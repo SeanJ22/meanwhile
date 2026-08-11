@@ -1,0 +1,32 @@
+import { RADIUS_LADDER_KM, searchMeetings } from "@/lib/meetings/query";
+
+/**
+ * GET /api/meetings?lat=&lng=&radiusKm=
+ *
+ * The map's only data dependency. It returns normalized meetings plus which
+ * rung of the empty-state cascade produced them, so the client can say what it
+ * did rather than silently showing a wider area than was asked for.
+ */
+
+export async function GET(request: Request) {
+  const params = new URL(request.url).searchParams;
+
+  const lat = Number(params.get("lat"));
+  const lng = Number(params.get("lng"));
+
+  if (!Number.isFinite(lat) || lat < -90 || lat > 90) {
+    return Response.json({ error: "lat must be between -90 and 90" }, { status: 400 });
+  }
+  if (!Number.isFinite(lng) || lng < -180 || lng > 180) {
+    return Response.json({ error: "lng must be between -180 and 180" }, { status: 400 });
+  }
+
+  const requested = Number(params.get("radiusKm"));
+  const radiusKm =
+    Number.isFinite(requested) && requested > 0
+      ? Math.min(requested, RADIUS_LADDER_KM[RADIUS_LADDER_KM.length - 1])
+      : RADIUS_LADDER_KM[0];
+
+  const result = await searchMeetings(lat, lng, radiusKm);
+  return Response.json(result);
+}

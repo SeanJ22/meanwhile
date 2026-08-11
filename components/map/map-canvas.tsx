@@ -7,6 +7,8 @@ import {
   MapLibreMap,
   Marker,
   NavigationControl,
+  prewarm,
+  setWorkerUrl,
   type ErrorEvent as MapErrorEvent,
 } from "maplibre-gl";
 import { useEffect, useRef } from "react";
@@ -15,8 +17,16 @@ import {
   CONUS_BOUNDS,
   FALLBACK_STYLE,
   METRO_ZOOM,
+  buildRasterStyle,
+  rasterBasemapEnabled,
   resolveBasemap,
 } from "@/lib/map/style";
+import {
+  addDistrictLayers,
+  districtLayersPresent,
+  loadDistricts,
+  removeDistrictLayers,
+} from "@/lib/map/districts";
 import type { Venue } from "@/lib/meetings/venues";
 
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -40,6 +50,10 @@ interface MapCanvasProps {
   venues: Venue[];
   camera: CameraTarget | null;
   selectedVenueKey: string | null;
+  /** Draw the congressional district overlay. */
+  showDistricts: boolean;
+  /** The boundary file could not be loaded; the caller says so and disables the toggle. */
+  onDistrictError: () => void;
   /**
    * Frame every venue rather than resting at metro zoom on the centroid. Set
    * when the cascade widened or fell back, because the meetings it found can
@@ -105,6 +119,8 @@ export function MapCanvas({
   camera,
   selectedVenueKey,
   frameAllVenues,
+  showDistricts,
+  onDistrictError,
   onSelectVenue,
   onTileError,
 }: MapCanvasProps) {
@@ -119,14 +135,40 @@ export function MapCanvas({
     onSelectRef.current = onSelectVenue;
   }, [onSelectVenue]);
 
+  const onDistrictErrorRef = useRef(onDistrictError);
+  useEffect(() => {
+    onDistrictErrorRef.current = onDistrictError;
+  }, [onDistrictError]);
+
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
+    // MapLibre 6 loads its tile-parsing worker as a separate file, resolving
+    // the name against its own script URL. Under Turbopack that lands on
+    // /_next/static/chunks/maplibre-gl-worker.mjs, but the asset is emitted to
+    // /_next/static/media/ under a content-hashed name — so the fetch 404s.
+    setWorkerUrl("/maplibre-gl-worker.mjs");
+
+    // MapLibre shares one worker pool across all maps and tears it down when
+    // the last map is removed. React Strict Mode mounts, cleans up, then mounts
+    // again, so the second map would inherit a disposed pool. prewarm() takes a
+    // reference so map.remove() cannot dispose it. Must follow setWorkerUrl and
+    // precede the first map.
+    prewarm();
+
     const basemap = resolveBasemap();
+    const raster = rasterBasemapEnabled();
+
+    // Raster mode with no key has nothing to draw. Fall through to the plain
+    // ground colour and say so, rather than substituting another provider —
+    // a silent swap turns a total rendering failure into something that looks
+    // like a styling choice.
+    const rasterStyle = raster ? buildRasterStyle() : null;
+    if (raster && !rasterStyle) onTileError();
 
     const map = new MapLibreMap({
       container: containerRef.current,
-      style: basemap.styleUrl,
+      style: raster ? (rasterStyle ?? FALLBACK_STYLE) : basemap.styleUrl,
       bounds: CONUS_BOUNDS,
       fitBoundsOptions: { padding: 24, duration: 0 },
       // Added explicitly below so it lands bottom right, clear of the coverage
@@ -237,6 +279,41 @@ export function MapCanvas({
       markers.set(venue.key, marker);
     }
   }, [venues]);
+
+  // The district overlay. Kept out of the mount effect because the file is
+  // only fetched when a reader first asks for it — most never will, and it is
+  // the largest thing this screen can download.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    if (!showDistricts) {
+      if (districtLayersPresent(map)) removeDistrictLayers(map);
+      return;
+    }
+
+    let cancelled = false;
+
+    const draw = () => {
+      loadDistricts()
+        .then((data) => {
+          const live = mapRef.current;
+          if (cancelled || !live) return;
+          addDistrictLayers(live, data);
+        })
+        .catch(() => {
+          if (!cancelled) onDistrictErrorRef.current();
+        });
+    };
+
+    // addLayer needs a style; on a cold mount the style may still be loading.
+    if (map.isStyleLoaded()) draw();
+    else map.once("load", draw);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [showDistricts]);
 
   // Selection is a class on the marker element, so it survives re-renders
   // without rebuilding the marker.

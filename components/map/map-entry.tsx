@@ -2,11 +2,13 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import { useDistrictLayer } from "@/hooks/use-district-layer";
 import { useStoredZip } from "@/hooks/use-stored-zip";
 import type { MeetingSearchResult } from "@/lib/meetings/query";
 import { groupByVenue, type Venue } from "@/lib/meetings/venues";
 
 import { CoverageNotice } from "./coverage-notice";
+import { DistrictToggle } from "./district-toggle";
 import { EntryNotice } from "./entry-notice";
 import { LocationBar } from "./location-bar";
 import { MapCanvas, type CameraTarget } from "./map-canvas";
@@ -35,6 +37,13 @@ export function MapEntry() {
   const [failed, setFailed] = useState(false);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [tilesFailed, setTilesFailed] = useState(false);
+  const [districtsFailed, setDistrictsFailed] = useState(false);
+
+  const {
+    enabled: showDistricts,
+    restored: districtsRestored,
+    setEnabled: setShowDistricts,
+  } = useDistrictLayer();
 
   // Fetch whenever the location changes, and abandon in-flight work when it
   // changes again — a slow earlier search must not overwrite a newer one.
@@ -97,6 +106,7 @@ export function MapEntry() {
   );
 
   const onTileError = useCallback(() => setTilesFailed(true), []);
+  const onDistrictError = useCallback(() => setDistrictsFailed(true), []);
   const onSelectVenue = useCallback((venue: Venue) => setSelectedKey(venue.key), []);
 
   return (
@@ -106,6 +116,8 @@ export function MapEntry() {
         camera={camera}
         selectedVenueKey={selectedKey}
         frameAllVenues={current !== null && current.tier !== "exact"}
+        showDistricts={showDistricts && !districtsFailed}
+        onDistrictError={onDistrictError}
         onSelectVenue={onSelectVenue}
         onTileError={onTileError}
       />
@@ -143,6 +155,15 @@ export function MapEntry() {
         )}
 
         <div className="mt-auto flex flex-col gap-3 p-3 sm:p-5">
+          <div className="flex">
+            <DistrictToggle
+              enabled={showDistricts}
+              restored={districtsRestored}
+              failed={districtsFailed}
+              onChange={setShowDistricts}
+            />
+          </div>
+
           {tilesFailed && <TileNotice />}
 
           {failed && <SearchFailedNotice />}

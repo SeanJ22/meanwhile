@@ -1,0 +1,105 @@
+# Abuse Policy
+
+*Draft. Needs review by counsel before launch. Not legal advice.*
+
+Governs free-text reactions users write about candidates, officeholders, and ballot measures. These fields are never displayed to other users — they are stored, filtered, aggregated, and sold. That changes the calculus: this policy protects real people named in the text and protects the integrity of what gets exported, rather than moderating a public square.
+
+---
+
+## Operating principle
+
+Political speech about people seeking or holding power is harsh by design, and harshness is the signal buyers want. A constituent writing that a council member is a corrupt liar who should be run out of town is exactly the sentiment this product exists to capture. Over-filtering degrades the product to guard against a rare case.
+
+The line is not rudeness, contempt, or wishing someone would lose. The line is a statement a reasonable person would read as an intent to commit violence, or content that identifies a target's private location or routine in a way that facilitates harm.
+
+## Tiers
+
+**T0 — Political speech.** Anger, contempt, insult, accusations of corruption or lying, calls to vote someone out, profanity. Retained. Exported. No action.
+
+**T1 — Abusive but not threatening.** Slurs targeting protected characteristics, sexual harassment, degrading content aimed at a person's identity rather than their politics. Retained with flag. Excluded from export. No report. No user notification beyond the standard confirmation.
+
+**T2 — Concerning, ambiguous.** Violent imagery without clear target or intent, references to weapons, statements that read as menacing but could be rhetoric. Retained with flag. Excluded from export. Held for human review within 24 hours.
+
+**T3 — Apparent true threat or targeting.** Statements of intent to harm a specific person, conditional threats tied to an outcome, or disclosure of a target's home address, daily routine, family members, or children's school. Retained with flag and full metadata. Excluded from export. Escalated to human review immediately, target time under 2 hours during business hours.
+
+## Never auto-report
+
+A classifier hit is never sufficient to contact law enforcement. Every report passes human review first.
+
+The failure mode is concrete: "I'd kill for a bike lane on Speedway" and "someone should make sure he doesn't make it to the next meeting" score similarly on most classifiers. Sending police to the first person's house over a figure of speech is a serious harm, and it is the kind of error that ends a product built on trust.
+
+Review asks three questions. Is there an identifiable target. Would a reasonable person read this as intent to commit violence rather than as hyperbole or venting. Is there anything suggesting capability or proximity — mentions of location, schedule, weapons, or prior contact.
+
+## Legal context
+
+Not all threatening-sounding speech is unlawful. The constitutional standard for true threats requires more than that a listener felt threatened; under *Counterman v. Colorado* (2023) the speaker must have had some subjective awareness of the threatening nature of the statement, with recklessness sufficient. Threats against certain federal officials carry their own statutes.
+
+Two practical consequences. First, this is why review is human and why the threshold is deliberately high. Second, we are not the adjudicator — the decision to report is a decision to hand the question to people whose job it is, not a finding that a crime occurred.
+
+Counsel should confirm whether any reporting obligation attaches to us, and should review the escalation contacts below.
+
+## Escalation contacts
+
+Local or county law enforcement where the target is located, for municipal and county officials.
+
+State-level: the agency with protective jurisdiction over state officials, which varies by state and needs to be enumerated per state as coverage expands.
+
+Members of Congress: U.S. Capitol Police Threat Assessment Section, which handles threats to members regardless of where the member is located.
+
+Federal executive officials: the relevant FBI field office.
+
+Maintain the contact list in `docs/escalation-contacts.md` and verify it quarterly. A stale phone number during an incident is a failure.
+
+## Preservation
+
+Flagged content is never deleted. Deletion destroys evidence and forecloses options.
+
+Preserved records retain the text, timestamp, account identifier, IP and user agent at submission, the target entity, the tier assigned, the reviewer, the decision, and the reasoning. Retention is indefinite for T3, seven years for T2, and two years for T1.
+
+Do not edit a preserved record. Corrections are appended, never overwritten.
+
+Preservation applies even if the user deletes their account. The account deletion flow must not cascade to flagged records, and the privacy policy must disclose this exception plainly.
+
+## Account action
+
+T1: content excluded, no account action on first instance. Repeated T1 from one account triggers review for suspension.
+
+T2: no automatic action pending review.
+
+T3: account suspended immediately pending review, before the report decision is made.
+
+Do not notify a user that their content has been escalated to law enforcement. Do not confirm or deny escalation if asked. This is standard practice and protects both the investigation and the reporting party.
+
+## Export integrity
+
+Anything above T0 is excluded from every export, aggregate, and derived metric. Excluded volume is reported to buyers as a count with no content, so aggregates remain auditable without leaking the material.
+
+If exclusions ever exceed a meaningful share of reactions in one race, that fact is itself disclosed to the buyer. A district where a fifth of responses were filtered is a different environment from one where none were, and hiding that misrepresents the data.
+
+## Disclosure to users
+
+Adjacent to every free-text field, plain and short:
+
+> Your words go to the aggregate we sell to campaigns and organizations. Threats of violence are removed and may be reported to law enforcement.
+
+"May," not "will." A stated commitment that isn't honored on every instance is worse than a reserved right.
+
+Keep it small and inline. A modal or a prominent warning suppresses exactly the sentiment the product exists to capture.
+
+## Audit and review
+
+Every review decision is logged with reviewer, timestamp, tier, and reasoning. The log is immutable.
+
+Review the tier definitions and a sample of decisions quarterly, and after every general election. Miscalibration in either direction — filtering ordinary political anger, or letting genuine targeting through — shows up in the sample before it shows up anywhere else.
+
+Publish an annual transparency report with counts by tier, reports made, and account actions taken. This is a trust product; the numbers are an asset, not a liability.
+
+## Open items for counsel
+
+Whether any affirmative reporting duty attaches, and in which states.
+
+Whether the preservation-through-account-deletion exception survives state privacy statutes, particularly in California.
+
+Whether acting as a delivery channel for user messages to elected officials changes our exposure, and what that requires in the terms of service.
+
+What the terms of service must say for suspension and preservation to be enforceable.

@@ -294,21 +294,30 @@ export function MapCanvas({
 
     let cancelled = false;
 
-    const draw = () => {
-      loadDistricts()
-        .then((data) => {
+    // Fetch as soon as the reader asks, independently of the style. Gating the
+    // request on map readiness is what made this fail silently before: nothing
+    // was requested at all, so even the error path never ran.
+    loadDistricts()
+      .then((data) => {
+        // addLayer needs a loaded style. `load` fires exactly once in a map's
+        // lifetime, so waiting on it here stalls forever for anyone toggling
+        // after the map settled — which is everyone, because the control starts
+        // off. `idle` fires every time rendering comes to rest, so this retries
+        // rather than hanging.
+        const attach = () => {
           const live = mapRef.current;
           if (cancelled || !live) return;
+          if (!live.isStyleLoaded()) {
+            live.once("idle", attach);
+            return;
+          }
           addDistrictLayers(live, data);
-        })
-        .catch(() => {
-          if (!cancelled) onDistrictErrorRef.current();
-        });
-    };
-
-    // addLayer needs a style; on a cold mount the style may still be loading.
-    if (map.isStyleLoaded()) draw();
-    else map.once("load", draw);
+        };
+        attach();
+      })
+      .catch(() => {
+        if (!cancelled) onDistrictErrorRef.current();
+      });
 
     return () => {
       cancelled = true;

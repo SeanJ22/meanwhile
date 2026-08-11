@@ -85,12 +85,107 @@
     height: 3px;
   }
 
+  /* Archivo is loaded with its width axis; the headline is the one place that
+     spends it. Wide and tight-tracked, the way a notice head is set. */
+  .display-wide {
+    font-family: var(--font-display);
+    font-stretch: 112%;
+    letter-spacing: -0.025em;
+  }
+
   .panel {
     background: color-mix(in srgb, var(--ink-panel) 92%, transparent);
     backdrop-filter: blur(14px) saturate(1.1);
     border: 1px solid var(--rule);
     box-shadow: var(--shadow-panel);
   }
+}
+
+/*
+  Pins.
+
+  Markers are created imperatively by MapLibre, outside React's tree, so their
+  styling lives here rather than in a component. The visible dot is small; the
+  button around it is a 36px touch target.
+*/
+.wtp-pin {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.wtp-pin-dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 999px;
+  background: var(--signal);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--ink) 85%, transparent),
+    0 0 14px color-mix(in srgb, var(--signal) 55%, transparent);
+  transition:
+    width 140ms ease,
+    height 140ms ease,
+    box-shadow 140ms ease;
+}
+
+/* Concluded meetings are hollow — present, clearly not something to attend. */
+.wtp-pin[data-concluded="true"] .wtp-pin-dot {
+  background: transparent;
+  border: 2px solid var(--concluded);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink) 85%, transparent);
+}
+
+.wtp-pin:hover .wtp-pin-dot,
+.wtp-pin:focus-visible .wtp-pin-dot,
+.wtp-pin[data-selected="true"] .wtp-pin-dot {
+  width: 19px;
+  height: 19px;
+}
+
+.wtp-pin[data-selected="true"] .wtp-pin-dot {
+  box-shadow:
+    0 0 0 3px var(--ink),
+    0 0 0 5px var(--signal),
+    0 0 20px color-mix(in srgb, var(--signal) 70%, transparent);
+}
+
+.wtp-pin[data-concluded="true"][data-selected="true"] .wtp-pin-dot {
+  box-shadow:
+    0 0 0 3px var(--ink),
+    0 0 0 5px var(--concluded);
+}
+
+/* The zip centroid. Deliberately unlike a pin — it is not a place you can go,
+   it is where the map was pointed. */
+.wtp-here {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  border: 1px dashed color-mix(in srgb, var(--paper-dim) 55%, transparent);
+  background: color-mix(in srgb, var(--paper-dim) 8%, transparent);
+  pointer-events: none;
+}
+
+.wtp-pin-count {
+  position: absolute;
+  transform: translate(11px, -11px);
+  min-width: 15px;
+  padding: 0 3px;
+  border-radius: 999px;
+  background: var(--ink-raised);
+  border: 1px solid var(--rule);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  line-height: 14px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
 }
 
 /* MapLibre ships light-theme chrome; restate it in our own tokens rather than

@@ -10,6 +10,10 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
+    // lib/ and scripts/ import each other with explicit .ts specifiers so the
+    // same modules run under `node --test` and `tsx` without a path-alias
+    // shim. Next resolves them fine; this tells tsc to allow it.
+    "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,

@@ -1,0 +1,126 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+import { Button } from "@/components/ui/button";
+import { resolveZip } from "@/lib/geo/zcta";
+
+import { ZipComb } from "./zip-comb";
+
+/**
+ * The persisted zip, and the way out of it.
+ *
+ * A returning reader skips the entry notice, which is only fair if changing the
+ * zip is one visible click away rather than a cleared cache.
+ */
+
+const MESSAGES = {
+  malformed: "Five digits.",
+  unknown: "No such zip code.",
+  uncovered: "Not in our zip list yet.",
+} as const;
+
+interface LocationBarProps {
+  zip: string;
+  meetingCount: number;
+  onChange: (zip: string, lat: number, lng: number) => void;
+}
+
+export function LocationBar({ zip, meetingCount, onChange }: LocationBarProps) {
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState("");
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!editing) return;
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setEditing(false);
+    }
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [editing]);
+
+  function submit() {
+    const result = resolveZip(draft);
+    if (!result.ok) {
+      setError(MESSAGES[result.reason]);
+      return;
+    }
+
+    onChange(result.centroid.zip, result.centroid.lat, result.centroid.lng);
+    setEditing(false);
+    setDraft("");
+    setError(null);
+  }
+
+  if (!editing) {
+    return (
+      <div className="panel pointer-events-auto flex items-stretch">
+        <div className="px-4 py-2.5">
+          <p className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-muted">
+            Showing
+          </p>
+          <p className="mt-0.5 font-mono text-lg leading-none tabular-nums text-paper">
+            {zip}
+          </p>
+        </div>
+
+        <div className="hidden border-l border-rule-soft px-4 py-2.5 sm:block">
+          <p className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-muted">
+            Meetings
+          </p>
+          <p className="mt-0.5 font-mono text-lg leading-none tabular-nums text-paper">
+            {meetingCount}
+          </p>
+        </div>
+
+        <button
+          onClick={() => {
+            setDraft("");
+            setError(null);
+            setEditing(true);
+          }}
+          className="border-l border-rule-soft px-4 font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-paper-dim transition-colors hover:bg-ink-raised hover:text-signal"
+        >
+          Change
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="panel pointer-events-auto w-[19rem] p-4">
+      <p className="mb-2.5 font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-muted">
+        New zip code
+      </p>
+
+      <ZipComb
+        value={draft}
+        onChange={(next) => {
+          setDraft(next);
+          if (error) setError(null);
+        }}
+        onSubmit={submit}
+        invalid={Boolean(error)}
+        describedBy={error ? "location-bar-error" : undefined}
+        autoFocus
+      />
+
+      {error && (
+        <p id="location-bar-error" role="alert" className="mt-2 text-sm text-signal">
+          {error}
+        </p>
+      )}
+
+      <div className="mt-3 flex gap-2">
+        <Button onClick={submit} size="sm" disabled={draft.length !== 5} className="flex-1">
+          Show meetings
+        </Button>
+        <Button variant="outline" size="sm" onClick={() => setEditing(false)}>
+          Cancel
+        </Button>
+      </div>
+    </div>
+  );
+}

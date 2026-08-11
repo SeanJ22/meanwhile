@@ -15,7 +15,11 @@ export interface ZctaCentroid {
   lng: number;
 }
 
-const CENTROIDS = centroidFile.centroids as Record<string, [number, number]>;
+// JSON arrays widen to number[]; the file's contract is a pair per zip.
+const CENTROIDS = centroidFile.centroids as unknown as Record<
+  string,
+  [number, number]
+>;
 
 /**
  * Whether the centroid table covers the whole country.

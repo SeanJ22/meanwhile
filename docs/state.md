@@ -329,8 +329,29 @@ and appears to have overwritten `CLAUDE.md` with a pointer to it.
 
 **If `CLAUDE.md` is ever tiny or is just `@AGENTS.md`, it has been overwritten.**
 Do not treat the repo as constraint-free and do not reconstruct the file from
-memory — restore it. It is mirrored to `G:\My Drive\we-the-people\` partly as a
-hedge against this.
+memory — restore it.
+
+### The `G:\My Drive\we-the-people\` mirror
+
+A hedge against the above, and against losing the project's memory with a
+branch. It holds five files, flat:
+
+| Mirror | Repo |
+|---|---|
+| `CLAUDE.md` | `CLAUDE.md` |
+| `abuse-policy.md` | `docs/abuse-policy.md` |
+| `state.md` | `docs/state.md` |
+| `tracker.csv` | `docs/tracker.csv` |
+| `types.ts` | `lib/sources/types.ts` |
+
+**Keep the mirror in step in the same change that updates the repo copy.** A
+mirror that is only sometimes current is worse than none, because the next
+person cannot tell which side is authoritative. The repo is authoritative; the
+mirror is a copy, and should be byte-identical.
+
+Before overwriting a mirrored file, check the target actually matches the
+previous repo version — if it has diverged, it holds something the repo does
+not, and copying over it loses that.
 
 `docs/abuse-policy.md` (7.4 KB), referenced by CLAUDE.md line 55, is present. It
 is a draft pending review by counsel. It references

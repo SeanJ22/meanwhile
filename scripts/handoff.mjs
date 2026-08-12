@@ -177,20 +177,36 @@ if (!existsSync(MIRROR)) {
     }
 
     // Before overwriting, make sure the mirror is not holding something the
-    // repo does not. If it matches neither the working copy nor the last
-    // committed version, it has diverged and copying over it loses whatever
-    // that is — so skip it and say so.
-    const committed = tryRun("git", ["show", `HEAD:${repoPath}`]);
+    // repo never had. A mirror that matches *any* past version of the file is
+    // simply stale, which is the normal case and safe to refresh. Only one
+    // matching no version in the file's history contains something unique, and
+    // copying over that would lose it.
+    //
+    // Comparing against HEAD alone is wrong and was: it flagged every ordinary
+    // stale copy as diverged the moment a new commit landed.
     const mirrorBytes = existsSync(to) ? readFileSync(to, "utf8") : null;
-    const diverged =
-      mirrorBytes !== null &&
-      committed !== null &&
-      mirrorBytes.replace(/\r\n/g, "\n").trim() !==
-        committed.replace(/\r\n/g, "\n").trim();
 
-    if (diverged) {
-      problems.push(`${mirrorName} has diverged — not overwritten, diff it by hand`);
-      continue;
+    if (mirrorBytes !== null) {
+      const normalize = (s) => s.replace(/\r\n/g, "\n").trimEnd();
+      const target = normalize(mirrorBytes);
+
+      const revs = (
+        tryRun("git", ["rev-list", "--max-count=60", "HEAD", "--", repoPath]) ?? ""
+      )
+        .split("\n")
+        .filter(Boolean);
+
+      const known = revs.some((rev) => {
+        const past = tryRun("git", ["show", `${rev}:${repoPath}`]);
+        return past !== null && normalize(past) === target;
+      });
+
+      if (!known) {
+        problems.push(
+          `${mirrorName} matches no version in this file's history — not overwritten, diff it by hand`,
+        );
+        continue;
+      }
     }
 
     copyFileSync(from, to);

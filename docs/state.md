@@ -4,9 +4,8 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-12, after Phase 4.5 and the first half of Phase 4.6.
-Branch: `claude/civic-map-entry-screen-4ey1cs`, pushed. **PR #3 is merged**;
-Phase 4.5 and the first half of 4.6 are in `main`. See §7.
+Last updated: 2026-08-12, after Phase 4.6.6 — the coverage language (tracker
+M16). Working on `main`, which now carries everything through PR #6. See §7.
 
 ---
 
@@ -48,7 +47,7 @@ works.
 |---|---|
 | `corepack pnpm dev` | Development server |
 | `corepack pnpm build` | Production build |
-| `corepack pnpm test` | `node --test` over `tests/` — 68 tests |
+| `corepack pnpm test` | `node --test` over `tests/` — 78 tests |
 | `corepack pnpm lint` | ESLint |
 | `corepack pnpm ingest mock` | Run one source adapter end to end |
 | `corepack pnpm zcta:fetch` | Rebuild zip centroids from Census (see §3.2) |
@@ -156,7 +155,7 @@ real adapter is not asked for the same window three times.
   be of an empty map.
 - **Tests** — `cascade`, `zoned`, `districts`, `tiers`, `district-hits`,
   `zip-coverage`, `fixture-provenance`, `subdivisions`, `registry-oracle`.
-  **68 total.**
+  `coverage`. **78 total.**
 
 ### The division and body registry — `lib/registry/`
 
@@ -174,12 +173,12 @@ and the ZCTA centroids, so nothing at runtime needs a database.
 | `types.ts` | `Division`, `Body`, and the enums — `BodyClass`, `CoverageStatus`, `BodyOrigin`, `AgendaSourceType`, `SourceDataset`, `CanonicalMatch` |
 | `derive.ts` | Division type → the bodies it implies, and the LSAD table that decides whether a polygon governs at all |
 | `resolve.ts` | Point → divisions → bodies. Pure; geometry is an argument, so it runs in a test, on a server, or against tiles later |
+| `coverage.ts` | Point → the honest statement: who governs here, how much of their calendar we hold, and the municipal dedupe (§4.5) |
+| `server.ts` | Loads geometry and `registry.json` once per process and caches them |
 | `registry.json` | The generated output |
 
 Full numbers, the four-zip oracle, and the identifier decision are in §4.4.
-**Not yet wired into any screen** — the coverage language of 4.6.6 is the next
-piece, and it is what turns "0 meetings" into "Vail Unified has a governing
-board; we do not have its calendar yet."
+**Wired into the screen as of 4.6.6** — see §4.5.
 
 ### District overlays (six types)
 
@@ -792,6 +791,110 @@ asserts all four properties on every row.
 `none` is concentrated exactly where §4.3 predicted: county subdivisions, which
 the canonical list either nests differently or omits.
 
+### 4.5 Phase 4.6.6 — the coverage language, and a duplicate nobody had noticed
+
+**The registry is now on screen.** `lib/registry/coverage.ts` answers "who
+governs this point and how much of their calendar do we hold", the meetings
+route attaches it, and `coverage-notice.tsx` renders it. Tracker **M16**.
+
+#### The four states, and which one turned out to matter
+
+The brief's table has four rows: meetings found, bodies known but nothing
+scheduled, bodies known with no source wired, and nothing mapped. Building it
+surfaced a fifth situation that is really the third one wearing a disguise, and
+it is the most common of the lot.
+
+**85641 does not land on the empty rung.** It lands on `widened`, showing 14
+meetings from 37 miles away — every one of them Tucson's. So the reader in Vail
+was never looking at an empty map; they were looking at *someone else's
+government*, with nothing on screen to say so. The original plan replaced the
+`none` copy and would have left that untouched.
+
+So the coverage block rides **alongside** the cascade's message rather than
+replacing it, and it renders on any rung where a body governing this point has
+no calendar. The result for 85641:
+
+> **Radius widened** — Nothing scheduled within 16 miles of 85641. Showing the
+> 14 meetings within 37 miles.
+> **No city or town government** — this area is unincorporated.
+> We don't have calendars for the 2 bodies that govern the area around 85641.
+> · Pima — County · Vail Unified District — School district
+> You're also represented in AZ-6, State House District 19 and State Senate
+> District 19.
+> We know these bodies exist because the district boundaries do. We haven't
+> sourced their names or meeting schedules yet.
+
+**No body name is ever printed.** `Body.name` is null on every derived row and
+stays that way. What renders is the *division's* label, which Census sourced,
+plus the structural claim that a division of this type has a governing body —
+and a footnote that says exactly which half of that is unsourced. The rule from
+§4.4 holds all the way to the pixel.
+
+**`unincorporated` is only claimed when it was measured.** It requires a
+municipal-shaped division to cover the point and every one of them to be
+statistical. Finding *nothing* is the `UNMAPPED` state instead, because "no
+municipal government here" and "our boundary data does not reach here" are
+different statements and only one of them is about the reader's government.
+67501 (Hutchinson KS, outside the clip) renders the second and still names KS-1,
+so it never reads as "you have no representation".
+
+#### The duplicate: 32 governments counted twice, already live
+
+**§4.6.0 of the brief and an earlier version of §6 below both say cousub is
+built but not merged, so nothing is double-counted yet. That is wrong.**
+`scripts/build-registry.ts` reads *every* `.geojson` in `public/geo`, and
+`cousub-*.geojson` is in there. The duplicate landed the moment the registry was
+first generated; nobody had counted. M14 — the map *layer* — is genuinely still
+open, which is what made the wrong claim plausible.
+
+Concord NH is `state:nh/place:concord` **and**
+`state:nh/county:merrimack/place:concord_city`. One city, two divisions, two
+governing bodies. 32 of the 153 municipal bodies are duplicates of this kind: 3
+in New Hampshire, 29 in New Jersey.
+
+The split is exactly structural, which is what makes it fixable without matching
+names — a subdivision-derived identifier nests under its county, a place-derived
+one is flat:
+
+| Layer | Divisions | AZ | NH | NJ |
+|---|---|---|---|---|
+| flat (`place`) | 37 | 5 | 3 | 29 |
+| nested (`cousub`) | 116 | 0 | 50 | 66 |
+
+That matches §4.3 exactly: Arizona's municipalities are places, New Jersey's and
+New Hampshire's are county subdivisions. So where both layers produce a
+government for the same point, the subdivision is the government. It is also the
+only choice that keeps Rockaway township distinct from Rockaway borough.
+
+**And it validates against the federal count.** Dropping the flat duplicates and
+restricting to the three clip counties gives Morris 39 + Merrimack 27 + Pima 5 +
+3 counties = **74**, which is exactly the 2022 Census of Governments
+general-purpose figure the Phase 4.6 gate asks for. `tests/coverage.test.ts`
+asserts it. That is the check Phase 4.7 calls for — the derivation rule measured
+against the federal enumeration rather than eyeballed — and it passes.
+
+`dedupeMunicipal()` is a **stopgap at the read layer**, commented as one. The
+real fix is tracker **M17**: carry Census `FUNCSTAT` and `CLASSFP` on the
+features and resolve it once at build time, nationally and from data, rather
+than from a three-state observation.
+
+#### A regression worth keeping the scar tissue for
+
+The first dedupe deleted the City of Tucson. It asked "does a subdivision-derived
+municipal division cover this point?", and around Tucson the answer is yes —
+`county:pima/place:tucson_ccd`, a statistical Census County Division with no
+government at all. Reading that as evidence dropped the flat `place:tucson` and
+reported **downtown 85701 as unincorporated**.
+
+The fix is to ask whether the subdivision row produced a *body*, which is the
+LSAD rule's answer to exactly this question rather than a second guess at it. The
+test that would have caught it was passing a pre-filtered list of governing
+divisions, so the CCDs were never present; it now passes the resolved set.
+
+Worth the note because it is the §4.2 lesson again in a new place: the code was
+reasoned about carefully, sounded right, and was wrong until it was measured
+against a real point.
+
 ---
 
 ## 5. Open questions
@@ -969,7 +1072,7 @@ correct — `resolveZip` only reports it when the table is partial.
 counties, so a reader can click districts in places that have no meetings behind
 them. Honest, and the coverage tier says so, but the asymmetry is new.
 
-**Map-layer test coverage is still thin.** 68 tests now cover the cascade, time
+**Map-layer test coverage is still thin.** 78 tests now cover the cascade, time
 handling, OCD identity, the tier axis, district disambiguation, fixture
 provenance, county subdivisions and the registry oracle. Nothing tests marker
 reconciliation, camera logic, or basemap resolution — which is part of why the
@@ -983,6 +1086,13 @@ components are only ever checked by screenshot. Tracker **M13**.
 municipal layer would render some governments twice — every New Hampshire city
 is both a place and a county subdivision, and under the current conventions
 those are two different identifiers. Tracker **M14**, which waits on D15.
+
+**The registry does not get that reprieve, and an earlier version of this file
+said it did.** `build-registry.ts` reads every file in `public/geo`, so the
+place/cousub duplicate has been in `registry.json` since it was first generated
+— 32 governments counted twice. M14 is the map layer and is still open; the
+registry side is tracker **M17**, and §4.5 has the evidence and the interim
+workaround.
 
 **Editing map layer code needs a full reload, not HMR.** The MapLibre instance
 is created once on mount and its layers are added imperatively. Hot-replacing
@@ -1132,7 +1242,7 @@ State as of 2026-08-12, verified rather than assumed:
 
 - Working tree clean, branch pushed, PR #3 merged. If a PR is still open it
   will be a small documentation one — check, and merge it before working.
-- 68 tests, lint and build all pass.
+- 78 tests, lint and build all pass.
 - The G Drive mirror and `transcripts/` are current as of the end of that
   session.
 

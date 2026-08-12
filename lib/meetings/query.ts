@@ -1,4 +1,5 @@
 import { haversineKm } from "../geo/distance.ts";
+import type { CoverageSummary } from "../registry/coverage.ts";
 import type { Meeting } from "../sources/types.ts";
 
 import { getMeetingSource } from "./registry.ts";
@@ -41,6 +42,15 @@ export interface MeetingSearchResult {
   /** Radius originally asked for — differs from `radiusKm` when widened. */
   requestedRadiusKm: number;
   center: { lat: number; lng: number };
+  /**
+   * Who governs this point and how much of their calendar we hold.
+   *
+   * Attached by the route rather than by `searchMeetings`, which stays pure and
+   * geometry-free. `null` when the registry could not be read — a coverage
+   * statement we cannot stand behind is worse than none, so the UI falls back to
+   * saying only what the cascade knows.
+   */
+  coverage: CoverageSummary | null;
 }
 
 function byStartAscending(a: Meeting, b: Meeting) {
@@ -110,6 +120,7 @@ export async function searchMeetings(
         radiusKm,
         requestedRadiusKm: startRadiusKm,
         center,
+        coverage: null,
       };
     }
   }
@@ -135,6 +146,7 @@ export async function searchMeetings(
       radiusKm: widest,
       requestedRadiusKm: startRadiusKm,
       center,
+      coverage: null,
     };
   }
 
@@ -147,5 +159,6 @@ export async function searchMeetings(
     radiusKm: widest,
     requestedRadiusKm: startRadiusKm,
     center,
+    coverage: null,
   };
 }

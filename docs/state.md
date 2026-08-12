@@ -5,8 +5,8 @@ what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
 Last updated: 2026-08-12, after Phase 4.5 and the first half of Phase 4.6.
-Branch: `claude/civic-map-entry-screen-4ey1cs`, pushed, with **PR #3 open**
-against `main`. See §7 — checked against `origin`, not assumed.
+Branch: `claude/civic-map-entry-screen-4ey1cs`, pushed. **PR #3 is merged**;
+Phase 4.5 and the first half of 4.6 are in `main`. See §7.
 
 ---
 
@@ -1006,49 +1006,31 @@ Branch `claude/civic-map-entry-screen-4ey1cs`. Working tree clean. Verified
 against `origin` on 2026-08-12 rather than assumed — an earlier version of this
 section was counting against a stale `origin/main`.
 
-**Everything is pushed.** The branch and
-`origin/claude/civic-map-entry-screen-4ey1cs` are identical — nothing exists
-only on one machine.
+**Everything is pushed**, and
+**[PR #3](https://github.com/SeanJ22/We-The-People/pull/3) is merged** —
+`origin/main` is at `5631465` and now carries all of Phase 4.5 and the first
+half of 4.6, 8 commits across 34 files.
 
-**[PR #3](https://github.com/SeanJ22/We-The-People/pull/3) is open** against
-`main`, carrying all of Phase 4.5 and the first half of 4.6: 8 commits, 34
-files, `MERGEABLE` / `CLEAN`. **It is not merged.** Until it is, `main` does not
-have this work.
+That PR merged the two commits **PR #2 had stranded**: `4ff074c` and `05e9f4b`
+were pushed to this branch after PR #2 closed at `07aee63`, and sat unmerged for
+a day without anyone noticing. Worth knowing as a pattern — a PR merged from a
+snapshot leaves behind whatever was pushed after it, silently. It happened
+again immediately: this very section was written while PR #3 was open, PR #3
+merged before that commit landed, and `main` was briefly carrying a `state.md`
+that claimed five commits were unpushed. **Check what `main` actually has rather
+than trusting the last thing this file said about it.**
+
+`main`'s history, most recent first:
 
 ```
-8a461fd  Correct the branch section against origin
-13dce33  Bring state.md and the tracker current through 4.6
-bb63c41  Generate the division and body registry               (Phase 4.6)
-05cbd59  Build the boundary data the derivation rule needs     (Phase 4.6)
-e4ecc1e  Record the transcript step, fix the branch line
-38f7bf0  Fix the four defects found testing the Phase 4 build  (Phase 4.5)
-05e9f4b  Note the transcripts folder in the G Drive mirror     ← stranded by PR #2
-4ff074c  Note that map layer edits need a full reload, not HMR ← stranded by PR #2
------------------------------------------ in origin/main below this line -----
-07aee63  Mirror tracker.csv to G Drive, document the mirror rule
-2194696  Bring docs/state.md up to date with phases 0-4
-619b839  Add seven district overlays and click-to-select       (Phase 4)
-973a5eb  Replace the entry notice with the welcome overlay     (Phase 3)
-a0d47cb  Port the EdiaStratMap application shell               (Phase 2)
-3c2867f  Fix the MapLibre worker and port the design system    (Phase 0+1)
-0d5442d  Fix district overlay never fetching its boundary file (pre-existing)
-89d5606  Note OCD at-large discrepancy risk on D07             (pre-existing)
-39cd657  Add national congressional district overlay           (pre-existing)
+5631465  Merge PR #3                                            ← Phase 4.5 + 4.6a
+149df6d  Merge PR #2
+b162fdc  Merge PR #1
 ```
 
-The bottom two of the eight predate this session: **PR #2 closed at `07aee63`
-and left them behind**, which is worth knowing because it is how two commits sat
-unmerged for a day without anyone noticing.
-
-**`origin/main` holds nothing this branch is missing.** It is at `149df6d` and
-its two commits are both pull-request merges *of this branch* — PR #1 at
-`b162fdc`, PR #2 at `149df6d` — with no original work of their own
-(`git log --no-merges HEAD..origin/main` is empty). Its tree is byte-identical
-to `07aee63`, an ancestor of the current HEAD. The merge base is `07aee63` and
-`git merge-tree` reports no conflicts, which is why the PR is `CLEAN`.
-
-So "2 behind `main`" is bookkeeping, not lost work, and a rebase would recover
-nothing.
+Neither merge commit carries original work — every one is a merge of this same
+branch, and `git log --no-merges origin/main` against the branch is empty. So
+`main` has never held anything the branch was missing.
 
 `.env.local` is gitignored and holds the MapTiler key,
 `NEXT_PUBLIC_MAPTILER_STYLE=basic-v2-dark` and
@@ -1102,8 +1084,8 @@ never held the code. Check `CLAUDE.md` is roughly 10 KB before doing anything �
 
 State as of 2026-08-12, verified rather than assumed:
 
-- Working tree clean, branch pushed, **PR #3 open and unmerged**. Merging it is
-  the first thing, unless it has already been merged.
+- Working tree clean, branch pushed, PR #3 merged. If a PR is still open it
+  will be a small documentation one — check, and merge it before working.
 - 68 tests, lint and build all pass.
 - The G Drive mirror and `transcripts/` are current as of the end of that
   session.

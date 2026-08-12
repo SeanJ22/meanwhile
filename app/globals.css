@@ -1,0 +1,230 @@
+@import "tailwindcss";
+
+/*
+  "Public notice, after dark."
+
+  The visual vocabulary is the posted municipal agenda: mono-set docket lines,
+  letterspaced notice headers, a comb-ruled form field. Meetings happen on
+  weeknights, so the map is dark and the notice panels sit on it in petrol ink.
+  Amber is the notice color and is spent only on upcoming meetings. Concluded
+  items get a cool, deliberately quieter teal so the two never compete.
+*/
+
+:root {
+  --ink: #070f11;
+  --ink-panel: #0c1a1d;
+  --ink-raised: #12262a;
+  --rule: #1f3b3f;
+  --rule-soft: #16292d;
+
+  --paper: #ecebe3;
+  --paper-dim: #b9c4c3;
+  --muted: #7d9497;
+
+  --signal: #ffb000;
+  --signal-dim: #a8760b;
+  --concluded: #6fa8a5;
+
+  --shadow-panel: 0 24px 60px -20px rgb(0 0 0 / 0.85), 0 2px 8px rgb(0 0 0 / 0.4);
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-ink-panel: var(--ink-panel);
+  --color-ink-raised: var(--ink-raised);
+  --color-rule: var(--rule);
+  --color-rule-soft: var(--rule-soft);
+  --color-paper: var(--paper);
+  --color-paper-dim: var(--paper-dim);
+  --color-muted: var(--muted);
+  --color-signal: var(--signal);
+  --color-signal-dim: var(--signal-dim);
+  --color-concluded: var(--concluded);
+
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-public-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+}
+
+@layer base {
+  html {
+    height: 100%;
+    background: var(--ink);
+    color-scheme: dark;
+  }
+
+  body {
+    min-height: 100%;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* One focus treatment everywhere, visible against both panel and map. */
+  :focus-visible {
+    outline: 2px solid var(--signal);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* The notice header: letterspaced mono over a double rule, lifted from the
+     top of a posted agenda packet. */
+  .notice-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--signal);
+  }
+
+  .notice-rule {
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    height: 3px;
+  }
+
+  /* Archivo is loaded with its width axis; the headline is the one place that
+     spends it. Wide and tight-tracked, the way a notice head is set. */
+  .display-wide {
+    font-family: var(--font-display);
+    font-stretch: 112%;
+    letter-spacing: -0.025em;
+  }
+
+  .panel {
+    background: color-mix(in srgb, var(--ink-panel) 92%, transparent);
+    backdrop-filter: blur(14px) saturate(1.1);
+    border: 1px solid var(--rule);
+    box-shadow: var(--shadow-panel);
+  }
+}
+
+/*
+  Pins.
+
+  Markers are created imperatively by MapLibre, outside React's tree, so their
+  styling lives here rather than in a component. The visible dot is small; the
+  button around it is a 36px touch target.
+*/
+.wtp-pin {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.wtp-pin-dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 999px;
+  background: var(--signal);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--ink) 85%, transparent),
+    0 0 14px color-mix(in srgb, var(--signal) 55%, transparent);
+  transition:
+    width 140ms ease,
+    height 140ms ease,
+    box-shadow 140ms ease;
+}
+
+/* Concluded meetings are hollow — present, clearly not something to attend. */
+.wtp-pin[data-concluded="true"] .wtp-pin-dot {
+  background: transparent;
+  border: 2px solid var(--concluded);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink) 85%, transparent);
+}
+
+.wtp-pin:hover .wtp-pin-dot,
+.wtp-pin:focus-visible .wtp-pin-dot,
+.wtp-pin[data-selected="true"] .wtp-pin-dot {
+  width: 19px;
+  height: 19px;
+}
+
+.wtp-pin[data-selected="true"] .wtp-pin-dot {
+  box-shadow:
+    0 0 0 3px var(--ink),
+    0 0 0 5px var(--signal),
+    0 0 20px color-mix(in srgb, var(--signal) 70%, transparent);
+}
+
+.wtp-pin[data-concluded="true"][data-selected="true"] .wtp-pin-dot {
+  box-shadow:
+    0 0 0 3px var(--ink),
+    0 0 0 5px var(--concluded);
+}
+
+/* The zip centroid. Deliberately unlike a pin — it is not a place you can go,
+   it is where the map was pointed. */
+.wtp-here {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  border: 1px dashed color-mix(in srgb, var(--paper-dim) 55%, transparent);
+  background: color-mix(in srgb, var(--paper-dim) 8%, transparent);
+  pointer-events: none;
+}
+
+.wtp-pin-count {
+  position: absolute;
+  transform: translate(11px, -11px);
+  min-width: 15px;
+  padding: 0 3px;
+  border-radius: 999px;
+  background: var(--ink-raised);
+  border: 1px solid var(--rule);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  line-height: 14px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* MapLibre ships light-theme chrome; restate it in our own tokens rather than
+   fighting specificity later. */
+.maplibregl-ctrl-attrib {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  background: color-mix(in srgb, var(--ink) 78%, transparent) !important;
+  color: var(--muted);
+}
+
+.maplibregl-ctrl-attrib a {
+  color: var(--paper-dim);
+}
+
+.maplibregl-ctrl-group {
+  background: var(--ink-panel) !important;
+  border: 1px solid var(--rule);
+  box-shadow: none !important;
+}
+
+.maplibregl-ctrl-group button + button {
+  border-top: 1px solid var(--rule-soft);
+}
+
+.maplibregl-ctrl-group button .maplibregl-ctrl-icon {
+  filter: invert(0.86) sepia(0.1);
+}
+
+.maplibregl-canvas:focus {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -4,9 +4,9 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-12, after Phase 4.5.
+Last updated: 2026-08-12, after Phase 4.5 and the first half of Phase 4.6.
 Branch: `claude/civic-map-entry-screen-4ey1cs`. Pushed through `619b839`;
-everything after that is committed locally and **not pushed**.
+the nine commits after it are local and **not pushed**.
 
 ---
 
@@ -48,10 +48,13 @@ works.
 |---|---|
 | `corepack pnpm dev` | Development server |
 | `corepack pnpm build` | Production build |
-| `corepack pnpm test` | `node --test` over `tests/` — 51 tests |
+| `corepack pnpm test` | `node --test` over `tests/` — 68 tests |
 | `corepack pnpm lint` | ESLint |
 | `corepack pnpm ingest mock` | Run one source adapter end to end |
 | `corepack pnpm zcta:fetch` | Rebuild zip centroids from Census (see §3.2) |
+| `corepack pnpm districts:fetch [type...]` | Rebuild boundary layers (see §2) |
+| `corepack pnpm registry:build` | Regenerate the division and body registry (§4.4) |
+| `corepack pnpm shoot <name>` | Headless capture of what actually rendered |
 | `corepack pnpm db:generate` / `db:migrate` | Drizzle migrations |
 
 ---
@@ -151,7 +154,31 @@ real adapter is not asked for the same window three times.
   timeouts. It prints what actually rendered, so a screenshot can never quietly
   be of an empty map.
 - **Tests** — `cascade`, `zoned`, `districts`, `tiers`, `district-hits`,
-  `zip-coverage`, `fixture-provenance`. **51 total.**
+  `zip-coverage`, `fixture-provenance`, `subdivisions`, `registry-oracle`.
+  **68 total.**
+
+### The division and body registry — `lib/registry/`
+
+**New in Phase 4.6, and it is the piece that connects the other two.** The app
+had polygons and it had meetings and nothing joined them: a point could resolve
+to Vail Unified School District and the app still could not say that district
+has a governing board.
+
+`pnpm registry:build` generates `lib/registry/registry.json` — **940 divisions,
+297 bodies** — from the committed boundary files. Committed like the geometry
+and the ZCTA centroids, so nothing at runtime needs a database.
+
+| File | Does |
+|---|---|
+| `types.ts` | `Division`, `Body`, and the enums — `BodyClass`, `CoverageStatus`, `BodyOrigin`, `AgendaSourceType`, `SourceDataset`, `CanonicalMatch` |
+| `derive.ts` | Division type → the bodies it implies, and the LSAD table that decides whether a polygon governs at all |
+| `resolve.ts` | Point → divisions → bodies. Pure; geometry is an argument, so it runs in a test, on a server, or against tiles later |
+| `registry.json` | The generated output |
+
+Full numbers, the four-zip oracle, and the identifier decision are in §4.4.
+**Not yet wired into any screen** — the coverage language of 4.6.6 is the next
+piece, and it is what turns "0 meetings" into "Vail Unified has a governing
+board; we do not have its calendar yet."
 
 ### District overlays (six types)
 
@@ -247,6 +274,11 @@ like an obvious improvement, that is the failure mode the rule exists to catch.
 ---
 
 ## 3. What is stubbed or mocked
+
+**The registry is not in this section.** `lib/registry/registry.json` is
+generated from real Census geometry and is as real as the boundary files — but
+every body in it is `NO_SOURCE_FOUND` with a null name, which is an honest
+statement of what is known rather than a stub. See §4.4.
 
 ### 3.1 Meeting data — the mock source
 
@@ -936,10 +968,20 @@ correct — `resolveZip` only reports it when the table is partial.
 counties, so a reader can click districts in places that have no meetings behind
 them. Honest, and the coverage tier says so, but the asymmetry is new.
 
-**Map-layer test coverage is still thin.** 41 tests now cover the cascade, time
-handling, OCD identity, the tier axis and district disambiguation. Nothing tests
-marker reconciliation, camera logic, or basemap resolution — which is part of
-why the tile problem was found by eye rather than by suite.
+**Map-layer test coverage is still thin.** 68 tests now cover the cascade, time
+handling, OCD identity, the tier axis, district disambiguation, fixture
+provenance, county subdivisions and the registry oracle. Nothing tests marker
+reconciliation, camera logic, or basemap resolution — which is part of why the
+tile problem was found by eye rather than by suite.
+
+**No test drives a React component.** Both Phase 4.5 radius bugs lived in the
+store and would have been caught by a component-level harness; today the
+components are only ever checked by screenshot. Tracker **M13**.
+
+**`cousub-*.geojson` is built and committed but not drawn.** Merging it into the
+municipal layer would render some governments twice — every New Hampshire city
+is both a place and a county subdivision, and under the current conventions
+those are two different identifiers. Tracker **M14**, which waits on D15.
 
 **Editing map layer code needs a full reload, not HMR.** The MapLibre instance
 is created once on mount and its layers are added imperatively. Hot-replacing
@@ -960,20 +1002,29 @@ replaced.
 
 ## 7. Current state of the branch
 
-Branch `claude/civic-map-entry-screen-4ey1cs`, pushed to `origin` at `619b839`.
-Working tree clean.
+Branch `claude/civic-map-entry-screen-4ey1cs`. Working tree clean.
 
-Seven commits ahead of `origin/main`, and **one behind it** — `origin/main`
-moved to `b162fdc` during this work, so a merge or rebase is needed before a PR.
+Fifteen commits ahead of `origin/main` and **one behind it** — `origin/main` is
+at `b162fdc`, so a merge or rebase is needed before a PR. **Only the first seven
+of these are pushed**; everything from `2194696` onward is local.
 
 ```
-619b839  Add seven district overlays and click-to-select        (Phase 4)
-973a5eb  Replace the entry notice with the welcome overlay      (Phase 3)
-a0d47cb  Port the EdiaStratMap application shell                (Phase 2)
-3c2867f  Fix the MapLibre worker and port the design system     (Phase 0+1)
-0d5442d  Fix district overlay never fetching its boundary file  (pre-existing)
-89d5606  Note OCD at-large discrepancy risk on D07              (pre-existing)
-39cd657  Add national congressional district overlay            (pre-existing)
+bb63c41  Generate the division and body registry               (Phase 4.6)
+05cbd59  Build the boundary data the derivation rule needs     (Phase 4.6)
+e4ecc1e  Record the transcript step, fix the branch line
+38f7bf0  Fix the four defects found testing the Phase 4 build  (Phase 4.5)
+05e9f4b  Note the transcripts folder in the G Drive mirror
+4ff074c  Note that map layer edits need a full reload, not HMR
+07aee63  Mirror tracker.csv to G Drive, document the mirror rule
+2194696  Bring docs/state.md up to date with phases 0-4
+------------------------------------------------ pushed below this line ------
+619b839  Add seven district overlays and click-to-select       (Phase 4)
+973a5eb  Replace the entry notice with the welcome overlay     (Phase 3)
+a0d47cb  Port the EdiaStratMap application shell               (Phase 2)
+3c2867f  Fix the MapLibre worker and port the design system    (Phase 0+1)
+0d5442d  Fix district overlay never fetching its boundary file (pre-existing)
+89d5606  Note OCD at-large discrepancy risk on D07             (pre-existing)
+39cd657  Add national congressional district overlay           (pre-existing)
 ```
 
 `.env.local` is gitignored and holds the MapTiler key,
@@ -993,6 +1044,26 @@ count badge, the list overlay, and the welcome card.
 **Not ported, and deliberately so:** Leaflet, vanilla-JS `innerHTML`
 construction with `escapeHtml`/`onclick` attributes, and the sales data model.
 
-Phases 5–8 remain: officeholders and the first real tables, popup and
-full-screen modal, the ported subsystems (notes, activity tracker, elections
-layer, conflicts, export, ingestion console), and responsive.
+### Where the phases stand
+
+- **0–4 done** — worker, design system, shell, welcome overlay, district
+  overlays with click-to-select.
+- **4.5 done** — the four defects found in testing. §4.2.
+- **4.6 half done.** The registry is generated and tested (§4.3, §4.4). What
+  remains: wiring the coverage language of 4.6.6 into the UI, populating
+  `agendaSourceType` per body (4.6.4), the `meeting_leads` table (4.6.5), and
+  the reader disambiguation prompt (4.6.3) — **which is a hard stop**, because
+  it adds a user data field and CLAUDE.md requires asking first.
+- **4.7 not started** — national scale: vector tiling, the Census of
+  Governments universe, vendor tenant enumeration, special districts.
+- **5–8 remain** — officeholders and the first real tables (which extend the
+  registry rather than replacing it), popup and full-screen modal, the ported
+  subsystems (notes, activity tracker, elections layer, conflicts, export,
+  ingestion console), and responsive.
+
+Two bodies the oracle names that the derivation **cannot** produce, and they are
+the interesting output rather than a failure: **Pima County Supervisor District
+4**, because Census does not publish county supervisor districts at all, and the
+**Southeast Regional Council**, because it is not a division and never will be.
+Both need the bodies-without-divisions path — the schema already allows it via a
+nullable `Body.ocdId`, and nothing populates it yet.

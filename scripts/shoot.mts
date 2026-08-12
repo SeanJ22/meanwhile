@@ -124,6 +124,23 @@ if (typed) {
   await page.waitForTimeout(400);
 }
 
+// Type into the welcome card's zip field and submit with Enter, which is the
+// only way to reach the malformed-input message — the button is disabled until
+// five digits are in.
+const typedZip = arg("typezip");
+if (typedZip) {
+  await page.fill(".welcome-card input[type=text]", typedZip);
+  await page.press(".welcome-card input[type=text]", "Enter");
+  await page.waitForTimeout(500);
+}
+
+// Escape hatch for any other affordance worth showing in a shot.
+const clicked = arg("click");
+if (clicked) {
+  await page.click(clicked);
+  await page.waitForTimeout(500);
+}
+
 if (flag("list")) {
   await page.click(".count-badge");
   await page.waitForTimeout(400);

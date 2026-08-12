@@ -18,9 +18,9 @@ import { groupByVenue, type Venue } from "@/lib/meetings/venues";
 import type { Meeting } from "@/lib/sources/types";
 
 import { CoverageNotice } from "./coverage-notice";
-import { EntryNotice } from "./entry-notice";
 import { MapCanvas, type CameraTarget, type MapFocus } from "./map-canvas";
 import { MeetingPanel } from "./meeting-panel";
+import { WelcomeOverlay } from "./welcome-overlay";
 
 /**
  * The entry screen.
@@ -55,6 +55,9 @@ function MapEntryInner() {
   const [districtsFailed, setDistrictsFailed] = useState(false);
   const [focus, setFocus] = useState<MapFocus | null>(null);
   const [districtCount, setDistrictCount] = useState(0);
+  // Reopened by the sidebar's CHANGE button and by reset. Distinct from "no
+  // zip stored yet", which opens it unconditionally.
+  const [welcomeRequested, setWelcomeRequested] = useState(false);
 
   // District visibility is persisted by its own hook, the sibling of
   // use-stored-zip. The store mirrors it one-way so the legend and the stats
@@ -99,6 +102,7 @@ function MapEntryInner() {
     (zip: string, lat: number, lng: number) => {
       dispatch({ type: "select/venue", key: null });
       setFailed(false);
+      setWelcomeRequested(false);
       remember({ zip, lat, lng });
     },
     [remember, dispatch],
@@ -186,9 +190,13 @@ function MapEntryInner() {
     [venues, dispatch],
   );
 
+  // Reset clears the filters a reader has got tangled in and offers the
+  // location prompt again — the two things that put them somewhere they did
+  // not mean to be.
   const onReset = useCallback(() => {
     dispatch({ type: "reset" });
     setFocus(null);
+    setWelcomeRequested(true);
   }, [dispatch]);
 
   const onTileError = useCallback(() => setTilesFailed(true), []);
@@ -204,6 +212,7 @@ function MapEntryInner() {
         <Sidebar
           onSearchPick={onSearchPick}
           onReset={onReset}
+          onChangeLocation={() => setWelcomeRequested(true)}
           showDistricts={showDistricts}
           districtsFailed={districtsFailed}
           onToggleDistricts={setShowDistricts}
@@ -238,12 +247,6 @@ function MapEntryInner() {
             )}
           </div>
 
-          {restored && !location && (
-            <div className="pointer-events-auto flex flex-1 items-center justify-center p-4 sm:p-6">
-              <EntryNotice onResolved={search} />
-            </div>
-          )}
-
           {/* Extra bottom padding clears the attribution, which now sits in
               the bottom-left corner. */}
           <div className="mt-auto flex flex-col items-start gap-3 p-3 pb-9 sm:p-5 sm:pb-10">
@@ -277,6 +280,19 @@ function MapEntryInner() {
 
         <Legend />
         <ListOverlay onPickMeeting={onPickMeeting} />
+
+        {/* Rendered last so it wins the z-1200 tie with the legend. Nothing
+            renders it until the stored zip has resolved, so a returning reader
+            never sees the prompt they already answered flash past. */}
+        {restored && (
+          <WelcomeOverlay
+            open={!location || welcomeRequested}
+            onResolved={search}
+            onDismiss={
+              location ? () => setWelcomeRequested(false) : null
+            }
+          />
+        )}
       </main>
     </DataProvider>
   );

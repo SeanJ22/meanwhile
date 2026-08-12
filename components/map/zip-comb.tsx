@@ -76,7 +76,7 @@ export function ZipComb({
       <div
         aria-hidden="true"
         className={cn(
-          "grid grid-cols-5 gap-1.5 sm:gap-2",
+          "grid grid-cols-5 gap-2",
           disabled && "opacity-50",
         )}
       >
@@ -88,20 +88,20 @@ export function ZipComb({
             <div
               key={index}
               className={cn(
-                "relative flex h-14 items-center justify-center border transition-colors sm:h-16",
-                "bg-ink/60 font-mono text-2xl tabular-nums text-paper sm:text-3xl",
+                "relative flex h-13 items-center justify-center rounded-md border transition-colors",
+                "bg-bg font-mono text-2xl tabular-nums text-text",
                 invalid
-                  ? "border-signal/70"
+                  ? "border-danger"
                   : isActive
-                    ? "border-signal"
+                    ? "border-local"
                     : digit
-                      ? "border-rule"
-                      : "border-rule-soft",
+                      ? "border-panel-border"
+                      : "border-panel-border/60",
               )}
             >
               {digit ?? ""}
               {isActive && !digit && (
-                <span className="absolute h-7 w-px animate-pulse bg-signal sm:h-8" />
+                <span className="absolute h-6 w-px animate-pulse bg-local" />
               )}
             </div>
           );

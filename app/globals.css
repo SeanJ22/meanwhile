@@ -302,6 +302,26 @@
   font-weight: 400;
 }
 
+.brand-change {
+  margin-left: 8px;
+  padding: 0;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--panel-border);
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.brand-change:hover {
+  color: var(--accent-local);
+  border-color: var(--accent-local);
+}
+
 /* Reset sits at right: 0, theme toggle at right: 36px — Edia's placement. */
 .brand .reset-view-btn {
   position: absolute;
@@ -1107,6 +1127,174 @@
   font-size: 12px;
   color: var(--text-muted);
   line-height: 1.6;
+}
+
+/* ---- Welcome overlay ---- */
+.welcome-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(15, 17, 23, 0.7);
+  backdrop-filter: blur(4px);
+  transition: opacity 0.3s ease;
+}
+
+[data-theme="light"] .welcome-overlay {
+  background: rgba(240, 242, 245, 0.7);
+}
+
+.welcome-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.welcome-card {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 16px;
+  padding: 40px 48px;
+  text-align: center;
+  max-width: 460px;
+  width: 90%;
+  max-height: 100%;
+  overflow-y: auto;
+  box-shadow: var(--shadow-card);
+}
+
+.welcome-icon {
+  color: var(--accent-local);
+  margin-bottom: 12px;
+}
+
+.welcome-title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  margin-bottom: 4px;
+  color: var(--text);
+}
+
+.welcome-subtitle {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 20px;
+}
+
+.welcome-msg {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.welcome-field {
+  margin-bottom: 16px;
+}
+
+.welcome-error {
+  min-height: 18px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--danger);
+}
+
+.welcome-submit {
+  width: 100%;
+  padding: 10px 18px;
+  border: 1px solid var(--accent-local);
+  border-radius: var(--radius);
+  background: var(--accent-local);
+  color: var(--bg);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+/* Inert, not faded. A dimmed accent fill still reads as a live button in a
+   muddy colour; an unfilled one reads as "not yet". */
+.welcome-submit:disabled {
+  background: var(--surface);
+  border-color: var(--panel-border);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+.welcome-divider {
+  margin: 20px 0 12px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.welcome-teams {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.welcome-team-btn {
+  padding: 8px 18px;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.welcome-team-btn:hover {
+  border-color: var(--accent-local);
+  color: var(--accent-local);
+  background: var(--accent-local-glow);
+}
+
+.welcome-opps-btn {
+  padding: 8px 22px;
+  border: 1px solid var(--accent-all);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--accent-all);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.welcome-opps-btn:hover {
+  background: var(--accent-all-glow);
+}
+
+.welcome-opps-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* The zip-is-orientation note. Deliberately part of the card rather than a
+   link: CLAUDE.md requires the limitation to be stated where the ask is. */
+.welcome-fineprint {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--panel-border);
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--text-muted);
+  text-align: left;
 }
 
 @keyframes fadeIn {

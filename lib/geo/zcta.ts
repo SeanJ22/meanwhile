@@ -51,6 +51,42 @@ export function lookupZcta(input: string): ZctaCentroid | null {
   return { zip, lat: point[0], lng: point[1] };
 }
 
+/**
+ * The ZCTA whose centroid is closest to a coordinate.
+ *
+ * Backs "Use my location" on the entry overlay. Note what this deliberately is
+ * not: it does not decide which districts a coordinate falls in, and it is not
+ * a reverse geocoder. It converts a browser position into the same kind of
+ * orientation a typed zip gives — no more authoritative for having come from
+ * GPS. Treating a precise coordinate as district truth is the exact mistake
+ * CLAUDE.md rules out for zip, and a coordinate invites it more strongly.
+ *
+ * Linear scan over ~33k points. It runs once, on a click, and a spatial index
+ * for a single query would cost more to build than the scan costs to run.
+ */
+export function nearestZcta(lat: number, lng: number): ZctaCentroid | null {
+  let best: ZctaCentroid | null = null;
+  let bestDistance = Infinity;
+
+  for (const zip in CENTROIDS) {
+    const [zLat, zLng] = CENTROIDS[zip];
+
+    // Squared degrees, with longitude scaled by cos(latitude) so the comparison
+    // is not skewed at high latitudes. Only used for ranking, never reported,
+    // so it does not need to be a real distance.
+    const dLat = zLat - lat;
+    const dLng = (zLng - lng) * Math.cos((lat * Math.PI) / 180);
+    const distance = dLat * dLat + dLng * dLng;
+
+    if (distance < bestDistance) {
+      bestDistance = distance;
+      best = { zip, lat: zLat, lng: zLng };
+    }
+  }
+
+  return best;
+}
+
 export type ZipResolution =
   | { ok: true; centroid: ZctaCentroid }
   | { ok: false; reason: "malformed" | "unknown" | "uncovered" };

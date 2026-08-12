@@ -22,12 +22,15 @@ import { ViewToggle } from "./view-toggle";
 export function Sidebar({
   onSearchPick,
   onReset,
+  onChangeLocation,
   showDistricts,
   districtsFailed,
   onToggleDistricts,
 }: {
   onSearchPick: (item: SearchItem) => void;
   onReset: () => void;
+  /** Reopens the welcome overlay. */
+  onChangeLocation: () => void;
   /** Owned by use-district-layer, which persists it. The store mirrors it. */
   showDistricts: boolean;
   districtsFailed: boolean;
@@ -55,9 +58,20 @@ export function Sidebar({
           <span className="brand-name">
             We the People
             <span className="brand-sub">
-              {location
-                ? `Meetings near ${location.zip}`
-                : "Public meetings near you"}
+              {location ? (
+                <>
+                  Meetings near {location.zip}
+                  <button
+                    type="button"
+                    className="brand-change"
+                    onClick={onChangeLocation}
+                  >
+                    Change
+                  </button>
+                </>
+              ) : (
+                "Public meetings near you"
+              )}
             </span>
           </span>
 

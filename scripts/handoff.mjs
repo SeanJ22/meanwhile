@@ -345,7 +345,42 @@ function ship() {
   else fail("ship · verify", `${left} commit(s) still not in main after the merge`);
 }
 
-if (SHIP) ship();
+if (SHIP) {
+  ship();
+
+  // The branch, main and PR lines above were measured *before* shipping, so
+  // once it succeeds they describe a state that no longer exists — and they
+  // would fail the run despite everything having worked. Re-measure and
+  // replace them rather than leaving a report that contradicts itself.
+  if (!results.some((r) => r.level === "fail" && r.label.startsWith("ship"))) {
+    const stale = new Set(["branch", "main", "main tree", "pull requests"]);
+    for (let i = results.length - 1; i >= 0; i--) {
+      if (stale.has(results[i].label)) results.splice(i, 1);
+    }
+
+    tryRun("git", ["fetch", "origin", "--quiet"]);
+
+    const unpushedNow = upstream
+      ? Number(git("rev-list", "--count", `${upstream}..HEAD`))
+      : 0;
+    if (unpushedNow === 0) ok("branch", `${branch} matches ${upstream}`);
+    else fail("branch", `${unpushedNow} commit(s) still not pushed`);
+
+    const unmergedNow = Number(git("rev-list", "--count", "origin/main..HEAD"));
+    if (unmergedNow === 0) ok("main", "carries everything on this branch");
+    else fail("main", `${unmergedNow} commit(s) still not merged`);
+
+    const openNow = JSON.parse(
+      tryRun("gh", ["pr", "list", "--state", "open", "--json", "number,title"]) || "[]",
+    );
+    if (openNow.length === 0) ok("pull requests", "none open");
+    else
+      warn(
+        "pull requests",
+        `${openNow.length} still open — ${openNow.map((p) => `#${p.number}`).join(", ")}`,
+      );
+  }
+}
 
 /* -------------------------------------------------------------- report --- */
 

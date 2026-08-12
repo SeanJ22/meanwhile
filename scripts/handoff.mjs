@@ -1,8 +1,19 @@
 /**
- * End-of-session handoff check.
+ * End-of-session handoff.
  *
  *   pnpm handoff            report, sync the mirror, export transcripts
  *   pnpm handoff --check    report only; touch nothing
+ *   pnpm handoff --ship     the above, then push, open a PR, and merge it
+ *
+ * `--ship` exists because the author asked for a one-command close: everything
+ * that is not current becomes current, the PR is created *and* merged, and the
+ * next session starts clean. It is standing authorization, recorded here so the
+ * behaviour is not a surprise.
+ *
+ * What `--ship` will not do is commit for you. A commit needs a message that
+ * says why, and generating one from a diff produces exactly the uninformative
+ * history this project's tracker rules exist to prevent. So it refuses on a
+ * dirty tree and tells you.
  *
  * Four surfaces have to agree before a session ends, and checking them by hand
  * is how they drift. This runs the whole sweep and prints a checklist you can
@@ -16,9 +27,8 @@
  * Exits non-zero if anything needs attention, so it can gate a commit hook
  * later without being rewritten.
  *
- * It deliberately does **not** push, merge, or open a PR. Those are outward
- * facing and stay a human decision; this only reports on them and does the two
- * jobs that are pure copies.
+ * Without `--ship` it does not push, merge, or open a PR — it only reports on
+ * them and does the two jobs that are pure copies.
  */
 
 import { execFileSync } from "node:child_process";
@@ -49,6 +59,13 @@ const MIRRORED = [
 ];
 
 const CHECK_ONLY = process.argv.includes("--check");
+const SHIP = process.argv.includes("--ship");
+
+/** `--title "..."` for the PR opened by --ship. */
+function flag(name, fallback) {
+  const i = process.argv.indexOf(`--${name}`);
+  return i === -1 ? fallback : process.argv[i + 1];
+}
 
 /* ------------------------------------------------------------------ util --- */
 
@@ -240,6 +257,95 @@ if (CHECK_ONLY) {
     ok("transcripts", n.replace(/^(\d+) transcript.*/, "$1 exported"));
   }
 }
+
+/* ---------------------------------------------------------------- ship --- */
+
+/**
+ * Push, open a PR, merge it.
+ *
+ * Runs only under `--ship`, and only from a clean tree — see the header. Each
+ * step is skipped when it is already done, so running it twice is harmless.
+ */
+function ship() {
+  if (dirty.length > 0) {
+    fail("ship", "refused — commit first, a commit needs a message that says why");
+    return;
+  }
+  if (!upstream) {
+    fail("ship", "refused — no upstream to push to");
+    return;
+  }
+  if (tryRun("gh", ["--version"]) === null) {
+    fail("ship", "refused — gh is not available");
+    return;
+  }
+
+  const unpushed = Number(git("rev-list", "--count", `${upstream}..HEAD`));
+  if (unpushed > 0) {
+    if (tryRun("git", ["push", "origin", branch]) === null) {
+      fail("ship", "push failed");
+      return;
+    }
+    ok("ship · push", `${unpushed} commit(s) pushed`);
+  } else {
+    ok("ship · push", "nothing to push");
+  }
+
+  const unmerged = Number(git("rev-list", "--count", "origin/main..HEAD"));
+  if (unmerged === 0) {
+    ok("ship · pr", "main already carries this branch");
+    return;
+  }
+
+  // Reuse an open PR rather than opening a second one for the same branch.
+  const existing = JSON.parse(
+    tryRun("gh", ["pr", "list", "--head", branch, "--state", "open", "--json", "number"]) ||
+      "[]",
+  );
+
+  let number = existing[0]?.number;
+
+  if (!number) {
+    const title = flag(
+      "title",
+      `Session handoff: ${unmerged} commit(s) from ${branch}`,
+    );
+    const bodyFile = flag("body-file");
+    const args = ["pr", "create", "--base", "main", "--head", branch, "--title", title];
+    if (bodyFile) args.push("--body-file", bodyFile);
+    else args.push("--body", "Opened by `pnpm handoff --ship` at the end of a session.");
+
+    const url = tryRun("gh", args);
+    if (url === null) {
+      fail("ship · pr", "could not open a PR");
+      return;
+    }
+    number = url.trim().split("/").pop();
+    ok("ship · pr", `opened #${number}`);
+  } else {
+    ok("ship · pr", `reusing open #${number}`);
+  }
+
+  // --merge to match this repo's existing history, which is merge commits.
+  const merged = tryRun("gh", ["pr", "merge", String(number), "--merge"]);
+  if (merged === null) {
+    fail(
+      "ship · merge",
+      `#${number} did not merge — checks pending, or branch protection wants a review`,
+    );
+    return;
+  }
+  ok("ship · merge", `#${number} merged`);
+
+  // Re-verify against the remote rather than trusting the merge reported
+  // success. A PR merges from a snapshot and can leave later commits behind.
+  tryRun("git", ["fetch", "origin", "--quiet"]);
+  const left = Number(git("rev-list", "--count", "origin/main..HEAD"));
+  if (left === 0) ok("ship · verify", "main carries everything on this branch");
+  else fail("ship · verify", `${left} commit(s) still not in main after the merge`);
+}
+
+if (SHIP) ship();
 
 /* -------------------------------------------------------------- report --- */
 

@@ -1089,7 +1089,12 @@ jobs that are pure copies:
 ```
 pnpm handoff            check, sync the mirror, export transcripts
 pnpm handoff --check    report only, touch nothing
+pnpm handoff --ship     the above, then push, open a PR, and merge it
 ```
+
+**Say "session ending — start handoff"** and the whole close happens: `state.md`
+is brought current, the tracker rows are updated, then `--ship` runs. The next
+session starts on a merged `main` with nothing outstanding.
 
 ```
   ok   working tree    clean
@@ -1101,9 +1106,15 @@ pnpm handoff --check    report only, touch nothing
   ok   transcripts     4 exported
 ```
 
-It exits non-zero when something needs fixing, so it can gate a hook later. It
-**does not push, merge, or open a PR** — those are outward-facing and stay a
-human decision; it only reports on them.
+It exits non-zero when something needs fixing, so it can gate a hook later.
+Without `--ship` it only reports on push, PR and merge rather than doing them.
+
+**`--ship` will not commit for you.** A commit needs a message saying *why*, and
+generating one from a diff produces exactly the uninformative history the
+tracker rules exist to prevent — so it refuses on a dirty tree and says so. It
+reuses an open PR rather than opening a second one for the same branch, and it
+re-fetches after merging to confirm `main` really took everything, because a PR
+merges from a snapshot and has twice left later commits behind.
 
 Two behaviours worth knowing, both learned the hard way:
 

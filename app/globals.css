@@ -1,104 +1,1390 @@
 @import "tailwindcss";
 
 /*
-  "Public notice, after dark."
+  Design tokens, ported from EdiaStratMap's `src/styles/main.css`.
 
-  The visual vocabulary is the posted municipal agenda: mono-set docket lines,
-  letterspaced notice headers, a comb-ruled form field. Meetings happen on
-  weeknights, so the map is dark and the notice panels sit on it in petrol ink.
-  Amber is the notice color and is spent only on upcoming meetings. Concluded
-  items get a cool, deliberately quieter teal so the two never compete.
+  Two themes, one token set. Dark is the default; `[data-theme="light"]` on
+  <html> swaps the values and nothing downstream needs to know. Every colour a
+  component uses comes from here — a literal hex in a component is a bug, because
+  it will be wrong in one of the two themes.
+
+  Edia drives its whole UI from three accents (--accent-strat / -cust / -both).
+  Ours are the three tiers of government, which is the axis this product filters
+  on. See lib/ocd/tiers.ts for the OCD-segment mapping: a tier is decided by
+  OCD-ID depth, never by string-matching a label.
 */
 
 :root {
-  --ink: #070f11;
-  --ink-panel: #0c1a1d;
-  --ink-raised: #12262a;
-  --rule: #1f3b3f;
-  --rule-soft: #16292d;
+  --bg: #0f1117;
+  --panel: #181a20;
+  --panel-border: #2a2d37;
+  --panel-bg: #1e2028;
+  --surface: #21242d;
+  --text: #e8e9ed;
+  --text-dim: #8b8d97;
+  --text-muted: #5c5e66;
+  --danger: #e17055;
+  --radius: 10px;
+  --radius-sm: 6px;
 
-  --paper: #ecebe3;
-  --paper-dim: #b9c4c3;
-  --muted: #7d9497;
+  /* Tiers. Local is the brightest because local meetings are the thing this
+     screen is for; national is the coolest because it is the least actionable
+     on a Tuesday night. */
+  --accent-local: #ffb000;
+  --accent-local-glow: rgba(255, 176, 0, 0.25);
+  --accent-state: #00b894;
+  --accent-state-glow: rgba(0, 184, 148, 0.25);
+  --accent-national: #6c8fd4;
+  --accent-national-glow: rgba(108, 143, 212, 0.25);
+  --accent-all: #e8853d;
+  --accent-all-glow: rgba(232, 133, 61, 0.25);
 
-  --signal: #ffb000;
-  --signal-dim: #a8760b;
+  /* Meeting status. Concluded is cool and quiet — present, clearly not
+     something you can still attend. Canceled shares the danger hue. */
   --concluded: #6fa8a5;
+  --canceled: #e17055;
 
-  --shadow-panel: 0 24px 60px -20px rgb(0 0 0 / 0.85), 0 2px 8px rgb(0 0 0 / 0.4);
+  /*
+    Boundary strokes. docs/state.md §4.1: the basemap draws its roads as one
+    flat #454545 (luminance 0.059) and meeting markers are --accent-local
+    (0.523). This sits between the two — clearly above the roads so a boundary
+    reads as a real edge, clearly below the markers so nothing ever competes
+    with a meeting, and in a different hue so it reads as a different kind of
+    thing rather than a brighter road.
+
+    lib/map/districts.ts reads this token off the document when it builds the
+    layers, so this is the single source of truth for it. MapLibre paint
+    properties cannot take a var() directly.
+  */
+  --district-line: #5f7a8a;
+
+  --shadow-panel: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --shadow-popup: 0 10px 40px rgba(0, 0, 0, 0.5);
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="light"] {
+  --bg: #f0f2f5;
+  --panel: #ffffff;
+  --panel-border: #dde0e6;
+  --panel-bg: #f8f9fa;
+  --surface: #ebedf0;
+  --text: #1a1a2e;
+  --text-dim: #5a5d6b;
+  --text-muted: #9197a3;
+  --danger: #c0392b;
+
+  --accent-local: #b8860b;
+  --accent-local-glow: rgba(184, 134, 11, 0.18);
+  --accent-state: #00896e;
+  --accent-state-glow: rgba(0, 137, 110, 0.18);
+  --accent-national: #3d5f9e;
+  --accent-national-glow: rgba(61, 95, 158, 0.18);
+  --accent-all: #d4722a;
+  --accent-all-glow: rgba(212, 114, 42, 0.18);
+
+  --concluded: #4a8481;
+  --canceled: #c0392b;
+
+  --district-line: #5a7280;
+
+  --shadow-panel: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --shadow-popup: 0 10px 40px rgba(0, 0, 0, 0.18);
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.12);
 }
 
 @theme inline {
-  --color-ink: var(--ink);
-  --color-ink-panel: var(--ink-panel);
-  --color-ink-raised: var(--ink-raised);
-  --color-rule: var(--rule);
-  --color-rule-soft: var(--rule-soft);
-  --color-paper: var(--paper);
-  --color-paper-dim: var(--paper-dim);
-  --color-muted: var(--muted);
-  --color-signal: var(--signal);
-  --color-signal-dim: var(--signal-dim);
-  --color-concluded: var(--concluded);
+  --color-bg: var(--bg);
+  --color-panel: var(--panel);
+  --color-panel-border: var(--panel-border);
+  --color-panel-bg: var(--panel-bg);
+  --color-surface: var(--surface);
+  --color-text: var(--text);
+  --color-text-dim: var(--text-dim);
+  --color-text-muted: var(--text-muted);
+  --color-danger: var(--danger);
 
-  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-public-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+  --color-local: var(--accent-local);
+  --color-state: var(--accent-state);
+  --color-national: var(--accent-national);
+  --color-all-tiers: var(--accent-all);
+
+  --color-concluded: var(--concluded);
+  --color-canceled: var(--canceled);
+  --color-district-line: var(--district-line);
+
+  --radius-token: var(--radius);
+  --radius-token-sm: var(--radius-sm);
+
+  /* DM Sans carries all UI text. JetBrains Mono carries every numeral, count,
+     identifier, OCD-ID, date and time — anything a reader might compare
+     column-wise or copy. */
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+}
+
+/*
+  LEGACY ALIASES — delete as Phase 2/3 replaces the components that use them.
+
+  The entry screen was built against a "public notice" palette (ink / paper /
+  signal / rule). Rather than rename every utility in one pass and land a diff
+  where nothing is verifiable, these map the old names onto the new tokens so
+  the existing screen keeps rendering and picks up the new palette immediately.
+  Nothing new should reference them.
+*/
+@theme inline {
+  --color-ink: var(--bg);
+  --color-ink-panel: var(--panel);
+  --color-ink-raised: var(--surface);
+  --color-rule: var(--panel-border);
+  --color-rule-soft: var(--panel-border);
+  --color-paper: var(--text);
+  --color-paper-dim: var(--text-dim);
+  --color-muted: var(--text-muted);
+  --color-signal: var(--accent-local);
+  /* Used as a border and a muted label colour, so it has to be an opaque
+     colour rather than the glow rgba. */
+  --color-signal-dim: color-mix(in srgb, var(--accent-local) 55%, var(--text-muted));
+
+  /* Archivo is gone; DM Sans carries display text too. */
+  --font-display: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
 @layer base {
   html {
     height: 100%;
-    background: var(--ink);
+    background: var(--bg);
     color-scheme: dark;
+  }
+
+  [data-theme="light"] {
+    color-scheme: light;
   }
 
   body {
     min-height: 100%;
-    background: var(--ink);
-    color: var(--paper);
+    background: var(--bg);
+    color: var(--text);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
 
-  /* One focus treatment everywhere, visible against both panel and map. */
+  /* One focus treatment everywhere, visible against both panel and map, and
+     against both themes. */
   :focus-visible {
-    outline: 2px solid var(--signal);
+    outline: 2px solid var(--accent-local);
     outline-offset: 2px;
   }
 }
 
 @layer components {
-  /* The notice header: letterspaced mono over a double rule, lifted from the
-     top of a posted agenda packet. */
   .notice-eyebrow {
     font-family: var(--font-mono);
     font-size: 0.6875rem;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: var(--signal);
+    color: var(--accent-local);
   }
 
   .notice-rule {
-    border-top: 1px solid var(--rule);
-    border-bottom: 1px solid var(--rule);
+    border-top: 1px solid var(--panel-border);
+    border-bottom: 1px solid var(--panel-border);
     height: 3px;
   }
 
-  /* Archivo is loaded with its width axis; the headline is the one place that
-     spends it. Wide and tight-tracked, the way a notice head is set. */
   .display-wide {
-    font-family: var(--font-display);
-    font-stretch: 112%;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.3px;
   }
 
   .panel {
-    background: color-mix(in srgb, var(--ink-panel) 92%, transparent);
-    backdrop-filter: blur(14px) saturate(1.1);
-    border: 1px solid var(--rule);
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius);
     box-shadow: var(--shadow-panel);
   }
+
+  /* Theme toggle and reset sit absolutely in the sidebar header — reset at
+     right: 0, theme at right: 36px, exactly as Edia places them. */
+  .icon-btn {
+    background: transparent;
+    border: 1px solid var(--panel-border);
+    border-radius: 4px;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+
+  .icon-btn:hover {
+    border-color: var(--accent-local);
+    color: var(--accent-local);
+    background: var(--accent-local-glow);
+  }
+}
+
+/* ============================================================================
+   SHELL — ported from EdiaStratMap src/styles/main.css.
+
+   Class names and metrics are kept as close to the original as the port allows,
+   so someone who knows that stylesheet can find their way around this one.
+   Every colour goes through a token, so all of it themes.
+   ========================================================================== */
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 340px;
+  height: 100vh;
+  max-height: 100dvh;
+  background: var(--panel);
+  border-right: 1px solid var(--panel-border);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.sidebar-header {
+  padding: 20px 22px 16px;
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.sidebar-scroll {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--panel-border) transparent;
+}
+
+.sidebar-scroll::-webkit-scrollbar,
+.search-autocomplete::-webkit-scrollbar,
+.filter-chips-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.sidebar-scroll::-webkit-scrollbar-track,
+.search-autocomplete::-webkit-scrollbar-track,
+.filter-chips-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sidebar-scroll::-webkit-scrollbar-thumb,
+.search-autocomplete::-webkit-scrollbar-thumb,
+.filter-chips-scroll::-webkit-scrollbar-thumb {
+  background: var(--panel-border);
+  border-radius: 2px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.brand-name {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: var(--text);
+}
+
+.brand-sub {
+  display: block;
+  margin-top: 1px;
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0;
+  font-weight: 400;
+}
+
+.brand-change {
+  margin-left: 8px;
+  padding: 0;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--panel-border);
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.brand-change:hover {
+  color: var(--accent-local);
+  border-color: var(--accent-local);
+}
+
+/* Reset sits at right: 0, theme toggle at right: 36px — Edia's placement. */
+.brand .reset-view-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.brand .theme-toggle-btn {
+  position: absolute;
+  top: 0;
+  right: 36px;
+}
+
+/* ---- View toggle: the primary mode switch ---- */
+.view-toggle {
+  display: flex;
+  background: var(--bg);
+  border-radius: var(--radius);
+  padding: 3px;
+  gap: 3px;
+}
+
+.view-btn {
+  flex: 1;
+  padding: 8px 10px;
+  border: none;
+  background: transparent;
+  color: var(--text-dim);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.view-btn:hover {
+  color: var(--text);
+  background: var(--surface);
+}
+
+.view-btn[data-active="true"] {
+  background: var(--tier-accent);
+  color: var(--bg);
+}
+
+/* ---- Scope selectors (Edia's team/rep) ---- */
+.scope-selectors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 0 0;
+}
+
+.scope-row {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.scope-label {
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-dim);
+}
+
+.scope-banner {
+  width: 100%;
+  font-size: 11px;
+  line-height: 1.4;
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: var(--accent-national);
+  background: var(--accent-national-glow);
+  border: 1px solid var(--accent-national-glow);
+}
+
+/* ---- Selects: one treatment, custom chevron ---- */
+.filter-select,
+.scope-select {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 12px;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238b8d97' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+  text-overflow: ellipsis;
+}
+
+.scope-select {
+  background-color: var(--surface);
+  padding: 6px 28px 6px 8px;
+}
+
+.filter-select:focus,
+.scope-select:focus {
+  border-color: var(--accent-local);
+}
+
+.scope-select[data-active="true"] {
+  border-color: var(--accent-local);
+  background-color: var(--accent-local-glow);
+}
+
+/* ---- Stats ---- */
+.stats-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 64px;
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+}
+
+.stat-card .num {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-card .label {
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* The dropped-record row. Full width under the cards, and deliberately not
+   quiet: a meeting that could not be placed is missing from the map, and a
+   reader who cannot see the count reads the map as complete. */
+.stat-missing {
+  width: 100%;
+  font-size: 11px;
+  color: var(--danger);
+  text-align: center;
+  padding: 2px 0 0;
+}
+
+/* ---- Search ---- */
+.search-box {
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.search-wrap {
+  position: relative;
+}
+
+.search-wrap > svg {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-sm);
+  padding: 9px 12px 9px 34px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.search-input:focus {
+  border-color: var(--accent-local);
+}
+.search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.search-autocomplete {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-top: none;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  max-height: 260px;
+  overflow-y: auto;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.search-autocomplete.open {
+  display: block;
+}
+
+.search-ac-group {
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-muted);
+  padding: 6px 12px 3px;
+  background: var(--panel-bg);
+}
+
+.search-ac-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.1s;
+  border-bottom: 1px solid var(--panel-border);
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  color: inherit;
+  font-family: inherit;
+}
+
+.search-ac-item:last-child {
+  border-bottom: none;
+}
+
+.search-ac-item:hover,
+.search-ac-item[data-selected="true"] {
+  background: var(--accent-local-glow);
+}
+
+.search-ac-type {
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  min-width: 36px;
+  text-align: center;
+  background: var(--tier-glow, var(--surface));
+  color: var(--tier-accent, var(--text-dim));
+}
+
+.search-ac-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text);
+}
+
+.search-ac-name b {
+  color: var(--accent-local);
+  font-weight: 600;
+}
+
+.search-ac-meta {
+  font-size: 10px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+}
+
+/* ---- Proximity-style controls: radius and near-me ---- */
+.prox-control {
+  padding: 10px 22px;
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.prox-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.prox-toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.prox-slider {
+  width: 34px;
+  height: 18px;
+  background: var(--surface);
+  border-radius: 9px;
+  position: relative;
+  transition: background 0.2s;
+  flex-shrink: 0;
+  border: 1px solid var(--panel-border);
+}
+
+.prox-slider::after {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: var(--text-dim);
+  border-radius: 50%;
+  top: 2px;
+  left: 3px;
+  transition:
+    transform 0.2s,
+    background 0.2s;
+}
+
+.prox-toggle input:checked + .prox-slider {
+  background: var(--accent-state-glow);
+  border-color: var(--accent-state);
+}
+
+.prox-toggle input:checked + .prox-slider::after {
+  transform: translateX(15px);
+  background: var(--accent-state);
+}
+
+.prox-toggle input:focus-visible + .prox-slider {
+  outline: 2px solid var(--accent-local);
+  outline-offset: 2px;
+}
+
+.prox-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-dim);
+}
+
+.prox-toggle input:checked ~ .prox-label {
+  color: var(--accent-state);
+}
+
+.prox-radius-wrap {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+  padding-left: 44px;
+}
+
+.prox-range {
+  flex: 1;
+  min-width: 80px;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--surface);
+  border-radius: 2px;
+  outline: none;
+}
+
+.prox-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent-state);
+  cursor: pointer;
+  border: none;
+}
+
+.prox-range::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent-state);
+  cursor: pointer;
+  border: none;
+}
+
+.prox-number {
+  width: 56px;
+  background: var(--bg);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-sm);
+  padding: 4px 6px;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-align: right;
+}
+
+.prox-unit {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.prox-count {
+  width: 100%;
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+
+.prox-note {
+  width: 100%;
+  font-size: 10px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* ---- Filters ---- */
+.filters-area {
+  padding: 14px 22px 20px;
+}
+
+.filters-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.filters-title {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0;
+}
+
+.filters-count {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  min-width: 16px;
+  padding: 1px 5px;
+  border-radius: 20px;
+  background: var(--accent-local);
+  color: var(--bg);
+}
+
+.filter-group {
+  margin-bottom: 16px;
+  animation: fadeIn 0.25s ease-out both;
+}
+.filter-group:nth-child(2) {
+  animation-delay: 0.05s;
+}
+.filter-group:nth-child(3) {
+  animation-delay: 0.1s;
+}
+.filter-group:nth-child(4) {
+  animation-delay: 0.15s;
+}
+.filter-group:nth-child(5) {
+  animation-delay: 0.2s;
+}
+
+.filter-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.filter-label .clear-btn {
+  font-size: 10px;
+  color: var(--text-muted);
+  cursor: pointer;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+  background: none;
+  border: none;
+  font-family: inherit;
+  padding: 0;
+}
+
+.filter-label .clear-btn:hover {
+  color: var(--danger);
+}
+
+.filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.filter-chips-scroll {
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.filter-chip {
+  padding: 5px 10px;
+  background: var(--bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 20px;
+  font-size: 11px;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+.filter-chip:hover {
+  border-color: var(--text-dim);
+  color: var(--text);
+}
+
+.filter-chip[data-active="true"] {
+  background: var(--chip-accent, var(--accent-local));
+  border-color: var(--chip-accent, var(--accent-local));
+  color: var(--bg);
+}
+
+.filter-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-dim);
+  padding: 3px 0;
+  cursor: pointer;
+}
+
+.filter-check input {
+  accent-color: var(--accent-local);
+}
+
+.filter-check[data-active="true"] {
+  color: var(--text);
+}
+
+.range-display {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.range-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ---- Legend ---- */
+.legend {
+  position: fixed;
+  bottom: 14px;
+  right: 24px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius);
+  padding: 8px 14px;
+  z-index: 1200;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  box-shadow: var(--shadow-panel);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9px;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  flex-shrink: 0;
+  background: var(--tier-accent);
+  box-shadow: 0 0 6px var(--tier-glow, transparent);
+}
+
+[data-theme="light"] .legend-dot {
+  border-color: rgba(0, 0, 0, 0.35);
+}
+
+/* Concluded reads as an outline, matching the hollow pin on the map. */
+.legend-dot[data-hollow="true"] {
+  background: transparent;
+  border-color: var(--tier-accent);
+}
+
+/* A boundary is a dashed rule, not a dot — it is a different kind of thing. */
+.legend-rule {
+  width: 14px;
+  height: 0;
+  border-top: 2px dotted var(--district-line);
+  flex-shrink: 0;
+}
+
+/* ---- Count badge + list overlay ---- */
+.count-badge {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius);
+  padding: 10px 16px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-dim);
+  box-shadow: var(--shadow-panel);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.count-badge:hover {
+  border-color: var(--accent-local);
+  color: var(--text);
+}
+
+.count-badge[data-active="true"] {
+  border-color: var(--accent-local);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.cb-num {
+  font-weight: 600;
+  color: var(--tier-accent, var(--accent-local));
+}
+
+.al-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1300;
+  background: var(--panel);
+  display: flex;
+  flex-direction: column;
+}
+
+.al-overlay-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.al-overlay-count {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text);
+}
+
+.al-overlay-close {
+  margin-left: auto;
+}
+
+.al-overlay-controls {
+  display: flex;
+  gap: 8px;
+  padding: 10px 22px;
+  border-bottom: 1px solid var(--panel-border);
+  flex-wrap: wrap;
+}
+
+.al-overlay-body {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  padding: 8px 0 24px;
+}
+
+.al-group-head {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 22px;
+  background: var(--panel-bg);
+  border: none;
+  border-bottom: 1px solid var(--panel-border);
+  color: var(--text-dim);
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.al-group-count {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+
+.al-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 22px;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--panel-border);
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: background 0.12s;
+}
+
+.al-row:hover {
+  background: var(--surface);
+}
+
+.al-row-title {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.al-row-sub {
+  display: block;
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.al-row-meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.al-more {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-family: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+.al-more:hover {
+  color: var(--accent-local);
+}
+
+.al-empty {
+  padding: 32px 22px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ---- District disambiguation ---- */
+.district-picker {
+  position: absolute;
+  z-index: 1250;
+  pointer-events: auto;
+  min-width: 210px;
+  max-width: 280px;
+  max-height: 340px;
+  overflow-y: auto;
+  transform: translate(12px, -12px);
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-popup);
+  padding: 8px 0;
+}
+
+.district-picker-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 2px 12px 8px;
+  border-bottom: 1px solid var(--panel-border);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-dim);
+}
+
+.district-picker-tier {
+  padding: 8px 12px 3px;
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--tier-accent, var(--text-muted));
+}
+
+.district-picker-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: background 0.12s;
+}
+
+.district-picker-row:hover {
+  background: var(--tier-glow, var(--surface));
+}
+
+.district-picker-label {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+  color: var(--text);
+}
+
+.district-picker-type {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* ---- Welcome overlay ---- */
+.welcome-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(15, 17, 23, 0.7);
+  backdrop-filter: blur(4px);
+  transition: opacity 0.3s ease;
+}
+
+[data-theme="light"] .welcome-overlay {
+  background: rgba(240, 242, 245, 0.7);
+}
+
+.welcome-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.welcome-card {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 16px;
+  padding: 40px 48px;
+  text-align: center;
+  max-width: 460px;
+  width: 90%;
+  max-height: 100%;
+  overflow-y: auto;
+  box-shadow: var(--shadow-card);
+}
+
+.welcome-icon {
+  color: var(--accent-local);
+  margin-bottom: 12px;
+}
+
+.welcome-title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  margin-bottom: 4px;
+  color: var(--text);
+}
+
+.welcome-subtitle {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 20px;
+}
+
+.welcome-msg {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.welcome-field {
+  margin-bottom: 16px;
+}
+
+.welcome-error {
+  min-height: 18px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--danger);
+}
+
+.welcome-submit {
+  width: 100%;
+  padding: 10px 18px;
+  border: 1px solid var(--accent-local);
+  border-radius: var(--radius);
+  background: var(--accent-local);
+  color: var(--bg);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+/* Inert, not faded. A dimmed accent fill still reads as a live button in a
+   muddy colour; an unfilled one reads as "not yet". */
+.welcome-submit:disabled {
+  background: var(--surface);
+  border-color: var(--panel-border);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+.welcome-divider {
+  margin: 20px 0 12px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.welcome-teams {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.welcome-team-btn {
+  padding: 8px 18px;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.welcome-team-btn:hover {
+  border-color: var(--accent-local);
+  color: var(--accent-local);
+  background: var(--accent-local-glow);
+}
+
+.welcome-opps-btn {
+  padding: 8px 22px;
+  border: 1px solid var(--accent-all);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--accent-all);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.welcome-opps-btn:hover {
+  background: var(--accent-all-glow);
+}
+
+.welcome-opps-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* The zip-is-orientation note. Deliberately part of the card rather than a
+   link: CLAUDE.md requires the limitation to be stated where the ask is. */
+.welcome-fineprint {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--panel-border);
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--text-muted);
+  text-align: left;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* MapLibre's own controls must clear the sidebar. Edia does the equivalent
+   with `.leaflet-left { left: 350px !important; }`. */
+.maplibregl-ctrl-top-left {
+  left: 350px;
 }
 
 /*
@@ -124,10 +1410,10 @@
   width: 13px;
   height: 13px;
   border-radius: 999px;
-  background: var(--signal);
+  background: var(--accent-local);
   box-shadow:
-    0 0 0 3px color-mix(in srgb, var(--ink) 85%, transparent),
-    0 0 14px color-mix(in srgb, var(--signal) 55%, transparent);
+    0 0 0 3px color-mix(in srgb, var(--bg) 85%, transparent),
+    0 0 14px var(--accent-local-glow);
   transition:
     width 140ms ease,
     height 140ms ease,
@@ -138,7 +1424,7 @@
 .wtp-pin[data-concluded="true"] .wtp-pin-dot {
   background: transparent;
   border: 2px solid var(--concluded);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink) 85%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--bg) 85%, transparent);
 }
 
 .wtp-pin:hover .wtp-pin-dot,
@@ -150,14 +1436,14 @@
 
 .wtp-pin[data-selected="true"] .wtp-pin-dot {
   box-shadow:
-    0 0 0 3px var(--ink),
-    0 0 0 5px var(--signal),
-    0 0 20px color-mix(in srgb, var(--signal) 70%, transparent);
+    0 0 0 3px var(--bg),
+    0 0 0 5px var(--accent-local),
+    0 0 20px var(--accent-local-glow);
 }
 
 .wtp-pin[data-concluded="true"][data-selected="true"] .wtp-pin-dot {
   box-shadow:
-    0 0 0 3px var(--ink),
+    0 0 0 3px var(--bg),
     0 0 0 5px var(--concluded);
 }
 
@@ -167,8 +1453,8 @@
   width: 22px;
   height: 22px;
   border-radius: 999px;
-  border: 1px dashed color-mix(in srgb, var(--paper-dim) 55%, transparent);
-  background: color-mix(in srgb, var(--paper-dim) 8%, transparent);
+  border: 1px dashed color-mix(in srgb, var(--text-dim) 55%, transparent);
+  background: color-mix(in srgb, var(--text-dim) 8%, transparent);
   pointer-events: none;
 }
 
@@ -178,9 +1464,9 @@
   min-width: 15px;
   padding: 0 3px;
   border-radius: 999px;
-  background: var(--ink-raised);
-  border: 1px solid var(--rule);
-  color: var(--paper);
+  background: var(--surface);
+  border: 1px solid var(--panel-border);
+  color: var(--text);
   font-family: var(--font-mono);
   font-size: 9px;
   line-height: 14px;
@@ -189,30 +1475,37 @@
 }
 
 /* MapLibre ships light-theme chrome; restate it in our own tokens rather than
-   fighting specificity later. */
+   fighting specificity later. Both themes are covered because every value here
+   is a token. */
 .maplibregl-ctrl-attrib {
   font-family: var(--font-mono);
   font-size: 10px;
-  background: color-mix(in srgb, var(--ink) 78%, transparent) !important;
-  color: var(--muted);
+  background: color-mix(in srgb, var(--panel) 78%, transparent) !important;
+  color: var(--text-muted);
 }
 
 .maplibregl-ctrl-attrib a {
-  color: var(--paper-dim);
+  color: var(--text-dim);
 }
 
 .maplibregl-ctrl-group {
-  background: var(--ink-panel) !important;
-  border: 1px solid var(--rule);
+  background: var(--panel) !important;
+  border: 1px solid var(--panel-border);
   box-shadow: none !important;
 }
 
 .maplibregl-ctrl-group button + button {
-  border-top: 1px solid var(--rule-soft);
+  border-top: 1px solid var(--panel-border);
 }
 
+/* The control icons ship as dark glyphs for a light UI. Invert them in dark
+   mode only; in light mode they are already correct. */
 .maplibregl-ctrl-group button .maplibregl-ctrl-icon {
   filter: invert(0.86) sepia(0.1);
+}
+
+[data-theme="light"] .maplibregl-ctrl-group button .maplibregl-ctrl-icon {
+  filter: none;
 }
 
 .maplibregl-canvas:focus {

@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "map:worker": "node scripts/build-map-worker.mjs",
+    "predev": "node scripts/build-map-worker.mjs",
     "dev": "next dev",
+    "prebuild": "node scripts/build-map-worker.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
@@ -11,7 +14,9 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "ingest": "tsx scripts/ingest.ts",
-    "zcta:fetch": "tsx scripts/fetch-zcta-centroids.ts"
+    "zcta:fetch": "tsx scripts/fetch-zcta-centroids.ts",
+    "districts:fetch": "tsx scripts/fetch-districts.ts",
+    "shoot": "tsx scripts/shoot.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
@@ -19,7 +24,7 @@
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.45.2",
     "lucide-react": "^1.31.0",
-    "maplibre-gl": "^6.3.0",
+    "maplibre-gl": "6.3.0",
     "next": "16.3.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
@@ -32,8 +37,10 @@
     "@types/react-dom": "^19",
     "dotenv": "^17.2.4",
     "drizzle-kit": "^0.31.6",
+    "esbuild": "^0.28.2",
     "eslint": "^9",
     "eslint-config-next": "16.3.0",
+    "playwright": "^1.62.1",
     "tailwindcss": "^4",
     "tsx": "^4.20.7",
     "typescript": "^5"

@@ -1,27 +1,22 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo, IBM_Plex_Mono, Public_Sans } from "next/font/google";
+import { DM_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-// Display: Archivo's width axis is what carries the wordmark and notice heads.
-const archivo = Archivo({
-  variable: "--font-archivo",
+// All UI text. Loaded as a variable font, which covers the 300–700 range the
+// design uses without four separate downloads.
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
   subsets: ["latin"],
-  axes: ["wdth"],
+  style: ["normal", "italic"],
+  display: "swap",
 });
 
-// Body: Public Sans is the typeface the US Web Design System ships. Quiet, and
-// native to the subject.
-const publicSans = Public_Sans({
-  variable: "--font-public-sans",
+// Every numeral, count, identifier, OCD-ID, date and time. Anything a reader
+// might compare column-wise or copy.
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
-});
-
-// Utility: dates, times, OCD-IDs, and the zip comb — anything that reads like
-// it came off a docket.
-const plexMono = IBM_Plex_Mono({
-  variable: "--font-plex-mono",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -31,17 +26,35 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#070f11",
+  themeColor: "#0f1117",
   // The map is full-bleed; let it run under the notch.
   viewportFit: "cover",
 };
+
+/*
+  Set the theme before first paint.
+
+  hooks/use-stored-theme.ts owns the choice, but no hook — and no effect — runs
+  early enough to stop a light-theme reader seeing a flash of the dark palette.
+  This is the standard escape hatch: a tiny synchronous script in <head> that
+  reads the same key and writes the same attribute. Wrapped in try/catch because
+  localStorage throws outright in some privacy modes, and a theme preference is
+  never worth breaking the page over.
+*/
+const THEME_SCRIPT = `try{if(localStorage.getItem("wtp.theme")==="light")document.documentElement.setAttribute("data-theme","light")}catch(e){}`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${archivo.variable} ${publicSans.variable} ${plexMono.variable} h-full antialiased`}
+      className={`${dmSans.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      // The pre-paint script writes data-theme, so the server-rendered markup
+      // and the first client pass legitimately differ on this element.
+      suppressHydrationWarning
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
       <body className="min-h-full">{children}</body>
     </html>
   );

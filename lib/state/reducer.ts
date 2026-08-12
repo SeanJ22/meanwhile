@@ -44,6 +44,8 @@ export const INITIAL_STATE: UiState = {
   search: { query: "", open: false, highlighted: -1 },
   selectedVenueKey: null,
   selectedDistrictOcdId: null,
+  selectedDistrictType: null,
+  districtPick: null,
   radiusKm: RADIUS_LADDER_KM[0],
   radiusOverridden: false,
   nearMeEnabled: false,
@@ -187,7 +189,16 @@ export function uiReducer(state: UiState, action: UiAction): UiState {
       return { ...state, selectedVenueKey: action.key };
 
     case "select/district":
-      return { ...state, selectedDistrictOcdId: action.ocdId };
+      return {
+        ...state,
+        selectedDistrictOcdId: action.ocdId,
+        selectedDistrictType: action.districtType,
+        // Choosing closes the prompt that offered the choice.
+        districtPick: null,
+      };
+
+    case "district/pick":
+      return { ...state, districtPick: action.pick };
 
     case "radius/set":
       return { ...state, radiusKm: action.km, radiusOverridden: true };

@@ -10,6 +10,7 @@ import {
   prewarm,
   setWorkerUrl,
   type ErrorEvent as MapErrorEvent,
+  type MapMouseEvent,
 } from "maplibre-gl";
 import { useCallback, useEffect, useRef } from "react";
 
@@ -20,12 +21,17 @@ import {
   resolveBasemap,
 } from "@/lib/map/style";
 import {
-  DISTRICT_LINE_LAYER_ID,
-  addDistrictLayers,
-  districtLayersPresent,
+  DISTRICT_TYPES,
+  addDistrictLayer,
+  districtLayerPresent,
+  districtsAt,
+  lineLayerId,
   loadDistricts,
-  removeDistrictLayers,
+  removeDistrictLayer,
+  setSelectedDistrict,
+  type DistrictHit,
 } from "@/lib/map/districts";
+import type { DistrictType } from "@/lib/state/types";
 import type { Theme } from "@/hooks/use-stored-theme";
 import type { Venue } from "@/lib/meetings/venues";
 
@@ -66,8 +72,12 @@ interface MapCanvasProps {
   /** How many district features are currently drawn, for the stats card. */
   onDistrictCount: (count: number) => void;
   selectedVenueKey: string | null;
-  /** Draw the congressional district overlay. */
-  showDistricts: boolean;
+  /** District overlays to draw. Empty draws none. */
+  districtTypes: DistrictType[];
+  /** The district the reader picked, highlighted via feature-state. */
+  selectedDistrict: { type: DistrictType; ocdId: string } | null;
+  /** A click landed in these districts. Always a set — see districtsAt. */
+  onDistrictClick: (hits: DistrictHit[], at: { x: number; y: number }) => void;
   /** The boundary file could not be loaded; the caller says so and disables the toggle. */
   onDistrictError: () => void;
   /**
@@ -138,10 +148,12 @@ export function MapCanvas({
   focus,
   selectedVenueKey,
   frameAllVenues,
-  showDistricts,
+  districtTypes,
+  selectedDistrict,
   theme,
   onDistrictError,
   onDistrictCount,
+  onDistrictClick,
   onSelectVenue,
   onTileError,
 }: MapCanvasProps) {
@@ -172,10 +184,15 @@ export function MapCanvas({
     onDistrictCountRef.current = onDistrictCount;
   }, [onDistrictCount]);
 
-  const showDistrictsRef = useRef(showDistricts);
+  const districtTypesRef = useRef(districtTypes);
   useEffect(() => {
-    showDistrictsRef.current = showDistricts;
-  }, [showDistricts]);
+    districtTypesRef.current = districtTypes;
+  }, [districtTypes]);
+
+  const onDistrictClickRef = useRef(onDistrictClick);
+  useEffect(() => {
+    onDistrictClickRef.current = onDistrictClick;
+  }, [onDistrictClick]);
 
   /*
    * Put the district overlay back whenever it is wanted and missing.
@@ -194,21 +211,32 @@ export function MapCanvas({
    * self-heals after any style change.
    */
   const ensureDistricts = useCallback(() => {
-    const ready = (m: MapLibreMap) =>
-      showDistrictsRef.current &&
-      !districtLayersPresent(m) &&
-      Boolean(m.getStyle()?.layers?.length);
-
     const map = mapRef.current;
-    if (!map || !ready(map)) return;
+    if (!map || !map.getStyle()?.layers?.length) return;
 
-    loadDistricts()
-      .then((data) => {
-        // Re-check: the fetch is async and the style may have moved on.
-        const live = mapRef.current;
-        if (live && ready(live)) addDistrictLayers(live, data);
-      })
-      .catch(() => onDistrictErrorRef.current());
+    const wanted = districtTypesRef.current;
+
+    // Drop what is no longer asked for, before adding what is.
+    for (const type of DISTRICT_TYPES) {
+      if (!wanted.includes(type) && districtLayerPresent(map, type)) {
+        removeDistrictLayer(map, type);
+      }
+    }
+
+    for (const type of wanted) {
+      if (districtLayerPresent(map, type)) continue;
+
+      loadDistricts(type)
+        .then((data) => {
+          // Re-check: the fetch is async and the style may have moved on.
+          const live = mapRef.current;
+          if (!live) return;
+          if (!districtTypesRef.current.includes(type)) return;
+          if (!live.getStyle()?.layers?.length) return;
+          addDistrictLayer(live, type, data);
+        })
+        .catch(() => onDistrictErrorRef.current());
+    }
   }, []);
 
   useEffect(() => {
@@ -284,7 +312,23 @@ export function MapCanvas({
     // and missing. See ensureDistricts for why this is not a one-shot.
     map.on("styledata", ensureDistricts);
 
+    /*
+     * Click to select a district.
+     *
+     * The answer is a *set*. One hit selects directly; several open a
+     * disambiguation prompt; none is a no-op rather than a cleared selection,
+     * so clicking empty water does not silently drop what a reader chose.
+     */
+    const onClick = (event: MapMouseEvent) => {
+      const hits = districtsAt(map, event.point, districtTypesRef.current);
+      if (hits.length === 0) return;
+      onDistrictClickRef.current(hits, { x: event.point.x, y: event.point.y });
+    };
+
+    map.on("click", onClick);
+
     return () => {
+      map.off("click", onClick);
       map.off("styledata", ensureDistricts);
       map.remove();
       mapRef.current = null;
@@ -404,16 +448,19 @@ export function MapCanvas({
    * on either one hung forever, leaving the toggle enabled and the map empty.
    */
   useEffect(() => {
+    ensureDistricts();
+  }, [districtTypes, ensureDistricts]);
+
+  // Selection is feature-state, never a source mutation.
+  useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-
-    if (!showDistricts) {
-      if (districtLayersPresent(map)) removeDistrictLayers(map);
-      return;
-    }
-
-    ensureDistricts();
-  }, [showDistricts, ensureDistricts]);
+    setSelectedDistrict(
+      map,
+      selectedDistrict?.type ?? null,
+      selectedDistrict?.ocdId ?? null,
+    );
+  }, [selectedDistrict, districtTypes]);
 
   // A one-off fly-to from search or the list. Separate from `camera`, which is
   // the zip's own centroid and must not move when a reader looks at a result.
@@ -440,14 +487,18 @@ export function MapCanvas({
     const count = () => {
       const live = mapRef.current;
       if (!live) return;
-      if (!showDistricts || !districtLayersPresent(live)) {
+
+      const layers = districtTypesRef.current
+        .map(lineLayerId)
+        .filter((id) => Boolean(live.getLayer(id)));
+
+      if (layers.length === 0) {
         onDistrictCountRef.current(0);
         return;
       }
+
       try {
-        const features = live.queryRenderedFeatures({
-          layers: [DISTRICT_LINE_LAYER_ID],
-        });
+        const features = live.queryRenderedFeatures({ layers });
         onDistrictCountRef.current(
           new Set(features.map((f) => f.properties?.ocdId)).size,
         );
@@ -464,7 +515,7 @@ export function MapCanvas({
       map.off("idle", count);
       map.off("sourcedata", count);
     };
-  }, [showDistricts]);
+  }, [districtTypes]);
 
   // Selection is a class on the marker element, so it survives re-renders
   // without rebuilding the marker.

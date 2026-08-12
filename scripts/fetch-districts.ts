@@ -25,12 +25,114 @@ import { pipeline } from "node:stream/promises";
 import { fileURLToPath } from "node:url";
 import { gzipSync, inflateRawSync } from "node:zlib";
 
+import {
+  countyIdentity,
+  legislativeIdentity,
+  placeIdentity,
+  schoolIdentity,
+  type DivisionIdentity,
+} from "../lib/ocd/divisions.ts";
 import { districtIdentity } from "../lib/ocd/fips.ts";
 
 const VINTAGE = "2025";
 const CONGRESS = "119";
-const SOURCE_URL = `https://www2.census.gov/geo/tiger/GENZ${VINTAGE}/shp/cb_${VINTAGE}_us_cd${CONGRESS}_500k.zip`;
 const SOURCE_ORG = "U.S. Census Bureau";
+const BASE = `https://www2.census.gov/geo/tiger/GENZ${VINTAGE}/shp`;
+
+/**
+ * The counties everything below Congress is clipped to.
+ *
+ * National coverage across all these types is 13,000+ features, which ends the
+ * committed-GeoJSON approach and forces vector tiling. Three counties keeps it
+ * to a few dozen features per type, keeps this tested pipeline, and defers the
+ * tiling decision until coverage actually expands. These three are the counties
+ * behind the four target zips.
+ */
+const CLIP_COUNTIES = [
+  { fips: "04019", label: "Pima County, AZ" },
+  { fips: "34027", label: "Morris County, NJ" },
+  { fips: "33013", label: "Merrimack County, NH" },
+] as const;
+
+/** State FIPS codes the clip counties sit in. */
+const CLIP_STATES = ["04", "34", "33"] as const;
+
+type Row = Record<string, string>;
+
+interface DistrictType {
+  /** Output filename stem, and the `--type` value. */
+  key: string;
+  /** Per-state Census archive, or one national file. */
+  url: (statefp: string) => string;
+  /** True when one archive covers the country. */
+  national?: boolean;
+  identity: (row: Row) => DivisionIdentity | null;
+  /** Human description for the run log. */
+  note: string;
+}
+
+/**
+ * Every district type this script can build.
+ *
+ * Congressional is deliberately absent: it is already built nationally as
+ * cd119.geojson, it is asserted at 441 features by tests/districts.test.ts, and
+ * national coverage is worth keeping for the one tier where a reader benefits
+ * from seeing beyond their own county. Everything else is clipped.
+ */
+const TYPES: DistrictType[] = [
+  {
+    key: "sldu",
+    url: (fp) => `${BASE}/cb_${VINTAGE}_${fp}_sldu_500k.zip`,
+    identity: (row) =>
+      legislativeIdentity(row.STATEFP, "sldu", row.SLDUST, row.NAMELSAD),
+    note: "State legislative districts, upper chamber",
+  },
+  {
+    key: "sldl",
+    url: (fp) => `${BASE}/cb_${VINTAGE}_${fp}_sldl_500k.zip`,
+    identity: (row) =>
+      legislativeIdentity(row.STATEFP, "sldl", row.SLDLST, row.NAMELSAD),
+    note: "State legislative districts, lower chamber",
+  },
+  {
+    key: "county",
+    url: () => `${BASE}/cb_${VINTAGE}_us_county_500k.zip`,
+    national: true,
+    // Exactly the clip counties, not everything that touches them. For every
+    // other type an adjacent feature that reaches the county line is genuinely
+    // nearby and worth drawing; for the layer that *is* the clip, including
+    // eighteen neighbours would misrepresent what this build covers.
+    identity: (row) =>
+      CLIP_COUNTIES.some((c) => c.fips === `${row.STATEFP}${row.COUNTYFP}`)
+        ? countyIdentity(row.STATEFP, row.NAME)
+        : null,
+    note: "Counties",
+  },
+  {
+    key: "place",
+    url: (fp) => `${BASE}/cb_${VINTAGE}_${fp}_place_500k.zip`,
+    identity: (row) => placeIdentity(row.STATEFP, row.NAME),
+    note: "Incorporated places and census designated places",
+  },
+  {
+    key: "unsd",
+    url: (fp) => `${BASE}/cb_${VINTAGE}_${fp}_unsd_500k.zip`,
+    identity: (row) => schoolIdentity(row.STATEFP, row.NAME),
+    note: "Unified school districts",
+  },
+  {
+    key: "elsd",
+    url: (fp) => `${BASE}/cb_${VINTAGE}_${fp}_elsd_500k.zip`,
+    identity: (row) => schoolIdentity(row.STATEFP, row.NAME),
+    note: "Elementary school districts",
+  },
+  {
+    key: "scsd",
+    url: (fp) => `${BASE}/cb_${VINTAGE}_${fp}_scsd_500k.zip`,
+    identity: (row) => schoolIdentity(row.STATEFP, row.NAME),
+    note: "Secondary school districts",
+  },
+];
 
 /**
  * Coordinate grid, in decimal degrees. 4 places is about 11 m, finer than a
@@ -56,8 +158,8 @@ const SIMPLIFY_PASSES = Number(process.env.DISTRICTS_PASSES ?? 8);
 const KEEP_ZIP = process.env.DISTRICTS_KEEP_ZIP === "1";
 
 const here = dirname(fileURLToPath(import.meta.url));
-const OUT_PATH = join(here, "..", "public", "geo", "cd119.geojson");
-const TMP_ZIP = join(here, "..", ".districts-download.zip");
+const GEO_DIR = join(here, "..", "public", "geo");
+const TMP_DIR = join(here, "..", ".districts-cache");
 
 /* ------------------------------------------------------------------ zip --- */
 
@@ -345,6 +447,165 @@ function simplifyGlobally(
   return { rings: current, removed: removedTotal };
 }
 
+/* ----------------------------------------------------------------- clip --- */
+
+type Bbox = [number, number, number, number];
+
+function bboxOf(polygons: Polygon[]): Bbox {
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+
+  for (const poly of polygons) {
+    for (const [x, y] of poly[0] ?? []) {
+      if (x < minX) minX = x;
+      if (y < minY) minY = y;
+      if (x > maxX) maxX = x;
+      if (y > maxY) maxY = y;
+    }
+  }
+
+  return [minX, minY, maxX, maxY];
+}
+
+function bboxesOverlap(a: Bbox, b: Bbox): boolean {
+  return !(a[2] < b[0] || b[2] < a[0] || a[3] < b[1] || b[3] < a[1]);
+}
+
+/** Ray casting against a polygon's exterior ring, minus its holes. */
+function pointInPolygon(point: [number, number], poly: Polygon): boolean {
+  const inRing = (ring: Ring) => {
+    let inside = false;
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      const [xi, yi] = ring[i];
+      const [xj, yj] = ring[j];
+      if (
+        yi > point[1] !== yj > point[1] &&
+        point[0] < ((xj - xi) * (point[1] - yi)) / (yj - yi) + xi
+      ) {
+        inside = !inside;
+      }
+    }
+    return inside;
+  };
+
+  if (!inRing(poly[0])) return false;
+  for (let h = 1; h < poly.length; h++) if (inRing(poly[h])) return false;
+  return true;
+}
+
+/**
+ * Whether two multipolygons share any area.
+ *
+ * Tests whether any vertex of one falls inside the other, in both directions,
+ * after a bounding-box reject. That misses the pathological case of two shapes
+ * whose boundaries cross with no vertex of either inside the other — but these
+ * are counties against districts, shapes of comparable size that overlap in
+ * area when they overlap at all, so the case does not arise here.
+ *
+ * Deliberately not a bbox test alone: Merrimack County's bounding box reaches
+ * into half of New Hampshire, and a bbox clip would pull in districts that
+ * never touch the county.
+ */
+function overlaps(a: Polygon[], b: Polygon[]): boolean {
+  const boxA = bboxOf(a);
+  const boxB = bboxOf(b);
+  if (!bboxesOverlap(boxA, boxB)) return false;
+
+  for (const polyA of a) {
+    for (const point of polyA[0]) {
+      for (const polyB of b) if (pointInPolygon(point, polyB)) return true;
+    }
+  }
+
+  for (const polyB of b) {
+    for (const point of polyB[0]) {
+      for (const polyA of a) if (pointInPolygon(point, polyA)) return true;
+    }
+  }
+
+  return false;
+}
+
+/* ------------------------------------------------------------- download --- */
+
+async function download(url: string, dest: string): Promise<Buffer> {
+  if (KEEP_ZIP && existsSync(dest)) {
+    console.log(`  reusing cached ${dest}`);
+    return readFile(dest);
+  }
+
+  console.log(`  fetching ${url}`);
+  const response = await fetch(url);
+  if (!response.ok || !response.body) {
+    throw new Error(
+      `Census returned ${response.status} ${response.statusText} for ${url}. ` +
+        `Check GENZ${VINTAGE}; Census moves these paths between releases.`,
+    );
+  }
+
+  await mkdir(dirname(dest), { recursive: true });
+  await pipeline(
+    Readable.fromWeb(response.body as Parameters<typeof Readable.fromWeb>[0]),
+    createWriteStream(dest),
+  );
+
+  return readFile(dest);
+}
+
+/** The .shp/.dbf pair out of a Census archive. */
+function readShapefile(zip: Buffer): { rows: Row[]; shapes: Polygon[][] } {
+  const files = extractAll(zip);
+  const shpName = [...files.keys()].find((n) => n.toLowerCase().endsWith(".shp"));
+  const dbfName = [...files.keys()].find((n) => n.toLowerCase().endsWith(".dbf"));
+  if (!shpName || !dbfName) throw new Error("Archive has no .shp/.dbf pair.");
+
+  const rows = parseDbf(files.get(dbfName)!);
+  const shapes = parseShp(files.get(shpName)!);
+  if (rows.length !== shapes.length) {
+    throw new Error(
+      `Attribute/geometry mismatch: ${rows.length} rows, ${shapes.length} shapes.`,
+    );
+  }
+
+  return { rows, shapes };
+}
+
+/**
+ * The clip polygons, quantized to the same grid as everything else.
+ *
+ * Built from the national county file, which is also a district type in its own
+ * right — the same download serves both.
+ */
+async function loadClipCounties(): Promise<Map<string, Polygon[]>> {
+  const zip = await download(
+    `${BASE}/cb_${VINTAGE}_us_county_500k.zip`,
+    join(TMP_DIR, "county-us.zip"),
+  );
+  const { rows, shapes } = readShapefile(zip);
+
+  const wanted = new Map<string, string>(
+    CLIP_COUNTIES.map((c) => [c.fips as string, c.label as string]),
+  );
+  const out = new Map<string, Polygon[]>();
+
+  for (let i = 0; i < rows.length; i++) {
+    const geoid = `${rows[i].STATEFP}${rows[i].COUNTYFP}`;
+    if (!wanted.has(geoid)) continue;
+    out.set(
+      geoid,
+      shapes[i].map((poly) => poly.map(quantizeRing).filter((r) => r.length >= 4)),
+    );
+  }
+
+  for (const [fips, label] of wanted) {
+    if (!out.has(fips)) throw new Error(`Clip county ${label} (${fips}) not found.`);
+  }
+
+  return out;
+}
+
 /* ----------------------------------------------------------------- main --- */
 
 interface Feature {
@@ -355,78 +616,30 @@ interface Feature {
     | { type: "MultiPolygon"; coordinates: number[][][][] };
 }
 
-async function main() {
-  const cached = KEEP_ZIP && existsSync(TMP_ZIP);
+interface BuildOptions {
+  /** Output file stem under public/geo. */
+  outName: string;
+  sourceUrl: string;
+  note: string;
+  rows: Row[];
+  shapes: Polygon[][];
+  identity: (row: Row) => DivisionIdentity | null;
+  /** Keep only features passing this. Absent means keep everything. */
+  keep?: (polygons: Polygon[]) => boolean;
+  /** Refuse to write below this, so a partial result never overwrites a good file. */
+  minFeatures: number;
+  extra?: Record<string, unknown>;
+}
 
-  if (cached) {
-    console.log(`Reusing cached ${TMP_ZIP}`);
-  } else {
-    console.log(`Fetching ${SOURCE_URL}`);
-
-    const response = await fetch(SOURCE_URL);
-    if (!response.ok || !response.body) {
-      throw new Error(
-        `Census returned ${response.status} ${response.statusText}. ` +
-          `Check GENZ${VINTAGE} in this script; Census moves these paths between releases.`,
-      );
-    }
-
-    await mkdir(dirname(TMP_ZIP), { recursive: true });
-    await pipeline(
-      Readable.fromWeb(response.body as Parameters<typeof Readable.fromWeb>[0]),
-      createWriteStream(TMP_ZIP),
-    );
-  }
+async function build(opts: BuildOptions): Promise<number> {
+  const { rows, shapes } = opts;
 
   console.log(
     `  quantize=${QUANTIZE_DECIMALS}dp tolerance=${SIMPLIFY_TOLERANCE_DEG}deg passes=${SIMPLIFY_PASSES}`,
   );
+  console.log(`  ${rows.length} records`);
 
-  try {
-    const zip = await readFile(TMP_ZIP);
-    console.log(`  ${(zip.length / 1_048_576).toFixed(1)} MB archive`);
-
-    const files = extractAll(zip);
-    const shpName = [...files.keys()].find((n) => n.toLowerCase().endsWith(".shp"));
-    const dbfName = [...files.keys()].find((n) => n.toLowerCase().endsWith(".dbf"));
-    const prjName = [...files.keys()].find((n) => n.toLowerCase().endsWith(".prj"));
-    if (!shpName || !dbfName) throw new Error("Archive has no .shp/.dbf pair.");
-
-    // cb_ files ship in NAD83. Its difference from WGS84 is on the order of a
-    // metre, below the resolution of a 1:500,000 boundary and far below the
-    // grid used here, so the degrees are used as-is rather than reprojected.
-    if (prjName) {
-      const prj = files.get(prjName)!.toString("latin1");
-      const datum = /GEOGCS\["([^"]+)"/.exec(prj)?.[1] ?? "unknown";
-      console.log(`  source CRS: ${datum} (treated as WGS84, sub-metre difference)`);
-    }
-
-    const rows = parseDbf(files.get(dbfName)!);
-    const shapes = parseShp(files.get(shpName)!);
-    if (rows.length !== shapes.length) {
-      throw new Error(
-        `Attribute/geometry mismatch: ${rows.length} rows, ${shapes.length} shapes.`,
-      );
-    }
-    console.log(`  ${rows.length} records`);
-
-    const cdField = Object.keys(rows[0]).find((f) => /^CD\d*FP$/.test(f));
-    if (!cdField) {
-      throw new Error(`No CD**FP field. Saw: ${Object.keys(rows[0]).join(", ")}`);
-    }
-
-    // Report the raw code inventory before anything is mapped. A code this
-    // script does not expect must be seen, not silently dropped.
-    const codeCounts = new Map<string, number>();
-    for (const row of rows) {
-      codeCounts.set(row[cdField], (codeCounts.get(row[cdField]) ?? 0) + 1);
-    }
-    const codes = [...codeCounts].sort((a, b) => a[0].localeCompare(b[0]));
-    console.log(`\n  distinct ${cdField} values (${codeCounts.size}):`);
-    console.log(
-      `    ${codes.map(([c, n]) => `${c}:${n}`).join("  ")}`,
-    );
-
+  {
     // Pass one: identity and geometry, quantized. Pinning needs every ring in
     // hand before any of them can be simplified.
     interface Pending {
@@ -442,14 +655,10 @@ async function main() {
 
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i];
-      const identity = districtIdentity(row.STATEFP, row[cdField]);
+      const identity = opts.identity(row);
 
       if (!identity) {
-        noteDrop(
-          row[cdField] === "ZZ"
-            ? "ZZ: water or unassigned area, not a seat"
-            : `unmapped STATEFP ${row.STATEFP} / ${cdField} ${row[cdField]}`,
-        );
+        noteDrop("no OCD identity: water, unassigned area, or unmapped code");
         continue;
       }
       if (shapes[i].length === 0) {
@@ -457,10 +666,22 @@ async function main() {
         continue;
       }
 
-      pending.push({
-        ...identity,
-        polygons: shapes[i].map((poly) => poly.map(quantizeRing).filter((r) => r.length >= 4)),
-      });
+      const polygons = shapes[i].map((poly) =>
+        poly.map(quantizeRing).filter((r) => r.length >= 4),
+      );
+
+      // The clip. Done before simplification so the expensive global pass only
+      // sees geometry that will actually be written.
+      if (opts.keep && !opts.keep(polygons)) {
+        noteDrop("outside the clip counties");
+        continue;
+      }
+
+      pending.push({ ...identity, polygons });
+    }
+
+    if (pending.length === 0) {
+      throw new Error("Nothing survived identity and clip; refusing to write.");
     }
 
     // Pin the vertices where simplification would otherwise disagree with the
@@ -607,53 +828,149 @@ async function main() {
           `OCD-IDs are the join key and must be unique.`,
       );
     }
-    if (features.length < 400) {
+    if (features.length < opts.minFeatures) {
       throw new Error(
-        `Only ${features.length} districts survived; expected well over 400. ` +
-          `Refusing to overwrite the committed file with a partial result.`,
+        `Only ${features.length} features survived; expected at least ` +
+          `${opts.minFeatures}. Refusing to overwrite with a partial result.`,
       );
     }
 
     const collection = {
       type: "FeatureCollection" as const,
-      source: SOURCE_URL,
+      source: opts.sourceUrl,
       sourceOrg: SOURCE_ORG,
       vintage: VINTAGE,
-      congress: CONGRESS,
       generatedAt: new Date().toISOString(),
-      note:
-        "Congressional district boundaries, 119th Congress, Census cartographic " +
-        "boundary release generalized to 1:500,000. Orientation and display only. " +
-        "Regenerate with `pnpm districts:fetch`.",
+      note: opts.note,
+      ...opts.extra,
       features,
     };
 
+    const outPath = join(GEO_DIR, `${opts.outName}.geojson`);
     const json = JSON.stringify(collection);
-    await mkdir(dirname(OUT_PATH), { recursive: true });
-    await writeFile(OUT_PATH, `${json}\n`);
+    await mkdir(GEO_DIR, { recursive: true });
+    await writeFile(outPath, `${json}\n`);
 
     const bytes = Buffer.byteLength(json);
-    const gzipped = gzipSync(json).length;
 
-    console.log(`\n  features written : ${features.length}`);
+    console.log(`  features written : ${features.length}`);
     console.log(
       `  vertices         : ${verticesBefore.toLocaleString()} -> ${verticesAfter.toLocaleString()}`,
     );
-    console.log(`  size             : ${(bytes / 1_048_576).toFixed(2)} MB`);
-    console.log(`  gzipped          : ${(gzipped / 1_048_576).toFixed(2)} MB`);
+    console.log(
+      `  size             : ${(bytes / 1024).toFixed(0)} KB (${(gzipSync(json).length / 1024).toFixed(0)} KB gzipped)`,
+    );
 
     if (dropped.size > 0) {
-      console.log(`\n  dropped:`);
       for (const [why, count] of dropped) {
-        console.log(`    ${String(count).padStart(4)}  ${why}`);
+        console.log(`  dropped ${String(count).padStart(5)}  ${why}`);
       }
-    } else {
-      console.log(`\n  dropped: none`);
     }
 
-    console.log(`\nWrote ${OUT_PATH}`);
+    console.log(`  wrote ${outPath}`);
+    return features.length;
+  }
+}
+
+/* ------------------------------------------------------------- driver --- */
+
+/** Congressional stays national: tests/districts.test.ts asserts 441 features,
+ *  and it is the one tier where seeing past your own county is worth the bytes. */
+async function buildCongressional(): Promise<number> {
+  const url = `${BASE}/cb_${VINTAGE}_us_cd${CONGRESS}_500k.zip`;
+  console.log(`\ncongressional (national)`);
+
+  const zip = await download(url, join(TMP_DIR, `cd${CONGRESS}-us.zip`));
+  const { rows, shapes } = readShapefile(zip);
+
+  const cdField = Object.keys(rows[0]).find((f) => /^CD\d*FP$/.test(f));
+  if (!cdField) {
+    throw new Error(`No CD**FP field. Saw: ${Object.keys(rows[0]).join(", ")}`);
+  }
+
+  return build({
+    outName: "cd119",
+    sourceUrl: url,
+    note:
+      "Congressional district boundaries, 119th Congress, Census cartographic " +
+      "boundary release generalized to 1:500,000. Orientation and display only. " +
+      "Regenerate with `pnpm districts:fetch`.",
+    rows,
+    shapes,
+    identity: (row) => districtIdentity(row.STATEFP, row[cdField]),
+    minFeatures: 400,
+    extra: { congress: CONGRESS },
+  });
+}
+
+async function buildClipped(
+  type: DistrictType,
+  clip: Map<string, Polygon[]>,
+): Promise<void> {
+  const counties = [...clip.values()];
+  const keep = (polygons: Polygon[]) =>
+    counties.some((county) => overlaps(polygons, county));
+
+  // A national source is read once; per-state sources once per state.
+  const states = type.national ? ["us"] : CLIP_STATES;
+
+  for (const statefp of states) {
+    const url = type.url(statefp);
+    const outName = `${type.key}-${statefp}`;
+    console.log(`\n${type.key} (${statefp}) — ${type.note}`);
+
+    // Not every state has every type. New Hampshire runs unified districts
+    // only, so it has no elementary or secondary file at all — a 404 there is
+    // the correct answer, not a failure. Say so and move on.
+    let zip: Buffer;
+    try {
+      zip = await download(url, join(TMP_DIR, `${outName}.zip`));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      if (message.includes("404")) {
+        console.log(`  no such file — this state has no ${type.key} districts`);
+        continue;
+      }
+      throw error;
+    }
+
+    const { rows, shapes } = readShapefile(zip);
+
+    await build({
+      outName,
+      sourceUrl: url,
+      note: `${type.note}, clipped to ${CLIP_COUNTIES.map((c) => c.label).join("; ")}. Census cartographic boundary release generalized to 1:500,000. Orientation and display only.`,
+      rows,
+      shapes,
+      identity: type.identity,
+      keep,
+      // One is enough: some types genuinely have a single feature in a county,
+      // and a floor above that would reject a correct result.
+      minFeatures: 1,
+      extra: { clippedTo: CLIP_COUNTIES.map((c) => c.fips) },
+    });
+  }
+}
+
+async function main() {
+  const requested = process.argv.slice(2).filter((a) => !a.startsWith("-"));
+  const only = new Set(requested);
+
+  try {
+    if (only.size === 0 || only.has("cd") || only.has("congressional")) {
+      await buildCongressional();
+    }
+
+    const types = TYPES.filter((t) => only.size === 0 || only.has(t.key));
+    if (types.length > 0) {
+      const clip = await loadClipCounties();
+      console.log(
+        `\nclip: ${CLIP_COUNTIES.map((c) => c.label).join("; ")}`,
+      );
+      for (const type of types) await buildClipped(type, clip);
+    }
   } finally {
-    if (!KEEP_ZIP) await rm(TMP_ZIP, { force: true });
+    if (!KEEP_ZIP) await rm(TMP_DIR, { recursive: true, force: true });
   }
 }
 

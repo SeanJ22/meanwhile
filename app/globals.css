@@ -1129,6 +1129,79 @@
   line-height: 1.6;
 }
 
+/* ---- District disambiguation ---- */
+.district-picker {
+  position: absolute;
+  z-index: 1250;
+  pointer-events: auto;
+  min-width: 210px;
+  max-width: 280px;
+  max-height: 340px;
+  overflow-y: auto;
+  transform: translate(12px, -12px);
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-popup);
+  padding: 8px 0;
+}
+
+.district-picker-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 2px 12px 8px;
+  border-bottom: 1px solid var(--panel-border);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-dim);
+}
+
+.district-picker-tier {
+  padding: 8px 12px 3px;
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--tier-accent, var(--text-muted));
+}
+
+.district-picker-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: background 0.12s;
+}
+
+.district-picker-row:hover {
+  background: var(--tier-glow, var(--surface));
+}
+
+.district-picker-label {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+  color: var(--text);
+}
+
+.district-picker-type {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
 /* ---- Welcome overlay ---- */
 .welcome-overlay {
   position: absolute;

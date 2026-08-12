@@ -1,4 +1,5 @@
 import type { Tier } from "@/lib/ocd/tiers";
+
 import type { CoverageTier } from "@/lib/meetings/query";
 import type { MeetingStatus, OcdId } from "@/lib/sources/types";
 
@@ -70,6 +71,28 @@ export interface FilterState {
   hideUncovered: boolean;
 }
 
+/** One district a click landed in. Shaped here rather than imported from
+ *  lib/map so the store does not depend on the map. */
+export interface DistrictChoice {
+  type: DistrictType;
+  tier: Tier;
+  typeLabel: string;
+  ocdId: OcdId;
+  label: string;
+}
+
+/**
+ * A click that landed in more than one district.
+ *
+ * A point is in a *set* of districts, so this is the normal case and not an
+ * error path: Tucson resolves to six at once, and Rockaway lands in two school
+ * districts from the same layer. The reader picks which one they meant.
+ */
+export interface DistrictPick {
+  choices: DistrictChoice[];
+  at: { x: number; y: number };
+}
+
 export interface UiState {
   /** Multi-select. Empty means nothing is shown, which is a real state a
    *  reader can reach by turning all three off — and it says so rather than
@@ -89,6 +112,9 @@ export interface UiState {
   /** The district the reader picked by clicking the map. Never inferred from
    *  the stored zip — see CLAUDE.md on zip being orientation, not identity. */
   selectedDistrictOcdId: OcdId | null;
+  selectedDistrictType: DistrictType | null;
+  /** Open disambiguation prompt, when a click hit more than one district. */
+  districtPick: DistrictPick | null;
 
   /** Meeting radius, in km. The cascade rungs are the snap points. */
   radiusKm: number;
@@ -133,7 +159,12 @@ export type UiAction =
   | { type: "search/highlight"; index: number }
   | { type: "search/clear" }
   | { type: "select/venue"; key: string | null }
-  | { type: "select/district"; ocdId: OcdId | null }
+  | {
+      type: "select/district";
+      ocdId: OcdId | null;
+      districtType: DistrictType | null;
+    }
+  | { type: "district/pick"; pick: DistrictPick | null }
   | { type: "radius/set"; km: number }
   | { type: "nearMe/toggle"; enabled: boolean }
   | { type: "nearMe/position"; lat: number; lng: number }

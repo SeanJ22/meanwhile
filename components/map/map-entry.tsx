@@ -17,7 +17,11 @@ import type { MeetingSearchResult } from "@/lib/meetings/query";
 import { groupByVenue, type Venue } from "@/lib/meetings/venues";
 import type { Meeting } from "@/lib/sources/types";
 
+import type { DistrictHit } from "@/lib/map/districts";
+import type { DistrictType } from "@/lib/state/types";
+
 import { CoverageNotice } from "./coverage-notice";
+import { DistrictPicker } from "./district-picker";
 import { MapCanvas, type CameraTarget, type MapFocus } from "./map-canvas";
 import { MeetingPanel } from "./meeting-panel";
 import { WelcomeOverlay } from "./welcome-overlay";
@@ -199,6 +203,61 @@ function MapEntryInner() {
     setWelcomeRequested(true);
   }, [dispatch]);
 
+  // Which overlays are drawn: the district-type checkboxes, gated by the
+  // master toggle. Empty when the toggle is off.
+  const activeDistrictTypes = useMemo(
+    () =>
+      showDistricts && !districtsFailed
+        ? (ui.filters.districtTypes as DistrictType[])
+        : [],
+    [showDistricts, districtsFailed, ui.filters.districtTypes],
+  );
+
+  const selectedDistrict = useMemo(
+    () =>
+      ui.selectedDistrictOcdId && ui.selectedDistrictType
+        ? { type: ui.selectedDistrictType, ocdId: ui.selectedDistrictOcdId }
+        : null,
+    [ui.selectedDistrictOcdId, ui.selectedDistrictType],
+  );
+
+  /*
+   * A click on the map lands in a *set* of districts.
+   *
+   * One hit selects directly. More than one opens the disambiguation prompt —
+   * which is the normal case, not an edge: downtown Tucson is in six districts
+   * at once, and Rockaway is in two school districts from the same layer. The
+   * reader's spatial choice is what selects a district; nothing here is
+   * inferred from the stored zip.
+   */
+  const onDistrictClick = useCallback(
+    (hits: DistrictHit[], at: { x: number; y: number }) => {
+      if (hits.length === 1) {
+        dispatch({
+          type: "select/district",
+          ocdId: hits[0].ocdId,
+          districtType: hits[0].type,
+        });
+        return;
+      }
+
+      dispatch({
+        type: "district/pick",
+        pick: {
+          at,
+          choices: hits.map((h) => ({
+            type: h.type,
+            tier: h.tier,
+            typeLabel: h.typeLabel,
+            ocdId: h.ocdId,
+            label: h.label,
+          })),
+        },
+      });
+    },
+    [dispatch],
+  );
+
   const onTileError = useCallback(() => setTilesFailed(true), []);
   const onDistrictError = useCallback(() => setDistrictsFailed(true), []);
   const onSelectVenue = useCallback(
@@ -226,7 +285,9 @@ function MapEntryInner() {
             focus={focus}
             selectedVenueKey={ui.selectedVenueKey}
             frameAllVenues={current !== null && current.tier !== "exact"}
-            showDistricts={showDistricts && !districtsFailed}
+            districtTypes={activeDistrictTypes}
+            selectedDistrict={selectedDistrict}
+            onDistrictClick={onDistrictClick}
             theme={theme}
             onDistrictError={onDistrictError}
             onDistrictCount={setDistrictCount}
@@ -276,6 +337,12 @@ function MapEntryInner() {
               </div>
             )}
           </div>
+        </div>
+
+        {/* Positioned against the map area, so its coordinates match the
+            click that produced it. */}
+        <div className="pointer-events-none absolute inset-y-0 right-0 left-[340px]">
+          <DistrictPicker />
         </div>
 
         <Legend />

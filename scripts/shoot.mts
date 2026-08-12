@@ -134,6 +134,15 @@ if (typedZip) {
   await page.waitForTimeout(500);
 }
 
+// Click the map itself, in viewport coordinates. Used to exercise
+// click-to-select, which has no selector to aim at.
+const clickAt = arg("clickxy");
+if (clickAt) {
+  const [x, y] = clickAt.split(",").map(Number);
+  await page.mouse.click(x, y);
+  await page.waitForTimeout(700);
+}
+
 // Escape hatch for any other affordance worth showing in a shot.
 const clicked = arg("click");
 if (clicked) {

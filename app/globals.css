@@ -1,103 +1,227 @@
 @import "tailwindcss";
 
 /*
-  "Public notice, after dark."
+  Design tokens, ported from EdiaStratMap's `src/styles/main.css`.
 
-  The visual vocabulary is the posted municipal agenda: mono-set docket lines,
-  letterspaced notice headers, a comb-ruled form field. Meetings happen on
-  weeknights, so the map is dark and the notice panels sit on it in petrol ink.
-  Amber is the notice color and is spent only on upcoming meetings. Concluded
-  items get a cool, deliberately quieter teal so the two never compete.
+  Two themes, one token set. Dark is the default; `[data-theme="light"]` on
+  <html> swaps the values and nothing downstream needs to know. Every colour a
+  component uses comes from here — a literal hex in a component is a bug, because
+  it will be wrong in one of the two themes.
+
+  Edia drives its whole UI from three accents (--accent-strat / -cust / -both).
+  Ours are the three tiers of government, which is the axis this product filters
+  on. See lib/ocd/tiers.ts for the OCD-segment mapping: a tier is decided by
+  OCD-ID depth, never by string-matching a label.
 */
 
 :root {
-  --ink: #070f11;
-  --ink-panel: #0c1a1d;
-  --ink-raised: #12262a;
-  --rule: #1f3b3f;
-  --rule-soft: #16292d;
+  --bg: #0f1117;
+  --panel: #181a20;
+  --panel-border: #2a2d37;
+  --panel-bg: #1e2028;
+  --surface: #21242d;
+  --text: #e8e9ed;
+  --text-dim: #8b8d97;
+  --text-muted: #5c5e66;
+  --danger: #e17055;
+  --radius: 10px;
+  --radius-sm: 6px;
 
-  --paper: #ecebe3;
-  --paper-dim: #b9c4c3;
-  --muted: #7d9497;
+  /* Tiers. Local is the brightest because local meetings are the thing this
+     screen is for; national is the coolest because it is the least actionable
+     on a Tuesday night. */
+  --accent-local: #ffb000;
+  --accent-local-glow: rgba(255, 176, 0, 0.25);
+  --accent-state: #00b894;
+  --accent-state-glow: rgba(0, 184, 148, 0.25);
+  --accent-national: #6c8fd4;
+  --accent-national-glow: rgba(108, 143, 212, 0.25);
+  --accent-all: #e8853d;
+  --accent-all-glow: rgba(232, 133, 61, 0.25);
 
-  --signal: #ffb000;
-  --signal-dim: #a8760b;
+  /* Meeting status. Concluded is cool and quiet — present, clearly not
+     something you can still attend. Canceled shares the danger hue. */
   --concluded: #6fa8a5;
+  --canceled: #e17055;
 
-  --shadow-panel: 0 24px 60px -20px rgb(0 0 0 / 0.85), 0 2px 8px rgb(0 0 0 / 0.4);
+  /*
+    Boundary strokes. docs/state.md §4.1: the basemap draws its roads as one
+    flat #454545 (luminance 0.059) and meeting markers are --accent-local
+    (0.523). This sits between the two — clearly above the roads so a boundary
+    reads as a real edge, clearly below the markers so nothing ever competes
+    with a meeting, and in a different hue so it reads as a different kind of
+    thing rather than a brighter road.
+
+    lib/map/districts.ts reads this token off the document when it builds the
+    layers, so this is the single source of truth for it. MapLibre paint
+    properties cannot take a var() directly.
+  */
+  --district-line: #5f7a8a;
+
+  --shadow-panel: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --shadow-popup: 0 10px 40px rgba(0, 0, 0, 0.5);
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="light"] {
+  --bg: #f0f2f5;
+  --panel: #ffffff;
+  --panel-border: #dde0e6;
+  --panel-bg: #f8f9fa;
+  --surface: #ebedf0;
+  --text: #1a1a2e;
+  --text-dim: #5a5d6b;
+  --text-muted: #9197a3;
+  --danger: #c0392b;
+
+  --accent-local: #b8860b;
+  --accent-local-glow: rgba(184, 134, 11, 0.18);
+  --accent-state: #00896e;
+  --accent-state-glow: rgba(0, 137, 110, 0.18);
+  --accent-national: #3d5f9e;
+  --accent-national-glow: rgba(61, 95, 158, 0.18);
+  --accent-all: #d4722a;
+  --accent-all-glow: rgba(212, 114, 42, 0.18);
+
+  --concluded: #4a8481;
+  --canceled: #c0392b;
+
+  --district-line: #5a7280;
+
+  --shadow-panel: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --shadow-popup: 0 10px 40px rgba(0, 0, 0, 0.18);
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.12);
 }
 
 @theme inline {
-  --color-ink: var(--ink);
-  --color-ink-panel: var(--ink-panel);
-  --color-ink-raised: var(--ink-raised);
-  --color-rule: var(--rule);
-  --color-rule-soft: var(--rule-soft);
-  --color-paper: var(--paper);
-  --color-paper-dim: var(--paper-dim);
-  --color-muted: var(--muted);
-  --color-signal: var(--signal);
-  --color-signal-dim: var(--signal-dim);
-  --color-concluded: var(--concluded);
+  --color-bg: var(--bg);
+  --color-panel: var(--panel);
+  --color-panel-border: var(--panel-border);
+  --color-panel-bg: var(--panel-bg);
+  --color-surface: var(--surface);
+  --color-text: var(--text);
+  --color-text-dim: var(--text-dim);
+  --color-text-muted: var(--text-muted);
+  --color-danger: var(--danger);
 
-  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-public-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+  --color-local: var(--accent-local);
+  --color-state: var(--accent-state);
+  --color-national: var(--accent-national);
+  --color-all-tiers: var(--accent-all);
+
+  --color-concluded: var(--concluded);
+  --color-canceled: var(--canceled);
+  --color-district-line: var(--district-line);
+
+  --radius-token: var(--radius);
+  --radius-token-sm: var(--radius-sm);
+
+  /* DM Sans carries all UI text. JetBrains Mono carries every numeral, count,
+     identifier, OCD-ID, date and time — anything a reader might compare
+     column-wise or copy. */
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+}
+
+/*
+  LEGACY ALIASES — delete as Phase 2/3 replaces the components that use them.
+
+  The entry screen was built against a "public notice" palette (ink / paper /
+  signal / rule). Rather than rename every utility in one pass and land a diff
+  where nothing is verifiable, these map the old names onto the new tokens so
+  the existing screen keeps rendering and picks up the new palette immediately.
+  Nothing new should reference them.
+*/
+@theme inline {
+  --color-ink: var(--bg);
+  --color-ink-panel: var(--panel);
+  --color-ink-raised: var(--surface);
+  --color-rule: var(--panel-border);
+  --color-rule-soft: var(--panel-border);
+  --color-paper: var(--text);
+  --color-paper-dim: var(--text-dim);
+  --color-muted: var(--text-muted);
+  --color-signal: var(--accent-local);
+  /* Used as a border and a muted label colour, so it has to be an opaque
+     colour rather than the glow rgba. */
+  --color-signal-dim: color-mix(in srgb, var(--accent-local) 55%, var(--text-muted));
+
+  /* Archivo is gone; DM Sans carries display text too. */
+  --font-display: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
 @layer base {
   html {
     height: 100%;
-    background: var(--ink);
+    background: var(--bg);
     color-scheme: dark;
+  }
+
+  [data-theme="light"] {
+    color-scheme: light;
   }
 
   body {
     min-height: 100%;
-    background: var(--ink);
-    color: var(--paper);
+    background: var(--bg);
+    color: var(--text);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
 
-  /* One focus treatment everywhere, visible against both panel and map. */
+  /* One focus treatment everywhere, visible against both panel and map, and
+     against both themes. */
   :focus-visible {
-    outline: 2px solid var(--signal);
+    outline: 2px solid var(--accent-local);
     outline-offset: 2px;
   }
 }
 
 @layer components {
-  /* The notice header: letterspaced mono over a double rule, lifted from the
-     top of a posted agenda packet. */
   .notice-eyebrow {
     font-family: var(--font-mono);
     font-size: 0.6875rem;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: var(--signal);
+    color: var(--accent-local);
   }
 
   .notice-rule {
-    border-top: 1px solid var(--rule);
-    border-bottom: 1px solid var(--rule);
+    border-top: 1px solid var(--panel-border);
+    border-bottom: 1px solid var(--panel-border);
     height: 3px;
   }
 
-  /* Archivo is loaded with its width axis; the headline is the one place that
-     spends it. Wide and tight-tracked, the way a notice head is set. */
   .display-wide {
-    font-family: var(--font-display);
-    font-stretch: 112%;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.3px;
   }
 
   .panel {
-    background: color-mix(in srgb, var(--ink-panel) 92%, transparent);
-    backdrop-filter: blur(14px) saturate(1.1);
-    border: 1px solid var(--rule);
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius);
     box-shadow: var(--shadow-panel);
+  }
+
+  /* Theme toggle and reset sit absolutely in the sidebar header — reset at
+     right: 0, theme at right: 36px, exactly as Edia places them. */
+  .icon-btn {
+    background: transparent;
+    border: 1px solid var(--panel-border);
+    border-radius: 4px;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+
+  .icon-btn:hover {
+    border-color: var(--accent-local);
+    color: var(--accent-local);
+    background: var(--accent-local-glow);
   }
 }
 
@@ -124,10 +248,10 @@
   width: 13px;
   height: 13px;
   border-radius: 999px;
-  background: var(--signal);
+  background: var(--accent-local);
   box-shadow:
-    0 0 0 3px color-mix(in srgb, var(--ink) 85%, transparent),
-    0 0 14px color-mix(in srgb, var(--signal) 55%, transparent);
+    0 0 0 3px color-mix(in srgb, var(--bg) 85%, transparent),
+    0 0 14px var(--accent-local-glow);
   transition:
     width 140ms ease,
     height 140ms ease,
@@ -138,7 +262,7 @@
 .wtp-pin[data-concluded="true"] .wtp-pin-dot {
   background: transparent;
   border: 2px solid var(--concluded);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink) 85%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--bg) 85%, transparent);
 }
 
 .wtp-pin:hover .wtp-pin-dot,
@@ -150,14 +274,14 @@
 
 .wtp-pin[data-selected="true"] .wtp-pin-dot {
   box-shadow:
-    0 0 0 3px var(--ink),
-    0 0 0 5px var(--signal),
-    0 0 20px color-mix(in srgb, var(--signal) 70%, transparent);
+    0 0 0 3px var(--bg),
+    0 0 0 5px var(--accent-local),
+    0 0 20px var(--accent-local-glow);
 }
 
 .wtp-pin[data-concluded="true"][data-selected="true"] .wtp-pin-dot {
   box-shadow:
-    0 0 0 3px var(--ink),
+    0 0 0 3px var(--bg),
     0 0 0 5px var(--concluded);
 }
 
@@ -167,8 +291,8 @@
   width: 22px;
   height: 22px;
   border-radius: 999px;
-  border: 1px dashed color-mix(in srgb, var(--paper-dim) 55%, transparent);
-  background: color-mix(in srgb, var(--paper-dim) 8%, transparent);
+  border: 1px dashed color-mix(in srgb, var(--text-dim) 55%, transparent);
+  background: color-mix(in srgb, var(--text-dim) 8%, transparent);
   pointer-events: none;
 }
 
@@ -178,9 +302,9 @@
   min-width: 15px;
   padding: 0 3px;
   border-radius: 999px;
-  background: var(--ink-raised);
-  border: 1px solid var(--rule);
-  color: var(--paper);
+  background: var(--surface);
+  border: 1px solid var(--panel-border);
+  color: var(--text);
   font-family: var(--font-mono);
   font-size: 9px;
   line-height: 14px;
@@ -189,30 +313,37 @@
 }
 
 /* MapLibre ships light-theme chrome; restate it in our own tokens rather than
-   fighting specificity later. */
+   fighting specificity later. Both themes are covered because every value here
+   is a token. */
 .maplibregl-ctrl-attrib {
   font-family: var(--font-mono);
   font-size: 10px;
-  background: color-mix(in srgb, var(--ink) 78%, transparent) !important;
-  color: var(--muted);
+  background: color-mix(in srgb, var(--panel) 78%, transparent) !important;
+  color: var(--text-muted);
 }
 
 .maplibregl-ctrl-attrib a {
-  color: var(--paper-dim);
+  color: var(--text-dim);
 }
 
 .maplibregl-ctrl-group {
-  background: var(--ink-panel) !important;
-  border: 1px solid var(--rule);
+  background: var(--panel) !important;
+  border: 1px solid var(--panel-border);
   box-shadow: none !important;
 }
 
 .maplibregl-ctrl-group button + button {
-  border-top: 1px solid var(--rule-soft);
+  border-top: 1px solid var(--panel-border);
 }
 
+/* The control icons ship as dark glyphs for a light UI. Invert them in dark
+   mode only; in light mode they are already correct. */
 .maplibregl-ctrl-group button .maplibregl-ctrl-icon {
   filter: invert(0.86) sepia(0.1);
+}
+
+[data-theme="light"] .maplibregl-ctrl-group button .maplibregl-ctrl-icon {
+  filter: none;
 }
 
 .maplibregl-canvas:focus {

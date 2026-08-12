@@ -22,16 +22,26 @@ const DISTRICTS_URL = "/geo/cd119.geojson";
 /**
  * Line and label colour.
  *
- * Chosen against docs/state.md §4.1: the basemap draws its roads as one flat
- * #454545 (luminance 0.059) and the meeting pins are #ffb000 (0.523). These sit
- * between the two — clearly above the roads so the boundary reads as a real
- * edge, clearly below the pins so nothing competes with a meeting, and in a
- * different hue so it reads as a different kind of thing rather than a brighter
- * road.
+ * Read from the design tokens rather than hardcoded, so the overlay follows the
+ * theme. MapLibre paint properties are evaluated outside CSS and cannot take a
+ * `var()`, so the value is resolved from the document at the moment the layers
+ * are added. That is enough: a theme change swaps the basemap style, which
+ * discards these layers, and re-adding them re-reads the tokens.
+ *
+ * The reasoning behind the value lives in docs/state.md §4.1 and in the
+ * `--district-line` comment in app/globals.css: the basemap draws its roads as
+ * one flat grey and the meeting markers are the tier accent. This sits between
+ * the two — clearly above the roads so a boundary reads as a real edge, clearly
+ * below the markers so nothing competes with a meeting, and in a different hue
+ * so it reads as a different kind of thing rather than a brighter road.
  */
-const LINE_COLOR = "#5f7a8a";
-/** The same hue, one step down, so a label never out-shouts its own boundary. */
-const LABEL_COLOR = "#52697a";
+function token(name: string, fallback: string): string {
+  if (typeof window === "undefined") return fallback;
+  const value = getComputedStyle(document.documentElement)
+    .getPropertyValue(name)
+    .trim();
+  return value || fallback;
+}
 
 /** Below this the continental view stays quiet; identifiers would be noise. */
 const LABEL_MIN_ZOOM = 7;
@@ -93,6 +103,11 @@ export function districtLayersPresent(map: MapLibreMap): boolean {
 export function addDistrictLayers(map: MapLibreMap, data: unknown): void {
   if (districtLayersPresent(map)) return;
 
+  const lineColor = token("--district-line", "#5f7a8a");
+  // A halo in the page ground keeps the identifier readable over land and over
+  // water, where the basemap goes darker (or lighter) still.
+  const haloColor = token("--bg", "#0f1117");
+
   if (!map.getSource(DISTRICT_SOURCE_ID)) {
     map.addSource(DISTRICT_SOURCE_ID, {
       type: "geojson",
@@ -110,7 +125,7 @@ export function addDistrictLayers(map: MapLibreMap, data: unknown): void {
       source: DISTRICT_SOURCE_ID,
       layout: { "line-join": "round", "line-cap": "butt" },
       paint: {
-        "line-color": LINE_COLOR,
+        "line-color": lineColor,
         "line-opacity": 0.7,
         // Dash units are multiples of line width, so the pattern scales with
         // the stroke and stays a dotted line at both zoom extremes rather than
@@ -136,10 +151,8 @@ export function addDistrictLayers(map: MapLibreMap, data: unknown): void {
         "text-padding": 4,
       },
       paint: {
-        "text-color": LABEL_COLOR,
-        // A halo in the page ink keeps the identifier readable over land and
-        // over water, where the basemap goes darker still.
-        "text-halo-color": "#070f11",
+        "text-color": lineColor,
+        "text-halo-color": haloColor,
         "text-halo-width": 1.2,
       },
     },

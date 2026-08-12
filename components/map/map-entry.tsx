@@ -2,7 +2,9 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import { ThemeToggle } from "@/components/theme-toggle";
 import { useDistrictLayer } from "@/hooks/use-district-layer";
+import { useStoredTheme } from "@/hooks/use-stored-theme";
 import { useStoredZip } from "@/hooks/use-stored-zip";
 import type { MeetingSearchResult } from "@/lib/meetings/query";
 import { groupByVenue, type Venue } from "@/lib/meetings/venues";
@@ -32,6 +34,7 @@ interface TaggedResult extends MeetingSearchResult {
 
 export function MapEntry() {
   const { location, restored, remember } = useStoredZip();
+  const { theme } = useStoredTheme();
 
   const [result, setResult] = useState<TaggedResult | null>(null);
   const [failed, setFailed] = useState(false);
@@ -117,6 +120,7 @@ export function MapEntry() {
         selectedVenueKey={selectedKey}
         frameAllVenues={current !== null && current.tier !== "exact"}
         showDistricts={showDistricts && !districtsFailed}
+        theme={theme}
         onDistrictError={onDistrictError}
         onSelectVenue={onSelectVenue}
         onTileError={onTileError}
@@ -136,14 +140,22 @@ export function MapEntry() {
             <Wordmark />
           )}
 
-          {selectedVenue && (
-            <div className="hidden sm:block">
-              <MeetingPanel
-                venue={selectedVenue}
-                onClose={() => setSelectedKey(null)}
-              />
+          <div className="flex items-start gap-3">
+            {selectedVenue && (
+              <div className="hidden sm:block">
+                <MeetingPanel
+                  venue={selectedVenue}
+                  onClose={() => setSelectedKey(null)}
+                />
+              </div>
+            )}
+
+            {/* Phase 1 home. Phase 2 moves this into the sidebar header,
+                absolute at right: 36px with the reset button at right: 0. */}
+            <div className="pointer-events-auto">
+              <ThemeToggle />
             </div>
-          )}
+          </div>
         </div>
 
         {/* Nothing renders until the stored zip resolves, so a returning

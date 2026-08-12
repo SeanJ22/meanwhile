@@ -21,17 +21,32 @@ Open http://localhost:3000.
 
 ### Environment
 
-Every key lives in [.env.example](./.env.example). None are required to run the
-entry screen:
+Every key lives in [.env.example](./.env.example).
 
 | Variable | Needed for | Without it |
 |---|---|---|
-| `NEXT_PUBLIC_MAPTILER_KEY` | MapTiler vector tiles | Falls back to OpenFreeMap, which needs no account |
+| `NEXT_PUBLIC_MAPTILER_KEY` | MapTiler vector tiles | The map draws a plain ground colour and says "Basemap unavailable" |
 | `NEXT_PUBLIC_MAPTILER_STYLE` | Choosing a MapTiler style | Defaults to `dataviz-dark` |
 | `DATABASE_URL` | Neon Postgres | Nothing on this screen reads the database yet |
 
-Set `NEXT_PUBLIC_MAPTILER_KEY` before deploying. OpenFreeMap is free and
-unmetered but community-run, with no SLA behind it.
+`NEXT_PUBLIC_MAPTILER_KEY` is the only one the map needs. There is deliberately
+no substitute tile provider: a basemap that silently swaps in a different source
+is how a total rendering failure spent hours looking like a dark style choice.
+
+### The map worker
+
+`predev` and `prebuild` run [scripts/build-map-worker.mjs](./scripts/build-map-worker.mjs),
+which bundles MapLibre's tile-parsing Web Worker into a self-contained
+`public/maplibre-gl-worker.mjs` (gitignored — it is a build artifact, not a
+vendored file).
+
+MapLibre 6 locates that worker at runtime by resolving a template against its
+own `import.meta.url`, which no bundler can rewrite, so neither Turbopack nor
+webpack emits it as an addressable asset. Without this step the worker 404s,
+module evaluation fails silently, and **no vector tile is ever parsed** — which
+also takes the district overlay down with it, because MapLibre tiles GeoJSON
+sources inside that same worker. The script's header comment has the full
+account.
 
 ## What's here
 

@@ -88,6 +88,20 @@ await context.addInitScript(
   { zip, theme, districts: flag("districts") },
 );
 
+// The Next dev-mode indicator floats over the corner of the app in development
+// only. It is not part of the UI and must not appear in a shot someone is
+// reviewing as one.
+// Passed as a string, not a function: tsx compiles this file with esbuild,
+// which rewrites named inner functions to reference a `__name` helper that
+// does not exist in the page — the script then throws on every navigation.
+await context.addInitScript({
+  content: `document.addEventListener("DOMContentLoaded",function(){
+    var s=document.createElement("style");
+    s.textContent="nextjs-portal{display:none !important}";
+    document.head.appendChild(s);
+  })`,
+});
+
 const page = await context.newPage();
 
 const problems: string[] = [];
@@ -101,6 +115,19 @@ await page.goto(`${BASE_URL}${path}`, { waitUntil: "networkidle" });
 // Give the map time to fetch and parse tiles. networkidle covers the document,
 // not the worker's tile traffic.
 await page.waitForTimeout(settle);
+
+// Optional interactions, so a shot can show a state that only exists after
+// input — an open autocomplete, the list overlay — without a human driving it.
+const typed = arg("search");
+if (typed) {
+  await page.fill(".search-input", typed);
+  await page.waitForTimeout(400);
+}
+
+if (flag("list")) {
+  await page.click(".count-badge");
+  await page.waitForTimeout(400);
+}
 
 await mkdir(OUT_DIR, { recursive: true });
 const file = join(OUT_DIR, `${name}.png`);

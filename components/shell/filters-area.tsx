@@ -1,0 +1,245 @@
+"use client";
+
+import type { MeetingStatus } from "@/lib/sources/types";
+import { BODY_TYPE_LABEL } from "@/lib/state/derive";
+import { ALL_DISTRICT_TYPES, activeFilterCount } from "@/lib/state/reducer";
+import { useUi, useUiDispatch } from "@/lib/state/provider";
+import type { BodyType, DistrictType } from "@/lib/state/types";
+
+/**
+ * The filters panel.
+ *
+ * Ports Edia's `.filter-group` wholesale, including the staggered fade-in and
+ * the active-count badge on the header (`updateFiltersActiveCount`), plus
+ * `clearFilter`, `resetFilters` and `toggleFiltersPanel`.
+ */
+
+const STATUSES: { value: MeetingStatus; label: string; accent: string }[] = [
+  { value: "SCHEDULED", label: "Upcoming", accent: "var(--accent-local)" },
+  { value: "CONCLUDED", label: "Concluded", accent: "var(--concluded)" },
+  { value: "CANCELED", label: "Canceled", accent: "var(--canceled)" },
+];
+
+const BODY_TYPES: BodyType[] = [
+  "council",
+  "commission",
+  "school-board",
+  "county-board",
+  "committee",
+];
+
+const DISTRICT_LABEL: Record<DistrictType, string> = {
+  congressional: "Congressional",
+  "state-senate": "State Senate",
+  "state-house": "State House",
+  county: "County",
+  school: "School",
+  municipal: "Municipal",
+};
+
+export function FiltersArea() {
+  const ui = useUi();
+  const dispatch = useUiDispatch();
+  const count = activeFilterCount(ui.filters);
+
+  return (
+    <div className="filters-area">
+      <div className="filters-header">
+        <button
+          type="button"
+          className="filters-title"
+          aria-expanded={ui.filtersPanelOpen}
+          onClick={() => dispatch({ type: "filter/togglePanel" })}
+        >
+          Filters
+          {count > 0 && <span className="filters-count">{count}</span>}
+        </button>
+
+        {count > 0 && (
+          <button
+            type="button"
+            className="clear-btn"
+            onClick={() => dispatch({ type: "filter/reset" })}
+          >
+            Reset all
+          </button>
+        )}
+      </div>
+
+      {ui.filtersPanelOpen && (
+        <>
+          <Group
+            label="Body type"
+            onClear={
+              ui.filters.bodyTypes.length > 0
+                ? () => dispatch({ type: "filter/clear", group: "bodyTypes" })
+                : undefined
+            }
+          >
+            <div className="filter-chips filter-chips-scroll">
+              {BODY_TYPES.map((type) => (
+                <button
+                  key={type}
+                  type="button"
+                  className="filter-chip"
+                  data-active={ui.filters.bodyTypes.includes(type)}
+                  aria-pressed={ui.filters.bodyTypes.includes(type)}
+                  onClick={() =>
+                    dispatch({ type: "filter/toggleBodyType", value: type })
+                  }
+                >
+                  {BODY_TYPE_LABEL[type]}
+                </button>
+              ))}
+            </div>
+          </Group>
+
+          <Group
+            label="Meeting status"
+            onClear={
+              ui.filters.statuses.length > 0
+                ? () => dispatch({ type: "filter/clear", group: "statuses" })
+                : undefined
+            }
+          >
+            <div className="filter-chips">
+              {STATUSES.map((status) => (
+                <button
+                  key={status.value}
+                  type="button"
+                  className="filter-chip"
+                  data-active={ui.filters.statuses.includes(status.value)}
+                  aria-pressed={ui.filters.statuses.includes(status.value)}
+                  style={
+                    { "--chip-accent": status.accent } as React.CSSProperties
+                  }
+                  onClick={() =>
+                    dispatch({ type: "filter/toggleStatus", value: status.value })
+                  }
+                >
+                  {status.label}
+                </button>
+              ))}
+            </div>
+          </Group>
+
+          {/* Edia's dual-handle enrollment slider, measuring days instead of
+              students. The stops are the cascade's own horizons: 60 forward,
+              30 back. */}
+          <Group
+            label="Date range"
+            onClear={
+              ui.filters.daysAhead !== 60 || ui.filters.daysBack !== 0
+                ? () => dispatch({ type: "filter/clear", group: "daysAhead" })
+                : undefined
+            }
+          >
+            <p className="range-display">
+              {ui.filters.daysBack > 0 ? `${ui.filters.daysBack}d back` : "now"}
+              {" → "}
+              {ui.filters.daysAhead}d ahead
+            </p>
+            <div className="range-row">
+              <input
+                className="prox-range"
+                type="range"
+                min={0}
+                max={30}
+                value={ui.filters.daysBack}
+                aria-label="Days back"
+                onChange={(e) =>
+                  dispatch({
+                    type: "filter/dateWindow",
+                    daysBack: Number(e.target.value),
+                  })
+                }
+              />
+              <input
+                className="prox-range"
+                type="range"
+                min={1}
+                max={60}
+                value={ui.filters.daysAhead}
+                aria-label="Days ahead"
+                onChange={(e) =>
+                  dispatch({
+                    type: "filter/dateWindow",
+                    daysAhead: Number(e.target.value),
+                  })
+                }
+              />
+            </div>
+          </Group>
+
+          <Group
+            label="District types"
+            onClear={
+              ui.filters.districtTypes.length !== ALL_DISTRICT_TYPES.length
+                ? () => dispatch({ type: "filter/clear", group: "districtTypes" })
+                : undefined
+            }
+          >
+            {ALL_DISTRICT_TYPES.map((type) => {
+              const on = ui.filters.districtTypes.includes(type);
+              return (
+                <label key={type} className="filter-check" data-active={on}>
+                  <input
+                    type="checkbox"
+                    checked={on}
+                    onChange={() =>
+                      dispatch({ type: "filter/toggleDistrictType", value: type })
+                    }
+                  />
+                  {DISTRICT_LABEL[type]}
+                </label>
+              );
+            })}
+          </Group>
+
+          {/* Edia's focusStatesOn: default-on, and visibly so. A reader who
+              cannot see that jurisdictions are being hidden reads the gaps as
+              "no government here" rather than "not ingested yet". */}
+          <Group label="Coverage quality">
+            <label className="filter-check" data-active={ui.filters.hideUncovered}>
+              <input
+                type="checkbox"
+                checked={ui.filters.hideUncovered}
+                onChange={(e) =>
+                  dispatch({
+                    type: "filter/hideUncovered",
+                    value: e.target.checked,
+                  })
+                }
+              />
+              Hide jurisdictions with no ingestion yet
+            </label>
+          </Group>
+        </>
+      )}
+    </div>
+  );
+}
+
+function Group({
+  label,
+  onClear,
+  children,
+}: {
+  label: string;
+  onClear?: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="filter-group">
+      <div className="filter-label">
+        {label}
+        {onClear && (
+          <button type="button" className="clear-btn" onClick={onClear}>
+            clear
+          </button>
+        )}
+      </div>
+      {children}
+    </div>
+  );
+}

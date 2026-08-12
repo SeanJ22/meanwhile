@@ -2,54 +2,72 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { ThemeToggle } from "@/components/theme-toggle";
+import { CountBadge } from "@/components/map/count-badge";
+import { Legend } from "@/components/map/legend";
+import { ListOverlay } from "@/components/map/list-overlay";
+import { Sidebar } from "@/components/shell/sidebar";
 import { useDistrictLayer } from "@/hooks/use-district-layer";
 import { useStoredTheme } from "@/hooks/use-stored-theme";
 import { useStoredZip } from "@/hooks/use-stored-zip";
+import type { SearchItem } from "@/lib/search";
+import { DataProvider, type ShellData } from "@/lib/state/data";
+import { applyFilters } from "@/lib/state/derive";
+import { UiProvider, useUi, useUiDispatch } from "@/lib/state/provider";
 import type { MeetingSearchResult } from "@/lib/meetings/query";
 import { groupByVenue, type Venue } from "@/lib/meetings/venues";
+import type { Meeting } from "@/lib/sources/types";
 
 import { CoverageNotice } from "./coverage-notice";
-import { DistrictToggle } from "./district-toggle";
 import { EntryNotice } from "./entry-notice";
-import { LocationBar } from "./location-bar";
-import { MapCanvas, type CameraTarget } from "./map-canvas";
+import { MapCanvas, type CameraTarget, type MapFocus } from "./map-canvas";
 import { MeetingPanel } from "./meeting-panel";
 
 /**
  * The entry screen.
  *
- * Holds the state the map and the panels share — where we're looking, what came
- * back, which pin is open — and nothing about where meetings come from. It asks
- * /api/meetings and renders what it gets.
- *
- * The stored zip is the single source of truth for the search: entering one and
- * returning to a remembered one take exactly the same path.
+ * Holds nothing about where meetings come from: it asks /api/meetings and hands
+ * the answer to the shell. Shared UI state lives in lib/state, so the sidebar,
+ * the legend, the count badge and the list overlay cannot disagree about what
+ * is currently showing.
  */
 
-/** A result, tagged with the zip that produced it. */
 interface TaggedResult extends MeetingSearchResult {
   zip: string;
 }
 
 export function MapEntry() {
+  return (
+    <UiProvider>
+      <MapEntryInner />
+    </UiProvider>
+  );
+}
+
+function MapEntryInner() {
   const { location, restored, remember } = useStoredZip();
   const { theme } = useStoredTheme();
+  const ui = useUi();
+  const dispatch = useUiDispatch();
 
   const [result, setResult] = useState<TaggedResult | null>(null);
   const [failed, setFailed] = useState(false);
-  const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [tilesFailed, setTilesFailed] = useState(false);
   const [districtsFailed, setDistrictsFailed] = useState(false);
+  const [focus, setFocus] = useState<MapFocus | null>(null);
+  const [districtCount, setDistrictCount] = useState(0);
 
+  // District visibility is persisted by its own hook, the sibling of
+  // use-stored-zip. The store mirrors it one-way so the legend and the stats
+  // card can read it without a second source of truth for the value.
   const {
     enabled: showDistricts,
-    restored: districtsRestored,
     setEnabled: setShowDistricts,
   } = useDistrictLayer();
 
-  // Fetch whenever the location changes, and abandon in-flight work when it
-  // changes again — a slow earlier search must not overwrite a newer one.
+  useEffect(() => {
+    dispatch({ type: "districts/show", value: showDistricts });
+  }, [showDistricts, dispatch]);
+
   useEffect(() => {
     if (!location) return;
 
@@ -77,14 +95,13 @@ export function MapEntry() {
     return () => controller.abort();
   }, [location]);
 
-  // Entering a zip is just remembering it; the effect above does the rest.
   const search = useCallback(
     (zip: string, lat: number, lng: number) => {
-      setSelectedKey(null);
+      dispatch({ type: "select/venue", key: null });
       setFailed(false);
       remember({ zip, lat, lng });
     },
-    [remember],
+    [remember, dispatch],
   );
 
   const camera = useMemo<CameraTarget | null>(
@@ -95,134 +112,183 @@ export function MapEntry() {
     [location],
   );
 
-  // A result for a zip we've since moved on from isn't this view's answer.
   const current = result && location && result.zip === location.zip ? result : null;
 
-  const venues = useMemo(
-    () => (current ? groupByVenue(current.meetings) : []),
-    [current],
+  // Everything downstream reads this one filtered list.
+  const meetings = useMemo<Meeting[]>(
+    () =>
+      current
+        ? applyFilters({
+            meetings: current.meetings,
+            ui,
+            // Only constrain by radius once the reader has actually moved the
+            // slider. Before that the cascade's own radius is the answer, and
+            // re-filtering on the default would silently drop the meetings a
+            // widened search just found.
+            center: ui.radiusOverridden ? (ui.nearMe ?? location) : null,
+          })
+        : [],
+    [current, ui, location],
   );
 
+  const venues = useMemo<Venue[]>(() => groupByVenue(meetings), [meetings]);
+
   const selectedVenue = useMemo(
-    () => venues.find((venue) => venue.key === selectedKey) ?? null,
-    [venues, selectedKey],
+    () => venues.find((v) => v.key === ui.selectedVenueKey) ?? null,
+    [venues, ui.selectedVenueKey],
   );
+
+  useEffect(() => {
+    if (!current) return;
+    dispatch({
+      type: "coverage/report",
+      tier: current.tier,
+      // The mock adapter drops nothing today; when a real adapter does, it
+      // reports the count here rather than swallowing it.
+      dropped: 0,
+    });
+  }, [current, dispatch]);
+
+  const data = useMemo<ShellData>(
+    () => ({
+      allMeetings: current?.meetings ?? [],
+      meetings,
+      venues,
+      result: current,
+      location,
+      districtCount,
+      dropped: 0,
+      searchFailed: failed,
+    }),
+    [current, meetings, venues, location, districtCount, failed],
+  );
+
+  const onSearchPick = useCallback((item: SearchItem) => {
+    if (item.venueKey) dispatch({ type: "select/venue", key: item.venueKey });
+    if (item.lat !== null && item.lng !== null) {
+      setFocus({ lat: item.lat, lng: item.lng, zoom: 13, key: item.id });
+    }
+  }, [dispatch]);
+
+  const onPickMeeting = useCallback(
+    (meeting: Meeting) => {
+      const venue = venues.find((v) =>
+        v.meetings.some((m) => m.id === meeting.id),
+      );
+      if (venue) dispatch({ type: "select/venue", key: venue.key });
+      setFocus({
+        lat: meeting.location.lat,
+        lng: meeting.location.lng,
+        zoom: 14,
+        key: meeting.id,
+      });
+    },
+    [venues, dispatch],
+  );
+
+  const onReset = useCallback(() => {
+    dispatch({ type: "reset" });
+    setFocus(null);
+  }, [dispatch]);
 
   const onTileError = useCallback(() => setTilesFailed(true), []);
   const onDistrictError = useCallback(() => setDistrictsFailed(true), []);
-  const onSelectVenue = useCallback((venue: Venue) => setSelectedKey(venue.key), []);
+  const onSelectVenue = useCallback(
+    (venue: Venue) => dispatch({ type: "select/venue", key: venue.key }),
+    [dispatch],
+  );
 
   return (
-    <main className="relative h-dvh w-full overflow-hidden">
-      <MapCanvas
-        venues={venues}
-        camera={camera}
-        selectedVenueKey={selectedKey}
-        frameAllVenues={current !== null && current.tier !== "exact"}
-        showDistricts={showDistricts && !districtsFailed}
-        theme={theme}
-        onDistrictError={onDistrictError}
-        onSelectVenue={onSelectVenue}
-        onTileError={onTileError}
-      />
+    <DataProvider value={data}>
+      <main className="relative h-dvh w-full overflow-hidden">
+        <Sidebar
+          onSearchPick={onSearchPick}
+          onReset={onReset}
+          showDistricts={showDistricts}
+          districtsFailed={districtsFailed}
+          onToggleDistricts={setShowDistricts}
+        />
 
-      {/* Chrome floats over the map; only the panels themselves take pointer
-          events, so the map stays draggable everywhere between them. */}
-      <div className="pointer-events-none absolute inset-0 flex flex-col">
-        <div className="flex items-start justify-between gap-3 p-3 sm:p-5">
-          {location ? (
-            <LocationBar
-              zip={location.zip}
-              meetingCount={current?.meetings.length ?? 0}
-              onChange={search}
-            />
-          ) : (
-            <Wordmark />
-          )}
+        {/* The map starts where the sidebar ends. */}
+        <div className="absolute inset-y-0 right-0 left-[340px]">
+          <MapCanvas
+            venues={venues}
+            camera={camera}
+            focus={focus}
+            selectedVenueKey={ui.selectedVenueKey}
+            frameAllVenues={current !== null && current.tier !== "exact"}
+            showDistricts={showDistricts && !districtsFailed}
+            theme={theme}
+            onDistrictError={onDistrictError}
+            onDistrictCount={setDistrictCount}
+            onSelectVenue={onSelectVenue}
+            onTileError={onTileError}
+          />
+        </div>
 
-          <div className="flex items-start gap-3">
+        <div className="pointer-events-none absolute inset-y-0 right-0 left-[340px] flex flex-col">
+          <div className="flex items-start justify-end gap-3 p-3 sm:p-5">
             {selectedVenue && (
-              <div className="hidden sm:block">
+              <div className="pointer-events-auto hidden sm:block">
                 <MeetingPanel
                   venue={selectedVenue}
-                  onClose={() => setSelectedKey(null)}
+                  onClose={() => dispatch({ type: "select/venue", key: null })}
                 />
               </div>
             )}
+          </div>
 
-            {/* Phase 1 home. Phase 2 moves this into the sidebar header,
-                absolute at right: 36px with the reset button at right: 0. */}
+          {restored && !location && (
+            <div className="pointer-events-auto flex flex-1 items-center justify-center p-4 sm:p-6">
+              <EntryNotice onResolved={search} />
+            </div>
+          )}
+
+          {/* Extra bottom padding clears the attribution, which now sits in
+              the bottom-left corner. */}
+          <div className="mt-auto flex flex-col items-start gap-3 p-3 pb-9 sm:p-5 sm:pb-10">
             <div className="pointer-events-auto">
-              <ThemeToggle />
+              <CountBadge />
             </div>
-          </div>
-        </div>
 
-        {/* Nothing renders until the stored zip resolves, so a returning
-            reader never sees the notice they already answered. */}
-        {restored && !location && (
-          <div className="flex flex-1 items-center justify-center p-4 sm:p-6">
-            <EntryNotice onResolved={search} />
-          </div>
-        )}
+            {tilesFailed && <TileNotice />}
+            {failed && <SearchFailedNotice />}
 
-        <div className="mt-auto flex flex-col gap-3 p-3 sm:p-5">
-          <div className="flex">
-            <DistrictToggle
-              enabled={showDistricts}
-              restored={districtsRestored}
-              failed={districtsFailed}
-              onChange={setShowDistricts}
-            />
-          </div>
-
-          {tilesFailed && <TileNotice />}
-
-          {failed && <SearchFailedNotice />}
-
-          {current && (
-            <CoverageNotice
-              tier={current.tier}
-              zip={current.zip}
-              radiusKm={current.radiusKm}
-              requestedRadiusKm={current.requestedRadiusKm}
-              count={current.meetings.length}
-            />
-          )}
-
-          {/* On phones the detail panel is a sheet rather than a rail. */}
-          {selectedVenue && (
-            <div className="sm:hidden">
-              <MeetingPanel
-                venue={selectedVenue}
-                onClose={() => setSelectedKey(null)}
+            {current && (
+              <CoverageNotice
+                tier={current.tier}
+                zip={current.zip}
+                radiusKm={current.radiusKm}
+                requestedRadiusKm={current.requestedRadiusKm}
+                count={current.meetings.length}
               />
-            </div>
-          )}
+            )}
+
+            {selectedVenue && (
+              <div className="pointer-events-auto sm:hidden">
+                <MeetingPanel
+                  venue={selectedVenue}
+                  onClose={() => dispatch({ type: "select/venue", key: null })}
+                />
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-    </main>
-  );
-}
 
-
-function Wordmark() {
-  return (
-    <div className="pointer-events-none px-1 py-1">
-      <p className="font-display text-sm font-semibold uppercase tracking-[0.24em] text-paper-dim">
-        We the People
-      </p>
-    </div>
+        <Legend />
+        <ListOverlay onPickMeeting={onPickMeeting} />
+      </main>
+    </DataProvider>
   );
 }
 
 function SearchFailedNotice() {
   return (
     <div className="panel pointer-events-auto max-w-md px-4 py-3.5">
-      <p className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-signal">
+      <p className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-danger">
         Search failed
       </p>
-      <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
+      <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-text-dim">
         Couldn&apos;t reach the meetings service. Change the zip to try again.
       </p>
     </div>
@@ -232,15 +298,14 @@ function SearchFailedNotice() {
 function TileNotice() {
   return (
     <div className="panel pointer-events-auto max-w-md px-4 py-3.5">
-      <p className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-signal">
+      <p className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-danger">
         Basemap unavailable
       </p>
-      <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
+      <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-text-dim">
         Map tiles didn&apos;t load. Pins and meeting details still work. Set{" "}
-        <code className="font-mono text-paper">NEXT_PUBLIC_MAPTILER_KEY</code> in{" "}
-        <code className="font-mono text-paper">.env.local</code> to use MapTiler.
+        <code className="font-mono text-text">NEXT_PUBLIC_MAPTILER_KEY</code> in{" "}
+        <code className="font-mono text-text">.env.local</code> to use MapTiler.
       </p>
     </div>
   );
 }
-

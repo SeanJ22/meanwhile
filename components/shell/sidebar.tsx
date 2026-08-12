@@ -1,0 +1,120 @@
+"use client";
+
+import { ThemeToggle } from "@/components/theme-toggle";
+import type { SearchItem } from "@/lib/search";
+import { useShellData } from "@/lib/state/data";
+
+import { FiltersArea } from "./filters-area";
+import { NearMeControl } from "./near-me-control";
+import { RadiusControl } from "./radius-control";
+import { ScopeSelectors } from "./scope-selectors";
+import { SearchBox } from "./search-box";
+import { StatsBar } from "./stats-bar";
+import { ViewToggle } from "./view-toggle";
+
+/**
+ * The fixed left rail.
+ *
+ * Structure follows EdiaStratMap: a header that does not scroll, holding the
+ * brand, the theme and reset buttons, the view toggle and the scope selectors;
+ * then everything else in a scrolling column.
+ */
+export function Sidebar({
+  onSearchPick,
+  onReset,
+  showDistricts,
+  districtsFailed,
+  onToggleDistricts,
+}: {
+  onSearchPick: (item: SearchItem) => void;
+  onReset: () => void;
+  /** Owned by use-district-layer, which persists it. The store mirrors it. */
+  showDistricts: boolean;
+  districtsFailed: boolean;
+  onToggleDistricts: (value: boolean) => void;
+}) {
+  const { location } = useShellData();
+
+  return (
+    <aside className="sidebar">
+      <div className="sidebar-header">
+        <div className="brand">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="var(--accent-local)"
+            strokeWidth="2"
+            aria-hidden="true"
+          >
+            <path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z" />
+            <circle cx="12" cy="10" r="3" />
+          </svg>
+
+          <span className="brand-name">
+            We the People
+            <span className="brand-sub">
+              {location
+                ? `Meetings near ${location.zip}`
+                : "Public meetings near you"}
+            </span>
+          </span>
+
+          <ThemeToggle className="theme-toggle-btn" />
+
+          <button
+            type="button"
+            className="icon-btn reset-view-btn"
+            title="Reset view"
+            aria-label="Reset view"
+            onClick={onReset}
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden="true"
+            >
+              <path d="M3 12a9 9 0 1 0 3-6.7" />
+              <polyline points="3 4 3 9 8 9" />
+            </svg>
+          </button>
+        </div>
+
+        <ViewToggle />
+        <ScopeSelectors />
+      </div>
+
+      <div className="sidebar-scroll">
+        <StatsBar />
+        <SearchBox onPick={onSearchPick} />
+        <RadiusControl />
+        <NearMeControl />
+
+        <div className="prox-control">
+          <label className="prox-toggle">
+            <input
+              type="checkbox"
+              checked={showDistricts}
+              disabled={districtsFailed}
+              onChange={(e) => onToggleDistricts(e.target.checked)}
+            />
+            <span className="prox-slider" />
+            <span className="prox-label">Show districts</span>
+          </label>
+          {districtsFailed && (
+            <p className="prox-note" style={{ color: "var(--danger)" }}>
+              Boundary file didn&apos;t load.
+            </p>
+          )}
+        </div>
+
+        <FiltersArea />
+      </div>
+    </aside>
+  );
+}

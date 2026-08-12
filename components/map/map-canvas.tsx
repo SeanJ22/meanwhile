@@ -20,6 +20,7 @@ import {
   resolveBasemap,
 } from "@/lib/map/style";
 import {
+  DISTRICT_LINE_LAYER_ID,
   addDistrictLayers,
   districtLayersPresent,
   loadDistricts,
@@ -45,9 +46,25 @@ export interface CameraTarget {
   lng: number;
 }
 
+/**
+ * A one-off camera move, from search or the list overlay.
+ *
+ * `key` identifies the request rather than the place, so picking the same
+ * result twice flies again instead of being deduplicated into nothing.
+ */
+export interface MapFocus {
+  lat: number;
+  lng: number;
+  zoom?: number;
+  key: string;
+}
+
 interface MapCanvasProps {
   venues: Venue[];
   camera: CameraTarget | null;
+  focus: MapFocus | null;
+  /** How many district features are currently drawn, for the stats card. */
+  onDistrictCount: (count: number) => void;
   selectedVenueKey: string | null;
   /** Draw the congressional district overlay. */
   showDistricts: boolean;
@@ -118,11 +135,13 @@ function createHereElement(zipLabel: string): HTMLDivElement {
 export function MapCanvas({
   venues,
   camera,
+  focus,
   selectedVenueKey,
   frameAllVenues,
   showDistricts,
   theme,
   onDistrictError,
+  onDistrictCount,
   onSelectVenue,
   onTileError,
 }: MapCanvasProps) {
@@ -147,6 +166,11 @@ export function MapCanvas({
   useEffect(() => {
     onDistrictErrorRef.current = onDistrictError;
   }, [onDistrictError]);
+
+  const onDistrictCountRef = useRef(onDistrictCount);
+  useEffect(() => {
+    onDistrictCountRef.current = onDistrictCount;
+  }, [onDistrictCount]);
 
   const showDistrictsRef = useRef(showDistricts);
   useEffect(() => {
@@ -224,8 +248,11 @@ export function MapCanvas({
       dragRotate: false,
     });
 
-    map.addControl(new NavigationControl({ showCompass: false }), "bottom-right");
-    map.addControl(new AttributionControl({ compact: true }), "bottom-right");
+    // The legend owns the bottom-right corner (Edia puts it there and the port
+    // keeps it), so the map's own controls move out of its way rather than
+    // stacking on top of it.
+    map.addControl(new NavigationControl({ showCompass: false }), "top-right");
+    map.addControl(new AttributionControl({ compact: true }), "bottom-left");
     map.touchZoomRotate.disableRotation();
 
     // A failed style request would otherwise leave a blank screen with a
@@ -387,6 +414,57 @@ export function MapCanvas({
 
     ensureDistricts();
   }, [showDistricts, ensureDistricts]);
+
+  // A one-off fly-to from search or the list. Separate from `camera`, which is
+  // the zip's own centroid and must not move when a reader looks at a result.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !focus) return;
+
+    const options = {
+      center: [focus.lng, focus.lat] as [number, number],
+      zoom: focus.zoom ?? 13,
+    };
+
+    if (prefersReducedMotion()) map.jumpTo(options);
+    else map.flyTo({ ...options, duration: 900, essential: true });
+  }, [focus]);
+
+  // Report how many district features are drawn, for the stats card. Counted
+  // after rendering settles rather than from the source, because the number
+  // that matters is what a reader can see.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    const count = () => {
+      const live = mapRef.current;
+      if (!live) return;
+      if (!showDistricts || !districtLayersPresent(live)) {
+        onDistrictCountRef.current(0);
+        return;
+      }
+      try {
+        const features = live.queryRenderedFeatures({
+          layers: [DISTRICT_LINE_LAYER_ID],
+        });
+        onDistrictCountRef.current(
+          new Set(features.map((f) => f.properties?.ocdId)).size,
+        );
+      } catch {
+        onDistrictCountRef.current(0);
+      }
+    };
+
+    count();
+    map.on("idle", count);
+    map.on("sourcedata", count);
+
+    return () => {
+      map.off("idle", count);
+      map.off("sourcedata", count);
+    };
+  }, [showDistricts]);
 
   // Selection is a class on the marker element, so it survives re-renders
   // without rebuilding the marker.

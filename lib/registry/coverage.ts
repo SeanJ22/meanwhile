@@ -109,86 +109,20 @@ const SEAT_TYPES: ReadonlySet<DivisionType> = new Set<DivisionType>([
 ]);
 
 /**
- * Whether a municipal division came from the county-subdivision layer.
+ * The place/cousub duplicate is resolved upstream, at build time.
  *
- * Structural, not a name match: a cousub-derived identifier nests under its
- * county (`state:nh/county:merrimack/place:concord_city`) where a place-derived
- * one is flat (`state:nh/place:concord`). CLAUDE.md forbids joining on name
- * strings and this obeys that — it reads the identifier's shape, which the
- * generator controls, never the label.
+ * There used to be a `dedupeMunicipal()` here, and it was a stopgap. It guessed
+ * which layer held the government from the identifier's shape, inferred from
+ * three states — and it guessed wrong for cities: it kept
+ * `county:merrimack/place:concord_city` and dropped `place:concord`, which is
+ * the actual City of Concord. The count came out right and the identity did not.
+ *
+ * Census had already answered the question. `FUNCSTAT` marks the duplicate row
+ * `F`, for a *fictitious* entity created only to fill the geographic hierarchy,
+ * and `lib/registry/derive.ts` now reads it: 32 fictitious rows across the three
+ * clip counties produce no body, leaving exactly the 74 general-purpose
+ * governments the 2022 Census of Governments enumerates. See tracker M17.
  */
-function isSubdivisionDerived(ocdId: string): boolean {
-  return ocdId.includes("/county:");
-}
-
-/**
- * Drop the same government appearing twice.
- *
- * **This is a real defect in the registry, not a display quirk.** The build
- * reads every file in `public/geo`, which includes `cousub-*.geojson`, so New
- * Hampshire and New Jersey municipalities are ingested from both the place layer
- * and the county-subdivision layer. Concord NH is
- * `state:nh/place:concord` *and* `state:nh/county:merrimack/place:concord_city`
- * — one city, two divisions, two governing bodies. 32 of the registry's 153
- * municipal bodies are duplicates of this kind.
- *
- * The layer to keep is settled by what each state actually uses, which
- * `docs/state.md` §4.3 established from the Census files: Arizona's
- * municipalities are places and all 80 of its county subdivisions are
- * statistical; New Jersey's 564 municipalities are all county subdivisions; New
- * Hampshire's 222 towns are too. So where both layers produce a governing
- * division for the same point, the **subdivision** is the government and the
- * flat place row is the duplicate.
- *
- * Preferring the subdivision is also the only choice that keeps Rockaway
- * township distinct from Rockaway borough — two separate Morris County
- * municipalities that collapse onto one identifier under the flat form.
- *
- * **This is a stopgap at the read layer.** The real fix is 4.6.0: carry Census
- * `FUNCSTAT` and `CLASSFP` on the features so the duplicate is resolved once at
- * build time, nationally and from data rather than from a three-state
- * observation. Tracker M17. Dropping the flat rows here brings the three clip
- * counties to exactly the 74 general-purpose governments the 2022 Census of
- * Governments enumerates, which is what makes the rule credible rather than
- * convenient.
- */
-export function dedupeMunicipal(
-  divisions: Division[],
-  bodies: Body[],
-): { divisions: Division[]; bodies: Body[]; dropped: Division[] } {
-  // The subdivision layer only wins where it actually carries a *government*.
-  // Testing for a subdivision-derived division alone is not enough and gets
-  // Arizona badly wrong: Tucson is covered by `county:pima/place:tucson_ccd`, a
-  // statistical Census County Division with no government, and treating that as
-  // evidence would drop the flat `place:tucson` — deleting the City of Tucson
-  // and reporting downtown as unincorporated. So the test is whether the
-  // subdivision row produced a body, which is the LSAD rule's answer to exactly
-  // this question rather than a second guess at it.
-  const governing = new Set(bodies.map((b) => b.ocdId));
-  const hasSubdivisionGovernment = divisions.some(
-    (d) =>
-      d.divisionType === "place" &&
-      isSubdivisionDerived(d.ocdId) &&
-      governing.has(d.ocdId),
-  );
-
-  // Nothing to disambiguate: no municipal government here, or only one layer
-  // produced one. Arizona lands here, correctly.
-  if (!hasSubdivisionGovernment) {
-    return { divisions, bodies, dropped: [] };
-  }
-
-  const dropped = divisions.filter(
-    (d) => d.divisionType === "place" && !isSubdivisionDerived(d.ocdId),
-  );
-  const droppedIds = new Set(dropped.map((d) => d.ocdId));
-
-  return {
-    divisions: divisions.filter((d) => !droppedIds.has(d.ocdId)),
-    bodies: bodies.filter((b) => !b.ocdId || !droppedIds.has(b.ocdId)),
-    dropped,
-  };
-}
 
 /**
  * Summarize what governs a point.
@@ -205,8 +139,7 @@ export function summarizeCoverage(
   allBodies: Body[],
   meetingCount: number,
 ): CoverageSummary {
-  const hit = bodiesAt(point, features, divisionsById, allBodies);
-  const { divisions, bodies } = dedupeMunicipal(hit.divisions, hit.bodies);
+  const { divisions, bodies } = bodiesAt(point, features, divisionsById, allBodies);
 
   const covered: CoveredBody[] = bodies.map((body) => {
     const division = body.ocdId ? divisionsById.get(body.ocdId) : undefined;

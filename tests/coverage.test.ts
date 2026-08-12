@@ -1,12 +1,13 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { readFile, readdir } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 
 import { resolveZip } from "../lib/geo/zcta.ts";
-import { dedupeMunicipal, summarizeCoverage } from "../lib/registry/coverage.ts";
-import type { GeoFeature } from "../lib/registry/resolve.ts";
+import { summarizeCoverage } from "../lib/registry/coverage.ts";
+import { contains, type GeoFeature } from "../lib/registry/resolve.ts";
 import type { Division, Registry } from "../lib/registry/types.ts";
 
 /**
@@ -63,37 +64,79 @@ function coverageFor(zip: string, meetingCount: number) {
  */
 const COG_GENERAL_PURPOSE = 74;
 
-const GOVERNING_LSAD = new Set(["00", "21", "25", "43", "44", "47"]);
+/** Per-county, from the same federal source. */
+const COG_BY_COUNTY: Record<string, number> = {
+  "Pima AZ": 5,
+  "Merrimack NH": 27,
+  "Morris NJ": 39,
+};
+
+const bodyOcdIds = new Set(registry.bodies.map((b) => b.ocdId));
+
+/** Average of every exterior-ring vertex. Good enough to place a municipality in its county. */
+function centroid(feature: GeoFeature): [number, number] {
+  const polys =
+    feature.geometry.type === "Polygon"
+      ? [feature.geometry.coordinates]
+      : feature.geometry.coordinates;
+  let sx = 0;
+  let sy = 0;
+  let n = 0;
+  for (const poly of polys) {
+    for (const [x, y] of poly[0]) {
+      sx += x;
+      sy += y;
+      n++;
+    }
+  }
+  return [sx / n, sy / n];
+}
 
 test("the clip counties hold exactly the 74 governments Census enumerates", () => {
-  const municipal = registry.divisions.filter(
-    (d) => d.divisionType === "place" && GOVERNING_LSAD.has(d.lsad ?? ""),
+  // The federal check, and the reason the derivation rule is credible rather
+  // than merely plausible. Done by geometric containment, not by reading county
+  // out of the identifier: after the FUNCSTAT fix a New Jersey borough is a flat
+  // `state:nj/place:*` row with no county segment at all, so an identifier-shaped
+  // test would silently miss 29 governments.
+  const counties = JSON.parse(
+    readFileSync(join(GEO_DIR, "county-us.geojson"), "utf8"),
+  ).features as GeoFeature[];
+
+  const perCounty: Record<string, number> = {};
+  for (const feature of features) {
+    if (!bodyOcdIds.has(feature.properties.ocdId)) continue;
+    const division = byId.get(feature.properties.ocdId);
+    if (division?.divisionType !== "place") continue;
+
+    const home = counties.find((c) => contains(centroid(feature), c));
+    if (!home) continue;
+    const key = `${home.properties.label} ${(home.properties as { state?: string }).state}`;
+    perCounty[key] = (perCounty[key] ?? 0) + 1;
+  }
+
+  assert.deepEqual(
+    perCounty,
+    COG_BY_COUNTY,
+    `municipal counts per county disagree with the Census of Governments: ${JSON.stringify(perCounty)}`,
   );
 
-  // The clip is an overlap test, so it pulls in municipalities of neighbouring
-  // counties that share a border. The federal count is per county, so the
-  // comparison has to be too.
-  const inClip = municipal.filter(
-    (d) =>
-      /county:(morris|merrimack)\//.test(d.ocdId) ||
-      (d.state === "AZ" && !d.ocdId.includes("/county:")),
-  );
+  const total =
+    Object.values(perCounty).reduce((a, b) => a + b, 0) +
+    registry.divisions.filter((d) => d.divisionType === "county").length;
 
-  const counties = registry.divisions.filter((d) => d.divisionType === "county");
-
-  assert.equal(
-    inClip.length + counties.length,
-    COG_GENERAL_PURPOSE,
-    `expected ${COG_GENERAL_PURPOSE} general-purpose governments, got ${
-      inClip.length + counties.length
-    } (${inClip.length} municipal + ${counties.length} county)`,
-  );
+  assert.equal(total, COG_GENERAL_PURPOSE, `expected ${COG_GENERAL_PURPOSE}, got ${total}`);
 });
 
-test("a government ingested from both layers is counted once", () => {
-  // Concord NH is in the place file and the county-subdivision file. Two
-  // divisions, one city. Left alone it produces two governing bodies and the
-  // reader is told their city government exists twice.
+test("a government listed in both layers keeps the real row, not the fictitious one", () => {
+  // Concord NH is in the place file and the county-subdivision file. One city.
+  // Census marks the duplicate itself: the place row is FUNCSTAT=A and the
+  // subdivision row is FUNCSTAT=F, a fictitious entity that exists only to fill
+  // the geographic hierarchy.
+  //
+  // Which row survives matters as much as how many. An earlier read-layer
+  // dedupe kept the county-subdivision row and dropped `place:concord` — the
+  // count was right and the identity was wrong, which is worse, because every
+  // officeholder and meeting downstream joins on that key.
   const concord = registry.divisions.filter(
     (d) => d.divisionType === "place" && /concord/.test(d.ocdId) && d.state === "NH",
   );
@@ -102,35 +145,52 @@ test("a government ingested from both layers is counted once", () => {
     "expected Concord NH in both layers — if this fails the registry build changed",
   );
 
-  const bodies = registry.bodies.filter(
-    (b) => b.ocdId && concord.some((d) => d.ocdId === b.ocdId),
+  const withBody = concord.filter((d) => bodyOcdIds.has(d.ocdId));
+  assert.equal(withBody.length, 1, "one city is one governing body");
+  assert.equal(withBody[0].funcstat, "A");
+  assert.equal(
+    withBody[0].ocdId,
+    "ocd-division/country:us/state:nh/place:concord",
+    "the active place row is the City of Concord",
   );
-  const deduped = dedupeMunicipal(concord, bodies);
 
-  assert.equal(deduped.divisions.length, 1, "one city is one division");
-  assert.equal(deduped.bodies.length, 1, "one city is one governing body");
+  const dropped = concord.filter((d) => !bodyOcdIds.has(d.ocdId));
+  assert.ok(dropped.every((d) => d.funcstat === "F"));
+});
+
+test("every fictitious row is suppressed, and only fictitious rows are", () => {
+  // 32 across the three clip counties. If this number moves, either Census
+  // changed a vintage or the rule stopped reading FUNCSTAT.
+  const municipal = registry.divisions.filter((d) => d.divisionType === "place");
+  const fictitious = municipal.filter((d) => d.funcstat === "F");
+
+  assert.equal(fictitious.length, 32, "expected 32 fictitious duplicate rows");
   assert.ok(
-    deduped.divisions[0].ocdId.includes("/county:"),
-    "the county-subdivision row is the government; the flat place row is the duplicate",
+    fictitious.every((d) => !bodyOcdIds.has(d.ocdId)),
+    "a fictitious row must never produce a governing body",
+  );
+  assert.ok(
+    municipal
+      .filter((d) => d.funcstat === "A")
+      .every((d) => bodyOcdIds.has(d.ocdId)),
+    "every active municipal government must produce a governing body",
   );
 });
 
-test("dedupe leaves a state whose municipalities are places alone", () => {
-  // Arizona's county subdivisions are all statistical CCDs, so nothing there is
-  // duplicated and nothing may be dropped. Passing the *resolved* set rather
-  // than a pre-filtered one on purpose: the CCDs have to be present, because a
-  // dedupe that reads them as evidence of a subdivision government deletes the
-  // City of Tucson.
-  const az = registry.divisions.filter(
-    (d) => d.divisionType === "place" && d.state === "AZ",
-  );
-  const bodies = registry.bodies.filter(
-    (b) => b.ocdId && az.some((d) => d.ocdId === b.ocdId),
-  );
-  const { divisions, dropped } = dedupeMunicipal(az, bodies);
+test("Rockaway borough and township both survive as separate governments", () => {
+  // The case that makes the direction of the fix matter. Morris County holds
+  // both, and they are two municipalities with two councils. The borough is a
+  // flat place row; the township is a county subdivision; and there is a third,
+  // fictitious row duplicating the borough.
+  const rockaway = registry.divisions.filter((d) => /place:rockaway/.test(d.ocdId));
+  const governing = rockaway.filter((d) => bodyOcdIds.has(d.ocdId)).map((d) => d.ocdId);
 
-  assert.equal(dropped.length, 0, `dropped ${dropped.map((d) => d.label).join(", ")}`);
-  assert.equal(divisions.length, az.length);
+  assert.equal(governing.length, 2, `expected two governments, got ${governing.join(", ")}`);
+  assert.ok(governing.some((id) => id.endsWith("/place:rockaway")), "the borough");
+  assert.ok(
+    governing.some((id) => id.endsWith("/place:rockaway_township")),
+    "the township",
+  );
 });
 
 test("85701 keeps the City of Tucson and is not called unincorporated", () => {

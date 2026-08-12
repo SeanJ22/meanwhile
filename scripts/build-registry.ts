@@ -66,6 +66,8 @@ interface GeoFeature {
     district: string;
     label: string;
     lsad?: string;
+    funcstat?: string;
+    classfp?: string;
   };
 }
 
@@ -124,6 +126,8 @@ async function loadDivisions(now: string): Promise<Division[]> {
         label: p.label,
         parentOcdId: parentOf(p.ocdId),
         lsad: p.lsad ?? null,
+        funcstat: p.funcstat ?? null,
+        classfp: p.classfp ?? null,
         canonicalOcdId: null,
         canonicalMatch: "none",
         sourceDataset: "TIGER_GENZ2025",

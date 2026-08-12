@@ -47,7 +47,7 @@ works.
 |---|---|
 | `corepack pnpm dev` | Development server |
 | `corepack pnpm build` | Production build |
-| `corepack pnpm test` | `node --test` over `tests/` — 78 tests |
+| `corepack pnpm test` | `node --test` over `tests/` — 79 tests |
 | `corepack pnpm lint` | ESLint |
 | `corepack pnpm ingest mock` | Run one source adapter end to end |
 | `corepack pnpm zcta:fetch` | Rebuild zip centroids from Census (see §3.2) |
@@ -155,7 +155,7 @@ real adapter is not asked for the same window three times.
   be of an empty map.
 - **Tests** — `cascade`, `zoned`, `districts`, `tiers`, `district-hits`,
   `zip-coverage`, `fixture-provenance`, `subdivisions`, `registry-oracle`.
-  `coverage`. **78 total.**
+  `coverage`. **79 total.**
 
 ### The division and body registry — `lib/registry/`
 
@@ -164,8 +164,7 @@ had polygons and it had meetings and nothing joined them: a point could resolve
 to Vail Unified School District and the app still could not say that district
 has a governing board.
 
-`pnpm registry:build` generates `lib/registry/registry.json` — **940 divisions,
-297 bodies** — from the committed boundary files. Committed like the geometry
+`pnpm registry:build` generates `lib/registry/registry.json` — **940 divisions, 265 bodies** — from the committed boundary files. Committed like the geometry
 and the ZCTA centroids, so nothing at runtime needs a database.
 
 | File | Does |
@@ -739,21 +738,22 @@ Tracker **D15** tracks closing the gaps.
 ### 4.4 The registry — what it generates (2026-08-12)
 
 `pnpm registry:build` reads the committed boundary files and writes
-`lib/registry/registry.json`: **940 divisions, 297 bodies.** Committed the way
+`lib/registry/registry.json`: **940 divisions, 265 bodies.** Committed the way
 the boundary files are, so nothing at runtime needs a database — which matters,
 because `lib/db/schema.ts` is still `export {}`.
 
 | Division type | Divisions | Bodies | Why |
 |---|---|---|---|
 | county | 3 | 3 | one governing body each |
-| place | 272 | **153** | 119 skipped — CDPs and CCDs have no government |
+| place | 272 | **121** | 119 statistical, 32 fictitious duplicates (§4.6) |
 | school_district | 141 | 141 | one governing board each |
 | cd / sldu / sldl | 524 | **0** | a legislative seat is not a body that meets |
 
-The two zero rows are the point. **119 statistical divisions produced no body**,
-and **524 legislative districts produced none either** — a district elects a
-seat in a chamber that sits elsewhere, and Arizona's districts elect three
-people between two chambers, so the district is not even one seat.
+The gaps are the point. **119 statistical divisions produced no body**, **32
+fictitious ones produced none** (§4.6 — Census marks the duplicate itself), and
+**524 legislative districts produced none either** — a district elects a seat in
+a chamber that sits elsewhere, and Arizona's districts elect three people
+between two chambers, so the district is not even one seat.
 
 **Against the hand oracle**, all four target zips resolve every division on
 their list:
@@ -861,22 +861,78 @@ one is flat:
 | flat (`place`) | 37 | 5 | 3 | 29 |
 | nested (`cousub`) | 116 | 0 | 50 | 66 |
 
-That matches §4.3 exactly: Arizona's municipalities are places, New Jersey's and
-New Hampshire's are county subdivisions. So where both layers produce a
-government for the same point, the subdivision is the government. It is also the
-only choice that keeps Rockaway township distinct from Rockaway borough.
+**Resolved properly the same day — see §4.6. The read-layer `dedupeMunicipal()`
+described in earlier drafts is deleted, and it had the direction wrong.**
 
-**And it validates against the federal count.** Dropping the flat duplicates and
-restricting to the three clip counties gives Morris 39 + Merrimack 27 + Pima 5 +
-3 counties = **74**, which is exactly the 2022 Census of Governments
-general-purpose figure the Phase 4.6 gate asks for. `tests/coverage.test.ts`
-asserts it. That is the check Phase 4.7 calls for — the derivation rule measured
-against the federal enumeration rather than eyeballed — and it passes.
+### 4.6 M17 — FUNCSTAT, and why the stopgap was worse than the count suggested
 
-`dedupeMunicipal()` is a **stopgap at the read layer**, commented as one. The
-real fix is tracker **M17**: carry Census `FUNCSTAT` and `CLASSFP` on the
-features and resolve it once at build time, nationally and from data, rather
-than from a three-state observation.
+**The brief's premise was wrong, and measuring took one request.** §4.6.0 says
+Census ships the answer in "two fields already present on the source files."
+They are not present in the *cartographic* files this repo uses. The full field
+list of `cb_2025_*_place_500k.dbf` is STATEFP, PLACEFP, PLACENS, GEOIDFQ, GEOID,
+NAME, NAMELSAD, STUSPS, STATE_NAME, LSAD, ALAND, AWATER — no `FUNCSTAT`, no
+`CLASSFP`. Both exist only in full TIGER/Line.
+
+So `scripts/fetch-districts.ts` gained an optional `tigerLayer` per district
+type. Place and cousub now additionally fetch `tl_2025_<fp>_<layer>.zip`, parse
+**only its attribute table**, and join `FUNCSTAT`/`CLASSFP` onto the
+cartographic rows on GEOID. Geometry still comes from the generalized release;
+TIGER is read for two strings and thrown away. GEOID is identical across the two
+releases, so this is an exact key join rather than a name match — it matched
+**100% on every layer** (467/467, 700/700, 100/100, 80/80, 564/564, 259/259),
+and the script throws rather than writing a file whose governance fields came
+back empty. The archives are 0.4–1.1 MB at state scale.
+
+**FUNCSTAT is the whole answer, and it is cleaner than expected.** Across the
+six clipped files: **A = 121** active governments, **S = 119** statistical,
+**F = 32** fictitious. The 32 are exactly the duplicates. Census already marks
+the row it created purely to fill its own geographic hierarchy; nothing had to
+be inferred from which layer a row arrived in.
+
+| Code | Means | Governs |
+|---|---|---|
+| `A` `B` `G` | active; partially consolidated with own officials; subordinate | yes |
+| `C` | consolidated, **single** set of officials | yes, but see M18 |
+| `F` | fictitious — the other layer already lists this government | **no** |
+| `N` `S` `I` | nonfunctioning, statistical, inactive | no |
+
+Registry: **297 → 265 bodies**, municipal **153 → 121**.
+
+**The stopgap had it backwards, and that mattered more than the count.**
+`dedupeMunicipal()` preferred the county-subdivision row. Concord NH is
+`FUNCSTAT=A` in the place file and `FUNCSTAT=F` in the subdivision file — so the
+stopgap kept the *fictitious* row and dropped the actual City of Concord. One
+government either way, so the count looked right; the surviving identifier was
+wrong, which is worse, because every officeholder and meeting downstream joins
+on that key. New Hampshire's 221 *towns* genuinely are subdivisions, which is
+what made the wrong rule look right.
+
+**The federal check now runs on geometry, not identifiers.** After the fix a New
+Jersey borough is a flat `state:nj/place:*` row with no county segment at all, so
+the old ID-shaped county filter would silently miss 29 governments. The test
+places each municipality by centroid containment instead:
+
+| County | Municipalities | Census of Governments |
+|---|---|---|
+| Pima AZ | 5 | 5 |
+| Merrimack NH | 27 | 27 |
+| Morris NJ | 39 | 39 |
+| + 3 counties | | |
+| **Total** | **74** | **74** |
+
+Per county, not merely in aggregate. `tests/coverage.test.ts` also asserts that
+all 32 fictitious rows are suppressed and *only* those, that Concord keeps its
+`A` row, and that **Rockaway borough and Rockaway township both survive as
+separate governments** — the case that makes the direction of the fix visible.
+
+Cost of the two new properties across six files: under 1 KB.
+
+**One gap left, and it is latent rather than live.** `FUNCSTAT=C` is a
+consolidated government with a single set of officials — Nashville-Davidson,
+Indianapolis-Marion. The rule treats it as governing, because the alternative
+deletes a real city, but a `C` place plus its county derives two bodies where one
+council sits. **Zero `C` rows occur in the three clip counties**, so nothing is
+wrong today; it becomes real the moment coverage expands. Tracker **M18**.
 
 #### A regression worth keeping the scar tissue for
 
@@ -1072,7 +1128,7 @@ correct — `resolveZip` only reports it when the table is partial.
 counties, so a reader can click districts in places that have no meetings behind
 them. Honest, and the coverage tier says so, but the asymmetry is new.
 
-**Map-layer test coverage is still thin.** 78 tests now cover the cascade, time
+**Map-layer test coverage is still thin.** 79 tests now cover the cascade, time
 handling, OCD identity, the tier axis, district disambiguation, fixture
 provenance, county subdivisions and the registry oracle. Nothing tests marker
 reconciliation, camera logic, or basemap resolution — which is part of why the
@@ -1242,7 +1298,7 @@ State as of 2026-08-12, verified rather than assumed:
 
 - Working tree clean, branch pushed, PR #3 merged. If a PR is still open it
   will be a small documentation one — check, and merge it before working.
-- 78 tests, lint and build all pass.
+- 79 tests, lint and build all pass.
 - The G Drive mirror and `transcripts/` are current as of the end of that
   session.
 

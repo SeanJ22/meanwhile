@@ -49,6 +49,40 @@ export interface DivisionIdentity {
    * lib/registry/, where it can be corrected without refetching.
    */
   lsad?: string;
+  /**
+   * Census functional status. The sixth property, and the one that finally
+   * settles whether a polygon is a government.
+   *
+   * `A` active, `B` active and partially consolidated, `G` active but
+   * subordinate — all governments. `C` consolidated with another unit under a
+   * single set of officials, which is one government, not two. `F` a
+   * *fictitious* entity that exists only to fill the geographic hierarchy, `N`
+   * nonfunctioning, `S` statistical — none of them govern.
+   *
+   * This is what resolves the place/cousub duplicate, and it does it better
+   * than any rule inferred from the layer a row came from. Concord NH appears
+   * in both files under the same GNIS code: the place row is `FUNCSTAT=A` and
+   * the county-subdivision row is `FUNCSTAT=F`. Census has already said which
+   * one is the government. New Hampshire's 221 *towns* go the other way — the
+   * subdivision is `A` and there is no place row at all — which is why a
+   * "prefer the subdivision" rule got Concord backwards while still counting
+   * it once.
+   *
+   * **Not present in the cartographic (`cb_*`) files.** It is joined in from
+   * TIGER/Line on GEOID at fetch time; see `scripts/fetch-districts.ts`.
+   */
+  funcstat?: string;
+  /**
+   * Census class code — the *kind* of entity, where LSAD is its legal name and
+   * FUNCSTAT its status.
+   *
+   * Carried because it names the duplicate directly: `C2`, `C5` and `C6` on a
+   * place all mean an incorporated place that is coextensive with, or serving
+   * as, a county subdivision, and `Z7` on a subdivision means the reverse. It
+   * is a cross-check on FUNCSTAT rather than the primary test, and it is what
+   * makes New Jersey — wall-to-wall C2/C5 — auditable.
+   */
+  classfp?: string;
 }
 
 /** `ocd-division/country:us/state:az`, or null for an unknown FIPS code. */
@@ -137,6 +171,8 @@ export function placeIdentity(
   statefp: string,
   name: string,
   lsad?: string,
+  funcstat?: string,
+  classfp?: string,
 ): DivisionIdentity | null {
   const state = stateBase(statefp);
   if (!state || !name.trim()) return null;
@@ -150,6 +186,8 @@ export function placeIdentity(
     district: slug,
     label: name.trim(),
     lsad: lsad?.trim() || undefined,
+    funcstat: funcstat?.trim() || undefined,
+    classfp: classfp?.trim() || undefined,
   };
 }
 
@@ -185,6 +223,8 @@ export function subdivisionIdentity(
   countyName: string,
   nameLsad: string,
   lsad?: string,
+  funcstat?: string,
+  classfp?: string,
 ): DivisionIdentity | null {
   const state = stateBase(statefp);
   if (!state || !nameLsad.trim() || !countyName.trim()) return null;
@@ -201,6 +241,8 @@ export function subdivisionIdentity(
     district: slug,
     label: nameLsad.trim(),
     lsad: lsad?.trim() || undefined,
+    funcstat: funcstat?.trim() || undefined,
+    classfp: classfp?.trim() || undefined,
   };
 }
 

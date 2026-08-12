@@ -693,6 +693,16 @@ handling, OCD identity, the tier axis and district disambiguation. Nothing tests
 marker reconciliation, camera logic, or basemap resolution — which is part of
 why the tile problem was found by eye rather than by suite.
 
+**Editing map layer code needs a full reload, not HMR.** The MapLibre instance
+is created once on mount and its layers are added imperatively. Hot-replacing
+`lib/map/districts.ts` swaps the module but leaves the *already-added* layers on
+the live map, so a fixed paint expression does not take effect and the old
+errors keep firing from a page that is running new source. This cost real time
+once: 18 errors (6 district types × 3 attach attempts) kept appearing in the
+Next overlay after the underlying bug was already fixed and committed. If a map
+error persists after a change that should have fixed it, hard-reload before
+believing it.
+
 **Legacy Tailwind colour aliases remain.** `globals.css` maps the old
 ink/paper/signal names onto the new tokens in a marked block, so components not
 yet rewritten keep rendering. They should be deleted as those components are

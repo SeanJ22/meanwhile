@@ -631,6 +631,75 @@ components are only ever checked by screenshot. Tracker **M13**.
 
 ---
 
+### 4.3 Phase 4.6 — what the boundary data actually supports (2026-08-12)
+
+Phase 4.6 derives a body registry from division type: a county has a board, a
+municipality has a council, a school district has a governing board. Before any
+of that could be written, two questions had to be answered from data rather than
+assumed, and both answers changed the plan.
+
+**1. Which polygons have a government at all?** The committed files carried four
+properties and none of them said. Measured against the Census place files:
+
+| Layer | LSAD | Government? |
+|---|---|---|
+| place | 25 city, 43 town, 21 borough, 47 village | yes |
+| place | **57 CDP** | **no** |
+| cousub | 21/25/43/44/47, plus Princeton NJ (00) | yes |
+| cousub | **22 CCD** | **no** — statistical |
+| cousub | **32/36/42** grants, locations, purchases | **no** — unorganized |
+
+**376 of Arizona's 467 places are CDPs**, and all 80 of its county subdivisions
+are CCDs. A `place → council` rule without LSAD invents 376 councils in one
+state, starting with Vail — which is exactly the fabrication 4.6.2 warns about.
+LSAD is now the **fifth property** on place and cousub features, carried as the
+raw Census code so the interpretation can be corrected without refetching.
+
+**2. Where do municipalities live?** It depends on the state, and the repo only
+had half of it:
+
+- **Arizona** — municipalities are *places*. Its county subdivisions are
+  statistical.
+- **New Jersey** — all 564 municipalities are *county subdivisions*. The place
+  file holds ~323 entries and no townships.
+- **New Hampshire** — 222 towns are *county subdivisions*. 87 of its 100
+  "places" are CDPs.
+
+So **Newbury NH and Rockaway Township NJ had no polygon in this repo at all** —
+two of the four target zips, with no municipal geometry and therefore no
+possible derivation. `cousub` is now a built type (`cousub-04/33/34.geojson`,
+68 KB).
+
+**Identifier shape, and a collision that mattered.** County subdivisions are
+nested under their county and slugged from `NAMELSAD`, not `NAME`:
+
+```
+ocd-division/country:us/state:nj/county:morris/place:rockaway_township
+```
+
+Both shortcuts fail on real data. **Morris County contains Rockaway borough and
+Rockaway township — two separate municipalities, two councils, one slug** under
+`NAME`. Thirty New Jersey subdivisions collide that way (Clinton town/township,
+Mendham borough/township). Dropping the county collides across counties: six
+Washington townships, five Franklins, and Arizona's Fort Apache CCD in three
+counties. `tests/subdivisions.test.ts` pins all of it.
+
+**The unresolved part, and it blocks the registry.** See §5.2 item 8, now with
+evidence: the identifiers this repo constructs **do not match the canonical
+list**.
+
+| This repo builds | `opencivicdata/ocd-division-ids` has |
+|---|---|
+| `state:az/school_district:tucson_unified` | `state:az/county:pima/school_district:tucson_unified_district` — and `state:az/school_district:*` matches **zero** of 194,977 |
+| `state:nj/place:rockaway_township` | `state:nj/county:morris/place:rockaway` — nested, and the township appears absent |
+| `state:nh/place:newbury` | same, flat — **the nesting rule varies by state** |
+
+CLAUDE.md makes OCD-IDs the only join key, and `bodies.ocdId` is that join. A
+registry built on these keys hands Phase 5 a broken join, so **the convention
+needs deciding before the registry is written**, not after. Tracker **D15**.
+
+---
+
 ## 5. Open questions
 
 ### 5.1 Vector tiles — RESOLVED 2026-08-12
@@ -743,13 +812,23 @@ bundler can follow, so the report belongs there.
 5. ~~**Where are the actual product constraints?**~~ Resolved: `CLAUDE.md` is
    present and intact (9.9 KB). §3.5 still applies as a fragility warning.
 
-8. **Do the sub-congressional OCD slugs match the canonical list?** Open, and
-   it blocks Phase 5. `lib/ocd/divisions.ts` builds `county:`, `place:` and
-   `school_district:` identifiers from Census name fields. The congressional
-   ones were verified against `opencivicdata/ocd-division-ids` — these have
-   **not** been. They are consistent enough to key an overlay and a click; they
-   are not yet safe to join an officeholder onto, and CLAUDE.md makes OCD-IDs
-   the only join key.
+8. **Do the sub-congressional OCD slugs match the canonical list?** **Answered
+   2026-08-12, and the answer is no.** Checked against
+   `opencivicdata/ocd-division-ids` (194,977 identifiers) the same way the
+   congressional ones were. `state:az/school_district:*` matches nothing at
+   all — the canonical form nests under county and suffixes the name
+   (`state:az/county:pima/school_district:tucson_unified_district`). New Jersey
+   places nest under county; New Hampshire's do not. Full evidence in §4.3.
+
+   This is no longer a "verify before Phase 5" item — it **blocks the Phase 4.6
+   body registry**, because `bodies.ocdId` is the join and building it on keys
+   known to be wrong hands Phase 5 a broken join. Deciding the convention is
+   tracker **D15**. The open question is which way to go: adopt the canonical
+   shape wholesale (a rebuild of every committed boundary file, and it is not
+   clear the canonical list covers NJ townships), keep this repo's shape as an
+   internal key with a reconciliation table mapping to canonical, or something
+   between. The choice is the author's — it is hard to reverse once officeholder
+   and meeting rows carry the key.
 6. **Should road labels be toned down?** At z14+ `basic-v2-dark` draws road
    labels at `#c2c2c2` (luminance 0.538), marginally *brighter* than the amber
    pins (0.523). They are absent at metro zoom, so this only matters if readers

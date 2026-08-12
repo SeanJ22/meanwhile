@@ -30,6 +30,7 @@ import {
   legislativeIdentity,
   placeIdentity,
   schoolIdentity,
+  subdivisionIdentity,
   type DivisionIdentity,
 } from "../lib/ocd/divisions.ts";
 import { districtIdentity } from "../lib/ocd/fips.ts";
@@ -111,8 +112,21 @@ const TYPES: DistrictType[] = [
   {
     key: "place",
     url: (fp) => `${BASE}/cb_${VINTAGE}_${fp}_place_500k.zip`,
-    identity: (row) => placeIdentity(row.STATEFP, row.NAME),
+    identity: (row) => placeIdentity(row.STATEFP, row.NAME, row.LSAD),
     note: "Incorporated places and census designated places",
+  },
+  {
+    // The other half of municipal government, and in two of the three clip
+    // counties it is the only half. New Jersey's 564 municipalities and New
+    // Hampshire's 222 towns are county subdivisions; neither Newbury NH nor
+    // Rockaway Township NJ appears in the place file. Arizona has no minor
+    // civil divisions at all — its 80 county subdivisions are statistical
+    // CCDs, which is why LSAD has to ride along and be read downstream.
+    key: "cousub",
+    url: (fp) => `${BASE}/cb_${VINTAGE}_${fp}_cousub_500k.zip`,
+    identity: (row) =>
+      subdivisionIdentity(row.STATEFP, row.NAMELSADCO, row.NAMELSAD, row.LSAD),
+    note: "County subdivisions — towns, townships, boroughs, and CCDs",
   },
   {
     key: "unsd",
@@ -610,7 +624,13 @@ async function loadClipCounties(): Promise<Map<string, Polygon[]>> {
 
 interface Feature {
   type: "Feature";
-  properties: { ocdId: string; state: string; district: string; label: string };
+  properties: {
+    ocdId: string;
+    state: string;
+    district: string;
+    label: string;
+    lsad?: string;
+  };
   geometry:
     | { type: "Polygon"; coordinates: number[][][] }
     | { type: "MultiPolygon"; coordinates: number[][][][] };
@@ -647,6 +667,7 @@ async function build(opts: BuildOptions): Promise<number> {
       state: string;
       district: string;
       label: string;
+      lsad?: string;
       polygons: Polygon[];
     }
     const pending: Pending[] = [];
@@ -774,6 +795,10 @@ async function build(opts: BuildOptions): Promise<number> {
           state: item.state,
           district: item.district,
           label: item.label,
+          // Only where it exists — the legislative and school layers have no
+          // LSAD worth carrying, and an undefined key is dropped by
+          // JSON.stringify rather than written as null.
+          ...(item.lsad ? { lsad: item.lsad } : {}),
         },
         geometry:
           simplified.length === 1

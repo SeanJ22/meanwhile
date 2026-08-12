@@ -1169,35 +1169,35 @@ replaced.
 
 ## 7. Current state of the branch
 
-Branch `claude/civic-map-entry-screen-4ey1cs`. Working tree clean. Verified
-against `origin` on 2026-08-12 rather than assumed — an earlier version of this
-section was counting against a stale `origin/main`.
-
-**Everything is pushed**, and
-**[PR #3](https://github.com/SeanJ22/We-The-People/pull/3) is merged** —
-`origin/main` is at `5631465` and now carries all of Phase 4.5 and the first
-half of 4.6, 8 commits across 34 files.
-
-That PR merged the two commits **PR #2 had stranded**: `4ff074c` and `05e9f4b`
-were pushed to this branch after PR #2 closed at `07aee63`, and sat unmerged for
-a day without anyone noticing. Worth knowing as a pattern — a PR merged from a
-snapshot leaves behind whatever was pushed after it, silently. It happened
-again immediately: this very section was written while PR #3 was open, PR #3
-merged before that commit landed, and `main` was briefly carrying a `state.md`
-that claimed five commits were unpushed. **Check what `main` actually has rather
-than trusting the last thing this file said about it.**
-
-`main`'s history, most recent first:
+Branch `claude/coverage-language-and-registry-dedupe`, two commits on top of
+`origin/main` at `2978324` (the PR #6 merge). Phase 4.6.6 and the FUNCSTAT fix.
 
 ```
-5631465  Merge PR #3                                            ← Phase 4.5 + 4.6a
-149df6d  Merge PR #2
-b162fdc  Merge PR #1
+81f4667  Let Census resolve the duplicate: FUNCSTAT from TIGER/Line   ← M17
+2e69458  Say what coverage means on screen                            ← M16
+2978324  Merge PR #6                                                  ← origin/main
 ```
 
-Neither merge commit carries original work — every one is a merge of this same
-branch, and `git log --no-merges origin/main` against the branch is empty. So
-`main` has never held anything the branch was missing.
+**This session opened on a repo that looked empty, and that is worth knowing
+because it will happen again.** The working tree was on `main` at `64fee33` —
+the initial "Add files via upload" commit, carrying only `CLAUDE.md`. No `app/`,
+no `lib/`, no `docs/`, no `package.json`. Nothing was lost: `origin/main` was 26
+commits and 118 files ahead, local `main` held zero unique commits and was a
+strict ancestor, and no untracked file collided with a tracked path, so
+`git merge --ff-only origin/main` restored it losslessly.
+
+The cause is structural, not a one-off. **`pnpm handoff --ship` merges the PR
+through `gh` and leaves the session on the feature branch; nothing ever
+fast-forwards local `main`.** So local `main` falls a whole session behind every
+time, and the next person to check it out sees an apparently empty project. The
+plain `handoff` check cannot catch it either — it compares the branch against
+its own upstream and `main` against the branch, but never local `main` against
+`origin/main`. Tracker **R07** carries the fix.
+
+The older pattern still applies and is the same family: a PR merges from a
+snapshot, so anything pushed after it was opened is left behind silently. That
+stranded two commits after PR #2. **Check what `main` actually has rather than
+trusting the last thing this file said about it.**
 
 `.env.local` is gitignored and holds the MapTiler key,
 `NEXT_PUBLIC_MAPTILER_STYLE=basic-v2-dark` and
@@ -1221,11 +1221,14 @@ construction with `escapeHtml`/`onclick` attributes, and the sales data model.
 - **0–4 done** — worker, design system, shell, welcome overlay, district
   overlays with click-to-select.
 - **4.5 done** — the four defects found in testing. §4.2.
-- **4.6 half done.** The registry is generated and tested (§4.3, §4.4). What
-  remains: wiring the coverage language of 4.6.6 into the UI, populating
-  `agendaSourceType` per body (4.6.4), the `meeting_leads` table (4.6.5), and
-  the reader disambiguation prompt (4.6.3) — **which is a hard stop**, because
-  it adds a user data field and CLAUDE.md requires asking first.
+- **4.6 mostly done.** The registry is generated and tested (§4.3, §4.4), the
+  coverage language is on screen (§4.5, M16), and the place/cousub duplicate is
+  resolved at build time from Census `FUNCSTAT` (§4.6, M17). What remains:
+  populating `agendaSourceType` per body (4.6.4), the `meeting_leads` table
+  (4.6.5), and the reader disambiguation prompt (4.6.3) — **which is a hard
+  stop**, because it adds a user data field and CLAUDE.md requires asking first.
+  The "I want this" control in 4.6.6 is deliberately unbuilt for the same
+  reason, and because there is no table to write `demandCount` to.
 - **4.7 not started** — national scale: vector tiling, the Census of
   Governments universe, vendor tenant enumeration, special districts.
 - **5–8 remain** — officeholders and the first real tables (which extend the
@@ -1296,27 +1299,39 @@ letter.
 
 State as of 2026-08-12, verified rather than assumed:
 
-- Working tree clean, branch pushed, PR #3 merged. If a PR is still open it
-  will be a small documentation one — check, and merge it before working.
-- 79 tests, lint and build all pass.
+- **Check local `main` is not stale before anything else** — §7. If the repo
+  looks empty, it is not; fast-forward from `origin/main`.
+- 79 tests, lint and build all pass. M16 and M17 both Done with evidence in the
+  tracker.
 - The G Drive mirror and `transcripts/` are current as of the end of that
   session.
 
-**The next piece of work is tracker M16** — the Phase 4.6.6 coverage language.
-It is self-contained, needs no new data, and finishes the 4.6 gate: the registry
-already knows that Vail Unified has a governing board and that nothing has its
-calendar, so the map can stop saying "0 meetings" and start saying something
-true. The gate's screenshot of 85641 is the only outstanding deliverable.
+**External sources are cleared.** The author approved building adapters against
+**Granicus Legistar, Diligent Community/BoardDocs, Congress.gov and Plural
+Open** on 2026-08-12, which satisfies the CLAUDE.md ask-before-adding gate for
+those four. Recorded on tracker rows D02, D03, D12 and D13. It is clearance to
+build — it is **not** a D14 vendor-and-statute finding and it does not answer
+B09, both of which still stand on their own.
 
-**Two things need the author before they can be built**, and neither should be
-started on assumption:
+**The next piece of work is D14 → D12**: write the vendor and statute review,
+then the Legistar adapter. 4.6.8 already verified the API is live and needs no
+token for at least some clients, that Pima County's slug is `pima`, and that
+roll-call votes are a documented GET rather than an extraction problem. Tucson's
+slug is still unknown — `tucson` returns 500, and the CMS rule in 4.6.7 says to
+resolve the portal from the city clerk's own page rather than guessing again.
+
+**Two things still need the author**, and neither should be started on
+assumption:
 
 1. **The 4.6.3 reader prompt.** It adds a user data field, which `CLAUDE.md`
    requires asking about first. The exact question wording, what is stored, and
-   whether it stays device-local all need confirming.
+   whether it stays device-local all need confirming. The 4.6.6 "I want this"
+   control waits on the same answer.
 2. **D15**, closing the canonical identifier gaps. The convention is decided —
    internal key authoritative, canonical alongside with a confidence — but 348
-   divisions still match nothing, concentrated in county subdivisions.
+   divisions still match nothing, concentrated in county subdivisions. **M18**
+   (consolidated `FUNCSTAT=C` governments) asks the same which-identifier-wins
+   question and should probably be answered with it.
 
 Do not start Phase 4.7 before reading it: it changes two decisions inside 4.6,
 and it is the reason `cousub` was built now rather than later.

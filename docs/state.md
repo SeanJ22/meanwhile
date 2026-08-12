@@ -55,6 +55,7 @@ works.
 | `corepack pnpm districts:fetch [type...]` | Rebuild boundary layers (see §2) |
 | `corepack pnpm registry:build` | Regenerate the division and body registry (§4.4) |
 | `corepack pnpm shoot <name>` | Headless capture of what actually rendered |
+| `corepack pnpm handoff` | End-of-session sweep — see §8. `--check` reports without touching anything |
 | `corepack pnpm db:generate` / `db:migrate` | Drizzle migrations |
 
 ---
@@ -1077,10 +1078,55 @@ nullable `Body.ocdId`, and nothing populates it yet.
 
 ## 8. Picking this up next
 
-**The repository is `C:\Users\seanj\dev\we-the-people`.** There is an empty
-folder of the same name on the Desktop under OneDrive; it is a leftover and has
-never held the code. Check `CLAUDE.md` is roughly 10 KB before doing anything —
-§3.5 explains why.
+**The repository is `C:\Users\seanj\dev\we-the-people`** and always will be.
+Check `CLAUDE.md` is roughly 10 KB before doing anything — §3.5 explains why.
+
+### Ending a session: `pnpm handoff`
+
+Run it last. It checks the four surfaces that have to agree, and does the two
+jobs that are pure copies:
+
+```
+pnpm handoff            check, sync the mirror, export transcripts
+pnpm handoff --check    report only, touch nothing
+pnpm handoff --ship     the above, then push, open a PR, and merge it
+```
+
+**Say "session ending — start handoff"** and the whole close happens: `state.md`
+is brought current, the tracker rows are updated, then `--ship` runs. The next
+session starts on a merged `main` with nothing outstanding.
+
+```
+  ok   working tree    clean
+  ok   branch          matches origin/<branch>
+  ok   main            carries everything on this branch
+  ok   main tree       identical to the local tree
+  ok   pull requests   none open
+  ok   mirror          5/5 identical
+  ok   transcripts     4 exported
+```
+
+It exits non-zero when something needs fixing, so it can gate a hook later.
+Without `--ship` it only reports on push, PR and merge rather than doing them.
+
+**`--ship` will not commit for you.** A commit needs a message saying *why*, and
+generating one from a diff produces exactly the uninformative history the
+tracker rules exist to prevent — so it refuses on a dirty tree and says so. It
+reuses an open PR rather than opening a second one for the same branch, and it
+re-fetches after merging to confirm `main` really took everything, because a PR
+merges from a snapshot and has twice left later commits behind.
+
+Two behaviours worth knowing, both learned the hard way:
+
+- **It fetches first.** Every count is meaningless against a stale remote, and
+  twice in one session a branch-state claim in this file was wrong because it
+  was written before a fetch.
+- **It refuses to overwrite a diverged mirror file.** If a mirror copy matches
+  neither the working tree nor the last commit, it holds something the repo does
+  not, and copying over it would lose that. It says so instead.
+
+`WTP_MIRROR` overrides the G Drive path for a machine with a different drive
+letter.
 
 State as of 2026-08-12, verified rather than assumed:
 

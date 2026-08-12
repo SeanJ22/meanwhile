@@ -1,4 +1,5 @@
 import { RADIUS_LADDER_KM, searchMeetings } from "@/lib/meetings/query";
+import { coverageAt } from "@/lib/registry/server";
 
 /**
  * GET /api/meetings?lat=&lng=&radiusKm=
@@ -6,7 +7,15 @@ import { RADIUS_LADDER_KM, searchMeetings } from "@/lib/meetings/query";
  * The map's only data dependency. It returns normalized meetings plus which
  * rung of the empty-state cascade produced them, so the client can say what it
  * did rather than silently showing a wider area than was asked for.
+ *
+ * It also attaches the coverage summary: which bodies govern this point and how
+ * many of them have a calendar wired. The two answers belong together, because
+ * an empty meeting list means nothing until you know whether it is government
+ * being quiet or us being blind.
  */
+
+// The registry reads its geometry off the filesystem, which needs Node.
+export const runtime = "nodejs";
 
 export async function GET(request: Request) {
   const params = new URL(request.url).searchParams;
@@ -28,5 +37,16 @@ export async function GET(request: Request) {
       : RADIUS_LADDER_KM[0];
 
   const result = await searchMeetings(lat, lng, radiusKm);
-  return Response.json(result);
+
+  // A coverage statement we cannot stand behind is worse than none, so a
+  // registry that fails to load degrades to the cascade's own answer rather
+  // than failing the whole request or guessing.
+  let coverage = null;
+  try {
+    coverage = await coverageAt(lat, lng, result.meetings.length);
+  } catch (error) {
+    console.error("coverage lookup failed", error);
+  }
+
+  return Response.json({ ...result, coverage });
 }

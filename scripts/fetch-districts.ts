@@ -39,6 +39,16 @@ const VINTAGE = "2025";
 const CONGRESS = "119";
 const SOURCE_ORG = "U.S. Census Bureau";
 const BASE = `https://www2.census.gov/geo/tiger/GENZ${VINTAGE}/shp`;
+/**
+ * Full TIGER/Line, read for its attribute table only.
+ *
+ * Geometry still comes from the cartographic release above — TIGER/Line is an
+ * order of magnitude heavier and is built for spatial joins, not for shipping
+ * to a browser. But it is the only place `FUNCSTAT` and `CLASSFP` exist, and
+ * without those there is no way to tell a real municipality from the fictitious
+ * placeholder Census writes into the other layer for the same ground.
+ */
+const TIGER_BASE = `https://www2.census.gov/geo/tiger/TIGER${VINTAGE}`;
 
 /**
  * The counties everything below Congress is clipped to.
@@ -70,6 +80,17 @@ interface DistrictType {
   identity: (row: Row) => DivisionIdentity | null;
   /** Human description for the run log. */
   note: string;
+  /**
+   * TIGER/Line layer to join extra attributes from, on GEOID.
+   *
+   * The cartographic files carry LSAD but **not** `FUNCSTAT` or `CLASSFP`, and
+   * those two are what decide whether a polygon is a government and whether it
+   * is the same government as a row in the other layer. They exist only in
+   * full TIGER/Line, so the attributes are pulled from there and joined onto
+   * the generalized geometry. GEOID is identical across the two releases, so
+   * the join is exact rather than a name match.
+   */
+  tigerLayer?: string;
 }
 
 /**
@@ -112,7 +133,9 @@ const TYPES: DistrictType[] = [
   {
     key: "place",
     url: (fp) => `${BASE}/cb_${VINTAGE}_${fp}_place_500k.zip`,
-    identity: (row) => placeIdentity(row.STATEFP, row.NAME, row.LSAD),
+    identity: (row) =>
+      placeIdentity(row.STATEFP, row.NAME, row.LSAD, row.FUNCSTAT, row.CLASSFP),
+    tigerLayer: "place",
     note: "Incorporated places and census designated places",
   },
   {
@@ -125,7 +148,15 @@ const TYPES: DistrictType[] = [
     key: "cousub",
     url: (fp) => `${BASE}/cb_${VINTAGE}_${fp}_cousub_500k.zip`,
     identity: (row) =>
-      subdivisionIdentity(row.STATEFP, row.NAMELSADCO, row.NAMELSAD, row.LSAD),
+      subdivisionIdentity(
+        row.STATEFP,
+        row.NAMELSADCO,
+        row.NAMELSAD,
+        row.LSAD,
+        row.FUNCSTAT,
+        row.CLASSFP,
+      ),
+    tigerLayer: "cousub",
     note: "County subdivisions — towns, townships, boroughs, and CCDs",
   },
   {
@@ -587,6 +618,37 @@ function readShapefile(zip: Buffer): { rows: Row[]; shapes: Polygon[][] } {
 }
 
 /**
+ * `FUNCSTAT` and `CLASSFP` per GEOID, out of TIGER/Line.
+ *
+ * The cartographic release drops both. They are the two fields that say
+ * whether a polygon is a government, and whether it is the same government the
+ * other layer already listed — so they have to come from somewhere, and
+ * TIGER/Line is the same geography under the same GEOID, which makes this an
+ * exact key join rather than a name match.
+ *
+ * Only the attribute table is used; the full-resolution geometry in the archive
+ * is never parsed. The archives are small at state scale (0.4–1.1 MB), and this
+ * runs in a maintenance script rather than at request time.
+ */
+async function tigerAttributes(
+  layer: string,
+  statefp: string,
+): Promise<Map<string, Row>> {
+  const url = `${TIGER_BASE}/${layer.toUpperCase()}/tl_${VINTAGE}_${statefp}_${layer}.zip`;
+  const zip = await download(url, join(TMP_DIR, `tl-${layer}-${statefp}.zip`));
+
+  const files = extractAll(zip);
+  const dbfName = [...files.keys()].find((n) => n.toLowerCase().endsWith(".dbf"));
+  if (!dbfName) throw new Error(`TIGER archive ${url} has no .dbf`);
+
+  const byGeoid = new Map<string, Row>();
+  for (const row of parseDbf(files.get(dbfName)!)) {
+    if (row.GEOID) byGeoid.set(row.GEOID, row);
+  }
+  return byGeoid;
+}
+
+/**
  * The clip polygons, quantized to the same grid as everything else.
  *
  * Built from the national county file, which is also a district type in its own
@@ -630,6 +692,8 @@ interface Feature {
     district: string;
     label: string;
     lsad?: string;
+    funcstat?: string;
+    classfp?: string;
   };
   geometry:
     | { type: "Polygon"; coordinates: number[][][] }
@@ -668,6 +732,8 @@ async function build(opts: BuildOptions): Promise<number> {
       district: string;
       label: string;
       lsad?: string;
+      funcstat?: string;
+      classfp?: string;
       polygons: Polygon[];
     }
     const pending: Pending[] = [];
@@ -799,6 +865,10 @@ async function build(opts: BuildOptions): Promise<number> {
           // LSAD worth carrying, and an undefined key is dropped by
           // JSON.stringify rather than written as null.
           ...(item.lsad ? { lsad: item.lsad } : {}),
+          // FUNCSTAT is the field that says whether this polygon governs; CLASSFP
+          // says whether it is the same government the other layer listed.
+          ...(item.funcstat ? { funcstat: item.funcstat } : {}),
+          ...(item.classfp ? { classfp: item.classfp } : {}),
         },
         geometry:
           simplified.length === 1
@@ -960,6 +1030,30 @@ async function buildClipped(
     }
 
     const { rows, shapes } = readShapefile(zip);
+
+    // Join the two fields the cartographic release drops. A row that finds no
+    // TIGER match keeps its cartographic attributes and is counted, rather than
+    // being silently dropped or silently treated as non-governing — a missing
+    // attribute is a gap to see, not a verdict.
+    if (type.tigerLayer) {
+      const attrs = await tigerAttributes(type.tigerLayer, statefp);
+      let matched = 0;
+      for (const row of rows) {
+        const hit = row.GEOID ? attrs.get(row.GEOID) : undefined;
+        if (!hit) continue;
+        row.FUNCSTAT = hit.FUNCSTAT ?? "";
+        row.CLASSFP = hit.CLASSFP ?? "";
+        matched++;
+      }
+      console.log(
+        `  TIGER ${type.tigerLayer}: FUNCSTAT/CLASSFP joined on ${matched}/${rows.length} rows`,
+      );
+      if (matched === 0) {
+        throw new Error(
+          `TIGER join matched nothing for ${type.key} ${statefp} — GEOID shapes disagree, refusing to write a file whose governance fields are all empty`,
+        );
+      }
+    }
 
     await build({
       outName,

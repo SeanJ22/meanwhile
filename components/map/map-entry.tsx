@@ -325,6 +325,7 @@ function MapEntryInner() {
                 radiusKm={current.radiusKm}
                 requestedRadiusKm={current.requestedRadiusKm}
                 count={current.meetings.length}
+                coverage={current.coverage}
               />
             )}
 

@@ -138,6 +138,17 @@ export interface Division {
   parentOcdId: OcdId | null;
   /** Census LSAD, on place and county-subdivision rows. */
   lsad: string | null;
+  /**
+   * Census functional status — the field that decides whether this polygon is
+   * a government, and the one that resolves the place/cousub duplicate.
+   *
+   * `F` means Census created the row only to fill its geographic hierarchy: the
+   * same government is already listed in the other layer. Joined in from
+   * TIGER/Line, because the cartographic release drops it.
+   */
+  funcstat: string | null;
+  /** Census class code. Names the duplicate directly — `C2`/`C5`/`C6`, `Z7`. */
+  classfp: string | null;
   /** The canonical identifier, if one could be matched. */
   canonicalOcdId: OcdId | null;
   canonicalMatch: CanonicalMatch;

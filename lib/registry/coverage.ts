@@ -1,0 +1,198 @@
+import type { Tier } from "../ocd/tiers.ts";
+
+import { bodiesAt, type GeoFeature } from "./resolve.ts";
+import type {
+  Body,
+  BodyClass,
+  CoverageStatus,
+  Division,
+  DivisionType,
+} from "./types.ts";
+
+/**
+ * What we can honestly say about who governs a point, and how much of it we
+ * have.
+ *
+ * The failure this exists to kill: the stat card reads `0`, the map is empty,
+ * and a reader concludes nothing is happening. The truth is almost always *this
+ * app has no source for the bodies that govern here* — a completely different
+ * statement, and the one the product exists to never make.
+ *
+ * It is the same discipline the meeting cascade already applies. `query.ts`
+ * always reports which rung produced its answer, because a silently widened
+ * radius is a wrong answer. Coverage silence is the same bug one level up, so
+ * it gets the same treatment: say what is known, say what is missing, and never
+ * let the second one look like the first.
+ *
+ * **Never tell a reader they have no representation.** Every square foot of the
+ * country is governed by something. Where no municipal government exists — Vail,
+ * unincorporated county land, a New Hampshire grant — there is still a county
+ * board, a school board, state legislators and a member of Congress. An absent
+ * municipal tier is a fact to state plainly beside the tiers that do exist,
+ * never a reason to show less.
+ */
+
+/**
+ * Which of the four states the reader is actually in.
+ *
+ * `MEETINGS`       — bodies known and meetings found. The map speaks for itself.
+ * `NONE_SCHEDULED` — bodies known, sources wired, nothing on the calendar. This
+ *                    is the only one of the four that is a statement about
+ *                    *government* being quiet rather than about us being blind.
+ * `NO_SOURCE`      — bodies known, no calendar wired for them. Name them anyway.
+ * `UNMAPPED`       — no bodies known here at all.
+ */
+export type CoverageState = "MEETINGS" | "NONE_SCHEDULED" | "NO_SOURCE" | "UNMAPPED";
+
+/**
+ * A body covering the point.
+ *
+ * `divisionLabel` is the **division's** name, which is sourced — it comes off
+ * the Census boundary file. The body's own name is deliberately absent, because
+ * `Body.name` is null on every derived row and inventing one ("Vail Unified
+ * School District Governing Board") is the fabricated-agenda-URL failure again,
+ * except read aloud. What is known is that the division exists and that its type
+ * implies a governing body; that is exactly what this carries and no more.
+ */
+export interface CoveredBody {
+  bodyId: string;
+  ocdId: string | null;
+  divisionLabel: string;
+  divisionType: DivisionType;
+  bodyClass: BodyClass;
+  coverageStatus: CoverageStatus;
+  homepageUrl: string | null;
+  tier: Tier;
+}
+
+/**
+ * A legislative seat covering the point.
+ *
+ * Kept apart from `bodies` because a legislative district is not a body that
+ * meets — it elects a seat in a chamber sitting elsewhere, and Arizona's
+ * districts elect one senator and two representatives, so the district is not
+ * even one seat. It is still representation, and the "you are not unrepresented"
+ * statement is wrong without it.
+ */
+export interface Seat {
+  ocdId: string;
+  label: string;
+  divisionType: Extract<DivisionType, "cd" | "sldu" | "sldl">;
+  tier: Tier;
+}
+
+export interface CoverageSummary {
+  state: CoverageState;
+  bodies: CoveredBody[];
+  seats: Seat[];
+  /**
+   * A municipal-shaped division covers this point and every one of them is
+   * statistical — a CDP or a CCD — so there is genuinely no city or town
+   * government here.
+   *
+   * This is only true when a statistical place *was* found. Finding nothing at
+   * all is a different answer: it means the boundary data does not reach here,
+   * not that the reader is unincorporated. Conflating the two would turn a
+   * coverage gap into a false claim about somebody's government.
+   */
+  unincorporated: boolean;
+  counts: { total: number; withSource: number; withoutSource: number };
+}
+
+/** Coverage statuses that mean a calendar is actually wired. */
+const WIRED: ReadonlySet<CoverageStatus> = new Set<CoverageStatus>(["LIVE", "MANUAL"]);
+
+const SEAT_TYPES: ReadonlySet<DivisionType> = new Set<DivisionType>([
+  "cd",
+  "sldu",
+  "sldl",
+]);
+
+/**
+ * The place/cousub duplicate is resolved upstream, at build time.
+ *
+ * There used to be a `dedupeMunicipal()` here, and it was a stopgap. It guessed
+ * which layer held the government from the identifier's shape, inferred from
+ * three states — and it guessed wrong for cities: it kept
+ * `county:merrimack/place:concord_city` and dropped `place:concord`, which is
+ * the actual City of Concord. The count came out right and the identity did not.
+ *
+ * Census had already answered the question. `FUNCSTAT` marks the duplicate row
+ * `F`, for a *fictitious* entity created only to fill the geographic hierarchy,
+ * and `lib/registry/derive.ts` now reads it: 32 fictitious rows across the three
+ * clip counties produce no body, leaving exactly the 74 general-purpose
+ * governments the 2022 Census of Governments enumerates. See tracker M17.
+ */
+
+/**
+ * Summarize what governs a point.
+ *
+ * Pure — geometry and the registry come in as arguments — so it runs in a test,
+ * on a server, or against vector tiles later without changing. `meetingCount` is
+ * the cascade's answer for the same point; it is the only thing that separates
+ * "nothing is scheduled" from "we cannot see what is scheduled".
+ */
+export function summarizeCoverage(
+  point: [number, number],
+  features: GeoFeature[],
+  divisionsById: Map<string, Division>,
+  allBodies: Body[],
+  meetingCount: number,
+): CoverageSummary {
+  const { divisions, bodies } = bodiesAt(point, features, divisionsById, allBodies);
+
+  const covered: CoveredBody[] = bodies.map((body) => {
+    const division = body.ocdId ? divisionsById.get(body.ocdId) : undefined;
+    return {
+      bodyId: body.id,
+      ocdId: body.ocdId,
+      // A body with no division is the Southeast Regional Council case: real,
+      // hyperlocal, and not a division. Nothing populates that path yet.
+      divisionLabel: division?.label ?? "",
+      divisionType: division?.divisionType ?? "place",
+      bodyClass: body.bodyClass,
+      coverageStatus: body.coverageStatus,
+      homepageUrl: body.homepageUrl,
+      tier: division?.tier ?? "local",
+    };
+  });
+
+  const seats: Seat[] = divisions
+    .filter((d) => SEAT_TYPES.has(d.divisionType))
+    .map((d) => ({
+      ocdId: d.ocdId,
+      label: d.label,
+      divisionType: d.divisionType as Seat["divisionType"],
+      tier: d.tier,
+    }));
+
+  // Only claim "unincorporated" when a municipal-shaped division was actually
+  // found and every one of them turned out to be statistical. No division at all
+  // is a coverage gap, not a fact about the reader's government.
+  const municipal = divisions.filter((d) => d.divisionType === "place");
+  const municipalWithBody = new Set(
+    covered.filter((b) => b.divisionType === "place").map((b) => b.ocdId),
+  );
+  const unincorporated =
+    municipal.length > 0 && municipal.every((d) => !municipalWithBody.has(d.ocdId));
+
+  const withSource = covered.filter((b) => WIRED.has(b.coverageStatus)).length;
+  const withoutSource = covered.length - withSource;
+
+  const state: CoverageState =
+    meetingCount > 0
+      ? "MEETINGS"
+      : covered.length === 0
+        ? "UNMAPPED"
+        : withoutSource > 0
+          ? "NO_SOURCE"
+          : "NONE_SCHEDULED";
+
+  return {
+    state,
+    bodies: covered,
+    seats,
+    unincorporated,
+    counts: { total: covered.length, withSource, withoutSource },
+  };
+}

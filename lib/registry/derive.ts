@@ -40,9 +40,37 @@ const GOVERNING_LSAD = new Set(["00", "21", "25", "43", "44", "47"]);
 /** Statistical or unorganized. Named explicitly so an unknown code is not silently treated as either. */
 const NON_GOVERNING_LSAD = new Set(["22", "57", "32", "36", "42"]);
 
+/**
+ * Census `FUNCSTAT` codes that mean this polygon is a government.
+ *
+ * `A` active with primary general-purpose functions, `B` active and partially
+ * consolidated but with its own officials, `G` active but subordinate to
+ * another unit. `C` is an active government consolidated with another under a
+ * *single* set of officials — Nashville-Davidson, Indianapolis-Marion. It is
+ * included here because deleting a real city is worse than the alternative, but
+ * one set of officials is one body, so a `C` place plus its county currently
+ * derives two bodies where there is one council. None appear in the three clip
+ * counties; tracker M18 carries the merge before national ingest.
+ */
+const GOVERNING_FUNCSTAT = new Set(["A", "B", "C", "G"]);
+
+/**
+ * Codes that mean this polygon is not a government.
+ *
+ * `F` is the important one and it is what resolves the place/cousub duplicate:
+ * Census creates a *fictitious* row to fill its geographic hierarchy when a
+ * government is already listed in the other layer. Concord NH is `A` in the
+ * place file and `F` in the county-subdivision file — Census has already said
+ * which of the two is the city. `N` is a nonfunctioning legal entity, `S` a
+ * statistical one, `I` an inactive special-purpose unit.
+ */
+const NON_GOVERNING_FUNCSTAT = new Set(["F", "N", "S", "I"]);
+
 export type SkipReason =
   | "statistical-or-unorganized"
+  | "fictitious-duplicate-of-another-layer"
   | "unknown-lsad"
+  | "unknown-funcstat"
   | "legislative-seat-not-a-meeting-body";
 
 export interface DerivedSlot {
@@ -75,6 +103,36 @@ export function slotsFor(division: Division): DerivationOutcome {
       return { slots: [{ bodyClass: "GOVERNING", slot: "board" }], skipped: null };
 
     case "place": {
+      // FUNCSTAT first, because it states functional status directly where LSAD
+      // only names the entity's legal form — and because it is the only field
+      // that distinguishes a real municipality from the fictitious row Census
+      // writes into the other layer for the same ground. Without it, Concord NH
+      // is a city in the place file and a city in the county-subdivision file,
+      // and both look equally real.
+      const funcstat = division.funcstat ?? "";
+      if (funcstat) {
+        if (NON_GOVERNING_FUNCSTAT.has(funcstat)) {
+          return {
+            slots: [],
+            skipped:
+              funcstat === "F"
+                ? "fictitious-duplicate-of-another-layer"
+                : "statistical-or-unorganized",
+          };
+        }
+        if (GOVERNING_FUNCSTAT.has(funcstat)) {
+          return {
+            slots: [{ bodyClass: "GOVERNING", slot: "governing" }],
+            skipped: null,
+          };
+        }
+        // A code outside both tables is a gap here, not a licence to guess.
+        return { slots: [], skipped: "unknown-funcstat" };
+      }
+
+      // No FUNCSTAT: a boundary file built before the TIGER attribute join, or
+      // a layer TIGER has no counterpart for. Fall back to LSAD, which answers
+      // "does this govern" correctly but cannot see the duplicate.
       const lsad = division.lsad ?? "";
       if (GOVERNING_LSAD.has(lsad)) {
         return { slots: [{ bodyClass: "GOVERNING", slot: "governing" }], skipped: null };

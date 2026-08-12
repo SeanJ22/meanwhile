@@ -1,4 +1,7 @@
-import centroidFile from "./zcta-centroids.json";
+// The import attribute is what lets this module load under `node --test` as
+// well as under the bundler. Without it Node refuses the JSON outright, which
+// kept every zip-level test out of the suite.
+import centroidFile from "./zcta-centroids.json" with { type: "json" };
 
 /**
  * Zip → map coordinate.

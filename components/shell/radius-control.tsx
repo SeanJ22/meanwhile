@@ -53,8 +53,14 @@ export function RadiusControl() {
           onChange={(e) =>
             dispatch(
               e.target.checked
-                ? { type: "radius/set", km }
-                : { type: "filter/reset" },
+                ? // Start from the rung the visible results actually came
+                  // from, not from the untouched default. On a zip the cascade
+                  // widened for — 85641 lands on the 60 km rung — seeding 25
+                  // discarded every meeting the reader was looking at the
+                  // instant they touched the control, and the map went blank
+                  // with no explanation.
+                  { type: "radius/set", km: result?.radiusKm ?? km }
+                : { type: "radius/clear" },
             )
           }
         />

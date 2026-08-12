@@ -43,6 +43,31 @@ interface LayerSpec {
   tier: Tier;
   label: string;
   /**
+   * Dash pattern, in multiples of the line width.
+   *
+   * Hue is the tier signal, but the Local tier holds three types that overlap
+   * heavily around any city — county, municipal and school all trace the same
+   * ground. Drawn in one colour with one dash they were indistinguishable, so
+   * the pattern separates types *within* a tier: long dashes for the widest
+   * containing shape, down to a fine dot for the most nested one.
+   */
+  dash: [number, number];
+  /**
+   * Stroke weight relative to the base ramp.
+   *
+   * Same ordering logic as the dash — the shape that contains the others is
+   * drawn heaviest, so a reader can tell nesting depth at a glance without
+   * reading a single label.
+   */
+  weight: number;
+  /**
+   * Zoom at which this type's labels appear.
+   *
+   * Nested types come in later than their containers. Six label layers all
+   * switching on together at z7 produced a solid mat of text over any metro.
+   */
+  labelMinZoom: number;
+  /**
    * Layers with no data yet. The control still renders and the layer is still
    * defined — an empty slot you can see beats a missing one you cannot.
    */
@@ -54,21 +79,43 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
     files: ["cd119.geojson"],
     tier: "national",
     label: "Congressional",
+    dash: [8, 3],
+    weight: 1.3,
+    labelMinZoom: 5,
   },
   "state-senate": {
     files: ["sldu-04.geojson", "sldu-34.geojson", "sldu-33.geojson"],
     tier: "state",
     label: "State Senate",
+    dash: [5, 2],
+    weight: 1.1,
+    labelMinZoom: 7,
   },
   "state-house": {
     files: ["sldl-04.geojson", "sldl-34.geojson", "sldl-33.geojson"],
     tier: "state",
     label: "State House",
+    dash: [2, 2],
+    weight: 0.9,
+    labelMinZoom: 8,
   },
   county: {
     files: ["county-us.geojson"],
     tier: "local",
     label: "County",
+    // The widest thing the Local tier draws, so it gets the longest dash and
+    // the heaviest stroke.
+    dash: [7, 3],
+    weight: 1.25,
+    labelMinZoom: 6,
+  },
+  municipal: {
+    files: ["place-04.geojson", "place-34.geojson", "place-33.geojson"],
+    tier: "local",
+    label: "Municipal",
+    dash: [3, 2],
+    weight: 1.0,
+    labelMinZoom: 8,
   },
   school: {
     files: [
@@ -84,11 +131,11 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
     ],
     tier: "local",
     label: "School",
-  },
-  municipal: {
-    files: ["place-04.geojson", "place-34.geojson", "place-33.geojson"],
-    tier: "local",
-    label: "Municipal",
+    // The most nested Local shape, and the one carrying the most features —
+    // a fine dot at the lightest weight, held back to high zoom.
+    dash: [1, 2],
+    weight: 0.75,
+    labelMinZoom: 10,
   },
 };
 
@@ -102,8 +149,6 @@ export const labelLayerId = (type: DistrictType) => `district-${type}-label`;
 /** Every fill layer, for hit-testing a click. */
 export const allFillLayerIds = () => DISTRICT_TYPES.map(fillLayerId);
 
-/** Below this the view is too wide for identifiers to be anything but noise. */
-const LABEL_MIN_ZOOM = 7;
 const LABEL_FONT = ["Noto Sans Regular"];
 
 /**
@@ -268,7 +313,7 @@ export function addDistrictLayer(
         // Dash units are multiples of line width, so the pattern scales with
         // the stroke and stays dotted at both zoom extremes rather than turning
         // into a solid rule at one of them.
-        "line-dasharray": [2, 2],
+        "line-dasharray": spec.dash,
         // `zoom` is only legal as the direct input of a top-level `step` or
         // `interpolate`, so the selection test goes in the stop *outputs*
         // rather than wrapping the interpolate in a `case`. The wrapped form
@@ -279,9 +324,19 @@ export function addDistrictLayer(
           ["linear"],
           ["zoom"],
           4,
-          ["case", ["boolean", ["feature-state", "selected"], false], 2.0, 0.8],
+          [
+            "case",
+            ["boolean", ["feature-state", "selected"], false],
+            2.0 * spec.weight,
+            0.8 * spec.weight,
+          ],
           12,
-          ["case", ["boolean", ["feature-state", "selected"], false], 3.2, 1.5],
+          [
+            "case",
+            ["boolean", ["feature-state", "selected"], false],
+            3.2 * spec.weight,
+            1.5 * spec.weight,
+          ],
         ],
       },
     }));
@@ -290,7 +345,7 @@ export function addDistrictLayer(
       id: labelLayerId(type),
       type: "symbol",
       source,
-      minzoom: LABEL_MIN_ZOOM,
+      minzoom: spec.labelMinZoom,
       layout: {
         "text-field": ["get", "label"],
         "text-font": LABEL_FONT,

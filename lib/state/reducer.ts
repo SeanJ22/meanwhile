@@ -1,12 +1,12 @@
-import { RADIUS_LADDER_KM } from "@/lib/meetings/query";
-import { TIERS } from "@/lib/ocd/tiers";
+import { RADIUS_LADDER_KM } from "../meetings/query.ts";
+import { TIERS } from "../ocd/tiers.ts";
 
 import type {
   DistrictType,
   FilterState,
   UiAction,
   UiState,
-} from "./types";
+} from "./types.ts";
 
 /**
  * The reducer.
@@ -24,10 +24,24 @@ export const ALL_DISTRICT_TYPES: readonly DistrictType[] = [
   "municipal",
 ] as const;
 
+/**
+ * District types drawn when the overlay is first switched on: one per tier.
+ *
+ * Turning on all six at once put three Local boundaries — county, municipal and
+ * school — over the same ground at the same time, and around a city they
+ * overlap into noise. Starting with the widest of each tier gives a legible
+ * frame, and every other type is one checkbox away.
+ */
+export const DEFAULT_DISTRICT_TYPES: readonly DistrictType[] = [
+  "congressional",
+  "state-house",
+  "county",
+] as const;
+
 export const INITIAL_FILTERS: FilterState = {
   bodyTypes: [],
   statuses: [],
-  districtTypes: [...ALL_DISTRICT_TYPES],
+  districtTypes: [...DEFAULT_DISTRICT_TYPES],
   daysAhead: 60,
   daysBack: 0,
   hideUncovered: true,
@@ -202,6 +216,17 @@ export function uiReducer(state: UiState, action: UiAction): UiState {
 
     case "radius/set":
       return { ...state, radiusKm: action.km, radiusOverridden: true };
+
+    // Turning the limiter off has to actually turn it off. It previously
+    // dispatched `filter/reset`, which cleared every unrelated filter and left
+    // `radiusOverridden` true — so the radius kept filtering while the control
+    // read "off", with no way back short of a reload.
+    case "radius/clear":
+      return {
+        ...state,
+        radiusKm: RADIUS_LADDER_KM[0],
+        radiusOverridden: false,
+      };
 
     case "nearMe/toggle":
       return {

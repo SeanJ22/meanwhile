@@ -47,7 +47,7 @@ works.
 |---|---|
 | `corepack pnpm dev` | Development server |
 | `corepack pnpm build` | Production build |
-| `corepack pnpm test` | `node --test` over `tests/` — 14 tests |
+| `corepack pnpm test` | `node --test` over `tests/` — 51 tests |
 | `corepack pnpm lint` | ESLint |
 | `corepack pnpm ingest mock` | Run one source adapter end to end |
 | `corepack pnpm zcta:fetch` | Rebuild zip centroids from Census (see §3.2) |
@@ -149,12 +149,15 @@ real adapter is not asked for the same window three times.
   attached browser come back stale or empty, and timer-based checks hit CDP
   timeouts. It prints what actually rendered, so a screenshot can never quietly
   be of an empty map.
-- **Tests** — `cascade`, `zoned`, `districts`, `tiers`, `district-hits`. **41
-  total.**
+- **Tests** — `cascade`, `zoned`, `districts`, `tiers`, `district-hits`,
+  `zip-coverage`, `fixture-provenance`. **51 total.**
 
-### District overlays (eight types)
+### District overlays (six types)
 
-Toggleable boundary layers, off by default.
+Toggleable boundary layers, off by default. When the master toggle goes on,
+**one type per tier draws** — congressional, state house, county
+(`DEFAULT_DISTRICT_TYPES`). All six at once put three Local boundaries over the
+same ground and read as noise; the rest are one checkbox away.
 
 | Type | Source | Scope |
 |---|---|---|
@@ -185,11 +188,26 @@ genuinely differs by state.
 - **`lib/ocd/fips.ts`** holds FIPS-to-postal as an explicit literal.
   **`lib/ocd/divisions.ts`** builds the sub-congressional identifiers.
 - **`lib/map/districts.ts`** is a registry keyed by district type: one source
-  and fill/line/label layers each, coloured by **tier accent** (the dash pattern
-  is the shared signature of "this is a district"; hue says which tier). A
-  transparent fill sits under every line because a line has almost no hit area.
-  `promoteId: "ocdId"` makes selection `feature-state` rather than a source
-  mutation.
+  and fill/line/label layers each, coloured by **tier accent** (hue says which
+  tier). A transparent fill sits under every line because a line has almost no
+  hit area. `promoteId: "ocdId"` makes selection `feature-state` rather than a
+  source mutation.
+
+  **Dash and weight separate types *within* a tier** (Phase 4.5.2). Hue alone
+  was not enough: the Local tier holds three types — county, municipal, school
+  — that trace the same ground around any city, and drawn in one colour with
+  one dash `[2,2]` they were indistinguishable. Each type now carries its own
+  `dash`, `weight` and `labelMinZoom`, ordered by containment: the widest shape
+  gets the longest dash and heaviest stroke (county `[7,3]` at 1.25×, labels
+  from z6), the most nested gets a fine dot at the lightest weight held back to
+  high zoom (school `[1,2]` at 0.75×, labels from z10). Six label layers all
+  switching on together at z7 was most of the noise.
+
+**There are six district types, not eight.** `unsd`/`elsd`/`scsd` are merged
+into a single `school` type sharing one source, so a K-8 boundary and a
+regional high school boundary draw identically even though `districtsAt()`
+returns them as separate hits with distinct labels. Splitting them is tracker
+**M12**.
 - **`hooks/use-district-layer.ts`** persists the master toggle under
   `wtp.show_districts`; the per-type checkboxes live in the store.
 
@@ -270,6 +288,28 @@ zip a reason to exercise the widened tier.
 
 Fixture dates are **day offsets from today**, resolved at fetch time against the
 division's own time zone, so the calendar never goes stale.
+
+**Every fixture URL is null** (Phase 4.5.3). The rows previously carried
+invented permalinks — `https://tusd1.org/agendas/4107`,
+`tucson.legistar.com/...ID=4101` — which looked exactly like real ones and
+resolved to a front page or a 404. That is a `CLAUDE.md` provenance violation
+living inside the fixtures, and it is worse there than in application code
+because nothing surfaces it until a reader clicks. These meetings were not read
+from anywhere, so no URL can honestly cite them.
+
+- `Provenance.sourceUrl` is now `string | null`, which is what its own doc
+  comment already promised for an unfillable field.
+- `meeting-panel.tsx` renders **"No agenda posted yet"**, which already existed.
+- `FIXTURE_SOURCE_HOSTS`, declared beside the fixtures, is the allowlist of
+  hosts a fixture may cite. It is **empty**, and
+  `tests/fixture-provenance.test.ts` asserts every URL is either null or on it —
+  in the raw rows *and* in `normalize()` output, so an adapter that manufactures
+  a URL during the transform fails too. A fixture cannot gain a URL without
+  someone editing that array in the same change, which turns an invisible
+  fabrication into a visible diff.
+
+Tracker **M06 is reopened** as a result: the link rendered, but the target was
+fabricated, so "never a dead end" was not met.
 
 **To replace with a real source:**
 
@@ -527,6 +567,55 @@ default disagreeing with the deployed one.
 MapLibre paint properties cannot take a `var()`; resolving at build-time is
 enough, because a theme change swaps the style, which discards the layers, and
 re-adding them re-reads the tokens.
+
+---
+
+### 4.2 Phase 4.5 — the defects found in testing (2026-08-12)
+
+**85641 was not what it looked like.** The brief reported it "shows nothing at
+all" and named two candidates: the radius control suppressing the cascade's
+widening, or `derive.ts` dropping widened results. **Measured, both were
+wrong.** `/api/meetings?lat=32.04903&lng=-110.62291` returns 14 meetings at
+`tier: "widened"`, `radiusKm: 60`; `applyFilters` with default state keeps all
+14; and a fresh load renders 12 markers with the RADIUS WIDENED notice. The
+cascade, the client filter and the camera framing were all already correct — a
+previous session had anticipated exactly this and left the comments to prove it
+(`map-entry.tsx` gates the radius filter behind `radiusOverridden`;
+`map-canvas.tsx` frames all venues when the tier is not `exact`).
+
+**What did reproduce is the radius control, and it had two bugs.**
+
+1. **Enabling it blanked the map.** The toggle dispatched `radius/set` with the
+   untouched default of 25 km while 85641's results came from the 60 km rung, so
+   all 14 meetings vanished the instant a reader touched the control. It now
+   seeds from `result.radiusKm` — the rung the visible results actually came
+   from — so the limiter opens at 60 km showing "14 within 37 mi".
+2. **Disabling it did not disable it.** The off path dispatched `filter/reset`,
+   which cleared every *unrelated* filter (body types, statuses, date window,
+   district types) and left `radiusOverridden` true — so the radius kept
+   filtering while the control read "off", with no way back short of a reload.
+   A dedicated `radius/clear` action now does what the toggle says.
+
+This is the more likely explanation of what the author saw, and it is worse than
+the reported defect: silent, recoverable only by reload, and it destroys
+unrelated state on the way.
+
+**Why no test caught it.** Nothing covered the path from a real zip through the
+cascade *and* the client filter — `cascade.test.ts` works from bare coordinates
+and stops at the server. `tests/zip-coverage.test.ts` now closes that, and
+closing it required two unrelated repairs:
+
+- `lib/geo/zcta.ts` imported its JSON without an import attribute, so Node
+  refused to load it and every zip-level test was impossible. Now
+  `with { type: "json" }`, which Turbopack accepts.
+- `lib/state/derive.ts` and `reducer.ts` used `@/` path aliases that
+  `node --test` cannot resolve, so the reducer could not be tested despite its
+  docstring saying it was "exported on its own so it can be tested". Both now
+  use the relative, extension-bearing style the rest of `lib/` already uses.
+
+**Remaining gap:** no test drives the components. Both radius bugs lived in the
+store and would have been caught by a component-level harness; today the
+components are only ever checked by screenshot. Tracker **M13**.
 
 ---
 

@@ -166,6 +166,7 @@ export type UiAction =
     }
   | { type: "district/pick"; pick: DistrictPick | null }
   | { type: "radius/set"; km: number }
+  | { type: "radius/clear" }
   | { type: "nearMe/toggle"; enabled: boolean }
   | { type: "nearMe/position"; lat: number; lng: number }
   | { type: "districts/show"; value: boolean }

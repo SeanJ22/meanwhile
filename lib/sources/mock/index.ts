@@ -39,7 +39,8 @@ export interface LegistarEvent {
   EventLatitude: number;
   EventLongitude: number;
   EventAgendaFile: string | null;
-  EventInSiteURL: string;
+  /** Null when no permalink is known. Never a constructed one — see fixtures.ts. */
+  EventInSiteURL: string | null;
   EventAgendaStatusName: "Draft" | "Final" | null;
   EventCanceled: boolean;
   DivisionOcdId: string;

@@ -4,8 +4,9 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-12
-Branch: `claude/civic-map-entry-screen-4ey1cs` (pushed, at `619b839`)
+Last updated: 2026-08-12, after Phase 4.5 and the first half of Phase 4.6.
+Branch: `claude/civic-map-entry-screen-4ey1cs`, with **five unpushed commits**.
+See §7 — checked against `origin`, not assumed.
 
 ---
 
@@ -47,10 +48,13 @@ works.
 |---|---|
 | `corepack pnpm dev` | Development server |
 | `corepack pnpm build` | Production build |
-| `corepack pnpm test` | `node --test` over `tests/` — 14 tests |
+| `corepack pnpm test` | `node --test` over `tests/` — 68 tests |
 | `corepack pnpm lint` | ESLint |
 | `corepack pnpm ingest mock` | Run one source adapter end to end |
 | `corepack pnpm zcta:fetch` | Rebuild zip centroids from Census (see §3.2) |
+| `corepack pnpm districts:fetch [type...]` | Rebuild boundary layers (see §2) |
+| `corepack pnpm registry:build` | Regenerate the division and body registry (§4.4) |
+| `corepack pnpm shoot <name>` | Headless capture of what actually rendered |
 | `corepack pnpm db:generate` / `db:migrate` | Drizzle migrations |
 
 ---
@@ -149,12 +153,39 @@ real adapter is not asked for the same window three times.
   attached browser come back stale or empty, and timer-based checks hit CDP
   timeouts. It prints what actually rendered, so a screenshot can never quietly
   be of an empty map.
-- **Tests** — `cascade`, `zoned`, `districts`, `tiers`, `district-hits`. **41
-  total.**
+- **Tests** — `cascade`, `zoned`, `districts`, `tiers`, `district-hits`,
+  `zip-coverage`, `fixture-provenance`, `subdivisions`, `registry-oracle`.
+  **68 total.**
 
-### District overlays (eight types)
+### The division and body registry — `lib/registry/`
 
-Toggleable boundary layers, off by default.
+**New in Phase 4.6, and it is the piece that connects the other two.** The app
+had polygons and it had meetings and nothing joined them: a point could resolve
+to Vail Unified School District and the app still could not say that district
+has a governing board.
+
+`pnpm registry:build` generates `lib/registry/registry.json` — **940 divisions,
+297 bodies** — from the committed boundary files. Committed like the geometry
+and the ZCTA centroids, so nothing at runtime needs a database.
+
+| File | Does |
+|---|---|
+| `types.ts` | `Division`, `Body`, and the enums — `BodyClass`, `CoverageStatus`, `BodyOrigin`, `AgendaSourceType`, `SourceDataset`, `CanonicalMatch` |
+| `derive.ts` | Division type → the bodies it implies, and the LSAD table that decides whether a polygon governs at all |
+| `resolve.ts` | Point → divisions → bodies. Pure; geometry is an argument, so it runs in a test, on a server, or against tiles later |
+| `registry.json` | The generated output |
+
+Full numbers, the four-zip oracle, and the identifier decision are in §4.4.
+**Not yet wired into any screen** — the coverage language of 4.6.6 is the next
+piece, and it is what turns "0 meetings" into "Vail Unified has a governing
+board; we do not have its calendar yet."
+
+### District overlays (six types)
+
+Toggleable boundary layers, off by default. When the master toggle goes on,
+**one type per tier draws** — congressional, state house, county
+(`DEFAULT_DISTRICT_TYPES`). All six at once put three Local boundaries over the
+same ground and read as noise; the rest are one checkbox away.
 
 | Type | Source | Scope |
 |---|---|---|
@@ -185,11 +216,26 @@ genuinely differs by state.
 - **`lib/ocd/fips.ts`** holds FIPS-to-postal as an explicit literal.
   **`lib/ocd/divisions.ts`** builds the sub-congressional identifiers.
 - **`lib/map/districts.ts`** is a registry keyed by district type: one source
-  and fill/line/label layers each, coloured by **tier accent** (the dash pattern
-  is the shared signature of "this is a district"; hue says which tier). A
-  transparent fill sits under every line because a line has almost no hit area.
-  `promoteId: "ocdId"` makes selection `feature-state` rather than a source
-  mutation.
+  and fill/line/label layers each, coloured by **tier accent** (hue says which
+  tier). A transparent fill sits under every line because a line has almost no
+  hit area. `promoteId: "ocdId"` makes selection `feature-state` rather than a
+  source mutation.
+
+  **Dash and weight separate types *within* a tier** (Phase 4.5.2). Hue alone
+  was not enough: the Local tier holds three types — county, municipal, school
+  — that trace the same ground around any city, and drawn in one colour with
+  one dash `[2,2]` they were indistinguishable. Each type now carries its own
+  `dash`, `weight` and `labelMinZoom`, ordered by containment: the widest shape
+  gets the longest dash and heaviest stroke (county `[7,3]` at 1.25×, labels
+  from z6), the most nested gets a fine dot at the lightest weight held back to
+  high zoom (school `[1,2]` at 0.75×, labels from z10). Six label layers all
+  switching on together at z7 was most of the noise.
+
+**There are six district types, not eight.** `unsd`/`elsd`/`scsd` are merged
+into a single `school` type sharing one source, so a K-8 boundary and a
+regional high school boundary draw identically even though `districtsAt()`
+returns them as separate hits with distinct labels. Splitting them is tracker
+**M12**.
 - **`hooks/use-district-layer.ts`** persists the master toggle under
   `wtp.show_districts`; the per-type checkboxes live in the store.
 
@@ -228,6 +274,11 @@ like an obvious improvement, that is the failure mode the rule exists to catch.
 ---
 
 ## 3. What is stubbed or mocked
+
+**The registry is not in this section.** `lib/registry/registry.json` is
+generated from real Census geometry and is as real as the boundary files — but
+every body in it is `NO_SOURCE_FOUND` with a null name, which is an honest
+statement of what is known rather than a stub. See §4.4.
 
 ### 3.1 Meeting data — the mock source
 
@@ -270,6 +321,28 @@ zip a reason to exercise the widened tier.
 
 Fixture dates are **day offsets from today**, resolved at fetch time against the
 division's own time zone, so the calendar never goes stale.
+
+**Every fixture URL is null** (Phase 4.5.3). The rows previously carried
+invented permalinks — `https://tusd1.org/agendas/4107`,
+`tucson.legistar.com/...ID=4101` — which looked exactly like real ones and
+resolved to a front page or a 404. That is a `CLAUDE.md` provenance violation
+living inside the fixtures, and it is worse there than in application code
+because nothing surfaces it until a reader clicks. These meetings were not read
+from anywhere, so no URL can honestly cite them.
+
+- `Provenance.sourceUrl` is now `string | null`, which is what its own doc
+  comment already promised for an unfillable field.
+- `meeting-panel.tsx` renders **"No agenda posted yet"**, which already existed.
+- `FIXTURE_SOURCE_HOSTS`, declared beside the fixtures, is the allowlist of
+  hosts a fixture may cite. It is **empty**, and
+  `tests/fixture-provenance.test.ts` asserts every URL is either null or on it —
+  in the raw rows *and* in `normalize()` output, so an adapter that manufactures
+  a URL during the transform fails too. A fixture cannot gain a URL without
+  someone editing that array in the same change, which turns an invisible
+  fabrication into a visible diff.
+
+Tracker **M06 is reopened** as a result: the link rendered, but the target was
+fabricated, so "never a dead end" was not met.
 
 **To replace with a real source:**
 
@@ -348,6 +421,24 @@ branch. It holds five files, flat:
 mirror that is only sometimes current is worse than none, because the next
 person cannot tell which side is authoritative. The repo is authoritative; the
 mirror is a copy, and should be byte-identical.
+
+The same folder also holds `transcripts/` — readable Markdown exports of the
+Claude Code sessions that produced this work. Those are *not* mirrored repo
+files and have no counterpart here; they are a record of how the work happened,
+kept because the source session logs live only in `~/.claude/projects/` and are
+neither synced nor backed up.
+
+**Regenerate them at the end of every working session:**
+
+```
+node ~/.claude/export-transcript.mjs --out "G:/My Drive/we-the-people/transcripts"
+```
+
+That rewrites every session file plus a `README.md` index. They are also worth
+*reading*: when a decision here is recorded without its reasoning, the session
+that made it usually has the reasoning. They contain the full conversation
+including file contents and command output, so treat them as sensitive before
+sharing.
 
 Before overwriting a mirrored file, check the target actually matches the
 previous repo version — if it has diverged, it holds something the repo does
@@ -523,6 +614,185 @@ re-adding them re-reads the tokens.
 
 ---
 
+### 4.2 Phase 4.5 — the defects found in testing (2026-08-12)
+
+**85641 was not what it looked like.** The brief reported it "shows nothing at
+all" and named two candidates: the radius control suppressing the cascade's
+widening, or `derive.ts` dropping widened results. **Measured, both were
+wrong.** `/api/meetings?lat=32.04903&lng=-110.62291` returns 14 meetings at
+`tier: "widened"`, `radiusKm: 60`; `applyFilters` with default state keeps all
+14; and a fresh load renders 12 markers with the RADIUS WIDENED notice. The
+cascade, the client filter and the camera framing were all already correct — a
+previous session had anticipated exactly this and left the comments to prove it
+(`map-entry.tsx` gates the radius filter behind `radiusOverridden`;
+`map-canvas.tsx` frames all venues when the tier is not `exact`).
+
+**What did reproduce is the radius control, and it had two bugs.**
+
+1. **Enabling it blanked the map.** The toggle dispatched `radius/set` with the
+   untouched default of 25 km while 85641's results came from the 60 km rung, so
+   all 14 meetings vanished the instant a reader touched the control. It now
+   seeds from `result.radiusKm` — the rung the visible results actually came
+   from — so the limiter opens at 60 km showing "14 within 37 mi".
+2. **Disabling it did not disable it.** The off path dispatched `filter/reset`,
+   which cleared every *unrelated* filter (body types, statuses, date window,
+   district types) and left `radiusOverridden` true — so the radius kept
+   filtering while the control read "off", with no way back short of a reload.
+   A dedicated `radius/clear` action now does what the toggle says.
+
+This is the more likely explanation of what the author saw, and it is worse than
+the reported defect: silent, recoverable only by reload, and it destroys
+unrelated state on the way.
+
+**Why no test caught it.** Nothing covered the path from a real zip through the
+cascade *and* the client filter — `cascade.test.ts` works from bare coordinates
+and stops at the server. `tests/zip-coverage.test.ts` now closes that, and
+closing it required two unrelated repairs:
+
+- `lib/geo/zcta.ts` imported its JSON without an import attribute, so Node
+  refused to load it and every zip-level test was impossible. Now
+  `with { type: "json" }`, which Turbopack accepts.
+- `lib/state/derive.ts` and `reducer.ts` used `@/` path aliases that
+  `node --test` cannot resolve, so the reducer could not be tested despite its
+  docstring saying it was "exported on its own so it can be tested". Both now
+  use the relative, extension-bearing style the rest of `lib/` already uses.
+
+**Remaining gap:** no test drives the components. Both radius bugs lived in the
+store and would have been caught by a component-level harness; today the
+components are only ever checked by screenshot. Tracker **M13**.
+
+---
+
+### 4.3 Phase 4.6 — what the boundary data actually supports (2026-08-12)
+
+Phase 4.6 derives a body registry from division type: a county has a board, a
+municipality has a council, a school district has a governing board. Before any
+of that could be written, two questions had to be answered from data rather than
+assumed, and both answers changed the plan.
+
+**1. Which polygons have a government at all?** The committed files carried four
+properties and none of them said. Measured against the Census place files:
+
+| Layer | LSAD | Government? |
+|---|---|---|
+| place | 25 city, 43 town, 21 borough, 47 village | yes |
+| place | **57 CDP** | **no** |
+| cousub | 21/25/43/44/47, plus Princeton NJ (00) | yes |
+| cousub | **22 CCD** | **no** — statistical |
+| cousub | **32/36/42** grants, locations, purchases | **no** — unorganized |
+
+**376 of Arizona's 467 places are CDPs**, and all 80 of its county subdivisions
+are CCDs. A `place → council` rule without LSAD invents 376 councils in one
+state, starting with Vail — which is exactly the fabrication 4.6.2 warns about.
+LSAD is now the **fifth property** on place and cousub features, carried as the
+raw Census code so the interpretation can be corrected without refetching.
+
+**2. Where do municipalities live?** It depends on the state, and the repo only
+had half of it:
+
+- **Arizona** — municipalities are *places*. Its county subdivisions are
+  statistical.
+- **New Jersey** — all 564 municipalities are *county subdivisions*. The place
+  file holds ~323 entries and no townships.
+- **New Hampshire** — 222 towns are *county subdivisions*. 87 of its 100
+  "places" are CDPs.
+
+So **Newbury NH and Rockaway Township NJ had no polygon in this repo at all** —
+two of the four target zips, with no municipal geometry and therefore no
+possible derivation. `cousub` is now a built type (`cousub-04/33/34.geojson`,
+68 KB).
+
+**Identifier shape, and a collision that mattered.** County subdivisions are
+nested under their county and slugged from `NAMELSAD`, not `NAME`:
+
+```
+ocd-division/country:us/state:nj/county:morris/place:rockaway_township
+```
+
+Both shortcuts fail on real data. **Morris County contains Rockaway borough and
+Rockaway township — two separate municipalities, two councils, one slug** under
+`NAME`. Thirty New Jersey subdivisions collide that way (Clinton town/township,
+Mendham borough/township). Dropping the county collides across counties: six
+Washington townships, five Franklins, and Arizona's Fort Apache CCD in three
+counties. `tests/subdivisions.test.ts` pins all of it.
+
+**The unresolved part, and it blocks the registry.** See §5.2 item 8, now with
+evidence: the identifiers this repo constructs **do not match the canonical
+list**.
+
+| This repo builds | `opencivicdata/ocd-division-ids` has |
+|---|---|
+| `state:az/school_district:tucson_unified` | `state:az/county:pima/school_district:tucson_unified_district` — and `state:az/school_district:*` matches **zero** of 194,977 |
+| `state:nj/place:rockaway_township` | `state:nj/county:morris/place:rockaway` — nested, and the township appears absent |
+| `state:nh/place:newbury` | same, flat — **the nesting rule varies by state** |
+
+CLAUDE.md makes OCD-IDs the only join key, and `bodies.ocdId` is that join.
+**Decided 2026-08-12: the internal key stays authoritative and the canonical
+identifier rides alongside it with a confidence.** Adopting the canonical shape
+wholesale would make Rockaway Township — a real municipality with its own
+council — unrepresentable, so it is the one option that can lose a government.
+Carrying both keeps every division and *gains* the canonical mapping wherever
+it exists, which is the shape Phase 4.7.4 prescribes for national scale anyway.
+Reconciliation quality is reported below and re-run by `pnpm registry:build`.
+Tracker **D15** tracks closing the gaps.
+
+### 4.4 The registry — what it generates (2026-08-12)
+
+`pnpm registry:build` reads the committed boundary files and writes
+`lib/registry/registry.json`: **940 divisions, 297 bodies.** Committed the way
+the boundary files are, so nothing at runtime needs a database — which matters,
+because `lib/db/schema.ts` is still `export {}`.
+
+| Division type | Divisions | Bodies | Why |
+|---|---|---|---|
+| county | 3 | 3 | one governing body each |
+| place | 272 | **153** | 119 skipped — CDPs and CCDs have no government |
+| school_district | 141 | 141 | one governing board each |
+| cd / sldu / sldl | 524 | **0** | a legislative seat is not a body that meets |
+
+The two zero rows are the point. **119 statistical divisions produced no body**,
+and **524 legislative districts produced none either** — a district elects a
+seat in a chamber that sits elsewhere, and Arizona's districts elect three
+people between two chambers, so the district is not even one seat.
+
+**Against the hand oracle**, all four target zips resolve every division on
+their list:
+
+| Zip | Divisions | Bodies | Notably |
+|---|---|---|---|
+| 85701 | 7 | 3 | Pima, Tucson, Tucson Unified |
+| 85641 | 6 | **2** | Pima and Vail Unified — **no municipal body**, correctly |
+| 07866 | 8 | **4** | Rockaway *township* plus **two** school districts |
+| 03255 | 6 | 3 | Merrimack, Newbury *town*, Kearsarge Regional |
+
+85641 is the case the whole phase exists for: the only municipal-shaped division
+covering the centroid is Tucson CCD, a statistical artifact, so the rule
+produces no council while still finding Vail Unified's board.
+
+**Every generated row is `bodyOrigin: DERIVED_FROM_DIVISION_TYPE`,
+`coverageStatus: NO_SOURCE_FOUND`, `agendaSourceType: NONE`, and `name: null`.**
+The claim is structural — *this division has a governing board* — never a
+sourced claim about its name, schedule or members. Names vary by state
+(supervisors, commissioners, select boards) and a plausible invented one is the
+fabricated-agenda-URL failure again, except read aloud. `tests/registry-oracle.test.ts`
+asserts all four properties on every row.
+
+**Canonical reconciliation**, from `pnpm registry:build`:
+
+| Type | exact | high | none |
+|---|---|---|---|
+| cd | 441 | — | — |
+| county | 3 | — | — |
+| sldu | 25 | — | — |
+| sldl | 15 | — | 43 |
+| school_district | — | 64 | 77 |
+| place | 44 | — | 228 |
+
+`none` is concentrated exactly where §4.3 predicted: county subdivisions, which
+the canonical list either nests differently or omits.
+
+---
+
 ## 5. Open questions
 
 ### 5.1 Vector tiles — RESOLVED 2026-08-12
@@ -635,13 +905,23 @@ bundler can follow, so the report belongs there.
 5. ~~**Where are the actual product constraints?**~~ Resolved: `CLAUDE.md` is
    present and intact (9.9 KB). §3.5 still applies as a fragility warning.
 
-8. **Do the sub-congressional OCD slugs match the canonical list?** Open, and
-   it blocks Phase 5. `lib/ocd/divisions.ts` builds `county:`, `place:` and
-   `school_district:` identifiers from Census name fields. The congressional
-   ones were verified against `opencivicdata/ocd-division-ids` — these have
-   **not** been. They are consistent enough to key an overlay and a click; they
-   are not yet safe to join an officeholder onto, and CLAUDE.md makes OCD-IDs
-   the only join key.
+8. **Do the sub-congressional OCD slugs match the canonical list?** **Answered
+   2026-08-12, and the answer is no.** Checked against
+   `opencivicdata/ocd-division-ids` (194,977 identifiers) the same way the
+   congressional ones were. `state:az/school_district:*` matches nothing at
+   all — the canonical form nests under county and suffixes the name
+   (`state:az/county:pima/school_district:tucson_unified_district`). New Jersey
+   places nest under county; New Hampshire's do not. Full evidence in §4.3.
+
+   This is no longer a "verify before Phase 5" item — it **blocks the Phase 4.6
+   body registry**, because `bodies.ocdId` is the join and building it on keys
+   known to be wrong hands Phase 5 a broken join. Deciding the convention is
+   tracker **D15**. The open question is which way to go: adopt the canonical
+   shape wholesale (a rebuild of every committed boundary file, and it is not
+   clear the canonical list covers NJ townships), keep this repo's shape as an
+   internal key with a reconciliation table mapping to canonical, or something
+   between. The choice is the author's — it is hard to reverse once officeholder
+   and meeting rows carry the key.
 6. **Should road labels be toned down?** At z14+ `basic-v2-dark` draws road
    labels at `#c2c2c2` (luminance 0.538), marginally *brighter* than the amber
    pins (0.523). They are absent at metro zoom, so this only matters if readers
@@ -688,10 +968,30 @@ correct — `resolveZip` only reports it when the table is partial.
 counties, so a reader can click districts in places that have no meetings behind
 them. Honest, and the coverage tier says so, but the asymmetry is new.
 
-**Map-layer test coverage is still thin.** 41 tests now cover the cascade, time
-handling, OCD identity, the tier axis and district disambiguation. Nothing tests
-marker reconciliation, camera logic, or basemap resolution — which is part of
-why the tile problem was found by eye rather than by suite.
+**Map-layer test coverage is still thin.** 68 tests now cover the cascade, time
+handling, OCD identity, the tier axis, district disambiguation, fixture
+provenance, county subdivisions and the registry oracle. Nothing tests marker
+reconciliation, camera logic, or basemap resolution — which is part of why the
+tile problem was found by eye rather than by suite.
+
+**No test drives a React component.** Both Phase 4.5 radius bugs lived in the
+store and would have been caught by a component-level harness; today the
+components are only ever checked by screenshot. Tracker **M13**.
+
+**`cousub-*.geojson` is built and committed but not drawn.** Merging it into the
+municipal layer would render some governments twice — every New Hampshire city
+is both a place and a county subdivision, and under the current conventions
+those are two different identifiers. Tracker **M14**, which waits on D15.
+
+**Editing map layer code needs a full reload, not HMR.** The MapLibre instance
+is created once on mount and its layers are added imperatively. Hot-replacing
+`lib/map/districts.ts` swaps the module but leaves the *already-added* layers on
+the live map, so a fixed paint expression does not take effect and the old
+errors keep firing from a page that is running new source. This cost real time
+once: 18 errors (6 district types × 3 attach attempts) kept appearing in the
+Next overlay after the underlying bug was already fixed and committed. If a map
+error persists after a change that should have fixed it, hard-reload before
+believing it.
 
 **Legacy Tailwind colour aliases remain.** `globals.css` maps the old
 ink/paper/signal names onto the new tokens in a marked block, so components not
@@ -702,21 +1002,43 @@ replaced.
 
 ## 7. Current state of the branch
 
-Branch `claude/civic-map-entry-screen-4ey1cs`, pushed to `origin` at `619b839`.
-Working tree clean.
+Branch `claude/civic-map-entry-screen-4ey1cs`. Working tree clean. Verified
+against `origin` on 2026-08-12 rather than assumed — an earlier version of this
+section was counting against a stale `origin/main`.
 
-Seven commits ahead of `origin/main`, and **one behind it** — `origin/main`
-moved to `b162fdc` during this work, so a merge or rebase is needed before a PR.
+**Five commits are unpushed.** The branch is 5 ahead of
+`origin/claude/civic-map-entry-screen-4ey1cs` and 0 behind it, so a push is a
+fast-forward with nothing to reconcile.
 
 ```
-619b839  Add seven district overlays and click-to-select        (Phase 4)
-973a5eb  Replace the entry notice with the welcome overlay      (Phase 3)
-a0d47cb  Port the EdiaStratMap application shell                (Phase 2)
-3c2867f  Fix the MapLibre worker and port the design system     (Phase 0+1)
-0d5442d  Fix district overlay never fetching its boundary file  (pre-existing)
-89d5606  Note OCD at-large discrepancy risk on D07              (pre-existing)
-39cd657  Add national congressional district overlay            (pre-existing)
+13dce33  Bring state.md and the tracker current through 4.6
+bb63c41  Generate the division and body registry               (Phase 4.6)
+05cbd59  Build the boundary data the derivation rule needs     (Phase 4.6)
+e4ecc1e  Record the transcript step, fix the branch line
+38f7bf0  Fix the four defects found testing the Phase 4 build  (Phase 4.5)
+----------------------------------------------- pushed below this line -------
+05e9f4b  Note the transcripts folder in the G Drive mirror
+4ff074c  Note that map layer edits need a full reload, not HMR
+07aee63  Mirror tracker.csv to G Drive, document the mirror rule
+2194696  Bring docs/state.md up to date with phases 0-4
+619b839  Add seven district overlays and click-to-select       (Phase 4)
+973a5eb  Replace the entry notice with the welcome overlay     (Phase 3)
+a0d47cb  Port the EdiaStratMap application shell               (Phase 2)
+3c2867f  Fix the MapLibre worker and port the design system    (Phase 0+1)
+0d5442d  Fix district overlay never fetching its boundary file (pre-existing)
+89d5606  Note OCD at-large discrepancy risk on D07             (pre-existing)
+39cd657  Add national congressional district overlay           (pre-existing)
 ```
+
+**`origin/main` holds nothing this branch is missing.** It is at `149df6d` and
+its two commits are both pull-request merges *of this branch* — PR #1 at
+`b162fdc` and PR #2 at `149df6d` — with no original work of their own
+(`git log --no-merges HEAD..origin/main` is empty). Its tree is byte-identical
+to `07aee63`, which is an ancestor of the current HEAD.
+
+So the branch is 7 ahead of `origin/main` and 2 "behind" it, where those two are
+merge commits carrying content the branch already has. A merge or rebase before
+the next PR is a bookkeeping step, not a way to recover anything.
 
 `.env.local` is gitignored and holds the MapTiler key,
 `NEXT_PUBLIC_MAPTILER_STYLE=basic-v2-dark` and
@@ -735,6 +1057,26 @@ count badge, the list overlay, and the welcome card.
 **Not ported, and deliberately so:** Leaflet, vanilla-JS `innerHTML`
 construction with `escapeHtml`/`onclick` attributes, and the sales data model.
 
-Phases 5–8 remain: officeholders and the first real tables, popup and
-full-screen modal, the ported subsystems (notes, activity tracker, elections
-layer, conflicts, export, ingestion console), and responsive.
+### Where the phases stand
+
+- **0–4 done** — worker, design system, shell, welcome overlay, district
+  overlays with click-to-select.
+- **4.5 done** — the four defects found in testing. §4.2.
+- **4.6 half done.** The registry is generated and tested (§4.3, §4.4). What
+  remains: wiring the coverage language of 4.6.6 into the UI, populating
+  `agendaSourceType` per body (4.6.4), the `meeting_leads` table (4.6.5), and
+  the reader disambiguation prompt (4.6.3) — **which is a hard stop**, because
+  it adds a user data field and CLAUDE.md requires asking first.
+- **4.7 not started** — national scale: vector tiling, the Census of
+  Governments universe, vendor tenant enumeration, special districts.
+- **5–8 remain** — officeholders and the first real tables (which extend the
+  registry rather than replacing it), popup and full-screen modal, the ported
+  subsystems (notes, activity tracker, elections layer, conflicts, export,
+  ingestion console), and responsive.
+
+Two bodies the oracle names that the derivation **cannot** produce, and they are
+the interesting output rather than a failure: **Pima County Supervisor District
+4**, because Census does not publish county supervisor districts at all, and the
+**Southeast Regional Council**, because it is not a division and never will be.
+Both need the bodies-without-divisions path — the schema already allows it via a
+nullable `Body.ocdId`, and nothing populates it yet.

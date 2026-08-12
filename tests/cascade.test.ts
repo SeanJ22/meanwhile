@@ -93,7 +93,14 @@ test("every returned meeting carries its provenance", async () => {
   const { meetings } = await searchMeetings(TUCSON.lat, TUCSON.lng);
 
   for (const meeting of meetings) {
-    assert.ok(meeting.provenance.sourceUrl, `${meeting.id} lost its source url`);
+    // `sourceUrl` is nullable on purpose: a body with no published permalink
+    // has none, and the fixtures were not read from anywhere, so inventing one
+    // to satisfy this assertion is the exact failure the field guards against.
+    // What must never happen is the key going missing in a transform.
+    assert.ok(
+      "sourceUrl" in meeting.provenance,
+      `${meeting.id} dropped source_url in the transform`,
+    );
     assert.ok(meeting.provenance.sourceOrg, `${meeting.id} lost its source org`);
     assert.ok(meeting.provenance.collectedAt, `${meeting.id} lost its collected_at`);
     assert.ok(meeting.ocdId.startsWith("ocd-division/"), `${meeting.id} has no OCD-ID`);

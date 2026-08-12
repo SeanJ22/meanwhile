@@ -35,6 +35,20 @@ export interface DivisionIdentity {
   state: string;
   district: string;
   label: string;
+  /**
+   * Census LSAD, carried verbatim on place and county-subdivision features.
+   *
+   * The fifth property, and it earns its bytes: it is the only thing in the
+   * boundary data that says whether a polygon has a government. 376 of
+   * Arizona's 467 "places" are census designated places with no municipality
+   * at all, and all 80 of its county subdivisions are statistical CCDs. A
+   * derivation rule without this mints a city council for Vail.
+   *
+   * Stored as the raw code rather than an interpreted flag so the geometry
+   * file stays a faithful copy of the source and the interpretation lives in
+   * lib/registry/, where it can be corrected without refetching.
+   */
+  lsad?: string;
 }
 
 /** `ocd-division/country:us/state:az`, or null for an unknown FIPS code. */
@@ -103,9 +117,26 @@ export function countyIdentity(
   };
 }
 
+/**
+ * Municipalities, from either Census layer that carries them.
+ *
+ * Both `place` and `cousub` land on the same `place:` segment, and that is
+ * deliberate: which layer a municipality lives in is an artifact of Census
+ * geography, not a fact about the government. Arizona's cities are places and
+ * its county subdivisions are statistical CCDs; New Jersey's 564 municipalities
+ * and New Hampshire's towns are county subdivisions and are largely absent from
+ * the place file. Newbury NH and Rockaway Township NJ have no polygon in this
+ * repo at all without the second layer.
+ *
+ * Because both layers feed one segment, a municipality listed in both — every
+ * New Hampshire city is a place *and* a county subdivision — produces the same
+ * identifier twice. That is correct; it is one government, and the caller
+ * de-duplicates on `ocdId`.
+ */
 export function placeIdentity(
   statefp: string,
   name: string,
+  lsad?: string,
 ): DivisionIdentity | null {
   const state = stateBase(statefp);
   if (!state || !name.trim()) return null;
@@ -118,6 +149,58 @@ export function placeIdentity(
     state: state.postal,
     district: slug,
     label: name.trim(),
+    lsad: lsad?.trim() || undefined,
+  };
+}
+
+/**
+ * County subdivisions — New England towns, mid-Atlantic townships, boroughs.
+ *
+ * Nested under the county and slugged from `NAMELSAD` (the name *with* its
+ * legal type) rather than `NAME`, because neither shortcut survives contact
+ * with the data:
+ *
+ * - **`NAME` alone collides between distinct governments.** Morris County NJ
+ *   contains both Rockaway borough and Rockaway township — two separate
+ *   municipalities, each with its own council, both slugging to `rockaway`.
+ *   Hunterdon has Clinton town and Clinton township; Morris also has Mendham
+ *   borough and Mendham township. 30 of New Jersey's 564 subdivisions collide
+ *   this way.
+ * - **Omitting the county collides across counties.** Six different Washington
+ *   townships, five Franklins. Arizona's Fort Apache CCD spans three counties
+ *   as three separate records.
+ *
+ * So the identifier carries both: `state:nj/county:morris/place:rockaway_township`.
+ *
+ * **This does not match the canonical list everywhere, and that is unresolved.**
+ * `opencivicdata/ocd-division-ids` nests New Jersey under county but lists New
+ * Hampshire towns flat (`state:nh/place:newbury`), and it appears to omit New
+ * Jersey's townships entirely — `county:morris/place:rockaway` is present, the
+ * township is not. Reconciling is tracker **D15**; until then treat a match
+ * here as "same shape on the map", never as "same division as the state's own
+ * records", and do not join an officeholder onto one.
+ */
+export function subdivisionIdentity(
+  statefp: string,
+  countyName: string,
+  nameLsad: string,
+  lsad?: string,
+): DivisionIdentity | null {
+  const state = stateBase(statefp);
+  if (!state || !nameLsad.trim() || !countyName.trim()) return null;
+
+  // `NAMELSADCO` arrives as "Morris County" / "Merrimack County"; the canonical
+  // vocabulary drops the suffix, matching countyIdentity above.
+  const county = slugify(countyName.replace(/\s+(County|Parish|Borough|Census Area)$/i, ""));
+  const slug = slugify(nameLsad);
+  if (!county || !slug) return null;
+
+  return {
+    ocdId: `${state.base}/county:${county}/place:${slug}`,
+    state: state.postal,
+    district: slug,
+    label: nameLsad.trim(),
+    lsad: lsad?.trim() || undefined,
   };
 }
 

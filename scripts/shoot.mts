@@ -2,7 +2,7 @@
  * Screenshot the running app.
  *
  * `pnpm shoot <name> [--zip 85701] [--theme dark|light] [--districts]
- *                    [--viewport 1440x900] [--path /] [--wait 6000]`
+ *                    [--viewport 1440x900] [--path /] [--wait 6000] [--zoom 14]`
  *
  * Why this exists: MapLibre renders on requestAnimationFrame, which browsers
  * stop delivering to a tab that is occluded or backgrounded. Capturing through
@@ -153,6 +153,53 @@ if (clicked) {
 if (flag("list")) {
   await page.click(".count-badge");
   await page.waitForTimeout(400);
+}
+
+// Switch every district type on. The default is one per tier; this is how the
+// worst case gets captured — all three Local boundaries over the same ground.
+if (flag("alltypes")) {
+  const boxes = page.locator("label.filter-check input[type=checkbox]");
+  for (let i = 0; i < (await boxes.count()); i++) {
+    const box = boxes.nth(i);
+    if (!(await box.isChecked())) await box.check();
+  }
+  await page.waitForTimeout(1500);
+}
+
+// Force a zoom level. District legibility is a function of zoom — five Local
+// boundaries that read cleanly at z9 can be a solid mat at z14 — so verifying
+// that work means capturing the same place at several zooms.
+const zoomTo = arg("zoom");
+if (zoomTo) {
+  await page.evaluate((z) => {
+    // Same fiber walk as the stats block below: the map instance is not on
+    // window, so this is the only handle on it from the page.
+    const el = document.querySelector(".maplibregl-map");
+    if (!el) return;
+    const key = Object.keys(el).find((k) => k.startsWith("__reactFiber$"));
+    if (!key) return;
+
+    let fiber = (el as unknown as Record<string, { memoizedState?: unknown; return?: unknown }>)[key];
+    let depth = 0;
+    while (fiber && depth < 40) {
+      let hook = fiber.memoizedState as { memoizedState?: unknown; next?: unknown } | undefined;
+      let i = 0;
+      while (hook && i < 25) {
+        const s = hook.memoizedState as { current?: { setZoom?: (z: number) => void; getStyle?: unknown } } | undefined;
+        if (s && typeof s === "object" && s.current && typeof s.current.getStyle === "function") {
+          s.current.setZoom?.(z);
+          return;
+        }
+        hook = hook.next as typeof hook;
+        i++;
+      }
+      fiber = fiber.return as typeof fiber;
+      depth++;
+    }
+  }, Number(zoomTo));
+  // Re-tiling at a new zoom is not instant, and a shot taken mid-fetch shows
+  // fewer boundaries than the map actually draws.
+  await page.waitForTimeout(4000);
 }
 
 await mkdir(OUT_DIR, { recursive: true });

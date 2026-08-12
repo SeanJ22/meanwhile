@@ -24,8 +24,17 @@ export type OcdId = string;
  * never inferred.
  */
 export interface Provenance {
-  /** The exact page or endpoint this record was read from. */
-  sourceUrl: string;
+  /**
+   * The exact page or endpoint this record was read from.
+   *
+   * Null when there is no such page to name. That is a real state, not an
+   * oversight: a body that publishes by phone or by paper has no permalink,
+   * and a fixture was not read from anywhere at all. The one thing this field
+   * must never hold is a plausible-looking URL that was constructed rather
+   * than observed — a fabricated citation is worse than a missing one,
+   * because it is invisible until a reader clicks it.
+   */
+  sourceUrl: string | null;
   /** The organization that published it, e.g. "City of Tucson Clerk". */
   sourceOrg: string;
   /** When we fetched it. */

@@ -1,9 +1,12 @@
-import { haversineKm } from "@/lib/geo/distance";
-import { matchesTiers, tierForOcdId } from "@/lib/ocd/tiers";
-import type { Meeting } from "@/lib/sources/types";
+// Relative, extension-bearing imports rather than the `@/` alias: this module
+// is pure and belongs under `node --test`, which cannot resolve the alias. The
+// rest of lib/ is already written this way.
+import { haversineKm } from "../geo/distance.ts";
+import { matchesTiers, tierForOcdId } from "../ocd/tiers.ts";
+import type { Meeting } from "../sources/types.ts";
 
-import { ALL_DISTRICT_TYPES } from "./reducer";
-import type { BodyType, UiState } from "./types";
+import { ALL_DISTRICT_TYPES } from "./reducer.ts";
+import type { BodyType, UiState } from "./types.ts";
 
 /**
  * Turning the shared state into the list everything renders.

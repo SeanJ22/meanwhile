@@ -8,7 +8,31 @@
  * Dates are day offsets rather than absolute, so a checkout from six months ago
  * still opens on a live-looking calendar. The adapter resolves them against the
  * body's own time zone at fetch time.
+ *
+ * **Every URL here is null, deliberately.** These rows carried invented
+ * permalinks — `tusd1.org/agendas/4107`, `tucson.legistar.com/...ID=4101` — that
+ * looked exactly like real ones and resolved to a front page or a 404. That is
+ * the fabrication CLAUDE.md's sourcing rule exists to prevent, and it is worse
+ * in a fixture than in application code because nothing surfaces it until a
+ * reader clicks. These meetings were not read from anywhere, so no URL can
+ * honestly cite them: null is the true value, and `meeting-panel.tsx` already
+ * renders "No agenda posted yet" for it.
+ *
+ * A real permalink may only appear here once someone has actually opened it and
+ * added its host to FIXTURE_SOURCE_HOSTS below — which is what makes adding one
+ * a visible diff rather than a silent invention.
  */
+
+/**
+ * Hosts a fixture is allowed to cite.
+ *
+ * Empty, because nothing in this file was read from anywhere. Enforced by
+ * `tests/fixture-provenance.test.ts`. The list is the point: a fixture cannot
+ * gain a URL without someone editing this array in the same change, so a
+ * fabricated citation cannot slip in unreviewed. It guards the real adapters
+ * too, where a `normalize()` that drops provenance produces the same symptom.
+ */
+export const FIXTURE_SOURCE_HOSTS: readonly string[] = [];
 
 export interface LegistarEventFixture {
   EventId: number;
@@ -24,7 +48,7 @@ export interface LegistarEventFixture {
   EventLatitude: number;
   EventLongitude: number;
   EventAgendaFile: string | null;
-  EventInSiteURL: string;
+  EventInSiteURL: string | null;
   /** "Final" once the body has met; Legistar leaves it null beforehand. */
   EventAgendaStatusName: "Draft" | "Final" | null;
   EventCanceled: boolean;
@@ -52,8 +76,8 @@ const TUCSON: LegistarEventFixture[] = [
     EventAddress: "255 W Alameda St, Tucson, AZ 85701",
     EventLatitude: 32.2226,
     EventLongitude: -110.9747,
-    EventAgendaFile: "https://tucson.legistar.com/View.ashx?M=A&ID=4101",
-    EventInSiteURL: "https://tucson.legistar.com/MeetingDetail.aspx?ID=4101",
+    EventAgendaFile: null,
+    EventInSiteURL: null,
     EventAgendaStatusName: "Final",
     EventCanceled: false,
     DivisionOcdId: "ocd-division/country:us/state:az/place:tucson",
@@ -73,7 +97,7 @@ const TUCSON: LegistarEventFixture[] = [
     EventLatitude: 32.2226,
     EventLongitude: -110.9747,
     EventAgendaFile: null,
-    EventInSiteURL: "https://tucson.legistar.com/MeetingDetail.aspx?ID=4102",
+    EventInSiteURL: null,
     EventAgendaStatusName: "Draft",
     EventCanceled: false,
     DivisionOcdId: "ocd-division/country:us/state:az/place:tucson",
@@ -92,8 +116,8 @@ const TUCSON: LegistarEventFixture[] = [
     EventAddress: "255 W Alameda St, Tucson, AZ 85701",
     EventLatitude: 32.2224,
     EventLongitude: -110.9741,
-    EventAgendaFile: "https://tucson.legistar.com/View.ashx?M=A&ID=4103",
-    EventInSiteURL: "https://tucson.legistar.com/MeetingDetail.aspx?ID=4103",
+    EventAgendaFile: null,
+    EventInSiteURL: null,
     EventAgendaStatusName: "Final",
     EventCanceled: false,
     DivisionOcdId: "ocd-division/country:us/state:az/place:tucson",
@@ -112,8 +136,8 @@ const TUCSON: LegistarEventFixture[] = [
     EventAddress: "201 N Stone Ave, Tucson, AZ 85701",
     EventLatitude: 32.2244,
     EventLongitude: -110.9714,
-    EventAgendaFile: "https://tucson.legistar.com/View.ashx?M=A&ID=4104",
-    EventInSiteURL: "https://tucson.legistar.com/MeetingDetail.aspx?ID=4104",
+    EventAgendaFile: null,
+    EventInSiteURL: null,
     EventAgendaStatusName: "Final",
     EventCanceled: false,
     DivisionOcdId: "ocd-division/country:us/state:az/place:tucson",
@@ -132,8 +156,8 @@ const TUCSON: LegistarEventFixture[] = [
     EventAddress: "130 W Congress St, Tucson, AZ 85701",
     EventLatitude: 32.2213,
     EventLongitude: -110.9731,
-    EventAgendaFile: "https://pima.legistar.com/View.ashx?M=A&ID=4105",
-    EventInSiteURL: "https://pima.legistar.com/MeetingDetail.aspx?ID=4105",
+    EventAgendaFile: null,
+    EventInSiteURL: null,
     EventAgendaStatusName: "Final",
     EventCanceled: false,
     DivisionOcdId: "ocd-division/country:us/state:az/county:pima",
@@ -153,7 +177,7 @@ const TUCSON: LegistarEventFixture[] = [
     EventLatitude: 32.221,
     EventLongitude: -110.9736,
     EventAgendaFile: null,
-    EventInSiteURL: "https://pima.legistar.com/MeetingDetail.aspx?ID=4106",
+    EventInSiteURL: null,
     EventAgendaStatusName: "Draft",
     EventCanceled: false,
     DivisionOcdId: "ocd-division/country:us/state:az/county:pima",
@@ -172,8 +196,8 @@ const TUCSON: LegistarEventFixture[] = [
     EventAddress: "1010 E 10th St, Tucson, AZ 85719",
     EventLatitude: 32.2295,
     EventLongitude: -110.9569,
-    EventAgendaFile: "https://tusd1.org/agendas/4107",
-    EventInSiteURL: "https://tusd1.org/governing-board/meetings/4107",
+    EventAgendaFile: null,
+    EventInSiteURL: null,
     EventAgendaStatusName: "Final",
     EventCanceled: false,
     DivisionOcdId:
@@ -194,7 +218,7 @@ const TUCSON: LegistarEventFixture[] = [
     EventLatitude: 32.2295,
     EventLongitude: -110.9569,
     EventAgendaFile: null,
-    EventInSiteURL: "https://tusd1.org/governing-board/meetings/4108",
+    EventInSiteURL: null,
     EventAgendaStatusName: null,
     EventCanceled: false,
     DivisionOcdId:
@@ -214,8 +238,8 @@ const TUCSON: LegistarEventFixture[] = [
     EventAddress: "310 W Alameda St, Tucson, AZ 85701",
     EventLatitude: 32.2229,
     EventLongitude: -110.9784,
-    EventAgendaFile: "https://tucson.legistar.com/View.ashx?M=A&ID=4109",
-    EventInSiteURL: "https://tucson.legistar.com/MeetingDetail.aspx?ID=4109",
+    EventAgendaFile: null,
+    EventInSiteURL: null,
     EventAgendaStatusName: "Final",
     EventCanceled: false,
     DivisionOcdId: "ocd-division/country:us/state:az/place:tucson",
@@ -234,8 +258,8 @@ const TUCSON: LegistarEventFixture[] = [
     EventAddress: "3202 E 1st St, Tucson, AZ 85716",
     EventLatitude: 32.2224,
     EventLongitude: -110.9264,
-    EventAgendaFile: "https://tucson.legistar.com/View.ashx?M=A&ID=4110",
-    EventInSiteURL: "https://tucson.legistar.com/MeetingDetail.aspx?ID=4110",
+    EventAgendaFile: null,
+    EventInSiteURL: null,
     EventAgendaStatusName: "Final",
     EventCanceled: false,
     DivisionOcdId: "ocd-division/country:us/state:az/place:tucson",
@@ -255,7 +279,7 @@ const TUCSON: LegistarEventFixture[] = [
     EventLatitude: 32.2503,
     EventLongitude: -110.9484,
     EventAgendaFile: null,
-    EventInSiteURL: "https://tucson.legistar.com/MeetingDetail.aspx?ID=4111",
+    EventInSiteURL: null,
     EventAgendaStatusName: "Draft",
     EventCanceled: false,
     DivisionOcdId: "ocd-division/country:us/state:az/place:tucson",
@@ -274,8 +298,8 @@ const TUCSON: LegistarEventFixture[] = [
     EventAddress: "1 E Broadway Blvd, Tucson, AZ 85701",
     EventLatitude: 32.2213,
     EventLongitude: -110.9698,
-    EventAgendaFile: "https://pagregion.com/agendas/4112",
-    EventInSiteURL: "https://pagregion.com/meetings/4112",
+    EventAgendaFile: null,
+    EventInSiteURL: null,
     EventAgendaStatusName: "Final",
     EventCanceled: false,
     DivisionOcdId: "ocd-division/country:us/state:az/county:pima",
@@ -294,8 +318,8 @@ const TUCSON: LegistarEventFixture[] = [
     EventAddress: "400 N Toole Ave, Tucson, AZ 85701",
     EventLatitude: 32.2244,
     EventLongitude: -110.9668,
-    EventAgendaFile: "https://tucson.legistar.com/View.ashx?M=A&ID=4113",
-    EventInSiteURL: "https://tucson.legistar.com/MeetingDetail.aspx?ID=4113",
+    EventAgendaFile: null,
+    EventInSiteURL: null,
     EventAgendaStatusName: "Final",
     EventCanceled: false,
     DivisionOcdId: "ocd-division/country:us/state:az/place:tucson",
@@ -314,8 +338,8 @@ const TUCSON: LegistarEventFixture[] = [
     EventAddress: "11000 N La Cañada Dr, Oro Valley, AZ 85737",
     EventLatitude: 32.4189,
     EventLongitude: -110.9695,
-    EventAgendaFile: "https://orovalleyaz.gov/agendas/4114",
-    EventInSiteURL: "https://orovalleyaz.gov/meetings/4114",
+    EventAgendaFile: null,
+    EventInSiteURL: null,
     EventAgendaStatusName: "Final",
     EventCanceled: false,
     DivisionOcdId: "ocd-division/country:us/state:az/place:oro_valley",
@@ -335,7 +359,7 @@ const TUCSON: LegistarEventFixture[] = [
     EventLatitude: 32.4287,
     EventLongitude: -111.2229,
     EventAgendaFile: null,
-    EventInSiteURL: "https://maranaaz.gov/meetings/4115",
+    EventInSiteURL: null,
     EventAgendaStatusName: "Draft",
     EventCanceled: false,
     DivisionOcdId: "ocd-division/country:us/state:az/place:marana",
@@ -355,7 +379,7 @@ const TUCSON: LegistarEventFixture[] = [
     EventLatitude: 32.2246,
     EventLongitude: -110.9709,
     EventAgendaFile: null,
-    EventInSiteURL: "https://tucson.legistar.com/MeetingDetail.aspx?ID=4116",
+    EventInSiteURL: null,
     EventAgendaStatusName: null,
     EventCanceled: true,
     DivisionOcdId: "ocd-division/country:us/state:az/place:tucson",
@@ -374,8 +398,8 @@ const TUCSON: LegistarEventFixture[] = [
     EventAddress: "255 W Alameda St, Tucson, AZ 85701",
     EventLatitude: 32.2226,
     EventLongitude: -110.9747,
-    EventAgendaFile: "https://tucson.legistar.com/View.ashx?M=A&ID=4117",
-    EventInSiteURL: "https://tucson.legistar.com/MeetingDetail.aspx?ID=4117",
+    EventAgendaFile: null,
+    EventInSiteURL: null,
     EventAgendaStatusName: "Final",
     EventCanceled: false,
     DivisionOcdId: "ocd-division/country:us/state:az/place:tucson",
@@ -405,8 +429,8 @@ const ROCKAWAY_NJ: LegistarEventFixture[] = [
     EventAddress: "65 Mount Hope Rd, Rockaway, NJ 07866",
     EventLatitude: 40.9401,
     EventLongitude: -74.5169,
-    EventAgendaFile: "https://rockawaytownship.org/agendas/5201",
-    EventInSiteURL: "https://rockawaytownship.org/meetings/5201",
+    EventAgendaFile: null,
+    EventInSiteURL: null,
     EventAgendaStatusName: "Final",
     EventCanceled: false,
     DivisionOcdId: "ocd-division/country:us/state:nj/place:rockaway_township",
@@ -426,7 +450,7 @@ const ROCKAWAY_NJ: LegistarEventFixture[] = [
     EventLatitude: 40.9401,
     EventLongitude: -74.5169,
     EventAgendaFile: null,
-    EventInSiteURL: "https://rockawaytownship.org/meetings/5202",
+    EventInSiteURL: null,
     EventAgendaStatusName: "Draft",
     EventCanceled: false,
     DivisionOcdId: "ocd-division/country:us/state:nj/place:rockaway_township",
@@ -445,8 +469,8 @@ const ROCKAWAY_NJ: LegistarEventFixture[] = [
     EventAddress: "65 Mount Hope Rd, Rockaway, NJ 07866",
     EventLatitude: 40.9401,
     EventLongitude: -74.5169,
-    EventAgendaFile: "https://rockawaytownship.org/agendas/5203",
-    EventInSiteURL: "https://rockawaytownship.org/meetings/5203",
+    EventAgendaFile: null,
+    EventInSiteURL: null,
     EventAgendaStatusName: "Final",
     EventCanceled: true,
     DivisionOcdId: "ocd-division/country:us/state:nj/place:rockaway_township",
@@ -465,8 +489,8 @@ const ROCKAWAY_NJ: LegistarEventFixture[] = [
     EventAddress: "10 Court St, Morristown, NJ 07960",
     EventLatitude: 40.7968,
     EventLongitude: -74.4815,
-    EventAgendaFile: "https://morriscountynj.gov/agendas/5204",
-    EventInSiteURL: "https://morriscountynj.gov/meetings/5204",
+    EventAgendaFile: null,
+    EventInSiteURL: null,
     EventAgendaStatusName: "Final",
     EventCanceled: false,
     DivisionOcdId: "ocd-division/country:us/state:nj/county:morris",
@@ -486,7 +510,7 @@ const ROCKAWAY_NJ: LegistarEventFixture[] = [
     EventLatitude: 40.7968,
     EventLongitude: -74.4815,
     EventAgendaFile: null,
-    EventInSiteURL: "https://morriscountynj.gov/meetings/5205",
+    EventInSiteURL: null,
     EventAgendaStatusName: null,
     EventCanceled: false,
     DivisionOcdId: "ocd-division/country:us/state:nj/county:morris",
@@ -505,8 +529,8 @@ const ROCKAWAY_NJ: LegistarEventFixture[] = [
     EventAddress: "100 Mount Hope Rd, Rockaway, NJ 07866",
     EventLatitude: 40.9372,
     EventLongitude: -74.5188,
-    EventAgendaFile: "https://rocktwp.net/agendas/5206",
-    EventInSiteURL: "https://rocktwp.net/board/meetings/5206",
+    EventAgendaFile: null,
+    EventInSiteURL: null,
     EventAgendaStatusName: "Final",
     EventCanceled: false,
     DivisionOcdId:
@@ -526,8 +550,8 @@ const ROCKAWAY_NJ: LegistarEventFixture[] = [
     EventAddress: "100 Mount Hope Rd, Rockaway, NJ 07866",
     EventLatitude: 40.9372,
     EventLongitude: -74.5188,
-    EventAgendaFile: "https://rocktwp.net/agendas/5207",
-    EventInSiteURL: "https://rocktwp.net/board/meetings/5207",
+    EventAgendaFile: null,
+    EventInSiteURL: null,
     EventAgendaStatusName: "Final",
     EventCanceled: false,
     DivisionOcdId:
@@ -548,7 +572,7 @@ const ROCKAWAY_NJ: LegistarEventFixture[] = [
     EventLatitude: 40.9401,
     EventLongitude: -74.5169,
     EventAgendaFile: null,
-    EventInSiteURL: "https://rockawaytownship.org/meetings/5208",
+    EventInSiteURL: null,
     EventAgendaStatusName: null,
     EventCanceled: false,
     DivisionOcdId: "ocd-division/country:us/state:nj/place:rockaway_township",
@@ -578,8 +602,8 @@ const NEWBURY_NH: LegistarEventFixture[] = [
     EventAddress: "937 Route 103, Newbury, NH 03255",
     EventLatitude: 43.3222,
     EventLongitude: -72.0389,
-    EventAgendaFile: "https://newburynh.org/agendas/6301",
-    EventInSiteURL: "https://newburynh.org/meetings/6301",
+    EventAgendaFile: null,
+    EventInSiteURL: null,
     EventAgendaStatusName: "Final",
     EventCanceled: false,
     DivisionOcdId: "ocd-division/country:us/state:nh/place:newbury",
@@ -599,7 +623,7 @@ const NEWBURY_NH: LegistarEventFixture[] = [
     EventLatitude: 43.3222,
     EventLongitude: -72.0389,
     EventAgendaFile: null,
-    EventInSiteURL: "https://newburynh.org/meetings/6302",
+    EventInSiteURL: null,
     EventAgendaStatusName: "Draft",
     EventCanceled: false,
     DivisionOcdId: "ocd-division/country:us/state:nh/place:newbury",
@@ -618,8 +642,8 @@ const NEWBURY_NH: LegistarEventFixture[] = [
     EventAddress: "937 Route 103, Newbury, NH 03255",
     EventLatitude: 43.3222,
     EventLongitude: -72.0389,
-    EventAgendaFile: "https://newburynh.org/agendas/6303",
-    EventInSiteURL: "https://newburynh.org/meetings/6303",
+    EventAgendaFile: null,
+    EventInSiteURL: null,
     EventAgendaStatusName: "Final",
     EventCanceled: false,
     DivisionOcdId: "ocd-division/country:us/state:nh/place:newbury",
@@ -638,8 +662,8 @@ const NEWBURY_NH: LegistarEventFixture[] = [
     EventAddress: "457 North Rd, North Sutton, NH 03260",
     EventLatitude: 43.3392,
     EventLongitude: -71.9407,
-    EventAgendaFile: "https://kearsarge.org/agendas/6304",
-    EventInSiteURL: "https://kearsarge.org/board/meetings/6304",
+    EventAgendaFile: null,
+    EventInSiteURL: null,
     EventAgendaStatusName: "Final",
     EventCanceled: false,
     DivisionOcdId:
@@ -659,8 +683,8 @@ const NEWBURY_NH: LegistarEventFixture[] = [
     EventAddress: "457 North Rd, North Sutton, NH 03260",
     EventLatitude: 43.3392,
     EventLongitude: -71.9407,
-    EventAgendaFile: "https://kearsarge.org/agendas/6305",
-    EventInSiteURL: "https://kearsarge.org/board/meetings/6305",
+    EventAgendaFile: null,
+    EventInSiteURL: null,
     EventAgendaStatusName: "Final",
     EventCanceled: false,
     DivisionOcdId:
@@ -680,8 +704,8 @@ const NEWBURY_NH: LegistarEventFixture[] = [
     EventAddress: "333 Daniel Webster Hwy, Boscawen, NH 03303",
     EventLatitude: 43.3162,
     EventLongitude: -71.669,
-    EventAgendaFile: "https://merrimackcounty.net/agendas/6306",
-    EventInSiteURL: "https://merrimackcounty.net/meetings/6306",
+    EventAgendaFile: null,
+    EventInSiteURL: null,
     EventAgendaStatusName: "Final",
     EventCanceled: false,
     DivisionOcdId: "ocd-division/country:us/state:nh/county:merrimack",
@@ -708,8 +732,8 @@ const COCHISE_CONCLUDED: LegistarEventFixture[] = [
     EventAddress: "1415 Melody Ln, Bisbee, AZ 85603",
     EventLatitude: 31.4293,
     EventLongitude: -109.9187,
-    EventAgendaFile: "https://cochise.az.gov/agendas/9301",
-    EventInSiteURL: "https://cochise.az.gov/meetings/9301",
+    EventAgendaFile: null,
+    EventInSiteURL: null,
     EventAgendaStatusName: "Final",
     EventCanceled: false,
     DivisionOcdId: "ocd-division/country:us/state:az/county:cochise",
@@ -728,8 +752,8 @@ const COCHISE_CONCLUDED: LegistarEventFixture[] = [
     EventAddress: "425 10th St, Douglas, AZ 85607",
     EventLatitude: 31.3445,
     EventLongitude: -109.5453,
-    EventAgendaFile: "https://douglasaz.gov/agendas/9302",
-    EventInSiteURL: "https://douglasaz.gov/meetings/9302",
+    EventAgendaFile: null,
+    EventInSiteURL: null,
     EventAgendaStatusName: "Final",
     EventCanceled: false,
     DivisionOcdId: "ocd-division/country:us/state:az/place:douglas",
@@ -749,7 +773,7 @@ const COCHISE_CONCLUDED: LegistarEventFixture[] = [
     EventLatitude: 31.5545,
     EventLongitude: -110.2989,
     EventAgendaFile: null,
-    EventInSiteURL: "https://sierravistaaz.gov/meetings/9303",
+    EventInSiteURL: null,
     EventAgendaStatusName: "Final",
     EventCanceled: false,
     DivisionOcdId: "ocd-division/country:us/state:az/place:sierra_vista",

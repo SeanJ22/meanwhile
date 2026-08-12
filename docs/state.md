@@ -5,8 +5,8 @@ what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
 Last updated: 2026-08-12, after Phase 4.5 and the first half of Phase 4.6.
-Branch: `claude/civic-map-entry-screen-4ey1cs`. Pushed through `619b839`;
-the nine commits after it are local and **not pushed**.
+Branch: `claude/civic-map-entry-screen-4ey1cs`, with **five unpushed commits**.
+See §7 — checked against `origin`, not assumed.
 
 ---
 
@@ -1002,22 +1002,25 @@ replaced.
 
 ## 7. Current state of the branch
 
-Branch `claude/civic-map-entry-screen-4ey1cs`. Working tree clean.
+Branch `claude/civic-map-entry-screen-4ey1cs`. Working tree clean. Verified
+against `origin` on 2026-08-12 rather than assumed — an earlier version of this
+section was counting against a stale `origin/main`.
 
-Fifteen commits ahead of `origin/main` and **one behind it** — `origin/main` is
-at `b162fdc`, so a merge or rebase is needed before a PR. **Only the first seven
-of these are pushed**; everything from `2194696` onward is local.
+**Five commits are unpushed.** The branch is 5 ahead of
+`origin/claude/civic-map-entry-screen-4ey1cs` and 0 behind it, so a push is a
+fast-forward with nothing to reconcile.
 
 ```
+13dce33  Bring state.md and the tracker current through 4.6
 bb63c41  Generate the division and body registry               (Phase 4.6)
 05cbd59  Build the boundary data the derivation rule needs     (Phase 4.6)
 e4ecc1e  Record the transcript step, fix the branch line
 38f7bf0  Fix the four defects found testing the Phase 4 build  (Phase 4.5)
+----------------------------------------------- pushed below this line -------
 05e9f4b  Note the transcripts folder in the G Drive mirror
 4ff074c  Note that map layer edits need a full reload, not HMR
 07aee63  Mirror tracker.csv to G Drive, document the mirror rule
 2194696  Bring docs/state.md up to date with phases 0-4
------------------------------------------------- pushed below this line ------
 619b839  Add seven district overlays and click-to-select       (Phase 4)
 973a5eb  Replace the entry notice with the welcome overlay     (Phase 3)
 a0d47cb  Port the EdiaStratMap application shell               (Phase 2)
@@ -1026,6 +1029,16 @@ a0d47cb  Port the EdiaStratMap application shell               (Phase 2)
 89d5606  Note OCD at-large discrepancy risk on D07             (pre-existing)
 39cd657  Add national congressional district overlay           (pre-existing)
 ```
+
+**`origin/main` holds nothing this branch is missing.** It is at `149df6d` and
+its two commits are both pull-request merges *of this branch* — PR #1 at
+`b162fdc` and PR #2 at `149df6d` — with no original work of their own
+(`git log --no-merges HEAD..origin/main` is empty). Its tree is byte-identical
+to `07aee63`, which is an ancestor of the current HEAD.
+
+So the branch is 7 ahead of `origin/main` and 2 "behind" it, where those two are
+merge commits carrying content the branch already has. A merge or rebase before
+the next PR is a bookkeeping step, not a way to recover anything.
 
 `.env.local` is gitignored and holds the MapTiler key,
 `NEXT_PUBLIC_MAPTILER_STYLE=basic-v2-dark` and

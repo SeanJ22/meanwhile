@@ -694,9 +694,70 @@ list**.
 | `state:nj/place:rockaway_township` | `state:nj/county:morris/place:rockaway` — nested, and the township appears absent |
 | `state:nh/place:newbury` | same, flat — **the nesting rule varies by state** |
 
-CLAUDE.md makes OCD-IDs the only join key, and `bodies.ocdId` is that join. A
-registry built on these keys hands Phase 5 a broken join, so **the convention
-needs deciding before the registry is written**, not after. Tracker **D15**.
+CLAUDE.md makes OCD-IDs the only join key, and `bodies.ocdId` is that join.
+**Decided 2026-08-12: the internal key stays authoritative and the canonical
+identifier rides alongside it with a confidence.** Adopting the canonical shape
+wholesale would make Rockaway Township — a real municipality with its own
+council — unrepresentable, so it is the one option that can lose a government.
+Carrying both keeps every division and *gains* the canonical mapping wherever
+it exists, which is the shape Phase 4.7.4 prescribes for national scale anyway.
+Reconciliation quality is reported below and re-run by `pnpm registry:build`.
+Tracker **D15** tracks closing the gaps.
+
+### 4.4 The registry — what it generates (2026-08-12)
+
+`pnpm registry:build` reads the committed boundary files and writes
+`lib/registry/registry.json`: **940 divisions, 297 bodies.** Committed the way
+the boundary files are, so nothing at runtime needs a database — which matters,
+because `lib/db/schema.ts` is still `export {}`.
+
+| Division type | Divisions | Bodies | Why |
+|---|---|---|---|
+| county | 3 | 3 | one governing body each |
+| place | 272 | **153** | 119 skipped — CDPs and CCDs have no government |
+| school_district | 141 | 141 | one governing board each |
+| cd / sldu / sldl | 524 | **0** | a legislative seat is not a body that meets |
+
+The two zero rows are the point. **119 statistical divisions produced no body**,
+and **524 legislative districts produced none either** — a district elects a
+seat in a chamber that sits elsewhere, and Arizona's districts elect three
+people between two chambers, so the district is not even one seat.
+
+**Against the hand oracle**, all four target zips resolve every division on
+their list:
+
+| Zip | Divisions | Bodies | Notably |
+|---|---|---|---|
+| 85701 | 7 | 3 | Pima, Tucson, Tucson Unified |
+| 85641 | 6 | **2** | Pima and Vail Unified — **no municipal body**, correctly |
+| 07866 | 8 | **4** | Rockaway *township* plus **two** school districts |
+| 03255 | 6 | 3 | Merrimack, Newbury *town*, Kearsarge Regional |
+
+85641 is the case the whole phase exists for: the only municipal-shaped division
+covering the centroid is Tucson CCD, a statistical artifact, so the rule
+produces no council while still finding Vail Unified's board.
+
+**Every generated row is `bodyOrigin: DERIVED_FROM_DIVISION_TYPE`,
+`coverageStatus: NO_SOURCE_FOUND`, `agendaSourceType: NONE`, and `name: null`.**
+The claim is structural — *this division has a governing board* — never a
+sourced claim about its name, schedule or members. Names vary by state
+(supervisors, commissioners, select boards) and a plausible invented one is the
+fabricated-agenda-URL failure again, except read aloud. `tests/registry-oracle.test.ts`
+asserts all four properties on every row.
+
+**Canonical reconciliation**, from `pnpm registry:build`:
+
+| Type | exact | high | none |
+|---|---|---|---|
+| cd | 441 | — | — |
+| county | 3 | — | — |
+| sldu | 25 | — | — |
+| sldl | 15 | — | 43 |
+| school_district | — | 64 | 77 |
+| place | 44 | — | 228 |
+
+`none` is concentrated exactly where §4.3 predicted: county subdivisions, which
+the canonical list either nests differently or omits.
 
 ---
 

@@ -17,7 +17,8 @@
     "zcta:fetch": "tsx scripts/fetch-zcta-centroids.ts",
     "districts:fetch": "tsx scripts/fetch-districts.ts",
     "shoot": "tsx scripts/shoot.mts",
-    "registry:build": "tsx scripts/build-registry.ts"
+    "registry:build": "tsx scripts/build-registry.ts",
+    "handoff": "node scripts/handoff.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

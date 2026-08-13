@@ -1,0 +1,34 @@
+# Deploy configuration, pinned rather than autodetected.
+#
+# The first deploy (main@7b9ccb0) went green on Netlify's autodetected
+# settings, which is the dangerous form of a wrong configuration: the default
+# build command runs whatever global pnpm the build image ships, while this
+# repo pins pnpm 10.33.0 through the `packageManager` field and expects the
+# `corepack pnpm` prefix everywhere. That happens to work until a lockfile
+# change makes the two versions disagree, and the failure would look unrelated
+# to its cause. So everything autodetection guessed is written down here.
+#
+# Verification is reading the deploy's build log for the pnpm version that
+# actually ran — never inferring it from a green build.
+
+[build]
+  command = "corepack enable && corepack pnpm run build"
+  publish = ".next"
+
+[build.environment]
+  # package.json pins packageManager pnpm@10.33.0; corepack honours it.
+  # Node 24 is what the repo is developed and tested on (no engines field —
+  # see docs/state.md §1).
+  NODE_VERSION = "24"
+
+[functions]
+  directory = "netlify/functions"
+
+# The demo is unlisted: platform-level visibility is the access control, and
+# these headers keep crawlers from indexing whatever they can reach anyway.
+# Belt to the braces in next.config.ts `headers()`, which covers Next-served
+# routes; this covers anything served off the CDN without touching Next.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"

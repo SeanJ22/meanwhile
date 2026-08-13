@@ -1,0 +1,281 @@
+[
+  {
+    "EventItemId": 327390,
+    "EventItemAgendaSequence": 1,
+    "EventItemTitle": "PIMA COUNTY BOARD OF SUPERVISORS",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": null,
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 0
+  },
+  {
+    "EventItemId": 327391,
+    "EventItemAgendaSequence": 2,
+    "EventItemTitle": "AGENDA/ADDENDUM AND BROADCAST INFORMATION",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": null,
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 0
+  },
+  {
+    "EventItemId": 327392,
+    "EventItemAgendaSequence": 3,
+    "EventItemTitle": "PUBLIC COMMENTS",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": null,
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 0
+  },
+  {
+    "EventItemId": 327393,
+    "EventItemAgendaSequence": 4,
+    "EventItemTitle": "HEARING ROOM NOTICE",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": null,
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 0
+  },
+  {
+    "EventItemId": 327394,
+    "EventItemAgendaSequence": 5,
+    "EventItemTitle": "ACCESSIBILITY",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": null,
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 0
+  },
+  {
+    "EventItemId": 327395,
+    "EventItemAgendaSequence": 6,
+    "EventItemTitle": "PAGE BREAK",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": null,
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 0
+  },
+  {
+    "EventItemId": 327396,
+    "EventItemAgendaSequence": 7,
+    "EventItemTitle": "Clerk's Note:  Members of the Pima County Board of Supervisors will attend either in person or by telephone, video or internet conferencing.\r\n\r\nThe meeting can be streamed via the following links:  BOS Agenda August 11, 2026\r\n(http://pima.granicus.com/ViewPublisher.php?view_id=3), on YouTube (https://www.youtube.com/c/PimaCountyArizona/), or via Cox Cable Channel 96.  Television viewing will be available in the lobby at 130 West Congress, 1st Floor.\r\n",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": null,
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 0
+  },
+  {
+    "EventItemId": 327397,
+    "EventItemAgendaSequence": 8,
+    "EventItemTitle": "ROLL CALL",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": null,
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 1
+  },
+  {
+    "EventItemId": 327402,
+    "EventItemAgendaSequence": 9,
+    "EventItemTitle": "AGENDA ADJUSTMENTS",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": null,
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 0
+  },
+  {
+    "EventItemId": 327409,
+    "EventItemAgendaSequence": 10,
+    "EventItemTitle": "EXECUTIVE SESSION",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": null,
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 0
+  },
+  {
+    "EventItemId": 327426,
+    "EventItemAgendaSequence": 11,
+    "EventItemTitle": "BOARD OF SUPERVISORS",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": null,
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 0
+  },
+  {
+    "EventItemId": 327427,
+    "EventItemAgendaSequence": 12,
+    "EventItemTitle": "UNFINISHED BUSINESS (6/9/26 and 7/14/26)\r\nStaffing Processes and Vacancy Policy\r\n1.\tDiscussion with County Administrator and Deputy County Administrators as to how staffing requests are analyzed and discussed with elected officials and department directors during the annual budgeting process. Also, discussion with same as to how staffing is discussed and monitored by administration throughout the rest of the year.\r\n2.\tDiscussion with County Administrator and Deputy County Administrators regarding the existing vacancy policy, how/why its current version was developed and if revisions to the current version should be considered. (District 1)",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": "File ID 20342",
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 0
+  },
+  {
+    "EventItemId": 327430,
+    "EventItemAgendaSequence": 13,
+    "EventItemTitle": "Board of Supervisors Representative Updates on Boards, Committees and Commissions and Any Other Municipalities",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": "File ID 20602",
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 0
+  },
+  {
+    "EventItemId": 327431,
+    "EventItemAgendaSequence": 15,
+    "EventItemTitle": "COUNTY ADMINISTRATOR",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": null,
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 0
+  },
+  {
+    "EventItemId": 327433,
+    "EventItemAgendaSequence": 16,
+    "EventItemTitle": "Update on County Initiatives to Address Homelessness and Public Safety",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": "File ID 20601",
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 0
+  },
+  {
+    "EventItemId": 327434,
+    "EventItemAgendaSequence": 17,
+    "EventItemTitle": "Pima County Climate Action Update\r\nUpdate of Pima County’s Climate Action Plan, as requested by the Board of Supervisors.",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": "File ID 20603",
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 0
+  },
+  {
+    "EventItemId": 327435,
+    "EventItemAgendaSequence": 18,
+    "EventItemTitle": "Wildfire Mitigation Plan One-Year Update\r\nPresentation/Discussion: One-year Update of the Wildfire Mitigation Plan.",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": "File ID 20604",
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 0
+  },
+  {
+    "EventItemId": 327443,
+    "EventItemAgendaSequence": 19,
+    "EventItemTitle": "FINANCE AND RISK MANAGEMENT",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": null,
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 0
+  },
+  {
+    "EventItemId": 327444,
+    "EventItemAgendaSequence": 20,
+    "EventItemTitle": "Monthly Financial Update\nDiscussion regarding a monthly financial update on the County's financial performance.",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": "File ID 20600",
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 0
+  },
+  {
+    "EventItemId": 327452,
+    "EventItemAgendaSequence": 21,
+    "EventItemTitle": "ADJOURNMENT\r\n\r\n",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": null,
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 0
+  },
+  {
+    "EventItemId": 327453,
+    "EventItemAgendaSequence": 22,
+    "EventItemTitle": "POSTED: 130 W. Congress Street, 1st Floor Tucson, AZ 85701\r\n                  Pima County Homepage: www.pima.gov\r\nDATE/TIME POSTED: 8/5/26 @ 3:00 p.m.\r\nDATE/TIME REPOSTED (additional attachments only): 8/5/26 @ 4:30 p.m.\r\nDATE/TIME REPOSTED (amended meeting time, 1:30 p.m.): 8/6/26 @ 5:00 p.m.\r\nDATE/TIME REPOSTED (additional attachments only): 8/7/26 @ 8:45 a.m.\r\nDATE/TIME REPOSTED (additional attachments only): 8/7/26 @ 3:15 p.m.\r\nDATE/TIME REPOSTED (combined Agenda/Addendum): 8/10/26 @ 5:00 p.m.",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": null,
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 0
+  },
+  {
+    "EventItemId": 327454,
+    "EventItemAgendaSequence": 23,
+    "EventItemTitle": "PAGE BREAK",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": null,
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 0
+  },
+  {
+    "EventItemId": 327455,
+    "EventItemAgendaSequence": 24,
+    "EventItemTitle": "ADDENDUM 1",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": null,
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 0
+  },
+  {
+    "EventItemId": 327456,
+    "EventItemAgendaSequence": 25,
+    "EventItemTitle": "EXECUTIVE SESSION",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": null,
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 0
+  },
+  {
+    "EventItemId": 327457,
+    "EventItemAgendaSequence": 26,
+    "EventItemTitle": "Pursuant to A.R.S. §38-431.03(A)(3), for legal advice and discussion regarding Constable discipline.",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": "File ID 20642",
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 0
+  },
+  {
+    "EventItemId": 327467,
+    "EventItemAgendaSequence": 27,
+    "EventItemTitle": "HUMAN RESOURCES",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": null,
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 0
+  },
+  {
+    "EventItemId": 327468,
+    "EventItemAgendaSequence": 28,
+    "EventItemTitle": "Recognition of the “We A.R.E. Gems” Quarterly Recipients\r\nPursuant to Administrative Procedure 23-5, Employee Recognition Program, the following employees have been selected for the quarterly \"We A.R.E. Gems\" recognition:\r\n·\tDevin Robles - Library\r\n·\tAlex Du Pont - Assessor Office\r\n·\tJennifer Black - Human Resources\r\n·\tHunter Tantlinger - Parks & Recreation\r\n·\tBarbara Geonaga - Conservation Lands & Resources\r\n·\tSydney Harrington - Public Defense Services\r\n·\tNichole Casebeer - Regional Flood Control District\r\n·\tCarlos Aguila - Library",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": "File ID 20640",
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 0
+  },
+  {
+    "EventItemId": 327481,
+    "EventItemAgendaSequence": 29,
+    "EventItemTitle": "POSTED: 130 W. Congress Street, 1st Floor Tucson, AZ 85701\r\n                  Pima County Homepage: www.pima.gov\r\nDATE/TIME POSTED: 8/7/26 @ 11:00 a.m. \r\n",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": null,
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 0
+  },
+  {
+    "EventItemId": 327520,
+    "EventItemAgendaSequence": 14,
+    "EventItemTitle": "PAGE BREAK",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": null,
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 0
+  },
+  {
+    "EventItemId": 327964,
+    "EventItemAgendaSequence": null,
+    "EventItemTitle": "The Pima County Board of Supervisors met in regular session at their regular meeting place in the Pima County Administration Building (Hearing Room), 130 West Congress Street, Tucson, Arizona, at 9:00 a.m. on Tuesday, August 11, 2026.  Upon roll call, those present and absent were as follows:MEETING SUMMARY REPORT - THE MINUTES WILL BE POSTED AT www.pima.gov/cob AFTER APPROVAL BY THE BOARD OF SUPERVISORS\r\n\r\nPima County Board of Supervisors’ Meeting \r\n130 W. Congress St., Hearing Room, 1st Fl. \r\nAugust 11, 2026 1:30 p.m. ",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": null,
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 0
+  },
+  {
+    "EventItemId": 328172,
+    "EventItemAgendaSequence": null,
+    "EventItemTitle": "\r\n\r\n\r\n\r\n_______________________________\r\nCHAIR\r\n\r\n\r\nATTEST:\r\n\r\n\r\n\r\n\r\n_______________________________\r\nCLERK",
+    "EventItemMatterName": null,
+    "EventItemMatterFile": null,
+    "EventItemPassedFlagName": null,
+    "EventItemRollCallFlag": 0
+  }
+]

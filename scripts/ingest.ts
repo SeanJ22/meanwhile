@@ -8,11 +8,14 @@
  * below gains an entry.
  */
 
+import { legistarSource } from "../lib/sources/legistar/index.ts";
 import { mockSource } from "../lib/sources/mock/index.ts";
 import type { Meeting, MeetingSource } from "../lib/sources/types.ts";
 
 const SOURCES: Record<string, MeetingSource<never>> = {
   mock: mockSource as unknown as MeetingSource<never>,
+  // Hits the network. Serialized and paced — see lib/sources/legistar/client.ts.
+  legistar: legistarSource as unknown as MeetingSource<never>,
 };
 
 async function main() {

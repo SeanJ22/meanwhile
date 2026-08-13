@@ -6,6 +6,8 @@ import {
 import { makeApptegySource } from "../apptegy/index.ts";
 import { makeCivicPlusSource } from "../civicplus/index.ts";
 import { makeDiligentSource } from "../diligent/index.ts";
+import { makeIqm2Source } from "../iqm2/index.ts";
+import { makeRevizeSource } from "../revize/index.ts";
 import {
   legistarSource,
   normalizeWithDrops as legistarNormalizeWithDrops,
@@ -75,6 +77,16 @@ const CAPABILITIES: Array<{
     name: "diligent",
     types: ["DILIGENT", "CIVICWEB"],
     make: (rows) => makeDiligentSource(rows) as ReportingMeetingSource<unknown>,
+  },
+  {
+    name: "iqm2",
+    types: ["IQM2"],
+    make: (rows) => makeIqm2Source(rows) as ReportingMeetingSource<unknown>,
+  },
+  {
+    name: "revize",
+    types: ["REVIZE"],
+    make: (rows) => makeRevizeSource(rows) as ReportingMeetingSource<unknown>,
   },
 ];
 

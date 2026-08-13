@@ -1,6 +1,6 @@
 {
  "formatVersion": 1,
- "generatedAt": "2026-08-13T18:43:12.049Z",
+ "generatedAt": "2026-08-13T18:56:01.690Z",
  "sources": [
   {
    "source": "legistar",
@@ -66,6 +66,32 @@
     "unplaceableInTime": 0,
     "notConfigured": 0
    }
+  },
+  {
+   "source": "iqm2",
+   "ok": true,
+   "error": null,
+   "fetched": 1,
+   "normalized": 10,
+   "drops": {
+    "placeless": 0,
+    "unknownVenue": 0,
+    "unplaceableInTime": 0,
+    "notConfigured": 0
+   }
+  },
+  {
+   "source": "revize",
+   "ok": true,
+   "error": null,
+   "fetched": 1,
+   "normalized": 1,
+   "drops": {
+    "placeless": 0,
+    "unknownVenue": 0,
+    "unplaceableInTime": 0,
+    "notConfigured": 1
+   }
   }
  ],
  "meetings": [
@@ -88,7 +114,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1820&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-13T18:43:06.871Z",
+    "collectedAt": "2026-08-13T18:55:57.681Z",
     "verifiedAt": null
    }
   },
@@ -111,7 +137,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1821&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-13T18:43:06.871Z",
+    "collectedAt": "2026-08-13T18:55:57.681Z",
     "verifiedAt": null
    }
   },
@@ -134,7 +160,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1822&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-13T18:43:06.871Z",
+    "collectedAt": "2026-08-13T18:55:57.681Z",
     "verifiedAt": null
    }
   },
@@ -157,7 +183,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1823&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-13T18:43:06.871Z",
+    "collectedAt": "2026-08-13T18:55:57.681Z",
     "verifiedAt": null
    }
   },
@@ -180,7 +206,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1824&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-13T18:43:06.871Z",
+    "collectedAt": "2026-08-13T18:55:57.681Z",
     "verifiedAt": null
    }
   },
@@ -203,7 +229,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1854&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-13T18:43:06.871Z",
+    "collectedAt": "2026-08-13T18:55:57.681Z",
     "verifiedAt": null
    }
   },
@@ -226,7 +252,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1869&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-13T18:43:06.871Z",
+    "collectedAt": "2026-08-13T18:55:57.681Z",
     "verifiedAt": null
    }
   },
@@ -249,7 +275,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-13T18:43:06.333Z",
+    "collectedAt": "2026-08-13T18:55:57.217Z",
     "verifiedAt": null
    }
   },
@@ -272,7 +298,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-13T18:43:06.333Z",
+    "collectedAt": "2026-08-13T18:55:57.217Z",
     "verifiedAt": null
    }
   },
@@ -295,7 +321,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-13T18:43:06.333Z",
+    "collectedAt": "2026-08-13T18:55:57.217Z",
     "verifiedAt": null
    }
   },
@@ -318,7 +344,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-13T18:43:06.333Z",
+    "collectedAt": "2026-08-13T18:55:57.217Z",
     "verifiedAt": null
    }
   },
@@ -341,7 +367,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-13T18:43:06.333Z",
+    "collectedAt": "2026-08-13T18:55:57.217Z",
     "verifiedAt": null
    }
   },
@@ -364,7 +390,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-13T18:43:06.333Z",
+    "collectedAt": "2026-08-13T18:55:57.217Z",
     "verifiedAt": null
    }
   },
@@ -387,7 +413,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-13T18:43:06.333Z",
+    "collectedAt": "2026-08-13T18:55:57.217Z",
     "verifiedAt": null
    }
   },
@@ -410,7 +436,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-13T18:43:06.333Z",
+    "collectedAt": "2026-08-13T18:55:57.217Z",
     "verifiedAt": null
    }
   },
@@ -433,7 +459,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-13T18:43:06.333Z",
+    "collectedAt": "2026-08-13T18:55:57.217Z",
     "verifiedAt": null
    }
   },
@@ -456,7 +482,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1946&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T18:43:06.586Z",
+    "collectedAt": "2026-08-13T18:55:57.427Z",
     "verifiedAt": null
    }
   },
@@ -479,7 +505,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1957&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T18:43:06.586Z",
+    "collectedAt": "2026-08-13T18:55:57.427Z",
     "verifiedAt": null
    }
   },
@@ -502,7 +528,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1942&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T18:43:06.586Z",
+    "collectedAt": "2026-08-13T18:55:57.427Z",
     "verifiedAt": null
    }
   },
@@ -525,7 +551,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1927&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T18:43:06.586Z",
+    "collectedAt": "2026-08-13T18:55:57.427Z",
     "verifiedAt": null
    }
   },
@@ -548,7 +574,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1943&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T18:43:06.586Z",
+    "collectedAt": "2026-08-13T18:55:57.427Z",
     "verifiedAt": null
    }
   },
@@ -571,7 +597,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1928&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T18:43:06.586Z",
+    "collectedAt": "2026-08-13T18:55:57.427Z",
     "verifiedAt": null
    }
   },
@@ -594,7 +620,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1945&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T18:43:06.586Z",
+    "collectedAt": "2026-08-13T18:55:57.427Z",
     "verifiedAt": null
    }
   },
@@ -617,7 +643,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1956&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T18:43:06.586Z",
+    "collectedAt": "2026-08-13T18:55:57.427Z",
     "verifiedAt": null
    }
   },
@@ -640,7 +666,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "collectedAt": "2026-08-13T18:55:57.508Z",
     "verifiedAt": null
    }
   },
@@ -663,7 +689,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "collectedAt": "2026-08-13T18:55:57.508Z",
     "verifiedAt": null
    }
   },
@@ -686,7 +712,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "collectedAt": "2026-08-13T18:55:57.508Z",
     "verifiedAt": null
    }
   },
@@ -709,7 +735,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "collectedAt": "2026-08-13T18:55:57.508Z",
     "verifiedAt": null
    }
   },
@@ -732,7 +758,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "collectedAt": "2026-08-13T18:55:57.508Z",
     "verifiedAt": null
    }
   },
@@ -755,7 +781,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "collectedAt": "2026-08-13T18:55:57.508Z",
     "verifiedAt": null
    }
   },
@@ -778,7 +804,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "collectedAt": "2026-08-13T18:55:57.508Z",
     "verifiedAt": null
    }
   },
@@ -801,7 +827,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "collectedAt": "2026-08-13T18:55:57.508Z",
     "verifiedAt": null
    }
   },
@@ -824,7 +850,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "collectedAt": "2026-08-13T18:55:57.508Z",
     "verifiedAt": null
    }
   },
@@ -847,7 +873,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "collectedAt": "2026-08-13T18:55:57.508Z",
     "verifiedAt": null
    }
   },
@@ -870,7 +896,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "collectedAt": "2026-08-13T18:55:57.508Z",
     "verifiedAt": null
    }
   },
@@ -893,7 +919,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "collectedAt": "2026-08-13T18:55:57.508Z",
     "verifiedAt": null
    }
   },
@@ -916,7 +942,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "collectedAt": "2026-08-13T18:55:57.508Z",
     "verifiedAt": null
    }
   },
@@ -939,7 +965,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "collectedAt": "2026-08-13T18:55:57.508Z",
     "verifiedAt": null
    }
   },
@@ -962,7 +988,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "collectedAt": "2026-08-13T18:55:57.508Z",
     "verifiedAt": null
    }
   },
@@ -985,7 +1011,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "collectedAt": "2026-08-13T18:55:57.508Z",
     "verifiedAt": null
    }
   },
@@ -1008,7 +1034,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "collectedAt": "2026-08-13T18:55:57.508Z",
     "verifiedAt": null
    }
   },
@@ -1031,7 +1057,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-13T18:43:08.075Z",
+    "collectedAt": "2026-08-13T18:55:58.879Z",
     "verifiedAt": null
    }
   },
@@ -1054,7 +1080,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-13T18:43:08.075Z",
+    "collectedAt": "2026-08-13T18:55:58.879Z",
     "verifiedAt": null
    }
   },
@@ -1077,7 +1103,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-13T18:43:08.075Z",
+    "collectedAt": "2026-08-13T18:55:58.879Z",
     "verifiedAt": null
    }
   },
@@ -1100,7 +1126,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-13T18:43:08.075Z",
+    "collectedAt": "2026-08-13T18:55:58.879Z",
     "verifiedAt": null
    }
   },
@@ -1123,7 +1149,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-13T18:43:08.075Z",
+    "collectedAt": "2026-08-13T18:55:58.879Z",
     "verifiedAt": null
    }
   },
@@ -1146,7 +1172,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=493",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-13T18:43:06.903Z",
+    "collectedAt": "2026-08-13T18:55:57.646Z",
     "verifiedAt": null
    }
   },
@@ -1169,7 +1195,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=496",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-13T18:43:06.903Z",
+    "collectedAt": "2026-08-13T18:55:57.646Z",
     "verifiedAt": null
    }
   },
@@ -1192,7 +1218,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=492",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-13T18:43:06.903Z",
+    "collectedAt": "2026-08-13T18:55:57.646Z",
     "verifiedAt": null
    }
   },
@@ -1215,7 +1241,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=485",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-13T18:43:06.903Z",
+    "collectedAt": "2026-08-13T18:55:57.646Z",
     "verifiedAt": null
    }
   },
@@ -1238,7 +1264,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=489",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-13T18:43:06.903Z",
+    "collectedAt": "2026-08-13T18:55:57.646Z",
     "verifiedAt": null
    }
   },
@@ -1261,7 +1287,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=484",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-13T18:43:06.903Z",
+    "collectedAt": "2026-08-13T18:55:57.646Z",
     "verifiedAt": null
    }
   },
@@ -1284,7 +1310,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3371",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-13T18:43:07.538Z",
+    "collectedAt": "2026-08-13T18:55:58.074Z",
     "verifiedAt": null
    }
   },
@@ -1307,7 +1333,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3370",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-13T18:43:07.538Z",
+    "collectedAt": "2026-08-13T18:55:58.074Z",
     "verifiedAt": null
    }
   },
@@ -1330,7 +1356,260 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3368",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-13T18:43:07.538Z",
+    "collectedAt": "2026-08-13T18:55:58.074Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "iqm2:morriscountynj:2240",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris",
+   "bodyName": "Board of County Commissioners",
+   "title": "Board of County Commissioners - Work Session",
+   "startsAt": "2026-07-22T17:00:00-04:00",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Administration and Records Building, Knox Room 525",
+    "address": "10 Court Street, Morristown, NJ 07960",
+    "lat": 40.796821,
+    "lng": -74.484698
+   },
+   "agendaUrl": "https://morriscountynj.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1667&Inline=True",
+   "jurisdiction": "Morris County, NJ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2240",
+    "sourceOrg": "Morris County Board of County Commissioners",
+    "collectedAt": "2026-08-13T18:55:57.551Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "iqm2:morriscountynj:2236",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris",
+   "bodyName": "Board of County Commissioners",
+   "title": "Board of County Commissioners - Regular Meeting",
+   "startsAt": "2026-07-22T19:00:00-04:00",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Administration and Records Building, Public Meeting Room 555",
+    "address": "10 Court Street, Morristown, NJ 07960",
+    "lat": 40.796821,
+    "lng": -74.484698
+   },
+   "agendaUrl": "https://morriscountynj.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1668&Inline=True",
+   "jurisdiction": "Morris County, NJ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2236",
+    "sourceOrg": "Morris County Board of County Commissioners",
+    "collectedAt": "2026-08-13T18:55:57.551Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "iqm2:morriscountynj:2241",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris",
+   "bodyName": "Board of County Commissioners",
+   "title": "Board of County Commissioners - Work Session",
+   "startsAt": "2026-08-12T17:00:00-04:00",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Administration and Records Building, Knox Room 525",
+    "address": "10 Court Street, Morristown, NJ 07960",
+    "lat": 40.796821,
+    "lng": -74.484698
+   },
+   "agendaUrl": "https://morriscountynj.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1669&Inline=True",
+   "jurisdiction": "Morris County, NJ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2241",
+    "sourceOrg": "Morris County Board of County Commissioners",
+    "collectedAt": "2026-08-13T18:55:57.551Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "iqm2:morriscountynj:2242",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris",
+   "bodyName": "Board of County Commissioners",
+   "title": "Board of County Commissioners - Regular Meeting",
+   "startsAt": "2026-08-12T19:00:00-04:00",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Administration and Records Building, Public Meeting Room 555",
+    "address": "10 Court Street, Morristown, NJ 07960",
+    "lat": 40.796821,
+    "lng": -74.484698
+   },
+   "agendaUrl": "https://morriscountynj.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1671&Inline=True",
+   "jurisdiction": "Morris County, NJ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2242",
+    "sourceOrg": "Morris County Board of County Commissioners",
+    "collectedAt": "2026-08-13T18:55:57.551Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "iqm2:morriscountynj:2243",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris",
+   "bodyName": "Board of County Commissioners",
+   "title": "Board of County Commissioners - Work Session",
+   "startsAt": "2026-08-26T17:00:00-04:00",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Administration and Records Building, Knox Room 525",
+    "address": "10 Court Street, Morristown, NJ 07960",
+    "lat": 40.796821,
+    "lng": -74.484698
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Morris County, NJ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2243",
+    "sourceOrg": "Morris County Board of County Commissioners",
+    "collectedAt": "2026-08-13T18:55:57.551Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "iqm2:morriscountynj:2244",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris",
+   "bodyName": "Board of County Commissioners",
+   "title": "Board of County Commissioners - Regular Meeting",
+   "startsAt": "2026-08-26T19:00:00-04:00",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Administration and Records Building, Public Meeting Room 555",
+    "address": "10 Court Street, Morristown, NJ 07960",
+    "lat": 40.796821,
+    "lng": -74.484698
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Morris County, NJ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2244",
+    "sourceOrg": "Morris County Board of County Commissioners",
+    "collectedAt": "2026-08-13T18:55:57.551Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "iqm2:morriscountynj:2245",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris",
+   "bodyName": "Board of County Commissioners",
+   "title": "Board of County Commissioners - Work Session",
+   "startsAt": "2026-09-09T17:00:00-04:00",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Administration and Records Building, Knox Room 525",
+    "address": "10 Court Street, Morristown, NJ 07960",
+    "lat": 40.796821,
+    "lng": -74.484698
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Morris County, NJ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2245",
+    "sourceOrg": "Morris County Board of County Commissioners",
+    "collectedAt": "2026-08-13T18:55:57.551Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "iqm2:morriscountynj:2246",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris",
+   "bodyName": "Board of County Commissioners",
+   "title": "Board of County Commissioners - Regular Meeting",
+   "startsAt": "2026-09-09T19:00:00-04:00",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Administration and Records Building, Public Meeting Room 555",
+    "address": "10 Court Street, Morristown, NJ 07960",
+    "lat": 40.796821,
+    "lng": -74.484698
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Morris County, NJ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2246",
+    "sourceOrg": "Morris County Board of County Commissioners",
+    "collectedAt": "2026-08-13T18:55:57.551Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "iqm2:morriscountynj:2247",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris",
+   "bodyName": "Board of County Commissioners",
+   "title": "Board of County Commissioners - Work Session",
+   "startsAt": "2026-09-23T17:00:00-04:00",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Administration and Records Building, Knox Room 525",
+    "address": "10 Court Street, Morristown, NJ 07960",
+    "lat": 40.796821,
+    "lng": -74.484698
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Morris County, NJ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2247",
+    "sourceOrg": "Morris County Board of County Commissioners",
+    "collectedAt": "2026-08-13T18:55:57.551Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "iqm2:morriscountynj:2248",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris",
+   "bodyName": "Board of County Commissioners",
+   "title": "Board of County Commissioners - Regular Meeting",
+   "startsAt": "2026-09-23T19:00:00-04:00",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Administration and Records Building, Public Meeting Room 555",
+    "address": "10 Court Street, Morristown, NJ 07960",
+    "lat": 40.796821,
+    "lng": -74.484698
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Morris County, NJ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2248",
+    "sourceOrg": "Morris County Board of County Commissioners",
+    "collectedAt": "2026-08-13T18:55:57.551Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "revize:merrimack:2026-08-24",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
+   "bodyName": "Merrimack County Board of Commissioners",
+   "title": "Board of Commissioners Mtg.",
+   "startsAt": "2026-08-24T10:00:00-04:00",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "OCH, 163 N. Main St., Concord",
+    "address": "163 N. Main St., Concord, NH 03301",
+    "lat": 43.210534,
+    "lng": -71.538023
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Merrimack County, NH",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
+    "sourceOrg": "Merrimack County Board of Commissioners",
+    "collectedAt": "2026-08-13T18:55:57.230Z",
     "verifiedAt": null
    }
   }
@@ -1463,6 +1742,134 @@
    "text": null,
    "extraction": "failed",
    "extractionNote": "Invalid PDF structure."
+  },
+  {
+   "id": "onbase:tucson:1957@1775b259b9df6c6ec817aa00eda8eef556e5789d12e5eadbc4ef92a674150208",
+   "meetingId": "onbase:tucson:1957",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "documentUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Regular_1957_Agenda_8_18_2026_5_30_00_PM.pdf?documentType=1&meetingId=1957",
+   "contentHash": "1775b259b9df6c6ec817aa00eda8eef556e5789d12e5eadbc4ef92a674150208",
+   "retrievedAt": "2026-08-13T18:55:59.000Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Regular_1957_Agenda_8_18_2026_5_30_00_PM.pdf?documentType=1&meetingId=1957",
+   "sourceOrg": "City of Tucson Clerk",
+   "collectedAt": "2026-08-13T18:55:59.000Z",
+   "verifiedAt": null,
+   "text": null,
+   "extraction": "failed",
+   "extractionNote": "Invalid PDF structure."
+  },
+  {
+   "id": "onbase:tucson:1942@d5e076d55cda66af59ece6ce50b6dda401a729521a3f53f3ef8ff9ffe52d8a53",
+   "meetingId": "onbase:tucson:1942",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "documentUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Study_Session_1942_Agenda_7_7_2026_2_00_00_PM.pdf?documentType=1&meetingId=1942",
+   "contentHash": "d5e076d55cda66af59ece6ce50b6dda401a729521a3f53f3ef8ff9ffe52d8a53",
+   "retrievedAt": "2026-08-13T18:55:59.648Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Study_Session_1942_Agenda_7_7_2026_2_00_00_PM.pdf?documentType=1&meetingId=1942",
+   "sourceOrg": "City of Tucson Clerk",
+   "collectedAt": "2026-08-13T18:55:59.648Z",
+   "verifiedAt": null,
+   "text": null,
+   "extraction": "failed",
+   "extractionNote": "Invalid PDF structure."
+  },
+  {
+   "id": "onbase:tucson:1927@cc8ba1a9a429a64c9cd835ef3f15761f3ffdb65c206f436ec5d27327acb25075",
+   "meetingId": "onbase:tucson:1927",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "documentUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Regular_1927_Agenda_7_7_2026_5_30_00_PM.pdf?documentType=1&meetingId=1927",
+   "contentHash": "cc8ba1a9a429a64c9cd835ef3f15761f3ffdb65c206f436ec5d27327acb25075",
+   "retrievedAt": "2026-08-13T18:55:59.758Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Regular_1927_Agenda_7_7_2026_5_30_00_PM.pdf?documentType=1&meetingId=1927",
+   "sourceOrg": "City of Tucson Clerk",
+   "collectedAt": "2026-08-13T18:55:59.758Z",
+   "verifiedAt": null,
+   "text": null,
+   "extraction": "failed",
+   "extractionNote": "Invalid PDF structure."
+  },
+  {
+   "id": "onbase:tucson:1943@95771fc31f2523037410c7705c2e7f8034fc422145c79ece194ebfa9751c1f4f",
+   "meetingId": "onbase:tucson:1943",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "documentUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Study_Session_1943_Agenda_7_21_2026_1_00_00_PM.pdf?documentType=1&meetingId=1943",
+   "contentHash": "95771fc31f2523037410c7705c2e7f8034fc422145c79ece194ebfa9751c1f4f",
+   "retrievedAt": "2026-08-13T18:55:59.852Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Study_Session_1943_Agenda_7_21_2026_1_00_00_PM.pdf?documentType=1&meetingId=1943",
+   "sourceOrg": "City of Tucson Clerk",
+   "collectedAt": "2026-08-13T18:55:59.852Z",
+   "verifiedAt": null,
+   "text": null,
+   "extraction": "failed",
+   "extractionNote": "Invalid PDF structure."
+  },
+  {
+   "id": "onbase:tucson:1928@ec8885529396690ddfaa8c6fcd8f662b04c60f4062b2ca229591453cb1bc3d5b",
+   "meetingId": "onbase:tucson:1928",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "documentUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Regular_1928_Agenda_7_21_2026_5_30_00_PM.pdf?documentType=1&meetingId=1928",
+   "contentHash": "ec8885529396690ddfaa8c6fcd8f662b04c60f4062b2ca229591453cb1bc3d5b",
+   "retrievedAt": "2026-08-13T18:55:59.958Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Regular_1928_Agenda_7_21_2026_5_30_00_PM.pdf?documentType=1&meetingId=1928",
+   "sourceOrg": "City of Tucson Clerk",
+   "collectedAt": "2026-08-13T18:55:59.958Z",
+   "verifiedAt": null,
+   "text": null,
+   "extraction": "failed",
+   "extractionNote": "Invalid PDF structure."
+  },
+  {
+   "id": "onbase:tucson:1945@d0fa36caaa7aa640521aef3c3e91620b3375c6bb338fbc02dcd71170f354c79b",
+   "meetingId": "onbase:tucson:1945",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "documentUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Study_Session_1945_Agenda_8_5_2026_1_30_00_PM.pdf?documentType=1&meetingId=1945",
+   "contentHash": "d0fa36caaa7aa640521aef3c3e91620b3375c6bb338fbc02dcd71170f354c79b",
+   "retrievedAt": "2026-08-13T18:56:00.059Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Study_Session_1945_Agenda_8_5_2026_1_30_00_PM.pdf?documentType=1&meetingId=1945",
+   "sourceOrg": "City of Tucson Clerk",
+   "collectedAt": "2026-08-13T18:56:00.059Z",
+   "verifiedAt": null,
+   "text": null,
+   "extraction": "failed",
+   "extractionNote": "Invalid PDF structure."
+  },
+  {
+   "id": "onbase:tucson:1956@6b088731e6660f74ade4ab9b10ada2a240ce16f45979d185b962c9b4d57d6044",
+   "meetingId": "onbase:tucson:1956",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "documentUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Regular_1956_Agenda_8_5_2026_5_30_00_PM.pdf?documentType=1&meetingId=1956",
+   "contentHash": "6b088731e6660f74ade4ab9b10ada2a240ce16f45979d185b962c9b4d57d6044",
+   "retrievedAt": "2026-08-13T18:56:00.205Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Regular_1956_Agenda_8_5_2026_5_30_00_PM.pdf?documentType=1&meetingId=1956",
+   "sourceOrg": "City of Tucson Clerk",
+   "collectedAt": "2026-08-13T18:56:00.205Z",
+   "verifiedAt": null,
+   "text": null,
+   "extraction": "failed",
+   "extractionNote": "Invalid PDF structure."
+  },
+  {
+   "id": "apptegy:vail:60703697@862fe9a8f7fe45ec171c75c0b7178d3ecaa395155dde9801dd471673410e3d03",
+   "meetingId": "apptegy:vail:60703697",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "documentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "contentHash": "862fe9a8f7fe45ec171c75c0b7178d3ecaa395155dde9801dd471673410e3d03",
+   "retrievedAt": "2026-08-13T18:56:01.689Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "sourceOrg": "Vail School District Governing Board",
+   "collectedAt": "2026-08-13T18:56:01.689Z",
+   "verifiedAt": null,
+   "text": "Vail School District - Home Skip Navigation Jump to SideBar Quick Menu Public site Policy Sign in Vail School District Where Education is a Community Effort Your Javascript is turned off, without it, this site will not operate as intended. Home Welcome to Vail School District Home Calendar Meetings Search Home Vail School District Governing Board Board Meetings are held on the second and fourth Tuesday of the month (unless otherwise noted) at 7:00 p.m. at: Calvin Baker Leadership Center 13801 E. Benson Highway, Vail, Arizona Doors will be opened 15 minutes prior to the start of the meeting. The 2025/2026 schedule of Regular Meetings of the Vail School District Governing Board is as follows: 2025- July 8 July 22 August 12 August 26 September 9 September 23 October 14 October 28 November 12 December 9 2026- January 13 January 27 February 10 February 24 March 10 March 24 April 14 April 28 May 12 June 2 June 23 For more information, please contact Cindy Petersen . Share Welcome Welcome to our Community by Diligent public site, where you can find information about upcoming and recent meetings and participate in discussions about our community. Select the Welcome banner for additional information about using this site. Disclaimer: The documents contained in this system are intended for information only. To verify the accuracy and currency of this information, please contact us directly. Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals © Diligent Community 2026 Vail School District User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
   }
  ]
 }

@@ -28,6 +28,8 @@ import { makeCivicPlusSource } from "../lib/sources/civicplus/index.ts";
 import { CompositeSource } from "../lib/sources/composite/index.ts";
 import { buildCompositeSource } from "../lib/sources/composite/wiring.ts";
 import { makeDiligentSource } from "../lib/sources/diligent/index.ts";
+import { makeIqm2Source } from "../lib/sources/iqm2/index.ts";
+import { makeRevizeSource } from "../lib/sources/revize/index.ts";
 import { legistarSource } from "../lib/sources/legistar/index.ts";
 import { makeOnBaseSource } from "../lib/sources/onbase/index.ts";
 import { mockSource } from "../lib/sources/mock/index.ts";
@@ -47,6 +49,10 @@ const SOURCES: Record<string, () => MeetingSource<never>> = {
     makeApptegySource(wiringForTypes(["APPTEGY"])) as unknown as MeetingSource<never>,
   diligent: () =>
     makeDiligentSource(wiringForTypes(["DILIGENT", "CIVICWEB"])) as unknown as MeetingSource<never>,
+  iqm2: () =>
+    makeIqm2Source(wiringForTypes(["IQM2"])) as unknown as MeetingSource<never>,
+  revize: () =>
+    makeRevizeSource(wiringForTypes(["REVIZE"])) as unknown as MeetingSource<never>,
   composite: () => buildCompositeSource() as unknown as MeetingSource<never>,
 };
 

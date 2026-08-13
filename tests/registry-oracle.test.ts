@@ -175,8 +175,18 @@ test("07866 sits in two school districts at once", () => {
 
 test("every derived body is labelled structural, never sourced", () => {
   for (const body of registry.bodies) {
+    // Unchanged by 4.6.10 and load-bearing: a source hunt can find a body's
+    // website without making the body's EXISTENCE a sourced claim. That stays
+    // structural, and the name stays null, for all 265 rows.
     assert.equal(body.bodyOrigin, "DERIVED_FROM_DIVISION_TYPE");
-    assert.equal(body.coverageStatus, "NO_SOURCE_FOUND");
+    // coverageStatus is no longer uniform — an audited body carries what its
+    // hunt found. What must never happen is a body claiming an exhausted
+    // search; tests/link-ladder.test.ts holds that line against the audit file.
+    assert.notEqual(
+      body.coverageStatus,
+      "NO_SOURCE_FOUND",
+      `${body.id} claims a search came back empty; none has been exhausted yet`,
+    );
     // The existence of the body is a structural claim. Its name is not, and
     // names vary by state — supervisors, commissioners, select boards.
     assert.equal(

@@ -9,6 +9,7 @@ import {
   shortOcdId,
 } from "@/lib/map/format";
 import type { Venue } from "@/lib/meetings/venues";
+import { venueLink } from "@/lib/registry/links";
 import type { Meeting } from "@/lib/sources/types";
 
 /**
@@ -27,6 +28,12 @@ interface MeetingPanelProps {
 }
 
 export function MeetingPanel({ venue, onClose, onOpenMeeting }: MeetingPanelProps) {
+  // A venue is a group of meetings at one building, so any of them carries the
+  // building's coordinates. `groupByVenue` keys on them, so they agree.
+  const directions = venue.meetings[0]
+    ? venueLink(venue.meetings[0].location)
+    : null;
+
   return (
     <aside
       aria-label={`Meetings at ${venue.name}`}
@@ -46,6 +53,26 @@ export function MeetingPanel({ venue, onClose, onOpenMeeting }: MeetingPanelProp
             <p className="mt-1 text-[0.8125rem] leading-snug text-muted">
               {venue.address}
             </p>
+          )}
+          {/*
+            The address used to end there — correct, and inert. Somebody reading
+            it is usually deciding whether they can get to the room, and the
+            coordinates behind this pin already answer that. Marked "derived"
+            in the popup ladder for the same reason it is unlabelled here: it is
+            built from coordinates we hold rather than a page anyone opened, so
+            it is offered as a convenience and never as a citation.
+          */}
+          {directions && (
+            <a
+              href={directions.url}
+              target="_blank"
+              rel="noreferrer"
+              title={directions.hint}
+              className="mt-1 inline-flex items-baseline gap-1 text-[0.75rem] text-signal hover:underline"
+            >
+              Directions
+              <ExternalLink className="size-3 translate-y-0.5" />
+            </a>
           )}
         </div>
 

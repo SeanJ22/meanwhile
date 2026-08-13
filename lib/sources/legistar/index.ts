@@ -1,4 +1,5 @@
 import { haversineKm } from "../../geo/distance.ts";
+import type { AgendaItem } from "../../meetings/attribution.ts";
 import { toZonedIso } from "../../time/zoned.ts";
 import type {
   Meeting,
@@ -205,10 +206,15 @@ export function normalizeWithDrops(
  * board sat as the library district's board, which means a special district's
  * business is inside a county feed rather than behind a separate hunt.
  *
- * This **reports**; it does not attribute. Turning a heading into a body
- * requires reconciling the named district back to the registry, and until a
- * meeting-to-body join table exists there is nowhere to record the answer.
- * Tracker **D19**.
+ * This **reports**; it does not attribute. It is kept as the cheap signal —
+ * "does this agenda need segmenting at all" — while the attribution itself now
+ * lives in `lib/meetings/attribution.ts`, which splits the agenda into the
+ * bodies that actually acted and records the ones it cannot name rather than
+ * defaulting them onto the host. Tracker **D19**.
+ *
+ * Run against the recorded Pima agenda it finds **two** special districts, not
+ * the one this comment used to name: the Ajo Domestic Water Improvement
+ * District as well as the Library District Board.
  */
 export function detectSittingAs(items: LegistarEventItem[]): string[] {
   const marker = /\b(sitting|acting)\s+as\b/i;
@@ -222,6 +228,24 @@ export function detectSittingAs(items: LegistarEventItem[]): string[] {
   }
 
   return [...found];
+}
+
+/**
+ * Adapt Legistar's agenda items to the shape `attribution.ts` works in.
+ *
+ * A conversion rather than a re-export, so the attribution layer never has to
+ * know a vendor's field names — the same reason `normalize()` exists at all.
+ * `EventItemMatterFile` is the load-bearing field: it is present on business and
+ * absent on headings, which is what lets the split work without depending on a
+ * clerk's capitalisation habits.
+ */
+export function toAgendaItems(items: LegistarEventItem[]): AgendaItem[] {
+  return items.map((item) => ({
+    id: item.EventItemId,
+    sequence: item.EventItemAgendaSequence,
+    title: item.EventItemTitle ?? item.EventItemMatterName ?? "",
+    matterFile: item.EventItemMatterFile,
+  }));
 }
 
 export const legistarSource: MeetingSource<LegistarEventWithClient> = {

@@ -3,6 +3,7 @@
 import { formatMiles } from "@/lib/map/format";
 import type { CoverageTier } from "@/lib/meetings/query";
 import type { CoverageSummary, CoveredBody, Seat } from "@/lib/registry/coverage";
+import { agendaAbsenceNote } from "@/lib/registry/wording";
 import type { SeatHolder } from "@/lib/officials/lookup";
 
 /**
@@ -183,9 +184,30 @@ function CoverageBody({ zip, coverage }: { zip: string; coverage: CoverageSummar
               key={body.bodyId}
               className="flex items-baseline justify-between gap-3 border-b border-[var(--panel-border)] pb-1 last:border-0"
             >
-              <span className="text-[0.8125rem] leading-snug">
-                {body.divisionLabel}
-              </span>
+              {/*
+                The division's label, linked to the body's own page when a
+                source hunt found one. This is the smallest form of the 4.6.10
+                fix: a reader told "Newbury town governs here, and we don't have
+                their calendar" previously had no way to reach Newbury at all.
+                Still the division label and never Body.name, which is null on
+                every row — the link's destination is sourced, the text is
+                Census's, and neither is invented.
+              */}
+              {body.homepageUrl ? (
+                <a
+                  href={body.homepageUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  title="The body's own website"
+                  className="text-[0.8125rem] leading-snug text-paper underline decoration-dotted underline-offset-2 hover:text-signal"
+                >
+                  {body.divisionLabel}
+                </a>
+              ) : (
+                <span className="text-[0.8125rem] leading-snug">
+                  {body.divisionLabel}
+                </span>
+              )}
               <span
                 className={`shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em] ${TIER_CLASS[body.tier]}`}
               >
@@ -200,6 +222,25 @@ function CoverageBody({ zip, coverage }: { zip: string; coverage: CoverageSummar
           )}
         </ul>
       )}
+
+      {/*
+        D17. Renders per body and only for a hunt that was actually exhausted,
+        so it cannot let New Hampshire's statute explain away a body nobody has
+        searched. No body qualifies today — nothing has been searched to
+        exhaustion — which is why this is decided-and-in-place rather than
+        visible.
+      */}
+      {shown.map((body) => {
+        const note = agendaAbsenceNote(body.ocdId, body.coverageStatus);
+        return note ? (
+          <p
+            key={`${body.bodyId}-absence`}
+            className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted"
+          >
+            <span className="text-paper-dim">{body.divisionLabel}</span> — {note}
+          </p>
+        ) : null;
+      })}
 
       {seats.length > 0 &&
         (seatCounts.named === 0 ? (
@@ -253,7 +294,28 @@ function CoverageBody({ zip, coverage }: { zip: string; coverage: CoverageSummar
           {counts.withoutSource > 0 && (
             <>
               We know these bodies exist because the district boundaries do. We
-              haven&apos;t sourced their names or meeting schedules yet.
+              haven&apos;t sourced their names or meeting schedules yet.{" "}
+              {/*
+                4.6.1. Without this sentence the one above implies we searched
+                and came up empty, which is true for almost none of them — 258
+                of 265 bodies have never been looked at. Claiming a diligence
+                nobody spent is the same family of overclaim as a fabricated
+                source URL, just harder to catch because there is nothing to
+                click.
+              */}
+              {/*
+                Says only that a search happened, never what it turned up —
+                a searched body can still be blocked by vendor terms or publish
+                nothing at all. Where a search did find the body's page, the
+                link on its name above is the evidence, and it needs no caption.
+              */}
+              {counts.lookedAt === 0
+                ? "Nobody has searched for their agendas yet."
+                : counts.lookedAt < counts.total
+                  ? `We've searched for the agendas of ${counts.lookedAt} of the ${counts.total}.`
+                  : counts.total === 1
+                    ? "We have searched for its agendas."
+                    : "We have searched for all of their agendas."}
             </>
           )}
           {counts.withoutSource > 0 && seatCounts.named < seatCounts.total && " "}

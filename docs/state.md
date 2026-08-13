@@ -48,7 +48,7 @@ works.
 | `corepack pnpm session:start` | Start-of-session sweep, then the dev server — see §8. `--check` starts nothing |
 | `corepack pnpm dev` | Development server. Refuses if 3000 is taken; records its pid in `.dev-server.pid` |
 | `corepack pnpm build` | Production build |
-| `corepack pnpm test` | `node --test` over `tests/` — 132 tests |
+| `corepack pnpm test` | `node --test` over `tests/` — 162 tests |
 | `corepack pnpm lint` | ESLint |
 | `corepack pnpm ingest mock` | Run one source adapter end to end |
 | `corepack pnpm zcta:fetch` | Rebuild zip centroids from Census (see §3.2) |
@@ -1390,6 +1390,157 @@ error.**
 
 ---
 
+### 4.11 Phase 4.6.10 — somewhere to click, and who actually looked (2026-08-12)
+
+Two changes that had to ship together, because each is half an answer. Tracker
+**M21**.
+
+#### The ladder
+
+"Select Board — Regular Meeting, Fri Aug 14" was plain text. A reader who wanted
+the Town of Newbury had no route out of the card, and the address underneath it
+was inert. The app *knew* things it never offered — the body's page, the system
+the record came from, coordinates precise enough to navigate by.
+
+`lib/registry/links.ts` returns an ordered ladder — agenda, meeting record,
+all-agendas portal, body homepage, directions — and **omits every rung it cannot
+fill.** There is deliberately no fallback that builds a plausible URL out of a
+jurisdiction name. That is the 4.5.3 fabrication wearing a different hat, and it
+is worse here because a link *looks* like a promise. An empty ladder renders as
+empty.
+
+Every link is `SOURCED` or `DERIVED` **in the type**, not by convention. The only
+derived rung is the OpenStreetMap directions link, built from coordinates this
+repo already sourced from the Census geocoder, and it renders with a `derived`
+tag beside it so it can never be read as a citation sitting among real ones.
+OpenStreetMap because it needs no key and no account — nothing about the reader
+is traded for the link — and because `CLAUDE.md` rules out Google Maps.
+
+#### The audit, and the default that was lying
+
+Every one of the 265 derived bodies read `NO_SOURCE_FOUND`, and that single value
+was doing two opposite jobs: *we walked the ladder and there is nothing to find*,
+and *nobody has ever looked*. The second was true of essentially all of them,
+because `NO_SOURCE_FOUND` was simply what the derivation wrote.
+
+So `CoverageStatus` gained `NOT_ATTEMPTED` and `SOURCE_BLOCKED`, and
+`NO_SOURCE_FOUND` became **a claim requiring evidence** — an audit row in
+`lib/registry/coverage-audit.ts` recording an exhausted hunt. Today:
+
+| Status | Bodies |
+|---|---|
+| `NOT_ATTEMPTED` | 258 |
+| `KNOWN_UNCOVERED` | 6 |
+| `SOURCE_BLOCKED` | 1 |
+| `NO_SOURCE_FOUND` | **0** |
+
+Zero is the honest number and the one worth staring at. Nobody has ever walked
+the ladder to exhaustion, so nothing may say so.
+
+Seven real hunts are recorded, every rung including the misses, each with the URL
+it was read from. `build-registry.ts` overlays them and **throws** on an audit row
+whose `bodyId` matches nothing, because a stale identifier otherwise leaves a body
+looking unlooked-at forever. What the overlay does *not* touch is `bodyOrigin`,
+`name`, `sourceDataset` and `provenance` — the first version set `bodyOrigin` to
+`SOURCED` and `tests/registry-oracle.test.ts` caught it. **Finding a body's
+website does not make the body's existence a sourced claim.** That stays
+structural and the name stays null, on all 265 rows.
+
+#### Three things the hunts overturned
+
+1. **Vail Unified is NovusAgenda, not Diligent** — tracker **D13**, **D22**. The
+   Diligent adapter was scoped as covering TUSD *and* Vail. It does not. Vail's
+   own Governing Board page links to `vailschools.novusagenda.com`. The
+   `go.boarddocs.com` URL that search results assert is Vail's is **dead in a
+   real browser**, and it stays in the audit as a `MISS` rather than being
+   deleted — so the next session cannot rediscover it and record it as fact.
+   This is D16's lesson repeating exactly: infer a vendor from anything but the
+   body's own page and you get it wrong.
+
+2. **The fixture-to-registry join was broken and silent** — tracker **D15**. Five
+   of eleven in-clip fixture divisions matched *nothing*: the fixtures carried
+   flat identifiers (`state:nh/place:newbury`) while the registry nests and
+   suffixes (`county:merrimack/place:newbury_town`). Tucson and the three
+   counties happened to match, so the popup looked right in Arizona and simply
+   had no body link in New Hampshire, with nothing logged anywhere. **The
+   silent zero-match join, third occurrence.** The test now asserts the match
+   count *and the denominator*, and names the deliberately out-of-clip Cochise
+   divisions explicitly, so a clip can never read as a broken join and a broken
+   join can never hide behind "probably the clip".
+
+3. **A feed can return 200, the right content type, and nothing at all.**
+   Newbury's `/rss.xml` is a valid RSS document with zero items. Status code and
+   content type both say success. Only the body says otherwise — §8's rule
+   again, in the place it is easiest to skip.
+
+**CivicWeb is not CivicPlus.** Different companies, confusingly similar names:
+CivicPlus builds CivicEngage and the AgendaCenter (Rockaway Township), while
+CivicWeb is iCompass, *a Diligent brand* (Newbury). They are separate
+`AgendaSourceType` values, because folding them together points one adapter at
+two unrelated systems.
+
+---
+
+### 4.12 Phase 4.6.9 / D19 — who actually acted (2026-08-12)
+
+`Meeting.ocdId` is one field, and a meeting can have more than one government in
+it. Pima's Board of Supervisors meeting of 2026-08-11 carries "BOARD OF
+SUPERVISORS SITTING AS OTHER BOARDS", then a board's name, then "SITTING AS THE
+BOARD OF SUPERVISORS". The business in between belongs to that other board.
+Without a join, all 124 items record as county-board business.
+
+`lib/meetings/attribution.ts` splits an agenda into the bodies that acted, and
+`MeetingBody` is written as the table it will become so the Phase 5.1 migration
+is a transcription rather than a redesign.
+
+**Headings are detected by the absence of a matter file, not by capitalisation.**
+Legistar attaches a matter file to anything with a legislative record behind it,
+so that one field separates business from section titles without depending on a
+clerk's house style — "CALL TO THE PUBLIC" is shouted in capitals exactly like
+the real switches are, and correctly starts nothing.
+
+**An unresolved heading attributes to nothing, and never to the host.** This is
+the whole discipline of the file. The host is the one body we can already see is
+*not* responsible — the agenda said so in capital letters — so falling back to it
+recreates the precise error the row exists to prevent. Attributing to nobody is a
+smaller, truer claim.
+
+#### What measuring found that the tracker row had not
+
+**Pima sat as two special districts that day, not one.** Alongside the Library
+District Board there is an **Ajo Domestic Water Improvement District**. Four
+segments, 49 items of business, two of them attributed to nobody.
+
+Both resolve to `UNRESOLVED`, and **that is the correct answer rather than a
+failure.** Census publishes no boundary for a special district, so the registry
+holds no division for either and nothing can honestly be matched. The segment is
+recorded as unresolved with its published heading as evidence, which is exactly
+the row a later curated-body pass needs.
+
+It is also the 4.7.6 thesis showing up early: a large share of the country's
+~39,555 special districts sit inside county feeds *already in Legistar*, rather
+than behind 39,555 separate source hunts. Reaching them needs the items told
+apart once they arrive, which is this.
+
+#### A conservation law, and the drop it caught
+
+Every item with a matter file must land in **exactly one** segment. The first
+version skipped items with an empty title before attributing them, which lost the
+single Pima item that has a matter file and no title: 49 in, 48 out, no error
+anywhere. The count alone reads fine; the count against its denominator does not.
+§8's rule, in the place it is easiest to skip.
+
+Resolution is scoped hard — a candidate body must sit inside the host's own
+division *and* the heading must contain its division label — and a test asserts
+that a heading naming another county resolves to nothing. Widening that is how a
+heading match turns into the name-string join `CLAUDE.md` forbids.
+
+**Still open:** nothing persists the rows (`lib/db/schema.ts` is still
+`export {}`), and the adapter does not fetch event items during an ordinary
+ingest, so this runs against the recorded fixture rather than in the live path.
+
+---
+
 ## 5. Open questions
 
 ### 5.1 Vector tiles — RESOLVED 2026-08-12
@@ -1569,7 +1720,7 @@ correct — `resolveZip` only reports it when the table is partial.
 counties, so a reader can click districts in places that have no meetings behind
 them. Honest, and the coverage tier says so, but the asymmetry is new.
 
-**Map-layer test coverage is still thin.** 132 tests now cover the cascade, time
+**Map-layer test coverage is still thin.** 162 tests now cover the cascade, time
 handling, OCD identity, the tier axis, district disambiguation, fixture
 provenance, county subdivisions and the registry oracle. Nothing tests marker
 reconciliation, camera logic, or basemap resolution — which is part of why the
@@ -1610,9 +1761,33 @@ replaced.
 
 ## 7. Current state of the branch
 
-**Working on `main` at `8ee9bdb`** (the PR #16 merge). Nothing sits on a branch.
+**Working on `claude/link-ladder-and-coverage-audit`**, branched from `main` at
+`c94aa9c` (the PR #17 merge). Four commits.
 
-**test 132 pass · lint clean · build green.**
+**test 162 pass · lint clean · tsc clean · build green.**
+
+```
+dbe4602  Correct two tracker rows that named branches which never existed
+cfae75f  Decide the New Hampshire agenda wording       ← D17
+226b6cd  Attribute agenda items to the board that acted ← D19, §4.12
+42478ba  Give every meeting somewhere to click          ← M21, §4.11
+```
+
+**One branch carries all three pieces, and two commit messages say otherwise.**
+`226b6cd` and `cfae75f` name `claude/meeting-bodies-join` and
+`claude/d17-nh-agenda-wording`. Neither branch was ever created — the session
+stayed on the first branch after the first commit and the messages were written
+from intent rather than from `git`. The tracker rows are corrected in `dbe4602`
+and say so in place; the commit messages themselves are left alone rather than
+rewritten, because the correction is more useful visible than tidied away. It is
+the same slip D03 records, and it is caught the same way: by asking git rather
+than trusting the last thing written down.
+
+What landed: the link ladder and the body coverage audit (§4.11), the agenda
+attribution join (§4.12), and the D17 New Hampshire wording. It also corrected
+the mock fixtures' division identifiers, which had never matched the registry
+for New Hampshire or New Jersey — a join that had been silently matching nothing
+since the registry was first generated.
 
 Four PRs landed on 2026-08-12, in this order:
 
@@ -1701,13 +1876,14 @@ construction with `escapeHtml`/`onclick` attributes, and the sales data model.
   overlays with click-to-select.
 - **4.5 done** — the four defects found in testing. §4.2.
 - **4.6 mostly done.** The registry is generated and tested (§4.3, §4.4), the
-  coverage language is on screen (§4.5, M16), and the place/cousub duplicate is
-  resolved at build time from Census `FUNCSTAT` (§4.6, M17). What remains:
-  populating `agendaSourceType` per body (4.6.4), the `meeting_leads` table
-  (4.6.5), and the reader disambiguation prompt (4.6.3) — **which is a hard
-  stop**, because it adds a user data field and CLAUDE.md requires asking first.
-  The "I want this" control in 4.6.6 is deliberately unbuilt for the same
-  reason, and because there is no table to write `demandCount` to.
+  coverage language is on screen (§4.5, M16), the place/cousub duplicate is
+  resolved at build time from Census `FUNCSTAT` (§4.6, M17), and the link ladder
+  and coverage audit are in (§4.11, M21). What remains: populating
+  `agendaSourceType` for the *other 258* bodies (4.6.4 — seven now carry one
+  from a real hunt), the `meeting_leads` table (4.6.5), and the reader
+  disambiguation prompt (4.6.3), which is approved as of 2026-08-12 with
+  device-local storage. The "I want this" control and `demandCount` (4.6.3a)
+  are still unbuilt and still have no table to write to.
 - **The meetings track has started.** D14 (the vendor and statute review) is
   done and D12 (the Legistar adapter) is built and verified live, though not yet
   the app's source — §4.7. D13 (Diligent) is unblocked but should try the
@@ -1938,11 +2114,13 @@ State as of 2026-08-12, verified rather than assumed:
 - **R07 is fixed.** `--ship` fast-forwards local `main` and pushes `-u` for a
   branch with no upstream; the plain check and `session:start` both report a
   stale local `main`. If the repo ever still looks empty, it is not — §7.
-- **132 tests, lint and build all pass.** M16, M17, R07, R09, R10, D14 and M20
-  all Done with evidence in the tracker. D02, D03, D12 and M05 are **In
-  progress** with the evidence recorded and the reason each is not Done stated
-  on the row — the Legistar adapter is not the app's source, the rosters do not
-  carry votes, and the popup has no direct marker path yet.
+- **162 tests, lint, tsc and build all pass.** M16, M17, M21, R07, R09, R10,
+  D14 and M20 all Done with evidence in the tracker. D02, D03, D12 and M05 are
+  **In progress** with the evidence recorded and the reason each is not Done
+  stated on the row — the Legistar adapter is not the app's source, the rosters
+  do not carry votes, and the popup has no direct marker path yet. D19's join is
+  built but nothing persists it; D17's wording is decided but renders for
+  nobody, because no hunt has been exhausted.
 
   **`git-state.txt` reads this line, so a stale number here becomes a false
   report in the mirror** — it did once, reporting 79 after the suite had reached
@@ -1981,8 +2159,18 @@ instead. Do not spend another request guessing Tucson slugs.
    the cheap half**: `phoenix`, `mesa`, `maricopa`, `seattle`, `oakland`,
    `alexandria` and `alameda` all answered 200 in one sweep, and adding one is
    an entry in `clients.ts` plus a curated venue table.
-2. **D13 Diligent**, for the school-board tier — trying the portal's subscribe
-   channel and the district's own site *before* the portal, per D14.
+2. **D13 Diligent *and* D22 NovusAgenda together**, for the school-board tier —
+   trying each district's own site *before* the portal, per D14. **Diligent
+   alone no longer reaches both target districts**: 4.6.10 measured Vail and it
+   runs NovusAgenda, not BoardDocs (§4.11). The author chose to build both in
+   one change on 2026-08-12, since `agendaSourceType` routing is the point of
+   4.6.4 anyway.
+
+   **D21 CivicPlus may be the better first adapter of the three** and was not on
+   this list before: Rockaway Township publishes populated RSS *and* iCal agenda
+   feeds through its own website, so there is no vendor portal and no B09 tenant
+   question, and both URL patterns are CivicPlus-wide. It still needs a D14
+   finding written before anything ships.
 3. **Phase 7**, whose slots the Phase 6 modal already renders as empty states:
    Notes and Activity tabs exist and say what is coming.
 4. **Tier 3 officeholders**, the curated local seed. It is the only half of
@@ -1992,10 +2180,15 @@ instead. Do not spend another request guessing Tucson slugs.
 **Two things still need the author**, and neither should be started on
 assumption:
 
-1. **The 4.6.3 reader prompt.** It adds a user data field, which `CLAUDE.md`
-   requires asking about first. The exact question wording, what is stored, and
-   whether it stays device-local all need confirming. The 4.6.6 "I want this"
-   control waits on the same answer.
+1. **The 4.6.3 reader prompt — approved, and still blocked on one thing.** The
+   author approved it on 2026-08-12 and settled the storage question: **device-
+   local only**, with a tracker row to revisit sync when accounts exist. What is
+   still missing is **the wording itself**, which the author says is verbatim and
+   deliberately chosen and must not be paraphrased. It is not in this repo and
+   was not supplied, so 4.6.3, 4.6.3c and the 4.6.3a "want us to prioritize it"
+   control all wait on that text arriving. Do not draft a stand-in — a
+   paraphrase of copy that was chosen word by word is worse than a blank,
+   because it looks finished.
 2. **D15**, closing the canonical identifier gaps. The convention is decided —
    internal key authoritative, canonical alongside with a confidence — but 348
    divisions still match nothing, concentrated in county subdivisions. **M18**

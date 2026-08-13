@@ -17,9 +17,13 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { TIER_SEGMENTS, type Tier } from "../lib/ocd/tiers.ts";
+import { indexAudits } from "../lib/registry/audit.ts";
+import { COVERAGE_AUDIT_FILE } from "../lib/registry/coverage-audit.ts";
 import { bodiesFor, slotsFor, type SkipReason } from "../lib/registry/derive.ts";
 import type {
+  Body,
   CanonicalMatch,
+  CoverageStatus,
   Division,
   DivisionType,
   Registry,
@@ -207,6 +211,61 @@ async function reconcile(divisions: Division[]): Promise<void> {
   }
 }
 
+/**
+ * Overlay the hand-walked source hunts onto the derived bodies.
+ *
+ * The derivation stays pure — it knows a division type implies a body and
+ * nothing else. Everything a person learned by opening pages arrives here, and
+ * arrives *only* for bodies that have an audit row. A body with no row keeps
+ * `NOT_ATTEMPTED`, which is the whole point: the absence is the signal.
+ *
+ * Throws on an audit row whose `bodyId` matches nothing. A hunt recorded
+ * against an identifier the registry does not have is either a typo or a stale
+ * identifier, and both silently produce a body that looks unlooked-at forever.
+ */
+function applyAudits(bodies: Body[]): void {
+  const audits = indexAudits(COVERAGE_AUDIT_FILE);
+  const byId = new Map(bodies.map((b) => [b.id, b]));
+
+  const orphans = [...audits.keys()].filter((id) => !byId.has(id));
+  if (orphans.length > 0) {
+    throw new Error(
+      `audit rows matching no body:\n  ${orphans.join("\n  ")}\n` +
+        "Every audit bodyId must be an existing <ocdId>#<slot>.",
+    );
+  }
+
+  for (const [bodyId, audit] of audits) {
+    const body = byId.get(bodyId)!;
+    // Only the coverage fields. `bodyOrigin`, `sourceDataset`, `name` and
+    // `provenance` are deliberately untouched, and the first attempt to set
+    // them was wrong: finding a body's website does not make the body's
+    // EXISTENCE a sourced claim. That is still structural — this division is a
+    // town, towns have select boards — and its name is still null, because
+    // nothing here read a name off anything. tests/registry-oracle.test.ts
+    // asserts that invariant across all 265 rows and caught this.
+    //
+    // The audit file is itself the committed, citable provenance for the four
+    // fields below; every rung in it carries the URL it was read from.
+    body.coverageStatus = audit.coverageStatus;
+    body.agendaSourceType = audit.agendaSourceType;
+    body.agendaSourceRef = audit.agendaSourceRef;
+    body.homepageUrl = audit.homepageUrl;
+  }
+
+  const counts = new Map<CoverageStatus, number>();
+  for (const b of bodies) {
+    counts.set(b.coverageStatus, (counts.get(b.coverageStatus) ?? 0) + 1);
+  }
+  console.log(`\n  coverage status (audited ${audits.size} of ${bodies.length})`);
+  for (const [status, n] of [...counts.entries()].sort()) {
+    console.log(`  ${status.padEnd(18)} ${String(n).padStart(5)}`);
+  }
+  console.log(
+    `  with a homepage    ${String(bodies.filter((b) => b.homepageUrl).length).padStart(5)}`,
+  );
+}
+
 async function main() {
   const now = new Date().toISOString();
 
@@ -219,6 +278,7 @@ async function main() {
 
   console.log("bodies");
   const bodies = divisions.flatMap((d) => bodiesFor(d, now));
+  applyAudits(bodies);
 
   // Report what the rule did, including what it deliberately refused to do.
   const perType = new Map<string, { divisions: number; bodies: number }>();

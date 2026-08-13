@@ -407,16 +407,22 @@ memory — restore it.
 ### The `G:\My Drive\we-the-people\` mirror
 
 A hedge against the above, and against losing the project's memory with a
-branch. It holds six files, flat — five copied from the repo, one generated:
+branch. It holds seven files, flat — six copied from the repo, one generated:
 
 | Mirror | Repo |
 |---|---|
 | `CLAUDE.md` | `CLAUDE.md` |
 | `abuse-policy.md` | `docs/abuse-policy.md` |
+| `vendor-review.md` | `docs/vendor-review.md` |
 | `state.md` | `docs/state.md` |
 | `tracker.csv` | `docs/tracker.csv` |
 | `types.ts` | `lib/sources/types.ts` |
 | `git-state.txt` | *generated — no repo counterpart* |
+
+`vendor-review.md` was added 2026-08-12 alongside D14. It is in the mirror for
+the same reason `abuse-policy.md` is: a standing document that constrains what
+may be built, pending review by counsel, and worth surviving the loss of a
+branch.
 
 `git-state.txt` is written by `pnpm handoff` after the fetch and before the
 mirror sync. It is plain text, one fact per line: when it was generated, the

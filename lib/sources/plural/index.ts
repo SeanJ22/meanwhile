@@ -196,12 +196,40 @@ export function rowsToPeople(csv: string, state: string): PluralPerson[] {
     }));
 }
 
+/**
+ * What a build spent, so the quota is a printed number rather than a surprise.
+ *
+ * **The two counters are deliberately separate.** Plural's free tier allows
+ * **500 GraphQL requests per day at 1 per second**; the bulk CSVs are ordinary
+ * static files on `data.openstates.org` and are not metered against it. Adding
+ * them together would invent pressure on a ceiling nothing is approaching, and
+ * showing neither is how a ceiling gets discovered by hitting it.
+ */
+export interface PluralRequestCount {
+  /** Static bulk-file downloads. Not counted against the API quota. */
+  bulk: number;
+  /** Metered against the 500/day tier. Currently always zero — see below. */
+  graphql: number;
+}
+
+/** The free tier's documented ceiling, stated once so the build can print it. */
+export const GRAPHQL_DAILY_QUOTA = 500;
+export const GRAPHQL_MIN_INTERVAL_MS = 1000;
+
+export const requestCount: PluralRequestCount = { bulk: 0, graphql: 0 };
+
+export function resetRequestCount(): void {
+  requestCount.bulk = 0;
+  requestCount.graphql = 0;
+}
+
 async function fetchState(state: string): Promise<string> {
   const url = bulkUrl(state);
   const MAX_ATTEMPTS = 4;
   let lastStatus = 0;
 
   for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+    requestCount.bulk++;
     const response = await fetch(url, {
       headers: { "User-Agent": userAgent(), Accept: "text/csv" },
     });
@@ -216,7 +244,15 @@ async function fetchState(state: string): Promise<string> {
   throw new Error(`${url} returned HTTP ${lastStatus}`);
 }
 
-/** Download every configured state, serialized. */
+/**
+ * Download every configured state, serialized.
+ *
+ * **One request per state, and nothing per legislator.** That is the whole
+ * reason for the bulk route: 620 legislators across these three states would
+ * cost most of a day's GraphQL quota under any per-person or per-district fetch
+ * pattern, and would cost it again on every rerun. Three static files cost
+ * three requests and are metered against nothing.
+ */
 export async function fetchAll(
   states: readonly string[] = PLURAL_STATES,
 ): Promise<PluralPerson[]> {

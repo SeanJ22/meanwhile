@@ -2,12 +2,17 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import {
+  bulkUrl,
   CHAMBER_TITLE,
   designationFromLabel,
   designationKey,
+  GRAPHQL_DAILY_QUOTA,
+  GRAPHQL_MIN_INTERVAL_MS,
   indexDivisions,
   normalize,
   parseCsv,
+  requestCount,
+  resetRequestCount,
   rowsToPeople,
   type PluralPerson,
 } from "../lib/sources/plural/index.ts";
@@ -166,6 +171,43 @@ test("all four target-zip seat types are now named", async () => {
       }
     }
   }
+});
+
+test("the roster reads the unmetered bulk host, never the quota'd API", () => {
+  // The regression this exists for: someone moves the roster onto GraphQL for
+  // a field the CSV lacks — term dates are the likely reason — and 620
+  // legislators quietly eat most of a 500/day quota on every build. If that
+  // ever happens it should fail here rather than mid-run on a 429.
+  for (const state of ["az", "nj", "nh"]) {
+    const url = bulkUrl(state);
+    assert.match(url, /^https:\/\/data\.openstates\.org\/people\/current\//);
+    assert.doesNotMatch(url, /graphql|open\.pluralpolicy\.com/i);
+  }
+});
+
+test("the quota is stated where the build can print it", () => {
+  // Plural's documented free tier. Recorded as a constant so the build output
+  // shows the ceiling rather than the ceiling being discovered by hitting it.
+  assert.equal(GRAPHQL_DAILY_QUOTA, 500);
+  assert.equal(GRAPHQL_MIN_INTERVAL_MS, 1000);
+});
+
+test("bulk and GraphQL request counts stay separate", () => {
+  // Bulk files are static and unmetered; adding them to the GraphQL count
+  // would invent pressure on a ceiling nothing is approaching.
+  resetRequestCount();
+  assert.deepEqual(requestCount, { bulk: 0, graphql: 0 });
+
+  const index = indexDivisions(DIVISIONS);
+  normalize(
+    [person({ id: "ocd-person/q", state: "az", current_district: "19" })],
+    index,
+    "2026-08-12T00:00:00.000Z",
+    "04",
+  );
+
+  // normalize() is pure — it must never spend a request of either kind.
+  assert.deepEqual(requestCount, { bulk: 0, graphql: 0 });
 });
 
 function person(overrides: Partial<PluralPerson>): PluralPerson {

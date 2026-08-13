@@ -188,6 +188,57 @@ were.
 
 ---
 
+## Plural Open (ex-Open States) — a quota, not a restriction
+
+**This row is a different kind of entry from the three above, and the difference
+is the point.** Granicus, Hyland and Diligent are *vendors holding a public
+body's records*, and the question there is whether their terms can narrow access
+to those records. Plural is a **publisher of public-domain data** that chose to
+give it away. There is no access question to answer.
+
+| | |
+|---|---|
+| Bulk data | `data.openstates.org/people/current/<st>.csv`, nightly |
+| Auth for bulk | **none** — no key, no login. Verified live for AZ, NJ, NH |
+| Licence | **CC-0.** Attribution requested, not required |
+| API | v3 GraphQL at `open.pluralpolicy.com`; v2 is sunset |
+| API auth | `apikey` query parameter, free tier |
+| **API quota** | **500 requests/day, 1 request/second** |
+| Read | 2026-08-12 |
+
+**Automated access: expressly the intended use.** Bulk downloads exist precisely
+to be consumed programmatically, and the data is dedicated to the public domain.
+There is nothing here resembling the anti-scraping clauses in the Hyland and
+Diligent documents.
+
+**Commercial use: unrestricted by the licence.** CC-0 is a dedication to the
+public domain, so it imposes no commercial-use condition at all. That makes
+Plural the *only* source in this document with no commercial-use question
+hanging over it — worth noting given the business model, and in pointed contrast
+to OpenFEC's contributor-information restriction (D06) and Arizona's
+§ 39-121.03.
+
+**The 500/day quota is an operational ceiling, not a legal constraint, and it
+must not be recorded as one.** It limits how we may build, not whether we may.
+**D03 stays cleared.**
+
+It is, however, the reason the roster is built the way it is rather than a
+stylistic preference. AZ, NJ and NH are **620 legislators**; any per-person or
+per-district GraphQL fetch pattern would spend the better part of a day's quota
+in one build, and would do it again on every rerun. The bulk route costs
+**3 HTTP requests and 0 GraphQL requests** for the same three states — which the
+build now prints, so the distance from the ceiling is visible rather than
+discovered by hitting it.
+
+If GraphQL is ever needed — term dates and photo URLs are the likely reasons,
+since the CSV carries neither — the discipline is: serialize at 1 request per
+second, cache aggressively and never re-fetch unchanged data, and print the
+request count in the build output. That is the same shape as the Legistar
+retrieval discipline, for a different reason: there it is manners, here it is
+arithmetic.
+
+---
+
 ## The statutory question — B09, and one finding that changes the product
 
 The framing for counsel, unchanged from the brief and now with the specific
@@ -310,6 +361,7 @@ said nothing about where agendas live, exactly as the rule warns.
 | Granicus / Legistar | **none** | no — marketing site only | **yes, documented** | **Cleared — build on the API** (D12) |
 | Hyland / OnBase | explicit, broad | not enumerated, but thin evidence | no | **Do not build.** Ask the clerk; use GovDelivery (D16) |
 | Diligent / BoardDocs | explicit | **no — express product carve-out** | no | **Escalate to B09.** Try subscribe + district site first (D13) |
+| Plural Open | none — bulk data is the intended use | n/a, not a records holder | yes, but quota'd | **Cleared** (D03). Build on bulk; the 500/day cap is a ceiling, not a restriction |
 
 **Ships first: Legistar, on the API.** It is the only row where the vendor built
 the interface, the data returned is already public by the client's own act, and

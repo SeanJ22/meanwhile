@@ -48,7 +48,7 @@ works.
 | `corepack pnpm session:start` | Start-of-session sweep, then the dev server — see §8. `--check` starts nothing |
 | `corepack pnpm dev` | Development server. Refuses if 3000 is taken; records its pid in `.dev-server.pid` |
 | `corepack pnpm build` | Production build |
-| `corepack pnpm test` | `node --test` over `tests/` — 129 tests |
+| `corepack pnpm test` | `node --test` over `tests/` — 132 tests |
 | `corepack pnpm lint` | ESLint |
 | `corepack pnpm ingest mock` | Run one source adapter end to end |
 | `corepack pnpm zcta:fetch` | Rebuild zip centroids from Census (see §3.2) |
@@ -158,7 +158,7 @@ real adapter is not asked for the same window three times.
 - **Tests** — `cascade`, `zoned`, `districts`, `tiers`, `district-hits`,
   `zip-coverage`, `fixture-provenance`, `subdivisions`, `registry-oracle`,
   `coverage`, `legistar`, `officeholders`, `officeholder-lookup`, `plural`.
-  **129 total.**
+  **132 total.**
 
 ### The division and body registry — `lib/registry/`
 
@@ -1468,7 +1468,7 @@ correct — `resolveZip` only reports it when the table is partial.
 counties, so a reader can click districts in places that have no meetings behind
 them. Honest, and the coverage tier says so, but the asymmetry is new.
 
-**Map-layer test coverage is still thin.** 129 tests now cover the cascade, time
+**Map-layer test coverage is still thin.** 132 tests now cover the cascade, time
 handling, OCD identity, the tier axis, district disambiguation, fixture
 provenance, county subdivisions and the registry oracle. Nothing tests marker
 reconciliation, camera logic, or basemap resolution — which is part of why the
@@ -1772,7 +1772,7 @@ State as of 2026-08-12, verified rather than assumed:
 - **R07 is fixed.** `--ship` fast-forwards local `main` and pushes `-u` for a
   branch with no upstream; the plain check and `session:start` both report a
   stale local `main`. If the repo ever still looks empty, it is not — §7.
-- **129 tests, lint and build all pass.** M16, M17, R07, R09, R10 and D14 all
+- **132 tests, lint and build all pass.** M16, M17, R07, R09, R10 and D14 all
   Done with evidence in the tracker.
 
   **`git-state.txt` reads this line, so a stale number here becomes a false

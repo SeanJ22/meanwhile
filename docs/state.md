@@ -1481,6 +1481,66 @@ two unrelated systems.
 
 ---
 
+### 4.12 Phase 4.6.9 / D19 — who actually acted (2026-08-12)
+
+`Meeting.ocdId` is one field, and a meeting can have more than one government in
+it. Pima's Board of Supervisors meeting of 2026-08-11 carries "BOARD OF
+SUPERVISORS SITTING AS OTHER BOARDS", then a board's name, then "SITTING AS THE
+BOARD OF SUPERVISORS". The business in between belongs to that other board.
+Without a join, all 124 items record as county-board business.
+
+`lib/meetings/attribution.ts` splits an agenda into the bodies that acted, and
+`MeetingBody` is written as the table it will become so the Phase 5.1 migration
+is a transcription rather than a redesign.
+
+**Headings are detected by the absence of a matter file, not by capitalisation.**
+Legistar attaches a matter file to anything with a legislative record behind it,
+so that one field separates business from section titles without depending on a
+clerk's house style — "CALL TO THE PUBLIC" is shouted in capitals exactly like
+the real switches are, and correctly starts nothing.
+
+**An unresolved heading attributes to nothing, and never to the host.** This is
+the whole discipline of the file. The host is the one body we can already see is
+*not* responsible — the agenda said so in capital letters — so falling back to it
+recreates the precise error the row exists to prevent. Attributing to nobody is a
+smaller, truer claim.
+
+#### What measuring found that the tracker row had not
+
+**Pima sat as two special districts that day, not one.** Alongside the Library
+District Board there is an **Ajo Domestic Water Improvement District**. Four
+segments, 49 items of business, two of them attributed to nobody.
+
+Both resolve to `UNRESOLVED`, and **that is the correct answer rather than a
+failure.** Census publishes no boundary for a special district, so the registry
+holds no division for either and nothing can honestly be matched. The segment is
+recorded as unresolved with its published heading as evidence, which is exactly
+the row a later curated-body pass needs.
+
+It is also the 4.7.6 thesis showing up early: a large share of the country's
+~39,555 special districts sit inside county feeds *already in Legistar*, rather
+than behind 39,555 separate source hunts. Reaching them needs the items told
+apart once they arrive, which is this.
+
+#### A conservation law, and the drop it caught
+
+Every item with a matter file must land in **exactly one** segment. The first
+version skipped items with an empty title before attributing them, which lost the
+single Pima item that has a matter file and no title: 49 in, 48 out, no error
+anywhere. The count alone reads fine; the count against its denominator does not.
+§8's rule, in the place it is easiest to skip.
+
+Resolution is scoped hard — a candidate body must sit inside the host's own
+division *and* the heading must contain its division label — and a test asserts
+that a heading naming another county resolves to nothing. Widening that is how a
+heading match turns into the name-string join `CLAUDE.md` forbids.
+
+**Still open:** nothing persists the rows (`lib/db/schema.ts` is still
+`export {}`), and the adapter does not fetch event items during an ordinary
+ingest, so this runs against the recorded fixture rather than in the live path.
+
+---
+
 ## 5. Open questions
 
 ### 5.1 Vector tiles — RESOLVED 2026-08-12
@@ -1704,7 +1764,7 @@ replaced.
 **Working on `claude/link-ladder-and-coverage-audit`**, branched from `main` at
 `c94aa9c` (the PR #17 merge).
 
-**test 147 pass · lint clean · tsc clean · build green.**
+**test 157 pass · lint clean · tsc clean · build green.**
 
 Phase 4.6.10 and 4.6.1 landed on that branch — the link ladder, the body
 coverage audit, and the `NOT_ATTEMPTED` status that stops `NO_SOURCE_FOUND`

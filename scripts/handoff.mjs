@@ -76,6 +76,7 @@ const EXPORTER = join(
 const MIRRORED = [
   ["CLAUDE.md", "CLAUDE.md"],
   ["docs/abuse-policy.md", "abuse-policy.md"],
+  ["docs/vendor-review.md", "vendor-review.md"],
   ["docs/state.md", "state.md"],
   ["docs/tracker.csv", "tracker.csv"],
   ["lib/sources/types.ts", "types.ts"],

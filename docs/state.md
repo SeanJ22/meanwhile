@@ -4,8 +4,8 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-12, after Phase 4.6.6 — the coverage language (tracker
-M16). Working on `main`, which now carries everything through PR #6. See §7.
+Last updated: 2026-08-12, after the Legistar adapter and the vendor review
+(tracker D12, D14). See §4.7 and §7.
 
 ---
 
@@ -48,12 +48,13 @@ works.
 | `corepack pnpm session:start` | Start-of-session sweep, then the dev server — see §8. `--check` starts nothing |
 | `corepack pnpm dev` | Development server. Refuses if 3000 is taken; records its pid in `.dev-server.pid` |
 | `corepack pnpm build` | Production build |
-| `corepack pnpm test` | `node --test` over `tests/` — 79 tests |
+| `corepack pnpm test` | `node --test` over `tests/` — 107 tests |
 | `corepack pnpm lint` | ESLint |
 | `corepack pnpm ingest mock` | Run one source adapter end to end |
 | `corepack pnpm zcta:fetch` | Rebuild zip centroids from Census (see §3.2) |
 | `corepack pnpm districts:fetch [type...]` | Rebuild boundary layers (see §2) |
 | `corepack pnpm registry:build` | Regenerate the division and body registry (§4.4) |
+| `corepack pnpm officials:build` | Regenerate the federal officeholder roster (§4.8) |
 | `corepack pnpm shoot <name>` | Headless capture of what actually rendered |
 | `corepack pnpm handoff` | End-of-session sweep — see §8. `--check` reports without touching anything |
 | `corepack pnpm db:generate` / `db:migrate` | Drizzle migrations |
@@ -155,8 +156,8 @@ real adapter is not asked for the same window three times.
   timeouts. It prints what actually rendered, so a screenshot can never quietly
   be of an empty map.
 - **Tests** — `cascade`, `zoned`, `districts`, `tiers`, `district-hits`,
-  `zip-coverage`, `fixture-provenance`, `subdivisions`, `registry-oracle`.
-  `coverage`. **79 total.**
+  `zip-coverage`, `fixture-provenance`, `subdivisions`, `registry-oracle`,
+  `coverage`, `legistar`, `officeholders`. **107 total.**
 
 ### The division and body registry — `lib/registry/`
 
@@ -407,16 +408,22 @@ memory — restore it.
 ### The `G:\My Drive\we-the-people\` mirror
 
 A hedge against the above, and against losing the project's memory with a
-branch. It holds six files, flat — five copied from the repo, one generated:
+branch. It holds seven files, flat — six copied from the repo, one generated:
 
 | Mirror | Repo |
 |---|---|
 | `CLAUDE.md` | `CLAUDE.md` |
 | `abuse-policy.md` | `docs/abuse-policy.md` |
+| `vendor-review.md` | `docs/vendor-review.md` |
 | `state.md` | `docs/state.md` |
 | `tracker.csv` | `docs/tracker.csv` |
 | `types.ts` | `lib/sources/types.ts` |
 | `git-state.txt` | *generated — no repo counterpart* |
+
+`vendor-review.md` was added 2026-08-12 alongside D14. It is in the mirror for
+the same reason `abuse-policy.md` is: a standing document that constrains what
+may be built, pending review by counsel, and worth surviving the loss of a
+branch.
 
 `git-state.txt` is written by `pnpm handoff` after the fetch and before the
 mirror sync. It is plain text, one fact per line: when it was generated, the
@@ -971,6 +978,230 @@ Worth the note because it is the §4.2 lesson again in a new place: the code was
 reasoned about carefully, sounded right, and was wrong until it was measured
 against a real point.
 
+### 4.7 The Legistar adapter, and what measuring the vendors actually found
+
+**The first real meeting source exists** — `lib/sources/legistar/`, tracker
+**D12** — and the review that cleared it is `docs/vendor-review.md`, tracker
+**D14**. Both landed 2026-08-12.
+
+**It is not yet the app's source.** `lib/meetings/registry.ts` still resolves to
+the mock, deliberately: Pima County's Legistar exposes exactly four bodies, all
+Board of Supervisors variants, so switching `active` would take the map from 34
+fixtures across four target zips to one county board, dropping 07866, 03255 and
+most of 85701. Whether to run a composite source or hold the mock until more
+clients are wired is a product decision and is not taken here.
+
+What it does do, verified live: `pnpm ingest legistar` fetches 9 events from
+`webapi.legistar.com/v1/pima/events`, normalizes 7, drops 2, and the agenda PDF
+and InSite permalink on a normalized record both resolve — a 132 KB
+`application/pdf` and a live meeting page. **That is the first agenda link in
+this project that is not fabricated,** which is the M06 requirement that §3.1
+reopened.
+
+#### Four things that were only knowable by measuring
+
+**Legistar's status codes are legible, and not what the tracker guessed.**
+Across nine slugs: **200 open client, 403 token required, 500 not a client.**
+The D12 row previously said 404/401. A bare 500 from an API that is
+demonstrably live means the slug is wrong, not that the endpoint is down —
+`describeStatus()` encodes this so the next person does not read an outage into
+it, and the retry logic deliberately does *not* back off on 500, because
+retrying asks the same wrong question four more times.
+
+**Tucson is not a Legistar client at all.** `tucson`, `tucsonaz` and
+`cityoftucson` all return 500. It runs **Hyland OnBase Agenda Online** at
+`tucsonaz.hylandcloud.com/221agendaonline` — a vendor that appears nowhere in
+the brief's list. It was found by following the clerk's own agenda link, which
+is the 4.6.7 CMS rule earning its place: `tucsonaz.gov` is served by **Granicus
+OpenCities**, so inferring the agenda vendor from the website vendor would have
+concluded "Granicus, therefore Legistar" and been wrong twice over. Tracker
+**D16**, and the terms say do not build it — see below.
+
+**The API returns no coordinates.** `EventLocation` is a room name — "Board of
+Supervisors' Hearing Room" — and there is no address, latitude or longitude
+anywhere in the payload. So `clients.ts` carries a curated venue table in which
+every entry cites the body's own page for the address and the Census geocoder
+call for the coordinates, and an unknown venue **drops** the meeting rather than
+placing an approximate pin. The drop is counted, never silent. This is the same
+discipline as the null fixture URLs in §3.1: a pin in roughly the right place is
+a fabricated citation wearing a map marker.
+
+**Legistar has no cancellation field.** `CANCELED` is claimed only on an
+explicit word in the free-text comment. The observed values on `pima` are null,
+"Study Session", "Special Meeting" and "Joint Meeting" — none of them a
+cancellation — so that path has no real positive to test against and the test
+pins the negatives instead. A meeting wrongly marked canceled keeps someone at
+home, so this must not be widened into pattern-matching.
+
+#### 4.6.9 is real, and it was confirmed rather than assumed
+
+Pima's Board of Supervisors meeting of 2026-08-11 (EventId 1824, 124 agenda
+items) carries the headings **"BOARD OF SUPERVISORS SITTING AS OTHER BOARDS"**,
+**"LIBRARY DISTRICT BOARD"** and **"SITTING AS THE BOARD OF SUPERVISORS"**. The
+county board sat as the library district's board.
+
+That is the many-to-many case the brief predicted, and it carries the 4.7.6
+consequence with it: a **special district's business is inside a county feed**,
+so a share of the 39,555 special districts are reachable through county feeds
+already in Legistar rather than through 39,555 separate hunts. Note that Pima's
+Legistar does *not* model the library district as a body — only four Board of
+Supervisors rows exist — so the agenda text is the only signal there is.
+
+`detectSittingAs()` **reports** these headings and is tested against the
+recorded fixture. It deliberately does not attribute: turning a heading into a
+body needs the named district reconciled back to the registry, and there is
+nowhere to record the answer until `meeting_bodies` exists in Phase 5.1. Until
+then a library-district vote would record as county-board business. Tracker
+**D19**.
+
+#### The vendor review, in one paragraph each
+
+Full text in `docs/vendor-review.md`; it is not legal advice and not a
+clearance, and everything touching the statutory argument is flagged for B09.
+
+**Granicus — cleared.** Terms revised 2026-07-20, California law, scoped
+throughout to "this website", and carrying **no automated-access clause of any
+kind** — checked for specifically, and absent, which distinguishes it from both
+other vendors. It hardly matters, because the sanctioned API returns only what
+the client already marked public. Build on the API; do not scrape
+`*.legistar.com` HTML.
+
+**Hyland — do not build.** Its terms explicitly prohibit scraping, robots and
+data mining, prohibit commercial exploitation, and prohibit use "to build a
+competitive product or service". They enumerate five `hyland.com` hosts and do
+**not** list `hylandcloud.com`, where every tenant lives — but that gap is thin
+evidence to act on, and Diligent's document proves a vendor states a product
+carve-out plainly when it means one. Route to the City instead: ask the Clerk,
+use the City's own GovDelivery list, and note that joint Tucson/Pima meetings
+already appear on `pima.legistar.com`.
+
+**Diligent — the brief's §4.5.4 correction is confirmed at source, verbatim:**
+"If there is any conflict between these Terms of Use and Diligent's standard
+terms for its products and services, Diligent's standard terms will apply and
+take precedence." So the website ToU is, by its own instruction, not the
+governing document for a tenant portal. Not cleared and not blocked; try the
+portal's subscribe channel and the district's own site first.
+
+#### One statute finding that changes product wording
+
+**New Hampshire does not require an agenda at all.** RSA 91-A:2 requires notice
+of time, date and place; it does not require an agenda, and a body may take up
+topics not on one it chose to publish. Arizona is the opposite — A.R.S.
+§ 38-431.02 requires the agenda posted on the body's website 24 hours ahead —
+and New Jersey sits between, requiring it "to the extent known".
+
+The 4.6.6 coverage language says we do not have a body's calendar *yet*, which
+reads as our gap. **For a New Hampshire body that can be the body's lawful
+choice, and there may be nothing to find.** Misattributing a legal choice to our
+own coverage is the same family of error as claiming "unincorporated" without
+measuring it (§4.5). Affects 03255 and every NH body in the registry. Tracker
+**D17**, wording to be decided before it is implemented.
+
+The other statute finding is for counsel rather than for code: **A.R.S.
+§ 39-121.03** requires a purpose statement for records requested for a
+*commercial purpose*, permits commercial-market pricing, and permits the
+custodian to ask the Governor to prohibit the request outright — with a
+definition reaching "any purpose in which the purchaser can reasonably
+anticipate the receipt of monetary gain from the direct or indirect use of the
+public record". It probably does not reach passive retrieval of an
+already-published page, since it attaches to a *request to a custodian*, but
+this product's data side sells aggregates and the indirect-gain language is
+broad. Flagged to **B09**, not resolved.
+
+### 4.8 The federal officeholder roster (2026-08-12)
+
+**Every reader in the country can now be told who represents them in Congress.**
+`lib/officials/` and `lib/sources/congress/`, generated by
+`pnpm officials:build` into a committed `lib/registry/officeholders-us.json` —
+537 people, 429 KB. Tracker **D02**, partially: this is the roster, not the roll
+calls that row is actually about.
+
+**Built on the bulk file, not the API.** `unitedstates/congress-legislators` is
+public domain, answers in one request, needs no key, has no rate limit, and is
+reproducible — which is why §5.0a says to prefer bulk where one exists. **The
+route does not change now that a key exists:** `CONGRESS_API_KEY` and
+`FEC_API_KEY` were written into `.env.local` on 2026-08-12, after the roster was
+built, and the Congress key is for the **photo path only** (D20). The roster
+stays on bulk.
+
+**`FEC_API_KEY` is deliberately unwired.** It belongs to the `FUNDING` evidence
+tier, not to Phase 5, and D14 has to clear the commercial-use restriction on
+contributor information under **52 U.S.C. § 30111(a)(4)** before an adapter
+ships. Mixing money data into a roster also invites exactly the composite-score
+failure `CLAUDE.md` forbids. The key being present is not a reason to use it.
+
+Like the registry, this is a **committed artifact, not a table.**
+`lib/db/schema.ts` is still `export {}`; the first source that needs *writes* is
+meetings, not people.
+
+#### The at-large trap, found by checking
+
+The bulk file numbers an at-large district **`0`**. This repo — and the
+canonical identifier list — call it **`cd:at-large`**. A natural
+`cd:${district}` produces `cd:0`, which matches no division, and would have
+**silently lost six voting members**: Alaska, Delaware, North Dakota, South
+Dakota, Vermont and Wyoming.
+
+Nothing about that is visible at four target zips, and nothing about it throws.
+It was found by listing the registry's at-large identifiers next to the
+source's, which took one command. `houseOcdId()` maps it and a test pins it.
+
+This is the same shape as every other correction in this file: reasoned about
+carefully, plausible, wrong until measured.
+
+#### What the reconciliation reports
+
+| | |
+|---|---|
+| Fetched | 537 |
+| Senate seats | 100 |
+| House seats | 437 |
+| Matched to a registry `cd:` division | **431** |
+| Unmatched, reported | **6** |
+
+The six are the **non-voting delegates** — DC, Puerto Rico, the Virgin Islands,
+Guam, American Samoa and the Northern Mariana Islands. Census does not publish
+congressional geometry for them, so the registry has no division to attach to.
+They land in an `unmatched` array with a reason, and their division links are
+**not shipped**: a name rendered against a division that does not exist is
+precisely the CLAUDE.md line 17 failure, and it fails silently because the name
+itself is perfectly real.
+
+**Senators attach to `ocd-division/country:us/state:xx`, and the registry has no
+state-level division rows at all** — it is generated from boundary layers and
+there is no state layer. That is fine rather than a gap: OCD-IDs are
+hierarchical, so the state identifier is derivable from the `state:` segment of
+any division resolved at a point. That is the hierarchy doing its job, not a
+name-string join.
+
+#### Two shapes that are load-bearing
+
+**`OfficeholderDivision` is a join table, never a column.** Arizona elects two
+senators to one state division, and its *legislative* districts each elect one
+senator and **two** representatives. A `divisionOcdId` column on the person
+breaks on Arizona immediately, before any of the harder cases.
+
+**`partyLabel` is display-only and is the field most likely to break the
+rules.** It is carried because the source publishes it and hiding it would be
+less honest, not more. Nothing may infer a position, a vote, or anything about a
+district from it. A test asserts the officeholder shape grows no
+score/rank/rating/match/fit/grade key, so a composite score cannot arrive by
+accretion.
+
+**Photos are typed and null.** `OfficeholderPhoto` carries a `license`, and a
+test already asserts nothing ships without one — the guard is in place before
+the images are. D20 has the detail, including two failure modes that force
+self-hosting: Congress.gov image URLs 403 on programmatic fetches, and
+`theunitedstates.io` is HTTP-only, so hotlinking it from an HTTPS page is
+mixed-content blocked and fails in a way the reader sees and the build does not.
+
+#### Not done
+
+Step 3 of §5.0 — **putting the names on screen.** The coverage notice still ends
+"We haven't sourced their names or meeting schedules yet" for AZ-6 and the two
+legislative districts, and the data to replace half that sentence now exists.
+That is the next piece, and it is small.
+
 ---
 
 ## 5. Open questions
@@ -1076,9 +1307,13 @@ bundler can follow, so the report belongs there.
 
 ### 5.2 Everything else
 
-1. **Which real meeting source lands first?** `types.ts` names both Granicus
-   Legistar and Democracy Works. The mock is Legistar-shaped, which implies
-   Legistar, but nothing commits to it.
+1. ~~**Which real meeting source lands first?**~~ **Answered 2026-08-12:
+   Legistar.** The adapter is built, tested and verified against the live `pima`
+   client — §4.7. What is *not* answered is when it becomes the app's source:
+   `active` is still the mock, because Pima's Legistar carries one county board
+   and switching would empty three of the four target zips. The open question is
+   now narrower — composite source, or hold the mock until more clients are
+   wired?
 4. **What is the persistence design?** `upsert()` exists on the interface and
    does nothing in the mock. Tables, migration, and conflict strategy are all
    unspecified. This blocks any real source.
@@ -1189,16 +1424,19 @@ replaced.
 
 ## 7. Current state of the branch
 
-Branch `claude/handoff-git-state`, one commit on top of `origin/main` at
-`11fc88a` (the PR #9 merge). The `git-state.txt` mirror file — R09.
+Branch `claude/legistar-adapter-and-vendor-review`, one commit on top of
+`origin/main` at `4f5d2ae` (the PR #12 merge). The Legistar adapter and the
+vendor review — D12 and D14, with D16 through D19 opened by the work.
 
 ```
-<this commit>  Write git-state.txt into the mirror                    ← R09
-11fc88a        Merge PR #9                                            ← origin/main
+<this commit>  Legistar adapter + vendor review              ← D12, D14
+4f5d2ae        Merge PR #12                                  ← origin/main
 ```
 
-The previous session's work (Phase 4.6.6 and the FUNCSTAT fix, M16 and M17) is
-in `origin/main` and no longer sits on a branch.
+**test 95 pass · lint clean · build green**, all three run on this branch.
+
+Everything earlier — Phase 4.6.6, the FUNCSTAT fix, the session lifecycle work
+(M16, M17, R07–R10) — is in `origin/main` and no longer sits on a branch.
 
 **An earlier session opened on a repo that looked empty, and that is worth
 knowing because it will happen again.** The working tree was on `main` at `64fee33` —
@@ -1263,8 +1501,16 @@ construction with `escapeHtml`/`onclick` attributes, and the sales data model.
   stop**, because it adds a user data field and CLAUDE.md requires asking first.
   The "I want this" control in 4.6.6 is deliberately unbuilt for the same
   reason, and because there is no table to write `demandCount` to.
+- **The meetings track has started.** D14 (the vendor and statute review) is
+  done and D12 (the Legistar adapter) is built and verified live, though not yet
+  the app's source — §4.7. D13 (Diligent) is unblocked but should try the
+  subscribe channel and the district's own site before the portal. D16 (Tucson,
+  which is Hyland OnBase and not Legistar) says do not build the portal route.
 - **4.7 not started** — national scale: vector tiling, the Census of
   Governments universe, vendor tenant enumeration, special districts.
+- **Phase 5 tier 1 is done** — the federal roster, §4.8. Tier 2 (state
+  legislators, Plural Open) is unblocked and takes the same shape. Neither
+  needed a database, and neither has been rendered yet.
 - **5–8 remain** — officeholders and the first real tables (which extend the
   registry rather than replacing it), popup and full-screen modal, the ported
   subsystems (notes, activity tracker, elections layer, conflicts, export,

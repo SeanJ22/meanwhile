@@ -1206,6 +1206,34 @@ Verified live for all three states. So `PLURAL_API_KEY` is **not required for th
 roster** — it is for the v3 API, which none of this touches. Data is CC-0;
 attribution is requested rather than required and is carried anyway.
 
+#### The quota is why bulk is correct, not merely tidy
+
+Plural's free tier is **500 GraphQL requests/day at 1 per second.** 620
+legislators under any per-person or per-district fetch pattern would spend most
+of a day's allowance in a single build — and again on every rerun. The bulk
+route costs **3 static requests, metered against nothing.**
+
+So the build prints both counters every run, and warns past half the ceiling:
+
+```
+requests: 3 bulk (unmetered) · 0 GraphQL of 500/day
+```
+
+They stay separate deliberately. Folding unmetered static downloads into the
+GraphQL count would invent pressure on a ceiling nothing is approaching, and
+printing neither is how a ceiling gets discovered by hitting a 429.
+
+**It is a quota, not a terms restriction** — it limits how we build, not whether
+we may, so D03 stays cleared. `docs/vendor-review.md` records it alongside the
+other three vendors, framed as the different kind of entry it is: Granicus,
+Hyland and Diligent *hold a public body's records*, whereas Plural *publishes
+public-domain data by choice*. There is no access question, and CC-0 leaves it
+the only source in that document with no commercial-use question at all.
+
+A test asserts `bulkUrl()` points at `data.openstates.org` and **not** the API
+host, because the likely way this breaks is somebody reaching for GraphQL to
+fill in term dates, which the CSV does not carry.
+
 #### The New Hampshire trap — the at-large trap in a different costume
 
 Plural designates New Hampshire House districts by **county and number** —

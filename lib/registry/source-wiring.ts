@@ -144,6 +144,54 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     verifiedAt: "2026-08-13",
   },
 
+  // ── Granicus IQM2 ───────────────────────────────────────────────────────
+  // Calendar.aspx?From=&To= is server-rendered with future meetings, and each
+  // row's tooltip publishes board, type, status, and the venue with street
+  // address. Verified live 2026-08-13; the RSS.aspx?Feed=Calendar pseudo-feed
+  // recorded earlier lists only published documents and is not used.
+  {
+    bodyId: "ocd-division/country:us/state:nj/county:morris#governing",
+    ocdId: "ocd-division/country:us/state:nj/county:morris",
+    agendaSourceType: "IQM2",
+    jurisdiction: "Morris County, NJ",
+    publishingOrg: "Morris County Board of County Commissioners",
+    timeZone: "America/New_York",
+    config: {
+      slug: "morriscountynj",
+      base: "https://morriscountynj.iqm2.com",
+      // The tenant could host other boards; only this one is wired.
+      boardMatch: "Board of County Commissioners",
+    },
+    verifiedAt: "2026-08-13",
+  },
+
+  // ── Revize ──────────────────────────────────────────────────────────────
+  // calendar.php is JS-only; the homepage "Upcoming Meetings" block and the
+  // BOC notices/agendas page are both server-rendered. Meetings come from the
+  // block, agenda PDFs matched by filename date from the page. Verified live
+  // 2026-08-13.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack#governing",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack",
+    agendaSourceType: "REVIZE",
+    jurisdiction: "Merrimack County, NH",
+    publishingOrg: "Merrimack County Board of Commissioners",
+    timeZone: "America/New_York",
+    config: {
+      slug: "merrimack",
+      base: "https://www.merrimackcounty.net",
+      agendaPage: "board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
+      documentsFolder: "Board of Commissioners/Public Notices, Agenda, Minutes/",
+      // The block also lists the county delegation's Executive Committee — a
+      // different government, not this body.
+      titleMatch: "Board of Commissioners",
+      // The block's own title text is "Board of Commissioners Mtg."; the
+      // body's published name, from its page heading.
+      bodyName: "Merrimack County Board of Commissioners",
+    },
+    verifiedAt: "2026-08-13",
+  },
+
   // ── Apptegy / Thrillshare ───────────────────────────────────────────────
   // The district website's own events API — the JSON the page itself renders
   // from, carrying start times with offsets, the venue string, and

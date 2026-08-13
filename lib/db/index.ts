@@ -1,7 +1,9 @@
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 
-import * as schema from "./schema";
+// Extension explicit so the file also loads under `node --test`'s
+// strip-types resolver, which the search-log tests run through.
+import * as schema from "./schema.ts";
 
 /*
   Lazy on purpose. Nothing in the map entry screen reads Postgres, so a missing

@@ -178,6 +178,65 @@ export const VENUE_CACHE: VenueEntry[] = [
     verifiedAt: "2026-08-13",
   },
 
+  // ── IQM2: Morris County Board of County Commissioners ───────────────────
+  // The Calendar.aspx tooltip publishes the room and the full street address
+  // for every sitting — work sessions in Knox Room 525, regular meetings in
+  // the Public Meeting Room 555, both in the Administration and Records
+  // Building. The tooltip is the county's own publication, which resolved the
+  // venue-citation errand its Akamai-fronted main site had blocked.
+  {
+    sourceId: "iqm2",
+    bodyOcdId: "ocd-division/country:us/state:nj/county:morris",
+    match:
+      "Knox Room 525, Administration and Records Building, 10 Court Street, Morristown, NJ  07960",
+    name: "Administration and Records Building, Knox Room 525",
+    address: "10 Court Street, Morristown, NJ 07960",
+    lat: 40.796821,
+    lng: -74.484698,
+    addressSourceUrl:
+      "https://morriscountynj.iqm2.com/Citizens/Calendar.aspx?From=8/1/2026&To=12/31/2026",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=10+Court+Street%2C+Morristown%2C+NJ+07960&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-13",
+  },
+  {
+    sourceId: "iqm2",
+    bodyOcdId: "ocd-division/country:us/state:nj/county:morris",
+    match:
+      "County Commissioners Public Meeting Room 555, Administration and Records Building, 10 Court Street, Morristown, NJ  07960",
+    name: "Administration and Records Building, Public Meeting Room 555",
+    address: "10 Court Street, Morristown, NJ 07960",
+    lat: 40.796821,
+    lng: -74.484698,
+    addressSourceUrl:
+      "https://morriscountynj.iqm2.com/Citizens/Calendar.aspx?From=8/1/2026&To=12/31/2026",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=10+Court+Street%2C+Morristown%2C+NJ+07960&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-13",
+  },
+
+  // ── Revize: Merrimack County Board of Commissioners ─────────────────────
+  // The homepage block says only "OCH - Concord". The expansion is the
+  // county's own 7/27/2026 public notice: "Location: OCH, 163 N. Main St.,
+  // Concord, NH 03301". Board meetings alternate venues (the 8/10 notice
+  // placed that one in Boscawen), so only the observed string is keyed; a
+  // Boscawen meeting will drop as unknownVenue until its string is observed
+  // and a row added — a counted drop, never a guessed pin.
+  {
+    sourceId: "revize",
+    bodyOcdId: "ocd-division/country:us/state:nh/county:merrimack",
+    match: "OCH - Concord",
+    name: "OCH, 163 N. Main St., Concord",
+    address: "163 N. Main St., Concord, NH 03301",
+    lat: 43.210534,
+    lng: -71.538023,
+    addressSourceUrl:
+      "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/Public%20Notice%207.27.26.pdf",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=163+N+Main+St%2C+Concord%2C+NH+03301&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-13",
+  },
+
   // ── CivicWeb: Newbury Selectboard ───────────────────────────────────────
   // "Town Office Meeting Room" — the town office is at 937 Route 103, stated
   // on the town's own administration page (which answers 200 to an identified

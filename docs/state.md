@@ -25,7 +25,10 @@ boundaries can be overlaid, and **clicking the map selects a district** — whic
 is how a reader narrows from "near this zip" to the specific district they care
 about.
 
-There are still no accounts, no persistence, and no live meeting data.
+There are still no accounts. *(Corrected 2026-08-13, §10: meetings are live —
+served from a committed snapshot of seven real sources — and persistence
+exists: three tables with a generated migration, with the identifier-free
+search log already writing.)*
 
 ### Running it
 
@@ -48,7 +51,7 @@ works.
 | `corepack pnpm session:start` | Start-of-session sweep, then the dev server — see §8. `--check` starts nothing |
 | `corepack pnpm dev` | Development server. Refuses if 3000 is taken; records its pid in `.dev-server.pid` |
 | `corepack pnpm build` | Production build |
-| `corepack pnpm test` | `node --test` over `tests/` — 197 tests |
+| `corepack pnpm test` | `node --test` over `tests/` — 226 tests (2026-08-13) |
 | `corepack pnpm lint` | ESLint |
 | `corepack pnpm ingest <source>` | Run one adapter end to end — `composite` prints per-source accounting and retrieves agenda documents |
 | `corepack pnpm meetings:report` | The four-zip gate: meetings per zip, contributing sources, unwired bodies. Live network |
@@ -159,7 +162,8 @@ real adapter is not asked for the same window three times.
 - **Tests** — `cascade`, `zoned`, `districts`, `tiers`, `district-hits`,
   `zip-coverage`, `fixture-provenance`, `subdivisions`, `registry-oracle`,
   `coverage`, `legistar`, `officeholders`, `officeholder-lookup`, `plural`.
-  **132 total.**
+  **132 total.** *(2026-08-13: 226 — snapshot, iqm2/revize fixtures,
+  db-schema and search-log suites added since this list was written.)*
 
 ### The division and body registry — `lib/registry/`
 
@@ -376,6 +380,9 @@ Rerun `pnpm zcta:fetch` when Census publishes a new vintage.
 ### 3.3 The database
 
 **Where:** `lib/db/schema.ts` — intentionally empty (`export {}`).
+*(No longer true as of 2026-08-13 — three tables and a generated migration
+landed with D10; see §10. The rest of this section stands as the design it
+was built to.)*
 
 Nothing on the entry screen reads Postgres. `getDb()` is lazy specifically so a
 missing `DATABASE_URL` does not break `pnpm dev`; the first caller that actually
@@ -2144,7 +2151,7 @@ State as of 2026-08-12, verified rather than assumed:
 - **R07 is fixed.** `--ship` fast-forwards local `main` and pushes `-u` for a
   branch with no upstream; the plain check and `session:start` both report a
   stale local `main`. If the repo ever still looks empty, it is not — §7.
-- **197 tests, lint, tsc and build all pass.** (Updated 2026-08-13.) M16, M17, M21, R07, R09, R10,
+- **226 tests, lint, tsc and build all pass.** (Updated 2026-08-13 evening; was 197 that morning.) M16, M17, M21, R07, R09, R10,
   D14 and M20 all Done with evidence in the tracker. D02, D03, D12 and M05 are
   **In progress** with the evidence recorded and the reason each is not Done
   stated on the row — the Legistar adapter is not the app's source, the rosters
@@ -2317,3 +2324,156 @@ on this machine or the mirror at the time of this reprioritization, so its
 status table could not be updated. **It is now stale on phase ordering —
 Phase 4.7 is suspended, Phase 8 is required — and this file is authoritative
 over it**, which is what the brief's own precedence rule already says.
+
+---
+
+## 10. The 2026-08-13 deploy-and-demo session
+
+The session that turned the branch into something a tester can open on a
+phone. Branch `claude/deploy-snapshot-and-demo`, PR #20. Everything below is
+committed and verified; **test 226 pass · lint clean · build exit 0**
+(verified by exit code — see the working-rule note below).
+
+### The deploy, pinned
+
+Netlify project `sparkwtp` was already connected and deploying on
+autodetected settings. What was wrong with those settings was exactly one
+thing: the build ran the image's global pnpm while the repo pins pnpm
+10.33.0. `netlify.toml` now pins the build command
+(`corepack enable && corepack pnpm run build`), Node 24, and the publish and
+functions directories. **Verified from the deploy log for `458755e`, not
+from the green line**: "Installing npm packages using pnpm version 10.33.0"
+(install side) and the pinned command echoed (build side). The unlisted
+posture is platform-level visibility plus `robots.txt` disallow-all and
+`X-Robots-Tag: noindex` on every route from both `next.config.ts` and a
+`netlify.toml` header rule. No app-level gate exists, deliberately.
+
+The deploy pipeline also proved itself mid-session: the one commit whose
+local "build green" claim was false (see below) failed its deploy preview
+with the same error, and the correction went green.
+
+### The snapshot — production never fans out
+
+The composite's live fan-out cannot ship: five serialized vendor fetches
+outlive a serverless timeout, and a fetch per visitor against a public
+body's portal is the rate degradation `CLAUDE.md` forbids. `pnpm ingest
+composite` now writes `data/meetings-snapshot.json` — generatedAt,
+per-source counts and failures, meetings, append-only agenda documents —
+and the app reads the file. Committed so the build is deterministic, agenda
+changes are diffs, and a failed refresh leaves the last good snapshot
+serving stale-but-honest data. `lib/meetings/snapshot.ts` is the only
+module that knows the path (the 90,000-government version swaps that module
+for a store, nothing else). The validator refuses a snapshot whose sources
+do not state integer counts — the count invariant as mechanism, now also
+written into `CLAUDE.md`'s non-negotiables. The reader always sees "Last
+checked" (`data-freshness.tsx`), and a failed source is attributed to the
+bodies it serves in the coverage notice. Refresh: GitHub Actions cron every
+six hours, committing to main only when the file changed;
+`WTP_MEETING_SOURCE=composite` keeps the live fan-out for local work.
+Current snapshot: **66 meetings from 7/7 sources, 16 agenda document
+versions**.
+
+### The two county adapters, and what the second pass found
+
+`iqm2` (Morris County) is built on `Citizens/Calendar.aspx?From=&To=` — the
+ladder had recorded the RSS pseudo-feed, but the calendar page is
+server-rendered with the *forward* schedule, and its row tooltips publish
+the venue with street address, which closed the venue-citation browser
+errand without a browser. `revize` (Merrimack County) reads the homepage
+upcoming-meetings block for meetings and matches agenda/notice PDFs by
+filename date; the county's own notice PDFs decoded "OCH - Concord" to
+163 N. Main St. **A measurement overturned a recorded claim, preserved in
+the audit row**: the earlier note said both Merrimack bodies meet in
+Boscawen — the Board in fact alternates venues per meeting, so venue rows
+key on observed strings only and anything unobserved drops counted.
+
+Gate movement: **07866 went 5 → 11 meetings**. 03255 holds at 1 on the
+exact rung because Merrimack meets ~33 km out — the widened-rung exerciser,
+as designed.
+
+### Tucson depth: what the hunts returned
+
+PCC's governing board is a live Diligent tenant
+(`pima.community.highbond.com`, service verified) — one wiring row from
+live, blocked only on the registry having no division for a community
+college district. That identifier decision is deliberately not taken here:
+tracker **D28** holds the options. The city's dozens of boards need a
+second-body-per-division convention (**D29**) plus an HTML adapter; RTA and
+PAG are not Legistar clients (verified beside a control); tucsonaz.gov
+publishes no machine feed (four endpoints 404). All rungs recorded in the
+ladder and audit. Comment access: honest UNKNOWN rows for both new county
+boards.
+
+### Persistence (D10) and the vintage, as implemented
+
+Three tables in `lib/db/schema.ts` with a generated migration: `meetings`
+(keyed on the source-namespaced id), `agenda_documents` (append-only,
+`meetingId@contentHash`), `search_log`. **Every `ocd_id` column is paired
+with a NOT NULL `division_vintage`** — the §0e decision as columns, guarded
+structurally in `tests/db-schema.test.ts` along with: no identifier column
+and no foreign keys on the search log, and no ranking vocabulary in any
+column name. Adapters do not write yet; meetings serve from the snapshot.
+
+### Search logging and /transparency, together
+
+The log writes: SEARCH server-side from `/api/meetings` (zip as
+`approximate_location`, resolved OCD-IDs with vintage, tier/radius/count),
+and MEETING_OPENED / BODY_OPENED / DISTRICT_SELECTED / FILTER_APPLIED from
+the client through `POST /api/log`. No identity by construction — schema,
+write-path fragment rejection, and a client that sends no cookie and mints
+no id. `/transparency` shipped in the same commit, scoped honestly to an
+unlisted demo, linked from the welcome overlay and the sidebar footer.
+`tests/search-log.test.ts` makes the coupling structural. **Author step for
+production logging: set `DATABASE_URL` in the Netlify environment and run
+`pnpm db:migrate` against Neon once.** Until then `/api/log` answers 202
+accepted-not-stored and nothing breaks.
+
+### Phone width, and the landing state
+
+Below 640px the sidebar is a slide-over drawer behind a 44px toggle, the
+map takes the whole screen, the meeting panel is a bottom sheet pinned to
+the viewport edge, popups span the width, and the legend hides (decision:
+three stacked cards on a six-inch screen; revisit if a tester asks what
+the pin colors mean). The welcome card now names the four covered places
+as one-tap buttons, says what comes back, and states coverage honestly.
+Gate met with screenshots of all four zips at 390×844 plus the
+welcome/drawer/sheet states (`scripts/phone-states.mts`).
+
+### Session-open now starts the server it used to only guard
+
+`session:start`'s port check kills a stale dev server it can attribute to
+this repo (pid-file match) instead of failing; a foreign occupant still
+fails. After starting, it waits for `/` to actually serve, then verifies
+the pid holding the port descends from the child it spawned and prints the
+HEAD sha served. The end-of-session kill in `handoff` stays.
+
+### Two working-rule sightings, preserved
+
+- **The tail-masked exit code.** `corepack pnpm build 2>&1 | tail -3`
+  reports tail's exit status, and a commit recorded "build green" on the
+  strength of it while the build had failed. Caught one commit later
+  (and independently by the deploy preview failing); the correction is its
+  own commit. Verify a build by its exit code, never through a pipe.
+- **Tree-shaking hid a client-graph leak.** Client value-imports of
+  `RADIUS_LADDER_KM` reached `node:fs` through query.ts → the meeting
+  registry → the snapshot source. The production build shook it away and
+  went green; the dev server, which does not shake, panicked on every
+  request. The boundary is now structural (`lib/meetings/constants.ts`).
+  A green build is not evidence about the dev server, or vice versa.
+
+### Decisions taken as cheaper-to-undo, with the rejected alternative
+
+- Snapshot keeps only succeeding sources' meetings on a partial refresh
+  (rejected: carrying a failed source's stale rows forward as if current —
+  the silent-fallback shape).
+- Agenda retrieval stays capped at 8 per run, prioritized toward meetings
+  with no stored document (rejected: raising the cap — politeness first,
+  and the 6-hour cadence converges).
+- The legend hides at phone width (rejected: repositioning it above the
+  sheet — three stacked cards).
+- Foreign processes on port 3000 still fail session:start rather than
+  being killed (rejected: kill-anything — we do not kill what we cannot
+  attribute).
+- OnBase's PHA board and joint meetings stay dropped-and-counted
+  (rejected: guessing City Hall — a pin in roughly the right place is a
+  fabricated citation wearing a map marker).

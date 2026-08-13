@@ -1,4 +1,4 @@
-import { RADIUS_LADDER_KM } from "../meetings/query.ts";
+import { RADIUS_LADDER_KM } from "../meetings/constants.ts";
 import { TIERS } from "../ocd/tiers.ts";
 
 import type {

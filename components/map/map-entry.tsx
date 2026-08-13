@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { CountBadge } from "@/components/map/count-badge";
 import { Legend } from "@/components/map/legend";
@@ -14,6 +14,8 @@ import { DataProvider, type ShellData } from "@/lib/state/data";
 import { applyFilters } from "@/lib/state/derive";
 import { UiProvider, useUi, useUiDispatch } from "@/lib/state/provider";
 import type { MeetingSearchResult } from "@/lib/meetings/query";
+import type { SnapshotStatus } from "@/lib/meetings/freshness";
+import { logEvent } from "@/lib/log/client";
 import { groupByVenue, type Venue } from "@/lib/meetings/venues";
 import type { Meeting } from "@/lib/sources/types";
 import type { SeatHolder } from "@/lib/officials/lookup";
@@ -29,6 +31,7 @@ import type { DistrictHit } from "@/lib/map/districts";
 import type { DistrictType } from "@/lib/state/types";
 
 import { CoverageNotice } from "./coverage-notice";
+import { DataFreshness } from "./data-freshness";
 import { DistrictPicker } from "./district-picker";
 import { MapCanvas, type CameraTarget, type MapFocus } from "./map-canvas";
 import { MeetingPanel } from "./meeting-panel";
@@ -48,6 +51,8 @@ import { WelcomeOverlay } from "./welcome-overlay";
 
 interface TaggedResult extends MeetingSearchResult {
   zip: string;
+  /** Present when the committed snapshot served this answer. */
+  snapshot?: SnapshotStatus | null;
 }
 
 export function MapEntry() {
@@ -74,6 +79,10 @@ function MapEntryInner() {
   // zip stored yet", which opens it unconditionally.
   const [welcomeRequested, setWelcomeRequested] = useState(false);
 
+  // Phone width only: the sidebar is a drawer (globals.css). Desktop ignores
+  // this entirely — the rail is always visible there.
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   // District visibility is persisted by its own hook, the sibling of
   // use-stored-zip. The store mirrors it one-way so the legend and the stats
   // card can read it without a second source of truth for the value.
@@ -94,7 +103,9 @@ function MapEntryInner() {
 
     void (async () => {
       try {
-        const response = await fetch(`/api/meetings?lat=${lat}&lng=${lng}`, {
+        // The zip rides along as approximate_location for the search log —
+        // orientation only, disclosed on /transparency.
+        const response = await fetch(`/api/meetings?lat=${lat}&lng=${lng}&zip=${zip}`, {
           headers: { accept: "application/json" },
           signal: controller.signal,
         });
@@ -118,6 +129,7 @@ function MapEntryInner() {
       dispatch({ type: "select/venue", key: null });
       setFailed(false);
       setWelcomeRequested(false);
+      setSidebarOpen(false);
       remember({ zip, lat, lng });
     },
     [remember, dispatch],
@@ -167,6 +179,43 @@ function MapEntryInner() {
    */
   const [popupMeeting, setPopupMeeting] = useState<Meeting | null>(null);
   const [modal, setModal] = useState<ModalSubject | null>(null);
+
+  /*
+   * Search-log events for the interactions the transparency page describes.
+   * Each carries the divisions touched and scalar detail only — the client
+   * half sends nothing that could identify the reader, and the effects fire
+   * on state *changes*, so a re-render logs nothing.
+   */
+  const openMeeting = useCallback((meeting: Meeting) => {
+    setPopupMeeting(meeting);
+    logEvent("MEETING_OPENED", [meeting.ocdId], { meetingId: meeting.id });
+  }, []);
+
+  useEffect(() => {
+    if (!selectedVenue) return;
+    const ocdIds = [...new Set(selectedVenue.meetings.map((m) => m.ocdId))];
+    logEvent("BODY_OPENED", ocdIds, { venueKey: selectedVenue.key });
+  }, [selectedVenue]);
+
+  useEffect(() => {
+    if (!ui.selectedDistrictOcdId) return;
+    logEvent("DISTRICT_SELECTED", [ui.selectedDistrictOcdId]);
+  }, [ui.selectedDistrictOcdId]);
+
+  // The tier filter is the one that changes what the whole screen shows.
+  // The ref skips the mount run: the default tiers are not a choice the
+  // reader made, and logging them would count page loads as filter events.
+  const tiersLogged = useRef(false);
+  useEffect(() => {
+    if (!tiersLogged.current) {
+      tiersLogged.current = true;
+      return;
+    }
+    logEvent("FILTER_APPLIED", [], {
+      filter: "tiers",
+      value: ui.tiers.join(","),
+    });
+  }, [ui.tiers]);
 
   // The last set of districts a click landed in, so the popup can recover the
   // full hit — the store keeps only the identifier and type.
@@ -231,6 +280,9 @@ function MapEntryInner() {
     if (item.lat !== null && item.lng !== null) {
       setFocus({ lat: item.lat, lng: item.lng, zoom: 13, key: item.id });
     }
+    // Picking a result means the reader wants the map, not the drawer that
+    // may be covering it at phone width.
+    setSidebarOpen(false);
   }, [dispatch]);
 
   const onPickMeeting = useCallback(
@@ -334,10 +386,45 @@ function MapEntryInner() {
           showDistricts={showDistricts}
           districtsFailed={districtsFailed}
           onToggleDistricts={setShowDistricts}
+          mobileOpen={sidebarOpen}
+          onMobileClose={() => setSidebarOpen(false)}
         />
 
-        {/* The map starts where the sidebar ends. */}
-        <div className="absolute inset-y-0 right-0 left-[340px]">
+        {/* Phone width: the drawer's toggle and its backdrop. The backdrop
+            sits under the sidebar's z-1000 so tapping the map closes the
+            drawer instead of dropping a pin through it. */}
+        {!sidebarOpen && (
+          <button
+            type="button"
+            className="sidebar-toggle sm:hidden"
+            aria-label="Open menu"
+            onClick={() => setSidebarOpen(true)}
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden="true"
+            >
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+        )}
+        {sidebarOpen && (
+          <div
+            className="sidebar-backdrop sm:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+
+        {/* The map starts where the sidebar ends — and at phone width the
+            sidebar is a drawer, so the map takes the whole screen. */}
+        <div className="absolute inset-y-0 right-0 left-0 sm:left-[340px]">
           <MapCanvas
             venues={venues}
             camera={camera}
@@ -355,13 +442,13 @@ function MapEntryInner() {
           />
         </div>
 
-        <div className="pointer-events-none absolute inset-y-0 right-0 left-[340px] flex flex-col">
+        <div className="pointer-events-none absolute inset-y-0 right-0 left-0 sm:left-[340px] flex flex-col">
           <div className="flex items-start justify-end gap-3 p-3 sm:p-5">
             {selectedVenue && (
               <div className="pointer-events-auto hidden sm:block">
                 <MeetingPanel
                   venue={selectedVenue}
-                  onOpenMeeting={setPopupMeeting}
+                  onOpenMeeting={openMeeting}
                   onClose={() => dispatch({ type: "select/venue", key: null })}
                 />
               </div>
@@ -378,6 +465,8 @@ function MapEntryInner() {
             {tilesFailed && <TileNotice />}
             {failed && <SearchFailedNotice />}
 
+            {current?.snapshot && <DataFreshness snapshot={current.snapshot} />}
+
             {current && (
               <CoverageNotice
                 tier={current.tier}
@@ -386,14 +475,19 @@ function MapEntryInner() {
                 requestedRadiusKm={current.requestedRadiusKm}
                 count={current.meetings.length}
                 coverage={current.coverage}
+                failedSourceOcdIds={
+                  current.snapshot?.failed.flatMap((f) => f.ocdIds) ?? []
+                }
               />
             )}
 
             {selectedVenue && (
-              <div className="pointer-events-auto sm:hidden">
+              // The phone form of the meeting panel: a bottom sheet pinned to
+              // the viewport edge, its own scroll, the map visible behind it.
+              <div className="bottom-sheet pointer-events-auto sm:hidden">
                 <MeetingPanel
                   venue={selectedVenue}
-                  onOpenMeeting={setPopupMeeting}
+                  onOpenMeeting={openMeeting}
                   onClose={() => dispatch({ type: "select/venue", key: null })}
                 />
               </div>
@@ -403,7 +497,7 @@ function MapEntryInner() {
 
         {/* Positioned against the map area, so its coordinates match the
             click that produced it. */}
-        <div className="pointer-events-none absolute inset-y-0 right-0 left-[340px]">
+        <div className="pointer-events-none absolute inset-y-0 right-0 left-0 sm:left-[340px]">
           <DistrictPicker />
         </div>
 
@@ -412,7 +506,7 @@ function MapEntryInner() {
             and the meeting panel owns top-right. A first attempt put them at
             bottom-left and they landed on top of the coverage notice, which a
             screenshot caught. */}
-        <div className="pointer-events-none absolute right-5 bottom-5 z-[1100] flex items-end gap-3">
+        <div className="pointer-events-none absolute right-2 bottom-2 left-2 z-[1200] flex items-end justify-end gap-3 sm:right-5 sm:bottom-5 sm:left-auto">
           {districtPopup && (
             <DistrictPopup
               district={districtPopup}

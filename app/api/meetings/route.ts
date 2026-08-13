@@ -1,4 +1,7 @@
+import { logSearchEvent } from "@/lib/db/search-log";
 import { RADIUS_LADDER_KM, searchMeetings } from "@/lib/meetings/query";
+import { getActiveSnapshotMeta } from "@/lib/meetings/snapshot";
+import { wiringForSourceName } from "@/lib/sources/composite/wiring";
 import { coverageAt } from "@/lib/registry/server";
 
 /**
@@ -48,5 +51,44 @@ export async function GET(request: Request) {
     console.error("coverage lookup failed", error);
   }
 
-  return Response.json({ ...result, coverage });
+  // When the snapshot serves the answer, say how old it is and which sources
+  // it is missing — a failed source's bodies would otherwise show nothing
+  // with no hint that the gap is ours and temporary.
+  const meta = getActiveSnapshotMeta();
+  const snapshot = meta
+    ? {
+        ...meta,
+        failed: meta.sources
+          .filter((s) => !s.ok)
+          .map((s) => ({
+            source: s.source,
+            ocdIds: wiringForSourceName(s.source).map((row) => row.ocdId),
+          })),
+      }
+    : null;
+
+  // The search log row: what was asked and where, never who. Fire-and-forget
+  // — a logging failure or an absent DATABASE_URL must never cost the reader
+  // their answer. Disclosed on /transparency, which ships with this code.
+  const zipParam = params.get("zip");
+  const zip = zipParam && /^\d{5}$/.test(zipParam) ? zipParam : null;
+  const resolvedOcdIds = coverage
+    ? [
+        ...coverage.bodies.flatMap((b) => (b.ocdId ? [b.ocdId] : [])),
+        ...coverage.seats.map((s) => s.ocdId),
+      ]
+    : [];
+  logSearchEvent({
+    eventType: "SEARCH",
+    approximateLocation: zip,
+    ocdIds: resolvedOcdIds,
+    detail: {
+      tier: result.tier,
+      radiusKm: result.radiusKm,
+      requestedRadiusKm: result.requestedRadiusKm,
+      meetingCount: result.meetings.length,
+    },
+  }).catch((error) => console.error("search log write failed", error));
+
+  return Response.json({ ...result, coverage, snapshot });
 }

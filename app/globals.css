@@ -1738,6 +1738,92 @@
 }
 
 /* ==========================================================================
+   Phone width — Phase 8, no longer deferred: the demo is opened on a phone.
+
+   Below Tailwind's `sm` (640px) the fixed 340px sidebar would eat the
+   screen, so it becomes a slide-over drawer behind a 44px toggle, and the
+   map takes the full width (the companion left-0/sm:left-[340px] classes
+   live in map-entry.tsx). The page itself never scrolls — the map owns its
+   gestures — which is why every tall surface here scrolls internally.
+   ========================================================================== */
+
+@media (max-width: 639px) {
+  .sidebar {
+    width: min(340px, 86vw);
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    visibility: hidden;
+  }
+
+  .sidebar.sidebar-open {
+    transform: translateX(0);
+    visibility: visible;
+    box-shadow: var(--shadow-popup);
+  }
+
+  .welcome-card {
+    padding: 28px 20px;
+  }
+
+  /* The legend floats bottom-right where the bottom sheet and the popups
+     live on a phone. Its content is color-coding a phone reader can learn
+     from the pins themselves; hiding it beats stacking three cards on a
+     six-inch screen. (Decision recorded in docs/state.md.) */
+  .legend {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar {
+    transition: none;
+  }
+}
+
+/* The drawer toggle — thumb-sized, above the map, below the overlays. */
+.sidebar-toggle {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 1050;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius);
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  color: var(--text);
+  box-shadow: var(--shadow-card);
+}
+
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 990;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+/* The phone meeting panel: a bottom sheet, not a floating card. Top corners
+   rounded, bottom flush, its own internal scroll capped well short of the
+   viewport so the map stays visibly behind it. */
+.bottom-sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1150;
+}
+
+.bottom-sheet > .panel {
+  width: 100%;
+  max-height: 55dvh;
+  border-radius: 16px 16px 0 0;
+  border-bottom: none;
+}
+
+/* ==========================================================================
    Full-screen modal — the port of `.account-modal`.
    ========================================================================== */
 

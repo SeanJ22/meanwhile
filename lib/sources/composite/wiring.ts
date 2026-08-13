@@ -6,6 +6,8 @@ import {
 import { makeApptegySource } from "../apptegy/index.ts";
 import { makeCivicPlusSource } from "../civicplus/index.ts";
 import { makeDiligentSource } from "../diligent/index.ts";
+import { makeIqm2Source } from "../iqm2/index.ts";
+import { makeRevizeSource } from "../revize/index.ts";
 import {
   legistarSource,
   normalizeWithDrops as legistarNormalizeWithDrops,
@@ -46,30 +48,58 @@ const legistarReporting: ReportingMeetingSource<LegistarEventWithClient> = {
 };
 
 const CAPABILITIES: Array<{
+  /** Must equal the built child's `name` — asserted in buildCompositeSource. */
+  name: string;
   types: AgendaSourceType[];
   make: ChildFactory;
 }> = [
   {
+    name: "legistar",
     types: ["LEGISTAR"],
     make: () => legistarReporting as ReportingMeetingSource<unknown>,
   },
   {
+    name: "civicplus",
     types: ["CIVICPLUS"],
     make: (rows) => makeCivicPlusSource(rows) as ReportingMeetingSource<unknown>,
   },
   {
+    name: "onbase",
     types: ["ONBASE"],
     make: (rows) => makeOnBaseSource(rows) as ReportingMeetingSource<unknown>,
   },
   {
+    name: "apptegy",
     types: ["APPTEGY"],
     make: (rows) => makeApptegySource(rows) as ReportingMeetingSource<unknown>,
   },
   {
+    name: "diligent",
     types: ["DILIGENT", "CIVICWEB"],
     make: (rows) => makeDiligentSource(rows) as ReportingMeetingSource<unknown>,
   },
+  {
+    name: "iqm2",
+    types: ["IQM2"],
+    make: (rows) => makeIqm2Source(rows) as ReportingMeetingSource<unknown>,
+  },
+  {
+    name: "revize",
+    types: ["REVIZE"],
+    make: (rows) => makeRevizeSource(rows) as ReportingMeetingSource<unknown>,
+  },
 ];
+
+/**
+ * The wiring rows a named adapter serves — how a snapshot's "this source
+ * failed at the last refresh" becomes "these are the bodies you can't see
+ * because of it". An unknown name returns no rows rather than throwing: a
+ * snapshot can legitimately name a source this build no longer has.
+ */
+export function wiringForSourceName(name: string): BodySourceWiring[] {
+  const capability = CAPABILITIES.find((c) => c.name === name);
+  return capability ? wiringForTypes(capability.types) : [];
+}
 
 /**
  * Build the composite from the wiring rows. A capability with no wired body
@@ -84,7 +114,15 @@ export function buildCompositeSource(): CompositeSource {
     // No wired body, no child — including Legistar, whose own client list is
     // only consulted once a wiring row routes a body to it.
     if (rows.length === 0) continue;
-    children.push(capability.make(rows));
+    const child = capability.make(rows);
+    if (child.name !== capability.name) {
+      // The capability name is what maps a snapshot's per-source report back
+      // to the bodies it serves; a drift here would misattribute failures.
+      throw new Error(
+        `capability "${capability.name}" built a child named "${child.name}"`,
+      );
+    }
+    children.push(child);
   }
   return new CompositeSource(children);
 }

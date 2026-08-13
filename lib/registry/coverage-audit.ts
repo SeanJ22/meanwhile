@@ -318,7 +318,7 @@ export const COVERAGE_AUDITS: BodyCoverageAudit[] = [
     bodyId: "ocd-division/country:us/state:nj/county:morris#governing",
     attemptedAt: "2026-08-13",
     attemptedBy: BY_13,
-    outcome: "FOUND_UNBUILT",
+    outcome: "COVERED",
     rungs: [
       {
         rung: "BODY_HOMEPAGE",
@@ -350,14 +350,21 @@ export const COVERAGE_AUDITS: BodyCoverageAudit[] = [
         url: "https://morriscountynj.iqm2.com/Services/iCalendar.aspx",
         note: "200 but returns the portal HTML shell, not an ics (with and without ?ID=).",
       },
+      {
+        rung: "VENDOR_API",
+        outcome: "HIT",
+        url: "https://morriscountynj.iqm2.com/Citizens/Calendar.aspx?From=8/1/2026&To=12/31/2026",
+        note: "2026-08-13, the wired rung: Calendar.aspx with From/To is fully server-rendered — future meetings through December, and each row's title tooltip carries board, type, status, and the venue with full street address (Knox Room 525 / Public Meeting Room 555, Administration and Records Building, 10 Court Street, Morristown). That tooltip also resolved the venue-citation errand the county's Akamai-fronted site had blocked. Agenda links (FileOpen.aspx?Type=14) present exactly where published.",
+      },
     ],
     homepageUrl:
       "https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners",
     agendaSourceType: "IQM2",
-    agendaSourceRef: "https://morriscountynj.iqm2.com/Services/RSS.aspx?Feed=Calendar",
-    coverageStatus: "KNOWN_UNCOVERED",
+    agendaSourceRef:
+      "https://morriscountynj.iqm2.com/Citizens/Calendar.aspx",
+    coverageStatus: "LIVE",
     notes:
-      "Source found and verified; no adapter yet. Build on the /Services/RSS.aspx?Feed=Calendar pseudo-feed plus /Citizens/Calendar.aspx for the forward schedule — both answer plain GET. Venue needs a citation (the commissioners meet in Morristown; cite the county page in a browser before curating coordinates). The /Services/ pattern generalizes to every *.iqm2.com client.",
+      "Wired 2026-08-13 (lib/sources/iqm2, adapter on Calendar.aspx rather than the RSS pseudo-feed — the feed lists only published documents, the calendar lists the schedule). Earlier note said the venue needed a browser errand against the county page; overtaken by the calendar tooltip publishing the address itself. The /Services/ and Calendar.aspx patterns generalize to every *.iqm2.com client.",
   },
 
   {
@@ -405,7 +412,7 @@ export const COVERAGE_AUDITS: BodyCoverageAudit[] = [
     bodyId: "ocd-division/country:us/state:nh/county:merrimack#governing",
     attemptedAt: "2026-08-13",
     attemptedBy: BY_13,
-    outcome: "FOUND_UNBUILT",
+    outcome: "COVERED",
     rungs: [
       {
         rung: "BODY_HOMEPAGE",
@@ -437,14 +444,22 @@ export const COVERAGE_AUDITS: BodyCoverageAudit[] = [
         url: "https://cms2.revize.com/revize/merrimack/Board%20of%20Commissioners/Public%20Notices,%20Agenda,%20Minutes/Public%20Notice%206.1.26.pdf",
         note: "Document URLs are stable and directly fetchable without the ?t= cache token — canonical URLs for provenance.",
       },
+      {
+        // The statutory posting location in practice (source-ladder rung 9),
+        // reached through the body's own agenda page.
+        rung: "BODY_AGENDA_PAGE",
+        outcome: "HIT",
+        url: "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/Public%20Notice%207.27.26.pdf",
+        note: "2026-08-13: the notice PDFs state each meeting's venue. 7/27 notice: 'Location: OCH, 163 N. Main St., Concord, NH 03301' — which decodes the homepage block's cryptic 'OCH - Concord'. The 8/10 notice placed that meeting at 333 Daniel Webster Hwy, Boscawen: the Board alternates venues per meeting, so no single venue row can cover the body.",
+      },
     ],
     homepageUrl: "https://www.merrimackcounty.net/",
     agendaSourceType: "REVIZE",
     agendaSourceRef:
       "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
-    coverageStatus: "KNOWN_UNCOVERED",
+    coverageStatus: "LIVE",
     notes:
-      "Source found and verified; no adapter yet. Both bodies meet at 333 Daniel Webster Hwy, Boscawen (geocoded 43.359873,-71.647976 via the Census geocoder; cite the county's own page for the address before curating the venue entry). ~29 km from the 03255 internal point, which is why this body is what exercises the widened rung. Zoom links are published for remote attendance.",
+      "Wired 2026-08-13 (lib/sources/revize: meetings from the homepage upcoming-meetings block, agenda/notice PDFs matched by filename date, ?t= stripped). CORRECTION, overturned by the notices themselves: the earlier note said both bodies meet at 333 Daniel Webster Hwy, Boscawen — the Board in fact alternates venues per meeting (7/27 at OCH Concord, 8/10 at Boscawen), so venue rows are keyed per observed string and an unobserved venue drops counted rather than guessed. Still ~29 km (Concord ~33 km) from the 03255 internal point — the widened-rung exerciser. The delegation's Executive Committee appears in the same homepage block and is deliberately unwired (a different government).",
   },
 ];
 

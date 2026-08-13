@@ -80,7 +80,10 @@ function tablesMatching(pattern: RegExp): Array<{ name: string; columns: string[
   for (const [name, value] of Object.entries(schema)) {
     if (!pattern.test(name)) continue;
     if (value == null || typeof value !== "object") continue;
-    const columns = Object.keys(value as Record<string, unknown>).filter(
+    // Through unknown: a concrete PgTable's mapped type has no string index
+    // signature, but its runtime own-keys are exactly the column properties
+    // this guard wants.
+    const columns = Object.keys(value as unknown as Record<string, unknown>).filter(
       (k) => !k.startsWith("_") && !k.startsWith("$"),
     );
     if (columns.length > 0) found.push({ name, columns });

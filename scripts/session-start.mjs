@@ -11,6 +11,13 @@
  *   2. `CLAUDE.md` is ~10 KB           a clobbered one looks like no constraints
  *   3. port 3000 is free               a stale dev server looks like a build
  *
+ * Since 2026-08-13 check 3 *repairs* rather than reports when the stale server
+ * is attributably this repo's own (pid file matches): it kills the tree and
+ * proceeds. A foreign occupant still fails — we do not kill what we cannot
+ * attribute. And after starting the dev server, the script waits for the entry
+ * page to actually serve, then verifies the pid holding the port descends from
+ * the child it spawned, printing the HEAD sha it is serving.
+ *
  * None of the three announces itself. Each presents as a plausible, working
  * state that happens to be the wrong one, and each has cost this project a
  * session already. That is the whole argument for running them before work
@@ -33,6 +40,7 @@ import {
   pidOnPort,
   portInUse,
   readPid,
+  stopDevServer,
 } from "./dev-server.mjs";
 
 const CHECK_ONLY = process.argv.includes("--check");
@@ -166,6 +174,11 @@ function restoreNote() {
 
 /* ---------------------------------------------------------------- 3 port --- */
 
+// A stale server here is always *last session's build* — the end-of-session
+// kill missed, or the machine slept through it. It is this repo's own process
+// (the pid file proves attribution), so killing it is the fix, not a decision
+// for a person. A process we cannot attribute to this repo still fails the
+// check: killing someone else's server on a guess is worse than asking.
 const busy = await portInUse();
 
 if (!busy) {
@@ -176,23 +189,28 @@ if (!busy) {
   const ours =
     occupant !== null && recorded !== null && isSelfOrDescendantOf(occupant, recorded);
 
-  fail(
-    "port",
-    occupant === null
-      ? `${PORT} is in use, owner unidentified`
-      : ours
-        ? `${PORT} held by this repo's own dev server (pid ${recorded})`
+  if (ours || (recorded !== null && occupant === null)) {
+    const result = await stopDevServer();
+    if (result.outcome === "stopped" || !(await portInUse())) {
+      warn("port", `stale dev server (pid ${recorded}) killed — ${PORT} now free`);
+    } else {
+      fail("port", `stale dev server kill failed: ${result.detail}`);
+    }
+  } else {
+    fail(
+      "port",
+      occupant === null
+        ? `${PORT} is in use, owner unidentified — no pid file to attribute it`
         : `${PORT} held by pid ${occupant}, not started from this repo`,
-  );
-
-  notes.push(
-    "  A server already on 3000 means Next would slide to 3001, and pnpm shoot",
-    "  targets 3000 — every screenshot would be of the old build, served with the",
-    "  old map worker. Stop it first:",
-    "",
-    `    ${killCommand(ours ? recorded : (occupant ?? recorded ?? 0))}`,
-  );
-  if (ours) notes.push("", "  Or:  pnpm handoff   (it stops the dev server for you)");
+    );
+    notes.push(
+      "  A server already on 3000 means Next would slide to 3001, and pnpm shoot",
+      "  targets 3000 — every screenshot would be of the old build, served with the",
+      "  old map worker. This one was not started from this repo, so decide and:",
+      "",
+      `    ${killCommand(occupant ?? 0)}`,
+    );
+  }
 }
 
 /* -------------------------------------------------------------- report --- */
@@ -241,3 +259,50 @@ child.on("error", (err) => {
   console.error(`could not start the dev server: ${err.message}`);
   process.exit(1);
 });
+
+// Wait for ready, then confirm the thing answering on 3000 is the server we
+// just spawned — not a survivor of the kill above, not a neighbour on 3001.
+// The stale-server incident (R10) was exactly this: a green-looking page served
+// by last session's process. Starting fresh is necessary; *verifying the
+// occupant is ours* is what makes "the running build matches the working tree"
+// a checked fact rather than an assumption. The GET also forces Next to compile
+// the entry page, so "ready" means "serves the page", not "opened the socket".
+(async () => {
+  const deadline = Date.now() + 180_000;
+  let served = false;
+  while (Date.now() < deadline) {
+    try {
+      const res = await fetch(`http://localhost:${PORT}/`, {
+        signal: AbortSignal.timeout(30_000),
+      });
+      if (res.ok) {
+        served = true;
+        break;
+      }
+    } catch {
+      /* not up yet */
+    }
+    await new Promise((r) => setTimeout(r, 1_000));
+  }
+
+  if (!served) {
+    console.error(`\ndev server did not serve / within 180s — check the log above.`);
+    return;
+  }
+
+  const occupant = pidOnPort();
+  const oursNow =
+    occupant !== null && isSelfOrDescendantOf(occupant, child.pid);
+  const head = tryRun("git", ["rev-parse", "--short", "HEAD"]) ?? "?";
+  const dirty = (tryRun("git", ["status", "--porcelain"]) ?? "") !== "";
+
+  if (oursNow) {
+    console.log(
+      `\ndev server ready on ${PORT} — serving the working tree at ${head}${dirty ? " (dirty)" : ""}, pid verified as this session's.\n`,
+    );
+  } else {
+    console.error(
+      `\nWARNING: port ${PORT} answers but is held by pid ${occupant ?? "?"}, which is NOT the server just started (pid ${child.pid}). Whatever it serves, it is not this working tree. Kill it: ${killCommand(occupant ?? 0)}\n`,
+    );
+  }
+})();

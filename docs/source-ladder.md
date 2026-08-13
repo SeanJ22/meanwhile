@@ -122,6 +122,30 @@ never when the list runs out.
   `*.iqm2.com` client — XML-declared, one rigidly regular block per meeting
   (Morris County). The `/Citizens/RSS.aspx` path is an error page; the
   working path is under `/Services/`.
+- **IQM2 `/Citizens/Calendar.aspx?From=&To=` beats the pseudo-feed.**
+  (2026-08-13, second pass.) The RSS pseudo-feed lists only *published
+  documents* — mostly the recent past. Calendar.aspx with a date range is
+  fully server-rendered with the forward schedule, and each row's `title`
+  tooltip publishes board, meeting type, status, and **the venue with its
+  full street address** — which resolved Morris County's venue citation
+  without touching the county's Akamai-fronted site. Agenda links
+  (`FileOpen.aspx?Type=14`) appear exactly where an agenda is published; an
+  unpublished one renders the same anchor with an empty href. This is the
+  rung the `iqm2` adapter is built on.
+- **Per-meeting statutory notice PDFs decode cryptic venue strings.**
+  Merrimack's homepage block says only "OCH - Concord"; the county's own
+  public-notice PDF for 7/27 states "Location: OCH, 163 N. Main St.,
+  Concord, NH 03301". The notices also proved the Board *alternates venues
+  per meeting* (8/10 was Boscawen) — so venue rows key on observed strings
+  only, and an unobserved venue drops counted.
+- **College and special-district boards run the same portals as K-12.**
+  Pima Community College's governing board is a Diligent Community tenant
+  (`pima.community.highbond.com`), found by following the Agenda links on
+  the college's own board-documents page. `/Services/MeetingsService.svc`
+  answers plain GET with venue strings — the existing `diligent` adapter
+  would serve it with one wiring row. Blocked only on the registry: Census
+  boundary files carry no community-college districts, so there is no
+  division to hang the body on (tracker D28).
 
 ### Seeded directions not yet needed (from the reprioritization brief)
 
@@ -164,6 +188,15 @@ audit rows.
   statewide clearinghouse.
 - `pima.legistar.com/Feed.ashx?M=Calendar&...` — 200 with an "Invalid feed"
   body. Assert on content, never on status.
+- `webapi.legistar.com/v1/{pimacc,pcc,rta,pagregion,pag,tucsonrta}/bodies` —
+  500: none of PCC, the RTA, or PAG are Legistar clients (control slug
+  `pima` answered 200 in the same sweep, 2026-08-13).
+- `go.boarddocs.com/az/pima/Board.nsf/Public` — 403; PCC's agendas live on
+  its Diligent tenant, not BoardDocs.
+- `tucsonaz.gov/{api/v2/events,Events,calendar.ics,RSSFeed.aspx}` — all 404
+  (2026-08-13): OpenCities publishes no machine feed for the city's boards;
+  their agendas live on per-board pages under the Clerk's
+  Boards-Committees-Commissions directory.
 
 ## Open browser errands
 
@@ -175,6 +208,9 @@ audit rows.
 - **Newbury's other bodies** (Planning, Zoning, Conservation): enumerate
   `newbury.nh.gov/minutes-and-agendas` in a browser; check per-body
   `/node/N/events` calendars and any Drupal iCal export.
-- **Merrimack County**: capture the `calendar.php` XHR.
-- **Morris County**: cite the commissioners' meeting venue from the county
-  page (Akamai 403s plain clients) before curating coordinates.
+- ~~**Merrimack County**: capture the `calendar.php` XHR.~~ Superseded
+  2026-08-13: the homepage block plus the notices page carry everything the
+  adapter needs; the JS calendar was never required.
+- ~~**Morris County**: cite the commissioners' meeting venue from the county
+  page.~~ Resolved 2026-08-13 without a browser: the IQM2 Calendar.aspx
+  tooltip publishes the venue and street address itself.

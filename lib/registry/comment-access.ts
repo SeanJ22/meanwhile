@@ -157,6 +157,43 @@ export const COMMENT_ACCESS: CommentAccess[] = [
     collectedAt: "2026-08-13",
     verifiedAt: null,
   },
+  // Wired 2026-08-13; no published comment rule found on the calendar or the
+  // notices read so far. The agenda PDFs are the likely place a rule appears
+  // (Morris's carry item lists; the retrieval cap has not reached them yet)
+  // — UNKNOWN until one is read, never inferred from the meeting being
+  // public.
+  {
+    bodyId: "ocd-division/country:us/state:nj/county:morris#governing",
+    ocdId: "ocd-division/country:us/state:nj/county:morris",
+    commentPeriod: "UNKNOWN",
+    commentPeriodDetail: null,
+    signup: null,
+    writtenComment: null,
+    attend: null,
+    timeLimit: null,
+    sourceUrl:
+      "https://morriscountynj.iqm2.com/Citizens/Calendar.aspx",
+    collectedAt: "2026-08-13",
+    verifiedAt: null,
+  },
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack#governing",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack",
+    commentPeriod: "UNKNOWN",
+    commentPeriodDetail: null,
+    signup: null,
+    // The notices state each meeting "is open to the public for the
+    // discussion of any matters that may come before the Board" and publish
+    // Zoom access; that is attendance information, not a comment-period rule.
+    writtenComment: null,
+    attend:
+      "Venue alternates per meeting and is stated in each public notice; Zoom links are published for remote attendance (per the Board's notices page).",
+    timeLimit: null,
+    sourceUrl:
+      "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
+    collectedAt: "2026-08-13",
+    verifiedAt: null,
+  },
 ];
 
 /** The comment-access record for a meeting's division, if one is curated. */

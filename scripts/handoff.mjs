@@ -22,7 +22,8 @@
  *   1. the working tree      nothing uncommitted
  *   2. the branch            nothing unpushed
  *   3. main                  nothing unmerged, no PR left open
- *   4. the G Drive mirror    five files byte-identical, plus transcripts
+ *   4. the G Drive mirror    five files byte-identical, plus transcripts and
+ *                            a generated `git-state.txt`
  *
  * Exits non-zero if anything needs attention, so it can gate a commit hook
  * later without being rewritten.
@@ -32,7 +33,13 @@
  */
 
 import { execFileSync } from "node:child_process";
-import { copyFileSync, existsSync, readFileSync, statSync } from "node:fs";
+import {
+  copyFileSync,
+  existsSync,
+  readFileSync,
+  statSync,
+  writeFileSync,
+} from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -155,10 +162,15 @@ const prs = tryRun("gh", [
   "--json",
   "number,title",
 ]);
+
+/** Null means gh could not answer — which is not the same as "none open". */
+let openPrs = null;
+
 if (prs === null) {
   warn("pull requests", "gh unavailable — check for open PRs by hand");
 } else {
   const open = JSON.parse(prs || "[]");
+  openPrs = open;
   if (open.length === 0) ok("pull requests", "none open");
   else {
     // A PR merges from a snapshot: anything pushed after it was opened is left
@@ -168,6 +180,145 @@ if (prs === null) {
       `${open.length} open — ${open.map((p) => `#${p.number} ${p.title}`).join("; ")}`,
     );
   }
+}
+
+/* ----------------------------------------------------------- git-state --- */
+
+/**
+ * The last verified `test` / `lint` / `build` claim, read out of `docs/state.md`
+ * rather than re-run.
+ *
+ * Re-running the suite here would report a number nobody wrote down, and this
+ * project's tracker rule is that a status is a claim a person committed to with
+ * evidence — not one a script inferred on its way past. So this reports the
+ * recorded claim and says which line it came from, which is checkable.
+ *
+ * It takes the *last* matching line in the file: `state.md` accretes downward,
+ * so the newest claim is the lowest one.
+ */
+function lastRecordedStatus() {
+  const rel = "docs/state.md";
+  const path = join(ROOT, rel);
+  if (!existsSync(path)) return { where: `${rel} missing` };
+
+  const lines = readFileSync(path, "utf8").split(/\r?\n/);
+  let line = null;
+  let lineNo = 0;
+  for (let i = 0; i < lines.length; i++) {
+    if (/\b\d+\s+tests?\b/.test(lines[i])) {
+      line = lines[i];
+      lineNo = i + 1;
+    }
+  }
+  if (line === null) return { where: `no test count recorded in ${rel}` };
+
+  const verdict = /\bfails?\b|\bfailing\b|\bred\b/i.test(line)
+    ? "fail"
+    : /\bpass(es|ing)?\b|\bgreen\b/i.test(line)
+      ? "pass"
+      : "recorded without a verdict";
+
+  return {
+    tests: line.match(/(\d+)\s+tests?\b/)[1],
+    testVerdict: verdict,
+    lint: /\blint\b/i.test(line) ? verdict : "not recorded",
+    build: /\bbuild\b/i.test(line) ? verdict : "not recorded",
+    where: `${rel}:${lineNo}`,
+  };
+}
+
+/**
+ * Write `git-state.txt` into the mirror.
+ *
+ * Unlike the five mirrored files this one has no repo counterpart — it is
+ * generated, not copied, and exists so a session that opens on the mirror
+ * (drive mounted, repo not yet cloned or fast-forwarded) can see where git
+ * actually stood without running git. It carries the R07 check specifically,
+ * because local `main` going stale is invisible from inside the repo until
+ * someone checks `main` out and finds it apparently empty.
+ *
+ * Plain text, one fact per line, no formatting — it is meant to be read whole.
+ */
+function writeGitState() {
+  if (!existsSync(MIRROR)) {
+    warn("git state", "mirror drive not reachable — not written");
+    return;
+  }
+
+  const lines = [];
+  const put = (label, value) => lines.push(`${label}: ${value}`);
+
+  put("generated", new Date().toISOString());
+  put("branch", branch);
+
+  const subject = (rev) => tryRun("git", ["log", "-1", "--format=%s", rev]);
+  const sha = (rev) => tryRun("git", ["rev-parse", rev]);
+
+  put("head sha", sha("HEAD") ?? "unknown");
+  put("head subject", subject("HEAD") ?? "unknown");
+
+  if (!hasMain) {
+    put("origin/main sha", "no origin/main");
+    put("origin/main subject", "no origin/main");
+  } else {
+    put("origin/main sha", sha("origin/main") ?? "unknown");
+    put("origin/main subject", subject("origin/main") ?? "unknown");
+  }
+
+  // The R07 check: local main against origin/main. Nothing else in this script
+  // compares those two — it checks the branch against its own upstream and main
+  // against the branch — which is the exact gap that let local main sit a whole
+  // session behind while every other line read clean.
+  const localMain = tryRun("git", ["rev-parse", "--verify", "main"]);
+  put("local main sha", localMain ?? "no local main branch");
+
+  if (!hasMain || localMain === null) {
+    put("local main matches origin/main", "cannot tell — one of the two is missing");
+  } else if (localMain === sha("origin/main")) {
+    put("local main matches origin/main", "yes");
+  } else {
+    const behind = Number(git("rev-list", "--count", "main..origin/main"));
+    const ahead = Number(git("rev-list", "--count", "origin/main..main"));
+    const detail = [
+      `${behind} commit(s) behind`,
+      ahead ? `${ahead} ahead` : null,
+    ]
+      .filter(Boolean)
+      .join(", ");
+    put("local main matches origin/main", `no — ${detail}`);
+  }
+
+  put(
+    "working tree",
+    dirty.length === 0 ? "clean" : `dirty — ${dirty.length} changed file(s)`,
+  );
+
+  if (openPrs === null) {
+    put("open prs", "unknown — gh unavailable");
+  } else if (openPrs.length === 0) {
+    put("open prs", "none");
+  } else {
+    put("open prs", String(openPrs.length));
+    for (const pr of openPrs) put("open pr", `#${pr.number} ${pr.title}`);
+  }
+
+  const status = lastRecordedStatus();
+  put(
+    "last recorded tests",
+    status.tests ? `${status.tests} (${status.testVerdict})` : "not recorded",
+  );
+  put("last recorded lint", status.lint ?? "not recorded");
+  put("last recorded build", status.build ?? "not recorded");
+  put("last recorded status from", status.where);
+
+  writeFileSync(join(MIRROR, "git-state.txt"), lines.join("\n") + "\n", "utf8");
+  return true;
+}
+
+if (CHECK_ONLY) {
+  ok("git state", "skipped (--check)");
+} else if (writeGitState()) {
+  ok("git state", "git-state.txt written to the mirror");
 }
 
 /* -------------------------------------------------------------- 4 mirror --- */
@@ -353,7 +504,13 @@ if (SHIP) {
   // would fail the run despite everything having worked. Re-measure and
   // replace them rather than leaving a report that contradicts itself.
   if (!results.some((r) => r.level === "fail" && r.label.startsWith("ship"))) {
-    const stale = new Set(["branch", "main", "main tree", "pull requests"]);
+    const stale = new Set([
+      "branch",
+      "main",
+      "main tree",
+      "pull requests",
+      "git state",
+    ]);
     for (let i = results.length - 1; i >= 0; i--) {
       if (stale.has(results[i].label)) results.splice(i, 1);
     }
@@ -373,12 +530,18 @@ if (SHIP) {
     const openNow = JSON.parse(
       tryRun("gh", ["pr", "list", "--state", "open", "--json", "number,title"]) || "[]",
     );
+    openPrs = openNow;
     if (openNow.length === 0) ok("pull requests", "none open");
     else
       warn(
         "pull requests",
         `${openNow.length} still open — ${openNow.map((p) => `#${p.number}`).join(", ")}`,
       );
+
+    // git-state.txt was written before the push and merge, so it describes a
+    // state that no longer exists — the same trap the re-measure above exists
+    // to avoid. Rewrite it against the remote we just re-fetched.
+    if (writeGitState()) ok("git state", "git-state.txt rewritten after shipping");
   }
 }
 

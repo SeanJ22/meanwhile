@@ -2281,6 +2281,30 @@ product.
 Full sourcing in `docs/ballot-research-2026.md` Part A. Plan against these,
 not against approximations:
 
+### The 4.6.3 narrowing prompt — the approved wording, verbatim
+
+Supplied by the author 2026-08-14 (session brief item 0b), recorded here so
+M26 can never again be blocked on a missing record. This is the chosen copy —
+build against it exactly; do not paraphrase, do not improve it.
+
+> 85641 covers 4 municipalities and 4 school districts. Do you want to
+> narrow it?
+
+On yes:
+
+> What's the street you live on? That will help us narrow it for you — no
+> house or apartment number needed.
+
+The counts in the template are computed, never literals — report what the
+zip actually resolves to. The ambiguity trigger is computed too: no prompt
+where the answer would not change what is listed. Spec as previously
+approved: device-local only (`useSyncExternalStore`, keys
+`wtp.selected_divisions` and `wtp.selected_street`), never transmitted,
+never tied to an account; the yes/no entry point makes declining the default
+path; picker first where it can resolve, street where it cannot; neither
+path gated on the other; whatever is not narrowed stays fully listed; street
+index built offline from TIGER, nothing leaves the device.
+
 | State | Registration deadline | Mail ballots go out | Early voting |
 |---|---|---|---|
 | Arizona | Oct 5, 11:59 p.m. | Oct 7 | begins Oct 7; mail-ballot requests until Oct 23 (azsos.gov 2026 election info + calendar; pima.gov) |
@@ -2630,6 +2654,9 @@ differently would violate the build-exactly-as-recorded instruction. The
 session brief's own cut order ranks the ballot above S1, and the ballot
 shipped. **Author step: paste the approved wording into this file (or
 commit the reprioritization document) and M26 unblocks.**
+*(Resolved 2026-08-14, the following session: the author supplied the
+wording in the session brief and it is now recorded verbatim in §9. M26 is
+unblocked and can never again be blocked on a missing record.)*
 
 ### Also in this session
 

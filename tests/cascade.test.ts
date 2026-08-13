@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
+// The suite never touches the network: pin the mock before the first query.
+// getMeetingSource() reads this per call, so setting it here is early enough.
+process.env.WTP_MEETING_SOURCE = "mock";
+
 import {
   RADIUS_LADDER_KM,
   searchMeetings,
@@ -10,6 +14,9 @@ import {
  * The cascade is the one piece of logic a user can't see working. A silently
  * widened radius looks identical to an exact hit, so these pin the tier the
  * search reports as much as the meetings it returns.
+ *
+ * These tests exercise the cascade *mechanism* against fixtures, which is why
+ * they run on the mock even though the app's active source is the composite.
  */
 
 const TUCSON = { lat: 32.22174, lng: -110.97133 };

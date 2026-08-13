@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
+// The suite never touches the network: pin the mock before the first query.
+process.env.WTP_MEETING_SOURCE = "mock";
+
 import { resolveZip } from "../lib/geo/zcta.ts";
 import { RADIUS_LADDER_KM, searchMeetings } from "../lib/meetings/query.ts";
 import { applyFilters } from "../lib/state/derive.ts";

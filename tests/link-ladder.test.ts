@@ -196,7 +196,14 @@ test("the Vail correction is recorded, not silently dropped", () => {
   const boarddocs = vail.rungs.find((r) => r.url?.includes("boarddocs"));
   assert.ok(boarddocs, "the refuted BoardDocs URL should remain on the record");
   assert.equal(boarddocs.outcome, "MISS");
-  assert.equal(vail.agendaSourceType, "NOVUSAGENDA");
+  // The second Vail correction (2026-08-13): the NovusAgenda tenant answered
+  // 200 with zero meetings in any window — it is the pre-2017 archive. It
+  // stays on the record as a MISS the same way BoardDocs does, and the wired
+  // source is the district's own events API.
+  const novus = vail.rungs.find((r) => r.url?.includes("novusagenda"));
+  assert.ok(novus, "the empty NovusAgenda tenant should remain on the record");
+  assert.equal(novus.outcome, "MISS");
+  assert.equal(vail.agendaSourceType, "APPTEGY");
 });
 
 test("every mock meeting's division resolves to a registry division", () => {

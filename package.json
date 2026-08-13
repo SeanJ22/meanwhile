@@ -15,6 +15,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "ingest": "tsx scripts/ingest.ts",
+    "meetings:report": "tsx scripts/coverage-report.ts",
     "zcta:fetch": "tsx scripts/fetch-zcta-centroids.ts",
     "districts:fetch": "tsx scripts/fetch-districts.ts",
     "shoot": "tsx scripts/shoot.mts",
@@ -30,6 +31,7 @@
     "lucide-react": "^1.31.0",
     "maplibre-gl": "6.3.0",
     "next": "16.3.0",
+    "pdfjs-dist": "^6.2.108",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "tailwind-merge": "^3.6.0"

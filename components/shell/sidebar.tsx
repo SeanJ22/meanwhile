@@ -26,6 +26,8 @@ export function Sidebar({
   showDistricts,
   districtsFailed,
   onToggleDistricts,
+  mobileOpen,
+  onMobileClose,
 }: {
   onSearchPick: (item: SearchItem) => void;
   onReset: () => void;
@@ -35,13 +37,36 @@ export function Sidebar({
   showDistricts: boolean;
   districtsFailed: boolean;
   onToggleDistricts: (value: boolean) => void;
+  /** Phone width only: the rail is a drawer, and this is its state. */
+  mobileOpen: boolean;
+  onMobileClose: () => void;
 }) {
   const { location } = useShellData();
 
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar${mobileOpen ? " sidebar-open" : ""}`}>
       <div className="sidebar-header">
         <div className="brand">
+          {/* Drawer close — phone width only; 44px thumb target. */}
+          <button
+            type="button"
+            className="icon-btn -ml-1 flex size-11 shrink-0 items-center justify-center sm:hidden"
+            aria-label="Close menu"
+            onClick={onMobileClose}
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden="true"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
           <svg
             width="20"
             height="20"

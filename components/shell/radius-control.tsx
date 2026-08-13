@@ -1,6 +1,6 @@
 "use client";
 
-import { RADIUS_LADDER_KM } from "@/lib/meetings/query";
+import { RADIUS_LADDER_KM } from "@/lib/meetings/constants";
 import { formatMiles } from "@/lib/map/format";
 import { useShellData } from "@/lib/state/data";
 import { useUi, useUiDispatch } from "@/lib/state/provider";

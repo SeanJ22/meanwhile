@@ -28,8 +28,17 @@ const MESSAGES = {
     "That zip isn't in our copy of the Census zip list yet. Try a nearby one.",
 } as const;
 
-/** The four zips with meeting fixtures behind them. */
-const QUICK_ZIPS = ["85701", "85641", "07866", "03255"] as const;
+/**
+ * The four zips with live sources behind them — the product's depth-first
+ * coverage (docs/state.md §9). Labeled by place, because a tester should not
+ * have to know a zip code to see the product work.
+ */
+const QUICK_ZIPS = [
+  { zip: "85701", label: "Tucson, AZ" },
+  { zip: "85641", label: "Vail, AZ" },
+  { zip: "07866", label: "Rockaway Twp., NJ" },
+  { zip: "03255", label: "Newbury, NH" },
+] as const;
 
 interface WelcomeOverlayProps {
   open: boolean;
@@ -127,8 +136,9 @@ export function WelcomeOverlay({
 
         <p className="welcome-msg">
           Councils, boards, and commissions decide what happens on your street,
-          in rooms anyone can walk into. Enter a zip code to see which ones are
-          meeting near you.
+          in rooms anyone can walk into. Enter a zip code and the map shows the
+          public meetings coming up near it — who is meeting, when, where, and
+          the agenda where one is posted.
         </p>
 
         <div className="welcome-field">
@@ -157,20 +167,32 @@ export function WelcomeOverlay({
           Show meetings
         </button>
 
-        <p className="welcome-divider">Or jump to</p>
+        <p className="welcome-divider">Or try a place we cover well</p>
 
         <div className="welcome-teams">
           {QUICK_ZIPS.map((quick) => (
             <button
-              key={quick}
+              key={quick.zip}
               type="button"
               className="welcome-team-btn"
-              onClick={() => submit(quick)}
+              onClick={() => submit(quick.zip)}
             >
-              {quick}
+              {quick.label}
             </button>
           ))}
         </div>
+
+        {/*
+          The honest coverage statement, before anyone types a zip we cannot
+          answer well. Any zip works; what differs is how much we hold, and
+          the map's coverage notice says exactly which bodies we can't see
+          yet. Nothing here ranks or suggests — it states where the data is.
+        */}
+        <p className="welcome-fineprint">
+          These four areas have the deepest coverage today. Any U.S. zip
+          works — elsewhere you&apos;ll see what we have so far, and the map
+          says plainly which local governments we can&apos;t see yet.
+        </p>
 
         <button
           type="button"

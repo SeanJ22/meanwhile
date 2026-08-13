@@ -79,6 +79,10 @@ function MapEntryInner() {
   // zip stored yet", which opens it unconditionally.
   const [welcomeRequested, setWelcomeRequested] = useState(false);
 
+  // Phone width only: the sidebar is a drawer (globals.css). Desktop ignores
+  // this entirely — the rail is always visible there.
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   // District visibility is persisted by its own hook, the sibling of
   // use-stored-zip. The store mirrors it one-way so the legend and the stats
   // card can read it without a second source of truth for the value.
@@ -125,6 +129,7 @@ function MapEntryInner() {
       dispatch({ type: "select/venue", key: null });
       setFailed(false);
       setWelcomeRequested(false);
+      setSidebarOpen(false);
       remember({ zip, lat, lng });
     },
     [remember, dispatch],
@@ -275,6 +280,9 @@ function MapEntryInner() {
     if (item.lat !== null && item.lng !== null) {
       setFocus({ lat: item.lat, lng: item.lng, zoom: 13, key: item.id });
     }
+    // Picking a result means the reader wants the map, not the drawer that
+    // may be covering it at phone width.
+    setSidebarOpen(false);
   }, [dispatch]);
 
   const onPickMeeting = useCallback(
@@ -378,10 +386,45 @@ function MapEntryInner() {
           showDistricts={showDistricts}
           districtsFailed={districtsFailed}
           onToggleDistricts={setShowDistricts}
+          mobileOpen={sidebarOpen}
+          onMobileClose={() => setSidebarOpen(false)}
         />
 
-        {/* The map starts where the sidebar ends. */}
-        <div className="absolute inset-y-0 right-0 left-[340px]">
+        {/* Phone width: the drawer's toggle and its backdrop. The backdrop
+            sits under the sidebar's z-1000 so tapping the map closes the
+            drawer instead of dropping a pin through it. */}
+        {!sidebarOpen && (
+          <button
+            type="button"
+            className="sidebar-toggle sm:hidden"
+            aria-label="Open menu"
+            onClick={() => setSidebarOpen(true)}
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden="true"
+            >
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+        )}
+        {sidebarOpen && (
+          <div
+            className="sidebar-backdrop sm:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+
+        {/* The map starts where the sidebar ends — and at phone width the
+            sidebar is a drawer, so the map takes the whole screen. */}
+        <div className="absolute inset-y-0 right-0 left-0 sm:left-[340px]">
           <MapCanvas
             venues={venues}
             camera={camera}
@@ -399,7 +442,7 @@ function MapEntryInner() {
           />
         </div>
 
-        <div className="pointer-events-none absolute inset-y-0 right-0 left-[340px] flex flex-col">
+        <div className="pointer-events-none absolute inset-y-0 right-0 left-0 sm:left-[340px] flex flex-col">
           <div className="flex items-start justify-end gap-3 p-3 sm:p-5">
             {selectedVenue && (
               <div className="pointer-events-auto hidden sm:block">
@@ -439,7 +482,9 @@ function MapEntryInner() {
             )}
 
             {selectedVenue && (
-              <div className="pointer-events-auto sm:hidden">
+              // The phone form of the meeting panel: a bottom sheet pinned to
+              // the viewport edge, its own scroll, the map visible behind it.
+              <div className="bottom-sheet pointer-events-auto sm:hidden">
                 <MeetingPanel
                   venue={selectedVenue}
                   onOpenMeeting={openMeeting}
@@ -452,7 +497,7 @@ function MapEntryInner() {
 
         {/* Positioned against the map area, so its coordinates match the
             click that produced it. */}
-        <div className="pointer-events-none absolute inset-y-0 right-0 left-[340px]">
+        <div className="pointer-events-none absolute inset-y-0 right-0 left-0 sm:left-[340px]">
           <DistrictPicker />
         </div>
 
@@ -461,7 +506,7 @@ function MapEntryInner() {
             and the meeting panel owns top-right. A first attempt put them at
             bottom-left and they landed on top of the coverage notice, which a
             screenshot caught. */}
-        <div className="pointer-events-none absolute right-5 bottom-5 z-[1100] flex items-end gap-3">
+        <div className="pointer-events-none absolute right-2 bottom-2 left-2 z-[1200] flex items-end justify-end gap-3 sm:right-5 sm:bottom-5 sm:left-auto">
           {districtPopup && (
             <DistrictPopup
               district={districtPopup}

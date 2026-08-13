@@ -1,5 +1,6 @@
 import { formatMeetingDate } from "@/lib/map/format";
 import { tierForOcdId, type Tier } from "@/lib/ocd/tiers";
+import { tierForMeeting } from "@/lib/state/derive";
 import type { Meeting } from "@/lib/sources/types";
 import type { Venue } from "@/lib/meetings/venues";
 
@@ -91,7 +92,7 @@ export function buildSearchIndex(
         // they can see why the row came back.
         label: `${meeting.bodyName} — ${meeting.title}`,
         meta: formatMeetingDate(meeting),
-        tier: tierForOcdId(meeting.ocdId),
+        tier: tierForMeeting(meeting),
         lat: meeting.location.lat,
         lng: meeting.location.lng,
         ocdId: meeting.ocdId,
@@ -113,9 +114,13 @@ export function buildSearchIndex(
       if (body) body.count++;
       else bodies.set(bodyKey, { meeting, count: 1 });
 
-      const place = places.get(meeting.ocdId);
-      if (place) place.count++;
-      else places.set(meeting.ocdId, { meeting, count: 1 });
+      // A division-less body (null ocdId) is findable as a body and as its
+      // meetings; there is no place identifier to offer.
+      if (meeting.ocdId !== null) {
+        const place = places.get(meeting.ocdId);
+        if (place) place.count++;
+        else places.set(meeting.ocdId, { meeting, count: 1 });
+      }
     }
   }
 
@@ -125,7 +130,7 @@ export function buildSearchIndex(
       kind: "body",
       label: meeting.bodyName,
       meta: `${count}`,
-      tier: tierForOcdId(meeting.ocdId),
+      tier: tierForMeeting(meeting),
       lat: meeting.location.lat,
       lng: meeting.location.lng,
       ocdId: meeting.ocdId,

@@ -63,6 +63,13 @@ export type CoverageState = "MEETINGS" | "NONE_SCHEDULED" | "NO_SOURCE" | "UNMAP
 export interface CoveredBody {
   bodyId: string;
   ocdId: string | null;
+  /**
+   * The body's own name — non-null only when it was read off a cited page
+   * (curated rows). Derived rows stay null and render their division's
+   * label; a curated Tucson board must render its own name, or five rows
+   * all read "Tucson".
+   */
+  name: string | null;
   divisionLabel: string;
   divisionType: DivisionType;
   bodyClass: BodyClass;
@@ -143,6 +150,14 @@ export interface CoverageSummary {
     withSource: number;
     withoutSource: number;
     lookedAt: number;
+    /**
+     * The GOVERNING-class subset. Split out because "N bodies govern here"
+     * became false the moment Tucson's 50-odd advisory boards, committees
+     * and commissions landed as curated rows (D29) — an advisory committee
+     * is representation-adjacent, not a government, and the lead sentence
+     * must not count it as one.
+     */
+    governing: { total: number; withSource: number };
   };
   /**
    * How many of the seats above we can actually name someone for.
@@ -208,6 +223,7 @@ export function summarizeCoverage(
     return {
       bodyId: body.id,
       ocdId: body.ocdId,
+      name: body.name,
       // A body with no division is the Southeast Regional Council case: real,
       // hyperlocal, and not a division. Nothing populates that path yet.
       divisionLabel: division?.label ?? "",
@@ -249,15 +265,33 @@ export function summarizeCoverage(
   const unincorporated =
     municipal.length > 0 && municipal.every((d) => !municipalWithBody.has(d.ocdId));
 
+  // Governing bodies first, live sources before unwired ones, then by label —
+  // the notice names only the first few, and those slots belong to the
+  // reader's actual governments.
+  const classRank = (b: CoveredBody) => (b.bodyClass === "GOVERNING" ? 0 : 1);
+  const liveRank = (b: CoveredBody) => (WIRED.has(b.coverageStatus) ? 0 : 1);
+  covered.sort(
+    (a, b) =>
+      classRank(a) - classRank(b) ||
+      liveRank(a) - liveRank(b) ||
+      a.divisionLabel.localeCompare(b.divisionLabel),
+  );
+
   const withSource = covered.filter((b) => WIRED.has(b.coverageStatus)).length;
   const withoutSource = covered.length - withSource;
+  const governing = covered.filter((b) => b.bodyClass === "GOVERNING");
 
+  // The state turns on the *governing* bodies: "nothing is scheduled" is a
+  // claim about government being quiet, and an unwired advisory committee
+  // (D29 added fifty of them in Tucson) must not convert it into a coverage
+  // confession — nor mask one where a government's calendar is missing.
+  const governingUnwired = governing.some((b) => !WIRED.has(b.coverageStatus));
   const state: CoverageState =
     meetingCount > 0
       ? "MEETINGS"
       : covered.length === 0
         ? "UNMAPPED"
-        : withoutSource > 0
+        : governingUnwired
           ? "NO_SOURCE"
           : "NONE_SCHEDULED";
 
@@ -272,6 +306,10 @@ export function summarizeCoverage(
       withSource,
       withoutSource,
       lookedAt: covered.filter((b) => b.lookedAt).length,
+      governing: {
+        total: governing.length,
+        withSource: governing.filter((b) => WIRED.has(b.coverageStatus)).length,
+      },
     },
     seatCounts: {
       total: seats.length,

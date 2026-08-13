@@ -110,6 +110,11 @@ test("every returned meeting carries its provenance", async () => {
     );
     assert.ok(meeting.provenance.sourceOrg, `${meeting.id} lost its source org`);
     assert.ok(meeting.provenance.collectedAt, `${meeting.id} lost its collected_at`);
-    assert.ok(meeting.ocdId.startsWith("ocd-division/"), `${meeting.id} has no OCD-ID`);
+    // Null is legal only for a division-less body (D28); the mock has none,
+    // so every fixture meeting must carry a real identifier.
+    assert.ok(
+      meeting.ocdId !== null && meeting.ocdId.startsWith("ocd-division/"),
+      `${meeting.id} has no OCD-ID`,
+    );
   }
 });

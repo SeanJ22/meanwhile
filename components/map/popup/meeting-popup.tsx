@@ -8,7 +8,7 @@ import {
   formatRelativeDay,
   shortOcdId,
 } from "@/lib/map/format";
-import { tierForOcdId } from "@/lib/ocd/tiers";
+import { tierForMeeting } from "@/lib/state/derive";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { CoveredBody } from "@/lib/registry/coverage";
 import { linksForMeeting, type OutboundLink } from "@/lib/registry/links";
@@ -73,7 +73,7 @@ export function MeetingPopup({
   onExpand,
   onClose,
 }: MeetingPopupProps) {
-  const tier = tierForOcdId(meeting.ocdId) ?? "local";
+  const tier = tierForMeeting(meeting) ?? "local";
   const badge = STATUS_BADGE[meeting.status];
   const links = linksForMeeting(meeting, body);
 

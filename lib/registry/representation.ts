@@ -78,10 +78,14 @@ export function leadKind(coverage: CoverageSummary): LeadKind {
       return "unmapped";
     case "NONE_SCHEDULED":
       return "none-scheduled";
-    case "MEETINGS":
-      return coverage.counts.withoutSource > 0
-        ? "meetings-missing-calendars"
-        : "all-wired";
+    case "MEETINGS": {
+      // The lead speaks about governments. Advisory boards and commissions
+      // get their own sentence; a missing advisory calendar must not turn
+      // "we watch all of their calendars" into a false claim, nor the other
+      // way around.
+      const g = coverage.counts.governing;
+      return g.withSource < g.total ? "meetings-missing-calendars" : "all-wired";
+    }
     case "NO_SOURCE":
       return "no-source";
   }

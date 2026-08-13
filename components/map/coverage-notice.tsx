@@ -57,6 +57,14 @@ const DIVISION_NOUN: Record<CoveredBody["divisionType"], string> = {
   sldl: "State house",
 };
 
+const BODY_CLASS_NOUN: Record<CoveredBody["bodyClass"], string> = {
+  GOVERNING: "Governing",
+  ADVISORY: "Advisory",
+  COMMISSION: "Commission",
+  REGIONAL: "Regional",
+  PRIVATE_ASSOCIATION: "Private",
+};
+
 const TIER_CLASS: Record<CoveredBody["tier"], string> = {
   local: "text-local",
   state: "text-state",
@@ -148,6 +156,9 @@ function CoverageBody({
   const hidden = bodies.length - shown.length;
   const seatLine = seatPhrase(seats);
   const kind = leadKind(coverage);
+  const g = counts.governing;
+  const others = counts.total - g.total;
+  const othersWithSource = counts.withSource - g.withSource;
 
   const lead =
     kind === "unmapped" ? (
@@ -161,40 +172,53 @@ function CoverageBody({
         {counts.total === 1 ? "body" : `${counts.total} bodies`} covering {zip}.
       </>
     ) : kind === "meetings-missing-calendars" ? (
-      // Meetings are on screen, but not from these bodies' calendars, because
-      // none of them has one. Deliberately says nothing about whether what is
-      // shown belongs to them — it says what we are missing, which is the part
-      // we can stand behind.
+      // Meetings are on screen, but not from every government's calendar.
+      // Deliberately says nothing about whether what is shown belongs to
+      // them — it says what we are missing, which is the part we can stand
+      // behind.
       <>
-        We don&apos;t have {counts.withoutSource === 1 ? "a calendar" : "calendars"}{" "}
-        for {counts.withoutSource === 1 ? "one of the bodies" : `${counts.withoutSource} of the bodies`}{" "}
+        We&apos;re missing{" "}
+        {g.total - g.withSource === 1
+          ? "the calendar of one of the bodies"
+          : `the calendars of ${g.total - g.withSource} of the bodies`}{" "}
         that govern the area around {zip}.
       </>
     ) : kind === "all-wired" ? (
-      // The state the old notice had no words for: everything that governs
-      // here is on our watch. Said plainly, because the list below is the
-      // reader's answer to "who governs me" and deserves an opening line.
+      // The state the old notice had no words for: every government here is
+      // on our watch. Said plainly, because the list below is the reader's
+      // answer to "who governs me" and deserves an opening line.
       <>
-        {counts.total === 1
-          ? "One body governs"
-          : `${counts.total} bodies govern`}{" "}
-        the area around {zip}. We watch{" "}
-        {counts.total === 1 ? "its calendar" : "all of their calendars"}.
+        {g.total === 1 ? "One body governs" : `${g.total} bodies govern`} the
+        area around {zip}. We watch{" "}
+        {g.total === 1 ? "its calendar" : "all of their calendars"}.
       </>
     ) : (
       <>
-        {counts.total === 1
-          ? "One body governs"
-          : `${counts.total} bodies govern`}{" "}
-        the area around {zip}
-        {counts.withoutSource === counts.total
-          ? counts.total === 1
+        {g.total === 1 ? "One body governs" : `${g.total} bodies govern`} the
+        area around {zip}
+        {g.withSource === 0
+          ? g.total === 1
             ? ", and we don't have its calendar yet"
             : ", and we don't have their calendars yet"
-          : `, and we're missing ${counts.withoutSource} of their calendars`}
+          : `, and we're missing ${g.total - g.withSource} of their calendars`}
         .
       </>
     );
+
+  // The advisory boards, committees and commissions, stated apart from the
+  // governments — real bodies a reader can follow, not extra governments.
+  const othersLine =
+    kind !== "unmapped" && others > 0 ? (
+      <>
+        {others === 1
+          ? "One more board, committee or commission serves"
+          : `${others} more boards, committees and commissions serve`}{" "}
+        the area
+        {othersWithSource > 0
+          ? `; we watch ${othersWithSource === others ? "all" : othersWithSource} of their calendars.`
+          : "."}
+      </>
+    ) : null;
 
   return (
     <>
@@ -208,6 +232,12 @@ function CoverageBody({
       <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
         {lead}
       </p>
+
+      {othersLine && (
+        <p className="mt-1 text-[0.75rem] leading-relaxed text-muted">
+          {othersLine}
+        </p>
+      )}
 
       {shown.length > 0 && (
         <ul className="mt-2.5 space-y-1">
@@ -233,17 +263,23 @@ function CoverageBody({
                   title="The body's own website"
                   className="text-[0.8125rem] leading-snug text-paper underline decoration-dotted underline-offset-2 hover:text-signal"
                 >
-                  {body.divisionLabel}
+                  {body.name ?? body.divisionLabel}
                 </a>
               ) : (
                 <span className="text-[0.8125rem] leading-snug">
-                  {body.divisionLabel}
+                  {body.name ?? body.divisionLabel}
                 </span>
               )}
               <span
                 className={`shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em] ${TIER_CLASS[body.tier]}`}
               >
-                {DIVISION_NOUN[body.divisionType]}
+                {/* A derived row is the division's government and tags by
+                    division type. A curated row tags by what it is — the PHA
+                    board tagged "Municipal" would claim a second city
+                    government, and a commission isn't a government at all. */}
+                {body.name === null
+                  ? DIVISION_NOUN[body.divisionType]
+                  : BODY_CLASS_NOUN[body.bodyClass]}
               </span>
             </li>
           ))}
@@ -339,7 +375,13 @@ function CoverageBody({
         </p>
       )}
 
-      {(counts.withoutSource > 0 || seatCounts.named < seatCounts.total) && (
+      {(bodies.some(
+        (b) =>
+          b.name === null &&
+          b.coverageStatus !== "LIVE" &&
+          b.coverageStatus !== "MANUAL",
+      ) ||
+        seatCounts.named < seatCounts.total) && (
         // The honest footnote, now narrowed to what is still unsourced. It used
         // to claim we had sourced no names at all, which stopped being true the
         // moment the federal roster landed — AZ-6 has a name on it. Claiming

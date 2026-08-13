@@ -208,9 +208,18 @@ test("85701 keeps the City of Tucson and is not called unincorporated", () => {
     "downtown Tucson has a city government",
   );
 
-  const municipal = coverage.bodies.filter((b) => b.divisionType === "place");
+  // Exactly one municipal *government*. The division now also carries the
+  // city's boards, commissions and the PHA as curated bodies (D29) — real
+  // bodies, not extra city governments, and they must not read as one.
+  const municipal = coverage.bodies.filter(
+    (b) => b.divisionType === "place" && b.name === null,
+  );
   assert.equal(municipal.length, 1, `expected the city, got ${municipal.length}`);
   assert.match(municipal[0].divisionLabel, /tucson/i);
+  assert.ok(
+    coverage.bodies.some((b) => b.name === "Planning Commission (PC)"),
+    "the curated boards should surface alongside the city",
+  );
 });
 
 test("85641 states the unincorporated fact and still names its government", () => {

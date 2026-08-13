@@ -21,6 +21,7 @@ import type { Meeting } from "@/lib/sources/types";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { CoveredBody } from "@/lib/registry/coverage";
 import { TIER_LABEL, tierForOcdId } from "@/lib/ocd/tiers";
+import { tierForMeeting } from "@/lib/state/derive";
 import {
   formatMeetingDate,
   formatMeetingTime,
@@ -188,12 +189,19 @@ function MapEntryInner() {
    */
   const openMeeting = useCallback((meeting: Meeting) => {
     setPopupMeeting(meeting);
-    logEvent("MEETING_OPENED", [meeting.ocdId], { meetingId: meeting.id });
+    // A division-less body (null ocdId) logs the event with no division.
+    logEvent("MEETING_OPENED", meeting.ocdId ? [meeting.ocdId] : [], {
+      meetingId: meeting.id,
+    });
   }, []);
 
   useEffect(() => {
     if (!selectedVenue) return;
-    const ocdIds = [...new Set(selectedVenue.meetings.map((m) => m.ocdId))];
+    const ocdIds = [
+      ...new Set(
+        selectedVenue.meetings.flatMap((m) => (m.ocdId ? [m.ocdId] : [])),
+      ),
+    ];
     logEvent("BODY_OPENED", ocdIds, { venueKey: selectedVenue.key });
   }, [selectedVenue]);
 
@@ -245,8 +253,13 @@ function MapEntryInner() {
    * notice cannot disagree about who governs a point or what we hold for them.
    */
   const bodyFor = useCallback(
-    (ocdId: string): CoveredBody | null =>
-      current?.coverage?.bodies.find((b) => b.ocdId === ocdId) ?? null,
+    (ocdId: string | null): CoveredBody | null =>
+      // Guarded against null on both sides: a division-less meeting must not
+      // accidentally match a division-less coverage body — they are different
+      // bodies that merely share the absence of a division.
+      ocdId
+        ? (current?.coverage?.bodies.find((b) => b.ocdId === ocdId) ?? null)
+        : null,
     [current],
   );
 
@@ -567,7 +580,7 @@ function meetingSubject(meeting: Meeting): ModalSubject {
   return {
     title: meeting.title,
     subtitle: `${meeting.bodyName} · ${meeting.jurisdiction}`,
-    tier: tierForOcdId(meeting.ocdId) ?? "local",
+    tier: tierForMeeting(meeting) ?? "local",
     badges:
       meeting.status === "SCHEDULED"
         ? []

@@ -147,6 +147,51 @@ never when the list runs out.
   boundary files carry no community-college districts, so there is no
   division to hang the body on (tracker D28).
 
+### 2026-08-14 (the D28/D29 wiring — all verified on real bodies)
+
+- **The embedded frame's own host.** A directory page that renders nothing to
+  a plain client may be an embedded frame from another host that serves
+  everything server-rendered. Tucson's Boards-Commissions directory at
+  `tucsonaz.gov` is empty in curl; the page's network traffic shows it
+  loading `clerksboards.tucsonaz.gov/boards?board=<id>` — and that host
+  serves the full board list (56 rows with ids) and every per-board page
+  (name, current agenda with PDF link, meeting location, meeting schedule,
+  members) to a plain GET. This became the `clerksboards` adapter.
+- **The bot wall reads the User-Agent, not the client.** `www.tucsonaz.gov`
+  403s common crawler UAs (WebFetch's, for one) but serves both curl's
+  default UA and this project's identified
+  `we-the-people civic meeting index (…)` — the polite UA is load-bearing,
+  not mere manners. Test a 403 with the project UA before recording a MISS.
+- **OnBase `ViewDocument` beats `Downloadfile`.** The agenda link OnBase
+  renders (`/Documents/Downloadfile/<name>.pdf?documentType=1&meetingId=N`)
+  returns a JS "Downloading, please wait" interstitial to a plain client.
+  The same document serves as a real PDF at
+  `/Documents/ViewDocument/<name>.pdf?meetingId=N&documentType=1`. Found by
+  reading the interstitial's own script for the URL patterns it constructs.
+- **The body's own agenda PDF as the venue citation.** The PHA Board of
+  Commissioners appears in Tucson's OnBase tenant with no location anywhere;
+  its own published agenda (meetingId 1981) states "MAYOR AND COUNCIL
+  CHAMBERS, CITY HALL, 255 W. ALAMEDA" — and that the Mayor and Council sit
+  as the PHA board. One citable document resolved both the venue and what
+  the body is. (Counter-case the same day: the Joint Meeting's agenda names
+  a *per-meeting* venue — the PAG offices — so it stays dropped-and-counted
+  rather than cached; the Merrimack alternating-venue lesson again.)
+- **The statutory annual Public Notice Statement.** Tucson's Clerk publishes
+  one PDF per year listing meeting dates, times, locations and agenda-posting
+  places for *all* boards, committees and commissions
+  (`/files/sharedassets/public/v/1/clerks/documents/bcc/2026-pns-statement-all-bccs.pdf`).
+  The per-board pages carry the same content in parseable HTML, so the PNS
+  is the cross-check rather than the feed here — but for a city without a
+  boards app, the PNS-equivalent is the single richest document to hunt.
+- **The Clerk's published schedule is the meeting feed.** Where a body's
+  page enumerates the year's dates ("1/28, 2/25, …, 12/30/2026 @ 12:30
+  p.m.") or states a rule ("1st Wednesday of each month @ 8:00 a.m."), the
+  expanded instances are sourced meetings citing that page — the same
+  content as the statutory annual notice. Two grammars parse; anything else
+  drops counted, never guessed. Cancellation is claimed only from the
+  Clerk's own signal (an agenda title reading "(Canceled) 08-12-26" cancels
+  exactly that date's instance).
+
 ### Seeded directions not yet needed (from the reprioritization brief)
 
 Minutes archives naming the next meeting; full-year schedules adopted by
@@ -186,6 +231,14 @@ audit rows.
   — email-only behind a CAPTCHA; not a machine channel.
 - `https://www.nhmunicipal.org/public-notices` — NHMA's own board, not a
   statewide clearinghouse.
+- `https://clerksboards.tucsonaz.gov/` bare — a landing shell ("Boards,
+  Commissions, and Committees Endpoint Platform") with no board list; the
+  list lives at `/boards/` (2026-08-14).
+- `https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/...`
+  — 200 with a JS interstitial, not the PDF; use `ViewDocument` (2026-08-14).
+- `https://www.tucsonaz.gov/Departments/Housing-and-Community-Development/HCD-News/Notice-of-Public-Hearing-Public-Housing-Authority-Plans`
+  — 404 (page moved); the PHA venue citation is its OnBase agenda instead
+  (2026-08-14).
 - `pima.legistar.com/Feed.ashx?M=Calendar&...` — 200 with an "Invalid feed"
   body. Assert on content, never on status.
 - `webapi.legistar.com/v1/{pimacc,pcc,rta,pagregion,pag,tucsonrta}/bodies` —

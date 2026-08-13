@@ -19,6 +19,7 @@ import { fileURLToPath } from "node:url";
 import { TIER_SEGMENTS, type Tier } from "../lib/ocd/tiers.ts";
 import { indexAudits } from "../lib/registry/audit.ts";
 import { COVERAGE_AUDIT_FILE } from "../lib/registry/coverage-audit.ts";
+import { CURATED_BODIES } from "../lib/registry/curated-bodies.ts";
 import { bodiesFor, slotsFor, type SkipReason } from "../lib/registry/derive.ts";
 import type {
   Body,
@@ -279,6 +280,40 @@ async function main() {
   console.log("bodies");
   const bodies = divisions.flatMap((d) => bodiesFor(d, now));
   applyAudits(bodies);
+
+  // The curated overlay — bodies the derivation structurally cannot produce
+  // (D28/D29). Checked before merging: a curated id colliding with a derived
+  // one is a mistake either way, and a curated division reference must exist.
+  const divisionIds = new Set(divisions.map((d) => d.ocdId));
+  const derivedIds = new Set(bodies.map((b) => b.id));
+  for (const curated of CURATED_BODIES) {
+    if (derivedIds.has(curated.id)) {
+      throw new Error(`curated body ${curated.id} collides with a derived row`);
+    }
+    if (curated.ocdId !== null && !divisionIds.has(curated.ocdId)) {
+      throw new Error(
+        `curated body ${curated.id} references unknown division ${curated.ocdId}`,
+      );
+    }
+    if (curated.bodyOrigin !== "CURATED") {
+      throw new Error(`curated body ${curated.id} must carry bodyOrigin CURATED`);
+    }
+    if (!curated.name || !curated.provenance.sourceUrl) {
+      // The curated bargain: a name may appear exactly because the page it
+      // was read from is cited. One without the other is a minted claim.
+      throw new Error(`curated body ${curated.id} needs both a name and a citation`);
+    }
+  }
+  const curatedIds = new Set(CURATED_BODIES.map((b) => b.id));
+  if (curatedIds.size !== CURATED_BODIES.length) {
+    throw new Error("duplicate ids inside CURATED_BODIES");
+  }
+  bodies.push(...CURATED_BODIES);
+  console.log(
+    `  curated overlay: ${CURATED_BODIES.length} bodies (` +
+      `${CURATED_BODIES.filter((b) => b.ocdId === null).length} division-less, ` +
+      `${CURATED_BODIES.filter((b) => b.coverageStatus === "LIVE").length} live)`,
+  );
 
   // Report what the rule did, including what it deliberately refused to do.
   const perType = new Map<string, { divisions: number; bodies: number }>();

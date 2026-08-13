@@ -87,9 +87,14 @@ test("the map's municipal count equals the registry's municipal body count", () 
   // The strongest form of the no-double-counting claim: the number of shapes
   // drawn equals the number of municipal governments the registry derives.
   const kept = mergedMunicipal();
+  // Derived governing bodies only: the map draws municipal governments, and
+  // a division's curated boards and commissions (D29) share its shape rather
+  // than adding one.
   const municipalBodies = registryFile.bodies.filter(
-    (b: { ocdId: string | null }) =>
-      b.ocdId != null && /\/place:/.test(b.ocdId),
+    (b: { ocdId: string | null; bodyOrigin: string }) =>
+      b.ocdId != null &&
+      /\/place:/.test(b.ocdId) &&
+      b.bodyOrigin === "DERIVED_FROM_DIVISION_TYPE",
   );
   assert.equal(
     kept.length,

@@ -47,7 +47,12 @@ test("every source-wiring row names a real registry body", () => {
 
 test("every wiring row's ocdId is its bodyId without the slot", () => {
   for (const w of SOURCE_WIRING) {
-    assert.equal(w.bodyId.split("#")[0], w.ocdId, w.bodyId);
+    if (w.ocdId === null) {
+      // A division-less body (D28) wires by its curated id instead.
+      assert.match(w.bodyId, /^curated:/, w.bodyId);
+    } else {
+      assert.equal(w.bodyId.split("#")[0], w.ocdId, w.bodyId);
+    }
   }
 });
 
@@ -119,10 +124,18 @@ test("onbase: rows parse and mapped venues normalize; unmapped drop counted", ()
 
   const { meetings, drops } = source.normalizeWithDrops(raw, NOW);
 
-  // 8 Mayor & Council sittings map to the cited chambers; the Joint Meeting
-  // and the Public Housing Authority Board have no cited venue and drop.
-  assert.equal(meetings.length, 8);
-  assert.equal(drops.unknownVenue, 2);
+  // 8 Mayor & Council sittings plus the PHA Board map to the cited chambers —
+  // the PHA's own published agenda states it sits there (D29). The Joint
+  // Meeting's venue varies per meeting (PAG offices this time) and stays
+  // dropped, counted.
+  assert.equal(meetings.length, 9);
+  assert.equal(drops.unknownVenue, 1);
+
+  const pha = meetings.find(
+    (m) => m.bodyName === "Public Housing Authority Board of Commissioners",
+  );
+  assert.ok(pha, "the PHA Board sitting should now place");
+  assert.equal(pha.location.address, "255 W. Alameda St, Tucson, AZ 85701");
 
   const regular = meetings.find((m) => m.id === "onbase:tucson:1957");
   assert.ok(regular);

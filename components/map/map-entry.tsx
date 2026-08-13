@@ -12,6 +12,7 @@ import { useStoredZip } from "@/hooks/use-stored-zip";
 import type { SearchItem } from "@/lib/search";
 import { DataProvider, type ShellData } from "@/lib/state/data";
 import { applyFilters } from "@/lib/state/derive";
+import { deriveActiveDistrictTypes } from "@/lib/state/district-intent";
 import { UiProvider, useUi, useUiDispatch } from "@/lib/state/provider";
 import type { MeetingSearchResult } from "@/lib/meetings/query";
 import type { SnapshotStatus } from "@/lib/meetings/freshness";
@@ -20,7 +21,7 @@ import { groupByVenue, type Venue } from "@/lib/meetings/venues";
 import type { Meeting } from "@/lib/sources/types";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { CoveredBody } from "@/lib/registry/coverage";
-import { TIER_LABEL, tierForOcdId } from "@/lib/ocd/tiers";
+import { TIER_LABEL } from "@/lib/ocd/tiers";
 import { tierForMeeting } from "@/lib/state/derive";
 import {
   formatMeetingDate,
@@ -324,12 +325,16 @@ function MapEntryInner() {
   }, [dispatch]);
 
   // Which overlays are drawn: the district-type checkboxes, gated by the
-  // master toggle. Empty when the toggle is off.
+  // master toggle. Empty when the toggle is off. The derivation is a pure
+  // function in lib/state/district-intent.ts so the may-not-derive-to-nothing
+  // guard can hold it (tests/representation.test.ts).
   const activeDistrictTypes = useMemo(
     () =>
-      showDistricts && !districtsFailed
-        ? (ui.filters.districtTypes as DistrictType[])
-        : [],
+      deriveActiveDistrictTypes(
+        showDistricts,
+        districtsFailed,
+        ui.filters.districtTypes as DistrictType[],
+      ),
     [showDistricts, districtsFailed, ui.filters.districtTypes],
   );
 

@@ -38,3 +38,18 @@ What I expected: a "Select all" next to the group.
 → tracker **M25** (triaged 2026-08-14; shipped the same day — "select all"
 and "clear" links in the group header, in the existing clear-link style. The
 default view stays three types; Reset all returns to it.)
+
+## 2026-08-14 — map, district overlay (reported in the session brief)
+
+What happened: the district overlay checkboxes do nothing — no lines change
+when selections are made.
+What I expected: checking a district type draws its boundaries.
+
+→ tracker **M27** (triaged 2026-08-14; diagnosed before fixing: the
+state→render path measured *working* at production's exact commit — check,
+uncheck, select all, clear, both themes, all four zips. What reproduced was
+the master "Show districts" toggle being off: the checkbox group stayed
+fully interactive and every click was a silent no-op. Fixed the same day —
+touching the group now turns the overlay on (except "clear"), the rule is
+pure and tested, and the group says "The overlay is off — checking a type
+turns it on" while it is off.)

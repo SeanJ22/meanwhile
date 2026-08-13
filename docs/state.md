@@ -1610,21 +1610,37 @@ replaced.
 
 ## 7. Current state of the branch
 
-**Working on `main` at `1568adf`** (the PR #13 merge). Nothing sits on a branch.
+**Working on `main` at `8ee9bdb`** (the PR #16 merge). Nothing sits on a branch.
 
-PR #13 carried the Legistar adapter and the vendor review (D12, D14), the
-federal officeholder roster (D02), and opened D16–D20:
+**test 132 pass · lint clean · build green.**
+
+Four PRs landed on 2026-08-12, in this order:
 
 ```
-1568adf  Merge PR #13                                  ← origin/main, local main
-b3372a9  Record the keys that now exist                ← D02, D06 corrections
-ea1d6ab  Federal officeholder roster                   ← D02
-e22fd56  Mirror the vendor review
-8c40e29  Legistar adapter + vendor review              ← D12, D14
-4f5d2ae  Merge PR #12
+8ee9bdb  Merge PR #16 — Phase 6: popup, modal, marker pool   ← M05, M20, §4.10
+d3fe6c1  Merge PR #15 — the quota paragraph #14 missed
+ac79b33  Merge PR #14 — Plural's 500/day quota recorded      ← D03, §4.9
+1568adf  Merge PR #13 — Legistar, vendor review, roster      ← D12, D14, D02
+4f5d2ae  Merge PR #12                                        ← where the day started
 ```
 
-**test 107 pass · lint clean · build green.**
+What that added, in one line each:
+
+- **D14** — `docs/vendor-review.md`, one finding per vendor plus the statute
+  question. Granicus cleared, Hyland refused, Diligent escalated to B09. §4.7.
+- **D12** — the Legistar adapter, verified against the live `pima` client. Not
+  yet the app's source; `registry.ts` still resolves to the mock. §4.7.
+- **D02, D03** — the federal and state officeholder rosters, both from
+  public-domain bulk files, both rendered on screen with their sources. §4.8,
+  §4.9.
+- **M05, M20** — the popup card, the six-tab modal, and the marker pool. §4.10.
+- Opened **D16–D20** and **M19–M20**.
+
+**Two commits went straight onto `main`** — `9af2fbc` and `59fd858`, the
+officeholder rendering and Plural. The session had checked `main` out to read a
+test count after shipping #13 and never branched again. Tests, lint and build
+were green before each, but neither passed through a PR. Recorded because the
+tracker briefly named a branch that never existed, and `78cbb9c` corrects it.
 
 Everything earlier — Phase 4.6.6, the FUNCSTAT fix, the session lifecycle work
 (M16, M17, R07–R10) — is also in `origin/main`.
@@ -1922,8 +1938,11 @@ State as of 2026-08-12, verified rather than assumed:
 - **R07 is fixed.** `--ship` fast-forwards local `main` and pushes `-u` for a
   branch with no upstream; the plain check and `session:start` both report a
   stale local `main`. If the repo ever still looks empty, it is not — §7.
-- **132 tests, lint and build all pass.** M16, M17, R07, R09, R10 and D14 all
-  Done with evidence in the tracker.
+- **132 tests, lint and build all pass.** M16, M17, R07, R09, R10, D14 and M20
+  all Done with evidence in the tracker. D02, D03, D12 and M05 are **In
+  progress** with the evidence recorded and the reason each is not Done stated
+  on the row — the Legistar adapter is not the app's source, the rosters do not
+  carry votes, and the popup has no direct marker path yet.
 
   **`git-state.txt` reads this line, so a stale number here becomes a false
   report in the mirror** — it did once, reporting 79 after the suite had reached
@@ -1946,12 +1965,29 @@ those four. Recorded on tracker rows D02, D03, D12 and D13. It is clearance to
 build — it is **not** a D14 vendor-and-statute finding and it does not answer
 B09, both of which still stand on their own.
 
-**The next piece of work is D14 → D12**: write the vendor and statute review,
-then the Legistar adapter. 4.6.8 already verified the API is live and needs no
-token for at least some clients, that Pima County's slug is `pima`, and that
-roll-call votes are a documented GET rather than an extraction problem. Tucson's
-slug is still unknown — `tucson` returns 500, and the CMS rule in 4.6.7 says to
-resolve the portal from the city clerk's own page rather than guessing again.
+~~**The next piece of work is D14 → D12.**~~ **Both done 2026-08-12** — §4.7,
+and `docs/vendor-review.md`. **Tucson's slug is no longer unknown either: there
+isn't one.** Tucson is not a Granicus client; it runs Hyland OnBase Agenda
+Online, found by following the clerk's own agenda link exactly as the 4.6.7 CMS
+rule says. Hyland's terms forbid the portal route, so D16 goes to the City
+instead. Do not spend another request guessing Tucson slugs.
+
+**The next piece of work, in the order it should be taken:**
+
+1. **Decide the active meeting source.** `registry.ts` still resolves to the
+   mock. Pima's Legistar carries one county board, so switching outright empties
+   three of the four target zips — the open question is composite versus holding
+   the mock until more clients are wired (§5.2 item 1). **Wiring more clients is
+   the cheap half**: `phoenix`, `mesa`, `maricopa`, `seattle`, `oakland`,
+   `alexandria` and `alameda` all answered 200 in one sweep, and adding one is
+   an entry in `clients.ts` plus a curated venue table.
+2. **D13 Diligent**, for the school-board tier — trying the portal's subscribe
+   channel and the district's own site *before* the portal, per D14.
+3. **Phase 7**, whose slots the Phase 6 modal already renders as empty states:
+   Notes and Activity tabs exist and say what is coming.
+4. **Tier 3 officeholders**, the curated local seed. It is the only half of
+   Phase 5 that needs hand work, and it is what would let the *meeting* popup's
+   Representation section stop being empty (§4.10).
 
 **Two things still need the author**, and neither should be started on
 assumption:

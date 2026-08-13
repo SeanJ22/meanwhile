@@ -48,7 +48,7 @@ works.
 | `corepack pnpm session:start` | Start-of-session sweep, then the dev server — see §8. `--check` starts nothing |
 | `corepack pnpm dev` | Development server. Refuses if 3000 is taken; records its pid in `.dev-server.pid` |
 | `corepack pnpm build` | Production build |
-| `corepack pnpm test` | `node --test` over `tests/` — 132 tests |
+| `corepack pnpm test` | `node --test` over `tests/` — 162 tests |
 | `corepack pnpm lint` | ESLint |
 | `corepack pnpm ingest mock` | Run one source adapter end to end |
 | `corepack pnpm zcta:fetch` | Rebuild zip centroids from Census (see §3.2) |
@@ -1720,7 +1720,7 @@ correct — `resolveZip` only reports it when the table is partial.
 counties, so a reader can click districts in places that have no meetings behind
 them. Honest, and the coverage tier says so, but the asymmetry is new.
 
-**Map-layer test coverage is still thin.** 132 tests now cover the cascade, time
+**Map-layer test coverage is still thin.** 162 tests now cover the cascade, time
 handling, OCD identity, the tier axis, district disambiguation, fixture
 provenance, county subdivisions and the registry oracle. Nothing tests marker
 reconciliation, camera logic, or basemap resolution — which is part of why the
@@ -1762,15 +1762,32 @@ replaced.
 ## 7. Current state of the branch
 
 **Working on `claude/link-ladder-and-coverage-audit`**, branched from `main` at
-`c94aa9c` (the PR #17 merge).
+`c94aa9c` (the PR #17 merge). Four commits.
 
 **test 162 pass · lint clean · tsc clean · build green.**
 
-Phase 4.6.10 and 4.6.1 landed on that branch — the link ladder, the body
-coverage audit, and the `NOT_ATTEMPTED` status that stops `NO_SOURCE_FOUND`
-being a default. See §4.11. It also corrected the mock fixtures' division
-identifiers, which had never matched the registry for New Hampshire or New
-Jersey.
+```
+dbe4602  Correct two tracker rows that named branches which never existed
+cfae75f  Decide the New Hampshire agenda wording       ← D17
+226b6cd  Attribute agenda items to the board that acted ← D19, §4.12
+42478ba  Give every meeting somewhere to click          ← M21, §4.11
+```
+
+**One branch carries all three pieces, and two commit messages say otherwise.**
+`226b6cd` and `cfae75f` name `claude/meeting-bodies-join` and
+`claude/d17-nh-agenda-wording`. Neither branch was ever created — the session
+stayed on the first branch after the first commit and the messages were written
+from intent rather than from `git`. The tracker rows are corrected in `dbe4602`
+and say so in place; the commit messages themselves are left alone rather than
+rewritten, because the correction is more useful visible than tidied away. It is
+the same slip D03 records, and it is caught the same way: by asking git rather
+than trusting the last thing written down.
+
+What landed: the link ladder and the body coverage audit (§4.11), the agenda
+attribution join (§4.12), and the D17 New Hampshire wording. It also corrected
+the mock fixtures' division identifiers, which had never matched the registry
+for New Hampshire or New Jersey — a join that had been silently matching nothing
+since the registry was first generated.
 
 Four PRs landed on 2026-08-12, in this order:
 
@@ -2097,11 +2114,13 @@ State as of 2026-08-12, verified rather than assumed:
 - **R07 is fixed.** `--ship` fast-forwards local `main` and pushes `-u` for a
   branch with no upstream; the plain check and `session:start` both report a
   stale local `main`. If the repo ever still looks empty, it is not — §7.
-- **132 tests, lint and build all pass.** M16, M17, R07, R09, R10, D14 and M20
-  all Done with evidence in the tracker. D02, D03, D12 and M05 are **In
-  progress** with the evidence recorded and the reason each is not Done stated
-  on the row — the Legistar adapter is not the app's source, the rosters do not
-  carry votes, and the popup has no direct marker path yet.
+- **162 tests, lint, tsc and build all pass.** M16, M17, M21, R07, R09, R10,
+  D14 and M20 all Done with evidence in the tracker. D02, D03, D12 and M05 are
+  **In progress** with the evidence recorded and the reason each is not Done
+  stated on the row — the Legistar adapter is not the app's source, the rosters
+  do not carry votes, and the popup has no direct marker path yet. D19's join is
+  built but nothing persists it; D17's wording is decided but renders for
+  nobody, because no hunt has been exhausted.
 
   **`git-state.txt` reads this line, so a stale number here becomes a false
   report in the mirror** — it did once, reporting 79 after the suite had reached
@@ -2140,8 +2159,18 @@ instead. Do not spend another request guessing Tucson slugs.
    the cheap half**: `phoenix`, `mesa`, `maricopa`, `seattle`, `oakland`,
    `alexandria` and `alameda` all answered 200 in one sweep, and adding one is
    an entry in `clients.ts` plus a curated venue table.
-2. **D13 Diligent**, for the school-board tier — trying the portal's subscribe
-   channel and the district's own site *before* the portal, per D14.
+2. **D13 Diligent *and* D22 NovusAgenda together**, for the school-board tier —
+   trying each district's own site *before* the portal, per D14. **Diligent
+   alone no longer reaches both target districts**: 4.6.10 measured Vail and it
+   runs NovusAgenda, not BoardDocs (§4.11). The author chose to build both in
+   one change on 2026-08-12, since `agendaSourceType` routing is the point of
+   4.6.4 anyway.
+
+   **D21 CivicPlus may be the better first adapter of the three** and was not on
+   this list before: Rockaway Township publishes populated RSS *and* iCal agenda
+   feeds through its own website, so there is no vendor portal and no B09 tenant
+   question, and both URL patterns are CivicPlus-wide. It still needs a D14
+   finding written before anything ships.
 3. **Phase 7**, whose slots the Phase 6 modal already renders as empty states:
    Notes and Activity tabs exist and say what is coming.
 4. **Tier 3 officeholders**, the curated local seed. It is the only half of
@@ -2151,10 +2180,15 @@ instead. Do not spend another request guessing Tucson slugs.
 **Two things still need the author**, and neither should be started on
 assumption:
 
-1. **The 4.6.3 reader prompt.** It adds a user data field, which `CLAUDE.md`
-   requires asking about first. The exact question wording, what is stored, and
-   whether it stays device-local all need confirming. The 4.6.6 "I want this"
-   control waits on the same answer.
+1. **The 4.6.3 reader prompt — approved, and still blocked on one thing.** The
+   author approved it on 2026-08-12 and settled the storage question: **device-
+   local only**, with a tracker row to revisit sync when accounts exist. What is
+   still missing is **the wording itself**, which the author says is verbatim and
+   deliberately chosen and must not be paraphrased. It is not in this repo and
+   was not supplied, so 4.6.3, 4.6.3c and the 4.6.3a "want us to prioritize it"
+   control all wait on that text arriving. Do not draft a stand-in — a
+   paraphrase of copy that was chosen word by word is worse than a blank,
+   because it looks finished.
 2. **D15**, closing the canonical identifier gaps. The convention is decided —
    internal key authoritative, canonical alongside with a confidence — but 348
    divisions still match nothing, concentrated in county subdivisions. **M18**

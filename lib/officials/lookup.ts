@@ -1,0 +1,131 @@
+import type { Officeholder, OfficeholderSet } from "./types.ts";
+
+/**
+ * Turning the officeholder roster into an answer for a point.
+ *
+ * Pure, and separate from the loading, so it runs in a test without touching
+ * the filesystem — the same split `lib/registry/resolve.ts` uses.
+ */
+
+/**
+ * What a surface needs to render a person honestly: who they are, and where
+ * that claim came from.
+ *
+ * Trimmed from `Officeholder` on purpose. Term dates and phone numbers belong
+ * on the officeholder panel in Phase 5.3, not on a coverage notice, and
+ * shipping the full record to the client would put the whole roster shape in
+ * the bundle for no benefit.
+ */
+export interface SeatHolder {
+  id: string;
+  name: string;
+  officeTitle: string;
+  /** Display only. Never used to infer a position or a vote. */
+  partyLabel: string | null;
+  websiteUrl: string | null;
+  /** Where the record was read from. Rendered, not just stored. */
+  sourceUrl: string | null;
+}
+
+export type OfficeholderIndex = Map<string, SeatHolder[]>;
+
+function toSeatHolder(person: Officeholder): SeatHolder {
+  return {
+    id: person.id,
+    name: person.name,
+    officeTitle: person.officeTitle,
+    partyLabel: person.partyLabel,
+    websiteUrl: person.websiteUrl,
+    sourceUrl: person.provenance.sourceUrl,
+  };
+}
+
+/**
+ * Index a roster by the division each person represents.
+ *
+ * Many-to-many in both directions: a division can elect several people, and a
+ * person can represent several divisions. The value is an array for the first
+ * reason and the join table exists for the second.
+ */
+export function indexByDivision(sets: OfficeholderSet[]): OfficeholderIndex {
+  const index: OfficeholderIndex = new Map();
+
+  for (const set of sets) {
+    const byId = new Map(set.officeholders.map((o) => [o.id, o]));
+
+    for (const link of set.divisions) {
+      const person = byId.get(link.officeholderId);
+      // A link with no matching person is a broken artifact, not something to
+      // paper over. Skipping it is right; rendering an empty name is not.
+      if (!person) continue;
+
+      const existing = index.get(link.ocdId);
+      if (existing) existing.push(toSeatHolder(person));
+      else index.set(link.ocdId, [toSeatHolder(person)]);
+    }
+  }
+
+  // Stable order so the same point renders the same way twice. Alphabetical by
+  // name, deliberately: any order derived from the data would be an ordering
+  // the reader could read meaning into, and CLAUDE.md forbids ordering by fit.
+  for (const holders of index.values()) {
+    holders.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  return index;
+}
+
+/**
+ * The state division identifier implied by any division identifier.
+ *
+ * Senators represent a whole state, and the registry holds no state-level
+ * division rows — it is generated from boundary layers and there is no state
+ * layer. It does not need one: OCD-IDs are hierarchical, so the state is a
+ * prefix of every division inside it. This reads that prefix.
+ *
+ * That is the identifier hierarchy doing its job, not a name-string join, which
+ * is the thing CLAUDE.md actually forbids.
+ */
+export function stateOcdIdFrom(ocdId: string): string | null {
+  const match = /^(ocd-division\/country:us\/state:[a-z]{2})(\/|$)/.exec(ocdId);
+  return match ? match[1] : null;
+}
+
+/** Everyone holding a seat for this division. Empty is a real answer. */
+export function holdersFor(
+  index: OfficeholderIndex,
+  ocdId: string,
+): SeatHolder[] {
+  return index.get(ocdId) ?? [];
+}
+
+/**
+ * The senators for whichever state these divisions sit in.
+ *
+ * Takes the set of divisions covering a point rather than a state code, because
+ * the caller has identifiers and not postal abbreviations, and because a point
+ * near a state line resolves to divisions in one state only — the geometry
+ * already answered that question.
+ */
+export function senatorsFor(
+  index: OfficeholderIndex,
+  ocdIds: string[],
+): SeatHolder[] {
+  const states = new Set<string>();
+  for (const ocdId of ocdIds) {
+    const state = stateOcdIdFrom(ocdId);
+    if (state) states.add(state);
+  }
+
+  const seen = new Set<string>();
+  const holders: SeatHolder[] = [];
+  for (const state of states) {
+    for (const holder of holdersFor(index, state)) {
+      if (seen.has(holder.id)) continue;
+      seen.add(holder.id);
+      holders.push(holder);
+    }
+  }
+
+  return holders.sort((a, b) => a.name.localeCompare(b.name));
+}

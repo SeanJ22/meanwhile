@@ -1,4 +1,10 @@
 import type { Tier } from "../ocd/tiers.ts";
+import {
+  holdersFor,
+  senatorsFor,
+  type OfficeholderIndex,
+  type SeatHolder,
+} from "../officials/lookup.ts";
 
 import { bodiesAt, type GeoFeature } from "./resolve.ts";
 import type {
@@ -79,6 +85,16 @@ export interface Seat {
   label: string;
   divisionType: Extract<DivisionType, "cd" | "sldu" | "sldl">;
   tier: Tier;
+  /**
+   * Who currently holds this seat, where a sourced record exists.
+   *
+   * **Empty is the normal case and must render as such.** Today only the
+   * federal roster is loaded, so `cd:` seats are filled and `sldu`/`sldl` are
+   * not — until Plural Open lands (D03). An empty array means we have no
+   * record, never that the seat is vacant, and the copy has to say the first
+   * rather than imply the second.
+   */
+  representatives: SeatHolder[];
 }
 
 export interface CoverageSummary {
@@ -96,7 +112,24 @@ export interface CoverageSummary {
    * coverage gap into a false claim about somebody's government.
    */
   unincorporated: boolean;
+  /**
+   * US senators for the state this point sits in.
+   *
+   * Kept apart from `seats` because a senator represents the whole state, and
+   * the state is not one of the divisions resolved at the point — there is no
+   * state boundary layer. The identifier is derived from the `state:` prefix of
+   * the divisions that *were* resolved.
+   */
+  senators: SeatHolder[];
   counts: { total: number; withSource: number; withoutSource: number };
+  /**
+   * How many of the seats above we can actually name someone for.
+   *
+   * The footnote depends on this. "We haven't sourced their names" was true of
+   * every seat until the federal roster landed; saying it of AZ-6 now, with
+   * Juan Ciscomani sitting in the file, would be false.
+   */
+  seatCounts: { total: number; named: number };
 }
 
 /** Coverage statuses that mean a calendar is actually wired. */
@@ -138,6 +171,13 @@ export function summarizeCoverage(
   divisionsById: Map<string, Division>,
   allBodies: Body[],
   meetingCount: number,
+  /**
+   * Officeholders by division. Optional, and an empty index is a valid state —
+   * a roster that fails to load must degrade to the pre-roster copy rather than
+   * failing the coverage answer, exactly as a failed registry load degrades to
+   * the cascade's own answer.
+   */
+  officials: OfficeholderIndex = new Map(),
 ): CoverageSummary {
   const { divisions, bodies } = bodiesAt(point, features, divisionsById, allBodies);
 
@@ -164,7 +204,13 @@ export function summarizeCoverage(
       label: d.label,
       divisionType: d.divisionType as Seat["divisionType"],
       tier: d.tier,
+      representatives: holdersFor(officials, d.ocdId),
     }));
+
+  const senators = senatorsFor(
+    officials,
+    divisions.map((d) => d.ocdId),
+  );
 
   // Only claim "unincorporated" when a municipal-shaped division was actually
   // found and every one of them turned out to be statistical. No division at all
@@ -193,6 +239,11 @@ export function summarizeCoverage(
     bodies: covered,
     seats,
     unincorporated,
+    senators,
     counts: { total: covered.length, withSource, withoutSource },
+    seatCounts: {
+      total: seats.length,
+      named: seats.filter((s) => s.representatives.length > 0).length,
+    },
   };
 }

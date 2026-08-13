@@ -25,9 +25,25 @@ export function StatsBar() {
   const { meetings, districtCount, dropped, result } = useShellData();
   const ui = useUi();
 
+  // Distinct people we can actually name at this point — the seats' holders
+  // plus the state's senators, deduplicated because a person can hold one seat
+  // and appear in both lists. The card read a flat 0 while three names were
+  // rendered beside it, which is the same class of quiet lie as a silently
+  // widened radius: the number said we had nothing and the screen said we did.
+  const officialCount = useMemo(() => {
+    const coverage = result?.coverage;
+    if (!coverage) return 0;
+    const ids = new Set<string>();
+    for (const seat of coverage.seats) {
+      for (const holder of seat.representatives) ids.add(holder.id);
+    }
+    for (const senator of coverage.senators) ids.add(senator.id);
+    return ids.size;
+  }, [result]);
+
   const stats = useMemo(
-    () => computeStats(meetings, ui.showDistricts ? districtCount : 0),
-    [meetings, districtCount, ui.showDistricts],
+    () => computeStats(meetings, ui.showDistricts ? districtCount : 0, officialCount),
+    [meetings, districtCount, ui.showDistricts, officialCount],
   );
 
   const accent = tierSetVars(ui.tiers);

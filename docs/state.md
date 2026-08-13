@@ -1383,7 +1383,7 @@ correct — `resolveZip` only reports it when the table is partial.
 counties, so a reader can click districts in places that have no meetings behind
 them. Honest, and the coverage tier says so, but the asymmetry is new.
 
-**Map-layer test coverage is still thin.** 79 tests now cover the cascade, time
+**Map-layer test coverage is still thin.** 107 tests now cover the cascade, time
 handling, OCD identity, the tier axis, district disambiguation, fixture
 provenance, county subdivisions and the registry oracle. Nothing tests marker
 reconciliation, camera logic, or basemap resolution — which is part of why the
@@ -1424,19 +1424,24 @@ replaced.
 
 ## 7. Current state of the branch
 
-Branch `claude/legistar-adapter-and-vendor-review`, one commit on top of
-`origin/main` at `4f5d2ae` (the PR #12 merge). The Legistar adapter and the
-vendor review — D12 and D14, with D16 through D19 opened by the work.
+**Working on `main` at `1568adf`** (the PR #13 merge). Nothing sits on a branch.
+
+PR #13 carried the Legistar adapter and the vendor review (D12, D14), the
+federal officeholder roster (D02), and opened D16–D20:
 
 ```
-<this commit>  Legistar adapter + vendor review              ← D12, D14
-4f5d2ae        Merge PR #12                                  ← origin/main
+1568adf  Merge PR #13                                  ← origin/main, local main
+b3372a9  Record the keys that now exist                ← D02, D06 corrections
+ea1d6ab  Federal officeholder roster                   ← D02
+e22fd56  Mirror the vendor review
+8c40e29  Legistar adapter + vendor review              ← D12, D14
+4f5d2ae  Merge PR #12
 ```
 
-**test 95 pass · lint clean · build green**, all three run on this branch.
+**test 107 pass · lint clean · build green.**
 
 Everything earlier — Phase 4.6.6, the FUNCSTAT fix, the session lifecycle work
-(M16, M17, R07–R10) — is in `origin/main` and no longer sits on a branch.
+(M16, M17, R07–R10) — is also in `origin/main`.
 
 **An earlier session opened on a repo that looked empty, and that is worth
 knowing because it will happen again.** The working tree was on `main` at `64fee33` —
@@ -1682,13 +1687,18 @@ State as of 2026-08-12, verified rather than assumed:
 - **R07 is fixed.** `--ship` fast-forwards local `main` and pushes `-u` for a
   branch with no upstream; the plain check and `session:start` both report a
   stale local `main`. If the repo ever still looks empty, it is not — §7.
-- 79 tests, lint and build all pass. M16, M17, R07, R09 and R10 all Done with
-  evidence in the tracker.
+- **107 tests, lint and build all pass.** M16, M17, R07, R09, R10 and D14 all
+  Done with evidence in the tracker.
+
+  **`git-state.txt` reads this line, so a stale number here becomes a false
+  report in the mirror** — it did once, reporting 79 after the suite had reached
+  107. The count lives in three places in this file (§1's command table, §6's
+  coverage note, and here); update all three or the lowest one wins.
 - R10 added `pnpm session:start` and the dev-server lifecycle. It found a real
   stale server on its first run: a `next dev` from 4:06 PM still serving after
   that session's handoff, which is the gap it exists to close.
-- R09 added `git-state.txt`, so the mirror is now six files: five copied, one
-  generated. It carries no tests — it is a handoff script, not app code, and the
+- R09 added `git-state.txt`, so the mirror is now seven files: six copied, one
+  generated — `vendor-review.md` joined on 2026-08-12 with D14. It carries no tests — it is a handoff script, not app code, and the
   suite does not reach it. Verified by running it against a scratch mirror and,
   for the behind path, a throwaway clone with local `main` reset back.
 - The G Drive mirror and `transcripts/` are current as of the end of that

@@ -3,6 +3,7 @@
 import { formatMiles } from "@/lib/map/format";
 import type { CoverageTier } from "@/lib/meetings/query";
 import type { CoverageSummary, CoveredBody, Seat } from "@/lib/registry/coverage";
+import type { SeatHolder } from "@/lib/officials/lookup";
 
 /**
  * Says which rung of the cascade produced what's on screen, and — when there is
@@ -59,6 +60,60 @@ function seatPhrase(seats: Seat[]): string | null {
 }
 
 /**
+ * One person, with the record behind them one click away.
+ *
+ * The source link is not decoration. `CLAUDE.md` line 17 allows a name on
+ * screen only when it carries a source record, and the transparency surface is
+ * what makes that claim checkable rather than merely asserted.
+ */
+function Holder({ holder }: { holder: SeatHolder }) {
+  return (
+    <span className="inline-flex items-baseline gap-1.5">
+      {holder.websiteUrl ? (
+        <a
+          href={holder.websiteUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="text-paper underline decoration-dotted underline-offset-2 hover:text-signal"
+        >
+          {holder.name}
+        </a>
+      ) : (
+        <span className="text-paper">{holder.name}</span>
+      )}
+      {holder.partyLabel && (
+        // Display only. Nothing here or downstream infers a position from it.
+        <span className="text-muted">· {holder.partyLabel}</span>
+      )}
+      {holder.sourceUrl && (
+        <a
+          href={holder.sourceUrl}
+          target="_blank"
+          rel="noreferrer"
+          title="Where this record was read from"
+          className="font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted hover:text-signal"
+        >
+          source
+        </a>
+      )}
+    </span>
+  );
+}
+
+function HolderList({ holders }: { holders: SeatHolder[] }) {
+  return (
+    <>
+      {holders.map((holder, i) => (
+        <span key={holder.id}>
+          {i > 0 && <span className="text-muted">, </span>}
+          <Holder holder={holder} />
+        </span>
+      ))}
+    </>
+  );
+}
+
+/**
  * The four states of 4.6.6, in the reader's words.
  *
  * The third row is the one that matters and the one that was missing: a body is
@@ -66,7 +121,7 @@ function seatPhrase(seats: Seat[]): string | null {
  * false — it describes us, not them.
  */
 function CoverageBody({ zip, coverage }: { zip: string; coverage: CoverageSummary }) {
-  const { bodies, seats, unincorporated, counts } = coverage;
+  const { bodies, seats, unincorporated, counts, senators, seatCounts } = coverage;
   const shown = bodies.slice(0, NAME_LIMIT);
   const hidden = bodies.length - shown.length;
   const seatLine = seatPhrase(seats);
@@ -146,19 +201,69 @@ function CoverageBody({ zip, coverage }: { zip: string; coverage: CoverageSummar
         </ul>
       )}
 
-      {seatLine && (
-        <p className="mt-2.5 text-[0.75rem] leading-relaxed text-muted">
-          You&apos;re also represented in {seatLine}.
+      {seats.length > 0 &&
+        (seatCounts.named === 0 ? (
+          // Nothing sourced for any seat — the original wording, still true.
+          <p className="mt-2.5 text-[0.75rem] leading-relaxed text-muted">
+            You&apos;re also represented in {seatLine}.
+          </p>
+        ) : (
+          <>
+            <p className="mt-2.5 text-[0.75rem] leading-relaxed text-muted">
+              You&apos;re also represented in:
+            </p>
+            <ul className="mt-1 space-y-1">
+              {seats.map((seat) => (
+                <li
+                  key={seat.ocdId}
+                  className="flex items-baseline justify-between gap-3 text-[0.75rem] leading-snug"
+                >
+                  <span className={TIER_CLASS[seat.tier]}>{seat.label}</span>
+                  <span className="text-right">
+                    {seat.representatives.length > 0 ? (
+                      <HolderList holders={seat.representatives} />
+                    ) : (
+                      // Not "vacant" — we simply have no record. The two are
+                      // completely different claims and only one is ours to
+                      // make.
+                      <span className="text-muted">no record yet</span>
+                    )}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </>
+        ))}
+
+      {senators.length > 0 && (
+        <p className="mt-2 text-[0.75rem] leading-relaxed text-muted">
+          <span className="text-national">
+            {senators.length === 1 ? "U.S. Senator" : "U.S. Senators"}
+          </span>{" "}
+          <HolderList holders={senators} />
         </p>
       )}
 
-      {counts.withoutSource > 0 && (
-        // The honest footnote. The registry knows these divisions exist and that
-        // divisions of their type have governing bodies; it does not know those
-        // bodies' names, schedules or members, and must not imply otherwise.
+      {(counts.withoutSource > 0 || seatCounts.named < seatCounts.total) && (
+        // The honest footnote, now narrowed to what is still unsourced. It used
+        // to claim we had sourced no names at all, which stopped being true the
+        // moment the federal roster landed — AZ-6 has a name on it. Claiming
+        // otherwise beside a rendered name is its own small lie.
         <p className="mt-2.5 text-[0.6875rem] leading-relaxed text-muted">
-          We know these bodies exist because the district boundaries do. We
-          haven&apos;t sourced their names or meeting schedules yet.
+          {counts.withoutSource > 0 && (
+            <>
+              We know these bodies exist because the district boundaries do. We
+              haven&apos;t sourced their names or meeting schedules yet.
+            </>
+          )}
+          {counts.withoutSource > 0 && seatCounts.named < seatCounts.total && " "}
+          {seatCounts.named < seatCounts.total && (
+            <>
+              {seatCounts.named > 0
+                ? "State legislators aren't sourced yet either."
+                : ""}
+            </>
+          )}
         </p>
       )}
     </>

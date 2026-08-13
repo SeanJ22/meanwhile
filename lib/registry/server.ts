@@ -1,6 +1,9 @@
 import { readFile, readdir } from "node:fs/promises";
 import { join } from "node:path";
 
+import { indexByDivision, type OfficeholderIndex } from "../officials/lookup.ts";
+import type { OfficeholderSet } from "../officials/types.ts";
+
 import { summarizeCoverage, type CoverageSummary } from "./coverage.ts";
 import type { GeoFeature } from "./resolve.ts";
 import type { Division, Registry } from "./types.ts";
@@ -24,7 +27,17 @@ interface Loaded {
   features: GeoFeature[];
   divisionsById: Map<string, Division>;
   registry: Registry;
+  officials: OfficeholderIndex;
 }
+
+/**
+ * The generated officeholder rosters, by scope.
+ *
+ * One file today — the federal roster. Per-state files (`officeholders-04.json`
+ * and so on) join this list as they are generated, so adding a state is adding
+ * a file rather than regenerating everything.
+ */
+const ROSTERS = ["officeholders-us.json"];
 
 let cache: Promise<Loaded> | null = null;
 
@@ -43,10 +56,28 @@ async function load(): Promise<Loaded> {
     await readFile(join(root, "lib", "registry", "registry.json"), "utf8"),
   ) as Registry;
 
+  // A missing or unreadable roster degrades to no names rather than failing the
+  // whole coverage answer. The pre-roster copy is still true — it just says
+  // less — whereas a 500 here would take the map's only data dependency down
+  // over a file that is nice to have.
+  const sets: OfficeholderSet[] = [];
+  for (const name of ROSTERS) {
+    try {
+      sets.push(
+        JSON.parse(
+          await readFile(join(root, "lib", "registry", name), "utf8"),
+        ) as OfficeholderSet,
+      );
+    } catch (error) {
+      console.error(`officeholder roster ${name} could not be read`, error);
+    }
+  }
+
   return {
     features,
     divisionsById: new Map(registry.divisions.map((d) => [d.ocdId, d])),
     registry,
+    officials: indexByDivision(sets),
   };
 }
 
@@ -74,12 +105,13 @@ export async function coverageAt(
   lng: number,
   meetingCount: number,
 ): Promise<CoverageSummary> {
-  const { features, divisionsById, registry } = await loaded();
+  const { features, divisionsById, registry, officials } = await loaded();
   return summarizeCoverage(
     [lng, lat],
     features,
     divisionsById,
     registry.bodies,
     meetingCount,
+    officials,
   );
 }

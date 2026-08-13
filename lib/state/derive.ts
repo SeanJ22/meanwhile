@@ -130,10 +130,14 @@ export interface ShellStats {
 /**
  * The four stat cards.
  *
- * `officials` is zero until Phase 5 lands real officeholder records. It is
- * shown as an honest zero rather than hidden: a card that appears only once it
- * has a number to show reads as "this was just added", where a zero reads as
- * "we have not got this yet", which is the truth.
+ * `officials` counts the people we can **name at this point** with a source
+ * behind them — the federal delegation today, and state legislators once D03
+ * lands. It defaults to zero so a caller with no coverage summary still gets an
+ * honest number rather than a wrong one.
+ *
+ * A zero here reads as "we have not got this yet", which is the truth when it
+ * is true. It stopped being true the moment the roster shipped, and a card
+ * reading 0 beside three rendered names was its own small lie.
  */
 export function computeStats(
   meetings: Meeting[],

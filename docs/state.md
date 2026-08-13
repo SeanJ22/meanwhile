@@ -1764,7 +1764,7 @@ replaced.
 **Working on `claude/link-ladder-and-coverage-audit`**, branched from `main` at
 `c94aa9c` (the PR #17 merge).
 
-**test 157 pass · lint clean · tsc clean · build green.**
+**test 162 pass · lint clean · tsc clean · build green.**
 
 Phase 4.6.10 and 4.6.1 landed on that branch — the link ladder, the body
 coverage audit, and the `NOT_ATTEMPTED` status that stops `NO_SOURCE_FOUND`

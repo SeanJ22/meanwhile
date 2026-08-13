@@ -3,6 +3,7 @@
 import { formatMiles } from "@/lib/map/format";
 import type { CoverageTier } from "@/lib/meetings/query";
 import type { CoverageSummary, CoveredBody, Seat } from "@/lib/registry/coverage";
+import { agendaAbsenceNote } from "@/lib/registry/wording";
 import type { SeatHolder } from "@/lib/officials/lookup";
 
 /**
@@ -221,6 +222,25 @@ function CoverageBody({ zip, coverage }: { zip: string; coverage: CoverageSummar
           )}
         </ul>
       )}
+
+      {/*
+        D17. Renders per body and only for a hunt that was actually exhausted,
+        so it cannot let New Hampshire's statute explain away a body nobody has
+        searched. No body qualifies today — nothing has been searched to
+        exhaustion — which is why this is decided-and-in-place rather than
+        visible.
+      */}
+      {shown.map((body) => {
+        const note = agendaAbsenceNote(body.ocdId, body.coverageStatus);
+        return note ? (
+          <p
+            key={`${body.bodyId}-absence`}
+            className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted"
+          >
+            <span className="text-paper-dim">{body.divisionLabel}</span> — {note}
+          </p>
+        ) : null;
+      })}
 
       {seats.length > 0 &&
         (seatCounts.named === 0 ? (

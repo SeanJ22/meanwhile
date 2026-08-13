@@ -3,12 +3,20 @@
  *
  *   pnpm handoff            report, sync the mirror, export transcripts
  *   pnpm handoff --check    report only; touch nothing
- *   pnpm handoff --ship     the above, then push, open a PR, and merge it
+ *   pnpm handoff --ship     the above, then push, open a PR, merge it, and
+ *                           fast-forward local main
  *
  * `--ship` exists because the author asked for a one-command close: everything
  * that is not current becomes current, the PR is created *and* merged, and the
  * next session starts clean. It is standing authorization, recorded here so the
  * behaviour is not a surprise.
+ *
+ * "The next session starts clean" is the part that was not true for a while.
+ * `--ship` merged on GitHub and left local `main` a session behind, every time
+ * — R07. It now pushes `-u` for a branch that has no upstream yet, and
+ * fast-forwards local `main` after the merge, and the plain check reports a
+ * stale local `main` as a warning. All three were the same assumption: that the
+ * remote and the local refs would somehow keep themselves in step.
  *
  * What `--ship` will not do is commit for you. A commit needs a message that
  * says why, and generating one from a diff produces exactly the uninformative
@@ -21,7 +29,8 @@
  *
  *   1. the working tree      nothing uncommitted
  *   2. the branch            nothing unpushed
- *   3. main                  nothing unmerged, no PR left open
+ *   3. main                  nothing unmerged, no PR left open, and the local
+ *                            `main` ref actually current with origin
  *   4. the dev server        stopped, port 3000 free
  *   5. the G Drive mirror    five files byte-identical, plus transcripts and
  *                            a generated `git-state.txt`
@@ -129,7 +138,8 @@ const dirty = git("status", "--porcelain")
 if (dirty.length === 0) ok("working tree", "clean");
 else fail("working tree", `${dirty.length} uncommitted file(s)`);
 
-const upstream = tryRun("git", [
+// Reassigned by ship(), which creates the upstream when a new branch has none.
+let upstream = tryRun("git", [
   "rev-parse",
   "--abbrev-ref",
   "--symbolic-full-name",
@@ -160,6 +170,44 @@ if (!hasMain) {
   if (identical) ok("main tree", "identical to the local tree");
   else if (unmerged === 0) warn("main tree", "differs despite no unmerged commits — look at it");
 }
+
+/** The command that would fix a stale local `main` from where we are standing. */
+function ffCommand() {
+  // `fetch origin main:main` updates the ref without touching the working tree,
+  // but git rejects it when main is the branch you are on.
+  return branch === "main"
+    ? "git merge --ff-only origin/main"
+    : "git fetch origin main:main";
+}
+
+/**
+ * R07: local `main` against `origin/main`.
+ *
+ * This is the comparison nothing above makes. The branch is checked against its
+ * own upstream and `main` against the branch, but the local `main` ref is never
+ * checked against the remote one — so it can sit a whole session behind while
+ * every other line reads clean, and the next checkout of `main` presents a
+ * project containing nothing but `CLAUDE.md`. That happened.
+ */
+function checkLocalMain() {
+  if (!hasMain) return;
+
+  const localMain = tryRun("git", ["rev-parse", "--verify", "main"]);
+  if (localMain === null) {
+    warn("local main", "no local main branch");
+    return;
+  }
+
+  const behind = Number(git("rev-list", "--count", "main..origin/main"));
+  const ahead = Number(git("rev-list", "--count", "origin/main..main"));
+
+  if (behind === 0 && ahead === 0) ok("local main", "matches origin/main");
+  else if (ahead > 0)
+    warn("local main", `diverged — ${behind} behind, ${ahead} ahead of origin/main`);
+  else warn("local main", `${behind} commit(s) behind origin/main — ${ffCommand()}`);
+}
+
+checkLocalMain();
 
 const prs = tryRun("gh", [
   "pr",
@@ -442,24 +490,35 @@ function ship() {
     fail("ship", "refused — commit first, a commit needs a message that says why");
     return;
   }
-  if (!upstream) {
-    fail("ship", "refused — no upstream to push to");
-    return;
-  }
   if (tryRun("gh", ["--version"]) === null) {
     fail("ship", "refused — gh is not available");
     return;
   }
 
-  const unpushed = Number(git("rev-list", "--count", `${upstream}..HEAD`));
-  if (unpushed > 0) {
-    if (tryRun("git", ["push", "origin", branch]) === null) {
-      fail("ship", "push failed");
+  // R07's second gap: this used to refuse outright when a branch had no
+  // upstream, so the first --ship of every session failed until someone ran
+  // `git push -u` by hand. Having no upstream is the normal state of a branch
+  // created this session, not an error — create it.
+  if (!upstream) {
+    if (tryRun("git", ["push", "-u", "origin", `HEAD:${branch}`]) === null) {
+      fail("ship · push", `${branch} has no upstream and could not be pushed`);
       return;
     }
-    ok("ship · push", `${unpushed} commit(s) pushed`);
+    upstream =
+      tryRun("git", ["rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{u}"]) ??
+      `origin/${branch}`;
+    ok("ship · push", `${branch} pushed, now tracking ${upstream}`);
   } else {
-    ok("ship · push", "nothing to push");
+    const unpushed = Number(git("rev-list", "--count", `${upstream}..HEAD`));
+    if (unpushed > 0) {
+      if (tryRun("git", ["push", "origin", branch]) === null) {
+        fail("ship", "push failed");
+        return;
+      }
+      ok("ship · push", `${unpushed} commit(s) pushed`);
+    } else {
+      ok("ship · push", "nothing to push");
+    }
   }
 
   const unmerged = Number(git("rev-list", "--count", "origin/main..HEAD"));
@@ -516,6 +575,63 @@ function ship() {
   else fail("ship · verify", `${left} commit(s) still not in main after the merge`);
 }
 
+/**
+ * Fast-forward local `main` to `origin/main`. R07, the headline gap.
+ *
+ * `gh pr merge` advances `main` on GitHub and leaves the session standing on the
+ * feature branch. Nothing here ever moved the local ref, so it fell exactly one
+ * session behind on every ship, and the next person to check `main` out found a
+ * project with nothing in it. The recovery was always a plain fast-forward,
+ * because local `main` had never held anything unique — which is precisely why
+ * the script can do it.
+ *
+ * `git fetch origin main:main` moves the ref without touching the working tree
+ * and **refuses anything that is not a fast-forward**, so a diverged `main` is
+ * reported rather than flattened. Git rejects that form when `main` is the
+ * branch you are standing on, so from `main` it is a `--ff-only` merge instead.
+ */
+function fastForwardMain() {
+  if (!hasMain) return;
+
+  const localMain = tryRun("git", ["rev-parse", "--verify", "main"]);
+
+  if (localMain !== null) {
+    const ahead = Number(git("rev-list", "--count", "origin/main..main"));
+    if (ahead > 0) {
+      // Never flatten this. Commits on local main that origin does not have are
+      // either unpushed work or a mistake, and both need a person.
+      warn(
+        "ship · main",
+        `local main has ${ahead} commit(s) origin/main does not — not fast-forwarded`,
+      );
+      return;
+    }
+    if (Number(git("rev-list", "--count", "main..origin/main")) === 0) {
+      ok("ship · main", "local main already current");
+      return;
+    }
+  }
+
+  const moved =
+    branch === "main"
+      ? tryRun("git", ["merge", "--ff-only", "origin/main"])
+      : tryRun("git", ["fetch", "origin", "main:main"]);
+
+  if (moved === null) {
+    fail("ship · main", `could not fast-forward local main — ${ffCommand()}`);
+    return;
+  }
+
+  // Confirm against the ref rather than trusting the command reported success,
+  // which is the same rule the merge verification above follows.
+  const after = tryRun("git", ["rev-parse", "--verify", "main"]);
+  if (after !== null && after === tryRun("git", ["rev-parse", "origin/main"])) {
+    ok("ship · main", `local main fast-forwarded to ${after.slice(0, 7)}`);
+  } else {
+    fail("ship · main", "local main still does not match origin/main");
+  }
+}
+
 if (SHIP) {
   ship();
 
@@ -528,6 +644,7 @@ if (SHIP) {
       "branch",
       "main",
       "main tree",
+      "local main",
       "pull requests",
       "git state",
     ]);
@@ -557,6 +674,12 @@ if (SHIP) {
         "pull requests",
         `${openNow.length} still open — ${openNow.map((p) => `#${p.number}`).join(", ")}`,
       );
+
+    // The merge just moved origin/main, which is what leaves the local ref
+    // behind. Fix it here, then re-measure, so the line below reports the state
+    // the session actually ends in rather than the one it passed through.
+    fastForwardMain();
+    checkLocalMain();
 
     // git-state.txt was written before the push and merge, so it describes a
     // state that no longer exists — the same trap the re-measure above exists

@@ -1208,18 +1208,25 @@ commits and 118 files ahead, local `main` held zero unique commits and was a
 strict ancestor, and no untracked file collided with a tracked path, so
 `git merge --ff-only origin/main` restored it losslessly.
 
-The cause is structural, not a one-off. **`pnpm handoff --ship` merges the PR
-through `gh` and leaves the session on the feature branch; nothing ever
-fast-forwards local `main`.** So local `main` falls a whole session behind every
-time, and the next person to check it out sees an apparently empty project. The
-plain `handoff` check cannot catch it either — it compares the branch against
-its own upstream and `main` against the branch, but never local `main` against
-`origin/main`. Tracker **R07** carries the fix.
+The cause was structural, not a one-off. `pnpm handoff --ship` merged the PR
+through `gh` and left the session on the feature branch; nothing ever
+fast-forwarded local `main`. So it fell a whole session behind every time, and
+the next person to check it out saw an apparently empty project. The plain
+`handoff` check could not catch it either — it compared the branch against its
+own upstream and `main` against the branch, but never local `main` against
+`origin/main`.
 
-Since R09 the comparison at least gets *recorded*: `git-state.txt` in the mirror
-carries a `local main matches origin/main` line with a behind count. That is not
-the fix — the checklist still does not warn and `--ship` still does not
-fast-forward — but the fact is now written down somewhere a next session reads.
+**Fixed 2026-08-12, tracker R07.** `--ship` now fast-forwards local `main` after
+the merge, using `git fetch origin main:main` — it moves the ref without
+touching the working tree and refuses anything that is not a fast-forward, so a
+diverged `main` is reported rather than flattened. From `main` itself it is a
+`--ff-only` merge, since git rejects that fetch form for the checked-out branch.
+The plain check reports a stale local `main` as a warning with the command to
+fix it, `pnpm session:start` checks the same thing before work starts (R10), and
+`git-state.txt` records it in the mirror (R09).
+
+Three surfaces now report it and one fixes it, which is deliberate: this failure
+is silent by nature and cost a session before anyone noticed.
 
 The older pattern still applies and is the same family: a PR merges from a
 snapshot, so anything pushed after it was opened is left behind silently. That
@@ -1286,7 +1293,7 @@ do not look:**
 
 | What | How it presents | What it actually is |
 |---|---|---|
-| stale local `main` | an empty repo | R07 — `main` a session behind |
+| stale local `main` | an empty repo | R07 — `main` a session behind (now also *fixed* by `--ship`, not just reported) |
 | clobbered `CLAUDE.md` | a repo with no constraints | overwritten by scaffolding |
 | stale dev server | a working build | last session's build on 3000 |
 | unsynced mirror | nothing at all | the orienting docs gone stale |
@@ -1373,7 +1380,8 @@ jobs that are pure copies:
 ```
 pnpm handoff            check, sync the mirror, export transcripts
 pnpm handoff --check    report only, touch nothing
-pnpm handoff --ship     the above, then push, open a PR, and merge it
+pnpm handoff --ship     the above, then push, open a PR, merge it, and
+                        fast-forward local main
 ```
 
 **Say "session ending — start handoff"** and the whole close happens: `state.md`
@@ -1385,6 +1393,7 @@ session starts on a merged `main` with nothing outstanding.
   ok   branch          matches origin/<branch>
   ok   main            carries everything on this branch
   ok   main tree       identical to the local tree
+  ok   local main      matches origin/main
   ok   pull requests   none open
   ok   git state       git-state.txt written to the mirror
   ok   dev server      pid 5544 stopped, port 3000 free
@@ -1402,6 +1411,14 @@ reuses an open PR rather than opening a second one for the same branch, and it
 re-fetches after merging to confirm `main` really took everything, because a PR
 merges from a snapshot and has twice left later commits behind.
 
+**`--ship` closes both ends of the branch's life** (R07). It pushes `-u` for a
+branch that has no upstream yet, rather than refusing — a branch created this
+session having no upstream is the normal case, and refusing meant the first
+ship of every session failed until someone ran `git push -u` by hand. And it
+fast-forwards local `main` after the merge, so the session ends on refs that
+agree. Both ends had assumed a branch that already existed on the remote and a
+local `main` that somehow kept itself in step.
+
 Two behaviours worth knowing, both learned the hard way:
 
 - **It fetches first.** Every count is meaningless against a stale remote, and
@@ -1416,9 +1433,10 @@ letter.
 
 State as of 2026-08-12, verified rather than assumed:
 
-- **Check local `main` is not stale before anything else** — §7. If the repo
-  looks empty, it is not; fast-forward from `origin/main`.
-- 79 tests, lint and build all pass. M16, M17, R09 and R10 all Done with
+- **R07 is fixed.** `--ship` fast-forwards local `main` and pushes `-u` for a
+  branch with no upstream; the plain check and `session:start` both report a
+  stale local `main`. If the repo ever still looks empty, it is not — §7.
+- 79 tests, lint and build all pass. M16, M17, R07, R09 and R10 all Done with
   evidence in the tracker.
 - R10 added `pnpm session:start` and the dev-server lifecycle. It found a real
   stale server on its first run: a `next dev` from 4:06 PM still serving after

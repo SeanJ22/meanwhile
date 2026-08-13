@@ -28,12 +28,24 @@ test("an exhausted New Hampshire search says the law does not require an agenda"
 });
 
 test("a body nobody searched never claims a search", () => {
-  // 258 of 265 bodies are NOT_ATTEMPTED. Pairing the statutory sentence with a
-  // search that never happened would let New Hampshire law explain away our own
-  // backlog.
-  assert.equal(agendaAbsenceNote(NH, "NOT_ATTEMPTED"), null);
-  assert.equal(agendaAbsenceNote(NH, "KNOWN_UNCOVERED"), null);
-  assert.equal(agendaAbsenceNote(NH, "LIVE"), null);
+  // D17 split (2026-08-13): the statutory sentence renders for every NH body
+  // — it is a fact about the law, not about our work — while "searched high
+  // and low" is a diligence claim that only an exhausted hunt may make.
+  for (const status of ["NOT_ATTEMPTED", "KNOWN_UNCOVERED", "LIVE"] as const) {
+    const note = agendaAbsenceNote(NH, status)!;
+    assert.match(note, /New Hampshire does not require an agenda/, status);
+    assert.ok(
+      !/searched/i.test(note),
+      `${status} must not claim a search happened`,
+    );
+  }
+});
+
+test("outside a no-agenda state, an unsearched body gets no note at all", () => {
+  // Arizona requires the agenda posted; there is no statutory fact to state
+  // and no diligence to claim, so the caller's own copy covers it.
+  assert.equal(agendaAbsenceNote(AZ, "NOT_ATTEMPTED"), null);
+  assert.equal(agendaAbsenceNote(AZ, "LIVE"), null);
 });
 
 test("outside New Hampshire an exhausted search owns the gap", () => {
@@ -44,10 +56,20 @@ test("outside New Hampshire an exhausted search owns the gap", () => {
   assert.ok(!/does not require an agenda/.test(note));
 });
 
-test("no body in the registry can trigger this copy today", () => {
-  // Nothing has been searched to exhaustion, so the sentence renders for
-  // nobody. Recorded rather than hidden: the wording is decided and in place,
-  // and the first exhausted hunt is what makes it appear.
+test("the statutory sentence now renders for real NH bodies", () => {
+  // The split's whole point: before it, the exhausted count was zero and the
+  // copy rendered for nobody — including the bodies it was written for. Now
+  // every NH body carries the statutory fact, whatever its hunt state.
+  const nhBodies = registry.bodies.filter(
+    (b) => b.ocdId && stateOf(b.ocdId) === "nh",
+  );
+  assert.ok(nhBodies.length > 0, "the registry holds NH bodies");
+  for (const body of nhBodies) {
+    const note = agendaAbsenceNote(body.ocdId, body.coverageStatus as never);
+    assert.ok(note, `${body.id} should carry the statutory sentence`);
+    assert.match(note!, /New Hampshire does not require an agenda/);
+  }
+  // The diligence sentence still renders for nobody: no hunt is exhausted.
   const exhausted = registry.bodies.filter(
     (b) => b.coverageStatus === "NO_SOURCE_FOUND",
   );

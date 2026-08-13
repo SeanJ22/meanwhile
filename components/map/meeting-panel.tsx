@@ -176,7 +176,7 @@ function MeetingEntry({
         )}
       </div>
 
-      <HowToBeHeard ocdId={meeting.ocdId} />
+      <HowToBeHeard ocdId={meeting.ocdId} bodyName={meeting.bodyName} />
 
       <footer className="mt-4 border-t border-rule-soft pl-4 pt-3">
         <p className="font-mono text-[0.6875rem] leading-relaxed text-muted">
@@ -206,8 +206,14 @@ function MeetingEntry({
  * comment period must never be inferred from the meeting being public — many
  * are public to observe and closed to speak.
  */
-function HowToBeHeard({ ocdId }: { ocdId: string }) {
-  const access = commentAccessFor(ocdId);
+function HowToBeHeard({
+  ocdId,
+  bodyName,
+}: {
+  ocdId: string | null;
+  bodyName: string;
+}) {
+  const access = commentAccessFor(ocdId, bodyName);
   if (!access) return null;
 
   if (access.commentPeriod === "UNKNOWN") {

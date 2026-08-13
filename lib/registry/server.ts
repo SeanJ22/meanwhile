@@ -5,7 +5,7 @@ import { indexByDivision, type OfficeholderIndex } from "../officials/lookup.ts"
 import type { OfficeholderSet } from "../officials/types.ts";
 
 import { summarizeCoverage, type CoverageSummary } from "./coverage.ts";
-import type { GeoFeature } from "./resolve.ts";
+import { divisionsAt as resolveDivisionsAt, type GeoFeature } from "./resolve.ts";
 import type { Division, Registry } from "./types.ts";
 
 /**
@@ -105,6 +105,12 @@ function loaded(): Promise<Loaded> {
  * separates "nothing is scheduled" from "we cannot see what is scheduled", and
  * those must never render the same way.
  */
+/** The divisions containing a point, from the committed geometry. */
+export async function divisionsAt(lat: number, lng: number): Promise<Division[]> {
+  const { features, divisionsById } = await loaded();
+  return resolveDivisionsAt([lng, lat], features, divisionsById);
+}
+
 export async function coverageAt(
   lat: number,
   lng: number,

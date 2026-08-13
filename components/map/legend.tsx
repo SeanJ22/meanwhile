@@ -2,7 +2,8 @@
 
 import { useMemo } from "react";
 
-import { TIERS, TIER_LABEL, tierForOcdId } from "@/lib/ocd/tiers";
+import { TIERS, TIER_LABEL } from "@/lib/ocd/tiers";
+import { tierForMeeting } from "@/lib/state/derive";
 import { useShellData } from "@/lib/state/data";
 import { useUi } from "@/lib/state/provider";
 
@@ -24,7 +25,7 @@ export function Legend() {
     let concluded = false;
 
     for (const meeting of meetings) {
-      const tier = tierForOcdId(meeting.ocdId);
+      const tier = tierForMeeting(meeting);
       if (tier) tiers.add(tier);
       if (meeting.status === "CONCLUDED") concluded = true;
     }

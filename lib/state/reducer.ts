@@ -1,6 +1,13 @@
 import { RADIUS_LADDER_KM } from "../meetings/constants.ts";
 import { TIERS } from "../ocd/tiers.ts";
 
+import {
+  ALL_DISTRICT_TYPES,
+  DEFAULT_DISTRICT_TYPES,
+  INITIAL_FILTERS,
+  INITIAL_STATE,
+} from "./defaults.ts";
+import { resetAllControls } from "./reset.ts";
 import type {
   DistrictType,
   FilterState,
@@ -8,71 +15,16 @@ import type {
   UiState,
 } from "./types.ts";
 
+// Re-exported from their new home so existing importers keep working; the
+// defaults moved to defaults.ts so the reset registry can read them without
+// a circular import.
+export { ALL_DISTRICT_TYPES, DEFAULT_DISTRICT_TYPES, INITIAL_FILTERS, INITIAL_STATE };
+
 /**
  * The reducer.
  *
  * Pure and exported on its own so it can be tested without mounting React.
  */
-
-/** Every district type the overlay registry knows about. */
-export const ALL_DISTRICT_TYPES: readonly DistrictType[] = [
-  "congressional",
-  "state-senate",
-  "state-house",
-  "county",
-  "school",
-  "municipal",
-] as const;
-
-/**
- * District types drawn when the overlay is first switched on: one per tier.
- *
- * Turning on all six at once put three Local boundaries — county, municipal and
- * school — over the same ground at the same time, and around a city they
- * overlap into noise. Starting with the widest of each tier gives a legible
- * frame, and every other type is one checkbox away.
- */
-export const DEFAULT_DISTRICT_TYPES: readonly DistrictType[] = [
-  "congressional",
-  "state-house",
-  "county",
-] as const;
-
-export const INITIAL_FILTERS: FilterState = {
-  bodyTypes: [],
-  statuses: [],
-  districtTypes: [...DEFAULT_DISTRICT_TYPES],
-  daysAhead: 60,
-  daysBack: 0,
-  hideUncovered: true,
-};
-
-export const INITIAL_STATE: UiState = {
-  // All three on by default: the reader has not told us what they care about
-  // yet, and hiding two thirds of their government on a guess is worse than
-  // showing all of it.
-  tiers: [...TIERS],
-  jurisdiction: null,
-  body: null,
-  filters: { ...INITIAL_FILTERS },
-  search: { query: "", open: false, highlighted: -1 },
-  selectedVenueKey: null,
-  selectedDistrictOcdId: null,
-  selectedDistrictType: null,
-  districtPick: null,
-  radiusKm: RADIUS_LADDER_KM[0],
-  radiusOverridden: false,
-  nearMeEnabled: false,
-  nearMe: null,
-  showDistricts: false,
-  listOverlayOpen: false,
-  filtersPanelOpen: true,
-  listSort: "date",
-  listGroupBy: "jurisdiction",
-  collapsedGroups: [],
-  coverage: null,
-  droppedCount: 0,
-};
 
 /** Add or remove a value, preserving the caller's canonical ordering. */
 function toggle<T>(list: T[], value: T, order?: readonly T[]): T[] {
@@ -93,7 +45,9 @@ function clearedGroup(group: keyof FilterState, filters: FilterState): FilterSta
     case "statuses":
       return { ...filters, statuses: [] };
     case "districtTypes":
-      return { ...filters, districtTypes: [...ALL_DISTRICT_TYPES] };
+      // "Cleared" means the default view (M24) — never everything-on, which
+      // is now the explicit Select all action instead.
+      return { ...filters, districtTypes: [...DEFAULT_DISTRICT_TYPES] };
     case "daysAhead":
     case "daysBack":
       return {
@@ -174,8 +128,25 @@ export function uiReducer(state: UiState, action: UiAction): UiState {
     case "filter/clear":
       return { ...state, filters: clearedGroup(action.group, state.filters) };
 
+    case "filter/districtTypesSet":
+      // Select all / Clear on the district-type group (M25). Canonical order
+      // is kept so the checkbox list never reshuffles.
+      return {
+        ...state,
+        filters: {
+          ...state.filters,
+          districtTypes: ALL_DISTRICT_TYPES.filter((t) =>
+            action.value.includes(t),
+          ),
+        },
+      };
+
     case "filter/reset":
-      return { ...state, filters: { ...INITIAL_FILTERS } };
+      // Every registered control, not merely `filters` — the old form was
+      // written when filters were the only controls and quietly skipped
+      // tiers, scope, search, radius and near-me as each grew around it
+      // (tracker M24). The registry is the fix's structural half.
+      return resetAllControls(state);
 
     case "filter/togglePanel":
       return { ...state, filtersPanelOpen: !state.filtersPanelOpen };
@@ -274,27 +245,9 @@ export function uiReducer(state: UiState, action: UiAction): UiState {
   }
 }
 
-/** Whether any filter is narrowing the result, for the count badge on the
- *  filters header. Mirrors Edia's `hasActiveFilter`. */
-export function hasActiveFilter(filters: FilterState): boolean {
-  return activeFilterCount(filters) > 0;
-}
-
-/** How many filter groups are actively constraining. Edia's
- *  `updateFiltersActiveCount`. */
-export function activeFilterCount(filters: FilterState): number {
-  let count = 0;
-  if (filters.bodyTypes.length > 0) count++;
-  if (filters.statuses.length > 0) count++;
-  if (filters.districtTypes.length !== ALL_DISTRICT_TYPES.length) count++;
-  if (
-    filters.daysAhead !== INITIAL_FILTERS.daysAhead ||
-    filters.daysBack !== INITIAL_FILTERS.daysBack
-  ) {
-    count++;
-  }
-  // hideUncovered is on by default, so it counts as active only when the
-  // reader has turned it off — the unusual state is the one worth flagging.
-  if (!filters.hideUncovered) count++;
-  return count;
-}
+// The old activeFilterCount/hasActiveFilter pair is gone (M24): it counted
+// only `filters`, and it counted the *default* district-type selection as
+// active — which is why a fresh page read "Filters 1" and Reset all
+// appeared to do nothing. The badge now reads `activeControlCount` from
+// lib/state/reset.ts, which covers every registered control and defines
+// active as "differs from the default view".

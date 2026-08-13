@@ -3,6 +3,12 @@
 import { formatMiles } from "@/lib/map/format";
 import type { CoverageTier } from "@/lib/meetings/query";
 import type { CoverageSummary, CoveredBody, Seat } from "@/lib/registry/coverage";
+import {
+  hasRepresentation,
+  leadKind,
+  noticeLabel,
+  shouldRenderNotice,
+} from "@/lib/registry/representation";
 import { agendaAbsenceNote } from "@/lib/registry/wording";
 import type { SeatHolder } from "@/lib/officials/lookup";
 
@@ -49,6 +55,14 @@ const DIVISION_NOUN: Record<CoveredBody["divisionType"], string> = {
   cd: "Congressional",
   sldu: "State senate",
   sldl: "State house",
+};
+
+const BODY_CLASS_NOUN: Record<CoveredBody["bodyClass"], string> = {
+  GOVERNING: "Governing",
+  ADVISORY: "Advisory",
+  COMMISSION: "Commission",
+  REGIONAL: "Regional",
+  PRIVATE_ASSOCIATION: "Private",
 };
 
 const TIER_CLASS: Record<CoveredBody["tier"], string> = {
@@ -141,43 +155,70 @@ function CoverageBody({
   const shown = bodies.slice(0, NAME_LIMIT);
   const hidden = bodies.length - shown.length;
   const seatLine = seatPhrase(seats);
+  const kind = leadKind(coverage);
+  const g = counts.governing;
+  const others = counts.total - g.total;
+  const othersWithSource = counts.withSource - g.withSource;
 
   const lead =
-    coverage.state === "UNMAPPED" ? (
+    kind === "unmapped" ? (
       <>
         We haven&apos;t mapped the governing bodies covering {zip} yet. That is a
         gap in our data, not a gap in your government.
       </>
-    ) : coverage.state === "NONE_SCHEDULED" ? (
+    ) : kind === "none-scheduled" ? (
       <>
         Nothing is scheduled for the{" "}
         {counts.total === 1 ? "body" : `${counts.total} bodies`} covering {zip}.
       </>
-    ) : coverage.state === "MEETINGS" ? (
-      // Meetings are on screen, but not from these bodies' calendars, because
-      // none of them has one. Deliberately says nothing about whether what is
-      // shown belongs to them — it says what we are missing, which is the part
-      // we can stand behind.
+    ) : kind === "meetings-missing-calendars" ? (
+      // Meetings are on screen, but not from every government's calendar.
+      // Deliberately says nothing about whether what is shown belongs to
+      // them — it says what we are missing, which is the part we can stand
+      // behind.
       <>
-        We don&apos;t have {counts.withoutSource === 1 ? "a calendar" : "calendars"}{" "}
-        for the{" "}
-        {counts.withoutSource === 1 ? "body" : `${counts.withoutSource} bodies`}{" "}
+        We&apos;re missing{" "}
+        {g.total - g.withSource === 1
+          ? "the calendar of one of the bodies"
+          : `the calendars of ${g.total - g.withSource} of the bodies`}{" "}
         that govern the area around {zip}.
+      </>
+    ) : kind === "all-wired" ? (
+      // The state the old notice had no words for: every government here is
+      // on our watch. Said plainly, because the list below is the reader's
+      // answer to "who governs me" and deserves an opening line.
+      <>
+        {g.total === 1 ? "One body governs" : `${g.total} bodies govern`} the
+        area around {zip}. We watch{" "}
+        {g.total === 1 ? "its calendar" : "all of their calendars"}.
       </>
     ) : (
       <>
-        {counts.total === 1
-          ? "One body governs"
-          : `${counts.total} bodies govern`}{" "}
-        the area around {zip}
-        {counts.withoutSource === counts.total
-          ? counts.total === 1
+        {g.total === 1 ? "One body governs" : `${g.total} bodies govern`} the
+        area around {zip}
+        {g.withSource === 0
+          ? g.total === 1
             ? ", and we don't have its calendar yet"
             : ", and we don't have their calendars yet"
-          : `, and we're missing ${counts.withoutSource} of their calendars`}
+          : `, and we're missing ${g.total - g.withSource} of their calendars`}
         .
       </>
     );
+
+  // The advisory boards, committees and commissions, stated apart from the
+  // governments — real bodies a reader can follow, not extra governments.
+  const othersLine =
+    kind !== "unmapped" && others > 0 ? (
+      <>
+        {others === 1
+          ? "One more board, committee or commission serves"
+          : `${others} more boards, committees and commissions serve`}{" "}
+        the area
+        {othersWithSource > 0
+          ? `; we watch ${othersWithSource === others ? "all" : othersWithSource} of their calendars.`
+          : "."}
+      </>
+    ) : null;
 
   return (
     <>
@@ -191,6 +232,12 @@ function CoverageBody({
       <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
         {lead}
       </p>
+
+      {othersLine && (
+        <p className="mt-1 text-[0.75rem] leading-relaxed text-muted">
+          {othersLine}
+        </p>
+      )}
 
       {shown.length > 0 && (
         <ul className="mt-2.5 space-y-1">
@@ -216,17 +263,23 @@ function CoverageBody({
                   title="The body's own website"
                   className="text-[0.8125rem] leading-snug text-paper underline decoration-dotted underline-offset-2 hover:text-signal"
                 >
-                  {body.divisionLabel}
+                  {body.name ?? body.divisionLabel}
                 </a>
               ) : (
                 <span className="text-[0.8125rem] leading-snug">
-                  {body.divisionLabel}
+                  {body.name ?? body.divisionLabel}
                 </span>
               )}
               <span
                 className={`shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em] ${TIER_CLASS[body.tier]}`}
               >
-                {DIVISION_NOUN[body.divisionType]}
+                {/* A derived row is the division's government and tags by
+                    division type. A curated row tags by what it is — the PHA
+                    board tagged "Municipal" would claim a second city
+                    government, and a commission isn't a government at all. */}
+                {body.name === null
+                  ? DIVISION_NOUN[body.divisionType]
+                  : BODY_CLASS_NOUN[body.bodyClass]}
               </span>
             </li>
           ))}
@@ -322,7 +375,13 @@ function CoverageBody({
         </p>
       )}
 
-      {(counts.withoutSource > 0 || seatCounts.named < seatCounts.total) && (
+      {(bodies.some(
+        (b) =>
+          b.name === null &&
+          b.coverageStatus !== "LIVE" &&
+          b.coverageStatus !== "MANUAL",
+      ) ||
+        seatCounts.named < seatCounts.total) && (
         // The honest footnote, now narrowed to what is still unsourced. It used
         // to claim we had sourced no names at all, which stopped being true the
         // moment the federal roster landed — AZ-6 has a name on it. Claiming
@@ -378,32 +437,29 @@ export function CoverageNotice({
   coverage,
   failedSourceOcdIds,
 }: CoverageNoticeProps) {
-  if (tier === "exact") return null;
+  // The notice renders on every failure rung, and on the exact rung whenever
+  // there is representation to show. It used to return null on `exact`
+  // outright — and since this is the only surface that renders who governs
+  // and represents a point, the composite making every zip exact silently
+  // deleted the officials from the product. The gate now lives in
+  // lib/registry/representation.ts, where a test holds it against the
+  // committed rosters.
+  if (!shouldRenderNotice(tier, coverage)) return null;
 
   const near = formatMiles(requestedRadiusKm);
   const wide = formatMiles(radiusKm);
 
   const isEmpty = tier === "none";
+  const label = noticeLabel(tier, coverage);
 
-  // Show the coverage block whenever it has something true to add: an empty map
-  // always, and a widened or concluded one when bodies that govern here have no
-  // calendar wired. Staying silent when every body is covered keeps the notice
-  // about what is missing rather than restating what is already on screen.
-  const showCoverage =
-    !!coverage &&
-    (isEmpty || coverage.state === "UNMAPPED" || coverage.counts.withoutSource > 0);
-
-  const label = isEmpty
-    ? coverage?.state === "UNMAPPED"
-      ? "Not mapped yet"
-      : coverage
-        ? "Coverage gap"
-        : "No coverage yet"
-    : tier === "widened"
-      ? "Radius widened"
-      : "Recently concluded";
-
-  const accent = tier === "concluded" ? "text-concluded" : "text-signal";
+  // Amber marks the rungs where something needs explaining. "Who governs
+  // here" on the exact rung is information, not an alert, so it stays quiet.
+  const accent =
+    tier === "concluded"
+      ? "text-concluded"
+      : tier === "exact"
+        ? "text-muted"
+        : "text-signal";
 
   return (
     <div className="panel pointer-events-auto max-w-md px-4 py-3.5">
@@ -436,7 +492,7 @@ export function CoverageNotice({
         there — and that we hold no calendar for them — is the difference
         between a helpful answer and a misleading one.
       */}
-      {coverage && showCoverage ? (
+      {coverage && hasRepresentation(coverage) ? (
         <CoverageBody
           zip={zip}
           coverage={coverage}

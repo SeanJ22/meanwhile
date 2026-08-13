@@ -76,8 +76,18 @@ export type MeetingStatus = "SCHEDULED" | "CONCLUDED" | "CANCELED";
 export interface Meeting {
   /** Stable within a source. Namespaced by source to stay unique across them. */
   id: string;
-  /** The division whose government is meeting. */
-  ocdId: OcdId;
+  /**
+   * The division whose government is meeting.
+   *
+   * **Null when the body is associated with no Census division** — Pima
+   * Community College's district, a special district, a regional council.
+   * That is a stated fact, not a missing value: Census enumerates no boundary
+   * for these governments, and minting an identifier is a convention decision
+   * (tracker D31) that must not be made ad hoc by an adapter. A null-division
+   * meeting is local-tier by construction — see `tierForMeeting` in
+   * `lib/state/derive.ts`.
+   */
+  ocdId: OcdId | null;
   /** The body itself: "Mayor and Council", "Planning Commission". */
   bodyName: string;
   /** What this particular sitting is called: "Regular Session", "Budget Hearing". */

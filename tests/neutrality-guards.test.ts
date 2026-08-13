@@ -61,12 +61,43 @@ test("no candidate or measure record grows a ranking key", () => {
   const offenders: string[] = [];
   for (const file of libFiles()) {
     const source = readFileSync(file, "utf8");
-    for (const shape of declaredShapes(source, /candidate|measure|ballot/i)) {
+    // `candida` catches Candidacy as well as Candidate; contest and election
+    // joined the vocabulary with the S2 ballot shapes.
+    for (const shape of declaredShapes(
+      source,
+      /candida|contest|measure|ballot|election/i,
+    )) {
       const hit = forbidden.exec(shape.body);
       if (hit) offenders.push(`${file} ${shape.name}: ${hit[1]}`);
     }
   }
   assert.deepEqual(offenders, [], offenders.join("; "));
+});
+
+test("no committed ballot data record carries a ranking key", () => {
+  // The same rule at the data layer: a curated file must not smuggle in what
+  // the type guard forbids — JSON has no types to scan.
+  const forbiddenKey =
+    /^(score|rank|rating|match|fit|grade|alignment|recommendation)$/i;
+  const dir = join(process.cwd(), "data", "ballot");
+  for (const name of readdirSync(dir)) {
+    if (!name.endsWith(".json")) continue;
+    const parsed: unknown = JSON.parse(readFileSync(join(dir, name), "utf8"));
+    const walk = (value: unknown, path: string) => {
+      if (Array.isArray(value)) {
+        value.forEach((v, i) => walk(v, `${path}[${i}]`));
+      } else if (value && typeof value === "object") {
+        for (const [k, v] of Object.entries(value)) {
+          assert.ok(
+            !forbiddenKey.test(k),
+            `${name} ${path}.${k} is a ranking-shaped key`,
+          );
+          walk(v, `${path}.${k}`);
+        }
+      }
+    };
+    walk(parsed, name);
+  }
 });
 
 /**

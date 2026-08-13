@@ -4,8 +4,9 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-12, after the Legistar adapter and the vendor review
-(tracker D12, D14). See §4.7 and §7.
+Last updated: 2026-08-14, after the regression-and-restoration session —
+the officials surface restored and guarded (M23), D28/D29 wired, the Morris
+County ballot shipped (S2), and the defects intake opened. See §11 and §7.
 
 ---
 
@@ -51,7 +52,7 @@ works.
 | `corepack pnpm session:start` | Start-of-session sweep, then the dev server — see §8. `--check` starts nothing |
 | `corepack pnpm dev` | Development server. Refuses if 3000 is taken; records its pid in `.dev-server.pid` |
 | `corepack pnpm build` | Production build |
-| `corepack pnpm test` | `node --test` over `tests/` — 226 tests (2026-08-13) |
+| `corepack pnpm test` | `node --test` over `tests/` — 250 tests (2026-08-14) |
 | `corepack pnpm lint` | ESLint |
 | `corepack pnpm ingest <source>` | Run one adapter end to end — `composite` prints per-source accounting and retrieves agenda documents |
 | `corepack pnpm meetings:report` | The four-zip gate: meetings per zip, contributing sources, unwired bodies. Live network |
@@ -425,6 +426,7 @@ branch. It holds seven files, flat — six copied from the repo, one generated:
 | `abuse-policy.md` | `docs/abuse-policy.md` |
 | `vendor-review.md` | `docs/vendor-review.md` |
 | `source-ladder.md` | `docs/source-ladder.md` |
+| `defects.md` | `docs/defects.md` |
 | `state.md` | `docs/state.md` |
 | `tracker.csv` | `docs/tracker.csv` |
 | `types.ts` | `lib/sources/types.ts` |
@@ -1738,7 +1740,7 @@ correct — `resolveZip` only reports it when the table is partial.
 counties, so a reader can click districts in places that have no meetings behind
 them. Honest, and the coverage tier says so, but the asymmetry is new.
 
-**Map-layer test coverage is still thin.** 197 tests now cover the cascade, time
+**Map-layer test coverage is still thin.** 250 tests (2026-08-14) now cover the cascade, time
 handling, OCD identity, the tier axis, district disambiguation, fixture
 provenance, county subdivisions and the registry oracle. Nothing tests marker
 reconciliation, camera logic, or basemap resolution — which is part of why the
@@ -1779,7 +1781,14 @@ replaced.
 
 ## 7. Current state of the branch
 
-**Working on `claude/composite-source-and-reprioritization`** (2026-08-13),
+**Working on `claude/restore-representation-session-0814`** (2026-08-14),
+branched from `main` at the PR #20 merge — the session §11 records:
+regression fix (M23), D28/D29 curated overlay, S2 ballot, M24/M25 defect
+fixes, this document set. **test 250 pass · lint clean · tsc clean · build
+exit 0.** The paragraphs below describe earlier sessions' branches and are
+kept as the historical record they were.
+
+**Previously: `claude/composite-source-and-reprioritization`** (2026-08-13),
 branched from `main` at the PR #18 merge. This is the session that retired the
 mock: the composite is the app's active source and all four target zips return
 real meetings at the exact tier — see §9 for the reprioritization it happened
@@ -1986,8 +1995,9 @@ the edit worked is the edit itself, and checking for it costs one command.
 
 This is the same shape as the five states above, one level down: not an
 environment that lies, but an *operation* that reports success for having done
-nothing. **It has now happened four times in this project**, in four different
-disguises:
+nothing. **It has now happened repeatedly in this project**, in different
+disguises (later sightings: the tail-masked exit code and the NovusAgenda
+200-with-zero-meetings HIT, both §10; the officials panel, 2026-08-14):
 
 | Instance | Presented as | Actually |
 |---|---|---|
@@ -1995,6 +2005,9 @@ disguises:
 | Zero-match identifier joins | a clean build | `cd:0` and NH `sldl:` matching nothing — §4.8, §4.9 |
 | The dev server on another port | a working page | last session's build on 3001 — the `predev` guard |
 | PR #14's documentation gap | a green ship | a `String.replace` that matched nothing |
+| The tail-masked exit code | build green | `\| tail -3` reporting tail's status, not the build's — §10 |
+| NovusAgenda's empty archive | a wired source (HIT) | 200 with zero meetings, recorded as working — §10 |
+| **The officials panel at the exact tier** | a clean demo with real meetings | the only surface rendering representation (`coverage-notice.tsx`) returned null on `exact`; the composite made every zip exact, so 537 federal officials and three state rosters left the page with every test green. Guarded now: the render gate lives in `lib/registry/representation.ts` and `tests/representation.test.ts` holds it against the committed rosters — a panel whose store is populated may not render nothing. 2026-08-14, M23 |
 
 The first three are now guarded by code — `resolveBasemap()` returns null rather
 than substituting, the officeholder builds print matched-against-held counts,
@@ -2019,12 +2032,34 @@ So the habit, stated plainly:
 The general form: **an operation that can do nothing must be asked what it
 did.**
 
+### Working rule: a MISS is dated, and failures are recorded before the ship
+
+**A recorded MISS is a fact about one attempt — this URL, this method, this
+date — never a verdict about the record.** Failing Tuesday does not mean
+failing Thursday: sources come online, sites get rebuilt, feeds get
+populated. Any hunt older than ~30 days is presumed stale and worth
+re-running before its misses are believed. Staleness is checkable, not
+remembered: every audit record in `lib/registry/coverage-audit.ts` carries
+`attemptedAt`, and the consolidated MISS list in `docs/source-ladder.md`
+dates its entries.
+
+And before any handoff ships: **every approach that failed this session goes
+into `source-ladder.md` or this section**, in enough detail that a future
+session can either avoid it or deliberately retry it. An unrecorded failure
+will be paid for twice — once when it happened, and once when the next
+session rediscovers it from scratch.
+
 ### Starting a session: `pnpm session:start`
 
 ```
 pnpm session:start            check, then start the dev server
 pnpm session:start --check    report only, start nothing
 ```
+
+**Then read `docs/defects.md` before anything else** (since 2026-08-14):
+it is the author's production scratchpad. Triage anything new into tracker
+rows and mark each entry with the row ID it became — the author types
+observations; the session does the bookkeeping.
 
 Three checks, then it brings up the dev server through `pnpm dev` — through the
 package manager deliberately, so `predev` runs and regenerates
@@ -2151,7 +2186,7 @@ State as of 2026-08-12, verified rather than assumed:
 - **R07 is fixed.** `--ship` fast-forwards local `main` and pushes `-u` for a
   branch with no upstream; the plain check and `session:start` both report a
   stale local `main`. If the repo ever still looks empty, it is not — §7.
-- **226 tests, lint, tsc and build all pass.** (Updated 2026-08-13 evening; was 197 that morning.) M16, M17, M21, R07, R09, R10,
+- **250 tests, lint, tsc and build all pass.** (Updated 2026-08-14; was 226 on 2026-08-13.) M16, M17, M21, R07, R09, R10,
   D14 and M20 all Done with evidence in the tracker. D02, D03, D12 and M05 are
   **In progress** with the evidence recorded and the reason each is not Done
   stated on the row — the Legistar adapter is not the app's source, the rosters
@@ -2477,3 +2512,154 @@ HEAD sha served. The end-of-session kill in `handoff` stays.
 - OnBase's PHA board and joint meetings stay dropped-and-counted
   (rejected: guessing City Hall — a pin in roughly the right place is a
   fabricated citation wearing a map marker).
+
+---
+
+## 11. The 2026-08-14 regression-and-restoration session
+
+Branch `claude/restore-representation-session-0814`. Ran unattended under
+the standing rules plus one the author fixed for every trade: **correct
+first, fast second** — now a constitution section in `CLAUDE.md`.
+**test 250 pass · lint clean · tsc clean · build exit 0** on every commit.
+
+### The regression: success in meetings deleted representation
+
+The author found production thinner than the build before it — the 537
+federal officials, the state legislators and the governing-body list were
+not reaching the page. Diagnosed before touching anything, against a local
+production build of the deployed commit (production itself is 401-gated to
+every plain client — that is the unlisted posture working):
+
+| Surface | 85701 | 85641 | 07866 | 03255 |
+|---|---|---|---|---|
+| Meeting list | intact (4, exact) | intact (3) | intact (11) | intact (1) |
+| District overlays | intact (119 feats) | intact (82) | intact (116) | intact (73) |
+| Officials/representation panel | **absent** | **absent** | **absent** | **absent** |
+
+The API shipped 6 named officials per zip; nothing rendered them. **Cause:**
+`coverage-notice.tsx` — the only surface rendering representation —
+returned null on the `exact` tier, a gate present since the first map
+commit. Invisible while the demo zips sat on widened/gap rungs; the
+composite serving real meetings made every zip exact and silently deleted
+the officials with every test green. Not the node:fs boundary, not
+tree-shaking, not the registry rewiring, not a dropped prop — all four
+prime suspects checked out clean (the Netlify function trace includes every
+data file; the route returns full coverage).
+
+**Fix and guard:** the render gate moved to `lib/registry/representation.ts`
+where `tests/representation.test.ts` holds it against the *committed*
+rosters and geometry — a panel whose store is populated may not render
+nothing, at any tier, at any of the four zips. Same-shape guard for the
+district overlays (every layer's committed file must hold features). The
+notice now renders on exact as "Who governs here" with an all-wired lead;
+amber stays reserved for failure rungs. Sighting added to §8's table.
+
+### D28/D29 as decided: no identifier minted, bodies first-class
+
+`Meeting.ocdId`, the wiring rows and the venue-cache key all admit null; a
+null-division meeting is local-tier by construction (`tierForMeeting`); the
+convention question moved whole to tracker **D31** with this session's
+evidence in it. New `lib/registry/curated-bodies.ts` overlay (58 rows,
+checked at build): PCC's Governing Board live through the existing diligent
+adapter, the PHA Board (its own agenda proved the Mayor and Council sit as
+its board in the M&C Chambers — venue cited to that agenda), and all 56
+boards/commissions in the Tucson Clerk's own directory, names verbatim.
+
+The find that unlocked meetings: the Clerk's directory renders nothing to a
+plain client because it embeds `clerksboards.tucsonaz.gov` — which
+server-renders every board page (schedule, location, current agenda) to
+this project's polite UA. The new `clerksboards` adapter expands the
+Clerk's published schedules (two grammars; anything else drops counted;
+cancellation only from the Clerk's own "(Canceled)" agenda title). Five
+boards wired live with cited venues; 51 KNOWN_UNCOVERED. Registry: 940
+divisions, **323 bodies**. Coverage language now splits governing bodies
+from advisory ones so "N bodies govern" never counts a committee.
+
+The four-zip gate after the refresh — **85 meetings from 8/8 sources**,
+85701 now visibly the deepest zip (the author's demo):
+
+| Zip | Meetings | Tier | Sources |
+|---|---|---|---|
+| 85701 | **17** (was 5) | exact | clerksboards 10, diligent 4 (incl. PCC 3), onbase 3 (incl. PHA) |
+| 85641 | 3 | exact | apptegy 3 |
+| 07866 | 11 | exact | iqm2 6, civicplus 3, apptegy 2 |
+| 03255 | 1 | exact | diligent/civicweb 1 |
+
+### S2: the Morris County ballot shipped (September 19 is the clock)
+
+`/ballot?zip=07866` renders every contest a Rockaway Township voter sees on
+2026-11-03, curated from the county clerk's own filed-candidate PDFs into
+`data/ballot/nj-morris-2026.json` behind a `BallotSource` contract parallel
+to `MeetingSource` (D08's national feed becomes a source swap): US Senate
+(4 candidates), US House NJ-11 (3), County Commissioner (2), Rockaway Twp
+BOE vote-for-2 plus unexpired (4), Morris Hills Regional's Rockaway seats
+(2) — and two **cited absences**: the clerk's own "NO LOCAL ELECTION" for
+the township, and no statewide public question as of the state's 07/27
+update. The NJ date strip (VBM mails Sep 19, registration Oct 13, early
+voting Oct 24–Nov 1) cites the state's official timeline PDF and is shaped
+for AZ/NH next. Neutrality: alphabetical order (the clerk's ballot-position
+drawing is a scan with no text layer — recorded miss), incumbency null
+(the filing does not state it), guard tests extended to the ballot shapes
+*and* the committed JSON, and the transparency page now says: ballot
+information is presented as filed; we never suggest how to vote.
+
+### The defects intake, and the first two fixes
+
+`docs/defects.md` is the author's standing production scratchpad (mirrored
+to Drive): dump observations freeform; the next session triages into
+tracker rows and marks each line. **Session-open step: read it first.**
+
+- **M24 — "Reset all" did not work.** Two compounding faults: the handler
+  reset only `filters` while five control groups had grown around it, and
+  the active-count treated the *default* district-type view as active — so
+  a fresh page read "Filters 1" and the button visibly did nothing. Fix is
+  structural: `lib/state/reset.ts` is a registry of resettable controls;
+  reset and the badge derive from it; `tests/reset-registry.test.ts` fails
+  the build when a `UiState` field arrives unregistered. Reset means
+  return-to-default-view and never closes selections. "Show districts"
+  stays a persisted preference, declared with its reason.
+- **M25 — district types gained "select all" / "clear"** in the existing
+  link style. The default view stays three types; Reset all returns to it.
+
+### S1 deferred, and why that is recorded rather than hidden
+
+Tracker **M26**: the approved verbatim wording for the 4.6.3 prompt is not
+in the repo (state.md says it lives in the author's reprioritization
+document), and substituting wording the author specifically approved
+differently would violate the build-exactly-as-recorded instruction. The
+session brief's own cut order ranks the ballot above S1, and the ballot
+shipped. **Author step: paste the approved wording into this file (or
+commit the reprioritization document) and M26 unblocks.**
+
+### Also in this session
+
+- The retry rule is now a working rule in §8: a MISS is a dated fact about
+  one attempt, hunts older than ~30 days are presumed stale, and every
+  failed approach is recorded before a handoff ships. `attemptedAt` already
+  dates every audit record, so staleness is checkable rather than
+  remembered.
+- Ladder gained the 2026-08-14 rung set: the embedded frame's own host, the
+  UA-sensitive bot wall, OnBase `ViewDocument` behind the `Downloadfile`
+  interstitial, the body's own agenda PDF as venue citation, the statutory
+  annual Public Notice Statement, and published-schedule-as-feed.
+- One extraction failure recorded honestly: OnBase's PHA agenda stored with
+  `extraction: failed` because the `Downloadfile` URL serves a JS
+  interstitial to non-browsers; readers get the working link in a browser,
+  and switching the adapter's agenda link to the `ViewDocument` form is a
+  small open improvement noted here rather than silently fixed.
+
+### Decisions taken as cheaper-to-undo, with the rejected alternative
+
+- Representation renders always on exact (rejected: a separate sidebar
+  officials panel — two surfaces reading the same store drift).
+- The who-governs card is uncollapsed on phone (rejected: collapsing —
+  wait for a tester to say it crowds; the author asked for restoration).
+- PHA and PCC boards carry `bodyClass: GOVERNING` as governing boards of
+  their own entities; curated rows tag by class, derived rows by division
+  type (rejected: minting a new class — D31's question, not this session's).
+- The Joint M&C/Pima meeting stays dropped-and-counted (its venue varies
+  per meeting — the Merrimack lesson).
+- "Show districts" excluded from Reset all as a persisted preference
+  (rejected: threading reset through the localStorage hook).
+- S1 deferred with the author step recorded (rejected: shipping substituted
+  wording).

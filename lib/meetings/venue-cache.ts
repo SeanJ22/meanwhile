@@ -25,8 +25,13 @@ import type { OcdId } from "../sources/types.ts";
 export interface VenueEntry {
   /** Adapter name, e.g. "onbase". First key segment. */
   sourceId: string;
-  /** The body whose meetings this resolution applies to. Second key segment. */
-  bodyOcdId: OcdId;
+  /**
+   * The body whose meetings this resolution applies to. Second key segment.
+   * Null for a body with no Census division (D28) — the key then degrades to
+   * `(sourceId, rawLocationString)`, which holds until two division-less
+   * bodies share a source and a location string; D31 owns the real fix.
+   */
+  bodyOcdId: OcdId | null;
   /** The raw location string as observed in the feed. Third key segment. */
   match: string;
   /** Rendered to the reader. */
@@ -56,6 +61,9 @@ export const PLACELESS_LOCATIONS = [
   "webex",
   "via zoom webinar",
   "zoom webinar",
+  // Tucson Clerk's boards pages publish these for virtual-only bodies.
+  "microsoft teams (virtual)",
+  "microsoft teams virtual",
 ];
 
 /** Reduce a location string to something two spellings of one room agree on. */
@@ -69,6 +77,145 @@ export function isPlacelessLocation(raw: string): boolean {
 }
 
 export const VENUE_CACHE: VenueEntry[] = [
+  // ── OnBase: Tucson Public Housing Authority ─────────────────────────────
+  // The PHA's own published agenda (2026-08-18) states the Mayor and Council
+  // sit as the PHA Board of Commissioners in the Mayor and Council Chambers.
+  // Same building and coordinates as the M&C rows below.
+  {
+    sourceId: "onbase",
+    bodyOcdId: "ocd-division/country:us/state:az/place:tucson",
+    match: "Public Housing Authority Board of Commissioners",
+    name: "Tucson City Hall, Mayor and Council Chambers",
+    address: "255 W. Alameda St, Tucson, AZ 85701",
+    lat: 32.223037,
+    lng: -110.975001,
+    addressSourceUrl:
+      "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/ViewDocument/agenda.pdf?meetingId=1981&documentType=1",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=255+W+Alameda+St%2C+Tucson%2C+AZ+85701&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-14",
+  },
+
+  // ── Diligent: Pima Community College Governing Board (D28) ──────────────
+  // The board-meetings page publishes the District Office address; the
+  // service's own location strings name rooms in that building. "District
+  // Office TBD" is the same building with the room not yet assigned — the
+  // building is the published venue either way.
+  {
+    sourceId: "diligent",
+    bodyOcdId: null,
+    match: "District Office, Community/Board Room C-105",
+    name: "PCC District Office, Community/Board Room C-105",
+    address: "4905 E. Broadway Blvd., Tucson, AZ 85709",
+    lat: 32.221683,
+    lng: -110.887102,
+    addressSourceUrl:
+      "https://www.pima.edu/about-pima/leadership-policies/governing-board/board-meetings/index.html",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=4905+E+Broadway+Blvd%2C+Tucson%2C+AZ+85709&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-14",
+  },
+  {
+    sourceId: "diligent",
+    bodyOcdId: null,
+    match: "District Office, Board Conference Room C-228",
+    name: "PCC District Office, Board Conference Room C-228",
+    address: "4905 E. Broadway Blvd., Tucson, AZ 85709",
+    lat: 32.221683,
+    lng: -110.887102,
+    addressSourceUrl:
+      "https://www.pima.edu/about-pima/leadership-policies/governing-board/board-meetings/index.html",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=4905+E+Broadway+Blvd%2C+Tucson%2C+AZ+85709&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-14",
+  },
+  {
+    sourceId: "diligent",
+    bodyOcdId: null,
+    match: "District Office TBD",
+    name: "PCC District Office",
+    address: "4905 E. Broadway Blvd., Tucson, AZ 85709",
+    lat: 32.221683,
+    lng: -110.887102,
+    addressSourceUrl:
+      "https://www.pima.edu/about-pima/leadership-policies/governing-board/board-meetings/index.html",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=4905+E+Broadway+Blvd%2C+Tucson%2C+AZ+85709&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-14",
+  },
+
+  // ── Clerksboards: Tucson boards with published physical venues (D29) ────
+  // Each `match` is the board page's own "4) Meeting Location" text verbatim;
+  // the page is both the address citation and the schedule source.
+  {
+    sourceId: "clerksboards",
+    bodyOcdId: "ocd-division/country:us/state:az/place:tucson",
+    match: "Microsoft Teams (Hybrid Format) / Mayor and Council Chambers; 255 W Alameda",
+    name: "Tucson City Hall, Mayor and Council Chambers",
+    address: "255 W. Alameda St, Tucson, AZ 85701",
+    lat: 32.223037,
+    lng: -110.975001,
+    addressSourceUrl: "https://clerksboards.tucsonaz.gov/boards/?board=38",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=255+W+Alameda+St%2C+Tucson%2C+AZ+85701&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-14",
+  },
+  {
+    sourceId: "clerksboards",
+    bodyOcdId: "ocd-division/country:us/state:az/place:tucson",
+    match: "Zoom Hybrid Format / City Hall - 1st Floor",
+    name: "Tucson City Hall, 1st Floor",
+    address: "255 W. Alameda St, Tucson, AZ 85701",
+    lat: 32.223037,
+    lng: -110.975001,
+    addressSourceUrl: "https://clerksboards.tucsonaz.gov/boards/?board=8",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=255+W+Alameda+St%2C+Tucson%2C+AZ+85701&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-14",
+  },
+  {
+    sourceId: "clerksboards",
+    bodyOcdId: "ocd-division/country:us/state:az/place:tucson",
+    match:
+      "Microsoft Teams (Hybrid Format) / Tucson Water 3rd Floor Conference Room; 310 W. Alameda St.",
+    name: "Tucson Water, 3rd Floor Conference Room",
+    address: "310 W. Alameda St, Tucson, AZ 85701",
+    lat: 32.222932,
+    lng: -110.975639,
+    addressSourceUrl: "https://clerksboards.tucsonaz.gov/boards/?board=23",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=310+W+Alameda+St%2C+Tucson%2C+AZ&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-14",
+  },
+  {
+    sourceId: "clerksboards",
+    bodyOcdId: "ocd-division/country:us/state:az/place:tucson",
+    match:
+      "Microsoft Teams (Hybrid Format) / Parks Administration Building; 900 S Randolph way",
+    name: "Tucson Parks Administration Building",
+    address: "900 S. Randolph Way, Tucson, AZ 85716",
+    lat: 32.21063,
+    lng: -110.918028,
+    addressSourceUrl: "https://clerksboards.tucsonaz.gov/boards/?board=63",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=900+S+Randolph+Way%2C+Tucson%2C+AZ&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-14",
+  },
+  {
+    sourceId: "clerksboards",
+    bodyOcdId: "ocd-division/country:us/state:az/place:tucson",
+    match:
+      "Microsoft Teams (Hybrid Format) / Ward 6 Council Office; 3202 E. 1st Street, 85716",
+    name: "Ward 6 Council Office",
+    address: "3202 E. 1st Street, Tucson, AZ 85716",
+    lat: 32.235068,
+    lng: -110.925106,
+    addressSourceUrl: "https://clerksboards.tucsonaz.gov/boards/?board=19",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=3202+E+1st+St%2C+Tucson%2C+AZ+85716&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-14",
+  },
+
   // ── OnBase: Tucson Mayor & Council ──────────────────────────────────────
   // OnBase publishes no location field, so the meeting name is the key. Only
   // the two regular Mayor & Council sittings are mapped: the City's own
@@ -259,7 +406,7 @@ export const VENUE_CACHE: VenueEntry[] = [
 
 export function resolveVenue(
   sourceId: string,
-  bodyOcdId: OcdId,
+  bodyOcdId: OcdId | null,
   rawLocation: string,
 ): VenueEntry | undefined {
   const key = venueKey(rawLocation);

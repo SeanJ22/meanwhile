@@ -10,7 +10,12 @@ test("every comment-access row names a real registry body and cites a source", (
   const bodyIds = new Set(registry.bodies.map((b) => b.id));
   for (const row of COMMENT_ACCESS) {
     assert.ok(bodyIds.has(row.bodyId), `${row.bodyId} is not in the registry`);
-    assert.equal(row.bodyId.split("#")[0], row.ocdId, row.bodyId);
+    if (row.ocdId === null) {
+      // Division-less bodies (D28) use the documented curated: id scheme.
+      assert.match(row.bodyId, /^curated:/, row.bodyId);
+    } else {
+      assert.equal(row.bodyId.split("#")[0], row.ocdId, row.bodyId);
+    }
     assert.match(row.sourceUrl, /^https:\/\//, `${row.bodyId} must cite a page`);
   }
 });
@@ -34,9 +39,31 @@ test("a YES row states where the period falls, in the body's own terms", () => {
   }
 });
 
-test("lookup is by division, the key every meeting carries", () => {
-  const tucson = commentAccessFor("ocd-division/country:us/state:az/place:tucson");
-  assert.ok(tucson);
-  assert.equal(tucson.timeLimit, "3 minutes per speaker.");
-  assert.equal(commentAccessFor("ocd-division/country:us/state:mt/place:absarokee"), undefined);
+test("lookup is by division plus published body name, never the wrong body's rule", () => {
+  // Tucson now carries several bodies (D29). The Mayor & Council rule must
+  // resolve for Mayor & Council meetings and must NOT resolve for a board
+  // meeting in the same division — a Planning Commission meeting rendering
+  // speaker-card rules it does not follow is a false claim.
+  const tucsonOcd = "ocd-division/country:us/state:az/place:tucson";
+  const mc = commentAccessFor(tucsonOcd, "Mayor & Council");
+  assert.ok(mc);
+  assert.equal(mc.timeLimit, "3 minutes per speaker.");
+
+  const pc = commentAccessFor(tucsonOcd, "Planning Commission");
+  assert.ok(pc);
+  assert.equal(pc.commentPeriod, "UNKNOWN");
+
+  // A body with no row of its own gets nothing — never a sibling's rule.
+  assert.equal(commentAccessFor(tucsonOcd, "Design Review Board"), undefined);
+  assert.equal(commentAccessFor(tucsonOcd), undefined);
+
+  // The division-less path (D28): PCC's rule resolves through the null key.
+  const pcc = commentAccessFor(null, "Regular Governing Board");
+  assert.ok(pcc);
+  assert.equal(pcc.commentPeriod, "YES");
+
+  assert.equal(
+    commentAccessFor("ocd-division/country:us/state:mt/place:absarokee"),
+    undefined,
+  );
 });

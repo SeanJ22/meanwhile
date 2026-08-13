@@ -26,7 +26,8 @@ export interface AgendaDocument {
   /** `<meetingId>@<contentHash>` — one row per distinct version. */
   id: string;
   meetingId: string;
-  ocdId: OcdId;
+  /** Null for a division-less body's meeting (D28). */
+  ocdId: OcdId | null;
   /** Where the document was fetched from. Observed, never constructed. */
   documentUrl: string;
   /** SHA-256 of the raw bytes. The revision detector. */

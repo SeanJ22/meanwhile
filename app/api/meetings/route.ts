@@ -62,7 +62,11 @@ export async function GET(request: Request) {
           .filter((s) => !s.ok)
           .map((s) => ({
             source: s.source,
-            ocdIds: wiringForSourceName(s.source).map((row) => row.ocdId),
+            // A division-less body (null ocdId) has no division to attribute
+            // the failure to; its absence is visible on the body itself.
+            ocdIds: wiringForSourceName(s.source).flatMap((row) =>
+              row.ocdId ? [row.ocdId] : [],
+            ),
           })),
       }
     : null;

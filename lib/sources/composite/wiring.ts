@@ -5,6 +5,7 @@ import {
 } from "../../registry/source-wiring.ts";
 import { makeApptegySource } from "../apptegy/index.ts";
 import { makeCivicPlusSource } from "../civicplus/index.ts";
+import { makeClerksBoardsSource } from "../clerksboards/index.ts";
 import { makeDiligentSource } from "../diligent/index.ts";
 import { makeIqm2Source } from "../iqm2/index.ts";
 import { makeRevizeSource } from "../revize/index.ts";
@@ -77,6 +78,12 @@ const CAPABILITIES: Array<{
     name: "diligent",
     types: ["DILIGENT", "CIVICWEB"],
     make: (rows) => makeDiligentSource(rows) as ReportingMeetingSource<unknown>,
+  },
+  {
+    name: "clerksboards",
+    types: ["CLERKSBOARDS"],
+    make: (rows) =>
+      makeClerksBoardsSource(rows) as ReportingMeetingSource<unknown>,
   },
   {
     name: "iqm2",

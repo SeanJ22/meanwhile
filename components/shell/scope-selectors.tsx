@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 
-import { matchesTiers } from "@/lib/ocd/tiers";
+import { tierForMeeting } from "@/lib/state/derive";
 import { useShellData } from "@/lib/state/data";
 import { useUi, useUiDispatch } from "@/lib/state/provider";
 
@@ -31,7 +31,11 @@ export function ScopeSelectors() {
   const jurisdictions = useMemo(() => {
     const seen = new Map<string, string>();
     for (const meeting of allMeetings) {
-      if (!matchesTiers(meeting.ocdId, tiers)) continue;
+      const tier = tierForMeeting(meeting);
+      if (tier === null || !tiers.includes(tier)) continue;
+      // A division-less body (null ocdId) has no identifier to select by;
+      // it stays reachable through the body dropdown and search instead.
+      if (meeting.ocdId === null) continue;
       if (!seen.has(meeting.ocdId)) seen.set(meeting.ocdId, meeting.jurisdiction);
     }
     return [...seen.entries()].sort((a, b) => a[1].localeCompare(b[1]));
@@ -40,7 +44,8 @@ export function ScopeSelectors() {
   const bodies = useMemo(() => {
     const seen = new Map<string, string>();
     for (const meeting of allMeetings) {
-      if (!matchesTiers(meeting.ocdId, tiers)) continue;
+      const tier = tierForMeeting(meeting);
+      if (tier === null || !tiers.includes(tier)) continue;
       if (jurisdiction && meeting.ocdId !== jurisdiction) continue;
       const key = `${meeting.ocdId}|${meeting.bodyName}`;
       if (!seen.has(key)) seen.set(key, meeting.bodyName);

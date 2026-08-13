@@ -174,11 +174,15 @@ test("07866 sits in two school districts at once", () => {
 });
 
 test("every derived body is labelled structural, never sourced", () => {
-  for (const body of registry.bodies) {
+  const derived = registry.bodies.filter(
+    (b) => b.bodyOrigin === "DERIVED_FROM_DIVISION_TYPE",
+  );
+  assert.ok(derived.length >= 265, "the derived rows went missing");
+
+  for (const body of derived) {
     // Unchanged by 4.6.10 and load-bearing: a source hunt can find a body's
     // website without making the body's EXISTENCE a sourced claim. That stays
-    // structural, and the name stays null, for all 265 rows.
-    assert.equal(body.bodyOrigin, "DERIVED_FROM_DIVISION_TYPE");
+    // structural, and the name stays null, on every derived row.
     // coverageStatus is no longer uniform — an audited body carries what its
     // hunt found. What must never happen is a body claiming an exhausted
     // search; tests/link-ladder.test.ts holds that line against the audit file.
@@ -196,6 +200,40 @@ test("every derived body is labelled structural, never sourced", () => {
     );
     assert.equal(body.provenance.verifiedAt, null);
   }
+});
+
+test("every curated body carries a sourced name with its citation", () => {
+  // The curated bargain (D28/D29): a name may appear exactly because the page
+  // it was read from is cited. One without the other is a minted claim.
+  const curated = registry.bodies.filter((b) => b.bodyOrigin === "CURATED");
+  assert.ok(curated.length > 0, "the curated overlay went missing");
+
+  for (const body of curated) {
+    assert.ok(body.name, `${body.id} has no name — curation read it off a page`);
+    assert.ok(
+      body.provenance.sourceUrl,
+      `${body.id} names a body with no citation`,
+    );
+    assert.notEqual(body.coverageStatus, "NO_SOURCE_FOUND");
+  }
+
+  // The division-less path (D28) exists and stays the exception.
+  const divisionless = curated.filter((b) => b.ocdId === null);
+  assert.ok(divisionless.length >= 1, "PCC's division-less row went missing");
+
+  // One division, many bodies (D29) — the registry must never assume one
+  // body per division.
+  const tucson = registry.bodies.filter(
+    (b) => b.ocdId === "ocd-division/country:us/state:az/place:tucson",
+  );
+  assert.ok(
+    tucson.length > 50,
+    `Tucson should carry its boards and commissions; got ${tucson.length}`,
+  );
+
+  // No two bodies share an id, curated included.
+  const ids = new Set(registry.bodies.map((b) => b.id));
+  assert.equal(ids.size, registry.bodies.length, "duplicate body ids");
 });
 
 test("no legislative district generates a meeting body", () => {

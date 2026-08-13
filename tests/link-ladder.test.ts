@@ -152,7 +152,11 @@ test("NO_SOURCE_FOUND is never claimed for a body nobody looked at", () => {
 
 test("a body with no audit row is NOT_ATTEMPTED, and that is most of them", () => {
   const audits = indexAudits(COVERAGE_AUDIT_FILE);
-  const unaudited = registry.bodies.filter((b) => !audits.has(b.id));
+  // Derived rows only: a curated row (D28/D29) carries its status from the
+  // curation itself, whose citation lives on the row's own provenance.
+  const unaudited = registry.bodies.filter(
+    (b) => !audits.has(b.id) && b.bodyOrigin === "DERIVED_FROM_DIVISION_TYPE",
+  );
   assert.ok(unaudited.length > 0);
   for (const body of unaudited) {
     assert.equal(

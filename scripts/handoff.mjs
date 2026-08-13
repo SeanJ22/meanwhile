@@ -80,6 +80,9 @@ const MIRRORED = [
   // Joined 2026-08-13: a standing document that constrains what gets built,
   // the same argument that put vendor-review.md here.
   ["docs/source-ladder.md", "source-ladder.md"],
+  // Joined 2026-08-14: the author's production-defect scratchpad — written
+  // from outside the repo, so it must be readable from outside the repo.
+  ["docs/defects.md", "defects.md"],
   ["docs/state.md", "state.md"],
   ["docs/tracker.csv", "tracker.csv"],
   ["lib/sources/types.ts", "types.ts"],

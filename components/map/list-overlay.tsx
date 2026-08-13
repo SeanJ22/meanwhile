@@ -4,7 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 
 import { haversineKm } from "@/lib/geo/distance";
 import { formatMeetingDate, formatMiles } from "@/lib/map/format";
-import { TIER_LABEL, tierForOcdId } from "@/lib/ocd/tiers";
+import { TIER_LABEL } from "@/lib/ocd/tiers";
+import { tierForMeeting } from "@/lib/state/derive";
 import { useShellData } from "@/lib/state/data";
 import { BODY_TYPE_LABEL, bodyTypeOf } from "@/lib/state/derive";
 import { useUi, useUiDispatch } from "@/lib/state/provider";
@@ -52,7 +53,7 @@ function groupKeyFor(meeting: Meeting, groupBy: ListGroupBy): string {
       return type ? BODY_TYPE_LABEL[type] : "Other";
     }
     case "district": {
-      const tier = tierForOcdId(meeting.ocdId);
+      const tier = tierForMeeting(meeting);
       return tier ? TIER_LABEL[tier] : "Unknown";
     }
     case "date":
@@ -237,7 +238,7 @@ export function ListOverlay({
                       key={meeting.id}
                       type="button"
                       className="al-row"
-                      style={tierVars(tierForOcdId(meeting.ocdId))}
+                      style={tierVars(tierForMeeting(meeting))}
                       onClick={() => {
                         onPickMeeting(meeting);
                         dispatch({ type: "list/open", open: false });

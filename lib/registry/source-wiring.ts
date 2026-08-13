@@ -21,8 +21,12 @@ import type { AgendaSourceType } from "./types.ts";
 export interface BodySourceWiring {
   /** Matches `Body.id` in the registry exactly. */
   bodyId: string;
-  /** The division whose government meets. The join key on every Meeting. */
-  ocdId: OcdId;
+  /**
+   * The division whose government meets. The join key on every Meeting.
+   * Null for a body with no Census division (D28) — the meeting then joins
+   * on nothing geographic and is local-tier by construction.
+   */
+  ocdId: OcdId | null;
   agendaSourceType: AgendaSourceType;
   /** Display only — never joined on. */
   jurisdiction: string;
@@ -117,6 +121,88 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
       "typeName:10": "Selectboard",
     },
     verifiedAt: "2026-08-13",
+  },
+
+  // ── D28: Pima Community College Governing Board ─────────────────────────
+  // A live Diligent tenant with no Census division: `ocdId` is null and the
+  // body is the curated registry row. Venue strings resolve through the
+  // venue cache against the District Office address PCC's own board page
+  // publishes; "VIRTUAL MEETING" rows drop placeless, counted.
+  {
+    bodyId: "curated:az/pima-community-college#governing",
+    ocdId: null,
+    agendaSourceType: "DILIGENT",
+    jurisdiction: "Pima Community College District, AZ",
+    publishingOrg: "Pima Community College Governing Board",
+    timeZone: "America/Phoenix",
+    config: {
+      slug: "pcc",
+      serviceBase: "https://pima.community.highbond.com",
+      // Verified live 2026-08-14: the service answers plain GET with venue
+      // strings (District Office rooms C-105 / C-228).
+      meetingPath: "/Portal/MeetingInformation.aspx?Org=Cal&Id=",
+    },
+    verifiedAt: "2026-08-14",
+  },
+
+  // ── D29: Tucson boards and commissions via the Clerk's boards app ───────
+  // clerksboards.tucsonaz.gov serves one server-rendered page per body with
+  // the published schedule, location and current agenda. These five carry a
+  // parseable schedule and a physical venue the page itself publishes; the
+  // other 51 bodies in the directory are curated registry rows awaiting
+  // either a schedule this parser reads or a venue citation.
+  {
+    bodyId: "ocd-division/country:us/state:az/place:tucson#planning-commission",
+    ocdId: "ocd-division/country:us/state:az/place:tucson",
+    agendaSourceType: "CLERKSBOARDS",
+    jurisdiction: "Tucson, AZ",
+    publishingOrg: "City of Tucson Clerk",
+    timeZone: "America/Phoenix",
+    config: { boardId: "38" },
+    verifiedAt: "2026-08-14",
+  },
+  {
+    bodyId: "ocd-division/country:us/state:az/place:tucson#board-of-adjustment",
+    ocdId: "ocd-division/country:us/state:az/place:tucson",
+    agendaSourceType: "CLERKSBOARDS",
+    jurisdiction: "Tucson, AZ",
+    publishingOrg: "City of Tucson Clerk",
+    timeZone: "America/Phoenix",
+    config: { boardId: "8" },
+    verifiedAt: "2026-08-14",
+  },
+  {
+    bodyId:
+      "ocd-division/country:us/state:az/place:tucson#citizens-water-advisory-committee",
+    ocdId: "ocd-division/country:us/state:az/place:tucson",
+    agendaSourceType: "CLERKSBOARDS",
+    jurisdiction: "Tucson, AZ",
+    publishingOrg: "City of Tucson Clerk",
+    timeZone: "America/Phoenix",
+    config: { boardId: "23" },
+    verifiedAt: "2026-08-14",
+  },
+  {
+    bodyId:
+      "ocd-division/country:us/state:az/place:tucson#tucson-parks-and-recreation-commission",
+    ocdId: "ocd-division/country:us/state:az/place:tucson",
+    agendaSourceType: "CLERKSBOARDS",
+    jurisdiction: "Tucson, AZ",
+    publishingOrg: "City of Tucson Clerk",
+    timeZone: "America/Phoenix",
+    config: { boardId: "63" },
+    verifiedAt: "2026-08-14",
+  },
+  {
+    bodyId:
+      "ocd-division/country:us/state:az/place:tucson#community-police-advisory-review-board",
+    ocdId: "ocd-division/country:us/state:az/place:tucson",
+    agendaSourceType: "CLERKSBOARDS",
+    jurisdiction: "Tucson, AZ",
+    publishingOrg: "City of Tucson Clerk",
+    timeZone: "America/Phoenix",
+    config: { boardId: "19" },
+    verifiedAt: "2026-08-14",
   },
 
   // ── CivicPlus / CivicEngage ─────────────────────────────────────────────

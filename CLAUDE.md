@@ -12,6 +12,17 @@ Civic app, two halves. Consumer side shows what's on a user's ballot with source
 - MapLibre GL with a vector tile provider. Not Google Maps.
 - Mobile is responsive web first. A React Native client comes later if push notifications justify it, and will consume the same API.
 
+## The order of every trade
+
+**Correct first. Fast second. Nothing third.** Perfection and speed are both
+mandatory, and when they collide, correct wins — always. A fast wrong answer
+in this product is a false claim about a government, and that is the one
+failure it cannot survive. Never ship partial data as complete, never let
+green stand in for verified, never trade an honest gap for a plausible
+guess. Data is the trophy, and nothing outside the four limits in the
+public-records rule below stands between this product and it. Public records
+are the product's birthright. Difficulty is friction, not refusal. Go get it.
+
 ## Non-negotiables in code
 
 **Never generate a candidate position.** Every position, vote, or stance rendered to a user must carry a source record pointing at a specific statement, roll-call vote, filing, or questionnaire response. If no source exists, the field is null and the UI renders "no public position found." Do not infer from party affiliation, endorsements, or similar candidates. This applies to LLM-generated summaries too — summaries paraphrase a cited source, never fill a gap.

@@ -1,6 +1,6 @@
 {
  "formatVersion": 1,
- "generatedAt": "2026-08-13T18:56:01.690Z",
+ "generatedAt": "2026-08-13T21:01:28.899Z",
  "sources": [
   {
    "source": "legistar",
@@ -33,10 +33,10 @@
    "ok": true,
    "error": null,
    "fetched": 1,
-   "normalized": 8,
+   "normalized": 9,
    "drops": {
     "placeless": 0,
-    "unknownVenue": 3,
+    "unknownVenue": 2,
     "unplaceableInTime": 0,
     "notConfigured": 0
    }
@@ -58,10 +58,23 @@
    "source": "diligent",
    "ok": true,
    "error": null,
-   "fetched": 2,
-   "normalized": 9,
+   "fetched": 3,
+   "normalized": 12,
    "drops": {
-    "placeless": 5,
+    "placeless": 6,
+    "unknownVenue": 0,
+    "unplaceableInTime": 0,
+    "notConfigured": 0
+   }
+  },
+  {
+   "source": "clerksboards",
+   "ok": true,
+   "error": null,
+   "fetched": 5,
+   "normalized": 15,
+   "drops": {
+    "placeless": 0,
     "unknownVenue": 0,
     "unplaceableInTime": 0,
     "notConfigured": 0
@@ -114,7 +127,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1820&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-13T18:55:57.681Z",
+    "collectedAt": "2026-08-13T21:01:22.865Z",
     "verifiedAt": null
    }
   },
@@ -137,7 +150,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1821&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-13T18:55:57.681Z",
+    "collectedAt": "2026-08-13T21:01:22.865Z",
     "verifiedAt": null
    }
   },
@@ -160,7 +173,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1822&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-13T18:55:57.681Z",
+    "collectedAt": "2026-08-13T21:01:22.865Z",
     "verifiedAt": null
    }
   },
@@ -183,7 +196,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1823&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-13T18:55:57.681Z",
+    "collectedAt": "2026-08-13T21:01:22.865Z",
     "verifiedAt": null
    }
   },
@@ -206,7 +219,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1824&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-13T18:55:57.681Z",
+    "collectedAt": "2026-08-13T21:01:22.865Z",
     "verifiedAt": null
    }
   },
@@ -225,11 +238,11 @@
    },
    "agendaUrl": "https://legistar.granicus.com/pima/meetings/2026/8/1854_A_Board_of_Supervisors_26-08-13_Online_Agenda.pdf",
    "jurisdiction": "Pima County, AZ",
-   "status": "SCHEDULED",
+   "status": "CONCLUDED",
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1854&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-13T18:55:57.681Z",
+    "collectedAt": "2026-08-13T21:01:22.865Z",
     "verifiedAt": null
    }
   },
@@ -252,7 +265,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1869&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-13T18:55:57.681Z",
+    "collectedAt": "2026-08-13T21:01:22.865Z",
     "verifiedAt": null
    }
   },
@@ -275,7 +288,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-13T18:55:57.217Z",
+    "collectedAt": "2026-08-13T21:01:22.299Z",
     "verifiedAt": null
    }
   },
@@ -298,7 +311,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-13T18:55:57.217Z",
+    "collectedAt": "2026-08-13T21:01:22.299Z",
     "verifiedAt": null
    }
   },
@@ -321,7 +334,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-13T18:55:57.217Z",
+    "collectedAt": "2026-08-13T21:01:22.299Z",
     "verifiedAt": null
    }
   },
@@ -344,7 +357,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-13T18:55:57.217Z",
+    "collectedAt": "2026-08-13T21:01:22.299Z",
     "verifiedAt": null
    }
   },
@@ -367,7 +380,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-13T18:55:57.217Z",
+    "collectedAt": "2026-08-13T21:01:22.299Z",
     "verifiedAt": null
    }
   },
@@ -390,7 +403,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-13T18:55:57.217Z",
+    "collectedAt": "2026-08-13T21:01:22.299Z",
     "verifiedAt": null
    }
   },
@@ -413,7 +426,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-13T18:55:57.217Z",
+    "collectedAt": "2026-08-13T21:01:22.299Z",
     "verifiedAt": null
    }
   },
@@ -436,7 +449,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-13T18:55:57.217Z",
+    "collectedAt": "2026-08-13T21:01:22.299Z",
     "verifiedAt": null
    }
   },
@@ -459,7 +472,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-13T18:55:57.217Z",
+    "collectedAt": "2026-08-13T21:01:22.299Z",
     "verifiedAt": null
    }
   },
@@ -482,7 +495,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1946&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T18:55:57.427Z",
+    "collectedAt": "2026-08-13T21:01:22.902Z",
     "verifiedAt": null
    }
   },
@@ -505,7 +518,30 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1957&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T18:55:57.427Z",
+    "collectedAt": "2026-08-13T21:01:22.902Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "onbase:tucson:1981",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Public Housing Authority Board of Commissioners",
+   "title": "Public Housing Authority Board of Commissioners",
+   "startsAt": "2026-08-18T17:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson City Hall, Mayor and Council Chambers",
+    "address": "255 W. Alameda St, Tucson, AZ 85701",
+    "lat": 32.223037,
+    "lng": -110.975001
+   },
+   "agendaUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Public_Housing_Authority_Board_of_Commissioners_1981_Agenda_8_18_2026_5_30_00_PM.pdf?documentType=1&meetingId=1981",
+   "jurisdiction": "Tucson, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1981&doctype=1",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-13T21:01:22.902Z",
     "verifiedAt": null
    }
   },
@@ -528,7 +564,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1942&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T18:55:57.427Z",
+    "collectedAt": "2026-08-13T21:01:22.902Z",
     "verifiedAt": null
    }
   },
@@ -551,7 +587,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1927&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T18:55:57.427Z",
+    "collectedAt": "2026-08-13T21:01:22.902Z",
     "verifiedAt": null
    }
   },
@@ -574,7 +610,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1943&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T18:55:57.427Z",
+    "collectedAt": "2026-08-13T21:01:22.902Z",
     "verifiedAt": null
    }
   },
@@ -597,7 +633,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1928&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T18:55:57.427Z",
+    "collectedAt": "2026-08-13T21:01:22.902Z",
     "verifiedAt": null
    }
   },
@@ -620,7 +656,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1945&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T18:55:57.427Z",
+    "collectedAt": "2026-08-13T21:01:22.902Z",
     "verifiedAt": null
    }
   },
@@ -643,7 +679,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1956&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T18:55:57.427Z",
+    "collectedAt": "2026-08-13T21:01:22.902Z",
     "verifiedAt": null
    }
   },
@@ -666,7 +702,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:55:57.508Z",
+    "collectedAt": "2026-08-13T21:01:22.702Z",
     "verifiedAt": null
    }
   },
@@ -689,7 +725,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:55:57.508Z",
+    "collectedAt": "2026-08-13T21:01:22.702Z",
     "verifiedAt": null
    }
   },
@@ -712,7 +748,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:55:57.508Z",
+    "collectedAt": "2026-08-13T21:01:22.702Z",
     "verifiedAt": null
    }
   },
@@ -735,7 +771,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:55:57.508Z",
+    "collectedAt": "2026-08-13T21:01:22.702Z",
     "verifiedAt": null
    }
   },
@@ -758,7 +794,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:55:57.508Z",
+    "collectedAt": "2026-08-13T21:01:22.702Z",
     "verifiedAt": null
    }
   },
@@ -781,7 +817,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:55:57.508Z",
+    "collectedAt": "2026-08-13T21:01:22.702Z",
     "verifiedAt": null
    }
   },
@@ -804,7 +840,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:55:57.508Z",
+    "collectedAt": "2026-08-13T21:01:22.702Z",
     "verifiedAt": null
    }
   },
@@ -827,7 +863,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:55:57.508Z",
+    "collectedAt": "2026-08-13T21:01:22.702Z",
     "verifiedAt": null
    }
   },
@@ -850,7 +886,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:55:57.508Z",
+    "collectedAt": "2026-08-13T21:01:22.702Z",
     "verifiedAt": null
    }
   },
@@ -873,7 +909,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:55:57.508Z",
+    "collectedAt": "2026-08-13T21:01:22.702Z",
     "verifiedAt": null
    }
   },
@@ -896,7 +932,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:55:57.508Z",
+    "collectedAt": "2026-08-13T21:01:22.702Z",
     "verifiedAt": null
    }
   },
@@ -919,7 +955,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:55:57.508Z",
+    "collectedAt": "2026-08-13T21:01:22.702Z",
     "verifiedAt": null
    }
   },
@@ -942,7 +978,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:55:57.508Z",
+    "collectedAt": "2026-08-13T21:01:22.702Z",
     "verifiedAt": null
    }
   },
@@ -965,7 +1001,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:55:57.508Z",
+    "collectedAt": "2026-08-13T21:01:22.702Z",
     "verifiedAt": null
    }
   },
@@ -988,7 +1024,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:55:57.508Z",
+    "collectedAt": "2026-08-13T21:01:22.702Z",
     "verifiedAt": null
    }
   },
@@ -1011,7 +1047,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:55:57.508Z",
+    "collectedAt": "2026-08-13T21:01:22.702Z",
     "verifiedAt": null
    }
   },
@@ -1034,7 +1070,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T18:55:57.508Z",
+    "collectedAt": "2026-08-13T21:01:22.702Z",
     "verifiedAt": null
    }
   },
@@ -1057,7 +1093,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-13T18:55:58.879Z",
+    "collectedAt": "2026-08-13T21:01:23.993Z",
     "verifiedAt": null
    }
   },
@@ -1080,7 +1116,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-13T18:55:58.879Z",
+    "collectedAt": "2026-08-13T21:01:23.993Z",
     "verifiedAt": null
    }
   },
@@ -1103,7 +1139,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-13T18:55:58.879Z",
+    "collectedAt": "2026-08-13T21:01:23.993Z",
     "verifiedAt": null
    }
   },
@@ -1126,7 +1162,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-13T18:55:58.879Z",
+    "collectedAt": "2026-08-13T21:01:23.993Z",
     "verifiedAt": null
    }
   },
@@ -1149,7 +1185,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-13T18:55:58.879Z",
+    "collectedAt": "2026-08-13T21:01:23.993Z",
     "verifiedAt": null
    }
   },
@@ -1172,7 +1208,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=493",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-13T18:55:57.646Z",
+    "collectedAt": "2026-08-13T21:01:22.899Z",
     "verifiedAt": null
    }
   },
@@ -1195,7 +1231,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=496",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-13T18:55:57.646Z",
+    "collectedAt": "2026-08-13T21:01:22.899Z",
     "verifiedAt": null
    }
   },
@@ -1218,7 +1254,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=492",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-13T18:55:57.646Z",
+    "collectedAt": "2026-08-13T21:01:22.899Z",
     "verifiedAt": null
    }
   },
@@ -1241,7 +1277,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=485",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-13T18:55:57.646Z",
+    "collectedAt": "2026-08-13T21:01:22.899Z",
     "verifiedAt": null
    }
   },
@@ -1264,7 +1300,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=489",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-13T18:55:57.646Z",
+    "collectedAt": "2026-08-13T21:01:22.899Z",
     "verifiedAt": null
    }
   },
@@ -1287,7 +1323,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=484",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-13T18:55:57.646Z",
+    "collectedAt": "2026-08-13T21:01:22.899Z",
     "verifiedAt": null
    }
   },
@@ -1310,7 +1346,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3371",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-13T18:55:58.074Z",
+    "collectedAt": "2026-08-13T21:01:23.413Z",
     "verifiedAt": null
    }
   },
@@ -1333,7 +1369,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3370",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-13T18:55:58.074Z",
+    "collectedAt": "2026-08-13T21:01:23.413Z",
     "verifiedAt": null
    }
   },
@@ -1356,7 +1392,421 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3368",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-13T18:55:58.074Z",
+    "collectedAt": "2026-08-13T21:01:23.413Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "diligent:pcc:705",
+   "ocdId": null,
+   "bodyName": "Regular Governing Board",
+   "title": "Regular Governing Board  - Sep 25 2026",
+   "startsAt": "2026-09-25T17:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "PCC District Office, Community/Board Room C-105",
+    "address": "4905 E. Broadway Blvd., Tucson, AZ 85709",
+    "lat": 32.221683,
+    "lng": -110.887102
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Pima Community College District, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=705",
+    "sourceOrg": "Pima Community College Governing Board",
+    "collectedAt": "2026-08-13T21:01:23.892Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "diligent:pcc:707",
+   "ocdId": null,
+   "bodyName": "Executive Session Meeting",
+   "title": "Executive Session Meeting - Sep 25 2026",
+   "startsAt": "2026-09-25T16:15:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "PCC District Office, Board Conference Room C-228",
+    "address": "4905 E. Broadway Blvd., Tucson, AZ 85709",
+    "lat": 32.221683,
+    "lng": -110.887102
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Pima Community College District, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=707",
+    "sourceOrg": "Pima Community College Governing Board",
+    "collectedAt": "2026-08-13T21:01:23.892Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "diligent:pcc:706",
+   "ocdId": null,
+   "bodyName": "Study Session",
+   "title": "Study Session - Aug 10 2026",
+   "startsAt": "2026-08-10T17:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "PCC District Office",
+    "address": "4905 E. Broadway Blvd., Tucson, AZ 85709",
+    "lat": 32.221683,
+    "lng": -110.887102
+   },
+   "agendaUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=706",
+   "jurisdiction": "Pima Community College District, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=706",
+    "sourceOrg": "Pima Community College Governing Board",
+    "collectedAt": "2026-08-13T21:01:23.892Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:38:2026-08-12",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Planning Commission",
+   "title": "Planning Commission",
+   "startsAt": "2026-08-12T18:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson City Hall, Mayor and Council Chambers",
+    "address": "255 W. Alameda St, Tucson, AZ 85701",
+    "lat": 32.223037,
+    "lng": -110.975001
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-13T21:01:22.222Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:38:2026-09-02",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Planning Commission",
+   "title": "Planning Commission",
+   "startsAt": "2026-09-02T18:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson City Hall, Mayor and Council Chambers",
+    "address": "255 W. Alameda St, Tucson, AZ 85701",
+    "lat": 32.223037,
+    "lng": -110.975001
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-13T21:01:22.222Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:38:2026-10-07",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Planning Commission",
+   "title": "Planning Commission",
+   "startsAt": "2026-10-07T18:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson City Hall, Mayor and Council Chambers",
+    "address": "255 W. Alameda St, Tucson, AZ 85701",
+    "lat": 32.223037,
+    "lng": -110.975001
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-13T21:01:22.222Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:8:2026-07-29",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Board of Adjustment",
+   "title": "Board of Adjustment",
+   "startsAt": "2026-07-29T12:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson City Hall, 1st Floor",
+    "address": "255 W. Alameda St, Tucson, AZ 85701",
+    "lat": 32.223037,
+    "lng": -110.975001
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-13T21:01:22.271Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:8:2026-08-26",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Board of Adjustment",
+   "title": "Board of Adjustment",
+   "startsAt": "2026-08-26T12:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson City Hall, 1st Floor",
+    "address": "255 W. Alameda St, Tucson, AZ 85701",
+    "lat": 32.223037,
+    "lng": -110.975001
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-13T21:01:22.271Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:8:2026-09-30",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Board of Adjustment",
+   "title": "Board of Adjustment",
+   "startsAt": "2026-09-30T12:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson City Hall, 1st Floor",
+    "address": "255 W. Alameda St, Tucson, AZ 85701",
+    "lat": 32.223037,
+    "lng": -110.975001
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-13T21:01:22.271Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:23:2026-08-05",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Citizens&#x27; Water Advisory Committee",
+   "title": "Citizens&#x27; Water Advisory Committee",
+   "startsAt": "2026-08-05T08:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson Water, 3rd Floor Conference Room",
+    "address": "310 W. Alameda St, Tucson, AZ 85701",
+    "lat": 32.222932,
+    "lng": -110.975639
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-13T21:01:22.319Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:23:2026-09-02",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Citizens&#x27; Water Advisory Committee",
+   "title": "Citizens&#x27; Water Advisory Committee",
+   "startsAt": "2026-09-02T08:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson Water, 3rd Floor Conference Room",
+    "address": "310 W. Alameda St, Tucson, AZ 85701",
+    "lat": 32.222932,
+    "lng": -110.975639
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-13T21:01:22.319Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:23:2026-10-07",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Citizens&#x27; Water Advisory Committee",
+   "title": "Citizens&#x27; Water Advisory Committee",
+   "startsAt": "2026-10-07T08:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson Water, 3rd Floor Conference Room",
+    "address": "310 W. Alameda St, Tucson, AZ 85701",
+    "lat": 32.222932,
+    "lng": -110.975639
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-13T21:01:22.319Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:63:2026-07-22",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Tucson Parks and Recreation Commission",
+   "title": "Tucson Parks and Recreation Commission",
+   "startsAt": "2026-07-22T15:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson Parks Administration Building",
+    "address": "900 S. Randolph Way, Tucson, AZ 85716",
+    "lat": 32.21063,
+    "lng": -110.918028
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-13T21:01:22.370Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:63:2026-08-26",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Tucson Parks and Recreation Commission",
+   "title": "Tucson Parks and Recreation Commission",
+   "startsAt": "2026-08-26T15:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson Parks Administration Building",
+    "address": "900 S. Randolph Way, Tucson, AZ 85716",
+    "lat": 32.21063,
+    "lng": -110.918028
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-13T21:01:22.370Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:63:2026-09-23",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Tucson Parks and Recreation Commission",
+   "title": "Tucson Parks and Recreation Commission",
+   "startsAt": "2026-09-23T15:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson Parks Administration Building",
+    "address": "900 S. Randolph Way, Tucson, AZ 85716",
+    "lat": 32.21063,
+    "lng": -110.918028
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-13T21:01:22.370Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:19:2026-07-21",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Community Police Advisory Review Board",
+   "title": "Community Police Advisory Review Board",
+   "startsAt": "2026-07-21T17:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Ward 6 Council Office",
+    "address": "3202 E. 1st Street, Tucson, AZ 85716",
+    "lat": 32.235068,
+    "lng": -110.925106
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-13T21:01:22.408Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:19:2026-08-18",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Community Police Advisory Review Board",
+   "title": "Community Police Advisory Review Board",
+   "startsAt": "2026-08-18T17:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Ward 6 Council Office",
+    "address": "3202 E. 1st Street, Tucson, AZ 85716",
+    "lat": 32.235068,
+    "lng": -110.925106
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-13T21:01:22.408Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:19:2026-09-15",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Community Police Advisory Review Board",
+   "title": "Community Police Advisory Review Board",
+   "startsAt": "2026-09-15T17:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Ward 6 Council Office",
+    "address": "3202 E. 1st Street, Tucson, AZ 85716",
+    "lat": 32.235068,
+    "lng": -110.925106
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-13T21:01:22.408Z",
     "verifiedAt": null
    }
   },
@@ -1379,7 +1829,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2240",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-13T18:55:57.551Z",
+    "collectedAt": "2026-08-13T21:01:22.749Z",
     "verifiedAt": null
    }
   },
@@ -1402,7 +1852,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2236",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-13T18:55:57.551Z",
+    "collectedAt": "2026-08-13T21:01:22.749Z",
     "verifiedAt": null
    }
   },
@@ -1425,7 +1875,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2241",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-13T18:55:57.551Z",
+    "collectedAt": "2026-08-13T21:01:22.749Z",
     "verifiedAt": null
    }
   },
@@ -1448,7 +1898,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2242",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-13T18:55:57.551Z",
+    "collectedAt": "2026-08-13T21:01:22.749Z",
     "verifiedAt": null
    }
   },
@@ -1471,7 +1921,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2243",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-13T18:55:57.551Z",
+    "collectedAt": "2026-08-13T21:01:22.749Z",
     "verifiedAt": null
    }
   },
@@ -1494,7 +1944,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2244",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-13T18:55:57.551Z",
+    "collectedAt": "2026-08-13T21:01:22.749Z",
     "verifiedAt": null
    }
   },
@@ -1517,7 +1967,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2245",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-13T18:55:57.551Z",
+    "collectedAt": "2026-08-13T21:01:22.749Z",
     "verifiedAt": null
    }
   },
@@ -1540,7 +1990,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2246",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-13T18:55:57.551Z",
+    "collectedAt": "2026-08-13T21:01:22.749Z",
     "verifiedAt": null
    }
   },
@@ -1563,7 +2013,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2247",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-13T18:55:57.551Z",
+    "collectedAt": "2026-08-13T21:01:22.749Z",
     "verifiedAt": null
    }
   },
@@ -1586,7 +2036,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2248",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-13T18:55:57.551Z",
+    "collectedAt": "2026-08-13T21:01:22.749Z",
     "verifiedAt": null
    }
   },
@@ -1609,7 +2059,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-13T18:55:57.230Z",
+    "collectedAt": "2026-08-13T21:01:22.440Z",
     "verifiedAt": null
    }
   }
@@ -1760,6 +2210,22 @@
    "extractionNote": "Invalid PDF structure."
   },
   {
+   "id": "onbase:tucson:1981@0ac83f695fbda090f4d4555daf3961ad8968011066150d41d56b8c2745058a88",
+   "meetingId": "onbase:tucson:1981",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "documentUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Public_Housing_Authority_Board_of_Commissioners_1981_Agenda_8_18_2026_5_30_00_PM.pdf?documentType=1&meetingId=1981",
+   "contentHash": "0ac83f695fbda090f4d4555daf3961ad8968011066150d41d56b8c2745058a88",
+   "retrievedAt": "2026-08-13T21:01:24.140Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Public_Housing_Authority_Board_of_Commissioners_1981_Agenda_8_18_2026_5_30_00_PM.pdf?documentType=1&meetingId=1981",
+   "sourceOrg": "City of Tucson Clerk",
+   "collectedAt": "2026-08-13T21:01:24.140Z",
+   "verifiedAt": null,
+   "text": null,
+   "extraction": "failed",
+   "extractionNote": "Invalid PDF structure."
+  },
+  {
    "id": "onbase:tucson:1942@d5e076d55cda66af59ece6ce50b6dda401a729521a3f53f3ef8ff9ffe52d8a53",
    "meetingId": "onbase:tucson:1942",
    "ocdId": "ocd-division/country:us/state:az/place:tucson",
@@ -1866,6 +2332,118 @@
    "sourceUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
    "sourceOrg": "Vail School District Governing Board",
    "collectedAt": "2026-08-13T18:56:01.689Z",
+   "verifiedAt": null,
+   "text": "Vail School District - Home Skip Navigation Jump to SideBar Quick Menu Public site Policy Sign in Vail School District Where Education is a Community Effort Your Javascript is turned off, without it, this site will not operate as intended. Home Welcome to Vail School District Home Calendar Meetings Search Home Vail School District Governing Board Board Meetings are held on the second and fourth Tuesday of the month (unless otherwise noted) at 7:00 p.m. at: Calvin Baker Leadership Center 13801 E. Benson Highway, Vail, Arizona Doors will be opened 15 minutes prior to the start of the meeting. The 2025/2026 schedule of Regular Meetings of the Vail School District Governing Board is as follows: 2025- July 8 July 22 August 12 August 26 September 9 September 23 October 14 October 28 November 12 December 9 2026- January 13 January 27 February 10 February 24 March 10 March 24 April 14 April 28 May 12 June 2 June 23 For more information, please contact Cindy Petersen . Share Welcome Welcome to our Community by Diligent public site, where you can find information about upcoming and recent meetings and participate in discussions about our community. Select the Welcome banner for additional information about using this site. Disclaimer: The documents contained in this system are intended for information only. To verify the accuracy and currency of this information, please contact us directly. Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals © Diligent Community 2026 Vail School District User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "apptegy:vail:60703698@af50f6f17faa9a17b9757e79da982c2161b45d6fec99a11f0afceb219e0ee060",
+   "meetingId": "apptegy:vail:60703698",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "documentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "contentHash": "af50f6f17faa9a17b9757e79da982c2161b45d6fec99a11f0afceb219e0ee060",
+   "retrievedAt": "2026-08-13T21:01:25.791Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "sourceOrg": "Vail School District Governing Board",
+   "collectedAt": "2026-08-13T21:01:25.791Z",
+   "verifiedAt": null,
+   "text": "Vail School District - Home Skip Navigation Jump to SideBar Quick Menu Public site Policy Sign in Vail School District Where Education is a Community Effort Your Javascript is turned off, without it, this site will not operate as intended. Home Welcome to Vail School District Home Calendar Meetings Search Home Vail School District Governing Board Board Meetings are held on the second and fourth Tuesday of the month (unless otherwise noted) at 7:00 p.m. at: Calvin Baker Leadership Center 13801 E. Benson Highway, Vail, Arizona Doors will be opened 15 minutes prior to the start of the meeting. The 2025/2026 schedule of Regular Meetings of the Vail School District Governing Board is as follows: 2025- July 8 July 22 August 12 August 26 September 9 September 23 October 14 October 28 November 12 December 9 2026- January 13 January 27 February 10 February 24 March 10 March 24 April 14 April 28 May 12 June 2 June 23 For more information, please contact Cindy Petersen . Share Welcome Welcome to our Community by Diligent public site, where you can find information about upcoming and recent meetings and participate in discussions about our community. Select the Welcome banner for additional information about using this site. Disclaimer: The documents contained in this system are intended for information only. To verify the accuracy and currency of this information, please contact us directly. Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals © Diligent Community 2026 Vail School District User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "apptegy:vail:60703699@1c3cbbdedf7f80da3e74abac634206f16d9f6529a4c0f050a0379378948b9fa6",
+   "meetingId": "apptegy:vail:60703699",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "documentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "contentHash": "1c3cbbdedf7f80da3e74abac634206f16d9f6529a4c0f050a0379378948b9fa6",
+   "retrievedAt": "2026-08-13T21:01:26.283Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "sourceOrg": "Vail School District Governing Board",
+   "collectedAt": "2026-08-13T21:01:26.283Z",
+   "verifiedAt": null,
+   "text": "Vail School District - Home Skip Navigation Jump to SideBar Quick Menu Public site Policy Sign in Vail School District Where Education is a Community Effort Your Javascript is turned off, without it, this site will not operate as intended. Home Welcome to Vail School District Home Calendar Meetings Search Home Vail School District Governing Board Board Meetings are held on the second and fourth Tuesday of the month (unless otherwise noted) at 7:00 p.m. at: Calvin Baker Leadership Center 13801 E. Benson Highway, Vail, Arizona Doors will be opened 15 minutes prior to the start of the meeting. The 2025/2026 schedule of Regular Meetings of the Vail School District Governing Board is as follows: 2025- July 8 July 22 August 12 August 26 September 9 September 23 October 14 October 28 November 12 December 9 2026- January 13 January 27 February 10 February 24 March 10 March 24 April 14 April 28 May 12 June 2 June 23 For more information, please contact Cindy Petersen . Share Welcome Welcome to our Community by Diligent public site, where you can find information about upcoming and recent meetings and participate in discussions about our community. Select the Welcome banner for additional information about using this site. Disclaimer: The documents contained in this system are intended for information only. To verify the accuracy and currency of this information, please contact us directly. Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals © Diligent Community 2026 Vail School District User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "apptegy:vail:60703700@3f4d9359c96ffc281c1843c1646962addc13351eebd0b6a9a1d6da2091066994",
+   "meetingId": "apptegy:vail:60703700",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "documentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "contentHash": "3f4d9359c96ffc281c1843c1646962addc13351eebd0b6a9a1d6da2091066994",
+   "retrievedAt": "2026-08-13T21:01:26.809Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "sourceOrg": "Vail School District Governing Board",
+   "collectedAt": "2026-08-13T21:01:26.809Z",
+   "verifiedAt": null,
+   "text": "Vail School District - Home Skip Navigation Jump to SideBar Quick Menu Public site Policy Sign in Vail School District Where Education is a Community Effort Your Javascript is turned off, without it, this site will not operate as intended. Home Welcome to Vail School District Home Calendar Meetings Search Home Vail School District Governing Board Board Meetings are held on the second and fourth Tuesday of the month (unless otherwise noted) at 7:00 p.m. at: Calvin Baker Leadership Center 13801 E. Benson Highway, Vail, Arizona Doors will be opened 15 minutes prior to the start of the meeting. The 2025/2026 schedule of Regular Meetings of the Vail School District Governing Board is as follows: 2025- July 8 July 22 August 12 August 26 September 9 September 23 October 14 October 28 November 12 December 9 2026- January 13 January 27 February 10 February 24 March 10 March 24 April 14 April 28 May 12 June 2 June 23 For more information, please contact Cindy Petersen . Share Welcome Welcome to our Community by Diligent public site, where you can find information about upcoming and recent meetings and participate in discussions about our community. Select the Welcome banner for additional information about using this site. Disclaimer: The documents contained in this system are intended for information only. To verify the accuracy and currency of this information, please contact us directly. Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals © Diligent Community 2026 Vail School District User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "apptegy:vail:60703701@20f82872f6989f414240e9bba31f77318c7cc28619323a255bd0ddcfc13fa102",
+   "meetingId": "apptegy:vail:60703701",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "documentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "contentHash": "20f82872f6989f414240e9bba31f77318c7cc28619323a255bd0ddcfc13fa102",
+   "retrievedAt": "2026-08-13T21:01:27.266Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "sourceOrg": "Vail School District Governing Board",
+   "collectedAt": "2026-08-13T21:01:27.266Z",
+   "verifiedAt": null,
+   "text": "Vail School District - Home Skip Navigation Jump to SideBar Quick Menu Public site Policy Sign in Vail School District Where Education is a Community Effort Your Javascript is turned off, without it, this site will not operate as intended. Home Welcome to Vail School District Home Calendar Meetings Search Home Vail School District Governing Board Board Meetings are held on the second and fourth Tuesday of the month (unless otherwise noted) at 7:00 p.m. at: Calvin Baker Leadership Center 13801 E. Benson Highway, Vail, Arizona Doors will be opened 15 minutes prior to the start of the meeting. The 2025/2026 schedule of Regular Meetings of the Vail School District Governing Board is as follows: 2025- July 8 July 22 August 12 August 26 September 9 September 23 October 14 October 28 November 12 December 9 2026- January 13 January 27 February 10 February 24 March 10 March 24 April 14 April 28 May 12 June 2 June 23 For more information, please contact Cindy Petersen . Share Welcome Welcome to our Community by Diligent public site, where you can find information about upcoming and recent meetings and participate in discussions about our community. Select the Welcome banner for additional information about using this site. Disclaimer: The documents contained in this system are intended for information only. To verify the accuracy and currency of this information, please contact us directly. Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals © Diligent Community 2026 Vail School District User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "apptegy:vail:60703702@2dbe8605f16862b409cbac9ce71d725cf056804dad3e57bf4143e7261e96193d",
+   "meetingId": "apptegy:vail:60703702",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "documentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "contentHash": "2dbe8605f16862b409cbac9ce71d725cf056804dad3e57bf4143e7261e96193d",
+   "retrievedAt": "2026-08-13T21:01:27.747Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "sourceOrg": "Vail School District Governing Board",
+   "collectedAt": "2026-08-13T21:01:27.747Z",
+   "verifiedAt": null,
+   "text": "Vail School District - Home Skip Navigation Jump to SideBar Quick Menu Public site Policy Sign in Vail School District Where Education is a Community Effort Your Javascript is turned off, without it, this site will not operate as intended. Home Welcome to Vail School District Home Calendar Meetings Search Home Vail School District Governing Board Board Meetings are held on the second and fourth Tuesday of the month (unless otherwise noted) at 7:00 p.m. at: Calvin Baker Leadership Center 13801 E. Benson Highway, Vail, Arizona Doors will be opened 15 minutes prior to the start of the meeting. The 2025/2026 schedule of Regular Meetings of the Vail School District Governing Board is as follows: 2025- July 8 July 22 August 12 August 26 September 9 September 23 October 14 October 28 November 12 December 9 2026- January 13 January 27 February 10 February 24 March 10 March 24 April 14 April 28 May 12 June 2 June 23 For more information, please contact Cindy Petersen . Share Welcome Welcome to our Community by Diligent public site, where you can find information about upcoming and recent meetings and participate in discussions about our community. Select the Welcome banner for additional information about using this site. Disclaimer: The documents contained in this system are intended for information only. To verify the accuracy and currency of this information, please contact us directly. Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals © Diligent Community 2026 Vail School District User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "apptegy:vail:60703703@723a66acf4f68488cc1a1c19632f7cdff084b08047e7bbb4e0fb1909c83eed54",
+   "meetingId": "apptegy:vail:60703703",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "documentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "contentHash": "723a66acf4f68488cc1a1c19632f7cdff084b08047e7bbb4e0fb1909c83eed54",
+   "retrievedAt": "2026-08-13T21:01:28.342Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "sourceOrg": "Vail School District Governing Board",
+   "collectedAt": "2026-08-13T21:01:28.342Z",
+   "verifiedAt": null,
+   "text": "Vail School District - Home Skip Navigation Jump to SideBar Quick Menu Public site Policy Sign in Vail School District Where Education is a Community Effort Your Javascript is turned off, without it, this site will not operate as intended. Home Welcome to Vail School District Home Calendar Meetings Search Home Vail School District Governing Board Board Meetings are held on the second and fourth Tuesday of the month (unless otherwise noted) at 7:00 p.m. at: Calvin Baker Leadership Center 13801 E. Benson Highway, Vail, Arizona Doors will be opened 15 minutes prior to the start of the meeting. The 2025/2026 schedule of Regular Meetings of the Vail School District Governing Board is as follows: 2025- July 8 July 22 August 12 August 26 September 9 September 23 October 14 October 28 November 12 December 9 2026- January 13 January 27 February 10 February 24 March 10 March 24 April 14 April 28 May 12 June 2 June 23 For more information, please contact Cindy Petersen . Share Welcome Welcome to our Community by Diligent public site, where you can find information about upcoming and recent meetings and participate in discussions about our community. Select the Welcome banner for additional information about using this site. Disclaimer: The documents contained in this system are intended for information only. To verify the accuracy and currency of this information, please contact us directly. Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals © Diligent Community 2026 Vail School District User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "apptegy:vail:60703705@32cdd9f7989b95cb567627189ac924401e4fb73e382e27adb3a39e05324effbe",
+   "meetingId": "apptegy:vail:60703705",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "documentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "contentHash": "32cdd9f7989b95cb567627189ac924401e4fb73e382e27adb3a39e05324effbe",
+   "retrievedAt": "2026-08-13T21:01:28.899Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "sourceOrg": "Vail School District Governing Board",
+   "collectedAt": "2026-08-13T21:01:28.899Z",
    "verifiedAt": null,
    "text": "Vail School District - Home Skip Navigation Jump to SideBar Quick Menu Public site Policy Sign in Vail School District Where Education is a Community Effort Your Javascript is turned off, without it, this site will not operate as intended. Home Welcome to Vail School District Home Calendar Meetings Search Home Vail School District Governing Board Board Meetings are held on the second and fourth Tuesday of the month (unless otherwise noted) at 7:00 p.m. at: Calvin Baker Leadership Center 13801 E. Benson Highway, Vail, Arizona Doors will be opened 15 minutes prior to the start of the meeting. The 2025/2026 schedule of Regular Meetings of the Vail School District Governing Board is as follows: 2025- July 8 July 22 August 12 August 26 September 9 September 23 October 14 October 28 November 12 December 9 2026- January 13 January 27 February 10 February 24 March 10 March 24 April 14 April 28 May 12 June 2 June 23 For more information, please contact Cindy Petersen . Share Welcome Welcome to our Community by Diligent public site, where you can find information about upcoming and recent meetings and participate in discussions about our community. Select the Welcome banner for additional information about using this site. Disclaimer: The documents contained in this system are intended for information only. To verify the accuracy and currency of this information, please contact us directly. Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals © Diligent Community 2026 Vail School District User name Password Sign In Remember me next time. Forgot password?",
    "extraction": "html",

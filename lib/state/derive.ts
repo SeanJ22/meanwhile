@@ -2,7 +2,7 @@
 // is pure and belongs under `node --test`, which cannot resolve the alias. The
 // rest of lib/ is already written this way.
 import { haversineKm } from "../geo/distance.ts";
-import { matchesTiers, tierForOcdId } from "../ocd/tiers.ts";
+import { tierForOcdId, type Tier } from "../ocd/tiers.ts";
 import type { Meeting } from "../sources/types.ts";
 
 import { ALL_DISTRICT_TYPES } from "./reducer.ts";
@@ -25,9 +25,26 @@ import type { BodyType, UiState } from "./types.ts";
  * guessing. A meeting that classifies as null is never hidden by a chip filter
  * it could not be matched against.
  */
+/**
+ * The tier a meeting files under.
+ *
+ * A meeting with a division files where its division does — `tierForOcdId`,
+ * which deliberately refuses to guess an unknown segment. A meeting with a
+ * **null** division is different: null is not an unknown segment, it is the
+ * stated fact that no Census division exists for this body (D28 — Pima
+ * Community College, special districts, regional councils), and every such
+ * body in this product is a local government. So null files as `local` by
+ * construction, not by inference — the alternative hides every wired
+ * division-less meeting behind the tier filter forever.
+ */
+export function tierForMeeting(meeting: Meeting): Tier | null {
+  if (meeting.ocdId === null) return "local";
+  return tierForOcdId(meeting.ocdId);
+}
+
 export function bodyTypeOf(meeting: Meeting): BodyType | null {
   const name = meeting.bodyName.toLowerCase();
-  const tier = tierForOcdId(meeting.ocdId);
+  const tier = tierForMeeting(meeting);
 
   if (/school|governing board/.test(name)) return "school-board";
   if (/board of supervisors|county board/.test(name)) return "county-board";
@@ -78,7 +95,8 @@ export function applyFilters({
   return meetings.filter((meeting) => {
     // Tier. An empty selection shows nothing, and the UI says so rather than
     // quietly falling back to everything.
-    if (!matchesTiers(meeting.ocdId, ui.tiers)) return false;
+    const tier = tierForMeeting(meeting);
+    if (tier === null || !ui.tiers.includes(tier)) return false;
 
     // Scope. Both are OCD-IDs; `body` additionally matches on the body name
     // within a jurisdiction, because bodies have no identifiers of their own

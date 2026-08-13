@@ -112,6 +112,13 @@ export type AgendaSourceType =
   | "ONBASE"
   | "IQM2"
   | "REVIZE"
+  /**
+   * The City of Tucson Clerk's boards application at
+   * `clerksboards.tucsonaz.gov` — server-rendered per-board pages carrying
+   * the published meeting schedule, location, and current agenda. Named for
+   * the host until it turns out to be a product other cities run.
+   */
+  | "CLERKSBOARDS"
   | "PRIMEGOV"
   | "NOVUSAGENDA"
   | "SIMBLI"
@@ -132,6 +139,9 @@ export type SourceDataset =
   | "NCES"
   | "DERIVED"
   | "VENDOR_DISCOVERY"
+  /** A government's own published directory of its bodies — e.g. the Tucson
+   *  City Clerk's Boards, Committees & Commissions listing. */
+  | "GOV_DIRECTORY"
   | "USER_REPORTED";
 
 /**

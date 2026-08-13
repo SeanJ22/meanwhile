@@ -159,6 +159,14 @@ export function Sidebar({
         <div className="mt-auto border-t border-[var(--panel-border)] px-1 pt-3 pb-2 text-[0.6875rem] leading-relaxed text-muted">
           <p>
             <a
+              href="/ballot"
+              className="underline decoration-dotted underline-offset-2 hover:text-signal"
+            >
+              What&apos;s on the ballot
+            </a>
+          </p>
+          <p className="mt-1">
+            <a
               href="/transparency"
               className="underline decoration-dotted underline-offset-2 hover:text-signal"
             >

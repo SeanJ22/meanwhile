@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { CountBadge } from "@/components/map/count-badge";
 import { Legend } from "@/components/map/legend";
@@ -15,6 +15,7 @@ import { applyFilters } from "@/lib/state/derive";
 import { UiProvider, useUi, useUiDispatch } from "@/lib/state/provider";
 import type { MeetingSearchResult } from "@/lib/meetings/query";
 import type { SnapshotStatus } from "@/lib/meetings/freshness";
+import { logEvent } from "@/lib/log/client";
 import { groupByVenue, type Venue } from "@/lib/meetings/venues";
 import type { Meeting } from "@/lib/sources/types";
 import type { SeatHolder } from "@/lib/officials/lookup";
@@ -98,7 +99,9 @@ function MapEntryInner() {
 
     void (async () => {
       try {
-        const response = await fetch(`/api/meetings?lat=${lat}&lng=${lng}`, {
+        // The zip rides along as approximate_location for the search log —
+        // orientation only, disclosed on /transparency.
+        const response = await fetch(`/api/meetings?lat=${lat}&lng=${lng}&zip=${zip}`, {
           headers: { accept: "application/json" },
           signal: controller.signal,
         });
@@ -171,6 +174,43 @@ function MapEntryInner() {
    */
   const [popupMeeting, setPopupMeeting] = useState<Meeting | null>(null);
   const [modal, setModal] = useState<ModalSubject | null>(null);
+
+  /*
+   * Search-log events for the interactions the transparency page describes.
+   * Each carries the divisions touched and scalar detail only — the client
+   * half sends nothing that could identify the reader, and the effects fire
+   * on state *changes*, so a re-render logs nothing.
+   */
+  const openMeeting = useCallback((meeting: Meeting) => {
+    setPopupMeeting(meeting);
+    logEvent("MEETING_OPENED", [meeting.ocdId], { meetingId: meeting.id });
+  }, []);
+
+  useEffect(() => {
+    if (!selectedVenue) return;
+    const ocdIds = [...new Set(selectedVenue.meetings.map((m) => m.ocdId))];
+    logEvent("BODY_OPENED", ocdIds, { venueKey: selectedVenue.key });
+  }, [selectedVenue]);
+
+  useEffect(() => {
+    if (!ui.selectedDistrictOcdId) return;
+    logEvent("DISTRICT_SELECTED", [ui.selectedDistrictOcdId]);
+  }, [ui.selectedDistrictOcdId]);
+
+  // The tier filter is the one that changes what the whole screen shows.
+  // The ref skips the mount run: the default tiers are not a choice the
+  // reader made, and logging them would count page loads as filter events.
+  const tiersLogged = useRef(false);
+  useEffect(() => {
+    if (!tiersLogged.current) {
+      tiersLogged.current = true;
+      return;
+    }
+    logEvent("FILTER_APPLIED", [], {
+      filter: "tiers",
+      value: ui.tiers.join(","),
+    });
+  }, [ui.tiers]);
 
   // The last set of districts a click landed in, so the popup can recover the
   // full hit — the store keeps only the identifier and type.
@@ -365,7 +405,7 @@ function MapEntryInner() {
               <div className="pointer-events-auto hidden sm:block">
                 <MeetingPanel
                   venue={selectedVenue}
-                  onOpenMeeting={setPopupMeeting}
+                  onOpenMeeting={openMeeting}
                   onClose={() => dispatch({ type: "select/venue", key: null })}
                 />
               </div>
@@ -402,7 +442,7 @@ function MapEntryInner() {
               <div className="pointer-events-auto sm:hidden">
                 <MeetingPanel
                   venue={selectedVenue}
-                  onOpenMeeting={setPopupMeeting}
+                  onOpenMeeting={openMeeting}
                   onClose={() => dispatch({ type: "select/venue", key: null })}
                 />
               </div>

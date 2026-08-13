@@ -202,6 +202,17 @@ export function WelcomeOverlay({
           GPS. If you later want the ballot you personally vote, we&apos;ll ask
           for a street address and explain why then.
         </p>
+
+        <p className="welcome-fineprint">
+          Searches here are logged without any identity attached —{" "}
+          <a
+            href="/transparency"
+            className="underline decoration-dotted underline-offset-2 hover:text-signal"
+          >
+            what this site collects
+          </a>
+          .
+        </p>
       </div>
     </div>
   );

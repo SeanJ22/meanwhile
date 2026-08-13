@@ -1,3 +1,4 @@
+import { logSearchEvent } from "@/lib/db/search-log";
 import { RADIUS_LADDER_KM, searchMeetings } from "@/lib/meetings/query";
 import { getActiveSnapshotMeta } from "@/lib/meetings/snapshot";
 import { wiringForSourceName } from "@/lib/sources/composite/wiring";
@@ -65,6 +66,29 @@ export async function GET(request: Request) {
           })),
       }
     : null;
+
+  // The search log row: what was asked and where, never who. Fire-and-forget
+  // — a logging failure or an absent DATABASE_URL must never cost the reader
+  // their answer. Disclosed on /transparency, which ships with this code.
+  const zipParam = params.get("zip");
+  const zip = zipParam && /^\d{5}$/.test(zipParam) ? zipParam : null;
+  const resolvedOcdIds = coverage
+    ? [
+        ...coverage.bodies.flatMap((b) => (b.ocdId ? [b.ocdId] : [])),
+        ...coverage.seats.map((s) => s.ocdId),
+      ]
+    : [];
+  logSearchEvent({
+    eventType: "SEARCH",
+    approximateLocation: zip,
+    ocdIds: resolvedOcdIds,
+    detail: {
+      tier: result.tier,
+      radiusKm: result.radiusKm,
+      requestedRadiusKm: result.requestedRadiusKm,
+      meetingCount: result.meetings.length,
+    },
+  }).catch((error) => console.error("search log write failed", error));
 
   return Response.json({ ...result, coverage, snapshot });
 }

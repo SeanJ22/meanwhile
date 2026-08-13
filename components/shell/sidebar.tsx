@@ -128,6 +128,28 @@ export function Sidebar({
         </div>
 
         <FiltersArea />
+
+        {/* The sidebar's footer: the disclosure link and the feedback path.
+            One line each — the transparency page carries the substance. */}
+        <div className="mt-auto border-t border-[var(--panel-border)] px-1 pt-3 pb-2 text-[0.6875rem] leading-relaxed text-muted">
+          <p>
+            <a
+              href="/transparency"
+              className="underline decoration-dotted underline-offset-2 hover:text-signal"
+            >
+              What this site collects
+            </a>
+          </p>
+          <p className="mt-1">
+            Feedback:{" "}
+            <a
+              href="mailto:seanj22@gmail.com"
+              className="underline decoration-dotted underline-offset-2 hover:text-signal"
+            >
+              seanj22@gmail.com
+            </a>
+          </p>
+        </div>
       </div>
     </aside>
   );

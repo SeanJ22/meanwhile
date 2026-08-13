@@ -16,6 +16,13 @@ import { UiProvider, useUi, useUiDispatch } from "@/lib/state/provider";
 import type { MeetingSearchResult } from "@/lib/meetings/query";
 import { groupByVenue, type Venue } from "@/lib/meetings/venues";
 import type { Meeting } from "@/lib/sources/types";
+import type { SeatHolder } from "@/lib/officials/lookup";
+import { TIER_LABEL, tierForOcdId } from "@/lib/ocd/tiers";
+import {
+  formatMeetingDate,
+  formatMeetingTime,
+  shortOcdId,
+} from "@/lib/map/format";
 
 import type { DistrictHit } from "@/lib/map/districts";
 import type { DistrictType } from "@/lib/state/types";
@@ -24,6 +31,9 @@ import { CoverageNotice } from "./coverage-notice";
 import { DistrictPicker } from "./district-picker";
 import { MapCanvas, type CameraTarget, type MapFocus } from "./map-canvas";
 import { MeetingPanel } from "./meeting-panel";
+import { DistrictPopup } from "./popup/district-popup";
+import { MeetingPopup } from "./popup/meeting-popup";
+import { EntityModal, type ModalSubject } from "./popup/entity-modal";
 import { WelcomeOverlay } from "./welcome-overlay";
 
 /**
@@ -146,6 +156,38 @@ function MapEntryInner() {
     [venues, ui.selectedVenueKey],
   );
 
+  /*
+   * Popup and modal state.
+   *
+   * Local rather than in the store, matching `welcomeRequested` above. These
+   * are ephemeral view state derived from a selection the store already holds;
+   * nothing else reads them, and putting them in the reducer would make every
+   * surface re-render on a popup open.
+   */
+  const [popupMeeting, setPopupMeeting] = useState<Meeting | null>(null);
+  const [modal, setModal] = useState<ModalSubject | null>(null);
+
+  // The last set of districts a click landed in, so the popup can recover the
+  // full hit — the store keeps only the identifier and type.
+  const [lastHits, setLastHits] = useState<DistrictHit[]>([]);
+
+  const districtPopup = useMemo(
+    () =>
+      lastHits.find((hit) => hit.ocdId === ui.selectedDistrictOcdId) ?? null,
+    [lastHits, ui.selectedDistrictOcdId],
+  );
+
+  /** Officeholders sourced for a division, from the coverage summary. */
+  const holdersFor = useCallback(
+    (ocdId: string): SeatHolder[] => {
+      const coverage = current?.coverage;
+      if (!coverage) return [];
+      const seat = coverage.seats.find((s) => s.ocdId === ocdId);
+      return seat?.representatives ?? [];
+    },
+    [current],
+  );
+
   useEffect(() => {
     if (!current) return;
     dispatch({
@@ -232,6 +274,10 @@ function MapEntryInner() {
    */
   const onDistrictClick = useCallback(
     (hits: DistrictHit[], at: { x: number; y: number }) => {
+      // Remember the whole set, not just the chosen one: the picker may select
+      // any of them, and the popup needs that hit's label and type back.
+      setLastHits(hits);
+
       if (hits.length === 1) {
         dispatch({
           type: "select/district",
@@ -302,6 +348,7 @@ function MapEntryInner() {
               <div className="pointer-events-auto hidden sm:block">
                 <MeetingPanel
                   venue={selectedVenue}
+                  onOpenMeeting={setPopupMeeting}
                   onClose={() => dispatch({ type: "select/venue", key: null })}
                 />
               </div>
@@ -333,6 +380,7 @@ function MapEntryInner() {
               <div className="pointer-events-auto sm:hidden">
                 <MeetingPanel
                   venue={selectedVenue}
+                  onOpenMeeting={setPopupMeeting}
                   onClose={() => dispatch({ type: "select/venue", key: null })}
                 />
               </div>
@@ -345,6 +393,40 @@ function MapEntryInner() {
         <div className="pointer-events-none absolute inset-y-0 right-0 left-[340px]">
           <DistrictPicker />
         </div>
+
+        {/* Popups sit above the panels and below the modal, and in the one
+            corner nothing else claims: the coverage notice owns bottom-left
+            and the meeting panel owns top-right. A first attempt put them at
+            bottom-left and they landed on top of the coverage notice, which a
+            screenshot caught. */}
+        <div className="pointer-events-none absolute right-5 bottom-5 z-[1100] flex items-end gap-3">
+          {districtPopup && (
+            <DistrictPopup
+              district={districtPopup}
+              representation={holdersFor(districtPopup.ocdId)}
+              upcomingMeetings={
+                meetings.filter(
+                  (m) =>
+                    m.ocdId === districtPopup.ocdId && m.status === "SCHEDULED",
+                ).length
+              }
+              onClose={() =>
+                dispatch({ type: "select/district", ocdId: null, districtType: null })
+              }
+              onExpand={() => setModal(districtSubject(districtPopup))}
+            />
+          )}
+
+          {popupMeeting && (
+            <MeetingPopup
+              meeting={popupMeeting}
+              onClose={() => setPopupMeeting(null)}
+              onExpand={() => setModal(meetingSubject(popupMeeting))}
+            />
+          )}
+        </div>
+
+        {modal && <EntityModal subject={modal} onClose={() => setModal(null)} />}
 
         <Legend />
         <ListOverlay onPickMeeting={onPickMeeting} />
@@ -365,6 +447,67 @@ function MapEntryInner() {
     </DataProvider>
   );
 }
+
+/**
+ * The modal's contents for a meeting.
+ *
+ * **Sources lists what is actually behind the card**, including the rows whose
+ * `sourceUrl` is null. Omitting those would imply everything shown was cited,
+ * which is the more damaging of the two possible lies.
+ */
+function meetingSubject(meeting: Meeting): ModalSubject {
+  return {
+    title: meeting.title,
+    subtitle: `${meeting.bodyName} · ${meeting.jurisdiction}`,
+    tier: tierForOcdId(meeting.ocdId) ?? "local",
+    badges:
+      meeting.status === "SCHEDULED"
+        ? []
+        : [{ label: STATUS_LABEL[meeting.status], status: meeting.status }],
+    facts: [
+      { label: "Body", value: meeting.bodyName },
+      { label: "Date", value: formatMeetingDate(meeting) },
+      { label: "Time", value: formatMeetingTime(meeting), mono: true },
+      { label: "Time zone", value: meeting.timeZone, mono: true },
+      { label: "Location", value: meeting.location.name },
+      {
+        label: "Address",
+        value: meeting.location.address ?? "not published",
+      },
+      { label: "Division", value: shortOcdId(meeting.ocdId), mono: true },
+      { label: "Status", value: STATUS_LABEL[meeting.status] },
+    ],
+    representation: [],
+    representationNote:
+      "We haven't sourced who sits on this body. The people we hold for this area represent it in Congress and the state legislature, which is a different thing.",
+    meetings: [meeting],
+    sources: [{ what: meeting.title, provenance: meeting.provenance }],
+  };
+}
+
+function districtSubject(district: DistrictHit): ModalSubject {
+  return {
+    title: district.label,
+    subtitle: `${district.typeLabel} · ${district.state}`,
+    tier: district.tier,
+    facts: [
+      { label: "Type", value: district.typeLabel },
+      { label: "Tier", value: TIER_LABEL[district.tier] },
+      { label: "OCD-ID", value: district.ocdId, mono: true },
+      { label: "State", value: district.state, mono: true },
+    ],
+    representation: [],
+    representationNote: "No sourced officeholder for this division yet.",
+    meetings: [],
+    sources: [],
+  };
+}
+
+const STATUS_LABEL: Record<Meeting["status"], string> = {
+  SCHEDULED: "Scheduled",
+  CONCLUDED: "Concluded",
+  CANCELED: "Canceled",
+};
 
 function SearchFailedNotice() {
   return (

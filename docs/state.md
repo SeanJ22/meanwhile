@@ -1315,6 +1315,79 @@ unknown licence (D20).
 been built, so there is no popup yet — the names live on the coverage notice
 alone.
 
+### 4.10 Phase 6 — the popup, the modal, and the marker pool (2026-08-12)
+
+Tracker **M05** (in progress) and **M20** (done). Nine screenshots are the
+evidence: meeting popup, district popup, district popup *with* representatives,
+and all six modal tabs.
+
+`.popup-card` and `.account-modal` are ported to `globals.css` as **plain CSS,
+not Tailwind utilities** — 300px, 16px/18px padding, 55vh, a 5px scrollbar are
+*ported values*, and burying them in a class string makes them look like
+choices somebody made here. `components/map/popup/` holds the JSX. Edia builds
+these as HTML strings with `escapeHtml`/`escapeAttr` and `onclick` attributes
+because it is vanilla JS; that half is deliberately not ported.
+
+#### The sourcing rule decided what goes in them
+
+**The meeting popup's Representation section is empty, and says so.**
+Officeholders attach to *divisions*; a county board or school board is not a
+division, and that is tier 3, which is unbuilt.
+
+The tempting move is to fill it with the federal and state people we *do* hold
+for that area, since they share an OCD-ID. **That would be a fabricated
+attribution.** A US Representative does not sit on the Pima County Board, and
+putting them under that heading is the line-17 failure in its most plausible
+form — every name would be real, correctly sourced, and in the wrong place.
+
+The **district** popup does show them, because a congressional or legislative
+district *is* a division. AZ-6 renders "U.S. REPRESENTATIVE — Juan Ciscomani"
+with a source link.
+
+**The Sources tab lists rows whose `sourceUrl` is null** as "no published page"
+rather than omitting them. A source list that quietly drops its uncited rows is
+worse than none, because it implies everything shown was cited.
+
+#### The marker pool, and why now
+
+`lib/map/marker-pool.ts`. The split is the point: `rebuildMarkerPool` runs when
+the **data** changes and creates or removes; `applyVisibility` runs when a
+**filter** changes and touches only the pins whose visibility actually flipped.
+Narrowing 500 pins to 480 does 20 DOM writes, not 980. A filtered-out pin is
+hidden, never destroyed.
+
+`updateMarkerIcon` mutates an existing element rather than replacing it, because
+replacing drops focus and these are real `<button>`s somebody may be tabbing
+through. `applyVisibility` **returns the number of elements it wrote to** — if
+that ever approaches the pool size on an ordinary filter change, the diffing has
+stopped working.
+
+Built now deliberately. At 34 fixtures it is invisible; once real ingestion
+lands there is nothing small enough left to verify a rewrite against.
+
+#### Three things the screenshots caught that the suite did not
+
+This is the third session running where `pnpm shoot` found what 132 green tests
+could not, which is the argument for §8's rule.
+
+1. **Popups landed on top of the coverage notice.** Both were bottom-left. They
+   now sit bottom-right, the one corner nothing else claims.
+2. **A 40px touch target on every pin was wrong.** It is scoped to
+   `pointer: coarse` — the problem is a fingertip against a 14px dot, and a
+   mouse needs no help.
+3. **Overlapping pins swallow each other's clicks** — tracker **M19**. Found
+   because a headless click failed with one marker "intercepting pointer
+   events" for another. **The first diagnosis blamed the touch target and was
+   wrong:** it reproduces with that rule scoped away entirely, because the 14px
+   dots themselves overlap at metro zoom. The comment in `globals.css` records
+   the correction rather than the first guess.
+
+A fourth thing looked like a defect and was not: a dark rectangle beside a
+selected district is the selected fill at `0.18` opacity, working as designed.
+Checking cost one command, which is the same discipline pointed the other way —
+**not every anomaly is a bug, and assuming either way without looking is the
+error.**
+
 ---
 
 ## 5. Open questions
@@ -1624,6 +1697,10 @@ construction with `escapeHtml`/`onclick` attributes, and the sales data model.
   the app's source — §4.7. D13 (Diligent) is unblocked but should try the
   subscribe channel and the district's own site before the portal. D16 (Tucson,
   which is Hyland OnBase and not Legistar) says do not build the portal route.
+- **Phase 6 popup and modal are built** (§4.10) — the popup card, the district
+  and meeting popups, the six-tab modal including Sources, and the marker pool.
+  Phase 7 (notes, activity, conflicts, export, ingestion console) and Phase 8
+  (responsive, bottom sheet) remain.
 - **4.7 not started** — national scale: vector tiling, the Census of
   Governments universe, vendor tenant enumeration, special districts.
 - **Phase 5 tier 1 is done** — the federal roster, §4.8. Tier 2 (state
@@ -1667,6 +1744,51 @@ None of the five announces itself. Each presents as a plausible working state
 that happens to be the wrong one, and the first three have each cost this
 project a session already. That is the argument for a scripted check at both
 ends rather than a habit of looking.
+
+### Working rule: verify the result, never the absence of an error
+
+**Confirm a scripted edit landed by grepping for what it was supposed to
+produce. A string replacement that matches nothing succeeds loudly and changes
+nothing.**
+
+`sed`, a scripted `String.replace`, a regex rewrite over a doc — all of them
+exit `0` on zero matches. There is no error to notice, so the only signal that
+the edit worked is the edit itself, and checking for it costs one command.
+
+This is the same shape as the five states above, one level down: not an
+environment that lies, but an *operation* that reports success for having done
+nothing. **It has now happened four times in this project**, in four different
+disguises:
+
+| Instance | Presented as | Actually |
+|---|---|---|
+| The raster basemap fallback | a styled dark map | the vector style never loaded — §5.1 |
+| Zero-match identifier joins | a clean build | `cd:0` and NH `sldl:` matching nothing — §4.8, §4.9 |
+| The dev server on another port | a working page | last session's build on 3001 — the `predev` guard |
+| PR #14's documentation gap | a green ship | a `String.replace` that matched nothing |
+
+The first three are now guarded by code — `resolveBasemap()` returns null rather
+than substituting, the officeholder builds print matched-against-held counts,
+and `predev` refuses the port. The fourth is a habit, because there is no
+sensible way to make every text edit self-checking.
+
+So the habit, stated plainly:
+
+- **After a scripted edit, grep for the new text.** Not for the absence of an
+  error, and not for the file's mtime. Note that these files are **CRLF** and
+  prose wraps, so a phrase that spans a line break needs
+  `tr -d '\r' < file | tr '\n' ' '` before matching — a zero from a naive grep
+  is itself ambiguous, and checking which kind of zero it is takes one command.
+- **After a build that reconciles two datasets, print the match count** — and
+  the denominator beside it, or a clip reads as a failure and a failure reads as
+  a clip (§4.9).
+- **After a visual change, `pnpm shoot`.** The Officials stat card read `0`
+  beside three rendered names with 117 tests green; only the screenshot caught
+  it. Screenshots are evidence, not confirmation — take them expecting to find
+  something.
+
+The general form: **an operation that can do nothing must be asked what it
+did.**
 
 ### Starting a session: `pnpm session:start`
 

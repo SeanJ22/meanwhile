@@ -34,6 +34,13 @@ import {
 import type { DistrictType } from "@/lib/state/types";
 import type { Theme } from "@/hooks/use-stored-theme";
 import type { Venue } from "@/lib/meetings/venues";
+import {
+  applySelection,
+  applyVisibility,
+  createMarkerPool,
+  destroyMarkerPool,
+  rebuildMarkerPool,
+} from "@/lib/map/marker-pool";
 
 import "maplibre-gl/dist/maplibre-gl.css";
 
@@ -99,39 +106,8 @@ function prefersReducedMotion() {
   );
 }
 
-/**
- * Marker element for a venue.
- *
- * A button, so it is reachable by keyboard and announced properly — MapLibre
- * will happily mount an unfocusable div and leave the map unusable without a
- * mouse.
- */
-function createMarkerElement(venue: Venue): HTMLButtonElement {
-  const concluded = venue.meetings.every((m) => m.status === "CONCLUDED");
-  const count = venue.meetings.length;
-
-  const button = document.createElement("button");
-  button.type = "button";
-  button.className = "wtp-pin";
-  button.dataset.concluded = String(concluded);
-  button.setAttribute(
-    "aria-label",
-    `${venue.name}, ${count} ${count === 1 ? "meeting" : "meetings"}`,
-  );
-
-  const dot = document.createElement("span");
-  dot.className = "wtp-pin-dot";
-  button.appendChild(dot);
-
-  if (count > 1) {
-    const badge = document.createElement("span");
-    badge.className = "wtp-pin-count";
-    badge.textContent = String(count);
-    button.appendChild(badge);
-  }
-
-  return button;
-}
+/* The marker element now lives in lib/map/marker-pool.ts, with the pool that
+   reuses it. It is still a real <button> with an aria-label. */
 
 /** The zip's own centroid — where the reader asked us to look. */
 function createHereElement(zipLabel: string): HTMLDivElement {
@@ -165,7 +141,7 @@ export function MapCanvas({
   const appliedStyleRef = useRef<string | null>(
     resolveBasemap(theme)?.styleUrl ?? null,
   );
-  const markersRef = useRef(new Map<string, Marker>());
+  const poolRef = useRef(createMarkerPool());
   const hereRef = useRef<Marker | null>(null);
 
   // Handlers live in a ref so re-renders don't tear down and rebuild markers.
@@ -305,7 +281,7 @@ export function MapCanvas({
     });
 
     mapRef.current = map;
-    const markers = markersRef.current;
+    const pool = poolRef.current;
 
     // Standing invariant: any time the style changes — including the initial
     // load and every theme swap — put the district overlay back if it is wanted
@@ -333,7 +309,7 @@ export function MapCanvas({
       map.remove();
       mapRef.current = null;
       hereRef.current = null;
-      markers.clear();
+      destroyMarkerPool(pool);
     };
     // Mount once. onTileError is stable by construction in the parent.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -378,36 +354,23 @@ export function MapCanvas({
     }
   }, [camera]);
 
-  // Reconcile markers against the current venues.
+  /*
+   * Reconcile the marker pool against the venues the data contains.
+   *
+   * Markers are created once and reused. This effect runs when the *data*
+   * changes; a filter that merely narrows what is shown goes through
+   * applyVisibility below and touches only the pins whose visibility actually
+   * changed. Separating the two is the whole point of the pool — see
+   * lib/map/marker-pool.ts.
+   */
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
 
-    const markers = markersRef.current;
-    const wanted = new Set(venues.map((v) => v.key));
-
-    for (const [key, marker] of markers) {
-      if (!wanted.has(key)) {
-        marker.remove();
-        markers.delete(key);
-      }
-    }
-
-    for (const venue of venues) {
-      if (markers.has(venue.key)) continue;
-
-      const element = createMarkerElement(venue);
-      element.addEventListener("click", (event) => {
-        event.stopPropagation();
-        onSelectRef.current(venue);
-      });
-
-      const marker = new Marker({ element, anchor: "center" })
-        .setLngLat([venue.lng, venue.lat])
-        .addTo(map);
-
-      markers.set(venue.key, marker);
-    }
+    rebuildMarkerPool(poolRef.current, map, venues, (venue) =>
+      onSelectRef.current(venue),
+    );
+    applyVisibility(poolRef.current, new Set(venues.map((v) => v.key)));
   }, [venues]);
 
   // Swap the basemap when the theme changes. The listener above puts the
@@ -520,9 +483,7 @@ export function MapCanvas({
   // Selection is a class on the marker element, so it survives re-renders
   // without rebuilding the marker.
   useEffect(() => {
-    for (const [key, marker] of markersRef.current) {
-      marker.getElement().dataset.selected = String(key === selectedVenueKey);
-    }
+    applySelection(poolRef.current, selectedVenueKey);
   }, [selectedVenueKey, venues]);
 
   /**

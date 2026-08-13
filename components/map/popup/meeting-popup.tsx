@@ -10,11 +10,12 @@ import {
 } from "@/lib/map/format";
 import { tierForOcdId } from "@/lib/ocd/tiers";
 import type { SeatHolder } from "@/lib/officials/lookup";
+import type { CoveredBody } from "@/lib/registry/coverage";
+import { linksForMeeting, type OutboundLink } from "@/lib/registry/links";
 import type { Meeting } from "@/lib/sources/types";
 
 import {
   Copyable,
-  NoValue,
   PopupCard,
   PopupRow,
   PopupSectionLabel,
@@ -52,6 +53,15 @@ interface MeetingPopupProps {
    * unsourced attribution CLAUDE.md line 17 forbids.
    */
   representation?: SeatHolder[];
+  /**
+   * The registry body governing this meeting's division, when one is known.
+   *
+   * Supplies the two ladder rungs the meeting record cannot: where all of this
+   * body's agendas live, and the body's own page. Optional because a meeting
+   * whose division has no registry row still deserves its agenda and venue
+   * rungs.
+   */
+  body?: CoveredBody | null;
   onExpand?: () => void;
   onClose?: () => void;
 }
@@ -59,11 +69,13 @@ interface MeetingPopupProps {
 export function MeetingPopup({
   meeting,
   representation = [],
+  body = null,
   onExpand,
   onClose,
 }: MeetingPopupProps) {
   const tier = tierForOcdId(meeting.ocdId) ?? "local";
   const badge = STATUS_BADGE[meeting.status];
+  const links = linksForMeeting(meeting, body);
 
   return (
     <PopupCard
@@ -96,24 +108,8 @@ export function MeetingPopup({
 
       <PopupRow label="Status">{STATUS_LABEL[meeting.status]}</PopupRow>
 
-      <PopupRow label="Agenda">
-        {meeting.agendaUrl ? (
-          <a
-            href={meeting.agendaUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-baseline gap-1 text-signal hover:underline"
-          >
-            Open
-            <ExternalLink className="size-3 translate-y-0.5" />
-          </a>
-        ) : (
-          // Never a constructed link. 4.5.3 nulled the fabricated fixture URLs
-          // for exactly this reason, and a plausible fake is worse than a blank
-          // because nothing surfaces it until a reader clicks.
-          <NoValue>no agenda posted yet</NoValue>
-        )}
-      </PopupRow>
+      <PopupSectionLabel>Where to go</PopupSectionLabel>
+      <LinkLadder links={links} lookedAt={body?.lookedAt ?? false} />
 
       <PopupSectionLabel>Representation</PopupSectionLabel>
       {representation.length > 0 ? (
@@ -144,6 +140,67 @@ const STATUS_LABEL: Record<Meeting["status"], string> = {
   CONCLUDED: "Concluded",
   CANCELED: "Canceled",
 };
+
+/**
+ * Every route out of this card, best first.
+ *
+ * **An empty ladder renders as empty.** That is the whole discipline: there is
+ * no rung that constructs a plausible destination when the real ones are
+ * missing, because a link that looks right and goes nowhere is invisible until
+ * somebody clicks it — the same failure that nulled 34 fixture URLs in 4.5.3.
+ *
+ * The empty copy distinguishes the two reasons a body has nothing here, using
+ * the audit's `lookedAt`. "We haven't looked yet" is a promise we can keep;
+ * "we looked and there's nothing published" is a finding about the body. Saying
+ * the second when the first is true would be claiming diligence we never spent.
+ */
+function LinkLadder({
+  links,
+  lookedAt,
+}: {
+  links: OutboundLink[];
+  lookedAt: boolean;
+}) {
+  if (links.length === 0) {
+    return (
+      <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
+        {lookedAt
+          ? "We went looking and this body publishes nothing we can link to."
+          : "Nothing to link to yet — nobody has gone looking for this body's agendas."}
+      </p>
+    );
+  }
+
+  return (
+    <ul className="mt-1.5 space-y-1">
+      {links.map((link) => (
+        <li key={link.rung} className="flex items-baseline justify-between gap-3">
+          <a
+            href={link.url}
+            target="_blank"
+            rel="noreferrer"
+            title={link.hint}
+            className="inline-flex min-w-0 items-baseline gap-1 truncate text-[0.8125rem] text-signal hover:underline"
+          >
+            <span className="truncate">{link.label}</span>
+            <ExternalLink className="size-3 shrink-0 translate-y-0.5" />
+          </a>
+          {link.kind === "DERIVED" && (
+            // A derived link is a convenience built from coordinates we hold,
+            // not evidence about the meeting. It is marked so it can never be
+            // read as a citation sitting in a list of sourced links.
+            <span
+              title="Built from coordinates we hold — not a source"
+              className="shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted"
+            >
+              derived
+            </span>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 /** The OCD-ID row, shared with the district popup. Mono, and copyable. */
 export function OcdIdRow({ ocdId }: { ocdId: string }) {

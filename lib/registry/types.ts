@@ -53,12 +53,27 @@ export type BodyClass =
  * empty map reads as "your government does nothing"; the truth is usually "we
  * have no source for the bodies that govern here", and those are completely
  * different statements.
+ *
+ * **`NOT_ATTEMPTED` was added in 4.6.10 and it is the important one.** Until it
+ * existed, `NO_SOURCE_FOUND` was the derivation's default for every body, so it
+ * meant both "we walked the ladder and there is nothing to find" and "nobody
+ * has ever looked" — and those demand opposite responses. `NO_SOURCE_FOUND` is
+ * now a *claim* that may only be made from a `lib/registry/audit.ts` row
+ * recording an exhausted hunt. A body with no audit row is `NOT_ATTEMPTED`.
  */
 export type CoverageStatus =
+  /** An adapter reads this body's calendar today. */
   | "LIVE"
+  /** Hand-entered from a source someone read. */
   | "MANUAL"
+  /** A usable source was located; no adapter reads it yet. */
   | "KNOWN_UNCOVERED"
-  | "NO_SOURCE_FOUND";
+  /** A source was located and this repo may not read it — see docs/vendor-review.md. */
+  | "SOURCE_BLOCKED"
+  /** The ladder was walked and came back empty. A finding, not a default. */
+  | "NO_SOURCE_FOUND"
+  /** Nobody has looked yet. The derivation's default, and a real state. */
+  | "NOT_ATTEMPTED";
 
 /**
  * Where this row's claim comes from.
@@ -74,10 +89,19 @@ export type BodyOrigin =
   | "USER_REPORTED"
   | "CURATED";
 
-/** Which adapter can read this body's agendas. Open-ended by design. */
+/**
+ * Which adapter can read this body's agendas. Open-ended by design.
+ *
+ * **`CIVICWEB` is not `CIVICPLUS`.** They are different companies with
+ * confusingly similar names: CivicPlus builds CivicEngage and the AgendaCenter
+ * (Rockaway Township NJ), while CivicWeb is iCompass, *a Diligent brand* —
+ * its portal footer reads "© iCompass - A Diligent Brand" (Newbury NH). Folding
+ * them together would point one adapter at two unrelated systems.
+ */
 export type AgendaSourceType =
   | "LEGISTAR"
   | "DILIGENT"
+  | "CIVICWEB"
   | "CIVICPLUS"
   | "APPTEGY"
   | "PRIMEGOV"
@@ -178,6 +202,13 @@ export interface Body {
   bodyOrigin: BodyOrigin;
   coverageStatus: CoverageStatus;
   agendaSourceType: AgendaSourceType;
+  /**
+   * Where this body's agendas live, as a URL a reader can open.
+   *
+   * **Always a URL, never an adapter slug.** An adapter's own key for a client
+   * — Legistar's `pima` — belongs in that adapter's registry, not here, because
+   * the link ladder renders this field and a slug in an `href` is a dead link.
+   */
   agendaSourceRef: string | null;
   meetingCadence: string | null;
   homepageUrl: string | null;

@@ -1390,6 +1390,97 @@ error.**
 
 ---
 
+### 4.11 Phase 4.6.10 — somewhere to click, and who actually looked (2026-08-12)
+
+Two changes that had to ship together, because each is half an answer. Tracker
+**M21**.
+
+#### The ladder
+
+"Select Board — Regular Meeting, Fri Aug 14" was plain text. A reader who wanted
+the Town of Newbury had no route out of the card, and the address underneath it
+was inert. The app *knew* things it never offered — the body's page, the system
+the record came from, coordinates precise enough to navigate by.
+
+`lib/registry/links.ts` returns an ordered ladder — agenda, meeting record,
+all-agendas portal, body homepage, directions — and **omits every rung it cannot
+fill.** There is deliberately no fallback that builds a plausible URL out of a
+jurisdiction name. That is the 4.5.3 fabrication wearing a different hat, and it
+is worse here because a link *looks* like a promise. An empty ladder renders as
+empty.
+
+Every link is `SOURCED` or `DERIVED` **in the type**, not by convention. The only
+derived rung is the OpenStreetMap directions link, built from coordinates this
+repo already sourced from the Census geocoder, and it renders with a `derived`
+tag beside it so it can never be read as a citation sitting among real ones.
+OpenStreetMap because it needs no key and no account — nothing about the reader
+is traded for the link — and because `CLAUDE.md` rules out Google Maps.
+
+#### The audit, and the default that was lying
+
+Every one of the 265 derived bodies read `NO_SOURCE_FOUND`, and that single value
+was doing two opposite jobs: *we walked the ladder and there is nothing to find*,
+and *nobody has ever looked*. The second was true of essentially all of them,
+because `NO_SOURCE_FOUND` was simply what the derivation wrote.
+
+So `CoverageStatus` gained `NOT_ATTEMPTED` and `SOURCE_BLOCKED`, and
+`NO_SOURCE_FOUND` became **a claim requiring evidence** — an audit row in
+`lib/registry/coverage-audit.ts` recording an exhausted hunt. Today:
+
+| Status | Bodies |
+|---|---|
+| `NOT_ATTEMPTED` | 258 |
+| `KNOWN_UNCOVERED` | 6 |
+| `SOURCE_BLOCKED` | 1 |
+| `NO_SOURCE_FOUND` | **0** |
+
+Zero is the honest number and the one worth staring at. Nobody has ever walked
+the ladder to exhaustion, so nothing may say so.
+
+Seven real hunts are recorded, every rung including the misses, each with the URL
+it was read from. `build-registry.ts` overlays them and **throws** on an audit row
+whose `bodyId` matches nothing, because a stale identifier otherwise leaves a body
+looking unlooked-at forever. What the overlay does *not* touch is `bodyOrigin`,
+`name`, `sourceDataset` and `provenance` — the first version set `bodyOrigin` to
+`SOURCED` and `tests/registry-oracle.test.ts` caught it. **Finding a body's
+website does not make the body's existence a sourced claim.** That stays
+structural and the name stays null, on all 265 rows.
+
+#### Three things the hunts overturned
+
+1. **Vail Unified is NovusAgenda, not Diligent** — tracker **D13**, **D22**. The
+   Diligent adapter was scoped as covering TUSD *and* Vail. It does not. Vail's
+   own Governing Board page links to `vailschools.novusagenda.com`. The
+   `go.boarddocs.com` URL that search results assert is Vail's is **dead in a
+   real browser**, and it stays in the audit as a `MISS` rather than being
+   deleted — so the next session cannot rediscover it and record it as fact.
+   This is D16's lesson repeating exactly: infer a vendor from anything but the
+   body's own page and you get it wrong.
+
+2. **The fixture-to-registry join was broken and silent** — tracker **D15**. Five
+   of eleven in-clip fixture divisions matched *nothing*: the fixtures carried
+   flat identifiers (`state:nh/place:newbury`) while the registry nests and
+   suffixes (`county:merrimack/place:newbury_town`). Tucson and the three
+   counties happened to match, so the popup looked right in Arizona and simply
+   had no body link in New Hampshire, with nothing logged anywhere. **The
+   silent zero-match join, third occurrence.** The test now asserts the match
+   count *and the denominator*, and names the deliberately out-of-clip Cochise
+   divisions explicitly, so a clip can never read as a broken join and a broken
+   join can never hide behind "probably the clip".
+
+3. **A feed can return 200, the right content type, and nothing at all.**
+   Newbury's `/rss.xml` is a valid RSS document with zero items. Status code and
+   content type both say success. Only the body says otherwise — §8's rule
+   again, in the place it is easiest to skip.
+
+**CivicWeb is not CivicPlus.** Different companies, confusingly similar names:
+CivicPlus builds CivicEngage and the AgendaCenter (Rockaway Township), while
+CivicWeb is iCompass, *a Diligent brand* (Newbury). They are separate
+`AgendaSourceType` values, because folding them together points one adapter at
+two unrelated systems.
+
+---
+
 ## 5. Open questions
 
 ### 5.1 Vector tiles — RESOLVED 2026-08-12
@@ -1610,9 +1701,16 @@ replaced.
 
 ## 7. Current state of the branch
 
-**Working on `main` at `8ee9bdb`** (the PR #16 merge). Nothing sits on a branch.
+**Working on `claude/link-ladder-and-coverage-audit`**, branched from `main` at
+`c94aa9c` (the PR #17 merge).
 
-**test 132 pass · lint clean · build green.**
+**test 147 pass · lint clean · tsc clean · build green.**
+
+Phase 4.6.10 and 4.6.1 landed on that branch — the link ladder, the body
+coverage audit, and the `NOT_ATTEMPTED` status that stops `NO_SOURCE_FOUND`
+being a default. See §4.11. It also corrected the mock fixtures' division
+identifiers, which had never matched the registry for New Hampshire or New
+Jersey.
 
 Four PRs landed on 2026-08-12, in this order:
 
@@ -1701,13 +1799,14 @@ construction with `escapeHtml`/`onclick` attributes, and the sales data model.
   overlays with click-to-select.
 - **4.5 done** — the four defects found in testing. §4.2.
 - **4.6 mostly done.** The registry is generated and tested (§4.3, §4.4), the
-  coverage language is on screen (§4.5, M16), and the place/cousub duplicate is
-  resolved at build time from Census `FUNCSTAT` (§4.6, M17). What remains:
-  populating `agendaSourceType` per body (4.6.4), the `meeting_leads` table
-  (4.6.5), and the reader disambiguation prompt (4.6.3) — **which is a hard
-  stop**, because it adds a user data field and CLAUDE.md requires asking first.
-  The "I want this" control in 4.6.6 is deliberately unbuilt for the same
-  reason, and because there is no table to write `demandCount` to.
+  coverage language is on screen (§4.5, M16), the place/cousub duplicate is
+  resolved at build time from Census `FUNCSTAT` (§4.6, M17), and the link ladder
+  and coverage audit are in (§4.11, M21). What remains: populating
+  `agendaSourceType` for the *other 258* bodies (4.6.4 — seven now carry one
+  from a real hunt), the `meeting_leads` table (4.6.5), and the reader
+  disambiguation prompt (4.6.3), which is approved as of 2026-08-12 with
+  device-local storage. The "I want this" control and `demandCount` (4.6.3a)
+  are still unbuilt and still have no table to write to.
 - **The meetings track has started.** D14 (the vendor and statute review) is
   done and D12 (the Legistar adapter) is built and verified live, though not yet
   the app's source — §4.7. D13 (Diligent) is unblocked but should try the

@@ -17,6 +17,7 @@ import type { MeetingSearchResult } from "@/lib/meetings/query";
 import { groupByVenue, type Venue } from "@/lib/meetings/venues";
 import type { Meeting } from "@/lib/sources/types";
 import type { SeatHolder } from "@/lib/officials/lookup";
+import type { CoveredBody } from "@/lib/registry/coverage";
 import { TIER_LABEL, tierForOcdId } from "@/lib/ocd/tiers";
 import {
   formatMeetingDate,
@@ -185,6 +186,18 @@ function MapEntryInner() {
       const seat = coverage.seats.find((s) => s.ocdId === ocdId);
       return seat?.representatives ?? [];
     },
+    [current],
+  );
+
+  /**
+   * The registry body governing a division, for the popup's link ladder.
+   *
+   * Comes off the same coverage summary the notice reads, so the popup and the
+   * notice cannot disagree about who governs a point or what we hold for them.
+   */
+  const bodyFor = useCallback(
+    (ocdId: string): CoveredBody | null =>
+      current?.coverage?.bodies.find((b) => b.ocdId === ocdId) ?? null,
     [current],
   );
 
@@ -420,6 +433,7 @@ function MapEntryInner() {
           {popupMeeting && (
             <MeetingPopup
               meeting={popupMeeting}
+              body={bodyFor(popupMeeting.ocdId)}
               onClose={() => setPopupMeeting(null)}
               onExpand={() => setModal(meetingSubject(popupMeeting))}
             />

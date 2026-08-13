@@ -272,7 +272,11 @@ test("a body's name is never invented for display", () => {
     const source = registry.bodies.find((b) => b.id === body.bodyId);
     assert.ok(source, `${body.bodyId} is not in the registry`);
     assert.equal(source.name, null, `${body.bodyId} gained a name from nowhere`);
-    assert.equal(source.coverageStatus, "NO_SOURCE_FOUND");
+    // The coverageStatus assertion that used to sit here was incidental to this
+    // test and is now false: Rockaway township has an audit row, so it reads
+    // KNOWN_UNCOVERED. What this test is actually about — a name never being
+    // invented — is unaffected, and holds even for the audited rows, since a
+    // source hunt finds a website and never a body's name.
     assert.notEqual(body.divisionLabel, "", "a division label must be present to render");
   }
 });

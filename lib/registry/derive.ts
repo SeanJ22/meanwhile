@@ -168,7 +168,11 @@ export function bodiesFor(division: Division, now: string): Body[] {
     name: null,
     bodyClass: slot.bodyClass,
     bodyOrigin: "DERIVED_FROM_DIVISION_TYPE" as const,
-    coverageStatus: "NO_SOURCE_FOUND" as const,
+    // NOT_ATTEMPTED, never NO_SOURCE_FOUND. Derivation knows this body exists
+    // and nothing else; claiming a search came back empty when no search ran is
+    // the same shape of untruth as minting the body's name. A hunt recorded in
+    // lib/registry/audit.ts is the only thing that may move this.
+    coverageStatus: "NOT_ATTEMPTED" as const,
     agendaSourceType: "NONE" as const,
     agendaSourceRef: null,
     meetingCadence: null,

@@ -68,6 +68,18 @@ export interface CoveredBody {
   bodyClass: BodyClass;
   coverageStatus: CoverageStatus;
   homepageUrl: string | null;
+  /** Where this body's agendas live, when a hunt found them. */
+  agendaSourceRef: string | null;
+  /**
+   * Whether anybody has actually gone looking for this body's calendar.
+   *
+   * Carried separately from `coverageStatus` because it is the question the
+   * reader's trust turns on and the status alone cannot answer it convincingly:
+   * "we don't have their calendar" reads the same whether we searched and came
+   * up empty or never tried. 258 of 265 bodies are the second, and saying so is
+   * more honest than letting a blank imply diligence.
+   */
+  lookedAt: boolean;
   tier: Tier;
 }
 
@@ -121,7 +133,17 @@ export interface CoverageSummary {
    * the divisions that *were* resolved.
    */
   senators: SeatHolder[];
-  counts: { total: number; withSource: number; withoutSource: number };
+  /**
+   * `lookedAt` is the count of bodies a source hunt has actually been run for.
+   * It is what lets the copy separate "we searched and found nothing" from
+   * "we haven't got to these yet" instead of letting one sentence cover both.
+   */
+  counts: {
+    total: number;
+    withSource: number;
+    withoutSource: number;
+    lookedAt: number;
+  };
   /**
    * How many of the seats above we can actually name someone for.
    *
@@ -193,6 +215,11 @@ export function summarizeCoverage(
       bodyClass: body.bodyClass,
       coverageStatus: body.coverageStatus,
       homepageUrl: body.homepageUrl,
+      agendaSourceRef: body.agendaSourceRef,
+      // Read off the status rather than the audit file, so the read layer keeps
+      // needing only the registry. NOT_ATTEMPTED is precisely the value the
+      // derivation writes when no audit row overlaid it.
+      lookedAt: body.coverageStatus !== "NOT_ATTEMPTED",
       tier: division?.tier ?? "local",
     };
   });
@@ -240,7 +267,12 @@ export function summarizeCoverage(
     seats,
     unincorporated,
     senators,
-    counts: { total: covered.length, withSource, withoutSource },
+    counts: {
+      total: covered.length,
+      withSource,
+      withoutSource,
+      lookedAt: covered.filter((b) => b.lookedAt).length,
+    },
     seatCounts: {
       total: seats.length,
       named: seats.filter((s) => s.representatives.length > 0).length,

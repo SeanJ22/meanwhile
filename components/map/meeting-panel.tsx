@@ -22,9 +22,11 @@ import type { Meeting } from "@/lib/sources/types";
 interface MeetingPanelProps {
   venue: Venue;
   onClose: () => void;
+  /** Opens the meeting popup. Omitted leaves the rows inert. */
+  onOpenMeeting?: (meeting: Meeting) => void;
 }
 
-export function MeetingPanel({ venue, onClose }: MeetingPanelProps) {
+export function MeetingPanel({ venue, onClose, onOpenMeeting }: MeetingPanelProps) {
   return (
     <aside
       aria-label={`Meetings at ${venue.name}`}
@@ -58,14 +60,24 @@ export function MeetingPanel({ venue, onClose }: MeetingPanelProps) {
 
       <div className="divide-y divide-rule-soft overflow-y-auto">
         {venue.meetings.map((meeting) => (
-          <MeetingEntry key={meeting.id} meeting={meeting} />
+          <MeetingEntry
+            key={meeting.id}
+            meeting={meeting}
+            onOpen={onOpenMeeting}
+          />
         ))}
       </div>
     </aside>
   );
 }
 
-function MeetingEntry({ meeting }: { meeting: Meeting }) {
+function MeetingEntry({
+  meeting,
+  onOpen,
+}: {
+  meeting: Meeting;
+  onOpen?: (meeting: Meeting) => void;
+}) {
   const concluded = meeting.status === "CONCLUDED";
 
   return (
@@ -77,9 +89,23 @@ function MeetingEntry({ meeting }: { meeting: Meeting }) {
             concluded ? "bg-concluded" : "bg-signal"
           }`}
         />
-        <h3 className="font-display text-[0.95rem] font-semibold leading-snug tracking-tight text-paper">
-          {meeting.bodyName}
-        </h3>
+        {onOpen ? (
+          // The body name is the control, because that is where a reader
+          // aiming at "tell me more about this" will click.
+          <h3>
+            <button
+              type="button"
+              onClick={() => onOpen(meeting)}
+              className="text-left font-display text-[0.95rem] font-semibold leading-snug tracking-tight text-paper hover:text-signal"
+            >
+              {meeting.bodyName}
+            </button>
+          </h3>
+        ) : (
+          <h3 className="font-display text-[0.95rem] font-semibold leading-snug tracking-tight text-paper">
+            {meeting.bodyName}
+          </h3>
+        )}
       </div>
 
       <p className="mt-1 pl-[1rem] text-sm leading-snug text-paper-dim">

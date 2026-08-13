@@ -150,6 +150,23 @@ if (clicked) {
   await page.waitForTimeout(500);
 }
 
+// A sequence of clicks, for states that only exist several steps in — a popup
+// reached through a marker and a panel row, or a modal tab reached through
+// both plus the expand button. Pipe-separated rather than comma, because
+// Playwright selectors contain commas far more often than pipes.
+const clickSeq = arg("clicks");
+if (clickSeq) {
+  for (const selector of clickSeq.split("|")) {
+    const trimmed = selector.trim();
+    if (!trimmed) continue;
+    // Fail loudly. A missing step used to leave the shot on an earlier state,
+    // which looks exactly like a successful capture of the wrong thing — the
+    // no-op-reports-success shape this project keeps rediscovering.
+    await page.click(trimmed, { timeout: 5000 });
+    await page.waitForTimeout(450);
+  }
+}
+
 if (flag("list")) {
   await page.click(".count-badge");
   await page.waitForTimeout(400);

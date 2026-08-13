@@ -1521,3 +1521,338 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ==========================================================================
+   Popup card — the port of EdiaStratMap's `.popup-card`.
+
+   Kept as plain CSS rather than Tailwind utilities because the measurements
+   are the spec: 300px, 16px/18px padding, 55vh, a 5px scrollbar. Those are
+   ported values, and burying them in a class string makes them look like
+   choices somebody made here.
+   ========================================================================== */
+
+.popup-card {
+  position: relative;
+  width: 300px;
+  max-width: calc(100vw - 2rem);
+  max-height: 55vh;
+  overflow-y: auto;
+  padding: 16px 18px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-popup);
+}
+
+/* 5px thin scrollbar, matching the sidebar's treatment. */
+.popup-card::-webkit-scrollbar {
+  width: 5px;
+}
+
+.popup-card::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.popup-card::-webkit-scrollbar-thumb {
+  background: var(--panel-border);
+  border-radius: 3px;
+}
+
+.popup-card {
+  scrollbar-width: thin;
+  scrollbar-color: var(--panel-border) transparent;
+}
+
+.popup-expand-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
+}
+
+.popup-expand-btn:hover,
+.popup-expand-btn:focus-visible {
+  color: var(--text);
+  background: var(--surface);
+}
+
+/* The eyebrow. Tier colour is set inline from the tier accent, so this only
+   carries the type treatment. */
+.popup-type {
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  /* Room for the expand button, which is absolutely positioned over this row. */
+  padding-right: 28px;
+}
+
+/* Edia appends a holdout badge to the eyebrow; ours appends meeting status. */
+.popup-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 8px;
+  letter-spacing: 0.5px;
+  background: var(--surface);
+  color: var(--text-dim);
+}
+
+.popup-badge[data-status="CANCELED"] {
+  color: var(--canceled);
+  background: color-mix(in srgb, var(--canceled) 15%, transparent);
+}
+
+.popup-badge[data-status="CONCLUDED"] {
+  color: var(--concluded);
+  background: color-mix(in srgb, var(--concluded) 15%, transparent);
+}
+
+.popup-card h3 {
+  margin-top: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text);
+}
+
+.popup-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.popup-row:last-child {
+  border-bottom: none;
+}
+
+.pk {
+  font-size: 10px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.pv {
+  font-size: 12px;
+  color: var(--text);
+  text-align: right;
+  word-break: break-word;
+}
+
+/* Edia's `.pv.money`. Numerals, times and OCD-IDs get the mono face so digits
+   line up and an identifier is visibly an identifier rather than prose. */
+.pv.mono {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+}
+
+.popup-section-label {
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px solid var(--panel-border);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+/* Click-to-copy, with the tooltip affordance Edia uses. */
+.copyable {
+  cursor: pointer;
+  position: relative;
+}
+
+.copyable:hover {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+}
+
+.copyable[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 6px);
+  transform: translateX(-50%);
+  padding: 3px 7px;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  border: 1px solid var(--panel-border);
+  color: var(--text);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  z-index: 5;
+}
+
+.copyable[data-tooltip]:hover::after,
+.copyable[data-tooltip][data-copied="true"]::after {
+  opacity: 1;
+}
+
+/* A 40px invisible touch target under the 14px dot.
+ *
+ * Ported from Edia's mobile block, and scoped there rather than applied at
+ * every size. `pointer: coarse` is the honest condition: the problem is a
+ * fingertip against a 14px dot, and a mouse is precise enough not to need the
+ * help — while a 40px target on every pin makes neighbours overlap where
+ * venues are close together.
+ *
+ * A note on how that was established, because the first version of this comment
+ * got it wrong. Pins around downtown Tucson *do* overlap and swallow each
+ * other's clicks, which a headless capture surfaced as one marker intercepting
+ * pointer events for another — but that happens with or without this rule, at
+ * 14px, because two venues sit within a few metres on screen. The overlap is
+ * real and is tracker M19; it is not caused by this block. */
+@media (pointer: coarse) {
+  .wtp-pin::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40px;
+    height: 40px;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* ==========================================================================
+   Full-screen modal — the port of `.account-modal`.
+   ========================================================================== */
+
+.account-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+}
+
+.account-modal {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 680px;
+  max-height: min(80vh, 44rem);
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-popup);
+  overflow: hidden;
+}
+
+.account-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.account-modal-title {
+  margin-top: 6px;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--text);
+}
+
+.account-modal-subtitle {
+  margin-top: 3px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.account-modal-tabs {
+  display: flex;
+  gap: 2px;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--panel-border);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.account-modal-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.account-modal-tab {
+  padding: 9px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.account-modal-tab:hover {
+  color: var(--text-dim);
+}
+
+.account-modal-tab[data-active="true"] {
+  color: var(--text);
+  border-bottom-color: var(--accent-all);
+}
+
+.account-modal-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 14px 20px 20px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--panel-border) transparent;
+}
+
+.account-modal-body::-webkit-scrollbar {
+  width: 5px;
+}
+
+.account-modal-body::-webkit-scrollbar-thumb {
+  background: var(--panel-border);
+  border-radius: 3px;
+}
+
+.account-modal-person {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.account-modal-person:last-child {
+  border-bottom: none;
+}
+
+/* Pool visibility. A filtered-out pin is hidden, not destroyed — see
+   lib/map/marker-pool.ts for why that distinction is the whole point. */
+.wtp-pin[data-hidden="true"] {
+  display: none;
+}

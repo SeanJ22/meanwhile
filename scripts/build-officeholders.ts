@@ -20,9 +20,11 @@ import { join } from "node:path";
 import { congressSource } from "../lib/sources/congress/index.ts";
 import {
   fetchAll,
+  GRAPHQL_DAILY_QUOTA,
   indexDivisions,
   normalize as normalizePlural,
   PLURAL_STATES,
+  requestCount,
 } from "../lib/sources/plural/index.ts";
 import registry from "../lib/registry/registry.json" with { type: "json" };
 
@@ -137,6 +139,19 @@ async function buildStates(collectedAt: string) {
   const people = await fetchAll();
 
   console.log(`\nplural: ${people.length} legislators fetched across ${PLURAL_STATES.length} states`);
+
+  // Printed every run so the quota stays a visible number. The free tier is
+  // 500 GraphQL requests/day at 1/sec; static bulk files are not metered
+  // against it, and the two are reported separately so nothing reads as
+  // pressure on a ceiling it is not approaching.
+  console.log(
+    `  requests: ${requestCount.bulk} bulk (unmetered) · ${requestCount.graphql} GraphQL of ${GRAPHQL_DAILY_QUOTA}/day`,
+  );
+  if (requestCount.graphql > GRAPHQL_DAILY_QUOTA * 0.5) {
+    console.warn(
+      `  WARNING: this run used over half the daily GraphQL quota. Cache harder or move the work to bulk.`,
+    );
+  }
 
   for (const state of PLURAL_STATES) {
     const mine = people.filter((p) => p.state === state);

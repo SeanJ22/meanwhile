@@ -19,7 +19,8 @@
     "districts:fetch": "tsx scripts/fetch-districts.ts",
     "shoot": "tsx scripts/shoot.mts",
     "registry:build": "tsx scripts/build-registry.ts",
-    "handoff": "node scripts/handoff.mjs"
+    "handoff": "node scripts/handoff.mjs",
+    "officials:build": "tsx scripts/build-officeholders.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

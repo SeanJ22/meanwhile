@@ -694,6 +694,14 @@ interface Feature {
     lsad?: string;
     funcstat?: string;
     classfp?: string;
+    /**
+     * The Census GEOID, verbatim. Complete by construction and exact — it
+     * matched 100% on every layer during the M17 TIGER join. Retained so
+     * that if the OCD-ID convention ever has to change, identifiers are
+     * re-derived from an exact key rather than rebuilt from name fields and
+     * slug rules that already produced 348 canonical-match misses.
+     */
+    geoid?: string;
   };
   geometry:
     | { type: "Polygon"; coordinates: number[][][] }
@@ -734,6 +742,7 @@ async function build(opts: BuildOptions): Promise<number> {
       lsad?: string;
       funcstat?: string;
       classfp?: string;
+      geoid?: string;
       polygons: Polygon[];
     }
     const pending: Pending[] = [];
@@ -764,7 +773,14 @@ async function build(opts: BuildOptions): Promise<number> {
         continue;
       }
 
-      pending.push({ ...identity, polygons });
+      // GEOID rides along from the raw row for every layer — it is the exact
+      // key the OCD identifiers could be re-derived from if the convention
+      // ever changes, and it costs a few bytes per feature to keep.
+      pending.push({
+        ...identity,
+        geoid: (row as { GEOID?: string }).GEOID || undefined,
+        polygons,
+      });
     }
 
     if (pending.length === 0) {
@@ -869,6 +885,7 @@ async function build(opts: BuildOptions): Promise<number> {
           // says whether it is the same government the other layer listed.
           ...(item.funcstat ? { funcstat: item.funcstat } : {}),
           ...(item.classfp ? { classfp: item.classfp } : {}),
+          ...(item.geoid ? { geoid: item.geoid } : {}),
         },
         geometry:
           simplified.length === 1

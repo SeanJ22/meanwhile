@@ -1,7 +1,10 @@
 import type { Map as MapLibreMap, MapGeoJSONFeature } from "maplibre-gl";
 
-import { TIER_ACCENT_VAR, type Tier } from "@/lib/ocd/tiers";
-import type { DistrictType } from "@/lib/state/types";
+// Relative, extension-bearing imports — the style the rest of lib/ uses —
+// because node --test cannot resolve the `@/` alias and this module is now
+// exercised by tests/municipal-layer.test.ts (the §4.2 lesson again).
+import { TIER_ACCENT_VAR, type Tier } from "../ocd/tiers.ts";
+import type { DistrictType } from "../state/types.ts";
 
 /**
  * District overlays.
@@ -16,15 +19,24 @@ import type { DistrictType } from "@/lib/state/types";
  */
 
 /**
- * The four properties `pnpm districts:fetch` writes, and nothing else.
+ * The properties the map reads, out of what `pnpm districts:fetch` writes.
  *
  * Declared here rather than pulled from a GeoJSON typings package: this is the
  * exact contract between the build script and the map, and stating it makes a
- * mismatch a type error instead of an undefined at runtime.
+ * mismatch a type error instead of an undefined at runtime. The build script
+ * also writes `lsad`, `classfp` and `geoid` on the layers that carry them;
+ * the map does not read those and they are deliberately not typed here.
  */
 export interface DistrictFeature {
   type: "Feature";
-  properties: { ocdId: string; state: string; district: string; label: string };
+  properties: {
+    ocdId: string;
+    state: string;
+    district: string;
+    label: string;
+    /** Census functional status, on place and county-subdivision features. */
+    funcstat?: string;
+  };
   geometry: {
     type: "Polygon" | "MultiPolygon";
     coordinates: number[][][] | number[][][][];
@@ -40,6 +52,18 @@ export interface DistrictCollection {
 interface LayerSpec {
   /** Files under public/geo, merged into one source. */
   files: string[];
+  /**
+   * Draw only features whose FUNCSTAT says a government sits there — M14.
+   *
+   * The municipal type merges the place and county-subdivision layers, and
+   * the same government can appear in both: Census marks the row it created
+   * purely to fill its hierarchy `F` (fictitious), so filtering on FUNCSTAT
+   * dedupes exactly the way the registry already does (`derive.ts`). It is
+   * also what keeps Arizona's CCDs — statistical shapes with no government —
+   * from ever drawing as municipal boundaries. Features without the property
+   * (every other layer) always pass.
+   */
+  governingOnly?: boolean;
   tier: Tier;
   label: string;
   /**
@@ -110,12 +134,25 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
     labelMinZoom: 6,
   },
   municipal: {
-    files: ["place-04.geojson", "place-34.geojson", "place-33.geojson"],
+    // Both halves of the municipal picture (M14): places, and the county
+    // subdivisions that ARE the municipalities in New Jersey and New
+    // Hampshire — Rockaway Township and Newbury have no place polygon at
+    // all. FUNCSTAT (governingOnly) is what stops the merge double-drawing
+    // Concord and friends and keeps Arizona's statistical CCDs off the map.
+    files: [
+      "place-04.geojson",
+      "place-34.geojson",
+      "place-33.geojson",
+      "cousub-04.geojson",
+      "cousub-34.geojson",
+      "cousub-33.geojson",
+    ],
     tier: "local",
     label: "Municipal",
     dash: [3, 2],
     weight: 1.0,
     labelMinZoom: 8,
+    governingOnly: true,
   },
   school: {
     files: [
@@ -169,6 +206,25 @@ function token(name: string, fallback: string): string {
 
 /* ------------------------------------------------------------- loading --- */
 
+/**
+ * Mirrors `GOVERNING_FUNCSTAT` in `lib/registry/derive.ts`: A/B/C/G govern,
+ * F/N/S/I do not. Kept as a literal here because the map bundle must not
+ * import registry code (§0d), and a test asserts the two stay in agreement.
+ */
+export const GOVERNING_FUNCSTAT = new Set(["A", "B", "C", "G"]);
+
+export function keepFeature(
+  spec: { governingOnly?: boolean },
+  feature: DistrictFeature,
+): boolean {
+  if (!spec.governingOnly) return true;
+  const funcstat = feature.properties.funcstat;
+  // A feature without the property predates the FUNCSTAT join or belongs to
+  // a layer that never carries it; keeping it is the non-destructive default.
+  if (!funcstat) return true;
+  return GOVERNING_FUNCSTAT.has(funcstat);
+}
+
 const cache = new Map<DistrictType, Promise<DistrictCollection>>();
 
 /**
@@ -202,7 +258,7 @@ export function loadDistricts(
   )
     .then((groups) => ({
       type: "FeatureCollection" as const,
-      features: groups.flat(),
+      features: groups.flat().filter((f) => keepFeature(spec, f)),
     }))
     .catch((error) => {
       // Let the next attempt retry rather than caching the failure forever.

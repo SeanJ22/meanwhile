@@ -123,12 +123,18 @@ test("feature count matches the 119th Congress after drops", async () => {
   );
 });
 
-test("every feature keeps exactly the four properties the map needs", async () => {
+test("every feature keeps exactly the properties the map needs plus GEOID", async () => {
+  // GEOID joined the retained set 2026-08-13: complete by construction and
+  // exact (it matched 100% on every layer in the M17 TIGER join), it is what
+  // lets the OCD convention be re-derived from an exact key if it ever has to
+  // change, instead of being rebuilt from name fields and slug rules that
+  // already produced 348 canonical-match misses. Cost across all files:
+  // ~15.8 KB.
   const features = await loadFeatures();
   for (const feature of features) {
     assert.deepEqual(
       Object.keys(feature.properties).sort(),
-      ["district", "label", "ocdId", "state"],
+      ["district", "geoid", "label", "ocdId", "state"],
       `unexpected properties on ${feature.properties.ocdId}`,
     );
   }

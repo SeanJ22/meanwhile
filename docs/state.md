@@ -48,13 +48,13 @@ works.
 | `corepack pnpm session:start` | Start-of-session sweep, then the dev server — see §8. `--check` starts nothing |
 | `corepack pnpm dev` | Development server. Refuses if 3000 is taken; records its pid in `.dev-server.pid` |
 | `corepack pnpm build` | Production build |
-| `corepack pnpm test` | `node --test` over `tests/` — 107 tests |
+| `corepack pnpm test` | `node --test` over `tests/` — 129 tests |
 | `corepack pnpm lint` | ESLint |
 | `corepack pnpm ingest mock` | Run one source adapter end to end |
 | `corepack pnpm zcta:fetch` | Rebuild zip centroids from Census (see §3.2) |
 | `corepack pnpm districts:fetch [type...]` | Rebuild boundary layers (see §2) |
 | `corepack pnpm registry:build` | Regenerate the division and body registry (§4.4) |
-| `corepack pnpm officials:build` | Regenerate the federal officeholder roster (§4.8) |
+| `corepack pnpm officials:build` | Regenerate the officeholder rosters — federal and per state (§4.8, §4.9) |
 | `corepack pnpm shoot <name>` | Headless capture of what actually rendered |
 | `corepack pnpm handoff` | End-of-session sweep — see §8. `--check` reports without touching anything |
 | `corepack pnpm db:generate` / `db:migrate` | Drizzle migrations |
@@ -157,7 +157,8 @@ real adapter is not asked for the same window three times.
   be of an empty map.
 - **Tests** — `cascade`, `zoned`, `districts`, `tiers`, `district-hits`,
   `zip-coverage`, `fixture-provenance`, `subdivisions`, `registry-oracle`,
-  `coverage`, `legistar`, `officeholders`. **107 total.**
+  `coverage`, `legistar`, `officeholders`, `officeholder-lookup`, `plural`.
+  **129 total.**
 
 ### The division and body registry — `lib/registry/`
 
@@ -1195,12 +1196,96 @@ self-hosting: Congress.gov image URLs 403 on programmatic fetches, and
 `theunitedstates.io` is HTTP-only, so hotlinking it from an HTTPS page is
 mixed-content blocked and fails in a way the reader sees and the build does not.
 
+### 4.9 State legislators, and the names on screen (2026-08-12)
+
+Tier 2 (**D03**) and the rendering (§5.0 step 3) landed together, because the
+rendering is what makes either tier worth having.
+
+**`data.openstates.org/people/current/<st>.csv`, nightly, no key and no login.**
+Verified live for all three states. So `PLURAL_API_KEY` is **not required for the
+roster** — it is for the v3 API, which none of this touches. Data is CC-0;
+attribution is requested rather than required and is carried anyway.
+
+#### The New Hampshire trap — the at-large trap in a different costume
+
+Plural designates New Hampshire House districts by **county and number** —
+"Merrimack 8", "Rockingham 30". This repo's identifiers are Census numeric
+codes: `sldl:608`. **A direct join scores 0 of 201, silently.**
+
+The bridge is the registry's own Census-sourced *label*, which carries the
+statutory designation: `sldl:608` is labelled "State House District Merrimack
+08". `indexDivisions()` keys on `state|chamber|designation` and
+`designationKey()` strips zero-padding so the two spellings meet.
+
+**This is not the name-string join `CLAUDE.md` forbids, and the difference is
+worth stating.** That rule is about joining *geographic entities* on colloquial
+names that collide across states and drift between sources. A New Hampshire
+House district's designation *is* its statutory identity; the match is scoped to
+one state and one chamber, exact after normalization rather than fuzzy, every
+miss is reported, and the output is keyed on this repo's OCD-IDs throughout.
+
+#### The denominator is the point
+
+| State | Legislators | Linked | Districts the registry holds | With someone |
+|---|---|---|---|---|
+| AZ | 90 | 24 | 16 | **16** |
+| NJ | 120 | 21 | 14 | **14** |
+| NH | 410 | 85 | 53 | **53** |
+
+**Zero holes.** The apparent shortfall — 24 of 90 — is the three-county clip,
+not a broken join, and the build prints held-against-covered per state precisely
+so the two can never be confused. A raw fraction alone would read as a 73%
+failure when it is complete coverage of a clipped file.
+
+**Many-to-many, confirmed in real data rather than argued from statute.** AZ
+LD19 returns one senator and **two** representatives; NJ Assembly District 25
+returns two Assemblymembers; NH Merrimack 07 returns two. A one-seat-per-district
+column would have had to drop half of them.
+
+**Chamber titles are a per-state table, not derived.** New Jersey's lower
+chamber is the General Assembly and its members are **Assemblymembers**. A state
+with no entry reports rather than inventing a title — the same rule that stops
+the body registry minting "supervisors" where a state says "select board".
+
+#### What the screen says now
+
+85641 went from *"We haven't sourced their names or meeting schedules yet"* to
+naming all six people, each linked to their own site with a **source** link to
+the record it was read from:
+
+> AZ-6 — Juan Ciscomani · Republican
+> State House District 19 — Gail Griffin, Lupe Diaz
+> State Senate District 19 — David Gowan
+> U.S. Senators — Mark Kelly, Ruben Gallego
+
+The footnote **narrows** rather than blanket-claiming: it now covers only the
+bodies, whose names and schedules are still unsourced. Saying "we haven't
+sourced their names" beside a rendered name is its own small lie.
+
+An empty seat renders **"no record yet"**, never "vacant". Having no record and
+the seat being empty are different claims and only one of them is ours to make.
+
+**The screenshot caught what the tests could not.** The Officials stat card read
+`0` with three names rendered beside it — `computeStats` already accepted the
+count and nothing ever passed it. It reads 6 now. This is the second time in two
+sessions that `pnpm shoot` found something green tests missed.
+
+**Two tests had to be rewritten, and the reason generalizes.** They asserted
+that state legislative seats had no records — true when written, false the
+moment Plural landed. They pinned a *moment* rather than a *mechanism*. Their
+replacements assert the invariant: an unindexed division yields an empty list,
+and `seatCounts.named` equals the number of seats that actually have someone.
+
 #### Not done
 
-Step 3 of §5.0 — **putting the names on screen.** The coverage notice still ends
-"We haven't sourced their names or meeting schedules yet" for AZ-6 and the two
-legislative districts, and the data to replace half that sentence now exists.
-That is the next piece, and it is small.
+**Term dates and photos.** The Plural CSV carries no term dates — those need the
+API or the `openstates/people` YAML. Photos are published as URLs by both
+sources and are shipped by neither, because rendering one would be a hotlink of
+unknown licence (D20).
+
+**The district popup.** §5.0 step 3 asks for the names there too. Phase 6 has not
+been built, so there is no popup yet — the names live on the coverage notice
+alone.
 
 ---
 
@@ -1383,7 +1468,7 @@ correct — `resolveZip` only reports it when the table is partial.
 counties, so a reader can click districts in places that have no meetings behind
 them. Honest, and the coverage tier says so, but the asymmetry is new.
 
-**Map-layer test coverage is still thin.** 107 tests now cover the cascade, time
+**Map-layer test coverage is still thin.** 129 tests now cover the cascade, time
 handling, OCD identity, the tier axis, district disambiguation, fixture
 provenance, county subdivisions and the registry oracle. Nothing tests marker
 reconciliation, camera logic, or basemap resolution — which is part of why the
@@ -1687,7 +1772,7 @@ State as of 2026-08-12, verified rather than assumed:
 - **R07 is fixed.** `--ship` fast-forwards local `main` and pushes `-u` for a
   branch with no upstream; the plain check and `session:start` both report a
   stale local `main`. If the repo ever still looks empty, it is not — §7.
-- **107 tests, lint and build all pass.** M16, M17, R07, R09, R10 and D14 all
+- **129 tests, lint and build all pass.** M16, M17, R07, R09, R10 and D14 all
   Done with evidence in the tracker.
 
   **`git-state.txt` reads this line, so a stale number here becomes a false

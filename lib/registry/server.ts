@@ -33,11 +33,16 @@ interface Loaded {
 /**
  * The generated officeholder rosters, by scope.
  *
- * One file today — the federal roster. Per-state files (`officeholders-04.json`
- * and so on) join this list as they are generated, so adding a state is adding
- * a file rather than regenerating everything.
+ * The federal roster plus one file per state, named by FIPS — 04 Arizona, 33
+ * New Hampshire, 34 New Jersey. Adding a state is adding a file and a line
+ * here, rather than regenerating everything.
  */
-const ROSTERS = ["officeholders-us.json"];
+const ROSTERS = [
+  "officeholders-us.json",
+  "officeholders-04.json",
+  "officeholders-33.json",
+  "officeholders-34.json",
+];
 
 let cache: Promise<Loaded> | null = null;
 

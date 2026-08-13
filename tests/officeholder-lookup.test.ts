@@ -108,22 +108,28 @@ test("85641 now names its representative, which it could not before", async () =
   assert.equal(coverage.senators.length, 2);
 });
 
-test("state legislative seats report no record rather than a name", async () => {
-  // Until Plural Open lands (D03). An empty list means we have no record — it
-  // must never be read, or rendered, as the seat being vacant.
-  const coverage = await coverageAt(VAIL[0], VAIL[1], 0);
-  const legislative = coverage.seats.filter((s) => s.divisionType !== "cd");
-
-  assert.ok(legislative.length > 0);
-  assert.ok(legislative.every((s) => s.representatives.length === 0));
+test("a seat with no record resolves to an empty list, never a placeholder", () => {
+  // This used to assert that state legislative seats were unnamed, which was
+  // true until Plural landed and then failed — it pinned a moment rather than
+  // the mechanism. What must hold forever is that a division nobody is indexed
+  // against yields nothing, so the UI can say "no record yet" rather than
+  // "vacant". Those are different claims and only one is ours to make.
+  const index = indexByDivision([]);
+  assert.deepEqual(holdersFor(index, "ocd-division/country:us/state:az/sldl:19"), []);
 });
 
-test("the footnote can tell a partly-sourced point from an unsourced one", async () => {
+test("seatCounts.named counts exactly the seats that have someone", async () => {
+  // The condition the footnote switches on. Asserting the invariant rather
+  // than a particular coverage level, so improving coverage does not fail it.
   const coverage = await coverageAt(VAIL[0], VAIL[1], 0);
 
-  // Exactly the condition the copy switches on: some seats named, not all.
-  assert.ok(coverage.seatCounts.named > 0);
-  assert.ok(coverage.seatCounts.named < coverage.seatCounts.total);
+  const actuallyNamed = coverage.seats.filter(
+    (s) => s.representatives.length > 0,
+  ).length;
+
+  assert.equal(coverage.seatCounts.named, actuallyNamed);
+  assert.equal(coverage.seatCounts.total, coverage.seats.length);
+  assert.ok(coverage.seatCounts.named <= coverage.seatCounts.total);
 });
 
 test("every rendered name carries a source, at all four kinds of point", async () => {

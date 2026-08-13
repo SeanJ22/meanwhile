@@ -1,0 +1,1468 @@
+{
+ "formatVersion": 1,
+ "generatedAt": "2026-08-13T18:43:12.049Z",
+ "sources": [
+  {
+   "source": "legistar",
+   "ok": true,
+   "error": null,
+   "fetched": 9,
+   "normalized": 7,
+   "drops": {
+    "placeless": 2,
+    "unknownVenue": 0,
+    "unplaceableInTime": 0,
+    "notConfigured": 0
+   }
+  },
+  {
+   "source": "civicplus",
+   "ok": true,
+   "error": null,
+   "fetched": 1,
+   "normalized": 9,
+   "drops": {
+    "placeless": 0,
+    "unknownVenue": 0,
+    "unplaceableInTime": 0,
+    "notConfigured": 2
+   }
+  },
+  {
+   "source": "onbase",
+   "ok": true,
+   "error": null,
+   "fetched": 1,
+   "normalized": 8,
+   "drops": {
+    "placeless": 0,
+    "unknownVenue": 3,
+    "unplaceableInTime": 0,
+    "notConfigured": 0
+   }
+  },
+  {
+   "source": "apptegy",
+   "ok": true,
+   "error": null,
+   "fetched": 2,
+   "normalized": 22,
+   "drops": {
+    "placeless": 0,
+    "unknownVenue": 0,
+    "unplaceableInTime": 0,
+    "notConfigured": 111
+   }
+  },
+  {
+   "source": "diligent",
+   "ok": true,
+   "error": null,
+   "fetched": 2,
+   "normalized": 9,
+   "drops": {
+    "placeless": 5,
+    "unknownVenue": 0,
+    "unplaceableInTime": 0,
+    "notConfigured": 0
+   }
+  }
+ ],
+ "meetings": [
+  {
+   "id": "legistar:pima:1820",
+   "ocdId": "ocd-division/country:us/state:az/county:pima",
+   "bodyName": "Board of Supervisors",
+   "title": "Study Session",
+   "startsAt": "2026-07-14T13:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
+    "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701",
+    "lat": 32.221618,
+    "lng": -110.974036
+   },
+   "agendaUrl": "https://legistar.granicus.com/pima/meetings/2026/7/1820_A_Board_of_Supervisors_26-07-14_Online_Agenda.pdf",
+   "jurisdiction": "Pima County, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1820&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+    "sourceOrg": "Pima County Clerk of the Board",
+    "collectedAt": "2026-08-13T18:43:06.871Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "legistar:pima:1821",
+   "ocdId": "ocd-division/country:us/state:az/county:pima",
+   "bodyName": "Board of Supervisors",
+   "title": "Board of Supervisors",
+   "startsAt": "2026-07-14T17:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
+    "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701",
+    "lat": 32.221618,
+    "lng": -110.974036
+   },
+   "agendaUrl": "https://legistar.granicus.com/pima/meetings/2026/7/1821_A_Board_of_Supervisors_26-07-14_Online_Agenda.pdf",
+   "jurisdiction": "Pima County, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1821&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+    "sourceOrg": "Pima County Clerk of the Board",
+    "collectedAt": "2026-08-13T18:43:06.871Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "legistar:pima:1822",
+   "ocdId": "ocd-division/country:us/state:az/county:pima",
+   "bodyName": "Board of Supervisors",
+   "title": "Board of Supervisors",
+   "startsAt": "2026-07-28T17:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
+    "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701",
+    "lat": 32.221618,
+    "lng": -110.974036
+   },
+   "agendaUrl": "https://legistar.granicus.com/pima/meetings/2026/7/1822_A_Board_of_Supervisors_26-07-28_Online_Agenda.pdf",
+   "jurisdiction": "Pima County, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1822&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+    "sourceOrg": "Pima County Clerk of the Board",
+    "collectedAt": "2026-08-13T18:43:06.871Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "legistar:pima:1823",
+   "ocdId": "ocd-division/country:us/state:az/county:pima",
+   "bodyName": "Board of Supervisors",
+   "title": "Study Session",
+   "startsAt": "2026-08-11T13:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
+    "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701",
+    "lat": 32.221618,
+    "lng": -110.974036
+   },
+   "agendaUrl": "https://legistar.granicus.com/pima/meetings/2026/8/1823_A_Board_of_Supervisors_26-08-11_Online_Agenda.pdf",
+   "jurisdiction": "Pima County, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1823&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+    "sourceOrg": "Pima County Clerk of the Board",
+    "collectedAt": "2026-08-13T18:43:06.871Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "legistar:pima:1824",
+   "ocdId": "ocd-division/country:us/state:az/county:pima",
+   "bodyName": "Board of Supervisors",
+   "title": "Board of Supervisors",
+   "startsAt": "2026-08-11T17:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
+    "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701",
+    "lat": 32.221618,
+    "lng": -110.974036
+   },
+   "agendaUrl": "https://legistar.granicus.com/pima/meetings/2026/8/1824_A_Board_of_Supervisors_26-08-11_Online_Agenda.pdf",
+   "jurisdiction": "Pima County, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1824&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+    "sourceOrg": "Pima County Clerk of the Board",
+    "collectedAt": "2026-08-13T18:43:06.871Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "legistar:pima:1854",
+   "ocdId": "ocd-division/country:us/state:az/county:pima",
+   "bodyName": "Board of Supervisors",
+   "title": "Joint Meeting",
+   "startsAt": "2026-08-13T12:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "1 E. Broadway Blvd, 4th Floor",
+    "address": "1 E. Broadway Blvd, Tucson, AZ 85701",
+    "lat": 32.221075,
+    "lng": -110.971059
+   },
+   "agendaUrl": "https://legistar.granicus.com/pima/meetings/2026/8/1854_A_Board_of_Supervisors_26-08-13_Online_Agenda.pdf",
+   "jurisdiction": "Pima County, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1854&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+    "sourceOrg": "Pima County Clerk of the Board",
+    "collectedAt": "2026-08-13T18:43:06.871Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "legistar:pima:1869",
+   "ocdId": "ocd-division/country:us/state:az/county:pima",
+   "bodyName": "Board of Supervisors",
+   "title": "Study Session",
+   "startsAt": "2026-07-28T15:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
+    "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701",
+    "lat": 32.221618,
+    "lng": -110.974036
+   },
+   "agendaUrl": "https://legistar.granicus.com/pima/meetings/2026/7/1869_A_Board_of_Supervisors_26-07-28_Online_Agenda.pdf",
+   "jurisdiction": "Pima County, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1869&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+    "sourceOrg": "Pima County Clerk of the Board",
+    "collectedAt": "2026-08-13T18:43:06.871Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "civicplus:rockaway_township:1830",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "bodyName": "Township Council",
+   "title": "Township Council Regular Meeting",
+   "startsAt": "2026-12-22T19:00:00-05:00",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Rockaway Township Municipal Building",
+    "address": "65 Mount Hope Road, Rockaway Township, NJ 07866",
+    "lat": 40.912595,
+    "lng": -74.530052
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Rockaway Township, NJ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
+    "sourceOrg": "Rockaway Township",
+    "collectedAt": "2026-08-13T18:43:06.333Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "civicplus:rockaway_township:1829",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "bodyName": "Township Council",
+   "title": "Township Council Regular Meeting",
+   "startsAt": "2026-12-08T19:00:00-05:00",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Rockaway Township Municipal Building",
+    "address": "65 Mount Hope Road, Rockaway Township, NJ 07866",
+    "lat": 40.912595,
+    "lng": -74.530052
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Rockaway Township, NJ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
+    "sourceOrg": "Rockaway Township",
+    "collectedAt": "2026-08-13T18:43:06.333Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "civicplus:rockaway_township:1828",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "bodyName": "Township Council",
+   "title": "Township Council Regular Meeting",
+   "startsAt": "2026-11-24T19:00:00-05:00",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Rockaway Township Municipal Building",
+    "address": "65 Mount Hope Road, Rockaway Township, NJ 07866",
+    "lat": 40.912595,
+    "lng": -74.530052
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Rockaway Township, NJ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
+    "sourceOrg": "Rockaway Township",
+    "collectedAt": "2026-08-13T18:43:06.333Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "civicplus:rockaway_township:1827",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "bodyName": "Township Council",
+   "title": "Township Council Regular Meeting",
+   "startsAt": "2026-11-10T19:00:00-05:00",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Rockaway Township Municipal Building",
+    "address": "65 Mount Hope Road, Rockaway Township, NJ 07866",
+    "lat": 40.912595,
+    "lng": -74.530052
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Rockaway Township, NJ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
+    "sourceOrg": "Rockaway Township",
+    "collectedAt": "2026-08-13T18:43:06.333Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "civicplus:rockaway_township:1826",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "bodyName": "Township Council",
+   "title": "Township Council Regular Meeting",
+   "startsAt": "2026-10-27T19:00:00-04:00",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Rockaway Township Municipal Building",
+    "address": "65 Mount Hope Road, Rockaway Township, NJ 07866",
+    "lat": 40.912595,
+    "lng": -74.530052
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Rockaway Township, NJ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
+    "sourceOrg": "Rockaway Township",
+    "collectedAt": "2026-08-13T18:43:06.333Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "civicplus:rockaway_township:1825",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "bodyName": "Township Council",
+   "title": "Township Council Regular Meeting",
+   "startsAt": "2026-10-13T19:00:00-04:00",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Rockaway Township Municipal Building",
+    "address": "65 Mount Hope Road, Rockaway Township, NJ 07866",
+    "lat": 40.912595,
+    "lng": -74.530052
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Rockaway Township, NJ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
+    "sourceOrg": "Rockaway Township",
+    "collectedAt": "2026-08-13T18:43:06.333Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "civicplus:rockaway_township:1824",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "bodyName": "Township Council",
+   "title": "Township Council Regular Meeting",
+   "startsAt": "2026-09-22T19:00:00-04:00",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Rockaway Township Municipal Building",
+    "address": "65 Mount Hope Road, Rockaway Township, NJ 07866",
+    "lat": 40.912595,
+    "lng": -74.530052
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Rockaway Township, NJ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
+    "sourceOrg": "Rockaway Township",
+    "collectedAt": "2026-08-13T18:43:06.333Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "civicplus:rockaway_township:1823",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "bodyName": "Township Council",
+   "title": "Township Council Regular Meeting",
+   "startsAt": "2026-09-08T19:00:00-04:00",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Rockaway Township Municipal Building",
+    "address": "65 Mount Hope Road, Rockaway Township, NJ 07866",
+    "lat": 40.912595,
+    "lng": -74.530052
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Rockaway Township, NJ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
+    "sourceOrg": "Rockaway Township",
+    "collectedAt": "2026-08-13T18:43:06.333Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "civicplus:rockaway_township:1822",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "bodyName": "Township Council",
+   "title": "Township Council Regular Meeting",
+   "startsAt": "2026-08-25T19:00:00-04:00",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Rockaway Township Municipal Building",
+    "address": "65 Mount Hope Road, Rockaway Township, NJ 07866",
+    "lat": 40.912595,
+    "lng": -74.530052
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Rockaway Township, NJ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
+    "sourceOrg": "Rockaway Township",
+    "collectedAt": "2026-08-13T18:43:06.333Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "onbase:tucson:1946",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Mayor & Council",
+   "title": "Mayor & Council - Study Session",
+   "startsAt": "2026-08-18T13:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson City Hall, Mayor and Council Chambers",
+    "address": "255 W. Alameda St, Tucson, AZ 85701",
+    "lat": 32.223037,
+    "lng": -110.975001
+   },
+   "agendaUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Study_Session_1946_Agenda_8_18_2026_1_30_00_PM.pdf?documentType=1&meetingId=1946",
+   "jurisdiction": "Tucson, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1946&doctype=1",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-13T18:43:06.586Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "onbase:tucson:1957",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Mayor & Council",
+   "title": "Mayor & Council - Regular",
+   "startsAt": "2026-08-18T17:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson City Hall, Mayor and Council Chambers",
+    "address": "255 W. Alameda St, Tucson, AZ 85701",
+    "lat": 32.223037,
+    "lng": -110.975001
+   },
+   "agendaUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Regular_1957_Agenda_8_18_2026_5_30_00_PM.pdf?documentType=1&meetingId=1957",
+   "jurisdiction": "Tucson, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1957&doctype=1",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-13T18:43:06.586Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "onbase:tucson:1942",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Mayor & Council",
+   "title": "Mayor & Council - Study Session",
+   "startsAt": "2026-07-07T14:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson City Hall, Mayor and Council Chambers",
+    "address": "255 W. Alameda St, Tucson, AZ 85701",
+    "lat": 32.223037,
+    "lng": -110.975001
+   },
+   "agendaUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Study_Session_1942_Agenda_7_7_2026_2_00_00_PM.pdf?documentType=1&meetingId=1942",
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1942&doctype=1",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-13T18:43:06.586Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "onbase:tucson:1927",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Mayor & Council",
+   "title": "Mayor & Council - Regular",
+   "startsAt": "2026-07-07T17:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson City Hall, Mayor and Council Chambers",
+    "address": "255 W. Alameda St, Tucson, AZ 85701",
+    "lat": 32.223037,
+    "lng": -110.975001
+   },
+   "agendaUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Regular_1927_Agenda_7_7_2026_5_30_00_PM.pdf?documentType=1&meetingId=1927",
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1927&doctype=1",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-13T18:43:06.586Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "onbase:tucson:1943",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Mayor & Council",
+   "title": "Mayor & Council - Study Session",
+   "startsAt": "2026-07-21T13:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson City Hall, Mayor and Council Chambers",
+    "address": "255 W. Alameda St, Tucson, AZ 85701",
+    "lat": 32.223037,
+    "lng": -110.975001
+   },
+   "agendaUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Study_Session_1943_Agenda_7_21_2026_1_00_00_PM.pdf?documentType=1&meetingId=1943",
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1943&doctype=1",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-13T18:43:06.586Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "onbase:tucson:1928",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Mayor & Council",
+   "title": "Mayor & Council - Regular",
+   "startsAt": "2026-07-21T17:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson City Hall, Mayor and Council Chambers",
+    "address": "255 W. Alameda St, Tucson, AZ 85701",
+    "lat": 32.223037,
+    "lng": -110.975001
+   },
+   "agendaUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Regular_1928_Agenda_7_21_2026_5_30_00_PM.pdf?documentType=1&meetingId=1928",
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1928&doctype=1",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-13T18:43:06.586Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "onbase:tucson:1945",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Mayor & Council",
+   "title": "Mayor & Council - Study Session",
+   "startsAt": "2026-08-05T13:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson City Hall, Mayor and Council Chambers",
+    "address": "255 W. Alameda St, Tucson, AZ 85701",
+    "lat": 32.223037,
+    "lng": -110.975001
+   },
+   "agendaUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Study_Session_1945_Agenda_8_5_2026_1_30_00_PM.pdf?documentType=1&meetingId=1945",
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1945&doctype=1",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-13T18:43:06.586Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "onbase:tucson:1956",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Mayor & Council",
+   "title": "Mayor & Council - Regular",
+   "startsAt": "2026-08-05T17:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson City Hall, Mayor and Council Chambers",
+    "address": "255 W. Alameda St, Tucson, AZ 85701",
+    "lat": 32.223037,
+    "lng": -110.975001
+   },
+   "agendaUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Regular_1956_Agenda_8_5_2026_5_30_00_PM.pdf?documentType=1&meetingId=1956",
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1956&doctype=1",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-13T18:43:06.586Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "apptegy:vail:60703697",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "bodyName": "Governing Board Meeting",
+   "title": "Governing Board Meeting",
+   "startsAt": "2026-08-26T02:00:00.000Z",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "address": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "lat": 32.0149457,
+    "lng": -110.6984644
+   },
+   "agendaUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "jurisdiction": "Vail Unified School District, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
+    "sourceOrg": "Vail School District Governing Board",
+    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "apptegy:vail:60703698",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "bodyName": "Governing Board Meeting",
+   "title": "Governing Board Meeting",
+   "startsAt": "2026-09-09T02:00:00.000Z",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "address": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "lat": 32.0149457,
+    "lng": -110.6984644
+   },
+   "agendaUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "jurisdiction": "Vail Unified School District, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
+    "sourceOrg": "Vail School District Governing Board",
+    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "apptegy:vail:60703699",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "bodyName": "Governing Board Meeting",
+   "title": "Governing Board Meeting",
+   "startsAt": "2026-09-23T02:00:00.000Z",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "address": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "lat": 32.0149457,
+    "lng": -110.6984644
+   },
+   "agendaUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "jurisdiction": "Vail Unified School District, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
+    "sourceOrg": "Vail School District Governing Board",
+    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "apptegy:vail:60703700",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "bodyName": "Governing Board Meeting",
+   "title": "Governing Board Meeting",
+   "startsAt": "2026-10-14T02:00:00.000Z",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "address": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "lat": 32.0149457,
+    "lng": -110.6984644
+   },
+   "agendaUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "jurisdiction": "Vail Unified School District, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
+    "sourceOrg": "Vail School District Governing Board",
+    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "apptegy:vail:60703701",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "bodyName": "Governing Board Meeting",
+   "title": "Governing Board Meeting",
+   "startsAt": "2026-10-28T02:00:00.000Z",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "address": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "lat": 32.0149457,
+    "lng": -110.6984644
+   },
+   "agendaUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "jurisdiction": "Vail Unified School District, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
+    "sourceOrg": "Vail School District Governing Board",
+    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "apptegy:vail:60703702",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "bodyName": "Governing Board Meeting",
+   "title": "Governing Board Meeting",
+   "startsAt": "2026-11-11T02:00:00.000Z",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "address": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "lat": 32.0149457,
+    "lng": -110.6984644
+   },
+   "agendaUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "jurisdiction": "Vail Unified School District, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
+    "sourceOrg": "Vail School District Governing Board",
+    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "apptegy:vail:60703703",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "bodyName": "Governing Board Meeting",
+   "title": "Governing Board Meeting",
+   "startsAt": "2026-12-09T02:00:00.000Z",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "address": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "lat": 32.0149457,
+    "lng": -110.6984644
+   },
+   "agendaUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "jurisdiction": "Vail Unified School District, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
+    "sourceOrg": "Vail School District Governing Board",
+    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "apptegy:vail:60703705",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "bodyName": "Governing Board Meeting",
+   "title": "Governing Board Meeting",
+   "startsAt": "2027-01-13T02:00:00.000Z",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "address": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "lat": 32.0149457,
+    "lng": -110.6984644
+   },
+   "agendaUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "jurisdiction": "Vail Unified School District, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
+    "sourceOrg": "Vail School District Governing Board",
+    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "apptegy:vail:60703706",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "bodyName": "Governing Board Meeting",
+   "title": "Governing Board Meeting",
+   "startsAt": "2027-01-27T02:00:00.000Z",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "address": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "lat": 32.0149457,
+    "lng": -110.6984644
+   },
+   "agendaUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "jurisdiction": "Vail Unified School District, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
+    "sourceOrg": "Vail School District Governing Board",
+    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "apptegy:vail:60703707",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "bodyName": "Governing Board Meeting",
+   "title": "Governing Board Meeting",
+   "startsAt": "2027-02-10T02:00:00.000Z",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "address": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "lat": 32.0149457,
+    "lng": -110.6984644
+   },
+   "agendaUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "jurisdiction": "Vail Unified School District, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
+    "sourceOrg": "Vail School District Governing Board",
+    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "apptegy:vail:60703708",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "bodyName": "Governing Board Meeting",
+   "title": "Governing Board Meeting",
+   "startsAt": "2027-02-24T02:00:00.000Z",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "address": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "lat": 32.0149457,
+    "lng": -110.6984644
+   },
+   "agendaUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "jurisdiction": "Vail Unified School District, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
+    "sourceOrg": "Vail School District Governing Board",
+    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "apptegy:vail:60703709",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "bodyName": "Governing Board Meeting",
+   "title": "Governing Board Meeting",
+   "startsAt": "2027-03-10T02:00:00.000Z",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "address": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "lat": 32.0149457,
+    "lng": -110.6984644
+   },
+   "agendaUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "jurisdiction": "Vail Unified School District, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
+    "sourceOrg": "Vail School District Governing Board",
+    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "apptegy:vail:60703710",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "bodyName": "Governing Board Meeting",
+   "title": "Governing Board Meeting",
+   "startsAt": "2027-03-24T02:00:00.000Z",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "address": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "lat": 32.0149457,
+    "lng": -110.6984644
+   },
+   "agendaUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "jurisdiction": "Vail Unified School District, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
+    "sourceOrg": "Vail School District Governing Board",
+    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "apptegy:vail:60703841",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "bodyName": "Governing Board Meeting",
+   "title": "Governing Board Meeting",
+   "startsAt": "2027-04-14T02:00:00.000Z",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "address": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "lat": 32.0149457,
+    "lng": -110.6984644
+   },
+   "agendaUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "jurisdiction": "Vail Unified School District, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
+    "sourceOrg": "Vail School District Governing Board",
+    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "apptegy:vail:60704267",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "bodyName": "Governing Board Meeting",
+   "title": "Governing Board Meeting",
+   "startsAt": "2027-04-28T02:00:00.000Z",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "address": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "lat": 32.0149457,
+    "lng": -110.6984644
+   },
+   "agendaUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "jurisdiction": "Vail Unified School District, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
+    "sourceOrg": "Vail School District Governing Board",
+    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "apptegy:vail:60704803",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "bodyName": "Governing Board Meeting",
+   "title": "Governing Board Meeting",
+   "startsAt": "2027-05-12T02:00:00.000Z",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "address": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "lat": 32.0149457,
+    "lng": -110.6984644
+   },
+   "agendaUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "jurisdiction": "Vail Unified School District, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
+    "sourceOrg": "Vail School District Governing Board",
+    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "apptegy:vail:60705239",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "bodyName": "Governing Board Meeting",
+   "title": "Governing Board Meeting",
+   "startsAt": "2027-05-26T02:00:00.000Z",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "address": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "lat": 32.0149457,
+    "lng": -110.6984644
+   },
+   "agendaUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "jurisdiction": "Vail Unified School District, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
+    "sourceOrg": "Vail School District Governing Board",
+    "collectedAt": "2026-08-13T18:43:06.810Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "apptegy:rocktwp:51345225",
+   "ocdId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district",
+   "bodyName": "RTSD Board Meeting",
+   "title": "RTSD Board Meeting",
+   "startsAt": "2026-09-09T22:00:00.000Z",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Copeland Middle School, 100 Lake Shore Dr, Rockaway, NJ 07866, USA",
+    "address": "Copeland Middle School, 100 Lake Shore Dr, Rockaway, NJ 07866, USA",
+    "lat": 40.917793,
+    "lng": -74.522404
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Rockaway Township School District, NJ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1",
+    "sourceOrg": "Rockaway Township Public Schools Board of Education",
+    "collectedAt": "2026-08-13T18:43:08.075Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "apptegy:rocktwp:51345226",
+   "ocdId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district",
+   "bodyName": "RTSD Board Meeting",
+   "title": "RTSD Board Meeting",
+   "startsAt": "2026-10-07T22:00:00.000Z",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Copeland Middle School, 100 Lake Shore Dr, Rockaway, NJ 07866, USA",
+    "address": "Copeland Middle School, 100 Lake Shore Dr, Rockaway, NJ 07866, USA",
+    "lat": 40.917793,
+    "lng": -74.522404
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Rockaway Township School District, NJ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1",
+    "sourceOrg": "Rockaway Township Public Schools Board of Education",
+    "collectedAt": "2026-08-13T18:43:08.075Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "apptegy:rocktwp:51345354",
+   "ocdId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district",
+   "bodyName": "RTSD Board Meeting",
+   "title": "RTSD Board Meeting",
+   "startsAt": "2026-11-11T23:00:00.000Z",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Copeland Middle School, 100 Lake Shore Dr, Rockaway, NJ 07866, USA",
+    "address": "Copeland Middle School, 100 Lake Shore Dr, Rockaway, NJ 07866, USA",
+    "lat": 40.917793,
+    "lng": -74.522404
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Rockaway Township School District, NJ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1",
+    "sourceOrg": "Rockaway Township Public Schools Board of Education",
+    "collectedAt": "2026-08-13T18:43:08.075Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "apptegy:rocktwp:51345385",
+   "ocdId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district",
+   "bodyName": "RTSD Board Meeting",
+   "title": "RTSD Board Meeting",
+   "startsAt": "2026-12-09T23:00:00.000Z",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Copeland Middle School, 100 Lake Shore Dr, Rockaway, NJ 07866, USA",
+    "address": "Copeland Middle School, 100 Lake Shore Dr, Rockaway, NJ 07866, USA",
+    "lat": 40.917793,
+    "lng": -74.522404
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Rockaway Township School District, NJ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1",
+    "sourceOrg": "Rockaway Township Public Schools Board of Education",
+    "collectedAt": "2026-08-13T18:43:08.075Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "apptegy:rocktwp:51345474",
+   "ocdId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district",
+   "bodyName": "RTSD Board Meeting - Reorganization Meeting",
+   "title": "RTSD Board Meeting - Reorganization Meeting",
+   "startsAt": "2027-01-06T23:00:00.000Z",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Copeland Middle School, 100 Lake Shore Dr, Rockaway, NJ 07866, USA",
+    "address": "Copeland Middle School, 100 Lake Shore Dr, Rockaway, NJ 07866, USA",
+    "lat": 40.917793,
+    "lng": -74.522404
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Rockaway Township School District, NJ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1",
+    "sourceOrg": "Rockaway Township Public Schools Board of Education",
+    "collectedAt": "2026-08-13T18:43:08.075Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "diligent:tusd1:493",
+   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+   "bodyName": "GOVERNING BOARD AGENDA SPECIAL MEETING",
+   "title": "GOVERNING BOARD AGENDA SPECIAL MEETING  - Aug 25 2026",
+   "startsAt": "2026-08-25T16:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Duffy Community Center, Multipurpose Room",
+    "address": "5145 E. 5th Street, Tucson, AZ 85711",
+    "lat": 32.228998,
+    "lng": -110.883029
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson Unified School District, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=493",
+    "sourceOrg": "Tucson Unified School District Governing Board",
+    "collectedAt": "2026-08-13T18:43:06.903Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "diligent:tusd1:496",
+   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+   "bodyName": "Bond Oversight Committee Meeting Agenda",
+   "title": "Bond Oversight Committee Meeting Agenda - Aug 20 2026",
+   "startsAt": "2026-08-20T13:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Duffy Community Center, Multipurpose Room",
+    "address": "5145 E. 5th Street, Tucson, AZ 85711",
+    "lat": 32.228998,
+    "lng": -110.883029
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson Unified School District, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=496",
+    "sourceOrg": "Tucson Unified School District Governing Board",
+    "collectedAt": "2026-08-13T18:43:06.903Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "diligent:tusd1:492",
+   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+   "bodyName": "GOVERNING BOARD AGENDA REGULAR MEETING",
+   "title": "GOVERNING BOARD AGENDA REGULAR MEETING - Aug 11 2026",
+   "startsAt": "2026-08-11T16:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Duffy Community Center, Multipurpose Room",
+    "address": "5145 E. 5th Street, Tucson, AZ 85711",
+    "lat": 32.228998,
+    "lng": -110.883029
+   },
+   "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=492",
+   "jurisdiction": "Tucson Unified School District, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=492",
+    "sourceOrg": "Tucson Unified School District Governing Board",
+    "collectedAt": "2026-08-13T18:43:06.903Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "diligent:tusd1:485",
+   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+   "bodyName": "GOVERNING BOARD AGENDA SPECIAL MEETING",
+   "title": "GOVERNING BOARD AGENDA SPECIAL MEETING  - Jul 28 2026",
+   "startsAt": "2026-07-28T16:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Duffy Community Center, Multipurpose Room",
+    "address": "5145 E. 5th Street, Tucson, AZ 85711",
+    "lat": 32.228998,
+    "lng": -110.883029
+   },
+   "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=485",
+   "jurisdiction": "Tucson Unified School District, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=485",
+    "sourceOrg": "Tucson Unified School District Governing Board",
+    "collectedAt": "2026-08-13T18:43:06.903Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "diligent:tusd1:489",
+   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+   "bodyName": "AGENDA FOR AUDIT COMMITTEE MEETING",
+   "title": "AGENDA FOR AUDIT COMMITTEE MEETING - Jul 15 2026",
+   "startsAt": "2026-07-15T14:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Morrow Education Center, Board Conference Room",
+    "address": "1010 E. Tenth Street, Tucson, AZ 85719",
+    "lat": 32.222464,
+    "lng": -110.956126
+   },
+   "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=489",
+   "jurisdiction": "Tucson Unified School District, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=489",
+    "sourceOrg": "Tucson Unified School District Governing Board",
+    "collectedAt": "2026-08-13T18:43:06.903Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "diligent:tusd1:484",
+   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+   "bodyName": "GOVERNING BOARD AGENDA REGULAR MEETING",
+   "title": "GOVERNING BOARD AGENDA REGULAR MEETING - Jul 14 2026",
+   "startsAt": "2026-07-14T16:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Duffy Community Center, Multipurpose Room",
+    "address": "5145 E. 5th Street, Tucson, AZ 85711",
+    "lat": 32.228998,
+    "lng": -110.883029
+   },
+   "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=484",
+   "jurisdiction": "Tucson Unified School District, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=484",
+    "sourceOrg": "Tucson Unified School District Governing Board",
+    "collectedAt": "2026-08-13T18:43:06.903Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "diligent:newburynh:3371",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "bodyName": "Selectboard",
+   "title": "Selectboard - 17 Aug 2026",
+   "startsAt": "2026-08-17T18:00:00-04:00",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Newbury Town Office, Meeting Room",
+    "address": "937 Route 103, Newbury, NH 03255",
+    "lat": 43.321682,
+    "lng": -72.03705
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Newbury, NH",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3371",
+    "sourceOrg": "Town of Newbury",
+    "collectedAt": "2026-08-13T18:43:07.538Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "diligent:newburynh:3370",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "bodyName": "Selectboard",
+   "title": "Selectboard - 20 Jul 2026",
+   "startsAt": "2026-07-20T17:00:00-04:00",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Newbury Town Office, Meeting Room",
+    "address": "937 Route 103, Newbury, NH 03255",
+    "lat": 43.321682,
+    "lng": -72.03705
+   },
+   "agendaUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3370",
+   "jurisdiction": "Newbury, NH",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3370",
+    "sourceOrg": "Town of Newbury",
+    "collectedAt": "2026-08-13T18:43:07.538Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "diligent:newburynh:3368",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "bodyName": "Selectboard",
+   "title": "Selectboard - 20 Jul 2026",
+   "startsAt": "2026-07-20T18:00:00-04:00",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Newbury Town Office, Meeting Room",
+    "address": "937 Route 103, Newbury, NH 03255",
+    "lat": 43.321682,
+    "lng": -72.03705
+   },
+   "agendaUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3368",
+   "jurisdiction": "Newbury, NH",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3368",
+    "sourceOrg": "Town of Newbury",
+    "collectedAt": "2026-08-13T18:43:07.538Z",
+    "verifiedAt": null
+   }
+  }
+ ],
+ "agendaDocuments": [
+  {
+   "id": "legistar:pima:1820@eedf451dbaa35f95118c00237ecc7252b9181201ccd4ba5028b24d4bd0c7623f",
+   "meetingId": "legistar:pima:1820",
+   "ocdId": "ocd-division/country:us/state:az/county:pima",
+   "documentUrl": "https://legistar.granicus.com/pima/meetings/2026/7/1820_A_Board_of_Supervisors_26-07-14_Online_Agenda.pdf",
+   "contentHash": "eedf451dbaa35f95118c00237ecc7252b9181201ccd4ba5028b24d4bd0c7623f",
+   "retrievedAt": "2026-08-13T18:43:08.982Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://legistar.granicus.com/pima/meetings/2026/7/1820_A_Board_of_Supervisors_26-07-14_Online_Agenda.pdf",
+   "sourceOrg": "Pima County Clerk of the Board",
+   "collectedAt": "2026-08-13T18:43:08.982Z",
+   "verifiedAt": null,
+   "text": "Board of Supervisors Pima County Meeting Agenda MEETING LOCATION Administration Bldg - East 130 W. Congress Street 1st Floor Tucson, AZ 85701 Public Access to Hearing Room at 12:40 p.m. Board of Supervisors' Hearing Room 1:00 PM Tuesday, July 14, 2026 Study Session PIMA COUNTY BOARD OF SUPERVISORS Jennifer Allen, Chair, District 3 Dr. Matt Heinz, Vice Chair, District 2 Rex Scott, Member, District 1 Steve Christy, Member, District 4 Andrés Cano, Member, District 5 AGENDA/ADDENDUM AND BROADCAST INFORMATION At least 24 hours before each scheduled meeting, the agenda/addendum is available online at www.pima.gov and in the Clerk of the Board’s Office, 130 W. Congress Street, 1st Floor, Tucson, AZ 85701, Mon-Fri, 8am to 5pm. Cable Channels: Cox 96 Webcast: www.pima.gov PUBLIC COMMENTS Written comments to the Board of Supervisors regarding the agenda items can be submitted to COB_mail@pima.gov. All comments will be provided to the Board of Supervisors. HEARING ROOM NOTICE Law permits that a video and/or audio recording of all or part of this meeting may be made if doing so does not interfere with the conduct of the meeting. Pima County has no control over the use and distribution of any such recordings. In addition to the official meeting proceedings, these recordings may include images of and comments made by the public prior to the start, during a recess and after adjournment of the meeting, and may be posted on social media or other internet sites. ACCESSIBILITY The Board Hearing Room is wheelchair and handicapped accessible. Any person who is in need of special services (e.g., assistive listening device, Braille or large print agenda material, signer for hearing impaired, accessible parking, etc.) due to any disability will be accommodated. Please contact the Clerk of the Board at (520) 724-8449 for these services at least three (3) business days prior to the Board Meeting. Page 1 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda Clerk's Note: Members of the Pima County Board of Supervisors will attend either in person or by telephone, video or internet conferencing. The meeting can be streamed via the following links: BOS Agenda July 14, 2026 (http://pima.granicus.com/ViewPublisher.php?view_id=3), on YouTube (https://www.youtube.com/c/PimaCountyArizona/), or via Cox Cable Channel 96. Television viewing will be available in the lobby at 130 West Congress, 1st Floor. 1. ROLL CALL 2. AGENDA ADJUSTMENTS EXECUTIVE SESSION (Clerk's Note: As of the posting date of 7/8/26, no executive session item has been placed on the study session agenda. However, this is subject to any addendum. Pursuant to A.R.S. §38-431.03(A)(3) the Board of Supervisors, or the Board sitting as other boards, may vote to go into executive session for the purpose of obtaining legal advice from its counsel with respect to any item listed on this agenda or any addendum thereto.) BOARD OF SUPERVISORS 3. UNFINISHED BUSINESS (6/9/26) Staffing Processes and Vacancy Policy 1. Discussion with County Administrator and Deputy County Administrators as to how staffing requests are analyzed and discussed with elected officials and department directors during the annual budgeting process. Also, discussion with same as to how staffing is discussed and monitored by administration throughout the rest of the year. 2. Discussion with County Administrator and Deputy County Administrators regarding the existing vacancy policy, how/why its current version was developed and if revisions to the current version should be considered. (District 1) BOS_StaffingProcessesVacancyPolicy_Dist1Submittal BOS_StaffVacPolQuestions_Dist1Submittal_7-8-26 BOS_StaffingProcessesVacancyPolicy_Slides_7-9-26 Attachments: 4. Board of Supervisors Representative Updates on Boards, Committees and Commissions and Any Other Municipalities 5. PLAZA Mobile Market Presentation (UA Garden Kitchen) Discussion/Direction: PLAZA Mobile Market, a program of the UA Garden Kitchen, is an affordable mobile market that supports both access to fresh local foods in under-resourced communities and economic development for small local farmers, including mostly refugee farmers. Historically Page 2 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda providing weekly mobile markets at both the Valencia and Quincie Douglas Pima County Library locations, PLAZA Mobile Market is under threat of going away entirely because of the cuts to the SNAP-Ed program in HR1, the One Big Beautiful Bill. Presentation from Jenn Parlin and Meredith Glaubach of the UA Garden Kitchen regarding the history of this impactful and unique program, current challenges, and the road ahead. (District 2) BOS_PLAZAMobileMarketPres_Dist2Submittal BOS_PLAZAMobileMarketPres_Slides_7-10-26 BOS_PLAZAMobileMarketOverview_7-10-26 BOS_AZDeptHealthServicesCommentLetter_7-10-26 Attachments: COUNTY ADMINISTRATOR 6. UNFINISHED BUSINESS (6/9/26) Pima County Climate Action Update Update of Pima County’s Climate Action Plan, as requested by the Board of Supervisors. CA_CAMemo_ClimateActionUpdate_Slides_6-5-26 CA_ClimateActionUpdate_CommLtrs_6-8-26_Redacted CA_CAMemo_ClimateActionUpdate_6-30-26 Attachments: 7. Update on County Initiatives to Address Homelessness and Public Safety CA_CAMemo_DetaineeandCrisisSystemsUpdate_7-9-26 CA_DetaineeandCrisisSystemsUpdate_Slides_7-9-26 Attachments: COMMUNITY AND WORKFORCE DEVELOPMENT 8. Prosperity Initiative: Measuring Progress Update on the Prosperity Initiative measurement of progress. CWD_ProsperityInitiativeMeasuringProg CWD_ProsperityInitiativeMeasuringProg_Slides_7-9-26 Attachments: FINANCE AND RISK MANAGEMENT 9. Monthly Financial Update Discussion regarding a monthly financial update on the County's financial performance. FN_CAMemo_MonthlyFinancialUpdate_7-9-26 FN_MonthlyFinancialUpdate_Slides_7-9-26 Attachments: 10. ADJOURNMENT Page 3 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda POSTED: 130 W. Congress Street, 1st Floor Tucson, AZ 85701 Pima County Homepage: www.pima.gov DATE/TIME POSTED: 7/8/26 @ 3:00 p.m. DATE/TIME REPOSTED (additional attachments only): 7/9/26 @ 4:00 p.m. DATE/TIME REPOSTED (additional attachments only): 7/9/26 @ 4:45 p.m. DATE/TIME REPOSTED (additional attachments only): 7/10/26 @ 8:45 a.m. DATE/TIME REPOSTED (additional attachments only): 7/10/26 @ 4:45 p.m. DATE/TIME REPOSTED (combined Agenda/Addendum): 7/13/26 @ 5:00 p.m. Page 4 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda ADDENDUM 1 EXECUTIVE SESSION 1. Pursuant to A.R.S. §38-431.03(A)(3), for legal advice and discussion regarding the filling of the Pima County Treasurer vacancy and related matters. PCA_ExecSession-PCTreasurerVacancyandRelatedMatters Attachments: 2. Pursuant to A.R.S. §38-431.03(A)(3) and (4), for legal advice and direction regarding former County Treasurer allegations and investigation. PCA_ExecSession-PCTreasurerAllegationsInvestigation Attachments: 3. Pursuant to A.R.S. §38-431.03(A)(1), for discussion or consideration of employment of a public officer, regarding the County Administrator position. PCA_ExecSession-CountyAdministratorPosition Attachments: POSTED: 1st Floor, 130 W. Congress Street, Tucson, AZ 85701 Pima County Homepage: www.pima.gov DATE/TIME POSTED: 7/10/26 @ 11:00 a.m. Page 5 Pima County Printed on 7/13/2026",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "legistar:pima:1821@7453d87ec34c672267a768379f052daa09816a1c61aa5f133a9d822c104aa036",
+   "meetingId": "legistar:pima:1821",
+   "ocdId": "ocd-division/country:us/state:az/county:pima",
+   "documentUrl": "https://legistar.granicus.com/pima/meetings/2026/7/1821_A_Board_of_Supervisors_26-07-14_Online_Agenda.pdf",
+   "contentHash": "7453d87ec34c672267a768379f052daa09816a1c61aa5f133a9d822c104aa036",
+   "retrievedAt": "2026-08-13T18:43:10.097Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://legistar.granicus.com/pima/meetings/2026/7/1821_A_Board_of_Supervisors_26-07-14_Online_Agenda.pdf",
+   "sourceOrg": "Pima County Clerk of the Board",
+   "collectedAt": "2026-08-13T18:43:10.097Z",
+   "verifiedAt": null,
+   "text": "Board of Supervisors Pima County Meeting Agenda MEETING LOCATION Administration Bldg - East 130 W. Congress Street 1st Floor Tucson, AZ 85701 Public Access to Hearing Room at 4:40 p.m. Board of Supervisors' Hearing Room 5:00 PM Tuesday, July 14, 2026 PIMA COUNTY BOARD OF SUPERVISORS Jennifer Allen, Chair, District 3 Dr. Matt Heinz, Vice Chair, District 2 Rex Scott, Member, District 1 Steve Christy, Member, District 4 Andrés Cano, Member, District 5 AGENDA/ADDENDUM AND BROADCAST INFORMATION At least 24 hours before each scheduled meeting, the agenda/addendum is available online at www.pima.gov and in the Clerk of the Board’s Office, 130 W. Congress Street, 1st Floor, Tucson, AZ 85701, Mon-Fri, 8am to 5pm. Cable Channels: Cox 96 Webcast: www.pima.gov PUBLIC PARTICIPATION SPEAKERS ARE LIMITED UP TO 3 MINUTES To address the Board of Supervisors, please complete a Speaker’s Card. Clearly print your name/address, the item number and other requested information. Speaker Card(s) are required for Call to the Public and Public Hearing Items. Once completed submit your Speaker Card(s) to Clerk staff. When the Chair announces your name, step forward to the podium and state your name for the record. The Chair reserves the right to ensure all testimony is pertinent or non-repetitive so matters are handled fairly and expeditiously. All attendees are advised that the Board of Supervisors strongly adhere to the Board of Supervisors Rules and Regulations. Outbursts, breaches of peace, boisterous conduct or other unlawful interference will result in that individual being asked to leave the meeting room. Any questions pertaining to the meeting can be directed to Melissa Manriquez, Clerk of the Board. HEARING ROOM NOTICE Law permits that a video and/or audio recording of all or part of this meeting may be made if doing so does not interfere with the conduct of the meeting. Pima County has no control over the use and distribution of any such recordings. In addition to the official meeting proceedings, these recordings may include images of and comments made by the public prior to the start, during a recess and after adjournment of the meeting, and may be posted on social media or other internet sites. ACCESSIBILITY The Board Hearing Room is wheelchair and handicapped accessible. Any person who is in need of special services (e.g., assistive listening device, Braille or large print agenda material, signer for hearing impaired, accessible parking, etc.) due to any disability will be accommodated. Please contact the Clerk of the Board at (520) 724-8449 for these services at least three (3) business days prior to the Board Meeting. Page 1 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda Clerk's Note: Members of the Pima County Board of Supervisors will attend either in person or by telephone, video or internet conferencing. The meeting can be streamed via the following links: BOS Agenda July 14, 2026 (http://pima.granicus.com/ViewPublisher.php?view_id=3), on YouTube (https://www.youtube.com/c/PimaCountyArizona/), or via Cox Cable Channel 96. Television viewing will be available in the lobby at 130 West Congress, 1st Floor. 1. ROLL CALL 2. PLEDGE OF ALLEGIANCE 3. LAND ACKNOWLEDGEMENT STATEMENT To be offered by Carmen Jones, Director of Operations, JobPath. 4. PAUSE 4 PAWS 5. CURRENT EVENTS/PUBLIC ACKNOWLEDGEMENTS 6. AGENDA ADJUSTMENTS PRESENTATION 7. County Supervisors Association (CSA) Presentation Update provided by the CSA and Michael Racy on the Second Session of the Fifty-Seventh Arizona Legislature, and presentation of an award to thank and honor Arizona Legislative District 21 Representative Stephanie Stahl-Hamilton. CA_CAMemo_CSAPresentation CA_CSAPresentation_CommLtr_7-13-26_Redacted Attachments: PRESENTATION/PROCLAMATION 8. Presentation of a proclamation to Meghan Brajevich and Chris Desborough, Office of Council Member Paul Cunningham, Ward 2, proclaiming the month of July 2026 to be: \"DISABILITY PRIDE MONTH\" PROC_DisabiltyPrideMonth Attachments: Page 2 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda 9. CALL TO THE PUBLIC Individuals wishing to participate telephonically at Call to the Public must contact the Clerk of the Board’s Office at 520-724-8449, to register their request and obtain remote access information, by the deadline of Monday, July 13, 2026 at 5:00 p.m. Call to the Public shall be scheduled for one hour each meeting unless extended by a majority vote of the Board of Supervisors. Speakers shall have up to three minutes to speak. However, for any meeting where 20 or more individuals have submitted speaker cards, each speaker's time shall be limited to two minutes. Please be aware that you may not be called upon to speak if the time for Call to the Public expires and is not extended by a majority vote of the Board of Supervisors. eComments can also be submitted to COB_mail@pima.gov. EXECUTIVE SESSION (Clerk's Note: As of the posting date of 7/8/26, no executive session item has been placed on the regular agenda. However, this is subject to any addendum. Pursuant to A.R.S. §38-431.03(A)(3) the Board of Supervisors, or the Board sitting as other boards, may vote to go into executive session for the purpose of obtaining legal advice from its counsel with respect to any item listed on this agenda or any addendum thereto.) BOARD OF SUPERVISORS SITTING AS OTHER BOARDS FLOOD CONTROL DISTRICT BOARD 10. Contract Solis Engineering Co., L.L.C., Amendment No. 2, to provide for Design Engineering Services: Drexel to Valencia East Bank Restoration, extend contract term to 12/31/29, amend contractual language and scope of services, Regional Flood Control District Tax Levy Fund, contract amount $593,247.02 (PO2600002611) Administering Department: Regional Flood Control District PO2600002611 Attachments: 11. Contract Promax Enterprises, L.L.C., to provide an acquisition agreement and warranty deed for approximately 28.86 acres of vacant land within the Brawley Wash sheet flood area, situated north of west Mile Wide Road and east of Sandario Road, FC-Floodprone Land Acquisition Program Fund, contract amount $555,000.00 (PO2600020277) PO2600020277 Attachments: Page 3 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda 12. Grant Acceptance United States Department of Agriculture, Amendment No. 7, to provide for the FC-USDA-Brawley Wash - OT2022 to develop a watershed restoration plan for the Brawley Wash, extend grant term to 12/31/26 and amend grant language, $16,201.00 (GA-FC-66009) GA-FC-66009 Attachments: SITTING AS THE BOARD OF SUPERVISORS *** HEARINGS *** Individuals wishing to address the Board on a Public Hearing item, but wish to participate remotely, can contact the Clerk of the Board's Office at 520-724-8449, to obtain remote access information. FRANCHISE/LICENSE/PERMIT 13. Hearing - Liquor License Job No. 399188, Kevin Arnold Kramber, Frida American Brasserie, 2905 E. Skyline Drive, No. 168, Tucson, Series 12, Restaurant, New License. FLP_LLFridaAmericanBrasserie Attachments: 14. Hearing - Liquor License Job No. 399547, Victor Hugo Huacuja Braun, Ragazzi Northern Italian Cuisine, 101 S. La Canada Drive, No. 51, Green Valley, Series 12, Restaurant, New License. FLP_LLRagazziNorthernItalianCuisine Attachments: 15. Hearing - Liquor License Job No. 399839, Ryan Witner Anderson, QuikTrip, No. 1455, 4602 W. Ajo Highway, Tucson, Series 10, Beer and Wine Store, New License. FLP_LLQuikTripNo.1455 Attachments: 16. Hearing - Liquor License Job No. 397910, Alejandro Garcia Ruiz, Talamazka, 190 W. Continental Road, No. 202, Green Valley, Series 12, Restaurant, New License. FLP_LLTalamazka Attachments: Page 4 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda DEVELOPMENT SERVICES 17. (Clerk’s Note: This case requires two separate motions and votes.) A. Hearing - Rezoning Closure P15RZ00009, MAGEE COMO DEVELOPMENT ASSOC., L.L.C. - N. LA CHOLLA BOULEVARD REZONING Magee Como Development Assoc., L.L.C., represented by Craig Courtney, requests a closure for an approximate .88-acre rezoning from the TR (Transitional) zone to the CB-2 (General Business) zone, located approximately 150 feet north of W. Magee Road and 600 feet west of N. La Cholla Boulevard, addressed as 7791 N. La Cholla Boulevard. The subject site was rezoned in 2016, received a time extension in 2021 and expired February 2, 2026. Staff recommends AGAINST CLOSURE. (District 1) B. Hearing - Rezoning Time Extension P15RZ00009, MAGEE COMO DEVELOPMENT ASSOC., L.L.C. - N. LA CHOLLA BOULEVARD REZONING Magee Como Development Assoc., L.L.C., represented by Craig Courtney, requests a five-year time extension. The approximate .88-acre rezoning from the TR (Transitional) zone to the CB-2 (General Business) zone expired February 2, 2026. The property is located approximately 150 feet north of W. Magee Road and 600 feet west of N. La Cholla Boulevard, addressed as 7791 N. La Cholla Boulevard. Staff recommends APPROVAL OF THE FIVE-YEAR-TIME EXTENSION SUBJECT TO MODIFIED STANDARD AND SPECIAL CONDITIONS. (District 1) DSD_P15RZ00009 Attachments: 18. Hearing - Plat Note Modification Co12-76-52, RANCHO DEL CERRO (LOT 430) Robert Workman and Janice Arnold, represented by Renzo Curay of Galileo Group, request a plat note modification for removal of the one-foot no-access easement along the northeasterly portion of Lot 430 (2.34 acres) of the Rancho Del Cerro subdivision (Bk. 28, Pg. 84). The subject property is zoned CR-1 (Single Residence) and is located southeast of the T-intersection of W. Paseo De Las Estrellas and N. Calle Del Risco, addressed as 5532 W. Placita Acantilada. Staff recommends APPROVAL WITH A CONDITION. (District 3) DSD_Co12-76-52 DSD_Co12-76-52_CommLtr_Redacted DSD_Co12-76-52_CommLtr DSD_Co12-76-52_CommLtr_7-13-26_Redacted Attachments: Page 5 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda TRANSPORTATION 19. Hearing - Roadway Development Impact Fee Audit FY23 and FY24 Pursuant to A.R.S. §11-1102(I)(2), conduct a public hearing on the biennial certified audit of the roadway development impact fee program. TR_RdwyDevlmtImpactFeeAuditFY23-24 Attachments: * * * 20. APPROVAL OF CONSENT CALENDAR BOARD OF SUPERVISORS 21. County Administrator Hiring Process Discussion/Direction/Action regarding the County Administrator Hiring Process. (District 3) 22. Pima County Treasurer Appointment of the Pima County Treasurer. BOS_TRApptMemo_Redacted BOS_TRAppt_CommentLtrs_Redacted BOS_TRAppt_CommLtr_7-8-26_Redacted BOS_TRAppt_CommLtrs_7-10-26_Redacted BOS_TRAppt_OurFamilyServicesCommLtr_7-10-26 BOS_TRAppt_PascuaYaquiTribeCommLtr_7-10-26 BOS_TRAppt_CommLtrs_7-13-26_Redacted BOS_TRAppt_CommLtrs2_7-13-26_Redacted BOS_TRAppt_CommLtrs3_7-13-26_Redacted Attachments: 23. Southern Arizona Rescue Association Discussion/Direction/Action regarding the Southern Arizona Rescue Association contract to provide for the provision of equipment, supplies and training for Search and Rescue Operations, extending contract term to 6/30/27 and amending contractual language and approval of funding, $100,000.00, from a source to be identified at the discretion of the County Administrator. (District 4) BOS_SoArizonaRescueAssoc_Dist4Submittal Attachments: Page 6 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda 24. Opposition to Building a Wall on the Tohono O’odham Nation’s Border with Mexico RESOLUTION NO. 2026 - 37 , of the Board of Supervisors, in opposition to the Executive Order of President Donald Trump to build a wall on the Tohono O’odham Nation’s border with Mexico. (District 3) BOS_ResoOpposingBorderWall_Dist3Submittal Attachments: CLERK OF THE BOARD 25. Petition for Relief of Taxes Pursuant to A.R.S. §42-11109(E), A-Mountain Church of God in Christ has petitioned the Board of Supervisors for relief of taxes and associated interest/penalty for tax year 2019, for Tax Parcel No. 118-04-178D. CL_A-MountainChurchofGodinChrist Attachments: COMMUNITY AND WORKFORCE DEVELOPMENT 26. Outside Agency Committee Funding Recommendations for Fiscal Year 2026/2027 Basic Needs Priority Area Category Agency/Program Name/Amount Requested/FY26/27 Recommendation Arivaca Coordinating Council-Human Resource Group, Inc./Food Security/$99,000/$53,195 Arivaca Coordinating Council-Human Resource Group, Inc./Helping HEARTS/$15,000/$15,000 Arizona Diaper Bank/Diapers for Infants, Children, Disabled, and Seniors/$66,904/$27,195 Casa de los Niños/Foster Care Food Pantry/$15,000/$15,000 Catholic Community Services of Southern Arizona, Inc./Case Management for Homeless Families/$58,110/$42,195 Catholic Community Services of Southern Arizona, Inc./Emergency Food Pantry and Clothing Closet/$75,000/$15,000 Community Food Bank, Inc./Child Nutrition Program/$40,000/$26,195 Community Food Bank, Inc./Emergency Food Assistance/$375,000/$262,873 Community Food Bank, Inc./Rural Resource Centers/$80,000/$70,195 Community Home Repair Projects of Arizona/Roof Repair and Replacement Program/$100,000/$26,195 Epidaurus, d.b.a. Amity Foundation/Road to Recovery/$15,000/$15,000 Felicia's Farm/FKA Izi Azi Foundation/Felicia's Farm/$15,000/$15,000 GAP Ministries/Basic needs/Support services/$196,610/$15,000 Greater Vail Community ReSources/Emergency Food/$15,000/$15,000 I Am You 360/I Am You 360 Small Home Experience Dignity First Program/$75,000/$15,000 IMPACT of Southern Arizona/IMPACT Clothing Bank/$36,000/$23,975 IMPACT of Southern Arizona/IMPACT Food Bank/$43,000/$26,660 Interfaith Community Services/Emergency Financial Services/$50,000/$24,395 Interfaith Community Services/ICS Mobile Meals/$50,000/$30,195 Interfaith Community Services/Transportation for At-Risk Seniors/$50,000/$29,595 Mobile Meals of Southern Arizona, Inc./More Than Meals - Essential Food Page 7 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda Delivery/$50,000/$27,895 Our Family Services, Inc./Common Unity Program/$39,144/$23,695 Our Family Services, Inc./Emergency Shelter Services/$58,148/$36,695 Primavera Foundation, Inc./Casa Paloma Drop-In Center/$35,000/$26,195 Primavera Foundation, Inc./Homelessness Intervention and Prevention (HIP)/$35,000/$29,195 Sahuarita Food Bank (d.b.a.: Marana Food Bank & Community Resource Center)/Marana Food Bank Emergency Food/$200,000/$106,217 Sahuarita Food Bank (d.b.a.: Marana Food Bank & Community Resource Center)/Sahuarita Food Bank Emergency Food/$45,000/$38,195 Sister Jose Women's Center/Case Navigation (formerly Gateway to Housing)/$50,000/$15,000 Southern Arizona AIDS Foundation/SAAF Food For Life/$137,500/$80,195 Splinter Art and Community Fund/Mobile Home Park Eviction Prevention and Housing Security Project/$15,000/$15,000 The John P. Bell Family Foundation, d.b.a. Team Lizzie Bell/Team Lizzie Bell/$15,000/$15,000 The Salvation Army/OUTSIDE AGENCY - MOTEL/$40,000/$15,000 Tucson Jewish Community Center, Inc./Advancing Independence at the Tucson J/$15,000/$15,000 Tucson Medical Center Foundation/Tucson Collaborative Community Care/$50,000/$15,000 St. Luke's in the Desert, Inc./Nutritional Services/$50,000/$0 Category Subtotal: $2,304,416/$1,221,145 Community Well-being and Safety Priority Area Category Agency/Program Name/Amount Requested/FY26/27 Recommendation Administration of Resources and Choices/Elder Services, Safety, and Placement/$54,820/$37,695 Arizona Burn Foundation/Pima County Community Smoke Alarm Walks/$15,000/$15,000 Casa de los Niños/Parent Education/$15,000/$15,000 Center for Community Mediation and Facilitation/Conflict Resolution/$20,961/$15,000 CPLC/CPLC Nahui Ollin Wellness Program/$69,997/$15,000 International Rescue Committee/Victims Services Program/$15,000/$15,000 Southern Arizona AIDS Foundation/SAAF AVP (Anti-Violence Project)/$30,000/$19,195 Tucson Center for Women and Children, d.b.a. Emerge Center Against Domestic Abuse/Lay Legal Services for Domestic Violence Victims/$15,000/$15,000 Tucson Center for Women and Children, d.b.a. Emerge Center Against Domestic Abuse/Youth Violence Prevention and Intervention/$15,000/$15,000 Tucson Medical Center Foundation/Desert Kids Safety Program/$50,000/$0 Category Subtotal: $300,778/$161,890 Education and Workforce Development Priority Area Category Agency/Program Name/Amount Requested/FY26/27 Recommendation Amistades, Inc./Amistades Prosperity Circles/$60,228/$15,000 Arivaca Action Center Incorporated/Arivaca Early Learning Center/$27,750/$17,195 Banner Health Foundation/Banner Health Career Explorers Program/$15,000/$15,000 Casa de los Niños/The Kelly Early Education Center/$15,000/$15,000 Catholic Community Services of Southern Arizona, Inc./Catholic Community Services of Southern Arizona/Childcare for Working Poor/$150,000/$15,000 Catholic Community Services of Southern Arizona, Inc./Workforce Development/$15,000/$15,000 Community Food Bank, Inc./Caridad Community Kitchen/$50,000/$30,995 Page 8 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda Goodwill Industries of Southern Arizona, Inc./Goodwill Adult Reentry Employment and Training Project/$235,980/$15,000 Greater Tucson Leadership, Inc./Tucson Youth Leadership Academy/$50,000/$15,000 International Rescue Committee/Workforce Development - Job Club (Job Readiness Training)/$21,500/$15,695 Literacy Connects/Literacy Connects Youth Development Programs/$62,422/$44,195 Live the Solution, d.b.a. Earn to Learn/Earn to Learn - Wrap-Around Services/$100,000/$15,000 Lutheran Social Services of the Southwest/Direct Care Worker Workforce Development/$15,000/$15,000 Lutheran Social Services of the Southwest/English Literacy Training for Workforce Development/$15,000/$15,000 Make Way for Books/The Story Project/$50,000/$21,395 Sahuarita Food Bank (d.b.a.: Marana Food Bank & Community Resource Center)/Community Resource Center/$15,000/$15,000 Sahuarita Food Bank (d.b.a.: Marana Food Bank & Community Resource Center)/Summit Community Development Program/$15,000/$15,000 Southwest Fair Housing Council/Fair Housing Education and Enforcement Program/$35,000/$15,000 The Dunbar Coalition, Inc., d.b.a. Dunbar Pavilion/Technology Training for Seniors/$15,000/$15,000 The John P. Bell Family Foundation, d.b.a. Team Lizzie Bell/Healthy Workers/$15,000/$15,000 Tucson Children's Museum, Inc., d.b.a. Children's Museum Tucson/Story School at Children's Museum Tucson/$15,000/$15,000 Tucson Girls Chorus/Tucson Girls Chorus Community Engagement Program/$15,000/$15,000 Tucson Preparatory School/Continuing Education for Adult Youth/$20,000/$15,000 United Way of Tucson and Southern Arizona/Empowered Teaching/$15,000/$15,000 Youth On Their Own/YOTO Program (Academic Stipends)/$125,000/$116,195 YWCA Southern Arizona/YWCA Economic Justice/$75,000/$15,000 Tucson Medical Center Foundation/Patient Care Technician Training Program/$75,724/$0 United Way of Tucson and Southern Arizona/Thriving Futures Mentorship/$15,000/$0 Category Subtotal: $1,333,604/$545,670 Health and Wellness Priority Area Category Agency/Program Name/Amount Requested/FY26/27 Recommendation Amistad y Salud, Clinica Amistad/Community Health & Wellness/$60,000/$27,595 Arizona Youth Partnership (AZYP)/Arizona Youth Partnership (AZYP) The Early Childhood Mental Health Program/$15,000/$15,000 Ayuda Smiles, Inc./Smiles for Veterans/$30,000/$15,000 Casa de los Niños/Casa de los Niños Uninsured Fund/$15,000/$15,000 Catholic Community Services of Southern Arizona, Inc./Reengaging and Connecting Deaf, Deaf Blind and Elderly Deaf Individuals with Resources through Supportive Partnerships/$60,000/$43,195 Child & Family Resources, Inc./Child and Adult Care Food Program/$15,000/$15,000 Community Emergency Medical Responders Foundation, Inc., d.b.a. CCHS Foundation/CCHS Homeless Medical Stabilization & Early Intervention Program/$50,000/$15,000 Compass Affordable Housing/CAH Tenant Empowerment, Advancement & Mentorship Program/$30,000/$15,000 Friends of Aphasia/Friends of Aphasia/$20,000/$15,000 Green Valley Assistance Services, Inc., d.b.a. Valley Assistance Services/Older Adult Resource Program Specialist/$34,110/$15,000 Page 9 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda Green Valley Assistance Services, Inc., d.b.a. Valley Assistance Services/Transforming Health Care Through Transportation/$30,000/$15,000 International Rescue Committee/Health - Medical Case Management/$95,264/$15,695 Jewish Family and Children's Services of Southern Arizona/HoME/$54,946/$31,195 Marana Health/Marana Health Integrated Street Medicine/$30,000/$15,000 Primavera Foundation, Inc./Supp Hsg RS Svs/Supportive Services/$45,000/$29,390 Saavi Services for the Blind/Health and Wellness Program for Blind Seniors/$35,000/$19,195 Sahuarita Food Bank (d.b.a.: Marana Food Bank & Community Resource Center)/Prescription for Health/$15,000/$15,000 Soldier's Best Friend/Soldier's Best Friend Service Dog Training Program/$30,000/$15,000 Southern Arizona AIDS Foundation/SAAF ALLY/$45,000/$33,195 Tucson Medical Center Foundation/TMC For Seniors/$15,000/$15,000 University of Arizona Foundation, d.b.a. Mobile Health Program/Mobile Health Program for Medically Underserved Residents/$15,000/$15,000 University of Arizona Foundation, f/b/o Pima County Cooperative Extension, The Garden Kitchen/PLAZA (Promoting Local Arizona Agriculture) Mobile Market: Expanding Food Access and a Thriving Local Food Economy/$88,961/$15,000 Serve Society/Mobile Community Haircare & Wellness Program/$120,000/$0 The John P. Bell Family Foundation, d.b.a. Team Lizzie Bell/Safe Homes/$15,000/$0 Category Subtotal: $963,281/$424,460 Prosperity Initiative Priority Area Category Agency/Program Name/Amount Requested/FY26/27 Recommendation 3rd Decade/3rd Decade Financial Education and Mentoring/$50,000/$15,000 Arivaca Coordinating Council-Human Resource Group, Inc./STAR Program (Formerly Senior Support)/$86,600/$20,195 Casa de los Niños/Casa de los Niños Care Coordination/$15,000/$15,000 Child & Family Resources, Inc./Pima County Healthy Families/$47,436/$35,695 Flowers & Bullets/Expanding Food Security and Entrepreneurship in Midtown Tucson/$15,000/$15,000 International Rescue Committee/Prosperity Initiative- Workforce and Career Pathways for New Americans/$100,000/$15,000 Jewish Family and Children's Services of Southern Arizona/Financial Wellness Program/$83,227/$19,395 Local First Arizona Foundation/Fuerza Local Business Accelerator by Local First Arizona/$15,000/$15,000 Step Up To Justice Pro Bono Law Center/Consumer Protection Legal Clinics/$25,000/$15,000 The IDEA School/Free Lunch Program, low-income students/$18,000/$0 The University of Arizona Foundation for the benefit of Wassaja Carlos Montezuma Center for Native American Health/The University of Arizona Foundation for the benefit of Wassaja Carlos Montezuma Center for Native American Health/$2,687,974/$0 Category Subtotal: $3,143,237/$165,285 Youth and Family Services Priority Area Category Agency/Program Name/Amount Requested/FY26/27 Recommendation Arizona Diaper Bank/Potty Training for Toddlers/$17,250/$15,000 Arizona's Children Association/Las Familias Program/$50,000/$28,695 Big Brothers Big Sisters of Southern Arizona/Mentor 2.0/$15,000/$15,000 Boys to Men Tucson, Inc./Boys to Men Tucson - Restorative Group Mentoring/$32,096/$15,000 Center for Community Mediation and Facilitation/Conflict Literacy Page 10 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda Training/$19,668/$15,000 Child & Family Resources, Inc./The Resilience Initiative/$15,000/$15,000 Daibudo Kodenkan Matsuno Kenshukai/Youth Martial Arts Scholarship Program/$20,000/$15,000 Girl Scouts of Southern Arizona/EmpowHERment Program: Today's Girl Scouts, Tomorrow's Leaders/$45,000/$25,195 Portable Practical Educational Preparation, Inc./Amado Food Project/$19,500/$15,000 Sahuarita Food Bank (d.b.a.: Marana Food Bank & Community Resource Center) Family Resource Center/$15,000/$15,000 Southern Arizona AIDS Foundation/SAAF EON/$45,000/$25,195 Tu Nidito Children and Family Services/Children to Children/$30,000/$23,995 Tu Nidito Children and Family Services/Pathways/$20,000/$15,195 YWCA Southern Arizona/Pima County Teen Court/$54,500/$38,195 Green Valley Assistance Services, Inc., d.b.a. Valley Assistance Services/Youth and Family Resource Program/$30,000/$0 Category Subtotal: $428,014/$276,470 General Services Priority Area Category Agency/Program Name/Amount Requested/FY26/27 Recommendation Arizona-Sonora Desert Museum/Invasive Species and Fire Education/$49,000/$44,528 El Rio Santa Cruz Neighborhood Health Center, Inc./Patient Centered Medical Home Program/$50,000/$45,108 El Rio Santa Cruz Neighborhood Health Center, Inc./Trichloroethylene Program/$170,000/$161,178 Friends of Robles Ranch/My Friends Closet/Robles Ranch Food Bank/$63,874/$47,978 Pima Council on Aging/Family Caregiver Support/$100,000/$17,578 Pima Council on Aging/Neighbors Care Alliance/$75,000/$55,978 Pima Council on Aging/Rights and Benefits/$180,000/$130,278 Pima County Community Land Trust/PCCLT Housing Counseling/$82,405/$60,978 Southern Arizona Children's Advocacy Center, Inc./Support Services for Child Victims/$75,000/$70,538 United Way of Tucson and Southern Arizona/Volunteer Income Tax Assistance (VITA) Program/$50,011/$26,000 Category Subtotal: $895,290/$660,142 CWD OUTSIDE AGENCY PRIORITY AREA CATEGORIES TOTAL: $9,368,620/$3,455,062 Other Department Priorities (County Administration/Health Department/Parks & Recreation) Agency/Program Name/Amount Requested/FY26/27 Recommendation (CA) Pima Association of Governments/Pima Association of Governments Overall Work Program/$298,000/$298,000 (HD) Tucson Center for Women and Children, d.b.a. Emerge Center Against Domestic Abuse/Comprehensive Domestic Violence Support Services/$325,000/$115,798 (PR) Desert Survivors, Inc./Desert Survivors, Inc./$67,760/$67,760 Other Department Priorities Subtotal: $690,760/$481,558 OUTSIDE AGENCY PROGRAM TOTAL: $10,059,380/$3,936,620 CWD_OutsideAgencyFundingRecs CWD_OutsideAgencyFundingRecs_CommLtr_7-13-26_Redacted Attachments: Page 11 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda REAL PROPERTY 27. Abandonment by Vacation RESOLUTION NO. 2026 - 38 , of the Board of Supervisors, for the vacation of a portion of W. River Terrace Drive, an undeveloped roadway, as Pima County Road Abandonment No. A-0085, within the southeast quarter of Section 15, T13S, R13E, G&SRM, Pima County, Arizona. (District 3) RPS_ResoWRiverTerraceDrive Attachments: REGIONAL WASTEWATER RECLAMATION 28. Marana Designated Management Agency (DMA) and Pima County DMA Boundary Map Staff recommends approval of an update to the Marana DMA and Pima County DMA boundary map facilitated by Pima Association of Governments, that clearly identifies the DMA boundaries. The DMA boundary update will allow the Town of Marana to provide wastewater service to new development in Saguaro Bloom Blocks 9 and 10. WW_MaranaPCDesignatedMgmtAgencyBoundaryMap Attachments: CONTRACT AND AWARD Procurement 29. B & F Contracting, Inc., Borderland Construction Company, Inc., Ellison-Mills Contracting, L.L.C., and Hunter Contracting Co., to provide a job order contract: wastewater conveyance system and related facilities, repair, rehabilitation and construction services, RWRD Obligations Fund, contract amount $25,000,000.00 (SC2600000376) Administering Department: Regional Wastewater Reclamation SC2600000376 Attachments: 30. ADJOURNMENT POSTED: 130 W. Congress Street, 1st Floor Tucson, AZ 85701 Pima County Homepage: www.pima.gov DATE/TIME POSTED: 7/8/26 @ 3:00 p.m. DATE/TIME REPOSTED (additional attachments only): 7/8/26 @ 5:00 p.m. DATE/TIME REPOSTED (additional attachments only): 7/10/26 @ 5:00 p.m. DATE/TIME REPOSTED (additional attachments only): 7/13/26 @ 10:15 a.m. DATE/TIME REPOSTED (additional attachments only): 7/13/26 @ 2:00 p.m. DATE/TIME REPOSTED (combined Agenda/Addendum and additional attachments): 7/13/26 @ 5:00 p.m. Page 12 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda ADDENDUM 1 BOARD OF SUPERVISORS SITTING AS OTHER BOARDS LIBRARY DISTRICT BOARD 1. Contract OverDrive, Inc., to provide for digital content services, Library District Fund, contract amount $20,000,000.00/4 year term (SC2600000371) Administering Department: Library SC2600000371 Attachments: SITTING AS THE BOARD OF SUPERVISORS BOARD OF SUPERVISORS 2. Debt and Financial Transparency Advisory Commission Discussion/Direction/Action regarding the creation of the Debt and Financial Transparency Advisory Commission. (District 1) BOS_DebtFinancialTransparencyAdvisoryComm_Dist1Submittal Attachments: 3. 2026 Primary Election Discussion/Direction/Action regarding the Primary Election with Pima County's Recorder and Elections Director, and/or designees, updating the Board on election operations including, but not limited to, activity at early voting sites, ballot processing and tabulation, deployment of the Recorder's \"Votemobile\", the implementation of the new ID-verified early ballot drop-off process, as well as an update from the Board's representative on the Elections Oversight Task Force. (District 4) BOS_2026PrimaryElection_Dist4Submittal BOS_2026PrimaryElection_CommLtr_7-13-26_Redacted Attachments: CONTRACT AND AWARD HEALTH 4. Helping Ourselves Pursue Enrichment, Inc., Amendment No. 2, to provide for the Crisis Cooperative Project for Opioid Misuse/Abuse and Prevention and amend contractual language, Substance Abuse and Mental Health Services Administration Fund passed through Arizona Department of Health Services, contract amount $275,000.00 (PO2600003846) PO2600003846 Attachments: Page 13 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda GRANT APPLICATION/ACCEPTANCE 5. Acceptance - Community and Workforce Development Arizona Department of Housing, Amendment No. 1, to provide for the HSSF Pima County EELS Emergency Housing Project, extend grant term to 12/31/26 and amend grant language, no cost (GA-CWD-71641) GA-CWD-71641 Attachments: POSTED: 1st Floor, 130 W. Congress Street, Tucson, AZ 85701 Pima County Homepage: www.pima.gov DATE/TIME POSTED: 7/10/26 @ 11:00 a.m. DATE/TIME REPOSTED (additional attachments only): 7/13/26 @ 10:15 a.m. Page 14 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda CONSENT CALENDAR JULY 14, 2026 Page 15 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda CONSENT CALENDAR, JULY 14, 2026 CONTRACT AND AWARD Community and Workforce Development 1. Town of Marana, to provide an intergovernmental agreement for the Pima Early Education Program, contract amount $153,339.20 revenue (CT2600000019) CT2600000019 Attachments: 2. Flowing Wells Unified School District, Amendment No. 1, to provide an intergovernmental agreement for the Pima Early Education Program, amend contractual language and scope of services, no cost (PO2500007946) PO2500007946 Attachments: 3. Sahuarita Unified School District, Amendment No. 1, to provide an intergovernmental agreement for the Pima Early Education Program, amend contractual language and scope of services, no cost (PO2500007952) PO2500007952 Attachments: 4. Tucson Unified School District, Amendment No. 1, to provide an intergovernmental agreement for the Pima Early Education Program, amend contractual language and scope of services, no cost (PO2500008371) PO2500008371 Attachments: 5. Marana Unified School District No. 06, Amendment No. 1, to provide an intergovernmental agreement for the Pima Early Education Program, amend contractual language and scope of services, no cost (PO2500008364) PO2500008364 Attachments: 6. Marana Unified School District No. 06, to provide an intergovernmental agreement for Pima Early Education Program (PEEP) Scholarships, term date 7/1/26 to 5/31/27, CWD PEEP Special Revenue Fund, contract amount $155,545.20 (PO2600009062) PO2600009062 Attachments: 7. Pima County Amphitheater Schools, d.b.a. Amphitheater Public Schools, Amendment No. 2, to provide an intergovernmental agreement for the Pima Early Education Program (PEEP), amend contractual language and scope of services, CWD PEEP Special Revenue Fund, contract amount $877,819.20 (PO2500009251) Page 16 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda PO2500009251 Attachments: 8. Sunnyside Unified School District 12, d.b.a. Sunnyside Unified School District, Amendment No. 2, to provide an intergovernmental agreement for the Pima Early Education Program (PEEP), amend contractual language and scope of services, CWD PEEP Special Revenue Fund, contract amount $622,180.80 (PO2500008368) PO2500008368 Attachments: County Attorney 9. CBS Consulting Group, Amendment No. 1, to provide for professional grant writing services, extend contract term to 6/30/27, amend contractual language and scope of services, General Fund, contract amount $85,000.00 (PO2500017504) PO2500017504 Attachments: Facilities Management 10. Bridgeway Health Solutions of Arizona, Inc., d.b.a. Arizona Complete Health - Complete Care Plan, Amendment No. 5, to provide an Operating Agreement for space within the Crisis Response Center located at 2802 E. District Street, Tucson, AZ, extend contract term to 9/30/28 and amend contractual language, no cost (SC2600000347) SC2600000347 Attachments: Parks and Recreation 11. Arivaca Community Center, Inc., Amendment No. 4, to provide for Arivaca Recreational Programming, extend contract term to 6/30/27 and amend contractual language, General Fund, contract amount $60,000.00 (CT_22-373) CT_22-373 Attachments: Pima County Wireless Integrated Network 12. Town of Oro Valley Police Department, Amendment No. 1, to provide for subscriber services, extend contract term to 6/21/31 and amend contractual language, contract amount $46,800.00 revenue (CTN-WIN-21-117) CTN-WIN-21-117 Attachments: Page 17 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda Procurement 13. Award Award: Purchase Order No. PO2600020272, Life Technologies Corporation, to provide for RapidHIT ID System. This contract is for a one-time award in the discrete amount of $359,718.26 (including sales tax). Funding Source: 40069FD FM Capital Projects Fund. Administering Department: Medical Examiner. Award_PO2600020272 Attachments: 14. Award Award: Multiple Supplier Contract No. SC2600000370, Group 1 OEM: Rasix Computer Center, Inc., and Group 2 Re-manufactured: B2B Supplies USA, L.L.C., to provide for OEM & Remanufactured Printer & Fax Toner Cartridges. This supplier contract is for an initial term of one (1) year in the shared annual award amount of $350,000.00 (including sales tax) and includes four (4) one-year renewal options. Funding Source: General Fund. Administering Department: Information Technology. Award_SC2600000370 Attachments: 15. Award Award: Supplier Contract No. SC2600000394, Nutrition One, L.L.C., to provide for food service congregate and non-congregate shelters. This supplier contract is for an initial term of one (1) year in the annual award amount of $285,000.00 (including sales tax) and includes four (4) one-year renewal options. Funding Source: Pima County Regional Affordable Housing Fund. Administering Department: Community and Workforce Development. Award_SC2600000394 Attachments: 16. TYPSA, Inc., Amendment No. 4, to provide Cultural Resources Services for Pima County Regional Middle Mile Project (PCRMMP), amend contractual language and scope of services, Non-Bond Projects Funds (Capital Project Funds), contract amount $964,042.91 (PO2500002562) Administering Department: Project Design and Construction PO2500002562 Attachments: 17. Tyler Technologies, Inc., Amendment No. 2, to provide for Tyler Technologies Records Management Software and amend contractual language, Recorder Special Revenue Fund, contract amount $120,000.00 (SC2400001375) Administering Department: Information Technology, on behalf of Recorder's Office SC2400001375 Attachments: Page 18 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda 18. Hunter Contracting Co., to provide for Construction Manager at Risk Services: Southeast Regional Park - Clay Target Center Relocation, term date 7/14/26 to 1/31/28, Parks and Recreation Capital Improvement Project Fund, contract amount $295,703.09 (PO2600017588) Administering Department: Project Design and Construction PO2600017588 Attachments: Real Property 19. The State of Arizona, Arizona Department of Environmental Quality, to provide a Non-Exclusive Right-of-Way Use License for Monitoring Wells, contract amount $2,500.00 revenue/25 year term (CT2600000062) CT2600000062 Attachments: 20. Anita AVE Properties, L.L.C., to provide for Sales Agreement No. Sale-0139 and Special Warranty Deed for the sale of vacant surplus property that consists of 0.24 acres of undeveloped land, located at the Northwest corner of Speedway Boulevard and Anita Avenue, contract amount $101,000.00 revenue (CT2600000061) CT2600000061 Attachments: Transportation 21. Regional Transportation Authority of Pima County, Amendment No. 8, to provide for design and construction of improvements to Sunset Road - Silverbell to I-10 to River Road (RTA-8), extend contract term to 6/30/31 and amend contractual language, no cost (CTN-TR-20-54) CTN-TR-20-54 Attachments: 22. GAC Star Valley, L.L.C., to provide a Development Agreement - Camino Verde and Valencia Intersection Improvements, Pima County, Arizona, Roadway Development Impact Fees - West Service Area Fund, contract amount $3,200,000.00/25 year term (PO2600020471) PO2600020471 Attachments: GRANT APPLICATION/ACCEPTANCE 23. Acceptance - Community and Workforce Development City of Tucson, to provide an intergovernmental agreement for the Tucson-Pima PRO Housing Initiative, term date 1/22/25 to 9/30/30, $1,732,500.00 (G-CWD-75075) G-CWD-75075 Attachments: Page 19 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda 24. Acceptance - Community and Workforce Development RESOLUTION NO. 2026 - 39 , of the Board of Supervisors, authorizing the approval of the Continuum of Care La Casita “Scope of Work for Fiscal Year 2024/2025 Renewal Grant Agreement” from the U.S. Department of Housing and Urban Development (“HUD”), $271,408.00/$67,852.00 General Fund Match (G-CWD-113945) G-CWD-113945 Attachments: 25. Acceptance - Community and Workforce Development RESOLUTION NO. 2026 - 40 , of the Board of Supervisors, authorizing the approval of the Continuum of Care “Scope of Work for Fiscal Year 2024/2025 Renewal Grant Agreement” from the U.S. Department of Housing and Urban Development (“HUD”), $477,916.00/$119,479.00 General Fund Match (G-CWD-113948) G-CWD-113948 Attachments: 26. Acceptance - Community and Workforce Development Arizona Department of Economic Security, Amendment No. 3, to provide for the Community Action Services Program and amend scope of work, no cost (GA-CWD-82532, GA-CWD-82533, GA-CWD-82534, GA-CWD-93453, GA-CWD-103987) GA-CWD-82532,82533,82534,93453,103987 Attachments: 27. Acceptance - Elections Arizona Secretary of State, to provide for Pima County election assistance for additional staffing and equipment, $20,000.00 (G-EL-113885) G-EL-113885 Attachments: 28. Acceptance - Environmental Quality US Environmental Protection Agency, Amendment No. 2, to provide for the PM2.5 Monitoring Network to maintain fine particulate matter monitoring networks, extend grant term to 3/31/27 and amend grant language, $391,454.00 (GA-DE-65961) GA-DE-65961 Attachments: BOARD, COMMISSION AND/OR COMMITTEE 29. Pima Animal Care Advisory Committee Reappointment of Laura O’Brien, representing Friends of Pima Animal Care Center. Term expiration: 6/30/30. (Organizational recommendation) BCC_PACAdvisoryCommitteeReappt Attachments: 30. State Board of Equalization Appointment of Mark Baudenistel, to fill a vacancy created by Brian Johnson. Term expiration: 12/31/28. (District 1) Page 20 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda BCC_StateBoardofEqualizationAppt Attachments: 31. Bond Advisory Committee Appointment of Carolyn Campbell. Term expiration: 7/13/32. (County Administrator recommendation) BCC_BondAdvisoryCommitteeAppt Attachments: 32. Regional Wastewater Reclamation Advisory Committee Appointment of Dr. Luisa Ikner, to fill a vacancy created by Claire Zucker. Term expiration: 3/1/28. (District 3) BCC_RWRACAppt Attachments: SPECIAL EVENT LIQUOR LICENSE/TEMPORARY EXTENSION OF PREMISES/ PATIO PERMIT/WINE FAIR/WINE FESTIVAL/JOINT PREMISES PERMIT APPROVED PURSUANT TO RESOLUTION NO. 2019-68 33. Temporary Extension 12104129, Kevin Arnold Kramber, Union Public House, 4340 N. Campbell Avenue, Nos. 101, 102, 103 and 104, Tucson, August 15, 2026. 34. Special Event Lorene C. Kelley, Girl Scouts of Southern Arizona, Camp Whispering Pines, 12500 E. Organization Ridge Road, Mt. Lemmon, August 20 and 21, 2026. ELECTIONS 35. Precinct Committeemen Pursuant to A.R.S. §16-821B, approval of Precinct Committeemen resignations and appointments: RESIGNATION-PRECINCT-PARTY: Judy Gillies-045-DEM, Tanya Tassi-141-DEM, Robert Latimore-193-DEM, David Sheldahl-061-REP APPOINTMENT-PRECINCT-PARTY: Judy Gillies-017-DEM, Susan Boehnlein-109-DEM, Martha Gipson-141-DEM, Meredith Archer-193-DEM, Lenore Becker-205-DEM, Caryl Romine Parker-207-DEM, Ricardo DeSaracho-061-REP, Harry Montano-069-REP, Tamara Westberg-104-REP, Bill Beard-105-REP, Caroline Sepp-238-REP EL_PrecinctCommitteemen Attachments: Page 21 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda FINANCE AND RISK MANAGEMENT 36. Duplicate Warrants - For Ratification 4IMPRINT, INC. $9,803.68; Lewis & Ellis, L.L.C. $3,500.00; James Cooke & Hobson, Inc. $2,750.27; 1969 $517.68; Emily Strandberg $180.00; Palliative and Supportive Care Alliance, Inc. $125.00; Ace Hardware $6.50; Jeffrey Dickerson $740.00; Hunter Contracting Co. $13,358.74; PHH Mortgage Corporation $454.92; Pacifica Apartments, L.L.C. $1,198.00; Pacifica Apartments, L.L.C. $3,150.00; Salvation Army $20,865.51; Eden Sinai Berreyes Encinas $250.00; Velocity Truck Center $70.98; Marquita Ochoa $175.00; Environmental Express, Inc. $2,564.02; Premier Biotech, L.L.C. $258.67; Marana Unified School District No. 6 $62,480.24; Sycamore Creek Apartments $926.00; Sycamore Creek Apartments $926.00; Stamback Services $383.02; DLT Solutions, L.L.C. $81,155.96. FN_DuplicateWarrants Attachments: RECORDER 37. Pursuant to Resolution No. 1993-200, ratification of the Document Storage and Retrieval Fund for the month of May, 2026. RE_DocStorageRetrievalFund_May2026 Attachments: RATIFY AND/OR APPROVE 38. Minutes: April 21, 2026 May 12, 2026 (Study Session) Warrants: June, 2026 CL_04-21-26DraftMinutes CL_05-12-26DraftStudySessionMinutes Attachments: Page 22 Pima County Printed on 7/13/2026",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "legistar:pima:1822@8463c037aab5a81ef7cfc42e8d348c8442957957ac4767732ccdc77890a8591a",
+   "meetingId": "legistar:pima:1822",
+   "ocdId": "ocd-division/country:us/state:az/county:pima",
+   "documentUrl": "https://legistar.granicus.com/pima/meetings/2026/7/1822_A_Board_of_Supervisors_26-07-28_Online_Agenda.pdf",
+   "contentHash": "8463c037aab5a81ef7cfc42e8d348c8442957957ac4767732ccdc77890a8591a",
+   "retrievedAt": "2026-08-13T18:43:10.531Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://legistar.granicus.com/pima/meetings/2026/7/1822_A_Board_of_Supervisors_26-07-28_Online_Agenda.pdf",
+   "sourceOrg": "Pima County Clerk of the Board",
+   "collectedAt": "2026-08-13T18:43:10.531Z",
+   "verifiedAt": null,
+   "text": "Board of Supervisors Pima County Meeting Agenda MEETING LOCATION Administration Bldg - East 130 W. Congress Street 1st Floor Tucson, AZ 85701 Public Access to Hearing Room at 4:40 p.m. Board of Supervisors' Hearing Room 5:00 PM Tuesday, July 28, 2026 PIMA COUNTY BOARD OF SUPERVISORS Jennifer Allen, Chair, District 3 Dr. Matt Heinz, Vice Chair, District 2 Rex Scott, Member, District 1 Steve Christy, Member, District 4 Andrés Cano, Member, District 5 AGENDA/ADDENDUM AND BROADCAST INFORMATION At least 24 hours before each scheduled meeting, the agenda/addendum is available online at www.pima.gov and in the Clerk of the Board’s Office, 130 W. Congress Street, 1st Floor, Tucson, AZ 85701, Mon-Fri, 8am to 5pm. Cable Channels: Cox 96 Webcast: www.pima.gov PUBLIC PARTICIPATION SPEAKERS ARE LIMITED UP TO 3 MINUTES To address the Board of Supervisors, please complete a Speaker’s Card. Clearly print your name/address, the item number and other requested information. Speaker Card(s) are required for Call to the Public and Public Hearing Items. Once completed submit your Speaker Card(s) to Clerk staff. When the Chair announces your name, step forward to the podium and state your name for the record. The Chair reserves the right to ensure all testimony is pertinent or non-repetitive so matters are handled fairly and expeditiously. All attendees are advised that the Board of Supervisors strongly adhere to the Board of Supervisors Rules and Regulations. Outbursts, breaches of peace, boisterous conduct or other unlawful interference will result in that individual being asked to leave the meeting room. Any questions pertaining to the meeting can be directed to Melissa Manriquez, Clerk of the Board. HEARING ROOM NOTICE Law permits that a video and/or audio recording of all or part of this meeting may be made if doing so does not interfere with the conduct of the meeting. Pima County has no control over the use and distribution of any such recordings. In addition to the official meeting proceedings, these recordings may include images of and comments made by the public prior to the start, during a recess and after adjournment of the meeting, and may be posted on social media or other internet sites. ACCESSIBILITY The Board Hearing Room is wheelchair and handicapped accessible. Any person who is in need of special services (e.g., assistive listening device, Braille or large print agenda material, signer for hearing impaired, accessible parking, etc.) due to any disability will be accommodated. Please contact the Clerk of the Board at (520) 724-8449 for these services at least three (3) business days prior to the Board Meeting. Page 1 Pima County Printed on 7/27/2026\nJuly 28, 2026 Board of Supervisors Meeting Agenda Clerk's Note: Members of the Pima County Board of Supervisors will attend either in person or by telephone, video or internet conferencing. The meeting can be streamed via the following links: BOS Agenda July 28, 2026 (http://pima.granicus.com/ViewPublisher.php?view_id=3), on YouTube (https://www.youtube.com/c/PimaCountyArizona/), or via Cox Cable Channel 96. Television viewing will be available in the lobby at 130 West Congress, 1st Floor. 1. ROLL CALL 2. PLEDGE OF ALLEGIANCE 3. LAND ACKNOWLEDGEMENT STATEMENT To be offered by Dr. Marcela Molina, Tucson Girls Chorus. 4. CURRENT EVENTS/PUBLIC ACKNOWLEDGEMENTS 5. AGENDA ADJUSTMENTS PRESENTATION 6. Recognition Recognition of the retirement of Ira Bellinger, Division Manager, Regional Wastewater Reclamation Department, for 27 years of service. HR_Recognition_IraBellinger Attachments: PRESENTATION/PROCLAMATION 7. Presentation of a proclamation to James Stormzand, Tribal Liaison, Division of Child Support Services, Arizona Department of Economic Security, proclaiming the month of August 2026 to be: \"CHILD SUPPORT AWARENESS MONTH\" PROC_ChildSupportAwarenessMonth Attachments: Page 2 Pima County Printed on 7/27/2026\nJuly 28, 2026 Board of Supervisors Meeting Agenda 8. CALL TO THE PUBLIC Individuals wishing to participate telephonically at Call to the Public must contact the Clerk of the Board’s Office at 520-724-8449, to register their request and obtain remote access information, by the deadline of Monday, July 27, 2026 at 5:00 p.m. Call to the Public shall be scheduled for one hour each meeting unless extended by a majority vote of the Board of Supervisors. Speakers shall have up to three minutes to speak. However, for any meeting where 20 or more individuals have submitted speaker cards, each speaker's time shall be limited to two minutes. Please be aware that you may not be called upon to speak if the time for Call to the Public expires and is not extended by a majority vote of the Board of Supervisors. eComments can also be submitted to COB_mail@pima.gov. EXECUTIVE SESSION (Clerk's Note: As of the posting date of 7/22/26, no executive session item has been placed on the regular agenda. However, this is subject to any addendum. Pursuant to A.R.S. §38-431.03(A)(3) the Board of Supervisors, or the Board sitting as other boards, may vote to go into executive session for the purpose of obtaining legal advice from its counsel with respect to any item listed on this agenda or any addendum thereto.) BOARD OF SUPERVISORS SITTING AS OTHER BOARDS FLOOD CONTROL DISTRICT BOARD 9. Riparian Habitat Mitigation Pursuant to Pima County Code, Section 16.30.050(B), quarterly report of District approved Riparian Habitat Mitigation Plans. FC_RiparianHabitatMitigationPlansQrtlyRpt Attachments: 10. Contract Stantec Consulting Services, Inc., Amendment No. 5, to provide for Brawley Wash Watershed Plan and amend contractual language, U.S. Department of Agriculture Grant and Flood Control Tax Levy Fund, contract amount $16,200.16 (PO2500010114) Administering Department: Regional Flood Control District PO2500010114 Attachments: LIBRARY DISTRICT BOARD 11. Grant Acceptance Urban Libraries Council, to provide for the Libraries and Local News National Micro-Grant Pilot Program, $7,500.00 (G-LIB-109684) G-LIB-109684 Attachments: Page 3 Pima County Printed on 7/27/2026\nJuly 28, 2026 Board of Supervisors Meeting Agenda SITTING AS THE BOARD OF SUPERVISORS *** HEARINGS *** Individuals wishing to address the Board on a Public Hearing item, but wish to participate remotely, can contact the Clerk of the Board's Office at 520-724-8449, to obtain remote access information. FRANCHISE/LICENSE/PERMIT 12. UNFINISHED BUSINESS (6/23/26) (Clerk’s Note: Per DSD’s Zoning Report, current zoning regulations will not permit the issuance of the licenses at this location. Zoning of the property is SR suburban ranch. This is a rural zone, and wholesale use is not allowed. The property would need to be rezoned to an appropriate zone.) Hearing - Liquor License Job No. 398241, Carol Santich Mellgren, Black Roosters, 12765 E. Cabeza De Vaca, Tucson, Series 4, Wholesaler, New License. FLP_LLBlack Roosters FLP_RequestforExtension_6-23-26 Attachments: 13. Hearing - Liquor License Job No. 401106, Andrea Dahlman Lewkowitz, Chipotle Mexican Grill, No. 6038, 7250 N. Oracle Road, No. 102, Tucson, Series 12, Restaurant, New License. FLP_LLChipotleMexicanGrillNo.6038 Attachments: DEVELOPMENT SERVICES 14. UNFINISHED BUSINESS (7/14/26) Hearing - Plat Note Modification Co12-76-52, RANCHO DEL CERRO (LOT 430) Robert Workman and Janice Arnold, represented by Renzo Curay of Galileo Group, request a plat note modification for removal of the one-foot no-access easement along the northeasterly portion of Lot 430 (2.34 acres) of the Rancho Del Cerro subdivision (Bk. 28, Pg. 84). The subject property is zoned CR-1 (Single Residence) and is located southeast of the T-intersection of W. Paseo De Las Estrellas and N. Calle Del Risco, addressed as 5532 W. Placita Acantilada. Staff recommends APPROVAL WITH A CONDITION. (District 3) Page 4 Pima County Printed on 7/27/2026\nJuly 28, 2026 Board of Supervisors Meeting Agenda DSD_Co12-76-52 DSD_Co12-76-52_CommLtr_Redacted DSD_Co12-76-52_CommLtr DSD_Co12-76-52_CommLtr_7-13-26_Redacted DSD_Co12-76-52_CommLtr_7-27-26_Redacted Attachments: 15. Hearing - Specific Plan and Comprehensive Plan Amendment P26SP00001, RIVER OVERLOOK, L.L.C. - W. RIVER ROAD SPECIFIC PLAN AND COMPREHENSIVE PLAN AMENDMENT River Overlook, L.L.C., represented by Projects International, Inc. , requests a comprehensive plan amendment and specific plan rezoning for approximately 4.2 acres (Parcel Codes 104-01-040H, 104-01-0460, 104-01-0470, 104-01-048C, 104-01-040L together with a portion of 104-01-042B and 104-01-0450, as well as a portion of abandoned right-of-way of W. River Terrace Drive) to amend the Comprehensive Plan from Medium Intensity Urban (MIU) and Commercial Activity Center (CAC) to Planned Development Community (PDC) and to rezone from SH (Suburban Homestead) to SP (Specific Plan) zone. The site is located on the south side of W. River Road, approximately one-quarter mile west of N. La Canada Drive, in Section 15, T13S, R13E, in the Catalina Foothills Planning Area. On motion, the Planning and Zoning Commission voted 5-1 (Commissioner Hanna voted NAY, Commissioners Hook, Maese, Matter and Tronsdal were absent) to recommended APPROVAL SUBJECT TO STANDARD AND SPECIAL CONDITIONS WITH AN ADDITIONAL CONDITION . Staff recommends APPROVAL OF THE SPECIFIC PLAN AND COMPREHENSIVE PLAN AMENDMENT . (District 1) DSD_P26SP00001 Attachments: 16. Hearing - Conditional Use Permit P26CU00003, ROMO - N. ANWAY ROAD Catherine M. Romo, represented by Todd Daoust with Pacific Coast Towers, requests a Type III Conditional Use Permit for a wireless communication facility in accordance with Section 18.07.030.H of the Pima County Zoning Code, in the RH (Rural Homestead) zone located south of W. Sunset Road, at the intersection of W. Sunset Road and N. Anway Road, addressed as 5575 N. Anway Road. Staff and the Planning and Zoning Commission recommend APPROVAL SUBJECT TO STANDARD AND SPECIAL CONDITIONS . (District 3) DSD_P26CU00003 Attachments: Page 5 Pima County Printed on 7/27/2026\nJuly 28, 2026 Board of Supervisors Meeting Agenda 17. Hearing - Conditional Use Permit P26CU00005, TORRES BLANCAS HOLDINGS, L.L.C. - S. ABREGO DRIVE Torres Blancas Holdings, L.L.C., represented by Todd Daoust with Pacific Coast Towers, requests a Type III Conditional Use Permit for a wireless communication facility in accordance with Section 18.07.030.H of the Pima County Zoning Code, in the RH (GC) (Rural Homestead - Golf Course) zone located east of N. I-19 Frontage Road, approximately 300 feet southeast of the intersection of N. I-19 Frontage Road and W. Pecan Valley Drive, addressed as 3233 S. Abrego Drive. Staff and the Planning and Zoning Commission recommend APPROVAL SUBJECT TO STANDARD AND SPECIAL CONDITIONS . (District 4) DSD_P26CU00005 Attachments: 18. Hearing - Rezoning Ordinance ORDINANCE NO. 2026 - 8 , P25RZ00002, Wilmot 8890, L.L.C. - S. Wilmot Road Rezoning. Owner: Wilmot 8890, L.L.C. (District 2) DSD_OrdP25RZ00002 Attachments: 19. Hearing - Rezoning Resolution RESOLUTION NO. 2026 - 41 , Co9-01-39, Hardin, et al. - Oracle Road Rezoning. Owner: Oracle Road Auto Plaza, L.L.C. (District 1) DSD_ResoCo9-01-39 Attachments: ENVIRONMENTAL QUALITY 20. Hearing - Code Text Amendment ORDINANCE NO. 2026 - 9 , of the Board of Supervisors, relating to air quality; amending the Pima County Code by amending Title 17, Chapters 17.04, 17.08, 17.11, 17.12, 17.13, and 17.16, to update and adopt new incorporations by reference of the following federal regulations: Acid Rain, National Emission Standards For Hazardous Air Pollutants (NESHAP), New Source Performance Standards (NSPS), National Ambient Air Quality Standards, and other parts of Title 40 Code of Federal Regulations, and conforming definitions to State Rules. DE_OrdCodeTextAmendment_Title17 Attachments: * * * 21. APPROVAL OF CONSENT CALENDAR Page 6 Pima County Printed on 7/27/2026\nJuly 28, 2026 Board of Supervisors Meeting Agenda BOARD OF SUPERVISORS 22. UNFINISHED BUSINESS (7/14/26) Pima County Treasurer Appointment of the Pima County Treasurer. BOS_TRApptMemo_Redacted BOS_TRAppt_CommentLtrs_Redacted BOS_TRAppt_CommLtr_7-8-26_Redacted BOS_TRAppt_CommLtrs_7-10-26_Redacted BOS_TRAppt_OurFamilyServicesCommLtr_7-10-26 BOS_TRAppt_PascuaYaquiTribeCommLtr_7-10-26 BOS_TRAppt_CommLtrs_7-13-26_Redacted BOS_TRAppt_CommLtrs2_7-13-26_Redacted BOS_TRAppt_CommLtrs3_7-13-26_Redacted BOS_TRAppt_CommLtr_7-14-26_Redacted BOS_TRAppt_CommLtr_7-15-26_Redacted BOS_TRAppt_CommLtr2_7-15-26_Redacted RA22_BOS_TRAppt_CommLtrs_7-16-26_Redacted RA22_BOS_TRAppt_CommLtr_7-20-26_Redacted RA22_BOS_TRAppt_CommLtr_7-22-26_Redacted BOS_TRAppt_CommLtr_7-27-26_Redacted BOS_TRAppt_CommLtr2_7-27-26 Attachments: 23. County Administrator Hiring Process Discussion/Direction/Action regarding the County Administrator Hiring Process. (District 3) COUNTY ADMINISTRATOR 24. Waitlists for Pima Early Education Program (PEEPs) and Board Options Discussion/Direction/Action regarding waitlists for PEEPs and options the Board may want to consider to expand enrollment in PEEPs and reduce the waitlists. CA_PEEPsWaitlists&BoardOptions CA_CAMemo_PEEPsWaitlists&BoardOptions Attachments: Page 7 Pima County Printed on 7/27/2026\nJuly 28, 2026 Board of Supervisors Meeting Agenda 25. Pima County Industrial Development Authority Discussion/Direction/Action regarding Pima County Industrial Development Authority Organizational Structure and Board Membership and Composition. CA_PCIndustrialDevelopmentAuthority CA_CAMemo_PCIndustrialDevelopmentAuthority_7-23-26 CA_CAMemo_PCIndustrialDevelopmentAuthority_7-27-26 Attachments: CLERK OF THE BOARD 26. Petition for Relief of Taxes Pursuant to A.R.S. §42-11109(E), Grimaldi Enterprises, L.L.C., d.b.a. Via de Dios, has petitioned the Board of Supervisors for relief of taxes and associated interest/penalty for tax years 2024 and 2025, for Tax Parcel No. 112-02-0710. CL_GrimaldiEnterprisesLLCdbaViadeDios CL_ContinuationRequest_7-24-26 CL_RevisedAssessorReviewForms_7-24-26 Attachments: 27. Compromising Taxes, Interest and Penalties Pursuant to A.R.S. §42-18124 and Board of Supervisors Policy C 4.4, Sonoran HW Solutions, L.L.C., is requesting that the Board compromise taxes, interest and penalties incurred for Tax Parcel Nos. 219-21-627X and 219-20-9150. CL_CompromisingTaxes_SonoranHWSolutionsLLC Attachments: HUMAN RESOURCES 28. Revisions to Personnel Policy Staff recommends approval of the proposed revisions to Personnel Policy No. 8-107, Special Leaves of Absence with Pay. HR_RevisionstoPersonnelPolicy8-107 Attachments: TRANSPORTATION 29. Revisions to Board of Supervisors Policy Staff recommends approval of the proposed revisions to Board of Supervisors Policy No. F 54.7, Small Tracts Easements by Patent Reservation (Veteran Tracts Roads). TR_RevisionstoBOSPolicyF54.7 Attachments: Page 8 Pima County Printed on 7/27/2026\nJuly 28, 2026 Board of Supervisors Meeting Agenda CONTRACT AND AWARD Detainee and Crisis Systems 30. State of Arizona, Amendment No. 9, to provide mental health services per A.R.S. §11-297(A)(2), extend contract term to 6/30/31 and amend contractual language, General Fund, contract amount $15,324,680.00 (CT_20-1) CT_20-1 Attachments: GRANT APPLICATION/ACCEPTANCE 31. Acceptance - Sheriff Executive Office of the President/Office of National Drug Control Policy, to provide for the High Intensity Drug Trafficking Area Program, $780,819.00 (G-SD-103852) G-SD-103852 Attachments: 32. ADJOURNMENT POSTED: 130 W. Congress Street, 1st Floor Tucson, AZ 85701 Pima County Homepage: www.pima.gov DATE/TIME POSTED: 7/22/26 @ 3:00 p.m. DATE/TIME REPOSTED (additional attachments only): 7/23/26 @ 4:00 p.m. DATE/TIME REPOSTED (additional attachments only): 7/27/26 @ 9:00 a.m. DATE/TIME REPOSTED (additional attachments only): 7/27/26 @ 10:30 a.m. DATE/TIME REPOSTED (additional attachments only): 7/27/26 @ 2:45 p.m. DATE/TIME REPOSTED (combined Agenda/Addendum): 7/27/26 @ 5:00 p.m. Page 9 Pima County Printed on 7/27/2026\nJuly 28, 2026 Board of Supervisors Meeting Agenda ADDENDUM 1 CONTRACT AND AWARD PROCUREMENT 1. High Point Networks, L.L.C., Amendment No. 2, to provide for Mitel VoIP system maintenance and support, amend contractual language and scope of services, no cost (SC2400001724) Administering Department: Information Technology SC2400001724 Attachments: POSTED: 130 W. Congress Street, 1st Floor, Tucson, AZ 85701 Pima County Homepage: www.pima.gov DATE/TIME POSTED: 7/24/26 @ 11:00 a.m. Page 10 Pima County Printed on 7/27/2026\nJuly 28, 2026 Board of Supervisors Meeting Agenda CONSENT CALENDAR JULY 28, 2026 Page 11 Pima County Printed on 7/27/2026\nJuly 28, 2026 Board of Supervisors Meeting Agenda CONSENT CALENDAR, JULY 28, 2026 CONTRACT AND AWARD County Attorney 1. Audilett Law, P.C., Amendment No. 8, to provide for legal representation of the Pima County Sheriff’s Department, Sheriff Chris Nanos, Sergeant Mosely, and Deputy Caudillo pertaining to the Bradley Lewis Matter, extend contract term to 7/12/27 and amend contractual language, no cost (CT_22-61) CT_22-61 Attachments: 2. The Center for Community Mediation and Facilitation, to provide for the National Center on Restorative Justice Program for professional services, Vermont Law School, Inc. National Center for Restorative Justice - Expansion Fund, contract amount $145,952.00 (PO2600010347) PO2600010347 Attachments: Detainee and Crisis Systems 3. CODAC Health, Recovery & Wellness, Inc., Amendment No. 1, to provide for medical forensic examination and evidence collection for victims of sexual assault, extend contract term to 6/30/27, amend contractual language and scope of services, General Fund, contract amount $352,000.00 (PO2500016949) PO2500016949 Attachments: 4. Southern Arizona Children’s Advocacy Center, Inc., Amendment No. 1, to provide for forensic medical examination and evidence collection for juvenile abuse and amend contractual language, General Fund, contract amount $80,000.00 (PO2500017048) PO2500017048 Attachments: 5. Arizona Rehab Campus, L.L.C., to provide for Inmate Navigation Enrollment Support and Treatment (INVEST), General Fund, contract amount $220,000.00 (PO2600019248) PO2600019248 Attachments: Page 12 Pima County Printed on 7/27/2026\nJuly 28, 2026 Board of Supervisors Meeting Agenda Pima County Wireless Integrated Network 6. Town of Sahuarita Police Department, Amendment No. 1, to provide for PCWIN subscriber services, extend contract term to 6/6/31 and amend contractual language, contract amount $150,540.00 revenue (CTN-WIN-21-102) CTN-WIN-21-102 Attachments: Procurement 7. Award Amendment of Award: Supplier Contract No. SC2400001257, Amendment No. 7, Aarrowhead Security, Inc., d.b.a. Vet-Sec Protection Agency, to provide for uniformed security services. This amendment extends the term of the contract commencing on 9/1/26 and terminating on 2/28/27 and adds a one-time increase in the amount of $1,750,000.00 for a cumulative not-to-exceed contract amount of $23,350,000.00. This extension and one-time increase is necessary to ensure County has continued uniformed security for Pima County locations while a new contract is established, and to allow time for a transition of services. Funding Source: General Fund. Administering Department: Facilities Management. Award_SC2400001257 Attachments: 8. Award Award: Supplier Contract No. SC2600000400, Maddock Machinery Corporation, to provide for vehicle fabrication and custom installation. This supplier contract is for an initial term of one (1) year in the annual award amount of $310,000.00 (including sales tax) and includes four (4) one-year renewal options. Funding Source: Fleet Services Fund. Administering Department: Fleet Services. Award_SC2600000400 Attachments: 9. Award Amendment of Award: Supplier Contract Nos. SC2400001231, SC2400001232 and SC2400001233, Amendment No. 8, Granite Construction Co., Calmat Co., d.b.a. Vulcan Materials-Western Division, and Pavement Sealants & Supply, Inc., to provide for asphaltic concrete. This amendment extends the term of the contract commencing on 8/14/26 and terminating on 9/7/26, to provide access to asphaltic concrete materials and supplies until award of the next contract anticipated on 9/8/26. No additional funds are needed. Administering Department: Transportation. Award_SC2400001231,SC2400001232,SC2400001233 Attachments: Page 13 Pima County Printed on 7/27/2026\nJuly 28, 2026 Board of Supervisors Meeting Agenda 10. SHI International Corp., to provide for a TeamDynamix License Agreement, to manage IT services, purchase requests, assets, and employee support through a centralized platform, no cost/5 year term (Delivery Order Nos. PO2600021807 and PO2600021809) Administering Department: Information Technology PO2600021807andPO2600021809 Attachments: 11. Line and Space, L.L.C., Amendment No. 4, to provide for architectural and design services: Richard Elias Mission Library Expansion and Renovation (XREMLB) and extend contract term to 12/31/26, no cost (PO2500007246) Administering Department: Project Design and Construction PO2500007246 Attachments: Regional Wastewater Reclamation 12. Pascua Yaqui Tribe, Amendment No. 1, to provide an intergovernmental agreement for sewer service, extend contract term to 7/27/51 and amend contractual language, no cost (CTN-WW-15-62) CTN-WW-15-62 Attachments: GRANT APPLICATION/ACCEPTANCE 13. Acceptance - Health Arizona Department of Health Services, Amendment No. 2, to provide for Prop. 201 Smoke Free Arizona, $188,528.00 (GA-HD-66390) G-HD-66390 Attachments: BOARD, COMMISSION AND/OR COMMITTEE 14. Bond Advisory Committee Appointment of Liz Morales, representing the City of Tucson. Term expiration: 7/27/32. (Jurisdictional recommendation) BCC_BondAdvisoryCommitteeAppt Attachments: Page 14 Pima County Printed on 7/27/2026\nJuly 28, 2026 Board of Supervisors Meeting Agenda SPECIAL EVENT LIQUOR LICENSE/TEMPORARY EXTENSION OF PREMISES/ PATIO PERMIT/WINE FAIR/WINE FESTIVAL/JOINT PREMISES PERMIT APPROVED PURSUANT TO RESOLUTION NO. 2019-68 15. Special Event · David Allen Johnson, Avra Valley/Marana VFW Post 5990, Walker Events, 6320 N. Anway Road, Marana, August 15, 2026. · Reverend Michael A. Martinez, Our Lady of the Valley Parish, Our Lady of the Valley Parish Hall, 505 N. La Canada Drive, Green Valley, September 18, 2026. · Michelle Lea Phillips, Greater Green Valley Community Foundation, Historic Canoa Ranch, 5375 S. I-19 Frontage Road, November 14, 2026. TREASURER 16. Duplicate Warrants - For Ratification Bain Michael R Or Debra R $116.19 TO_DuplicateWarrants Attachments: RATIFY AND/OR APPROVE 17. Minutes: May 12, 2026 June 9, 2026 (Study Session) CL_05-12-26DraftMinutes CL_06-09-26DraftStudySessionMinutes Attachments: Page 15 Pima County Printed on 7/27/2026",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "legistar:pima:1823@b0b59e74db13dd3a1fd3ba7d9aeb3a65d2790a31e39c640f5741bb6407ba3169",
+   "meetingId": "legistar:pima:1823",
+   "ocdId": "ocd-division/country:us/state:az/county:pima",
+   "documentUrl": "https://legistar.granicus.com/pima/meetings/2026/8/1823_A_Board_of_Supervisors_26-08-11_Online_Agenda.pdf",
+   "contentHash": "b0b59e74db13dd3a1fd3ba7d9aeb3a65d2790a31e39c640f5741bb6407ba3169",
+   "retrievedAt": "2026-08-13T18:43:10.861Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://legistar.granicus.com/pima/meetings/2026/8/1823_A_Board_of_Supervisors_26-08-11_Online_Agenda.pdf",
+   "sourceOrg": "Pima County Clerk of the Board",
+   "collectedAt": "2026-08-13T18:43:10.861Z",
+   "verifiedAt": null,
+   "text": "Board of Supervisors Pima County Meeting Agenda MEETING LOCATION Administration Bldg - East 130 W. Congress Street 1st Floor Tucson, AZ 85701 Public Access to Hearing Room at 1:10 p.m. Board of Supervisors' Hearing Room 1:30 PM Tuesday, August 11, 2026 Study Session PIMA COUNTY BOARD OF SUPERVISORS Jennifer Allen, Chair, District 3 Dr. Matt Heinz, Vice Chair, District 2 Rex Scott, Member, District 1 Steve Christy, Member, District 4 Andrés Cano, Member, District 5 AGENDA/ADDENDUM AND BROADCAST INFORMATION At least 24 hours before each scheduled meeting, the agenda/addendum is available online at www.pima.gov and in the Clerk of the Board’s Office, 130 W. Congress Street, 1st Floor, Tucson, AZ 85701, Mon-Fri, 8am to 5pm. Cable Channels: Cox 96 Webcast: www.pima.gov PUBLIC COMMENTS Written comments to the Board of Supervisors regarding the agenda items can be submitted to COB_mail@pima.gov. All comments will be provided to the Board of Supervisors. HEARING ROOM NOTICE Law permits that a video and/or audio recording of all or part of this meeting may be made if doing so does not interfere with the conduct of the meeting. Pima County has no control over the use and distribution of any such recordings. In addition to the official meeting proceedings, these recordings may include images of and comments made by the public prior to the start, during a recess and after adjournment of the meeting, and may be posted on social media or other internet sites. ACCESSIBILITY The Board Hearing Room is wheelchair and handicapped accessible. Any person who is in need of special services (e.g., assistive listening device, Braille or large print agenda material, signer for hearing impaired, accessible parking, etc.) due to any disability will be accommodated. Please contact the Clerk of the Board at (520) 724-8449 for these services at least three (3) business days prior to the Board Meeting. Page 1 Pima County Printed on 8/10/2026\nAugust 11, 2026 Board of Supervisors Meeting Agenda Clerk's Note: Members of the Pima County Board of Supervisors will attend either in person or by telephone, video or internet conferencing. The meeting can be streamed via the following links: BOS Agenda August 11, 2026 (http://pima.granicus.com/ViewPublisher.php?view_id=3), on YouTube (https://www.youtube.com/c/PimaCountyArizona/), or via Cox Cable Channel 96. Television viewing will be available in the lobby at 130 West Congress, 1st Floor. 1. ROLL CALL 2. AGENDA ADJUSTMENTS EXECUTIVE SESSION (Clerk's Note: As of the posting date of 8/5/26, no executive session item has been placed on the study session agenda. However, this is subject to any addendum. Pursuant to A.R.S. §38-431.03(A)(3) the Board of Supervisors, or the Board sitting as other boards, may vote to go into executive session for the purpose of obtaining legal advice from its counsel with respect to any item listed on this agenda or any addendum thereto.) BOARD OF SUPERVISORS 3. UNFINISHED BUSINESS (6/9/26 and 7/14/26) Staffing Processes and Vacancy Policy 1. Discussion with County Administrator and Deputy County Administrators as to how staffing requests are analyzed and discussed with elected officials and department directors during the annual budgeting process. Also, discussion with same as to how staffing is discussed and monitored by administration throughout the rest of the year. 2. Discussion with County Administrator and Deputy County Administrators regarding the existing vacancy policy, how/why its current version was developed and if revisions to the current version should be considered. (District 1) BOS_StaffingProcessesVacancyPolicy_Dist1Submittal BOS_StaffVacPolQuestions_Dist1Submittal_7-8-26 BOS_StaffingProcessesVacancyPolicy_Slides_7-9-26 BOS_CAMemo_StaffingVacancyPolicy_7-31-26 BOS_VacanctPositionsPolicyUpdate_Slides_8-6-26 Attachments: 4. Board of Supervisors Representative Updates on Boards, Committees and Commissions and Any Other Municipalities Page 2 Pima County Printed on 8/10/2026\nAugust 11, 2026 Board of Supervisors Meeting Agenda COUNTY ADMINISTRATOR 5. Update on County Initiatives to Address Homelessness and Public Safety CA_CAMemo_OnePimaFY26Summary CA_OnePimaFY26Update_Slides Attachments: 6. Pima County Climate Action Update Update of Pima County’s Climate Action Plan, as requested by the Board of Supervisors. CA_CAMemo_ClimateActionUpdate_Slides_8-5-26 Attachments: 7. Wildfire Mitigation Plan One-Year Update Presentation/Discussion: One-year Update of the Wildfire Mitigation Plan. CA_CAMemo_WildfireMitigationPlan1YrUpdate CA_CAMemo_WildfireMitigationPlanAnnualUpdate CA_WildfireMitigationPlan1YrUpdate_Slides Attachments: FINANCE AND RISK MANAGEMENT 8. Monthly Financial Update Discussion regarding a monthly financial update on the County's financial performance. FN_MonthlyFinancialUpdate_Slides_8-6-26 FN_CAMemo_FinancialUpdateJul_8-7-26 Attachments: 9. ADJOURNMENT POSTED: 130 W. Congress Street, 1st Floor Tucson, AZ 85701 Pima County Homepage: www.pima.gov DATE/TIME POSTED: 8/5/26 @ 3:00 p.m. DATE/TIME REPOSTED (additional attachments only): 8/5/26 @ 4:30 p.m. DATE/TIME REPOSTED (amended meeting time, 1:30 p.m.): 8/6/26 @ 5:00 p.m. DATE/TIME REPOSTED (additional attachments only): 8/7/26 @ 8:45 a.m. DATE/TIME REPOSTED (additional attachments only): 8/7/26 @ 3:15 p.m. DATE/TIME REPOSTED (combined Agenda/Addendum): 8/10/26 @ 5:00 p.m. Page 3 Pima County Printed on 8/10/2026\nAugust 11, 2026 Board of Supervisors Meeting Agenda ADDENDUM 1 EXECUTIVE SESSION 1. Pursuant to A.R.S. §38-431.03(A)(3), for legal advice and discussion regarding Constable discipline. PCA_ExecSession-ConstableDiscipline Attachments: HUMAN RESOURCES 2. Recognition of the “We A.R.E. Gems” Quarterly Recipients Pursuant to Administrative Procedure 23-5, Employee Recognition Program, the following employees have been selected for the quarterly \"We A.R.E. Gems\" recognition: · Devin Robles - Library · Jennifer Seigla - Pima County Attorney’s Office · Alex Du Pont - Assessor Office · Jennifer Black - Human Resources · Hunter Tantlinger - Parks & Recreation · Barbara Geonaga - Conservation Lands & Resources · Sydney Harrington - Public Defense Services · Nichole Casebeer - Regional Flood Control District · Carlos Aguila - Library HR_RecognitionWeA.R.E.GemsQrtrlyRecipients Attachments: POSTED: 130 W. Congress Street, 1st Floor Tucson, AZ 85701 Pima County Homepage: www.pima.gov DATE/TIME POSTED: 8/7/26 @ 11:00 a.m. Page 4 Pima County Printed on 8/10/2026",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "legistar:pima:1824@71d0c4b82a2298cbeeb9f0abb86e2d9ccf31ac4219c0fdeefd01f72ec639d326",
+   "meetingId": "legistar:pima:1824",
+   "ocdId": "ocd-division/country:us/state:az/county:pima",
+   "documentUrl": "https://legistar.granicus.com/pima/meetings/2026/8/1824_A_Board_of_Supervisors_26-08-11_Online_Agenda.pdf",
+   "contentHash": "71d0c4b82a2298cbeeb9f0abb86e2d9ccf31ac4219c0fdeefd01f72ec639d326",
+   "retrievedAt": "2026-08-13T18:43:11.182Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://legistar.granicus.com/pima/meetings/2026/8/1824_A_Board_of_Supervisors_26-08-11_Online_Agenda.pdf",
+   "sourceOrg": "Pima County Clerk of the Board",
+   "collectedAt": "2026-08-13T18:43:11.182Z",
+   "verifiedAt": null,
+   "text": "Board of Supervisors Pima County Meeting Agenda MEETING LOCATION Virtual (Television viewing available at 130 W. Congress Street 1st Floor Tucson, AZ 85701) Public Access to Lobby at 12:40 p.m. Board of Supervisors' Hearing Room 5:00 PM Tuesday, August 11, 2026 PIMA COUNTY BOARD OF SUPERVISORS Jennifer Allen, Chair, District 3 Dr. Matt Heinz, Vice Chair, District 2 Rex Scott, Member, District 1 Steve Christy, Member, District 4 Andrés Cano, Member, District 5 AGENDA/ADDENDUM AND BROADCAST INFORMATION At least 24 hours before each scheduled meeting, the agenda/addendum is available online at www.pima.gov and in the Clerk of the Board’s Office, 130 W. Congress Street, 1st Floor, Tucson, AZ 85701, Mon-Fri, 8am to 5pm. Cable Channels: Cox 96 Webcast: www.pima.gov PUBLIC PARTICIPATION SPEAKERS ARE LIMITED UP TO 3 MINUTES To address the Board of Supervisors, please complete a Speaker’s Card. Clearly print your name/address, the item number and other requested information. Speaker Card(s) are required for Call to the Public and Public Hearing Items. Once completed submit your Speaker Card(s) to Clerk staff. When the Chair announces your name, step forward to the podium and state your name for the record. The Chair reserves the right to ensure all testimony is pertinent or non-repetitive so matters are handled fairly and expeditiously. All attendees are advised that the Board of Supervisors strongly adhere to the Board of Supervisors Rules and Regulations. Outbursts, breaches of peace, boisterous conduct or other unlawful interference will result in that individual being asked to leave the meeting room. Any questions pertaining to the meeting can be directed to Melissa Manriquez, Clerk of the Board. HEARING ROOM NOTICE Law permits that a video and/or audio recording of all or part of this meeting may be made if doing so does not interfere with the conduct of the meeting. Pima County has no control over the use and distribution of any such recordings. In addition to the official meeting proceedings, these recordings may include images of and comments made by the public prior to the start, during a recess and after adjournment of the meeting, and may be posted on social media or other internet sites. ACCESSIBILITY The Board Hearing Room is wheelchair and handicapped accessible. Any person who is in need of special services (e.g., assistive listening device, Braille or large print agenda material, signer for hearing impaired, accessible parking, etc.) due to any disability will be accommodated. Please contact the Clerk of the Board at (520) 724-8449 for these services at least three (3) business days prior to the Board Meeting. Page 1 Pima County Printed on 8/12/2026\nAugust 11, 2026 Board of Supervisors Meeting Agenda Clerk's Note: Members of the Pima County Board of Supervisors will attend either in person or by telephone, video or internet conferencing. The meeting can be streamed via the following links: BOS Agenda August 11, 2026 (http://pima.granicus.com/ViewPublisher.php?view_id=3), on YouTube (https://www.youtube.com/c/PimaCountyArizona/), or via Cox Cable Channel 96. Television viewing will be available in the lobby at 130 West Congress, 1st Floor. 1. ROLL CALL 2. PLEDGE OF ALLEGIANCE 3. LAND ACKNOWLEDGEMENT STATEMENT To be offered by Christie Lee, President and CEO, TMM Family Services. 4. PAUSE 4 PAWS 5. CURRENT EVENTS/PUBLIC ACKNOWLEDGEMENTS 6. AGENDA ADJUSTMENTS PRESENTATION 7. Recognition Recognition of the retirement of William R. Castaneda, Division Director, Adult Probation for Superior Court, for 40 years of service. HR_Recognition_WilliamR.Castaneda Attachments: PRESENTATION/PROCLAMATION 8. Presentation of a proclamation recognizing and honoring: \"CHILDREN’S MUSEUM TUCSON’S 40TH ANNIVERSARY\" PROC_Children'sMuseumTucson Attachments: Page 2 Pima County Printed on 8/12/2026\nAugust 11, 2026 Board of Supervisors Meeting Agenda 9. CALL TO THE PUBLIC Individuals wishing to participate telephonically at Call to the Public must contact the Clerk of the Board’s Office at 520-724-8449, to register their request and obtain remote access information, by the deadline of Monday, August 10, 2026 at 5:00 p.m. Call to the Public shall be scheduled for one hour each meeting unless extended by a majority vote of the Board of Supervisors. Speakers shall have up to three minutes to speak. However, for any meeting where 20 or more individuals have submitted speaker cards, each speaker's time shall be limited to two minutes. Please be aware that you may not be called upon to speak if the time for Call to the Public expires and is not extended by a majority vote of the Board of Supervisors. eComments can also be submitted to COB_mail@pima.gov. EXECUTIVE SESSION (Clerk's Note: As of the posting date of 8/5/26, no executive session item has been placed on the regular agenda. However, this is subject to any addendum. Pursuant to A.R.S. §38-431.03(A)(3) the Board of Supervisors, or the Board sitting as other boards, may vote to go into executive session for the purpose of obtaining legal advice from its counsel with respect to any item listed on this agenda or any addendum thereto.) BOARD OF SUPERVISORS SITTING AS OTHER BOARDS AJO DOMESTIC WATER IMPROVEMENT DISTRICT 10. Contract Arizona Water Company, to provide an Asset Purchase Agreement to sell the assets necessary and useful to the provision of water utility services, no cost (SC2600000425) SC2600000425 SC2600000425_CAMemo Attachments: LIBRARY DISTRICT BOARD 11. Contract Cox Subscriptions, Inc., d.b.a. W.T. Cox Information Services, to provide for periodicals & related item subscription services, term date 8/23/26 to 10/31/30, Library District Fund, contract amount $815,000.00 (SC2600000419) Administering Department: Library District SC2600000419 Attachments: Page 3 Pima County Printed on 8/12/2026\nAugust 11, 2026 Board of Supervisors Meeting Agenda SITTING AS THE BOARD OF SUPERVISORS *** HEARINGS *** Individuals wishing to address the Board on a Public Hearing item, but wish to participate remotely, can contact the Clerk of the Board's Office at 520-724-8449, to obtain remote access information. FRANCHISE/LICENSE/PERMIT 12. Hearing - Liquor License Job No. 400538, Luz Maria Acosta de Ramirez, Taco Giro Mexican Grill & Seafood, 13160 E. Colossal Cave Road, No. 100, Vail, Series 12, Restaurant, New License. FLP_LLTacoGiroMexicanGrill&Seafood Attachments: 13. Hearing - Liquor License Job No. 403111, Jeffrey Craig Miller, Rocky Point Drive Thru, 2526 W. Valencia Road, Tucson, Series 9, Liquor Store, Person Transfer. FLP_LLRockyPointDriveThru Attachments: 14. Hearing - Agent Change/Acquisition of Control/Restructure Job No. 402992, Kevin Arnold Kramber, Golf Club at Torres Blancas, 3233 S. Abrego Drive, Green Valley, Acquisition of Control. FLP_ACGolfClubAtTorresBlancas Attachments: DEVELOPMENT SERVICES 15. Hearing - Appeal of Hearing Administrator’s Decision P26CU00002, PADILLA - W. DIAMOND BELL RANCH ROAD WIRELESS COMMUNICATION TOWER (APPEAL) In accordance with Section 18.97.030.F of the Pima County Zoning Code, Ryan and Lindsay Chastain, appeal the decision of the Hearing Administrator in Case P26CU00002 to allow a Type 1 Conditional Use Permit for a new wireless communications facility located at 15949 W. Diamond Bell Ranch Road in the CB-1 (Local Business) zone. Section 18.07.030.H of the Pima County Zoning Code allows wireless towers as a Type 1 Conditional Use in the CB-1 zone. The Hearing Administrator granted APPROVAL SUBJECT TO STANDARD AND SPECIAL CONDITIONS . (District 3) Page 4 Pima County Printed on 8/12/2026\nAugust 11, 2026 Board of Supervisors Meeting Agenda DSD_P26CU00002_Part1 DSD_P26CU00002_Part2 DSD_P26CU00002_Part3 DSD_P26CU00002_DiamondBellRanchAppeal DSD_P26CU00002_CommLtr_8-12-26 Attachments: * * * 16. APPROVAL OF CONSENT CALENDAR BOARD OF SUPERVISORS 17. County Administrator Hiring Process Discussion/Direction/Action regarding the County Administrator Hiring Process. (District 3) 18. Amended Board of Supervisors Meeting Schedule for October 2026 Approval of the Board of Supervisors’ Amended Meeting Schedule for October 2026, to add a Special Meeting on Tuesday, October 20, 2026, from 1:00 p.m. to 6:00 p.m., to conduct County Administrator interviews in Executive Session. BOS_AmendedMeetingSchedule_October2026 Attachments: COUNTY ADMINISTRATOR 19. Pima County Legislative Program for 2027 RESOLUTION NO. 2026 - 42 , of the Board of Supervisors, adopting the Pima County Legislative Program for 2027. CA_CAMemo_PCLegislativeProgram2027 CA_ResoPCLegislativeProgram2027 CA_PCLegislativeProgram2027_Dist2Submittal_8-10-26 Attachments: 20. Revisions to Board of Supervisors Policy Staff recommends approval of the proposed revisions to Board of Supervisors Policy No. C 2.7, Prohibiting Weapons in Pima County Facilities and Vehicles. CA_RevisionstoBOSPolicyC2.7 Attachments: Page 5 Pima County Printed on 8/12/2026\nAugust 11, 2026 Board of Supervisors Meeting Agenda CLERK OF THE BOARD 21. UNFINISHED BUSINESS (7/28/26) Compromising Taxes, Interest and Penalties Pursuant to A.R.S. §42-18124 and Board of Supervisors Policy C 4.4, Sonoran HW Solutions, L.L.C., is requesting that the Board compromise taxes, interest and penalties incurred for Tax Parcel Nos. 219-21-627X and 219-20-9150. CL_CompromisingTaxes_SonoranHWSolutionsLLC CL_ContinuedNoticeforCompromisingTaxes Attachments: ECONOMIC DEVELOPMENT 22. Pima County Economic Development Strategic Plan 2026-2029 Staff recommends adoption of the Economic Development Strategic Plan 2026-2029. ED_StrategicPlan2026-29 ED_CAMemo_StrategicPlan2026-29 ED_StrategicPlan2026-29_Slides ED_CAMemo_ContinuanceRequest_8-6-26 Attachments: ELECTIONS 23. Vote Centers Pursuant to A.R.S. §16-411(B)(4), designation of vote centers for the 2026 General Election on November 3, 2026. EL_VoteCenters Attachments: HUMAN RESOURCES 24. Classification/Compensation The Human Resources Department requests approval to create the following new classification, associated costs will be borne by the user department (County Attorney) from within its current budget: Class Code/ Class Title/ Pay Grade (Salary Range)/ EEO Code/ FLSA Code 2132/ Certified Limited Practice Law Graduate - County Attorney/ 14 ($65,457.60-$91,644.80)/ 2/ E* *E = Exempt (not paid overtime) HR_ClassificationCompensation Attachments: Page 6 Pima County Printed on 8/12/2026\nAugust 11, 2026 Board of Supervisors Meeting Agenda SCHOOL SUPERINTENDENT 25. 2026 General Election - School District Cancellations Staff requests cancellation of those uncontested school district governing board positions for the General Election on November 3, 2026 and appointment of those who filed the required nominating petitions or nomination papers. Ajo Unified School District No. 15 - 3 Positions - Hazele \"Trish\" Olsen, Rodney Hopkins, Carolynn Rodriguez Altar Valley Elementary School District No. 51 - 2 Positions - Christina Poggi, Amanda Head Baboquivari Unified School District No. 40 - 4 Positions - Juan Buendia, Kathleen Vance, Ben Standifer, Jr., Dionne Leonard - TWO-YEAR TERM (Write-in) Catalina Foothills School District No. 16 - 3 Positions - Eric Thu, Marissa Baretich, Ivelisse Bonilla Continental Elementary School District No. 39 - 3 Positions - Ruth Amarillas, Steve Oesterle, Jeanette Velasquez-Karnas - TWO-YEAR TERM Empire Elementary School District No. 37 - 3 Positions - THREE (3) VACANCIES Flowing Wells Unified School District No. 8 - 2 Positions - Arlene Ochoa, Brianna Hamilton (Write-in) Marana Unified School District No. 6 - 2 Positions - Makyla Hays, Kathryn Mikronis Pima County JTED No. 11 (District 3) - 1 Position - ONE (1) VACANCY Redington Elementary School District No. 44 - 1 Position - ONE (1) VACANCY San Fernando Elementary School District No. 35 - 1 Position - ONE (1) VACANCY Vail Unified School District No. 20 - 2 Positions - Andrea Black, Edward Buster Pima Community College (District 1) - 1 Position - Nicole Barraza, (1 seat/4-year term) SS_SchoolDistrictCancellations Attachments: CONTRACT AND AWARD Economic Development 26. Southern Arizona Education Council, to provide for advancing academic success and civic engagement across Pima County, General Fund, contract amount $122,000.00 (PO2600018227) PO2600018227 PO2600018227_CAMemo_8-6-26 PO2600018227_CommLtr_8-10-26_Redacted PO2600018227_CommLtrs_8-10-26_Redacted PO2600018227_CommLtrs_8-11-26_Redacted PO2600018227_CAMemo_8-11-26 PO2600018227_CommLtr_8-12-26_Redacted Attachments: Page 7 Pima County Printed on 8/12/2026\nAugust 11, 2026 Board of Supervisors Meeting Agenda 27. ADJOURNMENT POSTED: 130 W. Congress Street, 1st Floor Tucson, AZ 85701 Pima County Homepage: www.pima.gov DATE/TIME POSTED: 8/5/26 @ 3:00 p.m. DATE/TIME REPOSTED (additional attachments only): 8/6/26 @ 4:00 p.m. DATE/TIME REPOSTED (additional attachments only): 8/7/26 @ 11:30 a.m. DATE/TIME REPOSTED (additional attachments only): 8/10/26 @ 10:45 a.m. DATE/TIME REPOSTED (combined Agenda/Addendum and additional attachments): 8/10/26 @ 5:00 p.m. DATE/TIME REPOSTED (additional attachments only): 8/11/26 @ 11:00 a.m. DATE/TIME REPOSTED (additional attachments only): 8/12/26 @ 2:30 p.m. Page 8 Pima County Printed on 8/12/2026\nAugust 11, 2026 Board of Supervisors Meeting Agenda ADDENDUM 1 BOARD OF SUPERVISORS 1. Request for Revisions to Board of Supervisors Policies Discussion/Direction/Action: Directing County Administration to revise Board policies D 31.4 (Enhanced Due Diligence Process for Pima County Economic Development Projects) and D 31.3 (Use of Non-Disclosure Agreements in Economic Development Projects) to reflect an expanded scope and criteria. (District 3) BOS_RequestRevisionsBOSPolicies_Dist3Submittal Attachments: 2. Establishing a 120-day Moratorium on Data Centers in Unincorporated Pima County Discussion/Direction/Action: Directing the County Administrator to work with PCAO and county departments to develop a resolution declaring a moratorium on data centers in unincorporated Pima County until the County has completed its zoning code text amendment process. The zoning code change process was initiated by a BOS vote in September 2025; a July 17, 2026 County Administrator memo provided a framework for the process to ensure Pima County zoning categories reflect the unique attributes of data centers. (District 3) BOS_MoratoriumDataCenters_Dist3Submittal BOS_MoratoriumDataCenters_CommLtr_8-11-26_Redacted Attachments: COUNTY ADMINISTRATOR 3. Constable Disciplinary Action Discussion/Direction/Action: Regarding disciplinary action of Constable, Justice Precinct 2. CA_CAMemo_ConstableDisiplinaryAction Attachments: COUNTY ATTORNEY 4. Distribution of Funds to Pima Animal Care Center from the Estate of Gregory M. Patchen Discussion/Direction/Action: To authorize the acceptance of a testamentary distribution from JSB Fiduciary & Estate Management Services, L.L.C. in the amount of $256,509.80 to be used for the Pima Animal Care Center, and a release of liability. PCA_DistributionofFundstoPACC Attachments: Page 9 Pima County Printed on 8/12/2026\nAugust 11, 2026 Board of Supervisors Meeting Agenda SUPERIOR COURT 5. Justice of the Peace Pro Tempore Appointment Appointment of Justice of the Peace Pro Tempore of the Green Valley Justice Court for the period of August 12, 2026 through June 30, 2027: Darlene Chavira Chavez SC_JPProTemporeAppt Attachments: CONTRACT AND AWARD PROCUREMENT 6. IDEXX Distribution Inc., to provide for laboratory testing services, General Fund, contract amount $350,000.00 (SC2500000648) Administering Department: Pima Animal Care Center SC2500000648 Attachments: BOARD, COMMISSION AND/OR COMMITTEE 7. Small Business Commission Appointment of Jeff Saunders, to fill a vacancy created by Crispin Jeffrey-Franco. No term expiration. (District 1) BCC_SmallBusinessCommissionAppt Attachments: 8. Pima County/Tucson Women’s Commission Appointment of Lucy Howell, to fill a vacancy created by Amanda Schreiber. Term expiration: 6/30/30. (Commission recommendation) BCC_WomensCommissionAppt Attachments: 9. Library Advisory Board Appointment of Sharon Foltz. Term expiration: 6/30/30. (District 4) BCC_LibraryAdvisoryBoardAppt Attachments: POSTED: 1st Floor, 130 W. Congress Street, Tucson, AZ 85701 Pima County Homepage: www.pima.gov DATE/TIME POSTED: 8/7/26 @ 11:00 a.m. Page 10 Pima County Printed on 8/12/2026\nAugust 11, 2026 Board of Supervisors Meeting Agenda CONSENT CALENDAR AUGUST 11, 2026 Page 11 Pima County Printed on 8/12/2026\nAugust 11, 2026 Board of Supervisors Meeting Agenda CONSENT CALENDAR, AUGUST 11, 2026 CONTRACT AND AWARD Detainee and Crisis Systems 1. Southern Arizona Children’s Advocacy Center, Inc., Amendment No. 2, to provide for forensic medical examination and evidence collection for juvenile abuse, extend contract term to 6/30/27 and amend contractual language, General Fund, contract amount $455,000.00 (PO2500017048) PO2500017048 Attachments: Office of Digital Inclusion 2. Wyyerd Connect, L.L.C., to provide a Pima County Non-Exclusive Right-of-Way License for a Fiber Optic Communications System, term date 8/11/26 to 6/30/31, contract amount $3,000.00 revenue (CT2600000065) CT2600000065 Attachments: 3. Bicentel, L.L.C., to provide a Pima County Non-Exclusive Right-of-Way License for a Fiber Optic Communications System, term date 8/11/26 to 6/30/31, contract amount $3,000.00 revenue (CT2600000067) CT2600000067 Attachments: 4. MMR Fiber Solutions, L.L.C., to provide a Pima County Non-Exclusive Right-of-Way License for a Fiber Optic Communications System, term date 8/11/26 to 6/30/31, contract amount $3,000.00 revenue (CT2600000066) CT2600000066 Attachments: Pima Animal Care Center 5. Friends of Pima Animal Care Center, Amendment No. 4, to provide a master cooperative agreement for philanthropic support, extend contract term to 6/5/27 and amend contractual language, no cost (SC2400002321) SC2400002321 Attachments: 6. Arizona Department of Corrections, Rehabilitation and Reentry Tucson - Wilmot, to provide an intergovernmental agreement for the Community Cat Trap/Neuter/Return Program, contract amount $10,000.00 revenue/3 year term (CT2600000068) CT2600000068 Attachments: Page 12 Pima County Printed on 8/12/2026\nAugust 11, 2026 Board of Supervisors Meeting Agenda 7. Arizona Board of Regents on behalf of the University of Arizona, to provide an intergovernmental agreement for partnership in support of training veterinary students at the University Veterinary School, no cost/3 year term (SC2600000384) SC2600000384 Attachments: Pima County Wireless Integrated Network 8. Corona de Tucson Fire District, Amendment No. 1, to provide for subscriber services, extend contract term to 7/5/31 and amend contractual language, contract amount $28,770.00 revenue (CTN-WIN-21-132) CTN-WIN_21-132 Attachments: Real Property 9. Robert J. Thomson & Cynthia A. Thomson, to provide for a Pima County License for Right-of-Way Encroachment (LIC-0173) to maintain an existing pedestrian steel staircase and walkway that encroach into the public right-of-way and provide access to their residence located at 12914 N. Phoenix Avenue, Summerhaven, AZ, on Mount Lemmon, no cost/25 year term (SC2600000416) SC2600000416 Attachments: 10. Tucson Airport Authority, Inc., to provide a Land Lease Agreement for the continued operation of the existing Solid Waste Transfer Station at Ryan Airfield, Environmental Quality, Solid Waste Management Fund, contract amount $77,525.00/5 year term (PO2600023415) PO2600023415 Attachments: GRANT APPLICATION/ACCEPTANCE 11. Acceptance - Health Arizona Early Childhood Development and Health Board (First Things First), Amendment No. 4, to provide for child care health consultation and amend grant language, $912,450.00 (GA-HD-70298) GA-HD-70298 GA-HD-70298_Revised1stpageBOSAIR_8-7-26 Attachments: 12. Acceptance - Health City of Tucson Housing and Community Development Department, Amendment No. 1, to provide for the Choice Neighborhoods - Supportive Services Project, amend grant language, change term date from 1/1/26 - 9/30/28 to 10/1/26 - 9/30/27, and reduce budget from $202,734.00 to $85,205.60 (GA-HD-95726) GA-HD-95726 Attachments: Page 13 Pima County Printed on 8/12/2026\nAugust 11, 2026 Board of Supervisors Meeting Agenda 13. Acceptance - Health Arizona Family Health Partnership, d.b.a. Affirm Sexual and Reproductive Health, to provide for family planning services in community health centers, $509,500.00/$809,221.74 Third-Party Payers, Local Governments, In-kind, and Health Special Revenue Fund match (G-HD-82539) G-HD-82539 Attachments: 14. Acceptance - Sheriff Governor’s Office of Highway Safety, Amendment No. 1, to provide for occupant protection awareness and education/related materials and supplies (car seats distribution to communities for education and awareness), $9,760.20 (GA-SD-84835) GA-SD-84835 Attachments: 15. Acceptance - Sheriff State of Arizona Department of Public Safety, to provide for State Gang Task Force Detention Liaison Officer and AZPOST certified sworn law enforcement officer/Enhance law enforcement services concerning criminal activities of street gangs, $173,947.00/$54,316.00 General Fund match (G-SD-113770) G-SD-113770 Attachments: 16. Acceptance - Sheriff State of Arizona Department of Public Safety, to provide for the Arizona Vehicle Theft Task Force/Enhance law enforcement service concerning vehicle thefts, $119,369.00/$27,467.00 General Fund match (G-SD-113776) G-SD-113776 Attachments: BOARD, COMMISSION AND/OR COMMITTEE 17. Bond Advisory Committee Appointment of Devin Stalder, representing Town of Sahuarita. Term expiration: 8/10/32. (Jurisdictional recommendation) BCC_BondAdvisoryCommitteeAppt Attachments: Page 14 Pima County Printed on 8/12/2026\nAugust 11, 2026 Board of Supervisors Meeting Agenda ELECTIONS 18. Precinct Committeemen Pursuant to A.R.S. §16-821B, approval of Precinct Committeemen resignations and appointments: APPOINTMENT-PRECINCT-PARTY: Kellen Renshaw-041-DEM, Susan Rebar-012-REP, Hannah Kibbey-147-REP, Sarah Kibbey-147-REP EL_PrecinctCommitteemen Attachments: SUPERIOR COURT 19. Justices of the Peace Pro Tempore Appointments Appointments of Justices of the Peace Pro Tempore of the Pima County Consolidated Justice Courts for the period of August 12, 2026 through June 30, 2027: Susan Bacal, Donna Bradley, Amy Hernandez, Jeffrey Marks, and Marylou Natividad. SC_JPProTemporeAppts Attachments: TREASURER 20. Duplicate Warrants - For Ratification Hongru Guo $21.39 TO_DuplicateWarrants Attachments: RATIFY AND/OR APPROVE 21. Minutes: May 26, 2026 June 23, 2026 (Study Session) Warrants: July, 2026 CL_05-26-26DraftMinutes CL_06-23-26DraftStudySessionMinutes Attachments: Page 15 Pima County Printed on 8/12/2026",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "legistar:pima:1854@5f3fb7b118afc36f17729be79645e45d9885fb68aa44e014ac1d9988bc1d79f5",
+   "meetingId": "legistar:pima:1854",
+   "ocdId": "ocd-division/country:us/state:az/county:pima",
+   "documentUrl": "https://legistar.granicus.com/pima/meetings/2026/8/1854_A_Board_of_Supervisors_26-08-13_Online_Agenda.pdf",
+   "contentHash": "5f3fb7b118afc36f17729be79645e45d9885fb68aa44e014ac1d9988bc1d79f5",
+   "retrievedAt": "2026-08-13T18:43:11.412Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://legistar.granicus.com/pima/meetings/2026/8/1854_A_Board_of_Supervisors_26-08-13_Online_Agenda.pdf",
+   "sourceOrg": "Pima County Clerk of the Board",
+   "collectedAt": "2026-08-13T18:43:11.412Z",
+   "verifiedAt": null,
+   "text": "Board of Supervisors Pima County Meeting Agenda MEETING LOCATION Pima Association of Governments 1 E. Broadway Blvd. 4th Floor Tucson, AZ 85701 Public Access to Meeting Room at 11:40 a.m. 1 E. Broadway, 4th Floor 12:00 PM Thursday, August 13, 2026 Joint Meeting MEETING NOTE: This meeting will be held at the Pima Association of Governments (PAG) Office, 1 E. Broadway Boulevard, Suite 401. Subject to technological availability, individuals interested in viewing or listening to the meeting can email COB_mail@pima.gov or cityclerk@tucsonaz.gov for instructions on how to remotely access the meeting. Seating for in-person attendance by members of the public will be limited, but the following options are available for public viewing. The meeting can be streamed via the following links: BOS Agenda August 13, 2026 (http://pima.granicus.com/ViewPublisher.php?view_id=3), on YouTube (https://www.youtube.com/c/PimaCountyArizona/), or via Cox Cable Channel 96 and https://www.youtube.com/@cityoftucson/live. Television viewing will be available in the lobby at 130 West Congress, 1st Floor and in the Mayor and Council Chambers at 255 W. Alameda. Citizens can submit comments regarding the agenda items to COB_mail@pima.gov or cityclerk@tucsonaz.gov. 1. ROLL CALL • Board of Supervisors • Mayor and Council 2. PLEDGE OF ALLEGIANCE 3. LAND ACKNOWLEDGEMENT STATEMENT 4. PROSPERITY INITIATIVE PRESENTATION AND DISCUSSION CA_ProsperityInitiativePoliciesStrategiesOverview_8-10-26 Attachments: 5. DISCUSSION AND DIRECTION ON THE CITY-COUNTY COLLABORATION AND ACTION ITEMS 6. ADJOURNMENT Page 1 Pima County Printed on 8/10/2026\nAugust 13, 2026 Board of Supervisors Meeting Agenda POSTED: 130 W. Congress Street, 1st Floor Tucson, AZ 85701 Pima County Homepage: www.pima.gov DATE/TIME POSTED: 8/7/26 @ 3:00 p.m. DATE/TIME REPOSTED (additional attachments only): 8/10/26 @ 5:20 p.m. Page 2 Pima County Printed on 8/10/2026",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "legistar:pima:1869@cd479280f923ad32fff6feb7ed1b682afbd01609a97ffadba06d2b0f63935947",
+   "meetingId": "legistar:pima:1869",
+   "ocdId": "ocd-division/country:us/state:az/county:pima",
+   "documentUrl": "https://legistar.granicus.com/pima/meetings/2026/7/1869_A_Board_of_Supervisors_26-07-28_Online_Agenda.pdf",
+   "contentHash": "cd479280f923ad32fff6feb7ed1b682afbd01609a97ffadba06d2b0f63935947",
+   "retrievedAt": "2026-08-13T18:43:11.614Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://legistar.granicus.com/pima/meetings/2026/7/1869_A_Board_of_Supervisors_26-07-28_Online_Agenda.pdf",
+   "sourceOrg": "Pima County Clerk of the Board",
+   "collectedAt": "2026-08-13T18:43:11.614Z",
+   "verifiedAt": null,
+   "text": "Board of Supervisors Pima County Meeting Agenda MEETING LOCATION Administration Bldg - East 130 W. Congress Street 1st Floor Tucson, AZ 85701 Public Access to Hearing Room at 4:40 p.m. Board of Supervisors' Hearing Room 3:00 PM Tuesday, July 28, 2026 Study Session PIMA COUNTY BOARD OF SUPERVISORS Jennifer Allen, Chair, District 3 Dr. Matt Heinz, Vice Chair, District 2 Rex Scott, Member, District 1 Steve Christy, Member, District 4 Andrés Cano, Member, District 5 AGENDA/ADDENDUM AND BROADCAST INFORMATION At least 24 hours before each scheduled meeting, the agenda/addendum is available online at www.pima.gov and in the Clerk of the Board’s Office, 130 W. Congress Street, 1st Floor, Tucson, AZ 85701, Mon-Fri, 8am to 5pm. Cable Channels: Cox 96 Webcast: www.pima.gov PUBLIC COMMENTS Written comments to the Board of Supervisors regarding the agenda items can be submitted to COB_mail@pima.gov. All comments will be provided to the Board of Supervisors. HEARING ROOM NOTICE Law permits that a video and/or audio recording of all or part of this meeting may be made if doing so does not interfere with the conduct of the meeting. Pima County has no control over the use and distribution of any such recordings. In addition to the official meeting proceedings, these recordings may include images of and comments made by the public prior to the start, during a recess and after adjournment of the meeting, and may be posted on social media or other internet sites. ACCESSIBILITY The Board Hearing Room is wheelchair and handicapped accessible. Any person who is in need of special services (e.g., assistive listening device, Braille or large print agenda material, signer for hearing impaired, accessible parking, etc.) due to any disability will be accommodated. Please contact the Clerk of the Board at (520) 724-8449 for these services at least three (3) business days prior to the Board Meeting. Page 1 Pima County Printed on 7/27/2026\nJuly 28, 2026 Board of Supervisors Meeting Agenda Clerk's Note: Members of the Pima County Board of Supervisors will attend either in person or by telephone, video or internet conferencing. The meeting can be streamed via the following links: BOS Agenda July 28, 2026 (http://pima.granicus.com/ViewPublisher.php?view_id=3), on YouTube (https://www.youtube.com/c/PimaCountyArizona/), or via Cox Cable Channel 96. Television viewing will be available in the lobby at 130 West Congress, 1st Floor. 1. ROLL CALL 2. AGENDA ADJUSTMENTS EXECUTIVE SESSION (Clerk's Note: In addition to the executive sessions listed below, pursuant to A.R.S. §38-431.03(A)(3) the Board of Supervisors, or the Board sitting as other boards, may vote to go into executive session for the purpose of obtaining legal advice from its counsel with respect to any item listed on this agenda or any addendum thereto.) 3. Pursuant to A.R.S. §38-431.03(A)(3) and (4), for legal advice and direction regarding policies related to property development and zoning. PCA_ExecSession-PropertyDevZoningPolicies Attachments: 4. ADJOURNMENT POSTED: 130 W. Congress Street, 1st Floor Tucson, AZ 85701 Pima County Homepage: www.pima.gov DATE/TIME POSTED: 7/24/26 @ 11:00 a.m. Page 2 Pima County Printed on 7/27/2026",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "onbase:tucson:1946@64e4dcc918a4f1025654c2100ef96aa761a5d59f12c9ccabf7f6777882e633df",
+   "meetingId": "onbase:tucson:1946",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "documentUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Study_Session_1946_Agenda_8_18_2026_1_30_00_PM.pdf?documentType=1&meetingId=1946",
+   "contentHash": "64e4dcc918a4f1025654c2100ef96aa761a5d59f12c9ccabf7f6777882e633df",
+   "retrievedAt": "2026-08-13T18:43:12.045Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Study_Session_1946_Agenda_8_18_2026_1_30_00_PM.pdf?documentType=1&meetingId=1946",
+   "sourceOrg": "City of Tucson Clerk",
+   "collectedAt": "2026-08-13T18:43:12.045Z",
+   "verifiedAt": null,
+   "text": null,
+   "extraction": "failed",
+   "extractionNote": "Invalid PDF structure."
+  }
+ ]
+}

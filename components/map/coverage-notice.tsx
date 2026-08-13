@@ -30,6 +30,13 @@ interface CoverageNoticeProps {
   requestedRadiusKm: number;
   count: number;
   coverage: CoverageSummary | null;
+  /**
+   * Divisions whose calendar source failed at the last snapshot refresh. A
+   * body on this list showing nothing means "we couldn't reach their source
+   * this time", which is a different claim from "nothing is scheduled" and
+   * must never render the same way.
+   */
+  failedSourceOcdIds?: string[];
 }
 
 /** How many bodies to name before collapsing the rest into a count. */
@@ -121,7 +128,15 @@ function HolderList({ holders }: { holders: SeatHolder[] }) {
  * known to exist and nothing has its calendar. Saying "no meetings" there is
  * false — it describes us, not them.
  */
-function CoverageBody({ zip, coverage }: { zip: string; coverage: CoverageSummary }) {
+function CoverageBody({
+  zip,
+  coverage,
+  failedSourceOcdIds = [],
+}: {
+  zip: string;
+  coverage: CoverageSummary;
+  failedSourceOcdIds?: string[];
+}) {
   const { bodies, seats, unincorporated, counts, senators, seatCounts } = coverage;
   const shown = bodies.slice(0, NAME_LIMIT);
   const hidden = bodies.length - shown.length;
@@ -231,6 +246,27 @@ function CoverageBody({ zip, coverage }: { zip: string; coverage: CoverageSummar
         exhausted, so the statute can never explain away a body nobody has
         searched.
       */}
+      {/*
+        The snapshot's per-source failure, attributed to the bodies it serves.
+        Without this, a source that was unreachable this morning renders its
+        bodies exactly like bodies with nothing scheduled — a gap of ours
+        presented as a fact about their government.
+      */}
+      {shown
+        .filter(
+          (body) => body.ocdId !== null && failedSourceOcdIds.includes(body.ocdId),
+        )
+        .map((body) => (
+          <p
+            key={`${body.bodyId}-source-failed`}
+            className="mt-1.5 text-[0.6875rem] leading-relaxed text-signal"
+          >
+            <span className="text-paper-dim">{body.divisionLabel}</span> — we
+            couldn&apos;t reach their calendar source at the last check, so
+            their meetings may be missing here.
+          </p>
+        ))}
+
       {shown.map((body) => {
         const note = agendaAbsenceNote(body.ocdId, body.coverageStatus);
         return note ? (
@@ -340,6 +376,7 @@ export function CoverageNotice({
   requestedRadiusKm,
   count,
   coverage,
+  failedSourceOcdIds,
 }: CoverageNoticeProps) {
   if (tier === "exact") return null;
 
@@ -400,7 +437,11 @@ export function CoverageNotice({
         between a helpful answer and a misleading one.
       */}
       {coverage && showCoverage ? (
-        <CoverageBody zip={zip} coverage={coverage} />
+        <CoverageBody
+          zip={zip}
+          coverage={coverage}
+          failedSourceOcdIds={failedSourceOcdIds}
+        />
       ) : (
         !coverage &&
         isEmpty && (

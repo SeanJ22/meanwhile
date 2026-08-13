@@ -1,0 +1,73 @@
+# The scheduled refresh behind data/meetings-snapshot.json.
+#
+# The app reads the committed snapshot; this is the thing that keeps it
+# current. Every six hours it reruns the composite ingest and commits the file
+# if anything changed. Agendas are posted days ahead, so this cadence is
+# generous; the point is never freshness-by-the-minute, it is that the reader
+# is told "last checked" honestly and the number stays small.
+#
+# Failure semantics, matching the ingest itself:
+#   - every source failed  -> ingest keeps the previous snapshot and exits 1;
+#     nothing commits, the site keeps serving the last good file, and the run
+#     shows red so someone looks.
+#   - some sources failed  -> the snapshot records them as failed; the site's
+#     coverage notice attributes the gap to the bodies those sources serve.
+#   - nothing changed      -> no diff, no commit, no deploy.
+#
+# A push to main triggers the Netlify deploy, which is how the refreshed data
+# reaches production — the build itself never touches a vendor.
+
+name: Refresh meetings snapshot
+
+on:
+  schedule:
+    # Minute 17 to stay off the busy top of the hour.
+    - cron: "17 */6 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-meetings-snapshot
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Enable corepack (pnpm pinned by packageManager)
+        run: corepack enable
+
+      - name: Install
+        run: corepack pnpm install --frozen-lockfile
+
+      - name: Refresh the snapshot
+        env:
+          # Identified traffic gets a conversation; anonymous traffic gets
+          # blocked. Set INGEST_CONTACT_EMAIL as a repository variable.
+          INGEST_CONTACT_EMAIL: ${{ vars.INGEST_CONTACT_EMAIL }}
+        run: corepack pnpm ingest composite
+
+      - name: Validate before committing
+        run: corepack pnpm test
+
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- data/meetings-snapshot.json; then
+            echo "snapshot unchanged — nothing to commit"
+            exit 0
+          fi
+          git config user.name "snapshot-refresh[bot]"
+          git config user.email "noreply@github.com"
+          git add data/meetings-snapshot.json
+          git commit -m "Snapshot refresh: $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push origin main

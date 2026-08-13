@@ -14,6 +14,7 @@ import { DataProvider, type ShellData } from "@/lib/state/data";
 import { applyFilters } from "@/lib/state/derive";
 import { UiProvider, useUi, useUiDispatch } from "@/lib/state/provider";
 import type { MeetingSearchResult } from "@/lib/meetings/query";
+import type { SnapshotStatus } from "@/lib/meetings/freshness";
 import { groupByVenue, type Venue } from "@/lib/meetings/venues";
 import type { Meeting } from "@/lib/sources/types";
 import type { SeatHolder } from "@/lib/officials/lookup";
@@ -29,6 +30,7 @@ import type { DistrictHit } from "@/lib/map/districts";
 import type { DistrictType } from "@/lib/state/types";
 
 import { CoverageNotice } from "./coverage-notice";
+import { DataFreshness } from "./data-freshness";
 import { DistrictPicker } from "./district-picker";
 import { MapCanvas, type CameraTarget, type MapFocus } from "./map-canvas";
 import { MeetingPanel } from "./meeting-panel";
@@ -48,6 +50,8 @@ import { WelcomeOverlay } from "./welcome-overlay";
 
 interface TaggedResult extends MeetingSearchResult {
   zip: string;
+  /** Present when the committed snapshot served this answer. */
+  snapshot?: SnapshotStatus | null;
 }
 
 export function MapEntry() {
@@ -378,6 +382,8 @@ function MapEntryInner() {
             {tilesFailed && <TileNotice />}
             {failed && <SearchFailedNotice />}
 
+            {current?.snapshot && <DataFreshness snapshot={current.snapshot} />}
+
             {current && (
               <CoverageNotice
                 tier={current.tier}
@@ -386,6 +392,9 @@ function MapEntryInner() {
                 requestedRadiusKm={current.requestedRadiusKm}
                 count={current.meetings.length}
                 coverage={current.coverage}
+                failedSourceOcdIds={
+                  current.snapshot?.failed.flatMap((f) => f.ocdIds) ?? []
+                }
               />
             )}
 

@@ -1,4 +1,6 @@
 import { RADIUS_LADDER_KM, searchMeetings } from "@/lib/meetings/query";
+import { getActiveSnapshotMeta } from "@/lib/meetings/snapshot";
+import { wiringForSourceName } from "@/lib/sources/composite/wiring";
 import { coverageAt } from "@/lib/registry/server";
 
 /**
@@ -48,5 +50,21 @@ export async function GET(request: Request) {
     console.error("coverage lookup failed", error);
   }
 
-  return Response.json({ ...result, coverage });
+  // When the snapshot serves the answer, say how old it is and which sources
+  // it is missing — a failed source's bodies would otherwise show nothing
+  // with no hint that the gap is ours and temporary.
+  const meta = getActiveSnapshotMeta();
+  const snapshot = meta
+    ? {
+        ...meta,
+        failed: meta.sources
+          .filter((s) => !s.ok)
+          .map((s) => ({
+            source: s.source,
+            ocdIds: wiringForSourceName(s.source).map((row) => row.ocdId),
+          })),
+      }
+    : null;
+
+  return Response.json({ ...result, coverage, snapshot });
 }

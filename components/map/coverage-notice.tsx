@@ -173,16 +173,30 @@ function CoverageBody({
       </>
     ) : kind === "meetings-missing-calendars" ? (
       // Meetings are on screen, but not from every government's calendar.
-      // Deliberately says nothing about whether what is shown belongs to
-      // them — it says what we are missing, which is the part we can stand
-      // behind.
-      <>
-        We&apos;re missing{" "}
-        {g.total - g.withSource === 1
-          ? "the calendar of one of the bodies"
-          : `the calendars of ${g.total - g.withSource} of the bodies`}{" "}
-        that govern the area around {zip}.
-      </>
+      // Leads with what we have (2j — the inversion rule): the failure frame
+      // "we're missing X" buried the fact that most calendars are watched.
+      // The numbers stay honest and computed; only the frame changed.
+      g.withSource === 0 ? (
+        // Zero tracked is not a lead-with-what-we-have case; say it straight.
+        <>
+          {g.total === 1
+            ? "One body governs the area around "
+            : `${g.total} bodies govern the area around `}
+          {zip}.{" "}
+          {g.total === 1
+            ? "Its calendar is being added — we don't have it yet."
+            : "Their calendars are being added — we don't have them yet."}
+        </>
+      ) : (
+        <>
+          We track the {g.withSource === 1 ? "calendar" : "calendars"} of{" "}
+          {g.withSource} of the {g.total} bodies that govern the area around{" "}
+          {zip}.{" "}
+          {g.total - g.withSource === 1
+            ? "The other body's calendar is being added."
+            : `The other ${g.total - g.withSource} are being added.`}
+        </>
+      )
     ) : kind === "all-wired" ? (
       // The state the old notice had no words for: every government here is
       // on our watch. Said plainly, because the list below is the reader's
@@ -195,29 +209,43 @@ function CoverageBody({
     ) : (
       <>
         {g.total === 1 ? "One body governs" : `${g.total} bodies govern`} the
-        area around {zip}
+        area around {zip}.{" "}
         {g.withSource === 0
           ? g.total === 1
-            ? ", and we don't have its calendar yet"
-            : ", and we don't have their calendars yet"
-          : `, and we're missing ${g.total - g.withSource} of their calendars`}
-        .
+            ? "Its calendar is being added — we don't have it yet."
+            : "Their calendars are being added — we don't have them yet."
+          : `We track ${g.withSource === 1 ? "the calendar" : "the calendars"} of ${g.withSource}; the other ${
+              g.total - g.withSource === 1
+                ? "one is"
+                : `${g.total - g.withSource} are`
+            } being added.`}
       </>
     );
 
   // The advisory boards, committees and commissions, stated apart from the
   // governments — real bodies a reader can follow, not extra governments.
+  // Leads with what is tracked (2j): "56 more boards ... we watch 5" read as
+  // failure when it describes a live, growing watch list. Numbers stay
+  // honest and computed; only the frame changed.
   const othersLine =
     kind !== "unmapped" && others > 0 ? (
-      <>
-        {others === 1
-          ? "One more board, committee or commission serves"
-          : `${others} more boards, committees and commissions serve`}{" "}
-        the area
-        {othersWithSource > 0
-          ? `; we watch ${othersWithSource === others ? "all" : othersWithSource} of their calendars.`
-          : "."}
-      </>
+      othersWithSource > 0 ? (
+        <>
+          We also track{" "}
+          {othersWithSource === others
+            ? `all ${others === 1 ? "" : others + " "}of the area's other board, committee and commission calendars`
+            : `${othersWithSource} more board and committee ${othersWithSource === 1 ? "calendar" : "calendars"} here`}
+          .
+          {othersWithSource < others &&
+            ` ${others - othersWithSource} more ${others - othersWithSource === 1 ? "body is" : "bodies are"} being added.`}
+        </>
+      ) : (
+        <>
+          {others === 1
+            ? "One more board, committee or commission serves the area — being added."
+            : `${others} more boards, committees and commissions serve the area — being added.`}
+        </>
+      )
     ) : null;
 
   return (

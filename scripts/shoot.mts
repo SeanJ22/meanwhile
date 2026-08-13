@@ -146,6 +146,21 @@ if (clickLabel) {
   await page.waitForTimeout(1200);
 }
 
+// Drag the map with a real mouse gesture, so movestart carries an
+// originalEvent — the signal scroll-and-settle (2i) keys on. Programmatic
+// panBy would not exercise it. Format: --drag x1,y1,x2,y2
+const dragArg = arg("drag");
+if (dragArg) {
+  const [x1, y1, x2, y2] = dragArg.split(",").map(Number);
+  await page.mouse.move(x1, y1);
+  await page.mouse.down();
+  // Several steps so MapLibre treats it as a pan, not a jump.
+  await page.mouse.move(x2, y2, { steps: 12 });
+  await page.mouse.up();
+  // The settle debounce is 650 ms; the refetch needs a beat beyond that.
+  await page.waitForTimeout(2600);
+}
+
 // Click the map itself, in viewport coordinates. Used to exercise
 // click-to-select, which has no selector to aim at.
 const clickAt = arg("clickxy");

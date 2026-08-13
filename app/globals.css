@@ -38,6 +38,12 @@
   --accent-national-glow: rgba(108, 143, 212, 0.25);
   --accent-all: #e8853d;
   --accent-all-glow: rgba(232, 133, 61, 0.25);
+  /* School government gets its own dot color (2g): a school-board meeting and
+     a congressional town hall at the same address must read apart without a
+     click. Magenta sits far from the amber/teal/blue tier family and stays
+     bright against the #454545-max basemap. */
+  --accent-school: #e84393;
+  --accent-school-glow: rgba(232, 67, 147, 0.25);
 
   /* Meeting status. Concluded is cool and quiet — present, clearly not
      something you can still attend. Canceled shares the danger hue. */
@@ -82,6 +88,8 @@
   --accent-national-glow: rgba(61, 95, 158, 0.18);
   --accent-all: #d4722a;
   --accent-all-glow: rgba(212, 114, 42, 0.18);
+  --accent-school: #c2185b;
+  --accent-school-glow: rgba(194, 24, 91, 0.18);
 
   --concluded: #4a8481;
   --canceled: #c0392b;
@@ -108,6 +116,7 @@
   --color-state: var(--accent-state);
   --color-national: var(--accent-national);
   --color-all-tiers: var(--accent-all);
+  --color-school: var(--accent-school);
 
   --color-concluded: var(--concluded);
   --color-canceled: var(--canceled);
@@ -246,6 +255,21 @@
   flex-direction: column;
   z-index: 1000;
   overflow: hidden;
+  transition: transform 0.25s ease;
+}
+
+/* One pattern at every width (2f): visible by default, slides left to hide,
+   the hamburger brings it back. The phone drawer was already this shape —
+   the desktop rail joins it. `data-sidebar` on <main> carries the state:
+   "default" is per-width (desktop visible, phone hidden), "open"/"closed"
+   are the reader's explicit choice and win at any width. */
+main[data-sidebar="closed"] .sidebar {
+  transform: translateX(-100%);
+  visibility: hidden;
+}
+
+main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
+  left: 0;
 }
 
 .sidebar-header {
@@ -964,6 +988,71 @@
   flex-shrink: 0;
 }
 
+/* The ballot entry point (2b): a floating bubble at the top of the map, in
+   the panel family the other controls share. Visible, not buried. */
+.ballot-bubble {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 14px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 999px;
+  color: var(--text);
+  box-shadow: var(--shadow-card);
+  white-space: nowrap;
+}
+
+.ballot-bubble:hover {
+  border-color: var(--accent-local);
+}
+
+.ballot-bubble-label {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
+.ballot-bubble-soon {
+  margin-left: 7px;
+  color: var(--text-muted);
+  letter-spacing: 0.12em;
+}
+
+/* The who-governs card, shrunk out of the way (2h): once the reader engages
+   with something specific, the card collapses into this bubble and one tap
+   brings it back. Same corner, same family. */
+.notice-fab {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 13px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 999px;
+  color: var(--text-dim);
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  animation: fadeIn 0.18s ease;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  white-space: nowrap;
+}
+
+.notice-fab:hover {
+  color: var(--text);
+  border-color: var(--accent-local);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notice-fab {
+    animation: none;
+  }
+}
+
 /* ---- Count badge + list overlay ---- */
 .count-badge {
   background: var(--panel);
@@ -1410,10 +1499,13 @@
   width: 13px;
   height: 13px;
   border-radius: 999px;
-  background: var(--accent-local);
+  /* --pin-color is set per venue by the marker pool from the government
+     level(s) meeting there (2g); a mixed venue gets an inline conic-gradient
+     split ring instead, which overrides this background. */
+  background: var(--pin-color, var(--accent-local));
   box-shadow:
     0 0 0 3px color-mix(in srgb, var(--bg) 85%, transparent),
-    0 0 14px var(--accent-local-glow);
+    0 0 14px var(--pin-glow, var(--accent-local-glow));
   transition:
     width 140ms ease,
     height 140ms ease,
@@ -1437,8 +1529,8 @@
 .wtp-pin[data-selected="true"] .wtp-pin-dot {
   box-shadow:
     0 0 0 3px var(--bg),
-    0 0 0 5px var(--accent-local),
-    0 0 20px var(--accent-local-glow);
+    0 0 0 5px var(--pin-color, var(--accent-local)),
+    0 0 20px var(--pin-glow, var(--accent-local-glow));
 }
 
 .wtp-pin[data-concluded="true"][data-selected="true"] .wtp-pin-dot {
@@ -1751,11 +1843,10 @@
   .sidebar {
     width: min(340px, 86vw);
     transform: translateX(-100%);
-    transition: transform 0.25s ease;
     visibility: hidden;
   }
 
-  .sidebar.sidebar-open {
+  main[data-sidebar="open"] .sidebar {
     transform: translateX(0);
     visibility: visible;
     box-shadow: var(--shadow-popup);
@@ -1765,12 +1856,26 @@
     padding: 28px 20px;
   }
 
-  /* The legend floats bottom-right where the bottom sheet and the popups
-     live on a phone. Its content is color-coding a phone reader can learn
-     from the pins themselves; hiding it beats stacking three cards on a
-     six-inch screen. (Decision recorded in docs/state.md.) */
+  /* The legend was hidden at phone width while every pin shared one color.
+     With dots colored by government level (2g) the mapping is no longer
+     learnable from the pins alone, so the legend returns in compact form:
+     one slim row, raised above the attribution line. The bottom sheet may
+     cover it while a venue is open — the sheet is the reader's current
+     focus, and the legend is one tap of the close button away. */
   .legend {
-    display: none;
+    bottom: 34px;
+    right: 10px;
+    padding: 5px 9px;
+    gap: 8px;
+  }
+
+  .legend-item {
+    font-size: 8px;
+  }
+
+  .legend-dot {
+    width: 8px;
+    height: 8px;
   }
 }
 
@@ -1780,13 +1885,14 @@
   }
 }
 
-/* The drawer toggle — thumb-sized, above the map, below the overlays. */
+/* The hamburger — thumb-sized, above the map, below the overlays. Rendered
+   whenever the sidebar is effectively hidden, at any width (2f). */
 .sidebar-toggle {
   position: absolute;
   top: 12px;
   left: 12px;
   z-index: 1050;
-  display: inline-flex;
+  display: none;
   align-items: center;
   justify-content: center;
   width: 44px;
@@ -1803,6 +1909,18 @@
   inset: 0;
   z-index: 990;
   background: rgba(0, 0, 0, 0.4);
+}
+
+/* When the hamburger shows: explicitly closed at any width, or the phone
+   default (hidden) when not explicitly opened. */
+main[data-sidebar="closed"] .sidebar-toggle {
+  display: inline-flex;
+}
+
+@media (max-width: 639px) {
+  main:not([data-sidebar="open"]) .sidebar-toggle {
+    display: inline-flex;
+  }
 }
 
 /* The phone meeting panel: a bottom sheet, not a floating card. Top corners

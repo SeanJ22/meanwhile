@@ -15,15 +15,20 @@
  * history this project's tracker rules exist to prevent. So it refuses on a
  * dirty tree and tells you.
  *
- * Four surfaces have to agree before a session ends, and checking them by hand
+ * Five surfaces have to agree before a session ends, and checking them by hand
  * is how they drift. This runs the whole sweep and prints a checklist you can
  * read at a glance:
  *
  *   1. the working tree      nothing uncommitted
  *   2. the branch            nothing unpushed
  *   3. main                  nothing unmerged, no PR left open
- *   4. the G Drive mirror    five files byte-identical, plus transcripts and
+ *   4. the dev server        stopped, port 3000 free
+ *   5. the G Drive mirror    five files byte-identical, plus transcripts and
  *                            a generated `git-state.txt`
+ *
+ * `pnpm session:start` is the bookend, and checks the things that are wrong at
+ * the *start* of a session — stale local main, a clobbered CLAUDE.md, a port
+ * already in use.
  *
  * Exits non-zero if anything needs attention, so it can gate a commit hook
  * later without being rewritten.
@@ -42,6 +47,8 @@ import {
 } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+
+import { stopDevServer } from "./dev-server.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(here, "..");
@@ -321,6 +328,19 @@ if (CHECK_ONLY) {
   ok("git state", "git-state.txt written to the mirror");
 }
 
+/* ---------------------------------------------------------- dev server --- */
+
+// Before the mirror, not after. A handoff that syncs and reports "safe to end
+// the session" while something is still serving on 3000 is a false report — the
+// next session's `predev` will refuse, or worse, Next slides to 3001 and the
+// screenshots come from a build nobody is looking at.
+{
+  const { outcome, detail } = await stopDevServer({ dryRun: CHECK_ONLY });
+  if (outcome === "occupied") fail("dev server", detail);
+  else if (outcome === "foreign") warn("dev server", detail);
+  else ok("dev server", CHECK_ONLY ? `${detail}` : detail);
+}
+
 /* -------------------------------------------------------------- 4 mirror --- */
 
 if (!existsSync(MIRROR)) {
@@ -559,7 +579,7 @@ const warned = results.filter((r) => r.level === "warn");
 
 console.log("");
 if (failed.length === 0 && warned.length === 0) {
-  console.log("All four surfaces agree. Safe to end the session.\n");
+  console.log("All five surfaces agree. Safe to end the session.\n");
   process.exit(0);
 }
 

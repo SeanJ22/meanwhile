@@ -45,7 +45,8 @@ works.
 
 | Command | Does |
 |---|---|
-| `corepack pnpm dev` | Development server |
+| `corepack pnpm session:start` | Start-of-session sweep, then the dev server — see §8. `--check` starts nothing |
+| `corepack pnpm dev` | Development server. Refuses if 3000 is taken; records its pid in `.dev-server.pid` |
 | `corepack pnpm build` | Production build |
 | `corepack pnpm test` | `node --test` over `tests/` — 79 tests |
 | `corepack pnpm lint` | ESLint |
@@ -1274,11 +1275,99 @@ nullable `Body.ocdId`, and nothing populates it yet.
 ## 8. Picking this up next
 
 **The repository is `C:\Users\seanj\dev\we-the-people`** and always will be.
-Check `CLAUDE.md` is roughly 10 KB before doing anything — §3.5 explains why.
+Check `CLAUDE.md` is roughly 10 KB before doing anything — §3.5 explains why, and
+`pnpm session:start` now checks it for you.
+
+### The two bookends, and what they have in common
+
+`pnpm session:start` runs first, `pnpm handoff` runs last. Between them they
+check five things, and **every one of them is a state that lies quietly if you
+do not look:**
+
+| What | How it presents | What it actually is |
+|---|---|---|
+| stale local `main` | an empty repo | R07 — `main` a session behind |
+| clobbered `CLAUDE.md` | a repo with no constraints | overwritten by scaffolding |
+| stale dev server | a working build | last session's build on 3000 |
+| unsynced mirror | nothing at all | the orienting docs gone stale |
+| unmerged branch | work that is "done" | work only on this machine |
+
+None of the five announces itself. Each presents as a plausible working state
+that happens to be the wrong one, and the first three have each cost this
+project a session already. That is the argument for a scripted check at both
+ends rather than a habit of looking.
+
+### Starting a session: `pnpm session:start`
+
+```
+pnpm session:start            check, then start the dev server
+pnpm session:start --check    report only, start nothing
+```
+
+Three checks, then it brings up the dev server through `pnpm dev` — through the
+package manager deliberately, so `predev` runs and regenerates
+`public/maplibre-gl-worker.mjs`.
+
+```
+  ok   main         local main matches origin/main
+  ok   CLAUDE.md    10.1 KB, intact
+  ok   port         3000 is free
+```
+
+1. **Local `main` is not stale.** Fetches, compares against `origin/main`, and
+   on a miss prints the commit count and the `git merge --ff-only origin/main`
+   that fixes it. This is R07: `handoff --ship` merges the PR through `gh` and
+   leaves the session on the feature branch, so nothing ever fast-forwards local
+   `main`. It is why the repo once opened looking empty (§7). A *diverged* `main`
+   — commits on both sides — is reported differently and does not get a
+   fast-forward suggestion, because `--ff-only` would refuse.
+2. **`CLAUDE.md` is roughly 10 KB.** Under 1 KB, or containing only
+   `@AGENTS.md`, means it was clobbered: stop, **do not reconstruct it from
+   memory**, restore from the mirror. The command is printed, and it says so
+   loudly if the mirror is not reachable either. Outside 8–14 KB is a warning
+   rather than a failure, since the file legitimately grows.
+3. **Port 3000 is free**, then start the dev server.
+
+It exits non-zero on any failure, same contract as `handoff`. `--check` is the
+form a hook wants, since the plain form ends in a server that never exits.
+
+### The dev server
+
+`pnpm dev` writes the `next dev` pid to `.dev-server.pid` in the repo root
+(gitignored) and removes it on any exit it lives to see. A `-9` leaves the file
+behind, so every reader checks the pid is alive rather than trusting the number.
+
+Two details that are not obvious and were measured, not assumed:
+
+- **The pid that holds the socket is not the pid in the file.** Next runs the
+  server in `start-server.js`, a *grandchild* of `next dev`. Measured on
+  2026-08-12: file recorded 5544, port 3000 held by 5816. So a kill must take
+  the tree (`taskkill /T /F /PID <pid>`), and "does the file match the occupant"
+  is a descent test, not `===`. An identity test would report this repo's own
+  server as a stranger's and withhold the kill that works.
+- **`pnpm dev` runs Next under node directly**, not through the `.cmd` shim. The
+  old `"dev": "next dev"` put `cmd.exe /d /s /c next dev` between pnpm and Next,
+  and killing a shim on Windows can orphan what it launched.
+
+`predev` **refuses to start when 3000 is in use** rather than letting Next slide
+to 3001. It prints the occupying pid, whether it is this repo's own server, and
+the command to kill it. Sliding to 3001 is the failure worth preventing:
+`scripts/shoot.mts` targets a fixed `http://localhost:3000`, so every screenshot
+would be of the old build — and of the old map worker, since `predev` is where
+that bundle is regenerated and a server that never restarted never regenerated
+it. The check runs before the worker build so a refusal costs nothing.
+
+`pnpm handoff` stops the dev server before syncing the mirror, as its own
+checklist line. Non-fatal when nothing was running, and it will not kill a
+process on a guess: something on 3000 with no matching `.dev-server.pid` is
+reported as foreign, with the pid and the kill command, for a person to decide.
+**If the port is still held after the kill it fails and exits non-zero** — a
+handoff that reports the session closed while something is still serving is a
+false report, which is worse than no check.
 
 ### Ending a session: `pnpm handoff`
 
-Run it last. It checks the four surfaces that have to agree, and does the two
+Run it last. It checks the five surfaces that have to agree, and does the two
 jobs that are pure copies:
 
 ```
@@ -1298,6 +1387,7 @@ session starts on a merged `main` with nothing outstanding.
   ok   main tree       identical to the local tree
   ok   pull requests   none open
   ok   git state       git-state.txt written to the mirror
+  ok   dev server      pid 5544 stopped, port 3000 free
   ok   mirror          5/5 identical
   ok   transcripts     4 exported
 ```
@@ -1328,8 +1418,11 @@ State as of 2026-08-12, verified rather than assumed:
 
 - **Check local `main` is not stale before anything else** — §7. If the repo
   looks empty, it is not; fast-forward from `origin/main`.
-- 79 tests, lint and build all pass. M16, M17 and R09 all Done with evidence in
-  the tracker.
+- 79 tests, lint and build all pass. M16, M17, R09 and R10 all Done with
+  evidence in the tracker.
+- R10 added `pnpm session:start` and the dev-server lifecycle. It found a real
+  stale server on its first run: a `next dev` from 4:06 PM still serving after
+  that session's handoff, which is the gap it exists to close.
 - R09 added `git-state.txt`, so the mirror is now six files: five copied, one
   generated. It carries no tests — it is a handoff script, not app code, and the
   suite does not reach it. Verified by running it against a scratch mirror and,

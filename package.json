@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "map:worker": "node scripts/build-map-worker.mjs",
-    "predev": "node scripts/build-map-worker.mjs",
-    "dev": "next dev",
+    "session:start": "node scripts/session-start.mjs",
+    "predev": "node scripts/check-port.mjs && node scripts/build-map-worker.mjs",
+    "dev": "node scripts/dev.mjs",
     "prebuild": "node scripts/build-map-worker.mjs",
     "build": "next build",
     "start": "next start",

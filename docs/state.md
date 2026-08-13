@@ -406,7 +406,7 @@ memory — restore it.
 ### The `G:\My Drive\we-the-people\` mirror
 
 A hedge against the above, and against losing the project's memory with a
-branch. It holds five files, flat:
+branch. It holds six files, flat — five copied from the repo, one generated:
 
 | Mirror | Repo |
 |---|---|
@@ -415,6 +415,25 @@ branch. It holds five files, flat:
 | `state.md` | `docs/state.md` |
 | `tracker.csv` | `docs/tracker.csv` |
 | `types.ts` | `lib/sources/types.ts` |
+| `git-state.txt` | *generated — no repo counterpart* |
+
+`git-state.txt` is written by `pnpm handoff` after the fetch and before the
+mirror sync. It is plain text, one fact per line: when it was generated, the
+current branch, local `HEAD` and `origin/main` by sha and subject, the **R07
+check** (does local `main` equal `origin/main`, and how far behind if not),
+whether the tree was clean, any open PRs, and the last recorded test count with
+lint and build status. Because it is generated it is never compared for drift
+and never copied — it is simply overwritten each run.
+
+It exists for the case the rest of the mirror cannot cover: a session that opens
+with the drive mounted but the repo not yet cloned or fast-forwarded, where
+there is no git to ask. The R07 line is the reason it is worth having at all —
+stale local `main` is invisible from inside the repo until someone checks `main`
+out and finds an apparently empty project (§7).
+
+The test, lint and build figures are **read from this file**, not re-run. A
+status is a claim someone committed to with evidence, not one a script inferred
+on its way past, so `git-state.txt` cites the `state.md` line it took them from.
 
 **Keep the mirror in step in the same change that updates the repo copy.** A
 mirror that is only sometimes current is worse than none, because the next
@@ -1169,17 +1188,19 @@ replaced.
 
 ## 7. Current state of the branch
 
-Branch `claude/coverage-language-and-registry-dedupe`, two commits on top of
-`origin/main` at `2978324` (the PR #6 merge). Phase 4.6.6 and the FUNCSTAT fix.
+Branch `claude/handoff-git-state`, one commit on top of `origin/main` at
+`11fc88a` (the PR #9 merge). The `git-state.txt` mirror file — R09.
 
 ```
-81f4667  Let Census resolve the duplicate: FUNCSTAT from TIGER/Line   ← M17
-2e69458  Say what coverage means on screen                            ← M16
-2978324  Merge PR #6                                                  ← origin/main
+<this commit>  Write git-state.txt into the mirror                    ← R09
+11fc88a        Merge PR #9                                            ← origin/main
 ```
 
-**This session opened on a repo that looked empty, and that is worth knowing
-because it will happen again.** The working tree was on `main` at `64fee33` —
+The previous session's work (Phase 4.6.6 and the FUNCSTAT fix, M16 and M17) is
+in `origin/main` and no longer sits on a branch.
+
+**An earlier session opened on a repo that looked empty, and that is worth
+knowing because it will happen again.** The working tree was on `main` at `64fee33` —
 the initial "Add files via upload" commit, carrying only `CLAUDE.md`. No `app/`,
 no `lib/`, no `docs/`, no `package.json`. Nothing was lost: `origin/main` was 26
 commits and 118 files ahead, local `main` held zero unique commits and was a
@@ -1193,6 +1214,11 @@ time, and the next person to check it out sees an apparently empty project. The
 plain `handoff` check cannot catch it either — it compares the branch against
 its own upstream and `main` against the branch, but never local `main` against
 `origin/main`. Tracker **R07** carries the fix.
+
+Since R09 the comparison at least gets *recorded*: `git-state.txt` in the mirror
+carries a `local main matches origin/main` line with a behind count. That is not
+the fix — the checklist still does not warn and `--ship` still does not
+fast-forward — but the fact is now written down somewhere a next session reads.
 
 The older pattern still applies and is the same family: a PR merges from a
 snapshot, so anything pushed after it was opened is left behind silently. That
@@ -1271,6 +1297,7 @@ session starts on a merged `main` with nothing outstanding.
   ok   main            carries everything on this branch
   ok   main tree       identical to the local tree
   ok   pull requests   none open
+  ok   git state       git-state.txt written to the mirror
   ok   mirror          5/5 identical
   ok   transcripts     4 exported
 ```
@@ -1301,8 +1328,12 @@ State as of 2026-08-12, verified rather than assumed:
 
 - **Check local `main` is not stale before anything else** — §7. If the repo
   looks empty, it is not; fast-forward from `origin/main`.
-- 79 tests, lint and build all pass. M16 and M17 both Done with evidence in the
-  tracker.
+- 79 tests, lint and build all pass. M16, M17 and R09 all Done with evidence in
+  the tracker.
+- R09 added `git-state.txt`, so the mirror is now six files: five copied, one
+  generated. It carries no tests — it is a handoff script, not app code, and the
+  suite does not reach it. Verified by running it against a scratch mirror and,
+  for the behind path, a throwaway clone with local `main` reset back.
 - The G Drive mirror and `transcripts/` are current as of the end of that
   session.
 

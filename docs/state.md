@@ -1118,10 +1118,17 @@ calls that row is actually about.
 
 **Built on the bulk file, not the API.** `unitedstates/congress-legislators` is
 public domain, answers in one request, needs no key, has no rate limit, and is
-reproducible — which is why §5.0a says to prefer bulk where one exists. Worth
-knowing: **`CONGRESS_API_KEY` is not in `.env.local`** and there is no system
-variable either, checked 2026-08-12. Nothing here needed one. Portraits (D20)
-and roll calls will.
+reproducible — which is why §5.0a says to prefer bulk where one exists. **The
+route does not change now that a key exists:** `CONGRESS_API_KEY` and
+`FEC_API_KEY` were written into `.env.local` on 2026-08-12, after the roster was
+built, and the Congress key is for the **photo path only** (D20). The roster
+stays on bulk.
+
+**`FEC_API_KEY` is deliberately unwired.** It belongs to the `FUNDING` evidence
+tier, not to Phase 5, and D14 has to clear the commercial-use restriction on
+contributor information under **52 U.S.C. § 30111(a)(4)** before an adapter
+ships. Mixing money data into a roster also invites exactly the composite-score
+failure `CLAUDE.md` forbids. The key being present is not a reason to use it.
 
 Like the registry, this is a **committed artifact, not a table.**
 `lib/db/schema.ts` is still `export {}`; the first source that needs *writes* is

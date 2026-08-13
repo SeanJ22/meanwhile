@@ -33,7 +33,6 @@ test("a body nobody searched never claims a search", () => {
   // backlog.
   assert.equal(agendaAbsenceNote(NH, "NOT_ATTEMPTED"), null);
   assert.equal(agendaAbsenceNote(NH, "KNOWN_UNCOVERED"), null);
-  assert.equal(agendaAbsenceNote(NH, "SOURCE_BLOCKED"), null);
   assert.equal(agendaAbsenceNote(NH, "LIVE"), null);
 });
 

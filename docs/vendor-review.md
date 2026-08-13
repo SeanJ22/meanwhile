@@ -1,17 +1,26 @@
 # Vendor and statute review
 
-Tracker **D14**. One written finding per vendor before an adapter ships, plus the
-state-law question underneath all of them.
+Tracker **D14**. One written paragraph per vendor recording what its terms say.
 
-**This is not legal advice and it is not a clearance.** It records what the
-published documents say, on the date they were read, and what follows
-operationally. Enforceability is counsel's — tracker **B05**, with the framed
-question in **B09**. Everything here that touches the statutory argument is
-flagged for that review rather than settled by it.
+**This is a record, not a gate — redefined 2026-08-13.** A vendor paragraph is
+reconnaissance informing route selection; it does not block an adapter. The
+public-records constraint now in `CLAUDE.md` states why: every record these
+systems hold is one a public body is statutorily obliged to publish, and a
+vendor's website terms are not a mechanism by which a public body can narrow
+statutory access to its own records. What binds retrieval is the four-part
+discipline in that constraint (no credentials, no accepted-then-violated
+clickwrap, polite serialized identified requests, nothing not already public),
+not a vendor's marketing-site ToU. The original 2026-08-12 findings below are
+kept as written, including the one this redefinition reversed — the correction
+is the useful part.
 
-Read 2026-08-12. Re-read any vendor row before its adapter ships if more than a
-few months have passed; these documents are revised without notice and the
-revision date is the only signal.
+**This is not legal advice.** It records what the published documents say, on
+the date they were read, and what follows operationally. Enforceability is
+counsel's — tracker **B05**, with the framed question in **B09**.
+
+Read 2026-08-12, extended 2026-08-13. Re-read any vendor row before its adapter
+ships if more than a few months have passed; these documents are revised
+without notice and the revision date is the only signal.
 
 ---
 
@@ -111,27 +120,31 @@ product or service."
 **Rights holder.** Hyland claims all content "contained on, appearing on, or
 relating to the Site."
 
-**Finding: do not build an OnBase adapter on this reading.** The prohibition is
-explicit and broad, and although the enumerated scope does not include the
-tenant host, that gap is thin evidence to act on — it is at least as likely to be
-an unrevised site list as a deliberate carve-out. The Diligent document proves a
-vendor will state the product carve-out plainly when it means one; Hyland's does
-not.
+**Original finding (2026-08-12): do not build an OnBase adapter on this
+reading.** The prohibition is explicit and broad, and although the enumerated
+scope does not include the tenant host, that gap is thin evidence to act on — it
+is at least as likely to be an unrevised site list as a deliberate carve-out.
+The Diligent document proves a vendor will state the product carve-out plainly
+when it means one; Hyland's does not.
 
-**Route instead, in this order:**
+**REVERSED 2026-08-13, and the adapter is built (D16).** Under the
+public-records constraint the scope gap is dispositive, not thin: the terms
+name five `hyland.com` hosts and reach no further by their own words, the
+tenant host is where the records live, and the records are the City of
+Tucson's — which Arizona law requires posted on the body's website (A.R.S.
+§ 38-431.02). A vendor's marketing-site ToU is the wrong instrument to reason
+from for a public body's statutory publications, and treating its silence
+about the tenant host as a prohibition was the gate-shaped reading D14 no
+longer takes. What survives of the original caution is the retrieval
+discipline, applied in full: the adapter reads the server-rendered landing
+page with one identified GET per ingest, serialized, honouring `Retry-After`,
+never re-fetching an unchanged document. The original conclusion above is kept
+because the correction is the useful part.
 
-1. Ask the City of Tucson Clerk directly for a machine-readable meeting feed.
-   The clerk is the publisher and the records are the City's, not Hyland's.
-   Template: `docs/email-tusd-clerk.md`, adapted.
-2. Tucson has a **GovDelivery subscription list**
-   (`public.govdelivery.com/accounts/AZTUCSON/subscriber/topics`) — a syndication
-   channel the City already operates for exactly this purpose. Ladder rung 3, and
-   it carries none of the vendor question.
-3. Pima County's Legistar carries **joint Tucson/Pima meetings**, so some Tucson
-   content is reachable through a cleared source regardless. Confirmed: a "Joint
-   Meeting with Mayor and Council and Pima County BOS" appears on both.
-
-Record the outcome on tracker **D16**.
+The alternative routes remain recorded and useful as fallbacks: the City
+Clerk, the **GovDelivery subscription list**
+(`public.govdelivery.com/accounts/AZTUCSON/subscriber/topics`), and the joint
+Tucson/Pima meetings that appear on `pima.legistar.com`.
 
 ---
 
@@ -185,6 +198,108 @@ The civic-tech precedent recorded in the brief (a LlamaIndex first-party reader,
 `civic-scraper`, and `dweekly/rcsd-meetings` running in public) is real and worth
 weighing, but precedent is not permission and should not be cited as though it
 were.
+
+**Addendum 2026-08-13 — the route that mooted most of the above.** Both
+Diligent Community and its iCompass/CivicWeb sibling expose the same WCF JSON
+service the portal page itself calls:
+`<tenant>/Services/MeetingsService.svc/meetings?from=&to=`. It answers a plain
+unauthenticated GET with the meeting list the portal renders — the same public
+data, in the form the page already receives it (ladder rung 7). Verified live
+on the TUSD tenant (`diligentoneplatform.com`, also answering on the legacy
+`highbond.com` hostname) and on Newbury's (`newburynh.civicweb.net`). The
+subscribe channel was tried first, per the original routing note: it is
+email-only behind a CAPTCHA, recorded as a MISS. The adapter is built on the
+service (D13); the tenant-agreement question stays flagged for B09 as a
+record, and the drafted letters remain unsent.
+
+---
+
+## CivicPlus — CivicEngage (added 2026-08-13)
+
+| | |
+|---|---|
+| Tenant observed | `rockawaytownship.org` (Rockaway Township, NJ) |
+| Feeds | `RSSFeed.aspx?ModID=65&CID=All-agendacenter`, `common/modules/iCalendar/iCalendar.aspx?catID=<n>&feed=calendar` |
+| Read | 2026-08-13 |
+
+**The different case, and the easy one.** CivicPlus builds the municipality's
+*own website*, and the feeds are published by the municipality through it —
+first-party syndication, ladder rung 2, with no vendor portal in the path.
+There is no tenant-portal instrument to reason about: the township publishes
+an iCal and an RSS feed the way it publishes any page on its own site, and
+both formats exist to be consumed programmatically. Both URL patterns are
+CivicPlus-wide rather than Rockaway-specific, so one adapter reaches many
+municipalities. **Adapter built (D21).** No terms question was found that
+reaches a municipality's own published feeds; if CivicPlus's own site terms
+are ever relevant they govern `civicplus.com`, not the township's website.
+
+---
+
+## Apptegy — Thrillshare (added 2026-08-13)
+
+| | |
+|---|---|
+| Tenants observed | `vailschooldistrictaz.thrillshare.com` (org 8164), `api.thrillshare.com/api/v4/o/4707` (Rockaway Twp SD) |
+| Endpoint | `/api/v4/o/<org>/cms/events` — unauthenticated JSON |
+| Read | 2026-08-13 |
+
+**First-party in the strongest sense.** Apptegy is the district's website CMS,
+and the events API is what the district's own pages render from — found by
+reading the embedded page state, not by probing. The district publishes the
+board-meeting events itself, with venue text and coordinates in the payload.
+Retrieval is the same act as loading the district's calendar page, in the form
+the page already receives. No anti-automation instrument was found governing
+tenant sites; the API serves the public site's own traffic. **Adapter built,
+serving both districts** — the §0b thesis (one platform, N bodies) working on
+its second body for free.
+
+---
+
+## NovusAgenda (added 2026-08-13 — a finding about data, not terms)
+
+`vailschools.novusagenda.com/agendapublic/` answers 200 and holds **zero
+meetings in any queried window** — it is Vail's archive for material prior to
+March 14, 2017, which the district's own board page states. Recorded here so
+nobody reads the 200 as a live source again: this was the fourth sighting of
+the "exists and carries nothing" failure shape. No terms question was reached
+because no adapter is warranted; if another body genuinely publishes through
+NovusAgenda, review then.
+
+---
+
+## Granicus — IQM2 / Accela Meeting Portal (added 2026-08-13)
+
+| | |
+|---|---|
+| Tenant observed | `morriscountynj.iqm2.com` (Morris County, NJ) |
+| Endpoints | `/Services/RSS.aspx?Feed=Calendar` (pseudo-feed), `/Citizens/Calendar.aspx`, `/Citizens/Detail_Meeting.aspx?ID=`, `FileOpen.aspx` agenda PDFs |
+| Read | 2026-08-13 |
+
+Granicus again, a different product. The same reasoning as the Legistar row
+applies: Granicus's site terms are scoped to its own sites and carry no
+automated-access clause, and the tenant portal serves what the county already
+published. The `/Services/RSS.aspx?Feed=Calendar` route is a syndication
+endpoint by name and by shape — one rigidly regular XML-declared block per
+meeting with datetime and document links, answering plain GET. **No adapter
+yet (KNOWN_UNCOVERED)**; when built, the `/Services/` pattern generalizes to
+every `*.iqm2.com` client.
+
+---
+
+## Revize (added 2026-08-13)
+
+| | |
+|---|---|
+| Tenant observed | `merrimackcounty.net` (Merrimack County, NH) |
+| Pages | `board_of_commissioners_/public_notices,_agendas,_minutes,_.php`, `elected_officials/delegation/public_notices.php` |
+| Read | 2026-08-13 |
+
+Revize is the county's website CMS — the CivicPlus case again, not the vendor-
+portal case. The notice pages are the county's statutory posting location in
+practice (RSA 91-A:2 permits the body's website), served as plain HTML with
+stable document URLs on `cms2.revize.com` (the `?t=` cache token is
+unnecessary, verified). First-party publication; no terms instrument found
+that reaches it. **No adapter yet (KNOWN_UNCOVERED).**
 
 ---
 
@@ -356,13 +471,14 @@ said nothing about where agendas live, exactly as the rule warns.
 
 ## Summary
 
-| Vendor | Automated access clause | Scoped to tenant portals? | Sanctioned API | Finding |
+| Vendor | Automated access clause | Scoped to tenant portals? | Machine route | Status (2026-08-13) |
 |---|---|---|---|---|
-| Granicus / Legistar | **none** | no — marketing site only | **yes, documented** | **Cleared — build on the API** (D12) |
-| Hyland / OnBase | explicit, broad | not enumerated, but thin evidence | no | **Do not build.** Ask the clerk; use GovDelivery (D16) |
-| Diligent / BoardDocs | explicit | **no — express product carve-out** | no | **Escalate to B09.** Try subscribe + district site first (D13) |
-| Plural Open | none — bulk data is the intended use | n/a, not a records holder | yes, but quota'd | **Cleared** (D03). Build on bulk; the 500/day cap is a ceiling, not a restriction |
-
-**Ships first: Legistar, on the API.** It is the only row where the vendor built
-the interface, the data returned is already public by the client's own act, and
-the terms carry no automated-access restriction at all.
+| Granicus / Legistar | **none** | no — marketing site only | documented public API | **Built, live** (D12) |
+| Hyland / OnBase | explicit, broad | terms name five `hyland.com` hosts; tenant host not among them | server-rendered list + PDF downloads | **Built, live** — original "do not build" reversed under the public-records constraint (D16) |
+| Diligent / BoardDocs / CivicWeb | explicit, scoped to Diligent Websites | **no — express product carve-out** | `MeetingsService.svc` JSON, both brands | **Built, live** for TUSD + Newbury (D13); B09 stays flagged as a record |
+| CivicPlus / CivicEngage | n/a — municipality's own site | n/a | first-party RSS + iCal | **Built, live** (D21) |
+| Apptegy / Thrillshare | n/a — district's own site | n/a | first-party events JSON | **Built, live** for Vail + RTSD |
+| Granicus / IQM2 | none (same instrument as Legistar row) | no | `/Services/RSS.aspx?Feed=Calendar` | Found, unbuilt (Morris County) |
+| Revize | n/a — county's own site | n/a | plain HTML + stable PDFs | Found, unbuilt (Merrimack County) |
+| NovusAgenda | not reached | — | — | No live tenant in scope — Vail's is a pre-2017 archive |
+| Plural Open | none — bulk data is the intended use | n/a, not a records holder | CC-0 bulk CSV | **Cleared** (D03); 500/day API cap is a ceiling, not a restriction |

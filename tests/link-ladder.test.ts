@@ -177,14 +177,26 @@ test("every audited body carries the status and URLs its audit recorded", () => 
   }
 });
 
-test("a blocked source is never given an agenda source to read", () => {
-  // Tucson: the Hyland portal parses fine and the terms forbid it. The registry
-  // must not carry a ref that an adapter would happily pick up later.
+test("no body carries a terminal blocked state", () => {
+  // SOURCE_BLOCKED was removed from CoverageStatus 2026-08-13 under the
+  // public-records constraint: a closed route is recorded on its audit rung
+  // (BLOCKED_TERMS / BLOCKED_ROBOTS) and the next rung is attempted — the
+  // body itself is never marked blocked. This pins the generated data to the
+  // same rule the type now enforces at compile time, because registry.json is
+  // a committed artifact that could carry a stale value the compiler never
+  // sees.
+  const valid = new Set([
+    "LIVE",
+    "MANUAL",
+    "KNOWN_UNCOVERED",
+    "NO_SOURCE_FOUND",
+    "NOT_ATTEMPTED",
+  ]);
   for (const body of registry.bodies) {
-    if (body.coverageStatus === "SOURCE_BLOCKED") {
-      assert.equal(body.agendaSourceRef, null, body.id);
-      assert.equal(body.agendaSourceType, "NONE", body.id);
-    }
+    assert.ok(
+      valid.has(body.coverageStatus),
+      `${body.id} carries ${body.coverageStatus}`,
+    );
   }
 });
 

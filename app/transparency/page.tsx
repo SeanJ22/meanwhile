@@ -110,6 +110,10 @@ export default function TransparencyPage() {
             vote, or filing — where no source exists, it says so instead of
             guessing.
           </p>
+          <p className="mt-3">
+            Ballot information is presented as filed with election
+            authorities; we never suggest how to vote.
+          </p>
         </Section>
 
         <Section title="Questions">

@@ -1,0 +1,157 @@
+{
+  "formatVersion": 1,
+  "curatedAt": "2026-08-14",
+  "curatorNote": "Transcribed from the Morris County Clerk's filed-candidate PDFs (general 08/07/26 revision, school 07/28/26 revision) and the NJ Division of Elections 2026 page (updated 07/27/26). The clerk's ballot-position drawing PDF (2026-general-candidate-order-081026.pdf) is a scan with no text layer, so ballot order was not machine-readable and candidates render alphabetically by surname. The filings carry party, slogan, and contact email; they state neither incumbency nor websites, so those fields are null throughout. No statewide public question is listed by the Division of Elections as of its 07/27/26 update; local non-binding and school-question deadlines fall in August 2026 — recheck at sample-ballot certification (mailed on/before Oct 21).",
+  "election": {
+    "id": "nj-2026-11-03",
+    "date": "2026-11-03",
+    "name": "2026 General Election",
+    "state": "NJ"
+  },
+  "contests": [
+    {
+      "id": "ballot-nj-morris:us-senate",
+      "electionId": "nj-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:nj",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "Member of the United States Senate",
+      "type": "CANDIDACY",
+      "voteFor": 1,
+      "termYears": 6,
+      "scopeNote": null,
+      "provenance": {
+        "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/6/elections/past-results/2026-general-candidates-080726.pdf",
+        "sourceOrg": "Morris County Clerk",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-nj-morris:us-house-11",
+      "electionId": "nj-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:nj/cd:11",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "Member of the House of Representatives (11th Congressional District)",
+      "type": "CANDIDACY",
+      "voteFor": 1,
+      "termYears": 2,
+      "scopeNote": null,
+      "provenance": {
+        "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/6/elections/past-results/2026-general-candidates-080726.pdf",
+        "sourceOrg": "Morris County Clerk",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-nj-morris:county-commissioner",
+      "electionId": "nj-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:nj/county:morris",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "Member of the Board of County Commissioners",
+      "type": "CANDIDACY",
+      "voteFor": 1,
+      "termYears": 3,
+      "scopeNote": null,
+      "provenance": {
+        "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/6/elections/past-results/2026-general-candidates-080726.pdf",
+        "sourceOrg": "Morris County Clerk",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-nj-morris:rockaway-twp-boe",
+      "electionId": "nj-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "Member of the Board of Education",
+      "type": "CANDIDACY",
+      "voteFor": 2,
+      "termYears": 3,
+      "scopeNote": null,
+      "provenance": {
+        "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-school-candidates-072826b.pdf",
+        "sourceOrg": "Morris County Clerk",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-nj-morris:rockaway-twp-boe-unexpired",
+      "electionId": "nj-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "Member of the Board of Education — Unexpired Term",
+      "type": "CANDIDACY",
+      "voteFor": 1,
+      "termYears": 2,
+      "scopeNote": null,
+      "provenance": {
+        "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-school-candidates-072826b.pdf",
+        "sourceOrg": "Morris County Clerk",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-nj-morris:morris-hills-regional-boe-rockaway-twp",
+      "electionId": "nj-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "Member of the Regional Board of Education (Rockaway Township seats)",
+      "type": "CANDIDACY",
+      "voteFor": 2,
+      "termYears": 3,
+      "scopeNote": "Regional board seats are allocated per municipality; these are the seats elected by Rockaway Township voters, per the clerk's school-candidates filing.",
+      "provenance": {
+        "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-school-candidates-072826b.pdf",
+        "sourceOrg": "Morris County Clerk",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    }
+  ],
+  "candidacies": [
+    { "id": "ballot-nj-morris:us-senate:booker", "contestId": "ballot-nj-morris:us-senate", "familyName": "BOOKER", "givenName": "Cory", "partyLabel": "Democratic", "slogan": null, "incumbent": null, "websiteUrl": null, "provenance": { "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/6/elections/past-results/2026-general-candidates-080726.pdf", "sourceOrg": "Morris County Clerk", "collectedAt": "2026-08-14", "verifiedAt": "2026-08-14" } },
+    { "id": "ballot-nj-morris:us-senate:fernandez", "contestId": "ballot-nj-morris:us-senate", "familyName": "FERNANDEZ", "givenName": "Veronica", "partyLabel": "Independent", "slogan": "End The Corruption!", "incumbent": null, "websiteUrl": null, "provenance": { "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/6/elections/past-results/2026-general-candidates-080726.pdf", "sourceOrg": "Morris County Clerk", "collectedAt": "2026-08-14", "verifiedAt": "2026-08-14" } },
+    { "id": "ballot-nj-morris:us-senate:kuniansky", "contestId": "ballot-nj-morris:us-senate", "familyName": "KUNIANSKY", "givenName": "Joanne", "partyLabel": "Independent", "slogan": "Socialist Workers Party", "incumbent": null, "websiteUrl": null, "provenance": { "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/6/elections/past-results/2026-general-candidates-080726.pdf", "sourceOrg": "Morris County Clerk", "collectedAt": "2026-08-14", "verifiedAt": "2026-08-14" } },
+    { "id": "ballot-nj-morris:us-senate:murphy", "contestId": "ballot-nj-morris:us-senate", "familyName": "MURPHY", "givenName": "Justin", "partyLabel": "Republican", "slogan": null, "incumbent": null, "websiteUrl": null, "provenance": { "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/6/elections/past-results/2026-general-candidates-080726.pdf", "sourceOrg": "Morris County Clerk", "collectedAt": "2026-08-14", "verifiedAt": "2026-08-14" } },
+    { "id": "ballot-nj-morris:us-house-11:bond", "contestId": "ballot-nj-morris:us-house-11", "familyName": "BOND", "givenName": "Alan B.", "partyLabel": "Independent", "slogan": "Hope For Tomorrow", "incumbent": null, "websiteUrl": null, "provenance": { "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/6/elections/past-results/2026-general-candidates-080726.pdf", "sourceOrg": "Morris County Clerk", "collectedAt": "2026-08-14", "verifiedAt": "2026-08-14" } },
+    { "id": "ballot-nj-morris:us-house-11:hathaway", "contestId": "ballot-nj-morris:us-house-11", "familyName": "HATHAWAY", "givenName": "Joe", "partyLabel": "Republican", "slogan": null, "incumbent": null, "websiteUrl": null, "provenance": { "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/6/elections/past-results/2026-general-candidates-080726.pdf", "sourceOrg": "Morris County Clerk", "collectedAt": "2026-08-14", "verifiedAt": "2026-08-14" } },
+    { "id": "ballot-nj-morris:us-house-11:mejia", "contestId": "ballot-nj-morris:us-house-11", "familyName": "MEJIA", "givenName": "Analilia", "partyLabel": "Democratic", "slogan": null, "incumbent": null, "websiteUrl": null, "provenance": { "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/6/elections/past-results/2026-general-candidates-080726.pdf", "sourceOrg": "Morris County Clerk", "collectedAt": "2026-08-14", "verifiedAt": "2026-08-14" } },
+    { "id": "ballot-nj-morris:county-commissioner:russo", "contestId": "ballot-nj-morris:county-commissioner", "familyName": "RUSSO", "givenName": "Christopher (Chris)", "partyLabel": "Democratic", "slogan": null, "incumbent": null, "websiteUrl": null, "provenance": { "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/6/elections/past-results/2026-general-candidates-080726.pdf", "sourceOrg": "Morris County Clerk", "collectedAt": "2026-08-14", "verifiedAt": "2026-08-14" } },
+    { "id": "ballot-nj-morris:county-commissioner:selen", "contestId": "ballot-nj-morris:county-commissioner", "familyName": "SELEN", "givenName": "Tayfun", "partyLabel": "Republican", "slogan": null, "incumbent": null, "websiteUrl": null, "provenance": { "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/6/elections/past-results/2026-general-candidates-080726.pdf", "sourceOrg": "Morris County Clerk", "collectedAt": "2026-08-14", "verifiedAt": "2026-08-14" } },
+    { "id": "ballot-nj-morris:rockaway-twp-boe:mamoun", "contestId": "ballot-nj-morris:rockaway-twp-boe", "familyName": "MAMOUN", "givenName": "Munir \"Monir\"", "partyLabel": null, "slogan": "Accountability Transparency Representation", "incumbent": null, "websiteUrl": null, "provenance": { "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-school-candidates-072826b.pdf", "sourceOrg": "Morris County Clerk", "collectedAt": "2026-08-14", "verifiedAt": "2026-08-14" } },
+    { "id": "ballot-nj-morris:rockaway-twp-boe:mezik", "contestId": "ballot-nj-morris:rockaway-twp-boe", "familyName": "MEZIK", "givenName": "Lisa", "partyLabel": null, "slogan": "Our Kids Matter!", "incumbent": null, "websiteUrl": null, "provenance": { "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-school-candidates-072826b.pdf", "sourceOrg": "Morris County Clerk", "collectedAt": "2026-08-14", "verifiedAt": "2026-08-14" } },
+    { "id": "ballot-nj-morris:rockaway-twp-boe:nydegger", "contestId": "ballot-nj-morris:rockaway-twp-boe", "familyName": "NYDEGGER", "givenName": "Russell G.", "partyLabel": null, "slogan": "Educational Stewardship", "incumbent": null, "websiteUrl": null, "provenance": { "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-school-candidates-072826b.pdf", "sourceOrg": "Morris County Clerk", "collectedAt": "2026-08-14", "verifiedAt": "2026-08-14" } },
+    { "id": "ballot-nj-morris:rockaway-twp-boe-unexpired:borno", "contestId": "ballot-nj-morris:rockaway-twp-boe-unexpired", "familyName": "BORNO", "givenName": "Olivier", "partyLabel": null, "slogan": "Ready to Listen", "incumbent": null, "websiteUrl": null, "provenance": { "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-school-candidates-072826b.pdf", "sourceOrg": "Morris County Clerk", "collectedAt": "2026-08-14", "verifiedAt": "2026-08-14" } },
+    { "id": "ballot-nj-morris:morris-hills-regional-boe-rockaway-twp:roach", "contestId": "ballot-nj-morris:morris-hills-regional-boe-rockaway-twp", "familyName": "ROACH", "givenName": "Brian", "partyLabel": null, "slogan": null, "incumbent": null, "websiteUrl": null, "provenance": { "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-school-candidates-072826b.pdf", "sourceOrg": "Morris County Clerk", "collectedAt": "2026-08-14", "verifiedAt": "2026-08-14" } },
+    { "id": "ballot-nj-morris:morris-hills-regional-boe-rockaway-twp:serafin", "contestId": "ballot-nj-morris:morris-hills-regional-boe-rockaway-twp", "familyName": "SERAFIN", "givenName": "William", "partyLabel": null, "slogan": null, "incumbent": null, "websiteUrl": null, "provenance": { "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-school-candidates-072826b.pdf", "sourceOrg": "Morris County Clerk", "collectedAt": "2026-08-14", "verifiedAt": "2026-08-14" } }
+  ],
+  "measures": [],
+  "absences": [
+    {
+      "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+      "divisionVintage": "TIGER_GENZ2025",
+      "statement": "NO LOCAL ELECTION — the Morris County Clerk's 2026 general-election candidate list carries this entry for Rockaway Township: no mayor or council seats are on the November 2026 ballot (the township elects municipal offices in odd years).",
+      "provenance": {
+        "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/6/elections/past-results/2026-general-candidates-080726.pdf",
+        "sourceOrg": "Morris County Clerk",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nj",
+      "divisionVintage": "TIGER_GENZ2025",
+      "statement": "No statewide public question is listed by the NJ Division of Elections for November 3, 2026 as of its July 27, 2026 update. Local non-binding and school ballot-question deadlines fall in August 2026 — this is a statement about the sources as of 2026-08-14, rechecked when sample ballots certify (mailed on or before October 21).",
+      "provenance": {
+        "sourceUrl": "https://www.nj.gov/state/elections/election-information-2026.shtml",
+        "sourceOrg": "NJ Division of Elections",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    }
+  ]
+}

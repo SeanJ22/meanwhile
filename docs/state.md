@@ -48,9 +48,10 @@ works.
 | `corepack pnpm session:start` | Start-of-session sweep, then the dev server — see §8. `--check` starts nothing |
 | `corepack pnpm dev` | Development server. Refuses if 3000 is taken; records its pid in `.dev-server.pid` |
 | `corepack pnpm build` | Production build |
-| `corepack pnpm test` | `node --test` over `tests/` — 162 tests |
+| `corepack pnpm test` | `node --test` over `tests/` — 197 tests |
 | `corepack pnpm lint` | ESLint |
-| `corepack pnpm ingest mock` | Run one source adapter end to end |
+| `corepack pnpm ingest <source>` | Run one adapter end to end — `composite` prints per-source accounting and retrieves agenda documents |
+| `corepack pnpm meetings:report` | The four-zip gate: meetings per zip, contributing sources, unwired bodies. Live network |
 | `corepack pnpm zcta:fetch` | Rebuild zip centroids from Census (see §3.2) |
 | `corepack pnpm districts:fetch [type...]` | Rebuild boundary layers (see §2) |
 | `corepack pnpm registry:build` | Regenerate the division and body registry (§4.4) |
@@ -346,16 +347,16 @@ from anywhere, so no URL can honestly cite them.
 Tracker **M06 is reopened** as a result: the link rendered, but the target was
 fabricated, so "never a dead end" was not met.
 
-**To replace with a real source:**
-
-1. Add a directory under `lib/sources/<name>/` exporting a `MeetingSource`.
-2. Change the one `active = resolve(...)` line in `lib/meetings/registry.ts`.
-3. Add an entry to the `SOURCES` map in `scripts/ingest.ts`.
-
-That is the whole swap for *reading*. **Writing is not solved** — see §3.3. The
-mock's `upsert()` deliberately does nothing and reports every record as
-"updated", because persisting fixtures would put fake public meetings into the
-same table real ones will land in.
+**Replaced 2026-08-13: the mock is no longer `active`.** The composite serves
+real meetings (§9); `getMeetingSource()` resolves `WTP_MEETING_SOURCE` and the
+cascade/zip-coverage tests pin `mock` so the suite never touches the network.
+The mock stays in the repo and stays in `scripts/ingest.ts` because the
+fixture-provenance and cascade tests run against it. Adding a source is now:
+a directory under `lib/sources/<name>/`, a capability entry in
+`lib/sources/composite/wiring.ts`, and wiring rows in
+`lib/registry/source-wiring.ts` — adding a *body* to an existing source is a
+wiring row alone. **Writing is still not solved** — see §3.3. Every adapter's
+`upsert()` deliberately reports without persisting until Phase 5 tables land.
 
 ### 3.2 Zip centroids — no longer a stub
 
@@ -416,6 +417,7 @@ branch. It holds seven files, flat — six copied from the repo, one generated:
 | `CLAUDE.md` | `CLAUDE.md` |
 | `abuse-policy.md` | `docs/abuse-policy.md` |
 | `vendor-review.md` | `docs/vendor-review.md` |
+| `source-ladder.md` | `docs/source-ladder.md` |
 | `state.md` | `docs/state.md` |
 | `tracker.csv` | `docs/tracker.csv` |
 | `types.ts` | `lib/sources/types.ts` |
@@ -1076,6 +1078,14 @@ carve-out plainly when it means one. Route to the City instead: ask the Clerk,
 use the City's own GovDelivery list, and note that joint Tucson/Pima meetings
 already appear on `pima.legistar.com`.
 
+> **REVERSED 2026-08-13 (D16), and the adapter is built and live.** Under the
+> public-records constraint added to `CLAUDE.md`, the scope gap is
+> dispositive, not thin: the terms reach no further than the hosts they name,
+> the tenant host is where the records live, and the records are the City of
+> Tucson's — which A.R.S. § 38-431.02 requires posted on the body's own
+> website. The original conclusion above is kept because the correction is
+> the useful part; `docs/vendor-review.md` has the full reversal.
+
 **Diligent — the brief's §4.5.4 correction is confirmed at source, verbatim:**
 "If there is any conflict between these Terms of Use and Diligent's standard
 terms for its products and services, Diligent's standard terms will apply and
@@ -1644,16 +1654,17 @@ bundler can follow, so the report belongs there.
 
 ### 5.2 Everything else
 
-1. ~~**Which real meeting source lands first?**~~ **Answered 2026-08-12:
-   Legistar.** The adapter is built, tested and verified against the live `pima`
-   client — §4.7. What is *not* answered is when it becomes the app's source:
-   `active` is still the mock, because Pima's Legistar carries one county board
-   and switching would empty three of the four target zips. The open question is
-   now narrower — composite source, or hold the mock until more clients are
-   wired?
-4. **What is the persistence design?** `upsert()` exists on the interface and
-   does nothing in the mock. Tables, migration, and conflict strategy are all
-   unspecified. This blocks any real source.
+1. ~~**Which real meeting source lands first?**~~ ~~**Answered 2026-08-12:
+   Legistar.**~~ **Fully answered 2026-08-13: the composite.** Four zips
+   across three states admit no single vendor, which settled
+   composite-versus-hold-the-mock. `lib/sources/composite/` is the app's
+   active source, fanning out over legistar, civicplus, onbase, apptegy and
+   diligent children — §9.
+4. ~~**What is the persistence design?**~~ **Scheduled, no longer
+   indefinitely open (2026-08-13):** persistence (D10), search logging (A06)
+   and the transparency page (T01) ship together next session, none alone.
+   The composite deliberately runs from memory with a short TTL, which D10's
+   row already permits.
 5. ~~**Where are the actual product constraints?**~~ Resolved: `CLAUDE.md` is
    present and intact (9.9 KB). §3.5 still applies as a fragility warning.
 
@@ -1720,7 +1731,7 @@ correct — `resolveZip` only reports it when the table is partial.
 counties, so a reader can click districts in places that have no meetings behind
 them. Honest, and the coverage tier says so, but the asymmetry is new.
 
-**Map-layer test coverage is still thin.** 162 tests now cover the cascade, time
+**Map-layer test coverage is still thin.** 197 tests now cover the cascade, time
 handling, OCD identity, the tier axis, district disambiguation, fixture
 provenance, county subdivisions and the registry oracle. Nothing tests marker
 reconciliation, camera logic, or basemap resolution — which is part of why the
@@ -1761,8 +1772,17 @@ replaced.
 
 ## 7. Current state of the branch
 
-**Working on `claude/link-ladder-and-coverage-audit`**, branched from `main` at
-`c94aa9c` (the PR #17 merge). Four commits.
+**Working on `claude/composite-source-and-reprioritization`** (2026-08-13),
+branched from `main` at the PR #18 merge. This is the session that retired the
+mock: the composite is the app's active source and all four target zips return
+real meetings at the exact tier — see §9 for the reprioritization it happened
+under. **test 197 pass · lint clean · tsc clean · build green.**
+
+The paragraphs below describe the previous session's branch and are kept as
+the historical record they were.
+
+**Previously: `claude/link-ladder-and-coverage-audit`**, branched from `main`
+at `c94aa9c` (the PR #17 merge). Four commits.
 
 **test 162 pass · lint clean · tsc clean · build green.**
 
@@ -1871,6 +1891,16 @@ count badge, the list overlay, and the welcome card.
 construction with `escapeHtml`/`onclick` attributes, and the sales data model.
 
 ### Where the phases stand
+
+> **Phase standings updated 2026-08-13 (§9):** the mock is no longer
+> `active` — the composite serves real meetings in all four zips. Phase 4.7's
+> build work is **suspended until after November**, except 4.6.4
+> (`agendaSourceType` routing), which is retained as the national hook because
+> it is what makes adding a body a registry row instead of a code edit.
+> **Phase 8 (responsive, mobile bottom sheet) is promoted from deferred to
+> required** before the product is shown to anyone — a reader deciding in a
+> parking lot is deciding on a phone. The list below predates that and stands
+> as history.
 
 - **0–4 done** — worker, design system, shell, welcome overlay, district
   overlays with click-to-select.
@@ -2114,7 +2144,7 @@ State as of 2026-08-12, verified rather than assumed:
 - **R07 is fixed.** `--ship` fast-forwards local `main` and pushes `-u` for a
   branch with no upstream; the plain check and `session:start` both report a
   stale local `main`. If the repo ever still looks empty, it is not — §7.
-- **162 tests, lint, tsc and build all pass.** M16, M17, M21, R07, R09, R10,
+- **197 tests, lint, tsc and build all pass.** (Updated 2026-08-13.) M16, M17, M21, R07, R09, R10,
   D14 and M20 all Done with evidence in the tracker. D02, D03, D12 and M05 are
   **In progress** with the evidence recorded and the reason each is not Done
   stated on the row — the Legistar adapter is not the app's source, the rosters
@@ -2150,50 +2180,140 @@ Online, found by following the clerk's own agenda link exactly as the 4.6.7 CMS
 rule says. Hyland's terms forbid the portal route, so D16 goes to the City
 instead. Do not spend another request guessing Tucson slugs.
 
-**The next piece of work, in the order it should be taken:**
+**The next piece of work, in the order it should be taken** (superseded
+2026-08-13 by the reprioritization — §9; the earlier list is preserved in git
+history):
 
-1. **Decide the active meeting source.** `registry.ts` still resolves to the
-   mock. Pima's Legistar carries one county board, so switching outright empties
-   three of the four target zips — the open question is composite versus holding
-   the mock until more clients are wired (§5.2 item 1). **Wiring more clients is
-   the cheap half**: `phoenix`, `mesa`, `maricopa`, `seattle`, `oakland`,
-   `alexandria` and `alameda` all answered 200 in one sweep, and adding one is
-   an entry in `clients.ts` plus a curated venue table.
-2. **D13 Diligent *and* D22 NovusAgenda together**, for the school-board tier —
-   trying each district's own site *before* the portal, per D14. **Diligent
-   alone no longer reaches both target districts**: 4.6.10 measured Vail and it
-   runs NovusAgenda, not BoardDocs (§4.11). The author chose to build both in
-   one change on 2026-08-12, since `agendaSourceType` routing is the point of
-   4.6.4 anyway.
+1. **Next session: persistence, search logging and the transparency page
+   together** (D10 + A06 + T01, item 3 of the reprioritization). They ship
+   together or not at all — collecting silently and disclosing later is the
+   failure this product cannot survive. The two-store constraint and its
+   tests are already in place; the meetings vintage column decided in §9
+   lands with this schema.
+2. **Then the 4.6.3 reader prompt** — approved, wording supplied verbatim in
+   the reprioritization document, device-local storage settled. Compute the
+   counts in the template (report what 85641 actually resolves to); picker
+   first, street where the picker cannot help, neither gated on the other.
+3. **The session after: the ballot build, then the candidate corpus** —
+   curation per jurisdiction into the shape `docs/ballot-research-2026.md`
+   describes, behind a MeetingSource-style contract (§0a). The corpus comes
+   after the ballot because the ballot says which candidates matter.
+4. Standing errands whenever a browser is at hand: the Kearsarge calendar id,
+   Newbury's other bodies, the Merrimack calendar XHR, the Morris County
+   venue citation — `docs/source-ladder.md` has the queue.
 
-   **D21 CivicPlus may be the better first adapter of the three** and was not on
-   this list before: Rockaway Township publishes populated RSS *and* iCal agenda
-   feeds through its own website, so there is no vendor portal and no B09 tenant
-   question, and both URL patterns are CivicPlus-wide. It still needs a D14
-   finding written before anything ships.
-3. **Phase 7**, whose slots the Phase 6 modal already renders as empty states:
-   Notes and Activity tabs exist and say what is coming.
-4. **Tier 3 officeholders**, the curated local seed. It is the only half of
-   Phase 5 that needs hand work, and it is what would let the *meeting* popup's
-   Representation section stop being empty (§4.10).
+**What still needs the author** (updated 2026-08-13 — D15 is decided and the
+4.6.3 wording has been supplied, so the earlier two-item list is done):
 
-**Two things still need the author**, and neither should be started on
-assumption:
+1. **The V-block (V01–V06) and C01** — buyer calls, Locunity, the mock
+   export. All P0, all genuinely the author's work, none started.
+2. **The drafted letters** (`docs/email-diligent-legal.md`,
+   `docs/email-tusd-clerk.md`) — sending is the author's call; either reply
+   moots part of B09.
+3. **D08's pricing call** — Democracy Works licensing terms and cost; the
+   research is done, the phone call is not.
+4. **B08** — the separation agreement, before signing.
 
-1. **The 4.6.3 reader prompt — approved, and still blocked on one thing.** The
-   author approved it on 2026-08-12 and settled the storage question: **device-
-   local only**, with a tracker row to revisit sync when accounts exist. What is
-   still missing is **the wording itself**, which the author says is verbatim and
-   deliberately chosen and must not be paraphrased. It is not in this repo and
-   was not supplied, so 4.6.3, 4.6.3c and the 4.6.3a "want us to prioritize it"
-   control all wait on that text arriving. Do not draft a stand-in — a
-   paraphrase of copy that was chosen word by word is worse than a blank,
-   because it looks finished.
-2. **D15**, closing the canonical identifier gaps. The convention is decided —
-   internal key authoritative, canonical alongside with a confidence — but 348
-   divisions still match nothing, concentrated in county subdivisions. **M18**
-   (consolidated `FUNCSTAT=C` governments) asks the same which-identifier-wins
-   question and should probably be answered with it.
+---
 
-Do not start Phase 4.7 before reading it: it changes two decisions inside 4.6,
-and it is the reason `cousub` was built now rather than later.
+## 9. The 2026-08-13 reprioritization — four zips are the product
+
+Recorded the day it took effect. The full directive lives with the author;
+this is what changed and why, for a session reading cold.
+
+### Why
+
+The product exists to answer four questions for an ordinary person: what is on
+my ballot, what do these measures actually say, where do the people on my
+ballot stand on what I care about, and what is happening near me that I do not
+know about. Only the fourth had been built, and it had been built on fixtures.
+
+There is a hard date. The general election is **2026-11-03**, and the product
+has to be useful from about October 1 — which decides scope: **depth in four
+zips beats breadth everywhere.** 85701 Tucson AZ, 85641 Vail AZ, 07866
+Rockaway Township NJ, 03255 Newbury NH are no longer a test set. They are the
+product.
+
+### The election dates, verified at the states' own sites (2026-08-13)
+
+Full sourcing in `docs/ballot-research-2026.md` Part A. Plan against these,
+not against approximations:
+
+| State | Registration deadline | Mail ballots go out | Early voting |
+|---|---|---|---|
+| Arizona | Oct 5, 11:59 p.m. | Oct 7 | begins Oct 7; mail-ballot requests until Oct 23 (azsos.gov 2026 election info + calendar; pima.gov) |
+| New Jersey | Oct 13 | Sep 19 (VBM mailing begins, 45 days out) | in person Oct 24 – Nov 1; sample ballots mailed by Oct 21 (nj.gov official 2026 timeline PDF) |
+| New Hampshire | no fixed statewide deadline — town clerk up to 6–13 days out, or same-day at the polls | no universal mail voting; absentee-by-excuse only | none in person (sos.nh.gov) |
+
+The product must therefore be *complete for these zips* by mid-September:
+New Jersey voters start receiving live ballots **September 19**.
+
+### What is suspended until after November
+
+The national build: Phase 4.7's work (vector tiling, Census of Governments
+universe, vendor tenant enumeration, national payloads, the special-district
+pipeline), M12 (school overlay split), M18 (FUNCSTAT=C, latent with zero C
+rows in the clip), D20 (portraits and term dates), Tier 3 curated locals
+except bodies on the four zips' ballots, and any adapter for a body that does
+not serve one of the four zips. Suspended rows keep their place in the tracker
+with priority lowered and a note — never deleted, never marked Done.
+
+**Not suspended: 4.6.4**, the `agendaSourceType` routing, because it is the
+mechanism that makes adding a body a registry row rather than a code edit —
+built this session as `lib/registry/source-wiring.ts` plus the composite's
+capability map.
+
+### Why the national constraints stay while the national build stops
+
+Avoiding rework at scale was the entire reason Phase 4.7 was designed before
+4.6 finished. Everything built for the four zips must work unchanged at
+90,837 local governments: curation is an adapter, not a literal (§0a — the
+venue cache and comment-access rows are curated *into the shape a feed
+fills*); adding a body never means editing code (§0b); venue geocoding is a
+cache keyed on `(sourceId, rawLocationString, bodyOcdId)` (§0c); nothing
+assumes geometry is a committed file (§0d); every division carries a
+vintage-bearing `sourceDataset` and a test asserts it (§0e — the
+redistricting trap, unfixable later); provenance survives at scale (§0f —
+distribution verified: 940/940 divisions TIGER_GENZ2025, 265/265 bodies
+DERIVED); townships are first-class (§0g); special districts arrive through
+county feeds (§0h).
+
+**One §0e decision recorded rather than taken:** meetings are transient this
+session (in-memory, short TTL), so no meeting row yet persists a division key
+across a redistricting boundary. When the meetings table lands (next
+session), it carries a division-vintage column from day one. Cheaper to
+reverse than to guess: no downstream rows exist yet to inherit a wrong shape.
+
+### What the session produced
+
+The composite build (§5.2 item 1 answered), agenda documents as append-only
+first-class records, ten recorded source hunts with two corrections (Vail's
+NovusAgenda tenant is an empty pre-2017 archive; Tucson's Hyland conclusion
+reversed and built), the public-records / no-recommendation / two-store
+constraints in CLAUDE.md with their guard tests, SOURCE_BLOCKED removed, the
+D17 gating split, M14 rendered, GEOID retained, per-body comment access
+curated and rendered, and the ballot/candidate research recorded in
+`docs/ballot-research-2026.md`. Phase 8 (responsive, bottom sheet) is
+promoted from deferred to **required** before the product is shown to anyone.
+
+The live gate the whole session was pointed at, measured 2026-08-13:
+
+| Zip | Meetings | Tier | Sources |
+|---|---|---|---|
+| 85701 | 5 | exact | onbase 2, diligent 2, legistar 1 |
+| 85641 | 3 | exact | apptegy 3 |
+| 07866 | 5 | exact | civicplus 3, apptegy 2 |
+| 03255 | 1 | exact | civicweb/diligent 1 |
+
+Real meetings, no fixtures, screenshots in `screenshots/composite-<zip>.png`.
+Bodies still without a wired source: Morris County and Morris Hills Regional
+(07866); Merrimack County and Kearsarge Regional (03255) — all four have
+recorded hunts and named next steps in `docs/source-ladder.md`.
+
+### The brief is stale on phase ordering
+
+`claude-code-brief-map-rebuild.md` lives outside the repo and was not present
+on this machine or the mirror at the time of this reprioritization, so its
+status table could not be updated. **It is now stale on phase ordering —
+Phase 4.7 is suspended, Phase 8 is required — and this file is authoritative
+over it**, which is what the brief's own precedence rule already says.

@@ -77,6 +77,9 @@ const MIRRORED = [
   ["CLAUDE.md", "CLAUDE.md"],
   ["docs/abuse-policy.md", "abuse-policy.md"],
   ["docs/vendor-review.md", "vendor-review.md"],
+  // Joined 2026-08-13: a standing document that constrains what gets built,
+  // the same argument that put vendor-review.md here.
+  ["docs/source-ladder.md", "source-ladder.md"],
   ["docs/state.md", "state.md"],
   ["docs/tracker.csv", "tracker.csv"],
   ["lib/sources/types.ts", "types.ts"],

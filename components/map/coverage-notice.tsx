@@ -224,11 +224,12 @@ function CoverageBody({ zip, coverage }: { zip: string; coverage: CoverageSummar
       )}
 
       {/*
-        D17. Renders per body and only for a hunt that was actually exhausted,
-        so it cannot let New Hampshire's statute explain away a body nobody has
-        searched. No body qualifies today — nothing has been searched to
-        exhaustion — which is why this is decided-and-in-place rather than
-        visible.
+        D17, split 2026-08-13. The statutory sentence — New Hampshire does not
+        require an agenda — is a fact about the law and renders for every NH
+        body here. The diligence sentence ("we searched high and low") is a
+        claim about our work and renders only for a hunt the audit records as
+        exhausted, so the statute can never explain away a body nobody has
+        searched.
       */}
       {shown.map((body) => {
         const note = agendaAbsenceNote(body.ocdId, body.coverageStatus);

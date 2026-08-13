@@ -15,12 +15,15 @@ import type { CoverageStatus } from "./types.ts";
  * find. Misattributing a body's lawful choice to our own coverage is the same
  * family of error as claiming a place is unincorporated without measuring it.
  *
- * **The statutory sentence is gated on an exhausted hunt, not on the state.**
- * "We searched high and low" is a claim about work somebody did, and it is false
- * for a body nobody has looked at — which is 258 of 265 today. Pairing a
- * statutory excuse with a search that never happened would let the law do the
- * explaining for our own backlog. That is why this reads `CoverageStatus`
- * rather than just the identifier.
+ * **The two sentences are gated separately — D17, split 2026-08-13.** The
+ * statutory sentence is a fact about New Hampshire law, true of every NH body
+ * regardless of how hard anyone looked, so it renders for NH bodies now. The
+ * diligence sentence — "we searched high and low" — is a claim about work
+ * somebody did, false for a body nobody has looked at, so it renders only when
+ * that body's audit shows an exhausted hunt. The earlier implementation hung
+ * both sentences on the exhausted hunt, and the exhausted count was zero, so
+ * the copy rendered for nobody — including Newbury and Kearsarge, the two
+ * bodies it was written for.
  */
 
 /** States whose open-meeting law does not require an agenda at all. */
@@ -39,24 +42,35 @@ export function stateOf(ocdId: string | null): string | null {
  * The sentence for a body with nothing on its calendar.
  *
  * Returns null when there is nothing honest to add — the caller's existing copy
- * already covers it.
+ * already covers it. No copy here is new: both sentences are the approved D17
+ * wording, and the split is in the gating alone.
  */
 export function agendaAbsenceNote(
   ocdId: string | null,
   status: CoverageStatus,
 ): string | null {
-  // Only an exhausted search may say a search happened. Everything else is
-  // covered by the coverage notice's own "nobody has searched yet" line.
-  if (status !== "NO_SOURCE_FOUND") return null;
-
   const state = stateOf(ocdId);
   const named = state ? NO_AGENDA_REQUIRED[state] : undefined;
 
-  if (named) {
+  // Only an exhausted search may say a search happened.
+  const searched = status === "NO_SOURCE_FOUND";
+
+  if (searched && named) {
     return `We searched high and low for the agenda, and could not find one. ${named} does not require an agenda, and this body may not publish one.`;
   }
 
-  // Elsewhere the absence is ours to own: an exhausted search in a state that
-  // does require publication is a gap we have not closed, not a lawful silence.
-  return "We searched high and low for the agenda, and could not find one.";
+  if (searched) {
+    // Elsewhere the absence is ours to own: an exhausted search in a state
+    // that does require publication is a gap we have not closed, not a lawful
+    // silence.
+    return "We searched high and low for the agenda, and could not find one.";
+  }
+
+  if (named) {
+    // The statutory fact stands on its own for every NH body, however little
+    // anyone has searched — it claims nothing about our diligence.
+    return `${named} does not require an agenda, and this body may not publish one.`;
+  }
+
+  return null;
 }

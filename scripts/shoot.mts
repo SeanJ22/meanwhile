@@ -134,6 +134,18 @@ if (typedZip) {
   await page.waitForTimeout(500);
 }
 
+// Click a labelled control — a district-type checkbox, a filter chip —
+// matched on its visible text. Exists because the per-type checkboxes live in
+// the store rather than localStorage, so no seed can turn them on.
+const clickLabel = arg("clicklabel");
+if (clickLabel) {
+  await page
+    .locator(`label:has-text("${clickLabel}")`)
+    .first()
+    .click({ force: true });
+  await page.waitForTimeout(1200);
+}
+
 // Click the map itself, in viewport coordinates. Used to exercise
 // click-to-select, which has no selector to aim at.
 const clickAt = arg("clickxy");

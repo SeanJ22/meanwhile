@@ -220,7 +220,11 @@ test("85641 states the unincorporated fact and still names its government", () =
   // plainly that there is no city government.
   const coverage = coverageFor("85641", 0);
 
-  assert.equal(coverage.state, "NO_SOURCE");
+  // NONE_SCHEDULED, not NO_SOURCE, since 2026-08-13: both of Vail's governing
+  // bodies (Pima County via Legistar, Vail Unified via its own site's events
+  // API) are LIVE in the composite, so an empty calendar is now a statement
+  // about the calendar rather than about our coverage.
+  assert.equal(coverage.state, "NONE_SCHEDULED");
   assert.equal(coverage.unincorporated, true, "Vail is unincorporated and must say so");
 
   const labels = coverage.bodies.map((b) => b.divisionLabel);
@@ -259,7 +263,12 @@ test("nobody is ever told they have no representation", () => {
 
 test("finding meetings and finding nothing are different states", () => {
   assert.equal(coverageFor("85701", 4).state, "MEETINGS");
-  assert.equal(coverageFor("85701", 0).state, "NO_SOURCE");
+  // Every body governing 85701 is LIVE as of 2026-08-13, so zero meetings is
+  // an empty calendar, not a coverage gap…
+  assert.equal(coverageFor("85701", 0).state, "NONE_SCHEDULED");
+  // …while 07866 still has unwired bodies (Morris County, Morris Hills
+  // Regional), so zero meetings there stays honestly NO_SOURCE.
+  assert.equal(coverageFor("07866", 0).state, "NO_SOURCE");
 });
 
 test("a body's name is never invented for display", () => {

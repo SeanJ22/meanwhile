@@ -9,6 +9,7 @@ import {
   shortOcdId,
 } from "@/lib/map/format";
 import type { Venue } from "@/lib/meetings/venues";
+import { commentAccessFor } from "@/lib/registry/comment-access";
 import { venueLink } from "@/lib/registry/links";
 import type { Meeting } from "@/lib/sources/types";
 
@@ -175,6 +176,8 @@ function MeetingEntry({
         )}
       </div>
 
+      <HowToBeHeard ocdId={meeting.ocdId} />
+
       <footer className="mt-4 border-t border-rule-soft pl-4 pt-3">
         <p className="font-mono text-[0.6875rem] leading-relaxed text-muted">
           <span className="text-paper-dim">{meeting.jurisdiction}</span>
@@ -191,5 +194,71 @@ function MeetingEntry({
         </p>
       </footer>
     </article>
+  );
+}
+
+/**
+ * How to actually be heard — D25.
+ *
+ * A meeting record that does not say how to speak is a notification without a
+ * next step. Renders the body's curated standing rule with its citation; where
+ * the rule is unknown it says unknown and links the body's own page, because a
+ * comment period must never be inferred from the meeting being public — many
+ * are public to observe and closed to speak.
+ */
+function HowToBeHeard({ ocdId }: { ocdId: string }) {
+  const access = commentAccessFor(ocdId);
+  if (!access) return null;
+
+  if (access.commentPeriod === "UNKNOWN") {
+    return (
+      <div className="mt-3 pl-4">
+        <p className="font-mono text-[0.6875rem] leading-relaxed text-muted">
+          <span className="uppercase tracking-[0.14em] text-paper-dim">
+            To be heard
+          </span>
+          <br />
+          We don&apos;t know this body&apos;s public-comment rules yet —{" "}
+          <a
+            href={access.sourceUrl}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="border-b border-signal-dim text-signal hover:border-signal"
+          >
+            check its own page
+          </a>
+          .
+        </p>
+      </div>
+    );
+  }
+
+  const lines = [
+    access.commentPeriodDetail,
+    access.timeLimit,
+    access.signup,
+    access.writtenComment,
+    access.attend,
+  ].filter((l): l is string => Boolean(l));
+
+  return (
+    <div className="mt-3 pl-4">
+      <p className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-paper-dim">
+        To be heard
+      </p>
+      <ul className="mt-1 space-y-1 text-[0.75rem] leading-relaxed text-paper-dim">
+        {lines.map((line) => (
+          <li key={line}>{line}</li>
+        ))}
+      </ul>
+      <a
+        href={access.sourceUrl}
+        target="_blank"
+        rel="noreferrer noopener"
+        className="mt-1 inline-block font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-muted underline-offset-2 hover:text-signal"
+      >
+        source
+      </a>
+    </div>
   );
 }

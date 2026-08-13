@@ -1,0 +1,155 @@
+BEGIN:VCALENDAR
+PRODID:iCalendar-Ruby
+VERSION:2.0
+X-WR-TIMEZONE:America/New_York
+BEGIN:VTIMEZONE
+TZID:America/New_York
+X-LIC-LOCATION:America/New_York
+BEGIN:STANDARD
+DTSTART:20241103T020000
+RRULE:FREQ=YEARLY;BYDAY=1SU;BYMONTH=11
+TZNAME:EST
+TZOFFSETFROM:-0400
+TZOFFSETTO:-0500
+END:STANDARD
+BEGIN:DAYLIGHT
+DTSTART:20250309T020000
+RRULE:FREQ=YEARLY;BYDAY=2SU;BYMONTH=3
+TZNAME:EDT
+TZOFFSETFROM:-0500
+TZOFFSETTO:-0400
+END:DAYLIGHT
+END:VTIMEZONE
+BEGIN:VEVENT
+DESCRIPTION: https://www.rockawaytownship.org/calendar.aspx?EID=1830
+DTEND;TZID=America/New_York:20261222T235900
+DTSTAMP;TZID=America/New_York:20260107T133824
+DTSTART;TZID=America/New_York:20261222T190000
+LAST-MODIFIED;TZID=America/New_York:20260107T133824
+LOCATION: -   Rockaway NJ 07866
+SEQUENCE:0
+SUMMARY:Township Council Regular Meeting
+UID:1830
+URL:/common/modules/iCalendar/iCalendar.aspx?feed=calendar&catID=25
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION: https://www.rockawaytownship.org/calendar.aspx?EID=1829
+DTEND;TZID=America/New_York:20261208T235900
+DTSTAMP;TZID=America/New_York:20260107T133752
+DTSTART;TZID=America/New_York:20261208T190000
+LAST-MODIFIED;TZID=America/New_York:20260107T133752
+LOCATION: -   Rockaway NJ 07866
+SEQUENCE:0
+SUMMARY:Township Council Regular Meeting
+UID:1829
+URL:/common/modules/iCalendar/iCalendar.aspx?feed=calendar&catID=25
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION: https://www.rockawaytownship.org/calendar.aspx?EID=1828
+DTEND;TZID=America/New_York:20261124T235900
+DTSTAMP;TZID=America/New_York:20260107T133706
+DTSTART;TZID=America/New_York:20261124T190000
+LAST-MODIFIED;TZID=America/New_York:20260107T133706
+LOCATION: -   Rockaway NJ 07866
+SEQUENCE:0
+SUMMARY:Township Council Regular Meeting
+UID:1828
+URL:/common/modules/iCalendar/iCalendar.aspx?feed=calendar&catID=25
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION: https://www.rockawaytownship.org/calendar.aspx?EID=1827
+DTEND;TZID=America/New_York:20261110T235900
+DTSTAMP;TZID=America/New_York:20260107T133630
+DTSTART;TZID=America/New_York:20261110T190000
+LAST-MODIFIED;TZID=America/New_York:20260107T133630
+LOCATION: -   Rockaway NJ 07866
+SEQUENCE:0
+SUMMARY:Township Council Regular Meeting
+UID:1827
+URL:/common/modules/iCalendar/iCalendar.aspx?feed=calendar&catID=25
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION: https://www.rockawaytownship.org/calendar.aspx?EID=1826
+DTEND;TZID=America/New_York:20261027T235900
+DTSTAMP;TZID=America/New_York:20260107T133546
+DTSTART;TZID=America/New_York:20261027T190000
+LAST-MODIFIED;TZID=America/New_York:20260107T133546
+LOCATION: -   Rockaway NJ 07866
+SEQUENCE:0
+SUMMARY:Township Council Regular Meeting
+UID:1826
+URL:/common/modules/iCalendar/iCalendar.aspx?feed=calendar&catID=25
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION: https://www.rockawaytownship.org/calendar.aspx?EID=1825
+DTEND;TZID=America/New_York:20261013T235900
+DTSTAMP;TZID=America/New_York:20260107T133513
+DTSTART;TZID=America/New_York:20261013T190000
+LAST-MODIFIED;TZID=America/New_York:20260107T133513
+LOCATION: -   Rockaway NJ 07866
+SEQUENCE:0
+SUMMARY:Township Council Regular Meeting
+UID:1825
+URL:/common/modules/iCalendar/iCalendar.aspx?feed=calendar&catID=25
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION: https://www.rockawaytownship.org/calendar.aspx?EID=1854
+DTEND;TZID=America/New_York:20261004T160000
+DTSTAMP;TZID=America/New_York:20260220T141536
+DTSTART;TZID=America/New_York:20261004T110000
+LAST-MODIFIED;TZID=America/New_York:20260220T141536
+LOCATION:Ford-Faesch House - 629 Mt. Hope Road  Rockaway NJ 07866
+SEQUENCE:0
+SUMMARY:OPEN HOUSE AT FORD-FAESCH
+UID:1854
+URL:/common/modules/iCalendar/iCalendar.aspx?feed=calendar&catID=25
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION: https://www.rockawaytownship.org/calendar.aspx?EID=1824
+DTEND;TZID=America/New_York:20260922T235900
+DTSTAMP;TZID=America/New_York:20260107T133437
+DTSTART;TZID=America/New_York:20260922T190000
+LAST-MODIFIED;TZID=America/New_York:20260107T133437
+LOCATION: -   Rockaway NJ 07866
+SEQUENCE:0
+SUMMARY:Township Council Regular Meeting
+UID:1824
+URL:/common/modules/iCalendar/iCalendar.aspx?feed=calendar&catID=25
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION: https://www.rockawaytownship.org/calendar.aspx?EID=1904
+DTEND;TZID=America/New_York:20260919T150000
+DTSTAMP;TZID=America/New_York:20260810T132534
+DTSTART;TZID=America/New_York:20260919T080000
+LAST-MODIFIED;TZID=America/New_York:20260810T132534
+LOCATION: -   Rockaway NJ 07866
+SEQUENCE:0
+SUMMARY:Townwide Yard Sale
+UID:1904
+URL:/common/modules/iCalendar/iCalendar.aspx?feed=calendar&catID=25
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION: https://www.rockawaytownship.org/calendar.aspx?EID=1823
+DTEND;TZID=America/New_York:20260908T235900
+DTSTAMP;TZID=America/New_York:20260107T133403
+DTSTART;TZID=America/New_York:20260908T190000
+LAST-MODIFIED;TZID=America/New_York:20260107T133403
+LOCATION: -   Rockaway NJ 07866
+SEQUENCE:0
+SUMMARY:Township Council Regular Meeting
+UID:1823
+URL:/common/modules/iCalendar/iCalendar.aspx?feed=calendar&catID=25
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION: https://www.rockawaytownship.org/calendar.aspx?EID=1822
+DTEND;TZID=America/New_York:20260825T235900
+DTSTAMP;TZID=America/New_York:20260107T133251
+DTSTART;TZID=America/New_York:20260825T190000
+LAST-MODIFIED;TZID=America/New_York:20260107T133251
+LOCATION: -   Rockaway NJ 07866
+SEQUENCE:0
+SUMMARY:Township Council Regular Meeting
+UID:1822
+URL:/common/modules/iCalendar/iCalendar.aspx?feed=calendar&catID=25
+END:VEVENT
+END:VCALENDAR

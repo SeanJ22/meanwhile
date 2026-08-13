@@ -68,12 +68,17 @@ export type CoverageStatus =
   | "MANUAL"
   /** A usable source was located; no adapter reads it yet. */
   | "KNOWN_UNCOVERED"
-  /** A source was located and this repo may not read it — see docs/vendor-review.md. */
-  | "SOURCE_BLOCKED"
   /** The ladder was walked and came back empty. A finding, not a default. */
   | "NO_SOURCE_FOUND"
   /** Nobody has looked yet. The derivation's default, and a real state. */
   | "NOT_ATTEMPTED";
+
+// `SOURCE_BLOCKED` was removed 2026-08-13 under the public-records constraint
+// (CLAUDE.md): a terminal "we gave up" state encoded in the schema is how
+// giving up becomes routine. A route that is genuinely closed is recorded on
+// its audit *rung* (`BLOCKED_TERMS` / `BLOCKED_ROBOTS`) and the next rung is
+// attempted — the body itself is never marked blocked. The one body that
+// carried it (Tucson) got a real hunt and is LIVE via OnBase.
 
 /**
  * Where this row's claim comes from.
@@ -104,6 +109,9 @@ export type AgendaSourceType =
   | "CIVICWEB"
   | "CIVICPLUS"
   | "APPTEGY"
+  | "ONBASE"
+  | "IQM2"
+  | "REVIZE"
   | "PRIMEGOV"
   | "NOVUSAGENDA"
   | "SIMBLI"

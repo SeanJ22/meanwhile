@@ -110,6 +110,37 @@ export interface MeetingQuery {
 }
 
 /**
+ * What a normalize() pass could not turn into a placed meeting, and why.
+ *
+ * Counted, never silent. `placeless` and `unknownVenue` are different facts
+ * (D18): "there is nothing to place" versus "we could not place it".
+ * `notConfigured` counts rows a feed carried that belong to no wired body —
+ * a township calendar's yard sale, a district's parent-teacher night — which
+ * are dropped by configuration rather than by failure.
+ */
+export interface NormalizeDropCounts {
+  placeless: number;
+  unknownVenue: number;
+  unplaceableInTime: number;
+  notConfigured: number;
+}
+
+/**
+ * A source that reports its drops alongside its meetings.
+ *
+ * The composite requires this of every child: a source that cannot say what
+ * it dropped cannot be audited, and "fewer meetings than the reader would
+ * otherwise have seen" must never happen silently.
+ */
+export interface ReportingMeetingSource<Raw = unknown>
+  extends MeetingSource<Raw> {
+  normalizeWithDrops(
+    raw: Raw[],
+    now?: Date,
+  ): { meetings: Meeting[]; drops: NormalizeDropCounts };
+}
+
+/**
  * The contract every source directory implements.
  *
  * Adding a source means adding a directory that exports one of these. It never

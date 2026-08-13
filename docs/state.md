@@ -1986,8 +1986,9 @@ the edit worked is the edit itself, and checking for it costs one command.
 
 This is the same shape as the five states above, one level down: not an
 environment that lies, but an *operation* that reports success for having done
-nothing. **It has now happened four times in this project**, in four different
-disguises:
+nothing. **It has now happened repeatedly in this project**, in different
+disguises (later sightings: the tail-masked exit code and the NovusAgenda
+200-with-zero-meetings HIT, both §10; the officials panel, 2026-08-14):
 
 | Instance | Presented as | Actually |
 |---|---|---|
@@ -1995,6 +1996,9 @@ disguises:
 | Zero-match identifier joins | a clean build | `cd:0` and NH `sldl:` matching nothing — §4.8, §4.9 |
 | The dev server on another port | a working page | last session's build on 3001 — the `predev` guard |
 | PR #14's documentation gap | a green ship | a `String.replace` that matched nothing |
+| The tail-masked exit code | build green | `\| tail -3` reporting tail's status, not the build's — §10 |
+| NovusAgenda's empty archive | a wired source (HIT) | 200 with zero meetings, recorded as working — §10 |
+| **The officials panel at the exact tier** | a clean demo with real meetings | the only surface rendering representation (`coverage-notice.tsx`) returned null on `exact`; the composite made every zip exact, so 537 federal officials and three state rosters left the page with every test green. Guarded now: the render gate lives in `lib/registry/representation.ts` and `tests/representation.test.ts` holds it against the committed rosters — a panel whose store is populated may not render nothing. 2026-08-14, M23 |
 
 The first three are now guarded by code — `resolveBasemap()` returns null rather
 than substituting, the officeholder builds print matched-against-held counts,

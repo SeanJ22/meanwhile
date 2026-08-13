@@ -2,7 +2,8 @@
 
 import type { MeetingStatus } from "@/lib/sources/types";
 import { BODY_TYPE_LABEL } from "@/lib/state/derive";
-import { ALL_DISTRICT_TYPES, activeFilterCount } from "@/lib/state/reducer";
+import { ALL_DISTRICT_TYPES } from "@/lib/state/reducer";
+import { activeControlCount } from "@/lib/state/reset";
 import { useUi, useUiDispatch } from "@/lib/state/provider";
 import type { BodyType, DistrictType } from "@/lib/state/types";
 
@@ -40,7 +41,10 @@ const DISTRICT_LABEL: Record<DistrictType, string> = {
 export function FiltersArea() {
   const ui = useUi();
   const dispatch = useUiDispatch();
-  const count = activeFilterCount(ui.filters);
+  // Counts every registered control, not just `filters` — and "active" means
+  // "differs from the default view", so a fresh page reads zero and Reset all
+  // visibly returns to it (M24).
+  const count = activeControlCount(ui);
 
   return (
     <div className="filters-area">
@@ -171,13 +175,34 @@ export function FiltersArea() {
             </div>
           </Group>
 
+          {/* Select all draws a busier map than the default three — expected
+              and fine (M25); the default stays what it is, and Reset all
+              returns to it. Labels hold back at low zoom to keep it legible. */}
           <Group
             label="District types"
-            onClear={
-              ui.filters.districtTypes.length !== ALL_DISTRICT_TYPES.length
-                ? () => dispatch({ type: "filter/clear", group: "districtTypes" })
-                : undefined
-            }
+            actions={[
+              ...(ui.filters.districtTypes.length < ALL_DISTRICT_TYPES.length
+                ? [
+                    {
+                      label: "select all",
+                      onClick: () =>
+                        dispatch({
+                          type: "filter/districtTypesSet",
+                          value: [...ALL_DISTRICT_TYPES],
+                        }),
+                    },
+                  ]
+                : []),
+              ...(ui.filters.districtTypes.length > 0
+                ? [
+                    {
+                      label: "clear",
+                      onClick: () =>
+                        dispatch({ type: "filter/districtTypesSet", value: [] }),
+                    },
+                  ]
+                : []),
+            ]}
           >
             {ALL_DISTRICT_TYPES.map((type) => {
               const on = ui.filters.districtTypes.includes(type);
@@ -223,16 +248,30 @@ export function FiltersArea() {
 function Group({
   label,
   onClear,
+  actions,
   children,
 }: {
   label: string;
   onClear?: () => void;
+  /** Named header links in the clear-btn style, for groups with more than
+   *  one affordance (district types: select all / clear — M25). */
+  actions?: Array<{ label: string; onClick: () => void }>;
   children: React.ReactNode;
 }) {
   return (
     <div className="filter-group">
       <div className="filter-label">
         {label}
+        {actions?.map((action) => (
+          <button
+            key={action.label}
+            type="button"
+            className="clear-btn"
+            onClick={action.onClick}
+          >
+            {action.label}
+          </button>
+        ))}
         {onClear && (
           <button type="button" className="clear-btn" onClick={onClear}>
             clear

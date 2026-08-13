@@ -152,6 +152,8 @@ export type UiAction =
   | { type: "filter/dateWindow"; daysAhead?: number; daysBack?: number }
   | { type: "filter/hideUncovered"; value: boolean }
   | { type: "filter/clear"; group: keyof FilterState }
+  /** Set the district-type selection outright — Select all / Clear (M25). */
+  | { type: "filter/districtTypesSet"; value: DistrictType[] }
   | { type: "filter/reset" }
   | { type: "filter/togglePanel" }
   | { type: "search/input"; query: string }

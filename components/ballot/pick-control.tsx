@@ -22,11 +22,15 @@ export function PickControl({
   contestTitle,
   voteFor,
   options,
+  prominent = false,
 }: {
   contestId: string;
   contestTitle: string;
   voteFor: number;
   options: { id: string; label: string }[];
+  /** 6a (2026-08-14 second session): on measure cards the ask renders
+   *  with visual weight — same words, bigger presence. It whispered. */
+  prominent?: boolean;
 }) {
   const pick = useSyncExternalStore(
     subscribePicks,
@@ -40,7 +44,13 @@ export function PickControl({
     <div className="mt-3 rounded border border-dashed border-[var(--panel-border)] p-2.5">
       {/* 3d (2026-08-19): the author's words. Same options, same
           device-local behavior — only the label changed. */}
-      <p className="font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
+      <p
+        className={
+          prominent
+            ? "font-mono text-[0.75rem] font-semibold uppercase tracking-[0.15em] text-signal"
+            : "font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted"
+        }
+      >
         What do you think?{voteFor > 1 ? ` (pick up to ${voteFor})` : ""}
       </p>
       <div className="mt-1.5 flex flex-wrap gap-1.5">

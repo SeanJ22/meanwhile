@@ -97,15 +97,15 @@ export const CAMPAIGN_SITES: Readonly<Record<string, CampaignSite>> = {
     url: "https://lupediazaz.com",
     foundVia: "the author's find (lupediazaz.com), independently verified",
     verification:
-      'Fetched 2026-08-16: site titled "Az Representative Lupe Diaz".',
-    attemptedAt: "2026-08-16",
+      'Fetched 2026-08-13: site titled "Az Representative Lupe Diaz".',
+    attemptedAt: "2026-08-13",
   },
   "plural:6dba6afa-b274-4273-b8c6-270d27214eee": {
     url: "https://www.almaforarizona.com",
     foundVia: "web search: Alma Hernandez campaign website",
     verification:
-      'Fetched 2026-08-16: site titled "Alma Hernandez for AZ State Senate".',
-    attemptedAt: "2026-08-16",
+      'Fetched 2026-08-13: site titled "Alma Hernandez for AZ State Senate".',
+    attemptedAt: "2026-08-13",
   },
   "plural:81d12f3a-b635-4111-be8d-a71d2f7565f2": {
     url: "https://bettyvillegasaz.com",

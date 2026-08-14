@@ -41,7 +41,7 @@ export interface BodyRoster {
   collectedAt: string;
 }
 
-const COLLECTED = "2026-08-15";
+const COLLECTED = "2026-08-13";
 
 export const BODY_ROSTERS: BodyRoster[] = [
   {
@@ -343,7 +343,7 @@ export const BODY_ROSTERS: BodyRoster[] = [
     sourceUrl:
       "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-members",
     sourceOrg: "Kearsarge Regional School District (SAU #65)",
-    collectedAt: "2026-08-17",
+    collectedAt: "2026-08-14",
     members: [
       {
         id: "roster:kearsarge#1",
@@ -447,7 +447,7 @@ export const BODY_ROSTERS: BodyRoster[] = [
     bodyName: "Rockaway Township Council",
     sourceUrl: "https://www.rockawaytownship.org/157/Township-Council",
     sourceOrg: "Rockaway Township",
-    collectedAt: "2026-08-17",
+    collectedAt: "2026-08-14",
     members: [
       {
         id: "roster:rockaway#0",
@@ -549,7 +549,7 @@ export const BODY_ROSTERS: BodyRoster[] = [
     sourceUrl:
       "https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners",
     sourceOrg: "Morris County",
-    collectedAt: "2026-08-17",
+    collectedAt: "2026-08-14",
     members: [
       {
         id: "roster:morris#1",
@@ -634,7 +634,7 @@ export const BODY_ROSTERS: BodyRoster[] = [
     sourceUrl:
       "https://chichesternh.org/DocumentCenter/View/1817/Merrimack-County-Annual-Report-2025",
     sourceOrg: "Merrimack County (FY2025 Annual Report, County Directory)",
-    collectedAt: "2026-08-17",
+    collectedAt: "2026-08-14",
     members: [
       {
         id: "roster:merrimack#1",

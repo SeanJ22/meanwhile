@@ -305,7 +305,7 @@ function specialDistrictRows(): Body[] {
       homepage: "https://merrimackccd.org/",
     },
   ];
-  const collected = "2026-08-17";
+  const collected = "2026-08-14";
   return rows.map((row) => ({
     id: `curated:${row.state}/${row.slug}#governing`,
     ocdId: null,

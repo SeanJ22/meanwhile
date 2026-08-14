@@ -693,11 +693,13 @@ export default async function BallotPage({
                 )}
 
                 {/* 4a: the private pick on measures — Yes/No, this device
-                    only, stated in the control. */}
+                    only, stated in the control. 6a: prominent here — the
+                    ask whispered on the cards where it matters most. */}
                 <PickControl
                   contestId={contest.id}
                   contestTitle={contest.title}
                   voteFor={1}
+                  prominent
                   options={[
                     { id: "YES", label: "Yes" },
                     { id: "NO", label: "No" },

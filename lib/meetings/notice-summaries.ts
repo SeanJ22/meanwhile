@@ -35,7 +35,7 @@ export const NOTICE_SUMMARIES: NoticeSummary[] = [
     summarizesUrl: "https://govboard.tusd1.org/",
     summary:
       "The TUSD Governing Board holds a special meeting Tuesday, August 25 at the Duffy Community Center. The closed-door (executive) session starts at 4:30 p.m.; the public part is scheduled to start at 5:30 p.m. The meeting includes a public hearing — a set time when anyone can speak — on changing the instructional time model for Palo Verde High Magnet School starting with the 2026–2027 school year. To speak, submit a Request to Address Board form to the Board office by noon the day of the meeting.",
-    writtenAt: "2026-08-15",
+    writtenAt: "2026-08-13",
   },
 ];
 

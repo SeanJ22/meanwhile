@@ -24,8 +24,8 @@ export const REGISTRATION_LINKS: RegistrationLink[] = [
     url: "https://my.arizona.vote/WhereToVote.aspx?s=individual",
     sourceOrg: "Arizona Secretary of State",
     verification:
-      "azsos.gov/elections/voters (fetched 2026-08-16) links this as the Arizona Voter Information Portal; the portal host itself challenges non-browser clients.",
-    verifiedAt: "2026-08-16",
+      "azsos.gov/elections/voters (fetched 2026-08-13) links this as the Arizona Voter Information Portal; the portal host itself challenges non-browser clients.",
+    verifiedAt: "2026-08-13",
   },
   {
     state: "NJ",
@@ -33,8 +33,8 @@ export const REGISTRATION_LINKS: RegistrationLink[] = [
     url: "https://voter.svrs.nj.gov/registration-check",
     sourceOrg: "New Jersey Division of Elections",
     verification:
-      "nj.gov/state/elections/voter-registration.shtml (fetched 2026-08-16) links this checker on the state's own voter-system host; the checker serves 200.",
-    verifiedAt: "2026-08-16",
+      "nj.gov/state/elections/voter-registration.shtml (fetched 2026-08-13) links this checker on the state's own voter-system host; the checker serves 200.",
+    verifiedAt: "2026-08-13",
   },
   {
     state: "NH",
@@ -42,8 +42,8 @@ export const REGISTRATION_LINKS: RegistrationLink[] = [
     url: "https://app.sos.nh.gov/voterinformation",
     sourceOrg: "New Hampshire Secretary of State",
     verification:
-      'Fetched 2026-08-16 (browser-UA rung): page titled "Voter Information Lookup | New Hampshire".',
-    verifiedAt: "2026-08-16",
+      'Fetched 2026-08-13 (browser-UA rung): page titled "Voter Information Lookup | New Hampshire".',
+    verifiedAt: "2026-08-13",
   },
 ];
 

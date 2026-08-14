@@ -7,7 +7,8 @@
  * characterization ("high taxes", "strict laws" are the reader's judgments
  * to make, not ours). An unanswered topic renders the honest gap.
  *
- * Verification: every `sourceUrl` was fetched 2026-08-17 unless its
+ * Verification: every `sourceUrl` was fetched 2026-08-14 (wall clock;
+ * the session ran under the 08-17 sequence label) unless its
  * `verification` note says otherwise. New Hampshire's state web hosts
  * (dhhs.nh.gov, revenue.nh.gov, dmv.nh.gov, sos.nh.gov) 403 every
  * non-browser client this pipeline has — those citations carry a
@@ -35,9 +36,9 @@ export interface AreaFactSet {
   notCovered: string[];
 }
 
-const FETCHED = "fetched 2026-08-17";
+const FETCHED = "fetched 2026-08-14";
 const NH_WALL =
-  "NH state hosts 403 non-browser clients; page title verified in a real browser 2026-08-17";
+  "NH state hosts 403 non-browser clients; page title verified in a real browser 2026-08-14";
 
 export const AREA_FACTS: AreaFactSet[] = [
   {

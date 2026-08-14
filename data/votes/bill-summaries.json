@@ -1,83 +1,83 @@
 {
- "curatedAt": "2026-08-16",
- "note": "Hand-curated plain-language summaries for every bill in the current vote window (item 4, 2026-08-16, author-approved). Each summary paraphrases the Congressional Research Service summary it cites — never the curator's reading of the politics, never a gap filled. The CRS basis date is the summary version read. A bill in `pending` has no plain-language summary yet, with the reason stated; the surface renders the honest coming state and never blocks the vote row. The refresh rule lives in scripts/fetch-votes.mts: bills newly entering the window print as unsummarized until curated here.",
+ "curatedAt": "2026-08-13",
+ "note": "Hand-curated plain-language summaries for every bill in the current vote window (item 4, 2026-08-13, author-approved). Each summary paraphrases the Congressional Research Service summary it cites — never the curator's reading of the politics, never a gap filled. The CRS basis date is the summary version read. A bill in `pending` has no plain-language summary yet, with the reason stated; the surface renders the honest coming state and never blocks the vote row. The refresh rule lives in scripts/fetch-votes.mts: bills newly entering the window print as unsummarized until curated here.",
  "summaries": {
   "https://www.congress.gov/bill/119th-congress/house-bill/8800": {
    "legisNum": "H R 8800",
    "title": "National Defense Authorization Act for Fiscal Year 2027",
    "summary": "The yearly military policy bill. It says what the Department of Defense (and the Energy Department's nuclear-weapons programs) may spend money on for the 2027 budget year — which aircraft and ships to buy, how many people serve in the military, pay and health care rules for troops, how the Pentagon buys things, how it works with other countries, and rules for cybersecurity and artificial intelligence.",
    "basis": "Congressional Research Service summary, version updated 2026-06-29, read at the bill page.",
-   "curatedAt": "2026-08-16"
+   "curatedAt": "2026-08-13"
   },
   "https://www.congress.gov/bill/119th-congress/house-bill/6955": {
    "legisNum": "H R 6955",
    "title": "Main Street Capital Access Act",
    "summary": "Loosens rules on banks. New banks get three years to build up their required financial cushion, some rural banks can hold a smaller cushion, regulators must weigh how much their rules burden banks, and several size limits move up so more banks are exempt from fees, reports, and merger approvals — including letting some bank mergers go ahead without checking whether they reduce competition.",
    "basis": "Congressional Research Service summary, version updated 2026-07-20, read at the bill page.",
-   "curatedAt": "2026-08-16"
+   "curatedAt": "2026-08-13"
   },
   "https://www.congress.gov/bill/119th-congress/house-bill/9770": {
    "legisNum": "H R 9770",
    "title": "Continuing Appropriations Act, 2027",
    "summary": "A stop-gap spending bill. It keeps the federal government funded — mostly at last year's levels — until December 4, 2026, or until the regular spending bills pass, whichever comes first. Without it the government would shut down when the budget year starts October 1. It makes exceptions for a few programs (like WIC food aid, disaster relief, the Indian Health Service, and wildfire fighting) and extends several expiring programs, including flood insurance.",
    "basis": "Congressional Research Service summary, version updated 2026-07-29, read at the bill page.",
-   "curatedAt": "2026-08-16"
+   "curatedAt": "2026-08-13"
   },
   "https://www.congress.gov/bill/119th-congress/house-bill/7008": {
    "legisNum": "H R 7008",
    "title": "Stop Insider Trading Act",
    "summary": "Bars members of Congress — and their spouses and dependent children — from buying stock in individual companies, and requires public notice 7 to 14 days before they sell stock they already own. Broad investments like widely held funds are exempt. Breaking the rules brings a fine of at least $2,000 or 10% of the trade (plus any profit made), which can't be paid with campaign money.",
    "basis": "Congressional Research Service summary, version updated 2026-07-17, read at the bill page.",
-   "curatedAt": "2026-08-16"
+   "curatedAt": "2026-08-13"
   },
   "https://www.congress.gov/bill/119th-congress/house-concurrent-resolution/113": {
    "legisNum": "H CON RES 113",
    "title": "Congressional budget for fiscal year 2027",
    "summary": "Congress's budget blueprint for 2027 (with targets through 2036). It doesn't spend money itself — it sets the overall numbers for spending, taxes, and debt, and tells four House committees to write follow-up legislation allowed to increase the deficit by set amounts. That follow-up uses a fast-track process the Senate can't filibuster.",
    "basis": "Congressional Research Service summary, version updated 2026-07-30, read at the bill page.",
-   "curatedAt": "2026-08-16"
+   "curatedAt": "2026-08-13"
   },
   "https://www.congress.gov/bill/119th-congress/house-concurrent-resolution/89": {
    "legisNum": "H CON RES 89",
    "title": "War Powers resolution on hostilities against Iran",
    "summary": "Orders the President to pull U.S. armed forces out of hostilities against Iran unless Congress declares war or votes to authorize the use of military force. It says this doesn't stop the U.S. from defending itself, its forces, its diplomatic buildings, or allies from imminent attack.",
    "basis": "Congressional Research Service summary, version updated 2026-04-27, read at the bill page.",
-   "curatedAt": "2026-08-16"
+   "curatedAt": "2026-08-13"
   },
   "https://www.congress.gov/bill/119th-congress/house-bill/8884": {
    "legisNum": "H R 8884",
    "title": "Removing Barriers to Work for Disabled Americans Act",
    "summary": "Lets the Social Security Administration restart pilot programs — paused since 2022 — that test changes to disability benefits meant to help people on disability work more without losing income. Joining a pilot is voluntary, a participant's total income can't go down because of it, and the agency must tell Congress about each pilot 120 days before starting it.",
    "basis": "Congressional Research Service summary, version updated 2026-06-26, read at the bill page.",
-   "curatedAt": "2026-08-16"
+   "curatedAt": "2026-08-13"
   },
   "https://www.congress.gov/bill/119th-congress/house-bill/6500": {
    "legisNum": "H.R. 6500",
    "title": "Continuing Appropriations and Extensions Act, 2027",
    "summary": "A stop-gap spending bill. It keeps the federal government funded — mostly at last year's levels — until December 11, 2026, or until the regular spending bills pass, whichever comes first, preventing a shutdown when the budget year starts October 1. It makes exceptions for programs like WIC food aid, small-business loans, disaster relief, the Indian Health Service, and wildfire fighting, and extends expiring programs covering agriculture, flood insurance, cybersecurity, transportation, veterans benefits, and housing.",
    "basis": "Congressional Research Service summary, version updated 2026-08-12, read at the bill page.",
-   "curatedAt": "2026-08-16"
+   "curatedAt": "2026-08-13"
   },
   "https://www.congress.gov/bill/119th-congress/senate-bill/5271": {
    "legisNum": "S. 5271",
    "title": "Photo identification requirements for federal elections",
    "summary": "Requires voters to show physical photo ID to get a ballot in federal elections. Someone without ID can cast a provisional ballot, but it only counts if they show ID within three days (or swear they lack it for religious reasons). Voting by mail would require sending a copy of a photo ID, or the last four digits of a Social Security number plus a sworn statement that ID couldn't reasonably be obtained. Overseas military voters and certain disabled or elderly voters are exempt, and states must work to make free ID imaging available.",
    "basis": "Congressional Research Service summary, version updated 2026-08-11, read at the bill page.",
-   "curatedAt": "2026-08-16"
+   "curatedAt": "2026-08-13"
   },
   "https://www.congress.gov/bill/119th-congress/senate-joint-resolution/181": {
    "legisNum": "S.J.Res. 181",
    "title": "War Powers resolution on hostilities against Iran",
    "summary": "Orders the President to remove U.S. armed forces from hostilities in or against Iran unless Congress declares war or votes to authorize the use of military force. It says this doesn't stop the U.S. from defending against an attack on itself, its personnel, or its facilities in other countries.",
    "basis": "Congressional Research Service summary, version updated 2026-05-06, read at the bill page.",
-   "curatedAt": "2026-08-16"
+   "curatedAt": "2026-08-13"
   },
   "https://www.congress.gov/bill/119th-congress/senate-resolution/817": {
    "legisNum": "S.Res. 817",
    "title": "En bloc consideration of nominations",
    "summary": "A Senate procedure step: it lets the Senate vote on a large batch of presidential nominations all at once instead of one at a time — executive-branch officials, judges, and ambassadors, including posts at the Departments of Defense, Energy, Interior, State, and Treasury and several boards and commissions.",
    "basis": "Congressional Research Service summary, version updated 2026-08-03, read at the bill page.",
-   "curatedAt": "2026-08-16"
+   "curatedAt": "2026-08-13"
   }
  },
  "pending": [
@@ -91,13 +91,13 @@
    "billUrl": "https://www.congress.gov/bill/119th-congress/senate-joint-resolution/199",
    "legisNum": "S.J.Res. 199",
    "title": "Congressional disapproval resolution",
-   "reason": "CRS has not published a summary for this resolution yet (checked 2026-08-16); the official title and text are at the link."
+   "reason": "CRS has not published a summary for this resolution yet (checked 2026-08-13); the official title and text are at the link."
   },
   {
    "billUrl": "https://www.congress.gov/bill/119th-congress/senate-joint-resolution/187",
    "legisNum": "S.J.Res. 187",
    "title": "Congressional disapproval resolution",
-   "reason": "CRS has not published a summary for this resolution yet (checked 2026-08-16); the official title and text are at the link."
+   "reason": "CRS has not published a summary for this resolution yet (checked 2026-08-13); the official title and text are at the link."
   }
  ]
 }

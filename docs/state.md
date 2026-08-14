@@ -4,14 +4,16 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-14, after the second session of the day — the friction
-constitution (0a/0b), the checkbox regression (M27), the friction batch
-(M28), the officials surface (D32), the AZ/NH ballots (D33), the federal
-votes corpus (D02), the narrowing prompt built (M26), and the routing
-knowledge base (A08). See §12. Earlier that day: the
-regression-and-restoration session — the officials surface restored and
-guarded (M23), D28/D29 wired, the Morris County ballot shipped (S2), and the
-defects intake opened (§11).
+Last updated: 2026-08-16, after the correctness-first session — the NH
+November ballot corrected in place (the overturn preserved, §14), the Kelly
+standard for officials and candidates (enrichment, the fetch-verifying
+audit, 40 hunted candidate links, registration checkers), the author's
+defect batch 3a–3h including the measured 3f diagnosis, curated
+plain-language bill summaries with the wrong-slug bill-link catch, the
+tester pass with its walk-through log (`docs/tester-pass.md`), and the
+ripcord doctrine in CLAUDE.md with FEC deferred whole behind it. See §14.
+Before that, 2026-08-15: the sensor turned on and the product learned plain
+language (§13).
 
 ---
 
@@ -3003,3 +3005,148 @@ links on the ballot (6b/6c).
   reactions attached to them; 5d sidebar doors; T08 before any public
   reachability; the author's Netlify-log look at the settle failure if it
   recurs (the card now names the cause on its face).
+
+---
+
+## 14. The 2026-08-16 correctness session — the ballot tells the whole truth, and the links all resolve
+
+Branch `claude/nh-ballot-kelly-standard-0816`, six commits. **test 325
+pass · lint clean · build exit 0** on every commit, verified by exit code;
+the session ran unattended under the standing motion (reversible decisions
+taken and recorded, irreversible ones parked in tracker rows, browser-heavy
+work last). This was the second-to-last build before the first outside
+tester.
+
+### 1 — The NH November finding, corrected in place (the overturn preserved)
+
+The shipped thin-November claim was true ONLY for town and school offices
+(March town meeting). For state and federal offices, 2026-11-03 is one of
+the largest ballots in the country. What was wrong and is now fixed, all
+from the SOS's own documents fetched this session:
+
+- **Executive Councilor District 2** and **Merrimack County Commissioner
+  Second District** were parked in coverageNotes as unmappable. The SOS's
+  2022-2032 assignment documents place Newbury in both; the contests now
+  render with their filed candidates (Liot Hill D / Menard, Strathdee R;
+  Ribas D / Bilodeau, French R), keyed to Newbury's town division.
+- The House district verified: **Merrimack 7 = New London + Newbury, two
+  seats — and NO floterial covers Newbury** per the SOS assignment PDF.
+  **This corrects §2's earlier claim** that Newbury sits in two House
+  districts; that claim described NH's floterial system generally and was
+  never true of Newbury specifically. The partition test stands.
+- A new honesty note: nomination-paper candidates (the independents' route)
+  are certified by September 2 and cannot be listed yet — stated, because
+  the press already names one for EC-2.
+- 03255: 10 → 12 contests, 41 → 47 candidacies. D33 corrected in place.
+
+### 2 — The Kelly standard
+
+- **`pnpm officials:enrich`** reads the legislatures' OWN rosters: AZ 90/90
+  members re-pointed at current-legislature pages with phones and the
+  email form (the CSV shipped legislature-55/56 URLs — the author's Diaz
+  defect, now closed: correct page, phone, contact form, and
+  lupediazaz.com in campaign-sites); NJ 119/120 re-pointed at official
+  njleg bio pages with contact forms (caucus-site URLs retired); NH 0/410
+  — gc.nh.gov resets TLS to non-browser clients, rung recorded.
+- **`pnpm officials:audit`** fetch-verifies every division-linked
+  official's page and writes `docs/officials-audit.md`: **661 audited, 577
+  verified (556 by content, 21 via the roster chain — njleg bios are
+  client-rendered SPAs), 0 misses, 84 inline-unverifiable (NH)**. A 200
+  that lands generic is a MISS by construction (the check demands the
+  member's name in the page).
+- **40 candidate links hunted and fetch-verified** across all three states
+  (`data/ballot/candidate-links-2026.json`), official site first, campaign
+  site labeled; every absence is a recorded MISS or NOT_ATTEMPTED hunt.
+  The verification rule earned its keep twice: kellyayotte.com now serves a
+  DIFFERENT politician's page (hers is kellyfornh.com), and gowanforaz.com
+  — listed by the state's own voter guide — timed out on three attempts.
+- **Registration checkers (2c)** for AZ/NJ/NH, each the authority's own
+  tool, chain-verified, prominent on the ballot page.
+
+### 3 — The defect batch, and what the tester pass measured
+
+3a what-first titles everywhere (`meetingHeadline`/`locationLine`, the Vail
+card pinned in tests); 3b the narrowing modal (forced response, never
+forced narrowing; decline persists inside the existing storage key); 3c the
+one-time acknowledged disclosure (CLAUDE.md record updated — the
+always-visible line retired; an unacknowledged tap parks, never records);
+3d CANDIDATE reactions on every ballot candidate with server-side target
+validation and extended neutrality guards; 3e the mayor surfaces in
+who-governs (rendering path, as the author suspected — the roster only fed
+meeting cards); 3g the 90-day backward window with the recent past riding
+along on successful rungs (tier still earned by the future; canceled never
+fills an empty map — re-pinned in tests) and the slider counting negative
+days so left = further past; 3h senators label on its own line, larger
+expansion portraits, blurb on top, legend under the popup layer,
+mm/dd/yyyy everywhere.
+
+**3f, diagnosed before fixing (measured live, screenshots on file):**
+selection shading was never broken — the whole-viewport tint in
+`shading-1-selected.png` is Pima's fill. What reproduced: the 6d
+same-gesture deselect lived only on the single-hit path, and a click is
+almost never a single hit, so "click again to unshade" never engaged. The
+picker now marks the selected district and choosing it deselects; verified
+by the screenshot pair.
+
+### 4 — Plain-language bill summaries, and the wrong-slug catch
+
+Eleven bills in the vote window carry hand-curated summaries (labeled ours,
+cited to the CRS summary version each paraphrases, expansion-gated on the
+vote row); three are pending with reasons — including H.R. 5334, whose
+number was reused as a vehicle so the on-file CRS summary describes a
+different act (the match check that caught it is now the curation rule).
+Found while matching: **the snapshot's billUrl builder collapsed every
+resolution type to `-bill`**, sending readers to unrelated real bills
+(H Con Res 113 → house-bill/113). Slug map fixed, snapshot regenerated
+(8674/8674, 2000/2000, 34 titles), and `votes:fetch` prints unsummarized
+bills entering the window.
+
+### 5/6 — Deferred whole, as the cut order sanctions
+
+FEC funding surfaces deferred WHOLE (a funding surface without tags and
+ripcords is the forbidden configuration); the **ripcord doctrine** itself
+is now a CLAUDE.md constraint, and D34 carries the flags
+(`ripcord.fecContributorDisplay`, `ripcord.fundingReactionsInAggregates` —
+the second ships PULLED), the D23 question, and counsel as closer.
+Positions (the three-answer machinery) deferred first per the cut order —
+D35 holds the design as specified, unchanged. Polishing what the tester
+will touch outranked finishing new surfaces this session, by instruction.
+
+### The tester pass
+
+`docs/tester-pass.md` — four zips at phone width, surface-by-surface
+pass/fail, links fetched, screenshots. Two fixes landed during the pass
+(3f, list-row dedupe). Its "open items" section is the final session's
+punch list seed.
+
+### Decisions taken as cheaper-to-undo, with the rejected alternative
+
+- EC/commissioner contests key to Newbury's town division (rejected:
+  county/state division — would render the wrong district to other towns'
+  readers; the town-level assignment is what the SOS documents source).
+- AZ enrichment nulls the CSV email and ships the legislature's email form
+  (rejected: keeping the unverifiable address the author found dead).
+- Enriched provenance points at the roster page that names member,
+  district, party, and link together (rejected: keeping Plural cited for
+  fields it no longer supplies).
+- The mayor line renders the roster's "Mayor" role only, in who-governs
+  (rejected: full rosters in the card — they stay on the body's meeting
+  surfaces).
+- The one-time disclosure ack is a new device-local key (rejected: a
+  server-side record — identity-free by construction).
+- NJ bio pages verdict VERIFIED-VIA-ROSTER, stated as a chain (rejected:
+  content-sniffing an SPA and calling 20 real pages misses).
+- The nomination-paper route renders as a coverage note until the SOS
+  certifies (rejected: naming the press-reported independent — not ours to
+  claim).
+
+### State as of 2026-08-16
+
+- **325 tests, lint clean, build exit 0** — verified by exit code.
+- The four-zip gate unchanged on meetings; the ballot gate now: 03255
+  twelve contests with EC/commissioner, all four zips carry links,
+  checkers, and candidate reactions.
+- Open next (the final session's punch list): `docs/tester-pass.md` open
+  items; D34 (FEC behind ripcords, counsel closes); D35 (positions
+  three-answer machinery, A07 in full); NH hunts marked NOT_ATTEMPTED;
+  NJ/NH body rosters; T08 before any public reachability.

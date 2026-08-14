@@ -944,7 +944,10 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   border: 1px solid var(--panel-border);
   border-radius: var(--radius);
   padding: 8px 14px;
-  z-index: 1200;
+  /* 3h (2026-08-16): below the popup layer (1200) and the bottom sheet
+     (1150) — the legend is ambient chrome and must never cover a card the
+     reader opened (author's screenshot: it overlaid the compact popup). */
+  z-index: 1100;
   display: flex;
   gap: 12px;
   flex-wrap: wrap;

@@ -96,10 +96,12 @@ export function OfficialModal({
         </header>
 
         <div className="account-modal-body">
-          <OfficialIdentity holder={holder} seatLabel={seatLabel} />
+          {/* 3h (2026-08-16): what-the-office-does moved to the TOP — the
+              reader orients on the office before the record. */}
+          <OfficialIdentity holder={holder} seatLabel={seatLabel} large />
+          <OfficeBlurb holder={holder} />
           <ReachThem holder={holder} />
           <RecentVotes holder={holder} reactionContext={reactionContext} />
-          <OfficeBlurb holder={holder} />
         </div>
       </div>
     </div>

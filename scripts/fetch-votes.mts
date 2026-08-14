@@ -266,9 +266,20 @@ if (apiKey) {
       };
       const title = data.bill?.title;
       if (!title) continue;
-      const billUrl = `https://www.congress.gov/bill/${CONGRESS}th-congress/${
-        parsed.type.startsWith("h") ? "house" : "senate"
-      }-bill/${parsed.num}`;
+      // Every bill type has its own congress.gov path segment — collapsing
+      // them all to "-bill" sent readers to unrelated real bills (H Con Res
+      // 113's link landed on house-bill/113). Caught 2026-08-16.
+      const URL_SLUG: Record<string, string> = {
+        hr: "house-bill",
+        hres: "house-resolution",
+        hjres: "house-joint-resolution",
+        hconres: "house-concurrent-resolution",
+        s: "senate-bill",
+        sres: "senate-resolution",
+        sjres: "senate-joint-resolution",
+        sconres: "senate-concurrent-resolution",
+      };
+      const billUrl = `https://www.congress.gov/bill/${CONGRESS}th-congress/${URL_SLUG[parsed.type]}/${parsed.num}`;
       for (const vote of votes) {
         if (vote.legisNum === legis) {
           vote.title = title;
@@ -276,6 +287,26 @@ if (apiKey) {
           vote.billUrl = billUrl;
           titled++;
         }
+      }
+      // The rolling-window rule for plain-language summaries (item 4): a
+      // bill entering the window without a curated summary in
+      // data/votes/bill-summaries.json prints here so the next session
+      // curates it — the surface renders the honest coming state until then.
+      try {
+        const { readFileSync } = await import("node:fs");
+        const curated = JSON.parse(
+          readFileSync("data/votes/bill-summaries.json", "utf8"),
+        ) as { summaries: Record<string, unknown>; pending: { billUrl: string }[] };
+        if (
+          !curated.summaries[billUrl] &&
+          !curated.pending.some((p) => p.billUrl === billUrl)
+        ) {
+          console.warn(
+            `  UNSUMMARIZED: ${legis} (${billUrl}) has no plain-language summary — curate it in data/votes/bill-summaries.json`,
+          );
+        }
+      } catch {
+        // A missing summaries file just means nothing is curated yet.
       }
     } catch {
       // A missing title leaves the chamber's own words — honest either way.

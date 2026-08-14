@@ -8,6 +8,14 @@ import {
   getGeneralLineup,
   lineupForContest,
 } from "@/lib/ballot/general-lineup";
+import {
+  linksForCandidacy,
+  linksForNominee,
+  type CandidateLinks,
+} from "@/lib/ballot/candidate-sites";
+import { registrationLinkFor } from "@/lib/ballot/registration-links";
+import { formatDateMDY } from "@/lib/map/format";
+import { ReactionControl } from "@/components/reactions/reaction-control";
 import { electionDatesFor } from "@/lib/ballot/election-dates";
 import type {
   BallotAbsence,
@@ -42,6 +50,40 @@ function candidatesOf(set: BallotSet, contest: Contest): Candidacy[] {
   return set.candidacies
     .filter((c) => c.contestId === contest.id)
     .sort((a, b) => a.familyName.localeCompare(b.familyName));
+}
+
+/**
+ * The hunted-and-verified links for a candidate (2b): official page first,
+ * campaign site second, both labeled. Rendered only where the hunt verified
+ * them — an absent link means the hunt is recorded in the data file, never
+ * that a URL was guessed.
+ */
+function CandidateLinkRow({ links }: { links: CandidateLinks | null }) {
+  if (!links || (!links.official && !links.campaign)) return null;
+  return (
+    <span className="inline-flex flex-wrap gap-x-2 text-[0.75rem]">
+      {links.official && (
+        <a
+          href={links.official.url}
+          target="_blank"
+          rel="noreferrer"
+          className="underline decoration-dotted"
+        >
+          official site
+        </a>
+      )}
+      {links.campaign && (
+        <a
+          href={links.campaign.url}
+          target="_blank"
+          rel="noreferrer"
+          className="text-muted underline decoration-dotted"
+        >
+          campaign site
+        </a>
+      )}
+    </span>
+  );
 }
 
 export default async function BallotPage({
@@ -148,6 +190,27 @@ export default async function BallotPage({
         </p>
       )}
 
+      {/* 2c: the registration checker, prominent — the first thing a voter
+          needs to know is whether they can vote at all. */}
+      {dates && set && (() => {
+        const reg = registrationLinkFor(set.election.state);
+        return reg ? (
+          <p className="mt-6 rounded border border-[var(--panel-border)] bg-[var(--surface,rgba(255,255,255,0.04))] p-3 text-[0.875rem]">
+            <a
+              href={reg.url}
+              target="_blank"
+              rel="noreferrer"
+              className="font-medium underline decoration-dotted"
+            >
+              {reg.label} →
+            </a>{" "}
+            <span className="text-[0.75rem] text-muted">
+              on the {reg.sourceOrg}&apos;s site
+            </span>
+          </p>
+        ) : null;
+      })()}
+
       {dates && (
         <section className="mt-6 rounded border border-[var(--panel-border)] p-4">
           <h2 className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-muted">
@@ -158,7 +221,7 @@ export default async function BallotPage({
               <li key={step.label} className="flex items-baseline justify-between gap-3">
                 <span className="text-[0.8125rem]">{step.label}</span>
                 <span className="shrink-0 font-mono text-[0.75rem] text-signal">
-                  {step.date}
+                  {formatDateMDY(step.date)}
                 </span>
               </li>
             ))}
@@ -173,7 +236,7 @@ export default async function BallotPage({
             >
               {dates.sourceOrg} official timeline
             </a>
-            , read {dates.collectedAt}.
+            , read {formatDateMDY(dates.collectedAt)}.
           </p>
         </section>
       )}
@@ -210,7 +273,7 @@ export default async function BallotPage({
                     >
                       certified primary canvass
                     </a>{" "}
-                    ({canvass.issuedBy}) · read {canvass.readAt}
+                    ({canvass.issuedBy}) · read {formatDateMDY(canvass.readAt)}
                   </>
                 ) : (
                   <>
@@ -222,7 +285,7 @@ export default async function BallotPage({
                     >
                       {contest.provenance.sourceOrg} filing
                     </a>{" "}
-                    · read {contest.provenance.collectedAt}
+                    · read {formatDateMDY(contest.provenance.collectedAt)}
                   </>
                 )}
               </p>
@@ -234,13 +297,33 @@ export default async function BallotPage({
                   {lineup.nominees.map((nominee) => (
                     <li
                       key={nominee.name}
-                      className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 border-b border-[var(--panel-border)] pb-2 last:border-0 last:pb-0"
+                      className="border-b border-[var(--panel-border)] pb-2 last:border-0 last:pb-0"
                     >
-                      <span className="text-[0.875rem]">{nominee.name}</span>
-                      <span className="text-right text-[0.75rem] text-muted">
-                        {nominee.partyLabel}
-                        {nominee.note && <> · {nominee.note}</>}
-                      </span>
+                      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
+                        <span className="text-[0.875rem]">
+                          {nominee.name}{" "}
+                          <CandidateLinkRow
+                            links={linksForNominee(contest.id, nominee.name)}
+                          />
+                        </span>
+                        <span className="text-right text-[0.75rem] text-muted">
+                          {nominee.partyLabel}
+                          {nominee.note && <> · {nominee.note}</>}
+                        </span>
+                      </div>
+                      {/* 3d: reader expression, never a recommendation — the
+                          answer is stored and aggregated, never rendered
+                          back, and nothing orders candidates by it. */}
+                      <ReactionControl
+                        targetType="CANDIDATE"
+                        targetId={`${contest.id}|${nominee.name}`}
+                        prompt="Would you vote for them?"
+                        context={
+                          centroid && zip
+                            ? { zip, lat: centroid.lat, lng: centroid.lng }
+                            : null
+                        }
+                      />
                     </li>
                   ))}
                 </ul>
@@ -255,33 +338,47 @@ export default async function BallotPage({
                     {candidatesOf(set, contest).map((cand) => (
                       <li
                         key={cand.id}
-                        className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 border-b border-[var(--panel-border)] pb-2 last:border-0 last:pb-0"
+                        className="border-b border-[var(--panel-border)] pb-2 last:border-0 last:pb-0"
                       >
-                        <span className="text-[0.875rem]">
-                          {cand.givenName} {cand.familyName}
-                          {cand.websiteUrl && (
-                            <>
-                              {" "}
-                              <a
-                                href={cand.websiteUrl}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="text-[0.75rem] underline decoration-dotted"
-                              >
-                                site
-                              </a>
-                            </>
-                          )}
-                        </span>
-                        <span className="text-right text-[0.75rem] text-muted">
-                          {cand.partyLabel ?? "No party label filed"}
-                          {cand.slogan && (
-                            <>
-                              {" "}
-                              · <span className="italic">&ldquo;{cand.slogan}&rdquo;</span>
-                            </>
-                          )}
-                        </span>
+                        <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
+                          <span className="text-[0.875rem]">
+                            {cand.givenName} {cand.familyName}{" "}
+                            <CandidateLinkRow links={linksForCandidacy(cand.id)} />
+                            {cand.websiteUrl && !linksForCandidacy(cand.id) && (
+                              <>
+                                {" "}
+                                <a
+                                  href={cand.websiteUrl}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="text-[0.75rem] underline decoration-dotted"
+                                >
+                                  site
+                                </a>
+                              </>
+                            )}
+                          </span>
+                          <span className="text-right text-[0.75rem] text-muted">
+                            {cand.partyLabel ?? "No party label filed"}
+                            {cand.slogan && (
+                              <>
+                                {" "}
+                                · <span className="italic">&ldquo;{cand.slogan}&rdquo;</span>
+                              </>
+                            )}
+                          </span>
+                        </div>
+                        {/* 3d: reader expression, never a recommendation. */}
+                        <ReactionControl
+                          targetType="CANDIDATE"
+                          targetId={cand.id}
+                          prompt="Would you vote for them?"
+                          context={
+                            centroid && zip
+                              ? { zip, lat: centroid.lat, lng: centroid.lng }
+                              : null
+                          }
+                        />
                       </li>
                     ))}
                   </ul>
@@ -368,8 +465,8 @@ export default async function BallotPage({
                   <span className="text-muted">
                     · read{" "}
                     {analysis
-                      ? analysis.retrievedAt.slice(0, 10)
-                      : contest.provenance.collectedAt}
+                      ? formatDateMDY(analysis.retrievedAt.slice(0, 10))
+                      : formatDateMDY(contest.provenance.collectedAt)}
                   </span>
                 </p>
               </div>
@@ -415,7 +512,7 @@ export default async function BallotPage({
                 >
                   {absence.provenance.sourceOrg}
                 </a>{" "}
-                · read {absence.provenance.collectedAt}
+                · read {formatDateMDY(absence.provenance.collectedAt)}
               </p>
             </section>
           ))}

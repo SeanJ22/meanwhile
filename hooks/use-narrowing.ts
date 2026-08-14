@@ -25,9 +25,20 @@ export interface NarrowingState {
   /** OCD-IDs the reader chose, scoped to the zip they chose them for. */
   divisions: string[];
   street: string | null;
+  /**
+   * The reader answered "no thanks, show me everything" (3b, 2026-08-16).
+   * Persisted INSIDE the divisions key's value — still exactly two
+   * localStorage keys — so the modal asks once per zip, never on every
+   * visit. A recorded decline is a response, not a narrowing.
+   */
+  declined: boolean;
 }
 
-const UNSET: NarrowingState = Object.freeze({ divisions: [], street: null });
+const UNSET: NarrowingState = Object.freeze({
+  divisions: [],
+  street: null,
+  declined: false,
+});
 
 const listeners = new Set<() => void>();
 
@@ -44,11 +55,19 @@ function readFor(zip: string): NarrowingState {
 
     let divisions: string[] = [];
     let street: string | null = null;
+    let declined = false;
 
     if (rawDivisions) {
-      const parsed = JSON.parse(rawDivisions) as { zip?: string; ocdIds?: string[] };
-      if (parsed.zip === zip && Array.isArray(parsed.ocdIds)) {
-        divisions = parsed.ocdIds.filter((x) => typeof x === "string");
+      const parsed = JSON.parse(rawDivisions) as {
+        zip?: string;
+        ocdIds?: string[];
+        declined?: boolean;
+      };
+      if (parsed.zip === zip) {
+        if (Array.isArray(parsed.ocdIds)) {
+          divisions = parsed.ocdIds.filter((x) => typeof x === "string");
+        }
+        declined = parsed.declined === true;
       }
     }
     if (rawStreet) {
@@ -61,9 +80,9 @@ function readFor(zip: string): NarrowingState {
     cachedRaw = raw;
     cachedZip = zip;
     cachedState =
-      divisions.length === 0 && street === null
+      divisions.length === 0 && street === null && !declined
         ? UNSET
-        : Object.freeze({ divisions, street });
+        : Object.freeze({ divisions, street, declined });
     return cachedState;
   } catch {
     return UNSET;
@@ -123,6 +142,18 @@ export function useNarrowing(zip: string) {
     [zip],
   );
 
+  const setDeclined = useCallback(() => {
+    try {
+      window.localStorage.setItem(
+        DIVISIONS_KEY,
+        JSON.stringify({ zip, ocdIds: [], declined: true }),
+      );
+    } catch {
+      // Same.
+    }
+    notify();
+  }, [zip]);
+
   const clear = useCallback(() => {
     try {
       window.localStorage.removeItem(DIVISIONS_KEY);
@@ -133,5 +164,5 @@ export function useNarrowing(zip: string) {
     notify();
   }, []);
 
-  return { ...state, setDivisions, setStreet, clear };
+  return { ...state, setDivisions, setStreet, setDeclined, clear };
 }

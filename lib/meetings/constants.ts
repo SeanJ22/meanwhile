@@ -15,8 +15,15 @@ export const RADIUS_LADDER_KM = [25, 60, 150] as const;
 /** How far ahead "upcoming" reaches. */
 export const UPCOMING_HORIZON_DAYS = 60;
 
-/** How far back the concluded tier reaches when there is no future to show. */
-export const CONCLUDED_LOOKBACK_DAYS = 30;
+/**
+ * How far back the served window reaches (3g, 2026-08-16: 30 → 90). This
+ * bounds both the concluded fallback tier and the recent-past meetings that
+ * ride along with upcoming results for the date slider's backward range.
+ * What actually renders from the past is whatever the snapshot holds —
+ * sources differ in how far back they publish, and the coverage is honest
+ * about that rather than padded.
+ */
+export const CONCLUDED_LOOKBACK_DAYS = 90;
 
 /**
  * Which rung of the cascade produced the result.

@@ -6,6 +6,7 @@ import { formatMiles } from "@/lib/map/format";
 import { NarrowingPrompt } from "./narrowing-prompt";
 import type { CoverageTier } from "@/lib/meetings/query";
 import type { CoverageSummary, CoveredBody, Seat } from "@/lib/registry/coverage";
+import { rosterHoldersForBody } from "@/lib/registry/body-rosters";
 import {
   hasRepresentation,
   leadKind,
@@ -388,6 +389,35 @@ function CoverageBody({
               </span>
             </li>
           ))}
+          {/* 3e (2026-08-16): the mayor surfaces in who-governs. The roster
+              was curated (5b) but only rendered on meeting cards, so 85701
+              showed Tucson's government without its highest-profile office.
+              The chief elected official of each governing body's roster now
+              renders under the body list; the full roster stays on the
+              body's meeting card. */}
+          {shown.flatMap((body) =>
+            rosterHoldersForBody(body.bodyId)
+              .filter((holder) => holder.officeTitle === "Mayor")
+              .map((holder) => (
+                <li
+                  key={holder.id}
+                  className="flex items-baseline justify-between gap-3 pb-1 text-[0.75rem] leading-snug"
+                >
+                  <span className="text-local">Mayor</span>
+                  <span className="text-right">
+                    <Holder
+                      holder={holder}
+                      onOpen={
+                        onOpenOfficial
+                          ? () =>
+                              onOpenOfficial(holder, "Mayor", "local", body.ocdId)
+                          : undefined
+                      }
+                    />
+                  </span>
+                </li>
+              )),
+          )}
           {hidden > 0 && (
             <li className="pt-0.5 text-[0.75rem] text-muted">
               and {hidden} more
@@ -483,18 +513,22 @@ function CoverageBody({
         ))}
 
       {senators.length > 0 && (
-        <p className="mt-2 text-[0.75rem] leading-relaxed text-muted">
-          <span className="text-national">
+        // 3h (2026-08-16): the label on its own line, the names beneath it —
+        // the inline form wrapped awkwardly at phone width.
+        <div className="mt-2 text-[0.75rem] leading-relaxed text-muted">
+          <p className="text-national">
             {senators.length === 1 ? "U.S. Senator" : "U.S. Senators"}
-          </span>{" "}
-          <HolderList
-            holders={senators}
-            seatLabel={null}
-            seatOcdId={null}
-            tier="national"
-            onOpenOfficial={onOpenOfficial}
-          />
-        </p>
+          </p>
+          <p className="mt-0.5">
+            <HolderList
+              holders={senators}
+              seatLabel={null}
+              seatOcdId={null}
+              tier="national"
+              onOpenOfficial={onOpenOfficial}
+            />
+          </p>
+        </div>
       )}
 
       {(bodies.some(

@@ -147,7 +147,9 @@ export function FiltersArea() {
 
           {/* Edia's dual-handle enrollment slider, measuring days instead of
               students. The stops are the cascade's own horizons: 60 forward,
-              30 back. */}
+              90 back (3g). The back slider counts NEGATIVE days so dragging
+              LEFT reaches further into the past — the intuitive direction —
+              and older meetings render wherever their sources publish them. */}
           <Group
             label="Date range"
             onClear={
@@ -165,14 +167,14 @@ export function FiltersArea() {
               <input
                 className="prox-range"
                 type="range"
-                min={0}
-                max={30}
-                value={ui.filters.daysBack}
+                min={-90}
+                max={0}
+                value={-ui.filters.daysBack}
                 aria-label="Days back"
                 onChange={(e) =>
                   dispatch({
                     type: "filter/dateWindow",
-                    daysBack: Number(e.target.value),
+                    daysBack: -Number(e.target.value),
                   })
                 }
               />

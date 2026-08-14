@@ -22,7 +22,7 @@ import { tierVars } from "../shell/tier-style";
  * rather than anything being inferred from where their zip code centroid fell.
  */
 export function DistrictPicker() {
-  const { districtPick } = useUi();
+  const { districtPick, selectedDistrictOcdId } = useUi();
   const dispatch = useUiDispatch();
 
   useEffect(() => {
@@ -68,24 +68,43 @@ export function DistrictPicker() {
             {TIER_LABEL[group.tier]}
           </p>
 
-          {group.choices.map((choice) => (
-            <button
-              key={choice.ocdId}
-              type="button"
-              className="district-picker-row"
-              style={tierVars(choice.tier)}
-              onClick={() =>
-                dispatch({
-                  type: "select/district",
-                  ocdId: choice.ocdId,
-                  districtType: choice.type,
-                })
-              }
-            >
-              <span className="district-picker-label">{choice.label}</span>
-              <span className="district-picker-type">{choice.typeLabel}</span>
-            </button>
-          ))}
+          {group.choices.map((choice) => {
+            // 3f (2026-08-16): the same gesture un-makes the selection HERE
+            // too. 6d put the toggle only on the single-hit path, but a
+            // click is almost never a single hit (downtown Tucson is in six
+            // districts), so "click again to unshade" never engaged — the
+            // picker reopened and re-selected. The already-selected row now
+            // reads as selected and choosing it deselects.
+            const isSelected = choice.ocdId === selectedDistrictOcdId;
+            return (
+              <button
+                key={choice.ocdId}
+                type="button"
+                className="district-picker-row"
+                style={tierVars(choice.tier)}
+                aria-pressed={isSelected}
+                onClick={() =>
+                  dispatch(
+                    isSelected
+                      ? { type: "select/district", ocdId: null, districtType: null }
+                      : {
+                          type: "select/district",
+                          ocdId: choice.ocdId,
+                          districtType: choice.type,
+                        },
+                  )
+                }
+              >
+                <span className="district-picker-label">
+                  {choice.label}
+                  {isSelected ? " ✓" : ""}
+                </span>
+                <span className="district-picker-type">
+                  {isSelected ? "tap to unselect" : choice.typeLabel}
+                </span>
+              </button>
+            );
+          })}
         </div>
       ))}
     </div>

@@ -12,8 +12,18 @@
  *   before any verification exists.
  */
 
-export type ReactionTargetType = "FEDERAL_VOTE";
-export const REACTION_TARGET_TYPES: ReactionTargetType[] = ["FEDERAL_VOTE"];
+/**
+ * CANDIDATE (3d, 2026-08-16) is the fourth reaction class beside votes and
+ * the designed measure/agenda classes. The question is "Would you vote for
+ * them?" — reader expression captured and stored, NEVER an input to any
+ * ordering, ranking, or recommendation the product renders; the neutrality
+ * guards extend over this class like every other.
+ */
+export type ReactionTargetType = "FEDERAL_VOTE" | "CANDIDATE";
+export const REACTION_TARGET_TYPES: ReactionTargetType[] = [
+  "FEDERAL_VOTE",
+  "CANDIDATE",
+];
 
 export type ReactionValue = "YES" | "NO" | "UNSURE";
 export const REACTION_VALUES: ReactionValue[] = ["YES", "NO", "UNSURE"];
@@ -59,7 +69,10 @@ export function isValidReactionKey(value: unknown): value is string {
   return typeof value === "string" && /^[A-Za-z0-9_-]{16,64}$/.test(value);
 }
 
-/** Roll-call ids are short and shaped; a cap keeps the column honest. */
+/**
+ * Roll-call ids are short; candidacy ids and lineup-nominee keys
+ * (`<contestId>|<name>`) run longer. The cap keeps the column honest.
+ */
 export function isPlausibleTargetId(value: unknown): value is string {
-  return typeof value === "string" && value.length > 0 && value.length <= 64;
+  return typeof value === "string" && value.length > 0 && value.length <= 128;
 }

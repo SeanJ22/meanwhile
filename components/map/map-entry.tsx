@@ -26,7 +26,12 @@ import type { CoveredBody } from "@/lib/registry/coverage";
 import { rosterHoldersForBody } from "@/lib/registry/body-rosters";
 import { TIER_LABEL } from "@/lib/ocd/tiers";
 import { tierForMeeting } from "@/lib/state/derive";
-import { formatMeetingDate, formatMeetingTime } from "@/lib/map/format";
+import {
+  formatMeetingDate,
+  formatMeetingTime,
+  locationLine,
+  meetingHeadline,
+} from "@/lib/map/format";
 
 import type { DistrictHit } from "@/lib/map/districts";
 import type { DistrictType } from "@/lib/state/types";
@@ -1002,12 +1007,12 @@ function meetingSubject(
 ): ModalSubject {
   const roster = rosterHoldersForBody(body?.bodyId ?? null);
   return {
-    // What it is FIRST (3): the body and its sitting are the headline;
-    // when, then where, then the agenda's content, then how to be heard.
-    // Some sources title a meeting with the body's own name — say it once.
-    title: meeting.title.startsWith(meeting.bodyName)
-      ? meeting.title
-      : `${meeting.bodyName} — ${meeting.title}`,
+    // What it is FIRST (3, tightened 3a 2026-08-16): the jurisdiction-
+    // qualified body and sitting are the headline ("Vail Unified School
+    // District — Governing Board Meeting"); when, then where ONCE — some
+    // sources publish the address as the venue name, and rendering the same
+    // string as Location and again as Address was the author's Vail defect.
+    title: meetingHeadline(meeting),
     subtitle: meeting.jurisdiction,
     tier: tierForMeeting(meeting) ?? "local",
     badges:
@@ -1017,10 +1022,9 @@ function meetingSubject(
     facts: [
       { label: "Date", value: formatMeetingDate(meeting) },
       { label: "Time", value: formatMeetingTime(meeting), mono: true },
-      { label: "Location", value: meeting.location.name },
       {
-        label: "Address",
-        value: meeting.location.address ?? "not published",
+        label: "Location",
+        value: locationLine(meeting.location.name, meeting.location.address),
       },
       { label: "Status", value: STATUS_LABEL[meeting.status] },
     ],

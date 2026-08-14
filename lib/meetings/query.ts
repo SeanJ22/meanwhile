@@ -107,11 +107,26 @@ export async function searchMeetings(
       return t >= now.getTime() && t <= now.getTime() + horizonMs;
     });
 
+  // The recent past rides along with a successful rung (3g): concluded and
+  // canceled sittings inside the lookback, at the same radius, so the date
+  // slider's backward range has something to reveal. They never decide the
+  // tier — that stays a claim about the future — and the client's default
+  // window (0 days back) keeps them off screen until asked for. CANCELED
+  // stays out of the *fallback* tier below: a canceled meeting is news, but
+  // it must never be what fills an otherwise-empty map.
+  const recentPast = all.filter((m) => {
+    if (m.status !== "CONCLUDED" && m.status !== "CANCELED") return false;
+    const t = Date.parse(m.startsAt);
+    return t >= now.getTime() - lookbackMs && t < now.getTime() + horizonMs;
+  });
+
   for (const radiusKm of rungs) {
     const hits = within(upcoming, lat, lng, radiusKm);
     if (hits.length > 0) {
       return {
-        meetings: hits.sort(byStartAscending),
+        meetings: [...hits, ...within(recentPast, lat, lng, radiusKm)].sort(
+          byStartAscending,
+        ),
         tier: radiusKm === rungs[0] ? "exact" : "widened",
         radiusKm,
         requestedRadiusKm: startRadiusKm,

@@ -389,3 +389,47 @@ caught it).
   NJ rosters (Rockaway Twp council, the two BOEs, Morris County
   commissioners) — `NOT_ATTEMPTED` as of 2026-08-15; next session's easy
   finds.
+
+## The 2026-08-16 rung set (the Kelly-standard session)
+
+- **The TLS-fingerprint wall.** gc.nh.gov (NH General Court) RESETS the TLS
+  handshake from every non-browser client — curl (schannel), Node fetch —
+  before any HTTP happens. Distinct from the sos.nh.gov UA wall (403 after
+  handshake). No inline verification of NH member pages is possible from
+  this pipeline; `attemptedAt: 2026-08-16`.
+- **The SOS district-assignment documents.** sos.nh.gov publishes the whole
+  2022-2032 map as town lists: `2022-2032-executive-council-districts.pdf`,
+  `2022-2032-county-commissioners-by-district_0.pdf` (with which districts
+  elect in which years), `2022-2032-state-representative-and-delegate-
+  districts.pdf` (floterials marked FL). The URL pattern is guessable from
+  the commissioners file; the EC file was found by probing it. All three
+  fetched via the browser-UA rung.
+- **The legislature's roster page as the member-URL authority.** The Plural
+  CSV freezes member URLs at the legislature that was sitting when the row
+  was written (AZ shipped legislature=55/56 links). azleg.gov/memberroster/
+  and njleg.state.nj.us/legislative-roster are server-rendered, name the
+  member beside the link, and carry phone/contact-form — the enrichment
+  source of record (scripts/enrich-officials.mts).
+- **A domain is not a person.** kellyayotte.com serves a DIFFERENT
+  politician's campaign page in 2026. Fetch-and-read is the only
+  verification that catches a lapsed-and-repointed domain; her real domain
+  (kellyfornh.com) surfaced by search.
+- **Client-rendered official pages verify by chain, not content.** njleg
+  bio pages are SPAs whose served HTML never contains the member's name;
+  the roster page that names the member beside the exact link is the
+  verification chain (VERIFIED-VIA-ROSTER in the audit).
+- **The Clean Elections voter guide as an official candidate-site index.**
+  azcleanelections.gov per-district general-election guide pages list
+  candidate websites — an official state source for campaign URLs
+  (found gowanforaz.com there; the host then timed out, recorded MISS).
+- **Ballotpedia serves 202 challenges to plain clients** — unusable as an
+  index from this pipeline; guess-and-verify plus search did the work.
+- **The reused-vehicle trap for bill summaries.** The CRS summaries
+  endpoint can describe an EARLIER act carried by the same bill number
+  (H.R. 5334). Match the summary's subject against the vote's title before
+  paraphrasing; a mismatch is a pending state, never a source.
+
+**2b hunt state (candidate links):** 40 verified links shipped; misses and
+NOT_ATTEMPTED hunts enumerated in `data/ballot/candidate-links-2026.json`
+(the hunts array is the ladder record for candidates; D36 tracks finishing
+it). `attemptedAt: 2026-08-16` throughout.

@@ -34,9 +34,15 @@ test("downtown zip finds upcoming meetings at the first radius", async () => {
   assert.equal(result.tier, "exact");
   assert.equal(result.radiusKm, RADIUS_LADDER_KM[0]);
   assert.ok(result.meetings.length > 0, "expected Tucson meetings");
+  // 3g (2026-08-16): the recent past rides along with a successful rung so
+  // the date slider can reach backward — but the TIER stays a claim about
+  // the future: every scheduled row is upcoming, and the rung was earned by
+  // scheduled rows alone.
+  const scheduled = result.meetings.filter((m) => m.status === "SCHEDULED");
+  assert.ok(scheduled.length > 0, "the exact rung must be earned by upcoming meetings");
   assert.ok(
-    result.meetings.every((m) => m.status === "SCHEDULED"),
-    "the exact tier must only ever show upcoming meetings",
+    scheduled.every((m) => Date.parse(m.startsAt) >= Date.now() - 60_000),
+    "every scheduled row on the exact tier is in the future",
   );
 });
 
@@ -83,16 +89,28 @@ test("nothing on file anywhere reports the none tier rather than throwing", asyn
   assert.deepEqual(result.meetings, []);
 });
 
-test("canceled meetings never fill an empty map", async () => {
+test("canceled meetings ride along but never fill an empty map", async () => {
   const results = await Promise.all(
     [TUCSON, GREEN_VALLEY, DOUGLAS].map((p) => searchMeetings(p.lat, p.lng)),
   );
 
   for (const result of results) {
-    assert.ok(
-      result.meetings.every((m) => m.status !== "CANCELED"),
-      "a canceled meeting is not something to attend",
-    );
+    // 3g: a canceled sitting is news and may appear beside real meetings —
+    // but it may never be what MAKES the result non-empty. Any result
+    // carrying a canceled row must have earned its rung with a scheduled
+    // one, and the concluded fallback stays canceled-free.
+    if (result.meetings.some((m) => m.status === "CANCELED")) {
+      assert.ok(
+        result.meetings.some((m) => m.status === "SCHEDULED"),
+        "a canceled meeting must never be what fills the map",
+      );
+    }
+    if (result.tier === "concluded") {
+      assert.ok(
+        result.meetings.every((m) => m.status !== "CANCELED"),
+        "the concluded fallback must not be padded with cancellations",
+      );
+    }
   }
 });
 

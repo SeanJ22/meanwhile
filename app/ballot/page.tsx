@@ -135,6 +135,20 @@ export default async function BallotPage({
         </span>
       </p>
 
+      {/* 7: the mover's page — the questions people ask before moving,
+          answered from official sources. */}
+      {zip && (
+        <p className="mt-2 text-[0.8125rem]">
+          <Link
+            href={`/about-area?zip=${zip}`}
+            className="underline decoration-dotted hover:text-signal"
+          >
+            Moving here? The basics — marijuana, taxes, schools, carrying,
+            registering →
+          </Link>
+        </p>
+      )}
+
       {!zip && (
         <p className="mt-6 text-[0.8125rem] text-muted">
           Open this page with a zip, e.g.{" "}

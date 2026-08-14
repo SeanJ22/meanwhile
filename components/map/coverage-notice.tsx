@@ -481,6 +481,18 @@ function CoverageBody({
           Keyed on the zip so a new zip mounts a fresh prompt. */}
       {/^\d{5}$/.test(zip) && <NarrowingPrompt key={zip} zip={zip} />}
 
+      {/* 7 (2026-08-17): the mover's page, one tap from who-governs. */}
+      {/^\d{5}$/.test(zip) && (
+        <p className="mt-2 text-[0.75rem]">
+          <a
+            href={`/about-area?zip=${zip}`}
+            className="underline decoration-dotted hover:text-signal"
+          >
+            Moving here? The basics — taxes, schools, registering →
+          </a>
+        </p>
+      )}
+
       {/*
         D17, split 2026-08-13. The statutory sentence — New Hampshire does not
         require an agenda — is a fact about the law and renders for every NH

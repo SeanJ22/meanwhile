@@ -6,7 +6,6 @@ import {
   formatMeetingDate,
   formatMeetingTime,
   formatRelativeDay,
-  shortOcdId,
 } from "@/lib/map/format";
 import type { Venue } from "@/lib/meetings/venues";
 import { commentAccessFor } from "@/lib/registry/comment-access";
@@ -42,19 +41,21 @@ export function MeetingPanel({ venue, onClose, onOpenMeeting }: MeetingPanelProp
     >
       <header className="flex items-start justify-between gap-3 border-b border-rule px-5 py-4">
         <div className="min-w-0">
+          {/* What it is FIRST (3): a single sitting leads with who is
+              meeting; the venue is where, and where comes after what. A
+              multi-meeting venue leads with the count — the list below is
+              the what. */}
           <p className="notice-eyebrow">
             {venue.meetings.length === 1
               ? "Public meeting"
               : `${venue.meetings.length} public meetings`}
           </p>
           <h2 className="mt-2 font-display text-lg font-semibold leading-snug tracking-tight text-paper">
-            {venue.name}
+            {venue.meetings.length === 1 ? venue.meetings[0].bodyName : venue.name}
           </h2>
-          {venue.address && (
-            <p className="mt-1 text-[0.8125rem] leading-snug text-muted">
-              {venue.address}
-            </p>
-          )}
+          <p className="mt-1 text-[0.8125rem] leading-snug text-muted">
+            {venue.meetings.length === 1 ? `${venue.name}${venue.address ? ` · ${venue.address}` : ""}` : (venue.address ?? "")}
+          </p>
           {/*
             The address used to end there — correct, and inert. Somebody reading
             it is usually deciding whether they can get to the room, and the
@@ -136,9 +137,13 @@ function MeetingEntry({
         )}
       </div>
 
-      <p className="mt-1 pl-[1rem] text-sm leading-snug text-paper-dim">
-        {meeting.title}
-      </p>
+      {/* Some sources title a sitting with the body's own name — one line
+          then, not the same words twice. */}
+      {meeting.title !== meeting.bodyName && (
+        <p className="mt-1 pl-[1rem] text-sm leading-snug text-paper-dim">
+          {meeting.title}
+        </p>
+      )}
 
       <dl className="mt-3 pl-4 font-mono text-[0.8125rem] tabular-nums">
         <div className="flex gap-2">
@@ -179,10 +184,10 @@ function MeetingEntry({
       <HowToBeHeard ocdId={meeting.ocdId} bodyName={meeting.bodyName} />
 
       <footer className="mt-4 border-t border-rule-soft pl-4 pt-3">
+        {/* No identifier here: internal keys never render to readers (4a).
+            Jurisdiction and source org are the reader-facing provenance. */}
         <p className="font-mono text-[0.6875rem] leading-relaxed text-muted">
           <span className="text-paper-dim">{meeting.jurisdiction}</span>
-          <br />
-          {shortOcdId(meeting.ocdId)}
           <br />
           {meeting.provenance.sourceOrg}
           {!meeting.provenance.verifiedAt && (
@@ -206,7 +211,7 @@ function MeetingEntry({
  * comment period must never be inferred from the meeting being public — many
  * are public to observe and closed to speak.
  */
-function HowToBeHeard({
+export function HowToBeHeard({
   ocdId,
   bodyName,
 }: {

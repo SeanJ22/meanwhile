@@ -47,6 +47,8 @@ interface CoverageNoticeProps {
    */
   failedSourceOcdIds?: string[];
   onOpenOfficial?: OpenOfficial;
+  /** Shrinks the card to its corner bubble — the explicit control (3). */
+  onMinimize?: () => void;
 }
 
 /** How many bodies to name before collapsing the rest into a count. */
@@ -547,6 +549,7 @@ export function CoverageNotice({
   coverage,
   failedSourceOcdIds,
   onOpenOfficial,
+  onMinimize,
 }: CoverageNoticeProps) {
   // The notice renders on every failure rung, and on the exact rung whenever
   // there is representation to show. It used to return null on `exact`
@@ -573,7 +576,29 @@ export function CoverageNotice({
         : "text-signal";
 
   return (
-    <div className="panel pointer-events-auto max-w-md px-4 py-3.5">
+    <div className="panel pointer-events-auto relative max-w-md px-4 py-3.5">
+      {onMinimize && (
+        // The explicit way out (3) — engagement still collapses it, but the
+        // reader shouldn't have to know that.
+        <button
+          type="button"
+          onClick={onMinimize}
+          aria-label="Minimize — the card stays one tap away"
+          className="absolute top-2 right-2 cursor-pointer p-1 text-muted hover:text-paper"
+        >
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            aria-hidden="true"
+          >
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+        </button>
+      )}
       <p
         className={`font-mono text-[0.625rem] uppercase tracking-[0.2em] ${accent}`}
       >

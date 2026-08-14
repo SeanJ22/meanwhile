@@ -1,7 +1,7 @@
 "use client";
 
 import { Maximize2, X } from "lucide-react";
-import { useCallback, useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
 
 import type { Tier } from "@/lib/ocd/tiers";
 
@@ -35,38 +35,34 @@ interface PopupCardProps {
   title: string;
   /** Appended to the eyebrow — Edia's holdout-badge pattern, ours is status. */
   badges?: PopupBadge[];
-  /** Opens the full-screen modal. Omitted where there is nothing to expand to. */
+  /** Opens the large tier. Omitted where there is nothing deeper. */
   onExpand?: () => void;
+  /** What "More" opens, for the screen reader and the tooltip. */
+  expandLabel?: string;
   onClose?: () => void;
-  /** Copied when the title is clicked. Omit to leave the title inert. */
-  copyTitle?: string;
   children: ReactNode;
 }
 
+/**
+ * The compact glance card (3). Two affordances, both always visible when
+ * available: a close X in the corner, and an obvious full-width "More"
+ * footer that opens the large tier — a corner icon alone was an entry
+ * point readers never found. The title is plain text: the reader gesture
+ * on a card is expansion, never clipboard (4a).
+ */
 export function PopupCard({
   type,
   tier,
   title,
   badges = [],
   onExpand,
+  expandLabel,
   onClose,
-  copyTitle,
   children,
 }: PopupCardProps) {
   return (
     <div className="popup-card pointer-events-auto" role="dialog" aria-label={title}>
-      {onExpand && (
-        <button
-          type="button"
-          className="popup-expand-btn"
-          onClick={onExpand}
-          aria-label={`Open ${title} in full view`}
-        >
-          <Maximize2 className="size-3.5" />
-        </button>
-      )}
-
-      {!onExpand && onClose && (
+      {onClose && (
         <button
           type="button"
           className="popup-expand-btn"
@@ -90,11 +86,21 @@ export function PopupCard({
         ))}
       </p>
 
-      <h3>
-        {copyTitle ? <Copyable text={copyTitle}>{title}</Copyable> : title}
-      </h3>
+      <h3>{title}</h3>
 
       <div className="mt-2.5">{children}</div>
+
+      {onExpand && (
+        <button
+          type="button"
+          onClick={onExpand}
+          aria-label={expandLabel ?? `More about ${title}`}
+          className="mt-3 flex w-full cursor-pointer items-center justify-center gap-1.5 rounded border border-[var(--panel-border)] px-3 py-2 text-[0.75rem] font-medium text-paper hover:border-[var(--signal)] hover:text-signal"
+        >
+          More
+          <Maximize2 className="size-3" />
+        </button>
+      )}
     </div>
   );
 }
@@ -121,51 +127,11 @@ export function PopupSectionLabel({ children }: { children: ReactNode }) {
   return <p className="popup-section-label">{children}</p>;
 }
 
-/**
- * Click to copy, with the tooltip affordance.
- *
- * The confirmation is visible rather than silent: a copy that may or may not
- * have worked is worse than a button that plainly did nothing, because the
- * reader only finds out when they paste.
+/*
+ * `Copyable` (click-to-copy) is deliberately gone (4a): it was a developer
+ * affordance that leaked to readers — the reader gesture on a card is
+ * expansion, never clipboard.
  */
-export function Copyable({
-  text,
-  children,
-}: {
-  text: string;
-  children: ReactNode;
-}) {
-  const [copied, setCopied] = useState(false);
-
-  const copy = useCallback(() => {
-    // `navigator.clipboard` is absent over plain HTTP and in some embedded
-    // webviews. Say nothing rather than claim a copy that did not happen.
-    if (!navigator.clipboard?.writeText) return;
-    void navigator.clipboard.writeText(text).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1400);
-    });
-  }, [text]);
-
-  return (
-    <span
-      className="copyable"
-      role="button"
-      tabIndex={0}
-      data-tooltip={copied ? "Copied" : "Click to copy"}
-      data-copied={String(copied)}
-      onClick={copy}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          copy();
-        }
-      }}
-    >
-      {children}
-    </span>
-  );
-}
 
 /**
  * A value the app does not have.

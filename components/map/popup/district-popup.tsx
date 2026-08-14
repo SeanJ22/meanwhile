@@ -4,7 +4,6 @@ import { TIER_LABEL } from "@/lib/ocd/tiers";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { DistrictHit } from "@/lib/map/districts";
 
-import { OcdIdRow } from "./meeting-popup";
 import {
   NoValue,
   PopupCard,
@@ -52,13 +51,14 @@ export function DistrictPopup({
       type={district.typeLabel}
       tier={district.tier}
       title={district.label}
-      copyTitle={district.label}
       onExpand={onExpand}
+      expandLabel={`More about ${district.label}`}
       onClose={onClose}
     >
+      {/* No OCD-ID row: internal identifiers never render to readers (4a).
+          The identifier still keys everything behind this card. */}
       <PopupRow label="Type">{district.typeLabel}</PopupRow>
       <PopupRow label="Tier">{TIER_LABEL[district.tier]}</PopupRow>
-      <OcdIdRow ocdId={district.ocdId} />
 
       <PopupRow label="Places within" mono>
         {placesWithin === undefined ? (

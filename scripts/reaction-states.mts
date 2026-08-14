@@ -47,14 +47,18 @@ const page = await context.newPage();
 await page.goto(`${BASE_URL}/`, { waitUntil: "networkidle" });
 await page.waitForTimeout(7000);
 
-// Open the rep popup from the who-governs card: the first officeholder name.
+// Open the rep surface from the who-governs card: the compact card first,
+// then its "More" into the large tier, where the record and its reaction
+// rows live (3: glance → more → full).
 const holderButton = page.locator("button.text-paper").first();
 const holderName = (await holderButton.textContent())?.trim();
 await holderButton.click();
+await page.waitForTimeout(600);
+await page.getByRole("button", { name: /^More/ }).first().click();
 await page.waitForSelector("text=Recent votes");
 await page.waitForTimeout(1500);
 
-const popup = page.locator(".popup-card").last();
+const popup = page.locator(".account-modal").last();
 const controls = popup.locator('button[aria-pressed]');
 const controlCount = await controls.count();
 const promptCount = await popup.locator("text=Do you like this vote?").count();

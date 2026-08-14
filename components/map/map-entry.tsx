@@ -25,11 +25,7 @@ import type { SeatHolder } from "@/lib/officials/lookup";
 import type { CoveredBody } from "@/lib/registry/coverage";
 import { TIER_LABEL } from "@/lib/ocd/tiers";
 import { tierForMeeting } from "@/lib/state/derive";
-import {
-  formatMeetingDate,
-  formatMeetingTime,
-  shortOcdId,
-} from "@/lib/map/format";
+import { formatMeetingDate, formatMeetingTime } from "@/lib/map/format";
 
 import type { DistrictHit } from "@/lib/map/districts";
 import type { DistrictType } from "@/lib/state/types";
@@ -42,6 +38,7 @@ import { MeetingPanel } from "./meeting-panel";
 import { DistrictPopup } from "./popup/district-popup";
 import { MeetingPopup } from "./popup/meeting-popup";
 import { OfficialPopup } from "./popup/official-popup";
+import { OfficialModal } from "./popup/official-modal";
 import { EntityModal, type ModalSubject } from "./popup/entity-modal";
 import { WelcomeOverlay } from "./welcome-overlay";
 
@@ -130,6 +127,36 @@ function MapEntryInner() {
   // something specific (2h) — a pin, a list row, a filter — and comes back on
   // a tap or a new area.
   const [noticeCollapsed, setNoticeCollapsed] = useState(false);
+
+  /*
+   * Popup state, in the two-tier architecture (3). Declared before the
+   * handlers that clear them (`search` resets all of it on a zip change).
+   *
+   * Compact glance cards (`popupMeeting`, `officialPopup`, the district
+   * popup derived from the store) are entry points and may coexist. The
+   * LARGE tier is one-at-a-time: `large` holds whichever large surface is
+   * open — opening one replaces any other, subsumes the compact card that
+   * opened it, and closes the list overlay.
+   */
+  const [popupMeeting, setPopupMeeting] = useState<Meeting | null>(null);
+  const [large, setLarge] = useState<
+    | { kind: "entity"; subject: ModalSubject }
+    | {
+        kind: "official";
+        holder: SeatHolder;
+        seatLabel: string | null;
+        tier: "local" | "state" | "national";
+      }
+    | null
+  >(null);
+  const [officialPopup, setOfficialPopup] = useState<{
+    holder: SeatHolder;
+    seatLabel: string | null;
+    tier: "local" | "state" | "national";
+  } | null>(null);
+  // The last set of districts a click landed in, so the popup can recover
+  // the full hit — the store keeps only the identifier and type.
+  const [lastHits, setLastHits] = useState<DistrictHit[]>([]);
 
   // District visibility is persisted by its own hook, the sibling of
   // use-stored-zip. The store mirrors it one-way so the legend and the stats
@@ -230,6 +257,14 @@ function MapEntryInner() {
   const search = useCallback(
     (zip: string, lat: number, lng: number) => {
       dispatch({ type: "select/venue", key: null });
+      // A zip change is a new area: everything showing the previous area's
+      // entities must clear — holding the old reps, meeting, or district
+      // across a zip change is a stale-data bug (3).
+      dispatch({ type: "select/district", ocdId: null, districtType: null });
+      setPopupMeeting(null);
+      setOfficialPopup(null);
+      setLarge(null);
+      setLastHits([]);
       setFailure(null);
       setWelcomeRequested(false);
       dismissSidebar();
@@ -277,24 +312,18 @@ function MapEntryInner() {
     [venues, ui.selectedVenueKey],
   );
 
-  /*
-   * Popup and modal state.
-   *
-   * Local rather than in the store, matching `welcomeRequested` above. These
-   * are ephemeral view state derived from a selection the store already holds;
-   * nothing else reads them, and putting them in the reducer would make every
-   * surface re-render on a popup open.
-   */
-  const [popupMeeting, setPopupMeeting] = useState<Meeting | null>(null);
-  const [modal, setModal] = useState<ModalSubject | null>(null);
-
-  // The rep popup (3c): the person behind a clicked name, with the seat
-  // label and tier riding along for the card header.
-  const [officialPopup, setOfficialPopup] = useState<{
-    holder: SeatHolder;
-    seatLabel: string | null;
-    tier: "local" | "state" | "national";
-  } | null>(null);
+  /** The one-at-a-time rule: any large surface replaces every other. */
+  const openLarge = useCallback(
+    (next: NonNullable<typeof large>) => {
+      setLarge(next);
+      // The large tier subsumes the compact card that opened it, and the
+      // list overlay yields — three surfaces at once was the defect.
+      if (next.kind === "official") setOfficialPopup(null);
+      if (next.kind === "entity") setPopupMeeting(null);
+      dispatch({ type: "list/open", open: false });
+    },
+    [dispatch],
+  );
 
   const openOfficial = useCallback(
     (
@@ -312,6 +341,15 @@ function MapEntryInner() {
     },
     [],
   );
+
+  // Opening the list overlay closes any large popup — the same
+  // one-at-a-time rule, from the other direction. Adjust-during-render,
+  // keyed on the store value changing, matching `seenFilters` below.
+  const [seenListOpen, setSeenListOpen] = useState(ui.listOverlayOpen);
+  if (seenListOpen !== ui.listOverlayOpen) {
+    setSeenListOpen(ui.listOverlayOpen);
+    if (ui.listOverlayOpen) setLarge(null);
+  }
 
   /*
    * Search-log events for the interactions the transparency page describes.
@@ -373,7 +411,9 @@ function MapEntryInner() {
       if (view && haversineKm(center.lat, center.lng, view.lat, view.lng) < 5) {
         return;
       }
-      setNoticeCollapsed(false);
+      // Deliberately no notice expansion here: panning is not a question
+      // about who governs. The card shows once per resolved AREA (the
+      // effect below), on a click into a new district, or on a bubble tap.
       setSettled({
         forZip: location.zip,
         target: {
@@ -396,14 +436,43 @@ function MapEntryInner() {
   );
 
   /*
+   * The who-governs card's lifecycle (3): it shows once per resolved AREA,
+   * then lives as its corner bubble until the reader clicks INTO a new
+   * district or taps the bubble. Panning alone never re-expands it.
+   */
+  const shownAreaKey = useRef<string | null>(null);
+  useEffect(() => {
+    if (!current) return;
+    // The area label the notices speak — typed zip or settled nearZip. A
+    // genuinely new area shows the card once; the same area stays as the
+    // reader left it.
+    if (current.zip !== shownAreaKey.current) {
+      shownAreaKey.current = current.zip;
+      setNoticeCollapsed(false);
+    }
+  }, [current]);
+
+  // Clicking INTO a new district is a question about who governs there —
+  // the card answers. Re-selecting the same district changes nothing.
+  const lastExpandedDistrict = useRef<string | null>(null);
+  useEffect(() => {
+    if (
+      ui.selectedDistrictOcdId &&
+      ui.selectedDistrictOcdId !== lastExpandedDistrict.current
+    ) {
+      setNoticeCollapsed(false);
+    }
+    lastExpandedDistrict.current = ui.selectedDistrictOcdId;
+  }, [ui.selectedDistrictOcdId]);
+
+  /*
    * The engagement signals that shrink the who-governs card (2h): a pin, a
-   * list row, an open meeting, a district selection, a filter change. Map
-   * panning is deliberately not one of them — panning *expands* it again,
-   * because the reader is asking about a new area. Pin, list and district
-   * engagement collapse it inside their handlers below; filter engagement is
-   * caught here with the adjust-during-render pattern (the dispatches happen
-   * in other components), keyed on identity — `ui.filters` is one object
-   * from mount until a filter action actually replaces it.
+   * list row, an open meeting, a filter change. District clicks are the
+   * exception above — they *ask* who governs. Pin and list engagement
+   * collapse it inside their handlers below; filter engagement is caught
+   * here with the adjust-during-render pattern (the dispatches happen in
+   * other components), keyed on identity — `ui.filters` is one object from
+   * mount until a filter action actually replaces it.
    */
   const [seenFilters, setSeenFilters] = useState(ui.filters);
   const [seenTiers, setSeenTiers] = useState(ui.tiers);
@@ -412,10 +481,6 @@ function MapEntryInner() {
     setSeenTiers(ui.tiers);
     setNoticeCollapsed(true);
   }
-
-  // The last set of districts a click landed in, so the popup can recover the
-  // full hit — the store keeps only the identifier and type.
-  const [lastHits, setLastHits] = useState<DistrictHit[]>([]);
 
   const districtPopup = useMemo(
     () =>
@@ -548,7 +613,6 @@ function MapEntryInner() {
       // Remember the whole set, not just the chosen one: the picker may select
       // any of them, and the popup needs that hit's label and type back.
       setLastHits(hits);
-      setNoticeCollapsed(true);
 
       if (hits.length === 1) {
         dispatch({
@@ -715,8 +779,6 @@ function MapEntryInner() {
               />
             )}
 
-            {current?.snapshot && <DataFreshness snapshot={current.snapshot} />}
-
             {current &&
               (noticeCollapsed ? (
                 // Shrunk out of the way (2h), not gone: one tap brings the
@@ -754,8 +816,13 @@ function MapEntryInner() {
                     current.snapshot?.failed.flatMap((f) => f.ocdIds) ?? []
                   }
                   onOpenOfficial={openOfficial}
+                  onMinimize={() => setNoticeCollapsed(true)}
                 />
               ))}
+
+            {/* Provenance, not headline (3): "Last checked" demotes to a
+                footnote below the who-governs card. */}
+            {current?.snapshot && <DataFreshness snapshot={current.snapshot} />}
 
             {selectedVenue && (
               // The phone form of the meeting panel: a bottom sheet pinned to
@@ -787,30 +854,19 @@ function MapEntryInner() {
             bottom-left and they landed on top of the coverage notice, which a
             screenshot caught. */}
         <div className="pointer-events-none absolute right-2 bottom-2 left-2 z-[1200] flex items-end justify-end gap-3 sm:right-5 sm:bottom-5 sm:left-auto">
-          {officialPopup && (
+          {officialPopup && !large && (
             <OfficialPopup
               holder={officialPopup.holder}
               seatLabel={officialPopup.seatLabel}
               tier={officialPopup.tier}
-              // Where the reader is looking, for reaction rows — the typed
-              // zip or the settled view, the search log's own basis (1b).
-              reactionContext={
-                view
-                  ? {
-                      zip:
-                        current && /^\d{5}$/.test(current.zip)
-                          ? current.zip
-                          : (view.zip ?? null),
-                      lat: view.lat,
-                      lng: view.lng,
-                    }
-                  : null
+              onExpand={() =>
+                openLarge({ kind: "official", ...officialPopup })
               }
               onClose={() => setOfficialPopup(null)}
             />
           )}
 
-          {districtPopup && !officialPopup && (
+          {districtPopup && !officialPopup && !large && (
             <DistrictPopup
               district={districtPopup}
               onOpenOfficial={(holder) =>
@@ -836,21 +892,55 @@ function MapEntryInner() {
               onClose={() =>
                 dispatch({ type: "select/district", ocdId: null, districtType: null })
               }
-              onExpand={() => setModal(districtSubject(districtPopup))}
+              onExpand={() =>
+                openLarge({
+                  kind: "entity",
+                  subject: districtSubject(districtPopup),
+                })
+              }
             />
           )}
 
-          {popupMeeting && (
+          {popupMeeting && !large && (
             <MeetingPopup
               meeting={popupMeeting}
               body={bodyFor(popupMeeting.ocdId)}
               onClose={() => setPopupMeeting(null)}
-              onExpand={() => setModal(meetingSubject(popupMeeting))}
+              onExpand={() =>
+                openLarge({
+                  kind: "entity",
+                  subject: meetingSubject(popupMeeting),
+                })
+              }
             />
           )}
         </div>
 
-        {modal && <EntityModal subject={modal} onClose={() => setModal(null)} />}
+        {large?.kind === "entity" && (
+          <EntityModal subject={large.subject} onClose={() => setLarge(null)} />
+        )}
+        {large?.kind === "official" && (
+          <OfficialModal
+            holder={large.holder}
+            seatLabel={large.seatLabel}
+            tier={large.tier}
+            // Where the reader is looking, for reaction rows — the typed
+            // zip or the settled view, the search log's own basis (1b).
+            reactionContext={
+              view
+                ? {
+                    zip:
+                      current && /^\d{5}$/.test(current.zip)
+                        ? current.zip
+                        : (view.zip ?? null),
+                    lat: view.lat,
+                    lng: view.lng,
+                  }
+                : null
+            }
+            onClose={() => setLarge(null)}
+          />
+        )}
 
         <Legend />
         <ListOverlay onPickMeeting={onPickMeeting} />
@@ -881,26 +971,30 @@ function MapEntryInner() {
  */
 function meetingSubject(meeting: Meeting): ModalSubject {
   return {
-    title: meeting.title,
-    subtitle: `${meeting.bodyName} · ${meeting.jurisdiction}`,
+    // What it is FIRST (3): the body and its sitting are the headline;
+    // when, then where, then the agenda's content, then how to be heard.
+    // Some sources title a meeting with the body's own name — say it once.
+    title: meeting.title.startsWith(meeting.bodyName)
+      ? meeting.title
+      : `${meeting.bodyName} — ${meeting.title}`,
+    subtitle: meeting.jurisdiction,
     tier: tierForMeeting(meeting) ?? "local",
     badges:
       meeting.status === "SCHEDULED"
         ? []
         : [{ label: STATUS_LABEL[meeting.status], status: meeting.status }],
     facts: [
-      { label: "Body", value: meeting.bodyName },
       { label: "Date", value: formatMeetingDate(meeting) },
       { label: "Time", value: formatMeetingTime(meeting), mono: true },
-      { label: "Time zone", value: meeting.timeZone, mono: true },
       { label: "Location", value: meeting.location.name },
       {
         label: "Address",
         value: meeting.location.address ?? "not published",
       },
-      { label: "Division", value: shortOcdId(meeting.ocdId), mono: true },
       { label: "Status", value: STATUS_LABEL[meeting.status] },
     ],
+    agenda: { meetingId: meeting.id, agendaUrl: meeting.agendaUrl },
+    commentAccess: { ocdId: meeting.ocdId, bodyName: meeting.bodyName },
     representation: [],
     representationNote:
       "We haven't sourced who sits on this body. The people we hold for this area represent it in Congress and the state legislature, which is a different thing.",
@@ -915,9 +1009,9 @@ function districtSubject(district: DistrictHit): ModalSubject {
     subtitle: `${district.typeLabel} · ${district.state}`,
     tier: district.tier,
     facts: [
+      // No OCD-ID row: internal identifiers never render to readers (4a).
       { label: "Type", value: district.typeLabel },
       { label: "Tier", value: TIER_LABEL[district.tier] },
-      { label: "OCD-ID", value: district.ocdId, mono: true },
       { label: "State", value: district.state, mono: true },
     ],
     representation: [],

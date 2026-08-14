@@ -8,15 +8,21 @@ import type { Tier } from "@/lib/ocd/tiers";
 import type { RollCallVote, VotePosition } from "@/lib/votes/types";
 import type { ReactionViewContext } from "@/lib/reactions/client";
 import { ReactionControl } from "@/components/reactions/reaction-control";
+import { explainVoteQuestion } from "@/lib/votes/vote-explainers";
 
 import { PopupCard, PopupRow, PopupSectionLabel } from "./popup-card";
 
 /**
- * The rep popup (3c): the person behind a clicked name, in the same card
- * family as the meeting and district popups.
+ * The rep surfaces (3c), in the two-tier architecture:
  *
- * Everything rendered here traces to a published record — the roster row
- * (linked as SOURCE), the licensed photo manifest, the curated campaign-site
+ * - **`OfficialPopup`** — the compact glance card: who they are and how to
+ *   reach them, with an obvious "More" opening the large tier.
+ * - The **large tier** (`official-modal.tsx`) composes the shared pieces
+ *   exported here: identity, contact, the roll-call record with reaction
+ *   capture, and the office blurb.
+ *
+ * Everything rendered traces to a published record — the roster row (linked
+ * as SOURCE), the licensed photo manifest, the curated campaign-site
  * overlay. The office blurb describes the *office*, never the holder, and
  * the campaign site is always labeled as such with the official page first.
  * A missing photo renders initials, never a broken image.
@@ -27,8 +33,8 @@ interface OfficialPopupProps {
   /** The seat's label — "AZ-6", "State House District 19". */
   seatLabel: string | null;
   tier: Tier;
-  /** Where the reader is looking — rides on reactions, orientation only. */
-  reactionContext?: ReactionViewContext | null;
+  /** Opens the large tier. The compact card is the glance layer. */
+  onExpand?: () => void;
   onClose?: () => void;
 }
 
@@ -56,10 +62,10 @@ const POSITION_STYLE: Record<
 
 type MemberRollCall = RollCallVote & { position: VotePosition };
 
-/** How many recent votes the popup shows before pointing at the record. */
+/** How many recent votes the surface shows before pointing at the record. */
 const VOTE_LIMIT = 5;
 
-function RecentVotes({
+export function RecentVotes({
   holder,
   reactionContext,
 }: {
@@ -108,57 +114,68 @@ function RecentVotes({
         </p>
       ) : (
         <>
-          {votes.slice(0, VOTE_LIMIT).map((vote) => (
-            <div
-              key={vote.id}
-              className="mt-2 border-b border-[var(--panel-border)] pb-2 last:border-0"
-            >
-              {/* Plain words first — the official title, never ours. */}
-              <p className="text-[0.75rem] leading-snug">{vote.title}</p>
-              <p className="mt-1 flex flex-wrap items-baseline gap-x-2 text-[0.6875rem]">
-                <span
-                  className="font-mono font-semibold tracking-[0.08em]"
-                  style={{ color: POSITION_STYLE[vote.position].color }}
-                >
-                  {POSITION_STYLE[vote.position].label}
-                </span>
-                <span className="text-muted">
-                  {vote.question} · {vote.result}
-                  {vote.legisNum ? ` · ${vote.legisNum}` : ""}
-                </span>
-              </p>
-              <p className="mt-0.5 text-[0.625rem]">
-                <a
-                  href={vote.rollCallUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-muted underline decoration-dotted hover:text-signal"
-                >
-                  roll call
-                </a>
-                {vote.billUrl && (
-                  <>
-                    {" · "}
-                    <a
-                      href={vote.billUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-muted underline decoration-dotted hover:text-signal"
-                    >
-                      the bill and its official summary
-                    </a>
-                  </>
+          {votes.slice(0, VOTE_LIMIT).map((vote) => {
+            const explainer = explainVoteQuestion(vote.question);
+            return (
+              <div
+                key={vote.id}
+                className="mt-2 border-b border-[var(--panel-border)] pb-2 last:border-0"
+              >
+                {/* Plain words first — the official title, never ours. */}
+                <p className="text-[0.75rem] leading-snug">{vote.title}</p>
+                <p className="mt-1 flex flex-wrap items-baseline gap-x-2 text-[0.6875rem]">
+                  <span
+                    className="font-mono font-semibold tracking-[0.08em]"
+                    style={{ color: POSITION_STYLE[vote.position].color }}
+                  >
+                    {POSITION_STYLE[vote.position].label}
+                  </span>
+                  <span className="text-muted">
+                    {vote.question} · {vote.result}
+                    {vote.legisNum ? ` · ${vote.legisNum}` : ""}
+                  </span>
+                </p>
+                {explainer && (
+                  // The vote-type explainer (4b): what kind of vote this was,
+                  // in plain words — "yes then no on the same act" reads as
+                  // incoherence until the reader knows one was procedural.
+                  <p className="mt-1 text-[0.6875rem] leading-relaxed text-paper-dim">
+                    {explainer.plain}
+                  </p>
                 )}
-              </p>
-              {/* The sensor (P03): asked after the record, never before it. */}
-              <ReactionControl
-                targetType="FEDERAL_VOTE"
-                targetId={vote.id}
-                prompt="Do you like this vote?"
-                context={reactionContext}
-              />
-            </div>
-          ))}
+                <p className="mt-0.5 text-[0.625rem]">
+                  <a
+                    href={vote.rollCallUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-muted underline decoration-dotted hover:text-signal"
+                  >
+                    roll call
+                  </a>
+                  {vote.billUrl && (
+                    <>
+                      {" · "}
+                      <a
+                        href={vote.billUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-muted underline decoration-dotted hover:text-signal"
+                      >
+                        the bill and its official summary
+                      </a>
+                    </>
+                  )}
+                </p>
+                {/* The sensor (P03): asked after the record, never before it. */}
+                <ReactionControl
+                  targetType="FEDERAL_VOTE"
+                  targetId={vote.id}
+                  prompt="Do you like this vote?"
+                  context={reactionContext}
+                />
+              </div>
+            );
+          })}
           <p className="mt-2 text-[0.5625rem] leading-relaxed text-muted">
             Colors state their vote — green YES, red NO, blue PRESENT, gray
             NOT VOTING — never our opinion of it. Titles are the official
@@ -170,67 +187,63 @@ function RecentVotes({
   );
 }
 
-export function OfficialPopup({
+export function OfficialIdentity({
   holder,
   seatLabel,
-  tier,
-  reactionContext = null,
-  onClose,
-}: OfficialPopupProps) {
-  const blurb = blurbForTitle(holder.officeTitle);
-
+}: {
+  holder: SeatHolder;
+  seatLabel: string | null;
+}) {
   return (
-    <PopupCard
-      type={holder.officeTitle}
-      tier={tier}
-      title={holder.name}
-      copyTitle={holder.name}
-      onClose={onClose}
-    >
-      <div className="mt-2 flex items-start gap-3">
-        {holder.photoUrl ? (
-          // Served from our origin; source and license are recorded per
-          // image in lib/registry/official-photos.json (D20).
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={holder.photoUrl}
-            alt={`Portrait of ${holder.name}`}
-            width={64}
-            height={78}
-            className="rounded border border-[var(--panel-border)] object-cover"
-          />
-        ) : (
-          <div
-            aria-hidden="true"
-            className="flex h-[78px] w-16 shrink-0 items-center justify-center rounded border border-[var(--panel-border)] bg-[var(--surface)] font-mono text-lg text-muted"
-          >
-            {initialsOf(holder.name)}
-          </div>
-        )}
-
-        <div className="min-w-0">
-          <p className="text-[0.8125rem] leading-snug">
-            {holder.officeTitle}
-            {seatLabel ? ` · ${seatLabel}` : ""}
-          </p>
-          {holder.partyLabel && (
-            // Display only. Nothing infers anything from it.
-            <p className="mt-0.5 text-[0.75rem] text-muted">{holder.partyLabel}</p>
-          )}
-          {holder.sourceUrl && (
-            <a
-              href={holder.sourceUrl}
-              target="_blank"
-              rel="noreferrer"
-              title="Where this record was read from"
-              className="font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted hover:text-signal"
-            >
-              source
-            </a>
-          )}
+    <div className="mt-2 flex items-start gap-3">
+      {holder.photoUrl ? (
+        // Served from our origin; source and license are recorded per
+        // image in lib/registry/official-photos.json (D20).
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={holder.photoUrl}
+          alt={`Portrait of ${holder.name}`}
+          width={64}
+          height={78}
+          className="rounded border border-[var(--panel-border)] object-cover"
+        />
+      ) : (
+        <div
+          aria-hidden="true"
+          className="flex h-[78px] w-16 shrink-0 items-center justify-center rounded border border-[var(--panel-border)] bg-[var(--surface)] font-mono text-lg text-muted"
+        >
+          {initialsOf(holder.name)}
         </div>
-      </div>
+      )}
 
+      <div className="min-w-0">
+        <p className="text-[0.8125rem] leading-snug">
+          {holder.officeTitle}
+          {seatLabel ? ` · ${seatLabel}` : ""}
+        </p>
+        {holder.partyLabel && (
+          // Display only. Nothing infers anything from it.
+          <p className="mt-0.5 text-[0.75rem] text-muted">{holder.partyLabel}</p>
+        )}
+        {holder.sourceUrl && (
+          <a
+            href={holder.sourceUrl}
+            target="_blank"
+            rel="noreferrer"
+            title="Where this record was read from"
+            className="font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted hover:text-signal"
+          >
+            source
+          </a>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export function ReachThem({ holder }: { holder: SeatHolder }) {
+  return (
+    <>
       <PopupSectionLabel>Reach them</PopupSectionLabel>
       {holder.email && (
         <PopupRow label="Email">
@@ -299,32 +312,61 @@ export function OfficialPopup({
             No published contact on record yet.
           </p>
         )}
+    </>
+  );
+}
 
-      <RecentVotes holder={holder} reactionContext={reactionContext} />
+export function OfficeBlurb({ holder }: { holder: SeatHolder }) {
+  const blurb = blurbForTitle(holder.officeTitle);
+  if (!blurb) return null;
+  return (
+    <>
+      <PopupSectionLabel>What this office does</PopupSectionLabel>
+      <p className="mt-1.5 text-[0.75rem] leading-relaxed text-paper-dim">
+        {blurb.text}
+      </p>
+      <p className="mt-1 text-[0.625rem] text-muted">
+        Powers defined in:{" "}
+        {blurb.basisUrl ? (
+          <a
+            href={blurb.basisUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="underline decoration-dotted hover:text-signal"
+          >
+            {blurb.basis}
+          </a>
+        ) : (
+          blurb.basis
+        )}
+      </p>
+    </>
+  );
+}
 
-      {blurb && (
-        <>
-          <PopupSectionLabel>What this office does</PopupSectionLabel>
-          <p className="mt-1.5 text-[0.75rem] leading-relaxed text-paper-dim">
-            {blurb.text}
-          </p>
-          <p className="mt-1 text-[0.625rem] text-muted">
-            Powers defined in:{" "}
-            {blurb.basisUrl ? (
-              <a
-                href={blurb.basisUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="underline decoration-dotted hover:text-signal"
-              >
-                {blurb.basis}
-              </a>
-            ) : (
-              blurb.basis
-            )}
-          </p>
-        </>
-      )}
+/**
+ * The compact glance card: identity and contact, with the record one
+ * obvious tap deeper. Votes, reactions and the office blurb live in the
+ * large tier — glance → more → full.
+ */
+export function OfficialPopup({
+  holder,
+  seatLabel,
+  tier,
+  onExpand,
+  onClose,
+}: OfficialPopupProps) {
+  return (
+    <PopupCard
+      type={holder.officeTitle}
+      tier={tier}
+      title={holder.name}
+      onExpand={onExpand}
+      expandLabel={`More about ${holder.name} — votes and record`}
+      onClose={onClose}
+    >
+      <OfficialIdentity holder={holder} seatLabel={seatLabel} />
+      <ReachThem holder={holder} />
     </PopupCard>
   );
 }

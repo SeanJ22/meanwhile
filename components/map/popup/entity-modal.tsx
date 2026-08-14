@@ -3,16 +3,14 @@
 import { X } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 
-import {
-  formatMeetingDate,
-  formatMeetingTime,
-  shortOcdId,
-} from "@/lib/map/format";
+import { formatMeetingDate, formatMeetingTime } from "@/lib/map/format";
 import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { Meeting, Provenance } from "@/lib/sources/types";
 
-import { Copyable, NoValue, PopupRow, PopupSectionLabel } from "./popup-card";
+import { HowToBeHeard } from "../meeting-panel";
+import { AgendaSection } from "./agenda-section";
+import { NoValue, PopupRow, PopupSectionLabel } from "./popup-card";
 
 /**
  * The port of EdiaStratMap's `.account-modal`.
@@ -52,6 +50,14 @@ export interface ModalSubject {
   badges?: { label: string; status?: string }[];
   /** Overview rows. */
   facts: { label: string; value: ReactNode; mono?: boolean }[];
+  /**
+   * When the subject is a meeting: its stored agenda content renders in the
+   * overview (4c) — what the meeting is about, on the surface, not behind a
+   * link.
+   */
+  agenda?: { meetingId: string; agendaUrl: string | null } | null;
+  /** How to actually speak at it (D25), when the subject is a meeting. */
+  commentAccess?: { ocdId: string | null; bodyName: string } | null;
   representation: SeatHolder[];
   /** Why representation is empty, when it is. */
   representationNote: string;
@@ -165,6 +171,23 @@ export function EntityModal({
                   {fact.value}
                 </PopupRow>
               ))}
+
+              {subject.agenda && (
+                <>
+                  <PopupSectionLabel>What this meeting is about</PopupSectionLabel>
+                  <AgendaSection
+                    meetingId={subject.agenda.meetingId}
+                    agendaUrl={subject.agenda.agendaUrl}
+                  />
+                </>
+              )}
+
+              {subject.commentAccess && (
+                <HowToBeHeard
+                  ocdId={subject.commentAccess.ocdId}
+                  bodyName={subject.commentAccess.bodyName}
+                />
+              )}
             </>
           )}
 
@@ -329,9 +352,7 @@ function Sources({
 
           <PopupRow label="Collected" mono>
             {entry.provenance.collectedAt ? (
-              <Copyable text={entry.provenance.collectedAt}>
-                {entry.provenance.collectedAt.slice(0, 10)}
-              </Copyable>
+              entry.provenance.collectedAt.slice(0, 10)
             ) : (
               <NoValue />
             )}
@@ -368,4 +389,4 @@ function hostOf(url: string): string {
   }
 }
 
-export { PopupSectionLabel, shortOcdId };
+export { PopupSectionLabel };

@@ -142,7 +142,17 @@ export function ListOverlay({
   const center = ui.nearMe ?? location;
 
   return (
-    <div className="al-overlay" role="dialog" aria-label="Visible meetings">
+    <div
+      className="al-overlay"
+      role="dialog"
+      aria-label="Visible meetings"
+      onClick={(e) => {
+        // A large popup, not a takeover (3): clicking the backdrop closes.
+        if (e.target === e.currentTarget)
+          dispatch({ type: "list/open", open: false });
+      }}
+    >
+      <div className="al-panel">
       <div className="al-overlay-header">
         <span className="al-overlay-count">
           {sorted.length} {sorted.length === 1 ? "meeting" : "meetings"}
@@ -273,6 +283,7 @@ export function ListOverlay({
             Show {Math.min(hidden, PAGE)} more ({hidden} hidden)
           </button>
         )}
+      </div>
       </div>
     </div>
   );

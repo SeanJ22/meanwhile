@@ -217,4 +217,113 @@ export const CURATED_BODIES: Body[] = [
 
   // ── D29: every body in the Clerk's directory, verbatim ──────────────────
   ...TUCSON_BOARDS.map(tucsonBoardRow),
+
+  // ── 3c (2026-08-17): special districts serving the four zips, from the
+  // 2022 Census of Governments individual-units listing (the official
+  // universe — the Layer 1 audit's denominator, docs/coverage-audit-by-
+  // county.md). Every homepage below was fetch-verified 2026-08-17; the
+  // recorded URL is the redirect-followed effective URL. Coverage is
+  // NOT_ATTEMPTED — the existence claim is Census's, the agenda hunt is
+  // still owed, and there is deliberately no way to record "gave up". ──────
+  ...specialDistrictRows(),
 ];
+
+function specialDistrictRows(): Body[] {
+  const GUS = "2022 Census of Governments government-units listing";
+  const rows: Array<{
+    slug: string;
+    state: string;
+    name: string;
+    homepage: string;
+    note?: string;
+  }> = [
+    // Pima — serve 85701 (RTA county-wide, Rio Nuevo downtown) and 85641
+    // (the two fire districts covering the Vail area; JTED county-wide).
+    {
+      slug: "pima-regional-transportation-authority",
+      state: "az",
+      name: "Pima County Regional Transportation Authority Board",
+      homepage: "https://rtamobility.com/",
+    },
+    {
+      slug: "rio-nuevo-multipurpose-facilities-district",
+      state: "az",
+      name: "Rio Nuevo District Board of Directors",
+      homepage: "https://rionuevo.org/",
+    },
+    {
+      slug: "rincon-valley-fire-district",
+      state: "az",
+      name: "Rincon Valley Fire District Governing Board",
+      homepage: "https://rinconvalleyfdaz.gov/",
+    },
+    {
+      slug: "corona-de-tucson-fire-district",
+      state: "az",
+      name: "Corona de Tucson Fire District Governing Board",
+      homepage: "https://www.coronafire.org/",
+    },
+    {
+      slug: "pima-county-jted",
+      state: "az",
+      name: "Pima County Joint Technological Education District Governing Board",
+      homepage: "https://pimajted.org/",
+    },
+    // Morris — serve 07866 (RVRSA's member municipalities include Rockaway
+    // Township; the college, vocational district, and conservation district
+    // are county-wide).
+    {
+      slug: "rockaway-valley-regional-sewerage-authority",
+      state: "nj",
+      name: "Rockaway Valley Regional Sewerage Authority Board",
+      homepage: "https://rvrsa.org/",
+    },
+    {
+      slug: "county-college-of-morris",
+      state: "nj",
+      name: "County College of Morris Board of Trustees",
+      homepage: "https://www.ccm.edu/",
+    },
+    {
+      slug: "morris-county-vocational-school-district",
+      state: "nj",
+      name: "Morris County Vocational School District Board of Education",
+      homepage: "https://www.mcvts.org/",
+    },
+    {
+      slug: "morris-county-soil-conservation-district",
+      state: "nj",
+      name: "Morris County Soil Conservation District Board",
+      homepage: "https://mcscd.org/",
+    },
+    // Merrimack — the conservation district is county-wide and so serves
+    // 03255; no village district's boundary reaches Newbury (audit note).
+    {
+      slug: "merrimack-county-conservation-district",
+      state: "nh",
+      name: "Merrimack County Conservation District Board of Supervisors",
+      homepage: "https://merrimackccd.org/",
+    },
+  ];
+  const collected = "2026-08-17";
+  return rows.map((row) => ({
+    id: `curated:${row.state}/${row.slug}#governing`,
+    ocdId: null,
+    name: row.name,
+    bodyClass: "GOVERNING" as const,
+    bodyOrigin: "CURATED" as const,
+    coverageStatus: "NOT_ATTEMPTED" as const,
+    agendaSourceType: "NONE" as const,
+    agendaSourceRef: null,
+    meetingCadence: null,
+    homepageUrl: row.homepage,
+    demandCount: 0,
+    sourceDataset: "COG_2022" as const,
+    provenance: {
+      sourceUrl: row.homepage,
+      sourceOrg: `${GUS}; the body's own site`,
+      collectedAt: collected,
+      verifiedAt: collected,
+    },
+  }));
+}

@@ -206,6 +206,7 @@ export function officeTypeForTitle(title: string): OfficeType | null {
   }
   if (t.includes("supervisor")) return "county-commissioner";
   if (t.includes("governing board")) return "school-board";
+  if (t.includes("school board")) return "school-board";
   // 2e: the Selectboard maps to its own explainer, never a borrowed one.
   if (t.includes("selectboard") || t.includes("select board")) {
     return "select-board";

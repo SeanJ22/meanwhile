@@ -11,12 +11,20 @@ import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
  * sourced, dated, keyed to real wired bodies, and actually rendered.
  */
 
-test("every roster keys to a wired body — a roster for nothing is a curation error", () => {
+test("every roster keys to a real body — a roster for nothing is a curation error", () => {
+  // Generalized 2026-08-17 (Kearsarge): a roster may belong to a KNOWN
+  // registry body whose calendar is not wired yet — showing a body's people
+  // while its meetings are still being hunted is exactly the who-governs
+  // case. What stays forbidden is a roster keyed to nothing at all.
   const wiredIds = new Set(SOURCE_WIRING.map((r) => r.bodyId));
+  const registry = JSON.parse(
+    readFileSync(join(process.cwd(), "lib", "registry", "registry.json"), "utf8"),
+  ) as { bodies: { id: string }[] };
+  const registryIds = new Set(registry.bodies.map((b) => b.id));
   for (const roster of BODY_ROSTERS) {
     assert.ok(
-      wiredIds.has(roster.bodyId),
-      `${roster.bodyName}: bodyId does not match any source-wiring row`,
+      wiredIds.has(roster.bodyId) || registryIds.has(roster.bodyId),
+      `${roster.bodyName}: bodyId matches neither a source-wiring row nor a registry body`,
     );
   }
 });
@@ -50,7 +58,7 @@ test("every member has a name, a published title, and no invented contact", () =
         // Only published addresses: government domains, never guessed ones.
         assert.match(
           member.email,
-          /@(tucsonaz\.gov|pima\.gov|tusd1\.org|vailschooldistrict\.org|newbury\.nh\.gov)$/,
+          /@(tucsonaz\.gov|pima\.gov|tusd1\.org|vailschooldistrict\.org|newbury\.nh\.gov|rockawaytownship\.org)$/,
           `${member.name}: email must be from the body's own published domain`,
         );
       }

@@ -329,6 +329,345 @@ export const BODY_ROSTERS: BodyRoster[] = [
       },
     ],
   },
+  {
+    // 3d/6e (2026-08-17): the wall came down. kearsarge.org 403'd every
+    // client recorded in earlier hunts; a browser-UA fetch from this
+    // machine returned the full members page (200, 73 KB) — nine members,
+    // towns, term expirations, committees, all stated by the district
+    // itself. Newbury's representative is Kristen Schultz, who also chairs
+    // the Newbury Selectboard. The district publishes no per-member phone
+    // or email on this page — the absences are honest, not unhunted.
+    bodyId:
+      "ocd-division/country:us/state:nh/school_district:kearsarge_regional_school_district#board",
+    bodyName: "Kearsarge Regional School Board",
+    sourceUrl:
+      "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-members",
+    sourceOrg: "Kearsarge Regional School District (SAU #65)",
+    collectedAt: "2026-08-17",
+    members: [
+      {
+        id: "roster:kearsarge#1",
+        name: "Alison Mastin",
+        officeTitle: "School Board Chair",
+        termNote: "Represents Wilmot · term expires 2028",
+        email: null,
+        phone: null,
+        websiteUrl:
+          "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-members",
+      },
+      {
+        id: "roster:kearsarge#2",
+        name: "Kristen Schultz",
+        officeTitle: "School Board Vice Chair",
+        termNote: "Represents Newbury · term expires 2027",
+        email: null,
+        phone: null,
+        websiteUrl:
+          "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-members",
+      },
+      {
+        id: "roster:kearsarge#3",
+        name: "James MacKenna",
+        officeTitle: "School Board Member",
+        termNote: "Represents New London · term expires 2028",
+        email: null,
+        phone: null,
+        websiteUrl:
+          "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-members",
+      },
+      {
+        id: "roster:kearsarge#4",
+        name: "David Keith",
+        officeTitle: "School Board Member",
+        termNote: "Represents New London · term expires 2029",
+        email: null,
+        phone: null,
+        websiteUrl:
+          "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-members",
+      },
+      {
+        id: "roster:kearsarge#5",
+        name: "Art Bobruff",
+        officeTitle: "School Board Member",
+        termNote: "Represents Springfield · term expires 2027",
+        email: null,
+        phone: null,
+        websiteUrl:
+          "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-members",
+      },
+      {
+        id: "roster:kearsarge#6",
+        name: "Patrick McGowan",
+        officeTitle: "School Board Member",
+        termNote: "Represents Warner · term expires 2027",
+        email: null,
+        phone: null,
+        websiteUrl:
+          "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-members",
+      },
+      {
+        id: "roster:kearsarge#7",
+        name: "Paul Lakevicius",
+        officeTitle: "School Board Member",
+        termNote: "Represents Warner · term expires 2027",
+        email: null,
+        phone: null,
+        websiteUrl:
+          "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-members",
+      },
+      {
+        id: "roster:kearsarge#8",
+        name: "Nancy Glynn",
+        officeTitle: "School Board Member",
+        termNote: "Represents Sutton · term expires 2028",
+        email: null,
+        phone: null,
+        websiteUrl:
+          "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-members",
+      },
+      {
+        id: "roster:kearsarge#9",
+        name: "Eric Gregoire",
+        officeTitle: "School Board Member",
+        termNote: "Represents Bradford · term expires 2029",
+        email: null,
+        phone: null,
+        websiteUrl:
+          "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-members",
+      },
+    ],
+  },
+  {
+    // 6e (2026-08-17): the NJ rosters open at last. The township's own
+    // council page publishes per-member phone extensions AND emails — the
+    // Kelly standard straight from the source. Mayor rides on the roster so
+    // the 3e who-governs mayor line works for 07866 exactly as for 85701.
+    bodyId:
+      "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing",
+    bodyName: "Rockaway Township Council",
+    sourceUrl: "https://www.rockawaytownship.org/157/Township-Council",
+    sourceOrg: "Rockaway Township",
+    collectedAt: "2026-08-17",
+    members: [
+      {
+        id: "roster:rockaway#0",
+        name: "Joseph Jackson",
+        officeTitle: "Mayor",
+        termNote: "Unexpired term ends December 31, 2027",
+        email: null,
+        phone: "973-627-7200",
+        websiteUrl: "https://www.rockawaytownship.org/464/About-the-Mayor",
+      },
+      {
+        id: "roster:rockaway#1",
+        name: "Howard Morrison",
+        officeTitle: "Council President, At-Large",
+        termNote: "Term expires December 31, 2027",
+        email: "hmorrison@rockawaytownship.org",
+        phone: "973-627-7200 x2081",
+        websiteUrl: "https://www.rockawaytownship.org/157/Township-Council",
+      },
+      {
+        id: "roster:rockaway#2",
+        name: "Jonathan Sackett",
+        officeTitle: "Council Vice President, Ward 4",
+        termNote: "Term expires December 31, 2029",
+        email: "jsackett@rockawaytownship.org",
+        phone: "973-627-7200 x2088",
+        websiteUrl: "https://www.rockawaytownship.org/157/Township-Council",
+      },
+      {
+        id: "roster:rockaway#3",
+        name: "Adam Salberg",
+        officeTitle: "Council Member, At-Large",
+        termNote: "Term expires December 31, 2027",
+        email: "asalberg@rockawaytownship.org",
+        phone: "973-627-7200 x2083",
+        websiteUrl: "https://www.rockawaytownship.org/157/Township-Council",
+      },
+      {
+        id: "roster:rockaway#4",
+        name: "Pawel Wojtowicz",
+        officeTitle: "Council Member, At-Large",
+        termNote: "Term expires December 31, 2027",
+        email: "pwojtowicz@rockawaytownship.org",
+        phone: "973-627-7200 x2084",
+        websiteUrl: "https://www.rockawaytownship.org/157/Township-Council",
+      },
+      {
+        id: "roster:rockaway#5",
+        name: "Susan Fahrman Royek",
+        officeTitle: "Council Member, Ward 1",
+        termNote: "Term expires December 31, 2029",
+        email: "sroyek@rockawaytownship.org",
+        phone: "973-627-7200 x2085",
+        websiteUrl: "https://www.rockawaytownship.org/157/Township-Council",
+      },
+      {
+        id: "roster:rockaway#6",
+        name: "John J. Quinn",
+        officeTitle: "Council Member, Ward 2",
+        termNote: "Term expires December 31, 2029",
+        email: "jquinn@rockawaytownship.org",
+        phone: "973-627-7200 x2086",
+        websiteUrl: "https://www.rockawaytownship.org/157/Township-Council",
+      },
+      {
+        id: "roster:rockaway#7",
+        name: "Sophia Freire",
+        officeTitle: "Council Member, Ward 3",
+        termNote: "Term expires December 31, 2029",
+        email: "sfreire@rockawaytownship.org",
+        phone: "973-627-7200 x2087",
+        websiteUrl: "https://www.rockawaytownship.org/157/Township-Council",
+      },
+      {
+        id: "roster:rockaway#8",
+        name: "Emanuel Friedlander",
+        officeTitle: "Council Member, Ward 5",
+        termNote: "Term expires December 31, 2029",
+        email: "efriedlander@rockawaytownship.org",
+        phone: "973-627-7200 x2089",
+        websiteUrl: "https://www.rockawaytownship.org/157/Township-Council",
+      },
+      {
+        id: "roster:rockaway#9",
+        name: "Tucker Kelley",
+        officeTitle: "Council Member, Ward 6",
+        termNote: "Term expires December 31, 2029",
+        email: "tkelley@rockawaytownship.org",
+        phone: "973-627-7200 x2082",
+        websiteUrl: "https://www.rockawaytownship.org/157/Township-Council",
+      },
+    ],
+  },
+  {
+    // 6e (2026-08-17): read from the county's own page — the same page
+    // carries the meeting cadence and the clerk's phone (973-285-6010).
+    bodyId: "ocd-division/country:us/state:nj/county:morris#governing",
+    bodyName: "Morris County Board of County Commissioners",
+    sourceUrl:
+      "https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners",
+    sourceOrg: "Morris County",
+    collectedAt: "2026-08-17",
+    members: [
+      {
+        id: "roster:morris#1",
+        name: "Stephen H. Shaw",
+        officeTitle: "Commissioner Director",
+        termNote: null,
+        email: null,
+        phone: "973-285-6010",
+        websiteUrl:
+          "https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners",
+      },
+      {
+        id: "roster:morris#2",
+        name: "John Krickus",
+        officeTitle: "Commissioner Deputy Director",
+        termNote: null,
+        email: null,
+        phone: "973-285-6010",
+        websiteUrl:
+          "https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners",
+      },
+      {
+        id: "roster:morris#3",
+        name: "Douglas R. Cabana",
+        officeTitle: "County Commissioner",
+        termNote: null,
+        email: null,
+        phone: "973-285-6010",
+        websiteUrl:
+          "https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners",
+      },
+      {
+        id: "roster:morris#4",
+        name: "Thomas J. Mastrangelo",
+        officeTitle: "County Commissioner",
+        termNote: null,
+        email: null,
+        phone: "973-285-6010",
+        websiteUrl:
+          "https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners",
+      },
+      {
+        id: "roster:morris#5",
+        name: "Christine Myers",
+        officeTitle: "County Commissioner",
+        termNote: null,
+        email: null,
+        phone: "973-285-6010",
+        websiteUrl:
+          "https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners",
+      },
+      {
+        id: "roster:morris#6",
+        name: "Tayfun Selen",
+        officeTitle: "County Commissioner",
+        termNote: null,
+        email: null,
+        phone: "973-285-6010",
+        websiteUrl:
+          "https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners/Tayfun-Selen",
+      },
+      {
+        id: "roster:morris#7",
+        name: "Deborah Smith",
+        officeTitle: "County Commissioner",
+        termNote: null,
+        email: null,
+        phone: "973-285-6010",
+        websiteUrl:
+          "https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners",
+      },
+    ],
+  },
+  {
+    // 6e (2026-08-17): the county's FY2025 annual report directory (marked
+    // "Current") is the roster's source — the county site's commissioners
+    // index page still names a FORMER District 1 commissioner, and the
+    // county's own May 2026 meeting minutes confirm the annual report's
+    // three names. The stale page is recorded in the audit, not trusted.
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack#governing",
+    bodyName: "Merrimack County Board of Commissioners",
+    sourceUrl:
+      "https://chichesternh.org/DocumentCenter/View/1817/Merrimack-County-Annual-Report-2025",
+    sourceOrg: "Merrimack County (FY2025 Annual Report, County Directory)",
+    collectedAt: "2026-08-17",
+    members: [
+      {
+        id: "roster:merrimack#1",
+        name: "Stuart D. Trachy",
+        officeTitle: "County Commissioner, Chair",
+        termNote: "Of Franklin",
+        email: null,
+        phone: "(603) 796-6800",
+        websiteUrl:
+          "https://www.merrimackcounty.net/board_of_commissioners_/index.php",
+      },
+      {
+        id: "roster:merrimack#2",
+        name: "David M. Lovlien",
+        officeTitle: "County Commissioner, Vice Chair",
+        termNote: "Of Pembroke",
+        email: null,
+        phone: "(603) 796-6800",
+        websiteUrl:
+          "https://www.merrimackcounty.net/board_of_commissioners_/index.php",
+      },
+      {
+        id: "roster:merrimack#3",
+        name: "Stephen Shurtleff",
+        officeTitle: "County Commissioner, Clerk",
+        termNote: null,
+        email: null,
+        phone: "(603) 796-6800",
+        websiteUrl:
+          "https://www.merrimackcounty.net/board_of_commissioners_/index.php",
+      },
+    ],
+  },
 ];
 
 export function rosterForBody(bodyId: string | null): BodyRoster | null {

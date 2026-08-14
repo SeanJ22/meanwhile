@@ -156,6 +156,134 @@ export const TOPIC_ROUTES: readonly TopicRoute[] = [
     basis: "Municipal charters; county highway statutes; state DOT authority",
   },
   {
+    id: "trash-recycling",
+    label: "Trash and recycling",
+    examples: [
+      "missed garbage pickup",
+      "recycling schedule",
+      "bulk trash",
+      "illegal dumping",
+    ],
+    steps: [
+      {
+        bodyTarget: "municipal",
+        officeType: "city-council",
+        why: "Inside a city or borough, trash and recycling are a city service — the service line fixes a missed pickup fastest, and your council member answers for the service.",
+      },
+      {
+        bodyTarget: "county",
+        officeType: "county-commissioner",
+        why: "Outside city limits, collection is often private or county-coordinated — the county board sets what's offered.",
+      },
+    ],
+    basis: "Municipal charters and sanitation ordinances; county solid-waste authority",
+  },
+  {
+    id: "water-sewer",
+    label: "Water and sewer",
+    examples: [
+      "water main break",
+      "sewer backup",
+      "water bill question",
+      "no water pressure",
+    ],
+    steps: [
+      {
+        bodyTarget: "municipal",
+        officeType: "city-council",
+        why: "Where the city runs the water utility, the utility's own line handles leaks and bills — the council votes its rates.",
+      },
+      {
+        bodyTarget: "county",
+        officeType: "county-commissioner",
+        why: "Sewer systems are often county-run; the county board oversees the wastewater utility.",
+      },
+    ],
+    basis: "Municipal utility charters; county wastewater statutes",
+  },
+  {
+    id: "noise",
+    label: "Noise complaints",
+    examples: ["loud music at night", "construction noise", "noisy neighbors"],
+    steps: [
+      {
+        bodyTarget: "municipal",
+        officeType: "city-council",
+        why: "Noise rules are city ordinances — the police non-emergency line handles tonight's noise; your council member owns the ordinance itself.",
+      },
+      {
+        bodyTarget: "county",
+        officeType: "county-commissioner",
+        why: "Outside city limits the sheriff responds, under rules the county board sets.",
+      },
+    ],
+    basis: "Municipal noise ordinances; county code and sheriff authority",
+  },
+  {
+    id: "animals",
+    label: "Animals and pets",
+    examples: [
+      "stray dog",
+      "barking dog next door",
+      "dog license",
+      "found a cat",
+    ],
+    steps: [
+      {
+        bodyTarget: "county",
+        officeType: "county-commissioner",
+        why: "Animal care and control usually runs at the county level — one shelter and field service for the whole area.",
+      },
+      {
+        bodyTarget: "municipal",
+        officeType: "city-council",
+        why: "Some towns keep their own animal control officer and license dogs at town hall.",
+      },
+    ],
+    basis: "County animal-control statutes; municipal licensing ordinances",
+  },
+  {
+    id: "parks",
+    label: "Parks and playgrounds",
+    examples: [
+      "broken playground equipment",
+      "park maintenance",
+      "pool hours",
+      "reserve a pavilion",
+    ],
+    steps: [
+      {
+        bodyTarget: "municipal",
+        officeType: "city-council",
+        why: "City parks are a city department — its own line handles maintenance and reservations, and the council votes its budget.",
+      },
+      {
+        bodyTarget: "county",
+        officeType: "county-commissioner",
+        why: "Regional parks and trails belong to the county park system.",
+      },
+    ],
+    basis: "Municipal charters; county park district statutes",
+  },
+  {
+    id: "snow-removal",
+    label: "Snow removal",
+    examples: ["street not plowed", "plow damage", "ice on the road"],
+    steps: [
+      {
+        bodyTarget: "municipal",
+        officeType: "city-council",
+        why: "The town's road crew plows town roads — the public-works or highway line is the fastest call.",
+      },
+      {
+        bodyTarget: "county",
+        officeType: "county-commissioner",
+        why: "County roads are the county crew's; numbered state routes are the state's.",
+      },
+    ],
+    basis: "Municipal public-works charters; county and state highway statutes",
+  },
+  {
     id: "property-taxes",
     label: "Property taxes",
     examples: ["property tax bill", "assessment too high", "tax rate"],

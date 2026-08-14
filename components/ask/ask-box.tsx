@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 
 import { answerQuestion, REFUSAL_LOG_MAX_CHARS, type AskAnswer } from "@/lib/routing/ask";
 import type { CoverageSummary } from "@/lib/registry/coverage";
@@ -34,6 +34,15 @@ export function AskBox({
 }) {
   const [text, setText] = useState("");
   const [asked, setAsked] = useState<AskAnswer | null>(null);
+  // The visible-work beat (the author's presentation call, session brief
+  // 3): the answer renders after ~250ms behind "I got you... hang
+  // tight...". PRESENTATION ONLY — the routing below runs instantly and
+  // deterministically on-device before the timer starts, and nothing new
+  // is logged. The label deliberately avoids any thinking-style wording
+  // implying AI: the transparency page says no AI answers questions, and
+  // the label must not contradict it.
+  const [working, setWorking] = useState(false);
+  const beatTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   // Two instances mount at once (the who-governs card and the sidebar
   // rail) — the label/input pairing must not share a DOM id.
   const inputId = useId();
@@ -41,8 +50,7 @@ export function AskBox({
   const ask = () => {
     const question = text.trim();
     if (!question) return;
-    const result = answerQuestion(question, coverage);
-    setAsked(result);
+    const result = answerQuestion(question, coverage, zip);
     if (result.answer.kind === "ROUTED" && result.match) {
       logEvent("QUESTION_ASKED", ocdIds, {
         topic: result.match.topicId,
@@ -57,6 +65,14 @@ export function AskBox({
         question: question.slice(0, REFUSAL_LOG_MAX_CHARS),
       });
     }
+    // The answer is already in hand; only its rendering waits the beat.
+    if (beatTimer.current) clearTimeout(beatTimer.current);
+    setAsked(null);
+    setWorking(true);
+    beatTimer.current = setTimeout(() => {
+      setAsked(result);
+      setWorking(false);
+    }, 250);
   };
 
   return (
@@ -89,6 +105,14 @@ export function AskBox({
         </button>
       </div>
 
+      {working && (
+        // The beat — presentation only; no AI answers questions here and
+        // the label must not suggest otherwise.
+        <p className="mt-2 text-[0.75rem] italic text-muted" aria-live="polite">
+          I got you... hang tight...
+        </p>
+      )}
+
       {asked && asked.answer.kind === "NO_ROUTE" && (
         <p className="mt-2 text-[0.75rem] leading-relaxed text-muted">
           {asked.answer.statement}
@@ -100,6 +124,74 @@ export function AskBox({
           <p className="text-[0.75rem] font-semibold">
             {asked.answer.topic.label}
           </p>
+          {asked.contacts.length > 0 && (
+            // The everyday answer: the office that owns the fix, with the
+            // real line. A service line that owns the topic IS the answer.
+            <div className="mt-1.5 space-y-2">
+              {asked.contacts.map((contact) => (
+                <div
+                  key={`${contact.body}|${contact.service}`}
+                  className="rounded border border-[var(--signal)]/40 bg-[var(--signal)]/5 p-2"
+                >
+                  <p className="text-[0.75rem] font-semibold text-paper">
+                    {contact.body}
+                  </p>
+                  <p className="text-[0.6875rem] text-paper-dim">
+                    {contact.service}
+                  </p>
+                  <p className="mt-0.5 text-[0.75rem]">
+                    {contact.phone && (
+                      <a
+                        href={`tel:${contact.phone.replace(/[^\d+]/g, "")}`}
+                        className="font-semibold text-signal"
+                      >
+                        {contact.phone}
+                      </a>
+                    )}
+                    {contact.email && (
+                      <>
+                        {contact.phone && <span className="text-muted"> · </span>}
+                        <a
+                          href={`mailto:${contact.email}`}
+                          className="text-signal underline decoration-dotted"
+                        >
+                          {contact.email}
+                        </a>
+                      </>
+                    )}
+                    {contact.requestUrl && (
+                      <>
+                        {(contact.phone || contact.email) && (
+                          <span className="text-muted"> · </span>
+                        )}
+                        <a
+                          href={contact.requestUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-signal underline decoration-dotted"
+                        >
+                          online request
+                        </a>
+                      </>
+                    )}
+                  </p>
+                  {contact.note && (
+                    <p className="mt-0.5 text-[0.6875rem] text-muted">
+                      {contact.note}
+                    </p>
+                  )}
+                  <a
+                    href={contact.sourceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-0.5 inline-block font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted hover:text-signal"
+                  >
+                    source — {contact.sourceOrg}
+                  </a>
+                </div>
+              ))}
+            </div>
+          )}
           <ol className="mt-1 space-y-2">
             {asked.answer.steps.map((step, i) => (
               <li key={i} className="text-[0.75rem] leading-relaxed">

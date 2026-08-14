@@ -167,12 +167,26 @@ test("a Newbury voter (03255) sees the November slate, and March is stated, not 
   assert.equal(set.election.state, "NH");
 
   // Denominator: governor, US senate, CD2, state senate 7, Merrimack 7,
-  // and five county offices = 10 contests.
-  assert.equal(contests.length, 10, contests.map((c) => c.id).join(", "));
+  // Executive Council 2, county commissioner 2, and five county offices = 12
+  // contests — the full November slate (2026-08-16 correction: the thin-
+  // ballot finding held only for town/school offices, which decide in March).
+  assert.equal(contests.length, 12, contests.map((c) => c.id).join(", "));
 
   const ids = new Set(contests.map((c) => c.id));
   assert.ok(ids.has("ballot-nh-merrimack:us-senate"));
   assert.ok(ids.has("ballot-nh-merrimack:state-house-merrimack-7"));
+  assert.ok(ids.has("ballot-nh-merrimack:executive-council-2"));
+  assert.ok(ids.has("ballot-nh-merrimack:county-commissioner-2"));
+
+  // Both once-missing contests carry filed candidates, not empty shells.
+  const ec = set.candidacies.filter(
+    (c) => c.contestId === "ballot-nh-merrimack:executive-council-2",
+  );
+  assert.equal(ec.length, 3, "EC District 2: Liot Hill, Menard, Strathdee");
+  const commissioner = set.candidacies.filter(
+    (c) => c.contestId === "ballot-nh-merrimack:county-commissioner-2",
+  );
+  assert.equal(commissioner.length, 3, "Commissioner D2: Ribas, Bilodeau, French");
 
   const senate = set.candidacies.filter(
     (c) => c.contestId === "ballot-nh-merrimack:us-senate",

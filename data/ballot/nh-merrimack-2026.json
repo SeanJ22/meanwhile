@@ -1,7 +1,7 @@
 {
  "formatVersion": 1,
  "curatedAt": "2026-08-14",
- "curatorNote": "Transcribed from the NH Secretary of State's cumulative primary filing (cumulative-filings-7.16.26.pdf, both party sections) and the 2026-2027 political calendar. These are primary filings: the September 8 primary decides the general lineup. THE NOVEMBER FINDING: New Hampshire's town-meeting tradition decides town and school matters in March - the political calendar sets Town Election day as March 10, 2026 - so a thin November local ballot is how Newbury's system works, not a coverage gap. Merrimack County commissioner districts and Executive Council districts are not in our boundary data, so those contests are listed in coverageNotes rather than mapped to a division. County offices from the MERRIMACK County sections of both party filings.",
+ "curatorNote": "Transcribed from the NH Secretary of State's cumulative primary filing (cumulative-filings-7.16.26.pdf, both party sections) and the 2026-2027 political calendar. These are primary filings: the September 8 primary decides the general lineup. THE NOVEMBER FINDING, CORRECTED 2026-08-16: the original finding called the November ballot thin; that was true ONLY for town and school offices, which New Hampshire's town-meeting tradition decides in March (Town Election day March 10, 2026, per the political calendar). For state and federal offices the November ballot is one of the largest in the country - governor (two-year term, up every midterm), a U.S. Senate seat, U.S. House, all state senate and house seats, Executive Council, and county offices. The Executive Council and county commissioner contests were originally left in coverageNotes as unmappable; they are now listed as contests keyed to Newbury's town division, because the Secretary of State's own 2022-2032 district assignment documents place Newbury in Executive Council District 2 (2022-2032-executive-council-districts.pdf, Merrimack County section) and Merrimack County Commissioner Second District, which elects in 2026 to a 2-year term (2022-2032-county-commissioners-by-district_0.pdf). District BOUNDARIES are still not in our map data - only the town-to-district assignment is sourced. Newbury's House seat is District 7 (New London + Newbury, 2 seats) per 2022-2032-state-representative-and-delegate-districts.pdf, which also shows NO floterial district covering Newbury. County offices from the MERRIMACK County sections of both party filings.",
  "election": {
   "id": "nh-2026-11-03",
   "date": "2026-11-03",
@@ -92,6 +92,40 @@
     "sourceOrg": "New Hampshire Secretary of State",
     "collectedAt": "2026-08-14",
     "verifiedAt": "2026-08-14"
+   }
+  },
+  {
+   "id": "ballot-nh-merrimack:executive-council-2",
+   "electionId": "nh-2026-11-03",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "divisionVintage": "TIGER_GENZ2025",
+   "title": "Executive Councilor, District 2",
+   "type": "CANDIDACY",
+   "voteFor": 1,
+   "termYears": 2,
+   "scopeNote": "Newbury votes in Executive Council District 2 per the Secretary of State's 2022-2032 district assignment (the district spans 81 cities and towns across six counties; its Merrimack County portion includes Newbury and New London). The district's boundary lines are not on our map yet - only the town assignment is sourced. Candidates shown are everyone who filed for the September 8, 2026 state primary (Secretary of State cumulative filing, July 16 revision). The general-election lineup narrows to the primary winners after September 8.",
+   "provenance": {
+    "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/inline-documents/sonh/2022-2032-executive-council-districts.pdf",
+    "sourceOrg": "New Hampshire Secretary of State",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "id": "ballot-nh-merrimack:county-commissioner-2",
+   "electionId": "nh-2026-11-03",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "divisionVintage": "TIGER_GENZ2025",
+   "title": "Merrimack County Commissioner, Second District",
+   "type": "CANDIDACY",
+   "voteFor": 1,
+   "termYears": 2,
+   "scopeNote": "Newbury votes in the county's Second Commissioner District per the Secretary of State's 2022-2032 assignment (Andover, Boscawen, Bradford, Canterbury, Chichester, Danbury, Franklin, Hill, Loudon, New London, Newbury, Northfield, Salisbury, Sutton, Warner, Webster, Wilmot), which elects in 2026 to a two-year term. The district's boundary lines are not on our map yet - only the town assignment is sourced. Candidates shown are everyone who filed for the September 8, 2026 state primary (Secretary of State cumulative filing, July 16 revision). The general-election lineup narrows to the primary winners after September 8.",
+   "provenance": {
+    "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/inline-documents/sonh/2022-2032-county-commissioners-by-district_0.pdf",
+    "sourceOrg": "New Hampshire Secretary of State",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
    }
   },
   {
@@ -630,6 +664,102 @@
    }
   },
   {
+   "id": "ballot-nh-merrimack:executive-council-2:liot-hill-karen",
+   "contestId": "ballot-nh-merrimack:executive-council-2",
+   "familyName": "Liot Hill",
+   "givenName": "Karen",
+   "partyLabel": "Democratic",
+   "slogan": null,
+   "incumbent": null,
+   "websiteUrl": null,
+   "provenance": {
+    "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+    "sourceOrg": "New Hampshire Secretary of State",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "id": "ballot-nh-merrimack:executive-council-2:menard-tobin",
+   "contestId": "ballot-nh-merrimack:executive-council-2",
+   "familyName": "Menard",
+   "givenName": "Tobin",
+   "partyLabel": "Republican",
+   "slogan": null,
+   "incumbent": null,
+   "websiteUrl": null,
+   "provenance": {
+    "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+    "sourceOrg": "New Hampshire Secretary of State",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "id": "ballot-nh-merrimack:executive-council-2:strathdee-kim",
+   "contestId": "ballot-nh-merrimack:executive-council-2",
+   "familyName": "Strathdee",
+   "givenName": "Kim",
+   "partyLabel": "Republican",
+   "slogan": null,
+   "incumbent": null,
+   "websiteUrl": null,
+   "provenance": {
+    "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+    "sourceOrg": "New Hampshire Secretary of State",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "id": "ballot-nh-merrimack:county-commissioner-2:ribas-vincent-s-",
+   "contestId": "ballot-nh-merrimack:county-commissioner-2",
+   "familyName": "Ribas",
+   "givenName": "Vincent S.",
+   "partyLabel": "Democratic",
+   "slogan": null,
+   "incumbent": null,
+   "websiteUrl": null,
+   "provenance": {
+    "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+    "sourceOrg": "New Hampshire Secretary of State",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "id": "ballot-nh-merrimack:county-commissioner-2:bilodeau-richard",
+   "contestId": "ballot-nh-merrimack:county-commissioner-2",
+   "familyName": "Bilodeau",
+   "givenName": "Richard",
+   "partyLabel": "Republican",
+   "slogan": null,
+   "incumbent": null,
+   "websiteUrl": null,
+   "provenance": {
+    "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+    "sourceOrg": "New Hampshire Secretary of State",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "id": "ballot-nh-merrimack:county-commissioner-2:french-harold-f-",
+   "contestId": "ballot-nh-merrimack:county-commissioner-2",
+   "familyName": "French",
+   "givenName": "Harold F.",
+   "partyLabel": "Republican",
+   "slogan": null,
+   "incumbent": null,
+   "websiteUrl": null,
+   "provenance": {
+    "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+    "sourceOrg": "New Hampshire Secretary of State",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
    "id": "ballot-nh-merrimack:county-sheriff:shephard-peter",
    "contestId": "ballot-nh-merrimack:county-sheriff",
    "familyName": "Shephard",
@@ -864,6 +994,6 @@
   }
  ],
  "coverageNotes": [
-  "Executive Council and Merrimack County commissioner contests exist this cycle, but their district boundaries are not in our data yet, so we can't say which district covers you. This is a gap in our data, not an empty ballot line."
+  "Executive Council and county commissioner district boundary lines aren't on our map yet. Those contests are listed here because the Secretary of State's own district assignments place Newbury in Executive Council District 2 and the county's Second Commissioner District — the town assignment is sourced even though the lines can't be drawn."
  ]
 }

@@ -907,7 +907,7 @@ function MapEntryInner() {
               onExpand={() =>
                 openLarge({
                   kind: "entity",
-                  subject: districtSubject(districtPopup),
+                  subject: districtSubject(districtPopup, current?.meetings ?? []),
                 })
               }
             />
@@ -1029,7 +1029,12 @@ function meetingSubject(
       { label: "Status", value: STATUS_LABEL[meeting.status] },
     ],
     agenda: { meetingId: meeting.id, agendaUrl: meeting.agendaUrl },
-    commentAccess: { ocdId: meeting.ocdId, bodyName: meeting.bodyName },
+    // 6a (2026-08-17): a concluded meeting drops the to-be-heard boilerplate
+    // — there is nothing left to be heard at.
+    commentAccess:
+      meeting.status === "CONCLUDED"
+        ? null
+        : { ocdId: meeting.ocdId, bodyName: meeting.bodyName },
     // Tier-3 (5a): the curated roster where one exists; the honest absence
     // where none does.
     representation: roster,
@@ -1040,7 +1045,27 @@ function meetingSubject(
   };
 }
 
-function districtSubject(district: DistrictHit): ModalSubject {
+function districtSubject(
+  district: DistrictHit,
+  allMeetings: Meeting[] = [],
+): ModalSubject {
+  // 6c (2026-08-17): the county popup fills in. A county's large surface
+  // lists every local meeting in view (local coverage is clipped to exactly
+  // the clip counties, so the state prefix IS the county membership test
+  // for local-tier meetings — Vail's AND Tucson's together), and the
+  // county's own commissioners from the curated roster. Other district
+  // types list their own division's meetings.
+  const isCounty = /\/county:[^/]+$/.test(district.ocdId);
+  const statePrefix = `state:${district.state.toLowerCase()}`;
+  const meetings = allMeetings
+    .filter((m) =>
+      isCounty
+        ? tierForMeeting(m) === "local" &&
+          (m.ocdId === null || m.ocdId.includes(statePrefix))
+        : m.ocdId === district.ocdId,
+    )
+    .sort((a, b) => a.startsAt.localeCompare(b.startsAt));
+  const roster = rosterHoldersForBody(`${district.ocdId}#governing`);
   return {
     title: district.label,
     subtitle: `${district.typeLabel} · ${district.state}`,
@@ -1051,9 +1076,9 @@ function districtSubject(district: DistrictHit): ModalSubject {
       { label: "Tier", value: TIER_LABEL[district.tier] },
       { label: "State", value: district.state, mono: true },
     ],
-    representation: [],
+    representation: roster,
     representationNote: "No sourced officeholder for this division yet.",
-    meetings: [],
+    meetings,
     sources: [],
   };
 }

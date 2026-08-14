@@ -156,3 +156,38 @@ test("touching the district-type group turns the overlay on — except clear", (
   // Clearing every type draws nothing, so it must not enable the overlay.
   assert.equal(interactionTurnsOverlayOn("clear"), false);
 });
+
+/**
+ * The failed-fetch rule (2a, ninth sighting of the shape): **a failed
+ * operation may not render as an empty success.** The regression this pins:
+ * a settle-path fetch failed in production and the sidebar stood behind
+ * "0 meetings / 0 bodies / 0 officials" while the failure card rendered
+ * beside it — three confident false claims. "Couldn't check" and "none" are
+ * different facts; the stat cards must never claim the second on the
+ * strength of the first.
+ */
+test("a failed fetch renders couldn't-check, never confident zeros", async () => {
+  const { deriveStatsView } = await import("../lib/state/derive.ts");
+
+  const stats = { meetings: 0, bodies: 0, districts: 10, officials: 0 };
+  const failed = deriveStatsView(stats, true, true);
+
+  for (const key of ["meetings", "bodies", "officials"] as const) {
+    assert.notEqual(
+      failed[key],
+      0,
+      `stats.${key} rendered 0 beside a failed fetch — that is a false claim`,
+    );
+    assert.equal(failed[key], "—");
+  }
+  // Districts draw from committed files on the client and are genuinely
+  // intact when the meetings service is not — the honest number stays.
+  assert.equal(failed.districts, 10);
+  assert.ok(failed.failedNote, "the failed state must say couldn't-check");
+
+  // And the healthy path passes numbers through untouched, zeros included —
+  // a real zero is the truth when the fetch answered.
+  const ok = deriveStatsView(stats, true, false);
+  assert.equal(ok.meetings, 0);
+  assert.equal(ok.failedNote, null);
+});

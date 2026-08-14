@@ -12,9 +12,27 @@ import { tierSetVars } from "../shell/tier-style";
  * it opens is showing, and the tier-coloured numeral.
  */
 export function CountBadge() {
-  const { meetings, venues } = useShellData();
+  const { meetings, venues, searchFailed } = useShellData();
   const ui = useUi();
   const dispatch = useUiDispatch();
+
+  // "0 meetings" beside a failed fetch is a false claim — the badge says
+  // couldn't-check instead (2a: a failed operation may not render as an
+  // empty success).
+  if (searchFailed) {
+    return (
+      <button
+        type="button"
+        className="count-badge"
+        data-active={ui.listOverlayOpen}
+        aria-expanded={ui.listOverlayOpen}
+        onClick={() => dispatch({ type: "list/toggle" })}
+        style={tierSetVars(ui.tiers)}
+      >
+        meetings — couldn&apos;t check
+      </button>
+    );
+  }
 
   return (
     <button

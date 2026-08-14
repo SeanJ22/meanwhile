@@ -4,7 +4,7 @@ import { useMemo } from "react";
 
 import { formatMiles } from "@/lib/map/format";
 import { useShellData } from "@/lib/state/data";
-import { computeStats } from "@/lib/state/derive";
+import { computeStats, deriveStatsView } from "@/lib/state/derive";
 import { useUi } from "@/lib/state/provider";
 
 import { tierSetVars } from "./tier-style";
@@ -22,7 +22,8 @@ const COVERAGE_LABEL = {
 } as const;
 
 export function StatsBar() {
-  const { meetings, districtCount, dropped, result } = useShellData();
+  const { meetings, districtCount, dropped, result, searchFailed } =
+    useShellData();
   const ui = useUi();
 
   // Distinct people we can actually name at this point — the seats' holders
@@ -46,6 +47,13 @@ export function StatsBar() {
     [meetings, districtCount, ui.showDistricts, officialCount],
   );
 
+  // The failed-fetch rule (2a): a failed operation may not render as an
+  // empty success. The pure derivation is what the guard test holds.
+  const view = useMemo(
+    () => deriveStatsView(stats, ui.showDistricts, searchFailed),
+    [stats, ui.showDistricts, searchFailed],
+  );
+
   const accent = tierSetVars(ui.tiers);
 
   const coverage = result?.tier ?? null;
@@ -56,13 +64,14 @@ export function StatsBar() {
 
   return (
     <div className="stats-bar">
-      <Card label="Meetings" value={stats.meetings} style={accent} accent />
-      <Card label="Bodies" value={stats.bodies} />
-      <Card
-        label="Districts"
-        value={ui.showDistricts ? stats.districts : "—"}
-      />
-      <Card label="Officials" value={stats.officials} />
+      <Card label="Meetings" value={view.meetings} style={accent} accent />
+      <Card label="Bodies" value={view.bodies} />
+      <Card label="Districts" value={view.districts} />
+      <Card label="Officials" value={view.officials} />
+
+      {view.failedNote && (
+        <p className="stat-missing">{view.failedNote}</p>
+      )}
 
       {/* Edia's `.stat-missing`. A meeting the adapter could not place is
           missing from the map, and a reader who cannot see the count reads
@@ -77,7 +86,7 @@ export function StatsBar() {
       {/* docs/state.md §2: a silently widened search is a wrong answer, so the
           rung stays on screen rather than appearing only as a transient
           notice. */}
-      {coverage && (
+      {coverage && !searchFailed && (
         <p className="stat-missing" style={{ color: "var(--text-muted)" }}>
           Coverage: {COVERAGE_LABEL[coverage]}
           {widened ? ` (${widened})` : ""}

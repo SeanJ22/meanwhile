@@ -342,7 +342,10 @@ export function MapCanvas({
       userMoved = false;
       window.clearTimeout(settleTimer);
       settleTimer = window.setTimeout(() => {
-        const center = map.getCenter();
+        // wrap(): a map panned past the antimeridian reports longitudes
+        // outside [-180, 180], which the API rejects with a 400 — the one
+        // settle-only failure a client can manufacture on its own (2a).
+        const center = map.getCenter().wrap();
         onViewportSettleRef.current?.({ lat: center.lat, lng: center.lng });
       }, 650);
     };

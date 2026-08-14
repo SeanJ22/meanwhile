@@ -27,8 +27,11 @@ interface DistrictPopupProps {
   representation?: SeatHolder[];
   /** Municipalities inside this division, where the registry knows them. */
   placesWithin?: string[];
-  /** Upcoming meetings on file for this division. */
-  upcomingMeetings: number;
+  /**
+   * Upcoming meetings on file for this division. Null means the fetch that
+   * would answer failed — "couldn't check" and 0 are different facts (2a).
+   */
+  upcomingMeetings: number | null;
   /** Opens the rep popup (3c) for a clicked name. */
   onOpenOfficial?: (holder: SeatHolder) => void;
   onExpand?: () => void;
@@ -68,7 +71,11 @@ export function DistrictPopup({
       </PopupRow>
 
       <PopupRow label="Upcoming" mono>
-        {upcomingMeetings}
+        {upcomingMeetings === null ? (
+          <NoValue>couldn&apos;t check</NoValue>
+        ) : (
+          upcomingMeetings
+        )}
       </PopupRow>
 
       <PopupSectionLabel>Representation</PopupSectionLabel>

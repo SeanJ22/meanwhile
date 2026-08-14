@@ -93,7 +93,18 @@ function MapEntryInner() {
   const dispatch = useUiDispatch();
 
   const [result, setResult] = useState<TaggedResult | null>(null);
-  const [failed, setFailed] = useState(false);
+  /**
+   * How the meetings fetch failed, when it did: the HTTP status the service
+   * answered with, or null status for a request that never got an answer.
+   * Carried so the failure card can *name* the failure — production logs
+   * are not always reachable, and "SEARCH FAILED" with no cause cost a
+   * session of diagnosis (2a).
+   */
+  const [failure, setFailure] = useState<{ status: number | null } | null>(null);
+  // Bumped by the failure card's retry — re-runs the current view's fetch
+  // without making the reader change their zip (2a: "change the zip to try
+  // again" is wrong advice when the service hiccuped).
+  const [retryNonce, setRetryNonce] = useState(0);
   const [tilesFailed, setTilesFailed] = useState(false);
   const [districtsFailed, setDistrictsFailed] = useState(false);
   const [focus, setFocus] = useState<MapFocus | null>(null);
@@ -182,7 +193,18 @@ function MapEntryInner() {
             signal: controller.signal,
           },
         );
-        if (!response.ok) throw new Error(`Search failed: ${response.status}`);
+        if (!response.ok) {
+          // Let the failure name itself — the status distinguishes "the
+          // service is broken" (5xx) from "the request was rejected" (4xx)
+          // from "the session's access expired" (401), which are three
+          // different next steps.
+          console.error(
+            `meetings fetch failed: ${response.status} for ${view.kind} view`,
+          );
+          setResult(null);
+          setFailure({ status: response.status });
+          return;
+        }
 
         const payload: MeetingSearchResult & { nearZip?: string | null } =
           await response.json();
@@ -193,21 +215,22 @@ function MapEntryInner() {
           zip: zip ?? payload.nearZip ?? "the area shown",
           viewKey: key,
         });
-        setFailed(false);
+        setFailure(null);
       } catch {
         if (controller.signal.aborted) return;
+        console.error(`meetings fetch got no answer for ${view.kind} view`);
         setResult(null);
-        setFailed(true);
+        setFailure({ status: null });
       }
     })();
 
     return () => controller.abort();
-  }, [view]);
+  }, [view, retryNonce]);
 
   const search = useCallback(
     (zip: string, lat: number, lng: number) => {
       dispatch({ type: "select/venue", key: null });
-      setFailed(false);
+      setFailure(null);
       setWelcomeRequested(false);
       dismissSidebar();
       setNoticeCollapsed(false);
@@ -448,9 +471,9 @@ function MapEntryInner() {
       location,
       districtCount,
       dropped: 0,
-      searchFailed: failed,
+      searchFailed: failure !== null,
     }),
-    [current, meetings, venues, location, districtCount, failed],
+    [current, meetings, venues, location, districtCount, failure],
   );
 
   const onSearchPick = useCallback((item: SearchItem) => {
@@ -685,7 +708,12 @@ function MapEntryInner() {
             </div>
 
             {tilesFailed && <TileNotice />}
-            {failed && <SearchFailedNotice />}
+            {failure && (
+              <SearchFailedNotice
+                failure={failure}
+                onRetry={() => setRetryNonce((n) => n + 1)}
+              />
+            )}
 
             {current?.snapshot && <DataFreshness snapshot={current.snapshot} />}
 
@@ -795,10 +823,15 @@ function MapEntryInner() {
               }
               representation={holdersFor(districtPopup.ocdId)}
               upcomingMeetings={
-                meetings.filter(
-                  (m) =>
-                    m.ocdId === districtPopup.ocdId && m.status === "SCHEDULED",
-                ).length
+                // A failed fetch may not stand behind "Upcoming: 0" — the
+                // popup renders couldn't-check instead (2a).
+                failure
+                  ? null
+                  : meetings.filter(
+                      (m) =>
+                        m.ocdId === districtPopup.ocdId &&
+                        m.status === "SCHEDULED",
+                    ).length
               }
               onClose={() =>
                 dispatch({ type: "select/district", ocdId: null, districtType: null })
@@ -900,15 +933,36 @@ const STATUS_LABEL: Record<Meeting["status"], string> = {
   CANCELED: "Canceled",
 };
 
-function SearchFailedNotice() {
+function SearchFailedNotice({
+  failure,
+  onRetry,
+}: {
+  failure: { status: number | null };
+  onRetry: () => void;
+}) {
   return (
     <div className="panel pointer-events-auto max-w-md px-4 py-3.5">
       <p className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-danger">
         Search failed
       </p>
       <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-text-dim">
-        Couldn&apos;t reach the meetings service. Change the zip to try again.
+        We couldn&apos;t check this area — the meetings service didn&apos;t
+        answer. That doesn&apos;t mean nothing is happening here.
       </p>
+      {/* The failure names itself: this line is what turns the next
+          screenshot of this card into a diagnosis (2a). */}
+      <p className="mt-1 font-mono text-[0.625rem] text-muted">
+        {failure.status !== null
+          ? `The service answered ${failure.status}.`
+          : "The request never got an answer."}
+      </p>
+      <button
+        type="button"
+        onClick={onRetry}
+        className="mt-2.5 cursor-pointer rounded border border-[var(--panel-border)] px-3 py-1.5 text-[0.75rem] text-paper hover:border-[var(--signal)] hover:text-signal"
+      >
+        Try again
+      </button>
     </div>
   );
 }

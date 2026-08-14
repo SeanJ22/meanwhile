@@ -13,7 +13,11 @@ import { tierForMeeting } from "@/lib/state/derive";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { CoveredBody } from "@/lib/registry/coverage";
 import { linksForMeeting, type OutboundLink } from "@/lib/registry/links";
+import { minutesSummaryForMeeting } from "@/lib/meetings/minutes-summaries";
+import { officePhoneForBody } from "@/lib/meetings/office-phone";
 import type { Meeting } from "@/lib/sources/types";
+
+import { CalendarLinks } from "./calendar-links";
 
 import {
   PopupCard,
@@ -75,7 +79,15 @@ export function MeetingPopup({
 }: MeetingPopupProps) {
   const tier = tierForMeeting(meeting) ?? "local";
   const badge = STATUS_BADGE[meeting.status];
-  const links = linksForMeeting(meeting, body);
+  // 6a (2026-08-17): a concluded meeting is a record, not an errand —
+  // Directions drops (nobody drives to a meeting that already happened),
+  // and the card gains what happened + the office phone instead.
+  const concluded = meeting.status === "CONCLUDED";
+  const links = linksForMeeting(meeting, body).filter(
+    (link) => !(concluded && link.rung === "VENUE_MAP"),
+  );
+  const minutes = concluded ? minutesSummaryForMeeting(meeting.id) : null;
+  const officePhone = concluded ? officePhoneForBody(body?.bodyId ?? null) : null;
 
   return (
     <PopupCard
@@ -110,7 +122,59 @@ export function MeetingPopup({
 
       <PopupRow label="Status">{STATUS_LABEL[meeting.status]}</PopupRow>
 
-      <PopupSectionLabel>Where to go</PopupSectionLabel>
+      {/* 6b: the upcoming meeting goes on the reader's own calendar. */}
+      {!concluded && meeting.status === "SCHEDULED" && (
+        <CalendarLinks meeting={meeting} />
+      )}
+
+      {/* 6a: the past-meeting variant — what happened, in plain language,
+          where the minutes have been read; the honest state otherwise. */}
+      {concluded && (
+        <>
+          <PopupSectionLabel>What happened</PopupSectionLabel>
+          {minutes ? (
+            <details className="mt-1" open>
+              <summary className="cursor-pointer text-[0.6875rem] text-paper-dim underline decoration-dotted hover:text-signal">
+                What happened — plain language
+              </summary>
+              <p className="mt-1 text-[0.6875rem] leading-relaxed text-paper-dim">
+                {minutes.summary}
+              </p>
+              <p className="mt-0.5 text-[0.5625rem] leading-relaxed text-muted">
+                Our paraphrase of{" "}
+                <a
+                  href={minutes.minutesUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline decoration-dotted"
+                >
+                  the {minutes.sourceOrg} minutes
+                </a>{" "}
+                — read {minutes.readAt}.
+              </p>
+            </details>
+          ) : (
+            <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
+              Minutes not posted yet, or not yet read by us — what happened
+              here isn&apos;t summarized. The links below go to the body&apos;s
+              own records.
+            </p>
+          )}
+          {officePhone && (
+            <PopupRow label="Office">
+              <a
+                href={`tel:${officePhone.phone.replace(/[^\d+]/g, "")}`}
+                title={`Published on the ${officePhone.sourceOrg} page`}
+                className="text-signal hover:underline"
+              >
+                {officePhone.phone}
+              </a>
+            </PopupRow>
+          )}
+        </>
+      )}
+
+      <PopupSectionLabel>{concluded ? "Records" : "Where to go"}</PopupSectionLabel>
       <LinkLadder links={links} lookedAt={body?.lookedAt ?? false} />
 
       <PopupSectionLabel>Representation</PopupSectionLabel>

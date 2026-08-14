@@ -46,6 +46,7 @@ import { MeetingPopup } from "./popup/meeting-popup";
 import { OfficialPopup } from "./popup/official-popup";
 import { OfficialModal } from "./popup/official-modal";
 import { EntityModal, type ModalSubject } from "./popup/entity-modal";
+import { DoorOverlay } from "./door-overlay";
 import { WelcomeOverlay } from "./welcome-overlay";
 
 /**
@@ -327,6 +328,8 @@ function MapEntryInner() {
       if (next.kind === "official") setOfficialPopup(null);
       if (next.kind === "entity") setPopupMeeting(null);
       dispatch({ type: "list/open", open: false });
+      // 8a: a sidebar door is a large surface too, and yields the same way.
+      dispatch({ type: "door/close" });
     },
     [dispatch],
   );
@@ -354,7 +357,24 @@ function MapEntryInner() {
   const [seenListOpen, setSeenListOpen] = useState(ui.listOverlayOpen);
   if (seenListOpen !== ui.listOverlayOpen) {
     setSeenListOpen(ui.listOverlayOpen);
-    if (ui.listOverlayOpen) setLarge(null);
+    if (ui.listOverlayOpen) {
+      setLarge(null);
+      // Same 8b fix as the doors: the list opened from the phone drawer
+      // must not sit under the drawer's backdrop.
+      dismissSidebar();
+    }
+  }
+
+  // 8a: an opening door closes any large popup, same rule, same pattern.
+  // And it dismisses the phone drawer — the walk caught the door rendering
+  // UNDER the drawer's backdrop, which ate its clicks (8b's clutter class).
+  const [seenDoor, setSeenDoor] = useState(ui.door);
+  if (seenDoor !== ui.door) {
+    setSeenDoor(ui.door);
+    if (ui.door !== null) {
+      setLarge(null);
+      dismissSidebar();
+    }
   }
 
   /*
@@ -907,7 +927,7 @@ function MapEntryInner() {
               onExpand={() =>
                 openLarge({
                   kind: "entity",
-                  subject: districtSubject(districtPopup),
+                  subject: districtSubject(districtPopup, current?.meetings ?? []),
                 })
               }
             />
@@ -974,6 +994,26 @@ function MapEntryInner() {
           />
         )}
 
+        {/* 8a: the sidebar-count doors — large-surface lists behind the
+            stat numbers, one at a time like every large surface. */}
+        {ui.door && (
+          <DoorOverlay
+            door={ui.door}
+            coverage={current?.coverage ?? null}
+            meetings={current?.meetings ?? []}
+            onOpenOfficial={(holder, seatLabel, tier) =>
+              openLarge({ kind: "official", holder, seatLabel, tier })
+            }
+            onOpenMeeting={(meeting) =>
+              openLarge({
+                kind: "entity",
+                subject: meetingSubject(meeting, bodyFor(meeting.ocdId)),
+              })
+            }
+            onClose={() => dispatch({ type: "door/close" })}
+          />
+        )}
+
         <Legend />
         <ListOverlay onPickMeeting={onPickMeeting} />
 
@@ -1029,7 +1069,12 @@ function meetingSubject(
       { label: "Status", value: STATUS_LABEL[meeting.status] },
     ],
     agenda: { meetingId: meeting.id, agendaUrl: meeting.agendaUrl },
-    commentAccess: { ocdId: meeting.ocdId, bodyName: meeting.bodyName },
+    // 6a (2026-08-17): a concluded meeting drops the to-be-heard boilerplate
+    // — there is nothing left to be heard at.
+    commentAccess:
+      meeting.status === "CONCLUDED"
+        ? null
+        : { ocdId: meeting.ocdId, bodyName: meeting.bodyName },
     // Tier-3 (5a): the curated roster where one exists; the honest absence
     // where none does.
     representation: roster,
@@ -1040,7 +1085,27 @@ function meetingSubject(
   };
 }
 
-function districtSubject(district: DistrictHit): ModalSubject {
+function districtSubject(
+  district: DistrictHit,
+  allMeetings: Meeting[] = [],
+): ModalSubject {
+  // 6c (2026-08-17): the county popup fills in. A county's large surface
+  // lists every local meeting in view (local coverage is clipped to exactly
+  // the clip counties, so the state prefix IS the county membership test
+  // for local-tier meetings — Vail's AND Tucson's together), and the
+  // county's own commissioners from the curated roster. Other district
+  // types list their own division's meetings.
+  const isCounty = /\/county:[^/]+$/.test(district.ocdId);
+  const statePrefix = `state:${district.state.toLowerCase()}`;
+  const meetings = allMeetings
+    .filter((m) =>
+      isCounty
+        ? tierForMeeting(m) === "local" &&
+          (m.ocdId === null || m.ocdId.includes(statePrefix))
+        : m.ocdId === district.ocdId,
+    )
+    .sort((a, b) => a.startsAt.localeCompare(b.startsAt));
+  const roster = rosterHoldersForBody(`${district.ocdId}#governing`);
   return {
     title: district.label,
     subtitle: `${district.typeLabel} · ${district.state}`,
@@ -1051,9 +1116,9 @@ function districtSubject(district: DistrictHit): ModalSubject {
       { label: "Tier", value: TIER_LABEL[district.tier] },
       { label: "State", value: district.state, mono: true },
     ],
-    representation: [],
+    representation: roster,
     representationNote: "No sourced officeholder for this division yet.",
-    meetings: [],
+    meetings,
     sources: [],
   };
 }

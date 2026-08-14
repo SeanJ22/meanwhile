@@ -1,0 +1,204 @@
+{
+ "formatVersion": 1,
+ "curatedAt": "2026-08-17",
+ "note": "Kelly-standard candidate cards (2b): photo, a short bio in the candidate's own site's words, and published contact — each read from the cited page on the date recorded, every photo URL HEAD-verified as an image. Photo rule for challengers (author-adjusted): a challenger has no official portrait, so the campaign site's own photo is the legitimate source — recorded and labeled as such. Bios are the site's words, attributed, never our characterization. A candidate without an entry still renders a card (name, party, links, reaction control); every bio/photo absence is a recorded hunt below, never a blank presented as a fact.",
+ "cards": {
+  "ballot-nh-merrimack:governor:ayotte-kelly": {
+   "photoUrl": "https://kellyfornh.com/wp-content/uploads/2026/06/KellyAyotteForNH_WinRed_WebsitePullTrough_v2-1.jpg",
+   "photoSource": "Photo: the candidate's campaign site (kellyfornh.com)",
+   "bio": "Governor Kelly Ayotte is working every day to keep our state safe, prosperous and free.",
+   "bioSourceUrl": "https://kellyfornh.com",
+   "bioSourceLabel": "In the campaign's words — kellyfornh.com, read 2026-08-17",
+   "email": null,
+   "phone": null
+  },
+  "ballot-nh-merrimack:governor:warmington-cinde": {
+   "photoUrl": "https://run.imgix.net/97cfce8c-9d0e-4e05-824d-283b14876207/4d7eafb4-1f9c-4589-9ba4-0d1a344679e3/4d7eafb4-1f9c-4589-9ba4-0d1a344679e3.jpg",
+   "photoSource": "Photo: the candidate's campaign site (cindewarmington.com)",
+   "bio": "Cinde Warmington served as the only Democrat on the Executive Council and is running for governor to address the affordability challenges facing working families.",
+   "bioSourceUrl": "https://www.cindewarmington.com",
+   "bioSourceLabel": "From the candidate's site — cindewarmington.com, read 2026-08-17",
+   "email": "Vote@CindeWarmington.com",
+   "phone": null
+  },
+  "ballot-nh-merrimack:us-senate:pappas-chris": {
+   "photoUrl": null,
+   "photoSource": null,
+   "bio": "Born and raised in the Granite State, Chris is a product of Manchester public schools and a small business owner, helping run his family's restaurant.",
+   "bioSourceUrl": "https://chrispappas.org",
+   "bioSourceLabel": "From the candidate's site — chrispappas.org, read 2026-08-17",
+   "email": null,
+   "phone": null
+  },
+  "ballot-nh-merrimack:us-senate:brown-scott-p-": {
+   "photoUrl": "https://scottbrown.com/wp-content/uploads/2025/09/scott-brown-closeup-scaled.jpg",
+   "photoSource": "Photo: the candidate's campaign site (scottbrown.com)",
+   "bio": "His family has deep roots in Portsmouth stretching back generations; he served nearly 40 years in the military, was a U.S. Senator, and represented America as Ambassador to New Zealand and Samoa.",
+   "bioSourceUrl": "https://scottbrown.com",
+   "bioSourceLabel": "From the candidate's site — scottbrown.com, read 2026-08-17",
+   "email": "info@scottbrown.com",
+   "phone": null
+  },
+  "ballot-nh-merrimack:us-senate:sununu-john-e-": {
+   "photoUrl": "https://static.wixstatic.com/media/f28da3_2b522f593d584d4a9d296d5beb786b97~mv2.png",
+   "photoSource": "Photo: the candidate's campaign site (sununusenator.com)",
+   "bio": "John Sununu is a lifelong Granite Stater, trained as an engineer with private-sector experience, who represented New Hampshire in Washington.",
+   "bioSourceUrl": "https://www.sununusenator.com",
+   "bioSourceLabel": "From the candidate's site — sununusenator.com, read 2026-08-17",
+   "email": "info@sununusenator.com",
+   "phone": null
+  },
+  "ballot-nh-merrimack:us-house-2:tang-williams-lily": {
+   "photoUrl": "https://www.lilytangwilliams.com/wp-content/uploads/2022/01/lily-tang-williams-homepage.png",
+   "photoSource": "Photo: the candidate's campaign site (lilytangwilliams.com)",
+   "bio": "Born to working-class parents in China's Sichuan province just before the Cultural Revolution, she came to America in 1988 for graduate school.",
+   "bioSourceUrl": "https://www.lilytangwilliams.com",
+   "bioSourceLabel": "From the candidate's site — lilytangwilliams.com, read 2026-08-17",
+   "email": null,
+   "phone": null
+  },
+  "ballot-nh-merrimack:state-senate-7:harned-rebecca": {
+   "photoUrl": "https://run.imgix.net/619f0f55-d765-4c16-90a2-4d65cdb49697/12677376-e464-4869-96bb-75c4bf70b6ea/12677376-e464-4869-96bb-75c4bf70b6ea.jpg",
+   "photoSource": "Photo: the candidate's campaign site (rebeccafornh.com)",
+   "bio": "A working parent and research scientist who lives in Sutton; she serves on the Budget Committee for the Kearsarge Regional School District.",
+   "bioSourceUrl": "https://www.rebeccafornh.com",
+   "bioSourceLabel": "From the candidate's site — rebeccafornh.com, read 2026-08-17",
+   "email": "info@rebeccafornh.com",
+   "phone": null
+  },
+  "ballot-nh-merrimack:state-house-merrimack-7:sargent-gregory-m-": {
+   "photoUrl": "https://gregforrep.com/greg-portrait.jpg",
+   "photoSource": "Photo: the candidate's campaign site (gregforrep.com)",
+   "bio": "A New London resident and lifelong New Hampshire native; an attorney and General Counsel at a Manchester business, and a member of the House Resources, Recreation & Development Committee.",
+   "bioSourceUrl": "https://gregforrep.com",
+   "bioSourceLabel": "From the candidate's site — gregforrep.com, read 2026-08-17",
+   "email": "Greg@GregforRep.com",
+   "phone": null
+  },
+  "ballot-nh-merrimack:executive-council-2:liot-hill-karen": {
+   "photoUrl": "https://static.wixstatic.com/media/644896_ac32357ab0c6496a8824ebedef424559~mv2.jpeg",
+   "photoSource": "Photo: the candidate's campaign site (karenliothill.com)",
+   "bio": "The Executive Councilor for District 2, representing 81 cities and towns; a former waitress and small business owner.",
+   "bioSourceUrl": "https://www.karenliothill.com",
+   "bioSourceLabel": "From the candidate's site — karenliothill.com, read 2026-08-17",
+   "email": "Karen@KarenLiotHill.com",
+   "phone": "603-252-2542"
+  },
+  "ballot-nj-morris:us-senate:booker": {
+   "photoUrl": "https://corybooker.com/wp-content/uploads/2020/01/cory_sq_profile.png",
+   "photoSource": "Photo: the candidate's campaign site (corybooker.com)",
+   "bio": "A tireless fighter for New Jersey, powered by grassroots supporters — the campaign rejects donations from federal lobbyists and corporate PACs.",
+   "bioSourceUrl": "https://corybooker.com",
+   "bioSourceLabel": "In the campaign's words — corybooker.com, read 2026-08-17",
+   "email": null,
+   "phone": null
+  },
+  "ballot-nj-morris:us-senate:murphy": {
+   "photoUrl": "https://jerseyjustin4senate.org/wp-content/uploads/2025/12/JUSTIN-MURPHY-5-e1767132048689.png",
+   "photoSource": "Photo: the candidate's campaign site (jerseyjustin4senate.org)",
+   "bio": "A self-employed small business owner.",
+   "bioSourceUrl": "https://jerseyjustin4senate.org",
+   "bioSourceLabel": "From the candidate's site — jerseyjustin4senate.org, read 2026-08-17",
+   "email": "jerseyjustin4senate@gmail.com",
+   "phone": "609-969-0959"
+  },
+  "ballot-nj-morris:us-house-11:hathaway": {
+   "photoUrl": null,
+   "photoSource": null,
+   "bio": "Born and raised in a middle-class family in Clifton; he served as Mayor of Randolph in 2025 and on the Township Council since May 2022, and is a Yale graduate with over a decade in corporate communications.",
+   "bioSourceUrl": "https://www.joehathawayforcongress.com",
+   "bioSourceLabel": "From the candidate's site — joehathawayforcongress.com, read 2026-08-17",
+   "email": "info@joehathawayforcongress.com",
+   "phone": null
+  },
+  "ballot-nj-morris:us-house-11:mejia": {
+   "photoUrl": "https://images.squarespace-cdn.com/content/v1/691b52e1abc45c143c47e6a2/1ffd50e3-47e3-411d-b5d0-94c514a55328/Headshot-+Web+Background+3.jpg",
+   "photoSource": "Photo: the candidate's campaign site (analiliafornj.com)",
+   "bio": "She has spent 25 years fighting for working families — winning the $15 minimum wage and paid sick days in New Jersey — and is running for Congress in NJ-11.",
+   "bioSourceUrl": "https://www.analiliafornj.com",
+   "bioSourceLabel": "From the candidate's site — analiliafornj.com, read 2026-08-17",
+   "email": "press@analiliafornj.com",
+   "phone": null
+  },
+  "ballot-nj-morris:county-commissioner:selen": {
+   "photoUrl": "https://static.wixstatic.com/media/7ef20c_da57f763291442e19e51303d0828044b~mv2.jpg",
+   "photoSource": "Photo: the candidate's campaign site (selenformorriscounty.com)",
+   "bio": "He immigrated to America in 1996, served as Mayor of Chatham Township, and is Senior Vice President of Administration for Lincoln Educational Services; a CPA.",
+   "bioSourceUrl": "https://www.selenformorriscounty.com",
+   "bioSourceLabel": "From the candidate's site — selenformorriscounty.com, read 2026-08-17",
+   "email": null,
+   "phone": null
+  },
+  "ballot-az-pima:governor|Katie Hobbs": {
+   "photoUrl": "https://katiehobbs.org/wp-content/uploads/2025/07/KHA25_004_FINAL_horizontal_white-scaled.png",
+   "photoSource": "Photo: the candidate's campaign site (katiehobbs.org)",
+   "bio": "Born and raised in the Grand Canyon State, Katie Hobbs has dedicated her life to listening to her community and helping solve difficult challenges for the people of Arizona.",
+   "bioSourceUrl": "https://katiehobbs.org",
+   "bioSourceLabel": "From the candidate's site — katiehobbs.org, read 2026-08-17",
+   "email": "info@katiehobbs.org",
+   "phone": null
+  },
+  "ballot-az-pima:governor|Andy Biggs": {
+   "photoUrl": null,
+   "photoSource": null,
+   "bio": "An Arizona native who has served Arizona's 5th Congressional District since 2016.",
+   "bioSourceUrl": "https://biggsforarizona.com",
+   "bioSourceLabel": "From the candidate's site — biggsforarizona.com, read 2026-08-17",
+   "email": null,
+   "phone": null
+  },
+  "ballot-nh-merrimack:us-house-2:goodlander-maggie": {
+   "photoUrl": null,
+   "photoSource": null,
+   "bio": "Born and raised in Nashua, she represents New Hampshire's Second District; a former foreign-policy advisor to Senator John McCain, Navy Reserve intelligence officer for over a decade, law clerk to Justice Stephen Breyer, and Deputy Assistant Attorney General.",
+   "bioSourceUrl": "https://goodlander.house.gov/about",
+   "bioSourceLabel": "From her official House page — goodlander.house.gov, read 2026-08-17 (in a browser; the host refuses automated clients)",
+   "email": null,
+   "phone": null
+  }
+ },
+ "hunts": [
+  {
+   "key": "ballot-nh-merrimack:us-house-2:goodlander-maggie",
+   "name": "Maggie Goodlander",
+   "note": "RESOLVED for the bio 2026-08-17: goodlander.house.gov/about read in a real browser (403s pipelines). Photo still open — the page offers an official-portrait download whose URL was not captured; maggiefornh.com still 403s.",
+   "attemptedAt": "2026-08-17"
+  },
+  {
+   "key": "ballot-nh-merrimack:us-senate:pappas-chris#photo",
+   "name": "Chris Pappas",
+   "note": "chrispappas.org markup carries no identifiable headshot URL; pappas.house.gov 403s non-browser clients. Bio recorded from the campaign site; photo honest-absent.",
+   "attemptedAt": "2026-08-17"
+  },
+  {
+   "key": "ballot-nj-morris:us-senate:fernandez#bio",
+   "name": "Veronica Fernandez",
+   "note": "veronicaforsenate.com carries no formal bio and no candidate photo in markup (decorative graphics only); contact is a form with no published address. Recorded as the site's own state, not our gap.",
+   "attemptedAt": "2026-08-17"
+  },
+  {
+   "key": "ballot-nj-morris:us-house-11:hathaway#photo",
+   "name": "Joe Hathaway",
+   "note": "joehathawayforcongress.com markup carries a logo and body images but no dedicated headshot URL. Bio and email recorded; photo honest-absent.",
+   "attemptedAt": "2026-08-17"
+  },
+  {
+   "key": "ballot-az-pima:governor|Andy Biggs#photo",
+   "name": "Andy Biggs",
+   "note": "biggsforarizona.com markup carries only a social-share composite image, no dedicated headshot. ALSO RECORDED: andybiggs.com is a DIFFERENT person entirely (a safari photographer) — the kellyayotte.com lesson re-sighted; only the fetch-verified biggsforarizona.com is citable.",
+   "attemptedAt": "2026-08-17"
+  },
+  {
+   "key": "ballot-az-pima:*#cards",
+   "name": "Remaining AZ candidates",
+   "note": "NOT_ATTEMPTED for bio/photo enrichment this session beyond the governor contest — NH and NJ ran first per the depth directive. All 26 AZ candidates already carry fetch-verified official/campaign links from 2026-08-16 and render full cards minus bio/photo.",
+   "attemptedAt": "2026-08-17"
+  },
+  {
+   "key": "ballot-nh-merrimack:minor-candidates#cards",
+   "name": "NH primary-filing minor candidates",
+   "note": "Candidates whose 2026-08-16 link hunts already returned recorded MISSes (no findable site) have no photo/bio source that meets the never-characterize rule — their cards render name, party, and the filing citation, which is everything the public record offers. The September 8 primary narrows this list.",
+   "attemptedAt": "2026-08-17"
+  }
+ ]
+}

@@ -1,82 +1,105 @@
-# Session brief — correctness first: NH ballot, the Kelly standard, then FEC and positions
+# Session brief — the second-to-last build before the first outside tester
 
+(Executed 2026-08-17 on branch `claude/final-prep-nh-nj-depth-0817`; this
+file is the brief as pasted, preserved per its own instruction. The
+session ran unattended.)
+
+Check your memory files.
+This file is the session's full brief. On completion, overwrite `docs/session-brief.md`.
 This session runs unattended. Nobody is available to answer.
-Work straight through. The standing motion, in full:
 
-* Reversible decisions: take the option cheaper to undo, record the decision AND the rejected alternative in `state.md`, keep going. Do not stop.
-* Genuinely irreversible decisions (schema keys, identifier conventions, stored user data fields): do not choose — skip that item, open a tracker row with the options and evidence, continue with everything else.
+* Reversible decisions: take the cheaper-to-undo option, record it AND the rejected alternative in `state.md`, keep going.
+* Genuinely irreversible decisions: skip, tracker row with options and evidence, continue.
 * A source hunt is never a stopping point. Work the ladder, make more rungs, record every rung with `attemptedAt`.
-* Browser-heavy steps go LAST, after everything else is committed — the host has crashed on them repeatedly. Inline work only; background agents stay off.
+* Browser-heavy steps LAST, inline, no background agents.
 * Anything else that surfaces: tracker row, keep working.
-* The site is live on every push — nothing half-finished goes to `main`.
-* End with `pnpm handoff --ship`, verify the files on `main`, verify the production deploy published, and leave the standing report.
+* Live on every push — nothing half-finished to `main`. End with `pnpm handoff --ship`, verify on `main`, verify the deploy, standing report.
 
-Session-open: read `docs/defects.md` and triage. This file is the session's full brief — on completion, overwrite `docs/session-brief.md` with it.
+Session-open: read `docs/defects.md` and triage.
+Correct first. Fast second. Nothing third.
+The session's stated priority: GO DEEP ON NH AND NJ. The tester lives in New Hampshire and is moving to Morris County, New Jersey. 03255 and 07866 are her daily zips. Where a trade exists between breadth and depth in her two states, depth wins. The tester pass runs at PHONE width — she tests on a phone; the author has only verified desktop.
 
-Correct first. Fast second. Nothing third. Two shipped surfaces are wrong (NH ballot, state-official contacts); they lead.
+## 1 — Reader-facing copy, the author's words
 
-Context that governs the whole session: this is the second-to-last build before the first outside tester uses the product unsupervised. The bar is not "works when the author drives it" — it is "a first-time reader on her own phone in New Hampshire, then New Jersey, hits nothing wrong, nothing confusing, and nothing that speaks database." Every trade this session resolves toward perfection. Where an item can be done quickly or done right, do it right and let the cut order handle time.
+* 1a — The welcome overlay mission text is replaced, VERBATIM, with:
+  Whether you care about politics or not, politics cares about you.
+  Government reports to you.
+  While you were at work, a data center was approved three miles from your kids' school. While you were at soccer practice, the school board adopted a new AI policy. While you were living an ordinary week, decisions about your next four years got made.
+  Not in secret. In public, on a schedule, in a room you were allowed to walk into. Nobody told you.
+  Know where it's happening. Know when it's happening. Show up if you can.
+  And when you can't — say something anyway.
+  Do not edit it. Keep the zip entry and one-tap examples beneath it.
+* 1b — Transparency page wording: "sell" retires. The author's chosen form: "aggregates may be licensed" — e.g. "aggregates may be licensed to political organizations — that's what keeps this free to use." The commercial fact stays plainly stated; only the verb changes. Update everywhere the pattern appears, including the one-time reaction notice's linked page.
 
-## The tester pass — new final item before documents
+## 2 — NH and NJ depth
 
-After everything else, walk the product as the tester will: 03255 and 07866, at phone width, as a stranger. Enter the zip cold. Read every surface that renders. For each: does it pass the 15-year-old test, is every link real (fetch it), is every number honest, does every control do what it looks like it does. Fix what fails on the spot if small; file it with a screenshot if not. The gate is a written walk-through log — surface by surface, pass/fail — for both zips, plus the same at 85701 and 85641. This log is the release evidence the next (final) session builds its punch list from.
+* 2a — NH ballot measures exist. Find and ship them. Ballotpedia reports at least one 2026 NH statewide measure — that is a LEAD (D18), not a citation. NH measures are constitutional amendments (CACRs) passed by the General Court onto the ballot: verify at the NH SOS and gencourt.state.nh.us, ship every 2026 measure with official text verbatim and a plain-language summary in the register (Prop 142 pattern). A cited absence is only acceptable if the official record genuinely shows none — given the lead, expect at least one.
+* 2b — Kelly-standard cards for every ballot candidate, NH and NJ first, then AZ. Not a hyperlink — a card: photo, short bio, contact where published, official site (if officeholder) + campaign site, party. Photo rule adjusted for candidates: challengers have no official portrait, so the campaign site's own photo is the legitimate source — record and label it. Bios from the candidate's own site, brief and factual, attributed — never characterized by us. Governor, Exec Council, everyone.
+* 2c — NH legislator contacts: retry the TLS wall with new rungs. The author's order: try harder. Candidate rungs not yet tried: different TLS client profiles (curl with --ciphers, node with custom agent), the Wayback Machine's copies of member pages, the General Court's bulk/roster downloads (gencourt publishes member CSVs/rosters), the chamber clerk pages, per-member PDF directories. Phone-book-style official directories count as official sources. Record every rung.
+* 2d — NJ member-name capitalization: "Brian ROACH" → "Brian Roach." Normalize display case from the njleg source format, with a test (handles McDonald, O'Brien, DeCroce, van/von correctly — use a proper name-case pass, not naive title-case).
+* 2e — Newbury's no-mayor fact renders: "Newbury isn't a city — it has no mayor. The Select Board runs the town." The Select Board gets its office explainer in the register ("Your Select Board is the town's government — three neighbors elected to run things between town meetings...") — and its MEMBERS get Kelly-standard cards per 6e, because the people who fill the substitute role matter exactly as much as a mayor would. Same pattern anywhere the expected office doesn't exist: name the fact, explain the actual structure, show the actual people.
 
-## 1 — The NH ballot is wrong. Fix it with the AZ pattern.
+The stranger test — into CLAUDE.md, and it governs every surface:
+the author's principle, written as the standard: a person in Tucson should be able to learn everything they'd want to know about Newbury, NH from this product alone. The completeness bar for any place is a STRANGER's, not a local's — a local fills gaps with what they already know; a stranger has nothing, so any gap a stranger would hit is a defect. Every surface, every explainer, every card is judged against the reader who has never been there: no assumed context, no "everyone knows how town meeting works," no office left unexplained, no body left unpeopled. The tester pass (item 10) applies this test explicitly — the walker is a stranger to all four zips by instruction.
 
-The shipped "thin November ballot" finding was correct ONLY for town offices (genuinely March). For state and federal, NH's 2026-11-03 ballot is one of the largest in the country: a U.S. Senate seat, the governorship (NH governors serve two-year terms — up every midterm), both U.S. House seats, all 24 state senate seats, all 400 state house seats, Executive Council, and county offices. The wrinkle that fooled the session: the primary is 2026-09-08, so general nominees don't exist yet.
+## 3 — Coverage completeness: the Sunnyside catch, generalized
 
-Render it with the AZ pre-canvass pattern already built: every contest listed, filed candidates shown from the SOS filing lists (filing period closed June 12 — the lists exist at sos.nh.gov), "nominees final after the September 8 primary" stated per contest. For Newbury/03255 specifically: the correct state house and senate districts, Executive Council district, Merrimack county offices. Cited absences only where a contest genuinely has none. Update the NH date strip if the primary date changes anything shown.
+The author found Sunnyside and Amphitheater school districts missing around Tucson in five minutes of clicking. His point is fully general: school districts are the EXAMPLE. The question is what else is missing — and the answer must be measured against reality, not against our own records. An audit of the registry against the wiring only finds gaps in bodies we already know about; the Sunnyside class of miss is a gap in what we know exists.
 
-Correct the tracker/state.md record of the earlier finding in place — the overturn is preserved, not tidied.
+* 3a — Layer 1: the registry vs. the official universe. For each clip county (Pima, Morris, Merrimack), enumerate every government the OFFICIAL sources say exists and check each against the registry: Census of Governments; NCES district enumeration (including elementary-only, union/regional, and supervisory structures — NH's SAU layer must not hide districts); state-level enumerations where they exist. Every government in the official universe is either IN the registry or its absence is explained in the table (dissolved, merged, out-of-clip, or a genuine miss → fixed this session). Special districts get explicit attention — fire, water, library, sanitation, housing, community college — they are the largest category of government in the country and the easiest to miss.
+* 3b — Layer 2: the registry vs. the wiring. The original audit: every registry body vs. wired/curated status, with the roster column from 6e. Both layers land in one committed table, `docs/coverage-audit-by-county.md`, per county — the gap becomes a measured number, not a fear, at BOTH levels.
+* 3c — Fix what the audit finds, priority order: everything serving the four zips first, then the rest of each clip county as time allows, recorded as NOT_ATTEMPTED with the audit as the backlog where it doesn't. Full treatment for each: registry row, sources hunted per the ladder, comment access, boundaries where the official sources carry them.
+* 3d — Kearsarge stays on the list (the TLS-blocked district) — same new rungs as 2c.
+* 3e — The standing rule this creates, into CLAUDE.md: coverage claims are made against the official universe, never against our own records. "We watch N of M bodies here" — M comes from the Census of Governments / official enumerations, not from counting our registry. A registry that defines its own denominator cannot be caught missing anything.
 
-## 2 — The Kelly standard: every official and candidate, every tier, all their links
+## 4 — Ballot features
 
-The author's screenshots define the gate. The Mark Kelly card is the standard: photo, phone, working contact (form or email), the SPECIFIC official page, campaign site, all present and correct. The Lupe Diaz card is the gap: placeholder photo, no phone, no campaign site, a generic azleg.gov link where the specific member URL belongs — and the specific URL previously recorded is WRONG (author verified), with a dead email hyperlink.
+* 4a — Save my picks, DEVICE-LOCAL ONLY. Per contest, a "mark how you'd vote" control saving to localStorage (`wtp.ballot_picks`) — never transmitted, never in any store, no column anywhere could hold it (extend the schema guard). A "My picks" view for election-day reference. The surface states it plainly: "Saved on this device only. We never see your picks." This is DISTINCT from the reaction buttons (which are collected, anonymously) — the difference must be visually and textually clear.
+* 4b — Office explainers for every office type on any ballot — governor, executive councilor (the NH oddity — what does this role even do), treasurer, register of probate, county commissioner, all of them. The register, the 15-year-old test, at the top of each contest or its candidate cards.
+* 4c — (Registration links shipped last session — verify they render prominently on all three states' pages.)
 
-* 2a — State officials to the Kelly standard. AZ, NJ, NH legislators: specific member page URL (verified by fetching it — a URL that 404s or lands generic is a MISS, not a citation), working email hyperlink, phone, photo per the recorded source rules, campaign site. Fix Diaz specifically and audit every state official for the same defects — the wrong-URL and dead-email diseases are unlikely to be his alone. Print the audit table: per official, which of the five Kelly fields is present/verified.
-* 2b — Ballot candidates get their links, all levels, all three states. The author found five in seconds (Biggs: biggs.house.gov + biggsforarizona.com; Hobbs has one; Lombardo: risalombardo.com; Diaz: lupediazaz.com; Mansour: mansourforarizona.com) — they are findable, so find them all. Statewide, legislative, county, school board. Campaign site AND official site where the person holds office (label both, official primary). Contact hyperlinks from those sites where published. NJ and NH candidates get the same hunt — do the work. The ladder applies; a candidate without a found site gets a recorded hunt, not a blank.
-* 2c — Voter-registration check links. Per state, the official registration-status checker (AZ, NJ, NH SOS/elections sites), linked prominently from each ballot page.
+## 5 — Votes surface polish
 
-## 3 — Defect batch, from the author's production pass (screenshots on file)
+* 5a — Plain-language summary OPEN by default — no click to reveal. The collapse affordance may remain for closing.
+* 5b — "What a No vote means here": one mechanical line per vote row — "A No vote here was a vote against passing the bill" / for procedural types, the type explainer's plain consequence ("Voting No here let the bill move forward"). Mechanical, never evaluative; derived from the vote type data file.
+* 5c — Attribution once, TOS pattern: the "plain-language summary, ours…" line renders ONCE at the top of the Recent Votes section, not per bill.
 
-* 3a — Meeting title hierarchy, still wrong. The Vail card renders the venue big/bold with the address duplicated in the subtitle. The shipped what-first fix did not reach all cards. Fix everywhere: WHAT it is big/bold ("Vail Unified School District — Governing Board Meeting"), then address once, then room. Audit every meeting surface, not the one card.
-* 3b — The narrowing question becomes a modal. On zip entry with multiple coverage: a centered overlay, blurred background, the approved wording, forcing a RESPONSE — with "No thanks, show me everything" as one of the two big equally-weighted buttons, never an X to hunt. Forced response, never forced narrowing (the consent exception survives). The buried yes/no-thanks text links in the who-governs card retire.
-* 3c — Disclosure, TOS pattern (author approved). The per-button line dies. First reaction tap ever: a one-time notice — "Your answer joins anonymous local totals. We never know who you are. How we use this →" — acknowledged once, stored device-local, never repeated. The link opens the transparency page, which keeps the full truth including the may-be-sold language, plainly stated. Update the CLAUDE.md wording-decision record from last session accordingly.
-* 3d — Candidate reactions. "Would you vote for them? Yes / No / Unsure" on every ballot candidate card — the reusable control, new provenance tag `CANDIDATE_REACTION` (fourth class). Same store rules, same one-time disclosure. This is reader expression, not app recommendation — the neutrality guard tests extend to confirm nothing ranks or recommends from these.
-* 3e — The missing mayor. Tucson's mayor was curated but does not surface at 85701. Find why (rendering path, not data) and surface: mayor card at the Kelly standard, office blurb, in the who-governs representation for Tucson.
-* 3f — Shading regression. District shading on free-click is gone (the deselect fix likely killed the default). Restore: click shades, click again unshades — both work.
-* 3g — Sidebar date range gains the past. Slider extends backward (e.g., 90d past), direction intuitive (left = further past), and concluded/canceled meetings render where sources carry them — Legistar and the county feeds hold past events; the snapshot window extends backward. "Older meetings" is now twice-requested; the agenda-document store already holds their documents.
-* 3h — Layout smalls: US Senators label on its own line, names beneath; expansion photos larger; office blurb moves to the TOP of the large popup; legend z-index fixed (it overlays the small popup — screenshot on file); dates render mm/dd/yyyy everywhere.
+## 6 — Meetings and bodies
 
-## 4 — Plain-language bill summaries, curated (author approved)
+* 6a — Past-meeting card variant: concluded meetings drop Directions and the to-be-heard boilerplate; gain a "What happened — plain language" dropdown where minutes are published (curated from the minutes for concluded meetings in the current window, cited; honest "minutes not yet posted" otherwise); and a phone link for the clerk/body office — hunt the numbers.
+* 6b — Add to calendar on every upcoming meeting: .ics download (covers Apple/Outlook) + a Google Calendar link, with title (what-first), time, location, and the meeting's app link in the description.
+* 6c — The county popup fills in. Pima's large popup (and every county's): all county meetings (it covers Vail AND Tucson — list them all), representation (who represents people in this county, clear about what and where), officials, bodies. Generalize — the author's Tucson examples are examples, not scope.
+* 6d — Body ordering: governing bodies before advisory — City Council never below the Board of Adjustment.
+* 6e — EVERY governing-body member of EVERY wired body gets a Kelly-standard card. No location exceptions — the author's explicit scope. The principle: if we show a body, we show its people. Where tier-3 rosters already exist, RAISE each member from name-with-citation to full card. Where a roster is missing, the completeness audit (3a) will surface it — hunt it from the body's own pages, ladder applies. The audit table gains a column: roster present / carded / gaps, per body. A member whose photo or phone genuinely isn't published renders the honest placeholder, never a broken image or a fake — and the miss is recorded.
 
-The CRS text writes for staffers. The vote window is bounded — dozens of bills, not thousands — so hand-curate a plain-language summary per bill in the current window, the Prop 142 pattern: the author's register (15-year-old test), labeled "Plain-language summary," cited to the CRS summary and bill text it derives from, official text one click below. A data file keyed by bill, refreshed as the vote window rolls — note in the refresh script that new bills entering the window need summaries, and surface unsummarized bills honestly ("official summary below; plain-language version coming") rather than blocking the vote row. Vote-type explainer stays adjacent (passage vs. procedural), both visible.
+## 7 — "About this area" v1 — for movers
 
-## 5 — FEC funding surfaces, with reactions, behind two ripcords
+The tester is literally moving states; build the feature for her case. A section reachable from the zip's who-governs or ballot surface: the questions people ask before moving, answered before asked — including controversial ones. Per state (NJ and NH first, AZ too): marijuana legality (recreational/medical, where sold), school vaccination requirements and exemptions, firearm carry basics, state income tax, vehicle registration/license timelines, voter registration deadlines and ID requirements, homestead/property-tax basics. Every answer: one or two register-plain sentences, cited to the official source (statute, state agency page) — never advocacy, never characterization, the same neutrality discipline as everything else. Curated data file per state; honest "we haven't covered this yet" for anything unanswered. Title and flow are the session's choice — record it; the author will react.
 
-(Carried from the prior brief, author-approved, unchanged in substance.)
+## 8 — Interaction and carryovers
 
-* The ripcord doctrine into CLAUDE.md: legally-open features ship behind named kill switches; every record carries a provenance tag so a pull is a filter; the tracker row names flag, question, closer; ripcorded data never enters an export or sold aggregate until its question closes.
-* Adapter: FEC key wires into the fetch script env only — NEVER Netlify, never client. Snapshot pattern. Committee-level (raised, spent, cash on hand, small-donor share) tagged `FEC_COMMITTEE`; contributor-level display (top contributors as filed) tagged `FEC_CONTRIBUTOR`, reader-facing only; a guard test asserts FEC_CONTRIBUTOR rows are unreachable from aggregation/export.
-* Surface: Funding section on candidate cards and official large popups, plain register, cited, never characterized. Cited absences for no-committee/no-filings.
-* Reactions: the control on both funding displays — tags `FUNDING_TOTAL_REACTION` and `CONTRIBUTOR_REACTION`.
-* Ripcords: `ripcord.fecContributorDisplay` and `ripcord.fundingReactionsInAggregates` — the second ships PULLED (funding reactions excluded from sellable aggregation from day one). Tracker rows name the lawyer as closer. Transparency page updated same commit.
-* Identifier rule: FEC candidate ids vs roster/ballot ids — print the match rate before the adapter.
+* 8a — Sidebar numbers become doors (Meetings / Bodies / Districts / Officials counts tappable → large-popup lists → entity popups; one-large-popup rule). Twice carried, dropped once in brief-rewriting — it ships this session.
+* 8b — The clutter pass: popups do not minimize naturally (author). Audit every open-surface interaction: opening anything large minimizes everything else; compact cards yield to their own large tier; nothing stacks; the minimize affordance is obvious everywhere. Screenshot the worst current stack, then the fixed behavior.
 
-## 6 — Positions go live: the three-answer machinery
+## 9 — FEC funding surfaces — the author's order: build it, no exceptions
 
-(Carried, unchanged.) The corpus is full. Matched (verbatim short passages, source + retrieved date) / searched-nothing-matched (with denominator) / not-yet-collected (say so, link their site) — distinguishable in data and on screen, a test per type. Quote and link, never characterize. Change markers: "last checked" on every position; visible "this page changed since we last checked" with prior date when snapshots differ; never interpreted. Surface: Positions section in the large popup, topic-searchable within the popup (corpus search for this person only — NOT the routing chat). A07 in full; party-inference guard extends.
+Carried verbatim from the prior brief (tags, surfaces, reactions, ripcords). The one framing correction, recorded in the tracker: counsel closes the RIPCORDS, not the build. D34's row is updated to say so. `ripcord.fundingReactionsInAggregates` still ships PULLED; contributor display ships live behind its named flag. Adapter (fetch-script env only, snapshot pattern), committee + contributor tagged rows, guard test on the aggregation path, Funding sections in the register, reaction controls with the two funding tags, transparency page same commit, FEC-vs-roster identifier match rate printed.
 
-## 7 — Documents and handoff
+## 10 — The tester pass, PHONE WIDTH, hers first
 
-`state.md`: the NH overturn preserved, the Kelly-standard audit table, every 3-series fix, the summaries file, FEC with its structural line, positions live; test count in all three places. `CLAUDE.md`: the ripcord doctrine; the disclosure-decision update. Tracker: D23 split recorded, ripcord rows, defects triaged with row IDs, next free ID verified. Transparency page verified against everything shipped. Overwrite `docs/session-brief.md`. Ship, verify deploy, standing report.
+03255 and 07866 walked as a stranger on a 390px viewport, then 85701/85641. Cold zip entry; every surface read (15-year-old test), every link fetched, every control exercised, every popup opened and minimized. Written surface-by-surface pass/fail log → `docs/tester-pass.md` (supersede), open items seeding the FINAL session's punch list. Screenshots throughout.
+
+10b — One tracker verification (no build): confirm T02's row records the author's standing position after his bot-flooding note: tier-weighting, not mandatory authentication — anonymous reactions always allowed, optional verification raises tier, aggregates always tier-split with denominators; the open design question is how optional locality verification works WITHOUT creating identity linkage, and it must be answered before public launch (alongside T08). If the row already says this, note "verified current"; if not, update it in place. No reader-facing auth is built, this session or any session, without the author's explicit direction.
+
+## 11 — Documents and handoff
+
+`state.md`: everything above; the completeness-audit table linked; the D34 framing correction; test count in all three places. Tracker: rows in place, sidebar-doors carry noted as recovered, next free ID verified. Transparency page verified (license wording, picks-local, FEC section). Overwrite `docs/session-brief.md`. Ship, verify deploy, standing report.
 
 ## Order, and cuts if short
 
-1 → 2 → 3 → 4 → 5 (whole or defers whole) → 6 → tester pass → 7.
-
-Items 1–3 are correctness and the author's direct experience — never cut. The tester pass is never cut — it is the point of the session. If short: defer 6 first, then 5 (it defers WHOLE — a funding surface without tags and ripcords is the forbidden configuration), then thin 4 to the top ten bills by recency with the honest "coming" state on the rest. A deferred build item is fine; a defect the tester will hit is not — when choosing between finishing a new surface and polishing an existing one, polish wins this session. Documents never cut.
+1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 (whole or defers whole) → 10 → 11.
+NH/NJ depth (2), completeness (3), and the tester pass (10) are the session's point — never cut. If short: defer 9 whole first (it is the author's no-exceptions order — defer only under genuine duress and say so plainly at the top of the report), then thin 7 to NJ+NH only, then 6a's minutes summaries to the five most recent concluded meetings. Documents never cut. Polish beats new surface everywhere the choice arises.
 
 ## Standing rules
 
-All of CLAUDE.md's non-negotiables. Denominators with counts; screenshot before believing green; diagnose before fixing; compare identifier sets before any adapter; never assert absence of data in a test; grep after scripted edits; verify branches; nothing Done without branch + checks; a failed operation may not render as an empty success; a URL cited must have been fetched and verified — a 404 or a generic landing is a MISS, not a citation.
+All of CLAUDE.md's non-negotiables. Denominators with counts; screenshot before believing green; diagnose before fixing; compare identifier sets before any adapter; never assert absence of data in a test; grep after scripted edits; verify branches; nothing Done without branch + checks; a failed operation may not render as an empty success; a URL cited must have been fetched and verified — a 404 or generic landing is a MISS, not a citation.

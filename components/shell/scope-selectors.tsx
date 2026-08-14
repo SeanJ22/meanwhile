@@ -22,7 +22,7 @@ import { useUi, useUiDispatch } from "@/lib/state/provider";
  * distinct.
  */
 export function ScopeSelectors() {
-  const { allMeetings } = useShellData();
+  const { allMeetings, result } = useShellData();
   const { tiers, jurisdiction, body } = useUi();
   const dispatch = useUiDispatch();
 
@@ -50,8 +50,21 @@ export function ScopeSelectors() {
       const key = `${meeting.ocdId}|${meeting.bodyName}`;
       if (!seen.has(key)) seen.set(key, meeting.bodyName);
     }
-    return [...seen.entries()].sort((a, b) => a[1].localeCompare(b[1]));
-  }, [allMeetings, tiers, jurisdiction]);
+    // 6d (2026-08-17): governing bodies before advisory ones — the City
+    // Council never sorts below the Board of Adjustment. Class comes from
+    // the coverage summary's curated rows; a name coverage doesn't know
+    // (usually a derived governing body) ranks with the governments.
+    const advisory = new Map<string, boolean>();
+    for (const covered of result?.coverage?.bodies ?? []) {
+      if (covered.name) {
+        advisory.set(covered.name, covered.bodyClass !== "GOVERNING");
+      }
+    }
+    const rank = (label: string) => (advisory.get(label) ? 1 : 0);
+    return [...seen.entries()].sort(
+      (a, b) => rank(a[1]) - rank(b[1]) || a[1].localeCompare(b[1]),
+    );
+  }, [allMeetings, tiers, jurisdiction, result]);
 
   // The banner slot Edia uses for #smbOppBanner: one line explaining a filter
   // state a reader would otherwise have to infer from an empty map.

@@ -11,8 +11,16 @@ import {
 import {
   linksForCandidacy,
   linksForNominee,
-  type CandidateLinks,
 } from "@/lib/ballot/candidate-sites";
+import { blurbForContestTitle } from "@/lib/officials/office-blurbs";
+import { surnameDisplayCase } from "@/lib/ballot/name-case";
+import {
+  cardForCandidacy,
+  cardForNominee,
+} from "@/lib/ballot/candidate-cards";
+import { CandidateCard } from "@/components/ballot/candidate-card";
+import { MyPicks } from "@/components/ballot/my-picks";
+import { PickControl } from "@/components/ballot/pick-control";
 import { registrationLinkFor } from "@/lib/ballot/registration-links";
 import { formatDateMDY } from "@/lib/map/format";
 import { ReactionControl } from "@/components/reactions/reaction-control";
@@ -50,40 +58,6 @@ function candidatesOf(set: BallotSet, contest: Contest): Candidacy[] {
   return set.candidacies
     .filter((c) => c.contestId === contest.id)
     .sort((a, b) => a.familyName.localeCompare(b.familyName));
-}
-
-/**
- * The hunted-and-verified links for a candidate (2b): official page first,
- * campaign site second, both labeled. Rendered only where the hunt verified
- * them — an absent link means the hunt is recorded in the data file, never
- * that a URL was guessed.
- */
-function CandidateLinkRow({ links }: { links: CandidateLinks | null }) {
-  if (!links || (!links.official && !links.campaign)) return null;
-  return (
-    <span className="inline-flex flex-wrap gap-x-2 text-[0.75rem]">
-      {links.official && (
-        <a
-          href={links.official.url}
-          target="_blank"
-          rel="noreferrer"
-          className="underline decoration-dotted"
-        >
-          official site
-        </a>
-      )}
-      {links.campaign && (
-        <a
-          href={links.campaign.url}
-          target="_blank"
-          rel="noreferrer"
-          className="text-muted underline decoration-dotted"
-        >
-          campaign site
-        </a>
-      )}
-    </span>
-  );
 }
 
 export default async function BallotPage({
@@ -161,6 +135,20 @@ export default async function BallotPage({
         </span>
       </p>
 
+      {/* 7: the mover's page — the questions people ask before moving,
+          answered from official sources. */}
+      {zip && (
+        <p className="mt-2 text-[0.8125rem]">
+          <Link
+            href={`/about-area?zip=${zip}`}
+            className="underline decoration-dotted hover:text-signal"
+          >
+            Moving here? The basics — marijuana, taxes, schools, carrying,
+            registering →
+          </Link>
+        </p>
+      )}
+
       {!zip && (
         <p className="mt-6 text-[0.8125rem] text-muted">
           Open this page with a zip, e.g.{" "}
@@ -211,6 +199,10 @@ export default async function BallotPage({
         ) : null;
       })()}
 
+      {/* 4a: the private election-day list — renders only once something
+          is marked. Device-local; the component says so itself. */}
+      <MyPicks />
+
       {dates && (
         <section className="mt-6 rounded border border-[var(--panel-border)] p-4">
           <h2 className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-muted">
@@ -259,6 +251,24 @@ export default async function BallotPage({
                   : ""}
               </p>
 
+              {/* 4b (2026-08-17): what this office actually does, in the
+                  register, at the top of the contest. Describes the office,
+                  never the people running for it. */}
+              {(() => {
+                const blurb = blurbForContestTitle(contest.title);
+                return blurb ? (
+                  <p className="mt-1.5 text-[0.75rem] leading-relaxed text-paper-dim">
+                    {blurb.text}
+                    {blurb.basis && (
+                      <span className="text-muted">
+                        {" "}
+                        (Powers defined in: {blurb.basis}.)
+                      </span>
+                    )}
+                  </p>
+                ) : null;
+              })()}
+
               {/* 6c: the record behind this contest, at the top of the card
                   — never buried at the page bottom. */}
               <p className="mt-1 text-[0.6875rem] text-muted">
@@ -293,24 +303,24 @@ export default async function BallotPage({
               {/* The certified lineup retires the filing-list fallback (6a):
                   what a November voter actually chooses among. */}
               {lineup ? (
+                <>
                 <ul className="mt-3 space-y-2">
                   {lineup.nominees.map((nominee) => (
                     <li
                       key={nominee.name}
                       className="border-b border-[var(--panel-border)] pb-2 last:border-0 last:pb-0"
                     >
-                      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
-                        <span className="text-[0.875rem]">
-                          {nominee.name}{" "}
-                          <CandidateLinkRow
-                            links={linksForNominee(contest.id, nominee.name)}
-                          />
-                        </span>
-                        <span className="text-right text-[0.75rem] text-muted">
-                          {nominee.partyLabel}
-                          {nominee.note && <> · {nominee.note}</>}
-                        </span>
-                      </div>
+                      <CandidateCard
+                        name={nominee.name}
+                        partyLine={
+                          <>
+                            {nominee.partyLabel}
+                            {nominee.note && <> · {nominee.note}</>}
+                          </>
+                        }
+                        card={cardForNominee(contest.id, nominee.name)}
+                        links={linksForNominee(contest.id, nominee.name)}
+                      />
                       {/* 3d: reader expression, never a recommendation — the
                           answer is stored and aggregated, never rendered
                           back, and nothing orders candidates by it. */}
@@ -327,6 +337,18 @@ export default async function BallotPage({
                     </li>
                   ))}
                 </ul>
+                {/* 4a: the private pick — a different thing from the
+                    reactions above, and it says so. */}
+                <PickControl
+                  contestId={contest.id}
+                  contestTitle={contest.title}
+                  voteFor={contest.voteFor}
+                  options={lineup.nominees.map((n) => ({
+                    id: n.name,
+                    label: n.name,
+                  }))}
+                />
+                </>
               ) : (
                 <>
                   {contest.scopeNote && (
@@ -340,34 +362,26 @@ export default async function BallotPage({
                         key={cand.id}
                         className="border-b border-[var(--panel-border)] pb-2 last:border-0 last:pb-0"
                       >
-                        <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
-                          <span className="text-[0.875rem]">
-                            {cand.givenName} {cand.familyName}{" "}
-                            <CandidateLinkRow links={linksForCandidacy(cand.id)} />
-                            {cand.websiteUrl && !linksForCandidacy(cand.id) && (
-                              <>
-                                {" "}
-                                <a
-                                  href={cand.websiteUrl}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  className="text-[0.75rem] underline decoration-dotted"
-                                >
-                                  site
-                                </a>
-                              </>
-                            )}
-                          </span>
-                          <span className="text-right text-[0.75rem] text-muted">
-                            {cand.partyLabel ?? "No party label filed"}
-                            {cand.slogan && (
-                              <>
-                                {" "}
-                                · <span className="italic">&ldquo;{cand.slogan}&rdquo;</span>
-                              </>
-                            )}
-                          </span>
-                        </div>
+                        <CandidateCard
+                          name={`${cand.givenName} ${surnameDisplayCase(cand.familyName)}`}
+                          partyLine={
+                            <>
+                              {cand.partyLabel ?? "No party label filed"}
+                              {cand.slogan && (
+                                <>
+                                  {" "}
+                                  ·{" "}
+                                  <span className="italic">
+                                    &ldquo;{cand.slogan}&rdquo;
+                                  </span>
+                                </>
+                              )}
+                            </>
+                          }
+                          card={cardForCandidacy(cand.id)}
+                          links={linksForCandidacy(cand.id)}
+                          filedSiteUrl={cand.websiteUrl}
+                        />
                         {/* 3d: reader expression, never a recommendation. */}
                         <ReactionControl
                           targetType="CANDIDATE"
@@ -382,6 +396,16 @@ export default async function BallotPage({
                       </li>
                     ))}
                   </ul>
+                  {/* 4a: the private pick — distinct from reactions. */}
+                  <PickControl
+                    contestId={contest.id}
+                    contestTitle={contest.title}
+                    voteFor={contest.voteFor}
+                    options={candidatesOf(set, contest).map((cand) => ({
+                      id: cand.id,
+                      label: `${cand.givenName} ${surnameDisplayCase(cand.familyName)}`,
+                    }))}
+                  />
                 </>
               )}
             </section>
@@ -453,6 +477,19 @@ export default async function BallotPage({
                     {contest.scopeNote}
                   </p>
                 )}
+
+                {/* 4a: the private pick on measures — Yes/No, this device
+                    only, stated in the control. */}
+                <PickControl
+                  contestId={contest.id}
+                  contestTitle={contest.title}
+                  voteFor={1}
+                  options={[
+                    { id: "YES", label: "Yes" },
+                    { id: "NO", label: "No" },
+                  ]}
+                />
+
                 <p className="mt-2 text-[0.6875rem]">
                   <a
                     href={analysis?.analysisUrl ?? contest.provenance.sourceUrl ?? undefined}

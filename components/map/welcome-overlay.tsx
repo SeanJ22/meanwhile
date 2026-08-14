@@ -134,12 +134,29 @@ export function WelcomeOverlay({
         <h1 className="welcome-title">We the People</h1>
         <p className="welcome-subtitle">Notice of public meetings</p>
 
-        <p className="welcome-msg">
-          Councils, boards, and commissions decide what happens on your street,
-          in rooms anyone can walk into. Enter a zip code and the map shows the
-          public meetings coming up near it — who is meeting, when, where, and
-          the agenda where one is posted.
-        </p>
+        {/* The author's mission text, verbatim (session brief 1a). Do not
+            edit it here: tests/welcome-copy.test.ts pins every sentence. */}
+        <div className="welcome-msg space-y-2 text-left">
+          <p>
+            Whether you care about politics or not, politics cares about you.
+          </p>
+          <p>Government reports to you.</p>
+          <p>
+            While you were at work, a data center was approved three miles from
+            your kids&apos; school. While you were at soccer practice, the
+            school board adopted a new AI policy. While you were living an
+            ordinary week, decisions about your next four years got made.
+          </p>
+          <p>
+            Not in secret. In public, on a schedule, in a room you were allowed
+            to walk into. Nobody told you.
+          </p>
+          <p>
+            Know where it&apos;s happening. Know when it&apos;s happening. Show
+            up if you can.
+          </p>
+          <p>And when you can&apos;t — say something anyway.</p>
+        </div>
 
         <div className="welcome-field">
           <ZipComb

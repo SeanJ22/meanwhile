@@ -199,7 +199,11 @@ test("no table sneaks in a ranking or recommendation column", () => {
   // CLAUDE.md: no candidate or measure record may grow a score/rank/... key.
   // Meetings are not candidates, but the guard is cheap and the failure mode
   // (a 'relevance' column that becomes an ordering) is the same shape.
-  const forbidden = /score|rank|rating|match|fit|grade|alignment|recommend/;
+  // 4a (2026-08-17): "pick" joins the ban — save-my-picks is DEVICE-LOCAL
+  // ONLY (wtp.ballot_picks), and no server column may ever be able to hold
+  // one. "Saved on this device only. We never see your picks." is a schema
+  // property here, not just a sentence.
+  const forbidden = /score|rank|rating|match|fit|grade|alignment|recommend|pick/;
   for (const [name, table] of tables) {
     const config = getTableConfig(table as Parameters<typeof getTableConfig>[0]);
     for (const column of config.columns) {

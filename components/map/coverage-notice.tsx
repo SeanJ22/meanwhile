@@ -418,6 +418,56 @@ function CoverageBody({
                 </li>
               )),
           )}
+          {/* 2e (2026-08-17): the no-mayor town, stated as what it HAS. A
+              New England town run by a Select Board gets the fact named and
+              its members shown — the people filling the substitute role
+              matter exactly as much as a mayor would. Same pattern anywhere
+              the expected office doesn't exist. */}
+          {shown.flatMap((body) => {
+            const board = rosterHoldersForBody(body.bodyId).filter((holder) =>
+              /select\s?board/i.test(holder.officeTitle),
+            );
+            if (board.length === 0) return [];
+            const townName = body.divisionLabel.replace(
+              /\s+(town|city|township|borough)$/i,
+              "",
+            );
+            return [
+              <li
+                key={`${body.bodyId}-selectboard-fact`}
+                className="pb-1 text-[0.75rem] leading-relaxed text-paper-dim"
+              >
+                <span className="text-signal">
+                  {townName} isn&apos;t a city — it has no mayor.
+                </span>{" "}
+                The Select Board runs the town.
+              </li>,
+              ...board.map((holder) => (
+                <li
+                  key={holder.id}
+                  className="flex items-baseline justify-between gap-3 pb-1 text-[0.75rem] leading-snug"
+                >
+                  <span className="text-local">{holder.officeTitle}</span>
+                  <span className="text-right">
+                    <Holder
+                      holder={holder}
+                      onOpen={
+                        onOpenOfficial
+                          ? () =>
+                              onOpenOfficial(
+                                holder,
+                                holder.officeTitle,
+                                "local",
+                                body.ocdId,
+                              )
+                          : undefined
+                      }
+                    />
+                  </span>
+                </li>
+              )),
+            ];
+          })}
           {hidden > 0 && (
             <li className="pt-0.5 text-[0.75rem] text-muted">
               and {hidden} more
@@ -430,6 +480,18 @@ function CoverageBody({
           index says the answer would change. Declining stays effortless.
           Keyed on the zip so a new zip mounts a fresh prompt. */}
       {/^\d{5}$/.test(zip) && <NarrowingPrompt key={zip} zip={zip} />}
+
+      {/* 7 (2026-08-17): the mover's page, one tap from who-governs. */}
+      {/^\d{5}$/.test(zip) && (
+        <p className="mt-2 text-[0.75rem]">
+          <a
+            href={`/about-area?zip=${zip}`}
+            className="underline decoration-dotted hover:text-signal"
+          >
+            Moving here? The basics — taxes, schools, registering →
+          </a>
+        </p>
+      )}
 
       {/*
         D17, split 2026-08-13. The statutory sentence — New Hampshire does not

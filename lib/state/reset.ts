@@ -145,6 +145,7 @@ export const NON_CONTROL_FIELDS: Partial<Record<keyof UiState, string>> = {
   showDistricts:
     "a persisted preference (wtp.show_districts, owned by use-district-layer); reset does not undo preferences",
   listOverlayOpen: "view state, not a constraint on what is shown",
+  door: "view state — an open sidebar-count door, constrains nothing (8a)",
   filtersPanelOpen: "view state",
   listSort: "list presentation, constrains nothing",
   listGroupBy: "list presentation",

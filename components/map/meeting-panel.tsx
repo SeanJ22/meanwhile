@@ -192,7 +192,10 @@ function MeetingEntry({
         )}
       </div>
 
-      <HowToBeHeard ocdId={meeting.ocdId} bodyName={meeting.bodyName} />
+      {/* 6a: nothing left to be heard at once the meeting has concluded. */}
+      {meeting.status !== "CONCLUDED" && (
+        <HowToBeHeard ocdId={meeting.ocdId} bodyName={meeting.bodyName} />
+      )}
 
       <footer className="mt-4 border-t border-rule-soft pl-4 pt-3">
         {/* No identifier here: internal keys never render to readers (4a).

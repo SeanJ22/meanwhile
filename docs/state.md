@@ -4,16 +4,19 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-16, after the correctness-first session — the NH
-November ballot corrected in place (the overturn preserved, §14), the Kelly
-standard for officials and candidates (enrichment, the fetch-verifying
-audit, 40 hunted candidate links, registration checkers), the author's
-defect batch 3a–3h including the measured 3f diagnosis, curated
-plain-language bill summaries with the wrong-slug bill-link catch, the
-tester pass with its walk-through log (`docs/tester-pass.md`), and the
-ripcord doctrine in CLAUDE.md with FEC deferred whole behind it. See §14.
-Before that, 2026-08-15: the sensor turned on and the product learned plain
-language (§13).
+Last updated: 2026-08-17, after the final-prep session — the author's
+mission text verbatim on the welcome overlay and "sell" retired for
+"licensed"; NH/NJ depth (Kelly-standard candidate cards, the name-case
+pass, Newbury's Select Board named and peopled, the earned NH
+no-measure absence); the completeness audit against the Census of
+Governments official universe with ten special districts curated in and
+five new rosters (Kearsarge's wall came down); save-my-picks
+(device-local, schema-enforced); office explainers for every ballot
+office; the votes polish; past-meeting cards and add-to-calendar; the
+mover's "about this area" page; the sidebar numbers as doors; and the
+four-zip phone-width tester pass at 74 checks green. FEC (D34) deferred
+whole again under stated duress. See §15. Before that, 2026-08-16: the
+correctness session (§14).
 
 ---
 
@@ -59,7 +62,7 @@ works.
 | `corepack pnpm session:start` | Start-of-session sweep, then the dev server — see §8. `--check` starts nothing |
 | `corepack pnpm dev` | Development server. Refuses if 3000 is taken; records its pid in `.dev-server.pid` |
 | `corepack pnpm build` | Production build |
-| `corepack pnpm test` | `node --test` over `tests/` — 315 tests (2026-08-15) |
+| `corepack pnpm test` | `node --test` over `tests/` — 349 tests (2026-08-17) |
 | `corepack pnpm lint` | ESLint |
 | `corepack pnpm ingest <source>` | Run one adapter end to end — `composite` prints per-source accounting and retrieves agenda documents |
 | `corepack pnpm meetings:report` | The four-zip gate: meetings per zip, contributing sources, unwired bodies. Live network |
@@ -3150,3 +3153,175 @@ punch list seed.
   items; D34 (FEC behind ripcords, counsel closes); D35 (positions
   three-answer machinery, A07 in full); NH hunts marked NOT_ATTEMPTED;
   NJ/NH body rosters; T08 before any public reachability.
+
+---
+
+## 15. The 2026-08-17 final-prep session — depth for the tester's two states, and the denominator stops being ours
+
+Branch `claude/final-prep-nh-nj-depth-0817`, eleven commits, run
+unattended under the standing motion. **test 349 pass · lint clean ·
+build exit 0** on every commit, verified by exit code. The tester lives
+in New Hampshire and is moving to Morris County, NJ — where breadth and
+depth traded, depth in her two states won, by instruction.
+
+### 1 — The author's words
+
+The welcome overlay's mission text is the author's six sentences,
+VERBATIM, pinned sentence-by-sentence in `tests/welcome-copy.test.ts`
+(the pin normalizes JSX wrapping and entities to the rendered text). And
+"sell" retired from every reader surface for "aggregates may be
+licensed" — the commercial fact stays plainly stated, only the verb
+changed; the reactions test asserts both directions (the word present,
+sell/sold absent).
+
+### 2 — NH/NJ depth
+
+- **2a, the earned absence.** No statewide question is on NH's November
+  2026 ballot. Earned, not assumed: every 2025-2026 CACR enumerated dead
+  (6 right-to-compute ITL'd; 12 tax-supermajority failed the House 3/5
+  193-148 in May; 14, 15, 21, 24 failed in March; 28 killed), and the
+  SOS's own 2026 Election Details page — read in a real browser; the
+  host 403s every automated client including the pipeline's former
+  browser-UA rung, which has CLOSED — lists no question and no voters'
+  guide the way 2024's did. The absence ships in the ballot file with
+  SOS provenance; the CACR enumeration rides as a coverage note; the
+  Ballotpedia "lead" resolved to the DEFEATED 2024 judicial-retirement
+  question. gc.nh.gov is unreachable from this environment ENTIRELY —
+  TLS-reset to curl/node/WebFetch and failed even to the real browser;
+  every rung recorded (`docs/source-ladder.md`, the 2026-08-17 set).
+- **2b, Kelly-standard cards.** Every ballot candidate renders a CARD —
+  photo (campaign-site source, the author-adjusted rule for challengers,
+  every URL HEAD-verified `image/*`, labeled), bio in the candidate's
+  own site's words with a read date, published contact, official site
+  first + campaign site labeled, party as filed. 17 cards curated (11
+  NH including Goodlander's official-House-page bio read in a real
+  browser, 6 NJ, plus the AZ governor pair); absences are recorded
+  hunts; the domain trap re-sighted (andybiggs.com is a safari
+  photographer — only fetch-verified biggsforarizona.com is citable).
+  AZ beyond governor: NOT_ATTEMPTED per NH/NJ-first, recorded.
+- **2c/3d, the walls.** New rungs walked and recorded: schannel curl
+  (all TLS profiles) reset by gc.nh.gov; gencourt.state.nh.us DNS
+  retired; Wayback rate-limited at attempt; sos.nh.gov's Akamai wall now
+  403s browser-UA curl. **Kearsarge's wall CAME DOWN** — a browser-UA
+  fetch from this machine returned the full members page, and the
+  nine-member board is curated with towns, terms, committees (Newbury's
+  representative, Kristen Schultz, also chairs the Selectboard).
+- **2d.** Ledger-caps surnames render as names (`lib/ballot/name-case.ts`
+  — Mc/O'/exceptions-map/particles/suffixes, display-only, fires only on
+  all-caps input, mixed-case passes byte-identical; tested).
+- **2e.** "Newbury isn't a city — it has no mayor. The Select Board runs
+  the town." renders in who-governs with all three members tappable; the
+  Select Board has its own register explainer (RSA 41 basis); the
+  pattern is generalized to any select-board town.
+- **The stranger test and the denominator rule are CLAUDE.md
+  constraints** — completeness judged by the reader who has never been
+  there, and coverage claims measured against the official universe,
+  never our own records.
+
+### 3 — The completeness audit (docs/coverage-audit-by-county.md)
+
+The 2022 Census of Governments government-units listing is the committed
+Layer-1 denominator (`data/audit/gus-2022-clip-counties.json`): **Pima
+50, Morris 98, Merrimack 63 governments.** Findings: municipal and
+school layers are COMPLETE in all three counties, name-by-name —
+Sunnyside and Amphitheater were registry divisions all along (the
+author's catch was a surface gap, not an existence gap). The structural
+gap was SPECIAL DISTRICTS (60 across the counties, zero in the
+registry) plus the no-boundary school tier. Fixed for everything serving
+the four zips: ten curated bodies (RTA, Rio Nuevo, Rincon Valley FD,
+Corona de Tucson FD, Pima JTED, RVRSA, County College of Morris, Morris
+County Vocational SD, and the two county conservation districts),
+homepages fetch-verified, coverage honestly NOT_ATTEMPTED; the other 45
+are the enumerated backlog. Registry: **333 bodies.** Layer 2 and the
+roster column live in the audit; new rosters this session: Kearsarge
+(9), Rockaway Twp council + mayor (10, with per-member phone AND email),
+Morris County commissioners (7), Merrimack County commissioners (3 — the
+county's FY2025 annual report is the source; the county site's own
+index page is STALE and the audit says so).
+
+### 4-8 — The surfaces
+
+- **4a save-my-picks**: per-contest (measures included) to
+  `wtp.ballot_picks`, DEVICE-LOCAL ONLY — no network path in the module
+  (test-pinned), "pick" a banned column name schema-wide, "Saved on this
+  device only. We never see your picks." on every surface with the
+  difference from reactions named, transparency paragraph same commit.
+- **4b office explainers** for every candidacy contest on all three
+  ballots (executive councilor, register of probate, mine inspector, the
+  lot), guard-tested with the ballot files as the denominator.
+- **5 votes polish**: summary open by default; a mechanical "what a No
+  vote did" line on all 12 vote types (no-advocacy tested); attribution
+  once at the section top.
+- **6 meetings**: concluded meetings drop Directions and to-be-heard and
+  gain what-happened (curated-minutes store shipped with the honest
+  not-yet state; curation is the browser-phase worklist) plus the office
+  phone derived mechanically from the rosters' shared base line; .ics +
+  Google Calendar on every upcoming meeting (90-minute estimate stated
+  as an estimate); the county large popup lists all county-area meetings
+  and the commissioners; governing bodies sort before advisory.
+- **7 the mover's page** (`/about-area?zip=`): seven questions per state
+  (marijuana, vaccinations, firearms, income tax, vehicle, voter
+  registration, property tax) ×3 states, every answer one-two register
+  sentences cited to the official agency — NJ/AZ fetch-verified, all six
+  NH citations verified in a real browser with three URLs corrected.
+  Title decision recorded for the author: "Moving here? The basics" /
+  "The basics of living here".
+- **8a doors**: the four stat counts open the lists they count; the
+  one-large-surface rule holds in both directions; the reset-registry
+  guard forced the view-state decision.
+
+### 10 — The tester pass (docs/tester-pass.md, superseded)
+
+Four zips at 390×844 as a stranger (hers first), 74 checks green, zero
+console errors. The walk caught and the session fixed a real 8b defect:
+a door opened from the phone drawer rendered UNDER the drawer's backdrop
+and every tap died there — opening a door or the list now dismisses the
+drawer. Harness findings recorded: chrome labels uppercase via CSS (all
+body-text checks case-insensitive), and the in-app Browser pane cannot
+composite unattended — the repo's headless Playwright drivers are the
+tester harness of record (`scripts/tester-walk-0817.mts`).
+
+### 9 — Deferred, said plainly
+
+**FEC (D34) deferred whole, again.** The cut order names it first and
+this session hit genuine duress: the never-cut items consumed it. The
+framing correction is recorded on the row — counsel closes the RIPCORDS
+(via D23), not the build; the build is next session's largest item.
+Also T02 verified-and-extended per 10b: tier-weighting, never mandatory
+authentication; no reader-facing auth without the author's explicit
+direction.
+
+### Decisions taken as cheaper-to-undo, with the rejected alternative
+
+- The mission text renders as six short paragraphs in the existing
+  welcome-msg style (rejected: one block — the author's line breaks are
+  the rhythm).
+- Bios are the candidate site's own words, quoted and attributed, even
+  when thin or promotional (rejected: writing our own factual bios —
+  characterization by us, exactly what the rule forbids).
+- Special districts enter as `curated:` bodies with COG_2022 dataset and
+  NOT_ATTEMPTED coverage (rejected: waiting for the D31 identifier
+  convention — a real government missing from the registry is the worse
+  state).
+- The Merrimack commissioners roster cites the county's FY2025 annual
+  report over the county site's stale index page (rejected: the page —
+  it names a former commissioner; the minutes confirm the report).
+- The office phone derives from the roster's shared base number
+  (rejected: hunting separate clerk numbers — the rosters' cited pages
+  already publish the office line).
+- Calendar events carry a 90-minute estimated end, stated as an estimate
+  (rejected: zero-length events — they render uselessly everywhere).
+- The county door's membership test is the state prefix (correct while
+  local coverage is clipped to one county per state; noted to revisit at
+  expansion).
+
+### State as of 2026-08-17
+
+- **349 tests, lint clean, build exit 0** — verified by exit code.
+- Ballot gate: 03255 carries 12 contests + the earned no-measure
+  absence; all four zips carry cards, explainers, picks, registration
+  checkers, and the mover's page.
+- Open next: D34 (FEC, the largest item); D35 (positions machinery);
+  Rockaway BOE full names; Goodlander portrait; minutes-summary
+  curation; the 45 backlog special districts; T08 before any public
+  reachability.

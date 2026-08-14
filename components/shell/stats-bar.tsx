@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import { formatMiles } from "@/lib/map/format";
 import { useShellData } from "@/lib/state/data";
 import { computeStats, deriveStatsView } from "@/lib/state/derive";
-import { useUi } from "@/lib/state/provider";
+import { useUi, useUiDispatch } from "@/lib/state/provider";
 
 import { tierSetVars } from "./tier-style";
 
@@ -25,6 +25,7 @@ export function StatsBar() {
   const { meetings, districtCount, dropped, result, searchFailed } =
     useShellData();
   const ui = useUi();
+  const dispatch = useUiDispatch();
 
   // Distinct people we can actually name at this point — the seats' holders
   // plus the state's senators, deduplicated because a person can hold one seat
@@ -64,10 +65,30 @@ export function StatsBar() {
 
   return (
     <div className="stats-bar">
-      <Card label="Meetings" value={view.meetings} style={accent} accent />
-      <Card label="Bodies" value={view.bodies} />
-      <Card label="Districts" value={view.districts} />
-      <Card label="Officials" value={view.officials} />
+      {/* 8a (2026-08-17): the numbers are doors. Each count opens the list
+          it counts — twice carried, ships now. */}
+      <Card
+        label="Meetings"
+        value={view.meetings}
+        style={accent}
+        accent
+        onOpen={() => dispatch({ type: "list/open", open: true })}
+      />
+      <Card
+        label="Bodies"
+        value={view.bodies}
+        onOpen={() => dispatch({ type: "door/open", door: "bodies" })}
+      />
+      <Card
+        label="Districts"
+        value={view.districts}
+        onOpen={() => dispatch({ type: "door/open", door: "districts" })}
+      />
+      <Card
+        label="Officials"
+        value={view.officials}
+        onOpen={() => dispatch({ type: "door/open", door: "officials" })}
+      />
 
       {view.failedNote && (
         <p className="stat-missing">{view.failedNote}</p>
@@ -101,14 +122,22 @@ function Card({
   value,
   style,
   accent = false,
+  onOpen,
 }: {
   label: string;
   value: number | string;
   style?: React.CSSProperties;
   accent?: boolean;
+  onOpen?: () => void;
 }) {
   return (
-    <div className="stat-card" style={style}>
+    <button
+      type="button"
+      className="stat-card cursor-pointer text-left"
+      style={style}
+      onClick={onOpen}
+      aria-label={`Open the ${label.toLowerCase()} list`}
+    >
       <div
         className="num"
         style={accent ? { color: "var(--tier-accent, var(--text))" } : undefined}
@@ -116,6 +145,6 @@ function Card({
         {value}
       </div>
       <div className="label">{label}</div>
-    </div>
+    </button>
   );
 }

@@ -278,9 +278,15 @@ test("the capture point and the transparency page disclose together", () => {
     join(process.cwd(), "app", "transparency", "page.tsx"),
     "utf8",
   ).toLowerCase();
-  for (const claim of ["reaction", "hashed", "verification tier", "sold"]) {
-    assert.ok(page.includes(claim), `the transparency page never mentions "${claim}"`);
+  // 1b (2026-08-17): "sell" retired from reader surfaces — the commercial
+  // fact stays, stated as "may be licensed". The page must still state it.
+  for (const claim of ["reaction", "hashed", "verification tier", "licensed"]) {
+    assert.ok(page.includes(claim), `the transparency page must mention "${claim}"`);
   }
+  assert.ok(
+    !/\bsold\b|\bsell\b/.test(page),
+    'reader wording: "sell/sold" retired in favor of "licensed" (1b)',
+  );
   // 1d: the OFFICIAL_OPENED event ships with its disclosure line.
   assert.ok(
     page.includes("official"),

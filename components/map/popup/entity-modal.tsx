@@ -208,7 +208,7 @@ export function EntityModal({
             <Empty>
               Civic engagement tracking arrives in Phase 7 — marking that you
               attended, commented, or are watching an item. It stays on this
-              device and is never aggregated or sold.
+              device and is never aggregated or licensed.
             </Empty>
           )}
 

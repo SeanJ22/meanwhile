@@ -554,3 +554,24 @@ host allows it, real browser where it walls:
 - Cells with no defensible contact are recorded misses with reasons in
   `EVERYDAY_MISSES` (85641 trash/parks, 03255 water-sewer/animals, snow
   in the desert) — a miss is a work item, never silence.
+
+## The 2026-08-14 rung set (third 08-14 session — the governors hunt, item 2b)
+
+The statewide-executives module (`lib/officials/statewide-executives.ts`)
+needs each governor's office read off the state's own site. Plain-client
+rungs, `attemptedAt: 2026-08-14`:
+
+- **azgovernor.gov walls plain clients** — 403 on
+  /office-arizona-governor/contact-governors-office. Browser rung queued.
+- **governor.nh.gov walls plain clients** — 403 on the homepage. Same NH
+  wall family as newbury.nh.gov. Browser rung queued.
+- **nj.gov/governor answers plain clients with an empty shell** —
+  /contact/ returns "Untitled Document" with no content to a plain
+  fetch; the page is client-rendered. A 200 with no content is a MISS,
+  not a hit (the count rule). Browser rung queued.
+
+All three rows carry `verification: "PENDING_BROWSER"` until the
+in-browser read happens. THE RULE (everyday.ts precedent): a pending row
+must be verified or removed before ship — never shipped on faith. The
+browser phase of this session owns the verification; the walk record
+(docs/tester-pass.md) states what each page said.

@@ -1,4 +1,5 @@
 import type { CoverageTier } from "../meetings/constants.ts";
+import { allOfficialRows } from "../officials/tier-grouping.ts";
 
 import type { CoverageSummary } from "./coverage.ts";
 
@@ -27,19 +28,21 @@ export function hasRepresentation(coverage: CoverageSummary | null): boolean {
   return (
     coverage.bodies.length > 0 ||
     coverage.seats.length > 0 ||
-    coverage.senators.length > 0
+    coverage.senators.length > 0 ||
+    coverage.statewideExecutives.length > 0
   );
 }
 
-/** Distinct named officeholders in the summary — the panel's denominator. */
+/**
+ * Distinct named officeholders in the summary — the panel's denominator.
+ * Reads the SAME tier-grouping derivation every officials surface
+ * renders (item 2c), so the stat card's N and the door's rows cannot
+ * disagree: local roster members, state legislators, the governor, the
+ * federal delegation.
+ */
 export function namedHolderCount(coverage: CoverageSummary | null): number {
   if (!coverage) return 0;
-  const ids = new Set<string>();
-  for (const seat of coverage.seats) {
-    for (const holder of seat.representatives) ids.add(holder.id);
-  }
-  for (const holder of coverage.senators) ids.add(holder.id);
-  return ids.size;
+  return allOfficialRows(coverage).length;
 }
 
 /**

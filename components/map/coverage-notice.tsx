@@ -204,7 +204,25 @@ function CoverageBody({
   failedSourceOcdIds?: string[];
   onOpenOfficial?: OpenOfficial;
 }) {
-  const { bodies, seats, unincorporated, counts, senators, seatCounts } = coverage;
+  const {
+    bodies,
+    seats,
+    unincorporated,
+    counts,
+    senators,
+    seatCounts,
+    statewideExecutives,
+  } = coverage;
+
+  // Item 2c (2026-08-14 second session): officials group under three
+  // headers, closest-first — Local, State, Federal. The state seats and
+  // the federal seat split by division type (structure, never a label
+  // match); the governor (2b) rides under STATE after the legislators —
+  // order of scope, district before statewide.
+  const stateSeats = seats.filter(
+    (s) => s.divisionType === "sldl" || s.divisionType === "sldu",
+  );
+  const federalSeats = seats.filter((s) => s.divisionType === "cd");
 
   /*
    * The reader's device-local narrowing (M26): where they picked their
@@ -351,7 +369,12 @@ function CoverageBody({
       )}
 
       {shown.length > 0 && (
-        <ul className="mt-2.5 space-y-1">
+        <p className="mt-2.5 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-local">
+          Local
+        </p>
+      )}
+      {shown.length > 0 && (
+        <ul className="mt-1 space-y-1">
           {shown.map((body) => (
             <li
               key={body.bodyId}
@@ -555,63 +578,133 @@ function CoverageBody({
         ) : null;
       })}
 
-      {seats.length > 0 &&
-        (seatCounts.named === 0 ? (
-          // Nothing sourced for any seat — the original wording, still true.
-          <p className="mt-2.5 text-[0.75rem] leading-relaxed text-muted">
-            You&apos;re also represented in {seatLine}.
-          </p>
-        ) : (
-          <>
-            <p className="mt-2.5 text-[0.75rem] leading-relaxed text-muted">
-              You&apos;re also represented in:
-            </p>
-            <ul className="mt-1 space-y-1">
-              {seats.map((seat) => (
-                <li
-                  key={seat.ocdId}
-                  className="flex items-baseline justify-between gap-3 text-[0.75rem] leading-snug"
-                >
-                  <span className={TIER_CLASS[seat.tier]}>{seat.label}</span>
-                  <span className="text-right">
-                    {seat.representatives.length > 0 ? (
-                      <HolderList
-                        holders={seat.representatives}
-                        seatLabel={seat.label}
-                        seatOcdId={seat.ocdId}
-                        tier={seat.tier}
-                        onOpenOfficial={onOpenOfficial}
+      {seats.length > 0 && seatCounts.named === 0 ? (
+        // Nothing sourced for any seat — the original wording, still true.
+        <p className="mt-2.5 text-[0.75rem] leading-relaxed text-muted">
+          You&apos;re also represented in {seatLine}.
+        </p>
+      ) : (
+        <>
+          {/* Item 2c: STATE — legislators first (district scope), then the
+              governor (2b, statewide scope). Item 2b's honesty line: the
+              governor is the only statewide office listed, said rather
+              than implied complete. */}
+          {(stateSeats.length > 0 || statewideExecutives.length > 0) && (
+            <>
+              <p className="mt-2.5 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-state">
+                State
+              </p>
+              <ul className="mt-1 space-y-1">
+                {stateSeats.map((seat) => (
+                  <li
+                    key={seat.ocdId}
+                    className="flex items-baseline justify-between gap-3 text-[0.75rem] leading-snug"
+                  >
+                    <span className={TIER_CLASS[seat.tier]}>{seat.label}</span>
+                    <span className="text-right">
+                      {seat.representatives.length > 0 ? (
+                        <HolderList
+                          holders={seat.representatives}
+                          seatLabel={seat.label}
+                          seatOcdId={seat.ocdId}
+                          tier={seat.tier}
+                          onOpenOfficial={onOpenOfficial}
+                        />
+                      ) : (
+                        // Not "vacant" — we simply have no record. The two
+                        // are completely different claims and only one is
+                        // ours to make.
+                        <span className="text-muted">no record yet</span>
+                      )}
+                    </span>
+                  </li>
+                ))}
+                {statewideExecutives.map((holder) => (
+                  <li
+                    key={holder.id}
+                    className="flex items-baseline justify-between gap-3 text-[0.75rem] leading-snug"
+                  >
+                    <span className="text-state">{holder.officeTitle}</span>
+                    <span className="text-right">
+                      <Holder
+                        holder={holder}
+                        onOpen={
+                          onOpenOfficial
+                            ? () =>
+                                onOpenOfficial(
+                                  holder,
+                                  holder.officeTitle,
+                                  "state",
+                                  null,
+                                )
+                            : undefined
+                        }
                       />
-                    ) : (
-                      // Not "vacant" — we simply have no record. The two are
-                      // completely different claims and only one is ours to
-                      // make.
-                      <span className="text-muted">no record yet</span>
-                    )}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </>
-        ))}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              {statewideExecutives.length > 0 && (
+                <p className="mt-1 text-[0.625rem] leading-relaxed text-muted">
+                  The governor is the only statewide office listed so far.
+                </p>
+              )}
+            </>
+          )}
 
-      {senators.length > 0 && (
-        // 3h (2026-08-16): the label on its own line, the names beneath it —
-        // the inline form wrapped awkwardly at phone width.
-        <div className="mt-2 text-[0.75rem] leading-relaxed text-muted">
-          <p className="text-national">
-            {senators.length === 1 ? "U.S. Senator" : "U.S. Senators"}
-          </p>
-          <p className="mt-0.5">
-            <HolderList
-              holders={senators}
-              seatLabel={null}
-              seatOcdId={null}
-              tier="national"
-              onOpenOfficial={onOpenOfficial}
-            />
-          </p>
-        </div>
+          {/* Item 2c: FEDERAL — the House member (district scope) before
+              the senators (statewide). "Federal", never "National": it
+              matches every ballot and source the app cites. */}
+          {(federalSeats.length > 0 || senators.length > 0) && (
+            <>
+              <p className="mt-2.5 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-national">
+                Federal
+              </p>
+              <ul className="mt-1 space-y-1">
+                {federalSeats.map((seat) => (
+                  <li
+                    key={seat.ocdId}
+                    className="flex items-baseline justify-between gap-3 text-[0.75rem] leading-snug"
+                  >
+                    <span className={TIER_CLASS[seat.tier]}>{seat.label}</span>
+                    <span className="text-right">
+                      {seat.representatives.length > 0 ? (
+                        <HolderList
+                          holders={seat.representatives}
+                          seatLabel={seat.label}
+                          seatOcdId={seat.ocdId}
+                          tier={seat.tier}
+                          onOpenOfficial={onOpenOfficial}
+                        />
+                      ) : (
+                        <span className="text-muted">no record yet</span>
+                      )}
+                    </span>
+                  </li>
+                ))}
+                {senators.map((holder) => (
+                  <li
+                    key={holder.id}
+                    className="flex items-baseline justify-between gap-3 text-[0.75rem] leading-snug"
+                  >
+                    <span className="text-national">U.S. Senator</span>
+                    <span className="text-right">
+                      <Holder
+                        holder={holder}
+                        onOpen={
+                          onOpenOfficial
+                            ? () =>
+                                onOpenOfficial(holder, "U.S. Senator", "national", null)
+                            : undefined
+                        }
+                      />
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </>
       )}
 
       {(bodies.some(

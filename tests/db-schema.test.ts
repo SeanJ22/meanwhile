@@ -224,7 +224,7 @@ test("a generated migration exists and creates every schema table", () => {
   assert.ok(files.length >= 1, "no migration files in lib/db/migrations");
 
   const sql = files.map((f) => readFileSync(join(dir, f), "utf8")).join("\n");
-  for (const tableName of ["meetings", "agenda_documents", "search_log", "reactions"]) {
+  for (const tableName of ["meetings", "agenda_documents", "search_log", "reactions", "intake_limiter"]) {
     assert.ok(
       sql.includes(`CREATE TABLE "${tableName}"`),
       `no migration creates "${tableName}"`,

@@ -1,0 +1,66 @@
+# The daily intake tripwire (T08 1f).
+#
+# Runs scripts/intake-tripwire.mts: identifier-free day counts from the
+# reaction store and the search log, flags for volume far outside the
+# trailing normal range or a disproportionate quarantine share, and the
+# limiter table's 48h purge. The report lands in docs/intake-report.md and
+# is committed so the author sees flags in the repo (and the Drive mirror
+# picks the docs directory's changes up through the normal handoff).
+#
+# Flags are flagged, never auto-acted-on. This workflow never closes
+# intake, never deletes a reaction row, never touches the stores beyond
+# read-only counts and the limiter purge.
+#
+# Needs the DATABASE_URL repository secret. Until it is added, this fails
+# visibly on schedule — a tripwire that silently skips is worse than none
+# (same posture as refresh-fec-snapshot.yml before its key landed).
+
+name: Intake tripwire
+
+on:
+  schedule:
+    # Daily 10:41 UTC — off the busy top of the hour.
+    - cron: "41 10 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: intake-tripwire
+  cancel-in-progress: false
+
+jobs:
+  tripwire:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Enable corepack (pnpm pinned by packageManager)
+        run: corepack enable
+
+      - name: Install
+        run: corepack pnpm install --frozen-lockfile
+
+      - name: Run the tripwire
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: corepack pnpm intake:tripwire
+
+      - name: Commit the report if changed
+        run: |
+          if git diff --quiet -- docs/intake-report.md; then
+            echo "report unchanged — nothing to commit"
+            exit 0
+          fi
+          git config user.name "intake-tripwire[bot]"
+          git config user.email "noreply@github.com"
+          git add docs/intake-report.md
+          git commit -m "Intake tripwire report: $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push origin main

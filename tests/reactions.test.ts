@@ -253,7 +253,9 @@ test("submitReaction: 204 is COUNTED; 202, 500, and a network failure are NOT_CO
   const realFetch = globalThis.fetch;
   const outcomes: Record<string, string> = {};
   try {
-    for (const status of [204, 202, 500]) {
+    // 429 and 503 joined with T08: a rate-limited or intake-closed tap
+    // must render the same honest line as any other non-204.
+    for (const status of [204, 202, 429, 500, 503]) {
       globalThis.fetch = (async () => new Response(null, { status })) as typeof fetch;
       outcomes[String(status)] = await submitReaction(
         "FEDERAL_VOTE",
@@ -278,7 +280,9 @@ test("submitReaction: 204 is COUNTED; 202, 500, and a network failure are NOT_CO
   // 202 is a never-happens state now that the store is live — if it ever
   // reappears it must render as failure, never as quiet success.
   assert.equal(outcomes["202"], "NOT_COUNTED");
+  assert.equal(outcomes["429"], "NOT_COUNTED");
   assert.equal(outcomes["500"], "NOT_COUNTED");
+  assert.equal(outcomes["503"], "NOT_COUNTED");
   assert.equal(outcomes.network, "NOT_COUNTED");
 });
 

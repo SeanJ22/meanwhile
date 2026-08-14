@@ -11,7 +11,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --test --experimental-strip-types tests/**/*.test.ts",
+    "test": "node --test --experimental-strip-types --import ./scripts/register-test-loader.mjs tests/**/*.test.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "ingest": "tsx scripts/ingest.ts",
@@ -28,6 +28,7 @@
     "corpus:fetch": "tsx scripts/fetch-corpus.mts",
     "votes:fetch": "tsx scripts/fetch-votes.mts",
     "fec:fetch": "tsx scripts/fetch-fec.mts",
+    "intake:tripwire": "tsx scripts/intake-tripwire.mts",
     "streets:build": "tsx scripts/build-street-index.mts"
   },
   "dependencies": {

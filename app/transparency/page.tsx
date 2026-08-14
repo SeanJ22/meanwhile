@@ -157,6 +157,17 @@ export default function TransparencyPage() {
             that&apos;s what keeps this free to use; never anything containing
             or traceable to a person.
           </p>
+          <p>
+            To keep those totals honest, the site limits how fast and how
+            often one device can submit answers. Submissions faster than any
+            person could tap are refused, and answers that arrive at a
+            suspicious pace are stored but set aside — they never enter any
+            total. You would only ever notice these limits if you were
+            running a script. The counters that enforce them are kept apart
+            from your answers in a form that can&apos;t be connected to
+            them, hold nothing but how often — never what or who — and are
+            deleted within two days.
+          </p>
         </Section>
 
         <Section title="Campaign money">

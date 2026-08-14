@@ -60,6 +60,45 @@ export const RIPCORDS = {
     filters:
       "FUNDING_TOTAL_REACTION and CONTRIBUTOR_REACTION rows out of aggregateReactions and every export",
   },
+  /**
+   * The tunable intake protections (T08): the per-device burst limits, the
+   * soft velocity-quarantine threshold, the per-device daily ceiling, the
+   * per-IP windows, and same-origin enforcement on /api/reactions and
+   * /api/log. Pulling this switches the FAMILY off — for the day a
+   * protection turns out to be refusing real readers — while every
+   * threshold inside it is separately tunable via its own WTP_LIMIT_* env
+   * var (lib/signal/intake-limits.ts). Validity checks — real target ids,
+   * closed enums, length caps — are NOT in this family and never switch
+   * off. Ships LIVE.
+   */
+  "ripcord.rateLimits": {
+    pulled: false,
+    envVar: "WTP_RIPCORD_RATE_LIMITS",
+    question:
+      "Operational, not legal: are the thresholds and the origin check calibrated so no legitimate reader is ever refused? (The author's standard: the fastest human thumb never hits a limit; a script hits one in its first second.)",
+    closer: "The author — this is a product-safety tuning question, not a counsel question",
+    trackerRows: "T08",
+    filters:
+      "The rate-limit family on the intake routes: in-memory windows, the authoritative per-device counters, the daily ceiling, velocity quarantine, and same-origin enforcement",
+  },
+  /**
+   * The master ripcord (T08): closes reaction and search/ask intake
+   * ENTIRELY — the server refuses every write with a 503 while the app
+   * renders normally and a tapping reader sees the honest not-counted line
+   * (P11's rendering; no client change involved). For live-attack response
+   * without a code change. The pull procedure the author can follow at 2am
+   * is docs/ripcords.md. Ships LIVE.
+   */
+  "ripcord.reactionIntake": {
+    pulled: false,
+    envVar: "WTP_RIPCORD_REACTION_INTAKE",
+    question:
+      "Operational, not legal: held open for live-attack response — is the store currently under an attack that per-device limits cannot absorb?",
+    closer: "The author — pulled during an attack, restored when the attack ends",
+    trackerRows: "T08",
+    filters:
+      "Every write to the reaction store and the search/ask log (both POST routes refuse with 503); read paths and rendering are untouched",
+  },
 } as const satisfies Record<string, Ripcord>;
 
 export type RipcordName = keyof typeof RIPCORDS;

@@ -34,6 +34,12 @@ export interface StorableReaction {
   reactionKey: string;
   /** Server-resolved divisions for where the reader was looking. */
   ocdIds: string[];
+  /**
+   * Quarantine, not deletion (T08): why this row is excluded from the
+   * clean pool, or null for a clean row. Carries no identifier — only the
+   * mechanical reason the intake limits assigned at write time.
+   */
+  suspectReason?: "VELOCITY" | "LIMITER_UNAVAILABLE" | null;
 }
 
 /**
@@ -46,6 +52,7 @@ export async function writeReaction(row: StorableReaction): Promise<boolean> {
   if (!process.env.DATABASE_URL) return false;
 
   const occurredAt = new Date().toISOString();
+  const suspectReason = row.suspectReason ?? null;
   await getDb()
     .insert(reactions)
     .values({
@@ -59,6 +66,7 @@ export async function writeReaction(row: StorableReaction): Promise<boolean> {
       // verification (T02), never claimed at write time.
       verificationTier: "ANONYMOUS",
       reactionKeyHash: hashReactionKey(row.reactionKey),
+      suspectReason,
     })
     .onConflictDoUpdate({
       target: [reactions.reactionKeyHash, reactions.targetType, reactions.targetId],
@@ -70,6 +78,11 @@ export async function writeReaction(row: StorableReaction): Promise<boolean> {
         // Never sql`excluded.verification_tier` — an overwrite must not be
         // able to *raise* a tier; verification does that through its own path.
         verificationTier: sql`${reactions.verificationTier}`,
+        // Sticky by COALESCE (T08): once a row is quarantined, an overwrite
+        // can never clear it — a burst would otherwise launder itself clean
+        // by re-submitting the same targets at human pace. Only the author
+        // clears suspects, through their own review, never this path.
+        suspectReason: sql`COALESCE(${reactions.suspectReason}, ${suspectReason})`,
       },
     });
   return true;

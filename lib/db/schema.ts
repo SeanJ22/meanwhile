@@ -132,6 +132,10 @@ export const searchLog = pgTable(
         "DISTRICT_SELECTED",
         "FILTER_APPLIED",
         "OFFICIAL_OPENED",
+        // The ask box (5, 2026-08-19) — routed asks carry the topic id;
+        // refusals carry the capped question text. Same identifier-free
+        // row as every other event.
+        "QUESTION_ASKED",
       ],
     }).notNull(),
     /** Zip as entered. Orientation only — never resolved to a person. */

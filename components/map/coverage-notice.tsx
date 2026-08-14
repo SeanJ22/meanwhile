@@ -3,6 +3,7 @@
 import { useNarrowing } from "@/hooks/use-narrowing";
 import { formatMiles } from "@/lib/map/format";
 
+import { AskBox } from "@/components/ask/ask-box";
 import { NarrowingPrompt } from "./narrowing-prompt";
 import type { CoverageTier } from "@/lib/meetings/query";
 import type { CoverageSummary, CoveredBody, Seat } from "@/lib/registry/coverage";
@@ -497,6 +498,21 @@ function CoverageBody({
           </a>
         </p>
       )}
+
+      {/* 5 (2026-08-19): the ask box — routing without generation, on the
+          card that answers who governs. */}
+      <AskBox
+        coverage={coverage}
+        zip={/^\d{5}$/.test(zip) ? zip : null}
+        ocdIds={[
+          ...new Set(
+            [
+              ...coverage.bodies.map((b) => b.ocdId),
+              ...coverage.seats.map((s) => s.ocdId),
+            ].filter((id): id is string => Boolean(id)),
+          ),
+        ]}
+      />
 
       {/*
         D17, split 2026-08-13. The statutory sentence — New Hampshire does not

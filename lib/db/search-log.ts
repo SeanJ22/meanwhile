@@ -28,7 +28,8 @@ export type SearchLogEventType =
   | "MEETING_OPENED"
   | "DISTRICT_SELECTED"
   | "FILTER_APPLIED"
-  | "OFFICIAL_OPENED";
+  | "OFFICIAL_OPENED"
+  | "QUESTION_ASKED";
 
 export const SEARCH_LOG_EVENT_TYPES: SearchLogEventType[] = [
   "SEARCH",
@@ -39,6 +40,11 @@ export const SEARCH_LOG_EVENT_TYPES: SearchLogEventType[] = [
   // Approved by the author (session brief 1d, 2026-08-15) — added together
   // with its line on /transparency, per the coupling rule.
   "OFFICIAL_OPENED",
+  // The ask box (session brief 5, 2026-08-19), same coupling: routed asks
+  // log the topic id only; a refusal logs the question's text (capped)
+  // because unanswered questions are the roadmap — disclosed on
+  // /transparency in the same commit. Identifier-free like every row.
+  "QUESTION_ASKED",
 ];
 
 export interface SearchLogEvent {

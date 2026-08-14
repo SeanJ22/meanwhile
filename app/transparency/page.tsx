@@ -65,6 +65,18 @@ export default function TransparencyPage() {
             map, and it is never treated as your address or used to work out
             your ballot.
           </p>
+          <p>
+            The &quot;Who do I talk to about…?&quot; box works the same way.
+            Your question is matched against a fixed list of topics on your
+            device — no AI writes the answer, and every answer comes from
+            the same sourced records the rest of the site shows. When a
+            question routes to a topic, the log records the topic (like
+            &quot;libraries&quot;), not your words. When we can&apos;t route
+            a question, the log records the question&apos;s text (up to 200
+            characters) so we can learn to answer it — with nothing about
+            who asked, like every other row. Please don&apos;t put personal
+            details in a question.
+          </p>
         </Section>
 
         <Section title="What is not collected">

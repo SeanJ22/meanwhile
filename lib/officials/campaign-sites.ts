@@ -92,6 +92,21 @@ export const CAMPAIGN_SITES: Readonly<Record<string, CampaignSite>> = {
       'Site serves HTTP 403 to plain clients; its own indexed pages are titled "Maggie Hassan | U.S. Senator for New Hampshire". Verified from the site\'s indexed content, 2026-08-14.',
     attemptedAt: "2026-08-14",
   },
+  // The 2026-08-16 hunt (session 2a/2b) — the author's Diaz defect closed.
+  "plural:bc52f516-a13b-4490-a12c-7b98fa3969e5": {
+    url: "https://lupediazaz.com",
+    foundVia: "the author's find (lupediazaz.com), independently verified",
+    verification:
+      'Fetched 2026-08-16: site titled "Az Representative Lupe Diaz".',
+    attemptedAt: "2026-08-16",
+  },
+  "plural:6dba6afa-b274-4273-b8c6-270d27214eee": {
+    url: "https://www.almaforarizona.com",
+    foundVia: "web search: Alma Hernandez campaign website",
+    verification:
+      'Fetched 2026-08-16: site titled "Alma Hernandez for AZ State Senate".',
+    attemptedAt: "2026-08-16",
+  },
   "plural:81d12f3a-b635-4111-be8d-a71d2f7565f2": {
     url: "https://bettyvillegasaz.com",
     foundVia:

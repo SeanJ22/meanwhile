@@ -22,6 +22,8 @@
     "registry:build": "tsx scripts/build-registry.ts",
     "handoff": "node scripts/handoff.mjs",
     "officials:build": "tsx scripts/build-officeholders.ts",
+    "officials:enrich": "tsx scripts/enrich-officials.mts",
+    "officials:audit": "tsx scripts/audit-officials.mts",
     "officials:photos": "tsx scripts/fetch-official-photos.mts",
     "corpus:fetch": "tsx scripts/fetch-corpus.mts",
     "votes:fetch": "tsx scripts/fetch-votes.mts",

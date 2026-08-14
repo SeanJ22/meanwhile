@@ -1,0 +1,204 @@
+{
+ "curatedAt": "2026-08-16",
+ "note": "Hunted-and-verified links for every rendered ballot candidate (session 2026-08-16, item 2b). Every URL in `links` was fetched this session and the page read to confirm it names the person and the race or office; the `verification` sentence records what was seen. Official pages read from a legislature's server-rendered member roster carry that chain in the sentence. `hunts` records every candidate for whom no link ships: MISS means a search was run and nothing verifiable was found; NOT_ATTEMPTED means the hunt is queued and no claim of absence is made. gc.nh.gov member pages cannot be verified from this pipeline (TLS wall, docs/source-ladder.md) and are recorded in hunts rather than shipped unverified.",
+ "links": {
+  "ballot-az-pima:governor|Katie Hobbs": {
+   "official": { "url": "https://azgovernor.gov", "verification": "Fetched 2026-08-16: 'Office of the Arizona Governor Katie Hobbs'.", "attemptedAt": "2026-08-16" },
+   "campaign": { "url": "https://katiehobbs.org", "verification": "Fetched 2026-08-16: 'Katie Hobbs for Governor | A Champion for Every Arizonan'.", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-az-pima:governor|Andy Biggs": {
+   "official": { "url": "https://biggs.house.gov", "verification": "Fetched 2026-08-16: 'Congressman Andy Biggs' (his current office).", "attemptedAt": "2026-08-16" },
+   "campaign": { "url": "https://biggsforarizona.com", "verification": "Fetched 2026-08-16: 'Andy Biggs for Arizona'.", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-az-pima:governor|Risa Lombardo": {
+   "official": null,
+   "campaign": { "url": "https://www.risalombardo.com", "verification": "Fetched 2026-08-16: 'Risa Lombardo For Arizona — Vote Risa for Arizona'.", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-az-pima:governor|Teri Ann Hourihan": {
+   "official": null,
+   "campaign": { "url": "https://teriann4azgov.org", "verification": "Fetched 2026-08-16: 'Teri Ann 4 AZ Governor'.", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-az-pima:secretary-of-state|Adrian Fontes": {
+   "official": { "url": "https://azsos.gov", "verification": "Fetched 2026-08-16: Arizona Secretary of State site naming Fontes.", "attemptedAt": "2026-08-16" },
+   "campaign": { "url": "https://www.adrianfontes.com", "verification": "Fetched 2026-08-16: 'Re-Elect Adrian Fontes for Secretary of State'.", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-az-pima:secretary-of-state|Alexander Kolodin": {
+   "official": { "url": "https://www.azleg.gov/House/House-member/?legislature=57&session=130&legislator=2318", "verification": "Read from the Legislature's server-rendered member roster (fetched 2026-08-16), which names Alexander Kolodin beside this link.", "attemptedAt": "2026-08-16" },
+   "campaign": { "url": "https://www.alexforaz.com", "verification": "Fetched 2026-08-16: 'Alex Kolodin for Arizona Secretary of State | Official Website'.", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-az-pima:attorney-general|Kris Mayes": {
+   "official": { "url": "https://www.azag.gov", "verification": "Fetched 2026-08-16: Attorney General's Office site naming Mayes.", "attemptedAt": "2026-08-16" },
+   "campaign": { "url": "https://www.krismayes.com", "verification": "Fetched 2026-08-16: 'Kris Mayes for Arizona Attorney General 2026'.", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-az-pima:attorney-general|Warren Petersen": {
+   "official": { "url": "https://www.azleg.gov/Senate/Senate-member/?legislature=57&session=130&legislator=2393", "verification": "Read from the Legislature's server-rendered member roster (fetched 2026-08-16), which names Warren Petersen beside this link.", "attemptedAt": "2026-08-16" },
+   "campaign": { "url": "https://www.petersenforag.com", "verification": "Fetched 2026-08-16: 'Warren Petersen for Attorney General'.", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-az-pima:state-treasurer|Nick Mansour": {
+   "official": null,
+   "campaign": { "url": "https://mansourforarizona.com", "verification": "Fetched 2026-08-16: site titled 'Nick Mansour' (Mansour for Arizona).", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-az-pima:state-treasurer|Elijah Norton": {
+   "official": null,
+   "campaign": { "url": "https://nortonforaz.com", "verification": "Fetched 2026-08-16: 'Elijah Norton for Treasurer'.", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-az-pima:superintendent|Teresa Leyba Ruiz": {
+   "official": null,
+   "campaign": { "url": "https://www.drruizforarizona.com", "verification": "Fetched 2026-08-16: 'AZ Superintendent of Public Instruction | Dr Teresa Leyba Ruiz'.", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-az-pima:superintendent|Kimberly Yee": {
+   "official": { "url": "https://www.aztreasury.gov", "verification": "Fetched 2026-08-16: AZ Treasury Office site naming Yee (her current office).", "attemptedAt": "2026-08-16" },
+   "campaign": { "url": "https://www.kimberlyyee.com", "verification": "Fetched 2026-08-16: 'Kimberly Yee for Arizona'.", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-az-pima:mine-inspector|Walter \"Les\" Presmyk": {
+   "official": null,
+   "campaign": { "url": "https://lespresmyk.com", "verification": "Fetched 2026-08-16: 'Les Presmyk for Mine Inspector'.", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-az-pima:us-house-6|JoAnna Mendoza": {
+   "official": null,
+   "campaign": { "url": "https://www.joannamendoza.com", "verification": "Fetched 2026-08-16: 'JoAnna Mendoza - Arizona Tough. Battle-Tested. Ready to Serve.'", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-az-pima:us-house-6|Juan Ciscomani": {
+   "official": { "url": "https://ciscomani.house.gov", "verification": "Fetched 2026-08-16: 'Representative Ciscomani'.", "attemptedAt": "2026-08-16" },
+   "campaign": { "url": "https://juanciscomani.com", "verification": "Verified 2026-08-14 (campaign-sites.ts): 'Juan Ciscomani for Congress'.", "attemptedAt": "2026-08-14" }
+  },
+  "ballot-az-pima:us-house-6|Gary Swing": {
+   "official": null,
+   "campaign": { "url": "https://theswingvote.wixsite.com/unity", "verification": "Fetched 2026-08-16: 'Home | Gary Swing for Progress'.", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-az-pima:us-house-7|Adelita Grijalva": {
+   "official": { "url": "https://grijalva.house.gov", "verification": "Fetched 2026-08-16: 'Representative Adelita Grijalva | Representing Arizona's 7th District'.", "attemptedAt": "2026-08-16" },
+   "campaign": { "url": "https://www.adelitaforcongress.com", "verification": "Verified 2026-08-14 (campaign-sites.ts): 'Adelita Grijalva | Democrat for Congress'.", "attemptedAt": "2026-08-14" }
+  },
+  "ballot-az-pima:us-house-7|Daniel Francis Butierez Sr.": {
+   "official": null,
+   "campaign": { "url": "https://butierezforcongress.com", "verification": "Fetched 2026-08-16: 'Home - Butierezforcongress.com', naming Daniel Butierez for Congress.", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-az-pima:state-senate-19|Gail Griffin": {
+   "official": { "url": "https://www.azleg.gov/House/House-member/?legislature=57&session=130&legislator=2309", "verification": "Read from the Legislature's server-rendered member roster (fetched 2026-08-16), which names Gail Griffin beside this link (her current House seat).", "attemptedAt": "2026-08-16" },
+   "campaign": null
+  },
+  "ballot-az-pima:state-senate-19|Bob Karp": {
+   "official": null,
+   "campaign": { "url": "https://www.rwkarp.com", "verification": "Fetched 2026-08-16: rwkarp.com 'Learn about Bob Karp' — his LD-19 senate write-in campaign.", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-az-pima:state-senate-20|Alma Hernandez": {
+   "official": { "url": "https://www.azleg.gov/House/House-member/?legislature=57&session=130&legislator=2312", "verification": "Read from the Legislature's server-rendered member roster (fetched 2026-08-16), which names Alma Hernandez beside this link (her current House seat).", "attemptedAt": "2026-08-16" },
+   "campaign": { "url": "https://www.almaforarizona.com", "verification": "Fetched 2026-08-16: 'Alma Hernandez for AZ State Senate'.", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-az-pima:state-house-19|David Gowan": {
+   "official": { "url": "https://www.azleg.gov/Senate/Senate-member/?legislature=57&session=130&legislator=2382", "verification": "Read from the Legislature's server-rendered member roster (fetched 2026-08-16), which names David Gowan beside this link (his current Senate seat).", "attemptedAt": "2026-08-16" },
+   "campaign": null
+  },
+  "ballot-az-pima:state-house-19|Lupe Diaz": {
+   "official": { "url": "https://www.azleg.gov/House/House-member/?legislature=57&session=130&legislator=2304", "verification": "Fetched 2026-08-16: member page names Lupe Diaz with his phone; also on the Legislature's roster.", "attemptedAt": "2026-08-16" },
+   "campaign": { "url": "https://lupediazaz.com", "verification": "Fetched 2026-08-16: 'Az Representative Lupe Diaz'.", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-az-pima:state-house-19|Aiden Nicholette Swallow": {
+   "official": null,
+   "campaign": { "url": "https://aswallowforaz.com", "verification": "Fetched 2026-08-16: 'Aiden Swallow for Arizona | Real Solutions for Rural AZ'.", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-az-pima:state-house-20|Sally Ann Gonzales": {
+   "official": { "url": "https://www.azleg.gov/Senate/Senate-member/?legislature=57&session=130&legislator=2381", "verification": "Read from the Legislature's server-rendered member roster (fetched 2026-08-16), which names Sally Ann Gonzales beside this link (her current Senate seat).", "attemptedAt": "2026-08-16" },
+   "campaign": null
+  },
+  "ballot-az-pima:state-house-20|Betty Villegas": {
+   "official": { "url": "https://www.azleg.gov/House/House-member/?legislature=57&session=130&legislator=2346", "verification": "Read from the Legislature's server-rendered member roster (fetched 2026-08-16), which names Betty J Villegas beside this link.", "attemptedAt": "2026-08-16" },
+   "campaign": { "url": "https://bettyvillegasaz.com", "verification": "Verified 2026-08-14 (campaign-sites.ts): 'Betty Villegas | LD 20 legislator'.", "attemptedAt": "2026-08-14" }
+  },
+  "ballot-nj-morris:us-senate:booker": {
+   "official": { "url": "https://www.booker.senate.gov", "verification": "Fetched 2026-08-16: 'U.S. Senator Cory Booker of New Jersey'.", "attemptedAt": "2026-08-16" },
+   "campaign": { "url": "https://corybooker.com", "verification": "Verified 2026-08-14 (campaign-sites.ts): 'Stand with Cory Booker'.", "attemptedAt": "2026-08-14" }
+  },
+  "ballot-nj-morris:us-senate:fernandez": {
+   "official": null,
+   "campaign": { "url": "https://veronicaforsenate.com", "verification": "Fetched 2026-08-16: 'Veronica for Senate' (Veronica Fernandez, Independent Progressive).", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-nj-morris:us-senate:murphy": {
+   "official": null,
+   "campaign": { "url": "https://jerseyjustin4senate.org", "verification": "Fetched 2026-08-16: 'MURPHY FOR U.S. SENATE 2026 - New Jersey'.", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-nj-morris:us-house-11:hathaway": {
+   "official": null,
+   "campaign": { "url": "https://www.joehathawayforcongress.com", "verification": "Fetched 2026-08-16: 'Joe Hathaway for Congress'.", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-nj-morris:us-house-11:mejia": {
+   "official": { "url": "https://mejia.house.gov", "verification": "Fetched 2026-08-16: 'Representative Analilia Mejia | Representing New Jersey's 11th District' (she won the April 2026 special election).", "attemptedAt": "2026-08-16" },
+   "campaign": { "url": "https://www.analiliafornj.com", "verification": "Verified 2026-08-14 (campaign-sites.ts): 'Analilia Mejía for New Jersey'.", "attemptedAt": "2026-08-14" }
+  },
+  "ballot-nj-morris:county-commissioner:selen": {
+   "official": { "url": "https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners/Tayfun-Selen", "verification": "Fetched 2026-08-16: 'Tayfun Selen – Morris County, NJ'.", "attemptedAt": "2026-08-16" },
+   "campaign": { "url": "https://www.selenformorriscounty.com", "verification": "Fetched 2026-08-16: 'Tayfun Selen for Morris County Commissioner'.", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-nh-merrimack:governor:warmington-cinde": {
+   "official": null,
+   "campaign": { "url": "https://www.cindewarmington.com", "verification": "Fetched 2026-08-16: 'Cinde Warmington for Governor'.", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-nh-merrimack:governor:ayotte-kelly": {
+   "official": { "url": "https://www.governor.nh.gov", "verification": "Fetched 2026-08-16 (browser-UA rung — the host 403s plain clients): 'Welcome | Governor Kelly Ayotte'.", "attemptedAt": "2026-08-16" },
+   "campaign": { "url": "https://kellyfornh.com", "verification": "Fetched 2026-08-16: 'Kelly Ayotte for Governor'. NOTE: kellyayotte.com now serves a different politician's page and is NOT hers — the verified domain is kellyfornh.com.", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-nh-merrimack:us-senate:pappas-chris": {
+   "official": { "url": "https://pappas.house.gov", "verification": "Fetched 2026-08-16: 'Congressman Chris Pappas' (his current office).", "attemptedAt": "2026-08-16" },
+   "campaign": { "url": "https://chrispappas.org", "verification": "Fetched 2026-08-16: 'Chris Pappas for Senate | Official Campaign Website'.", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-nh-merrimack:us-senate:brown-scott-p-": {
+   "official": null,
+   "campaign": { "url": "https://scottbrown.com", "verification": "Fetched 2026-08-16: 'Scott Brown' campaign site for the NH U.S. Senate run.", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-nh-merrimack:us-senate:sununu-john-e-": {
+   "official": null,
+   "campaign": { "url": "https://www.sununusenator.com", "verification": "Fetched 2026-08-16: 'John Sununu for U.S. Senate'.", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-nh-merrimack:us-house-2:goodlander-maggie": {
+   "official": { "url": "https://goodlander.house.gov", "verification": "Fetched 2026-08-16: 'Congresswoman Maggie Goodlander'.", "attemptedAt": "2026-08-16" },
+   "campaign": { "url": "https://maggiefornh.com", "verification": "Verified 2026-08-14 (campaign-sites.ts): 'Maggie Goodlander for Congress'.", "attemptedAt": "2026-08-14" }
+  },
+  "ballot-nh-merrimack:us-house-2:tang-williams-lily": {
+   "official": null,
+   "campaign": { "url": "https://www.lilytangwilliams.com", "verification": "Fetched 2026-08-16: 'Lily Tang Williams' campaign site.", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-nh-merrimack:state-senate-7:harned-rebecca": {
+   "official": null,
+   "campaign": { "url": "https://www.rebeccafornh.com", "verification": "Fetched 2026-08-16: 'Rebecca Harned for New Hampshire State Senate'.", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-nh-merrimack:state-house-merrimack-7:sargent-gregory-m-": {
+   "official": null,
+   "campaign": { "url": "https://gregforrep.com", "verification": "Fetched 2026-08-16: 'Greg Sargent for NH State Representative | Newbury & New London'.", "attemptedAt": "2026-08-16" }
+  },
+  "ballot-nh-merrimack:executive-council-2:liot-hill-karen": {
+   "official": { "url": "https://www.council.nh.gov/district-2/councilor-liot-hill", "verification": "Fetched 2026-08-16 (browser-UA rung — the host 403s plain clients): 'Councilor Karen Liot Hill | New Hampshire Executive Council'.", "attemptedAt": "2026-08-16" },
+   "campaign": { "url": "https://www.karenliothill.com", "verification": "Fetched 2026-08-16: 'Karen Liot Hill' site naming her Executive Council service.", "attemptedAt": "2026-08-16" }
+  }
+ },
+ "hunts": [
+  { "key": "ballot-az-pima:secretary-of-state|Duwayne Collier", "name": "Duwayne Collier", "note": "MISS — searched 2026-08-16; no campaign site found (an X account only).", "attemptedAt": "2026-08-16" },
+  { "key": "ballot-az-pima:mine-inspector|Brian Matlock", "name": "Brian Matlock", "note": "MISS — searched 2026-08-16; a Facebook campaign page (MatlockforAZMI2026) but no campaign website found.", "attemptedAt": "2026-08-16" },
+  { "key": "ballot-az-pima:mine-inspector|Walter \"Les\" Presmyk (official)", "name": "Walter \"Les\" Presmyk", "note": "MISS for the official page only — asmi.az.gov serves a bot-challenge page to plain clients, so his State Mine Inspector leadership page could not be fetch-verified this session; his campaign site ships.", "attemptedAt": "2026-08-16" },
+  { "key": "ballot-az-pima:us-house-6|Jereme Lance Peters", "name": "Jereme Lance Peters", "note": "MISS — searched 2026-08-16; tracker profiles only (FEC, guides), no campaign site found.", "attemptedAt": "2026-08-16" },
+  { "key": "ballot-az-pima:state-senate-19|Gail Griffin (campaign)", "name": "Gail Griffin", "note": "MISS — gailgriffin4senate.com (named in search results) does not resolve (DNS dead, reconfirmed 2026-08-16; same result as the 2026-08-14 hunt).", "attemptedAt": "2026-08-16" },
+  { "key": "ballot-az-pima:state-house-19|David Gowan (campaign)", "name": "David Gowan", "note": "MISS — gowanforaz.com is listed by the Citizens Clean Elections Commission's own LD-19 general voter guide, but the host timed out on three attempts (https, http) on 2026-08-16. Retry next session.", "attemptedAt": "2026-08-16" },
+  { "key": "ballot-az-pima:state-house-19|Jackie O'Donnell Anderson", "name": "Jackie O'Donnell Anderson", "note": "MISS — searched 2026-08-16; a Facebook campaign page but no campaign website found.", "attemptedAt": "2026-08-16" },
+  { "key": "ballot-az-pima:state-house-20|Sally Ann Gonzales (campaign)", "name": "Sally Ann Gonzales", "note": "MISS — searched 2026-08-16; a campaign email in the party district site but no campaign website found.", "attemptedAt": "2026-08-16" },
+  { "key": "ballot-nj-morris:us-senate:kuniansky", "name": "Joanne Kuniansky", "note": "MISS — searched 2026-08-16; Socialist Workers Party candidate, no campaign site found.", "attemptedAt": "2026-08-16" },
+  { "key": "ballot-nj-morris:us-house-11:bond", "name": "Alan B. Bond", "note": "MISS — searched 2026-08-16; press coverage only, no campaign site found.", "attemptedAt": "2026-08-16" },
+  { "key": "ballot-nj-morris:county-commissioner:russo", "name": "Christopher (Chris) Russo", "note": "MISS — searched 2026-08-16; party endorsement pages and press only, no personal campaign site found; guessed domains do not resolve.", "attemptedAt": "2026-08-16" },
+  { "key": "ballot-nj-morris:rockaway-twp-boe:mamoun", "name": "Munir \"Monir\" Mamoun", "note": "MISS — group-searched with the other Rockaway Twp BOE candidates 2026-08-16; no candidate sites surfaced (school-board races rarely have them).", "attemptedAt": "2026-08-16" },
+  { "key": "ballot-nj-morris:rockaway-twp-boe:mezik", "name": "Lisa Mezik", "note": "MISS — group-searched 2026-08-16; nothing surfaced.", "attemptedAt": "2026-08-16" },
+  { "key": "ballot-nj-morris:rockaway-twp-boe:nydegger", "name": "Russell G. Nydegger", "note": "MISS — group-searched 2026-08-16; nothing surfaced.", "attemptedAt": "2026-08-16" },
+  { "key": "ballot-nj-morris:rockaway-twp-boe-unexpired:borno", "name": "Olivier Borno", "note": "MISS — group-searched 2026-08-16; nothing surfaced.", "attemptedAt": "2026-08-16" },
+  { "key": "ballot-nj-morris:morris-hills-regional-boe-rockaway-twp:roach", "name": "Brian Roach", "note": "NOT_ATTEMPTED — hunt queued; no individual search run yet.", "attemptedAt": "2026-08-16" },
+  { "key": "ballot-nj-morris:morris-hills-regional-boe-rockaway-twp:serafin", "name": "William Serafin", "note": "NOT_ATTEMPTED — hunt queued; no individual search run yet.", "attemptedAt": "2026-08-16" },
+  { "key": "ballot-nh-merrimack:governor:fife-shaun", "name": "Shaun Fife", "note": "NOT_ATTEMPTED — hunt queued; no individual search run yet.", "attemptedAt": "2026-08-16" },
+  { "key": "ballot-nh-merrimack:governor:mcclory-bob-wayne", "name": "Bob Wayne McClory", "note": "NOT_ATTEMPTED — hunt queued; no individual search run yet.", "attemptedAt": "2026-08-16" },
+  { "key": "ballot-nh-merrimack:us-senate (10 remaining filed candidates)", "name": "Jarvis, Manzur, Saal, Vail, Alciere, Danley, Martin, Maxwell, McMenamon II, Smith", "note": "NOT_ATTEMPTED — hunts queued for the ten other filed U.S. Senate candidates; the three most-covered candidacies (Pappas, Brown, Sununu) were hunted and verified this session. No claim of absence is made for the ten.", "attemptedAt": "2026-08-16" },
+  { "key": "ballot-nh-merrimack:us-house-2 (4 remaining filed candidates)", "name": "Beauchemin, Callis, Nicholson, Orlando", "note": "NOT_ATTEMPTED — hunts queued; Goodlander and Tang Williams were hunted and verified this session.", "attemptedAt": "2026-08-16" },
+  { "key": "ballot-nh-merrimack:state-senate-7:innis-daniel-e-", "name": "Daniel E. Innis", "note": "MISS both ways — his official page (gc.nh.gov/senate/members/webpages/district07.aspx) cannot be fetch-verified from this pipeline (gc.nh.gov resets TLS from non-browser clients; ladder rung) and innisfornh.com fails TLS handshake; search found no other campaign site (he dropped his U.S. Senate bid and refiled for the state seat).", "attemptedAt": "2026-08-16" },
+  { "key": "ballot-nh-merrimack:state-house-merrimack-7:ebel-karen-elizabeth", "name": "Karen Elizabeth Ebel", "note": "MISS — searched 2026-08-16; a Facebook campaign page (KarenEbelForStateRep) but no campaign website found. Her gc.nh.gov member page is inline-unverifiable (TLS rung).", "attemptedAt": "2026-08-16" },
+  { "key": "ballot-nh-merrimack:state-house-merrimack-7:rusis-cynthia", "name": "Cynthia Rusis", "note": "MISS — searched 2026-08-16; nothing surfaced.", "attemptedAt": "2026-08-16" },
+  { "key": "ballot-nh-merrimack:executive-council-2:menard-tobin", "name": "Tobin Menard", "note": "MISS — searched 2026-08-16; press coverage only, no campaign site found.", "attemptedAt": "2026-08-16" },
+  { "key": "ballot-nh-merrimack:executive-council-2:strathdee-kim", "name": "Kim Strathdee", "note": "MISS — searched 2026-08-16; a county-party profile page only, no campaign site found.", "attemptedAt": "2026-08-16" },
+  { "key": "ballot-nh-merrimack:county-commissioner-2 (all three)", "name": "Ribas, Bilodeau, French", "note": "MISS — searched together 2026-08-16; no campaign sites surfaced.", "attemptedAt": "2026-08-16" },
+  { "key": "ballot-nh-merrimack (county offices, 13 filed candidates)", "name": "Sheriff, County Attorney, Treasurer, Register of Deeds, Register of Probate candidates", "note": "NOT_ATTEMPTED — hunts queued; no individual searches run yet. No claim of absence is made.", "attemptedAt": "2026-08-16" }
+ ]
+}

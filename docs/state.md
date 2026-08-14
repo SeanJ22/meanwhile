@@ -4,15 +4,25 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-18 (wall clock 2026-08-14), after the FEC-and-
-final-prep session — the FEC funding surfaces built FIRST AND WHOLE per
-the author's order (D34 Done; both ripcords live in code, counsel holds
-the flags); Sunnyside and Amphitheater wired live with the honest record
-of the prior overclaim (D39); NH legislator contacts closed the long way
-(the General Court's own member directory, read through the Archive);
-the Rockaway BOE full names; Goodlander's portrait; the first two
-minutes summaries; and the four-zip phone-width walk at 89 checks green.
-See §16. Before that, 2026-08-17: the author's-words-and-depth session —
+Last updated: 2026-08-14, second session of the day (the dating
+convention changed this session — real wall-clock dates from here on;
+see the §18 header note). This session: the reaction pipeline proved
+itself end-to-end on the DEPLOYED site (one tap → one visible Neon row;
+production's platform password found DOWN); honest reaction outcomes —
+success earned by the 204, every failure rendering the saved-not-counted
+line (P11); the FEC snapshot thin-guard for the unattended weekly
+refresh (D44); the everyday-topics contact map — 30 of 36 topic×zip
+cells carrying a government's-own-page contact, the pothole golden
+answering Tucson 311 (A10); the refusal-log scrub before store (T09);
+and the photo census — 16 of 747 rendered people have portraits (D45).
+See §18. Before that, the 2026-08-19-labeled session (§17), and the
+2026-08-18-labeled FEC-and-final-prep session — the FEC funding surfaces
+built FIRST AND WHOLE per the author's order (D34 Done; both ripcords
+live in code, counsel holds the flags); Sunnyside and Amphitheater wired
+live with the honest record of the prior overclaim (D39); NH legislator
+contacts closed the long way (the General Court's own member directory,
+read through the Archive); the four-zip phone-width walk at 89 checks
+green. See §16. Before that, 2026-08-17: the author's-words-and-depth session —
 mission text verbatim on the welcome overlay and "sell" retired for
 "licensed"; NH/NJ depth (Kelly-standard candidate cards, the name-case
 pass, Newbury's Select Board named and peopled, the earned NH
@@ -3642,3 +3652,157 @@ guard-tested.
   construction); the 45 backlog special districts; the ask box keyword
   map growing from refusal logs; T08 before any public reachability; the
   author steps in "Before you send the link."
+
+## 18. The 2026-08-14 session (second session of 2026-08-14) — the pipeline proves itself and the map answers potholes
+
+**Dating convention, changed as of this section (the author's order in
+the session brief):** section headers from here on carry the REAL
+wall-clock date, disambiguated by sequence when a day holds more than
+one session. The date-shaped labels on §13–§17 ("the 2026-08-15
+session" through "the 2026-08-19 session") are SESSION SEQUENCE LABELS
+that ran ahead of the clock — every one of those sessions actually ran
+on wall-clock 2026-08-13/14. History is not rewritten; read those
+headers as sequence numbers. Machine-written data fields have always
+carried the wall clock and still do.
+
+Branch `claude/pipeline-proof-and-potholes-0814`. An outside tester has
+had the link since ~18:32 UTC and production's platform password is
+DOWN — found this session: the site loads openly with no auth. Every
+claim below about production was made against the live deploy.
+
+### 1 — Reaction honesty (P11): success is earned by the 204, and the pipeline proved end-to-end
+
+The author's decided option two, built and gated: `submitReaction`
+returns COUNTED only on the 204; the control renders the
+selected-and-counted state only then. Anything else — 500, network
+failure, and the 202 accepted-not-stored state (never-happens now the
+store is live; if it reappears it renders as failure) — renders
+"Couldn't reach the totals — your answer is saved on this device and
+wasn't counted." The device-local record writes always. The search log
+stays fire-and-forget BY DESIGN — a promise was made at the reaction
+capture point and none was made for our own bookkeeping; the difference
+is commented on both sides so neither gets "fixed" to match the other.
+Tests pin all four outcomes, the control wiring, and the line's two
+truths; the walk exercised the arc live with the network cut and
+restored (tester-pass.md).
+
+**The gate, met on the deployed site:** one real tap on production
+(Katie Hobbs's ballot card, YES, 2026-08-14T20:20:21Z) landed as a
+visible Neon row two seconds later — `CANDIDATE
+ballot-az-pima:governor|Katie Hobbs YES ANONYMOUS`, 20:20:23Z. Control
+screenshot `walk0814b-production-tap.png`; the row pulled by direct SQL
+(the author can see it in Neon's table view; the probe was possible
+because the password is down).
+
+**The store's ledger, honestly attributed** (query time ~20:25 UTC):
+reactions total 4 — the author's two (17:24 and 18:21 UTC, exactly the
+brief's facts), plus this session's own two (the dev-walk UNSURE at
+20:18:10Z and the production-gate YES at 20:20:21Z, both on the Hobbs
+card — dev holds the production DATABASE_URL, so walk taps are real
+rows). **The tester has tapped zero reactions so far.** Search log: 359
+rows total, earliest 2026-08-13T19:56Z. The tester's clean window
+(18:32–19:40 UTC, before this session's walks began writing): 4 rows —
+the "my kids school" refusal at 18:49, a SEARCH at 07465 (her own NJ
+zip, outside deep coverage — 5 meetings at 25km), a SEARCH at 85701,
+and Gallego's card opened at 19:12. Rows at/after 19:40 UTC are this
+session's own walks and probes (52).
+
+### 2 — The FEC snapshot refuses to ship thin (D44)
+
+The Kelly-504 eyeball became a mechanism: `lib/funding/guard.ts`
+compares the fresh snapshot against the last committed one BEFORE
+writing — a falling candidate count, a vanished candidate (absence
+recorded or not: a human confirms either, because "the FEC stopped
+returning a candidate" is what an outage looks like), or a retained
+candidate's contributor rows below prior fails the run with exit 1,
+keeps the old snapshot, and says why in the workflow log. A legitimate
+shrink ships only by a human rerunning with `--allow-shrink`, recorded
+in the tracker. Fixture-tested for the mechanism (the Kelly shape
+verbatim), never for the absence of an error; the unattended weekly
+refresh now fails loudly instead of publishing a thinner book.
+
+### 3 — The everyday-topics map (A10): the pothole standard
+
+Nine everyday route topics (roads incl. streetlights, trash/recycling,
+water/sewer, noise, permits/zoning, animals, parks, snow removal,
+property taxes) × four zips = **36 cells: 30 carry a sourced contact
+with a real phone or request URL, 6 are recorded misses with reasons —
+zero cells silent** (tests assert the accounting). Every shipped number
+was read off the government's own page — plain client where the host
+allows, real browser where it walls (tucsonaz.gov and newbury.nh.gov
+403 plain clients; rungs in source-ladder.md).
+
+The corrections the verification forced, which are the reason it exists:
+Tucson's pothole answer is **Tucson 311** (the city's current page; the
+old TDOT direct line lives on in 2015-era news stories and was NOT
+shipped); Newbury's tax collector and transfer station have their own
+lines (763-5326, 763-2289 — the search-snippet draft had the town
+office for both); and **zip 07866 crosses the borough/township line**,
+so both Rockaway governments answer, each named plainly — the first
+draft carried only the Borough while the registry's rosters cover the
+Township (the borough-vs-township trap, caught mid-session by the
+walk). Two 03255 misses (code enforcement, recreation) RESOLVED to
+contacts by the in-browser read of the town's own directory.
+
+The ask box surfaces contacts on routed answers after a ~250ms
+presentation beat — "I got you... hang tight..." (the author's words;
+never a thinking label — the transparency page says no AI answers
+questions and the label must not contradict it). Route and log land
+BEFORE the timer; nothing logs in the beat; guard-tested. The refusal
+log drove the map: "my kids school" and "I want a bike lane" — both
+live refusals from this morning — now route.
+
+### 4 — The refusal log scrubs before it stores (T09)
+
+`lib/log/scrub.ts`: digit runs of 7+ (separators allowed), email-shaped
+tokens, and street-address-shaped tokens (number + capitalized words)
+become `[#]` — mechanically, at the single write path in
+`lib/db/search-log.ts`, so nothing unscrubbed reaches the store
+whatever the client sends. Fixture-tested each shape; ordinary
+questions (zips included) pass untouched. The transparency page
+discloses the scrub in the same commit and the coupling guard enforces
+it. `docs/abuse-policy.md` gained the typed-questions threat section —
+preserve never render, flag for the author, never auto-report — PENDING
+COUNSEL like the rest of that file.
+
+### 5 — The photo census (D45): 16 of 747, counted by script
+
+`scripts/photo-census.mts` walks every person the product renders:
+**16 of 747 have a portrait; 731 render initials.** Ballot candidates
+8/109; federal officials 8/437 (House rides the national cd layer, so
+all attached members genuinely render; senators resolve for the covered
+states); state legislators 0/130 (the schema has no photo field);
+curated local rosters 0/71 (same). The author's far-more-than-six
+instinct confirmed by two orders of magnitude. The named miss list per
+surface and state is in `docs/photo-report.md` (superseded, keeping the
+six recorded hunts and every shipped photo's sync-guarded row) — it IS
+the dedicated photo session's brief input. No hunting this session, by
+the author's order.
+
+### The session's own working-rule sightings (recorded so they stop)
+
+- The tracker-edit trap, twice in one session: anchoring a CSV insert on
+  the NEXT row's prefix consumes that row. Anchor on the PREVIOUS row's
+  tail, and validate with Import-Csv (row count + dupe IDs) after every
+  tracker edit.
+- PowerShell `Set-Content` after `-replace` mangled UTF-8 (mojibake
+  em-dashes) — restored from git and redone with the Edit tool. Bulk
+  text replacement in files belongs to the Edit tool, not the shell.
+- A Bash heredoc with a backslashed Windows path wrote a junk file named
+  by the whole path string and exited 0 — the source-ladder append
+  landed nowhere and the "committed" claim was false until grepped for.
+  The verify-the-result rule's sixth sighting.
+
+### State as of 2026-08-14 (second session)
+
+- **409 tests, lint clean (one pre-existing warning), build exit 0** —
+  verified by exit code; walk0814b green at all four zips.
+- The item-1 gate PASSED on the deployed site: tap → visible Neon row.
+- Production's platform password is DOWN — the site is openly loadable.
+  T08 (the hardening gate) was scoped to "before the password comes
+  down"; the author should know it is already down.
+- Next free tracker ids: A11, B11, D46, M46, P12, R13, T10, V07, X04.
+- Open next: the incumbent-record-link modal could not be opened by this
+  session's harness (hydration live, click dead — unproven, queued to
+  the author's hand check); the photo session (D45's list); D35; the 45
+  backlog special districts; the ask-box map growing from refusal logs.

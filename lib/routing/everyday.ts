@@ -16,13 +16,15 @@
  *
  * Verification states, honest about the hunt (the standing rule: a URL
  * cited must have been fetched and verified):
- *  - "PAGE_FETCHED": the source page was retrieved by a plain client this
- *    session and the contact read off it.
- *  - "PENDING_BROWSER": the government's host walls plain clients (403) —
- *    the number comes from the official page via search snippets or a
- *    secondary source, and the browser phase of this session verifies it
- *    against the page itself before ship. A row that fails browser
- *    verification is removed to a miss, never shipped on faith.
+ *  - "PAGE_FETCHED": the contact was read off the source page this
+ *    session — by a plain client, or in a real browser where the host
+ *    walls plain clients (tucsonaz.gov, newbury.nh.gov — rungs in
+ *    docs/source-ladder.md).
+ *  - "PENDING_BROWSER": the number comes from the official page via
+ *    search snippets or a secondary source and has NOT yet been read off
+ *    the page itself. A pending row must be verified or removed to a
+ *    miss before ship — never shipped on faith. (No row ships in this
+ *    state as of 2026-08-14; the state exists for future hunts.)
  */
 
 export type EverydayVerification = "PAGE_FETCHED" | "PENDING_BROWSER";
@@ -76,17 +78,22 @@ export const EVERYDAY_CONTACTS: readonly EverydayContact[] = [
   {
     topicId: "roads-local",
     zips: ["85701"],
-    body: "City of Tucson — Department of Transportation & Mobility",
-    service: "Street maintenance: potholes, streetlights, signs, sidewalks",
-    phone: "520-791-3154",
-    email: "TDOTconcerns@tucsonaz.gov",
-    requestUrl: null,
+    body: "City of Tucson — Street Maintenance (Transportation & Mobility)",
+    service:
+      "Potholes, streetlights, signs, debris — the city takes these through Tucson 311",
+    // The city's own page, read in a real browser 2026-08-14: the current
+    // published channel is Tucson 311 (call 3-1-1, the app, or the web
+    // portal). The old direct TDOT line still circulates in 2015-era news
+    // stories; the city's page today says 311, so 311 is the answer.
+    phone: "311",
+    email: null,
+    requestUrl: "https://www.tucsonaz.gov/Residents/311-Service-Request-Portal",
     sourceUrl:
       "https://www.tucsonaz.gov/Departments/Transportation-Mobility/Street-Maintenance",
     sourceOrg: "City of Tucson",
     collectedAt: "2026-08-14",
-    verification: "PENDING_BROWSER",
-    note: "The service line is the answer — this crew owns the fix.",
+    verification: "PAGE_FETCHED",
+    note: "The service line is the answer — this crew owns the fix. Pothole repairs and street light issues are on their own list.",
   },
   {
     topicId: "trash-recycling",
@@ -100,7 +107,7 @@ export const EVERYDAY_CONTACTS: readonly EverydayContact[] = [
       "https://www.tucsonaz.gov/Shared-Contact-Content/Environmental-Services-Contact",
     sourceOrg: "City of Tucson",
     collectedAt: "2026-08-14",
-    verification: "PENDING_BROWSER",
+    verification: "PAGE_FETCHED",
     note: null,
   },
   {
@@ -115,7 +122,7 @@ export const EVERYDAY_CONTACTS: readonly EverydayContact[] = [
       "https://www.tucsonaz.gov/Departments/Water/Customer-Service/Contact-Tucson-Water",
     sourceOrg: "City of Tucson",
     collectedAt: "2026-08-14",
-    verification: "PENDING_BROWSER",
+    verification: "PAGE_FETCHED",
     note: "For a broken main or emergency leak: 520-791-4133.",
   },
   {
@@ -129,7 +136,7 @@ export const EVERYDAY_CONTACTS: readonly EverydayContact[] = [
     sourceUrl: "https://www.tucsonaz.gov/Departments/Police/Contact-TPD",
     sourceOrg: "City of Tucson",
     collectedAt: "2026-08-14",
-    verification: "PENDING_BROWSER",
+    verification: "PAGE_FETCHED",
     note: null,
   },
   {
@@ -144,7 +151,7 @@ export const EVERYDAY_CONTACTS: readonly EverydayContact[] = [
       "https://www.tucsonaz.gov/Departments/Planning-Development-Services",
     sourceOrg: "City of Tucson",
     collectedAt: "2026-08-14",
-    verification: "PENDING_BROWSER",
+    verification: "PAGE_FETCHED",
     note: null,
   },
   {
@@ -159,7 +166,7 @@ export const EVERYDAY_CONTACTS: readonly EverydayContact[] = [
       "https://www.tucsonaz.gov/Departments/Parks-and-Recreation/Contact-Parks-and-Recreation",
     sourceOrg: "City of Tucson",
     collectedAt: "2026-08-14",
-    verification: "PENDING_BROWSER",
+    verification: "PAGE_FETCHED",
     note: null,
   },
 
@@ -189,7 +196,7 @@ export const EVERYDAY_CONTACTS: readonly EverydayContact[] = [
     sourceUrl: "https://www.asr.pima.gov/contact",
     sourceOrg: "Pima County",
     collectedAt: "2026-08-14",
-    verification: "PENDING_BROWSER",
+    verification: "PAGE_FETCHED",
     note: null,
   },
 
@@ -219,7 +226,7 @@ export const EVERYDAY_CONTACTS: readonly EverydayContact[] = [
     sourceUrl: "https://sewerservicerequest.pima.gov/help",
     sourceOrg: "Pima County",
     collectedAt: "2026-08-14",
-    verification: "PENDING_BROWSER",
+    verification: "PAGE_FETCHED",
     note: "Drinking water here comes from private water companies that vary by address — check your water bill for yours.",
   },
   {
@@ -249,6 +256,98 @@ export const EVERYDAY_CONTACTS: readonly EverydayContact[] = [
     collectedAt: "2026-08-14",
     verification: "PAGE_FETCHED",
     note: "Zoning and building-code complaints: 520-724-9970.",
+  },
+
+  // ── 07866 — TWO municipalities share this zip ─────────────────────────
+  // The borough-vs-township trap, honored rather than fallen into: zip
+  // 07866 covers both the Borough of Rockaway AND Rockaway Township (the
+  // municipality the registry's rosters and meeting wiring cover). They
+  // are different governments with different service lines. Both render,
+  // each named plainly — the reader knows which town they live in; a
+  // zip-keyed map cannot, and must not guess.
+  {
+    topicId: "roads-local",
+    zips: ["07866"],
+    body: "Rockaway Township — Department of Public Works & Utilities",
+    service: "Township roads: potholes, snow, drainage",
+    phone: "973-983-2891",
+    email: "dpw@rockawaytownship.org",
+    requestUrl: null,
+    sourceUrl: "https://www.rockawaytownship.org/187/Public-Works-Utilities",
+    sourceOrg: "Rockaway Township",
+    collectedAt: "2026-08-14",
+    verification: "PAGE_FETCHED",
+    note: "For Rockaway Township addresses. Also answers at 973-627-1700.",
+  },
+  {
+    topicId: "snow-removal",
+    zips: ["07866"],
+    body: "Rockaway Township — Department of Public Works & Utilities",
+    service: "Snow plowing on township roads",
+    phone: "973-983-2891",
+    email: "dpw@rockawaytownship.org",
+    requestUrl: null,
+    sourceUrl: "https://www.rockawaytownship.org/187/Public-Works-Utilities",
+    sourceOrg: "Rockaway Township",
+    collectedAt: "2026-08-14",
+    verification: "PAGE_FETCHED",
+    note: "For Rockaway Township addresses.",
+  },
+  {
+    topicId: "trash-recycling",
+    zips: ["07866"],
+    body: "Rockaway Township — Department of Public Works",
+    service: "Recycling, bulk collection, and garbage questions",
+    phone: "973-983-2891",
+    email: "dpw@rockawaytownship.org",
+    requestUrl: null,
+    sourceUrl: "https://www.rockawaytownship.org/189/Recycle",
+    sourceOrg: "Rockaway Township",
+    collectedAt: "2026-08-14",
+    verification: "PAGE_FETCHED",
+    note: "For Rockaway Township addresses.",
+  },
+  {
+    topicId: "water-sewer",
+    zips: ["07866"],
+    body: "Rockaway Township — Municipal Utility (Water & Sewer)",
+    service: "Water and sewer service, run through Public Works",
+    phone: "973-983-2891",
+    email: "dpw@rockawaytownship.org",
+    requestUrl: null,
+    sourceUrl: "https://www.rockawaytownship.org/187/Public-Works-Utilities",
+    sourceOrg: "Rockaway Township",
+    collectedAt: "2026-08-14",
+    verification: "PAGE_FETCHED",
+    note: "For Rockaway Township addresses.",
+  },
+  {
+    topicId: "noise",
+    zips: ["07866"],
+    body: "Rockaway Township Police Department",
+    service: "Noise complaints — the non-emergency line",
+    phone: "973-625-4000",
+    email: null,
+    requestUrl: null,
+    sourceUrl: "https://www.rockawaytownship.org/231/Police",
+    sourceOrg: "Rockaway Township",
+    collectedAt: "2026-08-14",
+    verification: "PAGE_FETCHED",
+    note: "For Rockaway Township addresses.",
+  },
+  {
+    topicId: "animals",
+    zips: ["07866"],
+    body: "Rockaway Township — Animal Control",
+    service: "Animal complaints and humane law enforcement",
+    phone: "973-983-2848",
+    email: null,
+    requestUrl: null,
+    sourceUrl: "https://www.rockawaytownship.org/158/Animal-Control",
+    sourceOrg: "Rockaway Township",
+    collectedAt: "2026-08-14",
+    verification: "PAGE_FETCHED",
+    note: "After 4:30 PM and weekends: Rockaway Township Police, 973-625-4000.",
   },
 
   // ── 07866 — Borough of Rockaway ───────────────────────────────────────
@@ -335,7 +434,7 @@ export const EVERYDAY_CONTACTS: readonly EverydayContact[] = [
     sourceOrg: "Borough of Rockaway",
     collectedAt: "2026-08-14",
     verification: "PAGE_FETCHED",
-    note: null,
+    note: "For Borough of Rockaway addresses. Rockaway Township addresses: the municipal complex routes zoning questions, 973-627-7200.",
   },
   {
     topicId: "animals",
@@ -363,7 +462,7 @@ export const EVERYDAY_CONTACTS: readonly EverydayContact[] = [
     sourceOrg: "Borough of Rockaway",
     collectedAt: "2026-08-14",
     verification: "PAGE_FETCHED",
-    note: null,
+    note: "Rockaway Township addresses: the municipal complex routes recreation questions, 973-627-7200.",
   },
   {
     topicId: "property-taxes",
@@ -377,7 +476,7 @@ export const EVERYDAY_CONTACTS: readonly EverydayContact[] = [
     sourceOrg: "Borough of Rockaway",
     collectedAt: "2026-08-14",
     verification: "PAGE_FETCHED",
-    note: "Assessment questions: the Tax Assessor, 973-627-2000 ext 222.",
+    note: "Assessment questions: the Tax Assessor, 973-627-2000 ext 222. Rockaway Township addresses: the municipal complex routes tax questions, 973-627-7200.",
   },
 
   // ── 03255 — Town of Newbury, NH ───────────────────────────────────────
@@ -387,12 +486,12 @@ export const EVERYDAY_CONTACTS: readonly EverydayContact[] = [
     body: "Town of Newbury — Highway Department",
     service: "Town roads: potholes, grading, drainage",
     phone: "603-938-5494",
-    email: null,
+    email: "bscanlon@newbury.nh.gov",
     requestUrl: null,
     sourceUrl: "https://www.newbury.nh.gov/highway-department",
     sourceOrg: "Town of Newbury",
     collectedAt: "2026-08-14",
-    verification: "PENDING_BROWSER",
+    verification: "PAGE_FETCHED",
     note: null,
   },
   {
@@ -401,12 +500,12 @@ export const EVERYDAY_CONTACTS: readonly EverydayContact[] = [
     body: "Town of Newbury — Highway Department",
     service: "Snow plowing and sanding on town roads",
     phone: "603-938-5494",
-    email: null,
+    email: "bscanlon@newbury.nh.gov",
     requestUrl: null,
     sourceUrl: "https://www.newbury.nh.gov/highway-department",
     sourceOrg: "Town of Newbury",
     collectedAt: "2026-08-14",
-    verification: "PENDING_BROWSER",
+    verification: "PAGE_FETCHED",
     note: "Route 103 is the state's — NHDOT plows it, not the town crew.",
   },
   {
@@ -414,14 +513,14 @@ export const EVERYDAY_CONTACTS: readonly EverydayContact[] = [
     zips: ["03255"],
     body: "Town of Newbury — Transfer Station",
     service: "Household trash and recycling drop-off (no curbside pickup)",
-    phone: "603-763-4940",
+    phone: "603-763-2289",
     email: null,
     requestUrl: null,
-    sourceUrl: "https://www.newbury.nh.gov/transfer-station",
+    sourceUrl: "https://www.newbury.nh.gov/departments",
     sourceOrg: "Town of Newbury",
     collectedAt: "2026-08-14",
-    verification: "PENDING_BROWSER",
-    note: "The number is the town office — they hold the station's hours and permit rules.",
+    verification: "PAGE_FETCHED",
+    note: "A transfer-station permit is required — get one at the Town Office with proof of residency and your plate number.",
   },
   {
     topicId: "noise",
@@ -434,21 +533,49 @@ export const EVERYDAY_CONTACTS: readonly EverydayContact[] = [
     sourceUrl: "https://www.newbury.nh.gov/police-department",
     sourceOrg: "Town of Newbury",
     collectedAt: "2026-08-14",
-    verification: "PENDING_BROWSER",
+    verification: "PAGE_FETCHED",
     note: "Dispatch: 603-526-1961.",
   },
   {
     topicId: "property-taxes",
     zips: ["03255"],
-    body: "Town of Newbury — Town Clerk / Tax Collector",
-    service: "Tax bills, payments, and assessment questions",
+    body: "Town of Newbury — Tax Collector",
+    service: "Tax bills and payments",
+    phone: "603-763-5326",
+    email: null,
+    requestUrl: null,
+    sourceUrl: "https://www.newbury.nh.gov/departments",
+    sourceOrg: "Town of Newbury",
+    collectedAt: "2026-08-14",
+    verification: "PAGE_FETCHED",
+    note: "Assessment questions: the Assessor at the Town Office, 603-763-4940 ext. 209.",
+  },
+  {
+    topicId: "zoning-development",
+    zips: ["03255"],
+    body: "Town of Newbury — Code Enforcement Officer",
+    service: "Building, zoning, and code questions",
+    phone: "603-763-4940 ext. 203",
+    email: "codeenforcement@newbury.nh.gov",
+    requestUrl: null,
+    sourceUrl: "https://www.newbury.nh.gov/departments",
+    sourceOrg: "Town of Newbury",
+    collectedAt: "2026-08-14",
+    verification: "PAGE_FETCHED",
+    note: null,
+  },
+  {
+    topicId: "parks",
+    zips: ["03255"],
+    body: "Town of Newbury — Recreation",
+    service: "Town recreation programs and facilities",
     phone: "603-763-4940",
     email: null,
     requestUrl: null,
     sourceUrl: "https://www.newbury.nh.gov/departments",
     sourceOrg: "Town of Newbury",
     collectedAt: "2026-08-14",
-    verification: "PENDING_BROWSER",
+    verification: "PAGE_FETCHED",
     note: null,
   },
 ];
@@ -488,25 +615,13 @@ export const EVERYDAY_MISSES: readonly EverydayMiss[] = [
     topicId: "water-sewer",
     zip: "03255",
     reason:
-      "Most of Newbury is private wells and septic; whether the Blodgett Landing sewer district serves any of 03255 is unverified. Rungs: newbury.nh.gov walls plain clients (403, the known NH-host wall); newburynh.org DNS no longer resolves. Not attempted in a real browser yet.",
-  },
-  {
-    topicId: "zoning-development",
-    zip: "03255",
-    reason:
-      "Newbury's code enforcement / building inspector contact could not be read: newbury.nh.gov walls plain clients (403). The town office (603-763-4940) would route it, but publishing that as the zoning owner without the page is a guess. Browser phase may resolve.",
+      "The town's own department directory (read in a real browser 2026-08-14) lists no water or sewer department — consistent with private wells and septic. Whether the Blodgett Landing sewer district serves any of 03255 remains unverified; recorded as a gap rather than asserted either way.",
   },
   {
     topicId: "animals",
     zip: "03255",
     reason:
-      "NH towns typically run animal control through the police and license dogs at the town clerk, but Newbury's own pages could not be read (403 wall). Recording the gap rather than asserting the pattern.",
-  },
-  {
-    topicId: "parks",
-    zip: "03255",
-    reason:
-      "Newbury's recreation contact could not be read: newbury.nh.gov walls plain clients (403). Browser phase may resolve.",
+      "The town's own department directory (read in a real browser 2026-08-14) lists no animal control; NH towns typically run it through the police and license dogs at the town clerk, but publishing that pattern as Newbury's answer without the town saying so is a guess. The police row under 'noise' is the practical fallback.",
   },
 ];
 

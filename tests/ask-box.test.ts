@@ -78,11 +78,20 @@ test("golden, live at 85701: the pothole question returns Tucson's street-mainte
   assert.equal(match?.topicId, "roads-local");
   assert.equal(answer.kind, "ROUTED");
   const streetMaintenance = contacts.find((c) =>
-    c.body.includes("Transportation & Mobility"),
+    c.body.includes("Street Maintenance"),
   );
   assert.ok(streetMaintenance, "the street-maintenance owner must ride the answer");
-  assert.equal(streetMaintenance.phone, "520-791-3154");
+  // The city's own page, read in a real browser 2026-08-14: the published
+  // channel is Tucson 311 — call 3-1-1 or the request portal. The old
+  // direct TDOT line lives on in 2015-era news stories; the city's page
+  // today says 311, and the row ships what the page says.
+  assert.equal(streetMaintenance.phone, "311");
+  assert.equal(
+    streetMaintenance.requestUrl,
+    "https://www.tucsonaz.gov/Residents/311-Service-Request-Portal",
+  );
   assert.match(streetMaintenance.sourceUrl, /^https:\/\/www\.tucsonaz\.gov\//);
+  assert.equal(streetMaintenance.verification, "PAGE_FETCHED");
   // The service line is the answer — the note says so.
   assert.ok(streetMaintenance.note?.includes("service line is the answer"));
 });

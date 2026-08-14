@@ -303,6 +303,30 @@ that reaches it. **No adapter yet (KNOWN_UNCOVERED).**
 
 ---
 
+## Sparq Data Solutions — BoardBook Premier (added 2026-08-18)
+
+| | |
+|---|---|
+| Tenant observed | `meetings.boardbook.org/Public/Organization/2065` (Amphitheater USD, AZ) |
+| Pages | the public org page (server-rendered archive), `/Public/Agenda/<org>?meeting=<id>`, `/Public/PublicNotice/...` |
+| Read | 2026-08-14 (wall clock; session 2026-08-18) |
+
+BoardBook Premier is a school-board agenda system; the district's own
+agenda-information page names it as the posting location for "meeting
+notices, agendas and agenda packets." The public routes live under
+`/Public/` and are exactly that: plain GET, no auth, no clickwrap, no
+interstitial — the same pages any parent is sent to. The org page
+server-renders the whole archive including per-row venue name and street
+address, which is better address provenance than most first-party sites. No
+terms instrument was presented on any `/Public/` route fetched; the page
+footer carries a copyright line (Sparq Data Solutions Inc.) and nothing
+purporting to restrict access to the public records it hosts — and the
+records are the district's, which is the finding that applies to every row.
+Requests are serialized with the identified User-Agent; the whole archive
+arrives in one ~1 MB response, so the adapter's load is one request per
+refresh. **Adapter live (`lib/sources/boardbook`), first tenant
+Amphitheater USD.**
+
 ## Plural Open (ex-Open States) — a quota, not a restriction
 
 **This row is a different kind of entry from the three above, and the difference

@@ -70,11 +70,16 @@ function statusOf(startsAt: string, now: Date): MeetingStatus {
  * and cited there — else the row's published `Name`. Never minted.
  */
 function bodyNameFor(m: DiligentMeeting, wiring: BodySourceWiring): string {
-  const fromService = m.MeetingTypeName?.trim();
-  if (fromService) return fromService;
+  // A `typeName:<TypeId>` override wins when the wiring row carries one:
+  // some tenants publish a SITTING name in MeetingTypeName ("Regular
+  // Governing Board Meeting", Sunnyside) where a body name belongs, and
+  // the override is itself a published name — read off the portal's
+  // MeetingTypeList or the body's own site, cited on the wiring row.
   const fromConfig =
     m.TypeId != null ? wiring.config[`typeName:${m.TypeId}`] : undefined;
   if (fromConfig) return fromConfig;
+  const fromService = m.MeetingTypeName?.trim();
+  if (fromService) return fromService;
   return (m.Name ?? "").trim();
 }
 

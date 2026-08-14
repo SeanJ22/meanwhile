@@ -461,9 +461,85 @@ export const COVERAGE_AUDITS: BodyCoverageAudit[] = [
     notes:
       "Wired 2026-08-13 (lib/sources/revize: meetings from the homepage upcoming-meetings block, agenda/notice PDFs matched by filename date, ?t= stripped). CORRECTION, overturned by the notices themselves: the earlier note said both bodies meet at 333 Daniel Webster Hwy, Boscawen — the Board in fact alternates venues per meeting (7/27 at OCH Concord, 8/10 at Boscawen), so venue rows are keyed per observed string and an unobserved venue drops counted rather than guessed. Still ~29 km (Concord ~33 km) from the 03255 internal point — the widened-rung exerciser. The delegation's Executive Committee appears in the same homepage block and is deliberately unwired (a different government).",
   },
+
+  // ── Sunnyside USD Governing Board — the author's catch, wired ───────────
+  {
+    bodyId:
+      "ocd-division/country:us/state:az/school_district:sunnyside_unified_district#board",
+    attemptedAt: "2026-08-14",
+    attemptedBy: "session 2026-08-18 item 2 — the Sunnyside/Amphitheater wiring",
+    outcome: "COVERED",
+    rungs: [
+      {
+        rung: "BODY_AGENDA_PAGE",
+        outcome: "HIT",
+        url: "https://www.susd12.org/agenda-and-minutes",
+        note: "200. The district's own page names the current portal (Diligent, susd-12.community.highbond.com) and the NovusAgenda archive for 2008–2023 minutes.",
+      },
+      {
+        rung: "VENDOR_API",
+        outcome: "HIT",
+        url: "https://susd-12.community.highbond.com/Services/MeetingsService.svc/meetings?from=2026-07-01&to=2026-10-31",
+        note: "200 JSON, 9 rows, plain GET no auth — the same MeetingsService wire format as TUSD and PCC. Regular meetings 2nd+4th Tuesday 6:30 PM at the Fred T. Bull Administration Building Governing Board Room.",
+      },
+      {
+        rung: "VENDOR_API",
+        outcome: "HIT",
+        url: "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=168",
+        note: "Permalink pattern verified resolving (the Sep 22, 2026 regular meeting page) before being relied on.",
+      },
+      {
+        rung: "BODY_HOMEPAGE",
+        outcome: "HIT",
+        url: "https://www.susd12.org/governing-board-home",
+        note: "200. Five members with roles (Quintero President, Rodriquez Clerk), meeting cadence, Call to the Audience procedure, and the Governing Board Room address (2238 E. Ginter Road).",
+      },
+    ],
+    homepageUrl: "https://www.susd12.org/governing-board-home",
+    agendaSourceType: "DILIGENT",
+    agendaSourceRef: "https://susd-12.community.highbond.com/portal/",
+    coverageStatus: "LIVE",
+    notes:
+      "Wired 2026-08-18 (session-date label; wall clock 2026-08-14). The board that made the audit's denominator rule real: a registry division with a derived board since the school layer was built, and nothing on screen until this hunt. Venue row keyed on the feed's 'Fred T. Bull Administration Building' string — the district renamed its Ginter Road headquarters for the retired superintendent in 1992.",
+  },
+
+  // ── Amphitheater USD Governing Board — the second half of the catch ─────
+  {
+    bodyId:
+      "ocd-division/country:us/state:az/school_district:amphitheater_unified_district#board",
+    attemptedAt: "2026-08-14",
+    attemptedBy: "session 2026-08-18 item 2 — the Sunnyside/Amphitheater wiring",
+    outcome: "COVERED",
+    rungs: [
+      {
+        rung: "BODY_AGENDA_PAGE",
+        outcome: "HIT",
+        url: "https://www.amphi.com/agenda-information-current-and-past",
+        note: "200. The district's own page names BoardBook Premier and the org URL; agendas also post physically at 701 W. Wetmore Road.",
+      },
+      {
+        rung: "VENDOR_API",
+        outcome: "HIT",
+        url: "https://meetings.boardbook.org/Public/Organization/2065",
+        note: "200 HTML, server-rendered, plain GET no auth: 401 archive rows back to 2018, 15 in 2026, per-row venue name AND street address, public Agenda/PublicNotice links. New adapter lib/sources/boardbook. Notices post days ahead (Aug 11 sitting released Aug 10), so an empty upcoming window between postings is the portal's honest state.",
+      },
+      {
+        rung: "BODY_HOMEPAGE",
+        outcome: "HIT",
+        url: "https://www.amphi.com/348925_2",
+        note: "200. Five members with roles (Cox Golder President, Kopec Vice President); contact via per-member message forms and 520-696-5205 for board business.",
+      },
+    ],
+    homepageUrl: "https://www.amphi.com/our-district/governing-board",
+    agendaSourceType: "BOARDBOOK",
+    agendaSourceRef: "https://meetings.boardbook.org/Public/Organization/2065",
+    coverageStatus: "LIVE",
+    notes:
+      "Wired 2026-08-18 (session-date label; wall clock 2026-08-14) — first BoardBook Premier tenant, new vendor entry in docs/vendor-review.md. Two venues observed in 2026 rows, both in the venue cache with the feed's own published addresses.",
+  },
 ];
 
 export const COVERAGE_AUDIT_FILE: CoverageAuditFile = {
-  generatedAt: "2026-08-13",
+  generatedAt: "2026-08-14",
   audits: COVERAGE_AUDITS,
 };

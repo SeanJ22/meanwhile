@@ -23,7 +23,10 @@ import { groupByVenue, type Venue } from "@/lib/meetings/venues";
 import type { Meeting } from "@/lib/sources/types";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { CoveredBody } from "@/lib/registry/coverage";
-import { rosterHoldersForBody } from "@/lib/registry/body-rosters";
+import {
+  governingRosterHoldersForDivision,
+  rosterHoldersForBody,
+} from "@/lib/registry/body-rosters";
 import { TIER_LABEL } from "@/lib/ocd/tiers";
 import { tierForMeeting } from "@/lib/state/derive";
 import {
@@ -514,13 +517,18 @@ function MapEntryInner() {
     [lastHits, ui.selectedDistrictOcdId],
   );
 
-  /** Officeholders sourced for a division, from the coverage summary. */
+  /**
+   * Officeholders sourced for a division — legislative seats from the
+   * coverage summary, and for a local governing division the curated body
+   * roster (the Sunnyside catch: a school district's board members are its
+   * representation, and the seat lookup alone rendered none).
+   */
   const holdersFor = useCallback(
     (ocdId: string): SeatHolder[] => {
       const coverage = current?.coverage;
-      if (!coverage) return [];
-      const seat = coverage.seats.find((s) => s.ocdId === ocdId);
-      return seat?.representatives ?? [];
+      const seat = coverage?.seats.find((s) => s.ocdId === ocdId);
+      if (seat?.representatives.length) return seat.representatives;
+      return governingRosterHoldersForDivision(ocdId);
     },
     [current],
   );
@@ -938,9 +946,18 @@ function MapEntryInner() {
               meeting={popupMeeting}
               body={bodyFor(popupMeeting.ocdId)}
               // Tier-3 (5a): who sits on this body, curated with citations.
-              representation={rosterHoldersForBody(
-                bodyFor(popupMeeting.ocdId)?.bodyId ?? null,
-              )}
+              // The division fallback covers a meeting whose body is NEAR
+              // the searched point but does not contain it — a Sunnyside
+              // pin seen from downtown 85701 still names its board.
+              representation={
+                rosterHoldersForBody(
+                  bodyFor(popupMeeting.ocdId)?.bodyId ?? null,
+                ).length > 0
+                  ? rosterHoldersForBody(
+                      bodyFor(popupMeeting.ocdId)?.bodyId ?? null,
+                    )
+                  : governingRosterHoldersForDivision(popupMeeting.ocdId)
+              }
               onClose={() => setPopupMeeting(null)}
               onExpand={() =>
                 openLarge({
@@ -1045,7 +1062,11 @@ function meetingSubject(
   meeting: Meeting,
   body: CoveredBody | null = null,
 ): ModalSubject {
-  const roster = rosterHoldersForBody(body?.bodyId ?? null);
+  const direct = rosterHoldersForBody(body?.bodyId ?? null);
+  const roster =
+    direct.length > 0
+      ? direct
+      : governingRosterHoldersForDivision(meeting.ocdId);
   return {
     // What it is FIRST (3, tightened 3a 2026-08-16): the jurisdiction-
     // qualified body and sitting are the headline ("Vail Unified School
@@ -1105,7 +1126,10 @@ function districtSubject(
         : m.ocdId === district.ocdId,
     )
     .sort((a, b) => a.startsAt.localeCompare(b.startsAt));
-  const roster = rosterHoldersForBody(`${district.ocdId}#governing`);
+  // Both registry suffixes — a school district's body is `#board`, and the
+  // `#governing`-only form left every school-district popup claiming no
+  // sourced officeholder over a curated roster.
+  const roster = governingRosterHoldersForDivision(district.ocdId);
   return {
     title: district.label,
     subtitle: `${district.typeLabel} · ${district.state}`,

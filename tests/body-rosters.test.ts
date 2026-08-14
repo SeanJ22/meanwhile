@@ -3,7 +3,11 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 
-import { BODY_ROSTERS, rosterHoldersForBody } from "../lib/registry/body-rosters.ts";
+import {
+  BODY_ROSTERS,
+  governingRosterHoldersForDivision,
+  rosterHoldersForBody,
+} from "../lib/registry/body-rosters.ts";
 import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
 
 /**
@@ -102,4 +106,27 @@ test("the surfaces render the rosters — the register is not shelf-ware", () =>
     mapEntry.includes("rosterHoldersForBody"),
     "map-entry must wire rosters into the meeting surfaces",
   );
+});
+
+test("the division lookup finds both registry suffixes — school boards are #board", () => {
+  // The Sunnyside catch (2026-08-18): a #governing-only lookup rendered
+  // "no sourced officeholder" over every curated school-board roster.
+  const tusd = governingRosterHoldersForDivision(
+    "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+  );
+  assert.ok(tusd.length >= 5, "TUSD board roster unreachable by division");
+  const sunnyside = governingRosterHoldersForDivision(
+    "ocd-division/country:us/state:az/school_district:sunnyside_unified_district",
+  );
+  assert.ok(sunnyside.length === 5, "Sunnyside board roster unreachable by division");
+  assert.ok(sunnyside.some((m) => m.name === "Beki Quintero"));
+  const amphi = governingRosterHoldersForDivision(
+    "ocd-division/country:us/state:az/school_district:amphitheater_unified_district",
+  );
+  assert.ok(amphi.length === 5, "Amphitheater board roster unreachable by division");
+  const tucson = governingRosterHoldersForDivision(
+    "ocd-division/country:us/state:az/place:tucson",
+  );
+  assert.ok(tucson.length > 0, "#governing bodies must still resolve");
+  assert.equal(governingRosterHoldersForDivision(null).length, 0);
 });

@@ -286,6 +286,44 @@ export const COMMENT_ACCESS: CommentAccess[] = [
     collectedAt: "2026-08-13",
     verifiedAt: null,
   },
+
+  // ── Sunnyside USD Governing Board (item 2, 2026-08-18 session) ──────────
+  {
+    bodyId:
+      "ocd-division/country:us/state:az/school_district:sunnyside_unified_district#board",
+    ocdId:
+      "ocd-division/country:us/state:az/school_district:sunnyside_unified_district",
+    commentPeriod: "YES",
+    commentPeriodDetail:
+      "During regularly scheduled meetings a “Call to the Audience” gives interested individuals in the audience an opportunity to address the Board, per the board's own page.",
+    signup: null,
+    writtenComment: null,
+    attend:
+      "Governing Board Room, District Administration Building, 2238 E. Ginter Road; regular meetings the second and fourth Tuesday at 6:30 PM unless otherwise noted.",
+    timeLimit: null,
+    sourceUrl: "https://www.susd12.org/governing-board-home",
+    collectedAt: "2026-08-14",
+    verifiedAt: null,
+  },
+
+  // ── Amphitheater USD Governing Board (item 2, 2026-08-18 session) ───────
+  {
+    bodyId:
+      "ocd-division/country:us/state:az/school_district:amphitheater_unified_district#board",
+    ocdId:
+      "ocd-division/country:us/state:az/school_district:amphitheater_unified_district",
+    commentPeriod: "YES",
+    commentPeriodDetail:
+      "Two published paths: comments on scheduled agenda items (blue speaker's request form) and a general public comment period (yellow speaker's request form), both submitted to the Executive Assistant at the meeting.",
+    signup:
+      "Complete the blue (agenda item) or yellow (general comment) speaker's request form at the meeting; state your name, address, and relationship to the District.",
+    writtenComment: null,
+    attend: null,
+    timeLimit: "3 minutes per person, per the district's published procedure.",
+    sourceUrl: "https://www.amphi.com/addressing-the-board",
+    collectedAt: "2026-08-14",
+    verifiedAt: null,
+  },
 ];
 
 /**

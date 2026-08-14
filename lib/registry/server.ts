@@ -5,6 +5,7 @@ import {
   indexByDivision,
   type OfficeholderIndex,
   type PhotoIndex,
+  type SeatHolder,
 } from "../officials/lookup.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
 
@@ -131,6 +132,22 @@ function loaded(): Promise<Loaded> {
 export async function divisionsAt(lat: number, lng: number): Promise<Division[]> {
   const { features, divisionsById } = await loaded();
   return resolveDivisionsAt([lng, lat], features, divisionsById);
+}
+
+/**
+ * One officeholder by roster id, in the render shape (4, 2026-08-19).
+ * Serves the ballot page's incumbent-record link: the id arrives from an
+ * exact-key join (never a name match), and an id the roster doesn't hold
+ * returns null — no link rather than a wrong one.
+ */
+export async function seatHolderById(id: string): Promise<SeatHolder | null> {
+  const { officials } = await loaded();
+  for (const holders of officials.values()) {
+    for (const holder of holders) {
+      if (holder.id === id) return holder;
+    }
+  }
+  return null;
 }
 
 export async function coverageAt(

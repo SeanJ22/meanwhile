@@ -22,6 +22,8 @@ import { CandidateCard } from "@/components/ballot/candidate-card";
 import { MyPicks } from "@/components/ballot/my-picks";
 import { PickControl } from "@/components/ballot/pick-control";
 import { registrationLinkFor } from "@/lib/ballot/registration-links";
+import { incumbentHolderFor } from "@/lib/ballot/incumbent-record";
+import { IncumbentRecordLink } from "@/components/ballot/incumbent-record-link";
 import { partyColorVar } from "@/lib/officials/party-color";
 import { formatDateMDY } from "@/lib/map/format";
 import {
@@ -75,6 +77,21 @@ function candidatesOf(set: BallotSet, contest: Contest): Candidacy[] {
  *  division is the state root exactly like a US Senate seat's. */
 function isFederalContest(contest: Contest): boolean {
   return /:us-senate$|:us-house-\d+$/.test(contest.id);
+}
+
+/** 4 (2026-08-19): the incumbent's voting-record link, where the exact-key
+ *  join holds — an incumbent on a ballot IS an official we hold. No join,
+ *  no link; never a wrong one. */
+async function IncumbentRecord({
+  targetKey,
+  context,
+}: {
+  targetKey: string;
+  context: { zip: string; lat: number; lng: number } | null;
+}) {
+  const holder = await incumbentHolderFor(targetKey);
+  if (!holder) return null;
+  return <IncumbentRecordLink holder={holder} context={context} />;
 }
 
 /** D34: the funding answer under one candidate — totals with the reaction
@@ -365,6 +382,14 @@ export default async function BallotPage({
                         card={cardForNominee(contest.id, nominee.name)}
                         links={linksForNominee(contest.id, nominee.name)}
                       />
+                      <IncumbentRecord
+                        targetKey={`${contest.id}|${nominee.name}`}
+                        context={
+                          centroid && zip
+                            ? { zip, lat: centroid.lat, lng: centroid.lng }
+                            : null
+                        }
+                      />
                       {/* 3d: reader expression, never a recommendation — the
                           answer is stored and aggregated, never rendered
                           back, and nothing orders candidates by it. */}
@@ -442,6 +467,14 @@ export default async function BallotPage({
                           card={cardForCandidacy(cand.id)}
                           links={linksForCandidacy(cand.id)}
                           filedSiteUrl={cand.websiteUrl}
+                        />
+                        <IncumbentRecord
+                          targetKey={cand.id}
+                          context={
+                            centroid && zip
+                              ? { zip, lat: centroid.lat, lng: centroid.lng }
+                              : null
+                          }
                         />
                         {/* 3d: reader expression, never a recommendation. */}
                         <ReactionControl

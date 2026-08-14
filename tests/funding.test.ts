@@ -401,3 +401,139 @@ test("the transparency page discloses funding data and the aggregate exclusion",
   assert.match(page, /Federal\s+Election\s+Commission/);
   assert.match(page, /excluded\s+from\s+anything\s+licensed/);
 });
+
+// ── The thin-snapshot guard (session brief 2, wall clock 2026-08-14) ─────
+// The 0819 session caught the Kelly-504 shrink BY EYE; the weekly refresh
+// runs unattended, so the eye becomes a mechanism. These tests assert the
+// mechanism itself with a fixture snapshot that shrinks — never the absence
+// of an error.
+
+function guardFixture(
+  candidates: { id: string; name: string; rows: number; targetKeys?: string[] }[],
+  absences: { targetKey: string }[] = [],
+) {
+  return {
+    formatVersion: 1 as const,
+    fetchedAt: "2026-08-14T00:00:00Z",
+    cycle: 2026,
+    matchReport: { rosterMatched: 0, rosterTotal: 0, ballotMatched: 0, ballotTotal: 0 },
+    candidates: candidates.map((c) => ({
+      dataClass: "FEC_COMMITTEE" as const,
+      fecCandidateId: c.id,
+      name: c.name,
+      state: "AZ",
+      office: "S" as const,
+      district: null,
+      targetKeys: c.targetKeys ?? [`congress:${c.id}`],
+      matchRoutes: ["bioguide-bridge"],
+      principalCommitteeId: null,
+      cycle: 2026,
+      totals: {
+        receipts: 1,
+        disbursements: 1,
+        cashOnHand: 1,
+        individualItemized: 1,
+        individualUnitemized: 1,
+        smallDonorShare: null,
+        coverageEndDate: null,
+      },
+      topContributions: Array.from({ length: c.rows }, (_, i) => ({
+        dataClass: "FEC_CONTRIBUTOR" as const,
+        kind: "INDIVIDUAL" as const,
+        contributorName: `row ${i}`,
+        amount: 100,
+        receiptDate: null,
+        city: null,
+        state: null,
+        entityType: "IND",
+        lineNumber: "11AI",
+      })),
+      provenance: {
+        sourceUrl: "https://www.fec.gov/",
+        sourceOrg: "Federal Election Commission",
+        collectedAt: "2026-08-14",
+        verifiedAt: "2026-08-14",
+      },
+    })),
+    absences: absences.map((a) => ({
+      targetKey: a.targetKey,
+      displayName: a.targetKey,
+      reason: "registered but no filings",
+      checkedAt: "2026-08-14",
+      searchUrl: null,
+    })),
+  };
+}
+
+test("thin guard: the Kelly-504 shape — a retained candidate's rows shrink — is a regression", async () => {
+  const { findShrinkRegressions } = await import("../lib/funding/guard.ts");
+  const prior = guardFixture([
+    { id: "S6AZ00191", name: "Mark Kelly", rows: 10 },
+    { id: "H2AZ02360", name: "Juan Ciscomani", rows: 10 },
+  ]);
+  const next = guardFixture([
+    { id: "S6AZ00191", name: "Mark Kelly", rows: 5 },
+    { id: "H2AZ02360", name: "Juan Ciscomani", rows: 10 },
+  ]);
+  const regressions = findShrinkRegressions(prior, next);
+  assert.equal(regressions.length, 1);
+  assert.equal(regressions[0].kind, "CONTRIBUTOR_ROWS");
+  assert.match(regressions[0].detail, /10 → 5/);
+  assert.match(regressions[0].detail, /Mark Kelly/);
+});
+
+test("thin guard: a falling candidate count and a vanished candidate both fail", async () => {
+  const { findShrinkRegressions } = await import("../lib/funding/guard.ts");
+  const prior = guardFixture([
+    { id: "S6AZ00191", name: "Mark Kelly", rows: 10 },
+    { id: "H2AZ02360", name: "Juan Ciscomani", rows: 10 },
+  ]);
+  const next = guardFixture([{ id: "H2AZ02360", name: "Juan Ciscomani", rows: 10 }]);
+  const regressions = findShrinkRegressions(prior, next);
+  const kinds = regressions.map((r) => r.kind).sort();
+  assert.deepEqual(kinds, ["CANDIDATE_COUNT", "CANDIDATE_MISSING"]);
+  const missing = regressions.find((r) => r.kind === "CANDIDATE_MISSING");
+  assert.match(missing!.detail, /no absence was recorded/);
+});
+
+test("thin guard: a vanished candidate WITH a recorded absence still fails, naming the recorded reason", async () => {
+  const { findShrinkRegressions } = await import("../lib/funding/guard.ts");
+  const prior = guardFixture([
+    { id: "S6AZ00191", name: "Mark Kelly", rows: 10 },
+    { id: "H2AZ02360", name: "Juan Ciscomani", rows: 10 },
+  ]);
+  const next = guardFixture(
+    [{ id: "H2AZ02360", name: "Juan Ciscomani", rows: 10 }],
+    [{ targetKey: "congress:S6AZ00191" }],
+  );
+  const regressions = findShrinkRegressions(prior, next);
+  const missing = regressions.find((r) => r.kind === "CANDIDATE_MISSING");
+  assert.ok(missing, "a vanished candidate must fail even with an absence recorded — a human confirms it");
+  assert.match(missing!.detail, /recorded an absence/);
+  assert.match(missing!.detail, /human confirms/);
+});
+
+test("thin guard: growth and steady state pass clean", async () => {
+  const { findShrinkRegressions } = await import("../lib/funding/guard.ts");
+  const prior = guardFixture([{ id: "S6AZ00191", name: "Mark Kelly", rows: 5 }]);
+  const grown = guardFixture([
+    { id: "S6AZ00191", name: "Mark Kelly", rows: 10 },
+    { id: "H2AZ02360", name: "Juan Ciscomani", rows: 10 },
+  ]);
+  assert.deepEqual(findShrinkRegressions(prior, grown), []);
+  assert.deepEqual(findShrinkRegressions(prior, prior), []);
+});
+
+test("thin guard: the fetch script runs it before writing and keeps the prior snapshot on failure", () => {
+  const script = readFileSync(join(ROOT, "scripts", "fetch-fec.mts"), "utf8");
+  // The guard runs, the failure path exits nonzero WITHOUT writing, and the
+  // override is an explicit human flag — assert the wiring, not vibes.
+  assert.match(script, /findShrinkRegressions\(prior, snapshot\)/);
+  const guardAt = script.indexOf("findShrinkRegressions(prior, snapshot)");
+  const writeAt = script.indexOf("await writeFile(OUT");
+  assert.ok(guardAt > 0 && writeAt > guardAt, "the guard must run BEFORE the snapshot write");
+  assert.match(script, /process\.exit\(1\)/);
+  assert.match(script, /--allow-shrink/);
+  assert.match(script, /ALLOW_SHRINK = process\.argv\.includes\("--allow-shrink"\)/);
+});
+

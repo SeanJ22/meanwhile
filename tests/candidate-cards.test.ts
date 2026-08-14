@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 
@@ -40,7 +40,17 @@ test("every photo carries a labeled source and https URL; every bio its citation
   const { cards } = allCandidateCards();
   for (const [key, card] of Object.entries(cards)) {
     if (card.photoUrl !== null) {
-      assert.match(card.photoUrl, /^https:\/\//, `${key}: photo not https`);
+      // https for external photos; a site-local `/officials/…` path serves
+      // a COMMITTED public-domain portrait (license recorded in
+      // lib/registry/official-photos.json) and must resolve on disk.
+      if (card.photoUrl.startsWith("/officials/")) {
+        assert.ok(
+          existsSync(join(process.cwd(), "public", card.photoUrl.slice(1))),
+          `${key}: local portrait ${card.photoUrl} not committed`,
+        );
+      } else {
+        assert.match(card.photoUrl, /^https:\/\//, `${key}: photo not https`);
+      }
       assert.ok(card.photoSource, `${key}: photo without a labeled source`);
     }
     if (card.bio !== null) {

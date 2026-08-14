@@ -148,8 +148,8 @@
    "phone": null
   },
   "ballot-nh-merrimack:us-house-2:goodlander-maggie": {
-   "photoUrl": null,
-   "photoSource": null,
+   "photoUrl": "/officials/G000604.jpg",
+   "photoSource": "Official portrait — GPO Congressional Pictorial Directory (public domain), committed copy; license recorded in lib/registry/official-photos.json",
    "bio": "Born and raised in Nashua, she represents New Hampshire's Second District; a former foreign-policy advisor to Senator John McCain, Navy Reserve intelligence officer for over a decade, law clerk to Justice Stephen Breyer, and Deputy Assistant Attorney General.",
    "bioSourceUrl": "https://goodlander.house.gov/about",
    "bioSourceLabel": "From her official House page — goodlander.house.gov, read 2026-08-17 (in a browser; the host refuses automated clients)",
@@ -161,8 +161,8 @@
   {
    "key": "ballot-nh-merrimack:us-house-2:goodlander-maggie",
    "name": "Maggie Goodlander",
-   "note": "RESOLVED for the bio 2026-08-17: goodlander.house.gov/about read in a real browser (403s pipelines). Photo still open — the page offers an official-portrait download whose URL was not captured; maggiefornh.com still 403s.",
-   "attemptedAt": "2026-08-17"
+   "note": "RESOLVED for the bio 2026-08-17: goodlander.house.gov/about read in a real browser (403s pipelines). PHOTO RESOLVED 2026-08-18: the public-domain unitedstates/images repo caught up with her — official portrait fetched by pnpm officials:photos, committed at public/officials/G000604.jpg with license recorded, and the card now serves that committed copy (an incumbent's official portrait, labeled as such; maggiefornh.com still 403s).",
+   "attemptedAt": "2026-08-18"
   },
   {
    "key": "ballot-nh-merrimack:us-senate:pappas-chris#photo",

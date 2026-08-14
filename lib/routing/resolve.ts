@@ -39,12 +39,41 @@ export interface RoutingAnswer {
   grounding: { stepsWithSomeone: number; totalSteps: number };
 }
 
+/**
+ * Is this body the DIVISION'S OWN governing body — its council, board of
+ * supervisors, school board — as opposed to a curated body that merely
+ * governs something else while attached to the same division?
+ *
+ * The 85723 defect (item 2d, 2026-08-14 second session): "pothole in
+ * front of my house" answered with "Tucson · Public Housing Authority
+ * Board of Commissioners". The PHA is honestly `GOVERNING` — it governs
+ * the housing authority — and it is attached to `place:tucson`, so a
+ * class-based filter swept it into the municipal-government answer. A
+ * reader who calls the PHA about a pothole is bounced; a wrong body must
+ * never render as an answer.
+ *
+ * The discriminator is structural, not a name match: the registry mints
+ * a division's own governing body at the `#governing` slot (school
+ * boards at `#board`) — `lib/registry/derive.ts`'s documented id scheme.
+ * Curated additions occupy their own slots (`#public-housing-authority`)
+ * and never match. Tie-or-zero refuses: if the slot is absent, the step
+ * renders its honest gap, never the nearest lookalike.
+ */
+function isOwnGoverningBody(body: CoveredBody): boolean {
+  if (!body.ocdId) return false;
+  return (
+    body.bodyId === `${body.ocdId}#governing` ||
+    body.bodyId === `${body.ocdId}#board`
+  );
+}
+
 function bodiesFor(
   step: RouteStep,
   coverage: CoverageSummary,
 ): CoveredBody[] {
   if (!step.bodyTarget) return [];
   return coverage.bodies.filter((body) => {
+    if (!isOwnGoverningBody(body)) return false;
     if (step.bodyTarget === "county") return body.divisionType === "county";
     if (step.bodyTarget === "municipal") {
       return body.divisionType === "place" && body.bodyClass === "GOVERNING";

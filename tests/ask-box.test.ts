@@ -234,6 +234,59 @@ test("the transparency page covers the ask box in the same commit", () => {
   assert.match(page, /Who do I talk to about/);
   assert.match(page, /no AI writes the answer/);
   assert.match(page, /200\s*(\n\s*)?characters/, "the cap must be stated to readers");
+  // The scrub coupling (session brief 4): the scrub ships with its
+  // disclosure — the page states that phone-, email-, and address-shaped
+  // text is blanked before storage.
+  assert.match(page, /automatically\s+blanked/, "the scrub must be disclosed");
+  assert.match(page, /phone number/);
+  assert.match(page, /street\s+(\n\s*)?address/);
+});
+
+// ── The scrub (session brief 4, wall clock 2026-08-14) ───────────────────
+
+test("scrub: phone-, email-, and address-shaped text becomes [#] before storage", async () => {
+  const { scrubFreeText, SCRUB_MARK } = await import("../lib/log/scrub.ts");
+  // The three fixture shapes the brief names, each in a real question.
+  assert.equal(
+    scrubFreeText("call me back at 973-627-2000 about the pothole"),
+    `call me back at ${SCRUB_MARK} about the pothole`,
+  );
+  assert.equal(
+    scrubFreeText("my number is (520) 791-4444, who fixes streetlights"),
+    `my number is ${SCRUB_MARK}, who fixes streetlights`,
+  );
+  assert.equal(
+    scrubFreeText("email me at jane.doe@example.com please"),
+    `email me at ${SCRUB_MARK} please`,
+  );
+  assert.equal(
+    scrubFreeText("the pothole is at 123 Main Street in front of my house"),
+    `the pothole is at ${SCRUB_MARK} in front of my house`,
+  );
+  // A bare long digit run (an SSN shape) scrubs too.
+  assert.equal(scrubFreeText("my ssn is 123456789"), `my ssn is ${SCRUB_MARK}`);
+});
+
+test("scrub: ordinary questions pass through untouched", async () => {
+  const { scrubFreeText } = await import("../lib/log/scrub.ts");
+  for (const q of [
+    "who fixes potholes",
+    "there are 3 potholes on my street",
+    "why did the school board cut the budget",
+    "I want a bike lane",
+  ]) {
+    assert.equal(scrubFreeText(q), q, `"${q}" must survive the scrub`);
+  }
+  // A five-digit zip is orientation, not identity — it survives.
+  assert.equal(scrubFreeText("trash pickup in 85701"), "trash pickup in 85701");
+});
+
+test("scrub: the write path runs it before the insert — nothing unscrubbed reaches the store", () => {
+  const source = readFileSync(join(ROOT, "lib", "db", "search-log.ts"), "utf8");
+  const scrubAt = source.indexOf("scrubFreeText(");
+  const insertAt = source.indexOf(".insert(searchLog)");
+  assert.ok(scrubAt > 0, "the write path must scrub");
+  assert.ok(insertAt > scrubAt, "the scrub must run BEFORE the insert");
 });
 
 test("QUESTION_ASKED is a registered identifier-free event type", async () => {

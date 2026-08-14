@@ -57,7 +57,8 @@ export default function TransparencyPage() {
             When you search a zip code or tap around the map, the site logs
             the event: the zip you entered, which districts and government
             bodies the answer involved, which meeting or body you opened,
-            which filters you used, and when. That&apos;s the whole row.
+            which official&apos;s card you opened, which filters you used,
+            and when. That&apos;s the whole row.
           </p>
           <p>
             The zip is stored as an approximate location — it orients the
@@ -88,6 +89,39 @@ export default function TransparencyPage() {
             storage. The street you type is matched against a list downloaded
             to your device — it is never sent anywhere, never logged, and
             never tied to an account.
+          </p>
+        </Section>
+
+        <Section title="Reactions to votes">
+          <p>
+            Some vote records ask &quot;Do you like this vote?&quot; with
+            Yes, No, and Unsure buttons. When you answer, the site stores:
+            your answer, which vote it was about, roughly where you were
+            looking (the districts around the zip or map area — never an
+            address), the time, and a verification tier. Today every answer
+            is stored as unverified-anonymous; if we ever add ways to verify
+            answers, verified and unverified counts will always be reported
+            separately.
+          </p>
+          <p>
+            So you can change your answer later, your browser makes up a
+            random key the first time you react (kept in your browser&apos;s
+            own storage) and sends it with each answer. We store only a
+            scrambled (hashed) form of it. That key relates your
+            browser&apos;s answers to each other and to nothing else: it is
+            not tied to any account, appears in no other table, and is never
+            included in anything shared or sold. If you clear your
+            browser&apos;s storage, your earlier answers simply can&apos;t be
+            edited any more — they remain as anonymous rows. This is the
+            difference between a device-continuity token and tracking, and we
+            would rather say it plainly than have you wonder.
+          </p>
+          <p>
+            Nobody&apos;s answers — including totals — are ever shown to
+            anyone on this site. Area-level totals of answers, split by
+            verification tier, may eventually be shared and sold to
+            political organizations; never anything containing or traceable
+            to a person.
           </p>
         </Section>
 

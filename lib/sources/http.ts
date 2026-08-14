@@ -102,15 +102,23 @@ export async function politeGetJson<T>(
   return JSON.parse(text) as T;
 }
 
-/** Decode the handful of HTML entities that occur in these feeds. */
+/**
+ * Decode the handful of HTML entities that occur in these feeds. Numeric
+ * references cover both decimal and hex forms — `&#x27;` reached readers
+ * literally in a body name (caught by screenshot, 2026-08-15) because only
+ * the decimal spelling was handled.
+ */
 export function decodeEntities(value: string): string {
   return value
-    .replace(/&amp;/g, "&")
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">")
     .replace(/&quot;/g, '"')
     .replace(/&#0?39;/g, "'")
-    .replace(/&nbsp;/g, " ");
+    .replace(/&#x27;/gi, "'")
+    .replace(/&#x2019;/gi, "’")
+    .replace(/&#8217;/g, "’")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&");
 }
 
 export { REQUEST_SPACING_MS };

@@ -6,7 +6,6 @@ import {
   formatMeetingDate,
   formatMeetingTime,
   formatRelativeDay,
-  shortOcdId,
 } from "@/lib/map/format";
 import { tierForMeeting } from "@/lib/state/derive";
 import type { SeatHolder } from "@/lib/officials/lookup";
@@ -15,7 +14,6 @@ import { linksForMeeting, type OutboundLink } from "@/lib/registry/links";
 import type { Meeting } from "@/lib/sources/types";
 
 import {
-  Copyable,
   PopupCard,
   PopupRow,
   PopupSectionLabel,
@@ -82,9 +80,9 @@ export function MeetingPopup({
       type={meeting.jurisdiction}
       tier={tier}
       title={meeting.title}
-      copyTitle={meeting.title}
       badges={badge ? [badge] : []}
       onExpand={onExpand}
+      expandLabel={`More about ${meeting.title} — agenda and how to be heard`}
       onClose={onClose}
     >
       <PopupRow label="Body">{meeting.bodyName}</PopupRow>
@@ -100,11 +98,7 @@ export function MeetingPopup({
         {formatMeetingTime(meeting)}
       </PopupRow>
 
-      <PopupRow label="Location">
-        <Copyable text={meeting.location.address ?? meeting.location.name}>
-          {meeting.location.name}
-        </Copyable>
-      </PopupRow>
+      <PopupRow label="Location">{meeting.location.name}</PopupRow>
 
       <PopupRow label="Status">{STATUS_LABEL[meeting.status]}</PopupRow>
 
@@ -202,11 +196,3 @@ function LinkLadder({
   );
 }
 
-/** The OCD-ID row, shared with the district popup. Mono, and copyable. */
-export function OcdIdRow({ ocdId }: { ocdId: string }) {
-  return (
-    <PopupRow label="OCD-ID" mono>
-      <Copyable text={ocdId}>{shortOcdId(ocdId)}</Copyable>
-    </PopupRow>
-  );
-}

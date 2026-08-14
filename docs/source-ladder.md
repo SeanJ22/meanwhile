@@ -347,3 +347,45 @@ each needs its own hunt before an adapter.
 — 200, ~1.5–7 MB per county; zip fields are `ZIPL`/`ZIPR` (not LZIP/RZIP —
 the first build dropped 100% on that guess and the zero-written invariant
 caught it).
+
+**The 2026-08-15 rung set** (reactions/plain-language session):
+
+- **Netlify function logs** (2a diagnosis): unreachable this session — the
+  CLI has no stored login and interactive auth needs the author.
+  `attemptedAt: 2026-08-15`. Both request shapes measured healthy against
+  dev AND a local production build; the failure card now names its HTTP
+  status so the next production screenshot completes the diagnosis.
+- **govboard.tusd1.org** (4c notice channel): server-renders the Governing
+  Board's meeting notice, times, public-hearing items, the five-member
+  roster with roles and term expirations, and contact — all to a plain
+  identified client, 200, ~34 KB. Wired as `noticeUrl` on the TUSD row;
+  also the citation for the TUSD roster (5a). `attemptedAt: 2026-08-15`.
+- **azleg.gov adopted analyses** (2b): 10 of 11 fetched and text-extracted
+  directly. The eleventh — `adopted analysis SCR1004 - 2026.pdf` (Prop
+  319) — **404s while the Legislature's own index links it** (broken at
+  the source); the Council's draft `ballot analysis SCR1004 - 2026.pdf`
+  resolves (200, application/pdf, 18 KB) and ships labeled as the draft,
+  with the adopted URL retried first on every refresh run.
+  `attemptedAt: 2026-08-15`.
+- **AZ certified primary canvass** (6a):
+  `apps.azsos.gov/election/2026/canvass/20260806_Primary_Canvass.pdf` —
+  200, 19 MB, **scanned with no text layer** (pdfjs extracts 0 chars; the
+  NJ ballot-drawing shape again). County canvasses DO carry text (Pima's:
+  26 MB, 4.8M chars extracted). `results.arizona.vote` — 403 to a plain
+  client behind a bot-verification wall, and driving it in a browser
+  crashed the session host three times; recorded as a
+  browser-only-and-hostile rung, not attempted again. The route that
+  worked: the statewide canvass embeds each page as a JPEG — extracted
+  13 page images from the PDF bytes directly and read the winner-starred
+  tables by eye (pages recorded in the lineup file's citation).
+  `attemptedAt: 2026-08-15`.
+- **Roster pages** (5a/5b), all 200 to a plain identified client on
+  2026-08-15: `pima.gov/government/board_of_supervisors/` (the /1130 and
+  /173 CivicPlus paths 404 — the recorded venue-cache URL was the one that
+  worked); `tucsonaz.gov/Government/Mayor-Council-and-City-Manager` (the
+  /Departments path 404s); `vailschooldistrict.org/o/vsd/page/governing-board`
+  (apptegy page, names embedded in accordion JSON);
+  `newbury.nh.gov/selectboard` (members with term-end dates).
+  NJ rosters (Rockaway Twp council, the two BOEs, Morris County
+  commissioners) — `NOT_ATTEMPTED` as of 2026-08-15; next session's easy
+  finds.

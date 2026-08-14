@@ -1,7 +1,5 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-
 import type { VotesSnapshot } from "@/lib/votes/types";
+import { getVotesSnapshot } from "@/lib/votes/snapshot";
 
 /**
  * GET /api/votes?member=congress:C001133
@@ -14,15 +12,6 @@ import type { VotesSnapshot } from "@/lib/votes/types";
 
 export const runtime = "nodejs";
 
-let cache: VotesSnapshot | null = null;
-
-function snapshot(): VotesSnapshot {
-  cache ??= JSON.parse(
-    readFileSync(join(process.cwd(), "data", "votes", "votes-snapshot.json"), "utf8"),
-  ) as VotesSnapshot;
-  return cache;
-}
-
 export async function GET(request: Request) {
   const member = new URL(request.url).searchParams.get("member");
   if (!member || !/^congress:[A-Z]\d{6}$/.test(member)) {
@@ -34,7 +23,7 @@ export async function GET(request: Request) {
 
   let snap: VotesSnapshot;
   try {
-    snap = snapshot();
+    snap = getVotesSnapshot();
   } catch {
     // No snapshot is an honest empty state, not a 500 — the popup renders
     // "no recorded votes on file yet".

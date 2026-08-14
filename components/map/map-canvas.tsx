@@ -20,6 +20,7 @@ import {
   METRO_ZOOM,
   resolveBasemap,
 } from "@/lib/map/style";
+import { initialZoomForZip } from "@/lib/map/initial-zoom";
 import {
   DISTRICT_TYPES,
   addDistrictLayer,
@@ -342,7 +343,10 @@ export function MapCanvas({
       userMoved = false;
       window.clearTimeout(settleTimer);
       settleTimer = window.setTimeout(() => {
-        const center = map.getCenter();
+        // wrap(): a map panned past the antimeridian reports longitudes
+        // outside [-180, 180], which the API rejects with a 400 — the one
+        // settle-only failure a client can manufacture on its own (2a).
+        const center = map.getCenter().wrap();
         onViewportSettleRef.current?.({ lat: center.lat, lng: center.lng });
       }, 650);
     };
@@ -386,14 +390,14 @@ export function MapCanvas({
       .setAttribute("aria-label", `Center of zip code ${camera.zip}`);
   }, [camera]);
 
-  // Fly to a new center.
+  // Fly to a new center, at the zip's deliberate first-view altitude (6f).
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !camera) return;
 
     const options = {
       center: [camera.lng, camera.lat] as [number, number],
-      zoom: METRO_ZOOM,
+      zoom: initialZoomForZip(camera.zip),
     };
 
     if (prefersReducedMotion()) {

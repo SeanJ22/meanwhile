@@ -216,3 +216,49 @@ export function computeStats(
 export function activeDistrictTypes(ui: UiState) {
   return ALL_DISTRICT_TYPES.filter((t) => ui.filters.districtTypes.includes(t));
 }
+
+export interface StatsView {
+  meetings: number | "—";
+  bodies: number | "—";
+  districts: number | "—";
+  officials: number | "—";
+  /** Present exactly when the fetch failed: the couldn't-check statement. */
+  failedNote: string | null;
+}
+
+/**
+ * What the stat cards may claim, given whether the fetch that feeds them
+ * actually answered.
+ *
+ * The standing rule (ninth sighting, docs/state.md §8): **a failed operation
+ * may not render as an empty success.** "Couldn't check" and "none" are
+ * different facts — a sidebar reading 0 meetings / 0 bodies / 0 officials
+ * beside a failed request is three false claims about a government. So on
+ * failure every count that depends on the server's answer renders "—" with
+ * the note, never 0. Districts stay numeric: the overlay draws from
+ * committed files on the client and is genuinely intact when the meetings
+ * service is not — the author's failure screenshot showed exactly that
+ * split, and it was the one honest number on the card.
+ */
+export function deriveStatsView(
+  stats: ShellStats,
+  showDistricts: boolean,
+  searchFailed: boolean,
+): StatsView {
+  if (searchFailed) {
+    return {
+      meetings: "—",
+      bodies: "—",
+      officials: "—",
+      districts: showDistricts ? stats.districts : "—",
+      failedNote: "Couldn't check — the meetings service didn't answer.",
+    };
+  }
+  return {
+    meetings: stats.meetings,
+    bodies: stats.bodies,
+    officials: stats.officials,
+    districts: showDistricts ? stats.districts : "—",
+    failedNote: null,
+  };
+}

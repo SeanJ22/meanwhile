@@ -53,3 +53,26 @@ fully interactive and every click was a silent no-op. Fixed the same day —
 touching the group now turns the overlay on (except "clear"), the rule is
 pure and tested, and the group says "The overlay is off — checking a type
 turns it on" while it is off.)
+
+## 2026-08-15 — the session brief (author's notes arrived as the brief, not this file)
+
+The author's production pass for this session was delivered as the session
+brief rather than entries here. Triaged and built on branch
+`claude/reactions-and-plain-language-0815`; the brief is committed at
+`docs/session-brief.md` for the record. Row pointers:
+
+- Reaction capture live → **P03** (In progress: votes wired; provisions/
+  free text open), **T03**/**T05** (demo-grade pass, in place), **T08**
+  (new: the launch gate — full hardening before the password comes down).
+- Viewport-settle failure + honest failure rendering → fixed with 2a
+  (guard family extended; production cause instrumented, logs unreachable
+  without the author's Netlify login).
+- Prop 142 match-then-deny → fixed across all 11 measures (analyses render
+  verbatim; see **P01** for what remains).
+- Popup architecture → **M05** (Done).
+- Plain-language layer → CLAUDE.md non-negotiable + 4a/4b/4c/4d shipped.
+- Officials → body rosters ×5, mayor, no-mayor-as-fact (see **M05**/state.md
+  §13; NJ rosters still open).
+- Canvass lineup → **D33** updated.
+- 5d (sidebar counts as doors) — the brief's sanctioned first cut, taken;
+  open as future work, no row yet.

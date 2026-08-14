@@ -127,7 +127,10 @@ if (!hasOriginMain || !hasLocalMain) {
 // gone does not look broken, it looks like a repo with no rules — which is the
 // most expensive way for this particular file to fail.
 const CLAUDE = join(ROOT, "CLAUDE.md");
-const EXPECTED_KB = 10;
+// Grown deliberately: the friction constitution (0a, 2026-08-14), the
+// n-stores and plain-language non-negotiables (2026-08-15). The clobber
+// signature is a *tiny* file, so only the floor really guards.
+const EXPECTED_KB = 17;
 
 if (!existsSync(CLAUDE)) {
   fail("CLAUDE.md", "missing entirely");
@@ -143,7 +146,7 @@ if (!existsSync(CLAUDE)) {
   } else if (bytes < 1024) {
     fail("CLAUDE.md", `${bytes} bytes — under 1 KB, so it has been overwritten`);
     notes.push(...restoreNote());
-  } else if (bytes < 8 * 1024 || bytes > 14 * 1024) {
+  } else if (bytes < 8 * 1024 || bytes > 24 * 1024) {
     // Not fatal: the file legitimately grows. But a large swing from ~10 KB is
     // worth a look before trusting it.
     warn("CLAUDE.md", `${kb} KB — expected roughly ${EXPECTED_KB} KB, check it`);

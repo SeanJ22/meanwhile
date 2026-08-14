@@ -16,25 +16,26 @@ export function DataFreshness({ snapshot }: { snapshot: SnapshotStatus }) {
   const failed = snapshot.failed;
   const when = new Date(Date.parse(snapshot.generatedAt));
 
+  // A footnote, not a headline (3): provenance matters, but "who governs
+  // here" gets the visible position. No panel chrome — quiet small text at
+  // the bottom of the stack. A failed source still speaks in signal color.
   return (
-    <div className="panel pointer-events-auto max-w-md px-3 py-2">
-      <p className="text-[0.6875rem] leading-relaxed text-muted">
-        <span className="font-mono text-[0.5625rem] uppercase tracking-[0.15em]">
-          Last checked
-        </span>{" "}
-        <time dateTime={snapshot.generatedAt} title={when.toLocaleString()}>
-          {relativeAge(snapshot.generatedAt)}
-        </time>
-        {failed.length > 0 && (
-          <>
-            {" · "}
-            <span className="text-signal">
-              couldn&apos;t reach {failed.map((f) => f.source).join(", ")} — some
-              calendars may be missing
-            </span>
-          </>
-        )}
-      </p>
-    </div>
+    <p className="pointer-events-auto max-w-md text-[0.625rem] leading-relaxed text-muted">
+      <span className="font-mono text-[0.5625rem] uppercase tracking-[0.15em]">
+        Last checked
+      </span>{" "}
+      <time dateTime={snapshot.generatedAt} title={when.toLocaleString()}>
+        {relativeAge(snapshot.generatedAt)}
+      </time>
+      {failed.length > 0 && (
+        <>
+          {" · "}
+          <span className="text-signal">
+            couldn&apos;t reach {failed.map((f) => f.source).join(", ")} — some
+            calendars may be missing
+          </span>
+        </>
+      )}
+    </p>
   );
 }

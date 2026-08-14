@@ -36,6 +36,14 @@ export interface BodySourceWiring {
   timeZone: string;
   /** Per-adapter settings. Keys are documented by the adapter. */
   config: Record<string, string>;
+  /**
+   * The body's own meeting-notice page (4c), where one exists ahead of the
+   * vendor portal. Retrieved as a document for this body's meetings that
+   * have no published agenda yet — the notice a board posts on its own
+   * site is public content about the meeting, and rendering "no agenda
+   * posted yet" beside it was a source gap for a wired body.
+   */
+  noticeUrl?: string;
   /** When the URLs in config were last confirmed working. */
   verifiedAt: string;
 }
@@ -98,7 +106,13 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
       meetingPath: "/Portal/MeetingInformation.aspx?Org=Cal&Id=",
       extraQuery: "&loadall=true",
     },
-    verifiedAt: "2026-08-13",
+    // The Board's own notice page: server-renders the meeting notice
+    // (times, venue, public hearings) days before the Diligent portal
+    // publishes the agenda. Verified 2026-08-15 — it carried the Aug 25
+    // special-meeting notice including the Palo Verde ITM public hearing
+    // while the portal's agenda was still unpublished.
+    noticeUrl: "https://govboard.tusd1.org/",
+    verifiedAt: "2026-08-15",
   },
   {
     bodyId:

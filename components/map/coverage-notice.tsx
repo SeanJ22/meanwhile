@@ -47,16 +47,23 @@ interface CoverageNoticeProps {
    */
   failedSourceOcdIds?: string[];
   onOpenOfficial?: OpenOfficial;
+  /** Shrinks the card to its corner bubble — the explicit control (3). */
+  onMinimize?: () => void;
 }
 
 /** How many bodies to name before collapsing the rest into a count. */
 const NAME_LIMIT = 5;
 
-/** Opens the rep popup (3c). Seat label and tier ride along for the card. */
+/**
+ * Opens the rep popup (3c). Seat label and tier ride along for the card;
+ * the seat's division id rides along for the OFFICIAL_OPENED log event
+ * (null where the holder has no single seat division, e.g. senators).
+ */
 export type OpenOfficial = (
   holder: SeatHolder,
   seatLabel: string | null,
   tier: "local" | "state" | "national",
+  ocdId: string | null,
 ) => void;
 
 const DIVISION_NOUN: Record<CoveredBody["divisionType"], string> = {
@@ -144,11 +151,13 @@ function Holder({
 function HolderList({
   holders,
   seatLabel,
+  seatOcdId,
   tier,
   onOpenOfficial,
 }: {
   holders: SeatHolder[];
   seatLabel: string | null;
+  seatOcdId: string | null;
   tier: "local" | "state" | "national";
   onOpenOfficial?: OpenOfficial;
 }) {
@@ -161,7 +170,7 @@ function HolderList({
             holder={holder}
             onOpen={
               onOpenOfficial
-                ? () => onOpenOfficial(holder, seatLabel, tier)
+                ? () => onOpenOfficial(holder, seatLabel, tier, seatOcdId)
                 : undefined
             }
           />
@@ -309,9 +318,19 @@ function CoverageBody({
   return (
     <>
       {unincorporated && (
+        // The no-mayor case is a stated fact, not an empty slot (5b): say
+        // what this place has instead of what it lacks.
         <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
-          <span className="text-signal">No city or town government</span> — this
-          area is unincorporated.
+          <span className="text-signal">
+            This area isn&apos;t a city or town
+          </span>{" "}
+          — it has no mayor or city council.
+          {(() => {
+            const county = bodies.find((b) => b.divisionType === "county");
+            return county
+              ? ` The ${county.name ?? `${county.divisionLabel} County board`} is the closest thing here.`
+              : "";
+          })()}
         </p>
       )}
 
@@ -446,6 +465,7 @@ function CoverageBody({
                       <HolderList
                         holders={seat.representatives}
                         seatLabel={seat.label}
+                        seatOcdId={seat.ocdId}
                         tier={seat.tier}
                         onOpenOfficial={onOpenOfficial}
                       />
@@ -470,6 +490,7 @@ function CoverageBody({
           <HolderList
             holders={senators}
             seatLabel={null}
+            seatOcdId={null}
             tier="national"
             onOpenOfficial={onOpenOfficial}
           />
@@ -538,6 +559,7 @@ export function CoverageNotice({
   coverage,
   failedSourceOcdIds,
   onOpenOfficial,
+  onMinimize,
 }: CoverageNoticeProps) {
   // The notice renders on every failure rung, and on the exact rung whenever
   // there is representation to show. It used to return null on `exact`
@@ -564,7 +586,29 @@ export function CoverageNotice({
         : "text-signal";
 
   return (
-    <div className="panel pointer-events-auto max-w-md px-4 py-3.5">
+    <div className="panel pointer-events-auto relative max-w-md px-4 py-3.5">
+      {onMinimize && (
+        // The explicit way out (3) — engagement still collapses it, but the
+        // reader shouldn't have to know that.
+        <button
+          type="button"
+          onClick={onMinimize}
+          aria-label="Minimize — the card stays one tap away"
+          className="absolute top-2 right-2 cursor-pointer p-1 text-muted hover:text-paper"
+        >
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            aria-hidden="true"
+          >
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+        </button>
+      )}
       <p
         className={`font-mono text-[0.625rem] uppercase tracking-[0.2em] ${accent}`}
       >

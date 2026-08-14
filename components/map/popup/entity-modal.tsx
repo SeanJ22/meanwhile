@@ -3,16 +3,14 @@
 import { X } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 
-import {
-  formatMeetingDate,
-  formatMeetingTime,
-  shortOcdId,
-} from "@/lib/map/format";
+import { formatMeetingDate, formatMeetingTime } from "@/lib/map/format";
 import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { Meeting, Provenance } from "@/lib/sources/types";
 
-import { Copyable, NoValue, PopupRow, PopupSectionLabel } from "./popup-card";
+import { HowToBeHeard } from "../meeting-panel";
+import { AgendaSection } from "./agenda-section";
+import { NoValue, PopupRow, PopupSectionLabel } from "./popup-card";
 
 /**
  * The port of EdiaStratMap's `.account-modal`.
@@ -52,6 +50,14 @@ export interface ModalSubject {
   badges?: { label: string; status?: string }[];
   /** Overview rows. */
   facts: { label: string; value: ReactNode; mono?: boolean }[];
+  /**
+   * When the subject is a meeting: its stored agenda content renders in the
+   * overview (4c) — what the meeting is about, on the surface, not behind a
+   * link.
+   */
+  agenda?: { meetingId: string; agendaUrl: string | null } | null;
+  /** How to actually speak at it (D25), when the subject is a meeting. */
+  commentAccess?: { ocdId: string | null; bodyName: string } | null;
   representation: SeatHolder[];
   /** Why representation is empty, when it is. */
   representationNote: string;
@@ -63,6 +69,8 @@ export interface ModalSubject {
 interface EntityModalProps {
   subject: ModalSubject;
   onClose: () => void;
+  /** A representation row opens the person's full card (5a). */
+  onOpenHolder?: (holder: SeatHolder) => void;
   /** Overridden in tests and screenshots so a tab can be captured directly. */
   initialTab?: ModalTab;
 }
@@ -70,6 +78,7 @@ interface EntityModalProps {
 export function EntityModal({
   subject,
   onClose,
+  onOpenHolder,
   initialTab = "overview",
 }: EntityModalProps) {
   const [tab, setTab] = useState<ModalTab>(initialTab);
@@ -165,6 +174,23 @@ export function EntityModal({
                   {fact.value}
                 </PopupRow>
               ))}
+
+              {subject.agenda && (
+                <>
+                  <PopupSectionLabel>What this meeting is about</PopupSectionLabel>
+                  <AgendaSection
+                    meetingId={subject.agenda.meetingId}
+                    agendaUrl={subject.agenda.agendaUrl}
+                  />
+                </>
+              )}
+
+              {subject.commentAccess && (
+                <HowToBeHeard
+                  ocdId={subject.commentAccess.ocdId}
+                  bodyName={subject.commentAccess.bodyName}
+                />
+              )}
             </>
           )}
 
@@ -172,6 +198,7 @@ export function EntityModal({
             <Representation
               holders={subject.representation}
               note={subject.representationNote}
+              onOpenHolder={onOpenHolder}
             />
           )}
 
@@ -202,9 +229,11 @@ export function EntityModal({
 function Representation({
   holders,
   note,
+  onOpenHolder,
 }: {
   holders: SeatHolder[];
   note: string;
+  onOpenHolder?: (holder: SeatHolder) => void;
 }) {
   if (holders.length === 0) return <Empty>{note}</Empty>;
 
@@ -214,7 +243,17 @@ function Representation({
         <div key={holder.id} className="account-modal-person">
           <div className="flex items-baseline justify-between gap-3">
             <span className="text-[0.875rem] font-medium text-paper">
-              {holder.websiteUrl ? (
+              {onOpenHolder ? (
+                // The name opens the full card — contact, office blurb —
+                // rather than navigating away.
+                <button
+                  type="button"
+                  onClick={() => onOpenHolder(holder)}
+                  className="cursor-pointer hover:text-signal hover:underline"
+                >
+                  {holder.name}
+                </button>
+              ) : holder.websiteUrl ? (
                 <a
                   href={holder.websiteUrl}
                   target="_blank"
@@ -329,9 +368,7 @@ function Sources({
 
           <PopupRow label="Collected" mono>
             {entry.provenance.collectedAt ? (
-              <Copyable text={entry.provenance.collectedAt}>
-                {entry.provenance.collectedAt.slice(0, 10)}
-              </Copyable>
+              entry.provenance.collectedAt.slice(0, 10)
             ) : (
               <NoValue />
             )}
@@ -368,4 +405,4 @@ function hostOf(url: string): string {
   }
 }
 
-export { PopupSectionLabel, shortOcdId };
+export { PopupSectionLabel };

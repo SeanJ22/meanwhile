@@ -27,7 +27,8 @@ export type SearchLogEventType =
   | "BODY_OPENED"
   | "MEETING_OPENED"
   | "DISTRICT_SELECTED"
-  | "FILTER_APPLIED";
+  | "FILTER_APPLIED"
+  | "OFFICIAL_OPENED";
 
 export const SEARCH_LOG_EVENT_TYPES: SearchLogEventType[] = [
   "SEARCH",
@@ -35,6 +36,9 @@ export const SEARCH_LOG_EVENT_TYPES: SearchLogEventType[] = [
   "MEETING_OPENED",
   "DISTRICT_SELECTED",
   "FILTER_APPLIED",
+  // Approved by the author (session brief 1d, 2026-08-15) — added together
+  // with its line on /transparency, per the coupling rule.
+  "OFFICIAL_OPENED",
 ];
 
 export interface SearchLogEvent {

@@ -2,6 +2,12 @@ import Link from "next/link";
 
 import { contestsForDivisions } from "@/lib/sources/ballot-nj-morris";
 import { BALLOT_SOURCES } from "@/lib/ballot/registry";
+import { analysisForContest } from "@/lib/ballot/analyses";
+import { summaryForContest } from "@/lib/ballot/measure-summaries";
+import {
+  getGeneralLineup,
+  lineupForContest,
+} from "@/lib/ballot/general-lineup";
 import { electionDatesFor } from "@/lib/ballot/election-dates";
 import type {
   BallotAbsence,
@@ -88,7 +94,16 @@ export default async function BallotPage({
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-8 text-paper">
-      <p className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-muted">
+      {/* 6b: the way back, top-left — the map is where the reader came from. */}
+      <p className="text-[0.8125rem]">
+        <Link
+          href="/"
+          className="text-muted underline decoration-dotted underline-offset-2 hover:text-signal"
+        >
+          ← Back to the map
+        </Link>
+      </p>
+      <p className="mt-3 font-mono text-[0.625rem] uppercase tracking-[0.2em] text-muted">
         We the People
       </p>
       <h1 className="mt-1 text-xl font-semibold">
@@ -165,105 +180,201 @@ export default async function BallotPage({
 
       {set &&
         matched &&
-        candidacyContests.map((contest) => (
-          <section
-            key={contest.id}
-            className="mt-5 rounded border border-[var(--panel-border)] p-4"
-          >
-            <h2 className="text-[0.9375rem] font-semibold">{contest.title}</h2>
-            <p className="mt-0.5 font-mono text-[0.625rem] uppercase tracking-[0.15em] text-muted">
-              Vote for {contest.voteFor}
-              {contest.termYears
-                ? ` · ${contest.termYears}-year term`
-                : ""}
-            </p>
-            {contest.scopeNote && (
-              <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
-                {contest.scopeNote}
+        candidacyContests.map((contest) => {
+          const lineup = lineupForContest(contest.id);
+          const canvass = lineup ? getGeneralLineup()?.canvass : null;
+          return (
+            <section
+              key={contest.id}
+              className="mt-5 rounded border border-[var(--panel-border)] p-4"
+            >
+              <h2 className="text-[0.9375rem] font-semibold">{contest.title}</h2>
+              <p className="mt-0.5 font-mono text-[0.625rem] uppercase tracking-[0.15em] text-muted">
+                Vote for {contest.voteFor}
+                {contest.termYears
+                  ? ` · ${contest.termYears}-year term`
+                  : ""}
               </p>
-            )}
-            <ul className="mt-3 space-y-2">
-              {candidatesOf(set, contest).map((cand) => (
-                <li
-                  key={cand.id}
-                  className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 border-b border-[var(--panel-border)] pb-2 last:border-0 last:pb-0"
-                >
-                  <span className="text-[0.875rem]">
-                    {cand.givenName} {cand.familyName}
-                    {cand.websiteUrl && (
-                      <>
-                        {" "}
-                        <a
-                          href={cand.websiteUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-[0.75rem] underline decoration-dotted"
-                        >
-                          site
-                        </a>
-                      </>
-                    )}
-                  </span>
-                  <span className="text-right text-[0.75rem] text-muted">
-                    {cand.partyLabel ?? "No party label filed"}
-                    {cand.slogan && (
-                      <>
-                        {" "}
-                        · <span className="italic">&ldquo;{cand.slogan}&rdquo;</span>
-                      </>
-                    )}
-                  </span>
-                </li>
-              ))}
-            </ul>
-            <p className="mt-2.5 text-[0.6875rem] text-muted">
-              <a
-                href={contest.provenance.sourceUrl ?? undefined}
-                target="_blank"
-                rel="noreferrer"
-                className="underline decoration-dotted"
-              >
-                {contest.provenance.sourceOrg} filing
-              </a>{" "}
-              · read {contest.provenance.collectedAt}
-            </p>
-          </section>
-        ))}
 
-      {/* Statewide measures: the official short title, the pending-text
-          statement where official language is not yet published, and the
-          impartial analysis linked. Never characterized by us. */}
+              {/* 6c: the record behind this contest, at the top of the card
+                  — never buried at the page bottom. */}
+              <p className="mt-1 text-[0.6875rem] text-muted">
+                {lineup && canvass ? (
+                  <>
+                    Nominees per the{" "}
+                    <a
+                      href={canvass.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="underline decoration-dotted"
+                    >
+                      certified primary canvass
+                    </a>{" "}
+                    ({canvass.issuedBy}) · read {canvass.readAt}
+                  </>
+                ) : (
+                  <>
+                    <a
+                      href={contest.provenance.sourceUrl ?? undefined}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="underline decoration-dotted"
+                    >
+                      {contest.provenance.sourceOrg} filing
+                    </a>{" "}
+                    · read {contest.provenance.collectedAt}
+                  </>
+                )}
+              </p>
+
+              {/* The certified lineup retires the filing-list fallback (6a):
+                  what a November voter actually chooses among. */}
+              {lineup ? (
+                <ul className="mt-3 space-y-2">
+                  {lineup.nominees.map((nominee) => (
+                    <li
+                      key={nominee.name}
+                      className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 border-b border-[var(--panel-border)] pb-2 last:border-0 last:pb-0"
+                    >
+                      <span className="text-[0.875rem]">{nominee.name}</span>
+                      <span className="text-right text-[0.75rem] text-muted">
+                        {nominee.partyLabel}
+                        {nominee.note && <> · {nominee.note}</>}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <>
+                  {contest.scopeNote && (
+                    <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
+                      {contest.scopeNote}
+                    </p>
+                  )}
+                  <ul className="mt-3 space-y-2">
+                    {candidatesOf(set, contest).map((cand) => (
+                      <li
+                        key={cand.id}
+                        className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 border-b border-[var(--panel-border)] pb-2 last:border-0 last:pb-0"
+                      >
+                        <span className="text-[0.875rem]">
+                          {cand.givenName} {cand.familyName}
+                          {cand.websiteUrl && (
+                            <>
+                              {" "}
+                              <a
+                                href={cand.websiteUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-[0.75rem] underline decoration-dotted"
+                              >
+                                site
+                              </a>
+                            </>
+                          )}
+                        </span>
+                        <span className="text-right text-[0.75rem] text-muted">
+                          {cand.partyLabel ?? "No party label filed"}
+                          {cand.slogan && (
+                            <>
+                              {" "}
+                              · <span className="italic">&ldquo;{cand.slogan}&rdquo;</span>
+                            </>
+                          )}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </section>
+          );
+        })}
+
+      {/* The canvass caveat, once, under the AZ contests it governs. */}
+      {set &&
+        matched &&
+        candidacyContests.some((c) => lineupForContest(c.id)) && (
+          <p className="mt-3 text-[0.6875rem] leading-relaxed text-muted">
+            {getGeneralLineup()?.note}
+          </p>
+        )}
+
+      {/* Statewide measures (2b): the official short title, the plain-
+          language summary labeled as such, and the Legislative Council's
+          analysis VERBATIM — the official explainer, rendered rather than
+          merely linked. Data in hand is never displayed as missing. */}
       {measureContests.length > 0 && (
         <section className="mt-6">
           <h2 className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-muted">
             Statewide measures
           </h2>
-          {measureContests.map((contest) => (
-            <div
-              key={contest.id}
-              className="mt-3 rounded border border-[var(--panel-border)] p-4"
-            >
-              <h3 className="text-[0.875rem] font-semibold">{contest.title}</h3>
-              {contest.scopeNote && (
-                <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
-                  {contest.scopeNote}
+          {measureContests.map((contest) => {
+            const analysis = analysisForContest(contest.id);
+            const summary = summaryForContest(contest.id);
+            return (
+              <div
+                key={contest.id}
+                className="mt-3 rounded border border-[var(--panel-border)] p-4"
+              >
+                <h3 className="text-[0.875rem] font-semibold">{contest.title}</h3>
+
+                {summary && analysis?.text && (
+                  <div className="mt-2.5 rounded bg-[var(--surface,rgba(255,255,255,0.04))] p-3">
+                    <p className="font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
+                      Plain-language summary — read the official text below
+                    </p>
+                    <p className="mt-1.5 text-[0.8125rem] leading-relaxed">
+                      {summary.summary}
+                    </p>
+                  </div>
+                )}
+
+                {analysis?.text ? (
+                  <div className="mt-2.5">
+                    <p className="font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
+                      Official analysis — {analysis.sourceOrg}
+                    </p>
+                    {/* Verbatim, whole, and scrollable — never excerpted. */}
+                    <p className="mt-1.5 max-h-72 overflow-y-auto whitespace-pre-line rounded border border-[var(--panel-border)] p-3 text-[0.75rem] leading-relaxed text-paper-dim">
+                      {analysis.text}
+                    </p>
+                  </div>
+                ) : (
+                  analysis?.extractionNote && (
+                    // Extraction failed: say so honestly and keep the link.
+                    <p className="mt-2 text-[0.75rem] leading-relaxed text-muted">
+                      We retrieved this measure&apos;s official analysis but
+                      couldn&apos;t extract its text — read it at the link
+                      below.
+                    </p>
+                  )
+                )}
+
+                {contest.scopeNote && (
+                  <p className="mt-2 text-[0.75rem] leading-relaxed text-muted">
+                    {contest.scopeNote}
+                  </p>
+                )}
+                <p className="mt-2 text-[0.6875rem]">
+                  <a
+                    href={analysis?.analysisUrl ?? contest.provenance.sourceUrl ?? undefined}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="underline decoration-dotted"
+                  >
+                    {analysis?.sourceOrg ?? contest.provenance.sourceOrg}
+                  </a>{" "}
+                  <span className="text-muted">
+                    · read{" "}
+                    {analysis
+                      ? analysis.retrievedAt.slice(0, 10)
+                      : contest.provenance.collectedAt}
+                  </span>
                 </p>
-              )}
-              <p className="mt-2 text-[0.6875rem]">
-                <a
-                  href={contest.provenance.sourceUrl ?? undefined}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="underline decoration-dotted"
-                >
-                  {contest.provenance.sourceOrg}
-                </a>{" "}
-                <span className="text-muted">
-                  · read {contest.provenance.collectedAt}
-                </span>
-              </p>
-            </div>
-          ))}
+              </div>
+            );
+          })}
         </section>
       )}
 

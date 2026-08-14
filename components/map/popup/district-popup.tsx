@@ -4,7 +4,6 @@ import { TIER_LABEL } from "@/lib/ocd/tiers";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { DistrictHit } from "@/lib/map/districts";
 
-import { OcdIdRow } from "./meeting-popup";
 import {
   NoValue,
   PopupCard,
@@ -27,8 +26,11 @@ interface DistrictPopupProps {
   representation?: SeatHolder[];
   /** Municipalities inside this division, where the registry knows them. */
   placesWithin?: string[];
-  /** Upcoming meetings on file for this division. */
-  upcomingMeetings: number;
+  /**
+   * Upcoming meetings on file for this division. Null means the fetch that
+   * would answer failed — "couldn't check" and 0 are different facts (2a).
+   */
+  upcomingMeetings: number | null;
   /** Opens the rep popup (3c) for a clicked name. */
   onOpenOfficial?: (holder: SeatHolder) => void;
   onExpand?: () => void;
@@ -49,13 +51,14 @@ export function DistrictPopup({
       type={district.typeLabel}
       tier={district.tier}
       title={district.label}
-      copyTitle={district.label}
       onExpand={onExpand}
+      expandLabel={`More about ${district.label}`}
       onClose={onClose}
     >
+      {/* No OCD-ID row: internal identifiers never render to readers (4a).
+          The identifier still keys everything behind this card. */}
       <PopupRow label="Type">{district.typeLabel}</PopupRow>
       <PopupRow label="Tier">{TIER_LABEL[district.tier]}</PopupRow>
-      <OcdIdRow ocdId={district.ocdId} />
 
       <PopupRow label="Places within" mono>
         {placesWithin === undefined ? (
@@ -68,7 +71,11 @@ export function DistrictPopup({
       </PopupRow>
 
       <PopupRow label="Upcoming" mono>
-        {upcomingMeetings}
+        {upcomingMeetings === null ? (
+          <NoValue>couldn&apos;t check</NoValue>
+        ) : (
+          upcomingMeetings
+        )}
       </PopupRow>
 
       <PopupSectionLabel>Representation</PopupSectionLabel>

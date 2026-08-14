@@ -960,6 +960,24 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   white-space: nowrap;
 }
 
+/* 6e: a category with nothing on the map right now stays in the key,
+   muted — the legend never mutates with the view. */
+.legend-item[data-muted="true"] {
+  opacity: 0.35;
+}
+
+/* 6g: every interactive element says so. */
+button:not(:disabled),
+a,
+select,
+summary,
+[role="button"],
+input[type="checkbox"],
+input[type="range"],
+label:has(> input[type="checkbox"]) {
+  cursor: pointer;
+}
+
 .legend-dot {
   width: 10px;
   height: 10px;
@@ -1083,13 +1101,31 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   color: var(--tier-accent, var(--accent-local));
 }
 
+/* The list is a LARGE popup, not a full-screen takeover (3): same centered
+   frame as .account-modal, same backdrop, same one-at-a-time rule. */
 .al-overlay {
   position: absolute;
   inset: 0;
   z-index: 1300;
-  background: var(--panel);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+}
+
+.al-panel {
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 680px;
+  max-height: min(80vh, 44rem);
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-popup);
+  overflow: hidden;
 }
 
 .al-overlay-header {

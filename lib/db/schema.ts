@@ -5,6 +5,7 @@ import {
   pgTable,
   text,
   timestamp,
+  uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
 
@@ -130,6 +131,7 @@ export const searchLog = pgTable(
         "MEETING_OPENED",
         "DISTRICT_SELECTED",
         "FILTER_APPLIED",
+        "OFFICIAL_OPENED",
       ],
     }).notNull(),
     /** Zip as entered. Orientation only — never resolved to a person. */
@@ -148,4 +150,63 @@ export const searchLog = pgTable(
     detail: jsonb("detail").$type<Record<string, string | number | boolean>>(),
   },
   (table) => [index("search_log_occurred_at_idx").on(table.occurredAt)],
+);
+
+/**
+ * Reactions — the third collection store, and the first user-writable one.
+ *
+ * The n-stores rule (CLAUDE.md): search log, reactions, and the future
+ * subscription store never join. Like the search log, this table is
+ * permanently identifier-free — no account, no device ID, no retained IP,
+ * no foreign key to anything. It records what a reader thought of a public
+ * record and roughly where they were looking, never who they are.
+ *
+ * The one engineering wrinkle, solved without identity: "changeable
+ * reaction" needs continuity. `reactionKeyHash` is the SHA-256 of a random
+ * key the reader's browser invented on its first reaction
+ * (`wtp.reaction_key` in localStorage). It relates a browser's reactions to
+ * each other — enabling overwrite-on-change — and to nothing else: it joins
+ * no other table, appears in no export, and clearing the browser's storage
+ * simply means prior rows can no longer be edited (they remain anonymous
+ * rows). Disclosed in exactly these terms on /transparency.
+ *
+ * `verificationTier` is present from row one so aggregates are tier-shaped
+ * from the first export: everything today is ANONYMOUS; LOCALITY_VERIFIED
+ * and VOTER_MATCHED are designed future tiers (T02), never claimed early.
+ */
+export const reactions = pgTable(
+  "reactions",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    occurredAt: timestamp("occurred_at", { withTimezone: true, mode: "string" }).notNull(),
+    /** What kind of record the reaction attaches to. Votes only, today. */
+    targetType: text("target_type", { enum: ["FEDERAL_VOTE"] }).notNull(),
+    /** The roll-call key (`house:119-2:283`) — validated against the votes snapshot. */
+    targetId: text("target_id").notNull(),
+    /** The one-tap answer. There is deliberately no free-text column yet. */
+    reaction: text("reaction", { enum: ["YES", "NO", "UNSURE"] }).notNull(),
+    /**
+     * Where the reader was looking, on the same approximate-location basis
+     * as the search log: divisions resolved from the map view, zip-level at
+     * finest. Never an address, never district truth.
+     */
+    ocdIds: jsonb("ocd_ids").$type<string[]>().notNull(),
+    divisionVintage: text("division_vintage").notNull(),
+    /** ANONYMOUS today; future tiers exist in the enum so no migration reshapes aggregates. */
+    verificationTier: text("verification_tier", {
+      enum: ["ANONYMOUS", "LOCALITY_VERIFIED", "VOTER_MATCHED"],
+    }).notNull(),
+    /** See header — browser continuity, not identity. Stored only hashed. */
+    reactionKeyHash: text("reaction_key_hash").notNull(),
+  },
+  (table) => [
+    // One reaction per browser key per target: a changed answer overwrites
+    // the prior one (upsert on this index), never accumulates.
+    uniqueIndex("reactions_key_target_unq").on(
+      table.reactionKeyHash,
+      table.targetType,
+      table.targetId,
+    ),
+    index("reactions_target_idx").on(table.targetType, table.targetId),
+  ],
 );

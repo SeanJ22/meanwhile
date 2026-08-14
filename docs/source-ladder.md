@@ -433,3 +433,44 @@ caught it).
 NOT_ATTEMPTED hunts enumerated in `data/ballot/candidate-links-2026.json`
 (the hunts array is the ladder record for candidates; D36 tracks finishing
 it). `attemptedAt: 2026-08-16` throughout.
+
+## The 2026-08-17 rung set (the final-prep session)
+
+**The NH TLS wall, retried with the author-ordered new rungs (2c):**
+
+- `gc.nh.gov` — curl.exe (schannel, a different TLS stack than Node) RESETS
+  the handshake identically: default profile, forced TLS 1.2, forced
+  HTTP/1.1 all fail before any HTTP. This is fingerprint-level filtering,
+  not a cipher mismatch. `attemptedAt: 2026-08-17`.
+- `gencourt.state.nh.us` / `www.gencourt.state.nh.us` — **DNS retired**
+  (NXDOMAIN from this machine). gc.nh.gov is the only General Court host;
+  every doc still citing gencourt.state.nh.us URLs describes dead paths.
+- The Wayback Machine rung — archive.org answered 429 (rate-limited) at
+  attempt time; not exhausted, retry stands open.
+- The real-browser rung — queued to this session's browser phase (a real
+  Chrome reading a public site; no auth, no wall circumvented — the site
+  serves browsers and refuses pipelines).
+- `sos.nh.gov` — **the recorded browser-UA rung has CLOSED since 08-16**:
+  Akamai (edgesuite reference page) now 403s curl even with a full Chrome
+  UA string. WebFetch also 403. Real-browser rung queued.
+
+**NH 2026 ballot measures (2a) — the enumeration so far** (secondary
+sources; official gc.nh.gov confirmation queued to the browser phase):
+CACR 6 (right to compute) ITL'd 2026-01-07; CACR 12 (broad-based-tax
+supermajority) passed Senate 16-8 but failed the House three-fifths
+2026-05-14 (193-148); CACR 14 (citizenship for office) failed 2026-03-05
+(182-157); CACR 15 (hunt/fish) failed 2026-03-11 (199-128); CACR 21
+(voting eligibility) failed 2026-03-11 (184-146); CACR 24 (parental
+privacy in education) failed 2026-03-11 (181-156); CACR 28 (public
+protestant teachers) killed in the House 2026-03-05. No CACR reached the
+ballot; the Ballotpedia "lead" resolves to the 2024 judicial-retirement
+question (defeated) and to proposed-but-failed 2026 CACRs.
+`attemptedAt: 2026-08-17`.
+
+**Candidate-card hunts (2b):** 18 cards curated (10 NH, 6 NJ, 2 AZ), every
+photo URL HEAD-verified `image/*`; misses and NOT_ATTEMPTED recorded in
+`data/ballot/candidate-cards-2026.json` hunts. New wall sightings:
+maggiefornh.com 403s this pipeline; house.gov / senate.gov /
+governor.nh.gov 403 non-browser clients. **The domain trap re-sighted:**
+andybiggs.com is a safari photographer, not the congressman — only the
+fetch-verified biggsforarizona.com is citable. `attemptedAt: 2026-08-17`.

@@ -28,7 +28,22 @@ export type OfficeType =
   | "school-board"
   | "superintendent"
   | "mayor"
-  | "city-council";
+  | "city-council"
+  | "select-board"
+  | "governor"
+  | "executive-councilor"
+  | "secretary-of-state"
+  | "attorney-general"
+  | "state-treasurer"
+  | "superintendent-public-instruction"
+  | "mine-inspector"
+  | "county-sheriff"
+  | "county-attorney"
+  | "county-treasurer"
+  | "register-of-deeds"
+  | "register-of-probate"
+  | "county-surrogate"
+  | "county-clerk";
 
 export interface OfficeBlurb {
   /** The plain-words explanation. The author's register, checked. */
@@ -87,6 +102,85 @@ export const OFFICE_BLURBS: Readonly<Record<OfficeType, OfficeBlurb>> = {
     basis: "The city's charter and state municipal statutes",
     basisUrl: null,
   },
+  // 2e (2026-08-17): the substitute-for-a-mayor case, explained rather than
+  // left as a gap. New England towns are run this way on purpose.
+  "select-board": {
+    text: "Your Select Board is the town's government — a few neighbors elected to run things between town meetings. They set the budget proposal, oversee town staff, and carry out what the annual town meeting votes. The biggest decisions — the budget itself, big purchases — are made by the voters at town meeting, not by the board. Call them about roads, town services, and anything the town runs.",
+    basis: "New Hampshire RSA 41 (town officers)",
+    basisUrl: "https://www.gencourt.state.nh.us/rsa/html/NHTOC/NHTOC-III-41.htm",
+  },
+  // 4b (2026-08-17): every office type on a covered ballot gets its
+  // explainer. Same register, same neutrality: the office, never the holder.
+  governor: {
+    text: "Your governor runs the state government — they propose the state budget, sign or veto laws the legislature passes, appoint agency heads and judges, and command the National Guard in a state emergency. They can't pass laws alone or change what your town does. Call their office when a state agency has failed you and nothing else has worked.",
+    basis: "The state constitution's executive article",
+    basisUrl: null,
+  },
+  "executive-councilor": {
+    text: "Your executive councilor is a New Hampshire oddity worth knowing: a five-member elected council that must approve the governor's big decisions — judges, agency heads, state contracts over $10,000, and pardons. The governor can't do those things without the Council's vote. Call them when a state contract, appointment, or pardon in your area is being decided.",
+    basis: "New Hampshire Constitution, Part 2, Articles 60–66",
+    basisUrl: "https://www.nh.gov/glance/executive-council.htm",
+  },
+  "secretary-of-state": {
+    text: "Your secretary of state runs elections — voter registration, polling rules, counting and certifying results — and keeps the state's official records, including business filings. They don't make election law; the legislature does. Call their office about registering to vote, running for office, or a problem at the polls.",
+    basis: "State statutes on elections and public records",
+    basisUrl: null,
+  },
+  "attorney-general": {
+    text: "Your attorney general is the state's lawyer — they prosecute major crimes, defend state agencies in court, enforce consumer-protection law, and issue legal opinions state agencies follow. They don't handle private disputes. Call their office to report a scam, fraud, or a business treating people unfairly.",
+    basis: "State statutes on the department of justice / law",
+    basisUrl: null,
+  },
+  "state-treasurer": {
+    text: "Your state treasurer is the state's banker — they hold and invest the state's money, manage its debt, and return unclaimed property to the people it belongs to. They don't decide how money is spent; the budget does. Their office is also where you check whether the state is holding money in your name.",
+    basis: "State statutes on the treasury",
+    basisUrl: null,
+  },
+  "superintendent-public-instruction": {
+    text: "Your state superintendent runs the state education department — distributing school funding by the legislature's formula, overseeing standards and testing, and certifying teachers. They don't run your local district; your school board does. Call the department about teacher certification or a dispute your district can't resolve.",
+    basis: "State education statutes",
+    basisUrl: null,
+  },
+  "mine-inspector": {
+    text: "Your state mine inspector — an elected office only Arizona has — inspects active and abandoned mines for safety, and runs the program that fences off the state's roughly 100,000 abandoned mine openings. Call their office to report a dangerous open mine shaft.",
+    basis: "Arizona Constitution, Article 19",
+    basisUrl: null,
+  },
+  "county-sheriff": {
+    text: "Your sheriff runs the county jail, patrols areas outside city police departments, serves court papers, and provides courtroom security. Inside a city, the city's police handle most calls. Call the sheriff's office for law-enforcement matters outside city limits, or anything about the county jail.",
+    basis: "State statutes on county officers",
+    basisUrl: null,
+  },
+  "county-attorney": {
+    text: "Your county attorney prosecutes crimes committed in the county and advises county government on the law. They decide which charges to bring — one of the most consequential local powers there is. They don't handle private lawsuits. Contact their office as a victim or witness in a county case.",
+    basis: "State statutes on county officers",
+    basisUrl: null,
+  },
+  "county-treasurer": {
+    text: "Your county treasurer collects property taxes, holds the county's money, and invests it until it's spent. They don't set your tax rate — budgets voted by other bodies do. Call them about paying a property-tax bill, not about how big it is.",
+    basis: "State statutes on county officers",
+    basisUrl: null,
+  },
+  "register-of-deeds": {
+    text: "Your register of deeds keeps the county's land records — every deed, mortgage, and lien on property in the county, on public file. Buying or selling property runs through this office. Call them to get a copy of a deed or check what's recorded against a property.",
+    basis: "State statutes on county officers",
+    basisUrl: null,
+  },
+  "register-of-probate": {
+    text: "Your register of probate keeps the county's records of wills, estates, and guardianships — the paperwork of the probate court. In New Hampshire the office's day-to-day duties now sit with the state court system, but the elected office remains on the ballot. Call the probate court about a will or an estate.",
+    basis: "New Hampshire RSA 548",
+    basisUrl: null,
+  },
+  "county-surrogate": {
+    text: "Your county surrogate — a New Jersey office — is the county's probate judge for uncontested matters: they admit wills, appoint executors and administrators of estates, and handle adoptions' court paperwork. Call their office when someone has died and you need authority to settle their affairs.",
+    basis: "New Jersey statutes, Title 3B",
+    basisUrl: null,
+  },
+  "county-clerk": {
+    text: "Your county clerk runs the county's elections paperwork — ballots, mail voting, candidate filings — and records official documents like deeds (in some states) and passports. Call them about a mail ballot, an election deadline, or certified copies of records.",
+    basis: "State statutes on county officers",
+    basisUrl: null,
+  },
 };
 
 /**
@@ -112,10 +206,82 @@ export function officeTypeForTitle(title: string): OfficeType | null {
   }
   if (t.includes("supervisor")) return "county-commissioner";
   if (t.includes("governing board")) return "school-board";
+  // 2e: the Selectboard maps to its own explainer, never a borrowed one.
+  if (t.includes("selectboard") || t.includes("select board")) {
+    return "select-board";
+  }
+  if (t === "governor") return "governor";
+  if (t.includes("executive council")) return "executive-councilor";
+  if (t === "secretary of state") return "secretary-of-state";
+  if (t === "attorney general") return "attorney-general";
+  if (t === "state treasurer" || t === "treasurer") return "state-treasurer";
+  if (t.includes("superintendent of public instruction")) {
+    return "superintendent-public-instruction";
+  }
+  if (t.includes("mine inspector")) return "mine-inspector";
+  if (t.includes("sheriff")) return "county-sheriff";
+  if (t.includes("county attorney")) return "county-attorney";
+  if (t.includes("county treasurer")) return "county-treasurer";
+  if (t.includes("register of deeds")) return "register-of-deeds";
+  if (t.includes("register of probate")) return "register-of-probate";
+  if (t.includes("surrogate")) return "county-surrogate";
+  if (t.includes("county clerk")) return "county-clerk";
+  if (t.includes("county commissioner")) return "county-commissioner";
   return null;
 }
 
 export function blurbForTitle(title: string): OfficeBlurb | null {
   const type = officeTypeForTitle(title);
+  return type ? OFFICE_BLURBS[type] : null;
+}
+
+/**
+ * Map a ballot contest's title — the filing's phrasing, which differs from
+ * roster titles ("Member of the United States Senate", "Representative in
+ * Congress, District 2") — to an office type (4b). County-specific offices
+ * check before their state-level cousins so "Merrimack County Treasurer"
+ * never reads as the state treasurer. An unmatched title gets no blurb
+ * rather than a guessed one.
+ */
+export function officeTypeForContestTitle(title: string): OfficeType | null {
+  const t = title.toLowerCase();
+  if (t.includes("united states senate") || t.includes("united states senator")) {
+    return "us-senator";
+  }
+  if (
+    t.includes("house of representatives") ||
+    t.includes("representative in congress") ||
+    t.includes("u.s. representative")
+  ) {
+    return "us-representative";
+  }
+  if (t.includes("county commissioner")) return "county-commissioner";
+  if (t.includes("board of education")) return "school-board";
+  if (t.includes("state senator")) return "state-senator";
+  if (t.includes("state representative")) return "state-representative";
+  if (t.includes("executive councilor")) return "executive-councilor";
+  if (t === "governor") return "governor";
+  if (t.includes("secretary of state")) return "secretary-of-state";
+  if (t.includes("attorney general")) return "attorney-general";
+  if (t.includes("county attorney")) return "county-attorney";
+  if (t.includes("county treasurer")) return "county-treasurer";
+  if (t.includes("state treasurer")) return "state-treasurer";
+  if (t.includes("superintendent of public instruction")) {
+    return "superintendent-public-instruction";
+  }
+  if (t.includes("mine inspector")) return "mine-inspector";
+  if (t.includes("sheriff")) return "county-sheriff";
+  if (t.includes("register of deeds")) return "register-of-deeds";
+  if (t.includes("register of probate")) return "register-of-probate";
+  if (t.includes("surrogate")) return "county-surrogate";
+  if (t.includes("county clerk")) return "county-clerk";
+  if (t.includes("select board") || t.includes("selectboard")) {
+    return "select-board";
+  }
+  return null;
+}
+
+export function blurbForContestTitle(title: string): OfficeBlurb | null {
+  const type = officeTypeForContestTitle(title);
   return type ? OFFICE_BLURBS[type] : null;
 }

@@ -33,7 +33,7 @@ import { makeRevizeSource } from "../lib/sources/revize/index.ts";
 import { legistarSource } from "../lib/sources/legistar/index.ts";
 import { makeOnBaseSource } from "../lib/sources/onbase/index.ts";
 import { mockSource } from "../lib/sources/mock/index.ts";
-import { wiringForTypes } from "../lib/registry/source-wiring.ts";
+import { SOURCE_WIRING, wiringForTypes } from "../lib/registry/source-wiring.ts";
 import type { Meeting, MeetingSource } from "../lib/sources/types.ts";
 
 const SOURCES: Record<string, () => MeetingSource<never>> = {
@@ -59,8 +59,23 @@ const SOURCES: Record<string, () => MeetingSource<never>> = {
 /** How many agenda documents one ingest run will fetch. Politeness, not coverage. */
 const AGENDA_RETRIEVAL_CAP = 8;
 
+/**
+ * A meeting's document URL: its own agenda link, or — for a scheduled
+ * meeting with none — the body's curated notice page (4c). The notice a
+ * board posts on its own site is the content a reader needs while the
+ * vendor portal's agenda is still unpublished.
+ */
+function documentUrlFor(meeting: Meeting): string | null {
+  if (meeting.agendaUrl) return meeting.agendaUrl;
+  if (meeting.status !== "SCHEDULED") return null;
+  const wired = SOURCE_WIRING.find(
+    (row) => row.noticeUrl && row.ocdId !== null && row.ocdId === meeting.ocdId,
+  );
+  return wired?.noticeUrl ?? null;
+}
+
 async function retrieveAgendas(meetings: Meeting[]) {
-  const withAgenda = meetings.filter((m) => m.agendaUrl);
+  const withAgenda = meetings.filter((m) => documentUrlFor(m));
   // Meetings with no stored document yet go first: the cap is politeness per
   // run, and the store is seeded from the previous snapshot, so over repeated
   // refreshes every agenda gets retrieved before any gets re-checked.
@@ -77,7 +92,11 @@ async function retrieveAgendas(meetings: Meeting[]) {
 
   for (const meeting of capped) {
     try {
-      const doc = await retrieveAgendaDocument(meeting);
+      const url = documentUrlFor(meeting);
+      const doc = await retrieveAgendaDocument(
+        meeting,
+        url && url !== meeting.agendaUrl ? { urlOverride: url } : {},
+      );
       if (!doc) continue;
       if (doc.extraction === "failed") {
         console.warn(

@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import { noticeSummaryFor } from "@/lib/meetings/notice-summaries";
+
 /**
  * What the meeting is actually about (4c) — the stored notice/agenda text,
  * rendered on the meeting surface instead of merely linked from it.
@@ -15,6 +17,7 @@ import { useEffect, useState } from "react";
 
 interface AgendaDocumentView {
   documentUrl: string;
+  contentHash: string;
   retrievedAt: string;
   contentType: string;
   extraction: "html" | "pdf" | "failed";
@@ -32,6 +35,20 @@ interface AgendaSectionProps {
 /** Case-insensitive; the phrase boards actually print on notices. */
 function hasPublicHearing(text: string): boolean {
   return /public hearing/i.test(text);
+}
+
+/**
+ * Stored rows extracted before the extractor learned numeric entities can
+ * carry `&times;`-style literals — decode at render so a legacy row never
+ * shows markup to a reader. (The extractor itself now decodes; this covers
+ * documents whose bytes haven't changed since.)
+ */
+function sanitizeStoredText(text: string): string {
+  return text
+    .replace(/&#x([0-9a-f]+);/gi, (_, hex) => String.fromCodePoint(parseInt(hex, 16)))
+    .replace(/&#(\d+);/g, (_, dec) => String.fromCodePoint(Number(dec)))
+    .replace(/&times;/gi, "×")
+    .replace(/&amp;/g, "&");
 }
 
 export function AgendaSection({ meetingId, agendaUrl }: AgendaSectionProps) {
@@ -132,8 +149,20 @@ export function AgendaSection({ meetingId, agendaUrl }: AgendaSectionProps) {
     );
   }
 
+  const summary = noticeSummaryFor(meetingId, latest.contentHash);
+
   return (
     <div className="mt-1.5">
+      {summary && (
+        // Curated from this exact document version (4d): labeled, above,
+        // never replacing the official text below.
+        <div className="mb-2 rounded bg-[var(--surface,rgba(255,255,255,0.04))] p-3">
+          <p className="font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
+            Plain-language summary — read the official text below
+          </p>
+          <p className="mt-1.5 text-[0.75rem] leading-relaxed">{summary.summary}</p>
+        </div>
+      )}
       {hasPublicHearing(latest.text) && (
         // The thing a reader most needs called out: the meeting takes
         // public input on something specific.
@@ -143,7 +172,7 @@ export function AgendaSection({ meetingId, agendaUrl }: AgendaSectionProps) {
         </p>
       )}
       <p className="max-h-56 overflow-y-auto whitespace-pre-line rounded border border-[var(--panel-border)] p-3 text-[0.75rem] leading-relaxed text-paper-dim">
-        {latest.text}
+        {sanitizeStoredText(latest.text)}
       </p>
       <p className="mt-1 text-[0.625rem] text-muted">
         From{" "}

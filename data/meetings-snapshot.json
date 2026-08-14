@@ -1,13 +1,13 @@
 {
  "formatVersion": 1,
- "generatedAt": "2026-08-13T21:01:28.899Z",
+ "generatedAt": "2026-08-14T03:15:58.391Z",
  "sources": [
   {
    "source": "legistar",
    "ok": true,
    "error": null,
-   "fetched": 9,
-   "normalized": 7,
+   "fetched": 7,
+   "normalized": 5,
    "drops": {
     "placeless": 2,
     "unknownVenue": 0,
@@ -59,7 +59,7 @@
    "ok": true,
    "error": null,
    "fetched": 3,
-   "normalized": 12,
+   "normalized": 11,
    "drops": {
     "placeless": 6,
     "unknownVenue": 0,
@@ -109,52 +109,6 @@
  ],
  "meetings": [
   {
-   "id": "legistar:pima:1820",
-   "ocdId": "ocd-division/country:us/state:az/county:pima",
-   "bodyName": "Board of Supervisors",
-   "title": "Study Session",
-   "startsAt": "2026-07-14T13:00:00-07:00",
-   "timeZone": "America/Phoenix",
-   "location": {
-    "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
-    "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701",
-    "lat": 32.221618,
-    "lng": -110.974036
-   },
-   "agendaUrl": "https://legistar.granicus.com/pima/meetings/2026/7/1820_A_Board_of_Supervisors_26-07-14_Online_Agenda.pdf",
-   "jurisdiction": "Pima County, AZ",
-   "status": "CONCLUDED",
-   "provenance": {
-    "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1820&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
-    "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-13T21:01:22.865Z",
-    "verifiedAt": null
-   }
-  },
-  {
-   "id": "legistar:pima:1821",
-   "ocdId": "ocd-division/country:us/state:az/county:pima",
-   "bodyName": "Board of Supervisors",
-   "title": "Board of Supervisors",
-   "startsAt": "2026-07-14T17:00:00-07:00",
-   "timeZone": "America/Phoenix",
-   "location": {
-    "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
-    "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701",
-    "lat": 32.221618,
-    "lng": -110.974036
-   },
-   "agendaUrl": "https://legistar.granicus.com/pima/meetings/2026/7/1821_A_Board_of_Supervisors_26-07-14_Online_Agenda.pdf",
-   "jurisdiction": "Pima County, AZ",
-   "status": "CONCLUDED",
-   "provenance": {
-    "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1821&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
-    "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-13T21:01:22.865Z",
-    "verifiedAt": null
-   }
-  },
-  {
    "id": "legistar:pima:1822",
    "ocdId": "ocd-division/country:us/state:az/county:pima",
    "bodyName": "Board of Supervisors",
@@ -173,7 +127,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1822&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-13T21:01:22.865Z",
+    "collectedAt": "2026-08-14T03:15:51.678Z",
     "verifiedAt": null
    }
   },
@@ -196,7 +150,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1823&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-13T21:01:22.865Z",
+    "collectedAt": "2026-08-14T03:15:51.678Z",
     "verifiedAt": null
    }
   },
@@ -219,7 +173,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1824&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-13T21:01:22.865Z",
+    "collectedAt": "2026-08-14T03:15:51.678Z",
     "verifiedAt": null
    }
   },
@@ -242,7 +196,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1854&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-13T21:01:22.865Z",
+    "collectedAt": "2026-08-14T03:15:51.678Z",
     "verifiedAt": null
    }
   },
@@ -265,7 +219,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1869&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-13T21:01:22.865Z",
+    "collectedAt": "2026-08-14T03:15:51.678Z",
     "verifiedAt": null
    }
   },
@@ -288,7 +242,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-13T21:01:22.299Z",
+    "collectedAt": "2026-08-14T03:15:51.156Z",
     "verifiedAt": null
    }
   },
@@ -311,7 +265,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-13T21:01:22.299Z",
+    "collectedAt": "2026-08-14T03:15:51.156Z",
     "verifiedAt": null
    }
   },
@@ -334,7 +288,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-13T21:01:22.299Z",
+    "collectedAt": "2026-08-14T03:15:51.156Z",
     "verifiedAt": null
    }
   },
@@ -357,7 +311,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-13T21:01:22.299Z",
+    "collectedAt": "2026-08-14T03:15:51.156Z",
     "verifiedAt": null
    }
   },
@@ -380,7 +334,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-13T21:01:22.299Z",
+    "collectedAt": "2026-08-14T03:15:51.156Z",
     "verifiedAt": null
    }
   },
@@ -403,7 +357,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-13T21:01:22.299Z",
+    "collectedAt": "2026-08-14T03:15:51.156Z",
     "verifiedAt": null
    }
   },
@@ -426,7 +380,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-13T21:01:22.299Z",
+    "collectedAt": "2026-08-14T03:15:51.156Z",
     "verifiedAt": null
    }
   },
@@ -449,7 +403,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-13T21:01:22.299Z",
+    "collectedAt": "2026-08-14T03:15:51.156Z",
     "verifiedAt": null
    }
   },
@@ -472,7 +426,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-13T21:01:22.299Z",
+    "collectedAt": "2026-08-14T03:15:51.156Z",
     "verifiedAt": null
    }
   },
@@ -495,7 +449,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1946&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T21:01:22.902Z",
+    "collectedAt": "2026-08-14T03:15:52.524Z",
     "verifiedAt": null
    }
   },
@@ -518,7 +472,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1957&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T21:01:22.902Z",
+    "collectedAt": "2026-08-14T03:15:52.524Z",
     "verifiedAt": null
    }
   },
@@ -541,7 +495,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1981&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T21:01:22.902Z",
+    "collectedAt": "2026-08-14T03:15:52.524Z",
     "verifiedAt": null
    }
   },
@@ -564,7 +518,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1942&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T21:01:22.902Z",
+    "collectedAt": "2026-08-14T03:15:52.524Z",
     "verifiedAt": null
    }
   },
@@ -587,7 +541,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1927&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T21:01:22.902Z",
+    "collectedAt": "2026-08-14T03:15:52.524Z",
     "verifiedAt": null
    }
   },
@@ -610,7 +564,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1943&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T21:01:22.902Z",
+    "collectedAt": "2026-08-14T03:15:52.524Z",
     "verifiedAt": null
    }
   },
@@ -633,7 +587,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1928&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T21:01:22.902Z",
+    "collectedAt": "2026-08-14T03:15:52.524Z",
     "verifiedAt": null
    }
   },
@@ -656,7 +610,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1945&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T21:01:22.902Z",
+    "collectedAt": "2026-08-14T03:15:52.524Z",
     "verifiedAt": null
    }
   },
@@ -679,7 +633,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1956&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T21:01:22.902Z",
+    "collectedAt": "2026-08-14T03:15:52.524Z",
     "verifiedAt": null
    }
   },
@@ -702,7 +656,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T21:01:22.702Z",
+    "collectedAt": "2026-08-14T03:15:51.398Z",
     "verifiedAt": null
    }
   },
@@ -725,7 +679,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T21:01:22.702Z",
+    "collectedAt": "2026-08-14T03:15:51.398Z",
     "verifiedAt": null
    }
   },
@@ -748,7 +702,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T21:01:22.702Z",
+    "collectedAt": "2026-08-14T03:15:51.398Z",
     "verifiedAt": null
    }
   },
@@ -771,7 +725,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T21:01:22.702Z",
+    "collectedAt": "2026-08-14T03:15:51.398Z",
     "verifiedAt": null
    }
   },
@@ -794,7 +748,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T21:01:22.702Z",
+    "collectedAt": "2026-08-14T03:15:51.398Z",
     "verifiedAt": null
    }
   },
@@ -817,7 +771,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T21:01:22.702Z",
+    "collectedAt": "2026-08-14T03:15:51.398Z",
     "verifiedAt": null
    }
   },
@@ -840,7 +794,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T21:01:22.702Z",
+    "collectedAt": "2026-08-14T03:15:51.398Z",
     "verifiedAt": null
    }
   },
@@ -863,7 +817,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T21:01:22.702Z",
+    "collectedAt": "2026-08-14T03:15:51.398Z",
     "verifiedAt": null
    }
   },
@@ -886,7 +840,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T21:01:22.702Z",
+    "collectedAt": "2026-08-14T03:15:51.398Z",
     "verifiedAt": null
    }
   },
@@ -909,7 +863,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T21:01:22.702Z",
+    "collectedAt": "2026-08-14T03:15:51.398Z",
     "verifiedAt": null
    }
   },
@@ -932,7 +886,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T21:01:22.702Z",
+    "collectedAt": "2026-08-14T03:15:51.398Z",
     "verifiedAt": null
    }
   },
@@ -955,7 +909,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T21:01:22.702Z",
+    "collectedAt": "2026-08-14T03:15:51.398Z",
     "verifiedAt": null
    }
   },
@@ -978,7 +932,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T21:01:22.702Z",
+    "collectedAt": "2026-08-14T03:15:51.398Z",
     "verifiedAt": null
    }
   },
@@ -1001,7 +955,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T21:01:22.702Z",
+    "collectedAt": "2026-08-14T03:15:51.398Z",
     "verifiedAt": null
    }
   },
@@ -1024,7 +978,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T21:01:22.702Z",
+    "collectedAt": "2026-08-14T03:15:51.398Z",
     "verifiedAt": null
    }
   },
@@ -1047,7 +1001,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T21:01:22.702Z",
+    "collectedAt": "2026-08-14T03:15:51.398Z",
     "verifiedAt": null
    }
   },
@@ -1070,7 +1024,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-13T21:01:22.702Z",
+    "collectedAt": "2026-08-14T03:15:51.398Z",
     "verifiedAt": null
    }
   },
@@ -1093,7 +1047,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-13T21:01:23.993Z",
+    "collectedAt": "2026-08-14T03:15:52.623Z",
     "verifiedAt": null
    }
   },
@@ -1116,7 +1070,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-13T21:01:23.993Z",
+    "collectedAt": "2026-08-14T03:15:52.623Z",
     "verifiedAt": null
    }
   },
@@ -1139,7 +1093,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-13T21:01:23.993Z",
+    "collectedAt": "2026-08-14T03:15:52.623Z",
     "verifiedAt": null
    }
   },
@@ -1162,7 +1116,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-13T21:01:23.993Z",
+    "collectedAt": "2026-08-14T03:15:52.623Z",
     "verifiedAt": null
    }
   },
@@ -1185,7 +1139,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-13T21:01:23.993Z",
+    "collectedAt": "2026-08-14T03:15:52.623Z",
     "verifiedAt": null
    }
   },
@@ -1208,7 +1162,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=493",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-13T21:01:22.899Z",
+    "collectedAt": "2026-08-14T03:15:51.323Z",
     "verifiedAt": null
    }
   },
@@ -1231,7 +1185,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=496",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-13T21:01:22.899Z",
+    "collectedAt": "2026-08-14T03:15:51.323Z",
     "verifiedAt": null
    }
   },
@@ -1254,7 +1208,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=492",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-13T21:01:22.899Z",
+    "collectedAt": "2026-08-14T03:15:51.323Z",
     "verifiedAt": null
    }
   },
@@ -1277,7 +1231,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=485",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-13T21:01:22.899Z",
+    "collectedAt": "2026-08-14T03:15:51.323Z",
     "verifiedAt": null
    }
   },
@@ -1300,30 +1254,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=489",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-13T21:01:22.899Z",
-    "verifiedAt": null
-   }
-  },
-  {
-   "id": "diligent:tusd1:484",
-   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
-   "bodyName": "GOVERNING BOARD AGENDA REGULAR MEETING",
-   "title": "GOVERNING BOARD AGENDA REGULAR MEETING - Jul 14 2026",
-   "startsAt": "2026-07-14T16:30:00-07:00",
-   "timeZone": "America/Phoenix",
-   "location": {
-    "name": "Duffy Community Center, Multipurpose Room",
-    "address": "5145 E. 5th Street, Tucson, AZ 85711",
-    "lat": 32.228998,
-    "lng": -110.883029
-   },
-   "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=484",
-   "jurisdiction": "Tucson Unified School District, AZ",
-   "status": "CONCLUDED",
-   "provenance": {
-    "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=484",
-    "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-13T21:01:22.899Z",
+    "collectedAt": "2026-08-14T03:15:51.323Z",
     "verifiedAt": null
    }
   },
@@ -1346,7 +1277,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3371",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-13T21:01:23.413Z",
+    "collectedAt": "2026-08-14T03:15:51.675Z",
     "verifiedAt": null
    }
   },
@@ -1369,7 +1300,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3370",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-13T21:01:23.413Z",
+    "collectedAt": "2026-08-14T03:15:51.675Z",
     "verifiedAt": null
    }
   },
@@ -1392,7 +1323,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3368",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-13T21:01:23.413Z",
+    "collectedAt": "2026-08-14T03:15:51.675Z",
     "verifiedAt": null
    }
   },
@@ -1415,7 +1346,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=705",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-13T21:01:23.892Z",
+    "collectedAt": "2026-08-14T03:15:52.095Z",
     "verifiedAt": null
    }
   },
@@ -1438,7 +1369,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=707",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-13T21:01:23.892Z",
+    "collectedAt": "2026-08-14T03:15:52.095Z",
     "verifiedAt": null
    }
   },
@@ -1461,7 +1392,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=706",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-13T21:01:23.892Z",
+    "collectedAt": "2026-08-14T03:15:52.095Z",
     "verifiedAt": null
    }
   },
@@ -1484,7 +1415,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T21:01:22.222Z",
+    "collectedAt": "2026-08-14T03:15:51.067Z",
     "verifiedAt": null
    }
   },
@@ -1507,7 +1438,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T21:01:22.222Z",
+    "collectedAt": "2026-08-14T03:15:51.067Z",
     "verifiedAt": null
    }
   },
@@ -1530,7 +1461,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T21:01:22.222Z",
+    "collectedAt": "2026-08-14T03:15:51.067Z",
     "verifiedAt": null
    }
   },
@@ -1553,7 +1484,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T21:01:22.271Z",
+    "collectedAt": "2026-08-14T03:15:51.122Z",
     "verifiedAt": null
    }
   },
@@ -1576,7 +1507,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T21:01:22.271Z",
+    "collectedAt": "2026-08-14T03:15:51.122Z",
     "verifiedAt": null
    }
   },
@@ -1599,15 +1530,15 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T21:01:22.271Z",
+    "collectedAt": "2026-08-14T03:15:51.122Z",
     "verifiedAt": null
    }
   },
   {
    "id": "clerksboards:23:2026-08-05",
    "ocdId": "ocd-division/country:us/state:az/place:tucson",
-   "bodyName": "Citizens&#x27; Water Advisory Committee",
-   "title": "Citizens&#x27; Water Advisory Committee",
+   "bodyName": "Citizens' Water Advisory Committee",
+   "title": "Citizens' Water Advisory Committee",
    "startsAt": "2026-08-05T08:00:00-07:00",
    "timeZone": "America/Phoenix",
    "location": {
@@ -1622,15 +1553,15 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T21:01:22.319Z",
+    "collectedAt": "2026-08-14T03:15:51.181Z",
     "verifiedAt": null
    }
   },
   {
    "id": "clerksboards:23:2026-09-02",
    "ocdId": "ocd-division/country:us/state:az/place:tucson",
-   "bodyName": "Citizens&#x27; Water Advisory Committee",
-   "title": "Citizens&#x27; Water Advisory Committee",
+   "bodyName": "Citizens' Water Advisory Committee",
+   "title": "Citizens' Water Advisory Committee",
    "startsAt": "2026-09-02T08:00:00-07:00",
    "timeZone": "America/Phoenix",
    "location": {
@@ -1645,15 +1576,15 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T21:01:22.319Z",
+    "collectedAt": "2026-08-14T03:15:51.181Z",
     "verifiedAt": null
    }
   },
   {
    "id": "clerksboards:23:2026-10-07",
    "ocdId": "ocd-division/country:us/state:az/place:tucson",
-   "bodyName": "Citizens&#x27; Water Advisory Committee",
-   "title": "Citizens&#x27; Water Advisory Committee",
+   "bodyName": "Citizens' Water Advisory Committee",
+   "title": "Citizens' Water Advisory Committee",
    "startsAt": "2026-10-07T08:00:00-07:00",
    "timeZone": "America/Phoenix",
    "location": {
@@ -1668,7 +1599,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T21:01:22.319Z",
+    "collectedAt": "2026-08-14T03:15:51.181Z",
     "verifiedAt": null
    }
   },
@@ -1691,7 +1622,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T21:01:22.370Z",
+    "collectedAt": "2026-08-14T03:15:51.246Z",
     "verifiedAt": null
    }
   },
@@ -1714,7 +1645,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T21:01:22.370Z",
+    "collectedAt": "2026-08-14T03:15:51.246Z",
     "verifiedAt": null
    }
   },
@@ -1737,7 +1668,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T21:01:22.370Z",
+    "collectedAt": "2026-08-14T03:15:51.246Z",
     "verifiedAt": null
    }
   },
@@ -1760,7 +1691,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T21:01:22.408Z",
+    "collectedAt": "2026-08-14T03:15:51.324Z",
     "verifiedAt": null
    }
   },
@@ -1783,7 +1714,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T21:01:22.408Z",
+    "collectedAt": "2026-08-14T03:15:51.324Z",
     "verifiedAt": null
    }
   },
@@ -1806,7 +1737,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-13T21:01:22.408Z",
+    "collectedAt": "2026-08-14T03:15:51.324Z",
     "verifiedAt": null
    }
   },
@@ -1829,7 +1760,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2240",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-13T21:01:22.749Z",
+    "collectedAt": "2026-08-14T03:15:51.400Z",
     "verifiedAt": null
    }
   },
@@ -1852,7 +1783,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2236",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-13T21:01:22.749Z",
+    "collectedAt": "2026-08-14T03:15:51.400Z",
     "verifiedAt": null
    }
   },
@@ -1875,7 +1806,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2241",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-13T21:01:22.749Z",
+    "collectedAt": "2026-08-14T03:15:51.400Z",
     "verifiedAt": null
    }
   },
@@ -1898,7 +1829,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2242",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-13T21:01:22.749Z",
+    "collectedAt": "2026-08-14T03:15:51.400Z",
     "verifiedAt": null
    }
   },
@@ -1921,7 +1852,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2243",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-13T21:01:22.749Z",
+    "collectedAt": "2026-08-14T03:15:51.400Z",
     "verifiedAt": null
    }
   },
@@ -1944,7 +1875,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2244",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-13T21:01:22.749Z",
+    "collectedAt": "2026-08-14T03:15:51.400Z",
     "verifiedAt": null
    }
   },
@@ -1967,7 +1898,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2245",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-13T21:01:22.749Z",
+    "collectedAt": "2026-08-14T03:15:51.400Z",
     "verifiedAt": null
    }
   },
@@ -1990,7 +1921,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2246",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-13T21:01:22.749Z",
+    "collectedAt": "2026-08-14T03:15:51.400Z",
     "verifiedAt": null
    }
   },
@@ -2013,7 +1944,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2247",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-13T21:01:22.749Z",
+    "collectedAt": "2026-08-14T03:15:51.400Z",
     "verifiedAt": null
    }
   },
@@ -2036,7 +1967,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2248",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-13T21:01:22.749Z",
+    "collectedAt": "2026-08-14T03:15:51.400Z",
     "verifiedAt": null
    }
   },
@@ -2059,44 +1990,12 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-13T21:01:22.440Z",
+    "collectedAt": "2026-08-14T03:15:51.229Z",
     "verifiedAt": null
    }
   }
  ],
  "agendaDocuments": [
-  {
-   "id": "legistar:pima:1820@eedf451dbaa35f95118c00237ecc7252b9181201ccd4ba5028b24d4bd0c7623f",
-   "meetingId": "legistar:pima:1820",
-   "ocdId": "ocd-division/country:us/state:az/county:pima",
-   "documentUrl": "https://legistar.granicus.com/pima/meetings/2026/7/1820_A_Board_of_Supervisors_26-07-14_Online_Agenda.pdf",
-   "contentHash": "eedf451dbaa35f95118c00237ecc7252b9181201ccd4ba5028b24d4bd0c7623f",
-   "retrievedAt": "2026-08-13T18:43:08.982Z",
-   "contentType": "application/pdf",
-   "sourceUrl": "https://legistar.granicus.com/pima/meetings/2026/7/1820_A_Board_of_Supervisors_26-07-14_Online_Agenda.pdf",
-   "sourceOrg": "Pima County Clerk of the Board",
-   "collectedAt": "2026-08-13T18:43:08.982Z",
-   "verifiedAt": null,
-   "text": "Board of Supervisors Pima County Meeting Agenda MEETING LOCATION Administration Bldg - East 130 W. Congress Street 1st Floor Tucson, AZ 85701 Public Access to Hearing Room at 12:40 p.m. Board of Supervisors' Hearing Room 1:00 PM Tuesday, July 14, 2026 Study Session PIMA COUNTY BOARD OF SUPERVISORS Jennifer Allen, Chair, District 3 Dr. Matt Heinz, Vice Chair, District 2 Rex Scott, Member, District 1 Steve Christy, Member, District 4 Andrés Cano, Member, District 5 AGENDA/ADDENDUM AND BROADCAST INFORMATION At least 24 hours before each scheduled meeting, the agenda/addendum is available online at www.pima.gov and in the Clerk of the Board’s Office, 130 W. Congress Street, 1st Floor, Tucson, AZ 85701, Mon-Fri, 8am to 5pm. Cable Channels: Cox 96 Webcast: www.pima.gov PUBLIC COMMENTS Written comments to the Board of Supervisors regarding the agenda items can be submitted to COB_mail@pima.gov. All comments will be provided to the Board of Supervisors. HEARING ROOM NOTICE Law permits that a video and/or audio recording of all or part of this meeting may be made if doing so does not interfere with the conduct of the meeting. Pima County has no control over the use and distribution of any such recordings. In addition to the official meeting proceedings, these recordings may include images of and comments made by the public prior to the start, during a recess and after adjournment of the meeting, and may be posted on social media or other internet sites. ACCESSIBILITY The Board Hearing Room is wheelchair and handicapped accessible. Any person who is in need of special services (e.g., assistive listening device, Braille or large print agenda material, signer for hearing impaired, accessible parking, etc.) due to any disability will be accommodated. Please contact the Clerk of the Board at (520) 724-8449 for these services at least three (3) business days prior to the Board Meeting. Page 1 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda Clerk's Note: Members of the Pima County Board of Supervisors will attend either in person or by telephone, video or internet conferencing. The meeting can be streamed via the following links: BOS Agenda July 14, 2026 (http://pima.granicus.com/ViewPublisher.php?view_id=3), on YouTube (https://www.youtube.com/c/PimaCountyArizona/), or via Cox Cable Channel 96. Television viewing will be available in the lobby at 130 West Congress, 1st Floor. 1. ROLL CALL 2. AGENDA ADJUSTMENTS EXECUTIVE SESSION (Clerk's Note: As of the posting date of 7/8/26, no executive session item has been placed on the study session agenda. However, this is subject to any addendum. Pursuant to A.R.S. §38-431.03(A)(3) the Board of Supervisors, or the Board sitting as other boards, may vote to go into executive session for the purpose of obtaining legal advice from its counsel with respect to any item listed on this agenda or any addendum thereto.) BOARD OF SUPERVISORS 3. UNFINISHED BUSINESS (6/9/26) Staffing Processes and Vacancy Policy 1. Discussion with County Administrator and Deputy County Administrators as to how staffing requests are analyzed and discussed with elected officials and department directors during the annual budgeting process. Also, discussion with same as to how staffing is discussed and monitored by administration throughout the rest of the year. 2. Discussion with County Administrator and Deputy County Administrators regarding the existing vacancy policy, how/why its current version was developed and if revisions to the current version should be considered. (District 1) BOS_StaffingProcessesVacancyPolicy_Dist1Submittal BOS_StaffVacPolQuestions_Dist1Submittal_7-8-26 BOS_StaffingProcessesVacancyPolicy_Slides_7-9-26 Attachments: 4. Board of Supervisors Representative Updates on Boards, Committees and Commissions and Any Other Municipalities 5. PLAZA Mobile Market Presentation (UA Garden Kitchen) Discussion/Direction: PLAZA Mobile Market, a program of the UA Garden Kitchen, is an affordable mobile market that supports both access to fresh local foods in under-resourced communities and economic development for small local farmers, including mostly refugee farmers. Historically Page 2 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda providing weekly mobile markets at both the Valencia and Quincie Douglas Pima County Library locations, PLAZA Mobile Market is under threat of going away entirely because of the cuts to the SNAP-Ed program in HR1, the One Big Beautiful Bill. Presentation from Jenn Parlin and Meredith Glaubach of the UA Garden Kitchen regarding the history of this impactful and unique program, current challenges, and the road ahead. (District 2) BOS_PLAZAMobileMarketPres_Dist2Submittal BOS_PLAZAMobileMarketPres_Slides_7-10-26 BOS_PLAZAMobileMarketOverview_7-10-26 BOS_AZDeptHealthServicesCommentLetter_7-10-26 Attachments: COUNTY ADMINISTRATOR 6. UNFINISHED BUSINESS (6/9/26) Pima County Climate Action Update Update of Pima County’s Climate Action Plan, as requested by the Board of Supervisors. CA_CAMemo_ClimateActionUpdate_Slides_6-5-26 CA_ClimateActionUpdate_CommLtrs_6-8-26_Redacted CA_CAMemo_ClimateActionUpdate_6-30-26 Attachments: 7. Update on County Initiatives to Address Homelessness and Public Safety CA_CAMemo_DetaineeandCrisisSystemsUpdate_7-9-26 CA_DetaineeandCrisisSystemsUpdate_Slides_7-9-26 Attachments: COMMUNITY AND WORKFORCE DEVELOPMENT 8. Prosperity Initiative: Measuring Progress Update on the Prosperity Initiative measurement of progress. CWD_ProsperityInitiativeMeasuringProg CWD_ProsperityInitiativeMeasuringProg_Slides_7-9-26 Attachments: FINANCE AND RISK MANAGEMENT 9. Monthly Financial Update Discussion regarding a monthly financial update on the County's financial performance. FN_CAMemo_MonthlyFinancialUpdate_7-9-26 FN_MonthlyFinancialUpdate_Slides_7-9-26 Attachments: 10. ADJOURNMENT Page 3 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda POSTED: 130 W. Congress Street, 1st Floor Tucson, AZ 85701 Pima County Homepage: www.pima.gov DATE/TIME POSTED: 7/8/26 @ 3:00 p.m. DATE/TIME REPOSTED (additional attachments only): 7/9/26 @ 4:00 p.m. DATE/TIME REPOSTED (additional attachments only): 7/9/26 @ 4:45 p.m. DATE/TIME REPOSTED (additional attachments only): 7/10/26 @ 8:45 a.m. DATE/TIME REPOSTED (additional attachments only): 7/10/26 @ 4:45 p.m. DATE/TIME REPOSTED (combined Agenda/Addendum): 7/13/26 @ 5:00 p.m. Page 4 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda ADDENDUM 1 EXECUTIVE SESSION 1. Pursuant to A.R.S. §38-431.03(A)(3), for legal advice and discussion regarding the filling of the Pima County Treasurer vacancy and related matters. PCA_ExecSession-PCTreasurerVacancyandRelatedMatters Attachments: 2. Pursuant to A.R.S. §38-431.03(A)(3) and (4), for legal advice and direction regarding former County Treasurer allegations and investigation. PCA_ExecSession-PCTreasurerAllegationsInvestigation Attachments: 3. Pursuant to A.R.S. §38-431.03(A)(1), for discussion or consideration of employment of a public officer, regarding the County Administrator position. PCA_ExecSession-CountyAdministratorPosition Attachments: POSTED: 1st Floor, 130 W. Congress Street, Tucson, AZ 85701 Pima County Homepage: www.pima.gov DATE/TIME POSTED: 7/10/26 @ 11:00 a.m. Page 5 Pima County Printed on 7/13/2026",
-   "extraction": "pdf",
-   "extractionNote": null
-  },
-  {
-   "id": "legistar:pima:1821@7453d87ec34c672267a768379f052daa09816a1c61aa5f133a9d822c104aa036",
-   "meetingId": "legistar:pima:1821",
-   "ocdId": "ocd-division/country:us/state:az/county:pima",
-   "documentUrl": "https://legistar.granicus.com/pima/meetings/2026/7/1821_A_Board_of_Supervisors_26-07-14_Online_Agenda.pdf",
-   "contentHash": "7453d87ec34c672267a768379f052daa09816a1c61aa5f133a9d822c104aa036",
-   "retrievedAt": "2026-08-13T18:43:10.097Z",
-   "contentType": "application/pdf",
-   "sourceUrl": "https://legistar.granicus.com/pima/meetings/2026/7/1821_A_Board_of_Supervisors_26-07-14_Online_Agenda.pdf",
-   "sourceOrg": "Pima County Clerk of the Board",
-   "collectedAt": "2026-08-13T18:43:10.097Z",
-   "verifiedAt": null,
-   "text": "Board of Supervisors Pima County Meeting Agenda MEETING LOCATION Administration Bldg - East 130 W. Congress Street 1st Floor Tucson, AZ 85701 Public Access to Hearing Room at 4:40 p.m. Board of Supervisors' Hearing Room 5:00 PM Tuesday, July 14, 2026 PIMA COUNTY BOARD OF SUPERVISORS Jennifer Allen, Chair, District 3 Dr. Matt Heinz, Vice Chair, District 2 Rex Scott, Member, District 1 Steve Christy, Member, District 4 Andrés Cano, Member, District 5 AGENDA/ADDENDUM AND BROADCAST INFORMATION At least 24 hours before each scheduled meeting, the agenda/addendum is available online at www.pima.gov and in the Clerk of the Board’s Office, 130 W. Congress Street, 1st Floor, Tucson, AZ 85701, Mon-Fri, 8am to 5pm. Cable Channels: Cox 96 Webcast: www.pima.gov PUBLIC PARTICIPATION SPEAKERS ARE LIMITED UP TO 3 MINUTES To address the Board of Supervisors, please complete a Speaker’s Card. Clearly print your name/address, the item number and other requested information. Speaker Card(s) are required for Call to the Public and Public Hearing Items. Once completed submit your Speaker Card(s) to Clerk staff. When the Chair announces your name, step forward to the podium and state your name for the record. The Chair reserves the right to ensure all testimony is pertinent or non-repetitive so matters are handled fairly and expeditiously. All attendees are advised that the Board of Supervisors strongly adhere to the Board of Supervisors Rules and Regulations. Outbursts, breaches of peace, boisterous conduct or other unlawful interference will result in that individual being asked to leave the meeting room. Any questions pertaining to the meeting can be directed to Melissa Manriquez, Clerk of the Board. HEARING ROOM NOTICE Law permits that a video and/or audio recording of all or part of this meeting may be made if doing so does not interfere with the conduct of the meeting. Pima County has no control over the use and distribution of any such recordings. In addition to the official meeting proceedings, these recordings may include images of and comments made by the public prior to the start, during a recess and after adjournment of the meeting, and may be posted on social media or other internet sites. ACCESSIBILITY The Board Hearing Room is wheelchair and handicapped accessible. Any person who is in need of special services (e.g., assistive listening device, Braille or large print agenda material, signer for hearing impaired, accessible parking, etc.) due to any disability will be accommodated. Please contact the Clerk of the Board at (520) 724-8449 for these services at least three (3) business days prior to the Board Meeting. Page 1 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda Clerk's Note: Members of the Pima County Board of Supervisors will attend either in person or by telephone, video or internet conferencing. The meeting can be streamed via the following links: BOS Agenda July 14, 2026 (http://pima.granicus.com/ViewPublisher.php?view_id=3), on YouTube (https://www.youtube.com/c/PimaCountyArizona/), or via Cox Cable Channel 96. Television viewing will be available in the lobby at 130 West Congress, 1st Floor. 1. ROLL CALL 2. PLEDGE OF ALLEGIANCE 3. LAND ACKNOWLEDGEMENT STATEMENT To be offered by Carmen Jones, Director of Operations, JobPath. 4. PAUSE 4 PAWS 5. CURRENT EVENTS/PUBLIC ACKNOWLEDGEMENTS 6. AGENDA ADJUSTMENTS PRESENTATION 7. County Supervisors Association (CSA) Presentation Update provided by the CSA and Michael Racy on the Second Session of the Fifty-Seventh Arizona Legislature, and presentation of an award to thank and honor Arizona Legislative District 21 Representative Stephanie Stahl-Hamilton. CA_CAMemo_CSAPresentation CA_CSAPresentation_CommLtr_7-13-26_Redacted Attachments: PRESENTATION/PROCLAMATION 8. Presentation of a proclamation to Meghan Brajevich and Chris Desborough, Office of Council Member Paul Cunningham, Ward 2, proclaiming the month of July 2026 to be: \"DISABILITY PRIDE MONTH\" PROC_DisabiltyPrideMonth Attachments: Page 2 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda 9. CALL TO THE PUBLIC Individuals wishing to participate telephonically at Call to the Public must contact the Clerk of the Board’s Office at 520-724-8449, to register their request and obtain remote access information, by the deadline of Monday, July 13, 2026 at 5:00 p.m. Call to the Public shall be scheduled for one hour each meeting unless extended by a majority vote of the Board of Supervisors. Speakers shall have up to three minutes to speak. However, for any meeting where 20 or more individuals have submitted speaker cards, each speaker's time shall be limited to two minutes. Please be aware that you may not be called upon to speak if the time for Call to the Public expires and is not extended by a majority vote of the Board of Supervisors. eComments can also be submitted to COB_mail@pima.gov. EXECUTIVE SESSION (Clerk's Note: As of the posting date of 7/8/26, no executive session item has been placed on the regular agenda. However, this is subject to any addendum. Pursuant to A.R.S. §38-431.03(A)(3) the Board of Supervisors, or the Board sitting as other boards, may vote to go into executive session for the purpose of obtaining legal advice from its counsel with respect to any item listed on this agenda or any addendum thereto.) BOARD OF SUPERVISORS SITTING AS OTHER BOARDS FLOOD CONTROL DISTRICT BOARD 10. Contract Solis Engineering Co., L.L.C., Amendment No. 2, to provide for Design Engineering Services: Drexel to Valencia East Bank Restoration, extend contract term to 12/31/29, amend contractual language and scope of services, Regional Flood Control District Tax Levy Fund, contract amount $593,247.02 (PO2600002611) Administering Department: Regional Flood Control District PO2600002611 Attachments: 11. Contract Promax Enterprises, L.L.C., to provide an acquisition agreement and warranty deed for approximately 28.86 acres of vacant land within the Brawley Wash sheet flood area, situated north of west Mile Wide Road and east of Sandario Road, FC-Floodprone Land Acquisition Program Fund, contract amount $555,000.00 (PO2600020277) PO2600020277 Attachments: Page 3 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda 12. Grant Acceptance United States Department of Agriculture, Amendment No. 7, to provide for the FC-USDA-Brawley Wash - OT2022 to develop a watershed restoration plan for the Brawley Wash, extend grant term to 12/31/26 and amend grant language, $16,201.00 (GA-FC-66009) GA-FC-66009 Attachments: SITTING AS THE BOARD OF SUPERVISORS *** HEARINGS *** Individuals wishing to address the Board on a Public Hearing item, but wish to participate remotely, can contact the Clerk of the Board's Office at 520-724-8449, to obtain remote access information. FRANCHISE/LICENSE/PERMIT 13. Hearing - Liquor License Job No. 399188, Kevin Arnold Kramber, Frida American Brasserie, 2905 E. Skyline Drive, No. 168, Tucson, Series 12, Restaurant, New License. FLP_LLFridaAmericanBrasserie Attachments: 14. Hearing - Liquor License Job No. 399547, Victor Hugo Huacuja Braun, Ragazzi Northern Italian Cuisine, 101 S. La Canada Drive, No. 51, Green Valley, Series 12, Restaurant, New License. FLP_LLRagazziNorthernItalianCuisine Attachments: 15. Hearing - Liquor License Job No. 399839, Ryan Witner Anderson, QuikTrip, No. 1455, 4602 W. Ajo Highway, Tucson, Series 10, Beer and Wine Store, New License. FLP_LLQuikTripNo.1455 Attachments: 16. Hearing - Liquor License Job No. 397910, Alejandro Garcia Ruiz, Talamazka, 190 W. Continental Road, No. 202, Green Valley, Series 12, Restaurant, New License. FLP_LLTalamazka Attachments: Page 4 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda DEVELOPMENT SERVICES 17. (Clerk’s Note: This case requires two separate motions and votes.) A. Hearing - Rezoning Closure P15RZ00009, MAGEE COMO DEVELOPMENT ASSOC., L.L.C. - N. LA CHOLLA BOULEVARD REZONING Magee Como Development Assoc., L.L.C., represented by Craig Courtney, requests a closure for an approximate .88-acre rezoning from the TR (Transitional) zone to the CB-2 (General Business) zone, located approximately 150 feet north of W. Magee Road and 600 feet west of N. La Cholla Boulevard, addressed as 7791 N. La Cholla Boulevard. The subject site was rezoned in 2016, received a time extension in 2021 and expired February 2, 2026. Staff recommends AGAINST CLOSURE. (District 1) B. Hearing - Rezoning Time Extension P15RZ00009, MAGEE COMO DEVELOPMENT ASSOC., L.L.C. - N. LA CHOLLA BOULEVARD REZONING Magee Como Development Assoc., L.L.C., represented by Craig Courtney, requests a five-year time extension. The approximate .88-acre rezoning from the TR (Transitional) zone to the CB-2 (General Business) zone expired February 2, 2026. The property is located approximately 150 feet north of W. Magee Road and 600 feet west of N. La Cholla Boulevard, addressed as 7791 N. La Cholla Boulevard. Staff recommends APPROVAL OF THE FIVE-YEAR-TIME EXTENSION SUBJECT TO MODIFIED STANDARD AND SPECIAL CONDITIONS. (District 1) DSD_P15RZ00009 Attachments: 18. Hearing - Plat Note Modification Co12-76-52, RANCHO DEL CERRO (LOT 430) Robert Workman and Janice Arnold, represented by Renzo Curay of Galileo Group, request a plat note modification for removal of the one-foot no-access easement along the northeasterly portion of Lot 430 (2.34 acres) of the Rancho Del Cerro subdivision (Bk. 28, Pg. 84). The subject property is zoned CR-1 (Single Residence) and is located southeast of the T-intersection of W. Paseo De Las Estrellas and N. Calle Del Risco, addressed as 5532 W. Placita Acantilada. Staff recommends APPROVAL WITH A CONDITION. (District 3) DSD_Co12-76-52 DSD_Co12-76-52_CommLtr_Redacted DSD_Co12-76-52_CommLtr DSD_Co12-76-52_CommLtr_7-13-26_Redacted Attachments: Page 5 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda TRANSPORTATION 19. Hearing - Roadway Development Impact Fee Audit FY23 and FY24 Pursuant to A.R.S. §11-1102(I)(2), conduct a public hearing on the biennial certified audit of the roadway development impact fee program. TR_RdwyDevlmtImpactFeeAuditFY23-24 Attachments: * * * 20. APPROVAL OF CONSENT CALENDAR BOARD OF SUPERVISORS 21. County Administrator Hiring Process Discussion/Direction/Action regarding the County Administrator Hiring Process. (District 3) 22. Pima County Treasurer Appointment of the Pima County Treasurer. BOS_TRApptMemo_Redacted BOS_TRAppt_CommentLtrs_Redacted BOS_TRAppt_CommLtr_7-8-26_Redacted BOS_TRAppt_CommLtrs_7-10-26_Redacted BOS_TRAppt_OurFamilyServicesCommLtr_7-10-26 BOS_TRAppt_PascuaYaquiTribeCommLtr_7-10-26 BOS_TRAppt_CommLtrs_7-13-26_Redacted BOS_TRAppt_CommLtrs2_7-13-26_Redacted BOS_TRAppt_CommLtrs3_7-13-26_Redacted Attachments: 23. Southern Arizona Rescue Association Discussion/Direction/Action regarding the Southern Arizona Rescue Association contract to provide for the provision of equipment, supplies and training for Search and Rescue Operations, extending contract term to 6/30/27 and amending contractual language and approval of funding, $100,000.00, from a source to be identified at the discretion of the County Administrator. (District 4) BOS_SoArizonaRescueAssoc_Dist4Submittal Attachments: Page 6 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda 24. Opposition to Building a Wall on the Tohono O’odham Nation’s Border with Mexico RESOLUTION NO. 2026 - 37 , of the Board of Supervisors, in opposition to the Executive Order of President Donald Trump to build a wall on the Tohono O’odham Nation’s border with Mexico. (District 3) BOS_ResoOpposingBorderWall_Dist3Submittal Attachments: CLERK OF THE BOARD 25. Petition for Relief of Taxes Pursuant to A.R.S. §42-11109(E), A-Mountain Church of God in Christ has petitioned the Board of Supervisors for relief of taxes and associated interest/penalty for tax year 2019, for Tax Parcel No. 118-04-178D. CL_A-MountainChurchofGodinChrist Attachments: COMMUNITY AND WORKFORCE DEVELOPMENT 26. Outside Agency Committee Funding Recommendations for Fiscal Year 2026/2027 Basic Needs Priority Area Category Agency/Program Name/Amount Requested/FY26/27 Recommendation Arivaca Coordinating Council-Human Resource Group, Inc./Food Security/$99,000/$53,195 Arivaca Coordinating Council-Human Resource Group, Inc./Helping HEARTS/$15,000/$15,000 Arizona Diaper Bank/Diapers for Infants, Children, Disabled, and Seniors/$66,904/$27,195 Casa de los Niños/Foster Care Food Pantry/$15,000/$15,000 Catholic Community Services of Southern Arizona, Inc./Case Management for Homeless Families/$58,110/$42,195 Catholic Community Services of Southern Arizona, Inc./Emergency Food Pantry and Clothing Closet/$75,000/$15,000 Community Food Bank, Inc./Child Nutrition Program/$40,000/$26,195 Community Food Bank, Inc./Emergency Food Assistance/$375,000/$262,873 Community Food Bank, Inc./Rural Resource Centers/$80,000/$70,195 Community Home Repair Projects of Arizona/Roof Repair and Replacement Program/$100,000/$26,195 Epidaurus, d.b.a. Amity Foundation/Road to Recovery/$15,000/$15,000 Felicia's Farm/FKA Izi Azi Foundation/Felicia's Farm/$15,000/$15,000 GAP Ministries/Basic needs/Support services/$196,610/$15,000 Greater Vail Community ReSources/Emergency Food/$15,000/$15,000 I Am You 360/I Am You 360 Small Home Experience Dignity First Program/$75,000/$15,000 IMPACT of Southern Arizona/IMPACT Clothing Bank/$36,000/$23,975 IMPACT of Southern Arizona/IMPACT Food Bank/$43,000/$26,660 Interfaith Community Services/Emergency Financial Services/$50,000/$24,395 Interfaith Community Services/ICS Mobile Meals/$50,000/$30,195 Interfaith Community Services/Transportation for At-Risk Seniors/$50,000/$29,595 Mobile Meals of Southern Arizona, Inc./More Than Meals - Essential Food Page 7 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda Delivery/$50,000/$27,895 Our Family Services, Inc./Common Unity Program/$39,144/$23,695 Our Family Services, Inc./Emergency Shelter Services/$58,148/$36,695 Primavera Foundation, Inc./Casa Paloma Drop-In Center/$35,000/$26,195 Primavera Foundation, Inc./Homelessness Intervention and Prevention (HIP)/$35,000/$29,195 Sahuarita Food Bank (d.b.a.: Marana Food Bank & Community Resource Center)/Marana Food Bank Emergency Food/$200,000/$106,217 Sahuarita Food Bank (d.b.a.: Marana Food Bank & Community Resource Center)/Sahuarita Food Bank Emergency Food/$45,000/$38,195 Sister Jose Women's Center/Case Navigation (formerly Gateway to Housing)/$50,000/$15,000 Southern Arizona AIDS Foundation/SAAF Food For Life/$137,500/$80,195 Splinter Art and Community Fund/Mobile Home Park Eviction Prevention and Housing Security Project/$15,000/$15,000 The John P. Bell Family Foundation, d.b.a. Team Lizzie Bell/Team Lizzie Bell/$15,000/$15,000 The Salvation Army/OUTSIDE AGENCY - MOTEL/$40,000/$15,000 Tucson Jewish Community Center, Inc./Advancing Independence at the Tucson J/$15,000/$15,000 Tucson Medical Center Foundation/Tucson Collaborative Community Care/$50,000/$15,000 St. Luke's in the Desert, Inc./Nutritional Services/$50,000/$0 Category Subtotal: $2,304,416/$1,221,145 Community Well-being and Safety Priority Area Category Agency/Program Name/Amount Requested/FY26/27 Recommendation Administration of Resources and Choices/Elder Services, Safety, and Placement/$54,820/$37,695 Arizona Burn Foundation/Pima County Community Smoke Alarm Walks/$15,000/$15,000 Casa de los Niños/Parent Education/$15,000/$15,000 Center for Community Mediation and Facilitation/Conflict Resolution/$20,961/$15,000 CPLC/CPLC Nahui Ollin Wellness Program/$69,997/$15,000 International Rescue Committee/Victims Services Program/$15,000/$15,000 Southern Arizona AIDS Foundation/SAAF AVP (Anti-Violence Project)/$30,000/$19,195 Tucson Center for Women and Children, d.b.a. Emerge Center Against Domestic Abuse/Lay Legal Services for Domestic Violence Victims/$15,000/$15,000 Tucson Center for Women and Children, d.b.a. Emerge Center Against Domestic Abuse/Youth Violence Prevention and Intervention/$15,000/$15,000 Tucson Medical Center Foundation/Desert Kids Safety Program/$50,000/$0 Category Subtotal: $300,778/$161,890 Education and Workforce Development Priority Area Category Agency/Program Name/Amount Requested/FY26/27 Recommendation Amistades, Inc./Amistades Prosperity Circles/$60,228/$15,000 Arivaca Action Center Incorporated/Arivaca Early Learning Center/$27,750/$17,195 Banner Health Foundation/Banner Health Career Explorers Program/$15,000/$15,000 Casa de los Niños/The Kelly Early Education Center/$15,000/$15,000 Catholic Community Services of Southern Arizona, Inc./Catholic Community Services of Southern Arizona/Childcare for Working Poor/$150,000/$15,000 Catholic Community Services of Southern Arizona, Inc./Workforce Development/$15,000/$15,000 Community Food Bank, Inc./Caridad Community Kitchen/$50,000/$30,995 Page 8 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda Goodwill Industries of Southern Arizona, Inc./Goodwill Adult Reentry Employment and Training Project/$235,980/$15,000 Greater Tucson Leadership, Inc./Tucson Youth Leadership Academy/$50,000/$15,000 International Rescue Committee/Workforce Development - Job Club (Job Readiness Training)/$21,500/$15,695 Literacy Connects/Literacy Connects Youth Development Programs/$62,422/$44,195 Live the Solution, d.b.a. Earn to Learn/Earn to Learn - Wrap-Around Services/$100,000/$15,000 Lutheran Social Services of the Southwest/Direct Care Worker Workforce Development/$15,000/$15,000 Lutheran Social Services of the Southwest/English Literacy Training for Workforce Development/$15,000/$15,000 Make Way for Books/The Story Project/$50,000/$21,395 Sahuarita Food Bank (d.b.a.: Marana Food Bank & Community Resource Center)/Community Resource Center/$15,000/$15,000 Sahuarita Food Bank (d.b.a.: Marana Food Bank & Community Resource Center)/Summit Community Development Program/$15,000/$15,000 Southwest Fair Housing Council/Fair Housing Education and Enforcement Program/$35,000/$15,000 The Dunbar Coalition, Inc., d.b.a. Dunbar Pavilion/Technology Training for Seniors/$15,000/$15,000 The John P. Bell Family Foundation, d.b.a. Team Lizzie Bell/Healthy Workers/$15,000/$15,000 Tucson Children's Museum, Inc., d.b.a. Children's Museum Tucson/Story School at Children's Museum Tucson/$15,000/$15,000 Tucson Girls Chorus/Tucson Girls Chorus Community Engagement Program/$15,000/$15,000 Tucson Preparatory School/Continuing Education for Adult Youth/$20,000/$15,000 United Way of Tucson and Southern Arizona/Empowered Teaching/$15,000/$15,000 Youth On Their Own/YOTO Program (Academic Stipends)/$125,000/$116,195 YWCA Southern Arizona/YWCA Economic Justice/$75,000/$15,000 Tucson Medical Center Foundation/Patient Care Technician Training Program/$75,724/$0 United Way of Tucson and Southern Arizona/Thriving Futures Mentorship/$15,000/$0 Category Subtotal: $1,333,604/$545,670 Health and Wellness Priority Area Category Agency/Program Name/Amount Requested/FY26/27 Recommendation Amistad y Salud, Clinica Amistad/Community Health & Wellness/$60,000/$27,595 Arizona Youth Partnership (AZYP)/Arizona Youth Partnership (AZYP) The Early Childhood Mental Health Program/$15,000/$15,000 Ayuda Smiles, Inc./Smiles for Veterans/$30,000/$15,000 Casa de los Niños/Casa de los Niños Uninsured Fund/$15,000/$15,000 Catholic Community Services of Southern Arizona, Inc./Reengaging and Connecting Deaf, Deaf Blind and Elderly Deaf Individuals with Resources through Supportive Partnerships/$60,000/$43,195 Child & Family Resources, Inc./Child and Adult Care Food Program/$15,000/$15,000 Community Emergency Medical Responders Foundation, Inc., d.b.a. CCHS Foundation/CCHS Homeless Medical Stabilization & Early Intervention Program/$50,000/$15,000 Compass Affordable Housing/CAH Tenant Empowerment, Advancement & Mentorship Program/$30,000/$15,000 Friends of Aphasia/Friends of Aphasia/$20,000/$15,000 Green Valley Assistance Services, Inc., d.b.a. Valley Assistance Services/Older Adult Resource Program Specialist/$34,110/$15,000 Page 9 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda Green Valley Assistance Services, Inc., d.b.a. Valley Assistance Services/Transforming Health Care Through Transportation/$30,000/$15,000 International Rescue Committee/Health - Medical Case Management/$95,264/$15,695 Jewish Family and Children's Services of Southern Arizona/HoME/$54,946/$31,195 Marana Health/Marana Health Integrated Street Medicine/$30,000/$15,000 Primavera Foundation, Inc./Supp Hsg RS Svs/Supportive Services/$45,000/$29,390 Saavi Services for the Blind/Health and Wellness Program for Blind Seniors/$35,000/$19,195 Sahuarita Food Bank (d.b.a.: Marana Food Bank & Community Resource Center)/Prescription for Health/$15,000/$15,000 Soldier's Best Friend/Soldier's Best Friend Service Dog Training Program/$30,000/$15,000 Southern Arizona AIDS Foundation/SAAF ALLY/$45,000/$33,195 Tucson Medical Center Foundation/TMC For Seniors/$15,000/$15,000 University of Arizona Foundation, d.b.a. Mobile Health Program/Mobile Health Program for Medically Underserved Residents/$15,000/$15,000 University of Arizona Foundation, f/b/o Pima County Cooperative Extension, The Garden Kitchen/PLAZA (Promoting Local Arizona Agriculture) Mobile Market: Expanding Food Access and a Thriving Local Food Economy/$88,961/$15,000 Serve Society/Mobile Community Haircare & Wellness Program/$120,000/$0 The John P. Bell Family Foundation, d.b.a. Team Lizzie Bell/Safe Homes/$15,000/$0 Category Subtotal: $963,281/$424,460 Prosperity Initiative Priority Area Category Agency/Program Name/Amount Requested/FY26/27 Recommendation 3rd Decade/3rd Decade Financial Education and Mentoring/$50,000/$15,000 Arivaca Coordinating Council-Human Resource Group, Inc./STAR Program (Formerly Senior Support)/$86,600/$20,195 Casa de los Niños/Casa de los Niños Care Coordination/$15,000/$15,000 Child & Family Resources, Inc./Pima County Healthy Families/$47,436/$35,695 Flowers & Bullets/Expanding Food Security and Entrepreneurship in Midtown Tucson/$15,000/$15,000 International Rescue Committee/Prosperity Initiative- Workforce and Career Pathways for New Americans/$100,000/$15,000 Jewish Family and Children's Services of Southern Arizona/Financial Wellness Program/$83,227/$19,395 Local First Arizona Foundation/Fuerza Local Business Accelerator by Local First Arizona/$15,000/$15,000 Step Up To Justice Pro Bono Law Center/Consumer Protection Legal Clinics/$25,000/$15,000 The IDEA School/Free Lunch Program, low-income students/$18,000/$0 The University of Arizona Foundation for the benefit of Wassaja Carlos Montezuma Center for Native American Health/The University of Arizona Foundation for the benefit of Wassaja Carlos Montezuma Center for Native American Health/$2,687,974/$0 Category Subtotal: $3,143,237/$165,285 Youth and Family Services Priority Area Category Agency/Program Name/Amount Requested/FY26/27 Recommendation Arizona Diaper Bank/Potty Training for Toddlers/$17,250/$15,000 Arizona's Children Association/Las Familias Program/$50,000/$28,695 Big Brothers Big Sisters of Southern Arizona/Mentor 2.0/$15,000/$15,000 Boys to Men Tucson, Inc./Boys to Men Tucson - Restorative Group Mentoring/$32,096/$15,000 Center for Community Mediation and Facilitation/Conflict Literacy Page 10 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda Training/$19,668/$15,000 Child & Family Resources, Inc./The Resilience Initiative/$15,000/$15,000 Daibudo Kodenkan Matsuno Kenshukai/Youth Martial Arts Scholarship Program/$20,000/$15,000 Girl Scouts of Southern Arizona/EmpowHERment Program: Today's Girl Scouts, Tomorrow's Leaders/$45,000/$25,195 Portable Practical Educational Preparation, Inc./Amado Food Project/$19,500/$15,000 Sahuarita Food Bank (d.b.a.: Marana Food Bank & Community Resource Center) Family Resource Center/$15,000/$15,000 Southern Arizona AIDS Foundation/SAAF EON/$45,000/$25,195 Tu Nidito Children and Family Services/Children to Children/$30,000/$23,995 Tu Nidito Children and Family Services/Pathways/$20,000/$15,195 YWCA Southern Arizona/Pima County Teen Court/$54,500/$38,195 Green Valley Assistance Services, Inc., d.b.a. Valley Assistance Services/Youth and Family Resource Program/$30,000/$0 Category Subtotal: $428,014/$276,470 General Services Priority Area Category Agency/Program Name/Amount Requested/FY26/27 Recommendation Arizona-Sonora Desert Museum/Invasive Species and Fire Education/$49,000/$44,528 El Rio Santa Cruz Neighborhood Health Center, Inc./Patient Centered Medical Home Program/$50,000/$45,108 El Rio Santa Cruz Neighborhood Health Center, Inc./Trichloroethylene Program/$170,000/$161,178 Friends of Robles Ranch/My Friends Closet/Robles Ranch Food Bank/$63,874/$47,978 Pima Council on Aging/Family Caregiver Support/$100,000/$17,578 Pima Council on Aging/Neighbors Care Alliance/$75,000/$55,978 Pima Council on Aging/Rights and Benefits/$180,000/$130,278 Pima County Community Land Trust/PCCLT Housing Counseling/$82,405/$60,978 Southern Arizona Children's Advocacy Center, Inc./Support Services for Child Victims/$75,000/$70,538 United Way of Tucson and Southern Arizona/Volunteer Income Tax Assistance (VITA) Program/$50,011/$26,000 Category Subtotal: $895,290/$660,142 CWD OUTSIDE AGENCY PRIORITY AREA CATEGORIES TOTAL: $9,368,620/$3,455,062 Other Department Priorities (County Administration/Health Department/Parks & Recreation) Agency/Program Name/Amount Requested/FY26/27 Recommendation (CA) Pima Association of Governments/Pima Association of Governments Overall Work Program/$298,000/$298,000 (HD) Tucson Center for Women and Children, d.b.a. Emerge Center Against Domestic Abuse/Comprehensive Domestic Violence Support Services/$325,000/$115,798 (PR) Desert Survivors, Inc./Desert Survivors, Inc./$67,760/$67,760 Other Department Priorities Subtotal: $690,760/$481,558 OUTSIDE AGENCY PROGRAM TOTAL: $10,059,380/$3,936,620 CWD_OutsideAgencyFundingRecs CWD_OutsideAgencyFundingRecs_CommLtr_7-13-26_Redacted Attachments: Page 11 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda REAL PROPERTY 27. Abandonment by Vacation RESOLUTION NO. 2026 - 38 , of the Board of Supervisors, for the vacation of a portion of W. River Terrace Drive, an undeveloped roadway, as Pima County Road Abandonment No. A-0085, within the southeast quarter of Section 15, T13S, R13E, G&SRM, Pima County, Arizona. (District 3) RPS_ResoWRiverTerraceDrive Attachments: REGIONAL WASTEWATER RECLAMATION 28. Marana Designated Management Agency (DMA) and Pima County DMA Boundary Map Staff recommends approval of an update to the Marana DMA and Pima County DMA boundary map facilitated by Pima Association of Governments, that clearly identifies the DMA boundaries. The DMA boundary update will allow the Town of Marana to provide wastewater service to new development in Saguaro Bloom Blocks 9 and 10. WW_MaranaPCDesignatedMgmtAgencyBoundaryMap Attachments: CONTRACT AND AWARD Procurement 29. B & F Contracting, Inc., Borderland Construction Company, Inc., Ellison-Mills Contracting, L.L.C., and Hunter Contracting Co., to provide a job order contract: wastewater conveyance system and related facilities, repair, rehabilitation and construction services, RWRD Obligations Fund, contract amount $25,000,000.00 (SC2600000376) Administering Department: Regional Wastewater Reclamation SC2600000376 Attachments: 30. ADJOURNMENT POSTED: 130 W. Congress Street, 1st Floor Tucson, AZ 85701 Pima County Homepage: www.pima.gov DATE/TIME POSTED: 7/8/26 @ 3:00 p.m. DATE/TIME REPOSTED (additional attachments only): 7/8/26 @ 5:00 p.m. DATE/TIME REPOSTED (additional attachments only): 7/10/26 @ 5:00 p.m. DATE/TIME REPOSTED (additional attachments only): 7/13/26 @ 10:15 a.m. DATE/TIME REPOSTED (additional attachments only): 7/13/26 @ 2:00 p.m. DATE/TIME REPOSTED (combined Agenda/Addendum and additional attachments): 7/13/26 @ 5:00 p.m. Page 12 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda ADDENDUM 1 BOARD OF SUPERVISORS SITTING AS OTHER BOARDS LIBRARY DISTRICT BOARD 1. Contract OverDrive, Inc., to provide for digital content services, Library District Fund, contract amount $20,000,000.00/4 year term (SC2600000371) Administering Department: Library SC2600000371 Attachments: SITTING AS THE BOARD OF SUPERVISORS BOARD OF SUPERVISORS 2. Debt and Financial Transparency Advisory Commission Discussion/Direction/Action regarding the creation of the Debt and Financial Transparency Advisory Commission. (District 1) BOS_DebtFinancialTransparencyAdvisoryComm_Dist1Submittal Attachments: 3. 2026 Primary Election Discussion/Direction/Action regarding the Primary Election with Pima County's Recorder and Elections Director, and/or designees, updating the Board on election operations including, but not limited to, activity at early voting sites, ballot processing and tabulation, deployment of the Recorder's \"Votemobile\", the implementation of the new ID-verified early ballot drop-off process, as well as an update from the Board's representative on the Elections Oversight Task Force. (District 4) BOS_2026PrimaryElection_Dist4Submittal BOS_2026PrimaryElection_CommLtr_7-13-26_Redacted Attachments: CONTRACT AND AWARD HEALTH 4. Helping Ourselves Pursue Enrichment, Inc., Amendment No. 2, to provide for the Crisis Cooperative Project for Opioid Misuse/Abuse and Prevention and amend contractual language, Substance Abuse and Mental Health Services Administration Fund passed through Arizona Department of Health Services, contract amount $275,000.00 (PO2600003846) PO2600003846 Attachments: Page 13 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda GRANT APPLICATION/ACCEPTANCE 5. Acceptance - Community and Workforce Development Arizona Department of Housing, Amendment No. 1, to provide for the HSSF Pima County EELS Emergency Housing Project, extend grant term to 12/31/26 and amend grant language, no cost (GA-CWD-71641) GA-CWD-71641 Attachments: POSTED: 1st Floor, 130 W. Congress Street, Tucson, AZ 85701 Pima County Homepage: www.pima.gov DATE/TIME POSTED: 7/10/26 @ 11:00 a.m. DATE/TIME REPOSTED (additional attachments only): 7/13/26 @ 10:15 a.m. Page 14 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda CONSENT CALENDAR JULY 14, 2026 Page 15 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda CONSENT CALENDAR, JULY 14, 2026 CONTRACT AND AWARD Community and Workforce Development 1. Town of Marana, to provide an intergovernmental agreement for the Pima Early Education Program, contract amount $153,339.20 revenue (CT2600000019) CT2600000019 Attachments: 2. Flowing Wells Unified School District, Amendment No. 1, to provide an intergovernmental agreement for the Pima Early Education Program, amend contractual language and scope of services, no cost (PO2500007946) PO2500007946 Attachments: 3. Sahuarita Unified School District, Amendment No. 1, to provide an intergovernmental agreement for the Pima Early Education Program, amend contractual language and scope of services, no cost (PO2500007952) PO2500007952 Attachments: 4. Tucson Unified School District, Amendment No. 1, to provide an intergovernmental agreement for the Pima Early Education Program, amend contractual language and scope of services, no cost (PO2500008371) PO2500008371 Attachments: 5. Marana Unified School District No. 06, Amendment No. 1, to provide an intergovernmental agreement for the Pima Early Education Program, amend contractual language and scope of services, no cost (PO2500008364) PO2500008364 Attachments: 6. Marana Unified School District No. 06, to provide an intergovernmental agreement for Pima Early Education Program (PEEP) Scholarships, term date 7/1/26 to 5/31/27, CWD PEEP Special Revenue Fund, contract amount $155,545.20 (PO2600009062) PO2600009062 Attachments: 7. Pima County Amphitheater Schools, d.b.a. Amphitheater Public Schools, Amendment No. 2, to provide an intergovernmental agreement for the Pima Early Education Program (PEEP), amend contractual language and scope of services, CWD PEEP Special Revenue Fund, contract amount $877,819.20 (PO2500009251) Page 16 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda PO2500009251 Attachments: 8. Sunnyside Unified School District 12, d.b.a. Sunnyside Unified School District, Amendment No. 2, to provide an intergovernmental agreement for the Pima Early Education Program (PEEP), amend contractual language and scope of services, CWD PEEP Special Revenue Fund, contract amount $622,180.80 (PO2500008368) PO2500008368 Attachments: County Attorney 9. CBS Consulting Group, Amendment No. 1, to provide for professional grant writing services, extend contract term to 6/30/27, amend contractual language and scope of services, General Fund, contract amount $85,000.00 (PO2500017504) PO2500017504 Attachments: Facilities Management 10. Bridgeway Health Solutions of Arizona, Inc., d.b.a. Arizona Complete Health - Complete Care Plan, Amendment No. 5, to provide an Operating Agreement for space within the Crisis Response Center located at 2802 E. District Street, Tucson, AZ, extend contract term to 9/30/28 and amend contractual language, no cost (SC2600000347) SC2600000347 Attachments: Parks and Recreation 11. Arivaca Community Center, Inc., Amendment No. 4, to provide for Arivaca Recreational Programming, extend contract term to 6/30/27 and amend contractual language, General Fund, contract amount $60,000.00 (CT_22-373) CT_22-373 Attachments: Pima County Wireless Integrated Network 12. Town of Oro Valley Police Department, Amendment No. 1, to provide for subscriber services, extend contract term to 6/21/31 and amend contractual language, contract amount $46,800.00 revenue (CTN-WIN-21-117) CTN-WIN-21-117 Attachments: Page 17 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda Procurement 13. Award Award: Purchase Order No. PO2600020272, Life Technologies Corporation, to provide for RapidHIT ID System. This contract is for a one-time award in the discrete amount of $359,718.26 (including sales tax). Funding Source: 40069FD FM Capital Projects Fund. Administering Department: Medical Examiner. Award_PO2600020272 Attachments: 14. Award Award: Multiple Supplier Contract No. SC2600000370, Group 1 OEM: Rasix Computer Center, Inc., and Group 2 Re-manufactured: B2B Supplies USA, L.L.C., to provide for OEM & Remanufactured Printer & Fax Toner Cartridges. This supplier contract is for an initial term of one (1) year in the shared annual award amount of $350,000.00 (including sales tax) and includes four (4) one-year renewal options. Funding Source: General Fund. Administering Department: Information Technology. Award_SC2600000370 Attachments: 15. Award Award: Supplier Contract No. SC2600000394, Nutrition One, L.L.C., to provide for food service congregate and non-congregate shelters. This supplier contract is for an initial term of one (1) year in the annual award amount of $285,000.00 (including sales tax) and includes four (4) one-year renewal options. Funding Source: Pima County Regional Affordable Housing Fund. Administering Department: Community and Workforce Development. Award_SC2600000394 Attachments: 16. TYPSA, Inc., Amendment No. 4, to provide Cultural Resources Services for Pima County Regional Middle Mile Project (PCRMMP), amend contractual language and scope of services, Non-Bond Projects Funds (Capital Project Funds), contract amount $964,042.91 (PO2500002562) Administering Department: Project Design and Construction PO2500002562 Attachments: 17. Tyler Technologies, Inc., Amendment No. 2, to provide for Tyler Technologies Records Management Software and amend contractual language, Recorder Special Revenue Fund, contract amount $120,000.00 (SC2400001375) Administering Department: Information Technology, on behalf of Recorder's Office SC2400001375 Attachments: Page 18 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda 18. Hunter Contracting Co., to provide for Construction Manager at Risk Services: Southeast Regional Park - Clay Target Center Relocation, term date 7/14/26 to 1/31/28, Parks and Recreation Capital Improvement Project Fund, contract amount $295,703.09 (PO2600017588) Administering Department: Project Design and Construction PO2600017588 Attachments: Real Property 19. The State of Arizona, Arizona Department of Environmental Quality, to provide a Non-Exclusive Right-of-Way Use License for Monitoring Wells, contract amount $2,500.00 revenue/25 year term (CT2600000062) CT2600000062 Attachments: 20. Anita AVE Properties, L.L.C., to provide for Sales Agreement No. Sale-0139 and Special Warranty Deed for the sale of vacant surplus property that consists of 0.24 acres of undeveloped land, located at the Northwest corner of Speedway Boulevard and Anita Avenue, contract amount $101,000.00 revenue (CT2600000061) CT2600000061 Attachments: Transportation 21. Regional Transportation Authority of Pima County, Amendment No. 8, to provide for design and construction of improvements to Sunset Road - Silverbell to I-10 to River Road (RTA-8), extend contract term to 6/30/31 and amend contractual language, no cost (CTN-TR-20-54) CTN-TR-20-54 Attachments: 22. GAC Star Valley, L.L.C., to provide a Development Agreement - Camino Verde and Valencia Intersection Improvements, Pima County, Arizona, Roadway Development Impact Fees - West Service Area Fund, contract amount $3,200,000.00/25 year term (PO2600020471) PO2600020471 Attachments: GRANT APPLICATION/ACCEPTANCE 23. Acceptance - Community and Workforce Development City of Tucson, to provide an intergovernmental agreement for the Tucson-Pima PRO Housing Initiative, term date 1/22/25 to 9/30/30, $1,732,500.00 (G-CWD-75075) G-CWD-75075 Attachments: Page 19 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda 24. Acceptance - Community and Workforce Development RESOLUTION NO. 2026 - 39 , of the Board of Supervisors, authorizing the approval of the Continuum of Care La Casita “Scope of Work for Fiscal Year 2024/2025 Renewal Grant Agreement” from the U.S. Department of Housing and Urban Development (“HUD”), $271,408.00/$67,852.00 General Fund Match (G-CWD-113945) G-CWD-113945 Attachments: 25. Acceptance - Community and Workforce Development RESOLUTION NO. 2026 - 40 , of the Board of Supervisors, authorizing the approval of the Continuum of Care “Scope of Work for Fiscal Year 2024/2025 Renewal Grant Agreement” from the U.S. Department of Housing and Urban Development (“HUD”), $477,916.00/$119,479.00 General Fund Match (G-CWD-113948) G-CWD-113948 Attachments: 26. Acceptance - Community and Workforce Development Arizona Department of Economic Security, Amendment No. 3, to provide for the Community Action Services Program and amend scope of work, no cost (GA-CWD-82532, GA-CWD-82533, GA-CWD-82534, GA-CWD-93453, GA-CWD-103987) GA-CWD-82532,82533,82534,93453,103987 Attachments: 27. Acceptance - Elections Arizona Secretary of State, to provide for Pima County election assistance for additional staffing and equipment, $20,000.00 (G-EL-113885) G-EL-113885 Attachments: 28. Acceptance - Environmental Quality US Environmental Protection Agency, Amendment No. 2, to provide for the PM2.5 Monitoring Network to maintain fine particulate matter monitoring networks, extend grant term to 3/31/27 and amend grant language, $391,454.00 (GA-DE-65961) GA-DE-65961 Attachments: BOARD, COMMISSION AND/OR COMMITTEE 29. Pima Animal Care Advisory Committee Reappointment of Laura O’Brien, representing Friends of Pima Animal Care Center. Term expiration: 6/30/30. (Organizational recommendation) BCC_PACAdvisoryCommitteeReappt Attachments: 30. State Board of Equalization Appointment of Mark Baudenistel, to fill a vacancy created by Brian Johnson. Term expiration: 12/31/28. (District 1) Page 20 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda BCC_StateBoardofEqualizationAppt Attachments: 31. Bond Advisory Committee Appointment of Carolyn Campbell. Term expiration: 7/13/32. (County Administrator recommendation) BCC_BondAdvisoryCommitteeAppt Attachments: 32. Regional Wastewater Reclamation Advisory Committee Appointment of Dr. Luisa Ikner, to fill a vacancy created by Claire Zucker. Term expiration: 3/1/28. (District 3) BCC_RWRACAppt Attachments: SPECIAL EVENT LIQUOR LICENSE/TEMPORARY EXTENSION OF PREMISES/ PATIO PERMIT/WINE FAIR/WINE FESTIVAL/JOINT PREMISES PERMIT APPROVED PURSUANT TO RESOLUTION NO. 2019-68 33. Temporary Extension 12104129, Kevin Arnold Kramber, Union Public House, 4340 N. Campbell Avenue, Nos. 101, 102, 103 and 104, Tucson, August 15, 2026. 34. Special Event Lorene C. Kelley, Girl Scouts of Southern Arizona, Camp Whispering Pines, 12500 E. Organization Ridge Road, Mt. Lemmon, August 20 and 21, 2026. ELECTIONS 35. Precinct Committeemen Pursuant to A.R.S. §16-821B, approval of Precinct Committeemen resignations and appointments: RESIGNATION-PRECINCT-PARTY: Judy Gillies-045-DEM, Tanya Tassi-141-DEM, Robert Latimore-193-DEM, David Sheldahl-061-REP APPOINTMENT-PRECINCT-PARTY: Judy Gillies-017-DEM, Susan Boehnlein-109-DEM, Martha Gipson-141-DEM, Meredith Archer-193-DEM, Lenore Becker-205-DEM, Caryl Romine Parker-207-DEM, Ricardo DeSaracho-061-REP, Harry Montano-069-REP, Tamara Westberg-104-REP, Bill Beard-105-REP, Caroline Sepp-238-REP EL_PrecinctCommitteemen Attachments: Page 21 Pima County Printed on 7/13/2026\nJuly 14, 2026 Board of Supervisors Meeting Agenda FINANCE AND RISK MANAGEMENT 36. Duplicate Warrants - For Ratification 4IMPRINT, INC. $9,803.68; Lewis & Ellis, L.L.C. $3,500.00; James Cooke & Hobson, Inc. $2,750.27; 1969 $517.68; Emily Strandberg $180.00; Palliative and Supportive Care Alliance, Inc. $125.00; Ace Hardware $6.50; Jeffrey Dickerson $740.00; Hunter Contracting Co. $13,358.74; PHH Mortgage Corporation $454.92; Pacifica Apartments, L.L.C. $1,198.00; Pacifica Apartments, L.L.C. $3,150.00; Salvation Army $20,865.51; Eden Sinai Berreyes Encinas $250.00; Velocity Truck Center $70.98; Marquita Ochoa $175.00; Environmental Express, Inc. $2,564.02; Premier Biotech, L.L.C. $258.67; Marana Unified School District No. 6 $62,480.24; Sycamore Creek Apartments $926.00; Sycamore Creek Apartments $926.00; Stamback Services $383.02; DLT Solutions, L.L.C. $81,155.96. FN_DuplicateWarrants Attachments: RECORDER 37. Pursuant to Resolution No. 1993-200, ratification of the Document Storage and Retrieval Fund for the month of May, 2026. RE_DocStorageRetrievalFund_May2026 Attachments: RATIFY AND/OR APPROVE 38. Minutes: April 21, 2026 May 12, 2026 (Study Session) Warrants: June, 2026 CL_04-21-26DraftMinutes CL_05-12-26DraftStudySessionMinutes Attachments: Page 22 Pima County Printed on 7/13/2026",
-   "extraction": "pdf",
-   "extractionNote": null
-  },
   {
    "id": "legistar:pima:1822@8463c037aab5a81ef7cfc42e8d348c8442957957ac4767732ccdc77890a8591a",
    "meetingId": "legistar:pima:1822",
@@ -2447,6 +2346,342 @@
    "verifiedAt": null,
    "text": "Vail School District - Home Skip Navigation Jump to SideBar Quick Menu Public site Policy Sign in Vail School District Where Education is a Community Effort Your Javascript is turned off, without it, this site will not operate as intended. Home Welcome to Vail School District Home Calendar Meetings Search Home Vail School District Governing Board Board Meetings are held on the second and fourth Tuesday of the month (unless otherwise noted) at 7:00 p.m. at: Calvin Baker Leadership Center 13801 E. Benson Highway, Vail, Arizona Doors will be opened 15 minutes prior to the start of the meeting. The 2025/2026 schedule of Regular Meetings of the Vail School District Governing Board is as follows: 2025- July 8 July 22 August 12 August 26 September 9 September 23 October 14 October 28 November 12 December 9 2026- January 13 January 27 February 10 February 24 March 10 March 24 April 14 April 28 May 12 June 2 June 23 For more information, please contact Cindy Petersen . Share Welcome Welcome to our Community by Diligent public site, where you can find information about upcoming and recent meetings and participate in discussions about our community. Select the Welcome banner for additional information about using this site. Disclaimer: The documents contained in this system are intended for information only. To verify the accuracy and currency of this information, please contact us directly. Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals © Diligent Community 2026 Vail School District User name Password Sign In Remember me next time. Forgot password?",
    "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "apptegy:vail:60703706@f19eeda34147eb83d04f6d78357b34a1a455ad6b0438db7cf9eb1301624a1496",
+   "meetingId": "apptegy:vail:60703706",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "documentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "contentHash": "f19eeda34147eb83d04f6d78357b34a1a455ad6b0438db7cf9eb1301624a1496",
+   "retrievedAt": "2026-08-14T03:15:21.634Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "sourceOrg": "Vail School District Governing Board",
+   "collectedAt": "2026-08-14T03:15:21.634Z",
+   "verifiedAt": null,
+   "text": "Vail School District - Home Skip Navigation Jump to SideBar Quick Menu Public site Policy Sign in Vail School District Where Education is a Community Effort Your Javascript is turned off, without it, this site will not operate as intended. Home Welcome to Vail School District Home Calendar Meetings Search Home Vail School District Governing Board Board Meetings are held on the second and fourth Tuesday of the month (unless otherwise noted) at 7:00 p.m. at: Calvin Baker Leadership Center 13801 E. Benson Highway, Vail, Arizona Doors will be opened 15 minutes prior to the start of the meeting. The 2025/2026 schedule of Regular Meetings of the Vail School District Governing Board is as follows: 2025- July 8 July 22 August 12 August 26 September 9 September 23 October 14 October 28 November 12 December 9 2026- January 13 January 27 February 10 February 24 March 10 March 24 April 14 April 28 May 12 June 2 June 23 For more information, please contact Cindy Petersen . Share Welcome Welcome to our Community by Diligent public site, where you can find information about upcoming and recent meetings and participate in discussions about our community. Select the Welcome banner for additional information about using this site. Disclaimer: The documents contained in this system are intended for information only. To verify the accuracy and currency of this information, please contact us directly. Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals © Diligent Community 2026 Vail School District User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "apptegy:vail:60703707@e9d0f6a41113e60e4c0e4b8d801159947e5e76044ac67fbbd9fcfecc17f03170",
+   "meetingId": "apptegy:vail:60703707",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "documentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "contentHash": "e9d0f6a41113e60e4c0e4b8d801159947e5e76044ac67fbbd9fcfecc17f03170",
+   "retrievedAt": "2026-08-14T03:15:22.136Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "sourceOrg": "Vail School District Governing Board",
+   "collectedAt": "2026-08-14T03:15:22.136Z",
+   "verifiedAt": null,
+   "text": "Vail School District - Home Skip Navigation Jump to SideBar Quick Menu Public site Policy Sign in Vail School District Where Education is a Community Effort Your Javascript is turned off, without it, this site will not operate as intended. Home Welcome to Vail School District Home Calendar Meetings Search Home Vail School District Governing Board Board Meetings are held on the second and fourth Tuesday of the month (unless otherwise noted) at 7:00 p.m. at: Calvin Baker Leadership Center 13801 E. Benson Highway, Vail, Arizona Doors will be opened 15 minutes prior to the start of the meeting. The 2025/2026 schedule of Regular Meetings of the Vail School District Governing Board is as follows: 2025- July 8 July 22 August 12 August 26 September 9 September 23 October 14 October 28 November 12 December 9 2026- January 13 January 27 February 10 February 24 March 10 March 24 April 14 April 28 May 12 June 2 June 23 For more information, please contact Cindy Petersen . Share Welcome Welcome to our Community by Diligent public site, where you can find information about upcoming and recent meetings and participate in discussions about our community. Select the Welcome banner for additional information about using this site. Disclaimer: The documents contained in this system are intended for information only. To verify the accuracy and currency of this information, please contact us directly. Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals © Diligent Community 2026 Vail School District User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "apptegy:vail:60703708@48a820f22b99822b4f92f9b3926f71f5d211e391ef793888094ed4893f0f3719",
+   "meetingId": "apptegy:vail:60703708",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "documentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "contentHash": "48a820f22b99822b4f92f9b3926f71f5d211e391ef793888094ed4893f0f3719",
+   "retrievedAt": "2026-08-14T03:15:22.644Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "sourceOrg": "Vail School District Governing Board",
+   "collectedAt": "2026-08-14T03:15:22.644Z",
+   "verifiedAt": null,
+   "text": "Vail School District - Home Skip Navigation Jump to SideBar Quick Menu Public site Policy Sign in Vail School District Where Education is a Community Effort Your Javascript is turned off, without it, this site will not operate as intended. Home Welcome to Vail School District Home Calendar Meetings Search Home Vail School District Governing Board Board Meetings are held on the second and fourth Tuesday of the month (unless otherwise noted) at 7:00 p.m. at: Calvin Baker Leadership Center 13801 E. Benson Highway, Vail, Arizona Doors will be opened 15 minutes prior to the start of the meeting. The 2025/2026 schedule of Regular Meetings of the Vail School District Governing Board is as follows: 2025- July 8 July 22 August 12 August 26 September 9 September 23 October 14 October 28 November 12 December 9 2026- January 13 January 27 February 10 February 24 March 10 March 24 April 14 April 28 May 12 June 2 June 23 For more information, please contact Cindy Petersen . Share Welcome Welcome to our Community by Diligent public site, where you can find information about upcoming and recent meetings and participate in discussions about our community. Select the Welcome banner for additional information about using this site. Disclaimer: The documents contained in this system are intended for information only. To verify the accuracy and currency of this information, please contact us directly. Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals © Diligent Community 2026 Vail School District User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "apptegy:vail:60703709@2a191f8d99cd14fc23cf70e2e12f7981964d1b08043482ff070da9865c2ba6a0",
+   "meetingId": "apptegy:vail:60703709",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "documentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "contentHash": "2a191f8d99cd14fc23cf70e2e12f7981964d1b08043482ff070da9865c2ba6a0",
+   "retrievedAt": "2026-08-14T03:15:23.189Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "sourceOrg": "Vail School District Governing Board",
+   "collectedAt": "2026-08-14T03:15:23.189Z",
+   "verifiedAt": null,
+   "text": "Vail School District - Home Skip Navigation Jump to SideBar Quick Menu Public site Policy Sign in Vail School District Where Education is a Community Effort Your Javascript is turned off, without it, this site will not operate as intended. Home Welcome to Vail School District Home Calendar Meetings Search Home Vail School District Governing Board Board Meetings are held on the second and fourth Tuesday of the month (unless otherwise noted) at 7:00 p.m. at: Calvin Baker Leadership Center 13801 E. Benson Highway, Vail, Arizona Doors will be opened 15 minutes prior to the start of the meeting. The 2025/2026 schedule of Regular Meetings of the Vail School District Governing Board is as follows: 2025- July 8 July 22 August 12 August 26 September 9 September 23 October 14 October 28 November 12 December 9 2026- January 13 January 27 February 10 February 24 March 10 March 24 April 14 April 28 May 12 June 2 June 23 For more information, please contact Cindy Petersen . Share Welcome Welcome to our Community by Diligent public site, where you can find information about upcoming and recent meetings and participate in discussions about our community. Select the Welcome banner for additional information about using this site. Disclaimer: The documents contained in this system are intended for information only. To verify the accuracy and currency of this information, please contact us directly. Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals © Diligent Community 2026 Vail School District User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "apptegy:vail:60703710@8596c2d7bd05a20c4f850f3fb49450cab2a4235f822552d4ea3e3cfb0777d032",
+   "meetingId": "apptegy:vail:60703710",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "documentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "contentHash": "8596c2d7bd05a20c4f850f3fb49450cab2a4235f822552d4ea3e3cfb0777d032",
+   "retrievedAt": "2026-08-14T03:15:23.685Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "sourceOrg": "Vail School District Governing Board",
+   "collectedAt": "2026-08-14T03:15:23.685Z",
+   "verifiedAt": null,
+   "text": "Vail School District - Home Skip Navigation Jump to SideBar Quick Menu Public site Policy Sign in Vail School District Where Education is a Community Effort Your Javascript is turned off, without it, this site will not operate as intended. Home Welcome to Vail School District Home Calendar Meetings Search Home Vail School District Governing Board Board Meetings are held on the second and fourth Tuesday of the month (unless otherwise noted) at 7:00 p.m. at: Calvin Baker Leadership Center 13801 E. Benson Highway, Vail, Arizona Doors will be opened 15 minutes prior to the start of the meeting. The 2025/2026 schedule of Regular Meetings of the Vail School District Governing Board is as follows: 2025- July 8 July 22 August 12 August 26 September 9 September 23 October 14 October 28 November 12 December 9 2026- January 13 January 27 February 10 February 24 March 10 March 24 April 14 April 28 May 12 June 2 June 23 For more information, please contact Cindy Petersen . Share Welcome Welcome to our Community by Diligent public site, where you can find information about upcoming and recent meetings and participate in discussions about our community. Select the Welcome banner for additional information about using this site. Disclaimer: The documents contained in this system are intended for information only. To verify the accuracy and currency of this information, please contact us directly. Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals © Diligent Community 2026 Vail School District User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "apptegy:vail:60703841@b9b2fee783dd3ad29cc0bc5389d059de3923372d9151416e8094cd293efda4ae",
+   "meetingId": "apptegy:vail:60703841",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "documentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "contentHash": "b9b2fee783dd3ad29cc0bc5389d059de3923372d9151416e8094cd293efda4ae",
+   "retrievedAt": "2026-08-14T03:15:24.100Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "sourceOrg": "Vail School District Governing Board",
+   "collectedAt": "2026-08-14T03:15:24.100Z",
+   "verifiedAt": null,
+   "text": "Vail School District - Home Skip Navigation Jump to SideBar Quick Menu Public site Policy Sign in Vail School District Where Education is a Community Effort Your Javascript is turned off, without it, this site will not operate as intended. Home Welcome to Vail School District Home Calendar Meetings Search Home Vail School District Governing Board Board Meetings are held on the second and fourth Tuesday of the month (unless otherwise noted) at 7:00 p.m. at: Calvin Baker Leadership Center 13801 E. Benson Highway, Vail, Arizona Doors will be opened 15 minutes prior to the start of the meeting. The 2025/2026 schedule of Regular Meetings of the Vail School District Governing Board is as follows: 2025- July 8 July 22 August 12 August 26 September 9 September 23 October 14 October 28 November 12 December 9 2026- January 13 January 27 February 10 February 24 March 10 March 24 April 14 April 28 May 12 June 2 June 23 For more information, please contact Cindy Petersen . Share Welcome Welcome to our Community by Diligent public site, where you can find information about upcoming and recent meetings and participate in discussions about our community. Select the Welcome banner for additional information about using this site. Disclaimer: The documents contained in this system are intended for information only. To verify the accuracy and currency of this information, please contact us directly. Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals © Diligent Community 2026 Vail School District User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "apptegy:vail:60704267@58001f6d9183ff611695c4076c8a16808e7e354852148a773f6f6b3c82b2b6c4",
+   "meetingId": "apptegy:vail:60704267",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "documentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "contentHash": "58001f6d9183ff611695c4076c8a16808e7e354852148a773f6f6b3c82b2b6c4",
+   "retrievedAt": "2026-08-14T03:15:24.621Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "sourceOrg": "Vail School District Governing Board",
+   "collectedAt": "2026-08-14T03:15:24.621Z",
+   "verifiedAt": null,
+   "text": "Vail School District - Home Skip Navigation Jump to SideBar Quick Menu Public site Policy Sign in Vail School District Where Education is a Community Effort Your Javascript is turned off, without it, this site will not operate as intended. Home Welcome to Vail School District Home Calendar Meetings Search Home Vail School District Governing Board Board Meetings are held on the second and fourth Tuesday of the month (unless otherwise noted) at 7:00 p.m. at: Calvin Baker Leadership Center 13801 E. Benson Highway, Vail, Arizona Doors will be opened 15 minutes prior to the start of the meeting. The 2025/2026 schedule of Regular Meetings of the Vail School District Governing Board is as follows: 2025- July 8 July 22 August 12 August 26 September 9 September 23 October 14 October 28 November 12 December 9 2026- January 13 January 27 February 10 February 24 March 10 March 24 April 14 April 28 May 12 June 2 June 23 For more information, please contact Cindy Petersen . Share Welcome Welcome to our Community by Diligent public site, where you can find information about upcoming and recent meetings and participate in discussions about our community. Select the Welcome banner for additional information about using this site. Disclaimer: The documents contained in this system are intended for information only. To verify the accuracy and currency of this information, please contact us directly. Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals © Diligent Community 2026 Vail School District User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "apptegy:vail:60704803@a33622e39f8de8420e06f0af82c67f19c99365bc264fd206edf73b390cdc9a8e",
+   "meetingId": "apptegy:vail:60704803",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "documentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "contentHash": "a33622e39f8de8420e06f0af82c67f19c99365bc264fd206edf73b390cdc9a8e",
+   "retrievedAt": "2026-08-14T03:15:25.106Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "sourceOrg": "Vail School District Governing Board",
+   "collectedAt": "2026-08-14T03:15:25.106Z",
+   "verifiedAt": null,
+   "text": "Vail School District - Home Skip Navigation Jump to SideBar Quick Menu Public site Policy Sign in Vail School District Where Education is a Community Effort Your Javascript is turned off, without it, this site will not operate as intended. Home Welcome to Vail School District Home Calendar Meetings Search Home Vail School District Governing Board Board Meetings are held on the second and fourth Tuesday of the month (unless otherwise noted) at 7:00 p.m. at: Calvin Baker Leadership Center 13801 E. Benson Highway, Vail, Arizona Doors will be opened 15 minutes prior to the start of the meeting. The 2025/2026 schedule of Regular Meetings of the Vail School District Governing Board is as follows: 2025- July 8 July 22 August 12 August 26 September 9 September 23 October 14 October 28 November 12 December 9 2026- January 13 January 27 February 10 February 24 March 10 March 24 April 14 April 28 May 12 June 2 June 23 For more information, please contact Cindy Petersen . Share Welcome Welcome to our Community by Diligent public site, where you can find information about upcoming and recent meetings and participate in discussions about our community. Select the Welcome banner for additional information about using this site. Disclaimer: The documents contained in this system are intended for information only. To verify the accuracy and currency of this information, please contact us directly. Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals © Diligent Community 2026 Vail School District User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "apptegy:vail:60705239@6f77b73efe220973da757436d889ad1f439ce5ba47b3f330184cf46f997f574d",
+   "meetingId": "apptegy:vail:60705239",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "documentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "contentHash": "6f77b73efe220973da757436d889ad1f439ce5ba47b3f330184cf46f997f574d",
+   "retrievedAt": "2026-08-14T03:15:45.062Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "sourceOrg": "Vail School District Governing Board",
+   "collectedAt": "2026-08-14T03:15:45.062Z",
+   "verifiedAt": null,
+   "text": "Vail School District - Home Skip Navigation Jump to SideBar Quick Menu Public site Policy Sign in Vail School District Where Education is a Community Effort Your Javascript is turned off, without it, this site will not operate as intended. Home Welcome to Vail School District Home Calendar Meetings Search Home Vail School District Governing Board Board Meetings are held on the second and fourth Tuesday of the month (unless otherwise noted) at 7:00 p.m. at: Calvin Baker Leadership Center 13801 E. Benson Highway, Vail, Arizona Doors will be opened 15 minutes prior to the start of the meeting. The 2025/2026 schedule of Regular Meetings of the Vail School District Governing Board is as follows: 2025- July 8 July 22 August 12 August 26 September 9 September 23 October 14 October 28 November 12 December 9 2026- January 13 January 27 February 10 February 24 March 10 March 24 April 14 April 28 May 12 June 2 June 23 For more information, please contact Cindy Petersen . Share Welcome Welcome to our Community by Diligent public site, where you can find information about upcoming and recent meetings and participate in discussions about our community. Select the Welcome banner for additional information about using this site. Disclaimer: The documents contained in this system are intended for information only. To verify the accuracy and currency of this information, please contact us directly. Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals © Diligent Community 2026 Vail School District User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "diligent:tusd1:493@afbbca07a6910525e545c94156982a078aeed9f8e8e9ec31d48114c052457e58",
+   "meetingId": "diligent:tusd1:493",
+   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+   "documentUrl": "https://govboard.tusd1.org/",
+   "contentHash": "afbbca07a6910525e545c94156982a078aeed9f8e8e9ec31d48114c052457e58",
+   "retrievedAt": "2026-08-14T03:15:45.987Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://govboard.tusd1.org/",
+   "sourceOrg": "Tucson Unified School District Governing Board",
+   "collectedAt": "2026-08-14T03:15:45.987Z",
+   "verifiedAt": null,
+   "text": "Tucson Unified Governing Board Next Meeting View the Governing Board Meeting Live. Governing Board Meeting 8/25/2026 4:30pm - 8:30pm &times; Governing Board Meeting Date & Time: 8/25/2026 4:30pm - 8:30pm Governing Board meetings are held at the Duffy Community Center, 5145 E. 5 th Street, 85711, in the Multipurpose Room. All meeting notices, agendas, minutes, actions, recordings, and other resources are available on Diligent Community . Audio-video recordings are available shortly after the meetings also on Diligent Community . Close Board Members Dr. Ravi Shah Email Dr. Ravi Shah Board President Term expires: December 31, 2028 Natalie Luna Rose Email Natalie Luna Rose Board Clerk Term expires: December 31, 2028 Jennifer Eckstrom Email Jennifer Eckstrom Term expires: December 31, 2026 Val Romero Email Val Romero Term Expires: December 31, 2026 Sadie Shaw Email Sadie Shaw Term expires: December 31, 2028 Current Members' Bios Members: 1867-Present (PDF) Contact the Board Email Governing Board ( [email&#160;protected] ) Phone: (520) 225-6070 FAX: (520) 798-8767 Policies for Review: When the Governing Board is soliciting feedback on policies proposed for elimination, revision, and adoption, please click here to: Share your feedback Board Meeting The Governing Board will hold a Special Meeting on Tuesday, August 25, 2026 with Executive Session beginning at 4:30 p.m. and the Public meeting scheduled to begin at 5:30 p.m. at the Duffy Community Center - Multipurpose Room, 5145 E. Fifth Street, Tucson, AZ 85711. There will be a Public Hearing at the August 25th meeting for the Revision of Instructional Time Model (ITM) for Palo Verde High Magnet School Effective for the 2026-2027 School Year. Public access for each meeting will begin 15 minutes prior to the vote to go into Executive Session. Meeting notices are posted outside the front door at the TUSD District Office at 1010 E. Tenth Street, Tucson, AZ 85719. Call to the Audience The following procedures related to the Call to the Audience portion of Board meetings will be observed: Members of the public who wish to address the Board shall complete a Request to Address Board form and submit electronically to the Board office by noon the day of the meeting or physically to Board Staff at the start of the meeting before the close of Call to the Audience. Submission must include name of speaker, topic of comments and should indicate which agenda item your comments relate to. Submission must indicate whether individuals will address the Board in person or will submit written comments to be read into the record (email written comments to [email&#160;protected] ) by noon the day of the meeting. The complete rules for Call to the Audience are located in Governing Board Policy BEDH - Public Participation at Board Meetings, Policy-Code-BEDH (tusd1.org) . Se observar&aacute;n los siguientes procedimientos relacionados con la porci&oacute;n del Llamado a la Audiencia: Los miembros del p&uacute;blico que deseen abordar a la Mesa Directiva deben llenar la forma Petici&oacute;n para Dirigirse a La Mesa Directiva y someta esta forma electronicamente a la oficina de la Mesa Directiva para el mediodia el dia de la junta, o fisicamente al personal de la Mesa Directiva en la reuni&oacute;n en cualquier momento antes del cierre del Llamado a la Audiencia. Debe incluir su nombre, tema de los comentarios y debe incluir cu&aacute;l asunto de la agenda se relacionan sus comentarios. Debe indicar si desea dirigirse a la Mesa Directiva en persona o someter sus comentarios escritos para ser leidos (comentarios escritos pueden ser eviados por correo electr&oacute;nico al [email&#160;protected] ) para el mediodia del dia de la junta. Las reglas completes para la Llamado a la Audiencia pueden encontrar en la Pol&iacute;tica de la Mesa Directiva BEDH &ndash; Public Participation at Board Meetings, Policy-Code-BEDH (tusd1.org) . Meeting Materials Beginning January 13, 2026, Tucson Unified will be using Diligent Community to provide easy access to support materials, greater efficiency for the district, and increased transparency. To access agenda items and support materials go to Diligent Community . Recordings Audio-video recordings are available after the meetings on Diligent Community just choose the meeting you wish to view and then select video. Vacancies Events with 3 or More Members Impact Tucson Community and Family Resource Fair - July 25, 2026 Proclamations Resolutions National School Counseling Week Proclamation - February 2-6, 2026 Career & Technical Education (CTE) Month Proclamation - February 2026 Purchasing Month Proclamation - March 2026 Social Worker Month Proclamation - March 2026 Live Meeting Videos Governing Board meetings will be available here when meetings are in session. August 11, 2026 Meeting Vote to Convene On district Windows devices, students and staff may find that these videos on YouTube are blocked. If so, please log into Google with your district credentials . Error Message: For more details and instructions, please visit our TS Article on YouTube Videos (Sharepoint) . Thank you for your patience, as we work to resolve this.",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "diligent:tusd1:496@75c1f8e05cca2c49482375aba657bd91ff686b05413363ff299da2732cd713d5",
+   "meetingId": "diligent:tusd1:496",
+   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+   "documentUrl": "https://govboard.tusd1.org/",
+   "contentHash": "75c1f8e05cca2c49482375aba657bd91ff686b05413363ff299da2732cd713d5",
+   "retrievedAt": "2026-08-14T03:15:46.607Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://govboard.tusd1.org/",
+   "sourceOrg": "Tucson Unified School District Governing Board",
+   "collectedAt": "2026-08-14T03:15:46.607Z",
+   "verifiedAt": null,
+   "text": "Tucson Unified Governing Board Next Meeting View the Governing Board Meeting Live. Governing Board Meeting 8/25/2026 4:30pm - 8:30pm &times; Governing Board Meeting Date & Time: 8/25/2026 4:30pm - 8:30pm Governing Board meetings are held at the Duffy Community Center, 5145 E. 5 th Street, 85711, in the Multipurpose Room. All meeting notices, agendas, minutes, actions, recordings, and other resources are available on Diligent Community . Audio-video recordings are available shortly after the meetings also on Diligent Community . Close Board Members Dr. Ravi Shah Email Dr. Ravi Shah Board President Term expires: December 31, 2028 Natalie Luna Rose Email Natalie Luna Rose Board Clerk Term expires: December 31, 2028 Jennifer Eckstrom Email Jennifer Eckstrom Term expires: December 31, 2026 Val Romero Email Val Romero Term Expires: December 31, 2026 Sadie Shaw Email Sadie Shaw Term expires: December 31, 2028 Current Members' Bios Members: 1867-Present (PDF) Contact the Board Email Governing Board ( [email&#160;protected] ) Phone: (520) 225-6070 FAX: (520) 798-8767 Policies for Review: When the Governing Board is soliciting feedback on policies proposed for elimination, revision, and adoption, please click here to: Share your feedback Board Meeting The Governing Board will hold a Special Meeting on Tuesday, August 25, 2026 with Executive Session beginning at 4:30 p.m. and the Public meeting scheduled to begin at 5:30 p.m. at the Duffy Community Center - Multipurpose Room, 5145 E. Fifth Street, Tucson, AZ 85711. There will be a Public Hearing at the August 25th meeting for the Revision of Instructional Time Model (ITM) for Palo Verde High Magnet School Effective for the 2026-2027 School Year. Public access for each meeting will begin 15 minutes prior to the vote to go into Executive Session. Meeting notices are posted outside the front door at the TUSD District Office at 1010 E. Tenth Street, Tucson, AZ 85719. Call to the Audience The following procedures related to the Call to the Audience portion of Board meetings will be observed: Members of the public who wish to address the Board shall complete a Request to Address Board form and submit electronically to the Board office by noon the day of the meeting or physically to Board Staff at the start of the meeting before the close of Call to the Audience. Submission must include name of speaker, topic of comments and should indicate which agenda item your comments relate to. Submission must indicate whether individuals will address the Board in person or will submit written comments to be read into the record (email written comments to [email&#160;protected] ) by noon the day of the meeting. The complete rules for Call to the Audience are located in Governing Board Policy BEDH - Public Participation at Board Meetings, Policy-Code-BEDH (tusd1.org) . Se observar&aacute;n los siguientes procedimientos relacionados con la porci&oacute;n del Llamado a la Audiencia: Los miembros del p&uacute;blico que deseen abordar a la Mesa Directiva deben llenar la forma Petici&oacute;n para Dirigirse a La Mesa Directiva y someta esta forma electronicamente a la oficina de la Mesa Directiva para el mediodia el dia de la junta, o fisicamente al personal de la Mesa Directiva en la reuni&oacute;n en cualquier momento antes del cierre del Llamado a la Audiencia. Debe incluir su nombre, tema de los comentarios y debe incluir cu&aacute;l asunto de la agenda se relacionan sus comentarios. Debe indicar si desea dirigirse a la Mesa Directiva en persona o someter sus comentarios escritos para ser leidos (comentarios escritos pueden ser eviados por correo electr&oacute;nico al [email&#160;protected] ) para el mediodia del dia de la junta. Las reglas completes para la Llamado a la Audiencia pueden encontrar en la Pol&iacute;tica de la Mesa Directiva BEDH &ndash; Public Participation at Board Meetings, Policy-Code-BEDH (tusd1.org) . Meeting Materials Beginning January 13, 2026, Tucson Unified will be using Diligent Community to provide easy access to support materials, greater efficiency for the district, and increased transparency. To access agenda items and support materials go to Diligent Community . Recordings Audio-video recordings are available after the meetings on Diligent Community just choose the meeting you wish to view and then select video. Vacancies Events with 3 or More Members Impact Tucson Community and Family Resource Fair - July 25, 2026 Proclamations Resolutions National School Counseling Week Proclamation - February 2-6, 2026 Career & Technical Education (CTE) Month Proclamation - February 2026 Purchasing Month Proclamation - March 2026 Social Worker Month Proclamation - March 2026 Live Meeting Videos Governing Board meetings will be available here when meetings are in session. August 11, 2026 Meeting Vote to Convene On district Windows devices, students and staff may find that these videos on YouTube are blocked. If so, please log into Google with your district credentials . Error Message: For more details and instructions, please visit our TS Article on YouTube Videos (Sharepoint) . Thank you for your patience, as we work to resolve this.",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "diligent:tusd1:492@f45349bd4b86941feb3e68334f450234d46df13cac5126c978c21e24484da36e",
+   "meetingId": "diligent:tusd1:492",
+   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+   "documentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=492",
+   "contentHash": "f45349bd4b86941feb3e68334f450234d46df13cac5126c978c21e24484da36e",
+   "retrievedAt": "2026-08-14T03:15:47.564Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=492",
+   "sourceOrg": "Tucson Unified School District Governing Board",
+   "collectedAt": "2026-08-14T03:15:47.564Z",
+   "verifiedAt": null,
+   "text": "Tucson Unified School District - Meeting Information Skip Navigation Jump to SideBar Quick Menu Public site Sign in History, Tradition, Culture, and YOU! Your Javascript is turned off, without it, this site will not operate as intended. Home Â» Meeting Schedule Â» Meeting Information Welcome to Tucson Unified School District Home Calendar Meetings Search Share GOVERNING BOARD AGENDA REGULAR MEETING THE MEETING WILL BEGIN AT 4:30 P.M. TO VOTE TO GO INTO EXECUTIVE SESSION AND RECONVENE IN OPEN SESSION AT 5:30 P.M. PUBLIC ACCESS FOR EACH MEETING WILL BEGIN 15 MINUTES PRIOR TO THE VOTE TO GO INTO EXECUTIVE SESSION. -One or more Governing Board members will/may participate by telephonic or video communications. -Names and details, including available support documents, may be obtained during regular business hours at the TUSD Governing Board Office. -Upon request, TUSD will provide a certified interpreter to interpret Governing Board meetings whenever possible. Please contact Translations/Interpretations Services at 520-225-4858 at least 72 hours prior to the event. Every effort will be made to honor requests for interpretation services made with less than 72 hours notice. -A petición previa, TUSD proporcionará un intérprete titulado para interpretar las reuniones de la Mesa Directiva cuando lo sea posible. Favor de comunicarse a los Servicios de Traducción e Interpretación al 520-225-4858 al menos de 72 horas antes del evento. Se hará todo lo posible por atender a todas las solicitudes de interpretación realizados con menos de 72 horas de aviso previo. -If authorized by a majority vote of the members of the Governing Board, any matter on the open meeting agenda may be discussed in executive session for the purpose of obtaining legal advice thereon, pursuant to A.R.S. 38-431.03 (A)(3). The executive session will be held immediately after the vote and will not be open to the public. -The order of items on this agenda may be modified during the meeting at the discretion of the Board President or upon a motion to amend the order of business which is approved by the Board. Governing Board Members Aug 11 2026 GOVERNING BOARD AGENDA REGULAR MEETING Jul 14 2026 GOVERNING BOARD AGENDA REGULAR MEETING Jun 09 2026 GOVERNING BOARD AGENDA REGULAR MEETING May 12 2026 GOVERNING BOARD AGENDA REGULAR MEETING Apr 14 2026 GOVERNING BOARD AGENDA REGULAR MEETING Mar 10 2026 GOVERNING BOARD AGENDA REGULAR MEETING Feb 10 2026 GOVERNING BOARD AGENDA REGULAR MEETING Dec 09 2025 AGENDA FOR REGULAR BOARD MEETING Jul 22 2025 AGENDA FOR SPECIAL BOARD MEETING Jul 21 2025 AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Jul 15 2025 AGENDA FOR REGULAR BOARD MEETING Jun 17 2025 AGENDA FOR SPECIAL BOARD MEETING Jun 10 2025 AGENDA FOR REGULAR BOARD MEETING May 27 2025 AGENDA FOR SPECIAL BOARD MEETING May 13 2025 AGENDA FOR REGULAR BOARD MEETING Apr 29 2025 AGENDA FOR SPECIAL BOARD MEETING Apr 15 2025 AGENDA FOR REGULAR BOARD MEETING Mar 25 2025 AGENDA FOR SPECIAL BOARD MEETING Mar 04 2025 AGENDA FOR REGULAR BOARD MEETING Feb 25 2025 AGENDA FOR SPECIAL BOARD MEETING Feb 11 2025 AGENDA FOR REGULAR BOARD MEETING Jan 28 2025 AGENDA FOR SPECIAL BOARD MEETING Jan 21 2025 AGENDA FOR ORGANIZATIONAL AND REGULAR BOARD MEETING Jan 14 2025 MEETING POSTPONED DUE TO WATERLINE BREAK - RESCHEDULED TO JANUARY 21, 2025 (LOCATION TO FOLLOW PENDING STATUS OF REPAIRS) - AGENDA FOR ORGANIZATIONAL AND REGULAR BOARD MEETING Dec 10 2024 AGENDA FOR REGULAR BOARD MEETING Nov 19 2024 AGENDA FOR REGULAR BOARD MEETING Oct 29 2024 AGENDA FOR SPECIAL BOARD MEETING Oct 15 2024 AGENDA FOR REGULAR BOARD MEETING Sep 24 2024 AGENDA FOR SPECIAL BOARD MEETING Sep 10 2024 AGENDA FOR REGULAR BOARD MEETING Aug 27 2024 AGENDA FOR SPECIAL BOARD MEETING Aug 13 2024 AGENDA FOR REGULAR BOARD MEETING Jul 30 2024 AGENDA FOR SPECIAL BOARD MEETING Jul 23 2024 AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Jul 15 2024 AGENDA FOR REGULAR BOARD MEETING Jul 09 2024 AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Jun 11 2024 AGENDA FOR SPECIAL BOARD MEETING Jun 04 2024 AGENDA FOR REGULAR BOARD MEETING May 21 2024 AGENDA FOR SPECIAL BOARD MEETING May 14 2024 AGENDA FOR REGULAR BOARD MEETING Apr 23 2024 AGENDA FOR SPECIAL BOARD MEETING Apr 09 2024 AGENDA FOR REGULAR BOARD MEETING Apr 02 2024 AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Mar 26 2024 AGENDA FOR SPECIAL BOARD MEETING Mar 05 2024 AGENDA FOR REGULAR BOARD MEETING Feb 27 2024 AGENDA FOR SPECIAL BOARD MEETING Feb 13 2024 AGENDA FOR REGULAR BOARD MEETING Jan 30 2024 AGENDA FOR SPECIAL BOARD MEETING Jan 23 2024 AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Jan 16 2024 AGENDA FOR REGULAR BOARD MEETING Dec 12 2023 AGENDA FOR REGULAR BOARD MEETING Nov 28 2023 AGENDA FOR SPECIAL BOARD MEETING Nov 14 2023 AGENDA FOR REGULAR BOARD MEETING Oct 24 2023 AGENDA FOR SPECIAL BOARD MEETING Oct 17 2023 AGENDA FOR REGULAR BOARD MEETING Sep 26 2023 AGENDA FOR SPECIAL BOARD MEETING Sep 12 2023 AGENDA FOR REGULAR BOARD MEETING Aug 29 2023 AGENDA FOR SPECIAL BOARD MEETING Aug 22 2023 AGENDA FOR SPECIAL BOARD MEETING Aug 08 2023 AGENDA FOR REGULAR BOARD MEETING Jul 25 2023 AGENDA FOR SPECIAL BOARD MEETING Jul 18 2023 AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Jul 11 2023 AGENDA FOR REGULAR BOARD MEETING Jun 13 2023 AGENDA FOR REGULAR BOARD MEETING Jun 06 2023 AGENDA FOR SPECIAL BOARD MEETING - STUDY SESSION May 23 2023 AGENDA FOR SPECIAL BOARD MEETING May 09 2023 AGENDA FOR REGULAR BOARD MEETING Apr 25 2023 AGENDA FOR SPECIAL BOARD MEETING Apr 11 2023 AGENDA FOR REGULAR BOARD MEETING Mar 28 2023 AGENDA FOR SPECIAL BOARD MEETING Mar 14 2023 AGENDA FOR REGULAR BOARD MEETING Feb 28 2023 AGENDA FOR SPECIAL BOARD MEETING Feb 16 2023 AGENDA FOR REGULAR BOARD MEETING Jan 31 2023 AGENDA FOR SPECIAL BOARD MEETING Jan 24 2023 AGENDA FOR REGULAR BOARD MEETING Jan 10 2023 AGENDA FOR SPECIAL BOARD MEETING (ORGANIZATIONAL MEETING) Dec 06 2022 AGENDA FOR REGULAR BOARD MEETING Nov 29 2022 AGENDA FOR SPECIAL BOARD MEETING Nov 15 2022 AGENDA FOR REGULAR BOARD MEETING Oct 25 2022 AGENDA FOR SPECIAL BOARD MEETING Oct 06 2022 AGENDA FOR REGULAR BOARD MEETING Sep 20 2022 AGENDA FOR SPECIAL BOARD MEETING Sep 13 2022 AGENDA FOR REGULAR BOARD MEETING Aug 25 2022 CANCELED - AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Aug 24 2022 AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Aug 23 2022 AGENDA FOR SPECIAL BOARD MEETING Aug 16 2022 AGENDA FOR SPECIAL BOARD MEETING Aug 09 2022 AGENDA FOR REGULAR BOARD MEETING Jul 26 2022 AGENDA FOR SPECIAL BOARD MEETING Jul 21 2022 AGENDA FOR EXECUTIVE SESSION BOARD MEETING Jul 12 2022 AGENDA FOR REGULAR BOARD MEETING Jun 23 2022 CANCELLED AGENDA FOR EXECUTIVE SESSION BOARD MEETING Jun 21 2022 AGENDA FOR SPECIAL BOARD MEETING Jun 14 2022 AGENDA FOR REGULAR BOARD MEETING May 24 2022 AGENDA FOR SPECIAL BOARD MEETING May 19 2022 AGENDA FOR EXECUTIVE SESSION BOARD MEETING May 10 2022 AGENDA FOR REGULAR BOARD MEETING Apr 26 2022 AGENDA FOR SPECIAL BOARD MEETING Apr 12 2022 AGENDA FOR REGULAR BOARD MEETING Mar 22 2022 AGENDA FOR SPECIAL BOARD MEETING Mar 08 2022 AGENDA FOR REGULAR BOARD MEETING Feb 22 2022 AGENDA FOR SPECIAL BOARD MEETING Feb 08 2022 AGENDA FOR REGULAR BOARD MEETING Jan 25 2022 AGENDA FOR SPECIAL BOARD MEETING Jan 11 2022 AGENDA FOR REGULAR BOARD MEETING Jan 04 2022 AGENDA FOR SPECIAL BOARD MEETING Dec 07 2021 AGENDA FOR REGULAR BOARD MEETING Nov 23 2021 CANCELLED - AGENDA FOR SPECIAL BOARD MEETING Nov 09 2021 AGENDA FOR REGULAR BOARD MEETING Oct 26 2021 AGENDA FOR SPECIAL BOARD MEETING Oct 05 2021 AGENDA FOR REGULAR BOARD MEETING Sep 23 2021 AGENDA FOR SPECIAL BOARD MEETING Sep 09 2021 AGENDA FOR REGULAR BOARD MEETING Aug 24 2021 AGENDA FOR SPECIAL BOARD MEETING Aug 10 2021 AGENDA FOR REGULAR BOARD MEETING Aug 04 2021 AGENDA FOR EMERGENCY BOARD MEETING Jul 22 2021 AGENDA FOR EXECUTIVE SESSION BOARD MEETING Jul 20 2021 AGENDA FOR SPECIAL BOARD MEETING Jul 13 2021 AGENDA FOR REGULAR BOARD MEETING Jun 22 2021 AGENDA FOR SPECIAL BOARD MEETING Jun 08 2021 AGENDA FOR REGULAR BOARD MEETING May 25 2021 AGENDA FOR SPECIAL BOARD MEETING May 11 2021 AGENDA FOR REGULAR BOARD MEETING Apr 27 2021 AGENDA FOR SPECIAL BOARD MEETING Apr 13 2021 AGENDA FOR REGULAR BOARD MEETING Apr 07 2021 AGENDA FOR SPECIAL BOARD MEETING Mar 30 2021 AGENDA FOR SPECIAL BOARD MEETING Mar 09 2021 AGENDA FOR REGULAR BOARD MEETING Mar 02 2021 AGENDA FOR EXECUTIVE SESSION BOARD MEETING Mar 01 2021 AGENDA FOR SPECIAL BOARD MEETING Feb 23 2021 AGENDA FOR SPECIAL BOARD MEETING Feb 09 2021 AGENDA FOR REGULAR BOARD MEETING Jan 26 2021 AGENDA FOR SPECIAL BOARD MEETING Jan 19 2021 AGENDA FOR SPECIAL BOARD MEETING Jan 12 2021 AGENDA FOR REGULAR BOARD MEETING Jan 05 2021 AGENDA FOR SPECIAL BOARD MEETING Dec 08 2020 AGENDA FOR REGULAR BOARD MEETING Nov 17 2020 AGENDA FOR REGULAR BOARD MEETING Oct 27 2020 AGENDA FOR SPECIAL BOARD MEETING Oct 06 2020 AGENDA FOR REGULAR BOARD MEETING Sep 22 2020 AGENDA FOR SPECIAL BOARD MEETING Sep 09 2020 AGENDA FOR REGULAR BOARD MEETING Aug 25 2020 AGENDA FOR SPECIAL BOARD MEETING Aug 11 2020 AGENDA FOR REGULAR BOARD MEETING Aug 10 2020 AGENDA FOR EXECUTIVE SESSION BOARD MEETING Jul 29 2020 AGENDA FOR EXECUTIVE SESSION BOARD MEETING Jul 28 2020 AGENDA FOR SPECIAL BOARD MEETING Jul 14 2020 AGENDA FOR REGULAR BOARD MEETING Jun 23 2020 AGENDA FOR SPECIAL BOARD MEETING Jun 16 2020 AGENDA FOR SPECIAL BOARD MEETING Jun 09 2020 AGENDA FOR REGULAR BOARD MEETING Jun 02 2020 AGENDA FOR SPECIAL BOARD MEETING May 27 2020 AGENDA FOR SPECIAL BOARD MEETING May 12 2020 AGENDA FOR REGULAR BOARD MEETING Apr 28 2020 AGENDA FOR SPECIAL BOARD MEETING Apr 07 2020 AGENDA FOR REGULAR BOARD MEETING Mar 27 2020 AGENDA FOR SPECIAL BOARD MEETING Mar 18 2020 AGENDA FOR SPECIAL BOARD MEETING Mar 10 2020 AGENDA FOR REGULAR BOARD MEETING Mar 03 2020 AGENDA FOR SPECIAL BOARD MEETING Feb 18 2020 AGENDA FOR SPECIAL BOARD MEETING Feb 11 2020 AGENDA FOR REGULAR BOARD MEETING Jan 28 2020 AGENDA FOR SPECIAL BOARD MEETING Jan 14 2020 AGENDA FOR REGULAR BOARD MEETING Jan 07 2020 AGENDA FOR SPECIAL BOARD MEETING Dec 10 2019 AGENDA FOR REGULAR BOARD MEETING Nov 12 2019 AGENDA FOR REGULAR BOARD MEETING Oct 16 2019 AGENDA FOR REGULAR BOARD MEETING Oct 02 2019 AGENDA FOR SPECIAL BOARD MEETING Sep 24 2019 AGENDA FOR SPECIAL BOARD MEETING Sep 10 2019 AGENDA FOR REGULAR BOARD MEETING Aug 27 2019 AGENDA FOR SPECIAL BOARD MEETING Aug 22 2019 AGENDA FOR SPECIAL BOARD MEETING Aug 15 2019 AGENDA FOR SPECIAL BOARD MEETING Aug 13 2019 AGENDA FOR REGULAR BOARD MEETING Jul 23 2019 AGENDA FOR SPECIAL BOARD MEETING Jul 09 2019 AGENDA FOR REGULAR BOARD MEETING Jun 25 2019 AGENDA FOR SPECIAL BOARD MEETING Jun 18 2019 AGENDA FOR REGULAR BOARD MEETING May 28 2019 AGENDA FOR SPECIAL BOARD MEETING May 21 2019 AGENDA FOR SPECIAL BOARD MEETING May 14 2019 AGENDA FOR REGULAR BOARD MEETING Apr 30 2019 AGENDA FOR SPECIAL BOARD MEETING Apr 23 2019 AGENDA FOR SPECIAL BOARD MEETING Apr 09 2019 AGENDA FOR REGULAR BOARD MEETING Mar 26 2019 AGENDA FOR SPECIAL BOARD MEETING Mar 12 2019 AGENDA FOR REGULAR BOARD MEETING Feb 26 2019 AGENDA FOR SPECIAL BOARD MEETING Feb 12 2019 AGENDA FOR REGULAR BOARD MEETING Time: Location: Private Version For: Public User Agenda Splitscreen Live Meeting Minutes Print Version Versions Signed Minutes Accessible Web Version Annotate Agenda Show Map Hide Map Board Application: -Select- Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals Members Val Romero Sadie Shaw Jennifer Eckstrom Natalie Luna Rose Ravi Shah © Diligent Community 2026 Tucson Unified School District User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "diligent:tusd1:485@d94ab0837cd3d4f1e8e011efd242a0aedade5b4d9c9d0ef177a6df662ced4f28",
+   "meetingId": "diligent:tusd1:485",
+   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+   "documentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=485",
+   "contentHash": "d94ab0837cd3d4f1e8e011efd242a0aedade5b4d9c9d0ef177a6df662ced4f28",
+   "retrievedAt": "2026-08-14T03:15:48.002Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=485",
+   "sourceOrg": "Tucson Unified School District Governing Board",
+   "collectedAt": "2026-08-14T03:15:48.002Z",
+   "verifiedAt": null,
+   "text": "Tucson Unified School District - Meeting Information Skip Navigation Jump to SideBar Quick Menu Public site Sign in History, Tradition, Culture, and YOU! Your Javascript is turned off, without it, this site will not operate as intended. Home Â» Meetings Â» Meeting Information Welcome to Tucson Unified School District Home Calendar Meetings Search Share GOVERNING BOARD AGENDA SPECIAL MEETING THE MEETING WILL BEGIN AT 4:30 P.M. TO VOTE TO GO INTO EXECUTIVE SESSION AND RECONVENE IN OPEN SESSION AT 5:30 P.M. PUBLIC ACCESS FOR EACH MEETING WILL BEGIN 15 MINUTES PRIOR TO THE VOTE TO GO INTO EXECUTIVE SESSION. -One or more Governing Board members will/may participate by telephonic or video communications. -Names and details, including available support documents, may be obtained during regular business hours at the TUSD Governing Board Office. -Upon request, TUSD will provide a certified interpreter to interpret Governing Board meetings whenever possible. Please contact Translations/Interpretations Services at 520-225-4858 at least 72 hours prior to the event. Every effort will be made to honor requests for interpretation services made with less than 72 hours notice. -A petición previa, TUSD proporcionará un intérprete titulado para interpretar las reuniones de la Mesa Directiva cuando lo sea posible. Favor de comunicarse a los Servicios de Traducción e Interpretación al 520-225-4858 al menos de 72 horas antes del evento. Se hará todo lo posible por atender a todas las solicitudes de interpretación realizados con menos de 72 horas de aviso previo. -If authorized by a majority vote of the members of the Governing Board, any matter on the open meeting agenda may be discussed in executive session for the purpose of obtaining legal advice thereon, pursuant to A.R.S. 38-431.03 (A)(3). The executive session will be held immediately after the vote and will not be open to the public. -The order of items on this agenda may be modified during the meeting at the discretion of the Board President or upon a motion to amend the order of business which is approved by the Board. Governing Board Members Aug 04 2026 GOVERNING BOARD AGENDA SPECIAL MEETING Jul 28 2026 GOVERNING BOARD AGENDA SPECIAL MEETING Jun 16 2026 GOVERNING BOARD AGENDA SPECIAL MEETING May 26 2026 GOVERNING BOARD AGENDA SPECIAL MEETING Apr 28 2026 GOVERNING BOARD AGENDA SPECIAL MEETING Mar 31 2026 GOVERNING BOARD AGENDA SPECIAL MEETING Feb 24 2026 GOVERNING BOARD AGENDA SPECIAL MEETING Jan 27 2026 GOVERNING BOARD AGENDA SPECIAL MEETING Time: Location: Private Version For: Public User Agenda Splitscreen Live Meeting Minutes Print Version Versions Signed Minutes Accessible Web Version Annotate Agenda Show Map Hide Map Board Application: -Select- Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals Members Val Romero Sadie Shaw Jennifer Eckstrom Natalie Luna Rose Ravi Shah © Diligent Community 2026 Tucson Unified School District User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "diligent:tusd1:489@0bb0a6b84283862458000aa2a7babf3a96ec64a922b6cdcf8d5a63b583030519",
+   "meetingId": "diligent:tusd1:489",
+   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+   "documentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=489",
+   "contentHash": "0bb0a6b84283862458000aa2a7babf3a96ec64a922b6cdcf8d5a63b583030519",
+   "retrievedAt": "2026-08-14T03:15:48.352Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=489",
+   "sourceOrg": "Tucson Unified School District Governing Board",
+   "collectedAt": "2026-08-14T03:15:48.352Z",
+   "verifiedAt": null,
+   "text": "Tucson Unified School District - Meeting Information Skip Navigation Jump to SideBar Quick Menu Public site Sign in History, Tradition, Culture, and YOU! Your Javascript is turned off, without it, this site will not operate as intended. Home Â» Meeting Schedule Â» Meeting Information Welcome to Tucson Unified School District Home Calendar Meetings Search Share AGENDA FOR AUDIT COMMITTEE MEETING Members Jul 15 2026 AGENDA FOR AUDIT COMMITTEE MEETING Apr 15 2026 AGENDA FOR AUDIT COMMITTEE MEETING Mar 27 2026 AGENDA FOR AUDIT COMMITTEE MEETING Feb 13 2026 AGENDA FOR AUDIT COMMITTEE SPECIAL MEETING Feb 06 2026 AGENDA FOR AUDIT COMMITTEE SPECIAL MEETING Jan 21 2026 AUDIT COMMITTEE MEETING Oct 15 2025 AGENDA FOR AUDIT COMMITTEE MEETING Aug 01 2025 AGENDA FOR AUDIT COMMITTEE SPECIAL MEETING Jul 23 2025 AGENDA FOR AUDIT COMMITTEE MEETING SPECIAL EXECUTIVE SESSION MEETING Jul 16 2025 AGENDA FOR AUDIT COMMITTEE MEETING Jun 18 2025 AGENDA FOR AUDIT COMMITTEE MEETING Apr 16 2025 AGENDA FOR AUDIT COMMITTEE MEETING Mar 19 2025 AGENDA FOR AUDIT COMMITTEE MEETING Feb 19 2025 AGENDA FOR AUDIT COMMITTEE MEETING Jan 15 2025 AGENDA FOR AUDIT COMMITTEE MEETING Dec 18 2024 AGENDA FOR AUDIT COMMITTEE MEETING Nov 20 2024 AGENDA FOR AUDIT COMMITTEE MEETING Oct 16 2024 AGENDA FOR AUDIT COMMITTEE MEETING Sep 25 2024 AGENDA FOR AUDIT COMMITTEE MEETING Aug 28 2024 AGENDA FOR AUDIT COMMITTEE MEETING Jun 19 2024 AGENDA FOR AUDIT COMMITTEE MEETING May 15 2024 AGENDA FOR AUDIT COMMITTEE MEETING Apr 17 2024 AGENDA FOR AUDIT COMMITTEE MEETING Mar 20 2024 AGENDA FOR AUDIT COMMITTEE MEETING Feb 16 2024 AGENDA FOR AUDIT COMMITTEE MEETING Nov 17 2023 AGENDA FOR AUDIT COMMITTEE MEETING Aug 18 2023 AUDIT COMMITTEE MEETING Jun 23 2023 AGENDA FOR AUDIT COMMITTEE MEETING May 19 2023 AGENDA FOR AUDIT COMMITTEE MEETING Feb 17 2023 AGENDA FOR AUDIT COMMITTEE MEETING Nov 18 2022 CANCELLED - AGENDA FOR AUDIT COMMITTEE MEETING Aug 19 2022 AGENDA FOR AUDIT COMMITTEE MEETING May 20 2022 AGENDA FOR AUDIT COMMITTEE MEETING Apr 29 2022 CANCELLED - AGENDA FOR AUDIT COMMITTEE MEETING Feb 17 2022 CANCELLED - AGENDA FOR AUDIT COMMITTEE MEETING Jan 21 2022 CANCELLED - AGENDA FOR AUDIT COMMITTEE MEETING Oct 22 2021 AGENDA FOR AUDIT COMMITTEE MEETING Jul 01 2021 AGENDA FOR AUDIT COMMITTEE MEETING Jun 24 2021 AGENDA FOR AUDIT COMMITTEE MEETING Mar 26 2021 AGENDA FOR AUDIT COMMITTEE MEETING Feb 19 2021 AGENDA FOR AUDIT COMMITTEE MEETING Jan 29 2021 AGENDA FOR AUDIT COMMITTEE MEETING Dec 11 2020 AGENDA FOR AUDIT COMMITTEE MEETING Nov 20 2020 AGENDA FOR AUDIT COMMITTEE MEETING Oct 23 2020 AGENDA FOR AUDIT COMMITTEE MEETING Sep 25 2020 AGENDA FOR AUDIT COMMITTEE MEETING Aug 28 2020 AGENDA FOR AUDIT COMMITTEE MEETING Jun 26 2020 AGENDA FOR AUDIT COMMITTEE MEETING May 15 2020 AGENDA FOR AUDIT COMMITTEE MEETING May 01 2020 AGENDA FOR AUDIT COMMITTEE MEETING Apr 24 2020 AGENDA FOR AUDIT COMMITTEE MEETING Feb 28 2020 AGENDA FOR AUDIT COMMITTEE MEETING Jan 24 2020 AGENDA FOR AUDIT COMMITTEE MEETING Dec 13 2019 AGENDA FOR AUDIT COMMITTEE MEETING Nov 22 2019 AGENDA FOR AUDIT COMMITTEE MEETING Nov 04 2019 AGENDA FOR AUDIT COMMITTEE MEETING Oct 18 2019 AGENDA FOR AUDIT COMMITTEE MEETING Sep 27 2019 AGENDA FOR AUDIT COMMITTEE MEETING Aug 23 2019 AGENDA FOR AUDIT COMMITTEE MEETING Jun 28 2019 AGENDA FOR AUDIT COMMITTEE MEETING May 17 2019 AGENDA FOR AUDIT COMMITTEE MEETING Apr 26 2019 AGENDA FOR AUDIT COMMITTEE MEETING Time: Location: Private Version For: Public User Agenda Splitscreen Live Meeting Minutes Print Version Versions Signed Minutes Accessible Web Version Annotate Agenda Show Map Hide Map Board Application: -Select- Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals Members Nicole DaSilva Tabitha Fox Kevin Oberg Derika Louk John Wallace © Diligent Community 2026 Tucson Unified School District User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "diligent:newburynh:3370@7914692adcd3880923485f5e78f1a0ddb69657fa14d3f590011a5f2785a35984",
+   "meetingId": "diligent:newburynh:3370",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "documentUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3370",
+   "contentHash": "7914692adcd3880923485f5e78f1a0ddb69657fa14d3f590011a5f2785a35984",
+   "retrievedAt": "2026-08-14T03:15:49.468Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3370",
+   "sourceOrg": "Town of Newbury",
+   "collectedAt": "2026-08-14T03:15:49.468Z",
+   "verifiedAt": null,
+   "text": "Town of Newbury - Meeting Information Skip Navigation Jump to SideBar Quick Menu Portal Document Center Help Portal Help Sign In Your Javascript is turned off, without it, this site will not operate as intended. \" class=\"glyphicon glyphicon-plus\" onclick=\"Portal.MasterPagePage.events.toggleImageRotator(false);\" onkeypress=\"if(event.keyCode === 13) { Portal.MasterPagePage.events.toggleImageRotator(false); event.preventDefault() }\" tabindex=\"0\"> \" class=\"glyphicon glyphicon-minus\" onclick=\"Portal.MasterPagePage.events.toggleImageRotator(true);\" onkeypress=\"if(event.keyCode === 13) { Portal.MasterPagePage.events.toggleImageRotator(true); event.preventDefault() }\" tabindex=\"0\"> Home Meetings Meeting Information Welcome to Town of Newbury Home Calendar Meetings Search Share Selectboard Selectboard meetings are held every other Monday, starting at 6:00 pm. 20 Jul 2026 Selectboard 20 Jul 2026 Selectboard 06 Jul 2026 Selectboard 22 Jun 2026 Selectboard 08 Jun 2026 Selectboard 26 May 2026 Selectboard 11 May 2026 Selectboard 27 Apr 2026 Selectboard 13 Apr 2026 Selectboard Working Session 13 Apr 2026 Selectboard 30 Mar 2026 Selectboard 16 Mar 2026 Selectboard 02 Mar 2026 Selectboard 17 Feb 2026 Selectboard 02 Feb 2026 Selectboard 02 Feb 2026 Selectboard 20 Jan 2026 Selectboard 09 Jan 2026 Selectboard - 09 Jan 2026 - Budget Work Session 05 Jan 2026 Selectboard 22 Dec 2025 Selectboard - 22 Dec 2025 - Highway Budget 22 Dec 2025 Selectboard 08 Dec 2025 Selectboard 08 Dec 2025 Selectboard - 08 Dec 2025 - Work Session, Fire Budget 24 Nov 2025 Selectboard 24 Nov 2025 Selectboard - 24 Nov 2025 - Advisory Budget Committee 10 Nov 2025 Selectboard 04 Nov 2025 Selectboard 27 Oct 2025 Selectboard 14 Oct 2025 Selectboard 29 Sep 2025 Selectboard 15 Sep 2025 Selectboard 02 Sep 2025 Selectboard 25 Aug 2025 Selectboard 18 Aug 2025 Selectboard 04 Aug 2025 Selectboard 28 Jul 2025 Selectboard 21 Jul 2025 Selectboard 14 Jul 2025 Selectboard 07 Jul 2025 Selectboard 27 Jun 2025 Selectboard 23 Jun 2025 Selectboard 09 Jun 2025 Selectboard 27 May 2025 Selectboard 23 May 2025 Selectboard 12 May 2025 Selectboard 29 Apr 2025 Selectboard 28 Apr 2025 Selectboard 14 Apr 2025 Selectboard 03 Apr 2025 Selectboard 31 Mar 2025 Selectboard 25 Mar 2025 Selectboard 17 Mar 2025 Selectboard 03 Mar 2025 Selectboard 18 Feb 2025 Selectboard 03 Feb 2025 Selectboard 21 Jan 2025 Selectboard 17 Jan 2025 Selectboard 10 Jan 2025 Selectboard 06 Jan 2025 Selectboard 23 Dec 2024 Selectboard 09 Dec 2024 Selectboard 25 Nov 2024 Selectboard 18 Nov 2024 Selectboard 12 Nov 2024 Selectboard 28 Oct 2024 Selectboard 18 Oct 2024 Selectboard 15 Oct 2024 Selectboard 13 Oct 2024 Selectboard 30 Sep 2024 Selectboard 16 Sep 2024 Selectboard 03 Sep 2024 Selectboard 19 Aug 2024 Selectboard 19 Aug 2024 Selectboard 05 Aug 2024 Selectboard 08 Jul 2024 Selectboard 24 Jun 2024 Selectboard 10 Jun 2024 Selectboard 28 May 2024 Selectboard 13 May 2024 Selectboard 29 Apr 2024 Selectboard 15 Apr 2024 Selectboard 01 Apr 2024 Selectboard 18 Mar 2024 Selectboard 04 Mar 2024 Selectboard 13 Feb 2024 Selectboard 05 Feb 2024 Selectboard 22 Jan 2024 Selectboard 08 Jan 2024 Selectboard 26 Dec 2023 Selectboard 18 Dec 2023 Selectboard 11 Dec 2023 Selectboard 30 Nov 2023 Selectboard 27 Nov 2023 Selectboard 16 Nov 2023 Selectboard 13 Nov 2023 Selectboard 06 Nov 2023 Selectboard 30 Oct 2023 Selectboard 23 Oct 2023 Selectboard 16 Oct 2023 Selectboard 02 Oct 2023 Selectboard 18 Sep 2023 Selectboard 05 Sep 2023 Selectboard 28 Aug 2023 Selectboard 21 Aug 2023 Selectboard 18 Aug 2023 Selectboard 15 Aug 2023 Selectboard 11 Aug 2023 Selectboard 07 Aug 2023 Selectboard 31 Jul 2023 Selectboard 27 Jul 2023 Selectboard 25 Jul 2023 Selectboard 24 Jul 2023 Selectboard 10 Jul 2023 Selectboard 26 Jun 2023 Selectboard 12 Jun 2023 Selectboard 30 May 2023 Selectboard 15 May 2023 Selectboard 01 May 2023 Selectboard 17 Apr 2023 Selectboard 03 Apr 2023 Selectboard 20 Mar 2023 Selectboard 21 Feb 2023 Selectboard 06 Feb 2023 Selectboard 23 Jan 2023 Selectboard 09 Jan 2023 Selectboard 27 Dec 2022 Selectboard 12 Dec 2022 Selectboard 28 Nov 2022 Selectboard 14 Nov 2022 Selectboard 31 Oct 2022 Selectboard 17 Oct 2022 Selectboard 03 Oct 2022 Selectboard 19 Sep 2022 Selectboard 22 Aug 2022 Selectboard 17 Aug 2022 Summer Informational Meeting 8-17 08 Aug 2022 Selectboard 25 Jul 2022 Selectboard 11 Jul 2022 Selectboard 27 Jun 2022 Selectboard 13 Jun 2022 Selectboard 23 May 2022 Selectboard 09 May 2022 Selectboard 25 Apr 2022 Selectboard 11 Apr 2022 Selectboard 28 Mar 2022 Selectboard 14 Mar 2022 Selectboard 03 Mar 2022 Selectboard 28 Feb 2022 Selectboard 14 Feb 2022 Selectboard 31 Jan 2022 Selectboard 18 Jan 2022 Selectboard 03 Jan 2022 Selectboard 20 Dec 2021 Selectboard 06 Dec 2021 Selectboard 22 Nov 2021 Selectboard 08 Nov 2021 Selectboard 25 Oct 2021 Selectboard 12 Oct 2021 Selectboard 27 Sep 2021 Selectboard 13 Sep 2021 Selectboard 30 Aug 2021 Selectboard 16 Aug 2021 Selectboard 02 Aug 2021 Selectboard 19 Jul 2021 Selectboard 06 Jul 2021 Selectboard 21 Jun 2021 Selectboard 07 Jun 2021 Selectboard 24 May 2021 Selectboard 10 May 2021 Selectboard 26 Apr 2021 Selectboard 12 Apr 2021 Selectboard 29 Mar 2021 Selectboard 15 Mar 2021 Selectboard 01 Mar 2021 Selectboard 16 Feb 2021 Selectboard 01 Feb 2021 Selectboard 19 Jan 2021 Selectboard 04 Jan 2021 Selectboard 21 Dec 2020 Selectboard 07 Dec 2020 Selectboard 23 Nov 2020 Selectboard 09 Nov 2020 Selectboard 26 Oct 2020 Selectboard 13 Oct 2020 Selectboard 28 Sep 2020 Selectboard 14 Sep 2020 Selectboard 31 Aug 2020 Selectboard 17 Aug 2020 Selectboard 03 Aug 2020 Selectboard 20 Jul 2020 Selectboard 06 Jul 2020 Selectboard 22 Jun 2020 Selectboard 08 Jun 2020 Selectboard 26 May 2020 Selectboard 11 May 2020 Selectboard 27 Apr 2020 Selectboard 13 Apr 2020 Selectboard 30 Mar 2020 Selectboard 16 Mar 2020 Selectboard 02 Mar 2020 Selectboard 18 Feb 2020 Selectboard 10 Feb 2020 Selectboard 03 Feb 2020 Selectboard 21 Jan 2020 Selectboard 06 Jan 2020 Selectboard 23 Dec 2019 Selectboard 09 Dec 2019 Selectboard 25 Nov 2019 Selectboard 12 Nov 2019 Selectboard 28 Oct 2019 Selectboard 15 Oct 2019 Selectboard 30 Sep 2019 Selectboard 16 Sep 2019 Selectboard 03 Sep 2019 Selectboard 19 Aug 2019 Selectboard 05 Aug 2019 Selectboard 22 Jul 2019 Selectboard 08 Jul 2019 Selectboard 24 Jun 2019 Selectboard 10 Jun 2019 Selectboard 28 May 2019 Selectboard 13 May 2019 Selectboard 29 Apr 2019 Selectboard 15 Apr 2019 Selectboard 01 Apr 2019 Selectboard 18 Mar 2019 Selectboard 04 Mar 2019 Selectboard 19 Feb 2019 Selectboard 04 Feb 2019 Selectboard 22 Jan 2019 Selectboard 07 Jan 2019 Selectboard 27 Dec 2018 Selectboard 10 Dec 2018 Selectboard 26 Nov 2018 Selectboard 13 Nov 2018 Selectboard 29 Oct 2018 Selectboard 15 Oct 2018 Selectboard 01 Oct 2018 Selectboard 17 Sep 2018 Selectboard 04 Sep 2018 Selectboard 20 Aug 2018 Selectboard 06 Aug 2018 Selectboard 23 Jul 2018 Selectboard 09 Jul 2018 Selectboard 11 Jun 2018 Selectboard 29 May 2018 Selectboard 14 May 2018 Selectboard 30 Apr 2018 Selectboard 16 Apr 2018 Selectboard 02 Apr 2018 Selectboard 19 Mar 2018 Selectboard 05 Mar 2018 Selectboard 20 Feb 2018 Selectboard 12 Feb 2018 Selectboard Bond & Budget Hearing 05 Feb 2018 Selectboard 22 Jan 2018 Selectboard 08 Jan 2018 Selectboard 26 Dec 2017 Selectboard 11 Dec 2017 Selectboard 27 Nov 2017 Selectboard 13 Nov 2017 Selectboard 30 Oct 2017 Selectboard 16 Oct 2017 Selectboard 02 Oct 2017 Selectboard 18 Sep 2017 Selectboard 05 Sep 2017 Selectboard 21 Aug 2017 Selectboard 07 Aug 2017 Selectboard 24 Jul 2017 Selectboard 17 Jul 2017 SB Meeting/Summer Town Meeting 10 Jul 2017 Selectboard 26 Jun 2017 Selectboard 12 Jun 2017 Selectboard 30 May 2017 Selectboard 15 May 2017 Selectboard 01 May 2017 Selectboard 17 Apr 2017 Selectboard 03 Apr 2017 Selectboard 20 Mar 2017 Selectboard 06 Mar 2017 Selectboard 21 Feb 2017 Selectboard 06 Feb 2017 Selectboard 23 Jan 2017 Selectboard 11 Jan 2017 Selectboard 27 Dec 2016 Selectboard 12 Dec 2016 Selectboard 28 Nov 2016 Selectboard 14 Nov 2016 Selectboard 31 Oct 2016 Selectboard 17 Oct 2016 Selectboard 03 Oct 2016 Selectboard 19 Sep 2016 Selectboard 06 Sep 2016 Selectboard 22 Aug 2016 Selectboard 08 Aug 2016 Selectboard 25 Jul 2016 Selectboard 11 Jul 2016 Selectboard 27 Jun 2016 Selectboard 13 Jun 2016 Selectboard 31 May 2016 Selectboard 16 May 2016 Selectboard 02 May 2016 Selectboard 18 Apr 2016 Selectboard 04 Apr 2016 Selectboard 21 Mar 2016 Selectboard 09 Mar 2016 Town Meeting 07 Mar 2016 Board of Selectmen 22 Feb 2016 Board of Selectmen 08 Feb 2016 Board of Selectmen 25 Jan 2016 Board of Selectmen 11 Jan 2016 Board of Selectmen 28 Dec 2015 Board of Selectmen 14 Dec 2015 Board of Selectmen Time: Location: Agenda Minutes Print Version Splitscreen Show Map Hide Map Board Application: -Select- Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More © iCompass - A Diligent Brand 2026 Town of Newbury User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "diligent:newburynh:3368@478e78a6a00360d33d3bd691c42756ee482229118194f55e968ee6e7c2c1a425",
+   "meetingId": "diligent:newburynh:3368",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "documentUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3368",
+   "contentHash": "478e78a6a00360d33d3bd691c42756ee482229118194f55e968ee6e7c2c1a425",
+   "retrievedAt": "2026-08-14T03:15:50.171Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3368",
+   "sourceOrg": "Town of Newbury",
+   "collectedAt": "2026-08-14T03:15:50.171Z",
+   "verifiedAt": null,
+   "text": "Town of Newbury - Meeting Information Skip Navigation Jump to SideBar Quick Menu Portal Document Center Help Portal Help Sign In Your Javascript is turned off, without it, this site will not operate as intended. \" class=\"glyphicon glyphicon-plus\" onclick=\"Portal.MasterPagePage.events.toggleImageRotator(false);\" onkeypress=\"if(event.keyCode === 13) { Portal.MasterPagePage.events.toggleImageRotator(false); event.preventDefault() }\" tabindex=\"0\"> \" class=\"glyphicon glyphicon-minus\" onclick=\"Portal.MasterPagePage.events.toggleImageRotator(true);\" onkeypress=\"if(event.keyCode === 13) { Portal.MasterPagePage.events.toggleImageRotator(true); event.preventDefault() }\" tabindex=\"0\"> Home Meetings Meeting Information Welcome to Town of Newbury Home Calendar Meetings Search Share Selectboard Selectboard meetings are held every other Monday, starting at 6:00 pm. 20 Jul 2026 Selectboard 20 Jul 2026 Selectboard 06 Jul 2026 Selectboard 22 Jun 2026 Selectboard 08 Jun 2026 Selectboard 26 May 2026 Selectboard 11 May 2026 Selectboard 27 Apr 2026 Selectboard 13 Apr 2026 Selectboard Working Session 13 Apr 2026 Selectboard 30 Mar 2026 Selectboard 16 Mar 2026 Selectboard 02 Mar 2026 Selectboard 17 Feb 2026 Selectboard 02 Feb 2026 Selectboard 02 Feb 2026 Selectboard 20 Jan 2026 Selectboard 09 Jan 2026 Selectboard - 09 Jan 2026 - Budget Work Session 05 Jan 2026 Selectboard 22 Dec 2025 Selectboard - 22 Dec 2025 - Highway Budget 22 Dec 2025 Selectboard 08 Dec 2025 Selectboard 08 Dec 2025 Selectboard - 08 Dec 2025 - Work Session, Fire Budget 24 Nov 2025 Selectboard 24 Nov 2025 Selectboard - 24 Nov 2025 - Advisory Budget Committee 10 Nov 2025 Selectboard 04 Nov 2025 Selectboard 27 Oct 2025 Selectboard 14 Oct 2025 Selectboard 29 Sep 2025 Selectboard 15 Sep 2025 Selectboard 02 Sep 2025 Selectboard 25 Aug 2025 Selectboard 18 Aug 2025 Selectboard 04 Aug 2025 Selectboard 28 Jul 2025 Selectboard 21 Jul 2025 Selectboard 14 Jul 2025 Selectboard 07 Jul 2025 Selectboard 27 Jun 2025 Selectboard 23 Jun 2025 Selectboard 09 Jun 2025 Selectboard 27 May 2025 Selectboard 23 May 2025 Selectboard 12 May 2025 Selectboard 29 Apr 2025 Selectboard 28 Apr 2025 Selectboard 14 Apr 2025 Selectboard 03 Apr 2025 Selectboard 31 Mar 2025 Selectboard 25 Mar 2025 Selectboard 17 Mar 2025 Selectboard 03 Mar 2025 Selectboard 18 Feb 2025 Selectboard 03 Feb 2025 Selectboard 21 Jan 2025 Selectboard 17 Jan 2025 Selectboard 10 Jan 2025 Selectboard 06 Jan 2025 Selectboard 23 Dec 2024 Selectboard 09 Dec 2024 Selectboard 25 Nov 2024 Selectboard 18 Nov 2024 Selectboard 12 Nov 2024 Selectboard 28 Oct 2024 Selectboard 18 Oct 2024 Selectboard 15 Oct 2024 Selectboard 13 Oct 2024 Selectboard 30 Sep 2024 Selectboard 16 Sep 2024 Selectboard 03 Sep 2024 Selectboard 19 Aug 2024 Selectboard 19 Aug 2024 Selectboard 05 Aug 2024 Selectboard 08 Jul 2024 Selectboard 24 Jun 2024 Selectboard 10 Jun 2024 Selectboard 28 May 2024 Selectboard 13 May 2024 Selectboard 29 Apr 2024 Selectboard 15 Apr 2024 Selectboard 01 Apr 2024 Selectboard 18 Mar 2024 Selectboard 04 Mar 2024 Selectboard 13 Feb 2024 Selectboard 05 Feb 2024 Selectboard 22 Jan 2024 Selectboard 08 Jan 2024 Selectboard 26 Dec 2023 Selectboard 18 Dec 2023 Selectboard 11 Dec 2023 Selectboard 30 Nov 2023 Selectboard 27 Nov 2023 Selectboard 16 Nov 2023 Selectboard 13 Nov 2023 Selectboard 06 Nov 2023 Selectboard 30 Oct 2023 Selectboard 23 Oct 2023 Selectboard 16 Oct 2023 Selectboard 02 Oct 2023 Selectboard 18 Sep 2023 Selectboard 05 Sep 2023 Selectboard 28 Aug 2023 Selectboard 21 Aug 2023 Selectboard 18 Aug 2023 Selectboard 15 Aug 2023 Selectboard 11 Aug 2023 Selectboard 07 Aug 2023 Selectboard 31 Jul 2023 Selectboard 27 Jul 2023 Selectboard 25 Jul 2023 Selectboard 24 Jul 2023 Selectboard 10 Jul 2023 Selectboard 26 Jun 2023 Selectboard 12 Jun 2023 Selectboard 30 May 2023 Selectboard 15 May 2023 Selectboard 01 May 2023 Selectboard 17 Apr 2023 Selectboard 03 Apr 2023 Selectboard 20 Mar 2023 Selectboard 21 Feb 2023 Selectboard 06 Feb 2023 Selectboard 23 Jan 2023 Selectboard 09 Jan 2023 Selectboard 27 Dec 2022 Selectboard 12 Dec 2022 Selectboard 28 Nov 2022 Selectboard 14 Nov 2022 Selectboard 31 Oct 2022 Selectboard 17 Oct 2022 Selectboard 03 Oct 2022 Selectboard 19 Sep 2022 Selectboard 22 Aug 2022 Selectboard 17 Aug 2022 Summer Informational Meeting 8-17 08 Aug 2022 Selectboard 25 Jul 2022 Selectboard 11 Jul 2022 Selectboard 27 Jun 2022 Selectboard 13 Jun 2022 Selectboard 23 May 2022 Selectboard 09 May 2022 Selectboard 25 Apr 2022 Selectboard 11 Apr 2022 Selectboard 28 Mar 2022 Selectboard 14 Mar 2022 Selectboard 03 Mar 2022 Selectboard 28 Feb 2022 Selectboard 14 Feb 2022 Selectboard 31 Jan 2022 Selectboard 18 Jan 2022 Selectboard 03 Jan 2022 Selectboard 20 Dec 2021 Selectboard 06 Dec 2021 Selectboard 22 Nov 2021 Selectboard 08 Nov 2021 Selectboard 25 Oct 2021 Selectboard 12 Oct 2021 Selectboard 27 Sep 2021 Selectboard 13 Sep 2021 Selectboard 30 Aug 2021 Selectboard 16 Aug 2021 Selectboard 02 Aug 2021 Selectboard 19 Jul 2021 Selectboard 06 Jul 2021 Selectboard 21 Jun 2021 Selectboard 07 Jun 2021 Selectboard 24 May 2021 Selectboard 10 May 2021 Selectboard 26 Apr 2021 Selectboard 12 Apr 2021 Selectboard 29 Mar 2021 Selectboard 15 Mar 2021 Selectboard 01 Mar 2021 Selectboard 16 Feb 2021 Selectboard 01 Feb 2021 Selectboard 19 Jan 2021 Selectboard 04 Jan 2021 Selectboard 21 Dec 2020 Selectboard 07 Dec 2020 Selectboard 23 Nov 2020 Selectboard 09 Nov 2020 Selectboard 26 Oct 2020 Selectboard 13 Oct 2020 Selectboard 28 Sep 2020 Selectboard 14 Sep 2020 Selectboard 31 Aug 2020 Selectboard 17 Aug 2020 Selectboard 03 Aug 2020 Selectboard 20 Jul 2020 Selectboard 06 Jul 2020 Selectboard 22 Jun 2020 Selectboard 08 Jun 2020 Selectboard 26 May 2020 Selectboard 11 May 2020 Selectboard 27 Apr 2020 Selectboard 13 Apr 2020 Selectboard 30 Mar 2020 Selectboard 16 Mar 2020 Selectboard 02 Mar 2020 Selectboard 18 Feb 2020 Selectboard 10 Feb 2020 Selectboard 03 Feb 2020 Selectboard 21 Jan 2020 Selectboard 06 Jan 2020 Selectboard 23 Dec 2019 Selectboard 09 Dec 2019 Selectboard 25 Nov 2019 Selectboard 12 Nov 2019 Selectboard 28 Oct 2019 Selectboard 15 Oct 2019 Selectboard 30 Sep 2019 Selectboard 16 Sep 2019 Selectboard 03 Sep 2019 Selectboard 19 Aug 2019 Selectboard 05 Aug 2019 Selectboard 22 Jul 2019 Selectboard 08 Jul 2019 Selectboard 24 Jun 2019 Selectboard 10 Jun 2019 Selectboard 28 May 2019 Selectboard 13 May 2019 Selectboard 29 Apr 2019 Selectboard 15 Apr 2019 Selectboard 01 Apr 2019 Selectboard 18 Mar 2019 Selectboard 04 Mar 2019 Selectboard 19 Feb 2019 Selectboard 04 Feb 2019 Selectboard 22 Jan 2019 Selectboard 07 Jan 2019 Selectboard 27 Dec 2018 Selectboard 10 Dec 2018 Selectboard 26 Nov 2018 Selectboard 13 Nov 2018 Selectboard 29 Oct 2018 Selectboard 15 Oct 2018 Selectboard 01 Oct 2018 Selectboard 17 Sep 2018 Selectboard 04 Sep 2018 Selectboard 20 Aug 2018 Selectboard 06 Aug 2018 Selectboard 23 Jul 2018 Selectboard 09 Jul 2018 Selectboard 11 Jun 2018 Selectboard 29 May 2018 Selectboard 14 May 2018 Selectboard 30 Apr 2018 Selectboard 16 Apr 2018 Selectboard 02 Apr 2018 Selectboard 19 Mar 2018 Selectboard 05 Mar 2018 Selectboard 20 Feb 2018 Selectboard 12 Feb 2018 Selectboard Bond & Budget Hearing 05 Feb 2018 Selectboard 22 Jan 2018 Selectboard 08 Jan 2018 Selectboard 26 Dec 2017 Selectboard 11 Dec 2017 Selectboard 27 Nov 2017 Selectboard 13 Nov 2017 Selectboard 30 Oct 2017 Selectboard 16 Oct 2017 Selectboard 02 Oct 2017 Selectboard 18 Sep 2017 Selectboard 05 Sep 2017 Selectboard 21 Aug 2017 Selectboard 07 Aug 2017 Selectboard 24 Jul 2017 Selectboard 17 Jul 2017 SB Meeting/Summer Town Meeting 10 Jul 2017 Selectboard 26 Jun 2017 Selectboard 12 Jun 2017 Selectboard 30 May 2017 Selectboard 15 May 2017 Selectboard 01 May 2017 Selectboard 17 Apr 2017 Selectboard 03 Apr 2017 Selectboard 20 Mar 2017 Selectboard 06 Mar 2017 Selectboard 21 Feb 2017 Selectboard 06 Feb 2017 Selectboard 23 Jan 2017 Selectboard 11 Jan 2017 Selectboard 27 Dec 2016 Selectboard 12 Dec 2016 Selectboard 28 Nov 2016 Selectboard 14 Nov 2016 Selectboard 31 Oct 2016 Selectboard 17 Oct 2016 Selectboard 03 Oct 2016 Selectboard 19 Sep 2016 Selectboard 06 Sep 2016 Selectboard 22 Aug 2016 Selectboard 08 Aug 2016 Selectboard 25 Jul 2016 Selectboard 11 Jul 2016 Selectboard 27 Jun 2016 Selectboard 13 Jun 2016 Selectboard 31 May 2016 Selectboard 16 May 2016 Selectboard 02 May 2016 Selectboard 18 Apr 2016 Selectboard 04 Apr 2016 Selectboard 21 Mar 2016 Selectboard 09 Mar 2016 Town Meeting 07 Mar 2016 Board of Selectmen 22 Feb 2016 Board of Selectmen 08 Feb 2016 Board of Selectmen 25 Jan 2016 Board of Selectmen 11 Jan 2016 Board of Selectmen 28 Dec 2015 Board of Selectmen 14 Dec 2015 Board of Selectmen Time: Location: Agenda Minutes Print Version Splitscreen Show Map Hide Map Board Application: -Select- Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More © iCompass - A Diligent Brand 2026 Town of Newbury User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "diligent:pcc:706@9c912946420cbd986f871ff273b5234bd1632aaa38a86947ec1f6dde59c341b5",
+   "meetingId": "diligent:pcc:706",
+   "ocdId": null,
+   "documentUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=706",
+   "contentHash": "9c912946420cbd986f871ff273b5234bd1632aaa38a86947ec1f6dde59c341b5",
+   "retrievedAt": "2026-08-14T03:15:53.292Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=706",
+   "sourceOrg": "Pima Community College Governing Board",
+   "collectedAt": "2026-08-14T03:15:53.292Z",
+   "verifiedAt": null,
+   "text": "Pima Community College - Meeting Information Skip Navigation Jump to SideBar Quick Menu Public site Sign in Your Javascript is turned off, without it, this site will not operate as intended. Home Â» Meetings Â» Meeting Information Welcome to Pima Community College Home Calendar Meetings Search Share Study Session Members Aug 10 2026 Study Session Jun 15 2026 Study Session Apr 27 2026 Study Session Mar 30 2026 Study Session Feb 17 2026 Study Session Nov 17 2025 Study Session Oct 27 2025 Study Session Sep 29 2025 Study Session May 27 2025 Study Session Apr 28 2025 Study Session Time: Location: Private Version For: Public User Agenda Splitscreen Live Meeting Minutes Print Version Versions Signed Minutes Accessible Web Version Annotate Agenda Show Map Hide Map Board Application: -Select- Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals Members Greg Taylor Theresa Riel Nicole Barraza Kristen Randall Karla Morales © Diligent Community 2026 Pima Community College User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "iqm2:morriscountynj:2240@e69c0571b05241b6ed33fc2babc3e38ef3e4d48f71129c3432cc20e7349a4c00",
+   "meetingId": "iqm2:morriscountynj:2240",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris",
+   "documentUrl": "https://morriscountynj.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1667&Inline=True",
+   "contentHash": "e69c0571b05241b6ed33fc2babc3e38ef3e4d48f71129c3432cc20e7349a4c00",
+   "retrievedAt": "2026-08-14T03:15:53.697Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1667&Inline=True",
+   "sourceOrg": "Morris County Board of County Commissioners",
+   "collectedAt": "2026-08-14T03:15:53.697Z",
+   "verifiedAt": null,
+   "text": "BOARD OF COUNTY COMMISSIONERS MORRIS COUNTY, NEW JERSEY July 22, 2026 Work Session Agenda TIME: 5:00 PM Generated 7/17/2026 9:09 AM This meeting is being held in person and livestreamed via WebEx. There is no public comment session during the meeting, but the public is invited to attend in person or to access the meeting by following the link below or by calling in to the phone number listed below the link. WebEx viewer link: https://morriscountynj.webex.com/morriscountynj/j.php?MTID=m99a851851fc3c607c3cf583de e0f4cc5 Webinar password: u3mWZ3PNbM2 (83699376 when dialing from a phone or video system) Phone number: 1-408-418-9388 Event number/Access Code: 233 486 17235 ANNOUNCEMENT Adequate notice of this meeting held the 22nd day of July, 2026 has been provided through resolution adopted by this Board on January 2, 2026 at its Stated Annual Meeting held at the Administration and Records Building, Morristown, New Jersey and by electronic mailing to the Star Ledger and the Daily Record, through posting on the County website and by filing a copy of same with the Morris County Clerk and the Clerk of this Board. ROLL CALL Stephen H. Shaw Director John Krickus Deputy Director Douglas R. Cabana Thomas J. Mastrangelo Christine Myers Tayfun Selen Deborah Smith FLAG SALUTE PRESENTATION COUNTY COMMISSIONER REPORTS ADMINISTRATOR'S REPORT COUNTY COUNSEL'S REPORT CLERK OF THE BOARD'S REPORT\nJULY 22, 2026 WORK SESSION MEETING 2 | P a g e DEPARTMENT HEAD REPORTS REVIEW RESOLUTIONS CLOSED SESSION ADJOURNMENT",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "iqm2:morriscountynj:2236@dd516b3affc71d61ffd0b3e25136535636701e4d806f050918ebaa79a5315dcd",
+   "meetingId": "iqm2:morriscountynj:2236",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris",
+   "documentUrl": "https://morriscountynj.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1668&Inline=True",
+   "contentHash": "dd516b3affc71d61ffd0b3e25136535636701e4d806f050918ebaa79a5315dcd",
+   "retrievedAt": "2026-08-14T03:15:54.918Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1668&Inline=True",
+   "sourceOrg": "Morris County Board of County Commissioners",
+   "collectedAt": "2026-08-14T03:15:54.918Z",
+   "verifiedAt": null,
+   "text": "BOARD OF COUNTY COMMISSIONERS MORRIS COUNTY, NEW JERSEY July 22, 2026 Regular Meeting Agenda TIME: 7:00 PM Generated 7/17/2026 4:56 PM This meeting is being held in person and livestreamed via WebEx. The public is invited to attend in person or to view the meeting by following the link below or by calling in to the phone number listed below the link. Public comments are welcome in person or by submitting written comments to the Clerk of the Board, which may be read or summarized during the public portion of the meeting. Written comments may be submitted via email with the subject line “Public Comment”’ to the Clerk of the Board, Michele Reilly at mreilly@co.morris.nj.us or by mail addressed to Michele Reilly, Clerk of the Board, Morris County Board of County Commissioners, PO Box 900, Morristown, NJ 07963-0900. Emailed comments must be received at least eight (8) hours prior to the meeting. Mailed comments must be received by 4:00 p.m. the day before the meeting. WebEx viewer link: https://morriscountynj.webex.com/morriscountynj/j.php?MTID=me17b12956292a6453524952e 56681c03 Webinar password : i5jChaRFM38 (45524273 when dialing from a phone or video system) Phone number: 1-408-418-9388 Event number/Access Code: 233 068 01695 ANNOUNCEMENT Adequate notice of this meeting held the 22nd day of July, 2026 has been provided through resolution adopted by this Board on January 2, 2026 at its Stated Annual Meeting held at the Administration and Records Building, Morristown, New Jersey and by electronic mailing to the Star Ledger and the Daily Record, through posting on the County website and by filing a copy of same with the Morris County Clerk and the Clerk of this Board. ROLL CALL Stephen H. Shaw Director John Krickus Deputy Director Douglas R. Cabana Thomas J. Mastrangelo Christine Myers Tayfun Selen Deborah Smith OTHERS PRESENT Deena Leary, County Administrator; Brian Murray, Assistant County Administrator; John Napolitano, County Counsel; Staci Santucci, Assistant County Counsel; Michele Reilly, Clerk of the Board\nJULY 22, 2026 REGULAR COMMISSIONER MEETING 2 | P a g e PRAYER AND FLAG SALUTE PRESENTATION MINUTES FOR APPROVAL July 8, 2026, Work Session Meeting Minutes and Regular Meeting Minutes Action Taken: COMMUNICATIONS 1. The Town of Boonton is requesting permission, on behalf of the Boonton Fire Department, to close portions of Main Street (CR 511, CR 624), West Main Street (CR 624), and Washington Street/Route 202 (CR 511) between Lake Avenue and Grant Street on Saturday, September 5, 2026 (rain date: Monday, September 7, 2026), for the Labor Day Parade from 12:00 p.m. to 5:00 p.m. 2. The Hilltop Christian Nursery School is requesting permission to hang a banner over Main Street/Route 24 (CR 510) in Mendham Borough from July 27, 2026 to July 31, 2026 advertise that the Hilltop Christian Nursery School registration is open. 3. DJB Event Consultants, Inc. is requesting permission to use a portion of Washington Street (CR 510) between Conklin Avenue and Colonial Road, and Sussex Avenue (CR 617) between Mill Street and Elliot Street, Morristown for the Morristown Corporate Classic 5K Run for JWBS on Thursday, July 23, 2026, from 6:00 p.m. to 9:30 p.m. Action Taken: ORDINANCES: First Reading/Introduction ORDINANCES: Second Reading/Public Hearing OPEN TO THE PUBLIC RESOLUTIONS Action Taken: PAYMENT OF BILLS Action Taken: COMMISSIONER COMMENTS ADJOURNMENT\nJULY 22, 2026 REGULAR COMMISSIONER MEETING 3 | P a g e REGULAR COMMISSIONER MEETING RESOLUTIONS RES-2026-576. Resolution Authorizing the Commissioner Director to Execute an Amendment to Historic Preservation Easement between the Township of Pequannock and The County of Morris, for a 30-year deed restriction and protection for the preservation work at the Pompton Plains Railroad Station which was assisted by grants from the Open Space, Recreation, Farmland and Historic Preservation Trust (Office of Planning & Preservation) (ID #14222) RES-2026-577. Resolution Authorizing the County Chief Financial Officer to issue checks per Chapter 127 P.L. 1985 (Department of Finance) (ID #14217) RES-2026-578. Resolution Authorizing the County Chief Financial Officer to reissue check(s) that has/have been lost and payment has/have been stopped (Department of Finance) (ID #14220) RES-2026-579. Resolution Authorizing the Application and Award of the Local Public Health Infrastructure Grant in the amount of $119,372.00 (Department of Law & Public Safety) (ID #14223) RES-2026-580. Resolution Authorizing the Acceptance of the Grant Award for the Overdose Fatality Review Teams Grant for FY27 in the amount of $75,000.00 (Department of Law & Public Safety) (ID #14224) RES-2026-581. Resolution Authorizing an Award of a Contract to TENEX Software Solutions, Inc. for upgrades and maintenance of proprietary hardware, software, and equipment a total not to exceed expenditure of $27,250.00 (Purchasing) (ID #14216) RES-2026-582. Resolution Authorizing the County Chief Financial Officer to Reclassify Payments from One Account to Another (Department of Finance) (ID #14234) RES-2026-583. Resolution Authorizing the Sale of a 1994 Pierce Lance Pumper (VIN 4P1CT02S2RA000549) to the Jersey City Fire Department (Department of Law & Public Safety) (ID #14236) RES-2026-584. Resolution Authorizing Approval of the Right of Way License and Hold Harmless Agreement between the County of Morris and the Township of Denville for property located in Denville (County Counsel) (ID #14246) RES-2026-585. Resolution Authorizing Payment to the Bank of America through the County's PCARD program, in the amount of $12.45 (Department of Finance) (ID #14225) RES-2026-586. Resolution to Reclassify a Total of $120,929.15 in WIOA Youth Expenditures from FY26 to FY25 (Office of Planning & Preservation) (ID #14237) RES-2026-587. Resolution Authorizing an Increase under the State of New Jersey Office of Homeland Security and Preparedness FFY 2026 C-UASGP - State Share for a new grant total of $9,961,060.00. (Department of Law & Public Safety) (ID #14239) RES-2026-588. Resolution to Award a Non-fair and Open Contract for the Provision of Proprietary Software & Licensing to TENEX Software Solutions, Inc. to provide TENEX Precinct Central & ExpressLink Integration Proprietary Software & Licensing for $131,375.00 from October 1, 2026 through September 30, 2027 (Purchasing) (ID #14241)\nJULY 22, 2026 REGULAR COMMISSIONER MEETING 4 | P a g e RES-2026-589. Resolution Awarding a Contract for Bid #M25-37 Milling & Resurfacing, Sussex Turnpike (C.R. 617), Township of Randolph to Riverview Paving, Inc. for the amount of $1,371,613.62 (Department of Public Works) (ID #14243) RES-2026-590. Resolution Authorizing the Insertion of a Special Item of Revenue into the 2026 Budget under Chapter 159, New Jersey Department of Transportation, Upgrade Railroad Crossing Surface – Union Street, in the amount of $178,370.00 (Department of Finance) (ID #14229) RES-2026-591. Resolution Authorizing the Insertion of a Special Item of Revenue into the 2026 Budget under Chapter 159, New Jersey Department of Community Affairs, Universal Service Fund (USF) CWA Admin 2026, in the amount of $3,844.00 (Department of Finance) (ID #14230) RES-2026-592. Resolution Authorizing the Insertion of a Special Item of Revenue into the 2026 Budget under Chapter 159, New Jersey Department of Community Affairs, Low Income Home Energy Assistance Program (LIHEAP) CWA Admin 2026, in the amount of $6,013.00 (Department of Finance) (ID #14231) RES-2026-593. Resolution Authorizing the Insertion of a Special Item of Revenue into the 2026 Budget under Chapter 159, New Jersey Department of Law and Public Safety, State Facilities Education Act (SFEA) 2026-2027, in the amount of $47,280.00 (Department of Finance) (ID #14232) RES-2026-594. Resolution Authorizing the Insertion of a Special Item of Revenue into the 2026 Budget under Chapter 159, New Jersey Department of Health, Disaster Preparedness, Resiliency, and Emergency Medical Services (DPREMS), in the amount of $301,813.00 (Department of Finance) (ID #14233) RES-2026-595. Resolution Authorizing the Insertion of a Special Item of Revenue into the 2026 Budget under Chapter 159, New Jersey Department of Human Services, Work First New Jersey, in the amount of $473,074.00 (Department of Finance) (ID #14235) RES-2026-596. Resolution Authorizing the Insertion of a Special Item of Revenue into the 2026 Budget under Chapter 159, New Jersey Department of Transportation, Indian Falls Road Bridge No. 1400-992, in the amount of $47,834.39 (Department of Finance) (ID #14240) RES-2026-597. Resolution Accepting Additional NJDOT Grant Funding in the Amount of $393,558.26 for the Replacement of County Bridge No. 1400-992 on Indian Falls Road over Jackson Brook in the Township of Mine Hill, County of Morris (Department of Public Works) (ID #14244) RES-2026-598. Resolution Authorizing the Insertion of a Special Item of Revenue into the 2026 Budget under Chapter 159, New Jersey Department of Transportation, Indian Falls Road Bridge No. 1400-992, in the amount of $393,558.26 (Department of Finance) (ID #14245) RES-2026-599. Resolution Authorizing the Submission of the 2026 Annual Action Plan (Department of Human Services) (ID #14226) RES-2026-600. Resolution Authorizing Anticipated Program Income Funds to be Funded Under the Housing Rehabilitation Program and Other CDBG Projects (Department of Human Services) (ID #14227) RES-2026-601. Resolution Authorizing Anticipated HOME Program Income and Recaptured funds to be allotted for eligible HOME Program activities (Department of Human Services) (ID #14228)\nJULY 22, 2026 REGULAR COMMISSIONER MEETING 5 | P a g e RES-2026-602. Resolution Authorizing Award of Contract for Bid # B26-111 As-Needed Traffic Signal and Electrician Services for Morris County Owned Traffic Signals to Jen Electric for $23,600.00 (Department of Public Works) (ID #14242) RES-2026-603. Resolution to Approve Renewal of Workforce Innovation and Opportunity Act FY27 Agreements for Out-of-School Youth Services to NewBridge Services for $267,000 and Phillipsburg School Based Youth Services for $155,458 (Office of Planning & Preservation) (ID #14238) RES-2026-604. Resolution Authorizing 2026 SSH Modification for Family Promise (Department of Human Services) (ID #14248) RES-2026-605. Resolution Authorizing Award of Contract for Replacement of County Bridge No. 1400-992 Indian Falls Road Over Jackson Brook in the Township of Mine Hill, Morris County, New Jersey (#B26-37) to CMS Construction, Inc. for an amount not to exceed $1,054,848.00 (Department of Public Works) (ID #14252)",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "iqm2:morriscountynj:2241@67ac1cb180ca0ea5ac488f62889be8f8e5978661e9b89b5bfc22dfd537118446",
+   "meetingId": "iqm2:morriscountynj:2241",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris",
+   "documentUrl": "https://morriscountynj.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1669&Inline=True",
+   "contentHash": "67ac1cb180ca0ea5ac488f62889be8f8e5978661e9b89b5bfc22dfd537118446",
+   "retrievedAt": "2026-08-14T03:15:55.389Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1669&Inline=True",
+   "sourceOrg": "Morris County Board of County Commissioners",
+   "collectedAt": "2026-08-14T03:15:55.389Z",
+   "verifiedAt": null,
+   "text": "BOARD OF COUNTY COMMISSIONERS MORRIS COUNTY, NEW JERSEY August 12, 2026 Work Session Agenda TIME: 5:00 PM Generated 8/7/2026 4:08 PM This meeting is being held in person and livestreamed via WebEx. There is no public comment session during the meeting, but the public is invited to attend in person or to access the meeting by following the link below or by calling in to the phone number listed below the link. WebEx viewer link: https://morriscountynj.webex.com/morriscountynj/j.php?MTID=m3cd1aae608c94553397ddddbf e88b858 Webinar password: WSmuSmv3k33 (97687683 when dialing from a phone or video system) Phone number: 1-408-418-9388 Event number/Access Code: 2343 775 7216 ANNOUNCEMENT Adequate notice of this meeting held the 12th day of August, 2026 has been provided through resolution adopted by this Board on January 2, 2026 at its Stated Annual Meeting held at the Administration and Records Building, Morristown, New Jersey and by electronic mailing to the Star Ledger and the Daily Record, through posting on the County website and by filing a copy of same with the Morris County Clerk and the Clerk of this Board. ROLL CALL Stephen H. Shaw Director John Krickus Deputy Director Douglas R. Cabana Thomas J. Mastrangelo Christine Myers Tayfun Selen Deborah Smith FLAG SALUTE PRESENTATION COUNTY COMMISSIONER REPORTS ADMINISTRATOR'S REPORT COUNTY COUNSEL'S REPORT CLERK OF THE BOARD'S REPORT\nAUGUST 12, 2026 WORK SESSION MEETING 2 | P a g e DEPARTMENT HEAD REPORTS REVIEW RESOLUTIONS CLOSED SESSION ADJOURNMENT",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "iqm2:morriscountynj:2242@4c6a15d22f4ffa48e4c707b546f0b9672a923f6abf03ba1c9004b4fe1838b41e",
+   "meetingId": "iqm2:morriscountynj:2242",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris",
+   "documentUrl": "https://morriscountynj.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1671&Inline=True",
+   "contentHash": "4c6a15d22f4ffa48e4c707b546f0b9672a923f6abf03ba1c9004b4fe1838b41e",
+   "retrievedAt": "2026-08-14T03:15:55.986Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1671&Inline=True",
+   "sourceOrg": "Morris County Board of County Commissioners",
+   "collectedAt": "2026-08-14T03:15:55.986Z",
+   "verifiedAt": null,
+   "text": "BOARD OF COUNTY COMMISSIONERS MORRIS COUNTY, NEW JERSEY August 12, 2026 Regular Meeting Agenda TIME: 7:00 PM Generated 8/12/2026 10:06 AM This meeting is being held in person and livestreamed via WebEx. The public is invited to attend in person or to view the meeting by following the link below or by calling in to the phone number listed below the link. Public comments are welcome in person or by submitting written comments to the Clerk of the Board, which may be read or summarized during the public portion of the meeting. Written comments may be submitted via email with the subject line “Public Comment”’ to the Clerk of the Board, Michele Reilly at mreilly@co.morris.nj.us or by mail addressed to Michele Reilly, Clerk of the Board, Morris County Board of County Commissioners, PO Box 900, Morristown, NJ 07963-0900. Emailed comments must be received at least eight (8) hours prior to the meeting. Mailed comments must be received by 4:00 p.m. the day before the meeting. WebEx viewer link: https://morriscountynj.webex.com/morriscountynj/j.php?MTID=mf793eb2090b2166f799b34363 1fa375f Webinar password : hcE365fWD3y (42336539 when dialing from a phone or video system) Phone number: 1-408-418-9388 Event number/Access Code: 2331 194 0263 ANNOUNCEMENT Adequate notice of this meeting held the 12th day of August, 2026 has been provided through resolution adopted by this Board on January 2, 2026 at its Stated Annual Meeting held at the Administration and Records Building, Morristown, New Jersey and by electronic mailing to the Star Ledger and the Daily Record, through posting on the County website and by filing a copy of same with the Morris County Clerk and the Clerk of this Board. ROLL CALL Stephen H. Shaw Director John Krickus Deputy Director Douglas R. Cabana Thomas J. Mastrangelo Christine Myers Tayfun Selen Deborah Smith OTHERS PRESENT Deena Leary, County Administrator; John Napolitano, County Counsel; Staci Santucci, Assistant County Counsel; Michele Reilly, Clerk of the Board\nAUGUST 12, 2026 REGULAR COMMISSIONER MEETING 2 | P a g e PRAYER AND FLAG SALUTE PRESENTATION MINUTES FOR APPROVAL July 22, 2026 Work Session Meeting Minutes and Regular Meeting Minutes Action Taken: COMMUNICATIONS 1. Chester PTO is requesting permission to hang a banner over Main Street/Route 24 (CR 513/510) in Chester Borough from October 1, 2026, to October 18, 2026, to advertise the Food Truck Festival at Chubb Park. 2. Chester PTO is requesting permission to hang a banner over Main Street/Route 24 (CR 510) in Mendham Borough from October 1, 2026, to October 18, 2026, to advertise the Food Truck Festival at Chubb Park. 3. To confirm and ratify the approval of a request from Full Sweep Productions - NETFLIX for permission to leave an 80ft boom lift and a generator on Green Village Road (CR 647) between Kings Road and Madison Avenue (CR 124) August 5 through August 7, 2026 at the discretion of the Borough of Madison and the Madison Police Department, and to close Green Village Road (CR 647) from Main Street (CR 124) to Kings Road on August 6th from 7 a.m. to 10 p.m. as per Patrolman DiRocco. 4. The Long Hill Chamber of Commerce is requesting permission to close a portion of Long Hill Road and a portion of Division Avenue in Long Hill Township, from the intersection of Northfield and Long Hill Road down to Oaks Road and Long Hill Road and Division Avenue to Long Hill Road to Meadowview Road at Long Hill Road on October 4, 2026 (rain date October 11, 2026) from 9:00 a.m. to 9:00 p.m. for the Millington Music Festival. Action Taken: ORDINANCES: First Reading/Introduction ORDINANCES: Second Reading/Public Hearing OPEN TO THE PUBLIC RESOLUTIONS Action Taken: PAYMENT OF BILLS Action Taken: COMMISSIONER COMMENTS ADJOURNMENT\nAUGUST 12, 2026 REGULAR COMMISSIONER MEETING 3 | P a g e REGULAR COMMISSIONER MEETING RESOLUTIONS RES-2026-606. Resolution Approving the Plans and Specifications for Milling and Resurfacing Park Ave (C.R.623) in the Township of Morris, New Jersey (Bid# M25-35) (Department of Public Works) (ID #14249) RES-2026-607. Resolution Approving the Plans and Specifications for Milling and Resurfacing Ridgedale Ave (C.R. 632) in the Township of East Hanover, New Jersey (Bid# M24-45) (Department of Public Works) (ID #14251) RES-2026-608. Resolution Authorizing the Chief Financial Officer to process a payment to the State of New Jersey Department of Treasury in the total amount of $162,728.06 that remits 50% of interest earnings on unspent Chapter 12 proceeds to the State (Department of Finance) (ID #14264) RES-2026-609. Resolution Authorizing the Commissioner Director to Execute a Deed of Historic Preservation Easement between The Township of East Hanover and The County of Morris, for a 30-year deed restriction and protection for the preservation work at the Cook House which was assisted by grants from the Open Space, Recreation, Farmland and Historic Preservation Trust (Office of Planning & Preservation) (ID #14255) RES-2026-610. Resolution Authorizing the Commissioner Director to Execute an Amendment to Historic Preservation Easement between the Town of Morristown, Township of Morris and The County of Morris, for a 30-year deed restriction and protection for the preservation work at the Morristown & Morris Township Library which was assisted by grants from the Open Space, Recreation, Farmland and Historic Preservation Trust (Office of Planning & Preservation) (ID #14256) RES-2026-611. Resolution Approving the Plans and Specifications for Milling and Resurfacing Spring Valley Rd (C.R. 601) in the Township of Morris, New Jersey (Bid# M25-36) (Department of Public Works) (ID #14258) RES-2026-612. Resolution Authorizing the Commissioner Director to execute a grant agreement between the County of Morris and the Morris County Historical Society for $140,000 in historic preservation funding from the Open Space, Recreation, Farmland and Historic Preservation Trust for Acorn Hall (Office of Planning & Preservation) (ID #14263) RES-2026-613. Resolution Authorizing the Execution of a Memorandum of Agreement (MOA) between the NJ Department of Health/Greystone Park Psychiatric Hospital and the Morris County Office of Emergency Management for Basic Life Support Ambulance Service in the amount of $621,644.87 (Department of Law & Public Safety) (ID #14261) RES-2026-614. Resolution Authorizing the County Chief Financial Officer to issue checks per Chapter 127 P.L. 1985 (Department of Finance) (ID #14259) RES-2026-615. Resolution Authorizing the County Chief Financial Officer to reissue check(s) that has/have been lost and payment has/have been stopped (Department of Finance) (ID #14260) RES-2026-616. Resolution Authorizing the Transfer of Ownership of an Out-of-service Decontamination Trailer to Parsippany Fire District 6 (Department of Law & Public Safety) (ID #14262) RES-2026-617. Resolution Authorizing the County Chief Financial Officer to Reclassify Payments from One Account to Another (Department of Finance) (ID #14265)\nAUGUST 12, 2026 REGULAR COMMISSIONER MEETING 4 | P a g e RES-2026-618. Resolution Authorizing the Insertion of a Special Item of Revenue into the 2026 Budget under Chapter 159, New Jersey Department of Labor and Workforce Development, WorkFirst New Jersey - Digital Equity Training, in the amount of $1,000,000.00 (Department of Finance) (ID #14280) RES-2026-619. Resolution Authorizing the Insertion of a Special Item of Revenue into the 2026 Budget under Chapter 159, New Jersey Department of Labor and Workforce Development, WorkFirst New Jersey – Supplemental Nutrition Assistance Program, in the amount of $100,000.00 (Department of Finance) (ID #14281) RES-2026-620. Resolution Authorizing the Insertion of a Special Item of Revenue into the 2026 Budget under Chapter 159, New Jersey Department of Health, Local Public Health Overdose Fatality Review Teams 2027, in the amount of $75,000.00 (Department of Finance) (ID #14283) RES-2026-621. Resolution Authorizing Appointment to the Youth Services Advisory Committee (Clerk of the Board) (ID #14267) RES-2026-622. Resolution Authorizing Award of Contract for Labor Rates for HVAC Repairs and Services for Trane Systems (#B26-125) to Air Systems Maintenance, Inc. for an amount not to exceed $70,481.00 annually (Department of Public Works) (ID #14295) RES-2026-623. Resolution Authorizing Agreement for One-Stop Operator and Career Services Provider, between the Workforce Development Board of Northwest New Jersey and the County of Morris in the amount of $2,500,000 for the period July 1, 2026 to June 30, 2027 (Office of Planning & Preservation) (ID #14247) RES-2026-624. Resolution Authorizing Award of Contract for Grade Crossing Repairs to Union & Mercer Street on the Dover and Rockaway River Railroad, Town of Dover, Morris County, New Jersey (#B26-64) to Railroad Construction Company, Inc. for an amount not to exceed $358,985.50 (Department of Public Works) (ID #14290) RES-2026-625. Resolution to Extend a Contract with Hindsight, Inc. for Bid#23-139 Support and Maintenance of Integrated Software for the Morris County Office of Temporary Assistance (Department of Human Services) (ID #14289) RES-2026-626. Resolution Authorizing Award of Contract for B26-122 Delivery of Voting Machines & Associated Equipment for Elections to D.C. Express for an amount not to exceed $183,057.00 per year (Purchasing) (ID #14288) RES-2026-627. Resolution Authorizing a State Contract purchase from Axon Enterprise, Inc. to maintain equipment for the Prosecutor's Office Body Worn Camera Program for the amount of $223,950.24 (R26-139) (Sheriff's Office) (ID #14287) RES-2026-628. Resolution Authorizing Award of Contract for Professional Engineering Services Traffic Signal Intersection Improvements Project Main Street and Mountain Avenue/Hilltop Avenue; Mendham Borough, County of Morris, New Jersey (#P26-114) to Dynamic Traffic, LLC for an amount not to exceed $79,800.00 (Department of Public Works) (ID #14286) RES-2026-629. Resolution Authorizing a Memorandum of Understanding with the Center on Policing of Rutgers University, to continue participation in the support of the Newark/Jersey City UASI Office of Management and Regional Integration (Department of Law & Public Safety) (ID #14285) RES-2026-630. Resolution Authorizing the Insertion of a Special Item of Revenue into the 2026 Budget under Chapter 159, New Jersey Department of Transportation, Rte.\nAUGUST 12, 2026 REGULAR COMMISSIONER MEETING 5 | P a g e 24 EB Ramp to CR 510 (Columbia Turnpike), in the amount of $156,240.02 (Department of Finance) (ID #14284) RES-2026-631. Resolution Authorizing the Insertion of a Special Item of Revenue into the 2026 Budget under Chapter 159, New Jersey Department of Health, Local Public Health Infrastructure Grant (PHIG) Program 2027, in the amount of $119,372.00 (Department of Finance) (ID #14282) RES-2026-632. Resolution Authorizing Reimbursement for June 2026 Emergency Expenditure (Department of Human Services) (ID #14278) RES-2026-633. Resolution Authorizing Reimbursement for May 2026 Emergency Expenditure (Department of Human Services) (ID #14277) RES-2026-634. Resolution Authorizing Reimbursement for April 2026 Emergency Expenditure (Department of Human Services) (ID #14276) RES-2026-635. Resolution Authorizing the Commissioner Director to Execute a Grant Agreement between the County of Morris and the Borough of Mendham for $357,200 in Historic Preservation Funding from the Open Space, Recreation, Farmland and Historic Preservation Trust for the Phoenix House (Office of Planning & Preservation) (ID #14275) RES-2026-636. Resolution Authorizing the Commissioner Director to Execute a Grant Agreement between the County of Morris and the Borough of Mendham for $31,520 in Historic Preservation Funding from the Open Space, Recreation, Farmland and Historic Preservation Trust for the Bowers Building (Office of Planning & Preservation) (ID #14274) RES-2026-637. Resolution Authorizing the Commissioner Director to Execute a Grant Agreement between the County of Morris and the Borough of Mendham for $428,900 in Historic Preservation Funding from the Open Space, Recreation, Farmland and Historic Preservation Trust for the Scott Farm Barn (Office of Planning & Preservation) (ID #14273) RES-2026-638. Resolution Authorizing the Commissioner Director to Execute a Grant Agreement between the County of Morris and the Township of East Hanover for $330,000 in Historic Preservation Funding from the Open Space, Recreation, Farmland and Historic Preservation Trust for the East Hanover Historic Church (Office of Planning & Preservation) (ID #14272) RES-2026-639. Resolution Authorizing the Commissioner Director to Execute a Grant Agreement between the County of Morris and the Borough of Madison for $339,235 in Historic Preservation Funding from the Open Space, Recreation, Farmland and Historic Preservation Trust for the Hartley Dodge Memorial (Office of Planning & Preservation) (ID #14271) RES-2026-640. Resolution Authorizing the Commissioner Director to Execute a Grant Agreement between the County of Morris and the First Reformed Church of Pompton Plains for $365,184 in Historic Preservation Funding from the Open Space, Recreation, Farmland and Historic Preservation Trust for the First Reformed Church of Pompton Plains (Office of Planning & Preservation) (ID #14270) RES-2026-641. Resolution Authorizing Award of Contract for Milling and Resurfacing of Ridgedale Avenue (C.R. 632) in the Township of East Hanover (M24-45) to Top Line Construction Corp. for an amount not to exceed $2,616,330.01 (Department of Public Works) (ID #14269)\nAUGUST 12, 2026 REGULAR COMMISSIONER MEETING 6 | P a g e RES-2026-642. Resolution Amending Resolution #2026-290 (4/8/26) for Professional Engineering Services for NJDEP MS4 Highway Agency Infrastructure Mapping for Morris County to Increase Contract Amount and Extend Contract Term (Department of Public Works) (ID #14268) RES-2026-643. Resolution Authorization for a Competitive Contracting Process for the Hiring of a Consultant for Ambulance Billing and Collection Services (Purchasing) (ID #14266) RES-2026-644. Resolution Authorizing the Award of Contract to TNT Construction Group, LLC for Bid # B26-118 Labor Rates for As-Needed Roofing Repairs and Services at Various County of Morris Locations for an amount not to exceed $150,000.00 for a term of twelve (12) months (Department of Public Works) (ID #14257) RES-2026-645. Resolution Authorizing Award of Contract for Tree & Brush Clearing Along Berkshire Valley Road (C.R. 699) From Route 15 to Taylor Road in the Township of Jefferson, Phase 1 (#B26-116) to Downes Tree Service Co, Inc. for an amount not to exceed $155,925.00 (Department of Public Works) (ID #14294) RES-2026-646. Resolution Authorizing an Agreement Between the County of Morris and the Township of Parsippany-Troy Hills and the Town of Dover for the Establishment of a Consortium to Conduct the HOME Investment Partnerships Program (Department of Human Services) (ID #14291) RES-2026-647. Resolution Authorizing Execution of Application for the FFY25 New Jersey Victim Assistance Grant (VAG) Program (Prosecutor) (ID #14309)",
+   "extraction": "pdf",
    "extractionNote": null
   }
  ]

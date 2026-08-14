@@ -97,16 +97,23 @@ export function contentHashOf(bytes: Uint8Array): string {
 
 /** Strip an HTML document to its readable text. */
 export function extractHtmlText(html: string): string {
-  return html
+  // Prefer the page's own <main> region when it declares one — a notice
+  // page's navigation chrome is not the notice (4c).
+  const main = html.match(/<main[\s>][\s\S]*?<\/main>/i);
+  return (main ? main[0] : html)
     .replace(/<script[\s\S]*?<\/script>/gi, " ")
     .replace(/<style[\s\S]*?<\/style>/gi, " ")
     .replace(/<[^>]+>/g, " ")
     .replace(/&nbsp;/g, " ")
-    .replace(/&amp;/g, "&")
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">")
     .replace(/&#0?39;/g, "'")
     .replace(/&quot;/g, '"')
+    // Numeric references generically — &times; reached readers literally.
+    .replace(/&#x([0-9a-f]+);/gi, (_, hex) => String.fromCodePoint(parseInt(hex, 16)))
+    .replace(/&#(\d+);/g, (_, dec) => String.fromCodePoint(Number(dec)))
+    .replace(/&times;/gi, "×")
+    .replace(/&amp;/g, "&")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -143,6 +150,13 @@ export interface RetrieveOptions {
   fetchImpl?: typeof fetch;
   /** Skip the fetch entirely when the stored hash is known-current. */
   knownHash?: string | null;
+  /**
+   * Fetch this URL instead of the meeting's own agenda link — the curated
+   * notice channel (4c): a body that posts its meeting notice on its own
+   * page before the vendor portal publishes the agenda. The document is
+   * recorded against the notice URL it actually came from.
+   */
+  urlOverride?: string;
 }
 
 /**
@@ -156,14 +170,15 @@ export async function retrieveAgendaDocument(
   meeting: Meeting,
   options: RetrieveOptions = {},
 ): Promise<AgendaDocument | null> {
-  if (!meeting.agendaUrl) return null;
+  const url = options.urlOverride ?? meeting.agendaUrl;
+  if (!url) return null;
 
   const impl = options.fetchImpl ?? fetch;
-  const response = await impl(meeting.agendaUrl, {
+  const response = await impl(url, {
     headers: { "User-Agent": sourceUserAgent() },
   });
   if (!response.ok) {
-    throw new Error(`HTTP ${response.status} for ${meeting.agendaUrl}`);
+    throw new Error(`HTTP ${response.status} for ${url}`);
   }
 
   const bytes = new Uint8Array(await response.arrayBuffer());
@@ -175,18 +190,18 @@ export async function retrieveAgendaDocument(
     id: `${meeting.id}@${hash}`,
     meetingId: meeting.id,
     ocdId: meeting.ocdId,
-    documentUrl: meeting.agendaUrl,
+    documentUrl: url,
     contentHash: hash,
     retrievedAt,
     contentType,
-    sourceUrl: meeting.agendaUrl,
+    sourceUrl: url,
     sourceOrg: meeting.provenance.sourceOrg,
     collectedAt: retrievedAt,
     verifiedAt: null,
   };
 
   const isPdf =
-    contentType.includes("pdf") || meeting.agendaUrl.toLowerCase().includes(".pdf");
+    contentType.includes("pdf") || url.toLowerCase().includes(".pdf");
 
   try {
     if (isPdf) {

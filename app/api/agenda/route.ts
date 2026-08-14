@@ -32,6 +32,8 @@ export async function GET(request: Request) {
     .sort((a, b) => Date.parse(b.retrievedAt) - Date.parse(a.retrievedAt))
     .map((doc) => ({
       documentUrl: doc.documentUrl,
+      /** Cited by curated notice summaries — an exact-version key. */
+      contentHash: doc.contentHash,
       retrievedAt: doc.retrievedAt,
       contentType: doc.contentType,
       extraction: doc.extraction,

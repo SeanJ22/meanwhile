@@ -114,6 +114,11 @@ export default function TransparencyPage() {
             buttons, which do join anonymous local totals and say so where
             you tap them.
           </p>
+          <p>
+            The &quot;my picks card&quot; image is drawn on your device from
+            that same local list. Creating, screenshotting, or downloading
+            it sends nothing to us.
+          </p>
         </Section>
 
         <Section title="Reactions to votes and candidates">

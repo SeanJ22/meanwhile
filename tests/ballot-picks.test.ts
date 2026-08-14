@@ -66,3 +66,49 @@ test("the transparency page discloses picks as device-local", () => {
     "the transparency page must mention ballot picks",
   );
 });
+
+/**
+ * Item 5 (2026-08-14 second session): the picks card's hard constraints,
+ * held in source. The card renders the reader's device-local picks ONLY
+ * — no aggregates, no reactions, no totals, no commentary, no photos —
+ * and transmits nothing.
+ */
+test("the picks card renders picks only and transmits nothing", () => {
+  // Comments stripped: the docstring may NAME the constraints; the code
+  // may not reference the banned surfaces.
+  const source = read("components", "ballot", "picks-card.tsx")
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/^\s*\/\/.*$/gm, "");
+  assert.ok(!/\bfetch\s*\(/.test(source), "the card must not call fetch");
+  assert.ok(!/sendBeacon/.test(source), "the card must not beacon");
+  assert.ok(!/\/api\//.test(source), "the card must not touch any API path");
+  for (const banned of [
+    "reaction",
+    "aggregate",
+    "funding",
+    "photoUrl",
+    "score",
+    "recommend",
+  ]) {
+    assert.ok(
+      !source.toLowerCase().includes(banned),
+      `picks-card.tsx must not reference "${banned}" — the card is the reader's artifact, not the app's opinion`,
+    );
+  }
+  assert.ok(
+    source.includes("My picks — made with We the People"),
+    "the card carries the app name and nothing evaluative",
+  );
+  assert.ok(
+    /clearAllPicks/.test(source) && /Really clear/.test(source),
+    "clear-my-picks confirms before clearing",
+  );
+});
+
+test("the transparency page says the card is drawn on-device", () => {
+  const page = read("app", "transparency", "page.tsx");
+  assert.ok(
+    /picks card/.test(page) && /drawn on your device/.test(page),
+    "the card's device-side render is disclosed in the same commit that ships it",
+  );
+});

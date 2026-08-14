@@ -54,10 +54,17 @@ test("every target zip survives the client filter with default state", async () 
     const result = await searchMeetings(lat, lng);
 
     assert.ok(result.meetings.length > 0, `${zip}: cascade returned nothing`);
+    // 3g: results now carry the recent past for the date slider; the default
+    // window (0 days back) hides exactly those and nothing else. Every
+    // future meeting the cascade found must survive the default filters.
+    const future = result.meetings.filter(
+      (m) => Date.parse(m.startsAt) >= Date.now() - 60_000,
+    );
+    assert.ok(future.length > 0, `${zip}: no future meetings in the result`);
     assert.equal(
       visible(result.meetings).length,
-      result.meetings.length,
-      `${zip}: the default filter state dropped meetings the cascade found`,
+      future.length,
+      `${zip}: the default filter state must show every future meeting and only those`,
     );
   }
 });

@@ -190,9 +190,12 @@ export function RecentVotes({
 export function OfficialIdentity({
   holder,
   seatLabel,
+  large = false,
 }: {
   holder: SeatHolder;
   seatLabel: string | null;
+  /** The expanded surface earns a bigger portrait (3h, 2026-08-16). */
+  large?: boolean;
 }) {
   return (
     <div className="mt-2 flex items-start gap-3">
@@ -203,14 +206,16 @@ export function OfficialIdentity({
         <img
           src={holder.photoUrl}
           alt={`Portrait of ${holder.name}`}
-          width={64}
-          height={78}
+          width={large ? 104 : 64}
+          height={large ? 127 : 78}
           className="rounded border border-[var(--panel-border)] object-cover"
         />
       ) : (
         <div
           aria-hidden="true"
-          className="flex h-[78px] w-16 shrink-0 items-center justify-center rounded border border-[var(--panel-border)] bg-[var(--surface)] font-mono text-lg text-muted"
+          className={`flex shrink-0 items-center justify-center rounded border border-[var(--panel-border)] bg-[var(--surface)] font-mono text-lg text-muted ${
+            large ? "h-[127px] w-[104px]" : "h-[78px] w-16"
+          }`}
         >
           {initialsOf(holder.name)}
         </div>

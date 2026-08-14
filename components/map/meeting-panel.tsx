@@ -6,6 +6,8 @@ import {
   formatMeetingDate,
   formatMeetingTime,
   formatRelativeDay,
+  locationLine,
+  meetingHeadline,
 } from "@/lib/map/format";
 import type { Venue } from "@/lib/meetings/venues";
 import { commentAccessFor } from "@/lib/registry/comment-access";
@@ -45,16 +47,25 @@ export function MeetingPanel({ venue, onClose, onOpenMeeting }: MeetingPanelProp
               meeting; the venue is where, and where comes after what. A
               multi-meeting venue leads with the count — the list below is
               the what. */}
+          {/* 3a (2026-08-16): WHAT it is, big and bold, on EVERY shape of
+              venue — a building hosting three sittings of one body headlines
+              that body, never the building. The building and address render
+              once, deduped, because some sources publish the address AS the
+              venue name. */}
           <p className="notice-eyebrow">
             {venue.meetings.length === 1
               ? "Public meeting"
               : `${venue.meetings.length} public meetings`}
           </p>
           <h2 className="mt-2 font-display text-lg font-semibold leading-snug tracking-tight text-paper">
-            {venue.meetings.length === 1 ? venue.meetings[0].bodyName : venue.name}
+            {new Set(venue.meetings.map((m) => m.bodyName)).size === 1
+              ? meetingHeadline(venue.meetings[0])
+              : locationLine(venue.name, null)}
           </h2>
           <p className="mt-1 text-[0.8125rem] leading-snug text-muted">
-            {venue.meetings.length === 1 ? `${venue.name}${venue.address ? ` · ${venue.address}` : ""}` : (venue.address ?? "")}
+            {new Set(venue.meetings.map((m) => m.bodyName)).size === 1
+              ? locationLine(venue.name, venue.address)
+              : (venue.address ?? "")}
           </p>
           {/*
             The address used to end there — correct, and inert. Somebody reading
@@ -127,12 +138,12 @@ function MeetingEntry({
               onClick={() => onOpen(meeting)}
               className="text-left font-display text-[0.95rem] font-semibold leading-snug tracking-tight text-paper hover:text-signal"
             >
-              {meeting.bodyName}
+              {meetingHeadline(meeting)}
             </button>
           </h3>
         ) : (
           <h3 className="font-display text-[0.95rem] font-semibold leading-snug tracking-tight text-paper">
-            {meeting.bodyName}
+            {meetingHeadline(meeting)}
           </h3>
         )}
       </div>

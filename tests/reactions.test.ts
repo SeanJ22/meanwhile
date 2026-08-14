@@ -133,7 +133,9 @@ test("aggregation output carries no ranking vocabulary and no identifier", () =>
 
 test("validation: enums are closed sets, keys are shaped, targets are capped", () => {
   assert.ok(isValidTargetType("FEDERAL_VOTE"));
-  assert.ok(!isValidTargetType("CANDIDATE"));
+  // CANDIDATE joined the closed set 2026-08-16 (3d); MEASURE has not yet.
+  assert.ok(isValidTargetType("CANDIDATE"));
+  assert.ok(!isValidTargetType("MEASURE"));
   assert.ok(!isValidTargetType(""));
 
   assert.ok(isValidReactionValue("UNSURE"));
@@ -146,8 +148,47 @@ test("validation: enums are closed sets, keys are shaped, targets are capped", (
   assert.ok(!isValidReactionKey(42));
 
   assert.ok(isPlausibleTargetId("house:119-2:283"));
+  // Lineup-nominee keys run longer than roll-call ids; the cap moved to 128
+  // with the CANDIDATE class (3d).
+  assert.ok(isPlausibleTargetId('ballot-az-pima:mine-inspector|Walter "Les" Presmyk'));
   assert.ok(!isPlausibleTargetId(""));
-  assert.ok(!isPlausibleTargetId("x".repeat(65)));
+  assert.ok(!isPlausibleTargetId("x".repeat(129)));
+});
+
+test("CANDIDATE reactions validate against the ballot files, and nothing ranks from them", async () => {
+  const { getCandidateTargetIds } = await import("../lib/ballot/candidate-targets.ts");
+  const ids = getCandidateTargetIds();
+  // Denominator: 15 NJ + 41+6 NH candidacies + 29 AZ lineup nominee keys.
+  assert.ok(ids.size >= 85, `expected the full candidate universe, got ${ids.size}`);
+  assert.ok(ids.has("ballot-nj-morris:us-senate:booker"));
+  assert.ok(ids.has("ballot-nh-merrimack:executive-council-2:liot-hill-karen"));
+  assert.ok(ids.has("ballot-az-pima:governor|Katie Hobbs"));
+  assert.ok(!ids.has("ballot-az-pima:governor|Nobody Realname"));
+
+  // The neutrality guard extends over the fourth class (3d): the candidate-
+  // reaction path may never grow ranking vocabulary, and the ballot page
+  // must not order candidates by reactions — its only sorts are the filed
+  // ballot order and surname.
+  const { readFileSync } = await import("node:fs");
+  const { join } = await import("node:path");
+  for (const file of [
+    "lib/ballot/candidate-targets.ts",
+    "lib/signal/reactions.ts",
+    "lib/signal/aggregate.ts",
+  ]) {
+    const source = readFileSync(join(process.cwd(), file), "utf8").toLowerCase();
+    for (const banned of ['"score"', '"rank"', '"rating"', '"match"', '"fit"', '"grade"', '"alignment"', '"recommendation"']) {
+      assert.ok(!source.includes(banned), `${file} must not carry ${banned}`);
+    }
+  }
+  const ballotPage = readFileSync(
+    join(process.cwd(), "app", "ballot", "page.tsx"),
+    "utf8",
+  );
+  assert.ok(
+    !/sort\([^)]*reaction/i.test(ballotPage),
+    "the ballot page must never order candidates by reactions",
+  );
 });
 
 test("reaction targets are validated against the committed votes snapshot", () => {
@@ -205,20 +246,30 @@ test("rate limiter: a burst beyond the limit is rejected, and the window recover
 // ── The disclosure coupling — the 5a⇔5b rule extended to reactions ───────
 
 test("the capture point and the transparency page disclose together", () => {
-  // The control itself: the aggregated-and-sold sentence is adjacent to the
-  // input, visible, not behind a link (CLAUDE.md, disclosure at the point of
-  // capture) — and the author's approved sentence survives verbatim in part.
+  // The control (3c, 2026-08-16, author-approved TOS pattern): the first-ever
+  // tap surfaces a one-time notice that must be acknowledged BEFORE the
+  // answer records, with the approved sentence and the transparency link.
+  // The notice gates capture — the pending tap applies only on acknowledge.
   const control = readFileSync(
     join(process.cwd(), "components", "reactions", "reaction-control.tsx"),
     "utf8",
   );
   assert.ok(
-    control.includes("anonymous local totals") && control.includes("sell"),
-    "the reaction control must state aggregation and sale at the capture point",
+    control.includes("Your answer joins anonymous local totals. We never know who you"),
+    "the one-time notice must carry the approved sentence",
   );
   assert.ok(
-    control.includes("never know"),
-    "the control must state we never know who the reader is",
+    control.includes("How we use this"),
+    "the notice must link the full explanation",
+  );
+  assert.ok(
+    control.includes('href="/transparency"'),
+    "the notice's link must open the transparency page",
+  );
+  assert.ok(
+    control.includes("disclosureAcknowledged()") &&
+      control.includes("setPendingValue(value)"),
+    "an unacknowledged tap must park, never record",
   );
 
   // The transparency page: reactions, the hashed continuity key, and the

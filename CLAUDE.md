@@ -69,7 +69,7 @@ Each reaction has a one-tap binary and an optional free-text field. Binary carri
 
 **Incumbent and challenger reactions are stored and aggregated in separate buckets.** Incumbents have records, challengers have rhetoric. Aggregating them makes incumbents look worse by construction.
 
-**Disclosure at the point of capture.** The UI states in one plain sentence, adjacent to the input, that reactions are aggregated and sold. Not in a privacy policy, not behind a link.
+**Disclosure at the point of capture — the one-time acknowledged notice.** (Author-revised 2026-08-16; the prior form was an always-visible sentence beside every input.) The first reaction tap a device ever makes surfaces a one-time notice — "Your answer joins anonymous local totals. We never know who you are. How we use this →" — that must be acknowledged before the answer is recorded; the acknowledgment stores device-local and the notice never repeats. The linked transparency page carries the full truth, including that totals may be sold. The gate blocks capture until acknowledged: an unacknowledged tap parks and applies only on acknowledgment, never silently records. Still never buried in a privacy policy — the notice is at the capture point, the reader must pass through it exactly once, and `tests/reactions.test.ts` pins the sentence, the link, and the park-don't-record behavior.
 
 **Moderation runs before any export.** Free text about named real people will contain slurs and threats. No aggregate leaves the system unfiltered.
 

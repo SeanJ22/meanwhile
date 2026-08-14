@@ -155,8 +155,9 @@ async function main() {
         `| ${o.name} | ${o.officeTitle} | ${verdict} | ${contact} | ${phone} | ${photo} | ${campaign} |`,
       );
       totals.officials++;
-      if (verdict === "VERIFIED") totals.pageVerified++;
-      else if (verdict === "UNVERIFIABLE-INLINE") totals.pageUnverifiable++;
+      if (verdict === "VERIFIED" || verdict === "VERIFIED-VIA-ROSTER") {
+        totals.pageVerified++;
+      } else if (verdict === "UNVERIFIABLE-INLINE") totals.pageUnverifiable++;
       else totals.pageMiss++;
       process.stdout.write(
         `${label}  ${o.name.padEnd(28)} page:${verdict.padEnd(20)} contact:${contact.padEnd(6)} phone:${phone.padEnd(5)} campaign:${campaign}\n`,

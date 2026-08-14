@@ -6,6 +6,8 @@ import {
   formatMeetingDate,
   formatMeetingTime,
   formatRelativeDay,
+  locationLine,
+  meetingHeadline,
 } from "@/lib/map/format";
 import { tierForMeeting } from "@/lib/state/derive";
 import type { SeatHolder } from "@/lib/officials/lookup";
@@ -79,13 +81,17 @@ export function MeetingPopup({
     <PopupCard
       type={meeting.jurisdiction}
       tier={tier}
-      title={meeting.title}
+      title={meetingHeadline(meeting)}
       badges={badge ? [badge] : []}
       onExpand={onExpand}
       expandLabel={`More about ${meeting.title} — agenda and how to be heard`}
       onClose={onClose}
     >
-      <PopupRow label="Body">{meeting.bodyName}</PopupRow>
+      {/* 3a: the headline already says WHAT; the Body row repeats it only
+          when the sitting title is a distinct thing worth its own line. */}
+      {meeting.bodyName !== meeting.title && (
+        <PopupRow label="Body">{meeting.bodyName}</PopupRow>
+      )}
 
       <PopupRow label="Date">
         {formatMeetingDate(meeting)}
@@ -98,7 +104,9 @@ export function MeetingPopup({
         {formatMeetingTime(meeting)}
       </PopupRow>
 
-      <PopupRow label="Location">{meeting.location.name}</PopupRow>
+      <PopupRow label="Location">
+        {locationLine(meeting.location.name, meeting.location.address)}
+      </PopupRow>
 
       <PopupRow label="Status">{STATUS_LABEL[meeting.status]}</PopupRow>
 

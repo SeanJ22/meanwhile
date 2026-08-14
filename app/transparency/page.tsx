@@ -92,13 +92,18 @@ export default function TransparencyPage() {
           </p>
         </Section>
 
-        <Section title="Reactions to votes">
+        <Section title="Reactions to votes and candidates">
           <p>
-            Some vote records ask &quot;Do you like this vote?&quot; with
-            Yes, No, and Unsure buttons. When you answer, the site stores:
-            your answer, which vote it was about, roughly where you were
-            looking (the districts around the zip or map area — never an
-            address), the time, and a verification tier. Today every answer
+            Some vote records ask &quot;Do you like this vote?&quot; and
+            ballot candidates ask &quot;Would you vote for them?&quot; — each
+            with Yes, No, and Unsure buttons. The first time you ever answer,
+            a one-time notice explains this and asks you to OK it before
+            anything is recorded; it never repeats after that. When you
+            answer, the site stores: your answer, which vote or candidate it
+            was about, roughly where you were looking (the districts around
+            the zip or map area — never an address), the time, and a
+            verification tier. Your answers never affect how candidates are
+            shown, to you or anyone — nothing here ranks or recommends. Today every answer
             is stored as unverified-anonymous; if we ever add ways to verify
             answers, verified and unverified counts will always be reported
             separately.

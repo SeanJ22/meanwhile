@@ -7,6 +7,7 @@ import {
   isValidReactionValue,
   isValidTargetType,
 } from "@/lib/signal/reactions";
+import { getCandidateTargetIds } from "@/lib/ballot/candidate-targets";
 import { getVoteIds } from "@/lib/votes/snapshot";
 
 /**
@@ -72,14 +73,18 @@ export async function POST(request: Request) {
     return Response.json({ error: "malformed targetId" }, { status: 400 });
   }
 
-  // The target must be a vote that exists in the committed snapshot. A
-  // missing snapshot fails closed — better to refuse a reaction than to
-  // store one against a target nothing can render.
+  // The target must exist in the committed data for its type — votes in
+  // the votes snapshot, candidates in the ballot files (3d). A missing
+  // file fails closed — better to refuse a reaction than to store one
+  // against a target nothing can render.
   let validTargets: Set<string>;
   try {
-    validTargets = getVoteIds();
+    validTargets =
+      submission.targetType === "CANDIDATE"
+        ? getCandidateTargetIds()
+        : getVoteIds();
   } catch {
-    return Response.json({ error: "votes snapshot unavailable" }, { status: 503 });
+    return Response.json({ error: "target data unavailable" }, { status: 503 });
   }
   if (!validTargets.has(submission.targetId)) {
     return Response.json({ error: "unknown targetId" }, { status: 400 });

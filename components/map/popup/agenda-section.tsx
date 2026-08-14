@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { noticeSummaryFor } from "@/lib/meetings/notice-summaries";
+import { formatDateMDY } from "@/lib/map/format";
 
 /**
  * What the meeting is actually about (4c) — the stored notice/agenda text,
@@ -184,7 +185,7 @@ export function AgendaSection({ meetingId, agendaUrl }: AgendaSectionProps) {
         >
           the {latest.sourceOrg} document
         </a>{" "}
-        · read {latest.retrievedAt.slice(0, 10)}
+        · read {formatDateMDY(latest.retrievedAt.slice(0, 10))}
         {documents.length > 1 &&
           ` · ${documents.length} versions on file — a revised agenda is itself news`}
       </p>

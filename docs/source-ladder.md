@@ -474,3 +474,37 @@ maggiefornh.com 403s this pipeline; house.gov / senate.gov /
 governor.nh.gov 403 non-browser clients. **The domain trap re-sighted:**
 andybiggs.com is a safari photographer, not the congressman — only the
 fetch-verified biggsforarizona.com is citable. `attemptedAt: 2026-08-17`.
+
+## The 2026-08-18 rung set (the FEC-and-final-prep session)
+
+**NH legislator contacts — the long way FOUND IT (item 3).** The
+2026-08-17 Wayback rung stood open ("rate-limited, retry stands"), and the
+retry paid:
+
+- The Wayback Machine answered normally. `attemptedAt: 2026-08-18` (wall
+  clock 2026-08-14).
+- CDX enumeration of `gc.nh.gov/downloads/*` surfaced the General Court's
+  OWN downloadable member directory — `members.txt` (also .xls/.xlsx),
+  tab-delimited: name, chamber, county, district, address, phone, email,
+  party, committees, elected status. Ten captures, 2025-01-28 through
+  **2026-04-07** (the current legislature).
+- `https://web.archive.org/web/20260407184602id_/https://gc.nh.gov/downloads/members.txt`
+  fetched: 417 rows, 399 current (18 marked Former by the file itself).
+  This is the legislature's published directory read through an archive
+  of it — no wall touched, nothing retrieved the body has not published.
+- `pnpm officials:enrich` now carries an NH pass over it: matched on
+  chamber + county + district (via the registry's Census labels — the
+  same "Merrimack 08" bridge the Plural join uses) + name; Former rows
+  never match. **389/410 enriched — phone on 251, email on 386; 21
+  misses printed with reasons** (nickname collisions, members seated
+  after the capture). The tester's three (Innis D7, Sargent and Ebel
+  Merrimack 07) all carry directory phone + email.
+- Refresh path: re-point `NH_MEMBERS_TXT_ARCHIVE` at a newer capture — or
+  at the live file the day the wall comes down.
+- **Photos remain a recorded miss** — they live on the walled member
+  pages, and license-unknown scrapes are not shippable (D20).
+
+**Also this session:** BoardBook Premier (meetings.boardbook.org) joined
+the vendor set for Amphitheater USD — plain-GET public org page, full
+rungs in `lib/registry/coverage-audit.ts`; Sunnyside USD wired to its
+Diligent/Highbond tenant found via the district's own agenda page.

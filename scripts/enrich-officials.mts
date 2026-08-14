@@ -21,9 +21,18 @@
  *     caucus site), contactFormUrl (the roster's ContactLink). Phone and
  *     email stay from the CSV (the njleg.org pattern the legislature itself
  *     publishes).
- *   - NH: nothing — gc.nh.gov resets TLS handshakes from non-browser clients
- *     (rung recorded in docs/source-ladder.md); NH member pages cannot be
- *     verified from this pipeline yet.
+ *   - NH (2026-08-18, the long way): phone and email from the General
+ *     Court's OWN downloadable member directory — gc.nh.gov/downloads/
+ *     members.txt — read through the Internet Archive's capture of
+ *     2026-04-07, because gc.nh.gov resets TLS handshakes from every
+ *     client this environment has (all rungs in docs/source-ladder.md).
+ *     The file is the legislature's published directory: name, chamber,
+ *     county, district, address, phone, email, party, committees. Members
+ *     are matched on chamber + county + district (via the registry's own
+ *     Census labels — "State House District Merrimack 08") + name; rows
+ *     the directory marks "Former" never match; misses are reported with
+ *     the denominator. Photos stay a recorded miss — the member pages
+ *     that host them are behind the wall.
  *
  * Matched members get provenance pointing at the roster (which names the
  * member, district, and party — everything rendered), with the Plural CSV
@@ -260,6 +269,160 @@ function applyFederalFixups() {
   console.log(`US: ${applied} federal fixup(s) applied of ${Object.keys(FEDERAL_FIXUPS).length} recorded`);
 }
 
+// ── NH: the General Court's member directory, via the Archive ─────────────
+
+/** The capture pinned for reproducibility; the original URL rides in the
+ *  provenance. Re-point at a newer capture (or the live file, the day the
+ *  wall comes down) to refresh. */
+const NH_MEMBERS_TXT_ARCHIVE =
+  "https://web.archive.org/web/20260407184602id_/https://gc.nh.gov/downloads/members.txt";
+const NH_MEMBERS_TXT_ORIGINAL = "https://gc.nh.gov/downloads/members.txt";
+
+interface NhDirectoryRow {
+  name: string;
+  chamber: "upper" | "lower";
+  county: string;
+  district: string;
+  phone: string | null;
+  email: string | null;
+  status: string;
+}
+
+function unquote(s: string): string {
+  const t = s.trim();
+  return t.startsWith('"') && t.endsWith('"') ? t.slice(1, -1) : t;
+}
+
+function parseNhMembersTxt(text: string): NhDirectoryRow[] {
+  const lines = text.split(/\r?\n/).filter((l) => l.trim().length > 0);
+  const header = lines[0].split("\t").map((h) => h.trim());
+  const col = (name: string) => header.indexOf(name);
+  const rows: NhDirectoryRow[] = [];
+  for (const line of lines.slice(1)) {
+    const cells = line.split("\t").map(unquote);
+    const last = cells[col("LastName")] ?? "";
+    const first = cells[col("FirstName")] ?? "";
+    if (!last || !first) continue;
+    rows.push({
+      name: `${first} ${last}`,
+      chamber: cells[col("LegislativeBody")] === "S" ? "upper" : "lower",
+      county: (cells[col("County")] ?? "").trim(),
+      district: String(Number(cells[col("District")] ?? "")),
+      phone: (cells[col("Phone")] ?? "").trim() || null,
+      email: (cells[col("WorkEmail")] ?? "").trim() || null,
+      status: (cells[col("electedStatus")] ?? "").trim(),
+    });
+  }
+  return rows;
+}
+
+/**
+ * NH House districts are county-scoped ("Merrimack 7"), and the registry's
+ * Census-sourced division labels carry exactly that designation — the same
+ * bridge the Plural builder uses. This maps each member to their county +
+ * district so the directory match is scoped, not name-only.
+ */
+function nhDesignationOf(
+  set: OfficeholderSet,
+  registryLabels: Map<string, string>,
+  id: string,
+): { county: string | null; district: string | null } {
+  const link = set.divisions.find((d) => d.officeholderId === id);
+  if (!link) return { county: null, district: null };
+  const label = registryLabels.get(link.ocdId) ?? "";
+  const house = label.match(/State House District (\w+) 0*(\d+)/);
+  if (house) return { county: house[1], district: house[2] };
+  const senate = label.match(/State Senate District 0*(\d+)/);
+  if (senate) return { county: null, district: senate[1] };
+  return { county: null, district: null };
+}
+
+async function enrichNhFromArchive() {
+  const path = join(process.cwd(), "lib", "registry", "officeholders-33.json");
+  const set = JSON.parse(readFileSync(path, "utf8")) as OfficeholderSet &
+    Record<string, unknown>;
+  const registry = JSON.parse(
+    readFileSync(join(process.cwd(), "lib", "registry", "registry.json"), "utf8"),
+  ) as { divisions: { ocdId: string; label: string }[] };
+  const labels = new Map(registry.divisions.map((d) => [d.ocdId, d.label]));
+
+  const text = await fetchText(NH_MEMBERS_TXT_ARCHIVE);
+  const all = parseNhMembersTxt(text);
+  // A row the directory itself marks "Former" is not a current member and
+  // must never enrich one.
+  const rows = all.filter((r) => !/former/i.test(r.status));
+  if (rows.length === 0) throw new Error("NH members.txt: parsed ZERO current rows — refusing to write");
+  console.log(`NH directory: ${all.length} rows, ${rows.length} current (${all.length - rows.length} marked Former)`);
+
+  const now = new Date().toISOString();
+  let matched = 0;
+  let gotPhone = 0;
+  let gotEmail = 0;
+  const misses: string[] = [];
+  for (const o of set.officeholders) {
+    const want = nhDesignationOf(set, labels, o.id);
+    let candidates = rows.filter(
+      (r) =>
+        r.chamber === chamberOf(o) &&
+        (want.district === null || r.district === want.district) &&
+        (want.county === null || r.county.toLowerCase() === want.county.toLowerCase()) &&
+        (norm(r.name) === norm(o.name) ||
+          surname(r.name) === surname(o.name) ||
+          norm(o.name).includes(norm(r.name))),
+    );
+    if (candidates.length > 1) {
+      const exact = candidates.filter((r) => norm(r.name) === norm(o.name));
+      const byFirst = candidates.filter((r) => firstName(r.name) === firstName(o.name));
+      if (exact.length === 1) candidates = exact;
+      else if (byFirst.length === 1) candidates = byFirst;
+      else {
+        const byPrefix = candidates.filter(
+          (r) =>
+            firstName(r.name).startsWith(firstName(o.name)) ||
+            firstName(o.name).startsWith(firstName(r.name)),
+        );
+        if (byPrefix.length === 1) candidates = byPrefix;
+      }
+    }
+    if (candidates.length === 1) {
+      const row = candidates[0];
+      if (row.phone) {
+        o.phone = row.phone;
+        gotPhone++;
+      }
+      if (row.email) {
+        // The directory publishes whichever address the member filed —
+        // gc.nh.gov or personal. As published, never normalized.
+        o.email = row.email;
+        gotEmail++;
+      }
+      o.provenance = {
+        sourceUrl: NH_MEMBERS_TXT_ARCHIVE,
+        sourceOrg:
+          "NH General Court member directory (members.txt), via Internet Archive capture 2026-04-07 of " +
+          NH_MEMBERS_TXT_ORIGINAL,
+        collectedAt: now,
+        verifiedAt: now,
+      };
+      matched++;
+    } else {
+      misses.push(
+        `${o.name} (${o.officeTitle}${want.county ? ` ${want.county}` : ""}${want.district ? ` D${want.district}` : ""}): ${candidates.length} directory matches`,
+      );
+    }
+  }
+
+  writeFileSync(path, `${JSON.stringify(set, null, 1)}\n`, "utf8");
+  console.log(
+    `33: ${matched} of ${set.officeholders.length} enriched from the archived directory — phone on ${gotPhone}, email on ${gotEmail}`,
+  );
+  if (misses.length > 0) {
+    console.log(`  unmatched (fields left as the CSV had them): ${misses.length}`);
+    for (const miss of misses) console.log(`    ${miss}`);
+  }
+  return { matched, total: set.officeholders.length };
+}
+
 async function main() {
   applyFederalFixups();
   const az = await enrich(
@@ -290,11 +453,10 @@ async function main() {
     },
   );
 
+  const nh = await enrichNhFromArchive();
   console.log(
-    `\nNH: not enriched — gc.nh.gov resets TLS handshakes from non-browser clients ` +
-      `(rung recorded in docs/source-ladder.md). NH members keep their CSV fields.`,
+    `\ntotals: AZ ${az.matched}/${az.total} · NJ ${nj.matched}/${nj.total} · NH ${nh.matched}/${nh.total} (archived directory — the long way)`,
   );
-  console.log(`\ntotals: AZ ${az.matched}/${az.total} · NJ ${nj.matched}/${nj.total} · NH 0/410 (blocked route, recorded)`);
 }
 
 main().catch((error) => {

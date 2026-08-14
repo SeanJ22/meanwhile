@@ -508,3 +508,49 @@ retry paid:
 the vendor set for Amphitheater USD — plain-GET public org page, full
 rungs in `lib/registry/coverage-audit.ts`; Sunnyside USD wired to its
 Diligent/Highbond tenant found via the district's own agenda page.
+
+## The 2026-08-14 rung set (second 08-14 session — the everyday-contacts hunt)
+
+The pothole standard (session brief 3): every everyday topic × zip cell in
+`lib/routing/everyday.ts` carries a contact with its source page, or a
+recorded miss. `attemptedAt: 2026-08-14` (real wall-clock date; see
+state.md §18 for the dating-convention note). Every number below was
+ultimately read off the government's own page — plain client where the
+host allows it, real browser where it walls:
+
+- **tucsonaz.gov walls plain clients** (403 on every page tried) but
+  answers a real browser. All six city rows read off the city's own pages
+  in-browser this session. THE FINDING THAT CHANGED A ROW: the Street
+  Maintenance page's published channel today is **Tucson 311** (call
+  3-1-1, the Tucson311 app, or the 311 Service Request Portal) — the old
+  direct TDOT line (520-791-3154) circulates in 2015-era news stories and
+  search snippets but is NOT on the city's current page, so the row ships
+  311. Pothole repairs and street light issues are on the page's own
+  list of what Streets Maintenance addresses.
+- **pima.gov answers plain clients** — /1012/Service-Request,
+  /970/Development-Services, /2285/Animal-Care-Department-Directory
+  fetched clean; pimasheriff.org likewise. sewerservicerequest.pima.gov
+  403s plain clients but its help page read in-browser confirms
+  520-724-3400 (24/7); asr.pima.gov/contact renders client-side only —
+  read in-browser, 520-724-8630 + asrPC@pima.gov confirmed.
+- **rockawayborough.org answers plain clients** — publicworks, sanitation,
+  water.shtml, police, zoning, health, tax pages all fetched. **The
+  borough-vs-township trap, caught mid-session:** zip 07866 covers BOTH
+  the Borough of Rockaway and Rockaway Township — the registry's rosters
+  and meeting wiring cover the TOWNSHIP, and the first draft of the
+  contact map carried only borough numbers. Both municipalities now ride
+  every covered 07866 topic, each named plainly; rockawaytownship.org
+  (fetches clean) supplied DPW/utilities 973-983-2891, police
+  973-625-4000, animal control 973-983-2848.
+- **newbury.nh.gov walls plain clients** (403 — the known NH-host wall
+  family) but answers a real browser; **newburynh.org no longer resolves
+  in DNS** (the town moved hosts). The in-browser read of the town's own
+  department directory confirmed highway 603-938-5494 and police
+  603-763-4104 / dispatch 603-526-1961, CORRECTED two
+  search-snippet-sourced rows (Tax Collector has a dedicated line,
+  603-763-5326, and the Transfer Station its own, 603-763-2289), and
+  RESOLVED two recorded misses (Code Enforcement 603-763-4940 x203 +
+  codeenforcement@newbury.nh.gov; Recreation 603-763-4940).
+- Cells with no defensible contact are recorded misses with reasons in
+  `EVERYDAY_MISSES` (85641 trash/parks, 03255 water-sewer/animals, snow
+  in the desert) — a miss is a work item, never silence.

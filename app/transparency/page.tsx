@@ -74,8 +74,10 @@ export default function TransparencyPage() {
             &quot;libraries&quot;), not your words. When we can&apos;t route
             a question, the log records the question&apos;s text (up to 200
             characters) so we can learn to answer it — with nothing about
-            who asked, like every other row. Please don&apos;t put personal
-            details in a question.
+            who asked, like every other row. Before a question is stored,
+            anything shaped like a phone number, an email address, or a
+            street address is automatically blanked out. Even so, please
+            don&apos;t put personal details in a question.
           </p>
         </Section>
 

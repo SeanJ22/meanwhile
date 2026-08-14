@@ -95,21 +95,46 @@ export interface ReactionViewContext {
 }
 
 /**
+ * What actually happened to the reader's answer server-side. COUNTED is
+ * earned by exactly one thing: the 204 that means a row landed in the
+ * store. Everything else — a 500, a network failure, and the 202
+ * accepted-not-stored state (a never-happens state now that DATABASE_URL
+ * is live in production; if it ever reappears it renders as failure, not
+ * success) — is NOT_COUNTED, and the control says so.
+ */
+export type ReactionSubmitOutcome = "COUNTED" | "NOT_COUNTED";
+
+/**
+ * The honest line for anything short of a 204. The device-local half of
+ * the record still writes — the device's own memory is the reader's,
+ * always — but "counted" is a claim about the shared totals and only the
+ * store's own confirmation can make it.
+ */
+export const NOT_COUNTED_LINE =
+  "Couldn't reach the totals — your answer is saved on this device and wasn't counted.";
+
+/**
  * Record the reader's answer: locally (so the control stays honest about
  * what this browser said) and to the server (where it joins the anonymous
- * store). The network half is fire-and-forget — a failed write must never
- * cost the reader their tap, and the local record is the device's truth
- * either way.
+ * store). The local record writes unconditionally; the returned outcome
+ * reports the server half truthfully so the control can render success
+ * only when a row actually landed.
+ *
+ * This is deliberately NOT fire-and-forget, unlike the search log
+ * (`lib/log/client.ts`): a reaction is a promise made to the reader at the
+ * capture point — "your answer joins anonymous local totals" — and a
+ * promise needs its outcome. A log row is our bookkeeping; losing one
+ * costs the reader nothing and is silently dropped by design.
  */
-export function submitReaction(
+export async function submitReaction(
   targetType: ReactionTargetType,
   targetId: string,
   reaction: ReactionValue,
   context: ReactionViewContext | null,
-): void {
+): Promise<ReactionSubmitOutcome> {
   rememberReaction(targetType, targetId, reaction);
   try {
-    void fetch("/api/reactions", {
+    const response = await fetch("/api/reactions", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
@@ -122,8 +147,9 @@ export function submitReaction(
         lng: context?.lng ?? null,
       }),
       keepalive: true,
-    }).catch(() => {});
+    });
+    return response.status === 204 ? "COUNTED" : "NOT_COUNTED";
   } catch {
-    /* never the reader's problem */
+    return "NOT_COUNTED";
   }
 }

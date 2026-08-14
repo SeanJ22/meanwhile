@@ -7,6 +7,8 @@ const emptySubscribe = () => () => {};
 import {
   getStoredReaction,
   submitReaction,
+  NOT_COUNTED_LINE,
+  type ReactionSubmitOutcome,
   type ReactionViewContext,
 } from "@/lib/reactions/client";
 import type {
@@ -90,10 +92,21 @@ export function ReactionControl({
   // A tap made before the one-time disclosure is acknowledged parks here
   // and applies on acknowledgment — the answer is never recorded first.
   const [pendingValue, setPendingValue] = useState<ReactionValue | null>(null);
+  // The server's answer for THIS session's tap. The selected-and-counted
+  // rendering is EARNED by the 204 (outcome === "COUNTED"): while the write
+  // is in flight the tapped choice renders as saving, and anything short of
+  // a 204 renders the honest not-counted line instead of implied success.
+  // A selection restored from device storage (no tap this session) renders
+  // selected as the device's own memory — that claim is about this browser,
+  // not the totals.
+  const [outcome, setOutcome] = useState<ReactionSubmitOutcome | "SAVING" | null>(
+    null,
+  );
 
-  const record = (value: ReactionValue) => {
+  const record = async (value: ReactionValue) => {
     setOverride(value);
-    submitReaction(targetType, targetId, value, context);
+    setOutcome("SAVING");
+    setOutcome(await submitReaction(targetType, targetId, value, context));
   };
 
   const choose = (value: ReactionValue) => {
@@ -101,29 +114,45 @@ export function ReactionControl({
       setPendingValue(value);
       return;
     }
-    record(value);
+    void record(value);
   };
 
   return (
     <div className="mt-1.5">
       <p className="text-[0.6875rem] text-muted">{prompt}</p>
       <div className="mt-1 flex gap-1.5" role="group" aria-label={prompt}>
-        {CHOICES.map(({ value, label }) => (
-          <button
-            key={value}
-            type="button"
-            aria-pressed={selected === value}
-            onClick={() => choose(value)}
-            className={`min-h-9 flex-1 cursor-pointer rounded border px-2 text-[0.75rem] transition-colors ${
-              selected === value
-                ? "border-[var(--signal)] bg-[var(--signal)]/15 font-semibold text-signal"
-                : "border-[var(--panel-border)] text-paper-dim hover:border-[var(--signal)]/50 hover:text-paper"
-            }`}
-          >
-            {label}
-          </button>
-        ))}
+        {CHOICES.map(({ value, label }) => {
+          // The full selected-and-counted rendering is earned by the 204;
+          // a stored selection with no tap this session (outcome null) is
+          // the device's own memory and renders selected on that basis.
+          const isSelected = selected === value;
+          const style = !isSelected
+            ? "border-[var(--panel-border)] text-paper-dim hover:border-[var(--signal)]/50 hover:text-paper"
+            : outcome === "SAVING"
+              ? "border-[var(--signal)]/50 text-paper-dim"
+              : outcome === "NOT_COUNTED"
+                ? "border-dashed border-[var(--signal)]/60 text-paper-dim"
+                : "border-[var(--signal)] bg-[var(--signal)]/15 font-semibold text-signal";
+          return (
+            <button
+              key={value}
+              type="button"
+              aria-pressed={isSelected}
+              onClick={() => choose(value)}
+              className={`min-h-9 flex-1 cursor-pointer rounded border px-2 text-[0.75rem] transition-colors ${style}`}
+            >
+              {label}
+            </button>
+          );
+        })}
       </div>
+      {outcome === "NOT_COUNTED" && (
+        // Anything short of the 204 — 500, network failure, or the
+        // never-happens 202 — renders this line, never implied success.
+        <p className="mt-1 text-[0.6875rem] leading-relaxed text-muted">
+          {NOT_COUNTED_LINE}
+        </p>
+      )}
       {pendingValue !== null && (
         // The one-time notice: shown on this device's first-ever tap, gone
         // for good once acknowledged. The transparency link carries the
@@ -147,7 +176,7 @@ export function ReactionControl({
               acknowledgeDisclosure();
               const value = pendingValue;
               setPendingValue(null);
-              if (value) record(value);
+              if (value) void record(value);
             }}
           >
             OK — record my answer

@@ -1,3 +1,5 @@
+import { scrubFreeText } from "../log/scrub.ts";
+
 import { getDb } from "./index.ts";
 import { searchLog } from "./schema.ts";
 
@@ -133,6 +135,23 @@ export async function logSearchEvent(event: SearchLogEvent): Promise<boolean> {
 
   if (!process.env.DATABASE_URL) return false;
 
+  // The scrub pass (session brief 4, wall clock 2026-08-14): free text —
+  // the refusal log's question field, and any string a future event
+  // carries — is scrubbed of phone-number-, email-, and street-address-
+  // shaped tokens BEFORE storage. The store is described as
+  // identifier-free; a reader typing their own address into a question
+  // must not make that description false. Mechanical, tested in
+  // tests/ask-box.test.ts; disclosed on /transparency in the same commit.
+  let detail = event.detail ?? null;
+  if (detail) {
+    detail = Object.fromEntries(
+      Object.entries(detail).map(([k, v]) => [
+        k,
+        typeof v === "string" ? scrubFreeText(v) : v,
+      ]),
+    );
+  }
+
   await getDb()
     .insert(searchLog)
     .values({
@@ -141,7 +160,7 @@ export async function logSearchEvent(event: SearchLogEvent): Promise<boolean> {
       approximateLocation: zip,
       ocdIds: event.ocdIds,
       divisionVintage: DIVISION_VINTAGE,
-      detail: event.detail ?? null,
+      detail,
     });
   return true;
 }

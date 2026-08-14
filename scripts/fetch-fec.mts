@@ -44,6 +44,7 @@ import type {
   FundingAbsence,
   ContributionRow,
 } from "../lib/funding/types.ts";
+import { findShrinkRegressions } from "../lib/funding/guard.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 loadEnv({ path: join(ROOT, ".env.local") });
@@ -53,6 +54,10 @@ const API = "https://api.open.fec.gov/v1";
 const CYCLE = 2026;
 const UA = "we-the-people-civic-app/0.1 (contact: seanj22@gmail.com)";
 const MATCH_ONLY = process.argv.includes("--match-only");
+// The human override for a LEGITIMATE shrink (a committee amendment, a
+// candidate withdrawal). Using it is a recorded decision: rerun by hand,
+// note it in the tracker. The unattended weekly refresh never passes it.
+const ALLOW_SHRINK = process.argv.includes("--allow-shrink");
 
 const apiKey = process.env.FEC_API_KEY;
 if (!apiKey && !MATCH_ONLY) {
@@ -595,6 +600,42 @@ const snapshot: FundingSnapshot = {
   candidates,
   absences: misses,
 };
+
+// ---- The thin-snapshot guard (session brief 2, wall clock 2026-08-14) ----
+// Compare against the last committed snapshot BEFORE writing. A shrink —
+// fewer candidates, a vanished candidate, a retained candidate with fewer
+// contributor rows (the Kelly-504 shape) — fails the run and keeps the old
+// snapshot, loudly. The weekly workflow surfaces the nonzero exit; a human
+// reruns with --allow-shrink only after confirming the FEC-side reason,
+// and records the decision in the tracker.
+let prior: FundingSnapshot | null = null;
+try {
+  prior = JSON.parse(readFileSync(OUT, "utf8")) as FundingSnapshot;
+} catch {
+  prior = null; // First run ever — nothing to shrink from.
+}
+if (prior) {
+  const regressions = findShrinkRegressions(prior, snapshot);
+  if (regressions.length > 0) {
+    console.error("");
+    console.error("=== THIN SNAPSHOT — the guard refuses to ship it ===");
+    for (const r of regressions) console.error(`  [${r.kind}] ${r.detail}`);
+    if (!ALLOW_SHRINK) {
+      console.error("");
+      console.error(
+        `keeping the prior snapshot (${prior.candidates.length} candidates, ` +
+          `${prior.candidates.reduce((n, c) => n + c.topContributions.length, 0)} contributor rows). ` +
+          "If the shrink is real (amendment, withdrawal), a human reruns with " +
+          "--allow-shrink and records the decision in docs/tracker.csv.",
+      );
+      process.exit(1);
+    }
+    console.error("");
+    console.error(
+      "--allow-shrink passed: shipping the smaller snapshot on human authority. Record it in the tracker.",
+    );
+  }
+}
 
 await mkdir(dirname(OUT), { recursive: true });
 await writeFile(OUT, `${JSON.stringify(snapshot, null, 1)}\n`);

@@ -243,6 +243,102 @@ test("rate limiter: a burst beyond the limit is rejected, and the window recover
   assert.ok(limiter.allow("k", t0 + 60_001 + 1));
 });
 
+// ── The honest outcome — success is earned by the 204, nothing else ──────
+// (Session brief 1, wall clock 2026-08-14, the author's decided option two:
+// any non-204 — 202, 500, network failure — renders the honest not-counted
+// line; the device-local record still writes either way.)
+
+test("submitReaction: 204 is COUNTED; 202, 500, and a network failure are NOT_COUNTED", async () => {
+  const { submitReaction } = await import("../lib/reactions/client.ts");
+  const realFetch = globalThis.fetch;
+  const outcomes: Record<string, string> = {};
+  try {
+    for (const status of [204, 202, 500]) {
+      globalThis.fetch = (async () => new Response(null, { status })) as typeof fetch;
+      outcomes[String(status)] = await submitReaction(
+        "FEDERAL_VOTE",
+        "house:119-2:283",
+        "YES",
+        null,
+      );
+    }
+    globalThis.fetch = (async () => {
+      throw new Error("network down");
+    }) as typeof fetch;
+    outcomes.network = await submitReaction(
+      "FEDERAL_VOTE",
+      "house:119-2:283",
+      "YES",
+      null,
+    );
+  } finally {
+    globalThis.fetch = realFetch;
+  }
+  assert.equal(outcomes["204"], "COUNTED", "the 204 earns the success rendering");
+  // 202 is a never-happens state now that the store is live — if it ever
+  // reappears it must render as failure, never as quiet success.
+  assert.equal(outcomes["202"], "NOT_COUNTED");
+  assert.equal(outcomes["500"], "NOT_COUNTED");
+  assert.equal(outcomes.network, "NOT_COUNTED");
+});
+
+test("submitReaction: the device-local record writes even when the server is unreachable", async () => {
+  const { submitReaction, getStoredReaction } = await import(
+    "../lib/reactions/client.ts"
+  );
+  const realFetch = globalThis.fetch;
+  globalThis.fetch = (async () => {
+    throw new Error("network down");
+  }) as typeof fetch;
+  try {
+    const outcome = await submitReaction(
+      "FEDERAL_VOTE",
+      "house:119-2:999",
+      "NO",
+      null,
+    );
+    assert.equal(outcome, "NOT_COUNTED");
+    // The device's own memory is the reader's, always — the failed network
+    // half never costs them their tap.
+    assert.equal(getStoredReaction("FEDERAL_VOTE", "house:119-2:999"), "NO");
+  } finally {
+    globalThis.fetch = realFetch;
+  }
+});
+
+test("the control renders the three outcomes honestly — counted, saving, not-counted", () => {
+  const control = readFileSync(
+    join(process.cwd(), "components", "reactions", "reaction-control.tsx"),
+    "utf8",
+  );
+  // The honest line renders exactly on NOT_COUNTED…
+  assert.ok(
+    control.includes('outcome === "NOT_COUNTED" && ('),
+    "anything short of a 204 must render the honest not-counted line",
+  );
+  assert.ok(
+    control.includes("NOT_COUNTED_LINE"),
+    "the control must render the shared honest line, not a local paraphrase",
+  );
+  // …the success styling is gated on the outcome, not on the tap…
+  assert.ok(
+    control.includes('outcome === "SAVING"'),
+    "an in-flight write must render as saving, not as success",
+  );
+  // …and the control awaits the real outcome from submitReaction.
+  assert.ok(
+    control.includes("await submitReaction"),
+    "the control must await the server's answer — success is earned, not assumed",
+  );
+});
+
+test("the honest line says both truths: saved on this device, not counted", async () => {
+  const { NOT_COUNTED_LINE } = await import("../lib/reactions/client.ts");
+  assert.ok(NOT_COUNTED_LINE.includes("saved on this device"));
+  assert.ok(NOT_COUNTED_LINE.includes("wasn't counted"));
+  assert.ok(NOT_COUNTED_LINE.toLowerCase().includes("couldn't reach the totals"));
+});
+
 // ── The disclosure coupling — the 5a⇔5b rule extended to reactions ───────
 
 test("the capture point and the transparency page disclose together", () => {

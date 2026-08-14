@@ -1,91 +1,90 @@
-# Session brief — 2026-08-19 (executed; this file is the record)
+# Session brief — 2026-08-14 (second session of 2026-08-14), as executed
 
-The brief as received, verbatim in structure, with the execution recorded
-inline. Wall clock 2026-08-14; session label 2026-08-19. Branch
-`claude/fec-cache-and-question-box-0819`.
+The brief: "the pipeline proves itself and the map answers potholes."
+Committed here as the record, with what happened to each item. Branch
+`claude/pipeline-proof-and-potholes-0814`; full narrative in state.md
+§18; walk record in docs/tester-pass.md.
 
-## Session brief — the FEC replication bug, and the true final polish before the tester
+**Dating convention change (this brief's own order, executed):**
+state.md section headers now carry the REAL wall-clock date; §18 opens
+with the note telling a stranger that §13–§17's date-shaped labels are
+sequence numbers. Prior headers unchanged — history not rewritten.
 
-This session runs unattended. Nobody is available to answer.
+## 1 — Reaction honesty (P11) — DONE, gate PASSED on the deployed site
 
-- Reversible: cheaper-to-undo, recorded with the rejected alternative,
-  keep going. Irreversible: skip, tracker row, continue.
-- Hunts never stop — make more rungs, `attemptedAt` on every rung. The
-  long way is a way.
-- Browser-heavy steps LAST, inline, no background agents.
-- Live on every push; nothing half-finished to `main`. End with
-  `pnpm handoff --ship`, verify on `main`, verify the deploy, standing
-  report ending with "Before you send the link."
+The author's decided option two, built exactly: `submitReaction` returns
+the outcome; the control renders selected-and-counted ONLY on the 204;
+any non-204 (500, network failure, the never-happens 202) renders
+"Couldn't reach the totals — your answer is saved on this device and
+wasn't counted." Device-local record writes always. The search log
+stays fire-and-forget by design, the difference in kind commented on
+both sides. Tests pin all outcomes and renderings.
 
-Session-open: read `docs/defects.md` and triage. **Done** — no untriaged
-entries; this brief was the defect list, triaged into the rows below.
+The gate: production's platform password was found DOWN, so the probe
+ran against the real deploy — one tap (Hobbs card, YES,
+2026-08-14T20:20:21Z) landed as a visible Neon row at 20:20:23Z.
+Screenshot `walk0814b-production-tap.png`; row pulled by direct SQL.
 
-### 1 — The FEC officials join is broken (GATED) → D40, EXECUTED
+The ledger: 4 reactions total — the author's two (17:24, 18:21 UTC,
+matching the brief's facts) + this session's own two. **The tester has
+tapped zero reactions.** Search log 359 rows; the tester's clean window
+(18:32–19:40 UTC) holds 4 rows: the "my kids school" refusal, searches
+at 07465 and 85701, and Gallego's card opened.
 
-The author's screenshots: Gallego's and Grijalva's Funding sections
-rendered Kelly's exact data; Butierez showed his own — so the ballot join
-worked and the officials path collapsed. Diagnose before fixing — find
-the actual line. **Found**: not the join. Snapshot, roster, targetKeys,
-display builder, lookup — all clean. The actual line was the funding API
-route marking a query-keyed response `cache-control: public` while the
-CDN's cache key dropped the query string; the first official fetched was
-served to every subsequent one. Fixed by moving the target into the URL
-path; client fetch-state keyed on holder.id; the uniqueness invariant
-adopted into CLAUDE.md and guarded three ways in tests; the enrichment
-audit (photos, contacts, rosters, campaign sites) found 0 values bound
-to >1 key. Snapshot regeneration: deliberately superseded by same-day
-regeneration under 2a (the data was never broken). GATE PASSED:
-`walk19-85701-gate-{kelly,gallego,grijalva}.png`, three distinct books,
-figures matching the FEC's own API to the dollar.
+## 2 — The snapshot refuses to ship thin (D44) — DONE
 
-### 2 — FEC labeling and photo fixes → D41, D42, D43, EXECUTED
+`lib/funding/guard.ts` + wiring in `fetch-fec.mts` before the write:
+candidate count below prior, a vanished candidate (absence recorded or
+not — a human confirms either), or a retained candidate's contributor
+rows below prior → exit 1, old snapshot kept, reasons in the workflow
+log. `--allow-shrink` is the recorded human override. Fixture-tested on
+the Kelly-504 shape; the mechanism asserted, never the absence of error.
 
-- 2a self-funding labeled from FEC entity typing (CAN/13A → "the
-  candidate's own money", mechanical, never guessed) — snapshot
-  regenerated with the new fields, an FEC 504 rerun rather than shipped
-  short.
-- 2b the photo rule tightened; all 25 shipped photos eyeballed; 6
-  dropped to initials with rung-by-rung hunts; docs/photo-report.md is
-  the human-verifiable check, sync-guarded.
-- 2c contributor names: NO CHANGE by the author's order — D43 records
-  the watch item so nobody fixes it.
+## 3 — The everyday-topics map (A10) — DONE, verified against the pages
 
-### 3 — Copy and UI batch → M38–M45, EXECUTED
+9 topics × 4 zips = 36 cells: 30 sourced contacts, 6 recorded misses,
+0 silent (test-asserted). Every number read off the government's own
+page — real browser where hosts wall plain clients. The verification
+CHANGED the answers: Tucson's pothole owner answers through **Tucson
+311** (the city's current page — the old TDOT line was not shipped);
+07866 carries BOTH Rockaway governments (the registry covers the
+Township; the draft cited only the Borough — caught mid-session);
+Newbury's tax collector and transfer station got their dedicated lines,
+and two 03255 misses resolved to contacts off the town's directory.
+The hang-tight beat renders the author's words, never a thinking label;
+route and log land before the timer. The refusal log drove two new
+routes ("my kids school", "I want a bike lane" — both live refusals from
+this morning). The pothole golden passes live at 85701.
 
-3a party colors (four sites, both themes, unmapped parties honest gray).
-3b summaries bold (four surfaces). 3c the moving-here line verbatim;
-marijuana stays in the section. 3d "What do you think?". 3e the picks
-disclosure once, TOS pattern, reactions distinction included. 3f
-official analysis collapsed by default, verbatim once open, all states.
-3g one denominator for the districts card and door, guard asserts stated
-N === rendered rows. 3h pans never pop; the rule is pure and tested;
-settle refreshes data silently. 3i the honest finding: add-to-calendar
-shipped 08-17 on the compact card only — now on all three meeting
-surfaces.
+## 4 — Scrub before store (T09) — DONE
 
-### 4 — Incumbent voting-record links → B10, EXECUTED
+`lib/log/scrub.ts` (7+-digit runs, email-shaped, street-address-shaped
+→ `[#]`) at the single write path; fixture-tested; transparency page
+discloses it in the same commit, coupling guard extended;
+abuse-policy.md gained the typed-questions threat section, PENDING
+COUNSEL.
 
-Every federal incumbent standing in a covered contest links "See their
-voting record" into the real official modal; incumbency from the FEC
-snapshot's exact-key pairing; no link where absent or ambiguous. State
-incumbents deferred honestly (no roll-call surface exists yet).
+## 5 — The photo census (D45) — DONE, count only
 
-### 5 — The question box v1 → A09, EXECUTED
+`scripts/photo-census.mts`: **16 of 747 rendered people have a
+portrait** (ballot 8/109, federal 8/437, state legislators 0/130,
+curated rosters 0/71). Named miss list in docs/photo-report.md — the
+dedicated photo session's brief input. Nothing hunted, fetched, or
+changed, per the author's order.
 
-Ask box on the who-governs card and the sidebar; keyword routing into
-the A08 map; no generative answers; the honest refusal per A07; both
-golden cases live at 85701; refusals logged as QUESTION_ASKED (text
-capped at 200 chars — the roadmap), routed asks log the topic only;
-transparency page updated in the same commit, coupling guard-tested.
+## 6 — Final pass — DONE
 
-### 6 — Final pass and handoff → EXECUTED
+walk0814b green at all four zips at 390×844; tester-pass.md superseded;
+tracker updated in place (P11, D44, D45, A10, T09 all Done with
+evidence); next free ids A11, B11, D46, M46, P12, R13, T10, V07, X04;
+transparency page verified in the walk at every zip.
 
-walk19 at 390×844: 71 checks green across four zips, zero console
-errors; docs/tester-pass.md superseded; state.md §17; tracker updated in
-place (next free ids: A10, B11, D44, M46); this file overwritten; ship
-via `pnpm handoff --ship`; the standing report ends with "Before you
-send the link."
+## Carried out of this session
 
-### Order, and cuts
-
-1 (GATED) → 2 → 3 → 4 → 5 → 6, as briefed. **Nothing was cut.**
+- **Production's password is DOWN** — the author should confirm that is
+  intentional; T08 (hardening) was scoped to precede it.
+- The incumbent-record-link modal would not open under this session's
+  walk harness (hydration live, click dead; 0819 walked it green;
+  nothing in this session touched it) — a thirty-second hand check is in
+  the standing report's "Before you send the link."
+- The photo session runs next with D45's list as its input.

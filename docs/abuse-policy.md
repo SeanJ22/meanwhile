@@ -94,6 +94,45 @@ Review the tier definitions and a sample of decisions quarterly, and after every
 
 Publish an annual transparency report with counts by tier, reports made, and account actions taken. This is a trust product; the numbers are an asset, not a liability.
 
+## Typed questions in the ask box
+
+*Added 2026-08-14 (session brief 4). PENDING COUNSEL like the rest of this
+document.*
+
+The "Who do I talk to about…?" box stores unanswered questions' text
+(capped at 200 characters, scrubbed of phone-, email-, and
+street-address-shaped tokens before storage — `lib/log/scrub.ts`) in the
+identifier-free search log, to improve routing. Free text about local
+government will eventually contain a threat.
+
+Conservative handling, drafted before the first instance rather than
+after:
+
+- **Preserve, never render.** A question containing an apparent threat is
+  preserved exactly as stored (scrubbed form — the scrub is mechanical
+  and runs before anything reads the text), with its row metadata. It is
+  never rendered on any surface, never enters routing-improvement work,
+  and never appears in any export or aggregate. Deletion destroys
+  evidence; rendering spreads harm. Neither happens.
+- **Flag for the author.** Review of the refusal log is a human task; a
+  threat found there is set aside for the author's judgment under the
+  same tiers as reaction free-text (T2/T3 above). The same three review
+  questions apply, with one honest caveat: the row is identifier-free by
+  design, so "identifiable target" can only ever mean the person named
+  IN the text, and there is structurally no way to identify the writer.
+- **Never auto-report.** Unchanged from the rest of this policy: a
+  classifier or keyword hit is never sufficient; every report passes
+  human review first. The identifier-free design means a report could
+  only ever hand law enforcement the text and its approximate area,
+  never a writer — counsel should weigh whether that changes the
+  reporting calculus in either direction.
+- **No new disclosure surface yet.** The ask box stores questions only on
+  refusal, and the transparency page states the capture, the cap, and
+  the scrub. The threat-notice sentence that sits beside reaction
+  free-text fields is not yet on the ask box because the ask box is not
+  a free-text-about-a-person surface; if the refusal log's contents
+  prove otherwise, the notice extends to it.
+
 ## Open items for counsel
 
 Whether any affirmative reporting duty attaches, and in which states.

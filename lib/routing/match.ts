@@ -17,6 +17,10 @@ const TOPIC_KEYWORDS: Readonly<Record<string, readonly string[]>> = {
   "schools-operations": [
     "teacher", "teachers", "principal", "bus", "buses", "superintendent",
     "classroom", "grades", "bullying",
+    // From the refusal log (wall clock 2026-08-14): "my kids school"
+    // refused on the school-anchor tie. The possessive marks the reader's
+    // own child — a running-the-school question, not a policy one.
+    "kid", "kids",
   ],
   "schools-policy": [
     "curriculum", "closing", "boundaries", "build", "building", "built",
@@ -29,8 +33,28 @@ const TOPIC_KEYWORDS: Readonly<Record<string, readonly string[]>> = {
   ],
   "roads-local": [
     "pothole", "potholes", "road", "roads", "street", "streets", "speeding",
-    "crosswalk", "streetlight", "sidewalk", "traffic",
+    "crosswalk", "streetlight", "streetlights", "sidewalk", "traffic",
+    // From the refusal log (wall clock 2026-08-14): "I want a bike lane".
+    "bike", "bike lane", "bicycle",
   ],
+  "trash-recycling": [
+    "trash", "garbage", "recycling", "recycle", "pickup", "dumpster",
+    "litter", "dumping", "bulk",
+  ],
+  "water-sewer": [
+    "water", "sewer", "sewage", "leak", "hydrant", "drain", "drainage",
+    "flooding", "septic",
+  ],
+  noise: ["noise", "noisy", "loud", "music", "party", "quiet"],
+  animals: [
+    "animal", "animals", "dog", "dogs", "cat", "cats", "stray", "leash",
+    "barking", "pet", "pets",
+  ],
+  parks: [
+    "park", "parks", "playground", "trail", "trails", "pool", "pavilion",
+    "ballfield",
+  ],
+  "snow-removal": ["snow", "plow", "plowed", "plowing", "ice", "salt"],
   "property-taxes": ["tax", "taxes", "assessment", "assessor", "levy"],
   "elections-voting": [
     "vote", "voting", "voter", "ballot", "polling", "election", "elections",

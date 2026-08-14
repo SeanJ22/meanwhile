@@ -104,6 +104,87 @@ test("neutrality: no snapshot record grows a scoring key", () => {
   assert.ok(!banned.test(raw), "snapshot carries a scoring-class key");
 });
 
+// ── The uniqueness invariant (D40) ───────────────────────────────────────
+// The sibling of the count check: a join or enrichment producing IDENTICAL
+// payloads across distinct keys is presumed broken. The match-rate test
+// passed while production served every official the same committee's books
+// — the rate can be 100% with every match pointing at one row.
+
+test("D40: no two candidates share an FEC id, a committee id, or a target key", () => {
+  const fecIds = new Map<string, string>();
+  const committeeIds = new Map<string, string>();
+  const targetKeys = new Map<string, string>();
+  for (const candidate of snapshot.candidates) {
+    const prior = fecIds.get(candidate.fecCandidateId);
+    assert.ok(!prior, `${candidate.name} and ${prior} share FEC id ${candidate.fecCandidateId}`);
+    fecIds.set(candidate.fecCandidateId, candidate.name);
+    if (candidate.principalCommitteeId) {
+      // A true shared committee (a joint fundraising committee as PCC)
+      // would have to be proven from the FEC itself and listed here.
+      // Nothing in the snapshot legitimately shares one today.
+      const holder = committeeIds.get(candidate.principalCommitteeId);
+      assert.ok(
+        !holder,
+        `${candidate.name} and ${holder} share committee ${candidate.principalCommitteeId} — provable from the FEC or presumed broken`,
+      );
+      committeeIds.set(candidate.principalCommitteeId, candidate.name);
+    }
+    for (const key of candidate.targetKeys) {
+      const owner = targetKeys.get(key);
+      assert.ok(!owner, `target ${key} answers for both ${owner} and ${candidate.name}`);
+      targetKeys.set(key, candidate.name);
+    }
+  }
+});
+
+test("D40: distinct officials resolve to distinct funding payloads", () => {
+  // The production incident's trio, by name, then the general form.
+  const kelly = fundingAnswerForTarget("congress:K000377");
+  const gallego = fundingAnswerForTarget("congress:G000574");
+  const grijalva = fundingAnswerForTarget("congress:G000606");
+  for (const [who, answer] of [["Kelly", kelly], ["Gallego", gallego], ["Grijalva", grijalva]] as const) {
+    assert.equal(answer.kind, "funding", `${who} lost their funding answer`);
+  }
+  const bodies = [kelly, gallego, grijalva].map((a) => JSON.stringify(a));
+  assert.equal(new Set(bodies).size, 3, "the incident trio shares a payload again");
+
+  // Every congress-target payload pairwise distinct.
+  const congressKeys = snapshot.candidates
+    .flatMap((c) => c.targetKeys)
+    .filter((k) => k.startsWith("congress:"));
+  const payloads = congressKeys.map((k) => JSON.stringify(fundingAnswerForTarget(k)));
+  assert.equal(
+    new Set(payloads).size,
+    congressKeys.length,
+    "two distinct officials resolve to identical funding payloads",
+  );
+});
+
+test("D40: no query-keyed API route marks itself publicly cacheable", () => {
+  // The incident's actual mechanism: /api/funding?target=… marked
+  // `cache-control: public`, and the CDN's cache key dropped the query
+  // string — the first official's body served for every target. A response
+  // whose body varies by query string must not enter a shared cache; vary
+  // by path instead.
+  const walk = (dir: string): string[] =>
+    readdirSync(dir).flatMap((entry) => {
+      const full = join(dir, entry);
+      return statSync(full).isDirectory() ? walk(full) : /route\.ts$/.test(entry) ? [full] : [];
+    });
+  for (const file of walk(join(ROOT, "app", "api"))) {
+    const source = readFileSync(file, "utf8");
+    if (/searchParams/.test(source)) {
+      assert.ok(
+        !/cache-control["']?\s*:\s*["'][^"']*public/i.test(source),
+        `${file} keys its body on a query string AND marks the response public — a shared cache may serve one target's body to all (D40)`,
+      );
+    }
+  }
+  // And the funding client asks the path-keyed form.
+  const block = readFileSync(join(ROOT, "components", "funding", "funding-block.tsx"), "utf8");
+  assert.match(block, /\/api\/funding\/\$\{encodeURIComponent\(holder\.id\)\}/, "funding block must fetch the path-keyed route");
+});
+
 // ── The ripcord registry ─────────────────────────────────────────────────
 
 test("both ripcords are registered with question, closer, and tracker rows", () => {

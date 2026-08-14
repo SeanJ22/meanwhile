@@ -69,7 +69,17 @@ type MemberRollCall = RollCallVote & { position: VotePosition };
 /** How many recent votes the surface shows before pointing at the record. */
 const VOTE_LIMIT = 5;
 
-export function RecentVotes({
+export function RecentVotes(props: {
+  holder: SeatHolder;
+  reactionContext: ReactionViewContext | null;
+}) {
+  // Keyed on the holder so a holder change discards the fetched record
+  // structurally — a new holder never wears the previous one's votes
+  // (D40 hygiene, same shape as the funding block).
+  return <RecentVotesInner key={props.holder.id} {...props} />;
+}
+
+function RecentVotesInner({
   holder,
   reactionContext,
 }: {

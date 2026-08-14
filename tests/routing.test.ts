@@ -35,6 +35,70 @@ test("an unmapped topic returns the honest refusal, never a guess", async () => 
   assert.equal(answer.steps.length, 0);
 });
 
+/**
+ * The 85723 shape (item 2d, 2026-08-14 second session), pinned as a
+ * fixture: "pothole in front of my house" at a zip OUTSIDE the curated
+ * everyday map answered "Streets and roads" with "Tucson · Public
+ * Housing Authority Board of Commissioners" — the PHA, a curated
+ * GOVERNING body attached to place:tucson, swept into the
+ * municipal-government answer by the class-based filter. The rule is
+ * tie-or-zero REFUSES: a step names a division's OWN governing body
+ * (the #governing / #board slot) or renders its honest gap — never the
+ * nearest lookalike.
+ */
+test("85723: no routed step ever names a body that isn't the division's own government", async () => {
+  // ZCTA internal point for 85723 — inside Tucson, outside the four
+  // curated everyday zips.
+  const coverage = await coverageAt(32.18023, -110.96515, 1);
+
+  // The division's own governments at this point — the only bodies any
+  // routed step may name.
+  const ownGoverning = new Set(
+    coverage.bodies
+      .filter(
+        (b) =>
+          b.ocdId !== null &&
+          (b.bodyId === `${b.ocdId}#governing` || b.bodyId === `${b.ocdId}#board`),
+      )
+      .map((b) => b.name ?? b.divisionLabel),
+  );
+  // The PHA is attached to place:tucson and classed GOVERNING — the trap.
+  assert.ok(
+    coverage.bodies.some((b) => b.name?.includes("Public Housing Authority")),
+    "the fixture requires the PHA present at this point — if it moved, re-pin",
+  );
+
+  // The reported shape verbatim: the pothole route.
+  const pothole = resolveRouting("roads-local", coverage);
+  assert.equal(pothole.kind, "ROUTED");
+  for (const step of pothole.steps) {
+    for (const body of step.bodies) {
+      assert.ok(
+        ownGoverning.has(body.label),
+        `pothole step names "${body.label}" — not the division's own government`,
+      );
+      assert.ok(
+        !/housing authority/i.test(body.label),
+        "the PHA must never answer for streets",
+      );
+    }
+  }
+
+  // The audit half: EVERY route at this uncovered zip obeys the same
+  // rule — no topic falls through to a lookalike body.
+  for (const route of TOPIC_ROUTES) {
+    const answer = resolveRouting(route.id, coverage);
+    for (const step of answer.steps) {
+      for (const body of step.bodies) {
+        assert.ok(
+          ownGoverning.has(body.label),
+          `${route.id}: step names "${body.label}" — not the division's own government`,
+        );
+      }
+    }
+  }
+});
+
 test("golden case: the stopped library, at Tucson", async () => {
   // The author's example: "they stopped building the library down the road
   // — who should I talk to?" The route must land on the city council's body

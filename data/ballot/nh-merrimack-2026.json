@@ -1,7 +1,7 @@
 {
  "formatVersion": 1,
  "curatedAt": "2026-08-14",
- "curatorNote": "Transcribed from the NH Secretary of State's cumulative primary filing (cumulative-filings-7.16.26.pdf, both party sections) and the 2026-2027 political calendar. These are primary filings: the September 8 primary decides the general lineup. THE NOVEMBER FINDING, CORRECTED 2026-08-16: the original finding called the November ballot thin; that was true ONLY for town and school offices, which New Hampshire's town-meeting tradition decides in March (Town Election day March 10, 2026, per the political calendar). For state and federal offices the November ballot is one of the largest in the country - governor (two-year term, up every midterm), a U.S. Senate seat, U.S. House, all state senate and house seats, Executive Council, and county offices. The Executive Council and county commissioner contests were originally left in coverageNotes as unmappable; they are now listed as contests keyed to Newbury's town division, because the Secretary of State's own 2022-2032 district assignment documents place Newbury in Executive Council District 2 (2022-2032-executive-council-districts.pdf, Merrimack County section) and Merrimack County Commissioner Second District, which elects in 2026 to a 2-year term (2022-2032-county-commissioners-by-district_0.pdf). District BOUNDARIES are still not in our map data - only the town-to-district assignment is sourced. Newbury's House seat is District 7 (New London + Newbury, 2 seats) per 2022-2032-state-representative-and-delegate-districts.pdf, which also shows NO floterial district covering Newbury. County offices from the MERRIMACK County sections of both party filings.",
+ "curatorNote": "Transcribed from the NH Secretary of State's cumulative primary filing (cumulative-filings-7.16.26.pdf, both party sections) and the 2026-2027 political calendar. These are primary filings: the September 8 primary decides the general lineup. THE NOVEMBER FINDING, CORRECTED 2026-08-13: the original finding called the November ballot thin; that was true ONLY for town and school offices, which New Hampshire's town-meeting tradition decides in March (Town Election day March 10, 2026, per the political calendar). For state and federal offices the November ballot is one of the largest in the country - governor (two-year term, up every midterm), a U.S. Senate seat, U.S. House, all state senate and house seats, Executive Council, and county offices. The Executive Council and county commissioner contests were originally left in coverageNotes as unmappable; they are now listed as contests keyed to Newbury's town division, because the Secretary of State's own 2022-2032 district assignment documents place Newbury in Executive Council District 2 (2022-2032-executive-council-districts.pdf, Merrimack County section) and Merrimack County Commissioner Second District, which elects in 2026 to a 2-year term (2022-2032-county-commissioners-by-district_0.pdf). District BOUNDARIES are still not in our map data - only the town-to-district assignment is sourced. Newbury's House seat is District 7 (New London + Newbury, 2 seats) per 2022-2032-state-representative-and-delegate-districts.pdf, which also shows NO floterial district covering Newbury. County offices from the MERRIMACK County sections of both party filings.",
  "election": {
   "id": "nh-2026-11-03",
   "date": "2026-11-03",
@@ -107,8 +107,8 @@
    "provenance": {
     "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/inline-documents/sonh/2022-2032-executive-council-districts.pdf",
     "sourceOrg": "New Hampshire Secretary of State",
-    "collectedAt": "2026-08-16",
-    "verifiedAt": "2026-08-16"
+    "collectedAt": "2026-08-13",
+    "verifiedAt": "2026-08-13"
    }
   },
   {
@@ -124,8 +124,8 @@
    "provenance": {
     "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/inline-documents/sonh/2022-2032-county-commissioners-by-district_0.pdf",
     "sourceOrg": "New Hampshire Secretary of State",
-    "collectedAt": "2026-08-16",
-    "verifiedAt": "2026-08-16"
+    "collectedAt": "2026-08-13",
+    "verifiedAt": "2026-08-13"
    }
   },
   {
@@ -675,8 +675,8 @@
    "provenance": {
     "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
     "sourceOrg": "New Hampshire Secretary of State",
-    "collectedAt": "2026-08-16",
-    "verifiedAt": "2026-08-16"
+    "collectedAt": "2026-08-13",
+    "verifiedAt": "2026-08-13"
    }
   },
   {
@@ -691,8 +691,8 @@
    "provenance": {
     "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
     "sourceOrg": "New Hampshire Secretary of State",
-    "collectedAt": "2026-08-16",
-    "verifiedAt": "2026-08-16"
+    "collectedAt": "2026-08-13",
+    "verifiedAt": "2026-08-13"
    }
   },
   {
@@ -707,8 +707,8 @@
    "provenance": {
     "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
     "sourceOrg": "New Hampshire Secretary of State",
-    "collectedAt": "2026-08-16",
-    "verifiedAt": "2026-08-16"
+    "collectedAt": "2026-08-13",
+    "verifiedAt": "2026-08-13"
    }
   },
   {
@@ -723,8 +723,8 @@
    "provenance": {
     "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
     "sourceOrg": "New Hampshire Secretary of State",
-    "collectedAt": "2026-08-16",
-    "verifiedAt": "2026-08-16"
+    "collectedAt": "2026-08-13",
+    "verifiedAt": "2026-08-13"
    }
   },
   {
@@ -739,8 +739,8 @@
    "provenance": {
     "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
     "sourceOrg": "New Hampshire Secretary of State",
-    "collectedAt": "2026-08-16",
-    "verifiedAt": "2026-08-16"
+    "collectedAt": "2026-08-13",
+    "verifiedAt": "2026-08-13"
    }
   },
   {
@@ -755,8 +755,8 @@
    "provenance": {
     "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
     "sourceOrg": "New Hampshire Secretary of State",
-    "collectedAt": "2026-08-16",
-    "verifiedAt": "2026-08-16"
+    "collectedAt": "2026-08-13",
+    "verifiedAt": "2026-08-13"
    }
   },
   {
@@ -999,14 +999,14 @@
    "provenance": {
     "sourceUrl": "https://www.sos.nh.gov/2026-election-details",
     "sourceOrg": "New Hampshire Secretary of State",
-    "collectedAt": "2026-08-17",
-    "verifiedAt": "2026-08-17"
+    "collectedAt": "2026-08-14",
+    "verifiedAt": "2026-08-14"
    }
   }
  ],
  "coverageNotes": [
   "Executive Council and county commissioner district boundary lines aren't on our map yet. Those contests are listed here because the Secretary of State's own district assignments place Newbury in Executive Council District 2 and the county's Second Commissioner District — the town assignment is sourced even though the lines can't be drawn.",
   "Candidates can also reach the November ballot by nomination papers (the route independents and smaller parties use). The Secretary of State certifies those filings by September 2, 2026, so they can't be listed yet — the lists here show everyone who filed for the party primaries.",
-  "Why no question: putting a constitutional amendment (CACR) on the ballot takes a three-fifths vote of both chambers, and every CACR proposed in the 2025-2026 General Court fell short or was killed — CACR 6 (right to compute), 12 (tax supermajority), 14 (citizenship for office), 15 (hunt and fish), 21 (voting eligibility), 24 (parental privacy in education), and 28 (public protestant teachers). Vote records verified against legislative-tracking services 2026-08-17; the General Court's own site (gc.nh.gov) refuses every client this project has, browsers included — recorded in the source ladder."
+  "Why no question: putting a constitutional amendment (CACR) on the ballot takes a three-fifths vote of both chambers, and every CACR proposed in the 2025-2026 General Court fell short or was killed — CACR 6 (right to compute), 12 (tax supermajority), 14 (citizenship for office), 15 (hunt and fish), 21 (voting eligibility), 24 (parental privacy in education), and 28 (public protestant teachers). Vote records verified against legislative-tracking services 2026-08-14; the General Court's own site (gc.nh.gov) refuses every client this project has, browsers included — recorded in the source ladder."
  ]
 }

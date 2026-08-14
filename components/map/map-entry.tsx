@@ -51,6 +51,7 @@ import { OfficialModal } from "./popup/official-modal";
 import { EntityModal, type ModalSubject } from "./popup/entity-modal";
 import { DoorOverlay } from "./door-overlay";
 import { WelcomeOverlay } from "./welcome-overlay";
+import { TutorialOverlay } from "./tutorial-overlay";
 
 /**
  * The entry screen.
@@ -1053,6 +1054,12 @@ function MapEntryInner() {
               location ? () => setWelcomeRequested(false) : null
             }
           />
+        )}
+        {/* 6c (2026-08-14 second session): the first-run tour, once per
+            device, after the zip resolves and the welcome overlay is out
+            of the way. Skippable at every step. */}
+        {restored && (
+          <TutorialOverlay active={Boolean(location) && !welcomeRequested} />
         )}
       </main>
     </DataProvider>

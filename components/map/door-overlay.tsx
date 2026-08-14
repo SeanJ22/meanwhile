@@ -7,6 +7,11 @@ import type { SeatHolder } from "@/lib/officials/lookup";
 import type { Meeting } from "@/lib/sources/types";
 import type { DrawnDistrict } from "@/lib/map/districts";
 import { districtDoorRows } from "@/lib/state/derive";
+import {
+  groupOfficials,
+  TIER_GROUP_LABELS,
+  type TierGroup,
+} from "@/lib/officials/tier-grouping";
 import { formatMeetingDate } from "@/lib/map/format";
 
 /**
@@ -245,49 +250,56 @@ function OfficialsDoor({
     tier: "local" | "state" | "national",
   ) => void;
 }) {
-  const seen = new Set<string>();
-  const rows: { holder: SeatHolder; seatLabel: string | null; tier: "state" | "national" }[] = [];
-  for (const senator of coverage.senators) {
-    if (!seen.has(senator.id)) {
-      seen.add(senator.id);
-      rows.push({ holder: senator, seatLabel: "U.S. Senator", tier: "national" });
-    }
-  }
-  for (const seat of coverage.seats) {
-    for (const holder of seat.representatives) {
-      if (!seen.has(holder.id)) {
-        seen.add(holder.id);
-        rows.push({
-          holder,
-          seatLabel: seat.label,
-          tier: seat.label.toLowerCase().includes("state") ? "state" : "national",
-        });
-      }
-    }
-  }
-  if (rows.length === 0) {
+  // Item 2c (2026-08-14 second session): one derivation for every
+  // officials surface, grouped Local / State / Federal, closest-first —
+  // the list must not open with the names people already know. The flat
+  // mixed list (senators first, no locals at all) was the defect.
+  const groups = groupOfficials(coverage);
+  const total = groups.local.length + groups.state.length + groups.federal.length;
+  if (total === 0) {
     return (
       <p className="mt-3 text-[0.8125rem] text-muted">
         No sourced officeholders resolved at this point yet.
       </p>
     );
   }
+  const TIER_HEADER_CLASS: Record<TierGroup, string> = {
+    local: "text-local",
+    state: "text-state",
+    federal: "text-national",
+  };
   return (
-    <ul className="mt-3 space-y-1.5">
-      {rows.map(({ holder, seatLabel, tier }) => (
-        <li key={holder.id} className="flex items-baseline justify-between gap-3">
-          <button
-            type="button"
-            onClick={() => onOpenOfficial(holder, seatLabel, tier)}
-            className="cursor-pointer text-[0.8125rem] text-signal underline decoration-dotted"
-          >
-            {holder.name} →
-          </button>
-          <span className="shrink-0 text-right text-[0.6875rem] text-muted">
-            {seatLabel}
-          </span>
-        </li>
-      ))}
-    </ul>
+    <div className="mt-3 space-y-3">
+      {(Object.keys(TIER_GROUP_LABELS) as TierGroup[]).map((group) =>
+        groups[group].length === 0 ? null : (
+          <div key={group}>
+            <p
+              className={`font-mono text-[0.5625rem] uppercase tracking-[0.15em] ${TIER_HEADER_CLASS[group]}`}
+            >
+              {TIER_GROUP_LABELS[group]}
+            </p>
+            <ul className="mt-1 space-y-1.5">
+              {groups[group].map(({ holder, seatLabel, tier }) => (
+                <li
+                  key={holder.id}
+                  className="flex items-baseline justify-between gap-3"
+                >
+                  <button
+                    type="button"
+                    onClick={() => onOpenOfficial(holder, seatLabel, tier)}
+                    className="cursor-pointer text-[0.8125rem] text-signal underline decoration-dotted"
+                  >
+                    {holder.name} →
+                  </button>
+                  <span className="shrink-0 text-right text-[0.6875rem] text-muted">
+                    {seatLabel}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ),
+      )}
+    </div>
   );
 }

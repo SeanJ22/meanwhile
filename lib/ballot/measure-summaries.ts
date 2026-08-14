@@ -26,7 +26,7 @@ export interface MeasureSummary {
   writtenAt: string;
 }
 
-const WRITTEN_AT = "2026-08-15";
+const WRITTEN_AT = "2026-08-13";
 
 export const MEASURE_SUMMARIES: MeasureSummary[] = [
   {

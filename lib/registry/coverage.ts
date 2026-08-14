@@ -5,6 +5,7 @@ import {
   type OfficeholderIndex,
   type SeatHolder,
 } from "../officials/lookup.ts";
+import { statewideExecutivesFor } from "../officials/statewide-executives.ts";
 
 import { bodiesAt, type GeoFeature } from "./resolve.ts";
 import type {
@@ -141,6 +142,15 @@ export interface CoverageSummary {
    */
   senators: SeatHolder[];
   /**
+   * Statewide elected executives — the governor, today (item 2b,
+   * 2026-08-14 second session). Kept apart from `seats` for the same
+   * reason `senators` is: a statewide office is elected by no division on
+   * the map, so no district row can ever claim it — the blind spot that
+   * kept the most prominent officer in every state off the card. Governor
+   * only for now; the card's copy names that honestly.
+   */
+  statewideExecutives: SeatHolder[];
+  /**
    * `lookedAt` is the count of bodies a source hunt has actually been run for.
    * It is what lets the copy separate "we searched and found nothing" from
    * "we haven't got to these yet" instead of letting one sentence cover both.
@@ -255,6 +265,10 @@ export function summarizeCoverage(
     divisions.map((d) => d.ocdId),
   );
 
+  const statewideExecutives = statewideExecutivesFor(
+    divisions.map((d) => d.ocdId),
+  );
+
   // Only claim "unincorporated" when a municipal-shaped division was actually
   // found and every one of them turned out to be statistical. No division at all
   // is a coverage gap, not a fact about the reader's government.
@@ -301,6 +315,7 @@ export function summarizeCoverage(
     seats,
     unincorporated,
     senators,
+    statewideExecutives,
     counts: {
       total: covered.length,
       withSource,

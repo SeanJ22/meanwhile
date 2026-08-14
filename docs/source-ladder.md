@@ -554,3 +554,30 @@ host allows it, real browser where it walls:
 - Cells with no defensible contact are recorded misses with reasons in
   `EVERYDAY_MISSES` (85641 trash/parks, 03255 water-sewer/animals, snow
   in the desert) — a miss is a work item, never silence.
+
+## The 2026-08-14 rung set (third 08-14 session — the governors hunt, item 2b)
+
+The statewide-executives module (`lib/officials/statewide-executives.ts`)
+needs each governor's office read off the state's own site. Plain-client
+rungs, `attemptedAt: 2026-08-14`:
+
+- **azgovernor.gov walls plain clients** — 403 on
+  /office-arizona-governor/contact-governors-office. IN-BROWSER READ
+  (same session): that path 404s even in a browser (stale); the real
+  contact page is /constituent-services — "Office of the Arizona
+  Governor Katie Hobbs", 602-542-4331, engage@az.gov, read off the page.
+- **governor.nh.gov walls plain clients** — 403 on the homepage. Same NH
+  wall family as newbury.nh.gov. IN-BROWSER READ: "Welcome | Governor
+  Kelly Ayotte", 603-271-2121 published on the page; the contact page is
+  /contact-governor-ayotte.
+- **nj.gov/governor answers plain clients with an empty shell** —
+  /contact/ returns "Untitled Document" with no content to a plain
+  fetch; the page is client-rendered. A 200 with no content is a MISS,
+  not a hit (the count rule). IN-BROWSER READ: "Office of New Jersey
+  Governor Mikie Sherrill"; the office publishes NO phone — the contact
+  form (live, /governor/contact/) is the published channel, so the row
+  ships phone: null. An absence is an absence.
+
+All three rows now carry `verification: "PAGE_FETCHED"` — verified in a
+real browser this session before ship, per the everyday.ts rule that a
+pending row never ships on faith.

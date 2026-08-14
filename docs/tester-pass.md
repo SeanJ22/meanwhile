@@ -1,134 +1,99 @@
-# Tester pass — 2026-08-14 (second session of 2026-08-14), phone width, walked as a stranger
+# Tester pass — 2026-08-14 (third session of 2026-08-14), phone width, walked as a stranger
 
-Supersedes the 2026-08-19 pass. This session's changed surfaces walked at
-390×844, cold entry through the welcome overlay, all four zips. Driver:
-`scripts/tester-walk-0814b.mts` — the PASS/FAIL logs below are its output
-verbatim; screenshots `screenshots/walk0814b-<zip>-*.png`. Dating note:
-this document is headed with the REAL wall-clock date (the convention
-change recorded in state.md §18) — prior passes' date-shaped labels are
-session sequence numbers, not dates.
+Supersedes the second-session pass. This session executed the outside
+tester's recorded feedback; every changed surface walked at 390×844, cold
+entry through the welcome overlay, all four zips plus the uncovered-zip
+refusal at 85723. Driver: `scripts/tester-walk-0814c.mts` — the PASS/FAIL
+counts below are its output; screenshots `screenshots/walk0814c-<zip>-*.png`.
+All dates in this document are wall clock.
 
-**31 checks green across the four zips; the only console error is the
-walk's own deliberately-cut network request (the not-counted test).**
+**136 checks green: 85701 32/32 · 07866 34/34 · 03255 31/31 · 85641
+31/31 · 85723 8/8.**
 
-## The reaction-honesty arc (P11) — the session's gate, passed live
+## The item-1 gate, passed with the screenshot
 
-At 85701, on the ballot's candidate reaction controls (the same
-`ReactionControl` every surface uses):
+At 07866, the Rockaway Township mayor's full card
+(`walk0814c-07866-mayor-GATE.png`): **Joseph Jackson, LOCAL · MAYOR, no
+Tucson content anywhere on the card**, the jurisdiction-neutral office
+blurb ("how much day-to-day power a mayor has depends on the city's own
+charter"), phone 973-627-7200, official page rockawaytownship.org.
+Spot-verified against the township's own About-the-Mayor page in a real
+browser this session (Mayor Joe Jackson, in office since February 2022).
+The cause was the per-office-TYPE mayor blurb carrying Tucson's charter
+copy and Tucson's charter hyperlink — one jurisdiction's content bound to
+another jurisdiction's key. Tucson's verified copy now lives in a
+per-division override and renders only for Tucson's mayor; the
+cross-jurisdiction guard (`tests/jurisdiction-content.test.ts`) audits
+every curated roster, curated body, and everyday contact mechanically —
+the mayor blurb was the only contamination found.
 
-1. **First-ever tap parks behind the one-time notice** — nothing records
-   until "OK — record my answer" (P03 unchanged).
-2. **With the network cut** (route aborted): the tap renders the honest
-   line — "Couldn't reach the totals — your answer is saved on this
-   device and wasn't counted." — with the device-local record still
-   written. `walk0814b-85701-reaction-notcounted.png`.
-3. **With the network back**, changing the answer lands a 204 and EARNS
-   the selected-and-counted rendering; the honest line leaves.
-   `walk0814b-85701-reaction-counted.png`. This tap wrote a real row
-   (dev holds the production DATABASE_URL): CANDIDATE / Katie Hobbs /
-   UNSURE at 2026-08-14T20:18:10Z — the session's own, excluded from the
-   tester delta.
+## The walk's own catch: overlays were killing themselves at phone width
 
-**The deployed-site tap (the item-1 gate):** production's platform
-password is DOWN (found this session — the site loads openly), so the
-probe ran against the real deploy: one tap on Katie Hobbs's card at
-2026-08-14T20:20:21Z landed as a visible Neon row at 20:20:23Z
-(`CANDIDATE ballot-az-pima:governor|Katie Hobbs YES ANONYMOUS`),
-control-screenshot `walk0814b-production-tap.png`, row pulled by direct
-SQL and recorded in state.md §18. Tap → row: the pipeline proves itself
-end-to-end on the deployed site.
+The biggest finding of the session came from clicking instead of
+believing green: **the large official modal could not open at any phone
+viewport, on the map and the ballot both.** The back-button-closes-modal
+behavior pushed `{overlay:true}` onto `window.history`; Next's App Router
+owns history, and the push re-renders the route and remounts the island
+holding the modal's open state — the modal died the tick it opened.
+Proven by toggling exactly that line: works at 1280px (the effect skips),
+dies at 390px, with both push shapes. This was the prior session's queued
+"hydration live, click dead" item on the incumbent record link — and it
+meant phone readers could not open any official's full card. The pattern
+is removed from the official modal, the entity modal, and the list
+overlay; Escape, the close control, and backdrop click all close.
 
-## The everyday ask box (A10)
+## What each zip proved
 
-- **The pothole golden at 85701**: "There's a pothole in front of my
-  house — who do I call?" → the hang-tight beat ("I got you... hang
-  tight..." — never a thinking label), then City of Tucson Street
-  Maintenance answered through **Tucson 311** with the request portal
-  link and the city's own page cited. `walk0814b-85701-ask-pothole.png`.
-  The city's current page says 311 — the old direct TDOT number that
-  still circulates in 2015-era news stories is deliberately not shipped.
-- **07866 answers with BOTH municipalities** — Rockaway Township DPW &
-  Utilities and Borough of Rockaway DPW, each named plainly (the zip
-  crosses the boundary; the reader knows which town they live in, the
-  map cannot). `walk0814b-07866-ask-pothole.png`.
-- **03255**: Newbury Highway Department, 603-938-5494, off the town's
-  own page (read in a real browser — the host walls plain clients).
-  `walk0814b-03255-ask-pothole.png`.
-- **The refusal stays honest** at every zip ("Rather than guess…"),
-  `walk0814b-<zip>-ask-refusal.png`.
-- **The refusal log drove the map**: "my kids school" — a live refusal
-  logged at 18:49 UTC today — now routes to How a school is being run;
-  "I want a bike lane" routes to Streets and roads.
+Per zip (except where noted): the first-run tour appears once, is
+skippable at every step, and never reappears (walked whole at 85701,
+5 of 5 steps); the who-governs card groups LOCAL → STATE → FEDERAL,
+closest-first, "Federal" never "National"; the state's governor renders
+under STATE with a working contact and the honesty line ("The governor is
+the only statewide office listed so far"); all six district types default
+ON with the overlay master on; the officials door groups in the same
+three tiers and includes the local rosters the old flat list omitted; a
+federal official's card shows "How the parties voted" with real numbers
+and no characterization; the ask-box beat holds ~3 seconds with the
+answer withheld for the duration; the ballot opens on THE NEXT ELECTION
+with one-tap add-to-calendar, the registration deadline and link, early
+voting dates, and "Everyone below is on this ballot." (the propositions
+sentence only where propositions exist); the single Add-to-calendar
+control opens the Apple/Google/Outlook popup (the two-link render is
+gone); the incumbent-record modal OPENS (the prior session's unproven
+item, now proven); the picks card renders as a screenshot-ready image
+with the download offer and the nothing-is-sent line; Clear-my-picks
+confirms then clears.
 
-## The scrub disclosure (T09)
+Zip-specific: 03255 names **Kearsarge Regional** on who-governs and its
+school layer draws by default (the tester asked for it by name and the
+map never showed it — the layer defaulted off; diagnosis: default layer
+selection, not the registry join and not geometry). 07866 carries the
+item-1 gate above and governor **Mikie Sherrill**. 85701/85641 carry
+governor **Katie Hobbs** and the AZ propositions sentence. 85723 (outside
+the curated everyday map): "pothole in front of my house" routes to
+**Tucson** — the city, the correct general owner — with the honest
+who-sits-on-it gap, and **the Public Housing Authority never appears in
+the routed answer** (it was the answer in production; the join now
+matches only a division's own governing body).
 
-The transparency page states the blanking of phone-, email-, and
-street-address-shaped text before storage, at every zip walked.
-`walk0814b-<zip>-transparency.png`.
+## Governor verification (2b), done before ship
 
-## Walk logs, verbatim
+All three state sites wall plain clients; each was read in a real
+browser this session (rungs in `docs/source-ladder.md`): AZ — "Office of
+the Arizona Governor Katie Hobbs", 602-542-4331 and engage@az.gov off the
+constituent-services page (the draft's contact path 404'd and was
+corrected); NH — "Welcome | Governor Kelly Ayotte", 603-271-2121
+published; NJ — "Office of New Jersey Governor Mikie Sherrill", which
+publishes **no phone** — the row ships the live contact form and a null
+phone, because an absence is an absence.
 
-```
-== walk0814b 85701 ==
-PASS map: who-governs renders
-PASS ask box present
-PASS A10: the hang-tight beat renders, the author's words
-PASS A10: the beat never says Thinking
-PASS A10 golden: pothole → Tucson Street Maintenance via 311
-PASS A10: the 311 phone renders
-PASS A10: the source is cited on the card
-PASS A10: the honest refusal still renders
-PASS A10: 'my kids school' (this morning's live refusal) now routes
-PASS P03: the one-time notice gates the first tap
-PASS P11: a failed write renders the honest not-counted line
-PASS P11: a landed write earns the counted rendering — the line is gone
-PASS P11: the landed answer renders selected
-PASS T09: the scrub is disclosed
-PASS ask box disclosure still present
-console errors: the walk's own aborted /api/reactions request only
+## Honest notes
 
-== walk0814b 07866 ==
-PASS map: who-governs renders
-PASS ask box present
-PASS A10: the hang-tight beat renders, the author's words
-PASS A10: the beat never says Thinking
-PASS A10: BOTH municipalities answer at 07866
-PASS A10: the honest refusal still renders
-PASS T09: the scrub is disclosed
-PASS ask box disclosure still present
-console errors: none
-
-== walk0814b 03255 ==
-PASS map: who-governs renders
-PASS ask box present
-PASS A10: the hang-tight beat renders, the author's words
-PASS A10: the beat never says Thinking
-PASS A10: Newbury Highway Department answers the pothole
-PASS A10: the honest refusal still renders
-PASS T09: the scrub is disclosed
-PASS ask box disclosure still present
-console errors: none
-
-== walk0814b 85641 ==
-PASS map: who-governs renders
-PASS ask box present
-PASS A10: the hang-tight beat renders, the author's words
-PASS A10: the beat never says Thinking
-PASS A10: the honest refusal still renders
-PASS T09: the scrub is disclosed
-PASS ask box disclosure still present
-console errors: none
-```
-
-## Honest findings, not walked around
-
-- **The incumbent record link would not open its modal under this
-  harness** — hydration confirmed live (React props attached, sibling
-  controls responsive), three click strategies, zero DOM change. The
-  0819 pass exercised the same link green, and nothing in this session
-  touched that path; this reads as a harness quirk, but it is UNPROVEN
-  this session, so it goes to the author's thirty-second hand check in
-  "Before you send the link" rather than into a green claim.
-- The map's who-governs official popups could not be driven by the
-  harness's click dispatch this session either (same shape); official
-  cards were exercised through the ballot path instead.
+- The walk runs headless (the session was unattended); screenshots are
+  the walk's own captures, and the gate image was verified by eye in the
+  session log. Production re-verification after deploy is recorded in the
+  session report.
+- The "Mayor · Mayor" seat-label echo caught on the gate screenshot was
+  suppressed (a label identical to the office title is noise).
+- Console: the only errors during walks are MapLibre WebGL performance
+  warnings, pre-existing.

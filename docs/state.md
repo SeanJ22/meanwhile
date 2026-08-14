@@ -4,18 +4,26 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-14, second session of the day (the dating
-convention changed this session — real wall-clock dates from here on;
-see the §18 header note). This session: the reaction pipeline proved
-itself end-to-end on the DEPLOYED site (one tap → one visible Neon row;
-production's platform password found DOWN); honest reaction outcomes —
-success earned by the 204, every failure rendering the saved-not-counted
-line (P11); the FEC snapshot thin-guard for the unattended weekly
-refresh (D44); the everyday-topics contact map — 30 of 36 topic×zip
-cells carrying a government's-own-page contact, the pothole golden
-answering Tucson 311 (A10); the refusal-log scrub before store (T09);
-and the photo census — 16 of 747 rendered people have portraits (D45).
-See §18. Before that, the 2026-08-19-labeled session (§17), and the
+Last updated: 2026-08-14, third session of the day. This session
+executed the outside tester's recorded feedback: the Rockaway mayor
+stopped wearing Tucson's charter copy (M46, gated, the
+cross-jurisdiction guard); every district layer defaults on and
+Kearsarge renders at 03255 (M47); the governor joined who-governs as a
+first-class statewide attachment, browser-verified against all three
+states' own sites (B11); officials group Local → State → Federal
+everywhere (M48); the ask box refuses instead of naming the PHA for
+potholes (A11); party breakdowns on every roll call, sum-gated to the
+chamber's tally (B12); the ballot became a call to action with ONE
+add-to-calendar control (M49); the picks card (M50); the copy/truth
+batch including the wall-clock dates sweep and the first-run tutorial
+(M51); two standing rules into CLAUDE.md (X04); and THE WALK'S OWN
+CATCH — overlays pushed history state and Next remounted them, so no
+official's full card could open at any phone width; the pattern is
+removed (M52, the prior session's "click dead" mystery solved). See
+§19. Before that, the second session of 2026-08-14 (§18): the pipeline
+proof, reaction honesty (P11), the FEC thin-guard (D44), the
+everyday-topics map (A10), the refusal-log scrub (T09), and the photo
+census (D45). Before that, the 2026-08-19-labeled session (§17), and the
 2026-08-18-labeled FEC-and-final-prep session — the FEC funding surfaces
 built FIRST AND WHOLE per the author's order (D34 Done; both ripcords
 live in code, counsel holds the flags); Sunnyside and Amphitheater wired
@@ -3806,3 +3814,139 @@ the author's order.
   session's harness (hydration live, click dead — unproven, queued to
   the author's hand check); the photo session (D45's list); D35; the 45
   backlog special districts; the ask-box map growing from refusal logs.
+
+## 19. The 2026-08-14 session (third session of 2026-08-14) — the tester's feedback lands, and the walk finds the modal killer
+
+Branch `claude/tester-feedback-0814`. The outside tester's recorded
+live-demo feedback, triaged and executed as the session brief. All
+dates below are wall clock.
+
+### 1 — The Rockaway mayor takes off Tucson's language (M46, GATED — passed)
+
+Diagnosis: the per-office-TYPE mayor blurb in
+`lib/officials/office-blurbs.ts` was written for Tucson — the
+council-manager sentence, the Tucson charter basis, the Tucson charter
+HYPERLINK — and rendered on every mayor, so Rockaway Township's mayor
+wore another jurisdiction's content (phone correctly NJ, from the
+roster). The uniqueness invariant's sibling in curated words. Fix: the
+generic mayor blurb is jurisdiction-neutral by construction; Tucson's
+verified copy moved to `DIVISION_OFFICE_BLURBS`, applied only when the
+holder's own division matches, resolved mechanically off the roster
+carrying them. The mechanical audit (`tests/jurisdiction-content.test.ts`
+— per-state place names, domains, phone area codes across rosters,
+curated bodies, everyday contacts) found the mayor blurb was the ONLY
+contamination. Gate: `walk0814c-07866-mayor-GATE.png`, spot-verified
+against rockawaytownship.org.
+
+### 2 — Kearsarge, and every layer defaults on (M47)
+
+Diagnosis: default layer selection — not the registry join (the §4.4
+oracle resolves Kearsarge at 03255) and not geometry (the school layer
+is committed for Merrimack NH). The school type was missing from
+`DEFAULT_DISTRICT_TYPES` and the overlay master defaulted off, so a body
+the who-governs card counts was unreachable on the map. All six types
+now default on, master on (an explicit off is honored); the
+claims-reachable guard extends the stated-N family: every counted body's
+division must exist in a default-on layer's committed geometry. Rejected
+alternative recorded: the 2026-08-12 one-type-per-tier legibility
+default — legibility tuning loses to hiding a claimed body.
+
+### 3 — The governor, the tiers, and the blind spot (B11, M48)
+
+The who-governs card is built from division rows and a statewide
+executive is elected by no district on the map — the registry's shape
+was the card's blind spot, and the most prominent officer in every state
+was missing at every zip. `lib/officials/statewide-executives.ts`
+attaches the governor by the senators pattern (state OCD prefix).
+Browser-verified before ship (all three sites wall plain clients; rungs
+in source-ladder.md): AZ Hobbs — the draft contact path 404'd, corrected
+to /constituent-services with 602-542-4331 and engage@az.gov read off
+the page; NH Ayotte — 603-271-2121 published, contact page corrected;
+NJ Sherrill — the office publishes NO phone; the row ships null plus the
+live contact form, because an absence is an absence.
+
+`lib/officials/tier-grouping.ts` (M48) is the ONE derivation every
+officials surface reads: LOCAL (rosters) → STATE (legislators, then
+governor — order of scope) → FEDERAL (House member, then senators).
+Always closest-first — the product's thesis is that the government
+nobody watches is the nearest one. "Federal", never "National".
+Membership by structure; `namedHolderCount` reads the same derivation so
+the stat card's N and the door's rows cannot disagree. The officials
+door gained the local rosters its flat list had silently omitted.
+
+### 4 — Tie-or-zero refuses (A11), and the breakdown (B12)
+
+The 85723 defect: `bodiesFor` matched municipal on divisionType +
+bodyClass, and the Public Housing Authority — honestly GOVERNING,
+honestly attached to place:tucson — swept into the pothole answer. A
+routed step now names only a division's OWN governing body (the
+registry-minted `#governing`/`#board` slot — structural, never a class
+or name match); the fixture test audits every topic route at 85723.
+
+Party breakdowns (B12): pure arithmetic over the snapshot's positions
+joined to the roster's party labels, refused unless the per-party sums
+equal the chamber's recorded tally exactly (40/40 votes pass). Rendered
+as numbers only, parties alphabetical; the honest unavailable line
+otherwise.
+
+### 5 — The ballot as a call to action (M49, M50, M51)
+
+The standing header: next election + one-tap add-to-calendar,
+registration deadline + link, early voting, and the line answering the
+tester's exact confusion. Calendar links consolidated to ONE control
+(popup: Apple/Google/Outlook — same .ics, presentation not plumbing).
+"Make your voice heard" replaced "To be heard" verbatim. Incumbent
+cards: "[Name] currently holds this seat, so there's more information
+about them — that's not a bias, it's a record." The picks card (M50,
+author-approved): device-local picks drawn onto a canvas, downloadable,
+nothing transmitted, constraints held in source; Clear-my-picks with
+inline confirm. The 6-batch (M51): measure-card ask weight, the
+WALL-CLOCK DATES SWEEP (the session-label convention had leaked future
+dates into 246 provenance fields across nine curated files — mapped to
+real dates via git history: labels 08-15/16 ran 08-13, labels
+08-17/18/19 ran 08-14; a guard now scans every provenance field and
+fails on any future date, denominator stated), the five-step first-run
+tutorial, the moving-here state-picker line, and the 3-second ask beat
+with animated dots.
+
+### 6 — The walk's catch: overlays were killing themselves (M52)
+
+The large official modal could not OPEN at any phone viewport — map and
+ballot both. The back-button-closes-modal behavior pushed
+`{overlay:true}` onto `window.history`; Next's App Router owns history,
+re-rendered the route, and remounted the island holding the modal's open
+state — the modal died the tick it opened. Proven by toggling exactly
+that line (works at 1280px where the effect skips; both push shapes die
+at 390px). This was §18's queued "hydration live, click dead" item, and
+it means PHONE READERS COULD NOT OPEN ANY OFFICIAL'S FULL CARD in
+production during the tester's demo period. The pattern is removed from
+official-modal, entity-modal, and list-overlay; Escape, the close
+control, and backdrop click close; the back button navigates.
+
+### Standing rules adopted (X04, CLAUDE.md)
+
+Organizations render as filed, never characterized; every blurb carries
+its source class. Guarded where a guard can reach
+(`tests/org-characterization.test.ts`).
+
+### Recorded, not built
+
+P12 people's-voice aggregates TABLED by the author (nobody builds it in
+passing); T10 the demo-deletion promise with its due condition; D46 prop
+sponsors parked; D47 state comparison parked behind the moving-here
+link; V07 ed-tech parked; R13 the playbook clause, standing and
+permanent. D35 notes the tester independently requested
+top-issues-per-candidate.
+
+### State as of 2026-08-14 (third session)
+
+- **435 tests, lint clean (one pre-existing warning), build exit 0** —
+  verified by exit code; walk0814c 136 checks green (85701 32, 07866 34,
+  03255 31, 85641 31, 85723 8).
+- The item-1 gate PASSED with the screenshot, spot-verified against the
+  township's own site.
+- Next free tracker ids: A12, B13, D48, M53, P13, R14, T11, V08, X05.
+- Open next: the photo session (D45's list, author's order); D35
+  (positions machinery — tester demand now on record); the 45 backlog
+  special districts; the ask-box map growing from refusal logs; T10
+  fires at testing end.

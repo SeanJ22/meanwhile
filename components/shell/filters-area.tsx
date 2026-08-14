@@ -195,9 +195,10 @@ export function FiltersArea() {
             </div>
           </Group>
 
-          {/* Select all draws a busier map than the default three — expected
-              and fine (M25); the default stays what it is, and Reset all
-              returns to it. Labels hold back at low zoom to keep it legible. */}
+          {/* All types default on (session item 2, 2026-08-14 second
+              session): a body the who-governs card counts must be findable
+              without knowing which checkbox to tick. Reset all returns to
+              all-on. Labels hold back at low zoom to keep it legible. */}
           <Group
             label="District types"
             actions={[

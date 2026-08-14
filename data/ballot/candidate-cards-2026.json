@@ -1,14 +1,14 @@
 {
  "formatVersion": 1,
- "curatedAt": "2026-08-17",
- "note": "Kelly-standard candidate cards (2b): photo, a short bio in the candidate's own site's words, and published contact — each read from the cited page on the date recorded, every photo URL HEAD-verified as an image. Photo rule (tightened 2026-08-19, 2b): a clean solo portrait or honest initials — NEVER a screengrab, banner, logo crop, or a photo where the candidate is not the unambiguous sole subject. A challenger has no official portrait, so the campaign site's own photo is the legitimate source when it passes that bar — recorded and labeled as such; when it does not, initials render and the miss is a recorded hunt. Every shipped photo is listed with its source URL in docs/photo-report.md for human verification. Bios are the site's words, attributed, never our characterization. A candidate without an entry still renders a card (name, party, links, reaction control); every bio/photo absence is a recorded hunt below, never a blank presented as a fact.",
+ "curatedAt": "2026-08-14",
+ "note": "Kelly-standard candidate cards (2b): photo, a short bio in the candidate's own site's words, and published contact — each read from the cited page on the date recorded, every photo URL HEAD-verified as an image. Photo rule (tightened 2026-08-14, 2b): a clean solo portrait or honest initials — NEVER a screengrab, banner, logo crop, or a photo where the candidate is not the unambiguous sole subject. A challenger has no official portrait, so the campaign site's own photo is the legitimate source when it passes that bar — recorded and labeled as such; when it does not, initials render and the miss is a recorded hunt. Every shipped photo is listed with its source URL in docs/photo-report.md for human verification. Bios are the site's words, attributed, never our characterization. A candidate without an entry still renders a card (name, party, links, reaction control); every bio/photo absence is a recorded hunt below, never a blank presented as a fact.",
  "cards": {
   "ballot-nh-merrimack:governor:ayotte-kelly": {
    "photoUrl": null,
    "photoSource": null,
    "bio": "Governor Kelly Ayotte is working every day to keep our state safe, prosperous and free.",
    "bioSourceUrl": "https://kellyfornh.com",
-   "bioSourceLabel": "In the campaign's words — kellyfornh.com, read 2026-08-17",
+   "bioSourceLabel": "In the campaign's words — kellyfornh.com, read 2026-08-14",
    "email": null,
    "phone": null
   },
@@ -17,7 +17,7 @@
    "photoSource": "Photo: the candidate's campaign site (cindewarmington.com)",
    "bio": "Cinde Warmington served as the only Democrat on the Executive Council and is running for governor to address the affordability challenges facing working families.",
    "bioSourceUrl": "https://www.cindewarmington.com",
-   "bioSourceLabel": "From the candidate's site — cindewarmington.com, read 2026-08-17",
+   "bioSourceLabel": "From the candidate's site — cindewarmington.com, read 2026-08-14",
    "email": "Vote@CindeWarmington.com",
    "phone": null
   },
@@ -26,7 +26,7 @@
    "photoSource": null,
    "bio": "Born and raised in the Granite State, Chris is a product of Manchester public schools and a small business owner, helping run his family's restaurant.",
    "bioSourceUrl": "https://chrispappas.org",
-   "bioSourceLabel": "From the candidate's site — chrispappas.org, read 2026-08-17",
+   "bioSourceLabel": "From the candidate's site — chrispappas.org, read 2026-08-14",
    "email": null,
    "phone": null
   },
@@ -35,7 +35,7 @@
    "photoSource": null,
    "bio": "His family has deep roots in Portsmouth stretching back generations; he served nearly 40 years in the military, was a U.S. Senator, and represented America as Ambassador to New Zealand and Samoa.",
    "bioSourceUrl": "https://scottbrown.com",
-   "bioSourceLabel": "From the candidate's site — scottbrown.com, read 2026-08-17",
+   "bioSourceLabel": "From the candidate's site — scottbrown.com, read 2026-08-14",
    "email": "info@scottbrown.com",
    "phone": null
   },
@@ -44,7 +44,7 @@
    "photoSource": null,
    "bio": "John Sununu is a lifelong Granite Stater, trained as an engineer with private-sector experience, who represented New Hampshire in Washington.",
    "bioSourceUrl": "https://www.sununusenator.com",
-   "bioSourceLabel": "From the candidate's site — sununusenator.com, read 2026-08-17",
+   "bioSourceLabel": "From the candidate's site — sununusenator.com, read 2026-08-14",
    "email": "info@sununusenator.com",
    "phone": null
   },
@@ -53,7 +53,7 @@
    "photoSource": "Photo: the candidate's campaign site (lilytangwilliams.com)",
    "bio": "Born to working-class parents in China's Sichuan province just before the Cultural Revolution, she came to America in 1988 for graduate school.",
    "bioSourceUrl": "https://www.lilytangwilliams.com",
-   "bioSourceLabel": "From the candidate's site — lilytangwilliams.com, read 2026-08-17",
+   "bioSourceLabel": "From the candidate's site — lilytangwilliams.com, read 2026-08-14",
    "email": null,
    "phone": null
   },
@@ -62,7 +62,7 @@
    "photoSource": null,
    "bio": "A working parent and research scientist who lives in Sutton; she serves on the Budget Committee for the Kearsarge Regional School District.",
    "bioSourceUrl": "https://www.rebeccafornh.com",
-   "bioSourceLabel": "From the candidate's site — rebeccafornh.com, read 2026-08-17",
+   "bioSourceLabel": "From the candidate's site — rebeccafornh.com, read 2026-08-14",
    "email": "info@rebeccafornh.com",
    "phone": null
   },
@@ -71,7 +71,7 @@
    "photoSource": "Photo: the candidate's campaign site (gregforrep.com)",
    "bio": "A New London resident and lifelong New Hampshire native; an attorney and General Counsel at a Manchester business, and a member of the House Resources, Recreation & Development Committee.",
    "bioSourceUrl": "https://gregforrep.com",
-   "bioSourceLabel": "From the candidate's site — gregforrep.com, read 2026-08-17",
+   "bioSourceLabel": "From the candidate's site — gregforrep.com, read 2026-08-14",
    "email": "Greg@GregforRep.com",
    "phone": null
   },
@@ -80,7 +80,7 @@
    "photoSource": "Photo: the candidate's campaign site (karenliothill.com)",
    "bio": "The Executive Councilor for District 2, representing 81 cities and towns; a former waitress and small business owner.",
    "bioSourceUrl": "https://www.karenliothill.com",
-   "bioSourceLabel": "From the candidate's site — karenliothill.com, read 2026-08-17",
+   "bioSourceLabel": "From the candidate's site — karenliothill.com, read 2026-08-14",
    "email": "Karen@KarenLiotHill.com",
    "phone": "603-252-2542"
   },
@@ -89,7 +89,7 @@
    "photoSource": "Photo: the candidate's campaign site (corybooker.com)",
    "bio": "A tireless fighter for New Jersey, powered by grassroots supporters — the campaign rejects donations from federal lobbyists and corporate PACs.",
    "bioSourceUrl": "https://corybooker.com",
-   "bioSourceLabel": "In the campaign's words — corybooker.com, read 2026-08-17",
+   "bioSourceLabel": "In the campaign's words — corybooker.com, read 2026-08-14",
    "email": null,
    "phone": null
   },
@@ -98,7 +98,7 @@
    "photoSource": null,
    "bio": "A self-employed small business owner.",
    "bioSourceUrl": "https://jerseyjustin4senate.org",
-   "bioSourceLabel": "From the candidate's site — jerseyjustin4senate.org, read 2026-08-17",
+   "bioSourceLabel": "From the candidate's site — jerseyjustin4senate.org, read 2026-08-14",
    "email": "jerseyjustin4senate@gmail.com",
    "phone": "609-969-0959"
   },
@@ -107,7 +107,7 @@
    "photoSource": null,
    "bio": "Born and raised in a middle-class family in Clifton; he served as Mayor of Randolph in 2025 and on the Township Council since May 2022, and is a Yale graduate with over a decade in corporate communications.",
    "bioSourceUrl": "https://www.joehathawayforcongress.com",
-   "bioSourceLabel": "From the candidate's site — joehathawayforcongress.com, read 2026-08-17",
+   "bioSourceLabel": "From the candidate's site — joehathawayforcongress.com, read 2026-08-14",
    "email": "info@joehathawayforcongress.com",
    "phone": null
   },
@@ -116,7 +116,7 @@
    "photoSource": "Photo: the candidate's campaign site (analiliafornj.com)",
    "bio": "She has spent 25 years fighting for working families — winning the $15 minimum wage and paid sick days in New Jersey — and is running for Congress in NJ-11.",
    "bioSourceUrl": "https://www.analiliafornj.com",
-   "bioSourceLabel": "From the candidate's site — analiliafornj.com, read 2026-08-17",
+   "bioSourceLabel": "From the candidate's site — analiliafornj.com, read 2026-08-14",
    "email": "press@analiliafornj.com",
    "phone": null
   },
@@ -125,7 +125,7 @@
    "photoSource": "Photo: the candidate's campaign site (selenformorriscounty.com)",
    "bio": "He immigrated to America in 1996, served as Mayor of Chatham Township, and is Senior Vice President of Administration for Lincoln Educational Services; a CPA.",
    "bioSourceUrl": "https://www.selenformorriscounty.com",
-   "bioSourceLabel": "From the candidate's site — selenformorriscounty.com, read 2026-08-17",
+   "bioSourceLabel": "From the candidate's site — selenformorriscounty.com, read 2026-08-14",
    "email": null,
    "phone": null
   },
@@ -134,7 +134,7 @@
    "photoSource": null,
    "bio": "Born and raised in the Grand Canyon State, Katie Hobbs has dedicated her life to listening to her community and helping solve difficult challenges for the people of Arizona.",
    "bioSourceUrl": "https://katiehobbs.org",
-   "bioSourceLabel": "From the candidate's site — katiehobbs.org, read 2026-08-17",
+   "bioSourceLabel": "From the candidate's site — katiehobbs.org, read 2026-08-14",
    "email": "info@katiehobbs.org",
    "phone": null
   },
@@ -143,7 +143,7 @@
    "photoSource": null,
    "bio": "An Arizona native who has served Arizona's 5th Congressional District since 2016.",
    "bioSourceUrl": "https://biggsforarizona.com",
-   "bioSourceLabel": "From the candidate's site — biggsforarizona.com, read 2026-08-17",
+   "bioSourceLabel": "From the candidate's site — biggsforarizona.com, read 2026-08-14",
    "email": null,
    "phone": null
   },
@@ -152,7 +152,7 @@
    "photoSource": "Official portrait — GPO Congressional Pictorial Directory (public domain), committed copy; license recorded in lib/registry/official-photos.json",
    "bio": "Born and raised in Nashua, she represents New Hampshire's Second District; a former foreign-policy advisor to Senator John McCain, Navy Reserve intelligence officer for over a decade, law clerk to Justice Stephen Breyer, and Deputy Assistant Attorney General.",
    "bioSourceUrl": "https://goodlander.house.gov/about",
-   "bioSourceLabel": "From her official House page — goodlander.house.gov, read 2026-08-17 (in a browser; the host refuses automated clients)",
+   "bioSourceLabel": "From her official House page — goodlander.house.gov, read 2026-08-14 (in a browser; the host refuses automated clients)",
    "email": null,
    "phone": null
   }
@@ -161,80 +161,80 @@
   {
    "key": "ballot-nh-merrimack:us-house-2:goodlander-maggie",
    "name": "Maggie Goodlander",
-   "note": "RESOLVED for the bio 2026-08-17: goodlander.house.gov/about read in a real browser (403s pipelines). PHOTO RESOLVED 2026-08-18: the public-domain unitedstates/images repo caught up with her — official portrait fetched by pnpm officials:photos, committed at public/officials/G000604.jpg with license recorded, and the card now serves that committed copy (an incumbent's official portrait, labeled as such; maggiefornh.com still 403s).",
-   "attemptedAt": "2026-08-18"
+   "note": "RESOLVED for the bio 2026-08-14: goodlander.house.gov/about read in a real browser (403s pipelines). PHOTO RESOLVED 2026-08-14: the public-domain unitedstates/images repo caught up with her — official portrait fetched by pnpm officials:photos, committed at public/officials/G000604.jpg with license recorded, and the card now serves that committed copy (an incumbent's official portrait, labeled as such; maggiefornh.com still 403s).",
+   "attemptedAt": "2026-08-14"
   },
   {
    "key": "ballot-nh-merrimack:us-senate:pappas-chris#photo",
    "name": "Chris Pappas",
    "note": "chrispappas.org markup carries no identifiable headshot URL; pappas.house.gov 403s non-browser clients. Bio recorded from the campaign site; photo honest-absent.",
-   "attemptedAt": "2026-08-17"
+   "attemptedAt": "2026-08-14"
   },
   {
    "key": "ballot-nj-morris:us-senate:fernandez#bio",
    "name": "Veronica Fernandez",
    "note": "veronicaforsenate.com carries no formal bio and no candidate photo in markup (decorative graphics only); contact is a form with no published address. Recorded as the site's own state, not our gap.",
-   "attemptedAt": "2026-08-17"
+   "attemptedAt": "2026-08-14"
   },
   {
    "key": "ballot-nj-morris:us-house-11:hathaway#photo",
    "name": "Joe Hathaway",
    "note": "joehathawayforcongress.com markup carries a logo and body images but no dedicated headshot URL. Bio and email recorded; photo honest-absent.",
-   "attemptedAt": "2026-08-17"
+   "attemptedAt": "2026-08-14"
   },
   {
    "key": "ballot-az-pima:governor|Andy Biggs#photo",
    "name": "Andy Biggs",
    "note": "biggsforarizona.com markup carries only a social-share composite image, no dedicated headshot. ALSO RECORDED: andybiggs.com is a DIFFERENT person entirely (a safari photographer) — the kellyayotte.com lesson re-sighted; only the fetch-verified biggsforarizona.com is citable.",
-   "attemptedAt": "2026-08-17"
+   "attemptedAt": "2026-08-14"
   },
   {
    "key": "ballot-az-pima:*#cards",
    "name": "Remaining AZ candidates",
-   "note": "NOT_ATTEMPTED for bio/photo enrichment this session beyond the governor contest — NH and NJ ran first per the depth directive. All 26 AZ candidates already carry fetch-verified official/campaign links from 2026-08-16 and render full cards minus bio/photo.",
-   "attemptedAt": "2026-08-17"
+   "note": "NOT_ATTEMPTED for bio/photo enrichment this session beyond the governor contest — NH and NJ ran first per the depth directive. All 26 AZ candidates already carry fetch-verified official/campaign links from 2026-08-13 and render full cards minus bio/photo.",
+   "attemptedAt": "2026-08-14"
   },
   {
    "key": "ballot-nh-merrimack:minor-candidates#cards",
    "name": "NH primary-filing minor candidates",
-   "note": "Candidates whose 2026-08-16 link hunts already returned recorded MISSes (no findable site) have no photo/bio source that meets the never-characterize rule — their cards render name, party, and the filing citation, which is everything the public record offers. The September 8 primary narrows this list.",
-   "attemptedAt": "2026-08-17"
+   "note": "Candidates whose 2026-08-13 link hunts already returned recorded MISSes (no findable site) have no photo/bio source that meets the never-characterize rule — their cards render name, party, and the filing citation, which is everything the public record offers. The September 8 primary narrows this list.",
+   "attemptedAt": "2026-08-14"
   },
   {
    "key": "ballot-nh-merrimack:governor:ayotte-kelly#photo",
    "name": "Kelly Ayotte",
-   "note": "PHOTO DROPPED 2026-08-19 (2b rule tightened: a clean solo portrait or honest initials - never a screengrab, banner, logo crop, or group shot). Rung 1: the shipped WinRed banner (KellyAyotteForNH_WinRed_WebsitePullTrough_v2-1.jpg) is a campaign graphic with logo text, not a portrait. Rung 2 (re-extract, kellyfornh.com + /meet-kelly/ fetched 2026-08-19): AyotteKelly5-7-23-75 is a four-person family photo; 9S6A9852 is a press-conference crowd shot; the remaining images are logo files. Rung 3: the official governor.nh.gov portrait exists but carries an unknown state license - not shippable per the D20 rule. Initials render; the hunt stays open.",
-   "attemptedAt": "2026-08-19"
+   "note": "PHOTO DROPPED 2026-08-14 (2b rule tightened: a clean solo portrait or honest initials - never a screengrab, banner, logo crop, or group shot). Rung 1: the shipped WinRed banner (KellyAyotteForNH_WinRed_WebsitePullTrough_v2-1.jpg) is a campaign graphic with logo text, not a portrait. Rung 2 (re-extract, kellyfornh.com + /meet-kelly/ fetched 2026-08-14): AyotteKelly5-7-23-75 is a four-person family photo; 9S6A9852 is a press-conference crowd shot; the remaining images are logo files. Rung 3: the official governor.nh.gov portrait exists but carries an unknown state license - not shippable per the D20 rule. Initials render; the hunt stays open.",
+   "attemptedAt": "2026-08-14"
   },
   {
    "key": "ballot-az-pima:governor|Katie Hobbs#photo",
    "name": "Katie Hobbs",
-   "note": "PHOTO DROPPED 2026-08-19 (2b - this is the card the author flagged). Rung 1: the shipped file (KHA25_004_FINAL_horizontal_white-scaled.png) is a white-on-transparent campaign wordmark, not a photograph at all. Rung 2 (re-extract, katiehobbs.org + /meet-katie/ fetched 2026-08-19): 220603-Katie-Hobbs-2767 is a four-person patio scene; DSC06975 is a five-person street event; no solo portrait is published at fetchable URLs. Rung 3: azgovernor.gov carries an official portrait of unknown state license - not shippable per the D20 rule. Initials render; the hunt stays open.",
-   "attemptedAt": "2026-08-19"
+   "note": "PHOTO DROPPED 2026-08-14 (2b - this is the card the author flagged). Rung 1: the shipped file (KHA25_004_FINAL_horizontal_white-scaled.png) is a white-on-transparent campaign wordmark, not a photograph at all. Rung 2 (re-extract, katiehobbs.org + /meet-katie/ fetched 2026-08-14): 220603-Katie-Hobbs-2767 is a four-person patio scene; DSC06975 is a five-person street event; no solo portrait is published at fetchable URLs. Rung 3: azgovernor.gov carries an official portrait of unknown state license - not shippable per the D20 rule. Initials render; the hunt stays open.",
+   "attemptedAt": "2026-08-14"
   },
   {
    "key": "ballot-nj-morris:us-senate:murphy#photo",
    "name": "Justin Murphy",
-   "note": "PHOTO DROPPED 2026-08-19 (2b). Rung 1: the shipped PNG (JUSTIN-MURPHY-5) renders blank white as fetched by a plain client - not a portrait as served. Rung 2 (re-extract, jerseyjustin4senate.org fetched 2026-08-19): the og:image D70_8879 is a mid-speech candid in front of a campaign banner - not a clean portrait. Initials render; the hunt stays open.",
-   "attemptedAt": "2026-08-19"
+   "note": "PHOTO DROPPED 2026-08-14 (2b). Rung 1: the shipped PNG (JUSTIN-MURPHY-5) renders blank white as fetched by a plain client - not a portrait as served. Rung 2 (re-extract, jerseyjustin4senate.org fetched 2026-08-14): the og:image D70_8879 is a mid-speech candid in front of a campaign banner - not a clean portrait. Initials render; the hunt stays open.",
+   "attemptedAt": "2026-08-14"
   },
   {
    "key": "ballot-nh-merrimack:us-senate:brown-scott-p-#photo",
    "name": "Scott P. Brown",
-   "note": "PHOTO DROPPED 2026-08-19 (2b). Rung 1: the shipped scott-brown-closeup is a two-person event candid, not unambiguously a portrait of the candidate. Rung 2 (re-extract, scottbrown.com + /about/ fetched 2026-08-19): EY3A8288 is an audience crowd shot; the sharegraph and remaining images are logo/banner files. Initials render; the hunt stays open.",
-   "attemptedAt": "2026-08-19"
+   "note": "PHOTO DROPPED 2026-08-14 (2b). Rung 1: the shipped scott-brown-closeup is a two-person event candid, not unambiguously a portrait of the candidate. Rung 2 (re-extract, scottbrown.com + /about/ fetched 2026-08-14): EY3A8288 is an audience crowd shot; the sharegraph and remaining images are logo/banner files. Initials render; the hunt stays open.",
+   "attemptedAt": "2026-08-14"
   },
   {
    "key": "ballot-nh-merrimack:us-senate:sununu-john-e-#photo",
    "name": "John E. Sununu",
-   "note": "PHOTO DROPPED 2026-08-19 (2b). Rung 1: the shipped wixstatic image is a two-person couple photo - a stranger cannot tell which person is the candidate. Rung 2 (re-extract, sununusenator.com fetched 2026-08-19): the og:image is a campaign banner (portrait embedded beside SUNUNU SENATOR logo text) - cropping it would be exactly the banner-crop the rule bans. Initials render; the hunt stays open.",
-   "attemptedAt": "2026-08-19"
+   "note": "PHOTO DROPPED 2026-08-14 (2b). Rung 1: the shipped wixstatic image is a two-person couple photo - a stranger cannot tell which person is the candidate. Rung 2 (re-extract, sununusenator.com fetched 2026-08-14): the og:image is a campaign banner (portrait embedded beside SUNUNU SENATOR logo text) - cropping it would be exactly the banner-crop the rule bans. Initials render; the hunt stays open.",
+   "attemptedAt": "2026-08-14"
   },
   {
    "key": "ballot-nh-merrimack:state-senate-7:harned-rebecca#photo",
    "name": "Rebecca Harned",
-   "note": "PHOTO DROPPED 2026-08-19 (2b). Rung 1: the shipped run.imgix photo is a canoe selfie with a child - not a clean solo portrait. Rung 2 (re-extract, rebeccafornh.com + /about fetched 2026-08-19): the og:image is a logo-plus-photo campaign banner (candidate with two dogs, sunglasses) - a banner crop, banned. Initials render; the hunt stays open.",
-   "attemptedAt": "2026-08-19"
+   "note": "PHOTO DROPPED 2026-08-14 (2b). Rung 1: the shipped run.imgix photo is a canoe selfie with a child - not a clean solo portrait. Rung 2 (re-extract, rebeccafornh.com + /about fetched 2026-08-14): the og:image is a logo-plus-photo campaign banner (candidate with two dogs, sunglasses) - a banner crop, banned. Initials render; the hunt stays open.",
+   "attemptedAt": "2026-08-14"
   }
  ]
 }

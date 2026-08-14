@@ -150,6 +150,25 @@ export async function seatHolderById(id: string): Promise<SeatHolder | null> {
   return null;
 }
 
+/**
+ * officeholder id → partyLabel, across every loaded roster (item 3,
+ * 2026-08-14 second session). Serves the party-breakdown join in
+ * /api/votes — display data only; nothing downstream infers a position
+ * from it.
+ */
+export async function partyByOfficeholderId(): Promise<
+  Map<string, string | null>
+> {
+  const { officials } = await loaded();
+  const map = new Map<string, string | null>();
+  for (const holders of officials.values()) {
+    for (const holder of holders) {
+      if (!map.has(holder.id)) map.set(holder.id, holder.partyLabel);
+    }
+  }
+  return map;
+}
+
 export async function coverageAt(
   lat: number,
   lng: number,

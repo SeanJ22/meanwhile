@@ -112,6 +112,32 @@ export default async function AboutAreaPage({
         </section>
       )}
 
+      {/* 6d (2026-08-14 second session): one line, the state picker. The
+          full side-by-side comparison is deliberately NOT built — tracker
+          row for later. */}
+      {facts && (
+        <p className="mt-6 text-[0.8125rem] leading-relaxed text-paper-dim">
+          Curious how another state compares?{" "}
+          {(["AZ", "NJ", "NH"] as const)
+            .filter((s) => s !== state)
+            .map((s, i) => (
+              <span key={s}>
+                {i > 0 && <span className="text-muted"> · </span>}
+                <Link
+                  href={`/about-area?state=${s}`}
+                  className="underline decoration-dotted hover:text-signal"
+                >
+                  {s === "AZ"
+                    ? "Arizona"
+                    : s === "NJ"
+                      ? "New Jersey"
+                      : "New Hampshire"}
+                </Link>
+              </span>
+            ))}
+        </p>
+      )}
+
       <p className="mt-8 border-t border-[var(--panel-border)] pt-4 text-[0.75rem] text-muted">
         Rules change. Every answer links the office that owns it — when in
         doubt, their page wins.{" "}

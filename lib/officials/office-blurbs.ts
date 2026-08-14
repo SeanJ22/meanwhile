@@ -90,12 +90,15 @@ export const OFFICE_BLURBS: Readonly<Record<OfficeType, OfficeBlurb>> = {
     basisUrl: null,
   },
   mayor: {
-    // Honest about where power actually sits (5b): Tucson — the one mayor
-    // rendered today — is council-manager, so "runs the city day to day"
-    // would be false. Verified against the charter before writing.
-    text: "Your mayor is the city's elected leader — they lead the city council, speak for the city, and vote on the big decisions. In Tucson, the day-to-day work of city government is run by a city manager the council hires, so most big decisions need the council's vote, not the mayor's alone. Call them about city services and where the city is headed.",
-    basis: "Tucson City Charter (council–manager form) and state municipal statutes",
-    basisUrl: "https://codelibrary.amlegal.com/codes/tucson/latest/tucson_az_charter",
+    // Jurisdiction-neutral by construction (item 1, 2026-08-14 second
+    // session): this text renders for EVERY mayor, so it may claim nothing
+    // that is only true in one city. The Tucson-specific council-manager
+    // sentence that used to live here rendered on Rockaway Township's
+    // mayor — one jurisdiction's content bound to another jurisdiction's
+    // key. City-specific truth lives in DIVISION_OFFICE_BLURBS below.
+    text: "Your mayor is the city's elected leader — they speak for the city and lead its government. How much day-to-day power a mayor has depends on the city's own charter: in some cities the mayor runs city hall directly, and in others a hired manager runs the daily work while the mayor leads the council. Call them about city services and where the city is headed.",
+    basis: "The city's charter and state municipal statutes",
+    basisUrl: null,
   },
   "city-council": {
     text: "Your council members pass city laws, approve the budget, and vote on what gets built where — zoning is theirs. They can't change county or state rules. Call your council member about a local ordinance, a development, or city spending; you're exactly who they answer to.",
@@ -184,6 +187,37 @@ export const OFFICE_BLURBS: Readonly<Record<OfficeType, OfficeBlurb>> = {
 };
 
 /**
+ * Jurisdiction-specific office blurbs (item 1, 2026-08-14 second session).
+ *
+ * A blurb here applies ONLY when the officeholder's own division matches
+ * `divisionOcdId` exactly — verified content about how one named place's
+ * charter actually works. The generic per-type blurb above is the fallback
+ * for everyone else. This is the sibling of the uniqueness invariant: a
+ * per-type key must never carry per-place content, because every holder of
+ * the type wears it.
+ */
+export const DIVISION_OFFICE_BLURBS: ReadonlyArray<{
+  officeType: OfficeType;
+  divisionOcdId: string;
+  blurb: OfficeBlurb;
+}> = [
+  {
+    officeType: "mayor",
+    divisionOcdId: "ocd-division/country:us/state:az/place:tucson",
+    // Verified against the charter before writing (5b, 2026-08-15):
+    // Tucson is council-manager, so "runs the city day to day" would be
+    // false there.
+    blurb: {
+      text: "Your mayor is the city's elected leader — they lead the city council, speak for the city, and vote on the big decisions. In Tucson, the day-to-day work of city government is run by a city manager the council hires, so most big decisions need the council's vote, not the mayor's alone. Call them about city services and where the city is headed.",
+      basis:
+        "Tucson City Charter (council–manager form) and state municipal statutes",
+      basisUrl:
+        "https://codelibrary.amlegal.com/codes/tucson/latest/tucson_az_charter",
+    },
+  },
+];
+
+/**
  * Map an officeholder's published title to a blurb key. Titles come from the
  * rosters ("U.S. Senator", "State Representative", "Assemblymember") — an
  * unmapped title gets no blurb rather than a guessed one.
@@ -231,9 +265,20 @@ export function officeTypeForTitle(title: string): OfficeType | null {
   return null;
 }
 
-export function blurbForTitle(title: string): OfficeBlurb | null {
+export function blurbForTitle(
+  title: string,
+  divisionOcdId?: string | null,
+): OfficeBlurb | null {
   const type = officeTypeForTitle(title);
-  return type ? OFFICE_BLURBS[type] : null;
+  if (!type) return null;
+  if (divisionOcdId) {
+    const specific = DIVISION_OFFICE_BLURBS.find(
+      (entry) =>
+        entry.officeType === type && entry.divisionOcdId === divisionOcdId,
+    );
+    if (specific) return specific.blurb;
+  }
+  return OFFICE_BLURBS[type];
 }
 
 /**

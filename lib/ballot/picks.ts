@@ -111,6 +111,16 @@ export function clearPick(contestId: string) {
   write(file);
 }
 
+/**
+ * Clear every pick on this device (item 5, 2026-08-14 second session —
+ * the tester's ask: most people can't reset browser storage). Callers
+ * confirm first; this just clears. Device-local only, like everything
+ * in this module.
+ */
+export function clearAllPicks() {
+  write({ version: 1, picks: {} });
+}
+
 /** Subscribe helper for useSyncExternalStore. */
 export function subscribePicks(callback: () => void): () => void {
   window.addEventListener(PICKS_EVENT, callback);

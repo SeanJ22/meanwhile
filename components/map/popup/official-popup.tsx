@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { blurbForTitle } from "@/lib/officials/office-blurbs";
+import { divisionOcdIdForRosterHolder } from "@/lib/registry/body-rosters";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyColorVar } from "@/lib/officials/party-color";
 import type { Tier } from "@/lib/ocd/tiers";
@@ -65,7 +66,12 @@ const POSITION_STYLE: Record<
   NOT_VOTING: { label: "NOT VOTING", color: "var(--text-muted)" },
 };
 
-type MemberRollCall = RollCallVote & { position: VotePosition };
+type MemberRollCall = RollCallVote & {
+  position: VotePosition;
+  /** Item 3: per-party for/against, or null when it wouldn't sum to the
+   *  chamber's recorded tally — the honest unavailable state. */
+  partyBreakdown: { party: string; yes: number; no: number }[] | null;
+};
 
 /** How many recent votes the surface shows before pointing at the record. */
 const VOTE_LIMIT = 5;
@@ -156,6 +162,27 @@ function RecentVotesInner({
                     {vote.legisNum ? ` · ${vote.legisNum}` : ""}
                   </span>
                 </p>
+                {/* Item 3 (2026-08-14 second session): how the parties
+                    voted, under the member's own vote. Real numbers from
+                    the roll call, refused server-side unless they sum to
+                    the recorded tally. Numbers only — no "party-line"
+                    labels, no "crossed the aisle"; the reader concludes. */}
+                {vote.partyBreakdown ? (
+                  <p className="mt-1 text-[0.6875rem] leading-relaxed text-paper-dim">
+                    How the parties voted:{" "}
+                    {vote.partyBreakdown.map((t, j) => (
+                      <span key={t.party}>
+                        {j > 0 && <span className="text-muted"> · </span>}
+                        {t.party} {t.yes} for, {t.no} against
+                      </span>
+                    ))}
+                  </p>
+                ) : (
+                  <p className="mt-1 text-[0.6875rem] leading-relaxed text-muted">
+                    A party-by-party count isn&apos;t available for this
+                    vote.
+                  </p>
+                )}
                 {explainer && (
                   // The vote-type explainer (4b): what kind of vote this was,
                   // in plain words — "yes then no on the same act" reads as
@@ -285,7 +312,12 @@ export function OfficialIdentity({
       <div className="min-w-0">
         <p className="text-[0.8125rem] leading-snug">
           {holder.officeTitle}
-          {seatLabel ? ` · ${seatLabel}` : ""}
+          {/* A seat label identical to the title ("Mayor · Mayor") is
+              noise, not information — caught on the item-1 gate
+              screenshot. */}
+          {seatLabel && seatLabel !== holder.officeTitle
+            ? ` · ${seatLabel}`
+            : ""}
         </p>
         {holder.partyLabel && (
           // Display only. Nothing infers anything from it. Colored per the
@@ -389,7 +421,14 @@ export function ReachThem({ holder }: { holder: SeatHolder }) {
 }
 
 export function OfficeBlurb({ holder }: { holder: SeatHolder }) {
-  const blurb = blurbForTitle(holder.officeTitle);
+  // Item 1 (2026-08-14 second session): the blurb resolves against the
+  // holder's OWN jurisdiction, read off the roster that carries them —
+  // never a per-type default that smuggles one city's charter onto
+  // another city's mayor.
+  const blurb = blurbForTitle(
+    holder.officeTitle,
+    divisionOcdIdForRosterHolder(holder.id),
+  );
   if (!blurb) return null;
   return (
     <>

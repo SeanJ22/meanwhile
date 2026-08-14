@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 
 import { answerQuestion, REFUSAL_LOG_MAX_CHARS, type AskAnswer } from "@/lib/routing/ask";
 import type { CoverageSummary } from "@/lib/registry/coverage";
@@ -43,6 +43,19 @@ export function AskBox({
   // the label must not contradict it.
   const [working, setWorking] = useState(false);
   const beatTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // 6e (2026-08-14 second session), the author's retune: the beat showed
+  // ~250ms and disappeared too quickly. It now holds ~3 seconds with the
+  // trailing dots animating in sequence for the duration. Presentation
+  // only, still: routing and logging happen before the timer starts.
+  const BEAT_MS = 3000;
+  const [dots, setDots] = useState(1);
+  useEffect(() => {
+    if (!working) return;
+    const interval = setInterval(() => {
+      setDots((d) => (d % 3) + 1);
+    }, 400);
+    return () => clearInterval(interval);
+  }, [working]);
   // Two instances mount at once (the who-governs card and the sidebar
   // rail) — the label/input pairing must not share a DOM id.
   const inputId = useId();
@@ -72,7 +85,7 @@ export function AskBox({
     beatTimer.current = setTimeout(() => {
       setAsked(result);
       setWorking(false);
-    }, 250);
+    }, BEAT_MS);
   };
 
   return (
@@ -107,9 +120,11 @@ export function AskBox({
 
       {working && (
         // The beat — presentation only; no AI answers questions here and
-        // the label must not suggest otherwise.
+        // the label must not suggest otherwise. The static sentence is
+        // what a screen reader announces; the cycling dots are visual.
         <p className="mt-2 text-[0.75rem] italic text-muted" aria-live="polite">
-          I got you... hang tight...
+          I got you... hang tight
+          <span aria-hidden="true">{".".repeat(dots)}</span>
         </p>
       )}
 

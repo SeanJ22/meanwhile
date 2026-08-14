@@ -98,3 +98,37 @@ is committed at `docs/session-brief.md` for the record. Row pointers:
 - Incumbent record links → **B10** (Done, federal by construction).
 - The question box → **A09** (Done: v1 routing without generation, both
   goldens live at 85701; A08 updated).
+
+## 2026-08-14 — the tester's recorded feedback (arrived as the session brief)
+
+The outside tester's live-demo feedback was triaged and delivered as the
+third 08-14 session's brief; committed at `docs/session-brief.md` for the
+record. Row pointers:
+
+- Rockaway mayor wearing Tucson's copy + link (seen live in the demo) →
+  **M46** (Done, gated: the per-type mayor blurb carried Tucson's charter;
+  the cross-jurisdiction guard is the uniqueness invariant's sibling).
+- Kearsarge missing at 03255 → **M47** (Done: default layer selection —
+  school wasn't in the default set and the overlay master defaulted off).
+- Governor missing from who-governs (the author's own catch) → **B11**
+  (Done: statewide executives as a first-class attachment, verified
+  in-browser against all three states' own sites).
+- Flat officials lists → **M48** (Done: Local / State / Federal
+  everywhere, closest-first).
+- The PHA answering for potholes at 85723 → **A11** (Done: tie-or-zero
+  refuses; the own-governing-slot join).
+- Party breakdown on roll calls → **B12** (Done: sums gated to the
+  chamber's tally).
+- Ballot call-to-action → **M49**; picks card + clear → **M50** (both
+  Done).
+- Copy/truth batch incl. wall-clock dates sweep and the tutorial →
+  **M51** (Done).
+- Standing rules → **X04** + CLAUDE.md.
+- Recorded, not built: **P12** (people's voice, TABLED), **T10**
+  (demo-deletion promise, due at testing end), **D46** (prop sponsors,
+  parked), **D47** (state comparison, parked), **V07** (ed-tech, parked),
+  **R13** (the playbook clause, standing); D35 notes the tester's
+  independent top-issues request.
+- Found BY the walk, not reported: **M52** (Done) — overlays pushed
+  history state and Next remounted them; no official's full card could
+  open at phone width. The prior session's "click dead" mystery, solved.

@@ -1,12 +1,12 @@
 {
  "formatVersion": 1,
- "curatedAt": "2026-08-15",
+ "curatedAt": "2026-08-13",
  "canvass": {
   "title": "State of Arizona Official Canvass, 2026 Primary Election — July 21, 2026",
   "url": "https://apps.azsos.gov/election/2026/canvass/20260806_Primary_Canvass.pdf",
   "issuedBy": "Arizona Secretary of State",
   "reportDate": "2026-08-05",
-  "readAt": "2026-08-15",
+  "readAt": "2026-08-13",
   "readNote": "The certified canvass is a scanned PDF with no text layer; nominees and totals were transcribed by eye from the canvass's own pages (winners are starred in the document). Pages read: 2 (CD-6, CD-7), 3 (Governor), 5 (State Senate 19-20), 9 (State House 19-20), 11 (Secretary of State), 12 (Attorney General, Treasurer, Superintendent, Mine Inspector)."
  },
  "note": "The November lineup as certified: each party's primary winner per the canvass's winner markings (write-in winners included where the canvass stars them; totals decide where two same-party candidates appear unstarred). Candidates absent from the canvass did not advance through the primary; any additional general-election qualification (new independent filings, court orders) follows the Secretary of State's general-election ballot when it publishes.",

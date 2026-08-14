@@ -11,8 +11,10 @@ import { useCallback, useSyncExternalStore } from "react";
  * flashing on — or off — for a returning reader between the server render and
  * hydration.
  *
- * Off by default. District boundaries are context, not the thing the reader
- * came for.
+ * ON by default (session item 2, 2026-08-14 second session): the
+ * who-governs card counts school districts, so the map must show them
+ * without the reader finding a toggle — the tester asked for Kearsarge by
+ * name and never saw it. An explicit "off" choice ("0") is still honored.
  */
 
 const STORAGE_KEY = "wtp.show_districts";
@@ -42,7 +44,7 @@ function readRaw(): string | null {
     return window.localStorage.getItem(STORAGE_KEY);
   } catch {
     // Private mode or storage disabled. Forgetting the preference just means
-    // the overlay starts off, which is where it starts anyway.
+    // the overlay starts on, which is where it starts anyway.
     return null;
   }
 }
@@ -63,7 +65,8 @@ function getSnapshot(): DistrictLayerSnapshot {
 
   if (raw !== cachedRaw || cachedSnapshot === PENDING) {
     cachedRaw = raw;
-    cachedSnapshot = raw === "1" ? ON : OFF;
+    // Never-stored (null) defaults ON; only an explicit "0" turns it off.
+    cachedSnapshot = raw === "0" ? OFF : ON;
   }
 
   return cachedSnapshot;

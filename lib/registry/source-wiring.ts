@@ -112,7 +112,7 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     // special-meeting notice including the Palo Verde ITM public hearing
     // while the portal's agenda was still unpublished.
     noticeUrl: "https://govboard.tusd1.org/",
-    verifiedAt: "2026-08-15",
+    verifiedAt: "2026-08-13",
   },
   {
     // Sunnyside USD runs the same Diligent/Highbond tenant shape as Pima

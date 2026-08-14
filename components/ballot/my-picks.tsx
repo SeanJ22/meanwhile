@@ -2,7 +2,8 @@
 
 import { useSyncExternalStore } from "react";
 
-import { getAllPicks, subscribePicks } from "@/lib/ballot/picks";
+import { getAllPicks, subscribePicks, type StoredPick } from "@/lib/ballot/picks";
+import { PicksCardControls } from "@/components/ballot/picks-card";
 
 /**
  * The election-day reference (4a): everything this device has marked,
@@ -16,12 +17,7 @@ export function MyPicks() {
     () => JSON.stringify(getAllPicks()),
     () => "[]",
   );
-  const picks = JSON.parse(raw) as {
-    contestId: string;
-    contestTitle: string;
-    choiceIds: string[];
-    labels: Record<string, string>;
-  }[];
+  const picks = JSON.parse(raw) as StoredPick[];
 
   if (picks.length === 0) return null;
 
@@ -38,6 +34,9 @@ export function MyPicks() {
           </li>
         ))}
       </ul>
+      {/* Item 5 (2026-08-14 second session): the screenshottable card and
+          the clear control — the tester's booth workflow. */}
+      <PicksCardControls picks={picks} />
       {/* 3e: the full disclosure lives once at the page bottom; the header
           above already labels this box device-only. */}
       <p className="mt-2 text-[0.625rem] leading-relaxed text-muted">

@@ -38,6 +38,7 @@ import {
 } from "@/components/funding/funding-section";
 import { ReactionControl } from "@/components/reactions/reaction-control";
 import { electionDatesFor } from "@/lib/ballot/election-dates";
+import { AddToCalendar } from "@/components/calendar/add-to-calendar";
 import type {
   BallotAbsence,
   BallotSet,
@@ -191,6 +192,88 @@ export default async function BallotPage({
         </span>
       </p>
 
+      {/* Item 4 (2026-08-14 second session): the standing header — the
+          tester's "that's when you want to catch somebody and make them
+          ready to vote." The dates a reader acts on, at the top, each from
+          the state's own timeline (cited on the dates section below), and
+          election day one tap from their calendar. */}
+      {dates &&
+        set &&
+        (() => {
+          const reg = registrationLinkFor(set.election.state);
+          const regStep = dates.steps.find((s) =>
+            /registration deadline/i.test(s.label),
+          );
+          const earlyStep = dates.steps.find((s) =>
+            /early voting/i.test(s.label),
+          );
+          return (
+            <section className="mt-6 rounded border-2 border-[var(--signal)] p-4">
+              <h2 className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-signal">
+                The next election
+              </h2>
+              <p className="mt-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <span className="text-[1.0625rem] font-semibold">
+                  {formatDateMDY(dates.electionDay)}
+                </span>
+                <AddToCalendar
+                  event={{
+                    id: `election-day-${set.election.state}-${dates.electionDay}`,
+                    title: `Election Day — vote (${set.election.state})`,
+                    allDayDate: dates.electionDay,
+                    description:
+                      "Your ballot, with sources: found via We the People.",
+                  }}
+                />
+              </p>
+              <ul className="mt-2 space-y-1 text-[0.8125rem]">
+                {regStep && (
+                  <li>
+                    Register to vote by{" "}
+                    <span className="font-semibold">
+                      {formatDateMDY(regStep.date)}
+                    </span>
+                    {reg && (
+                      <>
+                        {" — "}
+                        <a
+                          href={reg.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="underline decoration-dotted hover:text-signal"
+                        >
+                          {reg.label} →
+                        </a>
+                      </>
+                    )}
+                  </li>
+                )}
+                {earlyStep && (
+                  <li>
+                    {earlyStep.label}:{" "}
+                    <span className="font-semibold">
+                      {/^\d{4}-\d{2}-\d{2}$/.test(earlyStep.date)
+                        ? formatDateMDY(earlyStep.date)
+                        : earlyStep.date
+                            .split("–")
+                            .map((d) => formatDateMDY(d.trim()))
+                            .join(" – ")}
+                    </span>
+                  </li>
+                )}
+              </ul>
+              {/* The tester's exact confusion, answered in one line. The
+                  propositions sentence renders only where propositions
+                  actually share the ballot. */}
+              <p className="mt-2 text-[0.8125rem] leading-relaxed text-paper-dim">
+                Everyone below is on this ballot.
+                {measureContests.length > 0 &&
+                  " Propositions are voted on at the same time."}
+              </p>
+            </section>
+          );
+        })()}
+
       {/* 7: the mover's page — the questions people ask before moving,
           answered from official sources. */}
       {zip && (
@@ -270,8 +353,28 @@ export default async function BallotPage({
             {dates.steps.map((step) => (
               <li key={step.label} className="flex items-baseline justify-between gap-3">
                 <span className="text-[0.8125rem]">{step.label}</span>
-                <span className="shrink-0 font-mono text-[0.75rem] text-signal">
-                  {formatDateMDY(step.date)}
+                <span className="shrink-0 text-right">
+                  <span className="font-mono text-[0.75rem] text-signal">
+                    {formatDateMDY(step.date)}
+                  </span>
+                  {/* Item 4: every rendered future date is one tap from
+                      the reader's calendar. Range and past dates render
+                      without a link — an event you can no longer act on
+                      isn't calendar material. */}
+                  {/^\d{4}-\d{2}-\d{2}$/.test(step.date) &&
+                    step.date >= new Date().toISOString().slice(0, 10) && (
+                      <>
+                        {" "}
+                        <AddToCalendar
+                          event={{
+                            id: `ballot-${set?.election.state ?? "xx"}-${step.date}-${step.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+                            title: `${step.label} (${set?.election.state ?? ""})`,
+                            allDayDate: step.date,
+                            description: step.detail ?? undefined,
+                          }}
+                        />
+                      </>
+                    )}
                 </span>
               </li>
             ))}
@@ -590,11 +693,13 @@ export default async function BallotPage({
                 )}
 
                 {/* 4a: the private pick on measures — Yes/No, this device
-                    only, stated in the control. */}
+                    only, stated in the control. 6a: prominent here — the
+                    ask whispered on the cards where it matters most. */}
                 <PickControl
                   contestId={contest.id}
                   contestTitle={contest.title}
                   voteFor={1}
+                  prominent
                   options={[
                     { id: "YES", label: "Yes" },
                     { id: "NO", label: "No" },

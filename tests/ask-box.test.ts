@@ -189,8 +189,19 @@ test("the hang-tight beat is presentation only — routed and logged before the 
     join(ROOT, "components", "ask", "ask-box.tsx"),
     "utf8",
   );
-  // The author's words, verbatim.
-  assert.ok(source.includes("I got you... hang tight..."));
+  // The author's words, verbatim — the trailing dots animate (6e,
+  // 2026-08-14 second session), so the static half is the sentence and
+  // the dots render beside it.
+  assert.ok(source.includes("I got you... hang tight"));
+  assert.ok(
+    /"\."\.repeat\(dots\)/.test(source),
+    "the trailing dots animate in sequence for the beat's duration",
+  );
+  // The author's retune: ~3 seconds before the answer renders.
+  assert.ok(
+    source.includes("BEAT_MS = 3000"),
+    "the beat holds three seconds",
+  );
   // Never "Thinking" or anything implying AI — the transparency page says
   // no AI answers questions and the label must not contradict it.
   assert.ok(!/Thinking|thinking\.\.\.|AI is/.test(source));
@@ -198,11 +209,11 @@ test("the hang-tight beat is presentation only — routed and logged before the 
   // routing stays instant and deterministic; only the rendering waits.
   const answerAt = source.indexOf("answerQuestion(question");
   const logAt = source.indexOf("logEvent(");
-  const timerAt = source.indexOf("setTimeout(");
+  const timerAt = source.indexOf("beatTimer.current = setTimeout(");
   assert.ok(answerAt > 0 && logAt > answerAt && timerAt > logAt,
     "route → log → beat, in that order; nothing new logs inside the beat");
   // Nothing is logged inside the timer callback.
-  const timerBody = source.slice(timerAt, source.indexOf("}, 250)"));
+  const timerBody = source.slice(timerAt, source.indexOf("}, BEAT_MS)"));
   assert.ok(!timerBody.includes("logEvent"), "the beat must not log");
 });
 

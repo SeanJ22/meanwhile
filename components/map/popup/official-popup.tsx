@@ -66,7 +66,12 @@ const POSITION_STYLE: Record<
   NOT_VOTING: { label: "NOT VOTING", color: "var(--text-muted)" },
 };
 
-type MemberRollCall = RollCallVote & { position: VotePosition };
+type MemberRollCall = RollCallVote & {
+  position: VotePosition;
+  /** Item 3: per-party for/against, or null when it wouldn't sum to the
+   *  chamber's recorded tally — the honest unavailable state. */
+  partyBreakdown: { party: string; yes: number; no: number }[] | null;
+};
 
 /** How many recent votes the surface shows before pointing at the record. */
 const VOTE_LIMIT = 5;
@@ -157,6 +162,27 @@ function RecentVotesInner({
                     {vote.legisNum ? ` · ${vote.legisNum}` : ""}
                   </span>
                 </p>
+                {/* Item 3 (2026-08-14 second session): how the parties
+                    voted, under the member's own vote. Real numbers from
+                    the roll call, refused server-side unless they sum to
+                    the recorded tally. Numbers only — no "party-line"
+                    labels, no "crossed the aisle"; the reader concludes. */}
+                {vote.partyBreakdown ? (
+                  <p className="mt-1 text-[0.6875rem] leading-relaxed text-paper-dim">
+                    How the parties voted:{" "}
+                    {vote.partyBreakdown.map((t, j) => (
+                      <span key={t.party}>
+                        {j > 0 && <span className="text-muted"> · </span>}
+                        {t.party} {t.yes} for, {t.no} against
+                      </span>
+                    ))}
+                  </p>
+                ) : (
+                  <p className="mt-1 text-[0.6875rem] leading-relaxed text-muted">
+                    A party-by-party count isn&apos;t available for this
+                    vote.
+                  </p>
+                )}
                 {explainer && (
                   // The vote-type explainer (4b): what kind of vote this was,
                   // in plain words — "yes then no on the same act" reads as

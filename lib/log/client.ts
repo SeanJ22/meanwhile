@@ -14,6 +14,14 @@ import type { SearchLogEventType } from "@/lib/db/search-log";
  * sendBeacon over fetch where available so an event on a closing page still
  * goes out; a failure of any kind is silently dropped, because losing a log
  * row must never cost the reader anything.
+ *
+ * Fire-and-forget is BY DESIGN here and is the deliberate opposite of
+ * `lib/reactions/client.ts#submitReaction`, which awaits its response and
+ * reports the outcome: a reaction is a promise made to the reader at the
+ * capture point ("your answer joins anonymous local totals"), so its
+ * success rendering must be earned by the store's 204. A log row is our
+ * own bookkeeping — no promise was made, so no outcome is owed. Do not
+ * "fix" either side to match the other.
  */
 export function logEvent(
   eventType: SearchLogEventType,

@@ -20,17 +20,21 @@ export const ALL_DISTRICT_TYPES: readonly DistrictType[] = [
 ] as const;
 
 /**
- * District types drawn when the overlay is first switched on: one per tier.
+ * District types drawn when the overlay is on: ALL of them (the author's
+ * order, session item 2, 2026-08-14 second session). The tester asked for
+ * Kearsarge Regional School District by name and the map never showed it —
+ * the school layer defaulted off, so a body the who-governs card counts
+ * was unreachable on the map. What the card claims must be findable
+ * without knowing which checkbox to tick.
  *
- * Turning on all six at once put three Local boundaries — county, municipal and
- * school — over the same ground at the same time, and around a city they
- * overlap into noise. Starting with the widest of each tier gives a legible
- * frame, and every other type is one checkbox away.
+ * Rejected alternative (recorded): the previous one-type-per-tier default
+ * (congressional / state-house / county), chosen 2026-08-12 because three
+ * Local boundaries over the same ground read as noise. The 4.5.2
+ * dash/weight separation is what makes all-on legible enough; legibility
+ * tuning stays open, but hiding a claimed body loses to visual noise.
  */
 export const DEFAULT_DISTRICT_TYPES: readonly DistrictType[] = [
-  "congressional",
-  "state-house",
-  "county",
+  ...ALL_DISTRICT_TYPES,
 ] as const;
 
 export const INITIAL_FILTERS: FilterState = {

@@ -915,6 +915,27 @@ export function rosterHoldersForBody(bodyId: string | null): RosterHolder[] {
 }
 
 /**
+ * The division a curated roster holder belongs to, read mechanically off
+ * the roster that carries them (item 1, 2026-08-14 second session). The
+ * roster's `bodyId` is `<division ocd-id>#<suffix>`; the division part is
+ * the jurisdiction the member actually serves. Used to pick
+ * jurisdiction-specific office blurbs — the Rockaway mayor rendered
+ * Tucson's charter copy because nothing tied the blurb to the holder's own
+ * place. Returns null for non-roster holders (federal, state), whose
+ * blurbs are jurisdiction-neutral by construction.
+ */
+export function divisionOcdIdForRosterHolder(
+  holderId: string,
+): string | null {
+  for (const roster of BODY_ROSTERS) {
+    if (roster.members.some((member) => member.id === holderId)) {
+      return roster.bodyId.split("#")[0];
+    }
+  }
+  return null;
+}
+
+/**
  * The governing body's roster for a DIVISION — the registry suffixes a
  * county or municipal governing body `#governing` and a school board
  * `#board`, and the district popup's `#governing`-only lookup meant every

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { blurbForTitle } from "@/lib/officials/office-blurbs";
+import { divisionOcdIdForRosterHolder } from "@/lib/registry/body-rosters";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyColorVar } from "@/lib/officials/party-color";
 import type { Tier } from "@/lib/ocd/tiers";
@@ -389,7 +390,14 @@ export function ReachThem({ holder }: { holder: SeatHolder }) {
 }
 
 export function OfficeBlurb({ holder }: { holder: SeatHolder }) {
-  const blurb = blurbForTitle(holder.officeTitle);
+  // Item 1 (2026-08-14 second session): the blurb resolves against the
+  // holder's OWN jurisdiction, read off the roster that carries them —
+  // never a per-type default that smuggles one city's charter onto
+  // another city's mayor.
+  const blurb = blurbForTitle(
+    holder.officeTitle,
+    divisionOcdIdForRosterHolder(holder.id),
+  );
   if (!blurb) return null;
   return (
     <>

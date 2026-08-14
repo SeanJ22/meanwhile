@@ -121,6 +121,76 @@ test("every district layer's committed files exist and hold features", () => {
 });
 
 /**
+ * The claims-reachable guard (session item 2, 2026-08-14 second session) —
+ * the stated-N family extended to the map. The tester asked for Kearsarge
+ * Regional School District by name at 03255; the who-governs card counted
+ * it, but its layer (school) was not in the default draw set, so a body
+ * the card claims was unreachable on the map. The rule: every body the
+ * who-governs card counts must render when the overlay is on with the
+ * DEFAULT type set — which now means every type defaults on, and every
+ * counted body's division must exist as a feature in its layer's
+ * committed geometry.
+ */
+test("every body the who-governs card counts is reachable on the map with default layers", async () => {
+  const { DEFAULT_DISTRICT_TYPES, ALL_DISTRICT_TYPES } = await import(
+    "../lib/state/defaults.ts"
+  );
+  // The author's order: all district types default on. If a type is ever
+  // removed from the default set again, the per-body check below is what
+  // says which claimed body just became unreachable.
+  assert.deepEqual(
+    [...DEFAULT_DISTRICT_TYPES].sort(),
+    [...ALL_DISTRICT_TYPES].sort(),
+    "all district-type layers default on",
+  );
+
+  const LAYER_FOR_DIVISION: Record<string, string> = {
+    county: "county",
+    place: "municipal",
+    school_district: "school",
+  };
+
+  const featureIds = new Map<string, Set<string>>();
+  const idsForLayer = (type: string): Set<string> => {
+    let ids = featureIds.get(type);
+    if (!ids) {
+      ids = new Set();
+      for (const file of DISTRICT_LAYERS[type as (typeof DISTRICT_TYPES)[number]]
+        .files) {
+        const parsed = JSON.parse(
+          readFileSync(join(ROOT, "public", "geo", file), "utf8"),
+        ) as { features: Array<{ properties: { ocdId?: string } }> };
+        for (const feature of parsed.features) {
+          if (feature.properties.ocdId) ids.add(feature.properties.ocdId);
+        }
+      }
+      featureIds.set(type, ids);
+    }
+    return ids;
+  };
+
+  for (const [zip, [lat, lng]] of Object.entries(ZIPS)) {
+    const coverage = await coverageAt(lat, lng, 1);
+    for (const body of coverage.bodies) {
+      if (!body.ocdId) continue; // division-less curated bodies have no layer
+      const layer = LAYER_FOR_DIVISION[body.divisionType];
+      assert.ok(
+        layer,
+        `${zip}: body ${body.ocdId} has divisionType ${body.divisionType} with no mapped layer`,
+      );
+      assert.ok(
+        (DEFAULT_DISTRICT_TYPES as readonly string[]).includes(layer),
+        `${zip}: layer ${layer} for counted body ${body.ocdId} is not in the default draw set`,
+      );
+      assert.ok(
+        idsForLayer(layer).has(body.ocdId),
+        `${zip}: counted body ${body.ocdId} has no feature in the ${layer} layer — the card claims what the map cannot show`,
+      );
+    }
+  }
+});
+
+/**
  * The state-change half of the same guard (seventh sighting, 2026-08-14).
  * The initial-render checks above never exercised an *interaction*: with
  * "Show districts" off, the district-type checkboxes stayed live and every

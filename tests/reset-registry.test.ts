@@ -122,9 +122,13 @@ test("select all and clear set the district types outright, in canonical order",
   const none = reducer(all, { type: "filter/districtTypesSet", value: [] });
   assert.deepEqual(none.filters.districtTypes, []);
 
-  // Neither all-on nor none is the default, so both read as active — and
-  // Reset all returns to the default three, not to either extreme.
-  assert.ok(activeControlCount(all) > 0);
+  // All-on IS the default now (session item 2, 2026-08-14 second session:
+  // every layer defaults on so a counted body is always reachable), so
+  // all-on must NOT read as an active control — the M24 badge counted the
+  // default view as active once already. Clearing every type is not the
+  // default and does read active.
+  assert.equal(activeControlCount(all), 0);
+  assert.ok(activeControlCount(none) > 0);
   const reset = reducer(none, { type: "filter/reset" });
   assert.deepEqual(reset.filters.districtTypes, INITIAL_STATE.filters.districtTypes);
 });

@@ -126,6 +126,9 @@ export interface UiState {
 
   showDistricts: boolean;
   listOverlayOpen: boolean;
+  /** 8a (2026-08-17): which sidebar-count door is open, if any. The doors
+   *  are large surfaces and follow the one-large-popup rule. */
+  door: "bodies" | "districts" | "officials" | null;
   filtersPanelOpen: boolean;
 
   listSort: ListSort;
@@ -174,6 +177,8 @@ export type UiAction =
   | { type: "districts/show"; value: boolean }
   | { type: "list/toggle" }
   | { type: "list/open"; open: boolean }
+  | { type: "door/open"; door: "bodies" | "districts" | "officials" }
+  | { type: "door/close" }
   | { type: "list/sort"; sort: ListSort }
   | { type: "list/groupBy"; groupBy: ListGroupBy }
   | { type: "list/toggleGroup"; key: string }

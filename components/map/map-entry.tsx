@@ -46,6 +46,7 @@ import { MeetingPopup } from "./popup/meeting-popup";
 import { OfficialPopup } from "./popup/official-popup";
 import { OfficialModal } from "./popup/official-modal";
 import { EntityModal, type ModalSubject } from "./popup/entity-modal";
+import { DoorOverlay } from "./door-overlay";
 import { WelcomeOverlay } from "./welcome-overlay";
 
 /**
@@ -327,6 +328,8 @@ function MapEntryInner() {
       if (next.kind === "official") setOfficialPopup(null);
       if (next.kind === "entity") setPopupMeeting(null);
       dispatch({ type: "list/open", open: false });
+      // 8a: a sidebar door is a large surface too, and yields the same way.
+      dispatch({ type: "door/close" });
     },
     [dispatch],
   );
@@ -355,6 +358,13 @@ function MapEntryInner() {
   if (seenListOpen !== ui.listOverlayOpen) {
     setSeenListOpen(ui.listOverlayOpen);
     if (ui.listOverlayOpen) setLarge(null);
+  }
+
+  // 8a: an opening door closes any large popup, same rule, same pattern.
+  const [seenDoor, setSeenDoor] = useState(ui.door);
+  if (seenDoor !== ui.door) {
+    setSeenDoor(ui.door);
+    if (ui.door !== null) setLarge(null);
   }
 
   /*
@@ -971,6 +981,26 @@ function MapEntryInner() {
                 : null
             }
             onClose={() => setLarge(null)}
+          />
+        )}
+
+        {/* 8a: the sidebar-count doors — large-surface lists behind the
+            stat numbers, one at a time like every large surface. */}
+        {ui.door && (
+          <DoorOverlay
+            door={ui.door}
+            coverage={current?.coverage ?? null}
+            meetings={current?.meetings ?? []}
+            onOpenOfficial={(holder, seatLabel, tier) =>
+              openLarge({ kind: "official", holder, seatLabel, tier })
+            }
+            onOpenMeeting={(meeting) =>
+              openLarge({
+                kind: "entity",
+                subject: meetingSubject(meeting, bodyFor(meeting.ocdId)),
+              })
+            }
+            onClose={() => dispatch({ type: "door/close" })}
           />
         )}
 

@@ -212,10 +212,22 @@ export function uiReducer(state: UiState, action: UiAction): UiState {
       return { ...state, showDistricts: action.value };
 
     case "list/toggle":
-      return { ...state, listOverlayOpen: !state.listOverlayOpen };
+      return { ...state, listOverlayOpen: !state.listOverlayOpen, door: null };
 
     case "list/open":
-      return { ...state, listOverlayOpen: action.open };
+      return {
+        ...state,
+        listOverlayOpen: action.open,
+        door: action.open ? null : state.door,
+      };
+
+    // 8a: the sidebar-count doors. One large surface at a time — opening a
+    // door closes the list overlay (and map-entry closes any large popup).
+    case "door/open":
+      return { ...state, door: action.door, listOverlayOpen: false };
+
+    case "door/close":
+      return { ...state, door: null };
 
     case "list/sort":
       return { ...state, listSort: action.sort };

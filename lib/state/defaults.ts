@@ -61,6 +61,7 @@ export const INITIAL_STATE: UiState = {
   nearMe: null,
   showDistricts: false,
   listOverlayOpen: false,
+  door: null,
   filtersPanelOpen: true,
   listSort: "date",
   listGroupBy: "jurisdiction",

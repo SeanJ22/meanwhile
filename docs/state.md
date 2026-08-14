@@ -3950,3 +3950,146 @@ top-issues-per-candidate.
   (positions machinery — tester demand now on record); the 45 backlog
   special districts; the ask-box map growing from refusal logs; T10
   fires at testing end.
+
+## 20. The 2026-08-14 session (fourth session of 2026-08-14) — the locks go on (T08)
+
+Branch `claude/t08-intake-locks-0814`. The author's brief: production is
+public with the password down DELIBERATELY (the tester works without
+friction, and it stays down); T08's hardening was scoped to precede
+public reachability and the order inverted by accident. This session
+restored it — T08 and nothing else, locks on the pipes, not the door.
+Nothing built here adds friction for a legitimate reader. All dates are
+wall clock.
+
+### The protections, and their flags
+
+Everything tunable ships behind a named flag per the ripcord doctrine;
+every threshold is separately tunable by env var without a code change
+(`lib/signal/intake-limits.ts`); the pull/tune procedure the author can
+follow at 2am is **`docs/ripcords.md`**.
+
+- **`ripcord.rateLimits`** (ships LIVE; closer: the author) governs the
+  tunable family on both intake routes (`/api/reactions`, `/api/log`):
+  in-memory per-device and per-IP sliding windows (cheapest first,
+  instance-local), the authoritative cross-instance per-device counters,
+  the daily ceiling, velocity quarantine, and same-origin enforcement.
+  Defaults: hard 40/min per device, soft (quarantine) 20/min, daily
+  ceiling 400, per-IP 120/min reactions and 240/min log events, 500-char
+  server cap on any log detail string. VALIDITY is deliberately not in
+  the family and never switches off: real target ids from the committed
+  registries, closed enums, body-size caps — a tap from the real app
+  always passes because the app only offers real targets.
+- **`ripcord.reactionIntake`** (ships LIVE; closer: the author) is the
+  master: pulled, both routes refuse every write with a 503 before
+  reading anything. The app renders normally and a tapping reader sees
+  P11's honest line — "Couldn't reach the totals…" — with ZERO client
+  change, because the client already earns success only from the 204.
+  For live-attack response; procedure in docs/ripcords.md.
+
+### The limiter never touches the store (1d — n-stores under load)
+
+Rate limiting needs transient per-device state; that state lives in its
+own table (`intake_limiter`), keyed by `sha256("intake-limiter:" + key)`
+— a DELIBERATELY DIFFERENT digest than the store's `reaction_key_hash`
+(`sha256(key)`), so two hashes of a secret nobody stores cannot be
+joined. Counters only (day bucket/count, minute bucket/count), no zip,
+no divisions, no IP, no reaction content, no foreign key; expires on its
+own 48-hour schedule via the tripwire's purge. Guarded structurally in
+`tests/db-schema.test.ts` and `tests/intake.test.ts` (disjoint columns,
+different digests, zero foreign keys). The rule is now stated in
+CLAUDE.md beside the store rules. IPs are read for the in-memory window
+and discarded — never stored, never logged.
+
+### Quarantine, not deletion (1e)
+
+`reactions.suspect_reason` (`VELOCITY` | `LIMITER_UNAVAILABLE`, nullable
+— a why, never a who; migration 0002 applied to Neon and verified by
+information_schema query). Rows past the soft velocity threshold land
+but are marked; rows written while the counters could not be checked are
+marked rather than trusted through. STICKY on overwrite by COALESCE — a
+burst cannot launder itself clean by re-submitting slowly; only the
+author clears suspects. `rowsEligibleForAggregation` drops suspect rows
+FIRST and UNCONDITIONALLY — no flag governs the exclusion; the clean
+pool is the only pool aggregates and exports ever draw from.
+
+### The tripwire (1f)
+
+`.github/workflows/intake-tripwire.yml`, daily 10:41 UTC: identifier-free
+day counts from both stores → `lib/signal/tripwire.ts` (pure, fixture-
+tested) → `docs/intake-report.md`, committed. Flags: a day at or past
+max(30, 4× trailing 14-day median) with at least 3 trailing days to
+judge against, or quarantine share ≥ 25% on a day with ≥ 12 rows. Every
+flag states its count and denominator; no flags renders an explicit
+"None." Flagged, never auto-acted-on — the workflow reads counts, purges
+expired limiter rows, commits the report, touches nothing else.
+**Needs the author's hands: the DATABASE_URL repository secret** — until
+it exists the scheduled run fails visibly rather than skipping silently.
+
+### The test wall
+
+`tests/intake.test.ts` (21 new; 456 total) asserts mechanisms, never
+absence: script-burst refused at the 6th request with limits lowered by
+env (the tunability proof doubling as the burst proof), foreign and
+missing origins 403, invented target 400, human pace accepted, both
+quarantine reasons excluded from aggregation with n counting only the
+clean pool, sticky-COALESCE pinned, digest disjointness pinned, master
+ripcord 503 on both routes with the honest line pinned on 503/429, the
+tripwire's spike/share/None paths, and the workflow's read-only posture.
+Test infrastructure note: `node --test` now resolves the `@/` alias via
+`scripts/test-alias-loader.mjs` so route handlers are testable directly.
+
+### The gate (production) — PASSED, both directions
+
+Deploy verified by content (the new transparency paragraph serving),
+never by the green light. Then, against `https://sparkwtp.netlify.app`:
+
+- **The human direction** (`scripts/tester-walk-0814d.mts`, 390×844,
+  8/8 checks green): a stranger's cold entry at 85701, the quick tour
+  skipped, the ask box answering "who fixes potholes" (routed to
+  `roads-local`, logged through the hardened route —
+  `walk0814d-ask-answers.png`); the first-ever reaction tap parking
+  behind the one-time notice (`walk0814d-disclosure.png`), acknowledged,
+  landing with EARNED success rendering and no failure line
+  (`walk0814d-tap-counted.png`); the answer changed at human pace and
+  landing again. The Neon rows, by SQL: `CANDIDATE
+  ballot-az-pima:governor|Katie Hobbs UNSURE suspect=null` 23:46:01Z
+  (YES overwritten by the change — upsert working), plus the walk's
+  SEARCH and QUESTION_ASKED log rows. The protections were INVISIBLE at
+  human speed, which is the brief's constraint working.
+- **The script direction** (probe script, output logged in §20's session
+  PR): a 50-request burst on one device key → 40 accepted with the
+  upserted row ending `suspect=VELOCITY` (23:46:21Z), first refusal at
+  request 41 exactly (the hard 40/min limit), ten 429s with Retry-After.
+  A human-paced probe beside it: 204, row `suspect=null` (23:46:13Z).
+  Same shape locally before the merge (23:40Z rows).
+- The limiter table held 5 counter rows after both gates — probe keys
+  and the walk browser's key, counters only, joinable to nothing.
+
+### The honest limit (recorded per the author's standard)
+
+Slow distributed fakery by a determined attacker rotating devices (fresh
+browser key per submission, many IPs, human-paced) remains possible
+without accounts. What this session bought: expensive-to-fake plus
+visible-when-attempted — per-device velocity and ceilings force key
+rotation; key rotation from one IP hits the per-IP window; distributing
+across IPs costs real infrastructure; and the tripwire makes volume and
+quarantine-share anomalies a flagged line the author sees the next day.
+The engagement-weighting and verification tiers (T02/T03) remain the
+deeper answer and remain open.
+
+### State as of 2026-08-14 (fourth session)
+
+- **456 tests (21 new), lint clean (one pre-existing warning), build
+  exit 0** — verified by exit code. Migration 0002 applied to Neon and
+  verified by column query, before the code that writes the column
+  deployed.
+- This session's own probe rows in the production store, named so the
+  tester-activity delta can exclude them: one clean YES on
+  `house:119-2:264` (the local human-pace probe, 23:40 UTC), one
+  VELOCITY-quarantined row from the local burst probe, and the
+  production-gate rows named in the gate paragraph above.
+- Next free tracker ids: A12, B13, D48, M53, P13, R14, T11, V08, X05
+  (unchanged — this session opened no new rows).
+- Open next: unchanged from §19 — the photo session (D45), D35, the 45
+  backlog special districts, the ask-box map, T10 at testing end. Plus:
+  the DATABASE_URL repo secret for the tripwire (Needs your hands).

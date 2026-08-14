@@ -219,6 +219,8 @@ function person(overrides: Partial<PluralPerson>): PluralPerson {
     current_chamber: "lower",
     email: "",
     image: "",
+    capitol_voice: "",
+    district_voice: "",
     links: "",
     sources: "",
     state: "az",

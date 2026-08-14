@@ -41,6 +41,7 @@ import { MapCanvas, type CameraTarget, type MapFocus } from "./map-canvas";
 import { MeetingPanel } from "./meeting-panel";
 import { DistrictPopup } from "./popup/district-popup";
 import { MeetingPopup } from "./popup/meeting-popup";
+import { OfficialPopup } from "./popup/official-popup";
 import { EntityModal, type ModalSubject } from "./popup/entity-modal";
 import { WelcomeOverlay } from "./welcome-overlay";
 
@@ -263,6 +264,28 @@ function MapEntryInner() {
    */
   const [popupMeeting, setPopupMeeting] = useState<Meeting | null>(null);
   const [modal, setModal] = useState<ModalSubject | null>(null);
+
+  // The rep popup (3c): the person behind a clicked name, with the seat
+  // label and tier riding along for the card header.
+  const [officialPopup, setOfficialPopup] = useState<{
+    holder: SeatHolder;
+    seatLabel: string | null;
+    tier: "local" | "state" | "national";
+  } | null>(null);
+
+  const openOfficial = useCallback(
+    (
+      holder: SeatHolder,
+      seatLabel: string | null,
+      tier: "local" | "state" | "national",
+    ) => {
+      // Deliberately not logged: adding an event type to the search log
+      // extends what the transparency page discloses, which is the author's
+      // call, not this session's (noted in the tracker).
+      setOfficialPopup({ holder, seatLabel, tier });
+    },
+    [],
+  );
 
   /*
    * Search-log events for the interactions the transparency page describes.
@@ -699,6 +722,7 @@ function MapEntryInner() {
                   failedSourceOcdIds={
                     current.snapshot?.failed.flatMap((f) => f.ocdIds) ?? []
                   }
+                  onOpenOfficial={openOfficial}
                 />
               ))}
 
@@ -732,9 +756,21 @@ function MapEntryInner() {
             bottom-left and they landed on top of the coverage notice, which a
             screenshot caught. */}
         <div className="pointer-events-none absolute right-2 bottom-2 left-2 z-[1200] flex items-end justify-end gap-3 sm:right-5 sm:bottom-5 sm:left-auto">
-          {districtPopup && (
+          {officialPopup && (
+            <OfficialPopup
+              holder={officialPopup.holder}
+              seatLabel={officialPopup.seatLabel}
+              tier={officialPopup.tier}
+              onClose={() => setOfficialPopup(null)}
+            />
+          )}
+
+          {districtPopup && !officialPopup && (
             <DistrictPopup
               district={districtPopup}
+              onOpenOfficial={(holder) =>
+                openOfficial(holder, districtPopup.label, districtPopup.tier)
+              }
               representation={holdersFor(districtPopup.ocdId)}
               upcomingMeetings={
                 meetings.filter(

@@ -153,6 +153,11 @@ export const congressSource: OfficialSource<CongressLegislator> = {
         websiteUrl: term.url ?? null,
         contactFormUrl: term.contact_form ?? null,
         phone: term.phone ?? null,
+        // Congress publishes contact forms, not member email addresses.
+        email: null,
+        // Curated separately with per-entry verification (3e) — the bulk
+        // file does not carry campaign sites, and guessing one is forbidden.
+        campaignUrl: null,
         // Portraits are a separate acquisition with their own licence
         // question — §5.0b. Null renders as initials, which is correct.
         photo: null,

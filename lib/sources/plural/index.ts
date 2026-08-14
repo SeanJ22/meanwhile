@@ -55,6 +55,10 @@ export interface PluralPerson {
   current_chamber: "upper" | "lower" | string;
   email: string;
   image: string;
+  /** The capitol office phone, as the legislature publishes it. */
+  capitol_voice: string;
+  /** The district office phone, where one is published. */
+  district_voice: string;
   /** Semicolon-separated. */
   links: string;
   sources: string;
@@ -190,6 +194,8 @@ export function rowsToPeople(csv: string, state: string): PluralPerson[] {
       current_chamber: at(row, "current_chamber"),
       email: at(row, "email"),
       image: at(row, "image"),
+      capitol_voice: at(row, "capitol_voice"),
+      district_voice: at(row, "district_voice"),
       links: at(row, "links"),
       sources: at(row, "sources"),
       state,
@@ -320,7 +326,13 @@ export function normalize(
       partyLabel: person.current_party || null,
       websiteUrl: person.links.split(";")[0] || null,
       contactFormUrl: null,
-      phone: null,
+      // Contact as the legislature publishes it, carried through the CC-0
+      // bulk file (3a). Capitol office first; the district office where the
+      // capitol number is not published. Empty strings are absences.
+      phone: person.capitol_voice || person.district_voice || null,
+      email: person.email || null,
+      // Curated separately with per-entry verification (3e).
+      campaignUrl: null,
       // Plural publishes an image URL. It is NOT shipped: it would be a
       // hotlink, and its licence is unknown. D20 handles both.
       photo: null,

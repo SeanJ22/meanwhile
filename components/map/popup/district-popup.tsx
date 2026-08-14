@@ -29,6 +29,8 @@ interface DistrictPopupProps {
   placesWithin?: string[];
   /** Upcoming meetings on file for this division. */
   upcomingMeetings: number;
+  /** Opens the rep popup (3c) for a clicked name. */
+  onOpenOfficial?: (holder: SeatHolder) => void;
   onExpand?: () => void;
   onClose?: () => void;
 }
@@ -38,6 +40,7 @@ export function DistrictPopup({
   representation = [],
   placesWithin,
   upcomingMeetings,
+  onOpenOfficial,
   onExpand,
   onClose,
 }: DistrictPopupProps) {
@@ -73,7 +76,17 @@ export function DistrictPopup({
         representation.map((holder) => (
           <PopupRow key={holder.id} label={holder.officeTitle}>
             <span className="inline-flex items-baseline gap-1.5">
-              {holder.websiteUrl ? (
+              {onOpenOfficial ? (
+                // The name opens the rep popup — contact, photo, what the
+                // office does. The official page link lives inside it.
+                <button
+                  type="button"
+                  onClick={() => onOpenOfficial(holder)}
+                  className="hover:text-signal hover:underline"
+                >
+                  {holder.name}
+                </button>
+              ) : holder.websiteUrl ? (
                 <a
                   href={holder.websiteUrl}
                   target="_blank"

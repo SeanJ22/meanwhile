@@ -64,6 +64,19 @@ export interface Officeholder {
   /** Official contact form, where one is published. */
   contactFormUrl: string | null;
   phone: string | null;
+  /**
+   * Published official email, where the source publishes one. Congress
+   * publishes contact forms, not addresses, so this is null federally; state
+   * legislatures publish member addresses and the bulk rosters carry them.
+   */
+  email: string | null;
+  /**
+   * The campaign or personal site, distinct from the official page and always
+   * labeled as such when rendered (3e). Curated in
+   * `lib/officials/campaign-sites.ts` with per-entry verification — never
+   * guessed, never inferred from a name.
+   */
+  campaignUrl: string | null;
   photo: OfficeholderPhoto | null;
   provenance: Provenance;
 }

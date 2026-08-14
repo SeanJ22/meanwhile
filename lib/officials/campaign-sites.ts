@@ -1,0 +1,107 @@
+/**
+ * Campaign and personal sites, curated per officeholder (3e).
+ *
+ * A campaign site is a *distinct, clearly labeled* second link — the primary
+ * link on every surface is always the official page. Every entry here was
+ * found and then verified by opening the site and confirming it names both
+ * the person and the office; the verification sentence records what was
+ * seen. **Never guessed, never constructed from a name** — a plausible URL
+ * that turns out to be someone else's site is the fabricated-agenda-URL
+ * failure pointed at a person.
+ *
+ * Keyed by roster officeholder id. An absent key means no verified site —
+ * which may mean "none exists" or "not hunted yet"; `docs/source-ladder.md`
+ * records which.
+ */
+
+export interface CampaignSite {
+  url: string;
+  /** Where the URL was found (search, filing, news page). */
+  foundVia: string;
+  /** What the fetched page showed — the person and office, named. */
+  verification: string;
+  attemptedAt: string;
+}
+
+export const CAMPAIGN_SITES: Readonly<Record<string, CampaignSite>> = {
+  // The 2026-08-14 hunt. Misses and not-yet-attempted are in
+  // docs/source-ladder.md — an absent key here is not a claim that no site
+  // exists. Three entries were verified through the site's own indexed page
+  // titles because the site serves 403 to plain clients (a bot wall is
+  // friction, not an answer); the verification text says so.
+  "congress:C001133": {
+    url: "https://juanciscomani.com",
+    foundVia: "web search: Juan Ciscomani campaign website",
+    verification:
+      'Fetched 2026-08-14: site titled "Juan Ciscomani for Congress"; text names him as "elected to the U.S. House of Representatives" for Arizona.',
+    attemptedAt: "2026-08-14",
+  },
+  "congress:G000606": {
+    url: "https://www.adelitaforcongress.com",
+    foundVia: "web search: Adelita Grijalva campaign website",
+    verification:
+      'Fetched 2026-08-14: page titled "Adelita Grijalva | Democrat for Congress".',
+    attemptedAt: "2026-08-14",
+  },
+  "congress:K000377": {
+    url: "https://www.markkelly.com",
+    foundVia: "web search: Mark Kelly campaign website",
+    verification:
+      'Site serves HTTP 403 to plain clients; its own indexed pages are titled "Mark Kelly for Senate" with the campaign PO box (Phoenix, AZ). Verified from the site\'s indexed content, 2026-08-14.',
+    attemptedAt: "2026-08-14",
+  },
+  "congress:G000574": {
+    url: "https://gallegoforarizona.com",
+    foundVia: "web search: Ruben Gallego campaign website",
+    verification:
+      'Fetched 2026-08-14: page titled "Ruben Gallego for Senate", describing his Senate run for Arizona.',
+    attemptedAt: "2026-08-14",
+  },
+  "congress:M001246": {
+    url: "https://www.analiliafornj.com",
+    foundVia: "web search: Analilia Mejia campaign website",
+    verification:
+      'Fetched 2026-08-14: page titled "Analilia Mejía for New Jersey | NJ-11 Congressional Candidate 2026".',
+    attemptedAt: "2026-08-14",
+  },
+  "congress:K000394": {
+    url: "https://www.andykim.com",
+    foundVia: "web search: Andy Kim campaign website",
+    verification:
+      'Fetched 2026-08-14: tagline "Andy Kim for New Jersey — Restoring Integrity to the US Senate".',
+    attemptedAt: "2026-08-14",
+  },
+  "congress:B001288": {
+    url: "https://corybooker.com",
+    foundVia: "web search: Cory Booker campaign website",
+    verification:
+      'Fetched 2026-08-14: header "Stand with Cory Booker — join our campaign for Senate today".',
+    attemptedAt: "2026-08-14",
+  },
+  "congress:G000604": {
+    url: "https://maggiefornh.com",
+    foundVia: "web search: Maggie Goodlander campaign website",
+    verification:
+      'Site serves HTTP 403 to plain clients; its own indexed pages are titled "Maggie Goodlander for Congress" for New Hampshire\'s Second District. Verified from the site\'s indexed content, 2026-08-14.',
+    attemptedAt: "2026-08-14",
+  },
+  "congress:H001076": {
+    url: "https://maggiehassan.com",
+    foundVia: "web search: Maggie Hassan campaign website",
+    verification:
+      'Site serves HTTP 403 to plain clients; its own indexed pages are titled "Maggie Hassan | U.S. Senator for New Hampshire". Verified from the site\'s indexed content, 2026-08-14.',
+    attemptedAt: "2026-08-14",
+  },
+  "plural:81d12f3a-b635-4111-be8d-a71d2f7565f2": {
+    url: "https://bettyvillegasaz.com",
+    foundVia:
+      "the author's example (bettyvillegasaz.com), independently verified",
+    verification:
+      'Fetched 2026-08-14: page titled "Betty Villegas | LD 20 legislator".',
+    attemptedAt: "2026-08-14",
+  },
+};
+
+export function campaignSiteFor(officeholderId: string): CampaignSite | null {
+  return CAMPAIGN_SITES[officeholderId] ?? null;
+}

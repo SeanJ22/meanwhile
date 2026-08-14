@@ -43,10 +43,18 @@ interface CoverageNoticeProps {
    * must never render the same way.
    */
   failedSourceOcdIds?: string[];
+  onOpenOfficial?: OpenOfficial;
 }
 
 /** How many bodies to name before collapsing the rest into a count. */
 const NAME_LIMIT = 5;
+
+/** Opens the rep popup (3c). Seat label and tier ride along for the card. */
+export type OpenOfficial = (
+  holder: SeatHolder,
+  seatLabel: string | null,
+  tier: "local" | "state" | "national",
+) => void;
 
 const DIVISION_NOUN: Record<CoveredBody["divisionType"], string> = {
   county: "County",
@@ -88,18 +96,26 @@ function seatPhrase(seats: Seat[]): string | null {
  * screen only when it carries a source record, and the transparency surface is
  * what makes that claim checkable rather than merely asserted.
  */
-function Holder({ holder }: { holder: SeatHolder }) {
+function Holder({
+  holder,
+  onOpen,
+}: {
+  holder: SeatHolder;
+  onOpen?: () => void;
+}) {
   return (
     <span className="inline-flex items-baseline gap-1.5">
-      {holder.websiteUrl ? (
-        <a
-          href={holder.websiteUrl}
-          target="_blank"
-          rel="noreferrer"
+      {onOpen ? (
+        // The name opens the rep popup (3c) — photo, contact, what the
+        // office does — rather than navigating away. The official page and
+        // the source link both live inside it.
+        <button
+          type="button"
+          onClick={onOpen}
           className="text-paper underline decoration-dotted underline-offset-2 hover:text-signal"
         >
           {holder.name}
-        </a>
+        </button>
       ) : (
         <span className="text-paper">{holder.name}</span>
       )}
@@ -122,13 +138,30 @@ function Holder({ holder }: { holder: SeatHolder }) {
   );
 }
 
-function HolderList({ holders }: { holders: SeatHolder[] }) {
+function HolderList({
+  holders,
+  seatLabel,
+  tier,
+  onOpenOfficial,
+}: {
+  holders: SeatHolder[];
+  seatLabel: string | null;
+  tier: "local" | "state" | "national";
+  onOpenOfficial?: OpenOfficial;
+}) {
   return (
     <>
       {holders.map((holder, i) => (
         <span key={holder.id}>
           {i > 0 && <span className="text-muted">, </span>}
-          <Holder holder={holder} />
+          <Holder
+            holder={holder}
+            onOpen={
+              onOpenOfficial
+                ? () => onOpenOfficial(holder, seatLabel, tier)
+                : undefined
+            }
+          />
         </span>
       ))}
     </>
@@ -146,10 +179,12 @@ function CoverageBody({
   zip,
   coverage,
   failedSourceOcdIds = [],
+  onOpenOfficial,
 }: {
   zip: string;
   coverage: CoverageSummary;
   failedSourceOcdIds?: string[];
+  onOpenOfficial?: OpenOfficial;
 }) {
   const { bodies, seats, unincorporated, counts, senators, seatCounts } = coverage;
   const shown = bodies.slice(0, NAME_LIMIT);
@@ -380,7 +415,12 @@ function CoverageBody({
                   <span className={TIER_CLASS[seat.tier]}>{seat.label}</span>
                   <span className="text-right">
                     {seat.representatives.length > 0 ? (
-                      <HolderList holders={seat.representatives} />
+                      <HolderList
+                        holders={seat.representatives}
+                        seatLabel={seat.label}
+                        tier={seat.tier}
+                        onOpenOfficial={onOpenOfficial}
+                      />
                     ) : (
                       // Not "vacant" — we simply have no record. The two are
                       // completely different claims and only one is ours to
@@ -399,7 +439,12 @@ function CoverageBody({
           <span className="text-national">
             {senators.length === 1 ? "U.S. Senator" : "U.S. Senators"}
           </span>{" "}
-          <HolderList holders={senators} />
+          <HolderList
+            holders={senators}
+            seatLabel={null}
+            tier="national"
+            onOpenOfficial={onOpenOfficial}
+          />
         </p>
       )}
 
@@ -464,6 +509,7 @@ export function CoverageNotice({
   count,
   coverage,
   failedSourceOcdIds,
+  onOpenOfficial,
 }: CoverageNoticeProps) {
   // The notice renders on every failure rung, and on the exact rung whenever
   // there is representation to show. It used to return null on `exact`
@@ -525,6 +571,7 @@ export function CoverageNotice({
           zip={zip}
           coverage={coverage}
           failedSourceOcdIds={failedSourceOcdIds}
+          onOpenOfficial={onOpenOfficial}
         />
       ) : (
         !coverage &&

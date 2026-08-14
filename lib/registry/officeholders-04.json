@@ -1,6 +1,6 @@
 {
   "scope": "04",
-  "generatedAt": "2026-08-13T03:28:01.234Z",
+  "generatedAt": "2026-08-13T23:16:11.944Z",
   "officeholders": [
     {
       "id": "plural:c6a181c7-b58e-4c2a-aa2d-9ca31fc6548f",
@@ -13,11 +13,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=57&session=129&legislator=2355",
       "contactFormUrl": null,
       "phone": null,
+      "email": "amarquez@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -32,11 +34,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2174",
       "contactFormUrl": null,
       "phone": null,
+      "email": "akolodin@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -51,11 +55,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=55&legislator=2033",
       "contactFormUrl": null,
       "phone": null,
+      "email": "ahernandez@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -70,11 +76,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2178",
       "contactFormUrl": null,
       "phone": null,
+      "email": "analise.ortiz@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -89,11 +97,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=57&session=129&legislator=2366",
       "contactFormUrl": null,
       "phone": null,
+      "email": "aabeytia@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -108,11 +118,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2274",
       "contactFormUrl": null,
       "phone": null,
+      "email": "bvillegas@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -127,11 +139,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=55&legislator=2071",
       "contactFormUrl": null,
       "phone": null,
+      "email": "bpingerelli@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -146,11 +160,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=55&session=123&legislator=2101",
       "contactFormUrl": null,
       "phone": null,
+      "email": "bfernandez@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -165,11 +181,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=57&session=129&legislator=2358",
       "contactFormUrl": null,
       "phone": null,
+      "email": "bgarcia@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -184,11 +202,13 @@
       "websiteUrl": "https://www.azleg.gov/senate-member/?legislature=57&legislator=2389",
       "contactFormUrl": null,
       "phone": null,
+      "email": "cwerner@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -203,11 +223,13 @@
       "websiteUrl": "https://www.azleg.gov/senate-member/?legislature=56&legislator=2138",
       "contactFormUrl": null,
       "phone": null,
+      "email": "cmiranda@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -222,11 +244,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2146",
       "contactFormUrl": null,
       "phone": null,
+      "email": "caguilar@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -241,11 +265,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=57&session=129&legislator=2364",
       "contactFormUrl": null,
       "phone": null,
+      "email": "clopez@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -260,11 +286,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=55&session=123&legislator=2103",
       "contactFormUrl": null,
       "phone": null,
+      "email": "cmathis@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -279,11 +307,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=57&session=129&legislator=2417",
       "contactFormUrl": null,
       "phone": null,
+      "email": "creim@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -298,11 +328,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2169",
       "contactFormUrl": null,
       "phone": null,
+      "email": "chernandez@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -317,11 +349,13 @@
       "websiteUrl": "https://www.azleg.gov/senate-member/?legislature=56&legislator=2123",
       "contactFormUrl": null,
       "phone": null,
+      "email": "dfarnsworth@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -336,11 +370,13 @@
       "websiteUrl": "https://www.azleg.gov/senate-member/?legislature=55&legislator=1968",
       "contactFormUrl": null,
       "phone": null,
+      "email": "dgowan@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -355,11 +391,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&legislator=2175&session=128",
       "contactFormUrl": null,
       "phone": null,
+      "email": "dlivingston@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -374,11 +412,13 @@
       "websiteUrl": "https://www.azleg.gov/House/House-member/?legislature=54&session=122&legislator=1881",
       "contactFormUrl": null,
       "phone": null,
+      "email": "mepstein@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -393,11 +433,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2281",
       "contactFormUrl": null,
       "phone": null,
+      "email": "eluna-najera@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -412,11 +454,13 @@
       "websiteUrl": "https://www.azleg.gov/senate-member/?legislature=56&legislator=2121",
       "contactFormUrl": null,
       "phone": null,
+      "email": "eva.diaz@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -431,11 +475,13 @@
       "websiteUrl": "https://www.azleg.gov/House/House-member/?legislature=56&session=127&legislator=2150",
       "contactFormUrl": null,
       "phone": null,
+      "email": "fbravo@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -450,11 +496,13 @@
       "websiteUrl": "https://www.azleg.gov/House/House-member/?legislature=54&session=122&legislator=1906",
       "contactFormUrl": null,
       "phone": null,
+      "email": "fcarroll@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -469,11 +517,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=55&legislator=2053",
       "contactFormUrl": null,
       "phone": null,
+      "email": "ggriffin@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -488,11 +538,13 @@
       "websiteUrl": "https://www.azleg.gov/senate-member/?legislature=57&legislator=2373",
       "contactFormUrl": null,
       "phone": null,
+      "email": "hangius@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -507,11 +559,13 @@
       "websiteUrl": "https://www.azleg.gov/House/House-member/?legislature=55&session=123&legislator=2066",
       "contactFormUrl": null,
       "phone": null,
+      "email": "jake.hoffman@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -526,11 +580,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=57&session=129&legislator=2370",
       "contactFormUrl": null,
       "phone": null,
+      "email": "jtaylor@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -545,11 +601,13 @@
       "websiteUrl": "https://www.azleg.gov/senate-member/?legislature=56&legislator=2141",
       "contactFormUrl": null,
       "phone": null,
+      "email": "jshamp@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -564,11 +622,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=57&session=129&legislator=2357",
       "contactFormUrl": null,
       "phone": null,
+      "email": "jconnolly@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -583,11 +643,13 @@
       "websiteUrl": "https://www.azleg.gov/senate-member/?legislature=56&legislator=2137",
       "contactFormUrl": null,
       "phone": null,
+      "email": "jmesnard@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -602,11 +664,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=57&session=129&legislator=2361",
       "contactFormUrl": null,
       "phone": null,
+      "email": "jweninger@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -621,11 +685,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2161",
       "contactFormUrl": null,
       "phone": null,
+      "email": "jgillette@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -640,11 +706,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=55&legislator=2056",
       "contactFormUrl": null,
       "phone": null,
+      "email": "jkavanagh@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -659,11 +727,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2270",
       "contactFormUrl": null,
       "phone": null,
+      "email": "jwilloughby@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -678,11 +748,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&session=128&legislator=2287",
       "contactFormUrl": null,
       "phone": null,
+      "email": "jcavero@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -697,11 +769,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=57&legislator=2359",
       "contactFormUrl": null,
       "phone": null,
+      "email": "jolson@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -716,11 +790,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=55&legislator=2068",
       "contactFormUrl": null,
       "phone": null,
+      "email": "jwilmeth@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -735,11 +811,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=55&legislator=2023",
       "contactFormUrl": null,
       "phone": null,
+      "email": "kpayne@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -754,11 +832,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=57&session=129&legislator=2365",
       "contactFormUrl": null,
       "phone": null,
+      "email": "kvolk@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -773,11 +853,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=57&session=129&legislator=2362",
       "contactFormUrl": null,
       "phone": null,
+      "email": "kpowell@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -792,11 +874,13 @@
       "websiteUrl": "https://www.azleg.gov/senate-member/?legislature=57&legislator=2415",
       "contactFormUrl": null,
       "phone": null,
+      "email": "ksears@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -811,11 +895,13 @@
       "websiteUrl": "https://www.azleg.gov/senate-member/?legislature=57&legislator=2390",
       "contactFormUrl": null,
       "phone": null,
+      "email": "lkuby@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -830,11 +916,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2172",
       "contactFormUrl": null,
       "phone": null,
+      "email": "lhendrix@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -849,11 +937,13 @@
       "websiteUrl": "https://www.azleg.gov/senate-member/?legislature=55&legislator=1978",
       "contactFormUrl": null,
       "phone": null,
+      "email": "lalston@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -868,11 +958,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=55&legislator=2034",
       "contactFormUrl": null,
       "phone": null,
+      "email": "lbiasiucci@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -887,11 +979,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=57&session=129&legislator=2369",
       "contactFormUrl": null,
       "phone": null,
+      "email": "lfink@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -906,11 +1000,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2206",
       "contactFormUrl": null,
       "phone": null,
+      "email": "laustin@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -925,11 +1021,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2156",
       "contactFormUrl": null,
       "phone": null,
+      "email": "lcontreras@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -944,11 +1042,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=55&session=123&legislator=2100",
       "contactFormUrl": null,
       "phone": null,
+      "email": "ldiaz@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -963,11 +1063,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2170",
       "contactFormUrl": null,
       "phone": null,
+      "email": "lhernandez@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -982,11 +1084,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2190",
       "contactFormUrl": null,
       "phone": null,
+      "email": "mpeshlakai@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1001,11 +1105,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2194",
       "contactFormUrl": null,
       "phone": null,
+      "email": "msandoval@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1020,11 +1126,13 @@
       "websiteUrl": "https://www.azleg.gov/House/House-member/?legislature=54&session=122&legislator=1865",
       "contactFormUrl": null,
       "phone": null,
+      "email": "mfinchem@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1039,11 +1147,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2163",
       "contactFormUrl": null,
       "phone": null,
+      "email": "mgress@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1058,11 +1168,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2153",
       "contactFormUrl": null,
       "phone": null,
+      "email": "mcarbone@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1077,11 +1189,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=57&session=129&legislator=2363",
       "contactFormUrl": null,
       "phone": null,
+      "email": "mway@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1096,11 +1210,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2189",
       "contactFormUrl": null,
       "phone": null,
+      "email": "mpena@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1115,11 +1231,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=55&legislator=2037",
       "contactFormUrl": null,
       "phone": null,
+      "email": "mtsosie@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1134,11 +1252,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2165",
       "contactFormUrl": null,
       "phone": null,
+      "email": "ngutierrez@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1153,11 +1273,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=55&session=123&legislator=2098",
       "contactFormUrl": null,
       "phone": null,
+      "email": "ncarter@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1172,11 +1294,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=57&session=129&legislator=2367",
       "contactFormUrl": null,
       "phone": null,
+      "email": "nkupper@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1191,11 +1315,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2158",
       "contactFormUrl": null,
       "phone": null,
+      "email": "odelossantos@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1210,11 +1336,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=57&session=129&legislator=2354",
       "contactFormUrl": null,
       "phone": null,
+      "email": "pcarter@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1229,11 +1357,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2157",
       "contactFormUrl": null,
       "phone": null,
+      "email": "pcontreras@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1248,11 +1378,13 @@
       "websiteUrl": "https://www.azleg.gov/senate-member/?legislature=56&legislator=2143",
       "contactFormUrl": null,
       "phone": null,
+      "email": "psundareshan@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1267,11 +1399,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=55&legislator=2063",
       "contactFormUrl": null,
       "phone": null,
+      "email": "qnguyen@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1286,11 +1420,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2272",
       "contactFormUrl": null,
       "phone": null,
+      "email": "qcrews@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1305,11 +1441,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2173",
       "contactFormUrl": null,
       "phone": null,
+      "email": "rkeshel@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1324,11 +1462,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=57&session=129&legislator=2360",
       "contactFormUrl": null,
       "phone": null,
+      "email": "rheap@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1343,11 +1483,13 @@
       "websiteUrl": "https://www.azleg.gov/senate-member/?legislature=55&legislator=1956",
       "contactFormUrl": null,
       "phone": null,
+      "email": "rgabaldon@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1362,11 +1504,13 @@
       "websiteUrl": "https://www.azleg.gov/senate-member/?legislature=55&legislator=1957",
       "contactFormUrl": null,
       "phone": null,
+      "email": "sgonzales@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1381,11 +1525,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&session=128&legislator=2279",
       "contactFormUrl": null,
       "phone": null,
+      "email": "sliguori@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1400,11 +1546,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2149",
       "contactFormUrl": null,
       "phone": null,
+      "email": "sbliss@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1419,11 +1567,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2148",
       "contactFormUrl": null,
       "phone": null,
+      "email": "sblattman@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1438,11 +1588,13 @@
       "websiteUrl": "https://www.azleg.gov/senate-member/?legislature=56&legislator=2273",
       "contactFormUrl": null,
       "phone": null,
+      "email": "sbolick@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1457,11 +1609,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2203",
       "contactFormUrl": null,
       "phone": null,
+      "email": "stravers@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1476,11 +1630,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&legislator=2199&session=128",
       "contactFormUrl": null,
       "phone": null,
+      "email": "sstahlhamilton@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1495,11 +1651,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=57&session=129&legislator=2353",
       "contactFormUrl": null,
       "phone": null,
+      "email": "ssimacek@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1514,11 +1672,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2183",
       "contactFormUrl": null,
       "phone": null,
+      "email": "smontenegro@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1533,11 +1693,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=57&legislator=2419",
       "contactFormUrl": null,
       "phone": null,
+      "email": "sallen@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1552,11 +1714,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=55&session=123&legislator=2096",
       "contactFormUrl": null,
       "phone": null,
+      "email": "tmartinez@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1571,11 +1735,13 @@
       "websiteUrl": "https://www.azleg.gov/senate-member/?legislature=56&legislator=2128",
       "contactFormUrl": null,
       "phone": null,
+      "email": "thatathlie@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1590,11 +1756,13 @@
       "websiteUrl": "https://www.azleg.gov/House/House-member/?legislature=54&session=122&legislator=1871",
       "contactFormUrl": null,
       "phone": null,
+      "email": "tshope@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1609,11 +1777,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=55&legislator=2031",
       "contactFormUrl": null,
       "phone": null,
+      "email": "tdunn@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1628,11 +1798,13 @@
       "websiteUrl": "https://www.azleg.gov/House/House-member/?legislature=54&session=122&legislator=1870",
       "contactFormUrl": null,
       "phone": null,
+      "email": "trivero@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1647,11 +1819,13 @@
       "websiteUrl": "https://www.azleg.gov/senate-member/?legislature=55&legislator=1965",
       "contactFormUrl": null,
       "phone": null,
+      "email": "vleach@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1666,11 +1840,13 @@
       "websiteUrl": "https://www.azleg.gov/house-member/?legislature=57&session=129&legislator=2356",
       "contactFormUrl": null,
       "phone": null,
+      "email": "wblackman@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1685,11 +1861,13 @@
       "websiteUrl": "https://www.azleg.gov/senate-member/?legislature=55&legislator=1966",
       "contactFormUrl": null,
       "phone": null,
+      "email": "wpetersen@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     },
@@ -1704,11 +1882,13 @@
       "websiteUrl": "https://www.azleg.gov/senate-member/?legislature=55&legislator=1960",
       "contactFormUrl": null,
       "phone": null,
+      "email": "wrogers@azleg.gov",
+      "campaignUrl": null,
       "photo": null,
       "provenance": {
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
-        "collectedAt": "2026-08-13T03:28:01.234Z",
+        "collectedAt": "2026-08-13T23:16:11.944Z",
         "verifiedAt": null
       }
     }

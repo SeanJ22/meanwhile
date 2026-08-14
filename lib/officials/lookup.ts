@@ -1,3 +1,4 @@
+import { campaignSiteFor } from "./campaign-sites.ts";
 import type { Officeholder, OfficeholderSet } from "./types.ts";
 
 /**
@@ -25,11 +26,25 @@ export interface SeatHolder {
   websiteUrl: string | null;
   /** Where the record was read from. Rendered, not just stored. */
   sourceUrl: string | null;
+  /** Published official contact (3a). Absences are absences. */
+  email: string | null;
+  phone: string | null;
+  contactFormUrl: string | null;
+  /** Portrait on our origin (3b), from the licensed-photos manifest. */
+  photoUrl: string | null;
+  /**
+   * The campaign/personal site (3e) — always rendered labeled as such,
+   * never as the primary link. From the curated, verified overlay.
+   */
+  campaignUrl: string | null;
 }
 
 export type OfficeholderIndex = Map<string, SeatHolder[]>;
 
-function toSeatHolder(person: Officeholder): SeatHolder {
+/** officeholderId → path on our origin, from official-photos.json. */
+export type PhotoIndex = Map<string, string>;
+
+function toSeatHolder(person: Officeholder, photos?: PhotoIndex): SeatHolder {
   return {
     id: person.id,
     name: person.name,
@@ -37,6 +52,11 @@ function toSeatHolder(person: Officeholder): SeatHolder {
     partyLabel: person.partyLabel,
     websiteUrl: person.websiteUrl,
     sourceUrl: person.provenance.sourceUrl,
+    email: person.email,
+    phone: person.phone,
+    contactFormUrl: person.contactFormUrl,
+    photoUrl: photos?.get(person.id) ?? null,
+    campaignUrl: campaignSiteFor(person.id)?.url ?? null,
   };
 }
 
@@ -47,7 +67,10 @@ function toSeatHolder(person: Officeholder): SeatHolder {
  * person can represent several divisions. The value is an array for the first
  * reason and the join table exists for the second.
  */
-export function indexByDivision(sets: OfficeholderSet[]): OfficeholderIndex {
+export function indexByDivision(
+  sets: OfficeholderSet[],
+  photos?: PhotoIndex,
+): OfficeholderIndex {
   const index: OfficeholderIndex = new Map();
 
   for (const set of sets) {
@@ -60,8 +83,8 @@ export function indexByDivision(sets: OfficeholderSet[]): OfficeholderIndex {
       if (!person) continue;
 
       const existing = index.get(link.ocdId);
-      if (existing) existing.push(toSeatHolder(person));
-      else index.set(link.ocdId, [toSeatHolder(person)]);
+      if (existing) existing.push(toSeatHolder(person, photos));
+      else index.set(link.ocdId, [toSeatHolder(person, photos)]);
     }
   }
 

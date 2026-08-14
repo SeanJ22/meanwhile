@@ -12,15 +12,17 @@ import { useShellData } from "@/lib/state/data";
 import { useUi } from "@/lib/state/provider";
 
 /**
- * The map legend.
+ * The map legend — fixed (6e).
  *
- * Ports Edia's `updateLegend`: entries reflect what is *actually rendered*, not
- * a fixed key. A legend listing a colour that is not on the map teaches a
- * reader a mapping they will then misapply.
+ * Every category renders always; a category with nothing currently on the
+ * map is visually muted, never removed. A legend that mutates with the
+ * view is not a legend — the reader can't learn a mapping from a key that
+ * keeps changing. (This reverses the earlier present-only port of Edia's
+ * `updateLegend`, deliberately.)
  *
  * Entries key on government *level* (2g) — school, local, state, federal —
- * matching the dot colors, so a school-board meeting and a congressional town
- * hall at the same address read apart without a click.
+ * matching the dot colors, so a school-board meeting and a congressional
+ * town hall at the same address read apart without a click.
  */
 
 const LEVEL_ACCENT: Record<GovernmentLevel, React.CSSProperties> = {
@@ -59,37 +61,37 @@ export function Legend() {
     return { levels, concluded };
   }, [meetings]);
 
-  const entries = LEVEL_ORDER.filter((level) => present.levels.has(level));
-
-  // Nothing rendered means nothing to explain.
-  if (entries.length === 0 && !ui.showDistricts) return null;
-
   return (
     <div className="legend">
-      {entries.map((level) => (
-        <span className="legend-item" key={level}>
+      {LEVEL_ORDER.map((level) => (
+        <span
+          className="legend-item"
+          key={level}
+          data-muted={!present.levels.has(level)}
+          title={
+            present.levels.has(level)
+              ? undefined
+              : "Nothing of this kind on the map right now"
+          }
+        >
           <span className="legend-dot" style={LEVEL_ACCENT[level]} />
           {LEVEL_LABEL[level]}
         </span>
       ))}
 
-      {present.concluded && (
-        <span className="legend-item">
-          <span
-            className="legend-dot"
-            data-hollow="true"
-            style={{ "--tier-accent": "var(--concluded)" } as React.CSSProperties}
-          />
-          Concluded
-        </span>
-      )}
+      <span className="legend-item" data-muted={!present.concluded}>
+        <span
+          className="legend-dot"
+          data-hollow="true"
+          style={{ "--tier-accent": "var(--concluded)" } as React.CSSProperties}
+        />
+        Concluded
+      </span>
 
-      {ui.showDistricts && (
-        <span className="legend-item">
-          <span className="legend-rule" />
-          District boundary
-        </span>
-      )}
+      <span className="legend-item" data-muted={!ui.showDistricts}>
+        <span className="legend-rule" />
+        District boundary
+      </span>
     </div>
   );
 }

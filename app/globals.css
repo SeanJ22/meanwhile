@@ -960,6 +960,24 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   white-space: nowrap;
 }
 
+/* 6e: a category with nothing on the map right now stays in the key,
+   muted — the legend never mutates with the view. */
+.legend-item[data-muted="true"] {
+  opacity: 0.35;
+}
+
+/* 6g: every interactive element says so. */
+button:not(:disabled),
+a,
+select,
+summary,
+[role="button"],
+input[type="checkbox"],
+input[type="range"],
+label:has(> input[type="checkbox"]) {
+  cursor: pointer;
+}
+
 .legend-dot {
   width: 10px;
   height: 10px;

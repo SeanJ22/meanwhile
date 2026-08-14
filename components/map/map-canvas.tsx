@@ -20,6 +20,7 @@ import {
   METRO_ZOOM,
   resolveBasemap,
 } from "@/lib/map/style";
+import { initialZoomForZip } from "@/lib/map/initial-zoom";
 import {
   DISTRICT_TYPES,
   addDistrictLayer,
@@ -389,14 +390,14 @@ export function MapCanvas({
       .setAttribute("aria-label", `Center of zip code ${camera.zip}`);
   }, [camera]);
 
-  // Fly to a new center.
+  // Fly to a new center, at the zip's deliberate first-view altitude (6f).
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !camera) return;
 
     const options = {
       center: [camera.lng, camera.lat] as [number, number],
-      zoom: METRO_ZOOM,
+      zoom: initialZoomForZip(camera.zip),
     };
 
     if (prefersReducedMotion()) {

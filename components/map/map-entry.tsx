@@ -616,11 +616,17 @@ function MapEntryInner() {
       setLastHits(hits);
 
       if (hits.length === 1) {
-        dispatch({
-          type: "select/district",
-          ocdId: hits[0].ocdId,
-          districtType: hits[0].type,
-        });
+        // 6d: every selection is un-makeable by the same gesture — clicking
+        // the already-selected district deselects it.
+        if (hits[0].ocdId === ui.selectedDistrictOcdId) {
+          dispatch({ type: "select/district", ocdId: null, districtType: null });
+        } else {
+          dispatch({
+            type: "select/district",
+            ocdId: hits[0].ocdId,
+            districtType: hits[0].type,
+          });
+        }
         return;
       }
 
@@ -638,7 +644,7 @@ function MapEntryInner() {
         },
       });
     },
-    [dispatch],
+    [dispatch, ui.selectedDistrictOcdId],
   );
 
   const onTileError = useCallback(() => setTilesFailed(true), []);

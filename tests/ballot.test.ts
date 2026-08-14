@@ -202,3 +202,59 @@ test("every AZ and NH ballot record is cited to an official source", async () =>
     }
   }
 });
+
+/**
+ * The certified general lineup (6a): nominees render from the canvass, the
+ * canvass is cited, and every lineup contest keys to a real filed contest.
+ */
+test("the AZ general lineup cites the certified canvass and keys to real contests", async () => {
+  const { readFileSync } = await import("node:fs");
+  const { join } = await import("node:path");
+  const lineup = JSON.parse(
+    readFileSync(
+      join(process.cwd(), "data", "ballot", "az-general-lineup-2026.json"),
+      "utf8",
+    ),
+  ) as {
+    canvass: { url: string; issuedBy: string; readAt: string; readNote: string };
+    contests: { contestId: string; nominees: { name: string; partyLabel: string }[] }[];
+  };
+
+  assert.match(
+    lineup.canvass.url,
+    /^https:\/\/apps\.azsos\.gov\/election\/2026\/canvass\//,
+    "the lineup must cite the SOS canvass document itself",
+  );
+  assert.ok(
+    lineup.canvass.readNote.length > 50,
+    "how the scan was read is part of the citation",
+  );
+
+  const az = JSON.parse(
+    readFileSync(join(process.cwd(), "data", "ballot", "az-pima-2026.json"), "utf8"),
+  ) as { contests: { id: string; type: string }[] };
+  const contestIds = new Set(az.contests.map((c) => c.id));
+
+  assert.ok(lineup.contests.length >= 12, `expected 12 lineup contests, found ${lineup.contests.length}`);
+  for (const contest of lineup.contests) {
+    assert.ok(
+      contestIds.has(contest.contestId),
+      `${contest.contestId}: lineup for a contest that is not on the ballot file`,
+    );
+    assert.ok(
+      contest.nominees.length >= 1,
+      `${contest.contestId}: a lineup with no nominees is not a lineup`,
+    );
+    for (const nominee of contest.nominees) {
+      assert.ok(nominee.name.length >= 5 && nominee.partyLabel.length >= 3);
+    }
+  }
+
+  // The surface renders the lineup and retires the filing fallback.
+  const page = readFileSync(join(process.cwd(), "app", "ballot", "page.tsx"), "utf8");
+  assert.ok(page.includes("lineupForContest"), "the ballot page must render the lineup");
+  assert.ok(
+    page.includes("certified primary canvass"),
+    "the canvass citation must be on the surface",
+  );
+});

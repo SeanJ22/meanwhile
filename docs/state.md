@@ -4,9 +4,14 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-14, after the regression-and-restoration session —
-the officials surface restored and guarded (M23), D28/D29 wired, the Morris
-County ballot shipped (S2), and the defects intake opened. See §11 and §7.
+Last updated: 2026-08-14, after the second session of the day — the friction
+constitution (0a/0b), the checkbox regression (M27), the friction batch
+(M28), the officials surface (D32), the AZ/NH ballots (D33), the federal
+votes corpus (D02), the narrowing prompt built (M26), and the routing
+knowledge base (A08). See §12. Earlier that day: the
+regression-and-restoration session — the officials surface restored and
+guarded (M23), D28/D29 wired, the Morris County ballot shipped (S2), and the
+defects intake opened (§11).
 
 ---
 
@@ -52,7 +57,7 @@ works.
 | `corepack pnpm session:start` | Start-of-session sweep, then the dev server — see §8. `--check` starts nothing |
 | `corepack pnpm dev` | Development server. Refuses if 3000 is taken; records its pid in `.dev-server.pid` |
 | `corepack pnpm build` | Production build |
-| `corepack pnpm test` | `node --test` over `tests/` — 250 tests (2026-08-14) |
+| `corepack pnpm test` | `node --test` over `tests/` — 281 tests (2026-08-14, second session) |
 | `corepack pnpm lint` | ESLint |
 | `corepack pnpm ingest <source>` | Run one adapter end to end — `composite` prints per-source accounting and retrieves agenda documents |
 | `corepack pnpm meetings:report` | The four-zip gate: meetings per zip, contributing sources, unwired bodies. Live network |
@@ -1740,7 +1745,7 @@ correct — `resolveZip` only reports it when the table is partial.
 counties, so a reader can click districts in places that have no meetings behind
 them. Honest, and the coverage tier says so, but the asymmetry is new.
 
-**Map-layer test coverage is still thin.** 250 tests (2026-08-14) now cover the cascade, time
+**Map-layer test coverage is still thin.** 281 tests (2026-08-14, second session) now cover the cascade, time
 handling, OCD identity, the tier axis, district disambiguation, fixture
 provenance, county subdivisions and the registry oracle. Nothing tests marker
 reconciliation, camera logic, or basemap resolution — which is part of why the
@@ -2187,7 +2192,7 @@ State as of 2026-08-12, verified rather than assumed:
 - **R07 is fixed.** `--ship` fast-forwards local `main` and pushes `-u` for a
   branch with no upstream; the plain check and `session:start` both report a
   stale local `main`. If the repo ever still looks empty, it is not — §7.
-- **250 tests, lint, tsc and build all pass.** (Updated 2026-08-14; was 226 on 2026-08-13.) M16, M17, M21, R07, R09, R10,
+- **281 tests, lint, tsc and build all pass.** (Updated 2026-08-14 second session; was 250 earlier that day.) M16, M17, M21, R07, R09, R10,
   D14 and M20 all Done with evidence in the tracker. D02, D03, D12 and M05 are
   **In progress** with the evidence recorded and the reason each is not Done
   stated on the row — the Legistar adapter is not the app's source, the rosters
@@ -2691,3 +2696,137 @@ unblocked and can never again be blocked on a missing record.)*
   (rejected: threading reset through the localStorage hook).
 - S1 deferred with the author step recorded (rejected: shipping substituted
   wording).
+
+---
+
+## 12. The 2026-08-14 second session — the friction constitution, and the product becoming reachable
+
+Branch `claude/restore-representation-session-0814` (continued), seven
+commits. **test 281 pass · lint clean · tsc clean · build exit 0**, each
+verified by exit code and screenshot per change.
+
+### The constitution (0a/0b)
+
+- **The friction rule is CLAUDE.md's third non-negotiable**, with its four
+  exceptions enumerated by number so a change claiming one can be checked
+  mechanically: (1) the capture-point transparency disclosure, (2) the
+  narrowing prompt's optionality, (3) consent to collection, (4) coverage-gap
+  honesty. Everything else goes.
+- **M26's approved wording is in §9 verbatim** — it can never again be
+  blocked on a missing record — and the prompt is now built against it (below).
+
+### M27 — the "dead" district checkboxes (eighth sighting, §8's table)
+
+Diagnosed before fixing: the state→render path measured **working** at
+production's exact commit, every variation. What reproduced: with "Show
+districts" off, the checkbox group stayed live and every click changed state
+with zero visible effect. Fix is intent — touching the group turns the
+overlay on (except "clear"), the rule pure in `lib/state/district-intent.ts`,
+the guard family extended to the state-change path.
+
+### M28 — the friction batch, 2a–2j in one pass
+
+Google-Maps directions (universal link); the ballot bubble top-right, same
+tab, zip attached, following the settled viewport, honest coming-soon (now
+retired — all three states covered); the sidebar one pattern at every width;
+dots colored by government level with split-ring mixed venues and the legend
+back at phone width; the who-governs card shrinking to a recoverable fab on
+engagement; scroll-and-settle rebuilt (gesture-only, debounced, guarded,
+camera never fought, `nearZip` resolved server-side, the search log staying
+zip-level); coverage sentences inverted to lead with what we track. Headless
+note: Playwright's mouse-drag never ends MapLibre's drag (`isMoving` sticks
+true — harness artifact); wheel and keyboard gestures exercise the same
+`moveend` path and were the verification route.
+
+### D32 — officials become people you can reach
+
+Contact on the rosters (state email/phone via the CC-0 bulk; federal was
+present); 8 of 10 wired federal portraits from the GPO pictorial directory
+with license recorded per image and both misses recorded with reasons
+(member-courtesy images are unknown-license and unknown is not clearable);
+the rep popup (photo/initials, contact links, official page, campaign site
+labeled as such, what-this-office-does); office blurbs as tested data in the
+author's register; `campaignUrl` curated with per-entry verification (10
+verified, misses in the ladder).
+
+**The statement corpus is filling**: `lib/corpus/types.ts` +
+`pnpm corpus:fetch` — 30 of 32 targets snapshotted (official pages and
+campaign sites for all 22 wired officials), append-only, content-addressed.
+**The change-marker design constraint is recorded for next session's
+position rendering**: every displayed position carries its "last checked"
+date; when a source's current snapshot differs from a prior one, the surface
+shows a visible "this page changed since we last checked" marker with the
+prior date and, as rendering matures, access to what it said before. The
+never-characterize rule applies to change too — the surface says THAT it
+changed and shows both records, never an interpretation. **Positions are not
+rendered yet**: the three-answer machinery (matched / searched-and-nothing /
+not-yet-collected, denominators attached) is next session's first item, and
+bio rendering waits with it.
+
+### D33 — the Arizona and New Hampshire ballots (S3)
+
+Pima County from the SOS candidate filing with primary-stage honesty (the
+July 21 primary is canvassed, the general list unpublished, so every filed
+candidate renders with a computed narrows-when note — never a news-reported
+nominee); eleven statewide measures carrying the Legislative Council's
+adopted analyses with official question text honestly pending; the cited
+absence of a Senate race. Merrimack County through the UA-sensitive bot
+wall: the open Senate seat (13 filed; Shaheen not running), the two-seat
+House district, five county offices, and **the November finding stated as
+the system working** — town and school matters decide at the March town
+meeting, cited to the SOS political calendar. `BallotSet.coverageNotes`
+carries our own gaps distinctly from authority absences; a per-state ballot
+registry closes 2e.
+
+### D02 — the votes corpus (federal roll calls)
+
+`lib/votes/` + `pnpm votes:fetch` + committed snapshot: 20 rolls per
+chamber, identifier sets compared before trusting (100% both chambers,
+preserved in the artifact; the Senate keys on LIS ids and
+legislators-current.json bridges), official bill titles from Congress.gov
+with the title's source recorded per vote. **A caught wrong number**: the
+first run shipped a party subtotal as the House tally (roll 264, 76–136 vs
+the real 76–350) — the last `yea/nay-total` pair is the chamber total, and a
+test pins it. The rep popup's Recent Votes: official words first, four
+unmistakable states, the chamber's result, links to the roll call and the
+bill's official summary, a legend saying the colors state *their vote*.
+Refresh is manual; wiring into the six-hour cron is open. **State roll
+calls (research note)**: AZ (apps.azleg.gov per-bill floor votes), NJ
+(njleg.state.nj.us per-bill lists), NH (gc.nh.gov per-bill tables) — all
+server-rendered, none verified machine-readable; each needs its own hunt.
+
+### M26 — the narrowing prompt, built
+
+The TIGER ADDRFEAT street index (91,923 edges across the three counties,
+midpoints resolved against the registry geometry) writes per-zip files for
+exactly the 123 zips where the answer would change — the trigger and the
+template's counts are computed (85641: 1 municipality + 3 school districts;
+07866: 3 + 4, the borough-vs-township picker rendering the identifier
+lesson). The approved wording verbatim and test-pinned; declining
+effortless; the street matched on-device against a downloaded list — the
+two approved localStorage keys, a no-network test on the hook, the
+transparency page extended. Narrowing filters the who-governs card per
+type; whatever is not narrowed stays fully listed; visible undo.
+
+### A08 — the routing knowledge base (no UI, by design)
+
+Nine cited topic routes on the office blurbs and registry body types; a
+pure `resolveRouting(topic, coverage)` grounding steps in real bodies and
+rosters with the denominator carried; refusals as tests (unmapped topic →
+the stated refusal; thin area → gaps stated, nothing guessed; a real body
+with no roster says which half is missing); the author's two golden cases
+pass against the real Tucson registry. Party cannot enter routing —
+mechanically tested. **The chat surface needs, before it ships**: the
+abuse-policy gates for a free-text entry, an explicit logging decision
+disclosed on the transparency page before launch, and topic matching that
+never silently maps an unmatched concern.
+
+### Also recorded
+
+- The OFFICIAL_OPENED search-log event was deliberately NOT added — a new
+  event type extends the transparency page's disclosure, which is the
+  author's call. Open question on D32's row.
+- Committed leftover `lib/state/defaults.tmp.txt` removed; two pre-existing
+  lint warnings cleaned.
+- The background-agent route died twice with the host process mid-session;
+  research was completed inline. Worth knowing before delegating hunts.

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 
 import { answerQuestion, REFUSAL_LOG_MAX_CHARS, type AskAnswer } from "@/lib/routing/ask";
 import type { CoverageSummary } from "@/lib/registry/coverage";
@@ -34,6 +34,9 @@ export function AskBox({
 }) {
   const [text, setText] = useState("");
   const [asked, setAsked] = useState<AskAnswer | null>(null);
+  // Two instances mount at once (the who-governs card and the sidebar
+  // rail) — the label/input pairing must not share a DOM id.
+  const inputId = useId();
 
   const ask = () => {
     const question = text.trim();
@@ -59,14 +62,15 @@ export function AskBox({
   return (
     <div className="mt-3 rounded border border-dashed border-[var(--panel-border)] p-2.5">
       <label
-        htmlFor="ask-box-input"
+        htmlFor={inputId}
         className="font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted"
       >
         Who do I talk to about…?
       </label>
       <div className="mt-1.5 flex gap-1.5">
         <input
-          id="ask-box-input"
+          id={inputId}
+          data-ask-box
           type="text"
           value={text}
           onChange={(e) => setText(e.target.value)}

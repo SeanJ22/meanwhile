@@ -1799,12 +1799,20 @@ replaced.
 
 ## 7. Current state of the branch
 
-**Working on `claude/restore-representation-session-0814`** (2026-08-14),
+**Working on `claude/fec-cache-and-question-box-0819`** (2026-08-19),
+branched from `main` at the PR #26 merge — the session §17 records: the
+FEC replication fix (D40, the gate), self-funding labels + the photo rule
+(D41/D42/D43), the 3-series copy/UI batch (M38–M45), incumbent record
+links (B10), and the ask box v1 (A09). **test 391 pass · lint clean (1
+pre-existing warning) · build exit 0**, the four-zip walk19 green with
+zero console errors. The paragraphs below describe earlier sessions'
+branches and are kept as the historical record they were.
+
+**Previously: `claude/restore-representation-session-0814`** (2026-08-14),
 branched from `main` at the PR #20 merge — the session §11 records:
 regression fix (M23), D28/D29 curated overlay, S2 ballot, M24/M25 defect
 fixes, this document set. **test 250 pass · lint clean · tsc clean · build
-exit 0.** The paragraphs below describe earlier sessions' branches and are
-kept as the historical record they were.
+exit 0.**
 
 **Previously: `claude/composite-source-and-reprioritization`** (2026-08-13),
 branched from `main` at the PR #18 merge. This is the session that retired the
@@ -3506,3 +3514,131 @@ restart after data regeneration; production builds fresh.
   pictorial repo updates; the 21 unmatched NH members; minutes curation
   as minutes publish; T08 before any public reachability; the author
   steps in "Before you send the link" (the ship report).
+
+---
+
+## 17. The 2026-08-19 session — the replication bug was a cache key, and the product takes questions
+
+Branch `claude/fec-cache-and-question-box-0819`, run unattended under the
+standing motion. Wall clock for the session: 2026-08-14 (the label/clock
+split of §16 holds). **test 391 pass · lint clean (one pre-existing
+warning) · build exit 0** on every commit, verified by exit code; the
+four-zip walk19 all green at 390×844, zero console errors. This session
+answered the author's production screenshots — the first tester-visible
+defect list.
+
+### 1 — The FEC replication bug (D40): diagnosed before fixed, and it was not the join
+
+Production rendered Mark Kelly's exact funding data ($41M/$21M/$24M, 65%
+small donors, his contributor rows) on Ruben Gallego's and Adelita
+Grijalva's official modals. Every layer the brief suspected measured
+CLEAN: the snapshot held three distinct correct records with correct
+targetKeys, the roster held distinct ids, the display builder and the
+officials lookup keyed correctly. The actual line: the old
+`/api/funding?target=` route marked its response `cache-control: public,
+max-age=3600` — and the CDN's cache key for function responses dropped
+the query string (the documented opennextjs-netlify class; their PR
+#2701 fixed the same shape for data requests). First official opened
+after a deploy was cached for the bare path and served to every
+subsequent official for an hour. Ballot cards were server-rendered
+per-path — which is exactly why Butierez showed his own data and the
+brief could tell "the officials join collapsed."
+
+The fix removes the class, not the instance: the target now rides in the
+PATH (`/api/funding/[target]`), which every cache implementation keys
+on; `FundingBlock` and `RecentVotes` are keyed on `holder.id` so a
+holder switch discards fetched state structurally. **The uniqueness
+invariant is now CLAUDE.md law** (sibling of the count check): a join
+producing identical payloads across distinct keys is presumed broken — a
+match rate reads 100% while every match points at one row. Guarded three
+ways in `tests/funding.test.ts` (D40 family): no two candidates share an
+FEC id, committee id, or target key; distinct officials resolve to
+pairwise-distinct payloads; no query-keyed API route may mark itself
+publicly cacheable (votes/meetings/agenda audited: query-keyed but
+uncached, safe). The enrichment audit found 0 values bound to >1 key
+anywhere (roster contacts ×537, photos ×8, campaign sites ×12).
+
+Gate evidence: walk19 opens all three modals the reader's way — three
+DISTINCT books, each matching the FEC's own API to the dollar (Gallego
+$4,345,411; Grijalva $2,285,639), screenshots
+`walk19-85701-gate-{kelly,gallego,grijalva}.png`. Production could not
+be probed directly (the site password returns 401 to plain clients —
+recorded); the mechanism is verified end-to-end locally and the fix is
+cache-implementation-independent.
+
+### 2 — Self-funding labeled from the FEC's own fields (D41), the photo rule (D42), the watch item (D43)
+
+Contributor rows now carry `entity_type` and `line_number` verbatim;
+`plainContributorLabel` (in `lib/funding/labels.ts` — client-safe, NOT
+display.ts, which sits on the node:fs snapshot graph and broke the
+browser build on first placement) derives labels mechanically: CAN/13A →
+"the candidate's own money" (Butierez's rows, pinned in tests), PAC/PTY/
+ORG/COM/CCM → accurate plain labels, IND → none. Snapshot regenerated
+twice — the first run left Kelly 5 contributor rows after an FEC 504 and
+was NOT shipped short; the rerun recovered all 10 (213 rows, 24
+candidates, matching the prior session).
+
+The photo rule tightened: a clean solo portrait or honest initials —
+never a screengrab, banner, logo crop, or group shot. All 17 candidate
+cards + 8 roster officials eyeballed as fetched: 8 card photos + 8 GPO
+portraits pass; SIX fell to initials with rung-by-rung hunts recorded
+(Ayotte: WinRed banner, family/crowd shots on re-extract, official
+portrait unknown-license per D20; Hobbs: a white-on-transparent WORDMARK
+— the author's card; Murphy: file renders blank as fetched; Brown:
+two-person candid; Sununu: couple photo, then a banner whose crop is
+banned; Harned: canoe selfie). `docs/photo-report.md` lists every
+shipped photo with source URL for human verification, sync-guarded in
+tests plus a mechanical banner/logo filename check. D43: contributor
+individual names render AS FILED — the author's explicit no-change
+order, its own tracker row so nobody fixes it in passing.
+
+### 3 — The author's copy batch (M38–M45), words verbatim
+
+3a party colors at all four render sites (display only; unmapped parties
+honest gray; both themes, contrast-tuned). 3b plain-language summaries
+bold on all four summary surfaces. 3c the moving-here teaser verbatim;
+marijuana stays in the section. 3d "What do you think?" 3e the picks
+disclosure ONCE at the ballot page bottom with the reactions distinction
+(tests re-pinned; not a consent surface — picks are never collected).
+3f official analysis collapses by default, verbatim once open, all three
+states through one path. 3g the districts card and door share ONE
+denominator — `drawnDistrictsOn()` feeds both; the guard asserts stated
+N === rendered rows. 3h pans never pop the who-governs card:
+`noticeShouldExpand()` is pure and tested; settle refreshes data
+silently; explicit gestures still expand. 3i the calendar-links truth:
+SHIPPED 08-17 on the compact meeting card only — the sidebar list and
+entity modal never got it, which is why the author found it nowhere; it
+now rides all three surfaces.
+
+### 4 — Incumbent record links (B10) and the ask box (A09)
+
+"See their voting record" on every incumbent's ballot card opens the
+same large official surface the map uses — incumbency from the exact-key
+pairing the FEC snapshot already earned (roster id + ballot keys on one
+candidate), never a name match; absent or ambiguous joins render no
+link. Live: Booker, Ciscomani, Goodlander, Grijalva, Mejia — every
+federal incumbent standing in a covered contest.
+
+The ask box — the author's third ask — shipped as v1: routing WITHOUT
+generation. Keyword matching (deterministic, tie-or-zero refuses) into
+the A08 routing map; answers name real bodies and sourced people with
+the denominator stated; both golden cases pass LIVE at 85701 through the
+exact function the surface calls. QUESTION_ASKED joins the
+identifier-free search log: routed asks log the topic id ONLY; refusals
+log the question capped at 200 chars — unanswered questions are the
+roadmap. Drizzle confirmed no SQL change. The transparency page covers
+the box, the no-AI fact, and the cap in the same commit, coupling
+guard-tested.
+
+### State as of 2026-08-19
+
+- **391 tests, lint clean (one pre-existing warning), build exit 0** —
+  verified by exit code; walk19 green at all four zips, zero console
+  errors.
+- The D40 gate PASSED with screenshots against FEC-verified figures.
+- Next free tracker ids: A10, B11, D44, M46, P11, R13, T09, V07, X04.
+- Open next: D35 (positions machinery, the largest deferred item); state
+  incumbent record links when state roll-calls land (B10 is federal by
+  construction); the 45 backlog special districts; the ask box keyword
+  map growing from refusal logs; T08 before any public reachability; the
+  author steps in "Before you send the link."

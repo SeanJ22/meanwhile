@@ -6,6 +6,8 @@ import { blurbForTitle } from "@/lib/officials/office-blurbs";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { Tier } from "@/lib/ocd/tiers";
 import type { RollCallVote, VotePosition } from "@/lib/votes/types";
+import type { ReactionViewContext } from "@/lib/reactions/client";
+import { ReactionControl } from "@/components/reactions/reaction-control";
 
 import { PopupCard, PopupRow, PopupSectionLabel } from "./popup-card";
 
@@ -25,6 +27,8 @@ interface OfficialPopupProps {
   /** The seat's label — "AZ-6", "State House District 19". */
   seatLabel: string | null;
   tier: Tier;
+  /** Where the reader is looking — rides on reactions, orientation only. */
+  reactionContext?: ReactionViewContext | null;
   onClose?: () => void;
 }
 
@@ -55,7 +59,13 @@ type MemberRollCall = RollCallVote & { position: VotePosition };
 /** How many recent votes the popup shows before pointing at the record. */
 const VOTE_LIMIT = 5;
 
-function RecentVotes({ holder }: { holder: SeatHolder }) {
+function RecentVotes({
+  holder,
+  reactionContext,
+}: {
+  holder: SeatHolder;
+  reactionContext: ReactionViewContext | null;
+}) {
   const [votes, setVotes] = useState<MemberRollCall[] | null>(null);
   const [failed, setFailed] = useState(false);
 
@@ -140,6 +150,13 @@ function RecentVotes({ holder }: { holder: SeatHolder }) {
                   </>
                 )}
               </p>
+              {/* The sensor (P03): asked after the record, never before it. */}
+              <ReactionControl
+                targetType="FEDERAL_VOTE"
+                targetId={vote.id}
+                prompt="Do you like this vote?"
+                context={reactionContext}
+              />
             </div>
           ))}
           <p className="mt-2 text-[0.5625rem] leading-relaxed text-muted">
@@ -157,6 +174,7 @@ export function OfficialPopup({
   holder,
   seatLabel,
   tier,
+  reactionContext = null,
   onClose,
 }: OfficialPopupProps) {
   const blurb = blurbForTitle(holder.officeTitle);
@@ -282,7 +300,7 @@ export function OfficialPopup({
           </p>
         )}
 
-      <RecentVotes holder={holder} />
+      <RecentVotes holder={holder} reactionContext={reactionContext} />
 
       {blurb && (
         <>

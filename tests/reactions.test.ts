@@ -1,0 +1,238 @@
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { test } from "node:test";
+
+import { aggregateReactions } from "../lib/signal/aggregate.ts";
+import { SlidingWindowLimiter } from "../lib/signal/rate-limit.ts";
+import {
+  VERIFICATION_TIERS,
+  isPlausibleTargetId,
+  isValidReactionKey,
+  isValidReactionValue,
+  isValidTargetType,
+} from "../lib/signal/reactions.ts";
+import { hashReactionKey, writeReaction } from "../lib/db/reactions.ts";
+import { getVoteIds } from "../lib/votes/snapshot.ts";
+
+/**
+ * Reaction capture (P03) — the first user-writable surface, tested at the
+ * layers that must be launch-grade from day one even while collection is
+ * demo-grade: the aggregation contract, the identity-free write path, the
+ * fail-closed validation, and the disclosure coupling.
+ */
+
+// ── The aggregation contract — the function the data business sells ──────
+
+test("aggregation: reactions in, per-division tier-split tallies out, n stated", () => {
+  const rows = [
+    // Two readers (distinct browsers) in overlapping divisions.
+    {
+      targetType: "FEDERAL_VOTE" as const,
+      targetId: "house:119-2:283",
+      reaction: "YES" as const,
+      ocdIds: ["ocd-division/country:us/state:az", "ocd-division/country:us/state:az/cd:7"],
+      verificationTier: "ANONYMOUS" as const,
+    },
+    {
+      targetType: "FEDERAL_VOTE" as const,
+      targetId: "house:119-2:283",
+      reaction: "NO" as const,
+      ocdIds: ["ocd-division/country:us/state:az/cd:7"],
+      verificationTier: "ANONYMOUS" as const,
+    },
+    {
+      targetType: "FEDERAL_VOTE" as const,
+      targetId: "house:119-2:283",
+      reaction: "UNSURE" as const,
+      ocdIds: ["ocd-division/country:us/state:az/cd:7"],
+      verificationTier: "LOCALITY_VERIFIED" as const,
+    },
+  ];
+
+  const tallies = aggregateReactions(rows);
+  const cd7 = tallies.find((t) => t.ocdId.endsWith("cd:7"));
+  const az = tallies.find((t) => t.ocdId.endsWith("state:az"));
+
+  assert.ok(cd7, "cd:7 tally missing");
+  assert.ok(az, "state tally missing");
+
+  // The denominators are stated and correct at both levels.
+  assert.equal(cd7.n, 3);
+  assert.equal(az.n, 1);
+  assert.equal(cd7.tiers.ANONYMOUS.YES, 1);
+  assert.equal(cd7.tiers.ANONYMOUS.NO, 1);
+  assert.equal(cd7.tiers.ANONYMOUS.n, 2);
+  assert.equal(cd7.tiers.LOCALITY_VERIFIED.UNSURE, 1);
+  assert.equal(cd7.tiers.LOCALITY_VERIFIED.n, 1);
+});
+
+test("aggregation: every tier appears in every tally — the confidence mix is visible, never blended", () => {
+  const tallies = aggregateReactions([
+    {
+      targetType: "FEDERAL_VOTE",
+      targetId: "senate:119-2:231",
+      reaction: "YES",
+      ocdIds: ["ocd-division/country:us/state:nh"],
+      verificationTier: "ANONYMOUS",
+    },
+  ]);
+  assert.equal(tallies.length, 1);
+  for (const tier of VERIFICATION_TIERS) {
+    const t = tallies[0].tiers[tier];
+    assert.ok(t, `tier ${tier} missing from the tally`);
+    assert.equal(t.n, t.YES + t.NO + t.UNSURE, `tier ${tier}: n is not the sum`);
+  }
+  // A tier with no rows says 0 — it does not disappear.
+  assert.equal(tallies[0].tiers.VOTER_MATCHED.n, 0);
+});
+
+test("aggregation: duplicate division ids on one row never double-count", () => {
+  const tallies = aggregateReactions([
+    {
+      targetType: "FEDERAL_VOTE",
+      targetId: "house:119-2:283",
+      reaction: "YES",
+      ocdIds: ["ocd-division/country:us/state:az", "ocd-division/country:us/state:az"],
+      verificationTier: "ANONYMOUS",
+    },
+  ]);
+  assert.equal(tallies.length, 1);
+  assert.equal(tallies[0].n, 1);
+});
+
+test("aggregation output carries no ranking vocabulary and no identifier", () => {
+  const tallies = aggregateReactions([
+    {
+      targetType: "FEDERAL_VOTE",
+      targetId: "house:119-2:283",
+      reaction: "YES",
+      ocdIds: ["ocd-division/country:us/state:az"],
+      verificationTier: "ANONYMOUS",
+    },
+  ]);
+  const forbidden = /score|rank|rating|match|fit|grade|alignment|recommend|key|hash|user|device/;
+  const walk = (value: unknown, path: string): void => {
+    if (typeof value !== "object" || value === null) return;
+    for (const [k, v] of Object.entries(value)) {
+      // Tier names are enum values used as record keys — VOTER_MATCHED's
+      // "match" names a future verification method, not a fit score.
+      if (!(VERIFICATION_TIERS as string[]).includes(k)) {
+        assert.ok(
+          !forbidden.test(k.toLowerCase()),
+          `aggregate key "${path}.${k}" matches forbidden vocabulary`,
+        );
+      }
+      walk(v, `${path}.${k}`);
+    }
+  };
+  walk(tallies, "$");
+});
+
+// ── Validation fails closed ──────────────────────────────────────────────
+
+test("validation: enums are closed sets, keys are shaped, targets are capped", () => {
+  assert.ok(isValidTargetType("FEDERAL_VOTE"));
+  assert.ok(!isValidTargetType("CANDIDATE"));
+  assert.ok(!isValidTargetType(""));
+
+  assert.ok(isValidReactionValue("UNSURE"));
+  assert.ok(!isValidReactionValue("MAYBE"));
+
+  assert.ok(isValidReactionKey("a".repeat(32)));
+  assert.ok(!isValidReactionKey("short"));
+  assert.ok(!isValidReactionKey("a".repeat(65)));
+  assert.ok(!isValidReactionKey("has spaces here!".padEnd(20, "x")));
+  assert.ok(!isValidReactionKey(42));
+
+  assert.ok(isPlausibleTargetId("house:119-2:283"));
+  assert.ok(!isPlausibleTargetId(""));
+  assert.ok(!isPlausibleTargetId("x".repeat(65)));
+});
+
+test("reaction targets are validated against the committed votes snapshot", () => {
+  const ids = getVoteIds();
+  // The denominator: the snapshot window is 20 rolls per chamber.
+  assert.ok(ids.size >= 20, `expected a real snapshot, found ${ids.size} vote ids`);
+  for (const id of ids) {
+    assert.match(id, /^(house|senate):\d+-\d+:\d+$/);
+  }
+  assert.ok(!ids.has("house:0-0:99999"), "an invented roll must not validate");
+});
+
+// ── The write path stays identity-free and honest without a database ─────
+
+test("the continuity key is stored only as a hash", () => {
+  const raw = "0123456789abcdef0123456789abcdef";
+  const hash = hashReactionKey(raw);
+  assert.match(hash, /^[0-9a-f]{64}$/);
+  assert.notEqual(hash, raw);
+  assert.equal(hash, hashReactionKey(raw), "hashing must be deterministic for upsert continuity");
+});
+
+test("a missing database is a quiet false, never a throw or a fake success", async () => {
+  const saved = process.env.DATABASE_URL;
+  delete process.env.DATABASE_URL;
+  try {
+    const stored = await writeReaction({
+      targetType: "FEDERAL_VOTE",
+      targetId: "house:119-2:283",
+      reaction: "YES",
+      reactionKey: "0123456789abcdef0123456789abcdef",
+      ocdIds: [],
+    });
+    assert.equal(stored, false);
+  } finally {
+    if (saved !== undefined) process.env.DATABASE_URL = saved;
+  }
+});
+
+// ── Rate limiting (demo-grade by decision; the mechanism still proves out) ─
+
+test("rate limiter: a burst beyond the limit is rejected, and the window recovers", () => {
+  const limiter = new SlidingWindowLimiter(5, 60_000);
+  const t0 = 1_000_000;
+  for (let i = 0; i < 5; i++) {
+    assert.ok(limiter.allow("k", t0 + i), `tap ${i + 1} of 5 should pass`);
+  }
+  assert.ok(!limiter.allow("k", t0 + 10), "the burst's 6th tap must be rejected");
+  // Another key is unaffected — per-key isolation.
+  assert.ok(limiter.allow("other", t0 + 10));
+  // After the window slides, the key recovers.
+  assert.ok(limiter.allow("k", t0 + 60_001 + 1));
+});
+
+// ── The disclosure coupling — the 5a⇔5b rule extended to reactions ───────
+
+test("the capture point and the transparency page disclose together", () => {
+  // The control itself: the aggregated-and-sold sentence is adjacent to the
+  // input, visible, not behind a link (CLAUDE.md, disclosure at the point of
+  // capture) — and the author's approved sentence survives verbatim in part.
+  const control = readFileSync(
+    join(process.cwd(), "components", "reactions", "reaction-control.tsx"),
+    "utf8",
+  );
+  assert.ok(
+    control.includes("anonymous local totals") && control.includes("sell"),
+    "the reaction control must state aggregation and sale at the capture point",
+  );
+  assert.ok(
+    control.includes("never know"),
+    "the control must state we never know who the reader is",
+  );
+
+  // The transparency page: reactions, the hashed continuity key, and the
+  // tier split are all disclosed in the same terms the schema enforces.
+  const page = readFileSync(
+    join(process.cwd(), "app", "transparency", "page.tsx"),
+    "utf8",
+  ).toLowerCase();
+  for (const claim of ["reaction", "hashed", "verification tier", "sold"]) {
+    assert.ok(page.includes(claim), `the transparency page never mentions "${claim}"`);
+  }
+  // 1d: the OFFICIAL_OPENED event ships with its disclosure line.
+  assert.ok(
+    page.includes("official"),
+    "the transparency page must disclose that opening an official's card is logged",
+  );
+});

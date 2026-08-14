@@ -278,11 +278,14 @@ function MapEntryInner() {
       holder: SeatHolder,
       seatLabel: string | null,
       tier: "local" | "state" | "national",
+      ocdId: string | null,
     ) => {
-      // Deliberately not logged: adding an event type to the search log
-      // extends what the transparency page discloses, which is the author's
-      // call, not this session's (noted in the tracker).
       setOfficialPopup({ holder, seatLabel, tier });
+      // Author-approved (1d), disclosed on /transparency in the same change.
+      // The holder id names the official opened, never the reader.
+      logEvent("OFFICIAL_OPENED", ocdId ? [ocdId] : [], {
+        officialId: holder.id,
+      });
     },
     [],
   );
@@ -761,6 +764,20 @@ function MapEntryInner() {
               holder={officialPopup.holder}
               seatLabel={officialPopup.seatLabel}
               tier={officialPopup.tier}
+              // Where the reader is looking, for reaction rows — the typed
+              // zip or the settled view, the search log's own basis (1b).
+              reactionContext={
+                view
+                  ? {
+                      zip:
+                        current && /^\d{5}$/.test(current.zip)
+                          ? current.zip
+                          : (view.zip ?? null),
+                      lat: view.lat,
+                      lng: view.lng,
+                    }
+                  : null
+              }
               onClose={() => setOfficialPopup(null)}
             />
           )}
@@ -769,7 +786,12 @@ function MapEntryInner() {
             <DistrictPopup
               district={districtPopup}
               onOpenOfficial={(holder) =>
-                openOfficial(holder, districtPopup.label, districtPopup.tier)
+                openOfficial(
+                  holder,
+                  districtPopup.label,
+                  districtPopup.tier,
+                  districtPopup.ocdId,
+                )
               }
               representation={holdersFor(districtPopup.ocdId)}
               upcomingMeetings={

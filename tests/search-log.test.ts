@@ -77,6 +77,7 @@ test("detail bags that could name a person are rejected, not laundered", () => {
 test("event types are a closed set", () => {
   assert.ok(isValidEventType("SEARCH"));
   assert.ok(isValidEventType("MEETING_OPENED"));
+  assert.ok(isValidEventType("OFFICIAL_OPENED"));
   assert.ok(!isValidEventType("PAGE_VIEW"));
   assert.ok(!isValidEventType(""));
   assert.ok(!isValidEventType(undefined));

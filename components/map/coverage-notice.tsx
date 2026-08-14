@@ -52,11 +52,16 @@ interface CoverageNoticeProps {
 /** How many bodies to name before collapsing the rest into a count. */
 const NAME_LIMIT = 5;
 
-/** Opens the rep popup (3c). Seat label and tier ride along for the card. */
+/**
+ * Opens the rep popup (3c). Seat label and tier ride along for the card;
+ * the seat's division id rides along for the OFFICIAL_OPENED log event
+ * (null where the holder has no single seat division, e.g. senators).
+ */
 export type OpenOfficial = (
   holder: SeatHolder,
   seatLabel: string | null,
   tier: "local" | "state" | "national",
+  ocdId: string | null,
 ) => void;
 
 const DIVISION_NOUN: Record<CoveredBody["divisionType"], string> = {
@@ -144,11 +149,13 @@ function Holder({
 function HolderList({
   holders,
   seatLabel,
+  seatOcdId,
   tier,
   onOpenOfficial,
 }: {
   holders: SeatHolder[];
   seatLabel: string | null;
+  seatOcdId: string | null;
   tier: "local" | "state" | "national";
   onOpenOfficial?: OpenOfficial;
 }) {
@@ -161,7 +168,7 @@ function HolderList({
             holder={holder}
             onOpen={
               onOpenOfficial
-                ? () => onOpenOfficial(holder, seatLabel, tier)
+                ? () => onOpenOfficial(holder, seatLabel, tier, seatOcdId)
                 : undefined
             }
           />
@@ -446,6 +453,7 @@ function CoverageBody({
                       <HolderList
                         holders={seat.representatives}
                         seatLabel={seat.label}
+                        seatOcdId={seat.ocdId}
                         tier={seat.tier}
                         onOpenOfficial={onOpenOfficial}
                       />
@@ -470,6 +478,7 @@ function CoverageBody({
           <HolderList
             holders={senators}
             seatLabel={null}
+            seatOcdId={null}
             tier="national"
             onOpenOfficial={onOpenOfficial}
           />

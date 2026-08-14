@@ -38,9 +38,10 @@ export function MyPicks() {
           </li>
         ))}
       </ul>
+      {/* 3e: the full disclosure lives once at the page bottom; the header
+          above already labels this box device-only. */}
       <p className="mt-2 text-[0.625rem] leading-relaxed text-muted">
-        Saved on this device only — never sent anywhere. Clearing your
-        browser&apos;s storage clears this list.
+        Clearing your browser&apos;s storage clears this list.
       </p>
     </section>
   );

@@ -14,6 +14,8 @@ import { commentAccessFor } from "@/lib/registry/comment-access";
 import { venueLink } from "@/lib/registry/links";
 import type { Meeting } from "@/lib/sources/types";
 
+import { CalendarLinks } from "./popup/calendar-links";
+
 /**
  * What sits behind a pin.
  *
@@ -191,6 +193,15 @@ function MeetingEntry({
           </p>
         )}
       </div>
+
+      {/* 3i (2026-08-19): the calendar links ride on EVERY upcoming-meeting
+          surface — they shipped 08-17 on the compact card alone, and a
+          reader working from this list never saw them. */}
+      {meeting.status === "SCHEDULED" && (
+        <div className="pl-4">
+          <CalendarLinks meeting={meeting} />
+        </div>
+      )}
 
       {/* 6a: nothing left to be heard at once the meeting has concluded. */}
       {meeting.status !== "CONCLUDED" && (

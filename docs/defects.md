@@ -76,3 +76,25 @@ brief rather than entries here. Triaged and built on branch
 - Canvass lineup → **D33** updated.
 - 5d (sidebar counts as doors) — the brief's sanctioned first cut, taken;
   open as future work, no row yet.
+
+## 2026-08-19 — the session brief (author's production screenshots arrived as the brief)
+
+The author's production pass was delivered as the session brief; the brief
+is committed at `docs/session-brief.md` for the record. Row pointers:
+
+- FEC replication (Kelly's books on Gallego and Grijalva) → **D40** (Done:
+  the cache key, not the join — the query-keyed funding route was publicly
+  cacheable and the CDN dropped the query string; target moved into the
+  path, uniqueness invariant into CLAUDE.md and tests, gate screenshots
+  against FEC-verified figures).
+- Butierez as his own donor mislabeled → **D41** (Done: entity typing
+  captured, "the candidate's own money" derived mechanically).
+- Hobbs's banner photo → **D42** (Done: rule tightened, 6 photos dropped
+  to initials with recorded hunts, docs/photo-report.md).
+- Contributor names as filed → **D43** (deliberate no-change, the
+  author's order, recorded so nobody fixes it).
+- 3a–3i copy/UI batch → **M38–M45** (all Done; 3i's honest finding: the
+  calendar links had shipped on one surface only).
+- Incumbent record links → **B10** (Done, federal by construction).
+- The question box → **A09** (Done: v1 routing without generation, both
+  goldens live at 85701; A08 updated).

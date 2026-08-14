@@ -2,7 +2,10 @@
 // is pure and belongs under `node --test`, which cannot resolve the alias. The
 // rest of lib/ is already written this way.
 import { haversineKm } from "../geo/distance.ts";
+import type { DrawnDistrict } from "../map/districts.ts";
 import { tierForOcdId, type Tier } from "../ocd/tiers.ts";
+import type { SeatHolder } from "../officials/lookup.ts";
+import type { Seat } from "../registry/coverage.ts";
 import type { Meeting } from "../sources/types.ts";
 
 import { ALL_DISTRICT_TYPES } from "./reducer.ts";
@@ -215,6 +218,57 @@ export function computeStats(
 /** District types currently switched on, for the overlay registry. */
 export function activeDistrictTypes(ui: UiState) {
   return ALL_DISTRICT_TYPES.filter((t) => ui.filters.districtTypes.includes(t));
+}
+
+/**
+ * The popup trigger rule (3h, 2026-08-19), pure so the test can hold it:
+ * the who-governs card re-expands ONLY for a typed-zip view of a new area —
+ * initial launch and a zip change from the sidebar are both typed-zip
+ * views. A settled viewport (free scrolling) NEVER re-expands it, even
+ * when the pan crosses into a different ZCTA — the settle still refreshes
+ * the data under the bubble, silently. Explicit reader gestures (a click
+ * into a new district, a bubble tap) expand it elsewhere — a gesture is
+ * the reader asking; a pan is not.
+ */
+export function noticeShouldExpand(
+  viewKind: "zip" | "settled",
+  areaZip: string,
+  lastShownZip: string | null,
+): boolean {
+  return viewKind === "zip" && areaZip !== lastShownZip;
+}
+
+/** A districts-door row: one drawn district, holders attached where a seat
+ *  matches by ocdId. */
+export interface DistrictDoorRow {
+  ocdId: string;
+  label: string;
+  typeLabel: string;
+  tier: Tier;
+  holders: SeatHolder[];
+}
+
+/**
+ * The districts door's rows (3g, 2026-08-19): EXACTLY one row per drawn
+ * district — the same list whose length the stat card states, so the
+ * stated N and the rendered rows cannot diverge (the guard test in
+ * tests/representation.test.ts holds `rows.length === drawn.length` and
+ * the card derivation against the same input). Holders join by ocdId from
+ * the coverage seats; a drawn district without a seat row renders with an
+ * empty holder list, never disappears.
+ */
+export function districtDoorRows(
+  drawn: readonly DrawnDistrict[],
+  seats: readonly Seat[],
+): DistrictDoorRow[] {
+  const byOcdId = new Map(seats.map((s) => [s.ocdId, s]));
+  return drawn.map((d) => ({
+    ocdId: d.ocdId,
+    label: d.label,
+    typeLabel: d.typeLabel,
+    tier: d.tier,
+    holders: byOcdId.get(d.ocdId)?.representatives ?? [],
+  }));
 }
 
 export interface StatsView {

@@ -161,7 +161,10 @@ export function AgendaSection({ meetingId, agendaUrl }: AgendaSectionProps) {
           <p className="font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
             Plain-language summary — read the official text below
           </p>
-          <p className="mt-1.5 text-[0.75rem] leading-relaxed">{summary.summary}</p>
+          {/* 3b: the product's voice renders BOLD. */}
+          <p className="mt-1.5 text-[0.75rem] font-semibold leading-relaxed">
+            {summary.summary}
+          </p>
         </div>
       )}
       {hasPublicHearing(latest.text) && (

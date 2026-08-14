@@ -1,6 +1,6 @@
 {
  "formatVersion": 1,
- "fetchedAt": "2026-08-14T14:09:08.248Z",
+ "fetchedAt": "2026-08-14T16:39:26.929Z",
  "cycle": 2026,
  "matchReport": {
   "rosterMatched": 10,
@@ -41,7 +41,9 @@
      "amount": 3500,
      "receiptDate": "2025-02-21",
      "city": "BETHESDA",
-     "state": "MD"
+     "state": "MD",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -50,7 +52,9 @@
      "amount": 3500,
      "receiptDate": "2025-03-03",
      "city": "FORT LAUDERDALE",
-     "state": "FL"
+     "state": "FL",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -59,7 +63,9 @@
      "amount": 3500,
      "receiptDate": "2025-02-21",
      "city": "LANTANA",
-     "state": "FL"
+     "state": "FL",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -68,7 +74,9 @@
      "amount": 3300,
      "receiptDate": "2025-01-07",
      "city": "NEW YORK",
-     "state": "NY"
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -77,7 +85,9 @@
      "amount": 3300,
      "receiptDate": "2025-01-07",
      "city": "NEW YORK",
-     "state": "NY"
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -86,7 +96,9 @@
      "amount": 5000,
      "receiptDate": "2026-03-12",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "14"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -95,7 +107,9 @@
      "amount": 5000,
      "receiptDate": "2025-03-05",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "11C"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -104,7 +118,9 @@
      "amount": 5000,
      "receiptDate": "2025-01-23",
      "city": "NEW YORK",
-     "state": "NY"
+     "state": "NY",
+     "entityType": "PAC",
+     "lineNumber": "11C"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -113,7 +129,9 @@
      "amount": 5000,
      "receiptDate": "2025-03-03",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "11C"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -122,7 +140,9 @@
      "amount": 3500,
      "receiptDate": "2025-02-24",
      "city": "CAMBRIDGE",
-     "state": "MA"
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI"
     }
    ],
    "provenance": {
@@ -166,7 +186,9 @@
      "amount": 7000,
      "receiptDate": "2026-02-04",
      "city": "VERONA",
-     "state": "NJ"
+     "state": "NJ",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -175,7 +197,9 @@
      "amount": 6400,
      "receiptDate": "2025-02-24",
      "city": "LOS ANGELES",
-     "state": "CA"
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -184,7 +208,9 @@
      "amount": 6400,
      "receiptDate": "2025-02-24",
      "city": "LOS ANGELES",
-     "state": "CA"
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -193,7 +219,9 @@
      "amount": 5600,
      "receiptDate": "2026-02-03",
      "city": "MONTCLAIR",
-     "state": "NJ"
+     "state": "NJ",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -202,7 +230,9 @@
      "amount": 5600,
      "receiptDate": "2025-04-15",
      "city": "MINNEAPOLIS",
-     "state": "MN"
+     "state": "MN",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -211,7 +241,9 @@
      "amount": 1105000,
      "receiptDate": "2025-06-02",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "COM",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -220,7 +252,9 @@
      "amount": 565000,
      "receiptDate": "2025-03-31",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "COM",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -229,7 +263,9 @@
      "amount": 435000,
      "receiptDate": "2025-06-30",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "COM",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -238,7 +274,9 @@
      "amount": 400000,
      "receiptDate": "2025-08-18",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "COM",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -247,7 +285,9 @@
      "amount": 380000,
      "receiptDate": "2026-06-30",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "COM",
+     "lineNumber": "12"
     }
    ],
    "provenance": {
@@ -289,7 +329,9 @@
      "amount": 5000,
      "receiptDate": "2024-10-03",
      "city": "TAHLEQUAH",
-     "state": "OK"
+     "state": "OK",
+     "entityType": "ORG",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -298,7 +340,9 @@
      "amount": 3500,
      "receiptDate": "2025-09-04",
      "city": "NEW YORK",
-     "state": "NY"
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -307,7 +351,9 @@
      "amount": 3500,
      "receiptDate": "2025-08-25",
      "city": "BOSTON",
-     "state": "MA"
+     "state": "MA",
+     "entityType": "IND",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -316,7 +362,9 @@
      "amount": 3500,
      "receiptDate": "2025-09-18",
      "city": "EVANSTON",
-     "state": "IL"
+     "state": "IL",
+     "entityType": "IND",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -325,7 +373,9 @@
      "amount": 3500,
      "receiptDate": "2025-09-24",
      "city": "NEW YORK",
-     "state": "NY"
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -334,7 +384,9 @@
      "amount": 108000,
      "receiptDate": "2025-12-17",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -343,7 +395,9 @@
      "amount": 104500,
      "receiptDate": "2025-09-29",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -352,7 +406,9 @@
      "amount": 36865,
      "receiptDate": "2025-01-24",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -361,7 +417,9 @@
      "amount": 24750,
      "receiptDate": "2026-03-13",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -370,7 +428,9 @@
      "amount": 22694.55,
      "receiptDate": "2025-07-08",
      "city": "BERKELEY",
-     "state": "CA"
+     "state": "CA",
+     "entityType": "ORG",
+     "lineNumber": "15"
     }
    ],
    "provenance": {
@@ -412,7 +472,9 @@
      "amount": 5000,
      "receiptDate": "2025-09-17",
      "city": "VIENNA",
-     "state": "WV"
+     "state": "WV",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -421,7 +483,9 @@
      "amount": 3572,
      "receiptDate": "2025-09-08",
      "city": "EVANSVILLE",
-     "state": "IN"
+     "state": "IN",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -430,7 +494,9 @@
      "amount": 3500,
      "receiptDate": "2025-06-13",
      "city": "SCARSDALE",
-     "state": "NY"
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -439,7 +505,9 @@
      "amount": 3500,
      "receiptDate": "2025-06-13",
      "city": "SCARSDALE",
-     "state": "NY"
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -448,7 +516,9 @@
      "amount": 3500,
      "receiptDate": "2025-04-10",
      "city": "BOSTON",
-     "state": "MA"
+     "state": "MA",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -457,7 +527,9 @@
      "amount": 5404.97,
      "receiptDate": "2025-01-28",
      "city": "OAKLAND",
-     "state": "CA"
+     "state": "CA",
+     "entityType": "ORG",
+     "lineNumber": "15"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -466,7 +538,9 @@
      "amount": 5000,
      "receiptDate": "2025-06-05",
      "city": "CHICAGO",
-     "state": "IL"
+     "state": "IL",
+     "entityType": "PAC",
+     "lineNumber": "11C"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -475,7 +549,9 @@
      "amount": 5000,
      "receiptDate": "2025-05-20",
      "city": "NEW YORK",
-     "state": "NY"
+     "state": "NY",
+     "entityType": "PAC",
+     "lineNumber": "11C"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -484,7 +560,9 @@
      "amount": 5000,
      "receiptDate": "2026-06-26",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "11C"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -493,7 +571,9 @@
      "amount": 5000,
      "receiptDate": "2026-06-04",
      "city": "JACKSONVILLE",
-     "state": "FL"
+     "state": "FL",
+     "entityType": "PAC",
+     "lineNumber": "11C"
     }
    ],
    "provenance": {
@@ -535,7 +615,9 @@
      "amount": 7000,
      "receiptDate": "2025-06-16",
      "city": "SAN FRANCISCO",
-     "state": "CA"
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -544,7 +626,9 @@
      "amount": 7000,
      "receiptDate": "2025-06-29",
      "city": "SAN FRANCISCO",
-     "state": "CA"
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -553,7 +637,9 @@
      "amount": 7000,
      "receiptDate": "2025-05-24",
      "city": "MCLEAN",
-     "state": "VA"
+     "state": "VA",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -562,7 +648,9 @@
      "amount": 7000,
      "receiptDate": "2025-06-30",
      "city": "MCLEAN",
-     "state": "VA"
+     "state": "VA",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -571,7 +659,9 @@
      "amount": 7000,
      "receiptDate": "2025-05-12",
      "city": "NEW YORK",
-     "state": "NY"
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -580,7 +670,9 @@
      "amount": 113200,
      "receiptDate": "2026-06-30",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -589,7 +681,9 @@
      "amount": 33500,
      "receiptDate": "2026-03-31",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -598,7 +692,9 @@
      "amount": 27180.37,
      "receiptDate": "2025-01-31",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "ORG",
+     "lineNumber": "14"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -607,7 +703,9 @@
      "amount": 25184.58,
      "receiptDate": "2025-09-29",
      "city": "MARLTON",
-     "state": "NJ"
+     "state": "NJ",
+     "entityType": "COM",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -616,7 +714,9 @@
      "amount": 7000,
      "receiptDate": "2025-06-29",
      "city": "CAMBRIDGE",
-     "state": "MA"
+     "state": "MA",
+     "entityType": "ORG",
+     "lineNumber": "11AI"
     }
    ],
    "provenance": {
@@ -658,7 +758,9 @@
      "amount": 5500,
      "receiptDate": "2025-07-25",
      "city": "KETCHUM",
-     "state": "ID"
+     "state": "ID",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -667,7 +769,9 @@
      "amount": 5000,
      "receiptDate": "2026-06-24",
      "city": "GALVESTON",
-     "state": "TX"
+     "state": "TX",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -676,7 +780,9 @@
      "amount": 5000,
      "receiptDate": "2026-01-12",
      "city": "NANTUCKET",
-     "state": "MA"
+     "state": "MA",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -685,7 +791,9 @@
      "amount": 5000,
      "receiptDate": "2025-11-24",
      "city": "INDIANAPOLIS",
-     "state": "IN"
+     "state": "IN",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -694,7 +802,9 @@
      "amount": 4800,
      "receiptDate": "2025-08-11",
      "city": "DALLAS",
-     "state": "TX"
+     "state": "TX",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -703,7 +813,9 @@
      "amount": 78161.66,
      "receiptDate": "2026-03-31",
      "city": "PHOENIX",
-     "state": "AZ"
+     "state": "AZ",
+     "entityType": "PAC",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -712,7 +824,9 @@
      "amount": 50000,
      "receiptDate": "2026-03-31",
      "city": "PHOENIX",
-     "state": "AZ"
+     "state": "AZ",
+     "entityType": "PAC",
+     "lineNumber": "15"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -721,7 +835,9 @@
      "amount": 38429.98,
      "receiptDate": "2026-05-29",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "ORG",
+     "lineNumber": "15"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -730,7 +846,9 @@
      "amount": 38238.03,
      "receiptDate": "2026-03-31",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "ORG",
+     "lineNumber": "15"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -739,7 +857,9 @@
      "amount": 37285.06,
      "receiptDate": "2026-06-30",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "ORG",
+     "lineNumber": "15"
     }
    ],
    "provenance": {
@@ -785,7 +905,9 @@
      "amount": 7000,
      "receiptDate": "2025-09-19",
      "city": "DALLAS",
-     "state": "TX"
+     "state": "TX",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -794,7 +916,9 @@
      "amount": 7000,
      "receiptDate": "2025-09-19",
      "city": "DALLAS",
-     "state": "TX"
+     "state": "TX",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -803,7 +927,9 @@
      "amount": 7000,
      "receiptDate": "2025-09-30",
      "city": "PHOENIX",
-     "state": "AZ"
+     "state": "AZ",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -812,7 +938,9 @@
      "amount": 7000,
      "receiptDate": "2025-06-30",
      "city": "SIERRA VISTA",
-     "state": "AZ"
+     "state": "AZ",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -821,7 +949,9 @@
      "amount": 7000,
      "receiptDate": "2025-06-18",
      "city": "PARK CITY",
-     "state": "UT"
+     "state": "UT",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -830,7 +960,9 @@
      "amount": 184000,
      "receiptDate": "2025-03-31",
      "city": "TUCSON",
-     "state": "AZ"
+     "state": "AZ",
+     "entityType": "COM",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -839,7 +971,9 @@
      "amount": 128157.68,
      "receiptDate": "2025-06-25",
      "city": "ALEXANDRIA",
-     "state": "VA"
+     "state": "VA",
+     "entityType": "PAC",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -848,7 +982,9 @@
      "amount": 107607.26,
      "receiptDate": "2026-03-31",
      "city": "ALEXANDRIA",
-     "state": "VA"
+     "state": "VA",
+     "entityType": "PAC",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -857,7 +993,9 @@
      "amount": 104000,
      "receiptDate": "2025-03-31",
      "city": "TUCSON",
-     "state": "AZ"
+     "state": "AZ",
+     "entityType": "COM",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -866,7 +1004,9 @@
      "amount": 88567.55,
      "receiptDate": "2025-03-24",
      "city": "ALEXANDRIA",
-     "state": "VA"
+     "state": "VA",
+     "entityType": "PAC",
+     "lineNumber": "12"
     }
    ],
    "provenance": {
@@ -910,7 +1050,9 @@
      "amount": 7000,
      "receiptDate": "2026-02-26",
      "city": "PALM BEACH",
-     "state": "FL"
+     "state": "FL",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -919,7 +1061,9 @@
      "amount": 3500,
      "receiptDate": "2025-06-30",
      "city": "CAMBRIDGE",
-     "state": "MA"
+     "state": "MA",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -928,7 +1072,9 @@
      "amount": 3500,
      "receiptDate": "2025-04-26",
      "city": "NEWTON",
-     "state": "MA"
+     "state": "MA",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -937,7 +1083,9 @@
      "amount": 3500,
      "receiptDate": "2025-05-09",
      "city": "NEWBURY",
-     "state": "NH"
+     "state": "NH",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -946,7 +1094,9 @@
      "amount": 3500,
      "receiptDate": "2025-06-27",
      "city": "RYE",
-     "state": "NY"
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -955,7 +1105,9 @@
      "amount": 212000,
      "receiptDate": "2026-06-26",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "COM",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -964,7 +1116,9 @@
      "amount": 119500,
      "receiptDate": "2026-03-25",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "COM",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -973,7 +1127,9 @@
      "amount": 114750,
      "receiptDate": "2025-09-29",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "COM",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -982,7 +1138,9 @@
      "amount": 48500,
      "receiptDate": "2026-03-31",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "COM",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -991,7 +1149,9 @@
      "amount": 25000,
      "receiptDate": "2026-03-13",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "COM",
+     "lineNumber": "12"
     }
    ],
    "provenance": {
@@ -1037,7 +1197,9 @@
      "amount": 3500,
      "receiptDate": "2025-07-14",
      "city": "SELLS",
-     "state": "AZ"
+     "state": "AZ",
+     "entityType": "ORG",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1046,7 +1208,9 @@
      "amount": 3500,
      "receiptDate": "2025-08-19",
      "city": "TUCSON",
-     "state": "AZ"
+     "state": "AZ",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1055,7 +1219,9 @@
      "amount": 3500,
      "receiptDate": "2025-07-15",
      "city": "CARMEL",
-     "state": "IN"
+     "state": "IN",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1064,7 +1230,9 @@
      "amount": 3500,
      "receiptDate": "2025-09-02",
      "city": "TUCSON",
-     "state": "AZ"
+     "state": "AZ",
+     "entityType": "ORG",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1073,7 +1241,9 @@
      "amount": 3500,
      "receiptDate": "2025-07-10",
      "city": "MENLO PARK",
-     "state": "CA"
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1082,7 +1252,9 @@
      "amount": 5000,
      "receiptDate": "2025-07-03",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "11C"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1091,7 +1263,9 @@
      "amount": 5000,
      "receiptDate": "2025-07-11",
      "city": "NORWALK",
-     "state": "CA"
+     "state": "CA",
+     "entityType": "PAC",
+     "lineNumber": "11C"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1100,7 +1274,9 @@
      "amount": 5000,
      "receiptDate": "2025-08-14",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "11C"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1109,7 +1285,9 @@
      "amount": 5000,
      "receiptDate": "2025-08-22",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "11C"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1118,7 +1296,9 @@
      "amount": 5000,
      "receiptDate": "2025-08-15",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "11C"
     }
    ],
    "provenance": {
@@ -1162,7 +1342,9 @@
      "amount": 3500,
      "receiptDate": "2026-06-25",
      "city": "SHORT HILLS",
-     "state": "NJ"
+     "state": "NJ",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1171,7 +1353,9 @@
      "amount": 3500,
      "receiptDate": "2026-05-21",
      "city": "CHICAGO",
-     "state": "IL"
+     "state": "IL",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1180,7 +1364,9 @@
      "amount": 3500,
      "receiptDate": "2026-06-03",
      "city": "MIDDLETOWN",
-     "state": "NJ"
+     "state": "NJ",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1189,7 +1375,9 @@
      "amount": 3500,
      "receiptDate": "2026-06-09",
      "city": "SHERMAN OAKS",
-     "state": "CA"
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1198,7 +1386,9 @@
      "amount": 3500,
      "receiptDate": "2026-06-28",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1207,7 +1397,9 @@
      "amount": 7761.25,
      "receiptDate": "2026-06-08",
      "city": "SANTA CLARA",
-     "state": "CA"
+     "state": "CA",
+     "entityType": "CCM",
+     "lineNumber": "15"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1216,7 +1408,9 @@
      "amount": 5000,
      "receiptDate": "2026-06-03",
      "city": "BROOKLYN",
-     "state": "NY"
+     "state": "NY",
+     "entityType": "PAC",
+     "lineNumber": "11C"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1225,7 +1419,9 @@
      "amount": 5000,
      "receiptDate": "2026-06-01",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "11C"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1234,7 +1430,9 @@
      "amount": 5000,
      "receiptDate": "2026-06-15",
      "city": "NEW YORK",
-     "state": "NY"
+     "state": "NY",
+     "entityType": "PAC",
+     "lineNumber": "11C"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1243,7 +1441,9 @@
      "amount": 5000,
      "receiptDate": "2026-05-29",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "11C"
     }
    ],
    "provenance": {
@@ -1285,7 +1485,9 @@
      "amount": 2000,
      "receiptDate": "2026-06-22",
      "city": "MEDFORD LAKES",
-     "state": "NJ"
+     "state": "NJ",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1294,7 +1496,9 @@
      "amount": 1030.26,
      "receiptDate": "2026-06-06",
      "city": "CAPE MAY",
-     "state": "NJ"
+     "state": "NJ",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1303,7 +1507,9 @@
      "amount": 1000,
      "receiptDate": "2026-06-04",
      "city": null,
-     "state": "NJ"
+     "state": "NJ",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1312,7 +1518,9 @@
      "amount": 1000,
      "receiptDate": "2026-06-18",
      "city": "LUMBERTON",
-     "state": "NJ"
+     "state": "NJ",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1321,7 +1529,9 @@
      "amount": 1000,
      "receiptDate": "2025-12-12",
      "city": "TOMS RIVER",
-     "state": "NJ"
+     "state": "NJ",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1330,7 +1540,9 @@
      "amount": 1100,
      "receiptDate": "2026-03-19",
      "city": "TABERNACLE",
-     "state": "NJ"
+     "state": "NJ",
+     "entityType": "CAN",
+     "lineNumber": "13A"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1339,7 +1551,9 @@
      "amount": 900,
      "receiptDate": "2026-03-30",
      "city": "TABERNACLE",
-     "state": "NJ"
+     "state": "NJ",
+     "entityType": "CAN",
+     "lineNumber": "13A"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1348,7 +1562,9 @@
      "amount": 700,
      "receiptDate": "2026-02-20",
      "city": "TABERNACLE",
-     "state": "NJ"
+     "state": "NJ",
+     "entityType": "CAN",
+     "lineNumber": "13A"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1357,7 +1573,9 @@
      "amount": 500,
      "receiptDate": "2026-04-18",
      "city": "HADDON HEIGHTS",
-     "state": "NJ"
+     "state": "NJ",
+     "entityType": "COM",
+     "lineNumber": "11C"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1366,7 +1584,9 @@
      "amount": 430,
      "receiptDate": "2026-05-28",
      "city": "TABERNACLE",
-     "state": "NJ"
+     "state": "NJ",
+     "entityType": "CAN",
+     "lineNumber": "13A"
     }
    ],
    "provenance": {
@@ -1408,7 +1628,9 @@
      "amount": 3500,
      "receiptDate": "2026-06-09",
      "city": "RANDOLPH",
-     "state": "NJ"
+     "state": "NJ",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1417,7 +1639,9 @@
      "amount": 3500,
      "receiptDate": "2026-05-18",
      "city": "RANDOLPH",
-     "state": "NJ"
+     "state": "NJ",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1426,7 +1650,9 @@
      "amount": 3500,
      "receiptDate": "2026-05-18",
      "city": "RANDOLPH",
-     "state": "NJ"
+     "state": "NJ",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1435,7 +1661,9 @@
      "amount": 3500,
      "receiptDate": "2026-06-12",
      "city": "SHORT HILLS",
-     "state": "NJ"
+     "state": "NJ",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1444,7 +1672,9 @@
      "amount": 3500,
      "receiptDate": "2026-04-06",
      "city": "RANDOLPH",
-     "state": "NJ"
+     "state": "NJ",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1453,7 +1683,9 @@
      "amount": 5000,
      "receiptDate": "2026-04-13",
      "city": "ARLINGTON",
-     "state": "VA"
+     "state": "VA",
+     "entityType": "PAC",
+     "lineNumber": "11C"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1462,7 +1694,9 @@
      "amount": 5000,
      "receiptDate": "2026-03-23",
      "city": "EDISON",
-     "state": "NJ"
+     "state": "NJ",
+     "entityType": "PAC",
+     "lineNumber": "11C"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1471,7 +1705,9 @@
      "amount": 5000,
      "receiptDate": "2026-01-16",
      "city": "EDISON",
-     "state": "NJ"
+     "state": "NJ",
+     "entityType": "PAC",
+     "lineNumber": "11C"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1480,7 +1716,9 @@
      "amount": 3500,
      "receiptDate": "2026-06-09",
      "city": "ARLINGTON",
-     "state": "VA"
+     "state": "VA",
+     "entityType": "ORG",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1489,7 +1727,9 @@
      "amount": 3500,
      "receiptDate": "2026-05-18",
      "city": "ARLINGTON",
-     "state": "VA"
+     "state": "VA",
+     "entityType": "ORG",
+     "lineNumber": "11AI"
     }
    ],
    "provenance": {
@@ -1533,7 +1773,9 @@
      "amount": 7000,
      "receiptDate": "2025-09-30",
      "city": "SAN FRANCISCO",
-     "state": "CA"
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1542,7 +1784,9 @@
      "amount": 7000,
      "receiptDate": "2025-09-30",
      "city": "NEW YORK",
-     "state": "NY"
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1551,7 +1795,9 @@
      "amount": 7000,
      "receiptDate": "2025-09-25",
      "city": "TULSA",
-     "state": "OK"
+     "state": "OK",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1560,7 +1806,9 @@
      "amount": 7000,
      "receiptDate": "2025-09-25",
      "city": "TULSA",
-     "state": "OK"
+     "state": "OK",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1569,7 +1817,9 @@
      "amount": 7000,
      "receiptDate": "2025-09-11",
      "city": "NEW YORK",
-     "state": "NY"
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1578,7 +1828,9 @@
      "amount": 664650,
      "receiptDate": "2026-03-31",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "CCM",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1587,7 +1839,9 @@
      "amount": 309333.73,
      "receiptDate": "2025-02-09",
      "city": "SOMERVILLE",
-     "state": "MA"
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1596,7 +1850,9 @@
      "amount": 309333.73,
      "receiptDate": "2025-02-09",
      "city": "SOMERVILLE",
-     "state": "MA"
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1605,7 +1861,9 @@
      "amount": 309333.73,
      "receiptDate": "2025-02-09",
      "city": "SOMERVILLE",
-     "state": "MA"
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1614,7 +1872,9 @@
      "amount": 309333.73,
      "receiptDate": "2025-02-09",
      "city": "SOMERVILLE",
-     "state": "MA"
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI"
     }
    ],
    "provenance": {
@@ -1724,7 +1984,9 @@
      "amount": 3000,
      "receiptDate": "2025-09-03",
      "city": "ARIVACA",
-     "state": "AZ"
+     "state": "AZ",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1733,7 +1995,9 @@
      "amount": 2809.9,
      "receiptDate": "2025-06-24",
      "city": "TUCSON",
-     "state": "AZ"
+     "state": "AZ",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1742,7 +2006,9 @@
      "amount": 1500,
      "receiptDate": "2025-09-03",
      "city": "ARIVACA",
-     "state": "AZ"
+     "state": "AZ",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1751,7 +2017,9 @@
      "amount": 1000,
      "receiptDate": "2025-09-02",
      "city": "TUCSON",
-     "state": "AZ"
+     "state": "AZ",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1760,7 +2028,9 @@
      "amount": 1000,
      "receiptDate": "2025-07-29",
      "city": "TUCSON",
-     "state": "AZ"
+     "state": "AZ",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1769,7 +2039,9 @@
      "amount": 136470,
      "receiptDate": "2025-03-21",
      "city": "TUCSON",
-     "state": "AZ"
+     "state": "AZ",
+     "entityType": "CAN",
+     "lineNumber": "13A"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1778,7 +2050,9 @@
      "amount": 14737.67,
      "receiptDate": "2025-03-31",
      "city": "TUCSON",
-     "state": "AZ"
+     "state": "AZ",
+     "entityType": "CAN",
+     "lineNumber": "11D"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1787,7 +2061,9 @@
      "amount": 10980.31,
      "receiptDate": "2025-04-30",
      "city": "TUCSON",
-     "state": "AZ"
+     "state": "AZ",
+     "entityType": "CAN",
+     "lineNumber": "11D"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1796,7 +2072,9 @@
      "amount": 7267.5,
      "receiptDate": "2025-10-03",
      "city": "LOS ANGELES",
-     "state": "CA"
+     "state": "CA",
+     "entityType": "ORG",
+     "lineNumber": "14"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1805,7 +2083,9 @@
      "amount": 3992.58,
      "receiptDate": "2025-09-23",
      "city": "TUCSON",
-     "state": "AZ"
+     "state": "AZ",
+     "entityType": "CAN",
+     "lineNumber": "11D"
     }
    ],
    "provenance": {
@@ -1847,7 +2127,9 @@
      "amount": 3500,
      "receiptDate": "2026-05-13",
      "city": "SAN MATEO",
-     "state": "CA"
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1856,7 +2138,9 @@
      "amount": 3000,
      "receiptDate": "2026-06-08",
      "city": "ALBANY",
-     "state": "NY"
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1865,7 +2149,9 @@
      "amount": 2500,
      "receiptDate": "2026-04-25",
      "city": "WILTON",
-     "state": "NH"
+     "state": "NH",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1874,7 +2160,9 @@
      "amount": 2000,
      "receiptDate": "2026-06-30",
      "city": "LEXINGTON",
-     "state": "MA"
+     "state": "MA",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1883,7 +2171,9 @@
      "amount": 2000,
      "receiptDate": "2026-01-17",
      "city": "AMHERST",
-     "state": "NH"
+     "state": "NH",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1892,7 +2182,9 @@
      "amount": 25000,
      "receiptDate": "2026-06-30",
      "city": "EXETER",
-     "state": "NH"
+     "state": "NH",
+     "entityType": "CAN",
+     "lineNumber": "13A"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1901,7 +2193,9 @@
      "amount": 3000,
      "receiptDate": "2026-06-08",
      "city": "WEST SOMERVILLE",
-     "state": "MA"
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1910,7 +2204,9 @@
      "amount": 2500,
      "receiptDate": "2026-04-25",
      "city": "WEST SOMERVILLE",
-     "state": "MA"
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1919,7 +2215,9 @@
      "amount": 2000,
      "receiptDate": "2026-01-17",
      "city": "WEST SOMERVILLE",
-     "state": "MA"
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1928,7 +2226,9 @@
      "amount": 1500,
      "receiptDate": "2026-05-02",
      "city": "WEST SOMERVILLE",
-     "state": "MA"
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI"
     }
    ],
    "provenance": {
@@ -1970,7 +2270,9 @@
      "amount": 7000,
      "receiptDate": "2025-12-22",
      "city": "WOODSIDE",
-     "state": "CA"
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1979,7 +2281,9 @@
      "amount": 7000,
      "receiptDate": "2026-03-04",
      "city": "BRONXVILLE",
-     "state": "NY"
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1988,7 +2292,9 @@
      "amount": 6500,
      "receiptDate": "2026-06-24",
      "city": "RANDOLPH",
-     "state": "VT"
+     "state": "VT",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1997,7 +2303,9 @@
      "amount": 5000,
      "receiptDate": "2026-05-26",
      "city": "POMPANO BEACH",
-     "state": "FL"
+     "state": "FL",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2006,7 +2314,9 @@
      "amount": 3500,
      "receiptDate": "2025-06-20",
      "city": "MIAMI BEACH",
-     "state": "FL"
+     "state": "FL",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2015,7 +2325,9 @@
      "amount": 123000,
      "receiptDate": "2026-06-30",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2024,7 +2336,9 @@
      "amount": 115000,
      "receiptDate": "2026-06-30",
      "city": "MANCHESTER",
-     "state": "NH"
+     "state": "NH",
+     "entityType": "PAC",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2033,7 +2347,9 @@
      "amount": 105812.32,
      "receiptDate": "2026-03-17",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2042,7 +2358,9 @@
      "amount": 84000,
      "receiptDate": "2026-03-31",
      "city": "MANCHESTER",
-     "state": "NH"
+     "state": "NH",
+     "entityType": "PAC",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2051,7 +2369,9 @@
      "amount": 59000,
      "receiptDate": "2026-06-30",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "12"
     }
    ],
    "provenance": {
@@ -2093,7 +2413,9 @@
      "amount": 7000,
      "receiptDate": "2026-06-22",
      "city": "HONOLULU",
-     "state": "HI"
+     "state": "HI",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2102,7 +2424,9 @@
      "amount": 7000,
      "receiptDate": "2025-12-10",
      "city": "WASHINGTON",
-     "state": "DC"
+     "state": "DC",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2111,7 +2435,9 @@
      "amount": 7000,
      "receiptDate": "2025-09-24",
      "city": "DUXBURY",
-     "state": "MA"
+     "state": "MA",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2120,7 +2446,9 @@
      "amount": 7000,
      "receiptDate": "2025-09-29",
      "city": "PALM BEACH",
-     "state": "FL"
+     "state": "FL",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2129,7 +2457,9 @@
      "amount": 7000,
      "receiptDate": "2025-09-26",
      "city": "RANCHO SANTA FE",
-     "state": "CA"
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2138,7 +2468,9 @@
      "amount": 361370.02,
      "receiptDate": "2025-09-30",
      "city": "RYE",
-     "state": "NH"
+     "state": "NH",
+     "entityType": "COM",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2147,7 +2479,9 @@
      "amount": 130108.99,
      "receiptDate": "2025-09-30",
      "city": "RYE",
-     "state": "NH"
+     "state": "NH",
+     "entityType": "COM",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2156,7 +2490,9 @@
      "amount": 75280.76,
      "receiptDate": "2025-12-31",
      "city": "RYE",
-     "state": "NH"
+     "state": "NH",
+     "entityType": "COM",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2165,7 +2501,9 @@
      "amount": 38254.63,
      "receiptDate": "2025-07-01",
      "city": "ARLINGTON",
-     "state": "VA"
+     "state": "VA",
+     "entityType": "PAC",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2174,7 +2512,9 @@
      "amount": 17287.6,
      "receiptDate": "2026-03-31",
      "city": "RYE",
-     "state": "NH"
+     "state": "NH",
+     "entityType": "COM",
+     "lineNumber": "12"
     }
    ],
    "provenance": {
@@ -2216,7 +2556,9 @@
      "amount": 14000,
      "receiptDate": "2026-01-16",
      "city": "MEREDITH",
-     "state": "NH"
+     "state": "NH",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2225,7 +2567,9 @@
      "amount": 14000,
      "receiptDate": "2025-11-18",
      "city": "VERO BEACH",
-     "state": "FL"
+     "state": "FL",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2234,7 +2578,9 @@
      "amount": 14000,
      "receiptDate": "2025-11-17",
      "city": "VERO BEACH",
-     "state": "FL"
+     "state": "FL",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2243,7 +2589,9 @@
      "amount": 10410.16,
      "receiptDate": "2026-02-24",
      "city": "LOCUST VALLEY",
-     "state": "NY"
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2252,7 +2600,9 @@
      "amount": 10410.16,
      "receiptDate": "2026-02-24",
      "city": "LOCUST VALLEY",
-     "state": "NY"
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2261,7 +2611,9 @@
      "amount": 260246.84,
      "receiptDate": "2026-03-31",
      "city": "ATHENS",
-     "state": "GA"
+     "state": "GA",
+     "entityType": "COM",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2270,7 +2622,9 @@
      "amount": 224779.78,
      "receiptDate": "2026-06-30",
      "city": "ATHENS",
-     "state": "GA"
+     "state": "GA",
+     "entityType": "COM",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2279,7 +2633,9 @@
      "amount": 114323.65,
      "receiptDate": "2026-03-31",
      "city": "ATHENS",
-     "state": "GA"
+     "state": "GA",
+     "entityType": "COM",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2288,7 +2644,9 @@
      "amount": 92925.72,
      "receiptDate": "2026-06-30",
      "city": "ATHENS",
-     "state": "GA"
+     "state": "GA",
+     "entityType": "COM",
+     "lineNumber": "12"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2297,7 +2655,9 @@
      "amount": 91838.46,
      "receiptDate": "2025-12-31",
      "city": "ATHENS",
-     "state": "GA"
+     "state": "GA",
+     "entityType": "COM",
+     "lineNumber": "12"
     }
    ],
    "provenance": {
@@ -2339,7 +2699,9 @@
      "amount": 1000,
      "receiptDate": "2026-06-28",
      "city": "HOLLIS",
-     "state": "NH"
+     "state": "NH",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2348,7 +2710,9 @@
      "amount": 1000,
      "receiptDate": "2025-10-05",
      "city": "NASHUA",
-     "state": "NH"
+     "state": "NH",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2357,7 +2721,9 @@
      "amount": 1000,
      "receiptDate": "2025-11-12",
      "city": "DUNBARTON",
-     "state": "NH"
+     "state": "NH",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2366,7 +2732,9 @@
      "amount": 1000,
      "receiptDate": "2025-10-10",
      "city": "NASHUA",
-     "state": "NH"
+     "state": "NH",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2375,7 +2743,9 @@
      "amount": 500,
      "receiptDate": "2026-04-23",
      "city": "SOMERVILLE",
-     "state": "MA"
+     "state": "MA",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2384,7 +2754,9 @@
      "amount": 6905.64,
      "receiptDate": "2026-06-30",
      "city": "SOMERVILLE",
-     "state": "MA"
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2393,7 +2765,9 @@
      "amount": 5249.02,
      "receiptDate": "2026-03-31",
      "city": "SOMERVILLE",
-     "state": "MA"
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2402,7 +2776,9 @@
      "amount": 3799.2,
      "receiptDate": "2025-11-30",
      "city": "SOMERVILLE",
-     "state": "MA"
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2411,7 +2787,9 @@
      "amount": 1000,
      "receiptDate": "2026-06-28",
      "city": "SOMERVILLE",
-     "state": "MA"
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2420,7 +2798,9 @@
      "amount": 1000,
      "receiptDate": "2025-10-05",
      "city": "SOMERVILLE",
-     "state": "MA"
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI"
     }
    ],
    "provenance": {
@@ -2462,7 +2842,9 @@
      "amount": 50,
      "receiptDate": "2026-06-22",
      "city": "NASHUA",
-     "state": "NH"
+     "state": "NH",
+     "entityType": "CAN",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2471,7 +2853,9 @@
      "amount": 50,
      "receiptDate": "2026-06-03",
      "city": "NASHUA",
-     "state": "NH"
+     "state": "NH",
+     "entityType": "CAN",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2480,7 +2864,9 @@
      "amount": 50,
      "receiptDate": "2026-05-06",
      "city": "NASHUA",
-     "state": "NH"
+     "state": "NH",
+     "entityType": "CAN",
+     "lineNumber": "11AI"
     }
    ],
    "provenance": {
@@ -2522,7 +2908,9 @@
      "amount": 3643.56,
      "receiptDate": "2026-04-27",
      "city": "WEST ISLIP",
-     "state": "NY"
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2531,7 +2919,9 @@
      "amount": 520.51,
      "receiptDate": "2026-04-14",
      "city": "CENTER SANDWICH",
-     "state": "NH"
+     "state": "NH",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2540,7 +2930,9 @@
      "amount": 500,
      "receiptDate": "2026-05-30",
      "city": "JUNIPER",
-     "state": "FL"
+     "state": "FL",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2549,7 +2941,9 @@
      "amount": 260.25,
      "receiptDate": "2026-05-30",
      "city": "HOLLIS",
-     "state": "NH"
+     "state": "NH",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2558,7 +2952,9 @@
      "amount": 260.25,
      "receiptDate": "2026-05-15",
      "city": "HOLLIS",
-     "state": "NH"
+     "state": "NH",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2567,7 +2963,9 @@
      "amount": 102906,
      "receiptDate": "2026-05-28",
      "city": "HOLLIS",
-     "state": "NH"
+     "state": "NH",
+     "entityType": "CAN",
+     "lineNumber": "11D"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2576,7 +2974,9 @@
      "amount": 55000,
      "receiptDate": "2026-04-27",
      "city": "HOLLIS",
-     "state": "NH"
+     "state": "NH",
+     "entityType": "CAN",
+     "lineNumber": "11D"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2585,7 +2985,9 @@
      "amount": 825.12,
      "receiptDate": "2026-01-27",
      "city": "HOLLIS",
-     "state": "NH"
+     "state": "NH",
+     "entityType": "CCM",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2594,7 +2996,9 @@
      "amount": 520.51,
      "receiptDate": "2026-06-30",
      "city": "HOLLIS",
-     "state": "NH"
+     "state": "NH",
+     "entityType": "CCM",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2603,7 +3007,9 @@
      "amount": 242.45,
      "receiptDate": "2026-02-11",
      "city": "HOLLIS",
-     "state": "NH"
+     "state": "NH",
+     "entityType": "CCM",
+     "lineNumber": "11AI"
     }
    ],
    "provenance": {
@@ -2645,7 +3051,9 @@
      "amount": 3500,
      "receiptDate": "2026-06-26",
      "city": "BELMONT",
-     "state": "CA"
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2654,7 +3062,9 @@
      "amount": 3500,
      "receiptDate": "2026-02-12",
      "city": "ELKO",
-     "state": "NV"
+     "state": "NV",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2663,7 +3073,9 @@
      "amount": 3500,
      "receiptDate": "2026-03-23",
      "city": "HILLIARD",
-     "state": "OH"
+     "state": "OH",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2672,7 +3084,9 @@
      "amount": 3500,
      "receiptDate": "2025-08-13",
      "city": "SAN JOSE",
-     "state": "CA"
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2681,7 +3095,9 @@
      "amount": 3500,
      "receiptDate": "2025-09-08",
      "city": "WHEELING",
-     "state": "WV"
+     "state": "WV",
+     "entityType": "IND",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2690,7 +3106,9 @@
      "amount": 80000,
      "receiptDate": "2025-05-14",
      "city": "WEARE",
-     "state": "NH"
+     "state": "NH",
+     "entityType": "CAN",
+     "lineNumber": "13A"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2699,7 +3117,9 @@
      "amount": 20000,
      "receiptDate": "2025-09-30",
      "city": "WEARE",
-     "state": "NH"
+     "state": "NH",
+     "entityType": "CAN",
+     "lineNumber": "13A"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2708,7 +3128,9 @@
      "amount": 6914.74,
      "receiptDate": "2026-05-22",
      "city": "MANASSAS",
-     "state": "VA"
+     "state": "VA",
+     "entityType": "ORG",
+     "lineNumber": "14"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2717,7 +3139,9 @@
      "amount": 3500,
      "receiptDate": "2025-08-13",
      "city": "ARLINGTON",
-     "state": "VA"
+     "state": "VA",
+     "entityType": "ORG",
+     "lineNumber": "11AI"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2726,7 +3150,9 @@
      "amount": 3500,
      "receiptDate": "2025-04-11",
      "city": "ARLINGTON",
-     "state": "VA"
+     "state": "VA",
+     "entityType": "ORG",
+     "lineNumber": "11AI"
     }
    ],
    "provenance": {

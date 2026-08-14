@@ -107,6 +107,11 @@ export function fundingAnswerForTarget(targetKey: string): FundingAnswer {
   return { kind: "none" };
 }
 
+// The 2a label mapper lives in ./labels.ts (client-safe — this module sits
+// on the node:fs snapshot graph and the client funding section needs the
+// labels); re-exported here so server callers keep one import surface.
+export { plainContributorLabel } from "./labels.ts";
+
 /** The honest line for offices the FEC does not cover. */
 export const STATE_FUNDING_NOTE =
   "Money in state and local races is filed with state campaign-finance systems, not the FEC. We haven't wired those yet — this is a gap in our data, not a statement that no money was raised.";

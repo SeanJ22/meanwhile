@@ -22,6 +22,9 @@ import { CandidateCard } from "@/components/ballot/candidate-card";
 import { MyPicks } from "@/components/ballot/my-picks";
 import { PickControl } from "@/components/ballot/pick-control";
 import { registrationLinkFor } from "@/lib/ballot/registration-links";
+import { incumbentHolderFor } from "@/lib/ballot/incumbent-record";
+import { IncumbentRecordLink } from "@/components/ballot/incumbent-record-link";
+import { partyColorVar } from "@/lib/officials/party-color";
 import { formatDateMDY } from "@/lib/map/format";
 import {
   fundingAnswerForTarget,
@@ -74,6 +77,21 @@ function candidatesOf(set: BallotSet, contest: Contest): Candidacy[] {
  *  division is the state root exactly like a US Senate seat's. */
 function isFederalContest(contest: Contest): boolean {
   return /:us-senate$|:us-house-\d+$/.test(contest.id);
+}
+
+/** 4 (2026-08-19): the incumbent's voting-record link, where the exact-key
+ *  join holds — an incumbent on a ballot IS an official we hold. No join,
+ *  no link; never a wrong one. */
+async function IncumbentRecord({
+  targetKey,
+  context,
+}: {
+  targetKey: string;
+  context: { zip: string; lat: number; lng: number } | null;
+}) {
+  const holder = await incumbentHolderFor(targetKey);
+  if (!holder) return null;
+  return <IncumbentRecordLink holder={holder} context={context} />;
 }
 
 /** D34: the funding answer under one candidate — totals with the reaction
@@ -181,8 +199,10 @@ export default async function BallotPage({
             href={`/about-area?zip=${zip}`}
             className="underline decoration-dotted hover:text-signal"
           >
-            Moving here? The basics — marijuana, taxes, schools, carrying,
-            registering →
+            {/* 3c: the author's line, verbatim. Marijuana stays in the
+                section; it left the teaser. */}
+            Moving here? Know the basics — Taxes, schools, registering, and
+            more. →
           </Link>
         </p>
       )}
@@ -352,12 +372,23 @@ export default async function BallotPage({
                         name={nominee.name}
                         partyLine={
                           <>
-                            {nominee.partyLabel}
+                            {/* 3a: display only, colored per the palette. */}
+                            <span style={{ color: partyColorVar(nominee.partyLabel) }}>
+                              {nominee.partyLabel}
+                            </span>
                             {nominee.note && <> · {nominee.note}</>}
                           </>
                         }
                         card={cardForNominee(contest.id, nominee.name)}
                         links={linksForNominee(contest.id, nominee.name)}
+                      />
+                      <IncumbentRecord
+                        targetKey={`${contest.id}|${nominee.name}`}
+                        context={
+                          centroid && zip
+                            ? { zip, lat: centroid.lat, lng: centroid.lng }
+                            : null
+                        }
                       />
                       {/* 3d: reader expression, never a recommendation — the
                           answer is stored and aggregated, never rendered
@@ -417,7 +448,11 @@ export default async function BallotPage({
                           name={`${cand.givenName} ${surnameDisplayCase(cand.familyName)}`}
                           partyLine={
                             <>
-                              {cand.partyLabel ?? "No party label filed"}
+                              {/* 3a: display only, colored per the palette;
+                                  no-affiliation stays gray. */}
+                              <span style={{ color: partyColorVar(cand.partyLabel) }}>
+                                {cand.partyLabel ?? "No party label filed"}
+                              </span>
                               {cand.slogan && (
                                 <>
                                   {" "}
@@ -432,6 +467,14 @@ export default async function BallotPage({
                           card={cardForCandidacy(cand.id)}
                           links={linksForCandidacy(cand.id)}
                           filedSiteUrl={cand.websiteUrl}
+                        />
+                        <IncumbentRecord
+                          targetKey={cand.id}
+                          context={
+                            centroid && zip
+                              ? { zip, lat: centroid.lat, lng: centroid.lng }
+                              : null
+                          }
                         />
                         {/* 3d: reader expression, never a recommendation. */}
                         <ReactionControl
@@ -509,22 +552,26 @@ export default async function BallotPage({
                     <p className="font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
                       Plain-language summary — read the official text below
                     </p>
-                    <p className="mt-1.5 text-[0.8125rem] leading-relaxed">
+                    {/* 3b: the product's voice renders BOLD. */}
+                    <p className="mt-1.5 text-[0.8125rem] font-semibold leading-relaxed">
                       {summary.summary}
                     </p>
                   </div>
                 )}
 
                 {analysis?.text ? (
-                  <div className="mt-2.5">
-                    <p className="font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
+                  // 3f (2026-08-19): the official analysis collapses by
+                  // default — the control names it and its source, expands
+                  // downward on click. The plain-language summary stays open
+                  // above. Verbatim and whole once open — never excerpted.
+                  <details className="mt-2.5">
+                    <summary className="cursor-pointer font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted hover:text-signal">
                       Official analysis — {analysis.sourceOrg}
-                    </p>
-                    {/* Verbatim, whole, and scrollable — never excerpted. */}
+                    </summary>
                     <p className="mt-1.5 max-h-72 overflow-y-auto whitespace-pre-line rounded border border-[var(--panel-border)] p-3 text-[0.75rem] leading-relaxed text-paper-dim">
                       {analysis.text}
                     </p>
-                  </div>
+                  </details>
                 ) : (
                   analysis?.extractionNote && (
                     // Extraction failed: say so honestly and keep the link.
@@ -622,6 +669,20 @@ export default async function BallotPage({
             {NEUTRAL_NOTE}
           </p>
         </>
+      )}
+
+      {/* 3e (2026-08-19): the picks disclosure, stated ONCE — the TOS
+          pattern. It carried the same sentence under every contest before;
+          the distinction from the reaction buttons lives here now. */}
+      {matched && matched.contests.length > 0 && (
+        <p className="mt-6 text-[0.6875rem] leading-relaxed text-muted">
+          &ldquo;What do you think?&rdquo; picks are saved on this device only
+          — we never see them. The Yes/No/Unsure reaction buttons are
+          different: those answers join anonymous local totals.{" "}
+          <Link href="/transparency" className="underline decoration-dotted">
+            How we handle data →
+          </Link>
+        </p>
       )}
 
       <p className="mt-8 border-t border-[var(--panel-border)] pt-4 text-[0.75rem] text-muted">

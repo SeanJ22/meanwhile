@@ -3,6 +3,7 @@
 import { useNarrowing } from "@/hooks/use-narrowing";
 import { formatMiles } from "@/lib/map/format";
 
+import { AskBox } from "@/components/ask/ask-box";
 import { NarrowingPrompt } from "./narrowing-prompt";
 import type { CoverageTier } from "@/lib/meetings/query";
 import type { CoverageSummary, CoveredBody, Seat } from "@/lib/registry/coverage";
@@ -15,6 +16,7 @@ import {
 } from "@/lib/registry/representation";
 import { agendaAbsenceNote } from "@/lib/registry/wording";
 import type { SeatHolder } from "@/lib/officials/lookup";
+import { partyColorVar } from "@/lib/officials/party-color";
 
 /**
  * Says which rung of the cascade produced what's on screen, and — when there is
@@ -131,8 +133,11 @@ function Holder({
         <span className="text-paper">{holder.name}</span>
       )}
       {holder.partyLabel && (
-        // Display only. Nothing here or downstream infers a position from it.
-        <span className="text-muted">· {holder.partyLabel}</span>
+        // Display only. Nothing here or downstream infers a position from
+        // it. Colored per the author's palette (3a).
+        <span style={{ color: partyColorVar(holder.partyLabel) }}>
+          · {holder.partyLabel}
+        </span>
       )}
       {holder.sourceUrl && (
         <a
@@ -488,10 +493,26 @@ function CoverageBody({
             href={`/about-area?zip=${zip}`}
             className="underline decoration-dotted hover:text-signal"
           >
-            Moving here? The basics — taxes, schools, registering →
+            Moving here? Know the basics — Taxes, schools, registering, and
+            more. →
           </a>
         </p>
       )}
+
+      {/* 5 (2026-08-19): the ask box — routing without generation, on the
+          card that answers who governs. */}
+      <AskBox
+        coverage={coverage}
+        zip={/^\d{5}$/.test(zip) ? zip : null}
+        ocdIds={[
+          ...new Set(
+            [
+              ...coverage.bodies.map((b) => b.ocdId),
+              ...coverage.seats.map((s) => s.ocdId),
+            ].filter((id): id is string => Boolean(id)),
+          ),
+        ]}
+      />
 
       {/*
         D17, split 2026-08-13. The statutory sentence — New Hampshire does not

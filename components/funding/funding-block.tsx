@@ -26,7 +26,17 @@ import {
 const STATE_OFFICIAL_NOTE =
   "Campaign money for state offices is filed with state campaign-finance systems, not the FEC. We haven't wired those yet — this is a gap in our data, not a statement that no money was raised.";
 
-export function FundingBlock({
+export function FundingBlock(props: {
+  holder: SeatHolder;
+  reactionContext: ReactionViewContext | null;
+}) {
+  // Keyed on the holder so a holder change discards the fetched state
+  // structurally — a new holder never wears the previous one's answer,
+  // not even for the frames before (or if) the new fetch lands (D40).
+  return <FundingBlockInner key={props.holder.id} {...props} />;
+}
+
+function FundingBlockInner({
   holder,
   reactionContext,
 }: {
@@ -41,8 +51,11 @@ export function FundingBlock({
     const controller = new AbortController();
     void (async () => {
       try {
+        // The target rides in the PATH, never a query string — a publicly
+        // cacheable response must carry its cache key where every shared
+        // cache honours it (D40).
         const response = await fetch(
-          `/api/funding?target=${encodeURIComponent(holder.id)}`,
+          `/api/funding/${encodeURIComponent(holder.id)}`,
           { signal: controller.signal },
         );
         if (!response.ok) throw new Error(String(response.status));

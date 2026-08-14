@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import { blurbForTitle } from "@/lib/officials/office-blurbs";
 import type { SeatHolder } from "@/lib/officials/lookup";
+import { partyColorVar } from "@/lib/officials/party-color";
 import type { Tier } from "@/lib/ocd/tiers";
 import type { RollCallVote, VotePosition } from "@/lib/votes/types";
 import type { ReactionViewContext } from "@/lib/reactions/client";
@@ -69,7 +70,17 @@ type MemberRollCall = RollCallVote & { position: VotePosition };
 /** How many recent votes the surface shows before pointing at the record. */
 const VOTE_LIMIT = 5;
 
-export function RecentVotes({
+export function RecentVotes(props: {
+  holder: SeatHolder;
+  reactionContext: ReactionViewContext | null;
+}) {
+  // Keyed on the holder so a holder change discards the fetched record
+  // structurally — a new holder never wears the previous one's votes
+  // (D40 hygiene, same shape as the funding block).
+  return <RecentVotesInner key={props.holder.id} {...props} />;
+}
+
+function RecentVotesInner({
   holder,
   reactionContext,
 }: {
@@ -229,7 +240,8 @@ function BillPlainSummary({ billUrl }: { billUrl: string | null }) {
       <summary className="cursor-pointer text-[0.6875rem] text-paper-dim underline decoration-dotted hover:text-signal">
         What this bill does — plain language
       </summary>
-      <p className="mt-1 text-[0.6875rem] leading-relaxed text-paper-dim">
+      {/* 3b: the product's voice renders BOLD. */}
+      <p className="mt-1 text-[0.6875rem] font-semibold leading-relaxed text-paper-dim">
         {summary.summary}
       </p>
     </details>
@@ -276,8 +288,14 @@ export function OfficialIdentity({
           {seatLabel ? ` · ${seatLabel}` : ""}
         </p>
         {holder.partyLabel && (
-          // Display only. Nothing infers anything from it.
-          <p className="mt-0.5 text-[0.75rem] text-muted">{holder.partyLabel}</p>
+          // Display only. Nothing infers anything from it. Colored per the
+          // author's palette (3a) — the color states the label, never a view.
+          <p
+            className="mt-0.5 text-[0.75rem]"
+            style={{ color: partyColorVar(holder.partyLabel) }}
+          >
+            {holder.partyLabel}
+          </p>
         )}
         {holder.sourceUrl && (
           <a

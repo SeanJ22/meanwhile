@@ -1,172 +1,91 @@
-# Session brief — the FINAL build before the outside tester (executed 2026-08-18)
+# Session brief — 2026-08-19 (executed; this file is the record)
 
-This file is the session's full brief, committed on completion per its
-own instruction. Executed on branch
-`claude/fec-funding-and-final-prep-0818`; the record is `docs/state.md`
-§16 and the tracker rows it names. This session runs unattended. Nobody
-is available to answer.
+The brief as received, verbatim in structure, with the execution recorded
+inline. Wall clock 2026-08-14; session label 2026-08-19. Branch
+`claude/fec-cache-and-question-box-0819`.
 
-- Reversible decisions: cheaper-to-undo option, recorded with the
-  rejected alternative, keep going. Irreversible: skip, tracker row,
-  continue.
-- A source hunt is never a stopping point — make more rungs, record
-  every rung with `attemptedAt`. "The long way is still a way" (the
-  author, on NH).
+## Session brief — the FEC replication bug, and the true final polish before the tester
+
+This session runs unattended. Nobody is available to answer.
+
+- Reversible: cheaper-to-undo, recorded with the rejected alternative,
+  keep going. Irreversible: skip, tracker row, continue.
+- Hunts never stop — make more rungs, `attemptedAt` on every rung. The
+  long way is a way.
 - Browser-heavy steps LAST, inline, no background agents.
 - Live on every push; nothing half-finished to `main`. End with
   `pnpm handoff --ship`, verify on `main`, verify the deploy, standing
-  report.
+  report ending with "Before you send the link."
 
-Session-open: read `docs/defects.md` and triage.
-Correct first. Fast second. Nothing third. The stranger test governs
-every surface.
+Session-open: read `docs/defects.md` and triage. **Done** — no untriaged
+entries; this brief was the defect list, triaged into the rows below.
 
-This is the last session before the tester. The order below is
-deliberate: FEC is FIRST because it has been deferred twice by running
-last. It ships this round — the author's explicit order, no exceptions,
-no duress clause this time.
+### 1 — The FEC officials join is broken (GATED) → D40, EXECUTED
 
-## 1 — FEC funding surfaces. First. Whole.
+The author's screenshots: Gallego's and Grijalva's Funding sections
+rendered Kelly's exact data; Butierez showed his own — so the ballot join
+worked and the officials path collapsed. Diagnose before fixing — find
+the actual line. **Found**: not the join. Snapshot, roster, targetKeys,
+display builder, lookup — all clean. The actual line was the funding API
+route marking a query-keyed response `cache-control: public` while the
+CDN's cache key dropped the query string; the first official fetched was
+served to every subsequent one. Fixed by moving the target into the URL
+path; client fetch-state keyed on holder.id; the uniqueness invariant
+adopted into CLAUDE.md and guarded three ways in tests; the enrichment
+audit (photos, contacts, rosters, campaign sites) found 0 values bound
+to >1 key. Snapshot regeneration: deliberately superseded by same-day
+regeneration under 2a (the data was never broken). GATE PASSED:
+`walk19-85701-gate-{kelly,gallego,grijalva}.png`, three distinct books,
+figures matching the FEC's own API to the dollar.
 
-The spec is carried verbatim from D34's row and the prior briefs — build
-exactly it:
+### 2 — FEC labeling and photo fixes → D41, D42, D43, EXECUTED
 
-- Adapter: FEC key from `.env.local` into the fetch-script environment
-  ONLY — never Netlify, never client. Snapshot pattern: committed
-  artifact, scheduled refresh, no live calls per page load. Print the
-  FEC-candidate-id vs roster/ballot-id match rate before writing the
-  adapter.
-- Data, tagged: committee-level (total raised, spent, cash on hand,
-  small-donor share, cycle-to-date) tagged `FEC_COMMITTEE`;
-  contributor-level display (top contributors/committees as the FEC
-  publishes them) tagged `FEC_CONTRIBUTOR`, reader-facing only. A guard
-  test asserts FEC_CONTRIBUTOR rows are unreachable from the
-  aggregation/export path.
-- Surface: a Funding section on candidate cards and official large
-  popups. Plain register, 15-year-old test: "Her campaign has raised
-  $4.2M this cycle. About a third came from small donors." Top
-  contributors listed as filed, cited, never characterized. Cited
-  absences for no-committee / no-filings-yet.
-- Reactions: the reusable control on both funding displays — tags
-  `FUNDING_TOTAL_REACTION` and `CONTRIBUTOR_REACTION`.
-- Ripcords: `ripcord.fecContributorDisplay` (kills contributor display +
-  its control; committee totals unaffected) and
-  `ripcord.fundingReactionsInAggregates` — the second ships PULLED
-  (funding reactions excluded from any sellable aggregation from day
-  one). Tracker rows name counsel as closer of the RIPCORDS — the build
-  is done.
-- Transparency page updated in the same commit: the funding data shown
-  is public FEC data; reactions to it follow the same rules as vote
-  reactions.
-- Federal officials and candidates first (they have FEC committees);
-  state/local candidates render the honest "state campaign-finance data
-  comes from state systems — coming" note rather than silence.
+- 2a self-funding labeled from FEC entity typing (CAN/13A → "the
+  candidate's own money", mechanical, never guessed) — snapshot
+  regenerated with the new fields, an FEC 504 rerun rather than shipped
+  short.
+- 2b the photo rule tightened; all 25 shipped photos eyeballed; 6
+  dropped to initials with rung-by-rung hunts; docs/photo-report.md is
+  the human-verifiable check, sync-guarded.
+- 2c contributor names: NO CHANGE by the author's order — D43 records
+  the watch item so nobody fixes it.
 
-Gate: the Funding section live on Ciscomani's and at least three ballot
-candidates' cards, screenshots, both ripcord flags demonstrably
-functional (flip each in a test).
+### 3 — Copy and UI batch → M38–M45, EXECUTED
 
-## 2 — Sunnyside and Amphitheater: actually wire them
+3a party colors (four sites, both themes, unmapped parties honest gray).
+3b summaries bold (four surfaces). 3c the moving-here line verbatim;
+marijuana stays in the section. 3d "What do you think?". 3e the picks
+disclosure once, TOS pattern, reactions distinction included. 3f
+official analysis collapsed by default, verbatim once open, all states.
+3g one denominator for the districts card and door, guard asserts stated
+N === rendered rows. 3h pans never pop; the rule is pure and tested;
+settle refreshes data silently. 3i the honest finding: add-to-calendar
+shipped 08-17 on the compact card only — now on all three meeting
+surfaces.
 
-The author checked: nothing is wired — "like nothing happened." The
-registry divisions existed; the audit marked the municipal/school layers
-complete; and no bodies, sources, or links shipped. Diagnose the miss
-honestly (the audit's "complete" claim was about the REGISTRY layer —
-record in state.md that the wiring layer was not delivered and the
-report implied more than shipped), then deliver the full treatment:
-governing-board body rows, agenda sources hunted per the ladder (both
-districts run standard AZ vendor stacks — identify and wire), rosters
-with Kelly-standard member cards (6e's rule: if we show a body, we show
-its people), comment access, office explainers. Same for any other
-four-zip-serving district the audit's backlog lists as within reach.
+### 4 — Incumbent voting-record links → B10, EXECUTED
 
-Gate: both districts render bodies, members, and meeting sources (or
-recorded exhausted hunts) at 85701/85641 — screenshots.
+Every federal incumbent standing in a covered contest links "See their
+voting record" into the real official modal; incumbency from the FEC
+snapshot's exact-key pairing; no link where absent or ambiguous. State
+incumbents deferred honestly (no roll-call surface exists yet).
 
-## 3 — NH legislator contacts: the long way
+### 5 — The question box v1 → A09, EXECUTED
 
-gc.nh.gov walls this environment entirely. The author's direction:
-nh.gov is accessible — find the click path. The long way is still a way.
-Rungs to work, in order, recording each:
+Ask box on the who-governs card and the sidebar; keyword routing into
+the A08 map; no generative answers; the honest refusal per A07; both
+golden cases live at 85701; refusals logged as QUESTION_ASKED (text
+capped at 200 chars — the roadmap), routed asks log the topic only;
+transparency page updated in the same commit, coupling guard-tested.
 
-- The nh.gov portal's own paths INTO legislative content — state
-  directories, the state library, agency pages that republish member
-  lists.
-- The Wayback Machine's captures of gencourt member pages and roster
-  downloads.
-- The SOS's election results and filings (they carry every member's
-  name, town, district — and often addresses).
-- County delegation pages (NH counties publish their state-rep
-  delegations), municipal sites listing "our representatives," and the
-  two chambers' clerk documents wherever mirrored.
-- Published PDF directories (the General Court publishes printable
-  member directories — find a mirror or cached copy).
-- Official press/committee documents carrying member contact blocks.
+### 6 — Final pass and handoff → EXECUTED
 
-The Kelly-standard fields per member: specific page or verified
-directory entry, email, phone, photo where officially published. Partial
-is acceptable if honest — a member with email-but-no-phone renders what
-exists. Every miss recorded. Merrimack-district members (the tester's)
-first, then the rest.
+walk19 at 390×844: 71 checks green across four zips, zero console
+errors; docs/tester-pass.md superseded; state.md §17; tracker updated in
+place (next free ids: A10, B11, D44, M46); this file overwritten; ship
+via `pnpm handoff --ship`; the standing report ends with "Before you
+send the link."
 
-## 4 — The punch list from the tester pass and the honest-limits section
+### Order, and cuts
 
-- 4a — Rockaway Township BOE members: surnames-only → full names, from
-  the district's own pages or minutes (the long way applies).
-- 4b — Goodlander's portrait and any other seeded portrait gaps —
-  official sources.
-- 4c — Minutes-summary curation: the seeded worklist — plain-language
-  "what happened" for concluded meetings in the window where minutes are
-  published, register standard, cited; honest "minutes not yet posted"
-  otherwise.
-- 4d — Every open item in `docs/tester-pass.md` not covered above: work
-  the list, mark each resolved or explicitly deferred with reason.
-
-## 5 — The final polish pass
-
-Walk all four zips once more at 390×844 as a stranger — the stranger
-test explicitly — after items 1–4 land. Every new surface (Funding
-sections, the new districts, NH contacts) joins the pass. Fix small on
-the spot; log anything larger. Supersede `docs/tester-pass.md` with the
-final log. This log is what the author reads before sending the link.
-
-## 6 — Documents and handoff
-
-`state.md`: the FEC build with its structural line and the D34 closure
-(build done, ripcords open, counsel closes them); the Sunnyside/Amphi
-wiring and the honest record of the prior session's overclaim; the NH
-contact rungs; the punch-list resolutions; test count in all three
-places. Tracker: D34 updated, rows in place, next free ID verified.
-Transparency page verified. Overwrite `docs/session-brief.md`. Ship,
-verify deploy, standing report — and end the report with a short section
-addressed to the author: "Before you send the link" — the migration
-reminder, anything requiring his eyes, and the state of every known
-limitation in one place.
-
-## Order, and cuts if short
-
-1 (FIRST, whole, ships) → 2 → 3 → 4 → 5 → 6.
-
-Item 1 is not deferrable this session — the author's explicit order. If
-the session runs short: thin 4c to the five most recent meetings, then
-4b, then 3 beyond the tester's Merrimack members. Items 1, 2, and 5 ship
-regardless. Documents never cut.
-
-## Standing rules
-
-All of CLAUDE.md's non-negotiables, the stranger test, the
-official-universe denominator. Denominators with counts; screenshot
-before believing green; diagnose before fixing; compare identifier sets
-before any adapter; never assert absence of data in a test; grep after
-scripted edits; verify branches; nothing Done without branch + checks; a
-failed operation may not render as an empty success; a URL cited must
-have been fetched and verified.
-
-## Outcome (recorded on completion)
-
-All six items shipped whole — nothing cut. D34 Done (ripcords are
-counsel's to close via D23); D39 done; NH 389/410 enriched through the
-Archive's capture of the General Court's own directory; BOE full names;
-Goodlander's portrait; two minutes summaries with the rest of the
-worklist honestly recorded; 89 walk checks green, zero console errors.
-test 371 · lint clean · build exit 0. The record: `docs/state.md` §16.
+1 (GATED) → 2 → 3 → 4 → 5 → 6, as briefed. **Nothing was cut.**

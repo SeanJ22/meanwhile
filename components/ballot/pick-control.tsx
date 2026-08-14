@@ -38,9 +38,10 @@ export function PickControl({
 
   return (
     <div className="mt-3 rounded border border-dashed border-[var(--panel-border)] p-2.5">
+      {/* 3d (2026-08-19): the author's words. Same options, same
+          device-local behavior — only the label changed. */}
       <p className="font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
-        Mark how you&apos;d vote{voteFor > 1 ? ` (up to ${voteFor})` : ""} —
-        private
+        What do you think?{voteFor > 1 ? ` (pick up to ${voteFor})` : ""}
       </p>
       <div className="mt-1.5 flex flex-wrap gap-1.5">
         {options.map((option) => {
@@ -74,11 +75,11 @@ export function PickControl({
           </button>
         )}
       </div>
-      <p className="mt-1.5 text-[0.625rem] leading-relaxed text-muted">
-        Saved on this device only. We never see your picks. (The
-        yes/no/unsure buttons above are different — those answers join
-        anonymous local totals.)
-      </p>
+      {/* 3e (2026-08-19): the disclosure moved to ONE statement at the
+          bottom of the ballot page (the TOS pattern) — repeating it under
+          every contest was reader friction, not consent (picks are never
+          collected, so no consent is at stake). tests/ballot-picks.test.ts
+          pins the single statement. */}
     </div>
   );
 }

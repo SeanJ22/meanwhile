@@ -6,6 +6,7 @@ import type { MeetingSearchResult } from "@/lib/meetings/query";
 import type { Venue } from "@/lib/meetings/venues";
 import type { Meeting } from "@/lib/sources/types";
 import type { StoredLocation } from "@/hooks/use-stored-zip";
+import type { DrawnDistrict } from "@/lib/map/districts";
 
 /**
  * The server's answer, plus everything derived from it once.
@@ -24,8 +25,9 @@ export interface ShellData {
   venues: Venue[];
   result: MeetingSearchResult | null;
   location: StoredLocation | null;
-  /** District features currently drawn, for the stats card and the legend. */
-  districtCount: number;
+  /** The districts currently drawn — the stats card counts this list and
+   *  the districts door renders it: one denominator for both (3g). */
+  drawnDistricts: DrawnDistrict[];
   /** Meetings the adapter could not place. Surfaced, never silent. */
   dropped: number;
   searchFailed: boolean;

@@ -4,6 +4,8 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import type { SearchItem } from "@/lib/search";
 import { useShellData } from "@/lib/state/data";
 
+import { AskBox } from "@/components/ask/ask-box";
+
 import { FiltersArea } from "./filters-area";
 import { NearMeControl } from "./near-me-control";
 import { RadiusControl } from "./radius-control";
@@ -19,6 +21,28 @@ import { ViewToggle } from "./view-toggle";
  * brand, the theme and reset buttons, the view toggle and the scope selectors;
  * then everything else in a scrolling column.
  */
+function SidebarAskBox() {
+  const { result, location } = useShellData();
+  const coverage = result?.coverage ?? null;
+  if (!coverage) return null;
+  return (
+    <div className="px-1">
+      <AskBox
+        coverage={coverage}
+        zip={location?.zip ?? null}
+        ocdIds={[
+          ...new Set(
+            [
+              ...coverage.bodies.map((b) => b.ocdId),
+              ...coverage.seats.map((s) => s.ocdId),
+            ].filter((id): id is string => Boolean(id)),
+          ),
+        ]}
+      />
+    </div>
+  );
+}
+
 export function Sidebar({
   onSearchPick,
   onReset,
@@ -155,6 +179,11 @@ export function Sidebar({
         </div>
 
         <FiltersArea />
+
+        {/* 5 (2026-08-19): the ask box in the rail — the second of its two
+            doors (the who-governs card is the first). Renders only when a
+            resolved coverage exists to ground answers in. */}
+        <SidebarAskBox />
 
         {/* The sidebar's footer: the disclosure link and the feedback path.
             One line each — the transparency page carries the substance. */}

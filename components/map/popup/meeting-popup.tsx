@@ -137,7 +137,8 @@ export function MeetingPopup({
               <summary className="cursor-pointer text-[0.6875rem] text-paper-dim underline decoration-dotted hover:text-signal">
                 What happened — plain language
               </summary>
-              <p className="mt-1 text-[0.6875rem] leading-relaxed text-paper-dim">
+              {/* 3b: the product's voice renders BOLD. */}
+              <p className="mt-1 text-[0.6875rem] font-semibold leading-relaxed text-paper-dim">
                 {minutes.summary}
               </p>
               <p className="mt-0.5 text-[0.5625rem] leading-relaxed text-muted">

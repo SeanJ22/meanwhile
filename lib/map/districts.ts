@@ -469,6 +469,63 @@ export interface DistrictHit {
   state: string;
 }
 
+/** One district currently drawn on screen — the stats card's unit (3g). */
+export interface DrawnDistrict {
+  type: DistrictType;
+  tier: Tier;
+  typeLabel: string;
+  ocdId: string;
+  label: string;
+}
+
+/**
+ * Every district currently drawn, deduplicated by ocdId (3g, 2026-08-19).
+ *
+ * This is the ONE denominator behind both the Districts stat card and the
+ * "Districts here" door it opens. The card used to count these features
+ * while the door listed legislative seats — two different universes, and
+ * the author caught the card saying 3 with two rows listed. The count is
+ * now `drawnDistrictsOn(...).length` and the door renders exactly this
+ * list, so the stated N and the rendered rows cannot diverge
+ * (tests/representation.test.ts holds the coupling).
+ */
+export function drawnDistrictsOn(
+  map: MapLibreMap,
+  activeTypes: readonly DistrictType[],
+): DrawnDistrict[] {
+  const layers = activeTypes
+    .map(lineLayerId)
+    .filter((id) => Boolean(map.getLayer(id)));
+  if (layers.length === 0) return [];
+
+  let features: MapGeoJSONFeature[];
+  try {
+    features = map.queryRenderedFeatures({ layers }) as MapGeoJSONFeature[];
+  } catch {
+    return [];
+  }
+
+  const seen = new Set<string>();
+  const drawn: DrawnDistrict[] = [];
+  for (const feature of features) {
+    const type = DISTRICT_TYPES.find(
+      (t) => lineLayerId(t) === feature.layer.id,
+    );
+    if (!type) continue;
+    const ocdId = String(feature.properties?.ocdId ?? "");
+    if (!ocdId || seen.has(ocdId)) continue;
+    seen.add(ocdId);
+    drawn.push({
+      type,
+      tier: DISTRICT_LAYERS[type].tier,
+      typeLabel: DISTRICT_LAYERS[type].label,
+      ocdId,
+      label: String(feature.properties?.label ?? ocdId),
+    });
+  }
+  return drawn;
+}
+
 /**
  * Every district containing a click.
  *

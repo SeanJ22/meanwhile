@@ -22,7 +22,7 @@ const COVERAGE_LABEL = {
 } as const;
 
 export function StatsBar() {
-  const { meetings, districtCount, dropped, result, searchFailed } =
+  const { meetings, drawnDistricts, dropped, result, searchFailed } =
     useShellData();
   const ui = useUi();
   const dispatch = useUiDispatch();
@@ -43,9 +43,16 @@ export function StatsBar() {
     return ids.size;
   }, [result]);
 
+  // 3g: the count IS the drawn list's length — the districts door renders
+  // the same list, so the stated N equals the rendered rows by construction.
   const stats = useMemo(
-    () => computeStats(meetings, ui.showDistricts ? districtCount : 0, officialCount),
-    [meetings, districtCount, ui.showDistricts, officialCount],
+    () =>
+      computeStats(
+        meetings,
+        ui.showDistricts ? drawnDistricts.length : 0,
+        officialCount,
+      ),
+    [meetings, drawnDistricts, ui.showDistricts, officialCount],
   );
 
   // The failed-fetch rule (2a): a failed operation may not render as an

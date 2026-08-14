@@ -64,6 +64,19 @@
   */
   --district-line: #5f7a8a;
 
+  /* Party affiliation colors (3a, 2026-08-19) — display only, applied to
+     the party LABEL text wherever it renders, never used to infer
+     anything. The author's palette: Democratic blue, Republican red,
+     Green green, Independent purple, no-affiliation/unknown gray. Values
+     are tuned per theme to clear WCAG AA against --panel-bg at the small
+     sizes party labels render at (lib/officials/party-color.ts maps
+     label → token). */
+  --party-democratic: #7da7f0;
+  --party-republican: #f0857c;
+  --party-green: #6fcf8f;
+  --party-independent: #b48ae0;
+  --party-none: #9aa0ab;
+
   --shadow-panel: 0 4px 20px rgba(0, 0, 0, 0.3);
   --shadow-popup: 0 10px 40px rgba(0, 0, 0, 0.5);
   --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
@@ -90,6 +103,12 @@
   --accent-all-glow: rgba(212, 114, 42, 0.18);
   --accent-school: #c2185b;
   --accent-school-glow: rgba(194, 24, 91, 0.18);
+
+  --party-democratic: #2457b8;
+  --party-republican: #b3362a;
+  --party-green: #1e7a3c;
+  --party-independent: #6b3fa0;
+  --party-none: #6a7079;
 
   --concluded: #4a8481;
   --canceled: #c0392b;

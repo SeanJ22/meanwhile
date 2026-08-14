@@ -6,9 +6,11 @@ import { useEffect, useState, type ReactNode } from "react";
 import { formatMeetingDate, formatMeetingTime } from "@/lib/map/format";
 import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
 import type { SeatHolder } from "@/lib/officials/lookup";
+import { partyColorVar } from "@/lib/officials/party-color";
 import type { Meeting, Provenance } from "@/lib/sources/types";
 
 import { HowToBeHeard } from "../meeting-panel";
+import { CalendarLinks } from "./calendar-links";
 import { AgendaSection } from "./agenda-section";
 import { NoValue, PopupRow, PopupSectionLabel } from "./popup-card";
 
@@ -276,7 +278,15 @@ function Representation({
             asks "says who?", and making them navigate to find out defeats it.
           */}
           <p className="mt-1 text-[0.6875rem] text-muted">
-            {holder.partyLabel ? `${holder.partyLabel} · ` : ""}
+            {/* 3a: the party label wears its color; the rest of the
+                provenance line stays muted. */}
+            {holder.partyLabel ? (
+              <span style={{ color: partyColorVar(holder.partyLabel) }}>
+                {holder.partyLabel} ·{" "}
+              </span>
+            ) : (
+              ""
+            )}
             {holder.sourceUrl ? (
               <a
                 href={holder.sourceUrl}
@@ -319,6 +329,9 @@ function Meetings({ meetings }: { meetings: Meeting[] }) {
           <p className="mt-0.5 text-[0.6875rem] text-muted">
             {meeting.bodyName} · {formatMeetingTime(meeting)}
           </p>
+          {/* 3i (2026-08-19): calendar links on every upcoming-meeting
+              surface, this tab included. */}
+          {meeting.status === "SCHEDULED" && <CalendarLinks meeting={meeting} />}
         </div>
       ))}
     </>

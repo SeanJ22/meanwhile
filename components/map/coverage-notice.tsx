@@ -15,6 +15,7 @@ import {
 } from "@/lib/registry/representation";
 import { agendaAbsenceNote } from "@/lib/registry/wording";
 import type { SeatHolder } from "@/lib/officials/lookup";
+import { partyColorVar } from "@/lib/officials/party-color";
 
 /**
  * Says which rung of the cascade produced what's on screen, and — when there is
@@ -131,8 +132,11 @@ function Holder({
         <span className="text-paper">{holder.name}</span>
       )}
       {holder.partyLabel && (
-        // Display only. Nothing here or downstream infers a position from it.
-        <span className="text-muted">· {holder.partyLabel}</span>
+        // Display only. Nothing here or downstream infers a position from
+        // it. Colored per the author's palette (3a).
+        <span style={{ color: partyColorVar(holder.partyLabel) }}>
+          · {holder.partyLabel}
+        </span>
       )}
       {holder.sourceUrl && (
         <a
@@ -488,7 +492,8 @@ function CoverageBody({
             href={`/about-area?zip=${zip}`}
             className="underline decoration-dotted hover:text-signal"
           >
-            Moving here? The basics — taxes, schools, registering →
+            Moving here? Know the basics — Taxes, schools, registering, and
+            more. →
           </a>
         </p>
       )}

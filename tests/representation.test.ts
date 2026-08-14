@@ -191,3 +191,56 @@ test("a failed fetch renders couldn't-check, never confident zeros", async () =>
   assert.equal(ok.meetings, 0);
   assert.equal(ok.failedNote, null);
 });
+
+test("3g: the districts door renders exactly the list the card counts", async () => {
+  const { districtDoorRows, deriveStatsView, computeStats } = await import(
+    "../lib/state/derive.ts"
+  );
+  // A drawn set spanning types: two with matching seats, two without
+  // (county/school districts have no legislative seat), plus a seat that is
+  // NOT drawn (must not create a row).
+  const drawn = [
+    { type: "congressional", tier: "national", typeLabel: "Congressional", ocdId: "ocd-division/country:us/state:az/cd:7", label: "AZ-7" },
+    { type: "state-senate", tier: "state", typeLabel: "State senate", ocdId: "ocd-division/country:us/state:az/sldu:21", label: "State Senate District 21" },
+    { type: "county", tier: "local", typeLabel: "County", ocdId: "ocd-division/country:us/state:az/county:pima", label: "Pima County" },
+    { type: "school", tier: "local", typeLabel: "School district", ocdId: "ocd-division/country:us/state:az/school_district:tucson", label: "Tucson Unified" },
+  ] as const;
+  const holder = {
+    id: "congress:G000606", name: "Adelita S. Grijalva", officeTitle: "U.S. Representative",
+    partyLabel: "Democrat", websiteUrl: null, sourceUrl: null, email: null,
+    phone: null, contactFormUrl: null, photoUrl: null, campaignUrl: null,
+  };
+  const seats = [
+    { ocdId: "ocd-division/country:us/state:az/cd:7", label: "AZ-7", divisionType: "cd", tier: "national", representatives: [holder] },
+    { ocdId: "ocd-division/country:us/state:az/cd:6", label: "AZ-6", divisionType: "cd", tier: "national", representatives: [holder] },
+  ];
+  const rows = districtDoorRows(drawn as never, seats as never);
+
+  // The invariant the author caught production violating: stated N ===
+  // rendered rows, from the SAME list.
+  assert.equal(rows.length, drawn.length, "one row per drawn district, no more, no fewer");
+  const cardN = deriveStatsView(computeStats([], drawn.length, 0), true, false).districts;
+  assert.equal(cardN, rows.length, "the card's stated N must equal the door's rendered rows");
+
+  // Holders attach only where the seat matches by ocdId; a missing seat
+  // renders an empty holder list, never drops the row.
+  assert.equal(rows[0].holders.length, 1);
+  assert.equal(rows[2].holders.length, 0);
+  // The undrawn seat created no row.
+  assert.ok(!rows.some((r) => r.ocdId.endsWith("cd:6")));
+});
+
+test("3h: free scrolling never re-expands the who-governs card; a typed zip does", async () => {
+  const { noticeShouldExpand } = await import("../lib/state/derive.ts");
+  // Launch: typed zip, nothing shown yet.
+  assert.equal(noticeShouldExpand("zip", "85701", null), true);
+  // Sidebar zip change: typed zip, new area.
+  assert.equal(noticeShouldExpand("zip", "07866", "85701"), true);
+  // Same zip re-entered: the handler resets collapse itself; the rule
+  // alone does not re-fire.
+  assert.equal(noticeShouldExpand("zip", "85701", "85701"), false);
+  // The author's complaint: a settled pan crossing into a new ZCTA must
+  // NOT pop the card - data refreshes silently under the bubble.
+  assert.equal(noticeShouldExpand("settled", "85641", "85701"), false);
+  assert.equal(noticeShouldExpand("settled", "85641", null), false);
+});

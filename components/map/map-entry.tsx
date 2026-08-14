@@ -11,7 +11,7 @@ import { useStoredTheme } from "@/hooks/use-stored-theme";
 import { useStoredZip } from "@/hooks/use-stored-zip";
 import type { SearchItem } from "@/lib/search";
 import { DataProvider, type ShellData } from "@/lib/state/data";
-import { applyFilters } from "@/lib/state/derive";
+import { applyFilters, noticeShouldExpand } from "@/lib/state/derive";
 import { deriveActiveDistrictTypes } from "@/lib/state/district-intent";
 import { haversineKm } from "@/lib/geo/distance";
 import { BallotBubble } from "./ballot-bubble";
@@ -36,7 +36,7 @@ import {
   meetingHeadline,
 } from "@/lib/map/format";
 
-import type { DistrictHit } from "@/lib/map/districts";
+import type { DistrictHit, DrawnDistrict } from "@/lib/map/districts";
 import type { DistrictType } from "@/lib/state/types";
 
 import { CoverageNotice } from "./coverage-notice";
@@ -115,7 +115,9 @@ function MapEntryInner() {
   const [tilesFailed, setTilesFailed] = useState(false);
   const [districtsFailed, setDistrictsFailed] = useState(false);
   const [focus, setFocus] = useState<MapFocus | null>(null);
-  const [districtCount, setDistrictCount] = useState(0);
+  // The one denominator (3g): the card counts this list's length and the
+  // districts door renders its rows.
+  const [drawnDistricts, setDrawnDistricts] = useState<DrawnDistrict[]>([]);
   // Reopened by the sidebar's CHANGE button and by reset. Distinct from "no
   // zip stored yet", which opens it unconditionally.
   const [welcomeRequested, setWelcomeRequested] = useState(false);
@@ -472,10 +474,14 @@ function MapEntryInner() {
   const shownAreaKey = useRef<string | null>(null);
   useEffect(() => {
     if (!current) return;
-    // The area label the notices speak — typed zip or settled nearZip. A
-    // genuinely new area shows the card once; the same area stays as the
-    // reader left it.
-    if (current.zip !== shownAreaKey.current) {
+    // 3h (2026-08-19): only a TYPED-ZIP view may re-expand the card —
+    // launch and a sidebar zip change are both typed-zip views. A settled
+    // pan that crosses a ZCTA line used to change `current.zip` (the
+    // nearZip) and pop the card mid-scroll; now it refreshes the data
+    // under the bubble silently. The rule is pure in
+    // lib/state/derive.ts#noticeShouldExpand, held by a test.
+    const viewKind = current.viewKey.startsWith("zip:") ? "zip" : "settled";
+    if (noticeShouldExpand(viewKind, current.zip, shownAreaKey.current)) {
       shownAreaKey.current = current.zip;
       setNoticeCollapsed(false);
     }
@@ -568,11 +574,11 @@ function MapEntryInner() {
       venues,
       result: current,
       location,
-      districtCount,
+      drawnDistricts,
       dropped: 0,
       searchFailed: failure !== null,
     }),
-    [current, meetings, venues, location, districtCount, failure],
+    [current, meetings, venues, location, drawnDistricts, failure],
   );
 
   const onSearchPick = useCallback((item: SearchItem) => {
@@ -762,7 +768,7 @@ function MapEntryInner() {
             onDistrictClick={onDistrictClick}
             theme={theme}
             onDistrictError={onDistrictError}
-            onDistrictCount={setDistrictCount}
+            onDrawnDistricts={setDrawnDistricts}
             onSelectVenue={onSelectVenue}
             onTileError={onTileError}
             onViewportSettle={onViewportSettle}
@@ -1018,6 +1024,8 @@ function MapEntryInner() {
             door={ui.door}
             coverage={current?.coverage ?? null}
             meetings={current?.meetings ?? []}
+            drawnDistricts={drawnDistricts}
+            districtOverlayOn={ui.showDistricts}
             onOpenOfficial={(holder, seatLabel, tier) =>
               openLarge({ kind: "official", holder, seatLabel, tier })
             }

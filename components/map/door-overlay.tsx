@@ -5,6 +5,8 @@ import { X } from "lucide-react";
 import type { CoverageSummary } from "@/lib/registry/coverage";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { Meeting } from "@/lib/sources/types";
+import type { DrawnDistrict } from "@/lib/map/districts";
+import { districtDoorRows } from "@/lib/state/derive";
 import { formatMeetingDate } from "@/lib/map/format";
 
 /**
@@ -22,6 +24,8 @@ export function DoorOverlay({
   door,
   coverage,
   meetings,
+  drawnDistricts,
+  districtOverlayOn,
   onOpenOfficial,
   onOpenMeeting,
   onClose,
@@ -29,6 +33,12 @@ export function DoorOverlay({
   door: "bodies" | "districts" | "officials";
   coverage: CoverageSummary | null;
   meetings: Meeting[];
+  /** The districts the map is drawing — the same list the stat card
+   *  counts, rendered row for row (3g). */
+  drawnDistricts: DrawnDistrict[];
+  /** Whether the overlay is on — off means the card said "—", and the
+   *  door explains rather than rendering an empty list. */
+  districtOverlayOn: boolean;
   onOpenOfficial: (
     holder: SeatHolder,
     seatLabel: string | null,
@@ -70,15 +80,23 @@ export function DoorOverlay({
           </button>
         </div>
 
-        {!coverage ? (
+        {door === "districts" ? (
+          // 3g: this door lists the districts the card counted — the same
+          // list, not a different universe. It renders even with no
+          // coverage; the drawn overlay is client-side and honest alone.
+          <DistrictsDoor
+            drawnDistricts={drawnDistricts}
+            districtOverlayOn={districtOverlayOn}
+            coverage={coverage}
+            onOpenOfficial={onOpenOfficial}
+          />
+        ) : !coverage ? (
           <p className="mt-3 text-[0.8125rem] text-muted">
             We couldn&apos;t resolve who governs this point — enter a zip
             first, or the search may have failed.
           </p>
         ) : door === "bodies" ? (
           <BodiesDoor coverage={coverage} meetings={meetings} onOpenMeeting={onOpenMeeting} />
-        ) : door === "districts" ? (
-          <DistrictsDoor coverage={coverage} onOpenOfficial={onOpenOfficial} />
         ) : (
           <OfficialsDoor coverage={coverage} onOpenOfficial={onOpenOfficial} />
         )}
@@ -149,53 +167,67 @@ function BodiesDoor({
 }
 
 function DistrictsDoor({
+  drawnDistricts,
+  districtOverlayOn,
   coverage,
   onOpenOfficial,
 }: {
-  coverage: CoverageSummary;
+  drawnDistricts: DrawnDistrict[];
+  districtOverlayOn: boolean;
+  coverage: CoverageSummary | null;
   onOpenOfficial: (
     holder: SeatHolder,
     seatLabel: string | null,
     tier: "local" | "state" | "national",
   ) => void;
 }) {
-  if (coverage.seats.length === 0) {
+  if (!districtOverlayOn) {
     return (
       <p className="mt-3 text-[0.8125rem] text-muted">
-        No districts resolved at this point yet.
+        The district overlay is off — the card shows &ldquo;—&rdquo; and
+        nothing is drawn. Turn on district types in the sidebar to draw and
+        count them.
       </p>
     );
   }
+  if (drawnDistricts.length === 0) {
+    return (
+      <p className="mt-3 text-[0.8125rem] text-muted">
+        No district boundaries are drawn in this view yet.
+      </p>
+    );
+  }
+  // 3g: EXACTLY one row per drawn district — the count the card stated.
+  const rows = districtDoorRows(drawnDistricts, coverage?.seats ?? []);
   return (
     <ul className="mt-3 space-y-2">
-      {coverage.seats.map((seat) => (
+      {rows.map((row) => (
         <li
-          key={seat.label}
+          key={row.ocdId}
           className="border-b border-[var(--panel-border)] pb-2 last:border-0"
         >
-          <p className="text-[0.8125rem]">{seat.label}</p>
-          {seat.representatives.length > 0 ? (
-            seat.representatives.map((holder) => (
-              <button
-                key={holder.id}
-                type="button"
-                onClick={() =>
-                  onOpenOfficial(
-                    holder,
-                    seat.label,
-                    seat.label.toLowerCase().includes("state") ? "state" : "national",
-                  )
-                }
-                className="mt-0.5 mr-3 cursor-pointer text-[0.75rem] text-signal underline decoration-dotted"
-              >
-                {holder.name} →
-              </button>
-            ))
-          ) : (
-            <p className="mt-0.5 text-[0.6875rem] text-muted">
-              No sourced officeholder on file yet.
-            </p>
-          )}
+          <div className="flex items-baseline justify-between gap-3">
+            <p className="text-[0.8125rem]">{row.label}</p>
+            <span className="shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
+              {row.typeLabel}
+            </span>
+          </div>
+          {row.holders.map((holder) => (
+            <button
+              key={holder.id}
+              type="button"
+              onClick={() =>
+                onOpenOfficial(
+                  holder,
+                  row.label,
+                  row.tier === "local" ? "local" : row.tier,
+                )
+              }
+              className="mt-0.5 mr-3 cursor-pointer text-[0.75rem] text-signal underline decoration-dotted"
+            >
+              {holder.name} →
+            </button>
+          ))}
         </li>
       ))}
     </ul>

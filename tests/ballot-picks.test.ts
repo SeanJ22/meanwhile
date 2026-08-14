@@ -28,22 +28,34 @@ test("the picks module never transmits — no fetch, no navigator.sendBeacon, no
   );
 });
 
-test("every pick surface states the device-only fact", () => {
-  for (const file of [
-    ["components", "ballot", "pick-control.tsx"],
-    ["components", "ballot", "my-picks.tsx"],
-  ] as const) {
-    const source = read(...file);
-    assert.ok(
-      /Saved on this device only/.test(source),
-      `${file.join("/")} must carry the device-only sentence`,
-    );
-  }
-  // The control must also distinguish itself from the collected reactions.
+test("3e: the picks disclosure is stated ONCE, on the ballot page, with the reaction distinction", () => {
+  // The TOS pattern (author-ordered 2026-08-19): one statement at the
+  // bottom of the ballot page, not a repeat under every contest. The
+  // distinction from reaction buttons lives in that statement.
+  const page = read("app", "ballot", "page.tsx");
+  assert.ok(
+    /saved on this device only/i.test(page),
+    "the ballot page must carry the device-only statement",
+  );
+  assert.ok(
+    /join anonymous local totals/.test(page),
+    "the single statement must name the difference from reactions",
+  );
+  assert.ok(
+    /transparency/.test(page),
+    "the statement must link the data-handling page",
+  );
+  // Once means once: the control no longer repeats it per contest. The
+  // control keeps the author's label; MyPicks keeps its device-only header
+  // as a label (a heading, not a second disclosure paragraph).
   const control = read("components", "ballot", "pick-control.tsx");
   assert.ok(
-    /join anonymous local totals/.test(control),
-    "the pick control must name the difference from reactions",
+    /What do you think\?/.test(control),
+    "3d: the pick control's label is the author's words",
+  );
+  assert.ok(
+    !/Saved on this device only\./.test(control),
+    "the per-contest disclosure paragraph is gone (3e) — it lives on the page once",
   );
 });
 

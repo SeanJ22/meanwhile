@@ -26,11 +26,12 @@ import {
   addDistrictLayer,
   districtLayerPresent,
   districtsAt,
-  lineLayerId,
+  drawnDistrictsOn,
   loadDistricts,
   removeDistrictLayer,
   setSelectedDistrict,
   type DistrictHit,
+  type DrawnDistrict,
 } from "@/lib/map/districts";
 import type { DistrictType } from "@/lib/state/types";
 import type { Theme } from "@/hooks/use-stored-theme";
@@ -77,8 +78,9 @@ interface MapCanvasProps {
   venues: Venue[];
   camera: CameraTarget | null;
   focus: MapFocus | null;
-  /** How many district features are currently drawn, for the stats card. */
-  onDistrictCount: (count: number) => void;
+  /** The districts currently drawn — the stats card counts this list and
+   *  the districts door renders it, one denominator for both (3g). */
+  onDrawnDistricts: (districts: DrawnDistrict[]) => void;
   selectedVenueKey: string | null;
   /** District overlays to draw. Empty draws none. */
   districtTypes: DistrictType[];
@@ -142,7 +144,7 @@ export function MapCanvas({
   selectedDistrict,
   theme,
   onDistrictError,
-  onDistrictCount,
+  onDrawnDistricts,
   onDistrictClick,
   onSelectVenue,
   onTileError,
@@ -171,10 +173,10 @@ export function MapCanvas({
     onDistrictErrorRef.current = onDistrictError;
   }, [onDistrictError]);
 
-  const onDistrictCountRef = useRef(onDistrictCount);
+  const onDrawnDistrictsRef = useRef(onDrawnDistricts);
   useEffect(() => {
-    onDistrictCountRef.current = onDistrictCount;
-  }, [onDistrictCount]);
+    onDrawnDistrictsRef.current = onDrawnDistricts;
+  }, [onDrawnDistricts]);
 
   const districtTypesRef = useRef(districtTypes);
   useEffect(() => {
@@ -493,43 +495,30 @@ export function MapCanvas({
     else map.flyTo({ ...options, duration: 900, essential: true });
   }, [focus]);
 
-  // Report how many district features are drawn, for the stats card. Counted
-  // after rendering settles rather than from the source, because the number
-  // that matters is what a reader can see.
+  // Report the districts currently drawn, for the stats card AND the
+  // districts door — the same list feeds both, so the stated count and the
+  // rendered rows share one denominator (3g). Counted after rendering
+  // settles rather than from the source, because what matters is what a
+  // reader can see.
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
 
-    const count = () => {
+    const report = () => {
       const live = mapRef.current;
       if (!live) return;
-
-      const layers = districtTypesRef.current
-        .map(lineLayerId)
-        .filter((id) => Boolean(live.getLayer(id)));
-
-      if (layers.length === 0) {
-        onDistrictCountRef.current(0);
-        return;
-      }
-
-      try {
-        const features = live.queryRenderedFeatures({ layers });
-        onDistrictCountRef.current(
-          new Set(features.map((f) => f.properties?.ocdId)).size,
-        );
-      } catch {
-        onDistrictCountRef.current(0);
-      }
+      onDrawnDistrictsRef.current(
+        drawnDistrictsOn(live, districtTypesRef.current),
+      );
     };
 
-    count();
-    map.on("idle", count);
-    map.on("sourcedata", count);
+    report();
+    map.on("idle", report);
+    map.on("sourcedata", report);
 
     return () => {
-      map.off("idle", count);
-      map.off("sourcedata", count);
+      map.off("idle", report);
+      map.off("sourcedata", report);
     };
   }, [districtTypes]);
 

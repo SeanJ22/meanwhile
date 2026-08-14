@@ -1,8 +1,8 @@
-import {
-  plainContributorLabel,
-  type FundingAbsenceData,
-  type FundingDisplayData,
+import type {
+  FundingAbsenceData,
+  FundingDisplayData,
 } from "@/lib/funding/display";
+import { plainContributorLabel } from "@/lib/funding/labels";
 import type { ReactionViewContext } from "@/lib/reactions/client";
 import { ReactionControl } from "@/components/reactions/reaction-control";
 import { formatDateMDY } from "@/lib/map/format";

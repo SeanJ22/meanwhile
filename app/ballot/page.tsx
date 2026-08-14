@@ -2,6 +2,8 @@ import Link from "next/link";
 
 import { contestsForDivisions } from "@/lib/sources/ballot-nj-morris";
 import { BALLOT_SOURCES } from "@/lib/ballot/registry";
+import { analysisForContest } from "@/lib/ballot/analyses";
+import { summaryForContest } from "@/lib/ballot/measure-summaries";
 import { electionDatesFor } from "@/lib/ballot/election-dates";
 import type {
   BallotAbsence,
@@ -230,40 +232,81 @@ export default async function BallotPage({
           </section>
         ))}
 
-      {/* Statewide measures: the official short title, the pending-text
-          statement where official language is not yet published, and the
-          impartial analysis linked. Never characterized by us. */}
+      {/* Statewide measures (2b): the official short title, the plain-
+          language summary labeled as such, and the Legislative Council's
+          analysis VERBATIM — the official explainer, rendered rather than
+          merely linked. Data in hand is never displayed as missing. */}
       {measureContests.length > 0 && (
         <section className="mt-6">
           <h2 className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-muted">
             Statewide measures
           </h2>
-          {measureContests.map((contest) => (
-            <div
-              key={contest.id}
-              className="mt-3 rounded border border-[var(--panel-border)] p-4"
-            >
-              <h3 className="text-[0.875rem] font-semibold">{contest.title}</h3>
-              {contest.scopeNote && (
-                <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
-                  {contest.scopeNote}
+          {measureContests.map((contest) => {
+            const analysis = analysisForContest(contest.id);
+            const summary = summaryForContest(contest.id);
+            return (
+              <div
+                key={contest.id}
+                className="mt-3 rounded border border-[var(--panel-border)] p-4"
+              >
+                <h3 className="text-[0.875rem] font-semibold">{contest.title}</h3>
+
+                {summary && analysis?.text && (
+                  <div className="mt-2.5 rounded bg-[var(--surface,rgba(255,255,255,0.04))] p-3">
+                    <p className="font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
+                      Plain-language summary — read the official text below
+                    </p>
+                    <p className="mt-1.5 text-[0.8125rem] leading-relaxed">
+                      {summary.summary}
+                    </p>
+                  </div>
+                )}
+
+                {analysis?.text ? (
+                  <div className="mt-2.5">
+                    <p className="font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
+                      Official analysis — {analysis.sourceOrg}
+                    </p>
+                    {/* Verbatim, whole, and scrollable — never excerpted. */}
+                    <p className="mt-1.5 max-h-72 overflow-y-auto whitespace-pre-line rounded border border-[var(--panel-border)] p-3 text-[0.75rem] leading-relaxed text-paper-dim">
+                      {analysis.text}
+                    </p>
+                  </div>
+                ) : (
+                  analysis?.extractionNote && (
+                    // Extraction failed: say so honestly and keep the link.
+                    <p className="mt-2 text-[0.75rem] leading-relaxed text-muted">
+                      We retrieved this measure&apos;s official analysis but
+                      couldn&apos;t extract its text — read it at the link
+                      below.
+                    </p>
+                  )
+                )}
+
+                {contest.scopeNote && (
+                  <p className="mt-2 text-[0.75rem] leading-relaxed text-muted">
+                    {contest.scopeNote}
+                  </p>
+                )}
+                <p className="mt-2 text-[0.6875rem]">
+                  <a
+                    href={analysis?.analysisUrl ?? contest.provenance.sourceUrl ?? undefined}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="underline decoration-dotted"
+                  >
+                    {analysis?.sourceOrg ?? contest.provenance.sourceOrg}
+                  </a>{" "}
+                  <span className="text-muted">
+                    · read{" "}
+                    {analysis
+                      ? analysis.retrievedAt.slice(0, 10)
+                      : contest.provenance.collectedAt}
+                  </span>
                 </p>
-              )}
-              <p className="mt-2 text-[0.6875rem]">
-                <a
-                  href={contest.provenance.sourceUrl ?? undefined}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="underline decoration-dotted"
-                >
-                  {contest.provenance.sourceOrg}
-                </a>{" "}
-                <span className="text-muted">
-                  · read {contest.provenance.collectedAt}
-                </span>
-              </p>
-            </div>
-          ))}
+              </div>
+            );
+          })}
         </section>
       )}
 

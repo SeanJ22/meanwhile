@@ -1,7 +1,12 @@
 "use client";
 
+import { useDistrictLayer } from "@/hooks/use-district-layer";
 import type { MeetingStatus } from "@/lib/sources/types";
 import { BODY_TYPE_LABEL } from "@/lib/state/derive";
+import {
+  interactionTurnsOverlayOn,
+  type DistrictInteraction,
+} from "@/lib/state/district-intent";
 import { ALL_DISTRICT_TYPES } from "@/lib/state/reducer";
 import { activeControlCount } from "@/lib/state/reset";
 import { useUi, useUiDispatch } from "@/lib/state/provider";
@@ -45,6 +50,19 @@ export function FiltersArea() {
   // "differs from the default view", so a fresh page reads zero and Reset all
   // visibly returns to it (M24).
   const count = activeControlCount(ui);
+
+  // The district-type checkboxes used to be live while "Show districts" was
+  // off — every click a silent no-op, which read as "the checkboxes are
+  // broken" (defect 2026-08-14). Touching the group now expresses intent to
+  // see districts, so it turns the overlay on; the rule lives in
+  // lib/state/district-intent.ts where a test can hold it.
+  const districtLayer = useDistrictLayer();
+  const overlayOff = districtLayer.restored && !districtLayer.enabled;
+  const wantOverlay = (kind: DistrictInteraction) => {
+    if (overlayOff && interactionTurnsOverlayOn(kind)) {
+      districtLayer.setEnabled(true);
+    }
+  };
 
   return (
     <div className="filters-area">
@@ -185,11 +203,13 @@ export function FiltersArea() {
                 ? [
                     {
                       label: "select all",
-                      onClick: () =>
+                      onClick: () => {
+                        wantOverlay("select-all");
                         dispatch({
                           type: "filter/districtTypesSet",
                           value: [...ALL_DISTRICT_TYPES],
-                        }),
+                        });
+                      },
                     },
                   ]
                 : []),
@@ -211,14 +231,20 @@ export function FiltersArea() {
                   <input
                     type="checkbox"
                     checked={on}
-                    onChange={() =>
-                      dispatch({ type: "filter/toggleDistrictType", value: type })
-                    }
+                    onChange={() => {
+                      wantOverlay("toggle-type");
+                      dispatch({ type: "filter/toggleDistrictType", value: type });
+                    }}
                   />
                   {DISTRICT_LABEL[type]}
                 </label>
               );
             })}
+            {overlayOff && (
+              <p className="mt-1 text-[0.6875rem] leading-relaxed text-muted">
+                The overlay is off — checking a type turns it on.
+              </p>
+            )}
           </Group>
 
           {/* Edia's focusStatesOn: default-on, and visibly so. A reader who

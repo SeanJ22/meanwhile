@@ -93,3 +93,112 @@ test("the NJ date strip is complete and cited", () => {
   }
   assert.match(dates.sourceUrl, /^https:\/\/www\.nj\.gov\//);
 });
+
+/**
+ * The AZ and NH surfaces (2026-08-14), through the shared registry — the
+ * same joins, denominators stated.
+ */
+import { BALLOT_SOURCES } from "../lib/ballot/registry.ts";
+import { BALLOT_COVERED_STATES } from "../lib/ballot/covered-states.ts";
+
+async function registryBallotAt(zip: string) {
+  const r = resolveZip(zip);
+  assert.ok(r.ok, `${zip} must resolve`);
+  const divisions = await divisionsAt(r.centroid.lat, r.centroid.lng);
+  const ocdIds = divisions.map((d) => d.ocdId);
+  for (const { source } of BALLOT_SOURCES) {
+    const set = source.normalize(await source.fetch());
+    const hit = contestsForDivisions(set, ocdIds);
+    if (hit.contests.length > 0 || hit.absences.length > 0) {
+      return { set, ...hit };
+    }
+  }
+  throw new Error(`${zip}: no ballot source matched`);
+}
+
+test("the client's covered-state list agrees with the registry", () => {
+  assert.deepEqual(
+    [...BALLOT_COVERED_STATES].sort(),
+    BALLOT_SOURCES.map((s) => s.state).sort(),
+    "covered-states.ts and ballot registry drifted apart",
+  );
+});
+
+test("a Tucson voter (85701) sees the statewide slate, CD-7, LD-20 and the measures", async () => {
+  const { set, contests } = await registryBallotAt("85701");
+  assert.equal(set.election.state, "AZ");
+
+  const candidacy = contests.filter((c) => c.type === "CANDIDACY");
+  const measures = contests.filter((c) => c.type === "MEASURE");
+  // Denominators: 6 statewide offices + CD7 + LD20 senate + LD20 house = 9
+  // candidacy contests; 11 statewide measures.
+  assert.equal(candidacy.length, 9, candidacy.map((c) => c.id).join(", "));
+  assert.equal(measures.length, 11);
+
+  const ids = new Set(contests.map((c) => c.id));
+  assert.ok(ids.has("ballot-az-pima:us-house-7"));
+  assert.ok(ids.has("ballot-az-pima:state-house-20"));
+  assert.ok(!ids.has("ballot-az-pima:us-house-6"), "CD-6 must not leak into 85701");
+
+  // Every measure links the Legislative Council's adopted analysis.
+  for (const m of measures) {
+    assert.match(m.provenance.sourceUrl ?? "", /azleg\.gov.*2026BallotMeasures/);
+  }
+
+  // The no-U.S.-Senate absence is stated and cited, never implied.
+  const { absences } = await registryBallotAt("85701");
+  assert.ok(
+    absences.some((a) => a.statement.includes("No U.S. Senate seat")),
+    "the cited absence of a Senate race must render",
+  );
+});
+
+test("a Vail voter (85641) sees CD-6 and LD-19, never Tucson's districts", async () => {
+  const { contests } = await registryBallotAt("85641");
+  const ids = new Set(contests.map((c) => c.id));
+  assert.ok(ids.has("ballot-az-pima:us-house-6"));
+  assert.ok(ids.has("ballot-az-pima:state-senate-19"));
+  assert.ok(!ids.has("ballot-az-pima:us-house-7"));
+  assert.ok(!ids.has("ballot-az-pima:state-house-20"));
+});
+
+test("a Newbury voter (03255) sees the November slate, and March is stated, not hidden", async () => {
+  const { set, contests, absences } = await registryBallotAt("03255");
+  assert.equal(set.election.state, "NH");
+
+  // Denominator: governor, US senate, CD2, state senate 7, Merrimack 7,
+  // and five county offices = 10 contests.
+  assert.equal(contests.length, 10, contests.map((c) => c.id).join(", "));
+
+  const ids = new Set(contests.map((c) => c.id));
+  assert.ok(ids.has("ballot-nh-merrimack:us-senate"));
+  assert.ok(ids.has("ballot-nh-merrimack:state-house-merrimack-7"));
+
+  const senate = set.candidacies.filter(
+    (c) => c.contestId === "ballot-nh-merrimack:us-senate",
+  );
+  assert.equal(senate.length, 13, "13 filed for the open Senate seat");
+
+  // The town-meeting finding renders as the authority's own structure — the
+  // March town election — for both the town and the school district.
+  assert.equal(absences.length, 2, absences.map((a) => a.ocdId).join(", "));
+  for (const a of absences) assert.match(a.statement, /March/);
+
+  // Our unmapped-districts gap is stated, never smoothed over.
+  assert.ok((set.coverageNotes ?? []).length > 0);
+});
+
+test("every AZ and NH ballot record is cited to an official source", async () => {
+  for (const state of ["az", "nh"]) {
+    const entry = BALLOT_SOURCES.find((s) => s.state === state);
+    assert.ok(entry);
+    const set = entry.source.normalize(await entry.source.fetch());
+    for (const record of [...set.contests, ...set.candidacies, ...set.absences]) {
+      assert.match(
+        record.provenance.sourceUrl ?? "",
+        /^https:\/\/(azsos\.gov|www\.azleg\.gov|www\.sos\.nh\.gov)\//,
+        `${state}: every record cites the election authority or Legislative Council`,
+      );
+    }
+  }
+});

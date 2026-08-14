@@ -1,6 +1,11 @@
 import { Marker, type Map as MapLibreMap } from "maplibre-gl";
 
 import type { Venue } from "@/lib/meetings/venues";
+import {
+  LEVEL_ORDER,
+  levelForMeeting,
+  type GovernmentLevel,
+} from "@/lib/state/derive";
 
 /**
  * A pool of markers, created once and reused.
@@ -38,6 +43,18 @@ export interface MarkerPool {
 
 export function createMarkerPool(): MarkerPool {
   return { entries: new Map(), previouslyVisibleKeys: new Set() };
+}
+
+function levelColor(level: GovernmentLevel): string {
+  return level === "federal"
+    ? "var(--accent-national)"
+    : `var(--accent-${level})`;
+}
+
+function levelGlow(level: GovernmentLevel): string {
+  return level === "federal"
+    ? "var(--accent-national-glow)"
+    : `var(--accent-${level}-glow)`;
 }
 
 /**
@@ -81,6 +98,44 @@ export function updateMarkerIcon(
     count > 0 && venue.meetings.every((m) => m.status === "CONCLUDED");
 
   element.dataset.concluded = String(concluded);
+
+  /*
+   * Dot color says which level of government meets here (2g): school, local,
+   * state or federal. A venue hosting several levels — a school board and a
+   * congressional town hall in the same building — shows a split ring with
+   * one equal slice per level, never one level's color silently standing in
+   * for all of them. Concluded venues stay hollow: the CSS rule owns their
+   * look, so the inline background must be cleared, not fought.
+   */
+  const dot = element.querySelector<HTMLSpanElement>(".wtp-pin-dot");
+  if (dot) {
+    const levels = LEVEL_ORDER.filter((level) =>
+      venue.meetings.some((m) => levelForMeeting(m) === level),
+    );
+    element.dataset.levels = levels.join(" ");
+
+    if (concluded || levels.length === 0) {
+      dot.style.background = "";
+      element.style.removeProperty("--pin-color");
+      element.style.removeProperty("--pin-glow");
+    } else if (levels.length === 1) {
+      dot.style.background = "";
+      element.style.setProperty("--pin-color", levelColor(levels[0]));
+      element.style.setProperty("--pin-glow", levelGlow(levels[0]));
+    } else {
+      const slice = 360 / levels.length;
+      const stops = levels
+        .map(
+          (level, i) =>
+            `${levelColor(level)} ${i * slice}deg ${(i + 1) * slice}deg`,
+        )
+        .join(", ");
+      dot.style.background = `conic-gradient(${stops})`;
+      element.style.setProperty("--pin-color", levelColor(levels[0]));
+      element.style.setProperty("--pin-glow", levelGlow(levels[0]));
+    }
+  }
+
   element.setAttribute(
     "aria-label",
     `${venue.name}, ${count} ${count === 1 ? "meeting" : "meetings"}`,

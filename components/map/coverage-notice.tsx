@@ -1,6 +1,9 @@
 "use client";
 
+import { useNarrowing } from "@/hooks/use-narrowing";
 import { formatMiles } from "@/lib/map/format";
+
+import { NarrowingPrompt } from "./narrowing-prompt";
 import type { CoverageTier } from "@/lib/meetings/query";
 import type { CoverageSummary, CoveredBody, Seat } from "@/lib/registry/coverage";
 import {
@@ -43,10 +46,18 @@ interface CoverageNoticeProps {
    * must never render the same way.
    */
   failedSourceOcdIds?: string[];
+  onOpenOfficial?: OpenOfficial;
 }
 
 /** How many bodies to name before collapsing the rest into a count. */
 const NAME_LIMIT = 5;
+
+/** Opens the rep popup (3c). Seat label and tier ride along for the card. */
+export type OpenOfficial = (
+  holder: SeatHolder,
+  seatLabel: string | null,
+  tier: "local" | "state" | "national",
+) => void;
 
 const DIVISION_NOUN: Record<CoveredBody["divisionType"], string> = {
   county: "County",
@@ -88,18 +99,26 @@ function seatPhrase(seats: Seat[]): string | null {
  * screen only when it carries a source record, and the transparency surface is
  * what makes that claim checkable rather than merely asserted.
  */
-function Holder({ holder }: { holder: SeatHolder }) {
+function Holder({
+  holder,
+  onOpen,
+}: {
+  holder: SeatHolder;
+  onOpen?: () => void;
+}) {
   return (
     <span className="inline-flex items-baseline gap-1.5">
-      {holder.websiteUrl ? (
-        <a
-          href={holder.websiteUrl}
-          target="_blank"
-          rel="noreferrer"
+      {onOpen ? (
+        // The name opens the rep popup (3c) — photo, contact, what the
+        // office does — rather than navigating away. The official page and
+        // the source link both live inside it.
+        <button
+          type="button"
+          onClick={onOpen}
           className="text-paper underline decoration-dotted underline-offset-2 hover:text-signal"
         >
           {holder.name}
-        </a>
+        </button>
       ) : (
         <span className="text-paper">{holder.name}</span>
       )}
@@ -122,13 +141,30 @@ function Holder({ holder }: { holder: SeatHolder }) {
   );
 }
 
-function HolderList({ holders }: { holders: SeatHolder[] }) {
+function HolderList({
+  holders,
+  seatLabel,
+  tier,
+  onOpenOfficial,
+}: {
+  holders: SeatHolder[];
+  seatLabel: string | null;
+  tier: "local" | "state" | "national";
+  onOpenOfficial?: OpenOfficial;
+}) {
   return (
     <>
       {holders.map((holder, i) => (
         <span key={holder.id}>
           {i > 0 && <span className="text-muted">, </span>}
-          <Holder holder={holder} />
+          <Holder
+            holder={holder}
+            onOpen={
+              onOpenOfficial
+                ? () => onOpenOfficial(holder, seatLabel, tier)
+                : undefined
+            }
+          />
         </span>
       ))}
     </>
@@ -146,14 +182,36 @@ function CoverageBody({
   zip,
   coverage,
   failedSourceOcdIds = [],
+  onOpenOfficial,
 }: {
   zip: string;
   coverage: CoverageSummary;
   failedSourceOcdIds?: string[];
+  onOpenOfficial?: OpenOfficial;
 }) {
   const { bodies, seats, unincorporated, counts, senators, seatCounts } = coverage;
-  const shown = bodies.slice(0, NAME_LIMIT);
-  const hidden = bodies.length - shown.length;
+
+  /*
+   * The reader's device-local narrowing (M26): where they picked their
+   * municipality or school district, bodies of that TYPE narrow to the
+   * choice; every other type stays fully listed. The choice never leaves
+   * the device — see hooks/use-narrowing.ts.
+   */
+  const narrowing = useNarrowing(zip);
+  const selected = new Set(narrowing.divisions);
+  const narrowedTypes = new Set(
+    bodies
+      .filter((b) => b.ocdId !== null && selected.has(b.ocdId))
+      .map((b) => b.divisionType),
+  );
+  const narrowedBodies = bodies.filter(
+    (b) =>
+      !narrowedTypes.has(b.divisionType) ||
+      (b.ocdId !== null && selected.has(b.ocdId)),
+  );
+
+  const shown = narrowedBodies.slice(0, NAME_LIMIT);
+  const hidden = narrowedBodies.length - shown.length;
   const seatLine = seatPhrase(seats);
   const kind = leadKind(coverage);
   const g = counts.governing;
@@ -173,16 +231,30 @@ function CoverageBody({
       </>
     ) : kind === "meetings-missing-calendars" ? (
       // Meetings are on screen, but not from every government's calendar.
-      // Deliberately says nothing about whether what is shown belongs to
-      // them — it says what we are missing, which is the part we can stand
-      // behind.
-      <>
-        We&apos;re missing{" "}
-        {g.total - g.withSource === 1
-          ? "the calendar of one of the bodies"
-          : `the calendars of ${g.total - g.withSource} of the bodies`}{" "}
-        that govern the area around {zip}.
-      </>
+      // Leads with what we have (2j — the inversion rule): the failure frame
+      // "we're missing X" buried the fact that most calendars are watched.
+      // The numbers stay honest and computed; only the frame changed.
+      g.withSource === 0 ? (
+        // Zero tracked is not a lead-with-what-we-have case; say it straight.
+        <>
+          {g.total === 1
+            ? "One body governs the area around "
+            : `${g.total} bodies govern the area around `}
+          {zip}.{" "}
+          {g.total === 1
+            ? "Its calendar is being added — we don't have it yet."
+            : "Their calendars are being added — we don't have them yet."}
+        </>
+      ) : (
+        <>
+          We track the {g.withSource === 1 ? "calendar" : "calendars"} of{" "}
+          {g.withSource} of the {g.total} bodies that govern the area around{" "}
+          {zip}.{" "}
+          {g.total - g.withSource === 1
+            ? "The other body's calendar is being added."
+            : `The other ${g.total - g.withSource} are being added.`}
+        </>
+      )
     ) : kind === "all-wired" ? (
       // The state the old notice had no words for: every government here is
       // on our watch. Said plainly, because the list below is the reader's
@@ -195,29 +267,43 @@ function CoverageBody({
     ) : (
       <>
         {g.total === 1 ? "One body governs" : `${g.total} bodies govern`} the
-        area around {zip}
+        area around {zip}.{" "}
         {g.withSource === 0
           ? g.total === 1
-            ? ", and we don't have its calendar yet"
-            : ", and we don't have their calendars yet"
-          : `, and we're missing ${g.total - g.withSource} of their calendars`}
-        .
+            ? "Its calendar is being added — we don't have it yet."
+            : "Their calendars are being added — we don't have them yet."
+          : `We track ${g.withSource === 1 ? "the calendar" : "the calendars"} of ${g.withSource}; the other ${
+              g.total - g.withSource === 1
+                ? "one is"
+                : `${g.total - g.withSource} are`
+            } being added.`}
       </>
     );
 
   // The advisory boards, committees and commissions, stated apart from the
   // governments — real bodies a reader can follow, not extra governments.
+  // Leads with what is tracked (2j): "56 more boards ... we watch 5" read as
+  // failure when it describes a live, growing watch list. Numbers stay
+  // honest and computed; only the frame changed.
   const othersLine =
     kind !== "unmapped" && others > 0 ? (
-      <>
-        {others === 1
-          ? "One more board, committee or commission serves"
-          : `${others} more boards, committees and commissions serve`}{" "}
-        the area
-        {othersWithSource > 0
-          ? `; we watch ${othersWithSource === others ? "all" : othersWithSource} of their calendars.`
-          : "."}
-      </>
+      othersWithSource > 0 ? (
+        <>
+          We also track{" "}
+          {othersWithSource === others
+            ? `all ${others === 1 ? "" : others + " "}of the area's other board, committee and commission calendars`
+            : `${othersWithSource} more board and committee ${othersWithSource === 1 ? "calendar" : "calendars"} here`}
+          .
+          {othersWithSource < others &&
+            ` ${others - othersWithSource} more ${others - othersWithSource === 1 ? "body is" : "bodies are"} being added.`}
+        </>
+      ) : (
+        <>
+          {others === 1
+            ? "One more board, committee or commission serves the area — being added."
+            : `${others} more boards, committees and commissions serve the area — being added.`}
+        </>
+      )
     ) : null;
 
   return (
@@ -291,6 +377,11 @@ function CoverageBody({
         </ul>
       )}
 
+      {/* The M26 narrowing prompt — renders only where the computed street
+          index says the answer would change. Declining stays effortless.
+          Keyed on the zip so a new zip mounts a fresh prompt. */}
+      {/^\d{5}$/.test(zip) && <NarrowingPrompt key={zip} zip={zip} />}
+
       {/*
         D17, split 2026-08-13. The statutory sentence — New Hampshire does not
         require an agenda — is a fact about the law and renders for every NH
@@ -352,7 +443,12 @@ function CoverageBody({
                   <span className={TIER_CLASS[seat.tier]}>{seat.label}</span>
                   <span className="text-right">
                     {seat.representatives.length > 0 ? (
-                      <HolderList holders={seat.representatives} />
+                      <HolderList
+                        holders={seat.representatives}
+                        seatLabel={seat.label}
+                        tier={seat.tier}
+                        onOpenOfficial={onOpenOfficial}
+                      />
                     ) : (
                       // Not "vacant" — we simply have no record. The two are
                       // completely different claims and only one is ours to
@@ -371,7 +467,12 @@ function CoverageBody({
           <span className="text-national">
             {senators.length === 1 ? "U.S. Senator" : "U.S. Senators"}
           </span>{" "}
-          <HolderList holders={senators} />
+          <HolderList
+            holders={senators}
+            seatLabel={null}
+            tier="national"
+            onOpenOfficial={onOpenOfficial}
+          />
         </p>
       )}
 
@@ -436,6 +537,7 @@ export function CoverageNotice({
   count,
   coverage,
   failedSourceOcdIds,
+  onOpenOfficial,
 }: CoverageNoticeProps) {
   // The notice renders on every failure rung, and on the exact rung whenever
   // there is representation to show. It used to return null on `exact`
@@ -497,6 +599,7 @@ export function CoverageNotice({
           zip={zip}
           coverage={coverage}
           failedSourceOcdIds={failedSourceOcdIds}
+          onOpenOfficial={onOpenOfficial}
         />
       ) : (
         !coverage &&

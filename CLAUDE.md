@@ -29,6 +29,8 @@ are the product's birthright. Difficulty is friction, not refusal. Go get it.
 
 **No composite match scores.** Alignment renders per issue. No aggregate percentage, ranking, ordering by fit, or UI affordance implying a recommendation.
 
+**Reader friction is a defect.** Remove it relentlessly. Every unnecessary click, confirmation, new tab, duplicate message, or hidden entry point is a bug with the same standing as a wrong number. The reader is trying to find out what is happening; everything between them and that answer had better be earning its place. Exactly four exceptions — friction that is the product working, checkable by number, and a change claiming one must name which: (1) the transparency disclosure at the point of reaction capture; (2) the optionality of the narrowing prompt — declining must stay the effortless default; (3) anything constituting consent to collection; (4) honesty about coverage gaps, which may never be smoothed into implied completeness. These four are load-bearing. Everything else goes.
+
 **No user-to-user surface.** No comments, feeds, upvotes, public profiles, or shared slates. Reactions are write-only from the user's perspective — stored and aggregated, never rendered back to any user including in aggregate form. Showing aggregates anchors later respondents and corrupts the data being sold.
 
 **Collect the minimum.** Zip or address for district resolution, an email for account identity. Do not add fields to the user model without asking first.

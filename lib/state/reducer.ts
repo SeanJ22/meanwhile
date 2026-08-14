@@ -9,7 +9,6 @@ import {
 } from "./defaults.ts";
 import { resetAllControls } from "./reset.ts";
 import type {
-  DistrictType,
   FilterState,
   UiAction,
   UiState,

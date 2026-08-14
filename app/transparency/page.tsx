@@ -82,6 +82,13 @@ export default function TransparencyPage() {
             stay on your device; only the zip itself is sent when the site
             fetches the meetings near it.
           </p>
+          <p>
+            If you narrow your zip to your municipality, school district, or
+            street, that choice is also kept only in your browser&apos;s
+            storage. The street you type is matched against a list downloaded
+            to your device — it is never sent anywhere, never logged, and
+            never tied to an account.
+          </p>
         </Section>
 
         <Section title="What happens to the data">

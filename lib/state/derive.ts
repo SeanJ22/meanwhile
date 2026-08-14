@@ -42,6 +42,47 @@ export function tierForMeeting(meeting: Meeting): Tier | null {
   return tierForOcdId(meeting.ocdId);
 }
 
+/**
+ * The government level a meeting belongs to, for the colored map dots (2g).
+ *
+ * Four levels, not three: the author's spec separates school government from
+ * the rest of Local, because a school-board meeting and a congressional town
+ * hall at the same address must be distinguishable without clicking. School
+ * is decided structurally where possible — a `school_district` segment in the
+ * OCD-ID — and by the same name bucket the chips use otherwise (a
+ * division-less school body has no segment to read). This colors dots; it is
+ * NOT the filter axis, which stays `tierForMeeting`.
+ */
+export type GovernmentLevel = "school" | "local" | "state" | "federal";
+
+export const LEVEL_ORDER: readonly GovernmentLevel[] = [
+  "school",
+  "local",
+  "state",
+  "federal",
+] as const;
+
+export const LEVEL_LABEL: Readonly<Record<GovernmentLevel, string>> = {
+  school: "School",
+  local: "Local",
+  state: "State",
+  federal: "Federal",
+};
+
+export function levelForMeeting(meeting: Meeting): GovernmentLevel | null {
+  if (
+    meeting.ocdId?.includes("/school_district:") ||
+    bodyTypeOf(meeting) === "school-board"
+  ) {
+    return "school";
+  }
+  const tier = tierForMeeting(meeting);
+  if (tier === "local") return "local";
+  if (tier === "state") return "state";
+  if (tier === "national") return "federal";
+  return null;
+}
+
 export function bodyTypeOf(meeting: Meeting): BodyType | null {
   const name = meeting.bodyName.toLowerCase();
   const tier = tierForMeeting(meeting);

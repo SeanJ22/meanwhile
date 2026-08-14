@@ -1,3 +1,5 @@
+import { haversineKm } from "@/lib/geo/distance";
+import { nearestZcta } from "@/lib/geo/zcta";
 import { logSearchEvent } from "@/lib/db/search-log";
 import { RADIUS_LADDER_KM, searchMeetings } from "@/lib/meetings/query";
 import { getActiveSnapshotMeta } from "@/lib/meetings/snapshot";
@@ -76,6 +78,18 @@ export async function GET(request: Request) {
   // their answer. Disclosed on /transparency, which ships with this code.
   const zipParam = params.get("zip");
   const zip = zipParam && /^\d{5}$/.test(zipParam) ? zipParam : null;
+
+  // The settled-viewport fetch (2i) carries no zip — the reader panned, they
+  // didn't type. Resolve the nearest ZCTA centroid so the notices and the
+  // ballot bubble can name the area, and cap it: a center more than 60 km
+  // from every centroid (open water, deep wilderness) honestly has no zip.
+  // Same orientation-only status as a typed zip — never district truth.
+  let nearZip: string | null = zip;
+  if (!nearZip) {
+    const near = nearestZcta(lat, lng);
+    nearZip =
+      near && haversineKm(lat, lng, near.lat, near.lng) <= 60 ? near.zip : null;
+  }
   const resolvedOcdIds = coverage
     ? [
         ...coverage.bodies.flatMap((b) => (b.ocdId ? [b.ocdId] : [])),
@@ -84,7 +98,9 @@ export async function GET(request: Request) {
     : [];
   logSearchEvent({
     eventType: "SEARCH",
-    approximateLocation: zip,
+    // Zip-level either way: the typed zip, or the nearest centroid's zip for
+    // a panned viewport. Never coordinates — the log stays orientation-only.
+    approximateLocation: nearZip,
     ocdIds: resolvedOcdIds,
     detail: {
       tier: result.tier,
@@ -94,5 +110,5 @@ export async function GET(request: Request) {
     },
   }).catch((error) => console.error("search log write failed", error));
 
-  return Response.json({ ...result, coverage, snapshot });
+  return Response.json({ ...result, coverage, snapshot, nearZip });
 }

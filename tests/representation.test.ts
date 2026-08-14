@@ -11,6 +11,10 @@ import {
   shouldRenderNotice,
 } from "../lib/registry/representation.ts";
 import { DISTRICT_LAYERS, DISTRICT_TYPES } from "../lib/map/districts.ts";
+import {
+  deriveActiveDistrictTypes,
+  interactionTurnsOverlayOn,
+} from "../lib/state/district-intent.ts";
 
 /**
  * The panel-denominator guard.
@@ -114,4 +118,41 @@ test("every district layer's committed files exist and hold features", () => {
       );
     }
   }
+});
+
+/**
+ * The state-change half of the same guard (seventh sighting, 2026-08-14).
+ * The initial-render checks above never exercised an *interaction*: with
+ * "Show districts" off, the district-type checkboxes stayed live and every
+ * click changed state with zero visible effect — reported in production as
+ * "the checkboxes do nothing". The rule and the derivation now live in
+ * lib/state/district-intent.ts where they can be held without a component
+ * harness (that gap is M13).
+ */
+test("a populated selection with the overlay on may never derive to nothing", () => {
+  for (const selected of [
+    ["congressional"],
+    ["congressional", "state-house", "county"],
+    [...DISTRICT_TYPES],
+  ] as const) {
+    const drawn = deriveActiveDistrictTypes(true, false, [...selected]);
+    assert.deepEqual(
+      drawn,
+      [...selected],
+      "overlay on + selection present must draw exactly the selection",
+    );
+  }
+
+  // The gates that legitimately empty the derivation, stated as such.
+  assert.deepEqual(deriveActiveDistrictTypes(false, false, ["county"]), []);
+  assert.deepEqual(deriveActiveDistrictTypes(true, true, ["county"]), []);
+});
+
+test("touching the district-type group turns the overlay on — except clear", () => {
+  // Checking a type or selecting all expresses "show me districts"; a click
+  // that changes state with no visible effect is the defect this pins.
+  assert.equal(interactionTurnsOverlayOn("toggle-type"), true);
+  assert.equal(interactionTurnsOverlayOn("select-all"), true);
+  // Clearing every type draws nothing, so it must not enable the overlay.
+  assert.equal(interactionTurnsOverlayOn("clear"), false);
 });

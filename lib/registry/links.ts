@@ -67,20 +67,23 @@ export interface LinkableBody {
 }
 
 /**
- * OpenStreetMap, at the coordinates we already hold.
+ * Google Maps directions, at the coordinates we already hold.
  *
- * Three things decided this. It needs no key and no account, so nothing about
- * the reader is exchanged for the link. It is **not Google Maps**, which
- * `CLAUDE.md` rules out for the basemap and which would be an odd thing to send
- * readers to from a MapLibre app. And the coordinates are already sourced — the
- * Census geocoder, cited per venue in `lib/sources/legistar/clients.ts` — so
- * this renders data we hold rather than fetching anything new.
+ * The author's direction (2026-08-14, friction pass): directions default to
+ * Google Maps on every venue link. The earlier OpenStreetMap choice read
+ * `CLAUDE.md`'s "Not Google Maps" too broadly — that rule is about the
+ * basemap, not about where a reader gets driving directions. The
+ * `maps/dir/?api=1` form is Google's documented universal link: it opens the
+ * native app where one is installed (iOS and Android alike) and the website
+ * everywhere else, which is the platform-appropriate fallback in one URL.
+ * The coordinates are already sourced — the Census geocoder, cited per venue
+ * in `lib/sources/legistar/clients.ts` — so this renders data we hold rather
+ * than fetching anything new.
  *
  * It is still `DERIVED`. The URL was constructed here; nobody opened it.
  */
-function osmUrl(lat: number, lng: number): string {
-  const at = `${lat.toFixed(6)}/${lng.toFixed(6)}`;
-  return `https://www.openstreetmap.org/?mlat=${lat.toFixed(6)}&mlon=${lng.toFixed(6)}#map=18/${at}`;
+function directionsUrl(lat: number, lng: number): string {
+  return `https://www.google.com/maps/dir/?api=1&destination=${lat.toFixed(6)}%2C${lng.toFixed(6)}`;
 }
 
 /** Reject anything that is not an http(s) URL before it reaches an href. */
@@ -103,9 +106,9 @@ export function venueLink(location: MeetingLocation): OutboundLink | null {
   return {
     rung: "VENUE_MAP",
     label: "Directions",
-    url: osmUrl(location.lat, location.lng),
+    url: directionsUrl(location.lat, location.lng),
     kind: "DERIVED",
-    hint: `${location.address ?? location.name} on OpenStreetMap`,
+    hint: `Directions to ${location.address ?? location.name} (Google Maps)`,
   };
 }
 

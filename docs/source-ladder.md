@@ -267,3 +267,83 @@ audit rows.
 - ~~**Morris County**: cite the commissioners' meeting venue from the county
   page.~~ Resolved 2026-08-13 without a browser: the IQM2 Calendar.aspx
   tooltip publishes the venue and street address itself.
+
+## The 2026-08-14 second-session hunts
+
+**Campaign/personal sites for the 22 wired officials** (3e; overlay in
+`lib/officials/campaign-sites.ts`, all `attemptedAt: 2026-08-14`):
+
+- Verified by fetch (page names person + office): juanciscomani.com,
+  adelitaforcongress.com, gallegoforarizona.com, analiliafornj.com,
+  andykim.com, corybooker.com, bettyvillegasaz.com (the author's example,
+  independently confirmed — "Betty Villegas | LD 20 legislator").
+- Verified via the site's own indexed titles — the site 403s plain clients
+  (the UA-sensitive-wall rung, noted per entry): markkelly.com,
+  maggiefornh.com, maggiehassan.com.
+- Honest misses, recorded: Shaheen (not seeking reelection 2026, announced
+  2025-03 per shaheen.senate.gov press release; no active campaign site
+  found); Gail Griffin (griffinforaz.com — DNS dead; gailgriffin4senate.com
+  surfaced in search, unverified); David Gowan (gowanforaz.com — connection
+  refused); Dan Innis (votedaninnis.com — 404; reported to have exited the
+  US Senate race); Alma Hernández (almaforarizona.org exists but the fetched
+  pages did not clearly state her own office — not shippable); Tony Bucco
+  (no dedicated site found; a Facebook campaign page is not a campaign site
+  under the overlay's rules).
+- `NOT_ATTEMPTED` (2026-08-14): Lupe Diaz, Sally Gonzales, Aura Dunn,
+  Marisa Sweeney, Greg Sargent, Karen Ebel.
+
+**State legislature contact and photo pages** (3a/3b state half):
+
+- Contact (email, capitol/district phone) shipped from the Plural CC-0 bulk
+  CSVs, which carry the legislatures' published values; per-member
+  direct-from-legislature verification is open. `attemptedAt: 2026-08-14`.
+- Photos: azleg.gov / njleg.state.nj.us / gc.nh.gov member pages publish
+  portraits; **their reuse terms are unhunted** — no state photo ships until
+  a per-state terms record exists (D20's unknown-is-not-clearable rule).
+  `NOT_ATTEMPTED` as of 2026-08-14.
+
+**Federal roll-call endpoints** (D02; exact endpoints, all verified 200 on
+2026-08-14):
+
+- House: `clerk.house.gov/evs/<year>/roll<NNN>.xml` — members keyed by
+  bioguide in `name-id`; the LAST `<yea-total>/<nay-total>` pair is the
+  chamber total (earlier pairs are party subtotals — shipping the first pair
+  was this session's caught bug). Latest roll discovered by HEAD
+  binary-search; no index endpoint needed.
+- Senate: `senate.gov/legislative/LIS/roll_call_lists/vote_menu_119_2.xml`
+  (official per-vote title lines) and
+  `.../roll_call_votes/vote1192/vote_119_2_<NNNNN>.xml` — members keyed by
+  **LIS id**, not bioguide; `legislators-current.json` bridges.
+- Bill titles: `api.congress.gov/v3/bill/<congress>/<type>/<num>` (key in
+  `.env.local`); the congress.gov bill page hosts the CRS summary the
+  surface links.
+
+**State roll-call publication (research note for next session):** Arizona —
+apps.azleg.gov publishes per-bill floor-vote pages (structured HTML; a
+Request-to-Speak/vote API is rumored but unverified). New Jersey —
+njleg.state.nj.us publishes per-bill vote lists (server-rendered). New
+Hampshire — gc.nh.gov publishes House and Senate roll calls per bill
+(server-rendered tables). None verified as machine-readable feeds yet;
+each needs its own hunt before an adapter.
+
+**AZ/NH election sources** (D33, all verified 2026-08-14):
+
+- `azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf`
+  — 200, text layer extractable via pdfjs.
+- `azsos.gov/elections/ballot-measures` — 200; carries the registration /
+  early-voting / election-day dates; official 2026 measure language "Coming
+  in 2026" (publicity pamphlet pending).
+- `azleg.gov/ballot-measures-2026-analyses/` — 200; 11 adopted Legislative
+  Council analysis PDFs under `/alispdfs/Council/2026BallotMeasures/`
+  (three probe-verified 200).
+- `sos.nh.gov` — **403 to every plain client including curl with an
+  identified UA; 200 with a browser UA** (the UA-sensitive-wall rung).
+  `2026-election-details` page links the cumulative filing
+  (`/files/docs/cumulative-filings-7.16.26.pdf`, 200, both party sections)
+  and the 2026–2027 political calendar PDF (200; Town Election March 10,
+  primary Sep 8, general Nov 3).
+
+**TIGER ADDRFEAT** (M26): `www2.census.gov/geo/tiger/TIGER2025/ADDRFEAT/tl_2025_<county>_addrfeat.zip`
+— 200, ~1.5–7 MB per county; zip fields are `ZIPL`/`ZIPR` (not LZIP/RZIP —
+the first build dropped 100% on that guess and the zero-written invariant
+caught it).

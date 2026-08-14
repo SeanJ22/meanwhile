@@ -169,6 +169,8 @@ function person(id: string, name: string) {
     websiteUrl: null,
     contactFormUrl: null,
     phone: null,
+    email: null,
+    campaignUrl: null,
     photo: null,
     provenance: {
       sourceUrl: "https://example.invalid/roster",

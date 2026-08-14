@@ -97,6 +97,19 @@ interface MapCanvasProps {
   theme: Theme;
   onSelectVenue: (venue: Venue) => void;
   onTileError: () => void;
+  /**
+   * The reader panned or zoomed and the map came to rest (2i). Fired only for
+   * gestures — never for flyTo/fitBounds the app itself issued — and only
+   * after a debounce, never mid-gesture. The parent decides whether to act
+   * (it skips when a popup is open or a selection is active).
+   */
+  onViewportSettle?: (center: { lat: number; lng: number }) => void;
+  /**
+   * Whether the app may move the camera to frame results. False for a
+   * settle-driven result: the reader chose this viewport by hand, and
+   * yanking it to fit venues would fight them (2i).
+   */
+  allowAutoFrame: boolean;
 }
 
 function prefersReducedMotion() {
@@ -132,6 +145,8 @@ export function MapCanvas({
   onDistrictClick,
   onSelectVenue,
   onTileError,
+  onViewportSettle,
+  allowAutoFrame,
 }: MapCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
@@ -169,6 +184,11 @@ export function MapCanvas({
   useEffect(() => {
     onDistrictClickRef.current = onDistrictClick;
   }, [onDistrictClick]);
+
+  const onViewportSettleRef = useRef(onViewportSettle);
+  useEffect(() => {
+    onViewportSettleRef.current = onViewportSettle;
+  }, [onViewportSettle]);
 
   /*
    * Put the district overlay back whenever it is wanted and missing.
@@ -303,7 +323,36 @@ export function MapCanvas({
 
     map.on("click", onClick);
 
+    /*
+     * Scroll-and-settle (2i). A user gesture is the only thing that carries
+     * an `originalEvent` on movestart — flyTo, jumpTo and fitBounds never do
+     * — so this fires for pans and pinches and stays silent through every
+     * camera move the app makes itself. The debounce means "came to rest":
+     * a new gesture inside the window cancels the pending settle, so nothing
+     * ever fires mid-gesture.
+     */
+    let userMoved = false;
+    let settleTimer: number | undefined;
+    const onMoveStart = (event: { originalEvent?: unknown }) => {
+      if (event.originalEvent) userMoved = true;
+      window.clearTimeout(settleTimer);
+    };
+    const onMoveEnd = () => {
+      if (!userMoved) return;
+      userMoved = false;
+      window.clearTimeout(settleTimer);
+      settleTimer = window.setTimeout(() => {
+        const center = map.getCenter();
+        onViewportSettleRef.current?.({ lat: center.lat, lng: center.lng });
+      }, 650);
+    };
+    map.on("movestart", onMoveStart);
+    map.on("moveend", onMoveEnd);
+
     return () => {
+      window.clearTimeout(settleTimer);
+      map.off("movestart", onMoveStart);
+      map.off("moveend", onMoveEnd);
       map.off("click", onClick);
       map.off("styledata", ensureDistricts);
       map.remove();
@@ -498,6 +547,10 @@ export function MapCanvas({
     const map = mapRef.current;
     if (!map || !camera || venues.length === 0) return;
 
+    // A settle-driven result must never move the camera — the reader put the
+    // viewport where they wanted it (2i).
+    if (!allowAutoFrame) return;
+
     // Let the fly-to land before overriding where it went.
     const timer = window.setTimeout(() => {
       if (!frameAllVenues) {
@@ -519,7 +572,7 @@ export function MapCanvas({
     }, 2800);
 
     return () => window.clearTimeout(timer);
-  }, [venues, camera, frameAllVenues]);
+  }, [venues, camera, frameAllVenues, allowAutoFrame]);
 
   // The inner div is the MapLibre container and gets its size from this
   // wrapper. maplibre-gl.css sets `position: relative` on `.maplibregl-map`

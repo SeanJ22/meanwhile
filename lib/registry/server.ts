@@ -1,7 +1,11 @@
 import { readFile, readdir } from "node:fs/promises";
 import { join } from "node:path";
 
-import { indexByDivision, type OfficeholderIndex } from "../officials/lookup.ts";
+import {
+  indexByDivision,
+  type OfficeholderIndex,
+  type PhotoIndex,
+} from "../officials/lookup.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
 
 import { summarizeCoverage, type CoverageSummary } from "./coverage.ts";
@@ -78,11 +82,29 @@ async function load(): Promise<Loaded> {
     }
   }
 
+  // The photo manifest (D20): per-image source and license, images served
+  // from our origin. Missing or unreadable degrades to initials everywhere.
+  const photos: PhotoIndex = new Map();
+  try {
+    const manifest = JSON.parse(
+      await readFile(
+        join(root, "lib", "registry", "official-photos.json"),
+        "utf8",
+      ),
+    ) as { photos: { officeholderId: string; url: string; license: string | null }[] };
+    for (const photo of manifest.photos) {
+      // Unknown license is not clearable — such a photo never ships (D20).
+      if (photo.license) photos.set(photo.officeholderId, photo.url);
+    }
+  } catch {
+    // No manifest is a fine state: initials render instead.
+  }
+
   return {
     features,
     divisionsById: new Map(registry.divisions.map((d) => [d.ocdId, d])),
     registry,
-    officials: indexByDivision(sets),
+    officials: indexByDivision(sets, photos),
   };
 }
 

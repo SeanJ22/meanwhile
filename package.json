@@ -21,7 +21,11 @@
     "shoot": "tsx scripts/shoot.mts",
     "registry:build": "tsx scripts/build-registry.ts",
     "handoff": "node scripts/handoff.mjs",
-    "officials:build": "tsx scripts/build-officeholders.ts"
+    "officials:build": "tsx scripts/build-officeholders.ts",
+    "officials:photos": "tsx scripts/fetch-official-photos.mts",
+    "corpus:fetch": "tsx scripts/fetch-corpus.mts",
+    "votes:fetch": "tsx scripts/fetch-votes.mts",
+    "streets:build": "tsx scripts/build-street-index.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

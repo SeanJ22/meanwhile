@@ -47,11 +47,13 @@ export function Sidebar({
     <aside className={`sidebar${mobileOpen ? " sidebar-open" : ""}`}>
       <div className="sidebar-header">
         <div className="brand">
-          {/* Drawer close — phone width only; 44px thumb target. */}
+          {/* Slide the rail away — any width (2f); 44px thumb target. The
+              hamburger in map-entry brings it back. */}
           <button
             type="button"
-            className="icon-btn -ml-1 flex size-11 shrink-0 items-center justify-center sm:hidden"
-            aria-label="Close menu"
+            className="icon-btn -ml-1 flex size-11 shrink-0 items-center justify-center"
+            aria-label="Hide sidebar"
+            title="Hide sidebar"
             onClick={onMobileClose}
           >
             <svg
@@ -63,8 +65,8 @@ export function Sidebar({
               strokeWidth="2"
               aria-hidden="true"
             >
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
+              <polyline points="11 17 6 12 11 7" />
+              <polyline points="18 17 13 12 18 7" />
             </svg>
           </button>
           <svg
@@ -158,8 +160,11 @@ export function Sidebar({
             One line each — the transparency page carries the substance. */}
         <div className="mt-auto border-t border-[var(--panel-border)] px-1 pt-3 pb-2 text-[0.6875rem] leading-relaxed text-muted">
           <p>
+            {/* Same tab, zip attached (2c/2d) — no interstitial asking for a
+                zip the app already knows. The map's bubble is the primary
+                entry point; this stays for readers who look in menus. */}
             <a
-              href="/ballot"
+              href={location ? `/ballot?zip=${location.zip}` : "/ballot"}
               className="underline decoration-dotted underline-offset-2 hover:text-signal"
             >
               What&apos;s on the ballot

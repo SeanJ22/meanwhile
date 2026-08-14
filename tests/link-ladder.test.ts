@@ -49,6 +49,12 @@ test("a meeting with no URLs and no body still offers directions, and nothing el
   );
   // The one rung that exists is derived, so it can never be read as a citation.
   assert.equal(links[0].kind, "DERIVED");
+  // Directions default to Google Maps (author's 2a, 2026-08-14) via the
+  // documented universal link, which opens the native app on both platforms.
+  assert.ok(
+    links[0].url.startsWith("https://www.google.com/maps/dir/?api=1"),
+    `directions should be a Google Maps universal link, got ${links[0].url}`,
+  );
 });
 
 test("the ladder never constructs a link it was not given", () => {

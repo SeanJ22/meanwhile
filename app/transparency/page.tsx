@@ -90,6 +90,16 @@ export default function TransparencyPage() {
             to your device — it is never sent anywhere, never logged, and
             never tied to an account.
           </p>
+          <p>
+            If you mark how you&apos;d vote on the ballot page (&quot;my
+            picks&quot;), those picks are saved only in your browser&apos;s
+            storage on your device. They are never sent anywhere, never
+            logged, never aggregated, and the database has no column that
+            could hold them — an automated test fails the build if one is
+            ever added. This is different from the yes/no/unsure reaction
+            buttons, which do join anonymous local totals and say so where
+            you tap them.
+          </p>
         </Section>
 
         <Section title="Reactions to votes and candidates">

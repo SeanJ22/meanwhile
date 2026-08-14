@@ -19,6 +19,8 @@ import {
   cardForNominee,
 } from "@/lib/ballot/candidate-cards";
 import { CandidateCard } from "@/components/ballot/candidate-card";
+import { MyPicks } from "@/components/ballot/my-picks";
+import { PickControl } from "@/components/ballot/pick-control";
 import { registrationLinkFor } from "@/lib/ballot/registration-links";
 import { formatDateMDY } from "@/lib/map/format";
 import { ReactionControl } from "@/components/reactions/reaction-control";
@@ -183,6 +185,10 @@ export default async function BallotPage({
         ) : null;
       })()}
 
+      {/* 4a: the private election-day list — renders only once something
+          is marked. Device-local; the component says so itself. */}
+      <MyPicks />
+
       {dates && (
         <section className="mt-6 rounded border border-[var(--panel-border)] p-4">
           <h2 className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-muted">
@@ -283,6 +289,7 @@ export default async function BallotPage({
               {/* The certified lineup retires the filing-list fallback (6a):
                   what a November voter actually chooses among. */}
               {lineup ? (
+                <>
                 <ul className="mt-3 space-y-2">
                   {lineup.nominees.map((nominee) => (
                     <li
@@ -316,6 +323,18 @@ export default async function BallotPage({
                     </li>
                   ))}
                 </ul>
+                {/* 4a: the private pick — a different thing from the
+                    reactions above, and it says so. */}
+                <PickControl
+                  contestId={contest.id}
+                  contestTitle={contest.title}
+                  voteFor={contest.voteFor}
+                  options={lineup.nominees.map((n) => ({
+                    id: n.name,
+                    label: n.name,
+                  }))}
+                />
+                </>
               ) : (
                 <>
                   {contest.scopeNote && (
@@ -363,6 +382,16 @@ export default async function BallotPage({
                       </li>
                     ))}
                   </ul>
+                  {/* 4a: the private pick — distinct from reactions. */}
+                  <PickControl
+                    contestId={contest.id}
+                    contestTitle={contest.title}
+                    voteFor={contest.voteFor}
+                    options={candidatesOf(set, contest).map((cand) => ({
+                      id: cand.id,
+                      label: `${cand.givenName} ${surnameDisplayCase(cand.familyName)}`,
+                    }))}
+                  />
                 </>
               )}
             </section>
@@ -434,6 +463,19 @@ export default async function BallotPage({
                     {contest.scopeNote}
                   </p>
                 )}
+
+                {/* 4a: the private pick on measures — Yes/No, this device
+                    only, stated in the control. */}
+                <PickControl
+                  contestId={contest.id}
+                  contestTitle={contest.title}
+                  voteFor={1}
+                  options={[
+                    { id: "YES", label: "Yes" },
+                    { id: "NO", label: "No" },
+                  ]}
+                />
+
                 <p className="mt-2 text-[0.6875rem]">
                   <a
                     href={analysis?.analysisUrl ?? contest.provenance.sourceUrl ?? undefined}

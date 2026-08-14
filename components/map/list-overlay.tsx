@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { haversineKm } from "@/lib/geo/distance";
-import { formatMeetingDate, formatMiles } from "@/lib/map/format";
+import { formatMeetingDate, formatMiles, meetingHeadline } from "@/lib/map/format";
 import { TIER_LABEL } from "@/lib/ocd/tiers";
 import { tierForMeeting } from "@/lib/state/derive";
 import { useShellData } from "@/lib/state/data";
@@ -255,9 +255,14 @@ export function ListOverlay({
                       }}
                     >
                       <span className="al-row-title">
-                        {meeting.title}
+                        {/* 3a: what-first, said once — sources that title a
+                            sitting with the body's own name must not read
+                            the same words twice. */}
+                        {meetingHeadline(meeting)}
                         <span className="al-row-sub">
-                          {meeting.bodyName} · {meeting.jurisdiction}
+                          {meeting.bodyName !== meeting.title
+                            ? `${meeting.bodyName} · ${meeting.jurisdiction}`
+                            : meeting.jurisdiction}
                         </span>
                       </span>
                       <span className="al-row-meta">

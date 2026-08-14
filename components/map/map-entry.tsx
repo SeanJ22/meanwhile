@@ -23,6 +23,7 @@ import { groupByVenue, type Venue } from "@/lib/meetings/venues";
 import type { Meeting } from "@/lib/sources/types";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { CoveredBody } from "@/lib/registry/coverage";
+import { rosterHoldersForBody } from "@/lib/registry/body-rosters";
 import { TIER_LABEL } from "@/lib/ocd/tiers";
 import { tierForMeeting } from "@/lib/state/derive";
 import { formatMeetingDate, formatMeetingTime } from "@/lib/map/format";
@@ -905,11 +906,18 @@ function MapEntryInner() {
             <MeetingPopup
               meeting={popupMeeting}
               body={bodyFor(popupMeeting.ocdId)}
+              // Tier-3 (5a): who sits on this body, curated with citations.
+              representation={rosterHoldersForBody(
+                bodyFor(popupMeeting.ocdId)?.bodyId ?? null,
+              )}
               onClose={() => setPopupMeeting(null)}
               onExpand={() =>
                 openLarge({
                   kind: "entity",
-                  subject: meetingSubject(popupMeeting),
+                  subject: meetingSubject(
+                    popupMeeting,
+                    bodyFor(popupMeeting.ocdId),
+                  ),
                 })
               }
             />
@@ -917,7 +925,20 @@ function MapEntryInner() {
         </div>
 
         {large?.kind === "entity" && (
-          <EntityModal subject={large.subject} onClose={() => setLarge(null)} />
+          <EntityModal
+            subject={large.subject}
+            onClose={() => setLarge(null)}
+            // A roster name opens the person's full card — the one-at-a-time
+            // rule swaps the large surfaces (3).
+            onOpenHolder={(holder) =>
+              openLarge({
+                kind: "official",
+                holder,
+                seatLabel: null,
+                tier: "local",
+              })
+            }
+          />
         )}
         {large?.kind === "official" && (
           <OfficialModal
@@ -969,7 +990,11 @@ function MapEntryInner() {
  * `sourceUrl` is null. Omitting those would imply everything shown was cited,
  * which is the more damaging of the two possible lies.
  */
-function meetingSubject(meeting: Meeting): ModalSubject {
+function meetingSubject(
+  meeting: Meeting,
+  body: CoveredBody | null = null,
+): ModalSubject {
+  const roster = rosterHoldersForBody(body?.bodyId ?? null);
   return {
     // What it is FIRST (3): the body and its sitting are the headline;
     // when, then where, then the agenda's content, then how to be heard.
@@ -995,7 +1020,9 @@ function meetingSubject(meeting: Meeting): ModalSubject {
     ],
     agenda: { meetingId: meeting.id, agendaUrl: meeting.agendaUrl },
     commentAccess: { ocdId: meeting.ocdId, bodyName: meeting.bodyName },
-    representation: [],
+    // Tier-3 (5a): the curated roster where one exists; the honest absence
+    // where none does.
+    representation: roster,
     representationNote:
       "We haven't sourced who sits on this body. The people we hold for this area represent it in Congress and the state legislature, which is a different thing.",
     meetings: [meeting],

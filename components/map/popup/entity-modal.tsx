@@ -69,6 +69,8 @@ export interface ModalSubject {
 interface EntityModalProps {
   subject: ModalSubject;
   onClose: () => void;
+  /** A representation row opens the person's full card (5a). */
+  onOpenHolder?: (holder: SeatHolder) => void;
   /** Overridden in tests and screenshots so a tab can be captured directly. */
   initialTab?: ModalTab;
 }
@@ -76,6 +78,7 @@ interface EntityModalProps {
 export function EntityModal({
   subject,
   onClose,
+  onOpenHolder,
   initialTab = "overview",
 }: EntityModalProps) {
   const [tab, setTab] = useState<ModalTab>(initialTab);
@@ -195,6 +198,7 @@ export function EntityModal({
             <Representation
               holders={subject.representation}
               note={subject.representationNote}
+              onOpenHolder={onOpenHolder}
             />
           )}
 
@@ -225,9 +229,11 @@ export function EntityModal({
 function Representation({
   holders,
   note,
+  onOpenHolder,
 }: {
   holders: SeatHolder[];
   note: string;
+  onOpenHolder?: (holder: SeatHolder) => void;
 }) {
   if (holders.length === 0) return <Empty>{note}</Empty>;
 
@@ -237,7 +243,17 @@ function Representation({
         <div key={holder.id} className="account-modal-person">
           <div className="flex items-baseline justify-between gap-3">
             <span className="text-[0.875rem] font-medium text-paper">
-              {holder.websiteUrl ? (
+              {onOpenHolder ? (
+                // The name opens the full card — contact, office blurb —
+                // rather than navigating away.
+                <button
+                  type="button"
+                  onClick={() => onOpenHolder(holder)}
+                  className="cursor-pointer hover:text-signal hover:underline"
+                >
+                  {holder.name}
+                </button>
+              ) : holder.websiteUrl ? (
                 <a
                   href={holder.websiteUrl}
                   target="_blank"

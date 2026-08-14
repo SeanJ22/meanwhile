@@ -75,9 +75,12 @@ export const OFFICE_BLURBS: Readonly<Record<OfficeType, OfficeBlurb>> = {
     basisUrl: null,
   },
   mayor: {
-    text: "Your mayor runs the city day to day and usually proposes the budget the council votes on. What a mayor can decide alone varies by city. Call them about city services — police, water, trash, streets — and big-picture city direction.",
-    basis: "The city's charter and state municipal statutes",
-    basisUrl: null,
+    // Honest about where power actually sits (5b): Tucson — the one mayor
+    // rendered today — is council-manager, so "runs the city day to day"
+    // would be false. Verified against the charter before writing.
+    text: "Your mayor is the city's elected leader — they lead the city council, speak for the city, and vote on the big decisions. In Tucson, the day-to-day work of city government is run by a city manager the council hires, so most big decisions need the council's vote, not the mayor's alone. Call them about city services and where the city is headed.",
+    basis: "Tucson City Charter (council–manager form) and state municipal statutes",
+    basisUrl: "https://codelibrary.amlegal.com/codes/tucson/latest/tucson_az_charter",
   },
   "city-council": {
     text: "Your council members pass city laws, approve the budget, and vote on what gets built where — zoning is theirs. They can't change county or state rules. Call your council member about a local ordinance, a development, or city spending; you're exactly who they answer to.",
@@ -99,6 +102,16 @@ export function officeTypeForTitle(title: string): OfficeType | null {
   if (t === "state representative" || t === "assemblymember") {
     return "state-representative";
   }
+  // The tier-3 rosters (5a/5b): local elected offices, curated with
+  // citations in lib/registry/body-rosters.ts. Matches are exact-shaped on
+  // the titles those rosters use — a Selectboard member deliberately maps
+  // to nothing rather than to a school-board blurb.
+  if (t === "mayor") return "mayor";
+  if (t.includes("council member") || t === "councilwoman" || t === "councilman") {
+    return "city-council";
+  }
+  if (t.includes("supervisor")) return "county-commissioner";
+  if (t.includes("governing board")) return "school-board";
   return null;
 }
 

@@ -318,9 +318,19 @@ function CoverageBody({
   return (
     <>
       {unincorporated && (
+        // The no-mayor case is a stated fact, not an empty slot (5b): say
+        // what this place has instead of what it lacks.
         <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
-          <span className="text-signal">No city or town government</span> — this
-          area is unincorporated.
+          <span className="text-signal">
+            This area isn&apos;t a city or town
+          </span>{" "}
+          — it has no mayor or city council.
+          {(() => {
+            const county = bodies.find((b) => b.divisionType === "county");
+            return county
+              ? ` The ${county.name ?? `${county.divisionLabel} County board`} is the closest thing here.`
+              : "";
+          })()}
         </p>
       )}
 

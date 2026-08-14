@@ -21,6 +21,12 @@ export interface VoteExplainer {
   match: RegExp;
   /** The plain-words statement of what this vote decides. */
   plain: string;
+  /**
+   * 5b (2026-08-17): what a No vote mechanically did on this vote type —
+   * one line, mechanical, never evaluative. Derived from the same
+   * parliamentary definition as `plain`; rendered on every vote row.
+   */
+  noMeans: string;
   /** Where the parliamentary definition lives. Data-file citation only. */
   basis: string;
 }
@@ -32,6 +38,8 @@ export interface VoteExplainer {
 export const VOTE_EXPLAINERS: VoteExplainer[] = [
   {
     match: /recommit/i,
+    noMeans:
+      "Voting No here let the bill move forward.",
     plain:
       "This was a procedural vote — a last chance to send the bill back to committee before passage. Voting no here means letting the bill move forward.",
     basis:
@@ -39,6 +47,8 @@ export const VOTE_EXPLAINERS: VoteExplainer[] = [
   },
   {
     match: /cloture/i,
+    noMeans:
+      "A No vote here was a vote to keep debating — against letting the final vote happen.",
     plain:
       "This vote was on whether to end debate so the Senate can move to a final vote. It needs 60 votes, and it is about letting the vote happen — not the final yes or no on the measure itself.",
     basis:
@@ -46,6 +56,8 @@ export const VOTE_EXPLAINERS: VoteExplainer[] = [
   },
   {
     match: /veto/i,
+    noMeans:
+      "A No vote here was a vote to let the veto stand.",
     plain:
       "This vote was on whether to pass the bill into law over the President's veto, which takes a two-thirds vote in both chambers.",
     basis:
@@ -53,6 +65,8 @@ export const VOTE_EXPLAINERS: VoteExplainer[] = [
   },
   {
     match: /nomination|confirm/i,
+    noMeans:
+      "A No vote here was a vote against approving the nominee.",
     plain:
       "This vote was on whether to approve the President's nominee for this position.",
     basis:
@@ -60,6 +74,8 @@ export const VOTE_EXPLAINERS: VoteExplainer[] = [
   },
   {
     match: /previous question/i,
+    noMeans:
+      "A No vote here was a vote to keep debate open.",
     plain:
       "This was a procedural vote on whether to cut off debate and block further changes. Losing it usually hands control of the debate to the other side.",
     basis:
@@ -67,6 +83,8 @@ export const VOTE_EXPLAINERS: VoteExplainer[] = [
   },
   {
     match: /suspend the rules/i,
+    noMeans:
+      "A No vote here was a vote against passing the bill under the fast-track shortcut.",
     plain:
       "This vote was on passing the bill under a fast-track shortcut that skips the usual debate rules — it needs a two-thirds vote instead of a simple majority.",
     basis:
@@ -74,6 +92,8 @@ export const VOTE_EXPLAINERS: VoteExplainer[] = [
   },
   {
     match: /motion to table/i,
+    noMeans:
+      "A No vote here was a vote to keep the matter alive.",
     plain:
       "This vote was on setting the matter aside — voting yes here stops it without a direct vote on the thing itself.",
     basis:
@@ -81,6 +101,8 @@ export const VOTE_EXPLAINERS: VoteExplainer[] = [
   },
   {
     match: /motion to proceed/i,
+    noMeans:
+      "A No vote here was a vote against taking the measure up.",
     plain:
       "This vote was on whether to take the measure up at all — about starting the debate, not about the measure itself.",
     basis:
@@ -88,6 +110,8 @@ export const VOTE_EXPLAINERS: VoteExplainer[] = [
   },
   {
     match: /amendment/i,
+    noMeans:
+      "A No vote here was a vote against making this change to the bill.",
     plain:
       "This vote was on a proposed change to the bill, not on the bill itself.",
     basis:
@@ -95,6 +119,8 @@ export const VOTE_EXPLAINERS: VoteExplainer[] = [
   },
   {
     match: /concur/i,
+    noMeans:
+      "A No vote here was a vote against accepting the other chamber's changes.",
     plain:
       "This vote was on accepting the other chamber's changes so the bill can go to the President.",
     basis:
@@ -102,6 +128,8 @@ export const VOTE_EXPLAINERS: VoteExplainer[] = [
   },
   {
     match: /agreeing to the resolution|on the resolution/i,
+    noMeans:
+      "A No vote here was a vote against adopting the resolution.",
     plain:
       "This vote was on adopting a resolution — often the rule that sets the terms of debate for a bill, or a formal statement of the chamber's position.",
     basis:
@@ -109,6 +137,8 @@ export const VOTE_EXPLAINERS: VoteExplainer[] = [
   },
   {
     match: /passage|on the bill/i,
+    noMeans:
+      "A No vote here was a vote against passing the bill.",
     plain: "This vote was on whether to pass the bill.",
     basis:
       "Senate glossary: passage — https://www.senate.gov/about/glossary.htm",

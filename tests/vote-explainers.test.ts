@@ -62,6 +62,22 @@ test("explainers pass the register test: plain words, no advocacy", () => {
   }
 });
 
+test("5b: every vote type states what a No vote mechanically did — never evaluatively", () => {
+  const advocacy = /\bshould\b|\bgood\b|\bbad\b|\bsadly\b|\bunfortunately\b/i;
+  for (const explainer of VOTE_EXPLAINERS) {
+    assert.ok(
+      explainer.noMeans && explainer.noMeans.length > 20,
+      `missing noMeans for: ${explainer.plain.slice(0, 40)}…`,
+    );
+    assert.match(
+      explainer.noMeans,
+      /\bNo\b/,
+      `noMeans must speak about the No vote: ${explainer.noMeans}`,
+    );
+    assert.ok(!advocacy.test(explainer.noMeans), `advocacy in: ${explainer.noMeans}`);
+  }
+});
+
 test("the vote surface actually renders the explainers", () => {
   const source = readFileSync(
     join(process.cwd(), "components", "map", "popup", "official-popup.tsx"),

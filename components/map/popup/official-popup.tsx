@@ -118,6 +118,12 @@ export function RecentVotes({
         </p>
       ) : (
         <>
+          {/* 5c (2026-08-17): attribution once, TOS pattern — stated at the
+              top of the section instead of repeated under every bill. */}
+          <p className="mt-1 text-[0.5625rem] leading-relaxed text-muted">
+            Plain-language bill summaries below are ours — each paraphrases
+            the bill&apos;s official summary, linked on its row.
+          </p>
           {votes.slice(0, VOTE_LIMIT).map((vote) => {
             const explainer = explainVoteQuestion(vote.question);
             return (
@@ -143,8 +149,12 @@ export function RecentVotes({
                   // The vote-type explainer (4b): what kind of vote this was,
                   // in plain words — "yes then no on the same act" reads as
                   // incoherence until the reader knows one was procedural.
+                  // 5b (2026-08-17): plus the mechanical meaning of a No on
+                  // this vote type, from the same data file — never
+                  // evaluative.
                   <p className="mt-1 text-[0.6875rem] leading-relaxed text-paper-dim">
-                    {explainer.plain}
+                    {explainer.plain}{" "}
+                    <span className="text-muted">{explainer.noMeans}</span>
                   </p>
                 )}
                 <BillPlainSummary billUrl={vote.billUrl} />
@@ -210,17 +220,17 @@ function BillPlainSummary({ billUrl }: { billUrl: string | null }) {
       </p>
     );
   }
+  // 5a (2026-08-17): open by default — the summary is the point of the row,
+  // and hiding it behind a click was reader friction. The collapse
+  // affordance stays for closing. 5c moved the "ours" attribution to the
+  // section top; the per-bill basis stays in the data file.
   return (
-    <details className="mt-1">
+    <details className="mt-1" open>
       <summary className="cursor-pointer text-[0.6875rem] text-paper-dim underline decoration-dotted hover:text-signal">
         What this bill does — plain language
       </summary>
       <p className="mt-1 text-[0.6875rem] leading-relaxed text-paper-dim">
         {summary.summary}
-      </p>
-      <p className="mt-0.5 text-[0.5625rem] leading-relaxed text-muted">
-        Plain-language summary, ours — it paraphrases the {summary.basis} Read
-        the official text at the bill link below.
       </p>
     </details>
   );

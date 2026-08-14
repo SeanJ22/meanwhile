@@ -9,6 +9,10 @@ import type { RollCallVote, VotePosition } from "@/lib/votes/types";
 import type { ReactionViewContext } from "@/lib/reactions/client";
 import { ReactionControl } from "@/components/reactions/reaction-control";
 import { explainVoteQuestion } from "@/lib/votes/vote-explainers";
+import {
+  summaryForBill,
+  summaryPendingForBill,
+} from "@/lib/votes/bill-summaries";
 
 import { PopupCard, PopupRow, PopupSectionLabel } from "./popup-card";
 
@@ -143,6 +147,7 @@ export function RecentVotes({
                     {explainer.plain}
                   </p>
                 )}
+                <BillPlainSummary billUrl={vote.billUrl} />
                 <p className="mt-0.5 text-[0.625rem]">
                   <a
                     href={vote.rollCallUrl}
@@ -184,6 +189,40 @@ export function RecentVotes({
         </>
       )}
     </>
+  );
+}
+
+/**
+ * The curated plain-language bill summary (item 4, 2026-08-16), behind the
+ * reader gesture — expansion. Labeled, cited to the CRS summary it
+ * paraphrases, with the official record staying one click away on the row.
+ * A bill honestly pending renders the coming state; the vote row is never
+ * blocked either way.
+ */
+function BillPlainSummary({ billUrl }: { billUrl: string | null }) {
+  const summary = summaryForBill(billUrl);
+  const pending = summaryPendingForBill(billUrl);
+  if (!summary && !pending) return null;
+  if (!summary) {
+    return (
+      <p className="mt-1 text-[0.625rem] leading-relaxed text-muted">
+        Official summary at the bill link — plain-language version coming.
+      </p>
+    );
+  }
+  return (
+    <details className="mt-1">
+      <summary className="cursor-pointer text-[0.6875rem] text-paper-dim underline decoration-dotted hover:text-signal">
+        What this bill does — plain language
+      </summary>
+      <p className="mt-1 text-[0.6875rem] leading-relaxed text-paper-dim">
+        {summary.summary}
+      </p>
+      <p className="mt-0.5 text-[0.5625rem] leading-relaxed text-muted">
+        Plain-language summary, ours — it paraphrases the {summary.basis} Read
+        the official text at the bill link below.
+      </p>
+    </details>
   );
 }
 

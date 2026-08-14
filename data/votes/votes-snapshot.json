@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-14T00:17:49.553Z",
+ "generatedAt": "2026-08-14T06:10:34.215Z",
  "congress": 119,
  "session": 2,
  "window": {
@@ -69,7 +69,7 @@
    "result": "Failed 76–350",
    "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/8800",
    "rollCallUrl": "https://clerk.house.gov/Votes/2026264",
-   "retrievedAt": "2026-08-14T00:17:42.564Z"
+   "retrievedAt": "2026-08-14T06:10:28.817Z"
   },
   {
    "id": "house:119-2:265",
@@ -85,7 +85,7 @@
    "result": "Agreed to 215–214",
    "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/8800",
    "rollCallUrl": "https://clerk.house.gov/Votes/2026265",
-   "retrievedAt": "2026-08-14T00:17:42.742Z"
+   "retrievedAt": "2026-08-14T06:10:29.021Z"
   },
   {
    "id": "house:119-2:266",
@@ -101,7 +101,7 @@
    "result": "Failed 212–217",
    "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/8800",
    "rollCallUrl": "https://clerk.house.gov/Votes/2026266",
-   "retrievedAt": "2026-08-14T00:17:42.942Z"
+   "retrievedAt": "2026-08-14T06:10:29.144Z"
   },
   {
    "id": "house:119-2:267",
@@ -117,7 +117,7 @@
    "result": "Agreed to 219–208",
    "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/8800",
    "rollCallUrl": "https://clerk.house.gov/Votes/2026267",
-   "retrievedAt": "2026-08-14T00:17:43.124Z"
+   "retrievedAt": "2026-08-14T06:10:29.264Z"
   },
   {
    "id": "house:119-2:268",
@@ -133,7 +133,7 @@
    "result": "Agreed to 221–203",
    "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/8800",
    "rollCallUrl": "https://clerk.house.gov/Votes/2026268",
-   "retrievedAt": "2026-08-14T00:17:43.410Z"
+   "retrievedAt": "2026-08-14T06:10:29.381Z"
   },
   {
    "id": "house:119-2:269",
@@ -149,7 +149,7 @@
    "result": "Failed 214–216",
    "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/8800",
    "rollCallUrl": "https://clerk.house.gov/Votes/2026269",
-   "retrievedAt": "2026-08-14T00:17:43.541Z"
+   "retrievedAt": "2026-08-14T06:10:29.506Z"
   },
   {
    "id": "house:119-2:270",
@@ -165,7 +165,7 @@
    "result": "Failed 210–216",
    "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/6955",
    "rollCallUrl": "https://clerk.house.gov/Votes/2026270",
-   "retrievedAt": "2026-08-14T00:17:43.714Z"
+   "retrievedAt": "2026-08-14T06:10:29.656Z"
   },
   {
    "id": "house:119-2:271",
@@ -181,7 +181,7 @@
    "result": "Passed 270–155",
    "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/6955",
    "rollCallUrl": "https://clerk.house.gov/Votes/2026271",
-   "retrievedAt": "2026-08-14T00:17:43.828Z"
+   "retrievedAt": "2026-08-14T06:10:29.781Z"
   },
   {
    "id": "house:119-2:272",
@@ -197,7 +197,7 @@
    "result": "Passed 220–205",
    "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/9770",
    "rollCallUrl": "https://clerk.house.gov/Votes/2026272",
-   "retrievedAt": "2026-08-14T00:17:43.968Z"
+   "retrievedAt": "2026-08-14T06:10:29.884Z"
   },
   {
    "id": "house:119-2:273",
@@ -213,7 +213,7 @@
    "result": "Agreed to 221–210",
    "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/8800",
    "rollCallUrl": "https://clerk.house.gov/Votes/2026273",
-   "retrievedAt": "2026-08-14T00:17:44.133Z"
+   "retrievedAt": "2026-08-14T06:10:30.008Z"
   },
   {
    "id": "house:119-2:274",
@@ -229,7 +229,7 @@
    "result": "Failed 207–224",
    "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/8800",
    "rollCallUrl": "https://clerk.house.gov/Votes/2026274",
-   "retrievedAt": "2026-08-14T00:17:44.249Z"
+   "retrievedAt": "2026-08-14T06:10:30.140Z"
   },
   {
    "id": "house:119-2:275",
@@ -245,7 +245,7 @@
    "result": "Agreed to 232–199",
    "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/8800",
    "rollCallUrl": "https://clerk.house.gov/Votes/2026275",
-   "retrievedAt": "2026-08-14T00:17:44.401Z"
+   "retrievedAt": "2026-08-14T06:10:30.260Z"
   },
   {
    "id": "house:119-2:276",
@@ -261,7 +261,7 @@
    "result": "Failed 175–254",
    "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/8800",
    "rollCallUrl": "https://clerk.house.gov/Votes/2026276",
-   "retrievedAt": "2026-08-14T00:17:44.510Z"
+   "retrievedAt": "2026-08-14T06:10:30.381Z"
   },
   {
    "id": "house:119-2:277",
@@ -277,7 +277,7 @@
    "result": "Failed 213–216",
    "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/8800",
    "rollCallUrl": "https://clerk.house.gov/Votes/2026277",
-   "retrievedAt": "2026-08-14T00:17:44.717Z"
+   "retrievedAt": "2026-08-14T06:10:30.507Z"
   },
   {
    "id": "house:119-2:278",
@@ -293,7 +293,7 @@
    "result": "Passed 216–212",
    "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/8800",
    "rollCallUrl": "https://clerk.house.gov/Votes/2026278",
-   "retrievedAt": "2026-08-14T00:17:44.840Z"
+   "retrievedAt": "2026-08-14T06:10:30.623Z"
   },
   {
    "id": "house:119-2:279",
@@ -309,7 +309,7 @@
    "result": "Failed 211–218",
    "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/7008",
    "rollCallUrl": "https://clerk.house.gov/Votes/2026279",
-   "retrievedAt": "2026-08-14T00:17:45.015Z"
+   "retrievedAt": "2026-08-14T06:10:30.756Z"
   },
   {
    "id": "house:119-2:280",
@@ -325,7 +325,7 @@
    "result": "Passed 232–198",
    "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/7008",
    "rollCallUrl": "https://clerk.house.gov/Votes/2026280",
-   "retrievedAt": "2026-08-14T00:17:45.137Z"
+   "retrievedAt": "2026-08-14T06:10:30.881Z"
   },
   {
    "id": "house:119-2:281",
@@ -339,9 +339,9 @@
    "question": "On Agreeing to the Resolution",
    "legisNum": "H CON RES 113",
    "result": "Passed 216–214",
-   "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/113",
+   "billUrl": "https://www.congress.gov/bill/119th-congress/house-concurrent-resolution/113",
    "rollCallUrl": "https://clerk.house.gov/Votes/2026281",
-   "retrievedAt": "2026-08-14T00:17:45.312Z"
+   "retrievedAt": "2026-08-14T06:10:30.987Z"
   },
   {
    "id": "house:119-2:282",
@@ -355,9 +355,9 @@
    "question": "On Agreeing to the Resolution",
    "legisNum": "H CON RES 89",
    "result": "Passed 214–208",
-   "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/89",
+   "billUrl": "https://www.congress.gov/bill/119th-congress/house-concurrent-resolution/89",
    "rollCallUrl": "https://clerk.house.gov/Votes/2026282",
-   "retrievedAt": "2026-08-14T00:17:45.441Z"
+   "retrievedAt": "2026-08-14T06:10:31.128Z"
   },
   {
    "id": "house:119-2:283",
@@ -373,7 +373,7 @@
    "result": "Passed 232–188",
    "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/8884",
    "rollCallUrl": "https://clerk.house.gov/Votes/2026283",
-   "retrievedAt": "2026-08-14T00:17:45.565Z"
+   "retrievedAt": "2026-08-14T06:10:31.242Z"
   },
   {
    "id": "senate:119-2:212",
@@ -389,7 +389,7 @@
    "result": "Agreed to 86–12",
    "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/5334",
    "rollCallUrl": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1192/vote_119_2_00212.htm",
-   "retrievedAt": "2026-08-14T00:17:46.214Z"
+   "retrievedAt": "2026-08-14T06:10:31.410Z"
   },
   {
    "id": "senate:119-2:213",
@@ -405,7 +405,7 @@
    "result": "Agreed to 84–12",
    "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/5334",
    "rollCallUrl": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1192/vote_119_2_00213.htm",
-   "retrievedAt": "2026-08-14T00:17:46.389Z"
+   "retrievedAt": "2026-08-14T06:10:31.468Z"
   },
   {
    "id": "senate:119-2:214",
@@ -419,9 +419,9 @@
    "question": "On the Cloture Motion",
    "legisNum": "S.Res. 817",
    "result": "Agreed to 50–45",
-   "billUrl": "https://www.congress.gov/bill/119th-congress/senate-bill/817",
+   "billUrl": "https://www.congress.gov/bill/119th-congress/senate-resolution/817",
    "rollCallUrl": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1192/vote_119_2_00214.htm",
-   "retrievedAt": "2026-08-14T00:17:46.521Z"
+   "retrievedAt": "2026-08-14T06:10:31.543Z"
   },
   {
    "id": "senate:119-2:215",
@@ -435,9 +435,9 @@
    "question": "On the Motion to Proceed",
    "legisNum": "S.J.Res. 199",
    "result": "Rejected 47–52",
-   "billUrl": "https://www.congress.gov/bill/119th-congress/senate-bill/199",
+   "billUrl": "https://www.congress.gov/bill/119th-congress/senate-joint-resolution/199",
    "rollCallUrl": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1192/vote_119_2_00215.htm",
-   "retrievedAt": "2026-08-14T00:17:46.775Z"
+   "retrievedAt": "2026-08-14T06:10:31.632Z"
   },
   {
    "id": "senate:119-2:216",
@@ -451,9 +451,9 @@
    "question": "On the Motion to Discharge",
    "legisNum": "S.J.Res. 181",
    "result": "Rejected 49–50",
-   "billUrl": "https://www.congress.gov/bill/119th-congress/senate-bill/181",
+   "billUrl": "https://www.congress.gov/bill/119th-congress/senate-joint-resolution/181",
    "rollCallUrl": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1192/vote_119_2_00216.htm",
-   "retrievedAt": "2026-08-14T00:17:46.835Z"
+   "retrievedAt": "2026-08-14T06:10:31.724Z"
   },
   {
    "id": "senate:119-2:217",
@@ -467,9 +467,9 @@
    "question": "On the Resolution",
    "legisNum": "S.Res. 817",
    "result": "Agreed to 50–47",
-   "billUrl": "https://www.congress.gov/bill/119th-congress/senate-bill/817",
+   "billUrl": "https://www.congress.gov/bill/119th-congress/senate-resolution/817",
    "rollCallUrl": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1192/vote_119_2_00217.htm",
-   "retrievedAt": "2026-08-14T00:17:46.913Z"
+   "retrievedAt": "2026-08-14T06:10:31.809Z"
   },
   {
    "id": "senate:119-2:218",
@@ -485,7 +485,7 @@
    "result": "Agreed to 89–4",
    "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/6500",
    "rollCallUrl": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1192/vote_119_2_00218.htm",
-   "retrievedAt": "2026-08-14T00:17:47.111Z"
+   "retrievedAt": "2026-08-14T06:10:31.892Z"
   },
   {
    "id": "senate:119-2:219",
@@ -501,7 +501,7 @@
    "result": "Agreed to 51–43",
    "billUrl": null,
    "rollCallUrl": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1192/vote_119_2_00219.htm",
-   "retrievedAt": "2026-08-14T00:17:47.166Z"
+   "retrievedAt": "2026-08-14T06:10:31.978Z"
   },
   {
    "id": "senate:119-2:220",
@@ -517,7 +517,7 @@
    "result": "Confirmed 51–44",
    "billUrl": null,
    "rollCallUrl": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1192/vote_119_2_00220.htm",
-   "retrievedAt": "2026-08-14T00:17:47.234Z"
+   "retrievedAt": "2026-08-14T06:10:32.030Z"
   },
   {
    "id": "senate:119-2:221",
@@ -533,7 +533,7 @@
    "result": "Agreed to 50–44",
    "billUrl": null,
    "rollCallUrl": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1192/vote_119_2_00221.htm",
-   "retrievedAt": "2026-08-14T00:17:47.383Z"
+   "retrievedAt": "2026-08-14T06:10:32.074Z"
   },
   {
    "id": "senate:119-2:222",
@@ -547,9 +547,9 @@
    "question": "On the Motion to Proceed",
    "legisNum": "S.J.Res. 187",
    "result": "Rejected 48–50",
-   "billUrl": "https://www.congress.gov/bill/119th-congress/senate-bill/187",
+   "billUrl": "https://www.congress.gov/bill/119th-congress/senate-joint-resolution/187",
    "rollCallUrl": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1192/vote_119_2_00222.htm",
-   "retrievedAt": "2026-08-14T00:17:47.466Z"
+   "retrievedAt": "2026-08-14T06:10:32.139Z"
   },
   {
    "id": "senate:119-2:223",
@@ -565,7 +565,7 @@
    "result": "Rejected 32–64",
    "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/5334",
    "rollCallUrl": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1192/vote_119_2_00223.htm",
-   "retrievedAt": "2026-08-14T00:17:47.510Z"
+   "retrievedAt": "2026-08-14T06:10:32.272Z"
   },
   {
    "id": "senate:119-2:224",
@@ -581,7 +581,7 @@
    "result": "Passed 86–11",
    "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/5334",
    "rollCallUrl": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1192/vote_119_2_00224.htm",
-   "retrievedAt": "2026-08-14T00:17:47.563Z"
+   "retrievedAt": "2026-08-14T06:10:32.327Z"
   },
   {
    "id": "senate:119-2:225",
@@ -597,7 +597,7 @@
    "result": "Confirmed 51–47",
    "billUrl": null,
    "rollCallUrl": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1192/vote_119_2_00225.htm",
-   "retrievedAt": "2026-08-14T00:17:47.636Z"
+   "retrievedAt": "2026-08-14T06:10:32.383Z"
   },
   {
    "id": "senate:119-2:226",
@@ -613,7 +613,7 @@
    "result": "Agreed to 91–6",
    "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/6500",
    "rollCallUrl": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1192/vote_119_2_00226.htm",
-   "retrievedAt": "2026-08-14T00:17:47.770Z"
+   "retrievedAt": "2026-08-14T06:10:32.424Z"
   },
   {
    "id": "senate:119-2:227",
@@ -629,7 +629,7 @@
    "result": "Agreed to 61–32",
    "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/6500",
    "rollCallUrl": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1192/vote_119_2_00227.htm",
-   "retrievedAt": "2026-08-14T00:17:47.840Z"
+   "retrievedAt": "2026-08-14T06:10:32.487Z"
   },
   {
    "id": "senate:119-2:228",
@@ -645,7 +645,7 @@
    "result": "Passed 90–6",
    "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/6500",
    "rollCallUrl": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1192/vote_119_2_00228.htm",
-   "retrievedAt": "2026-08-14T00:17:47.933Z"
+   "retrievedAt": "2026-08-14T06:10:32.556Z"
   },
   {
    "id": "senate:119-2:229",
@@ -661,7 +661,7 @@
    "result": "Agreed to 50–49",
    "billUrl": null,
    "rollCallUrl": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1192/vote_119_2_00229.htm",
-   "retrievedAt": "2026-08-14T00:17:47.989Z"
+   "retrievedAt": "2026-08-14T06:10:32.613Z"
   },
   {
    "id": "senate:119-2:230",
@@ -677,7 +677,7 @@
    "result": "Confirmed 50–49",
    "billUrl": null,
    "rollCallUrl": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1192/vote_119_2_00230.htm",
-   "retrievedAt": "2026-08-14T00:17:48.049Z"
+   "retrievedAt": "2026-08-14T06:10:32.670Z"
   },
   {
    "id": "senate:119-2:231",
@@ -693,7 +693,7 @@
    "result": "Rejected 52–46",
    "billUrl": "https://www.congress.gov/bill/119th-congress/senate-bill/5271",
    "rollCallUrl": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1192/vote_119_2_00231.htm",
-   "retrievedAt": "2026-08-14T00:17:48.142Z"
+   "retrievedAt": "2026-08-14T06:10:32.726Z"
   }
  ],
  "positions": [

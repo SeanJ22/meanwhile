@@ -1,6 +1,9 @@
 "use client";
 
+import { useNarrowing } from "@/hooks/use-narrowing";
 import { formatMiles } from "@/lib/map/format";
+
+import { NarrowingPrompt } from "./narrowing-prompt";
 import type { CoverageTier } from "@/lib/meetings/query";
 import type { CoverageSummary, CoveredBody, Seat } from "@/lib/registry/coverage";
 import {
@@ -187,8 +190,28 @@ function CoverageBody({
   onOpenOfficial?: OpenOfficial;
 }) {
   const { bodies, seats, unincorporated, counts, senators, seatCounts } = coverage;
-  const shown = bodies.slice(0, NAME_LIMIT);
-  const hidden = bodies.length - shown.length;
+
+  /*
+   * The reader's device-local narrowing (M26): where they picked their
+   * municipality or school district, bodies of that TYPE narrow to the
+   * choice; every other type stays fully listed. The choice never leaves
+   * the device — see hooks/use-narrowing.ts.
+   */
+  const narrowing = useNarrowing(zip);
+  const selected = new Set(narrowing.divisions);
+  const narrowedTypes = new Set(
+    bodies
+      .filter((b) => b.ocdId !== null && selected.has(b.ocdId))
+      .map((b) => b.divisionType),
+  );
+  const narrowedBodies = bodies.filter(
+    (b) =>
+      !narrowedTypes.has(b.divisionType) ||
+      (b.ocdId !== null && selected.has(b.ocdId)),
+  );
+
+  const shown = narrowedBodies.slice(0, NAME_LIMIT);
+  const hidden = narrowedBodies.length - shown.length;
   const seatLine = seatPhrase(seats);
   const kind = leadKind(coverage);
   const g = counts.governing;
@@ -353,6 +376,10 @@ function CoverageBody({
           )}
         </ul>
       )}
+
+      {/* The M26 narrowing prompt — renders only where the computed street
+          index says the answer would change. Declining stays effortless. */}
+      {/^\d{5}$/.test(zip) && <NarrowingPrompt zip={zip} />}
 
       {/*
         D17, split 2026-08-13. The statutory sentence — New Hampshire does not

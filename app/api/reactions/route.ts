@@ -8,6 +8,10 @@ import {
   isValidTargetType,
 } from "@/lib/signal/reactions";
 import { getCandidateTargetIds } from "@/lib/ballot/candidate-targets";
+import {
+  getContributorReactionTargetIds,
+  getFundingTargetIds,
+} from "@/lib/funding/snapshot";
 import { getVoteIds } from "@/lib/votes/snapshot";
 
 /**
@@ -74,15 +78,23 @@ export async function POST(request: Request) {
   }
 
   // The target must exist in the committed data for its type — votes in
-  // the votes snapshot, candidates in the ballot files (3d). A missing
-  // file fails closed — better to refuse a reaction than to store one
-  // against a target nothing can render.
+  // the votes snapshot, candidates in the ballot files (3d), funding
+  // reactions in the FEC snapshot (D34). A missing file fails closed —
+  // better to refuse a reaction than to store one against a target nothing
+  // can render. The CONTRIBUTOR_REACTION set is empty while
+  // ripcord.fecContributorDisplay is pulled, so the control's write path
+  // dies with its display — a ripcord that only hid pixels would not be
+  // a ripcord.
   let validTargets: Set<string>;
   try {
     validTargets =
       submission.targetType === "CANDIDATE"
         ? getCandidateTargetIds()
-        : getVoteIds();
+        : submission.targetType === "FUNDING_TOTAL_REACTION"
+          ? getFundingTargetIds()
+          : submission.targetType === "CONTRIBUTOR_REACTION"
+            ? getContributorReactionTargetIds()
+            : getVoteIds();
   } catch {
     return Response.json({ error: "target data unavailable" }, { status: 503 });
   }

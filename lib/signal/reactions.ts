@@ -19,10 +19,32 @@
  * ordering, ranking, or recommendation the product renders; the neutrality
  * guards extend over this class like every other.
  */
-export type ReactionTargetType = "FEDERAL_VOTE" | "CANDIDATE";
+/**
+ * FUNDING_TOTAL_REACTION and CONTRIBUTOR_REACTION (D34, 2026-08-18) are the
+ * funding classes — reactions to the committee-totals display and the
+ * contributor display, keyed by FEC candidate id so a reader's answer on
+ * the ballot card and the official popup lands on the same committee. The
+ * type IS the provenance tag the ripcord doctrine requires: while
+ * `ripcord.fundingReactionsInAggregates` is pulled (it ships pulled), rows
+ * of these two types are stored but excluded from aggregation and every
+ * export — see lib/signal/aggregate.ts.
+ */
+export type ReactionTargetType =
+  | "FEDERAL_VOTE"
+  | "CANDIDATE"
+  | "FUNDING_TOTAL_REACTION"
+  | "CONTRIBUTOR_REACTION";
 export const REACTION_TARGET_TYPES: ReactionTargetType[] = [
   "FEDERAL_VOTE",
   "CANDIDATE",
+  "FUNDING_TOTAL_REACTION",
+  "CONTRIBUTOR_REACTION",
+];
+
+/** The funding reaction classes — the filter a ripcord pull applies. */
+export const FUNDING_REACTION_TYPES: ReactionTargetType[] = [
+  "FUNDING_TOTAL_REACTION",
+  "CONTRIBUTOR_REACTION",
 ];
 
 export type ReactionValue = "YES" | "NO" | "UNSURE";

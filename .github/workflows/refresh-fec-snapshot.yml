@@ -1,0 +1,70 @@
+# The scheduled refresh behind data/fec/fec-2026.json (D34).
+#
+# The app reads the committed snapshot; no page load ever calls the FEC.
+# Weekly is the right cadence: campaign-finance filings land on statutory
+# deadlines (quarterly, pre-election), not continuously, and the surface
+# states "reported through" and "read" dates so staleness is visible, never
+# silent.
+#
+# The FEC key lives ONLY in fetch-script environments — .env.local on the
+# workstation, the FEC_API_KEY repository secret here. It is never set in
+# Netlify and never reaches client code (guard-tested in
+# tests/funding.test.ts). Until the secret is added, this workflow fails
+# visibly rather than committing an unrefreshed file.
+#
+# Failure semantics: the fetch script exits nonzero without writing when it
+# cannot proceed; a partial FEC outage shows up as recorded absences in the
+# snapshot, attributed per candidate. Tests run before any commit.
+
+name: Refresh FEC snapshot
+
+on:
+  schedule:
+    # Mondays 09:23 UTC — off the busy top of the hour.
+    - cron: "23 9 * * 1"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-fec-snapshot
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Enable corepack (pnpm pinned by packageManager)
+        run: corepack enable
+
+      - name: Install
+        run: corepack pnpm install --frozen-lockfile
+
+      - name: Refresh the snapshot
+        env:
+          FEC_API_KEY: ${{ secrets.FEC_API_KEY }}
+        run: corepack pnpm fec:fetch
+
+      - name: Validate before committing
+        run: corepack pnpm test
+
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- data/fec/fec-2026.json; then
+            echo "snapshot unchanged — nothing to commit"
+            exit 0
+          fi
+          git config user.name "snapshot-refresh[bot]"
+          git config user.email "noreply@github.com"
+          git add data/fec/fec-2026.json
+          git commit -m "FEC snapshot refresh: $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push origin main

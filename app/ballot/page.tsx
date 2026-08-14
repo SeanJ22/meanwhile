@@ -23,6 +23,16 @@ import { MyPicks } from "@/components/ballot/my-picks";
 import { PickControl } from "@/components/ballot/pick-control";
 import { registrationLinkFor } from "@/lib/ballot/registration-links";
 import { formatDateMDY } from "@/lib/map/format";
+import {
+  fundingAnswerForTarget,
+  STATE_FUNDING_NOTE,
+  type FundingAnswer,
+} from "@/lib/funding/display";
+import {
+  FundingAbsence,
+  FundingDisplay,
+  StateFundingNote,
+} from "@/components/funding/funding-section";
 import { ReactionControl } from "@/components/reactions/reaction-control";
 import { electionDatesFor } from "@/lib/ballot/election-dates";
 import type {
@@ -58,6 +68,34 @@ function candidatesOf(set: BallotSet, contest: Contest): Candidacy[] {
   return set.candidacies
     .filter((c) => c.contestId === contest.id)
     .sort((a, b) => a.familyName.localeCompare(b.familyName));
+}
+
+/** Federal is decided by the contest, never by division shape — a governor's
+ *  division is the state root exactly like a US Senate seat's. */
+function isFederalContest(contest: Contest): boolean {
+  return /:us-senate$|:us-house-\d+$/.test(contest.id);
+}
+
+/** D34: the funding answer under one candidate — totals with the reaction
+ *  control, an earned absence, or nothing when the snapshot has no record
+ *  either way. */
+function CandidateFunding({
+  targetKey,
+  context,
+}: {
+  targetKey: string;
+  context: { zip: string; lat: number; lng: number } | null;
+}) {
+  let answer: FundingAnswer;
+  try {
+    answer = fundingAnswerForTarget(targetKey);
+  } catch {
+    // A missing snapshot renders nothing — never an error in the reader's way.
+    return null;
+  }
+  if (answer.kind === "none") return null;
+  if (answer.kind === "absence") return <FundingAbsence data={answer.data} />;
+  return <FundingDisplay data={answer.data} context={context} />;
 }
 
 export default async function BallotPage({
@@ -334,9 +372,22 @@ export default async function BallotPage({
                             : null
                         }
                       />
+                      {isFederalContest(contest) && (
+                        <CandidateFunding
+                          targetKey={`${contest.id}|${nominee.name}`}
+                          context={
+                            centroid && zip
+                              ? { zip, lat: centroid.lat, lng: centroid.lng }
+                              : null
+                          }
+                        />
+                      )}
                     </li>
                   ))}
                 </ul>
+                {!isFederalContest(contest) && (
+                  <StateFundingNote note={STATE_FUNDING_NOTE} />
+                )}
                 {/* 4a: the private pick — a different thing from the
                     reactions above, and it says so. */}
                 <PickControl
@@ -393,9 +444,22 @@ export default async function BallotPage({
                               : null
                           }
                         />
+                        {isFederalContest(contest) && (
+                          <CandidateFunding
+                            targetKey={cand.id}
+                            context={
+                              centroid && zip
+                                ? { zip, lat: centroid.lat, lng: centroid.lng }
+                                : null
+                            }
+                          />
+                        )}
                       </li>
                     ))}
                   </ul>
+                  {!isFederalContest(contest) && (
+                    <StateFundingNote note={STATE_FUNDING_NOTE} />
+                  )}
                   {/* 4a: the private pick — distinct from reactions. */}
                   <PickControl
                     contestId={contest.id}

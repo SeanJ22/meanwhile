@@ -140,6 +140,29 @@ export default function TransparencyPage() {
           </p>
         </Section>
 
+        <Section title="Campaign money">
+          <p>
+            Some candidates and members of Congress show a &quot;Campaign
+            money&quot; section: how much their campaign raised and spent,
+            what it has on hand, roughly what share came from small donors,
+            and the largest contributions the campaign reported. All of it is
+            public data the campaigns themselves file with the Federal
+            Election Commission, shown as filed and linked to the FEC&apos;s
+            own records. We add nothing to it and characterize nobody by it.
+          </p>
+          <p>
+            The funding displays have the same yes/no/unsure reaction buttons
+            as votes and candidates, and the same rules apply — stored
+            anonymously, never shown back to anyone. One difference, stated
+            plainly: while a legal question about commercial use of FEC
+            contributor data is open, <strong>reactions to funding displays
+            are excluded from anything licensed to anyone</strong>. That
+            exclusion is enforced by a named switch in the code, and only
+            counsel can close it. If it closes, this page changes in the
+            same release.
+          </p>
+        </Section>
+
         <Section title="What happens to the data">
           <p>
             The plan for this product is to aggregate what people look up —

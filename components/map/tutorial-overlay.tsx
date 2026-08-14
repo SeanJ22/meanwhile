@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 
 /**
  * First-run tutorial, v1 (6c, wall clock 2026-08-14 second session): a
@@ -37,28 +37,49 @@ const STEPS: { title: string; body: string }[] = [
   },
 ];
 
+const listeners = new Set<() => void>();
+
+function subscribe(onStoreChange: () => void) {
+  listeners.add(onStoreChange);
+  window.addEventListener("storage", onStoreChange);
+  return () => {
+    listeners.delete(onStoreChange);
+    window.removeEventListener("storage", onStoreChange);
+  };
+}
+
+function readSeen(): boolean {
+  try {
+    return window.localStorage.getItem(STORAGE_KEY) === "1";
+  } catch {
+    // No storage: treat as seen — never show on every visit.
+    return true;
+  }
+}
+
+function markSeen() {
+  try {
+    window.localStorage.setItem(STORAGE_KEY, "1");
+  } catch {
+    // Can't remember; the local override below still dismisses.
+  }
+  for (const listener of listeners) listener();
+}
+
 export function TutorialOverlay({ active }: { active: boolean }) {
   const [step, setStep] = useState(0);
-  const [show, setShow] = useState(false);
+  // The server snapshot says "seen", so the overlay never flashes for a
+  // returning reader before hydration — the use-stored-zip pattern.
+  const seen = useSyncExternalStore(subscribe, readSeen, () => true);
+  // Storage-less fallback: dismissing must stick for this session even
+  // when localStorage can't hold the flag.
+  const [dismissed, setDismissed] = useState(false);
 
-  useEffect(() => {
-    if (!active) return;
-    try {
-      if (window.localStorage.getItem(STORAGE_KEY) !== "1") setShow(true);
-    } catch {
-      // No storage: never show, rather than showing on every visit.
-    }
-  }, [active]);
-
-  if (!show || !active) return null;
+  if (seen || dismissed || !active) return null;
 
   const dismiss = () => {
-    try {
-      window.localStorage.setItem(STORAGE_KEY, "1");
-    } catch {
-      // Can't remember — dismiss for this session anyway.
-    }
-    setShow(false);
+    setDismissed(true);
+    markSeen();
   };
 
   const current = STEPS[step];

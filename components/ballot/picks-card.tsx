@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 
 import { clearAllPicks, type StoredPick } from "@/lib/ballot/picks";
 
@@ -137,47 +137,33 @@ function drawCard(picks: StoredPick[], madeOn: string): string {
 }
 
 export function PicksCardControls({ picks }: { picks: StoredPick[] }) {
-  const [cardUrl, setCardUrl] = useState<string | null>(null);
+  const [showCard, setShowCard] = useState(false);
   const [confirmingClear, setConfirmingClear] = useState(false);
 
-  // Re-draw when picks change while the card is open, so a stale card
-  // never sits behind a fresh list.
-  useEffect(() => {
-    if (cardUrl === null) return;
-    if (picks.length === 0) {
-      setCardUrl(null);
-      return;
-    }
-    setCardUrl(
-      drawCard(
-        picks,
-        new Date().toLocaleDateString("en-US", {
-          month: "long",
-          day: "numeric",
-          year: "numeric",
-        }),
-      ),
+  // Derived, never stored: the card re-draws from the CURRENT picks on
+  // every change while open, so a stale card never sits behind a fresh
+  // list. The picks serialization is the dependency the list identity
+  // can't provide.
+  const picksKey = JSON.stringify(picks);
+  const cardUrl = useMemo(() => {
+    if (!showCard || picks.length === 0) return null;
+    return drawCard(
+      picks,
+      new Date().toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      }),
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(picks)]);
+  }, [showCard, picksKey]);
 
   return (
     <div className="mt-2.5">
       <p className="flex flex-wrap gap-x-3 gap-y-1 text-[0.75rem]">
         <button
           type="button"
-          onClick={() =>
-            setCardUrl(
-              drawCard(
-                picks,
-                new Date().toLocaleDateString("en-US", {
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
-                }),
-              ),
-            )
-          }
+          onClick={() => setShowCard(true)}
           className="cursor-pointer text-signal underline decoration-dotted hover:no-underline"
         >
           Create my card
@@ -190,7 +176,7 @@ export function PicksCardControls({ picks }: { picks: StoredPick[] }) {
               onClick={() => {
                 clearAllPicks();
                 setConfirmingClear(false);
-                setCardUrl(null);
+                setShowCard(false);
               }}
               className="cursor-pointer text-signal underline decoration-dotted"
             >

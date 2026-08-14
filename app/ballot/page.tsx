@@ -1,11 +1,14 @@
 import Link from "next/link";
 
-import {
-  ballotNjMorrisSource,
-  contestsForDivisions,
-} from "@/lib/sources/ballot-nj-morris";
+import { contestsForDivisions } from "@/lib/sources/ballot-nj-morris";
+import { BALLOT_SOURCES } from "@/lib/ballot/registry";
 import { electionDatesFor } from "@/lib/ballot/election-dates";
-import type { BallotSet, Candidacy, Contest } from "@/lib/ballot/types";
+import type {
+  BallotAbsence,
+  BallotSet,
+  Candidacy,
+  Contest,
+} from "@/lib/ballot/types";
 import { resolveZip } from "@/lib/geo/zcta";
 import { divisionsAt } from "@/lib/registry/server";
 
@@ -27,7 +30,7 @@ import { divisionsAt } from "@/lib/registry/server";
 export const runtime = "nodejs";
 
 const NEUTRAL_NOTE =
-  "Candidates are listed alphabetically by surname — the county's drawn ballot order was not machine-readable from the clerk's scanned drawing. Party labels and slogans are shown as filed. Nothing here is a recommendation.";
+  "Candidates are listed alphabetically by surname — the official ballot order either has not been drawn yet or was not machine-readable from the authority's publication. Party labels (and slogans where filed) are shown as filed. Nothing here is a recommendation.";
 
 function candidatesOf(set: BallotSet, contest: Contest): Candidacy[] {
   return set.candidacies
@@ -46,20 +49,42 @@ export default async function BallotPage({
   const resolution = zip ? resolveZip(zip) : null;
   const centroid = resolution?.ok ? resolution.centroid : null;
 
+  // Every registered source is asked; a source whose contests match none of
+  // the point's divisions contributes nothing. One source answers per state,
+  // and the ballot follows wherever the zip actually is (2e).
   let set: BallotSet | null = null;
-  let matched: ReturnType<typeof contestsForDivisions> | null = null;
+  let matched: {
+    contests: Contest[];
+    absences: BallotAbsence[];
+  } | null = null;
+  let coverageNotes: string[] = [];
+  let attempted = false;
 
   if (centroid) {
-    const raw = await ballotNjMorrisSource.fetch();
-    set = ballotNjMorrisSource.normalize(raw);
+    attempted = true;
     const divisions = await divisionsAt(centroid.lat, centroid.lng);
-    matched = contestsForDivisions(
-      set,
-      divisions.map((d) => d.ocdId),
-    );
+    const ocdIds = divisions.map((d) => d.ocdId);
+    for (const { source } of BALLOT_SOURCES) {
+      const candidate = source.normalize(await source.fetch());
+      const hit = contestsForDivisions(candidate, ocdIds);
+      if (hit.contests.length > 0 || hit.absences.length > 0) {
+        set = candidate;
+        matched = hit;
+        coverageNotes = candidate.coverageNotes ?? [];
+        break;
+      }
+    }
   }
 
-  const dates = matched && matched.contests.length > 0 ? electionDatesFor("NJ") : null;
+  const dates =
+    set && matched && matched.contests.length > 0
+      ? electionDatesFor(set.election.state)
+      : null;
+
+  const candidacyContests =
+    matched?.contests.filter((c) => c.type === "CANDIDACY") ?? [];
+  const measureContests =
+    matched?.contests.filter((c) => c.type === "MEASURE") ?? [];
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-8 text-paper">
@@ -99,12 +124,12 @@ export default async function BallotPage({
         </p>
       )}
 
-      {matched && matched.contests.length === 0 && (
+      {attempted && !matched && (
         <p className="mt-6 text-[0.8125rem] leading-relaxed text-muted">
           We haven&apos;t built the ballot for this area yet. Ballot coverage
-          currently reaches Morris County, New Jersey (07866); Arizona and New
-          Hampshire are next. This is a gap in our data, not a statement that
-          nothing is on your ballot.
+          currently reaches Pima County AZ, Morris County NJ, and Merrimack
+          County NH. This is a gap in our data, not a statement that nothing
+          is on your ballot.
         </p>
       )}
 
@@ -140,7 +165,7 @@ export default async function BallotPage({
 
       {set &&
         matched &&
-        matched.contests.map((contest) => (
+        candidacyContests.map((contest) => (
           <section
             key={contest.id}
             className="mt-5 rounded border border-[var(--panel-border)] p-4"
@@ -204,6 +229,61 @@ export default async function BallotPage({
             </p>
           </section>
         ))}
+
+      {/* Statewide measures: the official short title, the pending-text
+          statement where official language is not yet published, and the
+          impartial analysis linked. Never characterized by us. */}
+      {measureContests.length > 0 && (
+        <section className="mt-6">
+          <h2 className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-muted">
+            Statewide measures
+          </h2>
+          {measureContests.map((contest) => (
+            <div
+              key={contest.id}
+              className="mt-3 rounded border border-[var(--panel-border)] p-4"
+            >
+              <h3 className="text-[0.875rem] font-semibold">{contest.title}</h3>
+              {contest.scopeNote && (
+                <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
+                  {contest.scopeNote}
+                </p>
+              )}
+              <p className="mt-2 text-[0.6875rem]">
+                <a
+                  href={contest.provenance.sourceUrl ?? undefined}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline decoration-dotted"
+                >
+                  {contest.provenance.sourceOrg}
+                </a>{" "}
+                <span className="text-muted">
+                  · read {contest.provenance.collectedAt}
+                </span>
+              </p>
+            </div>
+          ))}
+        </section>
+      )}
+
+      {/* Our gaps, stated as ours — never smoothed into implied
+          completeness. Distinct from the authorities' absence statements. */}
+      {matched && coverageNotes.length > 0 && (
+        <section className="mt-6 rounded border border-dashed border-[var(--panel-border)] p-4">
+          <h2 className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-muted">
+            Not here yet
+          </h2>
+          {coverageNotes.map((note) => (
+            <p
+              key={note}
+              className="mt-2 text-[0.75rem] leading-relaxed text-paper-dim"
+            >
+              {note}
+            </p>
+          ))}
+        </section>
+      )}
 
       {matched && matched.contests.length > 0 && (
         <>

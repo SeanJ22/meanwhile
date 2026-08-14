@@ -8,7 +8,7 @@
  *
  * Lowercase postal codes, matching the `state:xx` segment of an OCD-ID.
  */
-export const BALLOT_COVERED_STATES: readonly string[] = ["nj"];
+export const BALLOT_COVERED_STATES: readonly string[] = ["nj", "az", "nh"];
 
 export function ballotCoveredForState(state: string | null): boolean {
   return state !== null && BALLOT_COVERED_STATES.includes(state.toLowerCase());

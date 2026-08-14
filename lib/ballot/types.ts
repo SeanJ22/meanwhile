@@ -103,6 +103,14 @@ export interface BallotSet {
   candidacies: Candidacy[];
   measures: Measure[];
   absences: BallotAbsence[];
+  /**
+   * Honest statements of OUR gaps — contests known to exist that are not yet
+   * curated or not yet mappable to a division. Rendered distinctly, because
+   * a silently missing contest reads as "nothing local is on your ballot",
+   * which the coverage-honesty rule forbids. Distinct from `absences`, which
+   * are the *authority's* statements.
+   */
+  coverageNotes?: string[];
 }
 
 /**

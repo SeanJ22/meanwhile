@@ -70,6 +70,64 @@ export const ELECTION_DATES: ElectionDates[] = [
     collectedAt: "2026-08-13",
     verifiedAt: "2026-08-13",
   },
+  {
+    state: "AZ",
+    electionDay: "2026-11-03",
+    steps: [
+      {
+        label: "Primary election (held)",
+        date: "2026-07-21",
+        detail:
+          "Canvassed August 6, 2026. The general-election candidate list narrows to the primary winners when the Secretary of State publishes it.",
+      },
+      {
+        label: "Voter registration deadline",
+        date: "2026-10-05",
+        detail: "11:59 p.m.",
+      },
+      {
+        label: "Early voting begins",
+        date: "2026-10-07",
+        detail: null,
+      },
+      {
+        label: "Election Day",
+        date: "2026-11-03",
+        detail: null,
+      },
+    ],
+    sourceUrl: "https://azsos.gov/elections/ballot-measures",
+    sourceOrg: "Arizona Secretary of State",
+    collectedAt: "2026-08-14",
+    verifiedAt: "2026-08-14",
+  },
+  {
+    state: "NH",
+    electionDay: "2026-11-03",
+    steps: [
+      {
+        label: "Town Election (town and school matters)",
+        date: "2026-03-10",
+        detail:
+          "New Hampshire's town-meeting system decides town offices and school-district matters in March, not November.",
+      },
+      {
+        label: "State primary",
+        date: "2026-09-08",
+        detail: "Decides which filed candidates reach the November ballot.",
+      },
+      {
+        label: "Election Day",
+        date: "2026-11-03",
+        detail: null,
+      },
+    ],
+    sourceUrl:
+      "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/inline-documents/sonh/political-calendar-2026-2027-tops-pages-of-calendar-landscape_0.pdf",
+    sourceOrg: "New Hampshire Secretary of State (2026–2027 political calendar)",
+    collectedAt: "2026-08-14",
+    verifiedAt: "2026-08-14",
+  },
 ];
 
 export function electionDatesFor(state: string): ElectionDates | null {

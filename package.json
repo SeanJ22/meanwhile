@@ -23,7 +23,8 @@
     "handoff": "node scripts/handoff.mjs",
     "officials:build": "tsx scripts/build-officeholders.ts",
     "officials:photos": "tsx scripts/fetch-official-photos.mts",
-    "corpus:fetch": "tsx scripts/fetch-corpus.mts"
+    "corpus:fetch": "tsx scripts/fetch-corpus.mts",
+    "votes:fetch": "tsx scripts/fetch-votes.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

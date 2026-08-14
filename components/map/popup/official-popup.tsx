@@ -1,8 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 import { blurbForTitle } from "@/lib/officials/office-blurbs";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { Tier } from "@/lib/ocd/tiers";
+import type { RollCallVote, VotePosition } from "@/lib/votes/types";
 
 import { PopupCard, PopupRow, PopupSectionLabel } from "./popup-card";
 
@@ -30,6 +33,124 @@ function initialsOf(name: string): string {
   const first = parts[0]?.[0] ?? "";
   const last = parts.length > 1 ? (parts[parts.length - 1][0] ?? "") : "";
   return (first + last).toUpperCase();
+}
+
+/**
+ * The four recorded states, visually unmistakable (5). The colors state
+ * the member's VOTE — what they cast, never whether it was good. The legend
+ * below the list says exactly that.
+ */
+const POSITION_STYLE: Record<
+  VotePosition,
+  { label: string; color: string }
+> = {
+  YES: { label: "YES", color: "var(--accent-state)" },
+  NO: { label: "NO", color: "var(--danger)" },
+  PRESENT: { label: "PRESENT", color: "var(--accent-national)" },
+  NOT_VOTING: { label: "NOT VOTING", color: "var(--text-muted)" },
+};
+
+type MemberRollCall = RollCallVote & { position: VotePosition };
+
+/** How many recent votes the popup shows before pointing at the record. */
+const VOTE_LIMIT = 5;
+
+function RecentVotes({ holder }: { holder: SeatHolder }) {
+  const [votes, setVotes] = useState<MemberRollCall[] | null>(null);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    if (!holder.id.startsWith("congress:")) return;
+    const controller = new AbortController();
+    void (async () => {
+      try {
+        const response = await fetch(`/api/votes?member=${holder.id}`, {
+          signal: controller.signal,
+        });
+        if (!response.ok) throw new Error(String(response.status));
+        const payload = (await response.json()) as { votes: MemberRollCall[] };
+        setVotes(payload.votes);
+      } catch {
+        if (!controller.signal.aborted) setFailed(true);
+      }
+    })();
+    return () => controller.abort();
+  }, [holder.id]);
+
+  // State legislators' roll calls are a coming store, not an absence to
+  // fake — the section only renders for federal members.
+  if (!holder.id.startsWith("congress:")) return null;
+
+  return (
+    <>
+      <PopupSectionLabel>Recent votes</PopupSectionLabel>
+      {failed ? (
+        <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
+          Couldn&apos;t load the vote record just now.
+        </p>
+      ) : votes === null ? (
+        <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
+          Loading…
+        </p>
+      ) : votes.length === 0 ? (
+        <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
+          No recorded votes on file in our current window yet.
+        </p>
+      ) : (
+        <>
+          {votes.slice(0, VOTE_LIMIT).map((vote) => (
+            <div
+              key={vote.id}
+              className="mt-2 border-b border-[var(--panel-border)] pb-2 last:border-0"
+            >
+              {/* Plain words first — the official title, never ours. */}
+              <p className="text-[0.75rem] leading-snug">{vote.title}</p>
+              <p className="mt-1 flex flex-wrap items-baseline gap-x-2 text-[0.6875rem]">
+                <span
+                  className="font-mono font-semibold tracking-[0.08em]"
+                  style={{ color: POSITION_STYLE[vote.position].color }}
+                >
+                  {POSITION_STYLE[vote.position].label}
+                </span>
+                <span className="text-muted">
+                  {vote.question} · {vote.result}
+                  {vote.legisNum ? ` · ${vote.legisNum}` : ""}
+                </span>
+              </p>
+              <p className="mt-0.5 text-[0.625rem]">
+                <a
+                  href={vote.rollCallUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-muted underline decoration-dotted hover:text-signal"
+                >
+                  roll call
+                </a>
+                {vote.billUrl && (
+                  <>
+                    {" · "}
+                    <a
+                      href={vote.billUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-muted underline decoration-dotted hover:text-signal"
+                    >
+                      the bill and its official summary
+                    </a>
+                  </>
+                )}
+              </p>
+            </div>
+          ))}
+          <p className="mt-2 text-[0.5625rem] leading-relaxed text-muted">
+            Colors state their vote — green YES, red NO, blue PRESENT, gray
+            NOT VOTING — never our opinion of it. Titles are the official
+            record&apos;s words.
+          </p>
+        </>
+      )}
+    </>
+  );
 }
 
 export function OfficialPopup({
@@ -160,6 +281,8 @@ export function OfficialPopup({
             No published contact on record yet.
           </p>
         )}
+
+      <RecentVotes holder={holder} />
 
       {blurb && (
         <>

@@ -378,8 +378,9 @@ function CoverageBody({
       )}
 
       {/* The M26 narrowing prompt — renders only where the computed street
-          index says the answer would change. Declining stays effortless. */}
-      {/^\d{5}$/.test(zip) && <NarrowingPrompt zip={zip} />}
+          index says the answer would change. Declining stays effortless.
+          Keyed on the zip so a new zip mounts a fresh prompt. */}
+      {/^\d{5}$/.test(zip) && <NarrowingPrompt key={zip} zip={zip} />}
 
       {/*
         D17, split 2026-08-13. The statutory sentence — New Hampshire does not

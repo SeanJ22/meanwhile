@@ -55,11 +55,9 @@ export function NarrowingPrompt({
   const [streetInput, setStreetInput] = useState("");
   const narrowing = useNarrowing(zip);
 
+  // Per-zip state resets by remount: the parent keys this component on the
+  // zip, so a new zip is a fresh instance rather than a synchronous reset.
   useEffect(() => {
-    setIndex(null);
-    setOpen(false);
-    setDeclined(false);
-    setStreetInput("");
     if (!/^\d{5}$/.test(zip)) return;
     const controller = new AbortController();
     void (async () => {

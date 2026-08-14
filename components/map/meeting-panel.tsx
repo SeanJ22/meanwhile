@@ -250,8 +250,10 @@ export function HowToBeHeard({
     return (
       <div className="mt-3 pl-4">
         <p className="font-mono text-[0.6875rem] leading-relaxed text-muted">
+          {/* Item 4 (2026-08-14 second session): renamed to a call to
+              action — the tester's words, verbatim. */}
           <span className="uppercase tracking-[0.14em] text-paper-dim">
-            To be heard
+            Make your voice heard
           </span>
           <br />
           We don&apos;t know this body&apos;s public-comment rules yet —{" "}
@@ -280,7 +282,7 @@ export function HowToBeHeard({
   return (
     <div className="mt-3 pl-4">
       <p className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-paper-dim">
-        To be heard
+        Make your voice heard
       </p>
       <ul className="mt-1 space-y-1 text-[0.75rem] leading-relaxed text-paper-dim">
         {lines.map((line) => (

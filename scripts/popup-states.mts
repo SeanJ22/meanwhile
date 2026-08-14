@@ -81,7 +81,7 @@ const modal = page.locator(".account-modal");
 const modalText = (await modal.textContent()) ?? "";
 console.log(
   `meeting modal: agenda-section=${modalText.includes("What this meeting is about")}, ` +
-    `to-be-heard=${modalText.includes("To be heard") || modalText.includes("comment")}, ` +
+    `to-be-heard=${modalText.includes("Make your voice heard") || modalText.includes("comment")}, ` +
     `close=${(await modal.locator('button[aria-label="Close"]').count()) > 0}`,
 );
 await page.screenshot({ path: join(OUT, "popup-2-meeting-modal.png") });

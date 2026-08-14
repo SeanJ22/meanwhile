@@ -562,16 +562,22 @@ needs each governor's office read off the state's own site. Plain-client
 rungs, `attemptedAt: 2026-08-14`:
 
 - **azgovernor.gov walls plain clients** — 403 on
-  /office-arizona-governor/contact-governors-office. Browser rung queued.
+  /office-arizona-governor/contact-governors-office. IN-BROWSER READ
+  (same session): that path 404s even in a browser (stale); the real
+  contact page is /constituent-services — "Office of the Arizona
+  Governor Katie Hobbs", 602-542-4331, engage@az.gov, read off the page.
 - **governor.nh.gov walls plain clients** — 403 on the homepage. Same NH
-  wall family as newbury.nh.gov. Browser rung queued.
+  wall family as newbury.nh.gov. IN-BROWSER READ: "Welcome | Governor
+  Kelly Ayotte", 603-271-2121 published on the page; the contact page is
+  /contact-governor-ayotte.
 - **nj.gov/governor answers plain clients with an empty shell** —
   /contact/ returns "Untitled Document" with no content to a plain
   fetch; the page is client-rendered. A 200 with no content is a MISS,
-  not a hit (the count rule). Browser rung queued.
+  not a hit (the count rule). IN-BROWSER READ: "Office of New Jersey
+  Governor Mikie Sherrill"; the office publishes NO phone — the contact
+  form (live, /governor/contact/) is the published channel, so the row
+  ships phone: null. An absence is an absence.
 
-All three rows carry `verification: "PENDING_BROWSER"` until the
-in-browser read happens. THE RULE (everyday.ts precedent): a pending row
-must be verified or removed before ship — never shipped on faith. The
-browser phase of this session owns the verification; the walk record
-(docs/tester-pass.md) states what each page said.
+All three rows now carry `verification: "PAGE_FETCHED"` — verified in a
+real browser this session before ship, per the everyday.ts rule that a
+pending row never ships on faith.

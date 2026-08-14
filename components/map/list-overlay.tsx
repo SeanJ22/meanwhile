@@ -74,19 +74,13 @@ export function ListOverlay({
   const [limit, setLimit] = useState(PAGE);
 
   /*
-   * On mobile the back button should close the overlay rather than leave the
-   * app. Pushing a history entry on open and popping it on close is Edia's
-   * approach and the only one that behaves correctly with the OS back gesture.
+   * NO pushed history entry (2026-08-14 third session, same diagnosis as
+   * official-modal.tsx): pushing {overlay:true} makes Next's App Router
+   * re-render the route and remount the islands — the pattern killed the
+   * official modal at every phone viewport the moment it opened. The
+   * Edia approach assumed a router that leaves history alone; Next
+   * doesn't. Escape and the close control close; back navigates.
    */
-  useEffect(() => {
-    if (!ui.listOverlayOpen) return;
-
-    window.history.pushState({ overlay: true }, "");
-    const onPop = () => dispatch({ type: "list/open", open: false });
-    window.addEventListener("popstate", onPop);
-
-    return () => window.removeEventListener("popstate", onPop);
-  }, [ui.listOverlayOpen, dispatch]);
 
   useEffect(() => {
     if (!ui.listOverlayOpen) return;

@@ -55,17 +55,19 @@ export const STATEWIDE_EXECUTIVES: readonly StatewideExecutive[] = [
       partyLabel: null,
       websiteUrl: "https://azgovernor.gov/",
       sourceUrl: "https://azgovernor.gov/",
-      email: null,
+      // Read off azgovernor.gov/constituent-services in a real browser
+      // 2026-08-14: "602-542-4331 · engage@az.gov", office titled
+      // "Office of the Arizona Governor Katie Hobbs".
+      email: "engage@az.gov",
       phone: "(602) 542-4331",
-      contactFormUrl:
-        "https://azgovernor.gov/office-arizona-governor/contact-governors-office",
+      contactFormUrl: "https://azgovernor.gov/constituent-services",
       photoUrl: null,
       campaignUrl: null,
     },
     sourceUrl: "https://azgovernor.gov/",
     sourceOrg: "Office of the Arizona Governor",
     collectedAt: "2026-08-14",
-    verification: "PENDING_BROWSER",
+    verification: "PAGE_FETCHED",
   },
   {
     stateOcdId: "ocd-division/country:us/state:nj",
@@ -77,7 +79,12 @@ export const STATEWIDE_EXECUTIVES: readonly StatewideExecutive[] = [
       websiteUrl: "https://www.nj.gov/governor/",
       sourceUrl: "https://www.nj.gov/governor/",
       email: null,
-      phone: "(609) 292-6000",
+      // The office's own site (read in a real browser 2026-08-14,
+      // titled "Office of New Jersey Governor Mikie Sherrill") publishes
+      // NO phone number — the contact form is the published channel.
+      // An absence is an absence; the draft's 609 number was removed
+      // because the page doesn't state it.
+      phone: null,
       contactFormUrl: "https://www.nj.gov/governor/contact/",
       photoUrl: null,
       campaignUrl: null,
@@ -85,7 +92,7 @@ export const STATEWIDE_EXECUTIVES: readonly StatewideExecutive[] = [
     sourceUrl: "https://www.nj.gov/governor/",
     sourceOrg: "Office of the Governor of New Jersey",
     collectedAt: "2026-08-14",
-    verification: "PENDING_BROWSER",
+    verification: "PAGE_FETCHED",
   },
   {
     stateOcdId: "ocd-division/country:us/state:nh",
@@ -97,15 +104,18 @@ export const STATEWIDE_EXECUTIVES: readonly StatewideExecutive[] = [
       websiteUrl: "https://www.governor.nh.gov/",
       sourceUrl: "https://www.governor.nh.gov/",
       email: null,
+      // Read off governor.nh.gov in a real browser 2026-08-14: page
+      // titled "Welcome | Governor Kelly Ayotte", phone 603-271-2121
+      // published on the page.
       phone: "(603) 271-2121",
-      contactFormUrl: "https://www.governor.nh.gov/contact-us",
+      contactFormUrl: "https://www.governor.nh.gov/contact-governor-ayotte",
       photoUrl: null,
       campaignUrl: null,
     },
     sourceUrl: "https://www.governor.nh.gov/",
     sourceOrg: "Office of the Governor of New Hampshire",
     collectedAt: "2026-08-14",
-    verification: "PENDING_BROWSER",
+    verification: "PAGE_FETCHED",
   },
 ];
 

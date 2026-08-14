@@ -51,16 +51,20 @@ export function OfficialModal({
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  useEffect(() => {
-    if (!window.matchMedia("(max-width: 1024px)").matches) return;
-    window.history.pushState({ overlay: true }, "");
-    const onPop = () => onClose();
-    window.addEventListener("popstate", onPop);
-    return () => {
-      window.removeEventListener("popstate", onPop);
-      if (window.history.state?.overlay) window.history.back();
-    };
-  }, [onClose]);
+  /*
+   * NO pushed history entry, deliberately (diagnosed 2026-08-14 third
+   * session). The phone back-button-closes-the-modal behavior worked by
+   * pushing {overlay:true} onto window.history — but Next's App Router
+   * owns history, and the push makes it re-render the route, which
+   * REMOUNTS the island holding the modal's open state: the modal dies
+   * in the same tick it opens, at every viewport under 1024px, on the
+   * map AND the ballot. That was the tester-era "official card won't
+   * open on the phone" defect and the prior session's "hydration live,
+   * click dead" mystery — proven by toggling the push alone. Both push
+   * shapes (bare and router-state-preserving) kill it. A modal that
+   * cannot open loses to a back button that leaves the page; × ,
+   * Escape, and backdrop click all close.
+   */
 
   return (
     <div

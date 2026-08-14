@@ -312,7 +312,12 @@ export function OfficialIdentity({
       <div className="min-w-0">
         <p className="text-[0.8125rem] leading-snug">
           {holder.officeTitle}
-          {seatLabel ? ` · ${seatLabel}` : ""}
+          {/* A seat label identical to the title ("Mayor · Mayor") is
+              noise, not information — caught on the item-1 gate
+              screenshot. */}
+          {seatLabel && seatLabel !== holder.officeTitle
+            ? ` · ${seatLabel}`
+            : ""}
         </p>
         {holder.partyLabel && (
           // Display only. Nothing infers anything from it. Colored per the

@@ -93,22 +93,13 @@ export function EntityModal({
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  // On a touch viewport the back button should close the modal rather than
-  // leave the app. Desktop keeps Escape and the close button, and gains no
-  // history entry — a back press there should still navigate.
-  useEffect(() => {
-    if (!window.matchMedia("(max-width: 1024px)").matches) return;
-
-    window.history.pushState({ overlay: true }, "");
-    const onPop = () => onClose();
-    window.addEventListener("popstate", onPop);
-
-    return () => {
-      window.removeEventListener("popstate", onPop);
-      // Only unwind our own entry, and only if it is still the current one.
-      if (window.history.state?.overlay) window.history.back();
-    };
-  }, [onClose]);
+  /*
+   * NO pushed history entry (2026-08-14 third session, same diagnosis as
+   * official-modal.tsx): pushing {overlay:true} makes Next's App Router
+   * re-render the route and remount the island holding this modal's open
+   * state — the modal dies the tick it opens, at every phone viewport.
+   * ×, Escape, and backdrop click close; the back button navigates.
+   */
 
   return (
     <div

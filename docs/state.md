@@ -57,7 +57,7 @@ works.
 | `corepack pnpm session:start` | Start-of-session sweep, then the dev server — see §8. `--check` starts nothing |
 | `corepack pnpm dev` | Development server. Refuses if 3000 is taken; records its pid in `.dev-server.pid` |
 | `corepack pnpm build` | Production build |
-| `corepack pnpm test` | `node --test` over `tests/` — 281 tests (2026-08-14, second session) |
+| `corepack pnpm test` | `node --test` over `tests/` — 315 tests (2026-08-15) |
 | `corepack pnpm lint` | ESLint |
 | `corepack pnpm ingest <source>` | Run one adapter end to end — `composite` prints per-source accounting and retrieves agenda documents |
 | `corepack pnpm meetings:report` | The four-zip gate: meetings per zip, contributing sources, unwired bodies. Live network |
@@ -1745,7 +1745,7 @@ correct — `resolveZip` only reports it when the table is partial.
 counties, so a reader can click districts in places that have no meetings behind
 them. Honest, and the coverage tier says so, but the asymmetry is new.
 
-**Map-layer test coverage is still thin.** 281 tests (2026-08-14, second session) now cover the cascade, time
+**Map-layer test coverage is still thin.** 315 tests (2026-08-15) now cover the cascade, time
 handling, OCD identity, the tier axis, district disambiguation, fixture
 provenance, county subdivisions and the registry oracle. Nothing tests marker
 reconciliation, camera logic, or basemap resolution — which is part of why the
@@ -2192,7 +2192,7 @@ State as of 2026-08-12, verified rather than assumed:
 - **R07 is fixed.** `--ship` fast-forwards local `main` and pushes `-u` for a
   branch with no upstream; the plain check and `session:start` both report a
   stale local `main`. If the repo ever still looks empty, it is not — §7.
-- **281 tests, lint, tsc and build all pass.** (Updated 2026-08-14 second session; was 250 earlier that day.) M16, M17, M21, R07, R09, R10,
+- **315 tests, lint, tsc and build all pass.** (Updated 2026-08-15; was 281 the day before.) M16, M17, M21, R07, R09, R10,
   D14 and M20 all Done with evidence in the tracker. D02, D03, D12 and M05 are
   **In progress** with the evidence recorded and the reason each is not Done
   stated on the row — the Legistar adapter is not the app's source, the rosters
@@ -2830,3 +2830,176 @@ never silently maps an unmatched concern.
   lint warnings cleaned.
 - The background-agent route died twice with the host process mid-session;
   research was completed inline. Worth knowing before delegating hunts.
+
+---
+
+## 13. The 2026-08-15 session — the sensor turns on, and the product speaks plain language
+
+Branch `claude/reactions-and-plain-language-0815`, seven commits plus a
+cron merge. **test 315 pass · lint clean · tsc clean · build exit 0** on
+every commit, each verified by exit code; screenshots per change. The
+brief is committed at `docs/session-brief.md`; the host process died three
+times mid-session (all on browser-heavy steps — the last driving
+results.arizona.vote), and each resume worked from the last commit
+forward. Browser-heavy work goes last, and documents beat portals.
+
+### P03 — reaction capture, whole (the first user-writable surface)
+
+"Do you like this vote?" Yes/No/Unsure on every federal roll-call row,
+one reusable control keyed by target type + id (votes wired; measures and
+agenda items later). The `reactions` table is the third collection store:
+identifier-free like the search log, tier-stamped from row one
+(`ANONYMOUS`; `LOCALITY_VERIFIED`/`VOTER_MATCHED` designed into the enum),
+divisions + vintage resolved server-side on the search-log basis. The
+continuity wrinkle solved honestly: a random browser-minted key
+(`wtp.reaction_key`), stored ONLY hashed, enabling overwrite-on-change and
+nothing else — no other table, no export; clearing it orphans prior rows
+as anonymous rows. CLAUDE.md's two-stores constraint became **the n-stores
+constraint**, guarded structurally (`tests/db-schema.test.ts`: no shared
+joinable column, no FKs anywhere, the key column on reactions alone). The
+aggregation contract is born tested (`lib/signal/aggregate.ts`): per-
+division tier-split tallies, every tier present even at zero, n stated.
+
+**T03 demo-grade by decision** (the site sits behind the platform
+password): enum-closed validation, target ids checked against the votes
+snapshot, 4 KB payload cap, fail-closed 400s, sliding-window limits
+(15/min per key, 60/min per IP, instance-local, IP never stored) — burst
+demonstrably 429s at 16 of 15. **Deliberately deferred**: adversarial-load
+work, abuse-pattern detection, shared limiter state, the T05 review path —
+all preconditions of removing the password, living in tracker **T08**.
+The one wording decision recorded: the brief put the disclosure sentence
+behind the "why we ask" link; CLAUDE.md requires aggregated-AND-sold
+visible at the capture point, not behind a link — CLAUDE.md won ("Your
+answer joins anonymous local totals we may sell. We never know who you
+are.", always visible; the link expands the fuller text). OFFICIAL_OPENED
+(1d, author-approved) shipped with its transparency line in the same
+commit. **Author step unchanged from D30: reactions store rows only once
+`DATABASE_URL` is set in Netlify and `pnpm db:migrate` has run; until
+then the endpoint answers 202 accepted-not-stored.**
+
+### 2a — the settle fetch, and the failure that now names itself
+
+Diagnosed first: both request shapes (settle, zip) measured healthy
+against dev AND a local production build; production logs need the
+author's Netlify login (CLI unauthenticated — recorded in the ladder). So
+the failure was made to speak: the SEARCH FAILED card now prints the HTTP
+status or "never got an answer", gains a one-tap retry, and **a failed
+fetch never leaves confident zeros standing** — stats render "—" with
+"couldn't check" (districts stay numeric; they draw from committed files
+and are genuinely intact), the count badge says couldn't-check, the
+district popup's Upcoming says couldn't-check. The rule joined the
+standing family (ninth sighting): *a failed operation may not render as an
+empty success* (`deriveStatsView`, held in `tests/representation.test.ts`).
+The one settle-only failure a client can manufacture — an unwrapped
+longitude — is fixed with `.wrap()`. Gate: pan 85641 → Tucson with no zip
+change turned 3 meetings into 11 via a settle-shaped request; a killed
+fetch showed couldn't-check everywhere; retry recovered (settle-1/2/3
+screenshots).
+
+### 2b — the analyses render (match-then-deny, reversed)
+
+All 11 AZ measures carried the same shape: analysis linked, text absent,
+scopeNote claiming the language unpublished. `scripts/fetch-measure-analyses.mts`
+retrieves and extracts every Legislative Council analysis (11/11; Prop
+319's adopted link is broken at the Legislature's own site — the draft
+ships labeled as the draft, primary URL retried each run). The measure
+card now renders: labeled plain-language summary → the Council's text
+VERBATIM → the honest narrower pending note → the citation.
+`tests/measure-summaries.test.ts` holds citation-exactness both ways and
+bans advocacy vocabulary.
+
+### 3 — the two-tier popup architecture
+
+Compact glance cards (visible close + full-width More) → the one-at-a-time
+large tier, with the subsume rule enforced in one place (`openLarge`).
+The meeting large surface reads what-first: body + sitting, when, where,
+**what this meeting is about** (stored agenda text via `/api/agenda`,
+public hearings called out in their own banner, extraction failures
+honest), then how to be heard. The rep surface re-housed: compact =
+identity + contact; large = votes + reactions + office blurb
+(`official-modal.tsx`). The list overlay became a centered large surface.
+Who-governs: shows once per resolved AREA, expands on a click into a NEW
+district or the bubble, never on a pan; explicit minimize; **a zip change
+clears every popup, selection, and hit** (the stale-reps bug). Last
+checked demoted to a chrome-less footnote. Gate: `scripts/popup-states.mts`
+with printed counts; two defects its screenshot caught (hex entities
+rendering literally; "X — X" duplicated titles) fixed the same commit.
+
+### 4 — the plain-language layer
+
+4a: no OCD-ID, slug, or enum value renders anywhere; `Copyable` deleted
+product-wide (the reader gesture is expansion); the rule is a CLAUDE.md
+non-negotiable. 4b: every vote row states its type in plain words from
+keyed data (`lib/votes/vote-explainers.ts`, twelve types, definitions
+cited in-file, unmatched renders nothing). 4c: the TUSD notice channel
+hunted and wired — `noticeUrl` on the wiring row feeds agenda retrieval
+for scheduled meetings with no published agenda; the Aug 25 special
+meeting renders its notice with the Palo Verde ITM public hearing (gate
+screenshot tusd-aug25-notice.png). 4d: notice summaries keyed by meeting
+AND content hash, so a summary dies with the exact version it summarizes.
+
+### 5 — officials completeness (5d cut, as the brief sanctioned)
+
+`lib/registry/body-rosters.ts`: five wired bodies' rosters curated from
+the bodies' OWN pages with officeholder discipline — TUSD (roles + term
+expirations), Pima BoS (five districts, chair/vice-chair), Tucson M&C
+(the mayor + six wards, published contact), Vail USD, Newbury Selectboard
+(term-end dates). Rendered on the compact meeting card and the modal's
+Representation tab; a roster name opens the person's full card. The mayor
+blurb was rewritten after checking Tucson's charter: council-manager, so
+where power sits is stated honestly. The no-mayor case is a stated fact
+("This area isn't a city or town — it has no mayor or city council. The
+Pima County board is the closest thing here."). No local photos: the
+cities' portraits are unknown-license and unknown is not clearable. NJ
+rosters are recorded open hunts. 5d (sidebar counts as doors) was the
+sanctioned first cut — taken and recorded.
+
+### 6 — the certified canvass, and the map keeping its word
+
+The AZ general lineup renders from the State of Arizona Official Canvass.
+The statewide PDF is a 19 MB scan with no text layer and the results
+portal is a bot-walled host-killer — the route that worked was extracting
+the PDF's embedded page JPEGs and reading the winner-starred tables by
+eye, with the method stated in the citation. Twelve contests; write-in
+winners noted as facts (Karp, Swing); one race decided by certified totals
+where the star was illegible; one canvass-vs-filing divergence ruled by
+the canvass (Slawson absent; Karp is the LD-19 senate nominee). The
+filing fallback retires only for lineup contests. Map: district deselect
+by the same gesture (6d), the fixed muted legend (6e), deliberate per-zip
+first-view zooms (`lib/map/initial-zoom.ts`, values recorded with reasons,
+6f), pointer cursors in one rule (6g), back-to-map and top-of-card source
+links on the ballot (6b/6c).
+
+### Decisions taken as cheaper-to-undo, with the rejected alternative
+
+- The disclosure sentence rides visible under the reaction buttons
+  (rejected: the brief's link-gated verbatim sentence — CLAUDE.md's
+  no-link rule wins under correct-first).
+- Reactions live in the rep surface's LARGE tier with the votes (rejected:
+  duplicating the control at both tiers — one write path, one surface).
+- The canvass was read from page images by eye, method disclosed
+  (rejected: 15-county text-canvass summation — higher parse risk across
+  fifteen formats than transcription from the winner-starred state
+  document; rejected: driving the results portal — three host crashes).
+- Prop 319 ships the Council's DRAFT analysis labeled as such (rejected:
+  claiming absence while the Legislature's own index links the adopted
+  file — the link is broken at the source and says so).
+- The cron-refreshed snapshot on main was merged by keeping the branch's
+  (rejected: taking the cron's — it predates the notice channel and the
+  entity decoding; the next cron run regenerates under the new code).
+- `session:start`'s CLAUDE.md size expectation moved to ~17 KB with a
+  wider band (rejected: leaving the standing warn — a check that always
+  warns teaches sessions to ignore it; the clobber signature is a tiny
+  file and the floor still guards).
+
+### State as of 2026-08-15
+
+- **315 tests, lint, tsc, build exit 0** — verified by exit code.
+- The reaction sensor is live end-to-end pending the author's
+  `DATABASE_URL` step (until then: 202 accepted-not-stored, honest).
+- Four-zip gate unchanged at 82 meetings / 8 of 8 sources / 43 agenda
+  documents (the cron merge kept the branch's richer snapshot).
+- Open next: NJ/NH body rosters; provisions on measures (P01) and
+  reactions attached to them; 5d sidebar doors; T08 before any public
+  reachability; the author's Netlify-log look at the settle failure if it
+  recurs (the card now names the cause on its face).

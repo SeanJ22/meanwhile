@@ -25,7 +25,7 @@ import type {
  * that must be acknowledged before the answer is recorded. The
  * acknowledgment stores device-local (`wtp.reaction_disclosure_ack`) and
  * the notice never repeats; the linked transparency page keeps the full
- * truth, including that totals may be sold. The gate blocks capture until
+ * truth, including that totals may be licensed. The gate blocks capture until
  * acknowledged — friction exceptions (1) and (3), disclosure and consent at
  * the capture point. The old always-visible per-button line retired with
  * that decision.
@@ -127,7 +127,7 @@ export function ReactionControl({
       {pendingValue !== null && (
         // The one-time notice: shown on this device's first-ever tap, gone
         // for good once acknowledged. The transparency link carries the
-        // full truth, including that totals may be sold.
+        // full truth, including that totals may be licensed.
         <div className="mt-1.5 rounded border border-[var(--signal)]/40 bg-[var(--signal)]/5 p-2">
           <p className="text-[0.6875rem] leading-relaxed text-paper-dim">
             Your answer joins anonymous local totals. We never know who you

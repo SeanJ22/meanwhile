@@ -115,7 +115,7 @@ export default function TransparencyPage() {
             scrambled (hashed) form of it. That key relates your
             browser&apos;s answers to each other and to nothing else: it is
             not tied to any account, appears in no other table, and is never
-            included in anything shared or sold. If you clear your
+            included in anything shared or licensed. If you clear your
             browser&apos;s storage, your earlier answers simply can&apos;t be
             edited any more — they remain as anonymous rows. This is the
             difference between a device-continuity token and tracking, and we
@@ -124,20 +124,20 @@ export default function TransparencyPage() {
           <p>
             Nobody&apos;s answers — including totals — are ever shown to
             anyone on this site. Area-level totals of answers, split by
-            verification tier, may eventually be shared and sold to
-            political organizations; never anything containing or traceable
-            to a person.
+            verification tier, may be licensed to political organizations —
+            that&apos;s what keeps this free to use; never anything containing
+            or traceable to a person.
           </p>
         </Section>
 
         <Section title="What happens to the data">
           <p>
             The plan for this product is to aggregate what people look up —
-            never who looked it up — and sell those aggregates to political
-            organizations: counts like &quot;how many searches touched this
-            district this week.&quot; That is how the product would stay free
-            to use. No aggregate of this demo&apos;s data has been sold to
-            anyone; if that changes, this page changes first.
+            never who looked it up — and those aggregates may be licensed to
+            political organizations: counts like &quot;how many searches
+            touched this district this week.&quot; That&apos;s what keeps this
+            free to use. No aggregate of this demo&apos;s data has been
+            licensed to anyone; if that changes, this page changes first.
           </p>
           <p>
             Because the log has no identity in it, there is nothing anyone —

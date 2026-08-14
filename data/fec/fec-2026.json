@@ -1,0 +1,2840 @@
+{
+ "formatVersion": 1,
+ "fetchedAt": "2026-08-14T14:09:08.248Z",
+ "cycle": 2026,
+ "matchReport": {
+  "rosterMatched": 10,
+  "rosterTotal": 10,
+  "ballotMatched": 29,
+  "ballotTotal": 38
+ },
+ "candidates": [
+  {
+   "dataClass": "FEC_COMMITTEE",
+   "fecCandidateId": "S0NH00219",
+   "name": "Jeanne Shaheen",
+   "state": "NH",
+   "office": "S",
+   "district": null,
+   "targetKeys": [
+    "congress:S001181"
+   ],
+   "matchRoutes": [
+    "bioguide-bridge"
+   ],
+   "principalCommitteeId": "C00457325",
+   "cycle": 2026,
+   "totals": {
+    "receipts": 172666.96,
+    "disbursements": 756829.29,
+    "cashOnHand": 871922.99,
+    "individualItemized": 90308.73,
+    "individualUnitemized": 11127.11,
+    "smallDonorShare": 0.06444261252992467,
+    "coverageEndDate": "2026-06-30"
+   },
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "ROSENTHAL, PAUL",
+     "amount": 3500,
+     "receiptDate": "2025-02-21",
+     "city": "BETHESDA",
+     "state": "MD"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "MURPHY, WILLIAM M.",
+     "amount": 3500,
+     "receiptDate": "2025-03-03",
+     "city": "FORT LAUDERDALE",
+     "state": "FL"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "LAUFER, MARSHA Z.",
+     "amount": 3500,
+     "receiptDate": "2025-02-21",
+     "city": "LANTANA",
+     "state": "FL"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "RYAN, MICHAEL L",
+     "amount": 3300,
+     "receiptDate": "2025-01-07",
+     "city": "NEW YORK",
+     "state": "NY"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "RYAN, MICHAEL L",
+     "amount": 3300,
+     "receiptDate": "2025-01-07",
+     "city": "NEW YORK",
+     "state": "NY"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "A NEW DIRECTION PAC",
+     "amount": 5000,
+     "receiptDate": "2026-03-12",
+     "city": "WASHINGTON",
+     "state": "DC"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "PRICEWATERHOUSECOOPERS POLITICAL ACTION COMMITTEE",
+     "amount": 5000,
+     "receiptDate": "2025-03-05",
+     "city": "WASHINGTON",
+     "state": "DC"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "PFIZER INC. PAC",
+     "amount": 5000,
+     "receiptDate": "2025-01-23",
+     "city": "NEW YORK",
+     "state": "NY"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "MORTGAGE BANKERS ASSOCIATION POLITICAL ACTION COMMITTEE",
+     "amount": 5000,
+     "receiptDate": "2025-03-03",
+     "city": "WASHINGTON",
+     "state": "DC"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 3500,
+     "receiptDate": "2025-02-24",
+     "city": "CAMBRIDGE",
+     "state": "MA"
+    }
+   ],
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/candidate/S0NH00219/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-14",
+    "verifiedAt": "2026-08-14"
+   }
+  },
+  {
+   "dataClass": "FEC_COMMITTEE",
+   "fecCandidateId": "S4NJ00185",
+   "name": "Cory A. Booker",
+   "state": "NJ",
+   "office": "S",
+   "district": null,
+   "targetKeys": [
+    "congress:B001288",
+    "ballot-nj-morris:us-senate:booker"
+   ],
+   "matchRoutes": [
+    "bioguide-bridge",
+    "scoped-search"
+   ],
+   "principalCommitteeId": "C00540500",
+   "cycle": 2026,
+   "totals": {
+    "receipts": 18869341.39,
+    "disbursements": 7000887.26,
+    "cashOnHand": 23060940.12,
+    "individualItemized": 5440147.49,
+    "individualUnitemized": 8440493.49,
+    "smallDonorShare": 0.447312564627885,
+    "coverageEndDate": "2026-06-30"
+   },
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "GRAHAM, JOHN F.",
+     "amount": 7000,
+     "receiptDate": "2026-02-04",
+     "city": "VERONA",
+     "state": "NJ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "PACHULSKI, RICHARD M.",
+     "amount": 6400,
+     "receiptDate": "2025-02-24",
+     "city": "LOS ANGELES",
+     "state": "CA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "HACKMAN, MICHAEL",
+     "amount": 6400,
+     "receiptDate": "2025-02-24",
+     "city": "LOS ANGELES",
+     "state": "CA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "LACEY, ANDREW D.",
+     "amount": 5600,
+     "receiptDate": "2026-02-03",
+     "city": "MONTCLAIR",
+     "state": "NJ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "GABBERT, MARTHA",
+     "amount": 5600,
+     "receiptDate": "2025-04-15",
+     "city": "MINNEAPOLIS",
+     "state": "MN"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "BOOKER VICTORY FUND",
+     "amount": 1105000,
+     "receiptDate": "2025-06-02",
+     "city": "WASHINGTON",
+     "state": "DC"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "BOOKER VICTORY FUND",
+     "amount": 565000,
+     "receiptDate": "2025-03-31",
+     "city": "WASHINGTON",
+     "state": "DC"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "BOOKER VICTORY FUND",
+     "amount": 435000,
+     "receiptDate": "2025-06-30",
+     "city": "WASHINGTON",
+     "state": "DC"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "BOOKER VICTORY FUND",
+     "amount": 400000,
+     "receiptDate": "2025-08-18",
+     "city": "WASHINGTON",
+     "state": "DC"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "BOOKER VICTORY FUND",
+     "amount": 380000,
+     "receiptDate": "2026-06-30",
+     "city": "WASHINGTON",
+     "state": "DC"
+    }
+   ],
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/candidate/S4NJ00185/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-14",
+    "verifiedAt": "2026-08-14"
+   }
+  },
+  {
+   "dataClass": "FEC_COMMITTEE",
+   "fecCandidateId": "S4AZ00139",
+   "name": "Ruben Gallego",
+   "state": "AZ",
+   "office": "S",
+   "district": null,
+   "targetKeys": [
+    "congress:G000574"
+   ],
+   "matchRoutes": [
+    "bioguide-bridge"
+   ],
+   "principalCommitteeId": "C00558627",
+   "cycle": 2026,
+   "totals": {
+    "receipts": 4345411.03,
+    "disbursements": 2475393,
+    "cashOnHand": 2081170.73,
+    "individualItemized": 1731624.23,
+    "individualUnitemized": 1787635.94,
+    "smallDonorShare": 0.4113847752625601,
+    "coverageEndDate": "2026-06-30"
+   },
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "CHEROKEE NATION",
+     "amount": 5000,
+     "receiptDate": "2024-10-03",
+     "city": "TAHLEQUAH",
+     "state": "OK"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "MINSKY, YARON",
+     "amount": 3500,
+     "receiptDate": "2025-09-04",
+     "city": "NEW YORK",
+     "state": "NY"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "HELMAN, WILLIAM",
+     "amount": 3500,
+     "receiptDate": "2025-08-25",
+     "city": "BOSTON",
+     "state": "MA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "FINNEGAN, PAUL",
+     "amount": 3500,
+     "receiptDate": "2025-09-18",
+     "city": "EVANSTON",
+     "state": "IL"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "MURDOCH, JAMES",
+     "amount": 3500,
+     "receiptDate": "2025-09-24",
+     "city": "NEW YORK",
+     "state": "NY"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "GALLEGO VICTORY FUND",
+     "amount": 108000,
+     "receiptDate": "2025-12-17",
+     "city": "WASHINGTON",
+     "state": "DC"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "MAJORITY FUND",
+     "amount": 104500,
+     "receiptDate": "2025-09-29",
+     "city": "WASHINGTON",
+     "state": "DC"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "GALLEGO VICTORY FUND",
+     "amount": 36865,
+     "receiptDate": "2025-01-24",
+     "city": "WASHINGTON",
+     "state": "DC"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "MAJORITY FUND",
+     "amount": 24750,
+     "receiptDate": "2026-03-13",
+     "city": "WASHINGTON",
+     "state": "DC"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "NAMES IN THE NEWS",
+     "amount": 22694.55,
+     "receiptDate": "2025-07-08",
+     "city": "BERKELEY",
+     "state": "CA"
+    }
+   ],
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/candidate/S4AZ00139/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-14",
+    "verifiedAt": "2026-08-14"
+   }
+  },
+  {
+   "dataClass": "FEC_COMMITTEE",
+   "fecCandidateId": "S6NH00091",
+   "name": "Margaret Wood Hassan",
+   "state": "NH",
+   "office": "S",
+   "district": null,
+   "targetKeys": [
+    "congress:H001076"
+   ],
+   "matchRoutes": [
+    "bioguide-bridge"
+   ],
+   "principalCommitteeId": "C00588772",
+   "cycle": 2026,
+   "totals": {
+    "receipts": 2539768.24,
+    "disbursements": 1748252.67,
+    "cashOnHand": 1742249.94,
+    "individualItemized": 1138517.55,
+    "individualUnitemized": 807867.07,
+    "smallDonorShare": 0.318086925128255,
+    "coverageEndDate": "2026-06-30"
+   },
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "DILS, JAN",
+     "amount": 5000,
+     "receiptDate": "2025-09-17",
+     "city": "VIENNA",
+     "state": "WV"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "WOODS, NEIL",
+     "amount": 3572,
+     "receiptDate": "2025-09-08",
+     "city": "EVANSVILLE",
+     "state": "IN"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "UNGAR, JONATHAN",
+     "amount": 3500,
+     "receiptDate": "2025-06-13",
+     "city": "SCARSDALE",
+     "state": "NY"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "UNGAR, JONATHAN",
+     "amount": 3500,
+     "receiptDate": "2025-06-13",
+     "city": "SCARSDALE",
+     "state": "NY"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SWEENEY, TIMOTHY",
+     "amount": 3500,
+     "receiptDate": "2025-04-10",
+     "city": "BOSTON",
+     "state": "MA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "NAMES IN THE NEWS",
+     "amount": 5404.97,
+     "receiptDate": "2025-01-28",
+     "city": "OAKLAND",
+     "state": "CA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "THE GRANT THORNTON ADVISORS LLC POLITICAL ACTION COMMITTEE",
+     "amount": 5000,
+     "receiptDate": "2025-06-05",
+     "city": "CHICAGO",
+     "state": "IL"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "MARSH & MCLENNAN COMPANIES, INC. POLITICAL ACTION COMMITTEE (MMCPAC)",
+     "amount": 5000,
+     "receiptDate": "2025-05-20",
+     "city": "NEW YORK",
+     "state": "NY"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "NATIONAL ASSOCIATION OF BROADCASTERS POLITICAL ACTION COMMITTEE (NABPAC)",
+     "amount": 5000,
+     "receiptDate": "2026-06-26",
+     "city": "WASHINGTON",
+     "state": "DC"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "FIDELITY NATIONAL FINANCIAL INC. PAC 2001",
+     "amount": 5000,
+     "receiptDate": "2026-06-04",
+     "city": "JACKSONVILLE",
+     "state": "FL"
+    }
+   ],
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00091/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-14",
+    "verifiedAt": "2026-08-14"
+   }
+  },
+  {
+   "dataClass": "FEC_COMMITTEE",
+   "fecCandidateId": "S4NJ00466",
+   "name": "Andy Kim",
+   "state": "NJ",
+   "office": "S",
+   "district": null,
+   "targetKeys": [
+    "congress:K000394"
+   ],
+   "matchRoutes": [
+    "bioguide-bridge"
+   ],
+   "principalCommitteeId": "C00648220",
+   "cycle": 2026,
+   "totals": {
+    "receipts": 1659590.26,
+    "disbursements": 1088776.61,
+    "cashOnHand": 1192513.73,
+    "individualItemized": 1010256.33,
+    "individualUnitemized": 366663.45,
+    "smallDonorShare": 0.22093613034340176,
+    "coverageEndDate": "2026-06-30"
+   },
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "WESTERFIELD, REBECCA",
+     "amount": 7000,
+     "receiptDate": "2025-06-16",
+     "city": "SAN FRANCISCO",
+     "state": "CA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SEIBEL, MICHAEL",
+     "amount": 7000,
+     "receiptDate": "2025-06-29",
+     "city": "SAN FRANCISCO",
+     "state": "CA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "LEE, LUCY",
+     "amount": 7000,
+     "receiptDate": "2025-05-24",
+     "city": "MCLEAN",
+     "state": "VA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "KIM, PAUL J",
+     "amount": 7000,
+     "receiptDate": "2025-06-30",
+     "city": "MCLEAN",
+     "state": "VA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "KIM, MICHAEL",
+     "amount": 7000,
+     "receiptDate": "2025-05-12",
+     "city": "NEW YORK",
+     "state": "NY"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "TEAM ANDY KIM",
+     "amount": 113200,
+     "receiptDate": "2026-06-30",
+     "city": "WASHINGTON",
+     "state": "DC"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "TEAM ANDY KIM",
+     "amount": 33500,
+     "receiptDate": "2026-03-31",
+     "city": "WASHINGTON",
+     "state": "DC"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "BUYING TIME, LLC",
+     "amount": 27180.37,
+     "receiptDate": "2025-01-31",
+     "city": "WASHINGTON",
+     "state": "DC"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "DUCKWORTH KIM VICTORY FUND",
+     "amount": 25184.58,
+     "receiptDate": "2025-09-29",
+     "city": "MARLTON",
+     "state": "NJ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 7000,
+     "receiptDate": "2025-06-29",
+     "city": "CAMBRIDGE",
+     "state": "MA"
+    }
+   ],
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/candidate/S4NJ00466/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-14",
+    "verifiedAt": "2026-08-14"
+   }
+  },
+  {
+   "dataClass": "FEC_COMMITTEE",
+   "fecCandidateId": "S0AZ00350",
+   "name": "Mark Kelly",
+   "state": "AZ",
+   "office": "S",
+   "district": null,
+   "targetKeys": [
+    "congress:K000377"
+   ],
+   "matchRoutes": [
+    "bioguide-bridge"
+   ],
+   "principalCommitteeId": "C00696526",
+   "cycle": 2026,
+   "totals": {
+    "receipts": 40775022.69,
+    "disbursements": 20889818.08,
+    "cashOnHand": 24287638.18,
+    "individualItemized": 13943147.31,
+    "individualUnitemized": 26447634.55,
+    "smallDonorShare": 0.6486234171118251,
+    "coverageEndDate": "2026-06-30"
+   },
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "ANDERSON, DAVID H",
+     "amount": 5500,
+     "receiptDate": "2025-07-25",
+     "city": "KETCHUM",
+     "state": "ID"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "KEMPNER, HETTA",
+     "amount": 5000,
+     "receiptDate": "2026-06-24",
+     "city": "GALVESTON",
+     "state": "TX"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "WILCOX, HARRY",
+     "amount": 5000,
+     "receiptDate": "2026-01-12",
+     "city": "NANTUCKET",
+     "state": "MA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "WITCHGER, WILLIAM",
+     "amount": 5000,
+     "receiptDate": "2025-11-24",
+     "city": "INDIANAPOLIS",
+     "state": "IN"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "PEROT, MARGOT B",
+     "amount": 4800,
+     "receiptDate": "2025-08-11",
+     "city": "DALLAS",
+     "state": "TX"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "MARK KELLY VICTORY FUND",
+     "amount": 78161.66,
+     "receiptDate": "2026-03-31",
+     "city": "PHOENIX",
+     "state": "AZ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "MARK KELLY VICTORY FUND",
+     "amount": 50000,
+     "receiptDate": "2026-03-31",
+     "city": "PHOENIX",
+     "state": "AZ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "AMALGAMATED BANK",
+     "amount": 38429.98,
+     "receiptDate": "2026-05-29",
+     "city": "WASHINGTON",
+     "state": "DC"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "AMALGAMATED BANK",
+     "amount": 38238.03,
+     "receiptDate": "2026-03-31",
+     "city": "WASHINGTON",
+     "state": "DC"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "AMALGAMATED BANK",
+     "amount": 37285.06,
+     "receiptDate": "2026-06-30",
+     "city": "WASHINGTON",
+     "state": "DC"
+    }
+   ],
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/candidate/S0AZ00350/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-14",
+    "verifiedAt": "2026-08-14"
+   }
+  },
+  {
+   "dataClass": "FEC_COMMITTEE",
+   "fecCandidateId": "H2AZ02360",
+   "name": "Juan Ciscomani",
+   "state": "AZ",
+   "office": "H",
+   "district": "06",
+   "targetKeys": [
+    "congress:C001133",
+    "ballot-az-pima:us-house-6:ciscomani-juan",
+    "ballot-az-pima:us-house-6|Juan Ciscomani"
+   ],
+   "matchRoutes": [
+    "bioguide-bridge",
+    "roster-person-reuse",
+    "roster-person-reuse"
+   ],
+   "principalCommitteeId": "C00786194",
+   "cycle": 2026,
+   "totals": {
+    "receipts": 6172866.72,
+    "disbursements": 2274264.76,
+    "cashOnHand": 4135162.85,
+    "individualItemized": 1800381.23,
+    "individualUnitemized": 500508.88,
+    "smallDonorShare": 0.08108208109829398,
+    "coverageEndDate": "2026-07-01"
+   },
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "POPOLO, JOE",
+     "amount": 7000,
+     "receiptDate": "2025-09-19",
+     "city": "DALLAS",
+     "state": "TX"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "POPOLO, CHRIS",
+     "amount": 7000,
+     "receiptDate": "2025-09-19",
+     "city": "DALLAS",
+     "state": "TX"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "NORTON, ELIJAH",
+     "amount": 7000,
+     "receiptDate": "2025-09-30",
+     "city": "PHOENIX",
+     "state": "AZ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "RUTHERFORD, LORAINE",
+     "amount": 7000,
+     "receiptDate": "2025-06-30",
+     "city": "SIERRA VISTA",
+     "state": "AZ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "PURCELL, PHILIP",
+     "amount": 7000,
+     "receiptDate": "2025-06-18",
+     "city": "PARK CITY",
+     "state": "UT"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "CISCOMANI VICTORY FUND",
+     "amount": 184000,
+     "receiptDate": "2025-03-31",
+     "city": "TUCSON",
+     "state": "AZ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "GROW THE MAJORITY",
+     "amount": 128157.68,
+     "receiptDate": "2025-06-25",
+     "city": "ALEXANDRIA",
+     "state": "VA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "GROW THE MAJORITY",
+     "amount": 107607.26,
+     "receiptDate": "2026-03-31",
+     "city": "ALEXANDRIA",
+     "state": "VA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "CISCOMANI VICTORY FUND",
+     "amount": 104000,
+     "receiptDate": "2025-03-31",
+     "city": "TUCSON",
+     "state": "AZ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "GROW THE MAJORITY",
+     "amount": 88567.55,
+     "receiptDate": "2025-03-24",
+     "city": "ALEXANDRIA",
+     "state": "VA"
+    }
+   ],
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/candidate/H2AZ02360/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-14",
+    "verifiedAt": "2026-08-14"
+   }
+  },
+  {
+   "dataClass": "FEC_COMMITTEE",
+   "fecCandidateId": "H4NH02399",
+   "name": "Maggie Goodlander",
+   "state": "NH",
+   "office": "H",
+   "district": "02",
+   "targetKeys": [
+    "congress:G000604",
+    "ballot-nh-merrimack:us-house-2:goodlander-maggie"
+   ],
+   "matchRoutes": [
+    "bioguide-bridge",
+    "roster-person-reuse"
+   ],
+   "principalCommitteeId": "C00878454",
+   "cycle": 2026,
+   "totals": {
+    "receipts": 3709389.94,
+    "disbursements": 1252997.78,
+    "cashOnHand": 2514390.01,
+    "individualItemized": 2560781.78,
+    "individualUnitemized": 209242.79,
+    "smallDonorShare": 0.05640894955357538,
+    "coverageEndDate": "2026-06-30"
+   },
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "FABRIKANT, CHARLES",
+     "amount": 7000,
+     "receiptDate": "2026-02-26",
+     "city": "PALM BEACH",
+     "state": "FL"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "LANDER, ERIC",
+     "amount": 3500,
+     "receiptDate": "2025-06-30",
+     "city": "CAMBRIDGE",
+     "state": "MA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "JAMPEL, JAMES",
+     "amount": 3500,
+     "receiptDate": "2025-04-26",
+     "city": "NEWTON",
+     "state": "MA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "GEER, MARK",
+     "amount": 3500,
+     "receiptDate": "2025-05-09",
+     "city": "NEWBURY",
+     "state": "NH"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "O'MARY, JESSICA",
+     "amount": 3500,
+     "receiptDate": "2025-06-27",
+     "city": "RYE",
+     "state": "NY"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "GOODLANDER VICTORY FUND",
+     "amount": 212000,
+     "receiptDate": "2026-06-26",
+     "city": "WASHINGTON",
+     "state": "DC"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "GOODLANDER VICTORY FUND",
+     "amount": 119500,
+     "receiptDate": "2026-03-25",
+     "city": "WASHINGTON",
+     "state": "DC"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "MAJORITY FUND",
+     "amount": 114750,
+     "receiptDate": "2025-09-29",
+     "city": "WASHINGTON",
+     "state": "DC"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "GOODLANDER VICTORY FUND",
+     "amount": 48500,
+     "receiptDate": "2026-03-31",
+     "city": "WASHINGTON",
+     "state": "DC"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "MAJORITY FUND",
+     "amount": 25000,
+     "receiptDate": "2026-03-13",
+     "city": "WASHINGTON",
+     "state": "DC"
+    }
+   ],
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/candidate/H4NH02399/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-14",
+    "verifiedAt": "2026-08-14"
+   }
+  },
+  {
+   "dataClass": "FEC_COMMITTEE",
+   "fecCandidateId": "H6AZ07121",
+   "name": "Adelita S. Grijalva",
+   "state": "AZ",
+   "office": "H",
+   "district": "07",
+   "targetKeys": [
+    "congress:G000606",
+    "ballot-az-pima:us-house-7:grijalva-adelita",
+    "ballot-az-pima:us-house-7|Adelita Grijalva"
+   ],
+   "matchRoutes": [
+    "bioguide-bridge",
+    "scoped-search",
+    "scoped-search"
+   ],
+   "principalCommitteeId": "C00901116",
+   "cycle": 2026,
+   "totals": {
+    "receipts": 2285639.26,
+    "disbursements": 1857662.75,
+    "cashOnHand": 427976.51,
+    "individualItemized": 825450.14,
+    "individualUnitemized": 1015921.45,
+    "smallDonorShare": 0.4444802238827487,
+    "coverageEndDate": "2026-07-01"
+   },
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "TOHONO O'ODHAM NATION",
+     "amount": 3500,
+     "receiptDate": "2025-07-14",
+     "city": "SELLS",
+     "state": "AZ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SMALL, RICK",
+     "amount": 3500,
+     "receiptDate": "2025-08-19",
+     "city": "TUCSON",
+     "state": "AZ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SIMON, DEBORAH JOY",
+     "amount": 3500,
+     "receiptDate": "2025-07-15",
+     "city": "CARMEL",
+     "state": "IN"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "PASCUA YAQUI TRIBE",
+     "amount": 3500,
+     "receiptDate": "2025-09-02",
+     "city": "TUCSON",
+     "state": "AZ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "KWAN, KATHY",
+     "amount": 3500,
+     "receiptDate": "2025-07-10",
+     "city": "MENLO PARK",
+     "state": "CA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "PROGRESSIVE MAJORITY PAC",
+     "amount": 5000,
+     "receiptDate": "2025-07-03",
+     "city": "WASHINGTON",
+     "state": "DC"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "PEOPLE HELPING PEOPLE",
+     "amount": 5000,
+     "receiptDate": "2025-07-11",
+     "city": "NORWALK",
+     "state": "CA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "JUNTOS PAC",
+     "amount": 5000,
+     "receiptDate": "2025-08-14",
+     "city": "WASHINGTON",
+     "state": "DC"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "JSTREETPAC",
+     "amount": 5000,
+     "receiptDate": "2025-08-22",
+     "city": "WASHINGTON",
+     "state": "DC"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "JOBS, EDUCATION, & FAMILIES FIRST  JEFF PAC",
+     "amount": 5000,
+     "receiptDate": "2025-08-15",
+     "city": "WASHINGTON",
+     "state": "DC"
+    }
+   ],
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/candidate/H6AZ07121/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-14",
+    "verifiedAt": "2026-08-14"
+   }
+  },
+  {
+   "dataClass": "FEC_COMMITTEE",
+   "fecCandidateId": "H6NJ11286",
+   "name": "Analilia Mejia",
+   "state": "NJ",
+   "office": "H",
+   "district": "11",
+   "targetKeys": [
+    "congress:M001246",
+    "ballot-nj-morris:us-house-11:mejia"
+   ],
+   "matchRoutes": [
+    "bioguide-bridge",
+    "roster-person-reuse"
+   ],
+   "principalCommitteeId": "C00927681",
+   "cycle": 2026,
+   "totals": {
+    "receipts": 1823435.89,
+    "disbursements": 1795960.42,
+    "cashOnHand": 27475.47,
+    "individualItemized": 819428.61,
+    "individualUnitemized": 633740.25,
+    "smallDonorShare": 0.3475528004442207,
+    "coverageEndDate": "2026-06-30"
+   },
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "WIGGERT, SARA",
+     "amount": 3500,
+     "receiptDate": "2026-06-25",
+     "city": "SHORT HILLS",
+     "state": "NJ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SMITH, LEO",
+     "amount": 3500,
+     "receiptDate": "2026-05-21",
+     "city": "CHICAGO",
+     "state": "IL"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "RECHNITZ, JOAN",
+     "amount": 3500,
+     "receiptDate": "2026-06-03",
+     "city": "MIDDLETOWN",
+     "state": "NJ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "POLONE, GAVIN",
+     "amount": 3500,
+     "receiptDate": "2026-06-09",
+     "city": "SHERMAN OAKS",
+     "state": "CA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "HORNSTEIN, NORBERT",
+     "amount": 3500,
+     "receiptDate": "2026-06-28",
+     "city": "WASHINGTON",
+     "state": "DC"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "RO FOR CONGRESS INC",
+     "amount": 7761.25,
+     "receiptDate": "2026-06-08",
+     "city": "SANTA CLARA",
+     "state": "CA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "WORKING FAMILIES PARTY PAC",
+     "amount": 5000,
+     "receiptDate": "2026-06-03",
+     "city": "BROOKLYN",
+     "state": "NY"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "TURQUOISE PAC",
+     "amount": 5000,
+     "receiptDate": "2026-06-01",
+     "city": "WASHINGTON",
+     "state": "DC"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "RETAIL, WHOLESALE & DEPARTMENT STORE UNION COMMITTEE ON POLITICAL EDUCATION (RWDSU COPE)",
+     "amount": 5000,
+     "receiptDate": "2026-06-15",
+     "city": "NEW YORK",
+     "state": "NY"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "NEA FUND FOR CHILDREN AND PUBLIC EDUCATION",
+     "amount": 5000,
+     "receiptDate": "2026-05-29",
+     "city": "WASHINGTON",
+     "state": "DC"
+    }
+   ],
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/candidate/H6NJ11286/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-14",
+    "verifiedAt": "2026-08-14"
+   }
+  },
+  {
+   "dataClass": "FEC_COMMITTEE",
+   "fecCandidateId": "S4NJ00532",
+   "name": "Justin MURPHY",
+   "state": "NJ",
+   "office": "S",
+   "district": null,
+   "targetKeys": [
+    "ballot-nj-morris:us-senate:murphy"
+   ],
+   "matchRoutes": [
+    "scoped-search"
+   ],
+   "principalCommitteeId": "C00865808",
+   "cycle": 2026,
+   "totals": {
+    "receipts": 27315.52,
+    "disbursements": 26296.95,
+    "cashOnHand": 122.51,
+    "individualItemized": 14243.96,
+    "individualUnitemized": 7239.6,
+    "smallDonorShare": 0.26503614062628134,
+    "coverageEndDate": "2026-06-30"
+   },
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "BELL, BARBARA E",
+     "amount": 2000,
+     "receiptDate": "2026-06-22",
+     "city": "MEDFORD LAKES",
+     "state": "NJ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "DEMO, MARK",
+     "amount": 1030.26,
+     "receiptDate": "2026-06-06",
+     "city": "CAPE MAY",
+     "state": "NJ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SAMMONS, ROBIN",
+     "amount": 1000,
+     "receiptDate": "2026-06-04",
+     "city": null,
+     "state": "NJ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "MARINELLI, BEVERLY",
+     "amount": 1000,
+     "receiptDate": "2026-06-18",
+     "city": "LUMBERTON",
+     "state": "NJ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "FIORETTI, ELOUISE",
+     "amount": 1000,
+     "receiptDate": "2025-12-12",
+     "city": "TOMS RIVER",
+     "state": "NJ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "MURPHY, JUSTIN M MR.",
+     "amount": 1100,
+     "receiptDate": "2026-03-19",
+     "city": "TABERNACLE",
+     "state": "NJ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "MURPHY, JUSTIN M MR.",
+     "amount": 900,
+     "receiptDate": "2026-03-30",
+     "city": "TABERNACLE",
+     "state": "NJ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "MURPHY, JUSTIN M MR.",
+     "amount": 700,
+     "receiptDate": "2026-02-20",
+     "city": "TABERNACLE",
+     "state": "NJ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "CAMDEN COUNTY REPUBLICAN COMMITTEE",
+     "amount": 500,
+     "receiptDate": "2026-04-18",
+     "city": "HADDON HEIGHTS",
+     "state": "NJ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "MURPHY, JUSTIN",
+     "amount": 430,
+     "receiptDate": "2026-05-28",
+     "city": "TABERNACLE",
+     "state": "NJ"
+    }
+   ],
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/candidate/S4NJ00532/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-14",
+    "verifiedAt": "2026-08-14"
+   }
+  },
+  {
+   "dataClass": "FEC_COMMITTEE",
+   "fecCandidateId": "H6NJ11211",
+   "name": "Joe HATHAWAY",
+   "state": "NJ",
+   "office": "H",
+   "district": "11",
+   "targetKeys": [
+    "ballot-nj-morris:us-house-11:hathaway"
+   ],
+   "matchRoutes": [
+    "scoped-search"
+   ],
+   "principalCommitteeId": "C00921809",
+   "cycle": 2026,
+   "totals": {
+    "receipts": 657711,
+    "disbursements": 652674.62,
+    "cashOnHand": 5036.38,
+    "individualItemized": 544294.57,
+    "individualUnitemized": 71416.43,
+    "smallDonorShare": 0.10858329874367312,
+    "coverageEndDate": "2026-06-30"
+   },
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SPIROPOULOS, CHRISTOPHER",
+     "amount": 3500,
+     "receiptDate": "2026-06-09",
+     "city": "RANDOLPH",
+     "state": "NJ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "O'NEIL, LAWRENCE JR.",
+     "amount": 3500,
+     "receiptDate": "2026-05-18",
+     "city": "RANDOLPH",
+     "state": "NJ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "O'NEIL, LAWRENCE JR.",
+     "amount": 3500,
+     "receiptDate": "2026-05-18",
+     "city": "RANDOLPH",
+     "state": "NJ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "JANOFF, ALLAN",
+     "amount": 3500,
+     "receiptDate": "2026-06-12",
+     "city": "SHORT HILLS",
+     "state": "NJ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SCHLOESSER, RUDY",
+     "amount": 3500,
+     "receiptDate": "2026-04-06",
+     "city": "RANDOLPH",
+     "state": "NJ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "NATIONAL APARTMENT ASSOCIATION PAC",
+     "amount": 5000,
+     "receiptDate": "2026-04-13",
+     "city": "ARLINGTON",
+     "state": "VA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "WAKEPAC",
+     "amount": 5000,
+     "receiptDate": "2026-03-23",
+     "city": "EDISON",
+     "state": "NJ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "TKJ PAC",
+     "amount": 5000,
+     "receiptDate": "2026-01-16",
+     "city": "EDISON",
+     "state": "NJ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "WINRED",
+     "amount": 3500,
+     "receiptDate": "2026-06-09",
+     "city": "ARLINGTON",
+     "state": "VA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "WINRED",
+     "amount": 3500,
+     "receiptDate": "2026-05-18",
+     "city": "ARLINGTON",
+     "state": "VA"
+    }
+   ],
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/candidate/H6NJ11211/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-14",
+    "verifiedAt": "2026-08-14"
+   }
+  },
+  {
+   "dataClass": "FEC_COMMITTEE",
+   "fecCandidateId": "H6AZ06099",
+   "name": "JoAnna Mendoza",
+   "state": "AZ",
+   "office": "H",
+   "district": "06",
+   "targetKeys": [
+    "ballot-az-pima:us-house-6:mendoza-joanna",
+    "ballot-az-pima:us-house-6|JoAnna Mendoza"
+   ],
+   "matchRoutes": [
+    "scoped-search",
+    "scoped-search"
+   ],
+   "principalCommitteeId": "C00897090",
+   "cycle": 2026,
+   "totals": {
+    "receipts": 7354599.1,
+    "disbursements": 4093847.5,
+    "cashOnHand": 3260751.6,
+    "individualItemized": 3116127.48,
+    "individualUnitemized": 2800233.26,
+    "smallDonorShare": 0.3807458736941895,
+    "coverageEndDate": "2026-07-01"
+   },
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "WADSWORTH, JACK",
+     "amount": 7000,
+     "receiptDate": "2025-09-30",
+     "city": "SAN FRANCISCO",
+     "state": "CA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SPENCER, THEODORE",
+     "amount": 7000,
+     "receiptDate": "2025-09-30",
+     "city": "NEW YORK",
+     "state": "NY"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SCHUSTERMAN, STACY",
+     "amount": 7000,
+     "receiptDate": "2025-09-25",
+     "city": "TULSA",
+     "state": "OK"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SCHUSTERMAN, LYNN",
+     "amount": 7000,
+     "receiptDate": "2025-09-25",
+     "city": "TULSA",
+     "state": "OK"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "PRIMUS, LISA",
+     "amount": 7000,
+     "receiptDate": "2025-09-11",
+     "city": "NEW YORK",
+     "state": "NY"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "HOUSE VICTORY PROJECT 2026",
+     "amount": 664650,
+     "receiptDate": "2026-03-31",
+     "city": "WASHINGTON",
+     "state": "DC"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 309333.73,
+     "receiptDate": "2025-02-09",
+     "city": "SOMERVILLE",
+     "state": "MA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 309333.73,
+     "receiptDate": "2025-02-09",
+     "city": "SOMERVILLE",
+     "state": "MA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 309333.73,
+     "receiptDate": "2025-02-09",
+     "city": "SOMERVILLE",
+     "state": "MA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 309333.73,
+     "receiptDate": "2025-02-09",
+     "city": "SOMERVILLE",
+     "state": "MA"
+    }
+   ],
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/candidate/H6AZ06099/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-14",
+    "verifiedAt": "2026-08-14"
+   }
+  },
+  {
+   "dataClass": "FEC_COMMITTEE",
+   "fecCandidateId": "H0AZ02216",
+   "name": "Iman Bah",
+   "state": "AZ",
+   "office": "H",
+   "district": "06",
+   "targetKeys": [
+    "ballot-az-pima:us-house-6:bah-iman"
+   ],
+   "matchRoutes": [
+    "scoped-search"
+   ],
+   "principalCommitteeId": "C00939009",
+   "cycle": 2026,
+   "totals": {
+    "receipts": 195,
+    "disbursements": 74.81,
+    "cashOnHand": 224.5,
+    "individualItemized": 0,
+    "individualUnitemized": 195,
+    "smallDonorShare": 1,
+    "coverageEndDate": "2026-03-31"
+   },
+   "topContributions": [],
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/candidate/H0AZ02216/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-14",
+    "verifiedAt": "2026-08-14"
+   }
+  },
+  {
+   "dataClass": "FEC_COMMITTEE",
+   "fecCandidateId": "H6AZ06214",
+   "name": "Jereme Lance Peters",
+   "state": "AZ",
+   "office": "H",
+   "district": "06",
+   "targetKeys": [
+    "ballot-az-pima:us-house-6:peters-jereme-lance",
+    "ballot-az-pima:us-house-6|Jereme Lance Peters"
+   ],
+   "matchRoutes": [
+    "scoped-search",
+    "scoped-search"
+   ],
+   "principalCommitteeId": "C00946525",
+   "cycle": 2026,
+   "totals": {
+    "receipts": 10500,
+    "disbursements": 10500,
+    "cashOnHand": 0,
+    "individualItemized": 10500,
+    "individualUnitemized": 0,
+    "smallDonorShare": 0,
+    "coverageEndDate": "2026-03-31"
+   },
+   "topContributions": [],
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/candidate/H6AZ06214/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-14",
+    "verifiedAt": "2026-08-14"
+   }
+  },
+  {
+   "dataClass": "FEC_COMMITTEE",
+   "fecCandidateId": "H4AZ07134",
+   "name": "Daniel Francis Butierez Sr.",
+   "state": "AZ",
+   "office": "H",
+   "district": "07",
+   "targetKeys": [
+    "ballot-az-pima:us-house-7:butierez-sr--daniel-francis",
+    "ballot-az-pima:us-house-7|Daniel Francis Butierez Sr."
+   ],
+   "matchRoutes": [
+    "scoped-search",
+    "scoped-search"
+   ],
+   "principalCommitteeId": "C00856773",
+   "cycle": 2026,
+   "totals": {
+    "receipts": 224367.4,
+    "disbursements": 213560.33,
+    "cashOnHand": 11399.21,
+    "individualItemized": 22991.41,
+    "individualUnitemized": 16901.02,
+    "smallDonorShare": 0.07532743170353626,
+    "coverageEndDate": "2026-07-01"
+   },
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "CHILTON, JAMES K",
+     "amount": 3000,
+     "receiptDate": "2025-09-03",
+     "city": "ARIVACA",
+     "state": "AZ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "NEILSON, ERIC",
+     "amount": 2809.9,
+     "receiptDate": "2025-06-24",
+     "city": "TUCSON",
+     "state": "AZ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "CHILTON, SUSAN",
+     "amount": 1500,
+     "receiptDate": "2025-09-03",
+     "city": "ARIVACA",
+     "state": "AZ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "PEREZLIZANO, MICHAEL",
+     "amount": 1000,
+     "receiptDate": "2025-09-02",
+     "city": "TUCSON",
+     "state": "AZ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SCHOFF, W MICHAEL",
+     "amount": 1000,
+     "receiptDate": "2025-07-29",
+     "city": "TUCSON",
+     "state": "AZ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "BUTIEREZ, DANIEL",
+     "amount": 136470,
+     "receiptDate": "2025-03-21",
+     "city": "TUCSON",
+     "state": "AZ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "BUTIEREZ, DANIEL",
+     "amount": 14737.67,
+     "receiptDate": "2025-03-31",
+     "city": "TUCSON",
+     "state": "AZ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "BUTIEREZ, DANIEL",
+     "amount": 10980.31,
+     "receiptDate": "2025-04-30",
+     "city": "TUCSON",
+     "state": "AZ"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "KVOA TV (ALLEN MEDIA BROADCAST)",
+     "amount": 7267.5,
+     "receiptDate": "2025-10-03",
+     "city": "LOS ANGELES",
+     "state": "CA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "BUTIEREZ, DANIEL",
+     "amount": 3992.58,
+     "receiptDate": "2025-09-23",
+     "city": "TUCSON",
+     "state": "AZ"
+    }
+   ],
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/candidate/H4AZ07134/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-14",
+    "verifiedAt": "2026-08-14"
+   }
+  },
+  {
+   "dataClass": "FEC_COMMITTEE",
+   "fecCandidateId": "S6NH00182",
+   "name": "Karishma Manzur",
+   "state": "NH",
+   "office": "S",
+   "district": null,
+   "targetKeys": [
+    "ballot-nh-merrimack:us-senate:manzur-karishma"
+   ],
+   "matchRoutes": [
+    "scoped-search"
+   ],
+   "principalCommitteeId": "C00916668",
+   "cycle": 2026,
+   "totals": {
+    "receipts": 206753.29,
+    "disbursements": 157755.26,
+    "cashOnHand": 48998.03,
+    "individualItemized": 106613,
+    "individualUnitemized": 74469.43,
+    "smallDonorShare": 0.36018498182060366,
+    "coverageEndDate": "2026-06-30"
+   },
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "RANKIN, JAMES",
+     "amount": 3500,
+     "receiptDate": "2026-05-13",
+     "city": "SAN MATEO",
+     "state": "CA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "ARIF, ASMA",
+     "amount": 3000,
+     "receiptDate": "2026-06-08",
+     "city": "ALBANY",
+     "state": "NY"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "NAQVI, BAQAR",
+     "amount": 2500,
+     "receiptDate": "2026-04-25",
+     "city": "WILTON",
+     "state": "NH"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "NURUZZAMAN, SAYEEDA",
+     "amount": 2000,
+     "receiptDate": "2026-06-30",
+     "city": "LEXINGTON",
+     "state": "MA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "FODOR, KAROLY",
+     "amount": 2000,
+     "receiptDate": "2026-01-17",
+     "city": "AMHERST",
+     "state": "NH"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "MANZUR, KARISHMA",
+     "amount": 25000,
+     "receiptDate": "2026-06-30",
+     "city": "EXETER",
+     "state": "NH"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 3000,
+     "receiptDate": "2026-06-08",
+     "city": "WEST SOMERVILLE",
+     "state": "MA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 2500,
+     "receiptDate": "2026-04-25",
+     "city": "WEST SOMERVILLE",
+     "state": "MA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 2000,
+     "receiptDate": "2026-01-17",
+     "city": "WEST SOMERVILLE",
+     "state": "MA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 1500,
+     "receiptDate": "2026-05-02",
+     "city": "WEST SOMERVILLE",
+     "state": "MA"
+    }
+   ],
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00182/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-14",
+    "verifiedAt": "2026-08-14"
+   }
+  },
+  {
+   "dataClass": "FEC_COMMITTEE",
+   "fecCandidateId": "S6NH00141",
+   "name": "Chris Pappas",
+   "state": "NH",
+   "office": "S",
+   "district": null,
+   "targetKeys": [
+    "ballot-nh-merrimack:us-senate:pappas-chris"
+   ],
+   "matchRoutes": [
+    "scoped-search"
+   ],
+   "principalCommitteeId": "C00660464",
+   "cycle": 2026,
+   "totals": {
+    "receipts": 13371607.38,
+    "disbursements": 8595870.88,
+    "cashOnHand": 5183320.73,
+    "individualItemized": 7487413.29,
+    "individualUnitemized": 4138689.75,
+    "smallDonorShare": 0.3095132568871462,
+    "coverageEndDate": "2026-06-30"
+   },
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "BOYERS, MICHELLE",
+     "amount": 7000,
+     "receiptDate": "2025-12-22",
+     "city": "WOODSIDE",
+     "state": "CA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SHAH, TUSHAR",
+     "amount": 7000,
+     "receiptDate": "2026-03-04",
+     "city": "BRONXVILLE",
+     "state": "NY"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "KENDALL, PAUL L.",
+     "amount": 6500,
+     "receiptDate": "2026-06-24",
+     "city": "RANDOLPH",
+     "state": "VT"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "BRATT, JOANNA U.",
+     "amount": 5000,
+     "receiptDate": "2026-05-26",
+     "city": "POMPANO BEACH",
+     "state": "FL"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "HARRIS, WILLIAM JR",
+     "amount": 3500,
+     "receiptDate": "2025-06-20",
+     "city": "MIAMI BEACH",
+     "state": "FL"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "BROWN, PAPPAS, PELTOLA, TALARICO SENATE VICTORY FUND",
+     "amount": 123000,
+     "receiptDate": "2026-06-30",
+     "city": "WASHINGTON",
+     "state": "DC"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "CHRIS PAPPAS VICTORY FUND",
+     "amount": 115000,
+     "receiptDate": "2026-06-30",
+     "city": "MANCHESTER",
+     "state": "NH"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "JUSTICE 2026",
+     "amount": 105812.32,
+     "receiptDate": "2026-03-17",
+     "city": "WASHINGTON",
+     "state": "DC"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "CHRIS PAPPAS VICTORY FUND",
+     "amount": 84000,
+     "receiptDate": "2026-03-31",
+     "city": "MANCHESTER",
+     "state": "NH"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "PAPPAS, PELTOLA, TALARICO, VINDMAN SENATE VICTORY FUND",
+     "amount": 59000,
+     "receiptDate": "2026-06-30",
+     "city": "WASHINGTON",
+     "state": "DC"
+    }
+   ],
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00141/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-14",
+    "verifiedAt": "2026-08-14"
+   }
+  },
+  {
+   "dataClass": "FEC_COMMITTEE",
+   "fecCandidateId": "S6NH00166",
+   "name": "Scott P. Brown",
+   "state": "NH",
+   "office": "S",
+   "district": null,
+   "targetKeys": [
+    "ballot-nh-merrimack:us-senate:brown-scott-p-"
+   ],
+   "matchRoutes": [
+    "scoped-search"
+   ],
+   "principalCommitteeId": "C00909622",
+   "cycle": 2026,
+   "totals": {
+    "receipts": 1943324.75,
+    "disbursements": 1207513.69,
+    "cashOnHand": 735811.06,
+    "individualItemized": 663146.38,
+    "individualUnitemized": 546024.21,
+    "smallDonorShare": 0.2809742478708203,
+    "coverageEndDate": "2026-06-30"
+   },
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "HANDA, ELLEN",
+     "amount": 7000,
+     "receiptDate": "2026-06-22",
+     "city": "HONOLULU",
+     "state": "HI"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "BERMAN, JANET",
+     "amount": 7000,
+     "receiptDate": "2025-12-10",
+     "city": "WASHINGTON",
+     "state": "DC"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "WHITE, CATHERINE A",
+     "amount": 7000,
+     "receiptDate": "2025-09-24",
+     "city": "DUXBURY",
+     "state": "MA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "REYNOLDS, ROBERT L",
+     "amount": 7000,
+     "receiptDate": "2025-09-29",
+     "city": "PALM BEACH",
+     "state": "FL"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "BARTLETT, BRUCE",
+     "amount": 7000,
+     "receiptDate": "2025-09-26",
+     "city": "RANCHO SANTA FE",
+     "state": "CA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "SCOTT BROWN VICTORY COMMITTEE",
+     "amount": 361370.02,
+     "receiptDate": "2025-09-30",
+     "city": "RYE",
+     "state": "NH"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "SCOTT BROWN VICTORY COMMITTEE",
+     "amount": 130108.99,
+     "receiptDate": "2025-09-30",
+     "city": "RYE",
+     "state": "NH"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "SCOTT BROWN VICTORY COMMITTEE",
+     "amount": 75280.76,
+     "receiptDate": "2025-12-31",
+     "city": "RYE",
+     "state": "NH"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "WINRED",
+     "amount": 38254.63,
+     "receiptDate": "2025-07-01",
+     "city": "ARLINGTON",
+     "state": "VA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "SCOTT BROWN VICTORY COMMITTEE",
+     "amount": 17287.6,
+     "receiptDate": "2026-03-31",
+     "city": "RYE",
+     "state": "NH"
+    }
+   ],
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00166/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-14",
+    "verifiedAt": "2026-08-14"
+   }
+  },
+  {
+   "dataClass": "FEC_COMMITTEE",
+   "fecCandidateId": "S6NH00208",
+   "name": "John E. Sununu",
+   "state": "NH",
+   "office": "S",
+   "district": null,
+   "targetKeys": [
+    "ballot-nh-merrimack:us-senate:sununu-john-e-"
+   ],
+   "matchRoutes": [
+    "scoped-search"
+   ],
+   "principalCommitteeId": "C00924092",
+   "cycle": 2026,
+   "totals": {
+    "receipts": 3662251.84,
+    "disbursements": 989605.38,
+    "cashOnHand": 2672646.46,
+    "individualItemized": 1660800.76,
+    "individualUnitemized": 395965.36,
+    "smallDonorShare": 0.10812073480997965,
+    "coverageEndDate": "2026-06-30"
+   },
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "MCCABE, BRIAN",
+     "amount": 14000,
+     "receiptDate": "2026-01-16",
+     "city": "MEREDITH",
+     "state": "NH"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "KEOUGH, BRUCE",
+     "amount": 14000,
+     "receiptDate": "2025-11-18",
+     "city": "VERO BEACH",
+     "state": "FL"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "CAREY, CHARLES",
+     "amount": 14000,
+     "receiptDate": "2025-11-17",
+     "city": "VERO BEACH",
+     "state": "FL"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "MOORE, JEFFREY",
+     "amount": 10410.16,
+     "receiptDate": "2026-02-24",
+     "city": "LOCUST VALLEY",
+     "state": "NY"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "MOORE, JEFFREY",
+     "amount": 10410.16,
+     "receiptDate": "2026-02-24",
+     "city": "LOCUST VALLEY",
+     "state": "NY"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "TEAM SUNUNU",
+     "amount": 260246.84,
+     "receiptDate": "2026-03-31",
+     "city": "ATHENS",
+     "state": "GA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "TEAM SUNUNU",
+     "amount": 224779.78,
+     "receiptDate": "2026-06-30",
+     "city": "ATHENS",
+     "state": "GA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "TEAM SUNUNU",
+     "amount": 114323.65,
+     "receiptDate": "2026-03-31",
+     "city": "ATHENS",
+     "state": "GA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "TEAM SUNUNU",
+     "amount": 92925.72,
+     "receiptDate": "2026-06-30",
+     "city": "ATHENS",
+     "state": "GA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "TEAM SUNUNU",
+     "amount": 91838.46,
+     "receiptDate": "2025-12-31",
+     "city": "ATHENS",
+     "state": "GA"
+    }
+   ],
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00208/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-14",
+    "verifiedAt": "2026-08-14"
+   }
+  },
+  {
+   "dataClass": "FEC_COMMITTEE",
+   "fecCandidateId": "H6NH02261",
+   "name": "Paige Beauchemin",
+   "state": "NH",
+   "office": "H",
+   "district": "02",
+   "targetKeys": [
+    "ballot-nh-merrimack:us-house-2:beauchemin-paige"
+   ],
+   "matchRoutes": [
+    "scoped-search"
+   ],
+   "principalCommitteeId": "C00921882",
+   "cycle": 2026,
+   "totals": {
+    "receipts": 30152.81,
+    "disbursements": 25624.72,
+    "cashOnHand": 4528.09,
+    "individualItemized": 12973.95,
+    "individualUnitemized": 16928.86,
+    "smallDonorShare": 0.5614355676966757,
+    "coverageEndDate": "2026-06-30"
+   },
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "JONE, LABOMBARD",
+     "amount": 1000,
+     "receiptDate": "2026-06-28",
+     "city": "HOLLIS",
+     "state": "NH"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SHAMS, ABDOL",
+     "amount": 1000,
+     "receiptDate": "2025-10-05",
+     "city": "NASHUA",
+     "state": "NH"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "FROST, JOSHUA",
+     "amount": 1000,
+     "receiptDate": "2025-11-12",
+     "city": "DUNBARTON",
+     "state": "NH"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "EARNEST, MICHELLE",
+     "amount": 1000,
+     "receiptDate": "2025-10-10",
+     "city": "NASHUA",
+     "state": "NH"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "LIA, ROTHSCHILD",
+     "amount": 500,
+     "receiptDate": "2026-04-23",
+     "city": "SOMERVILLE",
+     "state": "MA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 6905.64,
+     "receiptDate": "2026-06-30",
+     "city": "SOMERVILLE",
+     "state": "MA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 5249.02,
+     "receiptDate": "2026-03-31",
+     "city": "SOMERVILLE",
+     "state": "MA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 3799.2,
+     "receiptDate": "2025-11-30",
+     "city": "SOMERVILLE",
+     "state": "MA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 1000,
+     "receiptDate": "2026-06-28",
+     "city": "SOMERVILLE",
+     "state": "MA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 1000,
+     "receiptDate": "2025-10-05",
+     "city": "SOMERVILLE",
+     "state": "MA"
+    }
+   ],
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/candidate/H6NH02261/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-14",
+    "verifiedAt": "2026-08-14"
+   }
+  },
+  {
+   "dataClass": "FEC_COMMITTEE",
+   "fecCandidateId": "H6NH02295",
+   "name": "Dan Nicholson",
+   "state": "NH",
+   "office": "H",
+   "district": "02",
+   "targetKeys": [
+    "ballot-nh-merrimack:us-house-2:nicholson-dan"
+   ],
+   "matchRoutes": [
+    "scoped-search"
+   ],
+   "principalCommitteeId": "C00946699",
+   "cycle": 2026,
+   "totals": {
+    "receipts": 325,
+    "disbursements": 244.81,
+    "cashOnHand": 80.19,
+    "individualItemized": 150,
+    "individualUnitemized": 175,
+    "smallDonorShare": 0.5384615384615384,
+    "coverageEndDate": "2026-06-30"
+   },
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "NICHOLSON, DANIEL STEPHEN MR.",
+     "amount": 50,
+     "receiptDate": "2026-06-22",
+     "city": "NASHUA",
+     "state": "NH"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "NICHOLSON, DANIEL STEPHEN MR.",
+     "amount": 50,
+     "receiptDate": "2026-06-03",
+     "city": "NASHUA",
+     "state": "NH"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "NICHOLSON, DANIEL STEPHEN MR.",
+     "amount": 50,
+     "receiptDate": "2026-05-06",
+     "city": "NASHUA",
+     "state": "NH"
+    }
+   ],
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/candidate/H6NH02295/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-14",
+    "verifiedAt": "2026-08-14"
+   }
+  },
+  {
+   "dataClass": "FEC_COMMITTEE",
+   "fecCandidateId": "H6NH02287",
+   "name": "Victor Orlando",
+   "state": "NH",
+   "office": "H",
+   "district": "02",
+   "targetKeys": [
+    "ballot-nh-merrimack:us-house-2:orlando-victor"
+   ],
+   "matchRoutes": [
+    "scoped-search"
+   ],
+   "principalCommitteeId": "C00934919",
+   "cycle": 2026,
+   "totals": {
+    "receipts": 165180.74,
+    "disbursements": 168737.82,
+    "cashOnHand": 4914.15,
+    "individualItemized": 7274.74,
+    "individualUnitemized": 0,
+    "smallDonorShare": 0,
+    "coverageEndDate": "2026-06-30"
+   },
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "VELLIA, THOMAS",
+     "amount": 3643.56,
+     "receiptDate": "2026-04-27",
+     "city": "WEST ISLIP",
+     "state": "NY"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "LEPLA, JENNIFER",
+     "amount": 520.51,
+     "receiptDate": "2026-04-14",
+     "city": "CENTER SANDWICH",
+     "state": "NH"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "GEEHAN, JONATHAN",
+     "amount": 500,
+     "receiptDate": "2026-05-30",
+     "city": "JUNIPER",
+     "state": "FL"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "STEVENS, CHARLES",
+     "amount": 260.25,
+     "receiptDate": "2026-05-30",
+     "city": "HOLLIS",
+     "state": "NH"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "PENKACIK, AARON",
+     "amount": 260.25,
+     "receiptDate": "2026-05-15",
+     "city": "HOLLIS",
+     "state": "NH"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ORLANDO, VICTOR DMITRI MR.",
+     "amount": 102906,
+     "receiptDate": "2026-05-28",
+     "city": "HOLLIS",
+     "state": "NH"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ORLANDO, VICTOR DMITRI MR.",
+     "amount": 55000,
+     "receiptDate": "2026-04-27",
+     "city": "HOLLIS",
+     "state": "NH"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "VOTE VDO",
+     "amount": 825.12,
+     "receiptDate": "2026-01-27",
+     "city": "HOLLIS",
+     "state": "NH"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "VOTE VDO",
+     "amount": 520.51,
+     "receiptDate": "2026-06-30",
+     "city": "HOLLIS",
+     "state": "NH"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "VOTE VDO",
+     "amount": 242.45,
+     "receiptDate": "2026-02-11",
+     "city": "HOLLIS",
+     "state": "NH"
+    }
+   ],
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/candidate/H6NH02287/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-14",
+    "verifiedAt": "2026-08-14"
+   }
+  },
+  {
+   "dataClass": "FEC_COMMITTEE",
+   "fecCandidateId": "H2NH02260",
+   "name": "Lily Tang Williams",
+   "state": "NH",
+   "office": "H",
+   "district": "02",
+   "targetKeys": [
+    "ballot-nh-merrimack:us-house-2:tang-williams-lily"
+   ],
+   "matchRoutes": [
+    "scoped-search"
+   ],
+   "principalCommitteeId": "C00800458",
+   "cycle": 2026,
+   "totals": {
+    "receipts": 1108535.07,
+    "disbursements": 573795.06,
+    "cashOnHand": 664219.61,
+    "individualItemized": 374429.77,
+    "individualUnitemized": 599501.41,
+    "smallDonorShare": 0.5408050915340008,
+    "coverageEndDate": "2026-06-30"
+   },
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "ENDRIZ, JOHN",
+     "amount": 3500,
+     "receiptDate": "2026-06-26",
+     "city": "BELMONT",
+     "state": "CA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SCHAEFFER, ROBERT",
+     "amount": 3500,
+     "receiptDate": "2026-02-12",
+     "city": "ELKO",
+     "state": "NV"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "HARTSHORN, RONALD M",
+     "amount": 3500,
+     "receiptDate": "2026-03-23",
+     "city": "HILLIARD",
+     "state": "OH"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "LOW, JOHN",
+     "amount": 3500,
+     "receiptDate": "2025-08-13",
+     "city": "SAN JOSE",
+     "state": "CA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "EGAN, TIM",
+     "amount": 3500,
+     "receiptDate": "2025-09-08",
+     "city": "WHEELING",
+     "state": "WV"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "WILLIAMS, LILY TANG",
+     "amount": 80000,
+     "receiptDate": "2025-05-14",
+     "city": "WEARE",
+     "state": "NH"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "WILLIAMS, LILY TANG",
+     "amount": 20000,
+     "receiptDate": "2025-09-30",
+     "city": "WEARE",
+     "state": "NH"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "PLANET DIRECT",
+     "amount": 6914.74,
+     "receiptDate": "2026-05-22",
+     "city": "MANASSAS",
+     "state": "VA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "WINRED TECHNICAL SERVICES LLC",
+     "amount": 3500,
+     "receiptDate": "2025-08-13",
+     "city": "ARLINGTON",
+     "state": "VA"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "WINRED TECHNICAL SERVICES LLC",
+     "amount": 3500,
+     "receiptDate": "2025-04-11",
+     "city": "ARLINGTON",
+     "state": "VA"
+    }
+   ],
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/candidate/H2NH02260/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-14",
+    "verifiedAt": "2026-08-14"
+   }
+  }
+ ],
+ "absences": [
+  {
+   "targetKey": "ballot-nj-morris:us-senate:kuniansky",
+   "displayName": "Joanne KUNIANSKY",
+   "reason": "no FEC candidate registered matching \"Joanne KUNIANSKY\" for NJ-S in the 2026 cycle (0 scoped results checked)",
+   "checkedAt": "2026-08-14",
+   "searchUrl": "https://www.fec.gov/data/candidates/?q=KUNIANSKY&state=NJ"
+  },
+  {
+   "targetKey": "ballot-nh-merrimack:us-senate:jarvis-david",
+   "displayName": "David Jarvis",
+   "reason": "no FEC candidate registered matching \"David Jarvis\" for NH-S in the 2026 cycle (0 scoped results checked)",
+   "checkedAt": "2026-08-14",
+   "searchUrl": "https://www.fec.gov/data/candidates/?q=Jarvis&state=NH"
+  },
+  {
+   "targetKey": "ballot-nh-merrimack:us-senate:vail-john",
+   "displayName": "John Vail",
+   "reason": "no FEC candidate registered matching \"John Vail\" for NH-S in the 2026 cycle (0 scoped results checked)",
+   "checkedAt": "2026-08-14",
+   "searchUrl": "https://www.fec.gov/data/candidates/?q=Vail&state=NH"
+  },
+  {
+   "targetKey": "ballot-nh-merrimack:us-senate:alciere-tom",
+   "displayName": "Tom Alciere",
+   "reason": "no FEC candidate registered matching \"Tom Alciere\" for NH-S in the 2026 cycle (0 scoped results checked)",
+   "checkedAt": "2026-08-14",
+   "searchUrl": "https://www.fec.gov/data/candidates/?q=Alciere&state=NH"
+  },
+  {
+   "targetKey": "ballot-nh-merrimack:us-senate:danley-sky",
+   "displayName": "Sky Danley",
+   "reason": "no FEC candidate registered matching \"Sky Danley\" for NH-S in the 2026 cycle (0 scoped results checked)",
+   "checkedAt": "2026-08-14",
+   "searchUrl": "https://www.fec.gov/data/candidates/?q=Danley&state=NH"
+  },
+  {
+   "targetKey": "ballot-nh-merrimack:us-senate:maxwell-mary",
+   "displayName": "Mary Maxwell",
+   "reason": "no FEC candidate registered matching \"Mary Maxwell\" for NH-S in the 2026 cycle (1 scoped results checked)",
+   "checkedAt": "2026-08-14",
+   "searchUrl": "https://www.fec.gov/data/candidates/?q=Maxwell&state=NH"
+  },
+  {
+   "targetKey": "ballot-nh-merrimack:us-senate:mcmenamon-ii-richard-a-",
+   "displayName": "Richard A. McMenamon II",
+   "reason": "no FEC candidate registered matching \"Richard A. McMenamon II\" for NH-S in the 2026 cycle (0 scoped results checked)",
+   "checkedAt": "2026-08-14",
+   "searchUrl": "https://www.fec.gov/data/candidates/?q=McMenamon%20II&state=NH"
+  },
+  {
+   "targetKey": "ballot-nh-merrimack:us-senate:smith-sabrina-ann",
+   "displayName": "Sabrina Ann Smith",
+   "reason": "no FEC candidate registered matching \"Sabrina Ann Smith\" for NH-S in the 2026 cycle (1 scoped results checked)",
+   "checkedAt": "2026-08-14",
+   "searchUrl": "https://www.fec.gov/data/candidates/?q=Smith&state=NH"
+  },
+  {
+   "targetKey": "ballot-nh-merrimack:us-house-2:callis-michael-anthony",
+   "displayName": "Michael Anthony Callis",
+   "reason": "no FEC candidate registered matching \"Michael Anthony Callis\" for NH-H02 in the 2026 cycle (0 scoped results checked)",
+   "checkedAt": "2026-08-14",
+   "searchUrl": "https://www.fec.gov/data/candidates/?q=Callis&state=NH"
+  },
+  {
+   "targetKey": "ballot-nj-morris:us-senate:fernandez",
+   "displayName": "Veronica FERNANDEZ",
+   "reason": "registered with the FEC (S0NJ00258) but no financial reports filed for the 2026 cycle (last report covered through 2020-11-27)",
+   "checkedAt": "2026-08-14",
+   "searchUrl": "https://www.fec.gov/data/candidate/S0NJ00258/"
+  },
+  {
+   "targetKey": "ballot-nj-morris:us-house-11:bond",
+   "displayName": "Alan B. BOND",
+   "reason": "registered with the FEC (H6NJ11328) but no financial reports filed for the 2026 cycle",
+   "checkedAt": "2026-08-14",
+   "searchUrl": "https://www.fec.gov/data/candidate/H6NJ11328/"
+  },
+  {
+   "targetKey": "ballot-nh-merrimack:us-senate:saal-maxwell-l-",
+   "displayName": "Maxwell L. Saal",
+   "reason": "registered with the FEC (S6NH00224) but no financial reports filed for the 2026 cycle",
+   "checkedAt": "2026-08-14",
+   "searchUrl": "https://www.fec.gov/data/candidate/S6NH00224/"
+  },
+  {
+   "targetKey": "ballot-nh-merrimack:us-senate:martin-andy",
+   "displayName": "Andy Martin",
+   "reason": "registered with the FEC (S4NH00096) but no financial reports filed for the 2026 cycle",
+   "checkedAt": "2026-08-14",
+   "searchUrl": "https://www.fec.gov/data/candidate/S4NH00096/"
+  },
+  {
+   "targetKey": "ballot-az-pima:us-house-6|Gary Swing",
+   "displayName": "Gary Swing",
+   "reason": "registered with the FEC (H6AZ06164) but no financial reports filed for the 2026 cycle",
+   "checkedAt": "2026-08-14",
+   "searchUrl": "https://www.fec.gov/data/candidate/H6AZ06164/"
+  }
+ ]
+}

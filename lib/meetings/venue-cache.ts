@@ -402,6 +402,59 @@ export const VENUE_CACHE: VenueEntry[] = [
       "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=937+Route+103%2C+Newbury%2C+NH+03255&benchmark=Public_AR_Current&format=json",
     verifiedAt: "2026-08-13",
   },
+
+  // ── Diligent: Sunnyside USD Governing Board ─────────────────────────────
+  // The feed's location string names the Fred T. Bull Administration
+  // Building; the board's own page places the Governing Board Room at the
+  // District Administration Building, 2238 East Ginter Road — the same
+  // building, renamed for the retired superintendent in 1992.
+  {
+    sourceId: "diligent",
+    bodyOcdId:
+      "ocd-division/country:us/state:az/school_district:sunnyside_unified_district",
+    match: "Fred T. Bull Administration Building - Governing Board Room",
+    name: "Sunnyside District Administration Building, Governing Board Room",
+    address: "2238 E. Ginter Road, Tucson, AZ 85706",
+    lat: 32.137642,
+    lng: -110.938584,
+    addressSourceUrl: "https://www.susd12.org/governing-board-home",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=2238+E+Ginter+Rd%2C+Tucson%2C+AZ+85706&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-14",
+  },
+
+  // ── BoardBook: Amphitheater USD Governing Board ─────────────────────────
+  // BoardBook rows publish the address beside the venue name; these two are
+  // the only venues in the 2026 rows. The addressSourceUrl is the portal's
+  // own org page — the district's published meeting notices.
+  {
+    sourceId: "boardbook",
+    bodyOcdId:
+      "ocd-division/country:us/state:az/school_district:amphitheater_unified_district",
+    match: "Leadership and Professional Development Center",
+    name: "Amphitheater Leadership and Professional Development Center",
+    address: "701 W. Wetmore Road, Tucson, AZ 85705",
+    lat: 32.286421,
+    lng: -110.980988,
+    addressSourceUrl: "https://meetings.boardbook.org/Public/Organization/2065",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=701+W+Wetmore+Rd%2C+Tucson%2C+AZ+85705&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-14",
+  },
+  {
+    sourceId: "boardbook",
+    bodyOcdId:
+      "ocd-division/country:us/state:az/school_district:amphitheater_unified_district",
+    match: "Canyon del Oro High School Auditorium",
+    name: "Canyon del Oro High School Auditorium",
+    address: "25 W. Calle Concordia, Oro Valley, AZ 85704",
+    lat: 32.373548,
+    lng: -110.970219,
+    addressSourceUrl: "https://meetings.boardbook.org/Public/Organization/2065",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=25+W+Calle+Concordia%2C+Oro+Valley%2C+AZ+85704&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-14",
+  },
 ];
 
 export function resolveVenue(

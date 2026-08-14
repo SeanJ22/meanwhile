@@ -27,6 +27,7 @@
     "officials:photos": "tsx scripts/fetch-official-photos.mts",
     "corpus:fetch": "tsx scripts/fetch-corpus.mts",
     "votes:fetch": "tsx scripts/fetch-votes.mts",
+    "fec:fetch": "tsx scripts/fetch-fec.mts",
     "streets:build": "tsx scripts/build-street-index.mts"
   },
   "dependencies": {

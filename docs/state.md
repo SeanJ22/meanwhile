@@ -4,7 +4,15 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-17, after the final-prep session — the author's
+Last updated: 2026-08-18 (wall clock 2026-08-14), after the FEC-and-
+final-prep session — the FEC funding surfaces built FIRST AND WHOLE per
+the author's order (D34 Done; both ripcords live in code, counsel holds
+the flags); Sunnyside and Amphitheater wired live with the honest record
+of the prior overclaim (D39); NH legislator contacts closed the long way
+(the General Court's own member directory, read through the Archive);
+the Rockaway BOE full names; Goodlander's portrait; the first two
+minutes summaries; and the four-zip phone-width walk at 89 checks green.
+See §16. Before that, 2026-08-17: the author's-words-and-depth session —
 mission text verbatim on the welcome overlay and "sell" retired for
 "licensed"; NH/NJ depth (Kelly-standard candidate cards, the name-case
 pass, Newbury's Select Board named and peopled, the earned NH
@@ -62,7 +70,7 @@ works.
 | `corepack pnpm session:start` | Start-of-session sweep, then the dev server — see §8. `--check` starts nothing |
 | `corepack pnpm dev` | Development server. Refuses if 3000 is taken; records its pid in `.dev-server.pid` |
 | `corepack pnpm build` | Production build |
-| `corepack pnpm test` | `node --test` over `tests/` — 349 tests (2026-08-17) |
+| `corepack pnpm test` | `node --test` over `tests/` — 371 tests (2026-08-18) |
 | `corepack pnpm lint` | ESLint |
 | `corepack pnpm ingest <source>` | Run one adapter end to end — `composite` prints per-source accounting and retrieves agenda documents |
 | `corepack pnpm meetings:report` | The four-zip gate: meetings per zip, contributing sources, unwired bodies. Live network |
@@ -3325,3 +3333,176 @@ direction.
   Rockaway BOE full names; Goodlander portrait; minutes-summary
   curation; the 45 backlog special districts; T08 before any public
   reachability.
+
+---
+
+## 16. The 2026-08-18 session — FEC first and whole, the wiring debt paid, and the long way to NH
+
+Branch `claude/fec-funding-and-final-prep-0818`, run unattended under the
+standing motion. Wall clock for the whole session: 2026-08-14 — the
+repo''s session labels run ahead of the calendar, so data fields
+(collectedAt, verifiedAt) carry the wall clock and docs carry the label,
+the split the repo already used. **test 371 pass · lint clean (one
+pre-existing warning) · build exit 0** on every commit, verified by exit
+code. The last session before the outside tester.
+
+### 1 — FEC funding surfaces (D34), first, whole
+
+Built first per the author''s explicit order after two deferrals. The
+identifier match rate printed BEFORE the adapter, per spec — and the
+print caught the denominator bug (a governor''s division is the state
+root exactly like a US Senate seat''s; federal is decided by contest id
+now) plus three name traps (suffixes 422''d the search, compound
+surnames and nicknames broke position matching; an election_years filter
+untangled Scott Brown''s 2014 id from his 2026 one). Final rates: roster
+10/10 by bioguide bridge, ballot 29/38 by scoped search — the nine
+misses are filers with no FEC registration (under $5,000 raised, no
+requirement), each recorded and rendered as an earned absence with that
+explanation.
+
+- **Snapshot pattern**: `data/fec/fec-2026.json` (73 KB) committed;
+  `pnpm fec:fetch` (121 serialized requests, Retry-After honoured);
+  weekly refresh workflow `.github/workflows/refresh-fec-snapshot.yml`
+  — **needs FEC_API_KEY as a repo secret, an author step**. The key
+  lives in fetch-script environments only; a guard test walks app/,
+  components/, lib/, hooks/ asserting no runtime file mentions it.
+- **Strict cycle honesty**: only 2026-cycle totals ship; a dormant
+  committee''s stale filing is an absence with its old coverage date
+  named (Fernandez''s 2020 money nearly wore a 2026 label).
+- **The ripcords live in code** (`lib/ripcords.ts`): each carries its
+  question, closer (counsel via D23 — nobody else), tracker rows, and an
+  env override so each is flippable in tests and by ops.
+  `ripcord.fecContributorDisplay` ships LIVE — pulling it empties the
+  contributor display AND the CONTRIBUTOR_REACTION write path (the
+  validation set derives from the same switch).
+  `ripcord.fundingReactionsInAggregates` ships PULLED —
+  `aggregateReactions` filters both funding reaction types while pulled,
+  so nothing derived from them can enter an export. Both flips are
+  demonstrated in `tests/funding.test.ts` (18 tests), and lib/signal
+  provably never imports the funding corpus.
+- **Surfaces**: `components/funding/funding-section.tsx` on every
+  federal candidate''s ballot card and (via `/api/funding`) the official
+  modal. Plain register: "This campaign has raised $6.2 million… About
+  8% of the money came from small donors — people who gave under $200 in
+  total." Contributors listed exactly as filed, cited, never
+  characterized. State/local races carry the honest state-systems note.
+  Reaction targets key on the FEC candidate id so the same committee
+  gets the same answer on every surface.
+- **Transparency page** gained the Campaign money section in the same
+  commit, including the aggregate exclusion stated plainly.
+- Gate met with counts: 85641 4 / 07866 7 / 03255 19 funding sections;
+  Ciscomani''s modal verified (`funding-ciscomani-modal.png`,
+  `funding-ballot-*.png`).
+
+### 2 — Sunnyside and Amphitheater wired live (D39)
+
+The honest diagnosis first, recorded on the row and here: the D38
+audit''s "complete" was the REGISTRY layer only — the wiring layer
+(sources, rosters, comment access, anything a reader sees) was never
+delivered, and the report implied more than shipped. The author''s
+"like nothing happened" was correct about every reader-visible surface.
+
+- **Sunnyside**: a Diligent/Highbond tenant found via the district''s own
+  agenda page — one wiring row, no new code. Its MeetingTypeName carries
+  the SITTING name, so `bodyNameFor` now lets a cited `typeName:` config
+  override win. 7 meetings in the snapshot, 4 upcoming — pins inside
+  85701''s first rung.
+- **Amphitheater**: BoardBook Premier (Sparq Data Solutions), a NEW
+  vendor — adapter `lib/sources/boardbook` (server-rendered archive,
+  per-row venue name AND street address, public agenda links; notices
+  post days ahead so an empty upcoming window is the portal''s honest
+  state), vendor-review section, recorded fixture, counted drops.
+- Both boards: coverage audits COVERED/LIVE with full rungs, 5+5-member
+  rosters from the districts'' own pages, comment access (Call to the
+  Audience; blue/yellow speaker forms), three Census-geocoded venue rows.
+- **Found while gating, the M31-class miss**: the district popup''s
+  roster lookup was `#governing`-only while school boards are `#board` —
+  every school district, TUSD included, rendered "no sourced
+  officeholder" over a curated roster. `governingRosterHoldersForDivision`
+  tries both suffixes; wired into the district popup, the meeting-popup
+  fallback (a Sunnyside pin seen from downtown names its board), and
+  `holdersFor`; test-pinned.
+
+### 3 — NH legislator contacts, the long way
+
+The Wayback rung left open on 08-17 paid. CDX enumeration of
+`gc.nh.gov/downloads` surfaced the General Court''s OWN downloadable
+member directory — `members.txt`: name, chamber, county, district,
+address, phone, email, party, committees — captured 2026-04-07, current
+legislature, read through the Archive without touching the wall.
+`officials:enrich` gained the NH pass (chamber + county + district via
+the registry''s Census labels + name; directory-marked Former rows never
+match): **389/410 enriched — phone on 251, email on 386**, 21 misses
+printed with reasons. The tester''s three (Innis Senate D7, Sargent and
+Ebel Merrimack 07) all carry directory phone + email, verified on
+screen. Photos stay a recorded miss (walled member pages, unknown
+license). Refresh: re-point `NH_MEMBERS_TXT_ARCHIVE` at a newer capture
+— or the live file the day the wall drops. Rungs: the ladder''s
+2026-08-18 set.
+
+### 4 — The punch list
+
+- **4a**: the Rockaway Township BOE surnames-only defect closed — the
+  district''s own Apptegy page (`/page/board-members`) publishes full
+  names, roles, terms, per-member emails, reachable by plain GET (the
+  "defeated the pipeline" finding was about the events API, not this
+  page). Seven members curated; the roster renders from the BOE meeting
+  card.
+- **4b**: Goodlander''s public-domain official portrait fetched (the
+  unitedstates/images repo caught up) and her ballot card now serves the
+  committed copy with its license label. Grijalva and Mejia remain
+  honest misses (404 in the repo; Congress.gov depiction is
+  license-unknown and unshippable).
+- **4c**: the first two minutes summaries — Pima BOS 7/28 (the
+  treasurer appointment, the IDA reconstitution, River Overlook; cited
+  to the Clerk''s posted meeting-summary report) and Morris
+  commissioners 7/22 (cited to the full minutes). The rest of the
+  worklist was checked and recorded: TUSD''s and Sunnyside''s portal
+  minutes exist unpublished; Newbury hosts the agenda only. The honest
+  not-yet state renders, as designed.
+- **4d**: every open tester-pass item resolved or recorded — see the
+  superseded `docs/tester-pass.md`.
+
+### 5 — The final walk
+
+Four zips at 390×844 as a stranger, every new surface in the pass: **89
+checks green, zero console errors** (`scripts/tester-walk-0818.mts`,
+`walk18-*.png`). Two harness findings recorded in the driver (the
+sidebar is an aside too; the bottom sheet stalls Playwright''s
+scroll-into-view for rows a human can tap). One environment finding: a
+dev server started before an enrichment serves stale module JSON —
+restart after data regeneration; production builds fresh.
+
+### Decisions taken as cheaper-to-undo, with the rejected alternative
+
+- Funding reactions key on the FEC candidate id, not the app-side target
+  key (rejected: per-surface ids — the same committee would collect
+  split answers).
+- The small-donor share is unitemized individual contributions over
+  total receipts, with the method stated in the rendered words
+  (rejected: itemized+unitemized over receipts — "small donors" must
+  mean the under-$200 class the FEC itself defines).
+- The strict-cycle rule (2026 totals only) over latest-available totals
+  with a cycle label (rejected: old money wearing this cycle''s label is
+  a false claim even labeled).
+- The BoardBook adapter parses the org page rather than per-meeting
+  pages (rejected: N+1 requests for data the archive page already
+  carries).
+- Goodlander''s card serves the committed local portrait rather than
+  hotlinking the https repo (the D20 never-hotlink rule; the card test
+  now admits committed `/officials/` paths that must resolve on disk).
+- The NH enrichment pins the 2026-04-07 capture rather than "latest"
+  (reproducibility; a moved capture is a deliberate re-point, never a
+  silent drift).
+
+### State as of 2026-08-18
+
+- **371 tests, lint clean (one pre-existing warning), build exit 0** —
+  verified by exit code.
+- D34 DONE — the ripcords are counsel''s to close (D23); nothing else
+  waits on it. D39 done. Registry 333 bodies, two more LIVE.
+- Open next: D35 (positions machinery, the largest deferred item); the
+  45 backlog special districts; Grijalva/Mejia portraits when the
+  pictorial repo updates; the 21 unmatched NH members; minutes curation
+  as minutes publish; T08 before any public reachability; the author
+  steps in "Before you send the link" (the ship report).

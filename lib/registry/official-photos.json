@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-13T23:17:26.667Z",
+  "generatedAt": "2026-08-14T15:04:22.554Z",
   "photos": [
     {
       "officeholderId": "congress:C001133",
@@ -8,7 +8,7 @@
       "sourceUrl": "https://unitedstates.github.io/images/congress/450x550/C001133.jpg",
       "license": "Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images)",
       "attribution": null,
-      "collectedAt": "2026-08-13T23:17:26.667Z"
+      "collectedAt": "2026-08-14T15:04:22.554Z"
     },
     {
       "officeholderId": "congress:K000377",
@@ -17,7 +17,7 @@
       "sourceUrl": "https://unitedstates.github.io/images/congress/450x550/K000377.jpg",
       "license": "Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images)",
       "attribution": null,
-      "collectedAt": "2026-08-13T23:17:26.667Z"
+      "collectedAt": "2026-08-14T15:04:22.554Z"
     },
     {
       "officeholderId": "congress:G000574",
@@ -26,7 +26,7 @@
       "sourceUrl": "https://unitedstates.github.io/images/congress/450x550/G000574.jpg",
       "license": "Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images)",
       "attribution": null,
-      "collectedAt": "2026-08-13T23:17:26.667Z"
+      "collectedAt": "2026-08-14T15:04:22.554Z"
     },
     {
       "officeholderId": "congress:K000394",
@@ -35,7 +35,7 @@
       "sourceUrl": "https://unitedstates.github.io/images/congress/450x550/K000394.jpg",
       "license": "Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images)",
       "attribution": null,
-      "collectedAt": "2026-08-13T23:17:26.667Z"
+      "collectedAt": "2026-08-14T15:04:22.554Z"
     },
     {
       "officeholderId": "congress:B001288",
@@ -44,7 +44,7 @@
       "sourceUrl": "https://unitedstates.github.io/images/congress/450x550/B001288.jpg",
       "license": "Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images)",
       "attribution": null,
-      "collectedAt": "2026-08-13T23:17:26.667Z"
+      "collectedAt": "2026-08-14T15:04:22.554Z"
     },
     {
       "officeholderId": "congress:G000604",
@@ -53,7 +53,7 @@
       "sourceUrl": "https://unitedstates.github.io/images/congress/450x550/G000604.jpg",
       "license": "Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images)",
       "attribution": null,
-      "collectedAt": "2026-08-13T23:17:26.667Z"
+      "collectedAt": "2026-08-14T15:04:22.554Z"
     },
     {
       "officeholderId": "congress:S001181",
@@ -62,7 +62,7 @@
       "sourceUrl": "https://unitedstates.github.io/images/congress/450x550/S001181.jpg",
       "license": "Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images)",
       "attribution": null,
-      "collectedAt": "2026-08-13T23:17:26.667Z"
+      "collectedAt": "2026-08-14T15:04:22.554Z"
     },
     {
       "officeholderId": "congress:H001076",
@@ -71,7 +71,7 @@
       "sourceUrl": "https://unitedstates.github.io/images/congress/450x550/H001076.jpg",
       "license": "Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images)",
       "attribution": null,
-      "collectedAt": "2026-08-13T23:17:26.667Z"
+      "collectedAt": "2026-08-14T15:04:22.554Z"
     }
   ],
   "missing": [
@@ -79,85 +79,85 @@
       "officeholderId": "congress:G000606",
       "name": "Adelita S. Grijalva",
       "reason": "pictorial-directory image HTTP 404; Congress.gov depiction exists but is \"Image courtesy of the Member\" (unknown license — not shippable per D20)",
-      "attemptedAt": "2026-08-13T23:17:26.667Z"
+      "attemptedAt": "2026-08-14T15:04:22.554Z"
     },
     {
       "officeholderId": "congress:M001246",
       "name": "Analilia Mejia",
       "reason": "pictorial-directory image HTTP 404; Congress.gov depiction exists but is \"Image courtesy of the Member\" (unknown license — not shippable per D20)",
-      "attemptedAt": "2026-08-13T23:17:26.667Z"
+      "attemptedAt": "2026-08-14T15:04:22.554Z"
     },
     {
       "officeholderId": "plural:1e39adcf-868d-4722-a07b-09fcd36ad9ed",
       "name": "Gail Griffin",
       "reason": "state legislature portrait — per-state terms hunt not yet done (docs/source-ladder.md)",
-      "attemptedAt": "2026-08-13T23:17:26.667Z"
+      "attemptedAt": "2026-08-14T15:04:22.554Z"
     },
     {
       "officeholderId": "plural:bc52f516-a13b-4490-a12c-7b98fa3969e5",
       "name": "Lupe Diaz",
       "reason": "state legislature portrait — per-state terms hunt not yet done (docs/source-ladder.md)",
-      "attemptedAt": "2026-08-13T23:17:26.667Z"
+      "attemptedAt": "2026-08-14T15:04:22.554Z"
     },
     {
       "officeholderId": "plural:51520de4-0e87-475b-91d2-99aa18addf72",
       "name": "David Gowan",
       "reason": "state legislature portrait — per-state terms hunt not yet done (docs/source-ladder.md)",
-      "attemptedAt": "2026-08-13T23:17:26.667Z"
+      "attemptedAt": "2026-08-14T15:04:22.554Z"
     },
     {
       "officeholderId": "plural:6dba6afa-b274-4273-b8c6-270d27214eee",
       "name": "Alma Hernández",
       "reason": "state legislature portrait — per-state terms hunt not yet done (docs/source-ladder.md)",
-      "attemptedAt": "2026-08-13T23:17:26.667Z"
+      "attemptedAt": "2026-08-14T15:04:22.554Z"
     },
     {
       "officeholderId": "plural:81d12f3a-b635-4111-be8d-a71d2f7565f2",
       "name": "Betty Villegas",
       "reason": "state legislature portrait — per-state terms hunt not yet done (docs/source-ladder.md)",
-      "attemptedAt": "2026-08-13T23:17:26.667Z"
+      "attemptedAt": "2026-08-14T15:04:22.554Z"
     },
     {
       "officeholderId": "plural:3c965e03-1e51-4f10-a037-4fb2f35292c5",
       "name": "Sally Gonzales",
       "reason": "state legislature portrait — per-state terms hunt not yet done (docs/source-ladder.md)",
-      "attemptedAt": "2026-08-13T23:17:26.667Z"
+      "attemptedAt": "2026-08-14T15:04:22.554Z"
     },
     {
       "officeholderId": "plural:03aa8bec-9d7e-41e7-ad20-b5ba1991cab6",
       "name": "Aura Dunn",
       "reason": "state legislature portrait — per-state terms hunt not yet done (docs/source-ladder.md)",
-      "attemptedAt": "2026-08-13T23:17:26.667Z"
+      "attemptedAt": "2026-08-14T15:04:22.554Z"
     },
     {
       "officeholderId": "plural:028a440f-10cb-49cc-9417-1dfd0cff83e2",
       "name": "Marisa Sweeney",
       "reason": "state legislature portrait — per-state terms hunt not yet done (docs/source-ladder.md)",
-      "attemptedAt": "2026-08-13T23:17:26.667Z"
+      "attemptedAt": "2026-08-14T15:04:22.554Z"
     },
     {
       "officeholderId": "plural:f321f20f-b8af-4d0b-85ba-e7b8dcf9ae03",
       "name": "Tony Bucco",
       "reason": "state legislature portrait — per-state terms hunt not yet done (docs/source-ladder.md)",
-      "attemptedAt": "2026-08-13T23:17:26.667Z"
+      "attemptedAt": "2026-08-14T15:04:22.554Z"
     },
     {
       "officeholderId": "plural:f1292af8-a209-4ff7-87b5-086acddcc10e",
       "name": "Greg Sargent",
       "reason": "state legislature portrait — per-state terms hunt not yet done (docs/source-ladder.md)",
-      "attemptedAt": "2026-08-13T23:17:26.667Z"
+      "attemptedAt": "2026-08-14T15:04:22.554Z"
     },
     {
       "officeholderId": "plural:947e2e2b-04eb-4f92-9f83-aef8760517e0",
       "name": "Karen Ebel",
       "reason": "state legislature portrait — per-state terms hunt not yet done (docs/source-ladder.md)",
-      "attemptedAt": "2026-08-13T23:17:26.667Z"
+      "attemptedAt": "2026-08-14T15:04:22.554Z"
     },
     {
       "officeholderId": "plural:6328e7f7-d952-4d28-98b8-75a9a6f50c8d",
       "name": "Dan Innis",
       "reason": "state legislature portrait — per-state terms hunt not yet done (docs/source-ladder.md)",
-      "attemptedAt": "2026-08-13T23:17:26.667Z"
+      "attemptedAt": "2026-08-14T15:04:22.554Z"
     }
   ]
 }

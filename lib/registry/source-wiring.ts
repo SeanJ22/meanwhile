@@ -115,6 +115,32 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     verifiedAt: "2026-08-15",
   },
   {
+    // Sunnyside USD runs the same Diligent/Highbond tenant shape as Pima
+    // Community College. Found from the district's own agenda-and-minutes
+    // page (susd12.org names the portal); the MeetingsService answered
+    // plain GET with 9 rows and the permalink pattern verified resolving
+    // (Id=168 → the Sep 22 regular meeting page) before being relied on.
+    bodyId:
+      "ocd-division/country:us/state:az/school_district:sunnyside_unified_district#board",
+    ocdId:
+      "ocd-division/country:us/state:az/school_district:sunnyside_unified_district",
+    agendaSourceType: "DILIGENT",
+    jurisdiction: "Sunnyside Unified School District, AZ",
+    publishingOrg: "Sunnyside Unified School District Governing Board",
+    timeZone: "America/Phoenix",
+    config: {
+      slug: "susd12",
+      serviceBase: "https://susd-12.community.highbond.com",
+      meetingPath: "/Portal/MeetingInformation.aspx?Org=Cal&Id=",
+      // The tenant's MeetingTypeName carries the SITTING name ("Regular
+      // Governing Board Meeting"), not the body. "Governing Board" is the
+      // district's own name for it (susd12.org/governing-board-home).
+      "typeName:27": "Governing Board",
+      "typeName:21": "Governing Board",
+    },
+    verifiedAt: "2026-08-14",
+  },
+  {
     bodyId:
       "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#governing",
     ocdId:
@@ -216,6 +242,29 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     publishingOrg: "City of Tucson Clerk",
     timeZone: "America/Phoenix",
     config: { boardId: "19" },
+    verifiedAt: "2026-08-14",
+  },
+
+  // ── BoardBook Premier (Sparq Data Solutions) ────────────────────────────
+  // Amphitheater USD's agenda portal, named on the district's own
+  // agenda-information page. The org page server-renders the whole archive
+  // with per-row venue name and street address; agendas and notices are
+  // public links. Meetings post days ahead (Aug 11 released Aug 10), so an
+  // empty upcoming window between postings is the portal's honest state —
+  // the cadence field below is the district's own published schedule.
+  {
+    bodyId:
+      "ocd-division/country:us/state:az/school_district:amphitheater_unified_district#board",
+    ocdId:
+      "ocd-division/country:us/state:az/school_district:amphitheater_unified_district",
+    agendaSourceType: "BOARDBOOK",
+    jurisdiction: "Amphitheater Unified School District, AZ",
+    publishingOrg: "Amphitheater Unified School District Governing Board",
+    timeZone: "America/Phoenix",
+    config: {
+      orgId: "2065",
+      bodyName: "Amphitheater Unified School District Governing Board",
+    },
     verifiedAt: "2026-08-14",
   },
 

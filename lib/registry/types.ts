@@ -119,6 +119,13 @@ export type AgendaSourceType =
    * the host until it turns out to be a product other cities run.
    */
   | "CLERKSBOARDS"
+  /**
+   * BoardBook Premier (Sparq Data Solutions) — school-board agenda portal at
+   * `meetings.boardbook.org/Public/Organization/<id>`, server-rendered with
+   * the full meeting archive, per-row venue name AND street address, and
+   * public agenda/notice links. First tenant: Amphitheater USD (2026-08-18).
+   */
+  | "BOARDBOOK"
   | "PRIMEGOV"
   | "NOVUSAGENDA"
   | "SIMBLI"

@@ -7,6 +7,8 @@ import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { ReactionViewContext } from "@/lib/reactions/client";
 
+import { FundingBlock } from "@/components/funding/funding-block";
+
 import {
   OfficeBlurb,
   OfficialIdentity,
@@ -101,6 +103,9 @@ export function OfficialModal({
           <OfficialIdentity holder={holder} seatLabel={seatLabel} large />
           <OfficeBlurb holder={holder} />
           <ReachThem holder={holder} />
+          {/* D34: campaign money — FUNDING tier, visually its own section,
+              never blended with the votes below it. */}
+          <FundingBlock holder={holder} reactionContext={reactionContext} />
           <RecentVotes holder={holder} reactionContext={reactionContext} />
         </div>
       </div>

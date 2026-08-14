@@ -668,6 +668,205 @@ export const BODY_ROSTERS: BodyRoster[] = [
       },
     ],
   },
+
+  {
+    // 4a (2026-08-18): the surnames-only defect closed. The district's own
+    // Apptegy CMS page publishes full names, roles, terms, and per-member
+    // emails — reachable by plain GET at /page/board-members (the content
+    // rides in the page's embedded JSON; the tester-pass note that the
+    // site "defeated the pipeline" was about the events API, not this
+    // page). Seven members as published; trivera@/mmaasin@ on the same
+    // page are district-office contacts, not members.
+    bodyId:
+      "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district#board",
+    bodyName: "Rockaway Township Board of Education",
+    sourceUrl: "https://www.rocktwp.net/page/board-members",
+    sourceOrg: "Rockaway Township School District",
+    collectedAt: "2026-08-14",
+    members: [
+      {
+        id: "roster:rocktwp-boe#1",
+        name: "Alison McGeary",
+        officeTitle: "Board President",
+        termNote: "2024–2026, as published",
+        email: "amcgeary@rocktwp.net",
+        phone: null,
+        websiteUrl: "https://www.rocktwp.net/page/board-members",
+      },
+      {
+        id: "roster:rocktwp-boe#2",
+        name: "Noël Anderson",
+        officeTitle: "Board Vice President",
+        termNote: "2026–2028, as published",
+        email: "nanderson@rocktwp.net",
+        phone: null,
+        websiteUrl: "https://www.rocktwp.net/page/board-members",
+      },
+      {
+        id: "roster:rocktwp-boe#3",
+        name: "Lisa Mezik",
+        officeTitle: "Board Member",
+        termNote: "2024–2026, as published",
+        email: "lmezik@rocktwp.net",
+        phone: null,
+        websiteUrl: "https://www.rocktwp.net/page/board-members",
+      },
+      {
+        id: "roster:rocktwp-boe#4",
+        name: "Jacalyn Richardson",
+        officeTitle: "Board Member",
+        termNote: "2025–2027, as published",
+        email: "jrichardson@rocktwp.net",
+        phone: null,
+        websiteUrl: "https://www.rocktwp.net/page/board-members",
+      },
+      {
+        id: "roster:rocktwp-boe#5",
+        name: "Jemila Ann Tourne",
+        officeTitle: "Board Member",
+        termNote: "2025–2027, as published",
+        email: "jtourne@rocktwp.net",
+        phone: null,
+        websiteUrl: "https://www.rocktwp.net/page/board-members",
+      },
+      {
+        id: "roster:rocktwp-boe#6",
+        name: "Jamie Gorman",
+        officeTitle: "Board Member",
+        termNote: "2026–2028, as published",
+        email: "jgorman@rocktwp.net",
+        phone: null,
+        websiteUrl: "https://www.rocktwp.net/page/board-members",
+      },
+      {
+        id: "roster:rocktwp-boe#7",
+        name: "Rachael Brookes",
+        officeTitle: "Board Member",
+        termNote: "2026, as published",
+        email: "rbrookes@rocktwp.net",
+        phone: null,
+        websiteUrl: "https://www.rocktwp.net/page/board-members",
+      },
+    ],
+  },
+
+  {
+    // Item 2, 2026-08-18 session: the Sunnyside catch closed with people,
+    // not just pins. Five members with roles as the board's own page states
+    // them; the phone is the district line the same page publishes.
+    bodyId:
+      "ocd-division/country:us/state:az/school_district:sunnyside_unified_district#board",
+    bodyName: "Sunnyside Unified School District Governing Board",
+    sourceUrl: "https://www.susd12.org/governing-board-home",
+    sourceOrg: "Sunnyside Unified School District",
+    collectedAt: "2026-08-14",
+    members: [
+      {
+        id: "roster:susd12#1",
+        name: "Beki Quintero",
+        officeTitle: "Governing Board President",
+        termNote: null,
+        email: null,
+        phone: "(520) 545-2000",
+        websiteUrl: "https://www.susd12.org/governing-board-home",
+      },
+      {
+        id: "roster:susd12#2",
+        name: "Ted Rodriquez",
+        officeTitle: "Governing Board Clerk",
+        termNote: null,
+        email: null,
+        phone: "(520) 545-2000",
+        websiteUrl: "https://www.susd12.org/governing-board-home",
+      },
+      {
+        id: "roster:susd12#3",
+        name: "Edgar Bustamante",
+        officeTitle: "Governing Board Member",
+        termNote: null,
+        email: null,
+        phone: "(520) 545-2000",
+        websiteUrl: "https://www.susd12.org/governing-board-home",
+      },
+      {
+        id: "roster:susd12#4",
+        name: "Consuelo Hernandez",
+        officeTitle: "Governing Board Member",
+        termNote: null,
+        email: null,
+        phone: "(520) 545-2000",
+        websiteUrl: "https://www.susd12.org/governing-board-home",
+      },
+      {
+        id: "roster:susd12#5",
+        name: "Roberto Jaramillo",
+        officeTitle: "Governing Board Member",
+        termNote: null,
+        email: null,
+        phone: "(520) 545-2000",
+        websiteUrl: "https://www.susd12.org/governing-board-home",
+      },
+    ],
+  },
+
+  {
+    // The other half of the catch. Roles as the district's board-contact
+    // page states them; the phone is the board-business line the district's
+    // agenda-information page publishes for meeting questions.
+    bodyId:
+      "ocd-division/country:us/state:az/school_district:amphitheater_unified_district#board",
+    bodyName: "Amphitheater Unified School District Governing Board",
+    sourceUrl: "https://www.amphi.com/348925_2",
+    sourceOrg: "Amphitheater Unified School District",
+    collectedAt: "2026-08-14",
+    members: [
+      {
+        id: "roster:amphi#1",
+        name: "Vicki Cox Golder",
+        officeTitle: "Governing Board President",
+        termNote: null,
+        email: null,
+        phone: "(520) 696-5205",
+        websiteUrl: "https://www.amphi.com/348925_2",
+      },
+      {
+        id: "roster:amphi#2",
+        name: "Matt Kopec",
+        officeTitle: "Governing Board Vice President",
+        termNote: null,
+        email: null,
+        phone: "(520) 696-5205",
+        websiteUrl: "https://www.amphi.com/348925_2",
+      },
+      {
+        id: "roster:amphi#3",
+        name: "Deanna Day",
+        officeTitle: "Governing Board Member",
+        termNote: null,
+        email: null,
+        phone: "(520) 696-5205",
+        websiteUrl: "https://www.amphi.com/348925_2",
+      },
+      {
+        id: "roster:amphi#4",
+        name: "Michael Gemma",
+        officeTitle: "Governing Board Member",
+        termNote: null,
+        email: null,
+        phone: "(520) 696-5205",
+        websiteUrl: "https://www.amphi.com/348925_2",
+      },
+      {
+        id: "roster:amphi#5",
+        name: "Susan Zibrat",
+        officeTitle: "Governing Board Member",
+        termNote: null,
+        email: null,
+        phone: "(520) 696-5205",
+        websiteUrl: "https://www.amphi.com/348925_2",
+      },
+    ],
+  },
 ];
 
 export function rosterForBody(bodyId: string | null): BodyRoster | null {
@@ -713,4 +912,23 @@ export function rosterHoldersForBody(bodyId: string | null): RosterHolder[] {
     photoUrl: null,
     campaignUrl: null,
   }));
+}
+
+/**
+ * The governing body's roster for a DIVISION — the registry suffixes a
+ * county or municipal governing body `#governing` and a school board
+ * `#board`, and the district popup's `#governing`-only lookup meant every
+ * school district rendered "no sourced officeholder" over a curated roster
+ * (caught 2026-08-18 wiring Sunnyside). Exact keys, both suffixes, never a
+ * loose prefix — a division with an advisory-body roster must not have it
+ * mistaken for the government.
+ */
+export function governingRosterHoldersForDivision(
+  ocdId: string | null,
+): RosterHolder[] {
+  if (!ocdId) return [];
+  const governing = rosterHoldersForBody(`${ocdId}#governing`);
+  return governing.length > 0
+    ? governing
+    : rosterHoldersForBody(`${ocdId}#board`);
 }

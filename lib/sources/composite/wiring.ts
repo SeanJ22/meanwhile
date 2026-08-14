@@ -4,6 +4,7 @@ import {
   type BodySourceWiring,
 } from "../../registry/source-wiring.ts";
 import { makeApptegySource } from "../apptegy/index.ts";
+import { makeBoardBookSource } from "../boardbook/index.ts";
 import { makeCivicPlusSource } from "../civicplus/index.ts";
 import { makeClerksBoardsSource } from "../clerksboards/index.ts";
 import { makeDiligentSource } from "../diligent/index.ts";
@@ -84,6 +85,11 @@ const CAPABILITIES: Array<{
     types: ["CLERKSBOARDS"],
     make: (rows) =>
       makeClerksBoardsSource(rows) as ReportingMeetingSource<unknown>,
+  },
+  {
+    name: "boardbook",
+    types: ["BOARDBOOK"],
+    make: (rows) => makeBoardBookSource(rows) as ReportingMeetingSource<unknown>,
   },
   {
     name: "iqm2",

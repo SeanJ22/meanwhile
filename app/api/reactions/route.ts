@@ -1,5 +1,12 @@
 import { writeReaction } from "@/lib/db/reactions";
+import { noteSubmission } from "@/lib/db/intake-limiter";
 import { coverageAt } from "@/lib/registry/server";
+import { ripcordPulled } from "@/lib/ripcords";
+import {
+  classifySubmission,
+  intakeLimits,
+  isSameOriginSubmission,
+} from "@/lib/signal/intake-limits";
 import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
 import {
   isPlausibleTargetId,
@@ -15,33 +22,66 @@ import {
 import { getVoteIds } from "@/lib/votes/snapshot";
 
 /**
- * POST /api/reactions — the reaction write path (P03).
+ * POST /api/reactions — the reaction write path (P03), hardened (T08).
  *
- * Validation fails closed: an unknown enum value, an invented target id, an
- * oversized payload, a malformed key — all 400, nothing stored, nothing
- * coerced. The target id must name a roll call in the committed votes
- * snapshot; the surface only renders reactions on real votes, so anything
- * else is a client bug or a probe.
+ * Validation fails closed and is never behind any flag: an unknown enum
+ * value, an invented target id, an oversized payload, a malformed key —
+ * all 400, nothing stored, nothing coerced. A tap from the real app always
+ * passes because the app only offers real targets.
  *
- * Rate limiting is demo-grade by decision (state.md §13): per-key and
- * per-IP sliding windows, instance-local. The IP is read for limiting only
- * — it appears in no log line, no row, no error message. The full T03
- * hardening pass is tracked as a launch gate (T08).
+ * The protections (T08), cheapest first, all inside `ripcord.rateLimits`:
  *
- * Like /api/log: no cookie read, no identity accepted, and a missing
- * database is a 202 (accepted, not stored) so the demo without a
- * DATABASE_URL still behaves honestly.
+ * 1. Same-origin — the write must come from a page this site served.
+ * 2. In-memory sliding windows per device key and per IP — instance-local,
+ *    free, catch a single-instance burst immediately. The IP is read for
+ *    limiting only and appears in no log line, no row, no error message.
+ * 3. The authoritative counters (lib/db/intake-limiter.ts) — one atomic
+ *    upsert per submission, counted across every instance: past the hard
+ *    per-minute limit or the daily ceiling, refused; past the soft
+ *    velocity threshold, stored but QUARANTINED (suspect_reason, excluded
+ *    from every aggregate); counters unavailable, stored quarantined as
+ *    LIMITER_UNAVAILABLE — never trusted through.
+ *
+ * The limiter state lives in its own table with a digest that cannot join
+ * the reaction store (n-stores-never-join under load — CLAUDE.md). The
+ * master ripcord `ripcord.reactionIntake` closes this route entirely with
+ * a 503; the client's honesty rendering (P11) turns any non-204 into the
+ * not-counted line, so a closed intake is honest with zero client change.
+ *
+ * A missing database remains a 202 (accepted, not stored) so a demo
+ * without DATABASE_URL still behaves honestly.
  */
 
 export const runtime = "nodejs";
 
-/** Generous for humans, hostile to loops: a person changes their mind, a script hammers. */
-const perKeyLimiter = new SlidingWindowLimiter(15, 60_000);
-const perIpLimiter = new SlidingWindowLimiter(60, 60_000);
+/**
+ * The instance-local first line. Limits are read from env once per
+ * instance — the authoritative cross-instance numbers live in the DB
+ * counters, so a stale window limit here only affects the cheap pre-check.
+ */
+let limiters: { perKey: SlidingWindowLimiter; perIp: SlidingWindowLimiter } | null =
+  null;
+function getLimiters() {
+  if (!limiters) {
+    const limits = intakeLimits();
+    limiters = {
+      perKey: new SlidingWindowLimiter(limits.reactionsPerMinuteHard, 60_000),
+      perIp: new SlidingWindowLimiter(limits.reactionsPerIpPerMinute, 60_000),
+    };
+  }
+  return limiters;
+}
 
 const MAX_BODY_BYTES = 4096;
 
 export async function POST(request: Request) {
+  // The master ripcord (T08): intake closed means every write refused
+  // before anything is read or counted. The reader's tap renders the
+  // honest not-counted line; nothing silently records.
+  if (ripcordPulled("ripcord.reactionIntake")) {
+    return Response.json({ error: "intake is closed" }, { status: 503 });
+  }
+
   const raw = await request.text();
   if (raw.length > MAX_BODY_BYTES) {
     return Response.json({ error: "payload too large" }, { status: 413 });
@@ -102,15 +142,54 @@ export async function POST(request: Request) {
     return Response.json({ error: "unknown targetId" }, { status: 400 });
   }
 
-  // Rate limits, cheapest first. The IP is used here and discarded —
-  // never stored, never logged (CLAUDE.md: IP for rate limiting only).
-  const ip =
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  if (
-    !perKeyLimiter.allow(`k:${submission.reactionKey}`) ||
-    !perIpLimiter.allow(`ip:${ip}`)
-  ) {
-    return new Response(null, { status: 429, headers: { "Retry-After": "60" } });
+  // ── The T08 protections, cheapest first — the ripcord.rateLimits family ──
+  let suspectReason: "VELOCITY" | "LIMITER_UNAVAILABLE" | null = null;
+  if (!ripcordPulled("ripcord.rateLimits")) {
+    // Same-origin: taps come from pages this site served. A browser
+    // attaches Origin to every POSTed fetch; a script pumping writes from
+    // outside either omits it or names a foreign origin.
+    if (!isSameOriginSubmission(request)) {
+      return Response.json(
+        { error: "cross-origin submissions are not accepted" },
+        { status: 403 },
+      );
+    }
+
+    // In-memory windows: instance-local, free. The IP is used here and
+    // discarded — never stored, never logged (CLAUDE.md: IP for rate
+    // limiting only).
+    const ip =
+      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    const { perKey, perIp } = getLimiters();
+    if (
+      !perKey.allow(`k:${submission.reactionKey}`) ||
+      !perIp.allow(`ip:${ip}`)
+    ) {
+      return new Response(null, { status: 429, headers: { "Retry-After": "60" } });
+    }
+
+    // The authoritative cross-instance counters. null means the limit
+    // COULD NOT be checked — quarantine, never trust through.
+    const counters = await noteSubmission(submission.reactionKey);
+    if (counters === null) {
+      suspectReason = "LIMITER_UNAVAILABLE";
+    } else {
+      const disposition = classifySubmission(counters);
+      if (disposition.kind === "REFUSE_DAILY") {
+        // The quiet refusal past the daily ceiling (T08 1b): no real
+        // reader reaches it; the client renders the honest line.
+        return new Response(null, {
+          status: 429,
+          headers: { "Retry-After": "86400" },
+        });
+      }
+      if (disposition.kind === "REFUSE_RATE") {
+        return new Response(null, { status: 429, headers: { "Retry-After": "60" } });
+      }
+      if (disposition.kind === "QUARANTINE") {
+        suspectReason = disposition.reason;
+      }
+    }
   }
 
   // Where the reader was looking — resolved server-side from the map view,
@@ -139,6 +218,7 @@ export async function POST(request: Request) {
       reaction: submission.reaction,
       reactionKey: submission.reactionKey,
       ocdIds,
+      suspectReason,
     });
     return new Response(null, { status: stored ? 204 : 202 });
   } catch (error) {

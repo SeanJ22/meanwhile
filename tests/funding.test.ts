@@ -188,16 +188,32 @@ test("D40: no query-keyed API route marks itself publicly cacheable", () => {
 
 // ── The ripcord registry ─────────────────────────────────────────────────
 
-test("both ripcords are registered with question, closer, and tracker rows", () => {
+test("every ripcord is registered with question, closer, and tracker rows", () => {
+  // T08 added the two intake ripcords beside the FEC pair.
   assert.deepEqual(RIPCORD_NAMES.sort(), [
     "ripcord.fecContributorDisplay",
     "ripcord.fundingReactionsInAggregates",
+    "ripcord.rateLimits",
+    "ripcord.reactionIntake",
   ]);
   for (const name of RIPCORD_NAMES) {
     const ripcord = RIPCORDS[name];
     assert.ok(ripcord.question.length > 20, `${name} has no real question`);
-    assert.match(ripcord.closer, /counsel/i, `${name} names no closer`);
-    assert.ok(ripcord.trackerRows.includes("D23"), `${name} loses its tracker row`);
+    assert.ok(ripcord.closer.length > 10, `${name} names no closer`);
+    assert.ok(ripcord.trackerRows.length > 0, `${name} loses its tracker row`);
+  }
+  // The FEC pair stays counsel-closed — nobody else may close D23's question.
+  for (const name of [
+    "ripcord.fecContributorDisplay",
+    "ripcord.fundingReactionsInAggregates",
+  ] as const) {
+    assert.match(RIPCORDS[name].closer, /counsel/i, `${name} must name counsel`);
+    assert.ok(RIPCORDS[name].trackerRows.includes("D23"));
+  }
+  // The intake pair is the author's, operational, rooted in T08.
+  for (const name of ["ripcord.rateLimits", "ripcord.reactionIntake"] as const) {
+    assert.match(RIPCORDS[name].closer, /author/i, `${name} must name the author`);
+    assert.ok(RIPCORDS[name].trackerRows.includes("T08"));
   }
 });
 

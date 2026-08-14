@@ -96,7 +96,7 @@ if (zip === "85723") {
     await ask.press("Enter");
     // 6e: the beat — during it, the line shows and no answer renders.
     await page.waitForTimeout(1200);
-    let text = await body();
+    const text = await body();
     check("6e: the hang-tight line shows during the beat", /I got you\.\.\. hang tight/.test(text));
     check("6e: the answer is held for the beat", !/Streets and roads/i.test(text));
     await page.screenshot({ path: join(OUT, `walk0814c-${zip}-beat.png`) });

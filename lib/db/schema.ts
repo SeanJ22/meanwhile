@@ -1,6 +1,7 @@
 import {
   doublePrecision,
   index,
+  integer,
   jsonb,
   pgTable,
   text,
@@ -212,6 +213,18 @@ export const reactions = pgTable(
     }).notNull(),
     /** See header — browser continuity, not identity. Stored only hashed. */
     reactionKeyHash: text("reaction_key_hash").notNull(),
+    /**
+     * Quarantine, not deletion (T08). Rows that tripped an intake limit but
+     * landed anyway are marked with WHY — never with any identifier — and
+     * excluded from every aggregate and export (the clean pool is what the
+     * business draws from; see lib/signal/aggregate.ts). Nothing is ever
+     * auto-deleted; the author reviews and decides. Sticky on overwrite: a
+     * burst cannot launder itself clean by re-submitting slowly
+     * (lib/db/reactions.ts).
+     */
+    suspectReason: text("suspect_reason", {
+      enum: ["VELOCITY", "LIMITER_UNAVAILABLE"],
+    }),
   },
   (table) => [
     // One reaction per browser key per target: a changed answer overwrites
@@ -224,3 +237,36 @@ export const reactions = pgTable(
     index("reactions_target_idx").on(table.targetType, table.targetId),
   ],
 );
+
+/**
+ * Transient intake-limiter state (T08) — NOT a collection store, and never
+ * to become one. This table exists so the per-device rate limit and daily
+ * ceiling count across every serverless instance, which in-memory windows
+ * cannot.
+ *
+ * The n-stores rule under load (CLAUDE.md): limiter state lives in its OWN
+ * space and never joins the stores it protects. Enforced structurally:
+ *
+ * - `digest` is sha256 of "intake-limiter:" + the browser's raw continuity
+ *   key — a DELIBERATELY DIFFERENT digest than reactions.reaction_key_hash
+ *   (sha256 of the raw key alone). Two hashes of a secret nobody stores
+ *   cannot be joined to each other; the guard in tests/db-schema.test.ts
+ *   asserts no shared column ever appears.
+ * - Counters only: no zip, no divisions, no reaction content, no IP, no
+ *   foreign key. It records how OFTEN an anonymous device wrote — never
+ *   what, never where, never who.
+ * - Expires on its own schedule: rows untouched for 48 hours are purged by
+ *   the daily tripwire run (scripts/intake-tripwire.mts). It appears in no
+ *   export and no aggregate.
+ */
+export const intakeLimiter = pgTable("intake_limiter", {
+  /** sha256("intake-limiter:" + raw key) — see header; joins nothing. */
+  digest: text("digest").primaryKey(),
+  /** UTC day (YYYY-MM-DD) the day counter belongs to. */
+  dayBucket: text("day_bucket").notNull(),
+  dayCount: integer("day_count").notNull(),
+  /** UTC minute (YYYY-MM-DDTHH:MM) the minute counter belongs to. */
+  minuteBucket: text("minute_bucket").notNull(),
+  minuteCount: integer("minute_count").notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" }).notNull(),
+});

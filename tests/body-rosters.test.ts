@@ -62,7 +62,7 @@ test("every member has a name, a published title, and no invented contact", () =
         // Only published addresses: government domains, never guessed ones.
         assert.match(
           member.email,
-          /@(tucsonaz\.gov|pima\.gov|tusd1\.org|vailschooldistrict\.org|newbury\.nh\.gov|rockawaytownship\.org)$/,
+          /@(tucsonaz\.gov|pima\.gov|tusd1\.org|vailschooldistrict\.org|newbury\.nh\.gov|rockawaytownship\.org|rocktwp\.net)$/,
           `${member.name}: email must be from the body's own published domain`,
         );
       }

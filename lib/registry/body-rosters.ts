@@ -670,6 +670,87 @@ export const BODY_ROSTERS: BodyRoster[] = [
   },
 
   {
+    // 4a (2026-08-18): the surnames-only defect closed. The district's own
+    // Apptegy CMS page publishes full names, roles, terms, and per-member
+    // emails — reachable by plain GET at /page/board-members (the content
+    // rides in the page's embedded JSON; the tester-pass note that the
+    // site "defeated the pipeline" was about the events API, not this
+    // page). Seven members as published; trivera@/mmaasin@ on the same
+    // page are district-office contacts, not members.
+    bodyId:
+      "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district#board",
+    bodyName: "Rockaway Township Board of Education",
+    sourceUrl: "https://www.rocktwp.net/page/board-members",
+    sourceOrg: "Rockaway Township School District",
+    collectedAt: "2026-08-14",
+    members: [
+      {
+        id: "roster:rocktwp-boe#1",
+        name: "Alison McGeary",
+        officeTitle: "Board President",
+        termNote: "2024–2026, as published",
+        email: "amcgeary@rocktwp.net",
+        phone: null,
+        websiteUrl: "https://www.rocktwp.net/page/board-members",
+      },
+      {
+        id: "roster:rocktwp-boe#2",
+        name: "Noël Anderson",
+        officeTitle: "Board Vice President",
+        termNote: "2026–2028, as published",
+        email: "nanderson@rocktwp.net",
+        phone: null,
+        websiteUrl: "https://www.rocktwp.net/page/board-members",
+      },
+      {
+        id: "roster:rocktwp-boe#3",
+        name: "Lisa Mezik",
+        officeTitle: "Board Member",
+        termNote: "2024–2026, as published",
+        email: "lmezik@rocktwp.net",
+        phone: null,
+        websiteUrl: "https://www.rocktwp.net/page/board-members",
+      },
+      {
+        id: "roster:rocktwp-boe#4",
+        name: "Jacalyn Richardson",
+        officeTitle: "Board Member",
+        termNote: "2025–2027, as published",
+        email: "jrichardson@rocktwp.net",
+        phone: null,
+        websiteUrl: "https://www.rocktwp.net/page/board-members",
+      },
+      {
+        id: "roster:rocktwp-boe#5",
+        name: "Jemila Ann Tourne",
+        officeTitle: "Board Member",
+        termNote: "2025–2027, as published",
+        email: "jtourne@rocktwp.net",
+        phone: null,
+        websiteUrl: "https://www.rocktwp.net/page/board-members",
+      },
+      {
+        id: "roster:rocktwp-boe#6",
+        name: "Jamie Gorman",
+        officeTitle: "Board Member",
+        termNote: "2026–2028, as published",
+        email: "jgorman@rocktwp.net",
+        phone: null,
+        websiteUrl: "https://www.rocktwp.net/page/board-members",
+      },
+      {
+        id: "roster:rocktwp-boe#7",
+        name: "Rachael Brookes",
+        officeTitle: "Board Member",
+        termNote: "2026, as published",
+        email: "rbrookes@rocktwp.net",
+        phone: null,
+        websiteUrl: "https://www.rocktwp.net/page/board-members",
+      },
+    ],
+  },
+
+  {
     // Item 2, 2026-08-18 session: the Sunnyside catch closed with people,
     // not just pins. Five members with roles as the board's own page states
     // them; the phone is the district line the same page publishes.

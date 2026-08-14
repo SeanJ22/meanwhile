@@ -63,6 +63,50 @@ test("every photo carries a labeled source and https URL; every bio its citation
   }
 });
 
+test("2b: every shipped photo appears in docs/photo-report.md with its judgment", () => {
+  // The human-verifiable check: the report is where a person eyeballs what
+  // ships. A photo missing from it is a photo nobody judged.
+  const report = readFileSync(join(process.cwd(), "docs", "photo-report.md"), "utf8");
+  const { cards } = allCandidateCards();
+  for (const [key, card] of Object.entries(cards)) {
+    if (card.photoUrl !== null) {
+      assert.ok(
+        report.includes(card.photoUrl),
+        `${key}: shipped photo ${card.photoUrl} is not listed in docs/photo-report.md`,
+      );
+    }
+  }
+  const manifest = JSON.parse(
+    readFileSync(join(process.cwd(), "lib", "registry", "official-photos.json"), "utf8"),
+  ) as { photos: { url: string; sourceUrl: string }[] };
+  for (const photo of manifest.photos) {
+    assert.ok(
+      report.includes(photo.url),
+      `official photo ${photo.url} is not listed in docs/photo-report.md`,
+    );
+    assert.ok(
+      report.includes(photo.sourceUrl),
+      `official photo source ${photo.sourceUrl} is not listed in docs/photo-report.md`,
+    );
+  }
+});
+
+test("2b: a card photo is a portrait judgment, never a banner/logo file left behind", () => {
+  // The two classes the audit caught mechanically: campaign banner/logo
+  // filenames. Belt to the eyeball's braces — a re-added banner fails here
+  // even before a human looks.
+  const { cards } = allCandidateCards();
+  const bannerShaped = /(banner|logo|wordmark|sharegraph|pullt(h?)rough|winred)/i;
+  for (const [key, card] of Object.entries(cards)) {
+    if (card.photoUrl !== null) {
+      assert.ok(
+        !bannerShaped.test(card.photoUrl),
+        `${key}: photo URL looks like a banner/logo file (${card.photoUrl}) — the 2b rule bans these`,
+      );
+    }
+  }
+});
+
 test("no ranking vocabulary anywhere in the cards file", () => {
   const raw = readFileSync(
     join(process.cwd(), "data", "ballot", "candidate-cards-2026.json"),

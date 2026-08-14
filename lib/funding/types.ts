@@ -29,6 +29,16 @@ export interface ContributionRow {
   receiptDate: string | null;
   city: string | null;
   state: string | null;
+  /**
+   * The FEC's own entity typing for the money's source, as filed (IND,
+   * CAN, CCM, COM, ORG, PAC, PTY). The mechanical basis for the plain
+   * label — a candidate's own money renders as exactly that (2a), derived
+   * from this field and never guessed. Null on rows collected before the
+   * field was captured.
+   */
+  entityType: string | null;
+  /** FEC form line number (13A is loans from the candidate). */
+  lineNumber: string | null;
 }
 
 export interface CommitteeTotals {

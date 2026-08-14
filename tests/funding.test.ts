@@ -18,6 +18,7 @@ import {
 } from "../lib/funding/snapshot.ts";
 import {
   fundingAnswerForTarget,
+  plainContributorLabel,
   plainMoney,
   STATE_FUNDING_NOTE,
 } from "../lib/funding/display.ts";
@@ -338,6 +339,46 @@ test("the funding sentences name the cycle and the small-donor method", () => {
   // No internal identifier reaches the reader path.
   for (const s of answer.data.sentences) {
     assert.ok(!/FEC_(COMMITTEE|CONTRIBUTOR)/.test(s));
+  }
+});
+
+test("2a: a candidate's own money is labeled as exactly that, from the FEC fields", () => {
+  // The mechanism, not the name: entity CAN or a 13A candidate loan.
+  assert.equal(
+    plainContributorLabel({ kind: "COMMITTEE_OR_ORGANIZATION", entityType: "CAN", lineNumber: "11D" }),
+    "the candidate's own money",
+  );
+  assert.equal(
+    plainContributorLabel({ kind: "COMMITTEE_OR_ORGANIZATION", entityType: null, lineNumber: "13A" }),
+    "the candidate's own money",
+  );
+  assert.equal(plainContributorLabel({ kind: "INDIVIDUAL", entityType: "IND", lineNumber: "11AI" }), null);
+  assert.equal(
+    plainContributorLabel({ kind: "COMMITTEE_OR_ORGANIZATION", entityType: "PAC", lineNumber: null }),
+    "a political action committee",
+  );
+  // No typing on the row: the honest generic, never a guess.
+  assert.equal(
+    plainContributorLabel({ kind: "COMMITTEE_OR_ORGANIZATION", entityType: null, lineNumber: null }),
+    "committee or organization",
+  );
+
+  // And the live case that surfaced the defect: Butierez's self-funding
+  // rows carry entity CAN in the snapshot and label as his own money.
+  const butierez = snapshot.candidates.find((c) => c.fecCandidateId === "H4AZ07134");
+  assert.ok(butierez, "Butierez left the snapshot — retarget this check");
+  const selfRows = butierez.topContributions.filter((r) => r.entityType === "CAN");
+  assert.ok(selfRows.length > 0, "Butierez's CAN rows vanished from the snapshot");
+  for (const row of selfRows) {
+    assert.equal(plainContributorLabel(row), "the candidate's own money");
+  }
+  // Every CAN row snapshot-wide gets the label — the rule is mechanical.
+  for (const candidate of snapshot.candidates) {
+    for (const row of candidate.topContributions) {
+      if (row.entityType === "CAN") {
+        assert.equal(plainContributorLabel(row), "the candidate's own money");
+      }
+    }
   }
 });
 

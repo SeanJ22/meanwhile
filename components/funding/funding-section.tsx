@@ -1,6 +1,7 @@
-import type {
-  FundingAbsenceData,
-  FundingDisplayData,
+import {
+  plainContributorLabel,
+  type FundingAbsenceData,
+  type FundingDisplayData,
 } from "@/lib/funding/display";
 import type { ReactionViewContext } from "@/lib/reactions/client";
 import { ReactionControl } from "@/components/reactions/reaction-control";
@@ -56,7 +57,11 @@ export function FundingDisplay({
             committee has reported, listed exactly as filed.
           </p>
           <ul className="mt-1 space-y-0.5">
-            {data.contributors.map((row, index) => (
+            {data.contributors.map((row, index) => {
+              // 2a: the suffix comes from the FEC's entity typing — a
+              // candidate's own money says so, plainly.
+              const entityLabel = plainContributorLabel(row);
+              return (
               <li
                 key={`${row.contributorName}-${row.amount}-${index}`}
                 className="flex items-baseline justify-between gap-3 text-[0.75rem]"
@@ -66,15 +71,16 @@ export function FundingDisplay({
                   {row.city && row.state && (
                     <span className="text-muted"> · {row.city}, {row.state}</span>
                   )}
-                  {row.kind === "COMMITTEE_OR_ORGANIZATION" && (
-                    <span className="text-muted"> · committee or organization</span>
+                  {entityLabel && (
+                    <span className="text-muted"> · {entityLabel}</span>
                   )}
                 </span>
                 <span className="shrink-0 font-mono text-[0.6875rem]">
                   ${Math.round(row.amount).toLocaleString("en-US")}
                 </span>
               </li>
-            ))}
+              );
+            })}
           </ul>
           <ReactionControl
             targetType="CONTRIBUTOR_REACTION"

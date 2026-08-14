@@ -85,6 +85,10 @@ interface FecScheduleARow {
   contribution_receipt_date?: string;
   contributor_city?: string;
   contributor_state?: string;
+  /** IND, CAN (the candidate), CCM, COM, ORG, PAC, PTY — as filed. */
+  entity_type?: string;
+  /** Form 3 line number; 13A is loans from the candidate. */
+  line_number?: string;
 }
 
 let requestCount = 0;
@@ -524,6 +528,11 @@ for (const [fecId, entry] of byFecId) {
               : null,
             city: row.contributor_city ? String(row.contributor_city) : null,
             state: row.contributor_state ? String(row.contributor_state) : null,
+            // The FEC's entity typing rides along verbatim — the display's
+            // plain labels (2a: "the candidate's own money") derive from
+            // these fields mechanically, never from the name.
+            entityType: row.entity_type ? String(row.entity_type) : null,
+            lineNumber: row.line_number ? String(row.line_number) : null,
           });
         }
       } catch (error) {

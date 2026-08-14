@@ -991,10 +991,22 @@
     "collectedAt": "2026-08-14",
     "verifiedAt": "2026-08-14"
    }
+  },
+  {
+   "ocdId": "ocd-division/country:us/state:nh",
+   "divisionVintage": "TIGER_GENZ2025",
+   "statement": "No statewide ballot question is on the November 3, 2026 ballot. The Secretary of State's 2026 Election Details page (read August 17, 2026, in a browser — the host refuses automated clients) lists no constitutional amendment question, and no voters' guide for one exists the way 2024's did.",
+   "provenance": {
+    "sourceUrl": "https://www.sos.nh.gov/2026-election-details",
+    "sourceOrg": "New Hampshire Secretary of State",
+    "collectedAt": "2026-08-17",
+    "verifiedAt": "2026-08-17"
+   }
   }
  ],
  "coverageNotes": [
   "Executive Council and county commissioner district boundary lines aren't on our map yet. Those contests are listed here because the Secretary of State's own district assignments place Newbury in Executive Council District 2 and the county's Second Commissioner District — the town assignment is sourced even though the lines can't be drawn.",
-  "Candidates can also reach the November ballot by nomination papers (the route independents and smaller parties use). The Secretary of State certifies those filings by September 2, 2026, so they can't be listed yet — the lists here show everyone who filed for the party primaries."
+  "Candidates can also reach the November ballot by nomination papers (the route independents and smaller parties use). The Secretary of State certifies those filings by September 2, 2026, so they can't be listed yet — the lists here show everyone who filed for the party primaries.",
+  "Why no question: putting a constitutional amendment (CACR) on the ballot takes a three-fifths vote of both chambers, and every CACR proposed in the 2025-2026 General Court fell short or was killed — CACR 6 (right to compute), 12 (tax supermajority), 14 (citizenship for office), 15 (hunt and fish), 21 (voting eligibility), 24 (parental privacy in education), and 28 (public protestant teachers). Vote records verified against legislative-tracking services 2026-08-17; the General Court's own site (gc.nh.gov) refuses every client this project has, browsers included — recorded in the source ladder."
  ]
 }

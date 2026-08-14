@@ -357,14 +357,24 @@ function MapEntryInner() {
   const [seenListOpen, setSeenListOpen] = useState(ui.listOverlayOpen);
   if (seenListOpen !== ui.listOverlayOpen) {
     setSeenListOpen(ui.listOverlayOpen);
-    if (ui.listOverlayOpen) setLarge(null);
+    if (ui.listOverlayOpen) {
+      setLarge(null);
+      // Same 8b fix as the doors: the list opened from the phone drawer
+      // must not sit under the drawer's backdrop.
+      dismissSidebar();
+    }
   }
 
   // 8a: an opening door closes any large popup, same rule, same pattern.
+  // And it dismisses the phone drawer — the walk caught the door rendering
+  // UNDER the drawer's backdrop, which ate its clicks (8b's clutter class).
   const [seenDoor, setSeenDoor] = useState(ui.door);
   if (seenDoor !== ui.door) {
     setSeenDoor(ui.door);
-    if (ui.door !== null) setLarge(null);
+    if (ui.door !== null) {
+      setLarge(null);
+      dismissSidebar();
+    }
   }
 
   /*

@@ -1,86 +1,135 @@
-# Tester pass — 2026-08-16
+# Tester pass — 2026-08-17, phone width, walked as a stranger
 
-The final gate of the correctness session: the product walked as the first
-outside tester will, at phone width (390×844), zip entered cold, every
-rendered surface read. Four zips: 03255 (Newbury NH), 07866 (Rockaway NJ),
-85701 (Tucson), 85641 (Vail). Criteria per surface: 15-year-old test, every
-link real (fetched), every number honest, every control does what it looks
-like it does. Screenshots in `screenshots/tester-*.png` and
-`screenshots/shading-*.png`; drivers in `scripts/tester-drive.mts`,
-`scripts/shading-check.mts`, `scripts/meeting-card-check.mts`.
+Supersedes the 2026-08-16 pass. Every zip walked at 390×844 (the tester
+tests on a phone; her zips first), cold entry through the welcome overlay,
+the narrowing modal declined (the stranger's default), every new surface
+read and exercised. Driver: `scripts/tester-walk-0817.mts` — the printed
+PASS/FAIL log below is its output verbatim; screenshots
+`screenshots/walk-<zip>-{1-map,2-door-officials,3-ballot,4-area}.png`.
 
-This log is the release evidence the final session builds its punch list
-from. Fixed-during-pass items are marked FIXED; anything left is OPEN.
+The stranger test (CLAUDE.md, adopted this session) is the bar: any gap a
+stranger would hit is a defect, and the walker knows nothing about any of
+the four places by instruction.
 
-## The map, per zip
+## The defect the walk caught and the session fixed
 
-| Surface | 03255 | 07866 | 85701 | 85641 |
-|---|---|---|---|---|
-| Zip entry cold → map lands | PASS | PASS | PASS | PASS |
-| Narrowing modal (3b): centered, blurred ground, approved wording, computed counts, two equal buttons, no X | PASS (3 municipalities, 1 school district) | PASS | PASS | PASS |
-| Decline is one tap, recorded, not re-asked | PASS | PASS | PASS | PASS |
-| Who-governs card: honest coverage lead | PASS | PASS ("3 of the 4 bodies… being added") | PASS ("4 bodies… we watch all") | PASS (no-mayor stated as fact) |
-| Mayor at the Kelly standard in who-governs (3e) | n/a (no mayor) | n/a | PASS — "Mayor · Regina Romero · source", opens her card | n/a (stated: no mayor) |
-| U.S. Senators label on its own line (3h) | PASS | PASS | PASS | PASS |
-| Seats show named reps with sources | PASS | PASS (NJ-11 shows Mejia — the special-election winner, roster current) | PASS | PASS |
-| Meeting list rows what-first, said once (3a) | PASS | PASS | PASS | PASS — FIXED during pass: rows read "Governing Board Meeting · Governing Board Meeting…"; list now uses the shared headline |
-| District shading: click shades, click again unshades (3f) | — | — | PASS — FIXED during pass, see below | — |
-| Legend never covers a card (3h) | code-verified (legend z 1100 < popup layer 1200) | ″ | ″ | ″ |
+**The door under the drawer (8b's clutter class).** At phone width, a
+sidebar-count door opened from the drawer rendered UNDER the drawer's
+backdrop — every tap on the door (including Close) was eaten by the
+backdrop. Caught mechanically: Playwright's click retry log showed
+`.sidebar-backdrop intercepts pointer events` 60 times before timeout;
+that log is the "worst stack" record (the stack was untappable, which is
+why there is no pretty screenshot of it). Fix: opening a door or the list
+overlay dismisses the drawer, in the same adjust-during-render block that
+enforces the one-large-surface rule. `walk-*-2-door-officials.png` is the
+fixed behavior.
 
-### The 3f diagnosis, measured
+Two more findings during driver construction, not app defects: body-text
+checks must be case-insensitive because chrome labels render through
+`text-transform: uppercase`, and unattended sessions cannot drive the
+in-app Browser pane (no compositing) — the repo's headless Playwright
+drivers are the tester harness of record.
 
-With the overlay on, a click at downtown Tucson opens the picker (3 rows),
-choosing Pima County shades it (the whole-viewport fill is visible in
-`shading-1-selected.png`) and opens the district card — selection itself was
-never broken. What reproduced: a click is almost never a single hit, so the
-6d same-gesture deselect (which lived only on the single-hit path) never
-engaged — the second click reopened the picker and re-selecting was the only
-option. There was no gesture that unshaded. FIXED: the picker now marks the
-already-selected district (✓, "tap to unselect") and choosing it deselects —
-verified by screenshot pair (`shading-2-after-second-click.png`: tint gone,
-card closed, boundaries intact).
+## 03255 — Newbury, NH (hers, first)
 
-One non-defect recorded: driving the overlay from storage requires
-`wtp.show_districts` = `"1"` (not `"true"`) — a test-harness lesson, not a
-product bug.
+```
+PASS welcome: mission text verbatim
+PASS narrowing modal: shown and declinable
+PASS map: meetings or honest coverage line
+PASS 03255: Newbury no-mayor fact + Select Board members — who-governs select-board block
+PASS 03255: Selectboard members named
+PASS who-governs: about-area link
+PASS door: officials list opens with names
+PASS door: closes
+PASS ballot: renders contests
+PASS ballot: registration link prominent
+PASS ballot: office explainer present
+PASS ballot: pick control present and distinct
+PASS ballot: device-only sentence
+PASS ballot: about-area link
+PASS 2a: statewide-measure absence stated
+PASS 2b: NH card bios render
+PASS 4b: executive councilor explainer
+PASS 4a: My picks view appears after a tap
+PASS about-area: renders state facts
+PASS about-area: marijuana answered
+PASS about-area: every fact cited
+console errors: none
+```
 
-## The ballot, per zip (server-rendered — verified from the served HTML plus phone screenshots)
+What the stranger now gets that they didn't before this session: "Newbury
+isn't a city — it has no mayor. The Select Board runs the town." with the
+three members named and tappable; the Kearsarge board fully peopled (nine
+members, towns, terms); the Executive Council explained as the NH oddity
+it is; the earned statement that no statewide question is on the November
+ballot; and the mover's page answering the before-you-move questions with
+NH-agency citations verified in a real browser.
 
-| Check | 03255 | 07866 | 85701 | 85641 |
-|---|---|---|---|---|
-| Registration checker prominent (2c), state's own tool | PASS ("Look up your voter registration", sos.nh.gov app) | PASS (voter.svrs.nj.gov) | PASS (my.arizona.vote) | PASS |
-| Dates strip, mm/dd/yyyy (3h) | PASS (03/10, 09/08, 11/03) | PASS | PASS | PASS |
-| The November slate complete (item 1) | PASS — 12 contests including Executive Councilor D2 and County Commissioner D2 with filed candidates | PASS (6 contests) | PASS (lineup) | PASS (lineup) |
-| Candidate links, labeled, official first (2b) | PASS (20 campaign / 8 official link renders) | PASS | PASS (34/22) | PASS (38/22) |
-| "Would you vote for them?" on every candidate (3d) | PASS (47 controls) | PASS (15) | PASS | PASS |
-| One-time disclosure notice on first-ever tap (3c) | — | — | — | PASS — notice renders, OK records, never re-shown (`tester-85641-ballot-notice.png`) |
-| Nomination-papers honesty note (NH) | PASS | n/a | n/a | n/a |
-| Nothing speaks database | PASS | PASS | PASS | PASS |
+## 07866 — Rockaway Township, NJ
 
-## Links fetched this session
+```
+PASS welcome: mission text verbatim
+PASS narrowing modal: shown and declinable
+PASS map: meetings or honest coverage line
+PASS 07866: mayor line renders (roster mayor)
+PASS who-governs: about-area link
+PASS door: officials list opens with names
+PASS door: closes
+PASS ballot: renders contests
+PASS ballot: registration link prominent
+PASS ballot: office explainer present
+PASS ballot: pick control present and distinct
+PASS ballot: device-only sentence
+PASS ballot: about-area link
+PASS 2d: no shouting surnames (ROACH→Roach)
+PASS 2b: card bios render
+PASS 4a: My picks view appears after a tap
+PASS about-area: renders state facts
+PASS about-area: marijuana answered
+PASS about-area: every fact cited
+console errors: none
+```
 
-Every candidate link shipped was fetched and read (40 links,
-`data/ballot/candidate-links-2026.json` carries the verification sentence per
-link; misses recorded as MISS or NOT_ATTEMPTED). All three registration
-checkers verified — two directly, AZ via the SOS's own page linking it. The
-NH ballot's new provenance PDFs (EC districts, commissioner districts, house
-districts, cumulative filing) fetched and read this session. 577 official
-member pages verified by the audit (`docs/officials-audit.md`); gc.nh.gov's
-84 remain inline-unverifiable (TLS wall, ladder rung).
+New for the stranger here: Mayor Joseph Jackson and the full nine-member
+council with per-member phone extensions AND emails (the township
+publishes both — the Kelly standard straight from the source); the county
+commissioners; ledger-caps surnames rendering as names; candidate cards
+with bios and photos on the Senate/House/commissioner races.
 
-## Open items for the final session's punch list
+## 85701 / 85641 — Tucson and Vail, AZ
 
-- The vote-record popup's plain-language bill summaries and the larger
-  portraits shipped this session were not walked in a live popup at phone
-  width — the code paths are tested and built, but no screenshot exists.
-  Walk the rep popup once.
-- The pin-tap meeting card at phone width resisted the headless driver
-  (marker locator flaky); the card's header code is shared with the list and
-  panel (both verified). Tap one pin by hand.
-- 07866's first-view framing starts north of Rockaway on a phone; the author
-  should confirm the deliberate zoom (6f) still reads right at 390×844.
-- NH candidate hunts recorded NOT_ATTEMPTED (10 fringe US Senate, 4 US House,
-  county offices) — work items, not absences.
-- The concluded/canceled backward window (3g) renders what the snapshot
-  holds; sources that publish little past will show little — per-adapter
-  backward fetch windows are a recorded follow-up.
+```
+85701: 16/16 PASS · console errors: none
+85641: 16/16 PASS · console errors: none
+```
+
+(Same check set minus the state-specific rows; full logs in the driver
+output. AZ candidate cards carry links for all 26 candidates and bio/photo
+for the governor race — deeper AZ card enrichment is recorded
+NOT_ATTEMPTED per the NH/NJ-first directive.)
+
+## Open items — the final session's punch list
+
+1. **Rockaway Township BOE roster is surnames-only** — the district
+   publishes members by surname in agendas; its Apptegy site defeated the
+   pipeline. Needs an interactive browser session or a call sheet.
+2. **gc.nh.gov is unreachable from this environment entirely** (TLS
+   fingerprint wall; even the real-browser rung failed here). NH state
+   legislator contacts (2c) and CACR docket pages remain unverifiable
+   from this machine; the SOS-page absence evidence stands in.
+3. **Goodlander's photo** — her House page offers an official-portrait
+   download; the URL needs an interactive grab. maggiefornh.com 403s.
+4. **Minutes summaries (6a)** are shipped as the structure with the honest
+   "not yet summarized" state; the five most recent concluded meetings
+   are the seed curation worklist.
+5. **FEC (D34)** deferred whole again — the report says so plainly; next
+   session's largest item.
+6. **The interactive pane cannot run unattended** — if the author wants
+   pane-driven walks, they must run attended; headless drivers otherwise.
+
+## What was NOT walked
+
+Reaction submission end-to-end against a live DATABASE_URL (still the
+author's Netlify step); the SMS/attestation tiers (T02 — design only, by
+standing decision); production deploy surfaces (verified post-ship by URL
+instead).

@@ -37,7 +37,7 @@ export interface AreaFactSet {
 
 const FETCHED = "fetched 2026-08-17";
 const NH_WALL =
-  "NH state hosts 403 non-browser clients; verified in a real browser 2026-08-17 (browser-phase check)";
+  "NH state hosts 403 non-browser clients; page title verified in a real browser 2026-08-17";
 
 export const AREA_FACTS: AreaFactSet[] = [
   {
@@ -120,7 +120,7 @@ export const AREA_FACTS: AreaFactSet[] = [
         answer:
           "Recreational marijuana is not legal. Possessing three-quarters of an ounce or less is a civil violation (a fine, not a crime), and a state-run therapeutic cannabis program serves qualifying patients.",
         sourceUrl:
-          "https://www.dhhs.nh.gov/programs-services/health-care/therapeutic-cannabis-program",
+          "https://www.dhhs.nh.gov/programs-services/population-health/therapeutic-cannabis",
         sourceOrg: "New Hampshire Department of Health and Human Services",
         verification: NH_WALL,
       },
@@ -130,7 +130,7 @@ export const AREA_FACTS: AreaFactSet[] = [
         answer:
           "Children need routine immunizations to enroll in school or child care; New Hampshire allows medical and religious exemptions with documentation.",
         sourceUrl:
-          "https://www.dhhs.nh.gov/programs-services/disease-prevention/immunizations",
+          "https://www.dhhs.nh.gov/programs-services/disease-prevention/nh-immunization-program/immunization-guidance-schools",
         sourceOrg: "New Hampshire Department of Health and Human Services",
         verification: NH_WALL,
       },
@@ -140,7 +140,7 @@ export const AREA_FACTS: AreaFactSet[] = [
         answer:
           "New Hampshire allows anyone who may legally own a handgun to carry it openly or concealed without a license. An optional pistol/revolver license exists, mainly for carrying in other states that honor it.",
         sourceUrl:
-          "https://www.nh.gov/safety/divisions/nhsp/jib/permitslicensing/",
+          "https://www.nhsp.dos.nh.gov/our-services/justice-information-bureau/permits-and-licensing/pistol-and-revolver-licensing",
         sourceOrg: "New Hampshire State Police",
         verification: NH_WALL,
       },
@@ -158,7 +158,8 @@ export const AREA_FACTS: AreaFactSet[] = [
         question: "How long do I have to register my car and get a license?",
         answer:
           "New residents have 60 days after establishing residency to register vehicles and get a New Hampshire driver's license. Registration runs through your town clerk plus the DMV.",
-        sourceUrl: "https://dmv.nh.gov/registration/new-nh-residents",
+        sourceUrl:
+          "https://www.dmv.nh.gov/vehicles-boats-or-titles/vehicle-registrations/new-resident-new-hampshire",
         sourceOrg: "New Hampshire Division of Motor Vehicles",
         verification: NH_WALL,
       },

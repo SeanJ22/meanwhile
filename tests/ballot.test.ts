@@ -194,9 +194,16 @@ test("a Newbury voter (03255) sees the November slate, and March is stated, not 
   assert.equal(senate.length, 13, "13 filed for the open Senate seat");
 
   // The town-meeting finding renders as the authority's own structure — the
-  // March town election — for both the town and the school district.
-  assert.equal(absences.length, 2, absences.map((a) => a.ocdId).join(", "));
-  for (const a of absences) assert.match(a.statement, /March/);
+  // March town election — for both the town and the school district. 2a
+  // (2026-08-17) added the third: the earned statewide-measure absence.
+  assert.equal(absences.length, 3, absences.map((a) => a.ocdId).join(", "));
+  const march = absences.filter((a) => /March/.test(a.statement));
+  assert.equal(march.length, 2, "both March town-meeting absences stand");
+  const noQuestion = absences.find((a) =>
+    /No statewide ballot question/.test(a.statement),
+  );
+  assert.ok(noQuestion, "the statewide-measure absence is stated and cited");
+  assert.match(noQuestion.provenance.sourceUrl ?? "", /sos\.nh\.gov/);
 
   // Our unmapped-districts gap is stated, never smoothed over.
   assert.ok((set.coverageNotes ?? []).length > 0);

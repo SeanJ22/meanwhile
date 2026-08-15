@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { useNarrowing } from "@/hooks/use-narrowing";
+import { locateStreetInZip, type StreetPoint } from "@/lib/geo/census-geocoder";
 
 /**
  * The reader disambiguation affordance — M26/4.6.3c, rebuilt as a PASSIVE
@@ -52,6 +53,7 @@ export function NarrowingPrompt({
   zip,
   onNarrowed,
   onApplied,
+  onPoint,
 }: {
   zip: string;
   /** Present so the parent re-reads the store; the hook notifies anyway. */
@@ -60,10 +62,21 @@ export function NarrowingPrompt({
    *  municipality pick) — the map answers with its boundary shading.
    *  Declining and undoing never fire it. */
   onApplied?: () => void;
+  /**
+   * D53 (2026-08-15): the street resolved to a POINT, so the map can
+   * re-centre and the meetings, officials and counters can answer for that
+   * point rather than for the whole ZCTA. Fires only on success, always
+   * after the narrowing has already applied — the shading never waits on a
+   * network call, and a lookup that fails changes nothing the reader can
+   * see. Nothing here is stored or transmitted to us; see
+   * lib/geo/census-geocoder.ts.
+   */
+  onPoint?: (point: StreetPoint) => void;
 }) {
   const [index, setIndex] = useState<StreetIndex | null>(null);
   const [expanded, setExpanded] = useState(false);
   const [streetInput, setStreetInput] = useState("");
+  const [locating, setLocating] = useState(false);
   const narrowing = useNarrowing(zip);
 
   // Per-zip state resets by remount: the parent keys this component on the
@@ -108,7 +121,8 @@ export function NarrowingPrompt({
     return (
       <p className="mt-2 text-[0.6875rem] leading-relaxed text-voice">
         Narrowed to {chosen.map((c) => c.label).join(", ")} — stored only on
-        this device.{" "}
+        this device.
+        {locating ? " Finding the street on the map…" : ""}{" "}
         <button
           type="button"
           className="cursor-pointer text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
@@ -132,10 +146,21 @@ export function NarrowingPrompt({
       ...street.m.map((i) => index.municipalities[i].ocdId),
       ...street.s.map((i) => index.schoolDistricts[i].ocdId),
     ];
+    // The narrowing applies FIRST and completely. Everything below is extra
+    // precision that may or may not arrive; nothing the reader can see is
+    // waiting on it (D53).
     narrowing.setStreet(name);
     narrowing.setDivisions(ocdIds);
     onNarrowed?.();
     onApplied?.();
+
+    if (!onPoint) return;
+    setLocating(true);
+    void locateStreetInZip(name, zip)
+      .then((point) => {
+        if (point) onPoint(point);
+      })
+      .finally(() => setLocating(false));
   };
 
   // The chip: quiet, in the card's flow, decides nothing.
@@ -259,9 +284,17 @@ export function NarrowingPrompt({
       >
         No thanks, show me everything
       </button>
+      {/* D53: this line had to change the day the geocoder was wired. It used
+          to say the street was "never sent anywhere", and once a street name
+          goes to the Census Bureau's public address service that sentence is
+          false. Naming the route is friction-rule exception (3) — it is
+          consent to collection — and a promise we keep is worth more than a
+          shorter one we do not. */}
       <p className="mt-2 text-[0.625rem] leading-relaxed text-muted">
-        Your choice stays on this device. It is never sent anywhere and
-        never tied to an account.
+        Your choice stays on this device. We never store it, never send it to
+        us, and never tie it to an account. To put your street on the map we
+        ask the U.S. Census Bureau&apos;s free address lookup for its location
+        — the street name and this zip code, never a house number.
       </p>
     </div>
   );

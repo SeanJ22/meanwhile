@@ -812,3 +812,64 @@ is one parameter away and this paragraph is the record that it was a choice.
 
 **Neither site needed anything but a polite GET.** Both admitted this
 project's identified User-Agent first try, at a serialized pace.
+
+## 2026-08-15 — the Census Bureau geocoder (D53)
+
+The author approved the U.S. Census Bureau's geocoder as this product's
+external geocoding source. Federal, free, no key, no account, and already the
+record cited by rows in the venue cache.
+
+**Endpoint.** `https://geocoding.geo.census.gov/geocoder/locations/onelineaddress`
+with `benchmark=Public_AR_Current&format=json`.
+
+**The finding that shaped the build, stated first because it is the reason the
+code looks the way it does: the Census geocoder does not geocode street
+names.** It geocodes addresses. Verified 2026-08-15, four attempts:
+
+| Query | Endpoint | Result |
+|---|---|---|
+| `Green Pond Road, 07866` | onelineaddress | 200, **0 matches** |
+| `Green Pond Road, Rockaway, NJ 07866` | onelineaddress | 200, **0 matches** |
+| `?street=Green Pond Road&zip=07866` | structured `address` | 200, **0 matches** |
+| `808 Green Pond Road, Rockaway, NJ 07866` | onelineaddress | 200, 1 match, 40.99414 / −74.47413 |
+
+The narrowing chip promises the reader that no house number is needed, and
+that promise is what makes the question cheap to answer — it is not being
+renegotiated to suit an API. So the adapter **samples the street at four low
+house numbers of its own (1, 50, 200, 800) and asks whether the matches
+agree.** Within 1.5 km, their midpoint is a real point on the street the
+reader named. Wider than that, the street is too long for one point to mean
+anything and the lookup returns nothing, leaving the division shading that
+already shipped.
+
+Sampled live 2026-08-15, one street per demo zip:
+
+| Street | Zip | Matched | Spread | Outcome |
+|---|---|---|---|---|
+| ACADEMY ST | 07866 | 2 of 6 | 0.08 km | point |
+| GREEN POND RD | 07866 | 5 of 6 | **5.64 km** | **refused** — the samples cross a municipal line |
+| E 12TH ST | 85701 | 4 of 6 | 0.34 km | point |
+| ACORN RD | 03255 | 2 of 6 | 0.01 km | point |
+| ABERDEEN PL | 85641 | 1 of 6 | 0.00 km | point |
+
+Four of five resolve; the one that refuses is the one where a confident pin
+would have put a reader in the wrong town's meetings. That refusal is the
+feature.
+
+**What is never sent, stored, or logged.** The lookup runs on the reader's
+device and talks only to census.gov. A house number the reader types anyway is
+stripped before the request. The resulting point lives in React state for the
+life of the view and is gone on reload: no localStorage, no request to our own
+server, nothing added to the search log — and when the point becomes the query
+point, the view carries `zip: null`, so the server resolves and logs the
+nearest ZCTA exactly as it already did for a panned viewport. A street-level
+point never reaches the log even as a parameter.
+`tests/geocoder.test.ts` reads the module as source and fails on
+`localStorage`, `logEvent`, `/api/` or any host that is not the Bureau's.
+
+**The disclosure changed in the same commit.** The line under the street input
+used to say the reader's choice "is never sent anywhere". Once a street name
+goes to a federal address service that sentence is false, so it now names the
+route: the choice stays on the device and is never sent to us, and putting the
+street on the map asks the Census Bureau's free address lookup, street name
+and zip, never a house number.

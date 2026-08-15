@@ -5,6 +5,7 @@ import { formatMiles } from "@/lib/map/format";
 
 import { AskBox } from "@/components/ask/ask-box";
 import { NarrowingPrompt } from "./narrowing-prompt";
+import type { StreetPoint } from "@/lib/geo/census-geocoder";
 import type { CoverageTier } from "@/lib/meetings/query";
 import type { CoverageSummary, CoveredBody, Seat } from "@/lib/registry/coverage";
 import { rosterHoldersForBody } from "@/lib/registry/body-rosters";
@@ -55,6 +56,8 @@ interface CoverageNoticeProps {
   /** Item 7: fires when the reader APPLIES a narrowing (street or picker)
    *  — never on decline or undo. The map turns its boundary shading on. */
   onNarrowApplied?: () => void;
+  /** D53: the narrowed street resolved to a point. Passed straight through. */
+  onStreetPoint?: (point: StreetPoint) => void;
 }
 
 /** How many bodies to name before collapsing the rest into a count. */
@@ -202,12 +205,14 @@ function CoverageBody({
   failedSourceOcdIds = [],
   onOpenOfficial,
   onNarrowApplied,
+  onStreetPoint,
 }: {
   zip: string;
   coverage: CoverageSummary;
   failedSourceOcdIds?: string[];
   onOpenOfficial?: OpenOfficial;
   onNarrowApplied?: () => void;
+  onStreetPoint?: (point: StreetPoint) => void;
 }) {
   const {
     bodies,
@@ -515,7 +520,12 @@ function CoverageBody({
           only where the computed street index says the answer would change.
           Keyed on the zip so a new zip mounts a fresh chip. */}
       {/^\d{5}$/.test(zip) && (
-        <NarrowingPrompt key={zip} zip={zip} onApplied={onNarrowApplied} />
+        <NarrowingPrompt
+          key={zip}
+          zip={zip}
+          onApplied={onNarrowApplied}
+          onPoint={onStreetPoint}
+        />
       )}
 
       {/* 7 (2026-08-17): the mover's page, one tap from who-governs. */}
@@ -776,6 +786,7 @@ export function CoverageNotice({
   onOpenOfficial,
   onMinimize,
   onNarrowApplied,
+  onStreetPoint,
 }: CoverageNoticeProps) {
   // The notice renders on every failure rung, and on the exact rung whenever
   // there is representation to show. It used to return null on `exact`
@@ -895,6 +906,7 @@ export function CoverageNotice({
           failedSourceOcdIds={failedSourceOcdIds}
           onOpenOfficial={onOpenOfficial}
           onNarrowApplied={onNarrowApplied}
+          onStreetPoint={onStreetPoint}
         />
       ) : (
         !coverage &&

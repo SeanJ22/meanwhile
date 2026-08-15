@@ -1899,7 +1899,19 @@ replaced.
 
 ## 7. Current state of the branch
 
-**Working on `claude/counters-meetings-photos-0815`** (2026-08-15),
+**Working on `claude/party-meetings-faces-0815`** (2026-08-15, third
+session of the day), branched from `main` at the snapshot-refresh commit
+after the PR #36 merge — the session §26 records: party for local
+partisan bodies from certified results (M62), the day-not-hour meeting
+shape and both archives ingested (M59), the Census geocoder (D53), the
+author's three production defects (M72, M73, M74), the challenger photo
+sweep that shipped nothing and the doctrine question it raised (D50
+round 4), and the future-date inventory split into its two species
+(R16). **test 533 pass · lint clean (1 pre-existing warning) · build
+exit 0**, the four-zip walk `tester-walk-0815b` green with zero
+failures. M75 recorded, not built.
+
+**Previously: `claude/counters-meetings-photos-0815`** (2026-08-15),
 branched from `main` at the PR #34 merge — the session §24 records: the
 sidebar counters (M57), concluded meetings and the dead Concluded chip
 (M58), the mojibake and the two more the scan found (M60), party on the
@@ -5208,4 +5220,244 @@ redesigned surfaces; exclude them from any aggregate over 2026-08-15 at
 - `scripts/shoot.mts` gained `--ask`/`--askbeat`, `--fill`, `--scrollto`,
   and tutorial seeding — the walk's driving vocabulary.
 - Next free tracker ids: **A12, B16, C05, D54, M72, P13, R20, T11, V09,
+  X06**.
+
+## 26. The 2026-08-15 session (third of the day) — party gets proven, the day-not-hour meetings land, and the faces come back empty
+
+Branch `claude/party-meetings-faces-0815`. Six work items, all shipped;
+533 tests green, lint clean (the one pre-existing warning), production
+build exit 0.
+
+### The one-line version
+
+Every curated local body now says whether its seats carry a party and cites
+the certified record that settled it; two archives of past meetings that
+publish a date and no hour are ingested and render honestly; a typed street
+becomes a point on the map through the Census Bureau's geocoder, or nothing;
+three visible defects from the author's production pass are fixed; the
+photo hunt for 76 ballot challengers walked both rungs to the end and
+shipped nothing, which is the finding.
+
+### M62 — party for local partisan bodies, from certified results
+
+The lead item, and the one with the most hunting in it.
+
+The rule the author set: a local office is partisan or nonpartisan **by law
+or charter first**, and only a partisan office gets a party, read from the
+certified result of the election that put the person in the seat. Never an
+endorsement, a news report, or a party's own site. Certified results or
+silence.
+
+All twelve rosters are settled; none is UNDETERMINED any more. **Five are
+PARTISAN** (Pima County's supervisors, Tucson's mayor and council, Rockaway
+Township's council, Morris County's and Merrimack County's commissioners)
+and **seven are NONPARTISAN** (all six school boards plus the Newbury
+Selectboard). **30 of 71 curated local members carry a party**, each with
+its document, its publishing body, and the day it was read.
+
+Two findings worth keeping:
+
+**A general-election canvass usually does not print party.** Pima's
+certified general canvass and Morris County's official summary report both
+carry names and vote totals and no affiliation at all. The records that
+state party are the **partisan primary canvass** in Arizona — where the
+races are themselves headed `DEM Board of Supervisors District 1` — and the
+county clerk's **certified winners list** in New Jersey, which has a Party
+column the summary report lacks. Stopping one document early would have
+produced "no party found" for offices that are unambiguously partisan.
+
+**The same documents prove the negative.** Arizona school board races appear
+in Pima's general canvass with no party beside any candidate, and appear in
+the party-organised primary canvass under no party heading at all — they are
+not in that election. That is the election authority's own record saying
+these seats carry no party, which is a far stronger answer than "the
+district's page doesn't mention one".
+
+**Two members carry no party, and that is the finding rather than a gap in
+effort.** Pima's District 5 was won in November 2024 by Adelita Grijalva;
+she left for the CD7 special and the Board appointed Andrés Cano on
+2025-04-15. Rockaway Township's at-large seat with this term was certified
+to Howard Kritz; Howard Morrison holds it now and appears in NO certified
+winners list for 2023, 2024 or 2025 — an absence checked in all three
+documents rather than assumed. Neither has a certified result naming a
+party, so neither renders one. Arizona requires a supervisor appointee to
+share the vacating member's registration and the county's own call for
+applications said so; that is a sound inference and it is still not a
+certified result, which is what the rule asks for.
+
+The same hunt corrected two wrong term notes that had stood for two years:
+Cano was recorded as "Elected November 2024 to a four-year term", and
+Rockaway's mayor as holding an "unexpired" term he had already replaced with
+a full four-year one in 2023.
+
+**New Hampshire came in at ladder rung 4.** `sos.nh.gov` 403s this network —
+the page and the document path, both tried per document, as the author's
+ladder instructs. The Internet Archive's dated mirror served both county
+results files at 200, and the archive URL with its date in it is what the
+rows cite: the document that was actually read. Rung 3 is worth keeping
+even though it failed here, because the same trick **worked** on
+`newbury.nh.gov`, which 403s its HTML and served its annual report PDF
+clean. Same CMS, same wall, different answer per host.
+
+### M59 — we know the day, not the hour
+
+The author approved the schema. `Meeting` gains `startPrecision`, `MINUTE`
+or `DAY`. On a `DAY` row `startsAt` carries local midnight as an **ordering
+position and never a claim**: the card renders "Time not posted — check the
+agenda" where the clock would go, and the calendar link builds an all-day
+event carrying the same sentence rather than putting a fabricated hour into
+the reader's own calendar.
+
+Counts gained: **Rockaway Township 9 → 22 meetings** (+13 day-only, from its
+AgendaCenter) and **Merrimack County 1 → 15** (+14, from the notices page's
+dated documents). 27 day-only rows in the shipped snapshot, 126 meetings
+total from 9 of 9 sources.
+
+The AgendaCenter category id is the council's own filter value, recorded on
+the wiring row rather than guessed, because that page hosts four other
+bodies and taking every document on it would file the Planning Board's
+meetings under the Township Council. A guard asserts the two categories'
+dates never cross.
+
+Archived rows are placed at the body's **sole** curated venue and dropped as
+`unknownVenue` where a body has more than one — "they usually meet at the
+complex" is a guess the reader would act on.
+
+Both `publishesHistory: false` rows are retired, which took
+`allHistoryGaps()` to zero and left the gap-note machinery with nothing live
+to stand on. It is now tested through an injected gap rather than deleted:
+the next unwired vendor will need it.
+
+### D53 — the street becomes a point, or nothing
+
+The author approved the Census Bureau's geocoder. Wiring it turned up the
+fact that shaped the build: **it does not geocode street names, only
+addresses.** A bare street returns zero matches on both the one-line and
+structured endpoints.
+
+The chip's promise that no house number is needed does not move for an API,
+so the module samples the street at four house numbers of its own and asks
+whether the matches agree. Within 1.5 km their midpoint is a real point on
+the street; wider, the street is too long for one point to mean anything and
+the lookup returns nothing. Green Pond Road's samples span 5.6 km and cross
+a municipal line — a confident pin there would have put a reader in the
+wrong town's meetings, and refusing is the feature. Four of five sampled
+streets across the demo zips resolve.
+
+On success the map flies and the query point moves through the existing
+settled-view override, so meetings, officials and the sidebar counters all
+answer for the street instead of a ZCTA centroid. Every failure returns
+`null` and the shipped shading behaviour stands; there is no error state.
+
+The point never leaves the device: no storage, no request to our own server,
+nothing added to the search log, and the settled view carries `zip: null` so
+the server logs the nearest ZCTA exactly as it already did. **The disclosure
+line changed in the same commit** — it used to say the reader's choice is
+"never sent anywhere", and once a street name goes to a federal address
+service that sentence is false.
+
+### 4c — three from the author's production pass
+
+**M72, the who-governs card off the top at desktop.** Measured before
+touching it: the bottom stack 1072px tall against an 800px viewport, top at
+y = −272 — the same signature as the phone bug M54/M55 fixed. The upper
+bound had been written inside a `max-width: 639px` query because that bug
+was found on a phone, which quietly assumed a laptop is always taller than
+the card. It applies at every width now.
+
+**M73, the sidebar footer under the map legend at 390px.** The legend is
+fixed ambient chrome at z-1100, so it painted over the "Last checked" line.
+The legend's placement and the stack's reserved gutter now read the same two
+named variables. Two cascade traps on the way, both recorded in comments:
+the phone override lost to a later `:root` declaration by source order, and
+the stack's padding lost to a Tailwind utility on the same element. Each
+first attempt reported success and changed nothing.
+
+**M74, picks from another state's ballot.** Keeping them is right — a pick is
+the reader's private note and deleting it for looking at another state would
+lose deliberate work — so the missing thing was the sign, not the behaviour.
+The jurisdiction is read off the contest id every pick already carries, so
+picks saved before today are labelled too. An internal key never renders: no
+label, no line.
+
+### D50 round 4 — the challenger sweep ships nothing
+
+Both rungs walked to the end for all 76 ballot challengers.
+
+**Commons, attribute-verified: 0 staged.** 74 no-Wikidata-match — 62 with no
+search hit at all and 12 with hits that failed attribute verification — and
+2 verified items carrying no portrait. That is the identity discipline
+working; a name-only match would have put somebody else's face on a ballot
+card. A canonical failure class failing again is the expected result.
+
+**The campaign `og:image` rung: 10 staged, 0 shippable.** All ten were looked
+at in one contact sheet. Nine are wordmarks, logos, rally photos or banners;
+the tenth is a composed campaign banner, the exact shape D42 tightened the
+rule against. **And a doctrine finding, recorded rather than resolved:** the
+licence question settles all ten regardless of composition. A campaign site
+is neither of CLAUDE.md's two doors, and the rule names campaign headshots
+as commercial photography needing an explicit licence. The script that runs
+this rung describes itself on the opposite premise. It needs the author's
+ruling, not a patch.
+
+Counts unchanged at 590 of 750. The 48 curated locals are named as the
+remainder with their rung, per the brief's own cut rule.
+
+### R16 — the future-date inventory learns the difference
+
+The 117 were two species wearing one label. Election day will postdate every
+scan until November; warning about it every run teaches a reader to scroll
+past the warning, which is the only way that check can actually fail.
+
+Expected-future dates are now **annotated in the document, next to the
+date**, with the reason and the record they were verified against. The
+annotation lives where a reader who wonders will look, and the two cannot
+drift apart the way a second list would. Six shipped, all election day.
+
+A seventh turned out to be neither species — an illustrative retrieval date
+inside a hypothetical UI string — and became a placeholder, because an
+example that looks like a provenance claim is the confusion this rule fights.
+
+**The allowlist is now the suspicious set and nothing else: 26 entries and
+118 declared occurrences down to 16 and 81**, every one session-label
+residue. Correcting those is evidence-backed but it is a bulk rewrite of
+eight documents, some of whose dates a recorded decision says stay as
+written, so it is warned about loudly every run rather than guessed at.
+
+The tracker note written for this item failed its own check by naming two of
+the dates in prose. It was reworded rather than allowlisted.
+
+### The walk
+
+`scripts/tester-walk-0815b.mts`, all four demo zips at 390×844 plus a
+desktop bound check, **0 failures** — 07866 14/0/0, 03255 12 pass 3 skip,
+85701 12 pass 3 skip, 85641 12 pass 4 skip. `docs/tester-pass.md` is
+superseded with the full table, including the three bugs the walk found in
+ITSELF and the one product observation it surfaced and did not fix (M75, the
+meeting panel's lower edge under the legend at phone width — a different
+surface from M73, predating this session, recorded rather than patched
+blind at the end of a session).
+
+**Production rows this session created, named (the probe-rows rule):** the
+dev server the walk drove carries the production `DATABASE_URL`, so its log
+writes landed in the real search log. Across roughly a dozen walk runs on
+2026-08-15, the rows are **zip-search rows for the map-page loads at 07866,
+03255, 85701 and 85641** (on the order of forty, spread over the afternoon
+and evening local time) and **a handful of settled-view rows** from the
+viewport measurements at 1280×800. All were proving this session's surfaces;
+exclude them from any aggregate over 2026-08-15 at those four zips. **No
+reaction-store row and no intake row was written** — nothing in this session
+tapped a reaction, and the geocoder writes nowhere by construction.
+
+### State as of 2026-08-15, end of the third session
+
+- **533 tests green**, lint clean (one pre-existing warning in
+  `scripts/tester-drive.mts`), production build exit 0, `verify-stamps`
+  clean (11 audited, 0 disagreements, `AUTHOR_DECISION` empty and staying
+  empty).
+- New guards: `tests/party.test.ts` M62 family, `tests/day-precision.test.ts`,
+  `tests/geocoder.test.ts`, `tests/map-bounds.test.ts`, the M74 additions to
+  `tests/ballot-picks.test.ts`, and the R16 additions to
+  `tests/doc-dates.test.ts`.
+- Next free tracker ids: **A12, B16, C05, D54, M76, P13, R20, T11, V09,
   X06**.

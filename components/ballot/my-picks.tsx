@@ -22,8 +22,8 @@ export function MyPicks() {
   if (picks.length === 0) return null;
 
   return (
-    <section className="mt-6 rounded border border-dashed border-[var(--panel-border)] p-4">
-      <h2 className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-muted">
+    <section className="mt-6 rounded-[10px] border border-dashed border-[var(--panel-border)] p-4">
+      <h2 className="t-structure text-paper-dim">
         My picks — this device only
       </h2>
       <ul className="mt-2 space-y-1.5">

@@ -216,6 +216,14 @@ if (clickSeq) {
   }
 }
 
+// Scroll an element into view before shooting — for page sections below
+// the fold (the funding block, the measures). Playwright selector.
+const scrollTo = arg("scrollto");
+if (scrollTo) {
+  await page.locator(scrollTo).first().scrollIntoViewIfNeeded();
+  await page.waitForTimeout(400);
+}
+
 if (flag("list")) {
   await page.click(".count-badge");
   await page.waitForTimeout(400);

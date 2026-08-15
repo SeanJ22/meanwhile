@@ -145,7 +145,7 @@ function Holder({
           target="_blank"
           rel="noreferrer"
           title="Where this record was read from"
-          className="font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted hover:text-signal"
+          className="font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted underline decoration-dotted underline-offset-2 hover:text-link"
         >
           source
         </a>
@@ -344,7 +344,7 @@ function CoverageBody({
       {unincorporated && (
         // The no-mayor case is a stated fact, not an empty slot (5b): say
         // what this place has instead of what it lacks.
-        <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
+        <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-voice">
           <span className="text-signal">
             This area isn&apos;t a city or town
           </span>{" "}
@@ -358,12 +358,14 @@ function CoverageBody({
         </p>
       )}
 
-      <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
+      {/* The app's voice (design pass): coverage explanation is guidance,
+          not record — it renders in the voice register. */}
+      <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-voice">
         {lead}
       </p>
 
       {othersLine && (
-        <p className="mt-1 text-[0.75rem] leading-relaxed text-muted">
+        <p className="mt-1 text-[0.75rem] leading-relaxed text-voice">
           {othersLine}
         </p>
       )}
@@ -514,7 +516,7 @@ function CoverageBody({
         <p className="mt-2 text-[0.75rem]">
           <a
             href={`/about-area?zip=${zip}`}
-            className="underline decoration-dotted hover:text-signal"
+            className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
           >
             Moving here? Know the basics — Taxes, schools, registering, and
             more. →
@@ -580,7 +582,7 @@ function CoverageBody({
 
       {seats.length > 0 && seatCounts.named === 0 ? (
         // Nothing sourced for any seat — the original wording, still true.
-        <p className="mt-2.5 text-[0.75rem] leading-relaxed text-muted">
+        <p className="mt-2.5 text-[0.75rem] leading-relaxed text-voice">
           You&apos;re also represented in {seatLine}.
         </p>
       ) : (
@@ -714,7 +716,7 @@ function CoverageBody({
         // to claim we had sourced no names at all, which stopped being true the
         // moment the federal roster landed — AZ-6 has a name on it. Claiming
         // otherwise beside a rendered name is its own small lie.
-        <p className="mt-2.5 text-[0.6875rem] leading-relaxed text-muted">
+        <p className="mt-2.5 text-[0.6875rem] leading-relaxed text-voice">
           {counts.withoutSource > 0 && (
             <>
               We know these bodies exist because the district boundaries do. We

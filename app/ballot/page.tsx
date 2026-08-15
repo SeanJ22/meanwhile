@@ -165,31 +165,90 @@ export default async function BallotPage({
   const measureContests =
     matched?.contests.filter((c) => c.type === "MEASURE") ?? [];
 
+  /*
+   * Item 5 (design pass): when the IDENTICAL source line would repeat on
+   * every contest, it renders once — a marker at each contest, the full
+   * citation once at the page's foot. Distinct sources never collapse
+   * together, and a source used by one contest keeps its inline line.
+   * De-cluttering, never de-sourcing.
+   */
+  const FOOTNOTE_MARKERS = ["*", "†", "‡", "§", "‖", "¶"];
+  type SourceCite =
+    | { kind: "canvass"; url: string; issuedBy: string; readAt: string }
+    | { kind: "filing"; url: string | null; org: string; collectedAt: string };
+  const contestSourceKey = (cite: SourceCite): string =>
+    cite.kind === "canvass"
+      ? `canvass|${cite.url}|${cite.issuedBy}|${cite.readAt}`
+      : `filing|${cite.url ?? ""}|${cite.org}|${cite.collectedAt}`;
+  const contestCites = new Map<string, { cite: SourceCite; count: number }>();
+  for (const contest of candidacyContests) {
+    const lineup = lineupForContest(contest.id);
+    const canvass = lineup ? getGeneralLineup()?.canvass : null;
+    const cite: SourceCite =
+      lineup && canvass
+        ? {
+            kind: "canvass",
+            url: canvass.url,
+            issuedBy: canvass.issuedBy,
+            readAt: canvass.readAt,
+          }
+        : {
+            kind: "filing",
+            url: contest.provenance.sourceUrl ?? null,
+            org: contest.provenance.sourceOrg,
+            collectedAt: contest.provenance.collectedAt,
+          };
+    const key = contestSourceKey(cite);
+    const entry = contestCites.get(key);
+    if (entry) entry.count += 1;
+    else contestCites.set(key, { cite, count: 1 });
+  }
+  // Markers are assigned in first-appearance order, only to sources that
+  // actually repeat.
+  const sharedSources: { key: string; marker: string; cite: SourceCite }[] = [];
+  for (const [key, { cite, count }] of contestCites) {
+    if (count > 1) {
+      sharedSources.push({
+        key,
+        marker:
+          FOOTNOTE_MARKERS[sharedSources.length] ??
+          `${sharedSources.length + 1}`,
+        cite,
+      });
+    }
+  }
+  const contestSourceRef = (
+    key: string,
+  ): { shared: boolean; marker: string | null; anchor: string | null } => {
+    const index = sharedSources.findIndex((s) => s.key === key);
+    return index === -1
+      ? { shared: false, marker: null, anchor: null }
+      : { shared: true, marker: sharedSources[index].marker, anchor: `source-note-${index}` };
+  };
+
   return (
     <main className="mx-auto max-w-2xl px-4 py-8 text-paper">
       {/* 6b: the way back, top-left — the map is where the reader came from. */}
       <p className="text-[0.8125rem]">
         <Link
           href="/"
-          className="text-muted underline decoration-dotted underline-offset-2 hover:text-signal"
+          className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
         >
           ← Back to the map
         </Link>
       </p>
-      <p className="mt-3 font-mono text-[0.625rem] uppercase tracking-[0.2em] text-muted">
-        We the People
-      </p>
-      <h1 className="mt-1 text-xl font-semibold">
+      <p className="t-eyebrow mt-4 text-muted">We the People</p>
+      <h1 className="mt-1.5 text-2xl font-semibold tracking-tight">
         What&apos;s on the ballot{zip ? ` near ${zip}` : ""}
       </h1>
 
-      <p className="mt-3 text-[0.8125rem] leading-relaxed text-paper-dim">
+      {/* The app's voice (design pass): guidance renders in the voice
+          register, distinct from the filed record below. */}
+      <p className="mt-3 text-[0.8125rem] leading-relaxed text-voice">
         A zip code is orientation, not your exact ballot — zip areas cross
         town and district lines. Everything below is presented as filed with
         election authorities, with the filing linked on every item.{" "}
-        <span className="text-muted">
-          We never suggest how to vote.
-        </span>
+        <span className="font-medium">We never suggest how to vote.</span>
       </p>
 
       {/* Item 4 (2026-08-14 second session): the standing header — the
@@ -208,12 +267,10 @@ export default async function BallotPage({
             /early voting/i.test(s.label),
           );
           return (
-            <section className="mt-6 rounded border-2 border-[var(--signal)] p-4">
-              <h2 className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-signal">
-                The next election
-              </h2>
-              <p className="mt-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <span className="text-[1.0625rem] font-semibold">
+            <section className="mt-6 rounded-[10px] border border-[var(--signal)]/60 bg-[var(--signal)]/5 p-5 shadow-[var(--shadow-panel)]">
+              <h2 className="t-structure text-signal">The next election</h2>
+              <p className="mt-2.5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <span className="font-mono text-[1.375rem] font-semibold tracking-tight">
                   {formatDateMDY(dates.electionDay)}
                 </span>
                 <AddToCalendar
@@ -226,11 +283,11 @@ export default async function BallotPage({
                   }}
                 />
               </p>
-              <ul className="mt-2 space-y-1 text-[0.8125rem]">
+              <ul className="mt-2.5 space-y-1.5 text-[0.875rem]">
                 {regStep && (
                   <li>
                     Register to vote by{" "}
-                    <span className="font-semibold">
+                    <span className="font-mono text-[0.8125rem] font-semibold">
                       {formatDateMDY(regStep.date)}
                     </span>
                     {reg && (
@@ -240,7 +297,7 @@ export default async function BallotPage({
                           href={reg.url}
                           target="_blank"
                           rel="noreferrer"
-                          className="underline decoration-dotted hover:text-signal"
+                          className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
                         >
                           {reg.label} →
                         </a>
@@ -251,7 +308,7 @@ export default async function BallotPage({
                 {earlyStep && (
                   <li>
                     {earlyStep.label}:{" "}
-                    <span className="font-semibold">
+                    <span className="font-mono text-[0.8125rem] font-semibold">
                       {/^\d{4}-\d{2}-\d{2}$/.test(earlyStep.date)
                         ? formatDateMDY(earlyStep.date)
                         : earlyStep.date
@@ -265,7 +322,7 @@ export default async function BallotPage({
               {/* The tester's exact confusion, answered in one line. The
                   propositions sentence renders only where propositions
                   actually share the ballot. */}
-              <p className="mt-2 text-[0.8125rem] leading-relaxed text-paper-dim">
+              <p className="mt-2.5 text-[0.8125rem] leading-relaxed text-voice">
                 Everyone below is on this ballot.
                 {measureContests.length > 0 &&
                   " Propositions are voted on at the same time."}
@@ -280,7 +337,7 @@ export default async function BallotPage({
         <p className="mt-2 text-[0.8125rem]">
           <Link
             href={`/about-area?zip=${zip}`}
-            className="underline decoration-dotted hover:text-signal"
+            className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
           >
             {/* 3c: the author's line, verbatim. Marijuana stays in the
                 section; it left the teaser. */}
@@ -324,12 +381,12 @@ export default async function BallotPage({
       {dates && set && (() => {
         const reg = registrationLinkFor(set.election.state);
         return reg ? (
-          <p className="mt-6 rounded border border-[var(--panel-border)] bg-[var(--surface,rgba(255,255,255,0.04))] p-3 text-[0.875rem]">
+          <p className="mt-6 rounded-[10px] border border-[var(--panel-border)] bg-[var(--panel-bg)] p-3.5 text-[0.9375rem] shadow-[var(--shadow-panel)]">
             <a
               href={reg.url}
               target="_blank"
               rel="noreferrer"
-              className="font-medium underline decoration-dotted"
+              className="font-medium text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
             >
               {reg.label} →
             </a>{" "}
@@ -345,11 +402,11 @@ export default async function BallotPage({
       <MyPicks />
 
       {dates && (
-        <section className="mt-6 rounded border border-[var(--panel-border)] p-4">
-          <h2 className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-muted">
+        <section className="mt-6 rounded-[10px] border border-[var(--panel-border)] p-5">
+          <h2 className="t-structure text-paper-dim">
             Dates that decide whether you can vote
           </h2>
-          <ul className="mt-2 space-y-1.5">
+          <ul className="mt-2.5 space-y-1.5">
             {dates.steps.map((step) => (
               <li key={step.label} className="flex items-baseline justify-between gap-3">
                 <span className="text-[0.8125rem]">{step.label}</span>
@@ -399,26 +456,50 @@ export default async function BallotPage({
         candidacyContests.map((contest) => {
           const lineup = lineupForContest(contest.id);
           const canvass = lineup ? getGeneralLineup()?.canvass : null;
+          // Item 5 (design pass): a source line identical across contests
+          // renders as a footnote marker here and one citation at the
+          // page's foot. Distinct sources never collapse together.
+          const sourceRef =
+            lineup && canvass
+              ? contestSourceRef(
+                  `canvass|${canvass.url}|${canvass.issuedBy}|${canvass.readAt}`,
+                )
+              : contestSourceRef(
+                  `filing|${contest.provenance.sourceUrl ?? ""}|${contest.provenance.sourceOrg}|${contest.provenance.collectedAt}`,
+                );
           return (
             <section
               key={contest.id}
-              className="mt-5 rounded border border-[var(--panel-border)] p-4"
+              className="mt-5 rounded-[10px] border border-[var(--panel-border)] bg-[var(--panel-bg)] p-5 shadow-[var(--shadow-panel)]"
             >
-              <h2 className="text-[0.9375rem] font-semibold">{contest.title}</h2>
-              <p className="mt-0.5 font-mono text-[0.625rem] uppercase tracking-[0.15em] text-muted">
-                Vote for {contest.voteFor}
-                {contest.termYears
-                  ? ` · ${contest.termYears}-year term`
-                  : ""}
-              </p>
+              <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
+                <h2 className="text-[1.0625rem] font-semibold tracking-tight">
+                  {contest.title}
+                  {sourceRef.shared && (
+                    <sup>
+                      <a
+                        href={`#${sourceRef.anchor}`}
+                        title="Source, cited once at the foot of this page"
+                        className="ml-0.5 font-mono text-[0.6875rem] text-muted no-underline hover:text-link"
+                      >
+                        {sourceRef.marker}
+                      </a>
+                    </sup>
+                  )}
+                </h2>
+                <p className="t-eyebrow text-muted">
+                  Vote for {contest.voteFor}
+                  {contest.termYears ? ` · ${contest.termYears}-year term` : ""}
+                </p>
+              </div>
 
               {/* 4b (2026-08-17): what this office actually does, in the
                   register, at the top of the contest. Describes the office,
-                  never the people running for it. */}
+                  never the people running for it. Voice register. */}
               {(() => {
                 const blurb = blurbForContestTitle(contest.title);
                 return blurb ? (
-                  <p className="mt-1.5 text-[0.75rem] leading-relaxed text-paper-dim">
+                  <p className="mt-2 text-[0.75rem] leading-relaxed text-voice">
                     {blurb.text}
                     {blurb.basis && (
                       <span className="text-muted">
@@ -431,45 +512,49 @@ export default async function BallotPage({
               })()}
 
               {/* 6c: the record behind this contest, at the top of the card
-                  — never buried at the page bottom. */}
-              <p className="mt-1 text-[0.6875rem] text-muted">
-                {lineup && canvass ? (
-                  <>
-                    Nominees per the{" "}
-                    <a
-                      href={canvass.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="underline decoration-dotted"
-                    >
-                      certified primary canvass
-                    </a>{" "}
-                    ({canvass.issuedBy}) · read {formatDateMDY(canvass.readAt)}
-                  </>
-                ) : (
-                  <>
-                    <a
-                      href={contest.provenance.sourceUrl ?? undefined}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="underline decoration-dotted"
-                    >
-                      {contest.provenance.sourceOrg} filing
-                    </a>{" "}
-                    · read {formatDateMDY(contest.provenance.collectedAt)}
-                  </>
-                )}
-              </p>
+                  — never buried at the page bottom. When the identical line
+                  covers several contests it collapses to the marker above
+                  (item 5) — de-cluttering, never de-sourcing. */}
+              {!sourceRef.shared && (
+                <p className="mt-1 text-[0.6875rem] text-muted">
+                  {lineup && canvass ? (
+                    <>
+                      Nominees per the{" "}
+                      <a
+                        href={canvass.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="underline decoration-dotted underline-offset-2 hover:text-link"
+                      >
+                        certified primary canvass
+                      </a>{" "}
+                      ({canvass.issuedBy}) · read {formatDateMDY(canvass.readAt)}
+                    </>
+                  ) : (
+                    <>
+                      <a
+                        href={contest.provenance.sourceUrl ?? undefined}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="underline decoration-dotted underline-offset-2 hover:text-link"
+                      >
+                        {contest.provenance.sourceOrg} filing
+                      </a>{" "}
+                      · read {formatDateMDY(contest.provenance.collectedAt)}
+                    </>
+                  )}
+                </p>
+              )}
 
               {/* The certified lineup retires the filing-list fallback (6a):
                   what a November voter actually chooses among. */}
               {lineup ? (
                 <>
-                <ul className="mt-3 space-y-2">
+                <ul className="mt-3.5 space-y-3">
                   {lineup.nominees.map((nominee) => (
                     <li
                       key={nominee.name}
-                      className="border-b border-[var(--panel-border)] pb-2 last:border-0 last:pb-0"
+                      className="border-b border-[var(--panel-border)] pb-3 last:border-0 last:pb-0"
                     >
                       <CandidateCard
                         name={nominee.name}
@@ -545,11 +630,11 @@ export default async function BallotPage({
                       {contest.scopeNote}
                     </p>
                   )}
-                  <ul className="mt-3 space-y-2">
+                  <ul className="mt-3.5 space-y-3">
                     {candidatesOf(set, contest).map((cand) => (
                       <li
                         key={cand.id}
-                        className="border-b border-[var(--panel-border)] pb-2 last:border-0 last:pb-0"
+                        className="border-b border-[var(--panel-border)] pb-3 last:border-0 last:pb-0"
                       >
                         <CandidateCard
                           name={`${cand.givenName} ${surnameDisplayCase(cand.familyName)}`}
@@ -632,6 +717,48 @@ export default async function BallotPage({
           );
         })}
 
+      {/* Item 5: the collapsed source lines, cited once. Each marker above
+          lands here; provenance stays one glance away. */}
+      {sharedSources.length > 0 && (
+        <section className="mt-5 border-t border-[var(--panel-border)] pt-3">
+          {sharedSources.map((s, i) => (
+            <p
+              key={s.key}
+              id={`source-note-${i}`}
+              className="mt-1 text-[0.6875rem] leading-relaxed text-muted first:mt-0"
+            >
+              <span className="font-mono">{s.marker}</span>{" "}
+              {s.cite.kind === "canvass" ? (
+                <>
+                  Nominees per the{" "}
+                  <a
+                    href={s.cite.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="underline decoration-dotted underline-offset-2 hover:text-link"
+                  >
+                    certified primary canvass
+                  </a>{" "}
+                  ({s.cite.issuedBy}) · read {formatDateMDY(s.cite.readAt)}
+                </>
+              ) : (
+                <>
+                  <a
+                    href={s.cite.url ?? undefined}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="underline decoration-dotted underline-offset-2 hover:text-link"
+                  >
+                    {s.cite.org} filing
+                  </a>{" "}
+                  · read {formatDateMDY(s.cite.collectedAt)}
+                </>
+              )}
+            </p>
+          ))}
+        </section>
+      )}
+
       {/* The canvass caveat, once, under the AZ contests it governs. */}
       {set &&
         matched &&
@@ -646,23 +773,23 @@ export default async function BallotPage({
           analysis VERBATIM — the official explainer, rendered rather than
           merely linked. Data in hand is never displayed as missing. */}
       {measureContests.length > 0 && (
-        <section className="mt-6">
-          <h2 className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-muted">
-            Statewide measures
-          </h2>
+        <section className="mt-7">
+          <h2 className="t-structure text-paper-dim">Statewide measures</h2>
           {measureContests.map((contest) => {
             const analysis = analysisForContest(contest.id);
             const summary = summaryForContest(contest.id);
             return (
               <div
                 key={contest.id}
-                className="mt-3 rounded border border-[var(--panel-border)] p-4"
+                className="mt-3.5 rounded-[10px] border border-[var(--panel-border)] bg-[var(--panel-bg)] p-5 shadow-[var(--shadow-panel)]"
               >
-                <h3 className="text-[0.875rem] font-semibold">{contest.title}</h3>
+                <h3 className="text-[0.9375rem] font-semibold tracking-tight">
+                  {contest.title}
+                </h3>
 
                 {summary && analysis?.text && (
-                  <div className="mt-2.5 rounded bg-[var(--surface,rgba(255,255,255,0.04))] p-3">
-                    <p className="font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
+                  <div className="mt-2.5 rounded-md bg-[var(--surface,rgba(255,255,255,0.04))] p-3">
+                    <p className="t-eyebrow text-muted">
                       Plain-language summary — read the official text below
                     </p>
                     {/* 3b: the product's voice renders BOLD. */}
@@ -678,10 +805,10 @@ export default async function BallotPage({
                   // downward on click. The plain-language summary stays open
                   // above. Verbatim and whole once open — never excerpted.
                   <details className="mt-2.5">
-                    <summary className="cursor-pointer font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted hover:text-signal">
+                    <summary className="t-eyebrow cursor-pointer text-muted hover:text-link">
                       Official analysis — {analysis.sourceOrg}
                     </summary>
-                    <p className="mt-1.5 max-h-72 overflow-y-auto whitespace-pre-line rounded border border-[var(--panel-border)] p-3 text-[0.75rem] leading-relaxed text-paper-dim">
+                    <p className="mt-1.5 max-h-72 overflow-y-auto whitespace-pre-line rounded-md border border-[var(--panel-border)] p-3 text-[0.75rem] leading-relaxed text-paper-dim">
                       {analysis.text}
                     </p>
                   </details>
@@ -741,14 +868,12 @@ export default async function BallotPage({
       {/* Our gaps, stated as ours — never smoothed into implied
           completeness. Distinct from the authorities' absence statements. */}
       {matched && coverageNotes.length > 0 && (
-        <section className="mt-6 rounded border border-dashed border-[var(--panel-border)] p-4">
-          <h2 className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-muted">
-            Not here yet
-          </h2>
+        <section className="mt-6 rounded-[10px] border border-dashed border-[var(--panel-border)] p-4">
+          <h2 className="t-structure text-paper-dim">Not here yet</h2>
           {coverageNotes.map((note) => (
             <p
               key={note}
-              className="mt-2 text-[0.75rem] leading-relaxed text-paper-dim"
+              className="mt-2 text-[0.75rem] leading-relaxed text-voice"
             >
               {note}
             </p>
@@ -761,7 +886,7 @@ export default async function BallotPage({
           {matched.absences.map((absence) => (
             <section
               key={absence.ocdId}
-              className="mt-5 rounded border border-[var(--panel-border)] p-4"
+              className="mt-5 rounded-[10px] border border-[var(--panel-border)] p-4"
             >
               <p className="text-[0.8125rem] leading-relaxed text-paper-dim">
                 {absence.statement}
@@ -771,7 +896,7 @@ export default async function BallotPage({
                   href={absence.provenance.sourceUrl ?? undefined}
                   target="_blank"
                   rel="noreferrer"
-                  className="underline decoration-dotted"
+                  className="underline decoration-dotted underline-offset-2 hover:text-link"
                 >
                   {absence.provenance.sourceOrg}
                 </a>{" "}
@@ -780,7 +905,7 @@ export default async function BallotPage({
             </section>
           ))}
 
-          <p className="mt-6 text-[0.75rem] leading-relaxed text-muted">
+          <p className="mt-6 text-[0.75rem] leading-relaxed text-voice">
             {NEUTRAL_NOTE}
           </p>
         </>
@@ -790,22 +915,31 @@ export default async function BallotPage({
           pattern. It carried the same sentence under every contest before;
           the distinction from the reaction buttons lives here now. */}
       {matched && matched.contests.length > 0 && (
-        <p className="mt-6 text-[0.6875rem] leading-relaxed text-muted">
+        <p className="mt-6 text-[0.6875rem] leading-relaxed text-voice">
           &ldquo;What do you think?&rdquo; picks are saved on this device only
           — we never see them. The Yes/No/Unsure reaction buttons are
           different: those answers join anonymous local totals.{" "}
-          <Link href="/transparency" className="underline decoration-dotted">
+          <Link
+            href="/transparency"
+            className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
+          >
             How we handle data →
           </Link>
         </p>
       )}
 
-      <p className="mt-8 border-t border-[var(--panel-border)] pt-4 text-[0.75rem] text-muted">
-        <Link href="/" className="underline decoration-dotted">
+      <p className="mt-8 border-t border-[var(--panel-border)] pt-4 text-[0.75rem]">
+        <Link
+          href="/"
+          className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
+        >
           Back to the map
         </Link>{" "}
-        ·{" "}
-        <Link href="/transparency" className="underline decoration-dotted">
+        <span className="text-muted">·</span>{" "}
+        <Link
+          href="/transparency"
+          className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
+        >
           How we handle data
         </Link>
       </p>

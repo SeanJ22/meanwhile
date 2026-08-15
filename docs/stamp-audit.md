@@ -8,7 +8,7 @@ walked straight past the `Author-revised` stamp on the disclosure rule.
 each one, and the corrected date is typed into `CLAUDE.md` by hand from
 `pnpm stamp` or from the recovered column below.**
 
-Run on 2026-08-15 (America/Phoenix). 11 stamp(s) audited.
+Run on 2026-08-15 (America/Phoenix). 13 stamp(s) audited.
 
 **Method.** Each rule's opening clause — the bold title it leads with — is a
 long string that entered `CLAUDE.md` once. `git log -S<clause> -- CLAUDE.md`
@@ -32,19 +32,21 @@ lying. The recovered dates come from the unfiltered pickaxe.
 | The stranger test. | 2026-08-14 | 2026-08-14 | 0 | `b25ac80` 2: NH/NJ depth — Kelly cards, the name-case pass, Newbury's Select Board, and the office explainers |
 | Coverage claims are made against the official universe, n… | 2026-08-14 | 2026-08-14 | 0 | `b25ac80` 2: NH/NJ depth — Kelly cards, the name-case pass, Newbury's Select Board, and the office explainers |
 | Organizations render as filed, never characterized. | 2026-08-14 | 2026-08-14 | 0 | `1f00818` 7: two standing rules into CLAUDE.md |
-| A photo ships on one of two bases, and never on a third. | 2026-08-14 | 2026-08-14 | 0 | `81ce4d8` The tester's mobile pass: the bleed fenced, the ballot found, 281 faces |
+| A photo ships through one of four doors, and the composit… | 2026-08-15 | **NOT FOUND** | — | — |
+| A photo ships through one of four doors, and the composit… | 2026-08-13 | **NOT FOUND** | — | — |
 | Equal effort per candidate within a race. | 2026-08-14 | 2026-08-14 | 0 | `81ce4d8` The tester's mobile pass: the bleed fenced, the ballot found, 281 faces |
 | Every blurb carries its source class. | 2026-08-14 | 2026-08-14 | 0 | `1f00818` 7: two standing rules into CLAUDE.md |
 | Every production probe row a session creates is NAMED in … | 2026-08-15 | 2026-08-15 | 0 | `0b94547` The documents: section 24, the walk, the brief, and the probe-rows rule |
 | The ripcord doctrine — legally-open features ship behind … | 2026-08-13 | 2026-08-13 | 0 | `56d8787` 7: the session's documents — §14, the ripcord doctrine, the rows, the rungs, and the brief |
 | A join that can collapse must be asked for distinctness —… | 2026-08-14 | 2026-08-14 | 0 | `8046820` 1: the FEC replication bug (D40) — the cache key, not the join |
+| The zip playbook is append-only, and every depth run ends… | 2026-08-15 | **NOT FOUND** | — | — |
 | Disclosure at the point of capture — the one-time acknowl… | 2026-08-13 | 2026-08-13 | 0 | `8fa5759` 3: the defect batch — what-first titles, the narrowing modal, the one-time disclosure, candidate reactions, the mayor, the past, the smalls |
 
 ## What the deltas say
 
 - **0 stamp(s) disagree with git history.**
 - **0 stamp(s) are still later than today** (2026-08-15) — a date that had not happened when it was written.
-- **0 stamp(s) could not be recovered** and are printed `NOT FOUND` rather than guessed.
+- **3 stamp(s) could not be recovered** and are printed `NOT FOUND` rather than guessed.
 
 ## The literal `--diff-filter=A` result, per stamp
 
@@ -54,12 +56,14 @@ lying. The recovered dates come from the unfiltered pickaxe.
 | The stranger test. | none | 1 |
 | Coverage claims are made against the official universe, n… | none | 1 |
 | Organizations render as filed, never characterized. | none | 1 |
-| A photo ships on one of two bases, and never on a third. | none | 1 |
+| A photo ships through one of four doors, and the composit… | none | 0 |
+| A photo ships through one of four doors, and the composit… | none | 0 |
 | Equal effort per candidate within a race. | none | 1 |
 | Every blurb carries its source class. | none | 1 |
 | Every production probe row a session creates is NAMED in … | none | 1 |
 | The ripcord doctrine — legally-open features ship behind … | none | 1 |
 | A join that can collapse must be asked for distinctness —… | none | 1 |
+| The zip playbook is append-only, and every depth run ends… | none | 0 |
 | Disclosure at the point of capture — the one-time acknowl… | none | 1 |
 
 A `1` in the last column means the clause entered the file exactly once and

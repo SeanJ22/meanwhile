@@ -16,6 +16,7 @@
     "db:migrate": "drizzle-kit migrate",
     "ingest": "tsx scripts/ingest.ts",
     "meetings:report": "tsx scripts/coverage-report.ts",
+    "census:zip": "tsx scripts/census-who-governs.mts",
     "zcta:fetch": "tsx scripts/fetch-zcta-centroids.ts",
     "districts:fetch": "tsx scripts/fetch-districts.ts",
     "shoot": "tsx scripts/shoot.mts",

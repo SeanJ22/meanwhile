@@ -9,12 +9,14 @@ import {
 } from "@/lib/signal/intake-limits";
 import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
 import {
+  CONTEXT_RESTRICTED_VALUES,
   isPlausibleTargetId,
   isValidReactionKey,
   isValidReactionValue,
   isValidTargetType,
 } from "@/lib/signal/reactions";
 import { getCandidateTargetIds } from "@/lib/ballot/candidate-targets";
+import { getSingleCandidateTargetIds } from "@/lib/ballot/uncontested";
 import {
   getContributorReactionTargetIds,
   getFundingTargetIds,
@@ -140,6 +142,33 @@ export async function POST(request: Request) {
   }
   if (!validTargets.has(submission.targetId)) {
     return Response.json({ error: "unknown targetId" }, { status: 400 });
+  }
+
+  // The context table (M63): a value whose meaning depends on the contest's
+  // shape is refused wherever that shape does not hold. SOMEONE_ELSE only
+  // means what it says in a race with one candidate; accepted on a contested
+  // race it would pour a different question's answers into the same bucket.
+  // Enforced here rather than trusted to the UI — the UI decides what to
+  // offer, the server decides what is true.
+  if (CONTEXT_RESTRICTED_VALUES[submission.reaction] === "SINGLE_CANDIDATE_CONTEST") {
+    if (submission.targetType !== "CANDIDATE") {
+      return Response.json(
+        { error: "that answer does not apply to this target" },
+        { status: 400 },
+      );
+    }
+    let uncontested: Set<string>;
+    try {
+      uncontested = getSingleCandidateTargetIds();
+    } catch {
+      return Response.json({ error: "target data unavailable" }, { status: 503 });
+    }
+    if (!uncontested.has(submission.targetId)) {
+      return Response.json(
+        { error: "that answer is only offered in uncontested races" },
+        { status: 400 },
+      );
+    }
   }
 
   // ── The T08 protections, cheapest first — the ripcord.rateLimits family ──

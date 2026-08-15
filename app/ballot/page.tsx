@@ -505,6 +505,10 @@ export default async function BallotPage({
                             ? { zip, lat: centroid.lat, lng: centroid.lng }
                             : null
                         }
+                        // M63: counted from the lineup itself, so a contest
+                        // stops being uncontested the moment a second name
+                        // appears. The server derives the same set.
+                        singleCandidateContest={lineup.nominees.length === 1}
                       />
                       {isFederalContest(contest) && (
                         <CandidateFunding
@@ -588,6 +592,12 @@ export default async function BallotPage({
                             centroid && zip
                               ? { zip, lat: centroid.lat, lng: centroid.lng }
                               : null
+                          }
+                          // M63: the filing list's own count for this
+                          // contest — the same derivation the server makes
+                          // from the same committed file.
+                          singleCandidateContest={
+                            candidatesOf(set, contest).length === 1
                           }
                         />
                         {isFederalContest(contest) && (

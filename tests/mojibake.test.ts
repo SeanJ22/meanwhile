@@ -14,7 +14,8 @@ import {
  * M60 (2026-08-15) — no reader ever sees a decoding accident.
  *
  * The author's production report: every candidate blurb's attribution line
- * read `From the candidate's site â€" cindewarmington.com`. One em-dash
+ * read `From the candidate's site` followed by U+00E2 U+20AC U+201D and then
+ * the domain. One em-dash
  * (U+2014, `E2 80 94`) read back as cp1252 and re-encoded. One operation in
  * the 2026-08-14 photo session round-tripped the whole cards file through
  * such a decode — 28 existing em-dashes and 130 new ones, 158 in all, plus 34
@@ -31,11 +32,16 @@ const ROOT = join(import.meta.dirname, "..");
 
 /** Every tracked file whose contents can reach a reader as words. */
 function readerFacingFiles(): string[] {
-  return execFileSync("git", ["ls-files"], {
-    cwd: ROOT,
-    encoding: "utf8",
-    maxBuffer: 64e6,
-  })
+  // `--others --exclude-standard` alongside `--cached`: a file that is not
+  // committed yet is exactly when this check is most useful, and plain
+  // `git ls-files` cannot see one. (It could not see this test file either,
+  // which is how three files documenting the defect went unnoticed until
+  // the commit that tracked them.)
+  return execFileSync(
+    "git",
+    ["ls-files", "--cached", "--others", "--exclude-standard"],
+    { cwd: ROOT, encoding: "utf8", maxBuffer: 64e6 },
+  )
     .split("\n")
     .map((f) => f.trim())
     .filter(Boolean)
@@ -76,24 +82,38 @@ test("M60: no reader-facing string carries a mojibake signature", () => {
   );
 });
 
+/**
+ * The corrupt sequences are BUILT FROM CODEPOINTS here, never typed as
+ * literals.
+ *
+ * Not fussiness: the repo-wide scan above reads every tracked and untracked
+ * source file, and a test that spelled the defect out would be a permanent
+ * offender in the corpus it is guarding. Writing the bytes explicitly also
+ * says exactly which bytes are meant, which a literal in an editor cannot.
+ */
+const cp = (...codes: number[]) => String.fromCodePoint(...codes);
+/** U+00E2 U+20AC U+201D - an em-dash's E2 80 94 read as cp1252. */
+const BROKEN_EM_DASH = cp(0x00e2, 0x20ac, 0x201d);
+/** U+00C3 U+00A9 - an e-acute's C3 A9 read the same way. */
+const BROKEN_E_ACUTE = cp(0x00c3, 0x00a9);
+/** U+00E2 U+20AC U+2122 - a right single quote's E2 80 99. */
+const BROKEN_APOSTROPHE = cp(0x00e2, 0x20ac, 0x2122);
+
 test("M60: the detector actually detects the production sequence", () => {
-  // The exact bytes the author saw, built from codepoints so this test cannot
-  // itself be repaired into passing by a future encoding fix.
-  const broken =
-    "From the candidate's site â€” cindewarmington.com";
+  const broken = `From the candidate's site ${BROKEN_EM_DASH} cindewarmington.com`;
   assert.ok(hasMojibake(broken), "the detector missed the reported defect");
   assert.equal(findMojibake(broken).length, 1);
 
   assert.equal(
     repairMojibake(broken),
-    "From the candidate's site — cindewarmington.com",
+    "From the candidate's site \u2014 cindewarmington.com",
   );
 
   // The other shapes of the same accident.
-  assert.ok(hasMojibake("AndrÃ©s Cano"), "Ã© (é) not detected");
-  assert.ok(hasMojibake("donâ€™t"), "â€™ (’) not detected");
-  assert.equal(repairMojibake("AndrÃ©s Cano"), "Andrés Cano");
-  assert.equal(repairMojibake("donâ€™t"), "don’t");
+  assert.ok(hasMojibake(`Andr${BROKEN_E_ACUTE}s Cano`), "the e-acute shape not detected");
+  assert.ok(hasMojibake(`don${BROKEN_APOSTROPHE}t`), "the right-quote shape not detected");
+  assert.equal(repairMojibake(`Andr${BROKEN_E_ACUTE}s Cano`), "Andr\u00e9s Cano");
+  assert.equal(repairMojibake(`don${BROKEN_APOSTROPHE}t`), "don\u2019t");
 });
 
 test("M60: the detector leaves legitimate non-ASCII alone", () => {
@@ -121,10 +141,9 @@ test("M60: the detector leaves legitimate non-ASCII alone", () => {
  * success — the operation-that-can-do-nothing shape, wearing a repair's hat.
  */
 test("M60: repairing mixed text keeps the characters that were already right", () => {
-  const mixed =
-    "good — dash, bad â€” dash, good — again";
+  const mixed = `good \u2014 dash, bad ${BROKEN_EM_DASH} dash, good \u2014 again`;
   const fixed = repairMojibake(mixed);
-  assert.equal(fixed, "good — dash, bad — dash, good — again");
+  assert.equal(fixed, "good \u2014 dash, bad \u2014 dash, good \u2014 again");
   assert.equal((fixed.match(/—/g) ?? []).length, 3);
   assert.ok(!fixed.includes("�"), "the repair produced a replacement char");
 });

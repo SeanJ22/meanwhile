@@ -63,6 +63,16 @@ interface ReactionControlProps {
   /** The question in plain words — "Do you like this vote?" for votes. */
   prompt: string;
   context: ReactionViewContext | null;
+  /**
+   * This candidate is the only one in their contest (M63). The fourth
+   * answer — "Someone else" — renders only here, because only here does it
+   * mean anything: Yes is what an uncontested ballot forces, No cannot
+   * separate disliking the candidate from wanting a choice at all, and
+   * wanting somebody else is otherwise unsayable. The server enforces the
+   * same restriction; this prop decides what is offered, never what is
+   * allowed.
+   */
+  singleCandidateContest?: boolean;
 }
 
 const CHOICES: { value: ReactionValue; label: string }[] = [
@@ -71,12 +81,19 @@ const CHOICES: { value: ReactionValue; label: string }[] = [
   { value: "UNSURE", label: "Unsure" },
 ];
 
+const SOMEONE_ELSE: { value: ReactionValue; label: string } = {
+  value: "SOMEONE_ELSE",
+  label: "Someone else",
+};
+
 export function ReactionControl({
   targetType,
   targetId,
   prompt,
   context,
+  singleCandidateContest = false,
 }: ReactionControlProps) {
+  const choices = singleCandidateContest ? [...CHOICES, SOMEONE_ELSE] : CHOICES;
   // The device's stored answer reads through useSyncExternalStore: this
   // control now also renders inside server-rendered pages (the ballot, 3d),
   // and the store pattern hydrates against the server's blank then re-reads
@@ -120,8 +137,10 @@ export function ReactionControl({
   return (
     <div className="mt-1.5">
       <p className="text-[0.6875rem] text-muted">{prompt}</p>
-      <div className="mt-1 flex gap-1.5" role="group" aria-label={prompt}>
-        {CHOICES.map(({ value, label }) => {
+      {/* Wraps rather than squeezing: "Someone else" is a fourth control at
+          390px and four on one row would each be under a thumb's width. */}
+      <div className="mt-1 flex flex-wrap gap-1.5" role="group" aria-label={prompt}>
+        {choices.map(({ value, label }) => {
           // The full selected-and-counted rendering is earned by the 204;
           // a stored selection with no tap this session (outcome null) is
           // the device's own memory and renders selected on that basis.

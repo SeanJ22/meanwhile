@@ -4,9 +4,10 @@
  * 2026-08-15).
  *
  * The defect the author caught in production: every candidate blurb's
- * attribution line rendered `From the candidate's site â€" cindewarmington.com`.
- * That is a single em-dash (U+2014, UTF-8 `E2 80 94`) whose bytes were read
- * back as cp1252 — `E2`→â, `80`→€, `94`→" — and re-encoded as UTF-8. One
+ * attribution line rendered "From the candidate's site", then the three
+ * characters U+00E2 U+20AC U+201D, then the domain. Those three are a single
+ * em-dash (U+2014, UTF-8 `E2 80 94`) whose bytes were read back as cp1252 —
+ * each byte becoming its own character — and re-encoded as UTF-8. One
  * operation in the 2026-08-14 photo session round-tripped
  * `data/ballot/candidate-cards-2026.json` through such a decode and turned
  * all 28 of its em-dashes, plus 130 newly written ones, into that sequence;
@@ -17,8 +18,9 @@
  * catch, because the next one will be ad-hoc too.
  *
  * Running the check over the whole repo found two more the author had not
- * reported and nothing else would have: `Â»` in scraped meeting text, and
- * `CÃ­R` — Cír, the Tucson street abbreviation — in eight street-index files.
+ * reported and nothing else would have: a doubled guillemet in scraped
+ * meeting text, and a broken í in Cír, the Tucson street abbreviation, in
+ * eight street-index files.
  *
  * The rule this module exists to enforce: **no reader-facing string carries
  * a mojibake signature.** It is checked at the data, never patched at the

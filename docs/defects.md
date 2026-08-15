@@ -196,3 +196,23 @@ record. Row pointers:
   creates is named in its report.
 - Author's closures honoured: the Pima/Newbury library issue was not
   reinvestigated, and the limiter thresholds were not retuned.
+
+## 2026-08-15 — the design pass (the author's mandate arrived as the brief)
+
+The design pass ("Clean. Like Apple level clean.") was delivered as the
+session brief rather than entries here; the brief is committed at
+`docs/session-brief.md` for the record, the narrative is `state.md` §25.
+No untriaged entries were found at session-open. Row pointers:
+
+- Design system + type hierarchy → **M64** / **X05** (Done; DESIGN.md,
+  tokens, CLAUDE.md line).
+- Ask box flagship → **M65** (Done). Ballot + funding flagship, PAC-type
+  pills → **M66** (Done, guard-tested palette). Three registers → **M67**
+  (Done). Provenance footnotes → **M68** (Done).
+- The narrowing modal popping on free panning → **M69** (Done: passive
+  chip; root cause was the per-zip remount on ZCTA crossings).
+- Street input's visible payoff → **M70** (Done, device-side), with the
+  geocode-to-a-point remainder recorded as **D53** (blocked on author
+  approval of an external geocoder).
+- Clear-picks dialog → **M71** (Done).
+- Recorded, not built: **B15** (key votes tracker, doctrine locked).

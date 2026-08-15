@@ -4,7 +4,37 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-14, sixth session of the day. This session
+Last updated: 2026-08-15, second session of the day — **the design
+pass**: flagships look like flagships. The author's bar, verbatim:
+"Clean. Like Apple level clean." The system is COMMITTED, not sprinkled —
+`docs/DESIGN.md` plus tokens in `app/globals.css`: a type scale whose
+structural labels finally organize instead of whisper (LOCAL / STATE /
+FEDERAL as confident shelves — M64), the three registers replacing three
+grays (voice / link / data — M67), and a funding pill palette that never
+touches the party colors (guard-tested — M66). The ask box and the ballot
+got the flagship treatment (M65, M66) — the beat kept its exact words and
+timing; repeated contest provenance collapsed to footnotes, cited once at
+the page foot (M68); the narrowing modal that free panning re-triggered
+on every ZCTA crossing became a passive chip that never interrupts (M69);
+a typed street now visibly answers — containing districts shade, the
+overlay turns on, counters refresh (M70, with the geocode-to-a-point
+remainder recorded as D53, blocked on author approval of an external
+geocoder); clearing picks earns a real dialog (M71); and the one-line law
+entered CLAUDE.md (X05). The key-votes tracker — the tester's ask — is
+RECORDED whole as B15, not built. NOTHING behavioral changed except where
+the brief said so; all data rules stand. Walk: seven checks green at
+desktop and 390×844, before/after pairs in `screenshots/`; the walk's own
+production log rows are named in `docs/tester-pass.md` (six
+QUESTION_ASKED events and the page-load search rows, ≈09:55–10:38 local).
+See §25.
+
+Before that: 2026-08-15, first session of the day (§24) — the counters
+stopped lying (M57), the past came back to the Concluded filter (M58),
+the mojibake was repaired at the data (M60), party joined who-governs
+from election authorities' own filings (M61), and single-candidate
+contests gained "Someone else" (M63). Before that, 2026-08-14's seventh
+session (§23): the documents stopped making up dates. Before that:
+2026-08-14, sixth session of the day. That session
 executed the outside tester's **mobile** pass. Arizona was bleeding into
 New Hampshire through the ask box's topic templates and is fenced —
 shared explainer copy is jurisdiction-neutral by rule, place-specific
@@ -5032,3 +5062,150 @@ usefully, with what the walk cannot see.
 - 590 of 750 rendered people carry a portrait.
 - Next free tracker ids: **A12, B15, C05, D53, M64, P13, R20, T11, V09,
   X05**.
+
+## 25. The 2026-08-15 session (second of the day) — the design pass: flagships look like flagships
+
+The session dedicated to the author's bar, verbatim: "Clean. Like Apple
+level clean." A real pass with real deliverables, not adjective
+sprinkling — and NOTHING behavioral changed except where the brief said
+so: routing stayed deterministic, reactions stayed honest-outcome, every
+data rule stands. The brief is committed at `docs/session-brief.md`; the
+walk superseded `docs/tester-pass.md`.
+
+Session-open honesty: the brief's prerequisite (the truth-and-faces
+DEFECT rows Done) was confirmed against the tracker before anything was
+touched — M57, M58, M60, M61, M63 all Done; D50 In progress does not
+block. The brief also said "use the frontend-design skill"; no such skill
+is installed in this environment, so the pass applied its discipline
+directly — committed tokens, scale, restraint — and says so here rather
+than silently skipping the instruction.
+
+### The system (M64, X05 — items 3, 9)
+
+`docs/DESIGN.md` + tokens in `app/globals.css`, the single source of
+truth. Structural labels became `.t-structure` (11px mono 700, tracked,
+uppercase, with a hairline shelf rule) and `.t-eyebrow`; the old 9px
+whisper — SMALLER than the names it organized — is gone from
+who-governs, the door overlay, popup section labels, and the sidebar's
+filter headers. The one-line law entered CLAUDE.md: structural labels
+organize, content leads, flagship surfaces get flagship treatment, and
+reader-facing polish follows the committed tokens.
+
+### The three registers (M67 — item 4)
+
+Explainer voice, tappable links, and sourced data stopped being three
+grays: `--voice` (slate-blue) carries the app's guidance, `--link`
+(brand amber + dotted underline) carries everything tappable, and data
+keeps full-contrast text with mono numerals. Applied across the ballot,
+who-governs, the ask box, and funding. `text-muted` remains for pure
+metadata only.
+
+### The flagships (M65, M66 — items 1, 2, 2b)
+
+The ask box: raised block, the question as a real heading, an input that
+invites, a filled Ask. The "I got you... hang tight..." beat kept its
+exact words and ~3s timing (tests pin them) — only the dress changed.
+The answer renders under a signal eyebrow with contact cards — the phone
+number a large amber tel link, the source line attached.
+
+The ballot: the CTA header gained presence (shelf-ruled header, large
+mono date, tinted frame), contest cards became designed objects (title +
+right-aligned meta, office blurbs in voice, 64px photos, semibold
+names), and the reaction/pick prompts stopped whispering (the standing
+prominence rule folded in — the default "What do you think?" now carries
+the text register's weight, and every reaction prompt renders at
+0.8125rem medium).
+
+Funding: its own framed block; contributor rows read as designed records
+(name medium, amount right-aligned mono tabular); the PAC type labels
+render as pill badges — six families (teal/cyan/amber/gold/slate/stone),
+assigned once in `lib/funding/pill-colors.ts`, never using or
+approaching the party palette, tuned per theme, contrast checked at
+phone size in the walk. The pill is the tap target; the explainer
+behavior and every label are unchanged. `tests/pill-colors.test.ts` pins
+map completeness, the palette boundary, and that no pill token value
+duplicates a party color literal.
+
+### Footnoted provenance (M68 — item 5)
+
+When the IDENTICAL source line would repeat under every contest, it now
+renders a marker (`*`, `†`, `‡`…) at each contest title and the full
+citation ONCE at the page foot, anchor-linked. Distinct sources never
+collapse; a source used once keeps its inline line. De-cluttering, never
+de-sourcing — at 85701 the canvass line renders once instead of nine
+times.
+
+### The narrowing chip (M69 — item 6)
+
+The root cause found before fixing: the modal was keyed per zip, and a
+settled pan that crossed a ZCTA line changed the notice's zip, remounted
+the prompt, and popped the modal again — free panning triggered it
+constantly. It is now a passive chip in the who-governs card ("Narrow to
+this area?"): never modal, never overlays the map, expands IN PLACE on
+tap, collapse costs one tap and decides nothing, and within a session it
+only reappears when the resolved area changes. The approved wording
+(§9) is unchanged in the expanded state; declining stays one tap and
+device-recorded. The interaction rule is recorded in the component
+beside the trigger rule it supersedes.
+
+### The street's payoff (M70, D53 — item 7)
+
+Applying a street (or municipality) from the chip now: shades the
+containing municipality and school district on the map (a new `narrowed`
+feature-state, 0.12 fill — quieter than selection's 0.18, re-applied on
+the map's load signals so it appears the moment the polygon does), turns
+the boundary overlay on with the municipal + school layers active, and
+the who-governs list and DISTRICTS counter refresh through their
+existing derivations. Only an APPLY does this — declining or undoing
+never touches the reader's overlay settings. The remainder — geocoding
+the street to an actual POINT so meetings and officials re-center —
+needs a geocoder the repo doesn't have; adding one is an external-source
+addition CLAUDE.md requires asking before, and this session ran
+unattended. Recorded as D53 with the rejected alternative (shipping a
+division centroid as if it were the street's point) named.
+
+### The dialog (M71 — item 8)
+
+"Clear my picks" asks its same question in a real dialog now — portaled
+overlay, danger treatment on Clear, Keep focused — consistent with the
+pass's dialog language.
+
+### Recorded, not built
+
+**B15 — the key votes tracker** (the tester's ask), doctrine locked at
+recording time in the tracker row itself: author-approved list file,
+published inclusion criteria, VOTES ONLY, both parties' signature items
+by construction, rendered with existing machinery, never aggregated into
+any score, honest absences first-class, read-dates + a review pass each
+cycle, and the full candidate-entry list preserved. Awaiting the
+author's curated list.
+
+### The walk, and its own probe rows
+
+Seven checks green at desktop (1440×900) and 390×844, walked as a
+stranger at 85701; BEFORE/AFTER pairs for the ask box, the ballot, and
+who-governs in `screenshots/` (`before-*` / `after-*`), including the
+old modal (`before-narrowing-modal-desktop.png`) for contrast. No
+console errors on any shot.
+
+**Production rows this walk created, named (the probe-rows rule):** the
+dev server the walk drove carries the production `DATABASE_URL`, so its
+log writes landed in the real search log — six `QUESTION_ASKED` events
+("a pothole on my street" ×3, ≈09:55–10:11 local; "who fixes potholes"
+×3, ≈10:34–10:36 local; all routed, so topic id only), the zip-search
+rows of the walk's map-page loads at 85701 (about eighteen,
+≈09:55–10:38), and one settled-view row from the pan test (≈10:37). All were proving the
+redesigned surfaces; exclude them from any aggregate over 2026-08-15 at
+85701. No reaction-store or intake row was written.
+
+### State as of 2026-08-15, end of the design pass
+
+- The design system is committed: `docs/DESIGN.md`, tokens in
+  `app/globals.css`, the CLAUDE.md line. Future sessions build from it.
+- 507 tests green (including the new pill guards), lint clean (one
+  pre-existing warning in `scripts/tester-drive.mts`), production build
+  green, `verify-stamps` clean (11 audited, 0 disagreements).
+- `scripts/shoot.mts` gained `--ask`/`--askbeat`, `--fill`, `--scrollto`,
+  and tutorial seeding — the walk's driving vocabulary.
+- Next free tracker ids: **A12, B16, C05, D54, M72, P13, R20, T11, V09,
+  X06**.

@@ -677,3 +677,101 @@ question rather than an implied "nonpartisan".
   memory: the row cites the same filing the committed ballot record does, and
   `tests/party.test.ts` fails the build if the two surfaces ever disagree
   about the party or cite different records for it.
+
+### M62 — the certified-results rung, walked 2026-08-15
+
+The next rung, walked to the end for all twelve curated bodies. What it
+found first is worth stating before the results, because it would have
+produced a false "not found" for anyone who stopped one document early:
+
+**A general-election canvass usually does not print party.** Pima County's
+certified general canvass and the Morris County Clerk's official summary
+report both carry candidate names and vote totals and no affiliation at all.
+The documents that state party are:
+
+- **Arizona** — the certified **primary** canvass, where the races are
+  themselves headed by party: `DEM Board of Supervisors District 1`,
+  `REP Board of Supervisors District 4`.
+- **New Jersey** — the county clerk's certified **"Winners of the General
+  Election"**, which has a Party column (the summary report does not).
+- **New Hampshire** — the Secretary of State's certified county-office
+  results, which print the party as a letter beside the name:
+  `Steve Shurtleff, d`.
+
+**And the same documents prove the negative.** Arizona school district
+governing board races appear in Pima's general canvass with no party beside
+any candidate, and appear in the party-organised primary canvass under no
+party heading at all — they are not in that election. That is the election
+authority's own record saying these seats carry no party, which is a far
+stronger answer than "the district's page doesn't mention one".
+
+| Body | Partisanship | Record that settled it |
+|---|---|---|
+| Pima County Board of Supervisors | PARTISAN | AZ SoS, Official 2024 Primary Canvass — Pima County (races headed DEM/REP/GRN/LBT) |
+| Tucson Mayor & Council | PARTISAN | City of Tucson City Clerk: "The City of Tucson conducts regularly scheduled partisan elections" |
+| Rockaway Township Council | PARTISAN | Morris County Clerk, certified General Election Winners (Party column) |
+| Morris County Commissioners | PARTISAN | Morris County Clerk, certified General Election Winners |
+| Merrimack County Commissioners | PARTISAN | NH SoS, 2024 general county-office results (party letter per candidate) |
+| Tucson Unified Governing Board | NONPARTISAN | Pima certified canvasses — no party in the general, absent from the partisan primary |
+| Vail Unified Governing Board | NONPARTISAN | same |
+| Sunnyside Unified Governing Board | NONPARTISAN | same |
+| Amphitheater Unified Governing Board | NONPARTISAN | same |
+| Rockaway Township Board of Education | NONPARTISAN | N.J.S.A. 19:60-1 — "No party designation shall appear on any ballot to be used in a school election" |
+| Kearsarge Regional School Board | NONPARTISAN | RSA 671:20 — school ballots prepared "in the same manner as town clerks for non-partisan town elections" |
+| Newbury Selectboard | NONPARTISAN | Town of Newbury 2025 Annual Report — the moderator's certified March 2025 count, no party beside any town office |
+
+Newbury needed the town's own ballot rather than the statute: New Hampshire
+towns ADOPT a partisan or non-partisan ballot system under RSA 669, so the
+chapter alone cannot answer it for a particular town.
+
+**Two seats carry no party and that is the finding, not a gap in effort.**
+
+- **Pima District 5 (Andrés Cano).** The certified 2024 general canvass shows
+  the seat won by Adelita Grijalva. She left for the CD7 special and the
+  Board appointed Cano on 2025-04-15. There is no certified result naming his
+  party. Arizona requires a county-supervisor appointee to share the vacating
+  member's registration and the county's own call for applications said so —
+  a sound inference, and still not a certified result, so the card renders
+  nothing. The hunt also found the roster's term note was wrong ("Elected
+  November 2024 to a four-year term"); it now records the appointment.
+- **Rockaway Township at-large (Howard Morrison).** The seat with this term
+  was certified in November 2023 to Howard KRITZ. Morrison holds it per the
+  township's own council page and appears in NO certified winners list for
+  2023, 2024 (Rockaway Township: "NO LOCAL ELECTION") or 2025 — an absence
+  checked in all three documents rather than assumed. Appointed, so no party.
+  The hunt also corrected the mayor's term note, which still said "unexpired"
+  two years after he won a full four-year term.
+
+#### The NH ladder, rung by rung
+
+The author's standing ladder for any `sos.nh.gov` read, walked here for the
+Merrimack County commissioners and recorded in full because a 403 is never an
+answer:
+
+| Rung | Attempt | `attemptedAt` | Result |
+|---|---|---|---|
+| 1 | The committed filing snapshot in this repo | 2026-08-15 | Holds the 2026 cumulative candidate filings, not county results — wrong document, honestly wrong |
+| 2 | Search-index cache | 2026-08-15 | **HIT** — returned the exact document path `…/inline-documents/sonh/2024 County Commissioners by district.pdf`, proving the file exists and is indexed |
+| 3 | Direct document path under `sos.nh.gov/sites/g/files/…` | 2026-08-15 | **403** to the identified client, for the district PDF and for `2024-ge-county-offices-merrimack_1.xls`. Tried per document, as instructed. The block is host-wide, not page-only |
+| 4 | Internet Archive dated mirror | 2026-08-15 | **HIT** — snapshot `20260130123951` of the 2024 results index, and `20250728184156` for 2022. Both `.xls` files fetched at 200. The archive URL, with its date in it, is what the rows cite: it is the document that was actually read |
+| 5 | The author's residential browser | — | Not needed |
+
+No residential proxy, no spoofed origin, no circumvention of any kind. Rung 3
+is worth keeping even though it failed here: the same trick **worked** on
+`newbury.nh.gov`, which 403s its HTML pages and served
+`/sites/g/files/vyhlif4761/f/news/town_of_newbury_2025_report.pdf` at 200.
+Same CMS, same wall, different answer per host — which is exactly why the
+rung is attempted per document rather than assumed from the host.
+
+**Two more hosts that 403 a general-purpose fetcher and admit this project's
+identified User-Agent** (recorded so nobody records them as walls):
+`tucsonaz.gov` and `morriscountyclerk.org`. Both served every certified
+document requested, first try, at a serialized pace.
+
+**One document could not be read and is named rather than skipped**: the City
+of Tucson's certified Ward 3 primary recount (`certified-primary-election-
+ward-3-recount.pdf`) is a scan with no text layer. It does not change the
+party finding — Kevin Dahl appears in the certified primary results as a
+candidate in the `DEM Council Member Ward 3` contest either way, and the
+city's own council page has him in the seat — but the recount margin itself
+was not read from it.

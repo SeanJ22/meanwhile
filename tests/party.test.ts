@@ -190,3 +190,107 @@ for (const [zip, [lat, lng]] of Object.entries(ZIPS)) {
     );
   });
 }
+
+/* ------------------------------------------------------- M62 (2026-08-15) --- */
+
+/**
+ * The certified-results rung. M61 established that a roster must SAY whether
+ * its seats carry a party; M62 went and read the party off the record that
+ * states it, for every curated jurisdiction. These guards hold the shape of
+ * that answer so it cannot decay into the thing it replaced — a party that
+ * looks sourced because a URL is present.
+ */
+
+/** Anything a party may NOT be read from, however convenient. */
+const FORBIDDEN_PARTY_SOURCES = [
+  "democrats.org",
+  "gop.com",
+  "democraticparty",
+  "republicanparty",
+  "ballotpedia.org",
+  "wikipedia.org",
+  "vote411.org",
+  "facebook.com",
+  "twitter.com",
+  "x.com",
+];
+
+test("M62: no curated roster is left UNDETERMINED, and each cites what settled it", () => {
+  const undetermined = BODY_ROSTERS.filter((r) => r.partisanship === "UNDETERMINED");
+  assert.deepEqual(
+    undetermined.map((r) => r.bodyId),
+    [],
+    `${undetermined.length} roster(s) still UNDETERMINED — M62 walked all twelve`,
+  );
+
+  // Stated with its denominator, so a roster added without a partisanship
+  // finding shows up as a number rather than slipping in as a default.
+  const settled = BODY_ROSTERS.filter((r) => r.partisanshipSourceUrl).length;
+  assert.equal(
+    settled,
+    BODY_ROSTERS.length,
+    `only ${settled} of ${BODY_ROSTERS.length} rosters cite a partisanship record`,
+  );
+});
+
+test("M62: every party on a curated local is dated and read from an election authority", () => {
+  let held = 0;
+  let members = 0;
+
+  for (const roster of BODY_ROSTERS) {
+    for (const member of roster.members) {
+      members++;
+      if (!member.partyLabel) continue;
+      held++;
+
+      assert.ok(
+        member.partySourceUrl?.startsWith("https://"),
+        `${member.name}: party with no https record`,
+      );
+      // A record without a read date cannot be aged, and an undated claim is
+      // how a stale party survives an election.
+      assert.ok(
+        /^\d{4}-\d{2}-\d{2}$/.test(member.partyCollectedAt ?? ""),
+        `${member.name}: party with no collectedAt`,
+      );
+      assert.ok(
+        (member.partySourceOrg ?? "").length > 10,
+        `${member.name}: party with no publishing body named`,
+      );
+
+      const url = (member.partySourceUrl ?? "").toLowerCase();
+      for (const bad of FORBIDDEN_PARTY_SOURCES) {
+        assert.ok(
+          !url.includes(bad),
+          `${member.name}: party read from ${bad} — certified results or silence`,
+        );
+      }
+    }
+  }
+
+  // The denominator, printed on every run: 30 of 71 on 2026-08-15, the rest
+  // split between nonpartisan seats and two appointed vacancies. A drop here
+  // means a party stopped shipping; a jump means one arrived unreviewed.
+  console.log(`\n  party  ${held} of ${members} curated local member(s) carry a party\n`);
+  assert.ok(
+    held >= 30,
+    `only ${held} of ${members} curated local members carry a party — M62 landed 30`,
+  );
+});
+
+test("M62: an appointed member on a partisan body renders no party", () => {
+  // Both were found by the hunt, not reported: Pima's District 5 was won in
+  // 2024 by someone else and filled by Board appointment, and Rockaway's
+  // at-large president holds a seat certified to a different name. Neither
+  // has a certified result naming a party, so neither may carry one — this
+  // is the exact place a plausible guess would be most tempting.
+  const appointed = ["roster:pima#5", "roster:rockaway#1"];
+  for (const id of appointed) {
+    const member = BODY_ROSTERS.flatMap((r) => r.members).find((m) => m.id === id);
+    assert.ok(member, `${id} is gone from the rosters — update this guard with it`);
+    assert.ok(
+      !member.partyLabel,
+      `${member.name}: carries a party with no certified result behind it`,
+    );
+  }
+});

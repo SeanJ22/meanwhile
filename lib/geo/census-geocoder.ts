@@ -153,6 +153,33 @@ export function coherentMidpoint(
   };
 }
 
+/**
+ * What a street lookup can honestly conclude (the author's ruling,
+ * 2026-08-15).
+ *
+ * The previous shape was `StreetPoint | null`, and it collapsed two very
+ * different answers into the same null: "this street is nowhere we can find"
+ * and "this street runs across the map and a point would be a guess". The
+ * second one has an answer the reader can give — **which house number?** —
+ * and refusing to ask for it was throwing away the only thing that could
+ * resolve it. Green Pond Road in 07866 is the case: its sampled numbers land
+ * kilometres apart because the street genuinely crosses jurisdictions.
+ *
+ * The refusal remains for `NOT_FOUND`, and for `CROSSES` when the reader
+ * declines to answer. The house number is used for the geocode and, exactly
+ * like the resulting point, is never logged or stored.
+ */
+export type StreetLookup =
+  | { kind: "POINT"; point: StreetPoint }
+  | {
+      kind: "CROSSES";
+      /** The street as typed, cleaned — what the question is about. */
+      street: string;
+      /** How far the samples spread, km. Carried for tests, rendered nowhere. */
+      spreadKm: number;
+    }
+  | { kind: "NOT_FOUND" };
+
 export interface GeocodeOptions {
   fetchImpl?: typeof fetch;
   signal?: AbortSignal;
@@ -166,14 +193,11 @@ export interface GeocodeOptions {
  * Returns `null` for every failure mode there is, which is what makes the
  * caller's fallback a single branch instead of a matrix.
  */
-export async function locateStreetInZip(
-  street: string,
+async function sampleStreet(
+  cleaned: string,
   zip: string,
-  options: GeocodeOptions = {},
-): Promise<StreetPoint | null> {
-  const cleaned = streetOnly(street);
-  if (cleaned.length < 3 || !/^\d{5}$/.test(zip)) return null;
-
+  options: GeocodeOptions,
+): Promise<{ lat: number; lng: number }[]> {
   const impl = options.fetchImpl ?? fetch;
   const deadline = Date.now() + (options.timeoutMs ?? 8000);
   const points: { lat: number; lng: number }[] = [];
@@ -203,7 +227,18 @@ export async function locateStreetInZip(
       options.signal?.removeEventListener("abort", onOuterAbort);
     }
   }
+  return points;
+}
 
+export async function locateStreetInZip(
+  street: string,
+  zip: string,
+  options: GeocodeOptions = {},
+): Promise<StreetPoint | null> {
+  const cleaned = streetOnly(street);
+  if (cleaned.length < 3 || !/^\d{5}$/.test(zip)) return null;
+
+  const points = await sampleStreet(cleaned, zip, options);
   const midpoint = coherentMidpoint(points);
   if (!midpoint) return null;
 
@@ -214,4 +249,103 @@ export async function locateStreetInZip(
     samples: points.length,
     spreadKm: midpoint.spreadKm,
   };
+}
+
+/** The widest gap between a set of points, km. */
+function spreadOf(points: readonly { lat: number; lng: number }[]): number {
+  let spreadKm = 0;
+  for (const a of points) {
+    for (const b of points) {
+      spreadKm = Math.max(spreadKm, haversineKm(a.lat, a.lng, b.lat, b.lng));
+    }
+  }
+  return spreadKm;
+}
+
+/**
+ * The same lookup, but able to say *which* kind of no it is.
+ *
+ * `locateStreetInZip` above stays exactly as it was — a point or nothing —
+ * because plenty of callers only want the point. This one distinguishes the
+ * street we cannot find from the street that crosses district lines, so the
+ * input can ask the one question that resolves the second (the author's
+ * ruling, 2026-08-15).
+ */
+export async function lookupStreetInZip(
+  street: string,
+  zip: string,
+  options: GeocodeOptions = {},
+): Promise<StreetLookup> {
+  const cleaned = streetOnly(street);
+  if (cleaned.length < 3 || !/^\d{5}$/.test(zip)) return { kind: "NOT_FOUND" };
+
+  const points = await sampleStreet(cleaned, zip, options);
+  if (points.length === 0) return { kind: "NOT_FOUND" };
+
+  const midpoint = coherentMidpoint(points);
+  if (midpoint) {
+    return {
+      kind: "POINT",
+      point: {
+        lat: midpoint.lat,
+        lng: midpoint.lng,
+        street: cleaned,
+        samples: points.length,
+        spreadKm: midpoint.spreadKm,
+      },
+    };
+  }
+
+  // Matches that disagree. The street is real and we know where several
+  // points on it are; what we do not know is which one the reader lives near,
+  // and that is a question rather than a failure.
+  return { kind: "CROSSES", street: cleaned, spreadKm: spreadOf(points) };
+}
+
+/**
+ * One exact address, on the device. The answer to the crossing question.
+ *
+ * A single request, because a house number identifies a point and there is
+ * nothing to average. The number is used here and nowhere else: it is not
+ * returned in `StreetPoint`, not logged, and not stored — the same rule the
+ * point itself ships under.
+ */
+export async function locateAddressInZip(
+  houseNumber: string,
+  street: string,
+  zip: string,
+  options: GeocodeOptions = {},
+): Promise<StreetPoint | null> {
+  const number = houseNumber.trim().replace(/[^0-9a-z-]/gi, "");
+  const cleaned = streetOnly(street);
+  if (!number || cleaned.length < 3 || !/^\d{5}$/.test(zip)) return null;
+
+  const impl = options.fetchImpl ?? fetch;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), options.timeoutMs ?? 8000);
+  const onOuterAbort = () => controller.abort();
+  options.signal?.addEventListener("abort", onOuterAbort);
+  try {
+    const response = await impl(
+      censusGeocodeUrl(`${number} ${cleaned}, ${zip}`),
+      { headers: { accept: "application/json" }, signal: controller.signal },
+    );
+    if (!response.ok) return null;
+    const point = parseCensusPoint(await response.json());
+    if (!point) return null;
+    return {
+      lat: point.lat,
+      lng: point.lng,
+      // The STREET, never the full address: what the card renders must not
+      // become a household.
+      street: cleaned,
+      samples: 1,
+      spreadKm: 0,
+    };
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+    options.signal?.removeEventListener("abort", onOuterAbort);
+  }
 }

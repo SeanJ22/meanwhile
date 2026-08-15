@@ -229,3 +229,28 @@ record. No untriaged entries were found at session-open. Row pointers:
 - The NH who-governs card off the top at desktop → **M72** (Done).
 - The sidebar footer under the map legend at 390px → **M73** (Done).
 - Picks from another state's ballot unlabelled → **M74** (Done).
+
+## 2026-08-15 — the session brief (the depth session: NH and NJ)
+
+The author's directive arrived as the session brief rather than entries here;
+the brief is committed at `docs/session-brief.md` for the record. No untriaged
+entries were found at session-open. Row pointers:
+
+- The state folders and the zip playbook born → **R20** (Done), anchored at
+  **R13**; the playbook clause into CLAUDE.md.
+- The adapter window that dropped sixty days of history at every zip →
+  **M76** (Done). Found by asking why Newbury showed three meetings when its
+  portal publishes twenty sittings in 2026.
+- Rockaway's Planning Board and Board of Adjustment → **M77** (Done): the
+  boards were in a different iCal category from the council.
+- Morris Hills Regional, and the published-annual-schedule shape → **M78**
+  (Done). A district running no agenda vendor at all.
+- Newbury's other boards and Kearsarge → **M79** (In progress, never
+  blocked): both hosts refuse this pipeline; the browser rung is the next rung.
+- LegiScan → **D49** (Done), with **D54** recorded for the scheduled refresh
+  and its repo secret.
+- Photos under doors 3 and 4 → **D50** round 5 (still In progress: 592 of 750).
+- The street input's question → shipped; **M80** opened for the CORS wall the
+  walk found under it, which also names what D53 has never been able to do in
+  a browser.
+- The jurisdiction badge → **M81** (deferred whole, nothing half-built).

@@ -3,7 +3,11 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { useNarrowing } from "@/hooks/use-narrowing";
-import { locateStreetInZip, type StreetPoint } from "@/lib/geo/census-geocoder";
+import {
+  locateAddressInZip,
+  lookupStreetInZip,
+  type StreetPoint,
+} from "@/lib/geo/census-geocoder";
 
 /**
  * The reader disambiguation affordance — M26/4.6.3c, rebuilt as a PASSIVE
@@ -77,6 +81,16 @@ export function NarrowingPrompt({
   const [expanded, setExpanded] = useState(false);
   const [streetInput, setStreetInput] = useState("");
   const [locating, setLocating] = useState(false);
+  /**
+   * The street the reader picked whose sampled numbers disagreed on where it
+   * is (the author's ruling, 2026-08-15). Non-null means the input is asking
+   * the one question that resolves it. The house number lives in local state
+   * for exactly as long as the request does — it is never put in the
+   * narrowing store, never sent anywhere but the Census geocoder, and never
+   * rendered back.
+   */
+  const [crossingStreet, setCrossingStreet] = useState<string | null>(null);
+  const [houseNumber, setHouseNumber] = useState("");
   const narrowing = useNarrowing(zip);
 
   // Per-zip state resets by remount: the parent keys this component on the
@@ -108,6 +122,24 @@ export function NarrowingPrompt({
     return names.slice(0, 8);
   }, [index, streetInput]);
 
+  const applyHouseNumber = () => {
+    if (!crossingStreet || !onPoint) return;
+    const number = houseNumber;
+    setLocating(true);
+    void locateAddressInZip(number, crossingStreet, zip)
+      .then((point) => {
+        if (point) {
+          onPoint(point);
+          setCrossingStreet(null);
+        }
+      })
+      .finally(() => {
+        setLocating(false);
+        // Dropped the moment the request is done, whatever it returned.
+        setHouseNumber("");
+      });
+  };
+
   if (!index) return null;
 
   const hasSelection = narrowing.divisions.length > 0;
@@ -119,21 +151,77 @@ export function NarrowingPrompt({
       (d) => narrowing.divisions.includes(d.ocdId),
     );
     return (
-      <p className="mt-2 text-[0.6875rem] leading-relaxed text-voice">
-        Narrowed to {chosen.map((c) => c.label).join(", ")} — stored only on
-        this device.
-        {locating ? " Finding the street on the map…" : ""}{" "}
-        <button
-          type="button"
-          className="cursor-pointer text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
-          onClick={() => {
-            narrowing.clear();
-            onNarrowed?.();
-          }}
-        >
-          undo
-        </button>
-      </p>
+      <>
+        <p className="mt-2 text-[0.6875rem] leading-relaxed text-voice">
+          Narrowed to {chosen.map((c) => c.label).join(", ")} — stored only on
+          this device.
+          {locating ? " Finding the street on the map…" : ""}{" "}
+          <button
+            type="button"
+            className="cursor-pointer text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
+            onClick={() => {
+              narrowing.clear();
+              setCrossingStreet(null);
+              setHouseNumber("");
+              onNarrowed?.();
+            }}
+          >
+            undo
+          </button>
+        </p>
+        {/* The author's ruling, 2026-08-15: a street whose sampled numbers
+            disagree gets a QUESTION rather than a refusal. Optional in the
+            same way the chip is — ignoring it leaves the narrowing exactly
+            as it already applied, which is why there is no blocking state
+            and no error if it is skipped. */}
+        {crossingStreet && (
+          <div className="mt-1.5">
+            <label
+              htmlFor="wtp-house-number"
+              className="block text-[0.6875rem] leading-relaxed text-paper-dim"
+            >
+              This street crosses district lines — what&apos;s the house
+              number?
+            </label>
+            <div className="mt-1 flex items-center gap-1.5">
+              <input
+                id="wtp-house-number"
+                inputMode="numeric"
+                autoComplete="off"
+                value={houseNumber}
+                onChange={(e) => setHouseNumber(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") applyHouseNumber();
+                }}
+                placeholder="e.g. 808"
+                className="w-24 rounded-md border border-[var(--panel-border)] bg-[var(--panel-bg)] px-2 py-1 text-[0.75rem] text-paper outline-none focus:border-[var(--signal)]"
+              />
+              <button
+                type="button"
+                onClick={applyHouseNumber}
+                disabled={!houseNumber.trim() || locating}
+                className="cursor-pointer rounded-md border border-[var(--panel-border)] px-2 py-1 text-[0.75rem] text-paper-dim hover:border-[var(--signal)]/60 hover:text-paper disabled:cursor-default disabled:opacity-40"
+              >
+                Use it
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setCrossingStreet(null);
+                  setHouseNumber("");
+                }}
+                className="cursor-pointer text-[0.6875rem] text-muted underline decoration-dotted underline-offset-2 hover:text-paper"
+              >
+                skip
+              </button>
+            </div>
+            <p className="mt-1 text-[0.625rem] leading-relaxed text-muted">
+              Used once to place the point, then dropped. Never stored, never
+              sent to us.
+            </p>
+          </div>
+        )}
+      </>
     );
   }
 
@@ -156,12 +244,19 @@ export function NarrowingPrompt({
 
     if (!onPoint) return;
     setLocating(true);
-    void locateStreetInZip(name, zip)
-      .then((point) => {
-        if (point) onPoint(point);
+    setCrossingStreet(null);
+    void lookupStreetInZip(name, zip)
+      .then((result) => {
+        if (result.kind === "POINT") onPoint(result.point);
+        // The street crosses district lines. Rather than refuse, ask the one
+        // question that settles it (the author's ruling). The narrowing has
+        // already applied either way — this is extra precision, and declining
+        // to answer leaves exactly the state D53 shipped.
+        else if (result.kind === "CROSSES") setCrossingStreet(result.street);
       })
       .finally(() => setLocating(false));
   };
+
 
   // The chip: quiet, in the card's flow, decides nothing.
   if (!expanded) {

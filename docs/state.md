@@ -1899,7 +1899,22 @@ replaced.
 
 ## 7. Current state of the branch
 
-**Working on `claude/party-meetings-faces-0815`** (2026-08-15, third
+**Working on `claude/nh-nj-depth-0815`** (2026-08-15, fourth session of
+the day), branched from `main` at the PR #37 merge — the session §27
+records: the state folders and the zip playbook born (R20), the adapter
+window that dropped sixty days of history at every zip (M76), Rockaway's
+other two boards and the calendar category that hid them (M77), Morris
+Hills Regional and the published-annual-schedule shape (M78), the two NH
+hosts that refuse this pipeline (M79, In progress), LegiScan and the join
+that fails silently (D49), the four doors reopening the challenger sweep
+(D50 round 5, 590 → 592), the street input that asks instead of only
+refusing, and the CORS wall the walk found under it (M80). M81 — the
+jurisdiction badge — deferred whole and named, nothing half-built.
+**test 556 pass · lint clean (5 pre-existing warnings, 0 errors) · build
+exit 0**, the two-zip walk `tester-walk-0815c` with zero failures and one
+BLOCKED that names its reason.
+
+**Previously: `claude/party-meetings-faces-0815`** (2026-08-15, third
 session of the day), branched from `main` at the snapshot-refresh commit
 after the PR #36 merge — the session §26 records: party for local
 partisan bodies from certified results (M62), the day-not-hour meeting
@@ -5461,3 +5476,258 @@ tapped a reaction, and the geocoder writes nowhere by construction.
   `tests/doc-dates.test.ts`.
 - Next free tracker ids: **A12, B16, C05, D54, M76, P13, R20, T11, V09,
   X06**.
+
+## 27. The 2026-08-15 session (fourth of the day) — the depth session: New Hampshire and New Jersey get their bodies, and the playbook is born
+
+Branch `claude/nh-nj-depth-0815`. 556 tests green, lint clean (5
+pre-existing warnings, 0 errors), production build exit 0.
+
+### The one-line version
+
+The two states the author called "light and sparse" got their governments:
+07866 went from three bodies to seven and from 22 meetings to 49, and the
+adapters stopped silently throwing away sixty days of published history at
+every zip. State legislators now carry their voting records. The knowledge
+that used to be re-derived every session is a document. And the walk found
+that a feature shipped as working last session cannot run in a browser at
+all.
+
+### The shape of the session
+
+The author's instruction was density, and the honest way to get density is
+not to lower the bar — it is to find the governments that were already
+there. Four of the five findings below are the same shape: **something was
+being read as "that's all there is" when it was actually "that's all we
+asked for."**
+
+- The adapters asked for 30 days of history while the app served 90.
+- Rockaway's wired calendar feed carried one body, and a second feed id
+  carried two more.
+- Newbury's vendor portal carried one body, and the town has four.
+- The photo hunt staged one image per candidate, and that image was a
+  format designed to be a banner.
+
+None of these threw. Every one of them reported success.
+
+### 1 — The structures are born (R20)
+
+`states/nh/`, `states/nj/` and `states/az/` each hold a `NOTES.md`: that
+state's own memory of filing systems, vendor patterns, walls and statutory
+posting rules. Nothing was moved into them — the convention is born with
+this session's new work rather than by reshuffling history.
+
+`docs/zip-playbook.md` is born, and `CLAUDE.md` gained the clause that keeps
+it alive: it is **append-only**, and **every depth run ends with a playbook
+diff or an explicit "nothing new," stated in the standing report.** It
+carries the definition of done for a zip as ten checkable lines, the source
+ladder per jurisdiction type, and the rungs discovered so far — with the
+author's own preamble at the top: the rungs written are the rungs discovered,
+every new state is presumed to teach new ones, and recording them is the
+work rather than a deviation from it.
+
+`CLAUDE.md`'s photo rule was rewritten whole into **four doors**, with the
+composition and identity standards lifted out of the doors entirely. A door
+is permission to use a source; it is never permission to ship a worse
+picture.
+
+New: `pnpm census:zip <zip>` prints the who-governs table for a point —
+ingested, located-but-not-ingested, never-hunted — offline, with the vendor
+named. It is the playbook's first machine step and it is what found the gap
+this session filled.
+
+### 2 — The meetings (M76, M77, M78, M79)
+
+**M76, the one that mattered most and was invisible.** Every adapter carried
+`WINDOW_BACK_DAYS = 30`, under a comment claiming it matched the cascade,
+while the served lookback had been raised to 90. Sixty days of published,
+retrievable history were being dropped **at the fetch**, at every zip, for
+every source. No count check could catch it: each adapter honestly reported
+what it had asked for, and what it asked for was wrong. The windows now
+derive from `lib/meetings/constants.ts` so the two cannot drift again.
+Measured: 03255 3 → 7 meetings, Morris County 12 → 20, Tucson's clerk's
+boards 15 → 24, Amphitheater 2 → 6.
+
+**M77, Rockaway's other boards.** The township has five bodies on its own
+archive page and we were reading one. The finding is that **the boards are
+in a different calendar category from the council** — the wired feed is
+`catID=25` and carries the council; `catID=30` is a second calendar carrying
+the Planning Board and the Board of Adjustment with real start times.
+Thirteen of the fifteen ids probed return a 477-byte empty calendar. Both
+bodies are wired now, with their archive halves.
+
+Three sibling defects the new rows exposed, all of which predated them:
+CivicPlus announces a cancellation by **editing the SUMMARY text**, not by
+an iCal `STATUS` property, so two future sittings were rendering as
+SCHEDULED; the same notice is pasted into `LOCATION` ahead of the address,
+so both dropped as `unknownVenue`; and archive de-duplication was keyed on
+the division, so three bodies sharing one `ocdId` would have deleted each
+other's sittings.
+
+Two more bodies on that page are registry rows and deliberately **not**
+wired: the Environmental Commission's archive stops in 2019 and the Board of
+Assessment Commissioners' in 2022. Neither publishes anything the served
+window could render, and the township's sitemap and staff directory carry no
+page for the Environmental Commission at all.
+
+**M78, and a new source shape.** Morris Hills Regional — 07866's high school
+district, and `NOT_ATTEMPTED` until this session — **runs no agenda vendor at
+all** and publishes better than most districts that do. Its BOE Meetings page
+carries the whole 2026 schedule as a dated list with one sentence under it:
+"All meetings begin at 6:30 P.M. and are held in the Board of Education -
+Board Conference Room." That is not a vendor, it is a **shape**, and it is
+how a very large number of American school boards publish. It is an adapter
+now (`SCHEDULEPAGE`), so the next one is a wiring row.
+
+Three rules it was built under: the time is parsed from the body's own
+sentence and never defaulted (no sentence means `startPrecision: "DAY"`); the
+weekday prefix on the date is required, or a footer date becomes a meeting;
+documents join on the date the body wrote in its own link text, never on a
+filename. `VENDOR_API: MISS` is on the audit row on purpose — "this district
+runs no portal" is a finding about the district, not a gap in the hunt.
+
+**A zip sits in two school districts at once**, and both are its government.
+07866 now has **no governing body without a source**.
+
+**M79, the two New Hampshire walls.** Newbury's CivicWeb portal carries
+**only the Selectboard** — proven, not assumed: a whole-year query returned
+20 sittings and every one was TypeId 10. The Planning Board, Zoning Board of
+Adjustment and Conservation Commission are on the town's own site, and
+`newbury.nh.gov` 403s every HTML page to this pipeline while serving its
+PDFs at 200. `kearsarge.org` is the same wall. Both need the real-browser
+rung, which is named as the next rung. **In progress, never blocked.**
+
+### 3 — LegiScan (D49)
+
+State-legislature roll calls for AZ, NJ and NH. The data was never the hard
+part; **the join was, and it fails in a way that does not throw.**
+
+New Hampshire numbers House districts within a *county*, and the Census SLDL
+code concatenates the county's **zero-based alphabetical** ordinal with the
+two-digit number — Hillsborough 12 is `sldl:512`. Two ways of getting that
+wrong, both silent, both hit during the build: indexing the county table from
+1 gave 10 matches out of 426, which reads exactly like a thin roster; and
+zero-padding Belknap gave `sldl:007` against a real `sldl:7` and lost all
+nine of its seats. Both now round-trip against **our own committed boundary
+labels** — the geojson carries `State House District Merrimack 08` beside
+`sldl:608` — so the mapping is checked rather than remembered.
+
+Matching is on **district AND surname**, never name alone. Rates with their
+denominators: AZ 24/92, NJ 21/120, NH 85/426 — the large denominators are the
+rest of each legislature, which governs outside our clipped boundaries, and
+**every roster seat that could match, matched.** Ten were spot-verified by
+name and district against both sources; two people did not match and are
+named rather than forced.
+
+Retrieval is bulk-first with `dataset_hash` discipline — an unchanged dataset
+is never re-downloaded — and the legiscan.com front end is never touched. No
+dependency was added: `lib/sources/legiscan/zip.ts` reads the central
+directory directly, and throws on an entry it cannot read rather than
+skipping it.
+
+**The clip is surface-driven, and the first attempt was wrong in a way worth
+keeping.** "The 60 most recent per state" covered **two days** in Arizona,
+which votes in bursts — a member absent those two days would have rendered an
+empty record that reads as "never votes". It is now the union of each
+member's twelve most recent: 72 roll calls, 1,560 positions, 130
+officeholders with exactly twelve each.
+
+**The thin-snapshot guard fired during the build**, refused the write and
+kept the old file when the clip rule changed. The re-baseline was deliberate.
+
+A party-by-party count is **null** on every state vote and refused rather
+than estimated — we hold a fraction of each chamber, so no tally could sum to
+the recorded result. LegiScan's CC BY 4.0 attribution ships with the rows
+from the API so it cannot drift from the store it describes, and a guard test
+asserts a state member's payload carries it and a federal member's does not:
+the chambers' public-domain XML must never be credited to LegiScan.
+
+### 3b — The doors reopen the challenger sweep (D50, round 5)
+
+The author's four-door rewrite answers exactly the question round 4 parked.
+**590 → 592 of 750**, and the standards did not move an inch, which is why
+nine of eleven candidates still ship initials.
+
+The mechanical finding: round 4 staged **one** image per candidate — the
+`og:image` — and nine of ten were banners. That is a fact about the *format*:
+a share card is designed to be a banner with the name across it. The hunt now
+also collects the page's own `<img>` elements, and **both shipped portraits
+came from `<img>`; neither was the `og:image`.**
+
+Shipped under door 3, labelled campaign-provided with remove-on-request: Teri
+Ann Hourihan (AZ Governor) and Walter "Les" Presmyk (AZ Mine Inspector). Both
+are clean solo studio portraits from the candidate's own domain, under files
+the campaign itself named `Headshot` — which is also the identity evidence.
+
+Two refusals worth naming: Norton's one photograph carries **Facebook's CDN
+filename pattern**, and social-media images are prohibited at every door —
+re-hosting one on your own server does not change what it is. Swallow and
+Hathaway were refused on **identity, not composition**: their sites carry
+several faces and the portrait-shaped images carry no name evidence at all.
+
+A retrieval detail the guard caught rather than a person: Squarespace
+content-negotiated a **WebP** for a `.jpg` URL, and the metadata stripper
+refused to ship bytes it could not inspect.
+
+The other 65 challengers have no recorded campaign site, so their missing
+rung is a **site** hunt, not a photo hunt — named rather than counted as a
+photo failure.
+
+### 4 — The street input asks, and the walk finds why it cannot (M80)
+
+The author's ruling: a street whose sampled house numbers disagree on
+jurisdiction should be **asked about**, not refused. `lookupStreetInZip` now
+distinguishes "we cannot find this street" from "this street crosses district
+lines", and the second gets the question — *This street crosses district lines
+— what's the house number?* — with `locateAddressInZip` resolving it in one
+request. The number lives in component state for the length of that request,
+goes only to the Census geocoder, and is cleared in a `finally` whatever the
+outcome; three guard tests pin that, including a source scan for the device
+store, `localStorage` and our own API.
+
+**And then the walk found what no unit test could.** `geocoding.geo.census.gov`
+answers 200 to a server and sends **no `Access-Control-Allow-Origin` header at
+all**. No browser can call it. D53 shipped last session as a device-side
+geocode and its tests pass — because they run in Node — but nothing
+downstream of that call has ever fired in a page, including this session's
+question.
+
+This is a transport problem with a **doctrine** answer, which is why nothing
+was fixed: the only route that works is a server-side proxy, and both the UI
+copy and the geocoder's own guard test promise the opposite — *never stored,
+never sent to us*. Making the feature work by quietly retracting that promise
+is the author's call, not a session's. **M80** holds the three options.
+D53's `Done` status is left as written: its tests really do pass, and history
+is not rewritten.
+
+### 5 — Deferred whole, and named (M81)
+
+The jurisdiction badge — *Governs your area* vs *Nearby, different
+jurisdiction* — is the session brief's own first cut if the session ran short,
+and it did. **Nothing was half-built.** The foundation is already there:
+`bodiesAt()` in `lib/registry/resolve.ts` does exactly this point-in-polygon
+against the same committed geometry the map draws from, so the badge is a
+call to it plus a label. The one design question recorded for whoever builds
+it: a meeting whose body has a null `ocdId` cannot be point-tested at all and
+needs an honest third state.
+
+### The walk
+
+`scripts/tester-walk-0815c.mts`, 390×844, as a stranger. At **07866**: 49
+meetings across 7 bodies (from 22 across 3), both canceled sittings saying
+canceled, a state legislator's votes carrying the LegiScan attribution and a
+federal member's not, no identifiers and no mojibake on the map or the
+ballot, and the thin-candidate line where a portrait is missing. At **03255**:
+7 meetings, all Newbury's Selectboard — the county's 15 sit one radius step
+out, which is the cascade working rather than a gap.
+
+The street question reports as **BLOCKED** rather than FAIL, naming the CORS
+reason. A walk that fails for a known blocked transport teaches the reader to
+ignore its failures, which is the defect the walk exists to avoid.
+
+### The playbook diff
+
+Four entries added this run, per the new permanent rule: a town's portal may
+not be the town; the published annual schedule as a source shape; probe the
+calendar category ids; and check the adapter's own window before hunting a
+second source. Plus the LegiScan section — the district mapping that fails
+silently, and letting the surface drive the clip.

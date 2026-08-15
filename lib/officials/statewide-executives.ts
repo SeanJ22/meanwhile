@@ -19,9 +19,13 @@ import { stateOcdIdFrom } from "./lookup.ts";
  * language names this honestly rather than implying completeness.
  *
  * Officeholder discipline: every name and contact below was read off the
- * cited state page. Photos follow the photo rule — no clean licensed
- * portrait means initials, so `photoUrl` stays null (D45: no photo
- * hunting this session). `partyLabel` stays null: these rows carry what
+ * cited state page. Photos follow the photo rule — hunted in the dedicated
+ * photo session (2026-08-14): each governor's portrait was matched on
+ * Wikimedia Commons by attribute-verified identity, judged a clean solo
+ * portrait, committed metadata-stripped under public/officials/, and its
+ * license recorded in lib/registry/official-photos.json (the manifest row
+ * carries the Commons file page and the license). `partyLabel` stays
+ * null: these rows carry what
  * the office's own page publishes, and the governor's office page styles
  * itself officeholder-first, not party-first — party is on the ballot
  * surfaces where it is sourced from filings.
@@ -61,7 +65,7 @@ export const STATEWIDE_EXECUTIVES: readonly StatewideExecutive[] = [
       email: "engage@az.gov",
       phone: "(602) 542-4331",
       contactFormUrl: "https://azgovernor.gov/constituent-services",
-      photoUrl: null,
+      photoUrl: "/officials/statewide-az-governor.jpg",
       campaignUrl: null,
     },
     sourceUrl: "https://azgovernor.gov/",
@@ -86,7 +90,7 @@ export const STATEWIDE_EXECUTIVES: readonly StatewideExecutive[] = [
       // because the page doesn't state it.
       phone: null,
       contactFormUrl: "https://www.nj.gov/governor/contact/",
-      photoUrl: null,
+      photoUrl: "/officials/statewide-nj-governor.jpg",
       campaignUrl: null,
     },
     sourceUrl: "https://www.nj.gov/governor/",
@@ -109,7 +113,7 @@ export const STATEWIDE_EXECUTIVES: readonly StatewideExecutive[] = [
       // published on the page.
       phone: "(603) 271-2121",
       contactFormUrl: "https://www.governor.nh.gov/contact-governor-ayotte",
-      photoUrl: null,
+      photoUrl: "/officials/statewide-nh-governor.jpg",
       campaignUrl: null,
     },
     sourceUrl: "https://www.governor.nh.gov/",

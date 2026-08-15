@@ -4093,3 +4093,97 @@ deeper answer and remain open.
 - Open next: unchanged from §19 — the photo session (D45), D35, the 45
   backlog special districts, the ask-box map, T10 at testing end. Plus:
   the DATABASE_URL repo secret for the tripwire (Needs your hands).
+
+## 21. The 2026-08-14 session (fifth session of 2026-08-14) - the faces come back (D20)
+
+Branch `claude/photos-0814`. The author's brief: the ENTIRE session is
+photos - the census's 16 of 747 becomes the other number, with the rule
+never loosening: clean solo portrait or honest initials; license
+recorded or it does not ship; match by stable id, never name-search;
+download at build, serve from our origin, strip metadata; never a
+screengrab, banner, logo, group shot, or generated likeness. All dates
+are wall clock. The session crashed once mid-browser-phase and resumed
+from the committed tiers without redoing work.
+
+### The number
+
+**16 of 747 became 476 of 750.** The denominator moved because the three
+governors render on every who-governs card and were uncounted - a census
+gap fixed the honest way (statewide executives are now a census surface).
+Per surface: federal 437/437 (COMPLETE), statewide executives 3/3,
+ballot candidates 33/109, curated locals 3/71, state legislators 0/130.
+
+### How each tier landed
+
+- **Tier 1, the GPO bulk fetch:** `scripts/fetch-official-photos.mts`
+  widened from the four-zip wired set to every renderable federal
+  official, keyed by bioguide, metadata-stripped through the new pure-TS
+  JPEG/PNG stripper (`scripts/strip-image-metadata.mts`, unit-tested;
+  225 of 427 images carried EXIF that is now gone). One 503 was retried
+  to success; the 10 genuine 404s (new members the pictorial mirror
+  lacks) were recovered in Tier 3 via Wikimedia Commons P1157 lookups -
+  a stable-id join to public-domain congressional portraits.
+- **Tier 2, the chambers:** the terms hunt found NO reuse grant on any
+  of the three legislature sites - azleg.gov and gc.nh.gov carry bare
+  all-rights-reserved footers with no terms page (checked in a real
+  browser), njleg.state.nj.us's own disclaimer grants nothing, and the
+  NJ.gov executive-portal grant does not cover the OLS site. All 130
+  state legislators stay honest initials; the per-chamber findings are
+  ON EVERY MISSING ROW in the manifest, FOR COUNSEL. The governors
+  shipped anyway - Commons portraits, attribute-verified, licensed.
+- **Tier 3, the hand work:** the Commons rung ran for all 181 targets
+  (identity by P1157 for members of Congress; position-held + place
+  attribute verification for everyone else; 2+ plausible items =
+  AMBIGUOUS = miss, never guessed). The challenger blind spot - the
+  office SOUGHT is not the office HELD - was found and fixed in a
+  corrected second pass (Brown, Sununu, Petersen, Yee, Kolodin, Horne).
+  The campaign og:image rung walked all 15 recorded campaign sites: 4
+  passed judgment, 11 failed in exactly the canonical classes (logos,
+  wordmarks, banner composites, a blank white logo, a novelty-sign
+  photo) - each on its hunt. Sitting members on ballots reuse their
+  committed portraits (the Goodlander precedent): Biggs, Schweikert,
+  Ciscomani, Pappas, Grijalva, Mejia. The 8 pre-existing external card
+  photos were localized to our origin (D20's never-hotlink now holds on
+  candidate cards too).
+
+### The machinery that outlives the session
+
+- `lib/registry/official-photos.json` is the single license ledger:
+  every photo has url/sourceUrl/license/attribution; every absence has
+  reason + attemptedAt. `scripts/photo-census.mts` now GENERATES the
+  report's officials and candidate-cards tables from the ledger and the
+  cards file, so `docs/photo-report.md` cannot drift from what ships.
+- Curated locals: `lib/registry/roster-photos.json` is the tiny
+  client-safe derivative body-rosters.ts imports (the full manifest is
+  server-only); a test pins it byte-equal to the manifest's licensed
+  roster rows. Statewide executives carry their photoUrl in
+  `lib/officials/statewide-executives.ts` with the license row pinned by
+  test.
+- Verification: every staged image was eyeballed before shipping; a
+  21-member federal sample was cross-checked pair-by-pair against
+  bioguide.congress.gov (an independent archive keyed by the same
+  bioguide id - same face on all 21); the 390x844 walk hit all four
+  zips - 30+ portraits rendering from our origin, zero broken, honest
+  initials confirmed where photos failed judgment (Harned, Hathaway).
+  Walk caveat recorded honestly: the browser pane could not composite
+  screenshots this run, so the walk verified at the DOM level
+  (img.naturalWidth, served bytes, HTTP status) rather than by pixels;
+  the lazy-images-not-loading scare during the walk was the hidden
+  pane suspending lazy-load, not an app defect.
+
+### Open, and for counsel
+
+- FOR COUNSEL: may the product reuse state-legislature member portraits
+  under a public-records theory when the chamber site states
+  all-rights-reserved and publishes no terms? The finding rows name each
+  chamber. Until cleared: initials.
+- The jurisdiction-terms rung for 9 smaller local bodies is recorded
+  OPEN on their rows (the three largest jurisdictions were checked - no
+  grants).
+- Ballot misses (76) and local misses (68) all carry their rungs; new
+  rungs for the playbook when zip work resumes: bioguide.congress.gov as
+  an id-keyed verification archive; Commons P1157 for members the
+  pictorial lacks; the og:image rung with its high logo/banner failure
+  rate.
+- Next free tracker ids: A12, B13, D48, M53, P13, R14, T11, V08, X05
+  (unchanged - this session edited D20 in place and opened no new rows).

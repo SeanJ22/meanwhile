@@ -45,6 +45,7 @@ export function today(now = new Date()) {
  * Every date in a plain-text or Markdown body, with its 1-based line number.
  */
 export function scanText(text) {
+  const lines = text.split("\n");
   const hits = [];
   let line = 1;
   let cursor = 0;
@@ -53,7 +54,15 @@ export function scanText(text) {
     const at = match.index;
     for (let i = cursor; i < at; i++) if (text[i] === "\n") line++;
     cursor = at;
-    hits.push({ date: match[0], line });
+    // R16: a date on an annotated line is an expected future, not a
+    // tolerated one. Per LINE, because that is the unit a reader sees the
+    // annotation in — an annotation three paragraphs away would excuse
+    // dates nobody meant it to cover.
+    hits.push({
+      date: match[0],
+      line,
+      expected: isExpectedFutureLine(lines[line - 1]),
+    });
   }
   return hits;
 }
@@ -150,6 +159,17 @@ export function scanTrackerCsv(text, columns = ["Notes", "Detail"]) {
           date: hit.date,
           line: cell.line + hit.line - 1,
           column: name,
+          // R16: in a CSV prose column an HTML comment would render as text,
+          // so the bracketed form is used and it must TRAIL the date it
+          // annotates — a Notes cell can run to hundreds of characters and
+          // hold several dates, and a marker anywhere in the cell would
+          // excuse all of them.
+          expected: isExpectedFutureLine(
+            cell.value.slice(
+              cell.value.indexOf(hit.date),
+              cell.value.indexOf(hit.date) + 160,
+            ),
+          ),
         });
       }
     }
@@ -209,10 +229,17 @@ export function classify(hits, allowlist, file, todayStr) {
     budget.set(entry.date, (budget.get(entry.date) ?? 0) + entry.count);
   }
 
+  const expected = [];
   const allowed = [];
   const failures = [];
   for (const hit of hits) {
     if (hit.date <= todayStr) continue;
+    // R16: an annotated date is a different species and leaves the budget
+    // entirely. See EXPECTED_FUTURE_RE.
+    if (hit.expected) {
+      expected.push({ ...hit, file });
+      continue;
+    }
     const left = budget.get(hit.date) ?? 0;
     if (left > 0) {
       budget.set(hit.date, left - 1);
@@ -221,7 +248,42 @@ export function classify(hits, allowlist, file, todayStr) {
       failures.push({ ...hit, file });
     }
   }
-  return { allowed, failures };
+  return { expected, allowed, failures };
+}
+
+/**
+ * The marker that says "this date is SUPPOSED to be in the future" (R16,
+ * 2026-08-15).
+ *
+ * The inventory this scan found was never one thing. Election day is a date
+ * that will postdate every scan until it happens, and warning about it every
+ * run — forever, until November — teaches a reader to ignore the warning,
+ * which is the only way this check can actually fail. Session-label residue
+ * is the opposite: unexplained, and the reason the check exists.
+ *
+ * So an expected-future date is ANNOTATED, on its own line, with the reason
+ * and the source it was verified against:
+ *
+ *   The general election is **2026-11-03** <!-- expected-future: general
+ *   election day, verified against the Arizona Secretary of State's 2026
+ *   election calendar, 2026-08-15 -->
+ *
+ * The annotation lives in the document rather than in a registry beside it
+ * on purpose. A reader who wonders why a future date is tolerated finds the
+ * answer where the date is, and the two cannot drift apart — which is
+ * exactly what a second list would eventually do.
+ *
+ * The marker takes an HTML comment in Markdown and a bracketed form in the
+ * tracker's prose columns, where an HTML comment would render as text.
+ * Both require a non-empty reason: a bare marker would be an escape hatch,
+ * and this project does not keep those.
+ */
+export const EXPECTED_FUTURE_RE =
+  /(?:<!--\s*expected-future:\s*\S[^>]*-->|\[expected-future:\s*\S[^\]]*\])/i;
+
+/** Does this line carry an expected-future annotation? */
+export function isExpectedFutureLine(line) {
+  return EXPECTED_FUTURE_RE.test(line ?? "");
 }
 
 /**

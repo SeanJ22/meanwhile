@@ -2419,7 +2419,7 @@ my ballot, what do these measures actually say, where do the people on my
 ballot stand on what I care about, and what is happening near me that I do not
 know about. Only the fourth had been built, and it had been built on fixtures.
 
-There is a hard date. The general election is **2026-11-03**, and the product
+There is a hard date. The general election is **2026-11-03**, and the product <!-- expected-future: general election day; verified against lib/ballot/election-dates.ts, which carries it per state with the election authority's own URL. Read 2026-08-15. R16. -->
 has to be useful from about October 1 — which decides scope: **depth in four
 zips beats breadth everywhere.** 85701 Tucson AZ, 85641 Vail AZ, 07866
 Rockaway Township NJ, 03255 Newbury NH are no longer a test set. They are the
@@ -2761,7 +2761,7 @@ The four-zip gate after the refresh — **85 meetings from 8/8 sources**,
 ### S2: the Morris County ballot shipped (September 19 is the clock)
 
 `/ballot?zip=07866` renders every contest a Rockaway Township voter sees on
-2026-11-03, curated from the county clerk's own filed-candidate PDFs into
+2026-11-03, curated from the county clerk's own filed-candidate PDFs into <!-- expected-future: general election day. R16. -->
 `data/ballot/nj-morris-2026.json` behind a `BallotSource` contract parallel
 to `MeetingSource` (D08's national feed becomes a source swap): US Senate
 (4 candidates), US House NJ-11 (3), County Commissioner (2), Rockaway Twp
@@ -3161,7 +3161,7 @@ tester.
 ### 1 — The NH November finding, corrected in place (the overturn preserved)
 
 The shipped thin-November claim was true ONLY for town and school offices
-(March town meeting). For state and federal offices, 2026-11-03 is one of
+(March town meeting). For state and federal offices, 2026-11-03 is one of <!-- expected-future: general election day. R16. -->
 the largest ballots in the country. What was wrong and is now fixed, all
 from the SOS's own documents fetched this session:
 

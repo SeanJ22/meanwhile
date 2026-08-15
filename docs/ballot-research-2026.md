@@ -1,4 +1,4 @@
-# Ballot sources for 2026-11-03, and the candidate corpus — research
+# Ballot sources for 2026-11-03, and the candidate corpus — research <!-- expected-future: general election day, the date this document is about; verified against lib/ballot/election-dates.ts, which carries it for all three states with the election authority's own URL per state. Read 2026-08-15. R16. -->
 
 Tracker **D08** (investigated), **D05** (schema research). Research only —
 no adapter was written and no schema was built; per the reprioritization the
@@ -123,8 +123,8 @@ damaging claim.
 1. **Matched.** The passages, with links and dates.
 2. **Searched, nothing matched.** With the denominator: which sources we
    hold for this person and when each was last retrieved. "Nothing matching
-   in their campaign site as retrieved 2026-09-14, or in 47 recorded floor
-   votes."
+   in their campaign site as retrieved <retrieval date>, or in 47 recorded
+   floor votes."
 3. **Nothing collected for this person yet.** Say exactly that, and link
    their own site.
 

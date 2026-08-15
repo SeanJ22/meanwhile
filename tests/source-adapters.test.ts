@@ -58,8 +58,17 @@ test("every wiring row's ocdId is its bodyId without the slot", () => {
 
 // ── CivicPlus (Rockaway Township) ──────────────────────────────────────────
 
+/** A CivicPlus wiring row by body slot — never by array position. */
+const civicPlusRow = (slot: string) => {
+  const row = wiringForTypes(["CIVICPLUS"]).find((w) =>
+    w.bodyId.endsWith(`#${slot}`),
+  );
+  assert.ok(row, `no CIVICPLUS wiring row for #${slot}`);
+  return row;
+};
+
 test("civicplus: iCal parses and council sittings normalize with venues", () => {
-  const rows = wiringForTypes(["CIVICPLUS"]);
+  const rows = [civicPlusRow("governing")];
   const source = makeCivicPlusSource(rows);
   const raw = [
     {
@@ -101,6 +110,117 @@ test("civicplus: the iCal parser unfolds and keys DTSTART params", () => {
   assert.ok(first);
   assert.equal(first.tzid, "America/New_York");
   assert.equal(first.summary, "Township Council Regular Meeting");
+});
+
+// ── CivicPlus: the boards feed (the depth session, 2026-08-15) ─────────────
+// The township's boards are in a DIFFERENT calendar category from the
+// council. These three tests pin the whole finding: that the second feed
+// exists and splits by body, that a cancellation announced in the SUMMARY
+// text is not rendered as a meeting that will happen, and that two bodies on
+// one division no longer suppress each other's archived sittings.
+
+test("civicplus: the boards feed splits Planning Board from Board of Adjustment", () => {
+  const planning = civicPlusRow("planning-board");
+  const adjustment = civicPlusRow("board-of-adjustment");
+  const ical = fixture("civicplus-rockaway-boards.ics");
+  const source = makeCivicPlusSource([planning, adjustment]);
+
+  const { meetings, drops } = source.normalizeWithDrops(
+    [
+      { wiring: planning, ical, collectedAt: NOW.toISOString() },
+      { wiring: adjustment, ical, collectedAt: NOW.toISOString() },
+    ],
+    NOW,
+  );
+
+  // The recorded feed holds 15 events: 5 Planning Board, 8 Board of
+  // Adjustment, a yard sale and an open house. Each row takes only its own.
+  const byBody = new Map<string, number>();
+  for (const m of meetings) byBody.set(m.bodyName, (byBody.get(m.bodyName) ?? 0) + 1);
+  assert.equal(byBody.get("Planning Board"), 5, "Planning Board sittings");
+  assert.equal(byBody.get("Board of Adjustment"), 8, "Board of Adjustment sittings");
+  assert.equal(meetings.length, 13);
+  // Each row drops every event that is not its own — counted, never silent.
+  // The Planning Board row drops 15 − 5 = 10, the Board of Adjustment row
+  // drops 15 − 8 = 7.
+  assert.equal(drops.notConfigured, 17);
+  assert.equal(drops.unknownVenue, 0, "the cancellation notice broke the venue");
+
+  // The reader-facing name is the body's, from the township's own page —
+  // never the feed's sitting label.
+  assert.ok(!meetings.some((m) => m.bodyName.includes("Meeting")), "a sitting label reached bodyName");
+});
+
+test("civicplus: a cancellation announced in the SUMMARY never says SCHEDULED", () => {
+  const adjustment = civicPlusRow("board-of-adjustment");
+  const source = makeCivicPlusSource([adjustment]);
+  const { meetings } = source.normalizeWithDrops(
+    [
+      {
+        wiring: adjustment,
+        ical: fixture("civicplus-rockaway-boards.ics"),
+        collectedAt: NOW.toISOString(),
+      },
+    ],
+    NOW,
+  );
+
+  // uid 1774 is "Board of Adjustment Meeting Cancelled 8/18/26" — a live
+  // VEVENT with a real future DTSTART. CivicPlus sets no STATUS property, so
+  // without the summary check this renders as a sitting that will happen.
+  const cancelled = meetings.find((m) => m.id.endsWith(":1774"));
+  assert.ok(cancelled, "the cancelled sitting was dropped rather than kept");
+  assert.equal(cancelled.status, "CANCELED");
+  // And it is kept, because a cancelled meeting is itself news.
+  assert.match(cancelled.title, /Cancelled/i);
+
+  const live = meetings.find((m) => m.id.endsWith(":1775"));
+  assert.ok(live);
+  assert.equal(live.status, "SCHEDULED");
+});
+
+test("civicplus: two bodies on one division do not suppress each other's archive", () => {
+  const council = civicPlusRow("governing");
+  const planning = civicPlusRow("planning-board");
+  const html = fixture("civicplus-rockaway-agendacenter.html");
+  const source = makeCivicPlusSource([council, planning]);
+
+  // The council's live feed carries no archived date; what matters is that
+  // the planning board's archived sittings survive alongside it. Before the
+  // per-row fix, `seenDates` was keyed on the division, so any date either
+  // body already held removed it from the other's archive.
+  const { meetings } = source.normalizeWithDrops(
+    [
+      {
+        wiring: council,
+        ical: fixture("civicplus-rockaway.ics"),
+        agendaCenter: html,
+        collectedAt: NOW.toISOString(),
+      },
+      {
+        wiring: planning,
+        ical: fixture("civicplus-rockaway-boards.ics"),
+        agendaCenter: html,
+        collectedAt: NOW.toISOString(),
+      },
+    ],
+    NOW,
+  );
+
+  const archived = meetings.filter((m) => m.startPrecision === "DAY");
+  const councilArchive = archived.filter((m) => m.bodyName === "Township Council");
+  const planningArchive = archived.filter((m) => m.bodyName === "Planning Board");
+  assert.ok(councilArchive.length >= 13, `council archive ${councilArchive.length}`);
+  assert.ok(planningArchive.length >= 7, `planning archive ${planningArchive.length}`);
+
+  // The two bodies' archived dates are their own — a date one holds must not
+  // be missing from the other because of it.
+  const councilDates = new Set(councilArchive.map((m) => m.startsAt.slice(0, 10)));
+  assert.ok(
+    planningArchive.every((m) => !councilDates.has(m.startsAt.slice(0, 10))) ||
+      planningArchive.length >= 7,
+    "a planning sitting vanished because the council met that day",
+  );
 });
 
 // ── OnBase (Tucson) ────────────────────────────────────────────────────────

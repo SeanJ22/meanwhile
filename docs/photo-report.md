@@ -9,6 +9,106 @@ came from, and why it passed. A photo not listed here does not ship —
 `tests/candidate-cards.test.ts` asserts every shipped photo URL appears
 in this file.
 
+## Round 5 — the doors reopen the challenger sweep (2026-08-15, D50)
+
+**590 of 750 → 592 of 750.** Two portraits shipped, from eleven candidates
+and forty-six staged images. That ratio is the finding, and it is a better
+outcome than round 4's zero for a reason worth writing down.
+
+### What the author's ruling changed, and what it did not
+
+`CLAUDE.md`'s photo rule was rewritten whole on 2026-08-15 into **four
+doors**, with the composition and identity standards **lifted out of the
+doors entirely**. Round 4 had walked both of the old rungs to the end for all
+76 ballot challengers and shipped nothing, correctly: a campaign website was
+neither of the two doors that existed then. Doors 3 and 4 answer exactly that
+question —
+
+- **Door 3** — the campaign's OWN self-published portrait from its OWN site,
+  labelled "campaign-provided", source recorded, remove-on-request.
+- **Door 4**, last resort — any portrait on the candidate's own campaign site
+  or on any `.gov` site.
+
+**The standards did not move an inch**, and that is why nine of eleven
+candidates still ship initials. A door is permission to use a source; it is
+never permission to ship a worse picture.
+
+### The mechanical finding: an og:image is a banner by design
+
+Round 4 staged **one** image per candidate — the `og:image` — and nine of ten
+were banners. That was read at the time as "campaign sites publish banners".
+It is more precisely a fact about the format: **an `og:image` is a
+social-share card, and a share card is designed to be a banner with the
+candidate's name across it.** The headshot a campaign puts on its About page
+was never being looked at.
+
+`scripts/hunt-campaign-photos.mts` now collects the page's own `<img>`
+elements as well, filters the structural non-portraits (logos, icons,
+donate buttons, anything under 4 KB) and stages up to six per candidate. That
+one change is the whole difference between round 4's zero and round 5's two:
+both shipped portraits came from `<img>`, and **neither** was the `og:image`.
+
+### Shipped
+
+| Candidate | Contest | File | Door | Judgment |
+|---|---|---|---|---|
+| Teri Ann Hourihan | AZ Governor | `/candidates/az-pima-governor-hourihan-teri-ann.jpg` | 3 | Clean solo studio portrait, plain grey ground, unambiguous sole subject. The campaign's own file on its own domain, named `Teri+Headshot-Full+Res-11.jpg` — the name is the campaign's, which is also the identity evidence. Source `https://teriann4azgov.org`, read 2026-08-15. |
+| Walter "Les" Presmyk | AZ Mine Inspector | `/candidates/az-pima-mine-inspector-presmyk-walter-les.jpg` | 3 | Clean solo studio portrait, plain grey ground, unambiguous sole subject. The campaign's own file, named `Headshot.jpg`. Source `https://lespresmyk.com`, read 2026-08-15. |
+
+Both were fetched once, EXIF-stripped (`APP1` removed from each, verified),
+committed under `public/candidates/` and served from our own origin. Both
+cards carry `campaign-provided … Removed on request.`
+
+**A retrieval detail that would have shipped an unstripped file**:
+Squarespace's CDN content-negotiates, and handed back a **WebP** for a `.jpg`
+URL. The metadata stripper only understands JPEG and PNG and correctly
+refused rather than shipping bytes it could not inspect — so the fetch now
+sends `Accept: image/jpeg,image/png` explicitly. The guard caught this, not a
+person.
+
+### Not shipped, per candidate, with the reason
+
+Every one of these was hunted to the same depth. Doors 1 and 2 had already
+failed for all of them in earlier rounds (no Commons licence, no government
+body publishes a portrait of a challenger); doors 3 and 4 were walked here.
+
+| Candidate | Contest | Staged | Why nothing shipped |
+|---|---|---|---|
+| Risa Lombardo | AZ Governor | 1 | The only image on the site is a pure wordmark. |
+| Elijah Norton | AZ Treasurer | 2 | og:image is a wordmark. The one photograph is a clean solo portrait but its filename is Facebook's CDN pattern (`710724279_1016778710694891_…_n-1.jpg`) — **social-media images are prohibited at every door**, and re-hosting one on the campaign's own server does not change what it is. Recorded rather than shipped. |
+| JoAnna Mendoza | AZ CD-6 | 3 | All three are rally photographs with other people plainly visible; the candidate is not the unambiguous sole subject. |
+| Gary Swing | AZ CD-6 | 6 | A man beside a novelty sign (the sign is the subject), a mural, two near-blank gradients, a hiking snapshot, and a chart. No portrait on the site. |
+| Daniel Francis Butierez Sr. | AZ CD-7 | 5 | Wide banners with a mission church filling half the frame, an abstract, a donate button, a cityscape. |
+| Bob Karp | AZ Senate 19 | 3 | Wordmark, a "DONATE" button, and a text flyer. |
+| Aiden Nicholette Swallow | AZ House 19 | 6 | **Identity, not composition.** Two are clean solo portraits — and the site also carries images named `gowan.jpg` and `diaz.jpg`, which are the two incumbents in that contest. The two portraits are Canva compositions named `Untitled design.png` and `Untitled design-2.png`, carrying no name evidence at all. Any doubt about identity fails at every door, and this is doubt. |
+| Joe Hathaway | NJ CD-11 | 3 | The og:image is a wordmark-plus-portrait banner. One solo outdoor photograph and one family group; neither filename (`8599_500.jpg`, `8599_156.jpg`) carries identity evidence, and the family group contains a similar-looking man. Doubt again. |
+| Rebecca Harned | NH Senate 7 | 6 | Two wordmarks, a woman with two dogs with the face partly obscured, a two-person canoe photograph, and a firefighters' association logo. |
+
+### The 65 challengers with no recorded campaign site
+
+The eleven above are the challengers whose campaign site is recorded in
+`data/ballot/candidate-links-2026.json`. **The other 65 have no recorded
+site**, so doors 3 and 4 have nothing to point at for them — the missing
+rung is a *site* hunt, not a *photo* hunt, and it is named here rather than
+counted as a photo failure. Door 4's `.gov` half does not reach them either:
+a challenger holds no office, so no government body publishes their portrait.
+
+### The 48 curated local roster members
+
+Still the named remainder, unchanged from round 4. Their rung is door 2 (the
+body's own page) and it is unaffected by this ruling.
+
+### Tiers after round 5
+
+| Surface | Shipped | Denominator | Remaining |
+|---|---|---|---|
+| federal officials | 437 | 437 | 0 |
+| statewide executives | 3 | 3 | 0 |
+| state legislators | 94 | 130 | 36 |
+| curated local rosters | 23 | 71 | 48 — the named remainder |
+| ballot candidates | 35 | 109 | 74 — 9 hunted to the end of doors 3 and 4 today, 65 awaiting a site hunt |
+| **total** | **592** | **750** | **158** |
+
 ## Round 3 — New Hampshire's own chambers, and the locals (2026-08-15, D50)
 
 **535 of 750 → 590 of 750.** Sixty-nine portraits shipped: 24 New Hampshire

@@ -275,21 +275,49 @@ test("finding meetings and finding nothing are different states", () => {
   // Every body governing 85701 is LIVE as of 2026-08-13, so zero meetings is
   // an empty calendar, not a coverage gap…
   assert.equal(coverageFor("85701", 0).state, "NONE_SCHEDULED");
-  // …while 07866 still has unwired bodies (Morris County, Morris Hills
-  // Regional), so zero meetings there stays honestly NO_SOURCE.
-  assert.equal(coverageFor("07866", 0).state, "NO_SOURCE");
+  // …and 07866 joined it on 2026-08-15, when Morris Hills Regional — the last
+  // GOVERNING body at the point without a source — was wired (M78). The two
+  // bodies still unwired there are Rockaway's Environmental Commission and
+  // Board of Assessment Commissioners, both COMMISSION class, and the state
+  // deliberately does not turn on those: an unwired commission must not read
+  // as a government whose calendar is missing. The sidebar still counts them.
+  const rockaway = coverageFor("07866", 0);
+  assert.equal(rockaway.state, "NONE_SCHEDULED");
+  assert.ok(
+    rockaway.counts.withoutSource >= 2,
+    `${rockaway.counts.withoutSource} bodies without a source — the two ` +
+      `unwired commissions must still be counted, not absorbed by the state`,
+  );
+  assert.deepEqual(
+    rockaway.bodies
+      .filter((b) => b.bodyClass === "GOVERNING" && b.coverageStatus !== "LIVE")
+      .map((b) => b.bodyId),
+    [],
+    "a governing body at 07866 lost its source",
+  );
 });
 
 test("a body's name is never invented for display", () => {
-  // The copy prints the *division's* label, which Census sourced. Every body's
-  // own name is null and must stay that way until something sources it.
+  // The copy prints the *division's* label, which Census sourced. A DERIVED
+  // body's own name is null and must stay that way until something sources
+  // it. A CURATED row may carry a name — that is what the origin means — and
+  // then it must cite the page the name was read off. (Rockaway's Planning
+  // Board and Board of Adjustment arrived curated on 2026-08-15, named from
+  // the township's own AgendaCenter headings.)
   const coverage = coverageFor("07866", 0);
   assert.ok(coverage.bodies.length > 0);
 
   for (const body of coverage.bodies) {
     const source = registry.bodies.find((b) => b.id === body.bodyId);
     assert.ok(source, `${body.bodyId} is not in the registry`);
-    assert.equal(source.name, null, `${body.bodyId} gained a name from nowhere`);
+    if (source.bodyOrigin === "CURATED") {
+      assert.ok(
+        source.provenance?.sourceUrl,
+        `${body.bodyId} is curated but cites no page for its name`,
+      );
+    } else {
+      assert.equal(source.name, null, `${body.bodyId} gained a name from nowhere`);
+    }
     // The coverageStatus assertion that used to sit here was incidental to this
     // test and is now false: Rockaway township has an audit row, so it reads
     // KNOWN_UNCOVERED. What this test is actually about — a name never being

@@ -16,6 +16,7 @@
     "db:migrate": "drizzle-kit migrate",
     "ingest": "tsx scripts/ingest.ts",
     "meetings:report": "tsx scripts/coverage-report.ts",
+    "census:zip": "tsx scripts/census-who-governs.mts",
     "zcta:fetch": "tsx scripts/fetch-zcta-centroids.ts",
     "districts:fetch": "tsx scripts/fetch-districts.ts",
     "shoot": "tsx scripts/shoot.mts",
@@ -31,7 +32,8 @@
     "votes:fetch": "tsx scripts/fetch-votes.mts",
     "fec:fetch": "tsx scripts/fetch-fec.mts",
     "intake:tripwire": "tsx scripts/intake-tripwire.mts",
-    "streets:build": "tsx scripts/build-street-index.mts"
+    "streets:build": "tsx scripts/build-street-index.mts",
+    "legiscan:fetch": "tsx scripts/fetch-legiscan.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

@@ -61,10 +61,12 @@ test("normalize emits windowed meetings with cited venues and real agenda links"
   const raw = [{ wiring: WIRING, html: FIXTURE, collectedAt: "2026-08-14T12:00:00Z" }];
   const { meetings, drops } = source.normalizeWithDrops!(raw, NOW);
 
-  // Aug 11 and Jul 28 are inside the 30-day back window; Jul 14 is 31 days
-  // back — one day outside, deliberately clipped. The 2018 row and spring
-  // rows are the same archive clip, not drops.
-  assert.equal(meetings.length, 2, `${meetings.length} meetings in window`);
+  // M76 (2026-08-15): the back window is now the SERVED window — 90 days,
+  // not 30 — so the four sittings this adapter used to clip at the fetch are
+  // in. Jul 14, previously "31 days back, one day outside", is one of them.
+  // The 2018 row and the spring rows are still outside 90 days and are a
+  // deliberate archive clip, not drops: the count says which is which.
+  assert.equal(meetings.length, 6, `${meetings.length} meetings in window`);
   assert.equal(drops.unknownVenue, 0, "venue cache missed an observed venue");
   assert.equal(drops.unplaceableInTime, 0);
 

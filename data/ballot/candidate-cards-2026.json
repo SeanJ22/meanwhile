@@ -470,6 +470,24 @@
       "bioSourceLabel": null,
       "email": null,
       "phone": null
+    },
+    "ballot-az-pima:governor|Teri Ann Hourihan": {
+      "photoUrl": "/candidates/az-pima-governor-hourihan-teri-ann.jpg",
+      "photoSource": "campaign-provided — published by the campaign at https://teriann4azgov.org, read 2026-08-15; committed copy served from our origin, metadata stripped. Removed on request.",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:mine-inspector|Walter \"Les\" Presmyk": {
+      "photoUrl": "/candidates/az-pima-mine-inspector-presmyk-walter-les.jpg",
+      "photoSource": "campaign-provided — published by the campaign at https://lespresmyk.com, read 2026-08-15; committed copy served from our origin, metadata stripped. Removed on request.",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
     }
   },
   "hunts": [

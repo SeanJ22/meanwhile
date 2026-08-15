@@ -126,6 +126,14 @@ export type AgendaSourceType =
    * public agenda/notice links. First tenant: Amphitheater USD (2026-08-18).
    */
   | "BOARDBOOK"
+  /**
+   * Not a vendor — a shape. The body publishes its whole year of meeting
+   * dates as a list on its own page, with one sentence underneath naming the
+   * time and the room. Ladder rung 2, no portal in the path, and how a very
+   * large number of American school boards publish. First body: Morris Hills
+   * Regional School District (2026-08-15, M78).
+   */
+  | "SCHEDULEPAGE"
   | "PRIMEGOV"
   | "NOVUSAGENDA"
   | "SIMBLI"

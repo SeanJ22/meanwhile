@@ -107,8 +107,20 @@ test("normalizes Planning Commission meetings with venue, agenda and cancellatio
   ];
   const { meetings, drops } = source.normalizeWithDrops(raw, NOW);
 
-  // Window [Jul 15, Oct 13] over the published dates 8/12, 9/2, 10/7.
-  assert.equal(meetings.length, 3, JSON.stringify(meetings.map((m) => m.id)));
+  // M76 (2026-08-15): the back window is the SERVED window — 90 days, not
+  // 30 — so the window is [May 16, Oct 13] and the page's June 3 and July 1
+  // sittings come in with the three that were already here. Five, named, so
+  // the next widening has to state its count too.
+  assert.deepEqual(
+    meetings.map((m) => m.id),
+    [
+      "clerksboards:38:2026-06-03",
+      "clerksboards:38:2026-07-01",
+      "clerksboards:38:2026-08-12",
+      "clerksboards:38:2026-09-02",
+      "clerksboards:38:2026-10-07",
+    ],
+  );
   assert.equal(drops.unknownVenue, 0);
 
   const aug = meetings.find((m) => m.id === "clerksboards:38:2026-08-12");

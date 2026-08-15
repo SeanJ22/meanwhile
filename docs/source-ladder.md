@@ -873,3 +873,242 @@ goes to a federal address service that sentence is false, so it now names the
 route: the choice stays on the device and is never sent to us, and putting the
 street on the map asks the Census Bureau's free address lookup, street name
 and zip, never a house number.
+
+## 2026-08-15 — the depth session: NH and NJ get their bodies (M76–M79)
+
+Four findings, each of which would have produced a false "not found" or a
+false "that's all there is" for anyone who stopped one rung early.
+
+### The served window was not the fetch window (M76)
+
+Every adapter carried `WINDOW_BACK_DAYS = 30`, under a comment claiming it
+matched the cascade, while `CONCLUDED_LOOKBACK_DAYS` had been raised to 90.
+Sixty days of published, retrievable history were being dropped **at the
+fetch**, at every zip. No count check could catch it: each adapter honestly
+reported what it had asked for, and what it asked for was wrong.
+
+Measured after deriving the windows from `lib/meetings/constants.ts`:
+
+| Where | Before | After |
+|---|---|---|
+| 03255 (Newbury + Merrimack) | 3 meetings | 7 |
+| Morris County, NJ | 12 | 20 |
+| Tucson clerksboards | 15 | 24 |
+| Amphitheater USD | 2 | 6 |
+
+**The rung**: when a jurisdiction looks thinner than its portal, check the
+adapter's own window before hunting for a second source.
+
+### A township's boards are in a different calendar category (M77)
+
+Rockaway Township's wired iCal feed is `catID=25` and carries the Township
+Council and nothing else. **`catID=30` is a second calendar** carrying the
+Planning Board and the Board of Adjustment with real start times. Probing the
+ids is the whole rung: 13 of the 15 tried return a 477-byte empty calendar,
+and the two that do not tripled the township's coverage.
+
+| Body | AgendaCenter category | 2026 sittings archived |
+|---|---|---|
+| Township Council | 2 | 13 |
+| Board of Adjustment | 3 | 12 |
+| Planning Board | 4 | 7 |
+| Environmental Commission | 5 | 0 — archive stops in 2019 |
+| Board of Assessment Commissioners | 7 | 0 — archive stops in 2022 |
+
+The last two are registry rows carrying the finding and deliberately not
+wired: neither publishes anything the served 90-day window could render. The
+township's sitemap and staff directory carry **no page at all** for the
+Environmental Commission (checked 2026-08-15 — the only "Environmental" hit
+is a health-specialist job title), so its `homepageUrl` is the archive,
+because that is the only page the township publishes about it.
+
+Three sibling defects the new rows exposed, all of which existed before them:
+
+- **CivicPlus announces a cancellation by editing the SUMMARY text**
+  (`"Board of Adjustment Meeting Cancelled 8/18/26"`), never by setting the
+  iCal `STATUS` property. Two future sittings were rendering as SCHEDULED.
+- **The same notice is pasted into `LOCATION`** as an HTML block in front of
+  the address, so both canceled sittings dropped as `unknownVenue`.
+- **Archive de-duplication was keyed on the division.** Three bodies now share
+  one `ocdId`, and the council's Tuesday would have deleted the planning
+  board's Tuesday.
+
+### A town's portal may not be the town (M79)
+
+**Newbury's CivicWeb tenant carries only the Selectboard.** Proven rather than
+assumed: `MeetingsService.svc/meetings?from=2026-01-01&to=2026-12-31` returned <!-- expected-future: the end of the query range sent to the CivicWeb service, not a claim about when anything happened; the whole point of the query was to cover the rest of the calendar year -->
+**20 sittings and every one was TypeId 10**. The Planning Board, Zoning Board
+of Adjustment and Conservation Commission are not on it.
+
+`MeetingTypeList.aspx?type=<n>` **ignores the parameter** on this tenant —
+every value from 1 to 15 returned the identical page and the identical three
+meetings. Type discovery has to come from the service payload's own `TypeId`s,
+not from the type-list page.
+
+Two NH hosts refuse this pipeline entirely, recorded per URL so nobody records
+them as walls:
+
+| Host | Root | Agendas page | Feed / sitemap | robots.txt |
+|---|---|---|---|---|
+| `newbury.nh.gov` | 403 | 403 (`/planning-board`) | 403 (`/sitemap.xml`) | **200** — Drupal, `Crawl-delay: 10`, names no sitemap |
+| `kearsarge.org` | 403 | 403 | 403 (`/sitemap.xml`, `/rss.xml`) | — |
+
+Both are the real-browser rung's, and it is the next rung, not the end of the
+list. The coverage audit already records that rung working for Kearsarge on
+2026-08-14 and naming its prize: `2026-2027_school_board_schedule.pdf`.
+
+### The published annual schedule is a source shape, not a vendor (M78)
+
+Morris Hills Regional — 07866's high school district, `NOT_ATTEMPTED` until
+this session — **runs no agenda vendor at all** and publishes better than most
+districts that do. Its BOE Meetings page carries the year as a dated list:
+
+```
+Monday, January 26, 2026
+Monday, February 23, 2026
+…
+All meetings begin at 6:30 P.M. and are held in the Board of Education -
+Board Conference Room.
+```
+
+That is ladder rung 2 with no portal in the path, and it is how a very large
+number of American school boards publish. It is now an adapter
+(`lib/sources/schedulepage/`) and an `AgendaSourceType`. Three rules it was
+built under:
+
+1. **The time is parsed from the body's own sentence, never defaulted.** A
+   page with dates and no such sentence ships `startPrecision: "DAY"` — the
+   M59 shape — rather than an hour that would be right most of the time and
+   wrong exactly on the special sitting somebody wanted to attend.
+2. **The weekday prefix is required.** A bare `August 17, 2026` in a footer,
+   a news teaser or a copyright line would otherwise become a meeting. The
+   schedule list is the only place a body writes the weekday out.
+3. **Documents join on the date the body wrote in its own link text**
+   (`"August 17, 2026 - Regular Meeting"`), never on a filename that may or
+   may not be the meeting's date.
+
+`VENDOR_API: MISS` is recorded on the audit row on purpose. "No vendor" is a
+finding about this district, not a gap in the hunt.
+
+## 2026-08-15 — LegiScan lands, and the join is the whole problem (D49)
+
+State-legislature roll calls for AZ, NJ and NH. The data was never the hard
+part; **the join was**, and it fails in a way that does not throw.
+
+### The retrieval discipline, as built
+
+Bulk first. LegiScan publishes each session as one ZIP behind
+`getDatasetList` → `getDataset`, refreshed Sunday mornings. `dataset_hash` is
+stored in the committed snapshot and compared before every download; an
+unchanged hash is **never** re-downloaded. The legiscan.com front end is not
+touched at all. Node ships no archive reader, so `lib/sources/legiscan/zip.ts`
+reads the central directory directly rather than adding a dependency — and it
+throws on an unreadable entry rather than skipping it, which is the fourth
+sighting of the returned-nothing shape wearing a fifth hat.
+
+Sessions taken, all `2026-08-09` datasets:
+
+| State | session_id | People | Roll calls published |
+|---|---|---|---|
+| AZ | 2235 (57th Legislature, 2nd Regular) | 92 | 7,283 |
+| NJ | 2250 (2026-2027 Regular) | 120 | 1,539 |
+| NH | 2236 (2026 Regular) | 426 | 360 |
+
+### The district mapping, and the failure it hides
+
+LegiScan gives a district string; we need an OCD district key.
+
+- **AZ and NJ** number statewide: `HD-040` → `sldl:40`, `SD-025` → `sldu:25`.
+- **New Hampshire** numbers House districts *within a county*: `HD-12-HIL` is
+  Hillsborough 12. The Census SLDL code concatenates the county's
+  **zero-based alphabetical** ordinal with the two-digit district number —
+  Hillsborough is 5, so `sldl:512`.
+
+**Both NH details were got wrong first, and neither threw.** An ordinal table
+indexed from 1 produced 10 matches out of 426 — which reads exactly like a
+thin roster, not like a broken key. And zero-padding Belknap (ordinal 0)
+produced `sldl:007` against a real id of `sldl:7`, silently losing all nine
+Belknap seats. Both are now asserted against **our own committed boundary
+labels**: `public/geo/sldl-33.geojson` carries `State House District
+Merrimack 08` beside `sldl:608`, so every NH lower district round-trips
+through the mapping in `tests/legiscan.test.ts`.
+
+**Never by name alone.** The match is district AND surname: the district
+identifies the seat, and the surname is compared only *within* a district
+that already matched. Surnames are folded for accents and generational
+suffixes, because two sources routinely differ on middle names and nicknames
+("Walter"/"Walt", "Mary Jane"/"Mary", "James"/"Jim" all occur in this data).
+
+### The match rate, with its denominator
+
+| State | LegiScan people matched | of people in the session | of roster seats our geometry clips |
+|---|---|---|---|
+| AZ | 24 | 92 | 24 |
+| NJ | 21 | 120 | 21 |
+| NH | 85 | 426 | 85 |
+
+The large denominators are not a gap: our boundary files clip three counties,
+so most of a state's legislature governs nowhere we render. **Every roster
+seat that could match, matched.**
+
+### Spot-verified, ten by name and district against both sources
+
+| # | State | LegiScan | Ours |
+|---|---|---|---|
+| 1 | AZ | 4232 Sylvia Allen, HD-007 | Sylvia Allen, `sldl:7` |
+| 2 | AZ | 10708 Gail Griffin, HD-019 | Gail Griffin, `sldl:19` |
+| 3 | AZ | 20172 Walter Blackman, HD-007 | Walt Blackman, `sldl:7` |
+| 4 | AZ | 20571 Alma Hernandez, HD-020 | Alma Hernández, `sldl:20` |
+| 5 | NJ | 2948 John DiMaio, HD-023 | John DiMaio, `sldl:23` |
+| 6 | NJ | 3086 Jay Webber, HD-026 | Jay Webber, `sldl:26` |
+| 7 | NJ | 3105 Erik Peterson, HD-023 | Erik Peterson, `sldl:23` |
+| 8 | NH | 4910 Timothy Soucy, HD-21-MER | Timothy Soucy, `sldl:621` |
+| 9 | NH | 5091 Mary Wallner, HD-19-MER | Mary Jane Wallner, `sldl:619` |
+| 10 | NH | 10492 James MacKay, HD-18-MER | Jim MacKay, `sldl:618` |
+
+Our side cites each legislature's own roster (azleg.gov, njleg.state.nj.us,
+gc.nh.gov's members.txt via an Internet Archive capture, since gc.nh.gov
+resets the TLS handshake from this pipeline).
+
+**Two people did NOT match and are recorded rather than forced**: AZ
+`HD-007 David Marshall` and NH `HD-29-HIL Sheila Seidel` are in LegiScan's
+current membership and in neither of our roster snapshots for those seats.
+No join, no render — their votes are not stored against a guess at who they
+are.
+
+### The clip, stated
+
+Arizona alone published 7,283 roll calls in one session. The snapshot holds
+**the union of each matched member's twelve most recent** — 72 roll calls and
+1,560 positions across 130 officeholders, every one of whom has exactly
+twelve.
+
+Taking "the 60 most recent per state" was tried first and was wrong in a way
+worth writing down: **Arizona votes in bursts**, so 60 roll calls covered two
+days, and any member absent those two days would have rendered an empty
+record that reads as "never votes". A clip has to be driven by the surface it
+feeds.
+
+### The guard fired during the build, which is the point of it
+
+Changing the clip rule made the refresh produce 24 roll calls per state
+against 60 committed, and the thin-snapshot guard refused the write and kept
+the old file — exactly as it would for a genuine upstream shrink. The
+re-baseline was deliberate: the old snapshot was deleted by hand and the
+fetch re-run.
+
+### What is refused, not estimated
+
+A party-by-party count is **null** on every state vote. We hold positions only
+for members whose district our geometry clips, so any tally would be a
+fraction of the chamber's and could never sum to the recorded result — which
+is the same condition the federal breakdown already refuses on.
+
+### Attribution
+
+LegiScan's data is **CC BY 4.0**, which requires attribution wherever it
+appears. `LEGISCAN_ATTRIBUTION` is one object, sent with the rows by the API
+so it cannot drift from the store it describes, and rendered under the Recent
+votes heading. `tests/legiscan.test.ts` asserts a state member's payload
+carries it and a federal member's does not — the chambers' public-domain XML
+must never be credited to LegiScan.

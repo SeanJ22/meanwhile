@@ -1,5 +1,9 @@
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import {
+  CONCLUDED_LOOKBACK_DAYS,
+  UPCOMING_HORIZON_DAYS,
+} from "../../meetings/constants.ts";
+import {
   isPlacelessLocation,
   resolveVenue,
 } from "../../meetings/venue-cache.ts";
@@ -37,9 +41,18 @@ import type {
 
 const SOURCE_NAME = "boardbook";
 
-/** Matches the cascade's reach: 60 days forward, 30 back. */
-const WINDOW_FORWARD_DAYS = 60;
-const WINDOW_BACK_DAYS = 30;
+/**
+ * The fetch window IS the served window (M76, 2026-08-15).
+ *
+ * These were literal 60 and 30 with a comment claiming they matched the
+ * cascade. The served lookback moved 30 -> 90 and the adapters did not, so
+ * every source quietly dropped sixty days of published, retrievable history
+ * at the fetch — invisible to every count check, because each adapter
+ * honestly reported what it had asked for. Deriving them is what makes the
+ * drift impossible rather than merely noticed.
+ */
+const WINDOW_FORWARD_DAYS = UPCOMING_HORIZON_DAYS;
+const WINDOW_BACK_DAYS = CONCLUDED_LOOKBACK_DAYS;
 
 const BASE = "https://meetings.boardbook.org";
 

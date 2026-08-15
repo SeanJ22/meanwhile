@@ -10,6 +10,7 @@ import { makeClerksBoardsSource } from "../clerksboards/index.ts";
 import { makeDiligentSource } from "../diligent/index.ts";
 import { makeIqm2Source } from "../iqm2/index.ts";
 import { makeRevizeSource } from "../revize/index.ts";
+import { makeSchedulePageSource } from "../schedulepage/index.ts";
 import {
   legistarSource,
   normalizeWithDrops as legistarNormalizeWithDrops,
@@ -100,6 +101,12 @@ const CAPABILITIES: Array<{
     name: "revize",
     types: ["REVIZE"],
     make: (rows) => makeRevizeSource(rows) as ReportingMeetingSource<unknown>,
+  },
+  {
+    name: "schedulepage",
+    types: ["SCHEDULEPAGE"],
+    make: (rows) =>
+      makeSchedulePageSource(rows) as ReportingMeetingSource<unknown>,
   },
 ];
 

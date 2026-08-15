@@ -312,6 +312,51 @@ export const COVERAGE_AUDITS: BodyCoverageAudit[] = [
       "Not exhausted and not blocked — the host refuses every automated client this environment has, including its browser pane, while serving humans. Next errands, in value order: extract the Google Calendar embed id from /district/family-community/pages/calendars (→ public basic.ics, the only true feed candidate); fetch the 2026-2027 schedule PDF; enumerate the agendas page. Meetings are 6:30 PM at 165 Main St, New London per the search-indexed schedule page. Same host behaviour as newbury.nh.gov; one browser-grade fetch layer would serve both.",
   },
 
+  // ── The depth session, 2026-08-15 ────────────────────────────────────────
+  // 07866's HIGH SCHOOL district. NOT_ATTEMPTED until this session — the
+  // census named it, and the hunt found a district that runs no agenda
+  // vendor at all and publishes better than most that do.
+  {
+    bodyId:
+      "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district#board",
+    attemptedAt: "2026-08-15",
+    attemptedBy: "session 2026-08-15, the NH/NJ depth session (M78)",
+    outcome: "COVERED",
+    rungs: [
+      {
+        rung: "BODY_HOMEPAGE",
+        outcome: "HIT",
+        url: "https://www.mhrd.org/",
+        note: "200, 96,585 bytes. mhrd.org and www.mhrd.org both serve; morrishills.org returns a 114-byte stub. The homepage's own nav links every board page.",
+      },
+      {
+        rung: "BODY_AGENDA_PAGE",
+        outcome: "HIT",
+        url: "https://www.mhrd.org/administration/board-of-education/boe-meetings",
+        note: "200. The whole 2026 schedule as a dated list — twelve sittings, Jan 26 2026 through Jan 4 2027 — with one sentence under it: 'All meetings begin at 6:30 P.M. and are held in the Board of Education - Board Conference Room.' The time is read from that sentence, never defaulted. March 23 carries the district's own asterisk noting it moved from 03/16.",
+      },
+      {
+        rung: "BODY_AGENDA_PAGE",
+        outcome: "HIT",
+        url: "https://www.mhrd.org/administration/board-of-education/board-agendas",
+        note: "200. 41 PDF links, agendas and minutes, each labelled with the meeting date in the link text the district wrote — so the join is on a published date rather than a filename. Documents are served from resources.finalsite.net.",
+      },
+      {
+        rung: "VENDOR_API",
+        outcome: "MISS",
+        url: null,
+        note: "No agenda portal exists — no BoardDocs, Diligent, CivicWeb, Apptegy or BoardBook tenant. The district is a Finalsite CMS site publishing its own pages. Recorded because 'no vendor' is a finding about this district, not a gap in the hunt.",
+      },
+    ],
+    homepageUrl: "https://www.mhrd.org/",
+    agendaSourceType: "SCHEDULEPAGE",
+    agendaSourceRef:
+      "https://www.mhrd.org/administration/board-of-education/boe-meetings",
+    coverageStatus: "LIVE",
+    notes:
+      "The first body on the SCHEDULEPAGE shape: the body publishes its year of dates on one page with a sentence naming the time and room. Not a vendor — a pattern, and the one a very large number of American school boards use. The venue is curated once from the room name in that sentence plus the district's own footer address (48 Knoll Drive, Rockaway NJ 07866), geocoded through the Census Bureau. A zip sits in two school districts at once: 07866 is Rockaway Township's K-8 district AND this one, and both are its government.",
+  },
+
   // ── New rows, 2026-08-13 ─────────────────────────────────────────────────
 
   {

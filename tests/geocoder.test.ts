@@ -11,6 +11,8 @@ import {
   censusGeocodeUrl,
   coherentMidpoint,
   locateStreetInZip,
+  locateAddressInZip,
+  lookupStreetInZip,
   parseCensusPoint,
   streetOnly,
 } from "../lib/geo/census-geocoder.ts";
@@ -278,4 +280,110 @@ test("D53: a street whose samples agree resolves; one that scatters does not", a
     }),
   });
   assert.equal(scattered, null, "a 5.6 km street produced a single confident point");
+});
+
+test("the author's ruling: a crossing street is a question, not a refusal", async () => {
+  // The same two responses D53's test uses. Under `lookupStreetInZip` they
+  // stop collapsing into one null: a street we cannot find and a street that
+  // runs across the map are different answers, and only one of them has a
+  // question the reader can settle.
+  const crossing = await lookupStreetInZip("Green Pond Road", "07866", {
+    fetchImpl: stubFetch({
+      "1 Green Pond Road": {
+        result: { addressMatches: [{ coordinates: { x: -74.50227, y: 40.9106 } }] },
+      },
+      "800 Green Pond Road": {
+        result: { addressMatches: [{ coordinates: { x: -74.49598, y: 40.96108 } }] },
+      },
+    }),
+  });
+  assert.equal(crossing.kind, "CROSSES");
+  if (crossing.kind !== "CROSSES") return;
+  assert.equal(crossing.street, "Green Pond Road");
+  assert.ok(crossing.spreadKm > MAX_SPREAD_KM, `spread ${crossing.spreadKm}`);
+
+  // A street that agrees still resolves to a point, unchanged.
+  const tight = await lookupStreetInZip("Academy St", "07866", {
+    fetchImpl: stubFetch({
+      "1 Academy St": {
+        result: { addressMatches: [{ coordinates: { x: -74.51317, y: 40.90273 } }] },
+      },
+      "50 Academy St": {
+        result: { addressMatches: [{ coordinates: { x: -74.5137, y: 40.90337 } }] },
+      },
+    }),
+  });
+  assert.equal(tight.kind, "POINT");
+
+  // Nothing found at all is still NOT_FOUND — the refusal remains where it
+  // belongs, and a street with no matches must never produce the question.
+  const missing = await lookupStreetInZip("Nowhere Ave", "07866", {
+    fetchImpl: stubFetch({}),
+  });
+  assert.equal(missing.kind, "NOT_FOUND");
+});
+
+test("the answer resolves to the point, and the house number is never kept", async () => {
+  let asked = "";
+  const point = await locateAddressInZip("808", "Green Pond Road", "07866", {
+    fetchImpl: (async (url: string) => {
+      asked = String(url);
+      return {
+        ok: true,
+        json: async () => ({
+          result: { addressMatches: [{ coordinates: { x: -74.49598, y: 40.96108 } }] },
+        }),
+      } as unknown as Response;
+    }) as unknown as typeof fetch,
+  });
+
+  assert.ok(point);
+  assert.equal(point.samples, 1, "one exact address is one request, not four");
+  // The number went to the Bureau, which is the only place it may go.
+  assert.match(
+    decodeURIComponent(asked).replace(/\+/g, " "),
+    /808 Green Pond Road, 07866/,
+  );
+  // And it is not in what comes back. `street` is what the card renders, and
+  // a card must never become a household.
+  assert.equal(point.street, "Green Pond Road");
+  assert.ok(
+    !JSON.stringify(point).includes("808"),
+    "the house number survived into the returned point",
+  );
+
+  // No number, no request.
+  let called = false;
+  const nothing = await locateAddressInZip("", "Green Pond Road", "07866", {
+    fetchImpl: (async () => {
+      called = true;
+      return { ok: false } as unknown as Response;
+    }) as unknown as typeof fetch,
+  });
+  assert.equal(nothing, null);
+  assert.equal(called, false, "an empty house number still hit the network");
+});
+
+test("the house number never reaches the narrowing store or a log", () => {
+  const source = readFileSync(
+    new URL("../components/map/narrowing-prompt.tsx", import.meta.url),
+    "utf8",
+  );
+  // The number lives in component state and goes to the geocoder. It must
+  // not be written to the device store, logged, or sent to our own API —
+  // the same rule the resolved point ships under.
+  for (const forbidden of [
+    "setStreet(houseNumber",
+    "setDivisions(houseNumber",
+    "/api/log",
+    "console.log(houseNumber",
+    "localStorage",
+  ]) {
+    assert.ok(
+      !source.includes(forbidden),
+      `the narrowing prompt reaches for ${forbidden} with the house number`,
+    );
+  }
+  // And it is cleared once the request finishes, whatever the outcome.
+  assert.match(source, /\.finally\([\s\S]{0,200}setHouseNumber\(""\)/);
 });

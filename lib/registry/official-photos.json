@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-15T00:03:07.385Z",
+  "generatedAt": "2026-08-15T00:20:56.543Z",
   "photos": [
     {
       "officeholderId": "congress:S001181",
@@ -3843,69 +3843,153 @@
       "license": "Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images)",
       "attribution": null,
       "collectedAt": "2026-08-15T00:05:24.047Z"
-    }
-  ],
-  "missing": [
+    },
+    {
+      "officeholderId": "roster:pima#5",
+      "name": "Andrés Cano",
+      "url": "/officials/roster-pima-5.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File%3ACano%20Final.jpg",
+      "license": "CC BY-SA 4.0 — Tucsondemocrat (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3ACano%20Final.jpg)",
+      "attribution": "Tucsondemocrat",
+      "collectedAt": "2026-08-15T00:20:56.527Z"
+    },
+    {
+      "officeholderId": "roster:tucson-mc#1",
+      "name": "Regina Romero",
+      "url": "/officials/roster-tucson-mc-1.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File%3ARegina%20Romero%20-%202020%2001.jpg",
+      "license": "Public domain — The United States Senate - Office of Senator Martha McSally (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3ARegina%20Romero%20-%202020%2001.jpg)",
+      "attribution": "The United States Senate - Office of Senator Martha McSally",
+      "collectedAt": "2026-08-15T00:20:56.528Z"
+    },
+    {
+      "officeholderId": "roster:susd12#4",
+      "name": "Consuelo Hernandez",
+      "url": "/officials/roster-susd12-4.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File%3AConsuelo%20Hernandez%20by%20Gage%20Skidmore.jpg",
+      "license": "CC BY-SA 3.0 — Gage Skidmore (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3AConsuelo%20Hernandez%20by%20Gage%20Skidmore.jpg)",
+      "attribution": "Gage Skidmore",
+      "collectedAt": "2026-08-15T00:20:56.530Z"
+    },
     {
       "officeholderId": "congress:B001323",
       "name": "Nicholas J. Begich III",
-      "reason": "pictorial-directory image HTTP 404; Congress.gov depiction exists but is \"Image courtesy of the Member\" (unknown license — not shippable per D20)",
-      "attemptedAt": "2026-08-15T00:03:07.385Z"
+      "url": "/officials/B001323.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File%3ANick%20Begich%20III.jpg",
+      "license": "Public domain — House Creative Services (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3ANick%20Begich%20III.jpg)",
+      "attribution": "House Creative Services",
+      "collectedAt": "2026-08-15T00:20:56.531Z"
     },
     {
       "officeholderId": "congress:B001321",
       "name": "Tom Barrett",
-      "reason": "pictorial-directory image HTTP 404; Congress.gov depiction exists but is \"Image courtesy of the Member\" (unknown license — not shippable per D20)",
-      "attemptedAt": "2026-08-15T00:03:07.385Z"
+      "url": "/officials/B001321.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File%3ARep.%20Tom%20Barrett%20official%20photo%2C%20119th%20Congress%20(cropped).jpg",
+      "license": "Public domain — House Creative Services (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3ARep.%20Tom%20Barrett%20official%20photo%2C%20119th%20Congress%20(cropped).jpg)",
+      "attribution": "House Creative Services",
+      "collectedAt": "2026-08-15T00:20:56.532Z"
     },
     {
       "officeholderId": "congress:B001324",
       "name": "Wesley Bell",
-      "reason": "pictorial-directory image HTTP 404; Congress.gov depiction exists but is \"Image courtesy of the Member\" (unknown license — not shippable per D20)",
-      "attemptedAt": "2026-08-15T00:03:07.385Z"
+      "url": "/officials/B001324.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File%3ARep.%20Wesley%20Bell%20Official%20Portrait.jpg",
+      "license": "Public domain — Ike Hayman, House Creative Services (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3ARep.%20Wesley%20Bell%20Official%20Portrait.jpg)",
+      "attribution": "Ike Hayman, House Creative Services",
+      "collectedAt": "2026-08-15T00:20:56.533Z"
     },
     {
       "officeholderId": "congress:W000831",
       "name": "James R. Walkinshaw",
-      "reason": "pictorial-directory image HTTP 404; Congress.gov depiction exists but is \"Image courtesy of the Member\" (unknown license — not shippable per D20)",
-      "attemptedAt": "2026-08-15T00:03:07.385Z"
+      "url": "/officials/W000831.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File%3AJames%20Walkinshaw.jpg",
+      "license": "Public domain — US Congress (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3AJames%20Walkinshaw.jpg)",
+      "attribution": "US Congress",
+      "collectedAt": "2026-08-15T00:20:56.534Z"
     },
     {
       "officeholderId": "congress:G000606",
       "name": "Adelita S. Grijalva",
-      "reason": "pictorial-directory image HTTP 404; Congress.gov depiction exists but is \"Image courtesy of the Member\" (unknown license — not shippable per D20)",
-      "attemptedAt": "2026-08-15T00:03:07.385Z"
+      "url": "/officials/G000606.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File%3ARep.%20Adelita%20Grijalva%20Official%20Portrait.jpg",
+      "license": "Public domain — Damien Salas, Office of the Clerk U.S.House of Representatives (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3ARep.%20Adelita%20Grijalva%20Official%20Portrait.jpg)",
+      "attribution": "Damien Salas, Office of the Clerk U.S.House of Representatives",
+      "collectedAt": "2026-08-15T00:20:56.535Z"
     },
     {
       "officeholderId": "congress:V000139",
       "name": "Matt Van Epps",
-      "reason": "pictorial-directory image HTTP 404; Congress.gov depiction exists but is \"Image courtesy of the Member\" (unknown license — not shippable per D20)",
-      "attemptedAt": "2026-08-15T00:03:07.385Z"
+      "url": "/officials/V000139.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File%3ARep.%20Matt%20Van%20Epps%20official%20portrait%2C%20119th%20Congress.jpg",
+      "license": "Public domain — House Creative Services (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3ARep.%20Matt%20Van%20Epps%20official%20portrait%2C%20119th%20Congress.jpg)",
+      "attribution": "House Creative Services",
+      "collectedAt": "2026-08-15T00:20:56.535Z"
     },
     {
       "officeholderId": "congress:M001245",
       "name": "Christian D. Menefee",
-      "reason": "pictorial-directory image HTTP 404; Congress.gov depiction exists but is \"Image courtesy of the Member\" (unknown license — not shippable per D20)",
-      "attemptedAt": "2026-08-15T00:03:07.385Z"
+      "url": "/officials/M001245.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File%3AChristian%20Menefee%2C%20official%20portrait%20(119th%20Congress).jpg",
+      "license": "Public domain — U.S. House of Representatives (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3AChristian%20Menefee%2C%20official%20portrait%20(119th%20Congress).jpg)",
+      "attribution": "U.S. House of Representatives",
+      "collectedAt": "2026-08-15T00:20:56.536Z"
     },
     {
       "officeholderId": "congress:F000485",
       "name": "Clay Fuller",
-      "reason": "pictorial-directory image HTTP 404; Congress.gov depiction exists but is \"Image courtesy of the Member\" (unknown license — not shippable per D20)",
-      "attemptedAt": "2026-08-15T00:03:07.385Z"
+      "url": "/officials/F000485.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File%3AClay%20Fuller%20official%20congressional%20photograph%20119th%20congress.jpg",
+      "license": "Public domain — Unknown authorUnknown author (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3AClay%20Fuller%20official%20congressional%20photograph%20119th%20congress.jpg)",
+      "attribution": "Unknown authorUnknown author",
+      "collectedAt": "2026-08-15T00:20:56.537Z"
     },
     {
       "officeholderId": "congress:M001246",
       "name": "Analilia Mejia",
-      "reason": "pictorial-directory image HTTP 404; Congress.gov depiction exists but is \"Image courtesy of the Member\" (unknown license — not shippable per D20)",
-      "attemptedAt": "2026-08-15T00:03:07.385Z"
+      "url": "/officials/M001246.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File%3AAnalilia%20Mejia%2C%20official%20portrait%20(119th%20Congress).jpg",
+      "license": "Public domain — U.S. House of Representatives (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3AAnalilia%20Mejia%2C%20official%20portrait%20(119th%20Congress).jpg)",
+      "attribution": "U.S. House of Representatives",
+      "collectedAt": "2026-08-15T00:20:56.538Z"
     },
     {
       "officeholderId": "congress:G000607",
       "name": "James Gallagher",
-      "reason": "pictorial-directory image HTTP 404; Congress.gov depiction exists but is \"Image courtesy of the Member\" (unknown license — not shippable per D20)",
-      "attemptedAt": "2026-08-15T00:03:07.385Z"
+      "url": "/officials/G000607.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File%3AJames%20Gallagher%2C%20official%20portrait%20(119th%20Congress).jpg",
+      "license": "Public domain — U.S. House of Representatives (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3AJames%20Gallagher%2C%20official%20portrait%20(119th%20Congress).jpg)",
+      "attribution": "U.S. House of Representatives",
+      "collectedAt": "2026-08-15T00:20:56.539Z"
     },
+    {
+      "officeholderId": "statewide:az/governor",
+      "name": "Katie Hobbs",
+      "url": "/officials/statewide-az-governor.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File%3AKatie%20Hobbs%20by%20Gage%20Skidmore.jpg",
+      "license": "CC BY-SA 3.0 — Gage Skidmore (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3AKatie%20Hobbs%20by%20Gage%20Skidmore.jpg)",
+      "attribution": "Gage Skidmore",
+      "collectedAt": "2026-08-15T00:20:56.540Z"
+    },
+    {
+      "officeholderId": "statewide:nj/governor",
+      "name": "Mikie Sherrill",
+      "url": "/officials/statewide-nj-governor.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File%3AMikie%20Sherrill%20Headshot.jpg",
+      "license": "CC BY-SA 4.0 — Joeshmonobody (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3AMikie%20Sherrill%20Headshot.jpg)",
+      "attribution": "Joeshmonobody",
+      "collectedAt": "2026-08-15T00:20:56.541Z"
+    },
+    {
+      "officeholderId": "statewide:nh/governor",
+      "name": "Kelly Ayotte",
+      "url": "/officials/statewide-nh-governor.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File%3AKelly%20Ayotte%2C%20Official%20Portrait%2C%20112th%20Congress%202.jpg",
+      "license": "Public domain — United States Senate (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3AKelly%20Ayotte%2C%20Official%20Portrait%2C%20112th%20Congress%202.jpg)",
+      "attribution": "United States Senate",
+      "collectedAt": "2026-08-15T00:20:56.542Z"
+    }
+  ],
+  "missing": [
     {
       "officeholderId": "plural:1e39adcf-868d-4722-a07b-09fcd36ad9ed",
       "name": "Gail Griffin",
@@ -3977,6 +4061,414 @@
       "name": "Dan Innis",
       "reason": "state legislature portrait — per-state terms hunt not yet done (docs/source-ladder.md)",
       "attemptedAt": "2026-08-14T15:04:22.554Z"
+    },
+    {
+      "officeholderId": "roster:tusd#1",
+      "name": "Dr. Ravi Shah",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:tusd#2",
+      "name": "Natalie Luna Rose",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:tusd#3",
+      "name": "Jennifer Eckstrom",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:tusd#4",
+      "name": "Val Romero",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:tusd#5",
+      "name": "Sadie Shaw",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:pima#1",
+      "name": "Rex Scott",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:pima#2",
+      "name": "Dr. Matt Heinz",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:pima#3",
+      "name": "Jennifer Allen",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 5 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Pima|Pima County|Arizona/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:pima#4",
+      "name": "Steve Christy",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:tucson-mc#2",
+      "name": "Lane Santa Cruz",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:tucson-mc#3",
+      "name": "Paul Cunningham",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 5 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Tucson|Tucson Mayor &|Arizona/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:tucson-mc#4",
+      "name": "Kevin Dahl",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 2 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Tucson|Tucson Mayor &|Arizona/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:tucson-mc#5",
+      "name": "Nikki Lee",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 5 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Tucson|Tucson Mayor &|Arizona/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:tucson-mc#6",
+      "name": "Selina Barajas",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:tucson-mc#7",
+      "name": "Miranda Schubert",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:vail#1",
+      "name": "Allison Pratt",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:vail#2",
+      "name": "Callie Tippett",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:vail#3",
+      "name": "Jen Anderson",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 1 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Vail Unified District|Vail Unified School District Governing|Arizona/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:vail#4",
+      "name": "Ed Buster",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:vail#5",
+      "name": "Chris King",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 5 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Vail Unified District|Vail Unified School District Governing|Arizona/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:newbury#1",
+      "name": "Kristen Schultz",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 3 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Merrimack|Newbury Selectboard|New Hampshire/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:newbury#2",
+      "name": "Scott Wheeler",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 5 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Merrimack|Newbury Selectboard|New Hampshire/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:newbury#3",
+      "name": "Sandra Warde",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:kearsarge#1",
+      "name": "Alison Mastin",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:kearsarge#2",
+      "name": "Kristen Schultz",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 3 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Kearsarge Regional School District|Kearsarge Regional School|New Hampshire/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:kearsarge#3",
+      "name": "James MacKenna",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 1 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Kearsarge Regional School District|Kearsarge Regional School|New Hampshire/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:kearsarge#4",
+      "name": "David Keith",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 5 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Kearsarge Regional School District|Kearsarge Regional School|New Hampshire/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:kearsarge#5",
+      "name": "Art Bobruff",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:kearsarge#6",
+      "name": "Patrick McGowan",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 5 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Kearsarge Regional School District|Kearsarge Regional School|New Hampshire/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:kearsarge#7",
+      "name": "Paul Lakevicius",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:kearsarge#8",
+      "name": "Nancy Glynn",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 1 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Kearsarge Regional School District|Kearsarge Regional School|New Hampshire/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:kearsarge#9",
+      "name": "Eric Gregoire",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:rockaway#0",
+      "name": "Joseph Jackson",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 5 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Morris|Rockaway Township|New Jersey/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:rockaway#1",
+      "name": "Howard Morrison",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 4 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Morris|Rockaway Township|New Jersey/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:rockaway#2",
+      "name": "Jonathan Sackett",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 2 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Morris|Rockaway Township|New Jersey/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:rockaway#3",
+      "name": "Adam Salberg",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:rockaway#4",
+      "name": "Pawel Wojtowicz",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:rockaway#5",
+      "name": "Susan Fahrman Royek",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:rockaway#6",
+      "name": "John J. Quinn",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 2 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Morris|Rockaway Township|New Jersey/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:rockaway#7",
+      "name": "Sophia Freire",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:rockaway#8",
+      "name": "Emanuel Friedlander",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:rockaway#9",
+      "name": "Tucker Kelley",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:morris#1",
+      "name": "Stephen H. Shaw",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:morris#2",
+      "name": "John Krickus",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:morris#3",
+      "name": "Douglas R. Cabana",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:morris#4",
+      "name": "Thomas J. Mastrangelo",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:morris#5",
+      "name": "Christine Myers",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 2 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Morris|Morris County|New Jersey/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:morris#6",
+      "name": "Tayfun Selen",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:morris#7",
+      "name": "Deborah Smith",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 5 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Morris|Morris County|New Jersey/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:merrimack#1",
+      "name": "Stuart D. Trachy",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:merrimack#2",
+      "name": "David M. Lovlien",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:merrimack#3",
+      "name": "Stephen Shurtleff",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:rocktwp-boe#1",
+      "name": "Alison McGeary",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:rocktwp-boe#2",
+      "name": "Noël Anderson",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 3 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Rockaway Township School District|Rockaway Township|New Jersey/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:rocktwp-boe#3",
+      "name": "Lisa Mezik",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:rocktwp-boe#4",
+      "name": "Jacalyn Richardson",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:rocktwp-boe#5",
+      "name": "Jemila Ann Tourne",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:rocktwp-boe#6",
+      "name": "Jamie Gorman",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 2 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Rockaway Township School District|Rockaway Township|New Jersey/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:rocktwp-boe#7",
+      "name": "Rachael Brookes",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:susd12#1",
+      "name": "Beki Quintero",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:susd12#2",
+      "name": "Ted Rodriquez",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:susd12#3",
+      "name": "Edgar Bustamante",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 1 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Sunnyside Unified District|Sunnyside Unified School District Governing|Arizona/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:susd12#5",
+      "name": "Roberto Jaramillo",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 5 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Sunnyside Unified District|Sunnyside Unified School District Governing|Arizona/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:amphi#1",
+      "name": "Vicki Cox Golder",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:amphi#2",
+      "name": "Matt Kopec",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_P18 — Q26703665 matched (attributes: \"American politician | member of the Arizona House of Representatives\") but carries no P18 image",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:amphi#3",
+      "name": "Deanna Day",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:amphi#4",
+      "name": "Michael Gemma",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "officeholderId": "roster:amphi#5",
+      "name": "Susan Zibrat",
+      "reason": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
+      "attemptedAt": "2026-08-14"
     }
   ]
 }

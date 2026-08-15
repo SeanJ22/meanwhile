@@ -1,240 +1,1077 @@
 {
- "formatVersion": 1,
- "curatedAt": "2026-08-14",
- "note": "Kelly-standard candidate cards (2b): photo, a short bio in the candidate's own site's words, and published contact — each read from the cited page on the date recorded, every photo URL HEAD-verified as an image. Photo rule (tightened 2026-08-14, 2b): a clean solo portrait or honest initials — NEVER a screengrab, banner, logo crop, or a photo where the candidate is not the unambiguous sole subject. A challenger has no official portrait, so the campaign site's own photo is the legitimate source when it passes that bar — recorded and labeled as such; when it does not, initials render and the miss is a recorded hunt. Every shipped photo is listed with its source URL in docs/photo-report.md for human verification. Bios are the site's words, attributed, never our characterization. A candidate without an entry still renders a card (name, party, links, reaction control); every bio/photo absence is a recorded hunt below, never a blank presented as a fact.",
- "cards": {
-  "ballot-nh-merrimack:governor:ayotte-kelly": {
-   "photoUrl": null,
-   "photoSource": null,
-   "bio": "Governor Kelly Ayotte is working every day to keep our state safe, prosperous and free.",
-   "bioSourceUrl": "https://kellyfornh.com",
-   "bioSourceLabel": "In the campaign's words — kellyfornh.com, read 2026-08-14",
-   "email": null,
-   "phone": null
+  "formatVersion": 1,
+  "curatedAt": "2026-08-14",
+  "note": "Kelly-standard candidate cards (2b): photo, a short bio in the candidate's own site's words, and published contact â€” each read from the cited page on the date recorded, every photo URL HEAD-verified as an image. Photo rule (tightened 2026-08-14, 2b): a clean solo portrait or honest initials â€” NEVER a screengrab, banner, logo crop, or a photo where the candidate is not the unambiguous sole subject. A challenger has no official portrait, so the campaign site's own photo is the legitimate source when it passes that bar â€” recorded and labeled as such; when it does not, initials render and the miss is a recorded hunt. Every shipped photo is listed with its source URL in docs/photo-report.md for human verification. Bios are the site's words, attributed, never our characterization. A candidate without an entry still renders a card (name, party, links, reaction control); every bio/photo absence is a recorded hunt below, never a blank presented as a fact.",
+  "cards": {
+    "ballot-nh-merrimack:governor:ayotte-kelly": {
+      "photoUrl": "/candidates/nh-merrimack-governor-ayotte-kelly.jpg",
+      "photoSource": "official U.S. Senate portrait, public domain â€” Wikimedia Commons, Public domain, photo: United States Senate; file page read 2026-08-14, committed copy served from our origin",
+      "bio": "Governor Kelly Ayotte is working every day to keep our state safe, prosperous and free.",
+      "bioSourceUrl": "https://kellyfornh.com",
+      "bioSourceLabel": "In the campaign's words â€” kellyfornh.com, read 2026-08-14",
+      "email": null,
+      "phone": null
+    },
+    "ballot-nh-merrimack:governor:warmington-cinde": {
+      "photoUrl": "/candidates/nh-merrimack-governor-warmington-cinde.jpg",
+      "photoSource": "Photo: the candidate's campaign site (cindewarmington.com) â€” committed copy of https://run.imgix.net/97cfce8c-9d0e-4e05-824d-283b14876207/4d7eafb4-1f9c-4589-9ba4-0d1a344679e3/4d7eafb4-1f9c-4589-9ba4-0d1a344679e3.jpg served from our origin (fetched 2026-08-14, metadata stripped)",
+      "bio": "Cinde Warmington served as the only Democrat on the Executive Council and is running for governor to address the affordability challenges facing working families.",
+      "bioSourceUrl": "https://www.cindewarmington.com",
+      "bioSourceLabel": "From the candidate's site â€” cindewarmington.com, read 2026-08-14",
+      "email": "Vote@CindeWarmington.com",
+      "phone": null
+    },
+    "ballot-nh-merrimack:us-senate:pappas-chris": {
+      "photoUrl": "/officials/P000614.jpg",
+      "photoSource": "Official portrait â€” GPO Congressional Pictorial Directory (public domain), committed copy at /officials/P000614.jpg; license recorded in lib/registry/official-photos.json",
+      "bio": "Born and raised in the Granite State, Chris is a product of Manchester public schools and a small business owner, helping run his family's restaurant.",
+      "bioSourceUrl": "https://chrispappas.org",
+      "bioSourceLabel": "From the candidate's site â€” chrispappas.org, read 2026-08-14",
+      "email": null,
+      "phone": null
+    },
+    "ballot-nh-merrimack:us-senate:brown-scott-p-": {
+      "photoUrl": null,
+      "photoSource": null,
+      "bio": "His family has deep roots in Portsmouth stretching back generations; he served nearly 40 years in the military, was a U.S. Senator, and represented America as Ambassador to New Zealand and Samoa.",
+      "bioSourceUrl": "https://scottbrown.com",
+      "bioSourceLabel": "From the candidate's site â€” scottbrown.com, read 2026-08-14",
+      "email": "info@scottbrown.com",
+      "phone": null
+    },
+    "ballot-nh-merrimack:us-senate:sununu-john-e-": {
+      "photoUrl": null,
+      "photoSource": null,
+      "bio": "John Sununu is a lifelong Granite Stater, trained as an engineer with private-sector experience, who represented New Hampshire in Washington.",
+      "bioSourceUrl": "https://www.sununusenator.com",
+      "bioSourceLabel": "From the candidate's site â€” sununusenator.com, read 2026-08-14",
+      "email": "info@sununusenator.com",
+      "phone": null
+    },
+    "ballot-nh-merrimack:us-house-2:tang-williams-lily": {
+      "photoUrl": "/candidates/nh-merrimack-us-house-2-tang-williams-lily.png",
+      "photoSource": "Photo: the candidate's campaign site (lilytangwilliams.com) â€” committed copy of https://www.lilytangwilliams.com/wp-content/uploads/2022/01/lily-tang-williams-homepage.png served from our origin (fetched 2026-08-14, metadata stripped)",
+      "bio": "Born to working-class parents in China's Sichuan province just before the Cultural Revolution, she came to America in 1988 for graduate school.",
+      "bioSourceUrl": "https://www.lilytangwilliams.com",
+      "bioSourceLabel": "From the candidate's site â€” lilytangwilliams.com, read 2026-08-14",
+      "email": null,
+      "phone": null
+    },
+    "ballot-nh-merrimack:state-senate-7:harned-rebecca": {
+      "photoUrl": null,
+      "photoSource": null,
+      "bio": "A working parent and research scientist who lives in Sutton; she serves on the Budget Committee for the Kearsarge Regional School District.",
+      "bioSourceUrl": "https://www.rebeccafornh.com",
+      "bioSourceLabel": "From the candidate's site â€” rebeccafornh.com, read 2026-08-14",
+      "email": "info@rebeccafornh.com",
+      "phone": null
+    },
+    "ballot-nh-merrimack:state-house-merrimack-7:sargent-gregory-m-": {
+      "photoUrl": "/candidates/nh-merrimack-state-house-merrimack-7-sargent-gregory-m-.jpg",
+      "photoSource": "Photo: the candidate's campaign site (gregforrep.com) â€” committed copy of https://gregforrep.com/greg-portrait.jpg served from our origin (fetched 2026-08-14, metadata stripped)",
+      "bio": "A New London resident and lifelong New Hampshire native; an attorney and General Counsel at a Manchester business, and a member of the House Resources, Recreation & Development Committee.",
+      "bioSourceUrl": "https://gregforrep.com",
+      "bioSourceLabel": "From the candidate's site â€” gregforrep.com, read 2026-08-14",
+      "email": "Greg@GregforRep.com",
+      "phone": null
+    },
+    "ballot-nh-merrimack:executive-council-2:liot-hill-karen": {
+      "photoUrl": "/candidates/nh-merrimack-executive-council-2-liot-hill-karen.jpg",
+      "photoSource": "Photo: the candidate's campaign site (karenliothill.com) â€” committed copy of https://static.wixstatic.com/media/644896_ac32357ab0c6496a8824ebedef424559~mv2.jpeg served from our origin (fetched 2026-08-14, metadata stripped)",
+      "bio": "The Executive Councilor for District 2, representing 81 cities and towns; a former waitress and small business owner.",
+      "bioSourceUrl": "https://www.karenliothill.com",
+      "bioSourceLabel": "From the candidate's site â€” karenliothill.com, read 2026-08-14",
+      "email": "Karen@KarenLiotHill.com",
+      "phone": "603-252-2542"
+    },
+    "ballot-nj-morris:us-senate:booker": {
+      "photoUrl": "/candidates/nj-morris-us-senate-booker.png",
+      "photoSource": "Photo: the candidate's campaign site (corybooker.com) â€” committed copy of https://corybooker.com/wp-content/uploads/2020/01/cory_sq_profile.png served from our origin (fetched 2026-08-14, metadata stripped)",
+      "bio": "A tireless fighter for New Jersey, powered by grassroots supporters â€” the campaign rejects donations from federal lobbyists and corporate PACs.",
+      "bioSourceUrl": "https://corybooker.com",
+      "bioSourceLabel": "In the campaign's words â€” corybooker.com, read 2026-08-14",
+      "email": null,
+      "phone": null
+    },
+    "ballot-nj-morris:us-senate:murphy": {
+      "photoUrl": null,
+      "photoSource": null,
+      "bio": "A self-employed small business owner.",
+      "bioSourceUrl": "https://jerseyjustin4senate.org",
+      "bioSourceLabel": "From the candidate's site â€” jerseyjustin4senate.org, read 2026-08-14",
+      "email": "jerseyjustin4senate@gmail.com",
+      "phone": "609-969-0959"
+    },
+    "ballot-nj-morris:us-house-11:hathaway": {
+      "photoUrl": null,
+      "photoSource": null,
+      "bio": "Born and raised in a middle-class family in Clifton; he served as Mayor of Randolph in 2025 and on the Township Council since May 2022, and is a Yale graduate with over a decade in corporate communications.",
+      "bioSourceUrl": "https://www.joehathawayforcongress.com",
+      "bioSourceLabel": "From the candidate's site â€” joehathawayforcongress.com, read 2026-08-14",
+      "email": "info@joehathawayforcongress.com",
+      "phone": null
+    },
+    "ballot-nj-morris:us-house-11:mejia": {
+      "photoUrl": "/officials/M001246.jpg",
+      "photoSource": "Committed portrait of the sitting member (license recorded in lib/registry/official-photos.json: Public domain, official congressional portrait via Wikimedia Commons)",
+      "bio": "She has spent 25 years fighting for working families â€” winning the $15 minimum wage and paid sick days in New Jersey â€” and is running for Congress in NJ-11.",
+      "bioSourceUrl": "https://www.analiliafornj.com",
+      "bioSourceLabel": "From the candidate's site â€” analiliafornj.com, read 2026-08-14",
+      "email": "press@analiliafornj.com",
+      "phone": null
+    },
+    "ballot-nj-morris:county-commissioner:selen": {
+      "photoUrl": "/candidates/nj-morris-county-commissioner-selen.jpg",
+      "photoSource": "Photo: the candidate's campaign site (selenformorriscounty.com) â€” committed copy of https://static.wixstatic.com/media/7ef20c_da57f763291442e19e51303d0828044b~mv2.jpg served from our origin (fetched 2026-08-14, metadata stripped)",
+      "bio": "He immigrated to America in 1996, served as Mayor of Chatham Township, and is Senior Vice President of Administration for Lincoln Educational Services; a CPA.",
+      "bioSourceUrl": "https://www.selenformorriscounty.com",
+      "bioSourceLabel": "From the candidate's site â€” selenformorriscounty.com, read 2026-08-14",
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:governor|Katie Hobbs": {
+      "photoUrl": "/candidates/az-pima-governor-hobbs-katie.jpg",
+      "photoSource": "solo speaking-event portrait, unambiguous sole subject â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin",
+      "bio": "Born and raised in the Grand Canyon State, Katie Hobbs has dedicated her life to listening to her community and helping solve difficult challenges for the people of Arizona.",
+      "bioSourceUrl": "https://katiehobbs.org",
+      "bioSourceLabel": "From the candidate's site â€” katiehobbs.org, read 2026-08-14",
+      "email": "info@katiehobbs.org",
+      "phone": null
+    },
+    "ballot-az-pima:governor|Andy Biggs": {
+      "photoUrl": "/officials/B001302.jpg",
+      "photoSource": "Official portrait â€” GPO Congressional Pictorial Directory (public domain), committed copy at /officials/B001302.jpg; license recorded in lib/registry/official-photos.json",
+      "bio": "An Arizona native who has served Arizona's 5th Congressional District since 2016.",
+      "bioSourceUrl": "https://biggsforarizona.com",
+      "bioSourceLabel": "From the candidate's site â€” biggsforarizona.com, read 2026-08-14",
+      "email": null,
+      "phone": null
+    },
+    "ballot-nh-merrimack:us-house-2:goodlander-maggie": {
+      "photoUrl": "/officials/G000604.jpg",
+      "photoSource": "Official portrait â€” GPO Congressional Pictorial Directory (public domain), committed copy; license recorded in lib/registry/official-photos.json",
+      "bio": "Born and raised in Nashua, she represents New Hampshire's Second District; a former foreign-policy advisor to Senator John McCain, Navy Reserve intelligence officer for over a decade, law clerk to Justice Stephen Breyer, and Deputy Assistant Attorney General.",
+      "bioSourceUrl": "https://goodlander.house.gov/about",
+      "bioSourceLabel": "From her official House page â€” goodlander.house.gov, read 2026-08-14 (in a browser; the host refuses automated clients)",
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:governor:biggs-andy": {
+      "photoUrl": "/officials/B001302.jpg",
+      "photoSource": "Official portrait â€” GPO Congressional Pictorial Directory (public domain), committed copy at /officials/B001302.jpg; license recorded in lib/registry/official-photos.json",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:governor:schweikert-david": {
+      "photoUrl": "/officials/S001183.jpg",
+      "photoSource": "Official portrait â€” GPO Congressional Pictorial Directory (public domain), committed copy at /officials/S001183.jpg; license recorded in lib/registry/official-photos.json",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:us-house-6:ciscomani-juan": {
+      "photoUrl": "/officials/C001133.jpg",
+      "photoSource": "Official portrait â€” GPO Congressional Pictorial Directory (public domain), committed copy at /officials/C001133.jpg; license recorded in lib/registry/official-photos.json",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:us-house-6|Juan Ciscomani": {
+      "photoUrl": "/officials/C001133.jpg",
+      "photoSource": "Official portrait â€” GPO Congressional Pictorial Directory (public domain), committed copy at /officials/C001133.jpg; license recorded in lib/registry/official-photos.json",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:governor:hobbs-katie": {
+      "photoUrl": "/candidates/az-pima-governor-hobbs-katie.jpg",
+      "photoSource": "solo speaking-event portrait, unambiguous sole subject â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:secretary-of-state:fontes-adrian": {
+      "photoUrl": "/candidates/az-pima-secretary-of-state-fontes-adrian.jpg",
+      "photoSource": "clean solo portrait â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:secretary-of-state|Adrian Fontes": {
+      "photoUrl": "/candidates/az-pima-secretary-of-state-fontes-adrian.jpg",
+      "photoSource": "clean solo portrait â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:attorney-general:mayes-kris": {
+      "photoUrl": "/candidates/az-pima-attorney-general-mayes-kris.jpg",
+      "photoSource": "clean solo portrait â€” Wikimedia Commons, CC BY-SA 2.0, photo: Gage Skidmore from Surprise, AZ, United States of America, Please attribute to Gage Skidmore if used elsewhere.; file page read 2026-08-14, committed copy served from our origin",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:attorney-general|Kris Mayes": {
+      "photoUrl": "/candidates/az-pima-attorney-general-mayes-kris.jpg",
+      "photoSource": "clean solo portrait â€” Wikimedia Commons, CC BY-SA 2.0, photo: Gage Skidmore from Surprise, AZ, United States of America, Please attribute to Gage Skidmore if used elsewhere.; file page read 2026-08-14, committed copy served from our origin",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:state-senate-19:griffin-gail": {
+      "photoUrl": "/candidates/az-pima-state-senate-19-griffin-gail.jpg",
+      "photoSource": "informal event candid, unambiguous sole subject â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:state-senate-19|Gail Griffin": {
+      "photoUrl": "/candidates/az-pima-state-senate-19-griffin-gail.jpg",
+      "photoSource": "informal event candid, unambiguous sole subject â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:state-senate-20:hernandez-alma": {
+      "photoUrl": "/candidates/az-pima-state-senate-20-hernandez-alma.jpg",
+      "photoSource": "clean solo candid, sole subject â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:state-senate-20|Alma Hernandez": {
+      "photoUrl": "/candidates/az-pima-state-senate-20-hernandez-alma.jpg",
+      "photoSource": "clean solo candid, sole subject â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:state-house-19:diaz-lupe": {
+      "photoUrl": "/candidates/az-pima-state-house-19-diaz-lupe.jpg",
+      "photoSource": "clean solo portrait â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:state-house-19|Lupe Diaz": {
+      "photoUrl": "/candidates/az-pima-state-house-19-diaz-lupe.jpg",
+      "photoSource": "clean solo portrait â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:state-house-19:gowan-david": {
+      "photoUrl": "/candidates/az-pima-state-house-19-gowan-david.jpg",
+      "photoSource": "solo event candid, sole subject â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:state-house-19|David Gowan": {
+      "photoUrl": "/candidates/az-pima-state-house-19-gowan-david.jpg",
+      "photoSource": "solo event candid, sole subject â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:state-house-20:gonzales-sally-ann": {
+      "photoUrl": "/candidates/az-pima-state-house-20-gonzales-sally-ann.jpg",
+      "photoSource": "solo speaking portrait at committee microphone â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:state-house-20|Sally Ann Gonzales": {
+      "photoUrl": "/candidates/az-pima-state-house-20-gonzales-sally-ann.jpg",
+      "photoSource": "solo speaking portrait at committee microphone â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:state-house-20:villegas-betty": {
+      "photoUrl": "/candidates/az-pima-state-house-20-villegas-betty.jpg",
+      "photoSource": "clean solo portrait (hearing room) â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:state-house-20|Betty Villegas": {
+      "photoUrl": "/candidates/az-pima-state-house-20-villegas-betty.jpg",
+      "photoSource": "clean solo portrait (hearing room) â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:us-house-7:grijalva-adelita": {
+      "photoUrl": "/officials/G000606.jpg",
+      "photoSource": "Committed portrait of the sitting member (license recorded in lib/registry/official-photos.json: Public domain â€” Damien Salas, Office of the Clerk U.S.House of Representatives (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3ARep.%20Adelita%20Grijalva%20Official%20Portrait.jpg))",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:us-house-7|Adelita Grijalva": {
+      "photoUrl": "/officials/G000606.jpg",
+      "photoSource": "Committed portrait of the sitting member (license recorded in lib/registry/official-photos.json: Public domain â€” Damien Salas, Office of the Clerk U.S.House of Representatives (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3ARep.%20Adelita%20Grijalva%20Official%20Portrait.jpg))",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    }
   },
-  "ballot-nh-merrimack:governor:warmington-cinde": {
-   "photoUrl": "https://run.imgix.net/97cfce8c-9d0e-4e05-824d-283b14876207/4d7eafb4-1f9c-4589-9ba4-0d1a344679e3/4d7eafb4-1f9c-4589-9ba4-0d1a344679e3.jpg",
-   "photoSource": "Photo: the candidate's campaign site (cindewarmington.com)",
-   "bio": "Cinde Warmington served as the only Democrat on the Executive Council and is running for governor to address the affordability challenges facing working families.",
-   "bioSourceUrl": "https://www.cindewarmington.com",
-   "bioSourceLabel": "From the candidate's site — cindewarmington.com, read 2026-08-14",
-   "email": "Vote@CindeWarmington.com",
-   "phone": null
-  },
-  "ballot-nh-merrimack:us-senate:pappas-chris": {
-   "photoUrl": null,
-   "photoSource": null,
-   "bio": "Born and raised in the Granite State, Chris is a product of Manchester public schools and a small business owner, helping run his family's restaurant.",
-   "bioSourceUrl": "https://chrispappas.org",
-   "bioSourceLabel": "From the candidate's site — chrispappas.org, read 2026-08-14",
-   "email": null,
-   "phone": null
-  },
-  "ballot-nh-merrimack:us-senate:brown-scott-p-": {
-   "photoUrl": null,
-   "photoSource": null,
-   "bio": "His family has deep roots in Portsmouth stretching back generations; he served nearly 40 years in the military, was a U.S. Senator, and represented America as Ambassador to New Zealand and Samoa.",
-   "bioSourceUrl": "https://scottbrown.com",
-   "bioSourceLabel": "From the candidate's site — scottbrown.com, read 2026-08-14",
-   "email": "info@scottbrown.com",
-   "phone": null
-  },
-  "ballot-nh-merrimack:us-senate:sununu-john-e-": {
-   "photoUrl": null,
-   "photoSource": null,
-   "bio": "John Sununu is a lifelong Granite Stater, trained as an engineer with private-sector experience, who represented New Hampshire in Washington.",
-   "bioSourceUrl": "https://www.sununusenator.com",
-   "bioSourceLabel": "From the candidate's site — sununusenator.com, read 2026-08-14",
-   "email": "info@sununusenator.com",
-   "phone": null
-  },
-  "ballot-nh-merrimack:us-house-2:tang-williams-lily": {
-   "photoUrl": "https://www.lilytangwilliams.com/wp-content/uploads/2022/01/lily-tang-williams-homepage.png",
-   "photoSource": "Photo: the candidate's campaign site (lilytangwilliams.com)",
-   "bio": "Born to working-class parents in China's Sichuan province just before the Cultural Revolution, she came to America in 1988 for graduate school.",
-   "bioSourceUrl": "https://www.lilytangwilliams.com",
-   "bioSourceLabel": "From the candidate's site — lilytangwilliams.com, read 2026-08-14",
-   "email": null,
-   "phone": null
-  },
-  "ballot-nh-merrimack:state-senate-7:harned-rebecca": {
-   "photoUrl": null,
-   "photoSource": null,
-   "bio": "A working parent and research scientist who lives in Sutton; she serves on the Budget Committee for the Kearsarge Regional School District.",
-   "bioSourceUrl": "https://www.rebeccafornh.com",
-   "bioSourceLabel": "From the candidate's site — rebeccafornh.com, read 2026-08-14",
-   "email": "info@rebeccafornh.com",
-   "phone": null
-  },
-  "ballot-nh-merrimack:state-house-merrimack-7:sargent-gregory-m-": {
-   "photoUrl": "https://gregforrep.com/greg-portrait.jpg",
-   "photoSource": "Photo: the candidate's campaign site (gregforrep.com)",
-   "bio": "A New London resident and lifelong New Hampshire native; an attorney and General Counsel at a Manchester business, and a member of the House Resources, Recreation & Development Committee.",
-   "bioSourceUrl": "https://gregforrep.com",
-   "bioSourceLabel": "From the candidate's site — gregforrep.com, read 2026-08-14",
-   "email": "Greg@GregforRep.com",
-   "phone": null
-  },
-  "ballot-nh-merrimack:executive-council-2:liot-hill-karen": {
-   "photoUrl": "https://static.wixstatic.com/media/644896_ac32357ab0c6496a8824ebedef424559~mv2.jpeg",
-   "photoSource": "Photo: the candidate's campaign site (karenliothill.com)",
-   "bio": "The Executive Councilor for District 2, representing 81 cities and towns; a former waitress and small business owner.",
-   "bioSourceUrl": "https://www.karenliothill.com",
-   "bioSourceLabel": "From the candidate's site — karenliothill.com, read 2026-08-14",
-   "email": "Karen@KarenLiotHill.com",
-   "phone": "603-252-2542"
-  },
-  "ballot-nj-morris:us-senate:booker": {
-   "photoUrl": "https://corybooker.com/wp-content/uploads/2020/01/cory_sq_profile.png",
-   "photoSource": "Photo: the candidate's campaign site (corybooker.com)",
-   "bio": "A tireless fighter for New Jersey, powered by grassroots supporters — the campaign rejects donations from federal lobbyists and corporate PACs.",
-   "bioSourceUrl": "https://corybooker.com",
-   "bioSourceLabel": "In the campaign's words — corybooker.com, read 2026-08-14",
-   "email": null,
-   "phone": null
-  },
-  "ballot-nj-morris:us-senate:murphy": {
-   "photoUrl": null,
-   "photoSource": null,
-   "bio": "A self-employed small business owner.",
-   "bioSourceUrl": "https://jerseyjustin4senate.org",
-   "bioSourceLabel": "From the candidate's site — jerseyjustin4senate.org, read 2026-08-14",
-   "email": "jerseyjustin4senate@gmail.com",
-   "phone": "609-969-0959"
-  },
-  "ballot-nj-morris:us-house-11:hathaway": {
-   "photoUrl": null,
-   "photoSource": null,
-   "bio": "Born and raised in a middle-class family in Clifton; he served as Mayor of Randolph in 2025 and on the Township Council since May 2022, and is a Yale graduate with over a decade in corporate communications.",
-   "bioSourceUrl": "https://www.joehathawayforcongress.com",
-   "bioSourceLabel": "From the candidate's site — joehathawayforcongress.com, read 2026-08-14",
-   "email": "info@joehathawayforcongress.com",
-   "phone": null
-  },
-  "ballot-nj-morris:us-house-11:mejia": {
-   "photoUrl": "https://images.squarespace-cdn.com/content/v1/691b52e1abc45c143c47e6a2/1ffd50e3-47e3-411d-b5d0-94c514a55328/Headshot-+Web+Background+3.jpg",
-   "photoSource": "Photo: the candidate's campaign site (analiliafornj.com)",
-   "bio": "She has spent 25 years fighting for working families — winning the $15 minimum wage and paid sick days in New Jersey — and is running for Congress in NJ-11.",
-   "bioSourceUrl": "https://www.analiliafornj.com",
-   "bioSourceLabel": "From the candidate's site — analiliafornj.com, read 2026-08-14",
-   "email": "press@analiliafornj.com",
-   "phone": null
-  },
-  "ballot-nj-morris:county-commissioner:selen": {
-   "photoUrl": "https://static.wixstatic.com/media/7ef20c_da57f763291442e19e51303d0828044b~mv2.jpg",
-   "photoSource": "Photo: the candidate's campaign site (selenformorriscounty.com)",
-   "bio": "He immigrated to America in 1996, served as Mayor of Chatham Township, and is Senior Vice President of Administration for Lincoln Educational Services; a CPA.",
-   "bioSourceUrl": "https://www.selenformorriscounty.com",
-   "bioSourceLabel": "From the candidate's site — selenformorriscounty.com, read 2026-08-14",
-   "email": null,
-   "phone": null
-  },
-  "ballot-az-pima:governor|Katie Hobbs": {
-   "photoUrl": null,
-   "photoSource": null,
-   "bio": "Born and raised in the Grand Canyon State, Katie Hobbs has dedicated her life to listening to her community and helping solve difficult challenges for the people of Arizona.",
-   "bioSourceUrl": "https://katiehobbs.org",
-   "bioSourceLabel": "From the candidate's site — katiehobbs.org, read 2026-08-14",
-   "email": "info@katiehobbs.org",
-   "phone": null
-  },
-  "ballot-az-pima:governor|Andy Biggs": {
-   "photoUrl": null,
-   "photoSource": null,
-   "bio": "An Arizona native who has served Arizona's 5th Congressional District since 2016.",
-   "bioSourceUrl": "https://biggsforarizona.com",
-   "bioSourceLabel": "From the candidate's site — biggsforarizona.com, read 2026-08-14",
-   "email": null,
-   "phone": null
-  },
-  "ballot-nh-merrimack:us-house-2:goodlander-maggie": {
-   "photoUrl": "/officials/G000604.jpg",
-   "photoSource": "Official portrait — GPO Congressional Pictorial Directory (public domain), committed copy; license recorded in lib/registry/official-photos.json",
-   "bio": "Born and raised in Nashua, she represents New Hampshire's Second District; a former foreign-policy advisor to Senator John McCain, Navy Reserve intelligence officer for over a decade, law clerk to Justice Stephen Breyer, and Deputy Assistant Attorney General.",
-   "bioSourceUrl": "https://goodlander.house.gov/about",
-   "bioSourceLabel": "From her official House page — goodlander.house.gov, read 2026-08-14 (in a browser; the host refuses automated clients)",
-   "email": null,
-   "phone": null
-  }
- },
- "hunts": [
-  {
-   "key": "ballot-nh-merrimack:us-house-2:goodlander-maggie",
-   "name": "Maggie Goodlander",
-   "note": "RESOLVED for the bio 2026-08-14: goodlander.house.gov/about read in a real browser (403s pipelines). PHOTO RESOLVED 2026-08-14: the public-domain unitedstates/images repo caught up with her — official portrait fetched by pnpm officials:photos, committed at public/officials/G000604.jpg with license recorded, and the card now serves that committed copy (an incumbent's official portrait, labeled as such; maggiefornh.com still 403s).",
-   "attemptedAt": "2026-08-14"
-  },
-  {
-   "key": "ballot-nh-merrimack:us-senate:pappas-chris#photo",
-   "name": "Chris Pappas",
-   "note": "chrispappas.org markup carries no identifiable headshot URL; pappas.house.gov 403s non-browser clients. Bio recorded from the campaign site; photo honest-absent.",
-   "attemptedAt": "2026-08-14"
-  },
-  {
-   "key": "ballot-nj-morris:us-senate:fernandez#bio",
-   "name": "Veronica Fernandez",
-   "note": "veronicaforsenate.com carries no formal bio and no candidate photo in markup (decorative graphics only); contact is a form with no published address. Recorded as the site's own state, not our gap.",
-   "attemptedAt": "2026-08-14"
-  },
-  {
-   "key": "ballot-nj-morris:us-house-11:hathaway#photo",
-   "name": "Joe Hathaway",
-   "note": "joehathawayforcongress.com markup carries a logo and body images but no dedicated headshot URL. Bio and email recorded; photo honest-absent.",
-   "attemptedAt": "2026-08-14"
-  },
-  {
-   "key": "ballot-az-pima:governor|Andy Biggs#photo",
-   "name": "Andy Biggs",
-   "note": "biggsforarizona.com markup carries only a social-share composite image, no dedicated headshot. ALSO RECORDED: andybiggs.com is a DIFFERENT person entirely (a safari photographer) — the kellyayotte.com lesson re-sighted; only the fetch-verified biggsforarizona.com is citable.",
-   "attemptedAt": "2026-08-14"
-  },
-  {
-   "key": "ballot-az-pima:*#cards",
-   "name": "Remaining AZ candidates",
-   "note": "NOT_ATTEMPTED for bio/photo enrichment this session beyond the governor contest — NH and NJ ran first per the depth directive. All 26 AZ candidates already carry fetch-verified official/campaign links from 2026-08-13 and render full cards minus bio/photo.",
-   "attemptedAt": "2026-08-14"
-  },
-  {
-   "key": "ballot-nh-merrimack:minor-candidates#cards",
-   "name": "NH primary-filing minor candidates",
-   "note": "Candidates whose 2026-08-13 link hunts already returned recorded MISSes (no findable site) have no photo/bio source that meets the never-characterize rule — their cards render name, party, and the filing citation, which is everything the public record offers. The September 8 primary narrows this list.",
-   "attemptedAt": "2026-08-14"
-  },
-  {
-   "key": "ballot-nh-merrimack:governor:ayotte-kelly#photo",
-   "name": "Kelly Ayotte",
-   "note": "PHOTO DROPPED 2026-08-14 (2b rule tightened: a clean solo portrait or honest initials - never a screengrab, banner, logo crop, or group shot). Rung 1: the shipped WinRed banner (KellyAyotteForNH_WinRed_WebsitePullTrough_v2-1.jpg) is a campaign graphic with logo text, not a portrait. Rung 2 (re-extract, kellyfornh.com + /meet-kelly/ fetched 2026-08-14): AyotteKelly5-7-23-75 is a four-person family photo; 9S6A9852 is a press-conference crowd shot; the remaining images are logo files. Rung 3: the official governor.nh.gov portrait exists but carries an unknown state license - not shippable per the D20 rule. Initials render; the hunt stays open.",
-   "attemptedAt": "2026-08-14"
-  },
-  {
-   "key": "ballot-az-pima:governor|Katie Hobbs#photo",
-   "name": "Katie Hobbs",
-   "note": "PHOTO DROPPED 2026-08-14 (2b - this is the card the author flagged). Rung 1: the shipped file (KHA25_004_FINAL_horizontal_white-scaled.png) is a white-on-transparent campaign wordmark, not a photograph at all. Rung 2 (re-extract, katiehobbs.org + /meet-katie/ fetched 2026-08-14): 220603-Katie-Hobbs-2767 is a four-person patio scene; DSC06975 is a five-person street event; no solo portrait is published at fetchable URLs. Rung 3: azgovernor.gov carries an official portrait of unknown state license - not shippable per the D20 rule. Initials render; the hunt stays open.",
-   "attemptedAt": "2026-08-14"
-  },
-  {
-   "key": "ballot-nj-morris:us-senate:murphy#photo",
-   "name": "Justin Murphy",
-   "note": "PHOTO DROPPED 2026-08-14 (2b). Rung 1: the shipped PNG (JUSTIN-MURPHY-5) renders blank white as fetched by a plain client - not a portrait as served. Rung 2 (re-extract, jerseyjustin4senate.org fetched 2026-08-14): the og:image D70_8879 is a mid-speech candid in front of a campaign banner - not a clean portrait. Initials render; the hunt stays open.",
-   "attemptedAt": "2026-08-14"
-  },
-  {
-   "key": "ballot-nh-merrimack:us-senate:brown-scott-p-#photo",
-   "name": "Scott P. Brown",
-   "note": "PHOTO DROPPED 2026-08-14 (2b). Rung 1: the shipped scott-brown-closeup is a two-person event candid, not unambiguously a portrait of the candidate. Rung 2 (re-extract, scottbrown.com + /about/ fetched 2026-08-14): EY3A8288 is an audience crowd shot; the sharegraph and remaining images are logo/banner files. Initials render; the hunt stays open.",
-   "attemptedAt": "2026-08-14"
-  },
-  {
-   "key": "ballot-nh-merrimack:us-senate:sununu-john-e-#photo",
-   "name": "John E. Sununu",
-   "note": "PHOTO DROPPED 2026-08-14 (2b). Rung 1: the shipped wixstatic image is a two-person couple photo - a stranger cannot tell which person is the candidate. Rung 2 (re-extract, sununusenator.com fetched 2026-08-14): the og:image is a campaign banner (portrait embedded beside SUNUNU SENATOR logo text) - cropping it would be exactly the banner-crop the rule bans. Initials render; the hunt stays open.",
-   "attemptedAt": "2026-08-14"
-  },
-  {
-   "key": "ballot-nh-merrimack:state-senate-7:harned-rebecca#photo",
-   "name": "Rebecca Harned",
-   "note": "PHOTO DROPPED 2026-08-14 (2b). Rung 1: the shipped run.imgix photo is a canoe selfie with a child - not a clean solo portrait. Rung 2 (re-extract, rebeccafornh.com + /about fetched 2026-08-14): the og:image is a logo-plus-photo campaign banner (candidate with two dogs, sunglasses) - a banner crop, banned. Initials render; the hunt stays open.",
-   "attemptedAt": "2026-08-14"
-  }
- ]
+  "hunts": [
+    {
+      "key": "ballot-nh-merrimack:us-house-2:goodlander-maggie",
+      "name": "Maggie Goodlander",
+      "note": "RESOLVED for the bio 2026-08-14: goodlander.house.gov/about read in a real browser (403s pipelines). PHOTO RESOLVED 2026-08-14: the public-domain unitedstates/images repo caught up with her â€” official portrait fetched by pnpm officials:photos, committed at public/officials/G000604.jpg with license recorded, and the card now serves that committed copy (an incumbent's official portrait, labeled as such; maggiefornh.com still 403s).",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-senate:pappas-chris#photo",
+      "name": "Chris Pappas",
+      "note": "chrispappas.org markup carries no identifiable headshot URL; pappas.house.gov 403s non-browser clients. Bio recorded from the campaign site; photo honest-absent.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nj-morris:us-senate:fernandez#bio",
+      "name": "Veronica Fernandez",
+      "note": "veronicaforsenate.com carries no formal bio and no candidate photo in markup (decorative graphics only); contact is a form with no published address. Recorded as the site's own state, not our gap.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nj-morris:us-house-11:hathaway#photo",
+      "name": "Joe Hathaway",
+      "note": "joehathawayforcongress.com markup carries a logo and body images but no dedicated headshot URL. Bio and email recorded; photo honest-absent.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:governor|Andy Biggs#photo",
+      "name": "Andy Biggs",
+      "note": "biggsforarizona.com markup carries only a social-share composite image, no dedicated headshot. ALSO RECORDED: andybiggs.com is a DIFFERENT person entirely (a safari photographer) â€” the kellyayotte.com lesson re-sighted; only the fetch-verified biggsforarizona.com is citable.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:*#cards",
+      "name": "Remaining AZ candidates",
+      "note": "NOT_ATTEMPTED for bio/photo enrichment this session beyond the governor contest â€” NH and NJ ran first per the depth directive. All 26 AZ candidates already carry fetch-verified official/campaign links from 2026-08-13 and render full cards minus bio/photo.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:minor-candidates#cards",
+      "name": "NH primary-filing minor candidates",
+      "note": "Candidates whose 2026-08-13 link hunts already returned recorded MISSes (no findable site) have no photo/bio source that meets the never-characterize rule â€” their cards render name, party, and the filing citation, which is everything the public record offers. The September 8 primary narrows this list.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:governor:ayotte-kelly#photo",
+      "name": "Kelly Ayotte",
+      "note": "PHOTO DROPPED 2026-08-14 (2b rule tightened: a clean solo portrait or honest initials - never a screengrab, banner, logo crop, or group shot). Rung 1: the shipped WinRed banner (KellyAyotteForNH_WinRed_WebsitePullTrough_v2-1.jpg) is a campaign graphic with logo text, not a portrait. Rung 2 (re-extract, kellyfornh.com + /meet-kelly/ fetched 2026-08-14): AyotteKelly5-7-23-75 is a four-person family photo; 9S6A9852 is a press-conference crowd shot; the remaining images are logo files. Rung 3: the official governor.nh.gov portrait exists but carries an unknown state license - not shippable per the D20 rule. Initials render; the hunt stays open.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:governor|Katie Hobbs#photo",
+      "name": "Katie Hobbs",
+      "note": "PHOTO DROPPED 2026-08-14 (2b - this is the card the author flagged). Rung 1: the shipped file (KHA25_004_FINAL_horizontal_white-scaled.png) is a white-on-transparent campaign wordmark, not a photograph at all. Rung 2 (re-extract, katiehobbs.org + /meet-katie/ fetched 2026-08-14): 220603-Katie-Hobbs-2767 is a four-person patio scene; DSC06975 is a five-person street event; no solo portrait is published at fetchable URLs. Rung 3: azgovernor.gov carries an official portrait of unknown state license - not shippable per the D20 rule. Initials render; the hunt stays open.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nj-morris:us-senate:murphy#photo",
+      "name": "Justin Murphy",
+      "note": "PHOTO DROPPED 2026-08-14 (2b). Rung 1: the shipped PNG (JUSTIN-MURPHY-5) renders blank white as fetched by a plain client - not a portrait as served. Rung 2 (re-extract, jerseyjustin4senate.org fetched 2026-08-14): the og:image D70_8879 is a mid-speech candid in front of a campaign banner - not a clean portrait. Initials render; the hunt stays open.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-senate:brown-scott-p-#photo",
+      "name": "Scott P. Brown",
+      "note": "PHOTO DROPPED 2026-08-14 (2b). Rung 1: the shipped scott-brown-closeup is a two-person event candid, not unambiguously a portrait of the candidate. Rung 2 (re-extract, scottbrown.com + /about/ fetched 2026-08-14): EY3A8288 is an audience crowd shot; the sharegraph and remaining images are logo/banner files. Initials render; the hunt stays open.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-senate:sununu-john-e-#photo",
+      "name": "John E. Sununu",
+      "note": "PHOTO DROPPED 2026-08-14 (2b). Rung 1: the shipped wixstatic image is a two-person couple photo - a stranger cannot tell which person is the candidate. Rung 2 (re-extract, sununusenator.com fetched 2026-08-14): the og:image is a campaign banner (portrait embedded beside SUNUNU SENATOR logo text) - cropping it would be exactly the banner-crop the rule bans. Initials render; the hunt stays open.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:state-senate-7:harned-rebecca#photo",
+      "name": "Rebecca Harned",
+      "note": "PHOTO DROPPED 2026-08-14 (2b). Rung 1: the shipped run.imgix photo is a canoe selfie with a child - not a clean solo portrait. Rung 2 (re-extract, rebeccafornh.com + /about fetched 2026-08-14): the og:image is a logo-plus-photo campaign banner (candidate with two dogs, sunglasses) - a banner crop, banned. Initials render; the hunt stays open.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:governor:biggs-andy",
+      "name": "Andy Biggs",
+      "note": "PHOTO RESOLVED 2026-08-14 (photo session, Tier 3 rung 1): sitting member of Congress â€” the committed public-domain GPO portrait (/officials/B001302.jpg) serves the ballot card; identity is the curated incumbent assertion, matched to bioguide B001302.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:governor|Andy Biggs",
+      "name": "Andy Biggs",
+      "note": "PHOTO RESOLVED 2026-08-14 (photo session, Tier 3 rung 1): sitting member of Congress â€” the committed public-domain GPO portrait (/officials/B001302.jpg) serves the ballot card; identity is the curated incumbent assertion, matched to bioguide B001302.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:governor:schweikert-david",
+      "name": "David Schweikert",
+      "note": "PHOTO RESOLVED 2026-08-14 (photo session, Tier 3 rung 1): sitting member of Congress â€” the committed public-domain GPO portrait (/officials/S001183.jpg) serves the ballot card; identity is the curated incumbent assertion, matched to bioguide S001183.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:us-house-6:ciscomani-juan",
+      "name": "Juan Ciscomani",
+      "note": "PHOTO RESOLVED 2026-08-14 (photo session, Tier 3 rung 1): sitting member of Congress â€” the committed public-domain GPO portrait (/officials/C001133.jpg) serves the ballot card; identity is the curated incumbent assertion, matched to bioguide C001133.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:us-house-6|Juan Ciscomani",
+      "name": "Juan Ciscomani",
+      "note": "PHOTO RESOLVED 2026-08-14 (photo session, Tier 3 rung 1): sitting member of Congress â€” the committed public-domain GPO portrait (/officials/C001133.jpg) serves the ballot card; identity is the curated incumbent assertion, matched to bioguide C001133.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-senate:pappas-chris",
+      "name": "Chris Pappas",
+      "note": "PHOTO RESOLVED 2026-08-14 (photo session, Tier 3 rung 1): sitting member of Congress â€” the committed public-domain GPO portrait (/officials/P000614.jpg) serves the ballot card; identity is the curated incumbent assertion, matched to bioguide P000614.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nj-morris:us-senate:fernandez",
+      "name": "Veronica Fernandez",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 5 hits, none passed office=/senator|congress/ + place=/New Jersey/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nj-morris:us-senate:kuniansky",
+      "name": "Joanne Kuniansky",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nj-morris:us-senate:murphy",
+      "name": "Justin Murphy",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 5 hits, none passed office=/senator|congress/ + place=/New Jersey/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nj-morris:us-house-11:bond",
+      "name": "Alan B. Bond",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nj-morris:us-house-11:hathaway",
+      "name": "Joe Hathaway",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nj-morris:county-commissioner:russo",
+      "name": "Christopher (Chris) Russo",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nj-morris:rockaway-twp-boe:mamoun",
+      "name": "Munir \"Monir\" Mamoun",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nj-morris:rockaway-twp-boe:mezik",
+      "name": "Lisa Mezik",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nj-morris:rockaway-twp-boe:nydegger",
+      "name": "Russell G. Nydegger",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nj-morris:rockaway-twp-boe-unexpired:borno",
+      "name": "Olivier Borno",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nj-morris:morris-hills-regional-boe-rockaway-twp:roach",
+      "name": "Brian Roach",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 2 hits, none passed office=/politician|elected/ + place=/New Jersey/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nj-morris:morris-hills-regional-boe-rockaway-twp:serafin",
+      "name": "William Serafin",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:governor:hobbs-katie",
+      "name": "Katie Hobbs",
+      "note": "PHOTO RESOLVED 2026-08-14 (photo session, Commons rung): Q16226012 matched by attributes, license CC BY-SA 3.0, judged \"solo speaking-event portrait, unambiguous sole subject\"; committed at /candidates/az-pima-governor-hobbs-katie.jpg.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:governor:hourihan-teri-ann",
+      "name": "Teri Ann Hourihan",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:governor:lombardo-risa",
+      "name": "Risa Lombardo",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:governor:lytle-hugh",
+      "name": "Hugh Lytle",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:governor:miceli-ken",
+      "name": "Ken Miceli",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:governor:neely-scott",
+      "name": "Scott Neely",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 2 hits, none passed office=/governor/ + place=/Arizona/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:secretary-of-state:fontes-adrian",
+      "name": "Adrian Fontes",
+      "note": "PHOTO RESOLVED 2026-08-14 (photo session, Commons rung): Q115177238 matched by attributes, license CC BY-SA 3.0, judged \"clean solo portrait\"; committed at /candidates/az-pima-secretary-of-state-fontes-adrian.jpg.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:secretary-of-state:collier-duwayne",
+      "name": "Duwayne Collier",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:secretary-of-state:kolodin-alexander",
+      "name": "Alexander Kolodin",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 1 hits, none passed office=/secretary of state/ + place=/Arizona/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:secretary-of-state:swoboda-gina",
+      "name": "Gina Swoboda",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 1 hits, none passed office=/secretary of state/ + place=/Arizona/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:attorney-general:mayes-kris",
+      "name": "Kris Mayes",
+      "note": "PHOTO RESOLVED 2026-08-14 (photo session, Commons rung): Q6438168 matched by attributes, license CC BY-SA 2.0, judged \"clean solo portrait\"; committed at /candidates/az-pima-attorney-general-mayes-kris.jpg.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:attorney-general:glassman-rodney",
+      "name": "Rodney Glassman",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 1 hits, none passed office=/attorney/ + place=/Arizona/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:attorney-general:petersen-warren",
+      "name": "Warren Petersen",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 1 hits, none passed office=/attorney/ + place=/Arizona/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:state-treasurer:mansour-nick",
+      "name": "Nick Mansour",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:state-treasurer:zepeda-michael",
+      "name": "Michael Zepeda",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:state-treasurer:haley-katherine",
+      "name": "Katherine Haley",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 2 hits, none passed office=/treasurer/ + place=/Arizona/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:state-treasurer:norton-elijah",
+      "name": "Elijah Norton",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:superintendent:butts-michael-d-",
+      "name": "Michael D. Butts",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:superintendent:leyba-ruiz-teresa",
+      "name": "Teresa Leyba Ruiz",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:superintendent:newby-brett-matthew",
+      "name": "Brett Matthew Newby",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:superintendent:horne-tom",
+      "name": "Tom Horne",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 5 hits, none passed office=/superintendent|education/ + place=/Arizona/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:superintendent:yee-kimberly",
+      "name": "Kimberly Yee",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 1 hits, none passed office=/superintendent|education/ + place=/Arizona/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:mine-inspector:matlock-brian",
+      "name": "Brian Matlock",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:us-house-6:mendoza-joanna",
+      "name": "JoAnna Mendoza",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:us-house-6:bah-iman",
+      "name": "Iman Bah",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 4 hits, none passed office=/representative|congress/ + place=/Arizona/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:us-house-6:peters-jereme-lance",
+      "name": "Jereme Lance Peters",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:us-house-7:grijalva-adelita",
+      "name": "Adelita Grijalva",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 1 hits, none passed office=/representative|congress/ + place=/Arizona/ PHOTO RESOLVED 2026-08-14 (photo session): reuses the committed portrait /officials/G000606.jpg â€” Public domain â€” Damien Salas, Office of the Clerk U.S.House of Representatives (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3ARep.%20Adelita%20Grijalva%20Official%20Portrait.jpg).",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:us-house-7:butierez-sr--daniel-francis",
+      "name": "Daniel Francis Butierez Sr.",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:state-senate-19:slawson-ryan",
+      "name": "Ryan Slawson",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:state-senate-19:griffin-gail",
+      "name": "Gail Griffin",
+      "note": "PHOTO RESOLVED 2026-08-14 (photo session, Commons rung): Q16224676 matched by attributes, license CC BY-SA 3.0, judged \"informal event candid, unambiguous sole subject\"; committed at /candidates/az-pima-state-senate-19-griffin-gail.jpg.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:state-senate-20:hernandez-alma",
+      "name": "Alma Hernandez",
+      "note": "PHOTO RESOLVED 2026-08-14 (photo session, Commons rung): Q60639291 matched by attributes, license CC BY-SA 3.0, judged \"clean solo candid, sole subject\"; committed at /candidates/az-pima-state-senate-20-hernandez-alma.jpg.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:state-senate-20:perez-rocque",
+      "name": "Rocque Perez",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:state-house-19:anderson-jackie-o-donnell",
+      "name": "Jackie O'Donnell Anderson",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:state-house-19:swallow-aiden-nicholette",
+      "name": "Aiden Nicholette Swallow",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:state-house-19:caswell-cheryl",
+      "name": "Cheryl Caswell",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:state-house-19:diaz-lupe",
+      "name": "Lupe Diaz",
+      "note": "PHOTO RESOLVED 2026-08-14 (photo session, Commons rung): Q110513877 matched by attributes, license CC BY-SA 3.0, judged \"clean solo portrait\"; committed at /candidates/az-pima-state-house-19-diaz-lupe.jpg.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:state-house-19:gowan-david",
+      "name": "David Gowan",
+      "note": "PHOTO RESOLVED 2026-08-14 (photo session, Commons rung): Q16224458 matched by attributes, license CC BY-SA 3.0, judged \"solo event candid, sole subject\"; committed at /candidates/az-pima-state-house-19-gowan-david.jpg.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:state-house-20:diaz-genoveva",
+      "name": "Genoveva Diaz",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:state-house-20:gonzales-sally-ann",
+      "name": "Sally Ann Gonzales",
+      "note": "PHOTO RESOLVED 2026-08-14 (photo session, Commons rung): Q15615882 matched by attributes, license CC BY-SA 3.0, judged \"solo speaking portrait at committee microphone\"; committed at /candidates/az-pima-state-house-20-gonzales-sally-ann.jpg.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:state-house-20:koehler-ben",
+      "name": "Ben Koehler",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 2 hits, none passed office=/legislat|representative|senator|general court/ + place=/Arizona/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:state-house-20:villegas-betty",
+      "name": "Betty Villegas",
+      "note": "PHOTO RESOLVED 2026-08-14 (photo session, Commons rung): Q120987517 matched by attributes, license CC BY-SA 3.0, judged \"clean solo portrait (hearing room)\"; committed at /candidates/az-pima-state-house-20-villegas-betty.jpg.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:governor:ayotte-kelly",
+      "name": "Kelly Ayotte",
+      "note": "PHOTO RESOLVED 2026-08-14 (photo session, Commons rung): Q22354 matched by attributes, license Public domain, judged \"official U.S. Senate portrait, public domain\"; committed at /candidates/nh-merrimack-governor-ayotte-kelly.jpg.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:governor:fife-shaun",
+      "name": "Shaun Fife",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:governor:mcclory-bob-wayne",
+      "name": "Bob Wayne McClory",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-senate:jarvis-david",
+      "name": "David Jarvis",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 5 hits, none passed office=/senator|congress/ + place=/New Hampshire/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-senate:manzur-karishma",
+      "name": "Karishma Manzur",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-senate:saal-maxwell-l-",
+      "name": "Maxwell L. Saal",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-senate:vail-john",
+      "name": "John Vail",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 5 hits, none passed office=/senator|congress/ + place=/New Hampshire/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-senate:alciere-tom",
+      "name": "Tom Alciere",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 1 hits, none passed office=/senator|congress/ + place=/New Hampshire/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-senate:brown-scott-p-",
+      "name": "Scott P. Brown",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 2 hits, none passed office=/senator|congress/ + place=/New Hampshire/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-senate:danley-sky",
+      "name": "Sky Danley",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-senate:martin-andy",
+      "name": "Andy Martin",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 5 hits, none passed office=/senator|congress/ + place=/New Hampshire/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-senate:maxwell-mary",
+      "name": "Mary Maxwell",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 5 hits, none passed office=/senator|congress/ + place=/New Hampshire/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-senate:mcmenamon-ii-richard-a-",
+      "name": "Richard A. McMenamon II",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-senate:smith-sabrina-ann",
+      "name": "Sabrina Ann Smith",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-senate:sununu-john-e-",
+      "name": "John E. Sununu",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 1 hits, none passed office=/senator|congress/ + place=/New Hampshire/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-house-2:beauchemin-paige",
+      "name": "Paige Beauchemin",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_P18 â€” Q123466675 matched (attributes: \"New Hampshire politician | member of the New Hampshire House of Representatives\") but carries no P18 image",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-house-2:callis-michael-anthony",
+      "name": "Michael Anthony Callis",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-house-2:nicholson-dan",
+      "name": "Dan Nicholson",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-house-2:orlando-victor",
+      "name": "Victor Orlando",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 3 hits, none passed office=/representative|congress/ + place=/New Hampshire/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:state-senate-7:harned-rebecca",
+      "name": "Rebecca Harned",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:state-senate-7:innis-daniel-e-",
+      "name": "Daniel E. Innis",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:state-house-merrimack-7:ebel-karen-elizabeth",
+      "name": "Karen Elizabeth Ebel",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_P18 â€” Q124657667 matched (attributes: \"American politician | member of the New Hampshire House of Representatives | member of the New Hampshire House of Representatives\") but carries no P18 image",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:state-house-merrimack-7:rusis-cynthia",
+      "name": "Cynthia Rusis",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:executive-council-2:menard-tobin",
+      "name": "Tobin Menard",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:executive-council-2:strathdee-kim",
+      "name": "Kim Strathdee",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-commissioner-2:ribas-vincent-s-",
+      "name": "Vincent S. Ribas",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-commissioner-2:bilodeau-richard",
+      "name": "Richard Bilodeau",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-commissioner-2:french-harold-f-",
+      "name": "Harold F. French",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 1 hits, none passed office=/commissioner|freeholder/ + place=/New Hampshire/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-sheriff:shephard-peter",
+      "name": "Peter Shephard",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-sheriff:cassidy-frank-t-",
+      "name": "Frank T. Cassidy",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-sheriff:gerhard-jason",
+      "name": "Jason Gerhard",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 3 hits, none passed office=/sheriff/ + place=/New Hampshire/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-sheriff:weir-ben",
+      "name": "Ben Weir",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-attorney:endres-steven",
+      "name": "Steven Endres",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-attorney:hagaman-meg",
+      "name": "Meg Hagaman",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-attorney:raiche-jon",
+      "name": "Jon Raiche",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-attorney:rogers-sarah",
+      "name": "Sarah Rogers",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 5 hits, none passed office=/attorney/ + place=/New Hampshire/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-treasurer:donnelly-kathleen",
+      "name": "Kathleen Donnelly",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 2 hits, none passed office=/treasurer/ + place=/New Hampshire/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-treasurer:schuett-dianne-e-",
+      "name": "Dianne E. Schuett",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:register-of-deeds:davis-erica-s-",
+      "name": "Erica S. Davis",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:register-of-deeds:morse-samantha",
+      "name": "Samantha Morse",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nh-merrimack:register-of-probate:bradstreet-jane",
+      "name": "Jane Bradstreet",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:mine-inspector|Walter \"Les\" Presmyk",
+      "name": "Walter \"Les\" Presmyk",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:us-house-6|Gary Swing",
+      "name": "Gary Swing",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 1 hits, none passed office=/representative|congress/ + place=/Arizona/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:state-senate-19|Bob Karp",
+      "name": "Bob Karp",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 1 hits, none passed office=/legislat|representative|senator|general court/ + place=/Arizona/",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:us-house-7|Adelita Grijalva",
+      "name": "Adelita Grijalva",
+      "note": "PHOTO RESOLVED 2026-08-14 (photo session): reuses the committed portrait /officials/G000606.jpg â€” Public domain â€” Damien Salas, Office of the Clerk U.S.House of Representatives (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3ARep.%20Adelita%20Grijalva%20Official%20Portrait.jpg).",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-nj-morris:us-house-11:mejia",
+      "name": "Analilia Mejia",
+      "note": "PHOTO SWITCHED 2026-08-14 (photo session): the campaign-site hotlink could not be committed (image container not JPEG/PNG); the card now serves the committed public-domain congressional portrait /officials/M001246.jpg instead - a stronger license and our origin.",
+      "attemptedAt": "2026-08-14"
+    }
+  ]
 }

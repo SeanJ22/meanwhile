@@ -339,7 +339,37 @@ ${officialMissRows}
 const reportPath = join(ROOT, "docs", "photo-report.md");
 const existing = readFileSync(reportPath, "utf8");
 
-// Header: everything before the first generated/roster section.
+// The candidate-cards section, generated from the cards file — every
+// shipped card photo with its judgment/source string, so the 2b guard
+// (photoUrl present in this report) can never drift from the data.
+const fullCards = read("data/ballot/candidate-cards-2026.json") as {
+  cards: Record<string, { photoUrl: string | null; photoSource: string | null }>;
+  hunts: { key: string }[];
+};
+const shippedCardRows = Object.entries(fullCards.cards)
+  .filter(([, c]) => c.photoUrl)
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([key, c]) => `| \`${key}\` | ${c.photoUrl} | ${c.photoSource} |`)
+  .join("\n");
+const shippedCount = Object.values(fullCards.cards).filter((c) => c.photoUrl).length;
+const cardsSection = `## Candidate cards — \`data/ballot/candidate-cards-2026.json\`
+
+Generated from the cards file by \`scripts/photo-census.mts\`. Each row is
+a shipped photo with the judgment and source recorded on the card itself
+(\`photoSource\` renders as the image's title/alt). External photos were
+localized 2026-08-14: committed copies under \`public/candidates/\`,
+metadata-stripped, served from our origin. A candidate not listed renders
+initials, and every absence is a recorded hunt in the file's \`hunts\`
+array (${fullCards.hunts.length} recorded hunts, rung-by-rung with dates).
+
+${shippedCount} shipped card photos:
+
+| Card key | Served file | Judgment and source |
+|---|---|---|
+${shippedCardRows}
+`;
+
+// Header: everything before the first generated section.
 const officialsMarker = "## Official portraits — the manifest";
 const legacyOfficialsMarker = "## Roster officials";
 const headerEnd = [officialsMarker, legacyOfficialsMarker, "## Candidate cards"]
@@ -347,15 +377,6 @@ const headerEnd = [officialsMarker, legacyOfficialsMarker, "## Candidate cards"]
   .filter((i) => i >= 0)
   .reduce((a, b) => Math.min(a, b), existing.length);
 const header = existing.slice(0, headerEnd).trimEnd();
-
-// The hand-written candidate-cards section survives regeneration verbatim.
-const censusMarker = "## The census — every rendered person, counted by script";
-const cardsStart = existing.indexOf("## Candidate cards");
-const cardsEnd = existing.includes(censusMarker)
-  ? existing.indexOf(censusMarker)
-  : existing.length;
-const cardsSection =
-  cardsStart >= 0 ? existing.slice(cardsStart, cardsEnd).trimEnd() : "";
 
 writeFileSync(
   reportPath,

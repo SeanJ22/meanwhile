@@ -40,10 +40,14 @@ test("every photo carries a labeled source and https URL; every bio its citation
   const { cards } = allCandidateCards();
   for (const [key, card] of Object.entries(cards)) {
     if (card.photoUrl !== null) {
-      // https for external photos; a site-local `/officials/…` path serves
-      // a COMMITTED public-domain portrait (license recorded in
-      // lib/registry/official-photos.json) and must resolve on disk.
-      if (card.photoUrl.startsWith("/officials/")) {
+      // https for external photos; a site-local path serves a COMMITTED
+      // portrait — `/officials/…` licensed in official-photos.json,
+      // `/candidates/…` judged and sourced on the card itself (photo
+      // session 2026-08-14) — and must resolve on disk.
+      if (
+        card.photoUrl.startsWith("/officials/") ||
+        card.photoUrl.startsWith("/candidates/")
+      ) {
         assert.ok(
           existsSync(join(process.cwd(), "public", card.photoUrl.slice(1))),
           `${key}: local portrait ${card.photoUrl} not committed`,

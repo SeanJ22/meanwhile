@@ -24,7 +24,7 @@ cannot drift from what ships. All images are served from our origin
 (`scripts/strip-image-metadata.mts`), and matched by stable id (bioguide
 for Congress), never by name search.
 
-427 shipped portraits:
+443 shipped portraits:
 
 | Person | Served file | Source URL | License |
 |---|---|---|---|
@@ -67,7 +67,10 @@ for Congress), never by name search.
 | Eric Burlison | /officials/B001316.jpg | https://unitedstates.github.io/images/congress/450x550/B001316.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
 | Josh Brecheen | /officials/B001317.jpg | https://unitedstates.github.io/images/congress/450x550/B001317.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
 | Becca Balint | /officials/B001318.jpg | https://unitedstates.github.io/images/congress/450x550/B001318.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
+| Tom Barrett | /officials/B001321.jpg | https://commons.wikimedia.org/wiki/File%3ARep.%20Tom%20Barrett%20official%20photo%2C%20119th%20Congress%20(cropped).jpg | Public domain — House Creative Services (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3ARep.%20Tom%20Barrett%20official%20photo%2C%20119th%20Congress%20(cropped).jpg) |
 | Michael Baumgartner | /officials/B001322.jpg | https://unitedstates.github.io/images/congress/450x550/B001322.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
+| Nicholas J. Begich III | /officials/B001323.jpg | https://commons.wikimedia.org/wiki/File%3ANick%20Begich%20III.jpg | Public domain — House Creative Services (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3ANick%20Begich%20III.jpg) |
+| Wesley Bell | /officials/B001324.jpg | https://commons.wikimedia.org/wiki/File%3ARep.%20Wesley%20Bell%20Official%20Portrait.jpg | Public domain — Ike Hayman, House Creative Services (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3ARep.%20Wesley%20Bell%20Official%20Portrait.jpg) |
 | Sheri Biggs | /officials/B001325.jpg | https://unitedstates.github.io/images/congress/450x550/B001325.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
 | Janelle S. Bynum | /officials/B001326.jpg | https://unitedstates.github.io/images/congress/450x550/B001326.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
 | Robert P. Bresnahan, Jr. | /officials/B001327.jpg | https://unitedstates.github.io/images/congress/450x550/B001327.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
@@ -162,6 +165,7 @@ for Congress), never by name search.
 | Julie Fedorchak | /officials/F000482.jpg | https://unitedstates.github.io/images/congress/450x550/F000482.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
 | Laura Friedman | /officials/F000483.jpg | https://unitedstates.github.io/images/congress/450x550/F000483.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
 | Randy Fine | /officials/F000484.jpg | https://unitedstates.github.io/images/congress/450x550/F000484.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
+| Clay Fuller | /officials/F000485.jpg | https://commons.wikimedia.org/wiki/File%3AClay%20Fuller%20official%20congressional%20photograph%20119th%20congress.jpg | Public domain — Unknown authorUnknown author (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3AClay%20Fuller%20official%20congressional%20photograph%20119th%20congress.jpg) |
 | Sam Graves | /officials/G000546.jpg | https://unitedstates.github.io/images/congress/450x550/G000546.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
 | Al Green | /officials/G000553.jpg | https://unitedstates.github.io/images/congress/450x550/G000553.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
 | Brett Guthrie | /officials/G000558.jpg | https://unitedstates.github.io/images/congress/450x550/G000558.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
@@ -188,6 +192,8 @@ for Congress), never by name search.
 | Brandon Gill | /officials/G000603.jpg | https://unitedstates.github.io/images/congress/450x550/G000603.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
 | Maggie Goodlander | /officials/G000604.jpg | https://unitedstates.github.io/images/congress/450x550/G000604.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
 | Adam Gray | /officials/G000605.jpg | https://unitedstates.github.io/images/congress/450x550/G000605.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
+| Adelita S. Grijalva | /officials/G000606.jpg | https://commons.wikimedia.org/wiki/File%3ARep.%20Adelita%20Grijalva%20Official%20Portrait.jpg | Public domain — Damien Salas, Office of the Clerk U.S.House of Representatives (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3ARep.%20Adelita%20Grijalva%20Official%20Portrait.jpg) |
+| James Gallagher | /officials/G000607.jpg | https://commons.wikimedia.org/wiki/File%3AJames%20Gallagher%2C%20official%20portrait%20(119th%20Congress).jpg | Public domain — U.S. House of Representatives (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3AJames%20Gallagher%2C%20official%20portrait%20(119th%20Congress).jpg) |
 | Steny H. Hoyer | /officials/H000874.jpg | https://unitedstates.github.io/images/congress/450x550/H000874.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
 | James A. Himes | /officials/H001047.jpg | https://unitedstates.github.io/images/congress/450x550/H001047.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
 | Andy Harris | /officials/H001052.jpg | https://unitedstates.github.io/images/congress/450x550/H001052.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
@@ -321,6 +327,8 @@ for Congress), never by name search.
 | John J. McGuire III | /officials/M001239.jpg | https://unitedstates.github.io/images/congress/450x550/M001239.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
 | Addison P. McDowell | /officials/M001240.jpg | https://unitedstates.github.io/images/congress/450x550/M001240.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
 | Dave Min | /officials/M001241.jpg | https://unitedstates.github.io/images/congress/450x550/M001241.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
+| Christian D. Menefee | /officials/M001245.jpg | https://commons.wikimedia.org/wiki/File%3AChristian%20Menefee%2C%20official%20portrait%20(119th%20Congress).jpg | Public domain — U.S. House of Representatives (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3AChristian%20Menefee%2C%20official%20portrait%20(119th%20Congress).jpg) |
+| Analilia Mejia | /officials/M001246.jpg | https://commons.wikimedia.org/wiki/File%3AAnalilia%20Mejia%2C%20official%20portrait%20(119th%20Congress).jpg | Public domain — U.S. House of Representatives (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3AAnalilia%20Mejia%2C%20official%20portrait%20(119th%20Congress).jpg) |
 | Jerrold Nadler | /officials/N000002.jpg | https://unitedstates.github.io/images/congress/450x550/N000002.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
 | Richard E. Neal | /officials/N000015.jpg | https://unitedstates.github.io/images/congress/450x550/N000015.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
 | Troy E. Nehls | /officials/N000026.jpg | https://unitedstates.github.io/images/congress/450x550/N000026.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
@@ -437,6 +445,7 @@ for Congress), never by name search.
 | Derrick Van Orden | /officials/V000135.jpg | https://unitedstates.github.io/images/congress/450x550/V000135.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
 | Gabe Vasquez | /officials/V000136.jpg | https://unitedstates.github.io/images/congress/450x550/V000136.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
 | Eugene Simon Vindman | /officials/V000138.jpg | https://unitedstates.github.io/images/congress/450x550/V000138.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
+| Matt Van Epps | /officials/V000139.jpg | https://commons.wikimedia.org/wiki/File%3ARep.%20Matt%20Van%20Epps%20official%20portrait%2C%20119th%20Congress.jpg | Public domain — House Creative Services (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3ARep.%20Matt%20Van%20Epps%20official%20portrait%2C%20119th%20Congress.jpg) |
 | Maxine Waters | /officials/W000187.jpg | https://unitedstates.github.io/images/congress/450x550/W000187.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
 | Nikema Williams | /officials/W000788.jpg | https://unitedstates.github.io/images/congress/450x550/W000788.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
 | Joe Wilson | /officials/W000795.jpg | https://unitedstates.github.io/images/congress/450x550/W000795.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
@@ -453,23 +462,20 @@ for Congress), never by name search.
 | Bonnie Watson Coleman | /officials/W000822.jpg | https://unitedstates.github.io/images/congress/450x550/W000822.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
 | Tony Wied | /officials/W000829.jpg | https://unitedstates.github.io/images/congress/450x550/W000829.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
 | George Whitesides | /officials/W000830.jpg | https://unitedstates.github.io/images/congress/450x550/W000830.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
+| James R. Walkinshaw | /officials/W000831.jpg | https://commons.wikimedia.org/wiki/File%3AJames%20Walkinshaw.jpg | Public domain — US Congress (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3AJames%20Walkinshaw.jpg) |
 | Rudy Yakym III | /officials/Y000067.jpg | https://unitedstates.github.io/images/congress/450x550/Y000067.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
 | Ryan K. Zinke | /officials/Z000018.jpg | https://unitedstates.github.io/images/congress/450x550/Z000018.jpg | Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images) |
+| Andrés Cano | /officials/roster-pima-5.jpg | https://commons.wikimedia.org/wiki/File%3ACano%20Final.jpg | CC BY-SA 4.0 — Tucsondemocrat (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3ACano%20Final.jpg) |
+| Consuelo Hernandez | /officials/roster-susd12-4.jpg | https://commons.wikimedia.org/wiki/File%3AConsuelo%20Hernandez%20by%20Gage%20Skidmore.jpg | CC BY-SA 3.0 — Gage Skidmore (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3AConsuelo%20Hernandez%20by%20Gage%20Skidmore.jpg) |
+| Regina Romero | /officials/roster-tucson-mc-1.jpg | https://commons.wikimedia.org/wiki/File%3ARegina%20Romero%20-%202020%2001.jpg | Public domain — The United States Senate - Office of Senator Martha McSally (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3ARegina%20Romero%20-%202020%2001.jpg) |
+| Katie Hobbs | /officials/statewide-az-governor.jpg | https://commons.wikimedia.org/wiki/File%3AKatie%20Hobbs%20by%20Gage%20Skidmore.jpg | CC BY-SA 3.0 — Gage Skidmore (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3AKatie%20Hobbs%20by%20Gage%20Skidmore.jpg) |
+| Kelly Ayotte | /officials/statewide-nh-governor.jpg | https://commons.wikimedia.org/wiki/File%3AKelly%20Ayotte%2C%20Official%20Portrait%2C%20112th%20Congress%202.jpg | Public domain — United States Senate (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3AKelly%20Ayotte%2C%20Official%20Portrait%2C%20112th%20Congress%202.jpg) |
+| Mikie Sherrill | /officials/statewide-nj-governor.jpg | https://commons.wikimedia.org/wiki/File%3AMikie%20Sherrill%20Headshot.jpg | CC BY-SA 4.0 — Joeshmonobody (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3AMikie%20Sherrill%20Headshot.jpg) |
 
-22 recorded absences (every one carries its reason and date in the manifest):
+80 recorded absences (every one carries its reason and date in the manifest):
 
 | Person | Id | Reason |
 |---|---|---|
-| Tom Barrett | `congress:B001321` | pictorial-directory image HTTP 404; Congress.gov depiction exists but is "Image courtesy of the Member" (unknown license — not shippable per D20) |
-| Nicholas J. Begich III | `congress:B001323` | pictorial-directory image HTTP 404; Congress.gov depiction exists but is "Image courtesy of the Member" (unknown license — not shippable per D20) |
-| Wesley Bell | `congress:B001324` | pictorial-directory image HTTP 404; Congress.gov depiction exists but is "Image courtesy of the Member" (unknown license — not shippable per D20) |
-| Clay Fuller | `congress:F000485` | pictorial-directory image HTTP 404; Congress.gov depiction exists but is "Image courtesy of the Member" (unknown license — not shippable per D20) |
-| Adelita S. Grijalva | `congress:G000606` | pictorial-directory image HTTP 404; Congress.gov depiction exists but is "Image courtesy of the Member" (unknown license — not shippable per D20) |
-| James Gallagher | `congress:G000607` | pictorial-directory image HTTP 404; Congress.gov depiction exists but is "Image courtesy of the Member" (unknown license — not shippable per D20) |
-| Christian D. Menefee | `congress:M001245` | pictorial-directory image HTTP 404; Congress.gov depiction exists but is "Image courtesy of the Member" (unknown license — not shippable per D20) |
-| Analilia Mejia | `congress:M001246` | pictorial-directory image HTTP 404; Congress.gov depiction exists but is "Image courtesy of the Member" (unknown license — not shippable per D20) |
-| Matt Van Epps | `congress:V000139` | pictorial-directory image HTTP 404; Congress.gov depiction exists but is "Image courtesy of the Member" (unknown license — not shippable per D20) |
-| James R. Walkinshaw | `congress:W000831` | pictorial-directory image HTTP 404; Congress.gov depiction exists but is "Image courtesy of the Member" (unknown license — not shippable per D20) |
 | Marisa Sweeney | `plural:028a440f-10cb-49cc-9417-1dfd0cff83e2` | state legislature portrait — per-state terms hunt not yet done (docs/source-ladder.md) |
 | Aura Dunn | `plural:03aa8bec-9d7e-41e7-ad20-b5ba1991cab6` | state legislature portrait — per-state terms hunt not yet done (docs/source-ladder.md) |
 | Gail Griffin | `plural:1e39adcf-868d-4722-a07b-09fcd36ad9ed` | state legislature portrait — per-state terms hunt not yet done (docs/source-ladder.md) |
@@ -482,36 +488,125 @@ for Congress), never by name search.
 | Lupe Diaz | `plural:bc52f516-a13b-4490-a12c-7b98fa3969e5` | state legislature portrait — per-state terms hunt not yet done (docs/source-ladder.md) |
 | Greg Sargent | `plural:f1292af8-a209-4ff7-87b5-086acddcc10e` | state legislature portrait — per-state terms hunt not yet done (docs/source-ladder.md) |
 | Tony Bucco | `plural:f321f20f-b8af-4d0b-85ba-e7b8dcf9ae03` | state legislature portrait — per-state terms hunt not yet done (docs/source-ladder.md) |
+| Vicki Cox Golder | `roster:amphi#1` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Matt Kopec | `roster:amphi#2` | Wikimedia Commons rung (photo session 2026-08-14): NO_P18 — Q26703665 matched (attributes: "American politician | member of the Arizona House of Representatives") but carries no P18 image |
+| Deanna Day | `roster:amphi#3` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Michael Gemma | `roster:amphi#4` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Susan Zibrat | `roster:amphi#5` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Alison Mastin | `roster:kearsarge#1` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Kristen Schultz | `roster:kearsarge#2` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 3 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Kearsarge Regional School District|Kearsarge Regional School|New Hampshire/ |
+| James MacKenna | `roster:kearsarge#3` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 1 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Kearsarge Regional School District|Kearsarge Regional School|New Hampshire/ |
+| David Keith | `roster:kearsarge#4` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 5 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Kearsarge Regional School District|Kearsarge Regional School|New Hampshire/ |
+| Art Bobruff | `roster:kearsarge#5` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Patrick McGowan | `roster:kearsarge#6` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 5 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Kearsarge Regional School District|Kearsarge Regional School|New Hampshire/ |
+| Paul Lakevicius | `roster:kearsarge#7` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Nancy Glynn | `roster:kearsarge#8` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 1 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Kearsarge Regional School District|Kearsarge Regional School|New Hampshire/ |
+| Eric Gregoire | `roster:kearsarge#9` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Stuart D. Trachy | `roster:merrimack#1` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| David M. Lovlien | `roster:merrimack#2` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Stephen Shurtleff | `roster:merrimack#3` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Stephen H. Shaw | `roster:morris#1` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| John Krickus | `roster:morris#2` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Douglas R. Cabana | `roster:morris#3` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Thomas J. Mastrangelo | `roster:morris#4` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Christine Myers | `roster:morris#5` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 2 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Morris|Morris County|New Jersey/ |
+| Tayfun Selen | `roster:morris#6` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Deborah Smith | `roster:morris#7` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 5 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Morris|Morris County|New Jersey/ |
+| Kristen Schultz | `roster:newbury#1` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 3 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Merrimack|Newbury Selectboard|New Hampshire/ |
+| Scott Wheeler | `roster:newbury#2` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 5 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Merrimack|Newbury Selectboard|New Hampshire/ |
+| Sandra Warde | `roster:newbury#3` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Rex Scott | `roster:pima#1` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Dr. Matt Heinz | `roster:pima#2` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Jennifer Allen | `roster:pima#3` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 5 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Pima|Pima County|Arizona/ |
+| Steve Christy | `roster:pima#4` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Joseph Jackson | `roster:rockaway#0` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 5 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Morris|Rockaway Township|New Jersey/ |
+| Howard Morrison | `roster:rockaway#1` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 4 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Morris|Rockaway Township|New Jersey/ |
+| Jonathan Sackett | `roster:rockaway#2` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 2 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Morris|Rockaway Township|New Jersey/ |
+| Adam Salberg | `roster:rockaway#3` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Pawel Wojtowicz | `roster:rockaway#4` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Susan Fahrman Royek | `roster:rockaway#5` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| John J. Quinn | `roster:rockaway#6` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 2 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Morris|Rockaway Township|New Jersey/ |
+| Sophia Freire | `roster:rockaway#7` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Emanuel Friedlander | `roster:rockaway#8` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Tucker Kelley | `roster:rockaway#9` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Alison McGeary | `roster:rocktwp-boe#1` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Noël Anderson | `roster:rocktwp-boe#2` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 3 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Rockaway Township School District|Rockaway Township|New Jersey/ |
+| Lisa Mezik | `roster:rocktwp-boe#3` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Jacalyn Richardson | `roster:rocktwp-boe#4` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Jemila Ann Tourne | `roster:rocktwp-boe#5` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Jamie Gorman | `roster:rocktwp-boe#6` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 2 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Rockaway Township School District|Rockaway Township|New Jersey/ |
+| Rachael Brookes | `roster:rocktwp-boe#7` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Beki Quintero | `roster:susd12#1` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Ted Rodriquez | `roster:susd12#2` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Edgar Bustamante | `roster:susd12#3` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 1 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Sunnyside Unified District|Sunnyside Unified School District Governing|Arizona/ |
+| Roberto Jaramillo | `roster:susd12#5` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 5 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Sunnyside Unified District|Sunnyside Unified School District Governing|Arizona/ |
+| Lane Santa Cruz | `roster:tucson-mc#2` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Paul Cunningham | `roster:tucson-mc#3` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 5 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Tucson|Tucson Mayor &|Arizona/ |
+| Kevin Dahl | `roster:tucson-mc#4` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 2 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Tucson|Tucson Mayor &|Arizona/ |
+| Nikki Lee | `roster:tucson-mc#5` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 5 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Tucson|Tucson Mayor &|Arizona/ |
+| Selina Barajas | `roster:tucson-mc#6` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Miranda Schubert | `roster:tucson-mc#7` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Dr. Ravi Shah | `roster:tusd#1` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Natalie Luna Rose | `roster:tusd#2` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Jennifer Eckstrom | `roster:tusd#3` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Val Romero | `roster:tusd#4` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Sadie Shaw | `roster:tusd#5` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Allison Pratt | `roster:vail#1` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Callie Tippett | `roster:vail#2` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Jen Anderson | `roster:vail#3` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 1 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Vail Unified District|Vail Unified School District Governing|Arizona/ |
+| Ed Buster | `roster:vail#4` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits |
+| Chris King | `roster:vail#5` | Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — 5 hits, none passed office=/mayor|supervisor|council|commissioner|board|trustee|selectman|freeholder|school|superintendent|politician/ + place=/Vail Unified District|Vail Unified School District Governing|Arizona/ |
 
 ## Candidate cards — `data/ballot/candidate-cards-2026.json`
 
-The eight photos that pass the rule, exactly as served:
+Generated from the cards file by `scripts/photo-census.mts`. Each row is
+a shipped photo with the judgment and source recorded on the card itself
+(`photoSource` renders as the image's title/alt). External photos were
+localized 2026-08-14: committed copies under `public/candidates/`,
+metadata-stripped, served from our origin. A candidate not listed renders
+initials, and every absence is a recorded hunt in the file's `hunts`
+array (118 recorded hunts, rung-by-rung with dates).
 
-| Candidate | Judgment | Source URL |
+35 shipped card photos:
+
+| Card key | Served file | Judgment and source |
 |---|---|---|
-| Cinde Warmington | clean solo portrait (brick wall, arms crossed) | https://run.imgix.net/97cfce8c-9d0e-4e05-824d-283b14876207/4d7eafb4-1f9c-4589-9ba4-0d1a344679e3/4d7eafb4-1f9c-4589-9ba4-0d1a344679e3.jpg |
-| Lily Tang Williams | clean solo headshot (transparent background) | https://www.lilytangwilliams.com/wp-content/uploads/2022/01/lily-tang-williams-homepage.png |
-| Gregory M. Sargent | clean solo headshot (outdoor bokeh) | https://gregforrep.com/greg-portrait.jpg |
-| Karen Liot Hill | solo self-portrait at the NH State House — informal but the unambiguous sole subject | https://static.wixstatic.com/media/644896_ac32357ab0c6496a8824ebedef424559~mv2.jpeg |
-| Cory Booker | solo profile portrait (B&W) | https://corybooker.com/wp-content/uploads/2020/01/cory_sq_profile.png |
-| Analilia Mejia | clean solo portrait (street, arms crossed) | https://images.squarespace-cdn.com/content/v1/691b52e1abc45c143c47e6a2/1ffd50e3-47e3-411d-b5d0-94c514a55328/Headshot-+Web+Background+3.jpg |
-| Tahsin Selen | clean solo portrait (suit, arms crossed) | https://static.wixstatic.com/media/7ef20c_da57f763291442e19e51303d0828044b~mv2.jpg |
-| Maggie Goodlander | committed public-domain official portrait | /officials/G000604.jpg (see roster table) |
+| `ballot-az-pima:attorney-general:mayes-kris` | /candidates/az-pima-attorney-general-mayes-kris.jpg | clean solo portrait â€” Wikimedia Commons, CC BY-SA 2.0, photo: Gage Skidmore from Surprise, AZ, United States of America, Please attribute to Gage Skidmore if used elsewhere.; file page read 2026-08-14, committed copy served from our origin |
+| `ballot-az-pima:attorney-general|Kris Mayes` | /candidates/az-pima-attorney-general-mayes-kris.jpg | clean solo portrait â€” Wikimedia Commons, CC BY-SA 2.0, photo: Gage Skidmore from Surprise, AZ, United States of America, Please attribute to Gage Skidmore if used elsewhere.; file page read 2026-08-14, committed copy served from our origin |
+| `ballot-az-pima:governor:biggs-andy` | /officials/B001302.jpg | Official portrait â€” GPO Congressional Pictorial Directory (public domain), committed copy at /officials/B001302.jpg; license recorded in lib/registry/official-photos.json |
+| `ballot-az-pima:governor:hobbs-katie` | /candidates/az-pima-governor-hobbs-katie.jpg | solo speaking-event portrait, unambiguous sole subject â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
+| `ballot-az-pima:governor:schweikert-david` | /officials/S001183.jpg | Official portrait â€” GPO Congressional Pictorial Directory (public domain), committed copy at /officials/S001183.jpg; license recorded in lib/registry/official-photos.json |
+| `ballot-az-pima:governor|Andy Biggs` | /officials/B001302.jpg | Official portrait â€” GPO Congressional Pictorial Directory (public domain), committed copy at /officials/B001302.jpg; license recorded in lib/registry/official-photos.json |
+| `ballot-az-pima:governor|Katie Hobbs` | /candidates/az-pima-governor-hobbs-katie.jpg | solo speaking-event portrait, unambiguous sole subject â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
+| `ballot-az-pima:secretary-of-state:fontes-adrian` | /candidates/az-pima-secretary-of-state-fontes-adrian.jpg | clean solo portrait â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
+| `ballot-az-pima:secretary-of-state|Adrian Fontes` | /candidates/az-pima-secretary-of-state-fontes-adrian.jpg | clean solo portrait â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
+| `ballot-az-pima:state-house-19:diaz-lupe` | /candidates/az-pima-state-house-19-diaz-lupe.jpg | clean solo portrait â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
+| `ballot-az-pima:state-house-19:gowan-david` | /candidates/az-pima-state-house-19-gowan-david.jpg | solo event candid, sole subject â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
+| `ballot-az-pima:state-house-19|David Gowan` | /candidates/az-pima-state-house-19-gowan-david.jpg | solo event candid, sole subject â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
+| `ballot-az-pima:state-house-19|Lupe Diaz` | /candidates/az-pima-state-house-19-diaz-lupe.jpg | clean solo portrait â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
+| `ballot-az-pima:state-house-20:gonzales-sally-ann` | /candidates/az-pima-state-house-20-gonzales-sally-ann.jpg | solo speaking portrait at committee microphone â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
+| `ballot-az-pima:state-house-20:villegas-betty` | /candidates/az-pima-state-house-20-villegas-betty.jpg | clean solo portrait (hearing room) â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
+| `ballot-az-pima:state-house-20|Betty Villegas` | /candidates/az-pima-state-house-20-villegas-betty.jpg | clean solo portrait (hearing room) â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
+| `ballot-az-pima:state-house-20|Sally Ann Gonzales` | /candidates/az-pima-state-house-20-gonzales-sally-ann.jpg | solo speaking portrait at committee microphone â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
+| `ballot-az-pima:state-senate-19:griffin-gail` | /candidates/az-pima-state-senate-19-griffin-gail.jpg | informal event candid, unambiguous sole subject â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
+| `ballot-az-pima:state-senate-19|Gail Griffin` | /candidates/az-pima-state-senate-19-griffin-gail.jpg | informal event candid, unambiguous sole subject â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
+| `ballot-az-pima:state-senate-20:hernandez-alma` | /candidates/az-pima-state-senate-20-hernandez-alma.jpg | clean solo candid, sole subject â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
+| `ballot-az-pima:state-senate-20|Alma Hernandez` | /candidates/az-pima-state-senate-20-hernandez-alma.jpg | clean solo candid, sole subject â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
+| `ballot-az-pima:us-house-6:ciscomani-juan` | /officials/C001133.jpg | Official portrait â€” GPO Congressional Pictorial Directory (public domain), committed copy at /officials/C001133.jpg; license recorded in lib/registry/official-photos.json |
+| `ballot-az-pima:us-house-6|Juan Ciscomani` | /officials/C001133.jpg | Official portrait â€” GPO Congressional Pictorial Directory (public domain), committed copy at /officials/C001133.jpg; license recorded in lib/registry/official-photos.json |
+| `ballot-az-pima:us-house-7:grijalva-adelita` | /officials/G000606.jpg | Committed portrait of the sitting member (license recorded in lib/registry/official-photos.json: Public domain â€” Damien Salas, Office of the Clerk U.S.House of Representatives (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3ARep.%20Adelita%20Grijalva%20Official%20Portrait.jpg)) |
+| `ballot-az-pima:us-house-7|Adelita Grijalva` | /officials/G000606.jpg | Committed portrait of the sitting member (license recorded in lib/registry/official-photos.json: Public domain â€” Damien Salas, Office of the Clerk U.S.House of Representatives (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3ARep.%20Adelita%20Grijalva%20Official%20Portrait.jpg)) |
+| `ballot-nh-merrimack:executive-council-2:liot-hill-karen` | /candidates/nh-merrimack-executive-council-2-liot-hill-karen.jpg | Photo: the candidate's campaign site (karenliothill.com) â€” committed copy of https://static.wixstatic.com/media/644896_ac32357ab0c6496a8824ebedef424559~mv2.jpeg served from our origin (fetched 2026-08-14, metadata stripped) |
+| `ballot-nh-merrimack:governor:ayotte-kelly` | /candidates/nh-merrimack-governor-ayotte-kelly.jpg | official U.S. Senate portrait, public domain â€” Wikimedia Commons, Public domain, photo: United States Senate; file page read 2026-08-14, committed copy served from our origin |
+| `ballot-nh-merrimack:governor:warmington-cinde` | /candidates/nh-merrimack-governor-warmington-cinde.jpg | Photo: the candidate's campaign site (cindewarmington.com) â€” committed copy of https://run.imgix.net/97cfce8c-9d0e-4e05-824d-283b14876207/4d7eafb4-1f9c-4589-9ba4-0d1a344679e3/4d7eafb4-1f9c-4589-9ba4-0d1a344679e3.jpg served from our origin (fetched 2026-08-14, metadata stripped) |
+| `ballot-nh-merrimack:state-house-merrimack-7:sargent-gregory-m-` | /candidates/nh-merrimack-state-house-merrimack-7-sargent-gregory-m-.jpg | Photo: the candidate's campaign site (gregforrep.com) â€” committed copy of https://gregforrep.com/greg-portrait.jpg served from our origin (fetched 2026-08-14, metadata stripped) |
+| `ballot-nh-merrimack:us-house-2:goodlander-maggie` | /officials/G000604.jpg | Official portrait â€” GPO Congressional Pictorial Directory (public domain), committed copy; license recorded in lib/registry/official-photos.json |
+| `ballot-nh-merrimack:us-house-2:tang-williams-lily` | /candidates/nh-merrimack-us-house-2-tang-williams-lily.png | Photo: the candidate's campaign site (lilytangwilliams.com) â€” committed copy of https://www.lilytangwilliams.com/wp-content/uploads/2022/01/lily-tang-williams-homepage.png served from our origin (fetched 2026-08-14, metadata stripped) |
+| `ballot-nh-merrimack:us-senate:pappas-chris` | /officials/P000614.jpg | Official portrait â€” GPO Congressional Pictorial Directory (public domain), committed copy at /officials/P000614.jpg; license recorded in lib/registry/official-photos.json |
+| `ballot-nj-morris:county-commissioner:selen` | /candidates/nj-morris-county-commissioner-selen.jpg | Photo: the candidate's campaign site (selenformorriscounty.com) â€” committed copy of https://static.wixstatic.com/media/7ef20c_da57f763291442e19e51303d0828044b~mv2.jpg served from our origin (fetched 2026-08-14, metadata stripped) |
+| `ballot-nj-morris:us-house-11:mejia` | /officials/M001246.jpg | Committed portrait of the sitting member (license recorded in lib/registry/official-photos.json: Public domain, official congressional portrait via Wikimedia Commons) |
+| `ballot-nj-morris:us-senate:booker` | /candidates/nj-morris-us-senate-booker.png | Photo: the candidate's campaign site (corybooker.com) â€” committed copy of https://corybooker.com/wp-content/uploads/2020/01/cory_sq_profile.png served from our origin (fetched 2026-08-14, metadata stripped) |
 
-The six that fell to initials on 2026-08-19, with the failing class
-(full rung-by-rung records live in the cards file's hunts):
-
-| Candidate | What the shipped image actually was |
-|---|---|
-| Kelly Ayotte | WinRed campaign banner with logo text |
-| Katie Hobbs | white-on-transparent campaign wordmark — not a photograph (the card the author flagged) |
-| Justin Murphy | file renders blank white as fetched |
-| Scott P. Brown | two-person event candid |
-| John E. Sununu | two-person couple photo — a stranger cannot tell which person is the candidate |
-| Rebecca Harned | canoe selfie with a child |
-
-Cards that had no photo before and still have none: Chris Pappas, Joe
-Hathaway, Andy Biggs (recorded hunts, unchanged).
 
 ## The census — every rendered person, counted by script
 
@@ -523,28 +618,28 @@ ballot candidacies and lineup nominees, federal officials attached to
 covered divisions, state legislators attached to covered divisions, and
 every curated local roster member.
 
-**435 of 750 rendered people have a portrait; 315 render initials.**
+**466 of 750 rendered people have a portrait; 284 render initials.**
 
 | Surface | Portraits | Initials | Total |
 |---|---|---|---|
-| ballot candidates | 8 | 101 | 109 |
-| federal officials | 427 | 10 | 437 |
+| ballot candidates | 23 | 86 | 109 |
+| federal officials | 437 | 0 | 437 |
 | state legislators | 0 | 130 | 130 |
-| curated local rosters | 0 | 71 | 71 |
-| statewide executives | 0 | 3 | 3 |
+| curated local rosters | 3 | 68 | 71 |
+| statewide executives | 3 | 0 | 3 |
 
 | State | Portraits | Initials | Total |
 |---|---|---|---|
-| AK | 0 | 1 | 1 |
+| AK | 1 | 0 | 1 |
 | AL | 7 | 0 | 7 |
 | AR | 4 | 0 | 4 |
-| AZ | 10 | 105 | 115 |
-| CA | 50 | 1 | 51 |
+| AZ | 28 | 87 | 115 |
+| CA | 51 | 0 | 51 |
 | CO | 8 | 0 | 8 |
 | CT | 5 | 0 | 5 |
 | DE | 1 | 0 | 1 |
 | FL | 27 | 0 | 27 |
-| GA | 12 | 1 | 13 |
+| GA | 13 | 0 | 13 |
 | HI | 2 | 0 | 2 |
 | IA | 4 | 0 | 4 |
 | ID | 2 | 0 | 2 |
@@ -556,16 +651,16 @@ every curated local roster member.
 | MA | 9 | 0 | 9 |
 | MD | 8 | 0 | 8 |
 | ME | 2 | 0 | 2 |
-| MI | 12 | 1 | 13 |
+| MI | 13 | 0 | 13 |
 | MN | 8 | 0 | 8 |
-| MO | 7 | 1 | 8 |
+| MO | 8 | 0 | 8 |
 | MS | 4 | 0 | 4 |
 | MT | 2 | 0 | 2 |
 | NC | 14 | 0 | 14 |
 | ND | 1 | 0 | 1 |
 | NE | 3 | 0 | 3 |
-| NH | 9 | 143 | 152 |
-| NJ | 16 | 59 | 75 |
+| NH | 12 | 140 | 152 |
+| NJ | 18 | 57 | 75 |
 | NM | 3 | 0 | 3 |
 | NV | 4 | 0 | 4 |
 | NY | 26 | 0 | 26 |
@@ -576,10 +671,10 @@ every curated local roster member.
 | RI | 2 | 0 | 2 |
 | SC | 7 | 0 | 7 |
 | SD | 1 | 0 | 1 |
-| TN | 8 | 1 | 9 |
-| TX | 36 | 1 | 37 |
+| TN | 9 | 0 | 9 |
+| TX | 37 | 0 | 37 |
 | UT | 4 | 0 | 4 |
-| VA | 10 | 1 | 11 |
+| VA | 11 | 0 | 11 |
 | VT | 1 | 0 | 1 |
 | WA | 10 | 0 | 10 |
 | WI | 8 | 0 | 8 |
@@ -588,31 +683,11 @@ every curated local roster member.
 
 ### The named misses — the dedicated photo session's shopping list
 
-**ballot candidates — AZ (47):** Katie Hobbs; Teri Ann Hourihan; Risa Lombardo; Hugh Lytle; Andy Biggs; Ken Miceli; Scott Neely; David Schweikert; Adrian Fontes; Duwayne Collier; Alexander Kolodin; Gina Swoboda; Kris Mayes; Rodney Glassman; Warren Petersen; Nick Mansour; Michael Zepeda; Katherine Haley; Elijah Norton; Michael D. Butts; Teresa Leyba Ruiz; Brett Matthew Newby; Tom Horne; Kimberly Yee; Brian Matlock; JoAnna Mendoza; Iman Bah; Jereme Lance Peters; Juan Ciscomani; Adelita Grijalva; Daniel Francis Butierez Sr.; Ryan Slawson; Gail Griffin; Alma Hernandez; Rocque Perez; Jackie O'Donnell Anderson; Aiden Nicholette Swallow; Cheryl Caswell; Lupe Diaz; David Gowan; Genoveva Diaz; Sally Ann Gonzales; Ben Koehler; Betty Villegas; Walter "Les" Presmyk; Gary Swing; Bob Karp
+**ballot candidates — AZ (34):** Teri Ann Hourihan; Risa Lombardo; Hugh Lytle; Ken Miceli; Scott Neely; Duwayne Collier; Alexander Kolodin; Gina Swoboda; Rodney Glassman; Warren Petersen; Nick Mansour; Michael Zepeda; Katherine Haley; Elijah Norton; Michael D. Butts; Teresa Leyba Ruiz; Brett Matthew Newby; Tom Horne; Kimberly Yee; Brian Matlock; JoAnna Mendoza; Iman Bah; Jereme Lance Peters; Daniel Francis Butierez Sr.; Ryan Slawson; Rocque Perez; Jackie O'Donnell Anderson; Aiden Nicholette Swallow; Cheryl Caswell; Genoveva Diaz; Ben Koehler; Walter "Les" Presmyk; Gary Swing; Bob Karp
 
-**ballot candidates — NH (42):** Kelly Ayotte; Shaun Fife; Bob Wayne McClory; David Jarvis; Karishma Manzur; Chris Pappas; Maxwell L. Saal; John Vail; Tom Alciere; Scott P. Brown; Sky Danley; Andy Martin; Mary Maxwell; Richard A. McMenamon II; Sabrina Ann Smith; John E. Sununu; Paige Beauchemin; Michael Anthony Callis; Dan Nicholson; Victor Orlando; Rebecca Harned; Daniel E. Innis; Karen Elizabeth Ebel; Cynthia Rusis; Tobin Menard; Kim Strathdee; Vincent S. Ribas; Richard Bilodeau; Harold F. French; Peter Shephard; Frank T. Cassidy; Jason Gerhard; Ben Weir; Steven Endres; Meg Hagaman; Jon Raiche; Sarah Rogers; Kathleen Donnelly; Dianne E. Schuett; Erica S. Davis; Samantha Morse; Jane Bradstreet
+**ballot candidates — NH (40):** Shaun Fife; Bob Wayne McClory; David Jarvis; Karishma Manzur; Maxwell L. Saal; John Vail; Tom Alciere; Scott P. Brown; Sky Danley; Andy Martin; Mary Maxwell; Richard A. McMenamon II; Sabrina Ann Smith; John E. Sununu; Paige Beauchemin; Michael Anthony Callis; Dan Nicholson; Victor Orlando; Rebecca Harned; Daniel E. Innis; Karen Elizabeth Ebel; Cynthia Rusis; Tobin Menard; Kim Strathdee; Vincent S. Ribas; Richard Bilodeau; Harold F. French; Peter Shephard; Frank T. Cassidy; Jason Gerhard; Ben Weir; Steven Endres; Meg Hagaman; Jon Raiche; Sarah Rogers; Kathleen Donnelly; Dianne E. Schuett; Erica S. Davis; Samantha Morse; Jane Bradstreet
 
 **ballot candidates — NJ (12):** Veronica FERNANDEZ; Joanne KUNIANSKY; Justin MURPHY; Alan B. BOND; Joe HATHAWAY; Christopher (Chris) RUSSO; Munir "Monir" MAMOUN; Lisa MEZIK; Russell G. NYDEGGER; Olivier BORNO; Brian ROACH; William SERAFIN
-
-**federal officials — AK (1):** Nicholas J. Begich III
-
-**federal officials — AZ (1):** Adelita S. Grijalva
-
-**federal officials — CA (1):** James Gallagher
-
-**federal officials — GA (1):** Clay Fuller
-
-**federal officials — MI (1):** Tom Barrett
-
-**federal officials — MO (1):** Wesley Bell
-
-**federal officials — NJ (1):** Analilia Mejia
-
-**federal officials — TN (1):** Matt Van Epps
-
-**federal officials — TX (1):** Christian D. Menefee
-
-**federal officials — VA (1):** James R. Walkinshaw
 
 **state legislators — AZ (24):** Alma Hernández; Betty Villegas; Brian Fernandez; Chris Lopez; Chris Mathis; Consuelo Hernandez; David Gowan; Gail Griffin; Kevin Volk; Lupe Diaz; Mariana Sandoval; Michele Peña; Nancy Gutierrez; Priya Sundareshan; Rachel Keshel; Rosanna Gabaldón; Sally Gonzales; Stephanie Stahl Hamilton; Sylvia Allen; Teresa Martinez; T.J. Shope; Vince Leach; Walt Blackman; Wendy Rogers
 
@@ -620,14 +695,8 @@ every curated local roster member.
 
 **state legislators — NJ (21):** Al Barlas; Alixon Collazos-Gill; Andrew Macurdy; Tony Bucco; Aura Dunn; Brian Bergen; Chris DePhillips; Dawn Fantasia; Doug Steinhardt; Erik Peterson; Jay Webber; John DiMaio; John McKeon; Jon Bramnick; Joe Pennacchio; Kristin Corrado; Marisa Sweeney; Mike Inganamort; Parker Space; Rosy Bagolie; Vinnie Kearney
 
-**curated local rosters — AZ (32):** Dr. Ravi Shah; Natalie Luna Rose; Jennifer Eckstrom; Val Romero; Sadie Shaw; Rex Scott; Dr. Matt Heinz; Jennifer Allen; Steve Christy; Andrés Cano; Regina Romero; Lane Santa Cruz; Paul Cunningham; Kevin Dahl; Nikki Lee; Selina Barajas; Miranda Schubert; Allison Pratt; Callie Tippett; Jen Anderson; Ed Buster; Chris King; Beki Quintero; Ted Rodriquez; Edgar Bustamante; Consuelo Hernandez; Roberto Jaramillo; Vicki Cox Golder; Matt Kopec; Deanna Day; Michael Gemma; Susan Zibrat
+**curated local rosters — AZ (29):** Dr. Ravi Shah; Natalie Luna Rose; Jennifer Eckstrom; Val Romero; Sadie Shaw; Rex Scott; Dr. Matt Heinz; Jennifer Allen; Steve Christy; Lane Santa Cruz; Paul Cunningham; Kevin Dahl; Nikki Lee; Selina Barajas; Miranda Schubert; Allison Pratt; Callie Tippett; Jen Anderson; Ed Buster; Chris King; Beki Quintero; Ted Rodriquez; Edgar Bustamante; Roberto Jaramillo; Vicki Cox Golder; Matt Kopec; Deanna Day; Michael Gemma; Susan Zibrat
 
 **curated local rosters — NH (15):** Kristen Schultz; Scott Wheeler; Sandra Warde; Alison Mastin; Kristen Schultz; James MacKenna; David Keith; Art Bobruff; Patrick McGowan; Paul Lakevicius; Nancy Glynn; Eric Gregoire; Stuart D. Trachy; David M. Lovlien; Stephen Shurtleff
 
 **curated local rosters — NJ (24):** Joseph Jackson; Howard Morrison; Jonathan Sackett; Adam Salberg; Pawel Wojtowicz; Susan Fahrman Royek; John J. Quinn; Sophia Freire; Emanuel Friedlander; Tucker Kelley; Stephen H. Shaw; John Krickus; Douglas R. Cabana; Thomas J. Mastrangelo; Christine Myers; Tayfun Selen; Deborah Smith; Alison McGeary; Noël Anderson; Lisa Mezik; Jacalyn Richardson; Jemila Ann Tourne; Jamie Gorman; Rachael Brookes
-
-**statewide executives — AZ (1):** Katie Hobbs
-
-**statewide executives — NH (1):** Kelly Ayotte
-
-**statewide executives — NJ (1):** Mikie Sherrill

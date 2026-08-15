@@ -10,6 +10,7 @@ import {
   officeTypeForTitle,
 } from "../lib/officials/office-blurbs.ts";
 import { indexByDivision } from "../lib/officials/lookup.ts";
+import { STATEWIDE_EXECUTIVES } from "../lib/officials/statewide-executives.ts";
 import type { OfficeholderSet } from "../lib/officials/types.ts";
 
 /**
@@ -109,6 +110,42 @@ test("the photo manifest ships nothing without a license, and records its misses
   for (const miss of manifest.missing) {
     assert.ok(miss.reason.length > 0, "every absence carries its reason");
     assert.ok(miss.attemptedAt, "every attempt is dated");
+  }
+});
+
+test("roster-photos.json is exactly the manifest's licensed roster rows", () => {
+  // body-rosters.ts is client-bundled, so it imports this tiny derivative
+  // instead of the full manifest. Drift between the two would ship a photo
+  // with no license record (or hide a licensed one) — pinned here.
+  const manifest = JSON.parse(
+    readFileSync(join(ROOT, "lib", "registry", "official-photos.json"), "utf8"),
+  ) as { photos: { officeholderId: string; url: string; license: string | null }[] };
+  const derived = JSON.parse(
+    readFileSync(join(ROOT, "lib", "registry", "roster-photos.json"), "utf8"),
+  ) as Record<string, string>;
+
+  const licensed = new Map(
+    manifest.photos
+      .filter((p) => p.officeholderId.startsWith("roster:") && p.license)
+      .map((p) => [p.officeholderId, p.url]),
+  );
+  assert.deepEqual(
+    Object.fromEntries([...licensed.entries()].sort()),
+    Object.fromEntries(Object.entries(derived).sort()),
+    "roster-photos.json must match the manifest's licensed roster:* rows exactly (regenerate via scripts/ship-staged-portraits.mts)",
+  );
+});
+
+test("statewide executive photos carry manifest license rows", () => {
+  const manifest = JSON.parse(
+    readFileSync(join(ROOT, "lib", "registry", "official-photos.json"), "utf8"),
+  ) as { photos: { officeholderId: string; url: string; license: string | null }[] };
+  const byId = new Map(manifest.photos.map((p) => [p.officeholderId, p]));
+  for (const executive of STATEWIDE_EXECUTIVES) {
+    if (!executive.holder.photoUrl) continue;
+    const row = byId.get(executive.holder.id);
+    assert.ok(row?.license, `${executive.holder.id}: photo shipped without a manifest license row`);
+    assert.equal(row.url, executive.holder.photoUrl, `${executive.holder.id}: photoUrl and manifest url disagree`);
   }
 });
 

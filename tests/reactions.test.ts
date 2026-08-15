@@ -393,3 +393,193 @@ test("the capture point and the transparency page disclose together", () => {
     "the transparency page must disclose that opening an official's card is logged",
   );
 });
+
+// ── M63: "Someone else", the uncontested-race answer ─────────────────────
+
+/**
+ * The author's item: in a race with one name on the ballot, the three
+ * existing answers collect almost nothing — Yes is what the ballot forces,
+ * No cannot separate disliking this candidate from wanting a choice at all,
+ * and a reader who wants somebody else has no way to say so. "Someone else"
+ * is the only honest sentiment measure such a race has.
+ *
+ * A new enum value is cheap to add and expensive to get wrong, so the value
+ * ships context-restricted at the WRITE PATH, not merely hidden in the UI:
+ * accepted on a contested race the same button would be answering a
+ * different question, and the two meanings would land in one bucket. That is
+ * the same corruption the incumbent/challenger split exists to prevent.
+ */
+
+test("M63: the value is in the enum, restricted, and derivable from the data", async () => {
+  const { REACTION_VALUES, CONTEXT_RESTRICTED_VALUES, isValidReactionValue } =
+    await import("../lib/signal/reactions.ts");
+
+  assert.ok(REACTION_VALUES.includes("SOMEONE_ELSE"));
+  assert.ok(isValidReactionValue("SOMEONE_ELSE"));
+  assert.equal(
+    CONTEXT_RESTRICTED_VALUES.SOMEONE_ELSE,
+    "SINGLE_CANDIDATE_CONTEST",
+    "the value must declare the context it depends on",
+  );
+  // The three original answers stay unrestricted — a restriction table that
+  // grew to cover everything would be a bug, not a feature.
+  for (const value of ["YES", "NO", "UNSURE"] as const) {
+    assert.equal(CONTEXT_RESTRICTED_VALUES[value], undefined);
+  }
+
+  // The permitted set is DERIVED from the committed ballots, so a contest
+  // stops qualifying the moment a second candidate files.
+  const { getSingleCandidateTargetIds } = await import(
+    "../lib/ballot/uncontested.ts"
+  );
+  const { getCandidateTargetIds } = await import(
+    "../lib/ballot/candidate-targets.ts"
+  );
+  const uncontested = getSingleCandidateTargetIds();
+  const all = getCandidateTargetIds();
+
+  // Stated with its denominator: if the committed ballots ever hold no
+  // uncontested race, this must read as a fact and not as a broken join.
+  console.log(
+    `      M63: ${uncontested.size} of ${all.size} candidate targets sit in a one-candidate contest`,
+  );
+  assert.ok(
+    uncontested.size > 0,
+    "no uncontested contest in any committed ballot — the walk has nothing to tap; confirm against the filings before weakening this",
+  );
+  // Every permitted target is a real candidate target.
+  for (const id of uncontested) {
+    assert.ok(all.has(id), `${id} is permitted but is not a candidate target`);
+  }
+  assert.ok(
+    uncontested.size < all.size,
+    "every contest reads as uncontested — the grouping collapsed",
+  );
+});
+
+test("M63: the write path refuses the answer outside a one-candidate race", async () => {
+  process.env.WTP_RIPCORD_RATE_LIMITS = "1"; // the intake protections are not what is under test
+  const { POST } = await import("../app/api/reactions/route.ts");
+  const { getSingleCandidateTargetIds } = await import(
+    "../lib/ballot/uncontested.ts"
+  );
+  const { getCandidateTargetIds } = await import(
+    "../lib/ballot/candidate-targets.ts"
+  );
+
+  const uncontested = getSingleCandidateTargetIds();
+  const contested = [...getCandidateTargetIds()].find((id) => !uncontested.has(id));
+  assert.ok(contested, "no contested target to test the refusal against");
+
+  const post = (targetId: string, reaction: string, targetType = "CANDIDATE") =>
+    POST(
+      new Request("https://sparkwtp.netlify.app/api/reactions", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          targetType,
+          targetId,
+          reaction,
+          reactionKey: "m63guardkeym63guardkey00",
+        }),
+      }),
+    );
+
+  // Refused on a contested race — the whole point of the restriction.
+  const onContested = await post(contested, "SOMEONE_ELSE");
+  assert.equal(onContested.status, 400, "SOMEONE_ELSE accepted on a contested race");
+
+  // Refused on a target that is not a candidate at all.
+  const onVote = await post("does-not-matter", "SOMEONE_ELSE", "FEDERAL_VOTE");
+  assert.equal(onVote.status, 400);
+
+  // And the three original answers are untouched on the same contested
+  // target — the restriction must not have leaked onto them.
+  const yesOnContested = await post(contested, "YES");
+  assert.ok(
+    yesOnContested.status !== 400,
+    `YES on a contested race now 400s — the restriction leaked (status ${yesOnContested.status})`,
+  );
+});
+
+test("M63: the write path accepts the answer in a one-candidate race", async () => {
+  process.env.WTP_RIPCORD_RATE_LIMITS = "1";
+  const { POST } = await import("../app/api/reactions/route.ts");
+  const { getSingleCandidateTargetIds } = await import(
+    "../lib/ballot/uncontested.ts"
+  );
+  const target = [...getSingleCandidateTargetIds()][0];
+  assert.ok(target, "no uncontested target to accept");
+
+  const response = await POST(
+    new Request("http://localhost/api/reactions", {
+      method: "POST",
+      // Same-origin, the way a real tap arrives (T08). Without it the
+      // request is refused at the intake gate before the value is ever
+      // considered, and the test would prove nothing about the value.
+      headers: { "content-type": "application/json", origin: "http://localhost" },
+      body: JSON.stringify({
+        targetType: "CANDIDATE",
+        targetId: target,
+        reaction: "SOMEONE_ELSE",
+        reactionKey: "m63acceptkeym63acceptkey0",
+      }),
+    }),
+  );
+  // 204 with a database, 202 without one (the demo path). What must NOT
+  // happen is a 400: the value is legitimate here.
+  assert.ok(
+    response.status === 204 || response.status === 202,
+    `a legitimate SOMEONE_ELSE was refused with ${response.status}`,
+  );
+});
+
+test("M63: the fourth button renders only where the answer is accepted", () => {
+  const control = readFileSync(
+    join(process.cwd(), "components", "reactions", "reaction-control.tsx"),
+    "utf8",
+  );
+  assert.ok(control.includes('label: "Someone else"'), "the label must be the author's words");
+  assert.ok(
+    control.includes("singleCandidateContest"),
+    "the control must gate the fourth answer on the contest's shape",
+  );
+  // The gate is a prop the page computes from a COUNT, never a hardcoded
+  // list of contests that would rot the moment a candidate files.
+  const ballot = readFileSync(
+    join(process.cwd(), "app", "ballot", "page.tsx"),
+    "utf8",
+  );
+  assert.ok(
+    ballot.includes("lineup.nominees.length === 1") &&
+      ballot.includes("candidatesOf(set, contest).length === 1"),
+    "both candidate surfaces must derive the flag by counting the contest",
+  );
+
+  // The honest-outcome rendering is shared machinery, so the fourth answer
+  // inherits it: selection is earned by the 204, never assumed.
+  assert.ok(
+    control.includes('outcome === "NOT_COUNTED"') && control.includes("NOT_COUNTED_LINE"),
+    "the not-counted rendering must still gate every answer",
+  );
+});
+
+test("M63: the transparency page explains the fourth answer, in the same commit", () => {
+  const page = readFileSync(
+    join(process.cwd(), "app", "transparency", "page.tsx"),
+    "utf8",
+  );
+  assert.ok(
+    page.includes("Someone"),
+    "the transparency page must name the fourth answer",
+  );
+  assert.ok(
+    /only one candidate|one-candidate|no choice/i.test(page),
+    "the page must say when the fourth answer appears",
+  );
+  // Plain language: the reader-facing explanation may not leak the enum.
+  assert.ok(
+    !page.includes("SOMEONE_ELSE"),
+    "the identifier reached a reader surface",
+  );
+});

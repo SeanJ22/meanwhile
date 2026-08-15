@@ -31,6 +31,7 @@ export function DoorOverlay({
   meetings,
   drawnDistricts,
   districtOverlayOn,
+  onShowDistricts,
   onOpenOfficial,
   onOpenMeeting,
   onClose,
@@ -41,9 +42,12 @@ export function DoorOverlay({
   /** The districts the map is drawing — the same list the stat card
    *  counts, rendered row for row (3g). */
   drawnDistricts: DrawnDistrict[];
-  /** Whether the overlay is on — off means the card said "—", and the
+  /** Whether the overlay is on — off means the card said "Off", and the
    *  door explains rather than rendering an empty list. */
   districtOverlayOn: boolean;
+  /** Turns the overlay on from inside the door (M57). Sending the reader
+   *  to hunt for a checkbox in the sidebar was a hidden entry point. */
+  onShowDistricts: () => void;
   onOpenOfficial: (
     holder: SeatHolder,
     seatLabel: string | null,
@@ -52,11 +56,15 @@ export function DoorOverlay({
   onOpenMeeting: (meeting: Meeting) => void;
   onClose: () => void;
 }) {
+  // "Districts in view", not "here": this list is what the map is drawing
+  // across the whole viewport, so at 85701 it holds Marana and Oro Valley —
+  // districts the reader is emphatically not in. The other two doors ARE
+  // "here": they come from the coverage summary for the reader's point.
   const title =
     door === "bodies"
       ? "Bodies here"
       : door === "districts"
-        ? "Districts here"
+        ? "Districts in view"
         : "Officials here";
 
   return (
@@ -92,6 +100,7 @@ export function DoorOverlay({
           <DistrictsDoor
             drawnDistricts={drawnDistricts}
             districtOverlayOn={districtOverlayOn}
+            onShowDistricts={onShowDistricts}
             coverage={coverage}
             onOpenOfficial={onOpenOfficial}
           />
@@ -174,11 +183,13 @@ function BodiesDoor({
 function DistrictsDoor({
   drawnDistricts,
   districtOverlayOn,
+  onShowDistricts,
   coverage,
   onOpenOfficial,
 }: {
   drawnDistricts: DrawnDistrict[];
   districtOverlayOn: boolean;
+  onShowDistricts: () => void;
   coverage: CoverageSummary | null;
   onOpenOfficial: (
     holder: SeatHolder,
@@ -187,12 +198,21 @@ function DistrictsDoor({
   ) => void;
 }) {
   if (!districtOverlayOn) {
+    // M57: the switch is here, not somewhere the reader has to go find.
     return (
-      <p className="mt-3 text-[0.8125rem] text-muted">
-        The district overlay is off — the card shows &ldquo;—&rdquo; and
-        nothing is drawn. Turn on district types in the sidebar to draw and
-        count them.
-      </p>
+      <div className="mt-3">
+        <p className="text-[0.8125rem] text-muted">
+          District boundaries are switched off, so none are drawn and there
+          is nothing to count.
+        </p>
+        <button
+          type="button"
+          onClick={onShowDistricts}
+          className="mt-2 cursor-pointer rounded border border-[var(--panel-border)] px-3 py-1.5 text-[0.8125rem] text-paper hover:border-paper"
+        >
+          Show district boundaries
+        </button>
+      </div>
     );
   }
   if (drawnDistricts.length === 0) {

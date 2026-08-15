@@ -239,7 +239,13 @@ test("touching the district-type group turns the overlay on — except clear", (
 test("a failed fetch renders couldn't-check, never confident zeros", async () => {
   const { deriveStatsView } = await import("../lib/state/derive.ts");
 
-  const stats = { meetings: 0, bodies: 0, districts: 10, officials: 0 };
+  const stats = {
+    meetings: 0,
+    bodies: 0,
+    districts: 10,
+    officials: 0,
+    coverageAnswered: true,
+  };
   const failed = deriveStatsView(stats, true, true);
 
   for (const key of ["meetings", "bodies", "officials"] as const) {
@@ -289,7 +295,11 @@ test("3g: the districts door renders exactly the list the card counts", async ()
   // The invariant the author caught production violating: stated N ===
   // rendered rows, from the SAME list.
   assert.equal(rows.length, drawn.length, "one row per drawn district, no more, no fewer");
-  const cardN = deriveStatsView(computeStats([], drawn.length, 0), true, false).districts;
+  const cardN = deriveStatsView(
+    computeStats({ meetings: [], coverage: null, drawnDistricts: drawn as never }),
+    true,
+    false,
+  ).districts;
   assert.equal(cardN, rows.length, "the card's stated N must equal the door's rendered rows");
 
   // Holders attach only where the seat matches by ocdId; a missing seat
@@ -374,4 +384,125 @@ test("district-type selection is never persisted — the defaults stay authorita
     /raw === "0" \? OFF : ON/.test(layer),
     "never-stored defaults ON; only an explicit off is honored",
   );
+});
+
+/**
+ * M57 (2026-08-15) — the sidebar counters, the denominator disease's third
+ * sighting. The author's production pass: the sidebar read "6 OFFICIALS"
+ * while the officials door listed a mayor, six council members, a five-seat
+ * governing board, five county supervisors, the state delegation, the
+ * governor and both senators — twenty-four people. Bodies was wrong the same
+ * way and nobody had noticed: 13 against a door listing 60.
+ *
+ * Both counters had their OWN derivation, correct when written and never
+ * updated as their doors grew. So the guard is not "the numbers agree today"
+ * — it is that each counter is computed from the SAME collection its surface
+ * renders, checked against real committed registry data at all four demo
+ * zips. A counter that re-derives can drift; a counter handed the rendered
+ * list cannot.
+ */
+for (const [zip, [lat, lng]] of Object.entries(ZIPS)) {
+  test(`M57: every sidebar counter equals its door's rendered rows at ${zip}`, async () => {
+    const { computeStats, deriveStatsView, districtDoorRows } = await import(
+      "../lib/state/derive.ts"
+    );
+    const { groupOfficials, allOfficialRows } = await import(
+      "../lib/officials/tier-grouping.ts"
+    );
+
+    const coverage = await coverageAt(lat, lng, 1);
+
+    // The drawn set the map reports; stood in for here by the districts the
+    // registry resolves, because the value under test is the coupling, not
+    // MapLibre's viewport query.
+    const drawn = coverage.seats.map((s) => ({
+      type: "congressional" as const,
+      tier: s.tier,
+      typeLabel: "District",
+      ocdId: s.ocdId,
+      label: s.label,
+    }));
+    const meetings = [] as never[];
+
+    const stats = computeStats({ meetings, coverage, drawnDistricts: drawn });
+    const view = deriveStatsView(stats, true, false);
+
+    // OFFICIALS — the door renders groupOfficials()'s three tiers.
+    const groups = groupOfficials(coverage);
+    const officialRows =
+      groups.local.length + groups.state.length + groups.federal.length;
+    assert.ok(
+      officialRows > 0,
+      `${zip}: no officials rows at all — the denominator is empty, weaken this test deliberately or fix the join`,
+    );
+    assert.equal(
+      view.officials,
+      officialRows,
+      `${zip}: OFFICIALS card says ${view.officials}, the door renders ${officialRows}`,
+    );
+    // And the door's own flat list is the same set — no fourth derivation.
+    assert.equal(allOfficialRows(coverage).length, officialRows);
+
+    // The regression in its exact production shape: the old derivation
+    // (seats + senators) must NOT be what the card says wherever curated
+    // locals or statewide executives exist.
+    const seatsAndSenatorsOnly = new Set<string>();
+    for (const seat of coverage.seats)
+      for (const h of seat.representatives) seatsAndSenatorsOnly.add(h.id);
+    for (const s of coverage.senators) seatsAndSenatorsOnly.add(s.id);
+    if (groups.local.length > 0 || coverage.statewideExecutives.length > 0) {
+      assert.notEqual(
+        view.officials,
+        seatsAndSenatorsOnly.size,
+        `${zip}: the card is back on the seats-and-senators derivation — the M57 regression`,
+      );
+    }
+
+    // BODIES — the door renders coverage.bodies, one row each.
+    assert.equal(
+      view.bodies,
+      coverage.bodies.length,
+      `${zip}: BODIES card says ${view.bodies}, the door renders ${coverage.bodies.length}`,
+    );
+
+    // DISTRICTS — the door renders exactly one row per drawn district.
+    assert.equal(view.districts, districtDoorRows(drawn, coverage.seats).length);
+
+    // MEETINGS — the list overlay renders the same filtered array the card
+    // measures, so the coupling is length-for-length.
+    assert.equal(view.meetings, meetings.length);
+  });
+}
+
+/**
+ * The overlay-off state (M57, the author's second report: "the DISTRICTS
+ * counter renders blank"). A dash is this product's word for "we could not
+ * check". Spending it on a switch the reader flipped made the one number
+ * that was never broken read as the broken one.
+ */
+test("M57: districts off says Off, not the couldn't-check dash", async () => {
+  const { computeStats, deriveStatsView } = await import("../lib/state/derive.ts");
+
+  const off = computeStats({ meetings: [], coverage: null, drawnDistricts: null });
+  assert.equal(off.districts, null, "nothing drawn is null, not a count of zero");
+  assert.equal(deriveStatsView(off, false, false).districts, "Off");
+  // Even with a drawn list in hand, the master switch decides.
+  const drawn = [
+    {
+      type: "county" as const,
+      tier: "local" as const,
+      typeLabel: "County",
+      ocdId: "ocd-division/country:us/state:az/county:pima",
+      label: "Pima County",
+    },
+  ];
+  const on = computeStats({ meetings: [], coverage: null, drawnDistricts: drawn });
+  assert.equal(deriveStatsView(on, false, false).districts, "Off");
+  assert.equal(deriveStatsView(on, true, false).districts, 1);
+
+  // And the coverage-less state does not claim zeros for the two counters
+  // whose door says it could not resolve who governs.
+  const view = deriveStatsView(on, true, false);
+  assert.equal(view.bodies, "—");
+  assert.equal(view.officials, "—");
 });

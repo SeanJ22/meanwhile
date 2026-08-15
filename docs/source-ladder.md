@@ -581,3 +581,99 @@ rungs, `attemptedAt: 2026-08-14`:
 All three rows now carry `verification: "PAGE_FETCHED"` — verified in a
 real browser this session before ship, per the everyday.ts rule that a
 pending row never ships on faith.
+
+## 2026-08-15 — concluded meetings: which vendors serve history (M58)
+
+The author reported concluded meetings rendering only at 85701. Measured
+before fixing: the payload already carried concluded meetings at three of
+the four demo zips, and the **Concluded filter matched nothing at all four**
+because the client's date window starts at now. Per adapter, with counts
+from the committed snapshot:
+
+| Adapter | Jurisdictions | Serves history? | Rung |
+|---|---|---|---|
+| legistar | Pima County | yes (5 past) | already asked |
+| onbase | Tucson | yes (6 past) | already asked |
+| clerksboards | Tucson | yes (5 past) | already asked |
+| diligent | Newbury NH, TUSD, Sunnyside, Pima CC | yes (2/2/3/1 past) | already asked |
+| iqm2 | Morris County NJ | yes (4 past) | already asked |
+| boardbook | Amphitheater | yes (2 past) | already asked |
+| apptegy | Vail, Rockaway Twp SD | **yes — we never asked** | fixed below |
+| civicplus | Rockaway Township | no | rungs below |
+| revize | Merrimack County | no | rungs below |
+
+**Apptegy — the rung that earned it.** `/cms/events` defaults to upcoming
+only. Rungs walked 2026-08-15 against Vail's org (8164): plain page 1 → 20
+events, 0 past; `from`/`to` → ignored; `past=true` → ignored; `month`+`year`
+→ ignored; `order=desc` → ignored; `archived=true` → ignored;
+**`start_date=2026-05-01` → 20 events, all 20 past**. The parameter survives
+the feed's own `meta.links.next`, so the paged walk works from a past start.
+Both wired orgs now return four concluded board meetings each.
+
+**CivicPlus (Rockaway Township) — upcoming only, earned.** Rungs walked
+2026-08-15: the wired iCal category feed, the same feed with
+`startDate`/`endDate`, and with `from`/`to` — all three returned byte-for-byte
+the same 5,484-byte document with the same eleven future sittings. The only
+two past `DTSTART` values in it are VTIMEZONE boilerplate and appear in every
+category id (1, 2, 25, 27, 28). **Further rung found, not yet built:** the
+township's AgendaCenter archives past agendas and minutes back to 2019 (214
+dated documents, read 2026-08-15) — it publishes a date without a start time,
+so ingesting it needs a meeting shape that can say "we know the day, not the
+hour". Tracker M59.
+
+**Revize (Merrimack County) — upcoming only, earned.** The meeting rows come
+from a block whose heading is "Upcoming Meetings"; past sittings are not in
+it by construction. **Further rung found, not yet built:** the notices/agendas
+page on the same site carries public notice, board packet and minutes PDFs
+for 2.9, 2.20, 3.9, 3.23, 4.13, 4.27 and 5.11 (re-read 2026-08-15) — each one
+a meeting that happened. Same blocker as Rockaway: a filename dates a meeting
+without timing it, and inventing 10am to fill `startsAt` would be a generated
+fact about a government. Tracker M59.
+
+Both closed routes render the honest line at their jurisdiction rather than
+an empty Concluded filter (`publishesHistory: false` + `historyGapReason` on
+the wiring row).
+
+## 2026-08-15 — party on local officeholder rows (M61, M62)
+
+Rung 1 for every curated local body, walked 2026-08-15: **not one of these
+bodies publishes party affiliation on its own roster page.** Fetched and
+searched for "Republican|Democrat" in the stripped text:
+
+| Body | Page | Result |
+|---|---|---|
+| Pima County Board of Supervisors | pima.gov/1163/Board-of-Supervisors | 200, 0 hits |
+| Tucson Mayor & Council | tucsonaz.gov/Departments/Mayor-and-Council | 404 |
+| Morris County Commissioners | morriscountynj.gov/Departments/Board-of-County-Commissioners | 200, 0 hits |
+| Rockaway Township Council | rockawaytownship.org/157/Township-Council | 200, 0 hits |
+| Merrimack County Commissioners | merrimackcounty.net/board_of_commissioners_/index.php | 200, 0 hits |
+| NJ Governor's office | nj.gov/governor/admin/about/ | 200, 0 hits |
+
+That is a finding about the pages, not the offices — several of these are
+unambiguously partisan seats. The next rung is the election authority's
+certified candidate list or canvass, which publishes party per candidate;
+tracker M62 owns it. Until then each roster records `partisanship:
+"UNDETERMINED"` and nothing renders, so the silence is a stated open
+question rather than an implied "nonpartisan".
+
+**The three governors, done at that next rung 2026-08-15:**
+
+- **Katie Hobbs — Democratic.** Arizona Secretary of State, 2026 Candidate
+  Nominations and Petitions Filed (0330). Fetched and text-extracted
+  2026-08-15: "Hobbs, Katie Governor Democratic 6761 February 25, 2026".
+  Same document the AZ ballot surface already cites for this candidacy.
+- **Mikie Sherrill — Democratic.** New Jersey Division of Elections,
+  "Official List Candidates for Governor" tally dated 12/03/2025. Fetched and
+  text-extracted 2026-08-15: "MIKIE SHERRILL (w) … Democratic". Found by
+  walking the Division's results archive; a guessed results URL 404'd first
+  and was discarded rather than cited.
+- **Kelly Ayotte — Republican.** New Hampshire Secretary of State, cumulative
+  candidate filings 7.16.26 — the same document our NH ballot record cites,
+  read 2026-08-14 by the session that could reach the host. **Re-fetch on
+  2026-08-15 returned 403** from this environment, to a plain client, to a
+  browser user-agent, and to a real Chromium navigation; `sos.nh.gov/elections`
+  itself 403s the same way, so this is the whole host refusing this network
+  rather than the document moving. Not circumvented and not re-typed from
+  memory: the row cites the same filing the committed ballot record does, and
+  `tests/party.test.ts` fails the build if the two surfaces ever disagree
+  about the party or cite different records for it.

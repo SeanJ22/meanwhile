@@ -1304,6 +1304,14 @@ label:has(> input[type="checkbox"]) {
   line-height: 1.6;
 }
 
+/* The coverage-gap sentence under an empty Concluded filter (M58). Reads as
+   a statement rather than a filter hint, because it is one. */
+.al-empty-gap {
+  display: inline-block;
+  margin-top: 10px;
+  color: var(--text);
+}
+
 /* ---- District disambiguation ---- */
 .district-picker {
   position: absolute;

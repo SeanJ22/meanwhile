@@ -30,7 +30,35 @@ export interface RosterMember {
   phone: string | null;
   /** The member's own official page, where the body publishes one. */
   websiteUrl: string | null;
+  /**
+   * The member's party, EXACTLY as a government record states it (M61,
+   * 2026-08-15). Null is the normal case here today and means one of two
+   * different things, which the roster's `partisanship` below distinguishes:
+   * the office is nonpartisan and there is no party to state, or this is a
+   * partisan office whose party we have not sourced yet. Never inferred —
+   * not from a body's own page styling, not from a neighbour, not from a
+   * name.
+   */
+  partyLabel?: string | null;
+  /** The government record the party was read from. Required with it. */
+  partySourceUrl?: string;
 }
+
+/**
+ * Whether a body's seats are contested on party lines, and how we know.
+ *
+ * Recorded per body rather than assumed per state (M61): "no party rendered"
+ * has to be a stated fact, or an unsourced partisan office is indistinguishable
+ * from a genuinely nonpartisan one, and the reader can't tell which silence
+ * they are looking at.
+ */
+export type Partisanship =
+  /** Elected on party lines; party is a fact about the seat. */
+  | "PARTISAN"
+  /** No party appears on the ballot for this office. Nothing renders. */
+  | "NONPARTISAN"
+  /** Not yet established. Nothing renders, and it stays a work item. */
+  | "UNDETERMINED";
 
 export interface BodyRoster {
   /** Matches `BodySourceWiring.bodyId` exactly. */
@@ -41,6 +69,23 @@ export interface BodyRoster {
   sourceUrl: string;
   sourceOrg: string;
   collectedAt: string;
+  /**
+   * Whether these seats carry a party, and the record that says so (M61).
+   *
+   * Rung 1 was walked for every body here on 2026-08-15 and came back empty
+   * in the same way each time: **not one of these bodies publishes party on
+   * its own roster page** — Pima's supervisors, Tucson's mayor and council,
+   * Morris County's commissioners, Merrimack County's commissioners and
+   * Rockaway Township's council all list names, wards and terms and no
+   * affiliation. That is a finding about the pages, not about the offices,
+   * and several of these offices are unambiguously partisan. The next rung
+   * is the election authority's certified candidate list or canvass, which
+   * publishes party per candidate — the same class of record the governors'
+   * rows below now cite. Tracker M62 owns it.
+   */
+  partisanship: Partisanship;
+  /** What established `partisanship`. Absent while UNDETERMINED. */
+  partisanshipSourceUrl?: string;
 }
 
 const COLLECTED = "2026-08-13";
@@ -55,6 +100,9 @@ export const BODY_ROSTERS: BodyRoster[] = [
     sourceUrl: "https://govboard.tusd1.org/",
     sourceOrg: "Tucson Unified School District Governing Board",
     collectedAt: COLLECTED,
+    // Rung 1 walked 2026-08-15: this body publishes no party on its own
+    // roster page. The certified candidate list is the next rung (M62).
+    partisanship: "UNDETERMINED",
     members: [
       {
         id: "roster:tusd#1",
@@ -109,6 +157,9 @@ export const BODY_ROSTERS: BodyRoster[] = [
     sourceUrl: "https://www.pima.gov/government/board_of_supervisors/",
     sourceOrg: "Pima County",
     collectedAt: COLLECTED,
+    // Rung 1 walked 2026-08-15: this body publishes no party on its own
+    // roster page. The certified candidate list is the next rung (M62).
+    partisanship: "UNDETERMINED",
     members: [
       {
         id: "roster:pima#1",
@@ -166,6 +217,9 @@ export const BODY_ROSTERS: BodyRoster[] = [
     sourceUrl: "https://www.tucsonaz.gov/Government/Mayor-Council-and-City-Manager",
     sourceOrg: "City of Tucson",
     collectedAt: COLLECTED,
+    // Rung 1 walked 2026-08-15: this body publishes no party on its own
+    // roster page. The certified candidate list is the next rung (M62).
+    partisanship: "UNDETERMINED",
     members: [
       {
         id: "roster:tucson-mc#1",
@@ -246,6 +300,9 @@ export const BODY_ROSTERS: BodyRoster[] = [
     sourceUrl: "https://www.vailschooldistrict.org/o/vsd/page/governing-board",
     sourceOrg: "Vail Unified School District",
     collectedAt: COLLECTED,
+    // Rung 1 walked 2026-08-15: this body publishes no party on its own
+    // roster page. The certified candidate list is the next rung (M62).
+    partisanship: "UNDETERMINED",
     members: [
       {
         id: "roster:vail#1",
@@ -301,6 +358,9 @@ export const BODY_ROSTERS: BodyRoster[] = [
     sourceUrl: "https://www.newbury.nh.gov/selectboard",
     sourceOrg: "Town of Newbury",
     collectedAt: COLLECTED,
+    // Rung 1 walked 2026-08-15: this body publishes no party on its own
+    // roster page. The certified candidate list is the next rung (M62).
+    partisanship: "UNDETERMINED",
     members: [
       {
         id: "roster:newbury#1",
@@ -346,6 +406,9 @@ export const BODY_ROSTERS: BodyRoster[] = [
       "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-members",
     sourceOrg: "Kearsarge Regional School District (SAU #65)",
     collectedAt: "2026-08-14",
+    // Rung 1 walked 2026-08-15: this body publishes no party on its own
+    // roster page. The certified candidate list is the next rung (M62).
+    partisanship: "UNDETERMINED",
     members: [
       {
         id: "roster:kearsarge#1",
@@ -450,6 +513,9 @@ export const BODY_ROSTERS: BodyRoster[] = [
     sourceUrl: "https://www.rockawaytownship.org/157/Township-Council",
     sourceOrg: "Rockaway Township",
     collectedAt: "2026-08-14",
+    // Rung 1 walked 2026-08-15: this body publishes no party on its own
+    // roster page. The certified candidate list is the next rung (M62).
+    partisanship: "UNDETERMINED",
     members: [
       {
         id: "roster:rockaway#0",
@@ -552,6 +618,9 @@ export const BODY_ROSTERS: BodyRoster[] = [
       "https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners",
     sourceOrg: "Morris County",
     collectedAt: "2026-08-14",
+    // Rung 1 walked 2026-08-15: this body publishes no party on its own
+    // roster page. The certified candidate list is the next rung (M62).
+    partisanship: "UNDETERMINED",
     members: [
       {
         id: "roster:morris#1",
@@ -637,6 +706,9 @@ export const BODY_ROSTERS: BodyRoster[] = [
       "https://chichesternh.org/DocumentCenter/View/1817/Merrimack-County-Annual-Report-2025",
     sourceOrg: "Merrimack County (FY2025 Annual Report, County Directory)",
     collectedAt: "2026-08-14",
+    // Rung 1 walked 2026-08-15: this body publishes no party on its own
+    // roster page. The certified candidate list is the next rung (M62).
+    partisanship: "UNDETERMINED",
     members: [
       {
         id: "roster:merrimack#1",
@@ -685,6 +757,9 @@ export const BODY_ROSTERS: BodyRoster[] = [
     sourceUrl: "https://www.rocktwp.net/page/board-members",
     sourceOrg: "Rockaway Township School District",
     collectedAt: "2026-08-14",
+    // Rung 1 walked 2026-08-15: this body publishes no party on its own
+    // roster page. The certified candidate list is the next rung (M62).
+    partisanship: "UNDETERMINED",
     members: [
       {
         id: "roster:rocktwp-boe#1",
@@ -762,6 +837,9 @@ export const BODY_ROSTERS: BodyRoster[] = [
     sourceUrl: "https://www.susd12.org/governing-board-home",
     sourceOrg: "Sunnyside Unified School District",
     collectedAt: "2026-08-14",
+    // Rung 1 walked 2026-08-15: this body publishes no party on its own
+    // roster page. The certified candidate list is the next rung (M62).
+    partisanship: "UNDETERMINED",
     members: [
       {
         id: "roster:susd12#1",
@@ -821,6 +899,9 @@ export const BODY_ROSTERS: BodyRoster[] = [
     sourceUrl: "https://www.amphi.com/348925_2",
     sourceOrg: "Amphitheater Unified School District",
     collectedAt: "2026-08-14",
+    // Rung 1 walked 2026-08-15: this body publishes no party on its own
+    // roster page. The certified candidate list is the next rung (M62).
+    partisanship: "UNDETERMINED",
     members: [
       {
         id: "roster:amphi#1",
@@ -881,7 +962,8 @@ export interface RosterHolder {
   id: string;
   name: string;
   officeTitle: string;
-  partyLabel: null;
+  /** M61: widened from `null`. The type used to forbid a party outright. */
+  partyLabel: string | null;
   websiteUrl: string | null;
   sourceUrl: string;
   email: string | null;
@@ -893,9 +975,21 @@ export interface RosterHolder {
 
 /**
  * The roster as `SeatHolder`-shaped rows, so the popup family renders local
- * members with the same machinery as federal and state ones. `partyLabel`
- * stays null — these are nonpartisan offices as published, and the party of
- * a school-board member is not ours to assert.
+ * members with the same machinery as federal and state ones.
+ *
+ * `partyLabel` is null for every curated local today, and the reason is not
+ * the one this comment used to give (M61, 2026-08-15). It said "these are
+ * nonpartisan offices as published" — but walking rung 1 across all of them
+ * on 2026-08-15 showed that what is actually true is narrower and less
+ * comfortable: **none of these bodies publishes party on its own page**, and
+ * several of the offices — county supervisors and commissioners, Tucson's
+ * mayor and council, a township council — are elected on party lines. So the
+ * silence was being read as a fact about the offices when it was a fact about
+ * the pages. Each roster now records its `partisanship` instead of the code
+ * assuming it, UNDETERMINED where it is genuinely not established, and the
+ * next rung — the election authority's certified candidate list — is tracker
+ * M62. The party of a school-board member still is not ours to assert; what
+ * changed is that we no longer assert the opposite by silence.
  *
  * Photos resolve through `roster-photos.json` — a tiny derivative of the
  * licensed manifest (lib/registry/official-photos.json), regenerated by
@@ -912,7 +1006,10 @@ export function rosterHoldersForBody(bodyId: string | null): RosterHolder[] {
     id: member.id,
     name: member.name,
     officeTitle: member.officeTitle,
-    partyLabel: null,
+    // M61: carried through where a roster holds it. Null today for every
+    // curated local — see the roster's `partisanship`, which says whether
+    // that null means "no party to state" or "not sourced yet".
+    partyLabel: member.partyLabel ?? null,
     websiteUrl: member.websiteUrl,
     sourceUrl: roster.sourceUrl,
     email: member.email,

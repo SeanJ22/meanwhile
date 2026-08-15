@@ -19,6 +19,10 @@ import {
   retrieveAgendaDocument,
 } from "../lib/meetings/agenda-documents.ts";
 import {
+  CONCLUDED_LOOKBACK_DAYS,
+  UPCOMING_HORIZON_DAYS,
+} from "../lib/meetings/constants.ts";
+import {
   readSnapshot,
   writeSnapshot,
   type MeetingsSnapshot,
@@ -136,10 +140,25 @@ async function main() {
   const source = SOURCES[name]();
 
   // Continental US, wide enough to sweep everything the adapter has.
+  //
+  // The window is stated (M58, 2026-08-15). It used to be omitted, which read
+  // as "give me everything" and meant something else entirely to any adapter
+  // whose upstream defaults to upcoming-only: Apptegy quietly returned the
+  // future alone, so Vail and Rockaway Township's school board could never
+  // show a concluded meeting and nothing in the run said so. The window is
+  // the app's own cascade window, so the snapshot holds exactly what a reader
+  // can be shown and no more.
+  const now = Date.now();
   const raw = await source.fetch({
     lat: 39.5,
     lng: -98.35,
     radiusKm: 5000,
+    startsAfter: new Date(
+      now - CONCLUDED_LOOKBACK_DAYS * 86_400_000,
+    ).toISOString(),
+    startsBefore: new Date(
+      now + UPCOMING_HORIZON_DAYS * 86_400_000,
+    ).toISOString(),
   });
 
   const meetings: Meeting[] = source.normalize(raw);

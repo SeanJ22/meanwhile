@@ -162,3 +162,37 @@ for the record. Row pointers:
   112th-Congress U.S. Senate portrait** — a different office, roughly
   fourteen years old — and **Mikie Sherrill** a Commons headshot. Only
   Hobbs was in the brief; checking the neighbours found two more.
+
+## 2026-08-15 — the session brief (the author's production pass arrived as the brief)
+
+The author's production pass was delivered as the session brief rather than
+entries here; the brief is committed at `docs/session-brief.md` for the
+record. Row pointers:
+
+- Sidebar counters, "6 OFFICIALS" beside a 20+ popup and a blank DISTRICTS →
+  **M57** (Done). Measured first: OFFICIALS **and** BODIES were both wrong,
+  at every zip — 6 vs 24 and 13 vs 60 at 85701. DISTRICTS was spending the
+  couldn't-check dash on a switch the reader had turned off; it says "Off"
+  now and its door carries the switch.
+- Concluded meetings only at Tucson → **M58** (Done). Worse than reported:
+  the Concluded chip matched **nothing at all four zips**, Tucson included,
+  because the client's date window starts at now. Apptegy also served history
+  and had never been asked. **M59** recorded for the two vendors whose
+  archives publish a date without a start time.
+- The mojibake in every blurb attribution → **M60** (Done). Repaired at the
+  data; the repo-wide scan found 12 more nobody had reported, separately
+  caused and separately fixed at source.
+- Party missing on who-governs → **M61** (Done). Not a render bug — the
+  governors' rows held null on purpose. All three now cite an election
+  authority's own filing. **M62** recorded: no curated local body publishes
+  party on its own page, and that silence had been read as "nonpartisan".
+- "Someone else" on single-candidate contests → **M63** (Done),
+  context-restricted at the write path.
+- Photos → **D50** (still In progress: 535 → 590 of 750; the Commons sweep
+  for the ~76 ballot challengers is the named remainder).
+- Recorded, not built: **D51** (independent expenditures), **D52** (the state
+  money-translation umbrella).
+- Standing rule added to CLAUDE.md: every production probe row a session
+  creates is named in its report.
+- Author's closures honoured: the Pima/Newbury library issue was not
+  reinvestigated, and the limiter thresholds were not retuned.

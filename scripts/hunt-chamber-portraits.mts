@@ -52,20 +52,45 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 /** Every <img> on the page, as (src, alt). Regex over HTML on purpose —
  *  three server-rendered ASP/WordPress/Drupal sites, no DOM available. */
-function images(html: string, base: string): { src: string; alt: string }[] {
-  const out: { src: string; alt: string }[] = [];
+function images(
+  html: string,
+  base: string,
+): { src: string; alt: string; id: string }[] {
+  const out: { src: string; alt: string; id: string }[] = [];
   for (const tag of html.match(/<img\b[^>]*>/gi) ?? []) {
     const src = tag.match(/\ssrc\s*=\s*["']([^"']+)["']/i)?.[1];
     if (!src) continue;
     const alt = tag.match(/\salt\s*=\s*["']([^"']*)["']/i)?.[1] ?? "";
+    // The element's own id. On ASP.NET sites the control name is the
+    // page's own statement of what the element is — see MEMBER_IMAGE_IDS.
+    const id = tag.match(/\sid\s*=\s*["']([^"']*)["']/i)?.[1] ?? "";
     try {
-      out.push({ src: new URL(src, base).toString(), alt });
+      out.push({ src: new URL(src, base).toString(), alt, id });
     } catch {
       // A malformed src is a miss for this image, not for the page.
     }
   }
   return out;
 }
+
+/**
+ * Element ids by which a chamber's own template declares "this is the
+ * member's portrait" (2026-08-15).
+ *
+ * The New Hampshire House renders every member page from one ASP.NET
+ * template, and the portrait is always `<img id="pageBody_imgMember">`. Its
+ * file is named with an internal id that appears NOWHERE else on the page —
+ * not in the URL, which uses a different `pid`, and not in the alt text,
+ * which reads the generic "member picture" for all 386 of them. So neither
+ * of the earlier confirmations could reach it, and 27 members with a real
+ * published portrait were recorded as misses.
+ *
+ * The control id is a better signal than either: it is the chamber's own
+ * template saying which element on this member's page is that member. We
+ * arrive at the page through the id the General Court's member directory
+ * gave us, and we take the element that page calls the member's picture.
+ */
+const MEMBER_IMAGE_IDS = /(^|_)(imgMember|memberPhoto|memberImage)$/i;
 
 /** The publishing body for a member page. */
 function publisherFor(url: string): string | null {
@@ -102,30 +127,119 @@ function idsIn(url: string): string[] {
   return [...new Set(ids)];
 }
 
+/**
+ * The New Hampshire Senate rung (2026-08-15).
+ *
+ * The Senate keys everything by DISTRICT, not by a member id: the roster
+ * links `.../Senate/members/webpages/district23.aspx`, and that page carries
+ * exactly one portrait, `.../Senate/images/senators/23.jpg`. Neither the
+ * member's name nor a member id appears anywhere in either string, so the
+ * generic confirmation rejected all 24 senators — the same shape as the
+ * first NH House pass, which read "member picture" alt text and refused 410
+ * people.
+ *
+ * This is still a STRUCTURAL join and not a name search, and it is worth
+ * being precise about why: we do not go looking for a district that matches
+ * a person. We arrive at `district23.aspx` because the General Court's own
+ * member directory says that is Bill Gannon's page, and we accept the image
+ * only if the number in its filename is the same district the page is. The
+ * portrait is then, by the chamber's own filing, the face of whoever holds
+ * district 23 — which their directory says is him.
+ *
+ * Deliberately narrow: it requires the chamber's own senators image path, so
+ * a bare two-digit coincidence somewhere else on the page cannot satisfy it.
+ */
+function districtPortraitMatch(pageUrl: string, src: string): boolean {
+  const district = /\/district0*(\d+)\.aspx/i.exec(pageUrl)?.[1];
+  if (!district) return false;
+  const image = /\/senators?\/0*(\d+)\.(?:jpe?g|png)$/i.exec(src)?.[1];
+  if (!image) return false;
+  return Number(district) === Number(image);
+}
+
 function portraitOn(
   html: string,
   pageUrl: string,
   name: string,
 ): { src: string; alt: string } | { reason: string } {
-  const candidates = images(html, pageUrl).filter(
+  const tokens = surnameTokens(name).map((t) => t.toLowerCase());
+  const pageIds = idsIn(pageUrl);
+
+  /**
+   * Whether the image's own FILE PATH — not its alt text — identifies the
+   * member. The site's prose can be wrong; its filing is what it filed.
+   */
+  const structural = (src: string): boolean => {
+    const path = decodeURIComponent(src)
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .toLowerCase();
+    if (tokens.some((t) => path.includes(t))) return true;
+    if (districtPortraitMatch(pageUrl, src)) return true;
+    return pageIds.some((id) => new RegExp(`(^|[^0-9])${id}([^0-9]|$)`).test(src));
+  };
+
+  const JUNK =
+    /logo|seal|icon|banner|header|footer|flag|map|district|translate|spacer|blank|print|search|arrow|social|facebook|twitter|instagram|youtube/i;
+
+  const all = images(html, pageUrl);
+
+  // The template's own declaration wins outright, when the image it points
+  // at is a real one and not the chamber's placeholder.
+  const declared = all.filter(
     (i) =>
-      !/logo|seal|icon|banner|header|footer|flag|map|district|translate|spacer|blank|print|search|arrow|social|facebook|twitter|instagram|youtube/i.test(
-        `${i.src} ${i.alt}`,
-      ),
+      MEMBER_IMAGE_IDS.test(i.id) &&
+      !/nophoto|no-photo|placeholder|default/i.test(i.src),
   );
+  if (declared.length === 1) return declared[0];
+  if (declared.length > 1) {
+    return {
+      reason: `${declared.length} elements claim to be the member portrait — ambiguous, refusing rather than choosing (${declared
+        .map((d) => d.src)
+        .join(" | ")})`,
+    };
+  }
+  // A declared portrait that IS the placeholder is an honest absence on the
+  // chamber's side, and must be recorded as theirs rather than as our miss.
+  const placeholderDeclared = all.find(
+    (i) =>
+      MEMBER_IMAGE_IDS.test(i.id) &&
+      /nophoto|no-photo|placeholder|default/i.test(i.src),
+  );
+  if (placeholderDeclared) {
+    return {
+      reason: `the body publishes NO portrait for this member — its member page serves a placeholder (${placeholderDeclared.src}). An absence on their side, recorded as one.`,
+    };
+  }
+
+  const candidates = all.filter((i) => {
+    // A structurally identified image survives the junk filter (2026-08-15).
+    // The New Hampshire Senate labels both images on a senator's page
+    // `alt="NH State Seal"` — the state seal AND the senator's portrait —
+    // so filtering on the alt text threw away two real portraits and the
+    // hunt recorded them as "page published no image that could be a
+    // portrait". That is the never-assert-absence rule catching a fabricated
+    // absence: Daryl Abbas and Sharon Carson both have a published portrait,
+    // at the same conventional path as their 22 colleagues, and we said they
+    // did not. Their own file names say who they are; the alt text is a
+    // copy-paste mistake on a government website and is not evidence.
+    if (structural(i.src)) return !JUNK.test(i.src);
+    return !JUNK.test(`${i.src} ${i.alt}`);
+  });
   if (candidates.length === 0) {
     return { reason: "page published no image that could be a portrait" };
   }
-  const tokens = surnameTokens(name).map((t) => t.toLowerCase());
-  const pageIds = idsIn(pageUrl);
   const confirmed = candidates.filter((i) => {
     const hay = decodeURIComponent(`${i.src} ${i.alt}`)
       .normalize("NFD")
       .replace(/[̀-ͯ]/g, "")
       .toLowerCase();
-    // Either signal confirms: the member's own name, or the chamber's own
-    // stable id for them appearing in the portrait's file name.
+    // Any one of three signals confirms: the member's own name, the
+    // chamber's own stable id for them in the portrait's file name, or —
+    // for the NH Senate, which keys by district throughout — the page's
+    // district number matching the portrait's.
     if (tokens.some((t) => hay.includes(t))) return true;
+    if (districtPortraitMatch(pageUrl, i.src)) return true;
     return pageIds.some((id) =>
       new RegExp(`(^|[^0-9])${id}([^0-9]|$)`).test(i.src),
     );

@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 
 import type { Meeting, OcdId } from "../sources/types.ts";
 import { sourceUserAgent } from "../sources/http.ts";
+import { repairMojibake } from "../text/mojibake.ts";
 
 /**
  * Agenda documents as first-class records — item 1 of the reprioritization.
@@ -95,12 +96,25 @@ export function contentHashOf(bytes: Uint8Array): string {
   return createHash("sha256").update(bytes).digest("hex");
 }
 
-/** Strip an HTML document to its readable text. */
+/**
+ * Strip an HTML document to its readable text.
+ *
+ * The final `repairMojibake` is not defensive tidying (M60, 2026-08-15):
+ * Diligent's BoardDocs portal serves DOUBLE-ENCODED bytes. Its pages declare
+ * and send UTF-8, and the UTF-8 they send spells out U+00C2 U+00BB where the
+ * breadcrumb should read a single U+00BB guillemet — verified against the raw
+ * bytes of TUSD's MeetingInformation page, which carries two of the corrupt
+ * pairs and not one clean separator.
+ * Our decode is correct; the vendor's text is wrong, and a reader was seeing
+ * it in the agenda excerpt. This is our custody boundary, so it is repaired
+ * here on the way in rather than at render — a render-time patch would leave
+ * every stored row and every later consumer holding the broken text.
+ */
 export function extractHtmlText(html: string): string {
   // Prefer the page's own <main> region when it declares one — a notice
   // page's navigation chrome is not the notice (4c).
   const main = html.match(/<main[\s>][\s\S]*?<\/main>/i);
-  return (main ? main[0] : html)
+  const text = (main ? main[0] : html)
     .replace(/<script[\s\S]*?<\/script>/gi, " ")
     .replace(/<style[\s\S]*?<\/style>/gi, " ")
     .replace(/<[^>]+>/g, " ")
@@ -116,6 +130,7 @@ export function extractHtmlText(html: string): string {
     .replace(/&amp;/g, "&")
     .replace(/\s+/g, " ")
     .trim();
+  return repairMojibake(text);
 }
 
 /** Extract text from a PDF's bytes. Throws when the file cannot be read. */

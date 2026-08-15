@@ -85,9 +85,16 @@ function parseDbf(buf: Buffer): Record<string, string>[] {
     const row: Record<string, string> = {};
     let cursor = base;
     for (const field of fields) {
+      // UTF-8, not latin1 (M60, 2026-08-15). TIGER/Line ships its ADDRFEAT
+      // DBFs as UTF-8, and reading them as latin1 turned every accented
+      // street name into mojibake: the í in "Cír" (U+00ED, bytes C3 AD) came
+      // out as the two characters U+00C3 U+00AD, so 22 Tucson circles across
+      // eight zips shipped with a garbled name. Nobody noticed because only
+      // the Spanish-named streets corrupt, and a reader typing "cir" still
+      // matched on the ASCII prefix.
       row[field.name] = buf
         .subarray(cursor, cursor + field.length)
-        .toString("latin1")
+        .toString("utf8")
         .trim();
       cursor += field.length;
     }

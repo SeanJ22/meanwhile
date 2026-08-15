@@ -8,6 +8,7 @@ import {
   INITIAL_STATE,
 } from "./defaults.ts";
 import { resetAllControls } from "./reset.ts";
+import { daysBackForStatuses } from "./status-intent.ts";
 import type {
   FilterState,
   UiAction,
@@ -86,14 +87,21 @@ export function uiReducer(state: UiState, action: UiAction): UiState {
         },
       };
 
-    case "filter/toggleStatus":
+    case "filter/toggleStatus": {
+      // M58: asking for concluded meetings opens the backward window they
+      // live in. Without this the chip is a dead control at every zip — see
+      // status-intent.ts for the measurement.
+      const statuses = toggle(state.filters.statuses, action.value);
+      const daysBack = daysBackForStatuses(statuses, state.filters.daysBack);
       return {
         ...state,
         filters: {
           ...state.filters,
-          statuses: toggle(state.filters.statuses, action.value),
+          statuses,
+          daysBack: daysBack ?? state.filters.daysBack,
         },
       };
+    }
 
     case "filter/toggleDistrictType":
       return {

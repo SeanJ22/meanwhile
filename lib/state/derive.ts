@@ -5,7 +5,8 @@ import { haversineKm } from "../geo/distance.ts";
 import type { DrawnDistrict } from "../map/districts.ts";
 import { tierForOcdId, type Tier } from "../ocd/tiers.ts";
 import type { SeatHolder } from "../officials/lookup.ts";
-import type { Seat } from "../registry/coverage.ts";
+import { allOfficialRows } from "../officials/tier-grouping.ts";
+import type { CoverageSummary, Seat } from "../registry/coverage.ts";
 import type { Meeting } from "../sources/types.ts";
 
 import { ALL_DISTRICT_TYPES } from "./reducer.ts";
@@ -185,33 +186,56 @@ export function applyFilters({
 export interface ShellStats {
   meetings: number;
   bodies: number;
-  districts: number;
+  /** Null when the overlay is off: nothing is drawn, so there is no count. */
+  districts: number | null;
   officials: number;
+  /** False when no coverage answered — the two coverage counters can't claim. */
+  coverageAnswered: boolean;
 }
 
 /**
- * The four stat cards.
+ * The four stat cards, each computed from the SAME set the surface behind
+ * it renders (M57, 2026-08-15 — the denominator disease, third sighting).
  *
- * `officials` counts the people we can **name at this point** with a source
- * behind them — the federal delegation today, and state legislators once D03
- * lands. It defaults to zero so a caller with no coverage summary still gets an
- * honest number rather than a wrong one.
+ * The author caught the sidebar reading "6 OFFICIALS" beside an officials
+ * door listing twenty-four people. Two counters had drifted onto their own
+ * private universes while their doors grew:
  *
- * A zero here reads as "we have not got this yet", which is the truth when it
- * is true. It stopped being true the moment the roster shipped, and a card
- * reading 0 beside three rendered names was its own small lie.
+ *   OFFICIALS — counted `seats[].representatives` + `senators`, the
+ *     pre-roster derivation. It never learned about the curated local
+ *     rosters (M05) or the statewide executives (B11), so a mayor, six
+ *     council members, a governing board and five supervisors were
+ *     rendered by the door and counted by nobody. Now it is
+ *     `allOfficialRows()` — literally the door's own derivation.
+ *   BODIES — counted DISTINCT BODIES WITH MEETINGS in the filtered set
+ *     (13 at 85701) while the bodies door lists every body covering the
+ *     point (60). Now it is `coverage.bodies.length`, the door's list.
+ *
+ * The rule that stops the fourth sighting: a counter takes the rendered
+ * collection itself, never a re-derivation that happens to agree today.
+ * Guarded at all four zips against real committed registry data in
+ * tests/representation.test.ts.
+ *
+ * `districts` stays the drawn set — the districts door already renders
+ * exactly it (3g) — but is now `null` rather than 0 when the overlay is
+ * off, because "nothing is drawn because you turned it off" is a
+ * different fact from "none are drawn here".
  */
-export function computeStats(
-  meetings: Meeting[],
-  districtCount: number,
-  officialCount = 0,
-): ShellStats {
-  const bodies = new Set(meetings.map((m) => `${m.ocdId}|${m.bodyName}`));
+export function computeStats(input: {
+  /** The filtered meetings — what the list overlay renders. */
+  meetings: Meeting[];
+  /** What the bodies door and the officials door render from. */
+  coverage: CoverageSummary | null;
+  /** What the districts door renders, or null when the overlay is off. */
+  drawnDistricts: readonly DrawnDistrict[] | null;
+}): ShellStats {
+  const { meetings, coverage, drawnDistricts } = input;
   return {
     meetings: meetings.length,
-    bodies: bodies.size,
-    districts: districtCount,
-    officials: officialCount,
+    bodies: coverage ? coverage.bodies.length : 0,
+    districts: drawnDistricts ? drawnDistricts.length : null,
+    officials: coverage ? allOfficialRows(coverage).length : 0,
+    coverageAnswered: coverage !== null,
   };
 }
 
@@ -274,7 +298,7 @@ export function districtDoorRows(
 export interface StatsView {
   meetings: number | "—";
   bodies: number | "—";
-  districts: number | "—";
+  districts: number | "—" | "Off";
   officials: number | "—";
   /** Present exactly when the fetch failed: the couldn't-check statement. */
   failedNote: string | null;
@@ -293,26 +317,37 @@ export interface StatsView {
  * committed files on the client and is genuinely intact when the meetings
  * service is not — the author's failure screenshot showed exactly that
  * split, and it was the one honest number on the card.
+ *
+ * The districts card no longer renders "—" for an overlay the reader turned
+ * off (M57). A dash is this product's word for "we could not check", and
+ * spending it on "you switched this off" made the one intact number on the
+ * card read as the broken one — the author reported it as blank. Off says
+ * off, and its door offers the switch.
  */
 export function deriveStatsView(
   stats: ShellStats,
   showDistricts: boolean,
   searchFailed: boolean,
 ): StatsView {
+  const districts: StatsView["districts"] =
+    !showDistricts || stats.districts === null ? "Off" : stats.districts;
+
   if (searchFailed) {
     return {
       meetings: "—",
       bodies: "—",
       officials: "—",
-      districts: showDistricts ? stats.districts : "—",
+      districts,
       failedNote: "Couldn't check — the meetings service didn't answer.",
     };
   }
   return {
     meetings: stats.meetings,
-    bodies: stats.bodies,
-    officials: stats.officials,
-    districts: showDistricts ? stats.districts : "—",
+    // A counter whose surface says "we couldn't resolve who governs here"
+    // may not state a number, and 0 is a number (the failed-operation rule).
+    bodies: stats.coverageAnswered ? stats.bodies : "—",
+    officials: stats.coverageAnswered ? stats.officials : "—",
+    districts,
     failedNote: null,
   };
 }

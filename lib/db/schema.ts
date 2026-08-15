@@ -198,8 +198,17 @@ export const reactions = pgTable(
     }).notNull(),
     /** The roll-call key (`house:119-2:283`) — validated against the votes snapshot. */
     targetId: text("target_id").notNull(),
-    /** The one-tap answer. There is deliberately no free-text column yet. */
-    reaction: text("reaction", { enum: ["YES", "NO", "UNSURE"] }).notNull(),
+    /**
+     * The one-tap answer. There is deliberately no free-text column yet.
+     *
+     * SOMEONE_ELSE (M63) is accepted only on a candidate in a contest with
+     * exactly one candidate; the write path enforces that, and a stored row
+     * carrying it against a contested race would be a bug. The column is a
+     * plain text enum, so widening it needs no destructive migration.
+     */
+    reaction: text("reaction", {
+      enum: ["YES", "NO", "UNSURE", "SOMEONE_ELSE"],
+    }).notNull(),
     /**
      * Where the reader was looking, on the same approximate-location basis
      * as the search log: divisions resolved from the map view, zip-level at

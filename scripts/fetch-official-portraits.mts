@@ -317,8 +317,38 @@ export async function ship(
 
   await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
   await writeFile(cardsPath, `${JSON.stringify(cardsFile, null, 2)}\n`, "utf8");
+
+  /*
+   * Regenerate the client-safe derivative (2026-08-15).
+   *
+   * `body-rosters.ts` is client-bundled and imports the tiny
+   * `roster-photos.json` rather than the full manifest. Only the Commons
+   * ship script rewrote it, so shipping roster portraits through THIS door
+   * updated the manifest and left the derivative behind — twenty local
+   * officials with a licensed row and no photo on screen. The sync test
+   * caught it, which is what it is for; regenerating here is what stops the
+   * two paths disagreeing about which script you happened to run.
+   */
+  const rosterPhotos: Record<string, string> = {};
+  for (const photo of manifest.photos) {
+    const id = String(photo.officeholderId);
+    if (id.startsWith("roster:") && photo.license) {
+      rosterPhotos[id] = String(photo.url);
+    }
+  }
+  await writeFile(
+    join(ROOT, "lib", "registry", "roster-photos.json"),
+    `${JSON.stringify(
+      Object.fromEntries(Object.entries(rosterPhotos).sort()),
+      null,
+      2,
+    )}\n`,
+    "utf8",
+  );
+
   console.log(
-    `\n=== shipped ${shipped}; ${recorded} misses recorded with their rung ===`,
+    `\n=== shipped ${shipped}; ${recorded} misses recorded with their rung; ` +
+      `${Object.keys(rosterPhotos).length} roster photos in the client derivative ===`,
   );
   return { shipped, recorded };
 }

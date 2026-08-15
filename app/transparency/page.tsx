@@ -125,7 +125,12 @@ export default function TransparencyPage() {
           <p>
             Some vote records ask &quot;Do you like this vote?&quot; and
             ballot candidates ask &quot;Would you vote for them?&quot; — each
-            with Yes, No, and Unsure buttons. The first time you ever answer,
+            with Yes, No, and Unsure buttons. Where a race has only one
+            candidate on the ballot, a fourth button — &quot;Someone
+            else&quot; — appears as well, because in a race with no choice
+            the other three cannot tell us whether you actually wanted this
+            person. That fourth answer is offered, and accepted, only in
+            those one-candidate races. The first time you ever answer,
             a one-time notice explains this and asks you to OK it before
             anything is recorded; it never repeats after that. When you
             answer, the site stores: your answer, which vote or candidate it

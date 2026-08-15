@@ -47,8 +47,42 @@ export const FUNDING_REACTION_TYPES: ReactionTargetType[] = [
   "CONTRIBUTOR_REACTION",
 ];
 
-export type ReactionValue = "YES" | "NO" | "UNSURE";
-export const REACTION_VALUES: ReactionValue[] = ["YES", "NO", "UNSURE"];
+/**
+ * SOMEONE_ELSE (M63, 2026-08-15) is the fourth answer, and it is accepted
+ * ONLY on a candidate in a contest with exactly one candidate.
+ *
+ * The author's reasoning, which is the whole justification for a new enum
+ * value: in an uncontested race the other three answers collect almost
+ * nothing. Yes is what the ballot forces on you, No cannot distinguish
+ * disliking this candidate from wanting a choice at all, and a reader who
+ * simply wants somebody else has no way to say it. "Someone else" is the
+ * only honest sentiment measure an uncontested race has.
+ *
+ * Context-restricted at the write path, not just hidden in the UI: offered
+ * on a contested race the answer would mean something different, and mixing
+ * the two meanings into one bucket is the sort of quiet corruption the
+ * incumbent/challenger split exists to prevent. `getSingleCandidateTargetIds()`
+ * derives the permitted set from the committed ballot data, so a contest
+ * stops qualifying the moment a second candidate files.
+ */
+export type ReactionValue = "YES" | "NO" | "UNSURE" | "SOMEONE_ELSE";
+export const REACTION_VALUES: ReactionValue[] = [
+  "YES",
+  "NO",
+  "UNSURE",
+  "SOMEONE_ELSE",
+];
+
+/**
+ * Values whose meaning depends on the contest's shape, and the shape they
+ * require. A value listed here is refused wherever that context does not
+ * hold — the server-side validity table the value ships with.
+ */
+export const CONTEXT_RESTRICTED_VALUES: Readonly<
+  Partial<Record<ReactionValue, "SINGLE_CANDIDATE_CONTEST">>
+> = {
+  SOMEONE_ELSE: "SINGLE_CANDIDATE_CONTEST",
+};
 
 /**
  * ANONYMOUS is the only tier any row carries today. The other two are

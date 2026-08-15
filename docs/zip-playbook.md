@@ -269,6 +269,49 @@ against a 90-day served window, under a comment asserting they matched. No
 count check catches this: the adapter honestly reports what it asked for.
 Adapter windows now derive from `lib/meetings/constants.ts`.
 
+### State roll calls: LegiScan, and the join that fails silently (2026-08-15)
+
+Bulk first — `getDatasetList` → `getDataset`, one ZIP per state session,
+refreshed Sunday mornings. Store `dataset_hash`, compare it, **never
+re-download an unchanged dataset**. Never touch the legiscan.com front end.
+The data is CC BY 4.0 and the attribution renders wherever it appears.
+
+**The district mapping is the whole risk, and getting it wrong does not
+throw — it produces a low match rate, which looks exactly like a thin
+roster.** Two shapes so far:
+
+- **Statewide numbering** (AZ, NJ, and every state's upper chamber seen so
+  far): `HD-040` → `sldl:40`.
+- **County numbering** (NH's House): `HD-12-HIL` is Hillsborough 12, and the
+  Census SLDL code is the county's **zero-based alphabetical** ordinal
+  concatenated with the two-digit district number → `sldl:512`. Belknap is
+  ordinal 0, so its codes lose the leading zero: Belknap 7 is `sldl:7`, not
+  `sldl:007`. Both details were wrong on the first pass and both were silent.
+
+**Assert the mapping against your own boundary labels.** Our geojson carries
+`State House District Merrimack 08` beside `sldl:608`, which turns the
+mapping from a remembered fact into a checked one. Do this for every new
+state before trusting a match rate.
+
+**Match on district AND surname, never name alone** — the district identifies
+the seat and the surname is compared only within a district that already
+matched. Fold accents and generational suffixes: "Walter"/"Walt", "Mary
+Jane"/"Mary", "James"/"Jim" all occur between a legislature's own roster and
+LegiScan's.
+
+**Report the match rate WITH its denominator, per state.** A large unmatched
+count is usually not a gap: most of a legislature governs outside our clipped
+boundaries. What matters is that every roster seat that COULD match did.
+
+### Let the surface drive the clip (2026-08-15)
+
+A snapshot that holds "the N most recent" of anything must ask what the
+surface renders. Arizona published 7,283 roll calls in one session and
+**votes in bursts** — the 60 most recent covered two days, so any member
+absent those two days would have rendered an empty record that reads as
+"never votes". The clip is now the union of each member's own twelve most
+recent, which guarantees every member with a record has one to show.
+
 ## 4. The scripts that exist
 
 | Command | What it does |
@@ -280,6 +323,7 @@ Adapter windows now derive from `lib/meetings/constants.ts`.
 | `pnpm signal:snapshot` | Freeze aggregates for calibration. |
 | `pnpm stamp` | Today, `America/Phoenix`. Every written date comes from here. |
 | `pnpm verify-stamps` | Audits `CLAUDE.md`'s Adopted dates against git history. |
+| `pnpm legiscan:fetch` | State-legislature roll calls for AZ/NJ/NH, hash-gated. `--force` re-downloads. |
 
 ## 5. The state folders
 

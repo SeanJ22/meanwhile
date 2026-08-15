@@ -76,6 +76,34 @@ type MemberRollCall = RollCallVote & {
 /** How many recent votes the surface shows before pointing at the record. */
 const VOTE_LIMIT = 5;
 
+/**
+ * The licence attribution a vote store requires, when it requires one.
+ *
+ * Federal roll calls come from the chambers' own public-domain XML and carry
+ * none. LegiScan's state data is CC BY 4.0 and the licence requires
+ * attribution wherever it appears, so the API sends it with the rows and this
+ * renders it — never a hardcoded string on the client, which could drift from
+ * the store it describes.
+ */
+type VoteAttribution = {
+  text: string;
+  url: string;
+  licence: string;
+  licenceUrl: string;
+};
+
+/**
+ * Whether this holder has a roll-call store at all.
+ *
+ * `congress:` — the chambers' XML (5). `plural:` — a state legislator, from
+ * LegiScan (D49, 2026-08-15). Anything else, a county commissioner or a
+ * selectboard member, has no roll-call store, and the section renders nothing
+ * rather than an empty heading.
+ */
+function hasVoteRecord(id: string): boolean {
+  return id.startsWith("congress:") || id.startsWith("plural:");
+}
+
 export function RecentVotes(props: {
   holder: SeatHolder;
   reactionContext: ReactionViewContext | null;
@@ -94,10 +122,11 @@ function RecentVotesInner({
   reactionContext: ReactionViewContext | null;
 }) {
   const [votes, setVotes] = useState<MemberRollCall[] | null>(null);
+  const [attribution, setAttribution] = useState<VoteAttribution | null>(null);
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
-    if (!holder.id.startsWith("congress:")) return;
+    if (!hasVoteRecord(holder.id)) return;
     const controller = new AbortController();
     void (async () => {
       try {
@@ -105,8 +134,12 @@ function RecentVotesInner({
           signal: controller.signal,
         });
         if (!response.ok) throw new Error(String(response.status));
-        const payload = (await response.json()) as { votes: MemberRollCall[] };
+        const payload = (await response.json()) as {
+          votes: MemberRollCall[];
+          attribution?: VoteAttribution;
+        };
         setVotes(payload.votes);
+        setAttribution(payload.attribution ?? null);
       } catch {
         if (!controller.signal.aborted) setFailed(true);
       }
@@ -114,9 +147,9 @@ function RecentVotesInner({
     return () => controller.abort();
   }, [holder.id]);
 
-  // State legislators' roll calls are a coming store, not an absence to
-  // fake — the section only renders for federal members.
-  if (!holder.id.startsWith("congress:")) return null;
+  // A holder with no vote store renders nothing here — never an empty
+  // "Recent votes" heading, which reads as "this person does not vote".
+  if (!hasVoteRecord(holder.id)) return null;
 
   return (
     <>
@@ -141,6 +174,32 @@ function RecentVotesInner({
             Plain-language bill summaries below are ours — each paraphrases
             the bill&apos;s official summary, linked on its row.
           </p>
+          {/* D49 (2026-08-15): the CC BY 4.0 attribution LegiScan's licence
+              requires, wherever its data appears. Sent with the rows so it
+              cannot drift from the store it describes. */}
+          {attribution && (
+            <p className="mt-0.5 text-[0.5625rem] leading-relaxed text-muted">
+              Vote records from{" "}
+              <a
+                href={attribution.url}
+                target="_blank"
+                rel="noreferrer"
+                className="underline decoration-dotted hover:text-signal"
+              >
+                {attribution.text}
+              </a>
+              , under{" "}
+              <a
+                href={attribution.licenceUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="underline decoration-dotted hover:text-signal"
+              >
+                {attribution.licence}
+              </a>
+              .
+            </p>
+          )}
           {votes.slice(0, VOTE_LIMIT).map((vote) => {
             const explainer = explainVoteQuestion(vote.question);
             return (

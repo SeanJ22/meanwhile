@@ -24,7 +24,10 @@ await mkdir(join(ROOT, "public", "candidates"), { recursive: true });
 
 let moved = 0;
 let failed = 0;
-for (const [key, card] of Object.entries(cardsFile.cards) as [string, any][]) {
+for (const [key, card] of Object.entries(cardsFile.cards) as [
+  string,
+  { photoUrl: string | null; photoSource: string | null },
+][]) {
   if (!card.photoUrl || !/^https?:\/\//.test(card.photoUrl)) continue;
   const response = await fetch(card.photoUrl, {
     headers: { "user-agent": "we-the-people-civic-app/0.1 (contact: seanj22@gmail.com)" },

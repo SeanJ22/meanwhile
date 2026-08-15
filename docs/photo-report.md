@@ -9,12 +9,27 @@ came from, and why it passed. A photo not listed here does not ship —
 `tests/candidate-cards.test.ts` asserts every shipped photo URL appears
 in this file.
 
-Judged 2026-08-19 by eyeballing every image as fetched by a plain client
-(the session's 2b audit). The audit covered all 17 candidate cards and
-all 8 roster officials; 6 card photos failed the rule and fell back to
-initials — their misses are recorded hunts in
-`data/ballot/candidate-cards-2026.json` (`hunts`, `#photo` entries),
-each with every rung attempted.
+The dedicated photo session ran 2026-08-14 (branch `claude/photos-0814`):
+the before/after is **16 of 747 → 476 of 750** (the denominator grew by
+the three governors, who render on every who-governs card and were a
+census gap). Tier 1 fetched the GPO pictorial for every renderable
+member of Congress by bioguide id — federal reads **437/437**. Tier 2's
+chamber terms hunt found NO reuse grant on any of the three legislature
+sites (azleg.gov, gc.nh.gov, njleg.state.nj.us — findings recorded per
+missing row, FOR COUNSEL), so all 130 state legislators stay honest
+initials; the three governors shipped via attribute-verified Wikimedia
+Commons portraits instead. Tier 3 walked every ballot candidate and
+curated local through the Commons rung (identity by P1157 stable id for
+members of Congress, position-held + place verification for everyone
+else, ambiguity refused), the campaign og:image rung for all 15 recorded
+campaign sites, and the jurisdiction-terms rung for the three largest
+local bodies (no reuse grants — recorded). Every staged image was
+individually eyeballed before shipping; every miss carries its rungs
+with dates. Verification: a 21-member federal sample was cross-checked
+against bioguide.congress.gov (an independent archive keyed by the same
+stable id — same face on every pair), and a 390×844 walk across all four
+zips confirmed 30+ portraits rendering from our origin with honest
+initials where photos failed judgment.
 
 ## Official portraits — the manifest, `lib/registry/official-photos.json`
 

@@ -107,11 +107,23 @@ async function entities(ids: string[]) {
   return data.entities ?? {};
 }
 
-function claimValues(entity: any, prop: string): any[] {
-  return (entity?.claims?.[prop] ?? [])
-    .map((c: any) => c.mainsnak?.datavalue?.value)
-    .filter((v: any) => v !== undefined);
+interface WdClaim {
+  mainsnak?: { datavalue?: { value?: unknown } };
 }
+interface WdEntity {
+  claims?: Record<string, WdClaim[]>;
+  descriptions?: Record<string, { value: string }>;
+  labels?: Record<string, { value: string }>;
+}
+
+function claimValues(entity: WdEntity | undefined, prop: string): unknown[] {
+  return (entity?.claims?.[prop] ?? [])
+    .map((c) => c.mainsnak?.datavalue?.value)
+    .filter((v) => v !== undefined);
+}
+
+const itemId = (v: unknown): string | undefined =>
+  (v as { id?: string } | undefined)?.id;
 
 const FREE_LICENSE =
   /public domain|\bpd\b|cc0|cc[ -]by(?![ -]?(nc|nd))(-sa)?/i;
@@ -155,7 +167,9 @@ for (const target of targets) {
         type: "item",
         limit: "5",
       });
-      const hitIds: string[] = (search.search ?? []).map((h: any) => h.id);
+      const hitIds: string[] = ((search.search ?? []) as { id: string }[]).map(
+        (h) => h.id,
+      );
       if (hitIds.length === 0) {
         record({ outcome: "NO_WIKIDATA_MATCH", detail: "no search hits" });
         continue;
@@ -165,7 +179,8 @@ for (const target of targets) {
       const positionIds = new Set<string>();
       for (const id of hitIds) {
         for (const v of claimValues(ents[id], "P39")) {
-          if (v?.id) positionIds.add(v.id);
+          const pid = itemId(v);
+          if (pid) positionIds.add(pid);
         }
       }
       const positions = await entities([...positionIds].slice(0, 50));
@@ -176,7 +191,10 @@ for (const target of targets) {
       for (const id of hitIds) {
         const desc: string = ents[id]?.descriptions?.en?.value ?? "";
         const p39Labels = claimValues(ents[id], "P39")
-          .map((v: any) => positions[v?.id]?.labels?.en?.value ?? "")
+          .map((v) => {
+            const pid = itemId(v);
+            return pid ? (positions[pid]?.labels?.en?.value ?? "") : "";
+          })
           .filter(Boolean);
         const evidence = [desc, ...p39Labels].join(" | ");
         if (office.test(evidence) && place.test(evidence)) {
@@ -202,8 +220,9 @@ for (const target of targets) {
     }
 
     // ── P18 portrait ──────────────────────────────────────────────────
+    if (!matchedId) continue; // both no-match branches continue above
     const ent = (await entities([matchedId]))[matchedId];
-    const p18 = claimValues(ent, "P18")[0];
+    const p18 = claimValues(ent, "P18")[0] as string | undefined;
     if (!p18) {
       record({
         outcome: "NO_P18",
@@ -222,7 +241,13 @@ for (const target of targets) {
       iiprop: "extmetadata|url",
       iiurlwidth: "600",
     });
-    const page: any = Object.values(info.query?.pages ?? {})[0];
+    const page = Object.values(info.query?.pages ?? {})[0] as {
+      imageinfo?: {
+        thumburl?: string;
+        url?: string;
+        extmetadata?: Record<string, { value?: string }>;
+      }[];
+    };
     const ii = page?.imageinfo?.[0];
     const meta = ii?.extmetadata ?? {};
     const licenseShort = meta.LicenseShortName?.value ?? "";
@@ -241,6 +266,15 @@ for (const target of targets) {
 
     // ── Stage the 600px render for human judgment ─────────────────────
     const thumbUrl = ii?.thumburl ?? ii?.url;
+    if (!thumbUrl) {
+      record({
+        outcome: "DOWNLOAD_FAILED",
+        detail: `${fileTitle}: imageinfo carried no render URL`,
+        wikidataId: matchedId,
+        commonsFile: fileTitle,
+      });
+      continue;
+    }
     const dl = await fetch(thumbUrl, { headers: { "user-agent": UA } });
     if (!dl.ok) {
       record({

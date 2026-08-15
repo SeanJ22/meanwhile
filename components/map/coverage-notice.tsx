@@ -52,6 +52,9 @@ interface CoverageNoticeProps {
   onOpenOfficial?: OpenOfficial;
   /** Shrinks the card to its corner bubble — the explicit control (3). */
   onMinimize?: () => void;
+  /** Item 7: fires when the reader APPLIES a narrowing (street or picker)
+   *  — never on decline or undo. The map turns its boundary shading on. */
+  onNarrowApplied?: () => void;
 }
 
 /** How many bodies to name before collapsing the rest into a count. */
@@ -198,11 +201,13 @@ function CoverageBody({
   coverage,
   failedSourceOcdIds = [],
   onOpenOfficial,
+  onNarrowApplied,
 }: {
   zip: string;
   coverage: CoverageSummary;
   failedSourceOcdIds?: string[];
   onOpenOfficial?: OpenOfficial;
+  onNarrowApplied?: () => void;
 }) {
   const {
     bodies,
@@ -506,10 +511,12 @@ function CoverageBody({
         </ul>
       )}
 
-      {/* The M26 narrowing prompt — renders only where the computed street
-          index says the answer would change. Declining stays effortless.
-          Keyed on the zip so a new zip mounts a fresh prompt. */}
-      {/^\d{5}$/.test(zip) && <NarrowingPrompt key={zip} zip={zip} />}
+      {/* The M26 narrowing affordance — a passive chip (item 6), rendered
+          only where the computed street index says the answer would change.
+          Keyed on the zip so a new zip mounts a fresh chip. */}
+      {/^\d{5}$/.test(zip) && (
+        <NarrowingPrompt key={zip} zip={zip} onApplied={onNarrowApplied} />
+      )}
 
       {/* 7 (2026-08-17): the mover's page, one tap from who-governs. */}
       {/^\d{5}$/.test(zip) && (
@@ -768,6 +775,7 @@ export function CoverageNotice({
   failedSourceOcdIds,
   onOpenOfficial,
   onMinimize,
+  onNarrowApplied,
 }: CoverageNoticeProps) {
   // The notice renders on every failure rung, and on the exact rung whenever
   // there is representation to show. It used to return null on `exact`
@@ -886,6 +894,7 @@ export function CoverageNotice({
           coverage={coverage}
           failedSourceOcdIds={failedSourceOcdIds}
           onOpenOfficial={onOpenOfficial}
+          onNarrowApplied={onNarrowApplied}
         />
       ) : (
         !coverage &&

@@ -346,6 +346,11 @@ export function addDistrictLayer(
           "case",
           ["boolean", ["feature-state", "selected"], false],
           0.18,
+          // The reader's narrowed divisions (item 7, design pass): the
+          // street they typed shades the district(s) that contain it —
+          // quieter than a selection, present without one.
+          ["boolean", ["feature-state", "narrowed"], false],
+          0.12,
           ["boolean", ["feature-state", "hover"], false],
           0.08,
           0,
@@ -458,6 +463,38 @@ export function setSelectedDistrict(
 
   map.setFeatureState({ source, id: ocdId }, { selected: true });
   selected = { type, ocdId };
+}
+
+let narrowedApplied: { type: DistrictType; ocdId: string }[] = [];
+
+/**
+ * Shade the reader's narrowed divisions (item 7, design pass 2026-08-15):
+ * the street they typed shades the municipality and school district that
+ * contain it. Feature-state like selection, quieter than it, and additive
+ * — narrowing never clears a selection or vice versa.
+ *
+ * Entries whose layer is not loaded yet are simply not applied this call;
+ * the caller re-applies on the map's own load signals, so the shading
+ * appears the moment the boundary does.
+ */
+export function setNarrowedDistricts(
+  map: MapLibreMap,
+  entries: { type: DistrictType; ocdId: string }[],
+): void {
+  for (const prev of narrowedApplied) {
+    const source = sourceId(prev.type);
+    if (map.getSource(source)) {
+      map.setFeatureState({ source, id: prev.ocdId }, { narrowed: false });
+    }
+  }
+  narrowedApplied = [];
+
+  for (const entry of entries) {
+    const source = sourceId(entry.type);
+    if (!map.getSource(source)) continue;
+    map.setFeatureState({ source, id: entry.ocdId }, { narrowed: true });
+    narrowedApplied.push(entry);
+  }
 }
 
 export interface DistrictHit {

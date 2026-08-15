@@ -29,6 +29,7 @@ import {
   drawnDistrictsOn,
   loadDistricts,
   removeDistrictLayer,
+  setNarrowedDistricts,
   setSelectedDistrict,
   type DistrictHit,
   type DrawnDistrict,
@@ -86,6 +87,9 @@ interface MapCanvasProps {
   districtTypes: DistrictType[];
   /** The district the reader picked, highlighted via feature-state. */
   selectedDistrict: { type: DistrictType; ocdId: string } | null;
+  /** The reader's narrowed divisions (item 7): shaded quieter than a
+   *  selection, via feature-state, re-applied as layers load. */
+  narrowedDistricts?: { type: DistrictType; ocdId: string }[];
   /** A click landed in these districts. Always a set — see districtsAt. */
   onDistrictClick: (hits: DistrictHit[], at: { x: number; y: number }) => void;
   /** The boundary file could not be loaded; the caller says so and disables the toggle. */
@@ -142,6 +146,7 @@ export function MapCanvas({
   frameAllVenues,
   districtTypes,
   selectedDistrict,
+  narrowedDistricts,
   theme,
   onDistrictError,
   onDrawnDistricts,
@@ -479,6 +484,30 @@ export function MapCanvas({
       selectedDistrict?.ocdId ?? null,
     );
   }, [selectedDistrict, districtTypes]);
+
+  // Narrowed-division shading (item 7): same feature-state mechanism,
+  // re-applied on the map's load signals because the boundary layers load
+  // asynchronously — the shading appears the moment the polygon does.
+  const narrowedRef = useRef(narrowedDistricts ?? []);
+  useEffect(() => {
+    narrowedRef.current = narrowedDistricts ?? [];
+    const map = mapRef.current;
+    if (!map) return;
+
+    const apply = () => {
+      const live = mapRef.current;
+      if (!live) return;
+      setNarrowedDistricts(live, narrowedRef.current);
+    };
+
+    apply();
+    map.on("idle", apply);
+    map.on("sourcedata", apply);
+    return () => {
+      map.off("idle", apply);
+      map.off("sourcedata", apply);
+    };
+  }, [narrowedDistricts, districtTypes]);
 
   // A one-off fly-to from search or the list. Separate from `camera`, which is
   // the zip's own centroid and must not move when a reader looks at a result.

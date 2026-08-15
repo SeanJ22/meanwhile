@@ -7,6 +7,7 @@ import { Legend } from "@/components/map/legend";
 import { ListOverlay } from "@/components/map/list-overlay";
 import { Sidebar } from "@/components/shell/sidebar";
 import { useDistrictLayer } from "@/hooks/use-district-layer";
+import { useNarrowing } from "@/hooks/use-narrowing";
 import { useStoredTheme } from "@/hooks/use-stored-theme";
 import { useStoredZip } from "@/hooks/use-stored-zip";
 import type { SearchItem } from "@/lib/search";
@@ -641,6 +642,45 @@ function MapEntryInner() {
   );
 
   /*
+   * Item 7 (design pass): the reader's narrowed divisions shade on the map.
+   * The narrowing store is read for the zip the who-governs card speaks —
+   * the same zip the chip stored it under. Division type is derived from
+   * the OCD id's own segment, never from a label: the street index only
+   * ever narrows to municipalities and school districts.
+   */
+  const noticeZip =
+    result && /^\d{5}$/.test(result.zip) ? result.zip : (location?.zip ?? "");
+  const narrowing = useNarrowing(noticeZip);
+  const narrowedDistricts = useMemo(
+    () =>
+      narrowing.divisions.map((ocdId) => ({
+        ocdId,
+        type: (ocdId.includes("school_district:")
+          ? "school"
+          : "municipal") as DistrictType,
+      })),
+    [narrowing.divisions],
+  );
+
+  // The street's visible payoff (item 7): applying a narrowing turns the
+  // boundary overlay on with the municipal and school layers active, so
+  // the shaded district is actually on screen. Only an APPLY does this —
+  // declining or undoing never touches the reader's overlay settings.
+  const onNarrowApplied = useCallback(() => {
+    setShowDistricts(true);
+    dispatch({
+      type: "filter/districtTypesSet",
+      value: [
+        ...new Set([
+          ...ui.filters.districtTypes,
+          "municipal" as DistrictType,
+          "school" as DistrictType,
+        ]),
+      ],
+    });
+  }, [setShowDistricts, dispatch, ui.filters.districtTypes]);
+
+  /*
    * A click on the map lands in a *set* of districts.
    *
    * One hit selects directly. More than one opens the disambiguation prompt —
@@ -766,6 +806,7 @@ function MapEntryInner() {
             }
             districtTypes={activeDistrictTypes}
             selectedDistrict={selectedDistrict}
+            narrowedDistricts={narrowedDistricts}
             onDistrictClick={onDistrictClick}
             theme={theme}
             onDistrictError={onDistrictError}
@@ -888,6 +929,7 @@ function MapEntryInner() {
                   }
                   onOpenOfficial={openOfficial}
                   onMinimize={() => setNoticeCollapsed(true)}
+                  onNarrowApplied={onNarrowApplied}
                 />
               ))}
 

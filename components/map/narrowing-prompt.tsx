@@ -51,10 +51,15 @@ function countPhrase(n: number, singular: string, plural: string): string {
 export function NarrowingPrompt({
   zip,
   onNarrowed,
+  onApplied,
 }: {
   zip: string;
   /** Present so the parent re-reads the store; the hook notifies anyway. */
   onNarrowed?: () => void;
+  /** Item 7: fires ONLY when a narrowing is applied (street match or
+   *  municipality pick) — the map answers with its boundary shading.
+   *  Declining and undoing never fire it. */
+  onApplied?: () => void;
 }) {
   const [index, setIndex] = useState<StreetIndex | null>(null);
   const [expanded, setExpanded] = useState(false);
@@ -130,6 +135,7 @@ export function NarrowingPrompt({
     narrowing.setStreet(name);
     narrowing.setDivisions(ocdIds);
     onNarrowed?.();
+    onApplied?.();
   };
 
   // The chip: quiet, in the card's flow, decides nothing.
@@ -195,6 +201,7 @@ export function NarrowingPrompt({
                 onClick={() => {
                   narrowing.setDivisions([m.ocdId]);
                   onNarrowed?.();
+                  onApplied?.();
                 }}
               >
                 {m.label}

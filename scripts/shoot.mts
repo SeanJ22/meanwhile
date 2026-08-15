@@ -199,6 +199,15 @@ if (clicked) {
   await page.waitForTimeout(500);
 }
 
+// Fill any input: --fill "selector|value". Runs before --clicks so a
+// sequence can act on what the fill revealed (e.g. a street match).
+const fillArg = arg("fill");
+if (fillArg) {
+  const [selector, ...rest] = fillArg.split("|");
+  await page.locator(selector.trim()).first().fill(rest.join("|"));
+  await page.waitForTimeout(600);
+}
+
 // A sequence of clicks, for states that only exist several steps in — a popup
 // reached through a marker and a panel row, or a modal tab reached through
 // both plus the expand button. Pipe-separated rather than comma, because

@@ -8,7 +8,8 @@ zips at 390×844, plus a desktop bound check at 1280×800 · 0 failures.**
 
 Run with `pnpm exec tsx scripts/tester-walk-0815b.mts <zip>` against a local
 dev server at the shipping commits. Screenshots land in `screenshots/` as
-`walk0815b-<zip>-*.png`.
+`walk0815b-<zip>-*.png` — that directory is gitignored, so the images are
+local artifacts and the command above is what regenerates them.
 
 ## The score
 

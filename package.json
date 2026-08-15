@@ -21,6 +21,8 @@
     "shoot": "tsx scripts/shoot.mts",
     "registry:build": "tsx scripts/build-registry.ts",
     "handoff": "node scripts/handoff.mjs",
+    "stamp": "tsx scripts/stamp.mts",
+    "verify-stamps": "tsx scripts/verify-stamps.mts",
     "officials:build": "tsx scripts/build-officeholders.ts",
     "officials:enrich": "tsx scripts/enrich-officials.mts",
     "officials:audit": "tsx scripts/audit-officials.mts",

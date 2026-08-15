@@ -474,7 +474,11 @@ memory — restore it.
 ### The `G:\My Drive\we-the-people\` mirror
 
 A hedge against the above, and against losing the project's memory with a
-branch. It holds seven files, flat — six copied from the repo, one generated:
+branch. It holds ten files, flat — eight copied from the repo, two generated.
+The count in this sentence has drifted from the table below it twice (it read
+"seven files, flat — six copied" while the table listed nine); the authority is
+the `MIRRORED` list in `scripts/handoff.mjs` plus the two generated files, and
+R17 is the row for making the report count that list rather than restate it:
 
 | Mirror | Repo |
 |---|---|
@@ -487,6 +491,7 @@ branch. It holds seven files, flat — six copied from the repo, one generated:
 | `tracker.csv` | `docs/tracker.csv` |
 | `types.ts` | `lib/sources/types.ts` |
 | `git-state.txt` | *generated — no repo counterpart* |
+| `context.md` | *generated — no repo counterpart* |
 
 `vendor-review.md` was added 2026-08-12 alongside D14. It is in the mirror for
 the same reason `abuse-policy.md` is: a standing document that constrains what
@@ -510,6 +515,33 @@ out and finds an apparently empty project (§7).
 The test, lint and build figures are **read from this file**, not re-run. A
 status is a claim someone committed to with evidence, not one a script inferred
 on its way past, so `git-state.txt` cites the `state.md` line it took them from.
+
+`context.md` is the **second generated file** (R15, added 2026-08-14), written by
+`scripts/context-file.mjs` in the same handoff run and holding the same posture:
+no repo counterpart, never compared for drift, skipped by `--check`, and
+rewritten after a successful `--ship` because a merge moves every fact in it.
+It carries the phase standings (§7), every P0 tracker row as ID / item / status
+/ one-line note, every ripcord with its flag name, committed state, open
+question and named closer, the last ten tracker rows whose Status actually
+changed, and the same git facts `git-state.txt` holds — both files are written
+from one array so they cannot disagree about the same moment.
+
+It exists because this file is the wrong thing to hand a conversation that only
+needs to know where things stand: `state.md` is a quarter of a megabyte, and by
+the time it has been pasted anywhere there is no room left for the question. So
+`context.md` is capped at **20 KB**, and the cap is enforced by shrinking rather
+than by hoping — the tracker-change section is dropped first, then the P0 notes
+are narrowed, and **every cut says so in the file**, at the top and again in the
+section it was cut from. A partial file that reads as a complete one is the one
+thing the cap must not produce. It landed at 18.6 KB with nothing truncated.
+
+**Nothing in it is composed.** Phases are parsed out of §7, tracker rows and
+notes are read from `docs/tracker.csv`, ripcord state comes from
+`lib/ripcords.ts` — the registry is the state of record, and prose copies of a
+flag's position go stale in a way the registry cannot — and the status-change
+list is diffed out of git history. Long fields are clipped with `…`, never
+paraphrased. A generated summary of any of this would be a fresh set of claims
+with nothing behind them.
 
 **Keep the mirror in step in the same change that updates the repo copy.** A
 mirror that is only sometimes current is worse than none, because the next
@@ -1837,8 +1869,18 @@ replaced.
 
 ## 7. Current state of the branch
 
-**Working on `claude/fec-cache-and-question-box-0819`** (2026-08-19),
-branched from `main` at the PR #26 merge — the session §17 records: the
+**Working on `claude/date-integrity-and-context-mirror-0814`**
+(2026-08-14, seventh session of the day), branched from `main` at the
+PR #33 merge — the session §23 records: the stamp rule and its four
+guards (R14), `context.md` as the seventh mirror file (R15), and three
+findings recorded but deliberately not fixed (R16–R18). **test 476 pass
+(3 new) · lint clean (1 pre-existing warning) · build exit 0**, the date
+scan reporting 1017 dates scanned / 0 failures / 122 allowlisted. No
+product surface was touched.
+
+**Previously: `claude/fec-cache-and-question-box-0819`** (session label
+`0819`, wall clock 2026-08-14), branched from `main` at the PR #26 merge
+— the session §17 records: the
 FEC replication fix (D40, the gate), self-funding labels + the photo rule
 (D41/D42/D43), the 3-series copy/UI batch (M38–M45), incumbent record
 links (B10), and the ask box v1 (A09). **test 391 pass · lint clean (1
@@ -4524,3 +4566,164 @@ transient, joined to nothing.
 - D49 (LegiScan) is recorded, unfetched.
 - Next free tracker ids: **A12, D51, M57, P13, R14, T11, V09, X05**
   (this session opened M53–M56, B13, B14, V08, D48, D49, D50).
+
+---
+
+## 23. The 2026-08-14 session (seventh session of 2026-08-14) — the documents stop making up dates, and the mirror gets a short answer
+
+Branch `claude/date-integrity-and-context-mirror-0814`. Two items, both
+about documents making claims that are not true. All dates in this
+section are wall clock, read from `pnpm stamp`.
+
+### 1 — Fabricated dates (R14)
+
+`CLAUDE.md` carried three rules stamped `Adopted` for August 16, 17 and
+19. Every one of them is later than the file's own last modification and
+later than every commit in the repo. The machine clock is fine —
+`git-state.txt` stamped `04:01:34Z` on the *following* UTC day is 9:01pm
+on the 14th in `America/Phoenix`. So nothing was mistyped: an agent wrote a
+*plausible* date because it had none, which is the same failure as a
+generated candidate position — a confident claim with nothing behind it,
+and worse here, because a stamp says when a rule became law and every
+later decision was supposedly made under it.
+
+Five pieces shipped.
+
+- **`pnpm stamp`** (`scripts/stamp.mts`) prints today as `YYYY-MM-DD` in
+  `America/Phoenix`. The timezone is the point: `toISOString().slice(0,
+  10)` is a day ahead for seven hours out of twenty-four here, which is
+  this bug's smaller sibling and produces the same artifact. The day is
+  computed once, in `scripts/doc-dates.mjs`, and re-exported by
+  `stamp.mts` — three callers need it and a rule about dates enforced by
+  three copies of a timezone calculation would be the joke it sounds
+  like. That module is plain JavaScript so the pre-commit hook loads it
+  with no type stripping in the path.
+- **The rule in `CLAUDE.md`**, under the tracker conventions: an agent
+  does not know today's date, and a date not read from the system clock
+  is a fabrication.
+- **`tests/doc-dates.test.ts`** scans `CLAUDE.md`, every `.md` under
+  `docs/`, and the Notes and Detail columns of `docs/tracker.csv` —
+  Target is excluded deliberately, an intended future date being the
+  whole point of a target column. It reports its denominator every run.
+- **`.githooks/pre-commit`** runs the same scanner over **staged**
+  content (`git show :<path>`, not the working tree — a hook that checks
+  the worktree passes a `git add -p` that staged only the bad hunk).
+  Installed with `git config core.hooksPath .githooks`, which a fresh
+  clone must run. Bypass is git's own `--no-verify`.
+- **`pnpm verify-stamps`** (`scripts/verify-stamps.mts`) audits the
+  stamps against git and writes `docs/stamp-audit.md`. Not in the test
+  gate; it runs a `git log` per stamp and belongs at handoff.
+
+**The audit found four wrong of eight, all fabricated forward.** The
+stranger test and the coverage-denominator rule both claim August 17 and
+landed 2026-08-14 (`b25ac80`, +3 days); the ripcord doctrine claims
+August 16 and landed 2026-08-13 (`56d8787`, +3); the distinctness rule
+claims August 19 and landed 2026-08-14 (`8046820`, +5). The other four
+stamps check out exactly. **No stamp was corrected** — the author
+decides each one, and correcting them from here would be the same act
+that caused the defect.
+
+**On the specified `--diff-filter=A`.** The brief called for
+`git log -S<clause> --diff-filter=A`. That filter restricts the log to
+commits where a *file was added*; `CLAUDE.md` was added once, long
+before any of these rules existed, so with it on every stamp returns
+`NOT FOUND` and the audit says nothing. It is run verbatim anyway and
+reported in its own column, because a specified command quietly swapped
+for a working one is how a report starts lying. The recovered dates come
+from the unfiltered pickaxe, oldest commit first.
+
+**The scope was six times what the brief expected (R16).** The author
+expected three failures. The scan found **122 future-dated occurrences
+across 29 file/date pairs** — the three in `CLAUDE.md` plus 117 more,
+concentrated in `tracker.csv` (47), `state.md` (24), `source-ladder.md`
+(17) and `coverage-audit-by-county.md` (14). Most look like the
+session-label convention (§18: labels that ran ahead of the wall clock,
+history deliberately not rewritten) and some are genuinely future events
+— the general election among them. **They are enumerated, not
+excluded.** Every one sits in the test's `ALLOWLIST` pinned to its file
+*and its exact occurrence count*, so re-using a tolerated date to write
+a new fabricated stamp still fails; every one prints as a warning with a
+count on every run. An unenumerated known-failures escape hatch is how a
+check stops being one. Sorting the 117 into session labels, real future
+events and real fabrications is the author's call, and it is R16.
+
+The three `CLAUDE.md` strings are a separate group in the same list,
+`AUTHOR_DECISION`, and each entry is deleted when its corrected date is
+approved.
+
+### 2 — `context.md`, the seventh mirror file (R15)
+
+`state.md` is a quarter of a megabyte. It is the wrong artifact to hand
+a conversation that only needs to know where things stand — by the time
+it has been pasted anywhere there is no room left for the question.
+`context.md` is the short answer: the phase standings, every P0 tracker
+row, every ripcord with its flag / state / open question / named closer,
+the last ten tracker rows whose Status actually changed, and the git
+facts. §3.5 carries the full description.
+
+Three decisions worth recording.
+
+- **A new row is not a status change.** Listing them would have filled
+  the whole section with `(new row) → Done` from one session and pushed
+  out every real transition. New rows are counted and the count is
+  stated, so their absence is not silent.
+- **Ripcord state is read from `lib/ripcords.ts`**, not from prose. The
+  registry is the state of record — `pulled: true` is the committed
+  position of the switch — and a prose copy goes stale in a way the
+  registry cannot.
+- **The 20 KB cap shrinks rather than hopes.** Tracker-change rows go
+  first as specified, then the P0 notes narrow, and every cut is stated
+  at the top of the file and again in the section it came from. If the
+  cascade bottoms out the file says `STILL OVER` rather than quietly
+  exceeding the cap. The path was exercised at 17, 14 and 10 KB rather
+  than left as a branch nobody has run.
+
+### Found on the way, recorded and not fixed
+
+- **R16** — the other 117 future dates, above.
+- **R17** — three places named a different mirror-file count and none
+  matched the `MIRRORED` list (§3.5 prose said seven/six while its own
+  table listed nine; the `handoff.mjs` header said five). The two
+  sentences this session was already rewriting were corrected in
+  passing; the durable fix is for the report to *count* the list instead
+  of restating it.
+- **R18** — `docs/intake-report.md` and `git-state.txt` stamp a bare `Z`
+  instant, whose date component reads a day ahead for seven hours of
+  every day. Not wrong as an instant, misleading as a date, and the same
+  read that made the fabricated stamps look plausible.
+- **R19** — `session:start`'s `EXPECTED_KB` is 17 and `CLAUDE.md` is
+  26.5 KB, so its size check has been warning on every session open for
+  a while. A warning that fires every run is one nobody reads.
+
+`session:start` gained a fourth check on the way (in scope, since an
+uninstalled hook is a guard that never fires and never says so):
+`core.hooksPath` is local git config, survives no clone, and is now
+reported with the one command that installs it. Reported, not repaired —
+writing to a person's git config is a different kind of act from killing
+a dev server this repo started.
+
+The pre-commit hook refused this session's own tracker rows for quoting
+the bad stamps, which is the check working; the rows were reworded to
+name the days without the literal strings.
+
+### Evidence
+
+- **476 tests (3 new), lint clean (one pre-existing warning in
+  `scripts/tester-drive.mts`), build exit 0.** The date scan reports
+  **1017 dates scanned, 0 failures, 122 allowlisted** — the allowlisted
+  count is a warning line on every run, never a pass. The hook was
+  proven to refuse, not merely to exist, by staging a probe date and
+  watching it exit 1.
+- `context.md` landed at **18.6 KB of 20 KB, nothing truncated**.
+
+### Open
+
+- **The author's four decisions** are in `docs/stamp-audit.md`: three
+  stamps in `CLAUDE.md` to correct or confirm, and the fourth already
+  matching. Deleting an `AUTHOR_DECISION` allowlist entry and fixing the
+  stamp belong in the same commit.
+- **R16** — the 118, unsorted.
+- Everything open at the end of §22 is still open; this session touched
+  no product surface.
+- Next free tracker ids: **A12, D51, M57, P13, R20, T11, V09, X05**
+  (this session opened R14–R19).

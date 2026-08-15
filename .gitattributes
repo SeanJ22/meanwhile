@@ -1,0 +1,4 @@
+# Git hooks are run by `sh`. A CRLF here makes the shebang line read
+# `#!/bin/sh\r`, which fails with a bare "no such file or directory" that
+# names nothing — keep them LF on every platform.
+.githooks/* text eol=lf

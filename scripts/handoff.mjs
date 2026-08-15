@@ -32,8 +32,11 @@
  *   3. main                  nothing unmerged, no PR left open, and the local
  *                            `main` ref actually current with origin
  *   4. the dev server        stopped, port 3000 free
- *   5. the G Drive mirror    five files byte-identical, plus transcripts and
- *                            a generated `git-state.txt`
+ *   5. the G Drive mirror    the copied files byte-identical, plus transcripts
+ *                            and two generated files with no repo counterpart
+ *                            — `git-state.txt` (R09) and `context.md` (R15),
+ *                            neither compared for drift, both skipped by
+ *                            `--check` and rewritten after a successful ship
  *
  * `pnpm session:start` is the bookend, and checks the things that are wrong at
  * the *start* of a session — stale local main, a clobbered CLAUDE.md, a port
@@ -57,7 +60,9 @@ import {
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { writeContext } from "./context-file.mjs";
 import { stopDevServer } from "./dev-server.mjs";
+import { today } from "./doc-dates.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(here, "..");
@@ -301,6 +306,15 @@ function lastRecordedStatus() {
  *
  * Plain text, one fact per line, no formatting — it is meant to be read whole.
  */
+/**
+ * The facts, built once so `git-state.txt` and `context.md` cannot disagree.
+ *
+ * They are written in the same run from the same array; two independent
+ * readings of git taken a few hundred milliseconds apart would be two
+ * different claims about the same moment, and the mirror would hold both.
+ */
+let gitFacts = [];
+
 function writeGitState() {
   if (!existsSync(MIRROR)) {
     warn("git state", "mirror drive not reachable — not written");
@@ -374,6 +388,7 @@ function writeGitState() {
   put("last recorded status from", status.where);
 
   writeFileSync(join(MIRROR, "git-state.txt"), lines.join("\n") + "\n", "utf8");
+  gitFacts = lines;
   return true;
 }
 
@@ -381,6 +396,52 @@ if (CHECK_ONLY) {
   ok("git state", "skipped (--check)");
 } else if (writeGitState()) {
   ok("git state", "git-state.txt written to the mirror");
+}
+
+/* ----------------------------------------------------------- context.md --- */
+
+/**
+ * The seventh mirror file, and the second generated one.
+ *
+ * Same posture as `git-state.txt` and for the same reason: it has no repo
+ * counterpart, so there is nothing to compare it against and a drift check
+ * could only report noise. It is skipped by `--check` (which touches
+ * nothing), written on a plain run, and rewritten after a successful
+ * `--ship` because merging moves every fact in it.
+ *
+ * A failure here is a warning, never a failure of the handoff. The mirror's
+ * job is to survive the loss of the repo; a generated convenience file that
+ * could block a session from ending would be worse than not having it.
+ */
+async function writeContextFile(note) {
+  if (!existsSync(MIRROR)) {
+    warn("context", "mirror drive not reachable — context.md not written");
+    return;
+  }
+  try {
+    const built = await writeContext(MIRROR, {
+      gitFacts,
+      generatedAt: new Date().toISOString(),
+      stampToday: today(),
+    });
+    const kb = (built.bytes / 1024).toFixed(1);
+    const counts =
+      `${built.counts.phases} phase(s), ${built.counts.p0} P0 row(s), ` +
+      `${built.counts.ripcords} ripcord(s), ${built.counts.statusChanges} status change(s)`;
+    if (built.truncated) {
+      warn("context", `context.md ${kb} KB of 20 KB — TRUNCATED: ${built.truncation.join("; ")}`);
+    } else {
+      ok("context", `context.md ${note} — ${kb} KB of 20 KB, ${counts}`);
+    }
+  } catch (error) {
+    warn("context", `context.md not written — ${error.message}`);
+  }
+}
+
+if (CHECK_ONLY) {
+  ok("context", "skipped (--check)");
+} else {
+  await writeContextFile("written to the mirror");
 }
 
 /* ---------------------------------------------------------- dev server --- */
@@ -692,6 +753,13 @@ if (SHIP) {
     // state that no longer exists — the same trap the re-measure above exists
     // to avoid. Rewrite it against the remote we just re-fetched.
     if (writeGitState()) ok("git state", "git-state.txt rewritten after shipping");
+
+    // And context.md with it: it carries the same git facts plus tracker rows
+    // that the merge commit may have moved. A stale seventh file is exactly
+    // the drift the mirror exists to prevent.
+    const staleContext = results.findIndex((r) => r.label === "context");
+    if (staleContext !== -1) results.splice(staleContext, 1);
+    await writeContextFile("rewritten after shipping");
   }
 }
 

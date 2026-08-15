@@ -1,3 +1,7 @@
+import {
+  committeeTypeLabelFor,
+  type CommitteeTypeLabel,
+} from "./committee-types.ts";
 import type { ContributionRow } from "./types.ts";
 
 /**
@@ -17,10 +21,18 @@ export function plainContributorLabel(row: {
   kind: ContributionRow["kind"];
   entityType: string | null;
   lineNumber: string | null;
+  committeeType?: string | null;
+  organizationType?: string | null;
+  designation?: string | null;
 }): string | null {
   if (row.entityType === "CAN" || row.lineNumber === "13A") {
     return "the candidate's own money";
   }
+  // Item 6 (2026-08-14): where the contributing committee filed its own
+  // typing, that is the more specific true thing and it wins. Every label
+  // it can return lives in COMMITTEE_TYPE_LABELS and nowhere else.
+  const typed = contributorTypeLabel(row);
+  if (typed) return typed.label;
   switch (row.entityType) {
     case "IND":
       return null;
@@ -41,4 +53,28 @@ export function plainContributorLabel(row: {
         ? "committee or organization"
         : null;
   }
+}
+
+/**
+ * The typed label for a contributing committee, or null when the filing
+ * carries no typing (individuals, and rows from before item 6's capture).
+ *
+ * Exported separately from the string above because the surface needs the
+ * whole record — the label to render AND the two-sentence explainer with
+ * its FEC source — and a bare string cannot carry those.
+ */
+export function contributorTypeLabel(row: {
+  entityType?: string | null;
+  committeeType?: string | null;
+  organizationType?: string | null;
+  designation?: string | null;
+}): CommitteeTypeLabel | null {
+  // A candidate's own money is not a committee type; it is answered above
+  // and must never be relabeled by the committee table.
+  if (row.entityType === "IND" || row.entityType === "CAN") return null;
+  return committeeTypeLabelFor({
+    committeeType: row.committeeType ?? null,
+    organizationType: row.organizationType ?? null,
+    designation: row.designation ?? null,
+  });
 }

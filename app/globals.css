@@ -296,6 +296,34 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   border-bottom: 1px solid var(--panel-border);
 }
 
+/* The ballot entry in the rail's header (item 2, the tester's mobile pass
+   2026-08-14). It was a dotted-underline line in the footer, below
+   `mt-auto`; on a phone that is under the browser chrome. Here it reads as
+   what it is and is on screen the moment the drawer opens. */
+.sidebar-ballot-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 9px 11px;
+  border: 1px solid color-mix(in srgb, var(--signal) 45%, transparent);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--signal) 6%, transparent);
+  color: var(--text);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.sidebar-ballot-entry:hover {
+  border-color: var(--signal);
+}
+
+.sidebar-ballot-entry > span:last-child {
+  color: var(--signal);
+}
+
 .sidebar-scroll {
   flex: 1;
   overflow-y: auto;
@@ -1939,6 +1967,115 @@ label:has(> input[type="checkbox"]) {
 
 @media (prefers-reduced-motion: reduce) {
   .sidebar {
+    transition: none;
+  }
+}
+
+/* ==========================================================================
+   The map overlay stack — items 2 and 3 of the tester's mobile pass
+   (2026-08-14). Measured at 390×844 before the fix: the bottom stack had no
+   upper bound, the who-governs card reached 893px against an 844px
+   viewport, and its top sat at y = −113. The ballot bubble rendered at y=12
+   and was painted over by it (the tester: "the floater never appears"); the
+   count badge sat at y = −166; the card's own minimize control at y = −104.
+   Meanwhile the two fixed controls that DO stay above everything — the
+   hamburger at (12,12,44×44) and MapLibre's zoom column at (349,0,41×70) —
+   sat on top of card text.
+
+   Both are the same defect: an unbounded overlay in a bounded viewport. The
+   band below reserves the top strip for the fixed controls and the ballot
+   entry, and the card is held inside what is left over.
+   ========================================================================== */
+
+:root {
+  /* Clears the hamburger (12 + 44 = 56) and MapLibre's zoom column (0 + 70),
+     plus breathing room. Any fixed control added to the top strip must fit
+     inside this band or move — that is the rule item 3 buys. */
+  --map-control-band: 76px;
+}
+
+/* Explicit, because it is load-bearing: the top row wins over the bottom
+   stack. Relying on DOM order is what let a tall card bury the ballot. */
+.map-top-row {
+  position: relative;
+  z-index: 2;
+}
+
+.map-bottom-stack {
+  z-index: 1;
+}
+
+/* The card can never be taller than the space it has. `min-height: 0` is
+   what actually lets a flex child shrink; without it the panel keeps its
+   content height and overflows exactly as before. Self-correcting — no
+   magic height to drift out of date. */
+.map-bottom-stack > .panel {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* The who-governs card splits: a pinned head carrying the ballot entry, and
+   a body that takes the scroll. The entry a reader could not find must not
+   be scrollable out of sight the moment it is found. */
+.map-bottom-stack > .coverage-notice {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.map-bottom-stack > .coverage-notice > .coverage-notice-head {
+  flex: 0 0 auto;
+}
+
+.map-bottom-stack > .coverage-notice > .coverage-notice-body {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+@media (max-width: 639px) {
+  /* A definite top gives the stack a definite height, which is what makes
+     the shrink above possible at all — and it is the reserved gutter that
+     keeps every top-strip control off readable content. */
+  .map-bottom-stack {
+    top: var(--map-control-band);
+  }
+}
+
+/* The "what kind of money" label and its tap-for-explainer (item 6,
+   2026-08-14). The label sits where the plain suffix used to, reading as
+   part of the row; tapping it opens two sentences and the FEC page they
+   paraphrase. Expansion, never a new tab. */
+.funding-type > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  color: var(--text-muted);
+  list-style: none;
+}
+
+.funding-type > summary::-webkit-details-marker {
+  display: none;
+}
+
+.funding-type > summary::after {
+  content: "›";
+  transition: transform 0.15s;
+  opacity: 0.7;
+}
+
+.funding-type[open] > summary::after {
+  transform: rotate(90deg);
+}
+
+.funding-type > summary:hover {
+  color: var(--signal);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .funding-type > summary::after {
     transition: none;
   }
 }

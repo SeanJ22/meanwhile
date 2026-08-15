@@ -133,3 +133,86 @@ test("no ranking vocabulary anywhere in the cards file", () => {
   };
   walk(parsed, "$");
 });
+
+/**
+ * Item 5 of the tester's mobile pass (2026-08-14) — the thin-candidate line,
+ * and the equal-effort principle it belongs to.
+ *
+ * The tester, verbatim: "Karen might be the perfect fit for me, but she has
+ * no information here. So I'm only going to look at the folks that do have
+ * information... how could using this app actually impact voter outcomes
+ * instead of collect information from voters." The app never says a word
+ * about anyone and still tilts races, because thin cards track incumbency
+ * and campaign professionalism rather than merit. Naming the absence is what
+ * makes it a statement about our research instead of about the candidate.
+ */
+test("the thin-candidate line is one sentence, and it neither apologizes nor explains", async () => {
+  const { THIN_CANDIDATE_LINE } = await import(
+    "../lib/ballot/candidate-cards.ts"
+  );
+  assert.equal(
+    THIN_CANDIDATE_LINE,
+    "We haven't found much about this candidate yet.",
+  );
+  // Full stop means full stop: exactly one sentence.
+  assert.equal(
+    THIN_CANDIDATE_LINE.split(".").filter((s) => s.trim()).length,
+    1,
+    "no second sentence — an apology on the thin cards and silence on the thick ones is the same asymmetry",
+  );
+  for (const banned of ["sorry", "unfortunately", "apolog", "we tried", "please"]) {
+    assert.ok(
+      !THIN_CANDIDATE_LINE.toLowerCase().includes(banned),
+      `the line must not ${banned}`,
+    );
+  }
+  // And it never characterizes the candidate — the absence is ours.
+  for (const banned of ["little-known", "unknown", "minor", "obscure", "fringe"]) {
+    assert.ok(
+      !THIN_CANDIDATE_LINE.toLowerCase().includes(banned),
+      `the line describes our research, never the candidate (${banned})`,
+    );
+  }
+});
+
+test("thinness is decided by what we hold, and any one sourced field is enough to silence the line", async () => {
+  const { isThinCandidateCard } = await import(
+    "../lib/ballot/candidate-cards.ts"
+  );
+  const empty = {
+    photoUrl: null,
+    photoSource: null,
+    bio: null,
+    bioSourceUrl: null,
+    bioSourceLabel: null,
+    email: null,
+    phone: null,
+  };
+  assert.equal(isThinCandidateCard(null, false), true, "no card at all is thin");
+  assert.equal(isThinCandidateCard(empty, false), true, "an empty card is thin");
+  // A link alone is information a reader can act on.
+  assert.equal(isThinCandidateCard(null, true), false);
+  assert.equal(isThinCandidateCard(empty, true), false);
+  for (const field of ["photoUrl", "bio", "email", "phone"] as const) {
+    assert.equal(
+      isThinCandidateCard({ ...empty, [field]: "x" }, false),
+      false,
+      `${field} present means the card is not silent`,
+    );
+  }
+});
+
+test("the line renders on the card component itself, so it travels to every surface a thin card reaches", () => {
+  const src = readFileSync(
+    join(process.cwd(), "components", "ballot", "candidate-card.tsx"),
+    "utf8",
+  );
+  assert.ok(
+    /THIN_CANDIDATE_LINE/.test(src),
+    "the shared constant renders — not a copy of the sentence",
+  );
+  assert.ok(
+    /isThinCandidateCard/.test(src),
+    "the shared predicate decides — not an inline condition that can drift",
+  );
+});

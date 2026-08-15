@@ -6,7 +6,11 @@ import {
   divisionOcdIdForRosterHolder,
 } from "../lib/registry/body-rosters.ts";
 import { CURATED_BODIES } from "../lib/registry/curated-bodies.ts";
-import { EVERYDAY_CONTACTS } from "../lib/routing/everyday.ts";
+import { EVERYDAY_CONTACTS, everydayContactsFor } from "../lib/routing/everyday.ts";
+import { TOPIC_ROUTES } from "../lib/routing/topics.ts";
+import { resolveRouting } from "../lib/routing/resolve.ts";
+import { coverageAt } from "../lib/registry/server.ts";
+import { lookupZcta } from "../lib/geo/zcta.ts";
 import {
   DIVISION_OFFICE_BLURBS,
   OFFICE_BLURBS,
@@ -235,13 +239,160 @@ test("curated bodies carry no foreign-jurisdiction content", () => {
   }
 });
 
+/**
+ * The ask box's own templates and links (item 1, the tester's mobile pass,
+ * 2026-08-14). The tester asked "library" at 03255 and was told about Pima
+ * County, Arizona. Last session's guard covered rosters, curated bodies and
+ * everyday contacts; the TOPIC EXPLAINER TEMPLATES and their LINK TARGETS
+ * were outside its scope, so the same bleed survived in a second place.
+ *
+ * Two halves, both mechanical:
+ * - the shared templates name no covered place at all (place-specific truth
+ *   lives in a step's `divisionWhy` and reaches only that division);
+ * - the ANSWER AS RENDERED, resolved live against the real registry at each
+ *   covered zip, carries nothing from another state in any sentence or any
+ *   link — every topic, every zip.
+ */
+
+const ZIP_STATE: Record<string, StateCode> = {
+  "85701": "az",
+  "85641": "az",
+  "07866": "nj",
+  "03255": "nh",
+};
+
+test("topic explainer templates name no covered place — per-place truth lives only in divisionWhy", () => {
+  const placeMarkers = [
+    ...STATE_MARKERS.az,
+    ...STATE_MARKERS.nj,
+    ...STATE_MARKERS.nh,
+  ]
+    // State names themselves are allowed in a template only if no template
+    // uses them; keeping them in the list is the stricter reading and
+    // nothing currently trips it.
+    .map((m) => new RegExp(`\\b${m}\\b`, "i"));
+  assert.ok(TOPIC_ROUTES.length > 0, "routes exist");
+  for (const route of TOPIC_ROUTES) {
+    const shared = [
+      route.label,
+      route.basis,
+      ...route.examples,
+      ...route.steps.map((s) => s.why),
+    ];
+    for (const text of shared) {
+      for (const marker of placeMarkers) {
+        assert.ok(
+          !marker.test(text),
+          `topic ${route.id}: shared template "${text}" names a specific place (${marker}) — move it to the step's divisionWhy`,
+        );
+      }
+    }
+    // Every override keys on a real OCD id, and its copy belongs to that
+    // division's own state.
+    for (const step of route.steps) {
+      for (const override of step.divisionWhy ?? []) {
+        assert.ok(
+          override.divisionOcdId.startsWith("ocd-division/country:us/"),
+          `topic ${route.id}: divisionWhy key ${override.divisionOcdId} is a full OCD id`,
+        );
+        const own = stateOfOcdId(override.divisionOcdId);
+        assert.ok(own, `topic ${route.id}: ${override.divisionOcdId} resolves to a state`);
+        assertNoForeignMarker(
+          own,
+          override.why,
+          `topic ${route.id} divisionWhy ${override.divisionOcdId}`,
+        );
+        assertNoForeignMarker(
+          own,
+          override.basis ?? null,
+          `topic ${route.id} divisionWhy ${override.divisionOcdId} basis`,
+        );
+      }
+    }
+  }
+});
+
+test("the regression itself: every ask-box answer at every covered zip is free of another state's content and links", async () => {
+  let checkedAnswers = 0;
+  let checkedStrings = 0;
+  for (const [zip, own] of Object.entries(ZIP_STATE) as [string, StateCode][]) {
+    const centroid = lookupZcta(zip);
+    assert.ok(centroid, `${zip} has a centroid`);
+    const coverage = await coverageAt(centroid.lat, centroid.lng, 0);
+    for (const route of TOPIC_ROUTES) {
+      const answer = resolveRouting(route.id, coverage);
+      assert.equal(answer.kind, "ROUTED", `${zip}/${route.id} routes`);
+      checkedAnswers++;
+      const strings: [string, string | null][] = [];
+      for (const [i, step] of answer.steps.entries()) {
+        strings.push([`${zip}/${route.id} step${i} why`, step.why]);
+        strings.push([`${zip}/${route.id} step${i} gap`, step.gap]);
+        for (const body of step.bodies) {
+          strings.push([`${zip}/${route.id} step${i} body label`, body.label]);
+          // The link target is the half the tester actually tapped.
+          strings.push([`${zip}/${route.id} step${i} body link`, body.homepageUrl]);
+        }
+        for (const person of step.people) {
+          strings.push([`${zip}/${route.id} step${i} person`, person.name]);
+          strings.push([`${zip}/${route.id} step${i} person title`, person.officeTitle]);
+          strings.push([`${zip}/${route.id} step${i} person link`, person.sourceUrl]);
+        }
+      }
+      for (const contact of everydayContactsFor(route.id, zip)) {
+        strings.push([`${zip}/${route.id} contact body`, contact.body]);
+        strings.push([`${zip}/${route.id} contact service`, contact.service]);
+        strings.push([`${zip}/${route.id} contact note`, contact.note]);
+        strings.push([`${zip}/${route.id} contact request link`, contact.requestUrl]);
+        strings.push([`${zip}/${route.id} contact source link`, contact.sourceUrl]);
+        strings.push([`${zip}/${route.id} contact source org`, contact.sourceOrg]);
+      }
+      for (const [where, text] of strings) {
+        if (text) checkedStrings++;
+        assertNoForeignMarker(own, text, where);
+      }
+    }
+  }
+  // The denominator, stated: a silently empty audit is not a passing audit.
+  assert.equal(
+    checkedAnswers,
+    Object.keys(ZIP_STATE).length * TOPIC_ROUTES.length,
+    "every topic was resolved at every covered zip",
+  );
+  assert.ok(
+    checkedStrings > 200,
+    `the audit read ${checkedStrings} rendered strings — too few to have covered the answers`,
+  );
+});
+
+test("the sourced Pima library fact reaches Pima readers and nobody else", async () => {
+  const az = lookupZcta("85701");
+  const nh = lookupZcta("03255");
+  assert.ok(az && nh);
+  const azAnswer = resolveRouting(
+    "libraries",
+    await coverageAt(az.lat, az.lng, 0),
+  );
+  const nhAnswer = resolveRouting(
+    "libraries",
+    await coverageAt(nh.lat, nh.lng, 0),
+  );
+  assert.ok(
+    /county Board of Supervisors sits as its board/.test(azAnswer.steps[1].why),
+    "Pima's reader keeps the sourced, division-specific sentence",
+  );
+  assert.ok(
+    !/\bpima\b/i.test(nhAnswer.steps[1].why),
+    "the New Hampshire reader is told about no Arizona county",
+  );
+  assert.ok(
+    nhAnswer.steps[1].bodies.every(
+      (b) => !b.homepageUrl || /\bnh\b|newhampshire|merrimack/i.test(b.homepageUrl),
+    ),
+    "every link on the New Hampshire answer resolves inside New Hampshire",
+  );
+});
+
 test("everyday contacts serve only their own state's zips", () => {
-  const ZIP_STATE: Record<string, StateCode> = {
-    "85701": "az",
-    "85641": "az",
-    "07866": "nj",
-    "03255": "nh",
-  };
   for (const contact of EVERYDAY_CONTACTS) {
     const states = new Set(contact.zips.map((z) => ZIP_STATE[z]));
     assert.equal(

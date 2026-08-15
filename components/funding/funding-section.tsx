@@ -2,7 +2,10 @@ import type {
   FundingAbsenceData,
   FundingDisplayData,
 } from "@/lib/funding/display";
-import { plainContributorLabel } from "@/lib/funding/labels";
+import {
+  contributorTypeLabel,
+  plainContributorLabel,
+} from "@/lib/funding/labels";
 import type { ReactionViewContext } from "@/lib/reactions/client";
 import { ReactionControl } from "@/components/reactions/reaction-control";
 import { formatDateMDY } from "@/lib/map/format";
@@ -56,28 +59,55 @@ export function FundingDisplay({
             The biggest single contributions this campaign&apos;s main
             committee has reported, listed exactly as filed.
           </p>
-          <ul className="mt-1 space-y-0.5">
+          <ul className="mt-1 space-y-1">
             {data.contributors.map((row, index) => {
               // 2a: the suffix comes from the FEC's entity typing — a
               // candidate's own money says so, plainly.
               const entityLabel = plainContributorLabel(row);
+              // Item 6 (2026-08-14): where the contributing committee filed
+              // its own typing, the label carries an explainer. `typeLabel`
+              // is null for individuals and for rows the FEC never typed —
+              // those keep the plain suffix with nothing to tap, because
+              // there is nothing more we honestly know.
+              const typeLabel = contributorTypeLabel(row);
               return (
               <li
                 key={`${row.contributorName}-${row.amount}-${index}`}
-                className="flex items-baseline justify-between gap-3 text-[0.75rem]"
+                className="text-[0.75rem]"
               >
-                <span className="min-w-0 text-paper-dim">
-                  {row.contributorName}
-                  {row.city && row.state && (
-                    <span className="text-muted"> · {row.city}, {row.state}</span>
-                  )}
-                  {entityLabel && (
-                    <span className="text-muted"> · {entityLabel}</span>
-                  )}
-                </span>
-                <span className="shrink-0 font-mono text-[0.6875rem]">
-                  ${Math.round(row.amount).toLocaleString("en-US")}
-                </span>
+                <div className="flex items-baseline justify-between gap-3">
+                  <span className="min-w-0 text-paper-dim">
+                    {row.contributorName}
+                    {row.city && row.state && (
+                      <span className="text-muted"> · {row.city}, {row.state}</span>
+                    )}
+                    {entityLabel && !typeLabel && (
+                      <span className="text-muted"> · {entityLabel}</span>
+                    )}
+                  </span>
+                  <span className="shrink-0 font-mono text-[0.6875rem]">
+                    ${Math.round(row.amount).toLocaleString("en-US")}
+                  </span>
+                </div>
+                {typeLabel && (
+                  // Expansion, never a new tab (CLAUDE.md's reader gesture).
+                  // `<details>` so this stays a server-renderable component
+                  // and costs no client JavaScript.
+                  <details className="funding-type">
+                    <summary>{typeLabel.label}</summary>
+                    <p className="mt-0.5 text-[0.6875rem] leading-relaxed text-muted">
+                      {typeLabel.explainer}{" "}
+                      <a
+                        href={typeLabel.sourceUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="underline decoration-dotted"
+                      >
+                        the FEC&apos;s own definition
+                      </a>
+                    </p>
+                  </details>
+                )}
               </li>
               );
             })}

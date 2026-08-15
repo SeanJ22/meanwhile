@@ -795,8 +795,12 @@ export function CoverageNotice({
         ? "text-muted"
         : "text-signal";
 
+  // The ballot entry travels with the zip the card is already about, so the
+  // click never re-asks for something the app knows.
+  const ballotZip = zip && /^\d{5}$/.test(zip) ? zip : null;
+
   return (
-    <div className="panel pointer-events-auto relative max-w-md px-4 py-3.5">
+    <div className="coverage-notice panel pointer-events-auto relative max-w-md px-4 py-3.5">
       {onMinimize && (
         // The explicit way out (3) — engagement still collapses it, but the
         // reader shouldn't have to know that.
@@ -804,7 +808,7 @@ export function CoverageNotice({
           type="button"
           onClick={onMinimize}
           aria-label="Minimize — the card stays one tap away"
-          className="absolute top-2 right-2 cursor-pointer p-1 text-muted hover:text-paper"
+          className="absolute top-2 right-2 z-10 cursor-pointer p-1 text-muted hover:text-paper"
         >
           <svg
             width="12"
@@ -819,12 +823,42 @@ export function CoverageNotice({
           </svg>
         </button>
       )}
-      <p
-        className={`font-mono text-[0.625rem] uppercase tracking-[0.2em] ${accent}`}
-      >
-        {label}
-      </p>
+      {/* Pinned: the header never scrolls with the body, so the ballot entry
+          below it cannot be scrolled away. */}
+      <div className="coverage-notice-head">
+        <p
+          className={`font-mono text-[0.625rem] uppercase tracking-[0.2em] ${accent}`}
+        >
+          {label}
+        </p>
 
+        {/*
+          Item 2 of the tester's mobile pass (2026-08-14). Her words: the
+          floater never appears on her phone and "I don't think I would have
+          found that without knowing it existed" — the only entry she could
+          find sat at the very bottom of the drawer, under the browser
+          chrome. The floater's occlusion is fixed above; this is the entry
+          that does not depend on a reader spotting a 10px pill among the
+          map controls. It says what it is in words, it sits at the top of
+          the surface she was actually reading, and it is pinned outside the
+          card's scroll so it is on screen the moment the card is.
+
+          Reader friction is a defect: same tab, zip attached, no
+          interstitial. This is the product's core surface — reactions, the
+          picks card — and a reader who cannot reach it does not have it.
+        */}
+        <a
+          href={ballotZip ? `/ballot?zip=${ballotZip}` : "/ballot"}
+          className="coverage-notice-ballot mt-2 flex items-center justify-between gap-2 rounded border border-[var(--signal)]/45 bg-[var(--signal)]/5 px-2.5 py-2 text-[0.8125rem] leading-snug text-paper hover:border-[var(--signal)]"
+        >
+          <span className="font-semibold">What&apos;s on the ballot</span>
+          <span aria-hidden="true" className="shrink-0 text-signal">
+            →
+          </span>
+        </a>
+      </div>
+
+      <div className="coverage-notice-body">
       {tier === "widened" && (
         <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
           Nothing scheduled within {near} miles of {zip}. Showing the{" "}
@@ -867,6 +901,7 @@ export function CoverageNotice({
           </p>
         )
       )}
+      </div>
     </div>
   );
 }

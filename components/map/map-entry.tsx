@@ -784,8 +784,15 @@ function MapEntryInner() {
         >
           {/* pr clears MapLibre's zoom control in the top-right corner. The
               ballot bubble (2b) leads the row so it stays visible left of the
-              meeting panel when one is open. */}
-          <div className="flex items-start justify-end gap-3 p-3 pr-14 sm:p-5 sm:pr-16">
+              meeting panel when one is open.
+
+              `map-top-row` (item 2, the tester's mobile pass 2026-08-14)
+              puts this band above the bottom stack explicitly. It used to
+              rely on DOM order and lost: the bottom stack is a later
+              sibling, so a tall who-governs card painted straight over the
+              ballot entry. Ordering this load-bearing is written down, not
+              inferred. */}
+          <div className="map-top-row flex items-start justify-end gap-3 p-3 pr-14 sm:p-5 sm:pr-16">
             <div className="pointer-events-auto">
               <BallotBubble
                 zip={
@@ -812,8 +819,25 @@ function MapEntryInner() {
           {/* Extra bottom padding clears the attribution, which now sits in
               the bottom-left corner. Anchored to the bottom edge rather than
               flexed below the top row — a tall meeting panel up there was
-              pushing this whole group below the fold. */}
-          <div className="absolute inset-x-0 bottom-0 flex flex-col items-start gap-3 p-3 pb-9 sm:p-5 sm:pb-10">
+              pushing this whole group below the fold.
+
+              Items 2 and 3 (the tester's mobile pass, 2026-08-14) share one
+              cause, measured at 390×844 before it was touched: this stack
+              was bottom-anchored with NO upper bound, so the who-governs
+              card grew to 893px against an 844px viewport and its top
+              landed at y = −113. Everything above the fold went with it —
+              the ballot bubble (rendered at y=12, painted over, untappable:
+              "the floater never appears on her phone"), the count badge at
+              y = −166, and the card's own minimize control at y = −104.
+              What DID stay on top were the fixed controls — the hamburger
+              at (12,12) and MapLibre's zoom column at (349,0) — sitting
+              over card text, which is item 3.
+
+              `map-bottom-stack` bounds it: at phone width the stack starts
+              below the control band, so no fixed control ever sits over
+              readable content, and the card shrinks to the space left and
+              scrolls inside itself rather than off the screen. */}
+          <div className="map-bottom-stack absolute inset-x-0 bottom-0 flex flex-col items-start justify-end gap-3 p-3 pb-9 sm:p-5 sm:pb-10">
             <div className="pointer-events-auto">
               <CountBadge />
             </div>

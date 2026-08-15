@@ -94,6 +94,13 @@ interface FecScheduleARow {
   entity_type?: string;
   /** Form 3 line number; 13A is loans from the candidate. */
   line_number?: string;
+  /** Present when the contributor is itself a registered committee — its
+   *  own filed typing (item 6). Absent for individuals. */
+  contributor?: {
+    committee_type?: string | null;
+    organization_type?: string | null;
+    designation?: string | null;
+  } | null;
 }
 
 let requestCount = 0;
@@ -538,6 +545,21 @@ for (const [fecId, entry] of byFecId) {
             // these fields mechanically, never from the name.
             entityType: row.entity_type ? String(row.entity_type) : null,
             lineNumber: row.line_number ? String(row.line_number) : null,
+            // Item 6 (2026-08-14): the contributing committee's OWN filed
+            // typing, carried on the row's `contributor` object. These
+            // three fields are the entire mechanical basis for the plain
+            // "what kind of money" label (lib/funding/committee-types.ts).
+            // Absent on individuals, and absent rather than guessed
+            // whenever the FEC did not classify the committee.
+            committeeType: row.contributor?.committee_type
+              ? String(row.contributor.committee_type)
+              : null,
+            organizationType: row.contributor?.organization_type
+              ? String(row.contributor.organization_type)
+              : null,
+            designation: row.contributor?.designation
+              ? String(row.contributor.designation)
+              : null,
           });
         }
       } catch (error) {

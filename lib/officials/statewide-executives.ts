@@ -113,7 +113,7 @@ export const STATEWIDE_EXECUTIVES: readonly StatewideExecutive[] = [
       // published on the page.
       phone: "(603) 271-2121",
       contactFormUrl: "https://www.governor.nh.gov/contact-governor-ayotte",
-      photoUrl: "/officials/statewide-nh-governor.jpg",
+      photoUrl: "/officials/statewide-nh-governor.png",
       campaignUrl: null,
     },
     sourceUrl: "https://www.governor.nh.gov/",

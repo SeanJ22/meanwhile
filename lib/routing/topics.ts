@@ -20,13 +20,44 @@ import type { OfficeType } from "../officials/office-blurbs.ts";
 /** Which registry division types a routing step's body lives under. */
 export type BodyTarget = "municipal" | "county" | "school_district";
 
+/**
+ * Per-division truth for a step, rendered ONLY to readers whose own
+ * coverage includes that division.
+ *
+ * The item-1 defect (the tester's mobile pass, 2026-08-14): the libraries
+ * route's county step carried "in Pima County the county board sits as the
+ * Library District board" in its shared template, so a reader in Newbury,
+ * NH was told about an Arizona county. Same shape as the Rockaway mayor and
+ * the D40 cache key — one jurisdiction's content bound to another's key.
+ *
+ * The sourced Pima fact is real and worth keeping; it just belongs to Pima.
+ * This is the topic-template sibling of `DIVISION_OFFICE_BLURBS`.
+ */
+export interface DivisionWhy {
+  /** The division this copy belongs to. Full OCD id, never a name. */
+  divisionOcdId: string;
+  why: string;
+  /** Where this division-specific claim was read, when it differs. */
+  basis?: string;
+}
+
 export interface RouteStep {
   /** The kind of body that owns this step, in registry terms. */
   bodyTarget: BodyTarget | null;
   /** The office to talk to, in office-blurb terms (3d keys). */
   officeType: OfficeType | null;
-  /** Why this step, in the product's plain register. */
+  /**
+   * Why this step, in the product's plain register.
+   *
+   * **Jurisdiction-neutral, always.** A shared template names no county,
+   * city, district or body outside the reader's own — an Arizona example
+   * may never render at a New Hampshire zip, however illustrative.
+   * Place-specific truth goes in `divisionWhy` and reaches only that place.
+   * Guarded in `tests/jurisdiction-content.test.ts`.
+   */
   why: string;
+  /** Overrides for readers whose coverage includes the named division. */
+  divisionWhy?: readonly DivisionWhy[];
 }
 
 export interface TopicRoute {
@@ -103,11 +134,19 @@ export const TOPIC_ROUTES: readonly TopicRoute[] = [
       {
         bodyTarget: "county",
         officeType: "county-commissioner",
-        why: "Many library systems are county-run or county-funded (in Pima County the county board sits as the Library District board), so the county board can act where the city cannot.",
+        why: "Many library systems are county-run or county-funded, and in some places the county board doubles as the library district's own board — so the county board can act where the city cannot.",
+        divisionWhy: [
+          {
+            // The sourced Pima fact, kept where it belongs (item 1).
+            divisionOcdId: "ocd-division/country:us/state:az/county:pima",
+            why: "Here the library system is a county library district, and the county Board of Supervisors sits as its board — so the county board can act where the city cannot.",
+            basis:
+              "Pima County Board of Supervisors agenda, 2026-08-11, which convenes the Board as the Library District board (D19)",
+          },
+        ],
       },
     ],
-    basis:
-      "Municipal charters and county library-district statutes; Pima's board-sitting-as-library-district is recorded in the 2026-08-11 agenda (D19)",
+    basis: "Municipal charters and county library-district statutes",
   },
   {
     id: "zoning-development",

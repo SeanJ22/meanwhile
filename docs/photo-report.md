@@ -1469,3 +1469,103 @@ every curated local roster member.
 **curated local rosters — NH (15):** Kristen Schultz; Scott Wheeler; Sandra Warde; Alison Mastin; Kristen Schultz; James MacKenna; David Keith; Art Bobruff; Patrick McGowan; Paul Lakevicius; Nancy Glynn; Eric Gregoire; Stuart D. Trachy; David M. Lovlien; Stephen Shurtleff
 
 **curated local rosters — NJ (23):** Joseph Jackson; Howard Morrison; Jonathan Sackett; Adam Salberg; Pawel Wojtowicz; Susan Fahrman Royek; John J. Quinn; Sophia Freire; Emanuel Friedlander; Tucker Kelley; Stephen H. Shaw; John Krickus; Douglas R. Cabana; Thomas J. Mastrangelo; Christine Myers; Deborah Smith; Alison McGeary; Noël Anderson; Lisa Mezik; Jacalyn Richardson; Jemila Ann Tourne; Jamie Gorman; Rachael Brookes
+
+## Round 4 — the challenger sweep, and a rule that answers it (2026-08-15, D50)
+
+**590 of 750 → 590 of 750. Nothing shipped, and that is the finding.**
+
+The named remainder from round 3 was the ~76 ballot challengers. Both rungs
+were walked to the end. Neither can produce a shippable photo for this
+population, and the second one cannot in principle.
+
+### Rung: Wikimedia Commons, attribute-verified — 76 hunted, 0 staged
+
+| Outcome | Count |
+|---|---|
+| `NO_WIKIDATA_MATCH` | 74 |
+| `NO_P18` (item matched, carries no portrait) | 2 |
+| `AMBIGUOUS` | 0 |
+| `LICENSE_NOT_FREE` | 0 |
+| **staged for judgment** | **0** |
+
+Every miss is recorded per candidate with its `attemptedAt` and its reason,
+and the reasons are worth reading as a group: 62 returned no Wikidata search
+hit at all, and 12 returned hits that failed attribute verification — Sarah
+Rogers matched five items, none of them a New Hampshire county attorney;
+Gary Swing matched one, not an Arizona congressional candidate. That is the
+identity discipline working. A name-only match would have shipped somebody
+else's face on a ballot card.
+
+The two `NO_P18` cases are the interesting ones: Karen Elizabeth Ebel is a
+verified match (`Q124657667`, a member of the New Hampshire House) and her
+item simply carries no image. There is nothing here to find, and the
+absence is now recorded as a fact about Commons rather than as an unhunted
+blank.
+
+**This is a canonical failure class, and it failing again is the expected
+result rather than a disappointment.** Commons covers people who already
+have public encyclopaedic presence. A first-time challenger for county
+treasurer does not, and no amount of rung-walking changes that.
+
+### Rung: the campaign site's `og:image` — 11 sites, 10 images, 0 shippable
+
+Eleven of the 76 have a verified campaign site recorded. Ten published an
+`og:image`; one published none. All ten were staged and **looked at**, in one
+contact sheet, before any judgment:
+
+| Candidate | What the image actually is | Verdict |
+|---|---|---|
+| Teri Ann Hourihan | headshot inside a campaign roundel ringed with "FOR ARIZONA GOVERNOR" | badge, not a portrait |
+| Walter "Les" Presmyk | pure wordmark | logo |
+| Aiden Nicholette Swallow | logo — a bird on a purple field | logo |
+| Bob Karp | pure text treatment | logo |
+| Elijah Norton | pure wordmark | logo |
+| Gary Swing | a man beside a novelty sign, the sign the subject | environmental snapshot |
+| JoAnna Mendoza | rally photo, other people plainly visible, banner text overlaid | not the sole subject |
+| Daniel Francis Butierez Sr. | wide banner, a mission church filling half the frame | banner |
+| Rebecca Harned | split banner: wordmark, then a photo with two dogs, face obscured | banner |
+| Joe Hathaway | banner: wordmark left, a clean solo portrait right | banner |
+
+Nine fail the clean-solo-portrait bar on sight. The tenth — Hathaway — is
+the closest thing to a portrait in the set and is still a composed campaign
+banner, which is the exact shape the Hobbs failure tightened this rule
+against (D42).
+
+**And the licence question settles all ten at once, including the tenth.**
+`CLAUDE.md` gives a photo two doors: an explicit recorded licence, or an
+official government-published portrait. A campaign website is neither. The
+rule then says so directly — "Commercial photography still requires an
+explicit license, no exceptions: campaign headshots, press photos, wire
+images, anything a working photographer plausibly owns." A campaign
+`og:image` is precisely that class, and door 2 does not reach it.
+
+So this rung, as the script that runs it describes itself, rests on a premise
+the photo rule does not grant: "a challenger has no official portrait, so the
+campaign's own photo is the legitimate source WHEN it passes the
+clean-solo-portrait bar." Composition was never the only bar. **Recorded for
+the author rather than resolved by this session**, because it is a doctrine
+question and not a coding one: the rung cannot ship anything unless the
+author decides a campaign's self-published `og:image` carries an implied
+licence to identify its own candidate. Until then the honest state is
+initials plus `THIN_CANDIDATE_LINE`, which is what these 76 cards render.
+
+**Equal effort held.** Both rungs ran for every candidate in every contest,
+not for the ones likely to succeed, and every miss is recorded against the
+candidate rather than left as a blank that reads as absence of the person.
+
+### The remainder, named
+
+The 48 curated local roster members without a portrait were **not** hunted
+this session. The brief's own cut rule put them behind the challenger sweep
+if the session ran short, and it did. They are a real work item with a known
+rung — the body's own page under door 2, then Commons — and they are named
+here so nobody has to rediscover them. Current tiers:
+
+| Surface | Shipped | Denominator | Remaining |
+|---|---|---|---|
+| federal officials | 437 | 437 | 0 |
+| statewide executives | 3 | 3 | 0 |
+| state legislators | 94 | 130 | 36 |
+| curated local rosters | 23 | 71 | **48 — the named remainder** |
+| ballot candidates | 33 | 109 | 76 — hunted to the end of both rungs today |
+| **total** | **590** | **750** | **160** |

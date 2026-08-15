@@ -5,6 +5,26 @@ import { officeTypeForTitle } from "../officials/office-blurbs.ts";
 import { routeForTopic, type RouteStep, type TopicRoute } from "./topics.ts";
 
 /**
+ * The explainer sentence this reader actually sees.
+ *
+ * Item 1 (the tester's mobile pass, 2026-08-14): a shared topic template is
+ * jurisdiction-neutral by rule, and place-specific truth reaches only the
+ * place it belongs to. An override applies when the reader's OWN coverage
+ * contains the named division — resolved against the divisions we already
+ * hold for the point, never against a zip, a name, or a guess. No match,
+ * no override: the neutral sentence stands. Tie-or-zero, same as everywhere
+ * else.
+ */
+function whyFor(step: RouteStep, coverage: CoverageSummary): string {
+  if (!step.divisionWhy?.length) return step.why;
+  const own = new Set<string>();
+  for (const body of coverage.bodies) if (body.ocdId) own.add(body.ocdId);
+  for (const seat of coverage.seats) own.add(seat.ocdId);
+  const hit = step.divisionWhy.find((d) => own.has(d.divisionOcdId));
+  return hit ? hit.why : step.why;
+}
+
+/**
  * The routing resolution (6): given a topic and what we actually know about
  * a point, name the real bodies and people — with the denominator carried.
  *
@@ -132,7 +152,7 @@ export function resolveRouting(
     }
 
     return {
-      why: step.why,
+      why: whyFor(step, coverage),
       bodies: bodies.map((b) => ({
         // The division's label — sourced from Census — never an invented
         // body name (Body.name stays null on derived rows).

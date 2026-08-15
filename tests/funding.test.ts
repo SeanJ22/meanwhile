@@ -463,6 +463,11 @@ function guardFixture(
         state: null,
         entityType: "IND",
         lineNumber: "11AI",
+        // Item 6's filed committee typing — absent on individuals, which
+        // is what these fixture rows are.
+        committeeType: null,
+        organizationType: null,
+        designation: null,
       })),
       provenance: {
         sourceUrl: "https://www.fec.gov/",
@@ -553,3 +558,239 @@ test("thin guard: the fetch script runs it before writing and keeps the prior sn
   assert.match(script, /ALLOW_SHRINK = process\.argv\.includes\("--allow-shrink"\)/);
 });
 
+
+/**
+ * Item 6 of the tester's mobile pass (2026-08-14) — the author's item,
+ * validated by the tester the same day: every committee in her screenshot
+ * rendered the same four words, "a political action committee". Grant
+ * Thornton's PAC, Marsh & McLennan's, the Broadcasters', Fidelity's — all
+ * undifferentiated. The plain-language layer on the organizations-as-filed
+ * rule: say what KIND of money it is, derived only from what the committee
+ * itself filed.
+ */
+test("item 6: every FEC code in our snapshot maps, or falls to the honest default", async () => {
+  const { committeeTypeLabelFor, COMMITTEE_TYPE_LABELS } = await import(
+    "../lib/funding/committee-types.ts"
+  );
+  const snapshot = JSON.parse(
+    readFileSync(join(process.cwd(), "data", "fec", "fec-2026.json"), "utf8"),
+  ) as { candidates: { topContributions: Record<string, string | null>[] }[] };
+  const rows = snapshot.candidates.flatMap((c) => c.topContributions);
+  assert.ok(rows.length > 0, "the snapshot has contribution rows to check");
+
+  const allowed = new Set(COMMITTEE_TYPE_LABELS.map((l) => l.label));
+  let typed = 0;
+  let untyped = 0;
+  for (const row of rows) {
+    const filed = {
+      committeeType: row.committeeType ?? null,
+      organizationType: row.organizationType ?? null,
+      designation: row.designation ?? null,
+    };
+    const label = committeeTypeLabelFor(filed);
+    if (!filed.committeeType && !filed.organizationType && !filed.designation) {
+      // Nothing filed: the derivation must NOT invent a type.
+      assert.equal(
+        label,
+        null,
+        `a row with no filed typing must produce no type label (${JSON.stringify(filed)})`,
+      );
+      untyped++;
+      continue;
+    }
+    assert.ok(
+      label,
+      `filed typing ${JSON.stringify(filed)} produced no label — every code maps or falls to the default`,
+    );
+    assert.ok(
+      allowed.has(label.label),
+      `"${label.label}" is not in COMMITTEE_TYPE_LABELS — no label may render that is not in the table`,
+    );
+    typed++;
+  }
+  // Denominators, stated: a silently empty audit is not a passing audit.
+  assert.ok(
+    typed > 0,
+    `${typed} typed and ${untyped} untyped rows — the snapshot carries no committee typing at all, so this test proved nothing`,
+  );
+});
+
+test("item 6: an unknown code never invents a label — it falls to the honest generic", async () => {
+  const { committeeTypeLabelFor } = await import(
+    "../lib/funding/committee-types.ts"
+  );
+  // A code the FEC does not publish, and one it does but we do not map.
+  for (const committeeType of ["ZZ", "E", "C", "I", "D"]) {
+    const label = committeeTypeLabelFor({
+      committeeType,
+      organizationType: null,
+      designation: null,
+    });
+    assert.equal(
+      label?.id,
+      "organization",
+      `committee type ${committeeType} must fall to the honest generic, not a guess`,
+    );
+  }
+  // Nothing filed at all produces nothing at all.
+  assert.equal(
+    committeeTypeLabelFor({
+      committeeType: null,
+      organizationType: null,
+      designation: null,
+    }),
+    null,
+  );
+});
+
+test("item 6: the designation wins over the committee type where it is the more specific fact", async () => {
+  const { committeeTypeLabelFor } = await import(
+    "../lib/funding/committee-types.ts"
+  );
+  // The bug caught by reading the output before shipping: a joint
+  // fundraising committee files as committee type S or N, so type-first
+  // ordering rendered DUCKWORTH KIM VICTORY FUND as one candidate's own
+  // campaign committee.
+  assert.equal(
+    committeeTypeLabelFor({
+      committeeType: "S",
+      organizationType: null,
+      designation: "J",
+    })?.id,
+    "joint-fundraiser",
+  );
+  assert.equal(
+    committeeTypeLabelFor({
+      committeeType: "N",
+      organizationType: null,
+      designation: "J",
+    })?.id,
+    "joint-fundraiser",
+  );
+  // A leadership PAC also files as a qualified PAC.
+  assert.equal(
+    committeeTypeLabelFor({
+      committeeType: "Q",
+      organizationType: null,
+      designation: "D",
+    })?.id,
+    "leadership-pac",
+  );
+  // A separate segregated fund is typed by the organization behind it.
+  for (const [org, id] of [
+    ["C", "pac-corporation"],
+    ["L", "pac-labor"],
+    ["T", "pac-trade-association"],
+    ["M", "pac-membership"],
+    ["V", "pac-cooperative"],
+    ["W", "pac-no-capital-stock"],
+  ] as const) {
+    assert.equal(
+      committeeTypeLabelFor({
+        committeeType: "Q",
+        organizationType: org,
+        designation: "B",
+      })?.id,
+      id,
+      `ORG_TP ${org} types the PAC by its connected organization`,
+    );
+  }
+  // A PAC with no connected-organization category stays honestly generic.
+  assert.equal(
+    committeeTypeLabelFor({
+      committeeType: "N",
+      organizationType: null,
+      designation: "U",
+    })?.id,
+    "pac",
+  );
+  // Independent-expenditure-only is the super PAC.
+  assert.equal(
+    committeeTypeLabelFor({
+      committeeType: "O",
+      organizationType: null,
+      designation: "U",
+    })?.id,
+    "super-pac",
+  );
+});
+
+test("item 6: every label carries two plain sentences and a verified FEC source, and characterizes nobody", async () => {
+  const { COMMITTEE_TYPE_LABELS } = await import(
+    "../lib/funding/committee-types.ts"
+  );
+  const ids = new Set<string>();
+  for (const entry of COMMITTEE_TYPE_LABELS) {
+    assert.ok(!ids.has(entry.id), `duplicate label id ${entry.id}`);
+    ids.add(entry.id);
+    // Two sentences, per the brief. Counting terminators is enough here
+    // because none of the copy uses an abbreviation with a period.
+    const sentences = entry.explainer
+      .split(/(?<=[.!?])\s+/)
+      .filter((s) => s.trim().length > 0);
+    assert.equal(
+      sentences.length,
+      2,
+      `${entry.id}: the explainer is two sentences, not ${sentences.length}`,
+    );
+    assert.ok(
+      /^https:\/\/www\.fec\.gov\//.test(entry.sourceUrl),
+      `${entry.id}: the explainer cites the FEC's own page`,
+    );
+    // The organizations-as-filed rule, in the explainers too: a type label
+    // says what a committee IS, never what it is for or who it favors.
+    for (const banned of [
+      "affiliate",
+      "aligned",
+      "progressive",
+      "conservative",
+      "liberal",
+      "right-wing",
+      "left-wing",
+      "dark money",
+      "special interest",
+      "influence-peddl",
+    ]) {
+      assert.ok(
+        !entry.explainer.toLowerCase().includes(banned) &&
+          !entry.label.toLowerCase().includes(banned),
+        `${entry.id}: "${banned}" characterizes rather than states what was filed`,
+      );
+    }
+  }
+  assert.ok(
+    COMMITTEE_TYPE_LABELS.length >= 10,
+    `only ${COMMITTEE_TYPE_LABELS.length} labels — the table is too thin to have replaced the undifferentiated one`,
+  );
+});
+
+test("item 6: nothing is ever typed from a committee's NAME", async () => {
+  const src = readFileSync(
+    join(process.cwd(), "lib", "funding", "committee-types.ts"),
+    "utf8",
+  );
+  // The derivation reads three filed fields and nothing else.
+  const body = src.slice(src.indexOf("export function committeeTypeLabelFor"));
+  assert.ok(body.length > 200, "the derivation was found and read");
+  // Plain substrings, deliberately NOT regexes: `new RegExp("includes(")`
+  // is an unterminated group and throws instead of checking anything —
+  // which is exactly how the first version of this guard failed. A guard
+  // that cannot run is worse than no guard, because it reads as green.
+  for (const banned of [
+    "contributorName",
+    ".name",
+    ".includes(",
+    ".test(",
+    ".match(",
+    ".toLowerCase(",
+  ]) {
+    assert.ok(
+      !body.includes(banned),
+      `the derivation must not inspect names or strings (found "${banned}")`,
+    );
+  }
+  // And it reads exactly the three filed fields.
+  for (const field of ["committeeType", "organizationType", "designation"]) {
+    assert.ok(body.includes(field), `the derivation reads ${field}`);
+  }
+});

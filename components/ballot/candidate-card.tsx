@@ -1,4 +1,8 @@
-import type { CandidateCardData } from "@/lib/ballot/candidate-cards";
+import {
+  THIN_CANDIDATE_LINE,
+  isThinCandidateCard,
+  type CandidateCardData,
+} from "@/lib/ballot/candidate-cards";
 import type { CandidateLinks } from "@/lib/ballot/candidate-sites";
 
 /**
@@ -41,6 +45,10 @@ export function CandidateCard({
   filedSiteUrl?: string | null;
 }) {
   const hasLinks = Boolean(links?.official || links?.campaign || filedSiteUrl);
+  // Item 5, the tester's finding: silent absence becomes named absence. The
+  // line lives here rather than in a page, so it travels to every surface
+  // the thin card renders on.
+  const thin = isThinCandidateCard(card ?? null, hasLinks);
   return (
     <div className="flex gap-3">
       {card?.photoUrl ? (
@@ -135,6 +143,14 @@ export function CandidateCard({
                 {card.phone}
               </a>
             )}
+          </p>
+        )}
+
+        {thin && (
+          // The absence, named. Not muted into a footnote: a reader
+          // skipping this candidate should see that the gap is ours.
+          <p className="mt-1 text-[0.75rem] leading-relaxed text-paper-dim">
+            {THIN_CANDIDATE_LINE}
           </p>
         )}
       </div>

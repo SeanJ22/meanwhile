@@ -191,6 +191,48 @@ export default function TransparencyPage() {
             counsel can close it. If it closes, this page changes in the
             same release.
           </p>
+          <p>
+            Where a contributor is itself a committee, its label — a super
+            PAC, a leadership PAC, a PAC connected to a corporation, a
+            union, a trade association — comes only from the codes that
+            committee filed with the FEC, and tapping the label shows the
+            FEC&apos;s own definition. We never decide what kind of group
+            something is from its name, and where the FEC does not classify
+            a committee, the label stays general.
+          </p>
+        </Section>
+
+        {/* Door 2 of the photo rule (2026-08-14): an official
+            government-published portrait ships with attribution and a
+            documented remove-on-request posture. The posture has to be
+            written down where the person pictured can find it, which is
+            here — the rule and this paragraph land in the same commit. */}
+        <Section title="Photographs of officials">
+          <p>
+            Photographs of officials and candidates come from one of two
+            places, and we record which for every single one. Either the
+            photo carries an explicit licence — a public-domain government
+            work, or an openly licensed image with its licence and
+            photographer recorded — or it is the official portrait a
+            government body publishes to identify its own member, used with
+            a link to the page it came from and credit to that body.
+            Photographs a working photographer is likely to own — campaign
+            headshots, press pictures, wire images — are only ever used with
+            an explicit licence.
+          </p>
+          <p>
+            If you are pictured here and would like your photograph removed,
+            write to{" "}
+            <a
+              href="mailto:seanj22@gmail.com"
+              className="underline decoration-dotted underline-offset-2"
+            >
+              seanj22@gmail.com
+            </a>{" "}
+            and we will take it down. You do not have to give a reason, and
+            the rest of the entry stays as it is — the page will simply show
+            initials instead.
+          </p>
         </Section>
 
         <Section title="What happens to the data">

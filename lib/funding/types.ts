@@ -39,6 +39,18 @@ export interface ContributionRow {
   entityType: string | null;
   /** FEC form line number (13A is loans from the candidate). */
   lineNumber: string | null;
+  /**
+   * The contributing COMMITTEE's own typing, as it filed it (item 6,
+   * 2026-08-14). Carried on the Schedule A row's `contributor` object:
+   * `committee_type`, `organization_type` (ORG_TP) and `designation`
+   * (CMTE_DSGN). These three fields are the whole mechanical basis for the
+   * plain "what kind of money" label — see lib/funding/committee-types.ts.
+   * Null on individuals, and on rows collected before the fields were
+   * captured (which fall to the pre-item-6 generic, honestly).
+   */
+  committeeType: string | null;
+  organizationType: string | null;
+  designation: string | null;
 }
 
 export interface CommitteeTotals {

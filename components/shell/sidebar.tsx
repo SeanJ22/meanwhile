@@ -150,6 +150,23 @@ export function Sidebar({
           </button>
         </div>
 
+        {/*
+          Item 2 of the tester's mobile pass (2026-08-14): the ballot link
+          used to sit in this rail's FOOTER, under `mt-auto` — the very
+          bottom of a drawer that on a phone runs under the browser chrome.
+          The tester: "I don't think I would have found that without knowing
+          it existed." It moves to the header, above the fold at every
+          width, in words rather than an icon. The product's core surface
+          does not live at the bottom of a menu.
+        */}
+        <a
+          href={location ? `/ballot?zip=${location.zip}` : "/ballot"}
+          className="sidebar-ballot-entry"
+        >
+          <span>What&apos;s on the ballot</span>
+          <span aria-hidden="true">→</span>
+        </a>
+
         <ViewToggle />
         <ScopeSelectors />
       </div>
@@ -189,17 +206,6 @@ export function Sidebar({
             One line each — the transparency page carries the substance. */}
         <div className="mt-auto border-t border-[var(--panel-border)] px-1 pt-3 pb-2 text-[0.6875rem] leading-relaxed text-muted">
           <p>
-            {/* Same tab, zip attached (2c/2d) — no interstitial asking for a
-                zip the app already knows. The map's bubble is the primary
-                entry point; this stays for readers who look in menus. */}
-            <a
-              href={location ? `/ballot?zip=${location.zip}` : "/ballot"}
-              className="underline decoration-dotted underline-offset-2 hover:text-signal"
-            >
-              What&apos;s on the ballot
-            </a>
-          </p>
-          <p className="mt-1">
             <a
               href="/transparency"
               className="underline decoration-dotted underline-offset-2 hover:text-signal"

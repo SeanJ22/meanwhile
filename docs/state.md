@@ -4,8 +4,28 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-14, third session of the day. This session
-executed the outside tester's recorded feedback: the Rockaway mayor
+Last updated: 2026-08-14, sixth session of the day. This session
+executed the outside tester's **mobile** pass. Arizona was bleeding into
+New Hampshire through the ask box's topic templates and is fenced —
+shared explainer copy is jurisdiction-neutral by rule, place-specific
+truth reaches only its own place, and the guard now audits templates AND
+link targets (M53). The ballot was unreachable on a phone and the fixed
+controls sat over card text: **one root cause**, an unbounded overlay in
+a bounded viewport, measured before it was touched (M54, M55). Her
+four-of-six district types turned out to be **neither stale prefs nor a
+regression** — she was reading a deploy four hours older than the fix,
+and the migration the brief proposed would have migrated nothing (M56).
+Her biggest finding became a non-negotiable: the app can say nothing
+about anyone and still tilt a race, so **equal effort per candidate**
+enters CLAUDE.md and every silent card now names its absence (B13, with
+B14 and V08 recorded). The funding section says what KIND of money it is
+(D48). And the photo rule gained its second door — official
+government-published portraits — which unblocked the state-legislator
+tier whole: **476 of 750 → 535 of 750**, three governors' wrong faces
+replaced, 278 chamber portraits shipped (D50, In progress). Walk: 72
+checks green across four zips. See §22. Before that, the fifth session
+of 2026-08-14 (§21): the faces came back, 16 of 747 → 476 of 750 (D20).
+Before that, the third session of 2026-08-14 (§19): the Rockaway mayor
 stopped wearing Tucson's charter copy (M46, gated, the
 cross-jurisdiction guard); every district layer defaults on and
 Kearsarge renders at 03255 (M47); the governor joined who-governs as a
@@ -4187,3 +4207,320 @@ ballot candidates 33/109, curated locals 3/71, state legislators 0/130.
   rate.
 - Next free tracker ids: A12, B13, D48, M53, P13, R14, T11, V08, X05
   (unchanged - this session edited D20 in place and opened no new rows).
+
+## 22. The 2026-08-14 session (sixth session of 2026-08-14) — the tester's mobile pass: Arizona bleeds again, and the ballot goes missing on phones
+
+Branch `claude/tester-mobile-pass-0814`. The outside tester ran a full
+mobile pass and sent recorded feedback with screenshots. Her overall
+verdict was good — navigation smooth, she found everything without the
+tutorial, the calendar and election header praised. This session is the
+defects underneath that verdict, plus the one finding that is bigger
+than any of them. All dates in this section are wall clock.
+
+### 1 — Arizona bled into New Hampshire through the ask box (M53, gated)
+
+The tester asked **"library" at 03255** and was told about **Pima
+County, Arizona**. The rendered explainer read "in Pima County the
+county board sits as the Library District board" — one jurisdiction's
+content bound to another jurisdiction's key, the exact shape of the
+Rockaway mayor (M46) and of the D40 cache key, in a third place.
+
+**Diagnosed before fixing, and the diagnosis narrowed the claim.** A
+full audit — all 16 topics × all four zips, every rendered sentence and
+every rendered link, resolved live against the real registry — found
+**exactly two contaminations, both the same libraries template** (it
+renders at 07866 and 03255; at the two Arizona zips it is not foreign).
+Every *link target* in every answer already resolved correctly from the
+reader's own coverage: at 03255 the two bodies were Newbury town
+(newbury.nh.gov) and Merrimack County (merrimackcounty.net). So the copy
+was wrong everywhere it rendered, and the links were right — the
+tester's "tapping through landed on the Pima County Library Board" is
+best explained by the sentence itself naming that board as the body to
+approach. **The link half of item 1 was already sound and is now guarded
+rather than fixed**, which is the honest way to report it.
+
+The fix keeps the sourced Pima fact rather than deleting it: shared
+templates are jurisdiction-neutral by rule, and place-specific truth
+moves to a step's `divisionWhy`, resolved against the divisions in the
+reader's OWN coverage (`lib/routing/resolve.ts`). Pima's reader still
+reads "Here the library system is a county library district, and the
+county Board of Supervisors sits as its board"; New Hampshire's reads
+"in some places the county board doubles as the library district's own
+board". This is the topic-template sibling of `DIVISION_OFFICE_BLURBS`.
+
+The guard (`tests/jurisdiction-content.test.ts`) grew three tests: the
+shared templates name no covered place at all; every ask-box answer at
+every covered zip is free of another state's content **and links**, with
+the denominator asserted (64 answers, 200+ rendered strings, and the
+test fails if the audit reads too few); and the regression itself, both
+directions. Proven by reintroducing the string — three tests fail.
+
+### 2 and 3 — one root cause: an unbounded overlay in a bounded viewport (M54, M55)
+
+The tester: the what's-on-the-ballot floater never appears on her phone,
+and the only entry she could find sat at the very bottom of the drawer,
+under the browser chrome. **"I don't think I would have found that
+without knowing it existed."**
+
+Measured at 390×844 before anything was touched. The bottom overlay
+stack was bottom-anchored with **no upper bound**, so the who-governs
+card grew to **893px against an 844px viewport** and its top landed at
+**y = −113**. Everything above the fold went with it:
+
+- the ballot bubble rendered at y=12 and was painted over by the card —
+  present, invisible, untappable (`elementFromPoint` at its centre
+  returned a card row, not the link);
+- the count badge sat at **y = −166**, entirely off screen;
+- the card's own minimize control at **y = −104**, unreachable.
+
+And what *did* stay on top were the fixed controls, sitting over card
+text: the hamburger at (12,12,44×44) and MapLibre's zoom column at
+(349,0,41×70) — which is item 3, the same defect seen from the other
+side. The tester reported two problems; there was one.
+
+Fixes: a `--map-control-band` token reserves the top strip at phone
+width and the bottom stack starts below it, so no fixed control ever
+sits over readable content; the stack has a definite height and the card
+shrinks into it and scrolls internally (`min-height: 0` is what actually
+lets a flex child shrink — without it nothing changes); and the top row
+sits above the stack by **explicit z-index rather than DOM order**,
+because relying on order is what let a tall card bury the ballot in the
+first place.
+
+Then the entry itself, because an invisible floater made visible is not
+the same as a findable one. A pinned **"What's on the ballot →"** row
+now sits in the who-governs card's non-scrolling head — top of the
+surface she was actually reading, in words rather than a 10px pill — and
+the rail's ballot link moved out of the `mt-auto` footer into the
+sidebar header. Verified in-browser: bubble tappable at y=12, card entry
+at y=180 still pinned after the body scrolls 298px, rail entry second in
+the header.
+
+### 4 — the district-type defaults: the brief's hypothesis was wrong (M56)
+
+The tester saw roughly four of six district types checked and enabled
+the rest by hand. The brief's stated likely cause was stale device-local
+layer preferences, to be cleared by a one-time versioned migration.
+
+**Diagnosed before building it, and the hypothesis does not survive:
+district-type selection is not persisted anywhere.** It lives in the
+in-memory UI store and is rebuilt from `DEFAULT_DISTRICT_TYPES` on every
+load; the only persisted district key is the `wtp.show_districts` master
+toggle, which stores one flag. No device can be carrying a stale layer
+selection, and the migration would have migrated nothing. Nor is it a
+defaults regression — a fresh load renders all six checked, verified
+in-browser.
+
+The actual cause is timing. Her pass began **2026-08-14 18:32 UTC**; the
+all-on default (`87812f8`) merged to `main` at **22:59 UTC the same
+day**. She was reading the previous deploy, whose default was exactly
+three types — congressional, state-house, county — plus the "Show
+districts" master toggle, which is the fourth checked box she counted.
+
+Both device profiles the brief asked for were still verified: a fresh
+device, and a device carrying pre-fix `wtp.show_districts=1`. Both land
+all six on. A device carrying an explicit `"0"` keeps the overlay off,
+because that is the reader's own choice and not staleness. **No
+migration was built** — recorded here so nobody builds one later — and a
+guard now pins the fact that keeps this answer true: the moment a
+district-type selection starts being written to device storage, the
+defaults stop being authoritative and a migration IS owed.
+
+### 5 — the tester's biggest finding, and a new non-negotiable (B13, B14, V08)
+
+Her words, recorded verbatim because they are the origin of the rule:
+
+> "Karen might be the perfect fit for me, but she has no information
+> here. So I'm only going to look at the folks that do have
+> information... how could using this app actually impact voter outcomes
+> instead of collect information from voters."
+
+This is a neutrality failure none of the existing rules catch. The app
+never ranks, never scores, never recommends — and still tilts the race,
+because a thin card tracks incumbency and campaign professionalism
+rather than merit, and a reader rationally skips the candidates it says
+nothing about. Silence is not neutral.
+
+Two things shipped. **The absence is named**: every candidate whose card
+carries no photo, no words of their own, no contact and no link now
+renders "We haven't found much about this candidate yet." — one
+sentence, full stop, no apology and no second sentence, on the card
+component itself so it travels to every surface a thin card reaches.
+**Of 136 ballot candidates walked, 101 are thin today** (heuristic walk
+of the three filed sets plus the certified lineup — the method is stated
+because it is not a registry query). That number is the case for B14.
+
+And **equal effort per candidate within a race** is now a CLAUDE.md
+non-negotiable: hunts for candidate information run for every candidate
+in a contest to the same rung depth, misses recorded per candidate. A
+hunt that stops when the well-covered candidates are done has produced a
+ranking. B14 (the blurb-equalization hunt) and V08 (the candidate
+coverage-gap report, the author's idea — a candidate-side surface
+showing a candidate our coverage of them versus their opponents, never
+any reader data) are recorded, not built.
+
+### 6 — PAC typing: the funding section says what kind of money (D48)
+
+The author's item, validated by the tester the same day: every committee
+in her screenshot read "a political action committee". The
+organizations-as-filed rule gains its plain-language layer.
+
+The data path turned out cheaper than feared — the FEC's Schedule A row
+carries a `contributor` object with the contributing committee's own
+`committee_type`, `organization_type` and `designation`, so no second
+lookup pass was needed, only capturing three fields the fetcher was
+discarding. The snapshot was re-fetched (121 FEC requests, 213 rows;
+**75 of 105 committee rows carry filed typing**, 30 carry none and keep
+the honest generic).
+
+`lib/funding/committee-types.ts` is the whole mapping, one
+author-reviewable file, derived mechanically and never from a name — a
+guard asserts the derivation contains no string inspection at all. Each
+label taps open two sentences sourced to the FEC's own pages, both
+fetched and verified this session (the committee-type code descriptions
+page, and the master-file description page for ORG_TP and CMTE_DSGN).
+
+**Caught by reading the output before shipping**, which is the point of
+reading the output: designation `J` (joint fundraiser) files under
+committee type `S` or `N`, so a type-first ordering rendered DUCKWORTH
+KIM VICTORY FUND as "another candidate's campaign committee" and BOOKER
+VICTORY FUND as a plain PAC. The designation is the more specific filed
+fact and now wins. Over the snapshot the labels land as: 39 joint
+fundraising, 16 hybrid PAC, 16 organization, 16 the candidate's own
+money, 7 leadership PAC, 6 PAC connected to a corporation, 3 trade
+association, 2 labor union, 1 membership organization.
+
+One guard in this batch failed loudly and deserved to: the
+never-type-from-a-name test built its patterns with `new RegExp` over
+strings like `"includes("`, which is an unterminated group and throws
+rather than checking anything. **A guard that cannot run reads as
+green.** Rewritten with plain substrings.
+
+### 6b — photos, round 2: the second door, and 281 more faces (D50, In progress)
+
+The author's decision, into CLAUDE.md: a photo now ships on **an
+explicit recorded licence OR an official government-published
+portrait** — the portrait a body publishes to identify its own member —
+with the source recorded, attribution to that body, and a documented
+remove-on-request posture. That posture is now a section on the
+transparency page, shipped in the same commit as the rule, because a
+remove-on-request promise that the person pictured cannot find is not a
+posture. Commercial photography still needs an explicit licence, no
+exceptions. Every manifest row now records **which basis** it ships on.
+
+**476 of 750 → 535 of 750.** The manifest holds 721 portraits — 281
+under door 2, 440 under a recorded licence — and 410 recorded misses,
+each carrying its rung.
+
+**Three wrong faces first.** Katie Hobbs shipped a Gage Skidmore event
+candid; the state's own studio portrait replaced it. Checking the other
+two governors while there — which the brief asked for and which was the
+right instinct — found both also wrong in kind: **Kelly Ayotte was
+wearing her 112th-Congress U.S. SENATE portrait**, a different office
+and roughly fourteen years old, and Mikie Sherrill a Commons headshot.
+All three now carry their own offices' official portraits. New
+Hampshire's site 403s a plain client; the portrait came back on the next
+rung through a real browser at the same published URL — a public page,
+no access control touched, which is the ladder working exactly as
+CLAUDE.md describes.
+
+**Then the tier the old rule blocked whole.** Every state legislator's
+chamber member page was walked, joined by the chamber's own stable id
+already in our roster: **620 attempted, 281 portrait URLs found, 339
+misses recorded; 278 staged and shipped, 3 rejected on shape** (banner
+crops at 87×152, 200×159, 199×150). By chamber: **AZ 90/90, NJ 118/120,
+NH 73/410**.
+
+Three rungs had to be found rather than assumed, and each is worth the
+playbook:
+
+- **NJ's member pages are client-rendered** — the served HTML is a
+  loading spinner, so the plain-client rung returns nothing.
+  Instrumenting `window.fetch` in a real browser surfaced the endpoint
+  the page itself calls, `/api/legislatorData/legislatorBio/{rosterId}`,
+  keyed by the roster id we already hold. 118 of 120.
+- **NH names its portrait files after the member id**, so the first pass
+  rejected all 410 for an alt text reading "member picture". Widening
+  the confirmation to accept the chamber's own id in the file name — a
+  structural signal, stronger than a surname match — recovered 73.
+- **NH's remaining 337 are an honest absence on their side**: the House
+  serves a literal `nophoto.jpg` for members it publishes no portrait
+  of. The miss reason now says that in those words rather than reading
+  as our hunt failing.
+
+Of the 278, **59 land inside the census's 130-legislator universe** (the
+legislators actually rendered at the four covered zips); the other 219
+serve legislators outside current coverage and are banked. Verified
+twice by eye: a 22-face contact sheet of staged images before shipping
+and a 20-face sheet of the committed files afterwards, the latter also
+confirmed serving 200 with real bytes from our origin, 20 of 20.
+
+**What 6b did NOT reach, recorded as open work rather than as a
+finding:** the Commons sweep for the 71 remaining NH legislators, the 68
+curated locals, the ~76 ballot challengers, and the drafted email rung —
+`docs/photo-requests.md` was not written. D50 stays **In progress** and
+those rungs are its remaining work. The brief's cut guidance put the
+Hobbs verification and the chamber fetches first; both are done, and the
+thinning fell on the email drafts, as it authorised.
+
+### 6c — LegiScan, recorded and deliberately not fetched (D49)
+
+Row only. Nothing was fetched, no adapter written, no dependency added —
+adding an external source is an ask-before item. The evaluation the row
+names is the anchor for a future state-layer session: terms read against
+BOTH the free consumer app and the commercial data layer separately,
+AZ/NJ/NH roll-call coverage verified specifically rather than in
+general, and per-key distinctness proven before any id join ships.
+
+### 7 — the walk
+
+`scripts/tester-walk-0814e.mts`, 390×844, cold entry, all four zips:
+**72 checks green, 0 failed** (18/18 at each). `docs/tester-pass.md` is
+superseded and carries the gate screenshots and the honest notes.
+
+Two of the walk's own failures were **script** bugs, not app bugs, and
+are worth recording because both would have read as red on a working
+product: `[data-ask-box]` matches the sidebar rail's hidden copy first
+at phone width, so the item-1 gate reported "the ask box is
+unreachable" when it was on screen the whole time; and a one-level
+ancestor of that input captures the word "Ask" and none of the answer,
+so the link check saw zero links. Reading the failure instead of
+believing it is what separated them from real defects.
+
+### Deltas since the tester began, 2026-08-14 18:32 UTC
+
+Queried directly, not read off the daily report:
+
+- **Reactions: 20 of the store's 21 all-time rows** landed in this
+  window — FEDERAL_VOTE 10, CANDIDATE 7, CONTRIBUTOR_REACTION 2,
+  FUNDING_TOTAL_REACTION 1. **2 are quarantined** by `suspect_reason`
+  and excluded from every aggregate unconditionally; nothing was
+  auto-deleted, and the author decides.
+- **Search log: 208 of 511 all-time rows** — SEARCH 66, QUESTION_ASKED
+  42, FILTER_APPLIED 41, OFFICIAL_OPENED 40, BODY_OPENED 10,
+  DISTRICT_SELECTED 9. The 42 questions are the ask box's roadmap; the
+  identifier-free rule is unchanged and the two stores still share no
+  joinable column.
+
+`docs/intake-report.md` was regenerated and flags nothing: every day
+sits inside the trailing normal range. Six limiter rows remain,
+transient, joined to nothing.
+
+### Open, and for counsel
+
+- FOR COUNSEL, and now **narrower**: the all-rights-reserved finding on
+  the three legislature sites is no longer blocking, because door 2 is a
+  different basis from a licence — these are official portraits a
+  chamber publishes to identify its own members, used with attribution
+  and remove-on-request. If counsel disagrees with door 2 as applied to
+  chamber portraits, **281 rows are a single filter away** (`basis:
+  "OFFICIAL_PORTRAIT"`), which is the ripcord doctrine's shape even
+  though this is not a flagged feature.
+- D50's remaining rungs: Commons for the 71 NH legislators, the 68
+  curated locals, the ~76 ballot challengers, and the drafted email
+  batch.
+- B14 (blurb equalization) is the equal-effort rule's first debt: 101 of
+  136 ballot candidates are thin today.
+- D49 (LegiScan) is recorded, unfetched.
+- Next free tracker ids: **A12, D51, M57, P13, R14, T11, V09, X05**
+  (this session opened M53–M56, B13, B14, V08, D48, D49, D50).

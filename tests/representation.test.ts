@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
@@ -313,4 +313,65 @@ test("3h: free scrolling never re-expands the who-governs card; a typed zip does
   // NOT pop the card - data refreshes silently under the bubble.
   assert.equal(noticeShouldExpand("settled", "85641", "85701"), false);
   assert.equal(noticeShouldExpand("settled", "85641", null), false);
+});
+
+/**
+ * Item 4 of the tester's mobile pass (2026-08-14). She reported roughly
+ * four of the six district types checked and enabled the rest by hand. The
+ * brief's stated hypothesis was stale device-local layer preferences from
+ * before the all-on default, to be cleared by a one-time versioned
+ * migration.
+ *
+ * Diagnosed before building it, and the hypothesis is wrong in a way worth
+ * pinning: **the district-type selection is not persisted anywhere.** It
+ * lives in the in-memory UI store and is rebuilt from DEFAULT_DISTRICT_TYPES
+ * on every load, so no device can be carrying a stale one and a migration
+ * would have migrated nothing. The actual cause was timing — her pass began
+ * 2026-08-14 18:32 UTC and the all-on default merged to main at 22:59 UTC
+ * the same day, so she was reading the previous deploy, whose default was
+ * exactly three types plus the "Show districts" master toggle.
+ *
+ * This test is what keeps that answer true. The moment a district-type
+ * selection starts being written to device storage, the defaults stop being
+ * authoritative on a returning reader's device and the tester's report
+ * becomes reproducible for real — at which point a migration IS owed.
+ */
+test("district-type selection is never persisted — the defaults stay authoritative on every device", () => {
+  const sources = [
+    "lib/state/defaults.ts",
+    "lib/state/reducer.ts",
+    "lib/state/provider.tsx",
+    "hooks/use-district-layer.ts",
+    "components/shell/filters-area.tsx",
+  ];
+  let readFiles = 0;
+  for (const relative of sources) {
+    const path = join(ROOT, relative);
+    if (!existsSync(path)) continue; // a rename is not a failure; the sweep below is
+    readFiles++;
+    const src = readFileSync(path, "utf8");
+    const storageLines = src
+      .split("\n")
+      .filter((line) => /localStorage|sessionStorage/.test(line));
+    for (const line of storageLines) {
+      assert.ok(
+        !/districtTypes|district_types|district-types/i.test(line),
+        `${relative}: district-type selection must not touch device storage — "${line.trim()}"`,
+      );
+    }
+  }
+  assert.ok(readFiles >= 3, `only ${readFiles} state sources were read — the sweep did not run`);
+
+  // The one district key that IS persisted is the master toggle, and it
+  // stores a single flag, not a type list. An explicit "0" is the reader's
+  // own choice and stays honored — that is not staleness to migrate away.
+  const layer = readFileSync(join(ROOT, "hooks/use-district-layer.ts"), "utf8");
+  assert.ok(
+    /wtp\.show_districts/.test(layer),
+    "the master toggle is the only persisted district preference",
+  );
+  assert.ok(
+    /raw === "0" \? OFF : ON/.test(layer),
+    "never-stored defaults ON; only an explicit off is honored",
+  );
 });

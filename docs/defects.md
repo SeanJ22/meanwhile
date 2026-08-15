@@ -132,3 +132,33 @@ record. Row pointers:
 - Found BY the walk, not reported: **M52** (Done) — overlays pushed
   history state and Next remounted them; no official's full card could
   open at phone width. The prior session's "click dead" mystery, solved.
+
+## 2026-08-14 — the tester's mobile pass (arrived as the session brief)
+
+The outside tester's recorded mobile feedback was triaged and delivered
+as the sixth 08-14 session's brief; committed at `docs/session-brief.md`
+for the record. Row pointers:
+
+- Arizona bleeding into New Hampshire through the ask box's topic
+  explainer templates → **M53** (Done, gated: the templates were outside
+  last session's cross-jurisdiction guard; the audit found exactly two
+  contaminations and proved the link targets were already sound).
+- The ballot unreachable on a phone, and fixed controls over card text →
+  **M54** and **M55** (both Done, ONE root cause: an unbounded bottom
+  overlay stack, so the who-governs card reached 893px against an 844px
+  viewport and its top sat at y = −113).
+- Her four-of-six district types → **M56** (Done, and a deliberate
+  NO-migration: the selection is not persisted anywhere; she was on a
+  deploy four hours older than the fix).
+- The thin-candidate line and equal effort per candidate → **B13**
+  (Done, plus a CLAUDE.md non-negotiable), with **B14** (blurb
+  equalization) and **V08** (the candidate coverage-gap report) recorded.
+- PAC typing on the funding section → **D48** (Done).
+- Photos round 2, door 2 → **D50** (In progress: three governors' wrong
+  faces replaced and 278 chamber portraits shipped; the Commons sweep,
+  the curated locals, the challengers and the email drafts remain).
+- LegiScan → **D49** (recorded, deliberately not fetched).
+- Found BY the session, not reported: **Kelly Ayotte was wearing her
+  112th-Congress U.S. Senate portrait** — a different office, roughly
+  fourteen years old — and **Mikie Sherrill** a Commons headshot. Only
+  Hobbs was in the brief; checking the neighbours found two more.

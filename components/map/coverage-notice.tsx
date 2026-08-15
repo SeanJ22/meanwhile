@@ -369,9 +369,9 @@ function CoverageBody({
       )}
 
       {shown.length > 0 && (
-        <p className="mt-2.5 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-local">
-          Local
-        </p>
+        // Structural label (design pass): organizes, confident, with its
+        // shelf rule — never smaller than the names it organizes.
+        <p className="t-structure mt-3 text-local">Local</p>
       )}
       {shown.length > 0 && (
         <ul className="mt-1 space-y-1">
@@ -591,9 +591,7 @@ function CoverageBody({
               than implied complete. */}
           {(stateSeats.length > 0 || statewideExecutives.length > 0) && (
             <>
-              <p className="mt-2.5 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-state">
-                State
-              </p>
+              <p className="t-structure mt-3 text-state">State</p>
               <ul className="mt-1 space-y-1">
                 {stateSeats.map((seat) => (
                   <li
@@ -657,9 +655,7 @@ function CoverageBody({
               matches every ballot and source the app cites. */}
           {(federalSeats.length > 0 || senators.length > 0) && (
             <>
-              <p className="mt-2.5 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-national">
-                Federal
-              </p>
+              <p className="t-structure mt-3 text-national">Federal</p>
               <ul className="mt-1 space-y-1">
                 {federalSeats.map((seat) => (
                   <li

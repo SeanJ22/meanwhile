@@ -66,7 +66,7 @@ const context = await browser.newContext({
 // Seed localStorage before the app's first paint, so the run starts in the
 // state we want rather than clicking through to it.
 await context.addInitScript(
-  ({ zip, theme, districts }) => {
+  ({ zip, theme, districts, tutorial }) => {
     try {
       if (theme === "light") localStorage.setItem("wtp.theme", "light");
       else localStorage.removeItem("wtp.theme");
@@ -81,11 +81,16 @@ await context.addInitScript(
       }
 
       localStorage.setItem("wtp.show_districts", districts ? "1" : "0");
+
+      // The first-run tour covers the surfaces most shots are of. Seeded
+      // seen unless the shot is OF the tour (--tutorial).
+      if (tutorial) localStorage.removeItem("wtp.tutorial_seen");
+      else localStorage.setItem("wtp.tutorial_seen", "1");
     } catch {
       // Nothing to do; the shot just starts from defaults.
     }
   },
-  { zip, theme, districts: flag("districts") },
+  { zip, theme, districts: flag("districts"), tutorial: flag("tutorial") },
 );
 
 // The Next dev-mode indicator floats over the corner of the app in development
@@ -132,6 +137,23 @@ if (typedZip) {
   await page.fill(".welcome-card input[type=text]", typedZip);
   await page.press(".welcome-card input[type=text]", "Enter");
   await page.waitForTimeout(500);
+}
+
+// Type a question into the ask box and submit it. --ask captures the
+// ANSWER (waits out the ~3s beat); --askbeat captures the BEAT itself
+// (shoots mid-beat). Presentation-only driving; nothing new is logged
+// beyond what a real ask logs.
+const askQuestion = arg("ask") ?? arg("askbeat");
+if (askQuestion) {
+  // Two instances can mount (card and rail) — prefer the who-governs
+  // card's, whose answer stays in the viewport; fall back to any visible.
+  const inCard = page.locator(".coverage-notice [data-ask-box]:visible");
+  const box = (await inCard.count())
+    ? inCard.first()
+    : page.locator("[data-ask-box]:visible").first();
+  await box.fill(askQuestion);
+  await box.press("Enter");
+  await page.waitForTimeout(process.argv.includes("--askbeat") ? 900 : 3600);
 }
 
 // Click a labelled control — a district-type checkbox, a filter chip —

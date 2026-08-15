@@ -20,9 +20,13 @@
  * No vendor is contacted — that is the next step, not this one.
  */
 
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+
 import { resolveZip } from "../lib/geo/zcta.ts";
 import { coverageAt } from "../lib/registry/server.ts";
 import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
+import type { Registry } from "../lib/registry/types.ts";
 
 const DEFAULT_ZIPS = ["03255", "07866"];
 
@@ -35,6 +39,16 @@ async function main() {
   const targets = zips.length ? zips : DEFAULT_ZIPS;
 
   const wiring = new Map(SOURCE_WIRING.map((w) => [w.bodyId, w]));
+
+  const registry = JSON.parse(
+    await readFile(
+      join(process.cwd(), "lib", "registry", "registry.json"),
+      "utf8",
+    ),
+  ) as Registry;
+  const registryTypes = new Map(
+    registry.bodies.map((b) => [b.id, b.agendaSourceType]),
+  );
 
   for (const zip of targets) {
     const resolved = resolveZip(zip);
@@ -55,10 +69,15 @@ async function main() {
             : body.lookedAt
               ? "NOT-INGESTED"
               : "NOT-ATTEMPTED";
+        // The vendor for an unwired body comes from the registry row, which
+        // `CoveredBody` does not carry — it is a build output, read here
+        // rather than re-derived, so the table names the portal a hunt would
+        // be walking into.
+        const registryType = registryTypes.get(body.bodyId);
         const vendor = wired
           ? wired.agendaSourceType
-          : body.agendaSourceType && body.agendaSourceType !== "NONE"
-            ? body.agendaSourceType
+          : registryType && registryType !== "NONE"
+            ? registryType
             : "—";
         return {
           state,

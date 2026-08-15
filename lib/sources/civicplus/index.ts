@@ -163,6 +163,41 @@ function statusOf(startsAt: string, now: Date): MeetingStatus {
   return Date.parse(startsAt) < now.getTime() ? "CONCLUDED" : "SCHEDULED";
 }
 
+/**
+ * Whether the feed is announcing a cancellation (2026-08-15).
+ *
+ * **CivicPlus cancels a meeting by editing the SUMMARY text**, not by setting
+ * the iCal `STATUS` property — Rockaway's feed carries `"Board of Adjustment
+ * Meeting Cancelled 8/18/26"` as a live VEVENT with a real DTSTART. A
+ * `summaryMatch` prefix therefore matches it, and without this it would
+ * render as a sitting that is going to happen. A canceled meeting is itself
+ * news and is kept; it is just never allowed to say SCHEDULED.
+ *
+ * Both spellings, because the township uses the British one and the next
+ * township will not.
+ */
+export function isCancelledSummary(summary: string): boolean {
+  return /\bcancell?ed\b/i.test(summary);
+}
+
+/**
+ * The venue string, with a notice block written into it removed (2026-08-15).
+ *
+ * The same cancellation the SUMMARY announces is also pasted into `LOCATION`
+ * as an HTML paragraph in front of the address:
+ *
+ *   `<p>BOARD OF ADJUSTMENT MEETING CANCELLED AUGUST 18, 2026. …</p> -   Rockaway NJ 07866`
+ *
+ * The address after it is the same string every other sitting of that body
+ * carries and resolves through the venue cache; without this, both canceled
+ * sittings dropped as `unknownVenue`. This trims a notice the publisher put
+ * in the wrong field — it never supplies a venue that was not published.
+ */
+export function locationWithoutNotice(location: string): string {
+  const close = location.lastIndexOf("</p>");
+  return close >= 0 ? location.slice(close + "</p>".length) : location;
+}
+
 export function makeCivicPlusSource(
   wiringRows: BodySourceWiring[],
   fetchImpl?: typeof fetch,
@@ -181,6 +216,16 @@ export function makeCivicPlusSource(
 
     for (const { wiring, ical, agendaCenter, collectedAt } of raw) {
       const summaryMatch = wiring.config.summaryMatch ?? "";
+      // The body's own published name, where the feed's SUMMARY is a sitting
+      // label rather than a body ("Planning Board Meeting"). Read off the
+      // township's own page and cited on the wiring row; never minted.
+      const bodyName =
+        wiring.config.bodyName || summaryMatch || wiring.publishingOrg;
+      // Scoped to THIS row, not to the division. Three Rockaway bodies now
+      // share one ocdId, and a set keyed on the division would let the
+      // council's Tuesday suppress the planning board's Tuesday — a body's
+      // meeting vanishing because a different body met the same day.
+      const rowDates = new Set<string>();
 
       for (const event of parseIcalEvents(ical)) {
         if (summaryMatch && !event.summary.includes(summaryMatch)) {
@@ -202,20 +247,23 @@ export function makeCivicPlusSource(
           event.tzid ?? wiring.timeZone,
         );
 
-        if (isPlacelessLocation(event.location)) {
+        const eventLocation = locationWithoutNotice(event.location);
+        if (isPlacelessLocation(eventLocation)) {
           drops.placeless++;
           continue;
         }
-        const venue = resolveVenue(SOURCE_NAME, wiring.ocdId, event.location);
+        const venue = resolveVenue(SOURCE_NAME, wiring.ocdId, eventLocation);
         if (!venue) {
           drops.unknownVenue++;
           continue;
         }
 
+        rowDates.add(startsAt.slice(0, 10));
+
         meetings.push({
           id: `${SOURCE_NAME}:${wiring.config.slug}:${event.uid}`,
           ocdId: wiring.ocdId,
-          bodyName: summaryMatch || event.summary,
+          bodyName,
           title: event.summary,
           startsAt,
           timeZone: wiring.timeZone,
@@ -230,7 +278,9 @@ export function makeCivicPlusSource(
           // honest value — never a constructed AgendaCenter URL.
           agendaUrl: null,
           jurisdiction: wiring.jurisdiction,
-          status: statusOf(startsAt, now),
+          status: isCancelledSummary(event.summary)
+            ? "CANCELED"
+            : statusOf(startsAt, now),
           provenance: {
             sourceUrl: wiring.config.icalUrl,
             sourceOrg: wiring.publishingOrg,
@@ -253,17 +303,13 @@ export function makeCivicPlusSource(
       const categoryId = wiring.config.agendaCenterCategoryId;
       if (!agendaCenter || !categoryId) continue;
 
-      const seenDates = new Set(
-        meetings
-          .filter((m) => m.ocdId === wiring.ocdId)
-          .map((m) => m.startsAt.slice(0, 10)),
-      );
       const venue = soleVenueForBody(SOURCE_NAME, wiring.ocdId);
       const archiveUrl = `${wiring.config.agendaCenterUrl}`;
 
       for (const sitting of parseAgendaCenter(agendaCenter, categoryId)) {
-        // The feed's own row for a date, with its real time, always wins.
-        if (seenDates.has(sitting.date)) continue;
+        // The feed's own row for a date, with its real time, always wins —
+        // for THIS body. `rowDates` is per wiring row, not per division.
+        if (rowDates.has(sitting.date)) continue;
         if (!venue) {
           drops.unknownVenue++;
           continue;
@@ -276,8 +322,8 @@ export function makeCivicPlusSource(
         meetings.push({
           id: `${SOURCE_NAME}:${wiring.config.slug}:archive:${sitting.date}`,
           ocdId: wiring.ocdId,
-          bodyName: summaryMatch || wiring.publishingOrg,
-          title: summaryMatch || wiring.publishingOrg,
+          bodyName,
+          title: bodyName,
           startsAt,
           startPrecision: "DAY",
           timeZone: wiring.timeZone,

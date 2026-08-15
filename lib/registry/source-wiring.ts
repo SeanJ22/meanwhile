@@ -329,6 +329,72 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     verifiedAt: "2026-08-15",
   },
 
+  // The township's OTHER two live boards — the depth session, 2026-08-15.
+  //
+  // **The boards are in a different calendar category from the council.**
+  // The wired council feed is `catID=25`; probing the ids found `catID=30`,
+  // a second calendar carrying the Planning Board and the Board of
+  // Adjustment with real start times. Most other ids return a 477-byte empty
+  // calendar. That one probe is the whole density story for this township:
+  // 07866 had one municipal body and now has three.
+  //
+  // The archive halves are AgendaCenter categories 4 and 3, each id read off
+  // its own `<div id="cat<N>">` block's heading in the DOM — never by
+  // document order, which would have filed one board's meetings under
+  // another's.
+  //
+  // Two more bodies exist on that page and are NOT wired, deliberately:
+  // the Environmental Commission (category 5, nothing since 2019) and the
+  // Board of Assessment Commissioners (category 7, one sitting in 2022).
+  // Both are registry rows carrying the finding; neither publishes anything
+  // the served 90-day window could render, and inventing a source for them
+  // would be the opposite of coverage.
+  {
+    bodyId:
+      "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#planning-board",
+    ocdId:
+      "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+    agendaSourceType: "CIVICPLUS",
+    jurisdiction: "Rockaway Township, NJ",
+    publishingOrg: "Rockaway Township Planning Board",
+    timeZone: "America/New_York",
+    config: {
+      slug: "rockaway_township_planning_board",
+      icalUrl:
+        "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
+      // The feed's own SUMMARY text, verbatim. The same feed carries the
+      // Board of Adjustment and two civic events, so the match is required.
+      summaryMatch: "Planning Board Meeting",
+      // The body's published name, from the township's own page heading at
+      // /212/Planning-Board — the feed's SUMMARY labels the sitting, not the body.
+      bodyName: "Planning Board",
+      agendaCenterUrl: "https://www.rockawaytownship.org/AgendaCenter",
+      agendaCenterCategoryId: "4",
+    },
+    verifiedAt: "2026-08-15",
+  },
+  {
+    bodyId:
+      "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment",
+    ocdId:
+      "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+    agendaSourceType: "CIVICPLUS",
+    jurisdiction: "Rockaway Township, NJ",
+    publishingOrg: "Rockaway Township Board of Adjustment",
+    timeZone: "America/New_York",
+    config: {
+      slug: "rockaway_township_board_of_adjustment",
+      icalUrl:
+        "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
+      summaryMatch: "Board of Adjustment Meeting",
+      // Same, from /211/Board-of-Adjustment.
+      bodyName: "Board of Adjustment",
+      agendaCenterUrl: "https://www.rockawaytownship.org/AgendaCenter",
+      agendaCenterCategoryId: "3",
+    },
+    verifiedAt: "2026-08-15",
+  },
+
   // ── Granicus IQM2 ───────────────────────────────────────────────────────
   // Calendar.aspx?From=&To= is server-rendered with future meetings, and each
   // row's tooltip publishes board, type, status, and the venue with street

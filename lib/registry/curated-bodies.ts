@@ -42,6 +42,11 @@ const CLERKSBOARDS = "https://clerksboards.tucsonaz.gov/boards/?board=";
 
 const TUCSON_OCD = "ocd-division/country:us/state:az/place:tucson";
 
+/** Rockaway Township's own archive page — every board row below cites it. */
+const ROCKAWAY_AGENDA_CENTER = "https://www.rockawaytownship.org/AgendaCenter";
+const ROCKAWAY_OCD =
+  "ocd-division/country:us/state:nj/county:morris/place:rockaway_township";
+
 const COLLECTED = "2026-08-14";
 
 /**
@@ -226,7 +231,94 @@ export const CURATED_BODIES: Body[] = [
   // NOT_ATTEMPTED — the existence claim is Census's, the agenda hunt is
   // still owed, and there is deliberately no way to record "gave up". ──────
   ...specialDistrictRows(),
+
+  // ── The depth session (2026-08-15): Rockaway Township's other boards ────
+  // One division, many bodies — the same shape as Tucson's, and the reason
+  // 07866 read thin. The township's AgendaCenter enumerates exactly five
+  // bodies as `<div class="listing" id="cat<N>">` blocks; the Township
+  // Council was already a row, and these are the other four, named from the
+  // page's own headings with the id bound to its heading in the DOM rather
+  // than by document order.
+  ...rockawayBoardRows(),
 ];
+
+function rockawayBoardRows(): Body[] {
+  const collected = "2026-08-15";
+  const rows: Array<{
+    slug: string;
+    name: string;
+    categoryId: string;
+    /** LIVE rows are wired in SOURCE_WIRING; the others say why not. */
+    live: boolean;
+    homepage: string;
+  }> = [
+    {
+      slug: "planning-board",
+      name: "Planning Board",
+      categoryId: "4",
+      live: true,
+      // Fetched 2026-08-15: 200, <h1>Planning Board</h1>.
+      homepage: "https://www.rockawaytownship.org/212/Planning-Board",
+    },
+    {
+      slug: "board-of-adjustment",
+      name: "Board of Adjustment",
+      categoryId: "3",
+      live: true,
+      // Fetched 2026-08-15: 200, <h1>Board of Adjustment</h1>.
+      homepage: "https://www.rockawaytownship.org/211/Board-of-Adjustment",
+    },
+    {
+      // The archive holds four 2019 sittings and nothing since; no calendar
+      // feed in any probed category carries this body, and the township's
+      // sitemap and staff directory carry no page for it at all (checked
+      // 2026-08-15 — the only "Environmental" hit is a health-specialist
+      // job title). KNOWN_UNCOVERED, not NO_SOURCE_FOUND: the archive IS a
+      // located source, it is simply not one the served 90-day window can
+      // render anything from. Its homepage is the archive, because that is
+      // the only page the township publishes about this body.
+      slug: "environmental-commission",
+      name: "Environmental Commission",
+      categoryId: "5",
+      live: false,
+      homepage: "https://www.rockawaytownship.org/AgendaCenter",
+    },
+    {
+      // One archived sitting, 2022-03-30. Same reasoning as above, except
+      // this one does have its own page.
+      slug: "board-of-assessment-commissioners",
+      name: "Board of Assessment Commissioners",
+      categoryId: "7",
+      live: false,
+      // Fetched 2026-08-15: 200, <h1>Board of Assessment Commissioners</h1>.
+      homepage:
+        "https://www.rockawaytownship.org/505/Board-of-Assessment-Commissioners",
+    },
+  ];
+
+  return rows.map((row) => ({
+    id: `${ROCKAWAY_OCD}#${row.slug}`,
+    ocdId: ROCKAWAY_OCD,
+    // Sourced: the township's own AgendaCenter heading for category
+    // `row.categoryId`, read 2026-08-15.
+    name: row.name,
+    bodyClass: "COMMISSION" as const,
+    bodyOrigin: "CURATED" as const,
+    coverageStatus: row.live ? ("LIVE" as const) : ("KNOWN_UNCOVERED" as const),
+    agendaSourceType: row.live ? ("CIVICPLUS" as const) : ("HTML" as const),
+    agendaSourceRef: ROCKAWAY_AGENDA_CENTER,
+    meetingCadence: null,
+    homepageUrl: row.homepage,
+    demandCount: 0,
+    sourceDataset: "GOV_DIRECTORY" as const,
+    provenance: {
+      sourceUrl: ROCKAWAY_AGENDA_CENTER,
+      sourceOrg: "Rockaway Township",
+      collectedAt: collected,
+      verifiedAt: collected,
+    },
+  }));
+}
 
 function specialDistrictRows(): Body[] {
   const GUS = "2022 Census of Governments government-units listing";

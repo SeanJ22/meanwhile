@@ -1,247 +1,199 @@
-# Session brief — the tester's mobile pass: Arizona bleeds again, and the ballot goes missing on phones
+# Session brief — 2026-08-15
 
-*Executed 2026-08-14 (sixth session of 2026-08-14), branch
-`claude/tester-mobile-pass-0814`. This is the brief as the author wrote it,
-committed for the record; what actually happened is `docs/state.md` §22 and
-`docs/tester-pass.md`.*
+The author's production pass, as delivered. Committed for the record and
+superseding the previous brief; the work it asked for is recorded in
+`docs/state.md` §24 and in tracker rows **M57–M63**, **D50–D52**.
 
-On completion, overwrite `docs/session-brief.md`.
+---
+
+## The counters tell the truth and the faces finish
+
 This session runs unattended. Nobody is available to answer.
 
-* Reversible: cheaper-to-undo, recorded with the rejected alternative, keep
+- Reversible: cheaper-to-undo, recorded with the rejected alternative, keep
   going. Irreversible: skip, tracker row, continue.
-* Hunts never stop — more rungs, `attemptedAt` on every rung. The long way is
-  a way.
-* Browser-heavy steps LAST, inline, no background agents.
-* Live on every push; nothing half-finished to `main`. End with
+- Hunts never stop — more rungs, `attemptedAt` on every rung. The long way
+  is a way.
+- Browser-heavy steps LAST, inline, no background agents.
+- Live on every push; nothing half-finished to `main`. End with
   `pnpm handoff --ship`, verify on `main`, verify the deploy, standing report
   ending with "Needs your hands."
+- **NEW STANDING RULE, this session and forever:** every production probe row
+  a session creates (reactions, log events) is NAMED in the standing report —
+  timestamp and target — so the author can distinguish plumbing from reader
+  signal. The T08 session did this; the 0814f session didn't, and it cost the
+  author a manual investigation. Into CLAUDE.md.
 
-Session-open: read `docs/defects.md` and triage.
+Session-open: read `docs/defects.md` and triage. The Pima/Newbury library
+issue is CLOSED by the author (timing overlap between the 0814c routing fix
+and the tester's pass); do not reinvestigate. The two VELOCITY-quarantined
+rows are confirmed as session probe taps, not the tester's — the limiter
+thresholds are CORRECT, do not retune.
 
-## Context
+A dedicated DESIGN session follows this one; visual/polish work is out of
+scope here except where a fix requires touching a render.
 
-The outside tester ran a full mobile pass and sent recorded feedback with
-screenshots. Overall verdict: navigation smooth, found everything without the
-tutorial, calendar/election header praised. This brief is the defects and the
-one big finding. She tapped many reactions — the store's tester delta is now
-real; the daily intake report should reflect it.
+Correct first. Fast second. Nothing third. Items 1–4 are truth defects and
+lead. Photos ride last but are NEVER CUT.
 
-The photo session (`docs/photo-report.md` as input, brief already written)
-runs IMMEDIATELY AFTER this one — nothing photo-related here beyond item 5's
-line.
+### 1 — The sidebar counters lie (the denominator disease, third sighting)
 
-Correct first. Fast second. Nothing third. Item 1 is a false claim about which
-government serves the reader, live in production, found by the tester. It
-leads and it gates.
+The sidebar reads "6 OFFICIALS" while the officials popup renders 20+ (mayor,
+six council members, governing board, five supervisors, state and federal).
+The DISTRICTS counter renders blank ("—"). The stated-N guard family exists
+and these counters escaped it.
 
-## 1 — Arizona bleeds into New Hampshire through the ask box (GATED)
+- Diagnose: the officials count is almost certainly computed from the
+  district-elected roster set while the popup unions curated locals.
+  Districts blank is its own bug — find it.
+- Fix: every sidebar counter computes from the SAME set its surface renders.
+  One source of truth per number.
+- Extend the stated-N guard to the sidebar counters explicitly: counter value
+  equals rendered rows of its popup/surface, asserted for all four counters
+  at all four zips.
 
-The tester asked "library" at 03255. The rendered answer's explainer copy
-cites Pima County ("in Pima County the county board sits as the Library
-District board"), and tapping through from the Newbury result landed her on
-the PIMA COUNTY LIBRARY BOARD — Arizona content and an Arizona link served to
-a New Hampshire reader. Last session's cross-jurisdiction audit covered
-rosters, curated bodies, and everyday contacts; the ask box's TOPIC EXPLAINER
-TEMPLATES and their LINK TARGETS were outside its scope. Same class as the
-Rockaway mayor: one jurisdiction's content bound to another's key.
+### 2 — Concluded meetings exist everywhere, render only for Tucson
 
-* Diagnose before fixing: find how shared explainer copy and its links are
-  assembled, and every place a topic template carries jurisdiction-specific
-  content or targets.
-* Fix: explainer copy is either jurisdiction-neutral (no named counties,
-  cities, or bodies from elsewhere) or resolved per-jurisdiction from the
-  reader's own registry entries. Every link in an ask-box answer resolves ONLY
-  within the reader's jurisdiction set. An Arizona example may never render at
-  a New Hampshire zip, however illustrative.
-* Extend the cross-jurisdiction guard (last session's mechanical
-  place-name/domain check) to cover ask-box answer templates and their link
-  targets. Audit ALL topics × all four zips for the same bleed; report what
-  was found.
-* Gate: screenshot of the library question at 03255 — zero Arizona references,
-  every link resolving to a New Hampshire body, spot-verified.
+The author sees concluded meetings only at 85701. Vail, Newbury, Rockaway all
+have recent past meetings in reality.
 
-## 2 — The ballot is unreachable on mobile
+- Diagnose: likely only the Legistar adapter (Tucson) was ever asked for past
+  meetings; the other vendors' adapters fetch upcoming only — or the snapshot
+  window excludes history. Say which per adapter.
+- Fix: extend each adapter to fetch concluded meetings where its vendor
+  provides them (match the Tucson window). Where a vendor genuinely does not
+  serve history, the Concluded filter at that jurisdiction says so honestly
+  ("This body's system doesn't publish past meetings") instead of rendering
+  empty.
+- Guard: for every jurisdiction whose vendor serves history, the concluded
+  surface is non-empty OR carries the honest line. Never silent-empty.
 
-The tester: the what's-on-the-ballot floater never appears on her phone; the
-only entry sits at the very bottom, covered by browser chrome. "I don't think
-I would have found that without knowing it existed." The product's core
-surface — reactions, picks card, the CTA header — is invisible to a mobile
-reader who doesn't already know it's there.
+### 3 — The mojibake: a broken em-dash renders in every blurb attribution
 
-* A persistent "What's on the ballot" entry renders at the TOP of the mobile
-  layout (sidebar header / who-governs card — placement judged in the walk,
-  but top, always visible, never behind chrome).
-* Diagnose why the floater fails at phone width and either fix it or retire it
-  honestly on mobile in favor of the top entry — no half-dead floater.
-* Guard: at 390×844, the ballot is reachable within one tap of initial load,
-  asserted in the walk.
+"From the candidate's site [mojibake] cindewarmington.com" — a UTF-8 em-dash
+decoded wrong, everywhere the attribution line renders.
 
-## 3 — Fixed controls cover content at phone width
+- Diagnose where the bytes go wrong (fetch, store, or render) — fix at the
+  SOURCE, not with a display-time patch. Re-run whatever pipeline stored the
+  corrupted strings so the stored data is clean.
+- Guard: a test greps all reader-facing strings (registry, blurbs, summaries,
+  templates) for mojibake byte signatures and fails on any hit.
 
-The hamburger (left) and map zoom +/− (right) sit fixed over text at mobile
-width, permanently obscuring card content behind them (tester screenshot: the
-Kearsarge card header). Fix the layering/layout so controls never sit over
-readable content — reserved gutters, scroll-aware behavior, or repositioning;
-judged in the walk. Check every fixed-position control at phone width, not
-just these two.
+### 4 — Party affiliation missing on who-governs rows (rule regression)
 
-## 4 — District-type defaults: diagnose her four-of-six
+Ayotte shows "Republican" on the ballot and nothing on the who-governs box.
+The standing rule is party in colored font EVERYWHERE it renders. The
+statewide-executive rows (and audit: any other row class) shipped without the
+party join.
 
-Last session shipped all six district-type layers defaulting ON with a
-claims-reachable guard. The tester reports only ~4 were checked and she
-manually enabled the rest. Likeliest cause: her device's stored layer
-preferences predate the fix, and device-local prefs override defaults.
+- Party renders on every officeholder row on every surface: who-governs,
+  officials popup, modals — colored per the existing scheme, sourced as
+  already held.
+- Audit all officials surfaces for rows lacking party where party is held;
+  fix the class. Where party is genuinely not held for an office
+  (nonpartisan local boards), nothing renders — never guess.
+- Guard: any officeholder row whose registry entry carries party must render
+  it.
 
-* Diagnose which it is (stale persisted prefs vs a defaults regression). Say
-  which honestly.
-* If stale prefs: a one-time migration — stored layer selections from before
-  the defaults fix are cleared once (versioned prefs key), after which the
-  reader's own choices persist as normal. Device-local storage rules
-  unchanged.
-* Verify on both profiles: a fresh device and a device carrying pre-fix stored
-  prefs, both landing all-six-on after migration.
+### 5 — "Someone else" on single-candidate contests
 
-## 5 — The thin-candidate line, and the equal-effort principle
+Under "What do you think?" in contests with exactly one candidate, a fourth
+option renders: "Someone else." It is the only honest sentiment measure an
+uncontested race has.
 
-The tester's finding, her words: "Karen might be the perfect fit for me, but
-she has no information here. So I'm only going to look at the folks that do
-have information... how could using this app actually impact voter outcomes
-instead of collect information from voters." The app says nothing about anyone
-and still tilts races through information asymmetry — thin cards track
-incumbency and campaign professionalism, not merit.
+- A NEW reaction enum value, added properly to the server-side validity table
+  (accepted only for single-candidate contest contexts), same identifier-free
+  store, same tier stamping, same honest-outcome rendering (success only on
+  204).
+- The transparency page's reaction language covers the new value in the same
+  commit; the coupling guard extends.
+- Tests: validity (rejected outside single-candidate contexts), storage,
+  rendering. The walk taps one on production — NAME the probe row.
 
-* Every ballot candidate whose card lacks a blurb/photo/contact gets the
-  standard line, in the register: "We haven't found much about this candidate
-  yet." Full stop — no apology, no second sentence. Rendered wherever the thin
-  card renders. Silent absence becomes named absence.
-* Into CLAUDE.md, the principle: equal effort per candidate within a race —
-  hunts for candidate information (photos, blurbs, contacts) are run for every
-  candidate in a contest to the same rung depth, and misses are recorded per
-  candidate. The app's neutrality includes what it fails to find.
-* Tracker row: the blurb-equalization hunt (a sourced one-line description for
-  every ballot candidate, campaign-site or filing-derived, labeled per the
-  blurb-source rule) — a future session's item, not this one's.
-* Tracker row (business): the candidate coverage-gap report — the author's
-  idea. A generated per-race artifact showing a candidate what the app holds
-  on them vs. their opponents (fields present/absent, never reader data). A
-  candidate-side product surface; design later, record now.
-* `state.md` records the tester's finding verbatim as the principle's origin.
+### 6 — Photos: D50 finishes (NEVER CUT)
 
-## 6 — PAC typing: the funding section says what kind of money (the author's item, tester-validated same day)
+The email rung is DEAD by the author's order — the portraits are on the
+states' own pages. Complete the remaining classes under door 2 and the
+existing rules (clean solo portrait or initials; basis recorded; EXIF
+stripped; served from origin; never a wrong face):
 
-Every committee in the tester's screenshot renders "a political action
-committee" — Grant Thornton's PAC, Marsh & McLennan's, the Broadcasters',
-Fidelity's, undifferentiated. The author's standing rule (organizations render
-as filed with committee type) gains its plain-language layer:
+- NH Senate: the roster page the author supplied —
+  https://gc.nh.gov/senate/members/senate_roster.aspx — member pages carry
+  portraits. Fetch all 24 under door 2.
+- NH House: the member pages behind the roster dropdown at
+  https://gc.nh.gov/house/members/ carry photos for members who have them;
+  fetch what exists. The state's own nophoto.jpg means initials — that is the
+  honest end state for a volunteer 400-seat House, recorded per member, and
+  it satisfies equal-effort.
+- Commons sweep for NH members the state lacks, the 68 curated locals, and
+  the ~76 ballot challengers — machine-checkable licenses, attribute-verified.
+- Locals: official jurisdiction/board pages under door 2 first, then Commons.
+- Manifest + generated report updated; new X of 750 with per-tier breakdown;
+  every miss with rungs. D50 → Done or the honest remainder named.
 
-* A fixed, committed mapping table translates FEC committee-type codes and
-  connected-organization categories into plain labels: "a PAC connected to a
-  corporation" / "...a labor union" / "...a trade association" (separate
-  segregated funds by connected-org category), "a super PAC"
-  (independent-expenditure-only), "a leadership PAC," "a party committee,"
-  "the candidate's own committee." Derived MECHANICALLY from FEC fields —
-  where the FEC doesn't classify, "an organization" stays, honestly.
-* The mapping table is author-reviewable in one file; labels render in the
-  register; nothing is ever guessed from a committee's name.
-* Each type label carries a tap-for-explainer: two sentences, 15-year-old
-  register, sourced to the FEC's own definitions page (fetched and verified).
-* Tests: every FEC type code in our snapshot maps or falls to the honest
-  default; no label renders that isn't in the table.
+### 7 — Final pass and handoff
 
-## 6b — Photos, round 2: the second door opens, and every face gets fetched (NEVER CUT — the author's order: all of them)
+Two tracker rows recorded this session (recorded, not built):
 
-The author's decision, into CLAUDE.md: the photo rule gains a second
-acceptable basis. A photo ships with (1) an explicit recorded license, OR (2)
-an OFFICIAL GOVERNMENT-PUBLISHED portrait — the portrait a government body
-publishes to identify its own member — used with source URL recorded,
-attribution, and a documented remove-on-request posture (one line on the
-transparency page, same commit). Commercial photography — campaign headshots,
-press photos, wire images, anything a working photographer plausibly owns —
-still requires an explicit license, no exceptions: that is the class that
-generates demand letters. The clean-solo-portrait standard and the
-never-wrong-face standard move for nobody.
+- Independent expenditures: the next funding content item — FEC Schedule E
+  spending ABOUT covered races, rendered distinctly from contributions ("this
+  group spent money on its own about this race" vs "gave to the campaign"),
+  same mechanical typing rules. A future session's item.
+- The state money-translation program (umbrella): per-state campaign-finance
+  adapters with author-approved plain-language mapping tables, born with the
+  state-folder convention; parked behind the state-layer sessions.
 
-* FIRST, before any fetching: Katie Hobbs is a wrong or failing face. The
-  shipped Commons image is a dark-haired event candid; the state's own
-  portrait (gray hair, studio) is at
-  https://azgovernor.gov/governor/meet-governor-katie-hobbs — fetch THAT
-  portrait under door 2 and replace. Record what the Commons image actually
-  was. Check the other two governors' images against their offices' pages
-  while there.
-* The 130 state legislators: fetch each member's official portrait from their
-  chamber's own member page, matched by the member id already in our roster,
-  under door 2 — source recorded, EXIF-stripped, committed. AZ's pattern
-  (author-verified example):
-  https://www.azleg.gov/house-member/?legislature=57&session=130&legislator=2366
-  — the portrait is right on the member page. NJ and NH member pages carry the
-  same class of official portrait; establish each pattern. This is the tier the
-  old rule blocked; the new basis unblocks it whole.
-* The Commons sweep across any legislator or local the chamber page fails, and
-  across the 68 remaining curated locals — machine-checkable license,
-  attribute-verified, same standard.
-* Curated locals: official jurisdiction pages under door 2 (board and clerk
-  pages publish member photos more often than roster pages); then Commons;
-  then the email rung.
-* Ballot challengers (the remaining ~76): official pages where they hold any
-  office; Commons; campaign og:image ONLY where it is a clean solo portrait
-  AND plausibly campaign-produced (their own site's own headshot, recorded as
-  campaign-provided) — never a press or photographer image without license.
-  The canonical failure classes (logos, wordmarks, banners, event candids)
-  keep failing.
-* The email rung, drafted not sent: for every person still faceless after the
-  above, generate a short permission-request email (nonpartisan civic app,
-  official portrait, attribution offered) addressed to the right clerk/photo
-  office, batched into `docs/photo-requests.md` for the author to send.
-  Sending is the author's; drafting is this session's.
-* Manifest and generated report updated; every shipped photo's basis (license
-  vs official-portrait) recorded per row; misses keep rungs. Report the new X
-  of 750 with the per-tier breakdown.
+Walk at 390×844 as a stranger: counters equal popups at all four zips, a
+concluded meeting outside Tucson (or its honest line), zero mojibake,
+Ayotte's party on who-governs, a "Someone else" tap landing in Neon (NAME the
+probe row), and twenty new faces spot-checked against sources. Supersede
+docs/tester-pass.md. Documents: state.md (real-date header, every item),
+tracker in place, next free IDs verified, transparency page verified.
+Overwrite docs/session-brief.md. Ship, verify deploy, standing report ending
+with "Needs your hands" — probe rows named per the new rule.
 
-## 6c — Recorded, not built: LegiScan (the author's find)
+### Order, and cuts if short
 
-Tracker row only, no build this session: LegiScan
-(https://legiscan.com/AZ/datasets) publishes state bill data and roll-call
-votes as JSON datasets for all 50 states — the candidate source for the STATE
-LEGISLATOR VOTING RECORDS gap the app currently renders honestly (and the
-tester explicitly asked for). The evaluation, a future state-layer session's
-anchor: (1) terms of use read carefully against both the free consumer app AND
-the commercial data layer — the two may be licensed differently; (2) roll-call
-coverage and freshness verified for AZ/NJ/NH specifically; (3) id-join
-feasibility to our roster (their people ids vs ours). Record the row; do not
-fetch.
+1 → 2 → 3 → 4 → 5 → 6 → 7. If short: thin 6's Commons sweep to NH members
+only (locals/challengers named as remainder). Never cut 1, 2, 3, 4, 5, or 7.
+Documents never cut.
 
-## 7 — Final pass and handoff
-
-Walk at 390×844 as a stranger: the library question at 03255 (the gate), the
-ballot reachable in one tap, controls covering nothing, defaults all-on on
-both device profiles, a thin candidate's honesty line, PAC labels on a funding
-section with one explainer opened, Hobbs's card showing the official portrait,
-and twenty new photos spot-checked as clean solo portraits of the right person
-against their source pages. Supersede `docs/tester-pass.md`. Documents:
-`state.md` (real-date header; the bleed's cause and audit results; the
-tester's finding verbatim; every item), tracker in place (including the
-blurb-equalization row and the tester's items), next free IDs verified,
-transparency page verified. Overwrite `docs/session-brief.md`. Ship, verify
-deploy, standing report ending with "Needs your hands" — include the reactions
-delta and search-log delta since 2026-08-14 18:32 UTC (the tester's activity,
-now including her mobile pass).
-
-## Order, and cuts if short
-
-1 (GATED) → 2 → 3 → 4 → 5 → 6 → 6b → 7.
-
-If short: defer 6 (PAC typing) whole to the next content session — never ship
-half a mapping table. Within 6b, the Hobbs verification and the 130 chamber
-fetches come first; the email drafts may thin to the largest jurisdictions.
-Never cut 1, 2, 5, 6b, or 7. Documents never cut.
-
-## Standing rules
+### Standing rules
 
 All of CLAUDE.md's non-negotiables including the uniqueness invariant, the
-organizations-as-filed rule, the blurb-source rule, n-stores-never-join, and
-(new this session) equal-effort-per-candidate. The playbook clause stands. The
-stranger test. Denominators with counts; stated N equals rendered rows;
-screenshot before believing green; diagnose before fixing; never assert
+organizations-as-filed rule, the blurb-source rule, n-stores-never-join,
+equal-effort-per-candidate, and (new) probe-rows-named. The playbook clause
+stands. The stranger test. Denominators with counts; stated N equals rendered
+rows; screenshot before believing green; diagnose before fixing; never assert
 absence; a failed operation may not render as an empty success; reader-facing
-dates are wall clock; a URL cited must have been fetched and verified.
+dates are wall clock; every date written into any document comes from
+`pnpm stamp`, never typed from assumption (R14's law); a URL cited must have
+been fetched and verified.
+
+---
+
+## What the session did with it
+
+Every item was taken. Three of the five truth defects were **worse or
+different than reported**, which is the argument for the diagnose-first rule:
+
+- **1** — two counters were wrong, not one. BODIES read 13 against a door
+  listing 60 and nobody had noticed. DISTRICTS' blank was the couldn't-check
+  dash spent on a switch the reader had flipped.
+- **2** — the Concluded chip matched nothing at **all four zips including
+  Tucson**; the payloads already held the meetings. Apptegy also served
+  history and had never been asked.
+- **3** — the repo-wide scan found **twelve more** corrupted strings nobody
+  had reported, separately caused (TIGER DBFs read as latin1; a vendor
+  serving genuinely double-encoded bytes).
+- **4** — the render was never broken. The data was null on purpose, and the
+  audit found that **no curated local body publishes party at all**, which
+  had been silently read as "these offices are nonpartisan".
+- **5** — built as specified, context-restricted at the write path.
+- **6** — 535 → 590 of 750; the three NH identity joins the hunt could not
+  previously make, and one fabricated absence caught by going to look.
+
+The brief's sanctioned cut was taken: the Commons sweep is thinned to NH
+members, with the locals partially done under door 2 (20 of 68) and the ~76
+ballot challengers named as remainder. D50 stays **In progress** for that
+reason.

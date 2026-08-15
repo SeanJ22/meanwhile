@@ -1869,7 +1869,17 @@ replaced.
 
 ## 7. Current state of the branch
 
-**Working on `claude/date-integrity-and-context-mirror-0814`**
+**Working on `claude/counters-meetings-photos-0815`** (2026-08-15),
+branched from `main` at the PR #34 merge — the session §24 records: the
+sidebar counters (M57), concluded meetings and the dead Concluded chip
+(M58), the mojibake and the two more the scan found (M60), party on the
+who-governs card (M61), the uncontested-race answer (M63), and photos
+round 3 (D50, 535 → 590 of 750). **test 503 pass (22 new) · lint clean
+(1 pre-existing warning) · build exit 0**, the four-zip walk
+`tester-walk-0815` green at 60 of 60 with zero console errors.
+M59, M62, D51 and D52 recorded, not built.
+
+**Previously: `claude/date-integrity-and-context-mirror-0814`**
 (2026-08-14, seventh session of the day), branched from `main` at the
 PR #33 merge — the session §23 records: the stamp rule and its four
 guards (R14), `context.md` as the seventh mirror file (R15), and three
@@ -4775,3 +4785,250 @@ name the days without the literal strings.
   no product surface.
 - Next free tracker ids: **A12, D51, M57, P13, R20, T11, V09, X05**
   (this session opened R14–R19).
+
+## 24. The 2026-08-15 session — the counters stop lying, the past comes back, and the dashes decode
+
+The author's production pass again, delivered as the session brief
+(committed at `docs/session-brief.md`). Five truth defects, then photos.
+Each was **measured before it was fixed**, and three of the five turned out
+to be worse or different than reported — which is the argument for measuring.
+
+Branch `claude/counters-meetings-photos-0815`. Test 503 pass, lint clean
+(one pre-existing warning in `scripts/tester-drive.mts`), build exit 0,
+walk 60/60 across four zips.
+
+### 1 — The sidebar counters (M57), the denominator disease's third sighting
+
+The author saw "6 OFFICIALS" beside an officials popup listing more than
+twenty people, and a blank DISTRICTS counter. Measured on production at all
+four zips before touching anything:
+
+| Zip | OFFICIALS card | officials door | BODIES card | bodies door |
+|---|---|---|---|---|
+| 85701 | 6 | 24 | 13 | 60 |
+| 07866 | 6 | 31 | 3 | 4 |
+
+**Two counters were wrong, not one, and nobody had noticed the second.**
+Both had their own private derivation, correct when written and never
+updated as their doors grew. OFFICIALS counted `seats[].representatives`
+plus `senators` — the pre-roster shape, which never learned about the
+curated local rosters (M05) or the statewide executives (B11), so a mayor,
+six council members, a five-seat governing board and five county supervisors
+were rendered by the door and counted by nobody. BODIES counted distinct
+bodies **with meetings** in the filtered set while its door listed every
+body covering the point.
+
+The fix is not "make the numbers agree": it is that a counter is handed the
+collection its surface renders — `computeStats({meetings, coverage,
+drawnDistricts})` — so a re-derivation cannot drift again. Guarded at all
+four zips against the committed registry, and mutation-proven: reinstating
+either old derivation fails all four tests.
+
+**DISTRICTS was its own bug and a different one.** It rendered "—", which is
+this product's word for *we could not check*, for an overlay the reader had
+simply switched off. Spending the couldn't-check dash on a switch made the
+one number that was never broken read as the broken one. It says **Off**
+now, and its door carries the switch rather than sending the reader to hunt
+for a checkbox in the sidebar — the hidden-entry-point defect M27 already
+cost a session. The door's title also changed from "Districts here" to
+"Districts in view": the list is the viewport's drawn districts, and at
+85701 it includes Marana and Oro Valley, which the reader is not in.
+
+### 2 — Concluded meetings (M58): the chip was dead everywhere, not just outside Tucson
+
+The brief's report was that concluded meetings render only at 85701. The
+measurement was worse and simpler: **tapping the Concluded chip rendered "0
+meetings — nothing matches" at all four zips, Tucson included**, while the
+payloads behind those screens carried 24 concluded sittings at 85701, four
+at 07866 and two at 03255. The server has been sending the recent past with
+every successful rung for weeks. The client's default date window starts at
+*now*, so `days < -daysBack` dropped every one of them, and the only control
+that names concluded meetings could never match a row by itself.
+
+That is M27's shape one group over: a control that stays fully interactive
+while a different control in a different visual group makes every click a
+silent no-op — and worse than hidden, because it answers "nothing matches",
+which reads as a fact about the government rather than about a slider. A
+reader asking for concluded meetings is asking to look backwards, so the
+selection now carries its own window (`lib/state/status-intent.ts`, the
+`district-intent.ts` precedent). Turning the chip back off does not slam the
+window shut: the reader may have dragged it there themselves.
+
+**Per adapter, with counts** (the full ladder is in `docs/source-ladder.md`).
+Six of nine already served history — legistar, onbase, clerksboards,
+diligent, iqm2, boardbook. Three did not:
+
+- **apptegy** (Vail, Rockaway Township school board) — the vendor serves
+  history and *we never asked*. Rungs walked: `from`/`to`, `past=true`,
+  `month`+`year`, `order=desc`, `archived=true` all ignored;
+  **`start_date=` honoured**, and it survives the feed's own pagination.
+  Both orgs now return four concluded board meetings each. The ingest script
+  was omitting the window entirely, which read as "give me everything" and
+  meant "upcoming only" to any upstream that defaults that way; it states
+  the app's own cascade window now.
+- **civicplus** (Rockaway Township) — upcoming only, earned: the wired feed
+  and the same feed with `startDate`/`endDate` and `from`/`to` returned
+  byte-identical documents, and the only two past `DTSTART`s are VTIMEZONE
+  boilerplate present in every category id.
+- **revize** (Merrimack County) — upcoming only by construction; the block's
+  heading is literally "Upcoming Meetings".
+
+Both closed routes now render an honest line at their jurisdiction instead
+of an empty list. Both have a **further rung found and not built**: Rockaway's
+AgendaCenter archives 214 dated documents back to 2019 and Merrimack's
+notices page carries notice/packet/minutes PDFs for seven past meetings —
+each publishes a date without a start time, and inventing one to fill
+`startsAt` would be a generated fact about a government. **M59** owns it.
+
+### 3 — The mojibake (M60), and two more nobody reported
+
+Every blurb attribution rendered an em-dash as three cp1252 characters. One
+operation in the 2026-08-14 photo session round-tripped
+`data/ballot/candidate-cards-2026.json` through a bad decode: 28 existing
+em-dashes and 130 newly written ones, plus 34 inherited by
+`docs/photo-report.md`, which generates its candidate section from that file.
+No committed script does this — every one reads and writes UTF-8 through
+Node — so the cause was an ad-hoc shell round trip, exactly the class a
+guard has to catch.
+
+Repaired at the data, never at the render. Then the repo-wide scan found
+**twelve more the author had not reported and nothing else would have**,
+separately caused and separately fixed at source:
+
+- `scripts/build-street-index.mts` read TIGER's ADDRFEAT DBFs as **latin1**;
+  they are UTF-8. Twenty-two Tucson street names across eight zips shipped
+  garbled. Nobody noticed because only the Spanish-named streets corrupt and
+  a reader typing "cir" still matched the ASCII prefix. Index rebuilt.
+- Diligent's BoardDocs portal serves **genuinely double-encoded bytes** — its
+  pages declare and send UTF-8, and the UTF-8 they send spells out the broken
+  pair where a guillemet belongs, verified against the raw bytes. Our decode
+  is correct and the vendor's text is wrong, so `extractHtmlText` repairs at
+  our custody boundary, which is ingest and not render.
+
+**The repair caught itself being wrong.** The first `repairMojibake` ran the
+inverse over the whole string and silently turned the 32 em-dashes that had
+been written *correctly* into U+FFFD, while reporting success — the
+operation-that-can-do-nothing shape wearing a repair's hat. Found by
+asserting the em-dash count moved by exactly the number of sequences
+removed: 32 + 158 should have been 190 and it produced 158. It is per-match
+now, and `scripts/repair-mojibake.mts` refuses to write unless every
+sequence is accounted for.
+
+The guard scans all 489 tracked **and untracked** files. It could not see
+untracked ones at first, which is how three of its own documenting comments
+went unnoticed until the commit that tracked them; those comments now name
+the bytes by codepoint, so the guard is not policing a corpus it pollutes.
+
+### 4 — Party on who-governs (M61), and what the silence was hiding
+
+Ayotte read "Republican" on the ballot and nothing on the who-governs card.
+**Not a render bug**: every officials surface draws `partyLabel` through one
+`Holder` component. The three governors' rows carried `partyLabel: null`
+deliberately, on the reasoning that a governor's office page styles itself
+officeholder-first — and `RosterHolder`'s TYPE pinned party to `null`
+outright, with a comment asserting these are "nonpartisan offices as
+published".
+
+All three governors now carry a party from the election authority's own
+certified filing, cited per row and verified today: **Hobbs — Democratic**
+(AZ SOS nominations filed, text-extracted from the PDF), **Sherrill —
+Democratic** (NJ Division of Elections official tally 12/03/2025, found by
+walking the Division's archive after a guessed URL 404'd and was discarded
+rather than cited), **Ayotte — Republican** (NH SOS cumulative filings
+7.16.26 — the same document our ballot record cites; re-fetch today returned
+**403 to a plain client, to a browser user-agent, and to a real Chromium
+navigation**, and `sos.nh.gov/elections` itself 403s the same way, so the
+whole host refuses this network. Recorded, not circumvented).
+
+`tests/party.test.ts` now fails the build if the ballot and the officeholder
+row disagree about a person's party or cite different records for it — the
+reported defect, turned into an invariant.
+
+**The audit found the bigger thing.** 64 of 86 officeholders at the four
+zips carry no party, and walking rung 1 across all twelve curated bodies
+showed why: **not one publishes party on its own roster page** — not Pima's
+supervisors, not Tucson's mayor and council, not Morris or Merrimack's
+commissioners, not Rockaway's township council, several of which are
+unambiguously partisan seats. The silence was a fact about the pages being
+read as a fact about the offices. Each roster now records `partisanship`
+with the record that settled it, all twelve `UNDETERMINED`, so nothing
+renders and the open question is stated rather than implied closed. The next
+rung is the certified candidate list; **M62** owns it.
+
+### 5 — "Someone else" (M63)
+
+In a race with one name on the ballot the three existing answers collect
+almost nothing: Yes is what the ballot forces, No cannot separate disliking
+this candidate from wanting a choice at all, and a reader who simply wants
+somebody else has no way to say it.
+
+The value is **context-restricted at the write path**, not merely hidden in
+the UI: offered on a contested race the same button answers a different
+question and both meanings land in one bucket, which is the corruption the
+incumbent/challenger split exists to prevent. The permitted set is derived by
+counting the committed ballots — four of 136 candidate targets today — so a
+contest stops qualifying the moment a second candidate files. The aggregate
+carries the new column with a zero on every tally, the way it already carries
+every verification tier: a buyer must be able to tell "nobody chose this"
+from "this column did not exist yet". No migration — the Postgres column is
+plain text and the enum is TypeScript-level. The transparency page explains
+the fourth button in the same commit.
+
+### 6 — Photos, round 3 (D50, still In progress)
+
+**535 of 750 → 590 of 750.** Sixty-nine portraits under door 2: 24 NH
+senators, 25 NH representatives, 20 curated locals — every one eyeballed on
+a contact sheet before shipping, every miss recorded per person with its
+rungs. Full accounting in `docs/photo-report.md`, round 3.
+
+The General Court publishes a portrait for nearly every member and we were
+shipping 28 of 152. **None of the three causes was a missing photo; all
+three were our own confirmation refusing a real one.** The Senate keys
+portraits by district rather than member id. Two senators recorded as having
+no portrait both had one, thrown away because their pages label the portrait
+`alt="NH State Seal"` — a fabricated absence, found only by going to look
+instead of believing the record, and now impossible because an image whose
+own file path identifies the member survives the junk filter. The House
+declares its portrait by template control id (`pageBody_imgMember`) with a
+filename id that appears nowhere else on the page.
+
+`scripts/fetch-official-portraits.mts` now regenerates `roster-photos.json`.
+Only the Commons ship script did, so shipping roster portraits through door 2
+left twenty local officials with a licensed manifest row and no photo on
+screen. The sync test caught it — which is what it is for.
+
+**Remaining, named:** 32 NH House members the state itself serves
+`nophoto.jpg` for (an honest end state for a 400-seat volunteer chamber, and
+what the brief anticipated), 3 portraits too small to be portraits, 1
+personal-site link door 2 does not reach, 48 locals with per-person rungs
+(two bodies 403 a plain client), and the deferred Commons sweep for the ~76
+ballot challengers — the brief's sanctioned cut, taken. D50 stays In
+progress for that reason. Equal effort per candidate is unaffected: no
+contest gained a portrait for some candidates and not others, because no
+ballot candidate gained one at all.
+
+### The walk
+
+`scripts/tester-walk-0815.mts`, four zips at 390×844, as a stranger:
+**60 of 60**. It checks what the author reported rather than what the code
+changed. `docs/tester-pass.md` is superseded with the results and, more
+usefully, with what the walk cannot see.
+
+### Recorded, not built
+
+- **M59** — concluded meetings that publish a date but no start time.
+- **M62** — party for local partisan bodies, via certified election results.
+- **D51** — independent expenditures, the next funding-content item.
+- **D52** — the state money-translation program (umbrella).
+
+### State as of 2026-08-15
+
+- Counters, all four, at all four zips: stated N equals rendered rows.
+- Concluded meetings reachable at every wired jurisdiction that has any, and
+  an honest line where the vendor serves none.
+- Zero mojibake in 489 tracked and untracked files, guarded.
+- Party on every governor, sourced to a filing; every roster's partisanship
+  stated.
+- 590 of 750 rendered people carry a portrait.
+- Next free tracker ids: **A12, B15, C05, D53, M64, P13, R20, T11, V09,
+  X05**.

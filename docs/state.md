@@ -1875,8 +1875,10 @@ PR #33 merge — the session §23 records: the stamp rule and its four
 guards (R14), `context.md` as the seventh mirror file (R15), and three
 findings recorded but deliberately not fixed (R16–R18). **test 476 pass
 (3 new) · lint clean (1 pre-existing warning) · build exit 0**, the date
-scan reporting 1017 dates scanned / 0 failures / 122 allowlisted. No
-product surface was touched.
+scan reporting 1026 dates scanned / 0 failures / 88 allowlisted hits of
+117 declared. All five fabricated stamps in `CLAUDE.md` were recovered
+from git plus the session transcripts and corrected; the file now
+carries no future date. No product surface was touched.
 
 **Previously: `claude/fec-cache-and-question-box-0819`** (session label
 `0819`, wall clock 2026-08-14), branched from `main` at the PR #26 merge
@@ -4614,14 +4616,46 @@ Five pieces shipped.
   stamps against git and writes `docs/stamp-audit.md`. Not in the test
   gate; it runs a `git log` per stamp and belongs at handoff.
 
-**The audit found four wrong of eight, all fabricated forward.** The
+**The stamps were corrected — recovered, not decided.** The first pass
+of this session stopped at the report, because the rule is that the
+author decides. The author's answer was that they did not know the real
+dates and asked whether the transcripts could supply them. They can, and
+they agree with git exactly, so a second pass corrected all five from
+**two independent sources**: each rule's introducing commit carries an
+author date already in `-0700`, and the exported session transcript whose
+`Started` → `Last activity` window contains that commit is a second,
+unrelated witness.
+
+| Rule | Claimed | Real | Commit | Session window |
+|---|---|---|---|---|
+| The stranger test | 08-17 | **08-14** | `b25ac80` 00:42 | `323ab34a` 08-14 00:20→01:38 |
+| Coverage denominator | 08-17 | **08-14** | `b25ac80` 00:42 | same |
+| The ripcord doctrine | 08-16 | **08-13** | `56d8787` 23:27 | `c99995a7` 08-13 22:14→23:31 |
+| Distinctness | 08-19 | **08-14** | `8046820` 09:31 | `5c784e1e` 08-14 09:16→12:05 |
+| Disclosure (revised) | 08-16 | **08-13** | `8fa5759` 23:07 | `c99995a7`, same as above |
+
+**Widening the audit found the fifth.** The first version searched only
+for the word `Adopted` and walked straight past `(Author-revised …)` on
+the disclosure rule — it reported eight of nine and called that complete,
+which is precisely the failure this audit exists to catch. `STAMP_VERBS`
+is now an explicit list and the report prints it, so a stamp nothing
+audits is *visible* rather than assumed not to exist.
+
+After the corrections the audit reads **9 stamps, 0 disagreeing, 0 later
+than today, 0 `NOT FOUND`**. `CLAUDE.md` carries no future date at all
+and the `AUTHOR_DECISION` allowlist group is empty.
+
+**What the audit found before that.** Four wrong of eight, all fabricated
+forward — the fifth was still invisible. The
 stranger test and the coverage-denominator rule both claim August 17 and
 landed 2026-08-14 (`b25ac80`, +3 days); the ripcord doctrine claims
 August 16 and landed 2026-08-13 (`56d8787`, +3); the distinctness rule
 claims August 19 and landed 2026-08-14 (`8046820`, +5). The other four
-stamps check out exactly. **No stamp was corrected** — the author
-decides each one, and correcting them from here would be the same act
-that caused the defect.
+stamps checked out exactly. The report stopped there, on the rule that
+the author decides and that correcting a date from inside the tooling
+would be the same act that caused the defect. What changed that was not
+the tooling's judgement but the author's instruction, and the correction
+above is still a *reading*, not a decision.
 
 **On the specified `--diff-filter=A`.** The brief called for
 `git log -S<clause> --diff-filter=A`. That filter restricts the log to
@@ -4714,10 +4748,20 @@ name the days without the literal strings.
   line — wrapped, the first draft of this bullet reported "recorded
   without a verdict" and no build status at all.) The one lint warning
   is pre-existing, in `scripts/tester-drive.mts`. The date scan reports
-  **1017 dates scanned, 0 failures, 122 allowlisted** — the allowlisted
-  count is a warning line on every run, never a pass. The hook was
-  proven to refuse, not merely to exist, by staging a probe date and
-  watching it exit 1.
+  **1026 dates scanned, 0 failures, 88 allowlisted hits of 117
+  declared** — allowlisted hits are a warning line on every run, never
+  part of the pass. The hook was proven to refuse, not merely to exist,
+  by staging a probe date and watching it exit 1.
+- **The session crossed midnight in Phoenix, and the guard moved under
+  it.** `pnpm stamp` went from `2026-08-14` to `2026-08-15` between the
+  correction and the ship, so 29 allowlisted dates stopped being future
+  and the observed count fell 117 → 88 with nothing edited. The warning
+  line now prints **hit of declared** rather than one number, because a
+  count that falls on its own reads exactly like a count someone fixed.
+  The allowlist retires itself, entry by entry, as the clock passes each
+  date; the declared budget is what pins the inventory. The audit's
+  recovered dates are unaffected — commit author dates are historical
+  facts already carrying `-0700`.
 - `context.md` landed at **18.6 KB of 20 KB, nothing truncated**.
 
 ### Open

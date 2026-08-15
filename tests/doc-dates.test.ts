@@ -47,11 +47,14 @@ import {
  *
  * Two groups:
  *
- *   AUTHOR_DECISION — the three stamps in `CLAUDE.md` that started this.
- *     `pnpm verify-stamps` recovers each rule's real introduction date from
- *     git history into `docs/stamp-audit.md`; **each of these three entries
- *     is deleted when the author approves the corrected date**, and the
- *     stamp in `CLAUDE.md` is changed in the same commit. R14.
+ *   AUTHOR_DECISION — **now empty.** The three stamps in `CLAUDE.md` that
+ *     started this, plus two more the audit found once it stopped looking
+ *     only for the word "Adopted". The author did not know the real dates,
+ *     so they were recovered rather than decided: `pnpm verify-stamps` names
+ *     the commit that introduced each rule, and the exported session
+ *     transcripts give the session window that commit falls inside. Two
+ *     independent sources, agreeing, on all five. The stamps were corrected
+ *     and these entries deleted in the same commit. R14.
  *
  *   PRE_EXISTING — the other 26 (file, date) pairs, 118 occurrences, found
  *     when this test first ran. The author expected three; the scan found
@@ -64,11 +67,12 @@ import {
  *     Sorting them is the author's call, tracked as R16 — not this test's.
  */
 const ALLOWLIST = [
-  // ---- AUTHOR_DECISION (R14) — delete each entry when the author approves
-  // ---- the corrected date in docs/stamp-audit.md.
-  { file: "CLAUDE.md", date: "2026-08-16", count: 2, group: "AUTHOR_DECISION" },
-  { file: "CLAUDE.md", date: "2026-08-17", count: 2, group: "AUTHOR_DECISION" },
-  { file: "CLAUDE.md", date: "2026-08-19", count: 1, group: "AUTHOR_DECISION" },
+  // ---- AUTHOR_DECISION (R14): EMPTY, and that is the outcome, not an
+  // ---- oversight. All five stamps were recovered from two independent
+  // ---- sources — the introducing commit's author date (already in -0700)
+  // ---- and the session-transcript window containing it — and corrected in
+  // ---- CLAUDE.md. There is nothing left for this group to tolerate.
+  // ---- `CLAUDE.md` now carries no future date at all.
 
   // ---- PRE_EXISTING (R16) — the inventory as it stood when this test landed
   // ---- on 2026-08-14. Deleted per entry as the author rules on each file.
@@ -146,14 +150,24 @@ test("no date in CLAUDE.md, docs/*.md, or the tracker's prose columns is in the 
   // Allowlisted hits are warnings, never silence. Printed on every run with a
   // count, because a tolerated defect nobody sees is an accepted one.
   if (allowed.length > 0) {
-    const byGroup = new Map<string, number>();
+    // Observed and declared are different numbers and must not be printed as
+    // if they were one. The allowlist is DATE-RELATIVE: an entry stops being
+    // hit the moment the clock passes its date, so the observed count falls
+    // on its own while the declared budget stays put. This run crossed
+    // midnight and watched 117 become 88 — 29 entries retiring themselves —
+    // which reads as a fix if the two numbers are conflated.
+    const declared = new Map<string, number>();
     for (const entry of ALLOWLIST) {
-      byGroup.set(entry.group, (byGroup.get(entry.group) ?? 0) + entry.count);
+      declared.set(entry.group, (declared.get(entry.group) ?? 0) + entry.count);
     }
+    const declaredTotal = [...declared.values()].reduce((a, b) => a + b, 0);
+
     console.warn(
-      `\n  WARN  ${allowed.length} allowlisted future date(s) — ` +
-        [...byGroup].map(([g, n]) => `${g} ${n}`).join(", ") +
-        ` — see the ALLOWLIST at the top of tests/doc-dates.test.ts`,
+      `\n  WARN  ${allowed.length} allowlisted future date(s) hit, of ` +
+        `${declaredTotal} declared (` +
+        [...declared].map(([g, n]) => `${g} ${n}`).join(", ") +
+        `). The gap is entries whose date is now in the past — the allowlist ` +
+        `retires itself. See the ALLOWLIST at the top of tests/doc-dates.test.ts`,
     );
     for (const hit of allowed) {
       console.warn(`  warn  ${hit.file}:${hit.line}  ${hit.date}`);

@@ -7,6 +7,14 @@
  * presentation, not new plumbing.
  */
 
+import {
+  TIME_NOT_POSTED,
+  meetingHeadline,
+  meetingLocalDate,
+  startTimeIsKnown,
+} from "../map/format.ts";
+import type { Meeting } from "../sources/types.ts";
+
 export interface CalendarEventInput {
   /** Stable id for the ICS UID. */
   id: string;
@@ -86,4 +94,40 @@ export function icsDataHref(event: CalendarEventInput): string {
 /** Filename for the .ics download. */
 export function icsFileName(event: CalendarEventInput): string {
   return `${event.id.replace(/[^a-z0-9-]/gi, "-")}.ics`;
+}
+
+/**
+ * A meeting as a calendar event (M59, 2026-08-15) — pure, so the rule that
+ * decides timed-versus-all-day is testable without rendering a component.
+ *
+ * A meeting whose publisher never posted a start time becomes an ALL-DAY
+ * event carrying the same sentence the card shows. The alternative — a timed
+ * event at the midnight `startsAt` holds for ordering — would put a fabricated
+ * hour into the reader's own calendar and ring an alarm at midnight, which is
+ * the one place a wrong time does real damage.
+ */
+export function meetingCalendarEvent(
+  meeting: Meeting,
+  options: { origin?: string } = {},
+): CalendarEventInput {
+  const timed = startTimeIsKnown(meeting);
+  const lines = [
+    meeting.bodyName,
+    timed ? null : TIME_NOT_POSTED,
+    meeting.agendaUrl ? `Agenda: ${meeting.agendaUrl}` : null,
+    options.origin ? `Found via We the People: ${options.origin}/` : null,
+    timed ? "End time is an estimate — public bodies rarely publish one." : null,
+  ].filter(Boolean) as string[];
+
+  return {
+    id: meeting.id,
+    title: meetingHeadline(meeting),
+    ...(timed
+      ? { startsAtIso: meeting.startsAt }
+      : { allDayDate: meetingLocalDate(meeting) }),
+    location: [meeting.location.name, meeting.location.address]
+      .filter(Boolean)
+      .join(", "),
+    description: lines.join("\n"),
+  };
 }

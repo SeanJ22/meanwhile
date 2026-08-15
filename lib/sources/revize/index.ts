@@ -2,6 +2,7 @@ import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import {
   isPlacelessLocation,
   resolveVenue,
+  soleVenueForBody,
 } from "../../meetings/venue-cache.ts";
 import { toZonedIso } from "../../time/zoned.ts";
 import { politeGetText } from "../http.ts";
@@ -270,6 +271,72 @@ export function makeRevizeSource(
           agendaUrl: agenda ? documentUrl(wiring.config.base, agenda.href) : null,
           jurisdiction: wiring.jurisdiction,
           status: Date.parse(startsAt) < now.getTime() ? "CONCLUDED" : "SCHEDULED",
+          provenance: {
+            sourceUrl: pageUrl,
+            sourceOrg: wiring.publishingOrg,
+            collectedAt,
+            verifiedAt: null,
+          },
+        });
+      }
+
+      // ── M59: the archive rung ────────────────────────────────────────────
+      // The "Upcoming Meetings" block is upcoming by construction, so until
+      // now this body's past sittings did not exist as far as the app was
+      // concerned — the Concluded filter matched nothing at 03301 and said so
+      // honestly, which was true and useless. The notices page carries them:
+      // one public notice, board packet and minutes set per sitting, each
+      // filename dated. What it does NOT carry is a start time, and that is
+      // the whole reason these rows needed a new shape rather than a default
+      // hour. `startPrecision: "DAY"` says the publisher gave us a day.
+      const pageUrl = `${wiring.config.base}/${wiring.config.agendaPage}`;
+      const seen = new Set(meetings.map((m) => m.id));
+      const venue = soleVenueForBody(SOURCE_NAME, wiring.ocdId);
+
+      const dates = new Map<string, DatedDocument[]>();
+      for (const doc of documents) {
+        const key = `${doc.year}-${String(doc.month).padStart(2, "0")}-${String(doc.day).padStart(2, "0")}`;
+        dates.set(key, [...(dates.get(key) ?? []), doc]);
+      }
+
+      for (const [key, docs] of dates) {
+        const id = `${SOURCE_NAME}:${wiring.config.slug}:${key}`;
+        // A date the upcoming block already produced with a REAL time wins.
+        // The archive never overwrites a known hour with an unknown one.
+        if (seen.has(id)) continue;
+
+        if (!venue) {
+          drops.unknownVenue++;
+          continue;
+        }
+
+        const [y, m, d] = key.split("-").map(Number);
+        // Local midnight: an ordering position, not a claim. See
+        // `Meeting.startPrecision`.
+        const startsAt = toZonedIso(y, m, d, 0, 0, wiring.timeZone);
+        const agenda =
+          docs.find((doc) => doc.kind === "agenda") ??
+          docs.find((doc) => doc.kind === "notice") ??
+          null;
+
+        meetings.push({
+          id,
+          ocdId: wiring.ocdId,
+          bodyName: wiring.config.bodyName ?? wiring.publishingOrg,
+          title: wiring.config.bodyName ?? wiring.publishingOrg,
+          startsAt,
+          startPrecision: "DAY",
+          timeZone: wiring.timeZone,
+          location: {
+            name: venue.name,
+            address: venue.address,
+            lat: venue.lat,
+            lng: venue.lng,
+          },
+          agendaUrl: agenda ? documentUrl(wiring.config.base, agenda.href) : null,
+          jurisdiction: wiring.jurisdiction,
+          status:
+            Date.parse(startsAt) < now.getTime() ? "CONCLUDED" : "SCHEDULED",
           provenance: {
             sourceUrl: pageUrl,
             sourceOrg: wiring.publishingOrg,

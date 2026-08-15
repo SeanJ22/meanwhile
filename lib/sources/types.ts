@@ -94,6 +94,30 @@ export interface Meeting {
   title: string;
   /** Start time, ISO 8601 with offset. Local government meets in local time. */
   startsAt: string;
+  /**
+   * How precisely the publisher dated this sitting (M59, 2026-08-15).
+   *
+   * `MINUTE` — the normal case: the source gave a date AND a start time, and
+   *   `startsAt` means exactly what it says.
+   * `DAY` — **the source gave a date and no start time.** Two real archives do
+   *   this: Rockaway Township's AgendaCenter and Merrimack County's notices
+   *   page both publish past sittings as dated documents with no clock on
+   *   them. Those meetings happened, so refusing to ingest them is its own
+   *   kind of lie about coverage — but inventing 7pm to fill this field would
+   *   be a generated fact about a government, which is the failure this
+   *   product cannot survive.
+   *
+   * So on a `DAY` meeting `startsAt` carries local midnight and that midnight
+   * is **an ordering artifact, never a claim**. Nothing may render it as a
+   * time: `formatMeetingTime` returns the honest line instead, and calendar
+   * links build an all-day event. `tests/day-precision.test.ts` holds both.
+   *
+   * Optional because every source that predates M59 publishes real times, and
+   * absent means `MINUTE`. A source that CAN emit date-only rows must set it
+   * explicitly — the guard names those sources so a new one cannot inherit
+   * the default by omission.
+   */
+  startPrecision?: "MINUTE" | "DAY";
   /** IANA zone the meeting is held in, for rendering times honestly. */
   timeZone: string;
   location: MeetingLocation;

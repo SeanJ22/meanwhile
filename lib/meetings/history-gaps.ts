@@ -72,8 +72,23 @@ export function concludedGapNote(
   askingForConcluded: boolean,
   bodies: readonly Pick<CoveredBody, "bodyId">[],
 ): string | null {
+  return concludedGapNoteFor(askingForConcluded, historyGapsFor(bodies));
+}
+
+/**
+ * The same sentence, built from gaps the caller already has.
+ *
+ * Split out on 2026-08-15 because M59 closed the last two gaps and the wiring
+ * rows now record none — which left the note's own behaviour untestable
+ * through the registry. It is not dead code: it is the machinery that keeps a
+ * Concluded surface from being silently empty, and the next unwired vendor
+ * will need it. Testing it directly is how it survives the interval.
+ */
+export function concludedGapNoteFor(
+  askingForConcluded: boolean,
+  gaps: readonly HistoryGap[],
+): string | null {
   if (!askingForConcluded) return null;
-  const gaps = historyGapsFor(bodies);
   if (gaps.length === 0) return null;
 
   const named = gaps.map((g) => `${g.bodyName} — ${g.reason}`);

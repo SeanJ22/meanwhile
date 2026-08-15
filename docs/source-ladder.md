@@ -775,3 +775,40 @@ party finding — Kevin Dahl appears in the certified primary results as a
 candidate in the `DEM Council Member Ward 3` contest either way, and the
 city's own council page has him in the seat — but the recount margin itself
 was not read from it.
+
+### M59 closed both archives — 2026-08-15
+
+The two rungs recorded above as "found, not built" are built. What each one
+actually publishes, and the count it produced:
+
+| Jurisdiction | Route | Read | Sittings | Gained |
+|---|---|---|---|---|
+| Rockaway Township, NJ | `rockawaytownship.org/AgendaCenter`, category **2** | 2026-08-15 | 13 dated in 2026 | 9 → 22 meetings (+13 day-only) |
+| Merrimack County, NH | the BOC notices/agendas page, dated documents | 2026-08-15 | 14 distinct dates, 33 documents | 1 → 15 meetings (+14 day-only) |
+
+**The category id is the thing that had to be right.** Rockaway's AgendaCenter
+hosts five bodies — Board of Adjustment, Board of Assessment Commissioners,
+Environmental Commission, Planning Board and the Township Council — on one
+page, under `<div id="cat<N>">` blocks. Taking every document on the page
+would have filed the Planning Board's meetings under the council: a wrong
+claim about who met, of exactly the kind the uniqueness invariant exists to
+catch. The id `2` is the value of the Township Council's own checkbox in the
+page's category filter, recorded on the wiring row, and a guard asserts the
+two categories' dates never cross.
+
+**A search endpoint was found and not used.** The page's own JavaScript builds
+`/AgendaCenter/Search/?term=&CIDs=…&startDate=…&endDate=…`; it fetches at 200
+and returns the same 13 council sittings as the category block, ignoring the
+date range. Since it added nothing over the page the site already serves, the
+plain page is what the adapter reads — one GET, not two.
+
+**What is NOT claimed.** The AgendaCenter's year selector reaches back to 2019
+through a POST the page makes to `/AgendaCenter/UpdateCategoryList`. Only the
+current year is ingested, deliberately: the app serves a 90-day concluded
+window, so earlier rows would be snapshot weight nothing renders. The earlier
+note in this file said "214 dated documents back to 2019" — that remains true
+of the archive and is not what shipped. If the lookback ever widens, the rung
+is one parameter away and this paragraph is the record that it was a choice.
+
+**Neither site needed anything but a polite GET.** Both admitted this
+project's identified User-Agent first try, at a serialized pace.

@@ -68,7 +68,40 @@ export function formatMeetingDate(meeting: Meeting): string {
   return `${weekday} ${mdy}`;
 }
 
+/**
+ * The line a meeting shows where the clock would go when its publisher never
+ * posted one (M59, 2026-08-15). Plain enough for the 15-year-old test, and it
+ * describes the POSTING rather than the meeting — we know it happened that
+ * day; what is missing is the hour, and the agenda is where the reader can go
+ * looking. Never "TBD", which reads as the body being undecided.
+ */
+export const TIME_NOT_POSTED = "Time not posted — check the agenda";
+
+/** True when the publisher gave a start time. See `Meeting.startPrecision`. */
+export function startTimeIsKnown(meeting: Meeting): boolean {
+  return meeting.startPrecision !== "DAY";
+}
+
+/**
+ * The meeting's calendar date in its OWN zone, `YYYY-MM-DD` — what an all-day
+ * calendar event needs. Computed through `Intl` in the meeting's zone rather
+ * than sliced off the ISO string, because a slice reads the offset the string
+ * happens to carry and a Tucson meeting written in UTC would land a day early.
+ */
+export function meetingLocalDate(meeting: Meeting): string {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: meeting.timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date(meeting.startsAt));
+  return parts;
+}
+
 export function formatMeetingTime(meeting: Meeting): string {
+  // The single choke point for a meeting's clock, which is why the honest
+  // line lives here rather than at five call sites that could each forget it.
+  if (!startTimeIsKnown(meeting)) return TIME_NOT_POSTED;
   return new Intl.DateTimeFormat("en-US", {
     timeZone: meeting.timeZone,
     hour: "numeric",

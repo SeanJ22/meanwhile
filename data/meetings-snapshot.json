@@ -1,6 +1,6 @@
 {
  "formatVersion": 1,
- "generatedAt": "2026-08-15T18:49:42.832Z",
+ "generatedAt": "2026-08-15T21:02:28.492Z",
  "sources": [
   {
    "source": "legistar",
@@ -20,7 +20,7 @@
    "ok": true,
    "error": null,
    "fetched": 1,
-   "normalized": 9,
+   "normalized": 22,
    "drops": {
     "placeless": 0,
     "unknownVenue": 0,
@@ -111,7 +111,7 @@
    "ok": true,
    "error": null,
    "fetched": 1,
-   "normalized": 1,
+   "normalized": 15,
    "drops": {
     "placeless": 0,
     "unknownVenue": 0,
@@ -140,7 +140,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1822&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-15T18:49:39.332Z",
+    "collectedAt": "2026-08-15T21:02:22.492Z",
     "verifiedAt": null
    }
   },
@@ -163,7 +163,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1823&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-15T18:49:39.332Z",
+    "collectedAt": "2026-08-15T21:02:22.492Z",
     "verifiedAt": null
    }
   },
@@ -186,7 +186,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1824&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-15T18:49:39.332Z",
+    "collectedAt": "2026-08-15T21:02:22.492Z",
     "verifiedAt": null
    }
   },
@@ -209,7 +209,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1854&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-15T18:49:39.332Z",
+    "collectedAt": "2026-08-15T21:02:22.492Z",
     "verifiedAt": null
    }
   },
@@ -232,7 +232,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1869&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-15T18:49:39.332Z",
+    "collectedAt": "2026-08-15T21:02:22.492Z",
     "verifiedAt": null
    }
   },
@@ -255,7 +255,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T18:49:39.079Z",
+    "collectedAt": "2026-08-15T21:02:23.098Z",
     "verifiedAt": null
    }
   },
@@ -278,7 +278,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T18:49:39.079Z",
+    "collectedAt": "2026-08-15T21:02:23.098Z",
     "verifiedAt": null
    }
   },
@@ -301,7 +301,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T18:49:39.079Z",
+    "collectedAt": "2026-08-15T21:02:23.098Z",
     "verifiedAt": null
    }
   },
@@ -324,7 +324,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T18:49:39.079Z",
+    "collectedAt": "2026-08-15T21:02:23.098Z",
     "verifiedAt": null
    }
   },
@@ -347,7 +347,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T18:49:39.079Z",
+    "collectedAt": "2026-08-15T21:02:23.098Z",
     "verifiedAt": null
    }
   },
@@ -370,7 +370,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T18:49:39.079Z",
+    "collectedAt": "2026-08-15T21:02:23.098Z",
     "verifiedAt": null
    }
   },
@@ -393,7 +393,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T18:49:39.079Z",
+    "collectedAt": "2026-08-15T21:02:23.098Z",
     "verifiedAt": null
    }
   },
@@ -416,7 +416,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T18:49:39.079Z",
+    "collectedAt": "2026-08-15T21:02:23.098Z",
     "verifiedAt": null
    }
   },
@@ -439,7 +439,319 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T18:49:39.079Z",
+    "collectedAt": "2026-08-15T21:02:23.098Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "civicplus:rockaway_township:archive:2026-01-06",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "bodyName": "Township Council",
+   "title": "Township Council",
+   "startsAt": "2026-01-06T00:00:00-05:00",
+   "startPrecision": "DAY",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Rockaway Township Municipal Building",
+    "address": "65 Mount Hope Road, Rockaway Township, NJ 07866",
+    "lat": 40.912595,
+    "lng": -74.530052
+   },
+   "agendaUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_01062026-990",
+   "jurisdiction": "Rockaway Township, NJ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
+    "sourceOrg": "Rockaway Township",
+    "collectedAt": "2026-08-15T21:02:23.098Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "civicplus:rockaway_township:archive:2026-01-20",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "bodyName": "Township Council",
+   "title": "Township Council",
+   "startsAt": "2026-01-20T00:00:00-05:00",
+   "startPrecision": "DAY",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Rockaway Township Municipal Building",
+    "address": "65 Mount Hope Road, Rockaway Township, NJ 07866",
+    "lat": 40.912595,
+    "lng": -74.530052
+   },
+   "agendaUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_01202026-995",
+   "jurisdiction": "Rockaway Township, NJ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
+    "sourceOrg": "Rockaway Township",
+    "collectedAt": "2026-08-15T21:02:23.098Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "civicplus:rockaway_township:archive:2026-02-10",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "bodyName": "Township Council",
+   "title": "Township Council",
+   "startsAt": "2026-02-10T00:00:00-05:00",
+   "startPrecision": "DAY",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Rockaway Township Municipal Building",
+    "address": "65 Mount Hope Road, Rockaway Township, NJ 07866",
+    "lat": 40.912595,
+    "lng": -74.530052
+   },
+   "agendaUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_02102026-999",
+   "jurisdiction": "Rockaway Township, NJ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
+    "sourceOrg": "Rockaway Township",
+    "collectedAt": "2026-08-15T21:02:23.098Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "civicplus:rockaway_township:archive:2026-02-24",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "bodyName": "Township Council",
+   "title": "Township Council",
+   "startsAt": "2026-02-24T00:00:00-05:00",
+   "startPrecision": "DAY",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Rockaway Township Municipal Building",
+    "address": "65 Mount Hope Road, Rockaway Township, NJ 07866",
+    "lat": 40.912595,
+    "lng": -74.530052
+   },
+   "agendaUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_02242026-1002",
+   "jurisdiction": "Rockaway Township, NJ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
+    "sourceOrg": "Rockaway Township",
+    "collectedAt": "2026-08-15T21:02:23.098Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "civicplus:rockaway_township:archive:2026-03-10",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "bodyName": "Township Council",
+   "title": "Township Council",
+   "startsAt": "2026-03-10T00:00:00-04:00",
+   "startPrecision": "DAY",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Rockaway Township Municipal Building",
+    "address": "65 Mount Hope Road, Rockaway Township, NJ 07866",
+    "lat": 40.912595,
+    "lng": -74.530052
+   },
+   "agendaUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_03102026-1005",
+   "jurisdiction": "Rockaway Township, NJ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
+    "sourceOrg": "Rockaway Township",
+    "collectedAt": "2026-08-15T21:02:23.098Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "civicplus:rockaway_township:archive:2026-03-14",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "bodyName": "Township Council",
+   "title": "Township Council",
+   "startsAt": "2026-03-14T00:00:00-04:00",
+   "startPrecision": "DAY",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Rockaway Township Municipal Building",
+    "address": "65 Mount Hope Road, Rockaway Township, NJ 07866",
+    "lat": 40.912595,
+    "lng": -74.530052
+   },
+   "agendaUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_03142026-1006",
+   "jurisdiction": "Rockaway Township, NJ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
+    "sourceOrg": "Rockaway Township",
+    "collectedAt": "2026-08-15T21:02:23.098Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "civicplus:rockaway_township:archive:2026-03-24",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "bodyName": "Township Council",
+   "title": "Township Council",
+   "startsAt": "2026-03-24T00:00:00-04:00",
+   "startPrecision": "DAY",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Rockaway Township Municipal Building",
+    "address": "65 Mount Hope Road, Rockaway Township, NJ 07866",
+    "lat": 40.912595,
+    "lng": -74.530052
+   },
+   "agendaUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_03242026-1007",
+   "jurisdiction": "Rockaway Township, NJ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
+    "sourceOrg": "Rockaway Township",
+    "collectedAt": "2026-08-15T21:02:23.098Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "civicplus:rockaway_township:archive:2026-04-28",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "bodyName": "Township Council",
+   "title": "Township Council",
+   "startsAt": "2026-04-28T00:00:00-04:00",
+   "startPrecision": "DAY",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Rockaway Township Municipal Building",
+    "address": "65 Mount Hope Road, Rockaway Township, NJ 07866",
+    "lat": 40.912595,
+    "lng": -74.530052
+   },
+   "agendaUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_04282026-1011",
+   "jurisdiction": "Rockaway Township, NJ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
+    "sourceOrg": "Rockaway Township",
+    "collectedAt": "2026-08-15T21:02:23.098Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "civicplus:rockaway_township:archive:2026-05-12",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "bodyName": "Township Council",
+   "title": "Township Council",
+   "startsAt": "2026-05-12T00:00:00-04:00",
+   "startPrecision": "DAY",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Rockaway Township Municipal Building",
+    "address": "65 Mount Hope Road, Rockaway Township, NJ 07866",
+    "lat": 40.912595,
+    "lng": -74.530052
+   },
+   "agendaUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_05122026-1013",
+   "jurisdiction": "Rockaway Township, NJ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
+    "sourceOrg": "Rockaway Township",
+    "collectedAt": "2026-08-15T21:02:23.098Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "civicplus:rockaway_township:archive:2026-05-26",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "bodyName": "Township Council",
+   "title": "Township Council",
+   "startsAt": "2026-05-26T00:00:00-04:00",
+   "startPrecision": "DAY",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Rockaway Township Municipal Building",
+    "address": "65 Mount Hope Road, Rockaway Township, NJ 07866",
+    "lat": 40.912595,
+    "lng": -74.530052
+   },
+   "agendaUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_05262026-1015",
+   "jurisdiction": "Rockaway Township, NJ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
+    "sourceOrg": "Rockaway Township",
+    "collectedAt": "2026-08-15T21:02:23.098Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "civicplus:rockaway_township:archive:2026-06-09",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "bodyName": "Township Council",
+   "title": "Township Council",
+   "startsAt": "2026-06-09T00:00:00-04:00",
+   "startPrecision": "DAY",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Rockaway Township Municipal Building",
+    "address": "65 Mount Hope Road, Rockaway Township, NJ 07866",
+    "lat": 40.912595,
+    "lng": -74.530052
+   },
+   "agendaUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_06092026-1016",
+   "jurisdiction": "Rockaway Township, NJ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
+    "sourceOrg": "Rockaway Township",
+    "collectedAt": "2026-08-15T21:02:23.098Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "civicplus:rockaway_township:archive:2026-07-14",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "bodyName": "Township Council",
+   "title": "Township Council",
+   "startsAt": "2026-07-14T00:00:00-04:00",
+   "startPrecision": "DAY",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Rockaway Township Municipal Building",
+    "address": "65 Mount Hope Road, Rockaway Township, NJ 07866",
+    "lat": 40.912595,
+    "lng": -74.530052
+   },
+   "agendaUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_07142026-1020",
+   "jurisdiction": "Rockaway Township, NJ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
+    "sourceOrg": "Rockaway Township",
+    "collectedAt": "2026-08-15T21:02:23.098Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "civicplus:rockaway_township:archive:2026-08-18",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "bodyName": "Township Council",
+   "title": "Township Council",
+   "startsAt": "2026-08-18T00:00:00-04:00",
+   "startPrecision": "DAY",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Rockaway Township Municipal Building",
+    "address": "65 Mount Hope Road, Rockaway Township, NJ 07866",
+    "lat": 40.912595,
+    "lng": -74.530052
+   },
+   "agendaUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_08182026-1023",
+   "jurisdiction": "Rockaway Township, NJ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
+    "sourceOrg": "Rockaway Township",
+    "collectedAt": "2026-08-15T21:02:23.098Z",
     "verifiedAt": null
    }
   },
@@ -462,7 +774,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1946&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T18:49:38.894Z",
+    "collectedAt": "2026-08-15T21:02:22.345Z",
     "verifiedAt": null
    }
   },
@@ -485,7 +797,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1957&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T18:49:38.894Z",
+    "collectedAt": "2026-08-15T21:02:22.345Z",
     "verifiedAt": null
    }
   },
@@ -508,7 +820,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1981&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T18:49:38.894Z",
+    "collectedAt": "2026-08-15T21:02:22.345Z",
     "verifiedAt": null
    }
   },
@@ -531,7 +843,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1942&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T18:49:38.894Z",
+    "collectedAt": "2026-08-15T21:02:22.345Z",
     "verifiedAt": null
    }
   },
@@ -554,7 +866,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1927&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T18:49:38.894Z",
+    "collectedAt": "2026-08-15T21:02:22.345Z",
     "verifiedAt": null
    }
   },
@@ -577,7 +889,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1943&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T18:49:38.894Z",
+    "collectedAt": "2026-08-15T21:02:22.345Z",
     "verifiedAt": null
    }
   },
@@ -600,7 +912,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1928&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T18:49:38.894Z",
+    "collectedAt": "2026-08-15T21:02:22.345Z",
     "verifiedAt": null
    }
   },
@@ -623,7 +935,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1945&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T18:49:38.894Z",
+    "collectedAt": "2026-08-15T21:02:22.345Z",
     "verifiedAt": null
    }
   },
@@ -646,7 +958,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1956&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T18:49:38.894Z",
+    "collectedAt": "2026-08-15T21:02:22.345Z",
     "verifiedAt": null
    }
   },
@@ -669,7 +981,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.287Z",
+    "collectedAt": "2026-08-15T21:02:22.486Z",
     "verifiedAt": null
    }
   },
@@ -692,7 +1004,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.287Z",
+    "collectedAt": "2026-08-15T21:02:22.486Z",
     "verifiedAt": null
    }
   },
@@ -715,7 +1027,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.287Z",
+    "collectedAt": "2026-08-15T21:02:22.486Z",
     "verifiedAt": null
    }
   },
@@ -738,7 +1050,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.287Z",
+    "collectedAt": "2026-08-15T21:02:22.486Z",
     "verifiedAt": null
    }
   },
@@ -761,7 +1073,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.287Z",
+    "collectedAt": "2026-08-15T21:02:22.486Z",
     "verifiedAt": null
    }
   },
@@ -784,7 +1096,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.287Z",
+    "collectedAt": "2026-08-15T21:02:22.486Z",
     "verifiedAt": null
    }
   },
@@ -807,7 +1119,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.287Z",
+    "collectedAt": "2026-08-15T21:02:22.486Z",
     "verifiedAt": null
    }
   },
@@ -830,7 +1142,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.287Z",
+    "collectedAt": "2026-08-15T21:02:22.486Z",
     "verifiedAt": null
    }
   },
@@ -853,7 +1165,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.287Z",
+    "collectedAt": "2026-08-15T21:02:22.486Z",
     "verifiedAt": null
    }
   },
@@ -876,7 +1188,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.287Z",
+    "collectedAt": "2026-08-15T21:02:22.486Z",
     "verifiedAt": null
    }
   },
@@ -899,7 +1211,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.287Z",
+    "collectedAt": "2026-08-15T21:02:22.486Z",
     "verifiedAt": null
    }
   },
@@ -922,7 +1234,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.287Z",
+    "collectedAt": "2026-08-15T21:02:22.486Z",
     "verifiedAt": null
    }
   },
@@ -945,7 +1257,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.287Z",
+    "collectedAt": "2026-08-15T21:02:22.486Z",
     "verifiedAt": null
    }
   },
@@ -968,7 +1280,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.287Z",
+    "collectedAt": "2026-08-15T21:02:22.486Z",
     "verifiedAt": null
    }
   },
@@ -991,7 +1303,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.287Z",
+    "collectedAt": "2026-08-15T21:02:22.486Z",
     "verifiedAt": null
    }
   },
@@ -1014,7 +1326,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.287Z",
+    "collectedAt": "2026-08-15T21:02:22.486Z",
     "verifiedAt": null
    }
   },
@@ -1037,7 +1349,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.287Z",
+    "collectedAt": "2026-08-15T21:02:22.486Z",
     "verifiedAt": null
    }
   },
@@ -1060,7 +1372,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.287Z",
+    "collectedAt": "2026-08-15T21:02:22.486Z",
     "verifiedAt": null
    }
   },
@@ -1083,7 +1395,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.287Z",
+    "collectedAt": "2026-08-15T21:02:22.486Z",
     "verifiedAt": null
    }
   },
@@ -1106,7 +1418,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.287Z",
+    "collectedAt": "2026-08-15T21:02:22.486Z",
     "verifiedAt": null
    }
   },
@@ -1129,7 +1441,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.287Z",
+    "collectedAt": "2026-08-15T21:02:22.486Z",
     "verifiedAt": null
    }
   },
@@ -1152,7 +1464,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-15T18:49:40.208Z",
+    "collectedAt": "2026-08-15T21:02:24.170Z",
     "verifiedAt": null
    }
   },
@@ -1175,7 +1487,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-15T18:49:40.208Z",
+    "collectedAt": "2026-08-15T21:02:24.170Z",
     "verifiedAt": null
    }
   },
@@ -1198,7 +1510,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-15T18:49:40.208Z",
+    "collectedAt": "2026-08-15T21:02:24.170Z",
     "verifiedAt": null
    }
   },
@@ -1221,7 +1533,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-15T18:49:40.208Z",
+    "collectedAt": "2026-08-15T21:02:24.170Z",
     "verifiedAt": null
    }
   },
@@ -1244,7 +1556,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-15T18:49:40.208Z",
+    "collectedAt": "2026-08-15T21:02:24.170Z",
     "verifiedAt": null
    }
   },
@@ -1267,7 +1579,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-15T18:49:40.208Z",
+    "collectedAt": "2026-08-15T21:02:24.170Z",
     "verifiedAt": null
    }
   },
@@ -1290,7 +1602,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-15T18:49:40.208Z",
+    "collectedAt": "2026-08-15T21:02:24.170Z",
     "verifiedAt": null
    }
   },
@@ -1313,7 +1625,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=493",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.108Z",
+    "collectedAt": "2026-08-15T21:02:22.253Z",
     "verifiedAt": null
    }
   },
@@ -1336,7 +1648,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=496",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.108Z",
+    "collectedAt": "2026-08-15T21:02:22.253Z",
     "verifiedAt": null
    }
   },
@@ -1359,7 +1671,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=492",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.108Z",
+    "collectedAt": "2026-08-15T21:02:22.253Z",
     "verifiedAt": null
    }
   },
@@ -1382,7 +1694,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=485",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.108Z",
+    "collectedAt": "2026-08-15T21:02:22.253Z",
     "verifiedAt": null
    }
   },
@@ -1405,7 +1717,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=169",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.441Z",
+    "collectedAt": "2026-08-15T21:02:22.775Z",
     "verifiedAt": null
    }
   },
@@ -1428,7 +1740,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=168",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.441Z",
+    "collectedAt": "2026-08-15T21:02:22.775Z",
     "verifiedAt": null
    }
   },
@@ -1451,7 +1763,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=167",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.441Z",
+    "collectedAt": "2026-08-15T21:02:22.775Z",
     "verifiedAt": null
    }
   },
@@ -1474,7 +1786,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=166",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.441Z",
+    "collectedAt": "2026-08-15T21:02:22.775Z",
     "verifiedAt": null
    }
   },
@@ -1497,7 +1809,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=175",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.441Z",
+    "collectedAt": "2026-08-15T21:02:22.775Z",
     "verifiedAt": null
    }
   },
@@ -1520,7 +1832,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=165",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.441Z",
+    "collectedAt": "2026-08-15T21:02:22.775Z",
     "verifiedAt": null
    }
   },
@@ -1543,7 +1855,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=174",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.441Z",
+    "collectedAt": "2026-08-15T21:02:22.775Z",
     "verifiedAt": null
    }
   },
@@ -1566,7 +1878,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=163",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.441Z",
+    "collectedAt": "2026-08-15T21:02:22.775Z",
     "verifiedAt": null
    }
   },
@@ -1589,7 +1901,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3371",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-15T18:49:39.719Z",
+    "collectedAt": "2026-08-15T21:02:23.239Z",
     "verifiedAt": null
    }
   },
@@ -1612,7 +1924,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3370",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-15T18:49:39.719Z",
+    "collectedAt": "2026-08-15T21:02:23.239Z",
     "verifiedAt": null
    }
   },
@@ -1635,7 +1947,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3368",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-15T18:49:39.719Z",
+    "collectedAt": "2026-08-15T21:02:23.239Z",
     "verifiedAt": null
    }
   },
@@ -1658,7 +1970,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=705",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.974Z",
+    "collectedAt": "2026-08-15T21:02:23.733Z",
     "verifiedAt": null
    }
   },
@@ -1681,7 +1993,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=707",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.974Z",
+    "collectedAt": "2026-08-15T21:02:23.733Z",
     "verifiedAt": null
    }
   },
@@ -1704,7 +2016,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=706",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.974Z",
+    "collectedAt": "2026-08-15T21:02:23.733Z",
     "verifiedAt": null
    }
   },
@@ -1727,7 +2039,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T18:49:39.198Z",
+    "collectedAt": "2026-08-15T21:02:21.908Z",
     "verifiedAt": null
    }
   },
@@ -1750,7 +2062,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T18:49:39.198Z",
+    "collectedAt": "2026-08-15T21:02:21.908Z",
     "verifiedAt": null
    }
   },
@@ -1773,7 +2085,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T18:49:39.198Z",
+    "collectedAt": "2026-08-15T21:02:21.908Z",
     "verifiedAt": null
    }
   },
@@ -1796,7 +2108,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T18:49:39.273Z",
+    "collectedAt": "2026-08-15T21:02:21.958Z",
     "verifiedAt": null
    }
   },
@@ -1819,7 +2131,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T18:49:39.273Z",
+    "collectedAt": "2026-08-15T21:02:21.958Z",
     "verifiedAt": null
    }
   },
@@ -1842,7 +2154,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T18:49:39.273Z",
+    "collectedAt": "2026-08-15T21:02:21.958Z",
     "verifiedAt": null
    }
   },
@@ -1865,7 +2177,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T18:49:39.347Z",
+    "collectedAt": "2026-08-15T21:02:22.002Z",
     "verifiedAt": null
    }
   },
@@ -1888,7 +2200,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T18:49:39.347Z",
+    "collectedAt": "2026-08-15T21:02:22.002Z",
     "verifiedAt": null
    }
   },
@@ -1911,7 +2223,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T18:49:39.347Z",
+    "collectedAt": "2026-08-15T21:02:22.002Z",
     "verifiedAt": null
    }
   },
@@ -1934,7 +2246,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T18:49:39.421Z",
+    "collectedAt": "2026-08-15T21:02:22.048Z",
     "verifiedAt": null
    }
   },
@@ -1957,7 +2269,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T18:49:39.421Z",
+    "collectedAt": "2026-08-15T21:02:22.048Z",
     "verifiedAt": null
    }
   },
@@ -1980,7 +2292,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T18:49:39.421Z",
+    "collectedAt": "2026-08-15T21:02:22.048Z",
     "verifiedAt": null
    }
   },
@@ -2003,7 +2315,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T18:49:39.495Z",
+    "collectedAt": "2026-08-15T21:02:22.095Z",
     "verifiedAt": null
    }
   },
@@ -2026,7 +2338,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T18:49:39.495Z",
+    "collectedAt": "2026-08-15T21:02:22.095Z",
     "verifiedAt": null
    }
   },
@@ -2049,7 +2361,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T18:49:39.495Z",
+    "collectedAt": "2026-08-15T21:02:22.095Z",
     "verifiedAt": null
    }
   },
@@ -2072,7 +2384,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.322Z",
+    "collectedAt": "2026-08-15T21:02:22.202Z",
     "verifiedAt": null
    }
   },
@@ -2095,7 +2407,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-15T18:49:39.322Z",
+    "collectedAt": "2026-08-15T21:02:22.202Z",
     "verifiedAt": null
    }
   },
@@ -2118,7 +2430,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2240",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T18:49:39.577Z",
+    "collectedAt": "2026-08-15T21:02:22.554Z",
     "verifiedAt": null
    }
   },
@@ -2141,7 +2453,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2236",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T18:49:39.577Z",
+    "collectedAt": "2026-08-15T21:02:22.554Z",
     "verifiedAt": null
    }
   },
@@ -2164,7 +2476,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2241",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T18:49:39.577Z",
+    "collectedAt": "2026-08-15T21:02:22.554Z",
     "verifiedAt": null
    }
   },
@@ -2187,7 +2499,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2242",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T18:49:39.577Z",
+    "collectedAt": "2026-08-15T21:02:22.554Z",
     "verifiedAt": null
    }
   },
@@ -2210,7 +2522,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2243",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T18:49:39.577Z",
+    "collectedAt": "2026-08-15T21:02:22.554Z",
     "verifiedAt": null
    }
   },
@@ -2233,7 +2545,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2244",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T18:49:39.577Z",
+    "collectedAt": "2026-08-15T21:02:22.554Z",
     "verifiedAt": null
    }
   },
@@ -2256,7 +2568,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2245",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T18:49:39.577Z",
+    "collectedAt": "2026-08-15T21:02:22.554Z",
     "verifiedAt": null
    }
   },
@@ -2279,7 +2591,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2246",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T18:49:39.577Z",
+    "collectedAt": "2026-08-15T21:02:22.554Z",
     "verifiedAt": null
    }
   },
@@ -2302,7 +2614,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2247",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T18:49:39.577Z",
+    "collectedAt": "2026-08-15T21:02:22.554Z",
     "verifiedAt": null
    }
   },
@@ -2325,7 +2637,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2248",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T18:49:39.577Z",
+    "collectedAt": "2026-08-15T21:02:22.554Z",
     "verifiedAt": null
    }
   },
@@ -2348,7 +2660,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2249",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T18:49:39.577Z",
+    "collectedAt": "2026-08-15T21:02:22.554Z",
     "verifiedAt": null
    }
   },
@@ -2371,7 +2683,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2250",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T18:49:39.577Z",
+    "collectedAt": "2026-08-15T21:02:22.554Z",
     "verifiedAt": null
    }
   },
@@ -2394,7 +2706,343 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-15T18:49:39.297Z",
+    "collectedAt": "2026-08-15T21:02:22.182Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "revize:merrimack:2026-02-09",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
+   "bodyName": "Merrimack County Board of Commissioners",
+   "title": "Merrimack County Board of Commissioners",
+   "startsAt": "2026-02-09T00:00:00-05:00",
+   "startPrecision": "DAY",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "OCH, 163 N. Main St., Concord",
+    "address": "163 N. Main St., Concord, NH 03301",
+    "lat": 43.210534,
+    "lng": -71.538023
+   },
+   "agendaUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/BOC%20Packet%202.9.26.pdf",
+   "jurisdiction": "Merrimack County, NH",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
+    "sourceOrg": "Merrimack County Board of Commissioners",
+    "collectedAt": "2026-08-15T21:02:22.182Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "revize:merrimack:2026-02-20",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
+   "bodyName": "Merrimack County Board of Commissioners",
+   "title": "Merrimack County Board of Commissioners",
+   "startsAt": "2026-02-20T00:00:00-05:00",
+   "startPrecision": "DAY",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "OCH, 163 N. Main St., Concord",
+    "address": "163 N. Main St., Concord, NH 03301",
+    "lat": 43.210534,
+    "lng": -71.538023
+   },
+   "agendaUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/BOC%20Packet%202.20.26.pdf",
+   "jurisdiction": "Merrimack County, NH",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
+    "sourceOrg": "Merrimack County Board of Commissioners",
+    "collectedAt": "2026-08-15T21:02:22.182Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "revize:merrimack:2026-03-09",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
+   "bodyName": "Merrimack County Board of Commissioners",
+   "title": "Merrimack County Board of Commissioners",
+   "startsAt": "2026-03-09T00:00:00-04:00",
+   "startPrecision": "DAY",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "OCH, 163 N. Main St., Concord",
+    "address": "163 N. Main St., Concord, NH 03301",
+    "lat": 43.210534,
+    "lng": -71.538023
+   },
+   "agendaUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/March%209%20BOC%20Packet.pdf",
+   "jurisdiction": "Merrimack County, NH",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
+    "sourceOrg": "Merrimack County Board of Commissioners",
+    "collectedAt": "2026-08-15T21:02:22.182Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "revize:merrimack:2026-03-23",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
+   "bodyName": "Merrimack County Board of Commissioners",
+   "title": "Merrimack County Board of Commissioners",
+   "startsAt": "2026-03-23T00:00:00-04:00",
+   "startPrecision": "DAY",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "OCH, 163 N. Main St., Concord",
+    "address": "163 N. Main St., Concord, NH 03301",
+    "lat": 43.210534,
+    "lng": -71.538023
+   },
+   "agendaUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/3.23.26%20BOC%20Agenda%20Packet%20(1).pdf",
+   "jurisdiction": "Merrimack County, NH",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
+    "sourceOrg": "Merrimack County Board of Commissioners",
+    "collectedAt": "2026-08-15T21:02:22.182Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "revize:merrimack:2026-04-13",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
+   "bodyName": "Merrimack County Board of Commissioners",
+   "title": "Merrimack County Board of Commissioners",
+   "startsAt": "2026-04-13T00:00:00-04:00",
+   "startPrecision": "DAY",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "OCH, 163 N. Main St., Concord",
+    "address": "163 N. Main St., Concord, NH 03301",
+    "lat": 43.210534,
+    "lng": -71.538023
+   },
+   "agendaUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/Board%20Packet%204.13.26.pdf",
+   "jurisdiction": "Merrimack County, NH",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
+    "sourceOrg": "Merrimack County Board of Commissioners",
+    "collectedAt": "2026-08-15T21:02:22.182Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "revize:merrimack:2026-04-27",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
+   "bodyName": "Merrimack County Board of Commissioners",
+   "title": "Merrimack County Board of Commissioners",
+   "startsAt": "2026-04-27T00:00:00-04:00",
+   "startPrecision": "DAY",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "OCH, 163 N. Main St., Concord",
+    "address": "163 N. Main St., Concord, NH 03301",
+    "lat": 43.210534,
+    "lng": -71.538023
+   },
+   "agendaUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/Public%20Notice%204.27.26.pdf",
+   "jurisdiction": "Merrimack County, NH",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
+    "sourceOrg": "Merrimack County Board of Commissioners",
+    "collectedAt": "2026-08-15T21:02:22.182Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "revize:merrimack:2026-05-11",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
+   "bodyName": "Merrimack County Board of Commissioners",
+   "title": "Merrimack County Board of Commissioners",
+   "startsAt": "2026-05-11T00:00:00-04:00",
+   "startPrecision": "DAY",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "OCH, 163 N. Main St., Concord",
+    "address": "163 N. Main St., Concord, NH 03301",
+    "lat": 43.210534,
+    "lng": -71.538023
+   },
+   "agendaUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/Public%20Notice%205.11.26.pdf",
+   "jurisdiction": "Merrimack County, NH",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
+    "sourceOrg": "Merrimack County Board of Commissioners",
+    "collectedAt": "2026-08-15T21:02:22.182Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "revize:merrimack:2026-05-26",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
+   "bodyName": "Merrimack County Board of Commissioners",
+   "title": "Merrimack County Board of Commissioners",
+   "startsAt": "2026-05-26T00:00:00-04:00",
+   "startPrecision": "DAY",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "OCH, 163 N. Main St., Concord",
+    "address": "163 N. Main St., Concord, NH 03301",
+    "lat": 43.210534,
+    "lng": -71.538023
+   },
+   "agendaUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/BOC%20PACKET%205.26.26.pdf",
+   "jurisdiction": "Merrimack County, NH",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
+    "sourceOrg": "Merrimack County Board of Commissioners",
+    "collectedAt": "2026-08-15T21:02:22.182Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "revize:merrimack:2026-06-01",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
+   "bodyName": "Merrimack County Board of Commissioners",
+   "title": "Merrimack County Board of Commissioners",
+   "startsAt": "2026-06-01T00:00:00-04:00",
+   "startPrecision": "DAY",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "OCH, 163 N. Main St., Concord",
+    "address": "163 N. Main St., Concord, NH 03301",
+    "lat": 43.210534,
+    "lng": -71.538023
+   },
+   "agendaUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/Public%20Notice%206.1.26.pdf",
+   "jurisdiction": "Merrimack County, NH",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
+    "sourceOrg": "Merrimack County Board of Commissioners",
+    "collectedAt": "2026-08-15T21:02:22.182Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "revize:merrimack:2026-06-08",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
+   "bodyName": "Merrimack County Board of Commissioners",
+   "title": "Merrimack County Board of Commissioners",
+   "startsAt": "2026-06-08T00:00:00-04:00",
+   "startPrecision": "DAY",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "OCH, 163 N. Main St., Concord",
+    "address": "163 N. Main St., Concord, NH 03301",
+    "lat": 43.210534,
+    "lng": -71.538023
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Merrimack County, NH",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
+    "sourceOrg": "Merrimack County Board of Commissioners",
+    "collectedAt": "2026-08-15T21:02:22.182Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "revize:merrimack:2026-06-22",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
+   "bodyName": "Merrimack County Board of Commissioners",
+   "title": "Merrimack County Board of Commissioners",
+   "startsAt": "2026-06-22T00:00:00-04:00",
+   "startPrecision": "DAY",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "OCH, 163 N. Main St., Concord",
+    "address": "163 N. Main St., Concord, NH 03301",
+    "lat": 43.210534,
+    "lng": -71.538023
+   },
+   "agendaUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/6.22.26%20BOC%20Agenda.pdf",
+   "jurisdiction": "Merrimack County, NH",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
+    "sourceOrg": "Merrimack County Board of Commissioners",
+    "collectedAt": "2026-08-15T21:02:22.182Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "revize:merrimack:2026-07-13",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
+   "bodyName": "Merrimack County Board of Commissioners",
+   "title": "Merrimack County Board of Commissioners",
+   "startsAt": "2026-07-13T00:00:00-04:00",
+   "startPrecision": "DAY",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "OCH, 163 N. Main St., Concord",
+    "address": "163 N. Main St., Concord, NH 03301",
+    "lat": 43.210534,
+    "lng": -71.538023
+   },
+   "agendaUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/Public%20Notice%207.13.26.pdf",
+   "jurisdiction": "Merrimack County, NH",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
+    "sourceOrg": "Merrimack County Board of Commissioners",
+    "collectedAt": "2026-08-15T21:02:22.182Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "revize:merrimack:2026-07-27",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
+   "bodyName": "Merrimack County Board of Commissioners",
+   "title": "Merrimack County Board of Commissioners",
+   "startsAt": "2026-07-27T00:00:00-04:00",
+   "startPrecision": "DAY",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "OCH, 163 N. Main St., Concord",
+    "address": "163 N. Main St., Concord, NH 03301",
+    "lat": 43.210534,
+    "lng": -71.538023
+   },
+   "agendaUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/BOC%20Packet%207.27.26.pdf",
+   "jurisdiction": "Merrimack County, NH",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
+    "sourceOrg": "Merrimack County Board of Commissioners",
+    "collectedAt": "2026-08-15T21:02:22.182Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "revize:merrimack:2026-08-10",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
+   "bodyName": "Merrimack County Board of Commissioners",
+   "title": "Merrimack County Board of Commissioners",
+   "startsAt": "2026-08-10T00:00:00-04:00",
+   "startPrecision": "DAY",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "OCH, 163 N. Main St., Concord",
+    "address": "163 N. Main St., Concord, NH 03301",
+    "lat": 43.210534,
+    "lng": -71.538023
+   },
+   "agendaUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/Agenda%20-%20August%2010.pdf",
+   "jurisdiction": "Merrimack County, NH",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
+    "sourceOrg": "Merrimack County Board of Commissioners",
+    "collectedAt": "2026-08-15T21:02:22.182Z",
     "verifiedAt": null
    }
   }
@@ -2477,6 +3125,134 @@
    "collectedAt": "2026-08-13T18:43:11.614Z",
    "verifiedAt": null,
    "text": "Board of Supervisors Pima County Meeting Agenda MEETING LOCATION Administration Bldg - East 130 W. Congress Street 1st Floor Tucson, AZ 85701 Public Access to Hearing Room at 4:40 p.m. Board of Supervisors' Hearing Room 3:00 PM Tuesday, July 28, 2026 Study Session PIMA COUNTY BOARD OF SUPERVISORS Jennifer Allen, Chair, District 3 Dr. Matt Heinz, Vice Chair, District 2 Rex Scott, Member, District 1 Steve Christy, Member, District 4 Andrés Cano, Member, District 5 AGENDA/ADDENDUM AND BROADCAST INFORMATION At least 24 hours before each scheduled meeting, the agenda/addendum is available online at www.pima.gov and in the Clerk of the Board’s Office, 130 W. Congress Street, 1st Floor, Tucson, AZ 85701, Mon-Fri, 8am to 5pm. Cable Channels: Cox 96 Webcast: www.pima.gov PUBLIC COMMENTS Written comments to the Board of Supervisors regarding the agenda items can be submitted to COB_mail@pima.gov. All comments will be provided to the Board of Supervisors. HEARING ROOM NOTICE Law permits that a video and/or audio recording of all or part of this meeting may be made if doing so does not interfere with the conduct of the meeting. Pima County has no control over the use and distribution of any such recordings. In addition to the official meeting proceedings, these recordings may include images of and comments made by the public prior to the start, during a recess and after adjournment of the meeting, and may be posted on social media or other internet sites. ACCESSIBILITY The Board Hearing Room is wheelchair and handicapped accessible. Any person who is in need of special services (e.g., assistive listening device, Braille or large print agenda material, signer for hearing impaired, accessible parking, etc.) due to any disability will be accommodated. Please contact the Clerk of the Board at (520) 724-8449 for these services at least three (3) business days prior to the Board Meeting. Page 1 Pima County Printed on 7/27/2026\nJuly 28, 2026 Board of Supervisors Meeting Agenda Clerk's Note: Members of the Pima County Board of Supervisors will attend either in person or by telephone, video or internet conferencing. The meeting can be streamed via the following links: BOS Agenda July 28, 2026 (http://pima.granicus.com/ViewPublisher.php?view_id=3), on YouTube (https://www.youtube.com/c/PimaCountyArizona/), or via Cox Cable Channel 96. Television viewing will be available in the lobby at 130 West Congress, 1st Floor. 1. ROLL CALL 2. AGENDA ADJUSTMENTS EXECUTIVE SESSION (Clerk's Note: In addition to the executive sessions listed below, pursuant to A.R.S. §38-431.03(A)(3) the Board of Supervisors, or the Board sitting as other boards, may vote to go into executive session for the purpose of obtaining legal advice from its counsel with respect to any item listed on this agenda or any addendum thereto.) 3. Pursuant to A.R.S. §38-431.03(A)(3) and (4), for legal advice and direction regarding policies related to property development and zoning. PCA_ExecSession-PropertyDevZoningPolicies Attachments: 4. ADJOURNMENT POSTED: 130 W. Congress Street, 1st Floor Tucson, AZ 85701 Pima County Homepage: www.pima.gov DATE/TIME POSTED: 7/24/26 @ 11:00 a.m. Page 2 Pima County Printed on 7/27/2026",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "civicplus:rockaway_township:archive:2026-01-06@fa59c3b36af2255aab2ee83330a6da51e8d898cc0b435f79c78e7dd3a1f6f436",
+   "meetingId": "civicplus:rockaway_township:archive:2026-01-06",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "documentUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_01062026-990",
+   "contentHash": "fa59c3b36af2255aab2ee83330a6da51e8d898cc0b435f79c78e7dd3a1f6f436",
+   "retrievedAt": "2026-08-15T21:02:24.614Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_01062026-990",
+   "sourceOrg": "Rockaway Township",
+   "collectedAt": "2026-08-15T21:02:24.614Z",
+   "verifiedAt": null,
+   "text": "TOWNSHIP OF ROCKAWAY 2026 REORGANIZATION MEETING AGENDA JANUARY 6, 2026 7:00PM Page 1 of 7 1. WELCOME 2. REORGANIZATION MEETING CALLED TO ORDER BY THE TOWNSHIP CLERK. 3. FLAG SALUTE 4. MOMENT OF SILENCE TO REMEMBER THE SERVICE AND SACRIFICES OF THE ARMED SERVICE MEMBERS WHO PROTECT OUR NATION AND THE FIRST RESPONDERS WHO PROTECT OUR NEIGHBORHOODS 5. THIS MEETING WAS ADVERTISED IN THE DAILY RECORD AND THE OFFICIAL NEWSPAPERS FOR THE TOWNSHIP OF ROCKAWAY. NOTICE WAS POSTED ON THE OFFICIAL BULLETIN BOARDS OF ROCKAWAY TOWNSHIP, THE TOWNSHIP WEBSITE, AND NOTICE WAS FILED IN THE OFFICE OF THE TOWNSHIP CLERK. 6. RABBI ASHER HERSON, FROM THE CHABAD CENTER, TO PRESENT THE INVOCATION 7. ROLL CALL 8. ADMINISTERING OATHS OF OFFICE 9. ELECTION OF COUNCIL PRESIDENT 10. MAYOR ADMINISTERS OATH OF OFFICE TO COUNCIL PRESIDENT 11. COUNCIL PRESIDENT WILL BEGIN TO PRESIDE OVER THE MEETING AT THIS TIME AND GIVE HIS ADDRESS 12. ELECTION OF COUNCIL VICE-PRESIDENT 13. MAYOR ADMINISTERS OATH OF OFFICE TO COUNCIL VICE-PRESIDENT\n14. MAYOR ’ S ADDRESS 15. MAYOR ’ S APPOINTMENTS A. Clean Communities Coordinator – 1 year term ending 12/31/2026: Cara Sileno B. Recycling Coordinator – 1 year term ending 12/31/2026: Al Knoth C. Community Development and Revenue Sharing Committee – 1 year term ending 12/31/2026: i. Regular Member: Peter Tabbot ii. Alternate Member: Allison Ferrante iii. Council Committee Rep: TBD D. Planning Board: i. Class IV Member – 4-year term ending 12/31/2029: Jack Elko ii. Class IV Member – 4-year term ending 12/31/2029: Jennifer Meyers iii. Alternate – 1-year term ending 12/31/2026: Steve Cafone iv. Alternate- 2-year term ending 12/31/27: Mary Noon E. Municipal Alliance Committee – 1 year term ending 12/31/2026: Brenda Budd, Susan Gaeb F. Emergency Management – 2-year term expiring 12/31/2027 i. – Coordinator: Chief Robert Scherr ii. – First Deputy: Captain Michael Dachisen iii. – Second Deputy: Bert Parks G. Safety Delegate-TBD H. Library Board Trustee – 5-year term, Expiring 12/31/2028 i. - Ray Furman ii. - Joann Claps 16. COUNCIL PRESIDENT APPOINTMENT A. Council Liaisons – 1 year term ending 12/31/2026: i. Board of Education – Regional: (1) TBD ii. Board of Education – Local: (1) TBD iii. County Commissioners: TBD iv. County Commissioners, Alternate: (1)\nTBD v. Historical Society TBD vi. Library Board of Trustees: TBD vii. Library Board of Trustees, Alternate: (1) TBD viii. Morris Council on Older Persons: TBD ix. Municipal Alliance Committee: TBD x. Senior Citizens: TBD xi. Local Emergency Planning Council: TBD 17. APPOINTMENTS: A. R-26-02 MAYOR ’ S APPOINTMENTS WITH ADVICE & CONSENT OF THE TOWNSHIP COUNCIL B. R-26-03 TOWNSHIP COUNCIL APPOINTMENTS 18. APPROVAL OF MINUTES: A. December 9, 2025 – Township Council Regular Meeting Minutes 19. CONSENT AGENDA: A. R-26-01 RESOLUTION AUTHORIZING THE CHIEF FINANCIAL OFFICER OR THE BUSINESS ADMINISTRATOR TO DETERMINE THE CIRCUMSTANCES UNDER WHICH THE CERTIFICATION REQUIREMENTS RESPECTING CLAIMS FOR PAYMENT MADE TO THE TOWNSHIP MAY BE FORGIVEN B. R-26-04 RESOLUTION AUTHORIZING THE EXECUTION OF A CASH MANAGEMENT PLAN FOR THE TOWNSHIP OF ROCKAWAY C. R-26-05 RESOLUTION AUTHORIZING ADMINISTRATOR OF THE MUNICIPAL COURT TO COLLECT MONEYS AND FEES AND DEPOSIT THEM IN A DESIGNATED DEPOSITORY D. R-26-06 RESOLUTION ESTABLISHING PETTY CASH FUNDS AND DESIGNATING THE PERSON RESPONSIBILE FOR SUCH E. R-26-07 RESOLUTION DESIGNATING THE FEE FOR RECEIVING NOTICES THROUGHOUT THE YEAR 2026\nF. R-26-08 RESOLUTION DESIGNATING THE OFFICIAL NEWSPAPERS FOR THE TOWNSHIP OF ROCKAWAY FOR THE YEAR 2026 G. R-26-09 GOVERNING BODY CERTIFICATION OF COMPLIANCE WITH THE UNITED STATES EQUAL EMPLOYMENT OPPORTUNITY COMMISSION ’ S “ Enforcement Guidance on the Consideration of Arrest and Conviction Records in Employment Decisions Under Title VII of the Civil Rights Act of 1964 ” H. R-26-10 RESOLUTION AUTHORIZING THE DEFENSE, PROSECUTION AND SETTLEMENT OF TAX APPEALS I. R-26-11 RESOLUTION AUTHORIZING THE TOWNSHIP OF ROCKAWAY TO JOIN MORRIS COUNTY ADAPTIVE RECREATIONAL PROGRAM (McARP) J. R-26-12 RESOLUTION DESIGNATING OFFICER TO CERTIFY UNPAID MUNICIPAL LIENS K. R-26-13 RESOLUTION AUTHORIZING CANCELLATION OF SMALL BALANCES IN ACCORDANCE WITH THE SMALL BALANCE THRESHOLD AMOUNT SET FORTH IN NJSA 40A:5-17.1 L. R-26-14 RESOLUTION ESTABLISHING INTEREST ON DELINQUENT TAXES M. R-26-15 RESOLUTION TO CHARGE 6% YEAR END PENALTY N. R-26-16 RESOLUTION AUTHORIZING SEWER ASSESSMENT PAYMENTS O. R-26-17 RESOLUTION GRANTING AUTHORIZATION TO RETAIN PROFESSIONAL SERVICES THE COST OF WHICH IS ANTICIPATED TO EXCEED THE BID THRESHOLD IN ACCORDANCE WITH THE LOCAL PUBLIC CONTRACTS LAW P. R-26-18 AUTHORIZING PURCHASE OF CERTAIN GOODS AND SERVICES THROUGH THE USE OF STATE, COUNTY AND REGIONAL COOPERATIVE CONTRACTS FOR THE YEAR 2026 Q. R-26-19 RESOLUTION DESIGNATING COURT ATTENDANTS FOR THE YEAR 2026 R. R-26-20 RESOLUTION SETTING THE SPECIAL EVENT PERMIT FEE FOR THE CALENDAR YEAR 2026 PURSUANT TO ORDINANCE O-20-13 S. R-26-21 RESOLUTION APPROVING THE ROCKAWAY TOWNSHIP FIRE DEPARTMENT OFFICERS T. R-26-22 APPOINTING A PUBLIC AGENCY COMPLIANCE OFFICER FOR THE CALENDAR YEAR 2026 U. R-26-23 APPOINTING AN ADA COORDINATOR FOR 2026 V. R-26-24 RESOLUTION DESIGNATING THE OFFICIAL BULLETIN BOARD FOR THE TOWNSHIP OF ROCKAWAY FOR THE YEAR 2026\nW. R-26-25 A RESOLUTION ESTABLISHING TEMPORARY APPROPRIATIONS FOR THE TOWNSHIP OF ROCKAWAY FOR 2026 X. R-26-26 A RESOLUTION AUTHORIZING REDEMPTION OF TAX TITLE LIEN C#25-00028 AGAINST BLOCK 20702 LOT 16.01 KNOWN AS 95 W LAKE SHORE DR. Y. R-26-27 A RESOLUTION AUTHORIZING REDEMPTION OF TAX TITLE LIEN C#25-00032 AGAINST BLOCK 21301 LOT 15 KNOWN AS 32 VALLEY VIEW DR. Z. R-26-28 A RESOLUTION AUTHORIZING REDEMPTION OF TAX TITLE LIEN C#24-00056 AGAINST BLOCK 21901 LOT 19 KNOWN AS 32 STONYBROOK RD. AA. R-26-29 A RESOLUTION AUTHORIZING REDEMPTION OF TAX TITLE LIEN C#16-00069 AGAINST BLOCK 40801 LOT 139 KNOWN AS TIMBERBROOK RD. BB. R-26-30 RESOLUTION PURSUANT TO N.J.S.A. 10:4-18 PROVIDING OFFICIAL NOTICE OF THE 2026 ROCKAWAY TOWNSHIP REGULAR MEETING SCHEDULE CC. R-26-31 A RESOLUTION AUTHORIZING REDEMPTION OF TAX TITLE LIEN C#24-00039 AGAINST BLOCK 11509 LOT 6 KNOWN AS 337 RICHARD MINE RD. DD. R-26-32 RESOLUTION TO APPOINT LISA PALMIERI, CHIEF FINANCIAL OFFICER/BUSINESS ADMINISTRATOR, AS THE JOINT INSURANCE FUND COMMISSIONER AND BRYAN COWARD, PURCHASING AGENT, AS ALTERNATIVE COMMISSIONER EE. R-26-33 A RESOLUTION APPROVING THE APPOINTMENT OF CONFLICTS COUNSEL FOR ROCKAWAY TOWNSHIP FF. R-26-34 RESOLUTION TO APPOINT LISA PALMIERI, CHIEF FINANCIAL OFFICER/BUSINESS ADMINISTRATOR, AS THE HEALTH INSURANCE FUND COMMISSIONER AND BRYAN COWARD, PURCHASING AGENT, AS ALTERNATIVE COMMISSIONER GG. R-26-35 MAYOR ’ S APPOINTMENTS WITH THE ADVICE & CONSENT OF THE TOWNSHIP COUNCIL 20. OPEN TO THE PUBLIC: 21. RABBI ASHER HERSON, FROM THE CHABAD CENTER, TO PRESENT THE BENEDICTION\n22. REPORTS: A. Council/Committees B. Mayor C. Township Attorney D. Administration 23. ADJOURN: NEXT REGULAR MEETING JANUARY 20, 2026",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "civicplus:rockaway_township:archive:2026-01-20@8d0e11f0cd3e01140ef7d1312055011eb7680adcef9ee31df1d53200d66eafc5",
+   "meetingId": "civicplus:rockaway_township:archive:2026-01-20",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "documentUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_01202026-995",
+   "contentHash": "8d0e11f0cd3e01140ef7d1312055011eb7680adcef9ee31df1d53200d66eafc5",
+   "retrievedAt": "2026-08-15T21:02:25.981Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_01202026-995",
+   "sourceOrg": "Rockaway Township",
+   "collectedAt": "2026-08-15T21:02:25.981Z",
+   "verifiedAt": null,
+   "text": "Agenda Page 1 of 2 January 20th Township Council Regular Meeting As of: 1/16/2026 ROCKAWAY TOWNSHIP REGULAR MEETING AGENDA VIEW ON YOUTUBE HERE JANUARY 20th, 2026 7:00PM 1. CALL TO ORDER 2. COUNCIL PRESIDENT TO LEAD THOSE PRESENT IN THE SALUTE TO THE AMERICAN FLAG 3. MOMENT OF SILENCE TO REMEMBER THE SERVICE AND SACRIFICES OF THE ARMED SERVICE MEMBERS WHO PROTECT OUR NATION AND THE FIRST RESPONDERS WHO PROTECT OUR NEIGHBORHOODS 4. ROLL CALL 5. ADEQUATE NOTICE OF THIS MEETING WAS PROVIDED TO THE DAILY RECORD AND THE OFFICIAL NEWSPAPERS FOR THE TOWNSHIP OF ROCKAWAY. NOTICE WAS POSTED ON THE OFFICIAL BULLETIN BOARDS OF ROCKAWAY TOWNSHIP, THE TOWNSHIP WEBSITE, AND NOTICE WAS FILED IN THE OFFICE OF THE TOWNSHIP CLERK. 6. APPROVAL OF MINUTE(S): A. DECEMBER 9 TH TOWNSHIP COUNCIL CLOSED SESSION MEETING MINUTES B. DECEMBER 30 TH TOWNSHIP COUNCIL SPECIAL MEETING MINUTES C. JANUARY 6 TH TOWNSHIP COUNCIL REORGANIZATION MEETING MINUTES 7. REVIEW EDIT OF RESOLUTION # R-26-03 - TOWNSHIP COUNCIL APPOINTMENTS 8. OPEN TO THE PUBLIC: 9. CONSENT AGENDA: R-26-36 RESOLUTION AUTHORIZING PURCHASE OF CERTAIN GOODS AND SERVICES THROUGH THE USE OF STATE, COUNTY AND REGIONAL COOPERATIVE CONTRACTS FOR THE YEAR 2026 R-26-37 REFUND A 2025 WATER OVERPAYMENT APPLICABLE TO BLOCK 20604 LOT 29 ALSO KNOW AS 24 APACHE TRL. R-26-38 RESOLUTION GRANTING AUTHORIZATION TO RETAIN PROFESSIONAL SERVICES THE COST OF WHICH IS ANTICIPATED TO EXCEED THE BID THRESHOLD IN ACCORDANCE WITH THE LOCAL PUBLIC CONTRACTS LAW\nAgenda Page 2 of 2 January 20th Township Council Regular Meeting As of: 1/16/2026 R-26-39 RESOLUTION AUTHORIZING AN APPLICATION TO THE NEW JERSEY DEPARTMENT OF COMMUNITY AFFAIRS FOR A LOCAL RECREATIONAL IMPROVEMENT GRANT 10. NEW BUSINESS AND DISCUSSION: 11. ADJOURNMENT: * NEXT TOWNSHIP COUNCIL REGULARY MEETING - FEBRUARY 10TH*",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "civicplus:rockaway_township:archive:2026-02-10@480462da72ee0fa3db4d4df6e31f9d1e4486578d2773d8cb6c5c5b88ce12b389",
+   "meetingId": "civicplus:rockaway_township:archive:2026-02-10",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "documentUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_02102026-999",
+   "contentHash": "480462da72ee0fa3db4d4df6e31f9d1e4486578d2773d8cb6c5c5b88ce12b389",
+   "retrievedAt": "2026-08-15T21:02:26.322Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_02102026-999",
+   "sourceOrg": "Rockaway Township",
+   "collectedAt": "2026-08-15T21:02:26.322Z",
+   "verifiedAt": null,
+   "text": "Agenda Page 1 of 3 February 10 th Township Council Regular Meeting As of: 2/10/2026 ROCKAWAY TOWNSHIP REGULAR MEETING AGENDA VIEW ON YOUTUBE HERE FEBRUARY 10th, 2026 7:00PM 1. CALL TO ORDER 2. COUNCIL PRESIDENT TO LEAD THOSE PRESENT IN THE SALUTE TO THE AMERICAN FLAG 3. MOMENT OF SILENCE TO REMEMBER THE SERVICE AND SACRIFICES OF THE ARMED SERVICE MEMBERS WHO PROTECT OUR NATION AND THE FIRST RESPONDERS WHO PROTECT OUR NEIGHBORHOODS 4. ROLL CALL 5. ADEQUATE NOTICE OF THIS MEETING WAS PROVIDED TO THE DAILY RECORD AND THE OFFICIAL NEWSPAPERS FOR THE TOWNSHIP OF ROCKAWAY. NOTICE WAS POSTED ON THE OFFICIAL BULLETIN BOARDS OF ROCKAWAY TOWNSHIP, THE TOWNSHIP WEBSITE, AND NOTICE WAS FILED IN THE OFFICE OF THE TOWNSHIP CLERK. 6. APPROVAL OF MINUTE(S): A. JANUARY 20 TH TOWNSHIP COUNCIL CLOSED SESSION MEETING MINUTES 7. MAYOR ’ S APPOINTMENT Labor Counsel - Hatfield Schwartz Law Group 8. ORDINANCE(S) FOR INTRODUCTION: O-26-01 ORDINANCE PROVIDING FOR PFAS REMEDIATION IN AND BY THE TOWNSHIP OF ROCKAWAY, IN THE COUNTY OF MORRIS, NEW JERSEY, AND APPROPRIATING $864,737.74 THEREFOR FROM MONIES AVAILABLE IN THE RESERVE FOR PFAS REMEDIATION OF THE TOWNSHIP. O-26-02 AN ORDINANCE AMENDING CHAPTER 2 “ ADMINISTRATIVE CODE ” , ARTICLE IX, SECTION 2-48.4 “ WEDDING AND CIVIL UNION CEREMONIES ” , OF THE REVISED GENERAL ORDINANCES OF THE TOWNSHIP OF ROCKAWAY O-26-03 AN ORDINANCE AMENDING CHAPTER 54 ENTITLED \"LAND USE AND DEVELOPMENT\" OF THE CODE OF THE TOWNSHIP OF ROCKAWAY AMENDING SECTION 54-30.52 ENTITLED \"R-B MFO REGIONAL BUSINESS MULTIFAMILY OVERLAY DISTRICT\"\nAgenda Page 2 of 3 February 10 th Township Council Regular Meeting As of: 2/10/2026 O-26-04 AN ORDINANCE AMENDING CHAPTER 54 ENTITLED \"LAND USE AND DEVELOPMENT\" OF THE CODE OF THE TOWNSHIP OF ROCKAWAY CREATING A NEW SECTION 54-30.34 ENTITLED \"RMF-14 MULTIFAMILY RESIDENTIAL DISTRICT\" O-26-05 AN ORDINANCE AMENDING CHAPTER 54 ENTITLED \"LAND USE AND DEVELOPMENT\" OF THE CODE OF THE TOWNSHIP OF ROCKAWAY CREATING A NEW SECTION 54-30.71 ENTITLED \"RMFO-15B MULTIFAMILY RESIDENTIAL OVERLAY DISTRICT\" O-26-06 AN ORDINANCE AMENDING CHAPTER 54 ENTITLED \"LAND USE AND DEVELOPMENT\" OF THE CODE OF THE TOWNSHIP OF ROCKAWAY CREATING A NEW SECTION 54-30.72 ENTITLED \"RMFO-15C MULTIFAMILY RESIDENTIAL OVERLAY DISTRICT\" 9. OPEN TO THE PUBLIC: 10. CONSENT AGENDA: R-26-40 A RESOLUTION AUTHORIZING REDEMPTION OF TAX TITLE LIEN C#25-00017 AGAINST BLOCK 11301.10 LOT 3.13 KNOWN AS 313 FISCHER CT. R-26-41 RESOLUTION AUTHORIZING SUBMISSION OF A STRATEGIC PLAN FOR THE ROCKAWAY TOWNSHIP MUNICIPAL ALLIANCE GRANT FOR FISCAL YEAR 2027 AND ACKNOWLEDGING THE TERMS AND CONDITIONS FOR ADMINISTERING THE MUNICIPAL ALLIANCE GRANT R-26-42 A RESOLUTION AUTHORIZING AND APPROVING A CERTAIN SOIL DISTURBANCE PERMIT FOR THE WALTERS RESIDENCE WITH RESPECT TO REAL PROPERTY DESIGNATED ON THE OFFICIAL TAX MAP OF THE TOWNSHIP OF ROCKAWAY AS BLOCK 31101, LOT 56 AND BEING MORE COMMONLY KNOWN AS 48 UPPER HIBERNIA ROAD R-26-43 RESOLUTION NAMING THE NEW WATER UTILITY BUILDING AS THE “ STALTER REIDEL ” BUILDING R-26-44 RESOLUTION GRANTING AUTHORIZATION TO RETAIN PROFESSIONAL SERVICES THE COST OF WHICH IS ANTICIPATED TO EXCEED THE BID THRESHOLD IN ACCORDANCE WITH THE LOCAL PUBLIC CONTRACTS LAW R-26-45 RESOLUTION AUTHORIZING THE USE OF COMPETITIVE CONTRACTING FOR THE PURPOSE OF CONTRACTING FOR PRIMARY BANKING SERVICES VIS A VIS A REQUEST FOR PROPOSAL 11. NEW BUSINESS AND DISCUSSION: TIMOTHY BLOOMFIELD – FULL MEMBERSHIP – Fire Company #3 ETHAN ANGOMAS – JUNIOR MEMBERSHIP - Fire Company #5\nAgenda Page 3 of 3 February 10 th Township Council Regular Meeting As of: 2/10/2026 12. ADJOURNMENT: * NEXT TOWNSHIP COUNCIL REGULARY MEETING - FEBRUARY 24TH*",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "civicplus:rockaway_township:archive:2026-02-24@00bd2a7b0db7c8323c84768dbc3a1d09b3cb96ff8382540634d0fac9e1e2e616",
+   "meetingId": "civicplus:rockaway_township:archive:2026-02-24",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "documentUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_02242026-1002",
+   "contentHash": "00bd2a7b0db7c8323c84768dbc3a1d09b3cb96ff8382540634d0fac9e1e2e616",
+   "retrievedAt": "2026-08-15T21:02:26.637Z",
+   "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+   "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_02242026-1002",
+   "sourceOrg": "Rockaway Township",
+   "collectedAt": "2026-08-15T21:02:26.637Z",
+   "verifiedAt": null,
+   "text": "PK\u0003\u0004\u0014\u0000\u0006\u0000\b\u0000\u0000\u0000!\u0000v��z�\u0001\u0000\u0000�\u0007\u0000\u0000\u0013\u0000\b\u0002[Content_Types].xml �\u0004\u0002(�\u0000\u0002\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000��MK�@\u0010���!�U��\u001eD��\u0007?�*��u�;i\u0017���Ik���~\u0004��)��\u0004��y�gߐ���ۚl\u000e1i� v�\u000fY\u0006Nz�ݴ`\u001f�O�\u001b�%\u0014N �\u001d\u0014l �ݍ��F��\u0000)�i� 6C ��'9\u0003+R�\u00038��>Z�t\u001b� \b6ҝ\u0010H+\u0001���X�쳤�Տ�VL�Ǳ�;��\u001e�����#I\u001f}>�ד\u0002���W w�\u0003\u0000\u0000��\u0003\u0000PK\u0003\u0004\u0014\u0000\u0006\u0000\b\u0000\u0000\u0000!\u0000\u001e�\u001a��\u0000\u0000\u0000N\u0002\u0000\u0000 \u0000\b\u0002_rels/.rels �\u0004\u0002(�\u0000\u0002\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000���j�0 @���ѽQ��\u0018�N/c��\u0018�\u0007\b[IL\u0013��j��� oY�q\u0017\u001aVI�GA,8��5*������!Ɓ�Cꁥ�D(\\��\u0007��\u000f���\u0007L\u0002U\u0016)rڙ �\u0004��rn�A�\u0018���\u001c�n�c ��\u000f̒\u001f�,�G��N�5�b6c!~\u0012�\"A��Ia?\u0010��\u0019$�@�Qoa\u0015�V��Z,�b��P$v̖h�����/�\u0016���b-���WO\u0013OM\u0017io���\u000e�/\"\"x��Q� ���+q+��\u0014)�ϫ`��js`�����\u0007�����v�j�a\u000f��C�\u000e�[q \u000e��DR�C�0�٦���`N;��h�'�ktߞ�����\u0005\u0005^����d:I�)&��0�d��\b��\u0015\u001f\u001f� �g�8���%Jx�z��|��j>#����?�3�&�gS� f=�\u001d[)]br�@����w�(N�)\u0004ȆG�b_�/_��~���vN ��\u0014��5$H�I\u0004qZ�Q����_#��͟^�F4$\u0007� ��DT!F�� � ���3 �!�i:�4\u0001�a����bu@�D`4��5\u0019�\u0006K�\u001bR�{ް��3� T �\be�\u0002\u0004,\u0003m��(�����s�I:����͡�\u0018��\\�lH\u0013y\u0013�k]n�\u0004S\u0004(%�ʡ�����(η�yS���o1���K=�Ȑ��q�mo`�i?�\",�����\u00016\u0000A��r\u0016\u0012������'��@���]γ9�1�Ӥ,�)�@j�\u0000\u000f�ճdE9 P[-�L6|\u0006�ْ\u0019TE�X��DY�%\b�b�\u0011:\u001a�\u000e�3t���\u001d�����+�\u001e�u�� \u001c�Z\u0006�{,dt�[� ]\u0006DH�bm'� �͠jpލ�T\\LXV�6\u0010��ݡG��\u001a8��\u0001�D�\u0003�'�\u0016\u001d��RZ)\u001d�f�]�f����n��^7L\u0011�G\u001cK�}����&ʐdC�XfB����@��&�\u0004�r(�C�\u0014 ���$�\u0006!����\u000e!�g�XD�Mε������!=��h��Fy�|�h;�\u001b4��e�on\u0013�\u0016�I\u0000B�\u0003�� ��Y �{7�z�Q�� ��\u0011c��Ly.w{cӔm{D� \u001e:\\\u001f{��O\u0015�&���zT����\u001b��u}��΍m\u001b�\u0014�LY�&lr�S\u000eL�(|3���c����g\u00106\u0015 �J�\u0001�Id��O(u !�\b���C�̢�h�;��\u0001%�>�\u0017\u000f9ۧP`Qa�\u0019�\u0013&I?\u001eM&�-o2 b�\u001f Ñ�&�g��\u001f�'�)R�QK\u001f�Q\u0014Aҕ�u��J\u0002\u000fXD�~M\u001d�g��\u001e�����@�\u0000U^_K=-5�\u0006�.IH �®售2\u0010�\u0010R�2\u0003�7�o�\u0018\u0012��+�HM:\u001f�Ť!P���k�T���\u0015�� n�\u0002/^y��5]��N{k.'\u001eyؽ� ��\u0005+��I�`�GPA�\u0004Q������#~\\\u0004Q �\u0013:\u0014�6\u0012ڈ[�/a���_\u0006n�G ����4\u001c��2��^��?Z����%i��Ff���\\7Ț�f�\u0006Lw��NO���r�\u001b̚�.!I3+G$���D��\u0005��dS[��\u0014�\u0004�\u0004ʧ!��Rv�\\ /^�P��Z\u000e�H\u0012N�ܞ#�\u0013q���XѺs�-/�\u001d�\u000e {���k�Q�ͫt;�*O�jC�v�*����\u001b\u0010�`�\u001d\u0007\u0017����#j� � q5��\u0001\u0000\u0000���[�r۸\u0015~\u0015��δ;�\u0003���g�\u0019\u0010\u0000-&\u0012���c����J�ƶ4����*������$\u0005@��\u0014%3��8�ͅ#\u0011 q>�|�9\u0007��\u001f����Q�͎�|4=�b\u001e�4d\u0002t��4�_N�\u001fŠ��\u0004Ģ#x@� A\u0010\u0002\u001ar����%@\u001a�\u000e�V�\u0005�\u000f∽������\u001aY� �s�ԉ�8H�A(^��\"N�줞B�r�n�\u001e-���c�}۰\u000fm�2�����? D\u0002�) ��k��\b�HD|*�-��\u0016M ��W/�0Λ'��I����*t��WQB$��|���\bKx 7DI\u0010���%J6�\u001a�����Av5��\u0000���D�\u0005�\b���\u000f'�Qv+߭6,ۀ��\u0015.\u0016,˒���`nAk>Rn�6fk�\u001d`�\u0000�S.plk���߮��&���|/�l0\u0019d�\u0006{ǒ�`� �#B- �E���\u0001\u0006_����N\u0010\u0006I\u001aK֝*�s����$��4`��g� \u0011LS\u0012\u001f\u0010琨�^ �\u001f�T�\u0005�A\u001b�BՃI��l�\u000f�q8\u0016�A\"88\u0011��i{iSReyQ�\u001a\u0010ބ�#�2\u0015 �R��e*`bx��Q���P�Ӣ�F�W��%l.�}���喧(l��ۘ+U*��&t����\u0014�0��&ۂ�w��а�\u0006��>{зS��϶�����HQ�\u0018�4����٤�\u0017�;r��\u001c��=u:�-ڤ�/��pF\u001b���Nd���D����/[��z���B\u001bN̷b�*�ڽ \u0007�}�!���\u000e�L_P���V^C1t�Z���2̨A�x��( �C�bx\u0011%�m�\u001be�\u0015�|�(�Z�s�FpE�\u001f-�\u001cG]!\u0015 �\"��y�\u001d5�)v\u0011u��ă׿�r�\u0013�`[�Ԍk_-�$�c�ۺ\u0010Z��\\�\u0011�\u000eeM�c\u001bH� XH(g��7!v�?�ᦑ]_��K����[$\"�@�T��!&�Ea�2 *�CN+f�\u0019�>\\��\u000fɴ�M�3TR��pӿ����u�\u0001#l#�DV>X�\u001d���; \u0003c ���\u0017�:.&�qTM�M�\u0012�6�e֛&�\\�.�N\u0013ymmSn����Gi\u0018>D�R�g\u0011��\u0005��ҩjP�U��,b�:o }w�W�\u001agSѳ j���\u0017=d%;^_�����Z�pb�U��^ڊ����ڈ\u0005\u0017��bə��4H۲\u0016 d�a�@\u0006\u0002�� v �\u001c]11�\u000f7f\u0001?Fʯ_ѓd� ��l�W�o����@\u0007�%�c\u001c�B�o�\u000e�O�4\u0001�\u000e�̗%�v�|\u0019S\u0003Xm�!���\u0011��$Ei�,Ox�\"�r.}�0���m�R�\u0006�#\u001ew�\u0010��ظ�\u0019�u Ƚ� �\u0001/`� 1܅�j���\u0005��\u00060w�m����Qv=���*�Ժ��v=�!R����8Qq����zI\"��h?� DPV)$��C�K���&'��5�\u0015w(� dŝ�-�K\u0012˃�ty��9�4ʩ�MV.\u0016#A�%�v�Y(,��~����i;�\u001d\u0015�#�2��3�M:]\u0003�&�?L\b�5�^\u000f��hl���n�\u001f\u0002�_F�8T����V�+&tm�5���oZxy��._)w\\���f��՟7ԡ��Ȯ�Q��߁jv�{�����n���\\G�BC\u0002�#� ]yw�_�,�/\u0000���ܾ���t���\u0006�6���l���/\u001b\u0003}\u0001�Û\u0012��ty|U� �����$\u001bj�I^u�� i��5����\u001fߌ.o�\u0007y��k�Q\u001c�\u001f\u0000\u0000��\u0003\u0000PK\u0003\u0004\u0014\u0000\u0006\u0000\b\u0000\u0000\u0000!\u0000�I� �\u0002\u0000\u0000� \u0000\u0000\u0011\u0000\u0000\u0000word/endnotes.xmlԖ�n�0\u0010��\u0005�\u000e��\u000e�8�#�\u000e��)r ��\u0001\u0018���� Hʊ߾C�I�\u0006�r�\u000fZH�\u001fg�3c-n�x�\u001d�6L��\u001f^\u0004�G\u0005�)\u0013������d�{�b��L ����7���\u0016EBE*���\u0003�0I����[�\u0012� �S��\u0005gDK#���H��v�\bE��)��0(����\u001a\u0003��aq�Ưq�m\u0018-ո\u0000�\u0003N\u0011�cm�[�\bφ\\�k4\u0011 �0 ���l� 9�z��(\u0010X�#]�#�pn6�\u0014�IW�Hq�4\u001fG�\u0013�'�TT��Vj�-��\u001d�X��j\u0002`�-{a\u0019�G`\u0006�\u0006��x\u001da\u0011�Z\u0002�ӳ W�˔fq�P��ϵHj���;ӓJ_�\u001a�\u001e�%�H�s*l�9�4�XHa�L�\u0015���`r�@\u000e�9q�Y��P��r�W{�T��C̯�ϳ��ωa0�D\u001c�U 1�㞍%\u001c���xTh�\u00057\u001c�@\u001a@�\u0003�\b\u001b�� ��&�\u0003�w\u001cC��\\6\u0018s�]�\u0017j��l��e�:\u001a�\u001a������ �����}%��\u0019�� Z\u0002'��NH�_2�\brȃ4��\u0013pW8\u0015�\u0015���>\u0015�\"�G\u0005� UXc+�\u000fC��'a�N�r���\u0007\u0018������\u000fh�n\u0014\u001a�-G럓�gK�����.�ַ�Іnq���̣\u001b���n��6|��f\u0014&�\u0019,�[K��\u0005N�1\u0017�hھ ��2�\u0000� �\u0002H��>\u0001�S |ѡ�ѷBP�n�a�e�\u0018�A0�O~\u0012� 5H���{��(��x\u0017__�z\u0014:�����K��@ax�J��n��,\\�\u001fJ�d5�k6�a��jB�5XDrǠυ^Pp\u001f�x�= ��\u001fa9��G!:z���\u0000\u0000\u0000��\u0003\u0000PK\u0003\u0004\u0014\u0000\u0006\u0000\b\u0000\u0000\u0000!\u0000���3\u0004\u0000\u0000�\u0013\u0000\u0000\u0010\u0000\u0000\u0000word/footer1.xmlԗKs�8\u0010��[����{Hx�EŞ�v��!���sۋ �f\u0007�V\u0012v��\u0001���1&���\u001c ��\u001fju+\u000f_��@�`�}\u0012 e�^�%\u001c9����P~[�����\u0005�\\\u0014�\b\u000f�\u001d��ѯ� i�8n@�l2\u001b���q\u0003R\u0007S�7�v�\u001a��� 3�T�\u0006�3�G�XI\u001b���Ta�\u0006T\u0017��y0�K\u0016#��u�\u001d��� �\u0017wG7/\u0011�6�w��\u0000w0\u0013v௢�5\u001eS��\u000e��7%�\"֧Znw��U���'W���l��>�8j��\u001b�q��u\u0013\u0012G�\u001fH��*\u000e S_0\u0016pS�S63�=�Uv���\"|�b�C)�j�z]G�*x\u001d{� N�ţ��\u001f�����\u000e��F尵?W ��i�>���VD�\u0010���)� \u0017k��)�?-�4��\u0004\u001b� \u0000\u0000��\u0003\u0000PK\u0003\u0004\u0014\u0000\u0006\u0000\b\u0000\u0000\u0000!\u0000��g��\u0006\u0000\u0000� \u0000\u0000\u0015\u0000\u0000\u0000word/theme/theme1.xml�YK�\u001bG\u0010�\u0007�\u001f���z��a�5�H�k�6޵���Rk���i��ڵ0�`�r \u0004��C ��\u0010B 1��\u001fc�I�\u001f��\u001eI3-�ď]� ��U?�������4s����:G� �[=Wq\u001d��ؘ$aǽ}0,�\\GH��\u0011e � ,܋;�v\u0001��\u0011��\u0003�8�:n$��|�,F0��96� �M\u0018���.\u000f�c��AoL˵J�Q�\u0011I\\'A1��1��\u0011v\u000e�Jwg�|@�_\"�\u001a\u0018Q��TcCBc�Ӫ�\u0012 \u0011P�\u001c!�qa�1;>����P$$Lt܊�s�;\u0017�k!* dsrC���[ ��5-��õ���^��֯\u0001Tn�\u0006�Ac�X��\u00004\u001a�NS.��f-��\u001c(mZt���z����׷�]_} �\u0006�Mo ?\u001c\u0006� s���o��^��7�kP�llᛕn�k\u001ax �(I�[�ߨ\u0007�ݮ!\u0013F/[�m�\u001b6kKx�*�+�OdQ���\u001e�C\u0000h�\"I\u0012G.fx�F� \u0010%��8�$� �f(a\u0002�+�ʰR������(:�QN:\u001d\u001a��!��\u0011#Nf��^\u0005�n\u000e��ŋ����|���Ǐ_>�u����e��y�7?}���/����͓o�x�ǿ�����_�A�g��?{������\u0002�rt��\u001f�\u0018 �:>vn�\u00186hY\u0000\u001f���8�\u0010�Kt�P�\u0004)\u0019 z #\u0003}}�(��zش�\u001d\u000e��\u0006�4�g\u0010ޏ�\\\u0012 �Z\u0014\u001b�=�h�q랮���V�'�}q>��n!td[;���`>��'6�A� �7)�\u001c�8��Qsl��E�.!�]�Ȉ3�&ҹK�\u001e\"V�\u001c�C#�2��$\u0006�,l\u0004�߆m��8=Fm����D��@Ԧ\u0012SÌ��\\���\u0018�4��E2���_�ap!��!��\u0019��\u00106�\u001b|aн\u0006i���=��M$�djC�\"���>�\u0006\u0011�gV�$���+b !���LZI0�>�\u0001%��C���ې��\u0001�f��v$03��N\u0010�)���H�]N��ћ�Fh�bL�1\u001ac�ܾbó�a���\b��el��Udƪ�'X@���\u001b�c�0Bv\u001f�����b#�,P\u0012#^���� �\u0001\\u�5^�hj�R�ա���!bc�ZoF�\b+�\u0017�x]p��r�@��\u0007�������ζ9@�X �\u0003\u0004U�-݂���LD\u001d'-6��M�C����Q��$yk\u0005�Q��\u001f��� ��\u000fO-�өw���T:E�d��)�mV5\u0001�c��\u00175}4Onb�G,г�欦���4E����9�d�*\u0019��G�d��E?\u0002Z=��Z�§>\u0013B�\\P�+t�#�쏇0�;Zh��i\u0016As��� 9�m�3�\u0005��~�f�LU�\u0010���P83&�p��V�j���=6NG���sM\u0010@2\u001b��k5\u000ee�LG\u001b��\u0001�Z���A늀�}\u001f\u0012��L\u0012u ��j�-$��N�E�¢��\u0017��_K���� �H��RF\u0010n\u0010�c�T~��S�t�1�m�,�k+���i�D.�L\u0012�0����\u001c>e_�3�\u001a��)�i4[\u001f��*�l�\u0006��=�\u0018�\\�\u00075#4�\u0013��\u0004�x\u0006���T��I�\u001dɥ�?$�̸�}$�\u0014�����Db�P\u0012C���@��[��T{�Dɵ+����W��x2�#Y0�ua.Ub�=!Xu�\u001cH�G�c���-\u0004��Ue�1\u0011rm�1��ά����G�xߒ\u001dQDg\u0011Z�(�d��u{M'�\u000f�tsWf���P9�ķ�ۅ�D.i\u0016\\ �ִ珏w��Xey�`����\\�^庢[��\u0017B�Z��AM1�P�FMj�X\u0010�[�f�\u001dqڷ�fԪ bUW��֋mvx\u000f\"�\u000f��J��¯\u0016���+�4\u0013��Uv�/�9'\u001d�A��zA�\u000fJ��?(yu�Rj��z�������V���C0��⪟�=�\u001f�t�|o�Ƿ��ǫR�܈�e���\u0016���w�\u000e\u0001� t�# ����k Z�F5\bJ^���ڥ�W�u�f�5�\u000f������W�ռv�\u0005\u0000\u0000��\u0003\u0000PK\u0003\u0004\u0014\u0000\u0006\u0000\b\u0000\u0000\u0000!\u0000�v)�$\u001d\u0000\u0000��\u0000\u0000\u0011\u0000\u0000\u0000word/settings.xml�]i�\\�u�\u001e ���ϡX�2\u0010\u0015�\u001aːb#���͙&������G\u0014\u001d���,��s 9�m#\u0019�ӯ^�[w���}��?�o^��=�v���\u0017� u�b{{u��ݾ}����t��t��^on\u000e���\u0017������_��ˏ�������^`�������Ň����ի�Շ�~s��p��\u0005��p�o������������˫��ns޽���Ο^\u0019����0��\u0017���˧!^�wW�����n� ���;��繏�����~{{~x���\u0006s8ܞ>��Nϣ����\u0001�� �uu�����q��\u0006�\u0001}_�D/\u001ef����W\u0010��\u001e\u000e�\u0017\u001f/��+p\u000e$N��W �z\u001d޽9o�����n{s� �W7� F�x����Cx�� ���v�o6�\u000e��G�= o\u001e5\u001b���챚��V�\u001e��kA��v�\u0007�k��6�A\u0007h���z���7�O7ۉ5{����^���t�a�\u0007��\u000f��oM`{���'��w��s�9߃;�I\u000f{`�y���vw k\u001b��Ա��Ƒ�U��S��{�6ϖ�7�\u0014��\u0019� Gl\u0010��Eg��zm�d�\u001a1��\u0019x\u0017�p���p$�r\u0002\u0012\u0002�uK�3�sb�j�7�6[>Zt��E?\u0014�D�a�\u0002�\u0004>�!UΣ1��dr~�$p\u0002琤�䲐���}����:y���RH�,d ��\u0011W2�Av#s��\u0001� )�{���N V@� �s�\u0014 ��h���+W�\u0014�eu�pN�Q\u0019� Mi�)ڔ\u0013�eSQ��\u0006��5mz:�U�6# 7�A�\u0010 ��Ś ���?ǂE\u0005���i`}\u0013���������Q�-\u0011\u0012�����{�~��F |\u0015�p�K{�^�;� �9��\"�\u001c̏�\u0016C\u0007\u001f3�����!�e)\u0012�N\u0002��� \u0003o����v4N��[�\\\u0015���\u001f�e㾋 \u0011�D@*Ͽ����߃��z�D=y�f!N@�M���Gǹ7���u�t��\u001e1Ck�\u001dY@�(r��W��!&�p|\u0015�\u0016�S������{n5M\u000eMУ�v��g� �v)Z���X�}$�4BV�T\u0015\u0004�VU\u0012䧚��\"`���T��M��S�y��x�b\u0010V�//�#6 Ή�\u0016����z\u0016�\u0010\u0004�أ�\u0007C;��À�\u001c�� �y�# M��\b�\b��C82�\u0014|��� \u0010'H��M�\u001c2��\u0019\u0019�X�G`p� ׽\u0016*�W\u0004��-�\u001coUH���V��9b ��X�2_\u001f����D�c㾿�\u001b�)E�4G9~! ��K\u0013\u0010�x>\u001e�\u0014tղ�|n��( �[.� 6�Ӡ��R\u000f\u0005H�%��s�M��ܧ�-� !CX�\u0016M�R�U\u0011����c&ۭ*|\u0006\u001d6C\u0018 ��\\ս�50; �\\�L�y��\"6䱦�� �eZ�s�v�̽ ;����[�ZJ\u0003��`���rBf\u0001H��ԩ`�ܜV�W��J�R�\u0001)\\J =����) �.\u0000i\\��њg#��\u0001�t3��*\u000f�ɳRΚ�k\u0012\u000e�{�U�v㱦��� ��� |`��ѭ^\u000f� k�\u0004�u^��\u0002i��x\u0015�� �{>��sp������!@\u001e|�A;�\u000f�x��\u001c�6��.H��\u0005�x�Ʌ�y��Emxn}%Wx5�E\u001f�mt��\\�\u0000��� )�\"�\u0012���:�\u001c�=\u0019�����w������:����.���,�c�+��*H}��\u0015�4r�.��n ����.�Dǣ\u0002W�\u0017ִB\u00189WUm\u001c�[u]��U\u0015�oZ��P �竀 �OtM�������Q��IX��s��%�Q��MǪ\u001eRdj�+�������� !�[t�t�N���8�9�+�y�ͫ(���󼿇J�~��Pc�\u0013�y\u0015�%�h��>\u00002��Y�\u0016\u0010cy\u001e�\u001bDZ�=�r�כ�x�ɛ84��5��z�\u0010�[goC�\u0007�t�~�w�p��XTn�=\\r�! ��,��� ��}�d�K6˯| ���x\u001fU�\u0004>���:\u0011���y\u0014�0�Z��#�\b�d*�|r��D�B�\u0005�b�\u001a S�AV�����9 �w7�l�@�읰�� Uy �r�)V�\u001c>��������/���\u0017��|\u0015 �5A�w�)�N�B�ɏU:\u0013��;1�\u000f�ğ3W1�#Z�\u0005��X�sՄ���3��\u0000 �k��JM�}��Hi\u0010�\u001e��\u001b�� W�\u0001�!@\u0004��+��\u0014�V�[�����ԙĵet^�},@�0k\u000f�ɩ��x��B��7�f�k\u0012@ � ��\u000e\u001e�D�\u001c����{\u000e@\u001c�Έ˽� E2Ns� H���d�P�MV\u0017ށ���q�]�0kk#׉������^s� ��L�� k�����:���\u0003�\b\u001c���|\u0015VF��ڹ�Om@��x\u001fq�S�c ��L\u0005\"�\u0005\u0018���s0����C�߸u\u00062x�>���\u0002�]�U@���g�\u0004^�O�)�\u001bLpb���\u0014��qJz�l\u0011�)h1\b\u0010��\u0007�y\u0006=%�x\u0005*%\u001f�\u0005\u0004R�U\u0000�������.�(HI�5s����v;ekx\u001e)e\u001fx�(�x\u0017�\u0003��V�[r))����\u0000��#�7��VU\u0005}]��5q �{\u001b@�0��CxNhܿN\u0015�+��Wq\u001a4\u0007�\u0016��3Y�A��7mp���\u001b\\Xan���szp ZՊ���Z��x��4?�#W/�\u0006�\u0005�kp \u0016��J0�W��\u0013�r\u0003\"�\u0003R\u001b�u4�.F ��Ǘh���5%�M�����\u0019$5x\u001d�$i�TY�[>�d:�y�\u0004���N B���P��* ��\u0000�y�\u0006���� ��YC ��)pUyT]r\u0014v\u000f��$~�F8s�T\u001b��)5\b���F��襭�A��ƣ���P�h�BƬ��x�S�j\b�ݡ���v#Ā���맥{!�^z4�>@��s5e��,\u0001I \u0018��*B\u0019�p\u001f �䖶 \u0004M�h!�A ]�LSO�u/S:��\u0001�|���\u0005d�*B���\u0018�L\u001fx�3�̽4 �w\u0007\u0002\u0019���X�iU��OE��Y~�4\u0010��\u0007����z]��\u001c����\u0004�u��pO��]�\u0016N�D�\u0011��Yס\u0016T�W\u0007�� o �g��\bY�\u001a��\u0002�\u001b�%\u00002x��&\u0015y�oMV�q\u0006�x\u0016��`yTP�V �{� 6\u001b\u0012�\u0017k6V^Qk�$^/i�6\u001e!7�.�������4�\u0014 ��5�mm� �^_���[�>�h B�mkJ8\u000f�5�\u0004�kA 6 ��we���,u�N�zV��N\u001a ���Ԇ� ���Я D8]\u0012����i�8�\u0001\u0011���u\u0010���\u000f��͚��8ދӍM����P�y5@�\u001d����#�nM���nm�Yj ���t�2�\u001b�'�xŦ�(p|wJ8\u001d�ç\u0010h핐m\u0005\"�1��\u000e��w/}u�{�yN���\u0005��)�\u000f�A)^c�A ֬\u0007+�Y�� �H�!d�mt�/�n{4�w3\u0000��\u000f�я�Nt��5�c\u0010*�}m\u0012�N:q\u000f�''��\u0004\"T�{ё�\u001e��>�ȑ�x�ܫ�ܷ\u00042��.\u001dq+�J�\u0015�\u001e�[]\u001f\u001f\u0010�,pU];�)ҕ���\u000e%�kȽ;�sO\u001d�+��\u001e-���0�W\u0000���7v�����G\u0010���4�\u001e�>m�s�.��C�Ү����S�\u0019� t�\u0006@&�̍��D�>p�5�y2ցzT��\b}�C[��\u001b:\b�\u0014���7B�����\u0015�\\�\u0017�w�uD�0�\u0015�*\u000e��|�� ����Q�Z ����\u001aNi�S2�5�,D ��o@\u001aף�!����\\��\u001f ���5\\(�\u0003o��y-\u0007\"'�>�X\u001eI\u0000� h'\"�nk\u0013#����y\u000fd� Ӵ^8s\u0011��%� ?���N\u0007��g���\u0019��I�S���Xp�8�D����q�\\\u0007�r�\u000e��J�B�\u001e�\u0019��\u0019Z �w�M�\u000f��'�J෸>\u0003�\u0011�y�\u001b&S�\\ \u0010+�m���*�ظ�\u0004�y& ����LF�K�� _�)\b�tP��W�f���2���|��(~B�̶��ę�\u00107\u0002\u0019|��,J�v ���@\u001a�z\u0000\u0019�*\u0014��=�u�F9�\u0017Nƞ%&�#\u0001� �ln�?Su{��/o\u001e�}us|s�~����n����닛��\u000fg}���������}o�0�G��\u001f���f���\u001f����k?��}�f?_s����k����|- n���\u0019�ͥG\"�>l�X����\u0019�ux�p�t��\u000f��\u001fϠ���|��t���o~|}aԣ�~����������.l���#\\o�\u001b���T�����5�����\u001d��ͧ����� ~�8����f{�9n·�3�o\u000f�v�ׇ��!I��ẁ�\u0017��nr���#�?�_��\u0006�K�j~�`3^V\u001f�K8�Eg�BN��\u0004�=��-���\u000f\u0000\u0000��\u0003\u0000PK\u0003\u0004\u0014\u0000\u0006\u0000\b\u0000\u0000\u0000!\u0000����H\u000f\u0000\u0000L�\u0000\u0000\u000f\u0000\u0000\u0000word/styles.xml�]�s�\u0011~�L�\u0007��ڇ�%�ם'NƖ힧w�s�5�\u0010 Y�IB%��ݿ�\u0000\b����� ��t���Ej?\u0002����B$���/q�}�i\u0016��|0�a8�h� L\u001e�\u0007_\u001fn޽\u001fxYN��D,��W� ~�����,�_#�y\u001c ��b�|������I�ohL�\u001fؖ&�䚥1�����$&��n��g���*�����t8� \u0014L�\u0005��סO����i�K���F\u001c�%�&�f%�s\u0017�g�\u0006۔�4�x����I��aF\u0013\u0000\u0014�~�2����Q-�P�|4��Q\u00050�\u0001�\u0002��\u001f\u00068���8�\u001aNFq0�\u0012&{��������Ǆ�d\u0015q$�\u001a��Γ����b?��\b�E�d\u0017���ާ��$��aI�y�g$���|�\u0010� 8��G\u0016�\u0015�c\u0011I\u001e�c4y�u��F;� \u0003~}��[^\b�\u0013չ�_����O��[��:d�S\u001e���P�F�����C���N8��r�.\"\u0001���'��\\\u0012\\ �B��,]b�\u0013 �9?q>���\u0007��ާ!K�\u0016�\u0007\u001f�5��%�Ïa\u0010�D�b� \u0003�ۆ&_3\u001aT���zR\u0007|�K����TFB�\u0005�/>� u� \u0011D� �H|{\u0017V\u0017���.�F��&� %\"Ey�C\b�|\u0014ĩ�ȴ�6c�\u000e�.������.4y� M��B������.���.$a���$�/�\u0010�e\u0000�1\u001c�\u001a�8\u0006��q ZB�\u0018���1(\u0001�c\bt4�!��8�0E���7E�\u0016�cC���\u001e\u001f#�p�\u000f v��G\u0000;�� �\u000e�x~��=���p�go;���\u001a�[L��[.�$ﭲ5cy�r����?\u001aI8������A��N:�\u0000��lj ��\u0013��x�H�ڏ繨� �i���}tS�,w��Q�\u0012��h�$�\u0015\u0013��j#y�\b�\u0004p\u0013��3\u00194�:��;1�\u0015t��|U+�7���/�ì�y �A+#�?�I�\u001f_�4�e�So�\u001b\u0016E�\u0006�\u0010�yʊX�%*)�$��x�!Y(k�\u001aD�������L��;t\u001f�0q��������n\u0006����'�mE�)\u001c�\u0006��9��a�����FWw�� ^\u0004'��z{�hyH�-B\u0007�L��\u0002GH|�\u0019&��1T�����\u0018I\u00037h�)-n�ɩ#�%��ŤÁ�x^|����lH�����X\u0017r%�\u0007'`ڲa�[�N����yNV�~��r�QNu��;��ӄ\u001a\\�)�d�\u000f\u000f\"~\u001dt�\u0006׿�58W�]D$�B�O��x��[��o��O᱈��]�΁%�3\u000f���\\Ȣ]�d.{,�\u001cvX��Ð�x\u000e��$�?�0pF�\u0004sń\u0004sE�\u0004sŁ\u0004sJ@�;t4����h`���)�\u001cM\u000140Wq�t�w�+�\u0006�*�$��8�`��L�����G�k> v7�h��bN�t7�$9��,%�#��>\u0012\u0007 �\u0005�}���y �\u00147q;�\u0014kԑ��v\u0001�����Y�\u0004��v9X\u0011%QĘ���j����{׎��� \">ݰ(���Of[^//��2\u000e�/��i��S��ɽ�f�گ�̆G-˂�fv��M>����}�A��ˆ)f���2�k��4-��L�f9�h �9;nY͒k����;ZJ��,��pEҧ�@���Ͼ�3\u0004߼-��ƍ�m ��eS\b�ۢ�&\u0015���ů\u0005��n�1�w\u0013��\u001e�\"3 FNf�κ2C� � �\u0016��\u001d�4���wO��/'ѝ2�;V���~p��P�-�8%\u0019�\u001aq����e\u0019�\u001f;�\u001b3D�c�蜀�\u0010�2��\u001c���(�s�\u0019�s�2C��\u0015\u001c\u0011p� ��\u0015���V\u0010�&[��\u0005�!:O\u0007�\u0010h�B\b�P{�\u0014�\u0010(�\u0002s+�B\u0014�P!\u0004Z�\u0010\u0002-T8\u0001� \u0015�� �m� Ql� Q�B�\u0010h�B\b�P!\u0004Z�\u0010\u0002-T˹���J�\u0010\u0005-T\b�\u0016*�@ U�\u0017{\b\u0015�� �m� Ql� Q�B�\u0010h�B\b�P!\u0004Z�\u0010\u0002-T\b�\u0012*0�\u0012*DA \u0015B�� !�B-\u001e5�\u0017*�� \u0015��\b\u0015��\b\u0015��� !�B�\u0010h�B\b�P!\u0004Z�\u0010\u0002%T`n%T��\u0016*�@ \u0015B��*,�!Th�\u0013*��\u0011*D�\u0011*DA \u0015B�� !�B�\u0010h�B\b�P!\u0004J���J�\u0010\u0005-T\b�\u0016*�h�O�\u0013��6�\u0011~��x�~���T���r�P��Pe��XݟE�d��k|�p,�n �* �\\�6�����[\"P?|��h�GG���%�,���\u0014�O�Z�5�I[�떠ț�E�n f����[�apҖt�.˛R�p\u0004��Ҍf 9�\u0011���UK�T㪥V�qՒ�j\\��D5�Zj�\u001aW-5Q�s@6��S���Z��UKf�q�R\u0013ոj��j\\��D5�Z2R���Z��UK�T�%3ոj��j\\��D5�Zj�\u001aW-\u0019��UK�T㪥V�q��gn\u0012:x\u0005�2&i�{_�G�mr���_��f,�F\u0003\u000f�Փ�ڞU�\u001ar�9���wT��\\{�((^۪\u0000�\u0017o���R�X��S�x�ò��7V��q/.}+��a+��0 �\u0019�\u0016�O�oH�\u0018���F28�ݺd\u0013�tj� �S�\bt���J6 \u0011/Gl�\b��x��ؐ�8[�k�\u001d%�\u0006� \u0010��d��@4/�Ѻ\u0016�0\u0016�z��}�f��|G\"����IY�z� M��񤤶�����0PL��Ҫޚ}ȧ�\u001c�\u0018���N��QSI�!\u001b֩\u001e��\u0017��\u001a� $�:�s������/듥�\u0003���BF�\u001c\u001c��\u0002\u001f�� ݕ�\u0016[�\u0014su[�T\u0005zY�\u001f:���w��E\u0004�y���z�P؛��\u001fQRȴ�\u0014�'fD\u0011?{=�������\u0005��{��[�\u000f]ظ\u0001�\u001f�ċ��jz]sb���ZO�wA/��\u000e?�9��[-~���5��4\u0018i�]F�>^\u0002��G�O��M�e�fI�e�9�̡���b#�����.���A�?= ���U&K���\u0016���o\" С�\u0007�� D��oE)�W �p� ,\u0016�j\u0013�~�1\u000eWY������4^����*X���z\u0001\u0015�\u0014m�t\u0015�9�c�ɳ��+u�oô�3�� 3�x����.�v�\u0001��� sa�+�\u0002���\u0010��Bܪ�\u0005��L\u0011\u0016RD�:Ӥ�i�pN\u0013�\u0004�5�b�й&CL�\u0019��s��� �\u0017\u001f�,�w�m������~��*���p\u0019F��;թh�\u001a?L� XD�\u001a 1Zsk�\u0017q�\u000e\"�������,y��?4���R�z�%�!��\"N���A�+ \u001f�� �\u001a��U��=\u0013�\u0019�ߍ��KB�z��������E\u0014C3 �Y1\u0002�:*36��R��/�]�v���ѻ�t�)砒\u000fY@�F�\u001aKZA\u001ewAfe����´$9����G��R P0�/ؕx\u001f��߃� ��}\u001b��l�/�p�/v-b��{w�6���\u0014� ���W�gv!�/�Q\u000f�mD�|\u0015���:,l(l��A)G��\u00177���6�~\u000fv��F��[s�o�c���U�\u001a\u0005���y�� �5��Q��� �Q�\u0016y\u000e�\u001d�§�\u0016\\�y\u0010��Sˁ\u001bFՐ�@\u000f�%�G�� P3�%��\u0017k-\u000e �f;�E��̼H�@ , 2/-�ү�#��o\u0000��K˼�O��fk\u0007?]p ;��\u001bn�&�s����0NΙ�R�\b�&TԊ\u0013����Du�Cܧ\u0019�I\u0011���n�\b�\u001d�5i\"pvD�m\u0013���n�\b�\u001d�5i\"pvD�m\u0013���n�\b�\b��4\u00110�-\u000f'\u0011`��M\u0004T��Xs��X�C�\u0010ƪ��MW4\u0003qF\u0004�T9���@pL ��\u001e\u0018]�V}�I#x0\u0007���v��4�q��a�;�M\u0017 }L�\u001e��>n �T\u0005�m\u0019?�\\���H\u0012BS�Pk'�ٞ�h�X�x�Z��EF\u0012ASBP+p��\u0007uU�AO�\u001cZ8$�3%��\u0002E\u000eV\\�P\\���� �)A�\u0015�\u0003������ �\u0014)���#�7\u000e����qP�n�=P��h\u001c\u0014\u0019�%6>l�\u001a��:��u��j�\u0004\u001e7�\u0015��]��`-�ȝ*F���\u0006���;\u0005�r�ҭ?n\u0012 ���\u001f7�\u0005\\�t�\u0014�'�ȭ?nRdY�v�\u0014�, w�;\u0005'K���iRp���\b�\u0007Gġ��\"#�(� *��+�\u0011�+�\u0002��\u0013\u0003%�����!\u0007=P)R?�����'׃�\"�R˕�%����\u0000\u0000\u0000��\u0003\u0000PK\u0003\u0004\u0014\u0000\u0006\u0000\b\u0000\u0000\u0000!\u0000t?9z�\u0000\u0000\u0000(\u0001\u0000\u0000\u001e\u0000\b\u0001customXml/_rels/item1.xml.rels �\u0004\u0001(�\u0000\u0001\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000�ϱ��0 \u0006�����ho��P�\u0011�K)t;J\u000e�\u001aGILc�Xji߾�+t�(���Q���E]1��h��jP\u0018\u001d >N\u0006~��j\u0003����.\u0014��\u001d\u0019���G{��J ��\u0013��D60��o���\u0018,W�0��H9X)c�t��l'�_u����\u0001ݓ�\u000e��|\u0018\u001aP�=�;6��w�#w \u0018�E�v\u0017\u0016 ���d*���yB1�\u0005�ߪ�� �k���\u0003\u0000\u0000��\u0003\u0000PK\u0003\u0004\u0014\u0000\u0006\u0000\b\u0000\u0000\u0000!\u0000��0�\u0000\u0000\u0000U\u0001\u0000\u0000\u0018\u0000(\u0000customXml/itemProps1.xml �$\u0000(� \u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000���j�0 ����u�5mV�6n�ױ®n�$�� �36��}\u000e;uǝ�'!}?*\u000e\u001ff$��y���z�\u0000Q��V۞����9\u0010\u001f�m�Vq�\b���h���A��N]�2$6t�\u0017���\\��]�\u001fiZ�-݈ ��ȶ��\u0018}Nܼ�>�vV0��b�-&A>:�I:\u001crw�f49H\u000f�ٌ�\u0013F����-2������\u0004jnw\\;+3z�@�W�?�5���\u001a\b���4\"�e]W�(\u0002QJ�a�*iq2w��\u001a_}\u0011\u0019���\u001b�L�k�UZ��(alN{��\b��\u0012�\u0013{#m\u001d�G^j$: ��`�5\u001f�5��*�\u0004�;\u001b�� W����\u0011�(�\u001d����e�\u0013\u0005\u0014.�Y\u0018\u0019�\u00070� ��\u0000s�v�1�=#�8 /��\u0006 \u001c�|�Ĉ�Sa��[�$����H\u0000���f��\u001b�YZn����\u0004�,\u001b��\u0019n����\u0019'�s�zl�ZOŭ\u0003\u0019\u000f\u001e��3gS6c)~\u0013\u001c��Q�܃l7쌬�sn�>\u000e�\u0007V�(\u0007���jo�M�*pb\u000f[��5c,Yo6�S�>����=�J��\u0015>_zezRX��� �q�\u0011�s���Q��(��x,\u001d�\u001a���9�!��$\u0007h\u0014�?��#�j�ՙ$6� !\u0003��_O\"\u001d%�\u0017I��J\u0012?e�$y}:[�6��\u0016]5�׎\u0002��N\u0017�r�R��(��h �V�\u001f��7\u0000\u0000\u0000��\u0003\u0000PK\u0003\u0004\u0014\u0000\u0006\u0000\b\u0000\u0000\u0000!\u0000r4m��\u0001\u0000\u00009\u0003\u0000\u0000\u0011\u0000\b\u0001docProps/core.xml �\u0004\u0001(�\u0000\u0001\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000���k�0\u0010��\u0007�\u001f��\u001d�H�e�QY3��B�\u001e\u001d{Ӥk�Ֆ�t�����\u001d;K) � ��|�Sy���� �h[�!|�H\u0006N�ƺ݆��n�5�\"*gT�:ؐ\u0003Dr%?*�/t\u001b�.�\u001e\u0002Z�Y2�Xh�!{D_P\u001a�\u001e\u001a\u0015\u0017�p)�؆Faچ\u001d�J?�\u001dP�؊6��(T�\u0017�~6����Y�C=\b��PC\u0003\u000e#� NO,Bh� C�\u001f��x��!:\u0005g�5�\u0019�n�-\u00074����\u001f��Us��^i �4�@�5Ȓ��i\u0015���\u0005�� *�)_�\u0001��{D\u0007P�\u0006��\u0007\u001b�:�mk����n�'�\u001f�\u0013\u001c�6���s�K������F;Vqv��ZE�M�~�`�\u000f�I-�\u001e�������\u001d�'\u0005x��k�˯\u00032�'�]�\u000e��t�U�D�V��E�\u0018�=K'� �c����*�qp��^~\u0004\u0017�X�ρo�lB�3 ����-���+�~\u0001\u0000\u0000��\u0003\u0000PK\u0003\u0004\u0014\u0000\u0006\u0000\b\u0000\u0000\u0000!\u0000 \u0002\u0000\u00002\u0012\u0000\u0000\u0014\u0000\u0000\u0000word/webSettings.xml�=o�0\u0010��\u0002�\u000f\u0002�X�>(ш\u001d \bZ\u0014H۠M��\u0014m\u0013�@�V�__J�c��\u0010MՠE ��\u0007�\u0004�,'���oz���\u001b�r������w�P)M����>��O��/\u0000\u0000\u0000��\u0003\u0000PK\u0003\u0004\u0014\u0000\u0006\u0000\b\u0000\u0000\u0000!\u0000�2 \u001d�\u0001\u0000\u0000�\u0003\u0000\u0000\u0010\u0000\b\u0001docProps/app.xml �\u0004\u0001(�\u0000\u0001\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000�S]o� \u0014}���`���V\u0016E�jJ5�a[#�m�\u0019���0 �Q�_���xd��x:��ù\u001f���A\u0017'�AY�#�EI 0�6�t;�T�ِ\"Da\u001a���\u001d9C w��;v�ց� B�\u0014&�H\u001f��R\u001ad\u000f�\b \u001b���\u000f\"��;j�VI���u\u0000\u0013�,�\u0014�\"�\u0006�\u001b7\u0013��q{��K�X����쐏�\u001a\u0006�E\u0004�5�Ԍ�\u000eV�(t�\u0006�˲��l��� �\u0015�\u0013`/�7��S�\u0004پ\u0017^Ȉ��U�����>:��\u0014\u0011;˿(�m�m,\u001eG�E\"`4OaX�\u0011�W��KFs�}V&I�0:!��E��\u0003�$��ŎRh�c��\u0015:\u0000��\u001d�\u0001D��A�$�\u0014�'���\"�\u001f8�\u0015)��\u0000�g;r\u0012^ \u0013ɔ6\u0019#�.D�k\u00155r��\b�\u001c��/�\u0004\u0004׉�1j@|�n|! \u0002\u0000\u00002\u0012\u0000\u0000\u0014\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000�r\u0000\u0000word/webSettings.xmlPK\u0001\u0002-\u0000\u0014\u0000\u0006\u0000\b\u0000\u0000\u0000!\u0000�2 \u001d�\u0001\u0000\u0000�\u0003\u0000\u0000\u0010\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000�t\u0000\u0000docProps/app.xmlPK\u0005\u0006\u0000\u0000\u0000\u0000\u0012\u0000\u0012\u0000�\u0004\u0000\u0000 x\u0000\u0000\u0000\u0000",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "civicplus:rockaway_township:archive:2026-03-10@7e352af64cf36035c426b89e1f96ba767030803675f29683da08434da2bd0f28",
+   "meetingId": "civicplus:rockaway_township:archive:2026-03-10",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "documentUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_03102026-1005",
+   "contentHash": "7e352af64cf36035c426b89e1f96ba767030803675f29683da08434da2bd0f28",
+   "retrievedAt": "2026-08-15T21:02:27.285Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_03102026-1005",
+   "sourceOrg": "Rockaway Township",
+   "collectedAt": "2026-08-15T21:02:27.285Z",
+   "verifiedAt": null,
+   "text": "Agenda Page 1 of 3 March 10 th Township Council Regular Meeting As of: 3/9/2026 ROCKAWAY TOWNSHIP REGULAR MEETING AGENDA VIEW ON YOUTUBE HERE MARCH 10th, 2026 7:00PM 1. CALL TO ORDER 2. COUNCIL PRESIDENT TO LEAD THOSE PRESENT IN THE SALUTE TO THE AMERICAN FLAG 3. MOMENT OF SILENCE TO REMEMBER THE SERVICE AND SACRIFICES OF THE ARMED SERVICE MEMBERS WHO PROTECT OUR NATION AND THE FIRST RESPONDERS WHO PROTECT OUR NEIGHBORHOODS 4. ROLL CALL 5. ADEQUATE NOTICE OF THIS MEETING WAS PROVIDED TO THE DAILY RECORD AND THE OFFICIAL NEWSPAPERS FOR THE TOWNSHIP OF ROCKAWAY. NOTICE WAS POSTED ON THE OFFICIAL BULLETIN BOARDS OF ROCKAWAY TOWNSHIP, THE TOWNSHIP WEBSITE, AND NOTICE WAS FILED IN THE OFFICE OF THE TOWNSHIP CLERK. 6. APPROVAL OF MINUTE(S): A. FEBRUARY 24 TH TOWNSHIP COUNCIL MEETING MINUTES 7. PRESNTATION/DEDICATION FOR THE NAMING OF THE NEW WATER UTILITY BUILDING (STALTER/RIEDEL BUILDING) 8. ORDINANCE(S) FOR ADOPTION: O-26-03 AN ORDINANCE AMENDING CHAPTER 54 ENTITLED \"LAND USE AND DEVELOPMENT\" OF THE CODE OF THE TOWNSHIP OF ROCKAWAY AMENDING SECTION 54-30.52 ENTITLED \"R-B MFO REGIONAL BUSINESS MULTIFAMILY OVERLAY DISTRICT\" O-26-04 AN ORDINANCE AMENDING CHAPTER 54 ENTITLED \"LAND USE AND DEVELOPMENT\" OF THE CODE OF THE TOWNSHIP OF ROCKAWAY CREATING A NEW SECTION 54-30.34 ENTITLED \"RMF-14 MULTIFAMILY RESIDENTIAL DISTRICT\" O-26-05 AN ORDINANCE AMENDING CHAPTER 54 ENTITLED \"LAND USE AND DEVELOPMENT\" OF THE CODE OF THE TOWNSHIP OF ROCKAWAY CREATING A NEW SECTION 54-30.71 ENTITLED \"RMFO-15B MULTIFAMILY RESIDENTIAL OVERLAY DISTRICT\" O-26-06 AN ORDINANCE AMENDING CHAPTER 54 ENTITLED \"LAND USE AND DEVELOPMENT\" OF THE CODE OF THE TOWNSHIP OF ROCKAWAY CREATING A NEW\nAgenda Page 2 of 3 March 10 th Township Council Regular Meeting As of: 3/9/2026 SECTION 54-30.72 ENTITLED \"RMFO-15C MULTIFAMILY RESIDENTIAL OVERLAY DISTRICT\" O-26-07 AN ORDINANCE OF THE TOWNSHIP OF ROCKAWAY DELETING SECTION 54-45 ENTITLED “ FAIR SHARE HOUSING REQUIREMENTS, ” DELETING SECTION 54-46 ENTITLED “ AFFIRMATIVE MARKETING OF AFFORDABLE UNITS ” , DELETING SECTION 54-47 ENTITLED “ MUNICIPAL HOUSING LIAISON, ” DELETING SECTION 54-48 ENTITLED “ MANDATORY AFFORDABLE HOUSING SET-ASIDE, ” DELETING CHAPTER 53 ENTITLED ” MANDATORY DELEVELOPMENT FEE ” AND CREATING CHAPTER 8 ENTITLED “ AFFORDABLE HOUSING REQUIREMENTS ” R-26-56 RESOLUTION ENDORSING THE AMENDED HOUSING ELEMENT AND FAIR SHARE PLAN Housing Element and Fair Share Plan R-26-57 A RESOLUTION ADOPTING FOURTH ROUND AFFORDABLE HOUSING SPENDING PLAN R-26-60 A RESOLUTION ADOPTING AN “ AFFIRMATIVE MARKETING PLAN ” FOR THE TOWNSHIP OF ROCKAWAY 10. OPEN TO THE PUBLIC: 11 . R-26-62 A RESOLUTION SUPPORTING PUBLIC SAFETY, LEGAL IMMIGRATION AND FEDERAL COOPERATION 12. CONSENT AGENDA: R-26-52 A RESOLUTION AUTHORIZING REDEMPTION OF TAX TITLE LIEN C#25-00027 AGAINST BLOCK 20702 LOT 15 KNOWN AS 93 WEST LAKE SHORE DRIVE R-26-53 TAX REFUND FOR 2026 TAX OVERPAYMENT BLOCK 30601 LOT 4, 322 GREEN POND RD. R-26-54 AUTHORIZING THE CANCELLATION AND REFUND OF PROPERTY TAXES FOR HOMEOWNER QUALIFYING AS AN 100% DISABLED, TAX EXEMPT WIDOW OF A VETERAN R-26-55 AUTHORIZING THE CANCELLATION AND REFUND OF PROPERTY TAXES FOR HOMEOWNER QUALIFYING AS AN 100% DISABLED, TAX EXEMPT VETERAN R-26-58 A RESOLUTION AUTHORIZING THE SUBMISSION OF AN APPLICATION FOR AND ACCEPTANCE OF A COMMUNITY DEVELOPMENT BLOCK GRANT AGREEMENT FOR RESTORATION TO THE FOX HILLS WELL FIELD AT ROCKAWAY TOWNSHIP R-26-59 REDEMPTION OF MUNICIPAL TAX SALE CERTIFICATE #25-00035 AGAINST BLOCK 21401 LOT 60 KNOWN AS 49 VALLEY VIEW DRIVE R-26-61 RESOLUTION OF THE TOWNSHIP COUNCIL OF THE TOWNSHIP OF ROCKAWAY, COUNTY OF MORRIS, STATE OF NEW JERSEY AUTHORIZING THE MAYOR AND CLERK TO\nAgenda Page 3 of 3 March 10 th Township Council Regular Meeting As of: 3/9/2026 EXECUTE A FEDERAL AID AGREEMENT WITH THE NEW JERSEY DEPARTMENT OF TRANSPORTATION (NJDOT) 13. NEW BUSINESS AND DISCUSSION: 14. ADJOURNMENT: * BUDGET MEETING – MARCH 14 TH 9:00AM* * NEXT TOWNSHIP COUNCIL REGULARY MEETING – MARCH 24TH*",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "civicplus:rockaway_township:archive:2026-03-14@02615d2687cf162e8726d19be690ffe74093fa4f16725790ab23d65fd4975a08",
+   "meetingId": "civicplus:rockaway_township:archive:2026-03-14",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "documentUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_03142026-1006",
+   "contentHash": "02615d2687cf162e8726d19be690ffe74093fa4f16725790ab23d65fd4975a08",
+   "retrievedAt": "2026-08-15T21:02:27.689Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_03142026-1006",
+   "sourceOrg": "Rockaway Township",
+   "collectedAt": "2026-08-15T21:02:27.689Z",
+   "verifiedAt": null,
+   "text": "TOWNSHIP OF ROCKAWAY SPECIAL MEETING AGENDA MARCH 14, 2026 9:00 AM REVISED 2025 1. CALL TO ORDER 2. COUNCIL PRESIDENT TO LEAD THOSE PRESENT IN THE SALUTE TO THE AMERICAN FLAG 3. MOMENT OF SILENCE TO REMEMBER THE SERVICE AND SACRIFICES OF THE ARMED SERVICE MEMBERS WHO PROTECT OUR NATION AND THE FIRST RESPONDERS WHO PROTECT OUR NEIGHBORHOODS 4. ROLL CALL 5. NOTICE OF THIS MEETING WAS PUBLISHED IN THE DAILY RECORD AND THE OFFICIAL NEWSPAPERS FOR THE TOWNSHIP OF ROCKAWAY. NOTICE WAS POSTED ON THE OFFICIAL BULLETIN BOARDS OF ROCKAWAY TOWNSHIP, THE TOWNSHIP WEBSITE, AND NOTICE WAS FILED IN THE OFFICE OF THE TOWNSHIP CLERK. 6. OPEN TO THE PUBLIC 7. PRESENTATION BY THE TOWNSHIP’S AUDITOR, RAY SARINELLI, JR. FROM NISIVOCCIA 8. DISCUSSION OF THE PROPOSED 2026 BUDGET 9. ADJOURN: *NEXT REGULAR TOWNSHIP COUNCIL MEETING - MARCH 24, 2026. *",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "civicplus:rockaway_township:archive:2026-03-24@3236f1ef993020bd5bb031e4bfa337a1466deed89763e887387dc9d111ddab26",
+   "meetingId": "civicplus:rockaway_township:archive:2026-03-24",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "documentUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_03242026-1007",
+   "contentHash": "3236f1ef993020bd5bb031e4bfa337a1466deed89763e887387dc9d111ddab26",
+   "retrievedAt": "2026-08-15T21:02:28.073Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_03242026-1007",
+   "sourceOrg": "Rockaway Township",
+   "collectedAt": "2026-08-15T21:02:28.073Z",
+   "verifiedAt": null,
+   "text": "Agenda Page 1 of 3 March 24 th Township Council Regular Meeting As of: 3/24/2026 ROCKAWAY TOWNSHIP REGULAR MEETING AGENDA VIEW ON YOUTUBE HERE MARCH 24th, 2026 7:00PM 1. CALL TO ORDER 2. COUNCIL PRESIDENT TO LEAD THOSE PRESENT IN THE SALUTE TO THE AMERICAN FLAG 3. MOMENT OF SILENCE TO REMEMBER THE SERVICE AND SACRIFICES OF THE ARMED SERVICE MEMBERS WHO PROTECT OUR NATION AND THE FIRST RESPONDERS WHO PROTECT OUR NEIGHBORHOODS 4. ROLL CALL 5. ADEQUATE NOTICE OF THIS MEETING WAS PROVIDED TO THE DAILY RECORD AND THE OFFICIAL NEWSPAPERS FOR THE TOWNSHIP OF ROCKAWAY. NOTICE WAS POSTED ON THE OFFICIAL BULLETIN BOARDS OF ROCKAWAY TOWNSHIP, THE TOWNSHIP WEBSITE, AND NOTICE WAS FILED IN THE OFFICE OF THE TOWNSHIP CLERK. 6. APPROVAL OF MINUTE(S): A. MARCH 10 TH TOWNSHIP COUNCIL MEETING MINUTES 7. OPEN TO THE PUBLIC: 8. INTRODUCTION OF THE 2026 MUNICIPAL BUDGET A. O-26-08 ORDINANCE TO EXCEED THE MUNICIPAL BUDGET APPROPRIATION LIMITS AND TO ESTABLISH A CAP BANK (N.J.S.A. 40A: 4-45.14) B. RESOLUTIONS: I. R-26-67 A RESOLUTION TO INTRODUCE THE 2026 MUNICIPAL BUDGET OF THE TOWNSHIP OF ROCKAWAY IN THE COUNTY OF MORRIS II. R-26-68 RESOLUTION FOR SELF-EXAMINATION OF THE 2026 MUNICIPAL BUDGET III. R-26-72 RESOLUTION ESTABLISHING A POLICY FOR COMPREHENSIVE ONLINE PUBLIC DISCLOSURE OF MUNICIPAL BUDGET DOCUMENTS\nAgenda Page 2 of 3 March 24 th Township Council Regular Meeting As of: 3/24/2026 9. ORDINACE(S) FOR INTRODUCTION: A. O-26-09 BOND ORDINANCE APPROPRIATING $4,248,890, AND AUTHORIZING THE ISSUANCE OF $3,268,595 BONDS OR NOTES OF THE TOWNSHIP, FOR VARIOUS IMPROVEMENTS OR PURPOSES AUTHORIZED TO BE UNDERTAKEN BY THE TOWNSHIP OF ROCKAWAY, IN THE COUNTY OF MORRIS, NEW JERSEY. B. O-26-10 BOND ORDINANCE APPROPRIATING $1,730,000, AND AUTHORIZING THE ISSUANCE OF $1,690,000 BONDS OR NOTES OF THE TOWNSHIP, FOR VARIOUS IMPROVEMENTS OR PURPOSES AUTHORIZED TO BE UNDERTAKEN IN AND BY THE TOWNSHIP OF ROCKAWAY, IN THE COUNTY OF MORRIS, NEW JERSEY, FOR THE WATER SUPPLY AND DISTRIBUTION SYSTEM OF THE TOWNSHIP. C. O-26-11 ORDINANCE PROVIDING FOR IMPROVEMENT OF VARIOUS ROADS IN AND BY THE TOWNSHIP OF ROCKAWAY, IN THE COUNTY OF MORRIS, NEW JERSEY, AND REAPPROPRIATING $750,000 THEREFOR FROM PROCEEDS OF OBLIGATIONS OF THE TOWNSHIP HERETOFORE ISSUED AND FUNDS AVAILABLE UNDER ORDINANCES OF THE TOWNSHIP HERETOFORE ADOPTED. D. O-26-12 AN ORDINANCE FIXING THE SALARIES OF VARIOUS OFFICIALS AND CONTRACTUAL EMPLOYEES OF THE TOWNSHIP OF ROCKAWAY IN THE COUNTY OF MORRIS E. O-26-13 AN ORDINANCE FIXING THE SALARIES OF VARIOUS OFFICIALS AND NON-CONTRACTUAL EMPLOYEES OF THE TOWNSHIP OF ROCKAWAY IN THE COUNTY OF MORRIS 10. CONSENT AGENDA: R-26-63 AUTHORIZING THE CANCELLATION AND REFUND OF PROPERTY TAXES FOR HOMEOWNER QUALIFYING AS AN 100% DISABLED, TAX EXEMPT VETERAN R-26-64 A RESOLUTION AUTHORIZING REDEMPTION OF TAX TITLE LIEN C#25-00026 AGAINST BLOCK 20701 LOT 6.01 KNOWN AS 13 ALGONQUIN AVENUE R-26-65 AUTHORIZING THE CANCELLATION AND REFUND OF PROPERTY TAXES FOR HOMEOWNER QUALIFYING AS AN 100% DISABLED, TAX EXEMPT VETERAN R-26-66 REVOKING RESOLUTIONS R-25-53 AND R-24-169 AND SUPPORTING THE LOCATION AND OPERATION OF A CLASS 5 CANNABIS RETAILER BY KIND KUSH ROCKAWAY TOWNSHIP LLC WITHIN THE TOWNSHIP OF ROCKAWAY R-26-69 A RESOLUTION AUTHORIZING THE TRANSFER OF FUNDS R-26-70 AUTHORIZING THE CANCELLATION AND REFUND OF PROPERTY TAXES FOR HOMEOWNER QUALIFYING AS AN 100% DISABLED, TAX EXEMPT VETERAN\nAgenda Page 3 of 3 March 24 th Township Council Regular Meeting As of: 3/24/2026 R-26-71 A RESOLUTION AUTHORIZING THE AWARD OF A CONTRACT TO RIVERVIEW PAVING, INC. FOR THE CONSTRUCTION OF ROADWAY IMPROVEMENTS TO RESERVOIR ROAD – SECTION II IN THE TOTAL BID AMOUNT OF $459,015.52 11. NEW BUSINESS AND DISCUSSION: ALEJANDRO JIMENEZ-FONTANA – FULL MEMBERSHIP - Fire Company #4 COUNCIL REPORTS: Council Member Royek- Attended the March 18th BOE meeting. The spelling bee winners were announced and given certificates. A paraprofessional was awarded and given recognition for her work with children with autism. They announced their tentative budget that could cause a 6.69% tax increase. Council Member Wojtowicz- The Wildcat Ridge Preserve, a 123-acre wooded tract in Rockaway Township, has officially been preserved as open space following a sale closing on a project funded through a $1.04 million grant from the Morris County Open Space Preservation Trust Fund. The grant, approved by the Morris County Board of County Commissioners, enabled The Land Conservancy of New Jersey to secure the property. The closing on March 12, 2026, represents the first finalization of purchases involving three open space grants approved in November, authorizing nearly $7 million to preserve 192.3 acres across three municipalities. Council Member Kelley - On March 11th, I attended the Water Department building name dedication/celebration. On March 16th, I visited the areas of power loss, due to extremely high winds, in the Meriden and Valley Road sections of the 6th Ward. During my visit, I spoke with NG Gilbert and Verizon regarding power and communication restoration time frames. I Followed up with Police Chief Scheer regarding recorded data and speeding concerns on Decker/Lyonsville Road [still waiting for the recorded data]. I prepared for and participated in the March 14, 2026 public budget meeting. It was great to see many members of the public that attended. During the budget meeting I made many motions to cut over $300,000 of fat within the budget, increase revenues and public safety. However, the majority of council members were not interested in those areas of reductions to save taxpayer's money. 12. ADJOURNMENT: * NEXT TOWNSHIP COUNCIL REGULARY MEETING – APRIL 14TH*",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "civicplus:rockaway_township:archive:2026-04-28@fe4d960b6696f04a16084fec76e825c24fd8b8c87a7b8f3e2615db1d9e30234a",
+   "meetingId": "civicplus:rockaway_township:archive:2026-04-28",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "documentUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_04282026-1011",
+   "contentHash": "fe4d960b6696f04a16084fec76e825c24fd8b8c87a7b8f3e2615db1d9e30234a",
+   "retrievedAt": "2026-08-15T21:02:28.446Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_04282026-1011",
+   "sourceOrg": "Rockaway Township",
+   "collectedAt": "2026-08-15T21:02:28.446Z",
+   "verifiedAt": null,
+   "text": "Agenda Page 1 of 5 April 28 th Township Council Regular Meeting As of: 4/28/2026 ROCKAWAY TOWNSHIP REGULAR MEETING AGENDA VIEW ON YOUTUBE HERE APRIL 28th, 2026 7:00PM 1. CALL TO ORDER 2. COUNCIL PRESIDENT TO LEAD THOSE PRESENT IN THE SALUTE TO THE AMERICAN FLAG 3. MOMENT OF SILENCE TO REMEMBER THE SERVICE AND SACRIFICES OF THE ARMED SERVICE MEMBERS WHO PROTECT OUR NATION AND THE FIRST RESPONDERS WHO PROTECT OUR NEIGHBORHOODS 4. ROLL CALL 5. ADEQUATE NOTICE OF THIS MEETING WAS PROVIDED TO THE DAILY RECORD AND THE OFFICIAL NEWSPAPERS FOR THE TOWNSHIP OF ROCKAWAY. NOTICE WAS POSTED ON THE OFFICIAL BULLETIN BOARDS OF ROCKAWAY TOWNSHIP, THE TOWNSHIP WEBSITE, AND NOTICE WAS FILED IN THE OFFICE OF THE TOWNSHIP CLERK. 6. APPROVAL OF MINUTE(S): A. MARCH 24 TH TOWNSHIP COUNCIL MEETING MINUTES 7. OPEN TO THE PUBLIC: 8. R-26-73 RESOLUTION TO CANCEL RESERVE BALANCE 9. ADOPTION OF THE 2026 MUNICIPAL BUDGET A. O-26-08 ORDINANCE TO EXCEED THE MUNICIPAL BUDGET APPROPRIATION LIMITS AND TO ESTABLISH A CAP BANK (N.J.S.A. 40A: 4-45.14) B. 2026 BUDGET HEARING C. R-26-86 RESOLUTION TO READ THE 2026 OPERATING BUDGET BY TITLE D. R-26-87 RESOLUTION TO ADOPT THE 2026 MUNICIPAL BUDGET OF THE TOWNSHIP OF ROCKAWAY IN THE COUNTY OF MORRIS 10. ORDINANCE(S) FOR INTRODUCTION: A. O-26-14 AN ORDINANCE AMENDING CHAPTER 28 ENTITLED “ HEALTH AND ENVIRONMENT ” TO ADD A NEW ARTICLE 28-6 ENTITLED ‘ FARMERS\nAgenda Page 2 of 5 April 28 th Township Council Regular Meeting As of: 4/28/2026 MARKETS ’ TO CREATE PROVISIONS FOR THE LICENSING OF AND ESTABLISHING STANDARDS FOR FARMERS MARKET OPERATIONS B. O-26-15 AN ORDINANCE AMENDING CHAPTER 28 ENTITLED “ HEALTH AND ENVIRONMENT ” TO AMEND SECTIONS OF ARTICLE XI C. O-26-16 AN ORDINANCE AMENDING CHAPTER XVII “ PARKS AND RECREATIONAL FACILITIES ” OF THE REVISED GENERAL ORDINANCES OF THE TOWNSHIP OF ROCKAWAY, MORRIS COUNTY, STATE OF NEW JERSEY 10. ORDINANCE(S) FOR ADOPTION: A. O-26-09 BOND ORDINANCE APPROPRIATING $4,248,890, AND AUTHORIZING THE ISSUANCE OF $3,268,595 BONDS OR NOTES OF THE TOWNSHIP, FOR VARIOUS IMPROVEMENTS OR PURPOSES AUTHORIZED TO BE UNDERTAKEN BY THE TOWNSHIP OF ROCKAWAY, IN THE COUNTY OF MORRIS, NEW JERSEY. B. O-26-10 BOND ORDINANCE APPROPRIATING $1,730,000, AND AUTHORIZING THE ISSUANCE OF $1,690,000 BONDS OR NOTES OF THE TOWNSHIP, FOR VARIOUS IMPROVEMENTS OR PURPOSES AUTHORIZED TO BE UNDERTAKEN IN AND BY THE TOWNSHIP OF ROCKAWAY, IN THE COUNTY OF MORRIS, NEW JERSEY, FOR THE WATER SUPPLY AND DISTRIBUTION SYSTEM OF THE TOWNSHIP. C. O-26-11 ORDINANCE PROVIDING FOR IMPROVEMENT OF VARIOUS ROADS IN AND BY THE TOWNSHIP OF ROCKAWAY, IN THE COUNTY OF MORRIS, NEW JERSEY, AND REAPPROPRIATING $750,000 THEREFOR FROM PROCEEDS OF OBLIGATIONS OF THE TOWNSHIP HERETOFORE ISSUED AND FUNDS AVAILABLE UNDER ORDINANCES OF THE TOWNSHIP HERETOFORE ADOPTED. D. O-26-12 AN ORDINANCE FIXING THE SALARIES OF VARIOUS OFFICIALS AND CONTRACTUAL EMPLOYEES OF THE TOWNSHIP OF ROCKAWAY IN THE COUNTY OF MORRIS E. O-26-13 AN ORDINANCE FIXING THE SALARIES OF VARIOUS OFFICIALS AND NON-CONTRACTUAL EMPLOYEES OF THE TOWNSHIP OF ROCKAWAY IN THE COUNTY OF MORRIS 11. CONSENT AGENDA: R-26-74 A RESOLUTION AUTHORIZING THE AWARD OF A COMPETITIVE CONTRACT FOR BANKING SERVICES TO FULTON BANK FOR FIVE YEARS MAY 1, 2026, TO APRIL 30, 2031 R-26-75 A RESOLUTION AUTHORIZING REDEMPTION OF\nAgenda Page 3 of 5 April 28 th Township Council Regular Meeting As of: 4/28/2026 TAX TITLE LIEN C#25-00006 AGAINST BLOCK 10503 LOT 15 KNOWN AS 15 HIGHVIEW TERR. R-26-76 A RESOLUTION AUTHORIZING REDEMPTION OF TAX TITLE LIEN C#25-00009 AGAINST BLOCK 10903 LOT 9 KNOWN AS 23 NORTH ST. R-26-77 A RESOLUTION AUTHORIZING REDEMPTION OF TAX TITLE LIEN C#25-00010 AGAINST BLOCK 10904 LOT 10 KNOWN AS 96 BERKSHIRE AVE. R-26-78 A RESOLUTION AUTHORIZING REDEMPTION OF TAX TITLE LIEN C#25-00012 AGAINST BLOCK 11101 LOT 59 KNOWN AS 414 MINERAL SPRING DR. R-26-79 A RESOLUTION AUTHORIZING REDEMPTION OF TAX TITLE LIEN C#25-00019 AGAINST BLOCK 11302.03 LOT 1.25 KNOWN AS 3125 FRANKLIN LN. R-26-80 A RESOLUTION AUTHORIZING REDEMPTION OF TAX TITLE LIEN C#25-00023 AGAINST BLOCK 11507.05 LOT 9 KNOWN AS 322 RICHARD MINE RD., E9. R-26-81 A RESOLUTION AUTHORIZING REDEMPTION OF TAX TITLE LIEN C#25-00030 AGAINST BLOCK 21003 LOT 30 KNOWN AS 309 BEACH ST. R-26-82 A RESOLUTION AUTHORIZING REDEMPTION OF TAX TITLE LIEN C#25-00037 AGAINST BLOCK 21604 LOT 31 KNOWN AS 28 HIBERNIA RD. R-26-83 A RESOLUTION AUTHORIZING REDEMPTION OF TAX TITLE LIEN C#25-00038 AGAINST BLOCK 21706 LOT 23 KNOWN AS 75 WHITE MEADOW RD. R-26-84 A RESOLUTION AUTHORIZING REDEMPTION OF TAX TITLE LIEN C#25-00039 AGAINST BLOCK 21909 LOT 1 KNOWN AS 15 NAVAJO WY. R-26-85 A RESOLUTION AUTHORIZING REDEMPTION OF TAX TITLE LIEN C#25-00040 AGAINST BLOCK 22003 LOT 2 KNOWN AS 11 ELLEN DR. R-26-88 AUTHORIZING THE AWARD OF A CONTRACT TO DEMAIO ELECTRICAL COMPANY, INC. FOR THE CONSTRUCTION OF FOX HILLS WELL FILTRATION IN THE TOTAL BID AMOUNT OF $1,180,000.00 R-26-89 A RESOLUTION AUTHORIZING REDEMPTION OF TAX TITLE LIEN C#25-00011 AGAINST BLOCK 11007 LOT 10 KNOWN AS 73 FALLEN TIMBERS TRL. R-26-90 AUTHORIZING THE AWARD OF A CONTRACT TO AJM CONTRACTORS INC. FOR THE CONSTRUCTION OF ROADWAY IMPROVEMENTS TO RESERVOIR ROAD – SECTION 1 IN THE TOTAL BID AMOUNT OF $415,265.60 12. NEW BUSINESS AND DISCUSSION:\nAgenda Page 4 of 5 April 28 th Township Council Regular Meeting As of: 4/28/2026 LIAM MUNN – JUNIOR MEMBERSHIP - Fire Company #4 DAVID CHO – FULL MEMBERSHIP - Fire Company #2 Utility Committee 13. COUNCIL REPORTS: Councilman Adam Salberg: Report on Open Space Trust Fund: March 30 re-org meeting. 2026 resident contribution: 5/8 cent per $100 of valuation in which 1/4 cent goes to county parks and open space 1/4 cent goes to historic preservation 1/8 cent goes to municipal and/or qualifiable conservancy. No Board of County Commissioners report. Councilwoman Sophia Freire: Councilwoman ’ s report for April 28, 2026 Safety of our roads -met with town engineer, head of DPW, Ms. Palmieri, and the police chief to discuss the health of our roads. -winter repair is in action -they work in sections -map to also based on concerns that are reported Notice a road issue report it online or contact the road garage at 973-627-1700. -Your concerns and reports about speeding and road health are very important to maintaining the roads themselves. -Traffic trailers collect important data about speeding and traffic, your concerns influence where they are needed. -MT Hope Ave and RD are major arteries and as such are under Morris County ’ s control. Issues with them should be reported to the Morris County ’ s DPW 973-285-6761. -Ask for the traffic sergeant on duty. -DPW investigates troubling trees. JCPNL cuts the trees by power lines -RAVE is an alert system about the roads that you can sign up for through the Rockaway website. -6-year plan in place for the roads, Feb-May is worst stress months for the roads. Council Member Kelley: I want to thank Mr. Knoth and Ms. Ferrante for assisting me with my concerns regarding a dangerous tree on Lake Denmark Road. Thank you to Officer Schwarzmann for assisting me\nAgenda Page 5 of 5 April 28 th Township Council Regular Meeting As of: 4/28/2026 with my concern of illegal dumping of construction debris on State Preservation Land off of Valley Road. Thank you to Officer Foster for assisting traffic regarding the downed tree on Green Pond Road. Thank you to the Morris County DPW (John Clark's crew) for addressing many pot holes on Green Pond Road. Thank you to the Recreation Department (Morgan Morris)for the preparation of the fields associated with youth sports programs. I attended the Hibernia Co.1 fishing contest on Opening Day hosted by the Co.1 Ladies Auxiliary and Co.1 Fire House. Stopped by the Township Library event which was well attended. I hope everyone had a wonderful Passover and Easter Holiday 14. ADJOURNMENT: * NEXT TOWNSHIP COUNCIL REGULARY MEETING – MAY 12TH*",
    "extraction": "pdf",
    "extractionNote": null
   },

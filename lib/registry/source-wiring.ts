@@ -308,21 +308,25 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
       // house) in with council sittings; only summaries matching this prefix
       // are this body's meetings. The string is the feed's own SUMMARY text.
       summaryMatch: "Township Council",
+      // M59 (2026-08-15): the archive rung. The AgendaCenter files each
+      // sitting's agenda and minutes under a category; `2` is the value of
+      // the Township Council checkbox in the page's own category filter, and
+      // it is recorded rather than guessed because the same page carries the
+      // Planning Board, the Board of Adjustment and two more.
+      agendaCenterUrl: "https://www.rockawaytownship.org/AgendaCenter",
+      agendaCenterCategoryId: "2",
     },
     // M58: the iCal feed is upcoming-only. Rungs walked 2026-08-15 — the
     // wired feed and the same feed with startDate/endDate and from/to
     // parameters all returned the identical 5,484 bytes and the identical
     // eleven future sittings; the only two past DTSTARTs in it are the
-    // VTIMEZONE boilerplate, in every category id. The township's
-    // AgendaCenter DOES archive past agendas and minutes back to 2019 (214
-    // dated documents, read the same day) — that is a real further rung, and
-    // it publishes a date without a start time, so ingesting it needs a
-    // meeting shape that can say "we know the day, not the hour" rather than
-    // a fabricated 7pm. Tracker M59 owns it.
-    publishesHistory: false,
-    historyGapReason:
-      "The township's calendar feed only lists meetings that haven't happened yet.",
-    verifiedAt: "2026-08-13",
+    // VTIMEZONE boilerplate, in every category id.
+    //
+    // **M59 closed the gap on 2026-08-15**, which is why `publishesHistory`
+    // is gone from this row: the AgendaCenter archive is now ingested, and
+    // its sittings carry `startPrecision: "DAY"` because the township
+    // publishes their date and not their hour.
+    verifiedAt: "2026-08-15",
   },
 
   // ── Granicus IQM2 ───────────────────────────────────────────────────────
@@ -372,16 +376,15 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     },
     // M58: the meeting rows come from a block whose heading is literally
     // "Upcoming Meetings" — past sittings are not in it, by construction.
-    // The notices/agendas page on the same site DOES carry the history
-    // (re-read 2026-08-15: public notice, board packet and minutes PDFs for
-    // 2.9, 2.20, 3.9, 3.23, 4.13, 4.27, 5.11 … each a meeting that happened),
-    // but a filename dates a meeting without timing it, and inventing 10am
-    // to fill `startsAt` would be a generated fact about a government.
-    // Same further rung as Rockaway's AgendaCenter; tracker M59 owns it.
-    publishesHistory: false,
-    historyGapReason:
-      "The county's website lists upcoming meetings only. Past agendas and minutes are posted, but without the meeting times we would have to guess at them.",
-    verifiedAt: "2026-08-13",
+    //
+    // **M59 closed it on 2026-08-15**, which is why `publishesHistory` is
+    // gone from this row. The notices/agendas page on the same site carries
+    // the history as dated documents — a public notice, a board packet and
+    // minutes per sitting — and the adapter now emits a meeting for each date
+    // the upcoming block does not already cover. A filename dates a meeting
+    // without timing it, so those rows carry `startPrecision: "DAY"` and the
+    // card says the time was not posted instead of inventing 10am.
+    verifiedAt: "2026-08-15",
   },
 
   // ── Apptegy / Thrillshare ───────────────────────────────────────────────

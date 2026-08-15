@@ -1,8 +1,7 @@
 "use client";
 
 import type { Meeting } from "@/lib/sources/types";
-import { meetingHeadline } from "@/lib/map/format";
-import type { CalendarEventInput } from "@/lib/calendar/event-links";
+import { meetingCalendarEvent } from "@/lib/calendar/event-links";
 
 import { AddToCalendar } from "@/components/calendar/add-to-calendar";
 
@@ -11,34 +10,20 @@ import { AddToCalendar } from "@/components/calendar/add-to-calendar";
  * control in session item 4, 2026-08-14 second session). Built from the
  * meeting record alone — the what-first headline as the title, the
  * meeting's own instant, the venue, and the agenda link (when one
- * exists) plus this app's page in the description. The 90-minute block
- * is stated as an estimate in the description, because public bodies
- * rarely publish end times.
+ * exists) plus this app's page in the description.
+ *
+ * The event shape itself is `meetingCalendarEvent` in lib, because M59
+ * (2026-08-15) made it a decision rather than a mapping: a meeting whose
+ * publisher never posted a start time becomes an all-day event carrying the
+ * "time not posted" line, and that rule needs a test that does not have to
+ * render a component to reach it.
  */
-function meetingEvent(meeting: Meeting): CalendarEventInput {
-  const origin = typeof window !== "undefined" ? window.location.origin : "";
-  const lines = [
-    meeting.bodyName,
-    meeting.agendaUrl ? `Agenda: ${meeting.agendaUrl}` : null,
-    origin ? `Found via We the People: ${origin}/` : null,
-    "End time is an estimate — public bodies rarely publish one.",
-  ].filter(Boolean);
-  return {
-    id: meeting.id,
-    title: meetingHeadline(meeting),
-    startsAtIso: meeting.startsAt,
-    location: [meeting.location.name, meeting.location.address]
-      .filter(Boolean)
-      .join(", "),
-    description: lines.join("\n"),
-  };
-}
-
 export function CalendarLinks({ meeting }: { meeting: Meeting }) {
   if (meeting.status !== "SCHEDULED") return null;
+  const origin = typeof window !== "undefined" ? window.location.origin : "";
   return (
     <p className="mt-1.5 text-[0.75rem]">
-      <AddToCalendar event={meetingEvent(meeting)} />
+      <AddToCalendar event={meetingCalendarEvent(meeting, { origin })} />
     </p>
   );
 }

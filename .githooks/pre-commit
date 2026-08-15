@@ -1,0 +1,23 @@
+#!/bin/sh
+#
+# Refuse a commit whose staged documents carry a date later than today.
+#
+# The check itself is scripts/check-staged-dates.mjs; this file only finds
+# node and gets out of the way. Installed by pointing git at this directory:
+#
+#     git config core.hooksPath .githooks
+#
+# which `pnpm session:start` reports on, so a fresh clone is told rather than
+# left silently unprotected. Bypass with git's own `--no-verify`.
+#
+# `hooks/` at the repo root is React hooks — this is `.githooks/` on purpose.
+
+set -e
+
+if ! command -v node >/dev/null 2>&1; then
+  echo "pre-commit: node not on PATH — the document date check did not run." >&2
+  echo "pre-commit: refusing rather than passing a check that never ran." >&2
+  exit 1
+fi
+
+exec node scripts/check-staged-dates.mjs

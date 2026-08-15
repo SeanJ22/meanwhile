@@ -4,12 +4,14 @@
  *   pnpm session:start            check, then start the dev server
  *   pnpm session:start --check    check only; do not start anything
  *
- * The bookend to `pnpm handoff`. Three checks, and they share one property:
+ * The bookend to `pnpm handoff`. Four checks, and they share one property:
  * **the environment lies quietly if you do not look.**
  *
  *   1. local `main` vs `origin/main`   a stale main looks like an empty repo
  *   2. `CLAUDE.md` is ~10 KB           a clobbered one looks like no constraints
  *   3. port 3000 is free               a stale dev server looks like a build
+ *   4. `core.hooksPath` is set         an uninstalled guard looks like a passing
+ *                                      one — it never fires and never says so
  *
  * Since 2026-08-13 check 3 *repairs* rather than reports when the stale server
  * is attributably this repo's own (pid file matches): it kills the tree and
@@ -173,6 +175,38 @@ function restoreNote() {
     );
   }
   return out;
+}
+
+/* --------------------------------------------------------------- 4 hook --- */
+
+// The same family as the three above: a guard that is not installed does not
+// announce itself, it just never fires. `core.hooksPath` is local git config,
+// so it survives no clone and no fresh checkout — the pre-commit date check
+// (R14) is present in the tree and inert until someone runs one command.
+// Reported, not repaired: writing to a person's git config on their behalf is
+// a different kind of act from killing a server this repo started.
+{
+  const hooksPath = tryRun("git", ["config", "core.hooksPath"]);
+  const hook = join(ROOT, ".githooks", "pre-commit");
+
+  if (!existsSync(hook)) {
+    warn("pre-commit", ".githooks/pre-commit is missing from the tree");
+  } else if (hooksPath === ".githooks") {
+    ok("pre-commit", "installed — staged documents are checked for future dates");
+  } else {
+    warn(
+      "pre-commit",
+      `NOT installed${hooksPath ? ` (core.hooksPath is ${hooksPath})` : ""} — ` +
+        "the date check will not run on commit",
+    );
+    notes.push(
+      "  The pre-commit document-date check is in the tree but not installed.",
+      "  It catches a fabricated date at authorship, while the context to fix it",
+      "  still exists (R14, docs/state.md 23). Install it:",
+      "",
+      "    git config core.hooksPath .githooks",
+    );
+  }
 }
 
 /* ---------------------------------------------------------------- 3 port --- */

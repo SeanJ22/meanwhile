@@ -42,6 +42,10 @@ export interface RosterMember {
   partyLabel?: string | null;
   /** The government record the party was read from. Required with it. */
   partySourceUrl?: string;
+  /** Who published that record — an election authority, never a party. */
+  partySourceOrg?: string;
+  /** The day the record was read. Distinct from the roster's `collectedAt`. */
+  partyCollectedAt?: string;
 }
 
 /**
@@ -78,10 +82,18 @@ export interface BodyRoster {
    * Morris County's commissioners, Merrimack County's commissioners and
    * Rockaway Township's council all list names, wards and terms and no
    * affiliation. That is a finding about the pages, not about the offices,
-   * and several of these offices are unambiguously partisan. The next rung
-   * is the election authority's certified candidate list or canvass, which
-   * publishes party per candidate — the same class of record the governors'
-   * rows below now cite. Tracker M62 owns it.
+   * and several of these offices are unambiguously partisan.
+   *
+   * **M62 closed it on 2026-08-15 from the election authorities' own
+   * certified records, and no roster here is UNDETERMINED any more:** five
+   * are PARTISAN (Pima's board, Tucson's mayor and council, Rockaway
+   * Township's council, Morris County's and Merrimack County's commissioners)
+   * and seven are NONPARTISAN (all six school boards, plus the Newbury
+   * Selectboard). Every one cites the document that settled it. The value
+   * still means what it says: it describes the SEATS, not the people, and a
+   * NONPARTISAN body renders no party because there is none to render, while
+   * a PARTISAN body may still hold a member with no party — two here do,
+   * both appointed to fill a vacancy, so no certified result exists to read.
    */
   partisanship: Partisanship;
   /** What established `partisanship`. Absent while UNDETERMINED. */
@@ -89,6 +101,80 @@ export interface BodyRoster {
 }
 
 const COLLECTED = "2026-08-13";
+
+/**
+ * M62 — the certified-results rung, walked 2026-08-15.
+ *
+ * The rule the author set: a local office is partisan or nonpartisan by law or
+ * charter FIRST, and only a partisan office gets a party, read from the
+ * certified result of the election that put the person in the seat. Never from
+ * an endorsement, a news report, or a party's own site. Where no certification
+ * can be located the member's party stays null and the card renders nothing —
+ * silence, not a guess.
+ *
+ * Two findings worth stating plainly, because both were surprises:
+ *
+ * 1. **A general-election canvass usually does not print party.** Pima's and
+ *    Morris's summary reports carry names and totals and nothing else. The
+ *    record that states party is the PARTISAN PRIMARY canvass (Arizona: races
+ *    are headed `DEM`/`REP`/`GRN`/`LBT`) or the county clerk's certified
+ *    winners list (New Jersey: a Party column). Reading only the general
+ *    canvass would have produced "no party found" for offices that are
+ *    unambiguously partisan.
+ *
+ * 2. **The same documents prove the negative.** Arizona school district
+ *    governing board races appear in Pima's general canvass with no party
+ *    beside any candidate and appear in the partisan primary canvass under no
+ *    party heading at all — they are not in that election. That is the election
+ *    authority's own record saying these seats carry no party, which is a far
+ *    better answer than "the district's page doesn't mention one."
+ */
+const PARTY_READ = "2026-08-15";
+
+/**
+ * Arizona's certified primary canvass for Pima County, filed with the
+ * Secretary of State. Races are organised by party, so a nominee's party is
+ * stated by the document rather than inferred from it.
+ */
+const PIMA_PRIMARY_CANVASS =
+  "https://apps.azsos.gov/election/2024/pe/canvass/Official_2024_Primary_Canvass_Pima_County.pdf";
+
+/** Pima's certified general canvass — the document that prints no party. */
+const PIMA_GENERAL_CANVASS =
+  "https://apps.azsos.gov/election/2024/ge/canvass/202411GeneralElectionCanvass-Pima.pdf";
+
+/** City of Tucson, official primary results. Contests are headed by party. */
+const TUCSON_2023_PRIMARY =
+  "https://www.tucsonaz.gov/files/sharedassets/public/v/1/clerks/documents/elections/results/2023/primary/23paztuc_officialresults_080723.pdf";
+const TUCSON_2025_PRIMARY =
+  "https://www.tucsonaz.gov/files/sharedassets/public/v/1/clerks/documents/elections/results/25paz_officialresults_08112025.pdf";
+
+/** Morris County Clerk, "Winners of the General Election" — has a Party column. */
+const MORRIS_2023_WINNERS =
+  "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/past-results/2023-general-winners.pdf";
+const MORRIS_2024_WINNERS =
+  "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/past-results/2024-general-winners.pdf";
+const MORRIS_2025_WINNERS =
+  "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/2/elections/past-results/2025-general-winners.pdf";
+
+/**
+ * New Hampshire's certified county-office results, reached through the
+ * Internet Archive's dated mirror. `sos.nh.gov` returns 403 to every
+ * datacenter client — the page AND the document path, both tried — so the
+ * source recorded here is the archive snapshot that was actually read, with
+ * its date in the URL, rather than a live URL nobody could open. The ladder is
+ * written up in `docs/source-ladder.md`.
+ */
+const NH_2024_MERRIMACK_COUNTY =
+  "https://web.archive.org/web/20260130123951/https://www.sos.nh.gov/sites/g/files/ehbemt561/files/inline-documents/sonh/2024-ge-county-offices-merrimack_1.xls";
+const NH_2022_MERRIMACK_COUNTY =
+  "https://web.archive.org/web/20250728184156/https://www.sos.nh.gov/sites/g/files/ehbemt561/files/inline-documents/sonh/2022-ge-merrimack-county.xls";
+
+/** The org strings, so a typo cannot make two records look like two sources. */
+const AZ_SOS = "Arizona Secretary of State (official county canvass)";
+const TUCSON_CLERK = "City of Tucson City Clerk (official election results)";
+const MORRIS_CLERK = "Morris County Clerk (certified general election winners)";
+const NH_SOS = "New Hampshire Secretary of State (official general election results)";
 
 export const BODY_ROSTERS: BodyRoster[] = [
   {
@@ -100,9 +186,17 @@ export const BODY_ROSTERS: BodyRoster[] = [
     sourceUrl: "https://govboard.tusd1.org/",
     sourceOrg: "Tucson Unified School District Governing Board",
     collectedAt: COLLECTED,
-    // Rung 1 walked 2026-08-15: this body publishes no party on its own
-    // roster page. The certified candidate list is the next rung (M62).
-    partisanship: "UNDETERMINED",
+    // M62, 2026-08-15: NONPARTISAN, established from the election authority's
+    // own records rather than from the district's silence. Pima's certified
+    // GENERAL canvass carries these races — "Governing Board - Tucson Unified
+    // School District (TUSD) No. 1" — with no party beside any candidate,
+    // and the certified PARTISAN PRIMARY canvass, which heads every race with
+    // DEM/REP/GRN/LBT, contains no governing-board race at all. These seats
+    // are not contested on party lines, so nothing renders and nothing is
+    // missing. Pima County's School Superintendent, who runs the filing,
+    // issues a "Nonpartisan Nomination Paper".
+    partisanship: "NONPARTISAN",
+    partisanshipSourceUrl: PIMA_GENERAL_CANVASS,
     members: [
       {
         id: "roster:tusd#1",
@@ -157,9 +251,11 @@ export const BODY_ROSTERS: BodyRoster[] = [
     sourceUrl: "https://www.pima.gov/government/board_of_supervisors/",
     sourceOrg: "Pima County",
     collectedAt: COLLECTED,
-    // Rung 1 walked 2026-08-15: this body publishes no party on its own
-    // roster page. The certified candidate list is the next rung (M62).
-    partisanship: "UNDETERMINED",
+    // M62, 2026-08-15: PARTISAN, and the certified primary canvass says so —
+    // "DEM Board of Supervisors District 1", "REP Board of Supervisors
+    // District 4" and so on are the document's own race headings.
+    partisanship: "PARTISAN",
+    partisanshipSourceUrl: PIMA_PRIMARY_CANVASS,
     members: [
       {
         id: "roster:pima#1",
@@ -169,6 +265,10 @@ export const BODY_ROSTERS: BodyRoster[] = [
         email: null,
         phone: "520-724-2738",
         websiteUrl: "https://www.pima.gov/District1",
+        partyLabel: "Democratic",
+        partySourceUrl: PIMA_PRIMARY_CANVASS,
+        partySourceOrg: AZ_SOS,
+        partyCollectedAt: PARTY_READ,
       },
       {
         id: "roster:pima#2",
@@ -178,6 +278,10 @@ export const BODY_ROSTERS: BodyRoster[] = [
         email: null,
         phone: "520-724-2702",
         websiteUrl: "https://www.pima.gov/District2",
+        partyLabel: "Democratic",
+        partySourceUrl: PIMA_PRIMARY_CANVASS,
+        partySourceOrg: AZ_SOS,
+        partyCollectedAt: PARTY_READ,
       },
       {
         id: "roster:pima#3",
@@ -187,6 +291,10 @@ export const BODY_ROSTERS: BodyRoster[] = [
         email: null,
         phone: "520-724-8051",
         websiteUrl: "https://www.pima.gov/District3",
+        partyLabel: "Democratic",
+        partySourceUrl: PIMA_PRIMARY_CANVASS,
+        partySourceOrg: AZ_SOS,
+        partyCollectedAt: PARTY_READ,
       },
       {
         id: "roster:pima#4",
@@ -196,12 +304,28 @@ export const BODY_ROSTERS: BodyRoster[] = [
         email: null,
         phone: "520-724-8094",
         websiteUrl: "https://www.pima.gov/District4",
+        partyLabel: "Republican",
+        partySourceUrl: PIMA_PRIMARY_CANVASS,
+        partySourceOrg: AZ_SOS,
+        partyCollectedAt: PARTY_READ,
       },
       {
         id: "roster:pima#5",
         name: "Andrés Cano",
+        // M62: the one seat on this board with no certified result behind it,
+        // and the hunt is what found the wrong term note. District 5 was won
+        // in November 2024 by Adelita Grijalva (Pima's certified general
+        // canvass); she left for the CD7 special, and the Board appointed
+        // Cano on 2025-04-15 — an appointment, not an election. So he holds a
+        // seat on a partisan board with no certified result naming his party,
+        // and the card renders no party. Arizona requires a county-supervisor
+        // appointee to share the vacating member's registration, and the
+        // county's own call for applications said so; that would be a sound
+        // inference and it is still not a certified result, which is what this
+        // rule asks for. Silence, recorded, with the rungs in
+        // docs/source-ladder.md.
         officeTitle: "County Supervisor, District 5",
-        termNote: "Elected November 2024 to a four-year term",
+        termNote: "Appointed April 15, 2025 to serve through December 31, 2026",
         email: null,
         phone: "(520) 724-8126",
         websiteUrl: "https://www.pima.gov/District5",
@@ -217,9 +341,15 @@ export const BODY_ROSTERS: BodyRoster[] = [
     sourceUrl: "https://www.tucsonaz.gov/Government/Mayor-Council-and-City-Manager",
     sourceOrg: "City of Tucson",
     collectedAt: COLLECTED,
-    // Rung 1 walked 2026-08-15: this body publishes no party on its own
-    // roster page. The certified candidate list is the next rung (M62).
-    partisanship: "UNDETERMINED",
+    // M62, 2026-08-15: PARTISAN, and the City Clerk says it in one sentence —
+    // "The City of Tucson conducts regularly scheduled partisan elections."
+    // Wards nominate by party in the primary and the city votes at-large in
+    // the general, so the certified PRIMARY results are the record that names
+    // each member's party. Mayor and Wards 1, 2 and 4 stand in one cycle
+    // (2023, next 2027); Wards 3, 5 and 6 in the other (2025).
+    partisanship: "PARTISAN",
+    partisanshipSourceUrl:
+      "https://www.tucsonaz.gov/Departments/Clerks/Elections/About-City-of-Tucson-Elections",
     members: [
       {
         id: "roster:tucson-mc#1",
@@ -230,6 +360,10 @@ export const BODY_ROSTERS: BodyRoster[] = [
         phone: "520-791-4201",
         websiteUrl:
           "https://www.tucsonaz.gov/Government/Mayor-Council-and-City-Manager",
+        partyLabel: "Democratic",
+        partySourceUrl: TUCSON_2023_PRIMARY,
+        partySourceOrg: TUCSON_CLERK,
+        partyCollectedAt: PARTY_READ,
       },
       {
         id: "roster:tucson-mc#2",
@@ -240,6 +374,10 @@ export const BODY_ROSTERS: BodyRoster[] = [
         phone: "(520) 791-4040",
         websiteUrl:
           "https://www.tucsonaz.gov/Government/Mayor-Council-and-City-Manager",
+        partyLabel: "Democratic",
+        partySourceUrl: TUCSON_2023_PRIMARY,
+        partySourceOrg: TUCSON_CLERK,
+        partyCollectedAt: PARTY_READ,
       },
       {
         id: "roster:tucson-mc#3",
@@ -250,6 +388,10 @@ export const BODY_ROSTERS: BodyRoster[] = [
         phone: "(520) 791-4687",
         websiteUrl:
           "https://www.tucsonaz.gov/Government/Mayor-Council-and-City-Manager",
+        partyLabel: "Democratic",
+        partySourceUrl: TUCSON_2023_PRIMARY,
+        partySourceOrg: TUCSON_CLERK,
+        partyCollectedAt: PARTY_READ,
       },
       {
         id: "roster:tucson-mc#4",
@@ -260,6 +402,10 @@ export const BODY_ROSTERS: BodyRoster[] = [
         phone: "(520) 791-4711",
         websiteUrl:
           "https://www.tucsonaz.gov/Government/Mayor-Council-and-City-Manager",
+        partyLabel: "Democratic",
+        partySourceUrl: TUCSON_2025_PRIMARY,
+        partySourceOrg: TUCSON_CLERK,
+        partyCollectedAt: PARTY_READ,
       },
       {
         id: "roster:tucson-mc#5",
@@ -270,6 +416,10 @@ export const BODY_ROSTERS: BodyRoster[] = [
         phone: "(520) 791-3199",
         websiteUrl:
           "https://www.tucsonaz.gov/Government/Mayor-Council-and-City-Manager",
+        partyLabel: "Democratic",
+        partySourceUrl: TUCSON_2023_PRIMARY,
+        partySourceOrg: TUCSON_CLERK,
+        partyCollectedAt: PARTY_READ,
       },
       {
         id: "roster:tucson-mc#6",
@@ -280,6 +430,10 @@ export const BODY_ROSTERS: BodyRoster[] = [
         phone: "(520) 791-4231",
         websiteUrl:
           "https://www.tucsonaz.gov/Government/Mayor-Council-and-City-Manager",
+        partyLabel: "Democratic",
+        partySourceUrl: TUCSON_2025_PRIMARY,
+        partySourceOrg: TUCSON_CLERK,
+        partyCollectedAt: PARTY_READ,
       },
       {
         id: "roster:tucson-mc#7",
@@ -290,6 +444,10 @@ export const BODY_ROSTERS: BodyRoster[] = [
         phone: "(520) 791-4601",
         websiteUrl:
           "https://www.tucsonaz.gov/Government/Mayor-Council-and-City-Manager",
+        partyLabel: "Democratic",
+        partySourceUrl: TUCSON_2025_PRIMARY,
+        partySourceOrg: TUCSON_CLERK,
+        partyCollectedAt: PARTY_READ,
       },
     ],
   },
@@ -300,9 +458,11 @@ export const BODY_ROSTERS: BodyRoster[] = [
     sourceUrl: "https://www.vailschooldistrict.org/o/vsd/page/governing-board",
     sourceOrg: "Vail Unified School District",
     collectedAt: COLLECTED,
-    // Rung 1 walked 2026-08-15: this body publishes no party on its own
-    // roster page. The certified candidate list is the next rung (M62).
-    partisanship: "UNDETERMINED",
+    // M62, 2026-08-15: NONPARTISAN — same two certified Pima County records
+    // as the other Arizona school boards here. No party in the general
+    // canvass, no governing-board race in the partisan primary canvass.
+    partisanship: "NONPARTISAN",
+    partisanshipSourceUrl: PIMA_GENERAL_CANVASS,
     members: [
       {
         id: "roster:vail#1",
@@ -358,9 +518,16 @@ export const BODY_ROSTERS: BodyRoster[] = [
     sourceUrl: "https://www.newbury.nh.gov/selectboard",
     sourceOrg: "Town of Newbury",
     collectedAt: COLLECTED,
-    // Rung 1 walked 2026-08-15: this body publishes no party on its own
-    // roster page. The certified candidate list is the next rung (M62).
-    partisanship: "UNDETERMINED",
+    // M62, 2026-08-15: NONPARTISAN. New Hampshire town elections run on a
+    // ballot system the town itself adopts (RSA 669), so this could not be
+    // settled from the statute alone — it had to be settled from Newbury's
+    // ballot. The town's own 2025 Annual Report prints the moderator's
+    // certified count from the March 2025 town election: "Selectboard 3
+    // Years — Sandra Warde 326, Joanne Lord 157", no party beside either
+    // name, and none beside any other town office on the same page.
+    partisanship: "NONPARTISAN",
+    partisanshipSourceUrl:
+      "https://www.newbury.nh.gov/sites/g/files/vyhlif4761/f/news/town_of_newbury_2025_report.pdf",
     members: [
       {
         id: "roster:newbury#1",
@@ -406,9 +573,13 @@ export const BODY_ROSTERS: BodyRoster[] = [
       "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-members",
     sourceOrg: "Kearsarge Regional School District (SAU #65)",
     collectedAt: "2026-08-14",
-    // Rung 1 walked 2026-08-15: this body publishes no party on its own
-    // roster page. The certified candidate list is the next rung (M62).
-    partisanship: "UNDETERMINED",
+    // M62, 2026-08-15: NONPARTISAN by statute. RSA 671:20 has the school
+    // district clerk prepare ballots "in the same manner as town clerks for
+    // non-partisan town elections" — the school ballot is a non-partisan
+    // ballot as a matter of law, in every New Hampshire district, so no
+    // per-district record is needed and none exists to find.
+    partisanship: "NONPARTISAN",
+    partisanshipSourceUrl: "https://gc.nh.gov/rsa/html/LXIII/671/671-20.htm",
     members: [
       {
         id: "roster:kearsarge#1",
@@ -513,22 +684,41 @@ export const BODY_ROSTERS: BodyRoster[] = [
     sourceUrl: "https://www.rockawaytownship.org/157/Township-Council",
     sourceOrg: "Rockaway Township",
     collectedAt: "2026-08-14",
-    // Rung 1 walked 2026-08-15: this body publishes no party on its own
-    // roster page. The certified candidate list is the next rung (M62).
-    partisanship: "UNDETERMINED",
+    // M62, 2026-08-15: PARTISAN. The Morris County Clerk's certified
+    // "Winners of the General Election" carries a Party column, and every
+    // Rockaway Township seat in it is filled under a party label. This is
+    // also the roster where the certified record disagreed with the sitting
+    // membership twice, and both are recorded below rather than smoothed.
+    partisanship: "PARTISAN",
+    partisanshipSourceUrl: MORRIS_2025_WINNERS,
     members: [
       {
         id: "roster:rockaway#0",
         name: "Joseph Jackson",
         officeTitle: "Mayor",
-        termNote: "Unexpired term ends December 31, 2027",
+        // Was "Unexpired term ends December 31, 2027". The certified winners
+        // say otherwise: Jackson won a ONE-YEAR unexpired mayoral term in
+        // November 2022 and then a full FOUR-YEAR term in November 2023. The
+        // end date was right and the word "unexpired" was two years stale.
+        termNote: "Elected November 2023 to a four-year term ending December 31, 2027",
         email: null,
         phone: "973-627-7200",
         websiteUrl: "https://www.rockawaytownship.org/464/About-the-Mayor",
+        partyLabel: "Republican",
+        partySourceUrl: MORRIS_2023_WINNERS,
+        partySourceOrg: MORRIS_CLERK,
+        partyCollectedAt: PARTY_READ,
       },
       {
         id: "roster:rockaway#1",
         name: "Howard Morrison",
+        // No party, and the reason is a finding. The at-large seat with this
+        // term was won in November 2023 by Howard KRITZ; Morrison holds it
+        // now per the township's own council page. He appears in no certified
+        // winners list for 2023, 2024 (Rockaway Township: "NO LOCAL
+        // ELECTION") or 2025 — an absence checked in all three documents, not
+        // assumed — so he reached the seat by appointment and no certified
+        // result names his party. Nothing renders.
         officeTitle: "Council President, At-Large",
         termNote: "Term expires December 31, 2027",
         email: "hmorrison@rockawaytownship.org",
@@ -543,6 +733,10 @@ export const BODY_ROSTERS: BodyRoster[] = [
         email: "jsackett@rockawaytownship.org",
         phone: "973-627-7200 x2088",
         websiteUrl: "https://www.rockawaytownship.org/157/Township-Council",
+        partyLabel: "Democratic",
+        partySourceUrl: MORRIS_2025_WINNERS,
+        partySourceOrg: MORRIS_CLERK,
+        partyCollectedAt: PARTY_READ,
       },
       {
         id: "roster:rockaway#3",
@@ -552,6 +746,10 @@ export const BODY_ROSTERS: BodyRoster[] = [
         email: "asalberg@rockawaytownship.org",
         phone: "973-627-7200 x2083",
         websiteUrl: "https://www.rockawaytownship.org/157/Township-Council",
+        partyLabel: "Republican",
+        partySourceUrl: MORRIS_2023_WINNERS,
+        partySourceOrg: MORRIS_CLERK,
+        partyCollectedAt: PARTY_READ,
       },
       {
         id: "roster:rockaway#4",
@@ -561,6 +759,10 @@ export const BODY_ROSTERS: BodyRoster[] = [
         email: "pwojtowicz@rockawaytownship.org",
         phone: "973-627-7200 x2084",
         websiteUrl: "https://www.rockawaytownship.org/157/Township-Council",
+        partyLabel: "Republican",
+        partySourceUrl: MORRIS_2023_WINNERS,
+        partySourceOrg: MORRIS_CLERK,
+        partyCollectedAt: PARTY_READ,
       },
       {
         id: "roster:rockaway#5",
@@ -570,6 +772,10 @@ export const BODY_ROSTERS: BodyRoster[] = [
         email: "sroyek@rockawaytownship.org",
         phone: "973-627-7200 x2085",
         websiteUrl: "https://www.rockawaytownship.org/157/Township-Council",
+        partyLabel: "Democratic",
+        partySourceUrl: MORRIS_2025_WINNERS,
+        partySourceOrg: MORRIS_CLERK,
+        partyCollectedAt: PARTY_READ,
       },
       {
         id: "roster:rockaway#6",
@@ -579,6 +785,10 @@ export const BODY_ROSTERS: BodyRoster[] = [
         email: "jquinn@rockawaytownship.org",
         phone: "973-627-7200 x2086",
         websiteUrl: "https://www.rockawaytownship.org/157/Township-Council",
+        partyLabel: "Republican",
+        partySourceUrl: MORRIS_2025_WINNERS,
+        partySourceOrg: MORRIS_CLERK,
+        partyCollectedAt: PARTY_READ,
       },
       {
         id: "roster:rockaway#7",
@@ -588,6 +798,10 @@ export const BODY_ROSTERS: BodyRoster[] = [
         email: "sfreire@rockawaytownship.org",
         phone: "973-627-7200 x2087",
         websiteUrl: "https://www.rockawaytownship.org/157/Township-Council",
+        partyLabel: "Democratic",
+        partySourceUrl: MORRIS_2025_WINNERS,
+        partySourceOrg: MORRIS_CLERK,
+        partyCollectedAt: PARTY_READ,
       },
       {
         id: "roster:rockaway#8",
@@ -597,6 +811,10 @@ export const BODY_ROSTERS: BodyRoster[] = [
         email: "efriedlander@rockawaytownship.org",
         phone: "973-627-7200 x2089",
         websiteUrl: "https://www.rockawaytownship.org/157/Township-Council",
+        partyLabel: "Democratic",
+        partySourceUrl: MORRIS_2025_WINNERS,
+        partySourceOrg: MORRIS_CLERK,
+        partyCollectedAt: PARTY_READ,
       },
       {
         id: "roster:rockaway#9",
@@ -606,6 +824,10 @@ export const BODY_ROSTERS: BodyRoster[] = [
         email: "tkelley@rockawaytownship.org",
         phone: "973-627-7200 x2082",
         websiteUrl: "https://www.rockawaytownship.org/157/Township-Council",
+        partyLabel: "Republican",
+        partySourceUrl: MORRIS_2025_WINNERS,
+        partySourceOrg: MORRIS_CLERK,
+        partyCollectedAt: PARTY_READ,
       },
     ],
   },
@@ -618,9 +840,12 @@ export const BODY_ROSTERS: BodyRoster[] = [
       "https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners",
     sourceOrg: "Morris County",
     collectedAt: "2026-08-14",
-    // Rung 1 walked 2026-08-15: this body publishes no party on its own
-    // roster page. The certified candidate list is the next rung (M62).
-    partisanship: "UNDETERMINED",
+    // M62, 2026-08-15: PARTISAN — the Morris County Clerk's certified winners
+    // lists carry a Party column, and all seven seats were filled through it.
+    // Three-year terms, staggered three-three-one across 2023, 2024 and 2025,
+    // so three certified documents were needed to cover one board.
+    partisanship: "PARTISAN",
+    partisanshipSourceUrl: MORRIS_2024_WINNERS,
     members: [
       {
         id: "roster:morris#1",
@@ -631,6 +856,10 @@ export const BODY_ROSTERS: BodyRoster[] = [
         phone: "973-285-6010",
         websiteUrl:
           "https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners",
+        partyLabel: "Republican",
+        partySourceUrl: MORRIS_2024_WINNERS,
+        partySourceOrg: MORRIS_CLERK,
+        partyCollectedAt: PARTY_READ,
       },
       {
         id: "roster:morris#2",
@@ -641,6 +870,10 @@ export const BODY_ROSTERS: BodyRoster[] = [
         phone: "973-285-6010",
         websiteUrl:
           "https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners",
+        partyLabel: "Republican",
+        partySourceUrl: MORRIS_2024_WINNERS,
+        partySourceOrg: MORRIS_CLERK,
+        partyCollectedAt: PARTY_READ,
       },
       {
         id: "roster:morris#3",
@@ -651,6 +884,10 @@ export const BODY_ROSTERS: BodyRoster[] = [
         phone: "973-285-6010",
         websiteUrl:
           "https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners",
+        partyLabel: "Republican",
+        partySourceUrl: MORRIS_2025_WINNERS,
+        partySourceOrg: MORRIS_CLERK,
+        partyCollectedAt: PARTY_READ,
       },
       {
         id: "roster:morris#4",
@@ -661,6 +898,10 @@ export const BODY_ROSTERS: BodyRoster[] = [
         phone: "973-285-6010",
         websiteUrl:
           "https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners",
+        partyLabel: "Republican",
+        partySourceUrl: MORRIS_2025_WINNERS,
+        partySourceOrg: MORRIS_CLERK,
+        partyCollectedAt: PARTY_READ,
       },
       {
         id: "roster:morris#5",
@@ -671,6 +912,10 @@ export const BODY_ROSTERS: BodyRoster[] = [
         phone: "973-285-6010",
         websiteUrl:
           "https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners",
+        partyLabel: "Republican",
+        partySourceUrl: MORRIS_2025_WINNERS,
+        partySourceOrg: MORRIS_CLERK,
+        partyCollectedAt: PARTY_READ,
       },
       {
         id: "roster:morris#6",
@@ -681,6 +926,10 @@ export const BODY_ROSTERS: BodyRoster[] = [
         phone: "973-285-6010",
         websiteUrl:
           "https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners/Tayfun-Selen",
+        partyLabel: "Republican",
+        partySourceUrl: MORRIS_2023_WINNERS,
+        partySourceOrg: MORRIS_CLERK,
+        partyCollectedAt: PARTY_READ,
       },
       {
         id: "roster:morris#7",
@@ -691,6 +940,10 @@ export const BODY_ROSTERS: BodyRoster[] = [
         phone: "973-285-6010",
         websiteUrl:
           "https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners",
+        partyLabel: "Republican",
+        partySourceUrl: MORRIS_2024_WINNERS,
+        partySourceOrg: MORRIS_CLERK,
+        partyCollectedAt: PARTY_READ,
       },
     ],
   },
@@ -706,9 +959,14 @@ export const BODY_ROSTERS: BodyRoster[] = [
       "https://chichesternh.org/DocumentCenter/View/1817/Merrimack-County-Annual-Report-2025",
     sourceOrg: "Merrimack County (FY2025 Annual Report, County Directory)",
     collectedAt: "2026-08-14",
-    // Rung 1 walked 2026-08-15: this body publishes no party on its own
-    // roster page. The certified candidate list is the next rung (M62).
-    partisanship: "UNDETERMINED",
+    // M62, 2026-08-15: PARTISAN. New Hampshire county commissioners are
+    // elected by district at the state general election, and the Secretary of
+    // State's certified county-office results print the party as a letter
+    // beside each candidate — "Steve Shurtleff, d", "David Lovlien Jr., r".
+    // Two elections were needed: District 2 reads "No Election" in 2024
+    // because it is a four-year seat last contested in 2022.
+    partisanship: "PARTISAN",
+    partisanshipSourceUrl: NH_2024_MERRIMACK_COUNTY,
     members: [
       {
         id: "roster:merrimack#1",
@@ -719,6 +977,10 @@ export const BODY_ROSTERS: BodyRoster[] = [
         phone: "(603) 796-6800",
         websiteUrl:
           "https://www.merrimackcounty.net/board_of_commissioners_/index.php",
+        partyLabel: "Republican",
+        partySourceUrl: NH_2022_MERRIMACK_COUNTY,
+        partySourceOrg: NH_SOS,
+        partyCollectedAt: PARTY_READ,
       },
       {
         id: "roster:merrimack#2",
@@ -729,6 +991,10 @@ export const BODY_ROSTERS: BodyRoster[] = [
         phone: "(603) 796-6800",
         websiteUrl:
           "https://www.merrimackcounty.net/board_of_commissioners_/index.php",
+        partyLabel: "Republican",
+        partySourceUrl: NH_2024_MERRIMACK_COUNTY,
+        partySourceOrg: NH_SOS,
+        partyCollectedAt: PARTY_READ,
       },
       {
         id: "roster:merrimack#3",
@@ -739,6 +1005,10 @@ export const BODY_ROSTERS: BodyRoster[] = [
         phone: "(603) 796-6800",
         websiteUrl:
           "https://www.merrimackcounty.net/board_of_commissioners_/index.php",
+        partyLabel: "Democratic",
+        partySourceUrl: NH_2024_MERRIMACK_COUNTY,
+        partySourceOrg: NH_SOS,
+        partyCollectedAt: PARTY_READ,
       },
     ],
   },
@@ -757,9 +1027,13 @@ export const BODY_ROSTERS: BodyRoster[] = [
     sourceUrl: "https://www.rocktwp.net/page/board-members",
     sourceOrg: "Rockaway Township School District",
     collectedAt: "2026-08-14",
-    // Rung 1 walked 2026-08-15: this body publishes no party on its own
-    // roster page. The certified candidate list is the next rung (M62).
-    partisanship: "UNDETERMINED",
+    // M62, 2026-08-15: NONPARTISAN by statute, and New Jersey says it in one
+    // line — N.J.S.A. 19:60-1: "No party designation shall appear on any
+    // ballot to be used in a school election." Note what this does NOT mean:
+    // the township council two entries up is squarely partisan. Same town,
+    // same voters, different ballot, and the app now says so on each.
+    partisanship: "NONPARTISAN",
+    partisanshipSourceUrl: "https://nj.gov/state/dos-statutes-elections-19-60-63.shtml",
     members: [
       {
         id: "roster:rocktwp-boe#1",
@@ -837,9 +1111,11 @@ export const BODY_ROSTERS: BodyRoster[] = [
     sourceUrl: "https://www.susd12.org/governing-board-home",
     sourceOrg: "Sunnyside Unified School District",
     collectedAt: "2026-08-14",
-    // Rung 1 walked 2026-08-15: this body publishes no party on its own
-    // roster page. The certified candidate list is the next rung (M62).
-    partisanship: "UNDETERMINED",
+    // M62, 2026-08-15: NONPARTISAN — same two certified Pima County records
+    // as the other Arizona school boards here. No party in the general
+    // canvass, no governing-board race in the partisan primary canvass.
+    partisanship: "NONPARTISAN",
+    partisanshipSourceUrl: PIMA_GENERAL_CANVASS,
     members: [
       {
         id: "roster:susd12#1",
@@ -899,9 +1175,11 @@ export const BODY_ROSTERS: BodyRoster[] = [
     sourceUrl: "https://www.amphi.com/348925_2",
     sourceOrg: "Amphitheater Unified School District",
     collectedAt: "2026-08-14",
-    // Rung 1 walked 2026-08-15: this body publishes no party on its own
-    // roster page. The certified candidate list is the next rung (M62).
-    partisanship: "UNDETERMINED",
+    // M62, 2026-08-15: NONPARTISAN — same two certified Pima County records
+    // as the other Arizona school boards here. No party in the general
+    // canvass, no governing-board race in the partisan primary canvass.
+    partisanship: "NONPARTISAN",
+    partisanshipSourceUrl: PIMA_GENERAL_CANVASS,
     members: [
       {
         id: "roster:amphi#1",
@@ -977,19 +1255,20 @@ export interface RosterHolder {
  * The roster as `SeatHolder`-shaped rows, so the popup family renders local
  * members with the same machinery as federal and state ones.
  *
- * `partyLabel` is null for every curated local today, and the reason is not
- * the one this comment used to give (M61, 2026-08-15). It said "these are
- * nonpartisan offices as published" — but walking rung 1 across all of them
- * on 2026-08-15 showed that what is actually true is narrower and less
- * comfortable: **none of these bodies publishes party on its own page**, and
- * several of the offices — county supervisors and commissioners, Tucson's
- * mayor and council, a township council — are elected on party lines. So the
- * silence was being read as a fact about the offices when it was a fact about
- * the pages. Each roster now records its `partisanship` instead of the code
- * assuming it, UNDETERMINED where it is genuinely not established, and the
- * next rung — the election authority's certified candidate list — is tracker
- * M62. The party of a school-board member still is not ours to assert; what
- * changed is that we no longer assert the opposite by silence.
+ * `partyLabel` used to be null for every curated local, and the reason given
+ * for it was wrong (M61, 2026-08-15). It said "these are nonpartisan offices
+ * as published" — but none of these bodies publishes party on its own page,
+ * and several of the offices are elected on party lines, so a silence about
+ * the PAGES was being read as a fact about the OFFICES.
+ *
+ * **M62 (2026-08-15) filled it in from certified election results**: 30 of
+ * the 71 curated local members now carry a party, each with the canvass or
+ * certified winners list it was read from. The other 41 carry none, and the
+ * roster's `partisanship` says which kind of nothing that is — 39 sit on
+ * bodies recorded NONPARTISAN, where no party exists to state, and two sit on
+ * partisan bodies having been appointed to a vacancy, where a party exists
+ * and no certified result states it. Those two are the honest gap, named on
+ * the member rather than left as an anonymous blank.
  *
  * Photos resolve through `roster-photos.json` — a tiny derivative of the
  * licensed manifest (lib/registry/official-photos.json), regenerated by

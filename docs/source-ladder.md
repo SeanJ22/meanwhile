@@ -677,3 +677,199 @@ question rather than an implied "nonpartisan".
   memory: the row cites the same filing the committed ballot record does, and
   `tests/party.test.ts` fails the build if the two surfaces ever disagree
   about the party or cite different records for it.
+
+### M62 — the certified-results rung, walked 2026-08-15
+
+The next rung, walked to the end for all twelve curated bodies. What it
+found first is worth stating before the results, because it would have
+produced a false "not found" for anyone who stopped one document early:
+
+**A general-election canvass usually does not print party.** Pima County's
+certified general canvass and the Morris County Clerk's official summary
+report both carry candidate names and vote totals and no affiliation at all.
+The documents that state party are:
+
+- **Arizona** — the certified **primary** canvass, where the races are
+  themselves headed by party: `DEM Board of Supervisors District 1`,
+  `REP Board of Supervisors District 4`.
+- **New Jersey** — the county clerk's certified **"Winners of the General
+  Election"**, which has a Party column (the summary report does not).
+- **New Hampshire** — the Secretary of State's certified county-office
+  results, which print the party as a letter beside the name:
+  `Steve Shurtleff, d`.
+
+**And the same documents prove the negative.** Arizona school district
+governing board races appear in Pima's general canvass with no party beside
+any candidate, and appear in the party-organised primary canvass under no
+party heading at all — they are not in that election. That is the election
+authority's own record saying these seats carry no party, which is a far
+stronger answer than "the district's page doesn't mention one".
+
+| Body | Partisanship | Record that settled it |
+|---|---|---|
+| Pima County Board of Supervisors | PARTISAN | AZ SoS, Official 2024 Primary Canvass — Pima County (races headed DEM/REP/GRN/LBT) |
+| Tucson Mayor & Council | PARTISAN | City of Tucson City Clerk: "The City of Tucson conducts regularly scheduled partisan elections" |
+| Rockaway Township Council | PARTISAN | Morris County Clerk, certified General Election Winners (Party column) |
+| Morris County Commissioners | PARTISAN | Morris County Clerk, certified General Election Winners |
+| Merrimack County Commissioners | PARTISAN | NH SoS, 2024 general county-office results (party letter per candidate) |
+| Tucson Unified Governing Board | NONPARTISAN | Pima certified canvasses — no party in the general, absent from the partisan primary |
+| Vail Unified Governing Board | NONPARTISAN | same |
+| Sunnyside Unified Governing Board | NONPARTISAN | same |
+| Amphitheater Unified Governing Board | NONPARTISAN | same |
+| Rockaway Township Board of Education | NONPARTISAN | N.J.S.A. 19:60-1 — "No party designation shall appear on any ballot to be used in a school election" |
+| Kearsarge Regional School Board | NONPARTISAN | RSA 671:20 — school ballots prepared "in the same manner as town clerks for non-partisan town elections" |
+| Newbury Selectboard | NONPARTISAN | Town of Newbury 2025 Annual Report — the moderator's certified March 2025 count, no party beside any town office |
+
+Newbury needed the town's own ballot rather than the statute: New Hampshire
+towns ADOPT a partisan or non-partisan ballot system under RSA 669, so the
+chapter alone cannot answer it for a particular town.
+
+**Two seats carry no party and that is the finding, not a gap in effort.**
+
+- **Pima District 5 (Andrés Cano).** The certified 2024 general canvass shows
+  the seat won by Adelita Grijalva. She left for the CD7 special and the
+  Board appointed Cano on 2025-04-15. There is no certified result naming his
+  party. Arizona requires a county-supervisor appointee to share the vacating
+  member's registration and the county's own call for applications said so —
+  a sound inference, and still not a certified result, so the card renders
+  nothing. The hunt also found the roster's term note was wrong ("Elected
+  November 2024 to a four-year term"); it now records the appointment.
+- **Rockaway Township at-large (Howard Morrison).** The seat with this term
+  was certified in November 2023 to Howard KRITZ. Morrison holds it per the
+  township's own council page and appears in NO certified winners list for
+  2023, 2024 (Rockaway Township: "NO LOCAL ELECTION") or 2025 — an absence
+  checked in all three documents rather than assumed. Appointed, so no party.
+  The hunt also corrected the mayor's term note, which still said "unexpired"
+  two years after he won a full four-year term.
+
+#### The NH ladder, rung by rung
+
+The author's standing ladder for any `sos.nh.gov` read, walked here for the
+Merrimack County commissioners and recorded in full because a 403 is never an
+answer:
+
+| Rung | Attempt | `attemptedAt` | Result |
+|---|---|---|---|
+| 1 | The committed filing snapshot in this repo | 2026-08-15 | Holds the 2026 cumulative candidate filings, not county results — wrong document, honestly wrong |
+| 2 | Search-index cache | 2026-08-15 | **HIT** — returned the exact document path `…/inline-documents/sonh/2024 County Commissioners by district.pdf`, proving the file exists and is indexed |
+| 3 | Direct document path under `sos.nh.gov/sites/g/files/…` | 2026-08-15 | **403** to the identified client, for the district PDF and for `2024-ge-county-offices-merrimack_1.xls`. Tried per document, as instructed. The block is host-wide, not page-only |
+| 4 | Internet Archive dated mirror | 2026-08-15 | **HIT** — snapshot `20260130123951` of the 2024 results index, and `20250728184156` for 2022. Both `.xls` files fetched at 200. The archive URL, with its date in it, is what the rows cite: it is the document that was actually read |
+| 5 | The author's residential browser | — | Not needed |
+
+No residential proxy, no spoofed origin, no circumvention of any kind. Rung 3
+is worth keeping even though it failed here: the same trick **worked** on
+`newbury.nh.gov`, which 403s its HTML pages and served
+`/sites/g/files/vyhlif4761/f/news/town_of_newbury_2025_report.pdf` at 200.
+Same CMS, same wall, different answer per host — which is exactly why the
+rung is attempted per document rather than assumed from the host.
+
+**Two more hosts that 403 a general-purpose fetcher and admit this project's
+identified User-Agent** (recorded so nobody records them as walls):
+`tucsonaz.gov` and `morriscountyclerk.org`. Both served every certified
+document requested, first try, at a serialized pace.
+
+**One document could not be read and is named rather than skipped**: the City
+of Tucson's certified Ward 3 primary recount (`certified-primary-election-
+ward-3-recount.pdf`) is a scan with no text layer. It does not change the
+party finding — Kevin Dahl appears in the certified primary results as a
+candidate in the `DEM Council Member Ward 3` contest either way, and the
+city's own council page has him in the seat — but the recount margin itself
+was not read from it.
+
+### M59 closed both archives — 2026-08-15
+
+The two rungs recorded above as "found, not built" are built. What each one
+actually publishes, and the count it produced:
+
+| Jurisdiction | Route | Read | Sittings | Gained |
+|---|---|---|---|---|
+| Rockaway Township, NJ | `rockawaytownship.org/AgendaCenter`, category **2** | 2026-08-15 | 13 dated in 2026 | 9 → 22 meetings (+13 day-only) |
+| Merrimack County, NH | the BOC notices/agendas page, dated documents | 2026-08-15 | 14 distinct dates, 33 documents | 1 → 15 meetings (+14 day-only) |
+
+**The category id is the thing that had to be right.** Rockaway's AgendaCenter
+hosts five bodies — Board of Adjustment, Board of Assessment Commissioners,
+Environmental Commission, Planning Board and the Township Council — on one
+page, under `<div id="cat<N>">` blocks. Taking every document on the page
+would have filed the Planning Board's meetings under the council: a wrong
+claim about who met, of exactly the kind the uniqueness invariant exists to
+catch. The id `2` is the value of the Township Council's own checkbox in the
+page's category filter, recorded on the wiring row, and a guard asserts the
+two categories' dates never cross.
+
+**A search endpoint was found and not used.** The page's own JavaScript builds
+`/AgendaCenter/Search/?term=&CIDs=…&startDate=…&endDate=…`; it fetches at 200
+and returns the same 13 council sittings as the category block, ignoring the
+date range. Since it added nothing over the page the site already serves, the
+plain page is what the adapter reads — one GET, not two.
+
+**What is NOT claimed.** The AgendaCenter's year selector reaches back to 2019
+through a POST the page makes to `/AgendaCenter/UpdateCategoryList`. Only the
+current year is ingested, deliberately: the app serves a 90-day concluded
+window, so earlier rows would be snapshot weight nothing renders. The earlier
+note in this file said "214 dated documents back to 2019" — that remains true
+of the archive and is not what shipped. If the lookback ever widens, the rung
+is one parameter away and this paragraph is the record that it was a choice.
+
+**Neither site needed anything but a polite GET.** Both admitted this
+project's identified User-Agent first try, at a serialized pace.
+
+## 2026-08-15 — the Census Bureau geocoder (D53)
+
+The author approved the U.S. Census Bureau's geocoder as this product's
+external geocoding source. Federal, free, no key, no account, and already the
+record cited by rows in the venue cache.
+
+**Endpoint.** `https://geocoding.geo.census.gov/geocoder/locations/onelineaddress`
+with `benchmark=Public_AR_Current&format=json`.
+
+**The finding that shaped the build, stated first because it is the reason the
+code looks the way it does: the Census geocoder does not geocode street
+names.** It geocodes addresses. Verified 2026-08-15, four attempts:
+
+| Query | Endpoint | Result |
+|---|---|---|
+| `Green Pond Road, 07866` | onelineaddress | 200, **0 matches** |
+| `Green Pond Road, Rockaway, NJ 07866` | onelineaddress | 200, **0 matches** |
+| `?street=Green Pond Road&zip=07866` | structured `address` | 200, **0 matches** |
+| `808 Green Pond Road, Rockaway, NJ 07866` | onelineaddress | 200, 1 match, 40.99414 / −74.47413 |
+
+The narrowing chip promises the reader that no house number is needed, and
+that promise is what makes the question cheap to answer — it is not being
+renegotiated to suit an API. So the adapter **samples the street at four low
+house numbers of its own (1, 50, 200, 800) and asks whether the matches
+agree.** Within 1.5 km, their midpoint is a real point on the street the
+reader named. Wider than that, the street is too long for one point to mean
+anything and the lookup returns nothing, leaving the division shading that
+already shipped.
+
+Sampled live 2026-08-15, one street per demo zip:
+
+| Street | Zip | Matched | Spread | Outcome |
+|---|---|---|---|---|
+| ACADEMY ST | 07866 | 2 of 6 | 0.08 km | point |
+| GREEN POND RD | 07866 | 5 of 6 | **5.64 km** | **refused** — the samples cross a municipal line |
+| E 12TH ST | 85701 | 4 of 6 | 0.34 km | point |
+| ACORN RD | 03255 | 2 of 6 | 0.01 km | point |
+| ABERDEEN PL | 85641 | 1 of 6 | 0.00 km | point |
+
+Four of five resolve; the one that refuses is the one where a confident pin
+would have put a reader in the wrong town's meetings. That refusal is the
+feature.
+
+**What is never sent, stored, or logged.** The lookup runs on the reader's
+device and talks only to census.gov. A house number the reader types anyway is
+stripped before the request. The resulting point lives in React state for the
+life of the view and is gone on reload: no localStorage, no request to our own
+server, nothing added to the search log — and when the point becomes the query
+point, the view carries `zip: null`, so the server resolves and logs the
+nearest ZCTA exactly as it already did for a panned viewport. A street-level
+point never reaches the log even as a parameter.
+`tests/geocoder.test.ts` reads the module as source and fails on
+`localStorage`, `logEvent`, `/api/` or any host that is not the Bureau's.
+
+**The disclosure changed in the same commit.** The line under the street input
+used to say the reader's choice "is never sent anywhere". Once a street name
+goes to a federal address service that sentence is false, so it now names the
+route: the choice stays on the device and is never sent to us, and putting the
+street on the map asks the Census Bureau's free address lookup, street name
+and zip, never a house number.

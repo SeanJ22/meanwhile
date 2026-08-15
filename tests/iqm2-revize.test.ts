@@ -118,14 +118,25 @@ test("revize: normalize wires the BOC, drops the delegation's committee counted"
     NOW,
   );
 
-  assert.equal(meetings.length, 1, "one BOC meeting in the recorded block");
+  // Two populations now, and they are different facts (M59, 2026-08-15).
+  // The "Upcoming Meetings" block still yields exactly one BOC sitting with a
+  // real published time; the notices page yields the archive, dated and
+  // untimed. Counted separately so a regression in either is visible as a
+  // number instead of hiding inside a total.
+  const timed = meetings.filter((x) => x.startPrecision !== "DAY");
+  const dayOnly = meetings.filter((x) => x.startPrecision === "DAY");
+  assert.equal(timed.length, 1, "one timed BOC meeting in the recorded block");
+  assert.ok(
+    dayOnly.length >= 14,
+    `only ${dayOnly.length} archived sittings from the notices page — the fixture holds 14 dates`,
+  );
   assert.equal(
     drops.notConfigured,
     1,
     "the Executive Committee is a different government and must drop counted",
   );
 
-  const m = meetings[0];
+  const m = timed[0];
   assert.equal(m.ocdId, "ocd-division/country:us/state:nh/county:merrimack");
   assert.equal(m.bodyName, "Merrimack County Board of Commissioners");
   assert.equal(m.status, "SCHEDULED");
@@ -135,4 +146,17 @@ test("revize: normalize wires the BOC, drops the delegation's committee counted"
   assert.equal(m.agendaUrl, null);
   // Starts 10:00 AM Eastern.
   assert.match(m.startsAt, /^2026-08-24T10:00:00.*-04:00$/);
+
+  // Every archived row is midnight-anchored and carries the body's own venue.
+  for (const archived of dayOnly) {
+    assert.match(archived.startsAt, /T00:00:00/);
+    assert.equal(archived.location.name, "OCH, 163 N. Main St., Concord");
+    assert.equal(archived.ocdId, "ocd-division/country:us/state:nh/county:merrimack");
+  }
+  // The archive never overwrites a date the timed block already produced.
+  assert.equal(
+    dayOnly.filter((x) => x.startsAt.slice(0, 10) === m.startsAt.slice(0, 10)).length,
+    0,
+    "the archive duplicated a meeting the upcoming block already had",
+  );
 });

@@ -20,6 +20,7 @@ import {
 } from "@/lib/ballot/candidate-cards";
 import { CandidateCard } from "@/components/ballot/candidate-card";
 import { MyPicks } from "@/components/ballot/my-picks";
+import { jurisdictionKeyForContestId } from "@/lib/ballot/pick-jurisdiction";
 import { PickControl } from "@/components/ballot/pick-control";
 import { registrationLinkFor } from "@/lib/ballot/registration-links";
 import { incumbentHolderFor } from "@/lib/ballot/incumbent-record";
@@ -164,6 +165,17 @@ export default async function BallotPage({
     matched?.contests.filter((c) => c.type === "CANDIDACY") ?? [];
   const measureContests =
     matched?.contests.filter((c) => c.type === "MEASURE") ?? [];
+
+  /*
+   * 4c (2026-08-15): which ballot this page IS, read off its own contests
+   * rather than from the zip. The zip is orientation and a ZCTA can cross a
+   * county line; the contests that actually matched are what the reader is
+   * looking at, so they are what a stored pick is compared against.
+   */
+  const currentJurisdictionKey =
+    matched?.contests
+      .map((c) => jurisdictionKeyForContestId(c.id))
+      .find((key): key is string => key !== null) ?? null;
 
   /*
    * Item 5 (design pass): when the IDENTICAL source line would repeat on
@@ -399,7 +411,7 @@ export default async function BallotPage({
 
       {/* 4a: the private election-day list — renders only once something
           is marked. Device-local; the component says so itself. */}
-      <MyPicks />
+      <MyPicks currentJurisdictionKey={currentJurisdictionKey} />
 
       {dates && (
         <section className="mt-6 rounded-[10px] border border-[var(--panel-border)] p-5">

@@ -681,6 +681,47 @@ function MapEntryInner() {
   }, [setShowDistricts, dispatch, ui.filters.districtTypes]);
 
   /*
+   * D53 (2026-08-15): the street became a POINT, so the answer becomes the
+   * point's rather than the ZCTA's.
+   *
+   * Two things happen and they are separate on purpose. The camera flies —
+   * that is the visible payoff the shading half could not give. And the
+   * QUERY point moves, through the same `settled` override a panned viewport
+   * already uses, so the meetings, the officials and the sidebar counters
+   * all resolve to the street instead of to a centroid that may sit in
+   * another town. Reusing `settled` rather than inventing a third view kind
+   * matters: `forZip` already makes it stale the moment a new zip is
+   * entered, which is exactly the lifetime this point should have.
+   *
+   * Nothing here persists. The point is React state; a reload has none.
+   */
+  const onStreetPoint = useCallback(
+    (point: { lat: number; lng: number; street: string }) => {
+      if (!location) return;
+      setFocus({
+        lat: point.lat,
+        lng: point.lng,
+        zoom: 14,
+        key: `street:${point.street}:${point.lat.toFixed(4)}`,
+      });
+      setSettled({
+        forZip: location.zip,
+        target: {
+          key: `street:${point.lat.toFixed(4)},${point.lng.toFixed(4)}`,
+          kind: "settled",
+          // Null, deliberately. A settled view carries no zip into the search
+          // log — the server resolves the nearest ZCTA and logs THAT, so a
+          // street-level point never reaches the log even as a parameter.
+          zip: null,
+          lat: point.lat,
+          lng: point.lng,
+        },
+      });
+    },
+    [location],
+  );
+
+  /*
    * A click on the map lands in a *set* of districts.
    *
    * One hit selects directly. More than one opens the disambiguation prompt —
@@ -930,6 +971,7 @@ function MapEntryInner() {
                   onOpenOfficial={openOfficial}
                   onMinimize={() => setNoticeCollapsed(true)}
                   onNarrowApplied={onNarrowApplied}
+                  onStreetPoint={onStreetPoint}
                 />
               ))}
 

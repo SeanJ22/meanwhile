@@ -7,6 +7,7 @@ import { CONCLUDED_LOOKBACK_DAYS } from "../lib/meetings/constants.ts";
 import {
   allHistoryGaps,
   concludedGapNote,
+  concludedGapNoteFor,
   historyGapsFor,
 } from "../lib/meetings/history-gaps.ts";
 import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
@@ -133,8 +134,20 @@ test("M58: a body that publishes no history says so, in plain language", () => {
     }
   }
 
+  // The denominator, printed rather than assumed. **M59 (2026-08-15) took it
+  // to zero**: the two rows that carried a gap were Rockaway Township's
+  // council and Merrimack County's commissioners, and both archives are now
+  // ingested as date-only meetings. That is the mechanism working — a gap is
+  // a work item, and these two got done — so this asserts the CURRENT number
+  // rather than "at least one", and it will fail loudly if a new gap is
+  // recorded without anybody noticing.
   const gaps = allHistoryGaps();
-  assert.ok(gaps.length > 0, "the denominator: at least one gap is recorded");
+  console.log(`\n  gaps  ${gaps.length} wired body/bodies publish no history\n`);
+  assert.equal(
+    gaps.length,
+    0,
+    `${gaps.length} history gap(s): ${gaps.map((g) => g.bodyName).join(", ")}`,
+  );
   // Every gap joins by bodyId to a real wiring row — never a name.
   for (const gap of gaps) {
     assert.ok(SOURCE_WIRING.some((r) => r.bodyId === gap.bodyId));
@@ -142,19 +155,36 @@ test("M58: a body that publishes no history says so, in plain language", () => {
 });
 
 test("M58: the gap note fires only when the reader asks about the past", () => {
-  const gapBody = [{ bodyId: allHistoryGaps()[0].bodyId }];
+  // Driven off a synthetic gap rather than a real one. When M59 closed the
+  // last two gaps this test had nothing to stand on, and deleting it would
+  // have retired the machinery that keeps a Concluded surface from being
+  // silently empty — machinery the next unwired vendor will need. So the
+  // note's behaviour is pinned directly, and the join against the real
+  // wiring rows stays below.
   const cleanBody = [{ bodyId: "ocd-division/country:us/state:az/county:pima#governing" }];
 
-  assert.equal(concludedGapNote(false, gapBody), null, "not asking, no note");
+  assert.equal(concludedGapNote(false, cleanBody), null, "not asking, no note");
   assert.equal(
     concludedGapNote(true, cleanBody),
     null,
     "a body that does publish history gets no excuse made for it",
   );
-  const note = concludedGapNote(true, gapBody);
-  assert.ok(note && note.length > 30);
-  assert.ok(note.includes(allHistoryGaps()[0].bodyName), "the note names the body");
   assert.equal(historyGapsFor(cleanBody).length, 0);
+
+  // With gaps present the note names each body and its reason, in the
+  // reader's language. Same function, gaps injected.
+  const note = concludedGapNoteFor(true, [
+    {
+      bodyId: "ocd-division/country:us/state:zz/place:example#governing",
+      bodyName: "Example Township Council",
+      jurisdiction: "Example Township, ZZ",
+      reason: "The township's website lists meetings that haven't happened yet.",
+    },
+  ]);
+  assert.ok(note && note.length > 30);
+  assert.ok(note.includes("Example Township Council"), "the note names the body");
+  assert.ok(!/ical|rss|api|adapter/i.test(note), "the note talks like a build log");
+  assert.equal(concludedGapNoteFor(false, []), null);
 });
 
 /**

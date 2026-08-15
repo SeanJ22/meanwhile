@@ -470,3 +470,24 @@ export function resolveVenue(
       venueKey(v.match) === key,
   );
 }
+
+/**
+ * The one venue curated for a body, or nothing (M59, 2026-08-15).
+ *
+ * An archived meeting is a filename with a date on it: no venue string comes
+ * with it, and a meeting with no coordinates cannot go on a map. This is the
+ * honest way to place one — the body's OWN curated venue, the same row its
+ * upcoming meetings resolve to — and it deliberately returns `undefined` when
+ * a body has more than one, because "they usually meet at the complex" is a
+ * guess about where a specific sitting was held and the reader would act on
+ * it. Ambiguity drops the row as `unknownVenue` and it shows in the counts.
+ */
+export function soleVenueForBody(
+  sourceId: string,
+  bodyOcdId: OcdId | null,
+): VenueEntry | undefined {
+  const matches = VENUE_CACHE.filter(
+    (v) => v.sourceId === sourceId && v.bodyOcdId === bodyOcdId,
+  );
+  return matches.length === 1 ? matches[0] : undefined;
+}

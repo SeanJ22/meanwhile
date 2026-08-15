@@ -216,3 +216,16 @@ No untriaged entries were found at session-open. Row pointers:
   approval of an external geocoder).
 - Clear-picks dialog → **M71** (Done).
 - Recorded, not built: **B15** (key votes tracker, doctrine locked).
+
+## 2026-08-15 — the session brief (party, meetings, faces)
+
+The author's production pass again arrived as the session brief rather than
+entries here; the brief is committed at `docs/session-brief.md` for the
+record. No untriaged entries were found at session-open. Row pointers:
+
+- Party for local partisan bodies from certified results → **M62** (Done).
+- The day-not-hour meeting shape → **M59** (Done).
+- The Census Geocoder, approved → **D53** (Done).
+- The NH who-governs card off the top at desktop → **M72** (Done).
+- The sidebar footer under the map legend at 390px → **M73** (Done).
+- Picks from another state's ballot unlabelled → **M74** (Done).

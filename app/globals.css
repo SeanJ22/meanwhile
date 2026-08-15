@@ -1123,7 +1123,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 /* ---- Legend ---- */
 .legend {
   position: fixed;
-  bottom: 14px;
+  bottom: var(--map-legend-bottom);
   right: 24px;
   background: var(--panel);
   border: 1px solid var(--panel-border);
@@ -2099,7 +2099,6 @@ label:has(> input[type="checkbox"]) {
      cover it while a venue is open — the sheet is the reader's current
      focus, and the legend is one tap of the close button away. */
   .legend {
-    bottom: 34px;
     right: 10px;
     padding: 5px 9px;
     gap: 8px;
@@ -2142,6 +2141,30 @@ label:has(> input[type="checkbox"]) {
      plus breathing room. Any fixed control added to the top strip must fit
      inside this band or move — that is the rule item 3 buys. */
   --map-control-band: 76px;
+
+  /* The bottom counterpart of the control band (4c, 2026-08-15).
+     `--map-legend-bottom` is where the legend sits above the attribution
+     line; `--map-legend-height` is the slim phone row's measured height
+     (5px padding, an 8px label, 5px padding, plus its border). Both are
+     named because TWO rules depend on them: the legend's own placement, and
+     the bottom stack's reserved gutter. The author's production pass found
+     the sidebar footer's "Last checked" line painted under the legend at
+     390px — the legend is z-1100 ambient chrome, so it simply covered the
+     text. One number in two places is how that happens; one name in two
+     places is how it stops. */
+  --map-legend-bottom: 14px;
+  --map-legend-height: 24px;
+}
+
+/* At phone width the legend is raised clear of the map attribution line.
+   Declared here, AFTER the base :root above, because custom properties at
+   equal specificity are decided by source order — the first attempt at this
+   fix put the override earlier in the file, it lost silently, and the legend
+   stayed exactly where it was. Measured, not assumed. */
+@media (max-width: 639px) {
+  :root {
+    --map-legend-bottom: 34px;
+  }
 }
 
 /* Explicit, because it is load-bearing: the top row wins over the bottom
@@ -2184,13 +2207,36 @@ label:has(> input[type="checkbox"]) {
   overscroll-behavior: contain;
 }
 
-@media (max-width: 639px) {
-  /* A definite top gives the stack a definite height, which is what makes
-     the shrink above possible at all — and it is the reserved gutter that
-     keeps every top-strip control off readable content. */
-  .map-bottom-stack {
-    top: var(--map-control-band);
-  }
+/* A definite top gives the stack a definite height, which is what makes the
+   shrink above possible at all — and it is the reserved gutter that keeps
+   every top-strip control off readable content.
+
+   **At every width, since 2026-08-15 (4c).** This lived inside a
+   `max-width: 639px` query because the defect that produced it was found on
+   a phone, and the scoping quietly assumed a desktop viewport is always
+   taller than the card. It is not: the author's production pass caught the
+   New Hampshire who-governs card at 03255 running off the top at desktop,
+   and measuring it at 1280×800 gave the same signature as the phone bug —
+   the stack 1072px tall against an 800px viewport, its top at y = −272.
+   A bound that only holds at one width is not a bound; it is a coincidence
+   that happens to be true on the machine somebody tested on. */
+.map-bottom-stack {
+  top: var(--map-control-band);
+}
+
+/* The gutter the LEGEND needs, the bottom counterpart of the band above.
+   The stack's own `pb-9` cleared the map attribution and nothing else, so
+   the last line in the stack — the "Last checked" footnote — landed under
+   the legend, which is ambient chrome at z-1100 and simply painted over it
+   (the author's production pass, 390px). Computed from the legend's own two
+   numbers, so a taller legend pushes the text up instead of hiding it.
+   `!important` because this competes with a Tailwind padding utility on the
+   same element and losing that race is precisely how the first attempt at
+   this fix passed review and changed nothing. */
+.map-bottom-stack {
+  padding-bottom: calc(
+    var(--map-legend-bottom) + var(--map-legend-height) + 8px
+  ) !important;
 }
 
 /* The "what kind of money" label and its tap-for-explainer (item 6,

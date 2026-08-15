@@ -24,11 +24,22 @@ import { stateOcdIdFrom } from "./lookup.ts";
  * Wikimedia Commons by attribute-verified identity, judged a clean solo
  * portrait, committed metadata-stripped under public/officials/, and its
  * license recorded in lib/registry/official-photos.json (the manifest row
- * carries the Commons file page and the license). `partyLabel` stays
- * null: these rows carry what
- * the office's own page publishes, and the governor's office page styles
- * itself officeholder-first, not party-first — party is on the ballot
- * surfaces where it is sourced from filings.
+ * carries the Commons file page and the license).
+ *
+ * **Party (M61, 2026-08-15).** These rows shipped with `partyLabel: null`
+ * on the reasoning that a governor's own office page styles itself
+ * officeholder-first, so party was left to the ballot surfaces. The author
+ * caught the consequence in production: Kelly Ayotte read "Republican" on
+ * the ballot and carried nothing at all on the who-governs card, two
+ * surfaces disagreeing about the same person. The standing rule is that
+ * party renders wherever it is held, so the fix is to hold it — from the
+ * same class of record the ballot cites, the election authority's own
+ * certified filing, one per row and named on the row. Not from the office
+ * page, which genuinely does not state it, and not from anybody's
+ * knowledge.
+ *
+ * `partySourceUrl` is the record, and `tests/party.test.ts` will not let a
+ * party ship without one.
  *
  * Verification states follow the everyday.ts precedent: a
  * PENDING_BROWSER row must be verified in a real browser before ship —
@@ -44,6 +55,13 @@ export interface StatewideExecutive {
   holder: SeatHolder;
   /** The state's own page the row was read from. */
   sourceUrl: string;
+  /**
+   * The election authority record the holder's party was read from (M61).
+   * Required whenever the holder carries a party: the office page does not
+   * state it, so the claim has to cite the filing that does.
+   */
+  partySourceUrl?: string;
+  partySourceOrg?: string;
   sourceOrg: string;
   collectedAt: string;
   verification: StatewideVerification;
@@ -56,7 +74,10 @@ export const STATEWIDE_EXECUTIVES: readonly StatewideExecutive[] = [
       id: "statewide:az/governor",
       name: "Katie Hobbs",
       officeTitle: "Governor",
-      partyLabel: null,
+      // Read off the Secretary of State's own certified nomination list
+      // (2026 Candidate Nominations), the same filing the ballot surface
+      // already cites for this candidacy.
+      partyLabel: "Democratic",
       websiteUrl: "https://azgovernor.gov/",
       sourceUrl: "https://azgovernor.gov/",
       // Read off azgovernor.gov/constituent-services in a real browser
@@ -70,6 +91,9 @@ export const STATEWIDE_EXECUTIVES: readonly StatewideExecutive[] = [
     },
     sourceUrl: "https://azgovernor.gov/",
     sourceOrg: "Office of the Arizona Governor",
+    partySourceUrl:
+      "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+    partySourceOrg: "Arizona Secretary of State (candidate nominations filed)",
     collectedAt: "2026-08-14",
     verification: "PAGE_FETCHED",
   },
@@ -79,7 +103,10 @@ export const STATEWIDE_EXECUTIVES: readonly StatewideExecutive[] = [
       id: "statewide:nj/governor",
       name: "Mikie Sherrill",
       officeTitle: "Governor",
-      partyLabel: null,
+      // Read off the Division of Elections' certified tally, "Official List
+      // Candidates for Governor", dated 12/03/2025: MIKIE SHERRILL (w) …
+      // Democratic. Fetched and text-extracted 2026-08-15.
+      partyLabel: "Democratic",
       websiteUrl: "https://www.nj.gov/governor/",
       sourceUrl: "https://www.nj.gov/governor/",
       email: null,
@@ -95,6 +122,9 @@ export const STATEWIDE_EXECUTIVES: readonly StatewideExecutive[] = [
     },
     sourceUrl: "https://www.nj.gov/governor/",
     sourceOrg: "Office of the Governor of New Jersey",
+    partySourceUrl:
+      "https://nj.gov/state/elections/assets/pdf/election-results/2025/2025-official-general-results-governor.pdf",
+    partySourceOrg: "New Jersey Division of Elections (official general election results)",
     collectedAt: "2026-08-14",
     verification: "PAGE_FETCHED",
   },
@@ -104,7 +134,9 @@ export const STATEWIDE_EXECUTIVES: readonly StatewideExecutive[] = [
       id: "statewide:nh/governor",
       name: "Kelly Ayotte",
       officeTitle: "Governor",
-      partyLabel: null,
+      // Read off the Secretary of State's cumulative candidate filings
+      // (7.16.26), the same filing the NH ballot surface already cites.
+      partyLabel: "Republican",
       websiteUrl: "https://www.governor.nh.gov/",
       sourceUrl: "https://www.governor.nh.gov/",
       email: null,
@@ -118,6 +150,9 @@ export const STATEWIDE_EXECUTIVES: readonly StatewideExecutive[] = [
     },
     sourceUrl: "https://www.governor.nh.gov/",
     sourceOrg: "Office of the Governor of New Hampshire",
+    partySourceUrl:
+      "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+    partySourceOrg: "New Hampshire Secretary of State (cumulative candidate filings)",
     collectedAt: "2026-08-14",
     verification: "PAGE_FETCHED",
   },

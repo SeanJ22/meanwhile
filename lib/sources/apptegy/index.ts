@@ -2,6 +2,7 @@ import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import { decodeEntities, politeGetJson } from "../http.ts";
 import type {
   Meeting,
+  MeetingQuery,
   MeetingStatus,
   NormalizeDropCounts,
   ReportingMeetingSource,
@@ -25,9 +26,18 @@ import type {
 
 const SOURCE_NAME = "apptegy";
 
-/** Pages to walk before stopping. 20 events per page; a district's forward
- * calendar fits comfortably, and this is a runaway stop, not a coverage cap. */
-const MAX_PAGES = 5;
+/**
+ * Pages to walk before stopping. 20 events per page, and this is a runaway
+ * stop, not a coverage cap — the walk normally ends when a page runs past the
+ * query's forward horizon.
+ *
+ * Raised from 5 to 12 with the history fix (M58): starting the walk 90 days
+ * back means paging through a term's worth of a district calendar before
+ * reaching the future, and RTSD's is dense — it took 7 pages to reach October
+ * from mid-May. Five pages would have silently clipped the upcoming meetings
+ * this adapter already served, which is the wrong way to fix a gap.
+ */
+const MAX_PAGES = 12;
 
 export interface ApptegyEvent {
   id: number;
@@ -48,6 +58,9 @@ export interface ApptegyRaw {
   wiring: BodySourceWiring;
   events: ApptegyEvent[];
   collectedAt: string;
+  /** The exact first-page URL these events were read from — the citation
+   *  the record carries. Optional so recorded fixtures keep working. */
+  sourceUrl?: string;
 }
 
 function statusOf(startsAt: string, now: Date): MeetingStatus {
@@ -78,7 +91,7 @@ export function makeApptegySource(
     };
     const seen = new Set<string>();
 
-    for (const { wiring, events, collectedAt } of raw) {
+    for (const { wiring, events, collectedAt, sourceUrl } of raw) {
       const titleMatch = wiring.config.titleMatch ?? "";
 
       for (const event of events) {
@@ -125,7 +138,9 @@ export function makeApptegySource(
           jurisdiction: wiring.jurisdiction,
           status: statusOf(event.start_at, now),
           provenance: {
-            sourceUrl: `${wiring.config.apiBase}/cms/events?locale=en&page_no=1`,
+            sourceUrl:
+              sourceUrl ??
+              `${wiring.config.apiBase}/cms/events?locale=en&page_no=1`,
             sourceOrg: wiring.publishingOrg,
             collectedAt,
             verifiedAt: null,
@@ -140,24 +155,52 @@ export function makeApptegySource(
   return {
     name: SOURCE_NAME,
 
-    async fetch(): Promise<ApptegyRaw[]> {
+    async fetch(query: MeetingQuery): Promise<ApptegyRaw[]> {
+      // M58 (2026-08-15): ask for the recent past as well as the future.
+      //
+      // The feed defaults to upcoming-only, and this adapter took the default
+      // — so Vail and Rockaway Township's school board were the only wired
+      // jurisdictions that could never show a concluded meeting, and the
+      // Concluded filter there was empty by construction rather than by fact.
+      // "Not found" is a claim: the ladder rung that earns it here is
+      // `?start_date=`, which the events API honours and carries through its
+      // own `meta.links.next` (probed live 2026-08-15 — 2026-05-17 returned
+      // four concluded board meetings for each org). The query's own
+      // `startsAfter` is the window; the adapter does not invent one.
+      const startDate = query.startsAfter?.slice(0, 10);
+      const horizonMs = query.startsBefore ? Date.parse(query.startsBefore) : NaN;
+
       const collected: ApptegyRaw[] = [];
       for (const wiring of wiringRows) {
         const events: ApptegyEvent[] = [];
-        let url: string | null =
-          `${wiring.config.apiBase}/cms/events?locale=en&page_no=1`;
+        const first = new URL(`${wiring.config.apiBase}/cms/events`);
+        first.searchParams.set("locale", "en");
+        first.searchParams.set("page_no", "1");
+        if (startDate) first.searchParams.set("start_date", startDate);
+
+        let url: string | null = first.toString();
         for (let page = 0; url && page < MAX_PAGES; page++) {
           const body: ApptegyResponse = await politeGetJson<ApptegyResponse>(
             url,
             { fetchImpl },
           );
-          events.push(...(body.events ?? []));
+          const batch = body.events ?? [];
+          events.push(...batch);
+
+          // The feed runs forward in time, so once a page ends past the
+          // window there is nothing further to want. Stopping here is what
+          // keeps a 90-day lookback from turning into a walk to next May.
+          const last = batch[batch.length - 1]?.start_at;
+          if (last && Number.isFinite(horizonMs) && Date.parse(last) > horizonMs) {
+            break;
+          }
           url = body.meta?.links?.next ?? null;
         }
         collected.push({
           wiring,
           events,
           collectedAt: new Date().toISOString(),
+          sourceUrl: first.toString(),
         });
       }
       return collected;

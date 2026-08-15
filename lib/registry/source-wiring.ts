@@ -44,6 +44,25 @@ export interface BodySourceWiring {
    * posted yet" beside it was a source gap for a wired body.
    */
   noticeUrl?: string;
+  /**
+   * Whether this row's route serves CONCLUDED meetings (M58, 2026-08-15).
+   *
+   * Absent means yes — the normal case, and the one every other row is in.
+   * A row sets this to `false` only when the *published route* genuinely
+   * carries no past sitting, and the reason states which rungs were walked
+   * to earn that. It is never a shrug: `docs/source-ladder.md` records the
+   * attempts, and where a further rung exists but is not built yet, the
+   * reason says so and a tracker row owns it. This is a fact about a
+   * vendor's route, not a coverage status — there is deliberately no
+   * "blocked", and none of these rows stops being hunted.
+   *
+   * Read by `concludedGapNote()` so the Concluded filter can tell a reader
+   * *why* a jurisdiction is empty rather than rendering nothing and letting
+   * that read as "this body never meets".
+   */
+  publishesHistory?: false;
+  /** Why, in the reader's own language. Required when the flag is set. */
+  historyGapReason?: string;
   /** When the URLs in config were last confirmed working. */
   verifiedAt: string;
 }
@@ -290,6 +309,19 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
       // are this body's meetings. The string is the feed's own SUMMARY text.
       summaryMatch: "Township Council",
     },
+    // M58: the iCal feed is upcoming-only. Rungs walked 2026-08-15 — the
+    // wired feed and the same feed with startDate/endDate and from/to
+    // parameters all returned the identical 5,484 bytes and the identical
+    // eleven future sittings; the only two past DTSTARTs in it are the
+    // VTIMEZONE boilerplate, in every category id. The township's
+    // AgendaCenter DOES archive past agendas and minutes back to 2019 (214
+    // dated documents, read the same day) — that is a real further rung, and
+    // it publishes a date without a start time, so ingesting it needs a
+    // meeting shape that can say "we know the day, not the hour" rather than
+    // a fabricated 7pm. Tracker M59 owns it.
+    publishesHistory: false,
+    historyGapReason:
+      "The township's calendar feed only lists meetings that haven't happened yet.",
     verifiedAt: "2026-08-13",
   },
 
@@ -338,6 +370,17 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
       // body's published name, from its page heading.
       bodyName: "Merrimack County Board of Commissioners",
     },
+    // M58: the meeting rows come from a block whose heading is literally
+    // "Upcoming Meetings" — past sittings are not in it, by construction.
+    // The notices/agendas page on the same site DOES carry the history
+    // (re-read 2026-08-15: public notice, board packet and minutes PDFs for
+    // 2.9, 2.20, 3.9, 3.23, 4.13, 4.27, 5.11 … each a meeting that happened),
+    // but a filename dates a meeting without timing it, and inventing 10am
+    // to fill `startsAt` would be a generated fact about a government.
+    // Same further rung as Rockaway's AgendaCenter; tracker M59 owns it.
+    publishesHistory: false,
+    historyGapReason:
+      "The county's website lists upcoming meetings only. Past agendas and minutes are posted, but without the meeting times we would have to guess at them.",
     verifiedAt: "2026-08-13",
   },
 

@@ -1051,6 +1051,7 @@ function MapEntryInner() {
             meetings={current?.meetings ?? []}
             drawnDistricts={drawnDistricts}
             districtOverlayOn={ui.showDistricts}
+            onShowDistricts={() => setShowDistricts(true)}
             onOpenOfficial={(holder, seatLabel, tier) =>
               openLarge({ kind: "official", holder, seatLabel, tier })
             }

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { haversineKm } from "@/lib/geo/distance";
+import { concludedGapNote } from "@/lib/meetings/history-gaps";
 import { formatMeetingDate, formatMiles, meetingHeadline } from "@/lib/map/format";
 import { TIER_LABEL } from "@/lib/ocd/tiers";
 import { tierForMeeting } from "@/lib/state/derive";
@@ -68,10 +69,20 @@ export function ListOverlay({
 }: {
   onPickMeeting: (meeting: Meeting) => void;
 }) {
-  const { meetings, location } = useShellData();
+  const { meetings, location, result } = useShellData();
   const ui = useUi();
   const dispatch = useUiDispatch();
   const [limit, setLimit] = useState(PAGE);
+
+  // M58: the honest line behind an empty Concluded filter.
+  const gapNote = useMemo(
+    () =>
+      concludedGapNote(
+        ui.filters.statuses.includes("CONCLUDED"),
+        result?.coverage?.bodies ?? [],
+      ),
+    [ui.filters.statuses, result],
+  );
 
   /*
    * NO pushed history entry (2026-08-14 third session, same diagnosis as
@@ -202,6 +213,17 @@ export function ListOverlay({
             Nothing matches the current filters.
             <br />
             Clearing a filter or turning a tier back on will bring meetings back.
+            {/* M58: never a silent empty on the Concluded filter. Where a
+                body's system publishes no past meetings, the reader is told
+                which body and why — an unexplained empty list reads as
+                "this council doesn't meet", which is a false claim about a
+                government made by our own plumbing. */}
+            {gapNote && (
+              <>
+                <br />
+                <span className="al-empty-gap">{gapNote}</span>
+              </>
+            )}
           </p>
         )}
 

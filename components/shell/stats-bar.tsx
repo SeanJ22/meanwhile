@@ -27,32 +27,19 @@ export function StatsBar() {
   const ui = useUi();
   const dispatch = useUiDispatch();
 
-  // Distinct people we can actually name at this point — the seats' holders
-  // plus the state's senators, deduplicated because a person can hold one seat
-  // and appear in both lists. The card read a flat 0 while three names were
-  // rendered beside it, which is the same class of quiet lie as a silently
-  // widened radius: the number said we had nothing and the screen said we did.
-  const officialCount = useMemo(() => {
-    const coverage = result?.coverage;
-    if (!coverage) return 0;
-    const ids = new Set<string>();
-    for (const seat of coverage.seats) {
-      for (const holder of seat.representatives) ids.add(holder.id);
-    }
-    for (const senator of coverage.senators) ids.add(senator.id);
-    return ids.size;
-  }, [result]);
-
-  // 3g: the count IS the drawn list's length — the districts door renders
-  // the same list, so the stated N equals the rendered rows by construction.
+  // M57: every counter is handed the collection its own door renders — the
+  // filtered meetings, the coverage summary the bodies and officials doors
+  // read, and the drawn districts (null while the overlay is off). No card
+  // re-derives its number, which is how OFFICIALS came to say 6 beside a
+  // door listing 24 and BODIES 13 beside a door listing 60.
   const stats = useMemo(
     () =>
-      computeStats(
+      computeStats({
         meetings,
-        ui.showDistricts ? drawnDistricts.length : 0,
-        officialCount,
-      ),
-    [meetings, drawnDistricts, ui.showDistricts, officialCount],
+        coverage: result?.coverage ?? null,
+        drawnDistricts: ui.showDistricts ? drawnDistricts : null,
+      }),
+    [meetings, drawnDistricts, ui.showDistricts, result],
   );
 
   // The failed-fetch rule (2a): a failed operation may not render as an

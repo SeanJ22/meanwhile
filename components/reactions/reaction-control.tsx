@@ -135,8 +135,10 @@ export function ReactionControl({
   };
 
   return (
-    <div className="mt-1.5">
-      <p className="text-[0.6875rem] text-muted">{prompt}</p>
+    <div className="mt-2">
+      {/* The standing prominence rule (design pass): the question is the
+          product's revenue-bearing ask and never whispers. */}
+      <p className="text-[0.8125rem] font-medium text-paper-dim">{prompt}</p>
       {/* Wraps rather than squeezing: "Someone else" is a fourth control at
           390px and four on one row would each be under a thumb's width. */}
       <div className="mt-1 flex flex-wrap gap-1.5" role="group" aria-label={prompt}>

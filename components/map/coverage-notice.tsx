@@ -52,6 +52,9 @@ interface CoverageNoticeProps {
   onOpenOfficial?: OpenOfficial;
   /** Shrinks the card to its corner bubble — the explicit control (3). */
   onMinimize?: () => void;
+  /** Item 7: fires when the reader APPLIES a narrowing (street or picker)
+   *  — never on decline or undo. The map turns its boundary shading on. */
+  onNarrowApplied?: () => void;
 }
 
 /** How many bodies to name before collapsing the rest into a count. */
@@ -145,7 +148,7 @@ function Holder({
           target="_blank"
           rel="noreferrer"
           title="Where this record was read from"
-          className="font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted hover:text-signal"
+          className="font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted underline decoration-dotted underline-offset-2 hover:text-link"
         >
           source
         </a>
@@ -198,11 +201,13 @@ function CoverageBody({
   coverage,
   failedSourceOcdIds = [],
   onOpenOfficial,
+  onNarrowApplied,
 }: {
   zip: string;
   coverage: CoverageSummary;
   failedSourceOcdIds?: string[];
   onOpenOfficial?: OpenOfficial;
+  onNarrowApplied?: () => void;
 }) {
   const {
     bodies,
@@ -344,7 +349,7 @@ function CoverageBody({
       {unincorporated && (
         // The no-mayor case is a stated fact, not an empty slot (5b): say
         // what this place has instead of what it lacks.
-        <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
+        <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-voice">
           <span className="text-signal">
             This area isn&apos;t a city or town
           </span>{" "}
@@ -358,20 +363,22 @@ function CoverageBody({
         </p>
       )}
 
-      <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
+      {/* The app's voice (design pass): coverage explanation is guidance,
+          not record — it renders in the voice register. */}
+      <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-voice">
         {lead}
       </p>
 
       {othersLine && (
-        <p className="mt-1 text-[0.75rem] leading-relaxed text-muted">
+        <p className="mt-1 text-[0.75rem] leading-relaxed text-voice">
           {othersLine}
         </p>
       )}
 
       {shown.length > 0 && (
-        <p className="mt-2.5 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-local">
-          Local
-        </p>
+        // Structural label (design pass): organizes, confident, with its
+        // shelf rule — never smaller than the names it organizes.
+        <p className="t-structure mt-3 text-local">Local</p>
       )}
       {shown.length > 0 && (
         <ul className="mt-1 space-y-1">
@@ -504,17 +511,19 @@ function CoverageBody({
         </ul>
       )}
 
-      {/* The M26 narrowing prompt — renders only where the computed street
-          index says the answer would change. Declining stays effortless.
-          Keyed on the zip so a new zip mounts a fresh prompt. */}
-      {/^\d{5}$/.test(zip) && <NarrowingPrompt key={zip} zip={zip} />}
+      {/* The M26 narrowing affordance — a passive chip (item 6), rendered
+          only where the computed street index says the answer would change.
+          Keyed on the zip so a new zip mounts a fresh chip. */}
+      {/^\d{5}$/.test(zip) && (
+        <NarrowingPrompt key={zip} zip={zip} onApplied={onNarrowApplied} />
+      )}
 
       {/* 7 (2026-08-17): the mover's page, one tap from who-governs. */}
       {/^\d{5}$/.test(zip) && (
         <p className="mt-2 text-[0.75rem]">
           <a
             href={`/about-area?zip=${zip}`}
-            className="underline decoration-dotted hover:text-signal"
+            className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
           >
             Moving here? Know the basics — Taxes, schools, registering, and
             more. →
@@ -580,7 +589,7 @@ function CoverageBody({
 
       {seats.length > 0 && seatCounts.named === 0 ? (
         // Nothing sourced for any seat — the original wording, still true.
-        <p className="mt-2.5 text-[0.75rem] leading-relaxed text-muted">
+        <p className="mt-2.5 text-[0.75rem] leading-relaxed text-voice">
           You&apos;re also represented in {seatLine}.
         </p>
       ) : (
@@ -591,9 +600,7 @@ function CoverageBody({
               than implied complete. */}
           {(stateSeats.length > 0 || statewideExecutives.length > 0) && (
             <>
-              <p className="mt-2.5 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-state">
-                State
-              </p>
+              <p className="t-structure mt-3 text-state">State</p>
               <ul className="mt-1 space-y-1">
                 {stateSeats.map((seat) => (
                   <li
@@ -657,9 +664,7 @@ function CoverageBody({
               matches every ballot and source the app cites. */}
           {(federalSeats.length > 0 || senators.length > 0) && (
             <>
-              <p className="mt-2.5 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-national">
-                Federal
-              </p>
+              <p className="t-structure mt-3 text-national">Federal</p>
               <ul className="mt-1 space-y-1">
                 {federalSeats.map((seat) => (
                   <li
@@ -718,7 +723,7 @@ function CoverageBody({
         // to claim we had sourced no names at all, which stopped being true the
         // moment the federal roster landed — AZ-6 has a name on it. Claiming
         // otherwise beside a rendered name is its own small lie.
-        <p className="mt-2.5 text-[0.6875rem] leading-relaxed text-muted">
+        <p className="mt-2.5 text-[0.6875rem] leading-relaxed text-voice">
           {counts.withoutSource > 0 && (
             <>
               We know these bodies exist because the district boundaries do. We
@@ -770,6 +775,7 @@ export function CoverageNotice({
   failedSourceOcdIds,
   onOpenOfficial,
   onMinimize,
+  onNarrowApplied,
 }: CoverageNoticeProps) {
   // The notice renders on every failure rung, and on the exact rung whenever
   // there is representation to show. It used to return null on `exact`
@@ -888,6 +894,7 @@ export function CoverageNotice({
           coverage={coverage}
           failedSourceOcdIds={failedSourceOcdIds}
           onOpenOfficial={onOpenOfficial}
+          onNarrowApplied={onNarrowApplied}
         />
       ) : (
         !coverage &&

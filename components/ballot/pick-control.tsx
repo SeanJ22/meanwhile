@@ -41,19 +41,22 @@ export function PickControl({
   const selected = new Set(parsed?.choiceIds ?? []);
 
   return (
-    <div className="mt-3 rounded border border-dashed border-[var(--panel-border)] p-2.5">
+    <div className="mt-3 rounded-md border border-dashed border-[var(--panel-border)] p-3">
       {/* 3d (2026-08-19): the author's words. Same options, same
-          device-local behavior — only the label changed. */}
+          device-local behavior — only the label changed. The standing
+          prominence rule (design pass): the ask never whispers — the
+          prominent variant keeps its signal color, the default carries
+          the same weight in the text color. */}
       <p
         className={
           prominent
-            ? "font-mono text-[0.75rem] font-semibold uppercase tracking-[0.15em] text-signal"
-            : "font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted"
+            ? "text-[0.875rem] font-semibold text-signal"
+            : "text-[0.8125rem] font-semibold text-paper"
         }
       >
         What do you think?{voteFor > 1 ? ` (pick up to ${voteFor})` : ""}
       </p>
-      <div className="mt-1.5 flex flex-wrap gap-1.5">
+      <div className="mt-2 flex flex-wrap gap-1.5">
         {options.map((option) => {
           const on = selected.has(option.id);
           return (

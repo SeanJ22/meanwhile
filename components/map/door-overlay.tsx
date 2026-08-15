@@ -160,7 +160,7 @@ function BodiesDoor({
               ) : (
                 <span className="text-[0.8125rem]">{label}</span>
               )}
-              <span className="shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
+              <span className="shrink-0 font-mono text-[0.625rem] uppercase tracking-[0.15em] text-muted">
                 {body.bodyClass === "GOVERNING" ? "Governing" : "Advisory"}
               </span>
             </div>
@@ -233,7 +233,7 @@ function DistrictsDoor({
         >
           <div className="flex items-baseline justify-between gap-3">
             <p className="text-[0.8125rem]">{row.label}</p>
-            <span className="shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
+            <span className="shrink-0 font-mono text-[0.625rem] uppercase tracking-[0.15em] text-muted">
               {row.typeLabel}
             </span>
           </div>
@@ -293,9 +293,8 @@ function OfficialsDoor({
       {(Object.keys(TIER_GROUP_LABELS) as TierGroup[]).map((group) =>
         groups[group].length === 0 ? null : (
           <div key={group}>
-            <p
-              className={`font-mono text-[0.5625rem] uppercase tracking-[0.15em] ${TIER_HEADER_CLASS[group]}`}
-            >
+            {/* Structural label (design pass). */}
+            <p className={`t-structure ${TIER_HEADER_CLASS[group]}`}>
               {TIER_GROUP_LABELS[group]}
             </p>
             <ul className="mt-1 space-y-1.5">

@@ -80,6 +80,44 @@
   --shadow-panel: 0 4px 20px rgba(0, 0, 0, 0.3);
   --shadow-popup: 0 10px 40px rgba(0, 0, 0, 0.5);
   --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+  /* ------------------------------------------------------------------
+     The design pass (2026-08-15) — the committed system. DESIGN.md is
+     the prose spec; these tokens are the single source of truth.
+
+     THE THREE REGISTERS (who is speaking):
+     - voice  — the app's explainer/guidance voice. Slate-blue, set apart
+       from the neutral grays so guidance never reads as record.
+     - link   — anything tappable. The brand amber plus an underline;
+       interactive amber is already the app's language (focus ring,
+       active chips, hovers).
+     - data   — the sourced record: full-contrast --text, numerals and
+       identifiers in the mono face. Data is the brightest thing on any
+       surface; the registers exist so it stays that way.
+  */
+  --voice: #a4b1c9;
+  --link: var(--accent-local);
+
+  /* PILL FAMILIES (funding type labels, item 2b). Six families, chosen
+     to never use or approach the party palette (Democratic blue,
+     Republican red, Green green, Independent purple, unknown gray) —
+     teals, ambers, slates, warm neutrals only, so no committee type
+     reads as partisan and no color implies good or bad money. The
+     type → family assignment is arbitrary but CONSISTENT, and lives in
+     lib/funding/pill-colors.ts — nowhere else. Text/bg pairs are tuned
+     per theme to hold WCAG AA at pill size on a phone. */
+  --pill-teal-text: #79d8ca;
+  --pill-teal-bg: rgba(46, 169, 156, 0.16);
+  --pill-cyan-text: #85cbe0;
+  --pill-cyan-bg: rgba(70, 150, 180, 0.16);
+  --pill-amber-text: #eec779;
+  --pill-amber-bg: rgba(214, 158, 50, 0.15);
+  --pill-gold-text: #d9c87c;
+  --pill-gold-bg: rgba(180, 158, 60, 0.15);
+  --pill-slate-text: #b3bfd6;
+  --pill-slate-bg: rgba(120, 138, 170, 0.18);
+  --pill-stone-text: #cfc2ae;
+  --pill-stone-bg: rgba(160, 142, 112, 0.17);
 }
 
 [data-theme="light"] {
@@ -118,6 +156,22 @@
   --shadow-panel: 0 4px 20px rgba(0, 0, 0, 0.1);
   --shadow-popup: 0 10px 40px rgba(0, 0, 0, 0.18);
   --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.12);
+
+  /* The design-pass tokens, light theme. Same roles as dark. */
+  --voice: #52627e;
+
+  --pill-teal-text: #0d6b5f;
+  --pill-teal-bg: rgba(46, 169, 156, 0.14);
+  --pill-cyan-text: #135f7a;
+  --pill-cyan-bg: rgba(70, 150, 180, 0.14);
+  --pill-amber-text: #7d5300;
+  --pill-amber-bg: rgba(214, 158, 50, 0.16);
+  --pill-gold-text: #695910;
+  --pill-gold-bg: rgba(180, 158, 60, 0.16);
+  --pill-slate-text: #414f6b;
+  --pill-slate-bg: rgba(120, 138, 170, 0.16);
+  --pill-stone-text: #63523a;
+  --pill-stone-bg: rgba(160, 142, 112, 0.16);
 }
 
 @theme inline {
@@ -140,6 +194,12 @@
   --color-concluded: var(--concluded);
   --color-canceled: var(--canceled);
   --color-district-line: var(--district-line);
+
+  /* The three registers (design pass): text-voice for the app's
+     explainer voice, text-link for anything tappable. Data keeps
+     --text and the mono face. */
+  --color-voice: var(--voice);
+  --color-link: var(--link);
 
   --radius-token: var(--radius);
   --radius-token-sm: var(--radius-sm);
@@ -251,6 +311,81 @@
     color: var(--accent-local);
     background: var(--accent-local-glow);
   }
+
+  /* ------------------------------------------------------------------
+     The design pass (2026-08-15): the type scale's structural rungs.
+     DESIGN.md carries the whole scale; these two classes are the rungs
+     components share by name rather than by copied utility strings.
+
+     Structural labels ORGANIZE and content LEADS: a structural label is
+     confident — weight, tracking, a hairline rule — without dwarfing
+     the names under it. The old 9px whisper read as the least important
+     thing on the card while doing the most important job.
+  */
+
+  /* Tier and section headers: LOCAL / STATE / FEDERAL, ballot section
+     heads, door-overlay groups. Color comes from the caller (tier
+     accent or text-dim). */
+  .t-structure {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+  }
+
+  /* The rule after the text is what makes the header read as a shelf
+     the content sits on, rather than a small caption floating alone. */
+  .t-structure::after {
+    content: "";
+    flex: 1;
+    border-top: 1px solid color-mix(in srgb, currentColor 28%, transparent);
+  }
+
+  /* A structural header that should not draw its shelf (tight rows,
+     right-aligned tags). */
+  .t-structure--bare::after {
+    content: none;
+  }
+
+  /* Surface eyebrows: the small mono caption naming what a block IS
+     ("Campaign money · FEC", "The next election"). One size up from the
+     old 9px, weight instead of size for presence. */
+  .t-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+
+  /* ------------------------------------------------------------------
+     The funding type pills (item 2b). One pill per typed label; the
+     pill IS the tap target for the explainer. Families are assigned in
+     lib/funding/pill-colors.ts and never approach the party palette.
+  */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: 0.01em;
+    background: var(--pill-bg, var(--surface));
+    color: var(--pill-text, var(--text-dim));
+  }
+
+  .pill--teal  { --pill-bg: var(--pill-teal-bg);  --pill-text: var(--pill-teal-text); }
+  .pill--cyan  { --pill-bg: var(--pill-cyan-bg);  --pill-text: var(--pill-cyan-text); }
+  .pill--amber { --pill-bg: var(--pill-amber-bg); --pill-text: var(--pill-amber-text); }
+  .pill--gold  { --pill-bg: var(--pill-gold-bg);  --pill-text: var(--pill-gold-text); }
+  .pill--slate { --pill-bg: var(--pill-slate-bg); --pill-text: var(--pill-slate-text); }
+  .pill--stone { --pill-bg: var(--pill-stone-bg); --pill-text: var(--pill-stone-text); }
 }
 
 /* ============================================================================
@@ -457,10 +592,11 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 }
 
 .scope-label {
-  font-size: 9px;
-  font-weight: 600;
+  /* Structural label (design pass). */
+  font-size: 10px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
+  letter-spacing: 1px;
   color: var(--text-dim);
 }
 
@@ -617,7 +753,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 }
 
 .search-ac-group {
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.6px;
@@ -844,10 +980,11 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 }
 
 .filters-title {
-  font-size: 10px;
-  font-weight: 600;
+  /* Structural label (design pass): organizes, so it carries weight. */
+  font-size: 11px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
+  letter-spacing: 1.2px;
   color: var(--text-dim);
   display: flex;
   align-items: center;
@@ -888,10 +1025,11 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 }
 
 .filter-label {
-  font-size: 10px;
-  font-weight: 600;
+  /* Structural label (design pass). */
+  font-size: 11px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
+  letter-spacing: 1.1px;
   color: var(--text-dim);
   margin-bottom: 8px;
   display: flex;
@@ -1224,10 +1362,11 @@ label:has(> input[type="checkbox"]) {
   border-bottom: 1px solid var(--panel-border);
   color: var(--text-dim);
   font-family: inherit;
-  font-size: 10px;
-  font-weight: 600;
+  /* Structural label (design pass). */
+  font-size: 11px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
+  letter-spacing: 1.1px;
   cursor: pointer;
   text-align: left;
 }
@@ -1345,7 +1484,7 @@ label:has(> input[type="checkbox"]) {
 
 .district-picker-tier {
   padding: 8px 12px 3px;
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.8px;
@@ -1774,10 +1913,11 @@ label:has(> input[type="checkbox"]) {
 /* The eyebrow. Tier colour is set inline from the tier accent, so this only
    carries the type treatment. */
 .popup-type {
-  font-size: 9px;
-  font-weight: 600;
+  /* Surface eyebrow (design pass): one size up from the old 9px. */
+  font-size: 10px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.3px;
   /* Room for the expand button, which is absolutely positioned over this row. */
   padding-right: 28px;
 }
@@ -1851,11 +1991,13 @@ label:has(> input[type="checkbox"]) {
   margin-top: 12px;
   padding-top: 8px;
   border-top: 1px solid var(--panel-border);
-  font-size: 9px;
-  font-weight: 600;
+  /* Structural label (design pass): organizes, so it carries weight. */
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--text-muted);
+  letter-spacing: 1.4px;
+  color: var(--text-dim);
 }
 
 /* Click-to-copy, with the tooltip affordance Edia uses. */

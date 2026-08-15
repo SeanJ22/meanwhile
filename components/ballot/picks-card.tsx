@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 
 import { clearAllPicks, type StoredPick } from "@/lib/ballot/picks";
 
@@ -168,38 +169,65 @@ export function PicksCardControls({ picks }: { picks: StoredPick[] }) {
         >
           Create my card
         </button>
-        {confirmingClear ? (
-          <span className="text-paper-dim">
-            Really clear every pick on this device?{" "}
-            <button
-              type="button"
-              onClick={() => {
-                clearAllPicks();
-                setConfirmingClear(false);
-                setShowCard(false);
-              }}
-              className="cursor-pointer text-signal underline decoration-dotted"
-            >
-              Clear
-            </button>{" "}
-            <button
-              type="button"
-              onClick={() => setConfirmingClear(false)}
-              className="cursor-pointer text-muted underline decoration-dotted"
-            >
-              Keep
-            </button>
-          </span>
-        ) : (
-          <button
-            type="button"
-            onClick={() => setConfirmingClear(true)}
-            className="cursor-pointer text-muted underline decoration-dotted hover:text-paper"
-          >
-            Clear my picks
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={() => setConfirmingClear(true)}
+          className="cursor-pointer text-muted underline decoration-dotted hover:text-paper"
+        >
+          Clear my picks
+        </button>
       </p>
+
+      {/* Item 8 (design pass): a real confirmation dialog — same question
+          the inline line asked, in the app's dialog language. Portaled to
+          <body> so no ancestor transform can trap the overlay. */}
+      {confirmingClear &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Clear my picks"
+            className="fixed inset-0 z-[80] flex items-center justify-center p-4"
+          >
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 bg-black/45 backdrop-blur-sm"
+              onClick={() => setConfirmingClear(false)}
+            />
+            <div className="panel relative w-full max-w-sm p-5">
+              <p className="text-[0.9375rem] font-semibold leading-snug text-paper">
+                Really clear every pick on this device?
+              </p>
+              <p className="mt-1.5 text-[0.75rem] leading-relaxed text-voice">
+                This only touches this device — your picks were never sent
+                anywhere, so there is nothing to clear elsewhere.
+              </p>
+              <div className="mt-4 grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    clearAllPicks();
+                    setConfirmingClear(false);
+                    setShowCard(false);
+                  }}
+                  className="cursor-pointer rounded-md border border-[var(--danger)] px-4 py-2 text-[0.8125rem] font-semibold text-danger transition-colors hover:bg-[var(--danger)]/10"
+                >
+                  Clear
+                </button>
+                <button
+                  type="button"
+                  autoFocus
+                  onClick={() => setConfirmingClear(false)}
+                  className="cursor-pointer rounded-md border border-[var(--panel-border)] px-4 py-2 text-[0.8125rem] font-semibold text-paper transition-colors hover:border-paper"
+                >
+                  Keep
+                </button>
+              </div>
+            </div>
+          </div>,
+          document.body,
+        )}
 
       {cardUrl && (
         <div className="mt-3">

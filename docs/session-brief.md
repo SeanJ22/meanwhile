@@ -1,199 +1,189 @@
-# Session brief — 2026-08-15
+# Session brief — the design pass: flagships look like flagships
 
-The author's production pass, as delivered. Committed for the record and
-superseding the previous brief; the work it asked for is recorded in
-`docs/state.md` §24 and in tracker rows **M57–M63**, **D50–D52**.
+Committed for the record by the session that executed it (2026-08-15,
+second session of the day; branch `claude/design-pass-0815`). Row
+pointers: M64–M71, D53, X05, B15. The walk superseded
+`docs/tester-pass.md`; the session narrative is `docs/state.md` §25.
 
----
-
-## The counters tell the truth and the faces finish
+PREREQUISITE: the truth-and-faces session's DEFECT rows (counters,
+concluded meetings, mojibake, party rendering, "Someone else") must be
+Done before this brief runs — this session restyles surfaces that session
+fixed. D50 (photos) being In Progress does NOT block this session.
+Session-open: confirm the defect rows, or STOP and report. *(Confirmed at
+open: M57, M58, M60, M61, M63 all Done.)*
 
 This session runs unattended. Nobody is available to answer.
 
-- Reversible: cheaper-to-undo, recorded with the rejected alternative, keep
-  going. Irreversible: skip, tracker row, continue.
-- Hunts never stop — more rungs, `attemptedAt` on every rung. The long way
-  is a way.
-- Browser-heavy steps LAST, inline, no background agents.
+- Reversible: cheaper-to-undo, recorded with the rejected alternative,
+  keep going. Irreversible: skip, tracker row, continue.
+- Browser-heavy steps LAST where possible — this session is inherently
+  browser-heavy, so: strictly sequential rendering checks, no parallel
+  browser work, no background agents, commit per completed item so a
+  crash loses nothing.
 - Live on every push; nothing half-finished to `main`. End with
-  `pnpm handoff --ship`, verify on `main`, verify the deploy, standing report
-  ending with "Needs your hands."
-- **NEW STANDING RULE, this session and forever:** every production probe row
-  a session creates (reactions, log events) is NAMED in the standing report —
-  timestamp and target — so the author can distinguish plumbing from reader
-  signal. The T08 session did this; the 0814f session didn't, and it cost the
-  author a manual investigation. Into CLAUDE.md.
+  `pnpm handoff --ship`, verify on `main`, verify the deploy, standing
+  report ending with "Needs your hands" — probe rows named if any are
+  created.
 
-Session-open: read `docs/defects.md` and triage. The Pima/Newbury library
-issue is CLOSED by the author (timing overlap between the 0814c routing fix
-and the tester's pass); do not reinvestigate. The two VELOCITY-quarantined
-rows are confirmed as session probe taps, not the tester's — the limiter
-thresholds are CORRECT, do not retune.
+Session-open: read `docs/defects.md` and triage.
 
-A dedicated DESIGN session follows this one; visual/polish work is out of
-scope here except where a fix requires touching a render.
+## The mandate
 
-Correct first. Fast second. Nothing third. Items 1–4 are truth defects and
-lead. Photos ride last but are NEVER CUT.
+The author's bar, verbatim: "Clean. Like Apple level clean." This session
+is dedicated to it — a real pass with real deliverables, not adjective
+sprinkling. Use the frontend-design skill. Establish tokens; apply them
+everywhere; commit the system so future sessions inherit it instead of
+improvising.
 
-### 1 — The sidebar counters lie (the denominator disease, third sighting)
+NOTHING behavioral changes in this session except where an item says so:
+routing stays deterministic, reactions stay honest-outcome, all data
+rules stand. This is how it all LOOKS and FEELS.
 
-The sidebar reads "6 OFFICIALS" while the officials popup renders 20+ (mayor,
-six council members, governing board, five supervisors, state and federal).
-The DISTRICTS counter renders blank ("—"). The stated-N guard family exists
-and these counters escaped it.
+## 1 — The ask box becomes a flagship
 
-- Diagnose: the officials count is almost certainly computed from the
-  district-elected roster set while the popup unions curated locals.
-  Districts blank is its own bug — find it.
-- Fix: every sidebar counter computes from the SAME set its surface renders.
-  One source of truth per number.
-- Extend the stated-N guard to the sidebar counters explicitly: counter value
-  equals rendered rows of its popup/surface, asserted for all four counters
-  at all four zips.
+"Who do I talk to about…?" is a standout feature currently rendered as a
+form fragment (plain text, dotted border). Redesign it — the input AND
+its answer rendering — with presence, weight, and polish: an input that
+invites, answers that feel authoritative. The "I got you... hang
+tight..." beat keeps its timing and words; give it visual grace. No
+behavior changes.
 
-### 2 — Concluded meetings exist everywhere, render only for Tucson
+## 2 — The ballot gets the same elevation
 
-The author sees concluded meetings only at 85701. Vail, Newbury, Rockaway all
-have recent past meetings in reality.
+The tester loved using it; it should look like the product's centerpiece.
+Typography, spacing, card rhythm, the CTA header's presence, and the
+reaction controls' prominence (the standing "What do you think?"
+prominence rule folds in here). Candidate cards read as designed objects,
+not stacked divs.
 
-- Diagnose: likely only the Legistar adapter (Tucson) was ever asked for past
-  meetings; the other vendors' adapters fetch upcoming only — or the snapshot
-  window excludes history. Say which per adapter.
-- Fix: extend each adapter to fetch concluded meetings where its vendor
-  provides them (match the Tucson window). Where a vendor genuinely does not
-  serve history, the Concluded filter at that jurisdiction says so honestly
-  ("This body's system doesn't publish past meetings") instead of rendering
-  empty.
-- Guard: for every jurisdiction whose vendor serves history, the concluded
-  surface is non-empty OR carries the honest line. Never silent-empty.
+## 2b — The funding section is a flagship too
 
-### 3 — The mojibake: a broken em-dash renders in every blurb attribution
+The money surface is the product's most distinctive content and it just
+gained plain-language PAC typing — render it like it matters. Contributor
+rows read as designed records (name, typed label, amount in clear
+rhythm); the candidate's-own-money and self-funding labels sit naturally
+in the hierarchy. No data or label changes — the mapping table and
+organizations-as-filed rule are untouched. Rendering only.
 
-"From the candidate's site [mojibake] cindewarmington.com" — a UTF-8 em-dash
-decoded wrong, everywhere the attribution line renders.
+The type labels render as pill badges, the author's spec: a small rounded
+bubble, light tinted background with darker same-hue text (e.g., light
+teal bubble, dark teal text), small font, one pill per typed label.
+Rules:
 
-- Diagnose where the bytes go wrong (fetch, store, or render) — fix at the
-  SOURCE, not with a display-time patch. Re-run whatever pipeline stored the
-  corrupted strings so the stored data is clean.
-- Guard: a test greps all reader-facing strings (registry, blurbs, summaries,
-  templates) for mojibake byte signatures and fails on any hit.
+- The pill palette NEVER uses or approaches the party colors (Democratic
+  blue, Republican red, Green green, Independent purple, unknown gray).
+  PAC-type pills draw from a separate family — teals, ambers, slates,
+  warm neutrals — so no type reads as partisan and no color implies good
+  or bad money. Assignment is arbitrary but CONSISTENT: the same type is
+  always the same color, defined once in the tokens file.
+- Contrast passes at phone size (the light-bg/dark-text pair must stay
+  legible small); verified in the walk.
+- The tap-open explainer behavior is unchanged; the pill is the tap
+  target.
 
-### 4 — Party affiliation missing on who-governs rows (rule regression)
+## 3 — Visual hierarchy: structure reads as structure
 
-Ayotte shows "Republican" on the ballot and nothing on the who-governs box.
-The standing rule is party in colored font EVERYWHERE it renders. The
-statewide-executive rows (and audit: any other row class) shipped without the
-party join.
+Tier headers (LOCAL / STATE / FEDERAL) currently render SMALLER than the
+names under them. Define the type scale as tokens: structural labels
+distinct, confident, clearly organizational — without dwarfing content.
+Apply product-wide (who-governs, officials popup, ballot sections,
+filters).
 
-- Party renders on every officeholder row on every surface: who-governs,
-  officials popup, modals — colored per the existing scheme, sourced as
-  already held.
-- Audit all officials surfaces for rows lacking party where party is held;
-  fix the class. Where party is genuinely not held for an office
-  (nonpartisan local boards), nothing renders — never guess.
-- Guard: any officeholder row whose registry entry carries party must render
-  it.
+## 4 — Three registers, not three grays
 
-### 5 — "Someone else" on single-candidate contests
+Explainer voice, tappable links, and sourced data currently render as
+shades of gray. Define three visually distinct registers: the app's
+explainer voice reads as guidance; links look tappable; data reads as
+record. Apply everywhere explainers render.
 
-Under "What do you think?" in contests with exactly one candidate, a fourth
-option renders: "Someone else." It is the only honest sentiment measure an
-uncontested race has.
+## 5 — Repeated provenance collapses to footnotes
 
-- A NEW reaction enum value, added properly to the server-side validity table
-  (accepted only for single-candidate contest contexts), same identifier-free
-  store, same tier stamping, same honest-outcome rendering (success only on
-  204).
-- The transparency page's reaction language covers the new value in the same
-  commit; the coupling guard extends.
-- Tests: validity (rejected outside single-candidate contexts), storage,
-  rendering. The walk taps one on production — NAME the probe row.
+When the IDENTICAL source line repeats on a surface (e.g., "From the New
+Hampshire Secretary of State (2026–2027 political calendar), read
+08/14/2026" on every contest), render it once: an asterisk/dagger at each
+item, the full citation once at the surface's foot. Distinct sources
+never collapse together; provenance stays one glance away. De-cluttering,
+not de-sourcing — the blurb-source rule is untouched.
 
-### 6 — Photos: D50 finishes (NEVER CUT)
+## 6 — The map's "narrow it?" prompt never interrupts
 
-The email rung is DEAD by the author's order — the portraits are on the
-states' own pages. Complete the remaining classes under door 2 and the
-existing rules (clean solo portrait or initials; basis recorded; EXIF
-stripped; served from origin; never a wrong face):
+Free panning currently triggers the narrowing popup constantly. Replace
+it with a passive affordance: a quiet chip on settle ("Narrow to this
+area?") that never blocks panning, is never modal, and doesn't repeat
+within a session unless the viewport changes meaningfully. Record the
+interaction rule beside the existing popup-trigger rule.
 
-- NH Senate: the roster page the author supplied —
-  https://gc.nh.gov/senate/members/senate_roster.aspx — member pages carry
-  portraits. Fetch all 24 under door 2.
-- NH House: the member pages behind the roster dropdown at
-  https://gc.nh.gov/house/members/ carry photos for members who have them;
-  fetch what exists. The state's own nophoto.jpg means initials — that is the
-  honest end state for a volunteer 400-seat House, recorded per member, and
-  it satisfies equal-effort.
-- Commons sweep for NH members the state lacks, the 68 curated locals, and
-  the ~76 ballot challengers — machine-checkable licenses, attribute-verified.
-- Locals: official jurisdiction/board pages under door 2 first, then Commons.
-- Manifest + generated report updated; new X of 750 with per-tier breakdown;
-  every miss with rungs. D50 → Done or the honest remainder named.
+## 7 — The street input visibly does something
 
-### 7 — Final pass and handoff
+On entering a street name: geocode within the active zip, SHADE the
+containing district(s) on the map, and refresh the sidebar numbers,
+meetings, and officials to that point. The act gets a visible payoff.
+Device-side; no new logging beyond existing search-log rules.
 
-Two tracker rows recorded this session (recorded, not built):
+## 8 — "Clear my picks" confirms via a dialog
 
-- Independent expenditures: the next funding content item — FEC Schedule E
-  spending ABOUT covered races, rendered distinctly from contributions ("this
-  group spent money on its own about this race" vs "gave to the campaign"),
-  same mechanical typing rules. A future session's item.
-- The state money-translation program (umbrella): per-state campaign-finance
-  adapters with author-approved plain-language mapping tables, born with the
-  state-folder convention; parked behind the state-layer sessions.
+A real confirmation popup (same question), not an inline line change.
+Consistent with the new visual language.
 
-Walk at 390×844 as a stranger: counters equal popups at all four zips, a
-concluded meeting outside Tucson (or its honest line), zero mojibake,
-Ayotte's party on who-governs, a "Someone else" tap landing in Neon (NAME the
-probe row), and twenty new faces spot-checked against sources. Supersede
+## 9 — The system, committed
+
+- A tokens file / DESIGN.md: type scale, spacing, color roles, the three
+  registers, component patterns for the flagship surfaces. Future
+  sessions build from it.
+- Into CLAUDE.md, one line: structural labels organize, content leads,
+  flagship surfaces get flagship treatment, and reader-facing polish
+  follows the committed tokens.
+
+## 10 — Final pass and handoff
+
+One tracker row recorded this session (recorded, NOT built — the
+author's next content feature, fully specified in conversation and
+preserved here):
+
+- Key votes tracker (the tester's ask): an author-curated "notable
+  votes" section on member cards. Doctrine locked at recording time:
+  author-approved list file (like the PAC mapping table); inclusion
+  criteria PUBLISHED on the surface; VOTES ONLY (recorded roll calls —
+  executive actions and introduced-but-unvoted bills are excluded or
+  rendered as "Congress has not voted on this"); both parties' signature
+  items by construction; rendered with existing machinery (plain-language
+  summary, party breakdown, member's vote, source); NEVER aggregated into
+  a score, grade, or alignment; "no vote exists" and "the Senate hasn't
+  acted" are first-class honest answers; the list carries read-dates and
+  gets a review pass each cycle. Candidate entries preserved: CARES, ARP,
+  IIJA, IRA, CHIPS, Safer Communities, Respect for Marriage, the 2024
+  foreign-aid/TikTok package, Laken Riley, OBBBA, the Fiscal
+  Responsibility Act, the 2025 cabinet confirmations (Senate-only, House
+  says so honestly), the late-2025 shutdown reopening votes (framing
+  verified from the bills' own contents, never characterized), the
+  Consolidated Appropriations Act 2026, the ROAD to Housing Act, the
+  House stock-trading-ban vote (Senate pending, stated), and the Blanche
+  AG confirmation (50-49, 2026-08-08).
+
+Walk at 390×844 AND desktop as a stranger: the redesigned ask box (ask
+the pothole question, watch the beat), the ballot end to end, tier
+hierarchy on who-governs, one footnoted surface, free panning with the
+chip (never a popup), the street-input shade-and-refresh, the
+clear-picks dialog. Screenshot BEFORE/AFTER pairs for the ask box, the
+ballot, and who-governs — the author judges by eye. Supersede
 docs/tester-pass.md. Documents: state.md (real-date header, every item),
-tracker in place, next free IDs verified, transparency page verified.
-Overwrite docs/session-brief.md. Ship, verify deploy, standing report ending
-with "Needs your hands" — probe rows named per the new rule.
+DESIGN.md/tokens committed, tracker in place, next free IDs verified.
+Overwrite docs/session-brief.md. Ship, verify deploy, standing report
+ending with "Needs your hands."
 
-### Order, and cuts if short
+## Order, and cuts if short
 
-1 → 2 → 3 → 4 → 5 → 6 → 7. If short: thin 6's Commons sweep to NH members
-only (locals/challengers named as remainder). Never cut 1, 2, 3, 4, 5, or 7.
-Documents never cut.
+1 → 2 → 2b → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10.
 
-### Standing rules
+If short: defer 7 (street input) first, then 6 (map chip), then 5
+(footnotes). Never cut 1, 2, 2b, 3, 4, 8, 9, or 10. Documents never cut.
 
-All of CLAUDE.md's non-negotiables including the uniqueness invariant, the
-organizations-as-filed rule, the blurb-source rule, n-stores-never-join,
-equal-effort-per-candidate, and (new) probe-rows-named. The playbook clause
-stands. The stranger test. Denominators with counts; stated N equals rendered
-rows; screenshot before believing green; diagnose before fixing; never assert
-absence; a failed operation may not render as an empty success; reader-facing
-dates are wall clock; every date written into any document comes from
-`pnpm stamp`, never typed from assumption (R14's law); a URL cited must have
-been fetched and verified.
+## Standing rules
 
----
-
-## What the session did with it
-
-Every item was taken. Three of the five truth defects were **worse or
-different than reported**, which is the argument for the diagnose-first rule:
-
-- **1** — two counters were wrong, not one. BODIES read 13 against a door
-  listing 60 and nobody had noticed. DISTRICTS' blank was the couldn't-check
-  dash spent on a switch the reader had flipped.
-- **2** — the Concluded chip matched nothing at **all four zips including
-  Tucson**; the payloads already held the meetings. Apptegy also served
-  history and had never been asked.
-- **3** — the repo-wide scan found **twelve more** corrupted strings nobody
-  had reported, separately caused (TIGER DBFs read as latin1; a vendor
-  serving genuinely double-encoded bytes).
-- **4** — the render was never broken. The data was null on purpose, and the
-  audit found that **no curated local body publishes party at all**, which
-  had been silently read as "these offices are nonpartisan".
-- **5** — built as specified, context-restricted at the write path.
-- **6** — 535 → 590 of 750; the three NH identity joins the hunt could not
-  previously make, and one fabricated absence caught by going to look.
-
-The brief's sanctioned cut was taken: the Commons sweep is thinned to NH
-members, with the locals partially done under door 2 (20 of 68) and the ~76
-ballot challengers named as remainder. D50 stays **In progress** for that
-reason.
+All of CLAUDE.md's non-negotiables. The playbook clause stands. The
+stranger test. Denominators with counts; stated N equals rendered rows;
+screenshot before believing green; diagnose before fixing; never assert
+absence; a failed operation may not render as an empty success;
+reader-facing dates are wall clock; every date written into any document
+comes from `pnpm stamp`, never typed from assumption (R14's law); a URL
+cited must have been fetched and verified.

@@ -3,75 +3,50 @@
 The current walk. Supersedes every earlier pass in this file; the earlier
 ones live in git history and in `docs/state.md`.
 
-**2026-08-15 · `scripts/tester-walk-0815.mts` · four zips at 390×844 ·
-60 of 60 checks green.**
+**2026-08-15 · the design-pass walk · 85701 at desktop (1440×900) AND
+390×844 · all seven checks green at both widths.**
 
-The walk is run as a **stranger**: someone in Tucson who has never been to
-Newbury, NH, entering a zip cold and reading only what the screen says. It
-is deliberately written to check what the author REPORTED rather than what
-the code changed, so a fix that satisfies its own test but not the
-complaint fails here.
+This walk verified the DESIGN PASS (the session dedicated to the author's
+bar: "Clean. Like Apple level clean") — it checks the redesigned surfaces
+against the session brief, walked as a stranger. Every check ran against a
+local dev server at the exact commits that shipped; screenshots land in
+`screenshots/` as `before-*` / `after-*` pairs plus `check*-*` working
+shots. The author judges by eye: the pairs to compare are
+`before-whogoverns-desktop` → `after-whogoverns-desktop`,
+`before-ballot-desktop` → `after-ballot-desktop`, and the phone variants.
 
-Every check ran against the committed data on a local build at the exact
-commit that shipped. Screenshots per surface land in `screenshots/` as
-`walk0815-<zip>-*.png`.
+## What the walk held
 
-## What the walk holds
-
-| # | Rule | How it is checked |
+| # | Check | How, and what it showed |
 |---|---|---|
-| 1 | M57 — a counter states what its own door renders | all four cards read, each door opened, stated N compared to rendered rows |
-| 1 | M57 — a dash means "we could not check", never "you switched this off" | DISTRICTS must not render "—" |
-| 2 | M58 — the Concluded filter is answerable | tap the chip, assert the date window opened behind it |
-| 2 | M58 — never a silent empty | concluded rows render, OR the honest line names the body and why |
-| 3 | M60 — no decoding accidents reach a reader | the mojibake signature searched over the whole rendered text of the map AND the ballot |
-| 4 | M61 — party renders wherever it is held | the Governor row must carry a party, in its colour |
-| 5 | M63 — the uncontested-race answer | count the candidate controls offering "Someone else" |
-| — | no console errors on any surface | |
+| 1 | The ask box is a flagship | Asked "who fixes potholes" at both widths. The beat renders "I got you... hang tight..." (exact words, ~3s, cycling dots) in the voice register; the answer renders under a signal eyebrow with the contact card — 311 as a large amber tel link, source line attached. |
+| 2 | The ballot end to end | Top (CTA header with shelf rule, mono date, amber links), contest cards (title + right-aligned meta, office blurb in voice, 64px photos, semibold names), pick/reaction prompts at prominence, measures, footnote foot — desktop and phone. |
+| 3 | Tier hierarchy on who-governs | LOCAL / STATE / FEDERAL render as confident structural shelves (11px mono 700 + hairline rule in the tier accent), no longer smaller than the names they organize. Both widths. |
+| 4 | One footnoted surface | The AZ ballot: every canvass-sourced contest carries `*` at its title; the citation renders ONCE at the page foot ("Nominees per the certified primary canvass (Arizona Secretary of State) · read 08/13/2026"). |
+| 5 | Free panning, chip never a popup | Real mouse drag on the map; the view settled on a new area, NO modal appeared, and the narrowing affordance stayed a quiet chip in the card ("Narrow to this area?"). The pre-pass modal is in `before-narrowing-modal-desktop.png` for contrast. |
+| 6 | Street input visibly does something | Chip → "STONE" → "N STONE AVE": the boundary overlay turned itself on with municipal + school layers, Tucson and Tucson Unified shaded, DISTRICTS counter refreshed to the drawn count (29), who-governs narrowed with the undo line. |
+| 7 | Clear-picks dialog | A pick made, "Clear my picks" tapped: a real dialog (blurred backdrop, same question, Clear in danger treatment, Keep focused) at desktop and 390×844. |
+| — | Pill contrast at phone size | Funding pills ("a leadership PAC" slate, "a PAC connected to a membership organization" cyan) read clearly at 390px; light-on-tint pairs hold. |
+| — | No console errors on any surface | The shoot harness reports page errors per shot; none appeared across all walk shots. |
 
-## Results, 2026-08-15
+## Honest bounds
 
-| Zip | Place | Checks | Counters (Meetings / Bodies / Districts / Officials) |
-|---|---|---|---|
-| 85701 | Tucson, AZ | 15/15 | 22 / 60 / 26 / 24 |
-| 85641 | Vail, AZ | 15/15 | 4 / 2 / 11 / 17 |
-| 03255 | Newbury, NH | 15/15 | 1 / 3 / 37 / 22 |
-| 07866 | Rockaway, NJ | 15/15 | 12 / 4 / 60 / 31 |
-
-Every counter equalled its door's rendered rows at every zip. Before this
-session, 85701 read **6 officials beside a door listing 24** and **13 bodies
-beside a door listing 60**; 07866 read 6 officials beside 31.
-
-**Concluded meetings, outside Tucson.** At 03255 the Concluded filter now
-renders the Newbury Selectboard's sitting of **Mon 07/20/2026**; at 07866 it
-renders **eight** past meetings including the Rockaway Township school
-board's, which did not exist in our data before today because the adapter
-had never asked its vendor for history. Tapping the chip moves the date
-window to "90d back → 60d ahead" — before, it moved nothing and the list
-said "nothing matches" at every zip including Tucson.
-
-**Party.** Katie Hobbs · Democratic (blue), Kelly Ayotte · Republican (red),
-Mikie Sherrill · Democratic (blue), each rendered in the palette's colour on
-the who-governs card, each sourced to an election authority's own filing.
-
-**"Someone else."** One candidate control per ballot offers the fourth
-answer at 85701, 03255 and 07866; none at 85641, which has no uncontested
-race — the count is derived from the ballot, so that zero is the data
-speaking.
-
-**Faces.** Twenty of this session's sixty-nine new portraits were fetched
-back from our own origin and looked at on a contact sheet
-(`screenshots/walk0815-faces.png`): 20/20 served 200 with real bytes, every
-one a clean solo portrait, each labelled with the government host it came
-from — gc.nh.gov, govboard.tusd1.org, www.pima.gov.
-
-## What the walk cannot see
-
-Stated so a green run is not read as more than it is:
-
-- It runs against a **local build**, not the deployed site. The production
-  check is a separate pass after the deploy, recorded in the session report.
-- It reads the DOM. A portrait that serves real bytes can still be the wrong
-  person — that is why the contact sheets exist and why every face was
-  eyeballed before shipping, not after.
-- It walks four zips. Four is the demo set, not the country.
+- The walk ran at 85701 (the ballot + funding + footnotes + streets surface
+  all exist there). The redesign is token-driven and product-wide, but only
+  85701 was walked end to end this session — the standing four-zip walk
+  (`scripts/tester-walk-0815.mts`) still describes the truth-and-faces
+  checks, and its 60/60 result from earlier on 2026-08-15 predates this
+  restyle. A future session re-running it should expect COSMETIC
+  differences only.
+- Reactions were NOT tapped in this walk — no reaction-store row was
+  written. But the walk's dev server carries the production
+  `DATABASE_URL`, so its log writes ARE production rows (probe-rows rule):
+  **six `QUESTION_ASKED` events** — "a pothole on my street" ×3
+  (≈09:55–10:11 local, one from the sidebar instance, two from the card)
+  and "who fixes potholes" ×3 (≈10:34–10:36, phone-width beat + answer +
+  one retake), all routed (topic id only, no question text stored), all
+  against 85701's divisions, proving the redesigned ask box — plus the
+  **zip-search rows** of the walk's map-page loads at 85701 (about
+  eighteen, ~09:55–10:38 local) and **one settled-view row** from the
+  pan test (~10:37). All are plumbing wearing reader clothes; exclude them
+  from any aggregate over 2026-08-15 at 85701.

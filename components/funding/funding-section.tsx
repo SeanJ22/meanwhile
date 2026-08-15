@@ -6,6 +6,7 @@ import {
   contributorTypeLabel,
   plainContributorLabel,
 } from "@/lib/funding/labels";
+import { pillClassFor } from "@/lib/funding/pill-colors";
 import type { ReactionViewContext } from "@/lib/reactions/client";
 import { ReactionControl } from "@/components/reactions/reaction-control";
 import { formatDateMDY } from "@/lib/map/format";
@@ -27,8 +28,7 @@ import { formatDateMDY } from "@/lib/map/format";
  * client modal alike.
  */
 
-const SECTION_LABEL_CLASS =
-  "font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted";
+const SECTION_LABEL_CLASS = "t-eyebrow text-muted";
 
 export function FundingDisplay({
   data,
@@ -37,11 +37,17 @@ export function FundingDisplay({
   data: FundingDisplayData;
   context: ReactionViewContext | null;
 }) {
+  // The flagship treatment (design pass, item 2b): the money surface is
+  // the product's most distinctive content and renders like it — the
+  // section carries its own frame, contributor rows read as designed
+  // records, type labels render as pills. Rendering only: the data, the
+  // labels, the mapping table and the organizations-as-filed rule are
+  // untouched.
   return (
-    <div className="mt-2">
+    <div className="mt-3 rounded-md border border-[var(--panel-border)] bg-[var(--surface,rgba(255,255,255,0.04))]/60 p-3">
       <p className={SECTION_LABEL_CLASS}>Campaign money · FEC</p>
       {data.sentences.map((sentence) => (
-        <p key={sentence} className="mt-1 text-[0.75rem] leading-relaxed text-paper-dim">
+        <p key={sentence} className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
           {sentence}
         </p>
       ))}
@@ -53,13 +59,13 @@ export function FundingDisplay({
       />
 
       {data.contributorsShown && (
-        <div className="mt-2">
+        <div className="mt-3">
           <p className={SECTION_LABEL_CLASS}>Largest reported contributions</p>
-          <p className="mt-0.5 text-[0.6875rem] text-muted">
+          <p className="mt-0.5 text-[0.6875rem] leading-relaxed text-voice">
             The biggest single contributions this campaign&apos;s main
             committee has reported, listed exactly as filed.
           </p>
-          <ul className="mt-1 space-y-1">
+          <ul className="mt-1.5">
             {data.contributors.map((row, index) => {
               // 2a: the suffix comes from the FEC's entity typing — a
               // candidate's own money says so, plainly.
@@ -73,35 +79,41 @@ export function FundingDisplay({
               return (
               <li
                 key={`${row.contributorName}-${row.amount}-${index}`}
-                className="text-[0.75rem]"
+                className="border-b border-[var(--panel-border)] py-1.5 text-[0.75rem] last:border-0"
               >
                 <div className="flex items-baseline justify-between gap-3">
-                  <span className="min-w-0 text-paper-dim">
+                  <span className="min-w-0 font-medium text-paper">
                     {row.contributorName}
                     {row.city && row.state && (
-                      <span className="text-muted"> · {row.city}, {row.state}</span>
+                      <span className="font-normal text-muted"> · {row.city}, {row.state}</span>
                     )}
                     {entityLabel && !typeLabel && (
-                      <span className="text-muted"> · {entityLabel}</span>
+                      <span className="font-normal text-muted"> · {entityLabel}</span>
                     )}
                   </span>
-                  <span className="shrink-0 font-mono text-[0.6875rem]">
+                  <span className="shrink-0 font-mono text-[0.75rem] font-medium tabular-nums">
                     ${Math.round(row.amount).toLocaleString("en-US")}
                   </span>
                 </div>
                 {typeLabel && (
                   // Expansion, never a new tab (CLAUDE.md's reader gesture).
                   // `<details>` so this stays a server-renderable component
-                  // and costs no client JavaScript.
-                  <details className="funding-type">
-                    <summary>{typeLabel.label}</summary>
-                    <p className="mt-0.5 text-[0.6875rem] leading-relaxed text-muted">
+                  // and costs no client JavaScript. The pill is the tap
+                  // target (item 2b); its family comes from
+                  // lib/funding/pill-colors.ts and never the party palette.
+                  <details className="funding-type mt-0.5">
+                    <summary>
+                      <span className={pillClassFor(typeLabel)}>
+                        {typeLabel.label}
+                      </span>
+                    </summary>
+                    <p className="mt-1 text-[0.6875rem] leading-relaxed text-voice">
                       {typeLabel.explainer}{" "}
                       <a
                         href={typeLabel.sourceUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="underline decoration-dotted"
+                        className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
                       >
                         the FEC&apos;s own definition
                       </a>
@@ -121,13 +133,13 @@ export function FundingDisplay({
         </div>
       )}
 
-      <p className="mt-1.5 text-[0.625rem] text-muted">
+      <p className="mt-2 text-[0.625rem] text-muted">
         {data.sourceUrl ? (
           <a
             href={data.sourceUrl}
             target="_blank"
             rel="noreferrer"
-            className="underline decoration-dotted"
+            className="underline decoration-dotted underline-offset-2 hover:text-link"
           >
             {data.sourceOrg}
           </a>

@@ -88,15 +88,23 @@ export function AskBox({
     }, BEAT_MS);
   };
 
+  // The flagship treatment (design pass, item 1): a standout feature
+  // dressed as one — a raised block, a real heading, an input that
+  // invites, a filled Ask. Behavior is untouched: same routing, same
+  // logging, same beat, same words.
   return (
-    <div className="mt-3 rounded border border-dashed border-[var(--panel-border)] p-2.5">
+    <div className="mt-3.5 rounded-[10px] border border-[var(--panel-border)] bg-[var(--panel-bg)] p-3.5 shadow-[var(--shadow-panel)]">
       <label
         htmlFor={inputId}
-        className="font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted"
+        className="block text-[0.9375rem] font-semibold leading-snug text-paper"
       >
         Who do I talk to about…?
       </label>
-      <div className="mt-1.5 flex gap-1.5">
+      <p className="mt-0.5 text-[0.6875rem] leading-relaxed text-voice">
+        A pothole, the library, your kid&apos;s school — we&apos;ll point you
+        at the office that owns it.
+      </p>
+      <div className="mt-2.5 flex gap-2">
         <input
           id={inputId}
           data-ask-box
@@ -107,12 +115,12 @@ export function AskBox({
             if (e.key === "Enter") ask();
           }}
           placeholder="the library, a pothole, my kid's school…"
-          className="min-w-0 flex-1 rounded border border-[var(--panel-border)] bg-transparent px-2 py-1.5 text-[0.8125rem] placeholder:text-muted focus:border-[var(--signal)] focus:outline-none"
+          className="min-w-0 flex-1 rounded-md border border-[var(--panel-border)] bg-[var(--bg)] px-3 py-2 text-[0.875rem] placeholder:text-muted focus:border-[var(--signal)] focus:outline-none"
         />
         <button
           type="button"
           onClick={ask}
-          className="shrink-0 cursor-pointer rounded border border-[var(--panel-border)] px-2.5 text-[0.75rem] text-paper-dim hover:border-[var(--signal)] hover:text-paper"
+          className="shrink-0 cursor-pointer rounded-md border border-[var(--signal)] bg-[var(--signal)] px-3.5 text-[0.8125rem] font-semibold text-[var(--bg)] transition-opacity hover:opacity-90"
         >
           Ask
         </button>
@@ -122,76 +130,76 @@ export function AskBox({
         // The beat — presentation only; no AI answers questions here and
         // the label must not suggest otherwise. The static sentence is
         // what a screen reader announces; the cycling dots are visual.
-        <p className="mt-2 text-[0.75rem] italic text-muted" aria-live="polite">
+        // Timing and words unchanged (design pass): only the dress.
+        <p
+          className="mt-2.5 text-[0.8125rem] italic leading-relaxed text-voice"
+          aria-live="polite"
+        >
           I got you... hang tight
           <span aria-hidden="true">{".".repeat(dots)}</span>
         </p>
       )}
 
       {asked && asked.answer.kind === "NO_ROUTE" && (
-        <p className="mt-2 text-[0.75rem] leading-relaxed text-muted">
+        <p className="mt-2.5 text-[0.8125rem] leading-relaxed text-voice">
           {asked.answer.statement}
         </p>
       )}
 
       {asked && asked.answer.kind === "ROUTED" && asked.answer.topic && (
-        <div className="mt-2">
-          <p className="text-[0.75rem] font-semibold">
+        <div className="mt-3">
+          {/* The answer's own header: eyebrow naming the register, the
+              topic as the heading. Same data as before, dressed to be
+              read as the authoritative answer it is. */}
+          <p className="t-eyebrow text-signal">The answer</p>
+          <p className="mt-1 text-[0.9375rem] font-semibold leading-snug text-paper">
             {asked.answer.topic.label}
           </p>
           {asked.contacts.length > 0 && (
             // The everyday answer: the office that owns the fix, with the
             // real line. A service line that owns the topic IS the answer.
-            <div className="mt-1.5 space-y-2">
+            <div className="mt-2 space-y-2">
               {asked.contacts.map((contact) => (
                 <div
                   key={`${contact.body}|${contact.service}`}
-                  className="rounded border border-[var(--signal)]/40 bg-[var(--signal)]/5 p-2"
+                  className="rounded-md border border-[var(--signal)]/35 bg-[var(--signal)]/5 p-3"
                 >
-                  <p className="text-[0.75rem] font-semibold text-paper">
+                  <p className="text-[0.875rem] font-semibold text-paper">
                     {contact.body}
                   </p>
-                  <p className="text-[0.6875rem] text-paper-dim">
+                  <p className="text-[0.75rem] leading-relaxed text-voice">
                     {contact.service}
                   </p>
-                  <p className="mt-0.5 text-[0.75rem]">
+                  <p className="mt-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
                     {contact.phone && (
                       <a
                         href={`tel:${contact.phone.replace(/[^\d+]/g, "")}`}
-                        className="font-semibold text-signal"
+                        className="font-mono text-[0.9375rem] font-semibold text-link"
                       >
                         {contact.phone}
                       </a>
                     )}
                     {contact.email && (
-                      <>
-                        {contact.phone && <span className="text-muted"> · </span>}
-                        <a
-                          href={`mailto:${contact.email}`}
-                          className="text-signal underline decoration-dotted"
-                        >
-                          {contact.email}
-                        </a>
-                      </>
+                      <a
+                        href={`mailto:${contact.email}`}
+                        className="text-[0.75rem] text-link underline decoration-dotted underline-offset-2"
+                      >
+                        {contact.email}
+                      </a>
                     )}
                     {contact.requestUrl && (
-                      <>
-                        {(contact.phone || contact.email) && (
-                          <span className="text-muted"> · </span>
-                        )}
-                        <a
-                          href={contact.requestUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-signal underline decoration-dotted"
-                        >
-                          online request
-                        </a>
-                      </>
+                      <a
+                        href={contact.requestUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[0.75rem] text-link underline decoration-dotted underline-offset-2"
+                      >
+                        online request
+                      </a>
                     )}
                   </p>
                   {contact.note && (
-                    <p className="mt-0.5 text-[0.6875rem] text-muted">
+                    <p className="mt-1 text-[0.6875rem] leading-relaxed text-voice">
                       {contact.note}
                     </p>
                   )}
@@ -199,7 +207,7 @@ export function AskBox({
                     href={contact.sourceUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-0.5 inline-block font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted hover:text-signal"
+                    className="mt-1 inline-block font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted underline decoration-dotted underline-offset-2 hover:text-link"
                   >
                     source — {contact.sourceOrg}
                   </a>
@@ -207,12 +215,12 @@ export function AskBox({
               ))}
             </div>
           )}
-          <ol className="mt-1 space-y-2">
+          <ol className="mt-2 space-y-2.5">
             {asked.answer.steps.map((step, i) => (
               <li key={i} className="text-[0.75rem] leading-relaxed">
-                <p className="text-paper-dim">{step.why}</p>
+                <p className="text-voice">{step.why}</p>
                 {step.bodies.length > 0 && (
-                  <p className="mt-0.5">
+                  <p className="mt-0.5 text-[0.8125rem]">
                     {step.bodies.map((body, j) => (
                       <span key={body.label}>
                         {j > 0 && <span className="text-muted"> · </span>}
@@ -221,7 +229,7 @@ export function AskBox({
                             href={body.homepageUrl}
                             target="_blank"
                             rel="noreferrer"
-                            className="text-signal underline decoration-dotted"
+                            className="text-link underline decoration-dotted underline-offset-2"
                           >
                             {body.label}
                           </a>
@@ -233,11 +241,13 @@ export function AskBox({
                   </p>
                 )}
                 {step.people.length > 0 && (
-                  <p className="mt-0.5">
+                  <p className="mt-0.5 text-[0.8125rem]">
                     {step.people.map((person, j) => (
                       <span key={person.id}>
                         {j > 0 && <span className="text-muted">, </span>}
-                        <span className="text-paper">{person.name}</span>
+                        <span className="font-medium text-paper">
+                          {person.name}
+                        </span>
                         <span className="text-muted"> · {person.officeTitle}</span>
                         {person.sourceUrl && (
                           <>
@@ -246,7 +256,7 @@ export function AskBox({
                               href={person.sourceUrl}
                               target="_blank"
                               rel="noreferrer"
-                              className="font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted hover:text-signal"
+                              className="font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted underline decoration-dotted underline-offset-2 hover:text-link"
                             >
                               source
                             </a>
@@ -257,13 +267,15 @@ export function AskBox({
                   </p>
                 )}
                 {step.gap && (
-                  <p className="mt-0.5 text-[0.6875rem] text-muted">{step.gap}</p>
+                  <p className="mt-0.5 text-[0.6875rem] leading-relaxed text-voice">
+                    {step.gap}
+                  </p>
                 )}
               </li>
             ))}
           </ol>
           {/* The denominator, always stated — never implied completeness. */}
-          <p className="mt-1.5 text-[0.625rem] text-muted">
+          <p className="mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted">
             Based on what we track here
             {zip ? ` around ${zip}` : ""} — {asked.answer.grounding.stepsWithSomeone}{" "}
             of {asked.answer.grounding.totalSteps} steps point at a body or

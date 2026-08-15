@@ -59,13 +59,13 @@ export function CandidateCard({
           src={card.photoUrl}
           alt={`${name} — ${card.photoSource ?? "photo"}`}
           title={card.photoSource ?? undefined}
-          className="h-14 w-14 shrink-0 rounded object-cover object-top"
+          className="h-16 w-16 shrink-0 rounded-lg border border-[var(--panel-border)] object-cover object-top"
           loading="lazy"
         />
       ) : (
         <span
           aria-hidden="true"
-          className="flex h-14 w-14 shrink-0 items-center justify-center rounded bg-[var(--surface,rgba(255,255,255,0.06))] font-mono text-[0.9375rem] text-muted"
+          className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg border border-[var(--panel-border)] bg-[var(--surface,rgba(255,255,255,0.06))] font-mono text-[1rem] text-muted"
         >
           {initials(name)}
         </span>
@@ -73,21 +73,23 @@ export function CandidateCard({
 
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
-          <span className="text-[0.875rem] font-medium">{name}</span>
+          <span className="text-[0.9375rem] font-semibold tracking-tight">
+            {name}
+          </span>
           <span className="text-right text-[0.75rem] text-muted">
             {partyLine}
           </span>
         </div>
 
         {card?.bio && (
-          <p className="mt-1 text-[0.75rem] leading-relaxed text-paper-dim">
+          <p className="mt-1 text-[0.8125rem] leading-relaxed text-paper-dim">
             &ldquo;{card.bio}&rdquo;{" "}
             {card.bioSourceUrl && (
               <a
                 href={card.bioSourceUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="text-muted underline decoration-dotted"
+                className="text-muted underline decoration-dotted underline-offset-2 hover:text-link"
               >
                 {card.bioSourceLabel ?? "source"}
               </a>
@@ -96,13 +98,15 @@ export function CandidateCard({
         )}
 
         {(hasLinks || card?.email || card?.phone) && (
+          // Links register (design pass): tappable things carry the link
+          // color and the dotted underline, everywhere.
           <p className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-[0.75rem]">
             {links?.official && (
               <a
                 href={links.official.url}
                 target="_blank"
                 rel="noreferrer"
-                className="underline decoration-dotted"
+                className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
               >
                 official site
               </a>
@@ -112,7 +116,7 @@ export function CandidateCard({
                 href={links.campaign.url}
                 target="_blank"
                 rel="noreferrer"
-                className="text-muted underline decoration-dotted"
+                className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
               >
                 campaign site
               </a>
@@ -122,7 +126,7 @@ export function CandidateCard({
                 href={filedSiteUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="text-muted underline decoration-dotted"
+                className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
               >
                 site (as filed)
               </a>
@@ -130,7 +134,7 @@ export function CandidateCard({
             {card?.email && (
               <a
                 href={`mailto:${card.email}`}
-                className="text-muted underline decoration-dotted"
+                className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
               >
                 {card.email}
               </a>
@@ -138,7 +142,7 @@ export function CandidateCard({
             {card?.phone && (
               <a
                 href={`tel:${card.phone.replace(/[^\d+]/g, "")}`}
-                className="text-muted underline decoration-dotted"
+                className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
               >
                 {card.phone}
               </a>
@@ -149,7 +153,8 @@ export function CandidateCard({
         {thin && (
           // The absence, named. Not muted into a footnote: a reader
           // skipping this candidate should see that the gap is ours.
-          <p className="mt-1 text-[0.75rem] leading-relaxed text-paper-dim">
+          // Voice register — it describes our research, never them.
+          <p className="mt-1 text-[0.75rem] leading-relaxed text-voice">
             {THIN_CANDIDATE_LINE}
           </p>
         )}

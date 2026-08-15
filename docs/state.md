@@ -4708,8 +4708,12 @@ name the days without the literal strings.
 
 ### Evidence
 
-- **476 tests (3 new), lint clean (one pre-existing warning in
-  `scripts/tester-drive.mts`), build exit 0.** The date scan reports
+- **476 tests pass (3 new), lint clean, build exit 0.** (Kept on one
+  line deliberately: `git-state.txt` reads the last line in this file
+  matching a test count and looks for the verdict words on that same
+  line — wrapped, the first draft of this bullet reported "recorded
+  without a verdict" and no build status at all.) The one lint warning
+  is pre-existing, in `scripts/tester-drive.mts`. The date scan reports
   **1017 dates scanned, 0 failures, 122 allowlisted** — the allowlisted
   count is a warning line on every run, never a pass. The hook was
   proven to refuse, not merely to exist, by staging a probe date and

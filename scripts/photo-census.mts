@@ -18,6 +18,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { BODY_ROSTERS } from "../lib/registry/body-rosters.ts";
+import { STATEWIDE_EXECUTIVES } from "../lib/officials/statewide-executives.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (p: string) => JSON.parse(readFileSync(join(ROOT, p), "utf8"));
@@ -32,6 +33,23 @@ interface PersonRow {
 }
 
 const people: PersonRow[] = [];
+
+// ── The photo manifest — the single source for official portraits ───────
+// Every surface with a stable officeholder-style id resolves through it,
+// so the census reflects whatever actually ships, tier by tier.
+const manifest = read("lib/registry/official-photos.json") as {
+  photos: {
+    officeholderId: string;
+    name: string;
+    url: string;
+    sourceUrl: string;
+    license: string | null;
+  }[];
+  missing: { officeholderId: string; name: string; reason: string }[];
+};
+const shippedIds = new Set(
+  manifest.photos.filter((p) => p.license).map((p) => p.officeholderId),
+);
 
 // ── The covered division universe — what can actually render ────────────
 const registry = read("lib/registry/registry.json") as {
@@ -101,10 +119,6 @@ const us = read("lib/registry/officeholders-us.json") as {
   officeholders: { id: string; name: string }[];
   divisions: { officeholderId: string; ocdId: string }[];
 };
-const photoManifest = read("lib/registry/official-photos.json") as {
-  photos: { officeholderId: string }[];
-};
-const withPortrait = new Set(photoManifest.photos.map((p) => p.officeholderId));
 const usRendered = new Map<string, string>(); // id -> state
 // House members render through the NATIONAL congressional-district layer
 // (every cd division rides the registry), so all attached House members
@@ -136,8 +150,8 @@ for (const holder of us.officeholders) {
     surface: "federal officials",
     state,
     name: holder.name,
-    hasPortrait: withPortrait.has(holder.id),
-    note: withPortrait.has(holder.id)
+    hasPortrait: shippedIds.has(holder.id),
+    note: shippedIds.has(holder.id)
       ? null
       : "recorded miss in official-photos.json (license or 404)",
   });
@@ -163,10 +177,13 @@ for (const { file, state } of [
       surface: "state legislators",
       state,
       name: holder.name,
-      // The state officeholder schema carries no photo field at all —
-      // structurally initials, every one.
-      hasPortrait: false,
-      note: "no photo field in the state officeholder schema",
+      // State legislators resolve through the manifest exactly like
+      // federal members do (lib/registry/server.ts) — the census reads
+      // the same file the render path reads.
+      hasPortrait: shippedIds.has(holder.id),
+      note: shippedIds.has(holder.id)
+        ? null
+        : "recorded miss in official-photos.json (terms or absence)",
     });
   }
 }
@@ -179,11 +196,28 @@ for (const roster of BODY_ROSTERS) {
       surface: "curated local rosters",
       state,
       name: member.name,
-      // RosterMember has no photo field — structurally initials.
-      hasPortrait: false,
-      note: "no photo field in the roster schema",
+      hasPortrait: shippedIds.has(member.id),
+      note: shippedIds.has(member.id)
+        ? null
+        : "no shipped photo for this roster member",
     });
   }
+}
+
+// ── Surface 5: statewide executives (who-governs card, B11) ─────────────
+// Added to the census 2026-08-14 (photo session): the governors render on
+// every zip's who-governs card and were people the product shows a reader,
+// so leaving them out of the denominator was a census gap. 747 → 750.
+for (const executive of STATEWIDE_EXECUTIVES) {
+  const holder = executive.holder;
+  const shipped = shippedIds.has(holder.id) || Boolean(holder.photoUrl);
+  people.push({
+    surface: "statewide executives",
+    state: stateOfOcdId(executive.stateOcdId),
+    name: holder.name,
+    hasPortrait: shipped,
+    note: shipped ? null : "recorded miss in official-photos.json (terms or absence)",
+  });
 }
 
 // ── The census — counts with denominators, and the named miss list ──────
@@ -268,11 +302,63 @@ ${stateTable}
 ${missLines}
 `;
 
+// ── The official-portraits section, generated from the manifest ─────────
+// The guard test (tests/candidate-cards.test.ts, 2b) requires every
+// manifest photo's served URL AND source URL to appear in this report —
+// the report is where a human eyeballs what ships, so the table is
+// generated, never hand-maintained, and cannot drift from the manifest.
+const officialRows = [...manifest.photos]
+  .sort((a, b) => a.officeholderId.localeCompare(b.officeholderId))
+  .map((p) => `| ${p.name} | ${p.url} | ${p.sourceUrl} | ${p.license} |`)
+  .join("\n");
+const officialMissRows = [...manifest.missing]
+  .sort((a, b) => a.officeholderId.localeCompare(b.officeholderId))
+  .map((m) => `| ${m.name} | \`${m.officeholderId}\` | ${m.reason} |`)
+  .join("\n");
+const officialsSection = `## Official portraits — the manifest, \`lib/registry/official-photos.json\`
+
+Generated from the manifest by \`scripts/photo-census.mts\` — the table
+cannot drift from what ships. All images are served from our origin
+(\`public/officials/\`), metadata-stripped before commit
+(\`scripts/strip-image-metadata.mts\`), and matched by stable id (bioguide
+for Congress), never by name search.
+
+${manifest.photos.length} shipped portraits:
+
+| Person | Served file | Source URL | License |
+|---|---|---|---|
+${officialRows}
+
+${manifest.missing.length} recorded absences (every one carries its reason and date in the manifest):
+
+| Person | Id | Reason |
+|---|---|---|
+${officialMissRows}
+`;
+
 const reportPath = join(ROOT, "docs", "photo-report.md");
 const existing = readFileSync(reportPath, "utf8");
-const marker = "## The census — every rendered person, counted by script";
-const base = existing.includes(marker)
-  ? existing.slice(0, existing.indexOf(marker)).trimEnd()
-  : existing.trimEnd();
-writeFileSync(reportPath, `${base}\n\n${censusSection}`);
+
+// Header: everything before the first generated/roster section.
+const officialsMarker = "## Official portraits — the manifest";
+const legacyOfficialsMarker = "## Roster officials";
+const headerEnd = [officialsMarker, legacyOfficialsMarker, "## Candidate cards"]
+  .map((m) => existing.indexOf(m))
+  .filter((i) => i >= 0)
+  .reduce((a, b) => Math.min(a, b), existing.length);
+const header = existing.slice(0, headerEnd).trimEnd();
+
+// The hand-written candidate-cards section survives regeneration verbatim.
+const censusMarker = "## The census — every rendered person, counted by script";
+const cardsStart = existing.indexOf("## Candidate cards");
+const cardsEnd = existing.includes(censusMarker)
+  ? existing.indexOf(censusMarker)
+  : existing.length;
+const cardsSection =
+  cardsStart >= 0 ? existing.slice(cardsStart, cardsEnd).trimEnd() : "";
+
+writeFileSync(
+  reportPath,
+  `${header}\n\n${officialsSection}\n${cardsSection}\n\n${censusSection}`,
+);
 console.log(`\nwritten: docs/photo-report.md (${misses.length} named misses)`);

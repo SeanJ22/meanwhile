@@ -275,9 +275,26 @@ test("finding meetings and finding nothing are different states", () => {
   // Every body governing 85701 is LIVE as of 2026-08-13, so zero meetings is
   // an empty calendar, not a coverage gap…
   assert.equal(coverageFor("85701", 0).state, "NONE_SCHEDULED");
-  // …while 07866 still has unwired bodies (Morris County, Morris Hills
-  // Regional), so zero meetings there stays honestly NO_SOURCE.
-  assert.equal(coverageFor("07866", 0).state, "NO_SOURCE");
+  // …and 07866 joined it on 2026-08-15, when Morris Hills Regional — the last
+  // GOVERNING body at the point without a source — was wired (M78). The two
+  // bodies still unwired there are Rockaway's Environmental Commission and
+  // Board of Assessment Commissioners, both COMMISSION class, and the state
+  // deliberately does not turn on those: an unwired commission must not read
+  // as a government whose calendar is missing. The sidebar still counts them.
+  const rockaway = coverageFor("07866", 0);
+  assert.equal(rockaway.state, "NONE_SCHEDULED");
+  assert.ok(
+    rockaway.counts.withoutSource >= 2,
+    `${rockaway.counts.withoutSource} bodies without a source — the two ` +
+      `unwired commissions must still be counted, not absorbed by the state`,
+  );
+  assert.deepEqual(
+    rockaway.bodies
+      .filter((b) => b.bodyClass === "GOVERNING" && b.coverageStatus !== "LIVE")
+      .map((b) => b.bodyId),
+    [],
+    "a governing body at 07866 lost its source",
+  );
 });
 
 test("a body's name is never invented for display", () => {

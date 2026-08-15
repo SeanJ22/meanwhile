@@ -873,3 +873,119 @@ goes to a federal address service that sentence is false, so it now names the
 route: the choice stays on the device and is never sent to us, and putting the
 street on the map asks the Census Bureau's free address lookup, street name
 and zip, never a house number.
+
+## 2026-08-15 — the depth session: NH and NJ get their bodies (M76–M79)
+
+Four findings, each of which would have produced a false "not found" or a
+false "that's all there is" for anyone who stopped one rung early.
+
+### The served window was not the fetch window (M76)
+
+Every adapter carried `WINDOW_BACK_DAYS = 30`, under a comment claiming it
+matched the cascade, while `CONCLUDED_LOOKBACK_DAYS` had been raised to 90.
+Sixty days of published, retrievable history were being dropped **at the
+fetch**, at every zip. No count check could catch it: each adapter honestly
+reported what it had asked for, and what it asked for was wrong.
+
+Measured after deriving the windows from `lib/meetings/constants.ts`:
+
+| Where | Before | After |
+|---|---|---|
+| 03255 (Newbury + Merrimack) | 3 meetings | 7 |
+| Morris County, NJ | 12 | 20 |
+| Tucson clerksboards | 15 | 24 |
+| Amphitheater USD | 2 | 6 |
+
+**The rung**: when a jurisdiction looks thinner than its portal, check the
+adapter's own window before hunting for a second source.
+
+### A township's boards are in a different calendar category (M77)
+
+Rockaway Township's wired iCal feed is `catID=25` and carries the Township
+Council and nothing else. **`catID=30` is a second calendar** carrying the
+Planning Board and the Board of Adjustment with real start times. Probing the
+ids is the whole rung: 13 of the 15 tried return a 477-byte empty calendar,
+and the two that do not tripled the township's coverage.
+
+| Body | AgendaCenter category | 2026 sittings archived |
+|---|---|---|
+| Township Council | 2 | 13 |
+| Board of Adjustment | 3 | 12 |
+| Planning Board | 4 | 7 |
+| Environmental Commission | 5 | 0 — archive stops in 2019 |
+| Board of Assessment Commissioners | 7 | 0 — archive stops in 2022 |
+
+The last two are registry rows carrying the finding and deliberately not
+wired: neither publishes anything the served 90-day window could render. The
+township's sitemap and staff directory carry **no page at all** for the
+Environmental Commission (checked 2026-08-15 — the only "Environmental" hit
+is a health-specialist job title), so its `homepageUrl` is the archive,
+because that is the only page the township publishes about it.
+
+Three sibling defects the new rows exposed, all of which existed before them:
+
+- **CivicPlus announces a cancellation by editing the SUMMARY text**
+  (`"Board of Adjustment Meeting Cancelled 8/18/26"`), never by setting the
+  iCal `STATUS` property. Two future sittings were rendering as SCHEDULED.
+- **The same notice is pasted into `LOCATION`** as an HTML block in front of
+  the address, so both canceled sittings dropped as `unknownVenue`.
+- **Archive de-duplication was keyed on the division.** Three bodies now share
+  one `ocdId`, and the council's Tuesday would have deleted the planning
+  board's Tuesday.
+
+### A town's portal may not be the town (M79)
+
+**Newbury's CivicWeb tenant carries only the Selectboard.** Proven rather than
+assumed: `MeetingsService.svc/meetings?from=2026-01-01&to=2026-12-31` returned <!-- expected-future: the end of the query range sent to the CivicWeb service, not a claim about when anything happened; the whole point of the query was to cover the rest of the calendar year -->
+**20 sittings and every one was TypeId 10**. The Planning Board, Zoning Board
+of Adjustment and Conservation Commission are not on it.
+
+`MeetingTypeList.aspx?type=<n>` **ignores the parameter** on this tenant —
+every value from 1 to 15 returned the identical page and the identical three
+meetings. Type discovery has to come from the service payload's own `TypeId`s,
+not from the type-list page.
+
+Two NH hosts refuse this pipeline entirely, recorded per URL so nobody records
+them as walls:
+
+| Host | Root | Agendas page | Feed / sitemap | robots.txt |
+|---|---|---|---|---|
+| `newbury.nh.gov` | 403 | 403 (`/planning-board`) | 403 (`/sitemap.xml`) | **200** — Drupal, `Crawl-delay: 10`, names no sitemap |
+| `kearsarge.org` | 403 | 403 | 403 (`/sitemap.xml`, `/rss.xml`) | — |
+
+Both are the real-browser rung's, and it is the next rung, not the end of the
+list. The coverage audit already records that rung working for Kearsarge on
+2026-08-14 and naming its prize: `2026-2027_school_board_schedule.pdf`.
+
+### The published annual schedule is a source shape, not a vendor (M78)
+
+Morris Hills Regional — 07866's high school district, `NOT_ATTEMPTED` until
+this session — **runs no agenda vendor at all** and publishes better than most
+districts that do. Its BOE Meetings page carries the year as a dated list:
+
+```
+Monday, January 26, 2026
+Monday, February 23, 2026
+…
+All meetings begin at 6:30 P.M. and are held in the Board of Education -
+Board Conference Room.
+```
+
+That is ladder rung 2 with no portal in the path, and it is how a very large
+number of American school boards publish. It is now an adapter
+(`lib/sources/schedulepage/`) and an `AgendaSourceType`. Three rules it was
+built under:
+
+1. **The time is parsed from the body's own sentence, never defaulted.** A
+   page with dates and no such sentence ships `startPrecision: "DAY"` — the
+   M59 shape — rather than an hour that would be right most of the time and
+   wrong exactly on the special sitting somebody wanted to attend.
+2. **The weekday prefix is required.** A bare `August 17, 2026` in a footer,
+   a news teaser or a copyright line would otherwise become a meeting. The
+   schedule list is the only place a body writes the weekday out.
+3. **Documents join on the date the body wrote in its own link text**
+   (`"August 17, 2026 - Regular Meeting"`), never on a filename that may or
+   may not be the meeting's date.
+
+`VENDOR_API: MISS` is recorded on the audit row on purpose. "No vendor" is a
+finding about this district, not a gap in the hunt.

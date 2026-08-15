@@ -272,6 +272,27 @@ export const VENUE_CACHE: VenueEntry[] = [
     verifiedAt: "2026-08-13",
   },
 
+  // ── SchedulePage: Morris Hills Regional Board of Education ──────────────
+  // The schedule page names the room in one sentence — "held in the Board of
+  // Education - Board Conference Room" — and the district's own footer gives
+  // the street address. There is no per-sitting location string to key on,
+  // so the `match` is the room name the wiring row carries.
+  {
+    sourceId: "schedulepage",
+    bodyOcdId:
+      "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district",
+    match: "Board of Education - Board Conference Room",
+    name: "Morris Hills Regional District Board Conference Room",
+    address: "48 Knoll Drive, Rockaway, NJ 07866",
+    lat: 40.885647,
+    lng: -74.509769,
+    addressSourceUrl:
+      "https://www.mhrd.org/administration/board-of-education/boe-meetings",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=48+Knoll+Drive%2C+Rockaway%2C+NJ+07866&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-15",
+  },
+
   // ── Diligent: TUSD Governing Board / committees at the Duffy Center ─────
   // The MeetingLocation string carries the full address; two spellings occur
   // in live data ("Fifth Street" and "5th Street"), so both are keyed.

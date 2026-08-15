@@ -474,6 +474,38 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     },
     verifiedAt: "2026-08-13",
   },
+  // ── The published annual schedule (M78, 2026-08-15) ─────────────────────
+  // Morris Hills Regional is 07866's HIGH SCHOOL district — a zip sits in two
+  // school districts at once and both are its government. It was
+  // NOT_ATTEMPTED until this session: the census named it, the hunt found it
+  // runs no agenda vendor at all, and its own BOE Meetings page publishes the
+  // whole 2026 schedule as a dated list with "All meetings begin at 6:30 P.M.
+  // and are held in the Board of Education - Board Conference Room" under it.
+  // Ladder rung 2, no portal in the path.
+  {
+    bodyId:
+      "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district#board",
+    ocdId:
+      "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district",
+    agendaSourceType: "SCHEDULEPAGE",
+    jurisdiction: "Morris Hills Regional School District, NJ",
+    publishingOrg: "Morris Hills Regional District Board of Education",
+    timeZone: "America/New_York",
+    config: {
+      slug: "mhrd",
+      schedulePage:
+        "https://www.mhrd.org/administration/board-of-education/boe-meetings",
+      documentsPage:
+        "https://www.mhrd.org/administration/board-of-education/board-agendas",
+      // The district's own name for the body, from its page heading.
+      bodyName: "Board of Education",
+      // The room, verbatim from the schedule page's own sentence — the key
+      // the venue cache resolves. There is no per-sitting location string.
+      venueMatch: "Board of Education - Board Conference Room",
+    },
+    verifiedAt: "2026-08-15",
+  },
+
   {
     bodyId:
       "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district#board",

@@ -64,6 +64,13 @@ where the town files it.
   type, status, and the venue with street address. The
   `RSS.aspx?Feed=Calendar` pseudo-feed lists only published documents and is
   not a calendar.
+- **No vendor at all** — Morris Hills Regional. The district runs a Finalsite
+  CMS and publishes its whole year of board dates on one page with one
+  sentence naming the time and the room: "All meetings begin at 6:30 P.M. and
+  are held in the Board of Education - Board Conference Room." That is the
+  SCHEDULEPAGE shape (M78), ladder rung 2, and it is a better source than most
+  portals. Agendas and minutes are on a second page, each labelled with the
+  meeting date in the district's own link text.
 - **Apptegy Thrillshare** — Rockaway Township School District. The district
   site's own events API: `api.thrillshare.com/api/v4/o/<orgId>`, carrying
   start times with offsets, the venue string, and district-published
@@ -80,7 +87,7 @@ where the town files it.
 | Board of Assessment Commissioners | AgendaCenter cat 7 — nothing since 2022 | known, empty |
 | Morris County Board of County Commissioners | Granicus IQM2 | LIVE |
 | Rockaway Township School District Board | Apptegy Thrillshare | LIVE |
-| Morris Hills Regional School District Board | see the hunt record | — |
+| Morris Hills Regional School District Board | SchedulePage (mhrd.org BOE Meetings) | LIVE (2026-08-15) |
 
 **A zip sits in two school districts at once.** 07866 is in the Rockaway
 Township district (K-8) and the Morris Hills Regional district (high school),

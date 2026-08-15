@@ -198,6 +198,77 @@ no count check caught because each adapter honestly reported what it fetched.
 Adapter windows now derive from `lib/meetings/constants.ts`. **Check this
 first when a jurisdiction looks thinner than its portal.**
 
+### A town's portal may not be the town (2026-08-15)
+
+**Never read a vendor tenant as the government.** Newbury's iCompass CivicWeb
+portal published **20 sittings across the whole of 2026 and every one was the
+Selectboard** (`TypeId` 10 on all 20 rows — a whole-year service query, not a
+sample). The Planning Board, Zoning Board of Adjustment and Conservation
+Commission are not on it at all, and a session that had read the portal as
+"the town's meetings" would have recorded the town as fully covered while
+missing three of its four boards.
+
+The check is one query: ask the tenant for a whole year and count the distinct
+type ids. One type id means one body, and the rest of the government is
+somewhere else.
+
+Corollary: `MeetingTypeList.aspx?type=<n>` **ignores the parameter** on that
+tenant — every value 1–15 returned the identical page. Type discovery comes
+from the service payload's own `TypeId`s, never from the type-list page.
+
+### The published annual schedule (2026-08-15)
+
+A source shape, not a vendor, and the one to try when a body runs no portal:
+the body publishes its whole year of dates on one page with a single sentence
+underneath naming the time and the room.
+
+```
+Monday, January 26, 2026
+Monday, February 23, 2026
+…
+All meetings begin at 6:30 P.M. and are held in the Board of Education -
+Board Conference Room.
+```
+
+Ladder rung 2, no portal in the path, and how a very large number of American
+school boards publish. It is an adapter now (`lib/sources/schedulepage/`,
+`AgendaSourceType: "SCHEDULEPAGE"`), so the next one is a wiring row.
+
+Three rules that came with it, each one a way to get it wrong:
+
+1. **Parse the time from the body's own sentence; never default it.** No
+   sentence means `startPrecision: "DAY"` and a card that says the time was
+   not posted.
+2. **Require the weekday prefix on the date.** A bare `August 17, 2026` in a
+   footer or a news teaser would otherwise become a meeting. The schedule list
+   is the only place a body writes the weekday out.
+3. **Join documents on the date in the body's own link text**, never on a
+   filename.
+
+And record `VENDOR_API: MISS` when there is no vendor. "This district runs no
+portal" is a finding about the district; leaving it unrecorded makes it look
+like a gap in the hunt.
+
+### Probe the calendar category ids (2026-08-15)
+
+On CivicPlus, and by extension any CMS with numbered calendar feeds: **the
+boards are usually not in the council's category.** Rockaway's council feed is
+`catID=25`; `catID=30` is a second calendar carrying the Planning Board and
+the Board of Adjustment with real start times. Thirteen of the fifteen ids
+tried returned a 477-byte empty calendar — the probe is cheap and it tripled
+a township's coverage.
+
+Bind each archive block's category id to its **own heading in the DOM**, never
+by document order, or one board's meetings get filed under another's.
+
+### Check the adapter's window before hunting a second source (2026-08-15)
+
+When a jurisdiction reads thinner than its portal, the first suspect is our
+own fetch window, not the publisher. Every adapter here had a 30-day lookback
+against a 90-day served window, under a comment asserting they matched. No
+count check catches this: the adapter honestly reports what it asked for.
+Adapter windows now derive from `lib/meetings/constants.ts`.
+
 ## 4. The scripts that exist
 
 | Command | What it does |

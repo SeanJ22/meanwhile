@@ -1,6 +1,6 @@
 {
  "formatVersion": 1,
- "generatedAt": "2026-08-15T22:49:28.067Z",
+ "generatedAt": "2026-08-15T22:57:00.671Z",
  "sources": [
   {
    "source": "legistar",
@@ -118,6 +118,19 @@
     "unplaceableInTime": 0,
     "notConfigured": 1
    }
+  },
+  {
+   "source": "schedulepage",
+   "ok": true,
+   "error": null,
+   "fetched": 1,
+   "normalized": 3,
+   "drops": {
+    "placeless": 0,
+    "unknownVenue": 0,
+    "unplaceableInTime": 0,
+    "notConfigured": 0
+   }
   }
  ],
  "meetings": [
@@ -140,7 +153,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1803&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-15T22:49:20.505Z",
+    "collectedAt": "2026-08-15T22:56:51.592Z",
     "verifiedAt": null
    }
   },
@@ -163,7 +176,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1804&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-15T22:49:20.505Z",
+    "collectedAt": "2026-08-15T22:56:51.592Z",
     "verifiedAt": null
    }
   },
@@ -186,7 +199,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1816&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-15T22:49:20.505Z",
+    "collectedAt": "2026-08-15T22:56:51.592Z",
     "verifiedAt": null
    }
   },
@@ -209,7 +222,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1817&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-15T22:49:20.505Z",
+    "collectedAt": "2026-08-15T22:56:51.592Z",
     "verifiedAt": null
    }
   },
@@ -232,7 +245,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1820&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-15T22:49:20.505Z",
+    "collectedAt": "2026-08-15T22:56:51.592Z",
     "verifiedAt": null
    }
   },
@@ -255,7 +268,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1821&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-15T22:49:20.505Z",
+    "collectedAt": "2026-08-15T22:56:51.592Z",
     "verifiedAt": null
    }
   },
@@ -278,7 +291,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1822&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-15T22:49:20.505Z",
+    "collectedAt": "2026-08-15T22:56:51.592Z",
     "verifiedAt": null
    }
   },
@@ -301,7 +314,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1823&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-15T22:49:20.505Z",
+    "collectedAt": "2026-08-15T22:56:51.592Z",
     "verifiedAt": null
    }
   },
@@ -324,7 +337,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1824&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-15T22:49:20.505Z",
+    "collectedAt": "2026-08-15T22:56:51.592Z",
     "verifiedAt": null
    }
   },
@@ -347,7 +360,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1854&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-15T22:49:20.505Z",
+    "collectedAt": "2026-08-15T22:56:51.592Z",
     "verifiedAt": null
    }
   },
@@ -370,7 +383,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1858&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-15T22:49:20.505Z",
+    "collectedAt": "2026-08-15T22:56:51.592Z",
     "verifiedAt": null
    }
   },
@@ -393,7 +406,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1869&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-15T22:49:20.505Z",
+    "collectedAt": "2026-08-15T22:56:51.592Z",
     "verifiedAt": null
    }
   },
@@ -416,7 +429,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T22:49:20.986Z",
+    "collectedAt": "2026-08-15T22:56:52.316Z",
     "verifiedAt": null
    }
   },
@@ -439,7 +452,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T22:49:20.986Z",
+    "collectedAt": "2026-08-15T22:56:52.316Z",
     "verifiedAt": null
    }
   },
@@ -462,7 +475,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T22:49:20.986Z",
+    "collectedAt": "2026-08-15T22:56:52.316Z",
     "verifiedAt": null
    }
   },
@@ -485,7 +498,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T22:49:20.986Z",
+    "collectedAt": "2026-08-15T22:56:52.316Z",
     "verifiedAt": null
    }
   },
@@ -508,7 +521,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T22:49:20.986Z",
+    "collectedAt": "2026-08-15T22:56:52.316Z",
     "verifiedAt": null
    }
   },
@@ -531,7 +544,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T22:49:20.986Z",
+    "collectedAt": "2026-08-15T22:56:52.316Z",
     "verifiedAt": null
    }
   },
@@ -554,7 +567,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T22:49:20.986Z",
+    "collectedAt": "2026-08-15T22:56:52.316Z",
     "verifiedAt": null
    }
   },
@@ -577,7 +590,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T22:49:20.986Z",
+    "collectedAt": "2026-08-15T22:56:52.316Z",
     "verifiedAt": null
    }
   },
@@ -600,7 +613,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T22:49:20.986Z",
+    "collectedAt": "2026-08-15T22:56:52.316Z",
     "verifiedAt": null
    }
   },
@@ -624,7 +637,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T22:49:20.986Z",
+    "collectedAt": "2026-08-15T22:56:52.316Z",
     "verifiedAt": null
    }
   },
@@ -648,7 +661,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T22:49:20.986Z",
+    "collectedAt": "2026-08-15T22:56:52.316Z",
     "verifiedAt": null
    }
   },
@@ -672,7 +685,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T22:49:20.986Z",
+    "collectedAt": "2026-08-15T22:56:52.316Z",
     "verifiedAt": null
    }
   },
@@ -696,7 +709,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T22:49:20.986Z",
+    "collectedAt": "2026-08-15T22:56:52.316Z",
     "verifiedAt": null
    }
   },
@@ -720,7 +733,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T22:49:20.986Z",
+    "collectedAt": "2026-08-15T22:56:52.316Z",
     "verifiedAt": null
    }
   },
@@ -744,7 +757,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T22:49:20.986Z",
+    "collectedAt": "2026-08-15T22:56:52.316Z",
     "verifiedAt": null
    }
   },
@@ -768,7 +781,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T22:49:20.986Z",
+    "collectedAt": "2026-08-15T22:56:52.316Z",
     "verifiedAt": null
    }
   },
@@ -792,7 +805,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T22:49:20.986Z",
+    "collectedAt": "2026-08-15T22:56:52.316Z",
     "verifiedAt": null
    }
   },
@@ -816,7 +829,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T22:49:20.986Z",
+    "collectedAt": "2026-08-15T22:56:52.316Z",
     "verifiedAt": null
    }
   },
@@ -840,7 +853,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T22:49:20.986Z",
+    "collectedAt": "2026-08-15T22:56:52.316Z",
     "verifiedAt": null
    }
   },
@@ -864,7 +877,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T22:49:20.986Z",
+    "collectedAt": "2026-08-15T22:56:52.316Z",
     "verifiedAt": null
    }
   },
@@ -888,7 +901,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T22:49:20.986Z",
+    "collectedAt": "2026-08-15T22:56:52.316Z",
     "verifiedAt": null
    }
   },
@@ -912,7 +925,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-15T22:49:20.986Z",
+    "collectedAt": "2026-08-15T22:56:52.316Z",
     "verifiedAt": null
    }
   },
@@ -935,7 +948,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-15T22:49:22.082Z",
+    "collectedAt": "2026-08-15T22:56:53.384Z",
     "verifiedAt": null
    }
   },
@@ -958,7 +971,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-15T22:49:22.082Z",
+    "collectedAt": "2026-08-15T22:56:53.384Z",
     "verifiedAt": null
    }
   },
@@ -981,7 +994,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-15T22:49:22.082Z",
+    "collectedAt": "2026-08-15T22:56:53.384Z",
     "verifiedAt": null
    }
   },
@@ -1004,7 +1017,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-15T22:49:22.082Z",
+    "collectedAt": "2026-08-15T22:56:53.384Z",
     "verifiedAt": null
    }
   },
@@ -1027,7 +1040,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-15T22:49:22.082Z",
+    "collectedAt": "2026-08-15T22:56:53.384Z",
     "verifiedAt": null
    }
   },
@@ -1051,7 +1064,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-15T22:49:22.082Z",
+    "collectedAt": "2026-08-15T22:56:53.384Z",
     "verifiedAt": null
    }
   },
@@ -1075,7 +1088,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-15T22:49:22.082Z",
+    "collectedAt": "2026-08-15T22:56:53.384Z",
     "verifiedAt": null
    }
   },
@@ -1099,7 +1112,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-15T22:49:22.082Z",
+    "collectedAt": "2026-08-15T22:56:53.384Z",
     "verifiedAt": null
    }
   },
@@ -1123,7 +1136,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-15T22:49:22.082Z",
+    "collectedAt": "2026-08-15T22:56:53.384Z",
     "verifiedAt": null
    }
   },
@@ -1147,7 +1160,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-15T22:49:22.082Z",
+    "collectedAt": "2026-08-15T22:56:53.384Z",
     "verifiedAt": null
    }
   },
@@ -1171,7 +1184,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-15T22:49:22.082Z",
+    "collectedAt": "2026-08-15T22:56:53.384Z",
     "verifiedAt": null
    }
   },
@@ -1195,7 +1208,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-15T22:49:22.082Z",
+    "collectedAt": "2026-08-15T22:56:53.384Z",
     "verifiedAt": null
    }
   },
@@ -1218,7 +1231,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-15T22:49:23.237Z",
+    "collectedAt": "2026-08-15T22:56:54.430Z",
     "verifiedAt": null
    }
   },
@@ -1241,7 +1254,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-15T22:49:23.237Z",
+    "collectedAt": "2026-08-15T22:56:54.430Z",
     "verifiedAt": null
    }
   },
@@ -1264,7 +1277,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-15T22:49:23.237Z",
+    "collectedAt": "2026-08-15T22:56:54.430Z",
     "verifiedAt": null
    }
   },
@@ -1287,7 +1300,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-15T22:49:23.237Z",
+    "collectedAt": "2026-08-15T22:56:54.430Z",
     "verifiedAt": null
    }
   },
@@ -1310,7 +1323,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-15T22:49:23.237Z",
+    "collectedAt": "2026-08-15T22:56:54.430Z",
     "verifiedAt": null
    }
   },
@@ -1333,7 +1346,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-15T22:49:23.237Z",
+    "collectedAt": "2026-08-15T22:56:54.430Z",
     "verifiedAt": null
    }
   },
@@ -1356,7 +1369,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-15T22:49:23.237Z",
+    "collectedAt": "2026-08-15T22:56:54.430Z",
     "verifiedAt": null
    }
   },
@@ -1379,7 +1392,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-15T22:49:23.237Z",
+    "collectedAt": "2026-08-15T22:56:54.430Z",
     "verifiedAt": null
    }
   },
@@ -1403,7 +1416,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-15T22:49:23.237Z",
+    "collectedAt": "2026-08-15T22:56:54.430Z",
     "verifiedAt": null
    }
   },
@@ -1427,7 +1440,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-15T22:49:23.237Z",
+    "collectedAt": "2026-08-15T22:56:54.430Z",
     "verifiedAt": null
    }
   },
@@ -1451,7 +1464,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-15T22:49:23.237Z",
+    "collectedAt": "2026-08-15T22:56:54.430Z",
     "verifiedAt": null
    }
   },
@@ -1475,7 +1488,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-15T22:49:23.237Z",
+    "collectedAt": "2026-08-15T22:56:54.430Z",
     "verifiedAt": null
    }
   },
@@ -1499,7 +1512,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-15T22:49:23.237Z",
+    "collectedAt": "2026-08-15T22:56:54.430Z",
     "verifiedAt": null
    }
   },
@@ -1523,7 +1536,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-15T22:49:23.237Z",
+    "collectedAt": "2026-08-15T22:56:54.430Z",
     "verifiedAt": null
    }
   },
@@ -1547,7 +1560,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-15T22:49:23.237Z",
+    "collectedAt": "2026-08-15T22:56:54.430Z",
     "verifiedAt": null
    }
   },
@@ -1571,7 +1584,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-15T22:49:23.237Z",
+    "collectedAt": "2026-08-15T22:56:54.430Z",
     "verifiedAt": null
    }
   },
@@ -1595,7 +1608,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-15T22:49:23.237Z",
+    "collectedAt": "2026-08-15T22:56:54.430Z",
     "verifiedAt": null
    }
   },
@@ -1619,7 +1632,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-15T22:49:23.237Z",
+    "collectedAt": "2026-08-15T22:56:54.430Z",
     "verifiedAt": null
    }
   },
@@ -1643,7 +1656,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-15T22:49:23.237Z",
+    "collectedAt": "2026-08-15T22:56:54.430Z",
     "verifiedAt": null
    }
   },
@@ -1667,7 +1680,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-15T22:49:23.237Z",
+    "collectedAt": "2026-08-15T22:56:54.430Z",
     "verifiedAt": null
    }
   },
@@ -1690,7 +1703,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1946&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:20.540Z",
+    "collectedAt": "2026-08-15T22:56:51.371Z",
     "verifiedAt": null
    }
   },
@@ -1713,7 +1726,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1957&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:20.540Z",
+    "collectedAt": "2026-08-15T22:56:51.371Z",
     "verifiedAt": null
    }
   },
@@ -1736,7 +1749,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1981&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:20.540Z",
+    "collectedAt": "2026-08-15T22:56:51.371Z",
     "verifiedAt": null
    }
   },
@@ -1759,7 +1772,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1942&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:20.540Z",
+    "collectedAt": "2026-08-15T22:56:51.371Z",
     "verifiedAt": null
    }
   },
@@ -1782,7 +1795,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1927&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:20.540Z",
+    "collectedAt": "2026-08-15T22:56:51.371Z",
     "verifiedAt": null
    }
   },
@@ -1805,7 +1818,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1943&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:20.540Z",
+    "collectedAt": "2026-08-15T22:56:51.371Z",
     "verifiedAt": null
    }
   },
@@ -1828,7 +1841,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1928&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:20.540Z",
+    "collectedAt": "2026-08-15T22:56:51.371Z",
     "verifiedAt": null
    }
   },
@@ -1851,7 +1864,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1945&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:20.540Z",
+    "collectedAt": "2026-08-15T22:56:51.371Z",
     "verifiedAt": null
    }
   },
@@ -1874,7 +1887,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1956&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:20.540Z",
+    "collectedAt": "2026-08-15T22:56:51.371Z",
     "verifiedAt": null
    }
   },
@@ -1897,7 +1910,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.438Z",
+    "collectedAt": "2026-08-15T22:56:51.700Z",
     "verifiedAt": null
    }
   },
@@ -1920,7 +1933,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.438Z",
+    "collectedAt": "2026-08-15T22:56:51.700Z",
     "verifiedAt": null
    }
   },
@@ -1943,7 +1956,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.438Z",
+    "collectedAt": "2026-08-15T22:56:51.700Z",
     "verifiedAt": null
    }
   },
@@ -1966,7 +1979,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.438Z",
+    "collectedAt": "2026-08-15T22:56:51.700Z",
     "verifiedAt": null
    }
   },
@@ -1989,7 +2002,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.438Z",
+    "collectedAt": "2026-08-15T22:56:51.700Z",
     "verifiedAt": null
    }
   },
@@ -2012,7 +2025,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.438Z",
+    "collectedAt": "2026-08-15T22:56:51.700Z",
     "verifiedAt": null
    }
   },
@@ -2035,7 +2048,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.438Z",
+    "collectedAt": "2026-08-15T22:56:51.700Z",
     "verifiedAt": null
    }
   },
@@ -2058,7 +2071,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.438Z",
+    "collectedAt": "2026-08-15T22:56:51.700Z",
     "verifiedAt": null
    }
   },
@@ -2081,7 +2094,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.438Z",
+    "collectedAt": "2026-08-15T22:56:51.700Z",
     "verifiedAt": null
    }
   },
@@ -2104,7 +2117,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.438Z",
+    "collectedAt": "2026-08-15T22:56:51.700Z",
     "verifiedAt": null
    }
   },
@@ -2127,7 +2140,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.438Z",
+    "collectedAt": "2026-08-15T22:56:51.700Z",
     "verifiedAt": null
    }
   },
@@ -2150,7 +2163,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.438Z",
+    "collectedAt": "2026-08-15T22:56:51.700Z",
     "verifiedAt": null
    }
   },
@@ -2173,7 +2186,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.438Z",
+    "collectedAt": "2026-08-15T22:56:51.700Z",
     "verifiedAt": null
    }
   },
@@ -2196,7 +2209,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.438Z",
+    "collectedAt": "2026-08-15T22:56:51.700Z",
     "verifiedAt": null
    }
   },
@@ -2219,7 +2232,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.438Z",
+    "collectedAt": "2026-08-15T22:56:51.700Z",
     "verifiedAt": null
    }
   },
@@ -2242,7 +2255,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.438Z",
+    "collectedAt": "2026-08-15T22:56:51.700Z",
     "verifiedAt": null
    }
   },
@@ -2265,7 +2278,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.438Z",
+    "collectedAt": "2026-08-15T22:56:51.700Z",
     "verifiedAt": null
    }
   },
@@ -2288,7 +2301,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.438Z",
+    "collectedAt": "2026-08-15T22:56:51.700Z",
     "verifiedAt": null
    }
   },
@@ -2311,7 +2324,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.438Z",
+    "collectedAt": "2026-08-15T22:56:51.700Z",
     "verifiedAt": null
    }
   },
@@ -2334,7 +2347,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.438Z",
+    "collectedAt": "2026-08-15T22:56:51.700Z",
     "verifiedAt": null
    }
   },
@@ -2357,7 +2370,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.438Z",
+    "collectedAt": "2026-08-15T22:56:51.700Z",
     "verifiedAt": null
    }
   },
@@ -2380,7 +2393,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-15T22:49:22.119Z",
+    "collectedAt": "2026-08-15T22:56:53.514Z",
     "verifiedAt": null
    }
   },
@@ -2403,7 +2416,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-15T22:49:22.119Z",
+    "collectedAt": "2026-08-15T22:56:53.514Z",
     "verifiedAt": null
    }
   },
@@ -2426,7 +2439,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-15T22:49:22.119Z",
+    "collectedAt": "2026-08-15T22:56:53.514Z",
     "verifiedAt": null
    }
   },
@@ -2449,7 +2462,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-15T22:49:22.119Z",
+    "collectedAt": "2026-08-15T22:56:53.514Z",
     "verifiedAt": null
    }
   },
@@ -2472,7 +2485,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-15T22:49:22.119Z",
+    "collectedAt": "2026-08-15T22:56:53.514Z",
     "verifiedAt": null
    }
   },
@@ -2495,7 +2508,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-15T22:49:22.119Z",
+    "collectedAt": "2026-08-15T22:56:53.514Z",
     "verifiedAt": null
    }
   },
@@ -2518,7 +2531,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-17",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-15T22:49:22.119Z",
+    "collectedAt": "2026-08-15T22:56:53.514Z",
     "verifiedAt": null
    }
   },
@@ -2541,7 +2554,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=493",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.200Z",
+    "collectedAt": "2026-08-15T22:56:51.342Z",
     "verifiedAt": null
    }
   },
@@ -2564,7 +2577,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=496",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.200Z",
+    "collectedAt": "2026-08-15T22:56:51.342Z",
     "verifiedAt": null
    }
   },
@@ -2587,7 +2600,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=492",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.200Z",
+    "collectedAt": "2026-08-15T22:56:51.342Z",
     "verifiedAt": null
    }
   },
@@ -2610,7 +2623,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=485",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.200Z",
+    "collectedAt": "2026-08-15T22:56:51.342Z",
     "verifiedAt": null
    }
   },
@@ -2633,7 +2646,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=489",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.200Z",
+    "collectedAt": "2026-08-15T22:56:51.342Z",
     "verifiedAt": null
    }
   },
@@ -2656,7 +2669,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=484",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.200Z",
+    "collectedAt": "2026-08-15T22:56:51.342Z",
     "verifiedAt": null
    }
   },
@@ -2679,7 +2692,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=483",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.200Z",
+    "collectedAt": "2026-08-15T22:56:51.342Z",
     "verifiedAt": null
    }
   },
@@ -2702,7 +2715,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=481",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.200Z",
+    "collectedAt": "2026-08-15T22:56:51.342Z",
     "verifiedAt": null
    }
   },
@@ -2725,7 +2738,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=480",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.200Z",
+    "collectedAt": "2026-08-15T22:56:51.342Z",
     "verifiedAt": null
    }
   },
@@ -2748,7 +2761,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=169",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.723Z",
+    "collectedAt": "2026-08-15T22:56:51.822Z",
     "verifiedAt": null
    }
   },
@@ -2771,7 +2784,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=168",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.723Z",
+    "collectedAt": "2026-08-15T22:56:51.822Z",
     "verifiedAt": null
    }
   },
@@ -2794,7 +2807,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=167",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.723Z",
+    "collectedAt": "2026-08-15T22:56:51.822Z",
     "verifiedAt": null
    }
   },
@@ -2817,7 +2830,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=166",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.723Z",
+    "collectedAt": "2026-08-15T22:56:51.822Z",
     "verifiedAt": null
    }
   },
@@ -2840,7 +2853,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=175",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.723Z",
+    "collectedAt": "2026-08-15T22:56:51.822Z",
     "verifiedAt": null
    }
   },
@@ -2863,7 +2876,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=165",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.723Z",
+    "collectedAt": "2026-08-15T22:56:51.822Z",
     "verifiedAt": null
    }
   },
@@ -2886,7 +2899,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=174",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.723Z",
+    "collectedAt": "2026-08-15T22:56:51.822Z",
     "verifiedAt": null
    }
   },
@@ -2909,7 +2922,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=163",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.723Z",
+    "collectedAt": "2026-08-15T22:56:51.822Z",
     "verifiedAt": null
    }
   },
@@ -2932,7 +2945,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=162",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.723Z",
+    "collectedAt": "2026-08-15T22:56:51.822Z",
     "verifiedAt": null
    }
   },
@@ -2955,7 +2968,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=156",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.723Z",
+    "collectedAt": "2026-08-15T22:56:51.822Z",
     "verifiedAt": null
    }
   },
@@ -2978,7 +2991,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=155",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.723Z",
+    "collectedAt": "2026-08-15T22:56:51.822Z",
     "verifiedAt": null
    }
   },
@@ -3001,7 +3014,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=159",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.723Z",
+    "collectedAt": "2026-08-15T22:56:51.822Z",
     "verifiedAt": null
    }
   },
@@ -3024,7 +3037,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=154",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.723Z",
+    "collectedAt": "2026-08-15T22:56:51.822Z",
     "verifiedAt": null
    }
   },
@@ -3047,7 +3060,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3371",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-15T22:49:21.093Z",
+    "collectedAt": "2026-08-15T22:56:52.205Z",
     "verifiedAt": null
    }
   },
@@ -3070,7 +3083,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3370",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-15T22:49:21.093Z",
+    "collectedAt": "2026-08-15T22:56:52.205Z",
     "verifiedAt": null
    }
   },
@@ -3093,7 +3106,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3368",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-15T22:49:21.093Z",
+    "collectedAt": "2026-08-15T22:56:52.205Z",
     "verifiedAt": null
    }
   },
@@ -3116,7 +3129,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3367",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-15T22:49:21.093Z",
+    "collectedAt": "2026-08-15T22:56:52.205Z",
     "verifiedAt": null
    }
   },
@@ -3139,7 +3152,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3364",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-15T22:49:21.093Z",
+    "collectedAt": "2026-08-15T22:56:52.205Z",
     "verifiedAt": null
    }
   },
@@ -3162,7 +3175,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3363",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-15T22:49:21.093Z",
+    "collectedAt": "2026-08-15T22:56:52.205Z",
     "verifiedAt": null
    }
   },
@@ -3185,7 +3198,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3361",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-15T22:49:21.093Z",
+    "collectedAt": "2026-08-15T22:56:52.205Z",
     "verifiedAt": null
    }
   },
@@ -3208,7 +3221,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=705",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-15T22:49:21.569Z",
+    "collectedAt": "2026-08-15T22:56:52.707Z",
     "verifiedAt": null
    }
   },
@@ -3231,7 +3244,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=707",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-15T22:49:21.569Z",
+    "collectedAt": "2026-08-15T22:56:52.707Z",
     "verifiedAt": null
    }
   },
@@ -3254,7 +3267,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=706",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-15T22:49:21.569Z",
+    "collectedAt": "2026-08-15T22:56:52.707Z",
     "verifiedAt": null
    }
   },
@@ -3277,7 +3290,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=695",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-15T22:49:21.569Z",
+    "collectedAt": "2026-08-15T22:56:52.707Z",
     "verifiedAt": null
    }
   },
@@ -3300,7 +3313,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=696",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-15T22:49:21.569Z",
+    "collectedAt": "2026-08-15T22:56:52.707Z",
     "verifiedAt": null
    }
   },
@@ -3323,7 +3336,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:19.834Z",
+    "collectedAt": "2026-08-15T22:56:51.048Z",
     "verifiedAt": null
    }
   },
@@ -3346,7 +3359,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:19.834Z",
+    "collectedAt": "2026-08-15T22:56:51.048Z",
     "verifiedAt": null
    }
   },
@@ -3369,7 +3382,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:19.834Z",
+    "collectedAt": "2026-08-15T22:56:51.048Z",
     "verifiedAt": null
    }
   },
@@ -3392,7 +3405,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:19.834Z",
+    "collectedAt": "2026-08-15T22:56:51.048Z",
     "verifiedAt": null
    }
   },
@@ -3415,7 +3428,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:19.834Z",
+    "collectedAt": "2026-08-15T22:56:51.048Z",
     "verifiedAt": null
    }
   },
@@ -3438,7 +3451,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:19.878Z",
+    "collectedAt": "2026-08-15T22:56:51.100Z",
     "verifiedAt": null
    }
   },
@@ -3461,7 +3474,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:19.878Z",
+    "collectedAt": "2026-08-15T22:56:51.100Z",
     "verifiedAt": null
    }
   },
@@ -3484,7 +3497,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:19.878Z",
+    "collectedAt": "2026-08-15T22:56:51.100Z",
     "verifiedAt": null
    }
   },
@@ -3507,7 +3520,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:19.878Z",
+    "collectedAt": "2026-08-15T22:56:51.100Z",
     "verifiedAt": null
    }
   },
@@ -3530,7 +3543,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:19.878Z",
+    "collectedAt": "2026-08-15T22:56:51.100Z",
     "verifiedAt": null
    }
   },
@@ -3553,7 +3566,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:19.925Z",
+    "collectedAt": "2026-08-15T22:56:51.157Z",
     "verifiedAt": null
    }
   },
@@ -3576,7 +3589,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:19.925Z",
+    "collectedAt": "2026-08-15T22:56:51.157Z",
     "verifiedAt": null
    }
   },
@@ -3599,7 +3612,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:19.925Z",
+    "collectedAt": "2026-08-15T22:56:51.157Z",
     "verifiedAt": null
    }
   },
@@ -3622,7 +3635,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:19.925Z",
+    "collectedAt": "2026-08-15T22:56:51.157Z",
     "verifiedAt": null
    }
   },
@@ -3645,7 +3658,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:19.994Z",
+    "collectedAt": "2026-08-15T22:56:51.212Z",
     "verifiedAt": null
    }
   },
@@ -3668,7 +3681,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:19.994Z",
+    "collectedAt": "2026-08-15T22:56:51.212Z",
     "verifiedAt": null
    }
   },
@@ -3691,7 +3704,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:19.994Z",
+    "collectedAt": "2026-08-15T22:56:51.212Z",
     "verifiedAt": null
    }
   },
@@ -3714,7 +3727,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:19.994Z",
+    "collectedAt": "2026-08-15T22:56:51.212Z",
     "verifiedAt": null
    }
   },
@@ -3737,7 +3750,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:19.994Z",
+    "collectedAt": "2026-08-15T22:56:51.212Z",
     "verifiedAt": null
    }
   },
@@ -3760,7 +3773,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:20.055Z",
+    "collectedAt": "2026-08-15T22:56:51.294Z",
     "verifiedAt": null
    }
   },
@@ -3783,7 +3796,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:20.055Z",
+    "collectedAt": "2026-08-15T22:56:51.294Z",
     "verifiedAt": null
    }
   },
@@ -3806,7 +3819,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:20.055Z",
+    "collectedAt": "2026-08-15T22:56:51.294Z",
     "verifiedAt": null
    }
   },
@@ -3829,7 +3842,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:20.055Z",
+    "collectedAt": "2026-08-15T22:56:51.294Z",
     "verifiedAt": null
    }
   },
@@ -3852,7 +3865,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-15T22:49:20.055Z",
+    "collectedAt": "2026-08-15T22:56:51.294Z",
     "verifiedAt": null
    }
   },
@@ -3875,7 +3888,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.154Z",
+    "collectedAt": "2026-08-15T22:56:51.297Z",
     "verifiedAt": null
    }
   },
@@ -3898,7 +3911,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.154Z",
+    "collectedAt": "2026-08-15T22:56:51.297Z",
     "verifiedAt": null
    }
   },
@@ -3921,7 +3934,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.154Z",
+    "collectedAt": "2026-08-15T22:56:51.297Z",
     "verifiedAt": null
    }
   },
@@ -3944,7 +3957,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.154Z",
+    "collectedAt": "2026-08-15T22:56:51.297Z",
     "verifiedAt": null
    }
   },
@@ -3967,7 +3980,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.154Z",
+    "collectedAt": "2026-08-15T22:56:51.297Z",
     "verifiedAt": null
    }
   },
@@ -3990,7 +4003,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-15T22:49:20.154Z",
+    "collectedAt": "2026-08-15T22:56:51.297Z",
     "verifiedAt": null
    }
   },
@@ -4013,7 +4026,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2225",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.256Z",
+    "collectedAt": "2026-08-15T22:56:51.437Z",
     "verifiedAt": null
    }
   },
@@ -4036,7 +4049,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2227",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.256Z",
+    "collectedAt": "2026-08-15T22:56:51.437Z",
     "verifiedAt": null
    }
   },
@@ -4059,7 +4072,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2228",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.256Z",
+    "collectedAt": "2026-08-15T22:56:51.437Z",
     "verifiedAt": null
    }
   },
@@ -4082,7 +4095,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2234",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.256Z",
+    "collectedAt": "2026-08-15T22:56:51.437Z",
     "verifiedAt": null
    }
   },
@@ -4105,7 +4118,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2235",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.256Z",
+    "collectedAt": "2026-08-15T22:56:51.437Z",
     "verifiedAt": null
    }
   },
@@ -4128,7 +4141,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2229",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.256Z",
+    "collectedAt": "2026-08-15T22:56:51.437Z",
     "verifiedAt": null
    }
   },
@@ -4151,7 +4164,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2233",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.256Z",
+    "collectedAt": "2026-08-15T22:56:51.437Z",
     "verifiedAt": null
    }
   },
@@ -4174,7 +4187,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2239",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.256Z",
+    "collectedAt": "2026-08-15T22:56:51.437Z",
     "verifiedAt": null
    }
   },
@@ -4197,7 +4210,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2240",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.256Z",
+    "collectedAt": "2026-08-15T22:56:51.437Z",
     "verifiedAt": null
    }
   },
@@ -4220,7 +4233,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2236",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.256Z",
+    "collectedAt": "2026-08-15T22:56:51.437Z",
     "verifiedAt": null
    }
   },
@@ -4243,7 +4256,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2241",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.256Z",
+    "collectedAt": "2026-08-15T22:56:51.437Z",
     "verifiedAt": null
    }
   },
@@ -4266,7 +4279,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2242",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.256Z",
+    "collectedAt": "2026-08-15T22:56:51.437Z",
     "verifiedAt": null
    }
   },
@@ -4289,7 +4302,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2243",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.256Z",
+    "collectedAt": "2026-08-15T22:56:51.437Z",
     "verifiedAt": null
    }
   },
@@ -4312,7 +4325,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2244",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.256Z",
+    "collectedAt": "2026-08-15T22:56:51.437Z",
     "verifiedAt": null
    }
   },
@@ -4335,7 +4348,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2245",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.256Z",
+    "collectedAt": "2026-08-15T22:56:51.437Z",
     "verifiedAt": null
    }
   },
@@ -4358,7 +4371,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2246",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.256Z",
+    "collectedAt": "2026-08-15T22:56:51.437Z",
     "verifiedAt": null
    }
   },
@@ -4381,7 +4394,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2247",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.256Z",
+    "collectedAt": "2026-08-15T22:56:51.437Z",
     "verifiedAt": null
    }
   },
@@ -4404,7 +4417,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2248",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.256Z",
+    "collectedAt": "2026-08-15T22:56:51.437Z",
     "verifiedAt": null
    }
   },
@@ -4427,7 +4440,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2249",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.256Z",
+    "collectedAt": "2026-08-15T22:56:51.437Z",
     "verifiedAt": null
    }
   },
@@ -4450,7 +4463,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2250",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.256Z",
+    "collectedAt": "2026-08-15T22:56:51.437Z",
     "verifiedAt": null
    }
   },
@@ -4473,7 +4486,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.021Z",
+    "collectedAt": "2026-08-15T22:56:51.234Z",
     "verifiedAt": null
    }
   },
@@ -4497,7 +4510,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.021Z",
+    "collectedAt": "2026-08-15T22:56:51.234Z",
     "verifiedAt": null
    }
   },
@@ -4521,7 +4534,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.021Z",
+    "collectedAt": "2026-08-15T22:56:51.234Z",
     "verifiedAt": null
    }
   },
@@ -4545,7 +4558,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.021Z",
+    "collectedAt": "2026-08-15T22:56:51.234Z",
     "verifiedAt": null
    }
   },
@@ -4569,7 +4582,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.021Z",
+    "collectedAt": "2026-08-15T22:56:51.234Z",
     "verifiedAt": null
    }
   },
@@ -4593,7 +4606,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.021Z",
+    "collectedAt": "2026-08-15T22:56:51.234Z",
     "verifiedAt": null
    }
   },
@@ -4617,7 +4630,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.021Z",
+    "collectedAt": "2026-08-15T22:56:51.234Z",
     "verifiedAt": null
    }
   },
@@ -4641,7 +4654,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.021Z",
+    "collectedAt": "2026-08-15T22:56:51.234Z",
     "verifiedAt": null
    }
   },
@@ -4665,7 +4678,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.021Z",
+    "collectedAt": "2026-08-15T22:56:51.234Z",
     "verifiedAt": null
    }
   },
@@ -4689,7 +4702,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.021Z",
+    "collectedAt": "2026-08-15T22:56:51.234Z",
     "verifiedAt": null
    }
   },
@@ -4713,7 +4726,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.021Z",
+    "collectedAt": "2026-08-15T22:56:51.234Z",
     "verifiedAt": null
    }
   },
@@ -4737,7 +4750,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.021Z",
+    "collectedAt": "2026-08-15T22:56:51.234Z",
     "verifiedAt": null
    }
   },
@@ -4761,7 +4774,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.021Z",
+    "collectedAt": "2026-08-15T22:56:51.234Z",
     "verifiedAt": null
    }
   },
@@ -4785,7 +4798,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.021Z",
+    "collectedAt": "2026-08-15T22:56:51.234Z",
     "verifiedAt": null
    }
   },
@@ -4809,7 +4822,76 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-15T22:49:20.021Z",
+    "collectedAt": "2026-08-15T22:56:51.234Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "schedulepage:mhrd:2026-06-15",
+   "ocdId": "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district",
+   "bodyName": "Board of Education",
+   "title": "Board of Education",
+   "startsAt": "2026-06-15T18:30:00-04:00",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Morris Hills Regional District Board Conference Room",
+    "address": "48 Knoll Drive, Rockaway, NJ 07866",
+    "lat": 40.885647,
+    "lng": -74.509769
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Morris Hills Regional School District, NJ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://www.mhrd.org/administration/board-of-education/boe-meetings",
+    "sourceOrg": "Morris Hills Regional District Board of Education",
+    "collectedAt": "2026-08-15T22:56:53.256Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "schedulepage:mhrd:2026-08-17",
+   "ocdId": "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district",
+   "bodyName": "Board of Education",
+   "title": "Board of Education",
+   "startsAt": "2026-08-17T18:30:00-04:00",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Morris Hills Regional District Board Conference Room",
+    "address": "48 Knoll Drive, Rockaway, NJ 07866",
+    "lat": 40.885647,
+    "lng": -74.509769
+   },
+   "agendaUrl": "https://resources.finalsite.net/images/v1786724489/mhrdorg/yxozzjyygnrh7qhqmymm/08172026AGENDAFINAL.pdf",
+   "jurisdiction": "Morris Hills Regional School District, NJ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://www.mhrd.org/administration/board-of-education/boe-meetings",
+    "sourceOrg": "Morris Hills Regional District Board of Education",
+    "collectedAt": "2026-08-15T22:56:53.256Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "schedulepage:mhrd:2026-09-28",
+   "ocdId": "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district",
+   "bodyName": "Board of Education",
+   "title": "Board of Education",
+   "startsAt": "2026-09-28T18:30:00-04:00",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Morris Hills Regional District Board Conference Room",
+    "address": "48 Knoll Drive, Rockaway, NJ 07866",
+    "lat": 40.885647,
+    "lng": -74.509769
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Morris Hills Regional School District, NJ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://www.mhrd.org/administration/board-of-education/boe-meetings",
+    "sourceOrg": "Morris Hills Regional District Board of Education",
+    "collectedAt": "2026-08-15T22:56:53.256Z",
     "verifiedAt": null
    }
   }
@@ -5148,6 +5230,134 @@
    "collectedAt": "2026-08-15T22:49:28.019Z",
    "verifiedAt": null,
    "text": "Agenda Page 1 of 3 May 12 th Township Council Regular Meeting As of: 5/12/2026 ROCKAWAY TOWNSHIP REGULAR MEETING AGENDA MAY 12th, 2026 7:00PM 1. CALL TO ORDER 2. COUNCIL PRESIDENT TO LEAD THOSE PRESENT IN THE SALUTE TO THE AMERICAN FLAG 3. MOMENT OF SILENCE TO REMEMBER THE SERVICE AND SACRIFICES OF THE ARMED SERVICE MEMBERS WHO PROTECT OUR NATION AND THE FIRST RESPONDERS WHO PROTECT OUR NEIGHBORHOODS 4. ROLL CALL 5. ADEQUATE NOTICE OF THIS MEETING WAS PROVIDED TO THE DAILY RECORD AND THE OFFICIAL NEWSPAPERS FOR THE TOWNSHIP OF ROCKAWAY. NOTICE WAS POSTED ON THE OFFICIAL BULLETIN BOARDS OF ROCKAWAY TOWNSHIP, THE TOWNSHIP WEBSITE, AND NOTICE WAS FILED IN THE OFFICE OF THE TOWNSHIP CLERK. 6. APPROVAL OF MINUTE(S): A. APRIL 28 TH TOWNSHIP COUNCIL MEETING MINUTES 7. OPEN TO THE PUBLIC: 8. ORDINANCE(S) FOR INTRODUCTION: A. O-26-17 AN ORDINANCE AMENDING CHAPTER 15 (SEWER AND WATER) OF THE REVISED GENERAL ORDINANCES OF THE TOWNSHIP OF ROCKAWAY B. O-26-18 ORDINANCE PROVIDING FOR PEDESTRIAN SAFETY AND CONNECTIVITY IMPROVEMENTS IN THE AREA OF COPELAND MIDDLE AND STONY BROOK ELEMENTARY SCHOOLS IN AND BY THE TOWNSHIP OF ROCKAWAY, IN THE COUNTY OF MORRIS, NEW JERSEY, AND APPROPRIATING $401,812.81 THEREFOR CONSTITUTING PROCEEDS OF A FEDERAL-AID FUNDS GRANT FROM THE NEW JERSEY DEPARTMENT OF TRANSPORTATION. C. O-26-19 AN ORDINANCE AMENDING CHAPTER 28 ENTITLED “ HEALTH AND ENVIRONMENT ” TO ADD A NEW ARTICLE XVII ENTITLED “ BODY ART ESTABLISHMENTS ” TO CREATE\nAgenda Page 2 of 3 May 12 th Township Council Regular Meeting As of: 5/12/2026 PROVISIONS FOR THE LICENSING OF AND ESTABLISHING STANDARDS FOR BODY ART OPERATIONS 9. ORDINANCE(S) FOR ADOPTION: A. O-26-14 AN ORDINANCE AMENDING CHAPTER 28 ENTITLED “ HEALTH AND ENVIRONMENT ” TO ADD A NEW ARTICLE 28-6 ENTITLED ‘ FARMERS MARKETS ’ TO CREATE PROVISIONS FOR THE LICENSING OF AND ESTABLISHING STANDARDS FOR FARMERS MARKET OPERATIONS B. O-26-15 AN ORDINANCE AMENDING CHAPTER 28 ENTITLED “ HEALTH AND ENVIRONMENT ” TO AMEND SECTIONS OF ARTICLE XI C. O-26-16 AN ORDINANCE AMENDING CHAPTER XVII “ PARKS AND RECREATIONAL FACILITIES ” OF THE REVISED GENERAL ORDINANCES OF THE TOWNSHIP OF ROCKAWAY, MORRIS COUNTY, STATE OF NEW JERSEY 10. CONSENT AGENDA: R-26-91 RESOLUTION ESTABLISHING SANITARY SEWER MAINTENANCE FEE FOR SINGLE FAMILY RESIDENTIAL DWELLINGS R-26-92 A RESOLUTION AUTHORIZING REDEMPTION OF TAX TITLE LIEN C#25-00013 AGAINST BLOCK 11116 LOT 39.139 KNOWN AS 139 HAWTHORNE CT. R-26-93 A RESOLUTION AUTHORIZING REDEMPTION OF TAX TITLE LIEN C#23-00022 AGAINST BLOCK 20603 LOT 23 KNOWN AS 30 MIAMI TRL. R-26-94 A RESOLUTION AUTHORIZING REDEMPTION OF TAX TITLE LIEN C#18-00049 AGAINST BLOCK 30309 LOT 22 KNOWN AS 20 HALLVARD TERR. R-26-95 A RESOLUTION AUTHORIZING REDEMPTION OF TAX TITLE LIEN C#24-00063 AGAINST BLOCK 30505 LOT 10 KNOWN AS 20 MEGGINS RD. R-26-96 RESOLUTION AUTHORIZING A TAX SALE PURSUANT TO N.J.S.A. 54:5-19 R-26-97 RESOLUTION AUTHORIZING THE MAYOR TO SIGN A CONTRACT WITH REALAUCTION.COM, LLC FOR THE PURPOSE OF CONDUCTING MUNICIPAL TAX LIEN SALE FOR 2026 PURSUANT TO N.J.S.A. 54:5-19.1 R-26-98 A RESOLUTION AUTHORIZING THE REFUND / CREDIT OF TAXES FOR THE TAX YEARS 2023 THROUGH 2025 IN ACCORDANCE WITH THE PROVISIONS OF TAX COURT JUDGMENTS ENTERED ON MARCH 17, 2026\nAgenda Page 3 of 3 May 12 th Township Council Regular Meeting As of: 5/12/2026 R-26-99 AUTHORIZING THE EXECUTION OF A CONTRACT BETWEEN THE TOWNSHIP OF ROCKAWAY AND THE ROCKAWAY TOWNSHIP BOARD OF EDUCATION TO PARTICIPATE IN A SHARED SERVICES AGREEMENT FOR THE PROVISION OF FIVE CLASS III SPECIAL LAW ENFORCEMENT OFFICERS PURSUANT TO N.J.S.A. 40:65-1 ET SEQ. R-26-100 AUTHORIZING AND APPROVING AN APPLICATION FOR A CERTAIN SOIL DISTURBANCE PERMIT FOR REAL PROPERTY OWNED BY LEONARDO A. FARIELLO, WHICH PROPERTY IS DESIGNATED ON THE OFFICIAL TAX MAP OF THE TOWNSHIP OF ROCKAWAY AS BLOCK 60001, LOT 7 LOCATED OFF OF COPPERAS RIDGE ROAD R-26-101 AUTHORIZING THE CANCELLATION AND REFUND OF PROPERTY TAXES FOR HOMEOWNER QUALIFYING AS AN 100% DISABLED, TAX EXEMPT VETERAN R-26-102 AUTHORIZING THE CANCELLATION AND REFUND OF PROPERTY TAXES FOR HOMEOWNER QUALIFYING AS AN 100% DISABLED, TAX EXEMPT VETERAN R-26-103 A RESOLUTION APPOINTING A DEPUTY RECORDS CUSTODIAN FOR ROCKAWAY TOWNSHIP 11. NEW BUSINESS AND DISCUSSION:  Utility Committee/Liaison  Dog Park 12. COUNCIL REPORTS: 13. ADJOURNMENT: * NEXT TOWNSHIP COUNCIL REGULARY MEETING – MAY 26TH*",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "civicplus:rockaway_township:archive:2026-05-26@456483c3f72e2600f6dd95d03cb89300f1123c488cf7df46eaa37c9e575e7c8b",
+   "meetingId": "civicplus:rockaway_township:archive:2026-05-26",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "documentUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_05262026-1015",
+   "contentHash": "456483c3f72e2600f6dd95d03cb89300f1123c488cf7df46eaa37c9e575e7c8b",
+   "retrievedAt": "2026-08-15T22:56:54.889Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_05262026-1015",
+   "sourceOrg": "Rockaway Township",
+   "collectedAt": "2026-08-15T22:56:54.889Z",
+   "verifiedAt": null,
+   "text": "Agenda Page 1 of 3 May 26 th Township Council Regular Meeting As of: 5/23/2026 ROCKAWAY TOWNSHIP REGULAR MEETING AGENDA MAY 26th, 2026 7:00PM 1. CALL TO ORDER 2. COUNCIL PRESIDENT TO LEAD THOSE PRESENT IN THE SALUTE TO THE AMERICAN FLAG 3. MOMENT OF SILENCE TO REMEMBER THE SERVICE AND SACRIFICES OF THE ARMED SERVICE MEMBERS WHO PROTECT OUR NATION AND THE FIRST RESPONDERS WHO PROTECT OUR NEIGHBORHOODS 4. ROLL CALL 5. ADEQUATE NOTICE OF THIS MEETING WAS PROVIDED TO THE DAILY RECORD AND THE OFFICIAL NEWSPAPERS FOR THE TOWNSHIP OF ROCKAWAY. NOTICE WAS POSTED ON THE OFFICIAL BULLETIN BOARDS OF ROCKAWAY TOWNSHIP, THE TOWNSHIP WEBSITE, AND NOTICE WAS FILED IN THE OFFICE OF THE TOWNSHIP CLERK. 6. APPROVAL OF MINUTE(S): A. MAY 12 TH TOWNSHIP COUNCIL MEETING MINUTES 7. OPEN TO THE PUBLIC: 8. ORDINANCE FOR INTRODUCTION: O-26-20 ORDINANCE PROVIDING FOR MUNICIPAL BUILDING ADA IMPROVEMENTS IN AND BY THE TOWNSHIP OF ROCKAWAY, IN THE COUNTY OF MORRIS, NEW JERSEY, AND APPROPRIATING $73,963 THEREFOR CONSTITUTING PROCEEDS OF A COMMUNITY DEVELOPMENT BLOCK GRANT FROM MORRIS COUNTY. O-26-21 AN ORDINANCE ACCEPTING THE GRANT OF A WATER FILTRATION SYSTEM UTILITY EASEMENT TO THE TOWNSHIP OF ROCKAWAY BY THE FOX CREST HOWEOWNER ’ S ASSOCIATION, INC. O-26-22 AN ORDINANCE AMENDING CHAPTER 2 “ ADMINISTRATIVE CODE ” ; ARTICLE IV “ MEETINGS OF THE COUNCIL ” SECTION 2-5.7 “ ORDER FOR BUSINESS AND AGENDA ” AND SECTION 2-5.18 “ ORDINANCES AND RESOLUTIONS ” 9. ORDINANCE(S) FOR ADOPTION:\nAgenda Page 2 of 3 May 26 th Township Council Regular Meeting As of: 5/23/2026 A. O-26-17 AN ORDINANCE AMENDING CHAPTER 15 (SEWER AND WATER) OF THE REVISED GENERAL ORDINANCES OF THE TOWNSHIP OF ROCKAWAY B. O-26-18 ORDINANCE PROVIDING FOR PEDESTRIAN SAFETY AND CONNECTIVITY IMPROVEMENTS IN THE AREA OF COPELAND MIDDLE AND STONY BROOK ELEMENTARY SCHOOLS IN AND BY THE TOWNSHIP OF ROCKAWAY, IN THE COUNTY OF MORRIS, NEW JERSEY, AND APPROPRIATING $401,812.81 THEREFOR CONSTITUTING PROCEEDS OF A FEDERAL-AID FUNDS GRANT FROM THE NEW JERSEY DEPARTMENT OF TRANSPORTATION. C. O-26-19 AN ORDINANCE AMENDING CHAPTER 28 ENTITLED “ HEALTH AND ENVIRONMENT ” TO ADD A NEW ARTICLE XVII ENTITLED “ BODY ART ESTABLISHMENTS ” TO CREATE PROVISIONS FOR THE LICENSING OF AND ESTABLISHING STANDARDS FOR BODY ART OPERATIONS 10. CONSENT AGENDA: R-26-104 RESOLUTION CONDITIONALLY AUTHORIZING PUBLIC FIREWORKS DISPLAY FOR WHITE MEADOW LAKE PROPERTY OWNERS ’ ASSOCIATION R-26-105 AUTHORIZING THE CANCELLATION AND REFUND OF PROPERTY TAXES FOR HOMEOWNER QUALIFYING AS AN 100% DISABLED, TAX EXEMPT VETERAN R-26-106 RESOLUTION AUTHORIZING THE INSERTION OF AN ITEM OF REVENUE IN THE 2026 BUDGET FOR ADDITIONAL FUNDING FOR NATIONAL OPIOD SETTLEMENT R-26-107 RESOLUTION AUTHORIZING THE INSERTION OF AN ITEM OF REVENUE IN THE 2026 BUDGET FOR ADDITIONAL FUNDING FOR CLEAN COMMUNITIES GRANT PROGRAM R-26-108 RESOLUTION TO AUTHORIZE ESTIMATED PROPERTY TAX BILLING FOR THE 3RD QUARTER OF 2026 R-26-109 A RESOLUTION AUTHORIZING THE INSERTION OF AN ITEM OF REVENUE IN THE 2026 BUDGET FOR ADDITIONAL FUNDING FOR ENHANCING LOCAL PUBLIC HEALTH INFRASTRUCTURE GRANT R-26-110 RESOLUTION AFFIRMING THE CENSURE OF COUNCIL MEMBER TUCKER M. KELLEY 11. NEW BUSINESS AND DISCUSSION: 12. COUNCIL REPORTS: 13. ADJOURNMENT:\nAgenda Page 3 of 3 May 26 th Township Council Regular Meeting As of: 5/23/2026 NEXT TOWNSHIP COUNCIL REGULAR MEETING – JUNE 9 TH *JUNE 23RD TOWNSHIP COUNCIL REGULAR MEETING – CANCELLED*",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "civicplus:rockaway_township:archive:2026-06-09@ae0ecc8893154b0e67ebefbfef920d1acd6543a2137d43575c225e95382b5a09",
+   "meetingId": "civicplus:rockaway_township:archive:2026-06-09",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "documentUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_06092026-1016",
+   "contentHash": "ae0ecc8893154b0e67ebefbfef920d1acd6543a2137d43575c225e95382b5a09",
+   "retrievedAt": "2026-08-15T22:56:55.959Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_06092026-1016",
+   "sourceOrg": "Rockaway Township",
+   "collectedAt": "2026-08-15T22:56:55.959Z",
+   "verifiedAt": null,
+   "text": "Agenda Page 1 of 2 June 9 th Township Council Regular Meeting As of: 6/9/2026 ROCKAWAY TOWNSHIP REGULAR MEETING AGENDA JUNE 9th, 2026 7:00PM 1. CALL TO ORDER 2. COUNCIL PRESIDENT TO LEAD THOSE PRESENT IN THE SALUTE TO THE AMERICAN FLAG 3. MOMENT OF SILENCE TO REMEMBER THE SERVICE AND SACRIFICES OF THE ARMED SERVICE MEMBERS WHO PROTECT OUR NATION AND THE FIRST RESPONDERS WHO PROTECT OUR NEIGHBORHOODS 4. ROLL CALL 5. ADEQUATE NOTICE OF THIS MEETING WAS PROVIDED TO THE DAILY RECORD AND THE OFFICIAL NEWSPAPERS FOR THE TOWNSHIP OF ROCKAWAY. NOTICE WAS POSTED ON THE OFFICIAL BULLETIN BOARDS OF ROCKAWAY TOWNSHIP, THE TOWNSHIP WEBSITE, AND NOTICE WAS FILED IN THE OFFICE OF THE TOWNSHIP CLERK. 6. APPROVAL OF MINUTE(S): A. MAY 26 TH TOWNSHIP COUNCIL MEETING MINUTES 7. OPEN TO THE PUBLIC: 8. LISA SALBERG - proposed actions that can be taken to ensure the quality and viability of the drugs our residents take every day. 9. ORDINANCE FOR INTRODUCTION: O-26-23 AN ORDINANCE AMENDING CHAPTER 54 ENTITLED “ LAND USE AND DEVELOPMENT ” OF THE CODE OF THE TOWNSHIP TO ROCKAWAY TO INCLUDE AND DESIGNATE DATA CENTERS AS A PROHIBITED USE IN ALL ZONING DISTRICTS O-26-24 AN ORDINANCE AMENDING CHAPTER 28 OF THE ROCKAWAY TOWNSHIP GENERAL ORDINANCES ENTITLED “ HEALTH AND ENVIRONMENT ” TO AMEND ARTICLE III ENTITLED “ FOOD AND BEVERAGES ” 10. ORDINANCE(S) FOR ADOPTION: O-26-20 ORDINANCE PROVIDING FOR MUNICIPAL BUILDING ADA IMPROVEMENTS IN AND BY THE TOWNSHIP OF ROCKAWAY, IN THE COUNTY OF MORRIS, NEW JERSEY, AND\nAgenda Page 2 of 2 June 9 th Township Council Regular Meeting As of: 6/9/2026 APPROPRIATING $73,963 THEREFOR CONSTITUTING PROCEEDS OF A COMMUNITY DEVELOPMENT BLOCK GRANT FROM MORRIS COUNTY. O-26-21 AN ORDINANCE ACCEPTING THE GRANT OF A WATER FILTRATION SYSTEM UTILITY EASEMENT TO THE TOWNSHIP OF ROCKAWAY BY THE FOX CREST HOWEOWNER ’ S ASSOCIATION, INC. O-26-22 AN ORDINANCE AMENDING CHAPTER 2 “ ADMINISTRATIVE CODE ” ; ARTICLE IV “ MEETINGS OF THE COUNCIL ” SECTION 2-5.7 “ ORDER FOR BUSINESS AND AGENDA ” AND SECTION 2-5.18 “ ORDINANCES AND RESOLUTIONS ” 11. CONSENT AGENDA: R-26-111 RESOLUTION AUTHORIZING THE RENEWAL OF ALCOHOL BEVERAGE CONTROL (ABC) LIQUOR LICENSES FOR THE PERIOD OF JULY 1, 2026 TO JUNE 30, 2027 R-26-112 TAX REFUND FOR 2026 TAX OVERPAYMENT BLOCK 20302 LOT 20, 44 CIRCLE DR. R-26-113 RESOLUTION AUTHORIZING THE EXECUTION AND SUBMISSION OF A GRANT APPLICATION AND A GRANT AGREEMENT WITH THE NJDOT FOR ROADWAY IMPROVEMENTS TO CIRCLE DRIVE SECTION II R-26-114 A RESOLUTION AUTHORIZING AN AMENDMENT TO A PRE-EXISTING DEVELOPER'S AGREEMENT ADDING CONDITIONS AND EXTENDING THE DATE OF COMPLETION FOR DEVELOPMENT OF THE PROPERTY DESIGNATED ON THE OFFICIAL TAX MAP OF THE TOWNSHIP OF ROCKAWAY AS BLOCK 40801, LOT 83, WHICH IS LOCATED AT 1076 GREEN POND ROAD, ROCKAWAY, NEW JERSEY R-26-115 A RESOLUTION OF THE TOWNSHIP COUNCIL OF THE TOWNSHIP OF ROCKAWAY AUTHORIZING THE SALE OF SURPLUS PERSONAL PROPERTY NO LONGER NEEDED FOR PUBLIC USE ON AN ONLINE AUCTION WEBSITE R-26-116 A U T H O R I Z I N G T H E P U B L I C S A L E O F A P L E N A R Y R E T A I L D I S T R I B U T I O N LICENSE 12. NEW BUSINESS AND DISCUSSION: 13. ADJOURNMENT: NEXT TOWNSHIP COUNCIL REGULAR MEETING – JULY 14 TH *JUNE 23RD TOWNSHIP COUNCIL REGULAR MEETING – CANCELLED*",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "civicplus:rockaway_township:archive:2026-07-14@5bbfbbff71acdd981b2bd76725a6f27ef6c754fb53e469c7f3cc837a66212ceb",
+   "meetingId": "civicplus:rockaway_township:archive:2026-07-14",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "documentUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_07142026-1020",
+   "contentHash": "5bbfbbff71acdd981b2bd76725a6f27ef6c754fb53e469c7f3cc837a66212ceb",
+   "retrievedAt": "2026-08-15T22:56:56.274Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_07142026-1020",
+   "sourceOrg": "Rockaway Township",
+   "collectedAt": "2026-08-15T22:56:56.274Z",
+   "verifiedAt": null,
+   "text": "Agenda Page 1 of 2 July 14th Township Council Regular Meeting As of: 7/10/2026 ROCKAWAY TOWNSHIP REGULAR MEETING AGENDA JULY 14th, 2026 7:00PM 1. CALL TO ORDER 2. COUNCIL PRESIDENT TO LEAD THOSE PRESENT IN THE SALUTE TO THE AMERICAN FLAG 3. MOMENT OF SILENCE TO REMEMBER THE SERVICE AND SACRIFICES OF THE ARMED SERVICE MEMBERS WHO PROTECT OUR NATION AND THE FIRST RESPONDERS WHO PROTECT OUR NEIGHBORHOODS 4. ROLL CALL 5. ADEQUATE NOTICE OF THIS MEETING WAS PROVIDED TO THE DAILY RECORD AND THE OFFICIAL NEWSPAPERS FOR THE TOWNSHIP OF ROCKAWAY. NOTICE WAS POSTED ON THE OFFICIAL BULLETIN BOARDS OF ROCKAWAY TOWNSHIP, THE TOWNSHIP WEBSITE, AND NOTICE WAS FILED IN THE OFFICE OF THE TOWNSHIP CLERK. 6. APPROVAL OF MINUTE(S): A. JUNE 9 TH TOWNSHIP COUNCIL MEETING MINUTES B. MARCH 14 TH SPECIAL BUDGET MEETING MINUTES 7. OPEN TO THE PUBLIC: 8. GINA FICO - Breaking the Stigma and the Importance of Community Mental Health. 9. ORDINANCE(S) FOR INTRODUCTION: O-26-25 ORDINANCE PROVIDING FOR MUNICIPAL BUILDING ADA IMPROVEMENTS AND RESTORATION IN AND BY THE TOWNSHIP OF ROCKAWAY, IN THE COUNTY OF MORRIS, NEW JERSEY, AND APPROPRIATING $86,132.81 THEREFOR CONSTITUTING PROCEEDS OF A COMMUNITY DEVELOPMENT BLOCK GRANT FROM MORRIS COUNTY. O-26-26 AN ORDINANCE AMENDING CHAPTER 54 ENTITLED “ LAND USE AND DEVELOPMENT ” OF THE CODE OF THE TOWNSHIP OF ROCKAWAY ADOPTING A NEW ZONING MAP AND RE-LOCATING SPECIFIC ORDINANCE SECTIONS 10. ORDINANCE(S) FOR ADOPTION: O-26-23 AN ORDINANCE AMENDING CHAPTER 54 ENTITLED “ LAND USE AND DEVELOPMENT ” OF THE CODE OF THE TOWNSHIP TO ROCKAWAY TO INCLUDE AND DESIGNATE DATA CENTERS AS A PROHIBITED USE IN ALL ZONING DISTRICTS\nAgenda Page 2 of 2 July 14th Township Council Regular Meeting As of: 7/10/2026 O-26-24 AN ORDINANCE AMENDING CHAPTER 28 OF THE ROCKAWAY TOWNSHIP GENERAL ORDINANCES ENTITLED “ HEALTH AND ENVIRONMENT ” TO AMEND ARTICLE III ENTITLED “ FOOD AND BEVERAGES ” 11. CONSENT AGENDA: R-26-117 GOVERNING BODY CERTIFICATION OF THE ANNUAL AUDIT R-26-118 A RESOLUTION AUTHORIZING REDEMPTION OF TAX TITLE LIEN C#25-00033 AGAINST BLOCK 21301 LOT 23 KNOWN AS 16 VALLEY VIEW DR. R-26-119 RESOLUTION AUTHORIZING THE INSERTION OF AN ITEM OF REVENUE IN THE 2026 BUDGET FOR ADDITIONAL FUNDING FOR NATIONAL OPIOID SETTLEMENT R-26-120 RESOLUTION AUTHORIZING THE RENEWAL OF ALCOHOL BEVERAGE CONTROL (ABC) LIQUOR LICENSES FOR THE PERIOD OF JULY 1, 2026 TO JUNE 30, 2027 R-26-121 A RESOLUTION OF THE TOWNSHIP COUNCIL OF THE TOWNSHIP OF ROCKAWAY AUTHORIZING THE SALE OF SURPLUS PERSONAL PROPERTY NO LONGER NEEDED FOR PUBLIC USE ON AN ONLINE AUCTION WEBSITE R-26-122 REFUND A WATER OVERPAYMENT APPLICABLE TO BLOCK 10718 LOT 14 ALSO KNOW AS 287 MT HOPE AVE. R-26-123 A RESOLUTION AUTHORIZING THE RENEWAL OF INACTIVE PLENARY RETAIL CONSUMPTION LICENSE NO. 1435-33-010-007 FOR THE 2026 – 2027 LICENSE TERM R-26-124 RESOLUTION ADOPTING AMENDED FOURTH ROUND SPENDING PLAN R-26-125 RESOLUTION AUTHORIZING SPECIAL COUNSEL TO THE TOWNSHIP OF ROCKAWAY TO CONSENT TO AND EXECUTE ON BEHALF OF THE TOWNSHIP OF ROCKAWAY AN ALTERNATIVE DISPUTE RESOLUTION AGREEMENT BY AND BETWEEN ROCKAWAY VALLEY REGIONAL SEWERAGE AUTHORITY, THE CITY OF JERSEY CITY, AND JERSEY CITY MUNICIPAL UTILITIES AUTHORITY REGARDING ROCKAWAY VALLEY REGIONAL SEWERAGE AUTHORITY V. CITY OF JERSEY CITY AND JERSEY CITY MUNICIPAL UTILITIES AUTHORITY, DOCKET NO. MRS-L-1861-22 R-26-126 A RESOLUTION AUTHORIZING THE RENEWAL OF INACTIVE PLENARY RETAIL CONSUMPTION LICENSE NO. 1435-33-016-006 FOR THE 2026 – 2027 LICENSE TERM 12. NEW BUSINESS AND DISCUSSION: 13. COUNCIL REPORTS: 14. ADJOURNMENT: NEXT TOWNSHIP COUNCIL REGULAR MEETING – AUGUST 11 TH *JULY 28TH TOWNSHIP COUNCIL REGULAR MEETING – CANCELLED*",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "civicplus:rockaway_township:archive:2026-08-18@0c65d84ded4f109e90f65abe62f3fd09b9b8c601378518dd4b7c6f7c9f6c1ded",
+   "meetingId": "civicplus:rockaway_township:archive:2026-08-18",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "documentUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_08182026-1023",
+   "contentHash": "0c65d84ded4f109e90f65abe62f3fd09b9b8c601378518dd4b7c6f7c9f6c1ded",
+   "retrievedAt": "2026-08-15T22:56:57.069Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_08182026-1023",
+   "sourceOrg": "Rockaway Township",
+   "collectedAt": "2026-08-15T22:56:57.069Z",
+   "verifiedAt": null,
+   "text": "Agenda Page 1 of 2 August 18th Township Council Regular Meeting As of: 8/14/2026 ROCKAWAY TOWNSHIP REGULAR MEETING AGENDA AUGUST 18th, 2026 7:00PM 1. CALL TO ORDER 2. COUNCIL PRESIDENT TO LEAD THOSE PRESENT IN THE SALUTE TO THE AMERICAN FLAG 3. MOMENT OF SILENCE TO REMEMBER THE SERVICE AND SACRIFICES OF THE ARMED SERVICE MEMBERS WHO PROTECT OUR NATION AND THE FIRST RESPONDERS WHO PROTECT OUR NEIGHBORHOODS 4. ROLL CALL 5. ADEQUATE NOTICE OF THIS MEETING WAS PROVIDED TO THE DAILY RECORD AND THE OFFICIAL NEWSPAPERS FOR THE TOWNSHIP OF ROCKAWAY. NOTICE WAS POSTED ON THE OFFICIAL BULLETIN BOARDS OF ROCKAWAY TOWNSHIP, THE TOWNSHIP WEBSITE, AND NOTICE WAS FILED IN THE OFFICE OF THE TOWNSHIP CLERK. 6. APPROVAL OF MINUTE(S): A. JULY 14 TH TOWNSHIP COUNCIL MEETING MINUTES 7. OPEN TO THE PUBLIC: 8. ORDINANCE(S) FOR ADOPTION: O-26-25 ORDINANCE PROVIDING FOR MUNICIPAL BUILDING ADA IMPROVEMENTS AND RESTORATION IN AND BY THE TOWNSHIP OF ROCKAWAY, IN THE COUNTY OF MORRIS, NEW JERSEY, AND APPROPRIATING $86,132.81 THEREFOR CONSTITUTING PROCEEDS OF A COMMUNITY DEVELOPMENT BLOCK GRANT FROM MORRIS COUNTY. O-26-26 AN ORDINANCE AMENDING CHAPTER 54 ENTITLED “ LAND USE AND DEVELOPMENT ” OF THE CODE OF THE TOWNSHIP OF ROCKAWAY ADOPTING A NEW ZONING MAP AND RE-LOCATING SPECIFIC ORDINANCE SECTIONS 9. CONSENT AGENDA: R-26-127 RESOLUTION SUPPORTING THE LOCATION AND OPERATION OF CLASS 1 AND CLASS 2 CANNABIS LICENSES FOR CULTIVATING AND MANUFACTURING CANNABIS WITHIN THE TOWNSHIP OF ROCKAWAY\nAgenda Page 2 of 2 August 18th Township Council Regular Meeting As of: 8/14/2026 R-26-128 TAX REFUND FOR 2026 TAX OVERPAYMENT BLOCK 11014 LOT 15, 31 INDEPENDENCE WAY R-26-129 AUTHORIZING THE SALE OF REAL PROPERTY IDENTIFIED ON THE OFFICIAL TAX MAP OF THE TOWNSHIP OF ROCKAWAY AS LOT: 11 BLOCK: 21502 BEING MORE COMMONLY KNOWN AS 33 PAWNEE AVENUE R-26-130 RESOLUTION AUTHORIZING THE INSERTION OF AN ITEM OF REVENUE IN THE 2026 BUDGET FOR ADDITIONAL FUNDING FOR NATIONAL OPIOID SETTLEMENT 10. MAYORAL APPOINTMENT: Shade Tree Commission Members: Erin De Korte Beverly Ferrand John Maurer Linda Zenkert Brian Barros Alternates: Emily Kullmann Susan Royek 11. NEW BUSINESS AND DISCUSSION: DIOGO CASSANO - FULL MEMBERSHIP - Fire Company #5 JORDAN NIGRO – FULL MEMBERSHIP – Fire Company #4 12. COUNCIL REPORTS: 13. ADJOURNMENT: NEXT TOWNSHIP COUNCIL REGULAR MEETING – SEPTEMBER 8TH * AUGUST 25 TH TOWNSHIP COUNCIL REGULAR MEETING – CANCELLED*",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "civicplus:rockaway_township_planning_board:archive:2026-01-12@0516435eeebcd78bbb2fec1e721fa9e27c119cf38bbd1a26784f2b8e5cfb1d19",
+   "meetingId": "civicplus:rockaway_township_planning_board:archive:2026-01-12",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "documentUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_01122026-992",
+   "contentHash": "0516435eeebcd78bbb2fec1e721fa9e27c119cf38bbd1a26784f2b8e5cfb1d19",
+   "retrievedAt": "2026-08-15T22:56:58.013Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_01122026-992",
+   "sourceOrg": "Rockaway Township Planning Board",
+   "collectedAt": "2026-08-15T22:56:58.013Z",
+   "verifiedAt": null,
+   "text": "Rockaway Township Planning Board Municipal Building 7:30 PM Date: January 12, 2026 65 Mt. Hope Road Planning Board Agenda January 12, 2026 1. Call to Order: Notice of this meeting was provided to The Citizen and The Daily Record on November 26, 2025 2. Formal action may be taken at all meetings. 3. Notice to the newspapers was via email. 4. Attendance: Alternates: Mayor Jackson Mr. Cafone Chief Scherr Ms. Noon Mr. Elko (Chairperson) Township Engineer: Mrs. Ferrante Mr. Barilla (Vice-Chairperson) Counsel: Mr. Dimin Mr. Quinn Recording Secretary: Mrs. Browne Mr. Lutz Township Planner: Mr. Novak Mrs. Meyers Boswell Engineer: Mr. Rockwell Mrs. Schievella Mr. Simkins 5. Approval of Minutes: December 8, 2025 6. Correspondence: 7. Open to the Public: 8. Regular Order of Business: 9. Resolutions: ESCROW PB# 2540 NJNG 201 Roundhill Drive Block 22202 Lot 23 Minor Site Plan w/ “C” variance 10. Committee Reports: 11. Other Matters: 12. Public Hearings: 13. Old Business: 14. New Business: 15. Adjourn: Subcommittees: Minor Subdivision Tenancy and Minor Site Plan Simpkins, Lutz, TBD Barilla, Scherr, Schievella",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "civicplus:rockaway_township_planning_board:archive:2026-02-09@9f9f6596be5bd8de3904ed1d795bfa7ac83355905df6ae3f6a6c884cfa8082dd",
+   "meetingId": "civicplus:rockaway_township_planning_board:archive:2026-02-09",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "documentUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_02092026-998",
+   "contentHash": "9f9f6596be5bd8de3904ed1d795bfa7ac83355905df6ae3f6a6c884cfa8082dd",
+   "retrievedAt": "2026-08-15T22:56:59.142Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_02092026-998",
+   "sourceOrg": "Rockaway Township Planning Board",
+   "collectedAt": "2026-08-15T22:56:59.142Z",
+   "verifiedAt": null,
+   "text": "Rockaway Township Planning Board Municipal Building 7:30 PM Date: February 9, 2026 65 Mt. Hope Road Planning Board Agenda February 9, 2026 1. Call to Order: Notice of this meeting was provided to The Citizen and The Daily Record on November 26, 2025 2. Formal action may be taken at all meetings. 3. Notice to the newspapers was via email. 4. Attendance: Alternates: Mayor Jackson Mr. Cafone Chief Scherr Ms. Noon Mr. Elko (Chairperson) Township Engineer: Mrs. Ferrante Mr. Barilla Counsel: Mr. Dimin Mr. Quinn(Vice-Chairperson) Recording Secretary: Mrs. Browne Mr. Lutz Township Planner: Mr. Novak Mrs. Meyers Boswell Engineer: Mr. Rockwell Mrs. Schievella Mr. Simkins 5. Approval of Minutes: January 12, 2026 Re-Organization January 12, 2026 Regular Meeting 6. Correspondence: 7. Open to the Public: 8. Regular Order of Business: 9. Resolutions: ESCROW 10. Committee Reports: 11. Other Matters: 12. Public Hearings: • Amended - Housing Element and Fair Share Plan of the Township of Rockaway 13. Old Business: 14. New Business: 15. Adjourn: Subcommittees: Minor Subdivision Tenancy and Minor Site Plan Simpkins, Lutz, Meyers Barilla, Scherr, Schievella",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "civicplus:rockaway_township_planning_board:archive:2026-02-23@2bff739fca93930f048bc41d517e3658d63d28b5d5ea7ff6eabbc9dbc9d38b66",
+   "meetingId": "civicplus:rockaway_township_planning_board:archive:2026-02-23",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "documentUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_02232026-1001",
+   "contentHash": "2bff739fca93930f048bc41d517e3658d63d28b5d5ea7ff6eabbc9dbc9d38b66",
+   "retrievedAt": "2026-08-15T22:56:59.954Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_02232026-1001",
+   "sourceOrg": "Rockaway Township Planning Board",
+   "collectedAt": "2026-08-15T22:56:59.954Z",
+   "verifiedAt": null,
+   "text": "Rockaway Township Planning Board Municipal Building 7:30 PM Date: February 23, 2026 65 Mt. Hope Road SPECIAL MEETING Planning Board Agenda February 23, 2026 1. Call to Order: Notice of this meeting was provided to The Citizen and The Daily Record on February 11, 2026 2. Formal action may be taken at all meetings. 3. Notice to the newspapers was via email. 4. Attendance: Alternates: Mayor Jackson Mr. Cafone Chief Scherr Ms. Noon Mr. Elko (Chairperson) Township Engineer: Mrs. Ferrante Mr. Barilla Counsel: Ms. Bamberski Mr. Quinn(Vice-Chairperson) Recording Secretary: Mrs. Browne Mr. Lutz Township Planner: Mr. Novak Mrs. Meyers Boswell Engineer: Mr. Rockwell Mrs. Schievella Mr. Simkins 5. Approval of Minutes: February 9, 2026 6. Correspondence: 7. Open to the Public: 8. Regular Order of Business: 9. Resolutions: ESCROW 10. Committee Reports: 11. Other Matters: • Burgis Associates, Inc Memorandum – Affordable Housing Ordinances Consistency Review, dated February 19, 2026 • Adele Wadleigh, Acting Township Clerk Memorandum – Planning Board Referral: Ordinances O-26-03, O-26-04, O-26-05 and O-26-06, dated February 17, 2026 • Ordinance O-26-03: Ordinance 26-03 AN ORDINANCE AMENDING CHAPTER 54 ENTITLED \"LAND USE AND DEVELOPMENT\" OF THE CODE OF THE TOWNSHIP OF ROCKAWAY AMENDING SECTION 54-30.52 ENTITLED “R -B MFO REGIONAL BUSINESS MULTIFAMILY OVERLAY DISTRICT” Consistency determination subject to NJSA40:55 D-26 A -Referral Powers Prior to the adoption of a development regulation, revision, or amendment thereto, the planning board shall make and transmit to the governing body, within 35 days after referral, a report including identification of any provisions in the proposed development regulation, revision or amendment which are inconsistent with the master plan and recommendations concerning these inconsistencies and any other matters as the board deems appropriate.\nRockaway Township Planning Board Municipal Building 7:30 PM Date: February 23, 2026 65 Mt. Hope Road • Ordinance O-26-04: Ordinance 26-04 AN ORDINANCE AMENDING CHAPTER 54 ENTITLED \"LAND USE AND DEVELOPMENT\" OF THE CODE OF THE TOWNSHIP OF ROCKAWAY CREATING A NEW SECTION 54-30.34 ENTITLED “R MF-14 MULTIFAMILY RESIDENTIAL DISTRICT” Consistency determination subject to NJSA40:55 D-26 A -Referral Powers Prior to the adoption of a development regulation, revision, or amendment thereto, the planning board shall make and transmit to the governing body, within 35 days after referral, a report including identification of any provisions in the proposed development regulation, revision or amendment which are inconsistent with the master plan and recommendations concerning these inconsistencies and any other matters as the board deems appropriate. • Ordinance O-26-05: Ordinance 26-05 AN ORDINANCE AMENDING CHAPTER 54 ENTITLED \"LAND USE AND DEVELOPMENT\" OF THE CODE OF THE TOWNSHIP OF ROCKAWAY CREATING A NEW SECTION 54-30.71 ENTITLED “R MFO-15B MULTIFAMILY RESIDENTIAL OVERLAY DISTRICT” Consistency determination subject to NJSA40:55 D-26 A -Referral Powers Prior to the adoption of a development regulation, revision, or amendment thereto, the planning board shall make and transmit to the governing body, within 35 days after referral, a report including identification of any provisions in the proposed development regulation, revision or amendment which are inconsistent with the master plan and recommendations concerning these inconsistencies and any other matters as the board deems appropriate. • Ordinance O-26-06: Ordinance 26-06 AN ORDINANCE AMENDING CHAPTER 54 ENTITLED \"LAND USE AND DEVELOPMENT\" OF THE CODE OF THE TOWNSHIP OF ROCKAWAY CREATING A NEW SECTION 54-30.72 ENTITLED “R MFO-15C MULTIFAMILY RESIDENTIAL OVERLAY DISTRICT” Consistency determination subject to NJSA40:55 D-26 A -Referral Powers Prior to the adoption of a development regulation, revision, or amendment thereto, the planning board shall make and transmit to the governing body, within 35 days after referral, a report including identification of any provisions in the proposed development regulation, revision or amendment which are inconsistent with the master plan and recommendations concerning these inconsistencies and any other matters as the board deems appropriate. 12. Public Hearings: 13. Old Business: 14. New Business: 15. Adjourn: Subcommittees: Minor Subdivision Tenancy and Minor Site Plan Simpkins, Lutz, Meyers Barilla, Scherr, Schievella",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "civicplus:rockaway_township_planning_board:archive:2026-03-09@d57085f4cf5598f5a60adf55e078292726ea339aec77128ffe0ac61424a52998",
+   "meetingId": "civicplus:rockaway_township_planning_board:archive:2026-03-09",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+   "documentUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_03092026-1004",
+   "contentHash": "d57085f4cf5598f5a60adf55e078292726ea339aec77128ffe0ac61424a52998",
+   "retrievedAt": "2026-08-15T22:57:00.642Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_03092026-1004",
+   "sourceOrg": "Rockaway Township Planning Board",
+   "collectedAt": "2026-08-15T22:57:00.642Z",
+   "verifiedAt": null,
+   "text": "Rockaway Township Planning Board Municipal Building 7:30 PM Date: March 9, 2026 65 Mt. Hope Road SPECIAL MEETING Planning Board Agenda March 9, 2026 1. Call to Order: Notice of this meeting was provided to The Citizen and The Daily Record on February 11, 2026 2. Formal action may be taken at all meetings. 3. Notice to the newspapers was via email. 4. Attendance: Alternates: Mayor Jackson Mr. Cafone Chief Scherr Ms. Noon Mr. Elko (Chairperson) Township Engineer: Mrs. Ferrante Mr. Barilla Counsel: Ms. Bamberski Mr. Quinn (Vice-Chairperson) Recording Secretary: Mrs. Browne Mr. Lutz Township Planner: Mr. Novak Mrs. Meyers Boswell Engineer: Mr. Rockwell Mrs. Schievella Mr. Simkins 5. Approval of Minutes: February 9, 2026 6. Correspondence: 7. Open to the Public: 8. Regular Order of Business: 9. Resolutions: ESCROW 10. Committee Reports: 11. Other Matters: • Burgis Associates, Inc Memorandum – Affordable Housing Ordinances Consistency Review, dated February 19, 2026 • Adele Wadleigh, Acting Township Clerk Memorandum – Planning Board Referral: Ordinances O-26-03, O-26-04, O-26-05 and O-26-06, dated February 17, 2026 • Ordinance O-26-03: Ordinance 26-03 AN ORDINANCE AMENDING CHAPTER 54 ENTITLED \"LAND USE AND DEVELOPMENT\" OF THE CODE OF THE TOWNSHIP OF ROCKAWAY AMENDING SECTION 54-30.52 ENTITLED “R -B MFO REGIONAL BUSINESS MULTIFAMILY OVERLAY DISTRICT” Consistency determination subject to NJSA40:55 D-26 A -Referral Powers Prior to the adoption of a development regulation, revision, or amendment thereto, the planning board shall make and transmit to the governing body, within 35 days after referral, a report including identification of any provisions in the proposed development regulation, revision or amendment which are inconsistent with the master plan and recommendations concerning these inconsistencies and any other matters as the board deems appropriate.\nRockaway Township Planning Board Municipal Building 7:30 PM Date: March 9, 2026 65 Mt. Hope Road • Ordinance O-26-04: Ordinance 26-04 AN ORDINANCE AMENDING CHAPTER 54 ENTITLED \"LAND USE AND DEVELOPMENT\" OF THE CODE OF THE TOWNSHIP OF ROCKAWAY CREATING A NEW SECTION 54-30.34 ENTITLED “R MF-14 MULTIFAMILY RESIDENTIAL DISTRICT” Consistency determination subject to NJSA40:55 D-26 A -Referral Powers Prior to the adoption of a development regulation, revision, or amendment thereto, the planning board shall make and transmit to the governing body, within 35 days after referral, a report including identification of any provisions in the proposed development regulation, revision or amendment which are inconsistent with the master plan and recommendations concerning these inconsistencies and any other matters as the board deems appropriate. • Ordinance O-26-05: Ordinance 26-05 AN ORDINANCE AMENDING CHAPTER 54 ENTITLED \"LAND USE AND DEVELOPMENT\" OF THE CODE OF THE TOWNSHIP OF ROCKAWAY CREATING A NEW SECTION 54-30.71 ENTITLED “R MFO-15B MULTIFAMILY RESIDENTIAL OVERLAY DISTRICT” Consistency determination subject to NJSA40:55 D-26 A -Referral Powers Prior to the adoption of a development regulation, revision, or amendment thereto, the planning board shall make and transmit to the governing body, within 35 days after referral, a report including identification of any provisions in the proposed development regulation, revision or amendment which are inconsistent with the master plan and recommendations concerning these inconsistencies and any other matters as the board deems appropriate. • Ordinance O-26-06: Ordinance 26-06 AN ORDINANCE AMENDING CHAPTER 54 ENTITLED \"LAND USE AND DEVELOPMENT\" OF THE CODE OF THE TOWNSHIP OF ROCKAWAY CREATING A NEW SECTION 54-30.72 ENTITLED “R MFO-15C MULTIFAMILY RESIDENTIAL OVERLAY DISTRICT” Consistency determination subject to NJSA40:55 D-26 A -Referral Powers Prior to the adoption of a development regulation, revision, or amendment thereto, the planning board shall make and transmit to the governing body, within 35 days after referral, a report including identification of any provisions in the proposed development regulation, revision or amendment which are inconsistent with the master plan and recommendations concerning these inconsistencies and any other matters as the board deems appropriate. 12. Public Hearings: 13. Old Business: 14. New Business: 15. Adjourn: Subcommittees: Minor Subdivision Tenancy and Minor Site Plan Simpkins, Lutz, Meyers Barilla, Scherr, Schievella",
    "extraction": "pdf",
    "extractionNote": null
   },

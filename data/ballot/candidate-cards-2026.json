@@ -31,8 +31,8 @@
       "phone": null
     },
     "ballot-nh-merrimack:us-senate:brown-scott-p-": {
-      "photoUrl": null,
-      "photoSource": null,
+      "photoUrl": "/candidates/nh-merrimack-us-senate-brown-scott-p-.jpg",
+      "photoSource": "official U.S. Senate portrait, public domain — Wikimedia Commons, Public domain, photo: United States Congress; file page read 2026-08-14, committed copy served from our origin",
       "bio": "His family has deep roots in Portsmouth stretching back generations; he served nearly 40 years in the military, was a U.S. Senator, and represented America as Ambassador to New Zealand and Samoa.",
       "bioSourceUrl": "https://scottbrown.com",
       "bioSourceLabel": "From the candidate's site â€” scottbrown.com, read 2026-08-14",
@@ -40,8 +40,8 @@
       "phone": null
     },
     "ballot-nh-merrimack:us-senate:sununu-john-e-": {
-      "photoUrl": null,
-      "photoSource": null,
+      "photoUrl": "/candidates/nh-merrimack-us-senate-sununu-john-e-.jpg",
+      "photoSource": "official U.S. Senate portrait, public domain — Wikimedia Commons, Public domain, photo: Unknown authorUnknown author; file page read 2026-08-14, committed copy served from our origin",
       "bio": "John Sununu is a lifelong Granite Stater, trained as an engineer with private-sector experience, who represented New Hampshire in Washington.",
       "bioSourceUrl": "https://www.sununusenator.com",
       "bioSourceLabel": "From the candidate's site â€” sununusenator.com, read 2026-08-14",
@@ -94,8 +94,8 @@
       "phone": null
     },
     "ballot-nj-morris:us-senate:murphy": {
-      "photoUrl": null,
-      "photoSource": null,
+      "photoUrl": "/candidates/nj-morris-us-senate-murphy.jpg",
+      "photoSource": "solo photo at his own campaign event, unambiguous sole subject — the campaign site's own photo (https://jerseyjustin4senate.org/wp-content/uploads/2024/01/D70_8879-684x1024.jpg), read 2026-08-14; committed copy served from our origin, metadata stripped",
       "bio": "A self-employed small business owner.",
       "bioSourceUrl": "https://jerseyjustin4senate.org",
       "bioSourceLabel": "From the candidate's site â€” jerseyjustin4senate.org, read 2026-08-14",
@@ -362,6 +362,114 @@
       "bioSourceLabel": null,
       "email": null,
       "phone": null
+    },
+    "ballot-az-pima:attorney-general:petersen-warren": {
+      "photoUrl": "/candidates/az-pima-attorney-general-petersen-warren.jpg",
+      "photoSource": "solo event candid wearing his own name badge, sole subject — Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:attorney-general|Warren Petersen": {
+      "photoUrl": "/candidates/az-pima-attorney-general-petersen-warren.jpg",
+      "photoSource": "solo event candid wearing his own name badge, sole subject — Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:superintendent:yee-kimberly": {
+      "photoUrl": "/candidates/az-pima-superintendent-yee-kimberly.jpg",
+      "photoSource": "solo podium portrait wearing her name badge — Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:superintendent|Kimberly Yee": {
+      "photoUrl": "/candidates/az-pima-superintendent-yee-kimberly.jpg",
+      "photoSource": "solo podium portrait wearing her name badge — Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:secretary-of-state:kolodin-alexander": {
+      "photoUrl": "/candidates/az-pima-secretary-of-state-kolodin-alexander.jpg",
+      "photoSource": "solo speaking portrait, sole subject — Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:secretary-of-state|Alexander Kolodin": {
+      "photoUrl": "/candidates/az-pima-secretary-of-state-kolodin-alexander.jpg",
+      "photoSource": "solo speaking portrait, sole subject — Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:superintendent:horne-tom": {
+      "photoUrl": "/candidates/az-pima-superintendent-horne-tom.jpg",
+      "photoSource": "solo event candid, sole subject — Wikimedia Commons, CC BY-SA 2.0, photo: Gage Skidmore from Surprise, AZ, United States of America; file page read 2026-08-14, committed copy served from our origin",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:state-treasurer|Nick Mansour": {
+      "photoUrl": "/candidates/az-pima-state-treasurer-Nick-Mansour.jpg",
+      "photoSource": "clean solo portrait (outdoor, wide hero crop) — the campaign site's own photo (http://static1.squarespace.com/static/68080891cdf97c2e874172e0/t/69d3fae562e8ac760d3be2d2/1775500005849/Mansour__DSF7615_GFX100S-hero.jpg?format=1500w), read 2026-08-14; committed copy served from our origin, metadata stripped",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:superintendent|Teresa Leyba Ruiz": {
+      "photoUrl": "/candidates/az-pima-superintendent-Teresa-Leyba-Ruiz.jpg",
+      "photoSource": "clean solo portrait (office, arms crossed) — the campaign site's own photo (https://static.wixstatic.com/media/f57a3d_70983a372846453f9db0bf6bd87ec3c5~mv2.jpg/v1/fill/w_1024,h_684,al_c/f57a3d_70983a372846453f9db0bf6bd87ec3c5~mv2.jpg), read 2026-08-14; committed copy served from our origin, metadata stripped",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-nj-morris:us-senate:fernandez": {
+      "photoUrl": "/candidates/nj-morris-us-senate-fernandez.png",
+      "photoSource": "clean solo studio portrait — the campaign site's own photo (https://img1.wsimg.com/isteam/ip/968e4fa3-7440-46a2-ae03-16126b33e7da/blob-3188f26.png), read 2026-08-14; committed copy served from our origin, metadata stripped",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:state-treasurer:mansour-nick": {
+      "photoUrl": "/candidates/az-pima-state-treasurer-Nick-Mansour.jpg",
+      "photoSource": "clean solo portrait (outdoor, wide hero crop) — the campaign site's own photo (http://static1.squarespace.com/static/68080891cdf97c2e874172e0/t/69d3fae562e8ac760d3be2d2/1775500005849/Mansour__DSF7615_GFX100S-hero.jpg?format=1500w), read 2026-08-14; committed copy served from our origin, metadata stripped",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-az-pima:superintendent:leyba-ruiz-teresa": {
+      "photoUrl": "/candidates/az-pima-superintendent-Teresa-Leyba-Ruiz.jpg",
+      "photoSource": "clean solo portrait (office, arms crossed) — the campaign site's own photo (https://static.wixstatic.com/media/f57a3d_70983a372846453f9db0bf6bd87ec3c5~mv2.jpg/v1/fill/w_1024,h_684,al_c/f57a3d_70983a372846453f9db0bf6bd87ec3c5~mv2.jpg), read 2026-08-14; committed copy served from our origin, metadata stripped",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
     }
   },
   "hunts": [
@@ -482,7 +590,7 @@
     {
       "key": "ballot-nj-morris:us-senate:fernandez",
       "name": "Veronica Fernandez",
-      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 5 hits, none passed office=/senator|congress/ + place=/New Jersey/",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 5 hits, none passed office=/senator|congress/ + place=/New Jersey/ PHOTO RESOLVED 2026-08-14 (photo session, campaign rung): the campaign homepage og:image passed the clean-solo judgment (\"clean solo studio portrait\"); committed at /candidates/nj-morris-us-senate-fernandez.png.",
       "attemptedAt": "2026-08-14"
     },
     {
@@ -494,7 +602,7 @@
     {
       "key": "ballot-nj-morris:us-senate:murphy",
       "name": "Justin Murphy",
-      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 5 hits, none passed office=/senator|congress/ + place=/New Jersey/",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 5 hits, none passed office=/senator|congress/ + place=/New Jersey/ PHOTO RESOLVED 2026-08-14 (photo session, campaign rung): the campaign homepage og:image passed the clean-solo judgment (\"solo photo at his own campaign event, unambiguous sole subject\"); committed at /candidates/nj-morris-us-senate-murphy.jpg.",
       "attemptedAt": "2026-08-14"
     },
     {
@@ -506,7 +614,7 @@
     {
       "key": "ballot-nj-morris:us-house-11:hathaway",
       "name": "Joe Hathaway",
-      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits Campaign rung (photo session 2026-08-14): og:image is a campaign banner with logo text beside the photo — the banner failure class — initials stay.",
       "attemptedAt": "2026-08-14"
     },
     {
@@ -560,7 +668,7 @@
     {
       "key": "ballot-az-pima:governor:hourihan-teri-ann",
       "name": "Teri Ann Hourihan",
-      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
       "attemptedAt": "2026-08-14"
     },
     {
@@ -602,7 +710,7 @@
     {
       "key": "ballot-az-pima:secretary-of-state:kolodin-alexander",
       "name": "Alexander Kolodin",
-      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 1 hits, none passed office=/secretary of state/ + place=/Arizona/",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 1 hits, none passed office=/secretary of state/ + place=/Arizona/ PHOTO RESOLVED 2026-08-14 (photo session, Commons rung): Q116058524 matched by attributes, license CC BY-SA 3.0, judged \"solo speaking portrait, sole subject\"; committed at /candidates/az-pima-secretary-of-state-kolodin-alexander.jpg.",
       "attemptedAt": "2026-08-14"
     },
     {
@@ -626,7 +734,7 @@
     {
       "key": "ballot-az-pima:attorney-general:petersen-warren",
       "name": "Warren Petersen",
-      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 1 hits, none passed office=/attorney/ + place=/Arizona/",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 1 hits, none passed office=/attorney/ + place=/Arizona/ PHOTO RESOLVED 2026-08-14 (photo session, Commons rung): Q16734452 matched by attributes, license CC BY-SA 3.0, judged \"solo event candid wearing his own name badge, sole subject\"; committed at /candidates/az-pima-attorney-general-petersen-warren.jpg.",
       "attemptedAt": "2026-08-14"
     },
     {
@@ -674,13 +782,13 @@
     {
       "key": "ballot-az-pima:superintendent:horne-tom",
       "name": "Tom Horne",
-      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 5 hits, none passed office=/superintendent|education/ + place=/Arizona/",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 5 hits, none passed office=/superintendent|education/ + place=/Arizona/ PHOTO RESOLVED 2026-08-14 (photo session, Commons rung): Q7816233 matched by attributes, license CC BY-SA 2.0, judged \"solo event candid, sole subject\"; committed at /candidates/az-pima-superintendent-horne-tom.jpg.",
       "attemptedAt": "2026-08-14"
     },
     {
       "key": "ballot-az-pima:superintendent:yee-kimberly",
       "name": "Kimberly Yee",
-      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 1 hits, none passed office=/superintendent|education/ + place=/Arizona/",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 1 hits, none passed office=/superintendent|education/ + place=/Arizona/ PHOTO RESOLVED 2026-08-14 (photo session, Commons rung): Q16215159 matched by attributes, license CC BY-SA 3.0, judged \"solo podium portrait wearing her name badge\"; committed at /candidates/az-pima-superintendent-yee-kimberly.jpg.",
       "attemptedAt": "2026-08-14"
     },
     {
@@ -692,7 +800,7 @@
     {
       "key": "ballot-az-pima:us-house-6:mendoza-joanna",
       "name": "JoAnna Mendoza",
-      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH — no search hits",
       "attemptedAt": "2026-08-14"
     },
     {
@@ -848,7 +956,7 @@
     {
       "key": "ballot-nh-merrimack:us-senate:brown-scott-p-",
       "name": "Scott P. Brown",
-      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 2 hits, none passed office=/senator|congress/ + place=/New Hampshire/",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 2 hits, none passed office=/senator|congress/ + place=/New Hampshire/ PHOTO RESOLVED 2026-08-14 (photo session, Commons rung): Q155125 matched by attributes, license Public domain, judged \"official U.S. Senate portrait, public domain\"; committed at /candidates/nh-merrimack-us-senate-brown-scott-p-.jpg.",
       "attemptedAt": "2026-08-14"
     },
     {
@@ -884,7 +992,7 @@
     {
       "key": "ballot-nh-merrimack:us-senate:sununu-john-e-",
       "name": "John E. Sununu",
-      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 1 hits, none passed office=/senator|congress/ + place=/New Hampshire/",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 1 hits, none passed office=/senator|congress/ + place=/New Hampshire/ PHOTO RESOLVED 2026-08-14 (photo session, Commons rung): Q1699908 matched by attributes, license Public domain, judged \"official U.S. Senate portrait, public domain\"; committed at /candidates/nh-merrimack-us-senate-sununu-john-e-.jpg.",
       "attemptedAt": "2026-08-14"
     },
     {
@@ -914,7 +1022,7 @@
     {
       "key": "ballot-nh-merrimack:state-senate-7:harned-rebecca",
       "name": "Rebecca Harned",
-      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits Campaign rung (photo session 2026-08-14): og:image is a logo+photo composite (campaign wordmark left, candid with dogs right) — not a clean solo portrait — initials stay.",
       "attemptedAt": "2026-08-14"
     },
     {
@@ -1046,19 +1154,19 @@
     {
       "key": "ballot-az-pima:mine-inspector|Walter \"Les\" Presmyk",
       "name": "Walter \"Les\" Presmyk",
-      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” no search hits Campaign rung (photo session 2026-08-14): og:image is a white-on-transparent logo that renders blank — the Justin Murphy failure class — initials stay.",
       "attemptedAt": "2026-08-14"
     },
     {
       "key": "ballot-az-pima:us-house-6|Gary Swing",
       "name": "Gary Swing",
-      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 1 hits, none passed office=/representative|congress/ + place=/Arizona/",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 1 hits, none passed office=/representative|congress/ + place=/Arizona/ Campaign rung (photo session 2026-08-14): og:image is a novelty-sign photo, not a portrait — initials stay.",
       "attemptedAt": "2026-08-14"
     },
     {
       "key": "ballot-az-pima:state-senate-19|Bob Karp",
       "name": "Bob Karp",
-      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 1 hits, none passed office=/legislat|representative|senator|general court/ + place=/Arizona/",
+      "note": "Wikimedia Commons rung (photo session 2026-08-14): NO_WIKIDATA_MATCH â€” 1 hits, none passed office=/legislat|representative|senator|general court/ + place=/Arizona/ Campaign rung (photo session 2026-08-14): og:image is a campaign logo, not a photograph — initials stay.",
       "attemptedAt": "2026-08-14"
     },
     {
@@ -1071,6 +1179,66 @@
       "key": "ballot-nj-morris:us-house-11:mejia",
       "name": "Analilia Mejia",
       "note": "PHOTO SWITCHED 2026-08-14 (photo session): the campaign-site hotlink could not be committed (image container not JPEG/PNG); the card now serves the committed public-domain congressional portrait /officials/M001246.jpg instead - a stronger license and our origin.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:governor|Risa Lombardo",
+      "name": "ballot-az-pima:governor|Risa Lombardo",
+      "note": "Campaign rung (photo session 2026-08-14): campaign homepage carries no og:image — initials stay.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:governor|Teri Ann Hourihan",
+      "name": "ballot-az-pima:governor|Teri Ann Hourihan",
+      "note": "Campaign rung (photo session 2026-08-14): og:image is a campaign badge graphic (face inside a logo ring) — the wordmark failure class, not a photograph — initials stay.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:state-treasurer|Nick Mansour",
+      "name": "ballot-az-pima:state-treasurer|Nick Mansour",
+      "note": "PHOTO RESOLVED 2026-08-14 (photo session, campaign rung): the campaign homepage og:image passed the clean-solo judgment (\"clean solo portrait (outdoor, wide hero crop)\"); committed at /candidates/az-pima-state-treasurer-Nick-Mansour.jpg.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:state-treasurer|Elijah Norton",
+      "name": "ballot-az-pima:state-treasurer|Elijah Norton",
+      "note": "Campaign rung (photo session 2026-08-14): og:image is a campaign wordmark/logo, not a photograph — initials stay.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:superintendent|Teresa Leyba Ruiz",
+      "name": "ballot-az-pima:superintendent|Teresa Leyba Ruiz",
+      "note": "PHOTO RESOLVED 2026-08-14 (photo session, campaign rung): the campaign homepage og:image passed the clean-solo judgment (\"clean solo portrait (office, arms crossed)\"); committed at /candidates/az-pima-superintendent-Teresa-Leyba-Ruiz.jpg.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:us-house-6|JoAnna Mendoza",
+      "name": "ballot-az-pima:us-house-6|JoAnna Mendoza",
+      "note": "Campaign rung (photo session 2026-08-14): og:image is a campaign banner: logo text over an event crowd, candidate not the sole subject — initials stay.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:us-house-7|Daniel Francis Butierez Sr.",
+      "name": "ballot-az-pima:us-house-7|Daniel Francis Butierez Sr.",
+      "note": "Campaign rung (photo session 2026-08-14): og:image is a photocomposite campaign slide (cutout over backdrop), not a photograph — initials stay.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:state-house-19|Aiden Nicholette Swallow",
+      "name": "ballot-az-pima:state-house-19|Aiden Nicholette Swallow",
+      "note": "Campaign rung (photo session 2026-08-14): og:image is a campaign logo, not a photograph — initials stay.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:state-treasurer:mansour-nick",
+      "name": "Nick Mansour",
+      "note": "PHOTO RESOLVED 2026-08-14 (photo session): same committed campaign photo as the lineup card ballot-az-pima:state-treasurer|Nick Mansour.",
+      "attemptedAt": "2026-08-14"
+    },
+    {
+      "key": "ballot-az-pima:superintendent:leyba-ruiz-teresa",
+      "name": "Teresa Leyba Ruiz",
+      "note": "PHOTO RESOLVED 2026-08-14 (photo session): same committed campaign photo as the lineup card ballot-az-pima:superintendent|Teresa Leyba Ruiz.",
       "attemptedAt": "2026-08-14"
     }
   ]

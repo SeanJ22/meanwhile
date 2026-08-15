@@ -70,6 +70,13 @@ const JUDGMENTS: Record<string, string> = {
   "statewide:az/governor": "solo speaking-event portrait, unambiguous sole subject",
   "statewide:nh/governor": "official U.S. Senate portrait, public domain",
   "statewide:nj/governor": "clean solo portrait",
+  // Pass 2/3 (corrected challenger attributes, 2026-08-14):
+  "ballot-nh-merrimack:us-senate:brown-scott-p-": "official U.S. Senate portrait, public domain",
+  "ballot-nh-merrimack:us-senate:sununu-john-e-": "official U.S. Senate portrait, public domain",
+  "ballot-az-pima:attorney-general:petersen-warren": "solo event candid wearing his own name badge, sole subject",
+  "ballot-az-pima:superintendent:yee-kimberly": "solo podium portrait wearing her name badge",
+  "ballot-az-pima:secretary-of-state:kolodin-alexander": "solo speaking portrait, sole subject",
+  "ballot-az-pima:superintendent:horne-tom": "solo event candid, sole subject",
 };
 
 const stagedDirs = process.argv.slice(2);

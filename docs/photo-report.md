@@ -565,21 +565,25 @@ a shipped photo with the judgment and source recorded on the card itself
 localized 2026-08-14: committed copies under `public/candidates/`,
 metadata-stripped, served from our origin. A candidate not listed renders
 initials, and every absence is a recorded hunt in the file's `hunts`
-array (118 recorded hunts, rung-by-rung with dates).
+array (128 recorded hunts, rung-by-rung with dates).
 
-35 shipped card photos:
+50 shipped card photos:
 
 | Card key | Served file | Judgment and source |
 |---|---|---|
 | `ballot-az-pima:attorney-general:mayes-kris` | /candidates/az-pima-attorney-general-mayes-kris.jpg | clean solo portrait â€” Wikimedia Commons, CC BY-SA 2.0, photo: Gage Skidmore from Surprise, AZ, United States of America, Please attribute to Gage Skidmore if used elsewhere.; file page read 2026-08-14, committed copy served from our origin |
+| `ballot-az-pima:attorney-general:petersen-warren` | /candidates/az-pima-attorney-general-petersen-warren.jpg | solo event candid wearing his own name badge, sole subject — Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
 | `ballot-az-pima:attorney-general|Kris Mayes` | /candidates/az-pima-attorney-general-mayes-kris.jpg | clean solo portrait â€” Wikimedia Commons, CC BY-SA 2.0, photo: Gage Skidmore from Surprise, AZ, United States of America, Please attribute to Gage Skidmore if used elsewhere.; file page read 2026-08-14, committed copy served from our origin |
+| `ballot-az-pima:attorney-general|Warren Petersen` | /candidates/az-pima-attorney-general-petersen-warren.jpg | solo event candid wearing his own name badge, sole subject — Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
 | `ballot-az-pima:governor:biggs-andy` | /officials/B001302.jpg | Official portrait â€” GPO Congressional Pictorial Directory (public domain), committed copy at /officials/B001302.jpg; license recorded in lib/registry/official-photos.json |
 | `ballot-az-pima:governor:hobbs-katie` | /candidates/az-pima-governor-hobbs-katie.jpg | solo speaking-event portrait, unambiguous sole subject â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
 | `ballot-az-pima:governor:schweikert-david` | /officials/S001183.jpg | Official portrait â€” GPO Congressional Pictorial Directory (public domain), committed copy at /officials/S001183.jpg; license recorded in lib/registry/official-photos.json |
 | `ballot-az-pima:governor|Andy Biggs` | /officials/B001302.jpg | Official portrait â€” GPO Congressional Pictorial Directory (public domain), committed copy at /officials/B001302.jpg; license recorded in lib/registry/official-photos.json |
 | `ballot-az-pima:governor|Katie Hobbs` | /candidates/az-pima-governor-hobbs-katie.jpg | solo speaking-event portrait, unambiguous sole subject â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
 | `ballot-az-pima:secretary-of-state:fontes-adrian` | /candidates/az-pima-secretary-of-state-fontes-adrian.jpg | clean solo portrait â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
+| `ballot-az-pima:secretary-of-state:kolodin-alexander` | /candidates/az-pima-secretary-of-state-kolodin-alexander.jpg | solo speaking portrait, sole subject — Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
 | `ballot-az-pima:secretary-of-state|Adrian Fontes` | /candidates/az-pima-secretary-of-state-fontes-adrian.jpg | clean solo portrait â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
+| `ballot-az-pima:secretary-of-state|Alexander Kolodin` | /candidates/az-pima-secretary-of-state-kolodin-alexander.jpg | solo speaking portrait, sole subject — Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
 | `ballot-az-pima:state-house-19:diaz-lupe` | /candidates/az-pima-state-house-19-diaz-lupe.jpg | clean solo portrait â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
 | `ballot-az-pima:state-house-19:gowan-david` | /candidates/az-pima-state-house-19-gowan-david.jpg | solo event candid, sole subject â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
 | `ballot-az-pima:state-house-19|David Gowan` | /candidates/az-pima-state-house-19-gowan-david.jpg | solo event candid, sole subject â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
@@ -592,6 +596,13 @@ array (118 recorded hunts, rung-by-rung with dates).
 | `ballot-az-pima:state-senate-19|Gail Griffin` | /candidates/az-pima-state-senate-19-griffin-gail.jpg | informal event candid, unambiguous sole subject â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
 | `ballot-az-pima:state-senate-20:hernandez-alma` | /candidates/az-pima-state-senate-20-hernandez-alma.jpg | clean solo candid, sole subject â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
 | `ballot-az-pima:state-senate-20|Alma Hernandez` | /candidates/az-pima-state-senate-20-hernandez-alma.jpg | clean solo candid, sole subject â€” Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
+| `ballot-az-pima:state-treasurer:mansour-nick` | /candidates/az-pima-state-treasurer-Nick-Mansour.jpg | clean solo portrait (outdoor, wide hero crop) — the campaign site's own photo (http://static1.squarespace.com/static/68080891cdf97c2e874172e0/t/69d3fae562e8ac760d3be2d2/1775500005849/Mansour__DSF7615_GFX100S-hero.jpg?format=1500w), read 2026-08-14; committed copy served from our origin, metadata stripped |
+| `ballot-az-pima:state-treasurer|Nick Mansour` | /candidates/az-pima-state-treasurer-Nick-Mansour.jpg | clean solo portrait (outdoor, wide hero crop) — the campaign site's own photo (http://static1.squarespace.com/static/68080891cdf97c2e874172e0/t/69d3fae562e8ac760d3be2d2/1775500005849/Mansour__DSF7615_GFX100S-hero.jpg?format=1500w), read 2026-08-14; committed copy served from our origin, metadata stripped |
+| `ballot-az-pima:superintendent:horne-tom` | /candidates/az-pima-superintendent-horne-tom.jpg | solo event candid, sole subject — Wikimedia Commons, CC BY-SA 2.0, photo: Gage Skidmore from Surprise, AZ, United States of America; file page read 2026-08-14, committed copy served from our origin |
+| `ballot-az-pima:superintendent:leyba-ruiz-teresa` | /candidates/az-pima-superintendent-Teresa-Leyba-Ruiz.jpg | clean solo portrait (office, arms crossed) — the campaign site's own photo (https://static.wixstatic.com/media/f57a3d_70983a372846453f9db0bf6bd87ec3c5~mv2.jpg/v1/fill/w_1024,h_684,al_c/f57a3d_70983a372846453f9db0bf6bd87ec3c5~mv2.jpg), read 2026-08-14; committed copy served from our origin, metadata stripped |
+| `ballot-az-pima:superintendent:yee-kimberly` | /candidates/az-pima-superintendent-yee-kimberly.jpg | solo podium portrait wearing her name badge — Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
+| `ballot-az-pima:superintendent|Kimberly Yee` | /candidates/az-pima-superintendent-yee-kimberly.jpg | solo podium portrait wearing her name badge — Wikimedia Commons, CC BY-SA 3.0, photo: Gage Skidmore; file page read 2026-08-14, committed copy served from our origin |
+| `ballot-az-pima:superintendent|Teresa Leyba Ruiz` | /candidates/az-pima-superintendent-Teresa-Leyba-Ruiz.jpg | clean solo portrait (office, arms crossed) — the campaign site's own photo (https://static.wixstatic.com/media/f57a3d_70983a372846453f9db0bf6bd87ec3c5~mv2.jpg/v1/fill/w_1024,h_684,al_c/f57a3d_70983a372846453f9db0bf6bd87ec3c5~mv2.jpg), read 2026-08-14; committed copy served from our origin, metadata stripped |
 | `ballot-az-pima:us-house-6:ciscomani-juan` | /officials/C001133.jpg | Official portrait â€” GPO Congressional Pictorial Directory (public domain), committed copy at /officials/C001133.jpg; license recorded in lib/registry/official-photos.json |
 | `ballot-az-pima:us-house-6|Juan Ciscomani` | /officials/C001133.jpg | Official portrait â€” GPO Congressional Pictorial Directory (public domain), committed copy at /officials/C001133.jpg; license recorded in lib/registry/official-photos.json |
 | `ballot-az-pima:us-house-7:grijalva-adelita` | /officials/G000606.jpg | Committed portrait of the sitting member (license recorded in lib/registry/official-photos.json: Public domain â€” Damien Salas, Office of the Clerk U.S.House of Representatives (Wikimedia Commons, https://commons.wikimedia.org/wiki/File%3ARep.%20Adelita%20Grijalva%20Official%20Portrait.jpg)) |
@@ -602,10 +613,14 @@ array (118 recorded hunts, rung-by-rung with dates).
 | `ballot-nh-merrimack:state-house-merrimack-7:sargent-gregory-m-` | /candidates/nh-merrimack-state-house-merrimack-7-sargent-gregory-m-.jpg | Photo: the candidate's campaign site (gregforrep.com) â€” committed copy of https://gregforrep.com/greg-portrait.jpg served from our origin (fetched 2026-08-14, metadata stripped) |
 | `ballot-nh-merrimack:us-house-2:goodlander-maggie` | /officials/G000604.jpg | Official portrait â€” GPO Congressional Pictorial Directory (public domain), committed copy; license recorded in lib/registry/official-photos.json |
 | `ballot-nh-merrimack:us-house-2:tang-williams-lily` | /candidates/nh-merrimack-us-house-2-tang-williams-lily.png | Photo: the candidate's campaign site (lilytangwilliams.com) â€” committed copy of https://www.lilytangwilliams.com/wp-content/uploads/2022/01/lily-tang-williams-homepage.png served from our origin (fetched 2026-08-14, metadata stripped) |
+| `ballot-nh-merrimack:us-senate:brown-scott-p-` | /candidates/nh-merrimack-us-senate-brown-scott-p-.jpg | official U.S. Senate portrait, public domain — Wikimedia Commons, Public domain, photo: United States Congress; file page read 2026-08-14, committed copy served from our origin |
 | `ballot-nh-merrimack:us-senate:pappas-chris` | /officials/P000614.jpg | Official portrait â€” GPO Congressional Pictorial Directory (public domain), committed copy at /officials/P000614.jpg; license recorded in lib/registry/official-photos.json |
+| `ballot-nh-merrimack:us-senate:sununu-john-e-` | /candidates/nh-merrimack-us-senate-sununu-john-e-.jpg | official U.S. Senate portrait, public domain — Wikimedia Commons, Public domain, photo: Unknown authorUnknown author; file page read 2026-08-14, committed copy served from our origin |
 | `ballot-nj-morris:county-commissioner:selen` | /candidates/nj-morris-county-commissioner-selen.jpg | Photo: the candidate's campaign site (selenformorriscounty.com) â€” committed copy of https://static.wixstatic.com/media/7ef20c_da57f763291442e19e51303d0828044b~mv2.jpg served from our origin (fetched 2026-08-14, metadata stripped) |
 | `ballot-nj-morris:us-house-11:mejia` | /officials/M001246.jpg | Committed portrait of the sitting member (license recorded in lib/registry/official-photos.json: Public domain, official congressional portrait via Wikimedia Commons) |
 | `ballot-nj-morris:us-senate:booker` | /candidates/nj-morris-us-senate-booker.png | Photo: the candidate's campaign site (corybooker.com) â€” committed copy of https://corybooker.com/wp-content/uploads/2020/01/cory_sq_profile.png served from our origin (fetched 2026-08-14, metadata stripped) |
+| `ballot-nj-morris:us-senate:fernandez` | /candidates/nj-morris-us-senate-fernandez.png | clean solo studio portrait — the campaign site's own photo (https://img1.wsimg.com/isteam/ip/968e4fa3-7440-46a2-ae03-16126b33e7da/blob-3188f26.png), read 2026-08-14; committed copy served from our origin, metadata stripped |
+| `ballot-nj-morris:us-senate:murphy` | /candidates/nj-morris-us-senate-murphy.jpg | solo photo at his own campaign event, unambiguous sole subject — the campaign site's own photo (https://jerseyjustin4senate.org/wp-content/uploads/2024/01/D70_8879-684x1024.jpg), read 2026-08-14; committed copy served from our origin, metadata stripped |
 
 
 ## The census — every rendered person, counted by script
@@ -618,11 +633,11 @@ ballot candidacies and lineup nominees, federal officials attached to
 covered divisions, state legislators attached to covered divisions, and
 every curated local roster member.
 
-**466 of 750 rendered people have a portrait; 284 render initials.**
+**476 of 750 rendered people have a portrait; 274 render initials.**
 
 | Surface | Portraits | Initials | Total |
 |---|---|---|---|
-| ballot candidates | 23 | 86 | 109 |
+| ballot candidates | 33 | 76 | 109 |
 | federal officials | 437 | 0 | 437 |
 | state legislators | 0 | 130 | 130 |
 | curated local rosters | 3 | 68 | 71 |
@@ -633,7 +648,7 @@ every curated local roster member.
 | AK | 1 | 0 | 1 |
 | AL | 7 | 0 | 7 |
 | AR | 4 | 0 | 4 |
-| AZ | 28 | 87 | 115 |
+| AZ | 34 | 81 | 115 |
 | CA | 51 | 0 | 51 |
 | CO | 8 | 0 | 8 |
 | CT | 5 | 0 | 5 |
@@ -659,8 +674,8 @@ every curated local roster member.
 | NC | 14 | 0 | 14 |
 | ND | 1 | 0 | 1 |
 | NE | 3 | 0 | 3 |
-| NH | 12 | 140 | 152 |
-| NJ | 18 | 57 | 75 |
+| NH | 14 | 138 | 152 |
+| NJ | 20 | 55 | 75 |
 | NM | 3 | 0 | 3 |
 | NV | 4 | 0 | 4 |
 | NY | 26 | 0 | 26 |
@@ -683,11 +698,11 @@ every curated local roster member.
 
 ### The named misses — the dedicated photo session's shopping list
 
-**ballot candidates — AZ (34):** Teri Ann Hourihan; Risa Lombardo; Hugh Lytle; Ken Miceli; Scott Neely; Duwayne Collier; Alexander Kolodin; Gina Swoboda; Rodney Glassman; Warren Petersen; Nick Mansour; Michael Zepeda; Katherine Haley; Elijah Norton; Michael D. Butts; Teresa Leyba Ruiz; Brett Matthew Newby; Tom Horne; Kimberly Yee; Brian Matlock; JoAnna Mendoza; Iman Bah; Jereme Lance Peters; Daniel Francis Butierez Sr.; Ryan Slawson; Rocque Perez; Jackie O'Donnell Anderson; Aiden Nicholette Swallow; Cheryl Caswell; Genoveva Diaz; Ben Koehler; Walter "Les" Presmyk; Gary Swing; Bob Karp
+**ballot candidates — AZ (28):** Teri Ann Hourihan; Risa Lombardo; Hugh Lytle; Ken Miceli; Scott Neely; Duwayne Collier; Gina Swoboda; Rodney Glassman; Michael Zepeda; Katherine Haley; Elijah Norton; Michael D. Butts; Brett Matthew Newby; Brian Matlock; JoAnna Mendoza; Iman Bah; Jereme Lance Peters; Daniel Francis Butierez Sr.; Ryan Slawson; Rocque Perez; Jackie O'Donnell Anderson; Aiden Nicholette Swallow; Cheryl Caswell; Genoveva Diaz; Ben Koehler; Walter "Les" Presmyk; Gary Swing; Bob Karp
 
-**ballot candidates — NH (40):** Shaun Fife; Bob Wayne McClory; David Jarvis; Karishma Manzur; Maxwell L. Saal; John Vail; Tom Alciere; Scott P. Brown; Sky Danley; Andy Martin; Mary Maxwell; Richard A. McMenamon II; Sabrina Ann Smith; John E. Sununu; Paige Beauchemin; Michael Anthony Callis; Dan Nicholson; Victor Orlando; Rebecca Harned; Daniel E. Innis; Karen Elizabeth Ebel; Cynthia Rusis; Tobin Menard; Kim Strathdee; Vincent S. Ribas; Richard Bilodeau; Harold F. French; Peter Shephard; Frank T. Cassidy; Jason Gerhard; Ben Weir; Steven Endres; Meg Hagaman; Jon Raiche; Sarah Rogers; Kathleen Donnelly; Dianne E. Schuett; Erica S. Davis; Samantha Morse; Jane Bradstreet
+**ballot candidates — NH (38):** Shaun Fife; Bob Wayne McClory; David Jarvis; Karishma Manzur; Maxwell L. Saal; John Vail; Tom Alciere; Sky Danley; Andy Martin; Mary Maxwell; Richard A. McMenamon II; Sabrina Ann Smith; Paige Beauchemin; Michael Anthony Callis; Dan Nicholson; Victor Orlando; Rebecca Harned; Daniel E. Innis; Karen Elizabeth Ebel; Cynthia Rusis; Tobin Menard; Kim Strathdee; Vincent S. Ribas; Richard Bilodeau; Harold F. French; Peter Shephard; Frank T. Cassidy; Jason Gerhard; Ben Weir; Steven Endres; Meg Hagaman; Jon Raiche; Sarah Rogers; Kathleen Donnelly; Dianne E. Schuett; Erica S. Davis; Samantha Morse; Jane Bradstreet
 
-**ballot candidates — NJ (12):** Veronica FERNANDEZ; Joanne KUNIANSKY; Justin MURPHY; Alan B. BOND; Joe HATHAWAY; Christopher (Chris) RUSSO; Munir "Monir" MAMOUN; Lisa MEZIK; Russell G. NYDEGGER; Olivier BORNO; Brian ROACH; William SERAFIN
+**ballot candidates — NJ (10):** Joanne KUNIANSKY; Alan B. BOND; Joe HATHAWAY; Christopher (Chris) RUSSO; Munir "Monir" MAMOUN; Lisa MEZIK; Russell G. NYDEGGER; Olivier BORNO; Brian ROACH; William SERAFIN
 
 **state legislators — AZ (24):** Alma Hernández; Betty Villegas; Brian Fernandez; Chris Lopez; Chris Mathis; Consuelo Hernandez; David Gowan; Gail Griffin; Kevin Volk; Lupe Diaz; Mariana Sandoval; Michele Peña; Nancy Gutierrez; Priya Sundareshan; Rachel Keshel; Rosanna Gabaldón; Sally Gonzales; Stephanie Stahl Hamilton; Sylvia Allen; Teresa Martinez; T.J. Shope; Vince Leach; Walt Blackman; Wendy Rogers
 

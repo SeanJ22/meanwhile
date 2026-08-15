@@ -1,7 +1,14 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
+
+import {
+  PICK_JURISDICTION_LABELS,
+  isForeignPick,
+  jurisdictionKeyForContestId,
+  pickJurisdictionLabel,
+} from "../lib/ballot/pick-jurisdiction.ts";
 
 /**
  * 4a (2026-08-17): save-my-picks is DEVICE-LOCAL ONLY. These tests hold the
@@ -110,5 +117,79 @@ test("the transparency page says the card is drawn on-device", () => {
   assert.ok(
     /picks card/.test(page) && /drawn on your device/.test(page),
     "the card's device-side render is disclosed in the same commit that ships it",
+  );
+});
+
+/* ------------------------------------------------------- 4c (2026-08-15) --- */
+
+/**
+ * A pick made on another ballot says which one.
+ *
+ * The author's report: view New Hampshire's ballot with Arizona picks stored
+ * and the Arizona picks list unlabelled. Keeping them is right — a pick is
+ * the reader's private note and deleting it for looking at another state
+ * would lose deliberate work — so the missing thing was the sign, not the
+ * behaviour. The jurisdiction comes off the contest id, which every pick
+ * already carries, so picks saved before this shipped are labelled too.
+ */
+
+test("4c: a pick from another ballot is labelled, and only then", () => {
+  const az = "ballot-az-pima:governor";
+  const nh = "ballot-nh-merrimack:governor";
+
+  assert.equal(jurisdictionKeyForContestId(az), "az-pima");
+  assert.equal(jurisdictionKeyForContestId(nh), "nh-merrimack");
+  assert.equal(jurisdictionKeyForContestId("not-a-ballot-id"), null);
+
+  // Viewing New Hampshire: the Arizona pick is foreign, the local one is not.
+  assert.equal(isForeignPick(az, "nh-merrimack"), true);
+  assert.equal(isForeignPick(nh, "nh-merrimack"), false);
+
+  // No ballot resolved: nothing to differ from, so nothing is labelled.
+  // Labelling every row there would be noise rather than a sign.
+  assert.equal(isForeignPick(az, null), false);
+
+  assert.equal(pickJurisdictionLabel(az), "Pima County, Arizona");
+  assert.equal(pickJurisdictionLabel(nh), "Merrimack County, New Hampshire");
+});
+
+test("4c: every shipped ballot's contests have a reader-facing label", () => {
+  // The plain-language rule at full strength: `az-pima` is an internal key
+  // and may never render. A key with no label renders NOTHING, which is safe
+  // and also silent — so the denominator is checked here instead, against
+  // the ballot data that actually ships.
+  const dir = join(process.cwd(), "data", "ballot");
+  const keys = new Set<string>();
+  for (const name of readdirSync(dir)) {
+    if (!name.endsWith(".json")) continue;
+    const file = JSON.parse(readFileSync(join(dir, name), "utf8")) as {
+      contests?: { id?: string }[];
+    };
+    for (const contest of file.contests ?? []) {
+      const key = contest.id ? jurisdictionKeyForContestId(contest.id) : null;
+      if (key) keys.add(key);
+    }
+  }
+
+  assert.ok(keys.size >= 3, `only ${keys.size} ballot jurisdictions found in data/ballot`);
+  for (const key of keys) {
+    assert.ok(
+      PICK_JURISDICTION_LABELS[key],
+      `${key} ships contests but has no reader-facing label — its picks would render bare`,
+    );
+  }
+});
+
+test("4c: the label never leaks an internal key to a reader", () => {
+  for (const label of Object.values(PICK_JURISDICTION_LABELS)) {
+    assert.ok(!/ocd-division|[a-z]{2}-[a-z]+:/.test(label), `"${label}" carries an identifier`);
+    assert.match(label, /^[A-Z]/, `"${label}" does not read like a place name`);
+  }
+
+  // And the component only renders a label it has, never the key.
+  const source = read("components", "ballot", "my-picks.tsx");
+  assert.ok(
+    !/jurisdictionKeyForContestId/.test(source),
+    "my-picks reaches for the raw key; it must render only the label map's output",
   );
 });

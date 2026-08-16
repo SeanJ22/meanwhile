@@ -303,14 +303,23 @@
   --accent-school: #c2185b;
   --accent-school-glow: rgba(194, 24, 91, 0.18);
 
-  /* Deeper versions of the same three hues, so a filled tier toggle can carry
-     near-white text at 8:1 in a theme where the map accents themselves reach
-     3:1 either way. See the note beside the dark values. */
-  --tier-fill-local: #6d4600;
-  --tier-fill-state: #005745;
-  --tier-fill-national: #263d6e;
-  --tier-fill-on: #fdfaf4;
+  /* ITEM 10 (2026-08-16): THE AMBER REMNANT. These three were near-black
+     tints carrying near-white text, and the local one was #6d4600 — the exact
+     hex the dead interactive brown used to be, left behind on the selected
+     Local toggle. That is what the author saw. They also disagreed with the
+     LEGEND, which draws the same tiers in their bright accents, so the
+     control and the key to the map were two different colours for one tier.
 
+     The light theme now fills the way the dark theme already does — the tier
+     accent, bright, carrying DARK text — so the toggle IS the legend swatch
+     and the coupling is literal rather than approximate. The map is
+     untouched: no tier accent moved, which keeps the legend tuned against
+     the basemap as the author left it. Measured by `pnpm contrast`, both
+     themes, at the 7:1 sun bar. */
+  --tier-fill-local: #e0a213;
+  --tier-fill-state: #1cc3a2;
+  --tier-fill-national: #90afe4;
+  --tier-fill-on: #14161c;
   --party-democratic: #2457b8;
   --party-republican: #b3362a;
   --party-green: #1e7a3c;
@@ -474,7 +483,7 @@
   /* One focus treatment everywhere, visible against both panel and map, and
      against both themes. */
   :focus-visible {
-    outline: 2px solid var(--accent-local);
+    outline: 2px solid var(--link);
     outline-offset: 2px;
   }
 }
@@ -485,7 +494,7 @@
     font-size: 0.6875rem;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: var(--accent-local);
+    color: var(--link);
   }
 
   .notice-rule {
@@ -521,9 +530,9 @@
   }
 
   .icon-btn:hover {
-    border-color: var(--accent-local);
-    color: var(--accent-local);
-    background: var(--accent-local-glow);
+    border-color: var(--link);
+    color: var(--link);
+    background: color-mix(in srgb, var(--link) 14%, transparent);
   }
 
   /* ------------------------------------------------------------------
@@ -738,8 +747,8 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 }
 
 .brand-change:hover {
-  color: var(--accent-local);
-  border-color: var(--accent-local);
+  color: var(--link);
+  border-color: var(--link);
 }
 
 /* Reset sits at right: 0, theme toggle at right: 36px — Edia's placement. */
@@ -870,12 +879,12 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 
 .filter-select:focus,
 .scope-select:focus {
-  border-color: var(--accent-local);
+  border-color: var(--link);
 }
 
 .scope-select[data-active="true"] {
-  border-color: var(--accent-local);
-  background-color: var(--accent-local-glow);
+  border-color: var(--link);
+  background-color: color-mix(in srgb, var(--link) 14%, transparent);
 }
 
 /* ---- Stats ---- */
@@ -990,7 +999,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 }
 
 .search-input:focus {
-  border-color: var(--accent-local);
+  border-color: var(--link);
 }
 .search-input::placeholder {
   color: var(--text-muted);
@@ -1051,7 +1060,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 
 .search-ac-item:hover,
 .search-ac-item[data-selected="true"] {
-  background: var(--accent-local-glow);
+  background: color-mix(in srgb, var(--link) 14%, transparent);
 }
 
 .search-ac-type {
@@ -1077,7 +1086,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 }
 
 .search-ac-name b {
-  color: var(--accent-local);
+  color: var(--link);
   font-weight: 600;
 }
 
@@ -1145,7 +1154,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 }
 
 .prox-toggle input:focus-visible + .prox-slider {
-  outline: 2px solid var(--accent-local);
+  outline: 2px solid var(--link);
   outline-offset: 2px;
 }
 
@@ -1267,8 +1276,8 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   min-width: 16px;
   padding: 1px 5px;
   border-radius: 20px;
-  background: var(--accent-local);
-  color: var(--bg);
+  background: var(--action);
+  color: var(--action-on);
 }
 
 .filter-group {
@@ -1348,8 +1357,8 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 }
 
 .filter-chip[data-active="true"] {
-  background: var(--chip-accent, var(--accent-local));
-  border-color: var(--chip-accent, var(--accent-local));
+  background: var(--chip-accent, var(--action));
+  border-color: var(--chip-accent, var(--action));
   color: var(--bg);
 }
 
@@ -1364,7 +1373,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 }
 
 .filter-check input {
-  accent-color: var(--accent-local);
+  accent-color: var(--link);
 }
 
 .filter-check[data-active="true"] {
@@ -2558,7 +2567,7 @@ label:has(> input[type="checkbox"]) {
 
 .notice-fab:hover {
   color: var(--text);
-  border-color: var(--accent-local);
+  border-color: var(--link);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2586,12 +2595,12 @@ label:has(> input[type="checkbox"]) {
 }
 
 .count-badge:hover {
-  border-color: var(--accent-local);
+  border-color: var(--link);
   color: var(--text);
 }
 
 .count-badge[data-active="true"] {
-  border-color: var(--accent-local);
+  border-color: var(--link);
   background: var(--surface);
   color: var(--text);
 }
@@ -2750,7 +2759,7 @@ label:has(> input[type="checkbox"]) {
   cursor: pointer;
 }
 .al-more:hover {
-  color: var(--accent-local);
+  color: var(--link);
 }
 
 .al-empty {
@@ -2879,7 +2888,7 @@ label:has(> input[type="checkbox"]) {
 }
 
 .welcome-icon {
-  color: var(--accent-local);
+  color: var(--link);
   margin-bottom: 12px;
 }
 
@@ -2921,10 +2930,10 @@ label:has(> input[type="checkbox"]) {
 .welcome-submit {
   width: 100%;
   padding: 10px 18px;
-  border: 1px solid var(--accent-local);
+  border: 1px solid var(--action);
   border-radius: var(--radius);
-  background: var(--accent-local);
-  color: var(--bg);
+  background: var(--action);
+  color: var(--action-on);
   font-family: inherit;
   font-size: 13px;
   font-weight: 600;
@@ -2971,9 +2980,9 @@ label:has(> input[type="checkbox"]) {
 }
 
 .welcome-team-btn:hover {
-  border-color: var(--accent-local);
-  color: var(--accent-local);
-  background: var(--accent-local-glow);
+  border-color: var(--link);
+  color: var(--link);
+  background: color-mix(in srgb, var(--link) 14%, transparent);
 }
 
 .welcome-opps-btn {

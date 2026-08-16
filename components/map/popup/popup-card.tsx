@@ -1,8 +1,9 @@
 "use client";
 
 import { Maximize2, X } from "lucide-react";
-import { type ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 
+import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
 import type { Tier } from "@/lib/ocd/tiers";
 
 /**
@@ -49,6 +50,13 @@ interface PopupCardProps {
  * footer that opens the large tier — a corner icon alone was an entry
  * point readers never found. The title is plain text: the reader gesture
  * on a card is expansion, never clipboard (4a).
+ *
+ * **A press outside dismisses it** (item 1, 2026-08-15, the author: "that's
+ * natural mobile behavior"). One hook here rather than three in the callers,
+ * because all three compact cards — official, district, meeting — are this
+ * component, and a dismissal gesture that worked on two of the three would be
+ * worse than none. The corner X stays: the gesture is an addition, and a way
+ * out nobody discovers is not a way out.
  */
 export function PopupCard({
   type,
@@ -60,8 +68,16 @@ export function PopupCard({
   onClose,
   children,
 }: PopupCardProps) {
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  useDismissOnOutside(rootRef, onClose ?? (() => {}), Boolean(onClose));
+
   return (
-    <div className="popup-card pointer-events-auto" role="dialog" aria-label={title}>
+    <div
+      ref={rootRef}
+      className="popup-card pointer-events-auto"
+      role="dialog"
+      aria-label={title}
+    >
       {onClose && (
         <button
           type="button"

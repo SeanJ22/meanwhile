@@ -172,7 +172,7 @@ export function AskBox({
         <button
           type="button"
           onClick={ask}
-          className="shrink-0 cursor-pointer rounded-md border border-[var(--signal)] bg-[var(--signal)] px-3.5 text-[0.8125rem] font-semibold text-[var(--bg)] transition-opacity hover:opacity-90"
+          className="shrink-0 cursor-pointer rounded-md border border-[var(--action)] bg-[var(--action)] px-3.5 text-[0.8125rem] font-semibold text-[var(--action-on)] transition-opacity hover:opacity-90"
         >
           Ask
         </button>

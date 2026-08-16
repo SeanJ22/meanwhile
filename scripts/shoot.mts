@@ -71,13 +71,19 @@ await context.addInitScript(
       if (theme === "light") localStorage.setItem("wtp.theme", "light");
       else localStorage.removeItem("wtp.theme");
 
+      // SESSION storage since 2026-08-15 (6f): the reader's location no
+      // longer survives a tab closing, so seeding localStorage would seed
+      // nothing and every shot would be of the welcome overlay. The recents
+      // list is the localStorage half and is seeded with it, so the zip
+      // switcher has something to show.
       if (zip) {
-        localStorage.setItem(
+        sessionStorage.setItem(
           "wtp.approximate_location",
           JSON.stringify({ zip, savedAt: new Date().toISOString() }),
         );
+        localStorage.setItem("wtp.recent_zips", JSON.stringify([zip]));
       } else {
-        localStorage.removeItem("wtp.approximate_location");
+        sessionStorage.removeItem("wtp.approximate_location");
       }
 
       localStorage.setItem("wtp.show_districts", districts ? "1" : "0");

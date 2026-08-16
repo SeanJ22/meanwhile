@@ -1,5 +1,8 @@
 "use client";
 
+import { useRef } from "react";
+
+import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
 import { useNarrowing } from "@/hooks/use-narrowing";
 import { formatMiles } from "@/lib/map/format";
 
@@ -50,6 +53,13 @@ interface CoverageNoticeProps {
    * must never render the same way.
    */
   failedSourceOcdIds?: string[];
+  /**
+   * The answer under this card is the previous area's, and a fresher one is
+   * in flight (6f). The card DIMS rather than un-rendering — un-rendering is
+   * what made the bubble blink on every pan — and the dim is what keeps a
+   * held answer from reading as a settled one.
+   */
+  refreshing?: boolean;
   onOpenOfficial?: OpenOfficial;
   /** Shrinks the card to its corner bubble — the explicit control (3). */
   onMinimize?: () => void;
@@ -92,11 +102,21 @@ const BODY_CLASS_NOUN: Record<CoveredBody["bodyClass"], string> = {
   PRIVATE_ASSOCIATION: "Private",
 };
 
-const TIER_CLASS: Record<CoveredBody["tier"], string> = {
-  local: "text-local",
-  state: "text-state",
-  national: "text-national",
-};
+/**
+ * Item 5, the palette pass (2026-08-15). These were `text-local` /
+ * `text-state` / `text-national` — the tier accents — on every TYPE label in
+ * the list ("COUNTY", "MUNICIPAL", "SCHOOL DISTRICT", "COMMISSION") and on
+ * every office title beside a name. That put a saturated accent on the
+ * majority of the words in the card, and at 03255 or 85701 the result is a
+ * screen where nothing stands out because everything does.
+ *
+ * A type label is a STRUCTURAL label: it organizes the rows, it is not the
+ * record and it is not tappable. It renders neutral and confident — `--label`
+ * carries the weight instead of the colour. The tier accent keeps the place
+ * it actually earns: the LOCAL / STATE / FEDERAL section headers, and the
+ * map legend and tier toggles that share its token family.
+ */
+const TYPE_LABEL_CLASS = "text-label";
 
 function seatPhrase(seats: Seat[]): string | null {
   if (seats.length === 0) return null;
@@ -417,7 +437,7 @@ function CoverageBody({
                 </span>
               )}
               <span
-                className={`shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em] ${TIER_CLASS[body.tier]}`}
+                className={`shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em] ${TYPE_LABEL_CLASS}`}
               >
                 {/* A derived row is the division's government and tags by
                     division type. A curated row tags by what it is — the PHA
@@ -443,7 +463,7 @@ function CoverageBody({
                   key={holder.id}
                   className="flex items-baseline justify-between gap-3 pb-1 text-[0.75rem] leading-snug"
                 >
-                  <span className="text-local">Mayor</span>
+                  <span className={TYPE_LABEL_CLASS}>Mayor</span>
                   <span className="text-right">
                     <Holder
                       holder={holder}
@@ -487,7 +507,7 @@ function CoverageBody({
                   key={holder.id}
                   className="flex items-baseline justify-between gap-3 pb-1 text-[0.75rem] leading-snug"
                 >
-                  <span className="text-local">{holder.officeTitle}</span>
+                  <span className={TYPE_LABEL_CLASS}>{holder.officeTitle}</span>
                   <span className="text-right">
                     <Holder
                       holder={holder}
@@ -617,7 +637,7 @@ function CoverageBody({
                     key={seat.ocdId}
                     className="flex items-baseline justify-between gap-3 text-[0.75rem] leading-snug"
                   >
-                    <span className={TIER_CLASS[seat.tier]}>{seat.label}</span>
+                    <span className={TYPE_LABEL_CLASS}>{seat.label}</span>
                     <span className="text-right">
                       {seat.representatives.length > 0 ? (
                         <HolderList
@@ -641,7 +661,7 @@ function CoverageBody({
                     key={holder.id}
                     className="flex items-baseline justify-between gap-3 text-[0.75rem] leading-snug"
                   >
-                    <span className="text-state">{holder.officeTitle}</span>
+                    <span className={TYPE_LABEL_CLASS}>{holder.officeTitle}</span>
                     <span className="text-right">
                       <Holder
                         holder={holder}
@@ -681,7 +701,7 @@ function CoverageBody({
                     key={seat.ocdId}
                     className="flex items-baseline justify-between gap-3 text-[0.75rem] leading-snug"
                   >
-                    <span className={TIER_CLASS[seat.tier]}>{seat.label}</span>
+                    <span className={TYPE_LABEL_CLASS}>{seat.label}</span>
                     <span className="text-right">
                       {seat.representatives.length > 0 ? (
                         <HolderList
@@ -702,7 +722,7 @@ function CoverageBody({
                     key={holder.id}
                     className="flex items-baseline justify-between gap-3 text-[0.75rem] leading-snug"
                   >
-                    <span className="text-national">U.S. Senator</span>
+                    <span className={TYPE_LABEL_CLASS}>U.S. Senator</span>
                     <span className="text-right">
                       <Holder
                         holder={holder}
@@ -783,11 +803,22 @@ export function CoverageNotice({
   count,
   coverage,
   failedSourceOcdIds,
+  refreshing = false,
   onOpenOfficial,
   onMinimize,
   onNarrowApplied,
   onStreetPoint,
 }: CoverageNoticeProps) {
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  // Item 1 (2026-08-15): a press outside minimizes the card, the way a native
+  // sheet does. It MINIMIZES rather than closing — the card's collapsed form
+  // is its corner bubble, and there is no state in which it is gone, so the
+  // gesture lands the reader exactly where the explicit control does.
+  //
+  // Declared before the early return below so the hook order is stable; the
+  // hook itself no-ops when `onMinimize` is absent.
+  useDismissOnOutside(rootRef, onMinimize ?? (() => {}), Boolean(onMinimize));
+
   // The notice renders on every failure rung, and on the exact rung whenever
   // there is representation to show. It used to return null on `exact`
   // outright — and since this is the only surface that renders who governs
@@ -817,7 +848,11 @@ export function CoverageNotice({
   const ballotZip = zip && /^\d{5}$/.test(zip) ? zip : null;
 
   return (
-    <div className="coverage-notice panel pointer-events-auto relative max-w-md px-4 py-3.5">
+    <div
+      ref={rootRef}
+      data-refreshing={refreshing ? "true" : undefined}
+      className="coverage-notice panel pointer-events-auto relative max-w-md px-4 py-3.5"
+    >
       {onMinimize && (
         // The explicit way out (3) — engagement still collapses it, but the
         // reader shouldn't have to know that.

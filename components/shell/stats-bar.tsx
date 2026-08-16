@@ -66,12 +66,13 @@ export function StatsBar() {
         label="Meetings"
         value={view.meetings}
         style={accent}
-        accent
+        open={ui.listOverlayOpen}
         onOpen={() => dispatch({ type: "list/open", open: true })}
       />
       <Card
         label="Bodies"
         value={view.bodies}
+        open={ui.door === "bodies"}
         onOpen={() => dispatch({ type: "door/open", door: "bodies" })}
       />
       {/* The number never travels without what it counts. "179 DISTRICTS"
@@ -81,11 +82,13 @@ export function StatsBar() {
         label={`Districts ${view.districtsLabel.toLowerCase()}`}
         value={view.districts}
         sub={view.districtsSecondary}
+        open={ui.door === "districts"}
         onOpen={() => dispatch({ type: "door/open", door: "districts" })}
       />
       <Card
         label="Officials"
         value={view.officials}
+        open={ui.door === "officials"}
         onOpen={() => dispatch({ type: "door/open", door: "officials" })}
       />
 
@@ -116,12 +119,28 @@ export function StatsBar() {
   );
 }
 
+/**
+ * One counter, which is also the door to what it counts.
+ *
+ * **The highlight means one thing now: this door is OPEN** (6f, 2026-08-15).
+ * The author: MEETINGS was coloured while the other three were not, and it
+ * did not move when any of them was tapped. It was decoration wearing the
+ * clothes of a selection state — the reader learns that a coloured tile means
+ * something, tests the theory by tapping, and is taught that the app's
+ * signals are noise. His instruction was "make selection state consistent and
+ * meaningful, or remove the highlight", and meaningful is strictly better
+ * here because these four tiles genuinely have a state worth showing.
+ *
+ * So the accent moves with the reader: whichever list or door is on screen is
+ * the tile that lights, all four behave identically, and nothing is lit when
+ * nothing is open.
+ */
 function Card({
   label,
   value,
   sub = null,
   style,
-  accent = false,
+  open = false,
   onOpen,
 }: {
   label: string;
@@ -129,23 +148,21 @@ function Card({
   /** A second honest number, kept rather than thrown away. */
   sub?: string | null;
   style?: React.CSSProperties;
-  accent?: boolean;
+  /** This tile's list or door is the one currently on screen. */
+  open?: boolean;
   onOpen?: () => void;
 }) {
   return (
     <button
       type="button"
       className="stat-card cursor-pointer text-left"
+      data-open={open || undefined}
+      aria-expanded={open}
       style={style}
       onClick={onOpen}
       aria-label={`Open the ${label.toLowerCase()} list`}
     >
-      <div
-        className="num"
-        style={accent ? { color: "var(--tier-accent, var(--text))" } : undefined}
-      >
-        {value}
-      </div>
+      <div className="num">{value}</div>
       <div className="label">{label}</div>
       {sub && (
         <div className="label" style={{ color: "var(--text-muted)" }}>

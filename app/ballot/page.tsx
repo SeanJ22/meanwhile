@@ -18,6 +18,7 @@ import {
   cardForCandidacy,
   cardForNominee,
 } from "@/lib/ballot/candidate-cards";
+import { BallotNarrowing } from "@/components/ballot/ballot-narrowing";
 import { CandidateCard } from "@/components/ballot/candidate-card";
 import { MyPicks } from "@/components/ballot/my-picks";
 import { jurisdictionKeyForContestId } from "@/lib/ballot/pick-jurisdiction";
@@ -263,6 +264,13 @@ export default async function BallotPage({
         election authorities, with the filing linked on every item.{" "}
         <span className="font-medium">We never suggest how to vote.</span>
       </p>
+
+      {/* Item 2 (2026-08-15): the way out of the limitation the sentence
+          above states. Until now the page named the gap and stopped there;
+          this resolves a street to a point and narrows the contests to the
+          districts that actually contain it. Nothing is deleted — the
+          set-aside contests are one tap from coming back. */}
+      {zip && <BallotNarrowing zip={zip} />}
 
       {/* Item 4 (2026-08-14 second session): the standing header — the
           tester's "that's when you want to catch somebody and make them
@@ -529,6 +537,11 @@ export default async function BallotPage({
           return (
             <section
               key={contest.id}
+              // Item 2: what the address narrowing hides and un-hides. The
+              // page always RENDERS every contest the zip produced — the
+              // narrowing is presentation, so "show the whole zip again" is
+              // instant and can never fail.
+              data-contest-id={contest.id}
               className="mt-5 rounded-[10px] border border-[var(--panel-border)] bg-[var(--panel-bg)] p-5 shadow-[var(--shadow-panel)]"
             >
               <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
@@ -840,6 +853,7 @@ export default async function BallotPage({
             return (
               <div
                 key={contest.id}
+                data-contest-id={contest.id}
                 className="mt-3.5 rounded-[10px] border border-[var(--panel-border)] bg-[var(--panel-bg)] p-5 shadow-[var(--shadow-panel)]"
               >
                 <h3 className="text-[0.9375rem] font-semibold tracking-tight">

@@ -220,7 +220,7 @@ if (page.url().includes("/ballot")) {
       ".maplibregl-ctrl-top-right",
       ".maplibregl-ctrl-top-left",
       ".legend",
-      ".ballot-bubble",
+      ".ballot-pill",
       ".count-badge",
     ]) {
       const el = document.querySelector(selector);
@@ -243,7 +243,7 @@ if (page.url().includes("/ballot")) {
   // And nothing has escaped the viewport upward the way the card did.
   const offscreen = await page.evaluate(() => {
     const out: string[] = [];
-    for (const selector of [".map-bottom-stack > .panel", ".count-badge", ".ballot-bubble"]) {
+    for (const selector of [".map-bottom-stack > .panel", ".count-badge", ".ballot-pill"]) {
       const el = document.querySelector(selector);
       if (!el) continue;
       const r = el.getBoundingClientRect();

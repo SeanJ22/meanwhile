@@ -43,6 +43,7 @@ import type {
   FundingCandidate,
   FundingAbsence,
   ContributionRow,
+  SecondHopCommittee,
 } from "../lib/funding/types.ts";
 import { findShrinkRegressions } from "../lib/funding/guard.ts";
 
@@ -94,6 +95,9 @@ interface FecScheduleARow {
   entity_type?: string;
   /** Form 3 line number; 13A is loans from the candidate. */
   line_number?: string;
+  /** The contributing COMMITTEE's own FEC id, when there is one. The join
+   *  key for the second hop (item 3) — never a name match. */
+  contributor_id?: string | null;
   /** Present when the contributor is itself a registered committee — its
    *  own filed typing (item 6). Absent for individuals. */
   contributor?: {
@@ -102,6 +106,54 @@ interface FecScheduleARow {
     designation?: string | null;
   } | null;
 }
+interface FecCommitteeDetail {
+  committee_id?: string;
+  name?: string;
+  committee_type?: string | null;
+  organization_type?: string | null;
+  designation?: string | null;
+}
+interface FecCommitteeTotalsRow {
+  cycle?: number;
+  receipts?: number;
+}
+
+/**
+ * Which Schedule A rows are CONTRIBUTIONS (2026-08-15, found by the item-3
+ * line-number census, and it was a live defect).
+ *
+ * `/schedules/schedule_a/` returns every receipt a committee reports, not
+ * every gift. The August snapshot's "Largest reported contributions" list
+ * carried four line-14 rows (loan repayments coming BACK to the campaign)
+ * and seven line-15 rows (offsets to operating expenditures — a vendor
+ * refunding the campaign), and the second hop pulled eight line-17 rows —
+ * ActBlue's investment income, which would have rendered as "FIDELITY gave
+ * ActBlue $3.7 million". None of those is somebody funding a campaign, and
+ * a surface headed "contributions" claiming otherwise is a false claim
+ * about real money.
+ *
+ * Kept: line 11* (individuals, party committees, other political
+ * committees, the candidate) and line 12 (transfers from other authorized
+ * committees), plus 13A — a candidate's loan to their own campaign, which
+ * IS money funding the campaign and already renders as exactly that (D41).
+ * Everything else is money moving the other way or not a gift at all.
+ */
+function isContributionLine(lineNumber: string | null): boolean {
+  if (!lineNumber) return false;
+  return lineNumber.startsWith("11") || lineNumber === "12" || lineNumber === "13A";
+}
+
+/** Dropped rows, counted by line number, so a clip never reads as a clean run. */
+const droppedByLine = new Map<string, number>();
+function noteDrop(lineNumber: string | null): void {
+  const key = lineNumber ?? "(no line filed)";
+  droppedByLine.set(key, (droppedByLine.get(key) ?? 0) + 1);
+}
+
+/** How many top rows either hop keeps after filtering. */
+const TOP_N = 5;
+/** How many are FETCHED, so filtering does not silently shorten a list. */
+const FETCH_N = 20;
 
 let requestCount = 0;
 async function fecGet<T>(
@@ -117,6 +169,18 @@ async function fecGet<T>(
     if (response.status === 429) {
       const wait = Number(response.headers.get("retry-after") ?? "30") * 1000;
       console.warn(`  429 — honouring Retry-After ${wait / 1000}s`);
+      await new Promise((r) => setTimeout(r, wait));
+      continue;
+    }
+    // A 5xx is the FEC timing out under its own load, not an answer.
+    // Mark Kelly's Schedule A returned 504 on 2026-08-15 and again at every
+    // page size minutes later returned 200 with the full book — so a single
+    // 5xx read as "no contributors" is the Kelly-504 shape arriving through
+    // a different door. Backed off and retried, politely, before it is
+    // allowed to become a claim about a campaign's donors.
+    if (response.status >= 500) {
+      const wait = 2000 * (attempt + 1);
+      console.warn(`  ${response.status} on ${path} — backing off ${wait / 1000}s and retrying`);
       await new Promise((r) => setTimeout(r, wait));
       continue;
     }
@@ -526,11 +590,20 @@ for (const [fecId, entry] of byFecId) {
               two_year_transaction_period: CYCLE,
               sort: "-contribution_receipt_amount",
               is_individual: isIndividual,
-              per_page: 5,
+              // Fetch deep, filter, then take the top N — so removing a
+              // non-contribution row shortens nothing.
+              per_page: FETCH_N,
             })
           ).results ?? [];
+        const kept: ContributionRow[] = [];
         for (const row of rows) {
-          contributors.push({
+          const line = row.line_number ? String(row.line_number) : null;
+          const amount = Number(row.contribution_receipt_amount ?? 0);
+          if (!isContributionLine(line) || amount <= 0) {
+            noteDrop(line);
+            continue;
+          }
+          kept.push({
             dataClass: "FEC_CONTRIBUTOR",
             kind: isIndividual ? "INDIVIDUAL" : "COMMITTEE_OR_ORGANIZATION",
             contributorName: String(row.contributor_name ?? "").trim() || "(name not filed)",
@@ -560,8 +633,14 @@ for (const [fecId, entry] of byFecId) {
             designation: row.contributor?.designation
               ? String(row.contributor.designation)
               : null,
+            // Item 3 (2026-08-15): the contributing committee's own FEC id,
+            // the ONLY basis for the second hop. Absent on individuals.
+            contributorCommitteeId: row.contributor_id
+              ? String(row.contributor_id)
+              : null,
           });
         }
+        contributors.push(...kept.slice(0, TOP_N));
       } catch (error) {
         console.log(`  schedule_a (${isIndividual ? "individuals" : "committees"}) failed: ${(error as Error).message}`);
       }
@@ -607,6 +686,140 @@ for (const [fecId, entry] of byFecId) {
   );
 }
 
+// ---- 3b. The second hop — each contributing committee's own books --------
+//
+// Item 3 (2026-08-15, the author's design). A joint fundraising committee is
+// itself an FEC filer: "who gives to the Booker Victory Fund" is answered by
+// the FUND's own Schedule A, one level down, never by inference from this
+// candidate's. Fetched once per distinct committee id — the same fund
+// appearing on three candidates costs one fetch and stores one record, and
+// the distinctness invariant (D40's family) means two ids must never carry
+// identical books.
+//
+// Three requests per committee: its registration (name and filed typing),
+// its cycle totals, and its own top itemized receipts.
+//
+// EVERY committee id on ANY row is fetched, including the conduit ids that
+// ride on INDIVIDUAL rows — an individual giving through ActBlue or a PAC's
+// earmark files with that committee's id attached. Those hops are stored
+// but never rendered: only committee-typed rows get an expander
+// (lib/funding/snapshot.ts, secondHopForGroups), because "who gives to the
+// committee this person's cheque passed through" is a different question
+// from the one the tea button asks. Fetching them anyway keeps the run's
+// denominator equal to the ids the data actually contains, which is what
+// the thin guard compares against run to run.
+
+const hopIds = new Set<string>();
+for (const candidate of candidates) {
+  for (const row of candidate.topContributions) {
+    if (row.contributorCommitteeId) hopIds.add(row.contributorCommitteeId);
+  }
+}
+
+const secondHop: SecondHopCommittee[] = [];
+let hopEmpty = 0;
+console.log("");
+console.log(`=== second hop: ${hopIds.size} distinct contributing committees ===`);
+
+for (const committeeId of hopIds) {
+  process.stdout.write(`  ${committeeId} … `);
+  let detail: FecCommitteeDetail | null = null;
+  try {
+    detail =
+      (await fecGet<FecCommitteeDetail>(`/committee/${committeeId}/`, { per_page: 1 }))
+        .results?.[0] ?? null;
+  } catch (error) {
+    console.log(`registration fetch failed: ${(error as Error).message}`);
+    continue;
+  }
+  if (!detail) {
+    console.log("no FEC registration returned — skipped, nothing invented");
+    continue;
+  }
+
+  let receipts: number | null = null;
+  try {
+    const rows =
+      (await fecGet<FecCommitteeTotalsRow>(`/committee/${committeeId}/totals/`, {
+        cycle: CYCLE,
+        per_page: 5,
+      })).results ?? [];
+    const row = rows.find((r) => r.cycle === CYCLE) ?? null;
+    receipts = row ? Number(row.receipts ?? 0) : null;
+  } catch {
+    receipts = null; // Stated as unknown rather than guessed at zero.
+  }
+
+  const hopRows: ContributionRow[] = [];
+  try {
+    const rows =
+      (
+        await fecGet<FecScheduleARow>("/schedules/schedule_a/", {
+          committee_id: committeeId,
+          two_year_transaction_period: CYCLE,
+          sort: "-contribution_receipt_amount",
+          per_page: FETCH_N,
+        })
+      ).results ?? [];
+    for (const row of rows) {
+      if (hopRows.length >= TOP_N) break;
+      const line = row.line_number ? String(row.line_number) : null;
+      const amount = Number(row.contribution_receipt_amount ?? 0);
+      // The same contribution-line rule as the first hop. Without it,
+      // ActBlue's escrow interest (line 17, filed under "FIDELITY") would
+      // render as its three biggest donors.
+      if (!isContributionLine(line) || amount <= 0) {
+        noteDrop(line);
+        continue;
+      }
+      hopRows.push({
+        dataClass: "FEC_CONTRIBUTOR",
+        kind: row.entity_type === "IND" ? "INDIVIDUAL" : "COMMITTEE_OR_ORGANIZATION",
+        contributorName: String(row.contributor_name ?? "").trim() || "(name not filed)",
+        amount: Number(row.contribution_receipt_amount ?? 0),
+        receiptDate: row.contribution_receipt_date
+          ? String(row.contribution_receipt_date).slice(0, 10)
+          : null,
+        city: row.contributor_city ? String(row.contributor_city) : null,
+        state: row.contributor_state ? String(row.contributor_state) : null,
+        entityType: row.entity_type ? String(row.entity_type) : null,
+        lineNumber: row.line_number ? String(row.line_number) : null,
+        committeeType: row.contributor?.committee_type
+          ? String(row.contributor.committee_type)
+          : null,
+        organizationType: row.contributor?.organization_type
+          ? String(row.contributor.organization_type)
+          : null,
+        designation: row.contributor?.designation
+          ? String(row.contributor.designation)
+          : null,
+        contributorCommitteeId: row.contributor_id ? String(row.contributor_id) : null,
+      });
+    }
+  } catch (error) {
+    console.log(`schedule_a failed: ${(error as Error).message}`);
+  }
+
+  if (hopRows.length === 0) hopEmpty += 1;
+  secondHop.push({
+    dataClass: "FEC_CONTRIBUTOR",
+    committeeId,
+    name: String(detail.name ?? "").trim() || committeeId,
+    committeeType: detail.committee_type ? String(detail.committee_type) : null,
+    organizationType: detail.organization_type ? String(detail.organization_type) : null,
+    designation: detail.designation ? String(detail.designation) : null,
+    topContributions: hopRows,
+    receipts,
+    provenance: {
+      sourceUrl: `https://www.fec.gov/data/committee/${committeeId}/`,
+      sourceOrg: "Federal Election Commission",
+      collectedAt: today,
+      verifiedAt: today,
+    },
+  });
+  console.log(`${detail.name ?? "(unnamed)"} — ${hopRows.length} top receipts`);
+}
+
 // ---- 4. Write the snapshot, counts stated --------------------------------
 
 const snapshot: FundingSnapshot = {
@@ -621,6 +834,7 @@ const snapshot: FundingSnapshot = {
   },
   candidates,
   absences: misses,
+  secondHop,
 };
 
 // ---- The thin-snapshot guard (session brief 2, wall clock 2026-08-14) ----
@@ -666,6 +880,20 @@ console.log("");
 console.log("=== snapshot written ===");
 console.log(`candidates with totals: ${totalsHits}/${byFecId.size} matched FEC ids (${totalsEmpty} registered-but-no-filings)`);
 console.log(`contributor rows: ${candidates.reduce((n, c) => n + c.topContributions.length, 0)} across ${candidates.filter((c) => c.topContributions.length > 0).length} candidates`);
+console.log(
+  `second hop: ${secondHop.length}/${hopIds.size} committees fetched, ` +
+    `${secondHop.reduce((n, c) => n + c.topContributions.length, 0)} rows, ` +
+    `${hopEmpty} committee(s) returned no itemized receipts (recorded, not rendered)`,
+);
+// A deliberate clip must not read as a failure, and a real failure must not
+// read as a clip (CLAUDE.md): every dropped row is counted by the line
+// number it was dropped for.
+const droppedTotal = [...droppedByLine.values()].reduce((n, v) => n + v, 0);
+console.log(
+  `non-contribution receipts dropped: ${droppedTotal} ` +
+    `(${[...droppedByLine.entries()].sort().map(([line, n]) => `line ${line}: ${n}`).join(", ") || "none"}) ` +
+    `— loan repayments, vendor offsets and investment income are not gifts`,
+);
 console.log(`absences recorded: ${misses.length}`);
 console.log(`total FEC requests: ${requestCount}`);
 console.log(OUT);

@@ -2,11 +2,13 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { ripcordPulled } from "../ripcords.ts";
+import type { ContributorGroups } from "./grouping.ts";
 import type {
   ContributionRow,
   FundingAbsence,
   FundingCandidate,
   FundingSnapshot,
+  SecondHopCommittee,
 } from "./types.ts";
 
 /**
@@ -56,6 +58,38 @@ export function contributorRowsForDisplay(
 ): ContributionRow[] {
   if (ripcordPulled("ripcord.fecContributorDisplay")) return [];
   return candidate.topContributions;
+}
+
+/**
+ * The second hop for a set of grouped contributor rows (item 3) — the
+ * contributing committees' own books, keyed by committee id.
+ *
+ * Same ripcord as the first hop: these are FEC_CONTRIBUTOR rows, and
+ * `ripcord.fecContributorDisplay` empties them HERE, at the accessor, not
+ * in a component. Only ids the hop actually holds are returned, so a
+ * committee we never fetched renders no expander rather than an empty one —
+ * "we haven't looked one level down for this committee" and "this committee
+ * has no donors" are different claims and must not render the same.
+ */
+export function secondHopForGroups(
+  groups: ContributorGroups,
+): Record<string, SecondHopCommittee> {
+  if (ripcordPulled("ripcord.fecContributorDisplay")) return {};
+  const wanted = new Set(
+    groups.organizations
+      .map((g) => g.contributorCommitteeId)
+      .filter((id): id is string => id !== null),
+  );
+  if (wanted.size === 0) return {};
+  const out: Record<string, SecondHopCommittee> = {};
+  for (const committee of getFundingSnapshot().secondHop ?? []) {
+    if (!wanted.has(committee.committeeId)) continue;
+    // A committee whose own hop came back empty is stored (so the run is
+    // recorded) but never rendered as an expander with nothing in it.
+    if (committee.topContributions.length === 0) continue;
+    out[committee.committeeId] = committee;
+  }
+  return out;
 }
 
 /**

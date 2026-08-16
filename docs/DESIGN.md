@@ -335,3 +335,116 @@ a fixed width **will always eventually starve the value**. It rendered
 about to do the same to the who-governs seat rows. Where a label can be
 arbitrarily long — an office title, a body name — **stack it**. Do not tune
 the width.
+
+## The who-governs list is the one surface with no pills (2026-08-16, the author's ruling)
+
+The previous pass gave this list the battlecards' full element grammar — a
+filled party chip and an outbound "Their site →" beside every name — and the
+author's verdict on the result was "way overcrowded... a forever scroll". It
+was: the card carries twenty-odd people at 85701, and twenty rows each
+wearing a chip, a link and a source mark is a wall rather than a list.
+
+**The register here is DENSITY.** Three things per row and nothing else:
+
+- the **name**, which opens that person's small battlecard;
+- the **party as PLAIN TEXT** in its party colour (`.person-row-party`) —
+  never a filled pill. The pill is banned from this surface and from this
+  surface only;
+- the **source mark**, where the standing per-surface sourcing rules require
+  one. Sourcing did not change; this is layout and link grammar.
+
+## The click grammar on the map's cards (2026-08-16, the author's ruling)
+
+Exactly two moves, and every door out of the product is behind one of them:
+
+- a **PERSON's name** opens their **small battlecard**;
+- a **BODY's row** opens its **large battlecard**.
+
+**No external link lives in a list.** Pima and Tucson used to link straight
+out to their own websites from the who-governs rows, throwing a reader out of
+the product before it had told them anything about the body. The official
+site is a fact INSIDE the body's card now, beside the roster, the sittings
+and the records behind them — and no such row renders where no hunt found a
+homepage, rather than a guessed URL. This supersedes the click-out half of
+M92 on this surface.
+
+## The small popup is three things (2026-08-16, the author's ruling)
+
+The author on the previous form: "ugly and scattered, too much info." It
+carried a name, a party pill, outlined chips (state, chamber, incumbent), an
+office line, an in-seat date and a wrapped grid of up to ten contact pills,
+inside 300px.
+
+It is:
+
+1. the **name**, with the photo-or-initials circle;
+2. the **party as the FILLED PILL** — the pill belongs on battlecards, small
+   and large;
+3. the **contact pills in ONE VERTICAL COLUMN** — phone, email, contact form,
+   official page, campaign site, X where held. Facebook, YouTube, Instagram
+   and Mastodon are large-card only.
+
+**More** sits at the bottom, full width, aligned with the column, and opens
+the large battlecard — which carries the office, the in-seat line, the chips,
+the full social row, the record and everything else. **Nothing is deleted; it
+moved one tap down.** Measured at 1440: 1 chip, 0 role lines, 0 in-seat lines,
+3 pills in 1 column at 262px each, More at 262px, card 300px.
+
+The card's **eyebrow keeps the office title**: it is the structural label —
+what kind of card this is, in the tier's colour — that every popup in this
+system carries. What went is the role line inside the body, which said the
+same words a second time four pixels lower.
+
+`identityOnly` on `PersonIdentity` is what enforces this, and it suppresses
+all three of the office line, the in-seat line and the outlined chips at
+their own lines rather than being a prop that reads well and does nothing.
+
+## A section inside a pane indents (2026-08-16)
+
+`CardSection` takes `level="sub"`. A sub-group insets behind a rule and steps
+down in type size, corner radius and fill, while keeping its header, its
+count, its chevron and its tap target.
+
+The defect it fixes: "Votes on laws" and "Votes on people" rendered at the
+top level's size and colour INSIDE the Voting Record pane, both closed by
+default, so selecting "When it mattered" produced one small paragraph above
+two bars that read as neither content nor controls — the author's report was
+that the pane rendered nothing. **A view the reader has just chosen opens
+with its content**; none of the four sanctioned friction exceptions covers
+making them tap twice more. Measured after: 2137px tall, 6227 characters,
+2 sub-groups both open, 20 entries, indented 10px.
+
+## The confirmation pill, and why its guard measures a ratio
+
+A settled reaction renders as a filled pill in the vote grammar — green for
+yes, red for no, dark gray for unsure, the five-point funding scale in its own
+deeper shades. `SAVING` and `NOT_COUNTED` never reach it.
+
+It shipped once as `.reaction-choice--settled` written ABOVE `.reaction-choice`
+at the same specificity, so the base control's `background: var(--panel-bg)`
+won on source order and took the fill back, leaving near-white `--vote-text`
+on the panel ground at **1.01:1** in light theme. Every class name in the
+component read correctly and the button blanked on screen. **The rule is
+`.reaction-choice.reaction-choice--settled`, doubled deliberately, so source
+order can never decide it again** — and the guard resolves the class list
+through the stylesheet to a literal colour and a contrast ratio rather than
+reading class names and believing them.
+
+## Interactive is AZURE, tier accents are not interactive (2026-08-16)
+
+The brown-dies pass moved the interactive accent through three TOKENS —
+`--link`, `--action`, `--signal`. Every rule written against `--accent-local`
+DIRECTLY kept the amber, and twenty-eight of them did: the page's focus ring,
+icon-button hovers, the selects, the search input's focus, the autocomplete's
+selection and match bold, the filter chips and their counter, the count
+badges, the notice FAB, and the welcome overlay's submit button.
+
+**`--accent-local` is a TIER token.** It may be read only where the tier is
+the meaning — the token aliases and the map pins. Never by a hover, a focus,
+a selection or a filled action. Guarded in `tests/amber-remnant.test.ts`,
+which allowlists the tier-semantic declarations one whole line at a time.
+
+The selected tier toggle's fill is on `pnpm contrast`'s list now. It was not,
+which is how the light theme's Local fill stayed `#6d4600` — the dead
+interactive brown's own hex — through a palette pass whose whole point was
+killing that colour. **A fill nobody measures is a fill nobody notices.**

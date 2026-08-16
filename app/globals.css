@@ -310,12 +310,14 @@
      LEGEND, which draws the same tiers in their bright accents, so the
      control and the key to the map were two different colours for one tier.
 
-     The light theme now fills the way the dark theme already does — the tier
-     accent, bright, carrying DARK text — so the toggle IS the legend swatch
-     and the coupling is literal rather than approximate. The map is
-     untouched: no tier accent moved, which keeps the legend tuned against
-     the basemap as the author left it. Measured by `pnpm contrast`, both
-     themes, at the 7:1 sun bar. */
+     The light theme now fills the way the dark theme already does — bright,
+     carrying DARK text — so the toggle reads as its tier's own colour beside
+     the legend instead of as a near-black tint. Not the identical hex: the
+     light map accents sit at mid luminance and cannot carry text either way
+     (`--accent-local` takes `--bg` at 2.8:1 and white at 3.0:1), so these are
+     the readable-fill versions of the same hues. The map is untouched — no
+     tier accent moved, which keeps the legend tuned against the basemap as
+     the author left it. Measured by `pnpm contrast`, both themes. */
   --tier-fill-local: #e0a213;
   --tier-fill-state: #1cc3a2;
   --tier-fill-national: #90afe4;

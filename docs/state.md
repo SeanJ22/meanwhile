@@ -6727,3 +6727,185 @@ fired.
 nationally, so a new state's depth run starts with the federal tier already
 done; and the two-column trap is written down as a rung, with the measurement
 that detects it (`lab.scrollWidth > lab.clientWidth`).
+
+## 33. The 2026-08-16 session (third of the day) — the correction pass: the sensor proves it counts, and a district card stops denying people we hold
+
+The author's production pass arrived as the session brief (committed at
+`docs/session-brief.md`). Two of its items were truth defects live on
+production and they led in order. **No untriaged entries were found in
+`docs/defects.md` at session-open** — every entry already carried its row
+pointer.
+
+### The sensor was counting. The screen was not saying so.
+
+The author, on production: tapping **Yes** on "Do you like this vote?" BLANKS
+the button; tapping **Love it** on the funding question makes it DISAPPEAR.
+The brief asked for a diagnosis in one of two directions before any component
+was touched, and named the stakes: direction (b) — a swallowed error on the
+product's core sensor — would mean the honest-outcome rule had been violated
+on production and the report would have to say for how long.
+
+**It is direction (a), and the evidence came out of Neon before a line was
+edited.** Three reaction rows landed today under two browser keys:
+03:57:38Z `FUNDING_TOTAL_REACTION` H2AZ02360 **LOVE**, 16:26:01Z `CANDIDATE`
+`ballot-az-pima:governor|Katie Hobbs` **YES**, 16:36:15Z
+`CONTRIBUTOR_REACTION` S0AZ00350 **DISLIKE** — each with its scale version,
+`ANONYMOUS` tier, `suspect_reason` null. **The author's own Love it tap is in
+the table.** P11's `COUNTED`/`NOT_COUNTED` contract was never violated: the
+204 was earned and the settled state was correct. It was invisible.
+
+**The cause is the CASCADE, not the component**, and it was verified on the
+production artifact rather than in the repo. In the shipped stylesheet chunk,
+`.reaction-choice--settled` sits at byte 59,982 and `.reaction-choice` at
+61,497 — the base rule LATER, at the same specificity — so
+`background: var(--panel-bg)` won and took the fill back, while
+`color: var(--vote-text)` and `border-color: transparent` survived from the
+settled rule. Near-white `#fdfaf4` on `#f8f9fa` measures **1.012:1**: no
+text, no border, an empty rectangle.
+
+**Light theme only**, which is why it read as a blank rather than as a missing
+colour — in dark the same broken cascade measured 15.60:1, so the label stayed
+legible and only the fill was gone. Live from the merge of PR #47 (36440d7,
+2026-08-16 02:00 −07:00) until this fix; the pill and the defect entered in
+the same commit.
+
+The rule is `.reaction-choice.reaction-choice--settled` now, doubled so
+source order can never decide it again, and it sits with the control it
+modifies. **The guard refuses to read class names and believe them**, because
+every class name read correctly while the button was blank:
+`tests/reaction-pill.test.ts` taps all nine values across both scales, takes
+the class list the control would actually render, resolves it THROUGH the
+stylesheet by specificity and source order, and asserts both the expected
+`--vote-*` fill and a 4.5:1 floor in both themes. Proven to fail against the
+shipped stylesheet: two of six tests fail, naming the fill that was taken
+back. Measured after, on a real tap: Yes → `rgb(28,125,76)` at 4.93:1 dark
+and 6.73:1 light; Unsure → the neutral at 5.95:1 and 7.51:1.
+
+### A district card was denying officeholders we hold, and it was not a copy fix
+
+M112 was diagnosed by the previous session and left In progress rather than
+half-built. **Fixed by RESOLUTION, so the fallback sentence was not needed.**
+The measurement, taken before the fix against the committed stores from a
+downtown Tucson point: **24 of 24** non-containing divisions we hold
+officeholders for rendered zero. Every congressional district outside AZ-7.
+Every Arizona state senate and state house district the reader is not in. NH
+`sldu:14` and `sldl:1`. Three division types, at every zip, on the largest
+overlays the map draws.
+
+The cause was scope, not sourcing: `coverage.seats` is point-scoped by
+construction. Seats resolve by the clicked division's own OCD-ID now —
+`seatHoldersForDivision` reads the index that was already keyed that way, so
+it is the same store, the same rows and the same sourcing with no new data.
+The route puts **the division in the PATH**, never a query string: an OCD-ID
+is already a path, so every cache keys on it by construction and distinct
+divisions cannot collide. That is D40's rule stated where it would bite.
+
+**The render-default rule held throughout.** A gap sentence is never spoken
+while the lookup is in flight, and a FAILED lookup gets a third sentence of
+its own — not-yet-asked, could-not-check and hold-nobody are three facts and
+may not render as one. The battlecard re-derives for the still-selected
+division rather than freezing on the looking line.
+
+### The author's card rulings, and one of them reverses last session
+
+**The who-governs list goes back to clean**, which deliberately undoes half of
+M109: giving the list the battlecards' full element grammar is exactly what
+made it "way overcrowded... a forever scroll". Three things per row — name,
+party as plain text in its party colour, source mark. No pills on this
+surface. "Their site" gone from every row. **The click grammar is two moves**:
+a person's name opens their small card, a body's row opens its LARGE one.
+Pima and Tucson used to link straight out from the list; the official site is
+a fact inside the card now. Measured at 85701, both themes: 8 person rows, 0
+pills, 8 plain-party, 0 site links, 8 source marks, 5 body rows opening a
+card, 0 linking out.
+
+**The small popup is three things** — name with its circle, party as the
+filled pill, contact pills in one vertical column — with More at the bottom
+opening the large card. Measured at 1440: 1 chip, 0 role lines, 0 in-seat
+lines, 3 pills in 1 column at 262px each, More at 262px, card 300px. Two
+judgment calls are stated rather than buried: **email is kept** in the primary
+pill set though the author's enumeration did not name it, because dropping a
+published way to reach a representative is friction rather than density; and
+**the eyebrow keeps the office title**, because it is the card's structural
+label and what went is the role line inside the body.
+
+### The pane that looked empty, and the two funding asks
+
+"When it mattered" was diagnosed against production before anything changed:
+`/api/votes` serves 20 recent votes and 36 key votes for a senator, all of
+which reach the view. The pane's whole visible content was one criteria
+paragraph above two CLOSED bars, because both sub-groups shipped closed at
+the top level's size and colour. They open with the pane now and indent as
+sub-groups. Measured after: 2137px, 6227 characters, 2 sub-groups both open,
+20 entries, 10px indent.
+
+**Campaign money asks once per object.** The second prompt is "How do you feel
+about these contributions?" — and the sensors were verified rather than
+assumed. They were already distinct at every layer: different target types,
+separate rows under a unique index that carries `targetType`, separate
+aggregate buckets. **Found by that verification**, and it is the half that
+was genuinely broken: the tally's QUESTION label came from the SCALE, and
+both funding types share the five-point scale, so the contributions tally
+would have exported labelled with the totals' sentence. The label is per
+target type now; the buckets do not change and never did. The rewording sits
+inside scale v2, so it is filed as a **question rewording** with its date and
+reason rather than as a scale break — and a version bump, which changes how
+reactions are bucketed and exported, was NOT taken unattended.
+
+### The amber remnant was twenty-eight declarations, not one toggle
+
+The brown-dies pass moved the interactive accent through three TOKENS and
+that was the whole of it. Every rule written against `--accent-local`
+directly kept the amber in both themes: the page's focus ring, every icon
+button's hover, the brand CHANGE, the selects, the search input's focus, the
+autocomplete's selection and match bold, the proximity toggle, the filter
+checkboxes, the filter chips and their counter, the count badges, the notice
+FAB, the list overlay's More, the welcome icon and team buttons — and the
+loudest of them, **the welcome overlay's submit button**, the first filled
+control a reader ever sees.
+
+The reported toggle was `--tier-fill-local: #6d4600` in light: the dead
+interactive brown's own hex, left behind, and disagreeing with the legend
+that draws the same tier bright. Light fills the way dark does now, bright
+with dark text. **The map is untouched** — no tier accent moved, because
+retuning the legend against the basemap is the author's eye's call and a
+ruling about the interactive accent does not overrule it; the rejected
+alternative and its reason are in M118. **Why it survived a whole palette
+pass: nothing measured a tier fill.** All three are on `pnpm contrast`'s list
+now, and every pair clears its bar in both themes.
+
+### What was cut, in the brief's own order, and nothing half-built
+
+- **Item 8 (M91, the state-focus map)** — the brief's own first cut, deferred
+  whole a second time. Its separable half, the drag rubber-band, is recorded
+  with what was ruled out rather than fixed on a guess: there is no
+  `maxBounds` on the map, the fly-to fires only on a `location` change,
+  `allowAutoFrame` is already false for a settled view, and the map island
+  carries no `key` that would remount it. The behaviour was not reproduced,
+  and a fix for a cause nobody located is how a false claim gets replaced by
+  a differently false one.
+- **Item 7 (the single search bar)** — deferred. Both inputs keep working.
+- **Item 11 (M94, the proposition-blurb hunt)** — deferred; the walk that
+  would close it is the walk item 8 also needs.
+
+### Probe rows this session
+
+**Five**, every one created by this session's own screenshot walk against a
+dev server bound to the production database, and every one a `FEDERAL_VOTE`
+reaction on `house:119-2:283` tapped in the Recent pane of a senator's card,
+scale version 1, `suspect_reason` null:
+
+| when (UTC) | answer | browser key |
+|---|---|---|
+| 17:44:24.396 | YES | `fff8a2e3…` |
+| 17:45:22.502 | UNSURE | `fb4e1906…` |
+| 17:45:43.246 | UNSURE | `d04b2225…` |
+| 17:47:19.666 | UNSURE | `a7438a53…` |
+| 17:47:40.102 | UNSURE | `c2959874…` |
+
+Five keys because each browser context the walk opens mints its own, and
+within a context the second tap UPSERTS the first — which is the store
+behaving exactly as designed. They are plumbing wearing reader clothes and
+are named here so a later exclusion is a filter rather than a hunt. **No
+other row was written against production this session**; every other request
+the walk made was a GET.

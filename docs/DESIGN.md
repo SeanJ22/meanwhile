@@ -448,3 +448,61 @@ The selected tier toggle's fill is on `pnpm contrast`'s list now. It was not,
 which is how the light theme's Local fill stayed `#6d4600` — the dead
 interactive brown's own hex — through a palette pass whose whole point was
 killing that colour. **A fill nobody measures is a fill nobody notices.**
+
+## The state EXTRUDES from the map — it does not float above it (2026-08-16)
+
+**Reference, required reading before touching this:**
+<https://www.breakfreegraphics.com/design-blog/neumorphism-in-user-interfaces/>
+
+The distinction that article draws IS the spec, and it is the whole of it. A
+**Material card floats above** its background and drops a shadow onto it. A
+**neumorphic element extrudes from** the background — the same material,
+pushed up out of it. The active state is the second kind.
+
+Everything follows from that one sentence:
+
+- **Inside the border, the map is UNCHANGED.** No fill, no tint, no wash.
+  Arizona is made of the same terrain as the map around it. A fill would make
+  it a card sitting on the map, which is exactly what the reference exists to
+  distinguish this from — and it is the mistake to expect, because a fill is
+  the easy way to make a shape read as selected.
+- **The rise is the dual shadow**, translated from CSS to map layers. One
+  light source, top-left: a soft LIGHT edge along the NW border, a soft DARK
+  edge along the SE. Two opposed blurred line layers, offsets in SCREEN space
+  (`line-translate-anchor: viewport`) because the sun does not rotate with the
+  map. Both under the first symbol layer — an ambient effect that paints over
+  a town's name has started carrying information.
+- **Outside is MUTED AND SLIGHTLY BLURRED.** Desaturation alone is not the
+  spec. The blur is half of it, and it is why this half is a DOM scrim with
+  `backdrop-filter` rather than a MapLibre fill: no WebGL paint property can
+  blur what is painted underneath it. A tint pretending to be a blur is half
+  the work looking like the whole of it.
+
+**Zoom invariance.** The author's test: look at 85701, zoom ALL THE WAY OUT —
+Arizona still reads raised, everything else still reads muted and slightly
+blurred. The effect never disappears. Only the shadow's spread scales with
+zoom, so the edge stays subtle at continental scale instead of becoming a
+cartoon outline; the interpolation bottoms out at a visible width, never at
+zero.
+
+**It carries NO information, and that is a rule, not an omission.** The
+reference's own accessibility caution is that a low-contrast extrusion cannot
+be asked to mean something. So: labels in the muted area stay legible, pins
+inside the active state keep full contrast, the scrim sits UNDER every
+control (measured — at `z-index: 5` it blurred the count badge and the
+freshness line, which is the warning happening in practice), and it is
+dropped entirely under `prefers-contrast: more`. The border-crossing prompt
+does all the communicating.
+
+**Where the pieces live.** `lib/map/state-focus.ts` (the edge layers and the
+point-in-polygon), `components/map/state-focus-overlay.tsx` (the scrim and
+its even-odd clip), `.state-focus-*` in `app/globals.css`,
+`hooks/use-state-focus.ts` (activation and crossing). Geometry is Census
+TIGERweb, generalized — it decides pixels and never answers a question.
+
+**Two implementation traps, both measured rather than eyeballed.** The CSS
+compiler dropped the standard `backdrop-filter` and emitted only the
+`-webkit-` alias when both were written by hand; write the standard property
+alone and let the compiler prefix. And the scrim must be bounded to the MAP's
+box, not the viewport's — `map.project()` speaks in canvas pixels, so the
+clip has to be measured in the same box the projection speaks in.

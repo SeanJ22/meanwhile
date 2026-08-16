@@ -393,3 +393,39 @@ untriaged entries were found at session-open. Row pointers:
   built). `pnpm pairs prod` → **R25** (Done).
 - **No production probe rows.** Every production request this session was a
   GET; the walk taps no reaction and fires no log event.
+
+## 2026-08-16 — the session brief (g3: the regression net)
+
+The author's directive arrived as the session brief rather than as entries
+here; the brief is committed at `docs/session-brief.md` for the record and the
+narrative is `state.md` §34. **No untriaged entries were found at
+session-open** — every entry above already carried its row pointer. Row
+pointers for what the brief asked:
+
+- The regression net → **R27** (Done). Run against production BEFORE anything
+  was fixed: 20 named regressions, 5 checks that could not run. Four of the
+  twenty were the walk's own aim and were corrected, not softened.
+- `/about-area` 500ing at every zip → **M121** (Done). A render prop crossing
+  the server/client boundary; nothing failed at build.
+- Kearsarge dark, and the schedulepage refresh → **M122** (Done). **The
+  brief's diagnosis lead was wrong**: curl is present on the runner and the
+  log proves it ran and was refused — the wall is the runner's egress IP. Two
+  defects fixed; 03255 restored to 31 meetings across 5 bodies against the
+  truth session's 26 across 4.
+- The neighbouring Kearsarge towns → **M123** (deferred, every rung recorded).
+- The WGH footnote collapse → **M94** (Done).
+- The sources vocabulary → **M125** (Done), with the audit the ruling asked
+  for: three surfaces render the field and only one was wrong.
+- Zooming out removing pins → **M124** (Done). Neither clustering nor culling.
+- The ballot page → **M126** (Done) and **D65** (Done, the scale-v3 ruling).
+  **Your-picks was NOT gone from production** — measured working before it was
+  touched; what was true is why it read as gone.
+- The governors' term end and age → **M95** (deferred first, per the brief's
+  own cut order; no rungs walked, so the row is a deferral and not a partial).
+- The duplicate contact section → **M127** (Done, audited before deleting).
+- The state focus and the border-crossing prompt → **M91** (Done), with one
+  conflict left for the author: e's 6b2 releases focus on zoom-out, g3 says
+  the effect never disappears. The later instruction shipped.
+- Standing rules into CLAUDE.md: walk:all every session; a failed fetch never
+  empties a full surface; an official-source read IS the verification; more
+  viewport never means fewer pins.

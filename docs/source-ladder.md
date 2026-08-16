@@ -1112,3 +1112,161 @@ so it cannot drift from the store it describes, and rendered under the Recent
 votes heading. `tests/legiscan.test.ts` asserts a state member's payload
 carries it and a federal member's does not — the chambers' public-domain XML
 must never be credited to LegiScan.
+
+---
+
+## unitedstates/congress-legislators — the federal directory (adopted 2026-08-16)
+
+**Rung class: SOURCE OF RECORD, for what it covers.** The author's ruling.
+
+`https://github.com/unitedstates/congress-legislators`, fetched from
+`raw.githubusercontent.com` **at a commit SHA, never `main`**. Pinned at
+`4458244308621d0570a15008f46888b7a87645eb` (committed 2026-07-15; SHA read
+from the GitHub API 2026-08-16). CC0 — cited once on the sources page,
+nothing else owed.
+
+Five files, with the counts each returned at this pin:
+
+| File | Rows | What it carries |
+| --- | --- | --- |
+| `legislators-current.yaml` | 537 | roster, id crosswalk (FEC on 535), birthday on all 537, per-term party/start/end/phone/url |
+| `legislators-social-media.yaml` | 518 | bioguide-keyed OFFICIAL accounts; 505 carry X |
+| `legislators-district-offices.yaml` | 535 | 1,306 offices with address, phone, lat/lng |
+| `committees-current.yaml` | 49 | 49 committees, 181 subcommittees |
+| `committee-membership-current.yaml` | 230 keys | 3,891 membership rows with rank and title |
+
+**Two boundaries on the ruling, both guarded in
+`tests/congress-directory.test.ts`:**
+
+1. **The provenance tag names the PROJECT, never "official records."** It is
+   a community-maintained aggregation of the official sources. A tag calling
+   it official is the first step toward citing it for something a directory
+   cannot answer.
+2. **It is a DIRECTORY, not a ledger.** No votes, no money, no statements.
+   B17 stays on the chambers, FEC stays FEC, PRL stays PRL.
+
+**Joins are by BIOGUIDE, never by name.** A name join is invisible until two
+members share a surname.
+
+**The prior bioguide rungs are DEMOTED to fallback-and-audit.** The federal
+roster already carried a birthday and a term end for all 537 from the same
+upstream through its **unpinned** JSON mirror
+(`unitedstates.github.io/congress-legislators/legislators-current.json`).
+`pnpm congress:migrate` DIFFS the two and writes every disagreement to
+`docs/congress-legislators-diff.md` as a finding for the author to rule on —
+an upstream PR to file, or a stale value of ours. **Nothing is silently
+overwritten.** First run: 537 of 537 matched, 0 disagreements.
+
+**The recency exception, named.** Official pages win on recency — a death, a
+resignation or a swearing-in may be corrected from the chamber's own page
+without waiting for the repo. The repo is the baseline, not the ceiling; the
+migration never reverses such a correction because it never overwrites.
+(Seen live: Adelita S. Grijalva is in our roster and carries no social in
+this pin, because she took the seat after the pinned commit. Her card renders
+the absent channels as absent pills, which is the correct answer.)
+
+Commands: `pnpm congress:fetch` then `pnpm congress:migrate`.
+
+---
+
+## GovTrack — a LOOKUP RUNG, never a citation (recorded 2026-08-16)
+
+`https://www.govtrack.us`. Use it to NAVIGATE: popular name → bill number →
+roll-call number, when a bill is known by a name the chambers' own systems do
+not index. **Then go to the chamber and cite the chamber.** A citation to
+GovTrack is a citation to a third party's index of a public record when the
+public record itself is one hop away.
+
+Its API may have been discontinued in summer 2026 (see `CLAUDE.md`); this
+rung is the human-readable site, and nothing depends on the API.
+
+---
+
+## Reference bookmarks — consult when hunting, never in a pipeline (recorded 2026-08-16)
+
+Staleness **UNVERIFIED** on both. Nothing here enters an adapter.
+
+- `https://github.com/codeforamerica/open-civic-datasets` — an index of civic
+  datasets. Useful for "does anyone publish X in machine-readable form".
+- `https://github.com/api-evangelist/data-gov` — an index of federal data.gov
+  APIs.
+
+Both are catalogues of other people's catalogues. They point at a rung; they
+are never the rung.
+
+---
+
+## The 50-state open-data / transparency portals — UNVERIFIED PER-STATE RUNGS (recorded 2026-08-16)
+
+The author's find, filed whole. **Every row below is UNVERIFIED and is
+verified ONE STATE AT A TIME, when that state's session runs.** A row that
+has been walked gets a dated note beside it; entries are append-only.
+
+**Two corrections recorded now, before anyone walks them:**
+
+1. **Massachusetts is WRONG in the source list.** It gives `data.boston.gov`,
+   which is the CITY of Boston, not the Commonwealth. Find the state portal
+   when MA runs; do not walk the city site and record it as the state's.
+2. **Two different species, and reaching for the wrong tool wastes a rung.**
+   A *true open-data portal* (Socrata-class: `data.ny.gov`, `data.ca.gov`)
+   serves datasets with an API. A *spending-transparency checkbook* (NE, NV,
+   KY, and TN/WV leaning) serves expenditure lookups and nothing else.
+
+**And the boundary that matters most: NEITHER SPECIES IS campaign finance,
+meetings, or officials.** These are rungs on a ladder for other questions —
+budgets, spending, statistics. They do not answer the questions this product
+asks, and a session that walks one expecting a meeting calendar has spent a
+rung on the wrong ladder.
+
+| State | Portal | Species |
+| --- | --- | --- |
+| Alabama | open.alabama.gov | open data |
+| Alaska | dggs.alaska.gov | open data (geological survey) |
+| Arizona | openbooks.az.gov | checkbook |
+| Arkansas | transparency.arkansas.gov | checkbook |
+| California | data.ca.gov | open data (Socrata-class) |
+| Colorado | data.colorado.gov | open data (Socrata-class) |
+| Connecticut | transparency.ct.gov | checkbook |
+| Delaware | delaware.gov/data | open data |
+| Florida | floridahasarighttoknow.com | checkbook |
+| Georgia | open.georgia.gov | checkbook |
+| Hawaii | data.hawaii.gov | open data (Socrata-class) |
+| Idaho | transparent.idaho.gov | checkbook |
+| Illinois | data.illinois.gov | open data |
+| Indiana | in.gov/iot/open-data | open data |
+| Iowa | data.iowa.gov | open data (Socrata-class) |
+| Kansas | kansas.gov/opendata | open data |
+| Kentucky | transparency.ky.gov | checkbook |
+| Louisiana | latransparency.louisiana.gov | checkbook |
+| Maine | maine.gov/dafs/procurement/open-data | open data (procurement) |
+| Maryland | data.maryland.gov | open data (Socrata-class) |
+| Massachusetts | **[WRONG — data.boston.gov is the CITY of Boston, not the Commonwealth; find the state portal when MA runs]** | — |
+| Michigan | michigan.gov/open-data | open data |
+| Minnesota | mn.gov/admin/data | open data |
+| Mississippi | transparency.mississippi.gov | checkbook |
+| Missouri | data.mo.gov | open data |
+| Montana | dataportal.mt.gov | open data |
+| Nebraska | checkbook.nebraska.gov | checkbook |
+| Nevada | nvcheckbook.nv.gov | checkbook |
+| New Hampshire | nh.gov/data.htm | open data |
+| New Jersey | data.nj.gov | open data |
+| New Mexico | share.state.nm.us | open data |
+| New York | data.ny.gov | open data (Socrata-class) |
+| North Carolina | data.nc.gov | open data |
+| North Dakota | nd.gov/open-data | open data |
+| Ohio | data.ohio.gov | open data |
+| Oklahoma | data.ok.gov | open data |
+| Oregon | data.oregon.gov | open data |
+| Pennsylvania | data.pa.gov | open data (Socrata-class) |
+| Rhode Island | data.ri.gov | open data |
+| South Carolina | sc.gov/data-and-statistics | open data |
+| South Dakota | open.sd.gov | open data |
+| Tennessee | tn.gov/transparency | checkbook-leaning |
+| Texas | data.texas.gov | open data (Socrata-class) |
+| Utah | opendata.utah.gov | open data |
+| Vermont | data.vermont.gov | open data |
+| Virginia | data.virginia.gov | open data |
+| Washington | data.wa.gov | open data (Socrata-class) |
+| West Virginia | wv.gov/transparency | checkbook-leaning |
+| Wisconsin | data.wi.gov | open data |
+| Wyoming | wyoming.gov/government/open-data | open data |

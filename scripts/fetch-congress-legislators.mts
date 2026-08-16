@@ -1,0 +1,388 @@
+/**
+ * The congress-legislators snapshot — item 7, 2026-08-16.
+ *
+ * ## The source ruling (the author's, recorded)
+ *
+ * `unitedstates/congress-legislators` is the SOURCE OF RECORD for everything
+ * it covers: roster, id crosswalk, birthdays, term dates, party, DC contact,
+ * district offices, committees and membership, official social accounts.
+ *
+ * Two boundaries on that ruling, both load-bearing:
+ *
+ * 1. **It is a community-maintained aggregation of the official sources, and
+ *    the provenance tag says the PROJECT** — never "official records". A
+ *    reader who wants the government's own page still gets the government's
+ *    own page; what the reader must never be told is that this file IS that
+ *    page.
+ * 2. **It is a DIRECTORY, not a ledger.** No votes, no money, no statements.
+ *    B17 stays on the chambers, FEC stays FEC, PRL stays PRL. A directory
+ *    answers "who is this and how do I reach them"; the moment it starts
+ *    answering "what did they do", it is a claim surface and needs a claim
+ *    surface's citations.
+ *
+ * ## SHA-pinned, never `main`
+ *
+ * Fetching `main` means the same command returns different data on different
+ * days and nothing records which. Every file is fetched at a commit SHA,
+ * recorded with the read date and the row count it produced, so the snapshot
+ * can be reproduced exactly and a change between two runs is visible as a
+ * diff rather than as a surprise.
+ *
+ * ## Thin-guard per file
+ *
+ * Each file declares the minimum row count that makes it plausible. A
+ * truncated response, a redirect to an HTML error page, or a schema change
+ * that empties a field all present as "fewer rows than there should be", and
+ * every one of them would otherwise write a snapshot that reports success
+ * while holding nothing. An operation that can return nothing is asked what
+ * it returned.
+ *
+ * ## Licence
+ *
+ * CC0. Cited once on the sources page; nothing else is owed and nothing else
+ * is claimed.
+ *
+ *   pnpm congress:fetch
+ */
+
+import { mkdirSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+
+import { parse } from "yaml";
+
+import { stamp } from "./stamp.mts";
+
+/**
+ * The pin. Read from the GitHub API on 2026-08-16; the commit itself is dated
+ * 2026-07-15. Bumping this is a deliberate act with a diff, which is the
+ * whole point of pinning.
+ */
+const SHA = "4458244308621d0570a15008f46888b7a87645eb";
+
+const RAW = `https://raw.githubusercontent.com/unitedstates/congress-legislators/${SHA}`;
+
+const UA = "we-the-people/1.0 (civic data; contact seanj22@gmail.com)";
+
+/**
+ * The five files, and the floor under each.
+ *
+ * The floors are set from what the repository actually held at this SHA, well
+ * below the observed count so a normal week's churn does not trip them and
+ * far above zero so a truncation cannot pass.
+ */
+const FILES = [
+  { name: "legislators-current", min: 500, shape: "list" },
+  { name: "legislators-social-media", min: 400, shape: "list" },
+  { name: "legislators-district-offices", min: 400, shape: "list" },
+  { name: "committees-current", min: 40, shape: "list" },
+  // Keyed by committee/subcommittee id rather than a list — the one file
+  // here whose top level is a map. Its floor counts KEYS.
+  { name: "committee-membership-current", min: 40, shape: "map" },
+] as const;
+
+interface RawTerm {
+  type: string;
+  start: string;
+  end: string;
+  state: string;
+  district?: number;
+  party?: string;
+  phone?: string;
+  url?: string;
+  office?: string;
+  contact_form?: string;
+  class?: number;
+}
+
+interface RawLegislator {
+  id: { bioguide: string; fec?: string[]; govtrack?: number; icpsr?: number };
+  name: { first: string; last: string; official_full?: string };
+  bio?: { birthday?: string; gender?: string };
+  terms: RawTerm[];
+}
+
+interface RawSocial {
+  id: { bioguide: string };
+  social?: {
+    twitter?: string;
+    facebook?: string;
+    youtube?: string;
+    youtube_id?: string;
+    instagram?: string;
+    mastodon?: string;
+  };
+}
+
+interface RawOfficeSet {
+  id: { bioguide: string };
+  offices?: {
+    id?: string;
+    city?: string;
+    state?: string;
+    address?: string;
+    building?: string;
+    suite?: string;
+    zip?: string;
+    phone?: string;
+    fax?: string;
+    latitude?: number;
+    longitude?: number;
+  }[];
+}
+
+interface RawCommittee {
+  type: string;
+  name: string;
+  thomas_id: string;
+  jurisdiction?: string;
+  jurisdiction_source?: string;
+  url?: string;
+  subcommittees?: { name: string; thomas_id: string; address?: string }[];
+}
+
+interface RawMembership {
+  name: string;
+  party?: string;
+  rank?: number;
+  title?: string;
+  bioguide?: string;
+}
+
+async function fetchFile(name: string): Promise<unknown> {
+  const url = `${RAW}/${name}.yaml`;
+  const response = await fetch(url, { headers: { "User-Agent": UA } });
+  if (!response.ok) {
+    throw new Error(`${name}: HTTP ${response.status} from ${url}`);
+  }
+  const text = await response.text();
+  // A redirect to an HTML error page parses as a YAML string, not a list.
+  // Saying so here beats a downstream "0 rows" that reads like a real answer.
+  if (text.trimStart().startsWith("<")) {
+    throw new Error(`${name}: served HTML, not YAML, from ${url}`);
+  }
+  return parse(text);
+}
+
+/**
+ * The thin-guard. Returns the row count, and refuses below the floor.
+ *
+ * A truncation, a redirect to an error page and a schema change that empties
+ * a field all present the same way — fewer rows than there should be — and
+ * every one of them would otherwise write a snapshot reporting success while
+ * holding nothing.
+ */
+function guard(
+  name: string,
+  value: unknown,
+  min: number,
+  shape: "list" | "map",
+): number {
+  const count =
+    shape === "list"
+      ? Array.isArray(value)
+        ? value.length
+        : -1
+      : value && typeof value === "object" && !Array.isArray(value)
+        ? Object.keys(value).length
+        : -1;
+
+  if (count < 0) {
+    throw new Error(
+      `${name}: parsed to ${Array.isArray(value) ? "a list" : typeof value}, expected a ${shape}`,
+    );
+  }
+  if (count < min) {
+    throw new Error(
+      `${name}: THIN — ${count} rows, floor is ${min}. Refusing to ` +
+        `write a snapshot that would report success while holding nothing.`,
+    );
+  }
+  return count;
+}
+
+/** The term a member is serving now, or the last one on file. */
+function currentTerm(terms: RawTerm[]): RawTerm | null {
+  if (terms.length === 0) return null;
+  return terms[terms.length - 1];
+}
+
+async function main() {
+  const collectedAt = stamp();
+  const counts: Record<string, number> = {};
+
+  const raw: Record<string, unknown> = {};
+  for (const file of FILES) {
+    // Serialized, per the public-records rule: one request at a time, an
+    // identified User-Agent with a contact address.
+    const parsed = await fetchFile(file.name);
+    counts[file.name] = guard(file.name, parsed, file.min, file.shape);
+    raw[file.name] = parsed;
+    console.log(`  ${file.name}: ${counts[file.name]} rows`);
+  }
+
+  const legislators = raw["legislators-current"] as RawLegislator[];
+  const socials = raw["legislators-social-media"] as RawSocial[];
+  const officeSets = raw["legislators-district-offices"] as RawOfficeSet[];
+  const committees = raw["committees-current"] as RawCommittee[];
+  const memberships = raw["committee-membership-current"] as Record<
+    string,
+    RawMembership[]
+  >;
+
+  // ------------------------------------------------------------------
+  // Members. Joined by BIOGUIDE downstream, never by name.
+  const socialByBioguide = new Map(socials.map((s) => [s.id.bioguide, s.social ?? {}]));
+  const officesByBioguide = new Map(
+    officeSets.map((s) => [s.id.bioguide, s.offices ?? []]),
+  );
+
+  const members = legislators.map((person) => {
+    const term = currentTerm(person.terms);
+    const social = socialByBioguide.get(person.id.bioguide) ?? {};
+    const offices = officesByBioguide.get(person.id.bioguide) ?? [];
+
+    return {
+      bioguide: person.id.bioguide,
+      fecIds: person.id.fec ?? [],
+      name: person.name.official_full ?? `${person.name.first} ${person.name.last}`,
+      birthDate: person.bio?.birthday ?? null,
+      chamber: term?.type === "sen" ? "senate" : term?.type === "rep" ? "house" : null,
+      state: term?.state ?? null,
+      district: term?.district ?? null,
+      party: term?.party ?? null,
+      termStart: term?.start ?? null,
+      termEnd: term?.end ?? null,
+      phone: term?.phone ?? null,
+      url: term?.url ?? null,
+      contactForm: term?.contact_form ?? null,
+      social: {
+        // The file's field is `twitter`; it renders as X. The name in the
+        // data is the source's name and is not rewritten here.
+        twitter: social.twitter ?? null,
+        facebook: social.facebook ?? null,
+        youtube: social.youtube ?? null,
+        youtubeId: social.youtube_id ?? null,
+        instagram: social.instagram ?? null,
+        mastodon: social.mastodon ?? null,
+      },
+      districtOffices: offices
+        .filter((o) => o.city && (o.address || o.phone))
+        .map((o) => ({
+          city: o.city ?? null,
+          state: o.state ?? null,
+          address: [o.address, o.building, o.suite].filter(Boolean).join(", ") || null,
+          zip: o.zip ?? null,
+          phone: o.phone ?? null,
+          lat: typeof o.latitude === "number" ? o.latitude : null,
+          lng: typeof o.longitude === "number" ? o.longitude : null,
+        })),
+    };
+  });
+
+  // ------------------------------------------------------------------
+  // Committees, and who sits on them.
+  //
+  // `committee-membership-current.yaml` is keyed by committee/subcommittee
+  // id, so the per-member view is built here rather than at render.
+  const committeeById = new Map<string, { name: string; type: string; url: string | null; jurisdiction: string | null; jurisdictionSource: string | null }>();
+  for (const committee of committees) {
+    committeeById.set(committee.thomas_id, {
+      name: committee.name,
+      type: committee.type,
+      url: committee.url ?? null,
+      jurisdiction: committee.jurisdiction ?? null,
+      jurisdictionSource: committee.jurisdiction_source ?? null,
+    });
+    for (const sub of committee.subcommittees ?? []) {
+      committeeById.set(`${committee.thomas_id}${sub.thomas_id}`, {
+        name: `${committee.name} — ${sub.name}`,
+        type: committee.type,
+        url: committee.url ?? null,
+        jurisdiction: null,
+        jurisdictionSource: null,
+      });
+    }
+  }
+
+  const membershipsByBioguide = new Map<
+    string,
+    { committeeId: string; name: string; rank: number | null; title: string | null }[]
+  >();
+  let membershipRows = 0;
+  for (const [committeeId, rows] of Object.entries(memberships)) {
+    const committee = committeeById.get(committeeId);
+    if (!committee) continue;
+    for (const row of rows) {
+      // Joined by bioguide. A row without one is DROPPED and counted, never
+      // matched on the name string.
+      if (!row.bioguide) continue;
+      membershipRows += 1;
+      const list = membershipsByBioguide.get(row.bioguide) ?? [];
+      list.push({
+        committeeId,
+        name: committee.name,
+        rank: typeof row.rank === "number" ? row.rank : null,
+        title: row.title ?? null,
+      });
+      membershipsByBioguide.set(row.bioguide, list);
+    }
+  }
+
+  const subcommitteeCount = committees.reduce(
+    (n, c) => n + (c.subcommittees?.length ?? 0),
+    0,
+  );
+
+  const snapshot = {
+    source: {
+      project: "unitedstates/congress-legislators",
+      repoUrl: "https://github.com/unitedstates/congress-legislators",
+      sha: SHA,
+      licence: "CC0 1.0 Universal (public domain dedication)",
+      licenceUrl: "https://creativecommons.org/publicdomain/zero/1.0/",
+      /*
+       * The provenance tag names the PROJECT, per the author's ruling. It is a
+       * community-maintained aggregation of official sources — accurate, and
+       * not itself an official record. Calling it one would be the first step
+       * toward citing it for something a directory cannot answer.
+       */
+      sourceOrg: "unitedstates/congress-legislators (community project)",
+      collectedAt,
+    },
+    counts: {
+      ...counts,
+      members: members.length,
+      membersWithBirthday: members.filter((m) => m.birthDate).length,
+      membersWithFecId: members.filter((m) => m.fecIds.length > 0).length,
+      membersWithTwitter: members.filter((m) => m.social.twitter).length,
+      districtOffices: members.reduce((n, m) => n + m.districtOffices.length, 0),
+      committees: committees.length,
+      subcommittees: subcommitteeCount,
+      membershipRows,
+      membersWithCommittee: membershipsByBioguide.size,
+    },
+    members,
+    committees: [...committeeById.entries()].map(([id, c]) => ({ id, ...c })),
+    memberships: Object.fromEntries(membershipsByBioguide),
+  };
+
+  const dir = join(process.cwd(), "data", "congress-legislators");
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(
+    join(dir, "snapshot.json"),
+    JSON.stringify(snapshot, null, 2),
+    "utf8",
+  );
+
+  console.log("\nSnapshot written. Counts and their denominators:");
+  for (const [key, value] of Object.entries(snapshot.counts)) {
+    console.log(`  ${key}: ${value}`);
+  }
+  console.log(`\n  pinned at ${SHA}`);
+  console.log(`  read ${collectedAt}`);
+}
+
+void main().catch((error: unknown) => {
+  console.error(error instanceof Error ? error.message : error);
+  process.exitCode = 1;
+});

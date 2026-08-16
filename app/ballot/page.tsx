@@ -19,6 +19,7 @@ import {
   cardForNominee,
 } from "@/lib/ballot/candidate-cards";
 import { BallotNarrowing } from "@/components/ballot/ballot-narrowing";
+import { photosFirst } from "@/lib/ballot/photo-order";
 import { CandidateCard } from "@/components/ballot/candidate-card";
 import { MyPicks } from "@/components/ballot/my-picks";
 import { jurisdictionKeyForContestId } from "@/lib/ballot/pick-jurisdiction";
@@ -623,7 +624,7 @@ export default async function BallotPage({
               {lineup ? (
                 <>
                 <ul className="mt-3.5 space-y-3">
-                  {lineup.nominees.map((nominee) => (
+                  {photosFirst(lineup.nominees, (n) => Boolean(cardForNominee(contest.id, n.name)?.photoUrl)).map((nominee) => (
                     <li
                       key={nominee.name}
                       className="border-b border-[var(--panel-border)] pb-3 last:border-0 last:pb-0"
@@ -703,7 +704,7 @@ export default async function BallotPage({
                     </p>
                   )}
                   <ul className="mt-3.5 space-y-3">
-                    {candidatesOf(set, contest).map((cand) => (
+                    {photosFirst(candidatesOf(set, contest), (x) => Boolean(cardForCandidacy(x.id)?.photoUrl)).map((cand) => (
                       <li
                         key={cand.id}
                         className="border-b border-[var(--panel-border)] pb-3 last:border-0 last:pb-0"

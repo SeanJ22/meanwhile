@@ -6522,3 +6522,182 @@ browsing. The walk taps no reaction and fires no log event.
 
 **Playbook diff: nothing new.** This session touched build tooling and a
 type error; it walked no source ladder and learned no rung.
+
+---
+
+## 32. The 2026-08-16 session (second of the day) — the cards take their final face, the brown dies, and the federal directory is solved in one fetch
+
+Written for a reader with no context on this repo. Branch
+`claude/final-face-0816`.
+
+### The sentence that was false on production
+
+The battlecard **Sources tab** rendered *"Nothing on this card came from an
+external record"* on the Tucson Unified District card. Every fact on that
+card came from an external record: its boundary from Census TIGER/Line, its
+governing board from the district's own roster page, its sittings from the
+district's own agenda vendor. On a product whose entire claim is sourced
+accuracy, that sentence was the worst thing on the screen.
+
+**Diagnosed before fixing, and it was one line.** `districtSubject` in
+`components/map/map-entry.tsx` passed `sources: []`. Not "empty because we
+checked" — never wired at all. Only the meeting card ever built a source
+list, and it built its own inline: a parallel join, which is the shape this
+repo has now been bitten by four times, and the one nobody screenshots is the
+one that stays wrong.
+
+There is **one assembler** now (`lib/officials/card-sources.ts`), called by
+every card class. `SeatHolder` carries its full provenance instead of a bare
+URL — which is *why* the tab had to be fed from somewhere other than the rows
+it described. Rows merge by publisher and page, so thirty sittings from one
+vendor read as one source stating its count rather than thirty identical
+blocks. The person battlecard has no tab bar, so it gets the same list as a
+collapsible section with the stated N in its header.
+
+**The guard runs against the committed Tucson Unified roster, not a
+fixture** — a fixture-only test would have passed on the broken code too.
+
+### The mini card, and the trap that produced it
+
+The author reported Pima's supervisors "reading vertically" in the small
+popup. That is a real thing and here is exactly what it was.
+
+The representation rows were `<PopupRow label={holder.officeTitle}>`, and
+`.pk` — the key column — is `white-space: nowrap`. A 300px card leaves 264px
+for a label and a value. *"County Supervisor, District 2 (Vice Chair)"*
+refuses to wrap, eats all of it, the value column collapses to a few pixels,
+and `.pv`'s `word-break: break-word` breaks the **name** one character per
+line. **"Dr. Matt Heinz" as a vertical column of letters.**
+
+**It was never fixable by tuning a width.** A two-column row whose key can be
+arbitrarily long will always eventually starve its value. The rows are
+stacked now — name at full width, office beneath — and the same fix went into
+the who-governs card, which had the identical pattern and was one long seat
+label away from the identical failure.
+
+That is written into the playbook as a rung, because it is a class of defect
+and not an incident.
+
+### The cards' final face
+
+The author's rulings, built:
+
+- **The identity header.** Circle portrait with a **NEUTRAL** ring — the
+  reference screenshot rings it in the party's red and that is the one thing
+  not adopted, because a party-coloured ring makes the photograph itself a
+  partisan mark and a nonpartisan office would then wear either a colour it
+  has no claim to or a visibly lesser frame. The initials avatar occupies the
+  identical circle. Name as the dominant type. One chip row: party **filled**
+  in its assigned colour, state / chamber / incumbent as **outlined**
+  neutrals, all one height — fill-versus-outline carries the emphasis, never
+  size.
+- **Voting Record** is one full-width section with two selectors inside it;
+  the selected view takes the whole box and selecting one collapses the
+  other. `Recent` and `When it mattered` used to float as two headers with no
+  parent, in a grid that gave each half the card.
+- **Yes and no are pills**, in both views, and a settled reaction wears one
+  too. The honest-outcome rendering is unchanged underneath: only a 204 or a
+  device-restored selection earns the pill, so a write that did not land can
+  never render as one that did.
+- **Pictures first within a contest** (item 5b). The trade-off was raised —
+  layout position now stacks on the information advantage — and the author
+  ruled anyway. Recorded, with the three constraints that keep it from being
+  a ranking.
+
+### The chevron defect, diagnosed
+
+`.card-section[data-open] .card-section-chevron` was a **descendant**
+selector. CardSections nest — "When it mattered" contains "Votes on laws" and
+"Votes on people" — so opening the outer section rotated every chevron inside
+it, and the closed sub-groups pointed **up while shut**. The rule two blocks
+above it already used a child combinator for the background, so half the pair
+had always been right, which is why it read correctly in a diff.
+
+Audited everywhere while in there: the zip switcher's chevron never rotated
+at all. `list-overlay`'s triangles and `.funding-type`'s marker are correct.
+
+### The brown dies
+
+The author: *"I hate this brown throughout. Change it to something else
+entirely."* The interactive accent was amber — `#ffb000` dark, a deep amber
+`#6d4600` light that reads brown everywhere it touched.
+
+It is **azure** now (`#4fc9e8` / `#0a4f61`), system-wide through `--link`,
+`--action` and `--signal`. The reasoning is recorded in DESIGN.md because the
+choice was constrained rather than free: the accent had to sit clear of every
+party colour, every tier accent, `--danger` and `--voice`, and the gaps left
+were lime, cyan/azure and indigo. **An accent a reader could mistake for a
+party colour is a worse defect than a brown one** — a link that reads as a
+party mark is a claim.
+
+Found while doing it: `--color-signal` (the Tailwind alias behind
+`text-signal`) aliased `--accent-local` while the real `--signal` property
+aliased `--link`, so **one token name had two values depending on which
+spelling a component used**. The M96 trap running the other way. Both resolve
+to `--link` now.
+
+**Recorded, not done:** the tier accents did not move, so
+`--tier-fill-local` in the light theme is still a deep amber on the selected
+Local toggle. The brief permits moving Local provided the map legend moves
+with it; retuning the legend against the basemap is the author's eye's call,
+not a side effect of a link colour.
+
+### One fetch, and the federal directory is solved
+
+`unitedstates/congress-legislators`, **SHA-pinned** at
+`4458244308621d0570a15008f46888b7a87645eb`, never `main`. Every count matched
+what the brief stated: 537 members, birthday on all 537, FEC ids on 535, X on
+505, 1,306 district offices, 49 committees, 181 subcommittees, 3,891
+membership rows.
+
+**The thin-guard earned its keep on the first run**, catching that
+`committee-membership-current.yaml` is a map keyed by committee id and not a
+list — which would otherwise have written a snapshot with zero memberships
+and reported success.
+
+**The migration DIFFS; it does not overwrite.** The federal roster already
+carried a birthday and term end for all 537, from the same upstream through
+its *unpinned* JSON mirror. The author's ruling demotes that to
+fallback-and-audit: 537 of 537 matched by bioguide, **0 disagreements**, and
+the report at `docs/congress-legislators-diff.md` is written whether or not
+it finds anything — "we checked and they agree" and "nobody checked" are
+different facts and only one is worth having.
+
+Two boundaries, both guarded: the provenance tag names the **project**, never
+"official records"; and it is a **directory**, not a ledger — no votes, no
+money, no statements.
+
+**Seen live, and it is the recency exception working:** Adelita S. Grijalva
+holds AZ-7 in our roster and carries no social accounts in this pin, because
+she took the seat after the pinned commit. Her card renders the absent
+channels as absent pills, which is the correct answer.
+
+### What was measured, not assumed
+
+Everything below was read out of a real browser at 1440 and 390:
+
+| Claim | Measured |
+|---|---|
+| The accent moved | computed `--link` / `--action` / `--signal` all `#4fc9e8` |
+| The ring is neutral | `rgb(42, 45, 55)` = `--panel-border` |
+| Chips are one height | 28px on all four, party filled, rest outlined |
+| Pills stay tappable | 44px on every pill; 8 on Mark Kelly's card |
+| Voting Record is full width | section 638px, body 634px |
+| The accordion works | Recent selected → When it mattered selected |
+| **The chevron defect is fixed** | only the OPEN section rotated; both closed sub-groups `transform: none` |
+| Stated N equals rows | Sources 2/2, Committees 11/11, Offices 2/2 |
+| Counters stopped overflowing | `scrollWidth > clientWidth` FALSE on all four, both widths |
+| No page overflow at 390 | `scrollWidth` 390 = `clientWidth` |
+| The vertical text is gone | "Dr. Matt Heinz" in a 208px box over 2 lines — words wrapping |
+
+### Probe rows, and the playbook
+
+**No production probe rows.** Nothing was written against production this
+session. Every request the walk made was a GET against `localhost:3000`; the
+production verification is GETs only. No reaction was tapped and no log event
+fired.
+
+**Playbook diff — two entries added.** The federal rung is solved once,
+nationally, so a new state's depth run starts with the federal tier already
+done; and the two-column trap is written down as a rung, with the measurement
+that detects it (`lab.scrollWidth > lab.clientWidth`).

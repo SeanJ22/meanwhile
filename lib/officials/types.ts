@@ -89,7 +89,39 @@ export interface Officeholder {
    */
   campaignUrl: string | null;
   photo: OfficeholderPhoto | null;
+  /**
+   * The member's OFFICIAL accounts (item 7, 2026-08-16), from the
+   * congress-legislators directory, joined by bioguide.
+   *
+   * **Official only, and that is why these may render on an officeholder's
+   * card at all.** The upstream project's own policy is to carry the accounts
+   * a member's office publishes as its own, not campaign accounts — so a pill
+   * here points at the office, in the same register as the office phone
+   * number beside it. Nothing is ever backfilled from a campaign account.
+   *
+   * Render what is held, only what is held: an absent channel is an absent
+   * pill, never a greyed placeholder.
+   */
+  social?: SocialAccounts;
+  /** The state and chamber the member's own current term states (item 7). */
+  state?: string;
+  chamber?: string;
   provenance: Provenance;
+}
+
+/**
+ * The channels the directory carries. `twitter` is the source's own field
+ * name; it renders as X. The name in the data is not rewritten — a stored
+ * field renamed to match a rebrand is a field that no longer matches the
+ * file it came from.
+ */
+export interface SocialAccounts {
+  twitter?: string;
+  facebook?: string;
+  youtube?: string;
+  youtubeId?: string;
+  instagram?: string;
+  mastodon?: string;
 }
 
 /**

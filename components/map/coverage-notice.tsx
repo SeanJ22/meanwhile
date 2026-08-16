@@ -142,41 +142,76 @@ function Holder({
   holder: SeatHolder;
   onOpen?: () => void;
 }) {
+  /*
+   * Item 6 (2026-08-16): the who-governs card takes the uniform element
+   * grammar the battlecards already ship. This was an inline run of
+   * comma-separated names inside a right-aligned column — the same shape as
+   * the mini card's vertical-text defect, a label and a value competing for
+   * one fixed width, and it read as a dense prose blob rather than as a list
+   * of people.
+   *
+   * It is a `.person-row` now: name at full width, party as an `.id-chip` in
+   * the committed chip grammar rather than as coloured prose, and BOTH
+   * affordances rendered rather than one (M92, Gehrig's two-action model
+   * extended to people rows): the name opens the battlecard — photo,
+   * contact, what the office does — and "Their site" goes out to the
+   * officeholder's own page. A reader who wants the government's own words
+   * should not have to open our card to find the door to them.
+   */
   return (
-    <span className="inline-flex items-baseline gap-1.5">
-      {onOpen ? (
-        // The name opens the rep popup (3c) — photo, contact, what the
-        // office does — rather than navigating away. The official page and
-        // the source link both live inside it.
-        <button
-          type="button"
-          onClick={onOpen}
-          className="text-paper underline decoration-dotted underline-offset-2 hover:text-signal"
-        >
-          {holder.name}
-        </button>
-      ) : (
-        <span className="text-paper">{holder.name}</span>
-      )}
-      {holder.partyLabel && (
-        // Display only. Nothing here or downstream infers a position from
-        // it. Colored per the author's palette (3a).
-        <span style={{ color: partyColorVar(holder.partyLabel) }}>
-          · {holder.partyLabel}
-        </span>
-      )}
-      {holder.sourceUrl && (
-        <a
-          href={holder.sourceUrl}
-          target="_blank"
-          rel="noreferrer"
-          title="Where this record was read from"
-          className="source-tag font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted underline decoration-dotted underline-offset-2 hover:text-link"
-        >
-          source
-        </a>
-      )}
-    </span>
+    <div className="person-row">
+      <span className="person-row-name">
+        {onOpen ? (
+          <button
+            type="button"
+            onClick={onOpen}
+            className="cursor-pointer text-left hover:text-link hover:underline"
+          >
+            {holder.name}
+          </button>
+        ) : (
+          holder.name
+        )}
+      </span>
+      <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+        {holder.partyLabel && (
+          // Display only. Nothing here or downstream infers a position from
+          // it. The chip grammar, filled in the author's palette (3a) — the
+          // same chip the identity header uses, so party looks like party
+          // wherever a reader meets it.
+          <span
+            className="id-chip"
+            data-fill="true"
+            style={
+              { "--chip-fill": partyColorVar(holder.partyLabel) } as React.CSSProperties
+            }
+          >
+            {holder.partyLabel}
+          </span>
+        )}
+        {holder.websiteUrl && (
+          <a
+            href={holder.websiteUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="person-row-office text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
+          >
+            Their site →
+          </a>
+        )}
+        {holder.sourceUrl && (
+          <a
+            href={holder.sourceUrl}
+            target="_blank"
+            rel="noreferrer"
+            title="Where this record was read from"
+            className="source-tag font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted underline decoration-dotted underline-offset-2 hover:text-link"
+          >
+            source
+          </a>
+        )}
+      </span>
+    </div>
   );
 }
 
@@ -193,20 +228,21 @@ function HolderList({
   tier: "local" | "state" | "national";
   onOpenOfficial?: OpenOfficial;
 }) {
+  // Stacked, not comma-joined. Two representatives for one Arizona state
+  // house district read as one hyphenated name when they were run together
+  // in a right-aligned column.
   return (
     <>
-      {holders.map((holder, i) => (
-        <span key={holder.id}>
-          {i > 0 && <span className="text-muted">, </span>}
-          <Holder
-            holder={holder}
-            onOpen={
-              onOpenOfficial
-                ? () => onOpenOfficial(holder, seatLabel, tier, seatOcdId)
-                : undefined
-            }
-          />
-        </span>
+      {holders.map((holder) => (
+        <Holder
+          key={holder.id}
+          holder={holder}
+          onOpen={
+            onOpenOfficial
+              ? () => onOpenOfficial(holder, seatLabel, tier, seatOcdId)
+              : undefined
+          }
+        />
       ))}
     </>
   );
@@ -489,7 +525,7 @@ function CoverageBody({
                   className="flex items-baseline justify-between gap-3 pb-1 text-[0.75rem] leading-snug"
                 >
                   <span className={TYPE_LABEL_CLASS}>Mayor</span>
-                  <span className="text-right">
+                  <span className="block">
                     <Holder
                       holder={holder}
                       onOpen={
@@ -533,7 +569,7 @@ function CoverageBody({
                   className="flex items-baseline justify-between gap-3 pb-1 text-[0.75rem] leading-snug"
                 >
                   <span className={TYPE_LABEL_CLASS}>{holder.officeTitle}</span>
-                  <span className="text-right">
+                  <span className="block">
                     <Holder
                       holder={holder}
                       onOpen={
@@ -660,10 +696,10 @@ function CoverageBody({
                 {stateSeats.map((seat) => (
                   <li
                     key={seat.ocdId}
-                    className="flex items-baseline justify-between gap-3 text-[0.75rem] leading-snug"
+                    className="text-[0.75rem] leading-snug"
                   >
                     <span className={TYPE_LABEL_CLASS}>{seat.label}</span>
-                    <span className="text-right">
+                    <span className="block">
                       {seat.representatives.length > 0 ? (
                         <HolderList
                           holders={seat.representatives}
@@ -684,10 +720,10 @@ function CoverageBody({
                 {statewideExecutives.map((holder) => (
                   <li
                     key={holder.id}
-                    className="flex items-baseline justify-between gap-3 text-[0.75rem] leading-snug"
+                    className="text-[0.75rem] leading-snug"
                   >
                     <span className={TYPE_LABEL_CLASS}>{holder.officeTitle}</span>
-                    <span className="text-right">
+                    <span className="block">
                       <Holder
                         holder={holder}
                         onOpen={
@@ -724,10 +760,10 @@ function CoverageBody({
                 {federalSeats.map((seat) => (
                   <li
                     key={seat.ocdId}
-                    className="flex items-baseline justify-between gap-3 text-[0.75rem] leading-snug"
+                    className="text-[0.75rem] leading-snug"
                   >
                     <span className={TYPE_LABEL_CLASS}>{seat.label}</span>
-                    <span className="text-right">
+                    <span className="block">
                       {seat.representatives.length > 0 ? (
                         <HolderList
                           holders={seat.representatives}
@@ -745,10 +781,10 @@ function CoverageBody({
                 {senators.map((holder) => (
                   <li
                     key={holder.id}
-                    className="flex items-baseline justify-between gap-3 text-[0.75rem] leading-snug"
+                    className="text-[0.75rem] leading-snug"
                   >
                     <span className={TYPE_LABEL_CLASS}>U.S. Senator</span>
-                    <span className="text-right">
+                    <span className="block">
                       <Holder
                         holder={holder}
                         onOpen={

@@ -23,6 +23,10 @@ import { logEvent } from "@/lib/log/client";
 import { groupByVenue, type Venue } from "@/lib/meetings/venues";
 import type { Meeting } from "@/lib/sources/types";
 import type { SeatHolder } from "@/lib/officials/lookup";
+import {
+  districtCardSources,
+  meetingCardSources,
+} from "@/lib/officials/card-sources";
 import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
 import {
   governingRosterHoldersForDivision,
@@ -1319,7 +1323,9 @@ function meetingSubject(
     representationNote:
       "We haven't sourced who sits on this body. The people we hold for this area represent it in Congress and the state legislature, which is a different thing.",
     meetings: [meeting],
-    sources: [{ what: meeting.title, provenance: meeting.provenance }],
+    // Item 1 (2026-08-16): the shared assembler, so this card and the
+    // district card cannot answer "says who?" from two different joins.
+    sources: meetingCardSources(meeting, roster),
   };
 }
 
@@ -1374,7 +1380,20 @@ function districtSubject(
     representation: roster,
     representationNote: representationNoteFor(district.tier),
     meetings,
-    sources: [],
+    /*
+     * Item 1 (2026-08-16) — THE FALSE SENTENCE.
+     *
+     * This was `[]`. Not "empty because we checked" — never wired at all, so
+     * the Sources tab said "Nothing on this card came from an external
+     * record" on the Tucson Unified District card, whose boundary is Census
+     * TIGER/Line, whose governing board is the district's own roster page,
+     * and whose sittings are the district's own agenda vendor. Every fact on
+     * it came from an external record and the tab denied all three.
+     *
+     * A tab that reports absence has to have looked. This one now reads the
+     * same rows the card renders.
+     */
+    sources: districtCardSources(roster, meetings),
   };
 }
 

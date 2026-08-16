@@ -41,22 +41,30 @@ export function PickControl({
   const selected = new Set(parsed?.choiceIds ?? []);
 
   return (
-    <div className="mt-3 rounded-md border border-dashed border-[var(--panel-border)] p-3">
+    /*
+     * Item 5 (2026-08-16), the author's pass: "no prompt renders quieter
+     * because its subject is a measure instead of a person." The person
+     * prompt is 6c's framed `.reaction-box`; this was a dashed box with
+     * smaller type, and a proposition asking a reader what they think was
+     * visibly the lesser question on the page.
+     *
+     * It takes the SAME frame and the same prompt weight now.
+     *
+     * **What deliberately does NOT change: this is a PICK, not a reaction.**
+     * Picks are the reader's private note and never leave the device;
+     * reactions join anonymous local totals and say so at capture. The
+     * DASHED border is what carries that distinction, and it stays — the two
+     * asks are equally loud and still visibly different kinds of thing.
+     * Matching the weight is a styling decision; merging them would be a
+     * collection decision, and that is the author's to make.
+     */
+    <div className="reaction-box" data-frame="standing" data-kind="pick">
       {/* 3d (2026-08-19): the author's words. Same options, same
-          device-local behavior — only the label changed. The standing
-          prominence rule (design pass): the ask never whispers — the
-          prominent variant keeps its signal color, the default carries
-          the same weight in the text color. */}
-      <p
-        className={
-          prominent
-            ? "text-[0.875rem] font-semibold text-signal"
-            : "text-[0.8125rem] font-semibold text-paper"
-        }
-      >
+          device-local behavior — only the label changed. */}
+      <p className={prominent ? "reaction-box-prompt text-link" : "reaction-box-prompt"}>
         What do you think?{voteFor > 1 ? ` (pick up to ${voteFor})` : ""}
       </p>
-      <div className="mt-2 flex flex-wrap gap-1.5">
+      <div className="reaction-box-choices">
         {options.map((option) => {
           const on = selected.has(option.id);
           return (
@@ -67,9 +75,9 @@ export function PickControl({
               onClick={() =>
                 togglePick(contestId, contestTitle, option.id, option.label, voteFor)
               }
-              className={`min-h-8 cursor-pointer rounded border px-2 text-[0.75rem] transition-colors ${
+              className={`reaction-choice ${
                 on
-                  ? "border-[var(--paper,#e8e8ec)] bg-[var(--paper,#e8e8ec)]/10 font-semibold"
+                  ? "border-[var(--text)] bg-[var(--text)]/10 font-semibold"
                   : "border-[var(--panel-border)] text-paper-dim hover:text-paper"
               }`}
             >

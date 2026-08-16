@@ -493,3 +493,41 @@ a body on one and not the other is a finding.
 vendors, its walls, its statutory posting rules. Appended by every session
 that learns something about that state. The playbook is the method across all
 states; `NOTES.md` is what is true of one.
+
+---
+
+## 6. The federal rung — solved once, nationally (added 2026-08-16)
+
+**Every zip in the country resolves federal officeholders through ONE rung
+now, and it is not a hunt.** `unitedstates/congress-legislators`, SHA-pinned,
+carries the roster, the id crosswalk, birthdays, term dates, party, DC
+contact, district offices, committees and membership, and official social
+accounts for all 537 sitting members. See `docs/source-ladder.md` for the pin
+and the two boundaries on it.
+
+**What that means for a new state's depth run:** the federal tier is DONE
+before the run starts. Do not hunt a member's phone number, district office
+or committee seat — it is in the snapshot, joined by bioguide. A depth run's
+effort goes to the state and local tiers, where nothing equivalent exists.
+
+**What it does NOT solve, stated so nobody reaches for it:** it is a
+DIRECTORY. No votes (the chambers), no money (FEC), no statements (PRL). And
+it has no state or local scope at all — a state legislator's contact still
+comes from the state's own roster, and a local member's from the body's own
+page.
+
+New commands: `pnpm congress:fetch`, `pnpm congress:migrate`.
+
+### The two-column trap — a UI rung, but it belongs here
+
+A row that puts a `white-space: nowrap` label beside a value in a fixed-width
+card **will always eventually starve the value**, and the failure mode is
+silent: the value renders one character per line and nothing errors. It shipped
+to production twice from the same pattern — a person's name beside their
+office title in a 300px popup, and it was about to do the same on the
+who-governs card's seat rows.
+
+**The rung, for any surface where a label can be arbitrarily long — an office
+title, a body name, a jurisdiction:** stack it. Do not tune the width.
+Measure it with `lab.scrollWidth > lab.clientWidth`, which is what "overflows
+its box" looks like as a number.

@@ -6,6 +6,8 @@ import {
 import type { VotePosition } from "@/lib/votes/types";
 import { formatDateMDY } from "@/lib/map/format";
 
+import { VotePill } from "@/components/map/popup/official-popup";
+
 import { CardSection } from "./card-section";
 
 /**
@@ -51,11 +53,21 @@ export interface KeyVoteRow {
   note: string | null;
 }
 
-const POSITION_LABEL: Record<string, string> = {
-  YES: "Voted yes",
-  NO: "Voted no",
-  PRESENT: "Voted present",
-  DID_NOT_VOTE: "Did not vote",
+/**
+ * Item 5 (2026-08-16): the position renders as a FILLED PILL here too, in
+ * the same grammar as the Recent view. Two views of one record must not
+ * state the same fact in two visual languages.
+ *
+ * The tone carries the vote and nothing else — green for yes, red for no,
+ * gray for a recorded non-position. A NAMED GAP is not in this table: it
+ * renders `tone="gap"`, an outline, because absence is not a position and
+ * must never wear one (item 12).
+ */
+const POSITION_PILL: Record<string, { label: string; tone: "yes" | "no" | "neutral" }> = {
+  YES: { label: "Voted yes", tone: "yes" },
+  NO: { label: "Voted no", tone: "no" },
+  PRESENT: { label: "Voted present", tone: "neutral" },
+  DID_NOT_VOTE: { label: "Did not vote", tone: "neutral" },
 };
 
 /**
@@ -201,14 +213,29 @@ function KeyVoteGroupBlock({
                       did not obey it until the positions existed to obey it
                       with.
                     */}
-                    <span className="font-semibold text-paper">
-                      {row.positions[i]
-                        ? (POSITION_LABEL[row.positions[i] as string] ??
-                          "Position recorded")
-                        : row.held?.[i]
-                          ? "Not in this chamber for this vote"
-                          : "We haven't recorded this vote yet"}
-                    </span>
+                    {(() => {
+                      const position = row.positions[i];
+                      if (position) {
+                        const pill = POSITION_PILL[position];
+                        return pill ? (
+                          <VotePill tone={pill.tone}>{pill.label}</VotePill>
+                        ) : (
+                          <VotePill tone="neutral">Position recorded</VotePill>
+                        );
+                      }
+                      // Both of these are GAPS, not positions, and they wear
+                      // the outline rather than a colour. The first is a fact
+                      // about the member's tenure; the second is a fact about
+                      // OUR research. Collapsing either into a position colour
+                      // is how a null becomes an assertion.
+                      return (
+                        <VotePill tone="gap">
+                          {row.held?.[i]
+                            ? "Not in this chamber for this vote"
+                            : "We haven't recorded this vote yet"}
+                        </VotePill>
+                      );
+                    })()}
                     {ref.tally && (
                       <span className="text-muted"> · the vote was {ref.tally}</span>
                     )}

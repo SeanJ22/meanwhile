@@ -1,5 +1,11 @@
+import type { Provenance } from "../sources/types.ts";
+
 import { campaignSiteFor } from "./campaign-sites.ts";
-import type { Officeholder, OfficeholderSet } from "./types.ts";
+import type {
+  Officeholder,
+  OfficeholderSet,
+  SocialAccounts,
+} from "./types.ts";
 
 /**
  * Turning the officeholder roster into an answer for a point.
@@ -42,6 +48,20 @@ export interface SeatHolder {
   websiteUrl: string | null;
   /** Where the record was read from. Rendered, not just stored. */
   sourceUrl: string | null;
+  /**
+   * The FULL record behind this row — publisher, read date, verification —
+   * not just its URL (item 1, 2026-08-16).
+   *
+   * `sourceUrl` alone was enough for the inline "source" tag and nothing
+   * else, which is why every battlecard's Sources tab had to be fed from
+   * somewhere other than the rows it was describing. It was fed from nowhere,
+   * and the tab told readers that a card built entirely from external records
+   * came from none. A row that carries its own provenance cannot be listed
+   * without it.
+   *
+   * Null only where a row genuinely has no publisher on record.
+   */
+  provenance: Provenance | null;
   /** Published official contact (3a). Absences are absences. */
   email: string | null;
   phone: string | null;
@@ -53,6 +73,22 @@ export interface SeatHolder {
    * never as the primary link. From the curated, verified overlay.
    */
   campaignUrl: string | null;
+  /**
+   * Official accounts (item 7, 2026-08-16). Sitting federal members only —
+   * that is the source's scope, and a scope is not widened by wanting it to
+   * be. Other tiers carry none until an equivalent source exists, and their
+   * cards render the pills they do have rather than an emptier row dressed
+   * up as a complete one.
+   */
+  social?: SocialAccounts;
+  /**
+   * The state and chamber the member's OWN current term states (item 7).
+   * Federal only — a curated local roster publishes neither, and the
+   * identity header renders the tier instead rather than guessing one out of
+   * a seat label.
+   */
+  state?: string;
+  chamber?: string;
 }
 
 export type OfficeholderIndex = Map<string, SeatHolder[]>;
@@ -70,11 +106,15 @@ function toSeatHolder(person: Officeholder, photos?: PhotoIndex): SeatHolder {
     birthDate: person.birthDate ?? null,
     websiteUrl: person.websiteUrl,
     sourceUrl: person.provenance.sourceUrl,
+    provenance: person.provenance,
     email: person.email,
     phone: person.phone,
     contactFormUrl: person.contactFormUrl,
     photoUrl: photos?.get(person.id) ?? null,
     campaignUrl: campaignSiteFor(person.id)?.url ?? null,
+    social: person.social,
+    state: person.state,
+    chamber: person.chamber,
   };
 }
 

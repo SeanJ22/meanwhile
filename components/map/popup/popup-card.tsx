@@ -41,6 +41,13 @@ interface PopupCardProps {
   /** What "More" opens, for the screen reader and the tooltip. */
   expandLabel?: string;
   onClose?: () => void;
+  /**
+   * The body renders the title itself (item 2, 2026-08-16) — the person
+   * card's identity block leads with the name as its dominant type, and the
+   * card heading above it was the same fact a second time, four pixels away.
+   * The heading is still the accessible name via `aria-label`.
+   */
+  titleInBody?: boolean;
   children: ReactNode;
 }
 
@@ -66,6 +73,7 @@ export function PopupCard({
   onExpand,
   expandLabel,
   onClose,
+  titleInBody = false,
   children,
 }: PopupCardProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
@@ -102,9 +110,9 @@ export function PopupCard({
         ))}
       </p>
 
-      <h3>{title}</h3>
+      {!titleInBody && <h3>{title}</h3>}
 
-      <div className="mt-2.5">{children}</div>
+      <div className={titleInBody ? "" : "mt-2.5"}>{children}</div>
 
       {onExpand && (
         <button

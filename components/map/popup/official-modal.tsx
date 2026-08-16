@@ -7,15 +7,22 @@ import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { ReactionViewContext } from "@/lib/reactions/client";
 
+import {
+  personCardSources,
+  sourceCountLabel,
+} from "@/lib/officials/card-sources";
+import { CONGRESS_DIRECTORY_SOURCE } from "@/lib/officials/directory-source";
+
 import { FundingBlock } from "@/components/funding/funding-block";
 import { CardSection } from "@/components/officials/card-section";
+import { CardSourcesList } from "@/components/officials/card-sources-list";
 
-import {
-  OfficeBlurb,
-  OfficialIdentity,
-  ReachThem,
-  RecentVotes,
-} from "./official-popup";
+import { identityChipsFor } from "@/lib/officials/identity-chips";
+import { ContactPills } from "@/components/officials/contact-pills";
+import { MemberDirectory } from "@/components/officials/member-directory";
+import { PersonIdentity } from "@/components/officials/person-identity";
+
+import { OfficeBlurb, ReachThem, RecentVotes } from "./official-popup";
 
 /**
  * The rep surface's large tier (3): the full record in the strat-map
@@ -53,6 +60,26 @@ export function OfficialModal({
   }, [onClose]);
 
   /*
+   * Item 7's clean render, on the Sources section: the congress-legislators
+   * project is cited ONCE for every directory fact on this card — the
+   * official accounts in the pill row, the committee seats, the district
+   * offices — rather than once per row beside each of them. Money, votes and
+   * PRL keep their per-section citations; a claim surface is a different
+   * register from a directory fact.
+   */
+  const sources = personCardSources(
+    holder,
+    holder.id.startsWith("congress:")
+      ? [
+          {
+            what: "Their official accounts, committee seats and district offices",
+            provenance: CONGRESS_DIRECTORY_SOURCE,
+          },
+        ]
+      : [],
+  );
+
+  /*
    * NO pushed history entry, deliberately (diagnosed 2026-08-14 third
    * session). The phone back-button-closes-the-modal behavior worked by
    * pushing {overlay:true} onto window.history — but Next's App Router
@@ -78,18 +105,26 @@ export function OfficialModal({
       }}
     >
       <div className="account-modal">
+        {/*
+          Item 3 (2026-08-16): the header carries the TIER EYEBROW and the
+          close control, and nothing else.
+
+          It used to repeat the name as an h2 and the seat as a subtitle,
+          four pixels above an identity block that says both again at the
+          size the author's ruling asked for. Three renderings of "Mayor" and
+          two of the person's name on one card is friction with no exception
+          claiming it — the reader is trying to find out who this is, and
+          saying it twice does not help them do that faster. The identity
+          block's name is the card's heading now.
+        */}
         <header className="account-modal-header">
           <div className="min-w-0">
             <p
               className="popup-type"
               style={{ color: `var(--accent-${tier})` }}
             >
-              {TIER_LABEL[tier]} · {holder.officeTitle}
+              {TIER_LABEL[tier]}
             </p>
-            <h2 className="account-modal-title">{holder.name}</h2>
-            {seatLabel && (
-              <p className="account-modal-subtitle">{seatLabel}</p>
-            )}
           </div>
 
           <button
@@ -129,15 +164,45 @@ export function OfficialModal({
           there is no such thing as their voting record to be missing.
         */}
         <div className="account-modal-body">
-          <OfficialIdentity holder={holder} seatLabel={seatLabel} large />
+          {/*
+            Item 3 (2026-08-16), the author's ruling. Circle portrait with a
+            NEUTRAL ring, name as the dominant type, one chip row where party
+            FILLS and state / chamber / incumbent are outlined neutrals.
+            Fill-versus-outline carries the emphasis; every chip is one
+            height. The test is under one second to "who is this person".
+          */}
+          <PersonIdentity
+            holder={holder}
+            seatLabel={seatLabel}
+            large
+            chips={identityChipsFor(holder, tier, "INCUMBENT")}
+          />
+
+          {/*
+            Item 8 (2026-08-16): the full contact row, directly under the
+            identity chips, per the reference. Officeholder cards only — the
+            social handles come from the directory's OFFICIAL-accounts-only
+            policy, which is the entire reason a social pill belongs on an
+            officeholder's card. Render what is held, only what is held.
+          */}
+          <ContactPills holder={holder} />
 
           <CardSection title="What this office does">
             <OfficeBlurb holder={holder} bare />
           </CardSection>
 
+          {/* The section stays — collapse is organization, and the set of
+              sections is identical per office class. It now holds the office
+              addresses rather than repeating the pill row above it. */}
           <CardSection title="How to reach them">
             <ReachThem holder={holder} bare />
           </CardSection>
+
+          {/* Item 7: the member's LOCAL offices — the door near the reader —
+              and their committee seats. Federal members only; the source's
+              scope is the section's scope, and the section is identical for
+              all 537. */}
+          <MemberDirectory holder={holder} />
 
           {/* D34: campaign money — FUNDING tier, its own section, never
               blended with the votes. */}
@@ -151,6 +216,31 @@ export function OfficialModal({
             reactionContext={reactionContext}
             columns
           />
+
+          {/*
+            Item 1 (2026-08-16): the person battlecard's answer to "says
+            who?".
+
+            The division battlecard has a Sources TAB and this card has no tab
+            bar, so the same obligation lands in this card's own grammar — a
+            6b4 collapsible section, fed by the same assembler, with the
+            stated N in the header meta. A card class that answers the
+            question differently is fine; a card class that cannot answer it
+            at all was the defect.
+
+            Money and votes are deliberately absent from the list: those
+            sections cite themselves on the row, and the same claim in two
+            registers reads as two claims.
+          */}
+          <CardSection title="Sources" meta={sourceCountLabel(sources)}>
+            {sources.length === 0 ? (
+              <p className="text-[0.75rem] leading-relaxed text-muted">
+                Nothing on this card came from an external record.
+              </p>
+            ) : (
+              <CardSourcesList sources={sources} />
+            )}
+          </CardSection>
         </div>
       </div>
     </div>

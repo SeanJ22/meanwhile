@@ -8,7 +8,13 @@ import { formatMeetingDate, formatMeetingTime } from "@/lib/map/format";
 import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyColorVar } from "@/lib/officials/party-color";
-import type { Meeting, Provenance } from "@/lib/sources/types";
+import {
+  sourceCountLabel,
+  type CardSource,
+} from "@/lib/officials/card-sources";
+import type { Meeting } from "@/lib/sources/types";
+
+import { CardSourcesList } from "@/components/officials/card-sources-list";
 
 import { HowToBeHeard } from "../meeting-panel";
 import { CalendarLinks } from "./calendar-links";
@@ -79,8 +85,13 @@ export interface ModalSubject {
   /** Why representation is empty, when it is. */
   representationNote: string;
   meetings: Meeting[];
-  /** Every record behind anything on screen. */
-  sources: { what: string; provenance: Provenance }[];
+  /**
+   * Every record behind anything on screen, from the ONE assembler
+   * (`lib/officials/card-sources.ts`, item 1). Never built inline by a
+   * caller: two card classes building this two ways is how the district card
+   * came to build it zero ways.
+   */
+  sources: CardSource[];
 }
 
 interface EntityModalProps {
@@ -99,6 +110,7 @@ export function EntityModal({
   initialTab = "overview",
 }: EntityModalProps) {
   const [tab, setTab] = useState<ModalTab>(initialTab);
+  const sourceCount = sourceCountLabel(subject.sources);
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -170,6 +182,12 @@ export function EntityModal({
               onClick={() => setTab(entry.id)}
             >
               {entry.label}
+              {/* Item 1 (2026-08-16): the stated N, computed from the SAME
+                  array the tab maps over. A count derived a second way is how
+                  a number comes to disagree with what is on screen. */}
+              {entry.id === "sources" && sourceCount && (
+                <span className="account-modal-tab-count">{sourceCount}</span>
+              )}
             </button>
           ))}
         </div>
@@ -386,61 +404,11 @@ function Meetings({ meetings }: { meetings: Meeting[] }) {
  * that quietly omits the unsourced rows is a worse lie than no source list,
  * because it implies everything shown was cited.
  */
-function Sources({
-  sources,
-}: {
-  sources: { what: string; provenance: Provenance }[];
-}) {
+function Sources({ sources }: { sources: CardSource[] }) {
   if (sources.length === 0) {
     return <Empty>Nothing on this card came from an external record.</Empty>;
   }
-
-  return (
-    <>
-      {sources.map((entry, i) => (
-        <div key={`${entry.what}-${i}`} className="account-modal-person">
-          <p className="text-[0.8125rem] text-paper">{entry.what}</p>
-
-          <PopupRow label="Published by">
-            {entry.provenance.sourceOrg || <NoValue />}
-          </PopupRow>
-
-          <PopupRow label="Read from">
-            {entry.provenance.sourceUrl ? (
-              <a
-                href={entry.provenance.sourceUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="text-signal hover:underline"
-              >
-                {hostOf(entry.provenance.sourceUrl)}
-              </a>
-            ) : (
-              <NoValue>no published page</NoValue>
-            )}
-          </PopupRow>
-
-          <PopupRow label="Collected" mono>
-            {entry.provenance.collectedAt ? (
-              entry.provenance.collectedAt.slice(0, 10)
-            ) : (
-              <NoValue />
-            )}
-          </PopupRow>
-
-          <PopupRow label="Verified" mono>
-            {entry.provenance.verifiedAt ? (
-              entry.provenance.verifiedAt.slice(0, 10)
-            ) : (
-              // Null means no human has confirmed this against the source. It
-              // is the normal state and says so, rather than reading as a gap.
-              <NoValue>not yet</NoValue>
-            )}
-          </PopupRow>
-        </div>
-      ))}
-    </>
-  );
+  return <CardSourcesList sources={sources} />;
 }
 
 function Empty({ children }: { children: ReactNode }) {

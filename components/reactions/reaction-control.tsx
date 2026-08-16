@@ -110,6 +110,31 @@ const LABELS: Record<ReactionValue, string> = {
   DONT_CARE: "Don't care",
 };
 
+/**
+ * The tone a settled answer wears (item 5, 2026-08-16).
+ *
+ * Green for yes, red for no, dark gray for unsure and for the answers that
+ * are neither. The funding scale's two intensities take their own deeper
+ * shades — "Love it" is a deeper green than "Like it", "Hate it" a deeper red
+ * than "Don't like it".
+ *
+ * **These label the reader's own answer back to them and nothing else.** No
+ * aggregate is rendered, nothing is summed, and the tone carries no judgment
+ * of the target — a red pill means the reader said no, never that the vote
+ * was bad.
+ */
+const REACTION_TONE: Record<ReactionValue, string> = {
+  YES: "yes",
+  NO: "no",
+  UNSURE: "neutral",
+  SOMEONE_ELSE: "neutral",
+  LOVE: "yes-strong",
+  LIKE: "yes",
+  DISLIKE: "no",
+  HATE: "no-strong",
+  DONT_CARE: "neutral",
+};
+
 
 
 export function ReactionControl({
@@ -195,20 +220,40 @@ export function ReactionControl({
           // a stored selection with no tap this session (outcome null) is
           // the device's own memory and renders selected on that basis.
           const isSelected = selected === value;
+          /*
+           * Item 5 (2026-08-16): the CONFIRMED state renders as a pill in the
+           * vote grammar — green for yes, red for no, dark gray for unsure,
+           * and the five-point funding scale in its own shades.
+           *
+           * THE HONEST-OUTCOME RENDERING IS UNCHANGED UNDERNEATH. This is the
+           * confirmation's face, not its truth: only a settled answer wears
+           * the pill — the server's 204 (`COUNTED`), or a selection restored
+           * from this device's own memory, which is a claim about this
+           * browser rather than about the totals. `SAVING` and `NOT_COUNTED`
+           * keep their own distinct renderings and never borrow the pill,
+           * because a pill on a write that did not land would be exactly the
+           * implied success the outcome rule exists to refuse.
+           */
+          const settled =
+            isSelected && outcome !== "SAVING" && outcome !== "NOT_COUNTED";
           const style = !isSelected
-            ? "border-[var(--panel-border)] text-paper-dim hover:border-[var(--signal)]/50 hover:text-paper"
+            ? "border-[var(--panel-border)] text-paper-dim hover:border-[var(--link)]/50 hover:text-paper"
             : outcome === "SAVING"
-              ? "border-[var(--signal)]/50 text-paper-dim"
+              ? "border-[var(--link)]/50 text-paper-dim"
               : outcome === "NOT_COUNTED"
-                ? "border-dashed border-[var(--signal)]/60 text-paper-dim"
-                : "border-[var(--signal)] bg-[var(--signal)]/15 font-semibold text-signal";
+                ? "border-dashed border-[var(--link)]/60 text-paper-dim"
+                : "";
           return (
             <button
               key={value}
               type="button"
               aria-pressed={isSelected}
               onClick={() => choose(value)}
-              className={`reaction-choice ${style}`}
+              className={
+                settled
+                  ? `reaction-choice reaction-choice--settled vote-pill--${REACTION_TONE[value]}`
+                  : `reaction-choice ${style}`
+              }
             >
               {label}
             </button>

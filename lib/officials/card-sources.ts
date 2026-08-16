@@ -1,0 +1,199 @@
+import type { Meeting, Provenance } from "../sources/types.ts";
+
+import type { SeatHolder } from "./lookup.ts";
+
+/**
+ * **What a battlecard actually drew on — assembled once, for every card
+ * class.** (Item 1, 2026-08-16.)
+ *
+ * ## The defect this exists to end
+ *
+ * The Sources tab rendered "Nothing on this card came from an external
+ * record" on the Tucson Unified District card — a card whose every fact came
+ * from an external record: the boundary from Census TIGER/Line, the governing
+ * board from the district's own roster page, the sittings from the district's
+ * own agenda vendor. The sentence was live on production and it was false.
+ *
+ * The cause was one line: `districtSubject` in `map-entry.tsx` passed
+ * `sources: []`. The tab was never wired to the provenance the data
+ * underneath had been carrying all along. Only the meeting card ever built a
+ * source list, and it built its own inline — a parallel join, which is the
+ * shape this repo has now been bitten by four times.
+ *
+ * So there is one assembler. Every card class calls it, and the honest empty
+ * sentence renders only where it comes back empty — which, in a product whose
+ * whole claim is sourced accuracy, should be almost nowhere.
+ *
+ * ## One row per distinct source, not one row per fact
+ *
+ * A district card can list thirty sittings from one vendor. Thirty identical
+ * provenance blocks is not transparency, it is noise that hides the two rows
+ * a reader would actually check. Rows are merged by (org, url) and the `what`
+ * line names how many facts each source is behind — the count and its
+ * denominator, per the repo's standing rule.
+ *
+ * ## The count is stated, and the guard holds it
+ *
+ * `sourceCountLabel` is what the tab renders beside its name. It is computed
+ * from the same array the tab maps over, so the stated N cannot drift from
+ * the rendered rows; `tests/card-sources.test.ts` asserts that per card
+ * class, and asserts that a card holding any externally sourced fact never
+ * renders the empty sentence.
+ */
+
+export interface CardSource {
+  /** Which facts on this card this source is behind. */
+  what: string;
+  provenance: Provenance;
+}
+
+/**
+ * Where the district and place boundaries — and therefore every district
+ * card's identity, type and label — come from.
+ *
+ * Not invented here: this is the endpoint `scripts/fetch-districts.ts`
+ * actually fetches, and the vintage it pins. A card that renders a boundary
+ * is making a claim about where a government's authority stops, and that
+ * claim has a publisher.
+ */
+export const BOUNDARY_PROVENANCE: Provenance = {
+  sourceUrl: "https://www2.census.gov/geo/tiger/",
+  sourceOrg: "U.S. Census Bureau (TIGER/Line and Cartographic Boundary files)",
+  collectedAt: "2026-08-10",
+  verifiedAt: null,
+};
+
+/** Merge key: two rows from the same publisher and page are one source. */
+function keyOf(provenance: Provenance): string {
+  return `${provenance.sourceOrg}|${provenance.sourceUrl ?? ""}`;
+}
+
+/**
+ * Merge same-source entries, keeping the earliest-seen `what` and counting
+ * the rest.
+ *
+ * The merged `what` states the count AND what is being counted, so a source
+ * behind one fact and a source behind thirty read differently — a bare
+ * number with no denominator is exactly the shape the count rule forbids.
+ */
+export function mergeSources(entries: CardSource[]): CardSource[] {
+  const byKey = new Map<string, { entry: CardSource; extra: number }>();
+
+  for (const entry of entries) {
+    const key = keyOf(entry.provenance);
+    const existing = byKey.get(key);
+    if (existing) existing.extra += 1;
+    else byKey.set(key, { entry, extra: 0 });
+  }
+
+  return [...byKey.values()].map(({ entry, extra }) =>
+    extra === 0
+      ? entry
+      : { ...entry, what: `${entry.what}, and ${extra} more from this source` },
+  );
+}
+
+/** A person row's own record, when the row carries one. */
+function holderSource(holder: SeatHolder, what: string): CardSource | null {
+  if (holder.provenance) return { what, provenance: holder.provenance };
+  // A holder with a bare URL and no publisher/date is still a source, and
+  // saying so beats dropping it: an omitted row implies everything shown was
+  // cited by something better.
+  if (holder.sourceUrl) {
+    return {
+      what,
+      provenance: {
+        sourceUrl: holder.sourceUrl,
+        sourceOrg: "the publishing body",
+        collectedAt: "",
+        verifiedAt: null,
+      },
+    };
+  }
+  return null;
+}
+
+/**
+ * Every record behind a DISTRICT or DIVISION battlecard.
+ *
+ * Three classes of fact, and all three are external: the boundary that makes
+ * the card exist, the people the card says represent it, and the sittings it
+ * lists.
+ */
+export function districtCardSources(
+  representation: SeatHolder[],
+  meetings: Meeting[],
+): CardSource[] {
+  const entries: CardSource[] = [
+    { what: "This district's boundary, type and label", provenance: BOUNDARY_PROVENANCE },
+  ];
+
+  for (const holder of representation) {
+    const source = holderSource(holder, `Who represents it — ${holder.name}`);
+    if (source) entries.push(source);
+  }
+
+  for (const meeting of meetings) {
+    entries.push({ what: `A meeting on this card — ${meeting.title}`, provenance: meeting.provenance });
+  }
+
+  return mergeSources(entries);
+}
+
+/** Every record behind a MEETING battlecard. */
+export function meetingCardSources(
+  meeting: Meeting,
+  representation: SeatHolder[],
+): CardSource[] {
+  const entries: CardSource[] = [
+    { what: `This sitting — ${meeting.title}`, provenance: meeting.provenance },
+  ];
+
+  for (const holder of representation) {
+    const source = holderSource(holder, `Who sits on this body — ${holder.name}`);
+    if (source) entries.push(source);
+  }
+
+  return mergeSources(entries);
+}
+
+/**
+ * Every record behind a PERSON battlecard.
+ *
+ * The roster row is the spine — name, office, party, contact, term. The
+ * directory adds its own row when the card is drawing on it (item 7), and the
+ * photo carries the door it shipped through, because a portrait is a claim
+ * about a face and the photo rule is the reason it may be shown at all.
+ *
+ * Money and votes are NOT listed here: those sections carry their own
+ * citations on the row, per the clean-render doctrine, and repeating them in
+ * a list would be the same claim twice in two registers.
+ */
+export function personCardSources(
+  holder: SeatHolder,
+  extra: CardSource[] = [],
+): CardSource[] {
+  const entries: CardSource[] = [];
+
+  const spine = holderSource(
+    holder,
+    `Who they are, their office and how to reach them`,
+  );
+  if (spine) entries.push(spine);
+
+  entries.push(...extra);
+
+  return mergeSources(entries);
+}
+
+/**
+ * What the Sources tab states beside its name.
+ *
+ * Computed from the array the tab renders, never counted a second way — a
+ * stated N that is derived separately from the rows is how a count comes to
+ * disagree with what is on screen.
+ */
+export function sourceCountLabel(sources: CardSource[]): string | null {
+  if (sources.length === 0) return null;
+  return String(sources.length);
+}

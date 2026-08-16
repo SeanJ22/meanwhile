@@ -191,3 +191,147 @@ stay off the party palette), identifiers never render outside a
 technical-details disclosure, and the four sanctioned frictions (capture
 disclosure, narrowing optionality, consent, honest gaps) keep their
 weight — polish may never smooth them away.
+
+---
+
+# The 0816 pass — the cards take their final face
+
+Adopted 2026-08-16, the author's rulings. Everything below is committed
+grammar: a new surface uses these, it does not invent a neighbour.
+
+## The interactive accent is AZURE. The brown is gone.
+
+The author: *"I hate this brown throughout. Change it to something else
+entirely."* It was `#ffb000` in dark and a deep amber `#6d4600` in light,
+which reads brown on every surface it touched — the Ask button, the Ballot
+pill, links, selected states, the section-header pills.
+
+`--link`, `--action` and `--signal` are one azure family now
+(`#4fc9e8` dark / `#0a4f61` light), and both spellings of the token finally
+agree: `--color-signal` aliased `--accent-local` while the real `--signal`
+property aliased `--link`, so `text-signal` and `var(--signal)` were two
+different colours. They are both `--link`.
+
+**Why azure and not something warmer.** The palette here is crowded and most
+of it is politically load-bearing. The accent had to sit clear of the party
+colours (Democratic blue 217°, Republican red 5°, Green 140°, Independent
+purple 273°), the tier accents (local amber 41°, state teal-green 165°,
+national periwinkle 219°, school magenta 330°, all-tiers orange 25°),
+`--danger`, and `--voice`. The gaps left were lime, cyan/azure (~195°) and
+indigo. Lime is unreadable at these sizes; indigo sits between national blue
+and Independent purple, **and an accent a reader could mistake for a party
+colour is a worse defect than a brown one — a link that reads as a party mark
+is a claim.** Azure is 30° clear of the nearest tier accent on either side and
+is nobody's party. Both values clear the 7:1 sun bar in both themes.
+
+**The tier accents did NOT move, and that is a recorded decision with a
+remainder.** The brief permits moving Local off gold provided the map legend
+and tier toggles move with it — one token family, both move. They are tuned
+to sit between the basemap's roads and the meeting markers, so moving one
+means retuning the legend against the basemap, which is the author's eye's
+call and not a side effect of a link colour. **The remainder:
+`--tier-fill-local` in the light theme is still a deep amber on the selected
+Local toggle.** Named rather than quietly left.
+
+## The pill is the house grammar for "tappable fact"
+
+Three pill families, and they are not interchangeable:
+
+| Class | What it means | Form |
+| --- | --- | --- |
+| `.contact-pill` | a channel that opens something — phone, form, page, account | outlined, 44px min, icon + label |
+| `.id-chip` | an identity fact — party, state, chamber, standing | 24/28px, party FILLED, everything else outlined |
+| `.vote-pill` | a recorded position, or a settled reaction | filled, deep, near-white text |
+| `.card-section-header` | a collapsible section of a card | full-width pill in the accent |
+
+**They wrap; they never shrink.** A pill below tap size is a defect, so
+`.contact-pill` has a 44px floor (40px compact) and no flex-shrink. At 390px
+a row runs to two or three lines and every pill stays tappable.
+
+**Absent channels are absent pills.** Never a placeholder, never a greyed
+"no website", never padding to make a row look full. Equal effort means the
+HUNT is equal, not that the ROW is padded to equal length.
+
+## The identity header
+
+On every person battlecard, and scaled down on the small popup:
+
+1. **Circle portrait with a NEUTRAL ring** (`--panel-border`, 3px). The
+   reference screenshot rings it in the party's red; that is the one thing
+   not adopted. A ring in a party colour makes the photograph itself a
+   partisan mark, and a nonpartisan office would then wear either a colour it
+   has no claim to or a visibly lesser frame.
+2. **The initials avatar occupies the IDENTICAL circle** — same diameter,
+   same ring, same ground. This extends 6b3's uniform geometry. Layout weight
+   tracks OUR research, never the person.
+3. **Name as the dominant type** — 28px on the large card, 17px on the small.
+4. **One chip row, uniform height.** Party FILLED in its assigned colour
+   (every filed party fills: Republican red, Democrat blue, Independent
+   purple, Green green); then state, chamber/office, and
+   incumbent-or-challenger as OUTLINED neutrals. **Fill-versus-outline carries
+   the emphasis, never size** — a bigger chip would make the same claim a
+   second time, and sizes creep.
+5. **No party filed renders NOTHING** (M62). Never a "Nonpartisan" pill
+   dressed as an affiliation. Absence never wears a colour.
+6. **"Incumbent" and "Challenger" render in the identical chip**, through one
+   code path, so neither can grow a treatment the other lacks.
+
+State and chamber come off the member's own current term in the pinned
+congress-legislators file — never guessed from a seat label. A local roster
+publishes neither and the row says the tier instead.
+
+The card header above it carries the tier eyebrow and the close control and
+**nothing else**: it used to repeat the name and the office four pixels above
+an identity block that says both again.
+
+## Voting Record: one header, two views, full width
+
+`Recent` and `When it mattered` used to float as two headers with no parent
+("recent WHAT?") in a two-column grid that gave each half the card. Now:
+
+- **One `Voting Record` section header**, at the same full width as Campaign
+  money and the rest — one of the collapsible sections, not a special case.
+- **Two selectors inside it.** The selected view consumes the full width;
+  selecting one collapses the other. **The accordion is scoped INSIDE Voting
+  Record only** — the sections above are unaffected.
+- Information architecture otherwise unchanged: both views keep their
+  complete answers, newest first, overlap unmarked.
+
+**Chevron state-direction, everywhere.** Closed points down, open points up.
+The rotation rule must use a CHILD combinator — as a descendant selector it
+rotated every nested chevron when an outer section opened, so the closed
+sub-groups pointed up while shut.
+
+## The who-governs card and the counters
+
+- **The counters are a 2×2 grid.** Four flex tiles in a 340px rail gave each
+  about 70px to hold a 10px uppercase label, so "DISTRICTS IN VIEW"
+  overflowed its tile. Two per row at ~144px, sentence case, wrapping inside
+  its own tile. The honest modes from M87 are truth rules and did not move.
+- **Person rows are `.person-row`**, stacked: name at full width, party as an
+  `.id-chip`, and BOTH affordances rendered — the name opens the battlecard,
+  "Their site →" goes out to the officeholder's own page (M92's two-action
+  model, extended to people rows).
+- **Information order, open by default vs one tap down** (M93): the ballot
+  entry, the coverage sentence and the LOCAL/STATE/FEDERAL lists are OPEN —
+  they are the card's argument. "Why these N?", the per-body detail, and the
+  moving-here link are one tap down. **Collapse is organization, never
+  deletion**: nothing is removed by being collapsed, and a collapsed section
+  still renders its header so the reader knows it exists.
+
+## Register on a prompt is set by prominence, not by subject
+
+A proposition's prompt is as loud as a person's — same frame, same prompt
+weight. **What stays different is the KIND of thing**: a pick is the reader's
+private note that never leaves the device and wears a DASHED border; a
+reaction joins anonymous totals and says so at capture, and wears a solid
+one. Equally loud, visibly different.
+
+## The two-column trap, named once so it stops recurring
+
+A row that puts a `white-space: nowrap` label and a value in competition for
+a fixed width **will always eventually starve the value**. It rendered
+"Dr. Matt Heinz" one character per line inside a 300px popup, and it was
+about to do the same to the who-governs seat rows. Where a label can be
+arbitrarily long — an office title, a body name — **stack it**. Do not tune
+the width.

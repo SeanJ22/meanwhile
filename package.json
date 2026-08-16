@@ -41,7 +41,9 @@
     "overlaps": "tsx scripts/overlap-audit.mts",
     "key-votes:positions": "tsx scripts/fetch-key-vote-positions.mts",
     "sheet": "tsx scripts/contact-sheet.mts",
-    "walk:0815g": "tsx scripts/walk-0815g.mts"
+    "walk:0815g": "tsx scripts/walk-0815g.mts",
+    "congress:fetch": "tsx scripts/fetch-congress-legislators.mts",
+    "congress:migrate": "tsx scripts/migrate-congress-directory.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
@@ -69,7 +71,8 @@
     "playwright": "^1.62.1",
     "tailwindcss": "^4",
     "tsx": "^4.20.7",
-    "typescript": "^5"
+    "typescript": "^5",
+    "yaml": "^2.9.0"
   },
   "packageManager": "pnpm@10.33.0"
 }

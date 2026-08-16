@@ -5888,3 +5888,211 @@ The brief's own cut order was followed. **6c** (school-life routing), **6d**
 the brief's own instruction) and **7b** (the 81 session-label dates) were not
 built. Item **5**'s rule entered CLAUDE.md; its sweep did not run. Nothing was
 half-built, and every one of them is a tracker row.
+
+## 29. The 2026-08-15 session (sixth of the day) — the truth session: two hosts open, every division card confesses, and the laws get their votes
+
+The brief's frame was "a class of false claims live on every division card",
+and that turned out to be the honest description of three of this session's
+items: a card denying people it holds, a counter answering a question nobody
+asked, and a page telling the reader how plainly it was speaking.
+
+### The browser rung, and the guess that would have been wrong (M79)
+
+`kearsarge.org` and `newbury.nh.gov` answer **403 to this pipeline and 200 to
+a browser**. Between them they were hiding a school board's whole two-year
+calendar and a town's three land-use boards.
+
+The measurement is the part worth keeping, because the obvious fix is not the
+fix:
+
+| Client | Headers | Result |
+|---|---|---|
+| Node `fetch`, civic-index UA | ours | **403** |
+| Node `fetch`, full Chrome header set | Chrome's | **403** |
+| `curl`, the *same* Chrome header set | Chrome's | **200** |
+
+The filter reads the **TLS/HTTP2 client fingerprint**, not the `User-Agent`.
+A session that swapped the UA, got another 403 and recorded "the browser rung
+is closed" would have written down a wall that is not there.
+`politeGetText(url, { profile: "browser" })` sends the browser header set
+in-process and re-issues through `curl` on a 403; the contact address stays
+in the `User-Agent` either way. No login, no token, no robots directive names
+these paths, and every page is one a public body is obliged to publish.
+
+Behind the wall: Kearsarge publishes its whole 2026-2027 board calendar as a
+month table with the board's own words beside the dates — "Staff
+Nominations", "Budget Presentations", "Warrant Discussion" — plus two bullets
+naming the time and the place. The 2026-08-13 audit had recorded **165** Main
+St from a search snippet; the page says **114**, and the page wins. Newbury's
+own site carries three boards its CivicWeb portal does not.
+
+Three new source shapes were born, dispatched by a `shapes` key and unioned
+by date. **`month-table`**: the year is the whole problem, tracked by a
+stated year AND by a backwards month ordinal, because a schedule filed twelve
+months early is invisible until a reader shows up at an empty room.
+**`dated-list`**: scoped to the body's own block and scanned per match rather
+than per line, because the commission writes "June 9,2026" and puts two dates
+in one paragraph. **`agenda-list`**: Drupal's own `dc:date` with the offset in
+it, bound to one board by a path prefix — the town's template gives every
+board identical markup — and **the link text names the DOCUMENT, never the
+sitting**: a card titled "Agenda" is a government meeting named after the
+piece of paper we found it in.
+
+**schedulepage went from 1 body / 3 meetings to 4 bodies / 26.** Three drops
+are counted and all three are rows the board's own table carries in meeting
+shape and which are not meetings: the town election and two filing deadlines.
+
+**One board was left out and is named.** Newbury's Zoning Board of Adjustment
+publishes four 2026 agendas and its meeting PLACE on no rung walked — not the
+department page, not three agendas read in full, not the town's events
+listing. Both sibling boards state theirs in their own words. Borrowing one
+for this board is the guess the venue table exists to refuse, so it is a
+curated `KNOWN_UNCOVERED` row with the venue named as the next rung, and a
+test that makes wiring it later a deliberate act.
+
+Two published contradictions were recorded rather than smoothed: a Zoning
+agenda dated `2026-08-13` in the CMS field and `Wednesday, August 12, 2026`
+in its own heading, and another timed `7:00am` in the field while its items
+run from 7:05 p.m.
+
+### The class defect: every legislative division card denied its own member (M86)
+
+Diagnosed before fixing, and the diagnosis narrows the report while
+confirming its shape. A division's people live in **two** stores: legislative
+seats in the officeholder index the coverage summary exposes, local
+governments in the curated body rosters. The small popup asked both. The
+large battlecard asked the rosters alone — so **every congressional,
+state-house and state-senate card at every zip denied its own officeholder**:
+twelve cards, the three division types with the largest overlays on the map.
+County, municipal and school cards were already right.
+
+That is a parallel join, which is why it drifted: two surfaces answering one
+question from different stores eventually disagree, and the one nobody
+screenshots stays wrong. There is one resolver now —
+`representationForDivision` — read by the popup, the battlecard and the
+districts door, and the honest empty line comes from one place too. Guarded
+**as a class, per division type**, with the six types stated as the
+denominator so an empty pass cannot pass for a clean one; the guard was
+proven to fail without the fix, listing exactly the twelve cards.
+
+### The counter that answered a question nobody asked (M87)
+
+"179 DISTRICTS" read as a claim the reader is governed by 179. The door said
+"in view"; the tile said nothing, and the tile is the one on screen. In-view
+is labelled as such now — verified live at 85701 reading **"29 DISTRICTS IN
+VIEW"**. And once a street address has resolved, a second mode leads with the
+count of districts whose boundary CONTAINS that point, keeping the in-view
+number underneath. A zip centroid never qualifies: a ZCTA crosses city,
+county and school lines. Both modes carry the stated-N guard — the door
+renders exactly the rows the tile counted.
+
+### The author's ruling on funding reactions (D61)
+
+`ripcord.fundingReactionsInAggregates` flips **LIVE**, with the ruling
+recorded verbatim beside the flag: what is licensed is reader-attention
+signal, never FEC-derived data. The distinction the original framing
+collapsed is that § 30111(a)(4) restricts commercial use of the contributor
+DATA, and a reader's anonymous feeling about a display is neither that data
+nor derived from it. That separate question is untouched and still counsel's.
+The switch stays as a belt, and the test now demonstrates it in the position
+it is *not* shipped in.
+
+The funding question is the author's — "How do you feel about how this
+campaign is funded?" with Love it / Like it / Don't like it / Hate it / Don't
+care. The five values go through the server-side validity table and are
+accepted only on funding targets, **and the gate runs in both directions**:
+`YES` on a funding target is refused too, which is what stops a stale client
+blending instruments. Verified live: `LOVE` on a funding target → 204, `YES`
+on a funding target → 400, `LOVE` on a vote → 400.
+
+**Scale versioning is the data-honesty half.** Every row carries the
+instrument that produced it, derived server-side from the target type.
+Aggregates key on it, so a v1 funding tally and a v2 funding tally are two
+rows and never one — one denominator over both would report a trend caused by
+the question changing and nothing else. Migration 0003 applied to Neon and
+verified by column query: 22 existing rows backfilled to version 1.
+
+### The page that kept telling you it was being honest (M88)
+
+1,591 reader words to 1,448 — 143 cut, and the number is stated because
+"shorter" with no number is the same shrug as "it works". Out: the
+meta-language, the build-fails-on-a-new-column line twice over, and the
+duplicate never-tells-you-how-to-vote sentence.
+
+The read-aloud found something to **add**: the photographs section still
+described **two** doors after the photo rule grew to four. A page about
+photographs of real people cannot be out of date about which photographs it
+ships. Every coupling guard across five test files passes unchanged.
+
+### The ask box's second rung (A12)
+
+The keyword matcher refuses on questions a person could route in a second.
+The classifier asks a model one thing — which curated topic — and its entire
+output is one identifier from a closed list, or NONE. **It writes no sentence
+a reader sees.** Keyword-first is structural: the classifier's id is read
+only after the deterministic matcher returned null. The closed enum is
+checked twice, on the wire and again here, because a schema is a promise made
+by a server and a topic id is a claim about a government.
+
+Verified live at 85701: *"the light outside my house has been out for a
+week"* — no curated keyword in it — came back **Streets and roads**, with
+Tucson's Street Maintenance and the 311 line. That is the classifier's first
+real answer.
+
+No dependency was added: plain `fetch` against the Messages API, the same
+choice LegiScan got. The rejected alternative was the Anthropic SDK, declined
+because this repo's convention is to avoid a dependency for one endpoint and
+the author was not available to approve one.
+
+### The laws get their roll calls, and one was nearly the wrong vote (B17)
+
+**0 of 20 to 18 of 20.** The route is congress.gov's own record: the
+public-law lists, then the titles endpoint where a law's popular name
+actually lives ("Popular Titles | Inflation Reduction Act of 2022"), then
+that bill's recorded votes carrying the chamber's own URL. No bill number is
+typed anywhere.
+
+The April 2024 shape resolves mechanically. The House voted on four separate
+bills; the Senate voted them as one vehicle, so the enacted law carries the
+Senate's single vote and **no House vote at all**. The four siblings get
+their House votes through the enacted law's own related-bills list — four
+different House roll calls, one shared Senate roll call.
+
+**The catch this run made before it shipped.** Matching BSCA's `whichVote`
+"final passage" on the literal words picked House roll 212 — "On passage
+Passed 230-190" — which is the House passing its own unrelated Byrne-grant
+version of S. 2938 in May. The vote on the gun law is roll 299 in June,
+234-193. That would have put every House member against a vote on a different
+bill under the name of the law that made news. So the rule is stated rather
+than guessed: passage and concurrence questions only, then the last of them
+by the chamber's own timestamp, because that is the vote on the text that
+became law. The rejected alternative was refusing all eight two-vote entries.
+
+Also fixed: `/\bconcur\b/` matched none of the Senate's own "Senate
+CONCURRED in the House amendment" final actions, which is how BSCA and CHIPS
+first came back as "no passage or concurrence question" on bills whose
+concurrence votes were right there.
+
+Two misses, both correct refusals: the shutdown entry has no unambiguous
+popular name among a congress full of appropriations laws, and the
+stock-trading ban has not become law and says so on the card.
+
+### The probe row this session created
+
+One row, named per CLAUDE.md's standing order: a `FUNDING_TOTAL_REACTION` on
+`H2AZ02360` (Ciscomani's FEC id) with the answer `LOVE` and
+`scale_version: 2`, written 2026-08-15 during the verification walk against
+the same Neon database production uses. It is the only `scale_version = 2`
+row in the table, which is what makes it findable without an investigation.
+The two refusals beside it (`YES` on a funding target, `LOVE` on a vote) were
+400s and wrote nothing.
+
+### What was cut, and why
+
+The brief's own cut order was followed. **7**'s remaining PRL evaluation
+(license read verbatim off the JS-rendered data page, coverage table, join
+rates) and **6**'s town-hall survey were deferred and are tracker rows
+**D62** and **B18**, each carrying the rungs the next session starts from
+rather than a summary. **8**'s Facebook sweep (**X07**), **8**'s session-label
+dates (**R16**), **6c** school-life routing and **6f**/**M81** the
+jurisdiction badge were not built. Nothing was half-built.

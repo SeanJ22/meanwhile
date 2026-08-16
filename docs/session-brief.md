@@ -1,67 +1,73 @@
-# Session brief — the money tells its whole story
+# Session brief — the truth session: division cards confess, the classifier lands, and the law votes go live
 # (delivered 2026-08-15; this file is the record of what was asked)
 
 The author's directive for this session arrived as the brief rather than as
 entries in `docs/defects.md`. It is reproduced in outline here so the next
 session can read what was asked alongside what was done (`docs/state.md`
-§28). Row pointers are at the bottom.
+§29). Row pointers are at the bottom.
 
 ## What was asked
 
-1. **The voice guide enters CLAUDE.md.** Playful on interaction surfaces,
-   level on claim surfaces. The ask-box beat draws from a FIXED
-   author-curated pool; deliberation labels prohibited.
-2. **Contributions sort by money, grouped by kind.** Two compact columns,
-   amount descending, repeated same-committee filings collapsed to one row
-   with a count. Joint-fundraising transfers stay typed as transfers.
-3. **The second hop — "Give me the tea".** A committee contributor row
-   opens that committee's OWN top itemized contributors, framed as the
-   fund's donors, never the candidate's. Snapshot-committed, same
-   thin-guard, level register inside, playful only in the button.
-4. **Small-donor percentages get an honesty floor.** Below $5,000 raised
-   (flag-tunable), the percentage is replaced by the raw dollars.
-5. **The Facebook-as-campaign-site rule**, into CLAUDE.md, and applied.
-6. **Where do I vote:** a polling-place pointer per state.
-6b. **Four truth items:** one person one photo; the missing ballot photos;
-   "School District Not Defined"; canceled meetings at Tucson and Vail.
-6c. **The routing map learns school life.**
-6d. **Level 1 routing:** the ask box learns to classify, topic only.
-6e. **M80:** the geocoder goes through a stateless proxy, and the promise
-   becomes the keepable truth.
-6f. **M81:** the jurisdiction badge.
-6g. **Two small rulings:** the photo-rule stamps reformat; the LegiScan
-   Sunday workflow ships.
-7. **B15:** the key votes tracker, the author's locked list — 17 law
-   entries (April 2024 as four siblings) and 16 nominations, chamber-mapped,
-   criteria published, never aggregated.
-7b. **R16 cleanup:** the 81 session-label dates.
-8. **Final pass and handoff.**
+1. **Kearsarge's meetings exist and we render zero.** The district publishes
+   its full schedule; `kearsarge.org` 403s this pipeline (the M79 wall). The
+   REAL-BROWSER RUNG is the named next step. Newbury's three portal-less
+   boards ride the same rung.
+2. **EVERY division battlecard denies its officeholders** — a class defect,
+   the author's finding, "same across the board". Diagnose the single cause,
+   fix at the shared source, guard the CLASS per division type.
+3. **The districts counter tells the truth twice.** The tile says IN VIEW;
+   and where a resolved address point exists, a second mode counts the
+   districts actually CONTAINING the point.
+4. **The funding-reactions ripcord flips live — the author's ruling.** Plus
+   the five-point funding question and scale versioning as a data-honesty
+   mechanic.
+5. **The transparency page goes on the subtraction diet.** Every commitment
+   survives; the words shrink.
+6. **Town halls: recorded, evaluated, not built.**
+7. **"What are they saying": the Polarization Research Lab evaluation.**
+8. **Inherited whole from d's cut order:** 6c school-life routing, 6d the
+   Level 1 classifier (whole, never half), 6f/M81 the jurisdiction badge,
+   7b/R16 the 81 session-label dates, and item 5's Facebook sweep.
+9. **B17: the law rows get their roll calls**, via the congress.gov API.
+10. **The author's explainer review: CLOSED, one edit** — the GENIUS Act line,
+    verbatim. Plus a recorded-not-built row for "the debate" blocks.
+11. **Final pass and handoff.**
 
-The brief's own cut order, if short: 5 (sweep only), then 6f, then 6, then
-6d WHOLE, then 6c, then 7b. Never cut 1, 2, 3, 4, 6b, 6e, 6g, 7's machinery,
-or 8.
+The brief's own cut order, if short: defer **7**, then **6**, then 8's
+Facebook sweep, then 8's dates. Never cut 1, 2, 3, 4, 5, 8's classifier, 9,
+10 or 11.
 
 ## What the session did with it
 
-Built: 1, 2, 3, 4, 5's RULE, 6, 6b, 6e, 6g, and 7's machinery plus VOTES ON
-PEOPLE in full.
+Built: **1, 2, 3, 4, 5, 8's classifier, 9, 10** and **11**.
 
-Cut, in the brief's own order and named rather than hidden: **6c**, **6d**,
-**6f**, **7b**, and item **5's sweep**. Nothing was half-built.
+Cut, in the brief's own order and named rather than hidden: **7**'s remaining
+evaluation and **6**'s survey are recorded as tracker rows carrying the rungs
+(**D62**, **B18**); **8**'s Facebook sweep (**X07**), **8**'s session-label
+dates (**R16**), **6c** school-life routing and **6f**/**M81** the
+jurisdiction badge were not built. Nothing was half-built.
 
 ## Row pointers
 
-- Voice guide → **X06**. Contributions sorted/grouped/collapsed → **D55**.
-  The second hop → **D56**. The honesty floor → **D57**.
-- **D58** — found BY the work, live in production: Schedule A returns every
-  RECEIPT, not every gift, and a bank was rendering as one of Mark Kelly's
-  biggest donors.
-- Facebook rule → **X07** (rule adopted; sweep open). Polling place →
-  **M82**, with **B16** recorded for the address-level version.
-- One person one photo → **D59**. Risa Lombardo's portrait → **D60**. The
-  Census placeholder name → **M83**. Cancellation signals → **M84**.
-- The geocoder proxy → **M80** (Done), with **M85** for the crossing
-  question the real-page walk found had never been asked. LegiScan's Sunday
-  workflow → **D54** (Done, verified green in Actions).
-- Key votes → **B15** (In progress: machinery and 16/16 nominations
-  shipped), with **B17** recording the route that resolves the laws.
+- The browser rung, Kearsarge and Newbury's three boards → **M79** (Done),
+  with the Zoning Board named as the one left out and why.
+- The division battlecard's class defect → **M86** (Done). The districts
+  counter's two modes → **M87** (Done).
+- The author's funding ruling, the five-point scale, scale versioning →
+  **D61** (Done).
+- The transparency diet, and the photo rule's four doors reaching the page →
+  **M88** (Done).
+- The Level 1 classifier → **A12** (Done). The explainer review → **B15**
+  (noted, one edit).
+- The law rows' roll calls → **B17** (Done): 0 of 20 to 18 of 20.
+- Recorded, not built: **B18** (town halls) and **D62** (the PRL evaluation,
+  with the build brief written into the row).
+
+## The playbook diff
+
+`docs/zip-playbook.md` gained four entries: the browser rung and what it is
+actually made of (with the client/headers/result table, because the obvious
+guess is wrong); the three new "body's own page" shapes; the rule that a
+schedule table carries rows which are not meetings, and they are dropped
+COUNTED; and the pair of findings that a published schedule can contradict
+itself and that a board can publish its schedule without its place.

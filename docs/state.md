@@ -6338,6 +6338,14 @@ Netlify-side limit, a plugin). Everything in this section's claims about
 behaviour is verified against the local dev server at the merged commit and
 against the walk's twenty checks; none of it is verified on production yet.
 
+> **Closed 2026-08-16 — §31.** The build had failed, not queued, and the
+> cause was in this session's own tree: `scripts/walk-0815g.mts` did not
+> type-check. This paragraph stands as written rather than being edited into
+> hindsight — it was true when written, and the honest form of a wrong guess
+> is a correction beside it. The two suspects it names ("an env var, a
+> Netlify-side limit, a plugin") were all wrong; §31 has the diagnosis, and
+> **§30 is now verified live: 20 of 20 against production.**
+
 ### What was cut, and why
 
 The brief's own cut order permitted deferring **3** first, then **6e** whole.
@@ -6451,3 +6459,66 @@ seconds to two minutes and would be testing Next rather than us.
 
 ### §30, verified live
 
+**The deploy landed.** `main@6a6dbbd`, the gate green in 9s, and production
+serving the build ~4 minutes after the merge. Verified with a cache-buster on
+every request, against the three signals §30 could not get:
+
+| Signal | Production |
+|---|---|
+| `/api/votes?member=congress:K000377` | `chamber: senate`, 20 recent, **36 keyVotes**, 20 LAWS of which 17 carry a position |
+| `/api/meetings` at 03255 | **31 meetings, 1 zoning-board row** — "Zoning Board of Adjustment @ Newbury Offices", 2026-08-13T19:00 |
+| the front page carries the ballot pill | see below — the probe was wrong, the build is right |
+
+**`pnpm walk:0815g` against production: 20 of 20.** Every check §30 could
+only make locally — the outside-press dismissal and its survival through a
+pan, both floaters, the zip switcher's recents, each tier toggle in its own
+colour, the legend clearing the open drawer, both battlecards collapsed to
+their headers with the laws group stating 20, a House card saying the
+nominations line exactly once, "In seat until" on both, and the Zoning Board
+live at 03255. `pnpm pairs prod` filed 17 production screenshots beside their
+local pairs. **§30 is verified live.**
+
+### The third signal was a bad probe, and that is a finding
+
+"The front page carries the ballot pill" returns **zero** against a correct
+deploy, and it will keep doing so. §30 made the reader's location
+session-scoped, so the server render has no zip, so `MapFloaters` returns
+null and the welcome overlay takes the screen — exactly as designed. The
+class cannot be in the SSR HTML.
+
+The probe was written the same day as the change that invalidated it, which
+is how a check ends up measuring the wrong thing while looking authoritative.
+Two replacements, both used above: the deployed **CSS bundle** carries
+`.ballot-pill`, `.ask-pill`, `.card-section-header`, `.reaction-box`,
+`.candidate-avatar`, `.zip-switcher` and `.source-tag` (7 of 7 in
+`/_next/static/chunks/0_qcxguehz_71.css`), which is a build-artifact fact; and
+the walk drives a real browser with a seeded session, which is a reader fact.
+Recorded as **R24** so the next session does not re-derive it.
+
+### The gate's own first version was broken, and running it is what caught that
+
+It used `execFileSync("pnpm", …)`, which cannot run pnpm on Windows at all —
+pnpm is a `.cmd` shim and Node has refused to spawn `.cmd`/`.bat` without a
+shell since the 2024 argument-injection fix. It threw, the catch treated any
+throw as a failed build, and the gate refused a ship over a tree that builds
+clean in nine seconds. A false refusal rather than a false pass, so nothing
+shipped broken — but a gate that cannot tell "the build failed" from "the
+gate could not run" is untrustworthy in both directions, and the two are
+reported separately now.
+
+**The guard test could not have caught it**, and that is worth knowing about
+the guard test: it scans wiring, and a spawn that never happens is not
+wiring. What caught it was running the thing. The same test then caught the
+*fix* — it asserted the gate spawned `["run", "build"]` and the fix spawns
+one literal command string — which is the assertion doing its job on the
+first day it existed.
+
+### Probe rows, and the playbook
+
+**No production probe rows.** Nothing was written against production: every
+production request this session was a GET against `/api/votes`,
+`/api/meetings`, the front page or a CSS chunk, plus the walk's read-only
+browsing. The walk taps no reaction and fires no log event.
+
+**Playbook diff: nothing new.** This session touched build tooling and a
+type error; it walked no source ladder and learned no rung.

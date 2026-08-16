@@ -278,8 +278,11 @@ async function run(page: Page, step: Step) {
 }
 
 const phase = process.argv[2];
-if (phase !== "before" && phase !== "after") {
-  console.error("usage: pnpm pairs <before|after> [item…]");
+// "prod" is the same manifest against a deployed origin (SHOOT_BASE_URL) —
+// added 2026-08-16 so a production pass files beside its local pair instead
+// of overwriting it.
+if (phase !== "before" && phase !== "after" && phase !== "prod") {
+  console.error("usage: pnpm pairs <before|after|prod> [item…]");
   process.exit(1);
 }
 const only = new Set(process.argv.slice(3));

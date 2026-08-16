@@ -366,3 +366,30 @@ pointer. Row pointers for what the brief asked:
 - **No production probe rows were created this session** — nothing was
   written against production at all. Stated because the standing order
   requires it either way.
+
+## 2026-08-16 — the session brief (hotfix: the deploy gate)
+
+The author's hotfix directive arrived as the session brief; the brief is
+committed at `docs/session-brief.md` and the narrative is `state.md` §31. No
+untriaged entries were found at session-open. Row pointers:
+
+- The type error that blocked the deploy, its diagnosis, and the gate →
+  **R22** (Done). Netlify failed on a WALK SCRIPT while the site code
+  compiled clean. The stale-`.next` suspect was tested and is wrong — a
+  warm-cache build reproduces the failure exactly; the ordering suspect is
+  right, and the gate is `pnpm build` inside `pnpm handoff --ship`.
+- **§30 is verified live**: `pnpm walk:0815g` 20 of 20 against production,
+  31 meetings and 1 zoning-board row at 03255, 36 `keyVotes` on
+  `/api/votes`. **M89**, **M90**, **M96**–**M99** and **R21** amended by ID.
+- Found by the verification: **the front-page-HTML deploy probe is wrong by
+  construction** → **R24** (Done). `.ballot-pill` cannot appear in the SSR
+  HTML now that the location is session-scoped, so the probe reports a broken
+  deploy on a working one. Replaced by the CSS bundle and the walk.
+- Found by building the gate: **the gate's own first version could not run
+  the build it was gating** (Windows `.cmd` shim + `execFileSync`), and
+  refused a clean tree. Recorded inside R22; a false refusal, so nothing
+  shipped broken.
+- The Turbopack whole-project-tracing warning → **R23** (recorded, not
+  built). `pnpm pairs prod` → **R25** (Done).
+- **No production probe rows.** Every production request this session was a
+  GET; the walk taps no reaction and fires no log event.

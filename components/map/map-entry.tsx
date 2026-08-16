@@ -7,6 +7,10 @@ import { Legend } from "@/components/map/legend";
 import { ListOverlay } from "@/components/map/list-overlay";
 import { Sidebar } from "@/components/shell/sidebar";
 import { useDistrictLayer } from "@/hooks/use-district-layer";
+import {
+  useDivisionRepresentation,
+  type DivisionRepresentation,
+} from "@/hooks/use-division-representation";
 import { useNarrowing } from "@/hooks/use-narrowing";
 import { useStoredTheme } from "@/hooks/use-stored-theme";
 import { useStoredZip } from "@/hooks/use-stored-zip";
@@ -575,6 +579,23 @@ function MapEntryInner() {
   );
 
   /**
+   * The SELECTED division's officeholders, resolved by the division's own
+   * key rather than by where the reader is standing (M112, 2026-08-16).
+   *
+   * `holdersFor` above answers instantly for the divisions containing the
+   * point and for curated local rosters; it cannot answer for any of the
+   * other drawn districts, and its empty array was being rendered as our
+   * gap over people we hold. This hook asks. Both surfaces for the selected
+   * district — the small popup and the battlecard — read it, so they cannot
+   * disagree, and neither renders a gap sentence while the answer is still
+   * in flight.
+   */
+  const districtRepresentation = useDivisionRepresentation(
+    current?.coverage ?? null,
+    districtPopup?.ocdId ?? null,
+  );
+
+  /**
    * The registry body governing a division, for the popup's link ladder.
    *
    * Comes off the same coverage summary the notice reads, so the popup and the
@@ -1124,7 +1145,8 @@ function MapEntryInner() {
                   districtPopup.ocdId,
                 )
               }
-              representation={holdersFor(districtPopup.ocdId)}
+              representation={districtRepresentation.holders}
+              representationPending={districtRepresentation.status === "looking"}
               upcomingMeetings={
                 // A failed fetch may not stand behind "Upcoming: 0" — the
                 // popup renders couldn't-check instead (2a).
@@ -1146,6 +1168,7 @@ function MapEntryInner() {
                     districtPopup,
                     current?.meetings ?? [],
                     current?.coverage ?? null,
+                    districtRepresentation,
                   ),
                 })
               }
@@ -1185,7 +1208,24 @@ function MapEntryInner() {
 
         {large?.kind === "entity" && (
           <EntityModal
-            subject={large.subject}
+            subject={
+              // M112: the subject is a snapshot taken when the reader tapped
+              // "More", and the division-keyed officeholder lookup may still
+              // have been in flight. Re-derive it for the division that is
+              // still selected so the card FILLS IN rather than freezing on
+              // the looking line — and only for that division, so a
+              // meeting's card is never rebuilt as a district's.
+              large.subject.divisionOcdId &&
+              districtPopup &&
+              large.subject.divisionOcdId === districtPopup.ocdId
+                ? districtSubject(
+                    districtPopup,
+                    current?.meetings ?? [],
+                    current?.coverage ?? null,
+                    districtRepresentation,
+                  )
+                : large.subject
+            }
             onClose={() => setLarge(null)}
             // A roster name opens the person's full card — the one-at-a-time
             // rule swaps the large surfaces (3).
@@ -1333,6 +1373,13 @@ function districtSubject(
   district: DistrictHit,
   allMeetings: Meeting[] = [],
   coverage: CoverageSummary | null = null,
+  /**
+   * The division-keyed answer (M112, 2026-08-16), when the caller has one.
+   * Omitted, the card falls back to the point-scoped resolver — which is
+   * correct for the divisions containing the reader and empty for every
+   * other one, which is exactly why the caller normally passes this.
+   */
+  resolved: DivisionRepresentation | null = null,
 ): ModalSubject {
   // 6c (2026-08-17): the county popup fills in. A county's large surface
   // lists every local meeting in view (local coverage is clipped to exactly
@@ -1355,7 +1402,17 @@ function districtSubject(
   // congressional, state-house and state-senate division card denied its own
   // officeholder: rosters hold no legislative seats, and the seats were never
   // asked for. A parallel join always drifts; there is one now.
-  const roster = representationForDivision(coverage, district.ocdId);
+  //
+  // M112 (2026-08-16): the resolver above is POINT-SCOPED — `coverage.seats`
+  // carries only the divisions containing the reader — so every district card
+  // opened for anywhere else got an empty array and rendered it as our gap.
+  // State House District 21 denied Consuelo Hernandez and Stephanie Stahl
+  // Hamilton to any reader not living in it. `resolved` is the same question
+  // asked by the division's own key.
+  const roster =
+    resolved?.holders.length
+      ? resolved.holders
+      : representationForDivision(coverage, district.ocdId);
   return {
     title: district.label,
     subtitle: `${district.typeLabel} · ${district.state}`,
@@ -1376,9 +1433,13 @@ function districtSubject(
      * (Arizona's state house districts elect two) does not have to pick one.
      * A type with no office to name renders no explainer at all.
      */
+    divisionOcdId: district.ocdId,
     representedByOfficeTitle: officeTitleForDivision(district.ocdId),
     representation: roster,
-    representationNote: representationNoteFor(district.tier),
+    representationNote: representationNoteFor(
+      district.tier,
+      roster.length === 0 && resolved?.status === "looking",
+    ),
     meetings,
     /*
      * Item 1 (2026-08-16) — THE FALSE SENTENCE.

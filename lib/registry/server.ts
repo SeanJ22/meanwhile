@@ -2,6 +2,7 @@ import { readFile, readdir } from "node:fs/promises";
 import { join } from "node:path";
 
 import {
+  holdersFor,
   indexByDivision,
   type OfficeholderIndex,
   type PhotoIndex,
@@ -213,6 +214,33 @@ export async function chamberForOfficeholder(
     }
   }
   return null;
+}
+
+/**
+ * **Who holds this division's seats — keyed by the DIVISION, not by the
+ * reader** (M112, 2026-08-16).
+ *
+ * `coverageAt` answers "who represents this point", and its `seats` array is
+ * point-scoped by construction: it carries only the divisions containing the
+ * reader. The district battlecard resolved against that array, so opening any
+ * OTHER drawn district on the map produced an empty list — and the empty list
+ * rendered as OUR gap. State House District 21 told a reader in District 20
+ * that we hold no officeholder for it, over Consuelo Hernandez and Stephanie
+ * Stahl Hamilton, both in the index the same page had already loaded.
+ *
+ * The scope limit was real; the sentence about it was false. This function is
+ * the resolution the sentence was standing in for: the index is keyed by
+ * OCD-ID, so a division is answerable whether or not the reader is in it.
+ * Same store, same rows, same sourcing — no new data.
+ *
+ * An empty return here is a REAL absence: we asked the store by the
+ * division's own key and it holds nobody.
+ */
+export async function seatHoldersForDivision(
+  ocdId: string,
+): Promise<SeatHolder[]> {
+  const { officials } = await loaded();
+  return holdersFor(officials, ocdId);
 }
 
 export async function coverageAt(

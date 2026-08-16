@@ -69,8 +69,17 @@ export function representationForDivision(
  * A local division whose boundary exists has a government by construction, and
  * saying so is a different fact from a legislative seat we simply have not
  * sourced. Both are our gap, stated as ours.
+ *
+ * **`pending` is not an empty answer and never wears an empty answer's
+ * words** (M112, 2026-08-16). The battlecard for a district the reader is not
+ * standing in has to ASK who holds it — `useDivisionRepresentation` — and
+ * until that question comes back there is no absence to report. Saying
+ * "no sourced officeholder" while still looking is the render-default rule
+ * (M111) broken by a timing gap instead of a null: it turns our own
+ * unfinished lookup into a claim about a government.
  */
-export function representationNoteFor(tier: string): string {
+export function representationNoteFor(tier: string, pending = false): string {
+  if (pending) return "Looking up who holds this seat…";
   return tier === "local"
     ? "We know this division has a governing body because its boundary exists. We haven't sourced who sits on it."
     : "No sourced officeholder for this division yet.";

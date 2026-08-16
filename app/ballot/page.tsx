@@ -27,7 +27,10 @@ import { PickControl } from "@/components/ballot/pick-control";
 import { registrationLinkFor } from "@/lib/ballot/registration-links";
 import { pollingPlaceLinkFor } from "@/lib/ballot/polling-place-links";
 import { incumbentHolderFor } from "@/lib/ballot/incumbent-record";
-import { IncumbentRecordLink } from "@/components/ballot/incumbent-record-link";
+import {
+  IncumbentNameLink,
+  IncumbentRecordLink,
+} from "@/components/ballot/incumbent-record-link";
 import { partyColorVar } from "@/lib/officials/party-color";
 import { formatDateMDY } from "@/lib/map/format";
 import {
@@ -97,6 +100,34 @@ async function IncumbentRecord({
   const holder = await incumbentHolderFor(targetKey);
   if (!holder) return null;
   return <IncumbentRecordLink holder={holder} context={context} />;
+}
+
+/**
+ * The candidate's NAME as the door to their large battlecard (g3 item 7) —
+ * the map's click grammar, applied here.
+ *
+ * The name shown is the one AS FILED, never the roster's spelling: the ballot
+ * is the ballot's document, and swapping in our own version of a person's
+ * name because we happen to hold a record for them would be the card editing
+ * the ballot. Falls back to plain text where the exact-key join finds no
+ * record, because a door onto an empty card is worse than no door.
+ */
+async function IncumbentName({
+  targetKey,
+  name,
+  context,
+}: {
+  targetKey: string;
+  name: string;
+  context: { zip: string; lat: number; lng: number } | null;
+}) {
+  const holder = await incumbentHolderFor(targetKey);
+  if (!holder) {
+    return (
+      <span className="text-[0.9375rem] font-semibold tracking-tight">{name}</span>
+    );
+  }
+  return <IncumbentNameLink holder={holder} name={name} context={context} />;
 }
 
 /** D34: the funding answer under one candidate — totals with the reaction
@@ -642,6 +673,17 @@ export default async function BallotPage({
                         }
                         card={cardForNominee(contest.id, nominee.name)}
                         links={linksForNominee(contest.id, nominee.name)}
+                        nameSlot={
+                          <IncumbentName
+                            targetKey={`${contest.id}|${nominee.name}`}
+                            name={nominee.name}
+                            context={
+                              centroid && zip
+                                ? { zip, lat: centroid.lat, lng: centroid.lng }
+                                : null
+                            }
+                          />
+                        }
                       />
                       <IncumbentRecord
                         targetKey={`${contest.id}|${nominee.name}`}
@@ -732,6 +774,17 @@ export default async function BallotPage({
                           card={cardForCandidacy(cand.id)}
                           links={linksForCandidacy(cand.id)}
                           filedSiteUrl={cand.websiteUrl}
+                          nameSlot={
+                            <IncumbentName
+                              targetKey={cand.id}
+                              name={`${cand.givenName} ${surnameDisplayCase(cand.familyName)}`}
+                              context={
+                                centroid && zip
+                                  ? { zip, lat: centroid.lat, lng: centroid.lng }
+                                  : null
+                              }
+                            />
+                          }
                         />
                         <IncumbentRecord
                           targetKey={cand.id}
@@ -987,12 +1040,17 @@ export default async function BallotPage({
 
       {/* 3e (2026-08-19): the picks disclosure, stated ONCE — the TOS
           pattern. It carried the same sentence under every contest before;
-          the distinction from the reaction buttons lives here now. */}
+          the distinction from the reaction buttons lives here now.
+
+          g3 item 7 (2026-08-16): the label this sentence QUOTES changed with
+          the control, so the quote changed with it. A disclosure quoting
+          wording that is no longer on the page points the reader at
+          nothing. */}
       {matched && matched.contests.length > 0 && (
         <p className="mt-6 text-[0.6875rem] leading-relaxed text-voice">
-          &ldquo;What do you think?&rdquo; picks are saved on this device only
-          — we never see them. The Yes/No/Unsure reaction buttons are
-          different: those answers join anonymous local totals.{" "}
+          &ldquo;Your pick&rdquo; boxes are saved on this device only — we
+          never see them. The Yes/No/Unsure reaction buttons are different:
+          those answers join anonymous local totals.{" "}
           <Link
             href="/transparency"
             className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"

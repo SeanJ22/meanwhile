@@ -50,3 +50,54 @@ export function IncumbentRecordLink({
     </>
   );
 }
+
+/**
+ * The candidate's NAME as the door to their large battlecard — g3 item 7
+ * (2026-08-16), the click grammar from g2 item 3 applied to the ballot.
+ *
+ * On the map, a person's name opens their card. On the ballot page a name was
+ * inert text with a separate "See their voting record →" link underneath it,
+ * so the same reader learned two different grammars for the same gesture on
+ * two surfaces of one product. Now the name is the door on both.
+ *
+ * **It renders as a link only where we actually hold the record.** The
+ * incumbent join is exact-key (`lib/ballot/incumbent-record.ts`); a
+ * challenger's name stays plain text rather than becoming a link to an empty
+ * card, because a door onto nothing is worse than no door. That asymmetry is
+ * real and is already named on the card in the sentence above the record
+ * link — "that's not a bias, it's a record" — which is the equal-effort
+ * rule's answer to it: the difference is disclosed, not disguised.
+ */
+export function IncumbentNameLink({
+  holder,
+  name,
+  context,
+}: {
+  holder: SeatHolder;
+  /** The name AS FILED, which is what the ballot must show — never the roster's. */
+  name: string;
+  context: ReactionViewContext | null;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button
+        type="button"
+        data-candidate-card
+        onClick={() => setOpen(true)}
+        className="cursor-pointer text-left text-[0.9375rem] font-semibold tracking-tight underline decoration-dotted underline-offset-2 hover:text-link hover:decoration-solid"
+      >
+        {name}
+      </button>
+      {open && (
+        <OfficialModal
+          holder={holder}
+          seatLabel={null}
+          tier="national"
+          reactionContext={context}
+          onClose={() => setOpen(false)}
+        />
+      )}
+    </>
+  );
+}

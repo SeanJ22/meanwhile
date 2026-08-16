@@ -22,7 +22,7 @@ import { ContactPills } from "@/components/officials/contact-pills";
 import { MemberDirectory } from "@/components/officials/member-directory";
 import { PersonIdentity } from "@/components/officials/person-identity";
 
-import { OfficeBlurb, ReachThem, RecentVotes } from "./official-popup";
+import { OfficeBlurb, RecentVotes } from "./official-popup";
 
 /**
  * The rep surface's large tier (3): the full record in the strat-map
@@ -191,12 +191,24 @@ export function OfficialModal({
             <OfficeBlurb holder={holder} bare />
           </CardSection>
 
-          {/* The section stays — collapse is organization, and the set of
-              sections is identical per office class. It now holds the office
-              addresses rather than repeating the pill row above it. */}
-          <CardSection title="How to reach them">
-            <ReachThem holder={holder} bare />
-          </CardSection>
+          {/*
+            g3 item 9 (2026-08-16): the "How to reach them" accordion is GONE.
+            The pill row above it is the contact surface.
+
+            **Audited before deleting, field by field.** `ReachThem` rendered
+            phone, email, contact form, official page and campaign site;
+            `ContactPills` renders every one of those plus the official social
+            accounts, and carries the same honest-absence line ("No published
+            contact on record yet.") when a person has none. So the accordion
+            held nothing the pills do not — it was the identical facts, one
+            tap further away, under a header that promised something new.
+            The one thing that WAS unique to it, the office addresses, moved
+            to `MemberDirectory` before this session and is untouched below.
+
+            The section set is still identical per office class — the rule
+            6b4 set — because the section is gone for everyone, not gone for
+            the people we happen to know less about.
+          */}
 
           {/* Item 7: the member's LOCAL offices — the door near the reader —
               and their committee seats. Federal members only; the source's

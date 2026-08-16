@@ -2327,6 +2327,26 @@ label:has(> input[type="checkbox"]) {
   gap: 6px;
 }
 
+/*
+ * The five-point scale's group separators (g3 item 7, 2026-08-16).
+ *
+ * The author's find: on the funding row "Don't like it" sat dead centre, and
+ * the eye defaults to the middle of a row of equal buttons — a sensor reading
+ * its own layout, on the path whose aggregates are sold. Which options lead a
+ * group is decided in lib/reactions/pill.ts (SCALE_GROUP_LEADERS); this is
+ * only how the boundary looks: a hairline the width of the gap, dimmer than a
+ * border, carrying no information of its own.
+ *
+ * `align-self: stretch` rather than a fixed height, so it matches whatever
+ * the row's tallest control is after wrapping at 390px.
+ */
+.scale-sep {
+  flex: 0 0 1px;
+  align-self: stretch;
+  background: var(--panel-border);
+  opacity: 0.85;
+}
+
 .reaction-choice {
   flex: 1 1 auto;
   min-width: 5.25rem;

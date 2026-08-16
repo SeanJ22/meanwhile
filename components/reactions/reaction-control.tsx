@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { Fragment, useState, useSyncExternalStore } from "react";
 
 const emptySubscribe = () => () => {};
 
@@ -18,6 +18,7 @@ import {
 } from "@/lib/signal/reactions";
 import {
   REACTION_LABELS,
+  SCALE_GROUP_LEADERS,
   reactionChoiceClass,
 } from "@/lib/reactions/pill";
 
@@ -169,7 +170,7 @@ export function ReactionControl({
     <div className="reaction-box" data-frame={frame}>
       <p className="reaction-box-prompt">{prompt}</p>
       <div className="reaction-box-choices" role="group" aria-label={prompt}>
-        {choices.map((value) => {
+        {choices.map((value, i) => {
           // The full selected-and-counted rendering is earned by the 204;
           // a stored selection with no tap this session (outcome null) is
           // the device's own memory and renders selected on that basis.
@@ -183,15 +184,30 @@ export function ReactionControl({
           // NOT_COUNTED never reach the pill.
           const isSelected = selected === value;
           return (
-            <button
-              key={value}
-              type="button"
-              aria-pressed={isSelected}
-              onClick={() => choose(value)}
-              className={reactionChoiceClass(value, isSelected, outcome)}
-            >
-              {REACTION_LABELS[value]}
-            </button>
+            <Fragment key={value}>
+              {/*
+                g3 item 7 (2026-08-16), the author's find: on the five-point
+                row "Don't like it" sat DEAD CENTRE, and the eye defaults to
+                the middle of a row of equal buttons. That is a sensor reading
+                its own layout — a measurement instrument with a thumb on it,
+                on the one path this product sells.
+                The separators the author specified split the row into
+                favourable / unfavourable / abstain, so no single option owns
+                the centre: the centre is now a boundary rather than a button.
+                Rendered wherever this scale renders, per the ruling.
+              */}
+              {i > 0 && SCALE_GROUP_LEADERS.has(value) && (
+                <span className="scale-sep" aria-hidden="true" />
+              )}
+              <button
+                type="button"
+                aria-pressed={isSelected}
+                onClick={() => choose(value)}
+                className={reactionChoiceClass(value, isSelected, outcome)}
+              >
+                {REACTION_LABELS[value]}
+              </button>
+            </Fragment>
           );
         })}
       </div>

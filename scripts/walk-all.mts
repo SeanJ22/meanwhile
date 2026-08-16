@@ -248,11 +248,18 @@ for (const { zip } of FOUR) {
       `/ballot links "Moving here?" at ${zip}`,
       /Moving here\?/.test(ballot.text),
     );
+    // g3 item 7 superseded 3d's shared label. The two asks on this page are
+    // differently consequential — one is a private note, one joins an
+    // anonymous aggregate that is sold — and they must not read alike.
     check(
-      "0819",
-      `/ballot uses the reaction label "What do you think?" at ${zip}`,
-      /What do you think\?/.test(ballot.text),
-      /Would you vote for/.test(ballot.text) ? "" : "",
+      "g3",
+      `/ballot names the pick as a ballot-building action at ${zip}`,
+      /Your pick for this race/.test(ballot.text),
+    );
+    check(
+      "g3",
+      `/ballot's picks disclosure quotes wording that is on the page at ${zip}`,
+      !/&ldquo;What do you think\?&rdquo; picks/.test(ballot.text),
     );
   }
 }
@@ -634,11 +641,23 @@ section("D. The ballot page (0814c, D53, g3)");
   });
   await page.waitForTimeout(3500);
 
-  // M49/M50 + D53 — a pick renders the reader's running ballot.
-  const pickButtons = page.locator("[data-pick-choice]");
+  // M49/M50 — a pick renders the reader's running ballot.
+  //
+  // The selector is the pick BOX's own choices (`data-kind="pick"`), which is
+  // what distinguishes the ballot-builder from the reaction sensor sharing
+  // the same `.reaction-box` styling. An earlier draft looked for a
+  // `[data-pick-choice]` attribute this walk had invented and the product
+  // never had, and reported the round trip as un-runnable at every zip.
+  const pickButtons = page.locator(
+    '.reaction-box[data-kind="pick"] .reaction-choice',
+  );
   const pickCount = await pickButtons.count();
   if (pickCount === 0) {
-    cannotRun("0814c", "85701: your-picks round trip", "no [data-pick-choice] control on the page");
+    cannotRun(
+      "0814c",
+      "85701: your-picks round trip",
+      "no pick control on the page",
+    );
   } else {
     await pickButtons.first().click();
     await page.waitForTimeout(900);

@@ -116,7 +116,7 @@ export const REACTION_VALUES: ReactionValue[] = [
  * an export can find it. Nothing migrates: v1 funding rows stay exactly what
  * they were, answers to a question we no longer ask.
  */
-export type ScaleVersion = 1 | 2;
+export type ScaleVersion = 1 | 2 | 3;
 
 export interface ReactionScale {
   version: ScaleVersion;
@@ -136,6 +136,34 @@ export const SCALE_V2_FUNDING: ReactionScale = {
   version: 2,
   values: ["LOVE", "LIKE", "DISLIKE", "HATE", "DONT_CARE"],
   question: "How do you feel about how this campaign is funded?",
+};
+
+/**
+ * The contributions instrument — **v3, the author's ruling (g3 item 7,
+ * 2026-08-16).**
+ *
+ * The values are identical to v2's and the wording changed by one clause, so
+ * the previous session filed the change as a REWORDING and explicitly not as
+ * a scale break. The author overruled that, and the ruling is the
+ * conservative one: **the contributions prompt gets its own version so its
+ * rows never pool with answers to the older wording.**
+ *
+ * The reason it matters more than the size of the edit suggests: until
+ * 2026-08-16 this control asked "how do you feel about how this campaign is
+ * FUNDED" while sitting over a table of named contributors. Some readers
+ * answered about the campaign's finances and some about the donors in front
+ * of them, and there is no way to tell which from the row. Pooling those with
+ * answers to the current, unambiguous question would put two populations
+ * under one denominator — and the export layer, which groups by version,
+ * cannot catch what the registry says is one instrument.
+ *
+ * The wording lives on the scale, per the ruling: the version and the
+ * question a buyer is told the number answers are now the same object.
+ */
+export const SCALE_V3_CONTRIBUTIONS: ReactionScale = {
+  version: 3,
+  values: ["LOVE", "LIKE", "DISLIKE", "HATE", "DONT_CARE"],
+  question: "How do you feel about these contributions?",
 };
 
 /**
@@ -160,10 +188,23 @@ export const SCALE_BREAKS: Array<{
     to: 2,
     why: "The funding question changed from a voting-intention yes/no/unsure to a five-point feeling about the funding itself. Rows either side are different instruments and are never combined.",
   },
+  {
+    targetTypes: ["CONTRIBUTOR_REACTION"],
+    date: "2026-08-16",
+    from: 2,
+    to: 3,
+    why: "Until this date the contributions control asked 'how do you feel about how this campaign is funded' while sitting over a table of named contributors, so an answer could be about the campaign's finances or about the donors on screen and the row does not say which. The current wording asks about the contributions only. Same five values; two populations, never pooled.",
+  },
 ];
 
-/** The scale a target type is collected on TODAY. Server-decided, never sent. */
+/**
+ * The scale a target type is collected on TODAY. Server-decided, never sent.
+ *
+ * Order matters: the contributions table is a funding type, so its own
+ * version has to be checked before the general funding one.
+ */
 export function scaleForTargetType(targetType: ReactionTargetType): ReactionScale {
+  if (targetType === "CONTRIBUTOR_REACTION") return SCALE_V3_CONTRIBUTIONS;
   return FUNDING_REACTION_TYPES.includes(targetType) ? SCALE_V2_FUNDING : SCALE_V1;
 }
 
@@ -187,30 +228,79 @@ export function scaleForTargetType(targetType: ReactionTargetType): ReactionScal
  * always keyed on `targetType` alongside `targetId`, `ocdId` and the scale
  * version, and the store's unique index carries `targetType` too. This
  * corrects a LABEL, and it is the correction the reworded prompt requires.
+ *
+ * **g3 item 7 (2026-08-16) closed the gap the note above describes.** The two
+ * funding controls are no longer one instrument: the contributions table
+ * collects on `SCALE_V3_CONTRIBUTIONS`, whose question IS its wording, so the
+ * version and the question a buyer is told the number answers can no longer
+ * disagree. This override map is kept — empty — because the divergence it
+ * guards against is real and cheap to re-open, and because deleting it would
+ * take the reasoning with it.
  */
-const QUESTION_BY_TYPE: Partial<Record<ReactionTargetType, string>> = {
-  FUNDING_TOTAL_REACTION: "How do you feel about how this campaign is funded?",
-  CONTRIBUTOR_REACTION: "How do you feel about these contributions?",
-};
+const QUESTION_BY_TYPE: Partial<Record<ReactionTargetType, string>> = {};
 
 export function questionForTargetType(targetType: ReactionTargetType): string {
   return QUESTION_BY_TYPE[targetType] ?? scaleForTargetType(targetType).question;
 }
 
 /**
- * **The contributions prompt was reworded inside v2** (2026-08-16), and that
- * is recorded here rather than smoothed over.
+ * What the funding controls asked BEFORE the 2026-08-15 break.
  *
- * It is NOT a scale break: the value set, the version and the meaning of each
- * answer are unchanged, so the rows remain comparable in a way a scale break's
- * rows never are. What changed is which object the reader was looking at when
- * they answered — and until this date the contributions control asked the
- * totals' sentence, so a handful of v2 CONTRIBUTOR_REACTION rows written
- * before it were answering that wording on the contributions display.
+ * Named rather than inlined because it is the only wording in the system with
+ * no live surface behind it: nothing asks it today, and the rows that answered
+ * it are permanent. A retired question that lives as a string literal in the
+ * aggregator is a fact about the data with nowhere to be read.
+ */
+export const RETIRED_V1_FUNDING_QUESTION =
+  "Would you vote for someone whose campaign is funded this way?";
+
+/**
+ * **The question a STORED ROW was asked** — by its target type and the scale
+ * version stamped on it (g3 item 7, 2026-08-16).
  *
- * A version bump would be the heavier, cleaner instrument, and it changes how
- * reactions are bucketed and exported — CLAUDE.md's ask-before list. Recorded
- * for the author's ruling instead of taken unattended.
+ * `questionForTargetType` answers for the instrument in use TODAY. A row
+ * written months ago answered whatever was on screen then, and labelling it
+ * with today's wording is how a scale break disappears — the export would
+ * carry two populations under one sentence and the buyer could not tell.
+ *
+ * The aggregator used to hold one hardcoded fallback for "not the live
+ * version", which was right while there was exactly one older version and
+ * became wrong the moment a second target type moved to v3: a v2
+ * CONTRIBUTOR_REACTION row would have been labelled with the v1 wording,
+ * skipping a version. The lookup is by version now, so it stays right as
+ * versions accumulate.
+ */
+export function questionForRow(
+  targetType: ReactionTargetType,
+  version: ScaleVersion,
+): string {
+  if (version === scaleForTargetType(targetType).version) {
+    return questionForTargetType(targetType);
+  }
+  if (version === 3) return SCALE_V3_CONTRIBUTIONS.question;
+  if (version === 2) return SCALE_V2_FUNDING.question;
+  // v1 means two different questions depending on what was being asked
+  // about: a funding target asked the retired funding sentence, everything
+  // else asked — and still asks — about the position.
+  return FUNDING_REACTION_TYPES.includes(targetType)
+    ? RETIRED_V1_FUNDING_QUESTION
+    : SCALE_V1.question;
+}
+
+/**
+ * **The contributions prompt's rewording — the history behind the v3 break.**
+ *
+ * Recorded on 2026-08-16 as a rewording INSIDE v2, with the version bump left
+ * for the author because bucketing and export are on `CLAUDE.md`'s ask-before
+ * list. **He ruled the same day: bump it** (g3 item 7). So the change is now
+ * filed in `SCALE_BREAKS` as v2 → v3, and this entry stays as the record of
+ * what the older rows were actually answering.
+ *
+ * That is the useful half of it. A break says "these two sets are not
+ * comparable"; only this says WHY, in the words that were on the screen. A
+ * buyer holding pre-break `CONTRIBUTOR_REACTION` rows can read here that they
+ * answered the totals' sentence while looking at a contributions table, which
+ * is the fact that makes them uninterpretable — not the version number.
  */
 export const QUESTION_REWORDINGS: Array<{
   targetType: ReactionTargetType;
@@ -230,7 +320,9 @@ export const QUESTION_REWORDINGS: Array<{
 
 /** The values a scale admits, for a lookup that reads as a lookup. */
 export function valuesForScaleVersion(version: ScaleVersion): ReactionValue[] {
-  return version === 2 ? SCALE_V2_FUNDING.values : SCALE_V1.values;
+  if (version === 2) return SCALE_V2_FUNDING.values;
+  if (version === 3) return SCALE_V3_CONTRIBUTIONS.values;
+  return SCALE_V1.values;
 }
 
 /**

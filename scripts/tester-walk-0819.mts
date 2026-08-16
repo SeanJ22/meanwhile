@@ -174,7 +174,12 @@ await page.waitForTimeout(2500);
 text = await body();
 
 check("ballot: renders contests", /vote for/i.test(text));
-check("3d: 'What do you think?' pick label", text.includes("What do you think?"));
+// 3d's label was SUPERSEDED by g3 item 7 (2026-08-16): the pick control and
+// the per-candidate sensor both said "What do you think?", so the author read
+// the ballot-builder as a duplicate. The claim this walk owns is unchanged —
+// the pick control carries the author's current words — and `pnpm walk:all`
+// holds it going forward.
+check("3d → g3: the pick control names the action", text.includes("Your pick for this race"));
 check("3d: the old label is gone", !/mark how you.d vote/i.test(text));
 const disclosureCount = (text.match(/saved on this device only/gi) ?? []).length;
 check(

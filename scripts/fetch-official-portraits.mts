@@ -31,6 +31,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { stripImageMetadata } from "./strip-image-metadata.mts";
+import { stamp } from "./stamp.mts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const UA =
@@ -102,7 +103,9 @@ export async function stage(
   outDir: string,
 ): Promise<PortraitResult[]> {
   await mkdir(outDir, { recursive: true });
-  const attemptedAt = new Date().toISOString().slice(0, 10);
+  // America/Phoenix, never UTC — after 5pm local the obvious one-liner
+  // returns tomorrow and every row claims a date nobody could have read.
+  const attemptedAt = stamp();
   const results: PortraitResult[] = [];
 
   for (const [index, target] of targets.entries()) {
@@ -216,7 +219,7 @@ export async function ship(
 
   let shipped = 0;
   let recorded = 0;
-  const today = new Date().toISOString().slice(0, 10);
+  const today = stamp();
 
   for (const row of results) {
     const judgment = judgments[row.key];

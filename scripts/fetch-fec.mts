@@ -46,6 +46,7 @@ import type {
   SecondHopCommittee,
 } from "../lib/funding/types.ts";
 import { findShrinkRegressions } from "../lib/funding/guard.ts";
+import { stamp } from "./stamp.mts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 loadEnv({ path: join(ROOT, ".env.local") });
@@ -352,7 +353,15 @@ interface Match {
 }
 const matches: Match[] = [];
 const misses: FundingAbsence[] = [];
-const today = new Date().toISOString().slice(0, 10);
+// America/Phoenix, never UTC. `new Date().toISOString().slice(0, 10)` is the
+// obvious one-liner and it is wrong for seven hours out of every twenty-four
+// here — after 5pm Phoenix, UTC has already rolled over and every row this
+// run writes claims to have been read TOMORROW. Caught 2026-08-15 by the
+// walk, which rendered "read 08/16/2026" on the funding card at 6pm local:
+// a date nobody could have read, in a provenance field, which is the same
+// failure as a generated position wearing a smaller hat. `stamp()` is where
+// a script finds out what day it is.
+const today = stamp();
 
 for (const target of targets.filter((t) => t.route === "roster")) {
   const ids = fecByBioguide.get(target.bioguide!) ?? [];

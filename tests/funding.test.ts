@@ -1159,3 +1159,46 @@ test("item 6: nothing is ever typed from a committee's NAME", async () => {
     assert.ok(body.includes(field), `the derivation reads ${field}`);
   }
 });
+
+test("no committed snapshot claims to have been read on a day that has not happened", async () => {
+  // Caught 2026-08-15 by the walk, which rendered "read 08/16/2026" on the
+  // funding card at 6pm Phoenix. `new Date().toISOString().slice(0, 10)` is
+  // the obvious one-liner and it is wrong for seven hours out of every
+  // twenty-four here: after 5pm local, UTC has already rolled over and every
+  // provenance field the run writes claims tomorrow. A date nobody could
+  // have read is the same failure as a generated position wearing a smaller
+  // hat, and the fix is that scripts call stamp(), never toISOString().
+  const { stamp } = await import("../scripts/stamp.mts");
+  const today = stamp();
+
+  const dates: { where: string; date: string }[] = [];
+  for (const c of snapshot.candidates) {
+    dates.push({ where: `candidate ${c.fecCandidateId}`, date: c.provenance.collectedAt });
+    dates.push({ where: `candidate ${c.fecCandidateId}`, date: c.provenance.verifiedAt ?? today });
+  }
+  for (const h of snapshot.secondHop ?? []) {
+    dates.push({ where: `hop ${h.committeeId}`, date: h.provenance.collectedAt });
+  }
+  for (const a of snapshot.absences) {
+    dates.push({ where: `absence ${a.targetKey}`, date: a.checkedAt });
+  }
+
+  const future = dates.filter((d) => d.date > today);
+  assert.deepEqual(
+    future.map((d) => `${d.where}: ${d.date}`),
+    [],
+    `provenance dates later than ${today} (America/Phoenix)`,
+  );
+
+  // And the generators must not reach for the wrong clock again.
+  // Comments stripped first: the file explains the trap by quoting it, and
+  // a scan that reads prose would fail on the explanation.
+  const fetchScript = readFileSync(join(ROOT, "scripts", "fetch-fec.mts"), "utf8")
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/^\s*\/\/.*$/gm, "");
+  assert.ok(
+    !/new Date\(\)\.toISOString\(\)\.slice\(0,\s*10\)/.test(fetchScript),
+    "fetch-fec.mts reads the date off UTC — use stamp()",
+  );
+  assert.ok(fetchScript.includes("stamp()"));
+});

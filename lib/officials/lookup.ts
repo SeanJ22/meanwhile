@@ -1,3 +1,5 @@
+import type { Provenance } from "../sources/types.ts";
+
 import { campaignSiteFor } from "./campaign-sites.ts";
 import type { Officeholder, OfficeholderSet } from "./types.ts";
 
@@ -42,6 +44,20 @@ export interface SeatHolder {
   websiteUrl: string | null;
   /** Where the record was read from. Rendered, not just stored. */
   sourceUrl: string | null;
+  /**
+   * The FULL record behind this row — publisher, read date, verification —
+   * not just its URL (item 1, 2026-08-16).
+   *
+   * `sourceUrl` alone was enough for the inline "source" tag and nothing
+   * else, which is why every battlecard's Sources tab had to be fed from
+   * somewhere other than the rows it was describing. It was fed from nowhere,
+   * and the tab told readers that a card built entirely from external records
+   * came from none. A row that carries its own provenance cannot be listed
+   * without it.
+   *
+   * Null only where a row genuinely has no publisher on record.
+   */
+  provenance: Provenance | null;
   /** Published official contact (3a). Absences are absences. */
   email: string | null;
   phone: string | null;
@@ -70,6 +86,7 @@ function toSeatHolder(person: Officeholder, photos?: PhotoIndex): SeatHolder {
     birthDate: person.birthDate ?? null,
     websiteUrl: person.websiteUrl,
     sourceUrl: person.provenance.sourceUrl,
+    provenance: person.provenance,
     email: person.email,
     phone: person.phone,
     contactFormUrl: person.contactFormUrl,

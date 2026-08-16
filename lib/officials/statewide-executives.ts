@@ -52,7 +52,13 @@ export type StatewideVerification = "PAGE_FETCHED" | "PENDING_BROWSER";
 export interface StatewideExecutive {
   /** The state division this office serves — the attachment key. */
   stateOcdId: string;
-  holder: SeatHolder;
+  /**
+   * Everything about the person EXCEPT their provenance, which this entry
+   * already states below and `statewideExecutivesFor` attaches (item 1,
+   * 2026-08-16). Writing it twice is how two records of the same fact come
+   * to disagree.
+   */
+  holder: Omit<SeatHolder, "provenance">;
   /** The state's own page the row was read from. */
   sourceUrl: string;
   /**
@@ -181,7 +187,21 @@ export function statewideExecutivesFor(ocdIds: string[]): SeatHolder[] {
 
   const holders: SeatHolder[] = [];
   for (const executive of STATEWIDE_EXECUTIVES) {
-    if (states.has(executive.stateOcdId)) holders.push(executive.holder);
+    if (!states.has(executive.stateOcdId)) continue;
+    // Item 1 (2026-08-16): the entry already recorded the publisher and the
+    // read date; the holder handed to the surfaces did not carry them, so a
+    // card listing a governor could not say who published the claim. Attached
+    // here rather than duplicated into each literal above — one place, and it
+    // cannot drift from the `sourceOrg`/`collectedAt` the tests already hold.
+    holders.push({
+      ...executive.holder,
+      provenance: {
+        sourceUrl: executive.sourceUrl,
+        sourceOrg: executive.sourceOrg,
+        collectedAt: executive.collectedAt,
+        verifiedAt: null,
+      },
+    });
   }
   return holders;
 }

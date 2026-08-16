@@ -7,8 +7,14 @@ import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { ReactionViewContext } from "@/lib/reactions/client";
 
+import {
+  personCardSources,
+  sourceCountLabel,
+} from "@/lib/officials/card-sources";
+
 import { FundingBlock } from "@/components/funding/funding-block";
 import { CardSection } from "@/components/officials/card-section";
+import { CardSourcesList } from "@/components/officials/card-sources-list";
 
 import {
   OfficeBlurb,
@@ -51,6 +57,8 @@ export function OfficialModal({
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
+
+  const sources = personCardSources(holder);
 
   /*
    * NO pushed history entry, deliberately (diagnosed 2026-08-14 third
@@ -151,6 +159,31 @@ export function OfficialModal({
             reactionContext={reactionContext}
             columns
           />
+
+          {/*
+            Item 1 (2026-08-16): the person battlecard's answer to "says
+            who?".
+
+            The division battlecard has a Sources TAB and this card has no tab
+            bar, so the same obligation lands in this card's own grammar — a
+            6b4 collapsible section, fed by the same assembler, with the
+            stated N in the header meta. A card class that answers the
+            question differently is fine; a card class that cannot answer it
+            at all was the defect.
+
+            Money and votes are deliberately absent from the list: those
+            sections cite themselves on the row, and the same claim in two
+            registers reads as two claims.
+          */}
+          <CardSection title="Sources" meta={sourceCountLabel(sources)}>
+            {sources.length === 0 ? (
+              <p className="text-[0.75rem] leading-relaxed text-muted">
+                Nothing on this card came from an external record.
+              </p>
+            ) : (
+              <CardSourcesList sources={sources} />
+            )}
+          </CardSection>
         </div>
       </div>
     </div>

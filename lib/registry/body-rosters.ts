@@ -16,6 +16,8 @@
  * these rows.
  */
 
+import type { Provenance } from "../sources/types.ts";
+
 import ROSTER_PHOTOS from "./roster-photos.json" with { type: "json" };
 
 export interface RosterMember {
@@ -1244,6 +1246,8 @@ export interface RosterHolder {
   partyLabel: string | null;
   websiteUrl: string | null;
   sourceUrl: string;
+  /** Item 1 (2026-08-16): the roster page's publisher and read date. */
+  provenance: Provenance;
   email: string | null;
   phone: string | null;
   contactFormUrl: null;
@@ -1301,6 +1305,15 @@ export function rosterHoldersForBody(bodyId: string | null): RosterHolder[] {
     partyLabel: member.partyLabel ?? null,
     websiteUrl: member.websiteUrl,
     sourceUrl: roster.sourceUrl,
+    // Item 1 (2026-08-16): the roster's own publisher and read date travel
+    // with every member, so a card listing them can say who published the
+    // claim rather than only where it lives.
+    provenance: {
+      sourceUrl: roster.sourceUrl,
+      sourceOrg: roster.sourceOrg,
+      collectedAt: roster.collectedAt,
+      verifiedAt: null,
+    },
     email: member.email,
     phone: member.phone,
     contactFormUrl: null,

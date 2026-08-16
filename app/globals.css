@@ -3146,6 +3146,18 @@ main[data-sidebar="closed"] .sidebar-toggle {
   border-bottom-color: var(--accent-all);
 }
 
+/* Item 1 (2026-08-16): the Sources tab states how many records are behind
+   the card, so the reader can see there ARE some without opening it — the
+   tab used to be able to say "nothing" while the card was built entirely
+   from external records. Mono, because it is a count. */
+.account-modal-tab-count {
+  margin-left: 5px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.02em;
+  color: var(--text-dim);
+}
+
 .account-modal-body {
   flex: 1;
   min-height: 0;

@@ -30,7 +30,7 @@ const MODAL = code(["components", "map", "popup", "official-modal.tsx"]);
 
 test("the small popup renders identity only — no role line, no chips, no in-seat", () => {
   assert.ok(
-    /<PersonIdentity[^>]*identityOnly/s.test(POPUP),
+    /<PersonIdentity[\s\S]*?identityOnly/.test(POPUP),
     "the small popup must render the identity-only form",
   );
   assert.ok(
@@ -67,7 +67,7 @@ test("the party pill stays — it is banned from the list, not from the card", (
 
 test("the contact pills stack in one column, primary channels only", () => {
   assert.ok(
-    /<ContactPills[^>]*layout="column"[^>]*scope="primary"/s.test(POPUP),
+    /<ContactPills[\s\S]*?layout="column"[\s\S]*?scope="primary"/.test(POPUP),
     "the small popup must run the column, primary-scope pill set",
   );
   // The large card keeps the full row — nothing was deleted, it moved.

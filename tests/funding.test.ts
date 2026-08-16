@@ -8,7 +8,13 @@ import {
   aggregateReactions,
   rowsEligibleForAggregation,
 } from "../lib/signal/aggregate.ts";
-import { FUNDING_REACTION_TYPES } from "../lib/signal/reactions.ts";
+import {
+  FUNDING_REACTION_TYPES,
+  QUESTION_REWORDINGS,
+  SCALE_BREAKS,
+  questionForTargetType,
+  scaleForTargetType,
+} from "../lib/signal/reactions.ts";
 import {
   contributorRowsForDisplay,
   fundingForTarget,
@@ -1277,4 +1283,81 @@ test("no committed snapshot claims to have been read on a day that has not happe
     "fetch-fec.mts reads the date off UTC — use stamp()",
   );
   assert.ok(fetchScript.includes("stamp()"));
+});
+
+/*
+ * ITEM 5 (2026-08-16, the author): ONE ASK PER OBJECT, AND TWO PROVABLY
+ * DISTINCT SENSORS.
+ *
+ * The two funding controls asked WORD FOR WORD the same question about two
+ * different civic objects — the totals paragraph and the named contributions
+ * table. The brief's real worry is the one worth guarding: two different
+ * questions pooling into one signal. They never did, and this proves it at
+ * every layer rather than asserting it.
+ */
+
+test("the two funding asks are two sensors, at the write path and the aggregate", () => {
+  // 1. Different target types, on the same scale. Same instrument, different
+  //    object — which is why the scale is shared and the question is not.
+  assert.notEqual(fundingRow.targetType, contributorRow.targetType);
+  assert.equal(
+    scaleForTargetType("FUNDING_TOTAL_REACTION").version,
+    scaleForTargetType("CONTRIBUTOR_REACTION").version,
+  );
+
+  // 2. Different QUESTIONS, per target type. An export whose question line
+  //    does not match the question asked is a false claim about how the
+  //    number was collected, and the buyer cannot catch it.
+  assert.equal(
+    questionForTargetType("FUNDING_TOTAL_REACTION"),
+    "How do you feel about how this campaign is funded?",
+  );
+  assert.equal(
+    questionForTargetType("CONTRIBUTOR_REACTION"),
+    "How do you feel about these contributions?",
+  );
+
+  // 3. Separate aggregate buckets — same target id, same division, same
+  //    version, still two tallies, each labelled with its own question.
+  const tallies = aggregateReactions([fundingRow, contributorRow]);
+  assert.equal(tallies.length, 2, "two funding asks pooled into one tally");
+  const totals = tallies.find((t) => t.targetType === "FUNDING_TOTAL_REACTION");
+  const contributors = tallies.find((t) => t.targetType === "CONTRIBUTOR_REACTION");
+  assert.ok(totals && contributors);
+  assert.equal(totals.n, 1);
+  assert.equal(contributors.n, 1);
+  assert.notEqual(totals.question, contributors.question);
+  assert.equal(contributors.question, "How do you feel about these contributions?");
+
+  // 4. The store cannot merge them either: the upsert's conflict target
+  //    carries targetType alongside the key and the id.
+  const writePath = readFileSync(
+    join(process.cwd(), "lib", "db", "reactions.ts"),
+    "utf8",
+  );
+  assert.ok(
+    /target: \[reactions\.reactionKeyHash, reactions\.targetType, reactions\.targetId\]/.test(
+      writePath,
+    ),
+    "the upsert must key on targetType, or one browser's two answers overwrite each other",
+  );
+});
+
+test("the contributions rewording is recorded, not smoothed over", () => {
+  // Same values, same version, same meaning per answer — so it is NOT a scale
+  // break, and calling it one would be as dishonest as hiding it. What
+  // changed is which object the reader was looking at, and a handful of v2
+  // rows predate the change.
+  const rewording = QUESTION_REWORDINGS.find(
+    (r) => r.targetType === "CONTRIBUTOR_REACTION",
+  );
+  assert.ok(rewording, "the contributions rewording must be on the record");
+  assert.equal(rewording.date, "2026-08-16");
+  assert.equal(rewording.to, questionForTargetType("CONTRIBUTOR_REACTION"));
+  assert.notEqual(rewording.from, rewording.to);
+  // And it is not filed among the scale breaks, which mean something stricter.
+  assert.ok(
+    !SCALE_BREAKS.some((b) => b.date === "2026-08-16"),
+    "a rewording must not be filed as a scale break",
+  );
 });

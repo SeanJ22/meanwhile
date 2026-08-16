@@ -736,9 +736,21 @@ test("the funding surfaces ask the author's question, and offer only its scale",
   );
   const asks = section.match(/prompt="([^"]+)"/g) ?? [];
   assert.equal(asks.length, 2, "both funding controls must carry a prompt");
-  for (const ask of asks) {
-    assert.equal(ask, 'prompt="How do you feel about how this campaign is funded?"');
-  }
+  /*
+   * ITEM 5 (2026-08-16, the author): ONE ASK PER OBJECT. These two were
+   * word-for-word identical, so a reader who had just answered after the
+   * totals met the same sentence again under the contributions table — a nag,
+   * and an annoyed second answer is worse data than none. Two different civic
+   * objects, two different questions: the totals are how much and from where
+   * in aggregate; the table is who gave it, by name, as filed.
+   */
+  assert.equal(asks[0], 'prompt="How do you feel about how this campaign is funded?"');
+  assert.equal(asks[1], 'prompt="How do you feel about these contributions?"');
+  assert.equal(
+    new Set(asks).size,
+    2,
+    "the two funding asks must not ask the same question twice",
+  );
   // The old wording asked the reader to convert a feeling about money into a
   // voting intention — two questions in one button row.
   assert.ok(!/Would you vote for someone whose campaign/.test(section));

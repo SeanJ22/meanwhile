@@ -279,7 +279,6 @@ async function main() {
 
   console.log("bodies");
   const bodies = divisions.flatMap((d) => bodiesFor(d, now));
-  applyAudits(bodies);
 
   // The curated overlay — bodies the derivation structurally cannot produce
   // (D28/D29). Checked before merging: a curated id colliding with a derived
@@ -309,6 +308,15 @@ async function main() {
     throw new Error("duplicate ids inside CURATED_BODIES");
   }
   bodies.push(...CURATED_BODIES);
+
+  // Audits run AFTER the overlay (moved 2026-08-15, the truth session): a
+  // curated body has hunts too, and Newbury's three land-use boards are the
+  // first with a full ladder recorded. Running this before the merge made a
+  // curated body's audit row an "orphan" and refused the build — which is the
+  // guard working, pointed at the wrong moment in the sequence. Derived rows
+  // are overlaid exactly as before.
+  applyAudits(bodies);
+
   console.log(
     `  curated overlay: ${CURATED_BODIES.length} bodies (` +
       `${CURATED_BODIES.filter((b) => b.ocdId === null).length} division-less, ` +

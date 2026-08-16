@@ -47,6 +47,10 @@ const ROCKAWAY_AGENDA_CENTER = "https://www.rockawaytownship.org/AgendaCenter";
 const ROCKAWAY_OCD =
   "ocd-division/country:us/state:nj/county:morris/place:rockaway_township";
 
+/** Newbury's own site — the source for every board row below. */
+const NEWBURY_OCD =
+  "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town";
+
 const COLLECTED = "2026-08-14";
 
 /**
@@ -240,7 +244,80 @@ export const CURATED_BODIES: Body[] = [
   // page's own headings with the id bound to its heading in the DOM rather
   // than by document order.
   ...rockawayBoardRows(),
+
+  // ── The truth session (2026-08-15): Newbury's land-use boards ───────────
+  // One division, many bodies again — and the reason 03255 read as a town
+  // with a single government. The CivicWeb portal the town buys carries only
+  // the Selectboard; these three are on the town's own site, behind the host
+  // that refuses this pipeline's ordinary client. The browser rung reached
+  // them (M79).
+  ...newburyBoardRows(),
 ];
+
+function newburyBoardRows(): Body[] {
+  const collected = "2026-08-15";
+  const rows: Array<{
+    slug: string;
+    name: string;
+    path: string;
+    live: boolean;
+    /** Why not, in the reader's own terms. LIVE rows leave this null. */
+    gap: string | null;
+  }> = [
+    {
+      slug: "planning-board",
+      name: "Planning Board",
+      path: "/planning-board",
+      live: true,
+      gap: null,
+    },
+    {
+      slug: "conservation-commission",
+      name: "Conservation Commission",
+      path: "/conservation-commission",
+      live: true,
+      gap: null,
+    },
+    {
+      // The board publishes its agendas — four in 2026, each with a date and
+      // a time — and publishes its meeting PLACE nowhere this session could
+      // find: not on the department page, not in the agenda notices (three
+      // read in full), not in the town's events listing. Its sibling boards
+      // each state theirs in their own words, and inferring this one from
+      // theirs is exactly the guess the venue table exists to refuse. So the
+      // source is located and the body is not yet renderable: KNOWN_UNCOVERED,
+      // and the venue hunt is the named next rung.
+      slug: "zoning-board-of-adjustment",
+      name: "Zoning Board of Adjustment",
+      path: "/zoning-board-adjustment",
+      live: false,
+      gap: "agendas published; meeting place not published on any walked rung",
+    },
+  ];
+
+  return rows.map((row) => ({
+    id: `${NEWBURY_OCD}#${row.slug}`,
+    ocdId: NEWBURY_OCD,
+    // Sourced: the town's own page heading for `row.path`, read 2026-08-15
+    // through the browser rung.
+    name: row.name,
+    bodyClass: "COMMISSION" as const,
+    bodyOrigin: "CURATED" as const,
+    coverageStatus: row.live ? ("LIVE" as const) : ("KNOWN_UNCOVERED" as const),
+    agendaSourceType: row.live ? ("SCHEDULEPAGE" as const) : ("HTML" as const),
+    agendaSourceRef: `https://www.newbury.nh.gov${row.path}`,
+    meetingCadence: null,
+    homepageUrl: `https://www.newbury.nh.gov${row.path}`,
+    demandCount: 0,
+    sourceDataset: "GOV_DIRECTORY" as const,
+    provenance: {
+      sourceUrl: `https://www.newbury.nh.gov${row.path}`,
+      sourceOrg: "Town of Newbury",
+      collectedAt: collected,
+      verifiedAt: collected,
+    },
+  }));
+}
 
 function rockawayBoardRows(): Body[] {
   const collected = "2026-08-15";

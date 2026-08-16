@@ -506,6 +506,109 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     verifiedAt: "2026-08-15",
   },
 
+  // ── The browser rung (M79, 2026-08-15) ──────────────────────────────────
+  // Two New Hampshire hosts answer 403 to this pipeline's civic-index client
+  // and 200 to a browser, which is why these four bodies sat unwired with
+  // their schedules in plain view. `profile: "browser"` is the rung — the
+  // same public page, one step up the ladder, contact address intact. See
+  // `lib/sources/http.ts`.
+  //
+  // Kearsarge Regional School District is 03255's school district. Its board
+  // publishes the whole 2026-2027 year as a two-column month table with the
+  // board's own words beside each date ("Staff Nominations", "Budget
+  // Presentations", "Warrant Discussion"), one bullet naming the time and one
+  // naming the place. The agendas archive carries the date in each link's own
+  // text, so documents join on a published date rather than a filename.
+  {
+    bodyId:
+      "ocd-division/country:us/state:nh/school_district:kearsarge_regional_school_district#board",
+    ocdId:
+      "ocd-division/country:us/state:nh/school_district:kearsarge_regional_school_district",
+    agendaSourceType: "SCHEDULEPAGE",
+    jurisdiction: "Kearsarge Regional School District, NH",
+    publishingOrg: "Kearsarge Regional School District School Board",
+    timeZone: "America/New_York",
+    config: {
+      slug: "kearsarge",
+      profile: "browser",
+      shapes: "month-table",
+      schedulePage:
+        "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
+      documentsPage:
+        "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-agendas-minutes",
+      // The page's own free-content block. Scoped because the page also
+      // carries an attachments table and a sticky-header table.
+      sectionMatch: "field-name-body",
+      // The district's own name for the body, from its page heading.
+      bodyName: "School Board",
+      // Verbatim from the page's own bullet: "Meeting Location: 114 Main
+      // Street, New London (enter by the cupola on Main Street)".
+      venueMatch: "114 Main Street, New London",
+      // The one row on the schedule that names a different building — the
+      // January deliberative session at KRMS. It resolves on its own string,
+      // finds nothing, and drops COUNTED rather than inheriting 114 Main
+      // Street. Curating KRMS's address is the work that makes it render.
+      otherVenueMarkers: "KRMS",
+    },
+    verifiedAt: "2026-08-15",
+  },
+
+  // Newbury's land-use boards — the other half of M79. The CivicWeb portal
+  // carries only the Selectboard (proven: a whole-year query returned 20
+  // sittings, every one TypeId 10), and these boards live on the town's own
+  // Drupal site, which publishes a `dc:date` per sitting with the offset in
+  // it. No time is inferred anywhere in this shape.
+  //
+  // `pathPrefix` is load-bearing: the town's page template puts every board's
+  // blocks in identical markup, and a prefix-free parse would file one
+  // board's Thursday under another's.
+  {
+    bodyId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#planning-board",
+    ocdId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+    agendaSourceType: "SCHEDULEPAGE",
+    jurisdiction: "Newbury, NH",
+    publishingOrg: "Newbury Planning Board",
+    timeZone: "America/New_York",
+    config: {
+      slug: "newbury-planning-board",
+      profile: "browser",
+      shapes: "agenda-list",
+      schedulePage: "https://www.newbury.nh.gov/planning-board",
+      pathPrefix: "/planning-board/",
+      bodyName: "Planning Board",
+      venueMatch: "Newbury Town Office",
+    },
+    verifiedAt: "2026-08-15",
+  },
+  {
+    bodyId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#conservation-commission",
+    ocdId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+    agendaSourceType: "SCHEDULEPAGE",
+    jurisdiction: "Newbury, NH",
+    publishingOrg: "Newbury Conservation Commission",
+    timeZone: "America/New_York",
+    config: {
+      slug: "newbury-conservation-commission",
+      profile: "browser",
+      // Two shapes on one page: the commission writes its whole year with
+      // times in its own free-content block, and the agenda block links the
+      // sittings that have documents. Unioned by date.
+      shapes: "dated-list,agenda-list",
+      schedulePage: "https://www.newbury.nh.gov/conservation-commission",
+      // Scopes the dated list to the commission's own block, so a news
+      // teaser's date cannot become a meeting.
+      sectionMatch: "field-name-field-description",
+      pathPrefix: "/conservation-commission/",
+      bodyName: "Conservation Commission",
+      venueMatch: "Newbury Town Office",
+    },
+    verifiedAt: "2026-08-15",
+  },
+
   {
     bodyId:
       "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district#board",

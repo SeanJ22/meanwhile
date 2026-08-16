@@ -267,15 +267,29 @@ export const COVERAGE_AUDITS: BodyCoverageAudit[] = [
   {
     bodyId:
       "ocd-division/country:us/state:nh/school_district:kearsarge_regional_school_district#board",
-    attemptedAt: "2026-08-13",
-    attemptedBy: BY_13,
-    outcome: "FOUND_UNBUILT",
+    attemptedAt: "2026-08-15",
+    attemptedBy:
+      "session 2026-08-15, the truth session (M79) — the browser rung, over the 2026-08-13 hunt below",
+    outcome: "COVERED",
     rungs: [
+      // ── The rung that closed it, 2026-08-15 ──────────────────────────────
+      {
+        rung: "BODY_AGENDA_PAGE",
+        outcome: "HIT",
+        url: "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
+        note: "200 through the browser rung. The 2026-2027 School Board Calendar as a two-column month table: 40 dated rows April 2026 through June 2027, the board's own words beside many of them ('Staff Nominations', 'Budget Presentations', 'Warrant Discussion'), plus two bullets — 'Meetings start at 6:30 PM' and 'Meeting Location: 114 Main Street, New London (enter by the cupola on Main Street)'. THE 2026-08-13 ROW BELOW RECORDED 165 MAIN ST from a search snippet; the page itself says 114, and the page wins. Three rows on the table are not sittings — the town election and two filing deadlines — and are dropped counted.",
+      },
+      {
+        rung: "BODY_AGENDA_PAGE",
+        outcome: "HIT",
+        url: "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-agendas-minutes",
+        note: "200 through the browser rung. The agenda archive back to 2019, each link carrying the meeting date in the district's own link text ('January 8, 2026'), so documents join on a published date rather than a filename.",
+      },
       {
         rung: "BODY_AGENDA_PAGE",
         outcome: "BLOCKED_ROBOTS",
         url: "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-agendas-minutes",
-        note: "403 to a bot; renders in a real browser (verified 2026-08-12) — a dated table of School Board agendas. On 2026-08-13 this environment's browser was also refused at the origin, so the enumeration errand remains open.",
+        note: "403 to a bot; renders in a real browser (verified 2026-08-12) — a dated table of School Board agendas. On 2026-08-13 this environment's browser was also refused at the origin, so the enumeration errand remains open. CLOSED 2026-08-15 by the two HIT rows above; kept because the wall was real and the shape of it is the finding.",
       },
       {
         rung: "BODY_FEED",
@@ -304,12 +318,111 @@ export const COVERAGE_AUDITS: BodyCoverageAudit[] = [
     ],
     homepageUrl:
       "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-agendas-minutes",
-    agendaSourceType: "HTML",
+    agendaSourceType: "SCHEDULEPAGE",
     agendaSourceRef:
-      "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-agendas-minutes",
+      "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
+    coverageStatus: "LIVE",
+    notes:
+      "LIVE 2026-08-15 via the SCHEDULEPAGE month-table shape through the browser rung. The 2026-08-13 prediction held exactly — 'one browser-grade fetch layer would serve both' — and the measurement corrected the guess about what that layer is: a Chrome User-Agent is NOT the rung. Node's fetch sending a full browser header set still gets 403 from this host; curl sending the identical headers gets 200, so the filter reads the TLS/HTTP2 fingerprint and a session that had only swapped the UA would have recorded a wall that is not there. STILL OPEN: the January deliberative session is held at KRMS rather than 114 Main Street and drops counted until that address is curated; the Google Calendar embed id at /district/family-community/pages/calendars was not pursued, because the schedule page is richer than an ics would be.",
+  },
+
+  // ── The truth session, 2026-08-15: Newbury's land-use boards ────────────
+  // The town buys a CivicWeb portal that carries ONLY the Selectboard (proven
+  // 2026-08-15: a whole-year query returned 20 sittings and every one was
+  // TypeId 10). These three boards publish on the town's own Drupal, behind
+  // the same 403 wall as Kearsarge, and the browser rung reached all three.
+  {
+    bodyId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#planning-board",
+    attemptedAt: "2026-08-15",
+    attemptedBy: "session 2026-08-15, the truth session (M79) — the browser rung",
+    outcome: "COVERED",
+    rungs: [
+      {
+        rung: "BODY_AGENDA_PAGE",
+        outcome: "HIT",
+        url: "https://www.newbury.nh.gov/planning-board",
+        note: "200 through the browser rung. The page carries the board's roster, its agenda block and its minutes block; every row publishes a machine-readable <span property=\"dc:date\" content=\"2026-08-18T19:00:00-04:00\"> beside a link to that sitting's document. Eight 2026 sittings across the agenda and minutes blocks; no time is inferred anywhere.",
+      },
+      {
+        rung: "BODY_AGENDA_PAGE",
+        outcome: "HIT",
+        url: "https://www.newbury.nh.gov/planning-board/agenda/agenda-15",
+        note: "200. The 2026-08-18 agenda, rendered inline rather than as a PDF, and the source of this body's venue: 'Location – Newbury Town Office'. The Planning Board is the only one of the three that states its place in its own notices.",
+      },
+      {
+        rung: "BODY_FEED",
+        outcome: "MISS",
+        url: "https://newburynh.civicweb.net/Portal/MeetingTypeList.aspx",
+        note: "The town's vendor portal carries the Selectboard alone — 20 sittings in a whole-year query, all TypeId 10. A town's portal may not be the town.",
+      },
+    ],
+    homepageUrl: "https://www.newbury.nh.gov/planning-board",
+    agendaSourceType: "SCHEDULEPAGE",
+    agendaSourceRef: "https://www.newbury.nh.gov/planning-board",
+    coverageStatus: "LIVE",
+    notes:
+      "LIVE 2026-08-15 via the SCHEDULEPAGE agenda-list shape. The dc:date is the field the town's own listing renders and is what a reader browsing the site sees, so it is what we render — with one discrepancy recorded rather than smoothed: on the sibling Zoning Board, an agenda's dc:date and the date typed inside the agenda body disagree by a day. Where a date has both an agenda and minutes, the agenda wins.",
+  },
+  {
+    bodyId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#conservation-commission",
+    attemptedAt: "2026-08-15",
+    attemptedBy: "session 2026-08-15, the truth session (M79) — the browser rung",
+    outcome: "COVERED",
+    rungs: [
+      {
+        rung: "BODY_AGENDA_PAGE",
+        outcome: "HIT",
+        url: "https://www.newbury.nh.gov/conservation-commission",
+        note: "200 through the browser rung. TWO shapes on one page: the commission's own free-content block publishes the whole 2026 year with times ('August 11, 2026 - 6:00pm' … 'December 8, 2026 - 6:00 pm') and states the venue in a sentence — 'Meetings are the second Tuesday of the month at the Town Offices, with the three exceptions above on Thursday' — while the agenda block links the sittings that have documents. Eleven dated rows in the schedule block.",
+      },
+      {
+        rung: "BODY_AGENDA_PAGE",
+        outcome: "MISS",
+        url: "https://www.newbury.nh.gov/node/20/agenda",
+        note: "200 and EMPTY of 2026 — the year archive offers 2023, 2022 and 2021 only, while the department page's own block carries the 2026-08-11 sitting. The archive view filters on a year taxonomy the newer nodes do not carry, so the department page is this body's source of record and the archive is not. Asking what the page RETURNED rather than whether it answered is what caught it.",
+      },
+    ],
+    homepageUrl: "https://www.newbury.nh.gov/conservation-commission",
+    agendaSourceType: "SCHEDULEPAGE",
+    agendaSourceRef: "https://www.newbury.nh.gov/conservation-commission",
+    coverageStatus: "LIVE",
+    notes:
+      "LIVE 2026-08-15 via the SCHEDULEPAGE dated-list + agenda-list shapes, unioned by date. The commission writes 'June 9,2026' and puts two dates in one paragraph, so the scan is per-match rather than per-line; scoping it to the commission's own block is what stops a news teaser's date becoming a meeting.",
+  },
+  {
+    bodyId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#zoning-board-of-adjustment",
+    attemptedAt: "2026-08-15",
+    attemptedBy: "session 2026-08-15, the truth session (M79) — the browser rung",
+    outcome: "FOUND_UNBUILT",
+    rungs: [
+      {
+        rung: "BODY_AGENDA_PAGE",
+        outcome: "HIT",
+        url: "https://www.newbury.nh.gov/zoning-board-adjustment",
+        note: "200 through the browser rung. Four 2026 agendas with dc:date and time, plus five minutes rows; one agenda is titled 'April Meeting is Cancelled' — the board's own cancellation signal, in its link text. NO MEETING PLACE anywhere on the page.",
+      },
+      {
+        rung: "BODY_AGENDA_PAGE",
+        outcome: "MISS",
+        url: "https://www.newbury.nh.gov/zoning-board-adjustment/agenda/agenda-7",
+        note: "200; the 2026-08-13 agenda in full. Names cases, times each item, and states no location. Two older agendas (meeting-agenda-22, meeting-agenda-21) read the same way — no venue line in any of the three. Also the record of a published contradiction: this agenda's dc:date is Thursday 2026-08-13 while its own heading reads 'Wednesday, August 12, 2026', and the February row is timed 7:00am in the CMS field while its items run from 7:05 p.m.",
+      },
+      {
+        rung: "PARENT_LISTING",
+        outcome: "MISS",
+        url: "https://www.newbury.nh.gov/events",
+        note: "200; the town's events listing carries no location for this board either.",
+      },
+    ],
+    homepageUrl: "https://www.newbury.nh.gov/zoning-board-adjustment",
+    agendaSourceType: "HTML",
+    agendaSourceRef: "https://www.newbury.nh.gov/zoning-board-adjustment",
     coverageStatus: "KNOWN_UNCOVERED",
     notes:
-      "Not exhausted and not blocked — the host refuses every automated client this environment has, including its browser pane, while serving humans. Next errands, in value order: extract the Google Calendar embed id from /district/family-community/pages/calendars (→ public basic.ics, the only true feed candidate); fetch the 2026-2027 schedule PDF; enumerate the agendas page. Meetings are 6:30 PM at 165 Main St, New London per the search-indexed schedule page. Same host behaviour as newbury.nh.gov; one browser-grade fetch layer would serve both.",
+      "The one board of the three NOT wired, and deliberately. Its schedule is in hand — the same adapter and the same shape as its sibling would read it today — and its meeting PLACE is published nowhere this session could find, on any of the three rungs above. Both siblings state theirs in their own words, and taking the Town Office from them for this board would be exactly the guess the venue table exists to refuse: a pin in roughly the right place is a fabricated citation wearing a map marker. The named next rung is the venue, not the schedule: the board's approved minutes (which normally open by naming the room) and, failing that, the town's own posted notice. One curated venue row makes this body LIVE with no other change.",
   },
 
   // ── The depth session, 2026-08-15 ────────────────────────────────────────

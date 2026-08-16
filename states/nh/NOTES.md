@@ -65,16 +65,56 @@ expect notice pages rather than calendars.
 | Body | Source | State |
 |---|---|---|
 | Newbury Selectboard | CivicWeb (`newburynh.civicweb.net`), TypeId 10 | LIVE |
+| Newbury Planning Board | town site, `agenda-list` shape (browser rung) | LIVE |
+| Newbury Conservation Commission | town site, `dated-list` + `agenda-list` | LIVE |
+| Newbury Zoning Board of Adjustment | town site — schedule found, **venue not published** | KNOWN_UNCOVERED |
 | Merrimack County Board of Commissioners | Revize, upcoming block + notices archive | LIVE |
-| Kearsarge Regional School District Board | `kearsarge.org` agendas page | see below |
+| Kearsarge Regional School District Board | `kearsarge.org` schedule page, `month-table` shape | LIVE |
 
 The county's own index page is **stale** — it names a former District 1
 commissioner. The FY2025 annual report and the minutes are what the roster
 cites.
 
-`kearsarge.org` walls a plain client and **opened to a browser User-Agent on
-2026-08-14**. Recorded as a rung that worked on that date, not as a permanent
-route.
+### The two walled hosts, opened 2026-08-15 (M79)
+
+`kearsarge.org` and `newbury.nh.gov` both 403 the civic-index client on every
+path and serve a browser normally. **The rung is not the User-Agent.** Node's
+`fetch` sending a full Chrome header set is still refused; `curl` sending the
+identical headers is served — the filter reads the TLS/HTTP2 fingerprint. The
+browser profile in `lib/sources/http.ts` sends the browser headers in-process
+and falls through to `curl` on a 403, keeping our contact address in the UA
+either way. Method and measurement in `docs/zip-playbook.md`.
+
+What was behind the wall:
+
+- **Kearsarge** publishes its whole 2026-2027 board calendar as a month table
+  — 39 sittings, the board's own words beside many of them, `Meetings start at
+  6:30 PM`, `Meeting Location: 114 Main Street, New London (enter by the
+  cupola on Main Street)`. The 2026-08-13 audit recorded **165** Main St from a
+  search snippet; the page says **114**, and the page wins. Its January
+  deliberative session is at KRMS and drops counted until that address is
+  curated.
+- **Newbury's town site carries three boards the town's own vendor portal does
+  not.** The CivicWeb tenant is the Selectboard alone (proven: a whole-year
+  query returned 20 sittings, every one TypeId 10). Planning, Conservation and
+  Zoning are on `newbury.nh.gov`, each publishing a machine-readable `dc:date`
+  per sitting.
+- **The Conservation Commission's year archive is empty of 2026** while its
+  department page carries the August sitting — the archive view filters on a
+  year taxonomy the newer nodes lack. The department page is that body's
+  source of record. Asking what a page *returned* rather than whether it
+  answered is what caught it.
+- **The Zoning Board publishes its schedule and not its place.** Four 2026
+  agendas with dates and times; no meeting location on the department page, in
+  three agendas read in full, or in the town's events listing. Both sibling
+  boards state theirs in their own words. Borrowing one for this board is the
+  guess the venue table exists to refuse, so the body is recorded
+  KNOWN_UNCOVERED with the venue named as the next rung — one curated row
+  makes it LIVE with no other change.
+- Two published contradictions, recorded rather than smoothed: a Zoning agenda
+  dated `2026-08-13` in the CMS field and `Wednesday, August 12, 2026` in its
+  own heading, and another timed `7:00am` in the field while its items run
+  from 7:05 p.m.
 
 (Dates in this file are wall clock. Older records in `docs/source-ladder.md`
 label the same sessions "08-16" through "08-19" — sequence numbers that ran

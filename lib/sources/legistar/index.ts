@@ -100,10 +100,20 @@ function wallClock(raw: string): { hour: number; minute: number } | null {
  * values are null, "Study Session", "Special Meeting" and "Joint Meeting" — so
  * this path is untested against a real positive and must not be widened into
  * guesswork. A meeting wrongly marked canceled keeps someone at home.
+ *
+ * Item 6b (2026-08-15, the author: "zero canceled at Tucson is
+ * implausible"). Re-probed live against every field Legistar returns:
+ * fourteen Pima events since 2026-06-01, and NOT ONE mentions "cancelled"
+ * anywhere in the record — `EventAgendaStatusName` is "Final" on all
+ * fourteen. So the zero is a real zero with its denominator, not a dropped
+ * signal. What did change: the agenda-status field is now read as well as
+ * the comment, because it is the other place a Legistar client could put
+ * the word, and looking in one of two possible places is how a real
+ * cancellation gets rendered as a meeting going ahead.
  */
 function isCanceled(event: LegistarEvent): boolean {
-  const comment = event.EventComment ?? "";
-  return /\bcancell?ed\b/i.test(comment);
+  const fields = [event.EventComment ?? "", event.EventAgendaStatusName ?? ""];
+  return fields.some((field) => /\bcancell?ed\b/i.test(field));
 }
 
 function statusOf(

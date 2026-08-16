@@ -5546,7 +5546,7 @@
    "divisionType": "school_district",
    "tier": "local",
    "state": "AZ",
-   "label": "School District Not Defined",
+   "label": "No unified school district here",
    "parentOcdId": "ocd-division/country:us/state:az",
    "lsad": null,
    "funcstat": null,

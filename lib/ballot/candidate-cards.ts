@@ -1,6 +1,8 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
+import { officialPhotoForPerson } from "../photos/person.ts";
+
 /**
  * Kelly-standard candidate cards (2b, 2026-08-17): the curated photo / bio /
  * contact layer over the verified-links layer in `candidate-sites.ts`.
@@ -50,15 +52,42 @@ function load(): CandidateCardsFile {
   return cache;
 }
 
+/**
+ * One person, one photo (item 6b, 2026-08-15). A card for a sitting
+ * officeholder renders the SAME portrait their officials row does — and
+ * carries that portrait's own attribution, because swapping the image
+ * without swapping the credit would put a government portrait under a
+ * Commons photographer's name. Nine people were wearing two faces before
+ * this ran; `lib/photos/person.ts` states the precedence.
+ */
+function withPersonPhoto(
+  card: CandidateCardData | null,
+  personName: string,
+): CandidateCardData | null {
+  if (!card) return card;
+  const official = officialPhotoForPerson(personName);
+  if (!official || official.url === card.photoUrl) return card;
+  return { ...card, photoUrl: official.url, photoSource: official.source };
+}
+
+/** The person's name as filed, recovered from the candidacy id's tail. */
+function nameFromCandidacyId(candidacyId: string): string {
+  const tail = candidacyId.split(":").pop() ?? "";
+  return tail.split("-").reverse().join(" ");
+}
+
 export function cardForCandidacy(candidacyId: string): CandidateCardData | null {
-  return load().cards[candidacyId] ?? null;
+  return withPersonPhoto(
+    load().cards[candidacyId] ?? null,
+    nameFromCandidacyId(candidacyId),
+  );
 }
 
 export function cardForNominee(
   contestId: string,
   name: string,
 ): CandidateCardData | null {
-  return load().cards[`${contestId}|${name}`] ?? null;
+  return withPersonPhoto(load().cards[`${contestId}|${name}`] ?? null, name);
 }
 
 export function allCandidateCards(): CandidateCardsFile {

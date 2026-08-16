@@ -8,6 +8,7 @@ import {
   type SeatHolder,
 } from "../officials/lookup.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
+import { collapsePhotoIndexByPerson } from "../photos/person.ts";
 
 import { summarizeCoverage, type CoverageSummary } from "./coverage.ts";
 import { divisionsAt as resolveDivisionsAt, type GeoFeature } from "./resolve.ts";
@@ -92,11 +93,29 @@ async function load(): Promise<Loaded> {
         join(root, "lib", "registry", "official-photos.json"),
         "utf8",
       ),
-    ) as { photos: { officeholderId: string; url: string; license: string | null }[] };
+    ) as {
+      photos: {
+        officeholderId: string;
+        name: string;
+        url: string;
+        license: string | null;
+      }[];
+    };
+    const names = new Map<string, string>();
     for (const photo of manifest.photos) {
       // Unknown license is not clearable — such a photo never ships (D20).
-      if (photo.license) photos.set(photo.officeholderId, photo.url);
+      if (!photo.license) continue;
+      photos.set(photo.officeholderId, photo.url);
+      names.set(photo.officeholderId, photo.name);
     }
+    // One person, one photo (item 6b, 2026-08-15). A person holding two
+    // seats has two officeholder ids and had two photo rows, so Consuelo
+    // Hernandez's school-board row and her legislative row rendered two
+    // different faces of the same woman. Collapsed by person here, once,
+    // rather than at each of the surfaces that reads this index.
+    const collapsed = collapsePhotoIndexByPerson(photos, names);
+    photos.clear();
+    for (const [id, url] of collapsed) photos.set(id, url);
   } catch {
     // No manifest is a fine state: initials render instead.
   }

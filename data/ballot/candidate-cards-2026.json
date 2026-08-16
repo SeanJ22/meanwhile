@@ -488,6 +488,15 @@
       "bioSourceLabel": null,
       "email": null,
       "phone": null
+    },
+    "ballot-az-pima:governor|Risa Lombardo": {
+      "photoUrl": "/candidates/az-pima-governor-lombardo-risa.png",
+      "photoSource": "campaign-provided — published by the campaign at https://risalombardo.com, read 2026-08-15; committed copy served from our origin, metadata stripped. Removed on request.",
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
     }
   },
   "hunts": [

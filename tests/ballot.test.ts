@@ -279,3 +279,63 @@ test("the AZ general lineup cites the certified canvass and keys to real contest
     "the canvass citation must be on the surface",
   );
 });
+
+test("item 6: every covered state points at its own official polling-place lookup", async () => {
+  const { POLLING_PLACE_LINKS, pollingPlaceLinkFor } = await import(
+    "../lib/ballot/polling-place-links.ts"
+  );
+  const { REGISTRATION_LINKS } = await import(
+    "../lib/ballot/registration-links.ts"
+  );
+
+  // Every state we can render a ballot for gets the pointer — a reader in
+  // one state finding it and a reader in another not is the coverage gap
+  // this file exists to close.
+  for (const reg of REGISTRATION_LINKS) {
+    const link = pollingPlaceLinkFor(reg.state);
+    assert.ok(link, `${reg.state} has a registration link but no polling-place link`);
+  }
+
+  const hosts = new Set<string>();
+  for (const link of POLLING_PLACE_LINKS) {
+    const url = new URL(link.url);
+    assert.equal(url.protocol, "https:", `${link.state} link is not https`);
+    // The authority's own host — never an aggregator, never a third party.
+    assert.match(
+      url.hostname,
+      /(\.gov|\.arizona\.vote)$/,
+      `${link.state} points at ${url.hostname}, which is not an election authority's host`,
+    );
+    // A cited URL must have been fetched and verified, and the sentence
+    // must say which rung answered.
+    assert.ok(link.verification.length > 40, `${link.state} verification is too thin`);
+    assert.match(link.verifiedAt, /^\d{4}-\d{2}-\d{2}$/);
+    assert.ok(link.sourceOrg.length > 0);
+    // Plain words on the reader-facing line — no identifiers, no jargon.
+    assert.match(link.label, /^Find your polling place$/);
+    assert.ok(link.note.length > 0, `${link.state} must say what the tool asks for`);
+    hosts.add(`${link.state}|${url.href}`);
+  }
+  // Distinct states resolve to distinct URLs — the uniqueness invariant.
+  assert.equal(hosts.size, POLLING_PLACE_LINKS.length);
+  assert.equal(
+    new Set(POLLING_PLACE_LINKS.map((l) => l.url)).size,
+    POLLING_PLACE_LINKS.length,
+    "two states share one polling-place URL",
+  );
+});
+
+test("item 6: the ballot page renders the polling-place pointer in both places", async () => {
+  const { readFileSync } = await import("node:fs");
+  const { join } = await import("node:path");
+  const page = readFileSync(join(process.cwd(), "app", "ballot", "page.tsx"), "utf8");
+  assert.ok(page.includes("pollingPlaceLinkFor"), "the ballot page never asks for it");
+  // Both surfaces the brief named: the dates header and the checker box.
+  const occurrences = page.split("pollingPlaceLinkFor(set.election.state)").length - 1;
+  assert.equal(
+    occurrences,
+    2,
+    `the pointer resolves ${occurrences} time(s); it belongs in the dates header AND the checker box`,
+  );
+  assert.ok(page.includes("{polls.note}"), "the reader is never told what the tool asks for");
+});

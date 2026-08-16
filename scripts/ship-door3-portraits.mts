@@ -35,6 +35,8 @@ interface Shipment {
   site: string;
   /** Why it passed the eyeball: what the image is, in the judge's words. */
   judgment: string;
+  /** File extension, when the campaign publishes something other than JPEG. */
+  ext?: "jpg" | "png";
 }
 
 /**
@@ -65,6 +67,21 @@ const SHIPMENTS: Shipment[] = [
     site: "https://lespresmyk.com",
     judgment:
       "clean solo studio portrait, plain grey ground, unambiguous sole subject; the campaign's own file, named Headshot.jpg",
+  },
+  // Added 2026-08-15 (item 6b): the author named Risa Lombardo as still
+  // missing a face on the 85701 ballot. The prior hunt had checked only the
+  // home page's og:image and recorded the miss there — the home page carries
+  // a WORDMARK ("RISA LOMBARDO / GREEN FOR GOVERNOR"), which correctly
+  // failed. Door 3 is the campaign's own portrait ANYWHERE on its own site,
+  // not only in an og:image tag, and her About page carries one.
+  {
+    key: "ballot-az-pima:governor|Risa Lombardo",
+    slug: "az-pima-governor-lombardo-risa",
+    imageUrl: "https://risalombardo.com/wp-content/uploads/2026/05/risal-1024x1024.png",
+    site: "https://risalombardo.com",
+    ext: "png",
+    judgment:
+      "clean solo studio portrait, plain grey ground, circular crop on transparency, unambiguous sole subject; published on her own domain's About page. NOTE for the author: the campaign's own treatment places a small party emblem inside the lower-right of the circle. It is a portrait carrying a badge, not a logo standing in for a portrait, so it passes — but it is recorded here so the ruling is yours to reverse.",
   },
 ];
 
@@ -100,7 +117,12 @@ for (const s of SHIPMENTS) {
   // one — and the metadata stripper only understands JPEG and PNG, so an
   // unasked-for WebP means the portrait ships unstripped or not at all.
   const res = await fetch(s.imageUrl, {
-    headers: { "user-agent": UA, accept: "image/jpeg,image/png" },
+    headers: {
+      "user-agent": UA,
+      accept: "image/jpeg,image/png",
+      // Some campaign hosts refuse an image request with no referer.
+      referer: s.site,
+    },
   });
   if (!res.ok) {
     console.log(`  FETCH_FAILED   ${s.key} — HTTP ${res.status}`);
@@ -115,7 +137,7 @@ for (const s of SHIPMENTS) {
     continue;
   }
 
-  const file = `${s.slug}.jpg`;
+  const file = `${s.slug}.${s.ext ?? "jpg"}`;
   await writeFile(join(ROOT, "public", "candidates", file), bytes);
   card.photoUrl = `/candidates/${file}`;
   card.photoSource =

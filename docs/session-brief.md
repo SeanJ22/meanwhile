@@ -133,5 +133,6 @@ half-built, each with a tracker row carrying its whole spec.
 | 11 — M94's hunt | **M94** | **CUT**. Stays In progress; absence is not claimable without the walk. |
 | 12 — documents and handoff | — | Done. `state.md` §33. |
 
-The narrative is `docs/state.md` §33. Probe rows: **five**, all named there
-with their timestamps, targets and browser keys.
+The narrative is `docs/state.md` §33. Probe rows: **seven** — five from the local walk and two from the post-deploy
+verification against production — all named there with their timestamps,
+targets and browser keys.

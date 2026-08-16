@@ -12,7 +12,12 @@ import {
   type ErrorEvent as MapErrorEvent,
   type MapMouseEvent,
 } from "maplibre-gl";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
+import {
+  StateFocusOverlay,
+  type ProjectPoint,
+} from "@/components/map/state-focus-overlay";
 
 import {
   CONUS_BOUNDS,
@@ -28,6 +33,7 @@ import {
   districtLayerPresent,
   districtsAt,
   drawnDistrictsOn,
+  firstSymbolLayerId,
   loadDistricts,
   removeDistrictLayer,
   setNarrowedDistricts,
@@ -35,6 +41,13 @@ import {
   type DistrictHit,
   type DrawnDistrict,
 } from "@/lib/map/districts";
+import {
+  STATE_OUTLINES_URL,
+  addStateFocusLayers,
+  outlineFor,
+  setStateFocus,
+  type StateOutlines,
+} from "@/lib/map/state-focus";
 import type { DistrictType } from "@/lib/state/types";
 import type { Theme } from "@/hooks/use-stored-theme";
 import type { Venue } from "@/lib/meetings/venues";
@@ -128,6 +141,16 @@ interface MapCanvasProps {
    * yanking it to fit venues would fight them (2i).
    */
   allowAutoFrame: boolean;
+  /**
+   * The state the reader is in, as its OCD-ID — the state that RISES out of
+   * the map (g3 item 10, M91). Null before a zip resolves, and then nothing
+   * is raised and nothing is muted: a reader who has not said where they are
+   * has no "here" to mark.
+   *
+   * Keyed on the OCD-ID like everything else in this product, never on a
+   * name string.
+   */
+  focusStateOcdId?: string | null;
 }
 
 function prefersReducedMotion() {
@@ -166,6 +189,7 @@ export function MapCanvas({
   onTileError,
   onViewportSettle,
   allowAutoFrame,
+  focusStateOcdId = null,
 }: MapCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
@@ -489,6 +513,92 @@ export function MapCanvas({
       venues.length;
   }, [venues]);
 
+  /*
+   * THE STATE FOCUS (g3 item 10, M91) — the author's design, against his
+   * neumorphism reference.
+   *
+   * Two halves, and they live apart for a reason the reference forces: the
+   * raised EDGE is map layers (a light NW edge and a dark SE edge, one light
+   * source at top-left, per `lib/map/state-focus.ts`), while the MUTE AND
+   * BLUR outside is a DOM scrim, because no WebGL paint property can blur
+   * what is painted underneath it. Inside the border nothing is touched at
+   * all — that is what makes it an extrusion rather than a card.
+   *
+   * The outlines load once, lazily, and a failure is silent by design: this
+   * is ambient decoration carrying no information, and a map that draws
+   * without it is a working map. Anything louder would be an outage over a
+   * shadow.
+   */
+  const [outlines, setOutlines] = useState<StateOutlines | null>(null);
+  useEffect(() => {
+    let live = true;
+    void (async () => {
+      try {
+        const response = await fetch(STATE_OUTLINES_URL);
+        if (!response.ok) return;
+        const data = (await response.json()) as StateOutlines;
+        if (live) setOutlines(data);
+      } catch {
+        // Ambient only. The map is fine without it.
+      }
+    })();
+    return () => {
+      live = false;
+    };
+  }, []);
+
+  const focusOutline = useMemo(
+    () => outlineFor(outlines, focusStateOcdId ?? null),
+    [outlines, focusStateOcdId],
+  );
+
+  // Re-added on every style load, exactly like the district layers: a
+  // basemap swap throws every custom layer away.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !outlines) return;
+    const apply = () => {
+      if (!map.isStyleLoaded()) return;
+      addStateFocusLayers(map, outlines, firstSymbolLayerId(map));
+      setStateFocus(map, focusStateOcdId ?? null);
+    };
+    apply();
+    map.on("styledata", apply);
+    return () => {
+      map.off("styledata", apply);
+    };
+  }, [outlines, focusStateOcdId]);
+
+  /*
+   * The projection, handed to the scrim as a STABLE function.
+   *
+   * `map.project` is bound to the map instance and the map instance is
+   * created once, so this identity never changes — which matters because the
+   * scrim's effect depends on it, and a new function every render would
+   * rebuild the clip path on every render instead of on every camera move.
+   */
+  const [projectFn, setProjectFn] = useState<ProjectPoint | null>(null);
+  const [subscribeMove, setSubscribeMove] = useState<
+    ((onMove: () => void) => () => void) | null
+  >(null);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    // `setState` with a function argument would CALL it, so both are wrapped.
+    setProjectFn(() => (lngLat: [number, number]) => map.project(lngLat));
+    setSubscribeMove(() => (onMove: () => void) => {
+      map.on("move", onMove);
+      map.on("zoom", onMove);
+      map.on("resize", onMove);
+      return () => {
+        map.off("move", onMove);
+        map.off("zoom", onMove);
+        map.off("resize", onMove);
+      };
+    });
+  }, [outlines]);
+
   // Swap the basemap when the theme changes. The listener above puts the
   // districts back once the new style lands.
   useEffect(() => {
@@ -659,6 +769,14 @@ export function MapCanvas({
   return (
     <div className="absolute inset-0">
       <div ref={containerRef} className="size-full" />
+      {/* g3 item 10 (M91): the mute-and-blur half of the state extrusion.
+          Inside the wrapper so it sits over the canvas; `pointer-events:
+          none` keeps the map underneath fully draggable. */}
+      <StateFocusOverlay
+        outline={focusOutline}
+        project={projectFn}
+        subscribe={subscribeMove}
+      />
     </div>
   );
 }

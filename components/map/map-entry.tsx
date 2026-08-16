@@ -20,6 +20,8 @@ import { applyFilters, noticeShouldExpand } from "@/lib/state/derive";
 import { deriveActiveDistrictTypes } from "@/lib/state/district-intent";
 import { RADIUS_LADDER_KM } from "@/lib/meetings/constants";
 import { requestRadiusKm, shouldRequery } from "@/lib/map/viewport-radius";
+import { useStateFocus } from "@/hooks/use-state-focus";
+import { StateCrossingPrompt } from "./state-crossing-prompt";
 import { MapFloaters } from "./map-floaters";
 import { UiProvider, useUi, useUiDispatch } from "@/lib/state/provider";
 import type { MeetingSearchResult } from "@/lib/meetings/query";
@@ -317,6 +319,29 @@ function MapEntryInner() {
     [remember, dispatch, dismissSidebar],
   );
 
+  /*
+   * g3 item 10 (M91): which state rises out of the map, and the
+   * border-crossing clarification.
+   *
+   * Declared HERE — above both the zip-activation effect below and the settle
+   * handler further down — because both read it. A hook declared after its
+   * first reader is a temporal-dead-zone error, not a style preference.
+   */
+  const focusState = useStateFocus();
+
+  /*
+   * A resolved zip activates its state.
+   *
+   * Driven off `location` rather than from inside the search handler, because
+   * a session-restored location never passes through that handler and a
+   * returning reader's state must rise exactly the same way. The hook is
+   * idempotent — activating the state that is already active is a no-op — so
+   * running this on every location change costs nothing.
+   */
+  useEffect(() => {
+    if (location) focusState.activateAt(location.lat, location.lng);
+  }, [location, focusState]);
+
   const camera = useMemo<CameraTarget | null>(
     () =>
       location
@@ -492,6 +517,12 @@ function MapEntryInner() {
    */
   const onViewportSettle = useCallback(
     (center: { lat: number; lng: number; viewportRadiusKm: number }) => {
+      // The crossing detector runs on EVERY settle, ahead of the re-query
+      // guard below: a reader who pans across a state line and stops has
+      // crossed it whether or not the meetings answer needs refreshing, and
+      // returning early before this is how the clarification would go missing
+      // exactly when the pan was small.
+      focusState.noteCentre(center.lat, center.lng);
       if (!location || welcomeRequested) return;
       if (popupMeeting || ui.selectedVenueKey || ui.selectedDistrictOcdId) return;
 
@@ -548,6 +579,7 @@ function MapEntryInner() {
       ui.selectedVenueKey,
       ui.selectedDistrictOcdId,
       view,
+      focusState,
     ],
   );
 
@@ -1003,7 +1035,18 @@ function MapEntryInner() {
             onTileError={onTileError}
             onViewportSettle={onViewportSettle}
             allowAutoFrame={view?.kind !== "settled"}
+            focusStateOcdId={focusState.activeOcdId}
           />
+          {/* e's 6b2, built in g3 item 10: quiet within a state, explicit
+              between states. Once per ordered border pair per session. */}
+          {focusState.crossing && (
+            <StateCrossingPrompt
+              fromName={focusState.crossing.fromName}
+              toName={focusState.crossing.toName}
+              onSee={focusState.acceptCrossing}
+              onStay={focusState.dismissCrossing}
+            />
+          )}
         </div>
 
         <div

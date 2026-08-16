@@ -3831,3 +3831,156 @@ main[data-sidebar="closed"] .sidebar-toggle {
 .wtp-pin[data-hidden="true"] {
   display: none;
 }
+
+/*
+ * The state extrusion's mute-and-blur (g3 item 10, M91 — the author's design,
+ * against his neumorphism reference).
+ *
+ * The raised EDGE is map layers (lib/map/state-focus.ts). This is the other
+ * half: everything OUTSIDE the active state is muted in colour and very
+ * slightly blurred, so the state reads as pushed up out of the same material
+ * rather than as a card floating over it.
+ *
+ * `backdrop-filter` is the only thing that can blur what is painted
+ * underneath it — a WebGL layer cannot, which is why this is DOM and not a
+ * MapLibre fill. The blur is deliberately tiny: 1.1px is what "very slightly"
+ * costs, and it is the knob to turn if a device struggles. The effect itself
+ * never turns off — the author's test is that it holds at every zoom.
+ *
+ * `pointer-events: none` is load-bearing: this covers most of the viewport
+ * and the map underneath must stay fully draggable and clickable through it.
+ *
+ * The scrim is ambient and carries NO information (the reference's own
+ * accessibility caution). It is light enough that place labels in the muted
+ * area stay readable, and it is identical in both themes' intent — a scrim
+ * the colour of the page's own ground, so nothing outside picks up a hue the
+ * map did not have.
+ */
+.state-focus-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/*
+ * The map's box, not the page's. The first version was position: fixed over
+ * the whole viewport and muted the SIDEBAR along with the terrain — a scrim
+ * built to push land away was pushing the controls away too.
+ */
+.state-focus-layer {
+  position: absolute;
+  inset: 0;
+  /*
+   * BELOW every piece of chrome, above the terrain.
+   *
+   * Measured, not guessed. At z-index 5 this sat over `.map-bottom-stack`
+   * (z-index 1) and the first screenshot pair came back with the count badge,
+   * the freshness line and the WHO GOVERNS HERE floater all softly blurred —
+   * an ambient effect degrading the controls, which is the reference's own
+   * accessibility warning happening in practice. Zero puts it above the map
+   * canvas (a sibling earlier in the same wrapper, z-index auto) and under
+   * everything positive: the bottom stack at 1, the legend at 1100, the
+   * cards above that.
+   */
+  z-index: 0;
+  pointer-events: none;
+}
+
+.state-focus-scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  backdrop-filter: blur(1.1px) saturate(0.62) brightness(0.94);
+  background: color-mix(in oklab, var(--bg) 16%, transparent);
+}
+
+/*
+ * Light theme wants the opposite nudge: muting by DARKENING a pale map turns
+ * it grey and muddy, so outside brightens toward the page ground instead. The
+ * blur and the desaturation are identical — only which way "away from the
+ * eye" points changes with the ground.
+ */
+:root:not([data-theme="dark"]) .state-focus-scrim {
+  backdrop-filter: blur(1.1px) saturate(0.62) brightness(1.04);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .state-focus-scrim {
+    backdrop-filter: blur(1.1px) saturate(0.62) brightness(0.94);
+  }
+}
+
+:root[data-theme="dark"] .state-focus-scrim {
+  backdrop-filter: blur(1.1px) saturate(0.62) brightness(0.94);
+}
+
+/*
+ * A reader who has asked for less motion has not asked for less contrast, and
+ * this effect does not animate — so it stays. But a reader who has asked for
+ * MORE contrast has asked for exactly the thing an ambient scrim reduces, and
+ * the scrim carries no information, so it is the right thing to drop.
+ */
+@media (prefers-contrast: more) {
+  .state-focus-scrim {
+    display: none;
+  }
+}
+
+/*
+ * The border-crossing prompt (e's 6b2, built in g3 item 10).
+ *
+ * A card, not a modal: it sits above the map and the reader can keep panning
+ * underneath it. The doctrine is "quiet within a state, explicit between
+ * states" — explicit, not blocking.
+ *
+ * z-index sits above the state-focus scrim (5) and below the who-governs
+ * card's own stack, so it never buries the answer it is annotating.
+ */
+.state-crossing {
+  position: fixed;
+  left: 50%;
+  top: 76px;
+  z-index: 60;
+  width: min(22rem, calc(100vw - 24px));
+  transform: translateX(-50%);
+  border-radius: 12px;
+  border: 1px solid var(--panel-border);
+  background: var(--panel);
+  padding: 14px;
+  box-shadow: 0 10px 30px rgb(0 0 0 / 28%);
+}
+
+.state-crossing-body {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.state-crossing-actions {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.state-crossing-primary,
+.state-crossing-secondary {
+  min-height: 2.5rem;
+  flex: 1 1 auto;
+  cursor: pointer;
+  border-radius: 8px;
+  border: 1px solid var(--panel-border);
+  padding: 0 12px;
+  font-size: 0.8125rem;
+}
+
+.state-crossing-primary {
+  border-color: var(--link);
+  color: var(--link);
+  font-weight: 600;
+}
+
+.state-crossing-secondary {
+  color: var(--text-dim);
+}

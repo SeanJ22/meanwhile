@@ -122,13 +122,18 @@ test("one host's refusal does not empty the bodies on the other hosts", async ()
   // Commission and Zoning Board are three wiring rows on ONE division, and
   // reporting that division three times is the same duplication the
   // who-governs footnotes had to be de-duplicated for. The list is a set.
-  const refusedDivisions = new Set(refused.map((r) => r.wiring.ocdId));
+  const refusedDivisions = new Set(
+    refused.flatMap((r) => (r.wiring.ocdId ? [r.wiring.ocdId] : [])),
+  );
   assert.deepEqual(
     [...(unreachableOcdIds ?? [])].sort(),
     [...refusedDivisions].sort(),
     "the refused divisions and the reported ones disagree — a gap nobody is told about",
   );
   for (const row of refused) {
+    // A division-less body has no division to report; the drop count is the
+    // whole of what can honestly be said about it.
+    if (!row.wiring.ocdId) continue;
     assert.ok(
       unreachableOcdIds?.includes(row.wiring.ocdId),
       `${row.wiring.ocdId} was refused and is not in unreachableOcdIds`,

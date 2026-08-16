@@ -576,7 +576,12 @@ export function makeSchedulePageSource(
   const normalizeWithDrops = (
     raw: SchedulePageRaw[],
     now: Date = new Date(),
-  ): { meetings: Meeting[]; drops: NormalizeDropCounts } => {
+  ): {
+    meetings: Meeting[];
+    drops: NormalizeDropCounts;
+    /** Divisions whose own page refused this run — see `SchedulePageRaw.error`. */
+    unreachableOcdIds: string[];
+  } => {
     const meetings: Meeting[] = [];
     const drops: NormalizeDropCounts = {
       placeless: 0,
@@ -599,7 +604,9 @@ export function makeSchedulePageSource(
       // line on the reader's card instead of an empty calendar.
       if (error) {
         drops.notConfigured += 1;
-        unreachable.add(wiring.ocdId);
+        // A division-less body has no division to attribute the gap TO; the
+        // drop count above is the whole of what can honestly be said about it.
+        if (wiring.ocdId) unreachable.add(wiring.ocdId);
         continue;
       }
       const shapes = shapesOf(wiring);

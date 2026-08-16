@@ -54,6 +54,28 @@ const ROOTS = ["components", "app"];
  */
 const HANDLER = /^on[A-Z]/;
 
+/**
+ * The opt-out, and why there is one.
+ *
+ * A few client components cannot be rendered by a Server Component *even in
+ * principle*, because they take a live runtime object as an argument — a
+ * MapLibre projection, for instance. The rule's rationale ("one import away
+ * from being rendered by a server component") does not reach them: a server
+ * component has no map to project with, so the 500 this guard exists to
+ * prevent cannot occur.
+ *
+ * The escape hatch is a FILE-LEVEL marker that must state its reason:
+ *
+ *     // @server-boundary-exempt <why this cannot reach a server component>
+ *
+ * Deliberately not a rename. The obvious way past this guard is to call the
+ * prop `onProject` and move on, which would defeat the rule while making the
+ * name worse; an annotated exemption keeps the rule strict, keeps every
+ * exception visible in one grep, and makes each one something a reader can
+ * disagree with.
+ */
+const EXEMPT = /@server-boundary-exempt\s+(\S.*)$/m;
+
 function walk(dir: string, out: string[] = []): string[] {
   for (const entry of readdirSync(dir)) {
     const path = join(dir, entry);
@@ -99,15 +121,39 @@ function functionProps(source: string): string[] {
 
 test("no client component takes a render prop or an injected function", () => {
   const offenders: string[] = [];
+  const exemptions: string[] = [];
 
   for (const root of ROOTS) {
     for (const file of walk(root)) {
       const source = readFileSync(file, "utf8");
       if (!/^\s*["']use client["']/m.test(source)) continue;
-      for (const prop of functionProps(source)) {
+      const props = functionProps(source);
+      if (props.length === 0) continue;
+      const exempt = EXEMPT.exec(source);
+      if (exempt) {
+        exemptions.push(`${file.replace(/\\/g, "/")} — ${exempt[1].trim()}`);
+        continue;
+      }
+      for (const prop of props) {
         offenders.push(`${file.replace(/\\/g, "/")} — prop "${prop}"`);
       }
     }
+  }
+
+  // An exemption with no reason is the marker used as a mute button. Every
+  // one of them is printed on a pass too, so the list stays visible rather
+  // than quietly growing.
+  for (const line of exemptions) {
+    assert.ok(
+      line.split("—")[1]?.trim().length > 20,
+      `an exemption must say WHY it cannot reach a server component: ${line}`,
+    );
+  }
+  if (exemptions.length > 0) {
+    console.log(
+      `  server-boundary exemptions (${exemptions.length}):\n` +
+        exemptions.map((e) => `    · ${e}`).join("\n"),
+    );
   }
 
   assert.deepEqual(

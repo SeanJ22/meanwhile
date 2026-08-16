@@ -603,6 +603,36 @@ for (const { zip } of FOUR) {
     }
   }
 
+  /*
+   * g3 item 10 (M91) — the state rises out of the map, at every zoom.
+   *
+   * Measured at the LAST zoom step, which is the far end of the author's own
+   * test: "zooming ALL THE WAY OUT, Arizona still reads raised and everything
+   * else still reads muted and slightly blurred." A check that only looked at
+   * neighbourhood scale would pass on a treatment that vanishes when the
+   * state's border comes into view, which is the case that matters.
+   */
+  const focus = await page.evaluate(() => {
+    const scrim = document.querySelector(".state-focus-scrim");
+    const clip = document.querySelector(".state-focus-defs path");
+    return {
+      scrim: Boolean(scrim),
+      filter: scrim ? getComputedStyle(scrim).backdropFilter : "none",
+      // The clip has to hold the map rect AND the state's rings; a rect
+      // alone would mute everything, state included.
+      subpaths: (clip?.getAttribute("d") ?? "").split("M").length - 1,
+    };
+  });
+  check(
+    "g3",
+    `${zip}: the state focus holds when zoomed out`,
+    focus.scrim &&
+      /blur\(/.test(focus.filter) &&
+      /saturate\(/.test(focus.filter) &&
+      focus.subpaths >= 2,
+    `scrim ${focus.scrim ? "present" : "MISSING"}, filter "${focus.filter}", ${focus.subpaths} clip subpath(s)`,
+  );
+
   const zoomed =
     zooms.every((z) => Number.isFinite(z)) && zooms[2] < zooms[0] - 1;
   if (!zoomed) {

@@ -278,7 +278,14 @@ export function loadDistricts(
  * District layers are inserted before it so basemap place names keep drawing on
  * top of the boundaries.
  */
-function firstSymbolLayerId(map: MapLibreMap): string | undefined {
+/**
+ * The first symbol layer, so custom layers land UNDER the place labels.
+ *
+ * Exported since g3: the state-focus edges need the same insertion point,
+ * and an ambient effect painting over a town name would be an effect that
+ * carries information.
+ */
+export function firstSymbolLayerId(map: MapLibreMap): string | undefined {
   for (const layer of map.getStyle()?.layers ?? []) {
     if (layer.type === "symbol" && !layer.id.startsWith("district-")) {
       return layer.id;

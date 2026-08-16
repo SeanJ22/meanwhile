@@ -57,7 +57,24 @@ async function load(): Promise<Loaded> {
   const root = process.cwd();
   const geoDir = join(root, "public", "geo");
 
-  const names = (await readdir(geoDir)).filter((n) => n.endsWith(".geojson"));
+  /*
+   * Every district file in `public/geo`, and nothing else.
+   *
+   * The directory grew a non-district member in g3: `state-outlines.geojson`,
+   * a GENERALIZED state boundary that exists only to decide which pixels the
+   * state-focus effect mutes. A blanket `*.geojson` sweep would have loaded
+   * it into the resolver alongside the cartographic boundaries and let a
+   * half-kilometre-accurate outline answer a question about who governs a
+   * point — which is precisely what its own header says it must never do.
+   *
+   * An allow-list would rot the other way (a new district type silently
+   * absent). So the rule is stated as an exclusion, named, with the reason
+   * attached to the name.
+   */
+  const NOT_DISTRICT_GEOMETRY = new Set(["state-outlines.geojson"]);
+  const names = (await readdir(geoDir)).filter(
+    (n) => n.endsWith(".geojson") && !NOT_DISTRICT_GEOMETRY.has(n),
+  );
   const features: GeoFeature[] = [];
   for (const name of names) {
     const parsed = JSON.parse(await readFile(join(geoDir, name), "utf8"));

@@ -133,6 +133,23 @@ export function KeyVotesSection({
         {KEY_VOTES_CRITERIA}
       </p>
 
+      {/*
+        ITEM 6 (2026-08-16, the author): THE PANE THAT LOOKED EMPTY.
+        DIAGNOSED — the data was never the problem. Production's /api/votes
+        serves 36 key votes for a senator, 20 laws and 16 people, and every
+        one of them reached this component. What the reader saw on selecting
+        "When it mattered" was the criteria sentence and two CLOSED bars: both
+        sub-groups defaulted shut, at the same size and colour as the pane's
+        own header, so the pane's entire visible content was one small
+        paragraph.
+
+        A view the reader has just chosen must not need two more taps before
+        it shows anything — that is reader friction, and none of the four
+        sanctioned exceptions covers it. Both groups open with the pane. They
+        keep their headers, their counts and their chevrons, and they now
+        INDENT as sub-groups, so what they are is legible: a thing containing
+        two things, each still a thing to click.
+      */}
       {laws.length > 0 && (
         <CardSection
           title="Votes on laws"
@@ -140,22 +157,29 @@ export function KeyVotesSection({
           // calls were correctly refused. A count that quietly dropped them
           // would make our own gap invisible.
           meta={`${laws.length}`}
+          level="sub"
+          defaultOpen
         >
           <KeyVoteGroupBlock chamber={chamber} rows={laws} />
         </CardSection>
       )}
 
       {houseNominationsLine ? (
-        // Collapsed and inert: a header the reader can see, and one sentence
-        // behind it. Never sixteen rows of the same sentence.
-        <CardSection title="Votes on people" meta="none">
+        // One header, one sentence behind it. Never sixteen rows of the same
+        // sentence — but open, because the sentence IS the answer.
+        <CardSection title="Votes on people" meta="none" level="sub" defaultOpen>
           <p className="text-[0.75rem] leading-relaxed text-voice">
             {houseNominationsLine}
           </p>
         </CardSection>
       ) : (
         people.length > 0 && (
-          <CardSection title="Votes on people" meta={`${people.length}`}>
+          <CardSection
+            title="Votes on people"
+            meta={`${people.length}`}
+            level="sub"
+            defaultOpen
+          >
             <KeyVoteGroupBlock chamber={chamber} rows={people} />
           </CardSection>
         )

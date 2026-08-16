@@ -1749,6 +1749,47 @@ label:has(> input[type="checkbox"]) {
   padding: 10px 2px 2px;
 }
 
+/* SUB-GROUPS INSIDE A PANE (item 6, 2026-08-16, the author's ruling).
+ *
+ * "Votes on laws" and "Votes on people" are sections INSIDE the Voting Record
+ * pane, and at the same size and colour as the pane's own header they read as
+ * three peers rather than as a thing containing two things. The author's
+ * report was that "When it mattered" appeared to render NOTHING: the pane's
+ * whole visible content was one small paragraph and two closed bars that did
+ * not look like content or like controls.
+ *
+ * So a sub-group INDENTS behind a rule, and steps down in size — smaller
+ * type, squarer corners, quieter fill — while keeping the chevron and the
+ * tap target that say it is a thing to click. Hierarchy by inset and scale,
+ * in the committed grammar; no new affordance language. */
+.card-section[data-level="sub"] {
+  margin-top: 8px;
+  margin-left: 10px;
+  padding-left: 10px;
+  border-left: 2px solid color-mix(in srgb, var(--link) 35%, var(--panel-border));
+}
+
+.card-section[data-level="sub"] > .card-section-header {
+  min-height: 38px;
+  padding: 0 11px;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--link) 5%, var(--panel-bg));
+}
+
+.card-section[data-level="sub"] > .card-section-header:hover,
+.card-section[data-level="sub"][data-open] > .card-section-header {
+  background: color-mix(in srgb, var(--link) 10%, var(--panel-bg));
+}
+
+.card-section[data-level="sub"] .card-section-title {
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.card-section[data-level="sub"] > .card-section-body {
+  padding: 8px 0 2px;
+}
+
 /* The zip switcher's chevron (item 4's audit, 2026-08-16). It had no state
    rule at all — down while closed, still down while open. */
 .zip-chevron {

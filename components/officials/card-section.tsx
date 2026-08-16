@@ -45,18 +45,33 @@ export function CardSection({
   /** Rendered beside the title — a count, a date range. Never a judgement. */
   meta,
   defaultOpen = false,
+  /**
+   * `"sub"` is a section INSIDE another section's pane (item 6, 2026-08-16).
+   *
+   * "Votes on laws" and "Votes on people" live inside Voting Record, and at
+   * the top level's size and colour the three read as peers rather than as a
+   * thing containing two things — which is half of why the pane looked empty.
+   * A sub-group indents behind a rule and steps down in scale, keeping its
+   * chevron and its tap target so it still says "a new thing to click".
+   */
+  level = "top",
   children,
 }: {
   title: string;
   meta?: string | null;
   defaultOpen?: boolean;
+  level?: "top" | "sub";
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(defaultOpen);
   const id = useId();
 
   return (
-    <section className="card-section" data-open={open || undefined}>
+    <section
+      className="card-section"
+      data-open={open || undefined}
+      data-level={level === "sub" ? "sub" : undefined}
+    >
       <button
         type="button"
         className="card-section-header"

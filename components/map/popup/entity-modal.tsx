@@ -1,5 +1,6 @@
 "use client";
 
+import { blurbForTitle } from "@/lib/officials/office-blurbs";
 import { X } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 
@@ -60,6 +61,20 @@ export interface ModalSubject {
   agenda?: { meetingId: string; agendaUrl: string | null } | null;
   /** How to actually speak at it (D25), when the subject is a meeting. */
   commentAccess?: { ocdId: string | null; bodyName: string } | null;
+  /**
+   * 6f2 (2026-08-15, the author): a district battlecard's overview rendered
+   * type/tier/state and nothing else — three identifiers where a stranger
+   * needs a sentence. This is the office title of whoever REPRESENTS the
+   * district, so the card can render that office's shipped explainer.
+   *
+   * Deliberately not new prose: it reuses the per-office-type library the
+   * officeholder cards already use, and it explains the OFFICE, never the
+   * district's politics. "What the person who represents this district does"
+   * is the honest framing — a congressional district is not a government, it
+   * is a constituency, and the useful thing to know about it is what the
+   * person elected from it can actually do.
+   */
+  representedByOfficeTitle?: string | null;
   representation: SeatHolder[];
   /** Why representation is empty, when it is. */
   representationNote: string;
@@ -167,6 +182,41 @@ export function EntityModal({
                   {fact.value}
                 </PopupRow>
               ))}
+
+              {/* 6f2: the district explainer, from the shipped office-type
+                  library. Renders nothing when the library has no entry for
+                  the office — an absent explainer is better than a made-up
+                  one, and the tabs below still carry the record. */}
+              {subject.representedByOfficeTitle &&
+                (() => {
+                  const blurb = blurbForTitle(subject.representedByOfficeTitle);
+                  if (!blurb) return null;
+                  return (
+                    <>
+                      <PopupSectionLabel>
+                        What the person who represents this district does
+                      </PopupSectionLabel>
+                      <p className="mt-1.5 text-[0.75rem] leading-relaxed text-paper-dim">
+                        {blurb.text}
+                      </p>
+                      <p className="mt-1 text-[0.625rem] text-muted">
+                        Powers defined in:{" "}
+                        {blurb.basisUrl ? (
+                          <a
+                            href={blurb.basisUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="underline decoration-dotted hover:text-link"
+                          >
+                            {blurb.basis}
+                          </a>
+                        ) : (
+                          blurb.basis
+                        )}
+                      </p>
+                    </>
+                  );
+                })()}
 
               {subject.agenda && (
                 <>

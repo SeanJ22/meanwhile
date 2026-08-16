@@ -1548,6 +1548,20 @@ label:has(> input[type="checkbox"]) {
   color: var(--signal);
 }
 
+/* 6g (2026-08-15, the author): the SOURCE tag broke to "SR / C" beside a long
+   name — "Lane Santa Cruz" pushed it into a 2-character column and a
+   nine-letter mono word with 0.1em tracking wrapped mid-word.
+
+   Two rules, and both are needed: the tag never wraps, and it never shrinks
+   below its own width. `flex-shrink: 0` is what actually fixes it — the tag
+   lives in flex rows beside names that can be arbitrarily long, and without
+   it the tag is the flexible thing in the row. Applied at the CLASS rather
+   than per-site so a sixth render of this tag cannot arrive without it. */
+.source-tag {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 /* The collapsible battlecard section (item 6b4, 2026-08-15). The header is a
    pill because a pill is already this system's word for "tappable, and not a
    link", and it pops by CONTRAST with item 5's quieting rather than by being
@@ -2259,28 +2273,28 @@ label:has(> input[type="checkbox"]) {
   margin-bottom: 12px;
 }
 
+/* 6e2 (2026-08-15, the author, on BOTH desktop and phone): "the overlay's
+   type is too small even for good vision". The mission text is the product's
+   opening argument and was set at 13px — under the type scale's Body rung and
+   smaller than anything else a reader is asked to actually read. Both rungs
+   move onto the committed scale: Display for the name, Body for the
+   argument. */
 .welcome-title {
-  font-size: 22px;
+  font-size: 1.75rem;
   font-weight: 700;
-  letter-spacing: -0.3px;
-  margin-bottom: 4px;
+  letter-spacing: -0.02em;
+  margin-bottom: 18px;
   color: var(--text);
 }
 
-.welcome-subtitle {
-  font-size: 12px;
-  color: var(--text-dim);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
-  margin-bottom: 20px;
-}
+/* `.welcome-subtitle` retired 6e2 (2026-08-15) — the institutional line it
+   styled is gone; see welcome-overlay.tsx for why. */
 
 .welcome-msg {
-  font-size: 13px;
+  font-size: 0.9375rem;
   color: var(--text-dim);
-  line-height: 1.6;
-  margin-bottom: 24px;
+  line-height: 1.65;
+  margin-bottom: 26px;
 }
 
 .welcome-field {

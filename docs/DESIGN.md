@@ -39,6 +39,35 @@ The rule these encode: **a structural label organizes, so it carries weight —
 confident without dwarfing the content it organizes.** The pre-pass 9px
 whisper (smaller than the names under it) is the defect this replaces.
 
+## The palette's distribution (the mobile round-two pass, 2026-08-15)
+
+The system's second law, beside the one above: **one interactive accent, and
+it only ever marks things a reader can tap.** The design pass established the
+registers; this pass fixed how much of the screen each one was allowed to
+occupy. `--link` used to alias `--accent-local`, and `--signal` aliased it
+again, so a single amber carried links, structural labels, seat titles,
+counters, tier headers, focus rings and active chips. A colour that means
+seven things means nothing.
+
+| Token | What wears it |
+|---|---|
+| `--link` | Anything tappable. Nothing else. |
+| `--action` / `--action-on` | The FILLED primary action — the ballot pill, Ask, a dialog's affirmative. Reserved. |
+| `--label` | Structural labels: type tags, seat titles, section eyebrows. Neutral and confident; weight, not colour. |
+| `--text` | Data. Numerals, counts, amounts, names. The brightest thing on any surface. |
+| tier accents | Structure only — tier headers, legend dots, boundary lines, the tier toggles. |
+| `--tier-fill-*` | The readable form of a tier accent, for a FILLED tier control. The map accents sit at mid luminance and cannot carry text. |
+
+**The sun bar is 7:1, not WCAG's 4.5.** The tester's field finding: gold on
+light is unreadable in phone glare. `pnpm contrast` reads the tokens out of
+`globals.css` and checks every reader-facing pair against the surfaces it
+actually renders on, in both themes, exempting only tokens that carry neither
+guidance nor record — each exemption listed with its reason. A change that
+drops a pair below the bar fails the run.
+
+`pnpm overlaps` is its sibling for layout: nine states at 390px, and no
+floating element may cover a readable surface in any of them.
+
 ## The three registers
 
 Who is speaking decides how text renders. Three registers, tokens
@@ -115,6 +144,44 @@ The pill is the tap target for the type explainer.
   reference for passive affordances): a quiet `rounded-full` chip in the
   card's flow that never overlays the map, never blocks panning, expands in
   place on tap, and decides nothing until the reader does.
+
+## The person card's information order (2026-08-15, the author's design)
+
+Every person battlecard — senator, governor, ward council member, a
+challenger with two links to their name — renders the SAME sections in the
+SAME order. Identity is open; everything else is a collapsed pill header.
+
+1. **Identity** — open. Name, portrait or initials, office, party, "In seat
+   until", age where sourced. What a stranger sees in the first
+   screen-height before any tap is the card's argument, and the argument is
+   who this is.
+2. **What this office does** — the stranger test. A reader who does not know
+   what a ward council member IS cannot use a phone number or a donor list,
+   so the explainer sits ahead of the author's four.
+3. **How to reach them.**
+4. **Campaign money.**
+5. **Their votes** — two columns, both collapsed: *Recent* (the last 20 roll
+   calls, all of them, procedural included) and *When it mattered* (the
+   curated list with its published criteria at its head, and its own two
+   collapsed sub-groups).
+
+Items 3–5 are the author's stated order: identity → contact → funding →
+votes.
+
+**The section SET is identical per office class, and that is an
+equal-effort rule, not a layout preference.** A thin challenger renders the
+same headers as a thirty-year incumbent with honest content behind each.
+Hiding a section because it would be empty makes the well-covered
+candidate's card taller and more substantial — a layout thumb on the scale,
+which is exactly the information asymmetry the equal-effort rule exists to
+catch. The only permitted exception is structural: a person with no
+roll-call store at all has no votes section, because there is no such thing
+as their voting record to be missing.
+
+The header is a pill (`.card-section-header`) because a pill is already this
+system's word for "tappable and not a link". It pops by CONTRAST with the
+palette distribution above rather than by being another loud element — which
+is why the two were designed together and share one token family.
 
 ## What this system never does
 

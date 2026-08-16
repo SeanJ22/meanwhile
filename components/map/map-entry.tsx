@@ -1340,11 +1340,42 @@ function districtSubject(
       { label: "Tier", value: TIER_LABEL[district.tier] },
       { label: "State", value: district.state, mono: true },
     ],
+    /*
+     * 6f2 (2026-08-15): the enrichment. The overview was three identifiers
+     * and nothing a stranger could use.
+     *
+     * The office title is taken from the DIVISION's own type, not from
+     * whoever currently holds the seat — so an unfilled or unsourced seat
+     * still gets its explainer, and a district with two representatives
+     * (Arizona's state house districts elect two) does not have to pick one.
+     * A type with no office to name renders no explainer at all.
+     */
+    representedByOfficeTitle: officeTitleForDivision(district.ocdId),
     representation: roster,
     representationNote: representationNoteFor(district.tier),
     meetings,
     sources: [],
   };
+}
+
+/**
+ * The office that represents a division, from the division's OWN identifier
+ * segment (6f2, 2026-08-15).
+ *
+ * Read off the OCD-ID rather than off a label or a current officeholder: the
+ * identifier is the join key this whole product is built on, a label is a
+ * display string that varies by state, and a seat can be vacant. A segment
+ * with no office to name returns null and the card renders no explainer,
+ * which is the correct answer for a county or a place — those are governments
+ * with bodies, not constituencies with a representative, and they have their
+ * own surfaces.
+ */
+function officeTitleForDivision(ocdId: string): string | null {
+  if (/\/cd:[^/]+$/.test(ocdId)) return "U.S. Representative";
+  if (/\/sldu:[^/]+$/.test(ocdId)) return "State Senator";
+  if (/\/sldl:[^/]+$/.test(ocdId)) return "State Representative";
+  if (/\/school_district:[^/]+$/.test(ocdId)) return "School Board Member";
+  return null;
 }
 
 const STATUS_LABEL: Record<Meeting["status"], string> = {

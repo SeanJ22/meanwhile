@@ -62,16 +62,38 @@ test("M58: the Concluded chip opens the window its own meetings live in", () => 
   const future = meetingAt("2026-08-25T17:00:00.000Z", "SCHEDULED");
   const meetings = [past, future];
 
-  // The production behaviour, reproduced: default window + Concluded chip
-  // matched nothing, at every zip.
+  /*
+   * REWRITTEN 2026-08-15 (6f2), on this test's own instruction.
+   *
+   * It used to assert the DEFECT: default window (`now` → 60) plus the
+   * Concluded chip matched nothing, at every zip, and it said in its own
+   * message that a pass here means the window default changed and the test
+   * needs rewriting rather than deleting. It did change — the default is now
+   * 90 days back, matching the served window — so the defect is gone and the
+   * claim inverts. The reducer behaviour below is unchanged and is still the
+   * thing that has to hold: a reader who taps Concluded from ANY window ends
+   * up with one wide enough to answer.
+   */
   const naive = {
     ...INITIAL_STATE,
     filters: { ...INITIAL_STATE.filters, statuses: ["CONCLUDED" as const] },
   };
   assert.equal(
     applyFilters({ meetings, ui: naive, center: null, now }).length,
-    0,
-    "the defect itself — if this starts passing, the window default changed and this test needs rewriting, not deleting",
+    1,
+    "the default window now reaches back far enough for the chip to answer on its own",
+  );
+
+  // And from the OLD default, which is where the defect lived: the reducer
+  // still has to widen. This is the guard the rewrite must not lose.
+  const fromNarrow = uiReducer(
+    { ...INITIAL_STATE, filters: { ...INITIAL_STATE.filters, daysBack: 0 } },
+    { type: "filter/toggleStatus", value: "CONCLUDED" },
+  );
+  assert.equal(fromNarrow.filters.daysBack, CONCLUDED_LOOKBACK_DAYS);
+  assert.equal(
+    applyFilters({ meetings, ui: fromNarrow, center: null, now }).length,
+    1,
   );
 
   // Through the reducer, the way a reader actually taps it.

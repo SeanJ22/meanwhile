@@ -260,7 +260,7 @@ export function AskBox({
                     href={contact.sourceUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-1 inline-block font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted underline decoration-dotted underline-offset-2 hover:text-link"
+                    className="mt-1 inline-block source-tag font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted underline decoration-dotted underline-offset-2 hover:text-link"
                   >
                     source — {contact.sourceOrg}
                   </a>
@@ -309,7 +309,7 @@ export function AskBox({
                               href={person.sourceUrl}
                               target="_blank"
                               rel="noreferrer"
-                              className="font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted underline decoration-dotted underline-offset-2 hover:text-link"
+                              className="source-tag font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted underline decoration-dotted underline-offset-2 hover:text-link"
                             >
                               source
                             </a>

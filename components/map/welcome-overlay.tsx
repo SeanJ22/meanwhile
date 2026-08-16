@@ -131,8 +131,15 @@ export function WelcomeOverlay({
           <circle cx="12" cy="10" r="3" />
         </svg>
 
+        {/*
+          6e2 (2026-08-15, the author): "NOTICE OF PUBLIC MEETINGS" is gone.
+          It undersold the mission text doing the real work below it —
+          institutional boilerplate as the first thing a reader meets, on the
+          one surface that has to convince them this product is not a
+          government portal. The header is the name and the mission, and
+          nothing between them.
+        */}
         <h1 className="welcome-title">We the People</h1>
-        <p className="welcome-subtitle">Notice of public meetings</p>
 
         {/* The author's mission text, verbatim (session brief 1a). Do not
             edit it here: tests/welcome-copy.test.ts pins every sentence. */}

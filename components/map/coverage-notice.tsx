@@ -171,7 +171,7 @@ function Holder({
           target="_blank"
           rel="noreferrer"
           title="Where this record was read from"
-          className="font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted underline decoration-dotted underline-offset-2 hover:text-link"
+          className="source-tag font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted underline decoration-dotted underline-offset-2 hover:text-link"
         >
           source
         </a>
@@ -404,6 +404,31 @@ function CoverageBody({
         // Structural label (design pass): organizes, confident, with its
         // shelf rule — never smaller than the names it organizes.
         <p className="t-structure mt-3 text-local">Local</p>
+      )}
+      {/*
+        6g (2026-08-15, the author): "Why these five?" — the top list surfaces
+        a Board of Adjustment beside a county, a city and a school district,
+        and nothing on the surface says why those and not others.
+
+        One honest sentence about the SELECTION, and deliberately not a new
+        ranking: the list is the bodies whose calendars this product watches
+        here, in the order the coverage summary returns them, cut at five with
+        the remainder counted below. There is no scoring, no importance
+        judgement, and no ordering by anything a reader could mistake for one.
+        Saying so is cheaper than being asked.
+      */}
+      {hidden > 0 && (
+        <details className="mt-1">
+          <summary className="cursor-pointer text-[0.6875rem] text-link">
+            Why these {shown.length}?
+          </summary>
+          <p className="mt-1 text-[0.6875rem] leading-relaxed text-voice">
+            These are the bodies whose calendars we watch here, listed in the
+            order our coverage check returns them and cut at {shown.length}.
+            It isn&apos;t a ranking — nothing here is scored or ordered by
+            importance. The {hidden} others are counted in the line below.
+          </p>
+        </details>
       )}
       {shown.length > 0 && (
         <ul className="mt-1 space-y-1">

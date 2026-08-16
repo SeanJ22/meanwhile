@@ -38,6 +38,16 @@
  *                            neither compared for drift, both skipped by
  *                            `--check` and rewritten after a successful ship
  *
+ * **Under `--ship` there is a sixth, and it runs before anything is pushed:**
+ *
+ *   6. the deploy gate       `pnpm build` — the same command Netlify runs —
+ *                            with `tsconfig.tsbuildinfo` cleared first. A
+ *                            failure refuses the ship and prints the
+ *                            diagnostic, because Netlify's build log is
+ *                            behind the author's login. See `buildGate()`
+ *                            for why it is the build rather than `tsc`, and
+ *                            for the pre-push hook that was rejected.
+ *
  * `pnpm session:start` is the bookend, and checks the things that are wrong at
  * the *start* of a session — stale local main, a clobbered CLAUDE.md, a port
  * already in use.
@@ -49,11 +59,12 @@
  * them and does the two jobs that are pure copies.
  */
 
-import { execFileSync } from "node:child_process";
+import { execFileSync, execSync } from "node:child_process";
 import {
   copyFileSync,
   existsSync,
   readFileSync,
+  rmSync,
   statSync,
   writeFileSync,
 } from "node:fs";
@@ -548,6 +559,118 @@ if (CHECK_ONLY) {
 /* ---------------------------------------------------------------- ship --- */
 
 /**
+ * **The deploy gate** — born 2026-08-16, from a deploy that did not land.
+ *
+ * ## What happened
+ *
+ * `main@705f73b` merged green and production kept serving the previous build
+ * for an hour. Netlify's build failed type-check on
+ * `scripts/walk-0815g.mts(313,23): TS18048` — a walk SCRIPT, not site code.
+ * The session had run `pnpm build` and seen exit 0, and had not lied: the
+ * build ran BEFORE that file was written, and nothing type-checked the tree
+ * again between writing it and shipping. Diagnosed rather than assumed — a
+ * warm-cache `pnpm build` on the same tree reproduces the failure exactly, so
+ * the stale-`.next` theory is wrong and the ordering one is right.
+ *
+ * ## Why the gate is `pnpm build`, not `tsc --noEmit`
+ *
+ * The gate has to be the check Netlify runs, and Netlify runs
+ * `corepack pnpm run build`. `tsc --noEmit` is *nearly* the same pass — the
+ * build prints "Running TypeScript ..." and then the identical diagnostic —
+ * but `tsconfig.json` includes `.next/types/**\/*.ts`, the route types Next
+ * GENERATES during a build. A bare `tsc` run checks whatever those files
+ * happened to say last time, so a bad route-handler signature is exactly the
+ * class of error it could miss. Running the real command removes the question
+ * instead of reasoning about it.
+ *
+ * `tsconfig.tsbuildinfo` is cleared first because `"incremental": true` is on
+ * and Netlify starts from a clean checkout. (Measured: the warm build caught
+ * this error anyway — incremental does track new files. Cleared regardless,
+ * because "it happened to work this time" is not a property.)
+ *
+ * ## Rejected alternative, recorded
+ *
+ * A `.githooks/pre-push` hook. It would catch a push that bypasses this
+ * script, which handoff cannot — but it is installed by
+ * `git config core.hooksPath .githooks`, which is per-clone and which
+ * `pnpm session:start` only *reports* on. A gate that can be silently absent
+ * in a fresh clone is not a gate. It would also run on every
+ * work-in-progress push, and a minute of build on each is how a check gets
+ * `--no-verify`d out of existence. `--ship` is the single door everything
+ * merges through, it already refuses on a dirty tree, and its output is the
+ * checklist a session actually reads.
+ *
+ * **There is deliberately no skip flag.** An escape hatch on a gate is how
+ * the gate stops meaning anything, and the failure it exists to prevent cost
+ * a whole session's work sitting unshipped behind a green checkmark.
+ */
+function buildGate() {
+  try {
+    rmSync(join(ROOT, "tsconfig.tsbuildinfo"), { force: true });
+  } catch {
+    // Not being able to clear it is survivable — the build still type-checks.
+  }
+
+  const started = Date.now();
+  try {
+    /*
+     * `execSync` with ONE literal command string, not `execFileSync` with an
+     * args array — and this was measured, not preferred.
+     *
+     * `execFileSync("pnpm", …)` cannot run pnpm on Windows at all: it is a
+     * `.cmd` shim, and Node has refused to spawn `.cmd`/`.bat` without a
+     * shell since the 2024 argument-injection fix. `execFileSync("pnpm.cmd",
+     * …)` fails the same way. Adding `shell: true` to an args array works but
+     * emits Node's DEP0190 warning into the middle of the checklist. A single
+     * literal string has no args to escape and no injection surface — nothing
+     * here is interpolated.
+     *
+     * The first version of this gate got that wrong, and the failure mode is
+     * the one worth recording: it could not START the build, threw, and
+     * reported "pnpm build failed" — refusing a ship over a tree that builds
+     * clean. A gate that cannot tell "the build failed" from "the gate could
+     * not run" is not trustworthy in either direction, which is why the two
+     * are separated below.
+     */
+    execSync("pnpm run build", {
+      cwd: ROOT,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+  } catch (error) {
+    // No exit status means the command never ran — a broken gate, not a
+    // broken tree. It still refuses (a check that did not run may not pass),
+    // but it says which thing went wrong.
+    if (typeof error.status !== "number") {
+      fail(
+        "ship · build",
+        `refused — the gate could not RUN pnpm build (${error.message?.split("\n")[0] ?? "no status"}); this is the gate failing, not the tree`,
+      );
+      return false;
+    }
+
+    // The diagnostic is the whole value here. Netlify's log is behind the
+    // author's login, so a gate that only said "build failed" would move the
+    // wall rather than remove it.
+    const out = `${error.stdout ?? ""}${error.stderr ?? ""}`;
+    const diagnostic =
+      out
+        .split("\n")
+        .filter((l) => /error TS\d+|Failed to (compile|type check)/.test(l))
+        .slice(0, 4)
+        .join(" · ") || `exit ${error.status}, and no TS diagnostic in the output`;
+    fail("ship · build", `refused — pnpm build failed: ${diagnostic}`);
+    return false;
+  }
+
+  ok(
+    "ship · build",
+    `pnpm build clean in ${Math.round((Date.now() - started) / 1000)}s — the same command Netlify runs`,
+  );
+  return true;
+}
+
+/**
  * Push, open a PR, merge it.
  *
  * Runs only under `--ship`, and only from a clean tree — see the header. Each
@@ -562,6 +685,7 @@ function ship() {
     fail("ship", "refused — gh is not available");
     return;
   }
+  if (!buildGate()) return;
 
   // R07's second gap: this used to refuse outright when a branch had no
   // upstream, so the first --ship of every session failed until someone ran

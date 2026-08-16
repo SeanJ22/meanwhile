@@ -293,25 +293,66 @@ console.log("\nbattlecards at 85701");
 console.log("\n03255 — the Zoning Board");
 {
   const page = await returningPage("03255");
-  const found = await page.evaluate(async () => {
+
+  /*
+   * A DISCRIMINATED union, not two object shapes (fixed 2026-08-16).
+   *
+   * This returned `{ error: number }` on a bad response and
+   * `{ total, zba, first }` otherwise, and the caller narrowed with
+   * `"zba" in found`. TypeScript widens a union like that so BOTH members
+   * carry every key — one of them optional-undefined — so the `in` check
+   * narrows nothing and `found.zba` stays `number | undefined`. That is
+   * `TS18048`, and it is the error that failed Netlify's build for
+   * `705f73b` and left production on the previous deploy.
+   *
+   * `ok` is a real discriminant, so the narrowing below is real. No `!`
+   * assertion anywhere: the whole point of the check is that it cannot be
+   * told to stop worrying.
+   */
+  type ZbaProbe =
+    | { ok: false; status: number }
+    | { ok: true; total: number; zba: number; first: string | null };
+
+  const found: ZbaProbe = await page.evaluate(async () => {
     const r = await fetch("/api/meetings?lat=43.32&lng=-72.04&zip=03255", {
       headers: { accept: "application/json" },
     });
-    if (!r.ok) return { error: r.status };
+    if (!r.ok) return { ok: false as const, status: r.status };
     const body = (await r.json()) as {
       meetings: { id: string; bodyName: string; location: { name: string } }[];
     };
     const zba = body.meetings.filter((m) => m.id.includes("zoning-board"));
     return {
+      ok: true as const,
       total: body.meetings.length,
       zba: zba.length,
       first: zba[0] ? `${zba[0].bodyName} @ ${zba[0].location.name}` : null,
     };
   });
+
+  /*
+   * An unreachable meetings service is not a failed CHECK — it is a walk
+   * that could not run its check, and the two must never render the same.
+   * Throwing here is deliberate: a `check(..., false)` would land in the
+   * summary looking exactly like "the Zoning Board is missing from
+   * production", which is a different and much more alarming claim.
+   *
+   * A ZBA count of zero, by contrast, IS a failed check and stays one — it
+   * is the answer the walk exists to get, and it fails loudly through
+   * `check` with the counts printed beside it.
+   */
+  if (!found.ok) {
+    throw new Error(
+      `walk-0815g: /api/meetings at 03255 answered ${found.status} — the Zoning Board check could not run, so its result is unknown rather than negative`,
+    );
+  }
+
   check(
     "0: the Zoning Board's meetings are live at 03255",
-    "zba" in found && found.zba > 0,
-    JSON.stringify(found),
+    found.zba > 0,
+    // The count AND its denominator, per the standing rule: "1 of 31" is an
+    // answer, "1" on its own is a number.
+    `${found.zba} zoning-board row(s) of ${found.total} meetings${found.first ? ` — ${found.first}` : ""}`,
   );
   await page.context().close();
 }

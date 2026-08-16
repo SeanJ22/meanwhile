@@ -6361,3 +6361,93 @@ Item 3 shipped. **Not built, and nothing half-built:**
   end is sourced, which is all 537 federal members; the statewide executives
   carry neither a sourced term end nor a birth date, so their cards say
   nothing rather than guessing. Named in **M95** as the hunt it needs.
+
+## 31. The 2026-08-16 hotfix — the deploy gate: a walk script blocked the truck
+
+**Branch** `claude/deploy-gate-0816`. Small session, four jobs: fix the type
+error that failed Netlify, answer why the session before it saw a green build,
+gate it so it cannot recur, and finally run §30's walk against production.
+
+### The type error, and the guard that replaced it
+
+Netlify's build for `main@705f73b` failed on
+`scripts/walk-0815g.mts(313,23): error TS18048: 'found.zba' is possibly
+'undefined'`. The site code compiled clean — a **walk script** stopped the
+deploy.
+
+The cause is a union that was never a discriminated one. The probe returned
+`{ error: number }` on a bad response and `{ total, zba, first }` otherwise,
+and the caller narrowed with `"zba" in found`. TypeScript widens a union like
+that so both members carry every key, one of them optional-undefined, so the
+`in` test narrows nothing and `found.zba` stays `number | undefined`.
+
+Fixed with a real discriminant (`ok: true | false`) rather than a `!`
+assertion, and the two outcomes now render as the different things they are:
+an unreachable meetings service **throws a named error**, because a
+`check(..., false)` would land in the summary looking exactly like "the
+Zoning Board is missing from production" — a different and far more alarming
+claim. A zero count stays a failed check, loudly, with its denominator beside
+it.
+
+### Why the last session's `pnpm build` was green — diagnosed, not guessed
+
+The brief named two suspects. Both were tested before anything was declared.
+
+**Suspect A, a stale `.next` skipping the type-check: wrong.** Running
+`pnpm build` on the warm `.next` that session left behind reproduces the
+failure exactly — `✓ Compiled successfully in 718ms`, then `Running
+TypeScript ...`, then the identical `TS18048`. Incremental compilation does
+track newly added files; `tsconfig.tsbuildinfo` did not hide anything.
+
+**Suspect B, the build ran before the file existed: right, and it is the
+whole answer.** §30's last `pnpm build` was part of the checks run before the
+documents commit. `scripts/walk-0815g.mts` was written *after* that, in the
+final-pass step, and between writing it and `pnpm handoff --ship` the session
+ran only `pnpm walk:0815g` — never `tsc`, never `build`. The green build was
+true about the tree it saw and stale about the tree that shipped.
+
+So the failure is not a cache bug or a config drift. It is an **ordering
+gap**: nothing stood between the last verification and the merge. That is
+what decided the shape of the gate.
+
+### The gate
+
+`pnpm handoff --ship` now runs `pnpm build` — the exact command
+`netlify.toml` gives Netlify — with `tsconfig.tsbuildinfo` cleared first, and
+refuses to push if it fails. The diagnostic is printed rather than swallowed,
+because Netlify's build log needs the author's login and a gate that only
+said "build failed" would move the wall rather than remove it.
+
+**Why the build and not `tsc --noEmit`.** They are nearly the same pass, and
+`tsc` is much faster. But `tsconfig.json` includes `.next/types/**/*.ts` — the
+route types Next GENERATES during a build — so a bare `tsc` run checks
+whatever those files happened to say last time, and a bad route-handler
+signature is exactly the class of error it could miss. Running the real
+command removes the question instead of reasoning about it.
+
+**Rejected alternative, recorded: a `.githooks/pre-push` hook.** It would
+catch a push that bypasses handoff, which handoff by definition cannot. It
+loses on two counts. It is installed by `git config core.hooksPath
+.githooks`, which is per-clone and which `pnpm session:start` only *reports*
+on — a gate that can be silently absent in a fresh clone is not a gate. And
+it would fire on every work-in-progress push, which is how a minute-long
+check gets `--no-verify`'d out of existence. `--ship` is the single door
+everything merges through, it already refuses on a dirty tree, and its output
+is the checklist a session actually reads.
+
+**No skip flag, deliberately.** An escape hatch on a gate is how the gate
+stops meaning anything.
+
+**Proven, not assumed.** A deliberate TS error was injected into the same
+walk script and the gate's exact body run against it: it refused and printed
+`scripts/walk-0815g.mts(352,5): error TS2532 · Failed to type check.` The
+tree was then restored and `tsc --noEmit` exits 0.
+`tests/handoff-gate.test.ts` guards the WIRING — that `buildGate()` is called
+before the first push, that its result is acted on, that it runs the same
+command `netlify.toml` does, that the incremental info is cleared, and that no
+skip flag has appeared. A source scan rather than an execution test on
+purpose: running the gate inside `pnpm test` would take the suite from three
+seconds to two minutes and would be testing Next rather than us.
+
+### §30, verified live
+

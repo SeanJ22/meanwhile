@@ -14,6 +14,7 @@ import {
   isValidReactionKey,
   isValidReactionValue,
   isValidTargetType,
+  isValueOnScaleFor,
 } from "@/lib/signal/reactions";
 import { getCandidateTargetIds } from "@/lib/ballot/candidate-targets";
 import { getSingleCandidateTargetIds } from "@/lib/ballot/uncontested";
@@ -150,6 +151,20 @@ export async function POST(request: Request) {
   // race it would pour a different question's answers into the same bucket.
   // Enforced here rather than trusted to the UI — the UI decides what to
   // offer, the server decides what is true.
+  // The scale gate (2026-08-15), and it runs in BOTH directions: a
+  // five-point funding answer is refused on a vote, AND yes/no/unsure is
+  // refused on a funding target. The second direction is what keeps the
+  // scale break clean — a stale client writing v1 answers into a v2 column
+  // would blend two instruments, which is the whole thing scale versioning
+  // exists to stop. The server decides what question was asked; the row's
+  // scaleVersion is derived from the target type, never sent.
+  if (!isValueOnScaleFor(submission.targetType, submission.reaction)) {
+    return Response.json(
+      { error: "that answer is not on this question's scale" },
+      { status: 400 },
+    );
+  }
+
   if (CONTEXT_RESTRICTED_VALUES[submission.reaction] === "SINGLE_CANDIDATE_CONTEST") {
     if (submission.targetType !== "CANDIDATE") {
       return Response.json(

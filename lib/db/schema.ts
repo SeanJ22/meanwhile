@@ -207,8 +207,40 @@ export const reactions = pgTable(
      * plain text enum, so widening it needs no destructive migration.
      */
     reaction: text("reaction", {
-      enum: ["YES", "NO", "UNSURE", "SOMEONE_ELSE"],
+      enum: [
+        "YES",
+        "NO",
+        "UNSURE",
+        "SOMEONE_ELSE",
+        // The five-point funding scale (2026-08-15). Accepted only on the
+        // two funding target types; the write path enforces it in both
+        // directions, so a yes/no/unsure row against a funding target is a
+        // bug and not a legacy shape.
+        "LOVE",
+        "LIKE",
+        "DISLIKE",
+        "HATE",
+        "DONT_CARE",
+      ],
     }).notNull(),
+    /**
+     * **Which instrument produced this row** (2026-08-15).
+     *
+     * 1 = yes/no/unsure (+ SOMEONE_ELSE), the original scale and still the
+     * one votes and candidates use. 2 = the five-point funding scale.
+     *
+     * Rows on different scales are never combined: the aggregator groups by
+     * this column, and an export that put a v1 funding row and a v2 funding
+     * row under one denominator would be reporting a trend caused by the
+     * question changing. Server-derived from the target type on write —
+     * never sent by the client, because the client does not get to say what
+     * question it asked. Existing rows backfill to 1, which is what they
+     * are: answers to the question we asked then.
+     *
+     * `SCALE_BREAKS` in lib/signal/reactions.ts dates the break and says why,
+     * so a buyer holding both columns can read the reason.
+     */
+    scaleVersion: integer("scale_version").notNull().default(1),
     /**
      * Where the reader was looking, on the same approximate-location basis
      * as the search log: divisions resolved from the map view, zip-level at

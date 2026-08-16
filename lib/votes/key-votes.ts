@@ -113,6 +113,23 @@ export interface KeyVoteEntry {
    * whole file refuses to make.
    */
   senateSearch?: string;
+  /**
+   * The law's POPULAR NAME, for resolving this entry against the official
+   * record — B17, 2026-08-15.
+   *
+   * The Senate publishes its votes under a bill's official long title
+   * ("A bill to provide for reconciliation pursuant to title II of S. Con.
+   * Res. 14"), which names nothing a reader would recognise; that is why
+   * `senateSearch` alone left every law row empty. congress.gov's own
+   * `/titles` endpoint carries the popular and short titles the country
+   * actually uses, so the resolution is: find the public law whose titles
+   * include THIS phrase, then read that bill's recorded votes.
+   *
+   * Curated matching data, exactly like `senateSearch` — a phrase to search
+   * the official record for, never an asserted bill number. A bill number
+   * typed here from memory is the assumption this whole file refuses.
+   */
+  lawSearch?: string;
 }
 
 /** The House does not vote on nominations. Stated, never left blank. */
@@ -383,7 +400,10 @@ export const KEY_VOTES_LAWS: KeyVoteEntry[] = [
   law(
     "genius-act",
     "The GENIUS Act (2025)",
-    "The first federal rulebook for stablecoins — digital tokens meant to hold a fixed dollar value — requiring issuers to hold real dollar reserves and submit to federal or state supervision.",
+    // The author's one edit in his review of all 36 explainer lines
+    // (2026-08-15). Every other line is approved as shipped and is not to be
+    // reworded, tightened, or improved.
+    "The first federal rulebook for stablecoins (cryptocurrency) — digital tokens meant to hold a fixed dollar value — requiring issuers to hold real dollar reserves and submit to federal or state supervision.",
   ),
   law(
     "funding-fight",
@@ -459,10 +479,43 @@ const SENATE_SEARCH: Readonly<Record<string, string>> = {
   "road-to-housing": "ROAD to Housing",
 };
 
+/**
+ * The popular name of each law, for the congress.gov resolution (B17).
+ *
+ * Every phrase here is a name in ordinary public use — the name the entry's
+ * own title already carries, which the author wrote. Nothing is a bill
+ * number and nothing is a roll call: the fetch searches the official titles
+ * for the phrase and refuses on zero or ambiguous matches.
+ */
+const LAW_SEARCH: Readonly<Record<string, string>> = {
+  "cares-act": "CARES Act",
+  "american-rescue-plan": "American Rescue Plan",
+  iija: "Infrastructure Investment and Jobs Act",
+  bsca: "Bipartisan Safer Communities Act",
+  chips: "CHIPS and Science Act",
+  "pact-act": "Honoring our PACT Act",
+  ira: "Inflation Reduction Act",
+  "respect-for-marriage": "Respect for Marriage Act",
+  "fiscal-responsibility": "Fiscal Responsibility Act",
+  "april-2024-ukraine": "Ukraine Security Supplemental Appropriations Act",
+  "april-2024-israel": "Israel Security Supplemental Appropriations Act",
+  "april-2024-indopacific": "Indo-Pacific Security Supplemental Appropriations Act",
+  "april-2024-tiktok": "21st Century Peace through Strength Act",
+  ssfa: "Social Security Fairness Act",
+  "laken-riley": "Laken Riley Act",
+  obbba: "One Big Beautiful Bill Act",
+  "genius-act": "GENIUS Act",
+  "road-to-housing": "21st Century ROAD to Housing Act",
+};
+
 for (const entry of KEY_VOTES_LAWS) {
   const phrase = SENATE_SEARCH[entry.id];
   if (phrase) entry.senateSearch = phrase;
+  const popular = LAW_SEARCH[entry.id];
+  if (popular) entry.lawSearch = popular;
 }
+
+
 
 /** The whole list, in the author's order: laws first, then people. */
 export const KEY_VOTES: KeyVoteEntry[] = [...KEY_VOTES_LAWS, ...KEY_VOTES_PEOPLE];

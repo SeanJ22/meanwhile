@@ -4,10 +4,13 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { coverageAt } from "../lib/registry/server.ts";
+import { governingRosterHoldersForDivision } from "../lib/registry/body-rosters.ts";
 import {
   hasRepresentation,
   namedHolderCount,
   noticeLabel,
+  representationForDivision,
+  representationNoteFor,
   shouldRenderNotice,
 } from "../lib/registry/representation.ts";
 import { DISTRICT_LAYERS, DISTRICT_TYPES } from "../lib/map/districts.ts";
@@ -243,6 +246,7 @@ test("a failed fetch renders couldn't-check, never confident zeros", async () =>
     meetings: 0,
     bodies: 0,
     districts: 10,
+    governingDistricts: null,
     officials: 0,
     coverageAnswered: true,
   };
@@ -308,6 +312,95 @@ test("3g: the districts door renders exactly the list the card counts", async ()
   assert.equal(rows[2].holders.length, 0);
   // The undrawn seat created no row.
   assert.ok(!rows.some((r) => r.ocdId.endsWith("cd:6")));
+
+  // The in-view mode says so on the tile. The number used to travel bare —
+  // "179 DISTRICTS" beside a door headed "Districts in view" — and a tile
+  // that does not say what it counts is read as a claim about the reader.
+  const inView = deriveStatsView(
+    computeStats({ meetings: [], coverage: null, drawnDistricts: drawn as never }),
+    true,
+    false,
+  );
+  assert.equal(inView.districtsLabel, "In view");
+  assert.equal(inView.districtsSecondary, null, "one number, one line");
+});
+
+test("the governing mode counts what contains the reader, and its door lists it", async () => {
+  const { computeStats, deriveStatsView, governingDoorRows } = await import(
+    "../lib/state/derive.ts"
+  );
+
+  // Newbury: a zip centroid crosses lines, an address does not. This is the
+  // real coverage summary from the committed geometry, not a fixture.
+  const coverage = await coverageAt(...ZIPS["03255"], 0);
+  assert.ok(
+    coverage.divisions.length > 0,
+    "the governing set is the denominator — an empty one proves nothing",
+  );
+
+  // Without an address there is no governing claim to make: a ZCTA centroid
+  // can sit in a different town than the reader, so the card stays in view
+  // mode no matter how good the coverage is.
+  const drawn = [
+    {
+      type: "county" as const,
+      tier: "local" as const,
+      typeLabel: "County",
+      ocdId: "ocd-division/country:us/state:nh/county:merrimack",
+      label: "Merrimack County",
+    },
+  ];
+  const centroid = deriveStatsView(
+    computeStats({ meetings: [], coverage, drawnDistricts: drawn, atAddress: false }),
+    true,
+    false,
+  );
+  assert.equal(centroid.districtsLabel, "In view");
+  assert.equal(centroid.districts, 1);
+
+  // With one, the card leads with the governing count and KEEPS the in-view
+  // number rather than throwing it away.
+  const atAddress = deriveStatsView(
+    computeStats({ meetings: [], coverage, drawnDistricts: drawn, atAddress: true }),
+    true,
+    false,
+  );
+  assert.equal(atAddress.districtsLabel, "You're in");
+  assert.equal(atAddress.districts, coverage.divisions.length);
+  assert.equal(atAddress.districtsSecondary, "1 in view");
+
+  // The stated-N rule, extended to the second mode: the door renders exactly
+  // the rows the tile counted.
+  const rows = governingDoorRows(coverage, (ocdId) =>
+    representationForDivision(coverage, ocdId),
+  );
+  assert.equal(
+    rows.length,
+    atAddress.districts,
+    "the governing card's N must equal the governing door's rows",
+  );
+
+  // Identifiers never render: every row carries a reader-facing type name.
+  for (const row of rows) {
+    assert.ok(row.label.length > 0);
+    assert.ok(!/[_:]/.test(row.typeLabel), `${row.typeLabel} leaks an identifier`);
+  }
+  // And the mode names real people through the shared resolver — the county
+  // board sits inside this set.
+  assert.ok(
+    rows.some((r) => r.holders.length > 0),
+    "the governing door named nobody at a zip whose card names people",
+  );
+
+  // Turning the outlines off does not unmake geometry: the governing count
+  // stands and the secondary line says the outlines are off.
+  const outlinesOff = deriveStatsView(
+    computeStats({ meetings: [], coverage, drawnDistricts: null, atAddress: true }),
+    false,
+    false,
+  );
+  assert.equal(outlinesOff.districts, coverage.divisions.length);
+  assert.equal(outlinesOff.districtsSecondary, "District outlines are off");
 });
 
 test("3h: free scrolling never re-expands the who-governs card; a typed zip does", async () => {
@@ -505,4 +598,94 @@ test("M57: districts off says Off, not the couldn't-check dash", async () => {
   const view = deriveStatsView(on, true, false);
   assert.equal(view.bodies, "—");
   assert.equal(view.officials, "—");
+});
+
+/**
+ * The class guard — every division card renders the people some other
+ * surface already renders for that division (2026-08-15).
+ *
+ * The defect this pins is not one card. The division battlecard's
+ * Representation tab resolved from the curated body rosters ALONE, and
+ * rosters hold no legislative seats by construction — so a congressional, a
+ * state-house and a state-senate card at every zip each denied its own
+ * officeholder while the small popup beside it named them. Twelve cards
+ * across the four zips, all reading "No sourced officeholder for this
+ * division yet" over a populated index.
+ *
+ * The assertion is per DIVISION TYPE, deliberately: a fix that repaired `cd`
+ * and left `sldl` would pass a spot check and reproduce the whole defect one
+ * type down.
+ */
+test("no division card denies people another surface renders", async () => {
+  const missing: string[] = [];
+  const covered = new Map<string, number>();
+
+  for (const [zip, [lat, lng]] of Object.entries(ZIPS)) {
+    const coverage = await coverageAt(lat, lng, 0);
+
+    // Every division ANY surface holds people for: legislative seats from the
+    // officeholder index, local governments from the curated rosters.
+    const divisions = new Map<string, { type: string; expected: number }>();
+    for (const seat of coverage.seats) {
+      if (seat.representatives.length > 0) {
+        divisions.set(seat.ocdId, {
+          type: seat.divisionType,
+          expected: seat.representatives.length,
+        });
+      }
+    }
+    for (const body of coverage.bodies) {
+      if (!body.ocdId) continue;
+      const roster = governingRosterHoldersForDivision(body.ocdId);
+      if (roster.length === 0) continue;
+      const prior = divisions.get(body.ocdId);
+      if (!prior || prior.expected < roster.length) {
+        divisions.set(body.ocdId, {
+          type: body.divisionType,
+          expected: Math.max(prior?.expected ?? 0, roster.length),
+        });
+      }
+    }
+
+    for (const [ocdId, { type, expected }] of divisions) {
+      const rendered = representationForDivision(coverage, ocdId);
+      covered.set(type, (covered.get(type) ?? 0) + 1);
+      if (rendered.length < expected) {
+        missing.push(`${zip} ${type} ${ocdId}: card ${rendered.length} vs ${expected}`);
+      }
+    }
+  }
+
+  assert.deepEqual(missing, [], missing.join("\n"));
+
+  // The denominator, stated: an empty pass would satisfy the loop above
+  // silently, which is the exact failure shape this repo keeps recording.
+  // All six division types that carry people at these four zips are covered.
+  for (const type of [
+    "cd",
+    "sldl",
+    "sldu",
+    "county",
+    "place",
+    "school_district",
+  ]) {
+    assert.ok(
+      (covered.get(type) ?? 0) > 0,
+      `no ${type} division with people was checked — the guard proved nothing`,
+    );
+  }
+});
+
+test("the honest empty line is the same sentence on both surfaces", () => {
+  // A division with nobody says so once, in one place. Two surfaces writing
+  // their own version of a gap is how one of them ends up softer than the
+  // truth.
+  assert.equal(representationForDivision(null, null).length, 0);
+  assert.equal(
+    representationForDivision(null, "ocd-division/country:us/state:az/cd:7").length,
+    0,
+    "no coverage means no seat — never a guess from the roster store",
+  );
+  assert.match(representationNoteFor("local"), /haven't sourced who sits on it/);
+  assert.match(representationNoteFor("federal"), /No sourced officeholder/);
 });

@@ -1,6 +1,8 @@
 import type { CoverageTier } from "../meetings/constants.ts";
+import type { SeatHolder } from "../officials/lookup.ts";
 import { allOfficialRows } from "../officials/tier-grouping.ts";
 
+import { governingRosterHoldersForDivision } from "./body-rosters.ts";
 import type { CoverageSummary } from "./coverage.ts";
 
 /**
@@ -21,6 +23,58 @@ import type { CoverageSummary } from "./coverage.ts";
  * populated. These functions are that decision, and
  * `tests/representation.test.ts` holds them against the committed rosters.
  */
+
+/**
+ * **Who represents a division — the one resolver every officials surface
+ * reads** (the class fix, 2026-08-15).
+ *
+ * A division's people live in two stores and neither one is optional:
+ *
+ * - **Legislative seats** — a congressional district, a state house district,
+ *   a state senate district — come off the coverage summary's `seats`, which
+ *   is the officeholder index keyed by division.
+ * - **Local governing bodies** — a county board, a council, a school board —
+ *   come off the curated body rosters, whose ids suffix a division `#governing`
+ *   or `#board`.
+ *
+ * The defect this replaces: the district battlecard's Representation tab read
+ * the roster store ALONE. Rosters hold no legislative seats by construction,
+ * so **every congressional, state-house and state-senate division card denied
+ * its own officeholder** — NH-2 rendering "No sourced officeholder for this
+ * division yet" with Goodlander sitting in the index the small popup beside it
+ * was already reading. Not one card: three of the six division types, at every
+ * zip, and the ones with the largest overlays on the map.
+ *
+ * It was a parallel join, which is why it drifted: two surfaces answering the
+ * same question from different stores will always eventually disagree, and the
+ * one nobody screenshots is the one that stays wrong. There is one resolver
+ * now, and `tests/representation.test.ts` asserts per division type that a
+ * division any surface holds people for is a division the card holds the same
+ * people for.
+ */
+export function representationForDivision(
+  coverage: CoverageSummary | null | undefined,
+  ocdId: string | null,
+): SeatHolder[] {
+  if (!ocdId) return [];
+  const seat = coverage?.seats.find((s) => s.ocdId === ocdId);
+  if (seat?.representatives.length) return seat.representatives;
+  return governingRosterHoldersForDivision(ocdId);
+}
+
+/**
+ * What to say when the resolver comes back empty — and it must be sayable
+ * without knowing which store was asked.
+ *
+ * A local division whose boundary exists has a government by construction, and
+ * saying so is a different fact from a legislative seat we simply have not
+ * sourced. Both are our gap, stated as ours.
+ */
+export function representationNoteFor(tier: string): string {
+  return tier === "local"
+    ? "We know this division has a governing body because its boundary exists. We haven't sourced who sits on it."
+    : "No sourced officeholder for this division yet.";
+}
 
 /** Does the summary hold anything a representation panel could render? */
 export function hasRepresentation(coverage: CoverageSummary | null): boolean {

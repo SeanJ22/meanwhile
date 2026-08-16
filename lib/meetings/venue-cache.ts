@@ -293,6 +293,53 @@ export const VENUE_CACHE: VenueEntry[] = [
     verifiedAt: "2026-08-15",
   },
 
+  // ── SchedulePage: Kearsarge Regional School Board (M79) ─────────────────
+  // The schedule page states the place in its own bullet, verbatim: "Meeting
+  // Location: 114 Main Street, New London (enter by the cupola on Main
+  // Street)". The 2026-08-13 coverage audit recorded 165 Main St from a search
+  // snippet; the page itself says 114, and the page wins.
+  {
+    sourceId: "schedulepage",
+    bodyOcdId:
+      "ocd-division/country:us/state:nh/school_district:kearsarge_regional_school_district",
+    match: "114 Main Street, New London",
+    name: "Kearsarge Regional School District, 114 Main Street (enter by the cupola)",
+    address: "114 Main Street, New London, NH 03257",
+    lat: 43.418077,
+    lng: -71.990172,
+    addressSourceUrl:
+      "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=114+Main+Street%2C+New+London%2C+NH+03257&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-15",
+  },
+
+  // ── SchedulePage: Newbury's land-use boards (M79) ───────────────────────
+  // Two separate published statements, one per body, and neither is inferred
+  // from the other:
+  //   • Planning Board — its own agendas carry "Location – Newbury Town
+  //     Office" in the body of the notice (verified on the 2026-08-18 agenda).
+  //   • Conservation Commission — its own page says "Meetings are the second
+  //     Tuesday of the month at the Town Offices."
+  // The Zoning Board of Adjustment publishes neither, on any rung walked, and
+  // is deliberately absent from this table: see `lib/registry/coverage-audit.ts`.
+  // Same building and coordinates as the Selectboard row above, which the town
+  // administration page addresses at 937 Route 103.
+  {
+    sourceId: "schedulepage",
+    bodyOcdId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+    match: "Newbury Town Office",
+    name: "Newbury Town Office",
+    address: "937 Route 103, Newbury, NH 03255",
+    lat: 43.321682,
+    lng: -72.03705,
+    addressSourceUrl: "https://www.newbury.nh.gov/administration",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=937+Route+103%2C+Newbury%2C+NH+03255&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-15",
+  },
+
   // ── Diligent: TUSD Governing Board / committees at the Duffy Center ─────
   // The MeetingLocation string carries the full address; two spellings occur
   // in live data ("Fifth Street" and "5th Street"), so both are keyed.

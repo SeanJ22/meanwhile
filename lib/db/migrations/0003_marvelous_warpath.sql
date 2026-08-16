@@ -1,0 +1,1 @@
+ALTER TABLE "reactions" ADD COLUMN "scale_version" integer DEFAULT 1 NOT NULL;

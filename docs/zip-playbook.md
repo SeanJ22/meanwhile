@@ -249,6 +249,95 @@ And record `VENDOR_API: MISS` when there is no vendor. "This district runs no
 portal" is a finding about the district; leaving it unrecorded makes it look
 like a gap in the hunt.
 
+### The browser rung, and what it is actually made of (M79, 2026-08-15)
+
+**A 403 to this pipeline is a rung, not a wall.** `kearsarge.org` and
+`newbury.nh.gov` both refuse the civic-index client on every path — root,
+agendas page, sitemap, RSS — and both serve the identical pages to a browser.
+Between them they were hiding a school board's whole two-year calendar and a
+town's three land-use boards.
+
+The measurement is the part worth keeping, because the obvious guess is wrong:
+
+| Client | Headers | Result |
+|---|---|---|
+| Node `fetch`, civic-index UA | ours | **403** |
+| Node `fetch`, full Chrome header set | Chrome's | **403** |
+| `curl`, the *same* Chrome header set | Chrome's | **200** |
+
+The filter reads the **TLS/HTTP2 client fingerprint**, not the `User-Agent`.
+A session that swapped the UA, got another 403 and wrote "browser rung closed"
+would have recorded a wall that is not there — which is why the row above
+exists rather than a sentence saying "send a Chrome UA". `politeGetText(url,
+{ profile: "browser" })` sends the browser header set in-process and, on a
+403, re-issues through the system `curl`. The identification survives:
+`…Chrome/139.0.0.0 Safari/537.36 we-the-people civic meeting index (contact:
+…)`. We look like a browser to a filter and like ourselves to a human.
+
+Nothing here is an access control — no login, no token, no robots directive
+naming these paths, and every page is one a public body is statutorily obliged
+to publish. Pacing, `Retry-After` and serialization are unchanged.
+
+### Three more shapes of "the body's own page" (M79, 2026-08-15)
+
+The published annual schedule above was the first. It is a family, and the
+adapter now dispatches on `shapes` in the wiring row. A body may declare more
+than one and they union by date.
+
+- **`month-table`** — a two-column table, month in the left cell, one sitting
+  per row in the right: `Apr 2 Staff Nominations`, `September 10 - Budget
+  Presentations`. **The year is the whole problem**: only the first month cell
+  and the January cell state one. Track it two ways — a stated year sets it,
+  and a month ordinal that goes backwards rolls it forward — because a
+  schedule filed twelve months early is invisible until a reader shows up at
+  an empty room.
+- **`dated-list`** — `August 11, 2026 - 6:00pm` per line, with a sentence
+  naming the venue. **Scope it to the body's own block** (`sectionMatch`); the
+  same page carries a news teaser, a minutes archive and a document list, all
+  full of dates. Expect malformed rows: Newbury writes `June 9,2026` with no
+  space and puts two dates in one paragraph, so scan per match, not per line.
+- **`agenda-list`** — the document listing *is* the schedule. Drupal
+  municipal sites publish `<span property="dc:date" content="2026-08-18T19:00:00-04:00">` <!-- expected-future: the Newbury Planning Board's next sitting, quoted verbatim from the town's own markup as read 2026-08-15; a schedule example that postdates the read is the normal case for a schedule and this one is in the committed fixture tests/fixtures/schedulepage/newbury-planning-board.html -->
+  beside each document link, so no time is ever inferred. Two rules: bind rows
+  to one board with a **path prefix** (the town's template gives every board
+  identical markup, and a prefix-free parse files one board's Thursday under
+  another's), and **never let the link text become the sitting's title** — it
+  names the document ("Agenda", "Meeting Minutes"), and a card titled after
+  the piece of paper we found it in is not a meeting name. Read the label for
+  one thing only: `April Meeting is Cancelled` is the town's cancellation
+  signal.
+- A row timed at **exactly local midnight** is a document date, not a meeting
+  time. `startPrecision: "DAY"`, per M59.
+
+### The schedule table carries things that are not meetings (M79, 2026-08-15)
+
+Kearsarge's board calendar includes the town election and two filing
+deadlines, written in exactly the same shape as a sitting. Rendering "Election
+Day in your Town" as a school board meeting at 6:30pm at 114 Main Street is a
+fabricated claim about a government. Drop them — and **count them**, because a
+silent skip and a real absence must never look alike. Same for the table's own
+header row, which is not an undated sitting and must not spend a drop.
+
+### A published schedule can contradict itself, and a venue can be missing
+
+Two findings from Newbury that generalize:
+
+1. **The CMS date field and the agenda body can disagree.** A Zoning Board
+   agenda carries `dc:date` of Thursday 2026-08-13 and the heading
+   `Wednesday, August 12, 2026`; another is timed 7:00**am** in the field while
+   its items run from 7:05 p.m. Render the structured field the town's own
+   listing renders — that is what a reader browsing the site sees — and record
+   the discrepancy rather than smoothing it.
+2. **A board can publish its schedule and not its place.** Newbury's Zoning
+   Board of Adjustment publishes four 2026 agendas and states its meeting
+   location on no rung walked: not the department page, not three agendas read
+   in full, not the town's events listing. Its two sibling boards each state
+   theirs in their own words — and taking the Town Office from them for this
+   board is exactly the guess the venue table exists to refuse. **The venue is
+   its own hunt**, and a body can be source-found and still not renderable.
+   Wire the ones you can place; record the one you cannot, with the next rung
+   named.
+
 ### Probe the calendar category ids (2026-08-15)
 
 On CivicPlus, and by extension any CMS with numbered calendar feeds: **the

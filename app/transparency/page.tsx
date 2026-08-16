@@ -9,6 +9,25 @@ import Link from "next/link";
  * Every sentence here is checkable against the code: the search-log schema
  * (lib/db/schema.ts), the write path (lib/db/search-log.ts), and the guard
  * tests that make the claims structural rather than aspirational.
+ *
+ * **The subtraction diet, 2026-08-15 (the author's pass).** Every commitment
+ * on this page survived; the words around them did not. What went:
+ *
+ * - **Meta-language about how plainly things are being said.** "Stated
+ *   plainly", "we would rather say it plainly than have you wonder", "that
+ *   property is the deal" — a page that keeps telling you it is being honest
+ *   is spending the reader's attention on its own posture instead of on the
+ *   commitment. The commitments are load-bearing; the narration was not.
+ * - **The build-fails-on-a-new-column line, three times down to once.** It is
+ *   one fact about how every "never" here is enforced, and repeating it per
+ *   section made each instance read as smaller than it is.
+ * - **The duplicate never-tells-you-how-to-vote line.** It belongs in the
+ *   section named for it, once.
+ *
+ * One thing was ADDED rather than cut, because the diet found it: the
+ * photographs section still described **two** doors after CLAUDE.md's rule
+ * grew to four. A page about photographs of real people cannot be out of date
+ * about which photographs it ships.
  */
 
 export const metadata = {
@@ -47,36 +66,40 @@ export default function TransparencyPage() {
 
         <p className="mt-4 text-[0.9375rem] leading-relaxed text-paper-dim">
           This is an unlisted demo, shared with a handful of people by the
-          person who built it. This page describes exactly what it records
-          today. It is short because the demo is small; it will be rewritten —
-          and dated — before this product is offered to the public.
+          person who built it. This page describes what it records today, and
+          will be rewritten — and dated — before this product is offered to
+          the public.
         </p>
 
         <Section title="What is collected">
           <p>
             When you search a zip code or tap around the map, the site logs
             the event: the zip you entered, which districts and government
-            bodies the answer involved, which meeting or body you opened,
-            which official&apos;s card you opened, which filters you used,
-            and when. That&apos;s the whole row.
+            bodies the answer involved, which meeting, body, or
+            official&apos;s card you opened, which filters you used, and when.
+            That&apos;s the whole row.
           </p>
           <p>
-            The zip is stored as an approximate location — it orients the
-            map, and it is never treated as your address or used to work out
+            The zip is stored as an approximate location. It orients the map;
+            it is never treated as your address and never used to work out
             your ballot.
           </p>
           <p>
-            The &quot;Who do I talk to about…?&quot; box works the same way.
-            Your question is matched against a fixed list of topics on your
-            device — no AI writes the answer, and every answer comes from
-            the same sourced records the rest of the site shows. When a
-            question routes to a topic, the log records the topic (like
-            &quot;libraries&quot;), not your words. When we can&apos;t route
-            a question, the log records the question&apos;s text (up to 200
-            characters) so we can learn to answer it — with nothing about
-            who asked, like every other row. Before a question is stored,
-            anything shaped like a phone number, an email address, or a
-            street address is automatically blanked out. Even so, please
+            The &quot;Who do I talk to about…?&quot; box matches your question
+            against a fixed list of topics on your device. When that match
+            doesn&apos;t decide, the question is sent to Anthropic&apos;s
+            Claude to pick which of those same topics it belongs to — that,
+            and nothing else.{" "}
+            {/* Kept on one source line: the guard in tests/ask-box.test.ts
+                pins this exact phrase, and a reflow that split it would
+                retire the no-AI guarantee by accident. */}
+            No AI writes the answer, and every answer comes from the same
+            sourced records the rest of the site shows. A question that routes
+            records the topic (like &quot;libraries&quot;), not your words. A
+            question we can&apos;t route records its text, up to 200
+            characters, so we can learn to answer it — with nothing about who
+            asked. Anything shaped like a phone number, an email address, or a
+            street address is automatically blanked out first. Even so, please
             don&apos;t put personal details in a question.
           </p>
         </Section>
@@ -85,44 +108,37 @@ export default function TransparencyPage() {
           <p>
             There are no accounts here, and the log has no identity in it: no
             name, no email, no phone number, no device identifier, no
-            fingerprint, no IP address kept, no cookie that tracks you, and
-            no ID that links one of your visits to another. The database
-            table these events land in has no column that could hold any of
-            that — and an automated test fails the build if one is ever
-            added.
+            fingerprint, no IP address kept, no cookie that tracks you, and no
+            ID that links one of your visits to another. The table these
+            events land in has no column that could hold any of it.
           </p>
           <p>
-            Your zip and display preferences are kept in your own
-            browser&apos;s storage so the map remembers where you were. They
-            stay on your device; only the zip itself is sent when the site
+            Every &quot;never&quot; on this page is enforced in the database
+            schema and in automated tests: the build fails if a column, or a
+            route that could write one, is ever added.
+          </p>
+          <p>
+            Your zip, your display preferences, and any narrowing to a
+            municipality, school district, or street stay in your own
+            browser&apos;s storage. Only the zip is sent, when the site
             fetches the meetings near it.
           </p>
           <p>
-            If you narrow your zip to your municipality, school district, or
-            street, that choice is kept only in your browser&apos;s storage.
-            The street you type is first matched against a list downloaded to
+            A street you type is first matched against a list downloaded to
             your device. To put it on the map as an actual point, your address
             passes through our server to the U.S. Census Bureau&apos;s free
-            address lookup: we never store it and never log it — it exists in
-            memory for the length of that one request and is gone. Nothing
-            about it is written down anywhere, and an automated test fails the
-            build if that route ever gains a way to write. It is never tied to
-            an account.
+            address lookup: we never store or log it — it exists in memory for
+            the length of that one request and is gone. It is never tied to an
+            account.
           </p>
           <p>
             If you mark how you&apos;d vote on the ballot page (&quot;my
             picks&quot;), those picks are saved only in your browser&apos;s
-            storage on your device. They are never sent anywhere, never
-            logged, never aggregated, and the database has no column that
-            could hold them — an automated test fails the build if one is
-            ever added. This is different from the yes/no/unsure reaction
-            buttons, which do join anonymous local totals and say so where
-            you tap them.
-          </p>
-          <p>
-            The &quot;my picks card&quot; image is drawn on your device from
-            that same local list. Creating, screenshotting, or downloading
-            it sends nothing to us.
+            storage, and are never sent anywhere, never logged, never
+            aggregated. The picks card image is drawn on your device from that
+            same local list; creating, screenshotting, or downloading it sends
+            nothing to us. This is different from the reaction buttons, which
+            do join anonymous local totals and say so where you tap them.
           </p>
         </Section>
 
@@ -130,41 +146,39 @@ export default function TransparencyPage() {
           <p>
             Some vote records ask &quot;Do you like this vote?&quot; and
             ballot candidates ask &quot;Would you vote for them?&quot; — each
-            with Yes, No, and Unsure buttons. Where a race has only one
-            candidate on the ballot, a fourth button — &quot;Someone
-            else&quot; — appears as well, because in a race with no choice
-            the other three cannot tell us whether you actually wanted this
-            person. That fourth answer is offered, and accepted, only in
-            those one-candidate races. The first time you ever answer,
-            a one-time notice explains this and asks you to OK it before
-            anything is recorded; it never repeats after that. When you
-            answer, the site stores: your answer, which vote or candidate it
-            was about, roughly where you were looking (the districts around
-            the zip or map area — never an address), the time, and a
-            verification tier. Your answers never affect how candidates are
-            shown, to you or anyone — nothing here ranks or recommends. Today every answer
-            is stored as unverified-anonymous; if we ever add ways to verify
-            answers, verified and unverified counts will always be reported
-            separately.
+            with Yes, No, and Unsure. Where a race has only one candidate on
+            the ballot, a fourth button — &quot;Someone else&quot; — appears
+            as well, because in a race with no choice the other three
+            can&apos;t tell us whether you actually wanted this person. That
+            fourth answer is offered, and accepted, only in those
+            one-candidate races.
           </p>
           <p>
-            So you can change your answer later, your browser makes up a
-            random key the first time you react (kept in your browser&apos;s
-            own storage) and sends it with each answer. We store only a
-            scrambled (hashed) form of it. That key relates your
+            The first time you ever answer, a one-time notice explains this
+            and asks you to OK it before anything is recorded; it never
+            repeats. Each answer stores your answer, which vote or candidate
+            it was about, roughly where you were looking (the districts around
+            the zip or map area — never an address), the time, and a
+            verification tier. Today every answer is stored as
+            unverified-anonymous; if we ever add ways to verify answers,
+            verified and unverified counts will always be reported separately.
+          </p>
+          <p>
+            So you can change an answer later, your browser makes up a random
+            key the first time you react and sends it with each answer. We
+            store only a scrambled (hashed) form of it. That key relates your
             browser&apos;s answers to each other and to nothing else: it is
             not tied to any account, appears in no other table, and is never
             included in anything shared or licensed. If you clear your
             browser&apos;s storage, your earlier answers simply can&apos;t be
-            edited any more — they remain as anonymous rows. This is the
-            difference between a device-continuity token and tracking, and we
-            would rather say it plainly than have you wonder.
+            edited any more — they remain as anonymous rows.
           </p>
           <p>
             Nobody&apos;s answers — including totals — are ever shown to
-            anyone on this site. Area-level totals of answers, split by
-            verification tier, may be licensed to political organizations —
-            that&apos;s what keeps this free to use; never anything containing
+            anyone on this site, and your answers never affect how candidates
+            are shown, to you or to anyone. Area-level totals, split by
+            verification tier, may be licensed to political organizations;
+            that&apos;s what keeps this free to use. Never anything containing
             or traceable to a person.
           </p>
           <p>
@@ -172,11 +186,11 @@ export default function TransparencyPage() {
             often one device can submit answers. Submissions faster than any
             person could tap are refused, and answers that arrive at a
             suspicious pace are stored but set aside — they never enter any
-            total. You would only ever notice these limits if you were
-            running a script. The counters that enforce them are kept apart
-            from your answers in a form that can&apos;t be connected to
-            them, hold nothing but how often — never what or who — and are
-            deleted within two days.
+            total. You would only notice these limits if you were running a
+            script. The counters that enforce them are kept apart from your
+            answers in a form that can&apos;t be connected to them, hold
+            nothing but how often — never what or who — and are deleted within
+            two days.
           </p>
         </Section>
 
@@ -191,44 +205,47 @@ export default function TransparencyPage() {
             own records. We add nothing to it and characterize nobody by it.
           </p>
           <p>
-            The funding displays have the same yes/no/unsure reaction buttons
-            as votes and candidates, and the same rules apply — stored
-            anonymously, never shown back to anyone. One difference, stated
-            plainly: while a legal question about commercial use of FEC
-            contributor data is open, <strong>reactions to funding displays
-            are excluded from anything licensed to anyone</strong>. That
-            exclusion is enforced by a named switch in the code, and only
-            counsel can close it. If it closes, this page changes in the
-            same release.
+            Funding displays carry reaction buttons: &quot;How do you feel
+            about how this campaign is funded?&quot; — love it, like it,
+            don&apos;t like it, hate it, don&apos;t care. Your answer is
+            stored anonymously, is never shown back to you or anyone else,
+            and may inform aggregate research products. What is ever licensed
+            is what readers felt about a display — never the campaign-finance
+            data itself, which is the FEC&apos;s and is public already.
+          </p>
+          <p>
+            These buttons asked a yes/no/unsure question until 15 August
+            2026. Answers from before that date are kept separately and are
+            never combined with answers from after it: the question changed,
+            so the two are not the same measurement.
           </p>
           <p>
             Where a contributor is itself a committee, its label — a super
-            PAC, a leadership PAC, a PAC connected to a corporation, a
-            union, a trade association — comes only from the codes that
-            committee filed with the FEC, and tapping the label shows the
-            FEC&apos;s own definition. We never decide what kind of group
-            something is from its name, and where the FEC does not classify
-            a committee, the label stays general.
+            PAC, a leadership PAC, a PAC connected to a corporation, a union,
+            a trade association — comes only from the codes that committee
+            filed with the FEC, and tapping the label shows the FEC&apos;s own
+            definition. We never decide what kind of group something is from
+            its name, and where the FEC does not classify a committee, the
+            label stays general.
           </p>
         </Section>
 
-        {/* Door 2 of the photo rule (2026-08-14): an official
-            government-published portrait ships with attribution and a
-            documented remove-on-request posture. The posture has to be
-            written down where the person pictured can find it, which is
-            here — the rule and this paragraph land in the same commit. */}
+        {/* The photo rule's four doors (CLAUDE.md, 2026-08-13 through
+            2026-08-15). The posture has to be written down where the person
+            pictured can find it, which is here. */}
         <Section title="Photographs of officials">
           <p>
-            Photographs of officials and candidates come from one of two
-            places, and we record which for every single one. Either the
-            photo carries an explicit licence — a public-domain government
-            work, or an openly licensed image with its licence and
-            photographer recorded — or it is the official portrait a
-            government body publishes to identify its own member, used with
-            a link to the page it came from and credit to that body.
-            Photographs a working photographer is likely to own — campaign
-            headshots, press pictures, wire images — are only ever used with
-            an explicit licence.
+            Every photograph records where it came from, and it has to be one
+            of four things: an explicitly licensed image (a public-domain
+            government work, or an openly licensed one with its licence
+            recorded); the official portrait a government body publishes to
+            identify its own member, credited to that body; a portrait the
+            campaign publishes of its own candidate on its own site; or, as a
+            last resort, a portrait published on a .gov site. Photographs a
+            working photographer is likely to own — press pictures, wire
+            images, anything carrying a photographer&apos;s credit — are only
+            ever used with an explicit licence, and social-media images never
+            are.
           </p>
           <p>
             If you are pictured here and would like your photograph removed,
@@ -255,10 +272,8 @@ export default function TransparencyPage() {
             licensed to anyone; if that changes, this page changes first.
           </p>
           <p>
-            Because the log has no identity in it, there is nothing anyone —
-            including us — could use to trace a row back to you. That
-            property is the deal, and it is enforced in the schema, not just
-            promised here.
+            Because the log holds no identity, there is nothing anyone —
+            including us — could use to trace a row back to you.
           </p>
         </Section>
 
@@ -266,14 +281,11 @@ export default function TransparencyPage() {
           <p>
             It never tells you how to vote. It never ranks candidates, never
             scores how well anyone &quot;matches&quot; you, and never orders
-            candidates by anything except neutral order like the ballot&apos;s
-            own. Positions shown are always sourced to a specific statement,
-            vote, or filing — where no source exists, it says so instead of
-            guessing.
-          </p>
-          <p className="mt-3">
-            Ballot information is presented as filed with election
-            authorities; we never suggest how to vote.
+            candidates by anything except a neutral order like the
+            ballot&apos;s own. Ballot information is shown as filed with
+            election authorities, and positions are always sourced to a
+            specific statement, vote, or filing — where no source exists, it
+            says so instead of guessing.
           </p>
         </Section>
 

@@ -79,6 +79,13 @@ export interface TopicMatch {
   topicId: string;
   /** The words that carried the match — the mechanical evidence. */
   matchedOn: string[];
+  /**
+   * Which rung found this topic (6d, 2026-08-15). Absent means the keyword
+   * matcher, which is the only rung that carries `matchedOn` evidence — a
+   * classifier match has none to carry, and saying so is what keeps the two
+   * distinguishable in the log and in a later audit.
+   */
+  via?: "classifier";
 }
 
 function normalize(text: string): string {

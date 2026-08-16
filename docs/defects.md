@@ -293,3 +293,35 @@ at session-open. Row pointers:
 - Recorded, not built, in the brief's own cut order: **6c** (school-life
   routing), **6d** (the ask-box classifier), **6f**/**M81** (the jurisdiction
   badge), **7b**/**R16** (the 81 session-label dates), and item 5's sweep.
+
+## 2026-08-15 — the session brief (the truth session)
+
+The author's directive again arrived as the session brief rather than as
+entries here; the brief is committed at `docs/session-brief.md` for the
+record, and the narrative is `state.md` §29. **No untriaged entries were
+found at session-open** — every entry in this file already carries its row
+pointer. Row pointers for what the brief asked:
+
+- The browser rung; Kearsarge's calendar and Newbury's three land-use boards
+  → **M79** (Done). The obvious guess was wrong: a Chrome User-Agent is not
+  the rung — Node's fetch with a full browser header set is still 403'd and
+  `curl` with the identical headers is served, so the filter reads the
+  TLS/HTTP2 fingerprint.
+- EVERY division battlecard denying its officeholders → **M86** (Done).
+  Diagnosed before fixing, and the diagnosis narrows the report: the large
+  card asked the curated rosters alone, so the twelve congressional /
+  state-house / state-senate cards denied their own members while county,
+  municipal and school cards were already right.
+- The districts counter → **M87** (Done). Both modes, both guarded.
+- The funding-reactions ripcord, the five-point question, scale versioning →
+  **D61** (Done), with the author's ruling recorded verbatim.
+- The transparency diet → **M88** (Done). Found BY the read-aloud: the
+  photographs section still described two doors after the photo rule grew to
+  four.
+- The Level 1 classifier → **A12** (Done), verified live at 85701.
+- The law rows' roll calls → **B17** (Done), 0 of 20 to 18 of 20. Found BY
+  the work: matching BSCA's "final passage" on the literal words picked the
+  House's May passage of its own unrelated version of the bill, not the June
+  concurrence that is the vote on the gun law.
+- Recorded, not built: **B18** (town halls) and **D62** (the PRL evaluation).
+- Cut per the brief's own order: **X07**'s sweep, **R16**, 6c, **M81**.

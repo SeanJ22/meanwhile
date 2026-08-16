@@ -65,23 +65,134 @@ export const FUNDING_REACTION_TYPES: ReactionTargetType[] = [
  * derives the permitted set from the committed ballot data, so a contest
  * stops qualifying the moment a second candidate files.
  */
-export type ReactionValue = "YES" | "NO" | "UNSURE" | "SOMEONE_ELSE";
+/**
+ * The five-point funding scale (2026-08-15, the author's design).
+ *
+ * "Would you vote for someone whose campaign is funded this way?" asked the
+ * reader to convert a feeling about money into a voting intention, which is
+ * two questions wearing one button row. The funding surfaces now ask the
+ * question they are actually about — *how do you feel about how this campaign
+ * is funded* — on a five-point scale with an explicit way to say the honest
+ * fifth answer, which on a funding display is very often the true one.
+ *
+ * These five are accepted on FUNDING targets and refused everywhere else, the
+ * same way `SOMEONE_ELSE` is refused outside a one-candidate contest. Votes
+ * and candidates keep yes/no/unsure.
+ */
+export type ReactionValue =
+  | "YES"
+  | "NO"
+  | "UNSURE"
+  | "SOMEONE_ELSE"
+  | "LOVE"
+  | "LIKE"
+  | "DISLIKE"
+  | "HATE"
+  | "DONT_CARE";
 export const REACTION_VALUES: ReactionValue[] = [
   "YES",
   "NO",
   "UNSURE",
   "SOMEONE_ELSE",
+  "LOVE",
+  "LIKE",
+  "DISLIKE",
+  "HATE",
+  "DONT_CARE",
 ];
 
 /**
- * Values whose meaning depends on the contest's shape, and the shape they
- * require. A value listed here is refused wherever that context does not
- * hold — the server-side validity table the value ships with.
+ * **Scale versions — the data-honesty mechanic** (2026-08-15).
+ *
+ * A reaction row means nothing without the instrument that produced it. The
+ * funding surfaces asked a yes/no/unsure question until 2026-08-15 and ask a
+ * five-point question after it: those are **different instruments**, and rows
+ * from the two are not comparable in any direction. Averaging them, summing
+ * them, or reporting them under one denominator would be a fabricated trend —
+ * the numbers would move because the question changed and nothing else.
+ *
+ * So every row carries the version of the scale it was collected on, the
+ * aggregator groups by it, and the break is dated below where a buyer reading
+ * an export can find it. Nothing migrates: v1 funding rows stay exactly what
+ * they were, answers to a question we no longer ask.
  */
+export type ScaleVersion = 1 | 2;
+
+export interface ReactionScale {
+  version: ScaleVersion;
+  /** The values this scale admits, in the order a surface offers them. */
+  values: ReactionValue[];
+  /** What this instrument asks, for the record that travels with an export. */
+  question: string;
+}
+
+export const SCALE_V1: ReactionScale = {
+  version: 1,
+  values: ["YES", "NO", "UNSURE", "SOMEONE_ELSE"],
+  question: "Would you vote for someone who holds this position?",
+};
+
+export const SCALE_V2_FUNDING: ReactionScale = {
+  version: 2,
+  values: ["LOVE", "LIKE", "DISLIKE", "HATE", "DONT_CARE"],
+  question: "How do you feel about how this campaign is funded?",
+};
+
+/**
+ * When the funding instrument changed, and from what to what.
+ *
+ * Recorded here rather than in a comment because it has to travel: an export
+ * carrying both v1 and v2 funding rows must be able to say why they are in
+ * separate columns, and "the question changed on this date" is the only
+ * answer that makes the two honest side by side.
+ */
+export const SCALE_BREAKS: Array<{
+  targetTypes: string[];
+  date: string;
+  from: ScaleVersion;
+  to: ScaleVersion;
+  why: string;
+}> = [
+  {
+    targetTypes: ["FUNDING_TOTAL_REACTION", "CONTRIBUTOR_REACTION"],
+    date: "2026-08-15",
+    from: 1,
+    to: 2,
+    why: "The funding question changed from a voting-intention yes/no/unsure to a five-point feeling about the funding itself. Rows either side are different instruments and are never combined.",
+  },
+];
+
+/** The scale a target type is collected on TODAY. Server-decided, never sent. */
+export function scaleForTargetType(targetType: ReactionTargetType): ReactionScale {
+  return FUNDING_REACTION_TYPES.includes(targetType) ? SCALE_V2_FUNDING : SCALE_V1;
+}
+
+/** The values a scale admits, for a lookup that reads as a lookup. */
+export function valuesForScaleVersion(version: ScaleVersion): ReactionValue[] {
+  return version === 2 ? SCALE_V2_FUNDING.values : SCALE_V1.values;
+}
+
+/**
+ * Values whose meaning depends on their context, and the context they
+ * require. A value listed here is refused wherever that context does not
+ * hold — the server-side validity table each value ships with.
+ *
+ * `SINGLE_CANDIDATE_CONTEST` — "Someone else" only means what it says in a
+ * race with one candidate.
+ * `FUNDING_TARGET` — the five-point scale is a question about money, and the
+ * same word means something different asked about a person.
+ */
+export type ValueContext = "SINGLE_CANDIDATE_CONTEST" | "FUNDING_TARGET";
+
 export const CONTEXT_RESTRICTED_VALUES: Readonly<
-  Partial<Record<ReactionValue, "SINGLE_CANDIDATE_CONTEST">>
+  Partial<Record<ReactionValue, ValueContext>>
 > = {
   SOMEONE_ELSE: "SINGLE_CANDIDATE_CONTEST",
+  LOVE: "FUNDING_TARGET",
+  LIKE: "FUNDING_TARGET",
+  DISLIKE: "FUNDING_TARGET",
+  HATE: "FUNDING_TARGET",
+  DONT_CARE: "FUNDING_TARGET",
 };
 
 /**
@@ -115,6 +226,23 @@ export function isValidTargetType(value: unknown): value is ReactionTargetType {
 
 export function isValidReactionValue(value: unknown): value is ReactionValue {
   return typeof value === "string" && (REACTION_VALUES as string[]).includes(value);
+}
+
+/**
+ * Is this answer on the scale this target is collected on?
+ *
+ * The stricter half of the validity table, and it runs in BOTH directions: a
+ * five-point answer is refused on a vote, and yes/no/unsure is refused on a
+ * funding target. The second direction is what makes the scale break clean —
+ * without it a stale client would keep writing v1 rows into a v2 column and
+ * the two instruments would silently blend, which is the exact thing the
+ * versioning exists to prevent.
+ */
+export function isValueOnScaleFor(
+  targetType: ReactionTargetType,
+  value: ReactionValue,
+): boolean {
+  return scaleForTargetType(targetType).values.includes(value);
 }
 
 /**

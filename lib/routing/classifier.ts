@@ -1,0 +1,234 @@
+import { scrubFreeText } from "../log/scrub.ts";
+
+import { TOPIC_ROUTES } from "./topics.ts";
+
+/**
+ * **The Level 1 classifier — 6d, built 2026-08-15.**
+ *
+ * The ask box matches a question against curated keyword lists (`match.ts`)
+ * and refuses when the evidence does not decide. That refusal is honest and
+ * it is also the product's biggest gap: the refusal log is full of questions
+ * a person could route in a second — "who fixes the light outside my house",
+ * "the field behind the school is flooded" — that share no keyword with any
+ * curated list.
+ *
+ * This is the second rung, and it is deliberately the *smallest* thing that
+ * closes that gap:
+ *
+ * - **Keyword-first, always.** The classifier is only consulted when
+ *   `matchTopic` returns null. A question the deterministic matcher can route
+ *   never leaves the device, and the classifier can never overrule it.
+ * - **A closed enum, twice.** The model is given the curated topic ids and
+ *   told to answer with exactly one of them or `NONE`, through a JSON schema
+ *   that constrains the response — and the answer is then checked against the
+ *   same list here, because a schema is a contract with a server and this is
+ *   a claim about a government.
+ * - **It picks a topic. It never writes one.** The reader-facing answer is
+ *   the same curated route the keyword path produces, assembled from the same
+ *   registry and the same sourced people. **No sentence a reader sees is ever
+ *   generated** — the model's entire output is one identifier out of a fixed
+ *   list, and nothing else it says is read. That is what keeps this inside
+ *   CLAUDE.md's no-generation rule rather than beside it.
+ * - **The question is scrubbed before it leaves.** The same scrub the refusal
+ *   log runs — phone-, email- and address-shaped text blanked — applies here
+ *   too, so nothing shaped like a personal detail is sent anywhere.
+ * - **A cache and a ceiling.** Identical questions are answered from memory;
+ *   a daily call ceiling bounds spend, and the ceiling REFUSES rather than
+ *   degrading — an over-ceiling ask gets the honest keyword refusal it would
+ *   have had, never a worse answer dressed as an answer.
+ * - **`ripcord.askClassifier`.** One flag turns the rung off entirely and the
+ *   box returns to keyword-only, which is a complete product on its own.
+ *
+ * Nothing here is client-reachable: the route is the only caller, the key
+ * never leaves the server, and the question is not stored by this module.
+ */
+
+/** The answer this rung is allowed to give: one curated topic, or nothing. */
+export const NO_TOPIC = "NONE";
+
+export type ClassifierOutcome =
+  | { kind: "TOPIC"; topicId: string }
+  | { kind: "NONE" }
+  /** The rung did not run. The caller falls back to the keyword refusal. */
+  | { kind: "UNAVAILABLE"; why: "ripcord" | "ceiling" | "no-key" | "error" };
+
+/** Every id the model may answer with. Read off the curated routes. */
+export function classifiableTopicIds(): string[] {
+  return TOPIC_ROUTES.map((route) => route.id);
+}
+
+/**
+ * The model's whole instruction. Deliberately short and deliberately about
+ * *choosing*, not about writing: the words "answer", "explain" and "advise"
+ * do not appear, because the model is not doing any of those things.
+ */
+export function classifierPrompt(): string {
+  const lines = TOPIC_ROUTES.map((route) => `${route.id}: ${route.label}`);
+  return [
+    "You are labelling one question with one topic from a fixed list.",
+    "The question comes from a resident of a US town asking who in local, state, or federal government handles a problem.",
+    "",
+    "The topics:",
+    ...lines,
+    "",
+    `Answer with exactly one id from that list, or ${NO_TOPIC} if the question does not clearly belong to any of them.`,
+    `${NO_TOPIC} is a correct and expected answer. Do not stretch a question to fit a topic.`,
+    "Do not explain, do not add anything, and do not answer the question itself.",
+  ].join("\n");
+}
+
+/** The JSON schema the response is constrained to — the enum, on the wire. */
+export function classifierSchema(): Record<string, unknown> {
+  return {
+    type: "object",
+    properties: {
+      topic: { type: "string", enum: [...classifiableTopicIds(), NO_TOPIC] },
+    },
+    required: ["topic"],
+    additionalProperties: false,
+  };
+}
+
+/**
+ * Validate the model's answer against the closed list.
+ *
+ * Belt and braces over the schema: the schema is a promise made by a server,
+ * and an id that reached the routing map without being on this list would be
+ * a route this product never curated. Anything unrecognised is `NONE`.
+ */
+export function readClassifierAnswer(raw: unknown): ClassifierOutcome {
+  if (typeof raw !== "string") return { kind: "NONE" };
+  const value = raw.trim();
+  if (value === NO_TOPIC) return { kind: "NONE" };
+  return classifiableTopicIds().includes(value)
+    ? { kind: "TOPIC", topicId: value }
+    : { kind: "NONE" };
+}
+
+/** Normalized cache key — the same question asked twice costs once. */
+export function cacheKey(question: string): string {
+  return question.toLowerCase().replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
+}
+
+/**
+ * The in-process cache and the daily ceiling.
+ *
+ * Both are per-instance and deliberately so: this is a cost bound and a
+ * repeat-question saver, not a store. Nothing here is keyed to a person —
+ * the cache key is the question's own words, the counter is a bare integer,
+ * and neither is written anywhere or joined to anything. The reaction store's
+ * n-stores rule is not in play because there is no store.
+ */
+const CACHE_MAX = 500;
+const cache = new Map<string, ClassifierOutcome>();
+let spentOn = "";
+let spent = 0;
+
+export function classifierCeiling(): number {
+  const raw = Number(process.env.WTP_ASK_CLASSIFIER_DAILY_MAX);
+  return Number.isFinite(raw) && raw > 0 ? Math.floor(raw) : 500;
+}
+
+/** Today in UTC — the counter's own day, not the reader's. */
+function today(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
+export function classifierSpendToday(): { day: string; calls: number; ceiling: number } {
+  if (spentOn !== today()) return { day: today(), calls: 0, ceiling: classifierCeiling() };
+  return { day: spentOn, calls: spent, ceiling: classifierCeiling() };
+}
+
+/** Test seam — the suite must never inherit another test's counter. */
+export function resetClassifierState(): void {
+  cache.clear();
+  spentOn = "";
+  spent = 0;
+}
+
+function noteCall(): boolean {
+  const day = today();
+  if (spentOn !== day) {
+    spentOn = day;
+    spent = 0;
+  }
+  if (spent >= classifierCeiling()) return false;
+  spent += 1;
+  return true;
+}
+
+const MESSAGES_URL = "https://api.anthropic.com/v1/messages";
+
+/**
+ * The model. `claude-opus-5` deliberately, at `low` effort with thinking off:
+ * the task is one label out of sixteen, and the cost lever this session pulls
+ * is effort and the ceiling, never a quieter model chosen on the reader's
+ * behalf.
+ */
+const MODEL = "claude-opus-5";
+
+export interface ClassifyOptions {
+  /** Overridden in tests so the suite never touches the network. */
+  fetchImpl?: typeof fetch;
+}
+
+/**
+ * Classify one question. Returns `UNAVAILABLE` for every reason the rung did
+ * not run, and the caller renders the honest keyword refusal in each case —
+ * a classifier that quietly guesses when it is switched off would be worse
+ * than one that never existed.
+ */
+export async function classifyQuestion(
+  question: string,
+  options: ClassifyOptions = {},
+): Promise<ClassifierOutcome> {
+  const key = cacheKey(question);
+  if (!key) return { kind: "NONE" };
+  const hit = cache.get(key);
+  if (hit) return hit;
+
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) return { kind: "UNAVAILABLE", why: "no-key" };
+  if (!noteCall()) return { kind: "UNAVAILABLE", why: "ceiling" };
+
+  const impl = options.fetchImpl ?? fetch;
+  try {
+    const response = await impl(MESSAGES_URL, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: 64,
+        // Thinking off and effort low: the answer is one identifier, and
+        // disabling thinking is permitted at `high` or below.
+        thinking: { type: "disabled" },
+        output_config: {
+          effort: "low",
+          format: { type: "json_schema", schema: classifierSchema() },
+        },
+        system: classifierPrompt(),
+        // The scrub the refusal log already runs. Nothing shaped like a
+        // phone number, an email address or a street address leaves here.
+        messages: [{ role: "user", content: scrubFreeText(question) }],
+      }),
+    });
+    if (!response.ok) return { kind: "UNAVAILABLE", why: "error" };
+
+    const body = (await response.json()) as {
+      content?: Array<{ type?: string; text?: string }>;
+    };
+    const text = body.content?.find((b) => b.type === "text")?.text ?? "";
+    const parsed = JSON.parse(text) as { topic?: unknown };
+    const outcome = readClassifierAnswer(parsed.topic);
+    if (cache.size >= CACHE_MAX) cache.clear();
+    cache.set(key, outcome);
+    return outcome;
+  } catch {
+    // Every failure is the same answer to the reader: the keyword refusal.
+    return { kind: "UNAVAILABLE", why: "error" };
+  }
+}

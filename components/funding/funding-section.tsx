@@ -53,10 +53,16 @@ export function FundingDisplay({
           {sentence}
         </p>
       ))}
+      {/* The author's question, 2026-08-15. The old wording — "Would you
+          vote for someone whose campaign is funded this way?" — asked the
+          reader to convert a feeling about money into a voting intention,
+          which is two questions in one button row. This asks the one the
+          display is actually about, on the five-point scale the server
+          accepts for funding targets and nothing else. */}
       <ReactionControl
         targetType="FUNDING_TOTAL_REACTION"
         targetId={data.fecCandidateId}
-        prompt="Would you vote for someone whose campaign is funded this way?"
+        prompt="How do you feel about how this campaign is funded?"
         context={context}
       />
 
@@ -89,7 +95,7 @@ export function FundingDisplay({
           <ReactionControl
             targetType="CONTRIBUTOR_REACTION"
             targetId={data.fecCandidateId}
-            prompt="Would you vote for someone with these contributors?"
+            prompt="How do you feel about how this campaign is funded?"
             context={context}
           />
         </div>

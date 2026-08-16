@@ -339,13 +339,25 @@ test("07866 counts its two school districts separately", () => {
   );
 });
 
-test("03255 resolves the town, deduped to one municipal body", () => {
+test("03255 resolves the town, deduped to one municipal division", () => {
   // Newbury NH is a county subdivision and absent from the place file. Nothing
   // should double it, and the town government must survive the dedupe.
+  //
+  // **The claim is one DIVISION, not one body** (corrected 2026-08-15, the
+  // truth session). This asserted one municipal body until the browser rung
+  // reached the town's own site and found the Planning Board, the
+  // Conservation Commission and the Zoning Board of Adjustment sitting beside
+  // the Selectboard — one division, many bodies, which the registry has
+  // always said is the normal case and which Tucson and Rockaway already
+  // demonstrate. The dedupe this test guards is of the DIVISION; a body count
+  // standing in for it would have made finding a town's other governments
+  // look like a regression.
   const coverage = coverageFor("03255", 0);
   const municipal = coverage.bodies.filter((b) => b.divisionType === "place");
+  const divisions = new Set(municipal.map((b) => b.divisionLabel));
 
-  assert.equal(municipal.length, 1, `expected one town, got ${municipal.length}`);
+  assert.equal(divisions.size, 1, `expected one town, got ${[...divisions].join(", ")}`);
   assert.match(municipal[0].divisionLabel, /newbury/i);
+  assert.ok(municipal.length >= 4, `expected the town's four bodies, got ${municipal.length}`);
   assert.equal(coverage.unincorporated, false);
 });

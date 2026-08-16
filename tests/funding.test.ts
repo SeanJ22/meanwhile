@@ -189,8 +189,13 @@ test("D40: no query-keyed API route marks itself publicly cacheable", () => {
 // ── The ripcord registry ─────────────────────────────────────────────────
 
 test("every ripcord is registered with question, closer, and tracker rows", () => {
-  // T08 added the two intake ripcords beside the FEC pair.
+  // T08 added the two intake ripcords beside the FEC pair; 6d added the ask
+  // box's classifier (2026-08-15). The list is exact rather than a minimum:
+  // a ripcord that appears without its question, closer and tracker row is
+  // the doctrine's whole failure mode, and an exact list is what forces a
+  // new one through the checks below.
   assert.deepEqual(RIPCORD_NAMES.sort(), [
+    "ripcord.askClassifier",
     "ripcord.fecContributorDisplay",
     "ripcord.fundingReactionsInAggregates",
     "ripcord.rateLimits",
@@ -217,9 +222,23 @@ test("every ripcord is registered with question, closer, and tracker rows", () =
   }
 });
 
-test("ripcord.fundingReactionsInAggregates SHIPS pulled; contributor display ships live", () => {
-  assert.equal(RIPCORDS["ripcord.fundingReactionsInAggregates"].pulled, true);
+test("the two funding ripcords ship in the states their questions put them in", () => {
+  // The aggregates ripcord shipped PULLED on 2026-08-18 and was flipped LIVE
+  // on 2026-08-15 by the author's ruling: what is licensed is
+  // reader-attention signal — anonymous opinions about a display — and never
+  // FEC-derived data. The switch stays as a belt, so a re-pull is one flag.
+  assert.equal(RIPCORDS["ripcord.fundingReactionsInAggregates"].pulled, false);
+  assert.match(
+    RIPCORDS["ripcord.fundingReactionsInAggregates"].closer,
+    /Author-ruled/,
+    "a flipped ripcord must name who ruled it, not the closer it no longer waits on",
+  );
+
+  // The SEPARATE question — commercial use of FEC contributor DATA under
+  // § 30111(a)(4) — is untouched by that ruling and is still counsel's.
   assert.equal(RIPCORDS["ripcord.fecContributorDisplay"].pulled, false);
+  assert.match(RIPCORDS["ripcord.fecContributorDisplay"].closer, /Counsel/);
+  assert.match(RIPCORDS["ripcord.fecContributorDisplay"].question, /30111/);
 });
 
 // ── Flag flips — each ripcord demonstrably functional in both positions ──
@@ -239,7 +258,10 @@ function withEnv<T>(name: string, value: string | undefined, fn: () => T): T {
 const fundingRow = {
   targetType: "FUNDING_TOTAL_REACTION" as const,
   targetId: snapshot.candidates[0]?.fecCandidateId ?? "H0XX00000",
-  reaction: "YES" as const,
+  // The five-point scale, which is the only one a funding target accepts
+  // from 2026-08-15 — the write path refuses YES here in both directions.
+  reaction: "LOVE" as const,
+  scaleVersion: 2 as const,
   ocdIds: ["ocd-division/country:us/state:az"],
   verificationTier: "ANONYMOUS" as const,
 };
@@ -248,27 +270,37 @@ const voteRow = {
   ...fundingRow,
   targetType: "FEDERAL_VOTE" as const,
   targetId: "house:119-2:283",
+  reaction: "YES" as const,
+  scaleVersion: 1 as const,
 };
 
-test("pulled (the shipped state): funding reactions are stored-but-never-aggregated", () => {
+test("live (the shipped state): funding reactions are aggregated like any other", () => {
   const tallies = aggregateReactions([fundingRow, contributorRow, voteRow]);
-  assert.equal(tallies.length, 1, "funding rows leaked into aggregation");
-  assert.equal(tallies[0].targetType, "FEDERAL_VOTE");
+  assert.equal(tallies.length, 3, "a funding row was filtered while the flag is live");
   const eligible = rowsEligibleForAggregation([fundingRow, contributorRow, voteRow]);
-  assert.deepEqual(eligible.map((r) => r.targetType), ["FEDERAL_VOTE"]);
   for (const type of FUNDING_REACTION_TYPES) {
-    assert.ok(!eligible.some((r) => r.targetType === type));
+    assert.ok(
+      eligible.some((r) => r.targetType === type),
+      `${type} was filtered out of a live aggregate`,
+    );
   }
 });
 
-test("flip: closing the aggregates ripcord admits funding reactions (env override)", () => {
-  withEnv("WTP_RIPCORD_FUNDING_REACTIONS_IN_AGGREGATES", "live", () => {
-    assert.equal(ripcordPulled("ripcord.fundingReactionsInAggregates"), false);
-    const tallies = aggregateReactions([fundingRow, voteRow]);
-    assert.equal(tallies.length, 2, "closed ripcord should admit funding rows");
+test("flip: pulling the aggregates ripcord still filters funding reactions (env override)", () => {
+  // The belt, demonstrated in the position it is not shipped in. The
+  // machinery, the provenance tags and the filter are unchanged by the
+  // ruling — a re-pull is one flag and it is still a filter, never a
+  // migration or a hunt.
+  withEnv("WTP_RIPCORD_FUNDING_REACTIONS_IN_AGGREGATES", "pulled", () => {
+    assert.equal(ripcordPulled("ripcord.fundingReactionsInAggregates"), true);
+    const tallies = aggregateReactions([fundingRow, contributorRow, voteRow]);
+    assert.equal(tallies.length, 1, "a pulled ripcord let funding rows through");
+    assert.equal(tallies[0].targetType, "FEDERAL_VOTE");
+    const eligible = rowsEligibleForAggregation([fundingRow, contributorRow, voteRow]);
+    assert.deepEqual(eligible.map((r) => r.targetType), ["FEDERAL_VOTE"]);
   });
-  // And back: the committed state still filters.
-  assert.equal(ripcordPulled("ripcord.fundingReactionsInAggregates"), true);
+  // And back: the committed state aggregates.
+  assert.equal(ripcordPulled("ripcord.fundingReactionsInAggregates"), false);
 });
 
 test("flip: pulling the contributor ripcord empties the display and its write path", () => {
@@ -310,10 +342,36 @@ test("the aggregation layer never imports the funding corpus", () => {
 });
 
 test("aggregate output can never carry a contributor name", () => {
-  // Structural: the tally shape is counts keyed by division and target id.
+  // Structural: the tally shape is counts keyed by division and target id,
+  // plus the instrument that produced them (2026-08-15). `question` is our
+  // own words for the question we asked — never anything read off a filing.
   const tallies = aggregateReactions([voteRow]);
   const keys = Object.keys(tallies[0]).sort();
-  assert.deepEqual(keys, ["n", "ocdId", "targetId", "targetType", "tiers"]);
+  assert.deepEqual(keys, [
+    "n",
+    "ocdId",
+    "question",
+    "scaleVersion",
+    "targetId",
+    "targetType",
+    "tiers",
+  ]);
+
+  // And the same holds with funding rows in the mix, which is the case that
+  // matters now that funding reactions aggregate.
+  const funding = aggregateReactions([fundingRow, contributorRow]);
+  for (const tally of funding) {
+    assert.deepEqual(Object.keys(tally).sort(), keys);
+    for (const tier of Object.values(tally.tiers)) {
+      for (const column of Object.keys(tier)) {
+        assert.match(
+          column,
+          /^(n|LOVE|LIKE|DISLIKE|HATE|DONT_CARE)$/,
+          `a funding tally grew the column ${column}`,
+        );
+      }
+    }
+  }
 });
 
 // ── The key stays in the fetch script ────────────────────────────────────
@@ -700,11 +758,29 @@ test("funding reaction target ids validate against the snapshot", () => {
 
 // ── The transparency coupling ────────────────────────────────────────────
 
-test("the transparency page discloses funding data and the aggregate exclusion", () => {
+test("the transparency page discloses funding data, the reactions and the scale break", () => {
   const page = readFileSync(join(ROOT, "app", "transparency", "page.tsx"), "utf8");
   assert.match(page, /Campaign money/);
   assert.match(page, /Federal\s+Election\s+Commission/);
-  assert.match(page, /excluded\s+from\s+anything\s+licensed/);
+
+  // The exclusion sentence is gone because the exclusion is gone (the
+  // author's ruling, 2026-08-15). What replaces it has to carry the same
+  // weight of promise, so the guard follows the commitment rather than the
+  // wording: reactions are stored anonymously, never shown back, and what is
+  // licensed is reader signal and never the FEC data itself.
+  assert.match(page, /stored\s+anonymously/);
+  assert.match(page, /never\s+shown\s+back/);
+  assert.match(page, /never\s+the\s+campaign-finance\s+data\s+itself/);
+
+  // The scale break is disclosed on the page, not only in the schema — a
+  // reader who answered the old question is told their answer is kept apart
+  // from the new one.
+  assert.match(page, /until\s+15\s+August\s+2026/);
+  assert.match(page, /never\s+combined/);
+
+  // And the page states the new question in the reader's own words.
+  assert.match(page, /How do you feel/);
+  assert.match(page, /don&apos;t care/);
 });
 
 // ── The thin-snapshot guard (session brief 2, wall clock 2026-08-14) ─────

@@ -65,18 +65,34 @@ armor on (same env-var + trigger-deploy procedure):
 | `WTP_LIMIT_LOG_IP_PER_MINUTE` | 240 | per-IP search-log window |
 | `WTP_LIMIT_LOG_DETAIL_MAX_CHARS` | 500 | server cap on any log detail string |
 
-## The FEC pair (legal, counsel closes — not operational)
+## The FEC pair
 
 Documented for completeness; the procedure is identical (env var, value
-`pulled` or `live`, trigger deploy):
+`pulled` or `live`, trigger deploy).
 
 - `ripcord.fecContributorDisplay` / `WTP_RIPCORD_FEC_CONTRIBUTOR_DISPLAY`
   — kills the contributor-level display and its reaction control. Ships
-  live. **Counsel closes the underlying question (D23), nobody else.**
+  live. **Counsel closes the underlying question (D23), nobody else.** This
+  one is unchanged: § 30111(a)(4) restricts commercial use of FEC
+  contributor DATA, and that question is still open.
+
 - `ripcord.fundingReactionsInAggregates` /
   `WTP_RIPCORD_FUNDING_REACTIONS_IN_AGGREGATES` — keeps funding reactions
-  out of aggregates and exports. **Ships pulled and stays pulled until
-  counsel closes it.** Do not set this to `live` operationally.
+  out of aggregates and exports. **Shipped pulled with D34; flipped LIVE
+  2026-08-15 on the author's ruling.**
+
+  The ruling, verbatim: *"The author rules the exclusion wrong as product
+  truth: what is licensed is reader-attention signal (anonymous reactions),
+  never FEC-derived data — a buyer receives opinions about displays, not
+  contributor records. This is the author's documented, settled position."*
+
+  The distinction the original framing collapsed: a reader's anonymous
+  feeling about a display is not contributor data and is not derived from
+  it. It carries no contributor's name, amount or filing anywhere. The
+  switch stays as a **belt, not a blocker** — the provenance tags, the
+  filter and this procedure are unchanged, so counsel (the B05 hire) may
+  re-pull it and the re-pull is still a filter, never a migration or a hunt.
+  Closer: **author-ruled; counsel review welcome and may re-pull.**
 
 ## After any pull
 

@@ -46,17 +46,39 @@ export const RIPCORDS = {
   },
   /**
    * Excludes funding reactions (FUNDING_TOTAL_REACTION and
-   * CONTRIBUTOR_REACTION rows) from aggregation and every export. Ships
-   * PULLED: funding reactions are captured and stored, and none of them
-   * enters a sellable aggregate from day one.
+   * CONTRIBUTOR_REACTION rows) from aggregation and every export.
+   *
+   * **Shipped PULLED with D34; flipped LIVE 2026-08-15 on the author's
+   * ruling.** The ruling, verbatim:
+   *
+   * > The author rules the exclusion wrong as product truth: what is
+   * > licensed is reader-attention signal (anonymous reactions), never
+   * > FEC-derived data — a buyer receives opinions about displays, not
+   * > contributor records. This is the author's documented, settled
+   * > position.
+   *
+   * The reasoning is a distinction the original framing collapsed. The
+   * § 30111(a)(4) question is about the CONTRIBUTOR DATA — whose commercial
+   * use is restricted — and it is still open, still governing
+   * `ripcord.fecContributorDisplay`, and still counsel's to close. A
+   * reader's anonymous feeling about a display is not that data and is not
+   * derived from it: it is a fact about a reader, collected by us,
+   * identifier-free, and it carries no contributor's name, amount or filing
+   * into anything.
+   *
+   * **The switch stays, as a belt rather than a blocker.** The provenance
+   * tags, the filter and the pull procedure are unchanged, so if counsel's
+   * read differs the exclusion is one flag away and is still a filter, never
+   * a migration or a hunt.
    */
   "ripcord.fundingReactionsInAggregates": {
-    pulled: true,
+    pulled: false,
     envVar: "WTP_RIPCORD_FUNDING_REACTIONS_IN_AGGREGATES",
     question:
-      "May reader reactions to campaign-finance displays enter licensed aggregates, given the § 30111(a)(4) question over the underlying contributor data (D23)?",
-    closer: "Counsel (the B05 hire) — nobody else may close it (D23)",
-    trackerRows: "D23, D34",
+      "RULED by the author 2026-08-15: what is licensed is reader-attention signal — anonymous reactions — and never FEC-derived data; a buyer receives opinions about displays, not contributor records. The separate § 30111(a)(4) question over the underlying contributor DATA is untouched by this ruling and still governs ripcord.fecContributorDisplay (D23).",
+    closer:
+      "Author-ruled 2026-08-15; counsel review welcome (the B05 hire) and may re-pull it",
+    trackerRows: "D23, D34, D61",
     filters:
       "FUNDING_TOTAL_REACTION and CONTRIBUTOR_REACTION rows out of aggregateReactions and every export",
   },
@@ -80,6 +102,27 @@ export const RIPCORDS = {
     trackerRows: "T08",
     filters:
       "The rate-limit family on the intake routes: in-memory windows, the authoritative per-device counters, the daily ceiling, velocity quarantine, and same-origin enforcement",
+  },
+  /**
+   * The ask box's Level 1 classifier (6d, 2026-08-15). Pulled, the ask box
+   * is keyword-only — which is the complete product it was on the day it
+   * shipped, not a degraded one.
+   *
+   * Open because it is the first place a model touches a reader's path at
+   * all. What it may do is deliberately tiny: pick one id out of the curated
+   * topic list, or `NONE`. It writes no sentence a reader sees, and the
+   * answer it leads to is the same curated route the keyword path produces.
+   * Ships LIVE.
+   */
+  "ripcord.askClassifier": {
+    pulled: false,
+    envVar: "WTP_RIPCORD_ASK_CLASSIFIER",
+    question:
+      "Product, not legal: is a model choosing WHICH curated topic a question belongs to compatible with the no-generation rule, given that it writes none of the answer and its whole output is one identifier from a closed list?",
+    closer: "The author — this is a product-doctrine question, not a counsel question",
+    trackerRows: "A09, A12",
+    filters:
+      "The classifier call itself: the ask box falls back to keyword-only matching and the honest refusal",
   },
   /**
    * The master ripcord (T08): closes reaction and search/ask intake

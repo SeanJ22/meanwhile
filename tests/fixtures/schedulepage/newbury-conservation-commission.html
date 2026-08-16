@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<!--[if lt IE 9 ]>    <html class="lt-ie9 no-js"  lang="en" dir="ltr"> <![endif]-->
+<!--[if gte IE 9]><!--> <html class="no-js"  lang="en" dir="ltr"  prefix="fb: http://www.facebook.com/2008/fbml
+ content: http://purl.org/rss/1.0/modules/content/
+ dc: http://purl.org/dc/terms/
+ foaf: http://xmlns.com/foaf/0.1/
+ og: http://ogp.me/ns#
+ rdfs: http://www.w3.org/2000/01/rdf-schema#
+ sioc: http://rdfs.org/sioc/ns#
+ sioct: http://rdfs.org/sioc/types#
+ skos: http://www.w3.org/2004/02/skos/core#
+ xsd: http://www.w3.org/2001/XMLSchema#
+"> <!--<![endif]-->
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" href="https://www.newbury.nh.gov/sites/all/themes/custom/sites/newburynh/vts_newburynh/favicon.ico" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" /><script type="text/javascript">(window.NREUM||(NREUM={})).init={ajax:{deny_list:["bam.nr-data.net"]},feature_flags:["soft_nav"]};(window.NREUM||(NREUM={})).loader_config={licenseKey:"NRJS-acd47eab6e866cba245",applicationID:"528839427",browserID:"529697727"};;/*! For license information please see nr-loader-rum-1.320.0.min.js.LICENSE.txt */
+(()=>{var e={8122(e,t,r){"use strict";r.d(t,{a:()=>i});var n=r(944);function i(e,t){try{if(!e||"object"!=typeof e)return(0,n.R)(3);if(!t||"object"!=typeof t)return(0,n.R)(4);const r=Object.create(Object.getPrototypeOf(t),Object.getOwnPropertyDescriptors(t)),s=0===Object.keys(r).length?e:r;for(let a in s)if(void 0!==e[a])try{if(null===e[a]){r[a]=null;continue}Array.isArray(e[a])&&Array.isArray(t[a])?r[a]=Array.from(new Set([...e[a],...t[a]])):e[a]instanceof Map||e[a]instanceof Set||e[a]instanceof Date||e[a]instanceof RegExp?r[a]=e[a]:"object"==typeof e[a]&&null!==t[a]&&"object"==typeof t[a]?r[a]=i(e[a],t[a]):r[a]=e[a]}catch(e){r[a]||(0,n.R)(1,e)}return r}catch(e){(0,n.R)(2,e)}}},2555(e,t,r){"use strict";r.d(t,{f:()=>a});var n=r(384),i=r(8122);const s={beacon:n.NT.beacon,errorBeacon:n.NT.errorBeacon,licenseKey:void 0,applicationID:void 0,sa:void 0,queueTime:void 0,applicationTime:void 0,ttGuid:void 0,user:void 0,account:void 0,product:void 0,extra:void 0,jsAttributes:{},userAttributes:void 0,atts:void 0,transactionName:void 0,tNamePlain:void 0};function a(e){try{return!!e.licenseKey&&!!e.errorBeacon&&!!e.applicationID}catch(e){return!1}}r.d(t,["D",0,e=>(0,i.a)(e,s)])},7699(e,t,r){"use strict";var n=r(860);const i={[n.K7.logging]:!0,[n.K7.genericEvents]:!0,[n.K7.jserrors]:!0,[n.K7.ajax]:!0};r.d(t,["It",0,1e6,"KC",0,i,"qh",0,"SESSION_ERROR"])},9324(e,t,r){"use strict";r.d(t,["xv",0,"1.320.0"])},981(e,t,r){"use strict";r.d(t,["R",0,{AJAX:"AjaxRequest",PA:"PageAction",UA:"UserAction",BP:"BrowserPerformance",WS:"WebSocket",SPV:"SecurityPolicyViolation",JSE:"JavaScriptError",LOG:"Log",PVE:"PageView",PVT:"PageViewTiming",SR:"SessionReplay",ST:"SessionTrace",BI:"BrowserInteraction"}])},6154(e,t,r){"use strict";var n=r(1863);const i="undefined"!=typeof window&&!!window.document,s="undefined"!=typeof WorkerGlobalScope&&("undefined"!=typeof self&&self instanceof WorkerGlobalScope&&self.navigator instanceof WorkerNavigator||"undefined"!=typeof globalThis&&globalThis instanceof WorkerGlobalScope&&globalThis.navigator instanceof WorkerNavigator),a=i?window:"undefined"!=typeof WorkerGlobalScope&&("undefined"!=typeof self&&self instanceof WorkerGlobalScope&&self||"undefined"!=typeof globalThis&&globalThis instanceof WorkerGlobalScope&&globalThis),o=Boolean("hidden"===a?.document?.visibilityState),c=""+a?.location,u=/iPad|iPhone|iPod/.test(a.navigator?.userAgent),d=u&&"undefined"==typeof SharedWorker,l=((()=>{const e=a.navigator?.userAgent?.match(/Firefox[/\s](\d+\.\d+)/);Array.isArray(e)&&e.length>=2&&e[1]})(),Date.now()-(0,n.t)());r.d(t,["OF",0,u,"RI",0,i,"WN",0,l,"bv",0,s,"gm",0,a,"m",0,c,"mw",0,o,"sb",0,d,"zk",0,()=>{const e=a?.performance?.getEntriesByType?.("navigation")?.[0];if(e&&e.responseStart>0&&e.responseStart<a.performance.now())return e}])},3241(e,t,r){"use strict";r.d(t,{W:()=>i});var n=r(6154);function i(e={}){try{n.gm.dispatchEvent(new CustomEvent("newrelic",{detail:e}))}catch(e){}}},1687(e,t,r){"use strict";r.d(t,{Ak:()=>o,Ze:()=>u,x3:()=>c});var n=r(3241),i=r(3606),s=r(860),a=r(2646);function o(e,t){if(!e)return;const r={staged:!1,priority:s.P3[t]||0};e.runtime.drainRegistry.get(t)||e.runtime.drainRegistry.set(t,r)}function c(e,t){if(!e)return;const r=e.runtime.drainRegistry;r&&(r.get(t)&&r.delete(t),l(e,t,!1),r.size&&d(e))}function u(e,t="feature",r=!1){if(e){if(!e.runtime.drainRegistry.get(t)||r)return l(e,t);e.runtime.drainRegistry.get(t).staged=!0,d(e)}}function d(e){if(!e)return;const t=Array.from(e.runtime.drainRegistry);t.every(([e,t])=>t.staged)&&(t.sort((e,t)=>e[1].priority-t[1].priority),t.forEach(([t])=>{e.runtime.drainRegistry.delete(t),l(e,t)}))}function l(e,t,r=!0){if(!e)return;const s=e.ee,o=i.i.handlers;if(s&&!s.aborted&&s.backlog&&o){if((0,n.W)({type:"lifecycle",name:"drain",feature:t}),r){const e=s.backlog[t],r=o[t];if(r){for(let t=0;e&&t<e.length;++t)f(e[t],r);Object.entries(r).forEach(([e,t])=>{Object.values(t||{}).forEach(t=>{t[0]?.on&&t[0].context()instanceof a.y&&!t[0].listeners(e).includes(t[1])&&t[0].on(e,t[1])})})}}s.isolatedBacklog||delete o[t],s.backlog[t]=null,s.emit("drain-"+t,[])}}function f(e,t){var r=e[1];Object.values(t[r]||{}).forEach(t=>{var r=e[0];if(t[0]===r){var n=t[1],i=e[3],s=e[2];n.apply(i,s)}})}},7836(e,t,r){"use strict";var n=r(384),i=r(8990),s=r(2646),a=r(5607);const o="nr@context:".concat(a.W),c=function e(t,r){var n={},a={},d={},l=!1;try{l=16===r.length&&u.initializedAgents?.[r]?.runtime.isolatedBacklog}catch(e){}var f={on:p,addEventListener:p,removeEventListener:function(e,t){var r=n[e];if(!r)return;for(var i=0;i<r.length;i++)r[i]===t&&r.splice(i,1)},emit:function(e,r,n,i,s){!1!==s&&(s=!0);if(c.aborted&&!i)return;t&&s&&t.emit(e,r,n);var o=g(n);m(e).forEach(e=>{e.apply(o,r)});var u=b()[a[e]];u&&u.push([f,e,r,o]);return o},get:h,listeners:m,context:g,buffer:function(e,t){const r=b();if(t=t||"feature",f.aborted)return;Object.entries(e||{}).forEach(([e,n])=>{a[n]=t,t in r||(r[t]=[])})},abort:function(){f._aborted=!0,Object.keys(f.backlog).forEach(e=>{delete f.backlog[e]})},isBuffering:function(e){return!!b()[a[e]]},debugId:r,backlog:l?{}:t&&"object"==typeof t.backlog?t.backlog:{},isolatedBacklog:l};return Object.defineProperty(f,"aborted",{get:()=>{let e=f._aborted||!1;return e||(t&&(e=t.aborted),e)}}),f;function g(e){return e&&e instanceof s.y?e:e?(0,i.I)(e,o,()=>new s.y(o)):new s.y(o)}function p(e,t){n[e]=m(e).concat(t)}function m(e){return n[e]||[]}function h(t){return d[t]=d[t]||e(f,t)}function b(){return f.backlog}}(void 0,"globalEE"),u=(0,n.Zm)();u.ee||(u.ee=c),r.d(t,["P",0,o,"ee",0,c])},2646(e,t,r){"use strict";r.d(t,{y:()=>n});class n{constructor(e){this.contextId=e}}},9908(e,t,r){"use strict";r.d(t,{d:()=>n,p:()=>i});var n=r(7836).ee.get("handle");function i(e,t,r,i,s){s?(s.buffer([e],i),s.emit(e,t,r)):(n.buffer([e],i),n.emit(e,t,r))}},3606(e,t,r){"use strict";r.d(t,{i:()=>s});var n=r(9908);s.on=a;var i=s.handlers={};function s(e,t,r,s){a(s||n.d,i,e,t,r)}function a(e,t,r,i,s){s||(s="feature"),e||(e=n.d);var a=t[s]=t[s]||{};(a[r]=a[r]||[]).push([e,i])}},3878(e,t,r){"use strict";function n(e,t){return{capture:e,passive:!1,signal:t}}function i(e,t,r=!1,i){window.addEventListener(e,t,n(r,i))}function s(e,t,r=!1,i){document.addEventListener(e,t,n(r,i))}r.d(t,{DD:()=>s,jT:()=>n,sp:()=>i})},5607(e,t,r){"use strict";const n=(0,r(9566).bz)();r.d(t,["W",0,n])},9566(e,t,r){"use strict";r.d(t,{LA:()=>a,bz:()=>s});var n=r(6154);function i(e,t){return e?15&e[t]:16*Math.random()|0}function s(){const e=n.gm?.crypto||n.gm?.msCrypto;let t,r=0;return e&&e.getRandomValues&&(t=e.getRandomValues(new Uint8Array(30))),"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".split("").map(e=>"x"===e?i(t,r++).toString(16):"y"===e?(3&i()|8).toString(16):e).join("")}function a(e){const t=n.gm?.crypto||n.gm?.msCrypto;let r,s=0;t&&t.getRandomValues&&(r=t.getRandomValues(new Uint8Array(e)));const a=[];for(var o=0;o<e;o++)a.push(i(r,s++).toString(16));return a.join("")}},2614(e,t,r){"use strict";r.d(t,["BB",0,18e5,"Wt",0,"NRBA_SESSION::","iL",0,{SAME_TAB:"same-tab",CROSS_TAB:"cross-tab"},"tS",0,{STARTED:"session-started",PAUSE:"session-pause",RESET:"session-reset",RESUME:"session-resume",UPDATE:"session-update"},"wk",0,144e5])},1863(e,t,r){"use strict";function n(){return Math.floor(performance.now())}r.d(t,{t:()=>n})},944(e,t,r){"use strict";r.d(t,{R:()=>i});var n=r(3241);function i(e,t){"function"==typeof console.debug&&(console.debug("New Relic Warning: https://github.com/newrelic/newrelic-browser-agent/blob/main/docs/warning-codes.md#".concat(e),t),(0,n.W)({drained:null,type:"data",name:"warn",feature:"warn",data:{code:e,secondary:t}}))}},8990(e,t,r){"use strict";r.d(t,{I:()=>i});var n=Object.prototype.hasOwnProperty;function i(e,t,r){if(n.call(e,t))return e[t];var i=r();if(Object.defineProperty&&Object.keys)try{return Object.defineProperty(e,t,{value:i,writable:!0,enumerable:!1}),i}catch(e){}return e[t]=i,i}},6389(e,t,r){"use strict";function n(e,t=500,r={}){const n=r?.leading||!1;let i;return(...r)=>{n&&void 0===i&&(e.apply(this,r),i=setTimeout(()=>{i=clearTimeout(i)},t)),n||(clearTimeout(i),i=setTimeout(()=>{e.apply(this,r)},t))}}function i(e){let t=!1;return(...r)=>{t||(t=!0,e.apply(this,r))}}r.d(t,{J:()=>i,s:()=>n})},1910(e,t,r){"use strict";r.d(t,{i:()=>s});var n=r(944);const i=new Map;function s(...e){return e.every(e=>{if(i.has(e))return i.get(e);const t="function"==typeof e?e.toString():"",r=t.includes("[native code]"),s=t.includes("nrWrapper");return r||s||(0,n.R)(64,e?.name||t),i.set(e,r),r})}},5289(e,t,r){"use strict";r.d(t,{GG:()=>a,Qr:()=>c,sB:()=>o});var n=r(3878),i=r(6389);function s(){return"undefined"==typeof document||"complete"===document.readyState}function a(e,t){if(s())return e();const r=(0,i.J)(e),a=setInterval(()=>{s()&&(clearInterval(a),r())},500);(0,n.sp)("load",r,t)}function o(e){if(s())return e();(0,n.DD)("DOMContentLoaded",e)}function c(e){if(s())return e();(0,n.sp)("popstate",e)}},384(e,t,r){"use strict";r.d(t,{Zm:()=>c,bQ:()=>d,dV:()=>u,pV:()=>l});var n=r(6154),i=r(1863),s=r(944),a=r(1910);const o={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net"};function c(){return n.gm.NREUM||(n.gm.NREUM={}),void 0===n.gm.newrelic&&(n.gm.newrelic=n.gm.NREUM),n.gm.NREUM}function u(){let e=c();return e.o||(e.o={ST:n.gm.setTimeout,SI:n.gm.setImmediate||n.gm.setInterval,CT:n.gm.clearTimeout,XHR:n.gm.XMLHttpRequest,REQ:n.gm.Request,EV:n.gm.Event,PR:n.gm.Promise,MO:n.gm.MutationObserver,FETCH:n.gm.fetch,WS:n.gm.WebSocket},(0,a.i)(...Object.values(e.o))),e}function d(e,t){let r=c();r.initializedAgents??={},t.initializedAt={ms:(0,i.t)(),date:new Date},r.initializedAgents[e]=t,2===Object.keys(r.initializedAgents).length&&(0,s.R)(69)}function l(){return function(){let e=c();const t=e.info||{};e.info={beacon:o.beacon,errorBeacon:o.errorBeacon,...t}}(),function(){let e=c();const t=e.init||{};e.init={...t}}(),u(),function(){let e=c();const t=e.loader_config||{};e.loader_config={...t}}(),c()}r.d(t,["NT",0,o])},2843(e,t,r){"use strict";r.d(t,{G:()=>s,u:()=>i});var n=r(3878);function i(e,t=!1,r,i){(0,n.DD)("visibilitychange",function(){if(t)return void("hidden"===document.visibilityState&&e());e(document.visibilityState)},r,i)}function s(e,t,r){(0,n.sp)("pagehide",e,t,r)}},3969(e,t,r){"use strict";const n=r(860).K7.metrics;r.d(t,["TZ",0,n,"XG",0,"storeEventMetrics","xV",0,"storeSupportabilityMetrics"])},6630(e,t,r){"use strict";const n=r(860).K7.pageViewEvent;r.d(t,["T",0,n])},782(e,t,r){"use strict";const n=r(860).K7.pageViewTiming;r.d(t,["T",0,n])},4234(e,t,r){"use strict";r.d(t,{W:()=>i});var n=r(1687);class i{constructor(e,t){this.agentRef=e,this.ee=e?.ee,this.featureName=t,this.blocked=!1}deregisterDrain(){(0,n.x3)(this.agentRef,this.featureName)}}},7767(e,t,r){"use strict";var n=r(6154);r.d(t,["V",0,e=>n.RI&&!0===e?.privacy.cookies_enabled])},8362(e,t,r){"use strict";r.d(t,{d:()=>s});var n=r(9566),i=r(1741);class s extends i.W{agentIdentifier=(0,n.LA)(16)}},1741(e,t,r){"use strict";r.d(t,{W:()=>s});var n=r(944),i=r(4261);class s{#e(e,...t){if(this[e]!==s.prototype[e])return this[e](...t);(0,n.R)(35,e)}addPageAction(e,t){return this.#e(i.hG,e,t)}register(e){return this.#e(i.eY,e)}recordCustomEvent(e,t){return this.#e(i.fF,e,t)}setPageViewName(e,t){return this.#e(i.Fw,e,t)}setCustomAttribute(e,t,r){return this.#e(i.cD,e,t,r)}noticeError(e,t){return this.#e(i.o5,e,t)}setUserId(e,t=!1){return this.#e(i.Dl,e,t)}setApplicationVersion(e){return this.#e(i.nb,e)}setErrorHandler(e){return this.#e(i.bt,e)}addRelease(e,t){return this.#e(i.k6,e,t)}log(e,t){return this.#e("log",e,t)}start(){return this.#e("start")}finished(e){return this.#e(i.BL,e)}recordReplay(){return this.#e(i.CH)}pauseReplay(){return this.#e(i.Tb)}addToTrace(e){return this.#e(i.U2,e)}setCurrentRouteName(e){return this.#e(i.PA,e)}interaction(e){return this.#e(i.dT,e)}wrapLogger(e,t,r){return this.#e(i.Wb,e,t,r)}measure(e,t){return this.#e(i.V1,e,t)}consent(e){return this.#e(i.Pv,e)}}},4261(e,t,r){"use strict";r.d(t,["BL",0,"finished","CH",0,"recordReplay","Dl",0,"setUserId","Fw",0,"setPageViewName","PA",0,"setCurrentRouteName","Pv",0,"consent","Tb",0,"pauseReplay","U2",0,"addToTrace","V1",0,"measure","Wb",0,"wrapLogger","bt",0,"setErrorHandler","cD",0,"setCustomAttribute","dT",0,"interaction","eY",0,"register","fF",0,"recordCustomEvent","hG",0,"addPageAction","k6",0,"addRelease","nb",0,"setApplicationVersion","o5",0,"noticeError"])},1738(e,t,r){"use strict";r.d(t,{U:()=>l,Y:()=>d});var n=r(3241),i=r(9908),s=r(1863),a=r(944),o=r(3969),c=r(8362),u=r(860);function d(e,t,r,s){const d=s||r;!d||d[e]&&d[e]!==c.d.prototype[e]||(d[e]=function(){(0,i.p)(o.xV,["API/"+e+"/called"],void 0,u.K7.metrics,r.ee),(0,n.W)({drained:!!r.runtime?.activatedFeatures,type:"data",name:"api",feature:"api-"+e,data:{}});try{return t.apply(this,arguments)}catch(e){(0,a.R)(23,e)}})}function l(e,t,r,n,a){const o=e.info;null===r?delete o.jsAttributes[t]:o.jsAttributes[t]=r,(a||null===r)&&(0,i.p)("api-"+n,[(0,s.t)(),t,r],void 0,"session",e.ee)}},8374(e,t,r){r.nc=(()=>{try{return document?.currentScript?.nonce}catch(e){}return""})()},860(e,t,r){"use strict";const n="events",i="jserrors",s="browser/blobs",a="browser/logs",o={ajax:"ajax",genericEvents:"generic_events",jserrors:i,logging:"logging",metrics:"metrics",pageAction:"page_action",pageViewEvent:"page_view_event",pageViewTiming:"page_view_timing",sessionReplay:"session_replay",sessionTrace:"session_trace",softNav:"soft_navigations"},c={[o.pageViewEvent]:1,[o.pageViewTiming]:2,[o.metrics]:3,[o.jserrors]:4,[o.softNav]:5,[o.ajax]:6,[o.sessionTrace]:7,[o.sessionReplay]:8,[o.logging]:9,[o.genericEvents]:10},u={[o.pageViewEvent]:"rum",[o.pageViewTiming]:n,[o.ajax]:n,[o.softNav]:n,[o.metrics]:i,[o.jserrors]:i,[o.sessionTrace]:s,[o.sessionReplay]:s,[o.logging]:a,[o.genericEvents]:"ins"};r.d(t,["$J",0,u,"K7",0,o,"P3",0,c,"XX",0,i,"Yy",0,a,"df",0,s])}};const t={};function r(n){const i=t[n];if(void 0!==i)return i.exports;const s=t[n]={exports:{}};return e[n](s,s.exports,r),s.exports}r.m=e,r.d=(e,t)=>{if(Array.isArray(t))for(var n=0;n<t.length;){var i=t[n++],s=t[n++];r.o(e,i)?0===s&&n++:0===s?Object.defineProperty(e,i,{enumerable:!0,value:t[n++]}):Object.defineProperty(e,i,{enumerable:!0,get:s})}else for(var i in t)r.o(t,i)&&!r.o(e,i)&&Object.defineProperty(e,i,{enumerable:!0,get:t[i]})},r.f={},r.e=e=>Promise.all(Object.keys(r.f).reduce((t,n)=>(r.f[n](e,t),t),[])),r.u=e=>"nr-rum-1.320.0.min.js",r.o=(e,t)=>Object.prototype.hasOwnProperty.call(e,t),(()=>{const e={},t="NRBA-1.320.0.PROD:";r.l=(n,i,s,a)=>{if(e[n])return void e[n].push(i);let o,c;if(void 0!==s){const e=document.getElementsByTagName("script");for(var u=0;u<e.length;u++){const r=e[u];if(r.getAttribute("src")==n||r.getAttribute("data-webpack")==t+s){o=r;break}}}if(!o){c=!0;var d={296:"sha512-i0QzOd4vVY4bWrrW0ByiRrHm314+U+ceG+LLaJdZSgzUjam1J+CWBVzJmWmeUgmqooofACwblh7+pj/+BXK1kw=="};o=document.createElement("script"),o.charset="utf-8",r.nc&&o.setAttribute("nonce",r.nc),o.setAttribute("data-webpack",t+s),o.src=n,0!==o.src.indexOf(window.location.origin+"/")&&(o.crossOrigin="anonymous"),d[a]&&(o.integrity=d[a])}e[n]=[i];const l=(t,r)=>{o.onerror=o.onload=null,clearTimeout(f);const i=e[n];if(delete e[n],o.parentNode?.removeChild(o),i?.forEach(e=>e(r)),t)return t(r)},f=setTimeout(l.bind(null,void 0,{type:"timeout",target:o}),12e4);o.onerror=l.bind(null,o.onerror),o.onload=l.bind(null,o.onload),c&&document.head.appendChild(o)}})(),r.r=e=>{Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},r.p="https://js-agent.newrelic.com/",(()=>{const e={374:0,840:0};r.f.j=(t,n)=>{let i=r.o(e,t)?e[t]:void 0;if(0!==i)if(i)n.push(i[2]);else{const s=new Promise((r,n)=>i=e[t]=[r,n]);n.push(i[2]=s);const a=r.p+r.u(t),o=new Error,c=n=>{if(r.o(e,t)&&(i=e[t],0!==i&&(e[t]=void 0),i)){const e=n&&("load"===n.type?"missing":n.type),r=n&&n.target&&n.target.src;o.message="Loading chunk "+t+" failed: ("+e+": "+r+")",o.name="ChunkLoadError",o.type=e,o.request=r,i[1](o)}};r.l(a,c,"chunk-"+t,t)}};const t=(t,n)=>{let[i,s,a]=n;var o,c,u=0;if(i.some(t=>0!==e[t])){for(o in s)r.o(s,o)&&(r.m[o]=s[o]);if(a)a(r)}for(t&&t(n);u<i.length;u++)c=i[u],r.o(e,c)&&e[c]&&e[c][0](),e[c]=0},n=self["webpackChunk:NRBA-1.320.0.PROD"]=self["webpackChunk:NRBA-1.320.0.PROD"]||[];n.forEach(t.bind(null,0)),n.push=t.bind(null,n.push.bind(n))})(),(()=>{"use strict";r(8374);var e=r(8362),t=r(860);const n=Object.values(t.K7);var i=r(384),s=r(1741);var a=r(2555),o=r(981);t.K7.genericEvents,o.R.PA,o.R.UA,o.R.BP;const c={RESOURCES:"experimental.resources",REGISTER:"register"},u=(t.K7.ajax,"none"),d=e=>{if(!e||"string"!=typeof e)return!1;try{document.createDocumentFragment().querySelector(e)}catch{return!1}return!0};var l=r(2614),f=r(944),g=r(8122);const p="[data-nr-mask]",m=e=>(0,g.a)(e,(()=>{const e={feature_flags:[],experimental:{register:!1,resources:!1,iframe_bridge:!1,iframe_domains:[]},mask_selector:"*",block_selector:"[data-nr-block]",mask_input_options:{color:!1,date:!1,"datetime-local":!1,email:!1,month:!1,number:!1,range:!1,search:!1,tel:!1,text:!1,time:!1,url:!1,week:!1,textarea:!1,select:!1,password:!0}};return{ajax:{deny_list:void 0,block_internal:!0,enabled:!0,autoStart:!0,capture_payloads:u},api:{register:{get enabled(){return e.feature_flags.includes(c.REGISTER)||e.experimental.register},set enabled(t){e.experimental.register=t},duplicate_data_to_container:!1,get allow_iframe_bridge(){return e.feature_flags.includes(c.IFRAME_BRIDGE)||e.experimental.iframe_bridge},set allow_iframe_bridge(t){e.experimental.iframe_bridge=t},get iframe_domains(){return e.experimental.iframe_domains},set iframe_domains(t){Array.isArray(t)?e.experimental.iframe_domains=t:(0,f.R)(1,t)}}},browser_consent_mode:{enabled:!1},distributed_tracing:{enabled:void 0,exclude_newrelic_header:void 0,cors_use_newrelic_header:void 0,cors_use_tracecontext_headers:void 0,allowed_origins:void 0},get feature_flags(){return e.feature_flags},set feature_flags(t){e.feature_flags=t},generic_events:{enabled:!0,autoStart:!0},harvest:{interval:30},jserrors:{enabled:!0,autoStart:!0},logging:{enabled:!0,autoStart:!0},metrics:{enabled:!0,autoStart:!0},obfuscate:void 0,page_action:{enabled:!0},page_view_event:{enabled:!0,autoStart:!0},page_view_timing:{enabled:!0,autoStart:!0},performance:{capture_marks:!1,capture_measures:!1,capture_detail:!0,resources:{get enabled(){return e.feature_flags.includes(c.RESOURCES)||e.experimental.resources},set enabled(t){e.experimental.resources=t},asset_types:[],first_party_domains:[],ignore_newrelic:!0}},privacy:{cookies_enabled:!0},proxy:{assets:void 0,beacon:void 0},session:{expiresMs:l.wk,inactiveMs:l.BB},session_replay:{autoStart:!0,enabled:!1,preload:!1,sampling_rate:10,error_sampling_rate:100,collect_fonts:!1,inline_images:!1,fix_stylesheets:!0,mask_all_inputs:!0,get mask_text_selector(){return e.mask_selector},set mask_text_selector(t){d(t)?e.mask_selector="".concat(t,",").concat(p):""===t||null===t?e.mask_selector=p:(0,f.R)(5,t)},get block_class(){return"nr-block"},get ignore_class(){return"nr-ignore"},get mask_text_class(){return"nr-mask"},get block_selector(){return e.block_selector},set block_selector(t){d(t)?e.block_selector+=",".concat(t):""!==t&&(0,f.R)(6,t)},get mask_input_options(){return e.mask_input_options},set mask_input_options(t){t&&"object"==typeof t?e.mask_input_options={...t,password:!0}:(0,f.R)(7,t)}},session_trace:{enabled:!0,autoStart:!0},soft_navigations:{enabled:!0,autoStart:!0},ssl:void 0,user_actions:{enabled:!0,elementAttributes:["id","className","tagName","type"]},web_sockets:{enabled:!1}}})());var h=r(6154),b=r(9324);let v=0;const y={buildEnv:"PROD",distMethod:"CDN",version:b.xv,originTime:h.WN},_={consented:!1},w={activatedFeatures:void 0,appMetadata:{},configured:!1,get consented(){return this.session?.state?.consent||_.consented},set consented(e){_.consented=e},customTransaction:void 0,denyList:[],disabled:!1,drainRegistry:new Map,harvester:void 0,isolatedBacklog:!1,isRecording:!1,loaderType:void 0,maxBytes:3e4,obfuscator:void 0,onerror:void 0,ptid:void 0,releaseIds:{},session:void 0,timeKeeper:void 0,registeredEntities:[],jsAttributesMetadata:{bytes:0},get harvestCount(){return++v},listeningForIframeMessages:!1};var R=r(7836),x=r(3241);const A={accountID:void 0,trustKey:void 0,agentID:void 0,licenseKey:void 0,applicationID:void 0,xpid:void 0};var E=r(9908);const S="newrelic-iframe-";function k(e,t={},n,o){let{init:c,info:u,loader_config:d,runtime:l={},exposed:f=!0}=t;if(!u){const e=(0,i.pV)();c=e.init,u=e.info,d=e.loader_config}var p;e.init=m(c||{}),e.loader_config=(p=d||{},(0,g.a)(p,A)),u.jsAttributes??={},h.bv&&(u.jsAttributes.isWorker=!0),e.info=(0,a.D)(u);const b=e.init;e.runtime??=(e=>{const t=(0,g.a)(e,w),r=Object.keys(y).reduce((e,t)=>(e[t]={value:y[t],writable:!1,configurable:!0,enumerable:!0},e),{});return Object.defineProperties(t,r)})(l),b.proxy.assets&&(e=>{const t=e.startsWith("http");e+="/",r.p=t?e:"https://"+e})(b.proxy.assets),e.runtime.configured||(Object.defineProperty(e,"beacons",{get:()=>[e.info.beacon,e.info.errorBeacon,e.init.proxy.assets,e.init.proxy.beacon].filter(Boolean)}),Object.defineProperty(e.runtime,"denyList",{get:()=>[...e.init.ajax.deny_list||[],...e.init.ajax.block_internal?e.beacons:[]]}),e.runtime.ptid=e.agentIdentifier,function(e){const t=(0,i.pV)();Object.getOwnPropertyNames(s.W.prototype).forEach(r=>{const n=s.W.prototype[r];if("function"!=typeof n||"constructor"===n)return;let i=t[r];e[r]&&!1!==e.exposed&&"micro-agent"!==e.runtime?.loaderType&&(t[r]=(...t)=>{const n=e[r](...t);return i?i(...t):n})})}(e),e.runtime.loaderType=n,e.ee=R.ee.get(e.agentIdentifier),e.exposed=f,(0,x.W)({drained:!!e.runtime.activatedFeatures,type:"lifecycle",name:"initialize",feature:void 0,data:e.config}),e.init.api.register.allow_iframe_bridge&&h.gm.addEventListener("message",t=>{"string"==typeof t.data?.type&&t.data.type.startsWith(S)&&(0,E.p)("iframe-message",[t],void 0,"IFRAME",e.ee)}),e.runtime.configured=!0)}var T=r(1863),j=r(4261),P=r(1738);var O=r(1687),M=r(4234),N=r(5289),I=r(7767);function D(e){return!!(0,i.dV)().o.MO&&(0,I.V)(e)&&!0===e?.session_trace.enabled}var V=r(6389),W=r(7699);const B=new WeakSet;class K extends M.W{constructor(e,t){super(e,t),this.abortHandler=void 0,this.featAggregate=void 0,this.loadedSuccessfully=void 0,this.onAggregateImported=new Promise(e=>{this.loadedSuccessfully=e}),this.deferred=Promise.resolve(),!1===e.init[this.featureName].autoStart?this.deferred=new Promise((t,r)=>{this.ee.on("manual-start-all",(0,V.J)(()=>{(0,O.Ak)(e,this.featureName),t()}))}):(0,O.Ak)(e,t)}importAggregator(e,t,n={}){if(this.featAggregate)return;const i=async()=>{if(await this.deferred,this.#t(e),!(0,a.f)(e.info))return(0,f.R)(43),e.ee.abort(),void this.loadedSuccessfully(!1);let i;try{if((0,I.V)(e.init)){const{setupAgentSession:t}=await r.e(296).then(r.bind(r,8391));i=t(e)}}catch(e){(0,f.R)(20,e),this.ee.emit("internal-error",[e]),(0,E.p)(W.qh,[e],void 0,this.featureName,this.ee)}if(e.init.api.register.allow_iframe_bridge)try{const{setupIframeMFEMessageListener:t}=await Promise.resolve().then(function(){const e=new Error("Cannot find module '../../loaders/configure/iframe-message-handler'");throw e.code="MODULE_NOT_FOUND",e});t(e)}catch(e){(0,f.R)(23,e)}try{if(!this.#r(this.featureName,i,e.init))return(0,O.Ze)(this.agentRef,this.featureName),void this.loadedSuccessfully(!1);const{Aggregate:r}=await t();this.featAggregate=new r(e,n),e.runtime.harvester.initializedAggregates.push(this.featAggregate),this.loadedSuccessfully(!0)}catch(e){(0,f.R)(34,e),this.abortHandler?.(),(0,O.Ze)(this.agentRef,this.featureName,!0),this.loadedSuccessfully(!1),this.ee&&this.ee.abort()}};h.RI?(0,N.GG)(()=>i(),!0):i()}#r(e,r,n){if(this.blocked)return!1;switch(e){case t.K7.sessionReplay:return D(n)&&!!r;case t.K7.sessionTrace:return!!r;default:return!0}}#t(e){if(!B.has(e)&&(B.add(e),!(0,a.f)(e.info))){const t=(0,i.pV)();let r={...t.info?.jsAttributes};try{r={...r,...e.info?.jsAttributes}}catch(e){}k(e,{...t,info:{...t.info,jsAttributes:r},runtime:e.runtime},e.runtime.loaderType)}}}var C=r(6630);class U extends K{static featureName=C.T;constructor(e){var t;super(e,C.T),this.setupInspectionEvents(),t=e,(0,P.Y)(j.Fw,function(e,r){"string"==typeof e&&("/"!==e.charAt(0)&&(e="/"+e),t.runtime.customTransaction=(r||"http://custom.transaction")+e,(0,E.p)("api-"+j.Fw,[(0,T.t)()],void 0,void 0,t.ee))},t),this.importAggregator(e,()=>r.e(296).then(r.bind(r,1324)))}setupInspectionEvents(){const e=(e,t)=>{e&&(0,x.W)({timeStamp:e.timeStamp,loaded:"complete"===e.target.readyState,type:"window",name:t,data:e.target.location+""})};(0,N.sB)(t=>{e(t,"DOMContentLoaded")}),(0,N.GG)(t=>{e(t,"load")}),(0,N.Qr)(t=>{e(t,"navigate")}),this.ee.on(l.tS.UPDATE,(e,t)=>{(0,x.W)({type:"lifecycle",name:"session",data:t})})}}class L extends e.d{constructor(e){var t;(super(),h.gm)?(this.features={},(0,i.bQ)(this.agentIdentifier,this),this.desiredFeatures=new Set(e.features||[]),this.desiredFeatures.add(U),k(this,e,e.loaderType||"agent"),t=this,(0,P.Y)(j.cD,function(e,r,n=!1){if("string"==typeof e){if(["string","number","boolean"].includes(typeof r)||null===r)return(0,P.U)(t,e,r,j.cD,n);(0,f.R)(40,typeof r)}else(0,f.R)(39,typeof e)},t),function(e){(0,P.Y)(j.Dl,function(t,r=!1){if("string"!=typeof t&&null!==t)return void(0,f.R)(41,typeof t);const n=e.info.jsAttributes["enduser.id"];r&&null!=n&&n!==t?(0,E.p)("api-setUserIdAndResetSession",[t],void 0,"session",e.ee):(0,P.U)(e,"enduser.id",t,j.Dl,!0)},e)}(this),function(e){(0,P.Y)(j.nb,function(t){if("string"==typeof t||null===t)return(0,P.U)(e,"application.version",t,j.nb,!1);(0,f.R)(42,typeof t)},e)}(this),function(e){(0,P.Y)("start",function(){e.ee.emit("manual-start-all")},e)}(this),function(e){(0,P.Y)(j.Pv,function(t=!0){if("boolean"==typeof t){if((0,E.p)("api-"+j.Pv,[t],void 0,"session",e.ee),e.runtime.consented=t,t){const t=e.features.page_view_event;t.onAggregateImported.then(e=>{const r=t.featAggregate;e&&!r.sentRum&&r.sendRum()})}}else(0,f.R)(65,typeof t)},e)}(this),this.run()):(0,f.R)(21)}get config(){return{info:this.info,init:this.init,loader_config:this.loader_config,runtime:this.runtime}}get api(){return this}run(){try{const e=function(e){const t={};return n.forEach(r=>{t[r]=!!e[r]?.enabled}),t}(this.init),r=[...this.desiredFeatures];r.sort((e,r)=>t.P3[e.featureName]-t.P3[r.featureName]),r.forEach(r=>{if(!e[r.featureName]&&r.featureName!==t.K7.pageViewEvent)return;const n=function(e){switch(e){case t.K7.ajax:return[t.K7.jserrors];case t.K7.sessionTrace:return[t.K7.ajax,t.K7.pageViewEvent];case t.K7.sessionReplay:return[t.K7.sessionTrace];case t.K7.pageViewTiming:return[t.K7.pageViewEvent];default:return[]}}(r.featureName).filter(e=>!(e in this.features));n.length>0&&(0,f.R)(36,{targetFeature:r.featureName,missingDependencies:n}),this.features[r.featureName]=new r(this)})}catch(e){(0,f.R)(22,e);for(const e in this.features)this.features[e].abortHandler?.();const t=(0,i.Zm)();delete t.initializedAgents[this.agentIdentifier]?.features,delete this.sharedAggregator;return t.ee.get(this.agentIdentifier).abort(),!1}}}var F=r(2843),G=r(782);class H extends K{static featureName=G.T;constructor(e){super(e,G.T),h.RI&&((0,F.u)(()=>(0,E.p)("docHidden",[(0,T.t)()],void 0,G.T,this.ee),!0),(0,F.G)(()=>(0,E.p)("winPagehide",[(0,T.t)()],void 0,G.T,this.ee)),this.importAggregator(e,()=>r.e(296).then(r.bind(r,2117))))}}var z=r(3969);class Y extends K{static featureName=z.TZ;constructor(e){super(e,z.TZ),this.importAggregator(e,()=>r.e(296).then(r.bind(r,9623)))}}new L({features:[U,H,Y],loaderType:"lite"})})()})();</script>
+<meta name="generator" content="Drupal 7 (https://www.drupal.org)" />
+<link rel="canonical" href="https://www.newbury.nh.gov/conservation-commission" />
+<link rel="shortlink" href="https://www.newbury.nh.gov/node/20" />
+    <title>Conservation Commission | Newbury NH</title>
+
+    <style>
+@import url("https://www.newbury.nh.gov/modules/system/system.base.css?tfpewt");
+@import url("https://www.newbury.nh.gov/modules/system/system.menus.css?tfpewt");
+@import url("https://www.newbury.nh.gov/modules/system/system.messages.css?tfpewt");
+@import url("https://www.newbury.nh.gov/modules/system/system.theme.css?tfpewt");
+</style>
+<style>
+@import url("https://www.newbury.nh.gov/sites/all/modules/contrib/calendar/css/calendar_multiday.css?tfpewt");
+@import url("https://www.newbury.nh.gov/sites/all/modules/contrib/calendar_tooltips/calendar_tooltips.css?tfpewt");
+@import url("https://www.newbury.nh.gov/modules/comment/comment.css?tfpewt");
+@import url("https://www.newbury.nh.gov/sites/all/modules/contrib/date/date_repeat_field/date_repeat_field.css?tfpewt");
+@import url("https://www.newbury.nh.gov/sites/all/modules/contrib/fences/field.css?tfpewt");
+@import url("https://www.newbury.nh.gov/sites/all/modules/contrib/fitvids/fitvids.css?tfpewt");
+@import url("https://www.newbury.nh.gov/modules/node/node.css?tfpewt");
+@import url("https://www.newbury.nh.gov/sites/all/modules/contrib/picture/picture_wysiwyg.css?tfpewt");
+@import url("https://www.newbury.nh.gov/modules/search/search.css?tfpewt");
+@import url("https://www.newbury.nh.gov/modules/user/user.css?tfpewt");
+@import url("https://www.newbury.nh.gov/sites/all/modules/custom/vts_calendar_colors/css/vts_calendar_colors.css?tfpewt");
+</style>
+<style media="screen">
+@import url("https://www.newbury.nh.gov/sites/all/modules/features/vts_content_types/vts_content_types.css?tfpewt");
+@import url("https://www.newbury.nh.gov/sites/all/modules/features/vts_rules/vts_rules.css?tfpewt");
+</style>
+<style>
+@import url("https://www.newbury.nh.gov/sites/all/modules/contrib/date_repeat_entity/date_repeat_entity.css?tfpewt");
+@import url("https://www.newbury.nh.gov/sites/all/modules/contrib/views/css/views.css?tfpewt");
+</style>
+<style>
+@import url("https://www.newbury.nh.gov/sites/all/modules/contrib/colorbox/styles/default/colorbox_style.css?tfpewt");
+@import url("https://www.newbury.nh.gov/sites/all/modules/contrib/ctools/css/ctools.css?tfpewt");
+@import url("https://www.newbury.nh.gov/sites/all/modules/contrib/panels/css/panels.css?tfpewt");
+@import url("https://www.newbury.nh.gov/sites/all/modules/contrib/content_type_extras/css/content_type_extras.css?tfpewt");
+@import url("https://www.newbury.nh.gov/sites/all/modules/contrib/print/print_ui/css/print_ui.theme.css?tfpewt");
+@import url("https://www.newbury.nh.gov/sites/all/modules/contrib/date/date_views/css/date_views.css?tfpewt");
+@import url("https://www.newbury.nh.gov/sites/all/modules/contrib/menu_minipanels/css/menu_minipanels.css?tfpewt");
+</style>
+<style>.webform-component-file .form-submit{display:none;!important}
+</style>
+<style>
+@import url("https://www.newbury.nh.gov/sites/all/modules/contrib/hide_submit/css/hide_submit.css?tfpewt");
+@import url("https://www.newbury.nh.gov/sites/all/libraries/superfish/css/superfish.css?tfpewt");
+@import url("https://www.newbury.nh.gov/sites/all/libraries/superfish/css/superfish-smallscreen.css?tfpewt");
+</style>
+<style>
+@import url("https://www.newbury.nh.gov/sites/all/themes/custom/sites/newburynh/vts_newburynh/css/style.css?tfpewt");
+</style>
+<style media="print">
+@import url("https://www.newbury.nh.gov/sites/all/themes/custom/vts_aurora/css/print.css?tfpewt");
+</style>
+<style media="screen">#page {
+                  background-color: #5d9e69;
+                  background-size: 100%  750px;
+                  background-repeat: no-repeat;
+                  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #a1d2ec), color-stop(100%, #5d9e69));
+                  background-image: -moz-linear-gradient(#a1d2ec, #5d9e69);
+                  background-image: -webkit-linear-gradient(#a1d2ec, #5d9e69);
+                  background-image: -ms-linear-gradient(#a1d2ec, #5d9e69);
+                  background-image: linear-gradient(#a1d2ec, #5d9e69);
+                  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr="#a1d2ec", endColorstr="#5d9e69");
+                }</style>
+    <script src="https://www.newbury.nh.gov/misc/jquery.js?v=1.4.4"></script>
+<script>document.createElement( "picture" );</script>
+<script src="https://www.newbury.nh.gov/misc/jquery-extend-3.4.0.js?v=1.4.4"></script>
+<script src="https://www.newbury.nh.gov/misc/jquery-html-prefilter-3.5.0-backport.js?v=1.4.4"></script>
+<script src="https://www.newbury.nh.gov/misc/jquery.once.js?v=1.2"></script>
+<script src="https://www.newbury.nh.gov/misc/drupal.js?tfpewt"></script>
+<script src="https://www.newbury.nh.gov/sites/all/libraries/fitvids/jquery.fitvids.js?tfpewt"></script>
+<script src="https://www.newbury.nh.gov/sites/all/modules/contrib/beautytips/js/jquery.bt.min.js?v=0.9.5-rc1"></script>
+<script src="https://www.newbury.nh.gov/sites/all/modules/contrib/beautytips/js/beautytips.min.js?v=7.x-2.x"></script>
+<script src="https://www.newbury.nh.gov/misc/jquery.cookie.js?v=1.0"></script>
+<script src="https://www.newbury.nh.gov/misc/jquery.form.js?v=2.52"></script>
+<script src="https://www.newbury.nh.gov/misc/form-single-submit.js?v=7.103.13+7.103.1:drupal"></script>
+<script src="https://www.newbury.nh.gov/misc/ajax.js?v=7.103.13+7.103.1:drupal"></script>
+<script src="https://www.newbury.nh.gov/sites/all/modules/contrib/entityreference/js/entityreference.js?tfpewt"></script>
+<script src="https://www.newbury.nh.gov/sites/all/modules/contrib/fitvids/fitvids.js?tfpewt"></script>
+<script src="https://www.newbury.nh.gov/sites/all/libraries/colorbox/jquery.colorbox-min.js?tfpewt"></script>
+<script src="https://www.newbury.nh.gov/sites/all/modules/contrib/colorbox/js/colorbox.js?tfpewt"></script>
+<script src="https://www.newbury.nh.gov/sites/all/modules/contrib/colorbox/styles/default/colorbox_style.js?tfpewt"></script>
+<script src="https://www.newbury.nh.gov/sites/all/modules/contrib/field_group/field_group.js?tfpewt"></script>
+<script src="https://www.newbury.nh.gov/sites/all/modules/contrib/views/js/base.js?tfpewt"></script>
+<script src="https://www.newbury.nh.gov/misc/progress.js?v=7.103.13+7.103.1:drupal"></script>
+<script src="https://www.newbury.nh.gov/sites/all/modules/contrib/views/js/ajax_view.js?tfpewt"></script>
+<script src="https://www.newbury.nh.gov/sites/all/modules/contrib/google_analytics/googleanalytics.js?tfpewt"></script>
+<script>(function(i,s,o,g,r,a,m){i["GoogleAnalyticsObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,"script","https://www.google-analytics.com/analytics.js","ga");ga("create", "UA-84593456-34", {"cookieDomain":"auto"});ga("set", "anonymizeIp", true);ga("send", "pageview");</script>
+<script src="https://www.newbury.nh.gov/sites/all/modules/contrib/hide_submit/js/hide_submit.js?tfpewt"></script>
+<script src="https://www.newbury.nh.gov/sites/all/libraries/superfish/jquery.hoverIntent.minified.js?tfpewt"></script>
+<script src="https://www.newbury.nh.gov/sites/all/libraries/superfish/sftouchscreen.js?tfpewt"></script>
+<script src="https://www.newbury.nh.gov/sites/all/libraries/superfish/sfsmallscreen.js?tfpewt"></script>
+<script src="https://www.newbury.nh.gov/sites/all/libraries/superfish/supposition.js?tfpewt"></script>
+<script src="https://www.newbury.nh.gov/sites/all/libraries/superfish/superfish.js?tfpewt"></script>
+<script src="https://www.newbury.nh.gov/sites/all/modules/contrib/superfish/superfish.js?tfpewt"></script>
+<script src="https://www.newbury.nh.gov/sites/all/themes/custom/vts_aurora/js/text_filtering.js?tfpewt"></script>
+<script src="https://www.newbury.nh.gov/sites/all/themes/custom/vts_aurora/js/accordion_menu.js?tfpewt"></script>
+<script src="https://www.newbury.nh.gov/sites/all/themes/custom/vts_aurora/js/vts_misc.js?tfpewt"></script>
+<script>jQuery.extend(Drupal.settings, {"basePath":"\/","pathPrefix":"","setHasJsCookie":0,"ajaxPageState":{"theme":"vts_newburynh","theme_token":"GYkvlwWjxIhK5hwsG853sJRV1qFsRs3oOxkq0qRO6z8","js":{"sites\/all\/modules\/contrib\/picture\/picturefill\/picturefill.min.js":1,"sites\/all\/modules\/contrib\/picture\/picture.min.js":1,"sites\/all\/modules\/contrib\/addthis\/addthis.js":1,"misc\/jquery.js":1,"0":1,"misc\/jquery-extend-3.4.0.js":1,"misc\/jquery-html-prefilter-3.5.0-backport.js":1,"misc\/jquery.once.js":1,"misc\/drupal.js":1,"sites\/all\/libraries\/fitvids\/jquery.fitvids.js":1,"sites\/all\/modules\/contrib\/beautytips\/js\/jquery.bt.min.js":1,"sites\/all\/modules\/contrib\/beautytips\/js\/beautytips.min.js":1,"misc\/jquery.cookie.js":1,"misc\/jquery.form.js":1,"misc\/form-single-submit.js":1,"misc\/ajax.js":1,"sites\/all\/modules\/contrib\/entityreference\/js\/entityreference.js":1,"sites\/all\/modules\/contrib\/fitvids\/fitvids.js":1,"sites\/all\/libraries\/colorbox\/jquery.colorbox-min.js":1,"sites\/all\/modules\/contrib\/colorbox\/js\/colorbox.js":1,"sites\/all\/modules\/contrib\/colorbox\/styles\/default\/colorbox_style.js":1,"sites\/all\/modules\/contrib\/field_group\/field_group.js":1,"sites\/all\/modules\/contrib\/views\/js\/base.js":1,"misc\/progress.js":1,"sites\/all\/modules\/contrib\/views\/js\/ajax_view.js":1,"sites\/all\/modules\/contrib\/google_analytics\/googleanalytics.js":1,"1":1,"sites\/all\/modules\/contrib\/hide_submit\/js\/hide_submit.js":1,"sites\/all\/libraries\/superfish\/jquery.hoverIntent.minified.js":1,"sites\/all\/libraries\/superfish\/sftouchscreen.js":1,"sites\/all\/libraries\/superfish\/sfsmallscreen.js":1,"sites\/all\/libraries\/superfish\/supposition.js":1,"sites\/all\/libraries\/superfish\/superfish.js":1,"sites\/all\/modules\/contrib\/superfish\/superfish.js":1,"sites\/all\/themes\/custom\/vts_aurora\/js\/text_filtering.js":1,"sites\/all\/themes\/custom\/vts_aurora\/js\/accordion_menu.js":1,"sites\/all\/themes\/custom\/vts_aurora\/js\/vts_misc.js":1},"css":{"modules\/system\/system.base.css":1,"modules\/system\/system.menus.css":1,"modules\/system\/system.messages.css":1,"modules\/system\/system.theme.css":1,"sites\/all\/modules\/contrib\/calendar\/css\/calendar_multiday.css":1,"sites\/all\/modules\/contrib\/calendar_tooltips\/calendar_tooltips.css":1,"modules\/comment\/comment.css":1,"sites\/all\/modules\/contrib\/date\/date_repeat_field\/date_repeat_field.css":1,"modules\/field\/theme\/field.css":1,"sites\/all\/modules\/contrib\/fitvids\/fitvids.css":1,"modules\/node\/node.css":1,"sites\/all\/modules\/contrib\/picture\/picture_wysiwyg.css":1,"modules\/search\/search.css":1,"modules\/user\/user.css":1,"sites\/all\/modules\/custom\/vts_calendar_colors\/css\/vts_calendar_colors.css":1,"sites\/all\/modules\/features\/vts_content_types\/vts_content_types.css":1,"sites\/all\/modules\/features\/vts_rules\/vts_rules.css":1,"sites\/all\/modules\/contrib\/date_repeat_entity\/date_repeat_entity.css":1,"sites\/all\/modules\/contrib\/views\/css\/views.css":1,"sites\/all\/modules\/contrib\/colorbox\/styles\/default\/colorbox_style.css":1,"sites\/all\/modules\/contrib\/ctools\/css\/ctools.css":1,"sites\/all\/modules\/contrib\/panels\/css\/panels.css":1,"sites\/all\/modules\/contrib\/content_type_extras\/css\/content_type_extras.css":1,"sites\/all\/modules\/contrib\/print\/print_ui\/css\/print_ui.theme.css":1,"sites\/all\/modules\/contrib\/date\/date_views\/css\/date_views.css":1,"sites\/all\/modules\/contrib\/menu_minipanels\/css\/menu_minipanels.css":1,"0":1,"sites\/all\/modules\/contrib\/hide_submit\/css\/hide_submit.css":1,"sites\/all\/libraries\/superfish\/css\/superfish.css":1,"sites\/all\/libraries\/superfish\/css\/superfish-smallscreen.css":1,"sites\/all\/themes\/custom\/sites\/newburynh\/vts_newburynh\/css\/style.css":1,"sites\/all\/themes\/custom\/sites\/newburynh\/vts_newburynh\/simple.css":1,"sites\/all\/themes\/custom\/vts_aurora\/css\/print.css":1,"1":1}},"beautytipStyles":{"default":{"fill":"#ffffff","strokeStyle":"#B7B7B7","spikeLength":20,"spikeGirth":10,"width":"250px","overlap":0,"centerPointY":1,"cornerRadius":0,"cssStyles":{"fontFamily":"\u0026quot;Lucida Grande\u0026quot;,Helvetica,Arial,Verdana,sans-serif","fontSize":"12px","padding":"10px 14px"},"shadow":1,"shadowColor":"rgba(0,0,0,.5)","shadowBlur":8,"shadowOffsetX":4,"shadowOffsetY":4,"strokeWidth":1,"padding":"10px"},"plain":[],"netflix":{"positions":["right","left"],"fill":"#FFF","padding":5,"shadow":true,"shadowBlur":12,"strokeStyle":"#B9090B","spikeLength":50,"spikeGirth":60,"cornerRadius":10,"centerPointY":0.10000000000000001,"overlap":-8,"cssStyles":{"fontSize":"12px","fontFamily":"arial,helvetica,sans-serif"}},"facebook":{"fill":"#F7F7F7","padding":8,"strokeStyle":"#B7B7B7","cornerRadius":0,"cssStyles":{"fontFamily":"\u0022lucida grande\u0022,tahoma,verdana,arial,sans-serif","fontSize":"11px"}},"transparent":{"fill":"rgba(0, 0, 0, .8)","padding":20,"strokeStyle":"#CC0","strokeWidth":3,"spikeLength":40,"spikeGirth":40,"cornerRadius":40,"cssStyles":{"color":"#FFF","fontWeight":"bold"}},"big-green":{"fill":"#00FF4E","padding":20,"strokeWidth":0,"spikeLength":40,"spikeGirth":40,"cornerRadius":15,"cssStyles":{"fontFamily":"\u0022lucida grande\u0022,tahoma,verdana,arial,sans-serif","fontSize":"14px"}},"google-maps":{"positions":["top","bottom"],"fill":"#FFF","padding":15,"strokeStyle":"#ABABAB","strokeWidth":1,"spikeLength":65,"spikeGirth":40,"cornerRadius":25,"centerPointX":0.90000000000000002,"cssStyles":[]},"hulu":{"fill":"#F4F4F4","strokeStyle":"#666666","spikeLength":20,"spikeGirth":10,"width":350,"overlap":0,"centerPointY":1,"cornerRadius":0,"cssStyles":{"fontFamily":"\u0022Lucida Grande\u0022,Helvetica,Arial,Verdana,sans-serif","fontSize":"12px","padding":"10px 14px"},"shadow":true,"shadowColor":"rgba(0,0,0,.5)","shadowBlur":8,"shadowOffsetX":4,"shadowOffsetY":4}},"beautytips":{"calendar-tooltips":{"cssSelect":".calendar-calendar .mini-day-on a, .calendar-calendar .day a, .calendar-calendar .mini-day-on span, .calendar-calendar .day span","contentSelector":"$(this).next().html()","trigger":["mouseover","click"],"style":"hulu","list":["contentSelector","trigger"]}},"colorbox":{"opacity":"0.85","current":"{current} of {total}","previous":"\u00ab Prev","next":"Next \u00bb","close":"Close","maxWidth":"98%","maxHeight":"98%","fixed":true,"mobiledetect":true,"mobiledevicewidth":"480px","file_public_path":"\/sites\/g\/files\/vyhlif4761\/f","specificPagesDefaultValue":"admin*\nimagebrowser*\nimg_assist*\nimce*\nnode\/add\/*\nnode\/*\/edit\nprint\/*\nprintpdf\/*\nsystem\/ajax\nsystem\/ajax\/*"},"better_exposed_filters":{"views":{"group_alerts":{"displays":{"panel_pane_1":{"filters":[]}}},"group_slides":{"displays":{"panel_pane_1":{"filters":[]}}},"group_board_members":{"displays":{"panel_pane_1":{"filters":[]}}},"group_contact_info":{"displays":{"contact_info_full":{"filters":[]}}},"group_key_contacts":{"displays":{"panel_pane_1":{"filters":[]}}},"group_faq":{"displays":{"panel_pane_1":{"filters":[]}}},"group_news":{"displays":{"group_news_short":{"filters":[]}}},"group_calendar":{"displays":{"panel_pane_1":{"filters":[]}}},"group_agenda":{"displays":{"panel_pane_1":{"filters":[]}}},"group_minutes":{"displays":{"panel_pane_1":{"filters":[]}}}}},"addthis":{"async":false,"domready":true,"widget_url":"\/\/s7.addthis.com\/js\/300\/addthis_widget.js","addthis_config":{"pubid":"ra-5088ab9d4d87f028","services_compact":"bitly,facebook,facebook_like,google,google_plusone,google_plusone_share,more","services_exclude":"","data_track_clickback":false,"ui_508_compliant":false,"ui_click":false,"ui_cobrand":"AddThis","ui_delay":0,"ui_header_background":"","ui_header_color":"","ui_open_windows":false,"ui_use_css":true,"ui_use_addressbook":false,"ui_language":"en"},"addthis_share":{"templates":{"twitter":"{{title}} {{url}} via @AddThis"}}},"field_group":{"div":"full"},"views":{"ajax_path":"\/views\/ajax","ajaxViews":{"views_dom_id:05588cad8bfd05574f61005ca3632f3d":{"view_name":"group_calendar","view_display_id":"panel_pane_1","view_args":"20\/2026-08","view_path":"node\/20","view_base_path":"node\/20\/events\/month","view_dom_id":"05588cad8bfd05574f61005ca3632f3d","pager_element":0}}},"urlIsAjaxTrusted":{"\/views\/ajax":true,"\/advanced-search":true},"fitvids":{"custom_domains":[],"selectors":["body"],"simplifymarkup":true},"googleanalytics":{"trackOutbound":1,"trackMailto":1,"trackDownload":1,"trackDownloadExtensions":"7z|aac|arc|arj|asf|asx|avi|bin|csv|doc(x|m)?|dot(x|m)?|exe|flv|gif|gz|gzip|hqx|jar|jpe?g|js|mp(2|3|4|e?g)|mov(ie)?|msi|msp|pdf|phps|png|ppt(x|m)?|pot(x|m)?|pps(x|m)?|ppam|sld(x|m)?|thmx|qtm?|ra(m|r)?|sea|sit|tar|tgz|torrent|txt|wav|wma|wmv|wpd|xls(x|m|b)?|xlt(x|m)|xlam|xml|z|zip","trackColorbox":1},"hide_submit":{"hide_submit_status":true,"hide_submit_method":"disable","hide_submit_css":"hide-submit-disable","hide_submit_abtext":"","hide_submit_atext":"","hide_submit_hide_css":"hide-submit-processing","hide_submit_hide_text":"Processing please wait...","hide_submit_indicator_style":"expand-left","hide_submit_spinner_color":"#000","hide_submit_spinner_lines":12,"hide_submit_hide_fx":false,"hide_submit_reset_time":0},"superfish":{"1":{"id":"1","sf":{"animation":{"opacity":"show","height":"show"},"speed":"fast","dropShadows":false},"plugins":{"touchscreen":{"behaviour":"0","disableHover":true,"mode":"useragent_predefined"},"smallscreen":{"mode":"window_width","breakpointUnit":"px","title":"\u003E Click for Menu \u003C"},"supposition":true}}},"ogContext":{"groupType":"node","gid":"20"}});</script>
+  </head>
+  <body class="html not-front not-logged-in page-node page-node- page-node-20 node-type-department og-context og-context-node og-context-node-20  default-masthead vts-newburynh subsite-conservation-commission" >
+    <div id="skip-link">
+      <a href="#main" class="element-invisible element-focusable" role="link">Skip to main content</a>
+    </div>
+        
+<div id="page" class="vts-site-template vts-masthead-container-bg vts-menu-container-bg vts-titlebar-full-bg vts-footer-container-bg panels-page no-sidebars">
+      <header id="header" role="banner" class="region">
+      <div class="container clearfix">
+        <div class="vts-inner-6-6" id="mini-panel-site_heading_custom">
+  
+      <div class="inner-two-column-50-50">
+      <div class="inner-two-column-50-50__first">
+        <div id="logo"><a href="https://www.newbury.nh.gov/"><img typeof="foaf:Image" src="https://www.newbury.nh.gov/sites/all/themes/custom/sites/newburynh/vts_newburynh/logo.png" alt="Newbury NH" /></a></div>      </div>
+      <div class="inner-two-column-50-50__second">
+        <div id="home-button"><a href="https://www.newbury.nh.gov/"><i class="icon"></i><span class="screen-reader-text">Home</span></a></div>
+<form action="/advanced-search" method="get" id="views-exposed-form-search-advanced-site-search" accept-charset="UTF-8"><div><div class="views-exposed-form">
+  <div class="views-exposed-widgets clearfix">
+          <div id="edit-keywords-wrapper" class="views-exposed-widget views-widget-filter-search_api_views_fulltext">
+                  <label for="edit-keywords">
+            Keywords          </label>
+                        <div class="views-widget">
+          <div class="form-item form-type-textfield form-item-keywords">
+ <input placeholder="Search" type="text" id="edit-keywords" name="keywords" value="" size="30" maxlength="128" class="form-text" />
+</div>
+        </div>
+              </div>
+                    <div class="views-exposed-widget views-submit-button">
+      <input type="submit" id="edit-submit-search-advanced" value="Search" class="form-submit" />    </div>
+      </div>
+</div>
+</div></form>      </div>
+    </div>
+    </div>
+      </div>
+    </header>
+  
+      <nav id="navigation" role="navigation" class="region">
+      <div class="container clearfix">
+        <ul  id="superfish-1" class="menu sf-menu sf-main-menu sf-horizontal sf-style-none sf-total-items-6 sf-parent-items-1 sf-single-items-5"><li id="menu-848-1" class="first odd sf-item-1 sf-depth-1 sf-total-children-2 sf-parent-children-0 sf-single-children-2 menuparent"><a href="/about-us" class="sf-depth-1 menuparent">About Us</a><ul><li id="menu-2793-1" class="first odd sf-item-1 sf-depth-2 sf-no-children"><a href="/about-us/files/newbury-demographics-2024" target="_blank" class="sf-depth-2"> Newbury Demographics 2024</a></li><li id="menu-36376-1" class="last even sf-item-2 sf-depth-2 sf-no-children"><a href="/administration/files/2022-newburytown-report" class="sf-depth-2">2022 Newbury Annual Town Report</a></li></ul></li><li id="menu-1228-1" class="middle even sf-item-2 sf-depth-1 sf-no-children"><a href="/departments" class="sf-depth-1 menu-minipanel menu-minipanel-0 menuparent">Departments</a><ul class="menu-minipanel-panel menu-minipanel-mega-menu-department">
+  <li class="first odd last">
+    <div class="vts-inner-4-4-4" id="mini-panel-mega_menu_department">
+  
+      <div class="inner-three-column">
+      <div class="inner-three-column__first">
+                  <section class="panel-pane pane-block pane-menu-block-1" >
+  <div class="pane-inner clearfix">
+    
+              <h2 class="pane-title">
+        Departments:      </h2>
+        
+    
+    <div class="pane-content">
+      <div class="menu-block-wrapper menu-block-1 menu-name-main-menu parent-mlid-1222 menu-level-1">
+  <ul class="menu"><li class="first leaf has-children menu-mlid-1029"><a href="/administration">Administration</a></li>
+<li class="leaf has-children menu-mlid-1020"><a href="/assessor">Assessor</a></li>
+<li class="leaf has-children menu-mlid-1021"><a href="/code-enforcement-officer">Code Enforcement Officer</a></li>
+<li class="last leaf has-children menu-mlid-1018"><a href="/emergency-management">Emergency Management</a></li>
+</ul></div>
+    </div>
+
+    
+        
+  </div>
+</section>
+              </div>
+      <div class="inner-three-column__second">
+                  <div class="panel-pane pane-block pane-menu-block-2" >
+  <div class="pane-inner clearfix">
+    
+            
+    
+    <div class="pane-content">
+      <div class="menu-block-wrapper menu-block-2 menu-name-main-menu parent-mlid-1223 menu-level-1">
+  <ul class="menu"><li class="first leaf has-children menu-mlid-1027"><a href="/fire-rescue-department" target="_blank">Fire Department</a></li>
+<li class="leaf has-children menu-mlid-1024"><a href="/health-officer">Health Officer</a></li>
+<li class="leaf has-children menu-mlid-1026"><a href="/highway-department">Highway Department</a></li>
+<li class="leaf menu-mlid-1102"><a href="/planning-board">Land Use</a></li>
+<li class="leaf has-children menu-mlid-1022"><a href="http://newburynhlibrary.net" target="_blank">Library</a></li>
+<li class="last leaf has-children menu-mlid-1025"><a href="/police-department">Police Department</a></li>
+</ul></div>
+    </div>
+
+    
+        
+  </div>
+</div>
+              </div>
+      <div class="inner-three-column__third">
+                  <div class="panel-pane pane-block pane-menu-block-3 pane-padding-bottom-none" >
+  <div class="pane-inner clearfix">
+    
+            
+    
+    <div class="pane-content">
+      <div class="menu-block-wrapper menu-block-3 menu-name-main-menu parent-mlid-1224 menu-level-1">
+  <ul class="menu"><li class="first leaf has-children menu-mlid-1023"><a href="/tax-collector">Tax Collector</a></li>
+<li class="leaf has-children menu-mlid-1028"><a href="/town-clerk">Town Clerk</a></li>
+<li class="last leaf has-children menu-mlid-1019"><a href="/transfer-station">Transfer Station</a></li>
+</ul></div>
+    </div>
+
+    
+        
+  </div>
+</div>
+
+<div class="panel-pane pane-custom pane-1" >
+  <div class="pane-inner clearfix">
+    
+            
+    
+    <div class="pane-content">
+      <p><a href="https://www.newbury.nh.gov/departments"><span class="fa fa-university"> </span>All Departments</a></p>    </div>
+
+    
+        
+  </div>
+</div>
+              </div>
+    </div>
+  
+  </div>
+  </li>
+</ul>
+</li><li id="menu-1229-1" class="middle odd sf-item-3 sf-depth-1 sf-no-children"><a href="/boards" class="sf-depth-1 menu-minipanel menu-minipanel-0 menuparent">Boards &amp; Committees</a><ul class="menu-minipanel-panel menu-minipanel-mega-menu-boards">
+  <li class="first odd last">
+    <div class="vts-inner-4-4-4" id="mini-panel-mega_menu_boards">
+  
+      <div class="inner-three-column">
+      <div class="inner-three-column__first">
+                  <section class="panel-pane pane-block pane-menu-block-6" >
+  <div class="pane-inner clearfix">
+    
+              <h2 class="pane-title">
+        Boards &amp; Committees:      </h2>
+        
+    
+    <div class="pane-content">
+      <div class="menu-block-wrapper menu-block-6 menu-name-main-menu parent-mlid-1225 menu-level-1">
+  <ul class="menu"><li class="first leaf menu-mlid-40161"><a href="/selectboard/2026-advisory-budget-committee">2026 Advisory Budget Committee</a></li>
+<li class="leaf has-children menu-mlid-37421"><a href="/blodgett-sewer-user-advisory-committee">Blodgett Sewer User Advisory Committee</a></li>
+<li class="leaf menu-mlid-1012"><a href="/cemetery-trustees">Cemetery Trustees</a></li>
+<li class="leaf has-children active-trail active menu-mlid-1013"><a href="/conservation-commission" class="active-trail active">Conservation Commission</a></li>
+<li class="last leaf menu-mlid-1353"><a href="/joint-assessing-board-newbury-sunapee-new-london" target="_blank">Joint Assessing Board, Newbury Sunapee &amp; New London</a></li>
+</ul></div>
+    </div>
+
+    
+        
+  </div>
+</section>
+              </div>
+      <div class="inner-three-column__second">
+                  <div class="panel-pane pane-block pane-menu-block-4" >
+  <div class="pane-inner clearfix">
+    
+            
+    
+    <div class="pane-content">
+      <div class="menu-block-wrapper menu-block-4 menu-name-main-menu parent-mlid-1226 menu-level-1">
+  <ul class="menu"><li class="first leaf menu-mlid-1031"><a href="/joint-loss-management-committee">Joint Loss Management Committee</a></li>
+<li class="leaf has-children menu-mlid-1030"><a href="/newbury-beautification-committee">Newbury Beautification Committee</a></li>
+<li class="leaf has-children menu-mlid-22606"><a href="/newbury-energy-committee">Newbury Energy Committee</a></li>
+<li class="leaf menu-mlid-24796"><a href="/newbury-public-library-trustees">Newbury Public Library Trustees</a></li>
+<li class="leaf has-children menu-mlid-36486"><a href="/newbury-septic-committee">Newbury Septic Committee</a></li>
+<li class="leaf has-children menu-mlid-1014"><a href="/planning-board">Planning Board</a></li>
+<li class="last leaf has-children menu-mlid-1015"><a href="/selectboard">Selectboard</a></li>
+</ul></div>
+    </div>
+
+    
+        
+  </div>
+</div>
+              </div>
+      <div class="inner-three-column__third">
+                  <div class="panel-pane pane-block pane-menu-block-5 pane-padding-bottom-none" >
+  <div class="pane-inner clearfix">
+    
+            
+    
+    <div class="pane-content">
+      <div class="menu-block-wrapper menu-block-5 menu-name-main-menu parent-mlid-1227 menu-level-1">
+  <ul class="menu"><li class="first leaf menu-mlid-1188"><a href="/trustees-trust-funds">Trustees of the Trust Funds</a></li>
+<li class="last leaf has-children menu-mlid-1010"><a href="/zoning-board-adjustment">Zoning Board of Adjustment</a></li>
+</ul></div>
+    </div>
+
+    
+        
+  </div>
+</div>
+
+<div class="panel-pane pane-custom pane-2" >
+  <div class="pane-inner clearfix">
+    
+            
+    
+    <div class="pane-content">
+      <p><a href="https://www.newbury.nh.gov/boards"><span class="fa fa-users"> </span>All Boards and Committees</a></p><p><a href="https://www.newbury.nh.gov/minutes-and-agendas"><span class="fa fa-files-o"> </span>Minutes &amp; Agendas</a></p>    </div>
+
+    
+        
+  </div>
+</div>
+              </div>
+    </div>
+  
+  </div>
+  </li>
+</ul>
+</li><li id="menu-1218-1" class="middle even sf-item-4 sf-depth-1 sf-no-children"><a href="/community-organizations" class="sf-depth-1 menu-minipanel menu-minipanel-0 menuparent">Community Organizations</a><ul class="menu-minipanel-panel menu-minipanel-mega-menu-community-organization">
+  <li class="first odd last">
+    <div class="vts-3-col-no-wrap">
+  
+      <div class="three-column-no-wrap">
+      <div class="three-column-no-wrap__first">
+                  <div class="panel-pane pane-custom pane-3" >
+  <div class="pane-inner clearfix">
+    
+            
+    
+    <div class="pane-content">
+      <ul><li><a href="https://www.newbury.nh.gov/coalition-communities-20">Coalition Communities 2.0</a></li><li><a href="https://www.newbury.nh.gov/community-organizations/center-meeting-house-committee">Center Meeting House</a></li><li><a href="http://www.thefells.org/" target="_blank">Friends of the John Hay National Wildlife Refuge</a></li><li><a href="http://www.town.sunapee.nh.us/Pages/SunapeeNH_BComm/jointassessing" target="_blank">Joint Board Newbury, Sunapee &amp; New London</a></li></ul>    </div>
+
+    
+        
+  </div>
+</div>
+              </div>
+      <div class="three-column-no-wrap__second">
+                  <div class="panel-pane pane-custom pane-4" >
+  <div class="pane-inner clearfix">
+    
+            
+    
+    <div class="pane-content">
+      <ul><li><a href="https://www.kearsargecalendar.com/">Kearsarge Calendar</a></li><li><a href="http://www.kearsarge.org/" target="_blank">Kearsarge Regional School District</a></li><li><a href="http://www.lakesunapee.org/" target="_blank">Lake Sunapee Protective Association</a></li><li><a href="https://lakesunapeevna.org/" target="_blank">Lake Sunapee Region VNA</a></li><li><a href="https://www.newbury.nh.gov/historical-society">Historical Society</a></li></ul>    </div>
+
+    
+        
+  </div>
+</div>
+              </div>
+      <div class="three-column-no-wrap__third">
+                  <div class="panel-pane pane-custom pane-5" >
+  <div class="pane-inner clearfix">
+    
+            
+    
+    <div class="pane-content">
+      <ul><li><a href="http://www.lakesunapee.org/watershed/" target="_blank">Sunapee Area Watershed Coalition</a></li><li><a href="https://www.newbury.nh.gov/community-organizations/links/sunapee-greenway" target="_blank">Sunapee Greenway</a></li><li><a href="http://www.thefells.org/" target="_blank">The Fells</a></li><li><a href="https://www.newbury.nh.gov/community-organizations/veterans-memorial-committee">Veterans Memorial Committee</a></li><li><a href="https://www.newbury.nh.gov/home/pages/newbury-links">Useful Links</a></li></ul>    </div>
+
+    
+        
+  </div>
+</div>
+              </div>
+    </div>
+  
+  </div>
+  </li>
+</ul>
+</li><li id="menu-852-1" class="middle odd sf-item-5 sf-depth-1 sf-no-children decorative-menu-item"><a href="/where" class="sf-depth-1 menu-minipanel menu-minipanel-852 menuparent">Find It Fast</a><ul class="menu-minipanel-panel menu-minipanel-find-it-fast-drop-down">
+  <li class="first odd last">
+    <div class="vts-3-col-no-wrap">
+  
+      <div class="three-column-no-wrap">
+      <div class="three-column-no-wrap__first">
+                  <div class="panel-pane pane-custom pane-6" >
+  <div class="pane-inner clearfix">
+    
+            
+    
+    <div class="pane-content">
+      <ul><li><a href="https://www.newbury.nh.gov/home/files/2017-newbury-town-report" target="_blank">Annual Town Report</a></li><li><a href="https://www.axisgis.com/Tri_TownNH/" target="_blank">Assessing &amp; Mapping Database</a></li><li><a href="https://www.newbury.nh.gov/assessor/files/address-change-request-form-416" target="_blank">Change of Address Form</a></li><li><a href="https://www.newbury.nh.gov/code-enforcement-officer">Code Enforcement Officer</a></li><li><a href="https://www.newbury.nh.gov/community-organizations">Community Organizations</a></li><li><a href="https://www.newbury.nh.gov/town-clerk/files/dog-license-application" target="_blank">Dog License Application</a></li></ul>    </div>
+
+    
+        
+  </div>
+</div>
+              </div>
+      <div class="three-column-no-wrap__second">
+                  <div class="panel-pane pane-custom pane-7" >
+  <div class="pane-inner clearfix">
+    
+            
+    
+    <div class="pane-content">
+      <ul><li><a href="https://www.newbury.nh.gov/planning-board/pages/master-plan-documents">Master Plan Documents</a></li><li><a href="https://www.newbury.nh.gov/town-clerk/pages/online-payments">Online Payments</a></li><li><a href="http://www.newburynhrec.com/info/default.aspx" target="_blank">Recreation</a></li><li><a href="https://www.newbury.nh.gov/transfer-station">Recycling Information</a></li><li><a href="https://www.newbury.nh.gov/selectboard">Selectboard</a></li><li><a href="https://www.newbury.nh.gov/tax-collector/pages/tax-bills-2016">Tax Bills 2016</a></li><li><a href="https://www.newbury.nh.gov/transfer-station">Transfer Station</a></li></ul>    </div>
+
+    
+        
+  </div>
+</div>
+              </div>
+      <div class="three-column-no-wrap__third">
+                  <div class="panel-pane pane-custom pane-8" >
+  <div class="pane-inner clearfix">
+    
+            
+    
+    <div class="pane-content">
+      <ul><li><a href="https://www.newbury.nh.gov/police-department/pages/winter-parking-ban">Winter Parking Ban</a></li><li><a href="https://www.newbury.nh.gov/town-clerk/files/absentee-ballot-request-town-election-only" target="_blank">Absentee Ballot Request Town Election Only</a></li><li><a href="https://www.newbury.nh.gov/town-clerk/files/absentee-ballot-request-state-federal-election" target="_blank">Absentee Ballot Request State &amp; Federal Election</a></li><li><a href="https://www.newbury.nh.gov/home/pages/newbury-links">Useful Links</a></li></ul><p> </p><p style="text-align:right"><a href="https://www.newbury.nh.gov/where">Click Here for More...</a></p>    </div>
+
+    
+        
+  </div>
+</div>
+              </div>
+    </div>
+  
+  </div>
+  </li>
+</ul>
+</li><li id="menu-2753-1" class="last even sf-item-6 sf-depth-1 sf-no-children"><a href="/administration/links/selectboard-meeting-minutes-agendas" target="_blank" class="sf-depth-1">Selectboard Meeting Minutes</a></li></ul>      </div>
+    </nav>
+  
+      <div id="messages-help-wrapper" class="region">
+      <div class="container clearfix">
+        
+      </div>
+    </div>
+  
+  
+  <div id="main">
+    <div class="container clearfix">
+      <div id="content" role="main" class="region">
+        <section class="panel-pane pane-page-content" >      
+            
+    
+          <div id="block-system-main" class="block block-system">
+
+    
+  <div class="content">
+    <div class="panel-display clearfix vts-three-column page-two-sidebars" >
+
+  
+  <div class="clearfix panel-row">
+    <div class="region region-page-content">
+      <div class="region-inner clearfix">
+        <div class="vts-single-column" id="mini-panel-share_print_breadcrumbs">
+  <div class="panel-pane pane-block pane-print-ui-print-links pane-print-print-links" >      
+            
+    
+          <span class="print_html"><a href="https://www.newbury.nh.gov/print/20" title="Display a printer-friendly version of this page." class="print-html" rel="nofollow"><img class="print-icon" typeof="foaf:Image" src="https://www.newbury.nh.gov/sites/all/modules/contrib/print/icons/print_icon.png" alt="Print" title="Print" /></a></span>    
+    
+      </div><div class="panel-pane pane-block pane-addthis-addthis-block" >      
+            
+    
+          <a class="addthis_button "><img src="https://s7.addthis.com/static/btn/sm-share-en.gif" alt="Share page with AddThis" />
+</a>
+    
+    
+      </div><nav class="breadcrumb" role="navigation"><h2 class="element-invisible">You are here</h2><ol><li><a href="/">Home</a> ›› </li><li><a href="/boards">Boards &amp; Committees</a></li></ol></nav></div>
+<header class="panel-pane region-page-title"><h1 class="page-title">Conservation Commission </h1></header>
+<div class="panel-pane pane-node-content" >
+  <div class="pane-inner clearfix">
+    
+            
+    
+    <div class="pane-content">
+      <article class="node-20 node node-department clearfix" about="/conservation-commission" typeof="sioc:Item foaf:Document" role="article">
+      <header>
+                  <span property="dc:title" content="" class="rdf-meta element-hidden"></span><span property="sioc:num_replies" content="0" datatype="xsd:integer" class="rdf-meta element-hidden"></span>    </header>
+  
+  <div class="content">
+    
+    <!-- Main free content area -->
+    
+  <section class="field field-name-field-description field-type-text-with-summary field-label-hidden">
+    <p style="text-align:center"><strong><span style="font-size:16px">Newbury Conservation Commission<br />2026 Meeting </span></strong></p><p><strong><span style="font-size:16px">January 13, 2026 - 6:00pm</span></strong></p><p><strong><span style="font-size:16px">February 10, 2026 - 6:00pm</span></strong></p><p><strong><span style="font-size:16px">March 12, 2026 - 6:00pm(Thursday)</span></strong></p><p><strong><span style="font-size:16px">April 14, 2026 - 6:00pm</span></strong></p><p><strong><span style="font-size:16px">May 12, 2026 - 6:00pm</span></strong></p><p><strong><span style="font-size:16px">June 9,2026 - 6:00pm</span></strong></p><p><strong><span style="font-size:16px">July 14,2026 - 6:00pm</span></strong></p><p><strong><span style="font-size:16px">August 11, 2026 - 6:00pm</span></strong></p><p><strong><span style="font-size:16px">September 10, 2026 - 6:00pm(Thursday)</span></strong></p><p><strong><span style="font-size:16px">October 15, 2026 - 6:00 pm(Thursday) November 10, 2026 - 6:00 pm</span></strong></p><p><strong><span style="font-size:16px">December 8, 2026 - 6:00 pm</span></strong></p><p><strong><span style="font-size:16px">Meetings are the second Tuesday of the month at the Town Offices, with the three exceptions above on Thursday.</span></strong></p><p> </p><p style="text-align:center"> </p><hr /><p style="text-align:center"><span style="font-size:18px"><strong>Tree &amp; Vegetation Cutting Application in the Protected Shoreland</strong></span></p><p> The Newbury Conservation Commission has updated the process for requesting and submitting a Tree &amp; Vegetation Cutting Application In the Protected Shoreland District. You can now download the application from this website by clicking on the link:<a href="https://www.newburynh.org/sites/g/files/vyhlif4761/f/uploads/tree_cutting_application_-_rev._6-30-24.pdf"> </a><a href="https://www.Newbury.nh.gov/sites/g/files/vyhlif4761/f/uploads/tree_cutting_application_-_rev._6-30-24.pdf"><strong>Tree &amp; Vegetation Cutting Application in the Protected Shoreland</strong></a> Overlay District. Complete the application, scan the application and email it to the Newbury Conservation Commission. </p><p>The application will be reviewed by the Conservation Commission and you will be contacted if any additional information is needed. Please click the following links to the email addresses to the <strong><a href="/cdn-cgi/l/email-protection#ed8e82898888838b829f8e8880888399ad83889a8f989f94c38385c38a829bd29e988f87888e99d0b99f8888c8dfddae98999984838ac8dfddac9d9d81848e8c99848283">Code Enforcement Officer</a></strong> and the<a href="https://newburyconservationcommission@gmail.com"> </a><strong><a href="/cdn-cgi/l/email-protection#2e604b594c5b5c574d41405d4b5c584f5a4741404d414343475d5d4741406e49434f4742004d4143115d5b4c444b4d5a137a5c4b4b0b1c1e6d5b5a5a4740490b1c1e6f5e5e42474d4f5a474140">Conservation Commission</a></strong><a href="https://newburyconservationcommission@gmail.com"> </a>to send the completed application  The completed application can still be delivered to the Newbury Town Office, please place the application in the Conservation Commission box on the table outside the Code Enforcement Officer's Office.</p><hr /><p><a href="https://www.lakesunapee.org/septic-systems">Lake Sunapee Protective Association Septic System Information </a></p><p> </p>  </section>
+
+    <!-- Staff and Member Tables -->
+        <section class="inner-node-region"><h2>Board Members</h2><div class="view view-group-board-members view-id-group_board_members view-display-id-panel_pane_1 view-dom-id-f3fa49bff17d356c3a15fce7ff856a96">
+        
+  
+  
+      <div class="view-content">
+      <table  class="views-table cols-2">
+         <thead>
+      <tr>
+                  <th  class="views-field views-field-title" scope="col">
+            Name          </th>
+                  <th  class="views-field views-field-field-job-title" scope="col">
+            Title          </th>
+              </tr>
+    </thead>
+    <tbody>
+          <tr  class="odd views-row-first">
+                  <td  class="views-field views-field-title">
+            Katheryn Holmes
+
+          </td>
+                  <td  class="views-field views-field-field-job-title">
+            Chair (2026)          </td>
+              </tr>
+          <tr  class="even">
+                  <td  class="views-field views-field-title">
+            Bob Stewart
+
+          </td>
+                  <td  class="views-field views-field-field-job-title">
+            Vice Chair (2026)          </td>
+              </tr>
+          <tr  class="odd">
+                  <td  class="views-field views-field-title">
+            John Magee
+
+          </td>
+                  <td  class="views-field views-field-field-job-title">
+            Member (2027)          </td>
+              </tr>
+          <tr  class="even">
+                  <td  class="views-field views-field-title">
+            Alden Beauchemin.
+
+          </td>
+                  <td  class="views-field views-field-field-job-title">
+            Member (2027)          </td>
+              </tr>
+          <tr  class="odd">
+                  <td  class="views-field views-field-title">
+            <a href="/user/2701/contact">Kristen Schultz</a>
+
+          </td>
+                  <td  class="views-field views-field-field-job-title">
+            Ex Officio          </td>
+              </tr>
+          <tr  class="even views-row-last">
+                  <td  class="views-field views-field-title">
+            David Rhodes
+
+          </td>
+                  <td  class="views-field views-field-field-job-title">
+            Member (2028)          </td>
+              </tr>
+      </tbody>
+</table>
+    </div>
+  
+  
+  
+  
+  
+  
+</div></section>
+    <!-- Custom Person Tables -->
+    
+    <!-- BAC Import -->
+      </div>
+
+    
+</article>
+    </div>
+
+    
+        
+  </div>
+</div>
+      </div>
+    </div>
+
+          <aside class="sidebars">
+                  <div class="region region-page-sidebar-first sidebar">
+            <div class="region-inner clearfix">
+              <nav class="panel-pane pane-block pane-vts-blocks-9 panel-pane" >      
+            
+    
+          <div class="menu-block-wrapper menu-block-vts-accordion menu-name-main-menu parent-mlid-1013 menu-level-0">
+  <ul class="menu"><li class="first leaf menu-mlid-36896"><a href="/conservation-commission/files/mount-sunapee-septic-lagoon-presentation-town-office-may-19-2025" target="_self"> - Mount Sunapee Septic Lagoon Presentation at Town Office, May 19, 2025</a></li>
+<li class="leaf menu-mlid-34976"><a href="/conservation-commission/files/aquatherm-law-rsa27033-35" target="_self">Aquatherm Law RSA270:33-35</a></li>
+<li class="leaf menu-mlid-34916"><a href="/conservation-commission/links/aquatherm-registration-application-and-information" target="_self">Aquatherm Registration Application and information </a></li>
+<li class="leaf menu-mlid-36561"><a href="/conservation-commission/links/hiking-trails-newbury" target="_self">Hiking Trails in Newbury</a></li>
+<li class="leaf menu-mlid-34951"><a href="/conservation-commission/links/lspa-dock-de-icer-information" target="_self">LSPA Dock De-Icer Information </a></li>
+<li class="leaf menu-mlid-36281"><a href="/conservation-commission/links/septic-system-information" target="_self">Septic System Information</a></li>
+<li class="leaf menu-mlid-1114"><a href="/conservation-commission/links/sunapee-ragged-kearsarge-greenway-coalitions-website" target="_blank">Sunapee-Ragged-Kearsarge Greenway Coalition&#039;s website</a></li>
+<li class="last leaf menu-mlid-24806"><a href="/conservation-commission/files/tree-vegetation-cutting-application-protected-shoreland-126" target="_self">Tree &amp; Vegetation Cutting Application in the Protected Shoreland (1/26)</a></li>
+</ul></div>
+    
+    
+      </nav>
+<section class="panel-pane pane-views-panes pane-group-contact-info-contact-info-full with-heading" >
+  <div class="pane-inner clearfix">
+    
+              <h2 class="pane-title">
+        Contact Info      </h2>
+        
+    
+    <div class="pane-content">
+      <div class="view view-group-contact-info view-id-group_contact_info view-display-id-contact_info_full view-dom-id-89b42ca88d06300c7c7a0c86afcbcc0f">
+        
+  
+  
+      <div class="view-content">
+        <div class="views-row views-row-1 views-row-odd views-row-first views-row-last">
+      
+  <div class="field views--phone">    <span class="field-label">Phone: </span>    <div>Email: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1d73786a7f686f647e72736e786f6b7c697472737e727070746e6e7472735d7a707c7471337e7270">[email&#160;protected]</a></div>  </div>  
+  <div class="field views--address">    <span class="field-label">Address: </span>    <div><div class="location vcard">
+  <div class="adr">
+          <span class="fn">Newbury Town Office</span>
+              <div class="street-address">
+        937 US Rte 103                  <div class="additional">
+             PO Box 296          </div>
+              </div>
+              <span class="locality">Newbury</span>,               <span class="region">NH</span>
+            <span class="postal-code">03255</span>
+              <div class="country-name">United States</div>
+                                          </div>
+      <div class="map-link">
+      <div class="location map-link">See map: <a href="https://maps.google.com?q=937+US+Rte+103%2C+Newbury%2C+NH%2C+03255%2C+us" target="_blank">Google Maps</a></div>    </div>
+  </div>
+</div>  </div>  
+  <div class="field field-label-inline views--meetings-when">    <span class="field-label">Meetings - When: </span>    Second Tuesday of the month  </div>  
+  <div class="field field-label-inline views--meetings-where">    <span class="field-label">Meetings - Where: </span>    Town Offices  </div>  
+  <div class="field field-label-inline views--meetings-time">    <span class="field-label">Meetings - Time: </span>    6:00 pm  </div>  </div>
+    </div>
+  
+  
+  
+  
+  
+  
+</div>    </div>
+
+    
+        
+  </div>
+</section>
+            </div>
+          </div>
+                          <div class="region region-page-sidebar-second sidebar">
+            <div class="region-inner clearfix">
+              <section class="panel-pane pane-views-panes pane-group-news-group-news-short with-heading" >
+  <div class="pane-inner clearfix">
+    
+              <h2 class="pane-title">
+        <a href="/node/20/news">News &amp; Announcements</a>      </h2>
+        
+    
+    <div class="pane-content">
+      <div class="view view-group-news view-id-group_news view-display-id-group_news_short view-title-only view-dom-id-badaad1a9d2687ae4c7c81843c45f3cf">
+        
+  
+  
+      <div class="view-content">
+        <div class="views-row views-row-1 views-row-odd views-row-first">
+      
+          <a href="/conservation-commission/news/public-notice-conservation-commission">Public Notice: Conservation Commission</a>    </div>
+  <div class="views-row views-row-2 views-row-even views-row-last">
+      
+          <a href="/conservation-commission/news/newbury-conservation-commission-2024-meeting-schedule">Newbury Conservation Commission 2024 Meeting Schedule </a>    </div>
+    </div>
+  
+  
+  
+  
+  
+  
+</div>    </div>
+
+    
+        
+  </div>
+</section>
+
+<section class="panel-pane pane-views-panes pane-group-calendar-panel-pane-1 with-heading" >
+  <div class="pane-inner clearfix">
+    
+              <h2 class="pane-title">
+        <a href="/node/20/events/month">Conservation Commission  Calendar</a>      </h2>
+        
+    
+    <div class="pane-content">
+      <div class="view view-group-calendar view-id-group_calendar view-display-id-panel_pane_1 mini-calendar view-dom-id-05588cad8bfd05574f61005ca3632f3d">
+            <div class="view-header">
+          <div class="date-nav-wrapper clearfix">
+    <div class="date-nav item-list">
+      <div class="date-heading">
+        <h3><a href="https://www.newbury.nh.gov/node/20/events/month/20/2026-08" title="View full page month">August</a></h3>
+      </div>
+      <ul class="pager">
+              <li class="date-prev">
+          <a href="https://www.newbury.nh.gov/conservation-commission?month=2026-07" title="Navigate to previous month" rel="nofollow">&laquo;</a>        </li>
+                    <li class="date-next">
+          <a href="https://www.newbury.nh.gov/conservation-commission?month=2026-09" title="Navigate to next month" rel="nofollow">&raquo;</a>        </li>
+            </ul>
+    </div>
+  </div>
+    </div>
+  
+  
+  
+      <div class="view-content">
+      <div class="calendar-calendar"><div class="month-view">
+ 
+<table class="mini">
+  <thead>
+    <tr>
+              <th class="days sun">
+          S        </th>
+              <th class="days mon">
+          M        </th>
+              <th class="days tue">
+          T        </th>
+              <th class="days wed">
+          W        </th>
+              <th class="days thu">
+          T        </th>
+              <th class="days fri">
+          F        </th>
+              <th class="days sat">
+          S        </th>
+          </tr>
+  </thead>
+  <tbody>
+          <tr>
+                  <td id="group_calendar-2026-07-26" class="sun mini empty">
+            <div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-07-27" class="mon mini empty">
+            <div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-07-28" class="tue mini empty">
+            <div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-07-29" class="wed mini empty">
+            <div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-07-30" class="thu mini empty">
+            <div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-07-31" class="fri mini empty">
+            <div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-08-01" class="sat mini past has-no-events">
+            <div class="month mini-day-off"> 1 </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+              </tr>
+          <tr>
+                  <td id="group_calendar-2026-08-02" class="sun mini past has-no-events">
+            <div class="month mini-day-off"> 2 </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-08-03" class="mon mini past has-no-events">
+            <div class="month mini-day-off"> 3 </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-08-04" class="tue mini past has-no-events">
+            <div class="month mini-day-off"> 4 </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-08-05" class="wed mini past has-no-events">
+            <div class="month mini-day-off"> 5 </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-08-06" class="thu mini past has-no-events">
+            <div class="month mini-day-off"> 6 </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-08-07" class="fri mini past has-no-events">
+            <div class="month mini-day-off"> 7 </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-08-08" class="sat mini past has-no-events">
+            <div class="month mini-day-off"> 8 </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+              </tr>
+          <tr>
+                  <td id="group_calendar-2026-08-09" class="sun mini past has-no-events">
+            <div class="month mini-day-off"> 9 </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-08-10" class="mon mini past has-no-events">
+            <div class="month mini-day-off"> 10 </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-08-11" class="tue mini past has-events">
+            <div class="month mini-day-on"> <a href="https://www.newbury.nh.gov/node/20/events/day/2026-08-11">11</a><div class="calendar_tooltips" style="display:none"><ul><li><div class="calendar_tooltips-title-value"><a href="/conservation-commission/events/42296">Conservation Commission Meeting</a></div><div class="calendar_tooltips-field_date_and_time-value"><span  property="dc:date" datatype="xsd:dateTime" content="2026-08-11T18:00:00-04:00" class="date-display-single">6:00pm</span></div></li></ul></div> </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-08-12" class="wed mini past has-no-events">
+            <div class="month mini-day-off"> 12 </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-08-13" class="thu mini past has-no-events">
+            <div class="month mini-day-off"> 13 </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-08-14" class="fri mini past has-no-events">
+            <div class="month mini-day-off"> 14 </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-08-15" class="sat mini today has-no-events">
+            <div class="month mini-day-off"> 15 </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+              </tr>
+          <tr>
+                  <td id="group_calendar-2026-08-16" class="sun mini future has-no-events">
+            <div class="month mini-day-off"> 16 </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-08-17" class="mon mini future has-no-events">
+            <div class="month mini-day-off"> 17 </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-08-18" class="tue mini future has-no-events">
+            <div class="month mini-day-off"> 18 </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-08-19" class="wed mini future has-no-events">
+            <div class="month mini-day-off"> 19 </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-08-20" class="thu mini future has-no-events">
+            <div class="month mini-day-off"> 20 </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-08-21" class="fri mini future has-no-events">
+            <div class="month mini-day-off"> 21 </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-08-22" class="sat mini future has-no-events">
+            <div class="month mini-day-off"> 22 </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+              </tr>
+          <tr>
+                  <td id="group_calendar-2026-08-23" class="sun mini future has-no-events">
+            <div class="month mini-day-off"> 23 </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-08-24" class="mon mini future has-no-events">
+            <div class="month mini-day-off"> 24 </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-08-25" class="tue mini future has-no-events">
+            <div class="month mini-day-off"> 25 </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-08-26" class="wed mini future has-no-events">
+            <div class="month mini-day-off"> 26 </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-08-27" class="thu mini future has-no-events">
+            <div class="month mini-day-off"> 27 </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-08-28" class="fri mini future has-no-events">
+            <div class="month mini-day-off"> 28 </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-08-29" class="sat mini future has-no-events">
+            <div class="month mini-day-off"> 29 </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+              </tr>
+          <tr>
+                  <td id="group_calendar-2026-08-30" class="sun mini future has-no-events">
+            <div class="month mini-day-off"> 30 </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-08-31" class="mon mini future has-no-events">
+            <div class="month mini-day-off"> 31 </div><div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-09-01" class="tue mini empty">
+            <div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-09-02" class="wed mini empty">
+            <div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-09-03" class="thu mini empty">
+            <div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-09-04" class="fri mini empty">
+            <div class="calendar-empty">&nbsp;</div>
+          </td>
+                  <td id="group_calendar-2026-09-05" class="sat mini empty">
+            <div class="calendar-empty">&nbsp;</div>
+          </td>
+              </tr>
+      </tbody>
+</table>
+</div></div>    </div>
+  
+  
+  
+      
+<div class="more-link">
+  <a href="/node/20/events/month/20/2026-08">
+    All upcoming events  </a>
+</div>
+  
+  
+  
+</div>    </div>
+
+    
+        
+  </div>
+</section>
+
+<section class="panel-pane pane-views-panes pane-group-agenda-panel-pane-1" >
+  <div class="pane-inner clearfix">
+    
+              <h2 class="pane-title">
+        <a href="/node/20/agenda">Agendas</a>      </h2>
+        
+    
+    <div class="pane-content">
+      <div class="view view-group-agenda view-id-group_agenda view-display-id-panel_pane_1 view-dom-id-1dfe92b7286bcbc0564eac3fd8d96bd7">
+        
+  
+  
+      <div class="view-content">
+      <div class="item-list">    <ul>          <li class="views-row views-row-1 views-row-odd views-row-first contextual-links-region">  
+  <div class="views-field views-field-title">        <span class="field-content"><a href="/conservation-commission/agenda/meeting-agenda-3" target="_blank">Meeting Agenda</a></span>  </div>  
+  <div class="views-field views-field-field-agenda-date">        <div class="field-content"><span  property="dc:date" datatype="xsd:dateTime" content="2023-05-09T19:00:00-04:00" class="date-display-single">May 9, 2023 - 7:00pm</span></div>  </div></li>
+          <li class="views-row views-row-2 views-row-even contextual-links-region">  
+  <div class="views-field views-field-title">        <span class="field-content"><a href="/conservation-commission/agenda/meeting-agenda-2" target="_blank">Meeting Agenda</a></span>  </div>  
+  <div class="views-field views-field-field-agenda-date">        <div class="field-content"><span  property="dc:date" datatype="xsd:dateTime" content="2023-04-11T19:00:00-04:00" class="date-display-single">April 11, 2023 - 7:00pm</span></div>  </div></li>
+          <li class="views-row views-row-3 views-row-odd contextual-links-region">  
+  <div class="views-field views-field-title">        <span class="field-content"><a href="/conservation-commission/agenda/meeting-agenda-cancelled" target="_blank">Meeting Agenda CANCELLED </a></span>  </div>  
+  <div class="views-field views-field-field-agenda-date">        <div class="field-content"><span  property="dc:date" datatype="xsd:dateTime" content="2023-03-14T19:00:00-04:00" class="date-display-single">March 14, 2023 - 7:00pm</span></div>  </div></li>
+          <li class="views-row views-row-4 views-row-even contextual-links-region">  
+  <div class="views-field views-field-title">        <span class="field-content"><a href="/conservation-commission/agenda/meeting-agenda-1" target="_blank">Meeting Agenda </a></span>  </div>  
+  <div class="views-field views-field-field-agenda-date">        <div class="field-content"><span  property="dc:date" datatype="xsd:dateTime" content="2023-02-14T12:13:00-05:00" class="date-display-single">February 14, 2023 - 12:13pm</span></div>  </div></li>
+          <li class="views-row views-row-5 views-row-odd views-row-last contextual-links-region">  
+  <div class="views-field views-field-title">        <span class="field-content"><a href="/conservation-commission/agenda/meeting-agenda-0" target="_blank">Meeting Agenda</a></span>  </div>  
+  <div class="views-field views-field-field-agenda-date">        <div class="field-content"><span  property="dc:date" datatype="xsd:dateTime" content="2022-12-13T19:00:00-05:00" class="date-display-single">December 13, 2022 - 7:00pm</span></div>  </div></li>
+      </ul></div>    </div>
+  
+  
+  
+      
+<div class="more-link">
+  <a href="/node/20/agenda">
+    View all  </a>
+</div>
+  
+  
+  
+</div>    </div>
+
+    
+        
+  </div>
+</section>
+
+<section class="panel-pane pane-views-panes pane-group-minutes-panel-pane-1" >
+  <div class="pane-inner clearfix">
+    
+              <h2 class="pane-title">
+        <a href="/node/20/minutes">Minutes</a>      </h2>
+        
+    
+    <div class="pane-content">
+      <div class="view view-group-minutes view-id-group_minutes view-display-id-panel_pane_1 view-dom-id-15142c4dc82c3beaea878ce58f6c5668">
+        
+  
+  
+      <div class="view-content">
+      <div class="item-list">    <ul>          <li class="views-row views-row-1 views-row-odd views-row-first contextual-links-region">  
+  <div class="views-field views-field-title">        <span class="field-content"><a href="/conservation-commission/minutes/meeting-minutes-40" target="_blank">Meeting Minutes </a></span>  </div>  
+  <div class="views-field views-field-field-meeting-date">        <div class="field-content"><span  property="dc:date" datatype="xsd:dateTime" content="2025-08-12T00:00:00-04:00" class="date-display-single">August 12, 2025</span></div>  </div></li>
+          <li class="views-row views-row-2 views-row-even contextual-links-region">  
+  <div class="views-field views-field-title">        <span class="field-content"><a href="/conservation-commission/minutes/meeting-minutes-38" target="_blank">Meeting Minutes</a></span>  </div>  
+  <div class="views-field views-field-field-meeting-date">        <div class="field-content"><span  property="dc:date" datatype="xsd:dateTime" content="2025-07-08T00:00:00-04:00" class="date-display-single">July 8, 2025</span></div>  </div></li>
+          <li class="views-row views-row-3 views-row-odd contextual-links-region">  
+  <div class="views-field views-field-title">        <span class="field-content"><a href="/conservation-commission/minutes/meeting-minutes-37" target="_blank">Meeting Minutes</a></span>  </div>  
+  <div class="views-field views-field-field-meeting-date">        <div class="field-content"><span  property="dc:date" datatype="xsd:dateTime" content="2025-06-10T00:00:00-04:00" class="date-display-single">June 10, 2025</span></div>  </div></li>
+          <li class="views-row views-row-4 views-row-even contextual-links-region">  
+  <div class="views-field views-field-title">        <span class="field-content"><a href="/conservation-commission/minutes/meeting-minutes-32" target="_blank">Meeting Minutes </a></span>  </div>  
+  <div class="views-field views-field-field-meeting-date">        <div class="field-content"><span  property="dc:date" datatype="xsd:dateTime" content="2025-02-03T00:00:00-05:00" class="date-display-single">February 3, 2025</span></div>  </div></li>
+          <li class="views-row views-row-5 views-row-odd views-row-last contextual-links-region">  
+  <div class="views-field views-field-title">        <span class="field-content"><a href="/conservation-commission/minutes/meeting-minutes-39" target="_blank">Meeting Minutes</a></span>  </div>  
+  <div class="views-field views-field-field-meeting-date">        <div class="field-content"><span  property="dc:date" datatype="xsd:dateTime" content="2025-01-14T00:00:00-05:00" class="date-display-single">January 14, 2025</span></div>  </div></li>
+      </ul></div>    </div>
+  
+  
+  
+      
+<div class="more-link">
+  <a href="/node/20/minutes">
+    View all  </a>
+</div>
+  
+  
+  
+</div>    </div>
+
+    
+        
+  </div>
+</section>
+            </div>
+          </div>
+              </aside>
+      </div>
+
+  
+</div>  </div>
+</div>
+    
+    
+      </section>      </div>
+
+          </div>
+  </div>
+
+  
+      <footer id="footer" role="contentinfo" class="region">
+      <div class="container clearfix">
+        <section class="panel-pane pane-block pane-vts-blocks-5 panel-pane" >      
+            
+    
+          <p>Newbury Offices, PO Box 296, US Rte 103, Newbury, NH 03255<br />PH: (603) 763-4940  FAX: (603) 763-5298 <a href="https://maps.google.com/maps?near=Newbury,+New+Hampshire&amp;geocode=&amp;q=town+office&amp;f=l&amp;gl=us&amp;sll=43.321572,-72.037708&amp;sspn=0.005573,0.008197&amp;ie=UTF8&amp;ll=43.297558,-71.996605&amp;spn=0.010791,0.016394&amp;t=h&amp;z=16&amp;iwloc=A&amp;iwstate1=dir" target="_blank">View Map</a><br /><a href="https://www.newbury.nh.gov/home/pages/website-disclaimer">Website Disclaimer</a>  <a href="https://www.civicplus.com" target="_blank">Government Websites by CivicPlus ®</a></p>    
+    
+      </section>
+<ul id="vts-user-menu"><li class="first"><a href="/user/login?current=node/20">Login</a></li></ul>      </div>
+    </footer>
+  
+</div>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://www.newbury.nh.gov/sites/all/modules/contrib/picture/picturefill/picturefill.min.js?v=3.0.1"></script>
+<script src="https://www.newbury.nh.gov/sites/all/modules/contrib/picture/picture.min.js?v=7.103.13+7.103.1:drupal"></script>
+<script src="https://www.newbury.nh.gov/sites/all/modules/contrib/addthis/addthis.js?tfpewt"></script>
+  <script type="text/javascript">window.NREUM||(NREUM={});NREUM.info={"beacon":"bam.nr-data.net","licenseKey":"NRJS-acd47eab6e866cba245","applicationID":"528839427","transactionName":"MVVUZEdVXhUDVRULVggfd1NBXV8ITUYABVw5XVdeVFNVFD1YDgZcOUZfVUJrQAcFUw==","queueTime":28,"applicationTime":680,"atts":"HRJXEg9PTRs=","errorBeacon":"bam.nr-data.net","agent":""}</script></body>
+</html>

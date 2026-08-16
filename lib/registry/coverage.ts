@@ -122,6 +122,27 @@ export interface CoverageSummary {
   bodies: CoveredBody[];
   seats: Seat[];
   /**
+   * **Every division whose boundary CONTAINS this point** — the governing
+   * set (2026-08-15).
+   *
+   * Distinct from anything else on this summary: `bodies` is the governments
+   * we hold rows for and `seats` is the three legislative types, while this is
+   * the raw point-in-polygon answer, including a division with no body and a
+   * statistical place. It is what makes "you are in N districts" a sentence
+   * about the reader rather than about the viewport — the districts counter
+   * used to read "179 DISTRICTS" off what the map happened to be drawing,
+   * which is a fact about the camera.
+   *
+   * Same committed geometry the map draws from, resolved by the same
+   * `divisionsAt` the who-governs card uses. Never a second geometry source.
+   */
+  divisions: Array<{
+    ocdId: string;
+    label: string;
+    divisionType: DivisionType;
+    tier: Tier;
+  }>;
+  /**
    * A municipal-shaped division covers this point and every one of them is
    * statistical — a CDP or a CCD — so there is genuinely no city or town
    * government here.
@@ -313,6 +334,15 @@ export function summarizeCoverage(
     state,
     bodies: covered,
     seats,
+    // The governing set — every division containing the point, in the order
+    // `divisionsAt` returned them. Carried whole rather than as a count so
+    // the door can list what the number counts (the stated-N rule).
+    divisions: divisions.map((d) => ({
+      ocdId: d.ocdId,
+      label: d.label,
+      divisionType: d.divisionType,
+      tier: d.tier,
+    })),
     unincorporated,
     senators,
     statewideExecutives,

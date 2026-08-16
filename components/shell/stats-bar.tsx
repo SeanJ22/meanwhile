@@ -22,7 +22,7 @@ const COVERAGE_LABEL = {
 } as const;
 
 export function StatsBar() {
-  const { meetings, drawnDistricts, dropped, result, searchFailed } =
+  const { meetings, drawnDistricts, dropped, result, searchFailed, atAddress } =
     useShellData();
   const ui = useUi();
   const dispatch = useUiDispatch();
@@ -38,8 +38,9 @@ export function StatsBar() {
         meetings,
         coverage: result?.coverage ?? null,
         drawnDistricts: ui.showDistricts ? drawnDistricts : null,
+        atAddress,
       }),
-    [meetings, drawnDistricts, ui.showDistricts, result],
+    [meetings, drawnDistricts, ui.showDistricts, result, atAddress],
   );
 
   // The failed-fetch rule (2a): a failed operation may not render as an
@@ -73,9 +74,13 @@ export function StatsBar() {
         value={view.bodies}
         onOpen={() => dispatch({ type: "door/open", door: "bodies" })}
       />
+      {/* The number never travels without what it counts. "179 DISTRICTS"
+          read as a claim the reader is governed by 179; the door said "in
+          view" and the tile said nothing. */}
       <Card
-        label="Districts"
+        label={`Districts ${view.districtsLabel.toLowerCase()}`}
         value={view.districts}
+        sub={view.districtsSecondary}
         onOpen={() => dispatch({ type: "door/open", door: "districts" })}
       />
       <Card
@@ -114,12 +119,15 @@ export function StatsBar() {
 function Card({
   label,
   value,
+  sub = null,
   style,
   accent = false,
   onOpen,
 }: {
   label: string;
   value: number | string;
+  /** A second honest number, kept rather than thrown away. */
+  sub?: string | null;
   style?: React.CSSProperties;
   accent?: boolean;
   onOpen?: () => void;
@@ -139,6 +147,11 @@ function Card({
         {value}
       </div>
       <div className="label">{label}</div>
+      {sub && (
+        <div className="label" style={{ color: "var(--text-muted)" }}>
+          {sub}
+        </div>
+      )}
     </button>
   );
 }

@@ -31,6 +31,16 @@ export interface ShellData {
   /** Meetings the adapter could not place. Surfaced, never silent. */
   dropped: number;
   searchFailed: boolean;
+  /**
+   * True when the answer on screen was resolved from a street address the
+   * reader gave, rather than from a zip centroid.
+   *
+   * The districts counter is the first surface that needs to know: "you are
+   * in N districts" is only sayable about a real point, because a ZCTA
+   * centroid crosses city, county and school lines and can sit in another
+   * town entirely.
+   */
+  atAddress: boolean;
 }
 
 const DataContext = createContext<ShellData | null>(null);

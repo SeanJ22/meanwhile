@@ -3,6 +3,7 @@
 import { TIER_LABEL } from "@/lib/ocd/tiers";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { DistrictHit } from "@/lib/map/districts";
+import { representationNoteFor } from "@/lib/registry/representation";
 
 import {
   NoValue,
@@ -121,9 +122,9 @@ export function DistrictPopup({
         ))
       ) : (
         <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
-          {district.tier === "local"
-            ? "We know this division has a governing body because its boundary exists. We haven't sourced who sits on it."
-            : "No sourced officeholder for this division yet."}
+          {/* The same line the battlecard shows for the same division — the
+              two surfaces cannot say different things about one gap. */}
+          {representationNoteFor(district.tier)}
         </p>
       )}
 

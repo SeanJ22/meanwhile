@@ -149,7 +149,7 @@ export async function politeGetText(
 ): Promise<{ status: number; contentType: string; text: string }> {
   const impl = options.fetchImpl ?? fetch;
   const browser = options.profile === "browser";
-  const headers = browser
+  const headers: Record<string, string> = browser
     ? { ...browserProfileHeaders(), ...(options.accept ? { Accept: options.accept } : {}) }
     : { "User-Agent": sourceUserAgent(), Accept: options.accept ?? "*/*" };
   let lastStatus = 0;

@@ -23,11 +23,15 @@ import { logEvent } from "@/lib/log/client";
 import { groupByVenue, type Venue } from "@/lib/meetings/venues";
 import type { Meeting } from "@/lib/sources/types";
 import type { SeatHolder } from "@/lib/officials/lookup";
-import type { CoveredBody } from "@/lib/registry/coverage";
+import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
 import {
   governingRosterHoldersForDivision,
   rosterHoldersForBody,
 } from "@/lib/registry/body-rosters";
+import {
+  representationForDivision,
+  representationNoteFor,
+} from "@/lib/registry/representation";
 import { TIER_LABEL } from "@/lib/ocd/tiers";
 import { tierForMeeting } from "@/lib/state/derive";
 import {
@@ -526,18 +530,16 @@ function MapEntryInner() {
   );
 
   /**
-   * Officeholders sourced for a division — legislative seats from the
-   * coverage summary, and for a local governing division the curated body
-   * roster (the Sunnyside catch: a school district's board members are its
-   * representation, and the seat lookup alone rendered none).
+   * Officeholders sourced for a division — one resolver, shared with the
+   * division battlecard and with anything else that asks the question.
+   *
+   * This used to be the resolution itself, written out here, while the
+   * battlecard did its own narrower version six hundred lines down. See
+   * `representationForDivision`.
    */
   const holdersFor = useCallback(
-    (ocdId: string): SeatHolder[] => {
-      const coverage = current?.coverage;
-      const seat = coverage?.seats.find((s) => s.ocdId === ocdId);
-      if (seat?.representatives.length) return seat.representatives;
-      return governingRosterHoldersForDivision(ocdId);
-    },
+    (ocdId: string): SeatHolder[] =>
+      representationForDivision(current?.coverage ?? null, ocdId),
     [current],
   );
 
@@ -579,8 +581,12 @@ function MapEntryInner() {
       drawnDistricts,
       dropped: 0,
       searchFailed: failure !== null,
+      // The street-point view is the only one keyed on a resolved address —
+      // `onStreetPoint` mints exactly this prefix. Reading the key rather
+      // than carrying a second flag keeps the two from disagreeing.
+      atAddress: view?.key.startsWith("street:") ?? false,
     }),
-    [current, meetings, venues, location, drawnDistricts, failure],
+    [current, meetings, venues, location, drawnDistricts, failure, view],
   );
 
   const onSearchPick = useCallback((item: SearchItem) => {
@@ -1050,7 +1056,11 @@ function MapEntryInner() {
               onExpand={() =>
                 openLarge({
                   kind: "entity",
-                  subject: districtSubject(districtPopup, current?.meetings ?? []),
+                  subject: districtSubject(
+                    districtPopup,
+                    current?.meetings ?? [],
+                    current?.coverage ?? null,
+                  ),
                 })
               }
             />
@@ -1135,6 +1145,7 @@ function MapEntryInner() {
             meetings={current?.meetings ?? []}
             drawnDistricts={drawnDistricts}
             districtOverlayOn={ui.showDistricts}
+            atAddress={data.atAddress}
             onShowDistricts={() => setShowDistricts(true)}
             onOpenOfficial={(holder, seatLabel, tier) =>
               openLarge({ kind: "official", holder, seatLabel, tier })
@@ -1233,6 +1244,7 @@ function meetingSubject(
 function districtSubject(
   district: DistrictHit,
   allMeetings: Meeting[] = [],
+  coverage: CoverageSummary | null = null,
 ): ModalSubject {
   // 6c (2026-08-17): the county popup fills in. A county's large surface
   // lists every local meeting in view (local coverage is clipped to exactly
@@ -1250,10 +1262,12 @@ function districtSubject(
         : m.ocdId === district.ocdId,
     )
     .sort((a, b) => a.startsAt.localeCompare(b.startsAt));
-  // Both registry suffixes — a school district's body is `#board`, and the
-  // `#governing`-only form left every school-district popup claiming no
-  // sourced officeholder over a curated roster.
-  const roster = governingRosterHoldersForDivision(district.ocdId);
+  // The SAME resolver the small popup and the who-governs card read. This
+  // called the roster store directly until 2026-08-15, which is why every
+  // congressional, state-house and state-senate division card denied its own
+  // officeholder: rosters hold no legislative seats, and the seats were never
+  // asked for. A parallel join always drifts; there is one now.
+  const roster = representationForDivision(coverage, district.ocdId);
   return {
     title: district.label,
     subtitle: `${district.typeLabel} · ${district.state}`,
@@ -1265,7 +1279,7 @@ function districtSubject(
       { label: "State", value: district.state, mono: true },
     ],
     representation: roster,
-    representationNote: "No sourced officeholder for this division yet.",
+    representationNote: representationNoteFor(district.tier),
     meetings,
     sources: [],
   };

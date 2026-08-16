@@ -6,7 +6,8 @@ import type { CoverageSummary } from "@/lib/registry/coverage";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { Meeting } from "@/lib/sources/types";
 import type { DrawnDistrict } from "@/lib/map/districts";
-import { districtDoorRows } from "@/lib/state/derive";
+import { districtDoorRows, governingDoorRows, type DistrictDoorRow } from "@/lib/state/derive";
+import { representationForDivision } from "@/lib/registry/representation";
 import {
   groupOfficials,
   TIER_GROUP_LABELS,
@@ -31,6 +32,7 @@ export function DoorOverlay({
   meetings,
   drawnDistricts,
   districtOverlayOn,
+  atAddress,
   onShowDistricts,
   onOpenOfficial,
   onOpenMeeting,
@@ -45,6 +47,10 @@ export function DoorOverlay({
   /** Whether the overlay is on — off means the card said "Off", and the
    *  door explains rather than rendering an empty list. */
   districtOverlayOn: boolean;
+  /** True when a street address has resolved, which is when this door can
+   *  honestly list the districts the reader is IN rather than the ones the
+   *  camera happens to be over. */
+  atAddress: boolean;
   /** Turns the overlay on from inside the door (M57). Sending the reader
    *  to hunt for a checkbox in the sidebar was a hidden entry point. */
   onShowDistricts: () => void;
@@ -64,7 +70,9 @@ export function DoorOverlay({
     door === "bodies"
       ? "Bodies here"
       : door === "districts"
-        ? "Districts in view"
+        ? atAddress
+          ? "Districts you're in"
+          : "Districts in view"
         : "Officials here";
 
   return (
@@ -100,6 +108,7 @@ export function DoorOverlay({
           <DistrictsDoor
             drawnDistricts={drawnDistricts}
             districtOverlayOn={districtOverlayOn}
+            atAddress={atAddress}
             onShowDistricts={onShowDistricts}
             coverage={coverage}
             onOpenOfficial={onOpenOfficial}
@@ -183,12 +192,14 @@ function BodiesDoor({
 function DistrictsDoor({
   drawnDistricts,
   districtOverlayOn,
+  atAddress,
   onShowDistricts,
   coverage,
   onOpenOfficial,
 }: {
   drawnDistricts: DrawnDistrict[];
   districtOverlayOn: boolean;
+  atAddress: boolean;
   onShowDistricts: () => void;
   coverage: CoverageSummary | null;
   onOpenOfficial: (
@@ -197,6 +208,34 @@ function DistrictsDoor({
     tier: "local" | "state" | "national",
   ) => void;
 }) {
+  // The governing mode. A resolved street address makes "the districts you
+  // are in" a sayable fact, and it is the one the reader came for. It does
+  // NOT depend on the overlay: whether boundaries are drawn is a display
+  // choice, while containment is geometry.
+  if (atAddress && coverage) {
+    const rows = governingDoorRows(coverage, (ocdId) =>
+      representationForDivision(coverage, ocdId),
+    );
+    return (
+      <>
+        <p className="mt-3 text-[0.8125rem] text-muted">
+          Every district your address sits inside. The map may be showing more
+          than these — those are the ones near you, not the ones you&apos;re in.
+        </p>
+        <DistrictRows rows={rows} onOpenOfficial={onOpenOfficial} />
+        {!districtOverlayOn && (
+          <button
+            type="button"
+            onClick={onShowDistricts}
+            className="mt-3 cursor-pointer rounded border border-[var(--panel-border)] px-3 py-1.5 text-[0.8125rem] text-paper hover:border-paper"
+          >
+            Show district boundaries
+          </button>
+        )}
+      </>
+    );
+  }
+
   if (!districtOverlayOn) {
     // M57: the switch is here, not somewhere the reader has to go find.
     return (
@@ -224,6 +263,21 @@ function DistrictsDoor({
   }
   // 3g: EXACTLY one row per drawn district — the count the card stated.
   const rows = districtDoorRows(drawnDistricts, coverage?.seats ?? []);
+  return <DistrictRows rows={rows} onOpenOfficial={onOpenOfficial} />;
+}
+
+/** One row per district, shared by both modes so they cannot drift apart. */
+function DistrictRows({
+  rows,
+  onOpenOfficial,
+}: {
+  rows: DistrictDoorRow[];
+  onOpenOfficial: (
+    holder: SeatHolder,
+    seatLabel: string | null,
+    tier: "local" | "state" | "national",
+  ) => void;
+}) {
   return (
     <ul className="mt-3 space-y-2">
       {rows.map((row) => (

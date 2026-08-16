@@ -188,6 +188,12 @@ export interface ShellStats {
   bodies: number;
   /** Null when the overlay is off: nothing is drawn, so there is no count. */
   districts: number | null;
+  /**
+   * Districts whose boundary CONTAINS the reader's resolved address point —
+   * the governing set. Null when no address has been resolved (a zip centroid
+   * is not an address) or when no coverage answered.
+   */
+  governingDistricts: number | null;
   officials: number;
   /** False when no coverage answered — the two coverage counters can't claim. */
   coverageAnswered: boolean;
@@ -228,12 +234,20 @@ export function computeStats(input: {
   coverage: CoverageSummary | null;
   /** What the districts door renders, or null when the overlay is off. */
   drawnDistricts: readonly DrawnDistrict[] | null;
+  /**
+   * True when the query point is a resolved street address rather than a zip
+   * centroid. A ZCTA centroid can sit in another town, so "the districts you
+   * are in" is only sayable once a real address has been resolved.
+   */
+  atAddress?: boolean;
 }): ShellStats {
-  const { meetings, coverage, drawnDistricts } = input;
+  const { meetings, coverage, drawnDistricts, atAddress = false } = input;
   return {
     meetings: meetings.length,
     bodies: coverage ? coverage.bodies.length : 0,
     districts: drawnDistricts ? drawnDistricts.length : null,
+    governingDistricts:
+      atAddress && coverage ? coverage.divisions.length : null,
     officials: coverage ? allOfficialRows(coverage).length : 0,
     coverageAnswered: coverage !== null,
   };
@@ -273,6 +287,49 @@ export interface DistrictDoorRow {
 }
 
 /**
+ * The reader-facing name of a division type — the same words the map legend
+ * uses, so the two modes of the districts door read alike.
+ *
+ * Identifiers never render (CLAUDE.md's plain-language rule): a type this map
+ * has no word for falls back to "District" rather than leaking
+ * `school_district` onto a card.
+ */
+const DIVISION_TYPE_LABEL: Record<string, string> = {
+  cd: "Congressional",
+  sldu: "State Senate",
+  sldl: "State House",
+  county: "County",
+  place: "City or town",
+  school_district: "School district",
+};
+
+export function divisionTypeLabel(divisionType: string): string {
+  return DIVISION_TYPE_LABEL[divisionType] ?? "District";
+}
+
+/**
+ * The GOVERNING mode's rows — one per division whose boundary contains the
+ * reader's resolved address (2026-08-15).
+ *
+ * Same stated-N contract as the in-view mode below: the length of this list
+ * is the number the card states, and the guard test holds both modes.
+ * Holders come from the shared resolver, so a county row names its board and
+ * a congressional row names its member.
+ */
+export function governingDoorRows(
+  coverage: CoverageSummary,
+  holdersFor: (ocdId: string) => SeatHolder[],
+): DistrictDoorRow[] {
+  return coverage.divisions.map((d) => ({
+    ocdId: d.ocdId,
+    label: d.label,
+    typeLabel: divisionTypeLabel(d.divisionType),
+    tier: d.tier,
+    holders: holdersFor(d.ocdId),
+  }));
+}
+
+/**
  * The districts door's rows (3g, 2026-08-19): EXACTLY one row per drawn
  * district — the same list whose length the stat card states, so the
  * stated N and the rendered rows cannot diverge (the guard test in
@@ -300,6 +357,25 @@ export interface StatsView {
   bodies: number | "—";
   districts: number | "—" | "Off";
   officials: number | "—";
+  /**
+   * What the districts card is counting, in the reader's words.
+   *
+   * The number never travels without it. "179 DISTRICTS" read as a claim that
+   * the reader is governed by 179 governments — the door said "in view" and
+   * the tile said nothing, so the tile was the one the author believed. Two
+   * modes, and the label is what distinguishes them:
+   *
+   *   "In view"        — the drawn set. A fact about the camera.
+   *   "You're in"      — the governing set: divisions whose boundary contains
+   *                      the reader's resolved address. A fact about them.
+   */
+  districtsLabel: string;
+  /**
+   * The secondary line under the districts number, when a second honest
+   * number exists to show — the in-view count while the governing count
+   * leads. Null when there is only one number to say.
+   */
+  districtsSecondary: string | null;
   /** Present exactly when the fetch failed: the couldn't-check statement. */
   failedNote: string | null;
 }
@@ -323,21 +399,54 @@ export interface StatsView {
  * spending it on "you switched this off" made the one intact number on the
  * card read as the broken one — the author reported it as blank. Off says
  * off, and its door offers the switch.
+ *
+ * **The districts number now says what it is counting** (2026-08-15). It read
+ * a bare "179 DISTRICTS" beside a door headed "Districts in view" — so the
+ * tile made a claim about the reader's government that the door quietly
+ * withdrew, and the tile is the one on screen. Two modes:
+ *
+ *   *In view* — the drawn set, which is a fact about where the camera is
+ *   pointed and is labelled as one.
+ *
+ *   *You're in* — once the reader has given a street address and it has
+ *   resolved, the count of divisions whose boundary CONTAINS that point. That
+ *   is the governing set, it is the number they actually came for, and it
+ *   leads with the in-view count kept underneath rather than thrown away. A
+ *   zip centroid never qualifies: a ZCTA crosses city, county and school
+ *   lines, so a centroid can sit in a different town than the reader.
  */
 export function deriveStatsView(
   stats: ShellStats,
   showDistricts: boolean,
   searchFailed: boolean,
 ): StatsView {
-  const districts: StatsView["districts"] =
+  const drawn: StatsView["districts"] =
     !showDistricts || stats.districts === null ? "Off" : stats.districts;
+
+  // The governing mode needs the address AND the overlay's own number is
+  // still worth keeping underneath — including when the overlay is off, where
+  // the secondary line is what says so.
+  const governing = stats.governingDistricts;
+  const districts: StatsView["districts"] = governing === null ? drawn : governing;
+  const districtsLabel = governing === null ? "In view" : "You're in";
+  const districtsSecondary =
+    governing === null
+      ? null
+      : drawn === "Off"
+        ? "District outlines are off"
+        : `${drawn} in view`;
 
   if (searchFailed) {
     return {
       meetings: "—",
       bodies: "—",
       officials: "—",
-      districts,
+      // A failed search cannot have resolved an address point, so this falls
+      // back to the drawn count — the overlay draws from committed files and
+      // is genuinely intact when the meetings service is not.
+      districts: drawn,
+      districtsLabel: "In view",
+      districtsSecondary: null,
       failedNote: "Couldn't check — the meetings service didn't answer.",
     };
   }
@@ -348,6 +457,8 @@ export function deriveStatsView(
     bodies: stats.coverageAnswered ? stats.bodies : "—",
     officials: stats.coverageAnswered ? stats.officials : "—",
     districts,
+    districtsLabel,
+    districtsSecondary,
     failedNote: null,
   };
 }

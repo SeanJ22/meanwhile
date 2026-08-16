@@ -6890,25 +6890,29 @@ now, and every pair clears its bar in both themes.
 
 ### Probe rows this session
 
-**Five**, every one created by this session's own screenshot walk against a
-dev server bound to the production database, and every one a `FEDERAL_VOTE`
-reaction on `house:119-2:283` tapped in the Recent pane of a senator's card,
-scale version 1, `suspect_reason` null:
+**Seven**, every one created by this session's own screenshot walk — five
+against a dev server bound to the production database, and two against
+production itself in the post-deploy verification. Every one is a
+`FEDERAL_VOTE` reaction on `house:119-2:283`, tapped in the Recent pane of a
+senator's card, scale version 1, `suspect_reason` null:
 
-| when (UTC) | answer | browser key |
-|---|---|---|
-| 17:44:24.396 | YES | `fff8a2e3…` |
-| 17:45:22.502 | UNSURE | `fb4e1906…` |
-| 17:45:43.246 | UNSURE | `d04b2225…` |
-| 17:47:19.666 | UNSURE | `a7438a53…` |
-| 17:47:40.102 | UNSURE | `c2959874…` |
+| when (UTC) | answer | browser key | run |
+|---|---|---|---|
+| 17:44:24.396 | YES | `fff8a2e3…` | local walk |
+| 17:45:22.502 | UNSURE | `fb4e1906…` | local walk |
+| 17:45:43.246 | UNSURE | `d04b2225…` | local walk |
+| 17:47:19.666 | UNSURE | `a7438a53…` | local walk |
+| 17:47:40.102 | UNSURE | `c2959874…` | local walk |
+| 17:58:01.949 | UNSURE | `97982f7e…` | **production** |
+| 17:58:23.319 | UNSURE | `9d3b0000…` | **production** |
 
-Five keys because each browser context the walk opens mints its own, and
+Seven keys because each browser context the walk opens mints its own, and
 within a context the second tap UPSERTS the first — which is the store
-behaving exactly as designed. They are plumbing wearing reader clothes and
-are named here so a later exclusion is a filter rather than a hunt. **No
-other row was written against production this session**; every other request
-the walk made was a GET.
+behaving exactly as designed, and is why five contexts produced one YES and
+four UNSURE rather than five pairs. They are plumbing wearing reader clothes
+and are named here so a later exclusion is a filter rather than a hunt.
+**No other row was written against production this session**; every other
+request either walk made was a GET.
 
 ## 34. The 2026-08-16 session (fourth of the day) — the regression net, and the state rises out of the map
 

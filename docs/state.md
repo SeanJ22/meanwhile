@@ -6312,6 +6312,32 @@ audit scripts, and read-only API reads against the local dev server. Stated
 because the standing order requires it either way: a session that created no
 rows says so, so the absence is a finding rather than an omission.
 
+### The deploy did not land, and this is the one thing this session could not close
+
+`main` carries everything: PR #42 merged at `a7939a5`, local main
+fast-forwarded, no branches open. `pnpm build` is exit 0 on this exact tree,
+so the code compiles.
+
+**Production is still serving the previous build 45 minutes after the merge**,
+and it was checked twenty-two times over that window with a cache-buster on
+every request, so this is not an edge cache holding a stale page:
+
+- `GET /api/votes?member=congress:K000377` returns `chamber: undefined` and no
+  `keyVotes` key at all — the old route's shape.
+- `GET /api/meetings?…&zip=03255` returns 30 meetings and **zero** Zoning
+  Board rows; local returns 31 with the ZBA at "Newbury Offices".
+- The front page's HTML contains no `ballot-pill`, which the new floaters
+  cannot render without.
+
+The Netlify build log is the next rung and it needs the author's login — the
+same wall §12 recorded when a production cause had to be instrumented instead
+of read. So the honest statement is: **shipped and merged; not yet verified
+live.** Either the build is queued behind something, or it failed for a
+reason that does not reproduce in `pnpm build` locally (an env var, a
+Netlify-side limit, a plugin). Everything in this section's claims about
+behaviour is verified against the local dev server at the merged commit and
+against the walk's twenty checks; none of it is verified on production yet.
+
 ### What was cut, and why
 
 The brief's own cut order permitted deferring **3** first, then **6e** whole.

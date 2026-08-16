@@ -11,6 +11,7 @@ import {
   personCardSources,
   sourceCountLabel,
 } from "@/lib/officials/card-sources";
+import { CONGRESS_DIRECTORY_SOURCE } from "@/lib/officials/directory-source";
 
 import { FundingBlock } from "@/components/funding/funding-block";
 import { CardSection } from "@/components/officials/card-section";
@@ -58,7 +59,25 @@ export function OfficialModal({
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  const sources = personCardSources(holder);
+  /*
+   * Item 7's clean render, on the Sources section: the congress-legislators
+   * project is cited ONCE for every directory fact on this card — the
+   * official accounts in the pill row, the committee seats, the district
+   * offices — rather than once per row beside each of them. Money, votes and
+   * PRL keep their per-section citations; a claim surface is a different
+   * register from a directory fact.
+   */
+  const sources = personCardSources(
+    holder,
+    holder.id.startsWith("congress:")
+      ? [
+          {
+            what: "Their official accounts, committee seats and district offices",
+            provenance: CONGRESS_DIRECTORY_SOURCE,
+          },
+        ]
+      : [],
+  );
 
   /*
    * NO pushed history entry, deliberately (diagnosed 2026-08-14 third
@@ -86,18 +105,26 @@ export function OfficialModal({
       }}
     >
       <div className="account-modal">
+        {/*
+          Item 3 (2026-08-16): the header carries the TIER EYEBROW and the
+          close control, and nothing else.
+
+          It used to repeat the name as an h2 and the seat as a subtitle,
+          four pixels above an identity block that says both again at the
+          size the author's ruling asked for. Three renderings of "Mayor" and
+          two of the person's name on one card is friction with no exception
+          claiming it — the reader is trying to find out who this is, and
+          saying it twice does not help them do that faster. The identity
+          block's name is the card's heading now.
+        */}
         <header className="account-modal-header">
           <div className="min-w-0">
             <p
               className="popup-type"
               style={{ color: `var(--accent-${tier})` }}
             >
-              {TIER_LABEL[tier]} · {holder.officeTitle}
+              {TIER_LABEL[tier]}
             </p>
-            <h2 className="account-modal-title">{holder.name}</h2>
-            {seatLabel && (
-              <p className="account-modal-subtitle">{seatLabel}</p>
-            )}
           </div>
 
           <button

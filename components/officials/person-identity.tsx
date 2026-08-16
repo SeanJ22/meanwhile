@@ -119,7 +119,15 @@ export function PersonIdentity({
       <IdentityPortrait name={holder.name} photoUrl={holder.photoUrl} large={large} />
 
       <div className="min-w-0 flex-1">
-        <h3 className={large ? "id-name id-name--lg" : "id-name"}>{holder.name}</h3>
+        {/* The card's heading, at the level the surface it sits on needs:
+            on the large battlecard this IS the dialog's h2 (the header above
+            no longer repeats it), and inside a popup card it is an h3 under
+            the card's own label. */}
+        {large ? (
+          <h2 className="id-name id-name--lg">{holder.name}</h2>
+        ) : (
+          <h3 className="id-name">{holder.name}</h3>
+        )}
 
         <div className="id-chip-row">
           {/*

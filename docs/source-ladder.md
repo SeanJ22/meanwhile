@@ -1270,3 +1270,55 @@ rung on the wrong ladder.
 | West Virginia | wv.gov/transparency | checkbook-leaning |
 | Wisconsin | data.wi.gov | open data |
 | Wyoming | wyoming.gov/government/open-data | open data |
+
+---
+
+## The .gov registry — a rung for "where does this government publish?"
+
+*Added 2026-08-16 (item 9). Verified: fetched at the pinned commit, 16,501
+domains, 693 typed as election offices.*
+
+**`cisagov/dotgov-data`, `current-full.csv`.** Every domain in the .gov TLD
+with the registrant's own organization name, city, state, and CISA's own
+`Domain type`. US Government work, public domain. Committed as
+`data/dotgov/snapshot.json` by `pnpm dotgov:fetch`, SHA-pinned
+(`47f9693e…`, the zone-file commit of 2026-08-16T07:38:32Z), thin-guarded at
+15,000 domains and 500 election-typed domains, refreshed by
+`.github/workflows/refresh-dotgov-snapshot.yml` on Mondays.
+
+**What it is a rung for.** The first, cheapest question in any hunt for a
+body's own publications: does this government have a .gov, and what is it?
+It resolves a registrant to a domain in one lookup, without a search engine
+and without guessing at a hostname.
+
+**The named rung list: the 693 election offices.** CISA types them itself —
+`City - Election` (332), `County - Election` (288), `State or territory -
+Election` (36), `Special district - Election` (33), `Tribal - Election` (4).
+That classification is the registry's, not ours, which matters: a name match
+on "vote" or "election" would sweep in a town called Election and miss every
+secretary of state. This is the first rung for a ballot or candidate-filing
+hunt in a county we have not worked before.
+
+**THE BOUNDARY, and it is the important half. DOMAINS ARE NOT A
+DENOMINATOR.** Coverage claims are made against the official universe — the
+Census of Governments, NCES, the state rosters — never against a list like
+this one:
+
+- A government with **no .gov domain is absent from it entirely**. Small
+  towns, school districts and special districts routinely publish on a
+  `.org`, a `.us`, a vendor subdomain, or a Facebook page. Counting .gov
+  domains would undercount exactly the bodies that are hardest to cover,
+  which is the Sunnyside class of miss.
+- One government may hold **several domains**, and one domain may front
+  several governments.
+- **A domain is not a body.** `chicagoelections.gov` is one domain; the
+  Chicago Board of Election Commissioners is one body; nothing here maps the
+  two.
+
+The snapshot carries that sentence in its own `boundary` field, and
+`tests/dotgov.test.ts` fails if any coverage surface imports it.
+
+**Not built, and named:** the link-ladder WIRING — resolving a registry body
+to its .gov domain automatically, and offering it as a rung when a hunt comes
+back empty. The snapshot is the half that had to land; the wiring is the half
+that can wait for a session with a hunt in front of it.

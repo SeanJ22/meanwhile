@@ -42,15 +42,24 @@ const onServer = () => false;
  *
  * Nothing is stored and nothing is sent: the permutation lives in this
  * component's state for as long as the page is open.
+ *
+ * ## Why the CARD is in here (fixed 2026-08-16, g3 item 2)
+ *
+ * This component used to take a render prop — `children(fact)` — so the card
+ * markup could stay in the page. **A function cannot cross the server/client
+ * boundary.** React refuses it outright ("Functions are not valid as a child
+ * of Client Components"), and since the whole page is a Server Component, the
+ * refusal was a 500: `/about-area?zip=…` answered HTTP 500 at every zip on
+ * production, and `?state=…` with it. Only the zip-with-no-coverage path —
+ * which renders no facts and therefore never constructs this element — stayed
+ * green, which is why the route looked half-alive.
+ *
+ * The card is plain presentational markup over serializable data, so it lives
+ * here now and nothing crosses the boundary but the facts themselves. A page
+ * that wants a different card gets a prop with a discriminated value, never a
+ * function.
  */
-export function ShuffledFacts({
-  facts,
-  children,
-}: {
-  facts: AreaFact[];
-  /** Renders one fact. The card's markup stays in the page. */
-  children: (fact: AreaFact) => React.ReactNode;
-}) {
+export function ShuffledFacts({ facts }: { facts: AreaFact[] }) {
   /*
    * The permutation is computed once, lazily; hydration is what switches to
    * it. Deliberately NOT `setState` inside an effect — that cascades a
@@ -67,5 +76,29 @@ export function ShuffledFacts({
     return next;
   });
 
-  return <>{(hydrated ? order : facts).map((fact) => children(fact))}</>;
+  return (
+    <>
+      {(hydrated ? order : facts).map((fact) => (
+        <section
+          key={fact.topic}
+          className="mt-4 rounded border border-[var(--panel-border)] p-4"
+        >
+          <h2 className="text-[0.875rem] font-semibold">{fact.question}</h2>
+          <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
+            {fact.answer}
+          </p>
+          <p className="mt-2 text-[0.6875rem]">
+            <a
+              href={fact.sourceUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="underline decoration-dotted"
+            >
+              {fact.sourceOrg}
+            </a>
+          </p>
+        </section>
+      ))}
+    </>
+  );
 }

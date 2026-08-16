@@ -84,31 +84,11 @@ export default async function AboutAreaPage({
           leads on the same charged question reads as an editorial choice on a
           product that does not make them. Content unchanged; only which
           honest answer a reader sees first moves. */}
-      {facts && (
-        <ShuffledFacts facts={facts.facts}>
-          {(fact) => (
-            <section
-              key={fact.topic}
-              className="mt-4 rounded border border-[var(--panel-border)] p-4"
-            >
-              <h2 className="text-[0.875rem] font-semibold">{fact.question}</h2>
-              <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
-                {fact.answer}
-              </p>
-              <p className="mt-2 text-[0.6875rem]">
-                <a
-                  href={fact.sourceUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="underline decoration-dotted"
-                >
-                  {fact.sourceOrg}
-                </a>
-              </p>
-            </section>
-          )}
-        </ShuffledFacts>
-      )}
+      {/* The card markup lives INSIDE ShuffledFacts. It used to be passed in
+          as a render prop, which is a function crossing the server/client
+          boundary — React refuses that, and the refusal was a 500 at every
+          zip. See the component's own note. */}
+      {facts && <ShuffledFacts facts={facts.facts} />}
 
       {facts && facts.notCovered.length > 0 && (
         <section className="mt-6 rounded border border-dashed border-[var(--panel-border)] p-4">

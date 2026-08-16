@@ -99,10 +99,15 @@ export default function TransparencyPage() {
           </p>
           <p>
             If you narrow your zip to your municipality, school district, or
-            street, that choice is also kept only in your browser&apos;s
-            storage. The street you type is matched against a list downloaded
-            to your device — it is never sent anywhere, never logged, and
-            never tied to an account.
+            street, that choice is kept only in your browser&apos;s storage.
+            The street you type is first matched against a list downloaded to
+            your device. To put it on the map as an actual point, your address
+            passes through our server to the U.S. Census Bureau&apos;s free
+            address lookup: we never store it and never log it — it exists in
+            memory for the length of that one request and is gone. Nothing
+            about it is written down anywhere, and an automated test fails the
+            build if that route ever gains a way to write. It is never tied to
+            an account.
           </p>
           <p>
             If you mark how you&apos;d vote on the ballot page (&quot;my

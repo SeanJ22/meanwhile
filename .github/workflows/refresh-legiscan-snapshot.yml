@@ -1,0 +1,79 @@
+# The scheduled refresh behind data/votes/state-votes-snapshot.json (D49/D54).
+#
+# The app reads the committed snapshot; no page load ever calls LegiScan.
+#
+# **Sunday, because that is when LegiScan refreshes.** LegiScan publishes
+# each session as one bulk ZIP and rebuilds those datasets on Sunday
+# mornings, so any other day would re-ask a question whose answer has not
+# changed. `pnpm legiscan:fetch` compares the stored `dataset_hash` before
+# downloading anything and skips every state whose hash is unchanged — so
+# the common case is a run that downloads nothing at all, which is both the
+# polite thing and the condition of keeping the key.
+#
+# The LEGISCAN_API_KEY lives ONLY in fetch-script environments: .env.local on
+# the workstation and the repository secret here. It is never set in Netlify
+# and never reaches client code. Without it this workflow fails visibly
+# rather than committing an unrefreshed file.
+#
+# Failure semantics, inherited from the FEC refresh: the thin-snapshot guard
+# fails the run and keeps the old file when a refresh would produce fewer
+# roll calls for a session that has not ended. Tests run before any commit,
+# so a parse regression cannot publish either.
+#
+# Attribution: the snapshot carries LegiScan's required attribution per
+# record; `pnpm test` asserts it, which is why the test step sits between the
+# fetch and the commit rather than after it.
+
+name: Refresh LegiScan snapshot
+
+on:
+  schedule:
+    # Sundays 11:41 UTC — after LegiScan's own Sunday dataset rebuild, and
+    # off the top of the hour where every other cron in the world lands.
+    - cron: "41 11 * * 0"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-legiscan-snapshot
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Enable corepack (pnpm pinned by packageManager)
+        run: corepack enable
+
+      - name: Install
+        run: corepack pnpm install --frozen-lockfile
+
+      - name: Refresh the snapshot (dataset_hash-gated)
+        env:
+          LEGISCAN_API_KEY: ${{ secrets.LEGISCAN_API_KEY }}
+        run: corepack pnpm legiscan:fetch
+
+      - name: Validate before committing
+        run: corepack pnpm test
+
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- data/votes/state-votes-snapshot.json; then
+            echo "snapshot unchanged — dataset_hash matched for every state, nothing downloaded, nothing to commit"
+            exit 0
+          fi
+          git config user.name "snapshot-refresh[bot]"
+          git config user.email "noreply@github.com"
+          git add data/votes/state-votes-snapshot.json
+          git commit -m "LegiScan snapshot refresh: $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push origin main

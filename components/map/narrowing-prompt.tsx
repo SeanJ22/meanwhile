@@ -131,6 +131,8 @@ export function NarrowingPrompt({
         if (point) {
           onPoint(point);
           setCrossingStreet(null);
+          // The question is answered; the card may settle now (M80).
+          onApplied?.();
         }
       })
       .finally(() => {
@@ -209,15 +211,25 @@ export function NarrowingPrompt({
                 onClick={() => {
                   setCrossingStreet(null);
                   setHouseNumber("");
+                  // Declining must stay the effortless default (friction-rule
+                  // exception 2) — and it settles the card exactly the way an
+                  // answer does, so skipping costs nothing extra.
+                  onApplied?.();
                 }}
                 className="cursor-pointer text-[0.6875rem] text-muted underline decoration-dotted underline-offset-2 hover:text-paper"
               >
                 skip
               </button>
             </div>
+            {/* M80 (2026-08-15): this line said "never sent to us", and the
+                house number now passes through our own server on its way to
+                the Census Bureau — there is no other route, because the
+                Bureau sends no CORS header. Rewritten to the promise an
+                engineer can actually keep. */}
             <p className="mt-1 text-[0.625rem] leading-relaxed text-muted">
-              Used once to place the point, then dropped. Never stored, never
-              sent to us.
+              Used once to place the point, then dropped. It passes through
+              our server to the Census Bureau&apos;s lookup; we never store or
+              log it.
             </p>
           </div>
         )}
@@ -240,19 +252,38 @@ export function NarrowingPrompt({
     narrowing.setStreet(name);
     narrowing.setDivisions(ocdIds);
     onNarrowed?.();
-    onApplied?.();
 
-    if (!onPoint) return;
+    if (!onPoint) {
+      onApplied?.();
+      return;
+    }
     setLocating(true);
     setCrossingStreet(null);
     void lookupStreetInZip(name, zip)
       .then((result) => {
-        if (result.kind === "POINT") onPoint(result.point);
-        // The street crosses district lines. Rather than refuse, ask the one
-        // question that settles it (the author's ruling). The narrowing has
-        // already applied either way — this is extra precision, and declining
-        // to answer leaves exactly the state D53 shipped.
-        else if (result.kind === "CROSSES") setCrossingStreet(result.street);
+        if (result.kind === "POINT") {
+          onPoint(result.point);
+          onApplied?.();
+        } else if (result.kind === "CROSSES") {
+          // The street crosses district lines. Rather than refuse, ask the
+          // one question that settles it (the author's ruling). The
+          // narrowing has already applied either way — this is extra
+          // precision, and declining to answer leaves exactly the state D53
+          // shipped.
+          //
+          // **`onApplied` is deliberately NOT called here** (M80's real-page
+          // walk, 2026-08-15). It minimizes the who-governs card, which
+          // unmounts this component — and the crossing answer arrives about
+          // ten seconds after the tap, so the question was being set on a
+          // component that no longer existed and the reader was never asked.
+          // Verified live at 07866 / Green Pond Rd, whose four sampled house
+          // numbers span 9.5 km: the lookup said CROSSES every time and the
+          // input never rendered once. Node cannot see this — the card is
+          // mounted in both cases as far as a unit test is concerned.
+          setCrossingStreet(result.street);
+        } else {
+          onApplied?.();
+        }
       })
       .finally(() => setLocating(false));
   };
@@ -379,17 +410,22 @@ export function NarrowingPrompt({
       >
         No thanks, show me everything
       </button>
-      {/* D53: this line had to change the day the geocoder was wired. It used
-          to say the street was "never sent anywhere", and once a street name
-          goes to the Census Bureau's public address service that sentence is
-          false. Naming the route is friction-rule exception (3) — it is
-          consent to collection — and a promise we keep is worth more than a
-          shorter one we do not. */}
+      {/* D53 rewrote this line when the geocoder was wired; M80 rewrote it
+          again (2026-08-15) and this version is the keepable one.
+
+          The Census geocoder sends no CORS header, so no browser can call
+          it — the only route that works passes through our own server. The
+          previous sentence, "never send it to us", became unkeepable at
+          that moment, and a promise quietly retracted is worse than one
+          honestly rewritten. So it now says what is true and stays true:
+          the address passes through, and nothing keeps it. Naming the route
+          is friction-rule exception (3) — it is consent to collection. */}
       <p className="mt-2 text-[0.625rem] leading-relaxed text-muted">
-        Your choice stays on this device. We never store it, never send it to
-        us, and never tie it to an account. To put your street on the map we
-        ask the U.S. Census Bureau&apos;s free address lookup for its location
-        — the street name and this zip code, never a house number.
+        Your choice stays on this device and is never tied to an account. To
+        put your street on the map, your address passes through our server to
+        the U.S. Census Bureau&apos;s free address lookup — we never store or
+        log it. We send the street name and this zip code, never a house
+        number.
       </p>
     </div>
   );

@@ -215,12 +215,19 @@ test("D53: every failure mode returns null rather than an error state", async ()
   assert.equal(called, 0, "a request went out for input that could not resolve");
 });
 
-test("D53: the point is never stored and never reaches our own server", () => {
-  // Read as source, deliberately. The promise "we never store it, never send
-  // it to us" is now printed under the street input, and the cheapest way for
-  // it to become false is somebody adding a convenience: a localStorage
-  // cache, a log line, a POST to our own API to "help the cascade". Each of
-  // those is one import away and none would fail any other test here.
+test("D53/M80: the point is never stored, and the only server it touches is the proxy", () => {
+  // Read as source, deliberately. The promise printed under the street input
+  // is now "your address passes through our server to the Census Bureau's
+  // geocoder; we never store or log it" (M80, 2026-08-15), and the cheapest
+  // way for THAT to become false is somebody adding a convenience: a
+  // localStorage cache, a log line, a write on the way past. Each is one
+  // import away and none would fail any other test here.
+  //
+  // `/api/` left this list on 2026-08-15 and the reason is the whole of M80:
+  // the Census geocoder sends no CORS header, so a browser CANNOT call it,
+  // and the route through our own server is the only one that exists. What
+  // replaced the old assertion is stricter, not weaker — the proxy is pinned
+  // to one path, and tests above prove that route writes nothing.
   // Comments stripped first. The module's own doc block promises it does not
   // touch localStorage, and a scan that reads prose would fail on the
   // promise — a loose pattern verifies nothing, in either direction.
@@ -235,7 +242,6 @@ test("D53: the point is never stored and never reaches our own server", () => {
     "sessionStorage",
     "document.cookie",
     "logEvent",
-    "/api/",
     "search_log",
   ]) {
     assert.ok(
@@ -243,6 +249,10 @@ test("D53: the point is never stored and never reaches our own server", () => {
       `the geocoder reaches for ${forbidden} — the point must stay on the device`,
     );
   }
+  // Exactly one path on our own origin, and it is the proxy. Anything else
+  // would be a second route nobody has proven writes nothing.
+  const ourPaths = [...source.matchAll(/["'](\/api\/[a-z0-9/_-]*)["']/g)].map((m) => m[1]);
+  assert.deepEqual([...new Set(ourPaths)], ["/api/geocode"]);
   // The only host it may talk to is the Bureau's.
   const hosts = [...source.matchAll(/https?:\/\/([a-z0-9.-]+)/g)].map((m) => m[1]);
   for (const host of hosts) {
@@ -386,4 +396,162 @@ test("the house number never reaches the narrowing store or a log", () => {
   }
   // And it is cleared once the request finishes, whatever the outcome.
   assert.match(source, /\.finally\([\s\S]{0,200}setHouseNumber\(""\)/);
+});
+
+/* ------------------------------------------------- M80: the proxy route --- */
+
+test("M80: the geocode route writes NOTHING — no log, no store, no echo", async () => {
+  const source = readFileSync(
+    join(process.cwd(), "app", "api", "geocode", "route.ts"),
+    "utf8",
+  );
+
+  // The source scan. Every write primitive this codebase has, and the
+  // console: an address that reaches a log line is an address we kept,
+  // whatever the transparency page says.
+  for (const banned of [
+    "logEvent",
+    "insert",
+    "drizzle",
+    "getDb",
+    "reactions",
+    "search_log",
+    "localStorage",
+    "writeFile",
+    "appendFile",
+    "console.log",
+    "console.error",
+    "console.warn",
+  ]) {
+    assert.ok(
+      !source.includes(banned),
+      `the geocode route contains "${banned}" — this route must write nothing`,
+    );
+  }
+
+  // GET would put a home address in a URL, and URLs reach access logs and
+  // proxy caches that are not ours to promise about.
+  assert.ok(!/export async function GET/.test(source), "the route must not accept GET");
+  assert.ok(/export async function POST/.test(source));
+  // Never cacheable: this response is per-reader by construction.
+  assert.ok(/no-store/.test(source));
+  assert.ok(
+    !/cache-control["']?\s*:\s*["'][^"']*public/i.test(source),
+    "a per-reader response must never be publicly cacheable",
+  );
+
+  // And the runtime proof: call it with a stubbed upstream and assert that
+  // nothing anywhere observed the address. A source scan alone would pass a
+  // route that wrote through an alias.
+  const { POST } = await import("../app/api/geocode/route.ts");
+  const observed: string[] = [];
+  const realFetch = globalThis.fetch;
+  const realLog = console.log;
+  const realError = console.error;
+  console.log = (...args: unknown[]) => observed.push(`log:${String(args[0])}`);
+  console.error = (...args: unknown[]) => observed.push(`error:${String(args[0])}`);
+  globalThis.fetch = (async () =>
+    new Response(
+      JSON.stringify({
+        result: { addressMatches: [{ coordinates: { x: -110.97, y: 32.22 } }] },
+      }),
+      { status: 200 },
+    )) as typeof fetch;
+  try {
+    const response = await POST(
+      new Request("https://example.test/api/geocode", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ address: "1 W Congress St, 85701" }),
+      }),
+    );
+    const body = (await response.json()) as Record<string, unknown>;
+    assert.equal(body.match, true);
+    assert.equal(body.lat, 32.22);
+    assert.equal(body.lng, -110.97);
+    // Nothing about the request is echoed back — not the address, not the
+    // upstream status, not an error string.
+    assert.deepEqual(Object.keys(body).sort(), ["lat", "lng", "match"]);
+    assert.equal(response.headers.get("cache-control"), "no-store, no-cache, must-revalidate");
+  } finally {
+    globalThis.fetch = realFetch;
+    console.log = realLog;
+    console.error = realError;
+  }
+  assert.deepEqual(observed, [], "the route logged something");
+});
+
+test("M80: a browser goes through the proxy; the server calls the Bureau direct", async () => {
+  const source = readFileSync(
+    join(process.cwd(), "lib", "geo", "census-geocoder.ts"),
+    "utf8",
+  );
+  const { GEOCODE_PROXY_PATH } = await import("../lib/geo/census-geocoder.ts");
+  assert.equal(GEOCODE_PROXY_PATH, "/api/geocode");
+  // The branch exists and is on `window`, which is the only thing that
+  // distinguishes the two runtimes. Without it the browser path is dead:
+  // the Census geocoder sends no CORS header, so a page's direct request is
+  // refused before it leaves — and no Node test can see that, because Node
+  // does not enforce CORS. That blindness is how D53 shipped dead.
+  assert.ok(source.includes('typeof window === "undefined"'));
+  assert.ok(source.includes("GEOCODE_PROXY_PATH"));
+
+  // The server path still reaches the Bureau directly — scripts and the
+  // venue cache have no CORS to satisfy and no server to depend on.
+  const calls: string[] = [];
+  const fetchImpl = (async (input: string | URL) => {
+    calls.push(String(input));
+    return new Response(
+      JSON.stringify({
+        result: { addressMatches: [{ coordinates: { x: -110.97, y: 32.22 } }] },
+      }),
+      { status: 200 },
+    );
+  }) as unknown as typeof fetch;
+  const point = await locateAddressInZip("1", "W Congress St", "85701", { fetchImpl });
+  assert.ok(point);
+  assert.equal(calls.length, 1);
+  assert.ok(
+    calls[0].startsWith(CENSUS_GEOCODER_URL),
+    `server-side call went to ${calls[0]}`,
+  );
+});
+
+test("M80: the promise changed in the same commit, on both surfaces", () => {
+  const prompt = readFileSync(
+    join(process.cwd(), "components", "map", "narrowing-prompt.tsx"),
+    "utf8",
+  );
+  const transparency = readFileSync(
+    join(process.cwd(), "app", "transparency", "page.tsx"),
+    "utf8",
+  );
+
+  // The old promise is gone from the reader-facing copy. It was unkeepable
+  // the moment the feature needed a browser, and a promise quietly retracted
+  // is worse than one honestly rewritten.
+  const promptCopy = prompt.slice(prompt.indexOf("Your choice stays on this device"));
+  assert.ok(
+    !/never send it to us/.test(promptCopy),
+    "the narrowing prompt still makes the unkeepable promise",
+  );
+  assert.ok(
+    !/it is never sent anywhere, never logged/.test(transparency),
+    "the transparency page still says the street is never sent anywhere",
+  );
+
+  // And the keepable one is on both, in the same words.
+  for (const [name, page] of [
+    ["narrowing prompt", prompt],
+    ["transparency page", transparency],
+  ] as const) {
+    assert.ok(
+      /passes through our server/.test(page),
+      `${name} does not say the address passes through our server`,
+    );
+    assert.ok(
+      /never store\s+(or|it and never)\s+log/.test(page.replace(/\s+/g, " ")),
+      `${name} does not say we never store or log it`,
+    );
+  }
 });

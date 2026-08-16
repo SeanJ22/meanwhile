@@ -110,6 +110,65 @@ export function censusGeocodeUrl(address: string): string {
   return `${CENSUS_GEOCODER_URL}?${params.toString()}`;
 }
 
+/** Our own stateless proxy. The browser's only route to the Bureau. */
+export const GEOCODE_PROXY_PATH = "/api/geocode";
+
+/**
+ * One address → a point, by whichever route this code is running on (M80,
+ * 2026-08-15).
+ *
+ * **In a browser, the direct call is impossible.** The Census geocoder sends
+ * no CORS header, so every request a page made was refused before it left —
+ * which is why D53's street features had never once fired in a real page,
+ * and why no Node test could see it: Node does not enforce CORS. The browser
+ * goes through our own `/api/geocode`, which writes nothing.
+ *
+ * **On the server it calls the Bureau directly.** Scripts, tests and the
+ * venue cache have no CORS to satisfy, and bouncing them through our own
+ * route would only add a hop and a running server to depend on.
+ *
+ * Either way the answer is a point or null, and either way nothing about
+ * the address is retained.
+ */
+async function geocodeOnce(
+  address: string,
+  impl: typeof fetch,
+  signal: AbortSignal,
+): Promise<{ lat: number; lng: number } | null> {
+  if (typeof window === "undefined") {
+    const response = await impl(censusGeocodeUrl(address), {
+      headers: { accept: "application/json" },
+      signal,
+    });
+    if (!response.ok) return null;
+    return parseCensusPoint(await response.json());
+  }
+
+  // POST, so a home address never rides in a URL that could be logged by
+  // something that is not ours to promise about.
+  const response = await impl(GEOCODE_PROXY_PATH, {
+    method: "POST",
+    headers: { "content-type": "application/json", accept: "application/json" },
+    body: JSON.stringify({ address }),
+    signal,
+  });
+  if (!response.ok) return null;
+  const body = (await response.json()) as {
+    match?: boolean;
+    lat?: unknown;
+    lng?: unknown;
+  };
+  if (body.match !== true) return null;
+  if (typeof body.lat !== "number" || typeof body.lng !== "number") return null;
+  // The same envelope check the direct path applies — our own route is not
+  // a reason to trust a number less carefully.
+  if (!Number.isFinite(body.lat) || !Number.isFinite(body.lng)) return null;
+  if (body.lat < 15 || body.lat > 72 || body.lng < -180 || body.lng > -60) {
+    return null;
+  }
+  return { lat: body.lat, lng: body.lng };
+}
+
 /** The first match's coordinates, or null. Defensive: this is third-party JSON. */
 export function parseCensusPoint(
   payload: unknown,
@@ -212,14 +271,12 @@ async function sampleStreet(
     const onOuterAbort = () => controller.abort();
     options.signal?.addEventListener("abort", onOuterAbort);
     try {
-      const response = await impl(censusGeocodeUrl(`${number} ${cleaned}, ${zip}`), {
-        headers: { accept: "application/json" },
-        signal: controller.signal,
-      });
-      if (response.ok) {
-        const point = parseCensusPoint(await response.json());
-        if (point) points.push(point);
-      }
+      const point = await geocodeOnce(
+        `${number} ${cleaned}, ${zip}`,
+        impl,
+        controller.signal,
+      );
+      if (point) points.push(point);
     } catch {
       // A miss is a miss. The loop keeps going; zero matches ends as null.
     } finally {
@@ -326,12 +383,11 @@ export async function locateAddressInZip(
   const onOuterAbort = () => controller.abort();
   options.signal?.addEventListener("abort", onOuterAbort);
   try {
-    const response = await impl(
-      censusGeocodeUrl(`${number} ${cleaned}, ${zip}`),
-      { headers: { accept: "application/json" }, signal: controller.signal },
+    const point = await geocodeOnce(
+      `${number} ${cleaned}, ${zip}`,
+      impl,
+      controller.signal,
     );
-    if (!response.ok) return null;
-    const point = parseCensusPoint(await response.json());
     if (!point) return null;
     return {
       lat: point.lat,

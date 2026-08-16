@@ -291,7 +291,7 @@ test("the transparency page covers the ask box in the same commit", () => {
     "utf8",
   );
   assert.match(page, /Who do I talk to about/);
-  assert.match(page, /no AI writes the answer/);
+  assert.match(page, /[Nn]o AI writes the answer/);
   assert.match(page, /200\s*(\n\s*)?characters/, "the cap must be stated to readers");
   // The scrub coupling (session brief 4): the scrub ships with its
   // disclosure — the page states that phone-, email-, and address-shaped

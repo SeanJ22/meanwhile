@@ -383,7 +383,10 @@ export const KEY_VOTES_LAWS: KeyVoteEntry[] = [
   law(
     "genius-act",
     "The GENIUS Act (2025)",
-    "The first federal rulebook for stablecoins — digital tokens meant to hold a fixed dollar value — requiring issuers to hold real dollar reserves and submit to federal or state supervision.",
+    // The author's one edit in his review of all 36 explainer lines
+    // (2026-08-15). Every other line is approved as shipped and is not to be
+    // reworded, tightened, or improved.
+    "The first federal rulebook for stablecoins (cryptocurrency) — digital tokens meant to hold a fixed dollar value — requiring issuers to hold real dollar reserves and submit to federal or state supervision.",
   ),
   law(
     "funding-fight",

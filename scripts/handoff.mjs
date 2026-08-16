@@ -59,7 +59,7 @@
  * them and does the two jobs that are pure copies.
  */
 
-import { execFileSync } from "node:child_process";
+import { execFileSync, execSync } from "node:child_process";
 import {
   copyFileSync,
   existsSync,
@@ -613,16 +613,42 @@ function buildGate() {
 
   const started = Date.now();
   try {
-    // `pnpm.cmd` by name on Windows rather than `shell: true`: pnpm is a shim
-    // there and `execFileSync` cannot run it directly, but a shell would
-    // concatenate the args instead of passing them (Node's DEP0190) and put a
-    // deprecation warning in the middle of the handoff checklist.
-    execFileSync(process.platform === "win32" ? "pnpm.cmd" : "pnpm", ["run", "build"], {
+    /*
+     * `execSync` with ONE literal command string, not `execFileSync` with an
+     * args array — and this was measured, not preferred.
+     *
+     * `execFileSync("pnpm", …)` cannot run pnpm on Windows at all: it is a
+     * `.cmd` shim, and Node has refused to spawn `.cmd`/`.bat` without a
+     * shell since the 2024 argument-injection fix. `execFileSync("pnpm.cmd",
+     * …)` fails the same way. Adding `shell: true` to an args array works but
+     * emits Node's DEP0190 warning into the middle of the checklist. A single
+     * literal string has no args to escape and no injection surface — nothing
+     * here is interpolated.
+     *
+     * The first version of this gate got that wrong, and the failure mode is
+     * the one worth recording: it could not START the build, threw, and
+     * reported "pnpm build failed" — refusing a ship over a tree that builds
+     * clean. A gate that cannot tell "the build failed" from "the gate could
+     * not run" is not trustworthy in either direction, which is why the two
+     * are separated below.
+     */
+    execSync("pnpm run build", {
       cwd: ROOT,
       encoding: "utf8",
       stdio: ["ignore", "pipe", "pipe"],
     });
   } catch (error) {
+    // No exit status means the command never ran — a broken gate, not a
+    // broken tree. It still refuses (a check that did not run may not pass),
+    // but it says which thing went wrong.
+    if (typeof error.status !== "number") {
+      fail(
+        "ship · build",
+        `refused — the gate could not RUN pnpm build (${error.message?.split("\n")[0] ?? "no status"}); this is the gate failing, not the tree`,
+      );
+      return false;
+    }
+
     // The diagnostic is the whole value here. Netlify's log is behind the
     // author's login, so a gate that only said "build failed" would move the
     // wall rather than remove it.
@@ -632,7 +658,7 @@ function buildGate() {
         .split("\n")
         .filter((l) => /error TS\d+|Failed to (compile|type check)/.test(l))
         .slice(0, 4)
-        .join(" · ") || "see the output above";
+        .join(" · ") || `exit ${error.status}, and no TS diagnostic in the output`;
     fail("ship · build", `refused — pnpm build failed: ${diagnostic}`);
     return false;
   }

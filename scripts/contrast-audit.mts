@@ -131,6 +131,21 @@ const FILLED: { text: string; on: string; note: string }[] = [
   { text: "--vote-text", on: "--vote-yes", note: "Voted yes" },
   { text: "--vote-text", on: "--vote-no", note: "Voted no" },
   { text: "--vote-text", on: "--vote-neutral", note: "present / recorded / unsure" },
+  // Item 5's deeper funding shades, which the pill guard also measures.
+  { text: "--vote-text", on: "--vote-yes-strong", note: "Love it" },
+  { text: "--vote-text", on: "--vote-no-strong", note: "Hate it" },
+  // Item 10 (2026-08-16): the selected TIER TOGGLE. It was never on this
+  // list, which is how the light theme's Local fill stayed #6d4600 — the
+  // dead interactive brown's own hex — through a palette pass whose whole
+  // point was killing that colour. A fill nobody measures is a fill nobody
+  // notices.
+  { text: "--tier-fill-on", on: "--tier-fill-local", note: "selected Local toggle" },
+  { text: "--tier-fill-on", on: "--tier-fill-state", note: "selected State toggle" },
+  {
+    text: "--tier-fill-on",
+    on: "--tier-fill-national",
+    note: "selected Federal toggle",
+  },
 ];
 
 /**

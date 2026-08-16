@@ -106,10 +106,26 @@ export function FundingDisplay({
               secondHop={{}}
             />
           </div>
+          {/*
+            ITEM 5 (2026-08-16, the author): ONE ASK PER OBJECT.
+            This prompt was word-for-word the first one, so a reader who had
+            just answered "How do you feel about how this campaign is funded?"
+            after the totals met the identical sentence again under the
+            contributions table. It read as a nag, and an annoyed second
+            answer is worse data than no second answer.
+
+            Two different civic objects deserve two different questions. The
+            totals are how much money and where it came from in aggregate;
+            this table is WHO GAVE IT, by name, as filed. The sensors were
+            already distinct — CONTRIBUTOR_REACTION and
+            FUNDING_TOTAL_REACTION are separate target types, so they write
+            separate rows under the unique index and aggregate under separate
+            keys — and only the wording was pooling them in the reader's head.
+          */}
           <ReactionControl
             targetType="CONTRIBUTOR_REACTION"
             targetId={data.fecCandidateId}
-            prompt="How do you feel about how this campaign is funded?"
+            prompt="How do you feel about these contributions?"
             context={context}
           />
         </div>

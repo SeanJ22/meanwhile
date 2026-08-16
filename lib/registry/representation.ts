@@ -69,11 +69,36 @@ export function representationForDivision(
  * A local division whose boundary exists has a government by construction, and
  * saying so is a different fact from a legislative seat we simply have not
  * sourced. Both are our gap, stated as ours.
+ *
+ * **Three different empties, three different sentences** (M112,
+ * 2026-08-16). The battlecard for a district the reader is not standing in
+ * has to ASK who holds it — `useDivisionRepresentation` — and neither the
+ * question in flight nor a failed question is an absence of record. Saying
+ * "no sourced officeholder" for either is the render-default rule (M111)
+ * broken by a timing gap instead of a null: it turns our own unfinished or
+ * failed lookup into a claim about a government. Each of these sentences is
+ * about US, and they say which of us went wrong.
  */
-export function representationNoteFor(tier: string): string {
+export function representationNoteFor(
+  tier: string,
+  state: "gap" | "looking" | "unavailable" = "gap",
+): string {
+  if (state === "looking") return "Looking up who holds this seat…";
+  if (state === "unavailable") {
+    return "We couldn't check who holds this seat just now.";
+  }
   return tier === "local"
     ? "We know this division has a governing body because its boundary exists. We haven't sourced who sits on it."
     : "No sourced officeholder for this division yet.";
+}
+
+/** The note state a resolver status implies. `resolved` needs no note. */
+export function noteStateFor(
+  status: "resolved" | "looking" | "unsourced" | "unavailable",
+): "gap" | "looking" | "unavailable" {
+  if (status === "looking") return "looking";
+  if (status === "unavailable") return "unavailable";
+  return "gap";
 }
 
 /** Does the summary hold anything a representation panel could render? */

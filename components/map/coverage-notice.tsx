@@ -61,6 +61,15 @@ interface CoverageNoticeProps {
    */
   refreshing?: boolean;
   onOpenOfficial?: OpenOfficial;
+  /**
+   * Opens a BODY's large battlecard (item 3, 2026-08-16, the author's
+   * ruling). The click grammar on this surface is exactly two moves: a
+   * person's name opens their small card, a body's row opens the body's
+   * large one. Nothing on this list leaves the product — Pima and Tucson
+   * used to link straight out to their own websites from the row, and every
+   * external door now lives inside the card the row opens.
+   */
+  onOpenBody?: (body: CoveredBody) => void;
   /** Shrinks the card to its corner bubble — the explicit control (3). */
   onMinimize?: () => void;
   /** Item 7: fires when the reader APPLIES a narrowing (street or picker)
@@ -143,20 +152,27 @@ function Holder({
   onOpen?: () => void;
 }) {
   /*
-   * Item 6 (2026-08-16): the who-governs card takes the uniform element
-   * grammar the battlecards already ship. This was an inline run of
-   * comma-separated names inside a right-aligned column — the same shape as
-   * the mini card's vertical-text defect, a label and a value competing for
-   * one fixed width, and it read as a dense prose blob rather than as a list
-   * of people.
+   * ITEM 3 (2026-08-16, the author's ruling): THE LIST GOES BACK TO CLEAN.
    *
-   * It is a `.person-row` now: name at full width, party as an `.id-chip` in
-   * the committed chip grammar rather than as coloured prose, and BOTH
-   * affordances rendered rather than one (M92, Gehrig's two-action model
-   * extended to people rows): the name opens the battlecard — photo,
-   * contact, what the office does — and "Their site" goes out to the
-   * officeholder's own page. A reader who wants the government's own words
-   * should not have to open our card to find the door to them.
+   * The prior pass gave this row the battlecards' full element grammar — a
+   * filled party chip and a "Their site →" link beside every name — and the
+   * author's verdict on the result was "way overcrowded... a forever scroll."
+   * It was: this card can carry twenty-odd people, and twenty rows each
+   * carrying a chip, an outbound link and a source mark is a wall.
+   *
+   * So the register here is DENSITY, not completeness. Three things per row
+   * and nothing else:
+   *
+   *  • the name, which opens the person's SMALL battlecard;
+   *  • the party as PLAIN TEXT in its party colour — never a filled pill on
+   *    this surface. The pill belongs on the battlecards, small and large;
+   *  • the source mark, where the standing per-surface rules require one.
+   *
+   * "Their site →" is GONE from every row. External links do not live in the
+   * list — they live inside the card the name opens, which is the click
+   * grammar the author set for this whole surface: a PERSON opens a person's
+   * card, a BODY opens a body's card, and every door out of the product is
+   * behind one of those two.
    */
   return (
     <div className="person-row">
@@ -176,28 +192,16 @@ function Holder({
       <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
         {holder.partyLabel && (
           // Display only. Nothing here or downstream infers a position from
-          // it. The chip grammar, filled in the author's palette (3a) — the
-          // same chip the identity header uses, so party looks like party
-          // wherever a reader meets it.
+          // it. Plain text in the party colour — the pill is banned from
+          // this list and lives on the battlecards.
           <span
-            className="id-chip"
-            data-fill="true"
+            className="person-row-party"
             style={
-              { "--chip-fill": partyColorVar(holder.partyLabel) } as React.CSSProperties
+              { color: partyColorVar(holder.partyLabel) } as React.CSSProperties
             }
           >
             {holder.partyLabel}
           </span>
-        )}
-        {holder.websiteUrl && (
-          <a
-            href={holder.websiteUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="person-row-office text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
-          >
-            Their site →
-          </a>
         )}
         {holder.sourceUrl && (
           <a
@@ -260,6 +264,7 @@ function CoverageBody({
   coverage,
   failedSourceOcdIds = [],
   onOpenOfficial,
+  onOpenBody,
   onNarrowApplied,
   onStreetPoint,
 }: {
@@ -267,6 +272,7 @@ function CoverageBody({
   coverage: CoverageSummary;
   failedSourceOcdIds?: string[];
   onOpenOfficial?: OpenOfficial;
+  onOpenBody?: (body: CoveredBody) => void;
   onNarrowApplied?: () => void;
   onStreetPoint?: (point: StreetPoint) => void;
 }) {
@@ -474,24 +480,27 @@ function CoverageBody({
               className="flex items-baseline justify-between gap-3 border-b border-[var(--panel-border)] pb-1 last:border-0"
             >
               {/*
-                The division's label, linked to the body's own page when a
-                source hunt found one. This is the smallest form of the 4.6.10
-                fix: a reader told "Newbury town governs here, and we don't have
-                their calendar" previously had no way to reach Newbury at all.
-                Still the division label and never Body.name, which is null on
-                every row — the link's destination is sourced, the text is
-                Census's, and neither is invented.
+                ITEM 3 (2026-08-16, the author's ruling): A BODY ROW OPENS ITS
+                LARGE BATTLECARD. It used to be an outbound link straight to
+                the body's own website — Pima and Tucson threw the reader out
+                of the product from the list, before they had been told
+                anything about the body at all. The official site is still
+                one tap away; it is inside the card now, with the roster, the
+                sittings and the sources, which is where every external door
+                on this surface lives.
+
+                Still the division label and never an invented name: Body.name
+                is null on derived rows, and the text is Census's.
               */}
-              {body.homepageUrl ? (
-                <a
-                  href={body.homepageUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  title="The body's own website"
-                  className="text-[0.8125rem] leading-snug text-paper underline decoration-dotted underline-offset-2 hover:text-signal"
+              {onOpenBody ? (
+                <button
+                  type="button"
+                  onClick={() => onOpenBody(body)}
+                  title={`More about ${body.name ?? body.divisionLabel}`}
+                  className="cursor-pointer text-left text-[0.8125rem] leading-snug text-paper hover:text-link hover:underline"
                 >
                   {body.name ?? body.divisionLabel}
-                </a>
+                </button>
               ) : (
                 <span className="text-[0.8125rem] leading-snug">
                   {body.name ?? body.divisionLabel}
@@ -866,6 +875,7 @@ export function CoverageNotice({
   failedSourceOcdIds,
   refreshing = false,
   onOpenOfficial,
+  onOpenBody,
   onMinimize,
   onNarrowApplied,
   onStreetPoint,
@@ -1001,6 +1011,7 @@ export function CoverageNotice({
           coverage={coverage}
           failedSourceOcdIds={failedSourceOcdIds}
           onOpenOfficial={onOpenOfficial}
+          onOpenBody={onOpenBody}
           onNarrowApplied={onNarrowApplied}
           onStreetPoint={onStreetPoint}
         />

@@ -303,14 +303,25 @@
   --accent-school: #c2185b;
   --accent-school-glow: rgba(194, 24, 91, 0.18);
 
-  /* Deeper versions of the same three hues, so a filled tier toggle can carry
-     near-white text at 8:1 in a theme where the map accents themselves reach
-     3:1 either way. See the note beside the dark values. */
-  --tier-fill-local: #6d4600;
-  --tier-fill-state: #005745;
-  --tier-fill-national: #263d6e;
-  --tier-fill-on: #fdfaf4;
+  /* ITEM 10 (2026-08-16): THE AMBER REMNANT. These three were near-black
+     tints carrying near-white text, and the local one was #6d4600 — the exact
+     hex the dead interactive brown used to be, left behind on the selected
+     Local toggle. That is what the author saw. They also disagreed with the
+     LEGEND, which draws the same tiers in their bright accents, so the
+     control and the key to the map were two different colours for one tier.
 
+     The light theme now fills the way the dark theme already does — bright,
+     carrying DARK text — so the toggle reads as its tier's own colour beside
+     the legend instead of as a near-black tint. Not the identical hex: the
+     light map accents sit at mid luminance and cannot carry text either way
+     (`--accent-local` takes `--bg` at 2.8:1 and white at 3.0:1), so these are
+     the readable-fill versions of the same hues. The map is untouched — no
+     tier accent moved, which keeps the legend tuned against the basemap as
+     the author left it. Measured by `pnpm contrast`, both themes. */
+  --tier-fill-local: #e0a213;
+  --tier-fill-state: #1cc3a2;
+  --tier-fill-national: #90afe4;
+  --tier-fill-on: #14161c;
   --party-democratic: #2457b8;
   --party-republican: #b3362a;
   --party-green: #1e7a3c;
@@ -474,7 +485,7 @@
   /* One focus treatment everywhere, visible against both panel and map, and
      against both themes. */
   :focus-visible {
-    outline: 2px solid var(--accent-local);
+    outline: 2px solid var(--link);
     outline-offset: 2px;
   }
 }
@@ -485,7 +496,7 @@
     font-size: 0.6875rem;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: var(--accent-local);
+    color: var(--link);
   }
 
   .notice-rule {
@@ -521,9 +532,9 @@
   }
 
   .icon-btn:hover {
-    border-color: var(--accent-local);
-    color: var(--accent-local);
-    background: var(--accent-local-glow);
+    border-color: var(--link);
+    color: var(--link);
+    background: color-mix(in srgb, var(--link) 14%, transparent);
   }
 
   /* ------------------------------------------------------------------
@@ -738,8 +749,8 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 }
 
 .brand-change:hover {
-  color: var(--accent-local);
-  border-color: var(--accent-local);
+  color: var(--link);
+  border-color: var(--link);
 }
 
 /* Reset sits at right: 0, theme toggle at right: 36px — Edia's placement. */
@@ -870,12 +881,12 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 
 .filter-select:focus,
 .scope-select:focus {
-  border-color: var(--accent-local);
+  border-color: var(--link);
 }
 
 .scope-select[data-active="true"] {
-  border-color: var(--accent-local);
-  background-color: var(--accent-local-glow);
+  border-color: var(--link);
+  background-color: color-mix(in srgb, var(--link) 14%, transparent);
 }
 
 /* ---- Stats ---- */
@@ -990,7 +1001,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 }
 
 .search-input:focus {
-  border-color: var(--accent-local);
+  border-color: var(--link);
 }
 .search-input::placeholder {
   color: var(--text-muted);
@@ -1051,7 +1062,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 
 .search-ac-item:hover,
 .search-ac-item[data-selected="true"] {
-  background: var(--accent-local-glow);
+  background: color-mix(in srgb, var(--link) 14%, transparent);
 }
 
 .search-ac-type {
@@ -1077,7 +1088,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 }
 
 .search-ac-name b {
-  color: var(--accent-local);
+  color: var(--link);
   font-weight: 600;
 }
 
@@ -1145,7 +1156,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 }
 
 .prox-toggle input:focus-visible + .prox-slider {
-  outline: 2px solid var(--accent-local);
+  outline: 2px solid var(--link);
   outline-offset: 2px;
 }
 
@@ -1267,8 +1278,8 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   min-width: 16px;
   padding: 1px 5px;
   border-radius: 20px;
-  background: var(--accent-local);
-  color: var(--bg);
+  background: var(--action);
+  color: var(--action-on);
 }
 
 .filter-group {
@@ -1348,8 +1359,8 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 }
 
 .filter-chip[data-active="true"] {
-  background: var(--chip-accent, var(--accent-local));
-  border-color: var(--chip-accent, var(--accent-local));
+  background: var(--chip-accent, var(--action));
+  border-color: var(--chip-accent, var(--action));
   color: var(--bg);
 }
 
@@ -1364,7 +1375,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 }
 
 .filter-check input {
-  accent-color: var(--accent-local);
+  accent-color: var(--link);
 }
 
 .filter-check[data-active="true"] {
@@ -1749,6 +1760,47 @@ label:has(> input[type="checkbox"]) {
   padding: 10px 2px 2px;
 }
 
+/* SUB-GROUPS INSIDE A PANE (item 6, 2026-08-16, the author's ruling).
+ *
+ * "Votes on laws" and "Votes on people" are sections INSIDE the Voting Record
+ * pane, and at the same size and colour as the pane's own header they read as
+ * three peers rather than as a thing containing two things. The author's
+ * report was that "When it mattered" appeared to render NOTHING: the pane's
+ * whole visible content was one small paragraph and two closed bars that did
+ * not look like content or like controls.
+ *
+ * So a sub-group INDENTS behind a rule, and steps down in size — smaller
+ * type, squarer corners, quieter fill — while keeping the chevron and the
+ * tap target that say it is a thing to click. Hierarchy by inset and scale,
+ * in the committed grammar; no new affordance language. */
+.card-section[data-level="sub"] {
+  margin-top: 8px;
+  margin-left: 10px;
+  padding-left: 10px;
+  border-left: 2px solid color-mix(in srgb, var(--link) 35%, var(--panel-border));
+}
+
+.card-section[data-level="sub"] > .card-section-header {
+  min-height: 38px;
+  padding: 0 11px;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--link) 5%, var(--panel-bg));
+}
+
+.card-section[data-level="sub"] > .card-section-header:hover,
+.card-section[data-level="sub"][data-open] > .card-section-header {
+  background: color-mix(in srgb, var(--link) 10%, var(--panel-bg));
+}
+
+.card-section[data-level="sub"] .card-section-title {
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.card-section[data-level="sub"] > .card-section-body {
+  padding: 8px 0 2px;
+}
+
 /* The zip switcher's chevron (item 4's audit, 2026-08-16). It had no state
    rule at all — down while closed, still down while open. */
 .zip-chevron {
@@ -2042,6 +2094,30 @@ label:has(> input[type="checkbox"]) {
   gap: 6px;
 }
 
+/* ONE CLEAN COLUMN (item 4, 2026-08-16, the author's ruling).
+ *
+ * The small popup's contact pills stack instead of wrapping. Wrapping filled
+ * the card with ragged half-rows — the "ugly and scattered" the author sent
+ * this back for — and a column of full-width pills reads as a list of ways to
+ * reach one person, which is what it is. The "More" footer below is
+ * full-width too, so the column and the way deeper line up on both edges. */
+.contact-pill-row[data-layout="column"] {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  gap: 6px;
+}
+
+.contact-pill-row[data-layout="column"] .contact-pill {
+  width: 100%;
+  justify-content: flex-start;
+  /* A long label — an email address, a campaign host — wraps inside the pill
+     rather than pushing the card wider. */
+  white-space: normal;
+  overflow-wrap: anywhere;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
 /* --------------------------------------------------------------------------
    THE PERSON ROW (item 2) — a representation list that stays horizontally
    sane at every width.
@@ -2072,6 +2148,20 @@ label:has(> input[type="checkbox"]) {
   /* A long name wraps at word boundaries. It never truncates and it never
      breaks mid-word — both turn a person's name into a different string. */
   overflow-wrap: break-word;
+}
+
+/* PARTY AS PLAIN TEXT (item 3, 2026-08-16, the author's ruling).
+ *
+ * The who-governs list is the one surface where party is NOT a pill. Twenty
+ * rows of filled chips is the overcrowding the author sent this item back
+ * for; the pill stays on the battlecards, small and large, where there is one
+ * person and the chip is the identity. Here it is the word, in the party's
+ * colour, and the colour is display only — nothing infers a position from it. */
+.person-row-party {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
 }
 
 .person-row-office {
@@ -2128,16 +2218,9 @@ label:has(> input[type="checkbox"]) {
   --vote-fill: var(--vote-no-strong);
 }
 
-/* The settled reaction (item 5): the reader's own answer, wearing the same
-   grammar as a recorded vote. It is the CONFIRMATION'S FACE, not its truth —
-   `SAVING` and `NOT_COUNTED` never reach this class, so a write that did not
-   land can never render as one that did. */
-.reaction-choice--settled {
-  border-color: transparent;
-  background: var(--vote-fill, var(--surface));
-  color: var(--vote-text);
-  font-weight: 700;
-}
+/* The settled reaction's fill lives with `.reaction-choice`, further down —
+   it has to BEAT the base control, and putting it here is what broke it.
+   See `.reaction-choice.reaction-choice--settled`. */
 
 /* A NAMED GAP is not a position and never wears a position's colour. It is
    an outline in the muted register — the rule from item 12 made visible. */
@@ -2261,6 +2344,30 @@ label:has(> input[type="checkbox"]) {
 .reaction-box[data-frame="compact"] .reaction-choice {
   min-height: 2.25rem;
   font-size: 0.75rem;
+}
+
+/* THE SETTLED REACTION (item 5, corrected 2026-08-16).
+ *
+ * The reader's own answer, wearing the same grammar as a recorded vote. It
+ * is the CONFIRMATION'S FACE, not its truth — `SAVING` and `NOT_COUNTED`
+ * never reach this class, so a write that did not land can never render as
+ * one that did.
+ *
+ * TWO CLASSES, DELIBERATELY, and it must stay that way. This rule first
+ * shipped as a bare `.reaction-choice--settled` written ABOVE
+ * `.reaction-choice` — same specificity, earlier in the file — so the base
+ * control's `background: var(--panel-bg)` won the cascade and took the fill
+ * back, leaving near-white `--vote-text` on the panel ground at 1.01:1 in
+ * light theme. Every class name read correctly in review; the button blanked
+ * on screen the moment a reader tapped it, and the row had landed every
+ * time. The doubled class means source order can never decide this again.
+ * Guarded by measuring the ratio, not by reading the file:
+ * `tests/reaction-pill.test.ts`. */
+.reaction-choice.reaction-choice--settled {
+  border-color: transparent;
+  background: var(--vote-fill, var(--surface));
+  color: var(--vote-text);
+  font-weight: 700;
 }
 
 /* The calendar chooser's three destinations (item 4, 2026-08-15). Full-width
@@ -2462,7 +2569,7 @@ label:has(> input[type="checkbox"]) {
 
 .notice-fab:hover {
   color: var(--text);
-  border-color: var(--accent-local);
+  border-color: var(--link);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2490,12 +2597,12 @@ label:has(> input[type="checkbox"]) {
 }
 
 .count-badge:hover {
-  border-color: var(--accent-local);
+  border-color: var(--link);
   color: var(--text);
 }
 
 .count-badge[data-active="true"] {
-  border-color: var(--accent-local);
+  border-color: var(--link);
   background: var(--surface);
   color: var(--text);
 }
@@ -2654,7 +2761,7 @@ label:has(> input[type="checkbox"]) {
   cursor: pointer;
 }
 .al-more:hover {
-  color: var(--accent-local);
+  color: var(--link);
 }
 
 .al-empty {
@@ -2783,7 +2890,7 @@ label:has(> input[type="checkbox"]) {
 }
 
 .welcome-icon {
-  color: var(--accent-local);
+  color: var(--link);
   margin-bottom: 12px;
 }
 
@@ -2825,10 +2932,10 @@ label:has(> input[type="checkbox"]) {
 .welcome-submit {
   width: 100%;
   padding: 10px 18px;
-  border: 1px solid var(--accent-local);
+  border: 1px solid var(--action);
   border-radius: var(--radius);
-  background: var(--accent-local);
-  color: var(--bg);
+  background: var(--action);
+  color: var(--action-on);
   font-family: inherit;
   font-size: 13px;
   font-weight: 600;
@@ -2875,9 +2982,9 @@ label:has(> input[type="checkbox"]) {
 }
 
 .welcome-team-btn:hover {
-  border-color: var(--accent-local);
-  color: var(--accent-local);
-  background: var(--accent-local-glow);
+  border-color: var(--link);
+  color: var(--link);
+  background: color-mix(in srgb, var(--link) 14%, transparent);
 }
 
 .welcome-opps-btn {

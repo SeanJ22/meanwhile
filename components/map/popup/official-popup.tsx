@@ -10,7 +10,6 @@ import { ageFrom, inSeatUntil } from "@/lib/officials/tenure";
 import type { Tier } from "@/lib/ocd/tiers";
 import type { RollCallVote, VotePosition } from "@/lib/votes/types";
 import type { ReactionViewContext } from "@/lib/reactions/client";
-import { identityChipsFor } from "@/lib/officials/identity-chips";
 import { ReactionControl } from "@/components/reactions/reaction-control";
 import { CardSection } from "@/components/officials/card-section";
 import { ContactPills } from "@/components/officials/contact-pills";
@@ -745,9 +744,31 @@ export function OfficeBlurb({
 }
 
 /**
- * The compact glance card: identity and contact, with the record one
- * obvious tap deeper. Votes, reactions and the office blurb live in the
- * large tier — glance → more → full.
+ * The compact glance card — ITEM 4, 2026-08-16, the author's ruling.
+ *
+ * The author on the previous form: "ugly and scattered, too much info." It
+ * carried the name, a party pill, a row of outlined chips (state, chamber,
+ * incumbent), the office title, an in-seat date, and a wrapped grid of up to
+ * ten contact pills, all inside 300px.
+ *
+ * It is three things now and nothing else:
+ *
+ *  1. the name, with the photo-or-initials circle;
+ *  2. the party as the FILLED PILL — the pill belongs on battlecards, small
+ *     and large; it is banned only from the who-governs list;
+ *  3. the contact pills in ONE VERTICAL COLUMN — phone, email, contact form,
+ *     official page, campaign site, X where held. The rest of the social row
+ *     is large-card only.
+ *
+ * "More" sits at the bottom, full width, aligned with the column, and opens
+ * the large battlecard — which carries the office, the in-seat line, the
+ * chips, the full social row, the record and everything else. **Nothing is
+ * deleted; it moved one tap down.**
+ *
+ * The eyebrow above the card keeps the office title: it is the card's
+ * structural label — what KIND of card this is, in the tier's colour — and
+ * every popup in this system has one. The role line inside the body, which
+ * said the same words a second time four pixels lower, is what went.
  */
 export function OfficialPopup({
   holder,
@@ -769,15 +790,12 @@ export function OfficialPopup({
          the header's dominant type, was two of the same fact. */
       titleInBody
     >
-      <PersonIdentity
-        holder={holder}
-        seatLabel={seatLabel}
-        chips={identityChipsFor(holder, tier, "INCUMBENT")}
-      />
+      <PersonIdentity holder={holder} seatLabel={seatLabel} identityOnly />
       {/* Item 2, the author's ruling: the pill row REPLACES the REACH THEM
           label/value ledger — the ledger is what broke, and a pill carries
-          its own label so nothing competes for the popup's fixed width. */}
-      <ContactPills holder={holder} compact />
+          its own label so nothing competes for the popup's fixed width.
+          Item 4: one column, primary channels only. */}
+      <ContactPills holder={holder} compact layout="column" scope="primary" />
     </PopupCard>
   );
 }

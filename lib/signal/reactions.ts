@@ -167,6 +167,67 @@ export function scaleForTargetType(targetType: ReactionTargetType): ReactionScal
   return FUNDING_REACTION_TYPES.includes(targetType) ? SCALE_V2_FUNDING : SCALE_V1;
 }
 
+/**
+ * **The question a target type actually asks** (item 5, 2026-08-16).
+ *
+ * The scale and the question are not the same thing, and this session is
+ * where they came apart. The two funding controls share the five-point scale
+ * — same values, same version, genuinely one instrument's answer set — but
+ * they now ask about two different civic objects: the totals ("how this
+ * campaign is funded") and the contributions table ("these contributions").
+ * They asked WORD FOR WORD the same thing until today, which read to a reader
+ * as a nag and produced an annoyed second answer.
+ *
+ * `scale.question` would have labelled the contributions tally with the
+ * totals' wording. An export whose question line does not match the question
+ * asked is a false claim about how the number was collected, and the buyer
+ * has no way to catch it. So the label is per TARGET TYPE.
+ *
+ * **The buckets do not change.** They never did: `aggregateReactions` has
+ * always keyed on `targetType` alongside `targetId`, `ocdId` and the scale
+ * version, and the store's unique index carries `targetType` too. This
+ * corrects a LABEL, and it is the correction the reworded prompt requires.
+ */
+const QUESTION_BY_TYPE: Partial<Record<ReactionTargetType, string>> = {
+  FUNDING_TOTAL_REACTION: "How do you feel about how this campaign is funded?",
+  CONTRIBUTOR_REACTION: "How do you feel about these contributions?",
+};
+
+export function questionForTargetType(targetType: ReactionTargetType): string {
+  return QUESTION_BY_TYPE[targetType] ?? scaleForTargetType(targetType).question;
+}
+
+/**
+ * **The contributions prompt was reworded inside v2** (2026-08-16), and that
+ * is recorded here rather than smoothed over.
+ *
+ * It is NOT a scale break: the value set, the version and the meaning of each
+ * answer are unchanged, so the rows remain comparable in a way a scale break's
+ * rows never are. What changed is which object the reader was looking at when
+ * they answered — and until this date the contributions control asked the
+ * totals' sentence, so a handful of v2 CONTRIBUTOR_REACTION rows written
+ * before it were answering that wording on the contributions display.
+ *
+ * A version bump would be the heavier, cleaner instrument, and it changes how
+ * reactions are bucketed and exported — CLAUDE.md's ask-before list. Recorded
+ * for the author's ruling instead of taken unattended.
+ */
+export const QUESTION_REWORDINGS: Array<{
+  targetType: ReactionTargetType;
+  date: string;
+  from: string;
+  to: string;
+  why: string;
+}> = [
+  {
+    targetType: "CONTRIBUTOR_REACTION",
+    date: "2026-08-16",
+    from: "How do you feel about how this campaign is funded?",
+    to: "How do you feel about these contributions?",
+    why: "The two funding controls asked the same sentence about two different objects — the totals and the named contributions — which read as a repeat and collected an annoyed second answer. Same scale, same values, same version; the object being asked about is now named.",
+  },
+];
+
 /** The values a scale admits, for a lookup that reads as a lookup. */
 export function valuesForScaleVersion(version: ScaleVersion): ReactionValue[] {
   return version === 2 ? SCALE_V2_FUNDING.values : SCALE_V1.values;

@@ -45,7 +45,8 @@
     "congress:fetch": "tsx scripts/fetch-congress-legislators.mts",
     "congress:migrate": "tsx scripts/migrate-congress-directory.mts",
     "shoot:0816": "tsx scripts/shoot-0816.mts",
-    "verify:sources": "tsx scripts/verify-sources-tab.mts"
+    "verify:sources": "tsx scripts/verify-sources-tab.mts",
+    "dotgov:fetch": "tsx scripts/fetch-dotgov.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

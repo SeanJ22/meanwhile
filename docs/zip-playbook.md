@@ -531,3 +531,75 @@ who-governs card's seat rows.
 title, a body name, a jurisdiction:** stack it. Do not tune the width.
 Measure it with `lab.scrollWidth > lab.clientWidth`, which is what "overflows
 its box" looks like as a number.
+
+### The .gov registry is a rung, never a denominator (2026-08-16)
+
+`cisagov/dotgov-data`'s `current-full.csv` is the cheapest first rung in any
+hunt for a body's own publications: 16,501 domains with the registrant's own
+organization name and CISA's own `Domain type`. **693 of them are typed as
+election offices** — City 332, County 288, State or territory 36, Special
+district 33, Tribal 4 — and that is the named rung for a ballot or
+candidate-filing hunt in a county nobody has worked before. Committed at
+`data/dotgov/snapshot.json`, SHA-pinned, `pnpm dotgov:fetch`.
+
+**Use CISA's `Domain type`, never a name match.** A name match on "vote" or
+"election" would sweep in a town called Election and miss every secretary of
+state; the registry already classified these and reading its answer is both
+cheaper and right.
+
+**It is a list of DOMAINS and it is never a coverage denominator.** A
+government with no .gov domain is absent from it entirely — small towns,
+school districts and special districts routinely publish on a `.org`, a
+`.us`, a vendor subdomain, or a Facebook page — so counting .gov domains
+would undercount exactly the bodies hardest to cover, which is the Sunnyside
+class of miss. One government may hold several domains; a domain is not a
+body. M still comes from the Census of Governments and the official rosters.
+
+### A CSS state class must BEAT the base class, not merely differ from it
+
+The confirmation pill shipped invisible for seven hours because
+`.reaction-choice--settled` was written above `.reaction-choice` at the same
+specificity: the base rule's background won on source order, and near-white
+text on the panel ground measured **1.01:1** in light theme. Every class name
+read correctly in review, and in DARK theme the same broken cascade measured
+15.60:1 — so a dark-theme check would have passed it.
+
+**The rung:** a state modifier for a base class is written as
+`.base.base--state`, doubled, and sits with the base rather than above it.
+**And the check is a computed RATIO in BOTH themes**, never a class-name
+assertion and never a single-theme look — `tests/reaction-pill.test.ts`
+resolves the rendered class list through the stylesheet by specificity and
+source order and asserts the literal fill and a 4.5:1 floor.
+
+### A scope-limited resolver states OUR scope, never THEIR absence
+
+`representationForDivision` reads a POINT-SCOPED coverage summary, so every
+district the reader is not standing in came back empty — and the empty array
+rendered as "No sourced officeholder for this division yet" over people the
+same page had already loaded. Measured before the fix: **24 of 24**
+non-containing divisions we hold officeholders for rendered zero.
+
+**The rung, whenever a resolver's answer depends on where the reader is:**
+resolve by the OBJECT'S OWN KEY. An OCD-ID is already a path, so a route that
+answers by division spells it as one — `/api/representation/ocd-division/...`
+— and every cache keys on the division by construction rather than on a query
+string a CDN may drop (D40). Bind the response to the key it was asked for
+and discard one that names a different key.
+
+**And there are THREE empties, not one:** we hold nobody (ours), the lookup
+is still in flight (ours, and not an absence), the lookup failed (ours, and a
+different fact again). Each gets its own sentence.
+
+### Playwright `page.evaluate`: no inner functions, still, every time
+
+Cost two runs this session on top of the two it has cost before. `tsx`
+compiles `const fn = () => {}` inside an evaluate body into a call to
+esbuild's `__name`, which does not exist in the browser: `ReferenceError:
+__name is not defined`, thrown from inside the page. Inline the logic or use
+a `for` loop. This is written down for the third time because it keeps being
+rediscovered.
+
+### REFERENCE IMAGES COMMIT TO `screenshots/` BEFORE A SESSION
+
+Standing entry, carried forward: a brief that describes a reference image
+without a repo path cannot be checked against it. Briefs point at repo paths.

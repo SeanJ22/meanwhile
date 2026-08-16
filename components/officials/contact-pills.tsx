@@ -76,12 +76,31 @@ export function ContactPills({
   holder,
   /** The small popup scales the row down; the large card runs it full size. */
   compact = false,
+  /**
+   * `"column"` stacks the pills one per line (item 4, 2026-08-16, the
+   * author's ruling) — the small popup's form. A wrapped row left ragged
+   * half-lines across the card; a column reads as a list of ways to reach one
+   * person.
+   */
+  layout = "row",
+  /**
+   * `"primary"` is the small popup's set: phone, email, contact form,
+   * official page, campaign site, and X. **The rest of the social row —
+   * Facebook, YouTube, Instagram, Mastodon — is large-card only**, by the
+   * author's ruling: a glance card answers "how do I reach them", and five
+   * more accounts is the scatter it was sent back for. Nothing is padded
+   * either way; an absent channel is still an absent pill.
+   */
+  scope = "all",
 }: {
   holder: SeatHolder;
   compact?: boolean;
+  layout?: "row" | "column";
+  scope?: "all" | "primary";
 }) {
   const social = holder.social ?? {};
   const pills: React.ReactNode[] = [];
+  const full = scope === "all";
 
   // Order is the reader's likely need, not the source's field order: the
   // phone rings a human, the form reaches the office, the pages explain it,
@@ -169,7 +188,7 @@ export function ContactPills({
     );
   }
 
-  if (social.facebook) {
+  if (full && social.facebook) {
     pills.push(
       <Pill
         key="facebook"
@@ -180,7 +199,7 @@ export function ContactPills({
     );
   }
 
-  if (social.youtube || social.youtubeId) {
+  if (full && (social.youtube || social.youtubeId)) {
     pills.push(
       <Pill
         key="youtube"
@@ -195,7 +214,7 @@ export function ContactPills({
     );
   }
 
-  if (social.instagram) {
+  if (full && social.instagram) {
     pills.push(
       <Pill
         key="instagram"
@@ -206,7 +225,7 @@ export function ContactPills({
     );
   }
 
-  if (social.mastodon) {
+  if (full && social.mastodon) {
     pills.push(
       <Pill
         key="mastodon"
@@ -227,7 +246,11 @@ export function ContactPills({
   }
 
   return (
-    <div className="contact-pill-row" data-compact={compact || undefined}>
+    <div
+      className="contact-pill-row"
+      data-compact={compact || undefined}
+      data-layout={layout === "column" ? "column" : undefined}
+    >
       {pills}
     </div>
   );

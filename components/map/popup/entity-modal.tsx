@@ -84,6 +84,14 @@ export interface ModalSubject {
   representation: SeatHolder[];
   /** Why representation is empty, when it is. */
   representationNote: string;
+  /**
+   * The division this card is about, when it is about one (M112,
+   * 2026-08-16). The subject is a snapshot taken at click time; this is what
+   * lets the caller recognise its own division and re-derive the card when a
+   * division-keyed officeholder lookup answers, so a battlecard opened while
+   * the lookup was in flight fills in instead of freezing on the looking line.
+   */
+  divisionOcdId?: string | null;
   meetings: Meeting[];
   /**
    * Every record behind anything on screen, from the ONE assembler

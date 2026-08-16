@@ -1,144 +1,137 @@
-# Session brief — 2026-08-16, second of the day
+# Session brief — g2, the correction pass
 
-**Post-e: the cards take their final face, the brown dies, and the federal
-directory problem gets solved in one fetch.**
+*The author's production pass, delivered as the brief. Committed for the
+record, 2026-08-16. Outcome per item is appended at the end.*
 
-Committed for the record. The narrative is `docs/state.md` §32; the row
-pointers are below. Branch `claude/final-face-0816`.
+---
 
-Two reference screenshots arrived attached to the prompt as STRUCTURAL
-references — geometry, hierarchy, fill-vs-outline — with the tokens as law for
-everything visual. **They could not be saved to `screenshots/`**: an attached
-image in a prompt is visible to the session but its bytes are not reachable
-by any tool here, so `ref-header-ciscomani.png` and `ref-contact-pills.png`
-do not exist on disk. What was built from them is written out in DESIGN.md
-instead — the skeleton is described in words, including the one thing
-deliberately not adopted (the party-coloured ring).
+Session brief — g2, the correction pass: the sensor proves it counts,
+who-governs goes back to clean, and the map learns state lines
 
-## Session-open triage
+On completion, overwrite `docs/session-brief.md`.
 
-`docs/defects.md` read first. **No untriaged entries** — every entry already
-carried its row pointer, including the 2026-08-16 hotfix block.
+QUEUE POSITION: runs before h (NH finance). h drops when this reports clean.
 
-## What the brief asked, and what it got
+This session runs unattended. Nobody is available to answer.
 
-| # | Item | Row | Outcome |
-|---|---|---|---|
-| 1 | The false Sources sentence | **M100** | Done |
-| 2 | The mini cards rebuilt whole | **M101** | Done |
-| 3 | The identity header | **M102** | Done |
-| 4 | Voting Record + the chevrons | **M103** | Done |
-| 5 | Yes/no as pills | **M104**, **M105** | Done |
-| 5b | Pictures first | **M107** | Done |
-| 6 | The brown dies; counters; who-governs | **M102**, **M108**, **M109** | Done (one named remainder) |
-| 7 | congress-legislators | **D63** | Done |
-| 8 | The full contact pill row | **M106** | Done |
-| 9 | The dotgov registry | — | **NOT BUILT** |
-| 10 | Four source-ladder entries | **R26** | Done |
-| 11 | M91 / M92 / M94 / M95 | — | Partial — see below |
-| 12 | The render-default rule | **M111** | Done |
-| 13 | The Lombardo photo-badge ruling | **D60** | Skipped — the ruling did not arrive |
-| 14 | Final pass and handoff | — | Done |
+* Reversible: cheaper-to-undo, recorded with the rejected alternative, keep
+  going. Irreversible: skip, tracker row, continue.
+* Browser-heavy steps LAST, strictly sequential, no background agents, commit
+  per completed item. REAL-PAGE verification with measurements (g's standard)
+  on anything visual.
+* Live on every push; `pnpm handoff --ship` with the R22 gate; verify every
+  deploy LANDS on production. Standing report ending with "Needs your hands."
+  Probe rows named. Playbook diff or "nothing new," stated — including g's
+  standing entry: REFERENCE IMAGES COMMIT TO `screenshots/` BEFORE a session;
+  briefs point at repo paths.
 
-## What was NOT built, and why
+Session-open: read `docs/defects.md` and triage.
 
-Stated plainly rather than left to be discovered.
+Correct first. Fast second. Nothing third. Items 1 and 2 are truth defects
+live on production; they lead in that order.
 
-- **Item 9, the dotgov registry (cisagov/dotgov-data)** — not fetched. The
-  brief's cut order names item 9's *wiring* as the second cut and says the
-  snapshot itself should still land; it did not. Nothing half-built, no
-  partial adapter, no tracker row claiming otherwise. It is the first thing
-  the next session should pick up.
-- **M91, the state-focus map** — deferred, the brief's own sanctioned first
-  cut. The e-session design capture stands unchanged.
-- **M92** — the PEOPLE-row half shipped inside M109 (name opens the
-  battlecard, "Their site →" goes out). The bodies/districts half and the
-  AZ-6 linking defect are not done.
-- **M94** — the ask-box half shipped (**M110**). **The proposition
-  not-yet-published blurb was searched for and NOT FOUND** as a repeated
-  string on the ballot page; the only near match is the per-measure
-  `extractionNote`, which is correctly per-measure. Recorded as a question
-  rather than claimed as absent: **which surface was it on?**
-- **M95, sourced term ends for the three governors** — not built. It needs
-  each state's own election authority or constitution read and verified, and
-  a term end guessed from an election cycle is exactly the fabrication the
-  provenance discipline refuses. The three still render no "In seat until",
-  which is the honest state.
-- **A MEASURE/PROVISION reaction target type** — not added. Item 5's third
-  bullet was delivered as styling (the measure prompt takes the person
-  prompt's frame and weight, **M105**); creating a new reaction target
-  changes how reactions are bucketed and collected, which is on CLAUDE.md's
-  ask-before list, and nobody was available.
+**1 — Reactions blank out when tapped — diagnose whether the sensor is losing
+data (P1, leads).** The author, on production: tapping Yes on "Do you like
+this vote?" BLANKS the button; tapping Love it on the funding question makes
+it DISAPPEAR. The reader cannot tell whether their reaction counted. Diagnose
+FIRST, in one of two directions, and say which: (a) the POST lands (204, row
+written) and only the confirmation render is broken — a display defect; or
+(b) the POST is failing or never firing and the blank is a swallowed error —
+a DATA-LOSS defect on the product's core sensor. Check the Neon table's
+recent rows against test taps before touching any component. If (b), the
+honest-outcome rule (P11's COUNTED/NOT_COUNTED) has been violated on
+production and the diagnosis paragraph says for how long, as bounded by
+evidence. The fix renders the captured state as the pill g's item 5
+specified: green fill for yes, red for no, dark gray for unsure; the
+five-point funding scale in its own token shades. A captured reaction NEVER
+renders as blank; a failed one renders NOT_COUNTED honestly. Guard: a test
+that taps each reaction type and asserts the confirmation pill renders with
+the captured value; proven to fail against the broken state.
 
-## The one named remainder inside a Done item
+**2 — M112: the district card denies officeholders we hold (P1).** Diagnosis
+already recorded in the tracker: `representationForDivision` reads
+point-scoped `coverage.seats`, so any division not containing the reader's
+point renders "No sourced officeholder for this division yet" over people we
+hold. The fix is RESOLUTION: seats resolve by the clicked division's OCD-ID,
+independent of the reader's point. Guard in the M86 pattern, listing the
+divisions it fails on. Fallback ONLY if division-keyed resolution cannot be
+verified on production by session end; the false sentence does not survive
+this session either way.
 
-`--tier-fill-local` in the **light** theme is still a deep amber on the
-selected Local tier toggle. The interactive accent moved off amber entirely;
-the tier accents did not, because they are tuned to sit between the basemap's
-roads and the meeting markers and moving one means retuning the legend
-against the basemap. The brief permits moving Local provided the legend moves
-with it — that is the author's eye's call, not a side effect of a link
-colour.
+**3 — Who-governs goes back to what it was, in azure (the author's ruling).**
+Revert the LIST to its pre-g cleanliness, keeping ONLY the new colour scheme:
+no pills (party as plain text in its party colour), "Their site →" removed
+from every row, and the click grammar — a PERSON's name opens their SMALL
+battlecard, a BODY row opens its LARGE battlecard, with all external links
+inside the cards. Density returns to the pre-g register.
 
-## Probe rows
+**4 — The small popup slims to name, party, contact (the author's ruling).**
+Exactly three things: the name with its circle, the party as the FILLED PILL,
+and the contact pills stacked VERTICALLY in one clean column. No role line, no
+in-seat line, no chips. The full social row stays large-card-only. More sits
+at the bottom, aligned with the column.
 
-**None.** Nothing was written against production this session. The walk drove
-`localhost:3000`; production verification was GETs only. No reaction tapped,
-no log event fired.
+**5 — Campaign money asks once per object, and the two sensors are provably
+distinct.** The second prompt becomes "How do you feel about these
+contributions?" Verify the two prompts write DISTINCT reaction targets; if
+they write the SAME target that is a sensor defect and the aggregate honesty
+rules apply.
 
-## Playbook diff
+**6 — Voting Record: the accordion's empty half, and the sub-groups indent.**
+"When it mattered" appears to render NOTHING when selected. Diagnose — empty
+state, broken accordion pane, or data not reaching the view — then fix. Votes
+on laws / Votes on people indent clearly as sub-groups.
 
-**Two entries added** to `docs/zip-playbook.md`:
+**7 — One search bar (the author's ruling).** Merge the ask box and the
+entity search into ONE input: keyword-first, anything else routing as an ask
+through the existing curated path.
 
-1. **The federal rung is solved once, nationally.** A new state's depth run
-   starts with the federal tier already done — roster, contact, district
-   offices, committees, official accounts, all bioguide-joined from one
-   SHA-pinned snapshot. What it does NOT solve is stated too: no votes, no
-   money, no statements, and no state or local scope at all.
-2. **The two-column trap**, with the measurement that detects it
-   (`lab.scrollWidth > lab.clientWidth`). A row that puts a nowrap label
-   beside a value in a fixed-width card will always eventually starve the
-   value, and the failure is silent.
+**8 — M91 builds now: the state knows its borders.** The active state vivid
+and slightly raised, neighbours dim, the border-crossing prompt, and the drag
+rubber-band dies.
 
-## Found BY the verification, not reported — and it is a P1
+**9 — The dotgov snapshot lands.** cisagov/dotgov-data `current-full.csv`,
+SHA-pinned, thin-guard, weekly D54 slot; the 693-domain election subset as a
+named rung list; the domains-not-denominator boundary recorded.
 
-**M112.** Open any district on the map that does NOT contain the reader's own
-point, and its battlecard states *"No sourced officeholder for this division
-yet"* — while we hold the officeholders. At 85701 the point resolves
-`sldl:20`, so State House District 21's card denies Consuelo Hernandez and
-Stephanie Stahl Hamilton, both of whom are in the committed AZ store.
+**10 — The amber remnant dies in both themes.** Hunt every remaining
+amber/brown token use in BOTH themes; the map legend and tier toggles move in
+lockstep. Verify with computed-value measurement, both themes.
 
-**It is not M86 recurring.** The card does use the shared resolver now. But
-`representationForDivision` reads `coverage.seats`, and the coverage summary
-is POINT-SCOPED by construction — it carries only the divisions containing the
-reader. Every other drawn district gets an empty array, and the empty array
-renders as OUR gap.
+**11 — M94 resolves either way: the proposition-blurb hunt.** Walk every
+surface at all four zips, both card sizes. Never assert absence without the
+walk.
 
-That is the render-default rule adopted in this same session, violated by a
-resolver rather than by a component: absence produced by a scope limit is
-being stated as absence of a record.
+**12 — Final pass and handoff.** Walk at 390×844 and desktop; documents;
+overwrite `docs/session-brief.md`; ship; verify the deploy LANDS; standing
+report ending with "Needs your hands."
 
-**Diagnosed, NOT fixed, and the row says In progress.** The honest fix needs
-seats for arbitrary drawn divisions available client-side, which is
-data plumbing rather than copy, and building it unverified at the end of a
-session is how a false claim gets replaced by a differently false one.
+Order: 1 → 12. If short: defer 8 first (its rubber-band kill still ships);
+then 11 (named); then 7; then 9's wiring extras. Never cut 1, 2, 3, 4, 5, 6,
+10, or 12. Documents never cut.
 
-## Needs your hands
+---
 
-1. **M112 is a false claim live on production right now** — pick (a) resolve
-   the clicked division's seats through an API call when the battlecard opens,
-   or (b) at minimum make the sentence tell the truth about the scope.
-2. **Item 9 is untouched.** The dotgov registry snapshot did not land. It is
-   the cleanest single piece of work waiting.
-3. **M94's other half: which surface showed the repeated proposition
-   blurb?** It was searched for and not found; a pointer would close it in
-   minutes.
-4. **The light-theme Local tier toggle is still amber.** If you want the
-   whole gold family gone, say so and the map legend moves with it.
-5. **D60, the Lombardo photo badge — pin vs logo — is still open.**
-6. **`docs/congress-legislators-diff.md` found 0 disagreements.** Nothing to
-   rule on today; the file exists so that the day it finds one, it is already
-   the place you look.
-7. **`docs/stamp-audit.md`** carries 2 disagreements with git history and 1
-   NOT FOUND (this session's own new rule, which resolves once its commit
-   exists). Nothing was corrected automatically.
+## What this session did with it
+
+**Shipped: 1, 2, 3, 4, 5, 6, 9, 10, 12.** **Cut in the brief's own order: 8,
+then 11, then 7** — three of the four the brief named cuttable, nothing
+half-built, each with a tracker row carrying its whole spec.
+
+| Item | Row | Outcome |
+|---|---|---|
+| 1 — the blanking reaction | **M113** | Done. Direction **(a)**: the POST lands, the row was in the store every time. A CASCADE defect, light theme only, 1.012:1. |
+| 2 — M112 | **M112** | Done, by RESOLUTION. 24 of 24 non-containing divisions were denying people we hold. |
+| 3 — who-governs | **M114** | Done. Reverses half of M109 deliberately. |
+| 4 — the small popup | **M115** | Done. Two judgment calls stated in the row. |
+| 5 — one ask per object | **M116** | Done. The sensors were already distinct; the QUESTION LABEL was not. |
+| 6 — the empty pane | **M117** | Done. Diagnosed against production first: the data was never missing. |
+| 7 — one search bar | **M119** | **CUT**, spec kept whole. Both inputs keep working. |
+| 8 — M91 state focus | **M91**, **M120** | **CUT** (the brief's own first cut). The rubber-band was NOT REPRODUCED; M120 records what was ruled out. |
+| 9 — the dotgov snapshot | **D64** | Done. 16,501 domains, 693 election-typed. Wiring named as the remainder. |
+| 10 — the amber remnant | **M118** | Done. Twenty-eight declarations, not one toggle. |
+| 11 — M94's hunt | **M94** | **CUT**. Stays In progress; absence is not claimable without the walk. |
+| 12 — documents and handoff | — | Done. `state.md` §33. |
+
+The narrative is `docs/state.md` §33. Probe rows: **five**, all named there
+with their timestamps, targets and browser keys.

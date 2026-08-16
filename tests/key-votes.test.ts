@@ -321,3 +321,65 @@ function assertPassageQuestion(id: string, chamber: string, question: string | n
     `${id} ${chamber}: a procedural vote is standing in for the law`,
   );
 }
+
+/*
+ * ITEM 6 (2026-08-16, the author): "When it mattered" appeared to render
+ * NOTHING when selected.
+ *
+ * DIAGNOSED before anything was changed, and the data was never the problem:
+ * production's /api/votes serves 36 key votes for a senator — 20 laws, 16
+ * people — and all of them reach this component. What the reader saw was the
+ * criteria sentence and two CLOSED bars, because both sub-groups defaulted
+ * shut at the same size and colour as the pane's own header.
+ *
+ * Two rules now, and both are guarded here rather than at a screenshot:
+ * the pane opens with its content, and its sub-groups read as sub-groups.
+ */
+
+test("the key-votes pane opens with its content, not with two closed bars", () => {
+  const surface = readFileSync(
+    join(ROOT, "components", "officials", "key-votes-section.tsx"),
+    "utf8",
+  );
+  // Every CardSection this file renders opens with the pane. A view the
+  // reader just selected must not need two more taps to show anything.
+  const sections = surface.match(/<CardSection[\s\S]*?>/g) ?? [];
+  assert.ok(sections.length >= 3, "the pane should render its sub-groups");
+  for (const section of sections) {
+    assert.ok(
+      /defaultOpen/.test(section),
+      `a key-votes sub-group ships closed:\n${section}`,
+    );
+    assert.ok(
+      /level="sub"/.test(section),
+      `a key-votes sub-group is not marked as one:\n${section}`,
+    );
+  }
+});
+
+test("a sub-group is visually a sub-group, and still a thing to click", () => {
+  const component = readFileSync(
+    join(ROOT, "components", "officials", "card-section.tsx"),
+    "utf8",
+  );
+  assert.ok(
+    /data-level=\{level === "sub" \? "sub" : undefined\}/.test(component),
+    "the level must reach the DOM or the stylesheet cannot see it",
+  );
+  const css = readFileSync(join(ROOT, "app", "globals.css"), "utf8");
+  // Indented behind a rule, stepped down in scale — hierarchy in the
+  // committed grammar rather than a new affordance language.
+  assert.ok(/\.card-section\[data-level="sub"\] \{[^}]*margin-left/.test(css));
+  assert.ok(/\.card-section\[data-level="sub"\] \{[^}]*border-left/.test(css));
+  assert.ok(
+    /\.card-section\[data-level="sub"\] \.card-section-title \{[^}]*font-size/.test(css),
+  );
+  // The chevron rule stays scoped with `>` — the defect that rotated closed
+  // sub-groups' arrows when the parent opened must not come back.
+  assert.ok(
+    /\.card-section\[data-open\] > \.card-section-header \.card-section-chevron/.test(
+      css,
+    ),
+    "the chevron rotation must stay scoped to a section's own header",
+  );
+});

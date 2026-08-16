@@ -1,0 +1,71 @@
+# The scheduled refresh behind data/dotgov/snapshot.json (item 9, 2026-08-16).
+#
+# The app reads the committed snapshot; no page load ever calls GitHub.
+#
+# **Weekly, and SHA-PINNED, which are not in tension.** cisagov/dotgov-data
+# commits a new zone file most days, so `main` would return different data on
+# different days with nothing recording which — the pin is what makes a run
+# reproducible. This workflow therefore does NOT float the pin: it re-fetches
+# the pinned commit and fails loudly if that commit ever stops answering,
+# which is the only thing a scheduled run can honestly check about a pinned
+# source. Bumping the SHA stays a deliberate act with a diff and a read date,
+# taken by a session that looked at what changed.
+#
+# No secret. The registry is a public US Government work in a public repo.
+#
+# Failure semantics, inherited from the other refreshes: the thin-guard in
+# the fetch script throws before anything is written — under 15,000 domains
+# or under 500 election-typed domains keeps the old file. Tests run before
+# any commit, so a parse regression cannot publish either.
+
+name: Refresh dotgov snapshot
+
+on:
+  schedule:
+    # Mondays 09:17 UTC — the D54 weekly slot, off the top of the hour and
+    # clear of the Sunday LegiScan rebuild.
+    - cron: "17 9 * * 1"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-dotgov-snapshot
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Enable corepack (pnpm pinned by packageManager)
+        run: corepack enable
+
+      - name: Install
+        run: corepack pnpm install --frozen-lockfile
+
+      - name: Refresh the snapshot (thin-guarded, SHA-pinned)
+        run: corepack pnpm dotgov:fetch
+
+      - name: Validate before committing
+        run: corepack pnpm test
+
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- data/dotgov/snapshot.json; then
+            echo "snapshot unchanged — the pinned commit still answers with the same rows, nothing to commit"
+            exit 0
+          fi
+          git config user.name "snapshot-refresh[bot]"
+          git config user.email "noreply@github.com"
+          git add data/dotgov/snapshot.json
+          git commit -m "dotgov snapshot refresh: $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push origin main

@@ -879,21 +879,42 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 }
 
 /* ---- Stats ---- */
+/* Item 6 (2026-08-16): the counters redesigned.
+ *
+ * They were four flex tiles with `min-width: 64px` in a 340px rail, so at
+ * every width each tile was about 70px wide and had to hold a 10px uppercase
+ * label with half a pixel of tracking. "DISTRICTS IN VIEW" and "OFFICIALS"
+ * overflowed their tiles and the row read as clutter — four numbers you
+ * could not attach to their nouns.
+ *
+ * A 2×2 GRID is the form. Two per row at ~148px each is twice the width, so
+ * the longest label wraps inside its own tile instead of out of it, and the
+ * block reads as four things rather than as a strip. The door behaviour is
+ * untouched: every tile is still the door to what it counts, and the
+ * highlight still means "this door is open" and nothing else.
+ *
+ * The HONEST MODES from M87 are truth rules, not styling, and none of them
+ * moved: the "in view" labelling, the governing-set mode, "Off" when the
+ * overlay is off, and the couldn't-check dash. */
 .stats-bar {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 8px;
   padding: 14px 22px;
   border-bottom: 1px solid var(--panel-border);
 }
 
 .stat-card {
-  flex: 1;
-  min-width: 64px;
+  min-width: 0;
   background: var(--surface);
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
-  padding: 10px 12px;
+  padding: 11px 12px;
+}
+
+/* The full-width rows under the grid — dropped records, the coverage rung. */
+.stats-bar > .stat-missing {
+  grid-column: 1 / -1;
 }
 
 /* 6f (2026-08-15): the highlight means "this door is open", and it means that
@@ -913,12 +934,16 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   font-variant-numeric: tabular-nums;
 }
 
+/* The label reads as a NOUN, not as a header cell. Sentence case at a
+   readable size, wrapping freely inside its own tile — the uppercase
+   letter-spaced form is what made "DISTRICTS IN VIEW" wider than the box it
+   lived in, and shouting a label does not make its number clearer. */
 .stat-card .label {
-  font-size: 10px;
+  font-size: 11px;
+  line-height: 1.25;
   color: var(--text-dim);
-  margin-top: 4px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  margin-top: 5px;
+  overflow-wrap: break-word;
 }
 
 /* The dropped-record row. Full width under the cards, and deliberately not

@@ -345,6 +345,64 @@ function say(label: string, value: unknown) {
   await page.close();
 }
 
+
+// ------------------------------------- item 6: counters + who-governs
+for (const [w, h, label] of [
+  [1440, 950, "desktop"],
+  [390, 844, "phone"],
+] as const) {
+  const page = await open(w, h, "85701");
+  console.log(`\n${label} ${w} — counters and who-governs`);
+  if (w < 768) {
+    const menu = page.locator('button[aria-label="Open menu"]').first();
+    if ((await menu.count()) > 0) {
+      await menu.click();
+      await page.waitForTimeout(700);
+    }
+  }
+
+  // The overflow check is the whole point: the labels used to be wider than
+  // the tiles that held them, which is what "overflowing its tiles" means as
+  // a number.
+  const counters = await page.evaluate(() =>
+    [...document.querySelectorAll(".stat-card")].map((c) => {
+      const lab = c.querySelector(".label");
+      return {
+        label: (lab?.textContent ?? "").trim(),
+        num: (c.querySelector(".num")?.textContent ?? "").trim(),
+        tileW: Math.round(c.getBoundingClientRect().width),
+        overflows: lab ? lab.scrollWidth > lab.clientWidth + 1 : null,
+      };
+    }),
+  );
+  say("counters (overflows must all be false)", counters);
+  await page.screenshot({ path: join(OUT, `${PREFIX}-12-counters-${w}.png`) });
+
+  const gov = await page.evaluate(() => {
+    const card = document.querySelector(".coverage-notice");
+    if (!card) return null;
+    const rows = [...card.querySelectorAll(".person-row")].map((r) => {
+      const n = r.querySelector(".person-row-name") as HTMLElement | null;
+      return {
+        name: (n?.textContent ?? "").trim(),
+        nameW: n ? Math.round(n.getBoundingClientRect().width) : null,
+      };
+    });
+    return {
+      cardW: Math.round(card.getBoundingClientRect().width),
+      personRows: rows.length,
+      sample: rows.slice(0, 4),
+      partyChips: card.querySelectorAll(".id-chip[data-fill]").length,
+      theirSite: [...card.querySelectorAll("a")].filter((a) =>
+        /Their site/.test(a.textContent ?? ""),
+      ).length,
+    };
+  });
+  say("who-governs", gov);
+  await page.screenshot({ path: join(OUT, `${PREFIX}-13-who-governs-${w}.png`) });
+  await page.close();
+}
+
 // -------------------------------------- a member WITH the full social row
 {
   const page = await open(1440, 950, "85701");

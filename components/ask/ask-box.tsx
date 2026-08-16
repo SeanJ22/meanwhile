@@ -319,11 +319,28 @@ export function AskBox({
                     ))}
                   </p>
                 )}
-                {step.gap && (
-                  <p className="mt-0.5 text-[0.6875rem] leading-relaxed text-voice">
-                    {step.gap}
-                  </p>
-                )}
+                {/*
+                  M94 (2026-08-16), the footnote collapse: a gap sentence is
+                  said ONCE per answer, on the first step that hits it.
+
+                  A four-step route where three steps land on bodies we hold
+                  and no roster for rendered "We haven't sourced who sits on
+                  this body yet." three times, one line apart. Repeating a
+                  notice does not make it more honest — it makes the answer
+                  look like it is mostly apology, and it buries the steps
+                  that DID resolve. The rule is the same one the transparency
+                  diet applied to every other repeated line: state it, and
+                  state it once.
+
+                  It is still per-SENTENCE, not per-answer: two DIFFERENT gap
+                  sentences are two different facts and both are said.
+                */}
+                {step.gap &&
+                  asked.answer.steps.findIndex((s) => s.gap === step.gap) === i && (
+                    <p className="mt-0.5 text-[0.6875rem] leading-relaxed text-voice">
+                      {step.gap}
+                    </p>
+                  )}
               </li>
             ))}
           </ol>

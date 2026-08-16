@@ -11,9 +11,10 @@ import {
   type ReactionSubmitOutcome,
   type ReactionViewContext,
 } from "@/lib/reactions/client";
-import type {
-  ReactionTargetType,
-  ReactionValue,
+import {
+  scaleForTargetType,
+  type ReactionTargetType,
+  type ReactionValue,
 } from "@/lib/signal/reactions";
 
 /**
@@ -75,16 +76,29 @@ interface ReactionControlProps {
   singleCandidateContest?: boolean;
 }
 
-const CHOICES: { value: ReactionValue; label: string }[] = [
-  { value: "YES", label: "Yes" },
-  { value: "NO", label: "No" },
-  { value: "UNSURE", label: "Unsure" },
-];
-
-const SOMEONE_ELSE: { value: ReactionValue; label: string } = {
-  value: "SOMEONE_ELSE",
-  label: "Someone else",
+/**
+ * The labels, per value. The SCALE decides which of them a surface offers —
+ * `scaleForTargetType` is the same function the server uses to decide what
+ * it will accept, so the control cannot offer a button the write path would
+ * refuse.
+ */
+const LABELS: Record<ReactionValue, string> = {
+  YES: "Yes",
+  NO: "No",
+  UNSURE: "Unsure",
+  SOMEONE_ELSE: "Someone else",
+  // The five-point funding scale (2026-08-15, the author's design). "Don't
+  // care" is the honest fifth answer and on a funding display it is very
+  // often the true one; a scale without it collects a shrug as a shrug-shaped
+  // "unsure", which is a different feeling.
+  LOVE: "Love it",
+  LIKE: "Like it",
+  DISLIKE: "Don't like it",
+  HATE: "Hate it",
+  DONT_CARE: "Don't care",
 };
+
+
 
 export function ReactionControl({
   targetType,
@@ -93,7 +107,13 @@ export function ReactionControl({
   context,
   singleCandidateContest = false,
 }: ReactionControlProps) {
-  const choices = singleCandidateContest ? [...CHOICES, SOMEONE_ELSE] : CHOICES;
+  // The scale the server will accept for this target, and nothing else.
+  // SOMEONE_ELSE rides on top of the v1 scale in a one-candidate contest,
+  // which is the only place the server accepts it either.
+  const scale = scaleForTargetType(targetType);
+  const choices = scale.values.filter(
+    (value) => value !== "SOMEONE_ELSE" || singleCandidateContest,
+  );
   // The device's stored answer reads through useSyncExternalStore: this
   // control now also renders inside server-rendered pages (the ballot, 3d),
   // and the store pattern hydrates against the server's blank then re-reads
@@ -142,7 +162,8 @@ export function ReactionControl({
       {/* Wraps rather than squeezing: "Someone else" is a fourth control at
           390px and four on one row would each be under a thumb's width. */}
       <div className="mt-1 flex flex-wrap gap-1.5" role="group" aria-label={prompt}>
-        {choices.map(({ value, label }) => {
+        {choices.map((value) => {
+          const label = LABELS[value];
           // The full selected-and-counted rendering is earned by the 204;
           // a stored selection with no tap this session (outcome null) is
           // the device's own memory and renders selected on that basis.

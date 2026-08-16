@@ -191,15 +191,19 @@ export default function TransparencyPage() {
             own records. We add nothing to it and characterize nobody by it.
           </p>
           <p>
-            The funding displays have the same yes/no/unsure reaction buttons
-            as votes and candidates, and the same rules apply — stored
-            anonymously, never shown back to anyone. One difference, stated
-            plainly: while a legal question about commercial use of FEC
-            contributor data is open, <strong>reactions to funding displays
-            are excluded from anything licensed to anyone</strong>. That
-            exclusion is enforced by a named switch in the code, and only
-            counsel can close it. If it closes, this page changes in the
-            same release.
+            Funding displays carry reaction buttons: &quot;How do you feel
+            about how this campaign is funded?&quot; — love it, like it,
+            don&apos;t like it, hate it, don&apos;t care. Your answer is
+            stored anonymously, is never shown back to you or anyone else,
+            and may inform aggregate research products. What is ever licensed
+            is what readers felt about a display — never the campaign-finance
+            data itself, which is the FEC&apos;s and is public already.
+          </p>
+          <p>
+            These buttons asked a yes/no/unsure question until 15 August
+            2026. Answers from before that date are kept separately and are
+            never combined with answers from after it: the question changed,
+            so the two are not the same measurement.
           </p>
           <p>
             Where a contributor is itself a committee, its label — a super

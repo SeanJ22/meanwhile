@@ -5,9 +5,10 @@ import { sql } from "drizzle-orm";
 import { getDb } from "./index.ts";
 import { reactions } from "./schema.ts";
 import { DIVISION_VINTAGE } from "./search-log.ts";
-import type {
-  ReactionTargetType,
-  ReactionValue,
+import {
+  scaleForTargetType,
+  type ReactionTargetType,
+  type ReactionValue,
 } from "../signal/reactions.ts";
 
 /**
@@ -60,6 +61,11 @@ export async function writeReaction(row: StorableReaction): Promise<boolean> {
       targetType: row.targetType,
       targetId: row.targetId,
       reaction: row.reaction,
+      // Which instrument asked. Derived from the target type here, never
+      // taken from the client: a browser does not get to say what question
+      // it was showing, and a stale one saying "version 1" would blend two
+      // instruments into one column.
+      scaleVersion: scaleForTargetType(row.targetType).version,
       ocdIds: row.ocdIds,
       divisionVintage: DIVISION_VINTAGE,
       // Every row starts ANONYMOUS; higher tiers are earned by future
@@ -72,6 +78,10 @@ export async function writeReaction(row: StorableReaction): Promise<boolean> {
       target: [reactions.reactionKeyHash, reactions.targetType, reactions.targetId],
       set: {
         reaction: row.reaction,
+        // A changed answer is re-stamped with today's instrument, because
+        // the answer it replaces was given on today's instrument too — the
+        // upsert only ever fires for a row this browser wrote.
+        scaleVersion: scaleForTargetType(row.targetType).version,
         occurredAt,
         ocdIds: row.ocdIds,
         divisionVintage: DIVISION_VINTAGE,

@@ -6,11 +6,17 @@ import { test } from "node:test";
 import { aggregateReactions } from "../lib/signal/aggregate.ts";
 import { SlidingWindowLimiter } from "../lib/signal/rate-limit.ts";
 import {
+  SCALE_BREAKS,
+  SCALE_V1,
+  SCALE_V2_FUNDING,
   VERIFICATION_TIERS,
   isPlausibleTargetId,
   isValidReactionKey,
   isValidReactionValue,
   isValidTargetType,
+  isValueOnScaleFor,
+  scaleForTargetType,
+  valuesForScaleVersion,
 } from "../lib/signal/reactions.ts";
 import { hashReactionKey, writeReaction } from "../lib/db/reactions.ts";
 import { getVoteIds } from "../lib/votes/snapshot.ts";
@@ -81,7 +87,14 @@ test("aggregation: every tier appears in every tally — the confidence mix is v
   for (const tier of VERIFICATION_TIERS) {
     const t = tallies[0].tiers[tier];
     assert.ok(t, `tier ${tier} missing from the tally`);
-    assert.equal(t.n, t.YES + t.NO + t.UNSURE, `tier ${tier}: n is not the sum`);
+    // Summed over the SCALE's own values (2026-08-15): a tally now carries
+    // exactly the columns its instrument has, so the denominator check reads
+    // them off the scale rather than naming three by hand.
+    const sum = valuesForScaleVersion(tallies[0].scaleVersion).reduce(
+      (acc, value) => acc + (t[value] ?? 0),
+      0,
+    );
+    assert.equal(t.n, sum, `tier ${tier}: n is not the sum`);
   }
   // A tier with no rows says 0 — it does not disappear.
   assert.equal(tallies[0].tiers.VOTER_MATCHED.n, 0);
@@ -539,7 +552,13 @@ test("M63: the fourth button renders only where the answer is accepted", () => {
     join(process.cwd(), "components", "reactions", "reaction-control.tsx"),
     "utf8",
   );
-  assert.ok(control.includes('label: "Someone else"'), "the label must be the author's words");
+  // The label moved into the shared LABELS map when the five-point funding
+  // scale landed (2026-08-15). The author's words are what is pinned, not
+  // where they sit.
+  assert.ok(
+    control.includes('SOMEONE_ELSE: "Someone else"'),
+    "the label must be the author's words",
+  );
   assert.ok(
     control.includes("singleCandidateContest"),
     "the control must gate the fourth answer on the contest's shape",
@@ -582,4 +601,145 @@ test("M63: the transparency page explains the fourth answer, in the same commit"
     !page.includes("SOMEONE_ELSE"),
     "the identifier reached a reader surface",
   );
+});
+
+/**
+ * The five-point funding scale and its version — 2026-08-15, the author's
+ * design.
+ *
+ * The mechanic these guard is data honesty, not UI: the funding surfaces
+ * asked a yes/no/unsure question and now ask a five-point one, which makes
+ * rows either side of the change **different instruments**. Averaging them
+ * would report a trend caused by the question changing and nothing else.
+ */
+
+test("the funding scale is the funding scale, and nothing else is", () => {
+  assert.deepEqual(SCALE_V2_FUNDING.values, [
+    "LOVE",
+    "LIKE",
+    "DISLIKE",
+    "HATE",
+    "DONT_CARE",
+  ]);
+  assert.equal(
+    SCALE_V2_FUNDING.question,
+    "How do you feel about how this campaign is funded?",
+  );
+
+  // Funding targets are on v2; votes and candidates stay on v1. The scale is
+  // decided by the TARGET, so a client cannot choose its own instrument.
+  for (const type of ["FUNDING_TOTAL_REACTION", "CONTRIBUTOR_REACTION"] as const) {
+    assert.equal(scaleForTargetType(type).version, 2);
+  }
+  for (const type of ["FEDERAL_VOTE", "CANDIDATE"] as const) {
+    assert.equal(scaleForTargetType(type).version, 1);
+    assert.deepEqual(scaleForTargetType(type).values, SCALE_V1.values);
+  }
+
+  // Both directions. A five-point answer is refused on a vote AND
+  // yes/no/unsure is refused on a funding target — the second direction is
+  // what stops a stale client writing v1 answers into a v2 column.
+  assert.equal(isValueOnScaleFor("FUNDING_TOTAL_REACTION", "LOVE"), true);
+  assert.equal(isValueOnScaleFor("FUNDING_TOTAL_REACTION", "YES"), false);
+  assert.equal(isValueOnScaleFor("FEDERAL_VOTE", "YES"), true);
+  assert.equal(isValueOnScaleFor("FEDERAL_VOTE", "LOVE"), false);
+  assert.equal(isValueOnScaleFor("CANDIDATE", "DONT_CARE"), false);
+
+  // Every value in the union belongs to exactly one scale — a value on two
+  // scales would be a word meaning two things in one column.
+  const v1 = new Set(SCALE_V1.values);
+  for (const value of SCALE_V2_FUNDING.values) {
+    assert.ok(!v1.has(value), `${value} is on both scales`);
+  }
+});
+
+test("aggregates never mix scales, and the break is dated", () => {
+  const target = "H2AZ02360";
+  const ocdIds = ["ocd-division/country:us/state:az/cd:6"];
+  const base = {
+    targetType: "FUNDING_TOTAL_REACTION" as const,
+    targetId: target,
+    ocdIds,
+    verificationTier: "ANONYMOUS" as const,
+  };
+
+  const tallies = aggregateReactions([
+    // Two answers to the OLD question, still in the store.
+    { ...base, reaction: "YES" as const, scaleVersion: 1 as const },
+    { ...base, reaction: "NO" as const, scaleVersion: 1 as const },
+    // Three to the new one.
+    { ...base, reaction: "LOVE" as const, scaleVersion: 2 as const },
+    { ...base, reaction: "HATE" as const, scaleVersion: 2 as const },
+    { ...base, reaction: "DONT_CARE" as const, scaleVersion: 2 as const },
+  ]);
+
+  // Same target, same division, TWO tallies — because there were two
+  // questions. One tally of five would be the fabricated trend.
+  assert.equal(tallies.length, 2, "two instruments collapsed into one tally");
+  const v1 = tallies.find((t) => t.scaleVersion === 1);
+  const v2 = tallies.find((t) => t.scaleVersion === 2);
+  assert.ok(v1 && v2);
+  assert.equal(v1.n, 2);
+  assert.equal(v2.n, 3);
+
+  // Each tally carries exactly its own scale's columns, zeros included, and
+  // none of the other's — a buyer must be able to tell "nobody chose this"
+  // from "this column did not exist when the data was collected".
+  assert.deepEqual(
+    Object.keys(v1.tiers.ANONYMOUS).sort(),
+    [...SCALE_V1.values, "n"].sort(),
+  );
+  assert.deepEqual(
+    Object.keys(v2.tiers.ANONYMOUS).sort(),
+    [...SCALE_V2_FUNDING.values, "n"].sort(),
+  );
+  assert.equal(v2.tiers.ANONYMOUS.LOVE, 1);
+  assert.equal(v2.tiers.ANONYMOUS.LIKE, 0, "an unchosen column says 0");
+
+  // Each tally carries the question its own rows were asked, so a v1 tally
+  // is never relabelled with the wording that replaced it.
+  assert.equal(v2.question, SCALE_V2_FUNDING.question);
+  assert.notEqual(v1.question, v2.question);
+
+  // And the break itself is recorded, dated, with a reason a buyer can read.
+  const breaks = SCALE_BREAKS.filter((b) =>
+    b.targetTypes.includes("FUNDING_TOTAL_REACTION"),
+  );
+  assert.equal(breaks.length, 1);
+  assert.equal(breaks[0].date, "2026-08-15");
+  assert.equal(breaks[0].from, 1);
+  assert.equal(breaks[0].to, 2);
+  assert.ok(breaks[0].why.length > 40, "a scale break without a reason is a mystery");
+
+  // An absent version is 1 — which is what every row written before the
+  // change actually is, and what the column default says.
+  const legacy = aggregateReactions([{ ...base, reaction: "YES" as const }]);
+  assert.equal(legacy[0].scaleVersion, 1);
+});
+
+test("the funding surfaces ask the author's question, and offer only its scale", () => {
+  const section = readFileSync(
+    join(process.cwd(), "components", "funding", "funding-section.tsx"),
+    "utf8",
+  );
+  const asks = section.match(/prompt="([^"]+)"/g) ?? [];
+  assert.equal(asks.length, 2, "both funding controls must carry a prompt");
+  for (const ask of asks) {
+    assert.equal(ask, 'prompt="How do you feel about how this campaign is funded?"');
+  }
+  // The old wording asked the reader to convert a feeling about money into a
+  // voting intention — two questions in one button row.
+  assert.ok(!/Would you vote for someone whose campaign/.test(section));
+  assert.ok(!/Would you vote for someone with these contributors/.test(section));
+
+  // The control offers the scale the server accepts, from the same function,
+  // so it can never offer a button the write path would refuse.
+  const control = readFileSync(
+    join(process.cwd(), "components", "reactions", "reaction-control.tsx"),
+    "utf8",
+  );
+  assert.ok(control.includes("scaleForTargetType(targetType)"));
+  for (const label of ["Love it", "Like it", "Don't like it", "Hate it", "Don't care"]) {
+    assert.ok(control.includes(label), `the control is missing "${label}"`);
+  }
 });

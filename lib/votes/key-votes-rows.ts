@@ -21,6 +21,16 @@ export interface KeyVoteRowData {
   entry: KeyVoteEntry;
   refs: KeyVoteEntry["house"];
   positions: (VotePosition | "DID_NOT_VOTE" | null)[];
+  /**
+   * Whether the roll call itself is in hand, per ref (item 6b, 2026-08-15).
+   *
+   * With this, a null position has TWO honest sentences instead of one wrong
+   * one: "we hold this roll call and this member is not in it" (they were not
+   * in the chamber then) and "we have not recorded this roll call yet". The
+   * card used to default a null to `DID_NOT_VOTE`, which asserted a fact
+   * about a named member that nothing behind it supported.
+   */
+  held: boolean[];
   breakdowns: (string | null)[];
   note: string | null;
 }
@@ -54,9 +64,17 @@ export function getKeyVotesSnapshot(): KeyVotesSnapshot {
  */
 export function keyVoteRowsFor(
   chamber: "house" | "senate",
-  positionFor: (
-    ref: KeyVoteEntry["house"][number],
-  ) => { position: VotePosition | "DID_NOT_VOTE" | null; breakdown: string | null },
+  positionFor: (ref: {
+    /** The entry the ref belongs to — the positions store is keyed on it. */
+    entryId: string;
+    congress: number;
+    session: number;
+    rollNumber: number;
+  }) => {
+    position: VotePosition | "DID_NOT_VOTE" | null;
+    held: boolean;
+    breakdown: string | null;
+  },
 ): KeyVoteRowData[] {
   const snapshot = getKeyVotesSnapshot();
   return snapshot.entries.map((entry) => {
@@ -65,11 +83,19 @@ export function keyVoteRowsFor(
     // vote" a structural property rather than a discipline.
     const refs = chamber === "house" ? entry.house : entry.senate;
     const note = chamber === "house" ? entry.houseNote : entry.senateNote;
-    const answers = refs.map((ref) => positionFor(ref));
+    const answers = refs.map((ref) =>
+      positionFor({
+        entryId: entry.id,
+        congress: ref.congress,
+        session: ref.session,
+        rollNumber: ref.rollNumber,
+      }),
+    );
     return {
       entry,
       refs,
       positions: answers.map((a) => a.position),
+      held: answers.map((a) => a.held),
       breakdowns: answers.map((a) => a.breakdown),
       note: note ?? null,
     };

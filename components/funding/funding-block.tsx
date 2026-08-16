@@ -29,6 +29,8 @@ const STATE_OFFICIAL_NOTE =
 export function FundingBlock(props: {
   holder: SeatHolder;
   reactionContext: ReactionViewContext | null;
+  /** Inside a CardSection that already names the block (6b4). */
+  bare?: boolean;
 }) {
   // Keyed on the holder so a holder change discards the fetched state
   // structurally — a new holder never wears the previous one's answer,
@@ -39,9 +41,11 @@ export function FundingBlock(props: {
 function FundingBlockInner({
   holder,
   reactionContext,
+  bare = false,
 }: {
   holder: SeatHolder;
   reactionContext: ReactionViewContext | null;
+  bare?: boolean;
 }) {
   const isFederal = holder.id.startsWith("congress:");
   const [answer, setAnswer] = useState<FundingAnswer | null>(null);
@@ -70,5 +74,7 @@ function FundingBlockInner({
   if (!isFederal) return <StateFundingNote note={STATE_OFFICIAL_NOTE} />;
   if (!answer || answer.kind === "none") return null;
   if (answer.kind === "absence") return <FundingAbsence data={answer.data} />;
-  return <FundingDisplay data={answer.data} context={reactionContext} />;
+  return (
+    <FundingDisplay data={answer.data} context={reactionContext} bare={bare} />
+  );
 }

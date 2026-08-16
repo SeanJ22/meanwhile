@@ -1249,6 +1249,16 @@ export interface RosterHolder {
   contactFormUrl: null;
   photoUrl: string | null;
   campaignUrl: null;
+  /**
+   * 6d (2026-08-15): curated local rosters publish no term end and no birth
+   * date — the pages they are read from state a name, an office and often a
+   * phone number, and nothing else. Both are null here BY SOURCE rather than
+   * by omission, and both render as nothing at all. Computing a term from an
+   * election cycle, or an age from anywhere, is the guess the whole
+   * provenance discipline exists to refuse.
+   */
+  termEnd: null;
+  birthDate: null;
 }
 
 /**
@@ -1296,6 +1306,8 @@ export function rosterHoldersForBody(bodyId: string | null): RosterHolder[] {
     contactFormUrl: null,
     photoUrl: photos[member.id] ?? null,
     campaignUrl: null,
+    termEnd: null,
+    birthDate: null,
   }));
 }
 

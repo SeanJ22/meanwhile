@@ -1548,6 +1548,218 @@ label:has(> input[type="checkbox"]) {
   color: var(--signal);
 }
 
+/* The collapsible battlecard section (item 6b4, 2026-08-15). The header is a
+   pill because a pill is already this system's word for "tappable, and not a
+   link", and it pops by CONTRAST with item 5's quieting rather than by being
+   another loud element — which is why the two items were built together and
+   share one token family. Change `--link` and both move. */
+.card-section {
+  margin-top: 10px;
+}
+
+.card-section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid color-mix(in srgb, var(--link) 45%, var(--panel-border));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--link) 8%, var(--panel-bg));
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.card-section-header:hover,
+.card-section[data-open] > .card-section-header {
+  border-color: var(--link);
+  background: color-mix(in srgb, var(--link) 14%, var(--panel-bg));
+}
+
+.card-section-title {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.875rem;
+  font-weight: 650;
+  letter-spacing: -0.005em;
+}
+
+/* A count or a date range. Never a judgement, never a score. */
+.card-section-meta {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+}
+
+.card-section-chevron {
+  flex-shrink: 0;
+  color: var(--link);
+  transition: transform 0.18s ease;
+}
+
+.card-section[data-open] .card-section-chevron {
+  transform: rotate(180deg);
+}
+
+.card-section-body {
+  padding: 10px 2px 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-section-header,
+  .card-section-chevron {
+    transition: none;
+  }
+}
+
+/* Item 6b (2026-08-15): the two vote columns, side by side on a desktop and
+   stacked at 390px — the same information architecture in a width-appropriate
+   form, never a different one. */
+.vote-columns {
+  display: grid;
+  gap: 10px;
+}
+
+@media (min-width: 720px) {
+  .vote-columns {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+/* Item 6b3 (2026-08-15): one silhouette per contest, whatever the source
+   published. The tile is a surface in its own right — fixed size, its own
+   ground, its own border — so a circular PNG on transparency and a
+   full-bleed rectangle and a pair of initials all occupy the identical box.
+   Collapse is organization; so is this. Neither renders anyone smaller. */
+.candidate-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.candidate-avatar {
+  flex: 0 0 auto;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius);
+  border: 1px solid var(--panel-border);
+  background: var(--surface);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.candidate-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+}
+
+.candidate-initials {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+/* The reaction box (item 6c, 2026-08-15) — the sensor as the point of the
+   surface, not a footer under it. Same framed language as THE NEXT ELECTION.
+
+   `data-frame="compact"` is the author's smaller form for the battlecard's
+   vote rows: "as prominent, not as large". Same component, same colours, same
+   tap sizes — only the padding and the prompt's size change, because what
+   makes a dozen of these readable in one card is the space between them, not
+   a quieter colour. */
+.reaction-box {
+  margin-top: 12px;
+  border: 1px solid color-mix(in srgb, var(--link) 40%, var(--panel-border));
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--link) 5%, transparent);
+  padding: 13px 14px;
+}
+
+.reaction-box[data-frame="compact"] {
+  margin-top: 8px;
+  border-radius: var(--radius-sm);
+  padding: 9px 10px;
+}
+
+.reaction-box-prompt {
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+.reaction-box[data-frame="compact"] .reaction-box-prompt {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* The five-option funding row is the geometry test. Wrapping is the answer,
+   never shrinking: `min-width` keeps every control at a thumb's width and
+   `min-height` keeps it at a thumb's height, so five options become two rows
+   at 390px rather than five slivers. */
+.reaction-box-choices {
+  margin-top: 9px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.reaction-choice {
+  flex: 1 1 auto;
+  min-width: 5.25rem;
+  min-height: 2.5rem;
+  padding: 0 10px;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: var(--radius-sm);
+  background: var(--panel-bg);
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: border-color 0.15s, background-color 0.15s, color 0.15s;
+}
+
+.reaction-box[data-frame="compact"] .reaction-choice {
+  min-height: 2.25rem;
+  font-size: 0.75rem;
+}
+
+/* The calendar chooser's three destinations (item 4, 2026-08-15). Full-width
+   rows at a comfortable tap size, so the phone form is the same component as
+   the desktop one rather than a shrunken version of it. */
+.calendar-choice {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-height: 46px;
+  padding: 0 13px;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.calendar-choice:hover {
+  border-color: var(--link);
+}
+
+.calendar-choice svg {
+  flex-shrink: 0;
+}
+
 /* "Show me my actual ballot" (item 2, 2026-08-15) — the ballot page's way out
    of the limitation its own first sentence states. */
 .ballot-narrow-link {

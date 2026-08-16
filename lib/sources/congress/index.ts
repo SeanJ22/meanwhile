@@ -38,6 +38,14 @@ const SOURCE_ORG = "unitedstates/congress-legislators (public domain)";
 export interface CongressLegislator {
   id: { bioguide: string };
   name: { official_full?: string; first: string; last: string };
+  /**
+   * 6d (2026-08-15): the age line's ONLY authoritative federal source.
+   * The bioguide records a birthday for every sitting member, and it is a
+   * public federal record — which is the whole reason age may render at all.
+   * A person whose entry lacks one renders no age; nothing is ever computed
+   * from a news profile, a Wikipedia box, or a guess at a graduation year.
+   */
+  bio?: { birthday?: string };
   terms: CongressTerm[];
 }
 
@@ -148,6 +156,13 @@ export const congressSource: OfficialSource<CongressLegislator> = {
         level: "FEDERAL",
         termStart: term.start,
         termEnd: term.end,
+        // Sourced, never derived. Null is the normal answer outside the
+        // federal roster and renders as no age at all (6d).
+        birthDate:
+          typeof person.bio?.birthday === "string" &&
+          /^\d{4}-\d{2}-\d{2}$/.test(person.bio.birthday)
+            ? person.bio.birthday
+            : null,
         // Display only. Nothing downstream may infer from this.
         partyLabel: term.party ?? null,
         websiteUrl: term.url ?? null,

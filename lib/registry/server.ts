@@ -188,6 +188,33 @@ export async function partyByOfficeholderId(): Promise<
   return map;
 }
 
+/**
+ * Which chamber a federal member sits in (item 6b, 2026-08-15).
+ *
+ * Read off the roster's own `officeTitle`, which the congress-legislators
+ * bulk file sets from the term's `type` — so it is the source's answer, not a
+ * pattern match on a name. Null for anyone who is not a federal legislator,
+ * and the key-votes column simply does not render for them: an entry is a
+ * question each CHAMBER answered, and a mayor has no chamber.
+ *
+ * This exists so the chamber rule ("a House card shows House roll calls
+ * only") has exactly one place it can be got wrong.
+ */
+export async function chamberForOfficeholder(
+  id: string,
+): Promise<"house" | "senate" | null> {
+  const { officials } = await loaded();
+  for (const holders of officials.values()) {
+    for (const holder of holders) {
+      if (holder.id !== id) continue;
+      if (holder.officeTitle === "U.S. Senator") return "senate";
+      if (holder.officeTitle === "U.S. Representative") return "house";
+      return null;
+    }
+  }
+  return null;
+}
+
 export async function coverageAt(
   lat: number,
   lng: number,

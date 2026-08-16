@@ -35,9 +35,16 @@ const SECTION_LABEL_CLASS = "t-eyebrow text-muted";
 export function FundingDisplay({
   data,
   context,
+  bare = false,
 }: {
   data: FundingDisplayData;
   context: ReactionViewContext | null;
+  /**
+   * Inside a CardSection whose header already says "Campaign money" (6b4):
+   * the block drops its own frame and eyebrow rather than nesting two frames
+   * and saying the same two words twice, one line apart.
+   */
+  bare?: boolean;
 }) {
   // The flagship treatment (design pass, item 2b): the money surface is
   // the product's most distinctive content and renders like it — the
@@ -46,8 +53,15 @@ export function FundingDisplay({
   // labels, the mapping table and the organizations-as-filed rule are
   // untouched.
   return (
-    <div className="mt-3 rounded-md border border-[var(--panel-border)] bg-[var(--surface,rgba(255,255,255,0.04))]/60 p-3">
-      <p className={SECTION_LABEL_CLASS}>Campaign money · FEC</p>
+    <div
+      data-funding-section
+      className={
+        bare
+          ? ""
+          : "mt-3 rounded-md border border-[var(--panel-border)] bg-[var(--surface,rgba(255,255,255,0.04))]/60 p-3"
+      }
+    >
+      {!bare && <p className={SECTION_LABEL_CLASS}>Campaign money · FEC</p>}
       {data.sentences.map((sentence) => (
         <p key={sentence} className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
           {sentence}

@@ -8,6 +8,7 @@ import type { SeatHolder } from "@/lib/officials/lookup";
 import type { ReactionViewContext } from "@/lib/reactions/client";
 
 import { FundingBlock } from "@/components/funding/funding-block";
+import { CardSection } from "@/components/officials/card-section";
 
 import {
   OfficeBlurb,
@@ -101,16 +102,55 @@ export function OfficialModal({
           </button>
         </header>
 
+        {/*
+          Item 6b4 (2026-08-15) — the card's information order is a design
+          decision, and this is it. Recorded in DESIGN.md beside the tokens.
+
+          IDENTITY IS OPEN. Name, photo, office, party, in-seat-until: what a
+          stranger sees in the first screen-height before any tap is the
+          card's argument, and the argument is "here is who this is".
+
+          EVERYTHING ELSE IS A COLLAPSED HEADER, in this order:
+
+            1. What this office does — the stranger test. A reader who does
+               not know what a ward council member IS cannot use a phone
+               number or a donor list. It sits directly under identity for
+               that reason, ahead of the author's four.
+            2. How to reach them   ┐
+            3. Campaign money      ├ the author's stated order:
+            4. Their votes         ┘ identity → contact → funding → votes.
+
+          THE SECTION SET IS IDENTICAL PER OFFICE CLASS. A thin challenger
+          renders the same headers as a thirty-year incumbent, with honest
+          content behind each — collapse is organization, never a way to
+          render some people smaller than others. The one exception is
+          structural rather than editorial: a person with no roll-call store
+          at all (a mayor, a selectboard member) has no votes section, because
+          there is no such thing as their voting record to be missing.
+        */}
         <div className="account-modal-body">
-          {/* 3h (2026-08-16): what-the-office-does moved to the TOP — the
-              reader orients on the office before the record. */}
           <OfficialIdentity holder={holder} seatLabel={seatLabel} large />
-          <OfficeBlurb holder={holder} />
-          <ReachThem holder={holder} />
-          {/* D34: campaign money — FUNDING tier, visually its own section,
-              never blended with the votes below it. */}
-          <FundingBlock holder={holder} reactionContext={reactionContext} />
-          <RecentVotes holder={holder} reactionContext={reactionContext} />
+
+          <CardSection title="What this office does">
+            <OfficeBlurb holder={holder} bare />
+          </CardSection>
+
+          <CardSection title="How to reach them">
+            <ReachThem holder={holder} bare />
+          </CardSection>
+
+          {/* D34: campaign money — FUNDING tier, its own section, never
+              blended with the votes. */}
+          <CardSection title="Campaign money">
+            <FundingBlock holder={holder} reactionContext={reactionContext} bare />
+          </CardSection>
+
+          {/* Item 6b: two columns inside, each its own collapsed section. */}
+          <RecentVotes
+            holder={holder}
+            reactionContext={reactionContext}
+            columns
+          />
         </div>
       </div>
     </div>

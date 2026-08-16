@@ -23,6 +23,22 @@ export interface SeatHolder {
   officeTitle: string;
   /** Display only. Never used to infer a position or a vote. */
   partyLabel: string | null;
+  /**
+   * 6d (2026-08-15): "In seat until", on the small card AND the battlecard.
+   * The date the SOURCE publishes for the end of the current term. Never
+   * computed from an election cycle: a term that ended early, a seat filled
+   * by appointment, or a state with an unusual calendar would all be quietly
+   * wrong, and a wrong date about a government is the one failure this
+   * product cannot survive. No sourced term, nothing renders.
+   */
+  termEnd: string | null;
+  /**
+   * 6d: the ONLY basis on which an age may render, and it is a DATE rather
+   * than an age so the number is computed fresh at every render and cannot
+   * drift. Federal members carry the bioguide's; state and local rosters
+   * publish none and render no age.
+   */
+  birthDate: string | null;
   websiteUrl: string | null;
   /** Where the record was read from. Rendered, not just stored. */
   sourceUrl: string | null;
@@ -50,6 +66,8 @@ function toSeatHolder(person: Officeholder, photos?: PhotoIndex): SeatHolder {
     name: person.name,
     officeTitle: person.officeTitle,
     partyLabel: person.partyLabel,
+    termEnd: person.termEnd || null,
+    birthDate: person.birthDate ?? null,
     websiteUrl: person.websiteUrl,
     sourceUrl: person.provenance.sourceUrl,
     email: person.email,

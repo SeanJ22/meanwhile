@@ -74,6 +74,18 @@ interface ReactionControlProps {
    * allowed.
    */
   singleCandidateContest?: boolean;
+  /**
+   * How loudly the frame speaks (item 6c, 2026-08-15).
+   *
+   * `"standing"` — the default, and the ballot's own treatment: a framed
+   * block in the family of THE NEXT ELECTION box, so the sensor reads as the
+   * point of the surface rather than as an afterthought under it.
+   * `"compact"` — the same component at the author's smaller size, for the
+   * vote rows inside a battlecard: "as prominent, not as large." A vote card
+   * carries a dozen of these, and a dozen full-size frames would turn the
+   * record into a questionnaire.
+   */
+  frame?: "standing" | "compact";
 }
 
 /**
@@ -106,6 +118,7 @@ export function ReactionControl({
   prompt,
   context,
   singleCandidateContest = false,
+  frame = "standing",
 }: ReactionControlProps) {
   // The scale the server will accept for this target, and nothing else.
   // SOMEONE_ELSE rides on top of the v1 scale in a one-candidate contest,
@@ -155,13 +168,27 @@ export function ReactionControl({
   };
 
   return (
-    <div className="mt-2">
-      {/* The standing prominence rule (design pass): the question is the
-          product's revenue-bearing ask and never whispers. */}
-      <p className="text-[0.8125rem] font-medium text-paper-dim">{prompt}</p>
-      {/* Wraps rather than squeezing: "Someone else" is a fourth control at
-          390px and four on one row would each be under a thumb's width. */}
-      <div className="mt-1 flex flex-wrap gap-1.5" role="group" aria-label={prompt}>
+    /*
+     * Item 6c (2026-08-15): the question is a FRAMED BOX now, in the family
+     * of THE NEXT ELECTION panel. The standing prominence rule already said
+     * the ask never whispers, and it still whispered — an unframed line and a
+     * row of small outlines under a candidate reads as a footer to the card
+     * above it rather than as the thing the surface is for. This is the
+     * revenue-bearing path and the transparency page describes it as the
+     * point; the rendering now says so too.
+     *
+     * The GEOMETRY TEST is the five-option funding row (D61: Love it / Like
+     * it / Don't like it / Hate it / Don't care). Five controls at 390px is
+     * the hard case, and the frame is built around it rather than retrofitted
+     * — `flex-wrap` with a `min-height` and a sane `min-width` per control,
+     * so the row wraps to two lines and every control keeps a thumb's width.
+     * Never truncated, never shrunk below tap size.
+     *
+     * Nothing here edits a question or an option set. Item 6c styles them.
+     */
+    <div className="reaction-box" data-frame={frame}>
+      <p className="reaction-box-prompt">{prompt}</p>
+      <div className="reaction-box-choices" role="group" aria-label={prompt}>
         {choices.map((value) => {
           const label = LABELS[value];
           // The full selected-and-counted rendering is earned by the 204;
@@ -181,7 +208,7 @@ export function ReactionControl({
               type="button"
               aria-pressed={isSelected}
               onClick={() => choose(value)}
-              className={`min-h-9 flex-1 cursor-pointer rounded border px-2 text-[0.75rem] transition-colors ${style}`}
+              className={`reaction-choice ${style}`}
             >
               {label}
             </button>

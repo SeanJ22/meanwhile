@@ -6,6 +6,8 @@ import {
 import type { VotePosition } from "@/lib/votes/types";
 import { formatDateMDY } from "@/lib/map/format";
 
+import { CardSection } from "./card-section";
+
 /**
  * The key votes section (B15) — the author's fixed list of questions, each
  * answered by this member's OWN chamber's roll call.
@@ -31,7 +33,9 @@ import { formatDateMDY } from "@/lib/map/format";
  *        hole in our research into a claim about a legislature.
  */
 
-const LABEL_CLASS = "t-eyebrow text-muted";
+// The section's own eyebrow is gone (item 6b4, 2026-08-15): the CardSection
+// header above it now says "When it mattered" in the author's own words, and
+// a "Key votes" label one line under it was the same thing said twice.
 
 export interface KeyVoteRow {
   entry: KeyVoteEntry;
@@ -39,6 +43,8 @@ export interface KeyVoteRow {
   refs: KeyVoteEntry["house"];
   /** The member's position per roll call, index-matched to `refs`. */
   positions: (VotePosition | "DID_NOT_VOTE" | null)[];
+  /** Whether the roll call itself is in hand, index-matched to `refs`. */
+  held?: boolean[];
   /** Party breakdown per roll call, already gated to the chamber's tally. */
   breakdowns: (string | null)[];
   /** The stated note for a chamber with no vote to show, if the entry has one. */
@@ -52,6 +58,32 @@ const POSITION_LABEL: Record<string, string> = {
   DID_NOT_VOTE: "Did not vote",
 };
 
+/**
+ * Newest first, on a neutral and deterministic criterion (item 6b,
+ * 2026-08-15: "the whole card reads consistently backward through time").
+ *
+ * The refs carry no date, so the ordering is congress → session → roll
+ * number, which is monotonic in time within a chamber and is the chamber's
+ * own numbering rather than anything we computed. Entries with no roll call
+ * at all — the two the fetch correctly refused — sort LAST rather than being
+ * dropped: they are part of the stated N and their absence line is the point.
+ *
+ * This is ordering by TIME, which the never-rank rule permits by name
+ * ("ballot order or alphabetical" is its example of a neutral criterion, not
+ * its limit). Nothing here is ordered by agreement, importance, or fit.
+ */
+function newestFirst(rows: KeyVoteRow[]): KeyVoteRow[] {
+  const rank = (row: KeyVoteRow): number => {
+    if (row.refs.length === 0) return -1;
+    let best = -1;
+    for (const ref of row.refs) {
+      best = Math.max(best, ref.congress * 1e6 + ref.session * 1e5 + ref.rollNumber);
+    }
+    return best;
+  };
+  return [...rows].sort((a, b) => rank(b) - rank(a));
+}
+
 export function KeyVotesSection({
   chamber,
   rows,
@@ -60,43 +92,76 @@ export function KeyVotesSection({
   rows: KeyVoteRow[];
 }) {
   if (rows.length === 0) return null;
-  const laws = rows.filter((r) => r.entry.group === "LAWS");
-  const people = rows.filter((r) => r.entry.group === "PEOPLE");
+  const laws = newestFirst(rows.filter((r) => r.entry.group === "LAWS"));
+  const people = newestFirst(rows.filter((r) => r.entry.group === "PEOPLE"));
+
+  /*
+   * Item 6b, the author's ruling on House cards: "Votes on people renders
+   * once as the single honest line 'the House doesn't vote on nominations',
+   * collapsed and inert — never repeated per entry, never an empty section."
+   *
+   * The snapshot carries that sentence on every PEOPLE entry's `houseNote`,
+   * which is right in the data and wrong on a card: sixteen identical
+   * sentences under sixteen names is the repeated-notice defect the footnote
+   * system exists to stop. So a House card collapses the whole group into
+   * the one line. A Senate card gets both groups in full.
+   */
+  const houseNominationsLine =
+    chamber === "house"
+      ? (people.find((r) => r.note)?.note ??
+        "The House doesn't vote on nominations.")
+      : null;
 
   return (
-    <div className="mt-3 rounded-md border border-[var(--panel-border)] p-3">
-      <p className={LABEL_CLASS}>Key votes</p>
+    <div>
       {/* Requirement 2: the rule the list was picked by, on the surface,
-          verbatim. Not a link to it, not a summary of it. */}
-      <p className="mt-1 text-[0.6875rem] leading-relaxed text-voice">
+          verbatim. Not a link to it, not a summary of it. At the head of the
+          column, per item 6b. */}
+      <p className="text-[0.6875rem] leading-relaxed text-voice">
         {KEY_VOTES_CRITERIA}
       </p>
 
       {laws.length > 0 && (
-        <KeyVoteGroupBlock title="Votes on laws" chamber={chamber} rows={laws} />
+        <CardSection
+          title="Votes on laws"
+          // The stated N counts every entry, INCLUDING the two whose roll
+          // calls were correctly refused. A count that quietly dropped them
+          // would make our own gap invisible.
+          meta={`${laws.length}`}
+        >
+          <KeyVoteGroupBlock chamber={chamber} rows={laws} />
+        </CardSection>
       )}
-      {people.length > 0 && (
-        <KeyVoteGroupBlock title="Votes on people" chamber={chamber} rows={people} />
+
+      {houseNominationsLine ? (
+        // Collapsed and inert: a header the reader can see, and one sentence
+        // behind it. Never sixteen rows of the same sentence.
+        <CardSection title="Votes on people" meta="none">
+          <p className="text-[0.75rem] leading-relaxed text-voice">
+            {houseNominationsLine}
+          </p>
+        </CardSection>
+      ) : (
+        people.length > 0 && (
+          <CardSection title="Votes on people" meta={`${people.length}`}>
+            <KeyVoteGroupBlock chamber={chamber} rows={people} />
+          </CardSection>
+        )
       )}
     </div>
   );
 }
 
 function KeyVoteGroupBlock({
-  title,
   chamber,
   rows,
 }: {
-  title: string;
   chamber: "house" | "senate";
   rows: KeyVoteRow[];
 }) {
   return (
-    <div className="mt-2.5">
-      <p className="text-[0.625rem] font-semibold uppercase tracking-[0.08em] text-muted">
-        {title}
-      </p>
-      <ul className="mt-1">
+    <div>
+      <ul>
         {rows.map((row) => (
           <li
             key={row.entry.id}
@@ -124,9 +189,25 @@ function KeyVoteGroupBlock({
                     key={`${ref.congress}-${ref.session}-${ref.rollNumber}`}
                     className="mt-1 text-[0.75rem]"
                   >
+                    {/*
+                      A NULL POSITION IS NOT "Did not vote" (fixed 2026-08-15,
+                      item 6b). This used to default a null straight into
+                      `DID_NOT_VOTE`, which turns "we hold nothing for this
+                      person on this roll call" into a specific, checkable,
+                      wrong claim about a named member of Congress — and the
+                      commonest reason for a null is the most innocent one:
+                      they were not in that chamber in 2021. Requirement 4 of
+                      this file's own header says exactly this; the render
+                      did not obey it until the positions existed to obey it
+                      with.
+                    */}
                     <span className="font-semibold text-paper">
-                      {POSITION_LABEL[row.positions[i] ?? "DID_NOT_VOTE"] ??
-                        "Did not vote"}
+                      {row.positions[i]
+                        ? (POSITION_LABEL[row.positions[i] as string] ??
+                          "Position recorded")
+                        : row.held?.[i]
+                          ? "Not in this chamber for this vote"
+                          : "We haven't recorded this vote yet"}
                     </span>
                     {ref.tally && (
                       <span className="text-muted"> · the vote was {ref.tally}</span>

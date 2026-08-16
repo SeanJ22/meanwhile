@@ -161,6 +161,7 @@ test("contact fields survive the lookup to the surface", () => {
         level: "STATE",
         termStart: "",
         termEnd: "",
+        birthDate: null,
         partyLabel: null,
         websiteUrl: "https://example.gov/member",
         contactFormUrl: null,

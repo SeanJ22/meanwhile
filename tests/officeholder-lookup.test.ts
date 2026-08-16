@@ -165,6 +165,7 @@ function person(id: string, name: string) {
     level: "FEDERAL" as const,
     termStart: "2025-01-03",
     termEnd: "2031-01-03",
+    birthDate: null,
     partyLabel: null,
     websiteUrl: null,
     contactFormUrl: null,

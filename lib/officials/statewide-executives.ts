@@ -88,6 +88,9 @@ export const STATEWIDE_EXECUTIVES: readonly StatewideExecutive[] = [
       contactFormUrl: "https://azgovernor.gov/constituent-services",
       photoUrl: "/officials/statewide-az-governor.jpg",
       campaignUrl: null,
+      // 6d: no sourced term end or birth date on a governor's own page.
+      termEnd: null,
+      birthDate: null,
     },
     sourceUrl: "https://azgovernor.gov/",
     sourceOrg: "Office of the Arizona Governor",
@@ -119,6 +122,9 @@ export const STATEWIDE_EXECUTIVES: readonly StatewideExecutive[] = [
       contactFormUrl: "https://www.nj.gov/governor/contact/",
       photoUrl: "/officials/statewide-nj-governor.jpg",
       campaignUrl: null,
+      // 6d: no sourced term end or birth date on a governor's own page.
+      termEnd: null,
+      birthDate: null,
     },
     sourceUrl: "https://www.nj.gov/governor/",
     sourceOrg: "Office of the Governor of New Jersey",
@@ -147,6 +153,9 @@ export const STATEWIDE_EXECUTIVES: readonly StatewideExecutive[] = [
       contactFormUrl: "https://www.governor.nh.gov/contact-governor-ayotte",
       photoUrl: "/officials/statewide-nh-governor.png",
       campaignUrl: null,
+      // 6d: no sourced term end or birth date on a governor's own page.
+      termEnd: null,
+      birthDate: null,
     },
     sourceUrl: "https://www.governor.nh.gov/",
     sourceOrg: "Office of the Governor of New Hampshire",

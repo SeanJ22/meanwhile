@@ -54,17 +54,27 @@ test("every target zip survives the client filter with default state", async () 
     const result = await searchMeetings(lat, lng);
 
     assert.ok(result.meetings.length > 0, `${zip}: cascade returned nothing`);
-    // 3g: results now carry the recent past for the date slider; the default
-    // window (0 days back) hides exactly those and nothing else. Every
-    // future meeting the cascade found must survive the default filters.
+    /*
+     * REWRITTEN 2026-08-15 (6f2): the default window is 90 days back → 60
+     * forward now, matching the window the cascade actually serves. It used
+     * to be `now` → 60, so this asserted that the default hid every
+     * concluded meeting — which was true, and was the defect: the pipeline
+     * retrieves three months of history at some cost and the sidebar
+     * filtered all of it out before a reader could see any.
+     *
+     * So the claim changes shape: the default must now show EVERYTHING the
+     * cascade returned, because the cascade's window and the filter's window
+     * are the same window. That is a stronger assertion than the old one and
+     * it is the one that catches the two windows drifting apart again.
+     */
     const future = result.meetings.filter(
       (m) => Date.parse(m.startsAt) >= Date.now() - 60_000,
     );
     assert.ok(future.length > 0, `${zip}: no future meetings in the result`);
     assert.equal(
       visible(result.meetings).length,
-      future.length,
-      `${zip}: the default filter state must show every future meeting and only those`,
+      result.meetings.length,
+      `${zip}: the default filter window must match the served window — nothing the cascade found may be hidden by a default`,
     );
   }
 });

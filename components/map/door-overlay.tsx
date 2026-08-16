@@ -76,15 +76,22 @@ export function DoorOverlay({
         : "Officials here";
 
   return (
+    // Item 5 (2026-08-15): z-40 → z-1300. Found by the overlap audit, not by
+    // eye: a door is a LARGE surface, and every other large surface on this
+    // screen sits at 1200–1300, while the map legend is ambient chrome at
+    // 1100. A door at 40 therefore rendered UNDERNEATH the legend, which put
+    // six words of pin-colour key across a list of a county's officials at
+    // 390px. The legend's own rule already says it must never cover a card
+    // the reader opened; this is the other half of that rule.
     <div
-      className="pointer-events-auto fixed inset-0 z-40 flex items-center justify-center bg-black/40 p-4"
+      className="door-overlay pointer-events-auto fixed inset-0 z-[1300] flex items-center justify-center bg-black/40 p-4"
       role="dialog"
       aria-modal="true"
       aria-label={title}
       onClick={onClose}
     >
       <div
-        className="panel max-h-[80vh] w-full max-w-md overflow-y-auto p-4"
+        className="door-panel panel max-h-[80vh] w-full max-w-md overflow-y-auto p-4"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between">

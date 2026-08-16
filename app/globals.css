@@ -21,9 +21,14 @@
   --panel-bg: #1e2028;
   --surface: #21242d;
   --text: #e8e9ed;
-  --text-dim: #8b8d97;
+  /* Raised 2026-08-15 (item 5, the sun test) from #8b8d97, which cleared AA
+     and nothing else — 4.92:1 on --panel-bg. Secondary rows are READ, so
+     they are held to the 7:1 sun bar like every other reading token. */
+  --text-dim: #a8abb7;
   --text-muted: #5c5e66;
-  --danger: #e17055;
+  /* Raised from #e17055 for the same reason: a failure line is the one
+     sentence a reader must not have to squint at. */
+  --danger: #f0917a;
   --radius: 10px;
   --radius-sm: 6px;
 
@@ -44,6 +49,25 @@
      bright against the #454545-max basemap. */
   --accent-school: #e84393;
   --accent-school-glow: rgba(232, 67, 147, 0.25);
+
+  /* The FILLED form of a tier accent (item 5, 2026-08-15) — the selected tier
+     toggle, and nothing else yet.
+
+     Why a second set rather than filling with the accents above: a tier accent
+     is tuned to sit on the BASEMAP, between the roads and the markers, which
+     puts it at mid luminance. Mid luminance is exactly the worst place to be
+     when text has to sit ON it — light `--accent-local` (#b8860b) takes
+     `--bg` at 2.8:1 and white at 3.0:1, so a filled button in it is
+     unreadable EITHER way. In dark the accents themselves are bright enough
+     to fill with (`--bg` on them clears 5.8–10.3:1); in light they are
+     replaced by deeper versions of the same hues, carrying near-white text.
+
+     The map's colours are untouched: change a tier's accent and its fill has
+     to move with it, which is why they sit together here. */
+  --tier-fill-local: var(--accent-local);
+  --tier-fill-state: var(--accent-state);
+  --tier-fill-national: var(--accent-national);
+  --tier-fill-on: #0f1117;
 
   /* Meeting status. Concluded is cool and quiet — present, clearly not
      something you can still attend. Canceled shares the danger hue. */
@@ -96,7 +120,75 @@
        surface; the registers exist so it stays that way.
   */
   --voice: #a4b1c9;
-  --link: var(--accent-local);
+
+  /* ------------------------------------------------------------------
+     THE PALETTE PASS (item 5, 2026-08-15). The author: "I don't know how
+     I feel about all this gold font."
+
+     He was describing a real defect, not a preference. `--link` aliased
+     `--accent-local`, and `--signal` (the Tailwind alias) aliased it too —
+     so ONE colour was carrying links AND structural labels AND seat titles
+     AND counters AND tier headers AND focus rings AND active chips. A
+     colour that means seven things means nothing, and the screen reads
+     heavy because the eye has no idea which gold is the one to act on.
+
+     The distribution, not the hue, is what changed:
+
+     - `--link` is the ONE interactive accent. Amber, and now ONLY on
+       things a reader can tap.
+     - `--action` / `--action-on` are the FILLED primary action — the
+       ballot pill, the Ask button. Saturated accent is reserved for these.
+     - `--label` is new: structural labels (type tags, seat titles, section
+       eyebrows) render neutral and confident, at weight rather than in
+       colour. This is where most of the gold went.
+     - Data stays `--text`. It was never supposed to be gold; the counters
+       were, and are not any more.
+
+     Tier accents and party colours are UNTOUCHED, and so are the pill
+     families — they mark structure and identity, and item 5 says so
+     explicitly.
+
+     Every value here clears 7:1 against the surfaces it renders on, in
+     both themes, checked by `pnpm contrast`. That bar is the tester's
+     field finding rather than WCAG's: gold-on-light measured 2.90:1 in the
+     light theme — below AA, never mind glare — which is why the light
+     `--link` below is a deep amber rather than the brand's.
+  */
+  --link: #ffb000;
+  --label: #a9adb9;
+  --action: #ffb000;
+  --action-on: #0f1117;
+
+  /* ------------------------------------------------------------------
+     `--signal` IS A REAL PROPERTY NOW, and it was not before.
+
+     Found by the palette pass, 2026-08-15, by reading a computed style
+     instead of a stylesheet. `--signal` and `--signal-dim` existed ONLY
+     inside `@theme inline`, which is Tailwind's *inline* form: it teaches
+     the compiler to substitute values into utilities like `text-signal`
+     and deliberately emits NO custom property. So `text-signal` worked,
+     and every one of the ~20 arbitrary usages — `border-[var(--signal)]`,
+     `bg-[var(--signal)]/5`, and the raw `var(--signal)` in this
+     stylesheet — resolved to nothing at all.
+
+     What that meant on screen, all of it invisible in code review because
+     the class names read correctly:
+
+       • the ask box's "filled amber Ask button" (DESIGN.md's own words)
+         was an unfilled outline;
+       • "What's on the ballot" inside the who-governs card — the entry a
+         whole session was spent making findable — had no accent border and
+         no tint;
+       • every reaction control's selected state, the funding pill frame,
+         the tutorial's step dots, and the agenda notice were unstyled.
+
+     This is the empty-success shape in CSS: a declaration that names a
+     variable nobody defined fails silently and looks exactly like one that
+     works. The fix is one line; the lesson is in the playbook — verify a
+     token by reading `getComputedStyle`, never by reading the stylesheet.
+  */
+  --signal: var(--link);
+  --signal-dim: color-mix(in srgb, var(--link) 55%, var(--text-muted));
 
   /* PILL FAMILIES (funding type labels, item 2b). Six families, chosen
      to never use or approach the party palette (Democratic blue,
@@ -127,9 +219,11 @@
   --panel-bg: #f8f9fa;
   --surface: #ebedf0;
   --text: #1a1a2e;
-  --text-dim: #5a5d6b;
+  /* Darkened 2026-08-15 (item 5, the sun test) from #5a5d6b (6.20:1). */
+  --text-dim: #4b4f5c;
   --text-muted: #9197a3;
-  --danger: #c0392b;
+  /* Darkened from #c0392b (5.44:1) for the same reason. */
+  --danger: #95281c;
 
   --accent-local: #b8860b;
   --accent-local-glow: rgba(184, 134, 11, 0.18);
@@ -141,6 +235,14 @@
   --accent-all-glow: rgba(212, 114, 42, 0.18);
   --accent-school: #c2185b;
   --accent-school-glow: rgba(194, 24, 91, 0.18);
+
+  /* Deeper versions of the same three hues, so a filled tier toggle can carry
+     near-white text at 8:1 in a theme where the map accents themselves reach
+     3:1 either way. See the note beside the dark values. */
+  --tier-fill-local: #6d4600;
+  --tier-fill-state: #005745;
+  --tier-fill-national: #263d6e;
+  --tier-fill-on: #fdfaf4;
 
   --party-democratic: #2457b8;
   --party-republican: #b3362a;
@@ -157,8 +259,25 @@
   --shadow-popup: 0 10px 40px rgba(0, 0, 0, 0.18);
   --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.12);
 
-  /* The design-pass tokens, light theme. Same roles as dark. */
-  --voice: #52627e;
+  /* The design-pass tokens, light theme. Same roles as dark.
+
+     Item 5, 2026-08-15 — the sun test, and this is where it bites hardest.
+     `--link` used to alias `--accent-local` (#b8860b), which measures
+     **2.90:1** against this theme's page background. That is below AA, let
+     alone the 7:1 sun bar, and it is precisely the tester's field finding:
+     gold-on-light is unreadable in phone glare because it was barely
+     readable indoors. The interactive accent here is a deep amber that
+     keeps the brand's hue and clears the bar.
+
+     `--action` is the FILLED primary action, and it is measured the other
+     way round: the text sits ON the accent, so `--action` stays saturated
+     enough to read as an action and `--action-on` is the light text that
+     runs across it. */
+  --voice: #3f4f68;
+  --link: #6d4600;
+  --label: #494e5b;
+  --action: #7a4e00;
+  --action-on: #fdfaf4;
 
   --pill-teal-text: #0d6b5f;
   --pill-teal-bg: rgba(46, 169, 156, 0.14);
@@ -200,6 +319,13 @@
      --text and the mono face. */
   --color-voice: var(--voice);
   --color-link: var(--link);
+  /* Item 5 (2026-08-15). `text-label` is where the gold went: structural
+     labels organize, so they carry WEIGHT and neutral confidence rather than
+     the interactive accent. `bg-action`/`text-action-on` are the filled
+     primary action — the one place a saturated accent is still correct. */
+  --color-label: var(--label);
+  --color-action: var(--action);
+  --color-action-on: var(--action-on);
 
   --radius-token: var(--radius);
   --radius-token-sm: var(--radius-sm);
@@ -570,9 +696,25 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   background: var(--surface);
 }
 
+/* Item 5 (2026-08-15): a selected tier wears ITS OWN colour, never the
+   all-tiers orange — which is what the default view (all three on) used to
+   render as, matching nothing else on the screen. Unselected stays grey, as
+   it was. The fill tokens are the readable form of each tier accent; see
+   their note in the token block. */
 .view-btn[data-active="true"] {
-  background: var(--tier-accent);
-  color: var(--bg);
+  background: var(--tier-fill);
+  color: var(--tier-fill-on);
+  font-weight: 650;
+}
+
+.view-btn[data-tier="local"] {
+  --tier-fill: var(--tier-fill-local);
+}
+.view-btn[data-tier="state"] {
+  --tier-fill: var(--tier-fill-state);
+}
+.view-btn[data-tier="national"] {
+  --tier-fill: var(--tier-fill-national);
 }
 
 /* ---- Scope selectors (Edia's team/rep) ---- */
@@ -661,8 +803,17 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   flex: 1;
   min-width: 64px;
   background: var(--surface);
+  border: 1px solid transparent;
   border-radius: var(--radius-sm);
   padding: 10px 12px;
+}
+
+/* 6f (2026-08-15): the highlight means "this door is open", and it means that
+   on all four tiles. It used to be a permanent accent on MEETINGS alone,
+   which read as a selection state and was not one. */
+.stat-card[data-open] {
+  border-color: var(--link);
+  background: color-mix(in srgb, var(--link) 10%, var(--surface));
 }
 
 .stat-card .num {
@@ -1194,36 +1345,583 @@ label:has(> input[type="checkbox"]) {
   flex-shrink: 0;
 }
 
-/* The ballot entry point (2b): a floating bubble at the top of the map, in
-   the panel family the other controls share. Visible, not buried. */
-.ballot-bubble {
+/* The top-right floaters (item 2, 2026-08-15): the ballot entry, the zip, and
+   Ask. Replaces `.ballot-bubble`, which was a 10px uppercase mono whisper —
+   correct as a map control, wrong as the product's flagship entry, which is
+   what the author's note ("a standout entry and renders like one") says it
+   has to be. Sizes here are the type scale's Detail/Body rungs rather than
+   the Caption rung the old pill sat on, and the ballot half is FILLED: it is
+   the one genuinely primary action on the map, which under item 5's palette
+   rule is exactly what earns the saturated accent. */
+.map-floaters {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.map-floaters-row {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+
+/* One shell, two tap targets: an <a> cannot contain a <button>, and the zip
+   has to be its own control (item 3). The hairline between them is what says
+   "two things" without spending a second pill on it. */
+.ballot-pill {
+  display: inline-flex;
+  align-items: stretch;
+  border-radius: 999px;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.ballot-pill-main {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 15px;
+  background: var(--action);
+  color: var(--action-on);
+  font-size: 0.9375rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  border: 1px solid var(--action);
+  border-right: none;
+}
+
+.ballot-pill-main:hover {
+  filter: brightness(1.06);
+}
+
+.ballot-pill-soon {
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.72;
+}
+
+.ballot-pill-zip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 11px 13px;
+  background: var(--panel);
+  border: 1px solid var(--signal);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  /* 44px thumb target at phone width — the padding above already clears it,
+     stated here so a later type change cannot quietly shrink it. */
+  min-height: 44px;
+}
+
+.ballot-pill-zip:hover,
+.ballot-pill-zip[aria-expanded="true"] {
+  background: var(--surface);
+}
+
+/* Ask: the same weight as the ballot pill but the QUIET treatment, because
+   the two are peers in reach and not in claim — the ballot is where the
+   product is going, the ask is a door beside it. */
+.ask-pill {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  padding: 9px 14px;
+  padding: 11px 15px;
+  min-height: 44px;
   background: var(--panel);
   border: 1px solid var(--panel-border);
   border-radius: 999px;
   color: var(--text);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   box-shadow: var(--shadow-card);
+  cursor: pointer;
   white-space: nowrap;
 }
 
-.ballot-bubble:hover {
-  border-color: var(--accent-local);
+.ask-pill:hover {
+  border-color: var(--signal);
+  color: var(--signal);
 }
 
-.ballot-bubble-label {
+.ask-pill svg {
+  color: var(--signal);
+}
+
+/* The compact zip entry (item 3). Hangs under the pill it opened from, right
+   aligned so it never runs off the right edge at 390px — which is the exact
+   defect item 4 exists to fix on the calendar chooser, and there is no reason
+   to ship it twice. */
+.zip-switcher {
+  width: min(272px, calc(100vw - 24px));
+  padding: 12px 13px 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.zip-switcher-entry {
+  display: flex;
+  gap: 7px;
+}
+
+.zip-switcher-entry input {
+  min-width: 0;
+  flex: 1;
+  border: 1px solid var(--panel-border);
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  padding: 9px 11px;
+  font-family: var(--font-mono);
+  font-size: 0.9375rem;
+  letter-spacing: 0.08em;
+  color: var(--text);
+}
+
+.zip-switcher-entry input:focus {
+  outline: none;
+  border-color: var(--signal);
+}
+
+.zip-switcher-entry button {
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--signal);
+  background: var(--signal);
+  color: var(--bg);
+  padding: 0 15px;
+  font-size: 0.8125rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.zip-switcher-entry button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.zip-switcher-error {
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--danger);
+}
+
+.zip-switcher-label {
   font-family: var(--font-mono);
   font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
-  letter-spacing: 0.18em;
+  color: var(--text-muted);
 }
 
-.ballot-bubble-soon {
-  margin-left: 7px;
+.zip-switcher-recents {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.zip-switcher-recents button {
+  border-radius: 999px;
+  border: 1px solid var(--panel-border);
+  background: var(--surface);
+  color: var(--text);
+  padding: 7px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.zip-switcher-recents button:hover {
+  border-color: var(--signal);
+  color: var(--signal);
+}
+
+/* 6g (2026-08-15, the author): the SOURCE tag broke to "SR / C" beside a long
+   name — "Lane Santa Cruz" pushed it into a 2-character column and a
+   nine-letter mono word with 0.1em tracking wrapped mid-word.
+
+   Two rules, and both are needed: the tag never wraps, and it never shrinks
+   below its own width. `flex-shrink: 0` is what actually fixes it — the tag
+   lives in flex rows beside names that can be arbitrarily long, and without
+   it the tag is the flexible thing in the row. Applied at the CLASS rather
+   than per-site so a sixth render of this tag cannot arrive without it. */
+.source-tag {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* The collapsible battlecard section (item 6b4, 2026-08-15). The header is a
+   pill because a pill is already this system's word for "tappable, and not a
+   link", and it pops by CONTRAST with item 5's quieting rather than by being
+   another loud element — which is why the two items were built together and
+   share one token family. Change `--link` and both move. */
+.card-section {
+  margin-top: 10px;
+}
+
+.card-section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid color-mix(in srgb, var(--link) 45%, var(--panel-border));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--link) 8%, var(--panel-bg));
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.card-section-header:hover,
+.card-section[data-open] > .card-section-header {
+  border-color: var(--link);
+  background: color-mix(in srgb, var(--link) 14%, var(--panel-bg));
+}
+
+.card-section-title {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.875rem;
+  font-weight: 650;
+  letter-spacing: -0.005em;
+}
+
+/* A count or a date range. Never a judgement, never a score. */
+.card-section-meta {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+}
+
+.card-section-chevron {
+  flex-shrink: 0;
+  color: var(--link);
+  transition: transform 0.18s ease;
+}
+
+.card-section[data-open] .card-section-chevron {
+  transform: rotate(180deg);
+}
+
+.card-section-body {
+  padding: 10px 2px 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-section-header,
+  .card-section-chevron {
+    transition: none;
+  }
+}
+
+/* Item 6b (2026-08-15): the two vote columns, side by side on a desktop and
+   stacked at 390px — the same information architecture in a width-appropriate
+   form, never a different one. */
+.vote-columns {
+  display: grid;
+  gap: 10px;
+}
+
+@media (min-width: 720px) {
+  .vote-columns {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+/* Item 6b3 (2026-08-15): one silhouette per contest, whatever the source
+   published. The tile is a surface in its own right — fixed size, its own
+   ground, its own border — so a circular PNG on transparency and a
+   full-bleed rectangle and a pair of initials all occupy the identical box.
+   Collapse is organization; so is this. Neither renders anyone smaller. */
+.candidate-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.candidate-avatar {
+  flex: 0 0 auto;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius);
+  border: 1px solid var(--panel-border);
+  background: var(--surface);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.candidate-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+}
+
+.candidate-initials {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  letter-spacing: 0.04em;
   color: var(--text-muted);
-  letter-spacing: 0.12em;
+}
+
+/* The reaction box (item 6c, 2026-08-15) — the sensor as the point of the
+   surface, not a footer under it. Same framed language as THE NEXT ELECTION.
+
+   `data-frame="compact"` is the author's smaller form for the battlecard's
+   vote rows: "as prominent, not as large". Same component, same colours, same
+   tap sizes — only the padding and the prompt's size change, because what
+   makes a dozen of these readable in one card is the space between them, not
+   a quieter colour. */
+.reaction-box {
+  margin-top: 12px;
+  border: 1px solid color-mix(in srgb, var(--link) 40%, var(--panel-border));
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--link) 5%, transparent);
+  padding: 13px 14px;
+}
+
+.reaction-box[data-frame="compact"] {
+  margin-top: 8px;
+  border-radius: var(--radius-sm);
+  padding: 9px 10px;
+}
+
+.reaction-box-prompt {
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+.reaction-box[data-frame="compact"] .reaction-box-prompt {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* The five-option funding row is the geometry test. Wrapping is the answer,
+   never shrinking: `min-width` keeps every control at a thumb's width and
+   `min-height` keeps it at a thumb's height, so five options become two rows
+   at 390px rather than five slivers. */
+.reaction-box-choices {
+  margin-top: 9px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.reaction-choice {
+  flex: 1 1 auto;
+  min-width: 5.25rem;
+  min-height: 2.5rem;
+  padding: 0 10px;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: var(--radius-sm);
+  background: var(--panel-bg);
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: border-color 0.15s, background-color 0.15s, color 0.15s;
+}
+
+.reaction-box[data-frame="compact"] .reaction-choice {
+  min-height: 2.25rem;
+  font-size: 0.75rem;
+}
+
+/* The calendar chooser's three destinations (item 4, 2026-08-15). Full-width
+   rows at a comfortable tap size, so the phone form is the same component as
+   the desktop one rather than a shrunken version of it. */
+.calendar-choice {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-height: 46px;
+  padding: 0 13px;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.calendar-choice:hover {
+  border-color: var(--link);
+}
+
+.calendar-choice svg {
+  flex-shrink: 0;
+}
+
+/* "Show me my actual ballot" (item 2, 2026-08-15) — the ballot page's way out
+   of the limitation its own first sentence states. */
+.ballot-narrow-link {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.ballot-narrow-link:hover {
+  text-decoration-style: solid;
+}
+
+.ballot-narrow-form {
+  margin-top: 10px;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius);
+  background: var(--panel-bg);
+  padding: 13px 14px;
+}
+
+.ballot-narrow-ask {
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.ballot-narrow-fields {
+  margin-top: 9px;
+  display: flex;
+  gap: 7px;
+}
+
+.ballot-narrow-fields input {
+  min-width: 0;
+  border: 1px solid var(--panel-border);
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  padding: 9px 11px;
+  font-size: 0.875rem;
+  color: var(--text);
+}
+
+.ballot-narrow-fields input:first-child {
+  width: 5.5rem;
+  flex: 0 0 auto;
+  font-family: var(--font-mono);
+}
+
+.ballot-narrow-fields input:nth-child(2) {
+  flex: 1;
+}
+
+.ballot-narrow-fields input:focus {
+  outline: none;
+  border-color: var(--link);
+}
+
+.ballot-narrow-fields button {
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--action);
+  background: var(--action);
+  color: var(--action-on);
+  padding: 0 13px;
+  font-size: 0.8125rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.ballot-narrow-fields button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.ballot-narrow-error {
+  margin-top: 8px;
+  font-size: 0.75rem;
+  line-height: 1.55;
+  color: var(--danger);
+}
+
+/* Friction-rule exception (2): declining stays the effortless default, and
+   the promise is at the point of asking rather than in a policy. */
+.ballot-narrow-promise {
+  margin-top: 9px;
+  font-size: 0.6875rem;
+  line-height: 1.6;
+  color: var(--voice);
+}
+
+.ballot-narrow-promise button {
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+/* Dashed, because dashed means DEVICE-LOCAL in this system and this narrowing
+   is exactly that: it lives in one tab and is stored nowhere. */
+.ballot-narrowed {
+  margin-top: 10px;
+  border: 1px dashed var(--panel-border);
+  border-radius: var(--radius);
+  padding: 11px 13px;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--text);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ballot-narrowed button {
+  color: var(--link);
+  font-size: 0.75rem;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+/* A contest outside the narrowed address's districts. HIDDEN, never removed:
+   the page still renders every contest the zip produced, so "show the whole
+   zip again" is instant and cannot fail. */
+[data-contest-id][data-scoped-out] {
+  display: none;
+}
+
+/* The who-governs card while a fresher answer is in flight (6f). It stays on
+   screen — un-rendering it is what blinked the bubble on every pan — and it
+   dims, so a held answer can never read as a settled one. */
+.coverage-notice[data-refreshing="true"] {
+  opacity: 0.55;
+  transition: opacity 140ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .coverage-notice[data-refreshing="true"] {
+    transition: none;
+  }
 }
 
 /* The who-governs card, shrunk out of the way (2h): once the reader engages
@@ -1262,7 +1960,11 @@ label:has(> input[type="checkbox"]) {
 /* ---- Count badge + list overlay ---- */
 .count-badge {
   background: var(--panel);
+  /* The tier accent moves here from the numeral (item 5): a left edge in the
+     showing tiers' colour says the same thing the gold digits said, in the
+     place a structural mark belongs. */
   border: 1px solid var(--panel-border);
+  border-left: 3px solid var(--tier-accent, var(--panel-border));
   border-radius: var(--radius);
   padding: 10px 16px;
   font-family: var(--font-mono);
@@ -1284,9 +1986,15 @@ label:has(> input[type="checkbox"]) {
   color: var(--text);
 }
 
+/* Item 5 (2026-08-15): the counters are DATA, and data renders in the data
+   register — full-contrast `--text`, mono, at weight. They were tier-accented,
+   which is how "21 meetings · 7 venues" arrived on screen as two gold numbers
+   competing with the ballot entry and the links for the same eye. The tier
+   accent still lives on this badge, on its BORDER (below), where it marks
+   which tiers are showing without shouting a number. */
 .cb-num {
-  font-weight: 600;
-  color: var(--tier-accent, var(--accent-local));
+  font-weight: 650;
+  color: var(--text);
 }
 
 /* The list is a LARGE popup, not a full-screen takeover (3): same centered
@@ -1565,28 +2273,28 @@ label:has(> input[type="checkbox"]) {
   margin-bottom: 12px;
 }
 
+/* 6e2 (2026-08-15, the author, on BOTH desktop and phone): "the overlay's
+   type is too small even for good vision". The mission text is the product's
+   opening argument and was set at 13px — under the type scale's Body rung and
+   smaller than anything else a reader is asked to actually read. Both rungs
+   move onto the committed scale: Display for the name, Body for the
+   argument. */
 .welcome-title {
-  font-size: 22px;
+  font-size: 1.75rem;
   font-weight: 700;
-  letter-spacing: -0.3px;
-  margin-bottom: 4px;
+  letter-spacing: -0.02em;
+  margin-bottom: 18px;
   color: var(--text);
 }
 
-.welcome-subtitle {
-  font-size: 12px;
-  color: var(--text-dim);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
-  margin-bottom: 20px;
-}
+/* `.welcome-subtitle` retired 6e2 (2026-08-15) — the institutional line it
+   styled is gone; see welcome-overlay.tsx for why. */
 
 .welcome-msg {
-  font-size: 13px;
+  font-size: 0.9375rem;
   color: var(--text-dim);
-  line-height: 1.6;
-  margin-bottom: 24px;
+  line-height: 1.65;
+  margin-bottom: 26px;
 }
 
 .welcome-field {
@@ -2102,6 +2810,25 @@ label:has(> input[type="checkbox"]) {
     right: 10px;
     padding: 5px 9px;
     gap: 8px;
+  }
+
+  /* Item 5 (2026-08-15, the author's production pass): "the sidebar footer
+     collides with the map legend at mobile width."
+
+     Measured before touching it, and the diagnosis is not what the report
+     said — nothing about the FOOTER is special. The legend is `position:
+     fixed` at z-1100 and the drawer is z-1000, so at 390px the legend paints
+     over WHATEVER part of the drawer it happens to land on: at the author's
+     scroll position that was the footer, at ours it was the DATE RANGE
+     heading. A fix aimed at the footer would have moved the collision rather
+     than ending it.
+
+     The legend explains the pin colours on a map the open drawer is
+     covering. So it goes away while the drawer is open and comes back when
+     the reader closes it — the honest fix, and the only one that holds at
+     every scroll position. `pnpm overlaps` walks all of them. */
+  main[data-sidebar="open"] .legend {
+    display: none;
   }
 
   .legend-item {

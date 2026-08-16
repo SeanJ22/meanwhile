@@ -118,7 +118,7 @@ test("every explainer is level register, one sentence's worth, and never the tit
 
 test("the chamber rule: a House card never shows a Senate-only entry as a vote", () => {
   const seen = (chamber: "house" | "senate") =>
-    keyVoteRowsFor(chamber, () => ({ position: "YES", breakdown: null }));
+    keyVoteRowsFor(chamber, () => ({ position: "YES", held: true, breakdown: null }));
 
   const houseRows = seen("house");
   const senateRows = seen("senate");
@@ -202,7 +202,7 @@ test("the April 2024 group: four rows on a House card, one on a senator's, with 
     APRIL_2024_SENATE_NOTE,
     "The Senate voted on the four bills as a single package.",
   );
-  const house = keyVoteRowsFor("house", () => ({ position: "YES", breakdown: null }));
+  const house = keyVoteRowsFor("house", () => ({ position: "YES", held: true, breakdown: null }));
   const april = house.filter((r) => r.entry.siblingGroup === "april-2024");
   assert.equal(april.length, 4, "a House member votes on four separate bills");
   // Each is its own question with its own explainer — a member could vote

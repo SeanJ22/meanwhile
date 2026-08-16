@@ -42,7 +42,15 @@ export const INITIAL_FILTERS: FilterState = {
   statuses: [],
   districtTypes: [...DEFAULT_DISTRICT_TYPES],
   daysAhead: 60,
-  daysBack: 0,
+  /**
+   * 6f2 (2026-08-15, the author): 0 → 90. The served window has reached 90
+   * days back since M76, and the sidebar's own default was still `now`, so
+   * every concluded meeting the pipeline works to retrieve was filtered out
+   * before a reader could see one. The control said "now → 60d ahead" and
+   * was telling the truth about itself while hiding three months of what the
+   * app holds. The default now matches the window it filters.
+   */
+  daysBack: 90,
   hideUncovered: true,
 };
 

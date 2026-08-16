@@ -1,7 +1,14 @@
 import type { VotesSnapshot } from "@/lib/votes/types";
 import { getVotesSnapshot } from "@/lib/votes/snapshot";
 import { partyBreakdownFor } from "@/lib/votes/party-breakdown";
-import { partyByOfficeholderId } from "@/lib/registry/server";
+import { keyVoteRowsFor } from "@/lib/votes/key-votes-rows";
+import { KEY_VOTES_CRITERIA } from "@/lib/votes/key-votes";
+import {
+  keyVotePositionFor,
+  keyVotePositionKey,
+  keyVoteRollCallHeld,
+} from "@/lib/votes/key-vote-positions";
+import { chamberForOfficeholder, partyByOfficeholderId } from "@/lib/registry/server";
 import { getStateVotesSnapshot } from "@/lib/sources/legiscan/snapshot";
 import { LEGISCAN_ATTRIBUTION } from "@/lib/sources/legiscan/types";
 
@@ -115,5 +122,46 @@ export async function GET(request: Request) {
       partyBreakdown: partyBreakdownFor(v.id, v.result, snap.positions, parties),
     }));
 
-  return Response.json({ generatedAt: snap.generatedAt, votes });
+  /*
+   * Item 6b (2026-08-15): the "When it mattered" column's rows, served
+   * beside the recent ones so one card renders two answers from one request.
+   *
+   * The CHAMBER RULE is enforced upstream in `keyVoteRowsFor`, which is
+   * handed a chamber and never reads the other array — so a House member's
+   * card cannot render a Senate roll call even by mistake. A member with no
+   * chamber (nobody outside Congress) gets an empty list and the column does
+   * not render at all, rather than a header over nothing.
+   */
+  const chamber = await chamberForOfficeholder(member);
+  const keyVotes = chamber
+    ? keyVoteRowsFor(chamber, (ref) => {
+        const key = keyVotePositionKey(
+          ref.entryId,
+          chamber,
+          ref.congress,
+          ref.session,
+          ref.rollNumber,
+        );
+        return {
+          // null is a REAL answer here and travels as null. The card says
+          // the gap is ours; it never renders "did not vote" for it.
+          position: keyVotePositionFor(key, member),
+          held: keyVoteRollCallHeld(key),
+          // The party split is refused for these deliberately: we hold
+          // positions for the sitting members only, so any breakdown we
+          // computed would be a fraction of the chamber's and could never
+          // sum to the recorded tally — the same condition the recent-votes
+          // breakdown refuses on.
+          breakdown: null,
+        };
+      })
+    : [];
+
+  return Response.json({
+    generatedAt: snap.generatedAt,
+    votes,
+    chamber,
+    keyVotes,
+    keyVotesCriteria: keyVotes.length > 0 ? KEY_VOTES_CRITERIA : null,
+  });
 }

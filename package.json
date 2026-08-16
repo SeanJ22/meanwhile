@@ -35,7 +35,13 @@
     "streets:build": "tsx scripts/build-street-index.mts",
     "legiscan:fetch": "tsx scripts/fetch-legiscan.mts",
     "key-votes:fetch": "tsx scripts/fetch-key-votes.mts",
-    "law-votes:fetch": "tsx scripts/fetch-law-votes.mts"
+    "law-votes:fetch": "tsx scripts/fetch-law-votes.mts",
+    "pairs": "tsx scripts/pairs.mts",
+    "contrast": "tsx scripts/contrast-audit.mts",
+    "overlaps": "tsx scripts/overlap-audit.mts",
+    "key-votes:positions": "tsx scripts/fetch-key-vote-positions.mts",
+    "sheet": "tsx scripts/contact-sheet.mts",
+    "walk:0815g": "tsx scripts/walk-0815g.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

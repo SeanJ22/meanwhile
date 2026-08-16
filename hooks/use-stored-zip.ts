@@ -2,19 +2,35 @@
 
 import { useCallback, useSyncExternalStore } from "react";
 
+import { recordRecentZip } from "@/hooks/use-recent-zips";
 import { lookupZcta } from "@/lib/geo/zcta";
 
 /**
- * The remembered zip.
+ * The zip the reader is currently looking at.
  *
  * Stored as `approximate_location` — orientation, not identity, and never
- * treated as district truth. It lives in localStorage rather than on an account
- * because the entry screen has no accounts and does not need one.
+ * treated as district truth.
  *
- * localStorage is an external store, so it is read through
- * useSyncExternalStore: the server renders `pending`, and the first client pass
- * resolves it. That distinction is what keeps the entry notice from flashing at
- * a returning reader before their zip loads.
+ * **It is SESSION-scoped as of 2026-08-15 (6f, the author's ruling): "fresh
+ * open prompts for zip. Reopening the app does NOT restore the last map
+ * position/zip — it asks where you are."** So this lives in `sessionStorage`,
+ * which dies with the tab, rather than in `localStorage`, which does not. Two
+ * things follow, and both are the point:
+ *
+ * - A returning reader is ASKED where they are instead of being dropped into
+ *   an answer about somewhere they were last week. A stale location is the one
+ *   kind of wrong answer this product cannot notice on its own — every number
+ *   under it is correct for a place the reader is not.
+ * - Less about a reader survives on their device, not more. The only thing
+ *   that outlives the tab is the recents list
+ *   (`hooks/use-recent-zips.ts`), which exists so the re-ask costs one tap.
+ *   Picks and device-local reactions are untouched: they are the reader's own
+ *   work and were never location.
+ *
+ * `sessionStorage` is an external store, so it is read through
+ * `useSyncExternalStore`: the server renders `pending`, and the first client
+ * pass resolves it. That distinction is what keeps the entry prompt from
+ * flashing past a reader mid-session before their zip loads.
  */
 
 const STORAGE_KEY = "wtp.approximate_location";
@@ -48,10 +64,10 @@ let cachedSnapshot: LocationSnapshot = PENDING;
 
 function readRaw(): string | null {
   try {
-    return window.localStorage.getItem(STORAGE_KEY);
+    return window.sessionStorage.getItem(STORAGE_KEY);
   } catch {
     // Private mode or storage disabled. A forgotten zip just means the entry
-    // notice shows.
+    // notice shows — which is now the default anyway.
     return null;
   }
 }
@@ -71,7 +87,8 @@ function parse(raw: string | null): StoredLocation | null {
 
 function subscribe(onStoreChange: () => void) {
   listeners.add(onStoreChange);
-  // Keeps two tabs in step.
+  // Keeps two tabs in step for the recents write; sessionStorage itself is
+  // per-tab, so this only ever fires for the localStorage half.
   window.addEventListener("storage", onStoreChange);
 
   return () => {
@@ -109,13 +126,19 @@ export function useStoredZip() {
     };
 
     try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+      window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
     } catch {
       // Not being able to remember is survivable; failing the search is not.
       // Publish the choice anyway so this session still works.
       cachedRaw = JSON.stringify(payload);
       cachedSnapshot = { restored: true, location: next };
     }
+
+    // The one thing that outlives the tab (item 3), so the next open is a tap
+    // rather than eleven. Written here so every path that sets a location —
+    // the welcome card, the switcher, Near me — records it without having to
+    // remember to.
+    recordRecentZip(next.zip);
 
     for (const listener of listeners) listener();
   }, []);

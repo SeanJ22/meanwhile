@@ -136,11 +136,21 @@ export function matchesTiers(ocdId: OcdId, tiers: readonly Tier[]): boolean {
   return tier !== null && tiers.includes(tier);
 }
 
-/** Display label for a tier. */
+/**
+ * Display label for a tier.
+ *
+ * **"Federal", never "National"** (6f2, 2026-08-15 — the last straggler).
+ * The rule shipped for the officials surfaces on 2026-08-14 (M48) as words
+ * typed into those components, so every surface reading THIS map kept saying
+ * "National" — the district battlecards most visibly, and the tier toggle
+ * that names the whole mode. The label belongs here, once, or the rule is
+ * only true wherever somebody remembered it. The internal key stays
+ * `national`: it is an identifier, and identifiers never render (4a).
+ */
 export const TIER_LABEL: Readonly<Record<Tier, string>> = {
   local: "Local",
   state: "State",
-  national: "National",
+  national: "Federal",
 };
 
 /**

@@ -15,7 +15,7 @@ import { DataProvider, type ShellData } from "@/lib/state/data";
 import { applyFilters, noticeShouldExpand } from "@/lib/state/derive";
 import { deriveActiveDistrictTypes } from "@/lib/state/district-intent";
 import { haversineKm } from "@/lib/geo/distance";
-import { BallotBubble } from "./ballot-bubble";
+import { MapFloaters } from "./map-floaters";
 import { UiProvider, useUi, useUiDispatch } from "@/lib/state/provider";
 import type { MeetingSearchResult } from "@/lib/meetings/query";
 import type { SnapshotStatus } from "@/lib/meetings/freshness";
@@ -304,6 +304,33 @@ function MapEntryInner() {
   );
 
   const current = result && view && result.viewKey === view.key ? result : null;
+
+  /*
+   * 6f (2026-08-15) — "it keeps reappearing and disappearing while
+   * scrolling", the tester's words, and the cause is right here rather than
+   * in the expansion rule everyone suspected.
+   *
+   * `current` is null for the whole gap between a settle and its answer,
+   * because the answer in hand is keyed to the view the reader just left.
+   * Everything in the bottom stack hangs off `current` — including the
+   * COLLAPSED card's bubble, which is a button with no data in it. So a pan
+   * blinked the bubble out and back on every settle, which is exactly the
+   * churn reported, and no amount of tuning `noticeShouldExpand` could have
+   * touched it: the card was never re-expanding, it was un-rendering.
+   *
+   * `held` keeps the last answer on screen through the gap. Two rules keep
+   * that honest: the card carries `data-refreshing` while the answer under
+   * it is stale (dimmed by the stylesheet, so the reader can see it is
+   * settling rather than asserting), and nothing NEW is claimed — this is
+   * the previous answer still visible, not a guess about the new area.
+   */
+  // Adjust-during-render, the pattern this file already uses for `seenFilters`
+  // and the door/list guards — a ref would be read during render, which React
+  // forbids and the lint rule catches.
+  const [held, setHeld] = useState<TaggedResult | null>(null);
+  if (current && current !== held) setHeld(current);
+  const shown = current ?? held;
+  const refreshing = current === null && shown !== null;
 
   // Everything downstream reads this one filtered list.
   const meetings = useMemo<Meeting[]>(
@@ -776,6 +803,51 @@ function MapEntryInner() {
 
   const onTileError = useCallback(() => setTilesFailed(true), []);
   const onDistrictError = useCallback(() => setDistrictsFailed(true), []);
+  /*
+   * The Ask pill's whole job (item 2): expand the who-governs card and put
+   * the cursor in the ask box that is already inside it.
+   *
+   * Two frames, and both are needed rather than decorative: the card has to
+   * mount before there is an input to reach, and the browser has to have laid
+   * it out before `scrollIntoView` knows where it is. Anything narrower is a
+   * race that passes on a fast machine and silently does nothing on a phone —
+   * and "the button did nothing" is exactly the class of defect this session
+   * is fixing.
+   */
+  const openAsk = useCallback(() => {
+    setNoticeCollapsed(false);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const box = document.querySelector<HTMLInputElement>(
+          ".coverage-notice [data-ask-box]",
+        );
+        if (!box) return;
+        box.scrollIntoView({ block: "center", behavior: "smooth" });
+        box.focus({ preventScroll: true });
+      });
+    });
+  }, []);
+
+  /*
+   * 6f: Near me resolves districts, through the SAME machinery a narrowed
+   * street address uses (D53). Reusing `onStreetPoint` rather than inventing
+   * a parallel path is the point — one definition of what a point means, one
+   * lifetime (React state, this tab), one promise about storage. A second
+   * path would drift, and the thing it would drift on is the promise.
+   *
+   * `street` is the label the card shows for where the answer came from.
+   * "your approximate location" is the honest one here: a browser fix is a
+   * radius, and calling it an address would be the overclaim the caveat on
+   * the control exists to prevent.
+   */
+  const onNearMePoint = useCallback(
+    (point: { lat: number; lng: number }) => {
+      onStreetPoint({ ...point, street: "your approximate location" });
+      dismissSidebar();
+    },
+    [onStreetPoint, dismissSidebar],
+  );
+
   const onSelectVenue = useCallback(
     (venue: Venue) => {
       dispatch({ type: "select/venue", key: venue.key });
@@ -882,15 +954,17 @@ function MapEntryInner() {
               inferred. */}
           <div className="map-top-row flex items-start justify-end gap-3 p-3 pr-14 sm:p-5 sm:pr-16">
             <div className="pointer-events-auto">
-              <BallotBubble
+              <MapFloaters
                 zip={
-                  current
-                    ? /^\d{5}$/.test(current.zip)
-                      ? current.zip
-                      : (current.nearZip ?? null)
+                  shown
+                    ? /^\d{5}$/.test(shown.zip)
+                      ? shown.zip
+                      : (shown.nearZip ?? null)
                     : (location?.zip ?? null)
                 }
-                coverage={current?.coverage ?? null}
+                coverage={shown?.coverage ?? null}
+                onPickZip={search}
+                onAsk={openAsk}
               />
             </div>
             {selectedVenue && (
@@ -938,10 +1012,11 @@ function MapEntryInner() {
               />
             )}
 
-            {current &&
+            {shown &&
               (noticeCollapsed ? (
                 // Shrunk out of the way (2h), not gone: one tap brings the
-                // full card back.
+                // full card back. Rendered off `shown` rather than `current`
+                // so it survives the settle gap — see the note above.
                 <button
                   type="button"
                   className="notice-fab pointer-events-auto"
@@ -964,15 +1039,22 @@ function MapEntryInner() {
                   Who governs here
                 </button>
               ) : (
+                // NOT wrapped in a div: `.map-bottom-stack > .coverage-notice`
+                // is the bound that keeps this card inside the viewport
+                // (M54/M55), and a `>` combinator reads the DOM tree, not the
+                // box tree — `display: contents` would silently unbind it and
+                // the card would grow off the top of a phone again. The
+                // refreshing state rides as a prop instead.
                 <CoverageNotice
-                  tier={current.tier}
-                  zip={current.zip}
-                  radiusKm={current.radiusKm}
-                  requestedRadiusKm={current.requestedRadiusKm}
-                  count={current.meetings.length}
-                  coverage={current.coverage}
+                  tier={shown.tier}
+                  zip={shown.zip}
+                  radiusKm={shown.radiusKm}
+                  requestedRadiusKm={shown.requestedRadiusKm}
+                  count={shown.meetings.length}
+                  coverage={shown.coverage}
+                  refreshing={refreshing}
                   failedSourceOcdIds={
-                    current.snapshot?.failed.flatMap((f) => f.ocdIds) ?? []
+                    shown.snapshot?.failed.flatMap((f) => f.ocdIds) ?? []
                   }
                   onOpenOfficial={openOfficial}
                   onMinimize={() => setNoticeCollapsed(true)}
@@ -983,7 +1065,7 @@ function MapEntryInner() {
 
             {/* Provenance, not headline (3): "Last checked" demotes to a
                 footnote below the who-governs card. */}
-            {current?.snapshot && <DataFreshness snapshot={current.snapshot} />}
+            {shown?.snapshot && <DataFreshness snapshot={shown.snapshot} />}
 
             {selectedVenue && (
               // The phone form of the meeting panel: a bottom sheet pinned to
@@ -1278,11 +1360,42 @@ function districtSubject(
       { label: "Tier", value: TIER_LABEL[district.tier] },
       { label: "State", value: district.state, mono: true },
     ],
+    /*
+     * 6f2 (2026-08-15): the enrichment. The overview was three identifiers
+     * and nothing a stranger could use.
+     *
+     * The office title is taken from the DIVISION's own type, not from
+     * whoever currently holds the seat — so an unfilled or unsourced seat
+     * still gets its explainer, and a district with two representatives
+     * (Arizona's state house districts elect two) does not have to pick one.
+     * A type with no office to name renders no explainer at all.
+     */
+    representedByOfficeTitle: officeTitleForDivision(district.ocdId),
     representation: roster,
     representationNote: representationNoteFor(district.tier),
     meetings,
     sources: [],
   };
+}
+
+/**
+ * The office that represents a division, from the division's OWN identifier
+ * segment (6f2, 2026-08-15).
+ *
+ * Read off the OCD-ID rather than off a label or a current officeholder: the
+ * identifier is the join key this whole product is built on, a label is a
+ * display string that varies by state, and a seat can be vacant. A segment
+ * with no office to name returns null and the card renders no explainer,
+ * which is the correct answer for a county or a place — those are governments
+ * with bodies, not constituencies with a representative, and they have their
+ * own surfaces.
+ */
+function officeTitleForDivision(ocdId: string): string | null {
+  if (/\/cd:[^/]+$/.test(ocdId)) return "U.S. Representative";
+  if (/\/sldu:[^/]+$/.test(ocdId)) return "State Senator";
+  if (/\/sldl:[^/]+$/.test(ocdId)) return "State Representative";
+  if (/\/school_district:[^/]+$/.test(ocdId)) return "School Board Member";
+  return null;
 }
 
 const STATUS_LABEL: Record<Meeting["status"], string> = {

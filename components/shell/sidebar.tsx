@@ -52,6 +52,7 @@ export function Sidebar({
   onToggleDistricts,
   mobileOpen,
   onMobileClose,
+  onNearMePoint,
 }: {
   onSearchPick: (item: SearchItem) => void;
   onReset: () => void;
@@ -64,6 +65,8 @@ export function Sidebar({
   /** Phone width only: the rail is a drawer, and this is its state. */
   mobileOpen: boolean;
   onMobileClose: () => void;
+  /** 6f: Near me resolved a point — the map answers at it (D53 machinery). */
+  onNearMePoint?: (point: { lat: number; lng: number }) => void;
 }) {
   const { location } = useShellData();
 
@@ -167,6 +170,17 @@ export function Sidebar({
           <span aria-hidden="true">→</span>
         </a>
 
+        {/*
+          Item 2 (2026-08-15): the ask box moves to the TOP of the rail,
+          directly under the ballot entry — "first things first," the author.
+          It used to sit below the filters, five controls down a scrolling
+          column, which is the same burial the ballot link was rescued from
+          on 2026-08-14. The two doors a reader actually came for now open
+          the rail; the machinery for narrowing what is already on screen
+          follows underneath.
+        */}
+        <SidebarAskBox />
+
         <ViewToggle />
         <ScopeSelectors />
       </div>
@@ -175,7 +189,8 @@ export function Sidebar({
         <StatsBar />
         <SearchBox onPick={onSearchPick} />
         <RadiusControl />
-        <NearMeControl />
+        {/* 6f: the resolved point rides up to the map, which answers at it. */}
+        <NearMeControl onPoint={onNearMePoint} />
 
         <div className="prox-control">
           <label className="prox-toggle">
@@ -196,11 +211,6 @@ export function Sidebar({
         </div>
 
         <FiltersArea />
-
-        {/* 5 (2026-08-19): the ask box in the rail — the second of its two
-            doors (the who-governs card is the first). Renders only when a
-            resolved coverage exists to ground answers in. */}
-        <SidebarAskBox />
 
         {/* The sidebar's footer: the disclosure link and the feedback path.
             One line each — the transparency page carries the substance. */}

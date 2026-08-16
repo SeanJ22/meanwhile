@@ -215,7 +215,26 @@ function MeetingEntry({
           <span className="text-paper-dim">{meeting.jurisdiction}</span>
           <br />
           {meeting.provenance.sourceOrg}
-          {!meeting.provenance.verifiedAt && (
+          {/*
+            6f2 (2026-08-15, the author's ruling): "Not independently
+            verified" is RETIRED where the source is the body's own site or
+            feed — which is nearly everything here.
+
+            The line was self-undermining noise. When Newbury's own Planning
+            Board page is where a sitting came from, there is no independent
+            party who could verify it and none is wanted: the body IS the
+            authority on its own calendar, and the SOURCE link above is the
+            verification. Telling a reader that a town's own published agenda
+            is unverified teaches them to distrust the most reliable record
+            this product has.
+
+            It renders only where the data genuinely came from somewhere
+            OTHER than the body's own publication — `secondHand` on the
+            provenance, which no adapter sets today and which exists so the
+            line is available the day one does. The provenance data
+            underneath is untouched; this is about what a reader is told.
+          */}
+          {meeting.provenance.secondHand && !meeting.provenance.verifiedAt && (
             <>
               <br />
               <span className="text-signal-dim">Not independently verified</span>

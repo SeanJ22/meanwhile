@@ -119,7 +119,19 @@ export const RIPCORDS = {
     envVar: "WTP_RIPCORD_ASK_CLASSIFIER",
     question:
       "Product, not legal: is a model choosing WHICH curated topic a question belongs to compatible with the no-generation rule, given that it writes none of the answer and its whole output is one identifier from a closed list?",
-    closer: "The author — this is a product-doctrine question, not a counsel question",
+    /**
+     * **ANSWERED 2026-08-15 (6f3): the author reviewed how it operates — one
+     * identifier from a closed list, zero reader-facing sentences — and ruled
+     * it acceptable. The flag stays LIVE.**
+     *
+     * The question is not deleted and the flag is not removed. A ruling is a
+     * position on doctrine as it stands, and doctrine can move; keeping the
+     * flag means a future change of mind is one env var rather than a
+     * revert. That is the whole argument for the ripcord shape, and it
+     * applies exactly as much to a question that has been answered YES.
+     */
+    closer:
+      "The author — RULED 2026-08-15: acceptable as built, stays live. Retained as a one-flip pull if the doctrine ever moves.",
     trackerRows: "A09, A12",
     filters:
       "The classifier call itself: the ask box falls back to keyword-only matching and the honest refusal",

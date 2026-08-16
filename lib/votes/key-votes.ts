@@ -34,9 +34,27 @@
  * Senate voted the four as one package, so a senator's card shows one row
  * and says so.
  *
+ * ## The last-passage rule — AUTHOR-APPROVED 2026-08-15 (6f3)
+ *
  * Where a chamber voted twice on the same bill (passage, then concurrence in
  * the other chamber's amendment), the entry names WHICH roll call is its
  * vote — final passage or concurrence — per entry, in `whichVote`.
+ *
+ * **The standing rule, in the author's ruling: the card shows the LAST
+ * passage or concurrence vote.** The sixteen entries that took this as their
+ * default when B17 resolved them stand as approved rather than as
+ * unreviewed defaults.
+ *
+ * The reason it is the right default, recorded so nobody re-argues it: the
+ * last vote is the one on the text that became law. B17 found this the hard
+ * way — matching the Bipartisan Safer Communities Act on the literal words
+ * "final passage" picked the House's May vote on its own unrelated version
+ * of the bill, not the June concurrence that is the vote on the gun law. A
+ * member who voted differently on the two would have been shown answering a
+ * question nobody asked.
+ *
+ * Any future per-entry override is an explicit author decision, written into
+ * that entry's `whichVote`. Code never changes which vote an entry means.
  *
  * ## Roll call ids are fetched, never assumed
  *

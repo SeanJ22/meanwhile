@@ -50,26 +50,48 @@ export function CandidateCard({
   // the thin card renders on.
   const thin = isThinCandidateCard(card ?? null, hasLinks);
   return (
-    <div className="flex gap-3">
-      {card?.photoUrl ? (
-        // External campaign-site photo; next/image would require
-        // allowlisting every campaign's host.
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={card.photoUrl}
-          alt={`${name} — ${card.photoSource ?? "photo"}`}
-          title={card.photoSource ?? undefined}
-          className="h-16 w-16 shrink-0 rounded-lg border border-[var(--panel-border)] object-cover object-top"
-          loading="lazy"
-        />
-      ) : (
-        <span
-          aria-hidden="true"
-          className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg border border-[var(--panel-border)] bg-[var(--surface,rgba(255,255,255,0.06))] font-mono text-[1rem] text-muted"
-        >
-          {initials(name)}
-        </span>
-      )}
+    /*
+     * Item 6b3 (2026-08-15) — the author: "photos scattered through a contest
+     * read as broken." The fix is GEOMETRY, and it is deliberately not
+     * ordering.
+     *
+     * What was actually wrong, measured rather than assumed: the tile was
+     * already 64×64 for both a photo and initials, so the *box* was uniform.
+     * What was not uniform was what sat INSIDE it. A campaign portrait
+     * published as a circular PNG on transparency (Risa Lombardo's) rendered
+     * as a floating disc against the page while its neighbours rendered as
+     * full-bleed rectangles, and a portrait with lots of headroom sat at a
+     * different optical weight again. Three candidates, three different
+     * shapes, in a column that is supposed to read as one rhythm.
+     *
+     * So the tile is now a real surface: fixed size, its own background, its
+     * own border and radius, `object-cover` on top of it. A transparent
+     * source lands on the same ground the initials do, and every row in a
+     * contest has the same silhouette whatever the source published.
+     *
+     * ORDER IS UNTOUCHED — as filed. Sorting the photographed candidates to
+     * the top would make the layout tidier by handing the visual advantage to
+     * exactly the candidates who already have the information advantage,
+     * which is the thin-card bias the equal-effort rule exists to catch. If
+     * the geometry fix does not satisfy the author's eye, ordering is HIS
+     * decision to revisit, not a tidy-up.
+     */
+    <div className="candidate-row">
+      <span className="candidate-avatar" aria-hidden={card?.photoUrl ? undefined : true}>
+        {card?.photoUrl ? (
+          // External campaign-site photo; next/image would require
+          // allowlisting every campaign's host.
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={card.photoUrl}
+            alt={`${name} — ${card.photoSource ?? "photo"}`}
+            title={card.photoSource ?? undefined}
+            loading="lazy"
+          />
+        ) : (
+          <span className="candidate-initials">{initials(name)}</span>
+        )}
+      </span>
 
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">

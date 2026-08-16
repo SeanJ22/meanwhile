@@ -321,8 +321,8 @@ export const VENUE_CACHE: VenueEntry[] = [
   //     Office" in the body of the notice (verified on the 2026-08-18 agenda).
   //   • Conservation Commission — its own page says "Meetings are the second
   //     Tuesday of the month at the Town Offices."
-  // The Zoning Board of Adjustment publishes neither, on any rung walked, and
-  // is deliberately absent from this table: see `lib/registry/coverage-audit.ts`.
+  // The Zoning Board of Adjustment states neither, in any prose on any rung
+  // walked — and it turned out not to need to; see its own row below.
   // Same building and coordinates as the Selectboard row above, which the town
   // administration page addresses at 937 Route 103.
   {
@@ -335,6 +335,37 @@ export const VENUE_CACHE: VenueEntry[] = [
     lat: 43.321682,
     lng: -72.03705,
     addressSourceUrl: "https://www.newbury.nh.gov/administration",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=937+Route+103%2C+Newbury%2C+NH+03255&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-15",
+  },
+
+  // ── SchedulePage: Newbury's Zoning Board of Adjustment ──────────────────
+  // The row that took a body from KNOWN_UNCOVERED to LIVE with no other
+  // change, 2026-08-15 (the mobile round-two session), and the reason the
+  // three prior rungs missed it: **the address is not in the page's text.**
+  // The board's own page carries a "Contact Info" pane whose `street-address`
+  // block reads `937 Route 103 / PO Box 296 / Newbury, NH 03255` beside a
+  // `See map: Google Maps` link (`maps.google.com?q=937+Route+103%2C+Newbury%2C
+  // +NH%2C+03255%2C+us`) — machine-readable markup, invisible to a reader
+  // scanning prose for "the meeting is at". The author found it in his own
+  // browser via the map link and ruled it the meeting address for this board.
+  // The name is the town's OWN label for the building, from the site footer
+  // that every page carries: "Newbury Offices, PO Box 296, US Rte 103". Both
+  // strings verified against a live retrieval of the ZBA page on 2026-08-15.
+  //
+  // Same coordinates as the row above because it is the same building; the
+  // geocoder call is re-run and cited rather than copied on faith.
+  {
+    sourceId: "schedulepage",
+    bodyOcdId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+    match: "Newbury Offices",
+    name: "Newbury Offices",
+    address: "937 Route 103, Newbury, NH 03255",
+    lat: 43.321682,
+    lng: -72.03705,
+    addressSourceUrl: "https://www.newbury.nh.gov/zoning-board-adjustment",
     coordinateSourceUrl:
       "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=937+Route+103%2C+Newbury%2C+NH+03255&benchmark=Public_AR_Current&format=json",
     verifiedAt: "2026-08-15",

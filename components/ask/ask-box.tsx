@@ -172,7 +172,7 @@ export function AskBox({
         <button
           type="button"
           onClick={ask}
-          className="shrink-0 cursor-pointer rounded-md border border-[var(--signal)] bg-[var(--signal)] px-3.5 text-[0.8125rem] font-semibold text-[var(--bg)] transition-opacity hover:opacity-90"
+          className="shrink-0 cursor-pointer rounded-md border border-[var(--action)] bg-[var(--action)] px-3.5 text-[0.8125rem] font-semibold text-[var(--action-on)] transition-opacity hover:opacity-90"
         >
           Ask
         </button>
@@ -260,7 +260,7 @@ export function AskBox({
                     href={contact.sourceUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-1 inline-block font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted underline decoration-dotted underline-offset-2 hover:text-link"
+                    className="mt-1 inline-block source-tag font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted underline decoration-dotted underline-offset-2 hover:text-link"
                   >
                     source — {contact.sourceOrg}
                   </a>
@@ -309,7 +309,7 @@ export function AskBox({
                               href={person.sourceUrl}
                               target="_blank"
                               rel="noreferrer"
-                              className="font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted underline decoration-dotted underline-offset-2 hover:text-link"
+                              className="source-tag font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted underline decoration-dotted underline-offset-2 hover:text-link"
                             >
                               source
                             </a>

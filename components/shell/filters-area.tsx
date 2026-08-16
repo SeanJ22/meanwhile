@@ -152,8 +152,13 @@ export function FiltersArea() {
               and older meetings render wherever their sources publish them. */}
           <Group
             label="Date range"
+            // 6f2 (2026-08-15): the default is 90 back → 60 ahead, matching
+            // the served window. The clear link appears only when the reader
+            // has actually moved a handle away from it — comparing against
+            // the old `daysBack === 0` would have shown a permanently active
+            // "clear" on a fresh page, which is the M24 defect exactly.
             onClear={
-              ui.filters.daysAhead !== 60 || ui.filters.daysBack !== 0
+              ui.filters.daysAhead !== 60 || ui.filters.daysBack !== 90
                 ? () => dispatch({ type: "filter/clear", group: "daysAhead" })
                 : undefined
             }

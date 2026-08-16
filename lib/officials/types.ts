@@ -54,6 +54,17 @@ export interface Officeholder {
   /** ISO date it ends. */
   termEnd: string;
   /**
+   * ISO birth date, where an AUTHORITATIVE source publishes one (6d,
+   * 2026-08-15). Federally that is the bioguide, carried in the
+   * congress-legislators bulk file; state and local rosters publish none, and
+   * they render no age rather than an age from somewhere else.
+   *
+   * Stored as the DATE, never as an age. An age is a fact about today, so it
+   * is computed at render and cannot go stale on a shelf — the same reason a
+   * meeting stores its instant rather than "in three days".
+   */
+  birthDate: string | null;
+  /**
    * **Display only.** Never used to infer a position, a vote, or anything
    * about a district. `CLAUDE.md` forbids inferring from party affiliation,
    * and this field existing is the most likely place that rule gets broken.

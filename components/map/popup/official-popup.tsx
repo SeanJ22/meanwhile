@@ -6,10 +6,16 @@ import { blurbForTitle } from "@/lib/officials/office-blurbs";
 import { divisionOcdIdForRosterHolder } from "@/lib/registry/body-rosters";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyColorVar } from "@/lib/officials/party-color";
+import { ageFrom, inSeatUntil } from "@/lib/officials/tenure";
 import type { Tier } from "@/lib/ocd/tiers";
 import type { RollCallVote, VotePosition } from "@/lib/votes/types";
 import type { ReactionViewContext } from "@/lib/reactions/client";
 import { ReactionControl } from "@/components/reactions/reaction-control";
+import { CardSection } from "@/components/officials/card-section";
+import {
+  KeyVotesSection,
+  type KeyVoteRow,
+} from "@/components/officials/key-votes-section";
 import { explainVoteQuestion } from "@/lib/votes/vote-explainers";
 import {
   summaryForBill,
@@ -73,8 +79,24 @@ type MemberRollCall = RollCallVote & {
   partyBreakdown: { party: string; yes: number; no: number }[] | null;
 };
 
-/** How many recent votes the surface shows before pointing at the record. */
-const VOTE_LIMIT = 5;
+/**
+ * How many recent roll calls the "Recent" column shows.
+ *
+ * **Count-based, not a time window** (item 6b, the author's design): a
+ * congress votes in bursts, and "the last 30 days" is forty roll calls in one
+ * week and none in the next. Twenty self-adjusts to the chamber's own rhythm
+ * and always fills the column.
+ *
+ * **Nothing is filtered out of it, and nothing is footnoted as lesser.** The
+ * author's order: procedural votes — tabling, cloture, rules — are exactly
+ * where a member's real position often lives, because voting to table a bill
+ * is voting to kill it without going on record against it. This column shows
+ * every roll call the member cast, in the chamber's own words, with the plain
+ * function of the motion beside it.
+ *
+ * Was 5 until 2026-08-15.
+ */
+const VOTE_LIMIT = 20;
 
 /**
  * The licence attribution a vote store requires, when it requires one.
@@ -107,6 +129,13 @@ function hasVoteRecord(id: string): boolean {
 export function RecentVotes(props: {
   holder: SeatHolder;
   reactionContext: ReactionViewContext | null;
+  /**
+   * Item 6b (2026-08-15): render as the two-column architecture — "Recent"
+   * beside "When it mattered", each its own collapsed section — rather than
+   * as one flat list. The large card passes this; the compact glance card
+   * does not, and keeps its single short list.
+   */
+  columns?: boolean;
 }) {
   // Keyed on the holder so a holder change discards the fetched record
   // structurally — a new holder never wears the previous one's votes
@@ -117,12 +146,16 @@ export function RecentVotes(props: {
 function RecentVotesInner({
   holder,
   reactionContext,
+  columns = false,
 }: {
   holder: SeatHolder;
   reactionContext: ReactionViewContext | null;
+  columns?: boolean;
 }) {
   const [votes, setVotes] = useState<MemberRollCall[] | null>(null);
   const [attribution, setAttribution] = useState<VoteAttribution | null>(null);
+  const [chamber, setChamber] = useState<"house" | "senate" | null>(null);
+  const [keyVotes, setKeyVotes] = useState<KeyVoteRow[]>([]);
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
@@ -137,9 +170,13 @@ function RecentVotesInner({
         const payload = (await response.json()) as {
           votes: MemberRollCall[];
           attribution?: VoteAttribution;
+          chamber?: "house" | "senate" | null;
+          keyVotes?: KeyVoteRow[];
         };
         setVotes(payload.votes);
         setAttribution(payload.attribution ?? null);
+        setChamber(payload.chamber ?? null);
+        setKeyVotes(payload.keyVotes ?? []);
       } catch {
         if (!controller.signal.aborted) setFailed(true);
       }
@@ -151,9 +188,8 @@ function RecentVotesInner({
   // "Recent votes" heading, which reads as "this person does not vote".
   if (!hasVoteRecord(holder.id)) return null;
 
-  return (
+  const recent = (
     <>
-      <PopupSectionLabel>Recent votes</PopupSectionLabel>
       {failed ? (
         <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
           Couldn&apos;t load the vote record just now.
@@ -278,12 +314,15 @@ function RecentVotesInner({
                     </>
                   )}
                 </p>
-                {/* The sensor (P03): asked after the record, never before it. */}
+                {/* The sensor (P03): asked after the record, never before it.
+                    6c: the compact frame — as prominent as the ballot's, not
+                    as large, because a card carries a dozen of these. */}
                 <ReactionControl
                   targetType="FEDERAL_VOTE"
                   targetId={vote.id}
                   prompt="Do you like this vote?"
                   context={reactionContext}
+                  frame="compact"
                 />
               </div>
             );
@@ -296,6 +335,63 @@ function RecentVotesInner({
         </>
       )}
     </>
+  );
+
+  /*
+   * The compact glance card keeps the flat short list it always had — it is
+   * a glance, and two collapsed columns inside a 300px popup would be two
+   * things to tap before seeing anything.
+   */
+  if (!columns) {
+    return (
+      <>
+        <PopupSectionLabel>Recent votes</PopupSectionLabel>
+        {recent}
+      </>
+    );
+  }
+
+  /*
+   * Item 6b (2026-08-15) — the author's architecture, two columns:
+   *
+   *   "Recent"          — the last 20 roll calls, ALL of them, procedural
+   *                       included and none footnoted as lesser.
+   *   "When it mattered" — the B15 curated list, with its published criteria
+   *                       sentence at the column's head.
+   *
+   * **Overlap is expected and unmarked.** A recent vote that is also a
+   * when-it-mattered vote appears in both, because each column has to be a
+   * complete answer to its own question. Cross-marking them would make one
+   * column look like a subset of the other, and time deduplicates them
+   * naturally anyway.
+   *
+   * Both collapsed by default: the card's opening view is identity, contact
+   * and funding, with the record one tap down.
+   *
+   * Side by side on a desktop, stacked at 390px — `.vote-columns` is a grid
+   * that becomes two columns above 720px. Same information architecture
+   * either way, which is the difference between a responsive design and a
+   * phone version.
+   */
+  return (
+    <div className="vote-columns">
+      <CardSection
+        title="Recent"
+        meta={votes ? `last ${Math.min(votes.length, VOTE_LIMIT)}` : null}
+      >
+        <p className="mb-1.5 text-[0.6875rem] leading-relaxed text-voice">
+          Every roll call they cast, newest first — including the procedural
+          ones. Voting to set a bill aside is a way of deciding it.
+        </p>
+        {recent}
+      </CardSection>
+
+      {chamber && keyVotes.length > 0 && (
+        <CardSection title="When it mattered">
+          <KeyVotesSection chamber={chamber} rows={keyVotes} />
+        </CardSection>
+      )}
+    </div>
   );
 }
 
@@ -388,13 +484,44 @@ export function OfficialIdentity({
             {holder.partyLabel}
           </p>
         )}
+        {/*
+          Item 6d (2026-08-15): "In seat until", and — on the large card only
+          — age. Both render ONLY from a sourced value and neither is ever
+          computed from an election cycle or a news profile. A holder with no
+          sourced term end renders no line at all rather than an em dash,
+          because a visible blank invites a reader to conclude something.
+
+          The age is computed from the birth date AT RENDER (see
+          lib/officials/tenure.ts), so it cannot staleness-drift the way a
+          stored number would.
+        */}
+        {(() => {
+          const until = inSeatUntil(holder.termEnd);
+          const age = large ? ageFrom(holder.birthDate, new Date()) : null;
+          if (!until && age === null) return null;
+          return (
+            <p className="mt-0.5 flex flex-wrap gap-x-2 text-[0.75rem] text-label">
+              {until && (
+                <span>
+                  In seat until{" "}
+                  <span className="font-mono text-paper">{until}</span>
+                </span>
+              )}
+              {age !== null && (
+                <span>
+                  Age <span className="font-mono text-paper">{age}</span>
+                </span>
+              )}
+            </p>
+          );
+        })()}
         {holder.sourceUrl && (
           <a
             href={holder.sourceUrl}
             target="_blank"
             rel="noreferrer"
             title="Where this record was read from"
-            className="font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted hover:text-signal"
+            className="source-tag font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted hover:text-signal"
           >
             source
           </a>
@@ -404,10 +531,20 @@ export function OfficialIdentity({
   );
 }
 
-export function ReachThem({ holder }: { holder: SeatHolder }) {
+export function ReachThem({
+  holder,
+  bare = false,
+}: {
+  holder: SeatHolder;
+  /**
+   * The CardSection header already names this block (6b4). `bare` drops the
+   * inner label rather than saying the same words twice, one line apart.
+   */
+  bare?: boolean;
+}) {
   return (
     <>
-      <PopupSectionLabel>Reach them</PopupSectionLabel>
+      {!bare && <PopupSectionLabel>Reach them</PopupSectionLabel>}
       {holder.email && (
         <PopupRow label="Email">
           <a
@@ -479,7 +616,14 @@ export function ReachThem({ holder }: { holder: SeatHolder }) {
   );
 }
 
-export function OfficeBlurb({ holder }: { holder: SeatHolder }) {
+export function OfficeBlurb({
+  holder,
+  bare = false,
+}: {
+  holder: SeatHolder;
+  /** The CardSection header names it (6b4); drop the duplicate label. */
+  bare?: boolean;
+}) {
   // Item 1 (2026-08-14 second session): the blurb resolves against the
   // holder's OWN jurisdiction, read off the roster that carries them —
   // never a per-type default that smuggles one city's charter onto
@@ -491,7 +635,7 @@ export function OfficeBlurb({ holder }: { holder: SeatHolder }) {
   if (!blurb) return null;
   return (
     <>
-      <PopupSectionLabel>What this office does</PopupSectionLabel>
+      {!bare && <PopupSectionLabel>What this office does</PopupSectionLabel>}
       <p className="mt-1.5 text-[0.75rem] leading-relaxed text-paper-dim">
         {blurb.text}
       </p>

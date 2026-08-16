@@ -41,6 +41,24 @@ export interface Provenance {
   collectedAt: string;
   /** When a human or check last confirmed it still matches the source. */
   verifiedAt: string | null;
+  /**
+   * The record came from somewhere OTHER than the publishing body's own site
+   * or feed — an aggregator, a press report, a third party's index (6f2,
+   * 2026-08-15).
+   *
+   * **Absent/false is the normal case and is what retires the "Not
+   * independently verified" line.** When a meeting comes off a town's own
+   * planning-board page, there is no independent party who could verify it
+   * and none is wanted: the body is the authority on its own calendar and the
+   * SOURCE link is the verification. The old line rendered on every record
+   * that merely lacked a `verifiedAt` stamp, which taught readers to distrust
+   * the most reliable record this product has.
+   *
+   * No adapter sets this today — every wired source is a body's own
+   * publication or its own agenda vendor. It exists so the day one is not,
+   * the line is available and the claim is precise rather than blanket.
+   */
+  secondHand?: boolean;
 }
 
 /**

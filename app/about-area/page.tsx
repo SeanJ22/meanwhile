@@ -1,3 +1,4 @@
+import { ShuffledFacts } from "@/components/area/shuffled-facts";
 import Link from "next/link";
 
 import { areaFactsForState } from "@/lib/area/facts";
@@ -78,28 +79,36 @@ export default async function AboutAreaPage({
         </p>
       )}
 
-      {facts &&
-        facts.facts.map((fact) => (
-          <section
-            key={fact.topic}
-            className="mt-4 rounded border border-[var(--panel-border)] p-4"
-          >
-            <h2 className="text-[0.875rem] font-semibold">{fact.question}</h2>
-            <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
-              {fact.answer}
-            </p>
-            <p className="mt-2 text-[0.6875rem]">
-              <a
-                href={fact.sourceUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="underline decoration-dotted"
-              >
-                {fact.sourceOrg}
-              </a>
-            </p>
-          </section>
-        ))}
+      {/* 6g (2026-08-15): the order is shuffled per open. The authoring order
+          put marijuana first in all three states, and a page that always
+          leads on the same charged question reads as an editorial choice on a
+          product that does not make them. Content unchanged; only which
+          honest answer a reader sees first moves. */}
+      {facts && (
+        <ShuffledFacts facts={facts.facts}>
+          {(fact) => (
+            <section
+              key={fact.topic}
+              className="mt-4 rounded border border-[var(--panel-border)] p-4"
+            >
+              <h2 className="text-[0.875rem] font-semibold">{fact.question}</h2>
+              <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
+                {fact.answer}
+              </p>
+              <p className="mt-2 text-[0.6875rem]">
+                <a
+                  href={fact.sourceUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline decoration-dotted"
+                >
+                  {fact.sourceOrg}
+                </a>
+              </p>
+            </section>
+          )}
+        </ShuffledFacts>
+      )}
 
       {facts && facts.notCovered.length > 0 && (
         <section className="mt-6 rounded border border-dashed border-[var(--panel-border)] p-4">

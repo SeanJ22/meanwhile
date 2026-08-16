@@ -1,6 +1,6 @@
 {
  "formatVersion": 1,
- "generatedAt": "2026-08-16T02:51:07.825Z",
+ "generatedAt": "2026-08-16T04:34:31.621Z",
  "sources": [
   {
    "source": "legistar",
@@ -123,8 +123,8 @@
    "source": "schedulepage",
    "ok": true,
    "error": null,
-   "fetched": 4,
-   "normalized": 26,
+   "fetched": 5,
+   "normalized": 27,
    "drops": {
     "placeless": 0,
     "unknownVenue": 0,
@@ -153,7 +153,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1803&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-16T02:50:47.893Z",
+    "collectedAt": "2026-08-16T04:34:23.984Z",
     "verifiedAt": null
    }
   },
@@ -176,7 +176,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1804&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-16T02:50:47.893Z",
+    "collectedAt": "2026-08-16T04:34:23.984Z",
     "verifiedAt": null
    }
   },
@@ -199,7 +199,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1816&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-16T02:50:47.893Z",
+    "collectedAt": "2026-08-16T04:34:23.984Z",
     "verifiedAt": null
    }
   },
@@ -222,7 +222,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1817&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-16T02:50:47.893Z",
+    "collectedAt": "2026-08-16T04:34:23.984Z",
     "verifiedAt": null
    }
   },
@@ -245,7 +245,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1820&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-16T02:50:47.893Z",
+    "collectedAt": "2026-08-16T04:34:23.984Z",
     "verifiedAt": null
    }
   },
@@ -268,7 +268,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1821&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-16T02:50:47.893Z",
+    "collectedAt": "2026-08-16T04:34:23.984Z",
     "verifiedAt": null
    }
   },
@@ -291,7 +291,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1822&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-16T02:50:47.893Z",
+    "collectedAt": "2026-08-16T04:34:23.984Z",
     "verifiedAt": null
    }
   },
@@ -314,7 +314,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1823&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-16T02:50:47.893Z",
+    "collectedAt": "2026-08-16T04:34:23.984Z",
     "verifiedAt": null
    }
   },
@@ -337,7 +337,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1824&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-16T02:50:47.893Z",
+    "collectedAt": "2026-08-16T04:34:23.984Z",
     "verifiedAt": null
    }
   },
@@ -360,7 +360,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1854&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-16T02:50:47.893Z",
+    "collectedAt": "2026-08-16T04:34:23.984Z",
     "verifiedAt": null
    }
   },
@@ -383,7 +383,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1858&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-16T02:50:47.893Z",
+    "collectedAt": "2026-08-16T04:34:23.984Z",
     "verifiedAt": null
    }
   },
@@ -406,7 +406,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1869&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-16T02:50:47.893Z",
+    "collectedAt": "2026-08-16T04:34:23.984Z",
     "verifiedAt": null
    }
   },
@@ -429,7 +429,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-16T02:50:54.218Z",
+    "collectedAt": "2026-08-16T04:34:24.408Z",
     "verifiedAt": null
    }
   },
@@ -452,7 +452,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-16T02:50:54.218Z",
+    "collectedAt": "2026-08-16T04:34:24.408Z",
     "verifiedAt": null
    }
   },
@@ -475,7 +475,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-16T02:50:54.218Z",
+    "collectedAt": "2026-08-16T04:34:24.408Z",
     "verifiedAt": null
    }
   },
@@ -498,7 +498,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-16T02:50:54.218Z",
+    "collectedAt": "2026-08-16T04:34:24.408Z",
     "verifiedAt": null
    }
   },
@@ -521,7 +521,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-16T02:50:54.218Z",
+    "collectedAt": "2026-08-16T04:34:24.408Z",
     "verifiedAt": null
    }
   },
@@ -544,7 +544,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-16T02:50:54.218Z",
+    "collectedAt": "2026-08-16T04:34:24.408Z",
     "verifiedAt": null
    }
   },
@@ -567,7 +567,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-16T02:50:54.218Z",
+    "collectedAt": "2026-08-16T04:34:24.408Z",
     "verifiedAt": null
    }
   },
@@ -590,7 +590,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-16T02:50:54.218Z",
+    "collectedAt": "2026-08-16T04:34:24.408Z",
     "verifiedAt": null
    }
   },
@@ -613,7 +613,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-16T02:50:54.218Z",
+    "collectedAt": "2026-08-16T04:34:24.408Z",
     "verifiedAt": null
    }
   },
@@ -637,7 +637,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-16T02:50:54.218Z",
+    "collectedAt": "2026-08-16T04:34:24.408Z",
     "verifiedAt": null
    }
   },
@@ -661,7 +661,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-16T02:50:54.218Z",
+    "collectedAt": "2026-08-16T04:34:24.408Z",
     "verifiedAt": null
    }
   },
@@ -685,7 +685,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-16T02:50:54.218Z",
+    "collectedAt": "2026-08-16T04:34:24.408Z",
     "verifiedAt": null
    }
   },
@@ -709,7 +709,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-16T02:50:54.218Z",
+    "collectedAt": "2026-08-16T04:34:24.408Z",
     "verifiedAt": null
    }
   },
@@ -733,7 +733,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-16T02:50:54.218Z",
+    "collectedAt": "2026-08-16T04:34:24.408Z",
     "verifiedAt": null
    }
   },
@@ -757,7 +757,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-16T02:50:54.218Z",
+    "collectedAt": "2026-08-16T04:34:24.408Z",
     "verifiedAt": null
    }
   },
@@ -781,7 +781,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-16T02:50:54.218Z",
+    "collectedAt": "2026-08-16T04:34:24.408Z",
     "verifiedAt": null
    }
   },
@@ -805,7 +805,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-16T02:50:54.218Z",
+    "collectedAt": "2026-08-16T04:34:24.408Z",
     "verifiedAt": null
    }
   },
@@ -829,7 +829,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-16T02:50:54.218Z",
+    "collectedAt": "2026-08-16T04:34:24.408Z",
     "verifiedAt": null
    }
   },
@@ -853,7 +853,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-16T02:50:54.218Z",
+    "collectedAt": "2026-08-16T04:34:24.408Z",
     "verifiedAt": null
    }
   },
@@ -877,7 +877,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-16T02:50:54.218Z",
+    "collectedAt": "2026-08-16T04:34:24.408Z",
     "verifiedAt": null
    }
   },
@@ -901,7 +901,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-16T02:50:54.218Z",
+    "collectedAt": "2026-08-16T04:34:24.408Z",
     "verifiedAt": null
    }
   },
@@ -925,7 +925,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-16T02:50:54.218Z",
+    "collectedAt": "2026-08-16T04:34:24.408Z",
     "verifiedAt": null
    }
   },
@@ -948,7 +948,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-16T02:50:58.578Z",
+    "collectedAt": "2026-08-16T04:34:25.367Z",
     "verifiedAt": null
    }
   },
@@ -971,7 +971,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-16T02:50:58.578Z",
+    "collectedAt": "2026-08-16T04:34:25.367Z",
     "verifiedAt": null
    }
   },
@@ -994,7 +994,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-16T02:50:58.578Z",
+    "collectedAt": "2026-08-16T04:34:25.367Z",
     "verifiedAt": null
    }
   },
@@ -1017,7 +1017,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-16T02:50:58.578Z",
+    "collectedAt": "2026-08-16T04:34:25.367Z",
     "verifiedAt": null
    }
   },
@@ -1040,7 +1040,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-16T02:50:58.578Z",
+    "collectedAt": "2026-08-16T04:34:25.367Z",
     "verifiedAt": null
    }
   },
@@ -1064,7 +1064,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-16T02:50:58.578Z",
+    "collectedAt": "2026-08-16T04:34:25.367Z",
     "verifiedAt": null
    }
   },
@@ -1088,7 +1088,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-16T02:50:58.578Z",
+    "collectedAt": "2026-08-16T04:34:25.367Z",
     "verifiedAt": null
    }
   },
@@ -1112,7 +1112,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-16T02:50:58.578Z",
+    "collectedAt": "2026-08-16T04:34:25.367Z",
     "verifiedAt": null
    }
   },
@@ -1136,7 +1136,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-16T02:50:58.578Z",
+    "collectedAt": "2026-08-16T04:34:25.367Z",
     "verifiedAt": null
    }
   },
@@ -1160,7 +1160,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-16T02:50:58.578Z",
+    "collectedAt": "2026-08-16T04:34:25.367Z",
     "verifiedAt": null
    }
   },
@@ -1184,7 +1184,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-16T02:50:58.578Z",
+    "collectedAt": "2026-08-16T04:34:25.367Z",
     "verifiedAt": null
    }
   },
@@ -1208,7 +1208,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-16T02:50:58.578Z",
+    "collectedAt": "2026-08-16T04:34:25.367Z",
     "verifiedAt": null
    }
   },
@@ -1231,7 +1231,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-16T02:51:01.870Z",
+    "collectedAt": "2026-08-16T04:34:26.351Z",
     "verifiedAt": null
    }
   },
@@ -1254,7 +1254,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-16T02:51:01.870Z",
+    "collectedAt": "2026-08-16T04:34:26.351Z",
     "verifiedAt": null
    }
   },
@@ -1277,7 +1277,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-16T02:51:01.870Z",
+    "collectedAt": "2026-08-16T04:34:26.351Z",
     "verifiedAt": null
    }
   },
@@ -1300,7 +1300,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-16T02:51:01.870Z",
+    "collectedAt": "2026-08-16T04:34:26.351Z",
     "verifiedAt": null
    }
   },
@@ -1323,7 +1323,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-16T02:51:01.870Z",
+    "collectedAt": "2026-08-16T04:34:26.351Z",
     "verifiedAt": null
    }
   },
@@ -1346,7 +1346,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-16T02:51:01.870Z",
+    "collectedAt": "2026-08-16T04:34:26.351Z",
     "verifiedAt": null
    }
   },
@@ -1369,7 +1369,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-16T02:51:01.870Z",
+    "collectedAt": "2026-08-16T04:34:26.351Z",
     "verifiedAt": null
    }
   },
@@ -1392,7 +1392,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-16T02:51:01.870Z",
+    "collectedAt": "2026-08-16T04:34:26.351Z",
     "verifiedAt": null
    }
   },
@@ -1416,7 +1416,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-16T02:51:01.870Z",
+    "collectedAt": "2026-08-16T04:34:26.351Z",
     "verifiedAt": null
    }
   },
@@ -1440,7 +1440,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-16T02:51:01.870Z",
+    "collectedAt": "2026-08-16T04:34:26.351Z",
     "verifiedAt": null
    }
   },
@@ -1464,7 +1464,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-16T02:51:01.870Z",
+    "collectedAt": "2026-08-16T04:34:26.351Z",
     "verifiedAt": null
    }
   },
@@ -1488,7 +1488,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-16T02:51:01.870Z",
+    "collectedAt": "2026-08-16T04:34:26.351Z",
     "verifiedAt": null
    }
   },
@@ -1512,7 +1512,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-16T02:51:01.870Z",
+    "collectedAt": "2026-08-16T04:34:26.351Z",
     "verifiedAt": null
    }
   },
@@ -1536,7 +1536,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-16T02:51:01.870Z",
+    "collectedAt": "2026-08-16T04:34:26.351Z",
     "verifiedAt": null
    }
   },
@@ -1560,7 +1560,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-16T02:51:01.870Z",
+    "collectedAt": "2026-08-16T04:34:26.351Z",
     "verifiedAt": null
    }
   },
@@ -1584,7 +1584,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-16T02:51:01.870Z",
+    "collectedAt": "2026-08-16T04:34:26.351Z",
     "verifiedAt": null
    }
   },
@@ -1608,7 +1608,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-16T02:51:01.870Z",
+    "collectedAt": "2026-08-16T04:34:26.351Z",
     "verifiedAt": null
    }
   },
@@ -1632,7 +1632,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-16T02:51:01.870Z",
+    "collectedAt": "2026-08-16T04:34:26.351Z",
     "verifiedAt": null
    }
   },
@@ -1656,7 +1656,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-16T02:51:01.870Z",
+    "collectedAt": "2026-08-16T04:34:26.351Z",
     "verifiedAt": null
    }
   },
@@ -1680,7 +1680,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-16T02:51:01.870Z",
+    "collectedAt": "2026-08-16T04:34:26.351Z",
     "verifiedAt": null
    }
   },
@@ -1703,7 +1703,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1946&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.644Z",
+    "collectedAt": "2026-08-16T04:34:23.653Z",
     "verifiedAt": null
    }
   },
@@ -1726,7 +1726,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1957&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.644Z",
+    "collectedAt": "2026-08-16T04:34:23.653Z",
     "verifiedAt": null
    }
   },
@@ -1749,7 +1749,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1981&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.644Z",
+    "collectedAt": "2026-08-16T04:34:23.653Z",
     "verifiedAt": null
    }
   },
@@ -1772,7 +1772,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1942&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.644Z",
+    "collectedAt": "2026-08-16T04:34:23.653Z",
     "verifiedAt": null
    }
   },
@@ -1795,7 +1795,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1927&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.644Z",
+    "collectedAt": "2026-08-16T04:34:23.653Z",
     "verifiedAt": null
    }
   },
@@ -1818,7 +1818,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1943&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.644Z",
+    "collectedAt": "2026-08-16T04:34:23.653Z",
     "verifiedAt": null
    }
   },
@@ -1841,7 +1841,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1928&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.644Z",
+    "collectedAt": "2026-08-16T04:34:23.653Z",
     "verifiedAt": null
    }
   },
@@ -1864,7 +1864,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1945&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.644Z",
+    "collectedAt": "2026-08-16T04:34:23.653Z",
     "verifiedAt": null
    }
   },
@@ -1887,7 +1887,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1956&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.644Z",
+    "collectedAt": "2026-08-16T04:34:23.653Z",
     "verifiedAt": null
    }
   },
@@ -1910,7 +1910,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-18",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.921Z",
+    "collectedAt": "2026-08-16T04:34:24.015Z",
     "verifiedAt": null
    }
   },
@@ -1933,7 +1933,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-18",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.921Z",
+    "collectedAt": "2026-08-16T04:34:24.015Z",
     "verifiedAt": null
    }
   },
@@ -1956,7 +1956,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-18",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.921Z",
+    "collectedAt": "2026-08-16T04:34:24.015Z",
     "verifiedAt": null
    }
   },
@@ -1979,7 +1979,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-18",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.921Z",
+    "collectedAt": "2026-08-16T04:34:24.015Z",
     "verifiedAt": null
    }
   },
@@ -2002,7 +2002,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-18",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.921Z",
+    "collectedAt": "2026-08-16T04:34:24.015Z",
     "verifiedAt": null
    }
   },
@@ -2025,7 +2025,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-18",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.921Z",
+    "collectedAt": "2026-08-16T04:34:24.015Z",
     "verifiedAt": null
    }
   },
@@ -2048,7 +2048,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-18",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.921Z",
+    "collectedAt": "2026-08-16T04:34:24.015Z",
     "verifiedAt": null
    }
   },
@@ -2071,7 +2071,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-18",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.921Z",
+    "collectedAt": "2026-08-16T04:34:24.015Z",
     "verifiedAt": null
    }
   },
@@ -2094,7 +2094,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-18",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.921Z",
+    "collectedAt": "2026-08-16T04:34:24.015Z",
     "verifiedAt": null
    }
   },
@@ -2117,7 +2117,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-18",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.921Z",
+    "collectedAt": "2026-08-16T04:34:24.015Z",
     "verifiedAt": null
    }
   },
@@ -2140,7 +2140,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-18",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.921Z",
+    "collectedAt": "2026-08-16T04:34:24.015Z",
     "verifiedAt": null
    }
   },
@@ -2163,7 +2163,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-18",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.921Z",
+    "collectedAt": "2026-08-16T04:34:24.015Z",
     "verifiedAt": null
    }
   },
@@ -2186,7 +2186,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-18",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.921Z",
+    "collectedAt": "2026-08-16T04:34:24.015Z",
     "verifiedAt": null
    }
   },
@@ -2209,7 +2209,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-18",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.921Z",
+    "collectedAt": "2026-08-16T04:34:24.015Z",
     "verifiedAt": null
    }
   },
@@ -2232,7 +2232,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-18",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.921Z",
+    "collectedAt": "2026-08-16T04:34:24.015Z",
     "verifiedAt": null
    }
   },
@@ -2255,7 +2255,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-18",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.921Z",
+    "collectedAt": "2026-08-16T04:34:24.015Z",
     "verifiedAt": null
    }
   },
@@ -2278,7 +2278,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-18",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.921Z",
+    "collectedAt": "2026-08-16T04:34:24.015Z",
     "verifiedAt": null
    }
   },
@@ -2301,7 +2301,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-18",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.921Z",
+    "collectedAt": "2026-08-16T04:34:24.015Z",
     "verifiedAt": null
    }
   },
@@ -2324,7 +2324,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-18",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.921Z",
+    "collectedAt": "2026-08-16T04:34:24.015Z",
     "verifiedAt": null
    }
   },
@@ -2347,7 +2347,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-18",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.921Z",
+    "collectedAt": "2026-08-16T04:34:24.015Z",
     "verifiedAt": null
    }
   },
@@ -2370,7 +2370,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-18",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.921Z",
+    "collectedAt": "2026-08-16T04:34:24.015Z",
     "verifiedAt": null
    }
   },
@@ -2393,7 +2393,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-18",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-16T02:50:49.614Z",
+    "collectedAt": "2026-08-16T04:34:25.642Z",
     "verifiedAt": null
    }
   },
@@ -2416,7 +2416,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-18",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-16T02:50:49.614Z",
+    "collectedAt": "2026-08-16T04:34:25.642Z",
     "verifiedAt": null
    }
   },
@@ -2439,7 +2439,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-18",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-16T02:50:49.614Z",
+    "collectedAt": "2026-08-16T04:34:25.642Z",
     "verifiedAt": null
    }
   },
@@ -2462,7 +2462,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-18",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-16T02:50:49.614Z",
+    "collectedAt": "2026-08-16T04:34:25.642Z",
     "verifiedAt": null
    }
   },
@@ -2485,7 +2485,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-18",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-16T02:50:49.614Z",
+    "collectedAt": "2026-08-16T04:34:25.642Z",
     "verifiedAt": null
    }
   },
@@ -2508,7 +2508,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-18",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-16T02:50:49.614Z",
+    "collectedAt": "2026-08-16T04:34:25.642Z",
     "verifiedAt": null
    }
   },
@@ -2531,7 +2531,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-18",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-16T02:50:49.614Z",
+    "collectedAt": "2026-08-16T04:34:25.642Z",
     "verifiedAt": null
    }
   },
@@ -2554,7 +2554,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=493",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.594Z",
+    "collectedAt": "2026-08-16T04:34:23.672Z",
     "verifiedAt": null
    }
   },
@@ -2577,7 +2577,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=496",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.594Z",
+    "collectedAt": "2026-08-16T04:34:23.672Z",
     "verifiedAt": null
    }
   },
@@ -2600,7 +2600,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=492",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.594Z",
+    "collectedAt": "2026-08-16T04:34:23.672Z",
     "verifiedAt": null
    }
   },
@@ -2623,7 +2623,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=485",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.594Z",
+    "collectedAt": "2026-08-16T04:34:23.672Z",
     "verifiedAt": null
    }
   },
@@ -2646,7 +2646,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=489",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.594Z",
+    "collectedAt": "2026-08-16T04:34:23.672Z",
     "verifiedAt": null
    }
   },
@@ -2669,7 +2669,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=484",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.594Z",
+    "collectedAt": "2026-08-16T04:34:23.672Z",
     "verifiedAt": null
    }
   },
@@ -2692,7 +2692,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=483",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.594Z",
+    "collectedAt": "2026-08-16T04:34:23.672Z",
     "verifiedAt": null
    }
   },
@@ -2715,7 +2715,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=481",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.594Z",
+    "collectedAt": "2026-08-16T04:34:23.672Z",
     "verifiedAt": null
    }
   },
@@ -2738,7 +2738,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=480",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.594Z",
+    "collectedAt": "2026-08-16T04:34:23.672Z",
     "verifiedAt": null
    }
   },
@@ -2761,7 +2761,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=169",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:48.087Z",
+    "collectedAt": "2026-08-16T04:34:24.138Z",
     "verifiedAt": null
    }
   },
@@ -2784,7 +2784,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=168",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:48.087Z",
+    "collectedAt": "2026-08-16T04:34:24.138Z",
     "verifiedAt": null
    }
   },
@@ -2807,7 +2807,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=167",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:48.087Z",
+    "collectedAt": "2026-08-16T04:34:24.138Z",
     "verifiedAt": null
    }
   },
@@ -2830,7 +2830,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=166",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:48.087Z",
+    "collectedAt": "2026-08-16T04:34:24.138Z",
     "verifiedAt": null
    }
   },
@@ -2853,7 +2853,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=175",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:48.087Z",
+    "collectedAt": "2026-08-16T04:34:24.138Z",
     "verifiedAt": null
    }
   },
@@ -2876,7 +2876,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=165",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:48.087Z",
+    "collectedAt": "2026-08-16T04:34:24.138Z",
     "verifiedAt": null
    }
   },
@@ -2899,7 +2899,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=174",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:48.087Z",
+    "collectedAt": "2026-08-16T04:34:24.138Z",
     "verifiedAt": null
    }
   },
@@ -2922,7 +2922,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=163",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:48.087Z",
+    "collectedAt": "2026-08-16T04:34:24.138Z",
     "verifiedAt": null
    }
   },
@@ -2945,7 +2945,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=162",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:48.087Z",
+    "collectedAt": "2026-08-16T04:34:24.138Z",
     "verifiedAt": null
    }
   },
@@ -2968,7 +2968,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=156",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:48.087Z",
+    "collectedAt": "2026-08-16T04:34:24.138Z",
     "verifiedAt": null
    }
   },
@@ -2991,7 +2991,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=155",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:48.087Z",
+    "collectedAt": "2026-08-16T04:34:24.138Z",
     "verifiedAt": null
    }
   },
@@ -3014,7 +3014,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=159",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:48.087Z",
+    "collectedAt": "2026-08-16T04:34:24.138Z",
     "verifiedAt": null
    }
   },
@@ -3037,7 +3037,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=154",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:48.087Z",
+    "collectedAt": "2026-08-16T04:34:24.138Z",
     "verifiedAt": null
    }
   },
@@ -3060,7 +3060,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3371",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-16T02:50:48.519Z",
+    "collectedAt": "2026-08-16T04:34:24.581Z",
     "verifiedAt": null
    }
   },
@@ -3083,7 +3083,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3370",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-16T02:50:48.519Z",
+    "collectedAt": "2026-08-16T04:34:24.581Z",
     "verifiedAt": null
    }
   },
@@ -3106,7 +3106,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3368",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-16T02:50:48.519Z",
+    "collectedAt": "2026-08-16T04:34:24.581Z",
     "verifiedAt": null
    }
   },
@@ -3129,7 +3129,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3367",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-16T02:50:48.519Z",
+    "collectedAt": "2026-08-16T04:34:24.581Z",
     "verifiedAt": null
    }
   },
@@ -3152,7 +3152,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3364",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-16T02:50:48.519Z",
+    "collectedAt": "2026-08-16T04:34:24.581Z",
     "verifiedAt": null
    }
   },
@@ -3175,7 +3175,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3363",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-16T02:50:48.519Z",
+    "collectedAt": "2026-08-16T04:34:24.581Z",
     "verifiedAt": null
    }
   },
@@ -3198,7 +3198,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3361",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-16T02:50:48.519Z",
+    "collectedAt": "2026-08-16T04:34:24.581Z",
     "verifiedAt": null
    }
   },
@@ -3221,7 +3221,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=705",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-16T02:50:48.985Z",
+    "collectedAt": "2026-08-16T04:34:25.067Z",
     "verifiedAt": null
    }
   },
@@ -3244,7 +3244,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=707",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-16T02:50:48.985Z",
+    "collectedAt": "2026-08-16T04:34:25.067Z",
     "verifiedAt": null
    }
   },
@@ -3267,7 +3267,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=706",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-16T02:50:48.985Z",
+    "collectedAt": "2026-08-16T04:34:25.067Z",
     "verifiedAt": null
    }
   },
@@ -3290,7 +3290,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=695",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-16T02:50:48.985Z",
+    "collectedAt": "2026-08-16T04:34:25.067Z",
     "verifiedAt": null
    }
   },
@@ -3313,7 +3313,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=696",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-16T02:50:48.985Z",
+    "collectedAt": "2026-08-16T04:34:25.067Z",
     "verifiedAt": null
    }
   },
@@ -3336,7 +3336,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.302Z",
+    "collectedAt": "2026-08-16T04:34:23.331Z",
     "verifiedAt": null
    }
   },
@@ -3359,7 +3359,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.302Z",
+    "collectedAt": "2026-08-16T04:34:23.331Z",
     "verifiedAt": null
    }
   },
@@ -3382,7 +3382,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.302Z",
+    "collectedAt": "2026-08-16T04:34:23.331Z",
     "verifiedAt": null
    }
   },
@@ -3405,7 +3405,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.302Z",
+    "collectedAt": "2026-08-16T04:34:23.331Z",
     "verifiedAt": null
    }
   },
@@ -3428,7 +3428,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.302Z",
+    "collectedAt": "2026-08-16T04:34:23.331Z",
     "verifiedAt": null
    }
   },
@@ -3451,7 +3451,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.361Z",
+    "collectedAt": "2026-08-16T04:34:23.387Z",
     "verifiedAt": null
    }
   },
@@ -3474,7 +3474,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.361Z",
+    "collectedAt": "2026-08-16T04:34:23.387Z",
     "verifiedAt": null
    }
   },
@@ -3497,7 +3497,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.361Z",
+    "collectedAt": "2026-08-16T04:34:23.387Z",
     "verifiedAt": null
    }
   },
@@ -3520,7 +3520,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.361Z",
+    "collectedAt": "2026-08-16T04:34:23.387Z",
     "verifiedAt": null
    }
   },
@@ -3543,7 +3543,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.361Z",
+    "collectedAt": "2026-08-16T04:34:23.387Z",
     "verifiedAt": null
    }
   },
@@ -3566,7 +3566,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.413Z",
+    "collectedAt": "2026-08-16T04:34:23.440Z",
     "verifiedAt": null
    }
   },
@@ -3589,7 +3589,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.413Z",
+    "collectedAt": "2026-08-16T04:34:23.440Z",
     "verifiedAt": null
    }
   },
@@ -3612,7 +3612,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.413Z",
+    "collectedAt": "2026-08-16T04:34:23.440Z",
     "verifiedAt": null
    }
   },
@@ -3635,7 +3635,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.413Z",
+    "collectedAt": "2026-08-16T04:34:23.440Z",
     "verifiedAt": null
    }
   },
@@ -3658,7 +3658,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.465Z",
+    "collectedAt": "2026-08-16T04:34:23.493Z",
     "verifiedAt": null
    }
   },
@@ -3681,7 +3681,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.465Z",
+    "collectedAt": "2026-08-16T04:34:23.493Z",
     "verifiedAt": null
    }
   },
@@ -3704,7 +3704,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.465Z",
+    "collectedAt": "2026-08-16T04:34:23.493Z",
     "verifiedAt": null
    }
   },
@@ -3727,7 +3727,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.465Z",
+    "collectedAt": "2026-08-16T04:34:23.493Z",
     "verifiedAt": null
    }
   },
@@ -3750,7 +3750,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.465Z",
+    "collectedAt": "2026-08-16T04:34:23.493Z",
     "verifiedAt": null
    }
   },
@@ -3773,7 +3773,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.507Z",
+    "collectedAt": "2026-08-16T04:34:23.546Z",
     "verifiedAt": null
    }
   },
@@ -3796,7 +3796,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.507Z",
+    "collectedAt": "2026-08-16T04:34:23.546Z",
     "verifiedAt": null
    }
   },
@@ -3819,7 +3819,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.507Z",
+    "collectedAt": "2026-08-16T04:34:23.546Z",
     "verifiedAt": null
    }
   },
@@ -3842,7 +3842,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.507Z",
+    "collectedAt": "2026-08-16T04:34:23.546Z",
     "verifiedAt": null
    }
   },
@@ -3865,7 +3865,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-16T02:50:47.507Z",
+    "collectedAt": "2026-08-16T04:34:23.546Z",
     "verifiedAt": null
    }
   },
@@ -3888,7 +3888,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.560Z",
+    "collectedAt": "2026-08-16T04:34:23.617Z",
     "verifiedAt": null
    }
   },
@@ -3911,7 +3911,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.560Z",
+    "collectedAt": "2026-08-16T04:34:23.617Z",
     "verifiedAt": null
    }
   },
@@ -3934,7 +3934,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.560Z",
+    "collectedAt": "2026-08-16T04:34:23.617Z",
     "verifiedAt": null
    }
   },
@@ -3957,7 +3957,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.560Z",
+    "collectedAt": "2026-08-16T04:34:23.617Z",
     "verifiedAt": null
    }
   },
@@ -3980,7 +3980,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.560Z",
+    "collectedAt": "2026-08-16T04:34:23.617Z",
     "verifiedAt": null
    }
   },
@@ -4003,7 +4003,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-16T02:50:47.560Z",
+    "collectedAt": "2026-08-16T04:34:23.617Z",
     "verifiedAt": null
    }
   },
@@ -4026,7 +4026,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2225",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.699Z",
+    "collectedAt": "2026-08-16T04:34:24.075Z",
     "verifiedAt": null
    }
   },
@@ -4049,7 +4049,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2227",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.699Z",
+    "collectedAt": "2026-08-16T04:34:24.075Z",
     "verifiedAt": null
    }
   },
@@ -4072,7 +4072,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2228",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.699Z",
+    "collectedAt": "2026-08-16T04:34:24.075Z",
     "verifiedAt": null
    }
   },
@@ -4095,7 +4095,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2234",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.699Z",
+    "collectedAt": "2026-08-16T04:34:24.075Z",
     "verifiedAt": null
    }
   },
@@ -4118,7 +4118,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2235",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.699Z",
+    "collectedAt": "2026-08-16T04:34:24.075Z",
     "verifiedAt": null
    }
   },
@@ -4141,7 +4141,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2229",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.699Z",
+    "collectedAt": "2026-08-16T04:34:24.075Z",
     "verifiedAt": null
    }
   },
@@ -4164,7 +4164,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2233",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.699Z",
+    "collectedAt": "2026-08-16T04:34:24.075Z",
     "verifiedAt": null
    }
   },
@@ -4187,7 +4187,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2239",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.699Z",
+    "collectedAt": "2026-08-16T04:34:24.075Z",
     "verifiedAt": null
    }
   },
@@ -4210,7 +4210,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2240",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.699Z",
+    "collectedAt": "2026-08-16T04:34:24.075Z",
     "verifiedAt": null
    }
   },
@@ -4233,7 +4233,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2236",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.699Z",
+    "collectedAt": "2026-08-16T04:34:24.075Z",
     "verifiedAt": null
    }
   },
@@ -4256,7 +4256,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2241",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.699Z",
+    "collectedAt": "2026-08-16T04:34:24.075Z",
     "verifiedAt": null
    }
   },
@@ -4279,7 +4279,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2242",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.699Z",
+    "collectedAt": "2026-08-16T04:34:24.075Z",
     "verifiedAt": null
    }
   },
@@ -4302,7 +4302,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2243",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.699Z",
+    "collectedAt": "2026-08-16T04:34:24.075Z",
     "verifiedAt": null
    }
   },
@@ -4325,7 +4325,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2244",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.699Z",
+    "collectedAt": "2026-08-16T04:34:24.075Z",
     "verifiedAt": null
    }
   },
@@ -4348,7 +4348,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2245",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.699Z",
+    "collectedAt": "2026-08-16T04:34:24.075Z",
     "verifiedAt": null
    }
   },
@@ -4371,7 +4371,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2246",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.699Z",
+    "collectedAt": "2026-08-16T04:34:24.075Z",
     "verifiedAt": null
    }
   },
@@ -4394,7 +4394,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2247",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.699Z",
+    "collectedAt": "2026-08-16T04:34:24.075Z",
     "verifiedAt": null
    }
   },
@@ -4417,7 +4417,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2248",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.699Z",
+    "collectedAt": "2026-08-16T04:34:24.075Z",
     "verifiedAt": null
    }
   },
@@ -4440,7 +4440,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2249",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.699Z",
+    "collectedAt": "2026-08-16T04:34:24.075Z",
     "verifiedAt": null
    }
   },
@@ -4463,7 +4463,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2250",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.699Z",
+    "collectedAt": "2026-08-16T04:34:24.075Z",
     "verifiedAt": null
    }
   },
@@ -4486,7 +4486,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.505Z",
+    "collectedAt": "2026-08-16T04:34:23.594Z",
     "verifiedAt": null
    }
   },
@@ -4510,7 +4510,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.505Z",
+    "collectedAt": "2026-08-16T04:34:23.594Z",
     "verifiedAt": null
    }
   },
@@ -4534,7 +4534,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.505Z",
+    "collectedAt": "2026-08-16T04:34:23.594Z",
     "verifiedAt": null
    }
   },
@@ -4558,7 +4558,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.505Z",
+    "collectedAt": "2026-08-16T04:34:23.594Z",
     "verifiedAt": null
    }
   },
@@ -4582,7 +4582,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.505Z",
+    "collectedAt": "2026-08-16T04:34:23.594Z",
     "verifiedAt": null
    }
   },
@@ -4606,7 +4606,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.505Z",
+    "collectedAt": "2026-08-16T04:34:23.594Z",
     "verifiedAt": null
    }
   },
@@ -4630,7 +4630,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.505Z",
+    "collectedAt": "2026-08-16T04:34:23.594Z",
     "verifiedAt": null
    }
   },
@@ -4654,7 +4654,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.505Z",
+    "collectedAt": "2026-08-16T04:34:23.594Z",
     "verifiedAt": null
    }
   },
@@ -4678,7 +4678,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.505Z",
+    "collectedAt": "2026-08-16T04:34:23.594Z",
     "verifiedAt": null
    }
   },
@@ -4702,7 +4702,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.505Z",
+    "collectedAt": "2026-08-16T04:34:23.594Z",
     "verifiedAt": null
    }
   },
@@ -4726,7 +4726,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.505Z",
+    "collectedAt": "2026-08-16T04:34:23.594Z",
     "verifiedAt": null
    }
   },
@@ -4750,7 +4750,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.505Z",
+    "collectedAt": "2026-08-16T04:34:23.594Z",
     "verifiedAt": null
    }
   },
@@ -4774,7 +4774,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.505Z",
+    "collectedAt": "2026-08-16T04:34:23.594Z",
     "verifiedAt": null
    }
   },
@@ -4798,7 +4798,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.505Z",
+    "collectedAt": "2026-08-16T04:34:23.594Z",
     "verifiedAt": null
    }
   },
@@ -4822,7 +4822,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-16T02:50:47.505Z",
+    "collectedAt": "2026-08-16T04:34:23.594Z",
     "verifiedAt": null
    }
   },
@@ -4845,7 +4845,7 @@
    "provenance": {
     "sourceUrl": "https://www.mhrd.org/administration/board-of-education/boe-meetings",
     "sourceOrg": "Morris Hills Regional District Board of Education",
-    "collectedAt": "2026-08-16T02:50:47.370Z",
+    "collectedAt": "2026-08-16T04:34:25.645Z",
     "verifiedAt": null
    }
   },
@@ -4868,7 +4868,7 @@
    "provenance": {
     "sourceUrl": "https://www.mhrd.org/administration/board-of-education/boe-meetings",
     "sourceOrg": "Morris Hills Regional District Board of Education",
-    "collectedAt": "2026-08-16T02:50:47.370Z",
+    "collectedAt": "2026-08-16T04:34:25.645Z",
     "verifiedAt": null
    }
   },
@@ -4891,7 +4891,7 @@
    "provenance": {
     "sourceUrl": "https://www.mhrd.org/administration/board-of-education/boe-meetings",
     "sourceOrg": "Morris Hills Regional District Board of Education",
-    "collectedAt": "2026-08-16T02:50:47.370Z",
+    "collectedAt": "2026-08-16T04:34:25.645Z",
     "verifiedAt": null
    }
   },
@@ -4914,7 +4914,7 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-16T02:50:48.216Z",
+    "collectedAt": "2026-08-16T04:34:26.612Z",
     "verifiedAt": null
    }
   },
@@ -4937,7 +4937,7 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-16T02:50:48.216Z",
+    "collectedAt": "2026-08-16T04:34:26.612Z",
     "verifiedAt": null
    }
   },
@@ -4960,7 +4960,7 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-16T02:50:48.216Z",
+    "collectedAt": "2026-08-16T04:34:26.612Z",
     "verifiedAt": null
    }
   },
@@ -4983,7 +4983,7 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-16T02:50:48.216Z",
+    "collectedAt": "2026-08-16T04:34:26.612Z",
     "verifiedAt": null
    }
   },
@@ -5006,7 +5006,7 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-16T02:50:48.216Z",
+    "collectedAt": "2026-08-16T04:34:26.612Z",
     "verifiedAt": null
    }
   },
@@ -5029,7 +5029,7 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-16T02:50:48.216Z",
+    "collectedAt": "2026-08-16T04:34:26.612Z",
     "verifiedAt": null
    }
   },
@@ -5052,7 +5052,7 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-16T02:50:48.216Z",
+    "collectedAt": "2026-08-16T04:34:26.612Z",
     "verifiedAt": null
    }
   },
@@ -5075,7 +5075,7 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-16T02:50:48.216Z",
+    "collectedAt": "2026-08-16T04:34:26.612Z",
     "verifiedAt": null
    }
   },
@@ -5098,7 +5098,7 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-16T02:50:48.216Z",
+    "collectedAt": "2026-08-16T04:34:26.612Z",
     "verifiedAt": null
    }
   },
@@ -5121,7 +5121,7 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-16T02:50:48.216Z",
+    "collectedAt": "2026-08-16T04:34:26.612Z",
     "verifiedAt": null
    }
   },
@@ -5144,7 +5144,7 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-16T02:50:48.216Z",
+    "collectedAt": "2026-08-16T04:34:26.612Z",
     "verifiedAt": null
    }
   },
@@ -5167,7 +5167,7 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-16T02:50:48.216Z",
+    "collectedAt": "2026-08-16T04:34:26.612Z",
     "verifiedAt": null
    }
   },
@@ -5190,7 +5190,7 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-16T02:50:48.216Z",
+    "collectedAt": "2026-08-16T04:34:26.612Z",
     "verifiedAt": null
    }
   },
@@ -5213,7 +5213,7 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-16T02:50:48.216Z",
+    "collectedAt": "2026-08-16T04:34:26.612Z",
     "verifiedAt": null
    }
   },
@@ -5236,7 +5236,7 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-16T02:50:48.216Z",
+    "collectedAt": "2026-08-16T04:34:26.612Z",
     "verifiedAt": null
    }
   },
@@ -5259,7 +5259,7 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/planning-board",
     "sourceOrg": "Newbury Planning Board",
-    "collectedAt": "2026-08-16T02:50:48.788Z",
+    "collectedAt": "2026-08-16T04:34:27.170Z",
     "verifiedAt": null
    }
   },
@@ -5282,7 +5282,7 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/planning-board",
     "sourceOrg": "Newbury Planning Board",
-    "collectedAt": "2026-08-16T02:50:48.788Z",
+    "collectedAt": "2026-08-16T04:34:27.170Z",
     "verifiedAt": null
    }
   },
@@ -5305,7 +5305,7 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/planning-board",
     "sourceOrg": "Newbury Planning Board",
-    "collectedAt": "2026-08-16T02:50:48.788Z",
+    "collectedAt": "2026-08-16T04:34:27.170Z",
     "verifiedAt": null
    }
   },
@@ -5328,7 +5328,7 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/planning-board",
     "sourceOrg": "Newbury Planning Board",
-    "collectedAt": "2026-08-16T02:50:48.788Z",
+    "collectedAt": "2026-08-16T04:34:27.170Z",
     "verifiedAt": null
    }
   },
@@ -5351,7 +5351,7 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/conservation-commission",
     "sourceOrg": "Newbury Conservation Commission",
-    "collectedAt": "2026-08-16T02:50:49.119Z",
+    "collectedAt": "2026-08-16T04:34:27.529Z",
     "verifiedAt": null
    }
   },
@@ -5374,7 +5374,7 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/conservation-commission",
     "sourceOrg": "Newbury Conservation Commission",
-    "collectedAt": "2026-08-16T02:50:49.119Z",
+    "collectedAt": "2026-08-16T04:34:27.529Z",
     "verifiedAt": null
    }
   },
@@ -5397,7 +5397,7 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/conservation-commission",
     "sourceOrg": "Newbury Conservation Commission",
-    "collectedAt": "2026-08-16T02:50:49.119Z",
+    "collectedAt": "2026-08-16T04:34:27.529Z",
     "verifiedAt": null
    }
   },
@@ -5420,7 +5420,30 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/conservation-commission",
     "sourceOrg": "Newbury Conservation Commission",
-    "collectedAt": "2026-08-16T02:50:49.119Z",
+    "collectedAt": "2026-08-16T04:34:27.529Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "schedulepage:newbury-zoning-board-of-adjustment:2026-08-13",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "bodyName": "Zoning Board of Adjustment",
+   "title": "Zoning Board of Adjustment",
+   "startsAt": "2026-08-13T19:00:00-04:00",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Newbury Offices",
+    "address": "937 Route 103, Newbury, NH 03255",
+    "lat": 43.321682,
+    "lng": -72.03705
+   },
+   "agendaUrl": "https://www.newbury.nh.gov/zoning-board-adjustment/agenda/agenda-7",
+   "jurisdiction": "Newbury, NH",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://www.newbury.nh.gov/zoning-board-adjustment",
+    "sourceOrg": "Newbury Zoning Board of Adjustment",
+    "collectedAt": "2026-08-16T04:34:28.069Z",
     "verifiedAt": null
    }
   }
@@ -6643,6 +6666,86 @@
    "extractionNote": null
   },
   {
+   "id": "diligent:tusd1:489@3fe1550f4b8c4dbe795cd9e2545c7756e4b007526ddc612e4c654634c9370646",
+   "meetingId": "diligent:tusd1:489",
+   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+   "documentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=489",
+   "contentHash": "3fe1550f4b8c4dbe795cd9e2545c7756e4b007526ddc612e4c654634c9370646",
+   "retrievedAt": "2026-08-16T04:34:29.443Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=489",
+   "sourceOrg": "Tucson Unified School District Governing Board",
+   "collectedAt": "2026-08-16T04:34:29.443Z",
+   "verifiedAt": null,
+   "text": "Tucson Unified School District - Meeting Information Skip Navigation Jump to SideBar Quick Menu Public site Sign in History, Tradition, Culture, and YOU! Your Javascript is turned off, without it, this site will not operate as intended. Home » Meeting Schedule » Meeting Information Welcome to Tucson Unified School District Home Calendar Meetings Search Share AGENDA FOR AUDIT COMMITTEE MEETING Members Jul 15 2026 AGENDA FOR AUDIT COMMITTEE MEETING Apr 15 2026 AGENDA FOR AUDIT COMMITTEE MEETING Mar 27 2026 AGENDA FOR AUDIT COMMITTEE MEETING Feb 13 2026 AGENDA FOR AUDIT COMMITTEE SPECIAL MEETING Feb 06 2026 AGENDA FOR AUDIT COMMITTEE SPECIAL MEETING Jan 21 2026 AUDIT COMMITTEE MEETING Oct 15 2025 AGENDA FOR AUDIT COMMITTEE MEETING Aug 01 2025 AGENDA FOR AUDIT COMMITTEE SPECIAL MEETING Jul 23 2025 AGENDA FOR AUDIT COMMITTEE MEETING SPECIAL EXECUTIVE SESSION MEETING Jul 16 2025 AGENDA FOR AUDIT COMMITTEE MEETING Jun 18 2025 AGENDA FOR AUDIT COMMITTEE MEETING Apr 16 2025 AGENDA FOR AUDIT COMMITTEE MEETING Mar 19 2025 AGENDA FOR AUDIT COMMITTEE MEETING Feb 19 2025 AGENDA FOR AUDIT COMMITTEE MEETING Jan 15 2025 AGENDA FOR AUDIT COMMITTEE MEETING Dec 18 2024 AGENDA FOR AUDIT COMMITTEE MEETING Nov 20 2024 AGENDA FOR AUDIT COMMITTEE MEETING Oct 16 2024 AGENDA FOR AUDIT COMMITTEE MEETING Sep 25 2024 AGENDA FOR AUDIT COMMITTEE MEETING Aug 28 2024 AGENDA FOR AUDIT COMMITTEE MEETING Jun 19 2024 AGENDA FOR AUDIT COMMITTEE MEETING May 15 2024 AGENDA FOR AUDIT COMMITTEE MEETING Apr 17 2024 AGENDA FOR AUDIT COMMITTEE MEETING Mar 20 2024 AGENDA FOR AUDIT COMMITTEE MEETING Feb 16 2024 AGENDA FOR AUDIT COMMITTEE MEETING Nov 17 2023 AGENDA FOR AUDIT COMMITTEE MEETING Aug 18 2023 AUDIT COMMITTEE MEETING Jun 23 2023 AGENDA FOR AUDIT COMMITTEE MEETING May 19 2023 AGENDA FOR AUDIT COMMITTEE MEETING Feb 17 2023 AGENDA FOR AUDIT COMMITTEE MEETING Nov 18 2022 CANCELLED - AGENDA FOR AUDIT COMMITTEE MEETING Aug 19 2022 AGENDA FOR AUDIT COMMITTEE MEETING May 20 2022 AGENDA FOR AUDIT COMMITTEE MEETING Apr 29 2022 CANCELLED - AGENDA FOR AUDIT COMMITTEE MEETING Feb 17 2022 CANCELLED - AGENDA FOR AUDIT COMMITTEE MEETING Jan 21 2022 CANCELLED - AGENDA FOR AUDIT COMMITTEE MEETING Oct 22 2021 AGENDA FOR AUDIT COMMITTEE MEETING Jul 01 2021 AGENDA FOR AUDIT COMMITTEE MEETING Jun 24 2021 AGENDA FOR AUDIT COMMITTEE MEETING Mar 26 2021 AGENDA FOR AUDIT COMMITTEE MEETING Feb 19 2021 AGENDA FOR AUDIT COMMITTEE MEETING Jan 29 2021 AGENDA FOR AUDIT COMMITTEE MEETING Dec 11 2020 AGENDA FOR AUDIT COMMITTEE MEETING Nov 20 2020 AGENDA FOR AUDIT COMMITTEE MEETING Oct 23 2020 AGENDA FOR AUDIT COMMITTEE MEETING Sep 25 2020 AGENDA FOR AUDIT COMMITTEE MEETING Aug 28 2020 AGENDA FOR AUDIT COMMITTEE MEETING Jun 26 2020 AGENDA FOR AUDIT COMMITTEE MEETING May 15 2020 AGENDA FOR AUDIT COMMITTEE MEETING May 01 2020 AGENDA FOR AUDIT COMMITTEE MEETING Apr 24 2020 AGENDA FOR AUDIT COMMITTEE MEETING Feb 28 2020 AGENDA FOR AUDIT COMMITTEE MEETING Jan 24 2020 AGENDA FOR AUDIT COMMITTEE MEETING Dec 13 2019 AGENDA FOR AUDIT COMMITTEE MEETING Nov 22 2019 AGENDA FOR AUDIT COMMITTEE MEETING Nov 04 2019 AGENDA FOR AUDIT COMMITTEE MEETING Oct 18 2019 AGENDA FOR AUDIT COMMITTEE MEETING Sep 27 2019 AGENDA FOR AUDIT COMMITTEE MEETING Aug 23 2019 AGENDA FOR AUDIT COMMITTEE MEETING Jun 28 2019 AGENDA FOR AUDIT COMMITTEE MEETING May 17 2019 AGENDA FOR AUDIT COMMITTEE MEETING Apr 26 2019 AGENDA FOR AUDIT COMMITTEE MEETING Time: Location: Private Version For: Public User Agenda Splitscreen Live Meeting Minutes Print Version Versions Signed Minutes Accessible Web Version Annotate Agenda Show Map Hide Map Board Application: -Select- Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals Members Nicole DaSilva Tabitha Fox Kevin Oberg Derika Louk John Wallace © Diligent Community 2026 Tucson Unified School District User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "diligent:tusd1:484@f24cd35563f5a9cf8f4fa10622bdcf4ed80cda92e76cbd95c7aabfadb52567f8",
+   "meetingId": "diligent:tusd1:484",
+   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+   "documentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=484",
+   "contentHash": "f24cd35563f5a9cf8f4fa10622bdcf4ed80cda92e76cbd95c7aabfadb52567f8",
+   "retrievedAt": "2026-08-16T04:34:29.889Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=484",
+   "sourceOrg": "Tucson Unified School District Governing Board",
+   "collectedAt": "2026-08-16T04:34:29.889Z",
+   "verifiedAt": null,
+   "text": "Tucson Unified School District - Meeting Information Skip Navigation Jump to SideBar Quick Menu Public site Sign in History, Tradition, Culture, and YOU! Your Javascript is turned off, without it, this site will not operate as intended. Home » Meeting Schedule » Meeting Information Welcome to Tucson Unified School District Home Calendar Meetings Search Share GOVERNING BOARD AGENDA REGULAR MEETING THE MEETING WILL BEGIN AT 4:30 P.M. TO VOTE TO GO INTO EXECUTIVE SESSION AND RECONVENE IN OPEN SESSION AT 5:30 P.M. PUBLIC ACCESS FOR EACH MEETING WILL BEGIN 15 MINUTES PRIOR TO THE VOTE TO GO INTO EXECUTIVE SESSION. -One or more Governing Board members will/may participate by telephonic or video communications. -Names and details, including available support documents, may be obtained during regular business hours at the TUSD Governing Board Office. -Upon request, TUSD will provide a certified interpreter to interpret Governing Board meetings whenever possible. Please contact Translations/Interpretations Services at 520-225-4858 at least 72 hours prior to the event. Every effort will be made to honor requests for interpretation services made with less than 72 hours notice. -A petición previa, TUSD proporcionará un intérprete titulado para interpretar las reuniones de la Mesa Directiva cuando lo sea posible. Favor de comunicarse a los Servicios de Traducción e Interpretación al 520-225-4858 al menos de 72 horas antes del evento. Se hará todo lo posible por atender a todas las solicitudes de interpretación realizados con menos de 72 horas de aviso previo. -If authorized by a majority vote of the members of the Governing Board, any matter on the open meeting agenda may be discussed in executive session for the purpose of obtaining legal advice thereon, pursuant to A.R.S. 38-431.03 (A)(3). The executive session will be held immediately after the vote and will not be open to the public. -The order of items on this agenda may be modified during the meeting at the discretion of the Board President or upon a motion to amend the order of business which is approved by the Board. Governing Board Members Aug 11 2026 GOVERNING BOARD AGENDA REGULAR MEETING Jul 14 2026 GOVERNING BOARD AGENDA REGULAR MEETING Jun 09 2026 GOVERNING BOARD AGENDA REGULAR MEETING May 12 2026 GOVERNING BOARD AGENDA REGULAR MEETING Apr 14 2026 GOVERNING BOARD AGENDA REGULAR MEETING Mar 10 2026 GOVERNING BOARD AGENDA REGULAR MEETING Feb 10 2026 GOVERNING BOARD AGENDA REGULAR MEETING Dec 09 2025 AGENDA FOR REGULAR BOARD MEETING Jul 22 2025 AGENDA FOR SPECIAL BOARD MEETING Jul 21 2025 AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Jul 15 2025 AGENDA FOR REGULAR BOARD MEETING Jun 17 2025 AGENDA FOR SPECIAL BOARD MEETING Jun 10 2025 AGENDA FOR REGULAR BOARD MEETING May 27 2025 AGENDA FOR SPECIAL BOARD MEETING May 13 2025 AGENDA FOR REGULAR BOARD MEETING Apr 29 2025 AGENDA FOR SPECIAL BOARD MEETING Apr 15 2025 AGENDA FOR REGULAR BOARD MEETING Mar 25 2025 AGENDA FOR SPECIAL BOARD MEETING Mar 04 2025 AGENDA FOR REGULAR BOARD MEETING Feb 25 2025 AGENDA FOR SPECIAL BOARD MEETING Feb 11 2025 AGENDA FOR REGULAR BOARD MEETING Jan 28 2025 AGENDA FOR SPECIAL BOARD MEETING Jan 21 2025 AGENDA FOR ORGANIZATIONAL AND REGULAR BOARD MEETING Jan 14 2025 MEETING POSTPONED DUE TO WATERLINE BREAK - RESCHEDULED TO JANUARY 21, 2025 (LOCATION TO FOLLOW PENDING STATUS OF REPAIRS) - AGENDA FOR ORGANIZATIONAL AND REGULAR BOARD MEETING Dec 10 2024 AGENDA FOR REGULAR BOARD MEETING Nov 19 2024 AGENDA FOR REGULAR BOARD MEETING Oct 29 2024 AGENDA FOR SPECIAL BOARD MEETING Oct 15 2024 AGENDA FOR REGULAR BOARD MEETING Sep 24 2024 AGENDA FOR SPECIAL BOARD MEETING Sep 10 2024 AGENDA FOR REGULAR BOARD MEETING Aug 27 2024 AGENDA FOR SPECIAL BOARD MEETING Aug 13 2024 AGENDA FOR REGULAR BOARD MEETING Jul 30 2024 AGENDA FOR SPECIAL BOARD MEETING Jul 23 2024 AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Jul 15 2024 AGENDA FOR REGULAR BOARD MEETING Jul 09 2024 AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Jun 11 2024 AGENDA FOR SPECIAL BOARD MEETING Jun 04 2024 AGENDA FOR REGULAR BOARD MEETING May 21 2024 AGENDA FOR SPECIAL BOARD MEETING May 14 2024 AGENDA FOR REGULAR BOARD MEETING Apr 23 2024 AGENDA FOR SPECIAL BOARD MEETING Apr 09 2024 AGENDA FOR REGULAR BOARD MEETING Apr 02 2024 AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Mar 26 2024 AGENDA FOR SPECIAL BOARD MEETING Mar 05 2024 AGENDA FOR REGULAR BOARD MEETING Feb 27 2024 AGENDA FOR SPECIAL BOARD MEETING Feb 13 2024 AGENDA FOR REGULAR BOARD MEETING Jan 30 2024 AGENDA FOR SPECIAL BOARD MEETING Jan 23 2024 AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Jan 16 2024 AGENDA FOR REGULAR BOARD MEETING Dec 12 2023 AGENDA FOR REGULAR BOARD MEETING Nov 28 2023 AGENDA FOR SPECIAL BOARD MEETING Nov 14 2023 AGENDA FOR REGULAR BOARD MEETING Oct 24 2023 AGENDA FOR SPECIAL BOARD MEETING Oct 17 2023 AGENDA FOR REGULAR BOARD MEETING Sep 26 2023 AGENDA FOR SPECIAL BOARD MEETING Sep 12 2023 AGENDA FOR REGULAR BOARD MEETING Aug 29 2023 AGENDA FOR SPECIAL BOARD MEETING Aug 22 2023 AGENDA FOR SPECIAL BOARD MEETING Aug 08 2023 AGENDA FOR REGULAR BOARD MEETING Jul 25 2023 AGENDA FOR SPECIAL BOARD MEETING Jul 18 2023 AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Jul 11 2023 AGENDA FOR REGULAR BOARD MEETING Jun 13 2023 AGENDA FOR REGULAR BOARD MEETING Jun 06 2023 AGENDA FOR SPECIAL BOARD MEETING - STUDY SESSION May 23 2023 AGENDA FOR SPECIAL BOARD MEETING May 09 2023 AGENDA FOR REGULAR BOARD MEETING Apr 25 2023 AGENDA FOR SPECIAL BOARD MEETING Apr 11 2023 AGENDA FOR REGULAR BOARD MEETING Mar 28 2023 AGENDA FOR SPECIAL BOARD MEETING Mar 14 2023 AGENDA FOR REGULAR BOARD MEETING Feb 28 2023 AGENDA FOR SPECIAL BOARD MEETING Feb 16 2023 AGENDA FOR REGULAR BOARD MEETING Jan 31 2023 AGENDA FOR SPECIAL BOARD MEETING Jan 24 2023 AGENDA FOR REGULAR BOARD MEETING Jan 10 2023 AGENDA FOR SPECIAL BOARD MEETING (ORGANIZATIONAL MEETING) Dec 06 2022 AGENDA FOR REGULAR BOARD MEETING Nov 29 2022 AGENDA FOR SPECIAL BOARD MEETING Nov 15 2022 AGENDA FOR REGULAR BOARD MEETING Oct 25 2022 AGENDA FOR SPECIAL BOARD MEETING Oct 06 2022 AGENDA FOR REGULAR BOARD MEETING Sep 20 2022 AGENDA FOR SPECIAL BOARD MEETING Sep 13 2022 AGENDA FOR REGULAR BOARD MEETING Aug 25 2022 CANCELED - AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Aug 24 2022 AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Aug 23 2022 AGENDA FOR SPECIAL BOARD MEETING Aug 16 2022 AGENDA FOR SPECIAL BOARD MEETING Aug 09 2022 AGENDA FOR REGULAR BOARD MEETING Jul 26 2022 AGENDA FOR SPECIAL BOARD MEETING Jul 21 2022 AGENDA FOR EXECUTIVE SESSION BOARD MEETING Jul 12 2022 AGENDA FOR REGULAR BOARD MEETING Jun 23 2022 CANCELLED AGENDA FOR EXECUTIVE SESSION BOARD MEETING Jun 21 2022 AGENDA FOR SPECIAL BOARD MEETING Jun 14 2022 AGENDA FOR REGULAR BOARD MEETING May 24 2022 AGENDA FOR SPECIAL BOARD MEETING May 19 2022 AGENDA FOR EXECUTIVE SESSION BOARD MEETING May 10 2022 AGENDA FOR REGULAR BOARD MEETING Apr 26 2022 AGENDA FOR SPECIAL BOARD MEETING Apr 12 2022 AGENDA FOR REGULAR BOARD MEETING Mar 22 2022 AGENDA FOR SPECIAL BOARD MEETING Mar 08 2022 AGENDA FOR REGULAR BOARD MEETING Feb 22 2022 AGENDA FOR SPECIAL BOARD MEETING Feb 08 2022 AGENDA FOR REGULAR BOARD MEETING Jan 25 2022 AGENDA FOR SPECIAL BOARD MEETING Jan 11 2022 AGENDA FOR REGULAR BOARD MEETING Jan 04 2022 AGENDA FOR SPECIAL BOARD MEETING Dec 07 2021 AGENDA FOR REGULAR BOARD MEETING Nov 23 2021 CANCELLED - AGENDA FOR SPECIAL BOARD MEETING Nov 09 2021 AGENDA FOR REGULAR BOARD MEETING Oct 26 2021 AGENDA FOR SPECIAL BOARD MEETING Oct 05 2021 AGENDA FOR REGULAR BOARD MEETING Sep 23 2021 AGENDA FOR SPECIAL BOARD MEETING Sep 09 2021 AGENDA FOR REGULAR BOARD MEETING Aug 24 2021 AGENDA FOR SPECIAL BOARD MEETING Aug 10 2021 AGENDA FOR REGULAR BOARD MEETING Aug 04 2021 AGENDA FOR EMERGENCY BOARD MEETING Jul 22 2021 AGENDA FOR EXECUTIVE SESSION BOARD MEETING Jul 20 2021 AGENDA FOR SPECIAL BOARD MEETING Jul 13 2021 AGENDA FOR REGULAR BOARD MEETING Jun 22 2021 AGENDA FOR SPECIAL BOARD MEETING Jun 08 2021 AGENDA FOR REGULAR BOARD MEETING May 25 2021 AGENDA FOR SPECIAL BOARD MEETING May 11 2021 AGENDA FOR REGULAR BOARD MEETING Apr 27 2021 AGENDA FOR SPECIAL BOARD MEETING Apr 13 2021 AGENDA FOR REGULAR BOARD MEETING Apr 07 2021 AGENDA FOR SPECIAL BOARD MEETING Mar 30 2021 AGENDA FOR SPECIAL BOARD MEETING Mar 09 2021 AGENDA FOR REGULAR BOARD MEETING Mar 02 2021 AGENDA FOR EXECUTIVE SESSION BOARD MEETING Mar 01 2021 AGENDA FOR SPECIAL BOARD MEETING Feb 23 2021 AGENDA FOR SPECIAL BOARD MEETING Feb 09 2021 AGENDA FOR REGULAR BOARD MEETING Jan 26 2021 AGENDA FOR SPECIAL BOARD MEETING Jan 19 2021 AGENDA FOR SPECIAL BOARD MEETING Jan 12 2021 AGENDA FOR REGULAR BOARD MEETING Jan 05 2021 AGENDA FOR SPECIAL BOARD MEETING Dec 08 2020 AGENDA FOR REGULAR BOARD MEETING Nov 17 2020 AGENDA FOR REGULAR BOARD MEETING Oct 27 2020 AGENDA FOR SPECIAL BOARD MEETING Oct 06 2020 AGENDA FOR REGULAR BOARD MEETING Sep 22 2020 AGENDA FOR SPECIAL BOARD MEETING Sep 09 2020 AGENDA FOR REGULAR BOARD MEETING Aug 25 2020 AGENDA FOR SPECIAL BOARD MEETING Aug 11 2020 AGENDA FOR REGULAR BOARD MEETING Aug 10 2020 AGENDA FOR EXECUTIVE SESSION BOARD MEETING Jul 29 2020 AGENDA FOR EXECUTIVE SESSION BOARD MEETING Jul 28 2020 AGENDA FOR SPECIAL BOARD MEETING Jul 14 2020 AGENDA FOR REGULAR BOARD MEETING Jun 23 2020 AGENDA FOR SPECIAL BOARD MEETING Jun 16 2020 AGENDA FOR SPECIAL BOARD MEETING Jun 09 2020 AGENDA FOR REGULAR BOARD MEETING Jun 02 2020 AGENDA FOR SPECIAL BOARD MEETING May 27 2020 AGENDA FOR SPECIAL BOARD MEETING May 12 2020 AGENDA FOR REGULAR BOARD MEETING Apr 28 2020 AGENDA FOR SPECIAL BOARD MEETING Apr 07 2020 AGENDA FOR REGULAR BOARD MEETING Mar 27 2020 AGENDA FOR SPECIAL BOARD MEETING Mar 18 2020 AGENDA FOR SPECIAL BOARD MEETING Mar 10 2020 AGENDA FOR REGULAR BOARD MEETING Mar 03 2020 AGENDA FOR SPECIAL BOARD MEETING Feb 18 2020 AGENDA FOR SPECIAL BOARD MEETING Feb 11 2020 AGENDA FOR REGULAR BOARD MEETING Jan 28 2020 AGENDA FOR SPECIAL BOARD MEETING Jan 14 2020 AGENDA FOR REGULAR BOARD MEETING Jan 07 2020 AGENDA FOR SPECIAL BOARD MEETING Dec 10 2019 AGENDA FOR REGULAR BOARD MEETING Nov 12 2019 AGENDA FOR REGULAR BOARD MEETING Oct 16 2019 AGENDA FOR REGULAR BOARD MEETING Oct 02 2019 AGENDA FOR SPECIAL BOARD MEETING Sep 24 2019 AGENDA FOR SPECIAL BOARD MEETING Sep 10 2019 AGENDA FOR REGULAR BOARD MEETING Aug 27 2019 AGENDA FOR SPECIAL BOARD MEETING Aug 22 2019 AGENDA FOR SPECIAL BOARD MEETING Aug 15 2019 AGENDA FOR SPECIAL BOARD MEETING Aug 13 2019 AGENDA FOR REGULAR BOARD MEETING Jul 23 2019 AGENDA FOR SPECIAL BOARD MEETING Jul 09 2019 AGENDA FOR REGULAR BOARD MEETING Jun 25 2019 AGENDA FOR SPECIAL BOARD MEETING Jun 18 2019 AGENDA FOR REGULAR BOARD MEETING May 28 2019 AGENDA FOR SPECIAL BOARD MEETING May 21 2019 AGENDA FOR SPECIAL BOARD MEETING May 14 2019 AGENDA FOR REGULAR BOARD MEETING Apr 30 2019 AGENDA FOR SPECIAL BOARD MEETING Apr 23 2019 AGENDA FOR SPECIAL BOARD MEETING Apr 09 2019 AGENDA FOR REGULAR BOARD MEETING Mar 26 2019 AGENDA FOR SPECIAL BOARD MEETING Mar 12 2019 AGENDA FOR REGULAR BOARD MEETING Feb 26 2019 AGENDA FOR SPECIAL BOARD MEETING Feb 12 2019 AGENDA FOR REGULAR BOARD MEETING Time: Location: Private Version For: Public User Agenda Splitscreen Live Meeting Minutes Print Version Versions Signed Minutes Accessible Web Version Annotate Agenda Show Map Hide Map Board Application: -Select- Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals Members Val Romero Sadie Shaw Jennifer Eckstrom Natalie Luna Rose Ravi Shah © Diligent Community 2026 Tucson Unified School District User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "diligent:tusd1:483@01011e13bfc41a66d43fbbcb8f93cd6013a84ad261b973b8679be92556702719",
+   "meetingId": "diligent:tusd1:483",
+   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+   "documentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=483",
+   "contentHash": "01011e13bfc41a66d43fbbcb8f93cd6013a84ad261b973b8679be92556702719",
+   "retrievedAt": "2026-08-16T04:34:30.245Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=483",
+   "sourceOrg": "Tucson Unified School District Governing Board",
+   "collectedAt": "2026-08-16T04:34:30.245Z",
+   "verifiedAt": null,
+   "text": "Tucson Unified School District - Meeting Information Skip Navigation Jump to SideBar Quick Menu Public site Sign in History, Tradition, Culture, and YOU! Your Javascript is turned off, without it, this site will not operate as intended. Home » Meeting Schedule » Meeting Information Welcome to Tucson Unified School District Home Calendar Meetings Search Share Bond Oversight Committee Meeting Agenda -One or more Committee members will/may participate by telephonic or video communications. -Names and details, including available support documents, may be obtained during regular business hours at the TUSD Governing Board Office. -Upon request, TUSD will provide a certified interpreter to interpret Bond Oversight Committee meetings whenever possible. Please contact Translations/Interpretations Services at 520-225-4858 at least 72 hours prior to the event. Every effort will be made to honor requests for interpretation services made with less than 72 hours’ notice. -A petición previa, TUSD proporcionará un intérprete titulado para interpretar las reuniones del Comité de Supervisión de Bonos cuando lo sea posible. Favor de comunicarse a los Servicios de Traducción e Interpretación al 520-225-4858 al menos de 72 horas antes del evento. Se hará todo lo posible por atender a todas las solicitudes de interpretación realizados con menos de 72 horas de aviso previo. -If authorized by a majority vote of the members of the Bond Oversight Committee, any matter on the open meeting agenda may be discussed in executive session for the purpose of obtaining legal advice thereon, pursuant to A.R.S. 38-431.03 (A)(3). The executive session will be held immediately after the vote and will not be open to the public. -The order of items on this agenda may be modified during the meeting at the discretion of the Bond Oversight Committee Chair or upon a motion to amend the order of business which is approved by the Committee. Bond Oversight Committee Members Aug 20 2026 Bond Oversight Committee Meeting Agenda Jun 18 2026 Bond Oversight Committee Meeting Agenda May 14 2026 Bond Oversight Committee Meeting Agenda Apr 16 2026 Bond Oversight Committee Meeting Agenda Mar 26 2026 Bond Oversight Committee Meeting Agenda Feb 19 2026 Bond Oversight Committee Meeting Agenda Jan 15 2026 Bond Oversight Committee Nov 20 2025 AGENDA FOR BOND OVERSIGHT COMMITTEE MEETING Oct 16 2025 AGENDA FOR BOND OVERSIGHT COMMITTEE MEETING Sep 18 2025 AGENDA FOR BOND OVERSIGHT COMMITTEE MEETING Aug 21 2025 AGENDA FOR BOND OVERSIGHT COMMITTEE MEETING Jun 12 2025 AGENDA FOR BOND OVERSIGHT COMMITTEE MEETING May 15 2025 AGENDA FOR BOND OVERSIGHT COMMITTEE MEETING Apr 17 2025 AGENDA FOR BOND OVERSIGHT COMMITTEE MEETING Mar 20 2025 AGENDA FOR BOND OVERSIGHT COMMITTEE MEETING Feb 13 2025 AGENDA FOR BOND OVERSIGHT COMMITTEE MEETING Jan 16 2025 AGENDA FOR BOND OVERSIGHT COMMITTEE MEETING Nov 21 2024 AGENDA FOR BOND OVERSIGHT COMMITTEE MEETING Oct 17 2024 AGENDA FOR BOND OVERSIGHT COMMITTEE MEETING Sep 19 2024 AGENDA FOR BOND OVERSIGHT COMMITTEE MEETING Aug 15 2024 AGENDA FOR BOND OVERSIGHT COMMITTEE MEETING Jun 20 2024 AGENDA FOR BOND OVERSIGHT COMMITTEE MEETING May 16 2024 AGENDA FOR BOND OVERSIGHT COMMITTEE MEETING Apr 18 2024 AGENDA FOR BOND OVERSIGHT COMMITTEE MEETING Mar 28 2024 AGENDA FOR BOND OVERSIGHT COMMITTEE MEETING Time: Location: Private Version For: Public User Agenda Splitscreen Live Meeting Minutes Print Version Versions Signed Minutes Accessible Web Version Annotate Agenda Show Map Hide Map Board Application: -Select- Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals Members Kathryn Arvizu Sofia Blue Owen Brosanders (Absent) Cindy Coleman (Absent) Lyndsey Escalona Luis Gonzales (Absent) Steven Morrow Peter Norquest Tiffany Rogers (Absent) Erika Miranda-Carter © Diligent Community 2026 Tucson Unified School District User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "diligent:tusd1:481@9c6014fd58b29072e857cfa4941cd7124c95e412948d96e790634d406ac390c2",
+   "meetingId": "diligent:tusd1:481",
+   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+   "documentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=481",
+   "contentHash": "9c6014fd58b29072e857cfa4941cd7124c95e412948d96e790634d406ac390c2",
+   "retrievedAt": "2026-08-16T04:34:30.583Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=481",
+   "sourceOrg": "Tucson Unified School District Governing Board",
+   "collectedAt": "2026-08-16T04:34:30.583Z",
+   "verifiedAt": null,
+   "text": "Tucson Unified School District - Meeting Information Skip Navigation Jump to SideBar Quick Menu Public site Sign in History, Tradition, Culture, and YOU! Your Javascript is turned off, without it, this site will not operate as intended. Home » Meeting Schedule » Meeting Information Welcome to Tucson Unified School District Home Calendar Meetings Search Share GOVERNING BOARD AGENDA SPECIAL MEETING THE MEETING WILL BEGIN AT 4:30 P.M. TO VOTE TO GO INTO EXECUTIVE SESSION AND RECONVENE IN OPEN SESSION AT 5:30 P.M. PUBLIC ACCESS FOR EACH MEETING WILL BEGIN 15 MINUTES PRIOR TO THE VOTE TO GO INTO EXECUTIVE SESSION. -One or more Governing Board members will/may participate by telephonic or video communications. -Names and details, including available support documents, may be obtained during regular business hours at the TUSD Governing Board Office. -Upon request, TUSD will provide a certified interpreter to interpret Governing Board meetings whenever possible. Please contact Translations/Interpretations Services at 520-225-4858 at least 72 hours prior to the event. Every effort will be made to honor requests for interpretation services made with less than 72 hours notice. -A petición previa, TUSD proporcionará un intérprete titulado para interpretar las reuniones de la Mesa Directiva cuando lo sea posible. Favor de comunicarse a los Servicios de Traducción e Interpretación al 520-225-4858 al menos de 72 horas antes del evento. Se hará todo lo posible por atender a todas las solicitudes de interpretación realizados con menos de 72 horas de aviso previo. -If authorized by a majority vote of the members of the Governing Board, any matter on the open meeting agenda may be discussed in executive session for the purpose of obtaining legal advice thereon, pursuant to A.R.S. 38-431.03 (A)(3). The executive session will be held immediately after the vote and will not be open to the public. -The order of items on this agenda may be modified during the meeting at the discretion of the Board President or upon a motion to amend the order of business which is approved by the Board. Governing Board Members Aug 04 2026 GOVERNING BOARD AGENDA SPECIAL MEETING Jul 28 2026 GOVERNING BOARD AGENDA SPECIAL MEETING Jun 16 2026 GOVERNING BOARD AGENDA SPECIAL MEETING May 26 2026 GOVERNING BOARD AGENDA SPECIAL MEETING Apr 28 2026 GOVERNING BOARD AGENDA SPECIAL MEETING Mar 31 2026 GOVERNING BOARD AGENDA SPECIAL MEETING Feb 24 2026 GOVERNING BOARD AGENDA SPECIAL MEETING Jan 27 2026 GOVERNING BOARD AGENDA SPECIAL MEETING Time: Location: Private Version For: Public User Agenda Splitscreen Live Meeting Minutes Print Version Versions Signed Minutes Accessible Web Version Annotate Agenda Show Map Hide Map Board Application: -Select- Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals Members Natalie Luna Rose Val Romero Sadie Shaw Jennifer Eckstrom Ravi Shah © Diligent Community 2026 Tucson Unified School District User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "diligent:tusd1:480@ff8523e0de71f45e598967c45b83e9d4f6d4558b15a27fbab245ad54f31162e4",
+   "meetingId": "diligent:tusd1:480",
+   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+   "documentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=480",
+   "contentHash": "ff8523e0de71f45e598967c45b83e9d4f6d4558b15a27fbab245ad54f31162e4",
+   "retrievedAt": "2026-08-16T04:34:30.927Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=480",
+   "sourceOrg": "Tucson Unified School District Governing Board",
+   "collectedAt": "2026-08-16T04:34:30.927Z",
+   "verifiedAt": null,
+   "text": "Tucson Unified School District - Meeting Information Skip Navigation Jump to SideBar Quick Menu Public site Sign in History, Tradition, Culture, and YOU! Your Javascript is turned off, without it, this site will not operate as intended. Home » Meeting Schedule » Meeting Information Welcome to Tucson Unified School District Home Calendar Meetings Search Share GOVERNING BOARD AGENDA REGULAR MEETING THE MEETING WILL BEGIN AT 4:30 P.M. TO VOTE TO GO INTO EXECUTIVE SESSION AND RECONVENE IN OPEN SESSION AT 5:30 P.M. PUBLIC ACCESS FOR EACH MEETING WILL BEGIN 15 MINUTES PRIOR TO THE VOTE TO GO INTO EXECUTIVE SESSION. -One or more Governing Board members will/may participate by telephonic or video communications. -Names and details, including available support documents, may be obtained during regular business hours at the TUSD Governing Board Office. -Upon request, TUSD will provide a certified interpreter to interpret Governing Board meetings whenever possible. Please contact Translations/Interpretations Services at 520-225-4858 at least 72 hours prior to the event. Every effort will be made to honor requests for interpretation services made with less than 72 hours notice. -A petición previa, TUSD proporcionará un intérprete titulado para interpretar las reuniones de la Mesa Directiva cuando lo sea posible. Favor de comunicarse a los Servicios de Traducción e Interpretación al 520-225-4858 al menos de 72 horas antes del evento. Se hará todo lo posible por atender a todas las solicitudes de interpretación realizados con menos de 72 horas de aviso previo. -If authorized by a majority vote of the members of the Governing Board, any matter on the open meeting agenda may be discussed in executive session for the purpose of obtaining legal advice thereon, pursuant to A.R.S. 38-431.03 (A)(3). The executive session will be held immediately after the vote and will not be open to the public. -The order of items on this agenda may be modified during the meeting at the discretion of the Board President or upon a motion to amend the order of business which is approved by the Board. Governing Board Members Aug 11 2026 GOVERNING BOARD AGENDA REGULAR MEETING Jul 14 2026 GOVERNING BOARD AGENDA REGULAR MEETING Jun 09 2026 GOVERNING BOARD AGENDA REGULAR MEETING May 12 2026 GOVERNING BOARD AGENDA REGULAR MEETING Apr 14 2026 GOVERNING BOARD AGENDA REGULAR MEETING Mar 10 2026 GOVERNING BOARD AGENDA REGULAR MEETING Feb 10 2026 GOVERNING BOARD AGENDA REGULAR MEETING Dec 09 2025 AGENDA FOR REGULAR BOARD MEETING Jul 22 2025 AGENDA FOR SPECIAL BOARD MEETING Jul 21 2025 AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Jul 15 2025 AGENDA FOR REGULAR BOARD MEETING Jun 17 2025 AGENDA FOR SPECIAL BOARD MEETING Jun 10 2025 AGENDA FOR REGULAR BOARD MEETING May 27 2025 AGENDA FOR SPECIAL BOARD MEETING May 13 2025 AGENDA FOR REGULAR BOARD MEETING Apr 29 2025 AGENDA FOR SPECIAL BOARD MEETING Apr 15 2025 AGENDA FOR REGULAR BOARD MEETING Mar 25 2025 AGENDA FOR SPECIAL BOARD MEETING Mar 04 2025 AGENDA FOR REGULAR BOARD MEETING Feb 25 2025 AGENDA FOR SPECIAL BOARD MEETING Feb 11 2025 AGENDA FOR REGULAR BOARD MEETING Jan 28 2025 AGENDA FOR SPECIAL BOARD MEETING Jan 21 2025 AGENDA FOR ORGANIZATIONAL AND REGULAR BOARD MEETING Jan 14 2025 MEETING POSTPONED DUE TO WATERLINE BREAK - RESCHEDULED TO JANUARY 21, 2025 (LOCATION TO FOLLOW PENDING STATUS OF REPAIRS) - AGENDA FOR ORGANIZATIONAL AND REGULAR BOARD MEETING Dec 10 2024 AGENDA FOR REGULAR BOARD MEETING Nov 19 2024 AGENDA FOR REGULAR BOARD MEETING Oct 29 2024 AGENDA FOR SPECIAL BOARD MEETING Oct 15 2024 AGENDA FOR REGULAR BOARD MEETING Sep 24 2024 AGENDA FOR SPECIAL BOARD MEETING Sep 10 2024 AGENDA FOR REGULAR BOARD MEETING Aug 27 2024 AGENDA FOR SPECIAL BOARD MEETING Aug 13 2024 AGENDA FOR REGULAR BOARD MEETING Jul 30 2024 AGENDA FOR SPECIAL BOARD MEETING Jul 23 2024 AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Jul 15 2024 AGENDA FOR REGULAR BOARD MEETING Jul 09 2024 AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Jun 11 2024 AGENDA FOR SPECIAL BOARD MEETING Jun 04 2024 AGENDA FOR REGULAR BOARD MEETING May 21 2024 AGENDA FOR SPECIAL BOARD MEETING May 14 2024 AGENDA FOR REGULAR BOARD MEETING Apr 23 2024 AGENDA FOR SPECIAL BOARD MEETING Apr 09 2024 AGENDA FOR REGULAR BOARD MEETING Apr 02 2024 AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Mar 26 2024 AGENDA FOR SPECIAL BOARD MEETING Mar 05 2024 AGENDA FOR REGULAR BOARD MEETING Feb 27 2024 AGENDA FOR SPECIAL BOARD MEETING Feb 13 2024 AGENDA FOR REGULAR BOARD MEETING Jan 30 2024 AGENDA FOR SPECIAL BOARD MEETING Jan 23 2024 AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Jan 16 2024 AGENDA FOR REGULAR BOARD MEETING Dec 12 2023 AGENDA FOR REGULAR BOARD MEETING Nov 28 2023 AGENDA FOR SPECIAL BOARD MEETING Nov 14 2023 AGENDA FOR REGULAR BOARD MEETING Oct 24 2023 AGENDA FOR SPECIAL BOARD MEETING Oct 17 2023 AGENDA FOR REGULAR BOARD MEETING Sep 26 2023 AGENDA FOR SPECIAL BOARD MEETING Sep 12 2023 AGENDA FOR REGULAR BOARD MEETING Aug 29 2023 AGENDA FOR SPECIAL BOARD MEETING Aug 22 2023 AGENDA FOR SPECIAL BOARD MEETING Aug 08 2023 AGENDA FOR REGULAR BOARD MEETING Jul 25 2023 AGENDA FOR SPECIAL BOARD MEETING Jul 18 2023 AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Jul 11 2023 AGENDA FOR REGULAR BOARD MEETING Jun 13 2023 AGENDA FOR REGULAR BOARD MEETING Jun 06 2023 AGENDA FOR SPECIAL BOARD MEETING - STUDY SESSION May 23 2023 AGENDA FOR SPECIAL BOARD MEETING May 09 2023 AGENDA FOR REGULAR BOARD MEETING Apr 25 2023 AGENDA FOR SPECIAL BOARD MEETING Apr 11 2023 AGENDA FOR REGULAR BOARD MEETING Mar 28 2023 AGENDA FOR SPECIAL BOARD MEETING Mar 14 2023 AGENDA FOR REGULAR BOARD MEETING Feb 28 2023 AGENDA FOR SPECIAL BOARD MEETING Feb 16 2023 AGENDA FOR REGULAR BOARD MEETING Jan 31 2023 AGENDA FOR SPECIAL BOARD MEETING Jan 24 2023 AGENDA FOR REGULAR BOARD MEETING Jan 10 2023 AGENDA FOR SPECIAL BOARD MEETING (ORGANIZATIONAL MEETING) Dec 06 2022 AGENDA FOR REGULAR BOARD MEETING Nov 29 2022 AGENDA FOR SPECIAL BOARD MEETING Nov 15 2022 AGENDA FOR REGULAR BOARD MEETING Oct 25 2022 AGENDA FOR SPECIAL BOARD MEETING Oct 06 2022 AGENDA FOR REGULAR BOARD MEETING Sep 20 2022 AGENDA FOR SPECIAL BOARD MEETING Sep 13 2022 AGENDA FOR REGULAR BOARD MEETING Aug 25 2022 CANCELED - AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Aug 24 2022 AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Aug 23 2022 AGENDA FOR SPECIAL BOARD MEETING Aug 16 2022 AGENDA FOR SPECIAL BOARD MEETING Aug 09 2022 AGENDA FOR REGULAR BOARD MEETING Jul 26 2022 AGENDA FOR SPECIAL BOARD MEETING Jul 21 2022 AGENDA FOR EXECUTIVE SESSION BOARD MEETING Jul 12 2022 AGENDA FOR REGULAR BOARD MEETING Jun 23 2022 CANCELLED AGENDA FOR EXECUTIVE SESSION BOARD MEETING Jun 21 2022 AGENDA FOR SPECIAL BOARD MEETING Jun 14 2022 AGENDA FOR REGULAR BOARD MEETING May 24 2022 AGENDA FOR SPECIAL BOARD MEETING May 19 2022 AGENDA FOR EXECUTIVE SESSION BOARD MEETING May 10 2022 AGENDA FOR REGULAR BOARD MEETING Apr 26 2022 AGENDA FOR SPECIAL BOARD MEETING Apr 12 2022 AGENDA FOR REGULAR BOARD MEETING Mar 22 2022 AGENDA FOR SPECIAL BOARD MEETING Mar 08 2022 AGENDA FOR REGULAR BOARD MEETING Feb 22 2022 AGENDA FOR SPECIAL BOARD MEETING Feb 08 2022 AGENDA FOR REGULAR BOARD MEETING Jan 25 2022 AGENDA FOR SPECIAL BOARD MEETING Jan 11 2022 AGENDA FOR REGULAR BOARD MEETING Jan 04 2022 AGENDA FOR SPECIAL BOARD MEETING Dec 07 2021 AGENDA FOR REGULAR BOARD MEETING Nov 23 2021 CANCELLED - AGENDA FOR SPECIAL BOARD MEETING Nov 09 2021 AGENDA FOR REGULAR BOARD MEETING Oct 26 2021 AGENDA FOR SPECIAL BOARD MEETING Oct 05 2021 AGENDA FOR REGULAR BOARD MEETING Sep 23 2021 AGENDA FOR SPECIAL BOARD MEETING Sep 09 2021 AGENDA FOR REGULAR BOARD MEETING Aug 24 2021 AGENDA FOR SPECIAL BOARD MEETING Aug 10 2021 AGENDA FOR REGULAR BOARD MEETING Aug 04 2021 AGENDA FOR EMERGENCY BOARD MEETING Jul 22 2021 AGENDA FOR EXECUTIVE SESSION BOARD MEETING Jul 20 2021 AGENDA FOR SPECIAL BOARD MEETING Jul 13 2021 AGENDA FOR REGULAR BOARD MEETING Jun 22 2021 AGENDA FOR SPECIAL BOARD MEETING Jun 08 2021 AGENDA FOR REGULAR BOARD MEETING May 25 2021 AGENDA FOR SPECIAL BOARD MEETING May 11 2021 AGENDA FOR REGULAR BOARD MEETING Apr 27 2021 AGENDA FOR SPECIAL BOARD MEETING Apr 13 2021 AGENDA FOR REGULAR BOARD MEETING Apr 07 2021 AGENDA FOR SPECIAL BOARD MEETING Mar 30 2021 AGENDA FOR SPECIAL BOARD MEETING Mar 09 2021 AGENDA FOR REGULAR BOARD MEETING Mar 02 2021 AGENDA FOR EXECUTIVE SESSION BOARD MEETING Mar 01 2021 AGENDA FOR SPECIAL BOARD MEETING Feb 23 2021 AGENDA FOR SPECIAL BOARD MEETING Feb 09 2021 AGENDA FOR REGULAR BOARD MEETING Jan 26 2021 AGENDA FOR SPECIAL BOARD MEETING Jan 19 2021 AGENDA FOR SPECIAL BOARD MEETING Jan 12 2021 AGENDA FOR REGULAR BOARD MEETING Jan 05 2021 AGENDA FOR SPECIAL BOARD MEETING Dec 08 2020 AGENDA FOR REGULAR BOARD MEETING Nov 17 2020 AGENDA FOR REGULAR BOARD MEETING Oct 27 2020 AGENDA FOR SPECIAL BOARD MEETING Oct 06 2020 AGENDA FOR REGULAR BOARD MEETING Sep 22 2020 AGENDA FOR SPECIAL BOARD MEETING Sep 09 2020 AGENDA FOR REGULAR BOARD MEETING Aug 25 2020 AGENDA FOR SPECIAL BOARD MEETING Aug 11 2020 AGENDA FOR REGULAR BOARD MEETING Aug 10 2020 AGENDA FOR EXECUTIVE SESSION BOARD MEETING Jul 29 2020 AGENDA FOR EXECUTIVE SESSION BOARD MEETING Jul 28 2020 AGENDA FOR SPECIAL BOARD MEETING Jul 14 2020 AGENDA FOR REGULAR BOARD MEETING Jun 23 2020 AGENDA FOR SPECIAL BOARD MEETING Jun 16 2020 AGENDA FOR SPECIAL BOARD MEETING Jun 09 2020 AGENDA FOR REGULAR BOARD MEETING Jun 02 2020 AGENDA FOR SPECIAL BOARD MEETING May 27 2020 AGENDA FOR SPECIAL BOARD MEETING May 12 2020 AGENDA FOR REGULAR BOARD MEETING Apr 28 2020 AGENDA FOR SPECIAL BOARD MEETING Apr 07 2020 AGENDA FOR REGULAR BOARD MEETING Mar 27 2020 AGENDA FOR SPECIAL BOARD MEETING Mar 18 2020 AGENDA FOR SPECIAL BOARD MEETING Mar 10 2020 AGENDA FOR REGULAR BOARD MEETING Mar 03 2020 AGENDA FOR SPECIAL BOARD MEETING Feb 18 2020 AGENDA FOR SPECIAL BOARD MEETING Feb 11 2020 AGENDA FOR REGULAR BOARD MEETING Jan 28 2020 AGENDA FOR SPECIAL BOARD MEETING Jan 14 2020 AGENDA FOR REGULAR BOARD MEETING Jan 07 2020 AGENDA FOR SPECIAL BOARD MEETING Dec 10 2019 AGENDA FOR REGULAR BOARD MEETING Nov 12 2019 AGENDA FOR REGULAR BOARD MEETING Oct 16 2019 AGENDA FOR REGULAR BOARD MEETING Oct 02 2019 AGENDA FOR SPECIAL BOARD MEETING Sep 24 2019 AGENDA FOR SPECIAL BOARD MEETING Sep 10 2019 AGENDA FOR REGULAR BOARD MEETING Aug 27 2019 AGENDA FOR SPECIAL BOARD MEETING Aug 22 2019 AGENDA FOR SPECIAL BOARD MEETING Aug 15 2019 AGENDA FOR SPECIAL BOARD MEETING Aug 13 2019 AGENDA FOR REGULAR BOARD MEETING Jul 23 2019 AGENDA FOR SPECIAL BOARD MEETING Jul 09 2019 AGENDA FOR REGULAR BOARD MEETING Jun 25 2019 AGENDA FOR SPECIAL BOARD MEETING Jun 18 2019 AGENDA FOR REGULAR BOARD MEETING May 28 2019 AGENDA FOR SPECIAL BOARD MEETING May 21 2019 AGENDA FOR SPECIAL BOARD MEETING May 14 2019 AGENDA FOR REGULAR BOARD MEETING Apr 30 2019 AGENDA FOR SPECIAL BOARD MEETING Apr 23 2019 AGENDA FOR SPECIAL BOARD MEETING Apr 09 2019 AGENDA FOR REGULAR BOARD MEETING Mar 26 2019 AGENDA FOR SPECIAL BOARD MEETING Mar 12 2019 AGENDA FOR REGULAR BOARD MEETING Feb 26 2019 AGENDA FOR SPECIAL BOARD MEETING Feb 12 2019 AGENDA FOR REGULAR BOARD MEETING Time: Location: Private Version For: Public User Agenda Splitscreen Live Meeting Minutes Print Version Versions Signed Minutes Accessible Web Version Annotate Agenda Show Map Hide Map Board Application: -Select- Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals Members Natalie Luna Rose Val Romero Sadie Shaw Jennifer Eckstrom Ravi Shah © Diligent Community 2026 Tucson Unified School District User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
    "id": "diligent:susd12:165@aea79dc8a5ac9a638c24ed9a4b543976a462e51fb927995dea942b3dbe8a6eb6",
    "meetingId": "diligent:susd12:165",
    "ocdId": "ocd-division/country:us/state:az/school_district:sunnyside_unified_district",
@@ -6685,6 +6788,22 @@
    "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=163",
    "sourceOrg": "Sunnyside Unified School District Governing Board",
    "collectedAt": "2026-08-14T14:33:38.412Z",
+   "verifiedAt": null,
+   "text": "Sunnyside Unified School District #12 - Meeting Information Skip Navigation Jump to SideBar Quick Menu Public site Policy Sign in Your Javascript is turned off, without it, this site will not operate as intended. Home » Meeting Schedule » Meeting Information Welcome to Sunnyside Unified School District #12 Home Calendar Meetings Search Share Regular Governing Board Meeting Aug 11 2026 Regular Governing Board Meeting Jul 28 2026 Regular Governing Board Meeting Jul 07 2026 Governing Board Meeting Jun 23 2026 VIRTUAL Governing Board Meeting Jun 09 2026 Regular Governing Board Meeting May 26 2026 Regular Governing Board Meeting May 12 2026 Regular Governing Board Meeting Apr 28 2026 Regular Governing Board Meeting Apr 14 2026 Regular Governing Board Meeting Mar 24 2026 Regular Governing Board Meeting Feb 24 2026 Regular Governing Board Meeting Feb 10 2026 Regular Governing Board Meeting Jan 27 2026 Regular Governing Board Meeting Jan 13 2026 Organizational / Regular Governing Board Meeting Dec 09 2025 Regular Governing Board Meeting Nov 25 2025 VIRTUAL Governing Board Meeting Oct 28 2025 Regular Governing Board Meeting Time: Location: Private Version For: Public User Agenda Splitscreen Live Meeting Minutes Print Version Versions Signed Minutes Accessible Web Version Annotate Agenda Show Map Hide Map Board Application: -Select- Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals © Diligent Community 2026 Sunnyside Unified School District #12 User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "diligent:susd12:162@2c5fd81e09b511e36715f646a498d566fb445ef805fa16458a54b768b30e685c",
+   "meetingId": "diligent:susd12:162",
+   "ocdId": "ocd-division/country:us/state:az/school_district:sunnyside_unified_district",
+   "documentUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=162",
+   "contentHash": "2c5fd81e09b511e36715f646a498d566fb445ef805fa16458a54b768b30e685c",
+   "retrievedAt": "2026-08-16T04:34:31.620Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=162",
+   "sourceOrg": "Sunnyside Unified School District Governing Board",
+   "collectedAt": "2026-08-16T04:34:31.620Z",
    "verifiedAt": null,
    "text": "Sunnyside Unified School District #12 - Meeting Information Skip Navigation Jump to SideBar Quick Menu Public site Policy Sign in Your Javascript is turned off, without it, this site will not operate as intended. Home » Meeting Schedule » Meeting Information Welcome to Sunnyside Unified School District #12 Home Calendar Meetings Search Share Regular Governing Board Meeting Aug 11 2026 Regular Governing Board Meeting Jul 28 2026 Regular Governing Board Meeting Jul 07 2026 Governing Board Meeting Jun 23 2026 VIRTUAL Governing Board Meeting Jun 09 2026 Regular Governing Board Meeting May 26 2026 Regular Governing Board Meeting May 12 2026 Regular Governing Board Meeting Apr 28 2026 Regular Governing Board Meeting Apr 14 2026 Regular Governing Board Meeting Mar 24 2026 Regular Governing Board Meeting Feb 24 2026 Regular Governing Board Meeting Feb 10 2026 Regular Governing Board Meeting Jan 27 2026 Regular Governing Board Meeting Jan 13 2026 Organizational / Regular Governing Board Meeting Dec 09 2025 Regular Governing Board Meeting Nov 25 2025 VIRTUAL Governing Board Meeting Oct 28 2025 Regular Governing Board Meeting Time: Location: Private Version For: Public User Agenda Splitscreen Live Meeting Minutes Print Version Versions Signed Minutes Accessible Web Version Annotate Agenda Show Map Hide Map Board Application: -Select- Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals © Diligent Community 2026 Sunnyside Unified School District #12 User name Password Sign In Remember me next time. Forgot password?",
    "extraction": "html",

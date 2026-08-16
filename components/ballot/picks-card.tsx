@@ -195,13 +195,28 @@ export function PicksCardControls({ picks }: { picks: StoredPick[] }) {
               className="absolute inset-0 bg-black/45 backdrop-blur-sm"
               onClick={() => setConfirmingClear(false)}
             />
+            {/*
+              Item 6 (2026-08-15) — the author's order, and it is SUBTRACTION.
+
+              The second sentence used to read "your picks were never sent
+              anywhere, so there is nothing to clear elsewhere." Half of that
+              is true: the picks themselves are device-local. The other half
+              quietly wasn't — the taps that created them joined anonymous
+              local totals, exactly as the capture disclosure says they do,
+              and those totals cannot be un-joined by this button. A reader
+              who reads that sentence and clicks Clear believes something
+              about this product that is not so.
+
+              The fix is not a longer, more careful sentence. It is no
+              sentence: the dialog asks its question, and the data story
+              stays where it already lives and is already true — the one-time
+              notice at the point of capture, and "What this site collects".
+              A dialog is not the place to re-explain the business model, and
+              a half-truth is worse than a link.
+            */}
             <div className="panel relative w-full max-w-sm p-5">
               <p className="text-[0.9375rem] font-semibold leading-snug text-paper">
                 Really clear every pick on this device?
-              </p>
-              <p className="mt-1.5 text-[0.75rem] leading-relaxed text-voice">
-                This only touches this device — your picks were never sent
-                anywhere, so there is nothing to clear elsewhere.
               </p>
               <div className="mt-4 grid grid-cols-2 gap-2">
                 <button

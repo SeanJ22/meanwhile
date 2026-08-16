@@ -112,7 +112,7 @@ export function DistrictPopup({
                   target="_blank"
                   rel="noreferrer"
                   title="Where this record was read from"
-                  className="font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted hover:text-signal"
+                  className="source-tag font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted hover:text-signal"
                 >
                   src
                 </a>

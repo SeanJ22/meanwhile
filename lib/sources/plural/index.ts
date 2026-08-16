@@ -323,6 +323,8 @@ export function normalize(
       // is known: nothing. Term dates need the API or the YAML repo — D03.
       termStart: "",
       termEnd: "",
+      // State rosters publish no birth date; no sourced date, no age (6d).
+      birthDate: null,
       partyLabel: person.current_party || null,
       websiteUrl: person.links.split(";")[0] || null,
       contactFormUrl: null,

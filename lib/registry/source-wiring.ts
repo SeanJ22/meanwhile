@@ -608,6 +608,32 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     },
     verifiedAt: "2026-08-15",
   },
+  // The Zoning Board of Adjustment, wired 2026-08-15 (the mobile round-two
+  // session). Same shape and same adapter as its Planning Board sibling; the
+  // only thing that had ever been missing was the venue, and it turned up in
+  // the map link under the town's "Newbury Offices" label rather than in any
+  // agenda's prose. `venueMatch` keys the curated row, so this board resolves
+  // on the town's OWN label rather than borrowing the Planning Board's.
+  {
+    bodyId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#zoning-board-of-adjustment",
+    ocdId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+    agendaSourceType: "SCHEDULEPAGE",
+    jurisdiction: "Newbury, NH",
+    publishingOrg: "Newbury Zoning Board of Adjustment",
+    timeZone: "America/New_York",
+    config: {
+      slug: "newbury-zoning-board-of-adjustment",
+      profile: "browser",
+      shapes: "agenda-list",
+      schedulePage: "https://www.newbury.nh.gov/zoning-board-adjustment",
+      pathPrefix: "/zoning-board-adjustment/",
+      bodyName: "Zoning Board of Adjustment",
+      venueMatch: "Newbury Offices",
+    },
+    verifiedAt: "2026-08-15",
+  },
 
   {
     bodyId:

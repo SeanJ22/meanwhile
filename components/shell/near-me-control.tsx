@@ -7,17 +7,35 @@ import { useUi, useUiDispatch } from "@/lib/state/provider";
 /**
  * Browser geolocation.
  *
- * Same control shape as the radius toggle, and the same rule as the stored zip:
- * **this is orientation, not identity.** It moves the map centre and nothing
- * else. It never resolves a district, and the label says "approximate" on
- * screen rather than only in a comment, because a coordinate feels
- * authoritative in a way a zip does not and that feeling is the problem.
+ * **6f (2026-08-15, the author): Near me RESOLVES DISTRICTS now.** It used to
+ * move the map centre and nothing else, and say so — which was honest and,
+ * the author's word, counterintuitive: a reader who tells an app where they
+ * are expects the app to answer for where they are, and a control that
+ * politely declines to use what it just asked for is worse than one that
+ * never asked.
  *
- * CLAUDE.md: zip is stored as `approximate_location` and never treated as
- * district truth. Geolocation gets the same treatment — it is deliberately not
- * persisted at all.
+ * The rule it was written to respect is still respected, because the rule was
+ * never "don't use a point". It is that **a point is orientation, not
+ * identity, and is used and discarded.** That is exactly what a typed street
+ * address already does (D53): the point resolves the containing districts,
+ * the map flies to it, and nothing is stored — not in localStorage, not in
+ * sessionStorage, not in the search log, which records the nearest ZCTA the
+ * server resolved and never the coordinates it was handed.
+ *
+ * So the caveat stays on screen and changes what it is honest about: the
+ * READING is approximate (a browser's location is a radius, not a doorstep),
+ * rather than the app declining to use it.
  */
-export function NearMeControl() {
+export function NearMeControl({
+  onPoint,
+}: {
+  /**
+   * The resolved point, for the parent to answer at — the same handler a
+   * narrowed street address uses, so the two paths cannot drift into two
+   * different ideas of what a point means. Fires once per successful fix.
+   */
+  onPoint?: (point: { lat: number; lng: number }) => void;
+}) {
   const ui = useUi();
   const dispatch = useUiDispatch();
   const [error, setError] = useState<string | null>(null);
@@ -34,12 +52,19 @@ export function NearMeControl() {
     }
 
     navigator.geolocation.getCurrentPosition(
-      (position) =>
+      (position) => {
         dispatch({
           type: "nearMe/position",
           lat: position.coords.latitude,
           lng: position.coords.longitude,
-        }),
+        });
+        // 6f: and now the point is USED — same handler as a narrowed street
+        // address, same lifetime (React state for this tab), same promise.
+        onPoint?.({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+      },
       (err) => {
         setError(
           err.code === err.PERMISSION_DENIED
@@ -66,8 +91,9 @@ export function NearMeControl() {
 
       <div className="prox-radius-wrap">
         <p className="prox-note">
-          Approximate. Moves the map only — it doesn&apos;t decide which
-          districts you&apos;re in.
+          Approximate — a browser&apos;s location is a rough fix, not your
+          doorstep. We use it to find your districts and then discard it;
+          it&apos;s never stored or logged.
         </p>
         {error && (
           <p className="prox-note" style={{ color: "var(--danger)" }}>

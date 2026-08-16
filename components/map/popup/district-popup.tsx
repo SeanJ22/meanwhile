@@ -26,12 +26,12 @@ interface DistrictPopupProps {
   /** People sourced as representing this division. Empty is a real answer. */
   representation?: SeatHolder[];
   /**
-   * Whether the empty is EARNED (M112, 2026-08-16). A division the reader is
-   * not standing in has to be asked about, and until the answer arrives there
-   * is no absence to report — so `true` here suppresses the gap sentence in
-   * favour of the looking line. Absence and not-yet-asked are different facts.
+   * WHICH empty this is (M112, 2026-08-16). A division the reader is not
+   * standing in has to be asked about, and neither a question in flight nor a
+   * failed one is an absence of record — each gets its own sentence, and each
+   * of those sentences is about us rather than about a government.
    */
-  representationPending?: boolean;
+  representationNoteState?: "gap" | "looking" | "unavailable";
   /** Municipalities inside this division, where the registry knows them. */
   placesWithin?: string[];
   /**
@@ -48,7 +48,7 @@ interface DistrictPopupProps {
 export function DistrictPopup({
   district,
   representation = [],
-  representationPending = false,
+  representationNoteState = "gap",
   placesWithin,
   upcomingMeetings,
   onOpenOfficial,
@@ -156,7 +156,7 @@ export function DistrictPopup({
           {/* The same line the battlecard shows for the same division — the
               two surfaces cannot say different things about one gap, and
               neither may claim a gap before the lookup answers (M112). */}
-          {representationNoteFor(district.tier, representationPending)}
+          {representationNoteFor(district.tier, representationNoteState)}
         </p>
       )}
 

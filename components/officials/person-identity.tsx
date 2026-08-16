@@ -105,14 +105,32 @@ export function PersonIdentity({
    * instead of one of them guessing.
    */
   chips = [],
+  /**
+   * **The small popup's form** (item 4, 2026-08-16, the author's ruling).
+   *
+   * Exactly three things on that card and nothing else: the circle, the name,
+   * the party pill — then the contact column. The author's words for what was
+   * there before were "ugly and scattered, too much info", and what made it
+   * scattered was five competing facts at four type sizes inside 300px.
+   *
+   * So `identityOnly` drops the office line, the in-seat line, and every
+   * outlined chip (the state, the chamber, incumbent-or-challenger). **None
+   * of it is deleted** — all of it renders on the large battlecard, which is
+   * one tap below and is where a reader goes for the record. The PARTY pill
+   * stays, on both card sizes: it is banned from the who-governs LIST, never
+   * from a battlecard.
+   */
+  identityOnly = false,
 }: {
   holder: SeatHolder;
   seatLabel: string | null;
   large?: boolean;
   chips?: string[];
+  identityOnly?: boolean;
 }) {
-  const until = inSeatUntil(holder.termEnd);
+  const until = identityOnly ? null : inSeatUntil(holder.termEnd);
   const age = large ? ageFrom(holder.birthDate, new Date()) : null;
+  const outlined = identityOnly ? [] : chips;
 
   return (
     <div className={`id-header ${large ? "id-header--lg" : ""}`}>
@@ -139,17 +157,19 @@ export function PersonIdentity({
               {holder.partyLabel}
             </IdentityChip>
           )}
-          {chips.map((chip) => (
+          {outlined.map((chip) => (
             <IdentityChip key={chip}>{chip}</IdentityChip>
           ))}
         </div>
 
-        <p className="id-office">
-          {holder.officeTitle}
-          {/* A seat label identical to the title ("Mayor · Mayor") is noise,
-              not information. */}
-          {seatLabel && seatLabel !== holder.officeTitle ? ` · ${seatLabel}` : ""}
-        </p>
+        {!identityOnly && (
+          <p className="id-office">
+            {holder.officeTitle}
+            {/* A seat label identical to the title ("Mayor · Mayor") is noise,
+                not information. */}
+            {seatLabel && seatLabel !== holder.officeTitle ? ` · ${seatLabel}` : ""}
+          </p>
+        )}
 
         {/*
           6d: "In seat until", and — on the large card — age. Both render ONLY

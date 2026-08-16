@@ -2042,6 +2042,30 @@ label:has(> input[type="checkbox"]) {
   gap: 6px;
 }
 
+/* ONE CLEAN COLUMN (item 4, 2026-08-16, the author's ruling).
+ *
+ * The small popup's contact pills stack instead of wrapping. Wrapping filled
+ * the card with ragged half-rows — the "ugly and scattered" the author sent
+ * this back for — and a column of full-width pills reads as a list of ways to
+ * reach one person, which is what it is. The "More" footer below is
+ * full-width too, so the column and the way deeper line up on both edges. */
+.contact-pill-row[data-layout="column"] {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  gap: 6px;
+}
+
+.contact-pill-row[data-layout="column"] .contact-pill {
+  width: 100%;
+  justify-content: flex-start;
+  /* A long label — an email address, a campaign host — wraps inside the pill
+     rather than pushing the card wider. */
+  white-space: normal;
+  overflow-wrap: anywhere;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
 /* --------------------------------------------------------------------------
    THE PERSON ROW (item 2) — a representation list that stays horizontally
    sane at every width.
@@ -2072,6 +2096,20 @@ label:has(> input[type="checkbox"]) {
   /* A long name wraps at word boundaries. It never truncates and it never
      breaks mid-word — both turn a person's name into a different string. */
   overflow-wrap: break-word;
+}
+
+/* PARTY AS PLAIN TEXT (item 3, 2026-08-16, the author's ruling).
+ *
+ * The who-governs list is the one surface where party is NOT a pill. Twenty
+ * rows of filled chips is the overcrowding the author sent this item back
+ * for; the pill stays on the battlecards, small and large, where there is one
+ * person and the chip is the identity. Here it is the word, in the party's
+ * colour, and the colour is display only — nothing infers a position from it. */
+.person-row-party {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
 }
 
 .person-row-office {

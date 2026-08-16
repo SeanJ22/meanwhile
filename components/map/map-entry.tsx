@@ -37,6 +37,7 @@ import {
   rosterHoldersForBody,
 } from "@/lib/registry/body-rosters";
 import {
+  noteStateFor,
   representationForDivision,
   representationNoteFor,
 } from "@/lib/registry/representation";
@@ -1082,6 +1083,12 @@ function MapEntryInner() {
                     shown.snapshot?.failed.flatMap((f) => f.ocdIds) ?? []
                   }
                   onOpenOfficial={openOfficial}
+                  onOpenBody={(body) =>
+                    openLarge({
+                      kind: "entity",
+                      subject: bodySubject(body, shown.meetings ?? []),
+                    })
+                  }
                   onMinimize={() => setNoticeCollapsed(true)}
                   onNarrowApplied={onNarrowApplied}
                   onStreetPoint={onStreetPoint}
@@ -1146,7 +1153,7 @@ function MapEntryInner() {
                 )
               }
               representation={districtRepresentation.holders}
-              representationPending={districtRepresentation.status === "looking"}
+              representationNoteState={noteStateFor(districtRepresentation.status)}
               upcomingMeetings={
                 // A failed fetch may not stand behind "Upcoming: 0" — the
                 // popup renders couldn't-check instead (2a).
@@ -1369,6 +1376,88 @@ function meetingSubject(
   };
 }
 
+/**
+ * A GOVERNING BODY'S LARGE BATTLECARD (item 3, 2026-08-16, the author's
+ * ruling).
+ *
+ * The who-governs list used to send a reader straight out to the body's own
+ * website from the row — Pima and Tucson both — which threw them out of the
+ * product before it had told them anything. The click grammar is two moves
+ * now: a person's name opens their small card, a body's row opens this. Every
+ * external door lives inside, beside the roster, the sittings and the records
+ * behind them.
+ *
+ * Nothing here is invented. The name is the body's own or the division's
+ * Census label; the site is the sourced homepage or nothing at all.
+ */
+function bodySubject(
+  body: CoveredBody,
+  allMeetings: Meeting[] = [],
+): ModalSubject {
+  const roster =
+    rosterHoldersForBody(body.bodyId).length > 0
+      ? rosterHoldersForBody(body.bodyId)
+      : governingRosterHoldersForDivision(body.ocdId);
+  const meetings = allMeetings
+    .filter((m) => m.ocdId !== null && m.ocdId === body.ocdId)
+    .sort((a, b) => a.startsAt.localeCompare(b.startsAt));
+
+  return {
+    title: body.name ?? body.divisionLabel,
+    subtitle: body.divisionLabel,
+    tier: body.tier,
+    divisionOcdId: null,
+    facts: [
+      { label: "Type", value: BODY_TYPE_LABEL(body) },
+      { label: "Tier", value: TIER_LABEL[body.tier] },
+      // The external door, INSIDE the card. Absent where no hunt found one —
+      // never a guessed URL, and never a row claiming there is a site.
+      ...(body.homepageUrl
+        ? [
+            {
+              label: "Official site",
+              value: (
+                <a
+                  href={body.homepageUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
+                >
+                  {new URL(body.homepageUrl).hostname.replace(/^www\./, "")} →
+                </a>
+              ),
+            },
+          ]
+        : []),
+    ],
+    representation: roster,
+    representationNote:
+      "We know this body governs here because its division exists. We haven't sourced who sits on it.",
+    meetings,
+    sources: districtCardSources(roster, meetings),
+  };
+}
+
+/** A body's own kind where it is curated; its division's kind where derived. */
+function BODY_TYPE_LABEL(body: CoveredBody): string {
+  const DIVISION: Record<CoveredBody["divisionType"], string> = {
+    county: "County",
+    place: "Municipal",
+    school_district: "School district",
+    cd: "Congressional",
+    sldu: "State senate",
+    sldl: "State house",
+  };
+  const CLASS: Record<CoveredBody["bodyClass"], string> = {
+    GOVERNING: "Governing body",
+    ADVISORY: "Advisory body",
+    COMMISSION: "Commission",
+    REGIONAL: "Regional body",
+    PRIVATE_ASSOCIATION: "Private association",
+  };
+  return body.name === null ? DIVISION[body.divisionType] : CLASS[body.bodyClass];
+}
+
 function districtSubject(
   district: DistrictHit,
   allMeetings: Meeting[] = [],
@@ -1438,7 +1527,7 @@ function districtSubject(
     representation: roster,
     representationNote: representationNoteFor(
       district.tier,
-      roster.length === 0 && resolved?.status === "looking",
+      resolved ? noteStateFor(resolved.status) : "gap",
     ),
     meetings,
     /*

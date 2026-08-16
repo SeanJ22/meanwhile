@@ -195,14 +195,27 @@ test("the route answers by path, and distinct divisions get distinct answers", a
   assert.deepEqual(junk.body, { ocdId: null, holders: [] });
 });
 
-test("a gap sentence is never spoken while the lookup is still in flight", async () => {
-  const { representationNoteFor: note } = await import(
+test("three different empties get three different sentences", async () => {
+  const { representationNoteFor: note, noteStateFor } = await import(
     "../lib/registry/representation.ts"
   );
-  // M111's rule in the shape it took here: not-yet-asked is not absence, and
-  // the two may not render as the same sentence.
-  assert.notEqual(note("state", true), note("state", false));
-  assert.notEqual(note("local", true), note("local", false));
-  assert.ok(!/haven't sourced|No sourced/.test(note("state", true)));
-  assert.ok(!/haven't sourced|No sourced/.test(note("local", true)));
+  // M111's rule in the shape it took here. A question in flight is not an
+  // absence; a FAILED question is not an absence either, and it is not the
+  // same fact as a question in flight. Each sentence is about us.
+  for (const tier of ["state", "local"]) {
+    const said = new Set([
+      note(tier, "gap"),
+      note(tier, "looking"),
+      note(tier, "unavailable"),
+    ]);
+    assert.equal(said.size, 3, `${tier}: two empties share one sentence`);
+    assert.ok(!/haven't sourced|No sourced/.test(note(tier, "looking")));
+    assert.ok(!/haven't sourced|No sourced/.test(note(tier, "unavailable")));
+  }
+  // And a status maps to exactly one of them — a failed lookup can never be
+  // routed to the gap sentence by a caller.
+  assert.equal(noteStateFor("looking"), "looking");
+  assert.equal(noteStateFor("unavailable"), "unavailable");
+  assert.equal(noteStateFor("unsourced"), "gap");
+  assert.equal(noteStateFor("resolved"), "gap");
 });

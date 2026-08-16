@@ -1,4 +1,5 @@
 import type { CardSource } from "@/lib/officials/card-sources";
+import { verificationOf } from "@/lib/officials/verification";
 
 import { NoValue, PopupRow } from "@/components/map/popup/popup-card";
 
@@ -48,18 +49,47 @@ export function CardSourcesList({ sources }: { sources: CardSource[] }) {
             )}
           </PopupRow>
 
-          <PopupRow label="Verified" mono>
-            {entry.provenance.verifiedAt ? (
-              entry.provenance.verifiedAt.slice(0, 10)
-            ) : (
-              // Null means no human has confirmed this against the source. It
-              // is the normal state and says so, rather than reading as a gap.
-              <NoValue>not yet</NoValue>
-            )}
-          </PopupRow>
+          <VerifiedRow provenance={entry.provenance} />
         </div>
       ))}
     </>
+  );
+}
+
+/**
+ * The Verified row — g3 item 5, the author's ruling (2026-08-16).
+ *
+ * This row used to say "not yet" for everything a human had not personally
+ * re-checked, which on production meant a fact read off the Governor of
+ * Arizona's own website sat under the words "Verified: not yet" with the link
+ * to that website two rows above it. The ruling: **a read from the subject's
+ * own official source IS the verification**, by that source, on the date we
+ * read it.
+ *
+ * Three states, and each says exactly what it knows — never more:
+ *
+ * - a human confirmed it, and the row is that date;
+ * - the subject's own official publisher served it, and the row is the read
+ *   date and who served it, so the claim is checkable rather than asserted;
+ * - nobody has stood behind it yet, and "not yet" is the honest word — now
+ *   reserved for the aggregators and third-party pages it was written for.
+ *
+ * Level register throughout: this is a claim surface, and nothing here is
+ * cute about where a fact came from.
+ */
+function VerifiedRow({ provenance }: { provenance: CardSource["provenance"] }) {
+  const verification = verificationOf(provenance);
+  return (
+    <PopupRow label="Verified" mono>
+      {verification.kind === "confirmed" && verification.date}
+      {verification.kind === "official" && (
+        <>
+          {verification.date}
+          <span className="text-muted"> by {verification.by}</span>
+        </>
+      )}
+      {verification.kind === "unverified" && <NoValue>not yet</NoValue>}
+    </PopupRow>
   );
 }
 

@@ -56,9 +56,24 @@ test("3e: the picks disclosure is stated ONCE, on the ballot page, with the reac
   // control keeps the author's label; MyPicks keeps its device-only header
   // as a label (a heading, not a second disclosure paragraph).
   const control = read("components", "ballot", "pick-control.tsx");
+  // g3 item 7 (2026-08-16) SUPERSEDES 3d (2026-08-19): the pick control and
+  // the per-candidate sensor both read "What do you think?", so the author
+  // read the ballot-builder as a duplicate of the sensor. It names the action
+  // now. The sensor keeps the older wording, which is what it was written for.
   assert.ok(
-    /What do you think\?/.test(control),
-    "3d: the pick control's label is the author's words",
+    /Your pick for this race/.test(control),
+    "g3: the pick control names the ACTION, so it cannot be read as the sensor",
+  );
+  assert.ok(
+    !/What do you think\?/.test(control),
+    "the superseded label is still on the pick control — two differently-" +
+      "consequential asks must not wear one sentence",
+  );
+  // The page's single disclosure quotes this control. A disclosure quoting
+  // wording that is no longer on screen points the reader at nothing.
+  assert.ok(
+    /Your pick/.test(read("app", "ballot", "page.tsx")),
+    "the picks disclosure no longer quotes the control it describes",
   );
   assert.ok(
     !/Saved on this device only\./.test(control),

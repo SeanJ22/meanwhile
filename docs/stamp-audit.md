@@ -8,7 +8,7 @@ walked straight past the `Author-revised` stamp on the disclosure rule.
 each one, and the corrected date is typed into `CLAUDE.md` by hand from
 `pnpm stamp` or from the recovered column below.**
 
-Run on 2026-08-16 (America/Phoenix). 19 stamp(s) audited.
+Run on 2026-08-16 (America/Phoenix). 23 stamp(s) audited.
 
 **Method.** Each rule's opening clause — the bold title it leads with — is a
 long string that entered `CLAUDE.md` once. `git log -S<clause> -- CLAUDE.md`
@@ -45,14 +45,18 @@ lying. The recovered dates come from the unfiltered pickaxe.
 | The ripcord doctrine — legally-open features ship behind … | 2026-08-13 | 2026-08-13 | 0 | `56d8787` 7: the session's documents — §14, the ripcord doctrine, the rows, the rungs, and the brief |
 | A join that can collapse must be asked for distinctness —… | 2026-08-14 | 2026-08-14 | 0 | `8046820` 1: the FEC replication bug (D40) — the cache key, not the join |
 | The zip playbook is append-only, and every depth run ends… | 2026-08-15 | 2026-08-15 | 0 | `f5de914` The structures are born: state folders, notes, and the zip playbook |
-| A render default may never manufacture a claim — a null r… | 2026-08-16 | **NOT FOUND** | — | — |
+| A render default may never manufacture a claim — a null r… | 2026-08-16 | 2026-08-16 | 0 | `cc10808` Pictures first, the counters breathe, and the documents |
+| Every session ends by running `pnpm walk:all` against pro… | 2026-08-16 | **NOT FOUND** | — | — |
+| A failed fetch never silently empties a previously-full s… | 2026-08-16 | **NOT FOUND** | — | — |
+| A read from the subject's own official source IS the veri… | 2026-08-16 | **NOT FOUND** | — | — |
+| More viewport must never mean fewer pins. | 2026-08-16 | **NOT FOUND** | — | — |
 | Disclosure at the point of capture — the one-time acknowl… | 2026-08-13 | 2026-08-13 | 0 | `8fa5759` 3: the defect batch — what-first titles, the narrowing modal, the one-time disclosure, candidate reactions, the mayor, the past, the smalls |
 
 ## What the deltas say
 
 - **2 stamp(s) disagree with git history.**
 - **0 stamp(s) are still later than today** (2026-08-16) — a date that had not happened when it was written.
-- **1 stamp(s) could not be recovered** and are printed `NOT FOUND` rather than guessed.
+- **4 stamp(s) could not be recovered** and are printed `NOT FOUND` rather than guessed.
 
 | Line | Claimed | Recovered | Delta | Note |
 |---|---|---|---|---|
@@ -80,7 +84,11 @@ lying. The recovered dates come from the unfiltered pickaxe.
 | The ripcord doctrine — legally-open features ship behind … | none | 1 |
 | A join that can collapse must be asked for distinctness —… | none | 1 |
 | The zip playbook is append-only, and every depth run ends… | none | 1 |
-| A render default may never manufacture a claim — a null r… | none | 0 |
+| A render default may never manufacture a claim — a null r… | none | 1 |
+| Every session ends by running `pnpm walk:all` against pro… | none | 0 |
+| A failed fetch never silently empties a previously-full s… | none | 0 |
+| A read from the subject's own official source IS the veri… | none | 0 |
+| More viewport must never mean fewer pins. | none | 0 |
 | Disclosure at the point of capture — the one-time acknowl… | none | 1 |
 
 A `1` in the last column means the clause entered the file exactly once and

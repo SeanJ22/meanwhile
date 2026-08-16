@@ -42,11 +42,14 @@
     "key-votes:positions": "tsx scripts/fetch-key-vote-positions.mts",
     "sheet": "tsx scripts/contact-sheet.mts",
     "walk:0815g": "tsx scripts/walk-0815g.mts",
+    "walk:all": "tsx scripts/walk-all.mts",
     "congress:fetch": "tsx scripts/fetch-congress-legislators.mts",
     "congress:migrate": "tsx scripts/migrate-congress-directory.mts",
     "shoot:0816": "tsx scripts/shoot-0816.mts",
     "verify:sources": "tsx scripts/verify-sources-tab.mts",
-    "dotgov:fetch": "tsx scripts/fetch-dotgov.mts"
+    "dotgov:fetch": "tsx scripts/fetch-dotgov.mts",
+    "states:fetch": "tsx scripts/fetch-state-outlines.mts",
+    "shoot:focus": "tsx scripts/shoot-state-focus.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

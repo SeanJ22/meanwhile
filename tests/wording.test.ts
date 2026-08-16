@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { agendaAbsenceNote, stateOf } from "../lib/registry/wording.ts";
+import {
+  agendaAbsenceNote,
+  collapseFootnotes,
+  stateOf,
+} from "../lib/registry/wording.ts";
 import registry from "../lib/registry/registry.json" with { type: "json" };
 
 /** D17 — the New Hampshire wording, and what gates it. */
@@ -74,4 +78,55 @@ test("the statutory sentence now renders for real NH bodies", () => {
     (b) => b.coverageStatus === "NO_SOURCE_FOUND",
   );
   assert.equal(exhausted.length, 0);
+});
+
+/**
+ * M94 — one footnote per distinct sentence, bodies named inline.
+ *
+ * The production shape: at 03255 the who-governs panel repeated "we couldn't
+ * reach their calendar source" and "New Hampshire does not require an agenda"
+ * up to four times each, and three of those repeats named ONE town three
+ * times because Newbury's Planning Board, Conservation Commission and Zoning
+ * Board all sit on the same division.
+ */
+test("identical footnotes collapse to one, naming every distinct body", () => {
+  const bodies = [
+    { divisionLabel: "Newbury town", ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town" },
+    { divisionLabel: "Newbury town", ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town" },
+    { divisionLabel: "Newbury town", ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town" },
+    { divisionLabel: "Kearsarge Regional School District", ocdId: "ocd-division/country:us/state:nh/school_district:kearsarge_regional_school_district" },
+  ];
+
+  const collapsed = collapseFootnotes(bodies, (b) =>
+    agendaAbsenceNote(b.ocdId, "NOT_ATTEMPTED"),
+  );
+
+  assert.equal(collapsed.length, 1, "the statutory sentence rendered more than once");
+  assert.equal(
+    collapsed[0].subjects,
+    "Newbury town, Kearsarge Regional School District",
+    "a repeated town was named repeatedly, or a body was dropped from the line",
+  );
+  assert.match(collapsed[0].note, /New Hampshire does not require an agenda/);
+});
+
+test("footnotes that differ stay separate, in the panel's own order", () => {
+  const bodies = [
+    { divisionLabel: "Newbury town", ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town" },
+    { divisionLabel: "Tucson city", ocdId: "ocd-division/country:us/state:az/place:tucson" },
+  ];
+  const collapsed = collapseFootnotes(bodies, (b) =>
+    agendaAbsenceNote(b.ocdId, "NO_SOURCE_FOUND"),
+  );
+  assert.equal(collapsed.length, 2, "two different sentences were merged into one");
+  assert.equal(collapsed[0].subjects, "Newbury town");
+  assert.equal(collapsed[1].subjects, "Tucson city");
+});
+
+test("a body with nothing to say contributes no footnote at all", () => {
+  const collapsed = collapseFootnotes(
+    [{ divisionLabel: "Rockaway township", ocdId: "ocd-division/country:us/state:nj/place:rockaway" }],
+    (b) => agendaAbsenceNote(b.ocdId, "LIVE"),
+  );
+  assert.deepEqual(collapsed, [], "an empty note became a rendered line");
 });

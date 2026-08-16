@@ -12,7 +12,12 @@ import {
   type ErrorEvent as MapErrorEvent,
   type MapMouseEvent,
 } from "maplibre-gl";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
+import {
+  StateFocusOverlay,
+  type ProjectPoint,
+} from "@/components/map/state-focus-overlay";
 
 import {
   CONUS_BOUNDS,
@@ -21,12 +26,14 @@ import {
   resolveBasemap,
 } from "@/lib/map/style";
 import { initialZoomForZip } from "@/lib/map/initial-zoom";
+import { viewportRadiusKm } from "@/lib/map/viewport-radius";
 import {
   DISTRICT_TYPES,
   addDistrictLayer,
   districtLayerPresent,
   districtsAt,
   drawnDistrictsOn,
+  firstSymbolLayerId,
   loadDistricts,
   removeDistrictLayer,
   setNarrowedDistricts,
@@ -34,6 +41,13 @@ import {
   type DistrictHit,
   type DrawnDistrict,
 } from "@/lib/map/districts";
+import {
+  STATE_OUTLINES_URL,
+  addStateFocusLayers,
+  outlineFor,
+  setStateFocus,
+  type StateOutlines,
+} from "@/lib/map/state-focus";
 import type { DistrictType } from "@/lib/state/types";
 import type { Theme } from "@/hooks/use-stored-theme";
 import type { Venue } from "@/lib/meetings/venues";
@@ -110,13 +124,33 @@ interface MapCanvasProps {
    * after a debounce, never mid-gesture. The parent decides whether to act
    * (it skips when a popup is open or a selection is active).
    */
-  onViewportSettle?: (center: { lat: number; lng: number }) => void;
+  onViewportSettle?: (view: {
+    lat: number;
+    lng: number;
+    /**
+     * How far the reader can actually SEE, corner to corner and halved
+     * (g3 item 6). Carried because the fetch used to ignore zoom entirely
+     * and always ask for the ladder's first rung, so zooming out re-drew a
+     * 25 km circle around a moved centre and pins disappeared.
+     */
+    viewportRadiusKm: number;
+  }) => void;
   /**
    * Whether the app may move the camera to frame results. False for a
    * settle-driven result: the reader chose this viewport by hand, and
    * yanking it to fit venues would fight them (2i).
    */
   allowAutoFrame: boolean;
+  /**
+   * The state the reader is in, as its OCD-ID — the state that RISES out of
+   * the map (g3 item 10, M91). Null before a zip resolves, and then nothing
+   * is raised and nothing is muted: a reader who has not said where they are
+   * has no "here" to mark.
+   *
+   * Keyed on the OCD-ID like everything else in this product, never on a
+   * name string.
+   */
+  focusStateOcdId?: string | null;
 }
 
 function prefersReducedMotion() {
@@ -155,6 +189,7 @@ export function MapCanvas({
   onTileError,
   onViewportSettle,
   allowAutoFrame,
+  focusStateOcdId = null,
 }: MapCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
@@ -354,11 +389,42 @@ export function MapCanvas({
         // outside [-180, 180], which the API rejects with a 400 — the one
         // settle-only failure a client can manufacture on its own (2a).
         const center = map.getCenter().wrap();
-        onViewportSettleRef.current?.({ lat: center.lat, lng: center.lng });
+        const bounds = map.getBounds();
+        onViewportSettleRef.current?.({
+          lat: center.lat,
+          lng: center.lng,
+          viewportRadiusKm: viewportRadiusKm({
+            north: bounds.getNorth(),
+            south: bounds.getSouth(),
+            east: bounds.getEast(),
+            west: bounds.getWest(),
+          }),
+        });
       }, 650);
     };
     map.on("movestart", onMoveStart);
     map.on("moveend", onMoveEnd);
+
+    /*
+     * The camera probe (g3 item 6), sibling of `__wtpPinCount` below.
+     *
+     * `pnpm walk:all` has to prove it actually zoomed before it can claim
+     * anything about what zooming did. Without this the walk's first version
+     * reported "zooming out never removes pins — 11 → 11 → 11" while its
+     * gesture was landing on an overlay and the map had never moved: a green
+     * check for an experiment that did not run, which is worse than a red
+     * one. Read-only; nothing in the product consults it.
+     */
+    (window as unknown as { __wtpZoom?: () => number }).__wtpZoom = () =>
+      map.getZoom();
+    (window as unknown as { __wtpZoomOut?: (by?: number) => void }).__wtpZoomOut = (
+      by = 2,
+    ) => {
+      // Dispatched as a USER gesture would be seen: `zoomTo` with an
+      // `originalEvent` so the settle path — the one the defect lived in —
+      // is the path the walk exercises. A bare `map.zoomTo()` would skip it.
+      map.zoomTo(map.getZoom() - by, {}, { originalEvent: new Event("wheel") });
+    };
 
     return () => {
       window.clearTimeout(settleTimer);
@@ -431,7 +497,107 @@ export function MapCanvas({
       onSelectRef.current(venue),
     );
     applyVisibility(poolRef.current, new Set(venues.map((v) => v.key)));
+
+    /*
+     * The pin-count probe (g3 item 6).
+     *
+     * `pnpm walk:all` asserts that zooming out never REMOVES pins, and a
+     * count read off the DOM would be counting what the browser happened to
+     * have painted rather than what the map holds. This is the map's own
+     * answer to "how many pins are you showing", and it exists for exactly
+     * one caller. It is a read-only integer: nothing about the product
+     * behaves differently when it is or isn't there, so it cannot become a
+     * feature by accident.
+     */
+    (window as unknown as { __wtpPinCount?: () => number }).__wtpPinCount = () =>
+      venues.length;
   }, [venues]);
+
+  /*
+   * THE STATE FOCUS (g3 item 10, M91) — the author's design, against his
+   * neumorphism reference.
+   *
+   * Two halves, and they live apart for a reason the reference forces: the
+   * raised EDGE is map layers (a light NW edge and a dark SE edge, one light
+   * source at top-left, per `lib/map/state-focus.ts`), while the MUTE AND
+   * BLUR outside is a DOM scrim, because no WebGL paint property can blur
+   * what is painted underneath it. Inside the border nothing is touched at
+   * all — that is what makes it an extrusion rather than a card.
+   *
+   * The outlines load once, lazily, and a failure is silent by design: this
+   * is ambient decoration carrying no information, and a map that draws
+   * without it is a working map. Anything louder would be an outage over a
+   * shadow.
+   */
+  const [outlines, setOutlines] = useState<StateOutlines | null>(null);
+  useEffect(() => {
+    let live = true;
+    void (async () => {
+      try {
+        const response = await fetch(STATE_OUTLINES_URL);
+        if (!response.ok) return;
+        const data = (await response.json()) as StateOutlines;
+        if (live) setOutlines(data);
+      } catch {
+        // Ambient only. The map is fine without it.
+      }
+    })();
+    return () => {
+      live = false;
+    };
+  }, []);
+
+  const focusOutline = useMemo(
+    () => outlineFor(outlines, focusStateOcdId ?? null),
+    [outlines, focusStateOcdId],
+  );
+
+  // Re-added on every style load, exactly like the district layers: a
+  // basemap swap throws every custom layer away.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !outlines) return;
+    const apply = () => {
+      if (!map.isStyleLoaded()) return;
+      addStateFocusLayers(map, outlines, firstSymbolLayerId(map));
+      setStateFocus(map, focusStateOcdId ?? null);
+    };
+    apply();
+    map.on("styledata", apply);
+    return () => {
+      map.off("styledata", apply);
+    };
+  }, [outlines, focusStateOcdId]);
+
+  /*
+   * The projection, handed to the scrim as a STABLE function.
+   *
+   * `map.project` is bound to the map instance and the map instance is
+   * created once, so this identity never changes — which matters because the
+   * scrim's effect depends on it, and a new function every render would
+   * rebuild the clip path on every render instead of on every camera move.
+   */
+  const [projectFn, setProjectFn] = useState<ProjectPoint | null>(null);
+  const [subscribeMove, setSubscribeMove] = useState<
+    ((onMove: () => void) => () => void) | null
+  >(null);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    // `setState` with a function argument would CALL it, so both are wrapped.
+    setProjectFn(() => (lngLat: [number, number]) => map.project(lngLat));
+    setSubscribeMove(() => (onMove: () => void) => {
+      map.on("move", onMove);
+      map.on("zoom", onMove);
+      map.on("resize", onMove);
+      return () => {
+        map.off("move", onMove);
+        map.off("zoom", onMove);
+        map.off("resize", onMove);
+      };
+    });
+  }, [outlines]);
 
   // Swap the basemap when the theme changes. The listener above puts the
   // districts back once the new style lands.
@@ -603,6 +769,14 @@ export function MapCanvas({
   return (
     <div className="absolute inset-0">
       <div ref={containerRef} className="size-full" />
+      {/* g3 item 10 (M91): the mute-and-blur half of the state extrusion.
+          Inside the wrapper so it sits over the canvas; `pointer-events:
+          none` keeps the map underneath fully draggable. */}
+      <StateFocusOverlay
+        outline={focusOutline}
+        project={projectFn}
+        subscribe={subscribeMove}
+      />
     </div>
   );
 }

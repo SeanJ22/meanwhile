@@ -59,10 +59,29 @@ export function PickControl({
      * collection decision, and that is the author's to make.
      */
     <div className="reaction-box" data-frame="standing" data-kind="pick">
-      {/* 3d (2026-08-19): the author's words. Same options, same
-          device-local behavior — only the label changed. */}
+      {/*
+        g3 item 7 (2026-08-16), the author's reframe — SUPERSEDES 3d's "What
+        do you think?" (2026-08-19), which was this same label.
+
+        The old wording is why the author read this control as a duplicate of
+        the per-candidate sensor sitting a few lines above it. Both boxes
+        asked "what do you think?"; one of them was a private ballot-builder
+        and the other was a question whose answer is sold in an anonymous
+        aggregate, and nothing on the page said which was which. Two
+        differently-consequential asks wearing one sentence is a consent
+        problem wearing a copy problem's clothes.
+
+        "Your pick for this race" names the ACTION, not a feeling — this is
+        the control that writes the running ballot below. The sensor keeps
+        asking what the reader thinks, because that is what it is for.
+      */}
       <p className={prominent ? "reaction-box-prompt text-link" : "reaction-box-prompt"}>
-        What do you think?{voteFor > 1 ? ` (pick up to ${voteFor})` : ""}
+        Your pick for this race{voteFor > 1 ? ` (pick up to ${voteFor})` : ""}
+      </p>
+      {/* Playful register, on an interaction surface — and load-bearing: it
+          is the one line that tells the reader this box goes nowhere. */}
+      <p className="mt-0.5 text-[0.6875rem] leading-relaxed text-muted">
+        Building your own ballot. Stays on this phone.
       </p>
       <div className="reaction-box-choices">
         {options.map((option) => {

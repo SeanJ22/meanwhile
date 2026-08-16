@@ -271,7 +271,27 @@ const fundingRow = {
   ocdIds: ["ocd-division/country:us/state:az"],
   verificationTier: "ANONYMOUS" as const,
 };
-const contributorRow = { ...fundingRow, targetType: "CONTRIBUTOR_REACTION" as const };
+/**
+ * A contributions answer collected TODAY — v3 since g3 (2026-08-16).
+ *
+ * The version is stamped by the write path from `scaleForTargetType`, so a
+ * fixture that kept v2 here would be modelling a row the server can no longer
+ * produce, and the tally under it would carry the wording that row is
+ * ambiguous about. That ambiguity is real for the rows already in the store,
+ * and `contributorRowV2` below is the fixture for those.
+ */
+const contributorRow = {
+  ...fundingRow,
+  targetType: "CONTRIBUTOR_REACTION" as const,
+  scaleVersion: 3 as const,
+};
+
+/** The same ask, as it was collected before the bump. Never pooled with the above. */
+const contributorRowV2 = {
+  ...fundingRow,
+  targetType: "CONTRIBUTOR_REACTION" as const,
+  scaleVersion: 2 as const,
+};
 const voteRow = {
   ...fundingRow,
   targetType: "FEDERAL_VOTE" as const,
@@ -1297,10 +1317,14 @@ test("no committed snapshot claims to have been read on a day that has not happe
  */
 
 test("the two funding asks are two sensors, at the write path and the aggregate", () => {
-  // 1. Different target types, on the same scale. Same instrument, different
-  //    object — which is why the scale is shared and the question is not.
+  // 1. Different target types, and — since g3 item 7 (2026-08-16, the
+  //    author's ruling) — different scale VERSIONS. The previous session
+  //    shared the version and split only the question; the author bumped it
+  //    so contributions rows can never pool with answers to the older
+  //    wording, which sat over the same table asking about the campaign's
+  //    finances instead.
   assert.notEqual(fundingRow.targetType, contributorRow.targetType);
-  assert.equal(
+  assert.notEqual(
     scaleForTargetType("FUNDING_TOTAL_REACTION").version,
     scaleForTargetType("CONTRIBUTOR_REACTION").version,
   );
@@ -1329,6 +1353,23 @@ test("the two funding asks are two sensors, at the write path and the aggregate"
   assert.notEqual(totals.question, contributors.question);
   assert.equal(contributors.question, "How do you feel about these contributions?");
 
+  // 3b (g3). The pre-bump contributions rows are a THIRD tally, labelled with
+  // the wording they were actually collected under. This is the whole point
+  // of the author's bump: a v2 contributions row answered a sentence about
+  // the campaign's finances while looking at a table of donors, and pooling
+  // it with today's answers would put two populations under one denominator.
+  const withOld = aggregateReactions([fundingRow, contributorRow, contributorRowV2]);
+  assert.equal(withOld.length, 3, "a pre-bump contributions row pooled with a post-bump one");
+  const stale = withOld.find(
+    (t) => t.targetType === "CONTRIBUTOR_REACTION" && t.scaleVersion === 2,
+  );
+  assert.ok(stale, "the pre-bump contributions rows vanished from the aggregate");
+  assert.equal(
+    stale.question,
+    "How do you feel about how this campaign is funded?",
+    "a v2 row was relabelled with a wording it never saw",
+  );
+
   // 4. The store cannot merge them either: the upsert's conflict target
   //    carries targetType alongside the key and the id.
   const writePath = readFileSync(
@@ -1343,11 +1384,12 @@ test("the two funding asks are two sensors, at the write path and the aggregate"
   );
 });
 
-test("the contributions rewording is recorded, not smoothed over", () => {
-  // Same values, same version, same meaning per answer — so it is NOT a scale
-  // break, and calling it one would be as dishonest as hiding it. What
-  // changed is which object the reader was looking at, and a handful of v2
-  // rows predate the change.
+test("the contributions rewording is recorded, and the author's version bump with it", () => {
+  // Recorded first as a rewording inside v2, with the version bump left for
+  // the author because bucketing and export are on CLAUDE.md's ask-before
+  // list. He ruled the same day: bump it (g3 item 7). Both records stand —
+  // the break says the two sets are not comparable, and only the rewording
+  // says WHY, in the words that were on the screen.
   const rewording = QUESTION_REWORDINGS.find(
     (r) => r.targetType === "CONTRIBUTOR_REACTION",
   );
@@ -1355,9 +1397,20 @@ test("the contributions rewording is recorded, not smoothed over", () => {
   assert.equal(rewording.date, "2026-08-16");
   assert.equal(rewording.to, questionForTargetType("CONTRIBUTOR_REACTION"));
   assert.notEqual(rewording.from, rewording.to);
-  // And it is not filed among the scale breaks, which mean something stricter.
-  assert.ok(
-    !SCALE_BREAKS.some((b) => b.date === "2026-08-16"),
-    "a rewording must not be filed as a scale break",
+
+  // `.find` on the target type alone would return the 2026-08-15 break,
+  // which lists BOTH funding types — the bump is the one that lands on v3.
+  const bump = SCALE_BREAKS.find(
+    (b) => b.targetTypes.includes("CONTRIBUTOR_REACTION") && b.to === 3,
   );
+  assert.ok(bump, "the author's version bump must be filed as a scale break");
+  assert.equal(bump.date, "2026-08-16");
+  assert.equal(bump.from, 2);
+  assert.equal(bump.to, 3);
+  assert.equal(
+    bump.to,
+    scaleForTargetType("CONTRIBUTOR_REACTION").version,
+    "the break's target version and the live scale disagree",
+  );
+  assert.ok(bump.why.length > 40, "a scale break without a reason is a mystery");
 });

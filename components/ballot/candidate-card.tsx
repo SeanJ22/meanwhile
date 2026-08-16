@@ -34,8 +34,18 @@ export function CandidateCard({
   card,
   links,
   filedSiteUrl,
+  nameSlot,
 }: {
   name: string;
+  /**
+   * The name rendered as the door to this person's large battlecard (g3 item
+   * 7). A ReactNode, never a render function — a function cannot cross the
+   * server/client boundary, and doing that is what 500'd `/about-area`.
+   *
+   * Absent for anyone we hold no record for: their name stays plain text
+   * rather than becoming a link onto an empty card.
+   */
+  nameSlot?: React.ReactNode;
   /** Party label (and slogan where filed), already formatted by the caller. */
   partyLine: React.ReactNode;
   card: CandidateCardData | null;
@@ -95,9 +105,11 @@ export function CandidateCard({
 
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
-          <span className="text-[0.9375rem] font-semibold tracking-tight">
-            {name}
-          </span>
+          {nameSlot ?? (
+            <span className="text-[0.9375rem] font-semibold tracking-tight">
+              {name}
+            </span>
+          )}
           <span className="text-right text-[0.75rem] text-muted">
             {partyLine}
           </span>

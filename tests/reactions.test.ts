@@ -638,11 +638,23 @@ test("the funding scale is the funding scale, and nothing else is", () => {
     "How do you feel about how this campaign is funded?",
   );
 
-  // Funding targets are on v2; votes and candidates stay on v1. The scale is
-  // decided by the TARGET, so a client cannot choose its own instrument.
-  for (const type of ["FUNDING_TOTAL_REACTION", "CONTRIBUTOR_REACTION"] as const) {
-    assert.equal(scaleForTargetType(type).version, 2);
-  }
+  // The campaign totals are on v2; the CONTRIBUTIONS table moved to its own
+  // v3 on 2026-08-16 (g3 item 7, the author's ruling) so its rows never pool
+  // with answers given to the older wording. Votes and candidates stay on v1.
+  // The scale is decided by the TARGET, so a client cannot choose its own
+  // instrument.
+  assert.equal(scaleForTargetType("FUNDING_TOTAL_REACTION").version, 2);
+  assert.equal(scaleForTargetType("CONTRIBUTOR_REACTION").version, 3);
+  assert.deepEqual(
+    scaleForTargetType("CONTRIBUTOR_REACTION").values,
+    SCALE_V2_FUNDING.values,
+    "v3 is the same five answers — the break is about the QUESTION, not the values",
+  );
+  assert.equal(
+    scaleForTargetType("CONTRIBUTOR_REACTION").question,
+    "How do you feel about these contributions?",
+    "the wording lives beside the version, per the ruling",
+  );
   for (const type of ["FEDERAL_VOTE", "CANDIDATE"] as const) {
     assert.equal(scaleForTargetType(type).version, 1);
     assert.deepEqual(scaleForTargetType(type).values, SCALE_V1.values);

@@ -74,3 +74,58 @@ export function agendaAbsenceNote(
 
   return null;
 }
+
+/**
+ * One footnote per distinct SENTENCE, with the bodies it applies to named
+ * inline — M94, the author's find on production (2026-08-16).
+ *
+ * ## What the reader was looking at
+ *
+ * At 03255 the who-governs panel repeated "we couldn't reach their calendar
+ * source" and "New Hampshire does not require an agenda" up to FOUR TIMES
+ * EACH, one per body row, and Newbury's three land-use boards share a single
+ * division so three of the repeats named the same town three times over. Four
+ * identical sentences stacked under a card do not read as four facts. They
+ * read as a broken page, and they bury the one fact each of them carries —
+ * which is the reader-friction defect, at full strength, on the surface that
+ * exists to answer a question.
+ *
+ * ## The rule (e's 6g)
+ *
+ * A distinct footnote renders **once per body**; identical footnotes across
+ * bodies collapse to **once per panel**, with the bodies named inline —
+ * "Newbury town, Kearsarge Regional School District — New Hampshire does not
+ * require an agenda…". Nothing is dropped and nothing is generalized: every
+ * subject the un-collapsed list would have named is still named, in the order
+ * the panel meets them, so the collapse costs the reader no information and
+ * saves them three re-reads.
+ *
+ * Subjects de-duplicate too. Three boards of one town are one subject, because
+ * the sentence is about the town's publisher, not about each board.
+ */
+export interface CollapsedFootnote {
+  /** The sentence itself, rendered once. */
+  note: string;
+  /** Every distinct subject it applies to, in first-seen order. */
+  subjects: string;
+}
+
+export function collapseFootnotes<T extends { divisionLabel: string }>(
+  bodies: readonly T[],
+  noteFor: (body: T) => string | null,
+): CollapsedFootnote[] {
+  // Insertion-ordered: a Map keyed by the sentence keeps the panel's own
+  // reading order, which is the order the bodies appear in above it.
+  const byNote = new Map<string, string[]>();
+  for (const body of bodies) {
+    const note = noteFor(body);
+    if (!note) continue;
+    const subjects = byNote.get(note) ?? [];
+    if (!subjects.includes(body.divisionLabel)) subjects.push(body.divisionLabel);
+    byNote.set(note, subjects);
+  }
+  return [...byNote.entries()].map(([note, subjects]) => ({
+    note,
+    subjects: subjects.join(", "),
+  }));
+}

@@ -603,3 +603,49 @@ rediscovered.
 
 Standing entry, carried forward: a brief that describes a reference image
 without a repo path cannot be checked against it. Briefs point at repo paths.
+
+### WHERE a fetch rung RUNS matters as much as what it does (2026-08-16)
+
+The rung ladder has always been about the REQUEST — which client, which
+headers, which URL. This session found the other axis, and it cost a
+production outage before anyone looked.
+
+`kearsarge.org` and `newbury.nh.gov` answer **200 to both the index profile
+and the browser profile from a residential IP**, measured this session. The
+same requests from a **GitHub Actions runner get 403**, and the log proves
+`curl` ran and was refused too: a missing binary rejects with `spawn curl
+ENOENT`, and every failed run recorded `HTTP 403`, which is the message
+`curlGetText`'s own non-2xx path throws. So the wall is neither the TLS
+fingerprint (the M79 finding) nor a missing tool — it is the **runner's
+egress IP**, and no header, client or fingerprint change reaches it.
+
+**The rung, written for the next state:** when a host that serves you refuses
+the scheduled job, do not go looking for a better request. Record WHERE each
+attempt ran. A rung is `(client, headers, URL, EGRESS)`, and a ladder that
+records only the first three will send a session hunting a header that was
+never the problem.
+
+Two things follow, both shipped:
+
+- The refresh must not overwrite good data with the absence a refusal
+  produces (`lib/meetings/carry-forward.ts`, and the CLAUDE.md rule).
+- An adapter serving several bodies across several hosts isolates them, or
+  one host's WAF deletes bodies in another state.
+
+### Kearsarge's neighbouring towns — rungs walked, nothing wired (2026-08-16)
+
+03255's meetings-near view shows Newbury venues only. The other Kearsarge
+towns hold meetings inside the radius. Rungs attempted, per town, so the next
+session starts where this one stopped rather than re-walking:
+
+| Town | Host | Index profile | What it publishes | Next rung |
+|---|---|---|---|---|
+| New London NH | `newlondon.nh.gov` (GovOffice) | 200 | `/calendar` renders ONE server-side `<table>`, no feed, no `dc:date` | a `month-table`-family parse, or a new shape |
+| Warner NH | `warnernh.gov` (WordPress) | 200 | `/calendar` server-rendered; `/feed/` is the SITE feed; `/events/feed/` answers **200 with ZERO items**; no Tribe Events API (`/wp-json/tribe/events/v1/events` → 404) | parse `/calendar`; the empty feed is the empty-success shape and must never be recorded as a hit |
+| Bradford NH | `bradfordnh.gov` | 200 | `/calendar` → **404**; the path is elsewhere | find the real path before claiming anything |
+| Wilmot NH | `wilmotnh.org` (WordPress) | 200 | `/calendar` path present, not read to page level | probe the page |
+| Springfield NH | `springfieldnh.org` (Weebly) | 200 | not read to page level | probe the page |
+| Sutton NH | `www.suttonnh.gov` | **403** | — | **the browser rung** — 200 to a browser profile, measured. Same wall as Kearsarge and Newbury, and the same rung clears it. |
+
+None is `NOT_ATTEMPTED` any more, and none is claimed as publishing nothing.
+Every one is "exists, found, not wired", which is a work item.

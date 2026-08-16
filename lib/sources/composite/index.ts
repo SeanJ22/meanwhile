@@ -38,6 +38,12 @@ export interface ChildRunReport {
   fetched: number;
   normalized: number;
   drops: NormalizeDropCounts;
+  /**
+   * Divisions this child could not reach while otherwise succeeding — the
+   * PARTIAL refusal (g3). Absent or empty means "nothing narrower than the
+   * `ok` flag to say".
+   */
+  unreachableOcdIds?: string[];
 }
 
 export interface CompositeReport {
@@ -214,7 +220,7 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
       }
 
       try {
-        const { meetings, drops } = child.normalizeWithDrops(
+        const { meetings, drops, unreachableOcdIds } = child.normalizeWithDrops(
           byChild.get(child.name) ?? [],
           now,
         );
@@ -245,6 +251,9 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
           fetched: fetched.fetched,
           normalized: meetings.length,
           drops,
+          ...(unreachableOcdIds && unreachableOcdIds.length > 0
+            ? { unreachableOcdIds }
+            : {}),
         });
       } catch (error) {
         children.push({

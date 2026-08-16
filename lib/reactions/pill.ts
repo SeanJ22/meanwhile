@@ -114,3 +114,36 @@ export function reactionChoiceClass(
   // borrows a landed row's styling.
   return "reaction-choice reaction-choice--uncounted border-dashed border-[var(--link)]/60 text-paper-dim";
 }
+
+/**
+ * Where the five-point scale is split into groups — g3 item 7, the author's
+ * find (2026-08-16).
+ *
+ * ## The defect
+ *
+ * On the funding row — Love it · Like it · Don't like it · Hate it · Don't
+ * care — **"Don't like it" sat dead centre**, and the eye defaults to the
+ * middle of a row of equal buttons. That is a measuring instrument reading
+ * its own layout: a mild negative collects extra answers because of where it
+ * happens to fall, and this is the path whose aggregates are SOLD. A sensor
+ * with a thumb on it is worse than no sensor, because the number still looks
+ * like a number.
+ *
+ * ## The fix, and why it is placed by VALUE
+ *
+ * A separator before each group's first option splits the row into
+ * favourable / unfavourable / abstain, so the centre of the row is a boundary
+ * rather than a button and no single option owns it.
+ *
+ * Keyed on the VALUE, never on an index. The control filters its own choice
+ * list (`SOMEONE_ELSE` renders only in a one-candidate contest), so an
+ * index-based rule would slide a separator onto a different button the first
+ * time a scale is filtered — and the failure would be invisible, because the
+ * row would still look deliberate. This way the rule travels to every surface
+ * the scale renders on, which is what the author asked for, and it renders
+ * nowhere on the four-value v1 scale, which has no groups to mark.
+ */
+export const SCALE_GROUP_LEADERS: ReadonlySet<ReactionValue> = new Set<ReactionValue>([
+  "DISLIKE",
+  "DONT_CARE",
+]);

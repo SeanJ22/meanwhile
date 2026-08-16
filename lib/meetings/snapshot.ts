@@ -36,6 +36,25 @@ export interface SnapshotSourceReport {
   fetched: number;
   normalized: number;
   drops: NormalizeDropCounts;
+  /**
+   * Divisions this source could not reach while otherwise succeeding (g3).
+   *
+   * A source serving five bodies across three hosts can be refused by one of
+   * them, and `ok: false` would smear that refusal across all five. This is
+   * the narrow claim, and the meetings route prefers it when attributing a
+   * gap to a body on the reader's card.
+   */
+  unreachableOcdIds?: string[];
+  /**
+   * How many of this source's meetings in this snapshot came from the
+   * PREVIOUS one because this run could not reach them (g3).
+   *
+   * Never a silent number: a refresh that failed and carried forward looks
+   * identical, from the outside, to a refresh that succeeded — unless it
+   * says so. The carried rows keep their own `provenance.collectedAt`, so
+   * nothing on the reader's card claims a freshness it does not have.
+   */
+  carriedForward?: number;
 }
 
 export interface MeetingsSnapshot {
@@ -98,6 +117,29 @@ export function validateSnapshot(value: unknown): asserts value is MeetingsSnaps
       if (!Number.isInteger(s.drops?.[key])) {
         throw new Error(`${s.source}: drop count "${key}" must be stated as an integer`);
       }
+    }
+    // Same rule as the drop counts, applied to the two fields g3 added: a
+    // carry-forward that does not state its integer is a refresh claiming
+    // freshness it does not have, which is the exact failure the field
+    // exists to make visible.
+    if (s.carriedForward !== undefined && !Number.isInteger(s.carriedForward)) {
+      throw new Error(`${s.source}: carriedForward must be stated as an integer`);
+    }
+    if (
+      s.unreachableOcdIds !== undefined &&
+      (!Array.isArray(s.unreachableOcdIds) ||
+        s.unreachableOcdIds.some((id) => typeof id !== "string" || !id))
+    ) {
+      throw new Error(`${s.source}: unreachableOcdIds must be a list of division ids`);
+    }
+    // A source that reports every one of its divisions unreachable AND
+    // reports itself ok is contradicting itself; the adapter is required to
+    // throw in that case so the source reads as failed.
+    if (s.ok && s.carriedForward !== undefined && s.carriedForward > 0 &&
+        (s.unreachableOcdIds?.length ?? 0) === 0) {
+      throw new Error(
+        `${s.source}: carried ${s.carriedForward} meeting(s) forward while reporting nothing unreachable`,
+      );
     }
   }
   if (!snap.sources.some((s) => s.ok)) {
@@ -181,13 +223,29 @@ export function writeSnapshot(snapshot: MeetingsSnapshot, root?: string): string
 /** What the client is told about the snapshot behind its answer. */
 export interface SnapshotClientMeta {
   generatedAt: string;
-  sources: Array<{ source: string; ok: boolean; error: string | null }>;
+  sources: Array<{
+    source: string;
+    ok: boolean;
+    error: string | null;
+    /** The narrow refusal, so the route attributes the gap to these bodies only. */
+    unreachableOcdIds?: string[];
+    /** How many of this source's rows came from the previous snapshot. */
+    carriedForward?: number;
+  }>;
 }
 
 export function snapshotClientMeta(snapshot: MeetingsSnapshot): SnapshotClientMeta {
   return {
     generatedAt: snapshot.generatedAt,
-    sources: snapshot.sources.map(({ source, ok, error }) => ({ source, ok, error })),
+    sources: snapshot.sources.map(
+      ({ source, ok, error, unreachableOcdIds, carriedForward }) => ({
+        source,
+        ok,
+        error,
+        ...(unreachableOcdIds?.length ? { unreachableOcdIds } : {}),
+        ...(carriedForward !== undefined ? { carriedForward } : {}),
+      }),
+    ),
   };
 }
 

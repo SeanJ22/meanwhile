@@ -6913,3 +6913,161 @@ four UNSURE rather than five pairs. They are plumbing wearing reader clothes
 and are named here so a later exclusion is a filter rather than a hunt.
 **No other row was written against production this session**; every other
 request either walk made was a GET.
+
+## 34. The 2026-08-16 session (fourth of the day) — the regression net, and the state rises out of the map
+
+Branch `claude/regression-net-0816`. The brief's own framing was the finding:
+**past wins die silently, because each session's walk checked only its own
+brief.** That is the session in one sentence, and everything below either
+builds the thing that stops it or is one of the wins it found already dead.
+
+### The net, and what it caught on its first run
+
+`pnpm walk:all` is the suite nobody owned (R27). Every check carries the
+SESSION that shipped the claim, so a failure prints as "the win *e* shipped is
+undone" rather than as an anonymous red line. It ran against production
+**before anything was fixed** — that run is this session's diagnostic sweep,
+and it returned **20 named regressions and 5 checks that could not run**.
+
+Four of the twenty were the walk's own aim, and they are corrected here rather
+than softened: `/api/votes` called without its required `member` param,
+`/api/funding` called with a slug shape the route has never taken, a wording
+change that had moved on, and a document-wide regex reading the hidden welcome
+overlay's shortcut buttons and reporting Arizona contamination on a clean New
+Hampshire card. **A walk that misses its aim and a product that broke must
+never print the same way**, which is why `cannotRun` exists beside `check`.
+
+The rest were real. Three of them are the ones the author had already seen.
+
+### `/about-area` had been answering HTTP 500 at every zip (M121)
+
+The moving-here door, linked from every who-governs panel. Diagnosed to the
+exact throw rather than guessed: a Server Component was handing a Client
+Component a **render prop**, and a function cannot cross that boundary. React
+refuses it outright, and in a Server Component the refusal is a 500 at REQUEST
+time — so nothing failed at build, and the route looked half-alive because the
+one path that renders no facts (an unresolvable zip) never constructs the
+element and answered 200.
+
+A static guard now refuses any function prop on any client component that is
+not an `on…` handler, **proven against the exact line that caused it**. It
+caught this session's own state-focus overlay an hour later, which is the
+guard working; that component takes a live MapLibre projection and cannot
+reach a server component at all, so it carries an annotated file-level
+exemption rather than a renamed prop. The obvious way past a guard like this
+is to call the prop `onProject` and move on, and that would defeat the rule
+while making the name worse.
+
+### Kearsarge went dark, and the brief's lead was wrong (M122)
+
+The truth session verified fifteen Kearsarge sittings live. Production showed
+**seven meetings from one body** at 03255, against twenty-six from four.
+
+The brief's diagnosis lead was that `curl` is missing in the refresh runtime.
+**It is not, and the log disproves it.** The refresh runs on `ubuntu-latest`;
+a missing binary rejects with `spawn curl ENOENT`, and every failed run
+recorded `HTTP 403`, which is the message `curlGetText`'s own non-2xx path
+throws. So curl ran and was refused too. From a residential IP all three hosts
+serve 200 to *both* profiles, measured. **The wall is the runner's egress IP**
+— not the TLS fingerprint the M79 session found, and not a missing tool. No
+header, client or fingerprint change reaches it, and a session hunting one
+would have spent a day on the wrong axis.
+
+Two independent defects had produced the outage:
+
+1. **One host's refusal emptied five bodies.** `schedulepage` serves
+   Kearsarge, three Newbury land-use boards and Morris Hills Regional across
+   three unrelated hosts, through a loop whose first failure threw out of the
+   adapter. Morris Hills, in New Jersey, whose own page answered 200
+   throughout, disappeared because a New Hampshire school district's WAF did
+   not like the runner.
+2. **The refresh wrote the absence over good data.** The snapshot with 53
+   Kearsarge rows was replaced by one with zero, and the reader was shown an
+   empty calendar for a board that sits fifteen times a year.
+
+The second is now a rule in `CLAUDE.md`: **a failed fetch never silently
+empties a previously-full surface** — the render-default rule one layer down,
+because by the time a null reaches a component the lie is already in the file.
+`carryForward` keeps a refused source's last known rows, clipped to the same
+window, original `collectedAt` intact, count stated per source; a source that
+succeeds and reports no refusal carries nothing, because a body that genuinely
+went quiet must be allowed to.
+
+Snapshot regenerated from a runtime that can reach the hosts: **03255 is 31
+meetings across 5 bodies**, against the truth session's 26 across 4. Kearsarge
+is 15 of 31 — its whole published year.
+
+The neighbouring Kearsarge towns are M123: six towns, every rung recorded in
+the playbook, nothing wired and nothing claimed to publish nothing. Sutton
+403s the index profile and 200s the browser rung — the same wall, the same
+rung that clears it.
+
+### Zooming out was removing pins (M124)
+
+Neither of the obvious suspects. Nothing in the render layer reads zoom at
+all, so no cluster threshold and no culling bound. The settle re-query carried
+**no radius**, so the server used the ladder's first rung at every zoom level;
+a wheel zoom also drags the centre toward the cursor, so once it passed the
+re-query threshold a fresh 25 km circle was drawn around a NEW centre and
+everything outside it vanished. The reader asked to see more and got less.
+
+Found while verifying the fix, and worth more than the fix: the first draft of
+the re-query comparison fell back to the incoming radius when the previous
+view had none, so **both sides were the same number by construction**, the
+widening never fired, and the walk cheerfully reported "11 → 11 → 11" for a
+fix that was doing nothing. The walk now asserts the camera MOVED before it
+asserts anything about pins — a green check for an experiment that never ran
+is worse than a red one.
+
+### The state rises out of the map (M91)
+
+The largest item, built against the author's own reference. The distinction
+that article draws is the whole spec: a **Material card floats above** its
+background; a **neumorphic element extrudes from** it, same material. So
+inside Arizona's border the map is untouched — no fill, no tint — and the rise
+is the dual shadow translated to map layers, one light source at top-left.
+Outside is muted **and slightly blurred**, which is why that half is a DOM
+scrim with `backdrop-filter` and not a MapLibre fill: no WebGL paint property
+can blur what is under it, and a tint pretending to be a blur is half the work
+looking like all of it.
+
+Three defects found by measuring rather than looking, and all three would have
+survived a screenshot review:
+
+- the CSS compiler **dropped the standard `backdrop-filter`** and emitted only
+  the `-webkit-` alias when both were written by hand, so the first pair
+  clipped correctly and blurred nothing;
+- the scrim was `position: fixed` over the whole viewport and muted the
+  SIDEBAR, then at `z-index: 5` sat over the bottom stack and blurred the
+  count badge and the freshness line — the reference's own accessibility
+  warning happening in practice;
+- and the lint fix for a synchronous `setState` **cancelled the pending
+  animation frame without clearing the handle**, leaving the
+  "already scheduled" guard armed for a frame that would never run. The scrim
+  never drew again. It was invisible because the effect re-runs exactly once
+  on a first paint — as the outlines land — so the feature worked in a
+  screenshot taken before that moment and was dead in every walk taken after.
+
+The **border-crossing prompt** ships with it, entirely missing on production
+until now: quiet within a state, explicit between states.
+
+**One conflict is left for the author rather than resolved here.** e's 6b2
+says zooming out RELEASES focus. The g3 brief says twice, as his own test,
+that the effect holds at every zoom and never disappears. The later explicit
+instruction is what shipped; the release rule is not implemented, and only the
+shadow's spread scales with zoom.
+
+### The rest, briefly
+
+M94 collapsed the who-governs footnotes (four identical sentences, three of
+them naming one town three times). M125 stopped the Sources tab calling an
+official-source read "not yet" — a fact read off the Governor of Arizona's own
+site, under a link to it, labelled unverified. M126 made the ballot's pick
+control name its ACTION, so the private ballot-builder stops reading as the
+sensor whose aggregate is sold; D65 is the author's scale-v3 ruling underneath
+it. M127 deleted the duplicate contact accordion after auditing it field by
+field.
+
+**Deferred in the brief's own cut order: M95 (the governors' two facts) first,
+then M123 (the neighbouring towns).** Nothing half-built; both carry their
+whole spec, and M123 carries every rung this session walked.

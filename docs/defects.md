@@ -254,3 +254,42 @@ entries were found at session-open. Row pointers:
   walk found under it, which also names what D53 has never been able to do in
   a browser.
 - The jurisdiction badge → **M81** (deferred whole, nothing half-built).
+
+## 2026-08-15 — the session brief (the money session)
+
+The author's directive again arrived as the session brief rather than as
+entries here; the brief is committed at `docs/session-brief.md` for the
+record, and the narrative is `state.md` §28. No untriaged entries were found
+at session-open. Row pointers:
+
+- The register doctrine into CLAUDE.md → **X06**.
+- Contributions sorted by money, grouped by kind, repeat filings collapsed →
+  **D55**. The second hop, "Give me the tea" → **D56**. The small-donor
+  honesty floor → **D57**.
+- Found BY the work, live on production → **D58**: `/schedules/schedule_a/`
+  returns every RECEIPT, not every gift, and AMALGAMATED BANK was rendering
+  three times as one of Mark Kelly's biggest contributors. It was his own
+  bank refunding fees (FEC line 15). 75 non-contribution receipts dropped,
+  counted by line.
+- The Facebook-as-campaign-site rule → **X07** (rule adopted; the sweep is
+  the open half, and was the brief's own first cut).
+- The polling-place pointer → **M82**, with **B16** recorded for the
+  address-level version.
+- One person, one photo → **D59** (the author reported one; the audit found
+  nine). Risa Lombardo's portrait → **D60**. "School District Not Defined" →
+  **M83** (both a real gap geometry AND a labeling defect). Cancellation
+  signals per adapter → **M84** (the zeros are real, with denominators; two
+  adapters were not looking at all).
+- The geocoder proxy and the keepable promise → **M80** (Done, verified end
+  to end on production). Found BY that verification → **M85**: the
+  crossing-street question had never once been asked, because applying a
+  street unmounted the component that asks it.
+- The LegiScan Sunday workflow → **D54** (Done, run green in Actions).
+- Key votes → **B15** (In progress: machinery and 16/16 nominations
+  verified), with **B17** recording the route that resolves the laws.
+- Found BY the walk → the FEC snapshot was stamped with TOMORROW's date:
+  `toISOString()` after 5pm Phoenix. Scripts call `stamp()` now and a test
+  fails on any snapshot date later than today.
+- Recorded, not built, in the brief's own cut order: **6c** (school-life
+  routing), **6d** (the ask-box classifier), **6f**/**M81** (the jurisdiction
+  badge), **7b**/**R16** (the 81 session-label dates), and item 5's sweep.

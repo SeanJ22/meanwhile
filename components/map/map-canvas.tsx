@@ -21,6 +21,7 @@ import {
   resolveBasemap,
 } from "@/lib/map/style";
 import { initialZoomForZip } from "@/lib/map/initial-zoom";
+import { viewportRadiusKm } from "@/lib/map/viewport-radius";
 import {
   DISTRICT_TYPES,
   addDistrictLayer,
@@ -110,7 +111,17 @@ interface MapCanvasProps {
    * after a debounce, never mid-gesture. The parent decides whether to act
    * (it skips when a popup is open or a selection is active).
    */
-  onViewportSettle?: (center: { lat: number; lng: number }) => void;
+  onViewportSettle?: (view: {
+    lat: number;
+    lng: number;
+    /**
+     * How far the reader can actually SEE, corner to corner and halved
+     * (g3 item 6). Carried because the fetch used to ignore zoom entirely
+     * and always ask for the ladder's first rung, so zooming out re-drew a
+     * 25 km circle around a moved centre and pins disappeared.
+     */
+    viewportRadiusKm: number;
+  }) => void;
   /**
    * Whether the app may move the camera to frame results. False for a
    * settle-driven result: the reader chose this viewport by hand, and
@@ -354,11 +365,42 @@ export function MapCanvas({
         // outside [-180, 180], which the API rejects with a 400 — the one
         // settle-only failure a client can manufacture on its own (2a).
         const center = map.getCenter().wrap();
-        onViewportSettleRef.current?.({ lat: center.lat, lng: center.lng });
+        const bounds = map.getBounds();
+        onViewportSettleRef.current?.({
+          lat: center.lat,
+          lng: center.lng,
+          viewportRadiusKm: viewportRadiusKm({
+            north: bounds.getNorth(),
+            south: bounds.getSouth(),
+            east: bounds.getEast(),
+            west: bounds.getWest(),
+          }),
+        });
       }, 650);
     };
     map.on("movestart", onMoveStart);
     map.on("moveend", onMoveEnd);
+
+    /*
+     * The camera probe (g3 item 6), sibling of `__wtpPinCount` below.
+     *
+     * `pnpm walk:all` has to prove it actually zoomed before it can claim
+     * anything about what zooming did. Without this the walk's first version
+     * reported "zooming out never removes pins — 11 → 11 → 11" while its
+     * gesture was landing on an overlay and the map had never moved: a green
+     * check for an experiment that did not run, which is worse than a red
+     * one. Read-only; nothing in the product consults it.
+     */
+    (window as unknown as { __wtpZoom?: () => number }).__wtpZoom = () =>
+      map.getZoom();
+    (window as unknown as { __wtpZoomOut?: (by?: number) => void }).__wtpZoomOut = (
+      by = 2,
+    ) => {
+      // Dispatched as a USER gesture would be seen: `zoomTo` with an
+      // `originalEvent` so the settle path — the one the defect lived in —
+      // is the path the walk exercises. A bare `map.zoomTo()` would skip it.
+      map.zoomTo(map.getZoom() - by, {}, { originalEvent: new Event("wheel") });
+    };
 
     return () => {
       window.clearTimeout(settleTimer);
@@ -431,6 +473,20 @@ export function MapCanvas({
       onSelectRef.current(venue),
     );
     applyVisibility(poolRef.current, new Set(venues.map((v) => v.key)));
+
+    /*
+     * The pin-count probe (g3 item 6).
+     *
+     * `pnpm walk:all` asserts that zooming out never REMOVES pins, and a
+     * count read off the DOM would be counting what the browser happened to
+     * have painted rather than what the map holds. This is the map's own
+     * answer to "how many pins are you showing", and it exists for exactly
+     * one caller. It is a read-only integer: nothing about the product
+     * behaves differently when it is or isn't there, so it cannot become a
+     * feature by accident.
+     */
+    (window as unknown as { __wtpPinCount?: () => number }).__wtpPinCount = () =>
+      venues.length;
   }, [venues]);
 
   // Swap the basemap when the theme changes. The listener above puts the

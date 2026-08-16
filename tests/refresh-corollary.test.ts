@@ -221,7 +221,7 @@ test("a fresh row always beats a carried one, and a healthy source carries nothi
   };
 
   const fresh = [{ ...kearsargeSitting("2026-09-10"), title: "Budget Presentations" }];
-  const { meetings, carried } = carryForward(
+  const { meetings } = carryForward(
     [{ source: "schedulepage", ok: false }],
     fresh,
     previous,

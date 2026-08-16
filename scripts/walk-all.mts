@@ -83,7 +83,6 @@ interface Failure {
 
 const failures: Failure[] = [];
 let passed = 0;
-let group = "";
 
 /**
  * One assertion, owned by the session that shipped the claim.
@@ -116,7 +115,6 @@ function cannotRun(session: string, name: string, why: string): void {
 }
 
 function section(title: string): void {
-  group = title;
   console.log(`\n${title}`);
 }
 
@@ -559,34 +557,62 @@ for (const { zip } of FOUR) {
     check("0819", "07866: no shouting surnames", !/\bROACH\b/.test(text));
   }
 
-  // g3 item 6 — more viewport must never mean fewer pins.
+  /*
+   * g3 item 6 — more viewport must never mean fewer pins.
+   *
+   * The zoom-out goes through `__wtpZoomOut`, which issues the camera move
+   * WITH an `originalEvent` so it takes the same settle path a reader's
+   * gesture does. Playwright's own `mouse.wheel` was tried first and does not
+   * work here: at 390 wide the who-governs card covers the middle of the
+   * viewport, the wheel lands on the card, and the map never moves.
+   *
+   * **The zoom is asserted before the pin counts are.** The first version of
+   * this check printed a cheerful "11 → 11 → 11" while the map had not moved
+   * an inch — a green check for an experiment that never ran, which is worse
+   * than a red one, and the same shape as the empty-success failures this
+   * repo keeps finding. A flat count only means something once the camera is
+   * known to have changed.
+   */
+  const zooms: number[] = [];
   const counts: number[] = [];
   for (let step = 0; step < 3; step++) {
-    const n = await page.evaluate(() => {
-      const w = window as unknown as { __wtpPinCount?: () => number };
-      if (typeof w.__wtpPinCount === "function") return w.__wtpPinCount();
-      return -1;
+    const state = await page.evaluate(() => {
+      const w = window as unknown as {
+        __wtpPinCount?: () => number;
+        __wtpZoom?: () => number;
+      };
+      return {
+        pins: typeof w.__wtpPinCount === "function" ? w.__wtpPinCount() : -1,
+        zoom: typeof w.__wtpZoom === "function" ? w.__wtpZoom() : Number.NaN,
+      };
     });
-    counts.push(n);
+    counts.push(state.pins);
+    zooms.push(state.zoom);
     if (step < 2) {
-      await page.keyboard.press("Minus").catch(() => {});
-      await page.evaluate(() => {
-        const w = window as unknown as { __wtpZoomOut?: () => void };
-        w.__wtpZoomOut?.();
-      });
-      await page.waitForTimeout(2500);
+      await page.evaluate(() =>
+        (window as unknown as { __wtpZoomOut?: (by?: number) => void }).__wtpZoomOut?.(2),
+      );
+      await page.waitForTimeout(4000);
     }
   }
-  if (counts.every((c) => c >= 0)) {
-    const monotone = counts[1] >= counts[0] && counts[2] >= counts[1];
+
+  const zoomed =
+    zooms.every((z) => Number.isFinite(z)) && zooms[2] < zooms[0] - 1;
+  if (!zoomed) {
+    cannotRun(
+      "g3",
+      `${zip}: pin monotonicity`,
+      `the map did not zoom out (zooms ${zooms.join(" → ")}) — the check never ran`,
+    );
+  } else if (counts.some((c) => c < 0)) {
+    cannotRun("g3", `${zip}: pin monotonicity`, "the map exposes no pin-count probe");
+  } else {
     check(
       "g3",
       `${zip}: zooming out never removes pins`,
-      monotone,
-      `pin counts by zoom step: ${counts.join(" → ")}`,
+      counts[1] >= counts[0] && counts[2] >= counts[1],
+      `pins ${counts.join(" → ")} across zooms ${zooms.map((z) => z.toFixed(1)).join(" → ")}`,
     );
-  } else {
-    cannotRun("g3", `${zip}: pin monotonicity`, "the map exposes no pin-count probe");
   }
 
   await page.context().close();

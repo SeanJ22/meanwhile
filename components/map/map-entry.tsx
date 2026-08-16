@@ -18,7 +18,8 @@ import type { SearchItem } from "@/lib/search";
 import { DataProvider, type ShellData } from "@/lib/state/data";
 import { applyFilters, noticeShouldExpand } from "@/lib/state/derive";
 import { deriveActiveDistrictTypes } from "@/lib/state/district-intent";
-import { haversineKm } from "@/lib/geo/distance";
+import { RADIUS_LADDER_KM } from "@/lib/meetings/constants";
+import { requestRadiusKm, shouldRequery } from "@/lib/map/viewport-radius";
 import { MapFloaters } from "./map-floaters";
 import { UiProvider, useUi, useUiDispatch } from "@/lib/state/provider";
 import type { MeetingSearchResult } from "@/lib/meetings/query";
@@ -98,6 +99,14 @@ interface ViewTarget {
   zip: string | null;
   lat: number;
   lng: number;
+  /**
+   * What to ask the meetings API for (g3 item 6). Absent means the ladder's
+   * first rung, which is right for a typed zip — the reader named a place,
+   * not a viewport. A settled view carries what the reader can actually see,
+   * so zooming out returns a superset instead of a smaller circle around a
+   * moved centre.
+   */
+  radiusKm?: number;
 }
 
 export function MapEntry() {
@@ -232,7 +241,7 @@ function MapEntryInner() {
     if (!view) return;
 
     const controller = new AbortController();
-    const { key, zip, lat, lng } = view;
+    const { key, zip, lat, lng, radiusKm } = view;
 
     void (async () => {
       try {
@@ -240,8 +249,12 @@ function MapEntryInner() {
         // orientation only, disclosed on /transparency. A settled viewport
         // has none; the server resolves the nearest ZCTA and logs that.
         const zipParam = zip ? `&zip=${zip}` : "";
+        // g3 item 6: stated, never defaulted. Omitting it meant the server
+        // used the ladder's first rung at every zoom level, which is how
+        // zooming out came to REMOVE pins.
+        const radiusParam = radiusKm ? `&radiusKm=${radiusKm}` : "";
         const response = await fetch(
-          `/api/meetings?lat=${lat}&lng=${lng}${zipParam}`,
+          `/api/meetings?lat=${lat}&lng=${lng}${zipParam}${radiusParam}`,
           {
             headers: { accept: "application/json" },
             signal: controller.signal,
@@ -478,10 +491,36 @@ function MapEntryInner() {
    * false for settled views.
    */
   const onViewportSettle = useCallback(
-    (center: { lat: number; lng: number }) => {
+    (center: { lat: number; lng: number; viewportRadiusKm: number }) => {
       if (!location || welcomeRequested) return;
       if (popupMeeting || ui.selectedVenueKey || ui.selectedDistrictOcdId) return;
-      if (view && haversineKm(center.lat, center.lng, view.lat, view.lng) < 5) {
+
+      const radiusKm = requestRadiusKm(center.viewportRadiusKm);
+      // g3 item 6: the distance test alone was half the pin-dropping defect.
+      // A reader who zooms OUT without moving the centre passes no distance
+      // check, so the radius never widened and the new viewport stayed empty
+      // of pins that exist. A materially larger request is its own reason to
+      // re-ask; a smaller one never is.
+      if (
+        !shouldRequery(
+          view
+            ? {
+                lat: view.lat,
+                lng: view.lng,
+                // A zip view carries no radius because it never asked for
+                // one — which means it got the ladder's FIRST RUNG from the
+                // server. That default is what a widening has to be compared
+                // against. Falling back to the incoming radius (the first
+                // draft of this line) made every comparison a no-op: the two
+                // sides were the same number by construction, the zoom-out
+                // never re-queried, and the walk reported "11 → 11 → 11" for
+                // a fix that was doing nothing.
+                radiusKm: view.radiusKm ?? RADIUS_LADDER_KM[0],
+              }
+            : null,
+          { lat: center.lat, lng: center.lng, radiusKm },
+        )
+      ) {
         return;
       }
       // Deliberately no notice expansion here: panning is not a question
@@ -490,11 +529,15 @@ function MapEntryInner() {
       setSettled({
         forZip: location.zip,
         target: {
-          key: `settled:${center.lat.toFixed(3)},${center.lng.toFixed(3)}`,
+          // The radius is part of the key: two settles at the same centre and
+          // different zooms are two different questions, and sharing a key
+          // would make the wider one a no-op.
+          key: `settled:${center.lat.toFixed(3)},${center.lng.toFixed(3)}@${radiusKm}`,
           kind: "settled",
           zip: null,
           lat: center.lat,
           lng: center.lng,
+          radiusKm,
         },
       });
     },

@@ -279,19 +279,21 @@ function newburyBoardRows(): Body[] {
       gap: null,
     },
     {
-      // The board publishes its agendas — four in 2026, each with a date and
-      // a time — and publishes its meeting PLACE nowhere this session could
-      // find: not on the department page, not in the agenda notices (three
-      // read in full), not in the town's events listing. Its sibling boards
-      // each state theirs in their own words, and inferring this one from
-      // theirs is exactly the guess the venue table exists to refuse. So the
-      // source is located and the body is not yet renderable: KNOWN_UNCOVERED,
-      // and the venue hunt is the named next rung.
+      // LIVE 2026-08-15 (the mobile round-two session). The venue hunt this
+      // row was parked on closed, and not on a rung the last session had
+      // walked: the board's own page carries a "Contact Info" pane whose
+      // address block reads `937 Route 103, Newbury, NH 03255` behind a
+      // Google-map link, under the town's own label "Newbury Offices". The
+      // page TEXT never says it, which is why three reads of the agendas
+      // missed it — the address lives in the map link, not in the prose. The
+      // author found it in his own browser and ruled it the meeting address
+      // for this board and the Planning Board alike; the Planning Board's own
+      // agendas say "Newbury Town Office" independently, which agrees.
       slug: "zoning-board-of-adjustment",
       name: "Zoning Board of Adjustment",
       path: "/zoning-board-adjustment",
-      live: false,
-      gap: "agendas published; meeting place not published on any walked rung",
+      live: true,
+      gap: null,
     },
   ];
 

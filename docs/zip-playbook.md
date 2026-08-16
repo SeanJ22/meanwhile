@@ -338,6 +338,17 @@ Two findings from Newbury that generalize:
    Wire the ones you can place; record the one you cannot, with the next rung
    named.
 
+   > **2026-08-15, the mobile round-two session — the venue was there.** Not
+   > in the prose, which is why three careful reads came back MISS: it is in
+   > the department page's own **contact markup**, a vCard `street-address`
+   > block plus a `See map: Google Maps` link carrying
+   > `q=937+Route+103%2C+Newbury%2C+NH%2C+03255%2C+us`. The board is LIVE on
+   > one curated venue row and no other change, exactly as the note above
+   > predicted — but on a rung it did not name. See **Prose said no; ask the
+   > markup** below. The refusal to infer from the siblings stands: the
+   > independent answer agreed with them, which is the one thing an inference
+   > could never have proven.
+
 ### Probe the calendar category ids (2026-08-15)
 
 On CivicPlus, and by extension any CMS with numbered calendar feeds: **the
@@ -400,6 +411,68 @@ surface renders. Arizona published 7,283 roll calls in one session and
 absent those two days would have rendered an empty record that reads as
 "never votes". The clip is now the union of each member's own twelve most
 recent, which guarantees every member with a record has one to show.
+
+### Prose said no; ask the markup (2026-08-15)
+
+**A page that answers MISS for a fact stated in a sentence has not been asked
+for the same fact stated in markup.** Municipal CMSs publish addresses
+structurally all the time — vCard `location`/`adr`/`street-address` blocks,
+`See map` links carrying the address in a query string, JSON-LD `Place`,
+`<meta>` geo tags — and a reader scanning a rendered page for "the meeting is
+at" never sees any of it. Newbury's Zoning Board of Adjustment sat at
+`KNOWN_UNCOVERED` for a day on exactly this: three rungs of prose, all
+honestly MISS, over a page that carried the address in its own contact pane
+the whole time.
+
+So a venue hunt on a CMS page has a rung before the minutes and the posted
+notice, and it is nearly free:
+
+1. Grep the retrieved HTML for `street-address`, `class="adr"`, `vcard`,
+   `geo`, `maps.google`, `google.com/maps`, `openstreetmap`, `application/ld+json`.
+2. Read the address out of the **map link's query string** where the visible
+   text does not carry it — that is where the author found this one.
+3. Cite the markup, not the rendering: the row's `addressSourceUrl` is the
+   page, and the note says which block it came from.
+
+The same move is worth trying for meeting TIMES (`dc:date`, `<time datetime>`)
+and for body names, and it applies to any host, not just this vendor.
+
+### A hover-only menu is invisible to a click-walking rung (2026-08-15)
+
+`newbury.nh.gov` reveals its boards list **on hover, with no click** — there
+is no expanded state a walk can reach by clicking, so a rung that enumerates
+navigation by clicking finds nothing and reports an honest MISS over a
+complete list. Two lessons: read the **markup** of the nav (the `<ul>` is in
+the HTML whether or not a pointer ever touches it), and treat "the menu did
+not open" as a retrieval failure, never as evidence about what the town
+publishes. The author found this list in his own browser by hovering.
+
+### The town's one building, and the label it uses (2026-08-15)
+
+Newbury's convention — and New England towns do this constantly — is that
+**every physical town meeting happens at one place**, published under a single
+label ("Newbury Offices" in the site footer of every page) with the street
+address behind a map link rather than in the label. Two consequences for a
+New England town: one curated venue row can unlock several bodies, and the
+label the reader should see is the town's own, not a name reconstructed from
+the address. Resolve each body on its own published string anyway — the rows
+are cheap, and one body meeting somewhere else is a wrong pin for exactly the
+reader who turned up.
+
+### Newbury's boards, as the author observed them (2026-08-15) — a denominator
+
+The town's own boards list, read from the hover menu, in full: Advisory
+Budget, Blodgett Sewer, Cemetery Trustees, Conservation Commission, Joint
+Assessing, Joint Loss Management, Beautification, Energy, Library Trustees,
+Septic, Planning, Selectboard, Trust Funds Trustees, Zoning Board of
+Adjustment. **Fourteen bodies.** Recorded as the observed universe for this
+town — a denominator to measure coverage against, not a work list and not a
+commitment. Four are wired today (Selectboard, Planning, Conservation
+Commission, Zoning Board of Adjustment); the other ten are `NOT_ATTEMPTED`
+and must be recorded that way rather than as silence. Note that this list is
+the *town's own* enumeration and the coverage rule's denominator still comes
+from the Census of Governments — the two are cross-checks on each other, and
+a body on one and not the other is a finding.
 
 ## 4. The scripts that exist
 

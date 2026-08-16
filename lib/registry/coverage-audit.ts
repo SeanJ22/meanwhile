@@ -416,13 +416,19 @@ export const COVERAGE_AUDITS: BodyCoverageAudit[] = [
         url: "https://www.newbury.nh.gov/events",
         note: "200; the town's events listing carries no location for this board either.",
       },
+      {
+        rung: "BODY_AGENDA_PAGE",
+        outcome: "HIT",
+        url: "https://www.newbury.nh.gov/zoning-board-adjustment",
+        note: "2026-08-15, the mobile round-two session — THE VENUE, on a rung already walked and re-read for a different thing. The same page's 'Contact Info' pane carries a vCard address block (`937 Route 103 / PO Box 296 / Newbury, NH 03255`) and a `See map: Google Maps` link to `maps.google.com?q=937+Route+103%2C+Newbury%2C+NH%2C+03255%2C+us`. It is MARKUP, not prose: the page never writes a sentence saying where the board sits, which is exactly why three careful reads of the agendas came back MISS. Reported by the author from his own browser, then verified by live retrieval. The label is the town's own, from the site footer every page carries: 'Newbury Offices'.",
+      },
     ],
     homepageUrl: "https://www.newbury.nh.gov/zoning-board-adjustment",
-    agendaSourceType: "HTML",
+    agendaSourceType: "SCHEDULEPAGE",
     agendaSourceRef: "https://www.newbury.nh.gov/zoning-board-adjustment",
-    coverageStatus: "KNOWN_UNCOVERED",
+    coverageStatus: "LIVE",
     notes:
-      "The one board of the three NOT wired, and deliberately. Its schedule is in hand — the same adapter and the same shape as its sibling would read it today — and its meeting PLACE is published nowhere this session could find, on any of the three rungs above. Both siblings state theirs in their own words, and taking the Town Office from them for this board would be exactly the guess the venue table exists to refuse: a pin in roughly the right place is a fabricated citation wearing a map marker. The named next rung is the venue, not the schedule: the board's approved minutes (which normally open by naming the room) and, failing that, the town's own posted notice. One curated venue row makes this body LIVE with no other change.",
+      "KNOWN_UNCOVERED until 2026-08-15, then LIVE on one curated venue row and no other change — exactly as the prior session's note predicted, though not on the rung it named. It expected the venue from the board's approved minutes or a posted notice; it came from the department page's own contact markup, behind the Google-map link. The lesson recorded in the playbook: a page that answers MISS for a fact stated in PROSE has not been asked for the same fact stated in MARKUP, and a municipal CMS states addresses in markup constantly. The refusal to infer this board's venue from its siblings' was still right — and the independent answer agrees with them, which is what an inference could never have proven.",
   },
 
   // ── The depth session, 2026-08-15 ────────────────────────────────────────

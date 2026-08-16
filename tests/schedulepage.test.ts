@@ -391,14 +391,55 @@ test("the Planning Board normalizes to the venue its own agenda states", () => {
   }
 });
 
-test("the Zoning Board is deliberately unwired, and the reason is the venue", () => {
-  // Its schedule is in hand — the same parser reads it today — and the town
-  // publishes its meeting PLACE nowhere. Taking the Town Office from its two
-  // siblings would be the guess the venue table exists to refuse, so the body
-  // stays KNOWN_UNCOVERED with its ladder recorded. This test exists so that
-  // wiring it LATER is a deliberate act rather than a drift: when a venue is
-  // curated, this assertion is the thing that has to change.
+test("the Zoning Board is wired, on a venue the town publishes in markup", () => {
+  // This assertion used to say the opposite — the board stayed KNOWN_UNCOVERED
+  // because three rungs of prose said nothing about where it sits, and taking
+  // the Town Office from its two siblings would have been the guess the venue
+  // table exists to refuse. The venue arrived 2026-08-15 from the department
+  // page's own contact markup (a vCard address block behind a Google-map
+  // link), so wiring it is the deliberate act this test was written to force.
   const wired = wiringForTypes(["SCHEDULEPAGE"]).map((w) => w.config.slug);
-  assert.ok(!wired.includes("newbury-zoning-board-of-adjustment"));
-  assert.equal(parseAgendaList(NEWBURY_ZONING, "/zoning-board-adjustment/").sittings.length, 7);
+  assert.ok(wired.includes("newbury-zoning-board-of-adjustment"));
+
+  // The denominator, stated: the page publishes SEVEN dated sittings across
+  // two calendar years, and the served window (90 back, 60 forward) admits
+  // exactly one of them from this NOW. A clip is not a failure and must not
+  // read as one, so both numbers are asserted.
+  const parsed = parseAgendaList(NEWBURY_ZONING, "/zoning-board-adjustment/");
+  assert.equal(parsed.sittings.length, 7);
+
+  const row = wiringFor("newbury-zoning-board-of-adjustment");
+  const source = makeSchedulePageSource([row]);
+  const { meetings, drops } = source.normalizeWithDrops(
+    [{ wiring: row, schedule: NEWBURY_ZONING, collectedAt: NOW.toISOString() }],
+    NOW,
+  );
+
+  assert.deepEqual(
+    meetings.map((m) => m.startsAt.slice(0, 10)),
+    ["2026-08-13"],
+  );
+  // Zero, not "no error": the venue resolves, so nothing drops for want of a
+  // place. The other six sittings are outside the window, which is a different
+  // fact from being unplaceable.
+  assert.equal(drops.unknownVenue, 0);
+
+  const [aug] = meetings;
+  assert.equal(aug.bodyName, "Zoning Board of Adjustment");
+  assert.equal(aug.title, "Zoning Board of Adjustment", "never the document's label");
+  // The town's own label for the building, and its own address — neither
+  // borrowed from the sibling boards' rows.
+  assert.equal(aug.location.name, "Newbury Offices");
+  assert.equal(aug.location.address, "937 Route 103, Newbury, NH 03255");
+  assert.match(aug.startsAt, /T19:00:00-04:00$/);
+  assert.ok(
+    aug.agendaUrl?.startsWith("https://www.newbury.nh.gov/zoning-board-adjustment/"),
+  );
+
+  // The board's only cancellation signal is its own link text, and April's
+  // row carries it. Outside the window here, but the parse must still see it.
+  assert.equal(
+    parsed.sittings.find((s) => s.date === "2026-04-08")?.canceled,
+    true,
+  );
 });

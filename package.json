@@ -39,7 +39,8 @@
     "pairs": "tsx scripts/pairs.mts",
     "contrast": "tsx scripts/contrast-audit.mts",
     "overlaps": "tsx scripts/overlap-audit.mts",
-    "key-votes:positions": "tsx scripts/fetch-key-vote-positions.mts"
+    "key-votes:positions": "tsx scripts/fetch-key-vote-positions.mts",
+    "sheet": "tsx scripts/contact-sheet.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

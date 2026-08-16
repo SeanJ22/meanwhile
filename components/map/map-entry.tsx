@@ -828,6 +828,26 @@ function MapEntryInner() {
     });
   }, []);
 
+  /*
+   * 6f: Near me resolves districts, through the SAME machinery a narrowed
+   * street address uses (D53). Reusing `onStreetPoint` rather than inventing
+   * a parallel path is the point — one definition of what a point means, one
+   * lifetime (React state, this tab), one promise about storage. A second
+   * path would drift, and the thing it would drift on is the promise.
+   *
+   * `street` is the label the card shows for where the answer came from.
+   * "your approximate location" is the honest one here: a browser fix is a
+   * radius, and calling it an address would be the overclaim the caveat on
+   * the control exists to prevent.
+   */
+  const onNearMePoint = useCallback(
+    (point: { lat: number; lng: number }) => {
+      onStreetPoint({ ...point, street: "your approximate location" });
+      dismissSidebar();
+    },
+    [onStreetPoint, dismissSidebar],
+  );
+
   const onSelectVenue = useCallback(
     (venue: Venue) => {
       dispatch({ type: "select/venue", key: venue.key });

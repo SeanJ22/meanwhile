@@ -6096,3 +6096,242 @@ rates) and **6**'s town-hall survey were deferred and are tracker rows
 rather than a summary. **8**'s Facebook sweep (**X07**), **8**'s session-label
 dates (**R16**), **6c** school-life routing and **6f**/**M81** the
 jurisdiction badge were not built. Nothing was half-built.
+
+## 30. The 2026-08-15 session (seventh of the day) — mobile round two: the phone gets its gestures, and one colour stops meaning seven things
+
+**Branch** `claude/mobile-round-two-0815`. The author's brief was a mobile
+pass plus a standing bar — "Apple level clean" — and one data item at the
+front. Twenty-one numbered items; everything below is interaction and
+rendering except item 0, and no data rule changed.
+
+### 0. Newbury's Zoning Board goes live, and the venue was never missing
+
+The board had sat at `KNOWN_UNCOVERED` for a day because its meeting PLACE
+appeared in no prose on any rung walked: not the department page's text, not
+three agendas read in full, not the town's events listing. The prior session
+recorded that honestly and named the next rung as the board's approved
+minutes.
+
+It was on the department page the whole time, in **markup**. The page carries
+a "Contact Info" pane with a vCard `street-address` block — `937 Route 103 /
+PO Box 296 / Newbury, NH 03255` — beside a `See map: Google Maps` link whose
+query string is the address. The author found it in his own browser through
+the map link. Verified here by live retrieval (200 through the browser rung)
+and the Census geocoder re-run rather than copied from the sibling rows.
+
+One venue-cache row and one wiring row took the body from KNOWN_UNCOVERED to
+LIVE, exactly as the prior session's note predicted and on a rung it did not
+name. **The refusal to infer the venue from the sibling boards was still
+right**: the independent answer agrees with them, which is the one thing an
+inference could never have proven.
+
+**Counts with denominators.** The page publishes SEVEN dated sittings across
+2025–2026; the served window (90 back / 60 forward) admits exactly ONE from
+today — the 2026-08-13 sitting — and the other six are outside it. That is a
+clip, not a failure, and the test asserts both numbers so neither can
+silently become the other. `unknownVenue` drops: 0. The composite snapshot
+went from 4 schedulepage bodies to 5, 26 meetings to 27, 229 total from 10/10
+sources.
+
+**Playbook diff (R13), four entries.** "Prose said no; ask the markup" — grep
+retrieved HTML for `street-address`, `adr`, `vcard`, `maps.google`, `ld+json`
+BEFORE hunting a second source, and read the address out of a map link's
+query string where the visible text does not carry it. "A hover-only menu is
+invisible to a click-walking rung" — newbury.nh.gov reveals its boards list on
+HOVER with no click, so read the nav's markup and never treat a menu that did
+not open as evidence about what a town publishes. "The town's one building,
+and the label it uses." And Newbury's fourteen-body observed universe, from
+the author's own read of that menu, recorded as a denominator: four wired,
+ten `NOT_ATTEMPTED`.
+
+### The palette pass, and the token that was never real
+
+The author: "I don't know how I feel about all this gold font." He was
+describing a defect, not a preference. `--link` aliased `--accent-local` and
+`--signal` aliased it again, so ONE colour carried links, structural labels,
+seat titles, counters, tier headers, focus rings and active chips. A colour
+that means seven things means nothing, which is why the screen read heavy —
+the eye had no way to tell which gold was the one to act on.
+
+What changed is the DISTRIBUTION, not the hue. `--link` is the one
+interactive accent and now marks only tappable things. `--action` /
+`--action-on` are the filled primary action, reserved for the ballot pill and
+Ask. `--label` is new and neutral: type tags, seat titles and section eyebrows
+carry weight instead of colour. Counters went back to the data register. Tier
+accents and party colours are untouched, and so are the pill families.
+
+**`pnpm contrast` is the new guard, and its bar is the tester's, not
+WCAG's.** Her field finding was that gold-on-light is unreadable in phone
+glare — which is a WCAG *pass* that means nothing outdoors, because direct
+sun raises a display's black level by more than the whole contrast budget of
+a 4.5:1 pair. The script reads the tokens out of `globals.css` (never a copy)
+and holds every reader-facing pair to **7:1** against the surfaces it actually
+renders on, in both themes, with each exemption listed and reasoned. Light
+`--link` measured **2.90:1** — below AA, never mind glare. Eight tokens moved;
+every pair clears now.
+
+**Found by the work: `--signal` was never a real custom property.** It existed
+only inside `@theme inline`, which is Tailwind's *inline* form — it teaches
+the compiler to substitute values into utilities like `text-signal` and emits
+no variable. So `text-signal` worked and every one of ~20 arbitrary usages
+resolved to nothing: `border-[var(--signal)]`, `bg-[var(--signal)]/5`, and the
+raw `var(--signal)` in the stylesheet. DESIGN.md's own "filled amber Ask
+button" was an unfilled outline. "What's on the ballot" inside the
+who-governs card — the entry a whole session was spent making findable — had
+no accent border and no tint. Every reaction control's selected state, the
+funding pill frame, the tutorial dots and the agenda notice were unstyled.
+This is the empty-success shape in CSS: a declaration naming an undefined
+variable fails silently and reads exactly like one that works. Caught by
+reading a computed style rather than a stylesheet, which is now the rule.
+
+### The overlap audit, and what the reported collision actually was
+
+The author reported "the sidebar footer collides with the map legend at
+mobile width". Measured before touching: the footer is not special. The
+legend is `position: fixed` at z-1100 over a z-1000 drawer, so it paints on
+whatever the reader has scrolled to — his screenshot caught the footer, ours
+caught the DATE RANGE heading. A fix aimed at the footer would have moved the
+collision rather than ended it. The legend explains pin colours on a map the
+drawer is covering, so it hides while the drawer is open.
+
+`pnpm overlaps` walks nine states at 390px and reports every rectangle
+intersection between floating chrome and readable surfaces. It found a second
+one nobody had reported: **the sidebar-count doors sat at `z-40`** while every
+other large surface is 1200–1300 and the legend is 1100, so a door rendered
+UNDER the pin-colour key. Both clean now, 0 across 9/9.
+
+Two traps the walk had to be taught, both familiar: `getBoundingClientRect`
+is layout rather than paint (so rects are clipped to their scrolling
+ancestors), and no inner named functions inside `page.evaluate` (esbuild
+rewrites them to a `__name` helper the page does not have). And the first
+version printed "skipped" for two states it never reached and then reported
+zero overlaps across six — a clean bill of health for work it had not done.
+An unreached state is a failure now.
+
+### The battlecard, rebuilt
+
+Every major block is a collapsed pill header with identity open above them.
+The order is recorded in DESIGN.md: identity → what-this-office-does → contact
+→ money → votes. The office explainer sits ahead of the author's four because
+of the stranger test — a reader who does not know what a ward council member
+IS cannot use a phone number or a donor list.
+
+The section SET is identical per office class, and that is the equal-effort
+rule enforced at the component: hiding a section because it would be empty
+makes the well-covered candidate's card taller and more substantial, which is
+a layout thumb on the scale.
+
+The votes split into two columns, both collapsed. **Recent** is the last 20
+roll calls, count-based rather than time-windowed because a congress votes in
+bursts, and nothing is filtered — voting to table a bill is voting to kill it
+without going on record, so the procedural rows are where a position often
+lives. **When it mattered** is the B15 list with its published criteria at
+the head and two collapsible sub-groups. A House card collapses the sixteen
+nomination entries into the one honest line rather than repeating it sixteen
+times.
+
+**Found by wiring it, and it is the session's worst near-miss.** The
+key-votes component was written to render a position per member per roll
+call, and there were no positions in the product at all — B15 resolved WHICH
+roll calls, B17 verified them, neither fetched how anyone voted. With nothing
+to render it fell through to its default: **"Did not vote"**, a specific,
+false, checkable claim about a named member of Congress, on every row. It had
+never been visible because the section had not been wired to a surface.
+
+`pnpm key-votes:positions` fetches all 52 cited roll calls. Counts: 52 of 52
+fetched, 6,162 current-member votes of 7,773 recorded in the House, 2,889 of
+3,398 in the Senate — the gaps are members who have left office, which is the
+expected and correct shape. The Senate's nomination entries cite `.htm` pages
+because that is where a reader should be sent; the machine-readable sibling is
+`.xml`, and the first run reported sixteen zero-parses rather than writing
+sixteen empty maps. A null position now says WHICH gap it is: "Not in this
+chamber for this vote" (we hold the roll call, they were not in it) or "We
+haven't recorded this vote yet" (ours).
+
+Verified live: Mark Kelly, 20 LAWS with 17 positions, 2 entries with no roll
+call at all rendering their absence lines, and 1 — the CARES Act, March 2020 —
+where he was not yet a senator. The stated N is 20 and counts all of them.
+
+### The rest of the phone
+
+A press outside dismisses the who-governs card and all three compact popups,
+the way a native sheet does; the explicit controls stay, because a gesture
+nobody discovers is not an exit. The ballot pill is large and filled with an
+Ask pill beside it that focuses the ask box already on the page rather than
+mounting a third one. Tapping the zip opens a compact entry with device-local
+recents.
+
+**The location is session-scoped now** (the author's 6f ruling): a fresh open
+asks where you are, and the only thing that outlives the tab is the recents
+list. A stale location is the one kind of wrong answer this product cannot
+notice on its own — every number under it is correct, for a place the reader
+is not.
+
+**The bubble blinked on every pan**, which the tester reported as the card
+"keeping reappearing and disappearing", and the cause was not the expansion
+rule everyone suspected: `current` is null for the whole gap between a settle
+and its answer, and the collapsed card's bubble — a button with no data in it
+— hung off `current`. It is held and dimmed through the gap now.
+
+Near me resolves districts, through the same D53 machinery a typed street
+uses: same lifetime, same promise, nothing stored. The counter highlight means
+"this door is open" on all four tiles instead of being a permanent accent on
+one. The calendar chooser is a centered dialog with a mark per destination —
+an anchored menu's position is a function of its trigger and a centered one is
+a function of the viewport, which is why it clipped at 390px and now cannot.
+
+The clear-picks dialog lost its second sentence. Half of it was untrue: the
+picks were never sent, but the taps that made them joined anonymous totals and
+this button cannot un-join them. The fix was subtraction, not a longer
+sentence.
+
+### Four rulings recorded
+
+The sidebar's date range defaults to 90 days back, matching the served window
+— it was `now`, so every concluded meeting the pipeline retrieves was filtered
+out before a reader could see one. Two tests asserted the old default and were
+inverted; one said in its own message that a pass meant rewriting rather than
+deleting.
+
+"Not independently verified" retires. When a meeting comes off a town's own
+planning-board page there is no independent party who could verify it and none
+is wanted — the SOURCE link IS the verification, and the line taught readers
+to distrust the most reliable record here. It now renders only for a
+`secondHand` provenance, which no adapter sets.
+
+The ask classifier is author-ruled acceptable as built; the flag stays LIVE
+and keeps its question, because a ruling is a position on doctrine and
+doctrine can move. The last-passage rule is recorded as standing in the
+key-votes header, with the reason B17 learned it.
+
+### The probe rows this session created
+
+**None.** No reaction was tapped, no log event was fired, and nothing was
+written against production. The verification here is screenshots, the two
+audit scripts, and read-only API reads against the local dev server. Stated
+because the standing order requires it either way: a session that created no
+rows says so, so the absence is a finding rather than an omission.
+
+### What was cut, and why
+
+The brief's own cut order permitted deferring **3** first, then **6e** whole.
+Item 3 shipped. **Not built, and nothing half-built:**
+
+- **6b2, the state-focus map** — the vivid/dim treatment, the border dialog,
+  and the release-on-zoom-out. The largest item in the brief and the one that
+  needs the most care: it is a new interaction doctrine ("quiet within a
+  state, explicit between states"), fifty states plus DC from day one, and a
+  crossing detector that must not fire on a wobble. Recorded as **M91** with
+  the design captured rather than summarized.
+- **6e, See information / Go to website** — the two-action model on bodies and
+  districts, including the AZ-6 linking defect the brief names. **M92**.
+- **6e3, the who-governs information order** — the card's own open/one-tap-down
+  discipline. **M93**. The battlecard's version of this shipped and is the
+  pattern it would follow.
+- **6g's footnote half** — the repeated proposition blurb and the ask box's
+  repeated unsourced-body line. The SOURCE tag, "Why these five?" and the
+  moving-here shuffle all shipped. **M94**.
+- **6d's age for the three governors** — "In seat until" ships wherever a term
+  end is sourced, which is all 537 federal members; the statewide executives
+  carry neither a sourced term end nor a birth date, so their cards say
+  nothing rather than guessing. Named in **M95** as the hunt it needs.

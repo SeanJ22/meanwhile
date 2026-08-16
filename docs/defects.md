@@ -325,3 +325,44 @@ pointer. Row pointers for what the brief asked:
   concurrence that is the vote on the gun law.
 - Recorded, not built: **B18** (town halls) and **D62** (the PRL evaluation).
 - Cut per the brief's own order: **X07**'s sweep, **R16**, 6c, **M81**.
+
+## 2026-08-15 — the session brief (mobile round two: the phone feels native, and the palette gets reconsidered)
+
+The author's mobile pass again arrived as the session brief rather than as
+entries here; the brief is committed at `docs/session-brief.md` for the
+record, and the narrative is `state.md` §30. **No untriaged entries were
+found at session-open** — every entry in this file already carried its row
+pointer. Row pointers for what the brief asked:
+
+- Newbury's Zoning Board live on one curated venue row → **M89** (Done). The
+  venue was never missing: it is in the department page's contact MARKUP, not
+  its prose, which is why three rungs of careful reading came back MISS.
+- Native dismissal, the floaters, the zip switcher, the session-scoped
+  location, the palette pass, the framed question boxes → **M90** (Done).
+- Found BY the palette pass: **`--signal` was never a real CSS property** →
+  **M96** (Done). It lived only inside `@theme inline`, so `text-signal`
+  worked and every `border-[var(--signal)]` resolved to nothing — the "filled
+  amber Ask button" was an outline and the who-governs card's ballot entry had
+  no accent at all, invisible in every diff because the class names read
+  correctly.
+- The two audits → **M97** (Done). `pnpm contrast` at a 7:1 sun bar (light
+  `--link` measured 2.90:1), `pnpm overlaps` across nine states at 390px.
+  Found BY the walk: the sidebar-count doors at `z-40` under z-1100 chrome.
+- The battlecard's collapsed sections and two vote columns, plus "In seat
+  until" and age → **M98** (Done). Found BY wiring it: the key-votes surface
+  defaulted a null position to **"Did not vote"** — a false claim about a
+  named member — and there were no positions in the product at all.
+- The four 6f2 rulings → **M99** (Done): the 90-day default, "not
+  independently verified" retired, district cards enriched, FEDERAL in
+  `TIER_LABEL` where it belongs.
+- 6f3's two rulings recorded: the ask classifier author-ruled acceptable
+  (flag stays LIVE, question retained), and the last-passage rule as standing.
+- The screenshot tooling → **R21** (Done).
+- Recorded, not built, nothing half-built: **M91** (the state-focus map, the
+  brief's largest item, design captured whole), **M92** (See information / Go
+  to website, and the AZ-6 linking defect named inside it), **M93** (the
+  who-governs information order), **M94** (two more repeated notices),
+  **M95** (a sourced term end for the three governors).
+- **No production probe rows were created this session** — nothing was
+  written against production at all. Stated because the standing order
+  requires it either way.

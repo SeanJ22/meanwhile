@@ -52,6 +52,7 @@ export function Sidebar({
   onToggleDistricts,
   mobileOpen,
   onMobileClose,
+  onNearMePoint,
 }: {
   onSearchPick: (item: SearchItem) => void;
   onReset: () => void;
@@ -64,6 +65,8 @@ export function Sidebar({
   /** Phone width only: the rail is a drawer, and this is its state. */
   mobileOpen: boolean;
   onMobileClose: () => void;
+  /** 6f: Near me resolved a point — the map answers at it (D53 machinery). */
+  onNearMePoint?: (point: { lat: number; lng: number }) => void;
 }) {
   const { location } = useShellData();
 
@@ -186,7 +189,8 @@ export function Sidebar({
         <StatsBar />
         <SearchBox onPick={onSearchPick} />
         <RadiusControl />
-        <NearMeControl />
+        {/* 6f: the resolved point rides up to the map, which answers at it. */}
+        <NearMeControl onPoint={onNearMePoint} />
 
         <div className="prox-control">
           <label className="prox-toggle">

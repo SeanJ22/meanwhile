@@ -33,7 +33,8 @@
     "fec:fetch": "tsx scripts/fetch-fec.mts",
     "intake:tripwire": "tsx scripts/intake-tripwire.mts",
     "streets:build": "tsx scripts/build-street-index.mts",
-    "legiscan:fetch": "tsx scripts/fetch-legiscan.mts"
+    "legiscan:fetch": "tsx scripts/fetch-legiscan.mts",
+    "key-votes:fetch": "tsx scripts/fetch-key-votes.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

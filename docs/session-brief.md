@@ -1,59 +1,67 @@
-# Session brief — the depth session (2026-08-15, fourth of the day)
+# Session brief — the money tells its whole story
+# (delivered 2026-08-15; this file is the record of what was asked)
 
-The author's brief for this session, committed for the record per the
-standing convention. Branch `claude/nh-nj-depth-0815`; the narrative is
-`docs/state.md` §27.
+The author's directive for this session arrived as the brief rather than as
+entries in `docs/defects.md`. It is reproduced in outline here so the next
+session can read what was asked alongside what was done (`docs/state.md`
+§28). Row pointers are at the bottom.
 
-## The author's directive, verbatim intent
+## What was asked
 
-> "In the next session or two, we need to go really big on New Hampshire and
-> New Jersey... it is light and sparse... there's only probably one, maybe two
-> opportunities for someone to look through it — if they feel like this
-> doesn't have a lot of data, they're never going to interact with it again."
+1. **The voice guide enters CLAUDE.md.** Playful on interaction surfaces,
+   level on claim surfaces. The ask-box beat draws from a FIXED
+   author-curated pool; deliberation labels prohibited.
+2. **Contributions sort by money, grouped by kind.** Two compact columns,
+   amount descending, repeated same-committee filings collapsed to one row
+   with a count. Joint-fundraising transfers stay typed as transfers.
+3. **The second hop — "Give me the tea".** A committee contributor row
+   opens that committee's OWN top itemized contributors, framed as the
+   fund's donors, never the candidate's. Snapshot-committed, same
+   thin-guard, level register inside, playful only in the button.
+4. **Small-donor percentages get an honesty floor.** Below $5,000 raised
+   (flag-tunable), the percentage is replaced by the raw dollars.
+5. **The Facebook-as-campaign-site rule**, into CLAUDE.md, and applied.
+6. **Where do I vote:** a polling-place pointer per state.
+6b. **Four truth items:** one person one photo; the missing ballot photos;
+   "School District Not Defined"; canceled meetings at Tucson and Vail.
+6c. **The routing map learns school life.**
+6d. **Level 1 routing:** the ask box learns to classify, topic only.
+6e. **M80:** the geocoder goes through a stateless proxy, and the promise
+   becomes the keepable truth.
+6f. **M81:** the jurisdiction badge.
+6g. **Two small rulings:** the photo-rule stamps reformat; the LegiScan
+   Sunday workflow ships.
+7. **B15:** the key votes tracker, the author's locked list — 17 law
+   entries (April 2024 as four siblings) and 16 nominations, chamber-mapped,
+   criteria published, never aggregated.
+7b. **R16 cleanup:** the 81 session-label dates.
+8. **Final pass and handoff.**
 
-The author did not believe one meeting in sixty days across forty in-view
-districts at 03255, and he was right not to: those bodies exist and meet.
+The brief's own cut order, if short: 5 (sweep only), then 6f, then 6, then
+6d WHOLE, then 6c, then 7b. Never cut 1, 2, 3, 4, 6b, 6e, 6g, 7's machinery,
+or 8.
 
-## The author's rulings, now law
+## What the session did with it
 
-1. **The photo rule rewritten whole into four doors**, with the composition
-   and identity standards lifted out of the doors entirely. Doors: (1) an
-   explicit recorded licence; (2) an official government-published portrait;
-   (3) NEW — the campaign's own self-published portrait from its own site,
-   labelled "campaign-provided"; (4) NEW, last resort — any portrait on the
-   candidate's own site or any `.gov` site. Press, wire, photographer-credited
-   and social-media images stay prohibited at every door.
-2. **The street input asks instead of only refusing.** When sampled house
-   numbers along a street disagree on jurisdiction, the input prompts — "This
-   street crosses district lines — what's the house number?" — and resolves on
-   the answer. The number is used for the geocode and never logged or stored.
-3. **More states will demand more rungs**, into the playbook's preamble: the
-   rungs written so far are the rungs discovered so far, every new state is
-   presumed to teach new ones, and discovering-and-recording them is the work.
+Built: 1, 2, 3, 4, 5's RULE, 6, 6b, 6e, 6g, and 7's machinery plus VOTES ON
+PEOPLE in full.
 
-## The items, and what happened to each
+Cut, in the brief's own order and named rather than hidden: **6c**, **6d**,
+**6f**, **7b**, and item **5's sweep**. Nothing was half-built.
 
-| # | Item | Outcome |
-|---|---|---|
-| 1 | State folders, notes, and the playbook born | **Done** — R20 |
-| 2 | Meetings depth at 03255 and 07866 | **Done** — M76, M77, M78; M79 In progress (two NH hosts refuse this pipeline; the browser rung is named) |
-| 2 stretch | The in-view neighbour towns at 03255 | **Cut**, per the brief's own cut order |
-| 3 | LegiScan — state votes for AZ/NJ/NH | **Done** — D49, all three states |
-| 3b | D50 under doors 3 and 4 | **Done** — round 5, 590 → 592; 9 misses recorded per candidate, 65 named as needing a site hunt |
-| 4 | The jurisdiction badge | **Deferred whole** — M81, nothing half-built |
-| 5 | Walk, documents, handoff | **Done** — `tester-walk-0815c`, §27, this file |
+## Row pointers
 
-## What the session found that was not in the brief
-
-**M80 — the Census geocoder cannot be called from a browser at all.** It
-answers 200 to a server and sends no `Access-Control-Allow-Origin` header, so
-D53's device-side street geocode — shipped as working last session, with
-passing tests, because the tests run in Node — has never fired in a page.
-Ruling 2 above rides on the same call. This is a transport problem with a
-doctrine answer (the only route that works retracts "never sent to us"), so
-nothing was fixed and M80 holds the three options for the author.
-
-## The cut order, as the brief set it
-
-1 → 2 → 3 → 3b → 4 → 5, cutting 2's stretch neighbours first, then deferring
-4 whole. Both cuts were taken in that order and nothing else was cut.
+- Voice guide → **X06**. Contributions sorted/grouped/collapsed → **D55**.
+  The second hop → **D56**. The honesty floor → **D57**.
+- **D58** — found BY the work, live in production: Schedule A returns every
+  RECEIPT, not every gift, and a bank was rendering as one of Mark Kelly's
+  biggest donors.
+- Facebook rule → **X07** (rule adopted; sweep open). Polling place →
+  **M82**, with **B16** recorded for the address-level version.
+- One person one photo → **D59**. Risa Lombardo's portrait → **D60**. The
+  Census placeholder name → **M83**. Cancellation signals → **M84**.
+- The geocoder proxy → **M80** (Done), with **M85** for the crossing
+  question the real-page walk found had never been asked. LegiScan's Sunday
+  workflow → **D54** (Done, verified green in Actions).
+- Key votes → **B15** (In progress: machinery and 16/16 nominations
+  shipped), with **B17** recording the route that resolves the laws.

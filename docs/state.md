@@ -5731,3 +5731,160 @@ not be the town; the published annual schedule as a source shape; probe the
 calendar category ids; and check the adapter's own window before hunting a
 second source. Plus the LegiScan section — the district mapping that fails
 silently, and letting the surface drive the clip.
+
+
+## 28. The 2026-08-15 session (fifth of the day) — the money tells its whole story, and a bank stops being a donor
+
+**State as of 2026-08-15**, branch `claude/money-story-0815`, merged to
+`main`. `pnpm test` 587 passing, `pnpm lint` clean (5 pre-existing warnings
+in walk scripts), `pnpm build` green.
+
+The brief was the money: make the funding surface answer the question a
+reader actually has, add the hop that answers the next one, and stop a
+percentage from lying about a small campaign. Three of those landed. What
+they turned up on the way was bigger than any of them.
+
+### The defect the work found: a bank was one of Mark Kelly's biggest donors
+
+Building the second hop meant taking a census of FEC form line numbers, and
+the census said something nobody had asked: the "Largest reported
+contributions" list — live, shipped, on production — contained line 15 rows.
+Line 15 is *offsets to operating expenditures*: a vendor refunding the
+campaign. **AMALGAMATED BANK appeared three times on Mark Kelly's card as one
+of his largest contributors.** It was his own bank returning fees. Line 14
+(loan repayments coming back) was there too, and the new second hop would
+have rendered ActBlue's escrow interest — filed under FIDELITY — as its three
+biggest donors.
+
+`/schedules/schedule_a/` returns every RECEIPT a committee reports, not every
+gift, and nothing had ever asked it to distinguish them. Both hops now keep
+contribution lines only — 11\* (individuals, party committees, other political
+committees, the candidate), 12 (transfers from authorized committees) and 13A
+(a candidate's loan to their own campaign, which already renders as exactly
+that). The fetch goes twenty deep and takes the top five after filtering, so
+removing a non-gift shortens no list. **75 non-contribution receipts dropped
+this run, counted by line** (15: 36, 17: 26, 14: 8, 16: 3, plus two
+non-positive rows), because a deliberate clip must not read as a failure.
+
+Two more things fell out of the same run. The FEC returned **HTTP 504** on
+Kelly's Schedule A mid-fetch and `fecGet` had no 5xx retry, so a transient
+timeout became "zero contributors" — the thin guard refused to publish it,
+which is exactly what it is for, and the fetcher now backs off and retries.
+And the walk, at 6pm Phoenix, rendered **"read 08/16/2026"** on a funding
+card: `new Date().toISOString().slice(0, 10)` is wrong for seven hours out of
+every twenty-four here, and every provenance field the run wrote claimed
+tomorrow. The scripts call `stamp()` now, and a test fails on any snapshot
+date later than today.
+
+### The money, in the order the money happened
+
+Contributions render in two columns — committees and organizations,
+individual itemized donors — each sorted by amount **descending**. The five
+Booker Victory Fund lines fold into one row reading **"5 transfers ·
+$2,885,000"**, the filings one tap away, exactly as filed. The count noun
+comes off the FEC's own form line, so a joint fundraiser's transfers are
+never presented as single gifts.
+
+The column header says *Committees & organizations* rather than the brief's
+*PACs & organizations*. That is a deliberate, recorded deviation: a joint
+fundraising committee is not a PAC, and filing it under a PACs header would
+characterize it — which the organizations-as-filed rule forbids and which the
+same brief item explicitly protects.
+
+**The second hop** ("Give me the tea", the author's exact label) opens a
+contributing committee's OWN books under its OWN name. 42 distinct committees
+fetched, 199 rows, one (Working Families Party PAC) returning no itemized
+receipts and recorded rather than rendered — because "we did not look" and
+"there is nothing" must never render the same. The button is playful; every
+word inside it is level. D40's distinctness invariant was asserted one level
+down: **zero identical-book pairs across 42 distinct ids.**
+
+**The honesty floor**: below $5,000 raised, the small-donor percentage is
+replaced by the dollars themselves. Dan Nicholson's $325 no longer wears a
+54%.
+
+### The geocoder gets a route, and a promise gets rewritten
+
+The Census geocoder sends no CORS header. **No browser has ever been able to
+call it**, which means D53's street features had never once fired in a page —
+and no Node test could see it, because Node does not enforce CORS. A stateless
+POST proxy now carries the address and writes nothing: no log, no store, no
+echo, no cache, guarded by a source scan AND a runtime call.
+
+The old copy said the street was "never sent to us". That became unkeepable
+the moment the feature needed a browser, so it was rewritten in the same
+commit, on both surfaces and in three places, to the promise an engineer can
+keep: *your address passes through our server to the Census Bureau's
+geocoder; we never store or log it.* The old sentence is asserted **gone**.
+
+Verified in a real page, which immediately found what no test could: **the
+crossing-street question had never been asked once.** Applying a street
+minimized the who-governs card, unmounting the prompt — and the answer
+arrives about ten seconds later. Green Pond Rd's four sampled house numbers
+span 9.49 km, measured, so the lookup said CROSSES every single time and the
+input rendered never.
+
+### One person, one photo
+
+The author reported Katie Hobbs wearing her official portrait on one surface
+and a stale event candid on another. **The audit found she was one of nine** —
+including Consuelo Hernandez, who holds a school-board seat and a legislative
+one and wore two different official faces. Photos key to the person now, and
+the credit travels with the image, because a government portrait under a
+Commons photographer's name would be a worse defect than the duplicate it
+replaced.
+
+Risa Lombardo has a face. The earlier miss was recorded honestly and was
+wrong in *scope*: the hunt had checked only the home page's `og:image`, which
+is a wordmark and correctly failed. Door 3 is the campaign's own portrait
+anywhere on its own site, and her About page carries one.
+
+### "School District Not Defined" was both things at once
+
+At the Tohono O'odham reservation area the map named a district *School
+District Not Defined*. Diagnosed before touching anything, and both halves of
+the author's question are true. It **is** a real gap geometry — Census GEOID
+0499997 is a genuine polygon over land inside no unified school district,
+adjacent to Indian Oasis-Baboquivari rather than on top of it, which is why
+both render. It **is** also a labeling defect. So the geometry stays and the
+name becomes the fact: *No unified school district here.*
+
+### Canceled meetings: the zeros were real, and two adapters were not looking
+
+0 of 14 Legistar events since 2026-06-01 mention "cancelled" in any field
+(`EventAgendaStatusName` is "Final" on all fourteen). 0 of 20 Apptegy events
+per org, for Vail and Rockaway. So the zeros the author doubted are real,
+with denominators. But **Apptegy had no cancellation check at all**, and its
+schema carries no status field, so the first cancellation either district
+ever published would have rendered as a meeting going ahead. Both adapters
+look now.
+
+### The key votes: sixteen verified names, and a named remainder
+
+B15's list is the author's and locked — 20 law rows (April 2024 as four
+siblings, because the House voted four separate bills) and 16 nominations.
+The criteria sentence renders on the surface, verbatim. **The chamber rule is
+structural**: a card is handed only its own chamber's array, so a House card
+cannot show a Senate-only entry as a vote even by mistake.
+
+**All sixteen nominations verified** against the Senate's own roll-call
+record, matched on surname AND the author's recorded tally — a name match at
+a different tally is a cloture vote or an earlier failed one, and taking it
+would put a member against a vote they never cast. Sixteen for sixteen,
+sixteen distinct roll calls, zero misses.
+
+**0 of 20 law rows carry a verified roll call, and the reason is structural.**
+The Senate publishes every vote under the bill's OFFICIAL LONG TITLE, never
+its popular name: the Inflation Reduction Act is filed as "A bill to provide
+for reconciliation pursuant to title II of S. Con. Res. 14". Typing a bill
+number here from memory is precisely the assumption this product refuses, so
+none was typed. **B17** records the route that closes it — the congress.gov
+API, whose key is already present.
+
+### What was cut, and why
+
+The brief's own cut order was followed. **6c** (school-life routing), **6d**
+(the ask-box classifier), **6f** (the jurisdiction badge, deferrable twice by
+the brief's own instruction) and **7b** (the 81 session-label dates) were not
+built. Item **5**'s rule entered CLAUDE.md; its sweep did not run. Nothing was
+half-built, and every one of them is a tracker row.

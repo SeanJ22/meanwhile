@@ -58,9 +58,13 @@ test("the gate runs the command Netlify runs, and has no way to be skipped", () 
   // run is NOT equivalent: tsconfig includes `.next/types/**/*.ts`, which
   // Next generates during a build, so a bare tsc checks whatever those files
   // said last time.
+  // Matched on the command TEXT rather than an args array: the gate spawns
+  // through a shell with one literal string, because `execFileSync` cannot
+  // run pnpm's `.cmd` shim on Windows at all. This assertion caught that
+  // change the moment it was made, which is the assertion working.
   assert.match(
     gate,
-    /\["run", "build"\]/,
+    /execSync\(\s*"pnpm run build"/,
     "the gate must run `pnpm run build` — the command Netlify runs",
   );
   const netlify = readFileSync(join(ROOT, "netlify.toml"), "utf8");

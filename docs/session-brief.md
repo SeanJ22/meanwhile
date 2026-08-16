@@ -100,19 +100,45 @@ no log event fired.
    beside a value in a fixed-width card will always eventually starve the
    value, and the failure is silent.
 
+## Found BY the verification, not reported — and it is a P1
+
+**M112.** Open any district on the map that does NOT contain the reader's own
+point, and its battlecard states *"No sourced officeholder for this division
+yet"* — while we hold the officeholders. At 85701 the point resolves
+`sldl:20`, so State House District 21's card denies Consuelo Hernandez and
+Stephanie Stahl Hamilton, both of whom are in the committed AZ store.
+
+**It is not M86 recurring.** The card does use the shared resolver now. But
+`representationForDivision` reads `coverage.seats`, and the coverage summary
+is POINT-SCOPED by construction — it carries only the divisions containing the
+reader. Every other drawn district gets an empty array, and the empty array
+renders as OUR gap.
+
+That is the render-default rule adopted in this same session, violated by a
+resolver rather than by a component: absence produced by a scope limit is
+being stated as absence of a record.
+
+**Diagnosed, NOT fixed, and the row says In progress.** The honest fix needs
+seats for arbitrary drawn divisions available client-side, which is
+data plumbing rather than copy, and building it unverified at the end of a
+session is how a false claim gets replaced by a differently false one.
+
 ## Needs your hands
 
-1. **Item 9 is untouched.** The dotgov registry snapshot did not land. It is
+1. **M112 is a false claim live on production right now** — pick (a) resolve
+   the clicked division's seats through an API call when the battlecard opens,
+   or (b) at minimum make the sentence tell the truth about the scope.
+2. **Item 9 is untouched.** The dotgov registry snapshot did not land. It is
    the cleanest single piece of work waiting.
-2. **M94's other half: which surface showed the repeated proposition
+3. **M94's other half: which surface showed the repeated proposition
    blurb?** It was searched for and not found; a pointer would close it in
    minutes.
-3. **The light-theme Local tier toggle is still amber.** If you want the
+4. **The light-theme Local tier toggle is still amber.** If you want the
    whole gold family gone, say so and the map legend moves with it.
-4. **D60, the Lombardo photo badge — pin vs logo — is still open.**
-5. **`docs/congress-legislators-diff.md` found 0 disagreements.** Nothing to
+5. **D60, the Lombardo photo badge — pin vs logo — is still open.**
+6. **`docs/congress-legislators-diff.md` found 0 disagreements.** Nothing to
    rule on today; the file exists so that the day it finds one, it is already
    the place you look.
-6. **`docs/stamp-audit.md`** carries 2 disagreements with git history and 1
+7. **`docs/stamp-audit.md`** carries 2 disagreements with git history and 1
    NOT FOUND (this session's own new rule, which resolves once its commit
    exists). Nothing was corrected automatically.

@@ -1,0 +1,219 @@
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import test from "node:test";
+
+import {
+  APRIL_2024_SENATE_NOTE,
+  KEY_VOTES,
+  KEY_VOTES_CRITERIA,
+  KEY_VOTES_LAWS,
+  KEY_VOTES_PEOPLE,
+} from "../lib/votes/key-votes.ts";
+import {
+  getKeyVotesSnapshot,
+  keyVoteRowsFor,
+} from "../lib/votes/key-votes-rows.ts";
+
+/**
+ * B15 — the key votes tracker.
+ *
+ * The doctrine these guards hold, from the tracker row and the author's
+ * order: votes only; published criteria; never aggregated into a score;
+ * "no vote exists" and "the other chamber hasn't acted" are first-class
+ * honest answers; read-dates on every line; and — the structural one — an
+ * entry is a QUESTION that each chamber answered with its OWN roll calls.
+ */
+
+const ROOT = process.cwd();
+
+test("the list is the author's: 20 law rows (April 2024 as four siblings) and 16 nominations", () => {
+  assert.equal(KEY_VOTES_LAWS.length, 20);
+  assert.equal(KEY_VOTES_PEOPLE.length, 16);
+  assert.equal(KEY_VOTES.length, 36);
+  // The April 2024 package is four siblings because the House voted four
+  // separate bills and a member could vote differently on each.
+  const april = KEY_VOTES_LAWS.filter((e) => e.siblingGroup === "april-2024");
+  assert.equal(april.length, 4);
+  // Exactly one entry is marked as not yet law.
+  const pending = KEY_VOTES.filter((e) => e.pending);
+  assert.equal(pending.length, 1);
+  assert.equal(pending[0].id, "stock-trading-ban");
+  // Ids are unique — they key the render and the snapshot join.
+  assert.equal(new Set(KEY_VOTES.map((e) => e.id)).size, KEY_VOTES.length);
+});
+
+test("the criteria sentence is verbatim and renders ON the surface", () => {
+  assert.equal(
+    KEY_VOTES_CRITERIA,
+    "Major legislation that became law (plus one pending measure, marked), and consequential Senate confirmations, since 2020 — chosen before looking at how anyone voted.",
+  );
+  const surface = readFileSync(
+    join(ROOT, "components", "officials", "key-votes-section.tsx"),
+    "utf8",
+  );
+  assert.ok(
+    surface.includes("{KEY_VOTES_CRITERIA}"),
+    "the criteria must render on the surface, not merely exist",
+  );
+});
+
+test("no entry carries a scoring key, and nothing aggregates them", () => {
+  // CLAUDE.md's neutrality rule is stricter than the no-composite-score
+  // rule, and this file is where it would be easiest to break.
+  const raw = JSON.stringify(KEY_VOTES);
+  assert.ok(
+    !/"(score|rank|rating|match|fit|grade|alignment|recommendation)"/i.test(raw),
+    "a key vote entry grew a scoring key",
+  );
+  for (const file of ["key-votes.ts", "key-votes-rows.ts"]) {
+    const source = readFileSync(join(ROOT, "lib", "votes", file), "utf8");
+    assert.ok(
+      !/\.(reduce|filter)\([^)]*position\s*===\s*["']YES/.test(source),
+      `lib/votes/${file} counts YES votes — that is a score`,
+    );
+  }
+  const surface = readFileSync(
+    join(ROOT, "components", "officials", "key-votes-section.tsx"),
+    "utf8",
+  );
+  for (const banned of ["% agree", "score", "grade", "alignment", "rating"]) {
+    assert.ok(
+      !new RegExp(`>[^<]*${banned}`, "i").test(surface),
+      `the key votes surface renders "${banned}"`,
+    );
+  }
+});
+
+test("every explainer is level register, one sentence's worth, and never the title again", () => {
+  for (const entry of KEY_VOTES) {
+    assert.ok(entry.explainer.length > 40, `${entry.id}: explainer too thin`);
+    assert.ok(entry.explainerSource.length > 0, `${entry.id}: no source class`);
+    assert.match(entry.explainerReadAt, /^\d{4}-\d{2}-\d{2}$/);
+    // The title must not be doing the explaining. A bundle that names only
+    // its branding tells the reader nothing.
+    const titleWords = entry.title
+      .toLowerCase()
+      .replace(/[^a-z ]/g, " ")
+      .split(/\s+/)
+      .filter((w) => w.length > 4);
+    const explainer = entry.explainer.toLowerCase();
+    const echoed = titleWords.filter((w) => explainer.includes(w));
+    assert.ok(
+      echoed.length < titleWords.length || titleWords.length === 0,
+      `${entry.id}: the explainer is the title again`,
+    );
+    // Level register on a claim surface: never cute about real money or
+    // real people.
+    // Word boundaries, not substrings: "instead" contains "tea", and a
+    // guard that fails on it is a guard nobody will keep.
+    for (const banned of ["tea", "bet", "hang tight", "lol", "wild", "vibes"]) {
+      assert.ok(
+        !new RegExp(`\\b${banned}\\b`).test(explainer),
+        `${entry.id}: playful register on a claim surface ("${banned}")`,
+      );
+    }
+  }
+});
+
+test("the chamber rule: a House card never shows a Senate-only entry as a vote", () => {
+  const seen = (chamber: "house" | "senate") =>
+    keyVoteRowsFor(chamber, () => ({ position: "YES", breakdown: null }));
+
+  const houseRows = seen("house");
+  const senateRows = seen("senate");
+  assert.equal(houseRows.length, senateRows.length, "both chambers see every question");
+
+  // Nominations: the Senate has a roll call, the House has a stated note
+  // and no vote at all. A blank here would read as "he didn't show up".
+  const houseNomination = houseRows.find((r) => r.entry.id === "barrett-scotus")!;
+  assert.equal(houseNomination.refs.length, 0);
+  assert.equal(houseNomination.note, "The House doesn't vote on nominations.");
+  const senateNomination = senateRows.find((r) => r.entry.id === "barrett-scotus")!;
+  assert.ok(senateNomination.refs.length > 0, "the Senate roll call is missing");
+  assert.equal(senateNomination.note, null);
+
+  // The pending measure: the Senate hasn't acted, and says so.
+  const senatePending = senateRows.find((r) => r.entry.id === "stock-trading-ban")!;
+  assert.equal(senatePending.refs.length, 0);
+  assert.match(senatePending.note ?? "", /hasn't voted on this/);
+});
+
+test("all sixteen nominations are verified against the Senate's own record, name AND tally", () => {
+  const snapshot = getKeyVotesSnapshot();
+  const people = snapshot.entries.filter((e) => e.group === "PEOPLE");
+  assert.equal(people.length, 16);
+  for (const entry of people) {
+    assert.equal(entry.senate.length, 1, `${entry.id}: not exactly one Senate roll call`);
+    const ref = entry.senate[0];
+    assert.ok(ref.rollNumber > 0, `${entry.id}: roll number never resolved`);
+    assert.ok(
+      [116, 117, 118, 119].includes(ref.congress),
+      `${entry.id}: congress ${ref.congress} is outside the list's window`,
+    );
+    assert.match(ref.tally ?? "", /^\d+-\d+$/, `${entry.id}: no tally`);
+    // A URL cited must have been fetched and verified — and it must be the
+    // chamber's own, never an aggregator's.
+    assert.match(
+      ref.url ?? "",
+      /^https:\/\/www\.senate\.gov\/legislative\/LIS\/roll_call_votes\//,
+      `${entry.id}: roll call url is not the Senate's own`,
+    );
+    assert.match(ref.verifiedAt ?? "", /^\d{4}-\d{2}-\d{2}$/, `${entry.id}: no read date`);
+    assert.match(ref.question ?? "", /nomination/i, `${entry.id}: not a nomination vote`);
+  }
+  // Distinct nominations resolve to distinct roll calls — the D40 family.
+  const keys = people.map((e) => `${e.senate[0].congress}-${e.senate[0].session}#${e.senate[0].rollNumber}`);
+  assert.equal(new Set(keys).size, keys.length, "two nominations share one roll call");
+});
+
+test("an unresolved roll call renders OUR gap, never the legislature's", () => {
+  const surface = readFileSync(
+    join(ROOT, "components", "officials", "key-votes-section.tsx"),
+    "utf8",
+  );
+  // Three different kinds of "no vote here", and they must say three
+  // different things. Collapsing the third into the first two would turn a
+  // hole in our research into a claim about a legislature.
+  assert.ok(surface.includes("gap in our research"));
+  assert.ok(surface.includes("{row.note ??"), "the stated note must win over the generic gap line");
+  assert.ok(surface.includes("Did not vote"));
+
+  // And the laws that are not resolved yet carry no roll call at all —
+  // rather than a plausible number.
+  const snapshot = getKeyVotesSnapshot();
+  for (const entry of snapshot.entries) {
+    for (const ref of [...entry.house, ...entry.senate]) {
+      assert.ok(
+        ref.rollNumber > 0 && ref.url !== null && ref.verifiedAt !== null,
+        `${entry.id}: a roll call is present but unverified — no source, no claim`,
+      );
+    }
+  }
+  // Every miss is recorded with its reason, so the remainder is named.
+  assert.ok(Array.isArray(snapshot.misses));
+  for (const miss of snapshot.misses) {
+    assert.ok(miss.reason.length > 20, `${miss.id}: a miss without a reason`);
+  }
+});
+
+test("the April 2024 group: four rows on a House card, one on a senator's, with the line", () => {
+  assert.equal(
+    APRIL_2024_SENATE_NOTE,
+    "The Senate voted on the four bills as a single package.",
+  );
+  const house = keyVoteRowsFor("house", () => ({ position: "YES", breakdown: null }));
+  const april = house.filter((r) => r.entry.siblingGroup === "april-2024");
+  assert.equal(april.length, 4, "a House member votes on four separate bills");
+  // Each is its own question with its own explainer — a member could vote
+  // differently on each, and four identical rows would hide that.
+  assert.equal(new Set(april.map((r) => r.entry.explainer)).size, 4);
+  const surface = readFileSync(
+    join(ROOT, "components", "officials", "key-votes-section.tsx"),
+    "utf8",
+  );
+  assert.ok(
+    surface.includes('chamber === "senate" && row.entry.siblingGroup === "april-2024"'),
+    "the single-package line must render on a senator's card only",
+  );
+});

@@ -7071,3 +7071,28 @@ field.
 **Deferred in the brief's own cut order: M95 (the governors' two facts) first,
 then M123 (the neighbouring towns).** Nothing half-built; both carry their
 whole spec, and M123 carries every rung this session walked.
+
+### Production rows this session created
+
+**No reaction row was written, and no ask was submitted.** The standing order
+is answered either way, and this session has a wrinkle earlier ones did not
+state: **every `/api/meetings` GET writes a SEARCH row** to the production
+log (`app/api/meetings/route.ts` calls `logSearchEvent`), so a map settling
+on a zip writes one and so does every direct probe. A walk is never row-free,
+and prior sessions reporting "no production rows" for GET-only passes were
+reporting the reaction store, not the search log.
+
+`pnpm walk:all` counts and prints its own, every run. Against production this
+session:
+
+- the first diagnostic run (before any fix): **9 search-log rows, 1 log row**;
+- the final verification run after the deploy landed: **17 search-log rows,
+  1 log row**;
+- plus roughly a dozen more from hand probes of `/api/meetings` at the four
+  zips while diagnosing Kearsarge — all GETs at zip granularity, no reaction,
+  no identifier.
+
+Every one is a SEARCH event carrying a zip and a tier, which is what the
+search log is for and what it holds about anybody. They are plumbing wearing
+reader clothes and are named here so a later exclusion is a filter rather
+than a hunt.

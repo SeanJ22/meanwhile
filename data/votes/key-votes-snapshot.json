@@ -1,6 +1,6 @@
 {
  "formatVersion": 1,
- "fetchedAt": "2026-08-16T01:24:25.804Z",
+ "fetchedAt": "2026-08-16T03:43:44.410Z",
  "criteria": "Major legislation that became law (plus one pending measure, marked), and consequential Senate confirmations, since 2020 — chosen before looking at how anyone voted.",
  "entries": [
   {
@@ -10,8 +10,28 @@
    "explainer": "The first pandemic relief law: $1,200 payments to most adults, expanded unemployment benefits, and forgivable loans to keep small businesses paying staff.",
    "explainerSource": "congress.gov bill text and official summary",
    "explainerReadAt": "2026-08-15",
-   "house": [],
-   "senate": [],
+   "house": [
+    {
+     "congress": 116,
+     "session": 1,
+     "rollNumber": 493,
+     "question": "On motion to suspend the rules and pass the bill, as amended Agreed to by the Yeas and Nays: (2/3 required): 419 - 6 (Roll no. 493). (text: CR H5958-5959)",
+     "url": "https://clerk.house.gov/evs/2019/roll493.xml",
+     "tally": "419-6",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
+   "senate": [
+    {
+     "congress": 116,
+     "session": 2,
+     "rollNumber": 80,
+     "question": "Passed Senate, under the order of 3/25/20, having achieved 60 votes in the affirmative, with an amendment by Yea-Nay Vote. 96 - 0. Record Vote Number: 80.",
+     "url": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1162/vote_116_2_00080.xml",
+     "tally": "96-0",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
    "senateSearch": "Coronavirus Aid, Relief, and Economic Security"
   },
   {
@@ -21,8 +41,28 @@
    "explainer": "The second big pandemic package: $1,400 payments, an expanded child tax credit that paid parents monthly for a year, and money for vaccines, schools and state governments.",
    "explainerSource": "congress.gov bill text and official summary",
    "explainerReadAt": "2026-08-15",
-   "house": [],
-   "senate": [],
+   "house": [
+    {
+     "congress": 117,
+     "session": 1,
+     "rollNumber": 72,
+     "question": "On motion that the House agree to the Senate amendment Agreed to by the Yeas and Nays: 220 - 211 (Roll no. 72). (text: CR H1196-1259)",
+     "url": "https://clerk.house.gov/evs/2021/roll072.xml",
+     "tally": "220-211",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
+   "senate": [
+    {
+     "congress": 117,
+     "session": 1,
+     "rollNumber": 110,
+     "question": "Passed Senate with an amendment by Yea-Nay Vote. 50 - 49. Record Vote Number: 110.",
+     "url": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1171/vote_117_1_00110.xml",
+     "tally": "50-49",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
    "senateSearch": "American Rescue Plan"
   },
   {
@@ -32,8 +72,28 @@
    "explainer": "About $550 billion in new money for roads, bridges, water pipes, rural broadband and the electric grid, spread over five years.",
    "explainerSource": "congress.gov bill text and official summary",
    "explainerReadAt": "2026-08-15",
-   "house": [],
-   "senate": [],
+   "house": [
+    {
+     "congress": 117,
+     "session": 1,
+     "rollNumber": 369,
+     "question": "On motion that the House agree to the Senate amendment Agreed to by the Yeas and Nays: 228 - 206 (Roll no. 369). (consideration: CR H6230-6231)",
+     "url": "https://clerk.house.gov/evs/2021/roll369.xml",
+     "tally": "228-206",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
+   "senate": [
+    {
+     "congress": 117,
+     "session": 1,
+     "rollNumber": 314,
+     "question": "Passed Senate with an amendment by Yea-Nay Vote. 69 - 30. Record Vote Number: 314.",
+     "url": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1171/vote_117_1_00314.xml",
+     "tally": "69-30",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
    "senateSearch": "Infrastructure Investment and Jobs Act"
   },
   {
@@ -43,8 +103,28 @@
    "explainer": "The first major federal gun law in about 30 years — tougher checks for buyers under 21, money for state red-flag programs and school mental health. Still in effect; the under-21 provisions expire in 2032 by the law's own terms.",
    "explainerSource": "congress.gov bill text and official summary",
    "explainerReadAt": "2026-08-15",
-   "house": [],
-   "senate": [],
+   "house": [
+    {
+     "congress": 117,
+     "session": 2,
+     "rollNumber": 299,
+     "question": "On motion that the House agree to the Senate amendments to the House amendment Agreed to by the Yeas and Nays: 234 - 193 (Roll no. 299). (text: CR H5895-5903)",
+     "url": "https://clerk.house.gov/evs/2022/roll299.xml",
+     "tally": "234-193",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
+   "senate": [
+    {
+     "congress": 117,
+     "session": 2,
+     "rollNumber": 242,
+     "question": "Senate concurred in the House amendment to S. 2938 with an amendment SA (5099), and an amendment to the title by Yea-Nay Vote. 65 - 33. Record Vote Number: 242. (text: 06/21/2022 CR S3034-3042)",
+     "url": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1172/vote_117_2_00242.xml",
+     "tally": "65-33",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
    "whichVote": {
     "house": "final passage",
     "senate": "final passage"
@@ -58,8 +138,28 @@
    "explainer": "About $52 billion to pay companies to build computer-chip factories in the United States, after the pandemic showed how much depends on chips made elsewhere.",
    "explainerSource": "congress.gov bill text and official summary",
    "explainerReadAt": "2026-08-15",
-   "house": [],
-   "senate": [],
+   "house": [
+    {
+     "congress": 117,
+     "session": 2,
+     "rollNumber": 404,
+     "question": "On motion that the House agree to the Senate amendment to the House amendment to the Senate amendment Agreed to by the Yeas and Nays: 243 - 187, 1 Present (Roll no. 404). (text: CR H7273-7374)",
+     "url": "https://clerk.house.gov/evs/2022/roll404.xml",
+     "tally": "243-187",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
+   "senate": [
+    {
+     "congress": 117,
+     "session": 2,
+     "rollNumber": 271,
+     "question": "Senate concurred in the House amendment to the Senate amendment to H.R. 4346 with an amendment (SA 5135) by Yea-Nay Vote. 64 - 33. Record Vote Number: 271.",
+     "url": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1172/vote_117_2_00271.xml",
+     "tally": "64-33",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
    "senateSearch": "CHIPS"
   },
   {
@@ -69,8 +169,28 @@
    "explainer": "Extended VA health care and disability benefits to veterans exposed to burn pits and other toxic hazards, and made the government presume certain illnesses were service-related instead of making each veteran prove it.",
    "explainerSource": "congress.gov bill text and official summary",
    "explainerReadAt": "2026-08-15",
-   "house": [],
-   "senate": [],
+   "house": [
+    {
+     "congress": 117,
+     "session": 2,
+     "rollNumber": 309,
+     "question": "On passage Passed by the Yeas and Nays: 342 - 88 (Roll no. 309). (text: CR H6001-6016)",
+     "url": "https://clerk.house.gov/evs/2022/roll309.xml",
+     "tally": "342-88",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
+   "senate": [
+    {
+     "congress": 117,
+     "session": 2,
+     "rollNumber": 280,
+     "question": "Senate agreed to the House amendment to S. 3373, under the order of 8/2/2022, having achieved 60 votes in the affirmative by Yea-Nay Vote. 86 - 11. Record Vote Number: 280.",
+     "url": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1172/vote_117_2_00280.xml",
+     "tally": "86-11",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
    "senateSearch": "Honoring our PACT"
   },
   {
@@ -80,8 +200,28 @@
    "explainer": "Let Medicare negotiate the price of some prescription drugs and capped insulin at $35 a month for people on Medicare, alongside tax credits for clean energy, paid for partly by a minimum tax on large corporations.",
    "explainerSource": "congress.gov bill text and official summary",
    "explainerReadAt": "2026-08-15",
-   "house": [],
-   "senate": [],
+   "house": [
+    {
+     "congress": 117,
+     "session": 2,
+     "rollNumber": 420,
+     "question": "On motion that the House agree to the Senate amendment Agreed to by the Yeas and Nays: 220 - 207 (Roll no. 420). (text: CR H7577-7646)",
+     "url": "https://clerk.house.gov/evs/2022/roll420.xml",
+     "tally": "220-207",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
+   "senate": [
+    {
+     "congress": 117,
+     "session": 2,
+     "rollNumber": 325,
+     "question": "Passed Senate with an amendment by Yea-Nay Vote. 51 - 50. Record Vote Number: 325.",
+     "url": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1172/vote_117_2_00325.xml",
+     "tally": "51-50",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
    "senateSearch": "Inflation Reduction Act"
   },
   {
@@ -91,8 +231,28 @@
    "explainer": "Requires every state to recognize same-sex and interracial marriages performed in other states, so those marriages stay valid even if the Supreme Court changes course.",
    "explainerSource": "congress.gov bill text and official summary",
    "explainerReadAt": "2026-08-15",
-   "house": [],
-   "senate": [],
+   "house": [
+    {
+     "congress": 117,
+     "session": 2,
+     "rollNumber": 513,
+     "question": "On motion that the House agree to the Senate amendment Agreed to by the Yeas and Nays: 258 - 169, 1 Present (Roll no. 513). (text of amendment in the nature of a substitute: CR H8827)",
+     "url": "https://clerk.house.gov/evs/2022/roll513.xml",
+     "tally": "258-169",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
+   "senate": [
+    {
+     "congress": 117,
+     "session": 2,
+     "rollNumber": 362,
+     "question": "Passed Senate under the order of 11/28/22, having achieved 60 votes in the affirmative, with an amendment by Yea-Nay Vote. 61 - 36. Record Vote Number: 362. (text of amendment in the nature of a substitute: CR S6771)",
+     "url": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1172/vote_117_2_00362.xml",
+     "tally": "61-36",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
    "senateSearch": "Respect for Marriage"
   },
   {
@@ -102,8 +262,28 @@
    "explainer": "Ended the debt-ceiling standoff by suspending the borrowing limit into 2025, in exchange for caps on federal spending and new work requirements for some food-stamp recipients.",
    "explainerSource": "congress.gov bill text and official summary",
    "explainerReadAt": "2026-08-15",
-   "house": [],
-   "senate": [],
+   "house": [
+    {
+     "congress": 118,
+     "session": 1,
+     "rollNumber": 243,
+     "question": "On passage Passed by recorded vote: 314 - 117 (Roll No. 243). (text: CR H2681-2692)",
+     "url": "https://clerk.house.gov/evs/2023/roll243.xml",
+     "tally": "314-117",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
+   "senate": [
+    {
+     "congress": 118,
+     "session": 1,
+     "rollNumber": 146,
+     "question": "Passed Senate, under the order of 6/1/2023, having achieved 60 votes in the affirmative, without amendment by Yea-Nay Vote. 63 - 36. Record Vote Number: 146.",
+     "url": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1181/vote_118_1_00146.xml",
+     "tally": "63-36",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
    "senateSearch": "Fiscal Responsibility Act"
   },
   {
@@ -113,8 +293,28 @@
    "explainer": "About $61 billion for Ukraine's defense against Russia's invasion — weapons, ammunition, and economic support.",
    "explainerSource": "congress.gov bill text and official summary",
    "explainerReadAt": "2026-08-15",
-   "house": [],
-   "senate": [],
+   "house": [
+    {
+     "congress": 118,
+     "session": 2,
+     "rollNumber": 151,
+     "question": "On passage Passed by the Yeas and Nays: 311 - 112, 1 Present (Roll no. 151).",
+     "url": "https://clerk.house.gov/evs/2024/roll151.xml",
+     "tally": "311-112",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
+   "senate": [
+    {
+     "congress": 118,
+     "session": 2,
+     "rollNumber": 154,
+     "question": "Senate agreed to the House amendment to the Senate amendment to H.R. 815 by Yea-Nay Vote. 79 - 18. Record Vote Number: 154.",
+     "url": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1182/vote_118_2_00154.xml",
+     "tally": "79-18",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
    "siblingGroup": "april-2024",
    "senateSearch": "Israel Security Supplemental"
   },
@@ -125,8 +325,28 @@
    "explainer": "About $26 billion for Israel's military and air defenses, including roughly $9 billion for humanitarian relief in Gaza and other conflict zones.",
    "explainerSource": "congress.gov bill text and official summary",
    "explainerReadAt": "2026-08-15",
-   "house": [],
-   "senate": [],
+   "house": [
+    {
+     "congress": 118,
+     "session": 2,
+     "rollNumber": 152,
+     "question": "On passage Passed by the Yeas and Nays: 366 - 58 (Roll no. 152). (text: CR H2607-2610)",
+     "url": "https://clerk.house.gov/evs/2024/roll152.xml",
+     "tally": "366-58",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
+   "senate": [
+    {
+     "congress": 118,
+     "session": 2,
+     "rollNumber": 154,
+     "question": "Senate agreed to the House amendment to the Senate amendment to H.R. 815 by Yea-Nay Vote. 79 - 18. Record Vote Number: 154.",
+     "url": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1182/vote_118_2_00154.xml",
+     "tally": "79-18",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
    "siblingGroup": "april-2024",
    "senateSearch": "Israel Security Supplemental"
   },
@@ -137,8 +357,28 @@
    "explainer": "About $8 billion for military support to Taiwan and other allies in the Indo-Pacific, and for U.S. submarine production.",
    "explainerSource": "congress.gov bill text and official summary",
    "explainerReadAt": "2026-08-15",
-   "house": [],
-   "senate": [],
+   "house": [
+    {
+     "congress": 118,
+     "session": 2,
+     "rollNumber": 146,
+     "question": "On passage Passed by the Yeas and Nays: 385 - 34, 1 Present (Roll no. 146).",
+     "url": "https://clerk.house.gov/evs/2024/roll146.xml",
+     "tally": "385-34",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
+   "senate": [
+    {
+     "congress": 118,
+     "session": 2,
+     "rollNumber": 154,
+     "question": "Senate agreed to the House amendment to the Senate amendment to H.R. 815 by Yea-Nay Vote. 79 - 18. Record Vote Number: 154.",
+     "url": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1182/vote_118_2_00154.xml",
+     "tally": "79-18",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
    "siblingGroup": "april-2024",
    "senateSearch": "Israel Security Supplemental"
   },
@@ -149,8 +389,28 @@
    "explainer": "Required TikTok's Chinese owner to sell the app or have it blocked in U.S. app stores, and added sanctions on Russia, Iran and their weapons suppliers.",
    "explainerSource": "congress.gov bill text and official summary",
    "explainerReadAt": "2026-08-15",
-   "house": [],
-   "senate": [],
+   "house": [
+    {
+     "congress": 118,
+     "session": 2,
+     "rollNumber": 145,
+     "question": "On passage Passed by the Yeas and Nays: 360 - 58 (Roll no. 145).",
+     "url": "https://clerk.house.gov/evs/2024/roll145.xml",
+     "tally": "360-58",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
+   "senate": [
+    {
+     "congress": 118,
+     "session": 2,
+     "rollNumber": 154,
+     "question": "Senate agreed to the House amendment to the Senate amendment to H.R. 815 by Yea-Nay Vote. 79 - 18. Record Vote Number: 154.",
+     "url": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1182/vote_118_2_00154.xml",
+     "tally": "79-18",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
    "siblingGroup": "april-2024",
    "senateSearch": "Israel Security Supplemental"
   },
@@ -161,8 +421,28 @@
    "explainer": "Repealed two rules that reduced Social Security for millions of retired teachers, police, and other public workers, raising their monthly benefits.",
    "explainerSource": "congress.gov bill text and official summary",
    "explainerReadAt": "2026-08-15",
-   "house": [],
-   "senate": [],
+   "house": [
+    {
+     "congress": 118,
+     "session": 2,
+     "rollNumber": 456,
+     "question": "On motion to suspend the rules and pass the bill Agreed to by the Yeas and Nays: (2/3 required): 327 - 75, 1 Present (Roll no. 456). (text: CR H5925)",
+     "url": "https://clerk.house.gov/evs/2024/roll456.xml",
+     "tally": "327-75",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
+   "senate": [
+    {
+     "congress": 118,
+     "session": 2,
+     "rollNumber": 338,
+     "question": "Passed Senate, under the order of 12/20/2024, having achieved 60 votes in the affirmative, without amendment by Yea-Nay Vote. 76 - 20. Record Vote Number: 338.",
+     "url": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1182/vote_118_2_00338.xml",
+     "tally": "76-20",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
    "senateSearch": "Social Security Fairness"
   },
   {
@@ -172,8 +452,28 @@
    "explainer": "Requires federal immigration authorities to detain people in the country illegally who are arrested for theft or certain violent crimes, and lets states sue the federal government over immigration enforcement decisions.",
    "explainerSource": "congress.gov bill text and official summary",
    "explainerReadAt": "2026-08-15",
-   "house": [],
-   "senate": [],
+   "house": [
+    {
+     "congress": 119,
+     "session": 1,
+     "rollNumber": 23,
+     "question": "On passage Passed by the Yeas and Nays: 263 - 156 (Roll no. 23). (text: CR H277-278)",
+     "url": "https://clerk.house.gov/evs/2025/roll023.xml",
+     "tally": "263-156",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
+   "senate": [
+    {
+     "congress": 119,
+     "session": 1,
+     "rollNumber": 7,
+     "question": "Passed Senate with an amendment by Yea-Nay Vote. 64 - 35. Record Vote Number: 7. (text: CR S250-251)",
+     "url": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_00007.xml",
+     "tally": "64-35",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
    "senateSearch": "Laken Riley"
   },
   {
@@ -183,8 +483,28 @@
    "explainer": "Made the 2017 income-tax rates permanent and added new deductions, while cutting Medicaid and food-stamp spending through tighter eligibility and work rules, and increasing immigration-enforcement funding.",
    "explainerSource": "congress.gov bill text and official summary",
    "explainerReadAt": "2026-08-15",
-   "house": [],
-   "senate": [],
+   "house": [
+    {
+     "congress": 119,
+     "session": 1,
+     "rollNumber": 190,
+     "question": "On motion that the House agree to the Senate amendment Agreed to by recorded vote: 218 - 214 (Roll no. 190). (text: CR H3059-3143)",
+     "url": "https://clerk.house.gov/evs/2025/roll190.xml",
+     "tally": "218-214",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
+   "senate": [
+    {
+     "congress": 119,
+     "session": 1,
+     "rollNumber": 372,
+     "question": "Passed Senate with an amendment by Yea-Nay Vote. 51 - 50. Record Vote Number: 372.",
+     "url": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_00372.xml",
+     "tally": "51-50",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
    "whichVote": {
     "house": "concurrence in the Senate amendment",
     "senate": "final passage"
@@ -198,8 +518,28 @@
    "explainer": "The first federal rulebook for stablecoins — digital tokens meant to hold a fixed dollar value — requiring issuers to hold real dollar reserves and submit to federal or state supervision.",
    "explainerSource": "congress.gov bill text and official summary",
    "explainerReadAt": "2026-08-15",
-   "house": [],
-   "senate": [],
+   "house": [
+    {
+     "congress": 119,
+     "session": 1,
+     "rollNumber": 200,
+     "question": "On passage Passed by the Yeas and Nays: 308 - 122 (Roll no. 200). (text: CR H3405-3418)",
+     "url": "https://clerk.house.gov/evs/2025/roll200.xml",
+     "tally": "308-122",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
+   "senate": [
+    {
+     "congress": 119,
+     "session": 1,
+     "rollNumber": 318,
+     "question": "Passed Senate with an amendment by Yea-Nay Vote. 68 - 30. Record Vote Number: 318. (text: CR S3419-3432)",
+     "url": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_00318.xml",
+     "tally": "68-30",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
    "senateSearch": "GENIUS Act"
   },
   {
@@ -220,8 +560,28 @@
    "explainer": "The first broad federal housing law in years: money and rule changes aimed at getting more homes built, plus changes to rental assistance and homelessness programs.",
    "explainerSource": "congress.gov bill text and official summary",
    "explainerReadAt": "2026-08-15",
-   "house": [],
-   "senate": [],
+   "house": [
+    {
+     "congress": 119,
+     "session": 2,
+     "rollNumber": 224,
+     "question": "On motion that the House suspend the rules and agree to the Senate amendment to the House amendment to the Senate amendment Agreed to by the Yeas and Nays: (2/3 required): 358 - 32 (Roll no. 224). (text: CR H4151-4187)",
+     "url": "https://clerk.house.gov/evs/2026/roll224.xml",
+     "tally": "358-32",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
+   "senate": [
+    {
+     "congress": 119,
+     "session": 2,
+     "rollNumber": 182,
+     "question": "Senate concurred in the House amendment to the Senate amendment with an amendment (SA 5823) by Yea-Nay Vote. 85 - 5. Record Vote Number: 182.",
+     "url": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1192/vote_119_2_00182.xml",
+     "tally": "85-5",
+     "verifiedAt": "2026-08-15"
+    }
+   ],
    "senateSearch": "ROAD to Housing"
   },
   {
@@ -575,99 +935,14 @@
  ],
  "misses": [
   {
-   "id": "cares-act",
-   "chamber": "senate",
-   "reason": "no Senate passage vote whose official title contains \"Coronavirus Aid, Relief, and Economic Security\""
-  },
-  {
-   "id": "american-rescue-plan",
-   "chamber": "senate",
-   "reason": "no Senate passage vote whose official title contains \"American Rescue Plan\""
-  },
-  {
-   "id": "iija",
-   "chamber": "senate",
-   "reason": "no Senate passage vote whose official title contains \"Infrastructure Investment and Jobs Act\""
-  },
-  {
-   "id": "bsca",
-   "chamber": "senate",
-   "reason": "no Senate passage vote whose official title contains \"Bipartisan Safer Communities\""
-  },
-  {
-   "id": "chips",
-   "chamber": "senate",
-   "reason": "no Senate passage vote whose official title contains \"CHIPS\""
-  },
-  {
-   "id": "pact-act",
-   "chamber": "senate",
-   "reason": "no Senate passage vote whose official title contains \"Honoring our PACT\""
-  },
-  {
-   "id": "ira",
-   "chamber": "senate",
-   "reason": "no Senate passage vote whose official title contains \"Inflation Reduction Act\""
-  },
-  {
-   "id": "respect-for-marriage",
-   "chamber": "senate",
-   "reason": "no Senate passage vote whose official title contains \"Respect for Marriage\""
-  },
-  {
-   "id": "fiscal-responsibility",
-   "chamber": "senate",
-   "reason": "no Senate passage vote whose official title contains \"Fiscal Responsibility Act\""
-  },
-  {
-   "id": "april-2024-ukraine",
-   "chamber": "senate",
-   "reason": "no Senate passage vote whose official title contains \"Israel Security Supplemental\""
-  },
-  {
-   "id": "april-2024-israel",
-   "chamber": "senate",
-   "reason": "no Senate passage vote whose official title contains \"Israel Security Supplemental\""
-  },
-  {
-   "id": "april-2024-indopacific",
-   "chamber": "senate",
-   "reason": "no Senate passage vote whose official title contains \"Israel Security Supplemental\""
-  },
-  {
-   "id": "april-2024-tiktok",
-   "chamber": "senate",
-   "reason": "no Senate passage vote whose official title contains \"Israel Security Supplemental\""
-  },
-  {
-   "id": "ssfa",
-   "chamber": "senate",
-   "reason": "no Senate passage vote whose official title contains \"Social Security Fairness\""
-  },
-  {
-   "id": "laken-riley",
-   "chamber": "senate",
-   "reason": "no Senate passage vote whose official title contains \"Laken Riley\""
-  },
-  {
-   "id": "obbba",
-   "chamber": "senate",
-   "reason": "no Senate passage vote whose official title contains \"One Big Beautiful Bill\""
-  },
-  {
-   "id": "genius-act",
-   "chamber": "senate",
-   "reason": "no Senate passage vote whose official title contains \"GENIUS Act\""
-  },
-  {
    "id": "funding-fight",
-   "chamber": "senate",
-   "reason": "16 Senate passage votes match \"Continuing Appropriations\" (116-2#197 84-10; 117-1#477 69-28; 117-1#397 65-35; 117-2#64 65-27; 118-1#312 87-11; 118-1#247 88-9; 118-2#339 85-11; 118-2#255 78-18; 118-2#67 77-13; 119-1#618 60-40; 119-1#535 55-45; 119-1#534 47-53; 119-1#528 44-48; 119-1#527 47-45; 119-1#133 54-46; 119-2#228 90-6) — refusing to guess which one the entry means"
+   "chamber": "both",
+   "reason": "no unambiguous popular name: this entry names a shutdown-ending appropriations fight, and the congress carries several 'Continuing'/'Consolidated Appropriations' laws — refusing to pick one rather than putting members against a vote on a different bill"
   },
   {
-   "id": "road-to-housing",
-   "chamber": "senate",
-   "reason": "no Senate passage vote whose official title contains \"ROAD to Housing\""
+   "id": "stock-trading-ban",
+   "chamber": "both",
+   "reason": "the measure has not become law — there is no enacted bill to resolve, and the entry's own note says so on the card"
   }
  ]
 }

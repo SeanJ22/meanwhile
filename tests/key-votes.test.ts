@@ -217,3 +217,107 @@ test("the April 2024 group: four rows on a House card, one on a senator's, with 
     "the single-package line must render on a senator's card only",
   );
 });
+
+/**
+ * B17 — the law rows get their roll calls (2026-08-15).
+ *
+ * B15 left 0 of 20 laws with a verified roll call, for a structural reason:
+ * the Senate publishes every vote under the bill's official long title, so a
+ * popular-name search over the roll-call lists found nothing. The route that
+ * closes it is congress.gov's own record — public laws, then the titles
+ * endpoint where the popular names live, then that bill's recorded votes,
+ * each carrying the chamber's own URL.
+ */
+test("B17: the law rows carry roll calls from the chambers' own records", () => {
+  const snapshot = getKeyVotesSnapshot();
+  const laws = snapshot.entries.filter((e) => e.group === "LAWS");
+  assert.equal(laws.length, 20);
+
+  // 18 of 20, and the two that are not are STATED: the pending measure has
+  // no enacted bill, and the shutdown entry has no unambiguous popular name
+  // among a congress full of appropriations laws. Exact, so a regression
+  // cannot hide behind "at least".
+  const resolved = laws.filter((e) => e.house.length > 0 || e.senate.length > 0);
+  assert.equal(resolved.length, 18, resolved.map((e) => e.id).join(", "));
+  const unresolved = laws.filter((e) => e.house.length === 0 && e.senate.length === 0);
+  assert.deepEqual(unresolved.map((e) => e.id).sort(), [
+    "funding-fight",
+    "stock-trading-ban",
+  ]);
+  for (const entry of unresolved) {
+    const miss = snapshot.misses.find((m) => m.id === entry.id);
+    assert.ok(miss, `${entry.id}: unresolved with no recorded reason`);
+    assert.ok(miss.reason.length > 40, `${entry.id}: the reason must actually explain`);
+  }
+
+  for (const entry of resolved) {
+    for (const ref of entry.house) {
+      assert.ok(ref.rollNumber > 0, `${entry.id} house: no roll number`);
+      assert.match(ref.tally ?? "", /^\d+-\d+$/, `${entry.id} house: no tally`);
+      assert.match(ref.verifiedAt ?? "", /^\d{4}-\d{2}-\d{2}$/, `${entry.id}: no read date`);
+      // The chamber's OWN record, never an aggregator's.
+      assert.match(
+        ref.url ?? "",
+        /^https:\/\/clerk\.house\.gov\//,
+        `${entry.id} house: the roll-call url is not the Clerk's own`,
+      );
+      assertPassageQuestion(entry.id, "house", ref.question);
+    }
+    for (const ref of entry.senate) {
+      assert.ok(ref.rollNumber > 0, `${entry.id} senate: no roll number`);
+      assert.match(ref.tally ?? "", /^\d+-\d+$/, `${entry.id} senate: no tally`);
+      assert.match(ref.verifiedAt ?? "", /^\d{4}-\d{2}-\d{2}$/, `${entry.id}: no read date`);
+      assert.match(
+        ref.url ?? "",
+        /^https:\/\/www\.senate\.gov\//,
+        `${entry.id} senate: the roll-call url is not the Senate's own`,
+      );
+      assertPassageQuestion(entry.id, "senate", ref.question);
+    }
+  }
+
+  // The BSCA catch, pinned. The House's vote on the gun law is its June
+  // concurrence (234-193), NOT the May passage of its own unrelated version
+  // of the same bill number. Reading the entry's "final passage" as the
+  // literal words "on passage" picked the wrong one during this build, and
+  // this is the assertion that would catch it again.
+  const bsca = laws.find((e) => e.id === "bsca");
+  assert.equal(bsca?.house[0]?.tally, "234-193");
+  assert.match(bsca?.house[0]?.question ?? "", /agree to the Senate amendment/i);
+
+  // Distinct entries resolve to distinct roll calls — the D40 family, per
+  // chamber. The four April siblings SHARE the Senate's package vote by
+  // construction, which is the one legitimate collision.
+  const senateKeys = laws
+    .filter((e) => !e.siblingGroup && e.senate.length > 0)
+    .map((e) => `${e.senate[0].congress}-${e.senate[0].session}#${e.senate[0].rollNumber}`);
+  assert.equal(new Set(senateKeys).size, senateKeys.length, "two laws share a Senate roll call");
+  const houseKeys = laws
+    .filter((e) => e.house.length > 0)
+    .map((e) => `${e.house[0].congress}-${e.house[0].session}#${e.house[0].rollNumber}`);
+  assert.equal(new Set(houseKeys).size, houseKeys.length, "two laws share a House roll call");
+
+  // The April siblings: four DIFFERENT House votes on four bills the House
+  // actually voted on, and ONE shared Senate vote on the package.
+  const april = laws.filter((e) => e.siblingGroup);
+  assert.equal(april.length, 4);
+  assert.equal(new Set(april.map((e) => e.house[0]?.rollNumber)).size, 4);
+  assert.equal(new Set(april.map((e) => e.senate[0]?.rollNumber)).size, 1);
+});
+
+/** Passage or concurrence only — a cloture vote is a different question. */
+function assertPassageQuestion(id: string, chamber: string, question: string | null) {
+  assert.match(
+    question ?? "",
+    // `agreed?` and bare `concur` deliberately: the chambers write "Senate
+    // AGREED to the House amendment" and "Senate CONCURRED in", and a guard
+    // that only knew the infinitives would call a real concurrence vote a
+    // procedural one.
+    /passed|on passage|concur|agreed? to the|suspend the rules/i,
+    `${id} ${chamber}: not a passage-type question`,
+  );
+  assert.ok(
+    !/cloture|motion to proceed|motion to table|recommit/i.test(question ?? ""),
+    `${id} ${chamber}: a procedural vote is standing in for the law`,
+  );
+}

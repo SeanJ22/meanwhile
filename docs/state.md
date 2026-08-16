@@ -6690,6 +6690,32 @@ Everything below was read out of a real browser at 1440 and 390:
 | No page overflow at 390 | `scrollWidth` 390 = `clientWidth` |
 | The vertical text is gone | "Dr. Matt Heinz" in a 208px box over 2 lines — words wrapping |
 
+### Found BY the verification — M112, and it is a P1
+
+Verifying item 1 on production meant opening a real district battlecard. The
+Sources tab was correct. Its **Representation** tab was not.
+
+Open any district on the map that does NOT contain the reader's own point and
+the card states *"No sourced officeholder for this division yet"* — while we
+hold the officeholders. At 85701 the point resolves `sldl:20`, so State House
+District 21's card denies **Consuelo Hernandez** and **Stephanie Stahl
+Hamilton**, both in the committed AZ store.
+
+**It is not M86 recurring.** The card does use the shared resolver now. But
+`representationForDivision` reads `coverage.seats`, and the coverage summary
+is point-scoped by construction — it carries only the divisions containing the
+reader. Every other drawn district gets an empty array, and the empty array
+renders as our gap.
+
+That is **the render-default rule adopted in this same session**, violated by
+a resolver rather than by a component. Absence produced by a scope limit is
+being stated as absence of a record.
+
+Diagnosed, **not fixed**, and the row says In progress: the honest fix needs
+seats for arbitrary drawn divisions available client-side, which is data
+plumbing rather than copy. Building it unverified at the end of a session is
+how a false claim gets replaced by a differently false one.
+
 ### Probe rows, and the playbook
 
 **No production probe rows.** Nothing was written against production this

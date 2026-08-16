@@ -81,16 +81,33 @@ export function DistrictPopup({
 
       <PopupSectionLabel>Representation</PopupSectionLabel>
       {representation.length > 0 ? (
+        /*
+         * Item 2 (2026-08-16) — THE VERTICAL-TEXT DEFECT, diagnosed.
+         *
+         * These rows were `<PopupRow label={holder.officeTitle}>`, and
+         * `.pk` is `white-space: nowrap`. Inside a 300px card that leaves
+         * 264px for a label and a value; "County Supervisor, District 2
+         * (Vice Chair)" refuses to wrap and eats all of it, the value column
+         * collapses to a few pixels, and `.pv`'s `word-break: break-word`
+         * breaks the NAME one character per line. That is what the author
+         * saw live — Pima's supervisors reading vertically, "Dr. Matt Heinz"
+         * as a column of letters.
+         *
+         * It is not a style preference and it was never fixable by tuning a
+         * width: a two-column row whose key can be arbitrarily long will
+         * always eventually starve its value. So the row is STACKED — name
+         * first at full width, office beneath it — and nothing competes.
+         */
         representation.map((holder) => (
-          <PopupRow key={holder.id} label={holder.officeTitle}>
-            <span className="inline-flex items-baseline gap-1.5">
+          <div key={holder.id} className="person-row">
+            <span className="person-row-name">
               {onOpenOfficial ? (
                 // The name opens the rep popup — contact, photo, what the
                 // office does. The official page link lives inside it.
                 <button
                   type="button"
                   onClick={() => onOpenOfficial(holder)}
-                  className="hover:text-signal hover:underline"
+                  className="cursor-pointer text-left hover:text-link hover:underline"
                 >
                   {holder.name}
                 </button>
@@ -99,26 +116,32 @@ export function DistrictPopup({
                   href={holder.websiteUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-signal hover:underline"
+                  className="hover:text-link hover:underline"
                 >
                   {holder.name}
                 </a>
               ) : (
                 holder.name
               )}
+            </span>
+            <span className="person-row-office">
+              {holder.officeTitle}
               {holder.sourceUrl && (
-                <a
-                  href={holder.sourceUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  title="Where this record was read from"
-                  className="source-tag font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted hover:text-signal"
-                >
-                  src
-                </a>
+                <>
+                  {" · "}
+                  <a
+                    href={holder.sourceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    title="Where this record was read from"
+                    className="source-tag font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted hover:text-link"
+                  >
+                    src
+                  </a>
+                </>
               )}
             </span>
-          </PopupRow>
+          </div>
         ))
       ) : (
         <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">

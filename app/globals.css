@@ -154,10 +154,77 @@
      light theme — below AA, never mind glare — which is why the light
      `--link` below is a deep amber rather than the brand's.
   */
-  --link: #ffb000;
+  /* ------------------------------------------------------------------
+     THE BROWN DIES (item 6, 2026-08-16). The author: "I hate this brown
+     throughout. Change it to something else entirely."
+
+     The interactive accent was amber — `#ffb000` in dark, and in light a
+     deep amber `#6d4600` that reads as brown on every surface it touches.
+     It is replaced ENTIRELY, system-wide, through these three tokens:
+     `--link` (anything tappable), `--action` (the filled primary action),
+     and `--signal` (the alias every arbitrary usage goes through).
+
+     WHY AZURE, and what it had to avoid. The palette here is crowded and
+     most of it is politically load-bearing, so the new accent had to sit
+     clear of: the party colours (Democratic blue 217°, Republican red 5°,
+     Green 140°, Independent purple 273°), the tier accents (local amber
+     41°, state teal-green 165°, national periwinkle 219°, school magenta
+     330°, all-tiers orange 25°), `--danger`, and `--voice` (slate-blue
+     218°). The gaps left are lime, cyan/azure (~195°) and indigo. Lime is
+     unreadable at these sizes; indigo sits between national blue and
+     Independent purple, and an accent a reader could mistake for a party
+     colour is a worse defect than a brown one — a link that reads as a
+     party mark is a claim. Azure is 30° clear of the nearest tier accent
+     on either side and is nobody's party.
+
+     REJECTED, and recorded so nobody re-proposes it: moving Local's tier
+     accent off gold at the same time. The brief permits it — "if Local's
+     tier color moves off gold/brown, the map legend and the tier toggles
+     move with it" — but the tier accents are tuned to sit BETWEEN the
+     basemap's roads and the meeting markers, and moving one means retuning
+     the legend against the basemap. That is the author's eye's call, not a
+     side effect of a link colour. `--tier-fill-local` in the light theme
+     is therefore still a deep amber on the selected Local toggle; it is
+     named as a remainder rather than quietly left.
+
+     Both values clear the 7:1 sun bar against every surface they render on
+     — dark 8.40–9.75:1, light 8.13–9.11:1 — measured by `pnpm contrast`. */
+  --link: #4fc9e8;
   --label: #a9adb9;
-  --action: #ffb000;
+  --action: #4fc9e8;
   --action-on: #0f1117;
+
+  /* Text ON a filled PARTY chip (item 3). The party colours are tuned as
+     TEXT colours, so in dark they are light and the chip's text is the page
+     ground. Same inversion the tier fills already use. */
+  --party-on: #0f1117;
+
+  /* VOTE AND REACTION PILLS (item 5).
+
+     These deliberately invert the party chip's fill strategy — a party chip
+     is a PALE fill with dark text, a vote pill is a DEEP fill with near-white
+     text — and that inversion, not the hue, is what guarantees a no-vote can
+     never read as a party mark at a glance. Hue alone could not: dark
+     `--party-republican` is a pale salmon at 5° and any bright red sits
+     within a few degrees of it. The shades are separated too — `--vote-no`
+     is a deeper, more saturated vermilion than either party red — but the
+     register is the real guard.
+
+     Green YES, red NO, gray for present / position-recorded / not-voting and
+     for the unsure reaction. A NAMED GAP wears none of them (`.vote-pill--gap`
+     is an outline): absence is not a position and never gets a position's
+     colour. */
+  --vote-yes: #1c7d4c;
+  --vote-no: #c23d24;
+  --vote-neutral: #5b6170;
+  --vote-text: #fdfaf4;
+  /* The five-point funding scale's own shades (D61's scale, item 5's
+     treatment). DEEPER reads as more emphatic, which is the intuitive
+     direction: Love it is a deeper green than Like it, Hate it a deeper red
+     than Don't like it. Don't care takes the neutral. Nothing here is summed,
+     scored or ordered — the shades label the answer the reader gave. */
+  --vote-yes-strong: #14603a;
+  --vote-no-strong: #931f12;
 
   /* ------------------------------------------------------------------
      `--signal` IS A REAL PROPERTY NOW, and it was not before.
@@ -274,10 +341,26 @@
      enough to read as an action and `--action-on` is the light text that
      runs across it. */
   --voice: #3f4f68;
-  --link: #6d4600;
+  /* Item 6, 2026-08-16 — this is the brown the author named, and it is
+     gone. A deep azure, the same hue family as the dark theme's, measured
+     8.13 / 9.11 / 8.65:1 against the three surfaces it renders on. */
+  --link: #0a4f61;
   --label: #494e5b;
-  --action: #7a4e00;
+  --action: #0a4f61;
   --action-on: #fdfaf4;
+
+  /* Light party colours are DEEP, so the filled chip's text is near-white —
+     the inversion of the dark theme, same as the tier fills. */
+  --party-on: #fdfaf4;
+
+  /* Deep fills, near-white text, in both themes. See the dark block for why
+     the register rather than the hue is what separates a vote from a party. */
+  --vote-yes: #14663c;
+  --vote-no: #8f2416;
+  --vote-neutral: #4d525e;
+  --vote-text: #fdfaf4;
+  --vote-yes-strong: #0d4d2c;
+  --vote-no-strong: #6f1a10;
 
   --pill-teal-text: #0d6b5f;
   --pill-teal-bg: rgba(46, 169, 156, 0.14);
@@ -355,10 +438,15 @@
   --color-paper: var(--text);
   --color-paper-dim: var(--text-dim);
   --color-muted: var(--text-muted);
-  --color-signal: var(--accent-local);
+  /* Item 6 (2026-08-16): these aliased `--accent-local`, so `text-signal`
+     stayed GOLD while the real `--signal` property moved to the new accent —
+     the M96 trap running the other way, one colour with two values depending
+     on which spelling a component happened to use. Both spellings resolve to
+     `--link` now, so changing the interactive accent changes all of it. */
+  --color-signal: var(--link);
   /* Used as a border and a muted label colour, so it has to be an opaque
      colour rather than the glow rgba. */
-  --color-signal-dim: color-mix(in srgb, var(--accent-local) 55%, var(--text-muted));
+  --color-signal-dim: color-mix(in srgb, var(--link) 55%, var(--text-muted));
 
   /* Archivo is gone; DM Sans carries display text too. */
   --font-display: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
@@ -1616,12 +1704,40 @@ label:has(> input[type="checkbox"]) {
   transition: transform 0.18s ease;
 }
 
-.card-section[data-open] .card-section-chevron {
+/* Item 4 (2026-08-16) — THE CHEVRON DEFECT, diagnosed.
+ *
+ * This was a DESCENDANT selector: `.card-section[data-open] .card-section-
+ * chevron`. CardSections NEST — "When it mattered" contains "Votes on laws"
+ * and "Votes on people" — so opening the outer section rotated every chevron
+ * inside it, including the CLOSED sub-groups', which then pointed UP while
+ * shut. Exactly the author's report: arrows pointing the wrong way for their
+ * state, on those two sub-groups.
+ *
+ * The child combinator scopes the rotation to the section's OWN header. Note
+ * the rule two blocks up already used `>` for the background — half the pair
+ * was right, which is why it looked correct in a diff. */
+.card-section[data-open] > .card-section-header .card-section-chevron {
   transform: rotate(180deg);
 }
 
 .card-section-body {
   padding: 10px 2px 2px;
+}
+
+/* The zip switcher's chevron (item 4's audit, 2026-08-16). It had no state
+   rule at all — down while closed, still down while open. */
+.zip-chevron {
+  transition: transform 0.18s ease;
+}
+
+.zip-chevron[data-open] {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zip-chevron {
+    transition: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1631,19 +1747,380 @@ label:has(> input[type="checkbox"]) {
   }
 }
 
-/* Item 6b (2026-08-15): the two vote columns, side by side on a desktop and
-   stacked at 390px — the same information architecture in a width-appropriate
-   form, never a different one. */
-.vote-columns {
-  display: grid;
-  gap: 10px;
+/* Item 4 (2026-08-16): the two views INSIDE Voting Record.
+ *
+ * This replaces 6b's `.vote-columns` grid, which put Recent beside When it
+ * mattered and gave each half the card — so on a desktop the record read as
+ * two narrow gutters with the middle of the card empty, and each header
+ * floated with no parent saying what it was recent OF.
+ *
+ * One selected at a time; the selected view consumes the FULL width. The
+ * selectors are visibly a pair, so it reads as one control with two
+ * positions rather than as two independent things that happen to be
+ * adjacent. */
+.vote-view-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
 }
 
-@media (min-width: 720px) {
-  .vote-columns {
-    grid-template-columns: 1fr 1fr;
-    align-items: start;
-  }
+.vote-view-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid var(--panel-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.vote-view-btn:hover {
+  border-color: var(--link);
+  color: var(--link);
+}
+
+/* The selected view. Filled in the interactive accent, because this IS the
+   selected state and item 5's palette pass reserves the saturated accent for
+   exactly that. */
+.vote-view-btn[data-selected] {
+  border-color: transparent;
+  background: var(--action);
+  color: var(--action-on);
+}
+
+.vote-view-meta {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.04em;
+  opacity: 0.75;
+}
+
+.vote-view-body {
+  /* The selected view gets the whole box. */
+  width: 100%;
+}
+
+/* ==========================================================================
+   THE IDENTITY HEADER AND THE PILL GRAMMAR — items 2, 3, 5 and 8, 2026-08-16.
+
+   The author's ruling: circle portrait with a NEUTRAL ring, name as the
+   dominant type, one chip row where PARTY FILLS in its assigned colour and
+   everything else is an outlined neutral. Fill-versus-outline carries the
+   emphasis, never size — every chip is one height.
+
+   The reference screenshot rings the portrait in the party's red. That is the
+   one thing NOT adopted: a party-coloured ring makes the photograph itself a
+   partisan mark, and then a nonpartisan office has to wear either a colour it
+   has no claim to or a visibly lesser frame.
+   ========================================================================== */
+
+.id-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.id-header--lg {
+  gap: 16px;
+}
+
+/* ONE geometry, whatever is behind it — a photo and a pair of initials
+   occupy the identical circle. This extends 6b3's uniform tile: layout
+   weight tracks OUR research, never the person. */
+.id-portrait {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 999px;
+  /* NEUTRAL. Never a party colour, at any size, on any card. */
+  border: 3px solid var(--panel-border);
+  background: var(--surface);
+}
+
+.id-portrait--sm {
+  width: 52px;
+  height: 52px;
+}
+
+.id-portrait--lg {
+  width: 92px;
+  height: 92px;
+}
+
+.id-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* A circular crop taken from the middle decapitates people. */
+  object-position: top center;
+  display: block;
+}
+
+.id-portrait-initials {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+}
+
+.id-portrait--lg .id-portrait-initials {
+  font-size: 1.5rem;
+}
+
+.id-name {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--text);
+  /* Long names wrap; they never truncate. "Dr. Matt Heinz" losing its title
+     to an ellipsis is a different person's name. */
+  overflow-wrap: anywhere;
+}
+
+/* The dominant type on the card. Under one second to "who is this". */
+.id-name--lg {
+  font-size: 1.75rem;
+  letter-spacing: -0.025em;
+}
+
+.id-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 7px;
+}
+
+.id-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid var(--panel-border);
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* PARTY, and only party. The filled form carries the emphasis; the chip's
+   height does not change, because size would make the same claim a second
+   time and sizes creep. */
+.id-chip[data-fill] {
+  border-color: transparent;
+  background: var(--chip-fill);
+  color: var(--party-on);
+}
+
+.id-header--lg .id-chip {
+  height: 28px;
+  padding: 0 13px;
+  font-size: 0.8125rem;
+}
+
+.id-office {
+  margin-top: 7px;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  color: var(--text-dim);
+}
+
+.id-header--lg .id-office {
+  font-size: 0.9375rem;
+}
+
+.id-tenure {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-top: 5px;
+  font-size: 0.75rem;
+  color: var(--label);
+}
+
+/* --------------------------------------------------------------------------
+   THE CONTACT PILL ROW (items 2 and 8).
+
+   It replaces the REACH THEM label/value ledger, which was a flex row with a
+   `white-space: nowrap` key column: inside a 300px popup a long office title
+   ate the whole width, the value collapsed to a few pixels, and
+   `word-break: break-word` broke the name ONE CHARACTER PER LINE. That is the
+   production defect the author reported — Pima's supervisors reading
+   vertically, "Dr. Matt Heinz" as a vertical column of letters.
+
+   A pill carries its own label, so nothing competes for a fixed width.
+
+   THEY WRAP, THEY NEVER SHRINK: below a tap target a pill is a defect, so
+   there is a 44px floor and no flex-shrink. At 390px the row runs to two or
+   three lines and every pill stays tappable.
+
+   This is the house grammar for "tappable fact" — recorded in DESIGN.md. */
+.contact-pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.contact-pill {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--panel-border);
+  background: var(--panel-bg);
+  color: var(--text);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.contact-pill:hover,
+.contact-pill:focus-visible {
+  border-color: var(--link);
+  color: var(--link);
+}
+
+/* The compact form for the small popup. Still above the tap floor: a 40px
+   pill on a phone is the smallest thing a thumb reliably hits, and the row
+   sits inside a card the reader has deliberately opened. */
+.contact-pill-row[data-compact] .contact-pill {
+  min-height: 40px;
+  padding: 0 11px;
+  font-size: 0.75rem;
+  gap: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   THE PERSON ROW (item 2) — a representation list that stays horizontally
+   sane at every width.
+
+   It replaces a `.popup-row` whose key was the OFFICE TITLE. `.pk` is
+   `white-space: nowrap`, so "County Supervisor, District 2 (Vice Chair)"
+   consumed the whole 264px content box, the value column collapsed, and
+   `.pv`'s `word-break: break-word` rendered the person's NAME one character
+   per line. Stacked, nothing competes for the width: the name leads at full
+   width and the office sits under it. */
+.person-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.person-row:last-of-type {
+  border-bottom: none;
+}
+
+.person-row-name {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--text);
+  /* A long name wraps at word boundaries. It never truncates and it never
+     breaks mid-word — both turn a person's name into a different string. */
+  overflow-wrap: break-word;
+}
+
+.person-row-office {
+  font-size: 0.6875rem;
+  line-height: 1.3;
+  color: var(--text-dim);
+  overflow-wrap: break-word;
+}
+
+/* --------------------------------------------------------------------------
+   VOTE AND REACTION PILLS (item 5).
+
+   A recorded position renders as a FILLED pill in the chip grammar, in both
+   vote views, replacing the bare bold text and the coloured YES/NO.
+
+   The no-red is deliberately a DIFFERENT SHADE from the party red — a
+   no-vote must never read as a party mark at a glance. `--vote-no` sits
+   warmer and darker than `--party-republican` in both themes. */
+.vote-pill {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: var(--vote-fill, var(--surface));
+  color: var(--vote-text);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.vote-pill--yes {
+  --vote-fill: var(--vote-yes);
+}
+
+.vote-pill--no {
+  --vote-fill: var(--vote-no);
+}
+
+/* PRESENT, position-recorded, not-voting, and the unsure reaction: neutral
+   fill. A recorded non-position is a fact, and it is not a third opinion. */
+.vote-pill--neutral {
+  --vote-fill: var(--vote-neutral);
+}
+
+.vote-pill--yes-strong {
+  --vote-fill: var(--vote-yes-strong);
+}
+
+.vote-pill--no-strong {
+  --vote-fill: var(--vote-no-strong);
+}
+
+/* The settled reaction (item 5): the reader's own answer, wearing the same
+   grammar as a recorded vote. It is the CONFIRMATION'S FACE, not its truth —
+   `SAVING` and `NOT_COUNTED` never reach this class, so a write that did not
+   land can never render as one that did. */
+.reaction-choice--settled {
+  border-color: transparent;
+  background: var(--vote-fill, var(--surface));
+  color: var(--vote-text);
+  font-weight: 700;
+}
+
+/* A NAMED GAP is not a position and never wears a position's colour. It is
+   an outline in the muted register — the rule from item 12 made visible. */
+.vote-pill--gap {
+  background: transparent;
+  border-color: var(--panel-border);
+  color: var(--text-dim);
+  font-weight: 600;
 }
 
 /* Item 6b3 (2026-08-15): one silhouette per contest, whatever the source
@@ -1705,6 +2182,18 @@ label:has(> input[type="checkbox"]) {
   margin-top: 8px;
   border-radius: var(--radius-sm);
   padding: 9px 10px;
+}
+
+/* Item 5 (2026-08-16): the measure/proposition PICK takes the same frame and
+   the same prompt weight as the person prompt — "no prompt renders quieter
+   because its subject is a measure instead of a person."
+
+   The DASHED border is what still separates the two, and it is not
+   decoration: a pick is the reader's private note that never leaves the
+   device, a reaction joins anonymous totals and says so at capture. Equally
+   loud, visibly different kinds of thing. */
+.reaction-box[data-kind="pick"] {
+  border-style: dashed;
 }
 
 .reaction-box-prompt {

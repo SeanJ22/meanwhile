@@ -51,6 +51,7 @@ function meetingFixture(id: string, org: string, url: string | null): Meeting {
     ocdId: TUSD,
     startsAt: "2026-09-01T18:00:00.000Z",
     endsAt: null,
+    timeZone: "America/Phoenix",
     status: "SCHEDULED",
     location: {
       name: "1010 E Tenth St",

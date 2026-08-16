@@ -16,12 +16,12 @@ import { FundingBlock } from "@/components/funding/funding-block";
 import { CardSection } from "@/components/officials/card-section";
 import { CardSourcesList } from "@/components/officials/card-sources-list";
 
-import {
-  OfficeBlurb,
-  OfficialIdentity,
-  ReachThem,
-  RecentVotes,
-} from "./official-popup";
+import { identityChipsFor } from "@/lib/officials/identity-chips";
+import { ContactPills } from "@/components/officials/contact-pills";
+import { MemberDirectory } from "@/components/officials/member-directory";
+import { PersonIdentity } from "@/components/officials/person-identity";
+
+import { OfficeBlurb, ReachThem, RecentVotes } from "./official-popup";
 
 /**
  * The rep surface's large tier (3): the full record in the strat-map
@@ -137,15 +137,45 @@ export function OfficialModal({
           there is no such thing as their voting record to be missing.
         */}
         <div className="account-modal-body">
-          <OfficialIdentity holder={holder} seatLabel={seatLabel} large />
+          {/*
+            Item 3 (2026-08-16), the author's ruling. Circle portrait with a
+            NEUTRAL ring, name as the dominant type, one chip row where party
+            FILLS and state / chamber / incumbent are outlined neutrals.
+            Fill-versus-outline carries the emphasis; every chip is one
+            height. The test is under one second to "who is this person".
+          */}
+          <PersonIdentity
+            holder={holder}
+            seatLabel={seatLabel}
+            large
+            chips={identityChipsFor(holder, tier, "INCUMBENT")}
+          />
+
+          {/*
+            Item 8 (2026-08-16): the full contact row, directly under the
+            identity chips, per the reference. Officeholder cards only — the
+            social handles come from the directory's OFFICIAL-accounts-only
+            policy, which is the entire reason a social pill belongs on an
+            officeholder's card. Render what is held, only what is held.
+          */}
+          <ContactPills holder={holder} />
 
           <CardSection title="What this office does">
             <OfficeBlurb holder={holder} bare />
           </CardSection>
 
+          {/* The section stays — collapse is organization, and the set of
+              sections is identical per office class. It now holds the office
+              addresses rather than repeating the pill row above it. */}
           <CardSection title="How to reach them">
             <ReachThem holder={holder} bare />
           </CardSection>
+
+          {/* Item 7: the member's LOCAL offices — the door near the reader —
+              and their committee seats. Federal members only; the source's
+              scope is the section's scope, and the section is identical for
+              all 537. */}
+          <MemberDirectory holder={holder} />
 
           {/* D34: campaign money — FUNDING tier, its own section, never
               blended with the votes. */}

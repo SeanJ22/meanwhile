@@ -10,8 +10,11 @@ import { ageFrom, inSeatUntil } from "@/lib/officials/tenure";
 import type { Tier } from "@/lib/ocd/tiers";
 import type { RollCallVote, VotePosition } from "@/lib/votes/types";
 import type { ReactionViewContext } from "@/lib/reactions/client";
+import { identityChipsFor } from "@/lib/officials/identity-chips";
 import { ReactionControl } from "@/components/reactions/reaction-control";
 import { CardSection } from "@/components/officials/card-section";
+import { ContactPills } from "@/components/officials/contact-pills";
+import { PersonIdentity } from "@/components/officials/person-identity";
 import {
   KeyVotesSection,
   type KeyVoteRow,
@@ -58,19 +61,39 @@ function initialsOf(name: string): string {
 }
 
 /**
- * The four recorded states, visually unmistakable (5). The colors state
- * the member's VOTE — what they cast, never whether it was good. The legend
- * below the list says exactly that.
+ * The four recorded states, as FILLED PILLS (item 5, 2026-08-16).
+ *
+ * They were bare bold text in a colour. A pill in the chip grammar is what
+ * this system already uses for a stated fact, and the colours still state the
+ * member's VOTE — what they cast, never whether it was good. The legend below
+ * the list says exactly that.
+ *
+ * The no-red is a DIFFERENT SHADE from the party red on purpose, and the fill
+ * strategy is inverted from a party chip's as well — see `--vote-no` in
+ * globals.css. A no-vote must never read as a party mark at a glance.
  */
-const POSITION_STYLE: Record<
-  VotePosition,
-  { label: string; color: string }
-> = {
-  YES: { label: "YES", color: "var(--accent-state)" },
-  NO: { label: "NO", color: "var(--danger)" },
-  PRESENT: { label: "PRESENT", color: "var(--accent-national)" },
-  NOT_VOTING: { label: "NOT VOTING", color: "var(--text-muted)" },
+const POSITION_STYLE: Record<VotePosition, { label: string; tone: string }> = {
+  YES: { label: "Voted yes", tone: "yes" },
+  NO: { label: "Voted no", tone: "no" },
+  PRESENT: { label: "Voted present", tone: "neutral" },
+  NOT_VOTING: { label: "Did not vote", tone: "neutral" },
 };
+
+/**
+ * A recorded position, in the pill grammar.
+ *
+ * `tone="gap"` is the NAMED GAP form — an outline, never a position's
+ * colour. Absence is not an opinion and must not wear one (item 12).
+ */
+export function VotePill({
+  tone,
+  children,
+}: {
+  tone: "yes" | "no" | "neutral" | "gap";
+  children: React.ReactNode;
+}) {
+  return <span className={`vote-pill vote-pill--${tone}`}>{children}</span>;
+}
 
 type MemberRollCall = RollCallVote & {
   position: VotePosition;
@@ -245,13 +268,11 @@ function RecentVotesInner({
               >
                 {/* Plain words first — the official title, never ours. */}
                 <p className="text-[0.75rem] leading-snug">{vote.title}</p>
-                <p className="mt-1 flex flex-wrap items-baseline gap-x-2 text-[0.6875rem]">
-                  <span
-                    className="font-mono font-semibold tracking-[0.08em]"
-                    style={{ color: POSITION_STYLE[vote.position].color }}
-                  >
+                <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.6875rem]">
+                  {/* Item 5: the position as a filled pill, in both views. */}
+                  <VotePill tone={POSITION_STYLE[vote.position].tone as "yes" | "no" | "neutral"}>
                     {POSITION_STYLE[vote.position].label}
-                  </span>
+                  </VotePill>
                   <span className="text-muted">
                     {vote.question} · {vote.result}
                     {vote.legisNum ? ` · ${vote.legisNum}` : ""}
@@ -328,9 +349,9 @@ function RecentVotesInner({
             );
           })}
           <p className="mt-2 text-[0.5625rem] leading-relaxed text-muted">
-            Colors state their vote — green YES, red NO, blue PRESENT, gray
-            NOT VOTING — never our opinion of it. Titles are the official
-            record&apos;s words.
+            Colors state their vote — green for yes, red for no, gray for
+            present or not voting — never our opinion of it. Titles are the
+            official record&apos;s words.
           </p>
         </>
       )}
@@ -352,44 +373,109 @@ function RecentVotesInner({
   }
 
   /*
-   * Item 6b (2026-08-15) — the author's architecture, two columns:
+   * Item 4 (2026-08-16) — the author's pass, replacing 6b's two columns.
    *
-   *   "Recent"          — the last 20 roll calls, ALL of them, procedural
-   *                       included and none footnoted as lesser.
-   *   "When it mattered" — the B15 curated list, with its published criteria
-   *                       sentence at the column's head.
+   * What was wrong: "Recent" and "When it mattered" floated as two headers
+   * with no parent, so the first question a reader asks is "recent WHAT?" —
+   * and side by side they each wasted half the card on empty column space.
    *
-   * **Overlap is expected and unmarked.** A recent vote that is also a
-   * when-it-mattered vote appears in both, because each column has to be a
-   * complete answer to its own question. Cross-marking them would make one
-   * column look like a subset of the other, and time deduplicates them
-   * naturally anyway.
+   * The architecture now:
    *
-   * Both collapsed by default: the card's opening view is identity, contact
-   * and funding, with the record one tap down.
+   *   - ONE "Voting Record" section header, at the SAME full width as
+   *     "Campaign money" and the others above it. It is one of the
+   *     collapsible sections in the 6b4 grammar, not a special case.
+   *   - Inside it, Recent and When it mattered are SELECTORS. The selected
+   *     view consumes the full width of the box, and selecting one collapses
+   *     the other — accordion behaviour INSIDE Voting Record only. The
+   *     sections above are untouched by it.
    *
-   * Side by side on a desktop, stacked at 390px — `.vote-columns` is a grid
-   * that becomes two columns above 720px. Same information architecture
-   * either way, which is the difference between a responsive design and a
-   * phone version.
+   * INFORMATION ARCHITECTURE IS OTHERWISE UNCHANGED. Both views keep their
+   * complete answers, newest first, overlap unmarked, the House nominations
+   * line as shipped. **Overlap is expected and unmarked**: a recent vote that
+   * is also a when-it-mattered vote appears in both, because each view has to
+   * be a complete answer to its own question, and cross-marking them would
+   * make one look like a subset of the other.
    */
   return (
-    <div className="vote-columns">
-      <CardSection
-        title="Recent"
-        meta={votes ? `last ${Math.min(votes.length, VOTE_LIMIT)}` : null}
-      >
-        <p className="mb-1.5 text-[0.6875rem] leading-relaxed text-voice">
-          Every roll call they cast, newest first — including the procedural
-          ones. Voting to set a bill aside is a way of deciding it.
-        </p>
-        {recent}
-      </CardSection>
+    <CardSection title="Voting Record">
+      <VotingRecordViews
+        recent={recent}
+        recentMeta={votes ? `last ${Math.min(votes.length, VOTE_LIMIT)}` : null}
+        keyVotes={
+          chamber && keyVotes.length > 0 ? (
+            <KeyVotesSection chamber={chamber} rows={keyVotes} />
+          ) : null
+        }
+        keyVotesMeta={keyVotes.length > 0 ? String(keyVotes.length) : null}
+      />
+    </CardSection>
+  );
+}
 
-      {chamber && keyVotes.length > 0 && (
-        <CardSection title="When it mattered">
-          <KeyVotesSection chamber={chamber} rows={keyVotes} />
-        </CardSection>
+/**
+ * The two views inside Voting Record, and the accordion between them.
+ *
+ * One selected at a time, and one ALWAYS selected — a state where neither is
+ * open would make the reader tap twice to see a record they already asked
+ * for by opening the section. "Recent" leads because it answers the question
+ * a reader arrives with; "When it mattered" is the curated list and says so
+ * in its own criteria sentence.
+ *
+ * The selector is `aria-pressed` rather than a tablist: these are two views
+ * of one record inside an already-labelled region, and a nested tablist
+ * inside a collapsible section reads to a screen reader as a second
+ * navigation the card does not have.
+ */
+function VotingRecordViews({
+  recent,
+  recentMeta,
+  keyVotes,
+  keyVotesMeta,
+}: {
+  recent: React.ReactNode;
+  recentMeta: string | null;
+  keyVotes: React.ReactNode;
+  keyVotesMeta: string | null;
+}) {
+  const [view, setView] = useState<"recent" | "key">("recent");
+
+  return (
+    <div>
+      <div className="vote-view-switch">
+        <button
+          type="button"
+          className="vote-view-btn"
+          data-selected={view === "recent" || undefined}
+          aria-pressed={view === "recent"}
+          onClick={() => setView("recent")}
+        >
+          Recent
+          {recentMeta && <span className="vote-view-meta">{recentMeta}</span>}
+        </button>
+        {keyVotes && (
+          <button
+            type="button"
+            className="vote-view-btn"
+            data-selected={view === "key" || undefined}
+            aria-pressed={view === "key"}
+            onClick={() => setView("key")}
+          >
+            When it mattered
+            {keyVotesMeta && <span className="vote-view-meta">{keyVotesMeta}</span>}
+          </button>
+        )}
+      </div>
+
+      {view === "recent" ? (
+        <div className="vote-view-body">
+          <p className="mb-1.5 text-[0.6875rem] leading-relaxed text-voice">
+            Every roll call they cast, newest first — including the procedural
+            ones. Voting to set a bill aside is a way of deciding it.
+          </p>
+          {recent}
+        </div>
+      ) : (
+        <div className="vote-view-body">{keyVotes}</div>
       )}
     </div>
   );
@@ -678,9 +764,20 @@ export function OfficialPopup({
       onExpand={onExpand}
       expandLabel={`More about ${holder.name} — votes and record`}
       onClose={onClose}
+      /* Item 2 (2026-08-16): the card's own title is the identity block's
+         name now. Rendering it twice, once as the popup heading and once as
+         the header's dominant type, was two of the same fact. */
+      titleInBody
     >
-      <OfficialIdentity holder={holder} seatLabel={seatLabel} />
-      <ReachThem holder={holder} />
+      <PersonIdentity
+        holder={holder}
+        seatLabel={seatLabel}
+        chips={identityChipsFor(holder, tier, "INCUMBENT")}
+      />
+      {/* Item 2, the author's ruling: the pill row REPLACES the REACH THEM
+          label/value ledger — the ledger is what broke, and a pill carries
+          its own label so nothing competes for the popup's fixed width. */}
+      <ContactPills holder={holder} compact />
     </PopupCard>
   );
 }

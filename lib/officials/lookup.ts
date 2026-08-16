@@ -1,7 +1,11 @@
 import type { Provenance } from "../sources/types.ts";
 
 import { campaignSiteFor } from "./campaign-sites.ts";
-import type { Officeholder, OfficeholderSet } from "./types.ts";
+import type {
+  Officeholder,
+  OfficeholderSet,
+  SocialAccounts,
+} from "./types.ts";
 
 /**
  * Turning the officeholder roster into an answer for a point.
@@ -69,6 +73,22 @@ export interface SeatHolder {
    * never as the primary link. From the curated, verified overlay.
    */
   campaignUrl: string | null;
+  /**
+   * Official accounts (item 7, 2026-08-16). Sitting federal members only —
+   * that is the source's scope, and a scope is not widened by wanting it to
+   * be. Other tiers carry none until an equivalent source exists, and their
+   * cards render the pills they do have rather than an emptier row dressed
+   * up as a complete one.
+   */
+  social?: SocialAccounts;
+  /**
+   * The state and chamber the member's OWN current term states (item 7).
+   * Federal only — a curated local roster publishes neither, and the
+   * identity header renders the tier instead rather than guessing one out of
+   * a seat label.
+   */
+  state?: string;
+  chamber?: string;
 }
 
 export type OfficeholderIndex = Map<string, SeatHolder[]>;
@@ -92,6 +112,9 @@ function toSeatHolder(person: Officeholder, photos?: PhotoIndex): SeatHolder {
     contactFormUrl: person.contactFormUrl,
     photoUrl: photos?.get(person.id) ?? null,
     campaignUrl: campaignSiteFor(person.id)?.url ?? null,
+    social: person.social,
+    state: person.state,
+    chamber: person.chamber,
   };
 }
 

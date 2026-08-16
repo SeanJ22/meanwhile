@@ -95,6 +95,11 @@ export function MapFloaters({
             onClick={() => setSwitching((v) => !v)}
           >
             {zip}
+            {/* Item 4's chevron audit (2026-08-16): this one never moved at
+                all. `aria-expanded` flipped and the arrow stayed pointing
+                down while the switcher was open — a state indicator that
+                does not indicate its state is worse than none, because the
+                reader learns the app's signals are noise. */}
             <svg
               width="10"
               height="10"
@@ -103,6 +108,8 @@ export function MapFloaters({
               stroke="currentColor"
               strokeWidth="3"
               aria-hidden="true"
+              className="zip-chevron"
+              data-open={switching || undefined}
             >
               <polyline points="6 9 12 15 18 9" />
             </svg>

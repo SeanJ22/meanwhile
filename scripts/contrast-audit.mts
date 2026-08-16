@@ -118,6 +118,19 @@ const PAIRS: { text: string; on: string[]; note: string }[] = [
 /** Filled controls: the text colour sits ON the accent, not on the page. */
 const FILLED: { text: string; on: string; note: string }[] = [
   { text: "--action-on", on: "--action", note: "the primary filled action" },
+  // Item 3 (2026-08-16): the party chip FILLS in its assigned colour, so the
+  // chip's text sits on the party colour rather than on the page. Every
+  // filed party, both themes — a chip that is unreadable for one party and
+  // fine for the others is a defect with a partisan shape.
+  { text: "--party-on", on: "--party-democratic", note: "filled party chip" },
+  { text: "--party-on", on: "--party-republican", note: "filled party chip" },
+  { text: "--party-on", on: "--party-green", note: "filled party chip" },
+  { text: "--party-on", on: "--party-independent", note: "filled party chip" },
+  { text: "--party-on", on: "--party-none", note: "filled party chip" },
+  // Item 5: the vote and reaction pills.
+  { text: "--vote-text", on: "--vote-yes", note: "Voted yes" },
+  { text: "--vote-text", on: "--vote-no", note: "Voted no" },
+  { text: "--vote-text", on: "--vote-neutral", note: "present / recorded / unsure" },
 ];
 
 /**

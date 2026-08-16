@@ -323,11 +323,25 @@ test("submitReaction: the device-local record writes even when the server is unr
   }
 });
 
+/**
+ * The control's rendering contract spans two files since the correction
+ * pass (2026-08-16): the component decides WHEN, `lib/reactions/pill.ts`
+ * decides WHAT IT WEARS — extracted so a test can tap every value and read
+ * the class list back (`tests/reaction-pill.test.ts`). These guards read
+ * both, because the contract is the pair.
+ */
+function controlSource(): string {
+  return [
+    readFileSync(
+      join(process.cwd(), "components", "reactions", "reaction-control.tsx"),
+      "utf8",
+    ),
+    readFileSync(join(process.cwd(), "lib", "reactions", "pill.ts"), "utf8"),
+  ].join("\n");
+}
+
 test("the control renders the three outcomes honestly — counted, saving, not-counted", () => {
-  const control = readFileSync(
-    join(process.cwd(), "components", "reactions", "reaction-control.tsx"),
-    "utf8",
-  );
+  const control = controlSource();
   // The honest line renders exactly on NOT_COUNTED…
   assert.ok(
     control.includes('outcome === "NOT_COUNTED" && ('),
@@ -548,13 +562,11 @@ test("M63: the write path accepts the answer in a one-candidate race", async () 
 });
 
 test("M63: the fourth button renders only where the answer is accepted", () => {
-  const control = readFileSync(
-    join(process.cwd(), "components", "reactions", "reaction-control.tsx"),
-    "utf8",
-  );
+  const control = controlSource();
   // The label moved into the shared LABELS map when the five-point funding
-  // scale landed (2026-08-15). The author's words are what is pinned, not
-  // where they sit.
+  // scale landed (2026-08-15), and into lib/reactions/pill.ts with the rest
+  // of the rendering contract (2026-08-16). The author's words are what is
+  // pinned, not where they sit.
   assert.ok(
     control.includes('SOMEONE_ELSE: "Someone else"'),
     "the label must be the author's words",
@@ -734,10 +746,7 @@ test("the funding surfaces ask the author's question, and offer only its scale",
 
   // The control offers the scale the server accepts, from the same function,
   // so it can never offer a button the write path would refuse.
-  const control = readFileSync(
-    join(process.cwd(), "components", "reactions", "reaction-control.tsx"),
-    "utf8",
-  );
+  const control = controlSource();
   assert.ok(control.includes("scaleForTargetType(targetType)"));
   for (const label of ["Love it", "Like it", "Don't like it", "Hate it", "Don't care"]) {
     assert.ok(control.includes(label), `the control is missing "${label}"`);

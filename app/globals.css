@@ -2128,16 +2128,9 @@ label:has(> input[type="checkbox"]) {
   --vote-fill: var(--vote-no-strong);
 }
 
-/* The settled reaction (item 5): the reader's own answer, wearing the same
-   grammar as a recorded vote. It is the CONFIRMATION'S FACE, not its truth —
-   `SAVING` and `NOT_COUNTED` never reach this class, so a write that did not
-   land can never render as one that did. */
-.reaction-choice--settled {
-  border-color: transparent;
-  background: var(--vote-fill, var(--surface));
-  color: var(--vote-text);
-  font-weight: 700;
-}
+/* The settled reaction's fill lives with `.reaction-choice`, further down —
+   it has to BEAT the base control, and putting it here is what broke it.
+   See `.reaction-choice.reaction-choice--settled`. */
 
 /* A NAMED GAP is not a position and never wears a position's colour. It is
    an outline in the muted register — the rule from item 12 made visible. */
@@ -2261,6 +2254,30 @@ label:has(> input[type="checkbox"]) {
 .reaction-box[data-frame="compact"] .reaction-choice {
   min-height: 2.25rem;
   font-size: 0.75rem;
+}
+
+/* THE SETTLED REACTION (item 5, corrected 2026-08-16).
+ *
+ * The reader's own answer, wearing the same grammar as a recorded vote. It
+ * is the CONFIRMATION'S FACE, not its truth — `SAVING` and `NOT_COUNTED`
+ * never reach this class, so a write that did not land can never render as
+ * one that did.
+ *
+ * TWO CLASSES, DELIBERATELY, and it must stay that way. This rule first
+ * shipped as a bare `.reaction-choice--settled` written ABOVE
+ * `.reaction-choice` — same specificity, earlier in the file — so the base
+ * control's `background: var(--panel-bg)` won the cascade and took the fill
+ * back, leaving near-white `--vote-text` on the panel ground at 1.01:1 in
+ * light theme. Every class name read correctly in review; the button blanked
+ * on screen the moment a reader tapped it, and the row had landed every
+ * time. The doubled class means source order can never decide this again.
+ * Guarded by measuring the ratio, not by reading the file:
+ * `tests/reaction-pill.test.ts`. */
+.reaction-choice.reaction-choice--settled {
+  border-color: transparent;
+  background: var(--vote-fill, var(--surface));
+  color: var(--vote-text);
+  font-weight: 700;
 }
 
 /* The calendar chooser's three destinations (item 4, 2026-08-15). Full-width

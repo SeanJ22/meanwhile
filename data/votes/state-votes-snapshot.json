@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-16T01:18:21.723Z",
+ "generatedAt": "2026-08-16T11:54:25.385Z",
  "datasets": [
   {
    "state": "AZ",
@@ -13,17 +13,17 @@
    "state": "NJ",
    "sessionId": 2250,
    "sessionName": "2026-2027 Regular Session",
-   "datasetHash": "504f3492170b65452c2f2fca756de85d",
-   "datasetDate": "2026-08-09",
-   "downloadedAt": "2026-08-15T23:15:53.661Z"
+   "datasetHash": "608aac3f34d5b4adbc108995dded9afb",
+   "datasetDate": "2026-08-16",
+   "downloadedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "state": "NH",
    "sessionId": 2236,
    "sessionName": "2026 Regular Session",
-   "datasetHash": "0a23f4fc9592d616f94fe9203ffb5406",
-   "datasetDate": "2026-08-09",
-   "downloadedAt": "2026-08-15T23:15:53.661Z"
+   "datasetHash": "be0a081b43d62cd212382c4676da09ad",
+   "datasetDate": "2026-08-16",
+   "downloadedAt": "2026-08-16T11:54:25.385Z"
   }
  ],
  "identifierMatch": {
@@ -472,7 +472,7 @@
    "result": "Passed 59-18",
    "billUrl": "https://www.njleg.state.nj.us/bill-search/2026/A796",
    "rollCallUrl": "https://legiscan.com/NJ/rollcall/1713183",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1713184",
@@ -489,7 +489,7 @@
    "result": "Passed 27-11",
    "billUrl": "https://www.njleg.state.nj.us/bill-search/2026/A796",
    "rollCallUrl": "https://legiscan.com/NJ/rollcall/1713184",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1713168",
@@ -506,7 +506,7 @@
    "result": "Passed 59-20",
    "billUrl": "https://www.njleg.state.nj.us/bill-search/2026/A1072",
    "rollCallUrl": "https://legiscan.com/NJ/rollcall/1713168",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1712771",
@@ -523,7 +523,7 @@
    "result": "Passed 40-0",
    "billUrl": "https://www.njleg.state.nj.us/bill-search/2026/A1516",
    "rollCallUrl": "https://legiscan.com/NJ/rollcall/1712771",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1713186",
@@ -540,7 +540,7 @@
    "result": "Passed 79-0",
    "billUrl": "https://www.njleg.state.nj.us/bill-search/2026/A1517",
    "rollCallUrl": "https://legiscan.com/NJ/rollcall/1713186",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1712795",
@@ -557,7 +557,7 @@
    "result": "Passed 40-0",
    "billUrl": "https://www.njleg.state.nj.us/bill-search/2026/A1552",
    "rollCallUrl": "https://legiscan.com/NJ/rollcall/1712795",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1713187",
@@ -574,7 +574,7 @@
    "result": "Passed 57-21",
    "billUrl": "https://www.njleg.state.nj.us/bill-search/2026/A1715",
    "rollCallUrl": "https://legiscan.com/NJ/rollcall/1713187",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1713188",
@@ -591,7 +591,7 @@
    "result": "Passed 25-15",
    "billUrl": "https://www.njleg.state.nj.us/bill-search/2026/A1715",
    "rollCallUrl": "https://legiscan.com/NJ/rollcall/1713188",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1713189",
@@ -608,7 +608,7 @@
    "result": "Passed 25-14",
    "billUrl": "https://www.njleg.state.nj.us/bill-search/2026/A1715",
    "rollCallUrl": "https://legiscan.com/NJ/rollcall/1713189",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1713213",
@@ -625,7 +625,7 @@
    "result": "Passed 78-0",
    "billUrl": "https://www.njleg.state.nj.us/bill-search/2026/A2100",
    "rollCallUrl": "https://legiscan.com/NJ/rollcall/1713213",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1713338",
@@ -642,7 +642,7 @@
    "result": "Passed 40-0",
    "billUrl": "https://www.njleg.state.nj.us/bill-search/2026/A2132",
    "rollCallUrl": "https://legiscan.com/NJ/rollcall/1713338",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1712996",
@@ -659,7 +659,7 @@
    "result": "Passed 70-4",
    "billUrl": "https://www.njleg.state.nj.us/bill-search/2026/A2159",
    "rollCallUrl": "https://legiscan.com/NJ/rollcall/1712996",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1713069",
@@ -676,7 +676,7 @@
    "result": "Passed 79-0",
    "billUrl": "https://www.njleg.state.nj.us/bill-search/2026/A2380",
    "rollCallUrl": "https://legiscan.com/NJ/rollcall/1713069",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1713396",
@@ -693,7 +693,7 @@
    "result": "Passed 77-1",
    "billUrl": "https://www.njleg.state.nj.us/bill-search/2026/A2388",
    "rollCallUrl": "https://legiscan.com/NJ/rollcall/1713396",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1713398",
@@ -710,7 +710,7 @@
    "result": "Passed 40-0",
    "billUrl": "https://www.njleg.state.nj.us/bill-search/2026/A2388",
    "rollCallUrl": "https://legiscan.com/NJ/rollcall/1713398",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1713216",
@@ -727,7 +727,7 @@
    "result": "Passed 78-1",
    "billUrl": "https://www.njleg.state.nj.us/bill-search/2026/A2391",
    "rollCallUrl": "https://legiscan.com/NJ/rollcall/1713216",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1713179",
@@ -744,7 +744,7 @@
    "result": "Passed 59-20",
    "billUrl": "https://www.njleg.state.nj.us/bill-search/2026/A2401",
    "rollCallUrl": "https://legiscan.com/NJ/rollcall/1713179",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1713063",
@@ -761,7 +761,7 @@
    "result": "Passed 76-3",
    "billUrl": "https://www.njleg.state.nj.us/bill-search/2026/A2403",
    "rollCallUrl": "https://legiscan.com/NJ/rollcall/1713063",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1712938",
@@ -778,7 +778,7 @@
    "result": "Passed 79-0",
    "billUrl": "https://www.njleg.state.nj.us/bill-search/2026/A2550",
    "rollCallUrl": "https://legiscan.com/NJ/rollcall/1712938",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1712765",
@@ -795,7 +795,7 @@
    "result": "Passed 25-15",
    "billUrl": "https://www.njleg.state.nj.us/bill-search/2026/A2757",
    "rollCallUrl": "https://legiscan.com/NJ/rollcall/1712765",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1713135",
@@ -812,7 +812,7 @@
    "result": "Passed 33-4",
    "billUrl": "https://www.njleg.state.nj.us/bill-search/2026/A3497",
    "rollCallUrl": "https://legiscan.com/NJ/rollcall/1713135",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1713066",
@@ -829,7 +829,7 @@
    "result": "Passed 24-15",
    "billUrl": "https://www.njleg.state.nj.us/bill-search/2026/A3877",
    "rollCallUrl": "https://legiscan.com/NJ/rollcall/1713066",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1713158",
@@ -846,7 +846,7 @@
    "result": "Passed 40-0",
    "billUrl": "https://www.njleg.state.nj.us/bill-search/2026/A3883",
    "rollCallUrl": "https://legiscan.com/NJ/rollcall/1713158",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1713223",
@@ -863,7 +863,7 @@
    "result": "Passed 40-0",
    "billUrl": "https://www.njleg.state.nj.us/bill-search/2026/A4007",
    "rollCallUrl": "https://legiscan.com/NJ/rollcall/1713223",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1705564",
@@ -880,7 +880,7 @@
    "result": "Passed 195-157",
    "billUrl": "https://gc.nh.gov/bill_status/legacy/bs2016/bill_status.aspx?lsr=504&sy=2026&sortoption=&txtsessionyear=2026&txtbillnumber=HB155",
    "rollCallUrl": "https://legiscan.com/NH/rollcall/1705564",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1705305",
@@ -897,7 +897,7 @@
    "result": "Passed 197-159",
    "billUrl": "https://gc.nh.gov/bill_status/legacy/bs2016/bill_status.aspx?lsr=513&sy=2026&sortoption=&txtsessionyear=2026&txtbillnumber=HB317",
    "rollCallUrl": "https://legiscan.com/NH/rollcall/1705305",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1705630",
@@ -914,7 +914,7 @@
    "result": "Passed 182-160",
    "billUrl": "https://gc.nh.gov/bill_status/legacy/bs2016/bill_status.aspx?lsr=889&sy=2026&sortoption=&txtsessionyear=2026&txtbillnumber=HB609",
    "rollCallUrl": "https://legiscan.com/NH/rollcall/1705630",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1705631",
@@ -931,7 +931,7 @@
    "result": "Passed 15-8",
    "billUrl": "https://gc.nh.gov/bill_status/legacy/bs2016/bill_status.aspx?lsr=889&sy=2026&sortoption=&txtsessionyear=2026&txtbillnumber=HB609",
    "rollCallUrl": "https://legiscan.com/NH/rollcall/1705631",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1705606",
@@ -948,7 +948,7 @@
    "result": "Passed 196-156",
    "billUrl": "https://gc.nh.gov/bill_status/legacy/bs2016/bill_status.aspx?lsr=2283&sy=2026&sortoption=&txtsessionyear=2026&txtbillnumber=HB1062",
    "rollCallUrl": "https://legiscan.com/NH/rollcall/1705606",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1705607",
@@ -965,7 +965,7 @@
    "result": "Passed 208-140",
    "billUrl": "https://gc.nh.gov/bill_status/legacy/bs2016/bill_status.aspx?lsr=2855&sy=2026&sortoption=&txtsessionyear=2026&txtbillnumber=HB1279",
    "rollCallUrl": "https://legiscan.com/NH/rollcall/1705607",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1705327",
@@ -982,7 +982,7 @@
    "result": "Passed 183-170",
    "billUrl": "https://gc.nh.gov/bill_status/legacy/bs2016/bill_status.aspx?lsr=2870&sy=2026&sortoption=&txtsessionyear=2026&txtbillnumber=HB1300",
    "rollCallUrl": "https://legiscan.com/NH/rollcall/1705327",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1705661",
@@ -999,7 +999,7 @@
    "result": "Passed 15-8",
    "billUrl": "https://gc.nh.gov/bill_status/legacy/bs2016/bill_status.aspx?lsr=2870&sy=2026&sortoption=&txtsessionyear=2026&txtbillnumber=HB1300",
    "rollCallUrl": "https://legiscan.com/NH/rollcall/1705661",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1705618",
@@ -1016,7 +1016,7 @@
    "result": "Passed 179-161",
    "billUrl": "https://gc.nh.gov/bill_status/legacy/bs2016/bill_status.aspx?lsr=3033&sy=2026&sortoption=&txtsessionyear=2026&txtbillnumber=HB1374",
    "rollCallUrl": "https://legiscan.com/NH/rollcall/1705618",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1705687",
@@ -1033,7 +1033,7 @@
    "result": "Passed 183-158",
    "billUrl": "https://gc.nh.gov/bill_status/legacy/bs2016/bill_status.aspx?lsr=3035&sy=2026&sortoption=&txtsessionyear=2026&txtbillnumber=HB1376",
    "rollCallUrl": "https://legiscan.com/NH/rollcall/1705687",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1705399",
@@ -1050,7 +1050,7 @@
    "result": "Passed 185-171",
    "billUrl": "https://gc.nh.gov/bill_status/legacy/bs2016/bill_status.aspx?lsr=3234&sy=2026&sortoption=&txtsessionyear=2026&txtbillnumber=HB1588",
    "rollCallUrl": "https://legiscan.com/NH/rollcall/1705399",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1705451",
@@ -1067,7 +1067,7 @@
    "result": "Passed 14-9",
    "billUrl": "https://gc.nh.gov/bill_status/legacy/bs2016/bill_status.aspx?lsr=2962&sy=2026&sortoption=&txtsessionyear=2026&txtbillnumber=HB1735",
    "rollCallUrl": "https://legiscan.com/NH/rollcall/1705451",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1705297",
@@ -1084,7 +1084,7 @@
    "result": "Passed 189-158",
    "billUrl": "https://gc.nh.gov/bill_status/legacy/bs2016/bill_status.aspx?lsr=2042&sy=2026&sortoption=&txtsessionyear=2026&txtbillnumber=SB481",
    "rollCallUrl": "https://legiscan.com/NH/rollcall/1705297",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1701087",
@@ -1101,7 +1101,7 @@
    "result": "Passed 179-154",
    "billUrl": "https://gc.nh.gov/bill_status/legacy/bs2016/bill_status.aspx?lsr=296&sy=2026&sortoption=&txtsessionyear=2026&txtbillnumber=HB232",
    "rollCallUrl": "https://legiscan.com/NH/rollcall/1701087",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1701096",
@@ -1118,7 +1118,7 @@
    "result": "Passed 180-162",
    "billUrl": "https://gc.nh.gov/bill_status/legacy/bs2016/bill_status.aspx?lsr=2931&sy=2026&sortoption=&txtsessionyear=2026&txtbillnumber=HB1336",
    "rollCallUrl": "https://legiscan.com/NH/rollcall/1701096",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1701247",
@@ -1135,7 +1135,7 @@
    "result": "Passed 14-8",
    "billUrl": "https://gc.nh.gov/bill_status/legacy/bs2016/bill_status.aspx?lsr=584&sy=2026&sortoption=&txtsessionyear=2026&txtbillnumber=SB223",
    "rollCallUrl": "https://legiscan.com/NH/rollcall/1701247",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1701395",
@@ -1152,7 +1152,7 @@
    "result": "Passed 14-8",
    "billUrl": "https://gc.nh.gov/bill_status/legacy/bs2016/bill_status.aspx?lsr=2005&sy=2026&sortoption=&txtsessionyear=2026&txtbillnumber=SB430",
    "rollCallUrl": "https://legiscan.com/NH/rollcall/1701395",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1701299",
@@ -1169,7 +1169,7 @@
    "result": "Passed 14-8",
    "billUrl": "https://gc.nh.gov/bill_status/legacy/bs2016/bill_status.aspx?lsr=2030&sy=2026&sortoption=&txtsessionyear=2026&txtbillnumber=SB434",
    "rollCallUrl": "https://legiscan.com/NH/rollcall/1701299",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1701350",
@@ -1186,7 +1186,7 @@
    "result": "Passed 13-9",
    "billUrl": "https://gc.nh.gov/bill_status/legacy/bs2016/bill_status.aspx?lsr=2004&sy=2026&sortoption=&txtsessionyear=2026&txtbillnumber=SB574",
    "rollCallUrl": "https://legiscan.com/NH/rollcall/1701350",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1699219",
@@ -1203,7 +1203,7 @@
    "result": "Failed 8-15",
    "billUrl": "https://gc.nh.gov/bill_status/legacy/bs2016/bill_status.aspx?lsr=2305&sy=2026&sortoption=&txtsessionyear=2026&txtbillnumber=HB1010",
    "rollCallUrl": "https://legiscan.com/NH/rollcall/1699219",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1699211",
@@ -1220,7 +1220,7 @@
    "result": "Passed 14-9",
    "billUrl": "https://gc.nh.gov/bill_status/legacy/bs2016/bill_status.aspx?lsr=2931&sy=2026&sortoption=&txtsessionyear=2026&txtbillnumber=HB1336",
    "rollCallUrl": "https://legiscan.com/NH/rollcall/1699211",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1699212",
@@ -1237,7 +1237,7 @@
    "result": "Passed 14-9",
    "billUrl": "https://gc.nh.gov/bill_status/legacy/bs2016/bill_status.aspx?lsr=2931&sy=2026&sortoption=&txtsessionyear=2026&txtbillnumber=HB1336",
    "rollCallUrl": "https://legiscan.com/NH/rollcall/1699212",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1699210",
@@ -1254,7 +1254,7 @@
    "result": "Passed 15-8",
    "billUrl": "https://gc.nh.gov/bill_status/legacy/bs2016/bill_status.aspx?lsr=2440&sy=2026&sortoption=&txtsessionyear=2026&txtbillnumber=HB1792",
    "rollCallUrl": "https://legiscan.com/NH/rollcall/1699210",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   },
   {
    "id": "legiscan:1699194",
@@ -1271,7 +1271,7 @@
    "result": "Passed 14-8",
    "billUrl": "https://gc.nh.gov/bill_status/legacy/bs2016/bill_status.aspx?lsr=3149&sy=2026&sortoption=&txtsessionyear=2026&txtbillnumber=HB1793",
    "rollCallUrl": "https://legiscan.com/NH/rollcall/1699194",
-   "retrievedAt": "2026-08-15T23:15:53.661Z"
+   "retrievedAt": "2026-08-16T11:54:25.385Z"
   }
  ],
  "positions": [

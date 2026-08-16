@@ -22,6 +22,7 @@ import {
   CONCLUDED_LOOKBACK_DAYS,
   UPCOMING_HORIZON_DAYS,
 } from "../lib/meetings/constants.ts";
+import { carryForward } from "../lib/meetings/carry-forward.ts";
 import {
   readSnapshot,
   writeSnapshot,
@@ -215,7 +216,9 @@ function readPreviousSnapshot(): MeetingsSnapshot | null {
  * A refresh where every source failed keeps the previous snapshot — the site
  * serves stale-but-honest data and its "last checked" line says how stale.
  * A partial failure writes the sources that succeeded and records the ones
- * that did not; the coverage notice attributes the gap to the bodies served.
+ * that did not; the coverage notice attributes the gap to the bodies served,
+ * and `carryForward` (lib/meetings/carry-forward.ts — the refresh corollary)
+ * keeps those bodies' last known sittings on screen rather than blanking them.
  */
 function writeMeetingsSnapshot(
   source: CompositeSource,
@@ -241,10 +244,18 @@ function writeMeetingsSnapshot(
     return;
   }
 
-  const meetingIds = new Set(meetings.map((m) => m.id));
+  const now = new Date();
+  const { meetings: served, carried } = carryForward(
+    report.children,
+    meetings,
+    previous,
+    now,
+  );
+
+  const meetingIds = new Set(served.map((m) => m.id));
   const snapshot: MeetingsSnapshot = {
     formatVersion: 1,
-    generatedAt: new Date().toISOString(),
+    generatedAt: now.toISOString(),
     sources: report.children.map((c) => ({
       source: c.source,
       ok: c.ok,
@@ -252,23 +263,42 @@ function writeMeetingsSnapshot(
       fetched: c.fetched,
       normalized: c.normalized,
       drops: c.drops,
+      ...(c.unreachableOcdIds && c.unreachableOcdIds.length > 0
+        ? { unreachableOcdIds: c.unreachableOcdIds }
+        : {}),
+      ...(carried.has(c.source) ? { carriedForward: carried.get(c.source) } : {}),
     })),
-    meetings,
-    // Every stored version for every meeting still on the calendar window —
-    // append-only history survives the refresh; documents whose meetings have
-    // aged out of the window go with them.
-    agendaDocuments: meetings.flatMap((m) =>
-      agendaDocumentStore.versionsFor(m.id),
-    ).filter((doc) => meetingIds.has(doc.meetingId)),
+    meetings: served,
+    // Every stored version for a meeting still on the calendar window, plus
+    // the versions a CARRIED meeting already had — a carried sitting that
+    // lost its agenda would be a second, quieter kind of emptying.
+    agendaDocuments: [
+      ...served.flatMap((m) => agendaDocumentStore.versionsFor(m.id)),
+      ...(previous?.agendaDocuments ?? []),
+    ].filter(
+      (doc, i, all) =>
+        meetingIds.has(doc.meetingId) &&
+        all.findIndex((d) => d.id === doc.id) === i,
+    ),
   };
 
   const path = writeSnapshot(snapshot);
   const failedNames = snapshot.sources.filter((s) => !s.ok).map((s) => s.source);
+  const carriedTotal = [...carried.values()].reduce((a, b) => a + b, 0);
   console.log(
     `snapshot written: ${path}\n` +
       `  ${snapshot.meetings.length} meetings from ${okCount}/${snapshot.sources.length} sources, ` +
       `${snapshot.agendaDocuments.length} agenda document version(s)` +
       (failedNames.length > 0 ? `, failed: ${failedNames.join(", ")}` : ""),
+  );
+  // Stated with its denominator, always — a deliberate zero must not read as
+  // a failure and a real carry must not read as a fresh retrieval.
+  console.log(
+    carriedTotal > 0
+      ? `  ${carriedTotal} meeting(s) CARRIED FORWARD from ${previous?.generatedAt} for ` +
+          `${[...carried.entries()].map(([s, n]) => `${s}:${n}`).join(", ")} — ` +
+          "their sources were unreachable this run; nothing about them claims to be freshly checked"
+      : "  0 meetings carried forward — every source that serves a body was reachable",
   );
 }
 

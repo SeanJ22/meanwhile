@@ -189,7 +189,27 @@ export interface ReportingMeetingSource<Raw = unknown>
   normalizeWithDrops(
     raw: Raw[],
     now?: Date,
-  ): { meetings: Meeting[]; drops: NormalizeDropCounts };
+  ): {
+    meetings: Meeting[];
+    drops: NormalizeDropCounts;
+    /**
+     * Divisions this source could not reach THIS run, when the source as a
+     * whole still succeeded (g3, 2026-08-16).
+     *
+     * A source that serves several bodies across several hosts can be
+     * partially refused, and the two halves must not be reported as one. A
+     * whole-source failure is `ok: false` and already attributes to every
+     * body the source serves; this is the narrower claim — "these particular
+     * divisions refused us, the rest of this source is fine" — so the
+     * reader's card names exactly the bodies with a gap of ours behind them,
+     * and no body with a working calendar is smeared with a failure it did
+     * not have.
+     *
+     * Optional: a single-body adapter has nothing to say here, and `ok: false`
+     * remains the right report for it.
+     */
+    unreachableOcdIds?: string[];
+  };
 }
 
 /**

@@ -18,7 +18,7 @@ import {
   noticeLabel,
   shouldRenderNotice,
 } from "@/lib/registry/representation";
-import { agendaAbsenceNote } from "@/lib/registry/wording";
+import { agendaAbsenceNote, collapseFootnotes } from "@/lib/registry/wording";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyColorVar } from "@/lib/officials/party-color";
 
@@ -660,32 +660,33 @@ function CoverageBody({
         bodies exactly like bodies with nothing scheduled — a gap of ours
         presented as a fact about their government.
       */}
-      {shown
-        .filter(
+      {collapseFootnotes(
+        shown.filter(
           (body) => body.ocdId !== null && failedSourceOcdIds.includes(body.ocdId),
-        )
-        .map((body) => (
-          <p
-            key={`${body.bodyId}-source-failed`}
-            className="mt-1.5 text-[0.6875rem] leading-relaxed text-signal"
-          >
-            <span className="text-paper-dim">{body.divisionLabel}</span> — we
-            couldn&apos;t reach their calendar source at the last check, so
-            their meetings may be missing here.
-          </p>
-        ))}
+        ),
+        () =>
+          "we couldn’t reach their calendar source at the last check, so their meetings may be missing here.",
+      ).map((footnote) => (
+        <p
+          key={`source-failed:${footnote.subjects}`}
+          className="mt-1.5 text-[0.6875rem] leading-relaxed text-signal"
+        >
+          <span className="text-paper-dim">{footnote.subjects}</span> —{" "}
+          {footnote.note}
+        </p>
+      ))}
 
-      {shown.map((body) => {
-        const note = agendaAbsenceNote(body.ocdId, body.coverageStatus);
-        return note ? (
-          <p
-            key={`${body.bodyId}-absence`}
-            className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted"
-          >
-            <span className="text-paper-dim">{body.divisionLabel}</span> — {note}
-          </p>
-        ) : null;
-      })}
+      {collapseFootnotes(shown, (body) =>
+        agendaAbsenceNote(body.ocdId, body.coverageStatus),
+      ).map((footnote) => (
+        <p
+          key={`absence:${footnote.subjects}`}
+          className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted"
+        >
+          <span className="text-paper-dim">{footnote.subjects}</span> —{" "}
+          {footnote.note}
+        </p>
+      ))}
 
       {seats.length > 0 && seatCounts.named === 0 ? (
         // Nothing sourced for any seat — the original wording, still true.

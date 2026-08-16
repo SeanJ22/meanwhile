@@ -116,6 +116,20 @@ export interface SchedulePageRaw {
   /** The documents page's HTML, where the row wires one. */
   documents?: string;
   collectedAt: string;
+  /**
+   * This ROW's retrieval was refused, and `schedule` is empty (g3, 2026-08-16).
+   *
+   * Five bodies are wired to this adapter across three hosts. `fetch()` used
+   * to loop them and let the first failure throw, so **one host's 403 emptied
+   * all five calendars** — Kearsarge's fifteen sittings, Newbury's three
+   * land-use boards and Morris Hills Regional's board all vanished from
+   * production together because `kearsarge.org` refused the scheduled
+   * refresh's client. A row that fails is now recorded here and skipped; the
+   * rows that succeeded still ship, and the failure is carried to the
+   * snapshot so the reader is told which bodies we could not reach rather
+   * than being shown an empty calendar as if it were an empty government.
+   */
+  error?: string;
 }
 
 /** One sitting a page publishes, in whatever shape it published it. */
@@ -570,11 +584,24 @@ export function makeSchedulePageSource(
       unplaceableInTime: 0,
       notConfigured: 0,
     };
+    /** Divisions whose own page refused us this run — see `SchedulePageRaw.error`. */
+    const unreachable = new Set<string>();
 
     const windowStart = now.getTime() - WINDOW_BACK_DAYS * 86_400_000;
     const windowEnd = now.getTime() + WINDOW_FORWARD_DAYS * 86_400_000;
 
-    for (const { wiring, schedule, documents, collectedAt } of raw) {
+    for (const { wiring, schedule, documents, collectedAt, error } of raw) {
+      // A refused row publishes nothing THIS run. It is counted, not skipped:
+      // `notConfigured` is the drop bucket for "we had a row and produced no
+      // meeting from it", and a run that quietly shortened its own input is
+      // the empty-success shape. The division it belongs to is reported
+      // upward by `unreachableOcdIds` below, which is what puts the honest
+      // line on the reader's card instead of an empty calendar.
+      if (error) {
+        drops.notConfigured += 1;
+        unreachable.add(wiring.ocdId);
+        continue;
+      }
       const shapes = shapesOf(wiring);
       const section = wiring.config.sectionMatch
         ? sliceSection(schedule, wiring.config.sectionMatch)
@@ -678,40 +705,74 @@ export function makeSchedulePageSource(
       }
     }
 
-    return { meetings, drops };
+    return { meetings, drops, unreachableOcdIds: [...unreachable] };
   };
 
   return {
     name: SOURCE_NAME,
 
+    /**
+     * Serialized across bodies, same as every adapter here — and **isolated
+     * per body** (g3, 2026-08-16).
+     *
+     * The isolation is the fix for a production outage, not a nicety. These
+     * five rows live on three unrelated hosts, and a bare loop let the first
+     * host's refusal throw out of the whole adapter: the composite recorded
+     * `schedulepage: FAILED`, every one of the five bodies contributed
+     * nothing, and the committed snapshot replaced four working calendars
+     * with silence. A body whose own page answered is not implicated in a
+     * different body's WAF.
+     *
+     * A row that fails is recorded with its error and returned, rather than
+     * dropped: `normalizeWithDrops` needs to see it to attribute the gap to
+     * the right division, and a silently shorter list is the empty-success
+     * shape this repo has now sighted five times.
+     */
     async fetch(): Promise<SchedulePageRaw[]> {
       const collected: SchedulePageRaw[] = [];
-      // Serialized across bodies, same as every adapter here.
       for (const wiring of wiringRows) {
         const profile =
           wiring.config.profile === "browser"
             ? ("browser" as const)
             : ("index" as const);
-        const { text } = await politeGetText(wiring.config.schedulePage, {
-          fetchImpl,
-          accept: "text/html",
-          profile,
-        });
-        let documents: string | undefined;
-        if (wiring.config.documentsPage) {
-          const page = await politeGetText(wiring.config.documentsPage, {
+        try {
+          const { text } = await politeGetText(wiring.config.schedulePage, {
             fetchImpl,
             accept: "text/html",
             profile,
           });
-          documents = page.text;
+          let documents: string | undefined;
+          if (wiring.config.documentsPage) {
+            const page = await politeGetText(wiring.config.documentsPage, {
+              fetchImpl,
+              accept: "text/html",
+              profile,
+            });
+            documents = page.text;
+          }
+          collected.push({
+            wiring,
+            schedule: text,
+            documents,
+            collectedAt: new Date().toISOString(),
+          });
+        } catch (error) {
+          collected.push({
+            wiring,
+            schedule: "",
+            collectedAt: new Date().toISOString(),
+            error: String((error as Error)?.message ?? error),
+          });
         }
-        collected.push({
-          wiring,
-          schedule: text,
-          documents,
-          collectedAt: new Date().toISOString(),
-        });
+      }
+
+      // Every row refused is the whole source being refused, and that must
+      // still read as a source failure — the composite's own reporting, the
+      // snapshot's `failed` list and the reader's "we couldn't reach their
+      // calendar source" line all hang off it. Only a PARTIAL refusal is the
+      // new behaviour.
+      if (collected.length > 0 && collected.every((row) => row.error)) {
+        throw new Error(collected[0].error);
       }
       return collected;
     },

@@ -55,6 +55,8 @@
  */
 import { chromium, type Browser, type Page } from "playwright";
 
+import { mojibakePattern } from "../lib/text/mojibake.ts";
+
 const BASE = (process.env.SHOOT_BASE_URL ?? "https://sparkwtp.netlify.app").replace(
   /\/$/,
   "",
@@ -469,7 +471,15 @@ for (const { zip } of FOUR) {
   check("0814c", `${zip}: the map answers with something about this place`, text.length > 200);
 
   // M60 — the mojibake sweep. It has recurred often enough to be permanent.
-  const mojibake = text.match(/â€|Â|ï¿½|Ã¢/g) ?? [];
+  //
+  // The pattern comes from `lib/text/mojibake.ts` rather than being written
+  // here. Two reasons, and the second is the one that matters: it is the
+  // detector the repo already tests against real production sequences, and a
+  // hand-rolled copy would have to spell the byte sequences out — which trips
+  // `tests/mojibake.test.ts`, whose whole job is to find those bytes in
+  // committed text. The first draft of this walk did exactly that and failed
+  // the suite for detecting itself.
+  const mojibake = text.match(mojibakePattern()) ?? [];
   check("0815", `${zip}: no mojibake in the rendered text`, mojibake.length === 0, mojibake.slice(0, 4).join(" "));
 
   // M48/2c — the three tiers, and FEDERAL is the label.

@@ -61,14 +61,26 @@ export async function GET(request: Request) {
     ? {
         ...meta,
         failed: meta.sources
-          .filter((s) => !s.ok)
+          .filter((s) => !s.ok || (s.unreachableOcdIds?.length ?? 0) > 0)
           .map((s) => ({
             source: s.source,
-            // A division-less body (null ocdId) has no division to attribute
-            // the failure to; its absence is visible on the body itself.
-            ocdIds: wiringForSourceName(s.source).flatMap((row) =>
-              row.ocdId ? [row.ocdId] : [],
-            ),
+            // A PARTIAL refusal names its own divisions and nothing else
+            // (g3). Before this, a source serving five bodies across three
+            // hosts put the "we couldn't reach their calendar source" line on
+            // all five whenever one of them refused — telling four readers
+            // their government's calendar was unreachable when it was on
+            // screen in front of them.
+            //
+            // A whole-source failure still attributes to every body the
+            // source serves. A division-less body (null ocdId) has no
+            // division to attribute the failure to; its absence is visible on
+            // the body itself.
+            ocdIds:
+              s.ok && s.unreachableOcdIds
+                ? s.unreachableOcdIds
+                : wiringForSourceName(s.source).flatMap((row) =>
+                    row.ocdId ? [row.ocdId] : [],
+                  ),
           })),
       }
     : null;

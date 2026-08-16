@@ -184,15 +184,54 @@ test("the everyday contacts ride only their own zip — a Tucson number never an
   assert.deepEqual(everydayContactsFor("roads-local", "99999"), []);
 });
 
+test("the acknowledgment beat draws from the author's fixed pool — and code never adds an entry", async () => {
+  const { ASK_BEAT_POOL, PROHIBITED_BEAT_WORDS, beatStem } = await import(
+    "../lib/routing/ask-beat-pool.ts"
+  );
+  // The author's approved set, verbatim and in order (CLAUDE.md's register
+  // rule, 2026-08-15). This assertion IS the "code never adds a pool entry"
+  // guard: a fifth line — however good — fails the suite instead of
+  // shipping product voice nobody approved.
+  assert.deepEqual(
+    [...ASK_BEAT_POOL],
+    [
+      "Hang tight, I got you...",
+      "Bet — one sec...",
+      "On it...",
+      "Let me grab that...",
+    ],
+    "the pool is the author's list; code never adds to it",
+  );
+  assert.equal(ASK_BEAT_POOL.length, 4);
+  // Acknowledgment register only — never a deliberation claim. Nothing a
+  // reader sees on this surface is generated, so a "Thinking…" label would
+  // be a false claim about a machine reasoning.
+  for (const entry of ASK_BEAT_POOL) {
+    for (const banned of PROHIBITED_BEAT_WORDS) {
+      assert.ok(
+        !entry.toLowerCase().includes(banned),
+        `beat entry "${entry}" implies deliberation ("${banned}")`,
+      );
+    }
+  }
+  // Exactly one trailing ellipsis is stripped — the animated dots follow,
+  // and the reader never sees "......".
+  assert.equal(beatStem("On it..."), "On it");
+  assert.equal(beatStem("no dots"), "no dots");
+});
+
 test("the hang-tight beat is presentation only — routed and logged before the timer, and never labeled AI", () => {
   const source = readFileSync(
     join(ROOT, "components", "ask", "ask-box.tsx"),
     "utf8",
   );
-  // The author's words, verbatim — the trailing dots animate (6e,
-  // 2026-08-14 second session), so the static half is the sentence and
-  // the dots render beside it.
-  assert.ok(source.includes("I got you... hang tight"));
+  // The words now come from the author's pool rather than a literal in the
+  // component (2026-08-15) — what this file pins is that the component
+  // renders a POOL DRAW and holds no beat copy of its own.
+  assert.ok(
+    source.includes("drawAskBeat()") && source.includes("beatStem(beat)"),
+    "the beat renders a draw from the author's pool, not a hard-coded line",
+  );
   assert.ok(
     /"\."\.repeat\(dots\)/.test(source),
     "the trailing dots animate in sequence for the beat's duration",

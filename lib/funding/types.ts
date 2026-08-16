@@ -51,6 +51,48 @@ export interface ContributionRow {
   committeeType: string | null;
   organizationType: string | null;
   designation: string | null;
+  /**
+   * The contributing COMMITTEE's own FEC committee id (Schedule A's
+   * `contributor_id`), when the money came from a registered committee.
+   * Null for individuals and for rows collected before the field was
+   * captured. This id is the ONLY basis for the second hop (item 3,
+   * 2026-08-15): a joint-fundraising committee is itself an FEC filer with
+   * its own books, and "who gives to the Booker Victory Fund" is answered
+   * by that committee's own Schedule A — never by inference from this one.
+   */
+  contributorCommitteeId: string | null;
+}
+
+/**
+ * The second hop (item 3, 2026-08-15, the author's design) — a contributing
+ * committee's OWN top itemized receipts, one level down.
+ *
+ * A joint-fundraising committee is not a donor in the ordinary sense: it is
+ * a pooled raise that splits proceeds among its participants by a filed
+ * formula. So the reader who wants to know where a $1.1M "transfer" came
+ * from is asking about a different committee's books, and this record is
+ * that committee's books — fetched from the FEC by committee id, rendered
+ * under the fund's OWN name, never relabeled as the candidate's donors.
+ *
+ * FEC_CONTRIBUTOR class, so `ripcord.fecContributorDisplay` governs it
+ * exactly as it governs the first hop: pulling the ripcord empties this
+ * data at the accessor, not in CSS.
+ */
+export interface SecondHopCommittee {
+  dataClass: "FEC_CONTRIBUTOR";
+  /** The FEC committee id — the join key, and the cache key for the row. */
+  committeeId: string;
+  /** The committee's name exactly as it is registered. */
+  name: string;
+  /** Its own filed typing, so the pills read from the committee's filing. */
+  committeeType: string | null;
+  organizationType: string | null;
+  designation: string | null;
+  /** Its own top itemized receipts, as filed, largest first. */
+  topContributions: ContributionRow[];
+  /** Total receipts the committee itself reported for the cycle, if filed. */
+  receipts: number | null;
+  provenance: Provenance;
 }
 
 export interface CommitteeTotals {
@@ -111,4 +153,13 @@ export interface FundingSnapshot {
   };
   candidates: FundingCandidate[];
   absences: FundingAbsence[];
+  /**
+   * The second hop, keyed by committee id (item 3). Joined to the first hop
+   * by `ContributionRow.contributorCommitteeId` at render time — the same
+   * committee funding three candidates is fetched and stored ONCE, and the
+   * distinctness invariant applies: two distinct committee ids must never
+   * carry identical books (guarded in tests/funding.test.ts, the D40
+   * family). Absent on snapshots written before the hop existed.
+   */
+  secondHop?: SecondHopCommittee[];
 }

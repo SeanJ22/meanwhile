@@ -31,7 +31,11 @@ import type { FundingSnapshot } from "./types.ts";
 
 export interface ShrinkRegression {
   /** Which comparison failed, for the workflow log. */
-  kind: "CANDIDATE_COUNT" | "CANDIDATE_MISSING" | "CONTRIBUTOR_ROWS";
+  kind:
+    | "CANDIDATE_COUNT"
+    | "CANDIDATE_MISSING"
+    | "CONTRIBUTOR_ROWS"
+    | "SECOND_HOP_ROWS";
   detail: string;
 }
 
@@ -71,6 +75,35 @@ export function findShrinkRegressions(
       regressions.push({
         kind: "CONTRIBUTOR_ROWS",
         detail: `${prev.fecCandidateId} (${prev.name}) contributor rows fell ${prev.topContributions.length} → ${kept.topContributions.length} — the Kelly-504 shape; a partial FEC answer must not publish`,
+      });
+    }
+  }
+
+  // The second hop under the same rule (item 3, 2026-08-15). A committee
+  // whose own books thinned between runs is the Kelly-504 shape one level
+  // down, and it would render as a shorter list of donors with nothing
+  // saying so. Committees the prior snapshot never held are not a shrink;
+  // committees that VANISH are, because a fund that stops answering looks
+  // exactly like a fund with no donors.
+  const priorHop = prior.secondHop ?? [];
+  const nextHopById = new Map((next.secondHop ?? []).map((c) => [c.committeeId, c]));
+  for (const before of priorHop) {
+    const after = nextHopById.get(before.committeeId);
+    if (!after) {
+      // Only a regression if the hop was worth something before — a
+      // committee that was empty and is now absent tells us nothing.
+      if (before.topContributions.length > 0) {
+        regressions.push({
+          kind: "SECOND_HOP_ROWS",
+          detail: `second-hop committee ${before.committeeId} (${before.name}) held ${before.topContributions.length} rows and is missing from this run`,
+        });
+      }
+      continue;
+    }
+    if (after.topContributions.length < before.topContributions.length) {
+      regressions.push({
+        kind: "SECOND_HOP_ROWS",
+        detail: `second-hop committee ${before.committeeId} (${before.name}) rows fell ${before.topContributions.length} → ${after.topContributions.length}`,
       });
     }
   }

@@ -1,6 +1,6 @@
 {
  "formatVersion": 1,
- "fetchedAt": "2026-08-15T05:22:27.864Z",
+ "fetchedAt": "2026-08-16T00:46:50.800Z",
  "cycle": 2026,
  "matchReport": {
   "rosterMatched": 10,
@@ -46,7 +46,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -60,7 +61,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -74,7 +76,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -88,7 +91,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -102,21 +106,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
-    },
-    {
-     "dataClass": "FEC_CONTRIBUTOR",
-     "kind": "COMMITTEE_OR_ORGANIZATION",
-     "contributorName": "A NEW DIRECTION PAC",
-     "amount": 5000,
-     "receiptDate": "2026-03-12",
-     "city": "WASHINGTON",
-     "state": "DC",
-     "entityType": "PAC",
-     "lineNumber": "14",
-     "committeeType": "Q",
-     "organizationType": null,
-     "designation": "D"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -130,7 +121,8 @@
      "lineNumber": "11C",
      "committeeType": "Q",
      "organizationType": "C",
-     "designation": "B"
+     "designation": "B",
+     "contributorCommitteeId": "C00107235"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -144,7 +136,8 @@
      "lineNumber": "11C",
      "committeeType": "Q",
      "organizationType": "C",
-     "designation": "B"
+     "designation": "B",
+     "contributorCommitteeId": "C00016683"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -158,7 +151,8 @@
      "lineNumber": "11C",
      "committeeType": "Q",
      "organizationType": "T",
-     "designation": "B"
+     "designation": "B",
+     "contributorCommitteeId": "C00004812"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -172,14 +166,30 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 3500,
+     "receiptDate": "2025-03-10",
+     "city": "CAMBRIDGE",
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     }
    ],
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/S0NH00219/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-15",
-    "verifiedAt": "2026-08-15"
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
    }
   },
   {
@@ -221,7 +231,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -235,7 +246,8 @@
      "lineNumber": "11AI",
      "committeeType": "Q",
      "organizationType": "M",
-     "designation": "B"
+     "designation": "B",
+     "contributorCommitteeId": "C00797670"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -249,7 +261,8 @@
      "lineNumber": "11AI",
      "committeeType": "Q",
      "organizationType": "M",
-     "designation": "B"
+     "designation": "B",
+     "contributorCommitteeId": "C00797670"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -263,7 +276,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -277,7 +291,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -291,7 +306,8 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00734319"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -305,7 +321,8 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00734319"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -319,7 +336,8 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00734319"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -333,7 +351,8 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00734319"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -347,14 +366,15 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00734319"
     }
    ],
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/S4NJ00185/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-15",
-    "verifiedAt": "2026-08-15"
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
    }
   },
   {
@@ -394,7 +414,8 @@
      "lineNumber": "12",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -408,7 +429,8 @@
      "lineNumber": "12",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -422,7 +444,8 @@
      "lineNumber": "12",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -436,7 +459,8 @@
      "lineNumber": "12",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -450,7 +474,8 @@
      "lineNumber": "12",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -464,7 +489,8 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00848317"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -478,7 +504,8 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00904607"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -492,7 +519,8 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00848317"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -506,28 +534,30 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00904607"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
      "kind": "COMMITTEE_OR_ORGANIZATION",
-     "contributorName": "NAMES IN THE NEWS",
-     "amount": 22694.55,
-     "receiptDate": "2025-07-08",
-     "city": "BERKELEY",
-     "state": "CA",
-     "entityType": "ORG",
-     "lineNumber": "15",
-     "committeeType": null,
+     "contributorName": "MAJORITY FUND",
+     "amount": 20625,
+     "receiptDate": "2026-06-30",
+     "city": "WASHINGTON",
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "12",
+     "committeeType": "N",
      "organizationType": null,
-     "designation": null
+     "designation": "J",
+     "contributorCommitteeId": "C00904607"
     }
    ],
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/S4AZ00139/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-15",
-    "verifiedAt": "2026-08-15"
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
    }
   },
   {
@@ -567,7 +597,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -581,7 +612,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -595,7 +627,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -609,7 +642,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -623,21 +657,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
-    },
-    {
-     "dataClass": "FEC_CONTRIBUTOR",
-     "kind": "COMMITTEE_OR_ORGANIZATION",
-     "contributorName": "NAMES IN THE NEWS",
-     "amount": 5404.97,
-     "receiptDate": "2025-01-28",
-     "city": "OAKLAND",
-     "state": "CA",
-     "entityType": "ORG",
-     "lineNumber": "15",
-     "committeeType": null,
-     "organizationType": null,
-     "designation": null
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -651,7 +672,8 @@
      "lineNumber": "11C",
      "committeeType": "Q",
      "organizationType": "C",
-     "designation": "B"
+     "designation": "B",
+     "contributorCommitteeId": "C00408260"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -665,7 +687,8 @@
      "lineNumber": "11C",
      "committeeType": "Q",
      "organizationType": "C",
-     "designation": "B"
+     "designation": "B",
+     "contributorCommitteeId": "C00457234"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -679,7 +702,8 @@
      "lineNumber": "11C",
      "committeeType": "Q",
      "organizationType": "T",
-     "designation": "B"
+     "designation": "B",
+     "contributorCommitteeId": "C00009985"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -693,14 +717,30 @@
      "lineNumber": "11C",
      "committeeType": "Q",
      "organizationType": "C",
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00364455"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "FEDERATION OF EXCHANGE ACCOMODATORS 1031 PAC",
+     "amount": 5000,
+     "receiptDate": "2026-06-22",
+     "city": "WASHINGTON",
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "11C",
+     "committeeType": "Q",
+     "organizationType": "T",
+     "designation": "B",
+     "contributorCommitteeId": "C00426874"
     }
    ],
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00091/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-15",
-    "verifiedAt": "2026-08-15"
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
    }
   },
   {
@@ -740,7 +780,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -754,7 +795,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -768,7 +810,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -782,7 +825,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -796,7 +840,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -810,7 +855,8 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00938720"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -824,21 +870,8 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
-    },
-    {
-     "dataClass": "FEC_CONTRIBUTOR",
-     "kind": "COMMITTEE_OR_ORGANIZATION",
-     "contributorName": "BUYING TIME, LLC",
-     "amount": 27180.37,
-     "receiptDate": "2025-01-31",
-     "city": "WASHINGTON",
-     "state": "DC",
-     "entityType": "ORG",
-     "lineNumber": "14",
-     "committeeType": null,
-     "organizationType": null,
-     "designation": null
+     "designation": "J",
+     "contributorCommitteeId": "C00938720"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -852,7 +885,8 @@
      "lineNumber": "12",
      "committeeType": "S",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00912907"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -866,14 +900,30 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE TECHNICAL SERVICES",
+     "amount": 7000,
+     "receiptDate": "2025-05-27",
+     "city": "CAMBRIDGE",
+     "state": "MA",
+     "entityType": "ORG",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
     }
    ],
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/S4NJ00466/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-15",
-    "verifiedAt": "2026-08-15"
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
    }
   },
   {
@@ -913,7 +963,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -927,7 +978,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -941,7 +993,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -955,7 +1008,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -969,7 +1023,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -983,70 +1038,75 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00706861"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
      "kind": "COMMITTEE_OR_ORGANIZATION",
      "contributorName": "MARK KELLY VICTORY FUND",
-     "amount": 50000,
+     "amount": 23872.47,
+     "receiptDate": "2025-12-31",
+     "city": "PHOENIX",
+     "state": "AZ",
+     "entityType": "PAC",
+     "lineNumber": "12",
+     "committeeType": "N",
+     "organizationType": null,
+     "designation": "J",
+     "contributorCommitteeId": "C00706861"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "MARK KELLY VICTORY FUND - UNITEMIZED",
+     "amount": 18173.05,
      "receiptDate": "2026-03-31",
      "city": "PHOENIX",
      "state": "AZ",
      "entityType": "PAC",
-     "lineNumber": "15",
+     "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00706861"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
      "kind": "COMMITTEE_OR_ORGANIZATION",
-     "contributorName": "AMALGAMATED BANK",
-     "amount": 38429.98,
-     "receiptDate": "2026-05-29",
-     "city": "WASHINGTON",
-     "state": "DC",
-     "entityType": "ORG",
-     "lineNumber": "15",
-     "committeeType": null,
+     "contributorName": "DSCC LIFTOFF FUND",
+     "amount": 6529.6,
+     "receiptDate": "2025-12-18",
+     "city": "PHOENIX",
+     "state": "AZ",
+     "entityType": "PAC",
+     "lineNumber": "12",
+     "committeeType": "N",
      "organizationType": null,
-     "designation": null
+     "designation": "J",
+     "contributorCommitteeId": "C00908020"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
      "kind": "COMMITTEE_OR_ORGANIZATION",
-     "contributorName": "AMALGAMATED BANK",
-     "amount": 38238.03,
-     "receiptDate": "2026-03-31",
-     "city": "WASHINGTON",
-     "state": "DC",
-     "entityType": "ORG",
-     "lineNumber": "15",
-     "committeeType": null,
+     "contributorName": "ACTBLUE",
+     "amount": 5000,
+     "receiptDate": "2026-06-28",
+     "city": "WEST SOMERVILLE",
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI",
+     "committeeType": "V",
      "organizationType": null,
-     "designation": null
-    },
-    {
-     "dataClass": "FEC_CONTRIBUTOR",
-     "kind": "COMMITTEE_OR_ORGANIZATION",
-     "contributorName": "AMALGAMATED BANK",
-     "amount": 37285.06,
-     "receiptDate": "2026-06-30",
-     "city": "WASHINGTON",
-     "state": "DC",
-     "entityType": "ORG",
-     "lineNumber": "15",
-     "committeeType": null,
-     "organizationType": null,
-     "designation": null
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     }
    ],
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/S0AZ00350/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-15",
-    "verifiedAt": "2026-08-15"
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
    }
   },
   {
@@ -1090,7 +1150,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00694323"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1104,7 +1165,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00694323"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1118,7 +1180,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00694323"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1132,7 +1195,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1146,7 +1210,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00694323"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1160,7 +1225,8 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00825810"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1174,7 +1240,8 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00858373"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1188,7 +1255,8 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00858373"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1202,7 +1270,8 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00825810"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1216,14 +1285,15 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00858373"
     }
    ],
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/H2AZ02360/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-15",
-    "verifiedAt": "2026-08-15"
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
    }
   },
   {
@@ -1265,7 +1335,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1279,7 +1350,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1293,7 +1365,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1307,7 +1380,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1321,7 +1395,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1335,7 +1410,8 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00890137"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1349,7 +1425,8 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00890137"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1363,7 +1440,8 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00904607"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1377,7 +1455,8 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00890137"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1391,14 +1470,15 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00904607"
     }
    ],
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/H4NH02399/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-15",
-    "verifiedAt": "2026-08-15"
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
    }
   },
   {
@@ -1442,7 +1522,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1456,7 +1537,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1470,7 +1552,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1484,7 +1567,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1498,7 +1582,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1512,7 +1597,8 @@
      "lineNumber": "11C",
      "committeeType": "Q",
      "organizationType": null,
-     "designation": "D"
+     "designation": "D",
+     "contributorCommitteeId": "C00663609"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1526,7 +1612,8 @@
      "lineNumber": "11C",
      "committeeType": "Q",
      "organizationType": null,
-     "designation": "D"
+     "designation": "D",
+     "contributorCommitteeId": "C00248948"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1540,7 +1627,8 @@
      "lineNumber": "11C",
      "committeeType": "Q",
      "organizationType": null,
-     "designation": "D"
+     "designation": "D",
+     "contributorCommitteeId": "C00892752"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1554,7 +1642,8 @@
      "lineNumber": "11C",
      "committeeType": "Q",
      "organizationType": "M",
-     "designation": "B"
+     "designation": "B",
+     "contributorCommitteeId": "C00441949"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1568,14 +1657,15 @@
      "lineNumber": "11C",
      "committeeType": "Q",
      "organizationType": null,
-     "designation": "D"
+     "designation": "D",
+     "contributorCommitteeId": "C00617803"
     }
    ],
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/H6AZ07121/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-15",
-    "verifiedAt": "2026-08-15"
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
    }
   },
   {
@@ -1617,7 +1707,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1631,7 +1722,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1645,7 +1737,8 @@
      "lineNumber": "11AI",
      "committeeType": "Q",
      "organizationType": "M",
-     "designation": "B"
+     "designation": "B",
+     "contributorCommitteeId": "C00441949"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1659,7 +1752,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1673,21 +1767,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
-    },
-    {
-     "dataClass": "FEC_CONTRIBUTOR",
-     "kind": "COMMITTEE_OR_ORGANIZATION",
-     "contributorName": "RO FOR CONGRESS INC",
-     "amount": 7761.25,
-     "receiptDate": "2026-06-08",
-     "city": "SANTA CLARA",
-     "state": "CA",
-     "entityType": "CCM",
-     "lineNumber": "15",
-     "committeeType": "H",
-     "organizationType": null,
-     "designation": "P"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1701,7 +1782,8 @@
      "lineNumber": "11C",
      "committeeType": "W",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00606962"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1715,7 +1797,8 @@
      "lineNumber": "11C",
      "committeeType": "Q",
      "organizationType": null,
-     "designation": "D"
+     "designation": "D",
+     "contributorCommitteeId": "C00517235"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1729,7 +1812,8 @@
      "lineNumber": "11C",
      "committeeType": "Q",
      "organizationType": "L",
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00174011"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1743,14 +1827,30 @@
      "lineNumber": "11C",
      "committeeType": "Q",
      "organizationType": "L",
-     "designation": "B"
+     "designation": "B",
+     "contributorCommitteeId": "C00003251"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "MEDICARE FOR ALL",
+     "amount": 5000,
+     "receiptDate": "2026-05-14",
+     "city": "SEATTLE",
+     "state": "WA",
+     "entityType": "PAC",
+     "lineNumber": "11C",
+     "committeeType": "Q",
+     "organizationType": null,
+     "designation": "D",
+     "contributorCommitteeId": "C00685552"
     }
    ],
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/H6NJ11286/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-15",
-    "verifiedAt": "2026-08-15"
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
    }
   },
   {
@@ -1790,7 +1890,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1804,7 +1905,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1818,7 +1920,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1832,7 +1935,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1846,7 +1950,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1860,7 +1965,8 @@
      "lineNumber": "13A",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1874,7 +1980,8 @@
      "lineNumber": "13A",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1888,7 +1995,8 @@
      "lineNumber": "13A",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1902,7 +2010,8 @@
      "lineNumber": "11C",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1916,14 +2025,15 @@
      "lineNumber": "13A",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     }
    ],
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/S4NJ00532/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-15",
-    "verifiedAt": "2026-08-15"
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
    }
   },
   {
@@ -1963,7 +2073,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00694323"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1977,7 +2088,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00694323"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -1991,7 +2103,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00694323"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2005,7 +2118,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00694323"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2019,7 +2133,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00694323"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2033,7 +2148,8 @@
      "lineNumber": "11C",
      "committeeType": "Q",
      "organizationType": "T",
-     "designation": "B"
+     "designation": "B",
+     "contributorCommitteeId": "C00113241"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2047,7 +2163,8 @@
      "lineNumber": "11C",
      "committeeType": "Q",
      "organizationType": "C",
-     "designation": "B"
+     "designation": "B",
+     "contributorCommitteeId": "C00489005"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2061,7 +2178,8 @@
      "lineNumber": "11C",
      "committeeType": "Q",
      "organizationType": null,
-     "designation": "D"
+     "designation": "D",
+     "contributorCommitteeId": "C00784694"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2075,7 +2193,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2089,14 +2208,15 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     }
    ],
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/H6NJ11211/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-15",
-    "verifiedAt": "2026-08-15"
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
    }
   },
   {
@@ -2138,7 +2258,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2152,7 +2273,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2166,7 +2288,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2180,7 +2303,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2194,7 +2318,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2208,7 +2333,8 @@
      "lineNumber": "12",
      "committeeType": "H",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00941567"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2222,7 +2348,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2236,7 +2363,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2250,7 +2378,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2264,14 +2393,15 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     }
    ],
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/H6AZ06099/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-15",
-    "verifiedAt": "2026-08-15"
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
    }
   },
   {
@@ -2302,8 +2432,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/H0AZ02216/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-15",
-    "verifiedAt": "2026-08-15"
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
    }
   },
   {
@@ -2336,8 +2466,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/H6AZ06214/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-15",
-    "verifiedAt": "2026-08-15"
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
    }
   },
   {
@@ -2379,7 +2509,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2393,7 +2524,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2407,7 +2539,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2421,7 +2554,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00694323"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2435,7 +2569,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2449,7 +2584,8 @@
      "lineNumber": "13A",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2463,7 +2599,8 @@
      "lineNumber": "11D",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2477,21 +2614,8 @@
      "lineNumber": "11D",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
-    },
-    {
-     "dataClass": "FEC_CONTRIBUTOR",
-     "kind": "COMMITTEE_OR_ORGANIZATION",
-     "contributorName": "KVOA TV (ALLEN MEDIA BROADCAST)",
-     "amount": 7267.5,
-     "receiptDate": "2025-10-03",
-     "city": "LOS ANGELES",
-     "state": "CA",
-     "entityType": "ORG",
-     "lineNumber": "14",
-     "committeeType": null,
-     "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2505,14 +2629,30 @@
      "lineNumber": "11D",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "BUTIEREZ, DANIEL",
+     "amount": 3135.63,
+     "receiptDate": "2025-07-28",
+     "city": "TUCSON",
+     "state": "AZ",
+     "entityType": "CAN",
+     "lineNumber": "11D",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
     }
    ],
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/H4AZ07134/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-15",
-    "verifiedAt": "2026-08-15"
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
    }
   },
   {
@@ -2552,7 +2692,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2566,7 +2707,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2580,7 +2722,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2594,7 +2737,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2608,7 +2752,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2622,7 +2767,8 @@
      "lineNumber": "13A",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2636,7 +2782,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2650,7 +2797,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2664,7 +2812,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2678,14 +2827,15 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     }
    ],
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00182/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-15",
-    "verifiedAt": "2026-08-15"
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
    }
   },
   {
@@ -2725,7 +2875,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2739,7 +2890,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2753,7 +2905,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2767,7 +2920,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2781,7 +2935,8 @@
      "lineNumber": "11AI",
      "committeeType": "Q",
      "organizationType": null,
-     "designation": "D"
+     "designation": "D",
+     "contributorCommitteeId": "C00422774"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2795,7 +2950,8 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00949925"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2809,7 +2965,8 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00878702"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2823,7 +2980,8 @@
      "lineNumber": "12",
      "committeeType": "S",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00898965"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2837,7 +2995,8 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00878702"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2851,14 +3010,15 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00949933"
     }
    ],
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00141/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-15",
-    "verifiedAt": "2026-08-15"
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
    }
   },
   {
@@ -2898,7 +3058,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00694323"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2912,7 +3073,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00694323"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2926,7 +3088,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2940,7 +3103,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00694323"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2954,7 +3118,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00694323"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2968,7 +3133,8 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00909648"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2982,7 +3148,8 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00909648"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -2996,7 +3163,8 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00909648"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3010,7 +3178,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00694323"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3024,14 +3193,15 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00909648"
     }
    ],
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00166/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-15",
-    "verifiedAt": "2026-08-15"
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
    }
   },
   {
@@ -3071,7 +3241,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00694323"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3085,7 +3256,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00694323"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3099,7 +3271,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00694323"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3113,7 +3286,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3127,7 +3301,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00694323"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3141,7 +3316,8 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00924175"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3155,7 +3331,8 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00924175"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3169,7 +3346,8 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00924175"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3183,7 +3361,8 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00924175"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3197,14 +3376,15 @@
      "lineNumber": "12",
      "committeeType": "N",
      "organizationType": null,
-     "designation": "J"
+     "designation": "J",
+     "contributorCommitteeId": "C00924175"
     }
    ],
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00208/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-15",
-    "verifiedAt": "2026-08-15"
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
    }
   },
   {
@@ -3244,7 +3424,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3258,7 +3439,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3272,7 +3454,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3286,7 +3469,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3300,7 +3484,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3314,7 +3499,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3328,7 +3514,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3342,7 +3529,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3356,7 +3544,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3370,14 +3559,15 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
     }
    ],
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/H6NH02261/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-15",
-    "verifiedAt": "2026-08-15"
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
    }
   },
   {
@@ -3417,7 +3607,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3431,7 +3622,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3445,14 +3637,15 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     }
    ],
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/H6NH02295/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-15",
-    "verifiedAt": "2026-08-15"
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
    }
   },
   {
@@ -3492,7 +3685,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00694323"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3506,7 +3700,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00694323"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3520,7 +3715,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00694323"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3534,7 +3730,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00694323"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3548,7 +3745,8 @@
      "lineNumber": "11AI",
      "committeeType": "V",
      "organizationType": null,
-     "designation": "U"
+     "designation": "U",
+     "contributorCommitteeId": "C00694323"
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3562,7 +3760,8 @@
      "lineNumber": "11D",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3576,7 +3775,8 @@
      "lineNumber": "11D",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3590,7 +3790,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3604,7 +3805,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3618,14 +3820,15 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     }
    ],
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/H6NH02287/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-15",
-    "verifiedAt": "2026-08-15"
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
    }
   },
   {
@@ -3665,7 +3868,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3679,7 +3883,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3693,7 +3898,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3707,7 +3913,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3721,7 +3928,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3735,7 +3943,8 @@
      "lineNumber": "13A",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3749,21 +3958,8 @@
      "lineNumber": "13A",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
-    },
-    {
-     "dataClass": "FEC_CONTRIBUTOR",
-     "kind": "COMMITTEE_OR_ORGANIZATION",
-     "contributorName": "PLANET DIRECT",
-     "amount": 6914.74,
-     "receiptDate": "2026-05-22",
-     "city": "MANASSAS",
-     "state": "VA",
-     "entityType": "ORG",
-     "lineNumber": "14",
-     "committeeType": null,
-     "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3777,7 +3973,8 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
     },
     {
      "dataClass": "FEC_CONTRIBUTOR",
@@ -3791,14 +3988,30 @@
      "lineNumber": "11AI",
      "committeeType": null,
      "organizationType": null,
-     "designation": null
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "WINRED TECHNICAL SERVICES LLC",
+     "amount": 3500,
+     "receiptDate": "2025-04-11",
+     "city": "ARLINGTON",
+     "state": "VA",
+     "entityType": "ORG",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
     }
    ],
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/H2NH02260/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-15",
-    "verifiedAt": "2026-08-15"
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
    }
   }
  ],
@@ -3807,99 +4020,3799 @@
    "targetKey": "ballot-nj-morris:us-senate:kuniansky",
    "displayName": "Joanne KUNIANSKY",
    "reason": "no FEC candidate registered matching \"Joanne KUNIANSKY\" for NJ-S in the 2026 cycle (0 scoped results checked)",
-   "checkedAt": "2026-08-15",
+   "checkedAt": "2026-08-16",
    "searchUrl": "https://www.fec.gov/data/candidates/?q=KUNIANSKY&state=NJ"
   },
   {
    "targetKey": "ballot-nh-merrimack:us-senate:jarvis-david",
    "displayName": "David Jarvis",
    "reason": "no FEC candidate registered matching \"David Jarvis\" for NH-S in the 2026 cycle (0 scoped results checked)",
-   "checkedAt": "2026-08-15",
+   "checkedAt": "2026-08-16",
    "searchUrl": "https://www.fec.gov/data/candidates/?q=Jarvis&state=NH"
   },
   {
    "targetKey": "ballot-nh-merrimack:us-senate:vail-john",
    "displayName": "John Vail",
    "reason": "no FEC candidate registered matching \"John Vail\" for NH-S in the 2026 cycle (0 scoped results checked)",
-   "checkedAt": "2026-08-15",
+   "checkedAt": "2026-08-16",
    "searchUrl": "https://www.fec.gov/data/candidates/?q=Vail&state=NH"
   },
   {
    "targetKey": "ballot-nh-merrimack:us-senate:alciere-tom",
    "displayName": "Tom Alciere",
    "reason": "no FEC candidate registered matching \"Tom Alciere\" for NH-S in the 2026 cycle (0 scoped results checked)",
-   "checkedAt": "2026-08-15",
+   "checkedAt": "2026-08-16",
    "searchUrl": "https://www.fec.gov/data/candidates/?q=Alciere&state=NH"
   },
   {
    "targetKey": "ballot-nh-merrimack:us-senate:danley-sky",
    "displayName": "Sky Danley",
    "reason": "no FEC candidate registered matching \"Sky Danley\" for NH-S in the 2026 cycle (0 scoped results checked)",
-   "checkedAt": "2026-08-15",
+   "checkedAt": "2026-08-16",
    "searchUrl": "https://www.fec.gov/data/candidates/?q=Danley&state=NH"
   },
   {
    "targetKey": "ballot-nh-merrimack:us-senate:maxwell-mary",
    "displayName": "Mary Maxwell",
    "reason": "no FEC candidate registered matching \"Mary Maxwell\" for NH-S in the 2026 cycle (1 scoped results checked)",
-   "checkedAt": "2026-08-15",
+   "checkedAt": "2026-08-16",
    "searchUrl": "https://www.fec.gov/data/candidates/?q=Maxwell&state=NH"
   },
   {
    "targetKey": "ballot-nh-merrimack:us-senate:mcmenamon-ii-richard-a-",
    "displayName": "Richard A. McMenamon II",
    "reason": "no FEC candidate registered matching \"Richard A. McMenamon II\" for NH-S in the 2026 cycle (0 scoped results checked)",
-   "checkedAt": "2026-08-15",
+   "checkedAt": "2026-08-16",
    "searchUrl": "https://www.fec.gov/data/candidates/?q=McMenamon%20II&state=NH"
   },
   {
    "targetKey": "ballot-nh-merrimack:us-senate:smith-sabrina-ann",
    "displayName": "Sabrina Ann Smith",
    "reason": "no FEC candidate registered matching \"Sabrina Ann Smith\" for NH-S in the 2026 cycle (1 scoped results checked)",
-   "checkedAt": "2026-08-15",
+   "checkedAt": "2026-08-16",
    "searchUrl": "https://www.fec.gov/data/candidates/?q=Smith&state=NH"
   },
   {
    "targetKey": "ballot-nh-merrimack:us-house-2:callis-michael-anthony",
    "displayName": "Michael Anthony Callis",
    "reason": "no FEC candidate registered matching \"Michael Anthony Callis\" for NH-H02 in the 2026 cycle (0 scoped results checked)",
-   "checkedAt": "2026-08-15",
+   "checkedAt": "2026-08-16",
    "searchUrl": "https://www.fec.gov/data/candidates/?q=Callis&state=NH"
   },
   {
    "targetKey": "ballot-nj-morris:us-senate:fernandez",
    "displayName": "Veronica FERNANDEZ",
    "reason": "registered with the FEC (S0NJ00258) but no financial reports filed for the 2026 cycle (last report covered through 2020-11-27)",
-   "checkedAt": "2026-08-15",
+   "checkedAt": "2026-08-16",
    "searchUrl": "https://www.fec.gov/data/candidate/S0NJ00258/"
   },
   {
    "targetKey": "ballot-nj-morris:us-house-11:bond",
    "displayName": "Alan B. BOND",
    "reason": "registered with the FEC (H6NJ11328) but no financial reports filed for the 2026 cycle",
-   "checkedAt": "2026-08-15",
+   "checkedAt": "2026-08-16",
    "searchUrl": "https://www.fec.gov/data/candidate/H6NJ11328/"
   },
   {
    "targetKey": "ballot-nh-merrimack:us-senate:saal-maxwell-l-",
    "displayName": "Maxwell L. Saal",
    "reason": "registered with the FEC (S6NH00224) but no financial reports filed for the 2026 cycle",
-   "checkedAt": "2026-08-15",
+   "checkedAt": "2026-08-16",
    "searchUrl": "https://www.fec.gov/data/candidate/S6NH00224/"
   },
   {
    "targetKey": "ballot-nh-merrimack:us-senate:martin-andy",
    "displayName": "Andy Martin",
    "reason": "registered with the FEC (S4NH00096) but no financial reports filed for the 2026 cycle",
-   "checkedAt": "2026-08-15",
+   "checkedAt": "2026-08-16",
    "searchUrl": "https://www.fec.gov/data/candidate/S4NH00096/"
   },
   {
    "targetKey": "ballot-az-pima:us-house-6|Gary Swing",
    "displayName": "Gary Swing",
    "reason": "registered with the FEC (H6AZ06164) but no financial reports filed for the 2026 cycle",
-   "checkedAt": "2026-08-15",
+   "checkedAt": "2026-08-16",
    "searchUrl": "https://www.fec.gov/data/candidate/H6AZ06164/"
+  }
+ ],
+ "secondHop": [
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00401224",
+   "name": "ACTBLUE",
+   "committeeType": "V",
+   "organizationType": null,
+   "designation": "U",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "JACOBS, IRWIN",
+     "amount": 500000,
+     "receiptDate": "2025-10-16",
+     "city": "LA JOLLA",
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "W",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00495028"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "JACOBS, IRWIN",
+     "amount": 500000,
+     "receiptDate": "2025-10-15",
+     "city": "LA JOLLA",
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "W",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00495028"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "HULSIZER, MATTHEW",
+     "amount": 485100,
+     "receiptDate": "2026-04-22",
+     "city": "AUSTIN",
+     "state": "TX",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "N",
+     "organizationType": null,
+     "designation": "J",
+     "contributorCommitteeId": "C00916429"
+    }
+   ],
+   "receipts": 1925847484.38,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00401224/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00107235",
+   "name": "PRICEWATERHOUSECOOPERS POLITICAL ACTION COMMITTEE I",
+   "committeeType": "Q",
+   "organizationType": "C",
+   "designation": "B",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "BOBERSCHMIDT, MICHAEL J",
+     "amount": 5000,
+     "receiptDate": "2025-08-08",
+     "city": "NEW YORK",
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "PRICEWATERHOUSECOOPERS",
+     "amount": 5000,
+     "receiptDate": "2025-01-21",
+     "city": "WASHINGTON",
+     "state": "DC",
+     "entityType": "ORG",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "ZAMAN, FARHAD",
+     "amount": 2000,
+     "receiptDate": "2026-06-02",
+     "city": "NEW YORK",
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "YOUNG, THEODORE R",
+     "amount": 2000,
+     "receiptDate": "2026-06-02",
+     "city": "BRADENTON",
+     "state": "FL",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "YOUNG, KAREN",
+     "amount": 2000,
+     "receiptDate": "2026-06-02",
+     "city": "CHESTER",
+     "state": "NJ",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    }
+   ],
+   "receipts": 3237961.21,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00107235/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00016683",
+   "name": "PFIZER INC. PAC",
+   "committeeType": "Q",
+   "organizationType": "C",
+   "designation": "B",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "TARAPOREVALA, CYRUS",
+     "amount": 1250,
+     "receiptDate": "2025-09-19",
+     "city": "NEW YORK",
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SMITH, JAMES C.",
+     "amount": 1250,
+     "receiptDate": "2025-09-19",
+     "city": "NEW YORK",
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "NORA JOHNSON, SUZANNE",
+     "amount": 1250,
+     "receiptDate": "2025-09-19",
+     "city": "NEW YORK",
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "NARAYEN, SHANTANU",
+     "amount": 1250,
+     "receiptDate": "2025-09-19",
+     "city": "NEW YORK",
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "BUCKLEY, MORTIMER J.",
+     "amount": 1250,
+     "receiptDate": "2025-09-19",
+     "city": "NEW YORK",
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    }
+   ],
+   "receipts": 1281010.46,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00016683/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00004812",
+   "name": "MORTGAGE BANKERS ASSOCIATION POLITICAL ACTION COMMITTEE (MORPAC)",
+   "committeeType": "Q",
+   "organizationType": "T",
+   "designation": "B",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "JONES, MARK",
+     "amount": 50000,
+     "receiptDate": "2026-03-21",
+     "city": "SAN ANTONIO",
+     "state": "TX",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "N",
+     "organizationType": null,
+     "designation": "J",
+     "contributorCommitteeId": "C00868091"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "NARASIMHAN, SHEKAR",
+     "amount": 44300,
+     "receiptDate": "2026-02-18",
+     "city": "MC LEAN",
+     "state": "VA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "Y",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00000935"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "PEREZ, EDDY JR.",
+     "amount": 10000,
+     "receiptDate": "2025-06-20",
+     "city": "ATLANTA",
+     "state": "GA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "Y",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00075820"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "ANDREWS, BECKY",
+     "amount": 7000,
+     "receiptDate": "2025-07-22",
+     "city": "RENO",
+     "state": "NV",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "S",
+     "organizationType": null,
+     "designation": "P",
+     "contributorCommitteeId": "C00409581"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "ANDREWS, DUANE E.",
+     "amount": 7000,
+     "receiptDate": "2025-07-22",
+     "city": "RENO",
+     "state": "NV",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    }
+   ],
+   "receipts": 2380172.43,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00004812/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00797670",
+   "name": "AMERICAN ISRAEL PUBLIC AFFAIRS COMMITTEE POLITICAL ACTION COMMITTEE",
+   "committeeType": "Q",
+   "organizationType": "M",
+   "designation": "B",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "OCH, DANIEL",
+     "amount": 87500,
+     "receiptDate": "2026-05-15",
+     "city": "GREENWICH",
+     "state": "CT",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "N",
+     "organizationType": null,
+     "designation": "J",
+     "contributorCommitteeId": "C00916429"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "OCH, DANIEL",
+     "amount": 61800,
+     "receiptDate": "2026-05-15",
+     "city": "GREENWICH",
+     "state": "CT",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "N",
+     "organizationType": null,
+     "designation": "J",
+     "contributorCommitteeId": "C00916429"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "PANAR, MANNY",
+     "amount": 44300,
+     "receiptDate": "2025-06-19",
+     "city": "SILVER SPRING",
+     "state": "MD",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "Y",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00042366"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SCHWARTZBERG, ANDREW",
+     "amount": 44300,
+     "receiptDate": "2025-06-16",
+     "city": "PACIFIC PALISADES",
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "Y",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00042366"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "GLEIBERMAN, MARK",
+     "amount": 44300,
+     "receiptDate": "2026-05-05",
+     "city": "SAN DIEGO",
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "Y",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00000935"
+    }
+   ],
+   "receipts": 47521820.85,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00797670/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00734319",
+   "name": "BOOKER VICTORY FUND",
+   "committeeType": "N",
+   "organizationType": null,
+   "designation": "J",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 85768,
+     "receiptDate": "2026-06-30",
+     "city": "WEST SOMERVILLE",
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 59234,
+     "receiptDate": "2025-06-30",
+     "city": "WEST SOMERVILLE",
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 34775,
+     "receiptDate": "2025-12-31",
+     "city": "WEST SOMERVILLE",
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "SAN PABLO LYTTON CASINO",
+     "amount": 22000,
+     "receiptDate": "2025-05-14",
+     "city": "SAN PABLO",
+     "state": "CA",
+     "entityType": "ORG",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "LARSEN, CHRIS",
+     "amount": 22000,
+     "receiptDate": "2025-03-28",
+     "city": "SAN FRANCISCO",
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    }
+   ],
+   "receipts": 7421705.83,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00734319/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00848317",
+   "name": "GALLEGO VICTORY FUND",
+   "committeeType": "N",
+   "organizationType": null,
+   "designation": "J",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 327510,
+     "receiptDate": "2025-12-31",
+     "city": "WEST SOMERVILLE",
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 142037,
+     "receiptDate": "2026-03-31",
+     "city": "WEST SOMERVILLE",
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 136748.88,
+     "receiptDate": "2025-06-30",
+     "city": "WEST SOMERVILLE",
+     "state": "MA",
+     "entityType": "ORG",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 92905,
+     "receiptDate": "2026-06-30",
+     "city": "WEST SOMERVILLE",
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "VERSTANDIG, GRANT",
+     "amount": 12000,
+     "receiptDate": "2025-04-21",
+     "city": "MCLEAN",
+     "state": "VA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    }
+   ],
+   "receipts": 862233.39,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00848317/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00904607",
+   "name": "MAJORITY FUND",
+   "committeeType": "N",
+   "organizationType": null,
+   "designation": "J",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "DIMON, JUDITH KENT",
+     "amount": 134000,
+     "receiptDate": "2025-10-06",
+     "city": "NEW YORK",
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "MURDOCH, KATHRYN",
+     "amount": 134000,
+     "receiptDate": "2025-09-24",
+     "city": "NEW YORK",
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "MURDOCH, JAMES",
+     "amount": 134000,
+     "receiptDate": "2025-09-24",
+     "city": "NEW YORK",
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "PENNIMAN, MARY",
+     "amount": 134000,
+     "receiptDate": "2025-09-11",
+     "city": "SARATOGA SPRINGS",
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "COXE, TENCH",
+     "amount": 134000,
+     "receiptDate": "2025-09-04",
+     "city": "PALO ALTO",
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    }
+   ],
+   "receipts": 3053300,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00904607/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00408260",
+   "name": "THE GRANT THORNTON ADVISORS LLC POLITICAL ACTION COMMITTEE",
+   "committeeType": "Q",
+   "organizationType": "C",
+   "designation": "B",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "MARGULIES, MARK A.",
+     "amount": 5000,
+     "receiptDate": "2025-12-31",
+     "city": "WESTON",
+     "state": "FL",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SITES, DAVID ERIC",
+     "amount": 4000,
+     "receiptDate": "2026-01-31",
+     "city": "FALLS CHURCH",
+     "state": "VA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SITES, DAVID ERIC",
+     "amount": 4000,
+     "receiptDate": "2025-01-31",
+     "city": "FALLS CHURCH",
+     "state": "VA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "MALZONE, JANET L.",
+     "amount": 3000,
+     "receiptDate": "2025-01-31",
+     "city": "ELMHURST",
+     "state": "IL",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "NOTARANGELO, MICHAEL",
+     "amount": 2000,
+     "receiptDate": "2025-09-30",
+     "city": "CHESHIRE",
+     "state": "CT",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    }
+   ],
+   "receipts": 362926.04,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00408260/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00457234",
+   "name": "MARSH & MCLENNAN COMPANIES, INC. POLITICAL ACTION COMMITTEE (MARSH PAC)",
+   "committeeType": "Q",
+   "organizationType": "C",
+   "designation": "B",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "RYLAND, CHARLES M",
+     "amount": 5000,
+     "receiptDate": "2025-01-15",
+     "city": "DALLAS",
+     "state": "TX",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "MCGIVNEY, MARK C",
+     "amount": 5000,
+     "receiptDate": "2025-01-15",
+     "city": "NEW YORK",
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "KLISURA, DEAN M",
+     "amount": 5000,
+     "receiptDate": "2025-01-15",
+     "city": "NEW YORK",
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "DOYLE, JOHN Q",
+     "amount": 5000,
+     "receiptDate": "2025-01-15",
+     "city": "NEW YORK",
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "ATKINSON, JOHN",
+     "amount": 5000,
+     "receiptDate": "2025-01-15",
+     "city": "CHICAGO",
+     "state": "IL",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    }
+   ],
+   "receipts": 479691.53,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00457234/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00009985",
+   "name": "NATIONAL ASSOCIATION OF BROADCASTERS POLITICAL ACTION COMMITTEE (NABPAC)",
+   "committeeType": "Q",
+   "organizationType": "T",
+   "designation": "B",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "TARZIAN, THOMAS MR.",
+     "amount": 6000,
+     "receiptDate": "2025-03-31",
+     "city": "BLOOMINGTON",
+     "state": "IN",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "H",
+     "organizationType": null,
+     "designation": "P",
+     "contributorCommitteeId": "C00800649"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "MANSHIP, CHARLES MR.",
+     "amount": 5100,
+     "receiptDate": "2025-02-19",
+     "city": "BATON ROUGE",
+     "state": "LA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "S",
+     "organizationType": null,
+     "designation": "P",
+     "contributorCommitteeId": "C00543983"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "BENDER, RALPH B. MR.",
+     "amount": 5100,
+     "receiptDate": "2025-02-19",
+     "city": "BATON ROUGE",
+     "state": "LA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": "C99543983"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "WARSHAW, JEFF MR.",
+     "amount": 5000,
+     "receiptDate": "2025-08-14",
+     "city": "WESTPORT",
+     "state": "CT",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "PITTMAN, ROBERT W. MR.",
+     "amount": 5000,
+     "receiptDate": "2025-07-22",
+     "city": "NEW YORK",
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    }
+   ],
+   "receipts": 1853289.21,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00009985/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00364455",
+   "name": "FIDELITY NATIONAL FINANCIAL INC PAC 2001",
+   "committeeType": "Q",
+   "organizationType": "C",
+   "designation": "U",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SADOWSKI, PETER T.",
+     "amount": 2000,
+     "receiptDate": "2025-05-14",
+     "city": "LAS VEGAS",
+     "state": "NV",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "JORGENSEN, MICHELE",
+     "amount": 2000,
+     "receiptDate": "2025-05-07",
+     "city": "ALLEN",
+     "state": "TX",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "GORDY, RODNEY",
+     "amount": 2000,
+     "receiptDate": "2025-05-09",
+     "city": "WHITTIER",
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "PATILIS, JOANNA",
+     "amount": 2000,
+     "receiptDate": "2026-04-06",
+     "city": "MANHASSET",
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "JEWKES, ROGER",
+     "amount": 2000,
+     "receiptDate": "2026-04-23",
+     "city": "NEWPORT BEACH",
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    }
+   ],
+   "receipts": 197885,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00364455/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00426874",
+   "name": "FEDERATION OF EXCHANGE ACCOMODATORS 1031 PAC",
+   "committeeType": "Q",
+   "organizationType": "T",
+   "designation": "B",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "RAITZ, RON",
+     "amount": 5000,
+     "receiptDate": "2025-04-08",
+     "city": "MARIETTA",
+     "state": "GA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "PETERSON, MARNA",
+     "amount": 5000,
+     "receiptDate": "2025-03-31",
+     "city": "MINNEAPOLIS",
+     "state": "MN",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "PETERSON, JEFFREY",
+     "amount": 5000,
+     "receiptDate": "2025-03-31",
+     "city": "MINNEAPOLIS",
+     "state": "MN",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "MILLER, JAMES I.",
+     "amount": 5000,
+     "receiptDate": "2025-03-26",
+     "city": "GILBERT",
+     "state": "AZ",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "HORAN, JEFFREY",
+     "amount": 5000,
+     "receiptDate": "2025-01-31",
+     "city": "RICHARDSON",
+     "state": "TX",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    }
+   ],
+   "receipts": 148446.65,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00426874/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00938720",
+   "name": "TEAM ANDY KIM",
+   "committeeType": "N",
+   "organizationType": null,
+   "designation": "J",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 12000,
+     "receiptDate": "2026-06-22",
+     "city": "CAMBRIDGE",
+     "state": "MA",
+     "entityType": "ORG",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "LINER, STEPHANIE",
+     "amount": 12000,
+     "receiptDate": "2026-06-20",
+     "city": "WOODLAND HILLS",
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 12000,
+     "receiptDate": "2026-06-15",
+     "city": "CAMBRIDGE",
+     "state": "MA",
+     "entityType": "ORG",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "HUVANE, KEVIN",
+     "amount": 12000,
+     "receiptDate": "2026-06-11",
+     "city": "ENCINO",
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 12000,
+     "receiptDate": "2026-06-15",
+     "city": "CAMBRIDGE",
+     "state": "MA",
+     "entityType": "ORG",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    }
+   ],
+   "receipts": 216790,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00938720/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00912907",
+   "name": "DUCKWORTH KIM VICTORY FUND",
+   "committeeType": "S",
+   "organizationType": null,
+   "designation": "J",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "KIM, YOUNG JOON",
+     "amount": 10000,
+     "receiptDate": "2025-08-06",
+     "city": "NEW YORK",
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "NAMKUNG, DAVID",
+     "amount": 7000,
+     "receiptDate": "2025-08-25",
+     "city": "CHICAGO",
+     "state": "IL",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "PARK, JIN WOO",
+     "amount": 5000,
+     "receiptDate": "2025-09-18",
+     "city": "PALOS VERDES ESTATES",
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "LEE, JAMES GEECHUL",
+     "amount": 5000,
+     "receiptDate": "2025-08-12",
+     "city": "PALOS VERDES ESTATES",
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "LEE, JAMES GEECHUL",
+     "amount": 3905,
+     "receiptDate": "2025-08-17",
+     "city": "PALOS VERDES ESTATES",
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    }
+   ],
+   "receipts": 63635,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00912907/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00706861",
+   "name": "MARK KELLY VICTORY FUND",
+   "committeeType": "N",
+   "organizationType": null,
+   "designation": "J",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "MAZIN, CRAIG",
+     "amount": 22000,
+     "receiptDate": "2025-11-26",
+     "city": "SANTA MONICA",
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 10000,
+     "receiptDate": "2026-03-08",
+     "city": "WEST SOMERVILLE",
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "GUZMAN, NESTOR",
+     "amount": 10000,
+     "receiptDate": "2026-03-03",
+     "city": "SCOTTSDALE",
+     "state": "AZ",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 10000,
+     "receiptDate": "2026-03-22",
+     "city": "WEST SOMERVILLE",
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "O'KEEFE, JAMES W",
+     "amount": 10000,
+     "receiptDate": "2026-03-18",
+     "city": "SCOTTSDALE",
+     "state": "AZ",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    }
+   ],
+   "receipts": 448356.33,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00706861/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00908020",
+   "name": "DSCC LIFTOFF FUND",
+   "committeeType": "N",
+   "organizationType": null,
+   "designation": "J",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "BLUE, J NEAL",
+     "amount": 50000,
+     "receiptDate": "2025-10-23",
+     "city": "LA JOLLA",
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    }
+   ],
+   "receipts": 50000,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00908020/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00694323",
+   "name": "WINRED",
+   "committeeType": "V",
+   "organizationType": null,
+   "designation": "U",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "DUCHOSSOIS, CRAIG",
+     "amount": 900000,
+     "receiptDate": "2026-06-10",
+     "city": "CHICAGO",
+     "state": "IL",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "O",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00571703"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "DUCHOSSOIS, CRAIG",
+     "amount": 900000,
+     "receiptDate": "2026-06-02",
+     "city": "CHICAGO",
+     "state": "IL",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "W",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00504530"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "WINKLEVOSS, TYLER",
+     "amount": 750100,
+     "receiptDate": "2026-05-07",
+     "city": "NEW YORK",
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "N",
+     "organizationType": null,
+     "designation": "J",
+     "contributorCommitteeId": "C00837518"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "WINKLEVOSS, CAMERON",
+     "amount": 750100,
+     "receiptDate": "2026-05-07",
+     "city": "NEW YORK",
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "N",
+     "organizationType": null,
+     "designation": "J",
+     "contributorCommitteeId": "C00837518"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "DUCHOSSOIS, CRAIG",
+     "amount": 600000,
+     "receiptDate": "2026-06-10",
+     "city": "CHICAGO",
+     "state": "IL",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "O",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00571703"
+    }
+   ],
+   "receipts": 748758386.31,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00694323/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00825810",
+   "name": "CISCOMANI VICTORY FUND",
+   "committeeType": "N",
+   "organizationType": null,
+   "designation": "J",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "BIDWILL, MICHAEL",
+     "amount": 25000,
+     "receiptDate": "2025-09-12",
+     "city": "TEMPE",
+     "state": "AZ",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "BANDLAMURI, RAVI",
+     "amount": 25000,
+     "receiptDate": "2026-06-23",
+     "city": "TUCSON",
+     "state": "AZ",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "REGINA, TOM",
+     "amount": 25000,
+     "receiptDate": "2025-01-24",
+     "city": "TUCSON",
+     "state": "AZ",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "REGINA, TERRIE (TERESA)",
+     "amount": 25000,
+     "receiptDate": "2025-01-24",
+     "city": "TUCSON",
+     "state": "AZ",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "LOPEZ, HUMBERTO",
+     "amount": 25000,
+     "receiptDate": "2025-02-04",
+     "city": "TUCSON",
+     "state": "AZ",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    }
+   ],
+   "receipts": 1253428.7,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00825810/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00858373",
+   "name": "GROW THE MAJORITY",
+   "committeeType": "N",
+   "organizationType": null,
+   "designation": "J",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SINQUEFIELD, REX A.",
+     "amount": 1107700,
+     "receiptDate": "2025-03-28",
+     "city": "ST LOUIS",
+     "state": "MO",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "DUNN, TIMOTHY M.",
+     "amount": 1107700,
+     "receiptDate": "2025-03-07",
+     "city": "MIDLAND",
+     "state": "TX",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "BEAL, D ANDREW",
+     "amount": 1095700,
+     "receiptDate": "2025-04-21",
+     "city": "PLANO",
+     "state": "TX",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "MCKEE, JACK C.",
+     "amount": 1086000,
+     "receiptDate": "2025-09-26",
+     "city": "OOLTEWAH",
+     "state": "TN",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SINQUEFIELD, JEANNE C.",
+     "amount": 1079200,
+     "receiptDate": "2025-12-22",
+     "city": "ST. LOUIS",
+     "state": "MO",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    }
+   ],
+   "receipts": 95770595.95,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00858373/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00890137",
+   "name": "GOODLANDER VICTORY FUND",
+   "committeeType": "N",
+   "organizationType": null,
+   "designation": "J",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 303428.69,
+     "receiptDate": "2026-06-30",
+     "city": "WEST SOMERVILLE",
+     "state": "MA",
+     "entityType": "ORG",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 181118,
+     "receiptDate": "2026-03-31",
+     "city": "WEST SOMERVILLE",
+     "state": "MA",
+     "entityType": "ORG",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "EMANUEL, RAHM",
+     "amount": 20000,
+     "receiptDate": "2026-01-15",
+     "city": "CHICAGO",
+     "state": "IL",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "HILLIS, WILLIAM DANIEL",
+     "amount": 12000,
+     "receiptDate": "2025-12-30",
+     "city": "RINDGE",
+     "state": "NH",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "MILSAL, TAYLOR",
+     "amount": 12000,
+     "receiptDate": "2025-12-30",
+     "city": "RINDGE",
+     "state": "NH",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    }
+   ],
+   "receipts": 597972.69,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00890137/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00663609",
+   "name": "PROGRESSIVE MAJORITY PAC",
+   "committeeType": "Q",
+   "organizationType": null,
+   "designation": "D",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "FRESENIUS MEDICAL PAC",
+     "amount": 5000,
+     "receiptDate": "2026-03-31",
+     "city": "WASHINGTON",
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "11C",
+     "committeeType": "Q",
+     "organizationType": "C",
+     "designation": "B",
+     "contributorCommitteeId": "C00401299"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "GATES, MELINDA FRENCH",
+     "amount": 5000,
+     "receiptDate": "2026-03-24",
+     "city": "KIRKLAND",
+     "state": "WA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "BILLS, STEVEN",
+     "amount": 5000,
+     "receiptDate": "2026-02-24",
+     "city": "SAN FRANCISCO",
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ELEVANCE HEALTH PAC",
+     "amount": 5000,
+     "receiptDate": "2025-03-31",
+     "city": "WASHINGTON",
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "11C",
+     "committeeType": "Q",
+     "organizationType": "C",
+     "designation": "B",
+     "contributorCommitteeId": "C00197228"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SIMONS, ELIZABETH",
+     "amount": 5000,
+     "receiptDate": "2025-05-16",
+     "city": "ATHERTON",
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    }
+   ],
+   "receipts": 658901.53,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00663609/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00248948",
+   "name": "PEOPLE HELPING PEOPLE",
+   "committeeType": "Q",
+   "organizationType": null,
+   "designation": "D",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "NATIONAL MULTI HOUSING COUNCIL PAC",
+     "amount": 5000,
+     "receiptDate": "2025-05-23",
+     "city": "WASHINGTON",
+     "state": "DC",
+     "entityType": "COM",
+     "lineNumber": "11C",
+     "committeeType": "Q",
+     "organizationType": "T",
+     "designation": "B",
+     "contributorCommitteeId": "C00130773"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "BUILD PAC NATIONAL ASSOCIATION OF HOME BUILDERS",
+     "amount": 5000,
+     "receiptDate": "2025-01-16",
+     "city": "WASHINGTON",
+     "state": "DC",
+     "entityType": "COM",
+     "lineNumber": "11C",
+     "committeeType": "Q",
+     "organizationType": "T",
+     "designation": "B",
+     "contributorCommitteeId": "C00000901"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "NATIONAL ASSOCIATION OF REALTORS PAC",
+     "amount": 5000,
+     "receiptDate": "2026-04-23",
+     "city": "CHICAGO",
+     "state": "IL",
+     "entityType": "COM",
+     "lineNumber": "11C",
+     "committeeType": "Q",
+     "organizationType": "M",
+     "designation": "B",
+     "contributorCommitteeId": "C00030718"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "TORRES FOR CONGRESS",
+     "amount": 5000,
+     "receiptDate": "2026-04-21",
+     "city": "BRONX",
+     "state": "NY",
+     "entityType": "CCM",
+     "lineNumber": "11C",
+     "committeeType": "H",
+     "organizationType": null,
+     "designation": "P",
+     "contributorCommitteeId": "C00699744"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "LA BAMBA PAC",
+     "amount": 5000,
+     "receiptDate": "2026-04-21",
+     "city": "WASHINGTON",
+     "state": "DC",
+     "entityType": "COM",
+     "lineNumber": "11C",
+     "committeeType": "Q",
+     "organizationType": null,
+     "designation": "D",
+     "contributorCommitteeId": "C00753947"
+    }
+   ],
+   "receipts": 70022,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00248948/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00892752",
+   "name": "JUNTOS PAC",
+   "committeeType": "Q",
+   "organizationType": null,
+   "designation": "D",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 237965,
+     "receiptDate": "2025-06-25",
+     "city": "WEST SOMERVILLE",
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "GALLEGO VICTORY FUND",
+     "amount": 235000,
+     "receiptDate": "2025-12-17",
+     "city": "WASHINGTON",
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "12",
+     "committeeType": "N",
+     "organizationType": null,
+     "designation": "J",
+     "contributorCommitteeId": "C00848317"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 56000,
+     "receiptDate": "2026-03-31",
+     "city": "WEST SOMERVILLE",
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 23500,
+     "receiptDate": "2025-12-31",
+     "city": "WEST SOMERVILLE",
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 21000,
+     "receiptDate": "2026-02-28",
+     "city": "WEST SOMERVILLE",
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    }
+   ],
+   "receipts": 1500756.26,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00892752/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00441949",
+   "name": "JSTREETPAC",
+   "committeeType": "Q",
+   "organizationType": "M",
+   "designation": "B",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SAMUELS, BENJAMIN",
+     "amount": 56000,
+     "receiptDate": "2026-03-20",
+     "city": "BELLAIRE",
+     "state": "TX",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "N",
+     "organizationType": null,
+     "designation": "J",
+     "contributorCommitteeId": "C00831917"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "RECHNITZ, JOAN",
+     "amount": 50000,
+     "receiptDate": "2026-06-03",
+     "city": "MIDDLETOWN",
+     "state": "NJ",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "RECHNITZ, JOAN",
+     "amount": 50000,
+     "receiptDate": "2026-06-03",
+     "city": "MIDDLETOWN",
+     "state": "NJ",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "Y",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00000935"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "GLANT, LAUREN",
+     "amount": 50000,
+     "receiptDate": "2026-03-04",
+     "city": "BROOKLYN",
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "N",
+     "organizationType": null,
+     "designation": "J",
+     "contributorCommitteeId": "C00916429"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SOLOMONT, ALAN D",
+     "amount": 49300,
+     "receiptDate": "2026-03-23",
+     "city": "WESTON",
+     "state": "MA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "N",
+     "organizationType": null,
+     "designation": "J",
+     "contributorCommitteeId": "C00831917"
+    }
+   ],
+   "receipts": 5938371.19,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00441949/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00617803",
+   "name": "JOBS, EDUCATION, & FAMILIES FIRST  JEFF PAC",
+   "committeeType": "Q",
+   "organizationType": null,
+   "designation": "D",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "JEFFRIES VICTORY FUND",
+     "amount": 151900,
+     "receiptDate": "2025-03-31",
+     "city": "WASHINGTON",
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "12",
+     "committeeType": "N",
+     "organizationType": null,
+     "designation": "J",
+     "contributorCommitteeId": "C00768200"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "JEFFRIES VICTORY FUND",
+     "amount": 69923.5,
+     "receiptDate": "2025-01-31",
+     "city": "WASHINGTON",
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "12",
+     "committeeType": "N",
+     "organizationType": null,
+     "designation": "J",
+     "contributorCommitteeId": "C00768200"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "JEFFRIES VICTORY FUND",
+     "amount": 57250,
+     "receiptDate": "2025-05-31",
+     "city": "WASHINGTON",
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "12",
+     "committeeType": "N",
+     "organizationType": null,
+     "designation": "J",
+     "contributorCommitteeId": "C00768200"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "JEFFRIES VICTORY FUND",
+     "amount": 54200,
+     "receiptDate": "2025-06-30",
+     "city": "WASHINGTON",
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "12",
+     "committeeType": "N",
+     "organizationType": null,
+     "designation": "J",
+     "contributorCommitteeId": "C00768200"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "JEFFRIES VICTORY FUND",
+     "amount": 53760,
+     "receiptDate": "2025-04-30",
+     "city": "WASHINGTON",
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "12",
+     "committeeType": "N",
+     "organizationType": null,
+     "designation": "J",
+     "contributorCommitteeId": "C00768200"
+    }
+   ],
+   "receipts": 1503656.5,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00617803/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00606962",
+   "name": "WORKING FAMILIES PARTY PAC",
+   "committeeType": "W",
+   "organizationType": null,
+   "designation": "U",
+   "topContributions": [],
+   "receipts": 20206036.12,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00606962/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00517235",
+   "name": "TURQUOISE PAC",
+   "committeeType": "Q",
+   "organizationType": null,
+   "designation": "D",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "LUJAN VICTORY FUND",
+     "amount": 26000,
+     "receiptDate": "2025-04-17",
+     "city": "WASHINGTON",
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "12",
+     "committeeType": "N",
+     "organizationType": null,
+     "designation": "J",
+     "contributorCommitteeId": "C00720565"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "LUJAN VICTORY FUND",
+     "amount": 17000,
+     "receiptDate": "2026-02-10",
+     "city": "WASHINGTON",
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "12",
+     "committeeType": "N",
+     "organizationType": null,
+     "designation": "J",
+     "contributorCommitteeId": "C00720565"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "LUJAN VICTORY FUND",
+     "amount": 15000,
+     "receiptDate": "2025-08-13",
+     "city": "WASHINGTON",
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "12",
+     "committeeType": "N",
+     "organizationType": null,
+     "designation": "J",
+     "contributorCommitteeId": "C00720565"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "UNUM GROUP POLITICAL ACTION COMMITTEE (UNUMPAC)",
+     "amount": 5000,
+     "receiptDate": "2025-02-28",
+     "city": "CHATTANOOGA",
+     "state": "TN",
+     "entityType": "PAC",
+     "lineNumber": "12",
+     "committeeType": "Q",
+     "organizationType": "C",
+     "designation": "B",
+     "contributorCommitteeId": "C00177436"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "QUEST DIAGNOSTICS INCORPORATED POLITICAL ACTION COMMITTEE",
+     "amount": 5000,
+     "receiptDate": "2025-03-07",
+     "city": "SECAUCUS",
+     "state": "NJ",
+     "entityType": "PAC",
+     "lineNumber": "12",
+     "committeeType": "Q",
+     "organizationType": "C",
+     "designation": "B",
+     "contributorCommitteeId": "C00329185"
+    }
+   ],
+   "receipts": 610178,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00517235/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00174011",
+   "name": "RETAIL, WHOLESALE & DEPARTMENT STORE UNION COMMITTEE ON POLITICAL EDUCATION (RWDSU COPE)",
+   "committeeType": "Q",
+   "organizationType": "L",
+   "designation": "U",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "HALL, CHARLES JR",
+     "amount": 2700,
+     "receiptDate": "2026-02-04",
+     "city": "EAST ORANGE",
+     "state": "NJ",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "NGOKANA, OUSMANE",
+     "amount": 680,
+     "receiptDate": "2026-02-04",
+     "city": "MAPLEWOOD",
+     "state": "NJ",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "WRIGHT, DEBORAH",
+     "amount": 60,
+     "receiptDate": "2025-08-07",
+     "city": "BELFORD",
+     "state": "NJ",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SILVA, JOSEPH",
+     "amount": 60,
+     "receiptDate": "2025-08-07",
+     "city": "ST CLAIR SHORES",
+     "state": "MI",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "OYEFESO, ADEMOLA",
+     "amount": 42,
+     "receiptDate": "2025-08-07",
+     "city": "BROOKLYN",
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    }
+   ],
+   "receipts": 54504.97,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00174011/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00003251",
+   "name": "NEA FUND FOR CHILDREN AND PUBLIC EDUCATION",
+   "committeeType": "Q",
+   "organizationType": "L",
+   "designation": "B",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "OTT, MARLENE F",
+     "amount": 3200,
+     "receiptDate": "2025-07-02",
+     "city": "GREENDALE",
+     "state": "WI",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "LANG, ANITA R",
+     "amount": 2500,
+     "receiptDate": "2025-07-07",
+     "city": "APO",
+     "state": "AE",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SCHMIDT, KATE",
+     "amount": 2000,
+     "receiptDate": "2025-07-07",
+     "city": "EAGAN",
+     "state": "MN",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "OTT, MARLENE F",
+     "amount": 2000,
+     "receiptDate": "2025-07-12",
+     "city": "GREENDALE",
+     "state": "WI",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "MARLOWE, AMY",
+     "amount": 2000,
+     "receiptDate": "2025-07-07",
+     "city": "SYLACAUGA",
+     "state": "AL",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    }
+   ],
+   "receipts": 2845955.1,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00003251/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00685552",
+   "name": "MEDICARE FOR ALL",
+   "committeeType": "Q",
+   "organizationType": null,
+   "designation": "D",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 3726,
+     "receiptDate": "2025-09-29",
+     "city": "WEST SOMERVILLE",
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "CHEN, EILEEN",
+     "amount": 3726,
+     "receiptDate": "2025-09-26",
+     "city": "ROSLYN HEIGHTS",
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 2000,
+     "receiptDate": "2025-06-09",
+     "city": "WEST SOMERVILLE",
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "MOSER JR, WILLIAM M",
+     "amount": 2000,
+     "receiptDate": "2025-06-02",
+     "city": "STEAMBOAT SPRINGS",
+     "state": "CO",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 1500,
+     "receiptDate": "2025-01-20",
+     "city": "WEST SOMERVILLE",
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    }
+   ],
+   "receipts": 4464779.88,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00685552/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00113241",
+   "name": "NATIONAL APARTMENT ASSOCIATION POLITICAL ACTION COMMITTEE",
+   "committeeType": "Q",
+   "organizationType": "T",
+   "designation": "B",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "RUST, MIKE",
+     "amount": 5000,
+     "receiptDate": "2025-09-26",
+     "city": "NEW BRAUNFELS",
+     "state": "TX",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "DANNER, TERRY",
+     "amount": 5000,
+     "receiptDate": "2025-06-11",
+     "city": "FORT WORTH",
+     "state": "TX",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "BERGER, DAN",
+     "amount": 5000,
+     "receiptDate": "2025-06-17",
+     "city": "LANCASTER",
+     "state": "PA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "BERGER RENTAL COMMUNITIES",
+     "amount": 5000,
+     "receiptDate": "2025-06-17",
+     "city": "LANCASTER",
+     "state": "PA",
+     "entityType": "ORG",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "WILLIAMS, WAYNE MR.",
+     "amount": 5000,
+     "receiptDate": "2025-08-05",
+     "city": "PLANO",
+     "state": "TX",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    }
+   ],
+   "receipts": 1761640.1,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00113241/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00489005",
+   "name": "WAKEFERN FOOD CORP. POLITICAL ACTION COMMITTEE",
+   "committeeType": "Q",
+   "organizationType": "C",
+   "designation": "B",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "BROWN, SANDRA",
+     "amount": 5000,
+     "receiptDate": "2026-06-30",
+     "city": "PHILADELPHIA",
+     "state": "PA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "COE, JORDAN",
+     "amount": 5000,
+     "receiptDate": "2026-02-13",
+     "city": "WETHERSFIELD",
+     "state": "CT",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "BLATT, PERRY",
+     "amount": 5000,
+     "receiptDate": "2026-02-13",
+     "city": "SUMMIT",
+     "state": "NJ",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "MCMENAMIN, SEAN",
+     "amount": 5000,
+     "receiptDate": "2026-01-06",
+     "city": "GWYNEDO VALLEY",
+     "state": "PA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "STIGERS, MICHAEL",
+     "amount": 5000,
+     "receiptDate": "2025-11-17",
+     "city": "MANHATTAN BEACH",
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    }
+   ],
+   "receipts": 125650,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00489005/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00784694",
+   "name": "TKJ PAC",
+   "committeeType": "Q",
+   "organizationType": null,
+   "designation": "D",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "KEAN VICTORY FUND",
+     "amount": 13162.29,
+     "receiptDate": "2025-06-25",
+     "city": "EDISON",
+     "state": "NJ",
+     "entityType": "CCM",
+     "lineNumber": "12",
+     "committeeType": "N",
+     "organizationType": null,
+     "designation": "J",
+     "contributorCommitteeId": "C00786772"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "KEAN VICTORY FUND",
+     "amount": 13058.01,
+     "receiptDate": "2025-03-27",
+     "city": "EDISON",
+     "state": "NJ",
+     "entityType": "CCM",
+     "lineNumber": "12",
+     "committeeType": "N",
+     "organizationType": null,
+     "designation": "J",
+     "contributorCommitteeId": "C00786772"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "KEAN VICTORY FUND",
+     "amount": 10150,
+     "receiptDate": "2026-03-25",
+     "city": "EDISON",
+     "state": "NJ",
+     "entityType": "CCM",
+     "lineNumber": "12",
+     "committeeType": "N",
+     "organizationType": null,
+     "designation": "J",
+     "contributorCommitteeId": "C00786772"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "KEAN VICTORY FUND",
+     "amount": 10000,
+     "receiptDate": "2026-03-31",
+     "city": "EDISON",
+     "state": "NJ",
+     "entityType": "CCM",
+     "lineNumber": "12",
+     "committeeType": "N",
+     "organizationType": null,
+     "designation": "J",
+     "contributorCommitteeId": "C00786772"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "KEAN VICTORY FUND",
+     "amount": 9724.7,
+     "receiptDate": "2025-08-18",
+     "city": "EDISON",
+     "state": "NJ",
+     "entityType": "CCM",
+     "lineNumber": "12",
+     "committeeType": "N",
+     "organizationType": null,
+     "designation": "J",
+     "contributorCommitteeId": "C00786772"
+    }
+   ],
+   "receipts": 119195,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00784694/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00941567",
+   "name": "HOUSE VICTORY PROJECT 2026",
+   "committeeType": "H",
+   "organizationType": null,
+   "designation": "J",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SCHWARTZ, ERIC",
+     "amount": 70000,
+     "receiptDate": "2026-04-08",
+     "city": "NEW YORK",
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "RUTTENBERG, JANET L.",
+     "amount": 70000,
+     "receiptDate": "2026-04-22",
+     "city": "NEW YORK",
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "RUTTENBERG, HATTIE",
+     "amount": 70000,
+     "receiptDate": "2026-04-08",
+     "city": "GARDEN CITY",
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "KAMRAN, LINDA",
+     "amount": 70000,
+     "receiptDate": "2026-04-02",
+     "city": "PORTOLA VALLEY",
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "WEISS, ANTONIO",
+     "amount": 70000,
+     "receiptDate": "2026-03-27",
+     "city": "NEW YORK",
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    }
+   ],
+   "receipts": 7232233.32,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00941567/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00422774",
+   "name": "ADVANCING DEMOCRACY AND MOBILIZATION PAC",
+   "committeeType": "Q",
+   "organizationType": null,
+   "designation": "D",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "SCHIFF VICTORY FUND",
+     "amount": 66000,
+     "receiptDate": "2025-10-09",
+     "city": "WASHINGTON",
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "12",
+     "committeeType": "N",
+     "organizationType": null,
+     "designation": "J",
+     "contributorCommitteeId": "C00838896"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "SCHIFF VICTORY FUND",
+     "amount": 30000,
+     "receiptDate": "2026-06-30",
+     "city": "WASHINGTON",
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "12",
+     "committeeType": "N",
+     "organizationType": null,
+     "designation": "J",
+     "contributorCommitteeId": "C00838896"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "HARRIS, WILLIAM",
+     "amount": 20500,
+     "receiptDate": "2025-06-20",
+     "city": "WOODSIDE",
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "N",
+     "organizationType": null,
+     "designation": "J",
+     "contributorCommitteeId": "C00750919"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "SCHIFF VICTORY FUND",
+     "amount": 19000,
+     "receiptDate": "2026-03-26",
+     "city": "WASHINGTON",
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "12",
+     "committeeType": "N",
+     "organizationType": null,
+     "designation": "J",
+     "contributorCommitteeId": "C00838896"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "HARRIS, WILLIAM",
+     "amount": 10000,
+     "receiptDate": "2025-06-20",
+     "city": "WOODSIDE",
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "Y",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00178038"
+    }
+   ],
+   "receipts": 973479.84,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00422774/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00949925",
+   "name": "BROWN, PAPPAS, PELTOLA, TALARICO SENATE VICTORY FUND",
+   "committeeType": "N",
+   "organizationType": null,
+   "designation": "J",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 100000,
+     "receiptDate": "2026-06-15",
+     "city": "WEST SOMERVILLE",
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "MELEDANDRI, CHRISTOPHER",
+     "amount": 100000,
+     "receiptDate": "2026-06-08",
+     "city": "LOS ANGELES",
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "CHERNIN, PETER",
+     "amount": 50000,
+     "receiptDate": "2026-06-10",
+     "city": "BEVERLY HILLS",
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 50000,
+     "receiptDate": "2026-05-31",
+     "city": "WEST SOMERVILLE",
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "TURTLETAUB, MARC",
+     "amount": 50000,
+     "receiptDate": "2026-05-26",
+     "city": "SAN FRANCISCO",
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    }
+   ],
+   "receipts": 913412.43,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00949925/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00878702",
+   "name": "CHRIS PAPPAS VICTORY FUND",
+   "committeeType": "N",
+   "organizationType": null,
+   "designation": "J",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SAROFIM, SUSAN",
+     "amount": 22000,
+     "receiptDate": "2026-06-29",
+     "city": "HOUSTON",
+     "state": "TX",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "JACOBSON, JONATHAN S.",
+     "amount": 22000,
+     "receiptDate": "2026-03-11",
+     "city": "BOSTON",
+     "state": "MA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "WOLF, STEPHEN M.",
+     "amount": 17000,
+     "receiptDate": "2026-05-07",
+     "city": "EASTON",
+     "state": "MD",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SWEET, BARBARA K",
+     "amount": 15000,
+     "receiptDate": "2026-03-31",
+     "city": "NEW CASTLE",
+     "state": "NH",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "TULLMAN, GLEN E.",
+     "amount": 15000,
+     "receiptDate": "2026-03-04",
+     "city": "CHICAGO",
+     "state": "IL",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    }
+   ],
+   "receipts": 605667.42,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00878702/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00898965",
+   "name": "JUSTICE 2026",
+   "committeeType": "S",
+   "organizationType": null,
+   "designation": "J",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 14000,
+     "receiptDate": "2026-04-26",
+     "city": "WEST SOMERVILLE",
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "HOGAN, WAYNE",
+     "amount": 14000,
+     "receiptDate": "2026-04-20",
+     "city": "JACKSONVILLE",
+     "state": "FL",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 14000,
+     "receiptDate": "2026-01-31",
+     "city": "WEST SOMERVILLE",
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "HEBEISEN, KEITH",
+     "amount": 14000,
+     "receiptDate": "2026-01-27",
+     "city": "CHICAGO",
+     "state": "IL",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 10500,
+     "receiptDate": "2025-04-13",
+     "city": "WEST SOMERVILLE",
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    }
+   ],
+   "receipts": 865784.31,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00898965/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00949933",
+   "name": "PAPPAS, PELTOLA, TALARICO, VINDMAN SENATE VICTORY FUND",
+   "committeeType": "N",
+   "organizationType": null,
+   "designation": "J",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "HARRIS, WILLIAM SR",
+     "amount": 100000,
+     "receiptDate": "2026-05-28",
+     "city": "LEXINGTON",
+     "state": "MA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "REINHARD, ELI",
+     "amount": 31500,
+     "receiptDate": "2026-06-10",
+     "city": "SAN JOSE",
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "LYMBURN, BRUCE",
+     "amount": 25000,
+     "receiptDate": "2026-05-28",
+     "city": "PIEDMONT",
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "ACTBLUE",
+     "amount": 25000,
+     "receiptDate": "2026-06-08",
+     "city": "WEST SOMERVILLE",
+     "state": "MA",
+     "entityType": "PAC",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SIEGELMAN, ELIZABETH",
+     "amount": 25000,
+     "receiptDate": "2026-06-04",
+     "city": "PALO ALTO",
+     "state": "CA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00401224"
+    }
+   ],
+   "receipts": 431666.67,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00949933/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00909648",
+   "name": "SCOTT BROWN VICTORY COMMITTEE",
+   "committeeType": "N",
+   "organizationType": null,
+   "designation": "J",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "BOCH, ERNIE",
+     "amount": 12500,
+     "receiptDate": "2025-07-28",
+     "city": "NORWOOD",
+     "state": "MA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "WEINER, KANE",
+     "amount": 12000,
+     "receiptDate": "2025-08-11",
+     "city": "HOUSTON",
+     "state": "TX",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SULLIVAN, ARTHUR W",
+     "amount": 12000,
+     "receiptDate": "2025-08-22",
+     "city": "MANCHESTER",
+     "state": "NH",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "SOTELL, RICHARD M",
+     "amount": 12000,
+     "receiptDate": "2025-06-25",
+     "city": "WELLESLEY",
+     "state": "MA",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "PENSKE, ROGER S",
+     "amount": 12000,
+     "receiptDate": "2025-09-19",
+     "city": "BLOOMFIELD HILLS",
+     "state": "MI",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    }
+   ],
+   "receipts": 1007418.93,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00909648/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
+  },
+  {
+   "dataClass": "FEC_CONTRIBUTOR",
+   "committeeId": "C00924175",
+   "name": "TEAM SUNUNU",
+   "committeeType": "N",
+   "organizationType": null,
+   "designation": "J",
+   "topContributions": [
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "WINRED",
+     "amount": 54250,
+     "receiptDate": "2026-05-17",
+     "city": "CHEYENNE",
+     "state": "WY",
+     "entityType": "PAC",
+     "lineNumber": "11AI",
+     "committeeType": "V",
+     "organizationType": null,
+     "designation": "U",
+     "contributorCommitteeId": "C00694323"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "PITTS, ROBERT JR.",
+     "amount": 50000,
+     "receiptDate": "2026-03-24",
+     "city": "NEW YORK",
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "PITTS, BETSY",
+     "amount": 50000,
+     "receiptDate": "2026-03-24",
+     "city": "NEW YORK",
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "LAGONE, KENNETH G.",
+     "amount": 50000,
+     "receiptDate": "2026-03-30",
+     "city": "NEW YORK",
+     "state": "NY",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
+     "contributorName": "BOWDEN, MURRAY MR.",
+     "amount": 50000,
+     "receiptDate": "2026-03-20",
+     "city": "HOUSTON",
+     "state": "TX",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    }
+   ],
+   "receipts": 1683855,
+   "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00924175/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-08-16",
+    "verifiedAt": "2026-08-16"
+   }
   }
  ]
 }

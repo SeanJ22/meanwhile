@@ -1,0 +1,102 @@
+/**
+ * `pnpm exec tsx scripts/normalize-census-placeholders.mts`
+ *
+ * The Census's own placeholder names, translated into what they mean (item
+ * 6b, 2026-08-15, the author's finding).
+ *
+ * The defect: at the Tohono O'odham reservation area the map rendered a
+ * district called "School District Not Defined" beside Indian Oasis-
+ * Baboquivari Unified. Diagnosed before touching anything, and BOTH halves
+ * of the author's question turn out to be true:
+ *
+ *  - It IS a real gap geometry. GEOID 0499997 is a genuine Census feature —
+ *    a MultiPolygon over land that sits inside no unified school district.
+ *    It is adjacent to Indian Oasis-Baboquivari rather than on top of it,
+ *    which is why both render: they are different places.
+ *  - It IS a labeling defect. "School District Not Defined" is the Census's
+ *    internal placeholder, and we rendered it verbatim as though it were
+ *    the name of a district. CLAUDE.md: identifiers and internal keys never
+ *    reach a reader; a label map translates, or the row does not render.
+ *
+ * So the geometry stays — deleting it would erase a true fact about the
+ * place — and the NAME becomes the fact: "No unified school district here."
+ *
+ * Idempotent and re-runnable: it rewrites labels in the committed registry
+ * and boundary artifacts, states its counts, and exits non-zero if it
+ * changed nothing AND nothing was already normalized (an edit that edits
+ * nothing must never exit 0 quietly).
+ */
+import { readFileSync, writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+
+/**
+ * The Census placeholder strings we have actually seen, and what each one
+ * means in plain words. Extended only when a new one is SEEN — a mapping
+ * for a string nobody has met is a guess.
+ */
+export const CENSUS_PLACEHOLDER_LABELS: Readonly<Record<string, string>> = {
+  "School District Not Defined": "No unified school district here",
+};
+
+const TARGETS = [
+  join(ROOT, "lib", "registry", "registry.json"),
+  join(ROOT, "public", "geo", "unsd-04.geojson"),
+  join(ROOT, "public", "streets", "85321.json"),
+  join(ROOT, "public", "streets", "85601.json"),
+  join(ROOT, "public", "streets", "85602.json"),
+];
+
+let changedFiles = 0;
+let alreadyClean = 0;
+let replacements = 0;
+
+for (const file of TARGETS) {
+  let text: string;
+  try {
+    text = readFileSync(file, "utf8");
+  } catch {
+    console.log(`  MISSING   ${file}`);
+    continue;
+  }
+  let updated = text;
+  let fileHits = 0;
+  for (const [placeholder, plain] of Object.entries(CENSUS_PLACEHOLDER_LABELS)) {
+    // Only the LABEL is rewritten. The ocdId keeps its slug: it is a join
+    // key, it is never rendered, and changing it would break every stored
+    // reference to this division for a cosmetic reason.
+    const pattern = new RegExp(`("(?:label|name|NAME)"\\s*:\\s*")${placeholder}(")`, "g");
+    const before = updated;
+    updated = updated.replace(pattern, `$1${plain}$2`);
+    if (updated !== before) {
+      fileHits += before.split(placeholder).length - 1;
+    }
+  }
+  if (fileHits > 0) {
+    writeFileSync(file, updated, "utf8");
+    changedFiles += 1;
+    replacements += fileHits;
+    console.log(`  REWROTE   ${file.replace(ROOT, ".")} — ${fileHits} label(s)`);
+  } else if (
+    Object.values(CENSUS_PLACEHOLDER_LABELS).some((plain) => text.includes(plain))
+  ) {
+    alreadyClean += 1;
+    console.log(`  ALREADY   ${file.replace(ROOT, ".")}`);
+  } else {
+    console.log(`  NO_MATCH  ${file.replace(ROOT, ".")} — placeholder not present`);
+  }
+}
+
+console.log("");
+console.log(
+  `${replacements} label(s) rewritten across ${changedFiles} file(s); ${alreadyClean} already normalized.`,
+);
+
+if (changedFiles === 0 && alreadyClean === 0) {
+  console.error(
+    "nothing was rewritten and nothing was already normalized — this edit edited nothing, which is a failure, not a clean run",
+  );
+  process.exit(1);
+}

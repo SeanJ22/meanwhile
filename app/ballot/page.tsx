@@ -23,6 +23,7 @@ import { MyPicks } from "@/components/ballot/my-picks";
 import { jurisdictionKeyForContestId } from "@/lib/ballot/pick-jurisdiction";
 import { PickControl } from "@/components/ballot/pick-control";
 import { registrationLinkFor } from "@/lib/ballot/registration-links";
+import { pollingPlaceLinkFor } from "@/lib/ballot/polling-place-links";
 import { incumbentHolderFor } from "@/lib/ballot/incumbent-record";
 import { IncumbentRecordLink } from "@/components/ballot/incumbent-record-link";
 import { partyColorVar } from "@/lib/officials/party-color";
@@ -272,6 +273,7 @@ export default async function BallotPage({
         set &&
         (() => {
           const reg = registrationLinkFor(set.election.state);
+          const polls = pollingPlaceLinkFor(set.election.state);
           const regStep = dates.steps.find((s) =>
             /registration deadline/i.test(s.label),
           );
@@ -327,6 +329,26 @@ export default async function BallotPage({
                             .split("–")
                             .map((d) => formatDateMDY(d.trim()))
                             .join(" – ")}
+                    </span>
+                  </li>
+                )}
+                {/* Item 6 (2026-08-15): "where do I vote" beside the dates
+                    that decide whether you can. The state's own lookup, and
+                    what it will ask for stated before the tap — a link that
+                    demands a driver's licence number on arrival is friction
+                    the reader could have been warned about. */}
+                {polls && (
+                  <li>
+                    <a
+                      href={polls.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
+                    >
+                      {polls.label} →
+                    </a>{" "}
+                    <span className="text-[0.75rem] text-muted">
+                      on the {polls.sourceOrg}&apos;s site
                     </span>
                   </li>
                 )}
@@ -392,20 +414,45 @@ export default async function BallotPage({
           needs to know is whether they can vote at all. */}
       {dates && set && (() => {
         const reg = registrationLinkFor(set.election.state);
-        return reg ? (
-          <p className="mt-6 rounded-[10px] border border-[var(--panel-border)] bg-[var(--panel-bg)] p-3.5 text-[0.9375rem] shadow-[var(--shadow-panel)]">
-            <a
-              href={reg.url}
-              target="_blank"
-              rel="noreferrer"
-              className="font-medium text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
-            >
-              {reg.label} →
-            </a>{" "}
-            <span className="text-[0.75rem] text-muted">
-              on the {reg.sourceOrg}&apos;s site
-            </span>
-          </p>
+        const polls = pollingPlaceLinkFor(set.election.state);
+        return reg || polls ? (
+          <div className="mt-6 rounded-[10px] border border-[var(--panel-border)] bg-[var(--panel-bg)] p-3.5 shadow-[var(--shadow-panel)]">
+            {reg && (
+              <p className="text-[0.9375rem]">
+                <a
+                  href={reg.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-medium text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
+                >
+                  {reg.label} →
+                </a>{" "}
+                <span className="text-[0.75rem] text-muted">
+                  on the {reg.sourceOrg}&apos;s site
+                </span>
+              </p>
+            )}
+            {/* Item 6: the second half of "can I vote, and where" — same
+                block, same weight, the authority's own tool. */}
+            {polls && (
+              <p className={reg ? "mt-2 text-[0.9375rem]" : "text-[0.9375rem]"}>
+                <a
+                  href={polls.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-medium text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
+                >
+                  {polls.label} →
+                </a>{" "}
+                <span className="text-[0.75rem] text-muted">
+                  on the {polls.sourceOrg}&apos;s site
+                </span>
+                <span className="mt-0.5 block text-[0.75rem] leading-relaxed text-voice">
+                  {polls.note}
+                </span>
+              </p>
+            )}
+          </div>
         ) : null;
       })()}
 

@@ -398,6 +398,295 @@ test("2a: a candidate's own money is labeled as exactly that, from the FEC field
   }
 });
 
+// ── Item 2: the money's own order ────────────────────────────────────────
+
+test("item 2: contributions group by kind and sort by amount descending, in both groups", async () => {
+  const { groupContributions } = await import("../lib/funding/grouping.ts");
+  // Every candidate in the snapshot, not one specimen — the sort is a rule,
+  // and a rule that holds for Booker and fails for Nicholson is not one.
+  let checked = 0;
+  for (const candidate of snapshot.candidates) {
+    if (candidate.topContributions.length === 0) continue;
+    const groups = groupContributions(candidate.topContributions);
+    for (const column of [groups.organizations, groups.individuals]) {
+      for (let i = 1; i < column.length; i++) {
+        assert.ok(
+          column[i - 1].amount >= column[i].amount,
+          `${candidate.name}: ${column[i - 1].contributorName} ($${column[i - 1].amount}) sorted above ${column[i].contributorName} ($${column[i].amount})`,
+        );
+      }
+    }
+    for (const g of groups.organizations) {
+      assert.equal(g.kind, "COMMITTEE_OR_ORGANIZATION");
+    }
+    for (const g of groups.individuals) assert.equal(g.kind, "INDIVIDUAL");
+    checked += 1;
+  }
+  assert.ok(checked >= 20, `only ${checked} candidates carried rows to check`);
+});
+
+test("item 2: sums equal the parts, and no filing is lost in a collapse", async () => {
+  const { groupContributions } = await import("../lib/funding/grouping.ts");
+  let collapsedSeen = 0;
+  for (const candidate of snapshot.candidates) {
+    const rows = candidate.topContributions;
+    if (rows.length === 0) continue;
+    const groups = groupContributions(rows);
+    const all = [...groups.organizations, ...groups.individuals];
+    // Nothing dropped: every filing appears in exactly one group.
+    assert.equal(
+      all.reduce((n, g) => n + g.filings.length, 0),
+      rows.length,
+      `${candidate.name}: filings lost or duplicated in the grouping`,
+    );
+    // Every group's amount is the plain sum of its own filings. Compared in
+    // cents: these are IEEE doubles and $846,934.77 does not round-trip
+    // through addition, which is a fact about the machine and not about the
+    // money.
+    const cents = (n: number) => Math.round(n * 100);
+    for (const g of all) {
+      assert.equal(
+        cents(g.amount),
+        cents(g.filings.reduce((sum, f) => sum + f.amount, 0)),
+        `${candidate.name}: ${g.contributorName}'s summed amount is not the sum of its filings`,
+      );
+      assert.equal(g.count, g.filings.length);
+      if (g.count > 1) collapsedSeen += 1;
+    }
+    // And the whole column still adds to the whole input.
+    assert.equal(
+      cents(all.reduce((n, g) => n + g.amount, 0)),
+      cents(rows.reduce((n, r) => n + r.amount, 0)),
+    );
+  }
+  assert.ok(collapsedSeen > 0, "no collapsed row anywhere — the fold never ran");
+});
+
+test("item 2: the five Booker Victory Fund lines collapse to one row typed as transfers", async () => {
+  const { groupContributions } = await import("../lib/funding/grouping.ts");
+  const booker = snapshot.candidates.find((c) => c.fecCandidateId === "S4NJ00185");
+  assert.ok(booker, "Booker left the snapshot — retarget this check");
+  const groups = groupContributions(booker.topContributions);
+  const fund = groups.organizations.find((g) =>
+    g.contributorName.includes("BOOKER VICTORY FUND"),
+  );
+  assert.ok(fund, "the Booker Victory Fund rows are gone");
+  assert.ok(fund.count > 1, "the repeated filings did not fold");
+  // Transfers stay transfers: the noun comes off FEC form line 12, never
+  // off a guess about what a joint fundraiser's money means.
+  assert.equal(fund.countNoun, "transfers");
+  for (const filing of fund.filings) assert.equal(filing.lineNumber, "12");
+  assert.equal(
+    fund.amount,
+    fund.filings.reduce((n, f) => n + f.amount, 0),
+  );
+  // It leads its column — the reader's question is who spent the most.
+  assert.equal(groups.organizations[0].key, fund.key);
+});
+
+// ── Item 3: the second hop ───────────────────────────────────────────────
+
+test("item 3: the hop renders only for committee-typed rows, never for individuals", async () => {
+  const { groupContributions } = await import("../lib/funding/grouping.ts");
+  const { secondHopForGroups } = await import("../lib/funding/snapshot.ts");
+  const booker = snapshot.candidates.find((c) => c.fecCandidateId === "S4NJ00185");
+  assert.ok(booker);
+  const groups = groupContributions(booker.topContributions);
+  const hop = secondHopForGroups(groups);
+  const fund = groups.organizations.find((g) =>
+    g.contributorName.includes("BOOKER VICTORY FUND"),
+  )!;
+  assert.ok(hop[fund.contributorCommitteeId!], "the fund's own books are missing");
+
+  // An individual's row can carry a CONDUIT committee id (a cheque given
+  // through ActBlue or an earmarking PAC files with that committee's id
+  // attached). That must never open a tea expander: the individual is the
+  // donor, and rendering the conduit's donors under their name would be a
+  // different claim entirely.
+  const withConduit = groups.individuals.filter((g) => g.contributorCommitteeId);
+  assert.ok(withConduit.length > 0, "no conduit-id individual to check against");
+  for (const individual of withConduit) {
+    assert.ok(
+      !Object.keys(hop).includes(individual.contributorCommitteeId!) ||
+        groups.organizations.some(
+          (o) => o.contributorCommitteeId === individual.contributorCommitteeId,
+        ),
+      "a conduit id reached the hop set through an individual row",
+    );
+  }
+});
+
+test("item 3: hop books are mechanical, attributed, and distinct per committee id", () => {
+  const hops = snapshot.secondHop ?? [];
+  assert.ok(hops.length >= 20, `only ${hops.length} second-hop committees`);
+  const ids = new Set(hops.map((h) => h.committeeId));
+  assert.equal(ids.size, hops.length, "a committee id is stored twice");
+
+  // The D40 family, one level down: identical payloads across distinct keys
+  // are presumed broken. A hop that returned the same five names for two
+  // different funds is the replication bug wearing a new hat.
+  const books = new Map<string, string>();
+  for (const hop of hops) {
+    const signature = JSON.stringify(
+      hop.topContributions.map((r) => [r.contributorName, r.amount]),
+    );
+    if (hop.topContributions.length === 0) continue;
+    const clash = books.get(signature);
+    assert.equal(
+      clash,
+      undefined,
+      `${hop.committeeId} and ${clash} carry identical books — distinct keys must produce distinct results`,
+    );
+    books.set(signature, hop.committeeId);
+  }
+
+  for (const hop of hops) {
+    assert.equal(hop.dataClass, "FEC_CONTRIBUTOR");
+    assert.match(hop.committeeId, /^C\d{8}$/);
+    assert.ok(hop.name.length > 0);
+    assert.match(
+      hop.provenance.sourceUrl ?? "",
+      new RegExp(`^https://www\\.fec\\.gov/data/committee/${hop.committeeId}/$`),
+      "every hop links to its own committee's FEC page, not the candidate's",
+    );
+    assert.equal(hop.provenance.sourceOrg, "Federal Election Commission");
+    for (const row of hop.topContributions) {
+      assert.equal(row.dataClass, "FEC_CONTRIBUTOR");
+      assert.ok(row.amount > 0);
+    }
+  }
+});
+
+test("item 3: the tea is only in the button — the panel's own words stay level", () => {
+  const source = readFileSync(
+    join(ROOT, "components", "funding", "funding-section.tsx"),
+    "utf8",
+  );
+  assert.ok(source.includes("Give me the tea"), "the author's exact label");
+  // The panel's heading names the FUND, never relabels its donors as the
+  // candidate's.
+  assert.ok(source.includes("Who gives to {hop.name}"));
+  assert.ok(
+    source.includes("not this campaign&apos;s") ||
+      source.includes("not this campaign's"),
+    "the panel must say whose donors these are not",
+  );
+  // The allocation note is conditioned on the FILED designation, so a PAC
+  // never wears a joint fundraiser's explanation.
+  assert.ok(source.includes('hop.designation === "J"'));
+  // Nothing in the panel characterizes an organization (CLAUDE.md).
+  const panel = source.slice(source.indexOf("function SecondHopPanel"));
+  for (const banned of ["-aligned", "affiliate", "progressive group", "conservative group"]) {
+    assert.ok(!panel.includes(banned), `the hop panel characterizes: "${banned}"`);
+  }
+});
+
+test("item 3: pulling the contributor ripcord empties the second hop too", async () => {
+  const { groupContributions } = await import("../lib/funding/grouping.ts");
+  const { secondHopForGroups } = await import("../lib/funding/snapshot.ts");
+  const booker = snapshot.candidates.find((c) => c.fecCandidateId === "S4NJ00185")!;
+  const groups = groupContributions(booker.topContributions);
+  assert.ok(Object.keys(secondHopForGroups(groups)).length > 0);
+  const before = process.env.WTP_RIPCORD_FEC_CONTRIBUTOR_DISPLAY;
+  process.env.WTP_RIPCORD_FEC_CONTRIBUTOR_DISPLAY = "pulled";
+  try {
+    assert.deepEqual(
+      secondHopForGroups(groups),
+      {},
+      "the hop must die with the first-hop display — a pull is a data filter",
+    );
+  } finally {
+    if (before === undefined) delete process.env.WTP_RIPCORD_FEC_CONTRIBUTOR_DISPLAY;
+    else process.env.WTP_RIPCORD_FEC_CONTRIBUTOR_DISPLAY = before;
+  }
+});
+
+test("a surface headed 'contributions' carries only contributions — no offsets, no interest, no loan repayments", () => {
+  // Found by the item-3 line-number census on 2026-08-15, and it was live:
+  // Mark Kelly's largest-contributions list carried three AMALGAMATED BANK
+  // rows on line 15 — a bank refunding the campaign's own fees, rendered as
+  // one of his biggest donors — and the second hop pulled ActBlue's escrow
+  // interest (line 17, filed under FIDELITY) as its top three "gifts".
+  //
+  // Contribution lines only: 11* (individuals, party committees, other
+  // political committees, the candidate), 12 (transfers from authorized
+  // committees), 13A (a candidate's loan to their own campaign, which
+  // renders as exactly that). Money flowing back to a campaign is not
+  // somebody funding it.
+  const isContribution = (line: string | null) =>
+    line !== null && (line.startsWith("11") || line === "12" || line === "13A");
+
+  const offenders: string[] = [];
+  for (const candidate of snapshot.candidates) {
+    for (const row of candidate.topContributions) {
+      if (!isContribution(row.lineNumber) || row.amount <= 0) {
+        offenders.push(
+          `${candidate.name}: ${row.contributorName} $${row.amount} line ${row.lineNumber}`,
+        );
+      }
+    }
+  }
+  for (const hop of snapshot.secondHop ?? []) {
+    for (const row of hop.topContributions) {
+      if (!isContribution(row.lineNumber) || row.amount <= 0) {
+        offenders.push(
+          `${hop.name}: ${row.contributorName} $${row.amount} line ${row.lineNumber}`,
+        );
+      }
+    }
+  }
+  assert.deepEqual(offenders, [], "non-contribution receipts reached a contributions surface");
+});
+
+// ── Item 4: the small-donor honesty floor ────────────────────────────────
+
+test("item 4: below the floor the percentage is replaced by the raw dollars", async () => {
+  const { smallDonorSentence, SMALL_DONOR_FLOOR_DEFAULT } = await import(
+    "../lib/funding/display.ts"
+  );
+  assert.equal(SMALL_DONOR_FLOOR_DEFAULT, 5000);
+
+  // Dan Nicholson's shape: $325 raised, $175 unitemized — 54%, true and
+  // meaningless. The floor replaces it with the money itself.
+  const below = smallDonorSentence(325, 175, 175 / 325)!;
+  assert.match(below, /About \$175 came from small unitemized gifts/);
+  assert.ok(!/%/.test(below), "a percentage survived below the floor");
+
+  // Exactly AT the floor the percentage stands — the boundary is tested on
+  // both sides, not near it.
+  const at = smallDonorSentence(5000, 500, 0.1)!;
+  assert.match(at, /About 10% of the money came from small donors/);
+  const justBelow = smallDonorSentence(4999, 500, 500 / 4999)!;
+  assert.ok(!/%/.test(justBelow));
+
+  // Nothing raised: no sentence at all, rather than a zero pretending to be
+  // a finding.
+  assert.equal(smallDonorSentence(0, 0, null), null);
+
+  // Tunable without a deploy, like every other threshold here.
+  assert.match(smallDonorSentence(6000, 600, 0.1, 10_000)!, /came from small unitemized gifts/);
+});
+
+test("item 4: the live Nicholson card renders the raw sentence, and Booker keeps his percentage", () => {
+  const nicholson = fundingAnswerForTarget(
+    "ballot-nh-merrimack:us-house-2:nicholson-dan",
+  );
+  assert.equal(nicholson.kind, "funding");
+  if (nicholson.kind !== "funding") return;
+  const line = nicholson.data.sentences.find((s) => /small/.test(s));
+  assert.ok(line, "Nicholson's small-donor line vanished");
+  assert.ok(
+    !/%/.test(line!),
+    `a percentage of a $325 raise reached the reader: "${line}"`,
+  );
+
+  const booker = fundingAnswerForTarget("congress:B001288");
+  if (booker.kind === "funding") {
+    const bookerLine = booker.data.sentences.find((s) => /small donors/.test(s));
+    assert.ok(bookerLine && /%/.test(bookerLine), "Booker lost his percentage");
+  }
+});
+
 test("the state-systems note is a stated gap, never silence pretending coverage", () => {
   assert.match(STATE_FUNDING_NOTE, /state campaign-finance systems/);
   assert.match(STATE_FUNDING_NOTE, /gap in our data/);
@@ -468,6 +757,9 @@ function guardFixture(
         committeeType: null,
         organizationType: null,
         designation: null,
+        // Item 3's second-hop join key — null on individuals, which is what
+        // these fixture rows are.
+        contributorCommitteeId: null,
       })),
       provenance: {
         sourceUrl: "https://www.fec.gov/",
@@ -532,6 +824,79 @@ test("thin guard: a vanished candidate WITH a recorded absence still fails, nami
   assert.ok(missing, "a vanished candidate must fail even with an absence recorded — a human confirms it");
   assert.match(missing!.detail, /recorded an absence/);
   assert.match(missing!.detail, /human confirms/);
+});
+
+test("thin guard: the second hop thins under the same rule — a fund that stops answering fails", async () => {
+  const { findShrinkRegressions } = await import("../lib/funding/guard.ts");
+  const hop = (committeeId: string, rows: number) => ({
+    dataClass: "FEC_CONTRIBUTOR" as const,
+    committeeId,
+    name: `${committeeId} FUND`,
+    committeeType: "N",
+    organizationType: null,
+    designation: "J",
+    receipts: 1000,
+    topContributions: Array.from({ length: rows }, (_, i) => ({
+      dataClass: "FEC_CONTRIBUTOR" as const,
+      kind: "INDIVIDUAL" as const,
+      contributorName: `DONOR ${i}`,
+      amount: 100 - i,
+      receiptDate: "2026-01-01",
+      city: "TUCSON",
+      state: "AZ",
+      entityType: "IND",
+      lineNumber: "11AI",
+      committeeType: null,
+      organizationType: null,
+      designation: null,
+      contributorCommitteeId: null,
+    })),
+    provenance: {
+      sourceUrl: `https://www.fec.gov/data/committee/${committeeId}/`,
+      sourceOrg: "Federal Election Commission",
+      collectedAt: "2026-08-15",
+      verifiedAt: "2026-08-15",
+    },
+  });
+  const base = guardFixture([{ id: "S6AZ00191", name: "Mark Kelly", rows: 10 }]);
+
+  // Rows fall for a retained committee — the Kelly-504 shape one level down.
+  const thinned = findShrinkRegressions(
+    { ...base, secondHop: [hop("C00000001", 5)] },
+    { ...base, secondHop: [hop("C00000001", 2)] },
+  );
+  assert.equal(thinned.length, 1);
+  assert.equal(thinned[0].kind, "SECOND_HOP_ROWS");
+  assert.match(thinned[0].detail, /5 → 2/);
+
+  // A committee that VANISHES fails too: a fund that stops answering looks
+  // exactly like a fund with no donors.
+  const vanished = findShrinkRegressions(
+    { ...base, secondHop: [hop("C00000001", 5)] },
+    { ...base, secondHop: [] },
+  );
+  assert.equal(vanished.length, 1);
+  assert.match(vanished[0].detail, /missing from this run/);
+
+  // An empty hop disappearing is not a regression — it told us nothing.
+  assert.deepEqual(
+    findShrinkRegressions(
+      { ...base, secondHop: [hop("C00000001", 0)] },
+      { ...base, secondHop: [] },
+    ),
+    [],
+  );
+
+  // Growth and steady state pass, and a snapshot from before the hop
+  // existed never fails against one that has it.
+  assert.deepEqual(
+    findShrinkRegressions(
+      { ...base, secondHop: [hop("C00000001", 5)] },
+      { ...base, secondHop: [hop("C00000001", 5), hop("C00000002", 5)] },
+    ),
+    [],
+  );
+  assert.deepEqual(findShrinkRegressions(base, { ...base, secondHop: [hop("C1", 5)] }), []);
 });
 
 test("thin guard: growth and steady state pass clean", async () => {

@@ -1,9 +1,11 @@
+import { groupContributions, type ContributorGroups } from "./grouping.ts";
 import {
   contributorRowsForDisplay,
   fundingAbsenceForTarget,
   fundingForTarget,
+  secondHopForGroups,
 } from "./snapshot.ts";
-import type { ContributionRow } from "./types.ts";
+import type { ContributionRow, SecondHopCommittee } from "./types.ts";
 
 /**
  * The funding display payload — everything either surface (the ballot page,
@@ -23,7 +25,21 @@ export interface FundingDisplayData {
   /** Ripcord-filtered. Empty either means none fetched or display pulled —
    *  `contributorsShown` says which. */
   contributors: ContributionRow[];
+  /**
+   * The same rows, grouped by kind and sorted by amount descending, with
+   * repeated filings from one contributor folded (item 2). Built here so
+   * the ballot page and the official modal render the identical order —
+   * one sort, computed once, not two implementations that can drift.
+   */
+  contributorGroups: ContributorGroups;
   contributorsShown: boolean;
+  /**
+   * The second hop (item 3): the contributing committees' own books, keyed
+   * by FEC committee id, for the committee rows above. Only committees the
+   * hop was actually fetched for appear — a missing id renders no expander
+   * rather than an empty one.
+   */
+  secondHop: Record<string, SecondHopCommittee>;
   reportedThrough: string | null;
   sourceUrl: string | null;
   sourceOrg: string;
@@ -58,6 +74,46 @@ function cycleLabelFor(cycle: number): string {
   return `${cycle - 1}–${String(cycle).slice(2)}`;
 }
 
+/**
+ * The honesty floor on the small-donor percentage (item 4, 2026-08-15, the
+ * author's ruling — Dan Nicholson, $325 raised, "54% from small donors").
+ *
+ * A percentage of a tiny base is noise wearing a statistic's clothes: 54%
+ * of $325 is $175, one neighbour's cheque, and rendered as a percentage it
+ * reads like a grassroots finding beside a senator's 45% of $18.9 million.
+ * Both numbers are true; only one of them means anything. Below the floor
+ * the surface states the raw dollars instead — no percentage, nothing
+ * implied, and the reader can do their own division if they want to.
+ *
+ * Tunable without a deploy, like every other threshold in this codebase.
+ */
+export const SMALL_DONOR_FLOOR_DEFAULT = 5000;
+
+export function smallDonorFloor(): number {
+  const raw = process.env.WTP_FUNDING_SMALL_DONOR_FLOOR;
+  if (!raw) return SMALL_DONOR_FLOOR_DEFAULT;
+  const parsed = Number.parseInt(raw, 10);
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : SMALL_DONOR_FLOOR_DEFAULT;
+}
+
+/**
+ * The small-donor sentence for a campaign, or null when nothing was raised.
+ * Exported so the boundary is testable at exactly the floor rather than
+ * only through a rendered surface.
+ */
+export function smallDonorSentence(
+  receipts: number,
+  unitemized: number,
+  share: number | null,
+  floor = smallDonorFloor(),
+): string | null {
+  if (share === null || receipts <= 0) return null;
+  if (receipts < floor) {
+    return `About ${plainMoney(unitemized)} came from small unitemized gifts — people who gave under $200 in total. On a raise this small we don't state a percentage: it would read like a finding when it's a handful of cheques.`;
+  }
+  return `About ${Math.round(share * 100)}% of the money came from small donors — people who gave under $200 in total.`;
+}
+
 export function fundingAnswerForTarget(targetKey: string): FundingAnswer {
   const candidate = fundingForTarget(targetKey);
   if (candidate) {
@@ -66,12 +122,16 @@ export function fundingAnswerForTarget(targetKey: string): FundingAnswer {
     sentences.push(
       `This campaign has raised ${plainMoney(totals.receipts)} in the ${cycleLabelFor(candidate.cycle)} election cycle and spent ${plainMoney(totals.disbursements)}. It has ${plainMoney(totals.cashOnHand)} on hand.`,
     );
-    if (totals.smallDonorShare !== null && totals.receipts > 0) {
-      sentences.push(
-        `About ${Math.round(totals.smallDonorShare * 100)}% of the money came from small donors — people who gave under $200 in total.`,
-      );
-    }
+    // Item 4: the percentage renders only above the honesty floor; below
+    // it, the raw dollars. Same source figures either way.
+    const smallDonor = smallDonorSentence(
+      totals.receipts,
+      totals.individualUnitemized,
+      totals.smallDonorShare,
+    );
+    if (smallDonor) sentences.push(smallDonor);
     const contributors = contributorRowsForDisplay(candidate);
+    const contributorGroups = groupContributions(contributors);
     return {
       kind: "funding",
       data: {
@@ -80,6 +140,8 @@ export function fundingAnswerForTarget(targetKey: string): FundingAnswer {
         cycleLabel: cycleLabelFor(candidate.cycle),
         sentences,
         contributors,
+        contributorGroups,
+        secondHop: secondHopForGroups(contributorGroups),
         contributorsShown: contributors.length > 0,
         reportedThrough: totals.coverageEndDate,
         sourceUrl: candidate.provenance.sourceUrl,

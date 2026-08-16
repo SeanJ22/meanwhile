@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 
 import { answerQuestion, REFUSAL_LOG_MAX_CHARS, type AskAnswer } from "@/lib/routing/ask";
+import { ASK_BEAT_POOL, beatStem, drawAskBeat } from "@/lib/routing/ask-beat-pool";
 import type { CoverageSummary } from "@/lib/registry/coverage";
 import { logEvent } from "@/lib/log/client";
 
@@ -35,13 +36,18 @@ export function AskBox({
   const [text, setText] = useState("");
   const [asked, setAsked] = useState<AskAnswer | null>(null);
   // The visible-work beat (the author's presentation call, session brief
-  // 3): the answer renders after ~250ms behind "I got you... hang
-  // tight...". PRESENTATION ONLY — the routing below runs instantly and
+  // 3). PRESENTATION ONLY — the routing below runs instantly and
   // deterministically on-device before the timer starts, and nothing new
-  // is logged. The label deliberately avoids any thinking-style wording
-  // implying AI: the transparency page says no AI answers questions, and
-  // the label must not contradict it.
+  // is logged. The words come from the author's FIXED pool
+  // (lib/routing/ask-beat-pool.ts, CLAUDE.md's register rule): playful,
+  // acknowledgment register, and never a deliberation label — nothing a
+  // reader sees here is generated, and a deliberation word would claim
+  // otherwise. The prohibited list lives with the pool.
   const [working, setWorking] = useState(false);
+  // Drawn per ask, in the browser, at click time — never during server
+  // render, which would freeze one line into the HTML or mismatch on
+  // hydration. Seeded with the first entry so the type is never null.
+  const [beat, setBeat] = useState<string>(ASK_BEAT_POOL[0]);
   const beatTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   // 6e (2026-08-14 second session), the author's retune: the beat showed
   // ~250ms and disappeared too quickly. It now holds ~3 seconds with the
@@ -81,6 +87,7 @@ export function AskBox({
     // The answer is already in hand; only its rendering waits the beat.
     if (beatTimer.current) clearTimeout(beatTimer.current);
     setAsked(null);
+    setBeat(drawAskBeat());
     setWorking(true);
     beatTimer.current = setTimeout(() => {
       setAsked(result);
@@ -127,15 +134,16 @@ export function AskBox({
       </div>
 
       {working && (
-        // The beat — presentation only; no AI answers questions here and
-        // the label must not suggest otherwise. The static sentence is
-        // what a screen reader announces; the cycling dots are visual.
-        // Timing and words unchanged (design pass): only the dress.
+        // The beat — presentation only, and an acknowledgment rather than a
+        // claim of deliberation. The static sentence is what a screen
+        // reader announces; the cycling dots are visual, which is why the
+        // author's trailing ellipsis is stripped from the stem.
         <p
           className="mt-2.5 text-[0.8125rem] italic leading-relaxed text-voice"
           aria-live="polite"
+          data-ask-beat
         >
-          I got you... hang tight
+          {beatStem(beat)}
           <span aria-hidden="true">{".".repeat(dots)}</span>
         </p>
       )}

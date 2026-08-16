@@ -67,6 +67,36 @@ function statusOf(startsAt: string, now: Date): MeetingStatus {
   return Date.parse(startsAt) < now.getTime() ? "CONCLUDED" : "SCHEDULED";
 }
 
+/**
+ * Is this Apptegy event announcing a cancellation? (Item 6b, 2026-08-15 —
+ * the author: "zero canceled meetings at Tucson AND Vail is implausible.")
+ *
+ * Diagnosed before changing anything, and the answer has two halves.
+ *
+ * **Apptegy's event schema carries no status field at all.** Probed live
+ * 2026-08-15 against Vail USD (org 8164) and Rockaway Township schools (org
+ * 4707): thirty fields per event — id, title, venue, address, description,
+ * start/end, recurrence, formatting — and not one of them is a status. So a
+ * cancellation can only ever reach us as TEXT the district typed, exactly
+ * the way CivicPlus announces one by editing its SUMMARY.
+ *
+ * **And in this window neither district has cancelled anything.** Zero of
+ * the twenty events returned per org mention "cancel" in any field. So the
+ * zero the author saw is a real zero rather than a dropped signal — but the
+ * adapter was not LOOKING, which meant the first cancellation either
+ * district ever published would have rendered as a meeting going ahead.
+ * That is the failure worth closing, and this closes it.
+ *
+ * Deliberately narrow, for the reason the Legistar adapter states: a
+ * meeting wrongly marked cancelled keeps someone at home.
+ */
+export function isCancelled(event: {
+  title?: string | null;
+  description?: string | null;
+}): boolean {
+  return /\bcancell?ed\b/i.test(`${event.title ?? ""} ${event.description ?? ""}`);
+}
+
 /** First href in the event description, decoded — observed, never built. */
 export function agendaLinkFrom(description: string | null): string | null {
   if (!description) return null;
@@ -136,7 +166,9 @@ export function makeApptegySource(
           },
           agendaUrl: agendaLinkFrom(event.description),
           jurisdiction: wiring.jurisdiction,
-          status: statusOf(event.start_at, now),
+          status: isCancelled(event)
+            ? "CANCELED"
+            : statusOf(event.start_at, now),
           provenance: {
             sourceUrl:
               sourceUrl ??

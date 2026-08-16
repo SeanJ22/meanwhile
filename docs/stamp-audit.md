@@ -8,7 +8,7 @@ walked straight past the `Author-revised` stamp on the disclosure rule.
 each one, and the corrected date is typed into `CLAUDE.md` by hand from
 `pnpm stamp` or from the recovered column below.**
 
-Run on 2026-08-15 (America/Phoenix). 13 stamp(s) audited.
+Run on 2026-08-15 (America/Phoenix). 17 stamp(s) audited.
 
 **Method.** Each rule's opening clause — the bold title it leads with — is a
 long string that entered `CLAUDE.md` once. `git log -S<clause> -- CLAUDE.md`
@@ -29,11 +29,15 @@ lying. The recovered dates come from the unfiltered pickaxe.
 | Rule (opening clause) | Claimed | Recovered | Delta | Introducing commit |
 |---|---|---|---|---|
 | The design system is committed, not improvised. | 2026-08-15 | 2026-08-15 | 0 | `b8b6f7d` The system goes on the record |
+| The register is chosen by surface, and the ask-box beat d… | 2026-08-15 | **NOT FOUND** | — | — |
 | The stranger test. | 2026-08-14 | 2026-08-14 | 0 | `b25ac80` 2: NH/NJ depth — Kelly cards, the name-case pass, Newbury's Select Board, and the office explainers |
 | Coverage claims are made against the official universe, n… | 2026-08-14 | 2026-08-14 | 0 | `b25ac80` 2: NH/NJ depth — Kelly cards, the name-case pass, Newbury's Select Board, and the office explainers |
 | Organizations render as filed, never characterized. | 2026-08-14 | 2026-08-14 | 0 | `1f00818` 7: two standing rules into CLAUDE.md |
 | A photo ships through one of four doors, and the composit… | 2026-08-15 | 2026-08-15 | 0 | `f5de914` The structures are born: state folders, notes, and the zip playbook |
-| A photo ships through one of four doors, and the composit… | 2026-08-13 | 2026-08-15 | -2 d | `f5de914` The structures are born: state folders, notes, and the zip playbook |
+| An explicit recorded license | 2026-08-13 | 2026-08-15 | -2 d | `f5de914` The structures are born: state folders, notes, and the zip playbook |
+| An official government-published portrait | 2026-08-14 | 2026-08-15 | -1 d | `f5de914` The structures are born: state folders, notes, and the zip playbook |
+| The campaign's own self-published portrait from its own s… | 2026-08-15 | 2026-08-15 | 0 | `f5de914` The structures are born: state folders, notes, and the zip playbook |
+| Last resort, when doors 1–3 all fail for a person | 2026-08-15 | 2026-08-15 | 0 | `f5de914` The structures are born: state folders, notes, and the zip playbook |
 | Equal effort per candidate within a race. | 2026-08-14 | 2026-08-14 | 0 | `81ce4d8` The tester's mobile pass: the bleed fenced, the ballot found, 281 faces |
 | Every blurb carries its source class. | 2026-08-14 | 2026-08-14 | 0 | `1f00818` 7: two standing rules into CLAUDE.md |
 | Every production probe row a session creates is NAMED in … | 2026-08-15 | 2026-08-15 | 0 | `0b94547` The documents: section 24, the walk, the brief, and the probe-rows rule |
@@ -44,24 +48,29 @@ lying. The recovered dates come from the unfiltered pickaxe.
 
 ## What the deltas say
 
-- **1 stamp(s) disagree with git history.**
+- **2 stamp(s) disagree with git history.**
 - **0 stamp(s) are still later than today** (2026-08-15) — a date that had not happened when it was written.
-- **0 stamp(s) could not be recovered** and are printed `NOT FOUND` rather than guessed.
+- **1 stamp(s) could not be recovered** and are printed `NOT FOUND` rather than guessed.
 
 | Line | Claimed | Recovered | Delta | Note |
 |---|---|---|---|---|
-| `CLAUDE.md:52` | 2026-08-13 | 2026-08-15 | -2 d | claimed date is later than the introducing commit |
+| `CLAUDE.md:60` | 2026-08-13 | 2026-08-15 | -2 d | claimed date is later than the introducing commit |
+| `CLAUDE.md:61` | 2026-08-14 | 2026-08-15 | -1 d | claimed date is later than the introducing commit |
 
 ## The literal `--diff-filter=A` result, per stamp
 
 | Rule (opening clause) | `--diff-filter=A` returned | Unfiltered matches |
 |---|---|---|
 | The design system is committed, not improvised. | none | 1 |
+| The register is chosen by surface, and the ask-box beat d… | none | 0 |
 | The stranger test. | none | 1 |
 | Coverage claims are made against the official universe, n… | none | 1 |
 | Organizations render as filed, never characterized. | none | 1 |
 | A photo ships through one of four doors, and the composit… | none | 1 |
-| A photo ships through one of four doors, and the composit… | none | 1 |
+| An explicit recorded license | none | 1 |
+| An official government-published portrait | none | 1 |
+| The campaign's own self-published portrait from its own s… | none | 1 |
+| Last resort, when doors 1–3 all fail for a person | none | 1 |
 | Equal effort per candidate within a race. | none | 1 |
 | Every blurb carries its source class. | none | 1 |
 | Every production probe row a session creates is NAMED in … | none | 1 |

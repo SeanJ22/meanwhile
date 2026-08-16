@@ -153,3 +153,44 @@ test("every feature has drawable polygon geometry", async () => {
     );
   }
 });
+
+test("item 6b: no Census placeholder name reaches a reader as a district's name", async () => {
+  const { readFileSync } = await import("node:fs");
+  const { join } = await import("node:path");
+  const { CENSUS_PLACEHOLDER_LABELS } = await import(
+    "../scripts/normalize-census-placeholders.mts"
+  );
+
+  // The author's finding at the Tohono O'odham reservation area: the map
+  // rendered a district called "School District Not Defined". Both halves
+  // of his question were true — it IS a real gap geometry (Census GEOID
+  // 0499997, land inside no unified school district, adjacent to Indian
+  // Oasis-Baboquivari rather than on top of it), and it WAS a labeling
+  // defect. The geometry stays because it is a true fact about the place;
+  // the NAME becomes the fact.
+  const files = [
+    join(process.cwd(), "lib", "registry", "registry.json"),
+    join(process.cwd(), "public", "geo", "unsd-04.geojson"),
+  ];
+  for (const file of files) {
+    const text = readFileSync(file, "utf8");
+    for (const [placeholder, plain] of Object.entries(CENSUS_PLACEHOLDER_LABELS)) {
+      assert.ok(
+        !new RegExp(`"(?:label|name|NAME)"\s*:\s*"${placeholder}"`).test(text),
+        `${file} still labels a division "${placeholder}" — run scripts/normalize-census-placeholders.mts`,
+      );
+      assert.ok(
+        text.includes(plain),
+        `${file} lost the honest label "${plain}" — the geometry must stay, only the name changes`,
+      );
+    }
+  }
+
+  // The slug stays: it is a join key, never rendered, and renaming it would
+  // break every stored reference for a cosmetic reason.
+  const registry = readFileSync(files[0], "utf8");
+  assert.ok(
+    registry.includes("school_district:school_district_not_defined"),
+    "the ocdId must not have been rewritten — it is a join key",
+  );
+});

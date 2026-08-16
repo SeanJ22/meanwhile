@@ -104,6 +104,27 @@ export const RIPCORDS = {
       "The rate-limit family on the intake routes: in-memory windows, the authoritative per-device counters, the daily ceiling, velocity quarantine, and same-origin enforcement",
   },
   /**
+   * The ask box's Level 1 classifier (6d, 2026-08-15). Pulled, the ask box
+   * is keyword-only — which is the complete product it was on the day it
+   * shipped, not a degraded one.
+   *
+   * Open because it is the first place a model touches a reader's path at
+   * all. What it may do is deliberately tiny: pick one id out of the curated
+   * topic list, or `NONE`. It writes no sentence a reader sees, and the
+   * answer it leads to is the same curated route the keyword path produces.
+   * Ships LIVE.
+   */
+  "ripcord.askClassifier": {
+    pulled: false,
+    envVar: "WTP_RIPCORD_ASK_CLASSIFIER",
+    question:
+      "Product, not legal: is a model choosing WHICH curated topic a question belongs to compatible with the no-generation rule, given that it writes none of the answer and its whole output is one identifier from a closed list?",
+    closer: "The author — this is a product-doctrine question, not a counsel question",
+    trackerRows: "A09, A12",
+    filters:
+      "The classifier call itself: the ask box falls back to keyword-only matching and the honest refusal",
+  },
+  /**
    * The master ripcord (T08): closes reaction and search/ask intake
    * ENTIRELY — the server refuses every write with a 503 while the app
    * renders normally and a tapping reader sees the honest not-counted line

@@ -28,8 +28,18 @@ export function answerQuestion(
   text: string,
   coverage: CoverageSummary,
   zip: string | null = null,
+  /**
+   * A topic the Level 1 classifier chose (6d, 2026-08-15), used ONLY when
+   * the keyword matcher refused. Keyword-first is structural here rather
+   * than a convention: the classifier's id is read after `matchTopic`, so
+   * it can never overrule a deterministic match.
+   */
+  classified: string | null = null,
 ): AskAnswer {
-  const match = matchTopic(text);
+  const keyword = matchTopic(text);
+  const match: TopicMatch | null =
+    keyword ??
+    (classified ? { topicId: classified, matchedOn: [], via: "classifier" } : null);
   // No match resolves the unmapped-topic id — resolveRouting returns the
   // refusal for anything it doesn't know, which is exactly the contract.
   const answer = resolveRouting(match?.topicId ?? "", coverage);

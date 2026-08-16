@@ -189,8 +189,13 @@ test("D40: no query-keyed API route marks itself publicly cacheable", () => {
 // ── The ripcord registry ─────────────────────────────────────────────────
 
 test("every ripcord is registered with question, closer, and tracker rows", () => {
-  // T08 added the two intake ripcords beside the FEC pair.
+  // T08 added the two intake ripcords beside the FEC pair; 6d added the ask
+  // box's classifier (2026-08-15). The list is exact rather than a minimum:
+  // a ripcord that appears without its question, closer and tracker row is
+  // the doctrine's whole failure mode, and an exact list is what forces a
+  // new one through the checks below.
   assert.deepEqual(RIPCORD_NAMES.sort(), [
+    "ripcord.askClassifier",
     "ripcord.fecContributorDisplay",
     "ripcord.fundingReactionsInAggregates",
     "ripcord.rateLimits",

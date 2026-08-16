@@ -275,7 +275,21 @@ test("log discipline: routed asks log the topic only; refusals carry capped text
     join(ROOT, "components", "ask", "ask-box.tsx"),
     "utf8",
   );
-  assert.match(source, /routed: true,\s*\}/, "the routed log call must carry no question text");
+  // The claim is that the ROUTED branch carries no question text — pinned
+  // against the branch's own object rather than against the line that
+  // happened to end it. The classifier (6d) added a `via` marker after
+  // `routed: true`, which is a fact about which rung found the topic and
+  // not a word the reader typed; asserting the shape rather than the
+  // terminator is what lets the second fact ride without loosening the
+  // first.
+  const routedCall = /logEvent\("QUESTION_ASKED", ocdIds, \{[\s\S]*?routed: true,([\s\S]*?)\}\);/.exec(
+    source,
+  );
+  assert.ok(routedCall, "the routed log call is missing");
+  assert.ok(
+    !/question/.test(routedCall[1]),
+    "the routed log call must carry no question text",
+  );
   assert.match(
     source,
     /question: question\.slice\(0, REFUSAL_LOG_MAX_CHARS\)/,
@@ -360,4 +374,208 @@ test("QUESTION_ASKED is a registered identifier-free event type", async () => {
     routed: false,
     question: "who fixes the streetlights",
   });
+  // 6d: a classifier-routed ask logs the topic and which rung found it.
+  assertDetailIsAnonymous({ topic: "roads-local", routed: true, via: "classifier" });
+});
+
+/**
+ * The Level 1 classifier — 6d, 2026-08-15.
+ *
+ * The doctrine these hold: the model picks WHICH curated topic a question
+ * belongs to, out of a closed list, and writes none of the answer. Keyword
+ * matching runs first and cannot be overruled; every failure of the rung
+ * lands the reader on the honest refusal they would have had.
+ */
+
+test("the classifier answers with a curated topic id, or nothing", async () => {
+  const { classifiableTopicIds, readClassifierAnswer, classifierSchema, NO_TOPIC } =
+    await import("../lib/routing/classifier.ts");
+  const { TOPIC_ROUTES } = await import("../lib/routing/topics.ts");
+
+  // The enum IS the curated route list — not a parallel copy that can drift.
+  assert.deepEqual(classifiableTopicIds(), TOPIC_ROUTES.map((r) => r.id));
+  assert.ok(classifiableTopicIds().length >= 9, "the topic list is the denominator");
+
+  // Validated against that list HERE, not only by the schema. A schema is a
+  // promise made by a server; a topic id is a claim about a government.
+  assert.deepEqual(readClassifierAnswer("libraries"), {
+    kind: "TOPIC",
+    topicId: "libraries",
+  });
+  assert.deepEqual(readClassifierAnswer(NO_TOPIC), { kind: "NONE" });
+  for (const bogus of ["", "LIBRARIES", "potholes-and-things", 7, null, undefined]) {
+    assert.deepEqual(
+      readClassifierAnswer(bogus),
+      { kind: "NONE" },
+      `${String(bogus)} must not become a route`,
+    );
+  }
+
+  // The wire schema carries the same closed enum plus the refusal value.
+  const schema = classifierSchema() as {
+    properties: { topic: { enum: string[] } };
+    additionalProperties: boolean;
+  };
+  assert.equal(schema.additionalProperties, false);
+  assert.deepEqual(schema.properties.topic.enum, [
+    ...classifiableTopicIds(),
+    NO_TOPIC,
+  ]);
+});
+
+test("keyword-first: the classifier can never overrule a deterministic match", async () => {
+  const coverage = await coverageAt(...TUCSON, 1);
+
+  // The library question matches by keyword. Handing the classifier a
+  // DIFFERENT topic changes nothing — the fourth argument is read only when
+  // matchTopic returned null.
+  const keyworded = answerQuestion("who do I call about the library", coverage, "85701");
+  assert.equal(keyworded.match?.topicId, "libraries");
+  const overruled = answerQuestion(
+    "who do I call about the library",
+    coverage,
+    "85701",
+    "roads-local",
+  );
+  assert.equal(overruled.match?.topicId, "libraries");
+  assert.equal(overruled.match?.via, undefined, "a keyword match is not a classifier one");
+
+  // And where the keyword matcher refuses, the classifier's topic is used —
+  // marked as its own rung, with no evidence words to claim.
+  const refused = "the thing outside my house has been out for a week";
+  assert.equal(matchTopic(refused), null, "the fixture must still refuse by keyword");
+  const classified = answerQuestion(refused, coverage, "85701", "roads-local");
+  assert.equal(classified.match?.topicId, "roads-local");
+  assert.equal(classified.match?.via, "classifier");
+  assert.deepEqual(classified.match?.matchedOn, []);
+
+  // A topic the routing map does not know is still refused — the classifier
+  // cannot invent a route by naming one.
+  const invented = answerQuestion(refused, coverage, "85701", "made-up-topic");
+  assert.equal(invented.answer.kind, "NO_ROUTE");
+});
+
+test("the classifier is bounded: a ripcord, a ceiling, a cache, and no key means off", async () => {
+  const { RIPCORDS } = await import("../lib/ripcords.ts");
+  const {
+    classifyQuestion,
+    resetClassifierState,
+    classifierSpendToday,
+    cacheKey,
+  } = await import("../lib/routing/classifier.ts");
+
+  assert.equal(RIPCORDS["ripcord.askClassifier"].pulled, false);
+  assert.match(RIPCORDS["ripcord.askClassifier"].closer, /author/i);
+
+  const priorKey = process.env.ANTHROPIC_API_KEY;
+  const priorMax = process.env.WTP_ASK_CLASSIFIER_DAILY_MAX;
+  try {
+    // No key is not a guess — it is the rung declaring itself unavailable,
+    // which the caller renders as the keyword refusal.
+    delete process.env.ANTHROPIC_API_KEY;
+    resetClassifierState();
+    assert.deepEqual(await classifyQuestion("anything at all"), {
+      kind: "UNAVAILABLE",
+      why: "no-key",
+    });
+
+    // The ceiling REFUSES rather than degrading. An over-ceiling ask gets
+    // the answer it would have had, never a worse one dressed as an answer.
+    process.env.ANTHROPIC_API_KEY = "test-key-not-used";
+    process.env.WTP_ASK_CLASSIFIER_DAILY_MAX = "1";
+    resetClassifierState();
+    let calls = 0;
+    const fetchImpl = (async () => {
+      calls += 1;
+      return new Response(
+        JSON.stringify({ content: [{ type: "text", text: '{"topic":"libraries"}' }] }),
+        { status: 200 },
+      );
+    }) as unknown as typeof fetch;
+
+    assert.deepEqual(await classifyQuestion("first question", { fetchImpl }), {
+      kind: "TOPIC",
+      topicId: "libraries",
+    });
+    assert.equal(calls, 1);
+    assert.equal(classifierSpendToday().calls, 1);
+    assert.deepEqual(await classifyQuestion("a second, different question", { fetchImpl }), {
+      kind: "UNAVAILABLE",
+      why: "ceiling",
+    });
+    assert.equal(calls, 1, "the ceiling must stop the call, not just the answer");
+
+    // The cache answers a repeat without spending — including over ceiling.
+    assert.deepEqual(await classifyQuestion("First Question!", { fetchImpl }), {
+      kind: "TOPIC",
+      topicId: "libraries",
+    });
+    assert.equal(calls, 1);
+    assert.equal(cacheKey("First Question!"), cacheKey("first question"));
+
+    // A model answer off the list is NONE, not a route.
+    process.env.WTP_ASK_CLASSIFIER_DAILY_MAX = "50";
+    resetClassifierState();
+    const rogue = (async () =>
+      new Response(
+        JSON.stringify({ content: [{ type: "text", text: '{"topic":"do-my-taxes"}' }] }),
+        { status: 200 },
+      )) as unknown as typeof fetch;
+    assert.deepEqual(await classifyQuestion("something odd", { fetchImpl: rogue }), {
+      kind: "NONE",
+    });
+
+    // An upstream failure is unavailable, never a guess.
+    resetClassifierState();
+    const broken = (async () => new Response("nope", { status: 500 })) as unknown as typeof fetch;
+    assert.deepEqual(await classifyQuestion("something else", { fetchImpl: broken }), {
+      kind: "UNAVAILABLE",
+      why: "error",
+    });
+  } finally {
+    if (priorKey === undefined) delete process.env.ANTHROPIC_API_KEY;
+    else process.env.ANTHROPIC_API_KEY = priorKey;
+    if (priorMax === undefined) delete process.env.WTP_ASK_CLASSIFIER_DAILY_MAX;
+    else process.env.WTP_ASK_CLASSIFIER_DAILY_MAX = priorMax;
+    resetClassifierState();
+  }
+});
+
+test("the classifier writes no reader-facing sentence, and the key stays server-side", () => {
+  // The whole doctrine, held in source. The classifier module may speak to
+  // Anthropic; nothing else in the routing pipeline may, and no component
+  // may read its output as text.
+  for (const file of ["match.ts", "ask.ts", "resolve.ts", "topics.ts", "everyday.ts"]) {
+    const source = readFileSync(join(ROOT, "lib", "routing", file), "utf8");
+    for (const b of ["fetch(", "anthropic", "openai", "API_KEY", "llm"]) {
+      assert.ok(
+        !source.toLowerCase().includes(b.toLowerCase()),
+        `lib/routing/${file} contains "${b}" — the answer is assembled without generation`,
+      );
+    }
+  }
+
+  const classifier = readFileSync(join(ROOT, "lib", "routing", "classifier.ts"), "utf8");
+  // The scrub runs before anything leaves.
+  assert.match(classifier, /scrubFreeText\(question\)/);
+  // The response is read for one field and one field only.
+  assert.match(classifier, /readClassifierAnswer\(parsed\.topic\)/);
+
+  // The component reads a topic id off the route and nothing else — no
+  // sentence, no summary, no explanation reaches a reader from the model.
+  const box = readFileSync(join(ROOT, "components", "ask", "ask-box.tsx"), "utf8");
+  assert.match(box, /body\.topic === "string" \? body\.topic : null/);
+  assert.ok(
+    !/ANTHROPIC|api\.anthropic/i.test(box),
+    "the client must never hold the key or the endpoint",
+  );
+
+  // And the route itself never persists the question.
+  const route = readFileSync(
+    join(ROOT, "app", "api", "ask", "classify", "route.ts"),
+    "utf8",
+  );
+  for (const banned of ["logSearchEvent", "writeReaction", "getDb", "insert("]) {
+    assert.ok(!route.includes(banned), `the classify route must not ${banned}`);
+  }
 });

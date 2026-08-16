@@ -86,7 +86,10 @@ export default function TransparencyPage() {
           </p>
           <p>
             The &quot;Who do I talk to about…?&quot; box matches your question
-            against a fixed list of topics on your device.{" "}
+            against a fixed list of topics on your device. When that match
+            doesn&apos;t decide, the question is sent to Anthropic&apos;s
+            Claude to pick which of those same topics it belongs to — that,
+            and nothing else.{" "}
             {/* Kept on one source line: the guard in tests/ask-box.test.ts
                 pins this exact phrase, and a reflow that split it would
                 retire the no-AI guarantee by accident. */}

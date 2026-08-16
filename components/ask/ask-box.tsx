@@ -66,33 +66,78 @@ export function AskBox({
   // rail) — the label/input pairing must not share a DOM id.
   const inputId = useId();
 
+  /**
+   * The second rung (6d, 2026-08-15). Asked ONLY when the on-device keyword
+   * matcher refused, and asked for one thing: which curated topic this
+   * question belongs to. It writes none of the answer — the sentences below
+   * are the same curated route the keyword path renders. A failure of any
+   * kind (off, over ceiling, unreachable) returns null and the reader gets
+   * the honest refusal they would have had.
+   */
+  const classify = async (question: string): Promise<string | null> => {
+    try {
+      const response = await fetch("/api/ask/classify", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ question }),
+      });
+      if (!response.ok) return null;
+      const body = (await response.json()) as { topic?: string | null };
+      return typeof body.topic === "string" ? body.topic : null;
+    } catch {
+      return null;
+    }
+  };
+
   const ask = () => {
     const question = text.trim();
     if (!question) return;
-    const result = answerQuestion(question, coverage, zip);
-    if (result.answer.kind === "ROUTED" && result.match) {
-      logEvent("QUESTION_ASKED", ocdIds, {
-        topic: result.match.topicId,
-        routed: true,
-      });
-    } else {
-      // The refusal is the roadmap: the question rides along, capped,
-      // identifier-free like every row.
-      logEvent("QUESTION_ASKED", ocdIds, {
-        topic: "NO_ROUTE",
-        routed: false,
-        question: question.slice(0, REFUSAL_LOG_MAX_CHARS),
-      });
-    }
-    // The answer is already in hand; only its rendering waits the beat.
+
+    // The beat starts immediately — it now covers real work on the refusal
+    // path (one network call) as well as the deterministic path, and the
+    // reader sees the same acknowledgment either way.
     if (beatTimer.current) clearTimeout(beatTimer.current);
     setAsked(null);
     setBeat(drawAskBeat());
     setWorking(true);
-    beatTimer.current = setTimeout(() => {
-      setAsked(result);
-      setWorking(false);
-    }, BEAT_MS);
+
+    void (async () => {
+      const started = Date.now();
+      let result = answerQuestion(question, coverage, zip);
+      // Keyword-first, structurally: the classifier is consulted only after
+      // the deterministic matcher has already refused.
+      if (result.answer.kind !== "ROUTED") {
+        const topic = await classify(question);
+        if (topic) result = answerQuestion(question, coverage, zip, topic);
+      }
+
+      if (result.answer.kind === "ROUTED" && result.match) {
+        // The topic id, as always. `via` marks the rung that found it so a
+        // later audit can tell a classifier route from a keyword one — a
+        // fact about our machinery, never about the reader.
+        logEvent("QUESTION_ASKED", ocdIds, {
+          topic: result.match.topicId,
+          routed: true,
+          ...(result.match.via ? { via: result.match.via } : {}),
+        });
+      } else {
+        // The refusal is the roadmap: the question rides along, capped,
+        // identifier-free like every row.
+        logEvent("QUESTION_ASKED", ocdIds, {
+          topic: "NO_ROUTE",
+          routed: false,
+          question: question.slice(0, REFUSAL_LOG_MAX_CHARS),
+        });
+      }
+
+      // The beat holds its full length whatever the rung cost, so the box
+      // never flickers on a fast answer or feels stalled on a slow one.
+      const remaining = Math.max(0, BEAT_MS - (Date.now() - started));
+      beatTimer.current = setTimeout(() => {
+        setAsked(result);
+        setWorking(false);
+      }, remaining);
+    })();
   };
 
   // The flagship treatment (design pass, item 1): a standout feature

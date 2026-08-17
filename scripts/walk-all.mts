@@ -2033,6 +2033,174 @@ section("L. Contact surfaces (g9: R39 the phone pill, R40 the address)");
   }
 }
 
+// ═══════════════════════════════════════════════════════════════════════════
+// g9 / M19 — overlapping pins fan out, and dismissal returns them.
+// ═══════════════════════════════════════════════════════════════════════════
+
+section("M. Overlapping pins are each reachable (g9: M19, the author's ruling)");
+
+{
+  /*
+   * The claim: two pins sitting on top of each other are BOTH tappable.
+   *
+   * The walk cannot guess which pins collide — that depends on zoom, data and
+   * viewport — so it asks the map, through the same projection and the same
+   * collision rule the click path uses. Then it FORCES a collision by zooming
+   * out, because a build where nothing happens to overlap would otherwise
+   * report green on a check that never ran, which is the g3 lesson.
+   *
+   * Its own page, and no selection is made: the first press on a stacked pin
+   * fans and selects nothing, which is precisely the behaviour under test, so
+   * this check opens no popup and writes no MEETING_OPENED row.
+   *
+   * DESKTOP width, for g4 item 5's reason: at 390px the who-governs card
+   * covers the middle of the map, so a press aimed at a pin lands on an
+   * overlay and the check reports a working fan as a broken one. That is not
+   * a hypothetical — the first run of this check FAILED exactly that way, 4
+   * pins in the stack and 0 fanned, because the press never reached a pin.
+   */
+  const page = await openWideAt(browser, "85701");
+
+  type SpiderProbe = {
+    visible: number;
+    groups: string[][];
+    fanned: string[];
+    boxes: Record<string, { x: number; y: number }>;
+  };
+  const probe = async () =>
+    (await page.evaluate(
+      `(window.__wtpSpiderProbe ? window.__wtpSpiderProbe() : null)`,
+    )) as SpiderProbe | null;
+
+  let reading = await probe();
+  if (!reading) {
+    cannotRun("g9", "85701: overlapping pins fan out when pressed", "no __wtpSpiderProbe");
+    cannotRun("g9", "85701: dismissing the fan returns every pin", "no __wtpSpiderProbe");
+  } else {
+    // Zoom out until something collides, or give up and say so. Each step is
+    // a real gesture through the settle path, like a reader's wheel.
+    for (let step = 0; step < 5 && reading.groups.length === 0; step++) {
+      await page.evaluate(`window.__wtpZoomOut && window.__wtpZoomOut(1.5)`);
+      await page.waitForTimeout(1600);
+      reading = (await probe())!;
+    }
+
+    if (reading.groups.length === 0) {
+      cannotRun(
+        "g9",
+        "85701: overlapping pins fan out when pressed",
+        `no two of the ${reading.visible} visible pins overlap even after zooming out — ` +
+          `nothing to fan, so the claim could not be exercised`,
+      );
+      cannotRun("g9", "85701: dismissing the fan returns every pin", "no collision to dismiss");
+    } else {
+      const group = reading.groups[0];
+      const before = { ...reading.boxes };
+
+      const at = before[group[0]];
+      if (!at) {
+        cannotRun("g9", "85701: overlapping pins fan out when pressed", "no box for the stacked pin");
+        cannotRun("g9", "85701: dismissing the fan returns every pin", "no box for the stacked pin");
+      } else {
+        /*
+         * A REAL PRESS, at the stack's own coordinates.
+         *
+         * Deliberately the mouse rather than an injected hook: the defect
+         * being fixed IS pointer interception, so a walk that bypassed the
+         * pointer would be testing everything except the thing that broke.
+         * Whichever pin is on top receives it, which is fine — any member of
+         * a stack fans the whole stack, and "whichever is on top" is exactly
+         * what a reader gets.
+         */
+        // ASSERT THE PRESS CAN LAND BEFORE ASSERTING WHAT IT DID. A point
+        // covered by an overlay is a check that could not run, not a broken
+        // fan, and the two must never print the same way.
+        const under = (await page.evaluate(
+          `(() => {
+            const el = document.elementFromPoint(${at.x}, ${at.y});
+            if (!el) return "nothing";
+            const pin = el.closest(".wtp-pin");
+            return pin ? "pin" : (el.className || el.tagName || "unknown").toString().slice(0, 60);
+          })()`,
+        )) as string;
+
+        if (under !== "pin") {
+          cannotRun(
+            "g9",
+            "85701: overlapping pins fan out when pressed",
+            `the stack's own coordinates are covered by "${under}", so a press cannot reach a pin`,
+          );
+          cannotRun(
+            "g9",
+            "85701: dismissing the fan returns every pin",
+            "the fan could not be opened, so there was nothing to dismiss",
+          );
+        } else {
+          await page.mouse.click(at.x, at.y);
+          await page.waitForTimeout(900);
+
+          const fannedReading = (await probe())!;
+          const separated = (() => {
+            const pts = group
+              .map((k) => fannedReading.boxes[k])
+              .filter(Boolean) as { x: number; y: number }[];
+            if (pts.length < 2) return false;
+            for (let i = 0; i < pts.length; i++) {
+              for (let j = i + 1; j < pts.length; j++) {
+                if (Math.hypot(pts[i].x - pts[j].x, pts[i].y - pts[j].y) < 28) return false;
+              }
+            }
+            return true;
+          })();
+
+          const fanned = check(
+            "g9",
+            "85701: overlapping pins fan out when pressed",
+            fannedReading.fanned.length === group.length && separated,
+            `${group.length} pin(s) in the stack; ${fannedReading.fanned.length} fanned; ` +
+              `every pair now clears 28px: ${separated}`,
+          );
+
+          /*
+           * The dismissal check is GATED on the fan having happened.
+           *
+           * Ungated it passes trivially when nothing ever fanned — 0 still
+           * fanned, every pin within 2px of where it started, all true and
+           * all meaningless. The first run of this check did exactly that
+           * beside its own failing sibling, which is the empty-success shape
+           * one line away from the failure it was hiding.
+           */
+          if (!fanned) {
+            cannotRun(
+              "g9",
+              "85701: dismissing the fan returns every pin",
+              "the fan did not open, so a dismissal proves nothing",
+            );
+          } else {
+            // Escape, the explicit control beside the map-press gesture.
+            await page.keyboard.press("Escape");
+            await page.waitForTimeout(700);
+            const returned = (await probe())!;
+            const backWhereTheyWere = group.every((k) => {
+              const a = before[k];
+              const b = returned.boxes[k];
+              if (!a || !b) return false;
+              return Math.hypot(a.x - b.x, a.y - b.y) < 2;
+            });
+            check(
+              "g9",
+              "85701: dismissing the fan returns every pin",
+              returned.fanned.length === 0 && backWhereTheyWere,
+              `${returned.fanned.length} still fanned; every pin back within 2px: ${backWhereTheyWere}`,
+            );
+          }
+        }
+      }
+    }
+  }
+  await page.context().close();
+}
+
 await browser.close();
 
 const EXCLUDED = [

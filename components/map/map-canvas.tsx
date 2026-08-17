@@ -53,11 +53,14 @@ import type { Theme } from "@/hooks/use-stored-theme";
 import type { Venue } from "@/lib/meetings/venues";
 import {
   applySelection,
+  applySpiderfy,
   applyVisibility,
+  clearSpiderfy,
   createMarkerPool,
   destroyMarkerPool,
   rebuildMarkerPool,
 } from "@/lib/map/marker-pool";
+import { fanOffsets, findCollisionGroups } from "@/lib/map/spiderfy";
 
 import "maplibre-gl/dist/maplibre-gl.css";
 
@@ -425,12 +428,37 @@ export function MapCanvas({
      * so clicking empty water does not silently drop what a reader chose.
      */
     const onClick = (event: MapMouseEvent) => {
+      /*
+       * DISMISSAL RETURNS THEM (M19, 2026-08-17).
+       *
+       * A press on the map itself puts a fanned group back. Markers are DOM
+       * overlays, so a press on a pin never reaches the canvas and never
+       * reaches here — which is what makes this the right place: it fires for
+       * exactly the presses that mean "not one of those".
+       *
+       * It runs BEFORE the district hit-test and does not return, because
+       * dismissing the fan and selecting a district are two different answers
+       * to the same press and both are wanted: the pins go back, and the
+       * district under the finger still opens.
+       */
+      clearSpiderfy(pool);
+
       const hits = districtsAt(map, event.point, districtTypesRef.current);
       if (hits.length === 0) return;
       onDistrictClickRef.current(hits, { x: event.point.x, y: event.point.y });
     };
 
     map.on("click", onClick);
+
+    /*
+     * Escape puts them back too — the explicit control beside the gesture,
+     * for the same reason M90 kept one: a gesture nobody discovers is not an
+     * exit. No history entry is pushed (M52).
+     */
+    const onKeyDown = (keyEvent: KeyboardEvent) => {
+      if (keyEvent.key === "Escape") clearSpiderfy(pool);
+    };
+    window.addEventListener("keydown", onKeyDown);
 
     /*
      * Scroll-and-settle (2i). A user gesture is the only thing that carries
@@ -586,11 +614,52 @@ export function MapCanvas({
         };
       };
 
+    /*
+     * THE SPIDERFY PROBE (M19, 2026-08-17) — the fourth read-only instrument.
+     *
+     * The claim is "two overlapping pins are each reachable", and a walk
+     * cannot check it by clicking blindly: which pins collide depends on the
+     * zoom, the data and the viewport, so a walk that guessed a pair would
+     * report green on a build where nothing overlapped at all. This answers
+     * WHICH pins are stacked right now, and where they are — the same
+     * projection the click path uses, so the walk and the product cannot
+     * disagree about what a collision is.
+     *
+     * Read-only: nothing in the product consults it.
+     */
+    (window as unknown as { __wtpSpiderProbe?: () => unknown }).__wtpSpiderProbe =
+      () => {
+        const points = [...pool.entries.values()]
+          .filter((entry) => entry.element.dataset.hidden !== "true")
+          .map((entry) => {
+            const p = map.project([entry.venue.lng, entry.venue.lat]);
+            return { key: entry.venue.key, x: p.x, y: p.y };
+          });
+        return {
+          visible: points.length,
+          groups: findCollisionGroups(points),
+          fanned: [...pool.spiderfiedKeys],
+          /** Where each pin's ELEMENT actually sits, fan offsets included. */
+          boxes: Object.fromEntries(
+            [...pool.entries.values()]
+              .filter((entry) => entry.element.dataset.hidden !== "true")
+              .map((entry) => {
+                const r = entry.element.getBoundingClientRect();
+                return [
+                  entry.venue.key,
+                  { x: r.x + r.width / 2, y: r.y + r.height / 2 },
+                ];
+              }),
+          ),
+        };
+      };
+
     return () => {
       window.clearTimeout(settleTimer);
       map.off("movestart", onMoveStart);
       map.off("moveend", onMoveEnd);
       map.off("click", onClick);
+      window.removeEventListener("keydown", onKeyDown);
       map.off("styledata", ensureDistricts);
       map.remove();
       mapRef.current = null;
@@ -656,9 +725,51 @@ export function MapCanvas({
     const map = mapRef.current;
     if (!map) return;
 
-    rebuildMarkerPool(poolRef.current, map, venues, (venue) =>
-      onSelectRef.current(venue),
-    );
+    /*
+     * THE PIN CLICK, WITH FAN-OUT IN FRONT OF IT (M19, 2026-08-17, the
+     * author's ruling: A, spiderfy).
+     *
+     * A press on a pin that is sitting under or over another pin FANS THE
+     * GROUP first and selects nothing — because a click landing on a stack is
+     * a click whose target the reader has not chosen yet, and picking one for
+     * them is how the top pin came to swallow its neighbour. The second press
+     * lands on one fanned pin and selects it normally.
+     *
+     * Once a group is fanned, its members are no longer colliding (that is
+     * the point), so the next press on any of them falls straight through to
+     * selection. Nothing else in the app changes: a pin that never collides
+     * behaves exactly as it always did, in one press.
+     */
+    rebuildMarkerPool(poolRef.current, map, venues, (venue) => {
+      const pool = poolRef.current;
+
+      // Already fanned: this press is the reader choosing one of them.
+      if (pool.spiderfiedKeys.has(venue.key)) {
+        onSelectRef.current(venue);
+        return;
+      }
+
+      // Where the VISIBLE pins actually are on screen, right now. Projected
+      // rather than measured off the DOM: a pin the browser has not painted
+      // yet has no box, and the collision is a fact about the map's geometry.
+      const points = [...pool.entries.values()]
+        .filter((entry) => entry.element.dataset.hidden !== "true")
+        .map((entry) => {
+          const p = map.project([entry.venue.lng, entry.venue.lat]);
+          return { key: entry.venue.key, x: p.x, y: p.y };
+        });
+
+      const group = findCollisionGroups(points).find((g) => g.includes(venue.key));
+      if (!group) {
+        // Not in a stack. Any other group that was fanned goes back first —
+        // one fan at a time, or the new positions land on the old ones.
+        clearSpiderfy(pool);
+        onSelectRef.current(venue);
+        return;
+      }
+
+      applySpiderfy(pool, fanOffsets(group));
+    });
     applyVisibility(poolRef.current, new Set(venues.map((v) => v.key)));
 
     /*

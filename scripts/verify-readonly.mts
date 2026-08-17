@@ -97,8 +97,23 @@ for (const table of STORES) {
 // ── 3. A real read, and a real attempted write ───────────────────────────
 console.log("\nATTEMPTED OPERATIONS");
 try {
-  const rows = (await sql`select count(*)::int as n from search_log`) as { n: number }[];
-  report("a SELECT through the variable succeeds", true, `search_log holds ${rows[0].n} rows`);
+  /*
+   * `limit 1`, and NO COUNT — deliberately.
+   *
+   * What this probe needs to prove is that SELECT reaches a real store table,
+   * because grants are per-table and a `select 1` against nothing would prove
+   * nothing. What it must NOT do is print an unfiltered row total: every
+   * countable number out of search_log goes through the organic filter
+   * (lib/signal/search-log-reads.ts), and a raw total printed by a probe is a
+   * number somebody can quote. So it reports that a row came back, and the
+   * privilege table above carries the actual finding.
+   */
+  const rows = (await sql`select 1 as ok from search_log limit 1`) as { ok: number }[];
+  report(
+    "a SELECT through the variable succeeds",
+    rows.length === 1,
+    `search_log returned ${rows.length} row(s) to a limit-1 read`,
+  );
 } catch (error) {
   report(
     "a SELECT through the variable succeeds",

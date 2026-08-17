@@ -3205,6 +3205,23 @@ label:has(> input[type="checkbox"]) {
     0 0 0 5px var(--concluded);
 }
 
+/*
+ * A FANNED PIN SAYS IT MOVED (M19, 2026-08-17, the author's ruling: spiderfy).
+ *
+ * The offset itself is MapLibre's, applied in screen pixels on every frame.
+ * What CSS owns is the reason a reader is not misled by it: a pin sitting
+ * somewhere other than its building is a WRONG LOCATION unless something says
+ * otherwise, and this product does not get to be casually wrong about where a
+ * government meets. The dashed halo is the "these have been moved apart to be
+ * pickable" mark — deliberately not a colour, because colour on a pin already
+ * means which level of government meets there and a second meaning would
+ * corrupt the first.
+ */
+.wtp-pin[data-spiderfied="true"] .wtp-pin-dot {
+  outline: 1px dashed color-mix(in srgb, var(--text-dim) 70%, transparent);
+  outline-offset: 5px;
+}
+
 /* The zip centroid. Deliberately unlike a pin — it is not a place you can go,
    it is where the map was pointed. */
 .wtp-here {

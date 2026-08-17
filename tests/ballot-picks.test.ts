@@ -118,8 +118,9 @@ test("the picks card renders picks only and transmits nothing", () => {
     );
   }
   assert.ok(
-    source.includes("My picks — made with We the People"),
-    "the card carries the app name and nothing evaluative",
+    source.includes("My picks — made with ${PRODUCT_NAME}"),
+    "the card carries the app name and nothing evaluative — from lib/brand.ts, " +
+      "never a literal (B01's interim rename, 2026-08-17)",
   );
   assert.ok(
     /clearAllPicks/.test(source) && /Really clear/.test(source),

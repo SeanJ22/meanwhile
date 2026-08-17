@@ -4,9 +4,30 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-17 — **local development stopped being a production
-client, and the author's 117 dispositions started becoming the work.** The g7
-session. `.env.local` carried the production `DATABASE_URL`, so `pnpm dev` was
+Last updated: 2026-08-17 — **the deploy landed, and two instruments that could
+not measure started measuring.** The g8 session. Production had been serving a
+stale build: `main@a8f7ff2` failed Netlify's secrets scan over the two planted
+credential-shaped fixtures in `tests/mirror-code.test.ts`. **0 real instances**
+— nothing leaked. The scanner stayed fully armed and the fix was ours twice:
+the fixtures are assembled at runtime so no literal credential shape exists in
+any source file, and R23 closed, because the only reason a test file was in a
+deployed artifact was Turbopack tracing the whole project through a
+runtime-computed path. Measured before: two bundles tracing 2554 and 2567 files,
+122 of each from `tests/`. After: 0. `scripts/check-build-output.mjs` runs as
+`postbuild` and refuses either failure, with both refusals proven by planting.
+**The build stamp itself could never have verified a deploy** — `/api/build`
+read `process.env.COMMIT_REF` at module scope on the false premise that Next
+inlines it into the server bundle, so every deploy of every commit answered
+`"unknown"` with a 200. Fixed through `next.config.ts`'s `env`, proven by a
+build with the SHA set, and **production is now verifiably serving `e8f7b77`**.
+The 17 ORGANIC rows are the author's on his own statement and carry a class of
+their own, `AUTHOR`: **0 organic, 717 synthetic, 2845 unknown, 17 author, 3579
+total**. R34 closed with the local Neon branch verified four ways; R35 closed by
+citing commit SHAs rather than a branch that never existed; R33, R05, G04, R37,
+R38 closed and B01's interim rename to **Meanwhile** shipped. Full detail in §43.
+
+The g7 session, immediately before it: `.env.local` carried the production
+`DATABASE_URL`, so `pnpm dev` was
 a production client and opening a browser at `localhost:3000` wrote an unmarked
 ORGANIC row into the table the business sells from. Both halves shipped: a
 write guard that refuses any non-production runtime writing to a database it
@@ -9149,3 +9170,184 @@ All thirteen, with Drive IDs now recorded for the census trio:
 
 test 782 of 782 pass (4 new), lint 0 errors and 16 pre-existing warnings none
 in the touched files, build green.
+
+## 43. The 2026-08-17 g8 session — the deploy lands, and two instruments that could not measure start measuring
+
+Production had been serving a stale build. `main@a8f7ff2` failed Netlify's
+secrets scan, and everything g7 shipped was sitting behind that refusal.
+
+### The scanner was right, and the fix was ours twice
+
+The scan found **0 real instances**. The 2 "likely" hits were the planted
+credential-shaped fixtures in `tests/mirror-code.test.ts` — the literal `ghp_`
+and `github_pat_` strings the test feeds its matcher to prove the code mirror
+refuses a credential-shaped file. A scanner cannot tell a planted fixture from
+a leak and it is right not to try, so the scanner stayed fully armed: no
+`SECRETS_SCAN_OMIT_KEYS`, no smart-detection switch, no omit-paths.
+
+**The fixtures are assembled at runtime now.** `cred()` joins fragments, none
+credential-shaped on its own, and the matcher receives byte-for-byte the string
+it always did. The test is *stronger*: each fixture must trip the NAMED pattern
+it exists to exercise rather than merely tripping something, so a fragment typo
+that stopped producing a token shape is caught where a bare `hits()` would have
+passed. Class-wide audit: **9 value-shaped literals in 1 file**, and `tests/` is
+now clean of all seven shapes. The env-var NAMES in the same test
+(`ANTHROPIC_API_KEY`, `aws_secret_access_key`, a `DATABASE_URL` assignment) are
+left as literals — configuration names, not credentials, and the scan passed
+them.
+
+### R23 was the mechanism, and it is closed
+
+A test file had no business being in a deployed artifact. It was there because
+`lib/sources/ballot-curated/index.ts` read its file through a path passed in as
+a parameter, and a path a bundler cannot see is a path it must assume could be
+anything: Turbopack traced the whole project into the two bundles reaching it.
+
+**Measured before the fix:** `/api/ballot/scope` traced 2554 files and
+`/ballot` traced 2567, each carrying 122 files from `tests/`, against 104–195
+for every other route. **After:** the warning is gone, the largest bundle is 927
+(next-server itself), `tests/` traced is 0.
+
+`scripts/check-build-output.mjs` makes it permanent — wired as `postbuild`, so
+it runs on every build, locally and on Netlify, before the secrets scan sees the
+output. It refuses any artifact whose trace manifests carry a `tests/` file or a
+credential-shaped value, and prints its counts every run. Both refusals were
+proven by planting and restoring, and **the first plant went into a source file
+the artifact does not trace, which read as a pass** — so the traced-file list
+was measured before the plant was believed. The 3 skipped placeholders are
+counted out loud rather than silently ignored.
+
+### The build stamp could never have verified a deploy
+
+Found by using it. The merge landed, the handoff polled `/api/build` for five
+minutes, and production kept answering `"commit":"unknown"` with a 200 — an
+instrument reporting healthily while incapable of its one measurement.
+
+R22's premise was wrong: *"Next inlines a build-time env reference it can
+statically see"* into the server bundle. It does not. Next inlines for the
+CLIENT; server code keeps `process.env.X` as a RUNTIME read. Measured rather
+than reasoned about — the built chunk still contained the literal text
+`process.env.COMMIT_REF??null`. Netlify sets `COMMIT_REF` at BUILD time and not
+in the function runtime, so the module-scope read ran at cold start, found
+undefined, and every deploy of every commit reported "unknown".
+
+`next.config.ts`'s `env` key is the mechanism that actually substitutes at build
+time. Build metadata only — anything inlined there is readable by anyone who can
+read the bundle. An absent variable is written as an empty string and read back
+as null, because `""` sliced to seven characters is a blank SHA rendered as a
+value.
+
+Proven twice over: a build with `COMMIT_REF` set puts the literal into the
+server chunk AND removes `process.env.WTP_BUILD_COMMIT` from it, so it was
+substituted rather than merely present; the built server then answers with that
+SHA. **The deploy landed and is verifiable: `e8f7b77`, branch main, context
+production.**
+
+**And a finding that closes a question rather than opening one:** on the live
+Netlify deploy the serving function sees neither `NETLIFY` nor `CONTEXT` nor
+`DEPLOY_ID`, while the response headers say `Server: Netlify`. There is no
+runtime signal from Netlify for the write guard to tighten on. R34's second
+remainder has an answer, and it is "there isn't one".
+
+### The 17 ORGANIC rows are the author's, and they get a class of their own
+
+The author's statement, verbatim, 2026-08-17: *"Yes, they are mine. I only have
+one tester and they have confirmed they haven't logged in today."* That is
+attribution by the traffic's own author, not the inference C05 forbids —
+nothing is guessed from a user agent or a timing pattern.
+
+They are marked **`AUTHOR`**, a new run class, rather than `SYNTHETIC`. Calling
+a human session a script is a false statement in the record; calling it
+`ORGANIC` would sell the author's own clicks back to a buyer as district signal.
+It costs no migration — `run_class` is a `text` column with no constraint — and
+every sold read is an allowlist on `ORGANIC`, so a new class is excluded the
+moment it exists rather than the moment someone remembers.
+
+The census reports it, and **the denominator sentence derives its excluded
+figure from the TOTAL** instead of summing classes by hand, so the next class
+added cannot quietly fall out of the arithmetic.
+
+**Production census: 0 organic, 717 synthetic, 2845 unknown, 17 author, 3579
+total.** 0 + 717 + 2845 + 17 = 3579.
+
+### R34 closes: the local database is real, and verified rather than assumed
+
+The author created the Neon local branch. Four checks:
+
+1. **The two databases are genuinely different endpoints** —
+   `ep-weathered-cherry-ax65m9rf` local, `ep-dry-river-axwtolzc` production.
+   Established first, or no before/after comparison would have meant anything.
+2. **A local run's write lands local** — a real dev-server GET with a synthetic
+   header landed 1 row in LOCAL, 0 in production. A first pass read 0 in local
+   too; that was a RACE IN THE CHECK, not a defect — `logSearchEvent` is
+   fire-and-forget, so the route answers before the row lands.
+3. **Production is untouched** — census byte-identical across the write, last
+   row included.
+4. **The guard still refuses the old pairing** — all three write paths threw
+   `ProductionWriteRefused`, with the control that makes it conclusive: a local
+   pairing got PAST the guard and died on the query. Both of g7's planted breaks
+   re-run and still fail on their own named assertions.
+
+**R36 opened from that verification:** `WTP_PRODUCTION_DATABASE_URL_READONLY`
+connects as `neondb_owner` and is not read-only. The name promises a protection
+nobody implemented. Needs the Neon console; until then the backmark script
+prints its target's role and host on every run.
+
+### R35: eight rows citing a branch that never existed
+
+The pass **changed two of g7's provisional answers rather than transcribing
+them**, which is why it had to be per-row. Tracing each row's own artifacts to
+the commit that introduced them shows the g4 session's first four commits —
+`780283c`, `ca4d31c`, `cd0a9da`, `d6d477d` — sit on main's FIRST-PARENT CHAIN
+WITH NO MERGE COMMIT. They entered main without a pull request, so the branch
+that carried them left no trace at all. That is the mechanical reason R11's
+check cannot resolve `claude/apple-clean-0816`.
+
+**No branch name can honestly be substituted, so each row now cites its COMMIT
+SHA** — evidence a branch name never was. R28 was recorded by g7 as PR #56 on
+the strength of a commit subject; read by FILE LIST instead, PR #56 is the h
+session's Section G, while R28's twelve checks are a +325-line `walk-all` diff
+in `d6d477d`.
+
+### Two instruments that could not measure
+
+**G04** — the walk printed "PRODUCTION ROWS THIS RUN CREATED: N" while counting
+GETs issued at the call site. It asks the table now: 40 issued, 38 landed, 37 of
+them SEARCH on the shipping run. Three honest-absence paths, because a census
+that cannot run must never print a zero, and a warning if any of the run's own
+rows are NOT marked SYNTHETIC.
+
+**R37** — sessions compared runs by subtracting integers. A run that loses three
+checks and gains seven reports +4, identical to a run that simply gained four,
+and a check dying quietly is the failure the suite exists to catch. Every check
+now emits an identity, the run writes the sorted set to `docs/walk-checks.txt`,
+and the next run DIFFS. The first run's own finding: **161 distinct identities
+of 164 checks** — three share an identity, so the diff cannot see them
+separately, printed as a warning with the offending names.
+
+### R05, R38, B01
+
+**R05** — `tests/map-layers.test.ts`, 24 tests over marker reconciliation,
+camera and basemap. The reconciliation decision was split out into
+`reconcileKeys()`, which has no map and no DOM in it, so the module's own claim
+("a filter that narrows 500 pins to 480 does 20 DOM writes, not 980") is a test
+with those numbers in it. Proven to bite by three planted breaks.
+
+**R38** — diagnosed first, and the answer was clean: production carries none of
+the ten adapter ids at any of the four zips. So `lib/meetings/source-labels.ts`
+is the fix's precondition rather than a fix, put in place while the answer is
+still clean — the pressure is structural, since `/api/meetings` ships the ids to
+the client in three places.
+
+**B01 interim** — the display name is **Meanwhile** on every on-site surface.
+Twelve occurrences across eight files, all longhand literals, now one constant.
+The repo name and every off-site identifier derived from it are deliberately
+unchanged, and a test asserts they KEEP the old token: a public body with our
+identifier in last week's logs must find the same identifier this week.
+
+### Mirrored
+
+Fourteen now — `session-map.md` joined the canonical set (R33). It has no Drive
+id yet and one cannot be invented, so it is DECLARED pending in
+`docs/mirror-code-ids.json`; the id map must still account for the whole set, so
+an undeclared missing id still fails.

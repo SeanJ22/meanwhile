@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PRODUCT_NAME, titleFor } from "@/lib/brand";
 
 /**
  * The transparency page — item 5b, shipped in the same change as the search
@@ -31,7 +32,7 @@ import Link from "next/link";
  */
 
 export const metadata = {
-  title: "What this site collects — We the People",
+  title: titleFor("What this site collects"),
 };
 
 function Section({
@@ -58,7 +59,7 @@ export default function TransparencyPage() {
     <main className="min-h-dvh overflow-y-auto bg-[var(--bg,#101014)]">
       <div className="mx-auto max-w-2xl px-5 py-10 sm:py-14">
         <p className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-muted">
-          We the People
+          {PRODUCT_NAME}
         </p>
         <h1 className="mt-2 text-2xl font-semibold text-paper">
           What this site collects, and what it doesn&apos;t

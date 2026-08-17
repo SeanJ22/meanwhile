@@ -142,6 +142,14 @@ test("no module reads search_log without the organic filter", async () => {
       "lib/signal/search-log-reads.ts",
       // The back-marking pass, which by definition operates on unmarked rows.
       "scripts/searchlog-backmark.mts",
+      // G04, 2026-08-17: the walk asks how many rows ITS OWN run landed, by
+      // `run_id = <this run>`. That is the opposite of an aggregate — it is a
+      // count of OUR rows, the ones the organic filter exists to exclude, and
+      // filtering it to ORGANIC would make it report zero every time and read
+      // as "this run created nothing". Declared here with the reason, the
+      // DECLARED_EXTRAS pattern, because an exception that lives in code can
+      // be argued with and a silent one cannot.
+      "scripts/walk-all.mts",
     ].map((p) => p.replace(/\//g, sep)),
   );
 

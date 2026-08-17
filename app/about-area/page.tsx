@@ -4,6 +4,7 @@ import Link from "next/link";
 import { areaFactsForState } from "@/lib/area/facts";
 import { resolveZip } from "@/lib/geo/zcta";
 import { divisionsAt } from "@/lib/registry/server";
+import { PRODUCT_NAME, titleFor } from "@/lib/brand";
 
 /**
  * "About this area" v1 (7, 2026-08-17) — built for the mover: the questions
@@ -20,7 +21,7 @@ import { divisionsAt } from "@/lib/registry/server";
 export const runtime = "nodejs";
 
 export const metadata = {
-  title: "The basics of living here — We the People",
+  title: titleFor("The basics of living here"),
 };
 
 export default async function AboutAreaPage({
@@ -59,7 +60,7 @@ export default async function AboutAreaPage({
         </Link>
       </p>
       <p className="mt-3 font-mono text-[0.625rem] uppercase tracking-[0.2em] text-muted">
-        We the People
+        {PRODUCT_NAME}
       </p>
       <h1 className="mt-1 text-xl font-semibold">
         The basics of living here

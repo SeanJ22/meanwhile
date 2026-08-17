@@ -1,189 +1,133 @@
-# Session brief
+# Session brief — g9 (successor to g8, 2026-08-17)
 
-The last brief executed was **g7** (2026-08-17, branch
-`claude/g7-dispositions-0817`) — the session where the author's 117
-dispositions became the work. This file is overwritten by each session with the
-brief it ran; what follows is what this session was asked to do, what it did,
-and what it deliberately did not.
+The g8 session ended having landed the deploy and worked the top of the g7
+queue. This brief is written for whoever picks it up. **Nothing here is
+cuttable.** Work the items in order, complete each whole, keep starting the
+next until the session genuinely ends, defer whatever remains whole and
+specced, and report completion against the denominator.
 
-## What this session was asked for
+Where a disposition in `docs/deferred.csv` and this brief disagree, **the
+disposition governs**. Read each row's full Notes in `docs/tracker.csv` before
+building; the specs live there, and g8's rows carry the evidence so you do not
+have to gather it twice.
 
-Nine items, in a stated priority order, with the brief declaring outright that
-nothing in it was cuttable. The governing fact was that the author had
-dispositioned all 117 open rows in `docs/deferred.csv`, and the brief carried
-every row he marked "now" or "G7".
+## Four things you would otherwise rediscover
 
-The deferral rule in `CLAUDE.md` governed how it ended: work the items in
-order, complete each whole, keep starting the next until the session genuinely
-ends, defer whatever remains whole with a row, and report completion against
-the denominator. One precedence rule sat above the brief itself — where a
-disposition in `docs/deferred.csv` and the brief disagree, **the disposition
-governs**, because it is the author's own ruling, verbatim.
+1. **The deploy is landed and verifiable.** `/api/build` returns a real SHA
+   now. `main` is at `e8f7b77` or later; the endpoint is the check, not the
+   green build. `pnpm handoff --ship` polls it and refuses to claim a landing
+   it did not see.
+2. **`.env.local` points `DATABASE_URL` at a LOCAL Neon branch** (R34). Do not
+   repoint it at production. A script that must read or write production reads
+   `WTP_PRODUCTION_DATABASE_URL_READONLY` explicitly — and note R36: **that
+   variable is not read-only.** Its role is `neondb_owner`.
+3. **`docs/deferred.csv` is never regenerated.** The refusal guard stands and
+   the author's Disposition column lives only there.
+4. **The walk emits a check-identity SET** to `docs/walk-checks.txt` and diffs
+   against the committed one. Do not compare totals by subtraction; read the
+   `added` / `GONE` lines. Three checks currently share an identity with
+   another — the run names them, and giving them distinguishing names is a
+   small work item.
 
-1. Closures and recordings (tracker only, no build).
-2. The production database is unreachable from local (P0).
-3. Twenty small fixes the author marked "now".
-4. The ask surface — one build closing six rows.
-5. G05, the interface consolidation.
-6. G07, the pill label that carries the teaching.
-7. D35, the positions three-answer machinery.
-8. The remaining "finish now" rows, sixteen of them.
-9. Handoff.
+## The author's standing rule, law for every fix below
 
-## Where it got to: items 1 and 2 whole, item 3 at 7 of 20, items 4–8 not started
+A screenshot or named instance is an **EXAMPLE of a class-wide defect**, never
+the only occurrence. Fix the class at the shared code path, audit everywhere
+the pattern occurs, and report the full count found and fixed.
 
-**Items 1–2 of 9 complete; item 3 is 7 of its 20 sub-items; items 4 through 8
-were never started.** That is the honest denominator and the brief asked for it
-in exactly this form. A g7b session picks up at item 3's eighth sub-item (R05,
-the map layer tests) and runs the same order from there.
+---
 
-Nothing was half-built. The deferral boundary fell between sub-items, never
-inside one — every sub-item listed as done is done, tested, and recorded on its
-row; every one not started is untouched and still carries its full spec.
+## 1 — The author's production feedback of 2026-08-17 (P0, first)
 
-### Item 1 — the author's rulings enter the record (whole)
+g8 opened both rows with their full specs and deferred them WHOLE rather than
+half-build them. They are the author's own words about the shipped product and
+they go first.
 
-Twelve dispositions recorded verbatim in the rows they govern. Eight closed:
-M120, G09, M131, R16, R17, R02, V02, B06. Three recorded a ruling without
-moving status, because the ruling settles a question the row is not gated on —
-T04 (publication still waits on T01), T03 (an accepted risk is not a retired
-one), D03 (the state list is **NH, AZ, NJ**; the author confirmed "NH, NH, AZ"
-was a typo). T10 recorded that its empty disposition is a deliberate
-non-ruling.
+**1a — R39: one "Phone" pill replaces stacked numbers, everywhere.** The
+Shaheen card renders seven phone rows and is the EXAMPLE; the scope is every
+official with more than one recorded number, at every zip, on every surface the
+contact pills render, fixed at the shared component. One pill labelled "Phone".
+Multiple numbers → a modal centred on screen, numbers listed vertically, each
+labelled by its office **from the recorded data** (never inferred from an area
+code — an inferred office label is a generated claim about a public official),
+each a `tel:` link. Exactly one number → the pill is a direct `tel:` link, no
+modal. The modal sits OVER the battlecard; dismissing it returns the card
+untouched; one modal at a time; native dismissal per M90's pattern. Provenance
+unchanged. If any official carries multiple emails, same treatment; if none,
+state that and change nothing. Report the count of officials with more than one
+number and that every one renders the single pill. Walk checks at Shaheen and
+at a single-number official, both viewports, both themes.
 
-Two disagreements were recorded rather than smoothed. **R02**'s disposition
-reads "Unsure what the ask is here" while the brief said close it; it closed on
-the brief's stated ground, which is checkable and checks out, with both texts
-quoted in the row so the author can reopen on sight. **T04**'s wording follows
-the disposition's punctuation, not the brief's, per the precedence rule.
+**1b — R40: the personal email leaves the product; Feedback becomes an in-app
+form.** The two halves are ONE SUBJECT — removing the address without shipping
+the form leaves a reader with no way to reach anyone. Full spec on R40,
+including the one boundary g8 found while scoping: `app/api/geocode/route.ts`
+sends the address in an OUTBOUND User-Agent, which is a server-side contact
+route the courteous-client rule requires, and is outside the row's scope.
 
-**The one thing item 1 could not do**, reported as a failed retrieval rather
-than approximated: `docs/session-map.md` does not exist. Eight rungs walked and
-recorded on **R33** — working tree, every branch in git history, the Drive
-mirror folder, a recursive name search under it, the Drive root, the Drive API
-by title, the Drive API by content, and a grep across `docs/` and `scripts/`.
-Absent at every one, and the API rung rules out a sync gap: it is not in Drive
-at all.
+## 2 — The g7 queue's eight remaining sub-items, in order
 
-It was not reconstructed from the census, and the reason is the deliverable:
-the 117 dispositions carry **87 distinct free-text strings**, so the seven
-queues are an authoring judgement made on top of them and not recoverable from
-them. Seven groups invented here would be this session's ordering wearing the
-author's name, on the one document whose whole job is to carry his. The mirror
-set was left at 13 for the same reason — declaring a file that is not there
-would report MISSING on every handoff, and a permanently red check is one
-everybody learns to scroll past.
+g8 closed five of the thirteen (R05, R23, G04, R37 the check identities, R38
+the reader-facing source name) and shipped B01's interim rename. These eight
+remain, each with its full spec on its own row:
 
-**To close R33: the author supplies the content by any route.** The mechanical
-half is small and fully specced on the row.
+**M19** (overlapping pins swallow each other's clicks) · **D19** (sitting-as
+persistence and the live path) · **D18** (virtual meetings render as "online"
+with join info, a list overlay, never a fabricated pin) · **D24** (the 348
+unmatched OCD divisions) · **D31** (curated-ID convention settled) · **M12**
+(the school overlay split into three) · **D22** (the NovusAgenda adapter —
+**read the row's own correction first**: the Vail tenant is an archive, the
+adapter is built against a LIVE tenant only, and if no live tenant exists in
+scope, that finding is the deliverable).
 
-### Item 2 — local can no longer write to the store we sell from (whole)
+M19 is the largest and it is first: it needs a real decision between spiderfy,
+clustering and zoom-dependent grouping, and a walk check that can see a pin
+intercepting another's clicks.
 
-The braces: `lib/db/write-guard.ts`, called first by all four write sites
-across the search log, reactions and the intake limiter. Two signals, both
-failing closed. `WTP_DB_ROLE` declares what `DATABASE_URL` points at and
-**unset means production**, so anything undeclared is refused rather than
-trusted. `NODE_ENV` decides the runtime, chosen over `NETLIFY` or `CONTEXT`
-because Next sets it itself rather than a deploy setting someone has to
-remember — a platform variable that turned out to be absent at function runtime
-would refuse every production write, and that outage is the one thing this must
-not be able to cause.
+## 3 — g7 items 4 through 8, whole, in order
 
-Writes are guarded and reads deliberately are not: the harm is a row in a sold
-store, not a SELECT.
+Never started, still deferred whole with their specs intact. In order:
 
-The belt: `DATABASE_URL` is now **unset** in `.env.local`. It costs nothing,
-and why is worth keeping — **nothing in the app reads the database.** All four
-`getDb()` call sites are writes. The production string survives under
-`WTP_PRODUCTION_DATABASE_URL_READONLY`, a name the app never reads.
+* **item 4** — the ask surface: one build closing A01, A02, A07-same-PR, M119,
+  A06, G05-4d; copy promises only what routes.
+* **item 5** — G05: rules 4a–4c, 4e, 4f, 4h.
+* **item 6** — G07: the pill label.
+* **item 7** — D35: the positions three-answer machinery.
+* **item 8** — the fourteen finish-now rows: M134, M136, M139, M135, M07, B15,
+  G10/8a, P01, P03 with free-text gated on T05, D25, D29, D06 under the
+  unchanged structural FEC rule, M93 proposal-only.
 
-Proved, not asserted: 11 tests pin the four runtime-by-database pairings; two
-planted breaks were run against the real suite first and both failed it; all
-three write paths threw against the real production string (3 refused, 0
-leaked); and the control — the same call with the role declared local and a
-bogus host — reaches `insert into "search_log"` and dies on the connection, so
-the guard is demonstrably the gate.
+## 4 — Two small debts g8 created and named
 
-**Production census, read either side of all local work: 3543 rows, ORGANIC 17,
-SYNTHETIC 681, UNKNOWN 2845, reactions 35 — identical on both reads.** Zero
-rows created by this session's local work.
+* Three walk checks share an identity with another, so the identity diff counts
+  them once. The run names them. Give them distinguishing names.
+* `docs/mirror-code-ids.json` declares `session-map.md` **pending**: it has no
+  Drive id until it has been copied to Drive and `pnpm mirror:ids` has run
+  against the live folder. Run it and move the entry from `pendingDocs` into
+  `docs`.
 
-**A discrepancy with the brief, stated rather than smoothed.** The brief's
-premise was "the census stands at 0 organic." It does not. There are 17, all
-dated 2026-08-17, none of them this session's, and none recorded in
-`docs/synthetic-runs.md`. Fourteen are a burst at 17:11:47–17:12:30Z; three are
-searches at 17:54 and 18:01Z. **Nothing was back-marked** — the brief forbids
-it and this session cannot attribute them, and guessing a window is the
-fabrication that file already records one session committing. **The author
-should rule on whose they are.**
+## Handoff
 
-**R34's remainder needs the author's hands:** there is still no local database.
-The choice is diagnosed and stated — a **Neon branch**, not a local Postgres,
-because the app speaks Neon's HTTP driver rather than the Postgres wire
-protocol, so a local Postgres needs a proxy or a second driver, and a second
-driver means local stops testing what ships. Not provisioned here: no Neon API
-key in the environment, and no psql, Postgres or Docker on the machine.
+`pnpm walk:all` against production, new checks appended, old and new counts
+stated, with the identity diff (`added` / `GONE`) quoted rather than summarised.
+`state.md` via `pnpm stamp`. Tracker rows by ID; `docs/deferred.csv` NOT
+regenerated. Playbook diff or an explicit "nothing new". Overwrite this file.
+`pnpm handoff --ship` with the R22 gate, and verify the deploy LANDS via
+`/api/build` — state the SHA it returns.
 
-### Item 3 — 7 of 20 sub-items
+Standing report in the established format: ship status; test, lint, build
+counts with allowlisted warnings named; every mirror file by name with bytes;
+`context.md` against its 40 KB cap; tracker rows touched by ID;
+`stamp-audit.md` inline; production rows by run-id census. Completion against
+the denominator. Ending with "Needs your hands."
 
-Done: **R01** (the CLAUDE.md clobber guard, proved twice against the real
-pre-commit hook), **R19** (the size warning that fired every run; the band now
-derives from `EXPECTED_KB` so it cannot go stale again), **R18** (generated-at
-in Eastern, four files, scope held narrow), **R08** (the mirror comparison
-hardened both ways), **R11** (a branch named must be a branch that existed),
-the **stamp-audit allowlist**, and the **build-stamp endpoint** with the
-handoff wired to it.
+## Standing rules
 
-Two of those produced findings bigger than the fix:
+All of `CLAUDE.md`'s non-negotiables. Diagnose before fixing. No empty success.
+Never assert absence. Stated N equals rendered rows. Denominators always
+stated. A screenshot is an example of a class, never the instance. Screenshot
+before believing green; where a measurement can pass while wrong, measure the
+right thing. Every reader-facing date is wall clock via `pnpm stamp`. A render
+default may never manufacture a claim.
 
-- **R08 was not dormant.** CLAUDE.md is 45417 bytes in the working tree and
-  45147 in git — a 270-byte gap that is exactly its 270 CRLF line endings.
-  Proved on the real Drive mirror: old logic reports 2 of 11 current, new logic
-  10 of 11. Eight files were being needlessly recopied every run, forever.
-- **R11 found a third fabricated branch on its first run, and the largest.**
-  `claude/apple-clean-0816` is claimed by **eight rows** (M128, M129, M130,
-  M132, M133, M135, M139, R28) and appears in no ref, reflog, commit message or
-  merge subject. Tracing each 2026-08-16 commit to its merge shows the M-series
-  work landed on `claude/active-state-model-0816` via PRs #51–#54, while R28
-  came through #56 from `claude/h-03255-depth-0816`. **They do not share one
-  answer**, so they were not rewritten here — that is a per-row evidence pass,
-  and rewriting historical Notes on a guess is the exact failure this family is
-  about. Deferred as **R35** with the evidence carried into it.
-
-**The thirteen not started**, in the brief's order, each still carrying its
-full spec on its row: R05 (map layer tests), R23 (Turbopack tracing), G04 (the
-walk's probe counter — rows landed, not requests issued), the walk's
-**check-identity set**, the reader-facing source name (`schedulepage` must
-never reach a reader), M19 (overlapping pins), D19 (sitting-as attribution),
-D18 (virtual meetings render as "online"), D24 (the 348 unmatched OCD
-divisions), D31 (the identifier convention), M12 (the school overlay split),
-D22 (the NovusAgenda adapter — **read the row's own correction first**, the
-Vail tenant is an archive), and B01 (the interim rename to **Meanwhile** across
-every on-site surface).
-
-### Items 4–8 — not started, untouched
-
-Item 4 (the ask surface, one build closing A01, A02, M119, A07, A06 and G05's
-rule 4d), item 5 (G05's interface consolidation, rules 4a–4f and 4h), item 6
-(G07, the pill label), item 7 (D35, the positions three-answer machinery), and
-item 8 (sixteen "finish now" rows, M134 through M93).
-
-Every one of these was deferred **whole**. None was started and abandoned, and
-none has had its spec diluted. Their rows are unchanged and remain the
-authority; this brief deliberately does not restate what a row already carries.
-
-## What the next session should know before it starts
-
-- **The disposition governs the brief.** Where `docs/deferred.csv` and a brief
-  disagree, the author's disposition wins. Item 1 hit this twice.
-- **`docs/deferred.csv` is the author's marked census and is NOT regenerated.**
-  The refusal guard stands.
-- **`.env.local` no longer carries `DATABASE_URL`.** That is deliberate and
-  nothing in the app needs it. Do not "restore" it. If you need to read
-  production for a census, use `WTP_PRODUCTION_DATABASE_URL_READONLY` and know
-  that you are reading production.
-- **The handoff now warns about `claude/apple-clean-0816` on every run.** That
-  is R35 doing its job, not noise to suppress.
-- **`walk:all` does not yet emit its check-identity set.** That sub-item was
-  not reached, so comparisons are still integer subtraction and a lost check is
-  still invisible by name.
+**Correct first. Fast second. Nothing third.**

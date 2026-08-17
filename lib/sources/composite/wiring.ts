@@ -50,7 +50,7 @@ const legistarReporting: ReportingMeetingSource<LegistarEventWithClient> = {
   },
 };
 
-const CAPABILITIES: Array<{
+export const CAPABILITIES: Array<{
   /** Must equal the built child's `name` — asserted in buildCompositeSource. */
   name: string;
   types: AgendaSourceType[];

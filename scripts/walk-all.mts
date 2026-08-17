@@ -53,9 +53,16 @@
  * session creates against production is named in its report. No reaction is
  * ever tapped and no ask is ever submitted.
  */
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+
+import { neon } from "@neondatabase/serverless";
+import { config as loadEnv } from "dotenv";
 import { chromium, type Browser, type Page } from "playwright";
 
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
+import { PRODUCT_NAME } from "../lib/brand.ts";
+import { internalSourceIds } from "../lib/meetings/source-labels.ts";
 import { mojibakePattern } from "../lib/text/mojibake.ts";
 import { decodePng, patchStats, regionChange } from "./png.mts";
 
@@ -111,6 +118,30 @@ let passed = 0;
 const census = new Map<string, number>();
 
 /**
+ * Every check that ran, BY IDENTITY — and the reason integers were not enough.
+ *
+ * The census above fixed one half of the counting problem: no session has to
+ * transcribe a total. It did not fix the other half. A session still compares
+ * its run to the previous one by SUBTRACTING — "148 last time, 152 now, so I
+ * added four" — and that subtraction is blind in the way that matters: a run
+ * that loses three checks and gains seven reports +4, identical to a run that
+ * simply gained four. The failure the suite exists to catch is a check dying
+ * quietly, and integer arithmetic is exactly the instrument that cannot see it.
+ *
+ * So the run emits its check identities as a SET, `docs/walk-checks.txt`, and
+ * diffs itself against the committed one. What prints is what a session
+ * actually needs to say: these were added, these are GONE. A removal is loud
+ * even when the total went up.
+ *
+ * Names are stable by construction — the interpolated parts are zips and body
+ * names from committed tables, never a measured value, which belongs in the
+ * `evidence` argument. A name that carried a measurement would churn the diff
+ * on every run and teach everyone to ignore it.
+ */
+const identities: string[] = [];
+const CHECKS_FILE = join(process.cwd(), "docs", "walk-checks.txt");
+
+/**
  * One assertion, owned by the session that shipped the claim.
  *
  * `session` is not decoration: a failure prints as "the win <session> shipped
@@ -119,6 +150,7 @@ const census = new Map<string, number>();
  */
 function check(session: string, name: string, ok: boolean, evidence = ""): boolean {
   census.set(session, (census.get(session) ?? 0) + 1);
+  identities.push(`[${session}] ${name}`);
   if (ok) passed += 1;
   else failures.push({ session, name, evidence });
   console.log(
@@ -1752,6 +1784,63 @@ section("J. Carried rows state their own freshness (hotfix-0817 item 2)");
   }
 }
 
+// ═══════════════════════════════════════════════════════════════════════════
+// K. No internal key reaches a reader (g8)
+// ═══════════════════════════════════════════════════════════════════════════
+
+section("K. Reader surfaces speak plain language (g8)");
+
+/*
+ * `schedulepage`, `civicplus`, `iqm2`, `clerksboards` — adapter ids. Right in
+ * the wiring, wrong in front of a person, and `/api/meetings` ships them to
+ * the client in three places (`sources[].source`, every meeting `id`, and
+ * `carried.source`), so the value is permanently one interpolation away from a
+ * surface.
+ *
+ * Read off PRODUCTION rather than off the source, because that is where the
+ * claim lives. `tests/source-labels.test.ts` reads the components; this reads
+ * what a reader is actually served. The API's own JSON is deliberately NOT
+ * checked — it is a wire format, not a reader surface, and asserting on it
+ * would either fail forever or force the ids out of the place they belong.
+ */
+{
+  const ids = internalSourceIds();
+  for (const { zip } of FOUR) {
+    for (const [surface, path] of [
+      ["the map's server HTML", `/?zip=${zip}`],
+      ["/about-area", `/about-area?zip=${zip}`],
+      ["/ballot", `/ballot?zip=${zip}`],
+    ] as const) {
+      const res = await get(path);
+      if (res.status !== 200) {
+        cannotRun("g8", `${zip}: no internal source id on ${surface}`, `HTTP ${res.status}`);
+        continue;
+      }
+      const found = ids.filter((id) => new RegExp(`\\b${id}\\b`).test(res.text));
+      check(
+        "g8",
+        `${zip}: no internal source id on ${surface}`,
+        found.length === 0,
+        found.length > 0 ? `found: ${found.join(", ")}` : `${ids.length} id(s) checked`,
+      );
+
+      // B01 interim: the product wears one name, and the old one is gone from
+      // every surface a reader is served. A rename that half-lands is worse
+      // than one that never started — two names read as two products.
+      check(
+        "g8",
+        `${zip}: ${surface} carries the current product name, not the old one`,
+        res.text.includes(PRODUCT_NAME) && !/We[ ]the[ ]People/i.test(res.text),
+        res.text.includes(PRODUCT_NAME)
+          ? /We[ ]the[ ]People/i.test(res.text)
+            ? "both names are on the page"
+            : `"${PRODUCT_NAME}" present`
+          : `"${PRODUCT_NAME}" is not on the page at all`,
+      );
+    }
+  }
+}
+
 await browser.close();
 
 const EXCLUDED = [
@@ -1794,10 +1883,125 @@ if (blocked.length > 0) {
 console.log("\nNOT IN THIS SUITE, deliberately:");
 for (const e of EXCLUDED) console.log(`  · ${e}`);
 
+/* ── The check-identity set, diffed rather than subtracted ──────────────── */
+
+const ranNow = [...new Set(identities)].sort();
+const duplicates = identities.length - ranNow.length;
+const previous = existsSync(CHECKS_FILE)
+  ? readFileSync(CHECKS_FILE, "utf8")
+      .split("\n")
+      .map((l) => l.trim())
+      .filter((l) => l && !l.startsWith("#"))
+  : null;
+
+console.log(`\nCHECK IDENTITIES: ${ranNow.length} distinct of ${identities.length} run`);
+if (duplicates > 0) {
+  // Two checks with the same identity collapse in the set, so the diff would
+  // under-report. Said out loud AND NAMED — a bare count tells a session that
+  // its instrument is partly blind without telling it where.
+  const seen = new Map<string, number>();
+  for (const id of identities) seen.set(id, (seen.get(id) ?? 0) + 1);
+  console.log(
+    `  ${duplicates} check(s) share an identity with another — the set counts them once, ` +
+      `so the diff cannot see them separately. Give them distinguishing names:`,
+  );
+  for (const [id, n] of [...seen].filter(([, n]) => n > 1).sort((a, b) => b[1] - a[1])) {
+    console.log(`    ×${n}  ${id}`);
+  }
+}
+if (previous === null) {
+  console.log(
+    `  no committed baseline at docs/walk-checks.txt — this run WRITES the first one. ` +
+      `Nothing is compared, and that is stated rather than printed as "no changes".`,
+  );
+} else {
+  const before = new Set(previous);
+  const added = ranNow.filter((c) => !before.has(c));
+  const gone = previous.filter((c) => !ranNow.includes(c));
+  console.log(`  baseline ${previous.length} · added ${added.length} · GONE ${gone.length}`);
+  for (const c of added) console.log(`    +  ${c}`);
+  // A removal is the thing integer subtraction cannot see, so it prints even
+  // when the total went up.
+  for (const c of gone) console.log(`    -  ${c}   <- a check that ran last time did not run now`);
+  if (added.length === 0 && gone.length === 0) console.log("    (the same set, exactly)");
+}
+
+writeFileSync(
+  CHECKS_FILE,
+  `# The identity of every check pnpm walk:all ran, one per line, sorted.\n` +
+    `# Written by scripts/walk-all.mts on every run and COMMITTED, so the next run\n` +
+    `# diffs against it by set difference instead of subtracting two totals — a run\n` +
+    `# that loses three checks and gains seven reports +4 either way, and the check\n` +
+    `# dying quietly is the failure this suite exists to catch.\n` +
+    `# Checks that COULD NOT RUN are not here: they did not run, and recording them\n` +
+    `# as present would be the same lie in the other direction.\n` +
+    `${ranNow.join("\n")}\n`,
+  "utf8",
+);
+
+/* ── Probe accounting: rows LANDED, not requests issued (G04) ───────────── */
+
 console.log(
-  `\nPRODUCTION ROWS THIS RUN CREATED: ${searchLogRows} search-log row(s) ` +
-    `(every /api/meetings GET writes one), ${askRows} ask/log row(s). ` +
+  `\nPRODUCTION ROWS THIS RUN CREATED: ${searchLogRows} search-log GET(s) issued ` +
+    `(every /api/meetings GET writes one), ${askRows} ask/log request(s) issued. ` +
     `No reaction was tapped.`,
 );
+
+/**
+ * G04: the line above counts REQUESTS ISSUED, at the call site, before the
+ * response is known — and it reads as "rows created". A request that 404s,
+ * that `getJson` discards on a non-ok status, or that a CDN serves without
+ * reaching the route writes no row. Measured 2026-08-17: 28 issued, 25 landed.
+ *
+ * The C05 marker made the true number queryable for the first time, so the run
+ * now ASKS. `.env.local`'s DATABASE_URL points at the local branch since R34,
+ * so the production census reads the production string explicitly — and when
+ * there is none, the run says the number could not be read rather than
+ * printing the issued count as though it were the landed one.
+ */
+loadEnv({ path: join(process.cwd(), ".env.local") });
+const PRODUCTION_DB = process.env.WTP_PRODUCTION_DATABASE_URL_READONLY;
+
+if (BASE !== "https://sparkwtp.netlify.app") {
+  console.log(
+    `  rows landed: NOT READ — this run targeted ${BASE}, not production, so a production ` +
+      `census would be answering about someone else's rows.`,
+  );
+} else if (!PRODUCTION_DB) {
+  console.log(
+    `  rows landed: COULD NOT READ — WTP_PRODUCTION_DATABASE_URL_READONLY is not set. ` +
+      `The issued counts above stand as issued counts and are NOT the landed number.`,
+  );
+} else {
+  try {
+    const sql = neon(PRODUCTION_DB);
+    const landed = (await sql`
+      SELECT
+        COUNT(*)::int                                          AS total,
+        COUNT(*) FILTER (WHERE event_type = 'SEARCH')::int      AS searches,
+        COUNT(*) FILTER (WHERE run_class <> 'SYNTHETIC')::int   AS misclassed
+      FROM search_log WHERE run_id = ${RUN_ID}
+    `) as { total: number; searches: number; misclassed: number }[];
+    const { total, searches, misclassed } = landed[0];
+    console.log(
+      `  rows landed: ${total} row(s) carry run_id ${RUN_ID} (${searches} SEARCH). ` +
+        `Issued ${searchLogRows + askRows}, landed ${total} — a gap is ordinary ` +
+        `(a 404, a discarded non-ok response, or a CDN hit writes no row) and is not a failure.`,
+    );
+    if (misclassed > 0) {
+      console.log(
+        `  WARNING: ${misclassed} of this run's own rows are NOT marked SYNTHETIC — ` +
+          `our robot is sitting in the sold store as reader signal.`,
+      );
+    }
+  } catch (error) {
+    // An unreadable census is COULD NOT RUN, never zero. Zero would read as
+    // "this run created nothing", which is the opposite of what is known.
+    console.log(
+      `  rows landed: COULD NOT READ — ${(error as Error).message.slice(0, 120)}. ` +
+        `The issued counts above stand as issued counts.`,
+    );
+  }
+}
 
 if (failures.length > 0) process.exit(1);

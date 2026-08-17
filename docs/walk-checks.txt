@@ -1,0 +1,180 @@
+# The identity of every check pnpm walk:all ran, one per line, sorted.
+# Written by scripts/walk-all.mts on every run and COMMITTED, so the next run
+# diffs against it by set difference instead of subtracting two totals — a run
+# that loses three checks and gains seven reports +4 either way, and the check
+# dying quietly is the failure this suite exists to catch.
+# Checks that COULD NOT RUN are not here: they did not run, and recording them
+# as present would be the same lie in the other direction.
+[0814b] 03255: no deliberation label anywhere on the map
+[0814b] 07866: no deliberation label anywhere on the map
+[0814b] 85641: no deliberation label anywhere on the map
+[0814b] 85701: no deliberation label anywhere on the map
+[0814c] /ballot carries the device-only sentence at 03255
+[0814c] /ballot carries the device-only sentence at 07866
+[0814c] /ballot carries the device-only sentence at 85641
+[0814c] /ballot carries the device-only sentence at 85701
+[0814c] 03255: "Federal" is the label, never "National"
+[0814c] 03255: Kearsarge Regional is named on who-governs
+[0814c] 03255: the map answers with something about this place
+[0814c] 03255: the state's governor is on who-governs
+[0814c] 03255: who-governs is grouped Local / State / Federal
+[0814c] 07866: "Federal" is the label, never "National"
+[0814c] 07866: the map answers with something about this place
+[0814c] 07866: the state's governor is on who-governs
+[0814c] 07866: who-governs is grouped Local / State / Federal
+[0814c] 85641: "Federal" is the label, never "National"
+[0814c] 85641: the map answers with something about this place
+[0814c] 85641: the state's governor is on who-governs
+[0814c] 85641: who-governs is grouped Local / State / Federal
+[0814c] 85701: "Federal" is the label, never "National"
+[0814c] 85701: a pick raises the reader's running ballot
+[0814c] 85701: the map answers with something about this place
+[0814c] 85701: the state's governor is on who-governs
+[0814c] 85701: who-governs is grouped Local / State / Federal
+[0814e] 03255: zero Arizona references on the New Hampshire card
+[0815] 03255: no counter renders the couldn't-check dash
+[0815] 03255: no mojibake in the rendered text
+[0815] 07866: no counter renders the couldn't-check dash
+[0815] 07866: no mojibake in the rendered text
+[0815] 85641: no counter renders the couldn't-check dash
+[0815] 85641: no mojibake in the rendered text
+[0815] 85701: no counter renders the couldn't-check dash
+[0815] 85701: no mojibake in the rendered text
+[0815c] 03255: the meeting count holds
+[0815c] 03255: the number of bodies with sittings holds
+[0815c] 07866: Morris Hills Regional's board
+[0815c] 07866: the meeting count holds
+[0815c] 07866: the number of bodies with sittings holds
+[0815c] a senator's roll-call record still resolves
+[0815e] /transparency answers
+[0815e] /transparency discloses the classifier and keeps the no-generation guarantee
+[0815e] /transparency states the photo rule's FOUR doors
+[0815f] 03255: Newbury's Zoning Board of Adjustment
+[0816] the key-votes surface still has its votes
+[0817] /about-area answers at 03255
+[0817] /about-area answers at 07866
+[0817] /about-area answers at 85641
+[0817] /about-area answers at 85701
+[0817] /about-area cites every answer at 03255
+[0817] /about-area cites every answer at 07866
+[0817] /about-area cites every answer at 85641
+[0817] /about-area cites every answer at 85701
+[0817] /about-area renders its facts at 03255
+[0817] /about-area renders its facts at 07866
+[0817] /about-area renders its facts at 85641
+[0817] /about-area renders its facts at 85701
+[0817] /ballot answers at 03255
+[0817] /ballot answers at 07866
+[0817] /ballot answers at 85641
+[0817] /ballot answers at 85701
+[0817] /ballot carries the office explainer at 03255
+[0817] /ballot carries the office explainer at 07866
+[0817] /ballot carries the office explainer at 85641
+[0817] /ballot carries the office explainer at 85701
+[0817] /ballot links "Moving here?" at 03255
+[0817] /ballot links "Moving here?" at 07866
+[0817] /ballot links "Moving here?" at 85641
+[0817] /ballot links "Moving here?" at 85701
+[0817] /ballot renders contests at 03255
+[0817] /ballot renders contests at 07866
+[0817] /ballot renders contests at 85641
+[0817] /ballot renders contests at 85701
+[0818] 03255: Newbury's no-mayor fact renders
+[0818] 85641: the meeting count holds
+[0818] 85641: the number of bodies with sittings holds
+[0818] 85701: the meeting count holds
+[0818] 85701: the number of bodies with sittings holds
+[0819] 03255: the ask box is on the who-governs card
+[0819] 07866: no shouting surnames
+[0819] 07866: the ask box is on the who-governs card
+[0819] 85641: the ask box is on the who-governs card
+[0819] 85701: the ask box is on the who-governs card
+[0819] D40: distinct officials render distinct campaign books
+[f] 03255: Kearsarge Regional School District's sittings
+[g3] /ballot names the pick as a ballot-building action at 03255
+[g3] /ballot names the pick as a ballot-building action at 07866
+[g3] /ballot names the pick as a ballot-building action at 85641
+[g3] /ballot names the pick as a ballot-building action at 85701
+[g3] /ballot's picks disclosure quotes wording that is on the page at 03255
+[g3] /ballot's picks disclosure quotes wording that is on the page at 07866
+[g3] /ballot's picks disclosure quotes wording that is on the page at 85641
+[g3] /ballot's picks disclosure quotes wording that is on the page at 85701
+[g3] 03255: no footnote repeats in the who-governs panel
+[g3] 03255: the state focus holds when zoomed out
+[g3] 03255: zooming out never removes pins
+[g3] 07866: no footnote repeats in the who-governs panel
+[g3] 07866: the state focus holds when zoomed out
+[g3] 07866: zooming out never removes pins
+[g3] 85641: no footnote repeats in the who-governs panel
+[g3] 85641: the state focus holds when zoomed out
+[g3] 85641: zooming out never removes pins
+[g3] 85701: candidate names open their large battlecards
+[g3] 85701: no footnote repeats in the who-governs panel
+[g3] 85701: the five-point scale carries its group separators
+[g3] 85701: the state focus holds when zoomed out
+[g3] 85701: zooming out never removes pins
+[g3] an official-source read never says 'Verified: not yet'
+[g3] the large card carries no duplicate 'How to reach them' accordion
+[g4] 03255: only the active state draws district boundaries
+[g4] 03255: the raised state is the state the reader is in
+[g4] 07866: only the active state draws district boundaries
+[g4] 07866: the raised state is the state the reader is in
+[g4] 85701: District types is collapsed inside Filters
+[g4] 85701: Filters renders collapsed
+[g4] 85701: Limit radius and Show districts moved inside Filters
+[g4] 85701: Near me stays outside Filters
+[g4] 85701: only the active state draws district boundaries
+[g4] 85701: opening Filters reveals radius and districts
+[g4] 85701: the camera stays where the reader put it
+[g4] 85701: the meetings panel opens with every group collapsed
+[g4] 85701: the raised state is the state the reader is in
+[g4] the moving-here line reads exactly
+[g5] 03255: the zip draws nothing on the map
+[g5] 07866: the zip draws nothing on the map
+[g5] 85701: north Tucson renders crisp, not muted, at city zoom
+[g5] 85701: the meetings panel body paints on first render, no pointer
+[g5] 85701: the panel's group counts sum to the stated count
+[g5] 85701: the zip draws nothing on the map
+[g6] 03255 (desktop): the meetings count agrees with itself
+[g6] 03255 (phone): the meetings count agrees with itself
+[g6] 03255: who-governs states one number for one list
+[g6] 07866 (desktop): the meetings count agrees with itself
+[g6] 07866 (phone): the meetings count agrees with itself
+[g6] 07866: the Mayor row is gone from the who-governs panel
+[g6] 07866: the mayor is reachable from who-governs
+[g6] 07866: who-governs states one number for one list
+[g6] 85641 (desktop): the meetings count agrees with itself
+[g6] 85641 (phone): the meetings count agrees with itself
+[g6] 85641: who-governs states one number for one list
+[g6] 85701 (desktop): the meetings count agrees with itself
+[g6] 85701 (phone): the meetings count agrees with itself
+[g6] 85701: who-governs states one number for one list
+[g8] 03255: /about-area carries the current product name, not the old one
+[g8] 03255: /ballot carries the current product name, not the old one
+[g8] 03255: no internal source id on /about-area
+[g8] 03255: no internal source id on /ballot
+[g8] 03255: no internal source id on the map's server HTML
+[g8] 03255: the map's server HTML carries the current product name, not the old one
+[g8] 07866: /about-area carries the current product name, not the old one
+[g8] 07866: /ballot carries the current product name, not the old one
+[g8] 07866: no internal source id on /about-area
+[g8] 07866: no internal source id on /ballot
+[g8] 07866: no internal source id on the map's server HTML
+[g8] 07866: the map's server HTML carries the current product name, not the old one
+[g8] 85641: /about-area carries the current product name, not the old one
+[g8] 85641: /ballot carries the current product name, not the old one
+[g8] 85641: no internal source id on /about-area
+[g8] 85641: no internal source id on /ballot
+[g8] 85641: no internal source id on the map's server HTML
+[g8] 85641: the map's server HTML carries the current product name, not the old one
+[g8] 85701: /about-area carries the current product name, not the old one
+[g8] 85701: /ballot carries the current product name, not the old one
+[g8] 85701: no internal source id on /about-area
+[g8] 85701: no internal source id on /ballot
+[g8] 85701: no internal source id on the map's server HTML
+[g8] 85701: the map's server HTML carries the current product name, not the old one
+[h] 03255: the governing count matches the frozen external denominator
+[hotfix-0817] 03255: each carried row's stated timestamp is the one the snapshot records
+[hotfix-0817] 03255: no carried row is claimed to be as fresh as the snapshot
+[hotfix-0817] 03255: only rows from a source that reported a gap carry a mark
+[hotfix-0817] 03255: the footer does not speak for the carried rows

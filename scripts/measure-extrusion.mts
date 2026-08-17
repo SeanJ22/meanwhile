@@ -53,6 +53,19 @@
  * `MEASURE_BASE_URL=… pnpm measure:extrusion`
  */
 import { chromium } from "playwright";
+import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
+
+/**
+ * C05 (2026-08-17): this run declares itself so the rows it writes to
+ * production's search log are never counted as a reader's. The runner cannot
+ * mark the row — the route writes it — so it says who it is in a header.
+ */
+const RUN_HEADERS = syntheticRunHeaders({
+  WTP_RUN_ID:
+    process.env.WTP_RUN_ID?.trim() ||
+    makeRunId("measure-extrusion", new Date().toISOString()),
+});
+
 import { inflateSync } from "node:zlib";
 
 const BASE = (process.env.MEASURE_BASE_URL ?? "http://localhost:3000").replace(
@@ -188,6 +201,8 @@ let frames = 0;
 
 for (const theme of ["dark", "light"] as const) {
   const context = await browser.newContext({
+    // C05: this run is ours, declared at write time.
+    extraHTTPHeaders: RUN_HEADERS,
     viewport: { width: 1100, height: 900 },
     // Device pixel ratio 1: the thresholds are in the same pixels the
     // profiles are computed in, and a 2× screenshot would silently halve

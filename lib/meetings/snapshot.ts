@@ -360,13 +360,18 @@ export interface SnapshotCarriedMeta {
   count: number;
   /**
    * The instant those rows were last fresh — non-null ONLY when every carried
-   * row agrees on the same calendar day.
+   * row agrees on the same calendar day, and then it is the OLDEST of them.
    *
-   * Null when they disagree, and the surface then says each row carries its
-   * own date instead of naming one. Naming the oldest would understate the
-   * freshness of some rows and naming the newest would overstate others;
-   * both are claims we cannot make, and a null here renders as its own
-   * sentence rather than as a plausible date.
+   * Null when the days disagree, and the surface then says each row carries
+   * its own date instead of naming one: across days no single date can stand
+   * for the set without overstating some row's freshness.
+   *
+   * Within a day the rows differ by the seconds one refresh took to walk a
+   * source's pages, and the OLDEST is the only choice that never claims a row
+   * is fresher than it is. The walk check at 03255 caught the first version
+   * taking the FIRST row's instant, which named a stamp newer than 24 of the
+   * 25 rows it was speaking for — the same defect this whole section exists
+   * for, one layer smaller.
    */
   lastFreshAt: string | null;
 }
@@ -398,9 +403,13 @@ export function snapshotClientMeta(snapshot: MeetingsSnapshot): SnapshotClientMe
       ? {
           carried: {
             count: stamps.length,
-            // One day, one date. More than one, and the footer says the rows
-            // carry their own dates rather than picking one of them.
-            lastFreshAt: days.size === 1 ? stamps[0] : null,
+            // One day, one date — the OLDEST of them, the only one that never
+            // claims a row is fresher than it is. Across days no date can
+            // stand for the set, so the surface says so instead.
+            lastFreshAt:
+              days.size === 1
+                ? stamps.reduce((a, b) => (Date.parse(b) < Date.parse(a) ? b : a))
+                : null,
           },
         }
       : {}),

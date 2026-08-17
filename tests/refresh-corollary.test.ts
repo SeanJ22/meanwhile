@@ -440,15 +440,23 @@ test("the client meta names the carried rows and the day they were last reached"
   // extra sentence is owed.
   assert.equal(snapshotClientMeta(snap([kearsargeSitting("2026-09-10")])).carried, undefined);
 
-  // All carried rows agree on a day, so the footer can name it.
+  // All carried rows agree on a day, so the footer can name it — and it names
+  // the OLDEST, never whichever row happens to come first. Production caught
+  // this: 25 carried rows spread over the seconds one refresh took to walk a
+  // source's pages, and the first version named row one's instant, which was
+  // newer than rows two through twenty-five.
   const agreed = snapshotClientMeta(
     snap([
-      carried("schedulepage:a", "2026-08-16T20:50:57.882Z"),
       carried("schedulepage:b", "2026-08-16T20:51:04.000Z"),
+      carried("schedulepage:a", "2026-08-16T20:50:57.882Z"),
     ]),
   );
   assert.equal(agreed.carried?.count, 2);
-  assert.equal(agreed.carried?.lastFreshAt, "2026-08-16T20:50:57.882Z");
+  assert.equal(
+    agreed.carried?.lastFreshAt,
+    "2026-08-16T20:50:57.882Z",
+    "the stated instant is newer than one of the rows it speaks for",
+  );
 
   // They disagree, so no single date is true of all of them and none is
   // offered — the surface says each row carries its own instead.

@@ -1382,6 +1382,15 @@ function MapEntryInner() {
                 subject: meetingSubject(meeting, bodyFor(meeting.ocdId)),
               })
             }
+            // g4 item 9: the same card the who-governs list opens, built by
+            // the same subject builder — two doors onto one card, never two
+            // different cards for one body.
+            onOpenBody={(body) =>
+              openLarge({
+                kind: "entity",
+                subject: bodySubject(body, current?.meetings ?? []),
+              })
+            }
             onClose={() => dispatch({ type: "door/close" })}
           />
         )}

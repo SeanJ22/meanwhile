@@ -2,7 +2,7 @@
 
 import { X } from "lucide-react";
 
-import type { CoverageSummary } from "@/lib/registry/coverage";
+import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { Meeting } from "@/lib/sources/types";
 import type { DrawnDistrict } from "@/lib/map/districts";
@@ -36,6 +36,7 @@ export function DoorOverlay({
   onShowDistricts,
   onOpenOfficial,
   onOpenMeeting,
+  onOpenBody,
   onClose,
 }: {
   door: "bodies" | "districts" | "officials";
@@ -60,6 +61,21 @@ export function DoorOverlay({
     tier: "local" | "state" | "national",
   ) => void;
   onOpenMeeting: (meeting: Meeting) => void;
+  /**
+   * A BODY ROW OPENS ITS CARD (g4 item 9, the author's ruling).
+   *
+   * The sidebar's Bodies door was the last list surface still throwing the
+   * reader out of the product: the row was an `<a target="_blank">` straight
+   * to `homepageUrl`, so tapping Pima left for pima.gov before the reader had
+   * been told anything about Pima at all. The who-governs card's own body
+   * rows were converted in g3 and this one was missed, which is exactly why
+   * the item asks for an AUDIT rather than a fix.
+   *
+   * The official site is still one tap away — inside the card, with the
+   * roster, the sittings and the sources, which is where every external door
+   * on a reader surface belongs.
+   */
+  onOpenBody: (body: CoveredBody) => void;
   onClose: () => void;
 }) {
   // "Districts in view", not "here": this list is what the map is drawing
@@ -126,7 +142,12 @@ export function DoorOverlay({
             first, or the search may have failed.
           </p>
         ) : door === "bodies" ? (
-          <BodiesDoor coverage={coverage} meetings={meetings} onOpenMeeting={onOpenMeeting} />
+          <BodiesDoor
+            coverage={coverage}
+            meetings={meetings}
+            onOpenMeeting={onOpenMeeting}
+            onOpenBody={onOpenBody}
+          />
         ) : (
           <OfficialsDoor coverage={coverage} onOpenOfficial={onOpenOfficial} />
         )}
@@ -139,10 +160,12 @@ function BodiesDoor({
   coverage,
   meetings,
   onOpenMeeting,
+  onOpenBody,
 }: {
   coverage: CoverageSummary;
   meetings: Meeting[];
   onOpenMeeting: (meeting: Meeting) => void;
+  onOpenBody: (body: CoveredBody) => void;
 }) {
   if (coverage.bodies.length === 0) {
     return (
@@ -164,18 +187,20 @@ function BodiesDoor({
             className="border-b border-[var(--panel-border)] pb-2 last:border-0"
           >
             <div className="flex items-baseline justify-between gap-3">
-              {body.homepageUrl ? (
-                <a
-                  href={body.homepageUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-[0.8125rem] underline decoration-dotted hover:text-signal"
-                >
-                  {label}
-                </a>
-              ) : (
-                <span className="text-[0.8125rem]">{label}</span>
-              )}
+              {/* g4 item 9: the row opens the body's LARGE BATTLECARD. It
+                  used to be an outbound link to `homepageUrl`, so tapping
+                  Pima left the product for pima.gov before the reader had
+                  been told anything about Pima. The official site is still
+                  one tap away — inside the card, beside the roster, the
+                  sittings and the sources. */}
+              <button
+                type="button"
+                onClick={() => onOpenBody(body)}
+                title={`More about ${label}`}
+                className="cursor-pointer text-left text-[0.8125rem] leading-snug hover:text-link hover:underline"
+              >
+                {label}
+              </button>
               <span className="shrink-0 font-mono text-[0.625rem] uppercase tracking-[0.15em] text-muted">
                 {body.bodyClass === "GOVERNING" ? "Governing" : "Advisory"}
               </span>

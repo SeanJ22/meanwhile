@@ -3910,6 +3910,101 @@ main[data-sidebar="closed"] .sidebar-toggle {
   border-bottom: none;
 }
 
+/*
+ * WHICH LINE? — R39, 2026-08-17, the author's production feedback.
+ *
+ * The multi-number phone chooser. It sits OVER the battlecard rather than
+ * replacing it, so its z-index is one band above `.account-modal-overlay`'s
+ * 1300; dismissing it leaves the card exactly where it was.
+ *
+ * Deliberately its own small dialog rather than a reuse of `.account-modal`:
+ * that one is a 680px tabbed surface with a max-height near the whole
+ * viewport, and a list of three phone numbers inside it would read as a page
+ * that failed to load. This is sized to its content and centred.
+ */
+.phone-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 1rem;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+}
+
+.phone-modal {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 24rem;
+  max-height: min(80vh, 34rem);
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-popup);
+  overflow: hidden;
+}
+
+.phone-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 16px 18px 12px;
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.phone-modal-title {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--text);
+}
+
+.phone-modal-subtitle {
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.phone-modal-body {
+  padding: 8px;
+  overflow-y: auto;
+}
+
+/* Each row is a whole tap target, not a number with a link inside it. The
+   44px floor is the same one `.contact-pill` holds — a phone chooser whose
+   rows are below tap size has moved the defect rather than fixed it. */
+.phone-modal-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 44px;
+  justify-content: center;
+  padding: 9px 10px;
+  border-radius: calc(var(--radius) - 4px);
+  transition: background-color 0.15s ease;
+}
+
+.phone-modal-row:hover,
+.phone-modal-row:focus-visible {
+  background: var(--panel-bg);
+}
+
+.phone-modal-row-label {
+  font-size: 0.6875rem;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+}
+
+.phone-modal-row-number {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--link);
+}
+
 /* Pool visibility. A filtered-out pin is hidden, not destroyed — see
    lib/map/marker-pool.ts for why that distinction is the whole point. */
 .wtp-pin[data-hidden="true"] {

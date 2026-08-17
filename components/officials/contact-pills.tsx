@@ -1,8 +1,12 @@
 "use client";
 
-import { useMemberDirectory } from "@/hooks/use-member-directory";
-import type { SeatHolder } from "@/lib/officials/lookup";
+import { useState } from "react";
 
+import { isFederalMember, useMemberDirectory } from "@/hooks/use-member-directory";
+import type { SeatHolder } from "@/lib/officials/lookup";
+import { phoneChoicesFor, telHref } from "@/lib/officials/phone-numbers";
+
+import { PhoneChoiceModal } from "./phone-choice-modal";
 import {
   FacebookMark,
   FormMark,
@@ -73,6 +77,37 @@ function Pill({ href, label, mark, external = true, title }: PillProps) {
   );
 }
 
+/**
+ * The same pill geometry, pressing instead of navigating.
+ *
+ * Only the multi-number phone pill uses it: everything else on this row IS a
+ * destination, and a button that looks like a link but goes nowhere is the
+ * friction the pill row was built to remove.
+ */
+function PillButton({
+  label,
+  mark,
+  title,
+  onPress,
+}: {
+  label: string;
+  mark: React.ReactNode;
+  title?: string;
+  onPress: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      title={title ?? label}
+      className="contact-pill"
+      onClick={onPress}
+    >
+      {mark}
+      <span>{label}</span>
+    </button>
+  );
+}
+
 export function ContactPills({
   holder,
   /** The small popup scales the row down; the large card runs it full size. */
@@ -102,6 +137,13 @@ export function ContactPills({
   const social = holder.social ?? {};
   const pills: React.ReactNode[] = [];
   const full = scope === "all";
+  /**
+   * R39: which numbers the modal is showing, or null for closed. State rather
+   * than a route — M52, and the same reason `EntityModal` pushes no history
+   * entry: the Next router remounts this island and the modal would die the
+   * tick it opened.
+   */
+  const [phoneModalOpen, setPhoneModalOpen] = useState(false);
 
   /*
    * The district offices' own numbers (item 8).
@@ -113,84 +155,89 @@ export function ContactPills({
    * held, which for them is the one on the holder.
    */
   const { directory } = useMemberDirectory(holder.id);
-  const districtPhones = (directory?.districtOffices ?? [])
-    .filter((office): office is typeof office & { phone: string } =>
-      Boolean(office.phone),
-    )
-    // One pill per DISTINCT number: a member with four offices sharing a
-    // switchboard would otherwise get four identical pills, which is the
-    // "stated N equals rendered rows" rule failing in the small.
-    .filter(
-      (office, index, all) =>
-        all.findIndex((other) => other.phone === office.phone) === index,
-    )
-    .map((office) => ({
-      phone: office.phone,
-      // The city where one is held, so two district pills are told apart by
-      // the thing that actually differs. Never an invented placeholder.
-      label: office.city ? `${office.city} office` : "District office",
-    }));
-
-  // Named only in contrast to a district office. The federal directory is the
-  // only source that gives us both, and "Washington office" is what that
-  // member's own site calls it.
-  const washingtonLabel = "Washington office";
 
   /*
-   * **BOTH NUMBERS, LABELLED, DISTRICT FIRST** — g4 item 8, the author.
+   * **ONE PHONE PILL** — R39, 2026-08-17, the author's production feedback.
    *
-   * Grijalva's card holds a Washington number and a Tucson district number
-   * and the row showed one of them: `holder.phone` is the member's DC line,
-   * and every district office's number lives in the directory payload, which
-   * only the offices section ever asked for. A reader who wants to reach
-   * their representative about something local was being handed the number
-   * that is furthest from the answer.
+   * ## What was here, and what it did
    *
-   * District first, because it is the one that answers. The label says which
-   * is which and names the district office's CITY where one is held, so two
-   * pills reading "Phone" never sit side by side. Multiple district offices
-   * each carry their own city; the full list with addresses stays in
-   * Offices-near-you rather than being duplicated here.
+   * g4 item 8 put BOTH numbers on the row, labelled, district first — right
+   * about the data (a reader wanting something local was being handed the DC
+   * line) and wrong about the shape. One pill per number means a member with
+   * seven offices gets seven pills, and Shaheen's card is what that looks
+   * like: a wall of numbers where a contact row should be. The registry holds
+   * 531 officeholders with more than one recorded number, so this was never
+   * one card's problem.
+   *
+   * ## What is here now
+   *
+   * The numbers are COLLECTED first and rendered second, and the count
+   * decides the shape:
+   *
+   * - **More than one** → one pill reading `Phone`, opening a modal that
+   *   lists them with their office labels. The choice is still the reader's;
+   *   it just stopped costing them the whole card to make it.
+   * - **Exactly one** → the pill IS the `tel:` link and carries the number
+   *   itself. No modal: a dialog with one row is friction with nothing to
+   *   choose, and the number on the face is strictly more useful than the
+   *   word "Phone".
+   *
+   * District first, because it is the one that answers. Labels come from the
+   * recorded data — the district office's own published CITY, and Washington
+   * for the number the member's term record holds — never from an area code.
+   * The full list with addresses stays in Offices-near-you rather than being
+   * duplicated here.
    *
    * The order is otherwise the reader's likely need rather than the source's
    * field order: the phone rings a human, the form reaches the office, the
    * pages explain it, the accounts are where the office talks.
    */
-  for (const [index, office] of districtPhones.entries()) {
+  const phoneChoices = phoneChoicesFor({
+    phone: holder.phone,
+    districtOffices: directory?.districtOffices,
+    // Named only in contrast to a district office, and only where the record
+    // supports it: a federal member's term record IS the Washington office's
+    // line. Every other tier publishes one number and no office structure.
+    ownLabel: isFederalMember(holder.id) ? "Washington office" : "Office",
+  });
+
+  if (phoneChoices.length > 1) {
     pills.push(
-      <Pill
-        key={`district-phone-${index}`}
-        href={`tel:${office.phone.replace(/[^\d+]/g, "")}`}
-        // Taps to dial on a phone. The visible number stays exactly as the
-        // source published it, formatting and all — a reformatted number is a
-        // number we typed rather than one they published.
-        label={`${office.label}: ${office.phone}`}
+      <PillButton
+        key="phone"
+        label="Phone"
+        title={`${phoneChoices.length} published numbers`}
         mark={<PhoneMark />}
-        external={false}
+        onPress={() => setPhoneModalOpen(true)}
       />,
     );
-  }
-
-  if (holder.phone) {
+  } else if (phoneChoices.length === 1) {
     pills.push(
       <Pill
         key="phone"
-        href={`tel:${holder.phone.replace(/[^\d+]/g, "")}`}
-        // Labelled only when there is something to distinguish it FROM. A
-        // school-board member with one number gets a number, not a lesson in
-        // which building it rings in — the label is there to answer "which of
-        // these two", and with one pill there is no question to answer.
-        label={
-          districtPhones.length > 0
-            ? `${washingtonLabel}: ${holder.phone}`
-            : holder.phone
-        }
+        href={telHref(phoneChoices[0].phone)}
+        // Taps to dial on a phone. The visible number stays exactly as the
+        // source published it, formatting and all — a reformatted number is a
+        // number we typed rather than one they published.
+        //
+        // No office label: the label is there to answer "which of these", and
+        // with one number there is no question to answer.
+        label={phoneChoices[0].phone}
         mark={<PhoneMark />}
         external={false}
       />,
     );
   }
 
+  /*
+   * R39 asked for the same treatment if any official carries multiple EMAILS.
+   * None does, and none can: `SeatHolder.email` is one nullable string, every
+   * roster fills it from one published address, and a census of all 1,157
+   * officeholder records on 2026-08-17 found ZERO whose email field holds a
+   * list. So there is nothing here to collapse, and nothing changed — stated
+   * rather than silently skipped, because "we looked and there were none" and
+   * "we did not look" are different claims.
+   */
   if (holder.email) {
     pills.push(
       <Pill
@@ -317,13 +364,25 @@ export function ContactPills({
   }
 
   return (
-    <div
-      className="contact-pill-row"
-      data-compact={compact || undefined}
-      data-layout={layout === "column" ? "column" : undefined}
-    >
-      {pills}
-    </div>
+    <>
+      <div
+        className="contact-pill-row"
+        data-compact={compact || undefined}
+        data-layout={layout === "column" ? "column" : undefined}
+      >
+        {pills}
+      </div>
+      {/* Over the card, not instead of it. Closing returns the card exactly as
+          it was — the overlay carries `data-dismiss-exempt` so the press that
+          closes this never reads as an outside press on the battlecard. */}
+      {phoneModalOpen && (
+        <PhoneChoiceModal
+          name={holder.name}
+          choices={phoneChoices}
+          onClose={() => setPhoneModalOpen(false)}
+        />
+      )}
+    </>
   );
 }
 

@@ -36,12 +36,12 @@ const allowlistPaths: string[] = (allowlist.files ?? []).map((e: unknown) =>
 
 /* ----------------------------------------------- 6b: the canonical ten --- */
 
-test("the canonical mirror set is the author's ten, in one place", () => {
-  assert.equal(
-    MIRRORED_DOCS.length,
-    10,
-    "the canonical set is ten by the author's ruling of 2026-08-17 — the folder defines it",
-  );
+test("the canonical mirror set lives in one place, and holds what was ruled into it", () => {
+  // Ten by the author's ruling of 2026-08-17; twelve later the same day, when
+  // the deferred census (R31) was added by instruction. Growth by decision is
+  // fine — the failure this guards is the set living in two places and the
+  // two disagreeing, which is what produced two contradictory reports.
+  assert.equal(MIRRORED_DOCS.length, 12, "the canonical set changed size — was that a decision?");
 
   const names = MIRRORED_DOCS.map((d) => d.mirrorName);
   for (const expected of [
@@ -55,6 +55,8 @@ test("the canonical mirror set is the author's ten, in one place", () => {
     "types.ts",
     "git-state.txt",
     "context.md",
+    "deferred.md",
+    "deferred.csv",
   ]) {
     assert.ok(names.includes(expected), `${expected} left the canonical set`);
   }
@@ -65,10 +67,10 @@ test("the canonical mirror set is the author's ten, in one place", () => {
     "civic-app-brief.md is back on the standing list — the ruling dropped it",
   );
 
-  // Eight copied, two generated. The generated pair have no repo counterpart,
+  // Ten copied, two generated. The generated pair have no repo counterpart,
   // which is why they cannot be drift-checked and must not be counted as if
   // they could.
-  assert.equal(COPIED_DOCS.length, 8);
+  assert.equal(COPIED_DOCS.length, 10);
   assert.equal(MIRRORED_DOCS.filter((d) => d.repoPath === null).length, 2);
 });
 
@@ -219,7 +221,9 @@ test("no allowlisted file trips the credential scan today", () => {
 });
 
 test("the size caps are the stated ones and today's allowlist fits", () => {
-  assert.equal(MAX_FILE_BYTES, 120 * 1024);
+  // Raised from 120 KB on 2026-08-17: app/globals.css sat 2,756 bytes under
+  // the old ceiling, so the tokens file was one edit from being refused.
+  assert.equal(MAX_FILE_BYTES, 200 * 1024);
   assert.equal(MAX_TOTAL_BYTES, 1.5 * 1024 * 1024);
 
   let total = 0;

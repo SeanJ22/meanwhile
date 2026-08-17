@@ -8857,3 +8857,116 @@ test 768 of 768 pass (17 new in `tests/mirror-code.test.ts`), lint 0 errors and
 earned its keep again: it caught three TypeScript errors in the new test file
 that `pnpm test` had passed over, because TypeScript resolves the `.mjs`
 exports and the file's `@ts-expect-error` directives were unused.
+
+## 41. The 2026-08-17 deferred census — one complete list, run once
+
+A small task between sessions. Nothing in it touches the product, the map, the
+meetings panel, or any parked row. G05, G07 and G09 stayed parked. It also
+carries the author's raise of the code mirror's per-file cap.
+
+### What the census is
+
+`pnpm deferred` reads `docs/tracker.csv`, keeps every row that is not `Done` and
+not `Absorbed`, and writes two files. **330 rows in the tracker, 213 Done or
+Absorbed, 117 still open.**
+
+`docs/deferred.md` is the readable census — one line per row, note clipped to
+200 characters with a visible `…`. `docs/deferred.csv` is the triage sheet: the
+same rows, every column, notes UNCLIPPED, plus an empty `Disposition` column for
+the author to fill in. The notes are unclipped there deliberately — a decision
+made off a clipped note is a decision made blind.
+
+### What it is not
+
+**Not a source of truth.** `docs/tracker.csv` is, and the census says so in its
+own first paragraph. Nothing is edited in the `.md`: an edit there changes
+nothing and is overwritten on the next run. Nothing is composed, summarised or
+reworded — every field is reproduced from the tracker as written, the discipline
+`context.md` already follows.
+
+**It is a ONE-TIME run.** It is deliberately NOT wired into `pnpm handoff` or
+any other recurring path. Whether it should regenerate is the author's decision
+after reading this first one, and building the wiring before that decision is
+building something nobody asked for.
+
+### The counts must reconcile or nothing is written
+
+The header states three counts and the body must match them. If the header
+claims 117 and the body renders 116, the command writes NOTHING and exits 1.
+It also refuses on a tracker holding duplicate IDs, and on a `.md` over 40 KB —
+and the size refusal NAMES what would have to be cut rather than truncating
+silently. Both refusals were proven by mutation before being trusted: the body
+was made to drop a row (`refused — the header states 117 and the body rendered
+116`), and the cap was lowered to 20 KB (`refused — 29,924 bytes over the
+20,480-byte cap … the census section would have to be cut, and that is the
+author's call`). Neither run wrote a byte.
+
+### Nine statuses, and four of them are outliers
+
+The author has not seen the full set enumerated before. Across all 330 rows:
+`Done` 211, `Not started` 92, `In progress` 18, `Parked` 3, `Absorbed` 2, and
+then four statuses holding ONE row each — `Undecided` (P09), `Tabled` (P12),
+`Waiting on testing end` (T10), `Standing` (R13).
+
+Those four sit outside the script's known set on purpose. They are named in
+their own section with their literal status strings, and they are ALSO counted
+in the totals and listed in the census — named, never bucketed, never dropped.
+The brief expected the near-miss to be a row reading `Deferred` where its
+siblings read `Deferred whole`; **neither string exists in this tracker at all.**
+The near-miss here is a different shape — four one-row vocabularies — and it is
+reported as found rather than as expected.
+
+### The stalled flag, and how it is derived
+
+There is no changed-at column, so the entry date comes from the git history of
+`docs/tracker.csv`, first-parent, the same mechanism `context.md`'s
+status-change section uses. One pass over the commits builds a status map per
+commit; the entry point is the oldest consecutive commit in which a row already
+held its current status. Eighteen rows are `In progress`; **fourteen have held
+it across more than two sessions.**
+
+A "session" here is a distinct calendar date on which the tracker was committed
+— 6 distinct dates across 55 commits, 2026-08-12 to 2026-08-17. That
+UNDERCOUNTS sessions, because this repo often runs several in a day, so the flag
+is conservative in the right direction and the file says so.
+
+**Two rows have an UNRECOVERED entry date and are reported as unrecovered, never
+filled in with a plausible one:** `M07` and `R02` were already `In progress` at
+the oldest commit that touched the tracker (2026-08-12, `149df6d`), so they
+entered on or before that. They are listed with "at least 6 sessions" rather
+than omitted, and rather than given the oldest date as though it were the
+answer.
+
+### One defect the suite caught in this file
+
+The first generated `docs/deferred.md` failed `tests/doc-dates.test.ts` twice. A
+flat 200-character clip had landed inside
+`2026-11-03 [expected-future: NH general election …]`, producing
+`2026-11-03 [expected-future: NH gener…` <!-- expected-future: quoting the severed clip this section documents --> — a
+future date with no intact reason beside it, and an annotation whose reason was
+too short to be one. The tracker row was correct; **the clip made it wrong.**
+
+The fix is not an allowlist entry. A generated document that reproduces
+annotated prose has to satisfy the same rule its source does, so `clipNote()`
+walks the cut point backwards until the surviving text is clean: no annotation
+left unclosed, and no future date left without a complete one. Cutting away a
+legal date is a smaller loss than shipping an illegal one, and the `…` says
+something was cut either way.
+
+### Mirrored, and the canonical set is now twelve
+
+Both files joined the mirror. `MIRRORED_DOCS` in `scripts/mirror-set.mjs` goes
+from ten to twelve — by the author's instruction, recorded there with its date
+so a later reader sees a decision rather than drift. They are listed rather than
+left loose in the folder because the set check now FAILS an undeclared file.
+
+### The per-file cap, raised
+
+The code mirror's per-file cap goes from 120 KB to **200 KB** at the author's
+instruction. `app/globals.css` was 120,124 bytes against a 122,880-byte ceiling
+— 2,756 bytes of headroom — so the design tokens were one edit from falling out
+of the reviewer's reach. The near-cap warning stays; it now has room to mean
+something.
+
+test 768 of 768 pass, lint 0 errors and 16 pre-existing warnings none in the
+touched files, build green.

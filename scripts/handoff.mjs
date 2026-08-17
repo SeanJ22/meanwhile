@@ -1055,8 +1055,72 @@ function fastForwardMain() {
   }
 }
 
+/**
+ * Did the deploy actually LAND? (2026-08-17, the author's ruling.)
+ *
+ * The R22 gate proves the tree BUILDS — it runs the same command Netlify runs,
+ * before shipping. It cannot prove that what Netlify then served is this
+ * commit. Those are different claims, and the gap between them is an hour of
+ * production quietly serving the previous build, which is how R22 was born.
+ *
+ * `/api/build` closes it by reporting the commit the running deploy was built
+ * from. Polling behaviour, which is what the g6 session did, only works when a
+ * change alters observable behaviour; a doc-only or internal change has
+ * nothing to poll, and this session's own work is mostly that shape.
+ *
+ * A TIMEOUT IS REPORTED AS A COULD-NOT-RUN, NEVER AS A FAILURE. Netlify's
+ * build queue is not this script's to wait on, and an unreachable service is
+ * not a missing feature — the same distinction `walk:all` draws. What it must
+ * never do is report success without having seen the SHA.
+ */
+async function verifyDeployLanded(expectedSha) {
+  const url = `${(process.env.SHOOT_BASE_URL ?? "https://sparkwtp.netlify.app").replace(/\/+$/, "")}/api/build`;
+  const deadline = Date.now() + 5 * 60 * 1000;
+  const short = expectedSha.slice(0, 7);
+  let last = null;
+
+  while (Date.now() < deadline) {
+    try {
+      const response = await fetch(url, {
+        cache: "no-store",
+        headers: {
+          "cache-control": "no-cache",
+          // Declare ourselves (C05). This is a GET on a route that writes
+          // nothing, but the rule is that automated traffic says so.
+          "x-wtp-synthetic-run": `handoff-deploy-verify@${new Date().toISOString()}`,
+        },
+      });
+      if (response.ok) {
+        const body = await response.json();
+        last = body.commit ?? "unknown";
+        if (last === expectedSha) {
+          ok("ship · deploy", `production is serving ${short} (/api/build)`);
+          return;
+        }
+      }
+    } catch {
+      // Network flake or a deploy mid-swap; keep polling until the deadline.
+    }
+    await new Promise((r) => setTimeout(r, 15_000));
+  }
+
+  warn(
+    "ship · deploy",
+    last === null
+      ? `could not reach ${url} within 5 min — deploy NOT verified (could-not-run, not a failure)`
+      : `production still serving ${String(last).slice(0, 7)}, expected ${short} after 5 min — deploy NOT verified`,
+  );
+}
+
 if (SHIP) {
   ship();
+
+  // Only worth asking once the merge and fast-forward actually succeeded —
+  // otherwise the SHA we would be waiting for is not the one being deployed.
+  if (!results.some((r) => r.level === "fail" && r.label.startsWith("ship"))) {
+    const shipped = tryRun("git", ["rev-parse", "origin/main"]);
+    if (shipped) await verifyDeployLanded(shipped);
+  }
 
   // The branch, main and PR lines above were measured *before* shipping, so
   // once it succeeds they describe a state that no longer exists — and they

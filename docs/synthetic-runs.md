@@ -14,6 +14,13 @@ Runs from 2026-08-17 onward do not need an entry here — they declare
 themselves in the `x-wtp-synthetic-run` header at write time, which is the
 mechanism this ledger exists to substitute for retroactively.
 
+**A run that forgets the header still needs an entry.** It happened within the
+hour: the g6 session verified its own deploy with eight `curl` polls and did
+not set `WTP_RUN_ID`, so seven of our own rows landed labelled as readers. Any
+automated request made by hand — a `curl`, a browser probe, a one-off script —
+either sets `WTP_RUN_ID` or gets a window here. There is no third option that
+keeps the store honest.
+
 ## Format
 
 One row per run. `from` and `to` are inclusive ISO-8601 UTC instants. `runId`
@@ -25,6 +32,7 @@ not belong in this file.
 |---|---|---|---|
 | `g6-probe-diagnosis@2026-08-17` | 2026-08-17T07:11:00Z | 2026-08-17T07:12:00Z | g6 session, items 1a and 1b: direct `curl` GETs to `/api/meetings` — the `?zip=85701` shape that reproduced the 0,0 defect, and four `lat`/`lng` reads at the four pilot zips. Window read off the table itself (rows at 07:11:17.032 and 07:11:52.487–07:11:54.107), not estimated. |
 | `walk-all-local@2026-08-17T07:16:45.726Z` | 2026-08-17T07:16:45Z | 2026-08-17T07:20:13Z | g6 session, the item 1c baseline `pnpm walk:all` against production. Start and end instants read off the system clock either side of the command; the first and last rows in the window are 07:17:01.006 and 07:19:48.881. |
+| `g6-deploy-verification@2026-08-17` | 2026-08-17T07:51:00Z | 2026-08-17T07:53:30Z | g6 session, verifying that the item 1b fix reached production: eight cache-busted GETs to `/api/meetings?zip=85701`, polled 25 seconds apart until the route answered 400. **These rows landed marked `ORGANIC`** — the polls did not send the run header — and correcting them is why this script may now overwrite `ORGANIC` inside an evidenced window. Window read off the table (rows at 07:51:17.269 through 07:53:00.108); a first attempt at this entry guessed 08:05–08:20 from memory and matched nothing, which is the reason every window in this file is now read from the data rather than recalled. |
 
 ### One discrepancy, stated rather than smoothed
 

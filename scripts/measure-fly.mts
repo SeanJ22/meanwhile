@@ -15,11 +15,14 @@
  * - **Frame timing during the fly-in.** An animation-frame recorder runs from
  *   before navigation, sampling the camera each frame; the fly is the span
  *   where the camera is actually moving, and the report is the worst frame
- *   and the count over 32 ms (a 30 fps floor) inside that span.
+ *   and the count over 32 ms inside that span — a DESCRIPTIVE count, not a
+ *   judgement.
  *
- * The budget: no frame over 32 ms, first meaningful paint within 3.0 s. Both
- * are printed either way. A missed target is reported with its measurement,
- * never smoothed into a pass.
+ * **The frame budget is unset** (item 8b, 2026-08-17). The 32 ms absolute was
+ * invented rather than measured and is retired; the author sets a real one
+ * from his own hardware via `pnpm perf`. The paint budget stands. Everything
+ * is printed either way, and a missed target is reported with its
+ * measurement, never smoothed into a pass.
  */
 import { chromium } from "playwright";
 
@@ -30,7 +33,25 @@ const BASE = (process.env.SHOOT_BASE_URL ?? "https://sparkwtp.netlify.app").repl
 const ZIP = process.env.FLY_ZIP ?? "85701";
 const RUNS = Number(process.env.FLY_RUNS ?? 3);
 
-const FRAME_BUDGET_MS = 32;
+/**
+ * THE FRAME BUDGET IS UNSET (item 8b, 2026-08-17, the author's ruling).
+ *
+ * This was `const FRAME_BUDGET_MS = 32`, and it was invented rather than
+ * measured — set as an absolute because no baseline existed. It was missed
+ * before g5's fix and missed after it, with no cause ever named, on a
+ * software-rasterized CI runner whose numbers are not a reader's.
+ *
+ * The author's ruling: retire the absolute and set a real one from his own
+ * hardware, via `pnpm perf`. **It is deliberately replaced with nothing.** A
+ * check asserting against a made-up threshold is worse than no check — it
+ * teaches everyone that red means nothing.
+ *
+ * So the frame numbers below are still MEASURED and still PRINTED; they are
+ * simply not judged. `FRAME_REPORT_MS` is the threshold used only to count
+ * "how many frames were slower than this", a descriptive statistic that
+ * appears in the output as a count and never as a pass or a fail.
+ */
+const FRAME_REPORT_MS = 32;
 const PAINT_BUDGET_MS = 3000;
 
 interface Run {
@@ -204,7 +225,7 @@ for (let i = 0; i < RUNS; i += 1) {
       out.overBudget = deltas.filter((d) => d > budget).length;
       return out;
     },
-    { budget: FRAME_BUDGET_MS },
+    { budget: FRAME_REPORT_MS },
   );
 
   runs.push(result);
@@ -212,7 +233,7 @@ for (let i = 0; i < RUNS; i += 1) {
     `run ${i + 1}: FCP ${result.fcp.toFixed(0)}ms, LCP ${result.lcp.toFixed(0)}ms, ` +
       `map ready ${result.mapReady.toFixed(0)}ms, fly ${result.flyMs.toFixed(0)}ms over ` +
       `${result.flyFrames} frames, median ${result.medianFrame.toFixed(1)}ms, ` +
-      `worst ${result.worstFrame.toFixed(1)}ms, ${result.overBudget} over ${FRAME_BUDGET_MS}ms`,
+      `worst ${result.worstFrame.toFixed(1)}ms, ${result.overBudget} over ${FRAME_REPORT_MS}ms`,
   );
   await context.close();
 }
@@ -234,5 +255,7 @@ console.log(`\nmeasure:fly — ${BASE}, zip ${ZIP}, ${RUNS} cold run(s)`);
 console.log(`  first contentful paint   ${fcp.toFixed(0)} ms   (budget ${PAINT_BUDGET_MS} ms) ${fcp <= PAINT_BUDGET_MS ? "OK" : "OVER"}`);
 console.log(`  largest contentful paint ${lcp.toFixed(0)} ms`);
 console.log(`  map ready (interactive)  ${ready.toFixed(0)} ms`);
-console.log(`  worst fly-in frame       ${worst.toFixed(1)} ms  (budget ${FRAME_BUDGET_MS} ms) ${worst <= FRAME_BUDGET_MS ? "OK" : "OVER"}`);
+// Item 8b: MEASURED and PRINTED, deliberately not judged. The budget is unset
+// until the author rules on `pnpm perf`'s baseline from his own hardware.
+console.log(`  worst fly-in frame       ${worst.toFixed(1)} ms  (no budget set — see pnpm perf)`);
 console.log(`  frames over budget       ${over} (worst run)`);

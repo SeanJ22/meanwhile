@@ -715,7 +715,63 @@ for (const { zip } of FOUR) {
     );
   }
   if (zip === "07866") {
-    check("0818", "07866: the mayor line renders", /Mayor/.test(text));
+    /*
+     * RETIRED (g6 item 6, 2026-08-17): `[0818] 07866: the mayor line renders`
+     * asserted /Mayor/ on the who-governs card's text.
+     *
+     * It leaves the suite the only way a check ever may — **the author retired
+     * the claim behind it.** Item 6's ruling: the Mayor row's placement on
+     * who-governs is awkward and the office already renders in the
+     * battlecard's Representation tab, so it comes out of that panel
+     * everywhere, no exceptions. A check asserting the row is present would
+     * now be asserting a defect.
+     *
+     * It is REPLACED rather than dropped, because the thing worth guarding was
+     * never the row — it was that a reader at 07866 can still reach their
+     * mayor. That is what the check below asserts, and it asserts it against
+     * the path the office actually lives on now.
+     */
+    const mayorReachable = await page.evaluate(`(() => {
+      const card = document.querySelector(".coverage-notice");
+      if (!card) return { reason: "no who-governs card" };
+      const onPanel = /Mayor/.test(card.textContent || "");
+      // The township row is the door to the battlecard that carries the
+      // roster. Finding the door is the reachability claim.
+      let door = null;
+      for (const b of card.querySelectorAll("li[data-governing-row] button")) {
+        if (/Rockaway township/i.test(b.textContent || "")) door = b;
+      }
+      if (!door) return { onPanel, opened: false };
+      door.click();
+      return { onPanel, opened: true };
+    })()`) as { reason?: string; onPanel?: boolean; opened?: boolean };
+
+    if (mayorReachable.reason || !mayorReachable.opened) {
+      cannotRun(
+        "g6",
+        "07866: the mayor is reachable from who-governs",
+        mayorReachable.reason ?? "no Rockaway township row to open",
+      );
+    } else {
+      await page.waitForTimeout(1200);
+      const inCard = await page.evaluate(`(() => {
+        const t = document.body.textContent || "";
+        return { mayor: /Mayor/.test(t), jackson: /Joseph Jackson/.test(t) };
+      })()`) as { mayor: boolean; jackson: boolean };
+      check(
+        "g6",
+        "07866: the mayor is reachable from who-governs",
+        inCard.mayor && inCard.jackson,
+        `who-governs panel names a mayor: ${mayorReachable.onPanel} (item 6 removed it, so false is correct); ` +
+          `the township battlecard names the office: ${inCard.mayor}, and the holder: ${inCard.jackson}`,
+      );
+      check(
+        "g6",
+        "07866: the Mayor row is gone from the who-governs panel",
+        mayorReachable.onPanel === false,
+        `who-governs text contains "Mayor": ${mayorReachable.onPanel}`,
+      );
+    }
     check("0819", "07866: no shouting surnames", !/\bROACH\b/.test(text));
   }
 
@@ -1390,7 +1446,13 @@ section("F. The reader's map and the folded panels (g4 items 1-5, 9, 11, 14, 15)
 section("G. The meetings count agrees with itself (g6 item 1d)");
 
 for (const { zip } of FOUR) {
-  const page = await openAt(browser, zip);
+ for (const wide of [false, true]) {
+  // The chip lives at `sm:` and up, so the phone pass legitimately cannot see
+  // it and the desktop pass is where the FOURTH number comes from. Both run:
+  // dropping the phone would drop the viewport the defect was reported on,
+  // and dropping the desktop would leave the chip permanently unchecked.
+  const page = wide ? await openWideAt(browser, zip) : await openAt(browser, zip);
+  const where = `${zip}${wide ? " (desktop)" : " (phone)"}`;
   await page.waitForTimeout(600);
 
   const numbers = await page.evaluate(`(() => {
@@ -1418,7 +1480,7 @@ for (const { zip } of FOUR) {
   };
 
   if (!numbers.opened) {
-    cannotRun("g6", `${zip}: the meetings count agrees with itself`, "no meetings door on the sidebar");
+    cannotRun("g6", `${where}: the meetings count agrees with itself`, "no meetings door on the sidebar");
     await page.context().close();
     continue;
   }
@@ -1440,7 +1502,7 @@ for (const { zip } of FOUR) {
   })()`) as { reason?: string; stated?: number; groups?: number; sum?: number };
 
   if (panel.reason) {
-    cannotRun("g6", `${zip}: the meetings count agrees with itself`, panel.reason);
+    cannotRun("g6", `${where}: the meetings count agrees with itself`, panel.reason);
     await page.context().close();
     continue;
   }
@@ -1457,13 +1519,14 @@ for (const { zip } of FOUR) {
 
   check(
     "g6",
-    `${zip}: the meetings count agrees with itself`,
+    `${where}: the meetings count agrees with itself`,
     allEqual && (panel.stated ?? 0) >= 0,
     `sidebar ${numbers.sidebar}, ${chipNote}, panel header ${panel.stated}, ` +
       `group counts sum ${panel.sum} across ${panel.groups} group(s)`,
   );
 
   await page.context().close();
+ }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

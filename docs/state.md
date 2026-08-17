@@ -4,7 +4,22 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-16, sixth session of the day — **the active-state
+Last updated: 2026-08-17 — **the numbers stop contradicting each other, and
+our own robots stop counting as readers.** Four places where a stated number
+and a rendered thing disagreed, three of them fixed and one reconciled: Who
+Governs Here stated 4 / 5 / 5 for one list (two definitions on one surface,
+and a second instance underneath it that only a reader's own narrowing could
+trigger); `/api/meetings` answered 200 at 0°N 0°E because `Number(null)` is 0
+rather than NaN, and wrote that into the store we sell; and the `walk:all`
+count that had not reconciled across two sessions turned out to have lost
+nothing — the STARTING number was wrong. C05 shipped: every search-log row now
+says whether it is a reader, one of our own automated runs, or unknown, and
+only readers are counted. The honest consequence is that the log's history —
+2845 of 2891 rows — is not sellable, and the sellable record starts today.
+**Three of the brief's eight items landed; five were never started and are
+deferred whole as G05, G07, G08, G09, G10.** See §38.
+
+Before that: 2026-08-16, sixth session of the day — **the active-state
 model**: the mask stopped muting the state the reader is standing in, and
 the meetings panel stopped needing a mouse to paint. Both were the same
 defect — a clip path 16,800 x 20,000 px that Chromium DROPS rather than
@@ -7835,3 +7850,472 @@ mapped into Phase E rather than deleted. `README.md` is rewritten as a
 pointer-style front door. `states/nh/NOTES.md` and `docs/zip-playbook.md` take
 this session's appends, both append-only.
 
+## 38. The 2026-08-17 session — the numbers stop contradicting each other, and our own robots stop counting as readers
+
+The g6 brief asked for eight items and a standing rule. **Three items and the
+rule landed; five were never started.** That sentence goes first, because the
+rule this session wrote into `CLAUDE.md` requires the denominator to be stated
+rather than the progress to be narrated.
+
+HEAD at session open: `eb4df50`, `main` with h merged. The neumorphic
+active-state treatment was not touched, per the author's ruling governing the
+whole brief — no token, no layer, no shadow, no mask.
+
+### The standing rule, written before any other work
+
+**The deferral boundary falls between subjects, never inside one.** It sits in
+`CLAUDE.md` immediately below the fourteen-rung ladder, resolving the conflict
+between the transparency mandate's "never stop hunting" and the
+nothing-half-built rule. Both stay; this is the layer between them.
+
+**And the h deviation is now recorded next to the mandate text.** `CLAUDE.md`'s
+copy differs from the h brief in exactly one way — two clauses read without a
+reference to experimental control C5, which that brief itself forbade copying
+in. h made the adaptation correctly and reported it, but the repo did not hold
+it, so the next session to diff the two would have read a correct decision as
+drift. One paragraph, adjacent to the text, naming what changed and why.
+
+### Item 1a — one surface, three numbers, and the named suspect was half wrong
+
+Production at 85701 read **"4 bodies govern the area around 85701"** above a
+disclosure reading **"Why these 5?"** above **5 rows**.
+
+Two definitions on one surface. The prose read the server's
+`counts.governing` — bodies whose class is `GOVERNING`, four at 85701. The rows
+were the first five of the **whole sixty-body array**, governing and not.
+
+**The brief named the Public Housing Authority board as the row that moves
+between them. It is not.** The PHA board is classed `GOVERNING` and sits
+inside the four. The row that moved is the **Board of Adjustment**, a
+`COMMISSION`, fifth in a list cut at five from a sixty-row array — it was in
+the list because the list was never the governing set, not because anything
+reclassified. Confirmed against production at all four zips before a line was
+changed.
+
+**A second instance sat underneath it and a narrower fix would have left it
+live.** The reader's device-local narrowing (M26) shrinks the RENDERED list on
+the client; `counts.governing` is computed on the server and cannot see it. A
+fix that merely re-pointed the prose at the server count would have held until
+a reader narrowed to their own school district, and then re-opened the same gap
+by hand — no deploy, no data change, nothing to notice it.
+
+Every number now derives from **one array, after narrowing**
+(`lib/registry/who-governs.ts`), and the governing list is rendered **whole**
+rather than cut. That last part is the difference between an invariant and a
+coincidence: at today's four zips the governing sets are 4, 2, 4 and 3, all
+under the old five-row cut, so a test built from production would have passed
+on a build where the cut still bit. `tests/who-governs.test.ts` proves the
+equality at synthetic sizes up to forty governing bodies.
+
+Both definitions are real and both are needed — fifty Tucson advisory
+committees must never read as fifty governments (D29) — so both are said on
+screen in plain language. The "and N more" line names what those bodies are
+rather than letting them read as more governments.
+
+**Verified on the deployed page, not asserted.** Parsing the prose number, the
+disclosure link's number and the `<li>` count out of production's own DOM at
+the four pilot zips:
+
+| zip | prose | disclosure link | rendered rows |
+|---|---|---|---|
+| 85701 | 4 | 4 | 4 |
+| 85641 | 2 | 2 | 2 |
+| 07866 | 4 | 4 | 4 |
+| 03255 | 3 | 3 | 3 |
+
+The permanent walk check reads exactly those three values, off an explicit
+`data-governing-row` hook rather than a Tailwind class — a class is a styling
+decision, and the next design pass would otherwise have disarmed the guard that
+exists because this list once disagreed with itself.
+
+### Item 1b — `Number(null)` is 0, and that is how the Gulf of Guinea became an answer
+
+h's report disclosed one nonsense read at latitude 0, longitude 0. The cause
+took one reading of the route and no speculation:
+
+```
+const lat = Number(params.get("lat"));   // get() returns null when absent
+Number(null) === 0                        // not NaN
+```
+
+Both `Number.isFinite` guards passed. Both range checks passed. The route
+returned **200** with a centre at 0,0, a radius that had climbed the whole
+ladder to 150 km, a tier, and a `nearZip` of `"85701"` — and wrote a matching
+row into the search log, **the store this product sells**, asserting that
+somebody searched near 85701 and found nothing. Reproduced on production
+before the fix and again after it.
+
+**Eleven routes audited. Two affected.**
+
+- **`/api/meetings`** — the 0,0 read, plus a malformed `radiusKm` silently
+  becoming 25 km and a malformed `zip` silently becoming null.
+- **`/api/directory`** — a malformed `member` returned
+  `{source: null, districtOffices: [], committees: []}`, **byte-identical** to
+  the answer for a real member we hold no record of, on the recorded reasoning
+  that "the shape is the same." The shape being the same is the defect: those
+  are two different claims and only one of them is about a person.
+
+`/api/reactions` carried the same `Number(null)` shape and was hardened though
+it manufactured nothing — coverage at 0,0 returns an empty division list, so it
+was harmless by luck. **No 0,0 coordinate default exists anywhere else in the
+codebase**, checked rather than assumed.
+
+The refusing reader is `lib/api/params.ts`, and it also names **unknown
+parameters** back to the caller — because the original request was not a
+malformed coordinate, it was a caller using a parameter the route does not
+locate by, and ignoring it is what let a wrong request look like a right one.
+
+`tests/route-refusals.test.ts` — thirteen tests including a repo-wide guard
+that **failed before it was trusted**: it caught the meetings route's own
+comment quoting the old code, because the repo is CRLF and `.*$` stops in front
+of a `\r`.
+
+### Item 1c — nothing was lost, and the starting number was wrong
+
+g5 reported 133 checks before its work, retired 4 and added 7, and reported
+134. That does not close. h took 134 as given and grew it to 135.
+
+Reconciled **by enumeration**, and the method was validated before it was
+trusted: 124 literal-name check sites plus 11 produced by the data-driven
+`MEETING_FLOORS` table equals 135 — exactly what the real HEAD run printed.
+
+| commit | what it is | runtime checks |
+|---|---|---|
+| `d6d477d` | g5's parent | **131** |
+| `68987ee` | g5's merge | **134** |
+| `eb4df50` | h's merge, and HEAD | **135** (observed) |
+
+Retired across g5: one site, `[g4] ${zip}: the current zip is shaded`, ×4 at
+runtime — the author deleted zip shading. Added across g5: four sites, ×7 at
+runtime. Added across h: one, ×1. **131 − 4 + 7 = 134** and **134 + 1 = 135**.
+Both close exactly.
+
+**The discrepancy was the starting number.** The count at g5's parent was 131,
+not 133 — and 131 is the number g4's own report recorded ("Green locally: 131
+of 131, zero could not run"). One mis-transcribed integer propagated through
+two sessions and a merge, and from the far end it looked exactly like two
+checks silently dying.
+
+The two `measure:focus` checks the brief mentions as "could not run" are in
+`pnpm measure:focus`, a different instrument, and were never in `walk:all` —
+which is why the suite reported zero blocked while two checks were blocked
+elsewhere.
+
+So it cannot recur: **`walk:all` now prints its own census every run** — checks
+that ran, by the session that shipped them, with the blocked count stated
+separately and excluded from the total. No session transcribes a number again.
+
+### Item 1d — the meetings count, four places, four zips, one run
+
+A permanent check appended: the sidebar counter, the map chip, the panel's
+header and the sum of its group counts, asserted equal at all four zips, with
+all four numbers printed per zip. The chip is `sm:` and up, so on the phone
+viewport it is legitimately absent — and absent is reported as absent, never as
+a zero and never as a silent pass. Two explicit DOM hooks were added
+(`data-stat`, `data-meeting-count`) so the check does not have to find its
+subjects by matching visible label text, which is copy and moves.
+
+### Item 2 (C05) — our own traffic stops counting as readers
+
+**The rejection is recorded first, per the brief: stopping the writes is not
+the fix.** It would delete the only end-to-end proof that the write path works,
+and a silently broken write path is how we would find out months later that
+reactions had stopped recording.
+
+`search_log` grows `run_class` (`ORGANIC` | `SYNTHETIC` | `UNKNOWN`) and
+`run_id`. The marker is **declared by the runner at write time** in the
+`x-wtp-synthetic-run` header and recorded by the route — the row is written on
+Netlify, so the runner cannot set it directly, and a header is how a
+declaration crosses that gap. Never inferred afterwards, never a user-agent
+guess. `run_id` is null on every organic row **by construction**, so it can
+never become a session key relating two readers' rows to each other.
+
+The migration sets every pre-existing row to `UNKNOWN`, because the column's
+`ORGANIC` default is right for a live request and wrong for history, and
+drizzle-kit cannot know the difference.
+
+**The three counts, after back-marking: 0 organic, 46 synthetic, 2845 unknown,
+2891 total.**
+
+Two things in that line are worth stopping on. **The brief estimated ~537 rows
+were ours; the table holds 2891 rows in total**, and **none of the history is
+attributable** — nothing in a pre-marker row distinguishes our robot from a
+reader. So the honest reading is that the search log's history is not sellable,
+and the sellable record starts 2026-08-17. That is a finding, not a shortfall:
+an aggregate built from that history would have been wrong in our favour.
+
+`lib/signal/search-log-reads.ts` is the single filtered read path, and
+`tests/search-log-exclusion.test.ts` asserts no module reads the table without
+it — **proven by planting a violation and watching it fail** before it was
+trusted. The intake tripwire now reads through the filter, which makes it
+stricter rather than looser: a walk fires ~28 events in three minutes, which is
+precisely the timing burst it exists to flag, so it had been analysing our own
+robots and calling them anomalies. The transparency page changed in the same
+commit.
+
+**The mechanism was then verified end to end on production**, not asserted:
+every row this session created after the deploy carries its run id, readable in
+the table.
+
+#### Two things the marker immediately found
+
+**The walk's probe counter counts requests issued, not rows landed.** The
+baseline walk printed "28 search-log rows"; the table holds 25 `SEARCH` rows in
+that window. A request that 404s, that the walk's own `getJson` discards on a
+non-ok status, or that a CDN serves without reaching the route writes no row.
+Neither number is wrong — they count different things — but the line reads as
+rows created. **G04**, and it was only checkable because the marker exists.
+
+**A run that forgets the header is worse than an unmarked one.** Within the
+hour, this session verified its own deploy with eight `curl` polls and did not
+set `WTP_RUN_ID` — four rows landed marked `ORGANIC`. Our own robot, labelled a
+reader, in the store we sell. The back-marking script's original rule ("never
+overwrite an ORGANIC row, because it declared itself") turned out to be
+protecting a declaration that does not exist: `ORGANIC` is what the column
+*defaults* to, so a row that said nothing and a row that said "reader" are
+byte-identical. The rule now allows correction inside an evidenced window, and
+errs toward exclusion like everything else in C05. `docs/synthetic-runs.md`
+carries the windows, each read off the table rather than recalled — the first
+attempt at that entry guessed a time range from memory and matched nothing.
+
+### Item 3 (M141) — what the mouse was fixing, named from the code
+
+The author held this row open on a specific objection: g5 removed a
+full-viewport `backdrop-filter` scrim and the panel painted 4 of 4, but **a
+stacked scrim does not respond to pointer movement**, so the reported symptom
+was unexplained and a second cause might still be live.
+
+**The objection is right about the scrim and wrong about the claim.** g5's
+account is that "Chromium did not paint the upper surface's contents until
+something dirtied the layer — which a pointer move is." The scrim is not what
+responds to the pointer. The scrim is what *prevented the paint*; something
+else is what *forced the repaint*, and the symptom needs both. g5 never named
+the second half, which is why it reads as a plausible story rather than a
+mechanism.
+
+**The second half, read out of the stylesheet rather than inferred:**
+
+```
+app/globals.css:2828    .al-row:hover { … }
+```
+
+The meeting rows inside the panel body carry a hover rule. A pointer entering
+the panel triggers a style recalculation on `.al-row`, and that invalidates
+paint **inside `.al-overlay-body`** — the exact container whose pixels were
+missing. That is the "something" that dirties the layer, it is a real committed
+rule rather than a hypothesis, and it sits precisely where the defect was.
+
+So the full mechanism, both halves, each with its own evidence:
+
+| half | what | evidence |
+|---|---|---|
+| why it failed to paint | two `backdrop-filter` surfaces stacked over the WebGL canvas — the state-focus scrim (`app/globals.css:3994`) with the list overlay's own blur (`.al-overlay`, `app/globals.css:2736`) directly on top | g5's A/B: removing the OVERLAY's blur did nothing (0 of 4 at 390 px, no better than control); removing the SCRIM underneath it painted. The two surfaces are not interchangeable, which is what a "backdrop-filter is slow" story would predict. |
+| why the mouse fixed it | `.al-row:hover` forces a style recalc and paint invalidation inside the unpainted container | the rule is committed and applies to the rows in `.al-overlay-body`. A phone has no hover, which is why a phone reader never got the free repair and why the desktop symptom looked intermittent. |
+
+**Both halves are consistent with the fix.** Suspending `StateFocusOverlay`
+while the list overlay is open removes the lower backdrop surface, so the
+nesting that caused the missed paint is gone. The hover rule is untouched and
+harmless — it was never the defect, only the accidental remedy.
+
+#### The measurement, at the n the author asked for
+
+`pnpm measure:panels` at 390 × 844, **both device pixel ratios**, all four pilot
+zips, **40 cold trials per configuration**, the mouse never moved and no pointer
+event of any kind issued — every panel open is a DOM `click()` from inside the
+page, because a harness that hovers cannot see this defect.
+
+| configuration | paints on first render | group counts sum | expanding paints its rows |
+|---|---|---|---|
+| DPR 2 · 85701 | **40/40** | 40/40 | 40/40 |
+| DPR 2 · 85641 | **40/40** | 40/40 | 40/40 |
+| DPR 2 · 07866 | **40/40** | 40/40 | 40/40 |
+| DPR 2 · 03255 | **40/40** | 40/40 | 40/40 |
+| DPR 1 · 85701 | **40/40** | 40/40 | 40/40 |
+| DPR 1 · 85641 | **40/40** | 40/40 | 40/40 |
+| DPR 1 · 07866 | **40/40** | 40/40 | 40/40 |
+| DPR 1 · 03255 | **40/40** | 40/40 | 40/40 |
+
+**320 of 320** on the paint assertion; 960 of 960 across all three. Zero
+failures, zero could-not-run, in 81 minutes of wall clock.
+
+**What that is worth, stated as a bound rather than as "green".** The author's
+objection to 4 of 4 was exactly right — against a 25% failure rate, four passes
+happen 32% of the time, which is no evidence at all. Three hundred and twenty
+consecutive passes put the **95% upper bound on the failure probability at
+0.93%**. The same arithmetic that dismissed 4 of 4 is what makes this
+meaningful: if the old rate still held, this result would occur about once in
+10⁴⁰ runs.
+
+**What the measurement cannot see, so that the bound is not read as more than
+it is.** This is one machine, one Chromium build, one display stack and one
+network. A compositing race is environment-dependent by construction, so <0.93%
+is a bound on THIS environment and not a proof about every reader's phone. The
+instrument is permanent and the walk carries the claim, which is the part that
+survives the session.
+
+**The row closes**, on the measurement rather than on the reasoning — and the
+diagnosis above is the deliverable either way.
+
+### Item 6 — the mayor moves to where he already lived
+
+The author's ruling: the placement on who-governs is awkward and the office
+already renders in the battlecard's Representation tab. The Mayor row is out of
+that panel everywhere, no exceptions.
+
+**Reachability was established from the committed rosters BEFORE anything was
+removed**, which is the half of this item that is a finding rather than an
+edit — the brief asked for it to be reported, not decided:
+
+| zip | the office | reachable after removal, by what path |
+|---|---|---|
+| 85701 | Mayor Regina Romero | the Tucson row → its large battlecard → Representation tab; also on Tucson meeting cards |
+| 85641 | **none exists** | Vail is unincorporated, and the card's own first line already says it has no mayor or city council |
+| 07866 | Mayor Joseph Jackson | the Rockaway township row → battlecard → Representation tab |
+| 03255 | **none exists** | Newbury is run by a Selectboard |
+
+**No zip loses the office from the product**, so there is no finding to escalate
+and the WGH row is not reinstated.
+
+**The honest no-mayor fact survives, and it was never in the blast radius.**
+Newbury's select-board fact and explainer (M32) is a separate block keyed on the
+office TITLE rather than on "Mayor", so removing the Mayor filter does not reach
+it. It still renders on the who-governs card at 03255 with its three Selectboard
+members underneath — which is the point of M32: the statement is about how the
+town IS governed, not about what it lacks.
+
+The walk check `[0818] 07866: the mayor line renders` is **retired** — the only
+way a check ever may leave that suite, because the author retired the claim
+behind it. It is replaced rather than dropped: what was worth guarding was never
+the row but that a reader at 07866 can still reach their mayor, so the new check
+opens the township battlecard and asserts the office and the holder are inside
+it.
+
+### Rule 4g, and one more duplicate found on the way
+
+**4g:** the incumbency line ends at "them". Taken out of order and named as
+such — it is a one-line copy ruling that cannot half-land, unlike 4a–4f, which
+are coupled to item 5 by design. **One surface** carried the line
+(`components/ballot/incumbent-record-link.tsx`); the doc comment further down
+the same file quoted the cut clause as the equal-effort rule's answer and was
+updated with it.
+
+**And a duplicate this session introduced, removed.** Once item 1a made the list
+exactly the governments, the trailing "and N more" row read "and 56 more boards
+and committees" four lines beneath a sentence already saying "We also track 5
+more board and committee calendars here. 51 more bodies are being added." Same
+set, same number, twice.
+
+It also turned out to be **a bare `<li>` with no link**, which matters for the
+deferred item 4b: the brief keeps that row on the reasoning that removing it
+"makes 55 bodies unreachable from the surface whose job is coverage." It never
+made anything reachable. The reachability concern is real and is now stated as
+the open question it is, rather than answered by an element that only looked
+like an answer.
+
+### Item 8b — the invented budget is retired to nothing
+
+`pnpm perf` ships: one command, no profiler knowledge, launching **the Chrome
+actually installed on the machine**, visibly, so the numbers come from the GPU
+and display stack a reader would have. It writes `docs/perf-baseline.md` with
+time to first meaningful paint, median frame during the fly-in, worst frame,
+dropped-frame count, and whether hardware acceleration was active — read from
+`chrome://gpu`'s own feature status and stated in the FIRST line, because a run
+without acceleration is not a baseline and confusing those two is how the 32 ms
+number survived this long. A dropped frame is judged against the display's own
+median interval rather than an assumed 60 Hz.
+
+**The 32 ms absolute is retired and deliberately replaced with nothing.**
+`measure:fly` still measures and prints every frame number; it stops judging
+them. **The frame budget is UNSET pending the author's baseline** — recorded
+here because the brief asked for it to be recorded here, and because inventing a
+substitute would be the same mistake one number smaller.
+
+### Item 8c — three bullets of four
+
+`context.md` now builds at **22.7 KB against a 40 KB cap with zero truncation**,
+where this session's own first handoff reported "19.4 KB of 20 KB — TRUNCATED:
+tracker-change section: 10 of 10 rows dropped; P0 notes clipped from 130 to 110
+characters."
+
+- **The cap is 40 KB**, per the author's ruling: raise the cap rather than cut
+  rows.
+- **The phases parser learns the paragraph shape.** h restructured §7 into
+  "**Phase A — …**" paragraphs and the parser only knew bullets, so it printed
+  "_No phase standings found in state.md — the section heading moved._" **The
+  heading had not moved.** It was exactly where it had always been; the message
+  asserted a cause nobody had checked, in the file whose only job is orienting a
+  session with no other context. All five phases render now.
+- **A section that cannot be built fails loudly**, naming what actually
+  happened — "heading not found" and "heading found, shape unrecognised" are
+  different failures and now read differently, and both were **proven to fire**
+  before being trusted. The tracker-change section likewise distinguishes "none
+  recovered" from "recovered and then cut to fit", which the last handoff
+  reported as both at once.
+
+**The fourth bullet, R16's session-label date warnings, is NOT done** and stays
+in G10 — with one correction to the brief's premise. The brief says they "warn
+on every run and never resolve." They do resolve: the count has fallen from 64
+to **23 hits of 81 declared**, purely because the calendar passed the dates. So
+the warnings retire themselves while the wrong dates stay in the documents,
+uncorrected and no longer flagged. That is worse than a warning that nags, and
+it is the reason to finish this rather than wait.
+
+### Item 8a, third deliverable — the exclusion distance, stated
+
+g5's report never named the exclusion distance used for the effect-off
+equivalence check, and the brief is right that an unstated exclusion is how a
+tolerance gets loosened until it proves nothing. It is answerable from the code
+without re-running anything, so it is answered here.
+
+**It is not a constant.** `borderExclusionPx(zoom)` reads the SHIPPED spec for
+the zoom being measured:
+
+```
+ceil( max( offsetPx + 3·blurPx , 3·featherPx ) + 6 )
+```
+
+**The reasoning**, which is sound: the rise is a silhouette displaced by
+`offsetPx` and blurred at `blurPx`, so it reaches `offsetPx + 3σ` from the
+border and no further; the mask's own feather reaches `3 × featherPx`. A sample
+closer than the larger of those may legitimately differ from an effect-off
+frame, so including it would be measuring the edge while claiming to measure the
+interior. The `+ 6` is slack. Deriving it from the spec rather than pinning a
+number is what keeps it honest as the spec is tuned — a pinned constant would
+silently stop excluding the edge the first time the blur grew.
+
+| zoom | offset | blur | feather | offset + 3·blur | 3·feather | **exclusion** |
+|---|---|---|---|---|---|---|
+| 3–4 (continental) | 8 | 9 | 4 | 35 | 12 | **41 px** |
+| 6 | 10.67 | 11.33 | 5 | 44.7 | 15 | **51 px** |
+| 8 | 13.33 | 13.67 | 6 | 54.3 | 18 | **61 px** |
+| 10+ (neighbourhood) | 16 | 16 | 7 | 64 | 21 | **70 px** |
+
+**One correction while reading it.** The function's own doc comment says the
+exclusion is "64 px at neighbourhood zoom … 35 px at continental zoom". Those
+are the `offset + 3·blur` values, not the exclusion — the exclusion is 70 and 41
+after the `max` and the `+ 6`. The code is right and the sentence describing it
+is off by the slack it adds. Corrected in the comment.
+
+The other two 8a deliverables — the per-state byte and layer counts, and the
+both-themes frame set — need measurement runs and are **not** done; they stay in
+G10.
+
+### What was NOT started
+
+**Items 5 and 7 were never begun, and items 4 and 8 are part-done.** Each
+remainder is deferred whole with its spec intact:
+
+| row | what |
+|---|---|
+| **G05** | item 4, rules 4a–4f and 4h — absorbs M137 and M138 |
+| **G07** | item 5, Ask discoverability |
+| **G09** | item 7, the ramp measurement for NH and NJ, and sixteen frames |
+| **G10** | item 8a, and 8c's R16 remainder |
+
+**Item 5 was deliberately not attempted, and the reason is a coupling rather
+than doubt:** it is the designed compensation for rule 4a's discoverability
+cost, and 4a is not built. Shipping the compensation for a regression that does
+not exist yet would be building against a surface that is still hypothetical.
+
+M137 and M138 are marked **Absorbed** in the tracker, per the brief, and their
+notes say where their spec now lives.

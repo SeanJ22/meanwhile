@@ -39,14 +39,54 @@ import { chromium, type Page } from "playwright";
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
 
+import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
 import { decodePng, patchStats, regionChange } from "./png.mts";
 
 const BASE = (process.env.SHOOT_BASE_URL ?? "https://sparkwtp.netlify.app").replace(/\/$/, "");
 const OUT = join(process.cwd(), "screenshots", "panels");
 mkdirSync(OUT, { recursive: true });
 
-const ZIPS = ["85701", "03255", "08540", "06716"];
+/*
+ * g6 item 3 (2026-08-17): the zips are overridable, and the default changed.
+ *
+ * This pass ran 08540 and 06716, which are NOT two of the product's four
+ * pilot zips (85701, 85641, 07866, 03255 — state.md §9). A measurement of the
+ * meetings panel at a zip the product is not judged against is a measurement
+ * of a different thing, and the M141 brief asks for the four. They are the
+ * default now; `PANEL_ZIPS` overrides for a targeted pass.
+ */
+const ZIPS = (process.env.PANEL_ZIPS ?? "85701,85641,07866,03255")
+  .split(",")
+  .map((z) => z.trim())
+  .filter(Boolean);
 const REPS = Number(process.env.PANEL_REPS ?? 2);
+
+/**
+ * Which viewports to walk. Both by default, unchanged.
+ *
+ * g6 item 3 needs a phone-only pass at high n: a phone has NO HOVER, so the
+ * desktop result cannot clear this row no matter how green it is, and running
+ * desktop as well doubles a run that is already forty cold loads per zip.
+ */
+const VIEWPORTS = (process.env.PANEL_VIEWPORTS ?? "phone,desktop")
+  .split(",")
+  .map((v) => v.trim())
+  .filter(Boolean);
+
+/**
+ * C05: this pass writes a search-log row per cold load — forty per zip per
+ * viewport at high n — so it declares itself and those rows never reach an
+ * aggregate. Without this, one measurement pass would have been the largest
+ * single contamination of the store in the product's history.
+ */
+const RUN_HEADERS = syntheticRunHeaders({
+  WTP_RUN_ID:
+    process.env.WTP_RUN_ID?.trim() ||
+    makeRunId("measure-panels", new Date().toISOString()),
+});
+
+/** Writing 320 frames costs minutes and disk; the high-n pass wants rates. */
+const WRITE_FRAMES = process.env.PANEL_FRAMES !== "0";
 /**
  * Device pixel ratio. A real phone is 2 or 3, and the compositing failure this
  * pass guards is a compositor one — pinning it at 1 would test a device
@@ -110,10 +150,10 @@ async function openDoor(page: Page, label: RegExp): Promise<boolean> {
 
 const browser = await chromium.launch();
 
-for (const [viewport, width, height] of [
+for (const [viewport, width, height] of ([
   ["phone", 390, 844],
   ["desktop", 1280, 900],
-] as const) {
+] as const).filter((v) => VIEWPORTS.includes(v[0]))) {
   for (const zip of ZIPS) {
     let paintedRuns = 0;
     let sumMatchRuns = 0;
@@ -125,6 +165,8 @@ for (const [viewport, width, height] of [
       const context = await browser.newContext({
         viewport: { width, height },
         deviceScaleFactor: DSF,
+        // C05: this run is ours, declared at write time.
+        extraHTTPHeaders: RUN_HEADERS,
         reducedMotion: "reduce",
         colorScheme: "dark",
         hasTouch: width < 500,
@@ -362,6 +404,8 @@ for (const [name, label, selector] of DOORS) {
     const context = await browser.newContext({
       viewport: { width, height },
       deviceScaleFactor: DSF,
+      // C05: this run is ours, declared at write time.
+      extraHTTPHeaders: RUN_HEADERS,
       reducedMotion: "reduce",
       colorScheme: "dark",
       hasTouch: width < 500,

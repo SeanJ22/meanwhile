@@ -1,0 +1,149 @@
+/**
+ * WHAT THE DRIVE MIRROR HOLDS — the canonical set, in one place.
+ *
+ * ## Why this file exists
+ *
+ * Two consecutive session reports named different file sets as "the mirror".
+ * g6 named seven, hotfix-0817 named ten, and only four overlapped. Neither was
+ * lying: the copied list lived in `scripts/handoff.mjs` as `MIRRORED` and the
+ * two GENERATED files (`git-state.txt`, `context.md`) lived nowhere at all —
+ * they were written by two separate functions and counted by whoever happened
+ * to be writing the report. A set that is only ever assembled in prose gets
+ * assembled differently every time.
+ *
+ * The author ruled on 2026-08-17: the Drive folder's actual contents define the
+ * canonical set, and it is the ten below. This module is that ruling written
+ * into the code, so the document mirror, the code mirror's duplicate refusal,
+ * and the standing report all read the same array and cannot disagree again.
+ *
+ * `civic-app-brief.md` is deliberately absent. It was on an earlier standing
+ * list, it is not in the folder, and it has not been for some time — dropped by
+ * the same ruling.
+ *
+ * ## Copied versus generated
+ *
+ * Eight of the ten are COPIES of a repo file: the repo is authoritative and the
+ * mirror is downstream of it, so a drift check is meaningful and `handoff` runs
+ * one. Two are GENERATED into the mirror with no repo counterpart, so there is
+ * nothing to compare them against and a drift check could only report noise.
+ * The distinction is `repoPath === null`, not a comment, because the report
+ * needs to state it per file.
+ */
+
+import { existsSync, readdirSync, statSync } from "node:fs";
+import { join } from "node:path";
+
+/**
+ * The ten. Order is the author's, from the ruling.
+ *
+ * `mirrorName` is the filename in the Drive folder; `repoPath` is the repo file
+ * it is copied from, or `null` when the file is generated into the mirror.
+ */
+export const MIRRORED_DOCS = [
+  { mirrorName: "CLAUDE.md", repoPath: "CLAUDE.md" },
+  { mirrorName: "abuse-policy.md", repoPath: "docs/abuse-policy.md" },
+  { mirrorName: "vendor-review.md", repoPath: "docs/vendor-review.md" },
+  // Joined 2026-08-13: a standing document that constrains what gets built,
+  // the same argument that put vendor-review.md here.
+  { mirrorName: "source-ladder.md", repoPath: "docs/source-ladder.md" },
+  // Joined 2026-08-14: the author's production-defect scratchpad — written
+  // from outside the repo, so it must be readable from outside the repo.
+  { mirrorName: "defects.md", repoPath: "docs/defects.md" },
+  { mirrorName: "state.md", repoPath: "docs/state.md" },
+  { mirrorName: "tracker.csv", repoPath: "docs/tracker.csv" },
+  { mirrorName: "types.ts", repoPath: "lib/sources/types.ts" },
+  {
+    mirrorName: "git-state.txt",
+    repoPath: null,
+    generatedBy: "writeGitState() in scripts/handoff.mjs (R09)",
+  },
+  {
+    mirrorName: "context.md",
+    repoPath: null,
+    generatedBy: "writeContext() in scripts/context-file.mjs (R15)",
+  },
+];
+
+/** The eight with a repo counterpart, as `handoff` wants them. */
+export const COPIED_DOCS = MIRRORED_DOCS.filter((d) => d.repoPath !== null);
+
+/**
+ * Subdirectories the mirror is expected to hold.
+ *
+ * `transcripts/` is the session export. `code/` is the code mirror (R30) — the
+ * reviewer's read path into source, added 2026-08-17. Both are directories, so
+ * neither is a document and neither belongs in the ten.
+ */
+export const EXPECTED_DIRS = ["transcripts", "code"];
+
+/**
+ * Files in the folder that are the author's, not the mirror's.
+ *
+ * The ruling says a difference between the folder and the ten is a loud
+ * failure and never a silent reconciliation. Both halves are kept. But the
+ * folder is the author's Drive folder, and on the day the check was written it
+ * held three large CSV exports that nothing in this repo put there and nothing
+ * in this repo should remove. Failing every handoff over them would make the
+ * check permanently red, and a permanently red check is one everybody learns
+ * to scroll past — the same end state as the skip flag the deploy gate refuses
+ * to have.
+ *
+ * So: an extra file that is DECLARED here is reported and not failed, and the
+ * declaration is in code where it can be read and argued with. An extra file
+ * that is NOT declared still fails, which is the case the ruling was about.
+ * Nothing is ever deleted either way.
+ *
+ * If the author wants these gone from the folder, delete them in Drive and
+ * delete these three lines; the check will go on being satisfied.
+ */
+export const DECLARED_EXTRAS = [
+  // Written by the author 2026-08-15/16, 182 MB between them. Not mirror
+  // documents, not produced by handoff, and not this script's to remove.
+  "primary-rhetoric.csv",
+  "primary-rhetoric-sample.csv",
+  "primary-rhetoric-members.csv",
+];
+
+/** Every repo path the document mirror already carries. */
+export const MIRRORED_DOC_REPO_PATHS = new Set(
+  COPIED_DOCS.map((d) => d.repoPath),
+);
+
+/** Every filename the document mirror already occupies at the folder's top level. */
+export const MIRRORED_DOC_NAMES = new Set(MIRRORED_DOCS.map((d) => d.mirrorName));
+
+/**
+ * Compare the folder's ACTUAL contents against the canonical ten.
+ *
+ * The author's ruling is that a difference here "is a loud failure, not a
+ * silent reconciliation — name what is extra and what is missing." So this
+ * returns both lists and never repairs either one. Reconciling silently is how
+ * the folder and the list drifted far enough apart to produce two contradictory
+ * reports in the first place; a mirror that quietly deletes what it did not
+ * expect would also be a mirror that can destroy the author's own files.
+ *
+ * Returns `null` when the drive is not reachable — which is not the same as
+ * "the folder is empty", and the caller must not render it as such.
+ */
+export function checkMirrorContents(mirrorPath) {
+  if (!existsSync(mirrorPath)) return null;
+
+  const entries = readdirSync(mirrorPath);
+  const files = [];
+  const dirs = [];
+  for (const name of entries) {
+    if (statSync(join(mirrorPath, name)).isDirectory()) dirs.push(name);
+    else files.push(name);
+  }
+
+  const missing = MIRRORED_DOCS.map((d) => d.mirrorName).filter(
+    (name) => !files.includes(name),
+  );
+  const unexpected = files.filter((name) => !MIRRORED_DOC_NAMES.has(name));
+  const extra = unexpected.filter((name) => !DECLARED_EXTRAS.includes(name));
+  const declaredExtras = unexpected.filter((name) => DECLARED_EXTRAS.includes(name));
+  const extraDirs = dirs.filter((name) => !EXPECTED_DIRS.includes(name));
+  const missingDirs = EXPECTED_DIRS.filter((name) => !dirs.includes(name));
+
+  return { missing, extra, declaredExtras, extraDirs, missingDirs, files, dirs };
+}

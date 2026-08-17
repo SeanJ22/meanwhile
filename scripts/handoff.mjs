@@ -32,11 +32,26 @@
  *   3. main                  nothing unmerged, no PR left open, and the local
  *                            `main` ref actually current with origin
  *   4. the dev server        stopped, port 3000 free
- *   5. the G Drive mirror    the copied files byte-identical, plus transcripts
- *                            and two generated files with no repo counterpart
- *                            — `git-state.txt` (R09) and `context.md` (R15),
- *                            neither compared for drift, both skipped by
- *                            `--check` and rewritten after a successful ship
+ *   5. the G Drive mirror    the eight copied files byte-identical, plus
+ *                            transcripts and two generated files with no repo
+ *                            counterpart — `git-state.txt` (R09) and
+ *                            `context.md` (R15), neither compared for drift,
+ *                            both skipped by `--check` and rewritten after a
+ *                            successful ship. Those ten are THE CANONICAL SET
+ *                            (the author's ruling, 2026-08-17), and they live
+ *                            in `scripts/mirror-set.mjs` so the copier, the
+ *                            code mirror and the report cannot disagree about
+ *                            what the folder holds. The folder's actual
+ *                            contents are checked against the ten on every
+ *                            run, and a difference is named — extra and
+ *                            missing both — never reconciled.
+ *
+ *                            Then the CODE MIRROR (R30): a small curated set
+ *                            of source files copied into `<mirror>/code/` so
+ *                            the strategic reviewer can read code instead of
+ *                            inferring it from reports. It runs on every
+ *                            invocation, `--check` and `--ship` alike, and
+ *                            `--no-code` skips it. See `scripts/mirror-code.mjs`.
  *
  * **Under `--ship` there is a sixth, and it runs before anything is pushed:**
  *
@@ -74,6 +89,8 @@ import { fileURLToPath } from "node:url";
 import { CAP_BYTES, writeContext } from "./context-file.mjs";
 import { stopDevServer } from "./dev-server.mjs";
 import { today } from "./doc-dates.mjs";
+import { mirrorCode } from "./mirror-code.mjs";
+import { COPIED_DOCS, MIRRORED_DOCS, checkMirrorContents } from "./mirror-set.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(here, "..");
@@ -88,24 +105,21 @@ const EXPORTER = join(
   "export-transcript.mjs",
 );
 
-/** repo path → mirror filename. The repo is authoritative; the mirror is a copy. */
-const MIRRORED = [
-  ["CLAUDE.md", "CLAUDE.md"],
-  ["docs/abuse-policy.md", "abuse-policy.md"],
-  ["docs/vendor-review.md", "vendor-review.md"],
-  // Joined 2026-08-13: a standing document that constrains what gets built,
-  // the same argument that put vendor-review.md here.
-  ["docs/source-ladder.md", "source-ladder.md"],
-  // Joined 2026-08-14: the author's production-defect scratchpad — written
-  // from outside the repo, so it must be readable from outside the repo.
-  ["docs/defects.md", "defects.md"],
-  ["docs/state.md", "state.md"],
-  ["docs/tracker.csv", "tracker.csv"],
-  ["lib/sources/types.ts", "types.ts"],
-];
+/**
+ * The eight copied documents, read from `scripts/mirror-set.mjs`.
+ *
+ * The list used to live here as a local `MIRRORED` array, and the two
+ * GENERATED mirror files lived nowhere — which is how two consecutive session
+ * reports named different sets as "the mirror" (seven and ten, four
+ * overlapping). The canonical ten are now in one module that the document
+ * mirror, the code mirror's duplicate refusal, and the report all read.
+ */
+const MIRRORED = COPIED_DOCS.map((d) => [d.repoPath, d.mirrorName]);
 
 const CHECK_ONLY = process.argv.includes("--check");
 const SHIP = process.argv.includes("--ship");
+/** `--no-code` skips the code mirror (R30). Everything else still runs. */
+const NO_CODE = process.argv.includes("--no-code");
 
 /** `--title "..."` for the PR opened by --ship. */
 function flag(name, fallback) {
@@ -540,9 +554,117 @@ if (!existsSync(MIRROR)) {
     .filter(Boolean)
     .join(", ");
 
-  if (problems.length === 0) ok("mirror", summary || "5/5 identical");
+  if (problems.length === 0)
+    ok("mirror", summary || `${MIRRORED.length}/${MIRRORED.length} identical`);
   else fail("mirror", problems.join("; "));
 }
+
+/* ------------------------------------------------- the canonical ten (6b) --- */
+
+/**
+ * The folder's ACTUAL contents against the canonical ten.
+ *
+ * Runs LAST, after both mirrors have written. Ordering is not cosmetic here:
+ * the first version checked the folder before the code mirror had created
+ * `code/`, so the very first run reported `missing dir(s): code` — a real
+ * failure line about a directory that existed by the time the run ended. A
+ * check that reads the folder must read it after everything that writes to it.
+ *
+ * The author's ruling of 2026-08-17: the folder defines the set, and a
+ * difference between it and the list "is a loud failure, not a silent
+ * reconciliation — name what is extra and what is missing." Nothing here
+ * repairs anything. Deleting what the mirror did not expect would make this
+ * script capable of destroying the author's own files, and quietly adopting an
+ * unexpected file into the set is how the list drifted in the first place.
+ */
+function reportMirrorSet() {
+  const contents = checkMirrorContents(MIRROR);
+  if (contents === null) {
+    warn("mirror set", "drive not reachable — the canonical ten were not checked");
+  } else {
+    const notes = [];
+    if (contents.missing.length)
+      notes.push(`MISSING: ${contents.missing.join(", ")}`);
+    if (contents.extra.length)
+      notes.push(`EXTRA: ${contents.extra.join(", ")}`);
+    if (contents.missingDirs.length)
+      notes.push(`missing dir(s): ${contents.missingDirs.join(", ")}`);
+    if (contents.extraDirs.length)
+      notes.push(`extra dir(s): ${contents.extraDirs.join(", ")}`);
+
+    // Declared extras are named on every run rather than filtered into
+    // silence. The point of declaring one is to stop it failing the session,
+    // never to stop it being visible.
+    const declared = contents.declaredExtras.length
+      ? ` (declared, not counted: ${contents.declaredExtras.join(", ")})`
+      : "";
+
+    if (notes.length === 0)
+      ok("mirror set", `the canonical 10 present, nothing undeclared${declared}`);
+    else fail("mirror set", `${notes.join(" · ")}${declared}`);
+  }
+}
+
+/**
+ * All ten, by name, with bytes.
+ *
+ * "Seven mirror file sizes" is retired from the standing report format by the
+ * same ruling — it was never seven, and a report format that undercounts the
+ * folder is how a missing file goes unnoticed. A file the drive does not hold
+ * prints as `absent`, never as `0`: a zero is a size, and absence is not.
+ */
+function reportMirrorSizes() {
+  const sizes = MIRRORED_DOCS.map((d) => {
+    const at = join(MIRROR, d.mirrorName);
+    return `${d.mirrorName} ${existsSync(at) ? statSync(at).size : "absent"}`;
+  });
+  ok("mirror sizes", sizes.join(" · "));
+}
+
+/* ------------------------------------------------------- code mirror (R30) --- */
+
+/**
+ * The reviewer's read path into source. Runs on EVERY invocation — plain,
+ * `--check` and `--ship` alike.
+ *
+ * Wiring it into `--ship` only would have meant it never ran at session close
+ * in any session that ends some other way, and session close is the one moment
+ * it matters. It sits after the document mirror because the duplicate refusal
+ * reads the document set, and it is the last thing to touch the drive.
+ */
+if (NO_CODE) {
+  ok("code mirror", "skipped (--no-code)");
+} else {
+  const result = mirrorCode({
+    root: ROOT,
+    mirrorPath: MIRROR,
+    checkOnly: CHECK_ONLY,
+    headSha: tryRun("git", ["rev-parse", "HEAD"]),
+  });
+
+  if (result.level === "fail") fail("code mirror", result.detail);
+  else if (result.level === "warn") warn("code mirror", result.detail);
+  else ok("code mirror", result.detail);
+
+  // Every refusal is named on its own line. A count alone would let a file
+  // drop out of the reviewer's reach without anyone reading which one.
+  for (const row of result.rows.filter((r) => r.skipped)) {
+    warn("code · refused", `${row.repoPath} — ${row.reason}`);
+  }
+  for (const name of result.removedNames ?? []) {
+    warn("code · removed", `${name} — struck from the allowlist, deleted from Drive`);
+  }
+  for (const row of result.rows.filter((r) => r.nearCap !== undefined)) {
+    warn(
+      "code · near cap",
+      `${row.repoPath} is ${row.bytes} bytes — ${row.nearCap} short of the per-file cap, and refused once it crosses`,
+    );
+  }
+}
+
+// Both mirrors have now written. Only now is reading the folder meaningful.
+reportMirrorSet();
+reportMirrorSizes();
 
 /* ---------------------------------------------------------- transcripts --- */
 

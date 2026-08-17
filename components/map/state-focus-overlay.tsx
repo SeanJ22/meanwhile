@@ -4,67 +4,117 @@
 // event subscription, so a Server Component has nothing to render it with —
 // the 500 the boundary guard prevents cannot arise here.
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 
-import type { StateOutlineFeature } from "@/lib/map/state-focus";
+import {
+  extrusionSpecForZoom,
+  riseAlphasFor,
+  simplifyScreenRing,
+  type ExtrusionSpec,
+  type ScreenPoint,
+  type StateOutlineFeature,
+} from "@/lib/map/state-focus";
 
 /**
- * The mute-and-blur half of the state extrusion — g3 item 10 (M91).
+ * The whole extrusion: the two opposed shadows AND the mute-and-blur outside
+ * (M91, rebuilt for g4 items 1 and 2).
  *
- * ## Why this is a DOM overlay and not a map layer
+ * ## Why the shadows moved here from the map
  *
- * The author's spec has two halves. The raised EDGE is map layers
- * (`lib/map/state-focus.ts`); this is the other half — everything outside the
- * active state is **muted in colour and very slightly blurred**. Desaturation
- * alone is explicitly not the spec, and a WebGL paint property cannot blur
- * what is painted underneath it: MapLibre has no read-back of the frame. Only
- * the compositor can, through `backdrop-filter`.
+ * They were two MapLibre `line` layers and they read as a grey stroke tracing
+ * the polygon — `lib/map/state-focus.ts` carries the full account of why a
+ * stroke can never become a shadow. A shadow is cast by the SHAPE, so it is
+ * a blurred silhouette; and a blurred silhouette masked to the outside of the
+ * shape is something only the DOM can draw here, because it needs a soft mask
+ * and MapLibre's clip is binary.
  *
- * So: one absolutely-positioned element over the canvas, carrying
- * `backdrop-filter: blur() saturate()`, clipped to everything OUTSIDE the
- * active state's projected polygon.
+ * That turns out to be a simplification rather than a cost. This component
+ * already projected the polygon every frame to clip the scrim, so the shadows
+ * ride along on a computation that was happening anyway, and the map sheds
+ * two layers.
  *
- * **The rejected alternative, recorded:** doing the mute as a MapLibre `fill`
- * over the world-minus-state polygon. It is cheaper and it needs no
- * per-frame projection — and it can only tint, never blur, so it delivers
- * half the spec while looking like the whole of it. The author named the
- * blur; a tint pretending to be a blur is the kind of quiet substitution this
- * project treats as a defect.
+ * ## The soft mask IS the fix
  *
- * ## The clip
+ * A shadow is at nearly full strength where it meets the shape that casts it
+ * — that is what a shadow is. Clip it with a hard edge and the reader sees a
+ * step from nothing to full strength exactly along the border: a line. So the
+ * mask's own edge is blurred by `featherPx`, and the shadow rises out of zero
+ * AT the border instead of arriving at full strength. This is the difference
+ * the author's "the eye cannot find where the shadow begins" is describing,
+ * and it is the reason this is a `<mask>` and not a `<clipPath>`.
  *
- * A CSS `clip-path: polygon()` cannot express a hole. An SVG `<clipPath>`
- * with `clip-rule="evenodd"` can: one path holding the viewport rectangle
- * followed by the state's rings, so the even-odd rule punches the state out
- * and leaves the rest. Referenced by `clip-path: url(#…)`.
+ * The SCRIM keeps a hard `clipPath`, deliberately. Its edge is the state's
+ * SILHOUETTE, which the brief says must read — "the silhouette reads; the
+ * digitization must not". A silhouette is a boundary between two treatments;
+ * a line is a band darker or lighter than both of its sides. The measured
+ * acceptance check in `scripts/measure-extrusion.mts` tests exactly that
+ * distinction rather than testing for the absence of any edge at all.
  *
- * ## Cost, and the mobile answer
+ * ## Same material inside and out
  *
- * The path is recomputed on the map's `move`/`zoom`/`render` — the outline is
- * ~600 points across three states and one of them at a time, so a redraw is a
- * few hundred `project()` calls, well inside a frame. `backdrop-filter` is
- * the expensive half. It is kept to **1.1px** of blur, which is what "very
- * slightly" costs and is cheap enough to hold 60fps on a phone; if a future
- * device says otherwise, the knob to turn is the blur radius, never the
- * presence of the effect.
+ * Nothing is painted inside the active state. No fill, no tint, no wash — the
+ * mask stops every shadow at the border and the scrim's clip stops the mute
+ * there. Water inside Arizona is the same blue as water outside it, which is
+ * what makes this an extrusion of the map rather than a card lying on it.
  *
- * ## What it must never do
+ * ## Cost
  *
- * Carry information. The reference's own accessibility caution is that a
- * low-contrast extrusion cannot be asked to mean something — so the mute is a
- * light scrim that leaves labels legible, and the border-crossing prompt does
- * the communicating.
+ * One projection pass per animation frame over rings that are simplified to a
+ * sub-pixel tolerance first, so at continental zoom this is a few dozen
+ * points rather than six hundred. `backdrop-filter` is still the expensive
+ * half and is still 1.1 px; the SVG filters are composited on the GPU.
  */
 
 export interface ProjectPoint {
   (lngLat: [number, number]): { x: number; y: number };
 }
 
+/**
+ * Margin around the canvas for the filter regions and the mask.
+ *
+ * Comfortably more than the largest offset plus three sigma of blur, so every
+ * Gaussian reaches zero inside its own region. See the note on the filters
+ * below for what a clamped region does instead.
+ */
+const FILTER_PAD = 120;
+
+interface Drawing {
+  /**
+   * The state's own silhouette — its rings and nothing else.
+   *
+   * **Kept separate from `outsidePath` on purpose, and the reason is a real
+   * defect the measurement caught.** The first build used one path for both,
+   * and that path was the CLIP: the viewport rectangle followed by the
+   * state's rings, evaluated even-odd, which describes *everything except*
+   * the state. Feeding it to the mask inverted the mask, and feeding it to
+   * the shadows meant the thing being blurred and offset was a viewport-sized
+   * rectangle with a state-shaped hole in it.
+   *
+   * The result was full-strength white and black over the terrain with the
+   * state's border as a hard edge — the exact defect the rebuild existed to
+   * remove, reintroduced by a variable name. `pnpm measure:extrusion`
+   * reported peaks of 130–165 and adjacent steps of 165–202 where a blurred
+   * shadow cannot exceed six, which is how it was found; nothing about it was
+   * obvious in a screenshot, because a strong soft-cornered wash over a map
+   * still looks deliberate.
+   */
+  statePath: string;
+  /** The viewport minus the state, even-odd — what the scrim is clipped to. */
+  outsidePath: string;
+  /** Box the mask and shadows are sized against. */
+  width: number;
+  height: number;
+  /** Sizes for this frame's zoom. */
+  spec: ExtrusionSpec;
+}
+
 export function StateFocusOverlay({
   outline,
   project,
   subscribe,
-  clipId = "wtp-outside-state",
+  zoomOf,
+  theme,
+  clipId,
 }: {
   /** The focused state, or null — then nothing renders at all. */
   outline: StateOutlineFeature | null;
@@ -76,9 +126,26 @@ export function StateFocusOverlay({
    * keeps the map's event names in one file.
    */
   subscribe: ((onMove: () => void) => () => void) | null;
+  /**
+   * The camera's zoom, read at draw time.
+   *
+   * A function rather than a prop because the rise is re-sized on every frame
+   * of a pinch, and threading zoom through React state would re-render this
+   * component sixty times a second to change two numbers.
+   */
+  zoomOf?: (() => number) | null;
+  /**
+   * Which ground the rise is standing on.
+   *
+   * The two silhouettes' opacities differ by theme — a white highlight over
+   * a pale basemap is nearly invisible at the strength that reads correctly
+   * over a dark one. See `riseAlphasFor`.
+   */
+  theme: "light" | "dark";
+  /** Overridable so a test can mount two of these without id collisions. */
   clipId?: string;
 }) {
-  const [path, setPath] = useState<string>("");
+  const [drawing, setDrawing] = useState<Drawing | null>(null);
   const frame = useRef<number | null>(null);
   /**
    * The MAP's box, not the window's.
@@ -91,6 +158,21 @@ export function StateFocusOverlay({
    * the projection speaks in, and the element has to be positioned in it.
    */
   const boxRef = useRef<HTMLDivElement | null>(null);
+
+  /**
+   * Ids unique to this instance.
+   *
+   * `useId` rather than a module constant: two maps on one page would
+   * otherwise share a mask id, and the second to mount would silently
+   * repaint the first — the same class of aliasing bug as the funding cache
+   * key, one layer down.
+   */
+  const alphas = riseAlphasFor(theme);
+  const reactId = useId().replace(/[^a-zA-Z0-9_-]/g, "");
+  const outsideClipId = clipId ?? `wtp-outside-${reactId}`;
+  const maskId = `wtp-rise-mask-${reactId}`;
+  const softId = `wtp-rise-soft-${reactId}`;
+  const featherId = `wtp-rise-feather-${reactId}`;
 
   useEffect(() => {
     /*
@@ -105,24 +187,38 @@ export function StateFocusOverlay({
       frame.current = null;
       const box = boxRef.current;
       if (!outline || !project || !box) {
-        setPath("");
+        setDrawing(null);
         return;
       }
       const { width, height } = box.getBoundingClientRect();
-      // The map's rectangle first — the even-odd rule needs something to
-      // subtract the state FROM. A little overscan so a rounded corner or a
-      // sub-pixel rounding never exposes an unmuted sliver at the edge.
-      const parts = [`M-32,-32 H${width + 32} V${height + 32} H-32 Z`];
+      const spec = extrusionSpecForZoom(zoomOf?.() ?? 10);
+
+      const rings: string[] = [];
       for (const ring of outline.geometry.coordinates) {
         if (ring.length < 3) continue;
-        const points = ring.map((c) => project([c[0], c[1]]));
-        parts.push(
+        const projected: ScreenPoint[] = ring.map((c) => project([c[0], c[1]]));
+        // Simplified AFTER projection, so one sub-pixel rule covers every
+        // zoom — see lib/map/state-focus.ts#simplifyScreenRing.
+        const points = simplifyScreenRing(projected, spec.simplifyPx);
+        rings.push(
           `M${points
             .map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`)
             .join("L")}Z`,
         );
       }
-      setPath(parts.join(" "));
+      if (rings.length === 0) {
+        setDrawing(null);
+        return;
+      }
+
+      const statePath = rings.join(" ");
+      // The map's rectangle FIRST — the even-odd rule needs something to
+      // subtract the state from. A little overscan so a rounded corner or a
+      // sub-pixel rounding never exposes an unmuted sliver at the edge. This
+      // composite path is the SCRIM's clip and nothing else's; see the note
+      // on `Drawing.statePath` for what happened when the shadows shared it.
+      const outsidePath = `M-32,-32 H${width + 32} V${height + 32} H-32 Z ${statePath}`;
+      setDrawing({ statePath, outsidePath, width, height, spec });
     };
 
     const schedule = () => {
@@ -151,36 +247,194 @@ export function StateFocusOverlay({
          * never drew.
          *
          * It was invisible for one reason worth remembering: the effect only
-         * re-runs when `outline`, `project` or `subscribe` changes, which on
-         * a first paint happens exactly once — as the outlines land. So the
-         * feature worked in a screenshot taken before that and was dead in
-         * every walk taken after it.
+         * re-runs when its inputs change, which on a first paint happens
+         * exactly once — as the outlines land. So the feature worked in a
+         * screenshot taken before that and was dead in every walk after it.
          */
         frame.current = null;
       }
       window.removeEventListener("resize", schedule);
       unsubscribe();
     };
-  }, [outline, project, subscribe]);
+  }, [outline, project, subscribe, zoomOf]);
 
   // The measuring box always renders — it is what `redraw` measures, and a
   // component that only mounts its ruler once it has a measurement cannot
-  // take one. The SCRIM inside it is what waits for a focused state.
+  // take one. Everything inside it waits for a focused state.
   return (
     <div ref={boxRef} aria-hidden="true" className="state-focus-layer">
-      {outline && path && (
+      {outline && drawing && (
         <>
-          <svg className="state-focus-defs">
+          <svg
+            className="state-focus-art"
+            width={drawing.width}
+            height={drawing.height}
+            data-testid="state-focus-art"
+          >
             <defs>
-              <clipPath id={clipId} clipPathUnits="userSpaceOnUse">
-                <path d={path} clipRule="evenodd" />
+              {/* The clip for the SCRIM: binary, and the state's silhouette. */}
+              <clipPath id={outsideClipId} clipPathUnits="userSpaceOnUse">
+                <path d={drawing.outsidePath} clipRule="evenodd" />
               </clipPath>
+
+              {/*
+                Each silhouette's own softness.
+
+                An SVG filter primitive rather than the CSS `filter: blur()`
+                shorthand, because this is SVG 1.1 core and renders
+                identically everywhere, while CSS filters on SVG children
+                have a longer tail of disagreement between engines.
+
+                **The filter REGION is in user space, sized to the canvas,
+                and that is load-bearing.** The first build used the default
+                `objectBoundingBox` region of `-50% / 200%`, which is a
+                percentage of the PATH's bounding box — and at neighbourhood
+                zoom the projected state is thousands of pixels across, so
+                that region is tens of thousands of pixels of filter surface.
+                Chromium clamps it, and a clamped filter region does not fade
+                out: it CUTS OFF. The measurement caught it as an adjacent
+                step of 167 luminance units where a blurred shadow cannot
+                exceed one, and it was the white silhouette arriving at full
+                strength behind a hard straight edge — a second, worse
+                version of exactly the defect this rebuild exists to remove.
+
+                Bounded to the visible box plus a margin for the offset and
+                three sigma of blur, the region is small, the blur completes
+                inside it, and there is nothing to clamp.
+              */}
+              <filter
+                id={softId}
+                filterUnits="userSpaceOnUse"
+                x={-FILTER_PAD}
+                y={-FILTER_PAD}
+                width={drawing.width + FILTER_PAD * 2}
+                height={drawing.height + FILTER_PAD * 2}
+              >
+                <feGaussianBlur stdDeviation={drawing.spec.blurPx} />
+              </filter>
+              <filter
+                id={featherId}
+                filterUnits="userSpaceOnUse"
+                x={-FILTER_PAD}
+                y={-FILTER_PAD}
+                width={drawing.width + FILTER_PAD * 2}
+                height={drawing.height + FILTER_PAD * 2}
+              >
+                <feGaussianBlur stdDeviation={drawing.spec.featherPx} />
+              </filter>
+
+              {/*
+                The soft mask. White everywhere, black over the state, and the
+                black is BLURRED — so the shadows fade out of existence as they
+                approach the border instead of being cut off at full strength.
+                This one blur is the difference between a rise and the grey
+                stroke the author rejected.
+              */}
+              <mask
+                id={maskId}
+                maskUnits="userSpaceOnUse"
+                x={-FILTER_PAD}
+                y={-FILTER_PAD}
+                width={drawing.width + FILTER_PAD * 2}
+                height={drawing.height + FILTER_PAD * 2}
+              >
+                <rect
+                  x={-FILTER_PAD}
+                  y={-FILTER_PAD}
+                  width={drawing.width + FILTER_PAD * 2}
+                  height={drawing.height + FILTER_PAD * 2}
+                  fill="#ffffff"
+                />
+                <path
+                  d={drawing.statePath}
+                  fillRule="evenodd"
+                  fill="#000000"
+                  filter={`url(#${featherId})`}
+                />
+              </mask>
             </defs>
+
+            <g mask={`url(#${maskId})`}>
+              {/*
+                THE MUTE'S COLOUR, and it lives here rather than on the scrim
+                because this is the only place its edge can be soft.
+
+                The mute was one `backdrop-filter` element clipped with a
+                binary `clip-path`. Arizona's northern, eastern and southern
+                borders are straight lines, so that clip drew a crisp
+                rectangle across the map: the state read as pasted on rather
+                than raised out, and only the west border — where the light
+                is — was softened by a shadow. CSS `mask` referencing an SVG
+                mask would have fixed it in one line and is not honoured on an
+                HTML element in Chromium, which the four author frames showed
+                by not changing at all.
+
+                So the mute is split. Its COLOUR is this rect, masked by the
+                same feathered mask the shadows use, so it fades in across the
+                border on every side. Its BLUR and desaturation stay on the
+                scrim, hard-clipped — a 1.1 px blur has almost no luminance
+                step of its own, so what survives the split is far below what
+                the eye finds as an edge.
+              */}
+              <rect
+                x={-FILTER_PAD}
+                y={-FILTER_PAD}
+                width={drawing.width + FILTER_PAD * 2}
+                height={drawing.height + FILTER_PAD * 2}
+                fill={theme === "light" ? "#ffffff" : "#0b0d12"}
+                fillOpacity={theme === "light" ? 0.2 : 0.26}
+              />
+              {/* Light source at top-left. The lit silhouette is displaced
+                  TOWARD it and the shaded one away, both in screen space —
+                  the sun does not rotate with the map. */}
+              <path
+                d={drawing.statePath}
+                fillRule="evenodd"
+                fill="#ffffff"
+                fillOpacity={alphas.light}
+                filter={`url(#${softId})`}
+                transform={`translate(${-drawing.spec.offsetPx} ${-drawing.spec.offsetPx})`}
+              />
+              <path
+                d={drawing.statePath}
+                fillRule="evenodd"
+                fill="#000000"
+                fillOpacity={alphas.dark}
+                filter={`url(#${softId})`}
+                transform={`translate(${drawing.spec.offsetPx} ${drawing.spec.offsetPx})`}
+              />
+            </g>
           </svg>
+          {/*
+            The mute carries BOTH the hard clip and the soft mask, and the
+            pair is deliberate.
+
+            `clip-path` alone is what shipped, and the author's four frames
+            show what it costs: Arizona's northern, eastern and southern
+            borders are straight lines, so a binary clip along them reads as
+            a crisp rectangle stamped onto the map — the state looks pasted
+            on rather than raised out. The shadows soften the west border,
+            where the light is, and could never soften the other three.
+
+            The same feathered mask the shadows use fixes it, because it is
+            already exactly the right shape: black over the state, white
+            outside, with a blurred edge. Applied to the scrim, the mute
+            fades in across the border instead of switching on at it.
+
+            Both are set, and that IS the fallback: an engine that does not
+            resolve an SVG `mask` reference from CSS ignores the property and
+            still gets the clip, so the effect degrades to what shipped
+            rather than to nothing. An engine that honours both intersects
+            them, which is the soft edge.
+          */}
           <div
             className="state-focus-scrim"
             data-testid="state-focus-scrim"
-            style={{ clipPath: `url(#${clipId})` }}
+            style={{
+              clipPath: `url(#${outsideClipId})`,
+              mask: `url(#${maskId})`,
+              WebkitMask: `url(#${maskId})`,
+            }}
           />
         </>
       )}

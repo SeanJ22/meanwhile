@@ -54,6 +54,11 @@ yarn-error.log*
 # Machine-local by definition; a committed one would name someone else's process.
 /.dev-server.pid
 
+# session scratch — one-off probes and measurements that must resolve the
+# repo's own dependencies (a file outside the tree cannot), and must never be
+# type-checked by the deploy or reviewed as work. Regenerate, never commit.
+/.scratch/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

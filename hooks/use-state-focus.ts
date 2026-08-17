@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
   STATE_OUTLINES_URL,
@@ -94,9 +94,41 @@ export function useStateFocus(): StateFocus {
 
   const activateAt = useCallback(
     (lat: number, lng: number) => {
-      const ocdId = stateOcdIdAt(outlines, lat, lng);
-      if (!ocdId) return;
-      setActiveOcdId(ocdId);
+      /*
+       * **g4 item 1 — the mask follows the reader, and this line is why it
+       * did not.**
+       *
+       * The author's report: change the zip from a New Hampshire one to an
+       * Arizona one, the map flies to Arizona, and Arizona is still blurred
+       * and muted. The mask had kept New Hampshire.
+       *
+       * The cause was `if (!ocdId) return` — a guard that reads as
+       * defensive and is in fact the whole defect. It says "if I cannot
+       * identify a state here, CHANGE NOTHING", which leaves whatever was
+       * raised before still raised. The mask was therefore bound to the last
+       * activation that happened to succeed rather than to where the reader
+       * actually is, and every failed resolution silently extended the
+       * previous state's tenure.
+       *
+       * `stateOcdIdAt` returns null in three ordinary situations: the
+       * outlines have not loaded yet, the zip is in a state the product
+       * holds no outline for, and the point falls in a gap of the
+       * generalized geometry. All three used to strand the mask on the state
+       * the reader had left.
+       *
+       * The rule now is the one the brief states: **the raised region ALWAYS
+       * equals the current resolved state**, and a null resolution is
+       * published as a null — no state raised, nothing muted, the map plain.
+       * A mask with no owner is the same defect as a stale mask, and this is
+       * the one line that decides both.
+       *
+       * The single exception is the pre-load window: before the outlines
+       * arrive we cannot resolve ANY point, so publishing null then would
+       * blank a correct mask for the duration of a fetch. That is a fact
+       * about our data arriving, not about where the reader is.
+       */
+      if (!outlines) return;
+      setActiveOcdId(stateOcdIdAt(outlines, lat, lng));
       // A zip in a new state IS the context switch, and the reader performed
       // it deliberately by typing — so it activates, and does not also stop
       // to ask whether they meant it.
@@ -132,12 +164,43 @@ export function useStateFocus(): StateFocus {
 
   const dismissCrossing = useCallback(() => setCrossing(null), []);
 
-  return {
-    activeOcdId,
-    crossing,
-    acceptCrossing,
-    dismissCrossing,
-    activateAt,
-    noteCentre,
-  };
+  /*
+   * Memoized, and it is a correctness fix rather than a performance one.
+   *
+   * This hook used to return a fresh object literal on every render, so every
+   * consumer that listed `focusState` in an effect's dependencies re-ran that
+   * effect on every render of the map. Two things followed, and both are item
+   * 1's defect from the other side:
+   *
+   * - The zip-activation effect in `map-entry.tsx` re-asserted the zip's
+   *   state continuously. `acceptCrossing` — the reader answering "yes, show
+   *   me New Jersey" — was therefore undone on the very next render, and the
+   *   prompt could never do anything.
+   * - `activateAt` ends with `setCrossing(null)`, so the same runaway effect
+   *   cleared the crossing prompt one render after `noteCentre` raised it.
+   *   The clarification the border-crossing feature exists to give could not
+   *   stay on screen long enough to be read.
+   *
+   * Neither was visible in a screenshot and neither had a failing test: the
+   * effect was doing exactly what it said, far more often than anyone
+   * intended.
+   */
+  return useMemo(
+    () => ({
+      activeOcdId,
+      crossing,
+      acceptCrossing,
+      dismissCrossing,
+      activateAt,
+      noteCentre,
+    }),
+    [
+      activeOcdId,
+      crossing,
+      acceptCrossing,
+      dismissCrossing,
+      activateAt,
+      noteCentre,
+    ],
+  );
 }

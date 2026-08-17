@@ -3856,10 +3856,21 @@ main[data-sidebar="closed"] .sidebar-toggle {
  * the colour of the page's own ground, so nothing outside picks up a hue the
  * map did not have.
  */
-.state-focus-defs {
+/*
+ * The rise itself (g4 item 2). Two blurred silhouettes of the state, masked
+ * to the outside — see components/map/state-focus-overlay.tsx for why a
+ * shadow cast by the shape replaced the two line layers that read as a grey
+ * stroke.
+ *
+ * Sized in JS to the map's box and positioned at its origin, because the
+ * coordinates inside it are `map.project()` output and must not be rescaled
+ * by any CSS sizing of the SVG element.
+ */
+.state-focus-art {
   position: absolute;
-  width: 0;
-  height: 0;
+  top: 0;
+  left: 0;
+  overflow: visible;
   pointer-events: none;
 }
 
@@ -3891,8 +3902,12 @@ main[data-sidebar="closed"] .sidebar-toggle {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  backdrop-filter: blur(1.1px) saturate(0.62) brightness(0.94);
-  background: color-mix(in oklab, var(--bg) 16%, transparent);
+  /* Blur and desaturation ONLY. The mute's colour moved into the SVG
+     (state-focus-overlay.tsx) so its edge can be feathered by the same mask
+     the shadows use; this element keeps the two things only the compositor
+     can do, and both are gentle enough that its hard clip no longer reads as
+     a line. */
+  backdrop-filter: blur(1.1px) saturate(0.68);
 }
 
 /*
@@ -3902,17 +3917,17 @@ main[data-sidebar="closed"] .sidebar-toggle {
  * eye" points changes with the ground.
  */
 :root:not([data-theme="dark"]) .state-focus-scrim {
-  backdrop-filter: blur(1.1px) saturate(0.62) brightness(1.04);
+  backdrop-filter: blur(1.1px) saturate(0.68);
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .state-focus-scrim {
-    backdrop-filter: blur(1.1px) saturate(0.62) brightness(0.94);
+    backdrop-filter: blur(1.1px) saturate(0.68);
   }
 }
 
 :root[data-theme="dark"] .state-focus-scrim {
-  backdrop-filter: blur(1.1px) saturate(0.62) brightness(0.94);
+  backdrop-filter: blur(1.1px) saturate(0.68);
 }
 
 /*

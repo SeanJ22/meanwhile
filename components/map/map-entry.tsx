@@ -338,9 +338,16 @@ function MapEntryInner() {
    * idempotent — activating the state that is already active is a no-op — so
    * running this on every location change costs nothing.
    */
+  const { activateAt } = focusState;
   useEffect(() => {
-    if (location) focusState.activateAt(location.lat, location.lng);
-  }, [location, focusState]);
+    // Depends on `activateAt` alone, never on the whole `focusState` object
+    // (g4 item 1). The object used to be rebuilt every render, so this effect
+    // ran every render and re-asserted the zip's state — which undid an
+    // accepted border crossing one render after the reader accepted it, and
+    // cleared the crossing prompt one render after it was raised. See
+    // hooks/use-state-focus.ts for the full account.
+    if (location) activateAt(location.lat, location.lng);
+  }, [location, activateAt]);
 
   const camera = useMemo<CameraTarget | null>(
     () =>

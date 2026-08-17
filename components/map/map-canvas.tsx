@@ -43,10 +43,14 @@ import {
 } from "@/lib/map/districts";
 import {
   STATE_OUTLINES_URL,
-  addStateFocusLayers,
+  ZIP_SHADE_SOURCE,
+  applyZipShade,
+  filterStateAbbr,
   outlineFor,
-  setStateFocus,
+  removeZipShade,
+  stateAbbrFromOcdId,
   type StateOutlines,
+  type ZipOutlineFeature,
 } from "@/lib/map/state-focus";
 import type { DistrictType } from "@/lib/state/types";
 import type { Theme } from "@/hooks/use-stored-theme";
@@ -201,6 +205,16 @@ export function MapCanvas({
   );
   const poolRef = useRef(createMarkerPool());
   const hereRef = useRef<Marker | null>(null);
+  /**
+   * Has the reader taken the camera by hand? (g4 item 5.)
+   *
+   * A ref rather than state on purpose: nothing renders differently because
+   * of it, and putting it in state would re-render the map on every pan.
+   * Raised by any gesture; lowered only by the two effects that represent an
+   * explicit request to be moved — a new `camera` (a zip) and a new `focus`
+   * (a search result or a card).
+   */
+  const userMovedRef = useRef(false);
 
   // Handlers live in a ref so re-renders don't tear down and rebuild markers.
   const onSelectRef = useRef(onSelectVenue);
@@ -249,11 +263,47 @@ export function MapCanvas({
    * the stylesheet is parsed", it is idempotent however many times it fires and
    * self-heals after any style change.
    */
+  /**
+   * The state whose districts are currently ON the map (g4 item 3).
+   *
+   * A ref, not state: `ensureDistricts` is a stable callback subscribed to
+   * `styledata`, and it has to know what it built LAST time to know whether
+   * to tear it down. Held separately from `focusStateOcdId` because the two
+   * disagree for the whole duration of a fetch, and that gap is exactly when
+   * the old state's boundaries used to survive into the new state's view.
+   */
+  const districtStateRef = useRef<string | null>(null);
+  const focusAbbrRef = useRef<string | null>(stateAbbrFromOcdId(focusStateOcdId));
+  const focusOcdRef = useRef<string | null>(focusStateOcdId ?? null);
+  useEffect(() => {
+    focusAbbrRef.current = stateAbbrFromOcdId(focusStateOcdId);
+    focusOcdRef.current = focusStateOcdId ?? null;
+  }, [focusStateOcdId]);
+
   const ensureDistricts = useCallback(() => {
     const map = mapRef.current;
     if (!map || !map.getStyle()?.layers?.length) return;
 
-    const wanted = districtTypesRef.current;
+    const abbr = focusAbbrRef.current;
+    /*
+     * g4 item 3: NO ACTIVE STATE MEANS NO DISTRICT BOUNDARIES ANYWHERE.
+     *
+     * `wanted` is emptied rather than the loop being skipped, so the removal
+     * pass below runs and the previous state's layers actually come off. A
+     * `return` here would have left them drawn — the same shape as the stale
+     * mask in item 1, one layer down.
+     */
+    const wanted = abbr ? districtTypesRef.current : [];
+
+    // The active state changed under the layers: every one of them is now
+    // holding the wrong state's geometry, so they all go before anything is
+    // added back. Selecting a new state depopulates the old.
+    if (districtStateRef.current !== abbr) {
+      for (const type of DISTRICT_TYPES) {
+        if (districtLayerPresent(map, type)) removeDistrictLayer(map, type);
+      }
+      districtStateRef.current = abbr;
+    }
 
     // Drop what is no longer asked for, before adding what is.
     for (const type of DISTRICT_TYPES) {
@@ -265,14 +315,19 @@ export function MapCanvas({
     for (const type of wanted) {
       if (districtLayerPresent(map, type)) continue;
 
-      loadDistricts(type)
+      loadDistricts(type, abbr)
         .then((data) => {
           // Re-check: the fetch is async and the style may have moved on.
           const live = mapRef.current;
           if (!live) return;
           if (!districtTypesRef.current.includes(type)) return;
           if (!live.getStyle()?.layers?.length) return;
-          addDistrictLayer(live, type, data);
+          // ...and the ACTIVE STATE may have moved on too. Without this the
+          // reader who types an Arizona zip while New Hampshire's school
+          // districts are still in flight gets New Hampshire's boundaries
+          // painted over Arizona, seconds after the map has flown.
+          if (focusAbbrRef.current !== abbr) return;
+          addDistrictLayer(live, type, data, abbr);
         })
         .catch(() => onDistrictErrorRef.current());
     }
@@ -377,7 +432,12 @@ export function MapCanvas({
     let userMoved = false;
     let settleTimer: number | undefined;
     const onMoveStart = (event: { originalEvent?: unknown }) => {
-      if (event.originalEvent) userMoved = true;
+      if (event.originalEvent) {
+        userMoved = true;
+        // g4 item 5: the reader has taken the camera. It stays theirs until
+        // an explicit action hands it back — see the auto-frame effect.
+        userMovedRef.current = true;
+      }
       window.clearTimeout(settleTimer);
     };
     const onMoveEnd = () => {
@@ -426,6 +486,69 @@ export function MapCanvas({
       map.zoomTo(map.getZoom() - by, {}, { originalEvent: new Event("wheel") });
     };
 
+    /*
+     * The MAP probe (g4) — the third of the read-only instruments, and the
+     * one the g4 walk checks are built on.
+     *
+     * Four of this session's items are claims about map STATE that no
+     * screenshot can settle: which state the focus layers point at, which
+     * district layers exist, whether the zip shading is present, and whether
+     * the camera moved. g3's lesson was that three defects survived
+     * screenshots and died to measurement, so these are read off the map
+     * itself rather than off pixels.
+     *
+     * Read-only by construction: it returns copies of ids and filters and
+     * nothing in the product consults it, so it cannot become a feature by
+     * accident. Same standing as `__wtpZoom` and `__wtpPinCount`.
+     */
+    /*
+     * The map's projection, for the extrusion measurement only.
+     *
+     * `scripts/measure-extrusion.mts` samples the rendered canvas along
+     * normals crossing the state border, and only the live map can say where
+     * on screen a border vertex has landed. Read-only and nothing in the
+     * product consults it — the same standing as the three probes around it.
+     */
+    // Typed through `ProjectPoint` rather than an inline arrow: the
+    // server/client boundary guard reads any indented `name: (args) => Ret`
+    // as an injected function prop, and a window cast is neither injected nor
+    // a prop. Naming the shape says the same thing without tripping it.
+    (window as unknown as { __wtpProject?: ProjectPoint }).__wtpProject = (p) =>
+      map.project(p);
+
+    (window as unknown as { __wtpMapProbe?: () => unknown }).__wtpMapProbe =
+      () => {
+        const centre = map.getCenter();
+        const layers = (map.getStyle()?.layers ?? []).map((l) => l.id);
+        const districtLayers = layers.filter((id) => id.startsWith("district-"));
+        return {
+          zoom: map.getZoom(),
+          centre: { lat: centre.lat, lng: centre.lng },
+          /** Which state is raised — null when none, and then nothing is muted. */
+          focusOcdId: focusOcdRef.current,
+          /** The state the district layers were actually built for (item 3). */
+          districtState: districtStateRef.current,
+          /** Every district layer currently on the style, by id. */
+          districtLayers,
+          /**
+           * The state each district LINE layer is filtered to. Read back off
+           * the map rather than assumed, because item 3's claim is about what
+           * the map is drawing and not about what the app intended.
+           */
+          districtFilterStates: [
+            ...new Set(
+              districtLayers
+                .filter((id) => id.endsWith("-line"))
+                .map((id) => filterStateAbbr(map.getFilter(id))),
+            ),
+          ],
+          /** The zip shading (item 4), present or absent. */
+          zipShading: layers.filter((id) => id.startsWith(ZIP_SHADE_SOURCE)),
+          /** Total style layers, for item 3's before/after load measurement. */
+          layerCount: layers.length,
+        };
+      };
+
     return () => {
       window.clearTimeout(settleTimer);
       map.off("movestart", onMoveStart);
@@ -467,6 +590,9 @@ export function MapCanvas({
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !camera) return;
+
+    // An explicit request to be moved hands the camera back (g4 item 5).
+    userMovedRef.current = false;
 
     const options = {
       center: [camera.lng, camera.lat] as [number, number],
@@ -552,22 +678,75 @@ export function MapCanvas({
     [outlines, focusStateOcdId],
   );
 
-  // Re-added on every style load, exactly like the district layers: a
-  // basemap swap throws every custom layer away.
+  /*
+   * THE CURRENT ZIP, SHADED (g4 item 4 — the author's ask).
+   *
+   * A map layer rather than more SVG: a tint belongs on the map, where the
+   * basemap's own labels and this app's pins occlude it correctly. The
+   * extrusion is DOM only because it has to BLUR what is underneath it.
+   *
+   * The polygon comes from `/api/zcta/<zip>` one at a time. The full ZCTA
+   * geometry for the covered states is 1.06 MB and a reader looks at exactly
+   * one polygon of it, so it stays on the server — see lib/geo/zcta-outline.ts.
+   *
+   * Re-applied on every style load, exactly like the district layers: a
+   * basemap swap throws every custom layer away.
+   */
+  const [zipOutline, setZipOutline] = useState<ZipOutlineFeature | null>(null);
+  const zipOutlineRef = useRef<ZipOutlineFeature | null>(null);
+  useEffect(() => {
+    zipOutlineRef.current = zipOutline;
+  }, [zipOutline]);
+
+  useEffect(() => {
+    const zip = camera?.zip ?? null;
+    let live = true;
+    void (async () => {
+      // No zip means no shape to answer with, and the clear goes through the
+      // same async path as an answer rather than being set synchronously
+      // inside the effect — a synchronous setState here cascades a render,
+      // and it is also the correct ORDER: the previous zip's tint must not
+      // survive one paint into a new zip.
+      if (!zip) {
+        if (live) setZipOutline(null);
+        return;
+      }
+      try {
+        const response = await fetch(`/api/zcta/${encodeURIComponent(zip)}`);
+        if (!response.ok) return;
+        const data = (await response.json()) as { outline: ZipOutlineFeature | null };
+        // The zip may have changed while this was in flight. Applying a stale
+        // answer would shade the zip the reader just LEFT, which is item 1's
+        // defect wearing item 4's clothes.
+        if (live) setZipOutline(data.outline ?? null);
+      } catch {
+        // Orientation only. A map with no zip tint is a working map.
+      }
+    })();
+    return () => {
+      live = false;
+    };
+  }, [camera?.zip]);
+
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !outlines) return;
+    if (!map) return;
     const apply = () => {
-      if (!map.isStyleLoaded()) return;
-      addStateFocusLayers(map, outlines, firstSymbolLayerId(map));
-      setStateFocus(map, focusStateOcdId ?? null);
+      const live = mapRef.current;
+      if (!live || !live.getStyle()?.layers?.length) return;
+      const feature = zipOutlineRef.current;
+      // No zip resolved, or a zip we hold no polygon for: nothing is shaded.
+      // Never a stale neighbour's outline, which would be a wrong claim about
+      // where the reader is standing rather than a missing decoration.
+      if (!feature) removeZipShade(live);
+      else applyZipShade(live, feature, firstSymbolLayerId(live));
     };
     apply();
     map.on("styledata", apply);
     return () => {
       map.off("styledata", apply);
     };
-  }, [outlines, focusStateOcdId]);
+  }, [zipOutline]);
 
   /*
    * The projection, handed to the scrim as a STABLE function.
@@ -581,12 +760,23 @@ export function MapCanvas({
   const [subscribeMove, setSubscribeMove] = useState<
     ((onMove: () => void) => () => void) | null
   >(null);
+  /**
+   * The camera's zoom, read at DRAW time (g4 item 2).
+   *
+   * The rise is sized in screen pixels and its size scales with zoom, so the
+   * overlay needs the zoom on every frame of a pinch. Passed as a getter
+   * rather than a number: a prop would re-render this whole subtree sixty
+   * times a second to change two filter radii.
+   */
+  const [zoomOf, setZoomOf] = useState<(() => number) | null>(null);
 
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    // `setState` with a function argument would CALL it, so both are wrapped.
+    // `setState` with a function argument would CALL it, so all three are
+    // wrapped.
     setProjectFn(() => (lngLat: [number, number]) => map.project(lngLat));
+    setZoomOf(() => () => map.getZoom());
     setSubscribeMove(() => (onMove: () => void) => {
       map.on("move", onMove);
       map.on("zoom", onMove);
@@ -681,6 +871,10 @@ export function MapCanvas({
     const map = mapRef.current;
     if (!map || !focus) return;
 
+    // A search result or a card is an explicit request to be moved, so it
+    // hands the camera back to the app (g4 item 5).
+    userMovedRef.current = false;
+
     const options = {
       center: [focus.lng, focus.lat] as [number, number],
       zoom: focus.zoom ?? 13,
@@ -739,8 +933,36 @@ export function MapCanvas({
     // viewport where they wanted it (2i).
     if (!allowAutoFrame) return;
 
+    /*
+     * g4 item 5 — "the map stops dragging the reader back".
+     *
+     * The author's report was that free panning GLIDES BACK TO THE STARTING
+     * POINT. That rules out drag inertia, which continues a motion and never
+     * reverses it, and it names this timer exactly: the reader pans away, and
+     * 2.8 seconds later `fitBounds` flies the camera back to a frame computed
+     * around the zip's own centroid — the starting point, by construction.
+     *
+     * `allowAutoFrame` did not catch it because it is about where the RESULT
+     * came from, not about what the reader has done since. A zip-driven
+     * result keeps `allowAutoFrame` true for as long as it is on screen, so
+     * every pan inside that window was living on borrowed time: the venues
+     * array only had to change once — a refresh, a filter, a late arrival —
+     * to re-arm a timer that then yanked the camera home.
+     *
+     * So the gate is the READER's own hand. Once they pan or zoom, no
+     * automatic reframe may move the camera again until a new explicit action
+     * justifies it — a zip change, a search result, a card opening — each of
+     * which clears the flag where it is raised, in `camera`/`focus`.
+     */
+    if (userMovedRef.current) return;
+
     // Let the fly-to land before overriding where it went.
     const timer = window.setTimeout(() => {
+      // Re-checked INSIDE the timer as well as before it. The whole defect
+      // lives in the 2.8 s gap: the reader's pan almost always happens after
+      // the effect ran and before the callback fires, and a guard that only
+      // runs at scheduling time cannot see it.
+      if (userMovedRef.current) return;
       if (!frameAllVenues) {
         const anyVisible = venues.some((venue) =>
           map.getBounds().contains([venue.lng, venue.lat]),
@@ -776,6 +998,10 @@ export function MapCanvas({
         outline={focusOutline}
         project={projectFn}
         subscribe={subscribeMove}
+        zoomOf={zoomOf}
+        // The rise stands on the basemap, so its light and shade are sized
+        // against that ground — see riseAlphasFor.
+        theme={theme === "light" ? "light" : "dark"}
       />
     </div>
   );

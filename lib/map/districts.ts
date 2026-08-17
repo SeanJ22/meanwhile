@@ -5,6 +5,7 @@ import type { Map as MapLibreMap, MapGeoJSONFeature } from "maplibre-gl";
 // exercised by tests/municipal-layer.test.ts (the §4.2 lesson again).
 import { TIER_ACCENT_VAR, type Tier } from "../ocd/tiers.ts";
 import type { DistrictType } from "../state/types.ts";
+import { stateFilter } from "./state-focus.ts";
 
 /**
  * District overlays.
@@ -100,7 +101,10 @@ interface LayerSpec {
 
 export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
   congressional: {
-    files: ["cd119.geojson"],
+    // Split per state by `pnpm cd:split` (g4 item 3). The national file is
+    // 1.59 MB — larger than every other overlay put together — and a reader
+    // in Tucson has no use for Ohio's boundaries. Arizona's share is 23 KB.
+    files: ["cd119-04.geojson", "cd119-33.geojson", "cd119-34.geojson"],
     tier: "national",
     label: "Congressional",
     dash: [8, 3],
@@ -225,7 +229,47 @@ export function keepFeature(
   return GOVERNING_FUNCSTAT.has(funcstat);
 }
 
-const cache = new Map<DistrictType, Promise<DistrictCollection>>();
+/* --------------------------------------------------- the active state --- */
+
+/**
+ * FIPS by USPS code — the one place the two vocabularies meet on the client.
+ *
+ * The geo files are named by FIPS because Census names them that way; the
+ * feature property and the focus state are USPS because that is what a
+ * reader-facing label would be. Adding a state adds a line here and a line in
+ * `scripts/fetch-state-outlines.mts`.
+ */
+const FIPS_BY_ABBR: Record<string, string> = { AZ: "04", NH: "33", NJ: "34" };
+
+/**
+ * Which of a type's files are worth fetching for one state (g4 item 3).
+ *
+ * A file whose name ends in `-<fips>` belongs to that state; anything else is
+ * national and is always included (`county-us.geojson` holds three counties
+ * in total, so splitting it would cost more in files than it saves in bytes).
+ *
+ * **A null state returns NOTHING**, and that is the item's rule rather than a
+ * defensive default: with no active state there are no district boundaries
+ * anywhere, so there is nothing to fetch. Before this, entering a New
+ * Hampshire zip left New Jersey's lines on the map at regional zoom, and at
+ * fifty states that is an unreadable mat of boundaries paid for on every
+ * load.
+ */
+export function filesFor(
+  type: DistrictType,
+  stateAbbr: string | null,
+): string[] {
+  if (!stateAbbr) return [];
+  const fips = FIPS_BY_ABBR[stateAbbr];
+  if (!fips) return [];
+  return DISTRICT_LAYERS[type].files.filter((file) => {
+    const match = /-(\d{2})\.geojson$/.exec(file);
+    return !match || match[1] === fips;
+  });
+}
+
+/** Cached per type AND state — the same type holds different data per state. */
+const cache = new Map<string, Promise<DistrictCollection>>();
 
 /**
  * Fetch and merge a type's files.
@@ -241,14 +285,17 @@ const cache = new Map<DistrictType, Promise<DistrictCollection>>();
  */
 export function loadDistricts(
   type: DistrictType,
+  stateAbbr: string | null,
 ): Promise<DistrictCollection> {
-  const existing = cache.get(type);
+  const key = `${type}@${stateAbbr ?? "none"}`;
+  const existing = cache.get(key);
   if (existing) return existing;
 
   const spec = DISTRICT_LAYERS[type];
+  const files = filesFor(type, stateAbbr);
 
   const promise = Promise.all(
-    spec.files.map(async (file) => {
+    files.map(async (file) => {
       const response = await fetch(`/geo/${file}`);
       if (response.status === 404) return [];
       if (!response.ok) throw new Error(`/geo/${file} returned ${response.status}`);
@@ -262,11 +309,11 @@ export function loadDistricts(
     }))
     .catch((error) => {
       // Let the next attempt retry rather than caching the failure forever.
-      cache.delete(type);
+      cache.delete(key);
       throw error;
     });
 
-  cache.set(type, promise);
+  cache.set(key, promise);
   return promise;
 }
 
@@ -307,9 +354,22 @@ export function addDistrictLayer(
   map: MapLibreMap,
   type: DistrictType,
   data: DistrictCollection,
+  stateAbbr: string | null,
 ): void {
   const spec = DISTRICT_LAYERS[type];
   const source = sourceId(type);
+  /*
+   * g4 item 3, the belt to `filesFor`'s braces.
+   *
+   * Most types are already per-state files, so this filter changes nothing
+   * for them — but `county-us.geojson` is national by design (three counties
+   * in total; splitting it would cost more in files than it saves in bytes),
+   * and without a filter a New Hampshire reader saw Pima County's outline at
+   * regional zoom. It is also what makes the rule ASSERTABLE: a walk reads
+   * the filter back off the map through `__wtpMapProbe` rather than trying to
+   * photograph the absence of a line.
+   */
+  const filter = stateFilter(stateAbbr);
 
   // Colour by tier, not by type. The dash pattern is the shared signature of
   // "this is a district"; hue says which tier it belongs to.
@@ -347,6 +407,7 @@ export function addDistrictLayer(
       id: fillLayerId(type),
       type: "fill",
       source,
+      filter,
       paint: {
         "fill-color": accent,
         "fill-opacity": [
@@ -369,6 +430,7 @@ export function addDistrictLayer(
       id: lineLayerId(type),
       type: "line",
       source,
+      filter,
       layout: { "line-join": "round", "line-cap": "butt" },
       paint: {
         "line-color": accent,
@@ -413,6 +475,7 @@ export function addDistrictLayer(
       id: labelLayerId(type),
       type: "symbol",
       source,
+      filter,
       minzoom: spec.labelMinZoom,
       layout: {
         "text-field": ["get", "label"],

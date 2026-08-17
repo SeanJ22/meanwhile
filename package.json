@@ -49,7 +49,10 @@
     "verify:sources": "tsx scripts/verify-sources-tab.mts",
     "dotgov:fetch": "tsx scripts/fetch-dotgov.mts",
     "states:fetch": "tsx scripts/fetch-state-outlines.mts",
-    "shoot:focus": "tsx scripts/shoot-state-focus.mts"
+    "shoot:focus": "tsx scripts/shoot-state-focus.mts",
+    "zcta:outlines": "tsx scripts/fetch-zcta-outlines.mts",
+    "cd:split": "tsx scripts/split-congressional.mts",
+    "measure:extrusion": "tsx scripts/measure-extrusion.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

@@ -4,7 +4,22 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-17 — **the numbers stop contradicting each other, and
+Last updated: 2026-08-17 — **the snapshot counted two things and stated one
+number.** A bounded hotfix. The scheduled meetings refresh had been failing on
+its own gate since 2026-08-16T20:50Z with `snapshot holds 217 meetings but
+sources claim 193`: 193 rows fetched fresh, 24 carried forward for the source
+whose hosts refuse CI's egress, and an invariant that predated carry-forward
+comparing the total against the fresh count. The gate was right and nothing
+false shipped; the arithmetic was incomplete. The snapshot now STATES both
+numbers, every carried row names its source and the instant it was last
+actually fetched, and four equalities have to close at the write boundary and
+on every read — nothing was loosened, and four planted breakages were each run
+against the real gate first. The render half shipped with it: a carried row no
+longer inherits the footer's "last checked" line, it states its own. Item 1c
+closed at four points, derived backward from an observed run rather than from
+an inherited number: 131, 134, 135, 148 — no check was ever missing. See §39.
+
+Before that: 2026-08-17 — **the numbers stop contradicting each other, and
 our own robots stop counting as readers.** Four places where a stated number
 and a rendered thing disagreed, three of them fixed and one reconciled: Who
 Governs Here stated 4 / 5 / 5 for one list (two definitions on one surface,
@@ -1923,7 +1938,14 @@ replaced.
 
 ## 7. Current state of the branch
 
-**Working on `claude/nh-nj-depth-0815`** (2026-08-15, fourth session of
+**Working on `claude/h2-carry-forward-truth-0817`** (2026-08-17, the
+carry-forward hotfix), branched from `main` at `2dbae55` — the session §39
+records: the snapshot invariant taught that carry-forward exists (D66), the
+carried row that no longer inherits the footer's freshness (M142), and item
+1c closed at four points (G03). Two items, both the same false claim at two
+layers; nothing else moved.
+
+**Previously: `claude/nh-nj-depth-0815`** (2026-08-15, fourth session of
 the day), branched from `main` at the PR #37 merge — the session §27
 records: the state folders and the zip playbook born (R20), the adapter
 window that dropped sixty days of history at every zip (M76), Rockaway's
@@ -8429,3 +8451,193 @@ not exist yet would be building against a surface that is still hypothetical.
 
 M137 and M138 are marked **Absorbed** in the tracker, per the brief, and their
 notes say where their spec now lives.
+
+---
+
+## 39. The 2026-08-17 hotfix — the snapshot counted two things and stated one number
+
+A bounded two-item hotfix on `claude/h2-carry-forward-truth-0817`, branched
+from `main` at `2dbae55`. Both items are the same false claim seen at two
+layers: the pipeline layer, where an invariant refused a correct refresh, and
+the render layer, where a footer spoke for rows nobody had reached. Nothing
+else moved — G05, G07 and G09 stay parked, no interface rule was touched, and
+the author's production pass remains the next session's whole subject.
+
+**Session label.** This session calls itself `hotfix-0817` in code comments and
+in `walk:all` check tags. The brief reserves `h2` for the planned depth session
+— its item 3 owns the CivicPlus rung-12 attempt — and a hotfix wearing that
+session's name would misattribute both directions later. The branch name was
+already typed by then and is left alone; the labels inside the work are the
+ones a future failure prints.
+
+### Item 1 — the invariant learns that carry-forward exists
+
+**The diagnosis, in this session's words.** The scheduled *Refresh meetings
+snapshot* job had failed at least twice with `snapshot holds 217 meetings but
+sources claim 193`, and the committed snapshot had been frozen at
+`2026-08-16T20:50Z` ever since — every refresh since then blocked by its own
+gate. Nothing about the retrieval was wrong. 193 rows were fetched fresh; 24
+were carried forward for `schedulepage`, whose hosts refuse the CI runner's
+egress; 193 + 24 = 217. The assertion was written when a snapshot held exactly
+one kind of row, so *the rows present* and *the rows this run fetched* were the
+same number and either could stand in for the other. Carry-forward introduced a
+second kind of row and never told the arithmetic.
+
+The gate was behaving correctly and is the reason nothing false shipped. The
+defect is that the thing it measured had stopped being the thing it meant.
+
+**The brief's named suspect is confirmed, with one correction.** Carried rows
+were merged into the same `meetings` array as fresh ones with **no field
+distinguishing them**. The per-source `carriedForward` count *was* recorded at
+write time — that much of the suspect is wrong — but it could not be
+**recounted against the rows it counted**, and no read path could tell a
+carried row from a fresh one. A count nothing can recheck is not much better
+than a derived one: it is a number with no witness.
+
+**What ships.**
+
+| | |
+|---|---|
+| `MeetingsSnapshot.counts` | required, and states `fresh`, `carried`, `total` |
+| `Meeting.carried` | `{ source, lastFreshAt }`, stamped at write time by `carryForward` |
+| `reconcileCounts()` | four equalities, enforced at the write boundary and on every read |
+
+The four equalities: `fresh + carried === total`; `total ===` the rows present;
+`fresh ===` the sum of the per-source `normalized` — **the original assertion,
+preserved exactly, now aimed at the number it was always about**; and
+`carried ===` the rows carrying the mark, per source as well as in total. A
+carried row that does not name its source, names a source the snapshot does not
+account for, or states no parseable last-fresh instant fails the check.
+
+**Nothing was loosened.** No `>=`, no tolerance, no skip-when-carried, and the
+fourth forbidden repair — folding the carried rows into the per-source
+`normalized` so the sums match — is itself a test that must still fail, because
+those rows were not fetched and a source claiming it normalized them is the
+false statement the whole gate exists to catch.
+
+**The mark is preserved, never restamped.** A row carried through three failed
+runs keeps naming the run that actually fetched it. Restamping would walk the
+timestamp forward one refusal at a time, until a row nobody had fetched in a
+week claimed to be hours old — a freshness manufactured by failing.
+
+**Proven to fail before it was trusted.** Four mutations of the *real committed
+file* were each run against the *real CI gate*:
+
+| planted breakage | what the gate said |
+|---|---|
+| the `counts` block removed | `snapshot must state its counts: fresh, carried, total` |
+| `fresh` disagreeing with the per-source sum | `states 228 fresh meetings but sources claim 229` |
+| a carried row with no last-fresh instant | `carried meeting "legistar:pima:1803" does not state a parseable instant at which it was last fresh` |
+| `fresh + carried` not closing | `counts do not close: 229 fresh + 3 carried !== 229 total` |
+
+Plus planted fixtures inside `tests/snapshot.test.ts` built at the real scale —
+193 fresh across two sources and 24 carried for a third, 217 rows — so the
+repair is proven against the case that broke rather than a two-row miniature of
+it. The file was restored byte-identical after each mutation.
+
+**End to end, twice, because one run could not reach the failure.**
+`pnpm ingest composite` was run against the live portals: 10 of 10 sources
+reachable from this egress, `217 fresh + 0 carried = 217`, written and
+validated, and the committed snapshot is now today's rather than yesterday's. A
+developer's egress is not refused by `kearsarge.org`, so that run can never
+produce the CI shape — so the carry path was driven separately through the real
+`carryForward` and `writeSnapshot` against the real snapshot with
+`schedulepage` forced to fail: **189 fresh + 28 carried = 217**, written, read
+back, every mark intact, one distinct last-fresh day. The old invariant would
+have refused that file with `217 !== 189`.
+
+**This is not a fix for the egress wall.** `schedulepage` is still unreachable
+from CI — ladder rung 5 — and carry-forward masks that wall honestly rather
+than repairing it.
+
+### Item 2 — the reader was told a freshness that was true of some rows
+
+**The diagnosis, in this session's words.** The map footer reads
+`LAST CHECKED 6 hours ago`. It is computed from the snapshot's single
+`generatedAt`, which is a fact about the *file* — true of every row the run
+fetched and false of every row it carried. At 03255 the carried rows are
+exactly Kearsarge's and Newbury's, so the reader most likely to be misled is
+the one looking at the calendar this product had to fight hardest to get. That
+is a render default manufacturing a claim, and the rule against it is
+constitutional.
+
+**What ships, and what deliberately does not.** A carried row does not inherit
+the snapshot's freshness; it states its own, in the register each surface
+already speaks:
+
+- **the footer** names the count and — when every carried row agrees on one day
+  — that day. When they disagree it says each row states its own. Naming the
+  oldest understates some rows and naming the newest overstates others, and
+  neither is a claim we can make, so `lastFreshAt` is null in that case and the
+  null renders as its own sentence rather than as a plausible date.
+- **the panel card** gains a `Last reached …` line under the source org.
+- **the popup** gains a `Last reached` row.
+
+No badge, no icon, no colour, no new component, no reordering, no filtering of
+carried rows. **How staleness should look is the author's**, and it is a row in
+the next interface session, not this one.
+
+**The guard was tightened after it passed against broken code.** The first
+version asserted each surface's source contained `meeting.carried` and
+`lastFreshAt`. Three of the four planted mutations passed it — replacing the
+render gate with `{false && (` leaves both strings sitting in a dead branch. It
+now pins the **conditional each surface renders behind**, and all four
+mutations redden.
+
+**The walk check is honest about not being able to run.** Carried rows exist
+only when a source was unreachable on the refresh that wrote the committed
+snapshot, so on a healthy day there is nothing at 03255 to assert. The check
+then reports COULD NOT RUN, named, with the snapshot's `generatedAt` and the
+reason — never a pass it did not earn — and it is never retired for being
+unable to run. The condition it guards is precisely the condition it cannot
+rehearse.
+
+### Item 1c — closed at four points, and nothing was inherited
+
+The author held this row open because g6 reported `135 − 1 + 14 = 148`, which
+is this session's predecessor's own arithmetic rather than the reconciliation
+the row asked for, and because HEAD has since moved off h's merge.
+
+**Nothing was taken on trust, including g5's parent.** It was recovered as
+`d6d477d` from `git log -1 57a23ec^1` — the first parent of g5's first merge,
+PR #51 — rather than read off a document.
+
+| commit | what it is | runtime checks |
+|---|---|---|
+| `d6d477d` | g5's parent | **131** (derived, and equal to g4's own reported number) |
+| `68987ee` | g5's merge, PR #54 | **134** |
+| `eb4df50` | h's merge, PR #56 | **135** |
+| `2dbae55` | HEAD at session open | **148** (OBSERVED — full production run, 0 regressions, 0 could not run) |
+
+**The method runs backward from the observed number, so no multiplier is
+assumed.** The run's own per-session census is the multiplicity evidence: it
+says g5 contributes exactly **7** checks, h exactly **1**, and g6 exactly
+**14** — measured, not counted by hand. The two retirements come from the
+diffs: g5 replaced `[g4] the current zip is shaded` in place with `[g5] the zip
+draws nothing on the map`, both inside a four-iteration loop (−4), and g6
+removed `[0818] 07866: the mayor line renders` (−1). So
+
+`148 − 7 − 1 − 14 + 4 + 1 = 131`
+
+at g5's parent — which is **g4's own independently recorded number**, "Green
+locally: 131 of 131", reached from the opposite direction. Forward, per step:
+`131 − 4 + 7 = 134`, `134 + 1 = 135`, `135 − 1 + 14 = 148`. All four close.
+
+**No check is missing and none was restored.** The discrepancy was a
+mis-transcribed starting integer — 133 where the truth was 131 — and g6's
+diagnosis of it stands; what was owed was the fourth point and an independent
+derivation, and those are above.
+
+**One caveat recorded rather than smoothed.** The total is data-dependent — per
+zip loops, the `MEETING_FLOORS` table, and any check that degrades to
+could-not-run — so two runs of the same commit can differ with no code change.
+That is the argument for the printed census over a transcribed number, and it
+is why this table states which count was observed and which were derived.
+
+### Playbook diff
+
+One entry added to `docs/zip-playbook.md`: **a count derived at read time stops
+being true when the data grows a new case**. It carries the failure, the four
+forbidden repairs, the recount-against-the-rows rule, the plant-the-failure
+discipline, and the observation that a defect of this shape usually has a
+render half one layer up.

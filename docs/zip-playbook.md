@@ -824,3 +824,40 @@ reading was "the 2022 workbook disagrees with our committed extract."
 - **Prefer `FIPS_STATE` over `STATE` in Census workbooks.** `STATE` is the
   postal abbreviation; the numeric code is in `FIPS_STATE`, and preferring the
   wrong one matches zero rows in every county.
+
+## A count derived at read time stops being true when the data grows a new case
+
+The scheduled meetings refresh failed twice on `snapshot holds 217 meetings
+but sources claim 193`. Nothing about the retrieval was wrong: 193 rows were
+fetched fresh and 24 were carried forward for a source the CI runner's egress
+cannot reach. The gate was right to refuse — what it was measuring had gone
+stale.
+
+The invariant was written when a snapshot held exactly one kind of row, so
+"the rows present" and "the rows this run fetched" were the same number and
+either could stand for the other. Carry-forward introduced a second kind and
+never told the arithmetic. **A derived count is a claim about an assumption,
+and the assumption is invisible in the expression that derives it.**
+
+- **Record the number at the moment it is true, beside the thing it counts.**
+  The snapshot now states `fresh`, `carried` and `total`, written where they
+  are produced. The old expression is still there — it just has to agree with
+  a recorded number instead of standing in for one.
+- **A count must be recountable against its own rows.** The per-source
+  `carriedForward` number had existed for a day and could not be checked
+  against anything, because no ROW said it was carried. Marking the rows is
+  what turned a claim into a measurement.
+- **When a gate fails on real data, suspect the gate's model before the
+  data.** "Loosen it to `>=`", "skip it when carried rows are present", "make
+  the per-source claims include the carried rows" — each makes the failure go
+  away and leaves a test that cannot tell correct from incorrect.
+- **Plant the failure before trusting the fix.** Four mutations of the real
+  committed file (counts block removed; fresh disagreeing with the per-source
+  sum; a carried row with no last-fresh instant; fresh + carried not closing)
+  were each run against the real gate and each failed it. A test written after
+  a fix and never seen fail proves nothing.
+- **The same defect has a render half, one layer up.** Every reader-facing
+  freshness statement derived from the snapshot's single `generatedAt`, so the
+  footer said "last checked 6 hours ago" about rows nobody had reached in a
+  day. Where data grows a second kind, look for every surface that summarizes
+  it with one number.

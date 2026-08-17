@@ -14,10 +14,31 @@ export interface SnapshotFailureNote {
   ocdIds: string[];
 }
 
+/**
+ * The rows in the snapshot that the run behind it never retrieved (hotfix-0817).
+ *
+ * `generatedAt` is the age of the FILE. It is true of the rows this run
+ * fetched and false of the rows carried out of the previous snapshot because
+ * a source refused — and the footer stated it for all of them, which is a
+ * render default manufacturing a claim: "last checked 6 hours ago" about a
+ * Kearsarge sitting nobody has been able to reach for a day.
+ */
+export interface SnapshotCarriedNote {
+  count: number;
+  /**
+   * When those rows were last actually fetched — non-null only when they all
+   * agree on one day. Null renders as its own sentence, never as a date
+   * picked from among several.
+   */
+  lastFreshAt: string | null;
+}
+
 export interface SnapshotStatus {
   generatedAt: string;
   sources: Array<{ source: string; ok: boolean; error: string | null }>;
   failed: SnapshotFailureNote[];
+  /** Present only when the snapshot holds rows this run did not retrieve. */
+  carried?: SnapshotCarriedNote;
 }
 
 /** "3 minutes ago" / "2 hours ago" / "4 days ago", coarse on purpose. */

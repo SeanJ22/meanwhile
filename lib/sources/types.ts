@@ -62,6 +62,40 @@ export interface Provenance {
 }
 
 /**
+ * This row was NOT retrieved on the run that wrote the snapshot holding it —
+ * it was carried forward from the previous snapshot because its source could
+ * not be reached (hotfix-0817, 2026-08-17).
+ *
+ * **Recorded at write time, never inferred at read time.** Before this, a
+ * carried row sat in the same array as a fresh one with nothing to tell them
+ * apart: the only per-source count of them (`carriedForward`) could not be
+ * reconciled against the rows it counted, and every reader-facing freshness
+ * statement — all of which derive from the snapshot's `generatedAt` — claimed
+ * a carried row had been checked on the run that never reached it. A count
+ * derived from an assumption stops being true the moment the thing it derives
+ * from grows a new case, and carry-forward was exactly that new case.
+ *
+ * Absent is the normal state and means the row was freshly retrieved by the
+ * run that wrote the snapshot. No adapter sets this — `carryForward` in
+ * `lib/meetings/carry-forward.ts` is the only writer.
+ */
+export interface CarriedForward {
+  /** The source whose refusal is the reason this row was carried. */
+  source: string;
+  /**
+   * Wall-clock instant at which this row was last actually retrieved.
+   *
+   * The row's own `provenance.collectedAt` — set by the adapter when it read
+   * the page — carried verbatim, so a row carried twice keeps naming the run
+   * that really fetched it rather than the most recent failure. Never a
+   * plausible substitute: a row whose collect time cannot be parsed falls
+   * back to the `generatedAt` of the snapshot it is being carried out of,
+   * which is a recorded instant too.
+   */
+  lastFreshAt: string;
+}
+
+/**
  * Where a meeting physically happens.
  *
  * `lat`/`lng` are the pin. A meeting with no resolvable coordinates cannot be
@@ -145,6 +179,12 @@ export interface Meeting {
   jurisdiction: string;
   status: MeetingStatus;
   provenance: Provenance;
+  /**
+   * Present exactly when this row came out of the previous snapshot because
+   * its source refused this run (hotfix-0817). See `CarriedForward` — and note that
+   * nothing about a carried row may render a freshness it does not have.
+   */
+  carried?: CarriedForward;
 }
 
 /**

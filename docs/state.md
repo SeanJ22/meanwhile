@@ -9005,3 +9005,118 @@ something.
 
 test 768 of 768 pass, lint 0 errors and 16 pre-existing warnings none in the
 touched files, build green.
+
+## 42. The 2026-08-17 census split — the board separates into build and decisions
+
+A tiny task. No product changes; no parked row moved.
+
+### The author marked 116 of 117 rows, and they were uncommitted
+
+The census came back with a Disposition on every row but one (T10, which has
+none). Those rulings sat in the working tree, and `Disposition` is the one
+column the generator does not produce and the tracker does not carry — so a
+regenerated CSV would not have been a stale copy of them, it would have been
+their absence, with nothing in the output saying they had ever existed.
+
+**`pnpm deferred` now refuses when the CSV on disk carries a single non-empty
+Disposition**, through the same gate as every other refusal, writing NOTHING —
+not the CSV and not the `.md`, because a half-regenerated pair is worse than an
+untouched one. There is deliberately no flag; the way past it is to move the
+marked file aside by hand, which is a decision made once rather than a flag
+learned by reflex.
+
+Proven both directions against the real file before it was trusted: it refused
+and named 116 rows with both files left byte-identical to their backups, and it
+regenerated cleanly once the marked file was moved aside — the exact route the
+refusal message gives. Then the markings were committed.
+
+### The split
+
+`docs/deferred.xlsx`, two tabs, from the author's ruling that non-code
+decisions were confusing mixed in with build work:
+
+* **Build — 92 rows**, 91 carrying a Disposition.
+* **Non-code decisions — 25 rows**, all 25 carrying one.
+* 92 + 25 = 117, and the generator refuses if that does not close.
+
+Which rows go where is read from `docs/deferred-noncode.json`, so correcting a
+mis-sort is one line. It holds the author's enumerated legal set (B05, B08,
+B09, D23) and business set (B01–B04, B06, B07, V01–V08, X02, X03, T04), plus
+four added under the "any other row whose explainer asks for a ruling" clause —
+P09, P12, R13, T06 — each of whose action is a decision and never a build.
+
+**Rows are MOVED, never altered.** Same eleven columns on both tabs, Disposition
+exactly as marked. The workbook generator reads the CSV and writes a workbook;
+it never consults the tracker and cannot compose a cell, and a test asserts it
+does not read the tracker at all.
+
+### Judgment calls, named so one line corrects them
+
+Four rows are on the non-code tab because the author's own enumeration put them
+there, while their disposition or explainer describes a build: **B01** ("Change
+name to Meanwhile for now across all spots" — a rename across the app),
+**V04** (build one race's alignment grid end to end), and **V08** (a
+candidate-side product surface). They stay on Non-code because the author named
+them; if any should move, it is one line in the JSON.
+
+Four rows went the other way, to Build, under the both-halves rule: **T10** (the deletion mechanism
+is code; the trigger is the author declaring testing over), **T07** (compiling
+a contacts document that lands in the repo), and **D46/D47** (parked decisions
+the author has now ruled "Build in H" / "Build pre H").
+
+### Why there is a ZIP writer in the repo
+
+An `.xlsx` is a ZIP of XML parts and this repo has no spreadsheet library —
+`scripts/gus-extract.mts` already reads the Census workbook by treating it as
+exactly that. Adding a dependency to write eleven columns of text was the worse
+trade. Archive timestamps come from `pnpm stamp` rather than the wall clock, so
+two runs on one day are byte-identical and a diff means a real change.
+
+**Verified rather than assumed, three ways.** The archive was read back through
+.NET's own `ZipFile`: 7 entries, and the sheet XML parses under
+`XmlDocument`. Every cell was round-tripped — 1,287 cells across both tabs
+compared against the CSV, **0 mismatches**, 117 distinct IDs. And Google Drive
+independently types the uploaded file as
+`application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`, which is a
+third party agreeing it is a workbook and not merely a valid zip.
+
+### The first binary in the mirror set, and the hazard it found
+
+`deferred.xlsx` takes the canonical set from twelve to thirteen and is the
+first binary in it. That surfaced a real defect before it shipped: the mirror's
+"does this copy match any committed version" check reads the file as text and
+trims whitespace, which on a zip compares two corrupted strings — it would have
+answered "matches no version in this file's history" and REFUSED every ordinary
+update of the workbook, a protection misfiring into a permanent block.
+
+Binary entries now compare raw bytes through a dedicated `gitShowBuffer()`.
+Deliberately not `tryRun` with `encoding: "buffer"`: `tryRun` ends in
+`.trim()`, a Buffer has no `.trim()`, so that call throws, is swallowed by the
+catch and returns `null` — which the caller reads as "this version does not
+match" rather than as "the comparison never ran". Telling those two apart is
+the same discipline the deploy gate already carries.
+
+### A guard that was testing its own assumptions
+
+Two of the census guards asserted the shape the GENERATOR emits — first that no
+header name held a comma, then that every field was quoted. Both died the moment
+the author opened the CSV in a spreadsheet and saved it back: Excel quotes only
+the fields that need it and writes CRLF, so a quote-boundary scan found nothing
+and the test reported that the `Notes` column had been DELETED. It had not.
+The guards now parse real CSV. This file is round-tripped through a spreadsheet
+by design, and a guard on it has to read CSV rather than the dialect one writer
+happens to produce.
+
+### Mirrored
+
+All thirteen, with Drive IDs now recorded for the census trio:
+
+* `deferred.csv` — 149,659 bytes, `1rgrbsLTdbX-EVQG7wvw2cMVZziyZDA2a`,
+  updated IN PLACE (created 16:56:34Z, modified 18:28:27Z, same id).
+* `deferred.xlsx` — 69,490 bytes, `1Gxo_IQzKYHyQCBheUyJ603ukpNZNBjfr`, new.
+* `deferred.md` — 30,251 bytes, `1MlqMq4l1EJfB9jVOBXqBK5M0szk5-Jq1`,
+  **not copied this run because it had not changed** — named rather than left
+  as a silent absence from the copied count.
+
+test 782 of 782 pass (4 new), lint 0 errors and 16 pre-existing warnings none
+in the touched files, build green.

@@ -41,7 +41,7 @@ test("the canonical mirror set lives in one place, and holds what was ruled into
   // the deferred census (R31) was added by instruction. Growth by decision is
   // fine — the failure this guards is the set living in two places and the
   // two disagreeing, which is what produced two contradictory reports.
-  assert.equal(MIRRORED_DOCS.length, 12, "the canonical set changed size — was that a decision?");
+  assert.equal(MIRRORED_DOCS.length, 13, "the canonical set changed size — was that a decision?");
 
   const names = MIRRORED_DOCS.map((d) => d.mirrorName);
   for (const expected of [
@@ -57,6 +57,7 @@ test("the canonical mirror set lives in one place, and holds what was ruled into
     "context.md",
     "deferred.md",
     "deferred.csv",
+    "deferred.xlsx",
   ]) {
     assert.ok(names.includes(expected), `${expected} left the canonical set`);
   }
@@ -67,10 +68,10 @@ test("the canonical mirror set lives in one place, and holds what was ruled into
     "civic-app-brief.md is back on the standing list — the ruling dropped it",
   );
 
-  // Ten copied, two generated. The generated pair have no repo counterpart,
+  // Eleven copied, two generated. The generated pair have no repo counterpart,
   // which is why they cannot be drift-checked and must not be counted as if
   // they could.
-  assert.equal(COPIED_DOCS.length, 10);
+  assert.equal(COPIED_DOCS.length, 11);
   assert.equal(MIRRORED_DOCS.filter((d) => d.repoPath === null).length, 2);
 });
 
@@ -334,10 +335,26 @@ test("the id map records the folder and the verification date", () => {
     /^\d{4}-\d{2}-\d{2}$/,
     "the verification date must be a real stamp",
   );
-  // All ten documents carry an id, and no two documents share one.
+  // Every document carries an id, and no two share one. The COUNT is read from
+  // the canonical set rather than restated — this assertion held a literal 10
+  // and broke the moment the set grew to 13, which is the same defect the
+  // handoff's "the canonical 10 present" line had, in a test this time.
   const ids = Object.values(map.docs) as string[];
-  assert.equal(ids.length, 10, "the document id map no longer covers all ten");
-  assert.equal(new Set(ids).size, 10, "two documents share a Drive id — a join that collapsed");
+  assert.equal(
+    ids.length,
+    MIRRORED_DOCS.length,
+    `the document id map covers ${ids.length} of ${MIRRORED_DOCS.length} mirrored document(s)`,
+  );
+  assert.equal(
+    new Set(ids).size,
+    MIRRORED_DOCS.length,
+    "two documents share a Drive id — a join that collapsed",
+  );
+
+  // And every one is keyed by a name the set actually holds.
+  const names = new Set(MIRRORED_DOCS.map((d) => d.mirrorName));
+  const strays = Object.keys(map.docs).filter((n) => !names.has(n));
+  assert.deepEqual(strays, [], `id map holds name(s) not in the mirror set: ${strays.join(", ")}`);
 });
 
 /* --------------------------------------------------------- 4: manifest --- */

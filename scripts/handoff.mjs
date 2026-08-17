@@ -152,6 +152,28 @@ function tryRun(cmd, args, opts = {}) {
   }
 }
 
+/**
+ * `git show rev:path` as raw bytes.
+ *
+ * Deliberately NOT `tryRun` with `encoding: "buffer"`: `tryRun` ends in
+ * `.trim()`, a Buffer has no `.trim()`, so that call throws, is swallowed by
+ * the catch, and returns `null` — which the caller would read as "this version
+ * does not match" rather than as "the comparison never ran". A check that
+ * cannot tell those two apart is the failure mode this repo keeps writing
+ * down; separating them is cheaper than another instance of it.
+ */
+function gitShowBuffer(rev, repoPath) {
+  try {
+    return execFileSync("git", ["show", `${rev}:${repoPath}`], {
+      cwd: ROOT,
+      maxBuffer: 64 * 1024 * 1024,
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+  } catch {
+    return null;
+  }
+}
+
 function sameBytes(a, b) {
   if (!existsSync(a) || !existsSync(b)) return false;
   if (statSync(a).size !== statSync(b).size) return false;
@@ -518,11 +540,23 @@ if (!existsSync(MIRROR)) {
     //
     // Comparing against HEAD alone is wrong and was: it flagged every ordinary
     // stale copy as diverged the moment a new commit landed.
-    const mirrorBytes = existsSync(to) ? readFileSync(to, "utf8") : null;
+    //
+    // BINARY entries take the same check on raw BYTES. Reading a `.xlsx`
+    // through a utf8 decode and then trimming whitespace off the end compares
+    // two corrupted strings, so the check would have answered "matches no
+    // version" on the first ordinary update of a mirrored workbook and refused
+    // it — a protection misfiring into a permanent block. `deferred.xlsx` was
+    // the first binary in the set and found this before it shipped.
+    const entry = MIRRORED_DOCS.find((d) => d.repoPath === repoPath);
+    const isBinary = entry?.binary === true;
+
+    const mirrorBytes = existsSync(to)
+      ? readFileSync(to, isBinary ? null : "utf8")
+      : null;
 
     if (mirrorBytes !== null) {
       const normalize = (s) => s.replace(/\r\n/g, "\n").trimEnd();
-      const target = normalize(mirrorBytes);
+      const target = isBinary ? mirrorBytes : normalize(mirrorBytes);
 
       const revs = (
         tryRun("git", ["rev-list", "--max-count=60", "HEAD", "--", repoPath]) ?? ""
@@ -531,6 +565,10 @@ if (!existsSync(MIRROR)) {
         .filter(Boolean);
 
       const known = revs.some((rev) => {
+        if (isBinary) {
+          const past = gitShowBuffer(rev, repoPath);
+          return past !== null && Buffer.compare(past, target) === 0;
+        }
         const past = tryRun("git", ["show", `${rev}:${repoPath}`]);
         return past !== null && normalize(past) === target;
       });

@@ -61,7 +61,8 @@
     "zip:universe": "tsx scripts/zip-universe.mts",
     "searchlog:backmark": "tsx scripts/searchlog-backmark.mts",
     "perf": "tsx scripts/perf.mts",
-    "deferred": "node scripts/deferred.mjs"
+    "deferred": "node scripts/deferred.mjs",
+    "deferred:xlsx": "node scripts/deferred-xlsx.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

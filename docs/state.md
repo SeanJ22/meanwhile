@@ -7522,6 +7522,34 @@ collapsed by design since g4 item 11, and that assertion would fail a correct
 build. Every assertion is repeated and reported as a rate. The same pass audits
 the bodies, districts and officials doors the same way.
 
+### A correction, recorded because it was shipped before it was caught
+
+The first production run of `pnpm measure:focus` came back 34 of 35, and the
+one failure was read as a real defect: at 03255, continental zoom, light theme,
+"the state's middle" moved 4.63 luminance units against the effect-disabled
+frame. `capSpecToSpan` was written and shipped against that number — the rise
+capped by the size of the shape it marks, so that a state smaller than its own
+shadow is not muted by it.
+
+**It was the wrong diagnosis and it fixed nothing that had been reported.** At
+z4 New Hampshire is 45 × 82 screen pixels and the cap does not bind there at
+all — span/6 is 7.5 against a feather of 4 — and the number did not move. What
+was actually happening is that the check's most central REACHABLE sample was
+Berlin, in the far north-east, because the central ones sat under cards; it is
+4 px inside the border, well within the mask's own 12 px ramp. The check was
+measuring the transition and calling it the interior.
+
+The check now refuses that frame by name rather than failing it: "the most
+central reachable point (Berlin) is only 4px inside the border, within the
+mask's own 12px ramp — this state has no interior at this zoom." A check that
+cannot reach its subject has to say so. Reporting it as a defect sends the next
+session after a bug that is not there, which is exactly what it did here.
+
+`capSpecToSpan` is KEPT, with its comment corrected to say what is true: the
+property is real below z4, where a state genuinely does become smaller than the
+rise that marks it, and the specification is that the entire active state
+renders crisp at every zoom. It is not what fixed anything.
+
 `pnpm measure:fly` is the performance half — first contentful paint, largest
 contentful paint, the first moment the map answers a camera probe, and frame
 timing across the fly-in, all cold with the HTTP cache disabled. Its own first

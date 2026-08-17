@@ -351,8 +351,12 @@ const ZOOMS: [string, number][] = [
   ["regional", 6],
 ];
 
+const ONLY_THEMES = (process.env.FOCUS_THEMES ?? "dark,light").split(",");
+const ONLY_ZIPS = (process.env.FOCUS_ZIPS ?? "85701,03255").split(",");
 for (const theme of ["dark", "light"] as const) {
+  if (!ONLY_THEMES.includes(theme)) continue;
   for (const zip of ["85701", "03255"] as const) {
+    if (!ONLY_ZIPS.includes(zip)) continue;
     const context = await browser.newContext({
       viewport: { width: 1280, height: 900 },
       deviceScaleFactor: 1,
@@ -441,7 +445,31 @@ for (const theme of ["dark", "light"] as const) {
         const away = (await sampleGeometry(page, EXTERIOR[zip])).filter(
           (s) => s.onScreen && s.unobscured && !s.insideState && s.borderDistance >= exclusion,
         );
-        if (!middle || away.length === 0) {
+        /*
+         * The mask's OWN reach, which is the distance that decides whether a
+         * point can be crisp at all: the feathered edge ramps over three
+         * sigma from the border inward, and a sample inside that ramp is in
+         * the transition by construction. A point closer than this is not
+         * evidence of a muted interior — it is evidence that the state has no
+         * interior at this zoom, which is a different sentence and must not
+         * be reported as the first one.
+         */
+        const maskReach = Math.ceil(3 * extrusionSpecForZoom(zoom).featherPx);
+        if (middle && middle.borderDistance < maskReach) {
+          cannotRunNotes.push(
+            `${label}: the most central reachable point (${middle.name}) is only ` +
+              `${Math.round(middle.borderDistance)}px inside the border, within the mask's own ` +
+              `${maskReach}px ramp — this state has no interior at this zoom`,
+          );
+          console.log(
+            `  ....  ${label} interior — could not run (nothing outside the mask's ${maskReach}px ramp)`,
+          );
+          // The ZOOM loop moves on; the context stays open, because the
+          // per-zip data-scoping checks below still have to run against it.
+          // Closing it here killed the pass with "target page has been
+          // closed" — a harness that reports a real finding and then crashes
+          // before the rest of its checks is a harness that hides them.
+        } else if (!middle || away.length === 0) {
           cannotRunNotes.push(
             `${label}: nothing ${exclusion}px inside the border and no exterior sample to contrast it against`,
           );
@@ -460,7 +488,7 @@ for (const theme of ["dark", "light"] as const) {
           check(
             `${label} @z${zoom.toFixed(1)}: the state is smaller than the rise reaches, and its middle is still the crisp part`,
             middleDelta * 2 < outsideDelta,
-            `middle Δ${middleDelta.toFixed(2)} vs weakest outside Δ${outsideDelta.toFixed(2)} (exclusion ${exclusion}px)`,
+            `${middle.name} at ${Math.round(middle.borderDistance)}px inside: Δ${middleDelta.toFixed(2)} vs weakest outside Δ${outsideDelta.toFixed(2)} (mask ramp ${maskReach}px, exclusion ${exclusion}px)`,
           );
         }
       } else {

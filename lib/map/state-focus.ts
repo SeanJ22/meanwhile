@@ -321,12 +321,21 @@ export function extrusionSpecForZoom(zoom: number): ExtrusionSpec {
  * middle, the mask never reaches full strength anywhere inside the state, and
  * the mute bleeds into the one place the whole effect exists to keep clear.
  *
- * Caught by `pnpm measure:focus` and not by eye: at 03255, continental zoom,
- * LIGHT theme, the state's own middle moved 4.63 luminance units against the
- * effect-disabled frame where the dark theme moved 0.88 — the light theme's
- * highlight is the stronger of the two alphas, so it showed first. The author's
- * specification is that the ENTIRE active state renders crisp at every zoom,
- * and a state smaller than its own shadow does not.
+ * **What this did NOT fix, recorded because the first version of this comment
+ * claimed otherwise.** `pnpm measure:focus` reported 03255 at continental zoom
+ * in LIGHT theme moving 4.63 luminance units at what it called the state's
+ * middle, and this cap was written and shipped against that number. It was the
+ * wrong diagnosis: at that zoom New Hampshire is 45 x 82 screen pixels and the
+ * check's most central REACHABLE sample was inside the mask's own 12 px ramp,
+ * so it was measuring the transition and calling it the interior. The cap does
+ * not bind at z4 at all — span/6 is 7.5 against a feather of 4 — and the
+ * number did not move. The check now says "this state has no interior at this
+ * zoom" instead, which is the true sentence.
+ *
+ * It is kept because the property is real below z4, where a state does become
+ * smaller than the rise that marks it, and because the author's specification
+ * is that the ENTIRE active state renders crisp at EVERY zoom. It is not what
+ * fixed anything that was reported.
  *
  * So the same rule the zoom ramp already encodes is applied to the shape as
  * well as to the camera: the feather may not exceed a sixth of the state's

@@ -649,3 +649,56 @@ session starts where this one stopped rather than re-walking:
 
 None is `NOT_ATTEMPTED` any more, and none is claimed as publishing nothing.
 Every one is "exists, found, not wired", which is a work item.
+
+## Verification rungs, not source rungs — what g5 added (2026-08-16)
+
+This file is mostly about reaching records. This entry is about proving a
+surface is right once the records are in it, because the same session lost
+half a day to a measurement that was green on a broken build.
+
+**A visual measurement that cannot distinguish correct coverage from
+incorrect coverage is not a correctness test. Every visual guard must assert
+WHAT is affected, not only how smoothly.**
+
+`pnpm measure:extrusion` measures how smoothly the state effect's edge falls
+off, and it passed at full marks on a build whose mute covered the entire map
+at the zoom a reader lands on — including the state the reader was standing
+in. A perfectly smooth gradient over the wrong area is still the wrong area.
+The rungs that follow from it, in the order they are worth trying:
+
+1. **Anchor a visual check to the SUBJECT, not to pixels.** Sample real
+   lng/lat through the live projection, so the check follows the geometry the
+   feature is supposed to follow. A hard-coded pixel is only correct at one
+   camera.
+2. **Sample far from where the reader is looking.** The defect was invisible
+   to anything that sampled near the entered zip, because near the centre
+   there is nothing to compare against. North Tucson and Drexel Heights
+   caught it; downtown never would have.
+3. **Compare the surface against ITSELF with the feature disabled**, never
+   against a different part of the same frame. Terrain, tiles and labels vary;
+   only the feature may differ between two frames of the same camera.
+4. **Read the exclusion distance off the shipped spec, never as a constant.**
+   A fixed "sample 80 px inside the border" exceeded New Hampshire's own
+   width at continental zoom, so the check could not run exactly where the
+   defect was hardest to see — and the standing fix for a check that cannot
+   run is always to loosen it until it proves nothing.
+5. **A measurement that can pass while wrong needs a second measurement of
+   the other quantity.** Smoothness and coverage are different questions and
+   the same instrument cannot answer both.
+6. **Where the DOM is right and the pixels are wrong, measure pixels.**
+   `getBoundingClientRect` is layout, not paint. A panel whose rows were
+   present, positioned and counted correctly rendered nothing at all.
+7. **An intermittent defect is measured as a RATE.** The first A/B of the
+   panel's paint failure looked decisive and was not — the control arm
+   painted on its second run. Repeat every arm and print "n of m", or the
+   result is whichever answer the tester wanted.
+8. **A browser check for a no-hover defect must never move the mouse.**
+   Playwright's own `click()` moves the pointer, and a pointer move was the
+   thing that repaired the defect. Open with a DOM `click()` from inside the
+   page.
+9. **Chromium DROPS geometry it cannot rasterize rather than clamping it**,
+   and a dropped mask reads as full coverage. Measured: an identical-topology
+   clip path is honoured at ±2000 px and dropped at ±8000. Anything projected
+   to screen and handed to a clip, mask or filter is cut to the viewport
+   first. This is the same wall g5's predecessor hit at the SVG filter region
+   and it will be hit again.

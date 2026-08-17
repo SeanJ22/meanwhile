@@ -1700,15 +1700,32 @@ section("J. Carried rows state their own freshness (hotfix-0817 item 2)");
       // 2. The snapshot's own record and the rows agree. The count is a
       //    whole-file number and this zip is a slice of it, so the slice must
       //    not exceed it and every row's stamp must be one the file records.
+      //
+      // The file's stated instant is the OLDEST of the carried rows on a
+      // single shared day, so two things have to hold: it is on that day, and
+      // it is no NEWER than any row it speaks for. An instant newer than some
+      // row would be the footer claiming a freshness that row never had —
+      // which is the defect one layer down from the one this section exists
+      // for, and it is how the first version of this check failed.
+      const day = meta?.lastFreshAt?.slice(0, 10) ?? null;
+      const stated = meta?.lastFreshAt ? Date.parse(meta.lastFreshAt) : null;
+      const newerThanARow =
+        stated === null
+          ? []
+          : carriedRows.filter((m) => Date.parse(m.carried!.lastFreshAt) < stated);
       check(
         "hotfix-0817",
         "03255: each carried row's stated timestamp is the one the snapshot records",
         meta !== null &&
           carriedRows.length <= meta.count &&
           (meta.lastFreshAt === null ||
-            carriedRows.every((m) => m.carried!.lastFreshAt === meta.lastFreshAt)),
+            (carriedRows.every((m) => m.carried!.lastFreshAt.slice(0, 10) === day) &&
+              newerThanARow.length === 0)),
         `${carriedRows.length} carried here of ${meta?.count ?? "?"} in the snapshot; ` +
-          `file says ${meta?.lastFreshAt ?? "the rows disagree, each states its own"}`,
+          `file says ${meta?.lastFreshAt ?? "the rows disagree, each states its own"}` +
+          (newerThanARow.length > 0
+            ? `; ${newerThanARow.length} row(s) older than the stated instant`
+            : ""),
       );
 
       // 3. And the reader is told. The footer must state the carried count

@@ -8584,6 +8584,17 @@ render gate with `{false && (` leaves both strings sitting in a dead branch. It
 now pins the **conditional each surface renders behind**, and all four
 mutations redden.
 
+**The walk check caught the fix's own smaller version of the same defect.**
+The first production run with real carried rows failed on `03255: each carried
+row's stated timestamp is the one the snapshot records`. Twenty-five rows, all
+carried on the same day, spread over the seconds one refresh took to walk a
+source's pages — and the client meta named the FIRST row's instant, which was
+newer than twenty-four of the rows it was speaking for. It now names the
+**oldest**, the only choice that never claims a row is fresher than it is, and
+the walk check asserts both halves: every row on the stated day, and no row
+older than the stated instant. The check was written to catch exactly this
+class and caught it in its own author's code within an hour.
+
 **The walk check is honest about not being able to run.** Carried rows exist
 only when a source was unreachable on the refresh that wrote the committed
 snapshot, so on a healthy day there is nothing at 03255 to assert. The check

@@ -335,10 +335,26 @@ test("the id map records the folder and the verification date", () => {
     /^\d{4}-\d{2}-\d{2}$/,
     "the verification date must be a real stamp",
   );
-  // All ten documents carry an id, and no two documents share one.
+  // Every document carries an id, and no two share one. The COUNT is read from
+  // the canonical set rather than restated — this assertion held a literal 10
+  // and broke the moment the set grew to 13, which is the same defect the
+  // handoff's "the canonical 10 present" line had, in a test this time.
   const ids = Object.values(map.docs) as string[];
-  assert.equal(ids.length, 10, "the document id map no longer covers all ten");
-  assert.equal(new Set(ids).size, 10, "two documents share a Drive id — a join that collapsed");
+  assert.equal(
+    ids.length,
+    MIRRORED_DOCS.length,
+    `the document id map covers ${ids.length} of ${MIRRORED_DOCS.length} mirrored document(s)`,
+  );
+  assert.equal(
+    new Set(ids).size,
+    MIRRORED_DOCS.length,
+    "two documents share a Drive id — a join that collapsed",
+  );
+
+  // And every one is keyed by a name the set actually holds.
+  const names = new Set(MIRRORED_DOCS.map((d) => d.mirrorName));
+  const strays = Object.keys(map.docs).filter((n) => !names.has(n));
+  assert.deepEqual(strays, [], `id map holds name(s) not in the mirror set: ${strays.join(", ")}`);
 });
 
 /* --------------------------------------------------------- 4: manifest --- */

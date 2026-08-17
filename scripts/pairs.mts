@@ -21,6 +21,19 @@
  */
 
 import { chromium, type Page } from "playwright";
+import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
+
+/**
+ * C05 (2026-08-17): this run declares itself so the rows it writes to
+ * production's search log are never counted as a reader's. The runner cannot
+ * mark the row — the route writes it — so it says who it is in a header.
+ */
+const RUN_HEADERS = syntheticRunHeaders({
+  WTP_RUN_ID:
+    process.env.WTP_RUN_ID?.trim() ||
+    makeRunId("pairs", new Date().toISOString()),
+});
+
 import { mkdir } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -299,6 +312,8 @@ const failures: string[] = [];
 for (const shot of wanted) {
   const label = `${phase}-${shot.item}-${shot.name}`;
   const context = await browser.newContext({
+    // C05: this run is ours, declared at write time.
+    extraHTTPHeaders: RUN_HEADERS,
     viewport: shot.viewport ?? PHONE,
     deviceScaleFactor: 2,
     reducedMotion: "reduce",

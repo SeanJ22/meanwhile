@@ -11,6 +11,19 @@
  */
 
 import { chromium } from "playwright";
+import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
+
+/**
+ * C05 (2026-08-17): this run declares itself so the rows it writes to
+ * production's search log are never counted as a reader's. The runner cannot
+ * mark the row — the route writes it — so it says who it is in a header.
+ */
+const RUN_HEADERS = syntheticRunHeaders({
+  WTP_RUN_ID:
+    process.env.WTP_RUN_ID?.trim() ||
+    makeRunId("verify-sources-tab", new Date().toISOString()),
+});
+
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -22,6 +35,8 @@ const FALSE_SENTENCE = "Nothing on this card came from an external record";
 
 const browser = await chromium.launch();
 const context = await browser.newContext({
+    // C05: this run is ours, declared at write time.
+    extraHTTPHeaders: RUN_HEADERS,
   viewport: { width: 1440, height: 950 },
   deviceScaleFactor: 2,
   reducedMotion: "reduce",

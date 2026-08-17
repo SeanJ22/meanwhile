@@ -18,6 +18,19 @@
  */
 
 import { chromium } from "playwright";
+import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
+
+/**
+ * C05 (2026-08-17): this run declares itself so the rows it writes to
+ * production's search log are never counted as a reader's. The runner cannot
+ * mark the row — the route writes it — so it says who it is in a header.
+ */
+const RUN_HEADERS = syntheticRunHeaders({
+  WTP_RUN_ID:
+    process.env.WTP_RUN_ID?.trim() ||
+    makeRunId("shoot", new Date().toISOString()),
+});
+
 import { mkdir } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -55,6 +68,8 @@ const settle = Number(arg("wait", "9000"));
 
 const browser = await chromium.launch();
 const context = await browser.newContext({
+    // C05: this run is ours, declared at write time.
+    extraHTTPHeaders: RUN_HEADERS,
   viewport: { width, height },
   deviceScaleFactor: 2,
   // The app reads prefers-reduced-motion to decide between flyTo and jumpTo.

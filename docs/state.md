@@ -8360,6 +8360,36 @@ an instrument as a defect, which is the same class of error as the two above,
 and the reason the check now asserts against a scoped element with a character
 count printed beside it.
 
+#### C05's coverage gap, found by C05 itself
+
+The final census turned up **one `ORGANIC` row** where there should have been
+none — 09:44:58Z, zip 85701. It was `pnpm overlaps`, run because item 6 changed
+the who-governs card's height, loading the app without the header.
+
+That is **the second time in one day** a run of ours landed rows labelled as a
+reader's; the deploy verification did it with `curl` a few hours earlier. Twice
+is a class, so it got a guard rather than a third reminder.
+
+**The gap was much larger than the one row.** Of the scripts in `scripts/` that
+drive a browser, only three declared themselves — the three this session had
+touched. Every live one now does (`overlaps`, `measure:fly`, `measure:focus`,
+`measure:extrusion`, `shoot`, `pairs`, `shoot-0816`, `shoot-state-focus`,
+`verify-sources-tab`, `walk-0815g`), and
+`tests/run-marker-coverage.test.ts` fails on any that stops — **proven by
+planting a violation in `overlap-audit.mts` and watching it name the file.**
+
+Two scripts are out of scope and the test proves it by looking for the
+navigation rather than trusting a list: `contrast-audit.mts` opens no browser at
+all, and `contact-sheet.mts` renders local images. The retired one-off session
+walks are exempted by NAME, so the exemption is a stated list that cannot grow
+by accident.
+
+**One honesty note on the verification.** The re-run of the patched `overlaps`
+wrote no search-log row at all — total held at 3331 — so what is confirmed is
+that it no longer writes an ORGANIC row, and that the header is wired into its
+context (`scripts/overlap-audit.mts:200`). A marked row from that script was not
+positively observed, and saying so is cheaper than implying it was.
+
 #### Item 6's real cost, stated
 
 The mayor moved from **zero clicks** (a row on the who-governs panel) to **two**

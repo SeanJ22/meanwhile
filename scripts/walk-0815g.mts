@@ -13,6 +13,19 @@
  */
 import { chromium, type Page } from "playwright";
 
+import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
+
+/**
+ * C05 (2026-08-17): this run declares itself so the rows it writes to
+ * production's search log are never counted as a reader's. The runner cannot
+ * mark the row — the route writes it — so it says who it is in a header.
+ */
+const RUN_HEADERS = syntheticRunHeaders({
+  WTP_RUN_ID:
+    process.env.WTP_RUN_ID?.trim() ||
+    makeRunId("walk-0815g", new Date().toISOString()),
+});
+
 const BASE = process.env.SHOOT_BASE_URL ?? "http://localhost:3000";
 const PHONE = { width: 390, height: 844 };
 
@@ -27,6 +40,8 @@ const browser = await chromium.launch();
 /** A profile with a zip already in play, the way a mid-session reader has. */
 async function returningPage(zip: string): Promise<Page> {
   const context = await browser.newContext({
+    // C05: this run is ours, declared at write time.
+    extraHTTPHeaders: RUN_HEADERS,
     viewport: PHONE,
     reducedMotion: "reduce",
   });
@@ -57,6 +72,8 @@ console.log(`Walk 0815g — ${BASE}, 390×844\n`);
 console.log("fresh profile");
 {
   const context = await browser.newContext({
+    // C05: this run is ours, declared at write time.
+    extraHTTPHeaders: RUN_HEADERS,
     viewport: PHONE,
     reducedMotion: "reduce",
   });

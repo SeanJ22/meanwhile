@@ -48,6 +48,19 @@
  * nobody can re-rule on.
  */
 import { chromium, type Page } from "playwright";
+import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
+
+/**
+ * C05 (2026-08-17): this run declares itself so the rows it writes to
+ * production's search log are never counted as a reader's. The runner cannot
+ * mark the row — the route writes it — so it says who it is in a header.
+ */
+const RUN_HEADERS = syntheticRunHeaders({
+  WTP_RUN_ID:
+    process.env.WTP_RUN_ID?.trim() ||
+    makeRunId("measure-focus", new Date().toISOString()),
+});
+
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
 
@@ -365,6 +378,8 @@ for (const theme of ["dark", "light"] as const) {
   for (const zip of ["85701", "03255"] as const) {
     if (!ONLY_ZIPS.includes(zip)) continue;
     const context = await browser.newContext({
+    // C05: this run is ours, declared at write time.
+    extraHTTPHeaders: RUN_HEADERS,
       viewport: { width: 1280, height: 900 },
       deviceScaleFactor: 1,
       reducedMotion: "reduce",
@@ -611,6 +626,8 @@ for (const [label, zip] of [
   ["uncovered-06716", "06716"],
 ] as const) {
   const context = await browser.newContext({
+    // C05: this run is ours, declared at write time.
+    extraHTTPHeaders: RUN_HEADERS,
     viewport: { width: 1280, height: 900 },
     deviceScaleFactor: 1,
     reducedMotion: "reduce",

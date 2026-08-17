@@ -310,6 +310,43 @@ export function extrusionSpecForZoom(zoom: number): ExtrusionSpec {
 }
 
 /**
+ * The rise, capped by the size of the SHAPE it is marking (g5 item 1).
+ *
+ * `extrusionSpecForZoom` already bottoms the rise out well above zero,
+ * reasoning that "a state seen at continental scale is small on screen and a
+ * 16 px shadow would swamp it". That reasoning was calibrated on Arizona.
+ * New Hampshire is about a quarter of the size, and at continental zoom it is
+ * roughly 25 screen pixels across while the FAR spec's rise reaches 35 and its
+ * mask feathers over 12 from each side — so the two feathers meet in the
+ * middle, the mask never reaches full strength anywhere inside the state, and
+ * the mute bleeds into the one place the whole effect exists to keep clear.
+ *
+ * Caught by `pnpm measure:focus` and not by eye: at 03255, continental zoom,
+ * LIGHT theme, the state's own middle moved 4.63 luminance units against the
+ * effect-disabled frame where the dark theme moved 0.88 — the light theme's
+ * highlight is the stronger of the two alphas, so it showed first. The author's
+ * specification is that the ENTIRE active state renders crisp at every zoom,
+ * and a state smaller than its own shadow does not.
+ *
+ * So the same rule the zoom ramp already encodes is applied to the shape as
+ * well as to the camera: the feather may not exceed a sixth of the state's
+ * smaller on-screen dimension, which leaves at least a third of it at full
+ * mask strength, and the offset and blur may not exceed a third of it. Nothing
+ * reaches zero — a rise that vanished on a small state would be e's retired
+ * release rule arriving through the back door, which is the trap the zoom ramp
+ * was written to avoid.
+ */
+export function capSpecToSpan(spec: ExtrusionSpec, span: number): ExtrusionSpec {
+  if (!Number.isFinite(span) || span <= 0) return spec;
+  return {
+    offsetPx: Math.max(2, Math.min(spec.offsetPx, span / 3)),
+    blurPx: Math.max(2, Math.min(spec.blurPx, span / 3)),
+    featherPx: Math.max(1, Math.min(spec.featherPx, span / 6)),
+    simplifyPx: spec.simplifyPx,
+  };
+}
+
+/**
  * Opacity of each silhouette, BY THEME — and the split is a measured fix.
  *
  * The first build used one pair for both themes, and `pnpm measure:extrusion`

@@ -7,6 +7,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 
 import {
+  capSpecToSpan,
   clipRingToBox,
   extrusionSpecForZoom,
   riseAlphasFor,
@@ -224,6 +225,13 @@ export function StateFocusOverlay({
       };
 
       const rings: string[] = [];
+      // The active state's own on-screen extent, accumulated as the rings are
+      // built — the rise is capped by it so a state smaller than its own
+      // shadow is not muted by it. See capSpecToSpan.
+      let minX = Infinity;
+      let minY = Infinity;
+      let maxX = -Infinity;
+      let maxY = -Infinity;
       for (const ring of outline.geometry.coordinates) {
         if (ring.length < 3) continue;
         const projected: ScreenPoint[] = ring.map((c) => project([c[0], c[1]]));
@@ -235,6 +243,12 @@ export function StateFocusOverlay({
         // Simplified AFTER projection, so one sub-pixel rule covers every
         // zoom — see lib/map/state-focus.ts#simplifyScreenRing.
         const points = simplifyScreenRing(clipped, spec.simplifyPx);
+        for (const p of points) {
+          if (p.x < minX) minX = p.x;
+          if (p.x > maxX) maxX = p.x;
+          if (p.y < minY) minY = p.y;
+          if (p.y > maxY) maxY = p.y;
+        }
         rings.push(
           `M${points
             .map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`)
@@ -260,7 +274,18 @@ export function StateFocusOverlay({
       // composite path is the SCRIM's clip and nothing else's; see the note
       // on `Drawing.statePath` for what happened when the shadows shared it.
       const outsidePath = `M-32,-32 H${width + 32} V${height + 32} H-32 Z ${statePath}`;
-      setDrawing({ statePath, outsidePath, width, height, spec });
+      // With nothing on screen there is no shape to size the rise against, and
+      // nothing is drawn either — the uncapped spec is carried through so the
+      // mute rect and the mask keep their zoom-appropriate sizes.
+      const span =
+        rings.length > 0 ? Math.min(maxX - minX, maxY - minY) : Number.POSITIVE_INFINITY;
+      setDrawing({
+        statePath,
+        outsidePath,
+        width,
+        height,
+        spec: capSpecToSpan(spec, span),
+      });
     };
 
     const schedule = () => {

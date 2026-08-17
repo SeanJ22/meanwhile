@@ -3,6 +3,7 @@ import { test } from "node:test";
 
 import {
   NO_STATE,
+  capSpecToSpan,
   clipRingToBox,
   extrusionSpecForZoom,
   filterStateAbbr,
@@ -368,4 +369,38 @@ test("the clip runs before simplification and leaves a ring the simplifier can h
   assert.ok(simplified.length >= 3, "never below a triangle");
   const bbox = bboxOf(simplified);
   assert.ok(bbox.maxX <= BOX.maxX + 0.001 && bbox.maxY <= BOX.maxY + 0.001);
+});
+
+test("the rise is capped by the size of the state it is marking", () => {
+  /*
+   * Found by pnpm measure:focus, not by eye: at 03255 and continental zoom in
+   * LIGHT theme, the state's own middle moved 4.63 luminance units against the
+   * effect-disabled frame. New Hampshire is about 25 screen pixels across
+   * there and the FAR spec feathers over 12 from each side, so the two
+   * feathers met in the middle and the mask never reached full strength
+   * anywhere inside the state — the mute bled into the one place the effect
+   * exists to keep clear.
+   */
+  const far = extrusionSpecForZoom(4);
+  const tiny = capSpecToSpan(far, 25);
+  assert.ok(tiny.featherPx <= 25 / 6, `feather ${tiny.featherPx} swamps a 25px state`);
+  assert.ok(tiny.offsetPx <= 25 / 3);
+  assert.ok(tiny.blurPx <= 25 / 3);
+
+  // NEVER to zero. A rise that vanished on a small state would be the retired
+  // release rule arriving through the back door — the same trap the zoom ramp
+  // is written to avoid, one axis over.
+  for (const span of [0.5, 1, 4, 12, 25]) {
+    const capped = capSpecToSpan(far, span);
+    assert.ok(capped.featherPx > 0, `feather vanished at span ${span}`);
+    assert.ok(capped.offsetPx > 0, `offset vanished at span ${span}`);
+    assert.ok(capped.blurPx > 0, `blur vanished at span ${span}`);
+  }
+
+  // A state larger than its own rise is untouched: Arizona at any zoom, and
+  // anything filling the viewport.
+  assert.deepEqual(capSpecToSpan(far, 4000), far);
+  assert.deepEqual(capSpecToSpan(far, Number.POSITIVE_INFINITY), far);
+  // No shape on screen at all leaves the spec alone rather than collapsing it.
+  assert.deepEqual(capSpecToSpan(far, 0), far);
 });

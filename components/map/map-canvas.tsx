@@ -43,14 +43,10 @@ import {
 } from "@/lib/map/districts";
 import {
   STATE_OUTLINES_URL,
-  ZIP_SHADE_SOURCE,
-  applyZipShade,
   filterStateAbbr,
   outlineFor,
-  removeZipShade,
   stateAbbrFromOcdId,
   type StateOutlines,
-  type ZipOutlineFeature,
 } from "@/lib/map/state-focus";
 import type { DistrictType } from "@/lib/state/types";
 import type { Theme } from "@/hooks/use-stored-theme";
@@ -93,6 +89,11 @@ export interface MapFocus {
   key: string;
 }
 
+/** The cheap read-only camera probe (g5 item 1). See where it is installed. */
+interface CameraProbe {
+  (): { zoom: number; lat: number; lng: number };
+}
+
 interface MapCanvasProps {
   venues: Venue[];
   camera: CameraTarget | null;
@@ -101,6 +102,15 @@ interface MapCanvasProps {
    *  the districts door renders it, one denominator for both (3g). */
   onDrawnDistricts: (districts: DrawnDistrict[]) => void;
   selectedVenueKey: string | null;
+  /**
+   * A full-screen overlay is open over the map (g5 item 2).
+   *
+   * The state-focus scrim is suspended while it is, because two stacked
+   * backdrop-filter surfaces over the WebGL canvas cost the overlay its own
+   * paint — measured on production, not inferred. See the note at the render
+   * site.
+   */
+  overlayOpen?: boolean;
   /** District overlays to draw. Empty draws none. */
   districtTypes: DistrictType[];
   /** The district the reader picked, highlighted via feature-state. */
@@ -182,6 +192,7 @@ export function MapCanvas({
   focus,
   selectedVenueKey,
   frameAllVenues,
+  overlayOpen = false,
   districtTypes,
   selectedDistrict,
   narrowedDistricts,
@@ -490,10 +501,10 @@ export function MapCanvas({
      * The MAP probe (g4) — the third of the read-only instruments, and the
      * one the g4 walk checks are built on.
      *
-     * Four of this session's items are claims about map STATE that no
-     * screenshot can settle: which state the focus layers point at, which
-     * district layers exist, whether the zip shading is present, and whether
-     * the camera moved. g3's lesson was that three defects survived
+     * Several items are claims about map STATE that no screenshot can
+     * settle: which state the focus layers point at, which district layers
+     * exist, which state each one is filtered to, and whether the camera
+     * moved. g3's lesson was that three defects survived
      * screenshots and died to measurement, so these are read off the map
      * itself rather than off pixels.
      *
@@ -515,6 +526,25 @@ export function MapCanvas({
     // a prop. Naming the shape says the same thing without tripping it.
     (window as unknown as { __wtpProject?: ProjectPoint }).__wtpProject = (p) =>
       map.project(p);
+
+    /*
+     * The camera, and NOTHING else (g5 item 1).
+     *
+     * `__wtpMapProbe` walks the style's layers and sources on every call,
+     * which is fine once a frame is finished and useless sixty times a
+     * second. The fly-in measurement reads the camera on every animation
+     * frame to find where the transition begins and ends, so it needs a
+     * probe cheap enough not to change the thing it is measuring.
+     */
+    // Typed through `CameraProbe` rather than inline, for the same reason
+    // `__wtpProject` is: the server/client boundary guard reads any indented
+    // `name: (args) => Ret` as an injected function prop, and a window cast
+    // is neither injected nor a prop. Naming the shape says the same thing
+    // without tripping it.
+    (window as unknown as { __wtpCamera?: CameraProbe }).__wtpCamera = () => {
+      const c = map.getCenter();
+      return { zoom: map.getZoom(), lat: c.lat, lng: c.lng };
+    };
 
     (window as unknown as { __wtpMapProbe?: () => unknown }).__wtpMapProbe =
       () => {
@@ -542,8 +572,15 @@ export function MapCanvas({
                 .map((id) => filterStateAbbr(map.getFilter(id))),
             ),
           ],
-          /** The zip shading (item 4), present or absent. */
-          zipShading: layers.filter((id) => id.startsWith(ZIP_SHADE_SOURCE)),
+          /**
+           * Every custom source on the style, by id (g5 item 1).
+           *
+           * The data-scoping rule is about what is HELD, not only about what
+           * is drawn, so the walk needs the sources and not just the layers:
+           * a released state's layers can be gone while its GeoJSON source
+           * is still on the style holding the geometry.
+           */
+          customSources: Object.keys(map.getStyle()?.sources ?? {}),
           /** Total style layers, for item 3's before/after load measurement. */
           layerCount: layers.length,
         };
@@ -679,74 +716,17 @@ export function MapCanvas({
   );
 
   /*
-   * THE CURRENT ZIP, SHADED (g4 item 4 — the author's ask).
+   * THE CURRENT ZIP IS NOT DRAWN ON THE MAP (g5 item 1, the author's ruling).
    *
-   * A map layer rather than more SVG: a tint belongs on the map, where the
-   * basemap's own labels and this app's pins occlude it correctly. The
-   * extrusion is DOM only because it has to BLUR what is underneath it.
+   * g4 item 4 tinted the reader's own ZCTA polygon here, fetched one polygon
+   * at a time from a route built for it. The author removed it from the
+   * product: the zip chooses the active state and centres the camera, and
+   * that is all it does. The tint, its layer, its source, its geometry fetch
+   * and the route that served it are gone — not flagged off, gone — so a
+   * reader's zip now costs the map no request and no layer at all.
    *
-   * The polygon comes from `/api/zcta/<zip>` one at a time. The full ZCTA
-   * geometry for the covered states is 1.06 MB and a reader looks at exactly
-   * one polygon of it, so it stays on the server — see lib/geo/zcta-outline.ts.
-   *
-   * Re-applied on every style load, exactly like the district layers: a
-   * basemap swap throws every custom layer away.
+   * The committed ZCTA geometry stays in the repository, unused.
    */
-  const [zipOutline, setZipOutline] = useState<ZipOutlineFeature | null>(null);
-  const zipOutlineRef = useRef<ZipOutlineFeature | null>(null);
-  useEffect(() => {
-    zipOutlineRef.current = zipOutline;
-  }, [zipOutline]);
-
-  useEffect(() => {
-    const zip = camera?.zip ?? null;
-    let live = true;
-    void (async () => {
-      // No zip means no shape to answer with, and the clear goes through the
-      // same async path as an answer rather than being set synchronously
-      // inside the effect — a synchronous setState here cascades a render,
-      // and it is also the correct ORDER: the previous zip's tint must not
-      // survive one paint into a new zip.
-      if (!zip) {
-        if (live) setZipOutline(null);
-        return;
-      }
-      try {
-        const response = await fetch(`/api/zcta/${encodeURIComponent(zip)}`);
-        if (!response.ok) return;
-        const data = (await response.json()) as { outline: ZipOutlineFeature | null };
-        // The zip may have changed while this was in flight. Applying a stale
-        // answer would shade the zip the reader just LEFT, which is item 1's
-        // defect wearing item 4's clothes.
-        if (live) setZipOutline(data.outline ?? null);
-      } catch {
-        // Orientation only. A map with no zip tint is a working map.
-      }
-    })();
-    return () => {
-      live = false;
-    };
-  }, [camera?.zip]);
-
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map) return;
-    const apply = () => {
-      const live = mapRef.current;
-      if (!live || !live.getStyle()?.layers?.length) return;
-      const feature = zipOutlineRef.current;
-      // No zip resolved, or a zip we hold no polygon for: nothing is shaded.
-      // Never a stale neighbour's outline, which would be a wrong claim about
-      // where the reader is standing rather than a missing decoration.
-      if (!feature) removeZipShade(live);
-      else applyZipShade(live, feature, firstSymbolLayerId(live));
-    };
-    apply();
-    map.on("styledata", apply);
-    return () => {
-      map.off("styledata", apply);
-    };
-  }, [zipOutline]);
 
   /*
    * The projection, handed to the scrim as a STABLE function.
@@ -994,6 +974,45 @@ export function MapCanvas({
       {/* g3 item 10 (M91): the mute-and-blur half of the state extrusion.
           Inside the wrapper so it sits over the canvas; `pointer-events:
           none` keeps the map underneath fully draggable. */}
+      {/*
+        SUSPENDED WHILE A FULL-SCREEN OVERLAY IS OPEN (g5 item 2).
+
+        The author opened the meetings panel at 85701 and got a header reading
+        "86 meetings" above an empty box; moving the mouse over it made the
+        rows appear. A phone has no hover, so a mobile reader taps meetings,
+        sees a count above nothing, and concludes we hold nothing — a stated-N
+        versus rendered-rows violation produced by a paint bug.
+
+        Measured on production rather than guessed at. The DOM and the layout
+        were always complete: the panel's group headers were present, at real
+        coordinates, with counts summing to the header's own number. What was
+        missing was PIXELS, and the missing subset varied run to run — the
+        signature of a compositor that never painted a layer rather than of a
+        component that never rendered.
+
+        The cause is item 1, one layer down. This scrim carries
+        `backdrop-filter`, and while its clip was being dropped it covered the
+        entire viewport; the list overlay carries a `backdrop-filter` of its
+        own and stacks directly on top of it, over the map's WebGL canvas.
+        Two backdrop surfaces deep, Chromium did not paint the upper one's
+        contents until something dirtied the layer — which a pointer move is.
+        With the scrim removed first and nothing else changed, the panel
+        painted; with it present, the panel's own ground never did (header
+        luminance 25 against 16 at 1280px, and 26 against 10 at 390px).
+
+        Item 1's fix is therefore most of item 2's — but only while the reader
+        is INSIDE the active state. Pan into New Mexico with Arizona active
+        and a full-viewport scrim is correct and back, and the panel would go
+        blank again. So the suspension is the rule and not the workaround: a
+        reader looking at a modal cannot see the map through it, the scrim has
+        nothing to say to them while it is open, and the one thing it can
+        still do is cost them the content they opened.
+
+        Removing the overlay's own `backdrop-filter` was tried first and
+        measured: 0 of 4 at 390px, no better than the control. It is not the
+        upper surface that has to go.
+      */}
+      {overlayOpen ? null : (
       <StateFocusOverlay
         outline={focusOutline}
         project={projectFn}
@@ -1003,6 +1022,7 @@ export function MapCanvas({
         // against that ground — see riseAlphasFor.
         theme={theme === "light" ? "light" : "dark"}
       />
+      )}
     </div>
   );
 }

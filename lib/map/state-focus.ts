@@ -1,8 +1,4 @@
-import type {
-  FilterSpecification,
-  GeoJSONSourceSpecification,
-  Map as MapLibreMap,
-} from "maplibre-gl";
+import type { FilterSpecification } from "maplibre-gl";
 
 /**
  * **The state rises out of the map** — M91, rebuilt for g4 item 2 after the
@@ -347,113 +343,132 @@ export function riseAlphasFor(theme: "light" | "dark"): RiseAlphas {
     : { light: 0.5, dark: 0.42 };
 }
 
-/* -------------------------------------------------------- zip shading --- */
+/* ------------------------------------------------- the viewport clip --- */
 
 /**
- * The current zip's own polygon, tinted (g4 item 4, the author's ask).
+ * The box a projected ring is cut down to before it is handed to a mask, a
+ * clip or a filter — g5 item 1, and it is the whole defect.
  *
- * A MapLibre fill rather than more SVG, and the distinction is the same one
- * that split this feature in two in the first place: the extrusion needs to
- * BLUR what is underneath it and only the compositor can do that, while a
- * tint is a tint and belongs on the map where it will be occluded correctly
- * by labels and pins.
+ * ## What was actually wrong
  *
- * **It carries no data.** Like the extrusion it is orientation only — it
- * answers "which zip am I looking at" and says nothing about coverage,
- * quality, or how much we hold for that zip. `CLAUDE.md` forbids treating a
- * zip as district truth and this shape is not treated as any kind of truth:
- * it is generalized to ~200 m and nothing is resolved against it.
+ * The mute is a DOM scrim carrying `backdrop-filter`, clipped to
+ * "everything except the active state" by `clip-path: url(#…)`. The path fed
+ * to that clip was the state's rings projected to screen AT FULL EXTENT. At
+ * the zoom a reader lands on from a zip (z11) Arizona projects to roughly
+ * 16,800 × 20,000 CSS pixels, and **Chromium silently drops a `clip-path`
+ * that large**. A dropped clip is not a smaller clip: the scrim then paints
+ * over its entire box, so the reader standing in the middle of the active
+ * state saw every pixel of the frame muted and blurred.
+ *
+ * Measured on production before the fix, holding the topology fixed (the
+ * viewport rectangle minus one enclosing rectangle, even-odd — a region that
+ * is empty at every size, so a working clip must render nothing):
+ *
+ * | enclosing box | chroma | detail | verdict            |
+ * |---------------|--------|--------|--------------------|
+ * | ±2000 px      | 17.39  | 20.15  | identical to effect-off |
+ * | ±8000 px      | 11.24  |  9.57  | identical to the broken frame |
+ * | ±20000 px     | 11.24  |  9.57  | identical to the broken frame |
+ *
+ * The mask on the scrim was never doing any work at all — CSS `mask` on an
+ * HTML element does not resolve an SVG `<mask>` reference in Chromium, which
+ * is why the clip failing took the whole effect with it rather than degrading
+ * to the mask.
+ *
+ * This is the same failure g4 found one layer up, where an oversized SVG
+ * FILTER region was clamped rather than faded. Chromium's answer to geometry
+ * it cannot rasterize is to drop it, and a dropped mask reads as full
+ * coverage — the loudest possible way for an ambient effect to fail.
+ *
+ * ## Why cutting to the viewport is correct and not a workaround
+ *
+ * Everything outside `FILTER_PAD` of the canvas is already outside the mask's
+ * region and outside both filter regions, so it cannot contribute a pixel the
+ * reader can see. Cutting there removes only geometry that was being
+ * rasterized to be thrown away — which is also why this is the cheapest frame
+ * win available: at city zoom it takes the serialized path from the state's
+ * full ring count down to the handful of points that cross the screen.
+ *
+ * **An empty result is a real answer, not a failure.** A ring clipped to
+ * nothing means the viewport does not touch the active state at all — pan
+ * east into New Mexico while Arizona is active — and the correct render there
+ * is a fully muted frame. The caller must treat "no rings" as "everything is
+ * outside", never as "draw nothing"; the two look identical in the code and
+ * opposite on the screen.
  */
-export const ZIP_SHADE_SOURCE = "zip-shade";
-export const ZIP_SHADE_LAYER = "zip-shade-fill";
-export const ZIP_SHADE_OUTLINE_LAYER = "zip-shade-line";
-
-export interface ZipOutlineFeature {
-  type: "Feature";
-  properties: { zip: string };
-  geometry: { type: "Polygon" | "MultiPolygon"; coordinates: unknown };
+export interface ScreenBox {
+  minX: number;
+  minY: number;
+  maxX: number;
+  maxY: number;
 }
-
-const EMPTY = {
-  type: "FeatureCollection" as const,
-  features: [] as ZipOutlineFeature[],
-};
 
 /**
- * Put the shading layers on the map, or update the polygon they draw.
+ * Sutherland–Hodgman: one polygon ring cut down to an axis-aligned box.
  *
- * Idempotent, and re-callable after every style change for the same reason
- * the district layers are: `setStyle` discards every source and layer that is
- * not in the incoming stylesheet.
+ * Rings are clipped INDEPENDENTLY and the result is still evaluated even-odd,
+ * which is what makes holes survive: New Jersey ships three rings, and a hole
+ * clipped to the box stays a hole. It also handles the case that used to be
+ * invisible — a viewport sitting inside a hole clips the outer ring to the
+ * box and the hole to the box as well, and even-odd cancels them to nothing,
+ * which is the truth (a reader inside a hole is outside the state).
  *
- * A null feature empties the source rather than removing the layers. That
- * keeps the add path and the clear path the same shape, and it means a zip
- * we hold no polygon for renders nothing — never a stale neighbour's outline,
- * which would be a wrong claim about where the reader is standing.
+ * The connecting edges this produces on a concave ring run along the box's
+ * own edges and enclose no area, so they cost nothing under even-odd.
  */
-export function applyZipShade(
-  map: MapLibreMap,
-  feature: ZipOutlineFeature | null,
-  before?: string,
-): void {
-  const data = feature
-    ? { type: "FeatureCollection" as const, features: [feature] }
-    : EMPTY;
+export function clipRingToBox(
+  points: readonly ScreenPoint[],
+  box: ScreenBox,
+): ScreenPoint[] {
+  if (points.length < 3) return [];
 
-  const source = map.getSource(ZIP_SHADE_SOURCE);
-  if (source && "setData" in source) {
-    (source as { setData: (d: unknown) => void }).setData(data);
-  } else if (!source) {
-    map.addSource(ZIP_SHADE_SOURCE, {
-      type: "geojson",
-      data,
-    } as GeoJSONSourceSpecification);
+  let ring: ScreenPoint[] = [...points];
+
+  // 0: x ≥ minX, 1: x ≤ maxX, 2: y ≥ minY, 3: y ≤ maxY.
+  for (let edge = 0; edge < 4; edge += 1) {
+    if (ring.length === 0) break;
+    const next: ScreenPoint[] = [];
+    for (let i = 0; i < ring.length; i += 1) {
+      const current = ring[i];
+      const previous = ring[(i + ring.length - 1) % ring.length];
+      const currentIn = insideEdge(current, edge, box);
+      const previousIn = insideEdge(previous, edge, box);
+      if (currentIn !== previousIn) {
+        next.push(intersectEdge(previous, current, edge, box));
+      }
+      if (currentIn) next.push(current);
+    }
+    ring = next;
   }
 
-  if (!map.getLayer(ZIP_SHADE_LAYER)) {
-    map.addLayer(
-      {
-        id: ZIP_SHADE_LAYER,
-        type: "fill",
-        source: ZIP_SHADE_SOURCE,
-        paint: {
-          // Warm, low, and deliberately NOT a tier accent: a tier colour
-          // would read as a claim about what kind of place this is. The
-          // opacity is the whole design brief for this layer — "clear but not
-          // overwhelming", visible against terrain, never competing with a
-          // pin drawn on top of it.
-          "fill-color": "#f2c14e",
-          "fill-opacity": 0.14,
-        },
-      },
-      before,
-    );
-  }
-
-  if (!map.getLayer(ZIP_SHADE_OUTLINE_LAYER)) {
-    map.addLayer(
-      {
-        id: ZIP_SHADE_OUTLINE_LAYER,
-        type: "line",
-        source: ZIP_SHADE_SOURCE,
-        layout: { "line-join": "round", "line-cap": "round" },
-        paint: {
-          "line-color": "#f2c14e",
-          "line-opacity": 0.5,
-          "line-width": 1.2,
-        },
-      },
-      before,
-    );
-  }
+  return ring.length >= 3 ? ring : [];
 }
 
-/** Drop the shading entirely — no zip resolved means no shape to answer with. */
-export function removeZipShade(map: MapLibreMap): void {
-  for (const id of [ZIP_SHADE_OUTLINE_LAYER, ZIP_SHADE_LAYER]) {
-    if (map.getLayer(id)) map.removeLayer(id);
+function insideEdge(point: ScreenPoint, edge: number, box: ScreenBox): boolean {
+  if (edge === 0) return point.x >= box.minX;
+  if (edge === 1) return point.x <= box.maxX;
+  if (edge === 2) return point.y >= box.minY;
+  return point.y <= box.maxY;
+}
+
+function intersectEdge(
+  from: ScreenPoint,
+  to: ScreenPoint,
+  edge: number,
+  box: ScreenBox,
+): ScreenPoint {
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+  // A zero denominator cannot arise: the two points straddle this edge, so
+  // they differ along the axis the edge is measured on.
+  if (edge === 0 || edge === 1) {
+    const limit = edge === 0 ? box.minX : box.maxX;
+    const t = (limit - from.x) / dx;
+    return { x: limit, y: from.y + t * dy };
   }
-  if (map.getSource(ZIP_SHADE_SOURCE)) map.removeSource(ZIP_SHADE_SOURCE);
+  const limit = edge === 2 ? box.minY : box.maxY;
+  const t = (limit - from.y) / dy;
+  return { x: from.x + t * dx, y: limit };
 }
 
 /**

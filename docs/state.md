@@ -4,7 +4,16 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-15, second session of the day — **the design
+Last updated: 2026-08-16, sixth session of the day — **the active-state
+model**: the mask stopped muting the state the reader is standing in, and
+the meetings panel stopped needing a mouse to paint. Both were the same
+defect — a clip path 16,800 x 20,000 px that Chromium DROPS rather than
+applies, leaving a backdrop-filter scrim over the whole map — and both are
+now measured by checks that assert WHAT is covered rather than how smoothly
+(pnpm measure:focus, pnpm measure:panels, pnpm measure:fly). Zip shading is
+removed from the product by the author's ruling. See §36.
+
+Before that: 2026-08-15, second session of the day — **the design
 pass**: flagships look like flagships. The author's bar, verbatim:
 "Clean. Like Apple level clean." The system is COMMITTED, not sprinkled —
 `docs/DESIGN.md` plus tokens in `app/globals.css`: a type scale whose
@@ -7346,3 +7355,178 @@ Every row is named, per the standing order.
 
 They are plumbing wearing reader clothes, named here so a later exclusion is a
 filter rather than a hunt. **C05** is the row where that filter gets built.
+
+## 36. The 2026-08-16 session (sixth of the day) — the mask stops muting the state the reader is standing in, and the panel stops needing a mouse
+
+Two items, both P0, both only observable on production in a real browser, and
+both misdiagnosable in a way that would have cost a day. They turned out to be
+the same defect seen from two sides.
+
+### The specification, and what was actually wrong
+
+The author's model: one state is ACTIVE at a time and the zip sets it. The
+ENTIRE active state renders crisp, sharp and raised — every corner of it, at
+every zoom, indistinguishable from the plain base map except for the raised
+edge at its border. Every other state renders blurred and lowered. Only the
+active state's per-state geometry loads. With NO active state — before a zip,
+or at a zip we do not cover — nothing is muted, blurred or raised at all.
+
+What shipped did the opposite of the first clause. At the zoom a reader lands
+on from a zip, the ENTIRE frame was muted and blurred: no crisp region
+anywhere, with the reader standing in the middle of the active state.
+
+### Item 1's diagnosis — measured, not read
+
+The mute is a DOM scrim carrying `backdrop-filter`, clipped to "everything
+except the active state" by `clip-path: url(#…)`. The path fed to that clip was
+the state's rings projected to screen at FULL EXTENT. Read off production at
+z11, Arizona's projected path spans x −10869.4 → 5939.9 and y −16547.3 →
+3432.1: roughly **16,800 × 20,000 CSS pixels**.
+
+**Chromium silently drops a `clip-path` that large.** A dropped clip is not a
+smaller clip — the scrim then paints over its entire box, which is the whole
+map. Proved by holding the topology fixed and varying only magnitude. The test
+path is the viewport rectangle minus one enclosing rectangle, evaluated
+even-odd, so the clip region is empty at every size and a working clip must
+render nothing:
+
+| enclosing box | chroma | detail | verdict |
+|---|---|---|---|
+| ±2000 px | 17.39 | 20.15 | pixel-identical to the effect-disabled frame |
+| ±8000 px | 11.24 | 9.57 | pixel-identical to the broken frame |
+| ±20000 px | 11.24 | 9.57 | pixel-identical to the broken frame |
+
+Two other things fell out of the same session at the microscope. The CSS `mask`
+on the scrim was **inert the entire time** — Chromium does not resolve an SVG
+`<mask>` reference from CSS on an HTML element — so the clip was the only thing
+doing the work, and its failure took the whole effect with it rather than
+degrading to the mask. And this is the same class as g4's clamped SVG filter
+region: Chromium's answer to geometry it cannot rasterize is to DROP it, and a
+dropped mask reads as full coverage, which is the loudest possible way for an
+ambient effect to fail.
+
+Of the brief's three named suspects it was the second — the region clamped when
+the state extends far beyond the viewport — at the clip-path rather than at the
+filter. It was not a wrong polygon: the geometry was Arizona's, correctly
+projected, all the way through.
+
+### The fix
+
+`lib/map/state-focus.ts#clipRingToBox` — Sutherland–Hodgman, per ring, against
+the mask's own region (the canvas plus `FILTER_PAD`), applied after projection
+and BEFORE simplification. Nothing outside that box was ever inside the mask
+region or either filter region, so the cut removes only geometry that was being
+rasterized in order to be thrown away. It is also the cheapest frame win
+available: at city zoom the serialized path drops from the state's full ring
+count to the handful of points that cross the screen.
+
+**The case that looks identical in the code and opposite on the screen** is
+handled explicitly. A ring clipped to nothing means the viewport does not touch
+the active state anywhere — pan into New Mexico while Arizona is active — and
+the correct render there is a fully muted frame. That used to clear the drawing
+and render the map plain, which is the treatment reserved for having no active
+state at all. Now an empty `statePath` leaves the mask its white rect and the
+scrim its bare viewport rectangle, so the mute is total, which is the truth.
+Holes are clipped like any other ring, so a viewport inside one cancels to
+nothing under even-odd — a reader in a hole is outside the state.
+
+### The zip shading is gone
+
+The author's ruling: removed from the product, not tuned and not flagged. The
+tint, both layers, the source, the `/api/zcta/<zip>` route, `lib/geo/zcta-outline.ts`
+and the client fetch are deleted. The committed ZCTA geometry stays in the
+repository, unused. A reader's zip now costs the map no request and no layer.
+Its walk check is RETIRED with the feature and replaced by its opposite — "the
+zip draws nothing on the map" — so the suite's count changes for a stated
+reason rather than reading as a regression.
+
+### Item 2 — the panel that would not paint
+
+The author clicked meetings at 85701. The header read "86 meetings", Sort and
+Group rendered, and the list body was blank until the mouse moved over it. A
+phone has no hover, so a mobile reader taps meetings, sees a count above
+nothing, and concludes we hold nothing — a stated-N versus rendered-rows
+violation produced by a paint bug.
+
+**The DOM was never wrong, and that is the diagnosis.** Every reproduction
+against production found the six group headers present, at real coordinates,
+with counts summing to the header's own number, and none of it on screen.
+`getBoundingClientRect` is layout, not paint. The missing SUBSET varied between
+runs — at 1280px the panel lost its ground, its header and both selects while
+the group rows painted; at 390px it lost everything — which is a compositor
+that never painted a layer, not a component that never rendered.
+
+The cause is item 1, one layer down. The scrim carries `backdrop-filter`, and
+while its clip was being dropped it covered the entire viewport; the list
+overlay carries a `backdrop-filter` of its own and stacks directly on it over
+the map's WebGL canvas. Two backdrop surfaces deep, Chromium did not paint the
+upper one's contents until something dirtied the layer — which a pointer move
+is. With the scrim removed first and nothing else changed, header luminance
+went from 16 to 25.3 at 1280px and from 10 to 26 at 390px, and the phone's body
+detail from 0.0 to 3.8.
+
+**The failure is intermittent, so remedies were measured as rates.** The first
+A/B looked decisive and was not — the control arm painted on its second run.
+Removing the overlay's own `backdrop-filter` was tried and rejected on the
+numbers (0 of 4 at 390px, no better than control); promoting the panel to its
+own layer, 2 of 4. It is not the upper surface that has to go.
+
+Item 1's fix removes the full-viewport scrim wherever the reader is inside the
+active state. That is most of item 2 — but only most, because panning outside
+the active state brings a full-viewport scrim back, correctly this time, and
+the panel would blank again. So the scrim is additionally SUSPENDED while any
+full-screen overlay is open. That half is a rule and not a workaround: a reader
+looking at a modal cannot see the map through it, the scrim has nothing left to
+say to them, and the one thing it can still do is cost them the content they
+opened.
+
+### The checks, which are what would have caught this
+
+The existing `pnpm measure:extrusion` passed at full marks on the broken build.
+It measures how SMOOTHLY the effect's edge falls off; it cannot tell a smooth
+gradient over the right area from a smooth gradient over the whole map. **A
+visual measurement that cannot distinguish correct from incorrect coverage is
+not a correctness test** — it has to assert WHAT is affected, not only how
+smoothly.
+
+`pnpm measure:focus` is that assertion. Every sample is a lng/lat — a real
+place — projected through the live map's own projection, so the check follows
+the geometry exactly as the mask is supposed to:
+
+- **Interior**, deliberately far from the entered zip (north Tucson and Drexel
+  Heights at city zoom, the corners of the state further out): identical to the
+  effect-disabled frame.
+- **Effect-off equivalence**, with sample points held outside the raised edge
+  by a distance read off the SHIPPED spec for that zoom rather than by a
+  constant — 70 px at neighbourhood zoom, 41 px at continental. A fixed
+  exclusion would either fail a correct build or get loosened until it proved
+  nothing, and at continental zoom it exceeded New Hampshire's own width. Where
+  a state is smaller on screen than the rise reaches, the whole state is edge
+  and the interior claim is genuinely unmeasurable; those frames fall back to a
+  claim that is measurable at any size — the state's middle must be far less
+  changed than the land outside it.
+- **Exterior**: each point compared against ITSELF with the effect off, never
+  against an interior point somewhere else. Terrain varies; the effect is the
+  only thing allowed to differ between the two frames.
+- **Data scoping**, off the network log and the style rather than inferred.
+- **No active state**, with no zip and at 06716.
+
+`pnpm measure:panels` is item 2's. It opens the panel with a DOM `click()`
+issued from inside the page at all four zips at 390×844 and 1280×900 — **the
+mouse never moves**, because hovering is the thing that repairs the defect —
+and it asserts on PIXELS, in the brief's order: the body is not empty on first
+paint (the collapsed group headers, not a blank area), the group counts sum to
+the stated count, and expanding ONE group paints exactly its own stated rows.
+It deliberately does not assert that every meeting renders on open: groups are
+collapsed by design since g4 item 11, and that assertion would fail a correct
+build. Every assertion is repeated and reported as a rate. The same pass audits
+the bodies, districts and officials doors the same way.
+
+`pnpm measure:fly` is the performance half — first contentful paint, largest
+contentful paint, the first moment the map answers a camera probe, and frame
+timing across the fly-in, all cold with the HTTP cache disabled. Its own first
+run reported a perfectly smooth zero-frame fly-in, because the recorder was
+passed as a function and `tsx` compiled it into a call to esbuild's `__name`
+helper, which does not exist in a browser. It is passed as source text now: a
+string is compiled by nobody, and a recorder that throws on its first line
+reports the map never moved.

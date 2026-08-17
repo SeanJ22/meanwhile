@@ -7,6 +7,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 
 import {
+  clipRingToBox,
   extrusionSpecForZoom,
   riseAlphasFor,
   simplifyScreenRing,
@@ -80,7 +81,22 @@ const FILTER_PAD = 120;
 
 interface Drawing {
   /**
-   * The state's own silhouette — its rings and nothing else.
+   * The state's own silhouette — its rings and nothing else, CUT TO THE
+   * FILTER REGION (g5 item 1).
+   *
+   * The cut is the fix and `lib/map/state-focus.ts#clipRingToBox` carries the
+   * measurements: a clip path tens of thousands of pixels across is dropped
+   * by Chromium rather than applied, and a dropped clip on a `backdrop-filter`
+   * scrim mutes the whole map — including the state the reader is standing
+   * in. Nothing outside `FILTER_PAD` of the canvas could ever have been seen,
+   * so the cut removes only geometry that was being rasterized to be thrown
+   * away.
+   *
+   * An EMPTY string here is a claim with a meaning: the viewport does not
+   * touch the active state anywhere, so everything in view is outside it and
+   * the mute is total. That is the correct render for panning into New Mexico
+   * while Arizona is active, and it is why this case builds a full-coverage
+   * drawing instead of clearing to null.
    *
    * **Kept separate from `outsidePath` on purpose, and the reason is a real
    * defect the measurement caught.** The first build used one path for both,
@@ -193,24 +209,50 @@ export function StateFocusOverlay({
       const { width, height } = box.getBoundingClientRect();
       const spec = extrusionSpecForZoom(zoomOf?.() ?? 10);
 
+      /*
+       * The box every ring is cut to: exactly the mask's own region and the
+       * two filter regions, which are all `FILTER_PAD` around the canvas.
+       * Cutting anywhere wider would leave geometry that cannot be seen;
+       * cutting narrower would put an artificial edge close enough to the
+       * canvas for its own shadow to reach back into view.
+       */
+      const clipBox = {
+        minX: -FILTER_PAD,
+        minY: -FILTER_PAD,
+        maxX: width + FILTER_PAD,
+        maxY: height + FILTER_PAD,
+      };
+
       const rings: string[] = [];
       for (const ring of outline.geometry.coordinates) {
         if (ring.length < 3) continue;
         const projected: ScreenPoint[] = ring.map((c) => project([c[0], c[1]]));
+        // Cut BEFORE simplifying: the clip is what keeps the path small
+        // enough for Chromium to honour it at all, and doing it first also
+        // means the simplifier only ever walks the points that survived.
+        const clipped = clipRingToBox(projected, clipBox);
+        if (clipped.length < 3) continue;
         // Simplified AFTER projection, so one sub-pixel rule covers every
         // zoom — see lib/map/state-focus.ts#simplifyScreenRing.
-        const points = simplifyScreenRing(projected, spec.simplifyPx);
+        const points = simplifyScreenRing(clipped, spec.simplifyPx);
         rings.push(
           `M${points
             .map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`)
             .join("L")}Z`,
         );
       }
-      if (rings.length === 0) {
-        setDrawing(null);
-        return;
-      }
 
+      /*
+       * NO RINGS MEANS EVERYTHING IN VIEW IS OUTSIDE THE ACTIVE STATE.
+       *
+       * This used to clear the drawing, which rendered the frame plain — the
+       * treatment reserved for having no active state at all. The two are
+       * opposites: with a state active and none of it in view, the whole
+       * viewport is somewhere else and the whole viewport is muted. The empty
+       * `statePath` gets that for free: the mask keeps only its white rect, so
+       * the mute covers everything, and the scrim's clip is the bare viewport
+       * rectangle with nothing subtracted from it.
+       */
       const statePath = rings.join(" ");
       // The map's rectangle FIRST — the even-odd rule needs something to
       // subtract the state from. A little overscan so a rounded corner or a
@@ -345,12 +387,18 @@ export function StateFocusOverlay({
                   height={drawing.height + FILTER_PAD * 2}
                   fill="#ffffff"
                 />
-                <path
-                  d={drawing.statePath}
-                  fillRule="evenodd"
-                  fill="#000000"
-                  filter={`url(#${featherId})`}
-                />
+                {/* Omitted, not emptied, when no part of the state is in
+                    view: the mask is then its white rect alone and the mute
+                    covers the frame, which is the correct answer for a
+                    viewport that is entirely somewhere else. */}
+                {drawing.statePath && (
+                  <path
+                    d={drawing.statePath}
+                    fillRule="evenodd"
+                    fill="#000000"
+                    filter={`url(#${featherId})`}
+                  />
+                )}
               </mask>
             </defs>
 
@@ -386,23 +434,29 @@ export function StateFocusOverlay({
               />
               {/* Light source at top-left. The lit silhouette is displaced
                   TOWARD it and the shaded one away, both in screen space —
-                  the sun does not rotate with the map. */}
-              <path
-                d={drawing.statePath}
-                fillRule="evenodd"
-                fill="#ffffff"
-                fillOpacity={alphas.light}
-                filter={`url(#${softId})`}
-                transform={`translate(${-drawing.spec.offsetPx} ${-drawing.spec.offsetPx})`}
-              />
-              <path
-                d={drawing.statePath}
-                fillRule="evenodd"
-                fill="#000000"
-                fillOpacity={alphas.dark}
-                filter={`url(#${softId})`}
-                transform={`translate(${drawing.spec.offsetPx} ${drawing.spec.offsetPx})`}
-              />
+                  the sun does not rotate with the map. Both are omitted when
+                  no part of the state is in view: there is no edge on screen
+                  to raise, and an empty `d` is not a shape. */}
+              {drawing.statePath && (
+                <>
+                  <path
+                    d={drawing.statePath}
+                    fillRule="evenodd"
+                    fill="#ffffff"
+                    fillOpacity={alphas.light}
+                    filter={`url(#${softId})`}
+                    transform={`translate(${-drawing.spec.offsetPx} ${-drawing.spec.offsetPx})`}
+                  />
+                  <path
+                    d={drawing.statePath}
+                    fillRule="evenodd"
+                    fill="#000000"
+                    fillOpacity={alphas.dark}
+                    filter={`url(#${softId})`}
+                    transform={`translate(${drawing.spec.offsetPx} ${drawing.spec.offsetPx})`}
+                  />
+                </>
+              )}
             </g>
           </svg>
           {/*

@@ -1026,6 +1026,18 @@ function MapEntryInner() {
             camera={camera}
             focus={focus}
             selectedVenueKey={ui.selectedVenueKey}
+            /* g5 item 2: while a full-screen overlay covers the map, the
+               state scrim is suspended. The reader cannot see the map through
+               it, and leaving it composited under a second backdrop-filter
+               surface is what stopped the meetings panel painting. The
+               welcome overlay and the account modal carry the same
+               `backdrop-filter` over the same canvas, so all three count. */
+            overlayOpen={
+              ui.listOverlayOpen ||
+              ui.door !== null ||
+              !location ||
+              welcomeRequested
+            }
             frameAllVenues={
               current !== null &&
               current.tier !== "exact" &&

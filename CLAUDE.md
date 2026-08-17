@@ -44,6 +44,8 @@ Do not fail. Find every avenue, every back door, every nook, every cranny.
 * Every wall that falls becomes a rung, so it never costs a second session.
 * Two prohibitions remain, and neither is caution: no residential-proxy spoofing, and nothing fabricated when the ladder is genuinely exhausted. We take everything that is owed and we invent nothing.
 
+**Recorded deviation from the source document, so a later comparison reads it as a decision and not as drift** (recorded 2026-08-17; the adaptation itself was made 2026-08-16 by the h session and reported then). The text above is verbatim from the h session brief with ONE adaptation: the brief's first bullet and its operational-interpretation paragraph each cited experimental control **C5**, and the same brief separately forbade copying its experimental controls into `CLAUDE.md`. Those two clauses therefore read here without the C5 reference. Nothing else was changed, compressed, reordered or paraphrased. A session diffing `CLAUDE.md` against the h brief will find exactly this difference and no other.
+
 ### THE LADDER, EXHAUSTIVELY
 
 (The standing definition — a hunt is over only when every rung below has been
@@ -66,6 +68,14 @@ walked and recorded with `attemptedAt` and its result. These fourteen rungs are
 14. The author's browser, last.
 
 Operational interpretation of "every wall that falls becomes a rung": every successful wall-breaking method becomes a PERMANENT reusable step in the playbook, whether it is code or procedure. Only a genuinely NEW RETRIEVAL CLASS increments the numbered ladder. A new technique inside an existing rung enriches that rung; it does not renumber the ladder. This preserves the mandate verbatim while keeping the ladder version stable.
+
+### THE DEFERRAL BOUNDARY FALLS BETWEEN SUBJECTS, NEVER INSIDE ONE
+
+(Adopted 2026-08-17, the author's ruling on the conflict between the mandate
+above and the nothing-half-built rule. Both stay; this is the layer between
+them.)
+
+The deferral boundary falls between subjects, never inside one. A subject is never left half-hunted or half-built — the mandate governs the subject and the ladder is walked to exhaustion. But a session does not stop starting new subjects because it doubts it can finish them all. It keeps going until the session genuinely ends, defers whatever remains whole and specced, and states in its report how many subjects were completed against the denominator — "2 of 60", never "the sweep was deferred."
 
 ---
 

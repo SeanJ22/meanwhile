@@ -1,6 +1,7 @@
 import { scrubFreeText } from "../log/scrub.ts";
 
 import { getDb } from "./index.ts";
+import { ORGANIC, type RunMarker } from "./run-marker.ts";
 import { searchLog } from "./schema.ts";
 
 /**
@@ -57,6 +58,13 @@ export interface SearchLogEvent {
   ocdIds: string[];
   /** Scalar facts only; validated against the forbidden fragments below. */
   detail?: Record<string, string | number | boolean>;
+  /**
+   * Whose traffic this is (C05). Supplied by the caller from the incoming
+   * request's own declaration — see `lib/db/run-marker.ts`. Absent means
+   * ORGANIC, which is the correct reading of "nobody said otherwise" for a
+   * human at a browser.
+   */
+  marker?: RunMarker;
 }
 
 /**
@@ -133,6 +141,8 @@ export async function logSearchEvent(event: SearchLogEvent): Promise<boolean> {
     throw new Error("approximateLocation must be a five-digit zip or absent");
   }
 
+  const marker = event.marker ?? ORGANIC;
+
   if (!process.env.DATABASE_URL) return false;
 
   // The scrub pass (session brief 4, wall clock 2026-08-14): free text —
@@ -161,6 +171,11 @@ export async function logSearchEvent(event: SearchLogEvent): Promise<boolean> {
       ocdIds: event.ocdIds,
       divisionVintage: DIVISION_VINTAGE,
       detail,
+      // C05: whose traffic this is, declared at write time. `runId` is null on
+      // every organic row by construction, so it can never relate two
+      // readers' rows to each other.
+      runClass: marker.runClass,
+      runId: marker.runClass === "ORGANIC" ? null : marker.runId,
     });
   return true;
 }

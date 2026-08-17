@@ -1,10 +1,12 @@
 import { haversineKm } from "@/lib/geo/distance";
 import { nearestZcta } from "@/lib/geo/zcta";
 import { logSearchEvent } from "@/lib/db/search-log";
+import { markerFromRequest } from "@/lib/db/run-marker";
 import { RADIUS_LADDER_KM, searchMeetings } from "@/lib/meetings/query";
 import { getActiveSnapshotMeta } from "@/lib/meetings/snapshot";
 import { wiringForSourceName } from "@/lib/sources/composite/wiring";
 import { coverageAt } from "@/lib/registry/server";
+import { matching, numeric, numericInRange, refuse, rejectUnknown } from "@/lib/api/params";
 
 /**
  * GET /api/meetings?lat=&lng=&radiusKm=
@@ -25,21 +27,66 @@ export const runtime = "nodejs";
 export async function GET(request: Request) {
   const params = new URL(request.url).searchParams;
 
-  const lat = Number(params.get("lat"));
-  const lng = Number(params.get("lng"));
+  /*
+   * ITEM 1b (2026-08-17): this block used to read
+   *
+   *   const lat = Number(params.get("lat"));
+   *
+   * and `Number(null)` is 0, not NaN. A request carrying no coordinates at
+   * all — `/api/meetings?zip=85701`, the shape the h session's probe sent —
+   * passed both range checks and searched 0°N 0°E, climbing the radius ladder
+   * to 150 km in the Gulf of Guinea and answering 200 with a centre, a tier
+   * and a `nearZip` of "85701". It also wrote that into the search log.
+   *
+   * The reader-facing rule is `lib/api/params.ts`: absent or malformed
+   * refuses with a stated reason, and an unknown parameter is named back to
+   * the caller rather than ignored — because the original request was not a
+   * malformed coordinate, it was a caller using a parameter this route does
+   * not locate by.
+   */
+  const KNOWN = ["lat", "lng", "radiusKm", "zip"] as const;
+  const unknown = rejectUnknown(params, KNOWN);
+  if (!unknown.ok) return refuse(unknown.error);
 
-  if (!Number.isFinite(lat) || lat < -90 || lat > 90) {
-    return Response.json({ error: "lat must be between -90 and 90" }, { status: 400 });
-  }
-  if (!Number.isFinite(lng) || lng < -180 || lng > 180) {
-    return Response.json({ error: "lng must be between -180 and 180" }, { status: 400 });
-  }
+  const latRead = numericInRange(params, "lat", -90, 90, "refuse");
+  if (!latRead.ok) return refuse(latRead.error);
+  const lngRead = numericInRange(params, "lng", -180, 180, "refuse");
+  if (!lngRead.ok) return refuse(lngRead.error);
+  const lat = latRead.value;
+  const lng = lngRead.value;
 
-  const requested = Number(params.get("radiusKm"));
-  const radiusKm =
-    Number.isFinite(requested) && requested > 0
-      ? Math.min(requested, RADIUS_LADDER_KM[RADIUS_LADDER_KM.length - 1])
-      : RADIUS_LADDER_KM[0];
+  /*
+   * `radiusKm` is genuinely optional — absent means "start at the ladder's
+   * first rung", which is a documented default for a parameter the caller
+   * never sent. Present-but-unparseable is a different thing and refuses:
+   * `?radiusKm=abc` silently becoming 25 km is the same class of defect one
+   * size down, an answer about a smaller area than the caller asked for with
+   * nothing on screen to say so.
+   */
+  const radiusRead = numeric(params, "radiusKm", { default: RADIUS_LADDER_KM[0] });
+  if (!radiusRead.ok) return refuse(radiusRead.error);
+  if (radiusRead.value <= 0) {
+    return refuse(`radiusKm must be greater than 0, received ${radiusRead.value}`);
+  }
+  const radiusKm = Math.min(
+    radiusRead.value,
+    RADIUS_LADDER_KM[RADIUS_LADDER_KM.length - 1],
+  );
+
+  /*
+   * ITEM 1b: a malformed zip refuses rather than silently becoming null.
+   * `?zip=8570` — one digit short, a typo a client could ship — used to log a
+   * search with no location at all, and a row with a missing location is
+   * indistinguishable in the sold store from a reader who panned into open
+   * water. Absent is still fine and means "the reader panned, they didn't
+   * type"; the nearest ZCTA centroid answers that case below.
+   *
+   * Read at the door, with the others, so a refused request never runs the
+   * search — a refusal that arrives after the work is a refusal the caller
+   * paid for.
+   */
+  const zipRead = matching(params, "zip", /^\d{5}$/, { default: null });
+  if (!zipRead.ok) return refuse(zipRead.error);
 
   const result = await searchMeetings(lat, lng, radiusKm);
 
@@ -88,8 +135,7 @@ export async function GET(request: Request) {
   // The search log row: what was asked and where, never who. Fire-and-forget
   // — a logging failure or an absent DATABASE_URL must never cost the reader
   // their answer. Disclosed on /transparency, which ships with this code.
-  const zipParam = params.get("zip");
-  const zip = zipParam && /^\d{5}$/.test(zipParam) ? zipParam : null;
+  const zip = zipRead.value;
 
   // The settled-viewport fetch (2i) carries no zip — the reader panned, they
   // didn't type. Resolve the nearest ZCTA centroid so the notices and the
@@ -120,6 +166,9 @@ export async function GET(request: Request) {
       requestedRadiusKm: result.requestedRadiusKm,
       meetingCount: result.meetings.length,
     },
+    // C05: whose traffic this is. A walk declares itself in a header; a
+    // reader declares nothing and is organic.
+    marker: markerFromRequest(request),
   }).catch((error) => console.error("search log write failed", error));
 
   return Response.json({ ...result, coverage, snapshot, nearZip });

@@ -200,8 +200,19 @@ export interface CoverageSummary {
   seatCounts: { total: number; named: number };
 }
 
-/** Coverage statuses that mean a calendar is actually wired. */
-const WIRED: ReadonlySet<CoverageStatus> = new Set<CoverageStatus>(["LIVE", "MANUAL"]);
+/**
+ * Coverage statuses that mean a calendar is actually wired.
+ *
+ * Exported since item 1a (2026-08-17): the who-governs notice recomputes its
+ * own wired count from the post-narrowing body list rather than reading the
+ * server's, and it has to ask the SAME question this file asks. Two copies of
+ * "what counts as wired" is how the counts drifted in the first place.
+ */
+export const WIRED_STATUSES: ReadonlySet<CoverageStatus> = new Set<CoverageStatus>([
+  "LIVE",
+  "MANUAL",
+]);
+const WIRED = WIRED_STATUSES;
 
 const SEAT_TYPES: ReadonlySet<DivisionType> = new Set<DivisionType>([
   "cd",

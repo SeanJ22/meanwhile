@@ -1,4 +1,5 @@
 import { directoryFor } from "@/lib/officials/directory";
+import { matching, refuse, rejectUnknown } from "@/lib/api/params";
 
 /**
  * GET /api/directory?member=congress:C001133
@@ -22,17 +23,34 @@ export const dynamic = "force-dynamic";
 const FEDERAL_ID = /^congress:[A-Z]\d{6}$/;
 
 export function GET(request: Request) {
-  const member = new URL(request.url).searchParams.get("member") ?? "";
+  const params = new URL(request.url).searchParams;
 
-  if (!FEDERAL_ID.test(member)) {
-    // Not a federal member id. An empty directory is the honest answer and
-    // the shape is the same, so the client renders "no directory record"
-    // rather than a failure.
-    return Response.json(
-      { source: null, districtOffices: [], committees: [] },
-      { headers: { "Cache-Control": "private, no-store" } },
+  /*
+   * ITEM 1b (2026-08-17): this route used to answer a MALFORMED `member` with
+   * `{source: null, districtOffices: [], committees: []}` — byte-identical to
+   * the answer for a real member we hold no record of — on the reasoning that
+   * "an empty directory is the honest answer and the shape is the same."
+   *
+   * The shape being the same is precisely the problem. Those are two
+   * different claims and only one of them is about a person: "we have no
+   * directory record for Senator X" versus "you did not name a member." The
+   * first rendered for the second is a manufactured claim about whoever the
+   * reader happened to be looking at, and `use-member-directory.ts` already
+   * keeps `failed` separate from "no record" specifically so it never has to.
+   *
+   * So a missing or malformed `member` refuses with a stated reason. The
+   * honest empty below is reserved for the case it actually describes.
+   */
+  const unknown = rejectUnknown(params, ["member"]);
+  if (!unknown.ok) return refuse(unknown.error);
+
+  const read = matching(params, "member", FEDERAL_ID, "refuse");
+  if (!read.ok) {
+    return refuse(
+      `${read.error}. This route serves federal members only, as congress:<bioguide> (e.g. congress:C001133)`,
     );
   }
+  const member = read.value as string;
 
   const found = directoryFor(member);
   if (!found) {

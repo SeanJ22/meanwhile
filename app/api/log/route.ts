@@ -1,3 +1,4 @@
+import { markerFromRequest } from "@/lib/db/run-marker";
 import {
   assertDetailIsAnonymous,
   isValidEventType,
@@ -141,6 +142,8 @@ export async function POST(request: Request) {
       approximateLocation: (event.approximateLocation as string | null | undefined) ?? null,
       ocdIds: event.ocdIds as string[],
       detail: event.detail as Record<string, string | number | boolean> | undefined,
+      // C05: whose traffic this is, declared by the caller at write time.
+      marker: markerFromRequest(request),
     });
     return new Response(null, { status: stored ? 204 : 202 });
   } catch (error) {

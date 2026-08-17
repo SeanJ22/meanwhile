@@ -240,8 +240,20 @@ export async function POST(request: Request) {
   // the same approximate-location basis as the search log. Optional: a
   // reaction with no resolvable view stores with no divisions rather than
   // guessed ones.
-  const lat = Number(submission.lat);
-  const lng = Number(submission.lng);
+  /*
+   * ITEM 1b (2026-08-17), hardened rather than fixed — this route was audited
+   * and found NOT to manufacture a claim, but it carries the same shape and
+   * the shape is the defect.
+   *
+   * `Number(null)` is 0, so a body sending `{lat: null, lng: null}` passed
+   * every finite-and-in-range guard below and resolved coverage at 0°N 0°E.
+   * It happened to be harmless — the Gulf of Guinea has no divisions, so
+   * `ocdIds` came back empty, which is the same answer as "no resolvable
+   * view". Harmless by luck is not the standard: the guard now requires an
+   * actual number on the wire, so a null is absent rather than the equator.
+   */
+  const lat = typeof submission.lat === "number" ? submission.lat : Number.NaN;
+  const lng = typeof submission.lng === "number" ? submission.lng : Number.NaN;
   let ocdIds: string[] = [];
   if (Number.isFinite(lat) && lat >= -90 && lat <= 90 && Number.isFinite(lng) && lng >= -180 && lng <= 180) {
     try {

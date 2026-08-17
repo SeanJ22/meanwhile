@@ -8078,6 +8078,84 @@ errs toward exclusion like everything else in C05. `docs/synthetic-runs.md`
 carries the windows, each read off the table rather than recalled — the first
 attempt at that entry guessed a time range from memory and matched nothing.
 
+### Item 3 (M141) — what the mouse was fixing, named from the code
+
+The author held this row open on a specific objection: g5 removed a
+full-viewport `backdrop-filter` scrim and the panel painted 4 of 4, but **a
+stacked scrim does not respond to pointer movement**, so the reported symptom
+was unexplained and a second cause might still be live.
+
+**The objection is right about the scrim and wrong about the claim.** g5's
+account is that "Chromium did not paint the upper surface's contents until
+something dirtied the layer — which a pointer move is." The scrim is not what
+responds to the pointer. The scrim is what *prevented the paint*; something
+else is what *forced the repaint*, and the symptom needs both. g5 never named
+the second half, which is why it reads as a plausible story rather than a
+mechanism.
+
+**The second half, read out of the stylesheet rather than inferred:**
+
+```
+app/globals.css:2828    .al-row:hover { … }
+```
+
+The meeting rows inside the panel body carry a hover rule. A pointer entering
+the panel triggers a style recalculation on `.al-row`, and that invalidates
+paint **inside `.al-overlay-body`** — the exact container whose pixels were
+missing. That is the "something" that dirties the layer, it is a real committed
+rule rather than a hypothesis, and it sits precisely where the defect was.
+
+So the full mechanism, both halves, each with its own evidence:
+
+| half | what | evidence |
+|---|---|---|
+| why it failed to paint | two `backdrop-filter` surfaces stacked over the WebGL canvas — the state-focus scrim (`app/globals.css:3994`) with the list overlay's own blur (`.al-overlay`, `app/globals.css:2736`) directly on top | g5's A/B: removing the OVERLAY's blur did nothing (0 of 4 at 390 px, no better than control); removing the SCRIM underneath it painted. The two surfaces are not interchangeable, which is what a "backdrop-filter is slow" story would predict. |
+| why the mouse fixed it | `.al-row:hover` forces a style recalc and paint invalidation inside the unpainted container | the rule is committed and applies to the rows in `.al-overlay-body`. A phone has no hover, which is why a phone reader never got the free repair and why the desktop symptom looked intermittent. |
+
+**Both halves are consistent with the fix.** Suspending `StateFocusOverlay`
+while the list overlay is open removes the lower backdrop surface, so the
+nesting that caused the missed paint is gone. The hover rule is untouched and
+harmless — it was never the defect, only the accidental remedy.
+
+#### The measurement, at the n the author asked for
+
+`pnpm measure:panels` at 390 × 844, **both device pixel ratios**, all four pilot
+zips, **40 cold trials per configuration**, the mouse never moved and no pointer
+event of any kind issued — every panel open is a DOM `click()` from inside the
+page, because a harness that hovers cannot see this defect.
+
+| configuration | paints on first render | group counts sum | expanding paints its rows |
+|---|---|---|---|
+| DPR 2 · 85701 | **40/40** | 40/40 | 40/40 |
+| DPR 2 · 85641 | **40/40** | 40/40 | 40/40 |
+| DPR 2 · 07866 | **40/40** | 40/40 | 40/40 |
+| DPR 2 · 03255 | **40/40** | 40/40 | 40/40 |
+| DPR 1 · 85701 | **40/40** | 40/40 | 40/40 |
+| DPR 1 · 85641 | **40/40** | 40/40 | 40/40 |
+| DPR 1 · 07866 | **40/40** | 40/40 | 40/40 |
+| DPR 1 · 03255 | **40/40** | 40/40 | 40/40 |
+
+**320 of 320** on the paint assertion; 960 of 960 across all three. Zero
+failures, zero could-not-run, in 81 minutes of wall clock.
+
+**What that is worth, stated as a bound rather than as "green".** The author's
+objection to 4 of 4 was exactly right — against a 25% failure rate, four passes
+happen 32% of the time, which is no evidence at all. Three hundred and twenty
+consecutive passes put the **95% upper bound on the failure probability at
+0.93%**. The same arithmetic that dismissed 4 of 4 is what makes this
+meaningful: if the old rate still held, this result would occur about once in
+10⁴⁰ runs.
+
+**What the measurement cannot see, so that the bound is not read as more than
+it is.** This is one machine, one Chromium build, one display stack and one
+network. A compositing race is environment-dependent by construction, so <0.93%
+is a bound on THIS environment and not a proof about every reader's phone. The
+instrument is permanent and the walk carries the claim, which is the part that
+survives the session.
+
+**The row closes**, on the measurement rather than on the reasoning — and the
+diagnosis above is the deliverable either way.
+
 ### Item 6 — the mayor moves to where he already lived
 
 The author's ruling: the placement on who-governs is awkward and the office

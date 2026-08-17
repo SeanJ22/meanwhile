@@ -133,6 +133,66 @@ after:
   a free-text-about-a-person surface; if the refusal log's contents
   prove otherwise, the notice extends to it.
 
+## The feedback form
+
+*Added 2026-08-17 (R40). PENDING COUNSEL like the rest of this document.*
+
+The in-app feedback form (`/feedback`) is the third free-text intake, after
+reaction free-text and the ask box. Its store holds the message, the time,
+and which entry point it came through — no name, no address, no zip, no
+device key, and nothing joinable to any other store. The message is scrubbed
+of phone-, email-, and street-address-shaped tokens before storage
+(`lib/log/scrub.ts`, T09), at the single write path.
+
+**Handling is the ask box's, for the same reason.** A form inviting "what is
+wrong" will eventually receive a threat about a named official.
+
+- **Preserve, never render.** There is no surface anywhere that displays
+  feedback back to a reader, so this is structural rather than a discipline:
+  the only read path is `scripts/read-feedback.mts`, run by the author.
+  Deletion destroys evidence; nothing auto-deletes, including rows the rate
+  limiter quarantined.
+- **Flag for the author.** The same T1/T2/T3 tiers and the same three review
+  questions, with the same honest caveat the ask box carries: the store is
+  identifier-free by design, so "identifiable target" can only ever mean the
+  person named IN the text, and there is structurally no way to identify the
+  writer.
+- **Never auto-report.** Unchanged. Every report passes human review first.
+
+**Rate limiting, and why it is not the reaction limiter's numbers.** The
+adversary model driving the reaction protections — a funded campaign faking
+district signal — does not reach this surface: feedback enters no aggregate
+and no export, so faking it buys nothing except the author's reading time.
+The protections are therefore proportionate rather than maximal: same-origin,
+an in-memory per-key and per-IP window, a 2,000-character cap, and one
+authoritative cross-instance counter. That counter lives in the intake
+limiter's own table under a SEPARATE digest space (`feedback-limiter:` rather
+than `intake-limiter:`), so a reader who has been answering questions all
+afternoon can still report a wrong number, and someone pumping this form is
+not spending a budget that also gates reactions. Past the soft threshold a
+message still lands, quarantined and excluded from nothing that matters
+(there is nothing to exclude it from) but flagged for the author — a
+genuinely angry person is never silently dropped.
+
+**No threat notice on the field, and the reason.** The notice that sits beside
+reaction free-text names a specific consequence of a specific bargain: those
+words go into an aggregate that is sold. Feedback is sold to nobody and shown
+to nobody, so the sentence would be describing something that does not
+happen. The page states what IS true — stored, read by one person, never
+aggregated, and unable to be replied to. If the contents prove this reasoning
+wrong, the notice extends here on the same terms it would extend to the ask
+box.
+
+**The open question the build left open, for the author.** The form collects
+no way to reach the writer, and the scrub would eat one typed into the
+message. That is the strictest reading of "identifier-free beyond what the
+reader types," and it costs something real: a person asking a question gets no
+answer, and a person asking for their photograph to be removed gets no
+confirmation. Whether an OPTIONAL, deliberately-supplied reply address should
+be stored — unscrubbed, in its own nullable column, with its own disclosure —
+is a user-data-field decision and therefore the author's, not the builder's.
+Tracker row R41.
+
 ## Open items for counsel
 
 Whether any affirmative reporting duty attaches, and in which states.

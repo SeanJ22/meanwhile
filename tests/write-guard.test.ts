@@ -109,6 +109,7 @@ test("every database write path asserts the guard", () => {
     "lib/db/search-log.ts",
     "lib/db/reactions.ts",
     "lib/db/intake-limiter.ts",
+    "lib/db/feedback.ts",
   ];
   for (const path of writePaths) {
     const source = readFileSync(path, "utf8");
@@ -124,7 +125,7 @@ test("no write path outside the guarded set has appeared", () => {
   // Catches the real regression: someone adds lib/db/subscriptions.ts with an
   // .insert() and no guard. Scanning lib/db keeps the list honest instead of
   // letting the test above pass against a stale set.
-  const guarded = new Set(["search-log.ts", "reactions.ts", "intake-limiter.ts"]);
+  const guarded = new Set(["search-log.ts", "reactions.ts", "intake-limiter.ts", "feedback.ts"]);
   const unguarded: string[] = [];
   for (const name of readdirSync("lib/db")) {
     if (!name.endsWith(".ts") || guarded.has(name)) continue;

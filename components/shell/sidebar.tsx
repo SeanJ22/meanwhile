@@ -221,13 +221,15 @@ export function Sidebar({
               What this site collects
             </a>
           </p>
+          {/* R40 (2026-08-17): the author's personal address left the product.
+              It is one in-app route now — nothing leaves the app to reach
+              him, and no scraper reads an address off a shipped page. */}
           <p className="mt-1">
-            Feedback:{" "}
             <a
-              href="mailto:seanj22@gmail.com"
+              href="/feedback"
               className="underline decoration-dotted underline-offset-2 hover:text-signal"
             >
-              seanj22@gmail.com
+              Feedback
             </a>
           </p>
         </div>

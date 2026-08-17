@@ -42,6 +42,21 @@ export interface IntakeLimits {
   logEventsPerIpPerMinute: number;
   /** Server-enforced cap on any string in a log event's detail bag. */
   logDetailValueMaxChars: number;
+  /**
+   * The feedback form's own budget (R40, 2026-08-17), counted in the
+   * limiter's separate `feedback-limiter:` digest space so it neither spends
+   * nor is spent by the reaction budget.
+   *
+   * The numbers are shaped by what the surface IS: a person with a lot to
+   * report might send three or four messages in a sitting and would be
+   * appalled to be refused; nobody legitimate sends forty. Past the soft
+   * threshold a message still lands, quarantined — the author decides, and a
+   * genuinely angry reader is never silently dropped.
+   */
+  feedbackPerMinuteHard: number;
+  feedbackPerMinuteSoft: number;
+  feedbackPerDay: number;
+  feedbackPerIpPerMinute: number;
 }
 
 export function intakeLimits(): IntakeLimits {
@@ -52,6 +67,10 @@ export function intakeLimits(): IntakeLimits {
     reactionsPerIpPerMinute: envInt("WTP_LIMIT_REACTIONS_IP_PER_MINUTE", 120),
     logEventsPerIpPerMinute: envInt("WTP_LIMIT_LOG_IP_PER_MINUTE", 240),
     logDetailValueMaxChars: envInt("WTP_LIMIT_LOG_DETAIL_MAX_CHARS", 500),
+    feedbackPerMinuteHard: envInt("WTP_LIMIT_FEEDBACK_PER_MINUTE", 6),
+    feedbackPerMinuteSoft: envInt("WTP_LIMIT_FEEDBACK_SOFT_PER_MINUTE", 3),
+    feedbackPerDay: envInt("WTP_LIMIT_FEEDBACK_PER_DAY", 30),
+    feedbackPerIpPerMinute: envInt("WTP_LIMIT_FEEDBACK_IP_PER_MINUTE", 20),
   };
 }
 
@@ -77,6 +96,28 @@ export function classifySubmission(
     return { kind: "REFUSE_RATE" };
   }
   if (counters.minuteCount > limits.reactionsPerMinuteSoft) {
+    return { kind: "QUARANTINE", reason: "VELOCITY" };
+  }
+  return { kind: "ALLOW" };
+}
+
+/**
+ * The same classifier against the feedback thresholds (R40).
+ *
+ * A second function rather than a parameter on the first, because the two
+ * paths take their counters from two different digest spaces and mixing the
+ * thresholds would be a silent cross-charge — the exact thing the separate
+ * space exists to prevent. Pure, so it is testable without a database.
+ */
+export function classifyFeedbackSubmission(
+  counters: { minuteCount: number; dayCount: number },
+  limits: IntakeLimits = intakeLimits(),
+): SubmissionDisposition {
+  if (counters.dayCount > limits.feedbackPerDay) return { kind: "REFUSE_DAILY" };
+  if (counters.minuteCount > limits.feedbackPerMinuteHard) {
+    return { kind: "REFUSE_RATE" };
+  }
+  if (counters.minuteCount > limits.feedbackPerMinuteSoft) {
     return { kind: "QUARANTINE", reason: "VELOCITY" };
   }
   return { kind: "ALLOW" };

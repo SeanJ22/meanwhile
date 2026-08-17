@@ -5,6 +5,7 @@ import { useState } from "react";
 import { isWellFormedZip, nearestZcta, resolveZip } from "@/lib/geo/zcta";
 
 import { ZipComb } from "./zip-comb";
+import { PRODUCT_NAME } from "@/lib/brand";
 
 /**
  * The entry overlay.
@@ -139,7 +140,7 @@ export function WelcomeOverlay({
           government portal. The header is the name and the mission, and
           nothing between them.
         */}
-        <h1 className="welcome-title">We the People</h1>
+        <h1 className="welcome-title">{PRODUCT_NAME}</h1>
 
         {/* The author's mission text, verbatim (session brief 1a). Do not
             edit it here: tests/welcome-copy.test.ts pins every sentence. */}

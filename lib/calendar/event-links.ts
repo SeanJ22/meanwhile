@@ -14,6 +14,7 @@ import {
   startTimeIsKnown,
 } from "../map/format.ts";
 import type { Meeting } from "../sources/types.ts";
+import { PRODUCT_NAME } from "../brand.ts";
 
 export interface CalendarEventInput {
   /** Stable id for the ICS UID. */
@@ -74,7 +75,7 @@ export function googleCalendarUrl(event: CalendarEventInput): string {
 
 export function icsDataHref(event: CalendarEventInput): string {
   const esc = (s: string) => s.replace(/([,;])/g, "\\$1");
-  const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//We the People//event//EN", "BEGIN:VEVENT", `UID:${event.id}@wethepeople`];
+  const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", `PRODID:-//${PRODUCT_NAME}//event//EN`, "BEGIN:VEVENT", `UID:${event.id}@wethepeople`];
   if (event.allDayDate) {
     const { start, end } = allDayStamps(event.allDayDate);
     lines.push(`DTSTAMP:${start}T000000Z`);
@@ -115,7 +116,7 @@ export function meetingCalendarEvent(
     meeting.bodyName,
     timed ? null : TIME_NOT_POSTED,
     meeting.agendaUrl ? `Agenda: ${meeting.agendaUrl}` : null,
-    options.origin ? `Found via We the People: ${options.origin}/` : null,
+    options.origin ? `Found via ${PRODUCT_NAME}: ${options.origin}/` : null,
     timed ? "End time is an estimate — public bodies rarely publish one." : null,
   ].filter(Boolean) as string[];
 

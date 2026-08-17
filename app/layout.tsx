@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { DM_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { titleFor } from "@/lib/brand";
 
 // All UI text. Loaded as a variable font, which covers the 300–700 range the
 // design uses without four separate downloads.
@@ -20,7 +21,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "We the People — public meetings near you",
+  title: titleFor("Public meetings near you"),
   description:
     "Enter a zip code to see the councils, boards, and commissions meeting near you.",
 };

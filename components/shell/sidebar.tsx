@@ -12,6 +12,7 @@ import { ScopeSelectors } from "./scope-selectors";
 import { SearchBox } from "./search-box";
 import { StatsBar } from "./stats-bar";
 import { ViewToggle } from "./view-toggle";
+import { PRODUCT_NAME } from "@/lib/brand";
 
 /**
  * The fixed left rail.
@@ -109,7 +110,7 @@ export function Sidebar({
           </svg>
 
           <span className="brand-name">
-            We the People
+            {PRODUCT_NAME}
             <span className="brand-sub">
               {location ? (
                 <>

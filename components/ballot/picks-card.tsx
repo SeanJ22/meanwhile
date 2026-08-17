@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { clearAllPicks, type StoredPick } from "@/lib/ballot/picks";
+import { PRODUCT_NAME } from "@/lib/brand";
 
 /**
  * The picks card (session item 5, wall clock 2026-08-14 second session,
@@ -14,8 +15,10 @@ import { clearAllPicks, type StoredPick } from "@/lib/ballot/picks";
  * HARD CONSTRAINTS, from the brief: the reader's device-local picks
  * ONLY. No aggregates, no reactions, no totals, no app commentary, no
  * candidate photos. The card carries the app name and "My picks — made
- * with We the People, [date]" and nothing evaluative. It is the
- * reader's artifact, not the app's opinion.
+ * with <PRODUCT_NAME>, [date]" and nothing evaluative. It is the
+ * reader's artifact, not the app's opinion. The name is the constant,
+ * never a literal: B01's interim rename (2026-08-17) moved it once and
+ * is expected to move it again.
  *
  * Nothing about the picks store changes: the card is drawn onto a
  * <canvas> from localStorage entirely in the browser — creating or
@@ -132,7 +135,7 @@ function drawCard(picks: StoredPick[], madeOn: string): string {
   ctx.stroke();
   ctx.fillStyle = COLORS.muted;
   ctx.font = "10px ui-monospace, monospace";
-  ctx.fillText(`My picks — made with We the People, ${madeOn}`, PAD, y + 14);
+  ctx.fillText(`My picks — made with ${PRODUCT_NAME}, ${madeOn}`, PAD, y + 14);
 
   return canvas.toDataURL("image/png");
 }

@@ -149,6 +149,29 @@ export function updateMarkerIcon(
 }
 
 /**
+ * The reconciliation DECISION, with no map and no DOM in it.
+ *
+ * Split out from `rebuildMarkerPool` so the rule can be asserted directly
+ * (R05). The rule is the whole point of this module and it is one line of
+ * prose — create what is new, update what is already here, remove only what
+ * the data no longer has AT ALL — but it is the kind of rule that decays into
+ * "remove everything and rebuild" during an unrelated fix, and the symptom is
+ * a stutter at a scale no fixture reaches.
+ */
+export function reconcileKeys(
+  existingKeys: Iterable<string>,
+  wantedKeys: Iterable<string>,
+): { create: string[]; update: string[]; remove: string[] } {
+  const wanted = new Set(wantedKeys);
+  const existing = new Set(existingKeys);
+  return {
+    create: [...wanted].filter((k) => !existing.has(k)),
+    update: [...wanted].filter((k) => existing.has(k)),
+    remove: [...existing].filter((k) => !wanted.has(k)),
+  };
+}
+
+/**
  * Reconcile the pool against the venues the data now contains.
  *
  * Creates what is new, updates what changed, and removes only what the data no
@@ -162,14 +185,14 @@ export function rebuildMarkerPool(
   venues: Venue[],
   onSelect: (venue: Venue) => void,
 ): void {
-  const wanted = new Set(venues.map((v) => v.key));
+  const { remove } = reconcileKeys(pool.entries.keys(), venues.map((v) => v.key));
 
-  for (const [key, entry] of pool.entries) {
-    if (!wanted.has(key)) {
-      entry.marker.remove();
-      pool.entries.delete(key);
-      pool.previouslyVisibleKeys.delete(key);
-    }
+  for (const key of remove) {
+    const entry = pool.entries.get(key);
+    if (!entry) continue;
+    entry.marker.remove();
+    pool.entries.delete(key);
+    pool.previouslyVisibleKeys.delete(key);
   }
 
   for (const venue of venues) {

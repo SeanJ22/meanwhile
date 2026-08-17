@@ -54,6 +54,7 @@ import type {
 } from "@/lib/ballot/types";
 import { resolveZip } from "@/lib/geo/zcta";
 import { divisionsAt } from "@/lib/registry/server";
+import { PRODUCT_NAME } from "@/lib/brand";
 
 /**
  * The ballot surface — S2.
@@ -283,7 +284,7 @@ export default async function BallotPage({
           ← Back to the map
         </Link>
       </p>
-      <p className="t-eyebrow mt-4 text-muted">We the People</p>
+      <p className="t-eyebrow mt-4 text-muted">{PRODUCT_NAME}</p>
       <h1 className="mt-1.5 text-2xl font-semibold tracking-tight">
         What&apos;s on the ballot{zip ? ` near ${zip}` : ""}
       </h1>
@@ -333,7 +334,7 @@ export default async function BallotPage({
                     title: `Election Day — vote (${set.election.state})`,
                     allDayDate: dates.electionDay,
                     description:
-                      "Your ballot, with sources: found via We the People.",
+                      `Your ballot, with sources: found via ${PRODUCT_NAME}.`,
                   }}
                 />
               </p>

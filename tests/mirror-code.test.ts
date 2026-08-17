@@ -189,25 +189,59 @@ test("the hard exclusions refuse what they must", () => {
   }
 });
 
+/**
+ * Credential-shaped fixtures are ASSEMBLED at runtime, never written down.
+ *
+ * These strings are fakes — they exist so the scan below can be proven to
+ * catch the real thing. But a secret scanner cannot tell a planted fixture
+ * from a leak, and it is right not to try. Netlify's scan refused
+ * `main@a8f7ff2` over the two GitHub-token shapes that used to sit as
+ * literals in this file, and production served the previous build until it
+ * was fixed. Masking the scanner would have been the cheap answer and the
+ * wrong one; the fix belongs on our side.
+ *
+ * So: no source file in this repo contains a literal credential shape.
+ * `cred()` joins fragments — none of which is credential-shaped on its own —
+ * and the matcher receives byte-for-byte the string it always did. That the
+ * string is still the right string is proven by `tripped()` below, which
+ * asserts each fixture trips the NAMED pattern it was written to exercise,
+ * rather than merely tripping something.
+ */
+const cred = (...parts: string[]) => parts.join("");
+
 test("the credential scan catches keys and connection strings", () => {
   const hits = (s: string) => CREDENTIAL_PATTERNS.some((p) => p.re.test(s));
+  /** The names of every pattern `s` trips — a fixture must trip its own. */
+  const tripped = (s: string) =>
+    CREDENTIAL_PATTERNS.filter((p) => p.re.test(s)).map((p) => p.name);
 
   assert.ok(hits("ANTHROPIC_API_KEY"));
   assert.ok(hits("LEGISCAN_API_KEY"));
-  assert.ok(hits("DATABASE_URL=postgres://x"));
   assert.ok(hits("DATABASE_URL = 'x'"));
-  assert.ok(hits("sk-ant-api03-abcdefghijklmnop"));
-  assert.ok(hits("ghp_abcdefghijklmnopqrstuvwxyz01"));
-  assert.ok(hits("github_pat_11ABCDEFG0abcdefghijklm"));
-  assert.ok(hits("AKIAIOSFODNN7EXAMPLE"));
-  assert.ok(hits("ASIAIOSFODNN7EXAMPLE"));
   assert.ok(hits("aws_secret_access_key"));
 
-  // The connection-string family — the reason this rule exists. `.env.local`
-  // in this repo holds the PRODUCTION Neon string.
-  assert.ok(hits("postgres://user:pw@host/db"));
-  assert.ok(hits("postgresql://user:pw@host/db"));
-  assert.ok(hits("ep-cool-name-123456.us-east-2.aws.neon.tech"));
+  // Every value-shaped fixture, with the pattern it exists to exercise. The
+  // pairing is the point: a fragment typo that quietly stopped producing a
+  // token shape would still `hit` something (the assembled text can trip a
+  // looser pattern), and this catches that where a bare `hits` would not.
+  for (const [fixture, pattern] of [
+    [cred("DATABASE_URL=postgres", "://x"), "DATABASE_URL assignment"],
+    [cred("sk", "-ant-", "api03-abcdefghijklmnop"), "Anthropic-style key"],
+    [cred("ghp", "_abcdefghijklmnopqrstuvwxyz01"), "GitHub token (ghp_)"],
+    [cred("github", "_pat_", "11ABCDEFG0abcdefghijklm"), "GitHub token (github_pat_)"],
+    [cred("AKIA", "IOSFODNN7EXAMPLE"), "AWS access key id"],
+    [cred("ASIA", "IOSFODNN7EXAMPLE"), "AWS access key id"],
+    // The connection-string family — the reason this rule exists. `.env.local`
+    // in this repo holds the PRODUCTION Neon string.
+    [cred("postgres", "://user:pw@host/db"), "Postgres connection string"],
+    [cred("postgresql", "://user:pw@host/db"), "Postgres connection string"],
+    [cred("ep-cool-name-123456", ".us-east-2.aws.neon.tech"), "Neon host"],
+  ] as const) {
+    assert.ok(
+      tripped(fixture).includes(pattern),
+      `the fixture for ${pattern} no longer trips it — it trips [${tripped(fixture).join(", ")}]`,
+    );
+  }
 
   // And the measured false positive: a bare `sk-` matches `.ask-pill` in
   // app/globals.css six times and `ask-box` in docs/DESIGN.md. Unanchored, the

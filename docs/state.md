@@ -4,7 +4,22 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-16, sixth session of the day — **the active-state
+Last updated: 2026-08-17 — **the numbers stop contradicting each other, and
+our own robots stop counting as readers.** Four places where a stated number
+and a rendered thing disagreed, three of them fixed and one reconciled: Who
+Governs Here stated 4 / 5 / 5 for one list (two definitions on one surface,
+and a second instance underneath it that only a reader's own narrowing could
+trigger); `/api/meetings` answered 200 at 0°N 0°E because `Number(null)` is 0
+rather than NaN, and wrote that into the store we sell; and the `walk:all`
+count that had not reconciled across two sessions turned out to have lost
+nothing — the STARTING number was wrong. C05 shipped: every search-log row now
+says whether it is a reader, one of our own automated runs, or unknown, and
+only readers are counted. The honest consequence is that the log's history —
+2845 of 2891 rows — is not sellable, and the sellable record starts today.
+**Three of the brief's eight items landed; five were never started and are
+deferred whole as G05, G07, G08, G09, G10.** See §38.
+
+Before that: 2026-08-16, sixth session of the day — **the active-state
 model**: the mask stopped muting the state the reader is standing in, and
 the meetings panel stopped needing a mouse to paint. Both were the same
 defect — a clip path 16,800 x 20,000 px that Chromium DROPS rather than
@@ -7835,3 +7850,251 @@ mapped into Phase E rather than deleted. `README.md` is rewritten as a
 pointer-style front door. `states/nh/NOTES.md` and `docs/zip-playbook.md` take
 this session's appends, both append-only.
 
+## 38. The 2026-08-17 session — the numbers stop contradicting each other, and our own robots stop counting as readers
+
+The g6 brief asked for eight items and a standing rule. **Three items and the
+rule landed; five were never started.** That sentence goes first, because the
+rule this session wrote into `CLAUDE.md` requires the denominator to be stated
+rather than the progress to be narrated.
+
+HEAD at session open: `eb4df50`, `main` with h merged. The neumorphic
+active-state treatment was not touched, per the author's ruling governing the
+whole brief — no token, no layer, no shadow, no mask.
+
+### The standing rule, written before any other work
+
+**The deferral boundary falls between subjects, never inside one.** It sits in
+`CLAUDE.md` immediately below the fourteen-rung ladder, resolving the conflict
+between the transparency mandate's "never stop hunting" and the
+nothing-half-built rule. Both stay; this is the layer between them.
+
+**And the h deviation is now recorded next to the mandate text.** `CLAUDE.md`'s
+copy differs from the h brief in exactly one way — two clauses read without a
+reference to experimental control C5, which that brief itself forbade copying
+in. h made the adaptation correctly and reported it, but the repo did not hold
+it, so the next session to diff the two would have read a correct decision as
+drift. One paragraph, adjacent to the text, naming what changed and why.
+
+### Item 1a — one surface, three numbers, and the named suspect was half wrong
+
+Production at 85701 read **"4 bodies govern the area around 85701"** above a
+disclosure reading **"Why these 5?"** above **5 rows**.
+
+Two definitions on one surface. The prose read the server's
+`counts.governing` — bodies whose class is `GOVERNING`, four at 85701. The rows
+were the first five of the **whole sixty-body array**, governing and not.
+
+**The brief named the Public Housing Authority board as the row that moves
+between them. It is not.** The PHA board is classed `GOVERNING` and sits
+inside the four. The row that moved is the **Board of Adjustment**, a
+`COMMISSION`, fifth in a list cut at five from a sixty-row array — it was in
+the list because the list was never the governing set, not because anything
+reclassified. Confirmed against production at all four zips before a line was
+changed.
+
+**A second instance sat underneath it and a narrower fix would have left it
+live.** The reader's device-local narrowing (M26) shrinks the RENDERED list on
+the client; `counts.governing` is computed on the server and cannot see it. A
+fix that merely re-pointed the prose at the server count would have held until
+a reader narrowed to their own school district, and then re-opened the same gap
+by hand — no deploy, no data change, nothing to notice it.
+
+Every number now derives from **one array, after narrowing**
+(`lib/registry/who-governs.ts`), and the governing list is rendered **whole**
+rather than cut. That last part is the difference between an invariant and a
+coincidence: at today's four zips the governing sets are 4, 2, 4 and 3, all
+under the old five-row cut, so a test built from production would have passed
+on a build where the cut still bit. `tests/who-governs.test.ts` proves the
+equality at synthetic sizes up to forty governing bodies.
+
+Both definitions are real and both are needed — fifty Tucson advisory
+committees must never read as fifty governments (D29) — so both are said on
+screen in plain language. The "and N more" line names what those bodies are
+rather than letting them read as more governments.
+
+**Verified on the deployed page, not asserted.** Parsing the prose number, the
+disclosure link's number and the `<li>` count out of production's own DOM at
+the four pilot zips:
+
+| zip | prose | disclosure link | rendered rows |
+|---|---|---|---|
+| 85701 | 4 | 4 | 4 |
+| 85641 | 2 | 2 | 2 |
+| 07866 | 4 | 4 | 4 |
+| 03255 | 3 | 3 | 3 |
+
+The permanent walk check reads exactly those three values, off an explicit
+`data-governing-row` hook rather than a Tailwind class — a class is a styling
+decision, and the next design pass would otherwise have disarmed the guard that
+exists because this list once disagreed with itself.
+
+### Item 1b — `Number(null)` is 0, and that is how the Gulf of Guinea became an answer
+
+h's report disclosed one nonsense read at latitude 0, longitude 0. The cause
+took one reading of the route and no speculation:
+
+```
+const lat = Number(params.get("lat"));   // get() returns null when absent
+Number(null) === 0                        // not NaN
+```
+
+Both `Number.isFinite` guards passed. Both range checks passed. The route
+returned **200** with a centre at 0,0, a radius that had climbed the whole
+ladder to 150 km, a tier, and a `nearZip` of `"85701"` — and wrote a matching
+row into the search log, **the store this product sells**, asserting that
+somebody searched near 85701 and found nothing. Reproduced on production
+before the fix and again after it.
+
+**Eleven routes audited. Two affected.**
+
+- **`/api/meetings`** — the 0,0 read, plus a malformed `radiusKm` silently
+  becoming 25 km and a malformed `zip` silently becoming null.
+- **`/api/directory`** — a malformed `member` returned
+  `{source: null, districtOffices: [], committees: []}`, **byte-identical** to
+  the answer for a real member we hold no record of, on the recorded reasoning
+  that "the shape is the same." The shape being the same is the defect: those
+  are two different claims and only one of them is about a person.
+
+`/api/reactions` carried the same `Number(null)` shape and was hardened though
+it manufactured nothing — coverage at 0,0 returns an empty division list, so it
+was harmless by luck. **No 0,0 coordinate default exists anywhere else in the
+codebase**, checked rather than assumed.
+
+The refusing reader is `lib/api/params.ts`, and it also names **unknown
+parameters** back to the caller — because the original request was not a
+malformed coordinate, it was a caller using a parameter the route does not
+locate by, and ignoring it is what let a wrong request look like a right one.
+
+`tests/route-refusals.test.ts` — thirteen tests including a repo-wide guard
+that **failed before it was trusted**: it caught the meetings route's own
+comment quoting the old code, because the repo is CRLF and `.*$` stops in front
+of a `\r`.
+
+### Item 1c — nothing was lost, and the starting number was wrong
+
+g5 reported 133 checks before its work, retired 4 and added 7, and reported
+134. That does not close. h took 134 as given and grew it to 135.
+
+Reconciled **by enumeration**, and the method was validated before it was
+trusted: 124 literal-name check sites plus 11 produced by the data-driven
+`MEETING_FLOORS` table equals 135 — exactly what the real HEAD run printed.
+
+| commit | what it is | runtime checks |
+|---|---|---|
+| `d6d477d` | g5's parent | **131** |
+| `68987ee` | g5's merge | **134** |
+| `eb4df50` | h's merge, and HEAD | **135** (observed) |
+
+Retired across g5: one site, `[g4] ${zip}: the current zip is shaded`, ×4 at
+runtime — the author deleted zip shading. Added across g5: four sites, ×7 at
+runtime. Added across h: one, ×1. **131 − 4 + 7 = 134** and **134 + 1 = 135**.
+Both close exactly.
+
+**The discrepancy was the starting number.** The count at g5's parent was 131,
+not 133 — and 131 is the number g4's own report recorded ("Green locally: 131
+of 131, zero could not run"). One mis-transcribed integer propagated through
+two sessions and a merge, and from the far end it looked exactly like two
+checks silently dying.
+
+The two `measure:focus` checks the brief mentions as "could not run" are in
+`pnpm measure:focus`, a different instrument, and were never in `walk:all` —
+which is why the suite reported zero blocked while two checks were blocked
+elsewhere.
+
+So it cannot recur: **`walk:all` now prints its own census every run** — checks
+that ran, by the session that shipped them, with the blocked count stated
+separately and excluded from the total. No session transcribes a number again.
+
+### Item 1d — the meetings count, four places, four zips, one run
+
+A permanent check appended: the sidebar counter, the map chip, the panel's
+header and the sum of its group counts, asserted equal at all four zips, with
+all four numbers printed per zip. The chip is `sm:` and up, so on the phone
+viewport it is legitimately absent — and absent is reported as absent, never as
+a zero and never as a silent pass. Two explicit DOM hooks were added
+(`data-stat`, `data-meeting-count`) so the check does not have to find its
+subjects by matching visible label text, which is copy and moves.
+
+### Item 2 (C05) — our own traffic stops counting as readers
+
+**The rejection is recorded first, per the brief: stopping the writes is not
+the fix.** It would delete the only end-to-end proof that the write path works,
+and a silently broken write path is how we would find out months later that
+reactions had stopped recording.
+
+`search_log` grows `run_class` (`ORGANIC` | `SYNTHETIC` | `UNKNOWN`) and
+`run_id`. The marker is **declared by the runner at write time** in the
+`x-wtp-synthetic-run` header and recorded by the route — the row is written on
+Netlify, so the runner cannot set it directly, and a header is how a
+declaration crosses that gap. Never inferred afterwards, never a user-agent
+guess. `run_id` is null on every organic row **by construction**, so it can
+never become a session key relating two readers' rows to each other.
+
+The migration sets every pre-existing row to `UNKNOWN`, because the column's
+`ORGANIC` default is right for a live request and wrong for history, and
+drizzle-kit cannot know the difference.
+
+**The three counts, after back-marking: 0 organic, 46 synthetic, 2845 unknown,
+2891 total.**
+
+Two things in that line are worth stopping on. **The brief estimated ~537 rows
+were ours; the table holds 2891 rows in total**, and **none of the history is
+attributable** — nothing in a pre-marker row distinguishes our robot from a
+reader. So the honest reading is that the search log's history is not sellable,
+and the sellable record starts 2026-08-17. That is a finding, not a shortfall:
+an aggregate built from that history would have been wrong in our favour.
+
+`lib/signal/search-log-reads.ts` is the single filtered read path, and
+`tests/search-log-exclusion.test.ts` asserts no module reads the table without
+it — **proven by planting a violation and watching it fail** before it was
+trusted. The intake tripwire now reads through the filter, which makes it
+stricter rather than looser: a walk fires ~28 events in three minutes, which is
+precisely the timing burst it exists to flag, so it had been analysing our own
+robots and calling them anomalies. The transparency page changed in the same
+commit.
+
+**The mechanism was then verified end to end on production**, not asserted:
+every row this session created after the deploy carries its run id, readable in
+the table.
+
+#### Two things the marker immediately found
+
+**The walk's probe counter counts requests issued, not rows landed.** The
+baseline walk printed "28 search-log rows"; the table holds 25 `SEARCH` rows in
+that window. A request that 404s, that the walk's own `getJson` discards on a
+non-ok status, or that a CDN serves without reaching the route writes no row.
+Neither number is wrong — they count different things — but the line reads as
+rows created. **G04**, and it was only checkable because the marker exists.
+
+**A run that forgets the header is worse than an unmarked one.** Within the
+hour, this session verified its own deploy with eight `curl` polls and did not
+set `WTP_RUN_ID` — four rows landed marked `ORGANIC`. Our own robot, labelled a
+reader, in the store we sell. The back-marking script's original rule ("never
+overwrite an ORGANIC row, because it declared itself") turned out to be
+protecting a declaration that does not exist: `ORGANIC` is what the column
+*defaults* to, so a row that said nothing and a row that said "reader" are
+byte-identical. The rule now allows correction inside an evidenced window, and
+errs toward exclusion like everything else in C05. `docs/synthetic-runs.md`
+carries the windows, each read off the table rather than recalled — the first
+attempt at that entry guessed a time range from memory and matched nothing.
+
+### What was NOT started, and it is five of eight
+
+**Items 4, 5, 6, 7 and 8 were never begun.** Not thinned, not partially built —
+not started. Each is deferred whole with its spec intact:
+
+| item | what |
+|---|---|
+| **4** | the interface consolidation — eight rules, 4a–4h; absorbs M137 and M138 |
+| **5** | Ask discoverability: the pill's label carries the teaching |
+| **6** | Mayor comes out of Who Governs Here, with per-zip reachability reported |
+| **7** | measure the active-state ramp for NH and NJ, and capture sixteen frames |
+| **8** | g5's three unreported deliverables, `pnpm perf`, and `context.md` |
+
+M137 and M138 are marked **Absorbed** in the tracker, per the brief, and their
+notes say where their spec now lives.
+
+The brief's completion order was 1 through 8 and it was explicitly not a cut
+order. The order was followed; the session ended inside it. Under the rule this
+session wrote, that is reported as **three of eight items completed** rather
+than as "the consolidation was deferred."

@@ -11,9 +11,30 @@
  * pattern-matches a user agent, and never widens a window to catch a few more
  * rows. Anything it does not attribute stays `UNKNOWN` and stays excluded.
  *
- * It is idempotent and it never touches an `ORGANIC` row: a row that declared
- * itself at write time is already correct, and a backfill that could overwrite
- * a declaration would make the declaration worthless.
+ * It is idempotent, and it operates on `UNKNOWN` and `ORGANIC` rows but never
+ * on a row already marked `SYNTHETIC` — re-attributing an attributed row would
+ * let the last window to run win an argument the evidence should settle.
+ *
+ * ## Why it may correct an ORGANIC row, which was not the first design
+ *
+ * The first version refused to touch `ORGANIC` on the reasoning that a row
+ * which declared itself at write time is already correct. Within an hour of
+ * shipping, the g6 session verified the deploy with eight polls that did not
+ * send the header, and seven rows landed marked `ORGANIC` — our own robot,
+ * labelled a reader, in the store we sell.
+ *
+ * The reasoning was wrong because there is no such thing in the data as a row
+ * that declared ORGANIC. `ORGANIC` is what the column DEFAULTS to. A row that
+ * said nothing and a row that said "reader" are byte-identical, so "never
+ * overwrite a declaration" was protecting a declaration that does not exist.
+ *
+ * The risk of allowing the correction is that a badly drawn window excludes
+ * real readers. That errs toward exclusion, which is the direction every
+ * decision in C05 errs in on purpose: an undercount stated honestly is a
+ * smaller number, an overcount is a false claim about a district. The
+ * protection that actually matters is on the window, not the row — every entry
+ * in the ledger carries evidence, and a window without evidence is a guess and
+ * does not belong in the file.
  *
  * Run: `pnpm searchlog:backmark` (needs DATABASE_URL). `--dry` prints the
  * counts and writes nothing.
@@ -95,20 +116,21 @@ console.log(
 
 let marked = 0;
 for (const w of windows) {
-  // UNKNOWN only. An ORGANIC row declared itself and is already right; a
-  // SYNTHETIC row is already attributed. Neither may be overwritten by a
-  // window, or the declaration stops being the authority.
+  // Not already SYNTHETIC. See the header for why ORGANIC is in scope: it is
+  // the column's DEFAULT, so a row that said nothing and a row that said
+  // "reader" are byte-identical, and the first version of this script was
+  // protecting a declaration that does not exist.
   const rows = DRY
     ? ((await sql`
         SELECT COUNT(*)::int AS n FROM search_log
-        WHERE run_class = 'UNKNOWN'
+        WHERE run_class <> 'SYNTHETIC'
           AND occurred_at >= ${w.from}::timestamptz
           AND occurred_at <= ${w.to}::timestamptz
       `) as { n: number }[])
     : ((await sql`
         UPDATE search_log
         SET run_class = 'SYNTHETIC', run_id = ${w.runId}
-        WHERE run_class = 'UNKNOWN'
+        WHERE run_class <> 'SYNTHETIC'
           AND occurred_at >= ${w.from}::timestamptz
           AND occurred_at <= ${w.to}::timestamptz
         RETURNING 1

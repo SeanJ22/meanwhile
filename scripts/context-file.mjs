@@ -35,7 +35,15 @@ import { parseCsv } from "./doc-dates.mjs";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 /** The hard cap the author set. Bytes, not characters. */
-export const CAP_BYTES = 20 * 1024;
+/*
+ * ITEM 8c (2026-08-17, the author's ruling): **raise the cap rather than cut
+ * rows.** 20 KB was truncating the tracker-change section to nothing — the
+ * g6 session's own handoff reported "19.4 KB of 20 KB — TRUNCATED:
+ * tracker-change section: 10 of 10 rows dropped; P0 notes clipped from 130 to
+ * 110 characters", which is the whole of that section gone from the one file
+ * that orients every session.
+ */
+export const CAP_BYTES = 40 * 1024;
 
 /** How much of a tracker Note survives into a one-line cell. */
 const NOTE_CHARS = 130;
@@ -74,15 +82,26 @@ const cell = (s) => s.replace(/\|/g, "\\|");
  * sentence becomes the status, and a clip is marked.
  */
 export function readPhases(stateText) {
-  const start = stateText.indexOf("### Where the phases stand");
-  if (start === -1) return { rows: [], source: "docs/state.md — section not found" };
+  const HEADING = "### Where the phases stand";
+  const start = stateText.indexOf(HEADING);
+  if (start === -1) {
+    return {
+      rows: [],
+      source: "docs/state.md — section not found",
+      failure: `\`${HEADING}\` is not in docs/state.md — the heading moved or was renamed`,
+    };
+  }
 
   const rest = stateText.slice(start);
   const end = rest.indexOf("\n## ");
   const block = end === -1 ? rest : rest.slice(0, end);
 
   const rows = [];
-  // Bullets wrap across lines; join each bullet back into one string first.
+  const push = (phase, status) =>
+    rows.push({ phase: oneLine(phase, 46), status: oneLine(status, 150) });
+
+  // Shape 1: a bullet list, each bullet opening with a bolded standing.
+  // Bullets wrap across lines; join each back into one string first.
   const bullets = block.split(/\n(?=- )/).filter((b) => b.startsWith("- "));
   for (const bullet of bullets) {
     const flat = bullet.replace(/^- /, "").replace(/\s+/g, " ").trim();
@@ -91,7 +110,43 @@ export function readPhases(stateText) {
     const status = (bold ? flat.slice(bold[0].length) : flat.slice(phase.length))
       .replace(/^[\s—-]+/, "")
       .trim();
-    rows.push({ phase: oneLine(phase, 46), status: oneLine(status, 150) });
+    push(phase, status);
+  }
+
+  /*
+   * Shape 2 (added 2026-08-17, item 8c): bolded PARAGRAPHS.
+   *
+   * The h session restructured this section from a bullet list into
+   * "**Phase A — The federal card. Complete but for one panel.** ..."
+   * paragraphs. The bullet parser then found nothing, and the generator
+   * printed "_No phase standings found in state.md — the section heading
+   * moved._"
+   *
+   * **The heading had not moved.** It was exactly where it had always been —
+   * the message asserted a cause nobody had checked, in the one file whose
+   * job is to orient a session that has no other context. An empty section
+   * with a confident wrong explanation is worse than an empty section, and it
+   * is the same defect class as a render default manufacturing a claim.
+   */
+  if (rows.length === 0) {
+    for (const para of block.split(/\n\s*\n/)) {
+      const flat = para.replace(/\s+/g, " ").trim();
+      const m = flat.match(/^\*\*(Phase [^*]+?)\*\*/i);
+      if (!m) continue;
+      push(m[1], flat.slice(m[0].length).replace(/^[\s—-]+/, "").trim());
+    }
+  }
+
+  if (rows.length === 0) {
+    return {
+      rows,
+      source: "docs/state.md §7 — Where the phases stand",
+      failure:
+        `the heading \`${HEADING}\` WAS found at byte ${start}, but no phase rows could be ` +
+        `parsed from the ${block.length} bytes under it — neither the bullet shape ` +
+        `("- **Phase A** …") nor the paragraph shape ("**Phase A — …**") matched. ` +
+        `The section's format changed again; teach this parser the new shape.`,
+    };
   }
   return { rows, source: "docs/state.md §7 — Where the phases stand" };
 }
@@ -266,7 +321,19 @@ export async function buildContext({
     /* phases */
     put(`## Phases — ${phases.rows.length} standing(s)`, "", `Source: ${phases.source}.`, "");
     if (phases.rows.length === 0) {
-      put("_No phase standings found in state.md — the section heading moved._", "");
+      /*
+       * ITEM 8c: a section that CANNOT BE BUILT renders as a stated failure
+       * naming what was dropped and why — never as an absence, and never as
+       * silence. The previous text guessed at the cause ("the section heading
+       * moved") and was wrong; `readPhases` now returns what actually
+       * happened and this prints it.
+       */
+      put(
+        `> **SECTION FAILED — phases could not be built.** ${phases.failure ?? "no reason recorded"}`,
+        "",
+        "> This is a failure of this generator, not a statement that the project has no phases.",
+        "",
+      );
     } else {
       put("| Phase | Status |", "|---|---|");
       for (const row of phases.rows) put(`| ${cell(row.phase)} | ${cell(row.status)} |`);
@@ -325,7 +392,25 @@ export async function buildContext({
     );
     if (cutNote) put(cutNote, "");
     if (shown.length === 0) {
-      put("_No status change recovered in the commits walked._", "");
+      /*
+       * ITEM 8c: "no status change recovered" and "ten status changes were
+       * recovered and then dropped to fit the cap" are different facts, and
+       * this line used to render both. The g6 handoff printed exactly that:
+       * the section said nothing had been recovered while the truncation
+       * summary said 10 of 10 rows had been dropped. Two statements, same
+       * file, opposite meanings.
+       */
+      if (history.changes.length > 0) {
+        put(
+          `> **SECTION DROPPED — all ${history.changes.length} recovered status change(s) were cut to fit the ${capLabel}.**`,
+          "",
+          "> They were found. They are not shown. Raise the cap or narrow the walk;",
+          "> do not read this as a quiet period in the tracker.",
+          "",
+        );
+      } else {
+        put("_No status change recovered in the commits walked._", "");
+      }
     } else {
       put("| Date | ID | From → To | Commit |", "|---|---|---|---|");
       for (const c of shown) {

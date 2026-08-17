@@ -26,10 +26,18 @@ export function IncumbentRecordLink({
     <>
       {/* Item 4 (2026-08-14 second session), the tester's exact warning:
           without this line, readers assume the challenger's thinner card
-          means the app is broken. Wording is hers, near-verbatim. */}
+          means the app is broken. Wording is hers, near-verbatim.
+
+          RULE 4g (2026-08-17, the author): the line ends at "them". It used
+          to continue "— that's not a bias, it's a record", and the author's
+          model is the one-line disclosure at the foot of a Claude chat:
+          short, plain, carrying weight without arguing its own case. The
+          trailing clause defended against an objection nobody had raised,
+          and a disclosure that argues with the reader weakens the neutrality
+          it is asserting. State the fact and stop. */}
       <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
         {holder.name} currently holds this seat, so there&apos;s more
-        information about them — that&apos;s not a bias, it&apos;s a record.
+        information about them.
       </p>
       <button
         type="button"
@@ -65,8 +73,10 @@ export function IncumbentRecordLink({
  * challenger's name stays plain text rather than becoming a link to an empty
  * card, because a door onto nothing is worse than no door. That asymmetry is
  * real and is already named on the card in the sentence above the record
- * link — "that's not a bias, it's a record" — which is the equal-effort
- * rule's answer to it: the difference is disclosed, not disguised.
+ * link — "there's more information about them" — which is the equal-effort
+ * rule's answer to it: the difference is disclosed, not disguised. (The
+ * sentence used to go on to argue the point; rule 4g cut it, and the
+ * disclosure is the same disclosure without the argument.)
  */
 export function IncumbentNameLink({
   holder,

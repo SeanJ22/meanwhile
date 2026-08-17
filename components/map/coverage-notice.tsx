@@ -357,7 +357,6 @@ function CoverageBody({
   const g = { total: derived.governingCount, withSource: derived.governingWithSource };
   const others = derived.others;
   const othersWithSource = derived.othersWithSource;
-  const hidden = others;
 
   const lead =
     kind === "unmapped" ? (
@@ -580,35 +579,36 @@ function CoverageBody({
               </span>
             </li>
           ))}
-          {/* 3e (2026-08-16): the mayor surfaces in who-governs. The roster
-              was curated (5b) but only rendered on meeting cards, so 85701
-              showed Tucson's government without its highest-profile office.
-              The chief elected official of each governing body's roster now
-              renders under the body list; the full roster stays on the
-              body's meeting card. */}
-          {shown.flatMap((body) =>
-            rosterHoldersForBody(body.bodyId)
-              .filter((holder) => holder.officeTitle === "Mayor")
-              .map((holder) => (
-                <li
-                  key={holder.id}
-                  className="flex items-baseline justify-between gap-3 pb-1 text-[0.75rem] leading-snug"
-                >
-                  <span className={TYPE_LABEL_CLASS}>Mayor</span>
-                  <span className="block">
-                    <Holder
-                      holder={holder}
-                      onOpen={
-                        onOpenOfficial
-                          ? () =>
-                              onOpenOfficial(holder, "Mayor", "local", body.ocdId)
-                          : undefined
-                      }
-                    />
-                  </span>
-                </li>
-              )),
-          )}
+          {/*
+            ITEM 6 (2026-08-17, the author's ruling): THE MAYOR ROW IS GONE
+            FROM THIS PANEL, everywhere it appeared, no exceptions.
+
+            3e (2026-08-16) put it here because 85701 showed Tucson's
+            government without its highest-profile office. The author's ruling
+            is that the placement is awkward and the office already renders in
+            the battlecard's Representation tab, which it does.
+
+            **Reachability after removal, checked against the committed
+            rosters rather than assumed — no zip loses the office:**
+
+              85701  Mayor Regina Romero, on the City of Tucson roster.
+                     Reachable: the Tucson row opens its large battlecard →
+                     Representation tab. Also on Tucson meeting cards.
+              85641  No mayor EXISTS — Vail is unincorporated, and the card
+                     says so in its own first line ("This area isn't a city or
+                     town — it has no mayor or city council"). Nothing lost.
+              07866  Mayor Joseph Jackson, on the Rockaway township roster.
+                     Same path: the township row → Representation tab.
+              03255  No mayor exists; Newbury is run by a Selectboard.
+
+            **The no-mayor FACT is not this row and survives untouched.**
+            Newbury's select-board fact and explainer (M32) is the separate
+            block immediately below, keyed on the office title rather than on
+            "Mayor", so removing the Mayor filter does not reach it. It still
+            renders on the who-governs card at 03255, with the three
+            Selectboard members under it — which is the point: the statement
+            is about how the town IS governed, not about what it lacks.
+          */}
           {/* 2e (2026-08-17): the no-mayor town, stated as what it HAS. A
               New England town run by a Select Board gets the fact named and
               its members shown — the people filling the substitute role
@@ -660,16 +660,28 @@ function CoverageBody({
             ];
           })}
           {/*
-            ITEM 1a (2026-08-17): the list above is now exactly the
-            governments, so a bare "and 55 more" hanging off it would read as
-            55 more GOVERNMENTS — the very conflation this item was opened to
-            remove. It names what they are.
+            ITEM 1a (2026-08-17): the "and N more" row is GONE, and the reason
+            matters more than the row.
+
+            It was a bare `<li>` of static text — no link, no button, no
+            handler. Once the list above became exactly the governments, that
+            row said "and 56 more boards and committees" directly beneath a
+            sentence that already reads "We also track 5 more board and
+            committee calendars here. 51 more bodies are being added." Same
+            set, same number, twice, four lines apart. A duplicate message is a
+            defect with the same standing as a wrong number.
+
+            **A note for item 4b, which is deferred (G05).** The g6 brief keeps
+            this row on the reasoning that "removing 'and 55 more' makes 55
+            bodies unreachable from the surface whose job is coverage." That
+            premise does not hold: the row was never an affordance and led
+            nowhere, so it made nothing reachable and removing it makes nothing
+            unreachable. The reachability concern is REAL and is now stated
+            plainly rather than answered by an element that only looked like an
+            answer — those bodies are counted in the sentence above and in the
+            "Why these N?" disclosure, and neither opens them either. Building
+            a way in is item 4b's to rule on, with the false premise removed.
           */}
-          {hidden > 0 && (
-            <li className="pt-0.5 text-[0.75rem] text-muted">
-              and {hidden} more {hidden === 1 ? "board or committee" : "boards and committees"}
-            </li>
-          )}
         </ul>
       )}
 

@@ -60,7 +60,8 @@
     "gus:extract": "tsx scripts/gus-extract.mts",
     "zip:universe": "tsx scripts/zip-universe.mts",
     "searchlog:backmark": "tsx scripts/searchlog-backmark.mts",
-    "perf": "tsx scripts/perf.mts"
+    "perf": "tsx scripts/perf.mts",
+    "deferred": "node scripts/deferred.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

@@ -715,63 +715,8 @@ for (const { zip } of FOUR) {
     );
   }
   if (zip === "07866") {
-    /*
-     * RETIRED (g6 item 6, 2026-08-17): `[0818] 07866: the mayor line renders`
-     * asserted /Mayor/ on the who-governs card's text.
-     *
-     * It leaves the suite the only way a check ever may — **the author retired
-     * the claim behind it.** Item 6's ruling: the Mayor row's placement on
-     * who-governs is awkward and the office already renders in the
-     * battlecard's Representation tab, so it comes out of that panel
-     * everywhere, no exceptions. A check asserting the row is present would
-     * now be asserting a defect.
-     *
-     * It is REPLACED rather than dropped, because the thing worth guarding was
-     * never the row — it was that a reader at 07866 can still reach their
-     * mayor. That is what the check below asserts, and it asserts it against
-     * the path the office actually lives on now.
-     */
-    const mayorReachable = await page.evaluate(`(() => {
-      const card = document.querySelector(".coverage-notice");
-      if (!card) return { reason: "no who-governs card" };
-      const onPanel = /Mayor/.test(card.textContent || "");
-      // The township row is the door to the battlecard that carries the
-      // roster. Finding the door is the reachability claim.
-      let door = null;
-      for (const b of card.querySelectorAll("li[data-governing-row] button")) {
-        if (/Rockaway township/i.test(b.textContent || "")) door = b;
-      }
-      if (!door) return { onPanel, opened: false };
-      door.click();
-      return { onPanel, opened: true };
-    })()`) as { reason?: string; onPanel?: boolean; opened?: boolean };
-
-    if (mayorReachable.reason || !mayorReachable.opened) {
-      cannotRun(
-        "g6",
-        "07866: the mayor is reachable from who-governs",
-        mayorReachable.reason ?? "no Rockaway township row to open",
-      );
-    } else {
-      await page.waitForTimeout(1200);
-      const inCard = await page.evaluate(`(() => {
-        const t = document.body.textContent || "";
-        return { mayor: /Mayor/.test(t), jackson: /Joseph Jackson/.test(t) };
-      })()`) as { mayor: boolean; jackson: boolean };
-      check(
-        "g6",
-        "07866: the mayor is reachable from who-governs",
-        inCard.mayor && inCard.jackson,
-        `who-governs panel names a mayor: ${mayorReachable.onPanel} (item 6 removed it, so false is correct); ` +
-          `the township battlecard names the office: ${inCard.mayor}, and the holder: ${inCard.jackson}`,
-      );
-      check(
-        "g6",
-        "07866: the Mayor row is gone from the who-governs panel",
-        mayorReachable.onPanel === false,
-        `who-governs text contains "Mayor": ${mayorReachable.onPanel}`,
-      );
-    }
+    // The mayor-reachability pair moved OUT of this shared page loop — see
+    // section I. It needs a page nobody else has touched.
     check("0819", "07866: no shouting surnames", !/\bROACH\b/.test(text));
   }
 
@@ -1573,6 +1518,102 @@ section("H. The frozen denominator (h item 1)");
         `(Merrimack County, Newbury town, Kearsarge Regional SD)`,
     );
   }
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ITEM 6 (g6, 2026-08-17) — the mayor is still reachable after leaving the
+// who-governs panel.
+//
+// This REPLACES `[0818] 07866: the mayor line renders`, which asserted /Mayor/
+// on the who-governs card. That check leaves the suite the only way a check
+// ever may: **the author retired the claim behind it.** Keeping it would now
+// assert a defect. What was worth guarding was never the row — it was that a
+// reader at 07866 can still reach their mayor.
+//
+// **It runs on its own fresh page, and that is the point.** The first version
+// lived inside the shared per-zip loop in section C, after a dozen other
+// checks had already opened and closed things on that page, and it failed
+// against a production build where the office was demonstrably present: the
+// "Representation" button it clicked belonged to whatever surface an earlier
+// check had left open, not to the card this check had just opened. A guard
+// that reports a regression against a working build is worse than no guard.
+//
+// So every query below is scoped to the dialog this check opened —
+// `[role="dialog"]`, its own `[role="tablist"]`, its own `[role="tabpanel"]` —
+// and nothing is read off `document.body`.
+//
+// The distance is also recorded, because it is item 6's real cost: the mayor
+// moved from zero clicks (a row on who-governs) to two (row → card →
+// Representation). The author ruled the placement out; the price is stated
+// rather than implied.
+// ═══════════════════════════════════════════════════════════════════════════
+section("I. The mayor after item 6 (g6)");
+
+{
+  const page = await openAt(browser, "07866");
+  await page.waitForTimeout(700);
+
+  const onPanel = await page.evaluate(`(() => {
+    const card = document.querySelector(".coverage-notice");
+    if (!card) return null;
+    return /Mayor/.test(card.textContent || "");
+  })()`) as boolean | null;
+
+  if (onPanel === null) {
+    cannotRun("g6", "07866: the Mayor row is gone from the who-governs panel", "no who-governs card");
+    cannotRun("g6", "07866: the mayor is reachable from who-governs", "no who-governs card");
+  } else {
+    check(
+      "g6",
+      "07866: the Mayor row is gone from the who-governs panel",
+      onPanel === false,
+      `who-governs text contains "Mayor": ${onPanel}`,
+    );
+
+    const opened = await page.evaluate(`(() => {
+      const card = document.querySelector(".coverage-notice");
+      for (const b of card.querySelectorAll("li[data-governing-row] button")) {
+        if (/Rockaway township/i.test(b.textContent || "")) { b.click(); return true; }
+      }
+      return false;
+    })()`) as boolean;
+
+    if (!opened) {
+      cannotRun("g6", "07866: the mayor is reachable from who-governs", "no Rockaway township row to open");
+    } else {
+      await page.waitForTimeout(2500);
+      const tabbed = await page.evaluate(`(() => {
+        const dlg = document.querySelector('[role="dialog"]');
+        if (!dlg) return "no dialog";
+        for (const b of dlg.querySelectorAll('[role="tablist"] button')) {
+          if (/representation/i.test(b.textContent || "")) { b.click(); return "ok"; }
+        }
+        return "no Representation tab in the dialog";
+      })()`) as string;
+
+      if (tabbed !== "ok") {
+        cannotRun("g6", "07866: the mayor is reachable from who-governs", tabbed);
+      } else {
+        await page.waitForTimeout(1800);
+        const inPanel = await page.evaluate(`(() => {
+          const dlg = document.querySelector('[role="dialog"]');
+          const panel = dlg && dlg.querySelector('[role="tabpanel"]');
+          const t = (panel && panel.textContent) || "";
+          return { mayor: /Mayor/.test(t), jackson: /Joseph Jackson/.test(t), chars: t.length };
+        })()`) as { mayor: boolean; jackson: boolean; chars: number };
+
+        check(
+          "g6",
+          "07866: the mayor is reachable from who-governs",
+          inPanel.mayor && inPanel.jackson,
+          `two clicks from the panel (row → card → Representation): the office renders ${inPanel.mayor}, ` +
+            `the holder renders ${inPanel.jackson}, over ${inPanel.chars} chars of tab panel`,
+        );
+      }
+    }
+  }
+  await page.context().close();
 }
 
 await browser.close();

@@ -71,7 +71,7 @@ import {
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { writeContext } from "./context-file.mjs";
+import { CAP_BYTES, writeContext } from "./context-file.mjs";
 import { stopDevServer } from "./dev-server.mjs";
 import { today } from "./doc-dates.mjs";
 
@@ -436,13 +436,18 @@ async function writeContextFile(note) {
       stampToday: today(),
     });
     const kb = (built.bytes / 1024).toFixed(1);
+    // Item 8c: the cap is READ from the generator, never restated here. This
+    // line said "of 20 KB" while the generator had been raised to 40, so the
+    // first run after the raise printed "23.0 KB of 20 KB" and looked like an
+    // overrun that nothing warned about.
+    const capKb = Math.round(CAP_BYTES / 1024);
     const counts =
       `${built.counts.phases} phase(s), ${built.counts.p0} P0 row(s), ` +
       `${built.counts.ripcords} ripcord(s), ${built.counts.statusChanges} status change(s)`;
     if (built.truncated) {
-      warn("context", `context.md ${kb} KB of 20 KB — TRUNCATED: ${built.truncation.join("; ")}`);
+      warn("context", `context.md ${kb} KB of ${capKb} KB — TRUNCATED: ${built.truncation.join("; ")}`);
     } else {
-      ok("context", `context.md ${note} — ${kb} KB of 20 KB, ${counts}`);
+      ok("context", `context.md ${note} — ${kb} KB of ${capKb} KB, ${counts}`);
     }
   } catch (error) {
     warn("context", `context.md not written — ${error.message}`);

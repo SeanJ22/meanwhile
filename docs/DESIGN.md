@@ -506,3 +506,126 @@ compiler dropped the standard `backdrop-filter` and emitted only the
 alone and let the compiler prefix. And the scrim must be bounded to the MAP's
 box, not the viewport's — `map.project()` speaks in canvas pixels, so the
 clip has to be measured in the same box the projection speaks in.
+
+## The rise is a shadow, not a stroke (2026-08-16, the author's correction)
+
+The first build of the state extrusion drew two opposed **line layers** along
+the polygon. The author's verdict on the New Hampshire coast frames: a visible
+STROKE, a grey band tracing the polygon with every coastal vertex showing.
+
+The arithmetic says exactly that. Two lines 4 px apart and 7 px wide overlap
+over two-thirds of their width, and white at 0.5 over black at 0.42 is grey —
+on every side at once. One light source produces light on ONE side and dark on
+the other; grey everywhere is an outline wearing a shadow's clothes.
+
+**The rule, stated so it is not re-derived:** a shadow is cast by the SHAPE. It
+is a blurred, offset silhouette, not a line drawn along an edge. Widening a
+stroke's blur cannot turn it into a shadow, because a stroke follows the path
+and a shadow follows the light.
+
+Three properties, and where each is enforced:
+
+1. **No visible line.** The shadows are masked to the outside of the state by a
+   FEATHERED mask, so they rise out of zero at the border. A binary clip on a
+   shadow that is at ~97 % of peak where it meets the shape *is* the line.
+2. **One light source, two opposed shadows.** Light at top-left. Each
+   silhouette is offset a full step before blurring, so the dark one
+   contributes nothing on the lit side and vice versa — the asymmetry is
+   structural, not tuned.
+3. **The silhouette reads; the digitization must not.** Rings are simplified
+   in SCREEN space at a sub-pixel tolerance, which is zoom-adaptive by
+   construction.
+
+**The effect NEVER releases.** e's 6b2 rule — that zooming out surrenders
+focus — is retired by the author's g4 ruling. Only the SIZE of the rise scales
+with zoom, and it bottoms out well above zero: a spec interpolating to zero
+would be the release rule arriving through the back door, invisible in review
+because the code would still say it draws. `tests/state-focus.test.ts` asserts
+a non-zero rise at every zoom from 0 to 18.
+
+**Light and shade are sized against the GROUND.** A white silhouette at half
+opacity over a pale basemap is almost nothing while the same black one is a
+lot, so one pair of alphas for both themes gave light mode a rim and no light.
+`riseAlphasFor` carries per-theme values.
+
+**Nothing inside the active state is ever painted.** No fill, no tint, no wash.
+Water inside Arizona is the same blue as water outside it — that is what makes
+this an extrusion of the map rather than a card lying on it.
+
+**A measurement is the floor; the author's eye is the ceiling.**
+`pnpm measure:extrusion` subtracts the effect from its own frame and asserts
+three things: that it is present at all, that its steepest gradient stays under
+6 luminance units per pixel, and that the lit lobe leads the shaded one toward
+the light. A threshold is never lowered to make a build pass.
+
+## One popup at a time — and the sidebar is a DRAWER (2026-08-16, the author's ruling)
+
+**The law:** opening any card or panel CLOSES whatever card or panel is open.
+Everywhere, no exceptions. The pairs: districts panel → battlecard, WGH row →
+battlecard, small popup → large card, meeting card, calendar chooser, meetings
+list, ask-answer drawer.
+
+**The taxonomy, written down so no future session collapses the two:** the
+SIDEBAR IS A DRAWER, not a popup. It is **not** governed by the one-popup law.
+A drawer is the reader's standing workspace — it holds where they are and what
+they have narrowed to, and it persists across everything they open. A popup is
+an answer to one question and yields to the next question. Auto-collapsing the
+drawer when a map surface opens is a *drawer* rule, and it is about screen
+room; closing a popup when another opens is the *popup* law, and it is about
+never having two answers on screen at once.
+
+The build is open as **M138**; the rule is law regardless.
+
+## The mark carries the state; the colour reinforces it (2026-08-16)
+
+Green fill for yes, red for no, dark gray for unsure — and **every selected
+affirmative carries a checkmark, every selected negative a small ×**. Unsure
+and abstain carry no mark, because a mark on an abstention dresses "I have no
+view" as a view.
+
+The ordering is not stylistic. The author's own neumorphism reference insists
+an active element must be identifiable without relying on contrast, and
+roughly one reader in twelve cannot separate this green from this red: a
+selected state carried by colour alone is a state those readers cannot read.
+A build is checked by stripping colour and asking whether the answer is still
+legible.
+
+A MEASURE's Yes/No wears the vote grammar; a CANDIDATE pick keeps the neutral
+selected treatment. Green-for-yes is a statement about a POSITION, and
+colouring a candidate by it would be the product taking a view of a person.
+
+## What the drawer holds, and what stays outside it (2026-08-16)
+
+Filters renders COLLAPSED, and holds the controls that narrow or annotate what
+is ALREADY on screen — "Limit radius" and "Show districts". "Near me" stays
+outside it: it answers *where is the reader*, which is the same job the zip
+does, and it keeps its honest approximate-location note beside it.
+
+A collapsed group carries its state on its header where that is cheap. A
+closed group with nothing on its header is a question, not an answer.
+
+## Meetings read outward from now (2026-08-16)
+
+Upcoming first, soonest first; then past, most recent first. The two halves run
+in OPPOSITE directions on purpose — the list reads outward from the present in
+both directions, and "what happened last" is the near end of history, not the
+far one.
+
+Every group opens CLOSED. A finished sitting carries a filled "Concluded" pill
+and a cancelled one "Cancelled" in its own token shade: filled, because these
+are present values rather than named gaps, and an outline is what an absence
+wears.
+
+## The zip has a shape, and the shape carries no data (2026-08-16, the author's ask)
+
+The reader must be able to see which zip they are looking at. A low warm tint
+over the current ZCTA, inside the raised state — subtle enough never to compete
+with the extrusion or with a pin, distinct enough to answer "which zip am I in"
+at a glance.
+
+Deliberately NOT a tier accent: a tier colour would read as a claim about what
+kind of place this is. Like the extrusion it is orientation only and says
+nothing about coverage or quality. It follows the current zip and disappears
+when no zip resolves — and a zip we hold no polygon for renders nothing, never
+a neighbour's outline, which would be a wrong claim about where the reader is
+standing.

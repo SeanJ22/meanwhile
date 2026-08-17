@@ -429,3 +429,45 @@ pointers for what the brief asked:
 - Standing rules into CLAUDE.md: walk:all every session; a failed fetch never
   empties a full surface; an official-source read IS the verification; more
   viewport never means fewer pins.
+
+## 2026-08-16 — the session brief (g4: Apple-level clean)
+
+The author's directive arrived as the session brief rather than as entries
+here; the brief is committed at  for the record and the
+narrative is  §35. **No untriaged entries were found at
+session-open** — every entry above already carried its row pointer. Row
+pointers for what the brief asked:
+
+- The mask bound to the last successful activation rather than to where the
+  reader is → **M128** (Done). One line: . Found while
+  fixing it — the focus hook rebuilt its object every render, so the
+  border-crossing prompt was cleared one render after it was raised and could
+  never be read.
+- The extrusion reading as a grey stroke → **M129** (Done), with **M131**
+  opened for the light theme's unproven lobe asymmetry. The measurement found
+  two defects no screenshot showed: an INVERTED silhouette (the mask and both
+  shadows were fed the clip path) and Chromium CLAMPING an oversized SVG
+  filter region rather than fading it.
+- Every state drawing its districts at once → **M130** (Done), and the
+  1,592 KB national congressional file split per state (23 KB in Arizona).
+- The zip with no shape of its own → **M132** (Done). The geometry did not
+  exist and was fetched: 1,242 of 1,246 ZCTAs across the three states, served
+  per-zip rather than shipped.
+- The camera gliding back to the starting point → **M133** (Done). The
+  2,800 ms auto-frame, exactly as the brief suspected.
+- Filters, the meeting groups, both of Grijalva's numbers, the tick and the
+  cross, the tier-only dividers and the exact moving-here line → **M139**
+  (In progress) and the item 7/8/11/14 work inside **M128**'s branch.
+- The sidebar Bodies door throwing the reader out → **M135** (In progress:
+  the named case converted, the full list-surface audit open).
+- The walk grew by twelve checks and three of its own aims were corrected →
+  **R28** (Done).
+- **Recorded, not built, nothing half-built**: **M134** (a Yes becomes the
+  pick), **M136** (body battlecards to person-card depth), **M137** (ONE
+  search box), **M138** (one popup at a time), **B19** (polling place in the
+  app), **C05** (the buyer surface's denominator and the exclusion of our own
+  rows). **M95** and **M123** were not reached.
+- **Probe rows named**: 3 from the first browser probe (2 FILTER_APPLIED, 1
+  SEARCH at 03255), plus the SEARCH rows every local Playwright run writes to
+  production — 25 search-log and 13 ask/log rows on the final local walk
+  alone. No reaction was tapped and no ask was submitted.

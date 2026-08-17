@@ -7096,3 +7096,253 @@ Every one is a SEARCH event carrying a zip and a tier, which is what the
 search log is for and what it holds about anybody. They are plumbing wearing
 reader clothes and are named here so a later exclusion is a filter rather
 than a hunt.
+
+## 35. The 2026-08-16 session (fifth of the day) — Apple-level clean: the map answers to the reader
+
+The brief's governing standard was the author's own: **Apple-level clean.
+Fewer surfaces on screen, nothing repeated, nothing half-open, no element
+whose geometry fights its container.** Nineteen items, in a completion order
+that put his live defects first and the externally-blocked hunts last, so that
+whatever went unfinished would be work waiting on somebody else's server
+rather than work he was waiting to see.
+
+That is not how it went, and the honest account of why is the first thing in
+this section.
+
+### What the session actually spent itself on
+
+**Item 2 — the extrusion — consumed roughly half of it.** The brief asked for
+a MEASURED acceptance check rather than an eyeball one, citing g3's lesson
+that three defects survived screenshots and died to measurement. Building that
+instrument found three real defects in the thing being measured and four in
+the instrument itself, and each one had to be chased down before the next
+became visible. The full ledger is in **M129**; the short version is that a
+measurement which does not move when the thing it measures moves is not
+measuring it, and that fact took four rounds to establish.
+
+The consequence is stated plainly: **items 6, 10, 12, 13 and 16 were not
+built**, and item 9 landed only its named case. Each is a tracker row carrying
+its WHOLE spec — M134, M136, M137, M138, B19 and M135 — written so the next
+session starts from the brief rather than from a summary. Nothing was
+half-built and nothing thin was reported as done.
+
+### The mask was bound to the wrong thing (item 1, M128)
+
+The author changed an NH zip to an AZ zip, the map flew to Arizona, and
+Arizona stayed blurred. The cause was one line in `activateAt`:
+
+```ts
+if (!ocdId) return;
+```
+
+It reads as defensive and it is the whole defect. It says *if I cannot
+identify a state here, change nothing* — which leaves whatever was raised
+before still raised. The mask was therefore bound to the last activation that
+happened to SUCCEED rather than to where the reader is, and `stateOcdIdAt`
+returns null in three perfectly ordinary situations: the outlines have not
+loaded, the zip is in a state we hold no outline for, and the point falls in a
+gap of the generalized geometry. All three stranded the mask on the state the
+reader had left.
+
+It publishes the null now. No state raised, nothing muted, the map plain —
+because **a mask with no owner is the same defect as a stale mask**.
+
+Found while fixing it, and worth more than the fix: `useStateFocus` returned a
+fresh object literal every render, so the activation effect in `map-entry`
+re-ran on every render and re-asserted the zip's state. That undid an accepted
+border crossing one render after the reader accepted it, and cleared the
+crossing prompt one render after `noteCentre` raised it. **The border-crossing
+clarification could never stay on screen long enough to be read**, and nothing
+about that was visible in a screenshot or a test: the effect was doing exactly
+what it said, far more often than anyone intended.
+
+### The rise stops being a stroke (item 2, M129)
+
+The author's report — a grey band tracing the polygon with every coastal
+vertex showing — is confirmed by the shipped build's own arithmetic. Two
+opposed line layers, 4 px apart and 7 px wide, overlap over two-thirds of
+their width; white at 0.5 composited over black at 0.42 is grey, on every side
+at once. One light source gives light on one side and dark on the other. And a
+line layer traces the geometry, so New Hampshire's 256-point coast drew every
+digitized vertex.
+
+The rejected alternative is recorded because it is the obvious one: widening
+the blur relative to the width is a one-line change and it cannot work. The
+defect is not the blur radius; **a stroke follows the path and a shadow
+follows the light**.
+
+So the rise is two blurred SILHOUETTES of the state, offset in screen space,
+masked to the outside by a FEATHERED mask — a clip is binary, and a binary
+edge on a shadow that is at ~97 % of peak where it meets the shape is exactly
+the line being objected to. Rings are simplified in screen space at 0.9 px,
+which is zoom-adaptive by construction.
+
+**The instrument found what the eye did not.** `pnpm measure:extrusion`
+subtracts the effect from its own frame and reported peaks of 130–165 and
+adjacent steps of 165–202 where a blurred shadow cannot exceed six. Two causes,
+both invisible in a screenshot because a strong soft-cornered wash over a map
+still looks deliberate:
+
+- the mask and both shadows were fed the CLIP path — the viewport rectangle
+  followed by the state's rings, even-odd, which describes *everything except*
+  the state. The mask was inverted and the thing being blurred was a
+  viewport-sized rectangle with a state-shaped hole in it;
+- the SVG filter regions defaulted to `objectBoundingBox` at `-50% / 200%`,
+  which at neighbourhood zoom is tens of thousands of pixels. Chromium clamps
+  rather than fading, and a clamped filter region does not fall off — it cuts.
+
+The instrument's own four wrong turns are in M129 and in the script's header,
+because each was a way of measuring something other than the subject: basemap
+tiles arriving between the two shots; text antialiasing flipping when the
+`backdrop-filter` element's compositing layer was destroyed (which `display:
+none` and `backdrop-filter: none` do identically, hence identical wrong
+numbers through several code changes); the app's own chrome sitting over the
+region; and finally the basemap's place NAMES, which the mute blurs, changing
+single pixels by more than a hundred units. The step is measured on 8×8 block
+means now, where a letterform averages away and a stroke does not.
+
+**Final numbers, four frames: peak 141 / 147 / 168 / 167; steepest gradient
+5.29 / 4.49 / 5.43 / 3.97 per pixel against a limit of 6.** Dark theme's light
+and shade lead correctly by 280 px and 66 px.
+
+**Open and named (M131):** the light theme's two lobes measure near-coincident
+(−22.5 px and −3.0 px against a +4 px floor). The highlight reads on the
+author's frames and the test cannot yet prove the asymmetry there. It is not
+smoothed over and the threshold was not lowered to pass it — the run reports
+two failures across four frames, and says so.
+
+The mute's own edge got the same treatment for a reason the author's frames
+made obvious: Arizona's northern, eastern and southern borders are straight
+lines, so a binary clip along them drew a crisp rectangle and the state read
+as pasted on rather than raised out. CSS `mask` referencing an SVG mask would
+have fixed it in one line and **is not honoured on an HTML element in
+Chromium** — proved by the frames not changing at all. So the mute's COLOUR
+moved into the SVG, masked by the same feather, and only its blur and
+desaturation stay on the hard-clipped scrim, where a 1.1 px blur has almost no
+luminance step of its own.
+
+### One state, one set of boundaries (item 3, M130)
+
+Two mechanisms, because the item is both a correctness rule and a load win.
+`filesFor(type, state)` fetches only that state's files — and a NULL state
+returns nothing at all, which is the item's rule rather than a defensive
+default. Every layer also carries `["==", ["get","state"], abbr]`, because
+`county-us.geojson` is national by design and without a filter a New Hampshire
+reader saw Pima County's outline at regional zoom. The filter is what makes
+the rule ASSERTABLE: the walk reads it back off the map rather than trying to
+photograph the absence of a line.
+
+**The load win, measured:** `cd119.geojson` is 1,592 KB — larger than every
+other geo file put together — and was fetched at every zip. Per state it is
+23 KB in Arizona. That is a **1,569 KB reduction on the largest single asset
+the screen loads**, and it counts toward item 15's budget, which is otherwise
+unmeasured (M139).
+
+### The zip gets a shape (item 4, M132)
+
+The geometry did not exist. `pnpm zcta:outlines` pulls ZCTA polygons from
+Census TIGERweb for every zip whose committed centroid falls inside a covered
+state: **404 of 404 in Arizona, 245 of 247 in New Hampshire, 593 of 595 in New
+Jersey**. The five misses are zips with a centroid and no area, which is a real
+answer and is stated rather than retried.
+
+It is SERVED, not shipped. 1.06 MB across three states, 599 KB for Arizona
+alone, and the reader looks at exactly one polygon — so the files stay in
+`data/zcta` and `/api/zcta/<zip>` hands back the one feature, about 300 bytes.
+The zip is a PATH segment per D40's rule, because the response is publicly
+cacheable and a shared cache is only guaranteed to key on the path.
+
+### The camera stops being taken back (item 5, M133)
+
+The author's own detail is the diagnosis and it rules out the obvious suspect:
+inertia continues a motion and never reverses it, so a glide back to the
+STARTING POINT is a reframe. It is the 2,800 ms auto-frame, flying the camera
+to a box built around the zip's own centroid. `allowAutoFrame` did not catch it
+because it is about where the RESULT came from, not about what the reader has
+done since — so every pan inside a zip-driven result's lifetime was living on
+borrowed time, and the venues array only had to change once to re-arm the
+timer. The gate is the reader's own hand now, checked inside the timer as well
+as before it, because the whole defect lives in the 2.8-second gap.
+
+### The panels stop shouting (items 7, 8, 11, 14, 15)
+
+Filters opens CLOSED and now holds "Limit radius" and "Show districts"; "Near
+me" stays outside, because it answers *where is the reader* — the same job as
+the zip — while the other two narrow what is already on screen. District types
+is collapsed with its count on the header, because a closed group with no
+state on its header is a question rather than an answer.
+
+Meeting groups open closed too, and **upcoming meetings lead**. With ninety
+days of history in the serving window, a plain ascending sort put three months
+of finished meetings above everything a reader could still attend. The two
+halves run in opposite directions on purpose: the list reads outward from now.
+A finished sitting carries a filled "Concluded" pill and a cancelled one
+"Cancelled" in its own shade, because those are different things to know
+before travelling to a building.
+
+**Both of Grijalva's numbers render, labelled, district first.** The district
+lines were in the directory payload that only the offices section ever asked
+for, so the row showed the Washington one and called it "the phone" — a reader
+wanting to reach their representative about something local was handed the
+number furthest from the answer. The fetch became a shared hook, so the two
+surfaces make one request between them and cannot disagree about whether it
+landed.
+
+A selected answer now carries a tick or a cross everywhere — props,
+candidates, picks, votes. **The mark is the carrier and the colour is
+reinforcement**, which is an accessibility requirement rather than a
+preference: roughly one reader in twelve cannot separate this green from this
+red, and a state carried by colour alone is a state they cannot read. The
+five-point scale's group dividers went from 1 px at 0.85 opacity — "barely
+visible", and a divider a reader does not register cannot stop the middle
+button reading as the default — to 2 px at full strength.
+
+The who-governs card's dividing lines now fall only between LOCAL / STATE /
+FEDERAL, which is where the reader actually changes government, and the
+moving-here line reads exactly "Moving here? Know the basics →".
+
+### The one list surface still throwing readers out (item 9, M135)
+
+The sidebar's Bodies door rendered each row as an outbound link, so tapping
+Pima left for pima.gov before the reader had been told anything about Pima. It
+opens the same battlecard the who-governs list opens, built by the same
+subject builder — two doors onto one card, never two cards.
+
+The audit's count, because the count is the finding: **40 external links
+across reader surfaces; 39 are INSIDE cards**, which the item explicitly
+permits, and 1 was a list row sending the reader out. The districts panel, the
+meetings list and the search results have NOT been walked row by row; that is
+the open half and it is stated as such.
+
+### The net grew, and three of its own aims were corrected (R28)
+
+Twelve checks appended. Three existing aims corrected — not softened — and
+each was found by running the suite rather than by reasoning about it. The
+worst of them: the hop check wrote `sessionStorage` and reloaded, and `openAt`
+installs an init script that rewrites the location on every navigation, so the
+reload put the original zip straight back. **It was measuring its own fixture,
+and on a build where the defect was fixed it would have reported the defect
+anyway.**
+
+Green locally: 131 of 131, zero could not run.
+
+### Production rows this session created
+
+Every row is named, per the standing order.
+
+- **3 rows from the first browser probe** (23:47:05Z–23:47:31Z): two
+  `FILTER_APPLIED` rows carrying the default tier set, and one `SEARCH` row at
+  **03255** (tier exact, 25 km, 31 meetings). These came from a single page
+  load in the in-app browser pane while diagnosing item 1.
+- **The local Playwright runs write to PRODUCTION**, because `.env.local`
+  holds the production `DATABASE_URL`. The measurement passes, the frame
+  shoots and the local `walk:all` runs each load the app at 85701 and 03255,
+  and every `/api/meetings` GET writes a SEARCH row. The final local walk
+  reported **25 search-log rows and 13 ask/log rows** for that run alone; the
+  earlier diagnostic and measurement runs account for the rest.
+- **No reaction was tapped and no ask was submitted at any point.** Every row
+  is a SEARCH, a BODY_OPENED or a FILTER_APPLIED event carrying a zip and a
+  tier — what the search log is for, and what it holds about anybody.
+
+They are plumbing wearing reader clothes, named here so a later exclusion is a
+filter rather than a hunt. **C05** is the row where that filter gets built.

@@ -191,6 +191,44 @@ async function openAt(browser: Browser, zip: string): Promise<Page> {
   return page;
 }
 
+/**
+ * A DESKTOP context, for the checks whose subject only exists at that width.
+ *
+ * The suite runs at phone size by default and that is right for most of it —
+ * the tester's own passes were on a phone. But g4 item 14 is a claim about
+ * the desktop RAIL, and item 5 is a claim about dragging the middle of a map
+ * that a phone's overlays cover. Running those at 390px reported "could not
+ * run" four times over, which is honest and useless: the check has to be able
+ * to reach its subject before its result means anything.
+ */
+async function openWideAt(browser: Browser, zip: string): Promise<Page> {
+  const context = await browser.newContext({
+    viewport: { width: 1280, height: 900 },
+    deviceScaleFactor: 1,
+    reducedMotion: "reduce",
+  });
+  await context.addInitScript(
+    ({ zip }) => {
+      try {
+        sessionStorage.setItem(
+          "wtp.approximate_location",
+          JSON.stringify({ zip, savedAt: new Date().toISOString() }),
+        );
+        localStorage.setItem("wtp.tutorial_seen", "1");
+        localStorage.setItem("wtp.recent_zips", JSON.stringify([zip, "03255"]));
+      } catch {
+        // Defaults are fine — the walk just types the zip instead.
+      }
+    },
+    { zip },
+  );
+  const page = await context.newPage();
+  page.on("response", (r) => countProbe(r.url()));
+  await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 90_000 });
+  await page.waitForTimeout(9000);
+  return page;
+}
+
 async function bodyText(page: Page): Promise<string> {
   return page.locator("body").innerText();
 }
@@ -614,7 +652,7 @@ for (const { zip } of FOUR) {
    */
   const focus = await page.evaluate(() => {
     const scrim = document.querySelector(".state-focus-scrim");
-    const clip = document.querySelector(".state-focus-defs path");
+    const clip = document.querySelector(".state-focus-art clipPath path");
     return {
       scrim: Boolean(scrim),
       filter: scrim ? getComputedStyle(scrim).backdropFilter : "none",
@@ -766,6 +804,292 @@ section("E. Sources and officials (g3 items 5, 8, 9)");
 
   await page.context().close();
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// F. The map answers to the reader, and the panels stop shouting (g4).
+// ═══════════════════════════════════════════════════════════════════════════
+
+section("F. The reader's map and the folded panels (g4 items 1-5, 9, 11, 14, 15)");
+
+{
+  /*
+   * The zip hop, both directions (g4 item 1).
+   *
+   * The mask used to be bound to the last activation that SUCCEEDED rather
+   * than to where the reader is, so changing an NH zip to an AZ zip flew to
+   * Arizona and left New Hampshire raised. Every hop asserts the newly active
+   * state is the one the map says is focused; a hop that ends on the previous
+   * state is the defect returning.
+   */
+  const hops: Array<[string, string]> = [
+    ["03255", "ocd-division/country:us/state:nh"],
+    ["85701", "ocd-division/country:us/state:az"],
+    ["07866", "ocd-division/country:us/state:nj"],
+    ["03255", "ocd-division/country:us/state:nh"],
+  ];
+
+  for (const [zip, expected] of hops) {
+    /*
+     * A FRESH CONTEXT per hop.
+     *
+     * The first version wrote `sessionStorage` and reloaded — but `openAt`
+     * installs an init script that rewrites the location on EVERY navigation,
+     * so the reload put 03255 straight back and the walk reported New
+     * Hampshire raised while sitting at 85701. It was measuring its own
+     * fixture, and on a build where the defect was fixed it would have
+     * reported the defect anyway.
+     */
+    const page = await openAt(browser, zip);
+
+    const probe = (await page.evaluate(
+      () =>
+        (
+          window as unknown as { __wtpMapProbe?: () => Record<string, unknown> }
+        ).__wtpMapProbe?.() ?? null,
+    )) as {
+      focusOcdId: string | null;
+      districtLayers: string[];
+      districtFilterStates: (string | null)[];
+      zipShading: string[];
+    } | null;
+
+    if (!probe) {
+      cannotRun("g4", `${zip}: the map probe`, "no __wtpMapProbe on the page");
+      await page.context().close();
+      continue;
+    }
+
+    check(
+      "g4",
+      `${zip}: the raised state is the state the reader is in`,
+      probe.focusOcdId === expected,
+      `focus ${probe.focusOcdId ?? "none"}, wanted ${expected}`,
+    );
+
+    // g4 item 3 — no other state's boundaries, ever.
+    const want = expected.slice(-2).toUpperCase();
+    const foreign = probe.districtFilterStates.filter(
+      (abbr) => abbr !== null && abbr !== want,
+    );
+    check(
+      "g4",
+      `${zip}: only the active state draws district boundaries`,
+      foreign.length === 0,
+      `${probe.districtLayers.length} layer(s); foreign filters ${JSON.stringify(foreign)}`,
+    );
+
+    // g4 item 4 — the current zip is shaded, and the shading follows the zip.
+    check(
+      "g4",
+      `${zip}: the current zip is shaded`,
+      probe.zipShading.length > 0,
+      probe.zipShading.join(",") || "no zip-shade layer",
+    );
+
+    await page.context().close();
+  }
+}
+
+{
+  /*
+   * g4 item 5 — the map stops dragging the reader back.
+   *
+   * The author's report was that free panning glides back to the STARTING
+   * POINT, which is a reframe rather than inertia: the 2.8 s auto-frame flew
+   * the camera to a box built around the zip's own centroid. Pan by hand,
+   * wait past the timer, and the camera must not have moved.
+   */
+  const page = await openWideAt(browser, "85701");
+  const centreNow = async () =>
+    (await page.evaluate(
+      () =>
+        (
+          window as unknown as {
+            __wtpMapProbe?: () => { centre: { lat: number; lng: number } };
+          }
+        ).__wtpMapProbe?.().centre ?? null,
+    )) as { lat: number; lng: number } | null;
+
+  const before = await centreNow();
+  const box = await page.locator(".maplibregl-canvas").first().boundingBox();
+
+  if (!before || !box) {
+    cannotRun(
+      "g4",
+      "the pan-and-wait check",
+      before ? "no map canvas to drag" : "no __wtpMapProbe on the page",
+    );
+  } else {
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(
+      box.x + box.width / 2 - 160,
+      box.y + box.height / 2 - 90,
+      { steps: 12 },
+    );
+    await page.mouse.up();
+    await page.waitForTimeout(1200);
+
+    const panned = await centreNow();
+    // The experiment has to have RUN before its result means anything — g3's
+    // lesson about a green check for a gesture that landed on an overlay and
+    // never moved the map at all.
+    const moved =
+      panned !== null &&
+      (Math.abs(panned.lat - before.lat) > 1e-4 ||
+        Math.abs(panned.lng - before.lng) > 1e-4);
+
+    if (!moved || !panned) {
+      cannotRun("g4", "the pan-and-wait check", "the drag did not move the camera");
+    } else {
+      // Past the 2800 ms auto-frame timer and its 1400 ms flight.
+      await page.waitForTimeout(5000);
+      const after = await centreNow();
+      const drift = after
+        ? Math.abs(after.lat - panned.lat) + Math.abs(after.lng - panned.lng)
+        : 99;
+      check(
+        "g4",
+        "85701: the camera stays where the reader put it",
+        drift < 1e-3,
+        `drift ${drift.toFixed(5)} degrees after four seconds`,
+      );
+    }
+  }
+
+  await page.context().close();
+}
+
+{
+  const page = await openWideAt(browser, "85701");
+
+  // g4 item 14 — Filters opens COLLAPSED, and holds radius and districts.
+  const filtersOpen = await page
+    .locator(".filters-title[aria-expanded='true']")
+    .count();
+  check("g4", "85701: Filters renders collapsed", filtersOpen === 0);
+
+  const railVisible = await page
+    .locator(".sidebar-scroll")
+    .isVisible()
+    .catch(() => false);
+  if (!railVisible) {
+    cannotRun(
+      "g4",
+      "85701: the rail's control placement",
+      "the rail is closed at this width",
+    );
+  }
+  const railText = railVisible
+    ? await page.locator(".sidebar-scroll").innerText()
+    : "";
+  check(
+    "g4",
+    "85701: Near me stays outside Filters",
+    /Near me/i.test(railText),
+    "Near me is on the rail",
+  );
+  check(
+    "g4",
+    "85701: Limit radius and Show districts moved inside Filters",
+    !/Limit radius/i.test(railText) && !/Show districts/i.test(railText),
+    railText.replace(/\s+/g, " ").slice(0, 120),
+  );
+
+  /*
+   * Opening Filters is a CLICK, and a click that cannot land is reported as
+   * "could not run" rather than thrown.
+   *
+   * The rail is a drawer below the desktop breakpoint and the walk runs at
+   * more than one width; a hidden control there is the sidebar behaving, not
+   * a regression. Throwing would have taken the whole suite down with it —
+   * which is the opposite of what a regression net is for.
+   */
+  const filtersButton = page.locator(".filters-title").first();
+  const canOpen = await filtersButton.isVisible().catch(() => false);
+  if (!canOpen) {
+    cannotRun(
+      "g4",
+      "85701: opening Filters",
+      "the Filters control is not visible at this width (the rail is a drawer)",
+    );
+  } else {
+    await filtersButton.click();
+    await page.waitForTimeout(500);
+    const opened = await page.locator(".sidebar-scroll").innerText();
+    check(
+      "g4",
+      "85701: opening Filters reveals radius and districts",
+      /Limit radius/i.test(opened) && /Show districts/i.test(opened),
+    );
+    check(
+      "g4",
+      "85701: District types is collapsed inside Filters",
+      (await page.locator(".filter-group-toggle[aria-expanded='false']").count()) > 0,
+    );
+  }
+
+  /*
+   * g4 item 15 — the moving-here line, exactly.
+   *
+   * Asserted against the BALLOT page's server-rendered HTML rather than the
+   * map's DOM. The line lives on both surfaces, but on the map it is inside
+   * the who-governs card, which is collapsed to its bubble at some widths and
+   * after some interactions — so reading it off the map measured whether the
+   * card happened to be open, and reported "(absent)" for a string that was
+   * shipped and correct. The ballot page renders it unconditionally.
+   */
+  const ballotHtml = (await get("/ballot?zip=85701")).text;
+  check(
+    "g4",
+    "the moving-here line reads exactly",
+    /Moving here\? Know the basics/.test(ballotHtml) &&
+      !/Taxes, schools, registering/.test(ballotHtml),
+    /Taxes, schools, registering/.test(ballotHtml)
+      ? "the long form is still on the page"
+      : "exact",
+  );
+
+  await page.context().close();
+}
+
+{
+  /*
+   * g4 item 11 — the meetings panel opens fully collapsed.
+   *
+   * The author's comparison screenshots: grouped-and-collapsed is right,
+   * auto-expanded is wrong.
+   */
+  const page = await openWideAt(browser, "85701");
+  const listButton = page.locator('button:has-text("meetings")').first();
+  if ((await listButton.count()) === 0) {
+    cannotRun("g4", "the meetings panel", "no control opens the list at 85701");
+  } else {
+    const canOpenList = await listButton.isVisible().catch(() => false);
+    if (!canOpenList) {
+      cannotRun("g4", "the meetings panel", "the list control is not visible at this width");
+    } else {
+    await listButton.click();
+    await page.waitForTimeout(900);
+    const groups = await page.locator(".al-group-head").count();
+    const expanded = await page
+      .locator(".al-group-head[aria-expanded='true']")
+      .count();
+    if (groups === 0) {
+      cannotRun("g4", "the meetings panel's groups", "no groups rendered");
+    } else {
+      check(
+        "g4",
+        "85701: the meetings panel opens with every group collapsed",
+        expanded === 0,
+        `${expanded} of ${groups} group(s) open`,
+      );
+    }
+    }
+  }
+  await page.context().close();
+}
+
 
 // ═══════════════════════════════════════════════════════════════════════════
 // The summary.

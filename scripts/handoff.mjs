@@ -599,8 +599,15 @@ function reportMirrorSet() {
       ? ` (declared, not counted: ${contents.declaredExtras.join(", ")})`
       : "";
 
+    // The count is READ from the set, never restated. It shipped as a literal
+    // "10" for one run and printed "the canonical 10 present" on a run that
+    // listed twelve — the same defect as the context generator saying "of
+    // 20 KB" after its cap was raised to 40.
     if (notes.length === 0)
-      ok("mirror set", `the canonical 10 present, nothing undeclared${declared}`);
+      ok(
+        "mirror set",
+        `the canonical ${MIRRORED_DOCS.length} present, nothing undeclared${declared}`,
+      );
     else fail("mirror set", `${notes.join(" · ")}${declared}`);
   }
 }

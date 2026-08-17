@@ -2092,53 +2092,70 @@ construction with `escapeHtml`/`onclick` attributes, and the sales data model.
 
 ### Where the phases stand
 
-> **Phase standings updated 2026-08-13 (§9):** the mock is no longer
-> `active` — the composite serves real meetings in all four zips. Phase 4.7's
-> build work is **suspended until after November**, except 4.6.4
-> (`agendaSourceType` routing), which is retained as the national hook because
-> it is what makes adding a body a registry row instead of a code edit.
-> **Phase 8 (responsive, mobile bottom sheet) is promoted from deferred to
-> required** before the product is shown to anyone — a reader deciding in a
-> parking lot is deciding on a phone. The list below predates that and stands
-> as history.
+**Restructured 2026-08-16 (the h session, item 5).** The architecture-era
+table this replaces — Phases 0–8 of the EdiaStratMap port, "4.7 not started",
+the `meeting_leads` table, the ingestion console — described a build that no
+longer exists and had not been true for weeks. It stays in git history, and
+its two live remainders are mapped into Phase E below rather than deleted:
+**national scale** (vector tiling, the Census of Governments universe as the
+registry's denominator, vendor tenant enumeration, special districts) and the
+**notes / activity / conflicts / export** remainder of the old Phase 7.
 
-- **0–4 done** — worker, design system, shell, welcome overlay, district
-  overlays with click-to-select.
-- **4.5 done** — the four defects found in testing. §4.2.
-- **4.6 mostly done.** The registry is generated and tested (§4.3, §4.4), the
-  coverage language is on screen (§4.5, M16), the place/cousub duplicate is
-  resolved at build time from Census `FUNCSTAT` (§4.6, M17), and the link ladder
-  and coverage audit are in (§4.11, M21). What remains: populating
-  `agendaSourceType` for the *other 258* bodies (4.6.4 — seven now carry one
-  from a real hunt), the `meeting_leads` table (4.6.5), and the reader
-  disambiguation prompt (4.6.3), which is approved as of 2026-08-12 with
-  device-local storage. The "I want this" control and `demandCount` (4.6.3a)
-  are still unbuilt and still have no table to write to.
-- **The meetings track has started.** D14 (the vendor and statute review) is
-  done and D12 (the Legistar adapter) is built and verified live, though not yet
-  the app's source — §4.7. D13 (Diligent) is unblocked but should try the
-  subscribe channel and the district's own site before the portal. D16 (Tucson,
-  which is Hyland OnBase and not Legistar) says do not build the portal route.
-- **Phase 6 popup and modal are built** (§4.10) — the popup card, the district
-  and meeting popups, the six-tab modal including Sources, and the marker pool.
-  Phase 7 (notes, activity, conflicts, export, ingestion console) and Phase 8
-  (responsive, bottom sheet) remain.
-- **4.7 not started** — national scale: vector tiling, the Census of
-  Governments universe, vendor tenant enumeration, special districts.
-- **Phase 5 tier 1 is done** — the federal roster, §4.8. Tier 2 (state
-  legislators, Plural Open) is unblocked and takes the same shape. Neither
-  needed a database, and neither has been rendered yet.
-- **5–8 remain** — officeholders and the first real tables (which extend the
-  registry rather than replacing it), popup and full-screen modal, the ported
-  subsystems (notes, activity tracker, elections layer, conflicts, export,
-  ingestion console), and responsive.
+Status markers below are the truth as of this session's verified production
+deploy, not aspirations.
 
-Two bodies the oracle names that the derivation **cannot** produce, and they are
-the interesting output rather than a failure: **Pima County Supervisor District
-4**, because Census does not publish county supervisor districts at all, and the
-**Southeast Regional Council**, because it is not a division and never will be.
-Both need the bodies-without-divisions path — the schema already allows it via a
-nullable `Body.ocdId`, and nothing populates it yet.
+**Phase A — The federal card. Complete but for one panel.** What they do
+(roll-call votes: **DONE**), who funds them (FEC money surfaces: **DONE**),
+who they are and how to reach them (the congress-legislators directory:
+**DONE**), what they say (PRL: **specced in D62**, builds after Phase B
+opens). This phase CLOSES when the PRL panel ships.
+
+**Phase B — The state layer and the 50-state recipe.** State legislators
+(**DONE** — Plural), state votes (**DONE** — LegiScan, D54 weekly),
+jurisdiction depth (**IN PROGRESS, and further from done than the previous
+draft of this section assumed** — the h session froze 03255's denominator and
+ran two hunts against roughly sixty in-scope bodies; **H01** through **H06**
+carry what remains, each with its whole spec), state campaign finance (**NEXT
+SESSION** — NH, then AZ, then NJ). The scorecard at
+`docs/scorecard-03255.md` is what states 4–50 inherit, and its headline is
+that the three cost views are **not yet computable** — see it before
+budgeting national expansion off this phase.
+
+**Phase C — The commercial product. EMPTY, and it is the company.** C01 (the
+mock export — one measure, synthetic data), V05 (the beat-a-tracking-poll
+answer C01 doubles as), V01 (five buyer calls), the buyer-side demo dashboard
+(specced, not built). Nothing here has started while ~40 consumer P0s shipped
+around it. Reaction signal flows into aggregates (D61); nothing exists to show
+a buyer what it looks like. Includes the denominator question and the
+exclusion of our own probe and walk rows from any sold aggregate (**C05**).
+First artifact due soon.
+
+**Phase D — Launch readiness.** The name (B01/B02 — USPTO classes 9 and 42
+before any commitment), counsel (B05, plus the ripcord questions queued for
+them: D23 and the D61 review), the password coming down, T10's deletion
+promise at testing end, marketing. Mostly the author's rows.
+
+**Phase E — National scale. Not started, deliberately behind Phase B — with
+one piece now begun.** Vector tiling; the Census of Governments universe as
+the registry's denominator; vendor tenant enumeration; special districts; plus
+the notes / activity / conflicts / export remainder inherited from the old
+Phase 7.
+
+The Census-of-Governments piece is **no longer entirely unstarted**:
+`pnpm gus:extract` turns the national workbook into a per-county universe for
+any FIPS in the country, and `pnpm zip:universe` maps it to a zip with the
+method recorded per row. What that surfaced is the part Phase E has to
+absorb — **the Census counts UNITS and the product renders BODIES, and no
+external enumeration of bodies exists anywhere.** One Census row for the Town
+of Newbury stands behind five-plus bodies. **H02** is that gap, and it is the
+single highest-leverage missing piece for national scale.
+
+Two bodies the oracle names that the derivation **cannot** produce, and they
+are the interesting output rather than a failure: **Pima County Supervisor
+District 4**, because Census does not publish county supervisor districts at
+all, and the **Southeast Regional Council**, because it is not a division and
+never will be. Both need the bodies-without-divisions path — the schema
+already allows it via a nullable `Body.ocdId`, and nothing populates it yet.
 
 ---
 
@@ -7596,3 +7613,225 @@ passed as a function and `tsx` compiled it into a call to esbuild's `__name`
 helper, which does not exist in a browser. It is passed as source text now: a
 string is compiled by nobody, and a recorder that throws on its first line
 reports the map never moved.
+
+
+## 37. The 2026-08-16 session (seventh of the day) — the denominator comes from outside, and the sweep it was built for did not happen
+
+The h brief asked for everything in 03255 and a measurement of what it cost:
+the first real test of "can we just add more." **The denominator got built and
+the sweep did not.** That sentence is the session, and putting it first is the
+only honest way to write this section, because a narrative that opened with
+what shipped would be doing the thing the experiment was designed to catch.
+
+HEAD at session open: `68987ee`, `main` with g5 merged (`cea43c5` inside it).
+The state-focus map effect and the deleted zip shading were not touched.
+
+### Item 0 — the mandate becomes law, first, before any retrieval
+
+THE TRANSPARENCY MANDATE and THE LADDER, EXHAUSTIVELY are copied verbatim from
+the brief into `CLAUDE.md` as the first two sub-sections of the
+non-negotiables, above every operational rule, so the rules beneath inherit
+from them. Verified by character offset rather than by eye: mandate at 1463,
+ladder at 4155, the first pre-existing operational rule at 6445.
+
+**One adaptation, named because it is the only one.** The brief's
+operational-interpretation paragraph cites experimental control C5, and the
+brief separately forbids copying the controls into `CLAUDE.md`. Two clauses
+therefore read without the reference. Nothing else was changed, compressed,
+reordered or paraphrased. The ladder is stamped `ladder vH-start` in the file
+so a future session can tell which version a recorded hunt was walked against.
+
+### Session-open triage — the tracker had two rows per ID
+
+`docs/defects.md` carried no untriaged entries. The tracker did carry
+something: **`M128` and `M129` each had TWO rows describing entirely different
+work** — g4's mask/extrusion pair, and g5's active-state-model and
+meetings-panel pair appended underneath reusing the same IDs. 308 rows, 306
+unique.
+
+`CLAUDE.md` forbids this by name and already records that M02 and M04 did it
+once before. It recurred anyway, because the rule was enforced by nobody. The
+later pair — identified mechanically by the branch string in its Notes, not by
+eye — is now **M140** and **M141**; the g4 originals keep their IDs because
+`state.md` §35 and `defects.md` already cite them with the g4 meanings.
+
+`tests/tracker-integrity.test.ts` is the mechanical half, and it was **proven
+to fail before it was trusted**: a duplicate row was planted, the test reported
+`X08 x2`, and the file was restored. It prints its own denominator every run.
+
+### Item 1 — the universe, and the county line nobody had crossed
+
+**Step A.** The 2022 Census of Governments Government Units Listing, fetched
+2026-08-16 (HTTP 200, 11,459,763 bytes), extracted per county by the new
+`pnpm gus:extract`. **166 units** across Merrimack (63), Sullivan (40),
+Hillsborough (63).
+
+**Why three counties.** 03255's twenty-five kilometre serving radius crosses
+two county lines — Goshen, Sunapee, Washington, Springfield, Lempster, Croydon
+and Newport are in Sullivan; Hillsborough town is in Hillsborough. The
+committed extract held **Merrimack alone**, so before this session *the
+official denominator for 03255's meetings-near universe did not exist in the
+repository*. Enumerating one county and calling it the neighbourhood is the
+Sunnyside class of miss with a wider radius.
+
+**Merrimack replicates the earlier hand extract exactly — 63 against 63, zero
+diff by `censusId` in either direction.** Two independent extractions of the
+same release landing on the same set is what makes the number worth standing
+on.
+
+#### The parse defect that nearly became a data finding
+
+The first run returned **six** Merrimack special districts against the
+committed extract's eighteen, and the natural reading was that the workbook
+disagreed with a hand extraction. It did not.
+
+An empty `.xlsx` cell is written self-closing, `<c r="G24141" s="12"/>`, and a
+naive `/<c r="([A-Z]+\d+)"([^>]*)>([\s\S]*?)<\/c>/` matches it anyway: `[^>]*`
+absorbs the trailing slash and the lazy body runs on to the NEXT cell's
+`</c>`, swallowing it whole. Every column after the first empty one reads
+**shifted**. Twelve Merrimack districts have an empty `ADDRESS2`, so their
+`FIPS_STATE` had slid one column left into `WEB_ADDRESS`.
+
+**A shifted column does not look like a parse bug. It looks like a data
+difference.** It was caught only because a whole class of government came back
+suspiciously small against a number already held — which is the count
+discipline doing exactly its job, and would not have fired without a prior
+number to disagree with.
+
+(The same run also matched zero rows in all three counties on its first
+attempt, because `STATE` in this workbook is the postal abbreviation and the
+numeric code lives in `FIPS_STATE`. Also caught by the count, also invisible
+without it.)
+
+#### Step B, and the two things it is careful not to conflate
+
+`pnpm zip:universe 03255` maps every enumerated unit to two flags with the
+**method recorded per row**: 3 units govern, **40 UNRESOLVED**; 47 meet within
+25 km by venue proxy, 29 by the generous territory bound.
+
+- **Forty UNRESOLVED, not forty false.** The Census publishes no boundary for
+  special districts at any vintage. Recording them as "does not govern"
+  because no boundary was found would be the render-default rule's
+  manufactured claim, one layer upstream in the data.
+- **Two distances, both carried.** `boundaryKm` is the nearest point of the
+  unit's own territory — generous, an upper bound, and over-counting a
+  denominator can only make our coverage look worse. `venueKm` is the unit's
+  published administrative address, a labelled PROXY, and it is what decides
+  whether a pin appears. They disagree about eighteen units.
+- **Proximity never implies jurisdiction.** New London's board meets 7.6 km
+  from Newbury and governs not one inch of it. The flags are fields rather
+  than prose precisely so a later reader cannot infer one from the other.
+
+#### The finding underneath the whole exercise: units are not bodies
+
+The Census counts **units** — one row for the Town of Newbury. The product
+renders **bodies** — Newbury's Selectboard, Planning Board, Zoning Board of
+Adjustment, Conservation Commission and whatever else the town publishes.
+**No external enumeration of bodies exists, for any state.**
+
+So the who-governs denominator is two layers, and the second is itself a hunt.
+`pnpm census:zip 03255` prints **6 of 6** today; that is true against the
+registry and says nothing whatever about the town. Newbury is
+`BODIES_UNENUMERATED` — its site reveals its board list on hover, and nobody
+has read it. **H02** is that gap and it generalizes to every municipality in
+the country.
+
+Also frozen at item 1, before any hunting: field matrix **`vH-1`**
+(`lib/evidence/field-matrix.ts`), the ballot universe (12 contests, 47
+candidacies, and 03255 resolves to ONE ballot style rather than a union), the
+meetings-near rule (`RADIUS_LADDER_KM[0]`, standing law), and the C8 evidence
+ledger (`lib/evidence/emit.ts`).
+
+### Item 2 — one hunt, and a plausible wrong answer refused
+
+**Kearsarge Regional School District's member towns**, a required field whose
+evidence standard says the district's own enumeration and never inference from
+proximity. The brief supplied a working list and instructed that it be
+verified rather than assumed. **It was wrong in both directions.**
+
+The district's own board-members page:
+
+> Kearsarge Regional School District (SAU #65) is composed of seven towns
+> governed by one regional School Board consisting of nine members. The towns
+> represented are Bradford, Newbury, New London, Springfield, Sutton, Warner,
+> and Wilmot.
+
+**Goshen is not a member town. Warner is, and holds three of the nine seats.**
+Goshen sits 8.5 km from 03255's centroid and Warner 14.2 km, which is exactly
+why a member list must never be read off a map.
+
+**The wrong answer that was rejected rather than recorded.** Harvesting town
+names from the whole document returns **Bradford, New London and Sutton** —
+the three towns with school BUILDINGS, carried in the navigation of all 496
+pages. A regional district by definition serves towns with no school of their
+own, and Newbury, Springfield, Warner and Wilmot are precisely those four. The
+three-town answer is plausible, confidently derivable, and false. **Strip the
+shared navigation before harvesting anything from a CMS page** is now a
+playbook rule.
+
+One page answered two required fields — a regional board seats its members BY
+TOWN — and volunteered seven more the matrix never asked for: year first
+elected, term expiry, committee assignments, the SAU number and its office
+address. Reaching the page is the expensive part; a second visit would have
+paid the whole discovery cost again.
+
+Two corrections to the host, both from reading rather than guessing:
+`kearsarge.org` is **CivicPlus** (its own footer says so), so ladder rung 12
+is available here and has never been tried; and it carries a **RATE** wall
+(`robots.txt` `Crawl-delay: 10`, enforced — a burst earns 403 where the same
+client paced is served 200) **distinct from** the TLS-fingerprint wall already
+recorded on it. Two walls, one host, and the wrong diagnosis sends the next
+session hunting clients when the answer is patience.
+
+**Do not read 114 Cougar Court as the meeting venue.** That is the SAU office.
+The board meets at 114 Main Street, New London. Two addresses sharing a house
+number is the most inviting way to break the venue rule.
+
+### Items 2 (remainder), 3, and the measurement — deferred whole, nothing thinned
+
+Two subjects were hunted of roughly sixty bodies in scope, and zero of 47
+candidacies. **That is one hunt, not a partial sweep, and it is recorded as
+one.** Six rows carry the whole specs: **H01** (the depth sweep), **H02** (body
+enumeration), **H03** (the re-walk cohort), **H04** (the candidate sweep),
+**H05** (special-district territory), **H06** (the C7 replays and C2b
+backfill).
+
+### Item 4 — the scorecard says the three views are not computable
+
+`docs/scorecard-03255.md`, rendered from the 34-row ledger rather than from
+memory. Its headline is a refusal: **views 1, 2 and 3 are `unmeasured`**,
+because a per-field cost drawn from two bodies would be a sample of the
+easiest bodies, and the easiest bodies are the ones already wired.
+
+What it does establish:
+
+- **Total instrumented network time for the whole session: 12.1 seconds across
+  15 timed fetches.** Real, and nearly useless alone — which is the point of
+  stating it. Retrieval is not where this work's cost lives. It lives in
+  deciding what to fetch, reading what came back, and refusing the plausible
+  wrong answer, none of which a fetch timer can see.
+- **The one transferable number.** Universe/schema acquisition — the C11 line
+  the brief says national expansion must pay per geography and must never
+  treat as free — measures at **one command-line argument per additional
+  county**, after one 11 MB national download and a single 92,150-row pass.
+  With the caveat that carries the whole claim: that is true for counties in
+  states whose TIGER layers are already committed. Three states have them and
+  forty-seven do not.
+- **Zero fields are legitimately in bucket D**, and that is a statement about
+  this session rather than about New Hampshire: D requires an exhausted ladder
+  and no field reached rung 11. **No publication-obligation finding is
+  claimed**, because the mandate's evidence standard is met by nothing here
+  and reaching for the finding early is the incomplete hunt wearing a
+  respectable face.
+- **Two source families, n = 1 each.** No median is reportable and none is
+  reported.
+
+### Item 5 — the documents
+
+`state.md` §7's architecture-era phase table is replaced whole by Phases A–E;
+the old one stays in git history and its two live remainders (national scale,
+and the notes/activity/conflicts/export leftover of the old Phase 7) are
+mapped into Phase E rather than deleted. `README.md` is rewritten as a
+pointer-style front door. `states/nh/NOTES.md` and `docs/zip-playbook.md` take
+this session's appends, both append-only.
+

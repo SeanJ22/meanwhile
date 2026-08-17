@@ -471,3 +471,59 @@ pointers for what the brief asked:
   SEARCH at 03255), plus the SEARCH rows every local Playwright run writes to
   production — 25 search-log and 13 ask/log rows on the final local walk
   alone. No reaction was tapped and no ask was submitted.
+
+
+## 2026-08-16 — the session brief (h: everything in 03255, and what it cost)
+
+The author's directive arrived as the session brief rather than as entries
+here; the brief is committed at `docs/session-brief.md` for the record and the
+narrative is `state.md` §37. **No untriaged entries were found at
+session-open** — every entry above already carried its row pointer. Row
+pointers for what the brief asked:
+
+- The transparency mandate and the fourteen-rung ladder into `CLAUDE.md`,
+  verbatim, above the operational rules → **X08** (Done, item 0, first action
+  of the session). One adaptation named: the brief cites experimental control
+  C5, which the brief itself forbids copying into `CLAUDE.md`.
+- Found AT session-open, not reported: **the tracker carried two rows per ID**
+  → **R29** (Done). `M128` and `M129` each had two rows for entirely different
+  work; the g5 pair is now **M140**/**M141**. `CLAUDE.md` forbids this by name
+  and already records M02/M04 doing it once — it recurred because nobody
+  enforced it. `tests/tracker-integrity.test.ts` is the guard, proven to fail
+  on a planted duplicate before being trusted.
+- The frozen universe, both denominators, the field matrix, the ballot
+  universe and the meetings-near rule → item 1, committed at
+  `docs/universe-03255.md` and `data/audit/universe-03255.json`.
+  **The official denominator for 03255's meetings-near universe did not exist
+  in the repo** — the committed extract held Merrimack County alone and the
+  25 km circle crosses two county lines.
+- Found BY building it: **units are not bodies, and no external enumeration of
+  bodies exists** → **H02**. One Census row for the Town of Newbury stands
+  behind five-plus bodies; `pnpm census:zip 03255` printing "6 of 6" is true
+  against the registry and says nothing about the town.
+- Found BY building it: **a self-closing empty `.xlsx` cell swallows its
+  neighbour** under a naive cell regex, shifting every later column. Twelve
+  Merrimack special districts vanished and it read as a data difference rather
+  than a parse bug. Caught by the count discipline, fixed, and written into
+  the playbook.
+- Kearsarge's member towns → the brief's own working list was wrong in both
+  directions: **Goshen is not a member, Warner is and holds three of nine
+  seats**. A plausible false answer (Bradford/New London/Sutton — the towns
+  with school buildings, carried in every page's navigation) was rejected
+  rather than recorded.
+- Two new facts about `kearsarge.org`, both from reading rather than guessing:
+  it is **CivicPlus** (rung 12 available, never tried), and it carries a
+  **RATE** wall distinct from the TLS-fingerprint wall already recorded.
+- **Deferred whole, nothing half-built, each carrying its full spec**:
+  **H01** (the depth sweep — 2 subjects hunted of ~60 bodies in scope),
+  **H03** (the re-walk cohort, 0 walked), **H04** (the candidate sweep, 0 of
+  47), **H05** (special-district territory, 40 UNRESOLVED), **H06** (the C7
+  same-subject replays and the C2b backfill).
+- The scorecard → `docs/scorecard-03255.md`. **Its headline is that the three
+  cost views are not computable from what this session did**, and saying so is
+  the finding. Total instrumented network time for the session: 12.1 seconds
+  across 15 fetches.
+- Documents → `state.md` §7 restructured into Phases A–E (the architecture-era
+  table is in git history, its two live remainders mapped into Phase E),
+  `README.md` rewritten as a pointer-style front door, `states/nh/NOTES.md`
+  and `docs/zip-playbook.md` appended.

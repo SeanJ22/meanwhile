@@ -319,3 +319,40 @@ Named rather than smoothed, each carrying a tracker row with its whole spec:
 **The measurement thinned before the hunting did, which is the order the brief
 sets — but the hunting also stopped well short.** Saying so plainly is the
 only version of this document worth committing.
+
+---
+
+## 9 — Verification, and this run's own rows
+
+- **`pnpm test` 713 pass, 0 fail. `pnpm lint` 0 errors (16 pre-existing
+  warnings). `pnpm build` exit 0.**
+- **`pnpm walk:all` against production: 135 of 135 passed, 0 regressions, 0
+  could not run.** The suite grew by one — **section G**, which asks
+  production whether it still renders **three** governing units at 03255
+  against the 2022 Census of Governments' three. It is deliberately pinned to
+  the UNIT count and not the body count, because the body denominator is
+  `UNENUMERABLE` today (**H02**), and a check against a body count would pin
+  our registry to itself — the self-defining denominator the check exists to
+  refuse.
+- **The walk count changed, and that is expected rather than a regression:**
+  131 at g4, 134 at g5 (the zip-shading check retired with the feature, map
+  and panel checks added), 135 here.
+- **Deploy verified LANDED** by cache-busted API GET rather than by front-page
+  HTML: `/api/meetings` at 03255's centroid returns HTTP 200, **31 meetings
+  across 5 bodies**, tier `exact`, radius 25 km, snapshot generated
+  2026-08-16T20:50:57Z.
+
+### Production rows this session created, named
+
+The probe-naming rule applied to the instrument as well as to the hand.
+
+- **55 search-log rows** from the two `pnpm walk:all` runs (27 before section G
+  was appended, 28 after) — every `/api/meetings` GET writes one.
+- **2 ask/log rows**, one per walk run.
+- **3 search-log rows from hand verification.** One of them is a nonsense read:
+  the first probe passed a `zip` parameter the route does not accept, so it
+  logged an `UNMAPPED` read at latitude 0, longitude 0. It is named anyway,
+  because a nonsense row is still a row and an unnamed one is
+  indistinguishable from a reader.
+- **No reaction was tapped and no ask was submitted by hand.**
+- External fetches — `census.gov`, `kearsarge.org` — write to nothing of ours.

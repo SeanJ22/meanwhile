@@ -149,18 +149,30 @@
 [g6] 85701 (desktop): the meetings count agrees with itself
 [g6] 85701 (phone): the meetings count agrees with itself
 [g6] 85701: who-governs states one number for one list
+[g8] 03255: /about-area carries the current product name, not the old one
+[g8] 03255: /ballot carries the current product name, not the old one
 [g8] 03255: no internal source id on /about-area
 [g8] 03255: no internal source id on /ballot
 [g8] 03255: no internal source id on the map's server HTML
+[g8] 03255: the map's server HTML carries the current product name, not the old one
+[g8] 07866: /about-area carries the current product name, not the old one
+[g8] 07866: /ballot carries the current product name, not the old one
 [g8] 07866: no internal source id on /about-area
 [g8] 07866: no internal source id on /ballot
 [g8] 07866: no internal source id on the map's server HTML
+[g8] 07866: the map's server HTML carries the current product name, not the old one
+[g8] 85641: /about-area carries the current product name, not the old one
+[g8] 85641: /ballot carries the current product name, not the old one
 [g8] 85641: no internal source id on /about-area
 [g8] 85641: no internal source id on /ballot
 [g8] 85641: no internal source id on the map's server HTML
+[g8] 85641: the map's server HTML carries the current product name, not the old one
+[g8] 85701: /about-area carries the current product name, not the old one
+[g8] 85701: /ballot carries the current product name, not the old one
 [g8] 85701: no internal source id on /about-area
 [g8] 85701: no internal source id on /ballot
 [g8] 85701: no internal source id on the map's server HTML
+[g8] 85701: the map's server HTML carries the current product name, not the old one
 [h] 03255: the governing count matches the frozen external denominator
 [hotfix-0817] 03255: each carried row's stated timestamp is the one the snapshot records
 [hotfix-0817] 03255: no carried row is claimed to be as fresh as the snapshot

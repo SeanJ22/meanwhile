@@ -56,7 +56,7 @@
 import { chromium, type Browser, type Page } from "playwright";
 
 import { mojibakePattern } from "../lib/text/mojibake.ts";
-import { decodePng, patchStats } from "./png.mts";
+import { decodePng, patchStats, regionChange } from "./png.mts";
 
 const BASE = (process.env.SHOOT_BASE_URL ?? "https://sparkwtp.netlify.app").replace(
   /\/$/,
@@ -1174,6 +1174,10 @@ section("F. The reader's map and the folded panels (g4 items 1-5, 9, 11, 14, 15)
     await menu.first().evaluate((el: HTMLElement) => el.click());
     await page.waitForTimeout(800);
   }
+  // The frame BEFORE the panel opens. Every paint claim below is measured
+  // against it, so no absolute threshold has to know what the basemap looks
+  // like underneath the panel.
+  const closedFrame = decodePng(await page.screenshot());
   const opened = await page.evaluate(() => {
     const cards = Array.from(document.querySelectorAll("button, [role=button]"));
     for (const c of cards) {
@@ -1197,31 +1201,45 @@ section("F. The reader's map and the folded panels (g4 items 1-5, 9, 11, 14, 15)
         const n = Number((h.querySelector(".al-group-count")?.textContent ?? "").trim());
         if (Number.isFinite(n)) counts.push(n);
       }
+      const body = document.querySelector(".al-overlay-body");
       return {
         stated: Number((header?.textContent ?? "").replace(/[^\d]/g, "")),
         groups: heads.length,
         sum: counts.reduce((a, b) => a + b, 0),
-        rect: heads[0] ? heads[0].getBoundingClientRect().toJSON() : null,
+        rect: body ? body.getBoundingClientRect().toJSON() : null,
       };
     });
     const png = decodePng(await page.screenshot());
-    let detail = 0;
+    let change = 0;
     if (shape.rect && shape.rect.width > 8) {
-      // The walk's phone context runs at deviceScaleFactor 2, so a CSS rect
-      // is half the pixels the screenshot is measured in. Sampling the CSS
-      // coordinates straight would read the top-left quarter of the frame.
-      detail = patchStats(
-        png,
-        Math.round((shape.rect.x + shape.rect.width / 2) * 2),
-        Math.round((shape.rect.y + shape.rect.height / 2) * 2),
-        20,
-      ).detail;
+      /*
+       * The body's own rectangle, against the frame taken before the panel
+       * opened — see png.mts#regionChange for why this replaced a
+       * "does this patch carry detail" test.
+       *
+       * That test read a standard deviation of 2.6 on a good build against a
+       * threshold of 1, because a group header is mostly empty ground with a
+       * short label on the left. Device pixel ratio alone flipped it: this
+       * check reported a NAMED REGRESSION against a build that
+       * `pnpm measure:panels` had just passed 30 of 30 on the same
+       * production deploy. A guard that fails a build its own sibling passes
+       * is measuring the wrong thing.
+       *
+       * The walk's phone context runs at deviceScaleFactor 2, so a CSS rect
+       * is half the pixels the screenshot is measured in.
+       */
+      change = regionChange(closedFrame, png, {
+        x: shape.rect.x * 2,
+        y: shape.rect.y * 2,
+        width: shape.rect.width * 2,
+        height: shape.rect.height * 2,
+      });
     }
     check(
       "g5",
       "85701: the meetings panel body paints on first render, no pointer",
-      shape.groups > 0 && detail >= 1,
-      `${shape.groups} group header(s), paint detail ${detail.toFixed(1)} >= 1`,
+      shape.groups > 0 && change >= 6,
+      `${shape.groups} group header(s), the body's pixels moved ${change.toFixed(1)} from the frame before it opened (>= 6)`,
     );
     check(
       "g5",

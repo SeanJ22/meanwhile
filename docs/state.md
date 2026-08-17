@@ -7522,6 +7522,44 @@ collapsed by design since g4 item 11, and that assertion would fail a correct
 build. Every assertion is repeated and reported as a rate. The same pass audits
 the bodies, districts and officials doors the same way.
 
+### The transition, measured — and the choice recorded
+
+Cold, HTTP cache disabled, three runs each, at 85701, against production. The
+"before" numbers were taken against the shipped build before any of this
+landed.
+
+| | before | after |
+|---|---|---|
+| first contentful paint | 352 ms | 428 ms |
+| largest contentful paint | 1188 ms | 1232 ms |
+| map ready (first camera answer) | 552 ms | 755 ms |
+| median fly-in frame | 52.3 ms | 39.0 ms |
+| worst fly-in frame | **401.9 ms** | **266.2 ms** |
+| frames over the 32 ms budget | 38 of 38 | 45 of 47 |
+
+**First meaningful paint is inside the 3.0 s budget with room to spare. The
+32 ms frame budget is missed, before and after.** The worst frame improved by
+a third and the median by a quarter, which is the viewport clip no longer
+serializing a 20,000-pixel path every frame — but the fly-in still runs at
+roughly 20–25 fps.
+
+The brief allows suspending the blur for the duration of the fly-in if it
+cannot hold frame rate. **The choice is NOT to suspend it, and the reason is a
+measurement rather than a preference.** The same three runs with the effect
+never painted at all (`FLY_NO_EFFECT=1`) came back at a median of 42.4–48.9 ms
+and 40–41 frames over budget — indistinguishable from the runs with it on. The
+effect is not what is costing the frames; a cold fly-in decoding and uploading
+map tiles is. Suspending it would be a change with a false reason attached,
+which this session has already done once today and does not need to do twice.
+
+**One caveat, stated because the absolute numbers do not belong to a reader.**
+These runs are software-rasterized — Playwright's Chromium launches with
+`--enable-unsafe-swiftshader` on this machine — so no frame budget was ever
+going to survive them. What the numbers support is the RELATIVE claim: the
+effect is not the cost, and the clip made the frames materially better. A
+reader on GPU hardware is faster than any of this, and the honest way to close
+the budget question is to measure it on one.
+
 ### A correction, recorded because it was shipped before it was caught
 
 The first production run of `pnpm measure:focus` came back 34 of 35, and the

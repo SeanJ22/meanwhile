@@ -118,6 +118,29 @@ for (let i = 0; i < RUNS; i += 1) {
     `,
   });
 
+  /*
+   * ATTRIBUTION ARM (FLY_NO_EFFECT=1): the same run with the state effect
+   * never painted.
+   *
+   * The brief allows suspending the blur for the duration of the fly-in if it
+   * cannot hold frame rate. Whether that would help is a measurement, not a
+   * guess: a cold fly-in is also decoding and uploading map tiles, and if the
+   * frames are the same with the effect gone then suspending it buys nothing
+   * and shipping the suspension would be a change with a false reason
+   * attached.
+   */
+  if (process.env.FLY_NO_EFFECT === "1") {
+    await context.addInitScript({
+      content: `
+        (function () {
+          var style = document.createElement("style");
+          style.textContent = ".state-focus-layer { display: none !important; }";
+          (document.head || document.documentElement).appendChild(style);
+        })();
+      `,
+    });
+  }
+
   const page = await context.newPage();
   // Cold: no HTTP cache, no service worker warmth.
   const client = await context.newCDPSession(page);

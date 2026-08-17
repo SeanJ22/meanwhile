@@ -39,7 +39,7 @@ import { chromium, type Page } from "playwright";
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
 
-import { decodePng, patchStats } from "./png.mts";
+import { decodePng, patchStats, regionChange } from "./png.mts";
 
 const BASE = (process.env.SHOOT_BASE_URL ?? "https://sparkwtp.netlify.app").replace(/\/$/, "");
 const OUT = join(process.cwd(), "screenshots", "panels");
@@ -47,17 +47,27 @@ mkdirSync(OUT, { recursive: true });
 
 const ZIPS = ["85701", "03255", "08540", "06716"];
 const REPS = Number(process.env.PANEL_REPS ?? 2);
+/**
+ * Device pixel ratio. A real phone is 2 or 3, and the compositing failure this
+ * pass guards is a compositor one — pinning it at 1 would test a device
+ * nobody holds. Overridable so both can be measured.
+ */
+const DSF = Number(process.env.PANEL_DSF ?? 2);
 
 /**
- * How much local variation a patch of real content carries.
+ * How much a surface has to change the pixels it covers to count as painted.
  *
- * A painted panel is text on a ground: luminance moves from pixel to pixel.
- * An unpainted one is whatever was behind it, seen through a flat 60% black
- * backdrop, which is nearly uniform. One luminance unit of standard deviation
- * over a 41 x 41 patch separates them with room to spare — the measured
- * readings were 0.0 unpainted against 2.4–20 painted.
+ * Mean absolute luminance change over the surface's own rectangle, against the
+ * frame taken immediately BEFORE it opened. A panel that paints replaces map
+ * terrain with its own ground and text and moves that mean by tens of units; a
+ * panel whose pixels never arrived leaves the terrain exactly as it was.
+ *
+ * This replaced a local-DETAIL test that was thin by construction — a group
+ * header is mostly empty ground with a short label on the left, so its centre
+ * read a standard deviation of 2.6 on a good build against 0.0 on a broken
+ * one, and device pixel ratio alone flipped it. See png.mts#regionChange.
  */
-const PAINTED_DETAIL = 1;
+const PAINTED_CHANGE = 6;
 
 let checks = 0;
 let failures = 0;
@@ -114,7 +124,7 @@ for (const [viewport, width, height] of [
     for (let rep = 0; rep < REPS; rep += 1) {
       const context = await browser.newContext({
         viewport: { width, height },
-        deviceScaleFactor: 1,
+        deviceScaleFactor: DSF,
         reducedMotion: "reduce",
         colorScheme: "dark",
         hasTouch: width < 500,
@@ -137,6 +147,11 @@ for (const [viewport, width, height] of [
       );
       const page = await context.newPage();
       await openAt(page, zip, width < 500);
+
+      // The frame BEFORE the panel opens — the baseline every paint claim
+      // below is made against. Taken after the map has settled, so the only
+      // thing that may differ is the panel itself.
+      const closedFrame = decodePng(await page.screenshot());
 
       if (!(await openDoor(page, /meetings/))) {
         await context.close();
@@ -172,13 +187,13 @@ for (const [viewport, width, height] of [
       });
       const png = decodePng(shot);
       let detail = 0;
-      if (shape.headRect && shape.headRect.width > 8) {
-        detail = patchStats(
-          png,
-          Math.round(shape.headRect.x + shape.headRect.width / 2),
-          Math.round(shape.headRect.y + shape.headRect.height / 2),
-          Math.round(Math.min(20, shape.headRect.width / 3)),
-        ).detail;
+      if (shape.bodyRect && shape.bodyRect.width > 8) {
+        detail = regionChange(closedFrame, png, {
+          x: shape.bodyRect.x * DSF,
+          y: shape.bodyRect.y * DSF,
+          width: shape.bodyRect.width * DSF,
+          height: shape.bodyRect.height * DSF,
+        });
       }
       /*
        * A ZIP WE DO NOT COVER HAS NO GROUPS, AND THAT IS CORRECT.
@@ -197,14 +212,14 @@ for (const [viewport, width, height] of [
         });
         let noteDetail = 0;
         if (note && note.width > 8 && note.height > 8) {
-          noteDetail = patchStats(
-            png,
-            Math.round(note.x + note.width / 2),
-            Math.round(note.y + Math.min(note.height / 2, 24)),
-            Math.round(Math.min(20, note.width / 3)),
-          ).detail;
+          noteDetail = regionChange(closedFrame, png, {
+            x: note.x * DSF,
+            y: note.y * DSF,
+            width: note.width * DSF,
+            height: note.height * DSF,
+          });
         }
-        const ok = Boolean(note) && noteDetail >= PAINTED_DETAIL;
+        const ok = Boolean(note) && noteDetail >= PAINTED_CHANGE;
         if (ok) {
           paintedRuns += 1;
           sumMatchRuns += 1;
@@ -217,7 +232,7 @@ for (const [viewport, width, height] of [
         continue;
       }
 
-      const painted = shape.groups > 0 && detail >= PAINTED_DETAIL;
+      const painted = shape.groups > 0 && detail >= PAINTED_CHANGE;
       if (painted) paintedRuns += 1;
 
       /* --- 2: the group counts sum to the header count --- */
@@ -226,6 +241,7 @@ for (const [viewport, width, height] of [
       /* --- 3: expanding one group paints its rows immediately --- */
       let expanded = { rows: 0, want: 0, detail: 0 };
       if (shape.groups > 0) {
+        const collapsedFrame = png;
         const want = await page.evaluate(() => {
           const head = document.querySelector(".al-group-head") as HTMLElement | null;
           if (!head) return 0;
@@ -272,22 +288,21 @@ for (const [viewport, width, height] of [
         const png2 = decodePng(shot2);
         let rowDetail = 0;
         if (after.rect && after.rect.width > 8 && after.rect.height > 4) {
-          // The patch never leaves the row's own VISIBLE band. Sampling a
-          // fixed radius around a row that is only part-visible reads the
-          // panel's padding instead of its text, which is how a correct
-          // build reported detail 0.0 at 1280px.
-          rowDetail = patchStats(
-            png2,
-            Math.round(after.rect.x + after.rect.width / 2),
-            Math.round(after.rect.y + after.rect.height / 2),
-            Math.max(4, Math.floor(Math.min(after.rect.height / 2 - 1, after.rect.width / 3))),
-          ).detail;
+          // Against the COLLAPSED frame, not against the map: the rows appear
+          // inside a panel that was already painted, so the baseline is the
+          // same panel one interaction earlier.
+          rowDetail = regionChange(collapsedFrame, png2, {
+            x: after.rect.x * DSF,
+            y: after.rect.y * DSF,
+            width: after.rect.width * DSF,
+            height: after.rect.height * DSF,
+          });
         }
         expanded = { rows: after.rows, want, detail: rowDetail };
         // The brief is explicit: do NOT assert that every meeting renders on
         // open. Groups are collapsed by design (g4 item 11), so the claim is
         // that ONE expanded group paints exactly its own stated count.
-        if (want > 0 && after.rows === want && rowDetail >= PAINTED_DETAIL) expandRuns += 1;
+        if (want > 0 && after.rows === want && rowDetail >= PAINTED_CHANGE) expandRuns += 1;
       }
 
       readings.push(
@@ -346,7 +361,7 @@ for (const [name, label, selector] of DOORS) {
   ] as const) {
     const context = await browser.newContext({
       viewport: { width, height },
-      deviceScaleFactor: 1,
+      deviceScaleFactor: DSF,
       reducedMotion: "reduce",
       colorScheme: "dark",
       hasTouch: width < 500,
@@ -366,6 +381,7 @@ for (const [name, label, selector] of DOORS) {
     });
     const page = await context.newPage();
     await openAt(page, "85701", width < 500);
+    const closedFrame = decodePng(await page.screenshot());
     const opened = await openDoor(page, label);
     if (!opened) {
       notes.push(`${viewport}/${name}: never opened`);
@@ -384,14 +400,14 @@ for (const [name, label, selector] of DOORS) {
     const png = decodePng(shot);
     let detail = 0;
     if (rect && rect.width > 8 && rect.height > 8) {
-      detail = patchStats(
-        png,
-        Math.round(rect.x + rect.width / 2),
-        Math.round(rect.y + Math.min(rect.height / 2, 60)),
-        Math.round(Math.min(24, rect.width / 3)),
-      ).detail;
+      detail = regionChange(closedFrame, png, {
+        x: rect.x * DSF,
+        y: rect.y * DSF,
+        width: rect.width * DSF,
+        height: rect.height * DSF,
+      });
     }
-    const ok = Boolean(rect) && detail >= PAINTED_DETAIL;
+    const ok = Boolean(rect) && detail >= PAINTED_CHANGE;
     if (!ok) affected += 1;
     check(
       `${viewport}/${name}: paints on first render, no pointer`,

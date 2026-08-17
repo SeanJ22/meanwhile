@@ -159,3 +159,50 @@ export function patchStats(
   for (const v of values) variance += (v - luma) ** 2;
   return { luma, chroma: sumC / n, detail: Math.sqrt(variance / n) };
 }
+
+/**
+ * Mean absolute luminance change over a rectangle, between two frames.
+ *
+ * **The robust way to ask "did this paint".** The first version of the panel
+ * guard asked whether a patch carried local DETAIL, which sounds equivalent
+ * and is not: a group header is mostly empty ground with a short label on the
+ * left, so a patch at its centre reads a standard deviation of about 2.6 on a
+ * perfectly good build and 0.0 on a broken one — a margin thin enough that
+ * device pixel ratio alone flipped it, and a threshold that thin is a coin
+ * toss wearing a number.
+ *
+ * Comparing the SAME rectangle before and after the surface opens is
+ * self-calibrating instead. A painted panel replaces map terrain with its own
+ * ground and text, which moves mean luminance by tens of units; a panel whose
+ * pixels never arrived leaves the terrain exactly as it was, which moves it by
+ * almost nothing. No absolute threshold has to know what the basemap looks
+ * like at that spot.
+ *
+ * Both frames must be the same size — the caller's job, and a mismatch throws
+ * rather than silently comparing the wrong pixels.
+ */
+export function regionChange(
+  before: DecodedPng,
+  after: DecodedPng,
+  rect: { x: number; y: number; width: number; height: number },
+): number {
+  if (before.width !== after.width || before.height !== after.height) {
+    throw new Error(
+      `frame size mismatch: ${before.width}x${before.height} vs ${after.width}x${after.height}`,
+    );
+  }
+  const x0 = Math.max(0, Math.round(rect.x));
+  const y0 = Math.max(0, Math.round(rect.y));
+  const x1 = Math.min(before.width - 1, Math.round(rect.x + rect.width));
+  const y1 = Math.min(before.height - 1, Math.round(rect.y + rect.height));
+  let sum = 0;
+  let n = 0;
+  for (let y = y0; y <= y1; y += 1) {
+    for (let x = x0; x <= x1; x += 1) {
+      const i = y * before.width + x;
+      sum += Math.abs(after.luminance[i] - before.luminance[i]);
+      n += 1;
+    }
+  }
+  return n === 0 ? 0 : sum / n;
+}

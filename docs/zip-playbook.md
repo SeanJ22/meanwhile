@@ -702,3 +702,125 @@ The rungs that follow from it, in the order they are worth trying:
    to screen and handed to a clip, mask or filter is cut to the viewport
    first. This is the same wall g5's predecessor hit at the SVG filter region
    and it will be hit again.
+
+---
+
+## The denominator comes from outside, and it is a TWO-STEP (2026-08-16, h)
+
+Append-only, per R13. What the h depth run at 03255 added.
+
+An official count is not a denominator. "Merrimack County contains eighteen
+special districts" does not establish that eighteen special districts touch
+this zip. **Step A** is the authoritative universe; **Step B** is the
+jurisdiction mapping; skipping B leaves you with a number rather than a
+denominator, and skipping A leaves you with a registry that defines its own.
+
+1. **Enumerate EVERY county the serving radius reaches, not the county the zip
+   is in.** 03255 sits in Merrimack County and its 25 km circle crosses into
+   Sullivan and Hillsborough. Before this run the official denominator for
+   03255's meetings-near universe **did not exist in the repository** — the
+   committed extract held Merrimack alone. Enumerating one county and calling
+   it the neighbourhood is the Sunnyside miss with a wider radius.
+   `pnpm gus:extract <unpacked-xlsx-dir> <FIPS>...` does step A for any county
+   in the country.
+
+2. **Special districts resolve to `UNRESOLVED`, never to `false`.** The Census
+   publishes **no boundary for special districts at any vintage**, so geometry
+   cannot answer whether a village district reaches a zip. Forty of 03255's
+   166 enumerated units are in this state. Recording them as "does not govern"
+   because no boundary was found is the render-default rule's manufactured
+   claim, one layer upstream in the data.
+
+3. **Carry TWO distances and label which is which.** `boundaryKm` — nearest
+   point of the unit's own territory, generous, the upper bound on what could
+   possibly show. `venueKm` — the unit's published administrative address, a
+   PROXY for where it actually sits, and what decides whether a pin appears.
+   At 03255 they differ by eighteen units. A single number smuggles one answer
+   in under the other's name.
+
+4. **UNITS are not BODIES, and no external enumeration exists for bodies.**
+   The Census counts one row for the Town of Newbury; the product's
+   denominator is its Selectboard, Planning Board, Zoning Board of Adjustment,
+   Conservation Commission and the rest. So the body universe is a two-layer
+   denominator: the unit universe is authoritative and external, the body
+   universe per unit is a hunt against that unit's own published board list.
+   A unit whose board list has not been read is `BODIES_UNENUMERATED` — a
+   named gap, never a body count of one.
+
+5. **State and federal seats are in neither universe.** The Census enumerates
+   governments, not offices. Governor, Executive Council, state senate and
+   house, congressional and Senate seats have to be carried separately or they
+   silently vanish from a "complete" count.
+
+## Reading a CMS page: strip the navigation before harvesting anything
+
+The single highest-yield rule this run produced, and it nearly cost a false
+finding.
+
+**Every page on a CMS site carries the same menu, and the menu is the site
+talking about itself — not the page answering your question.** Harvesting town
+names from Kearsarge Regional School District's pages returned *Bradford, New
+London, Sutton*: the three towns with school BUILDINGS, named in the navigation
+of all 496 pages. The district's actual membership is **seven** towns, and a
+regional district by definition serves towns with no school of their own —
+Newbury, Springfield, Warner and Wilmot are exactly those four.
+
+The three-town answer is plausible, confidently derivable, and wrong. Cut
+`<nav>`, and cut everything before the last shared navigation landmark, before
+any harvest.
+
+- **A regional board seats its members BY TOWN**, so its members page answers
+  the roster AND the membership in one fetch. Take both while you are there:
+  reaching the page is the expensive part, and a second visit for the second
+  field pays the whole discovery cost again. Kearsarge's also volunteered year
+  first elected, term expiry and committee assignments, none of which the
+  field matrix asked for.
+- **Never read a member list off a map.** Goshen is 8.5 km from 03255 and is
+  not a member; Warner is 14.2 km and holds three of nine seats.
+
+## A rate wall is not a fingerprint wall
+
+`kearsarge.org` already had a recorded wall — the TLS/HTTP2 fingerprint filter
+(2026-08-15, M79), where a full browser header set from Node is refused and
+`curl` with identical headers is served. It has a **second, different** one:
+`robots.txt` publishes `Crawl-delay: 10` and the host enforces something like
+it. A burst of fetches earns HTTP 403 where the **same client, paced**, is
+served 200.
+
+Two walls on one host, and the wrong diagnosis sends you hunting clients when
+the answer is patience. **Read `robots.txt` for the crawl delay before
+deciding a 403 is a fingerprint**, and retry once after a full delay before
+escalating a rung. This is a technique inside rungs 3–4, not a new rung.
+
+- **Read the vendor off the page footer rather than guessing it.** This host
+  was tagged Schoolwires/Apptegy on a guess; the footer says **CivicPlus**.
+  That matters operationally: rung 12 — the vendor platform underneath — is
+  only reachable once you know which platform, and CivicPlus is already named
+  in the ladder's own text.
+
+## An empty spreadsheet cell can eat its neighbour
+
+For any `.xlsx` the ladder's rung 9 hands you — and government data arrives as
+`.xlsx` constantly.
+
+An empty cell is written self-closing, `<c r="G24141" s="12"/>`, and a naive
+`/<c r="([A-Z]+\d+)"([^>]*)>([\s\S]*?)<\/c>/` matches it anyway: `[^>]*`
+absorbs the trailing slash and the lazy body runs on to the NEXT cell's
+`</c>`, swallowing it whole. **Every column after the first empty one reads
+shifted.**
+
+The symptom is the dangerous part. A shifted column does not look like a parse
+bug; it looks like a **data difference**. Twelve of Merrimack County's eighteen
+special districts vanished from the first extraction because their
+`FIPS_STATE` had slid one column left into `WEB_ADDRESS`, and the natural
+reading was "the 2022 workbook disagrees with our committed extract."
+
+- **Branch on the self-closing slash explicitly.** Do not let an attribute
+  class swallow it.
+- **Print rows read, rows matched, and the per-category split on every run.**
+  This was caught only because a whole class of government came back
+  suspiciously small against a number already held. Without the count, it
+  reads as a clean run.
+- **Prefer `FIPS_STATE` over `STATE` in Census workbooks.** `STATE` is the
+  postal abbreviation; the numeric code is in `FIPS_STATE`, and preferring the
+  wrong one matches zero rows in every county.

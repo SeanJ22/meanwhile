@@ -1,124 +1,102 @@
 # We the People
 
-A civic app. This repository currently contains one screen: the map you land on.
+A free, nonpartisan civic app. Enter a zip code and it tells you who governs
+that place, what those people have actually done, when their next public
+meeting is, what is on your ballot, and — for federal offices — who paid for
+their campaigns.
 
-Enter a zip code, the map flies to it, and upcoming local government meetings
-render as pins. Click a pin to see who is meeting, when, where, and what's on
-the agenda.
+Every claim on a reader-facing surface carries a source record pointing at a
+specific statement, roll-call vote, filing or agenda. Where no source exists,
+the surface says so in plain language rather than filling the gap. The product
+never ranks candidates, never computes a match or fit score, and never tells
+anyone how to vote.
 
-Read [CLAUDE.md](./CLAUDE.md) before changing anything — it holds the
-constraints this product is built around, several of which are not negotiable.
+**Consumers never pay.** State campaign finance is tracked in Phase B and has
+not shipped.
 
 ## Getting started
 
 ```bash
 pnpm install
-cp .env.example .env.local   # optional in development, see below
+```
+
+```bash
 pnpm dev
 ```
 
-Open http://localhost:3000.
+Open http://localhost:3000. Every key lives in
+[.env.example](./.env.example); most of the app runs without any of them,
+because the registry, boundaries and meeting snapshots are committed files.
 
-### Environment
+```bash
+pnpm test
+```
 
-Every key lives in [.env.example](./.env.example).
+## Stack
 
-| Variable | Needed for | Without it |
-|---|---|---|
-| `NEXT_PUBLIC_MAPTILER_KEY` | MapTiler vector tiles | The map draws a plain ground colour and says "Basemap unavailable" |
-| `NEXT_PUBLIC_MAPTILER_STYLE` | Choosing a MapTiler style | Defaults to `dataviz-dark` |
-| `DATABASE_URL` | Neon Postgres | Nothing on this screen reads the database yet |
+Next.js (App Router) + TypeScript + React · Tailwind + shadcn/ui · Postgres on
+Neon through Drizzle · deployed on Netlify with ingestion on a schedule ·
+Auth.js email magic link only · MapLibre GL with a vector tile provider.
+Mobile is responsive web first.
 
-`NEXT_PUBLIC_MAPTILER_KEY` is the only one the map needs. There is deliberately
-no substitute tile provider: a basemap that silently swaps in a different source
-is how a total rendering failure spent hours looking like a dark style choice.
-
-### The map worker
-
-`predev` and `prebuild` run [scripts/build-map-worker.mjs](./scripts/build-map-worker.mjs),
-which bundles MapLibre's tile-parsing Web Worker into a self-contained
-`public/maplibre-gl-worker.mjs` (gitignored — it is a build artifact, not a
-vendored file).
-
-MapLibre 6 locates that worker at runtime by resolving a template against its
-own `import.meta.url`, which no bundler can rewrite, so neither Turbopack nor
-webpack emits it as an addressable asset. Without this step the worker 404s,
-module evaluation fails silently, and **no vector tile is ever parsed** — which
-also takes the district overlay down with it, because MapLibre tiles GeoJSON
-sources inside that same worker. The script's header comment has the full
-account.
-
-## What's here
+## Where things are
 
 ```
-app/
-  page.tsx                    the map entry screen
-  api/meetings/route.ts       the map's only data dependency
-components/map/               map, entry notice, pins, detail panel
+app/                  routes and pages
+components/           UI, shadcn primitives in components/ui
 lib/
-  sources/types.ts            the Meeting interface every adapter normalizes to
-  sources/mock/               fixture adapter standing in for Legistar
-  meetings/query.ts           the empty-state cascade
-  meetings/registry.ts        the one place that knows which adapter is live
-  geo/                        zip resolution and ZCTA centroids
-  map/                        tile provider, formatting
-  db/                         Drizzle schema (empty) and a lazy Neon client
-scripts/fetch-zcta-centroids.ts
-tests/
+  sources/<name>/     one ingestion adapter per external source
+  db/                 drizzle schema, migrations, queries
+  ocd/                OCD-ID parsing and district resolution
+  signal/             reaction aggregation, snapshots, export
+  evidence/           the research ledger and the required-field matrix
+scripts/              backfills, audits and data exploration
+docs/                 methodology, abuse policy, calibration log
+tests/fixtures/       recorded API responses, no live calls in tests
 ```
 
-## Notes on the pieces
+## Pointers, not copies
 
-**Meetings are mocked, but the interface isn't.** `lib/sources/types.ts` defines
-the real contract: `fetch()`, `normalize()`, `upsert()`, and a `Meeting` record
-carrying an OCD-ID and full provenance. The mock emits Legistar-shaped rows and
-transforms them exactly as a real adapter will. Nothing above
-`lib/meetings/registry.ts` can tell the difference — swapping in a live source
-is one line there plus a new directory under `lib/sources/`.
+This file used to describe the product, and it drifted badly enough to be
+wrong about what the app was. It points now, so that it cannot.
 
-There are 17 meetings around Tucson, 11 around Philadelphia, and 3 recently
-concluded in Cochise County. Their dates are day offsets from today, so the
-calendar never goes stale.
+| What you want | Where it lives |
+|---|---|
+| **The rules.** Non-negotiables, the transparency mandate, the retrieval ladder. Read this before changing anything. | [CLAUDE.md](./CLAUDE.md) |
+| **Current state.** What has shipped, what is in flight, which phase everything sits in. | [docs/state.md](./docs/state.md) §7 |
+| **Task status.** One row per ID, status and notes edited in the same commit as the work. | [docs/tracker.csv](./docs/tracker.csv) |
+| **Sources and what each rung of a hunt returned.** | [docs/source-ladder.md](./docs/source-ladder.md) |
+| **How to cover a new zip**, and the source ladder per jurisdiction type. Append-only. | [docs/zip-playbook.md](./docs/zip-playbook.md) |
+| **Coverage against the official universe**, never against our own records. | [docs/coverage-audit-by-county.md](./docs/coverage-audit-by-county.md) |
+| **Design system and tokens.** | [docs/DESIGN.md](./docs/DESIGN.md) |
+| **Abuse and moderation policy.** | [docs/abuse-policy.md](./docs/abuse-policy.md) |
+| **Kill switches and the procedure for pulling one.** | [docs/ripcords.md](./docs/ripcords.md) |
+| **What to dump when you notice something wrong in production.** | [docs/defects.md](./docs/defects.md) |
 
-**Zip codes are orientation, not identity.** A ZCTA is built from mail delivery
-routes and runs straight through cities, counties, and school districts. It
-tells the map where to look and nothing else. The entry screen says so, and
-anything that needs real districts will ask for a street address and explain
-why at that point.
-
-**ZCTA centroids ship as a stub.** `lib/geo/zcta-centroids.json` currently holds
-approximate coordinates for the metros the mock data covers, and its `complete`
-flag is `false` — which is what lets the UI say "we don't have that zip yet"
-rather than falsely claiming it doesn't exist. Run:
+## A few commands worth knowing
 
 ```bash
-pnpm zcta:fetch
+pnpm walk:all
 ```
 
-to replace it with all ~33,000 authoritative internal points from the Census
-2020 ZCTA Gazetteer. The flag flips to `true` and unknown zips start reading as
-invalid.
-
-**The map never renders empty.** `lib/meetings/query.ts` walks a radius ladder —
-25km, 60km, 150km — looking for upcoming meetings, then falls back to anything
-concluded in the last 30 days, then to a plain message. Whichever rung it lands
-on is reported to the client and shown on screen: a search that quietly widened
-its radius is indistinguishable from one that found what you asked for, which
-makes it a wrong answer.
-
-CLAUDE.md calls for one more rung after that — district boundaries with
-officeholders — which needs TIGER/Line geometry and an officeholder source.
-Not built.
-
-## Commands
+The standing regression suite, run against production at the end of every
+session. Each check carries the session that shipped the claim behind it, so a
+failure reads as "the win that session shipped is undone" rather than as an
+anonymous red line. New checks append; the suite only grows.
 
 ```bash
-pnpm dev              # development server
-pnpm build            # production build
-pnpm test             # node --test over tests/
-pnpm lint
-pnpm ingest mock      # run one source adapter
-pnpm zcta:fetch       # rebuild ZCTA centroids from Census
-pnpm db:generate      # drizzle migration from schema changes
-pnpm db:migrate
+pnpm stamp
 ```
+
+Today's date in `America/Phoenix`. Every date entering any document comes from
+here — a plausible date is a fabricated one, and this repo treats that as the
+same class of failure as a made-up quote.
+
+```bash
+pnpm zip:universe 03255
+```
+
+Enumerates what governs a zip and what meets near it, against the Census of
+Governments rather than against our own registry.
+
+Other commands are in [package.json](./package.json).

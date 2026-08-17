@@ -25,6 +25,50 @@ are the product's birthright. Difficulty is friction, not refusal. Go get it.
 
 ## Non-negotiables in code
 
+### THE TRANSPARENCY MANDATE
+
+(Adopted 2026-08-16, the author's directive. Copied verbatim from the h session
+brief. It governs every hunt in this product, and every session inherits it at
+session-open. It sits above the operational rules below because they inherit
+from it.)
+
+Get out of my way. This public information is mine and I need to read it.
+
+These are PUBLIC bodies and PUBLIC people. Their records, their meetings, their money, and their votes are already owed to the reader. Difficulty of access is frequently deliberate, and this product exists to defeat it — forcing the transparency that is already required. That mission governs every hunt.
+
+Do not fail. Find every avenue, every back door, every nook, every cranny.
+
+* Difficulty is an obstacle to out-climb and/or out-maneuver, never a reason to stop. A hunt that ends before the ladder is exhausted is an incomplete hunt, not a finding, and may never be reported as one.
+* A wall never renders as an emptiness. A failed retrieval is reported as a failed retrieval, with the wall named and every rung listed with its result. "No meetings" is never the render for "could not reach the calendar." Absence is never asserted.
+* Where a body is REQUIRED to publish and has not, that is a finding and it renders as one — the obligation stated, the date checked, the rungs walked. That sentence, in front of a reader, IS the transparency being forced. That being said, this is a LAST RESORT — as a reminder, this is public information and it is required to be SOMEWHERE. Reaching for the finding before the ladder is exhausted is the incomplete hunt this section forbids, wearing a respectable face. And it carries an EVIDENCE STANDARD, because it is a legal claim about a named body, not a retrieval report. It renders only when the record holds: the specific publication obligation; the authoritative source for that obligation (statute, rule, or charter, cited); why the obligation applies to THIS body and THIS document or data type; the obligation's effective date, or the version of the legal text applicable on the date checked; the date checked; the complete retrieval history; and the final failed state. Where the obligation itself is uncertain, the surface renders the retrieval failure honestly and NEVER upgrades it to a compliance claim. No claim without a source record — the same law as everywhere else in the product.
+* Every wall that falls becomes a rung, so it never costs a second session.
+* Two prohibitions remain, and neither is caution: no residential-proxy spoofing, and nothing fabricated when the ladder is genuinely exhausted. We take everything that is owed and we invent nothing.
+
+### THE LADDER, EXHAUSTIVELY
+
+(The standing definition — a hunt is over only when every rung below has been
+walked and recorded with `attemptedAt` and its result. These fourteen rungs are
+`ladder vH-start`.)
+
+1. Committed snapshot.
+2. Plain fetch.
+3. Fetch with the full browser header set.
+4. A different CLIENT whose TLS fingerprint passes (curl beat the fingerprint filter in the f session where header-swapping did not).
+5. A different EGRESS — g3's finding: a rung is `(client, headers, URL, egress)`. A CI runner's IP being refused is an EGRESS wall, not a header problem; name it and move to another rung rather than hunting headers.
+6. The LIVE BROWSER with JavaScript executed and content awaited. A page that renders for a human renders for us. A plain fetch returning nothing on a JS-rendered page is a FALSE MISS, not a wall.
+7. The page's own network calls — the JSON endpoint feeding the widget is usually right there, and it is better data than the HTML.
+8. Structured markup the prose hides — vCard, JSON-LD, microdata, RSS, iCal. (The playbook's "prose said no; ask the markup": Newbury's ZBA venue lived in a vCard block behind a map link.) An `.ics` feed is a calendar handed to us.
+9. Linked documents in EVERY format. PDFs ARE DATA — text-layer extraction first, OCR when scanned. "Paper-only" and "not machine-readable" are honest ONLY when the document does not exist online — never when a PDF is sitting on the body's site unparsed.
+10. Sitemaps, search-index caches, directory listings.
+11. The Internet Archive, with snapshot URLs.
+12. The vendor platform underneath — Diligent/BoardDocs, Granicus, CivicPlus and siblings expose predictable paths and APIs; identify the platform and use its own interface.
+13. The body's own public-records request path, as a named rung.
+14. The author's browser, last.
+
+Operational interpretation of "every wall that falls becomes a rung": every successful wall-breaking method becomes a PERMANENT reusable step in the playbook, whether it is code or procedure. Only a genuinely NEW RETRIEVAL CLASS increments the numbered ladder. A new technique inside an existing rung enriches that rung; it does not renumber the ladder. This preserves the mandate verbatim while keeping the ladder version stable.
+
+---
+
 **Never generate a candidate position.** Every position, vote, or stance rendered to a user must carry a source record pointing at a specific statement, roll-call vote, filing, or questionnaire response. If no source exists, the field is null and the UI renders "no public position found." Do not infer from party affiliation, endorsements, or similar candidates. This applies to LLM-generated summaries too — summaries paraphrase a cited source, never fill a gap.
 
 **No composite match scores.** Alignment renders per issue. No aggregate percentage, ranking, ordering by fit, or UI affordance implying a recommendation.

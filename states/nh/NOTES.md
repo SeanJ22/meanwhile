@@ -128,3 +128,72 @@ commissioners. Thirteen of them are in Merrimack County
 (`docs/coverage-audit-by-county.md`). **No village district's boundary reaches
 Newbury** — the nearest is Lake Todd, in Bradford/Sutton. Checked against the
 2022 Census of Governments, not assumed.
+
+## Kearsarge Regional School District — the seven member towns (2026-08-16, h)
+
+**The district's own words, from its own board-members page** (read
+2026-08-16, `kearsarge.org/district/school-board-mbc/pages/school-board-members`):
+
+> Kearsarge Regional School District (SAU #65) is composed of seven towns
+> governed by one regional School Board consisting of nine members. The towns
+> represented are Bradford, Newbury, New London, Springfield, Sutton, Warner,
+> and Wilmot.
+
+**Seven towns: Bradford, Newbury, New London, Springfield, Sutton, Warner,
+Wilmot.** Nine board seats, seated by town, plus an appointed School District
+Clerk who is an officer rather than a seat. Full roster with year first
+elected, term expiry and committee assignments in
+`data/audit/krsd-board-2026-08-16.json`.
+
+**The working list this session inherited was wrong in both directions.** It
+read "New London, Sutton, Bradford, Springfield, Wilmot, Goshen". **Goshen is
+not a member town.** **Warner is, and holds three of the nine seats.** Goshen
+sits 8.5 km from 03255's centroid and Warner 14.2 km, which is exactly why a
+member list must never be read off a map.
+
+**A false answer that looked right, and was rejected rather than recorded.**
+Harvesting town names from the whole document returns **Bradford, New London
+and Sutton** — because those are where the school BUILDINGS are, and the
+site-wide navigation menu names them on every page. A regional district by
+definition serves towns that have no school of their own, and Newbury,
+Springfield, Warner and Wilmot are precisely those four. The rule that catches
+it: **strip the shared navigation before harvesting anything from a CMS page**,
+because a menu is the site talking about itself, not the page answering your
+question.
+
+**Two addresses that share a house number, and must not be substituted for
+each other.** The SAU office is **114 Cougar Court, New London, NH 03257**
+(phone (603) 526-2051). The board's **meeting venue** is **114 Main Street,
+New London** — recorded earlier from the district's own calendar. The venue
+rule forbids borrowing one for the other, and a coincidence of house number is
+the most inviting way to break it.
+
+### Two corrections to what this file said before
+
+- **`kearsarge.org` is CivicPlus**, read from the page footer ("Government
+  Websites by CivicPlus®"). This file previously recorded no vendor for the
+  host. **Ladder rung 12 — the vendor platform underneath — has never been
+  tried here**, and CivicPlus is already named in the ladder's own text.
+- **A second, different wall on this host.** The recorded wall was the
+  TLS/HTTP2 fingerprint filter (2026-08-15, M79). There is also a **RATE**
+  wall: `robots.txt` publishes `Crawl-delay: 10` and the host enforces
+  something like it — a burst of fetches earns HTTP 403 where the same client,
+  paced, is served 200. Different wall, different answer: patience, not a new
+  client. Neither supersedes the other; a hunt here can hit either.
+
+## Special districts — the Merrimack-only check, corrected (2026-08-16, h)
+
+The note above under "Special districts" says no village district's boundary
+reaches Newbury, nearest Lake Todd in Bradford/Sutton. **That was checked
+against Merrimack County alone**, and 03255's 25 km serving radius crosses two
+county lines.
+
+With Sullivan County enumerated (`pnpm gus:extract`, 2022 Census of
+Governments, 2026-08-16), two more sit inside the circle by venue proxy and
+have never been assessed: **Highland Haven Special District** and **Ashuelot
+Pond Dam Precinct**, both administered from Washington, 14.89 km.
+
+**Neither is a who-governs claim.** The Census publishes no boundary for
+special districts at any vintage, so whether either reaches Newbury is
+`UNRESOLVED` — a work item, never a `false`. Full enumeration and method per
+row in `docs/universe-03255.md` and `data/audit/universe-03255.json`.

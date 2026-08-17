@@ -52,7 +52,10 @@
     "shoot:focus": "tsx scripts/shoot-state-focus.mts",
     "zcta:outlines": "tsx scripts/fetch-zcta-outlines.mts",
     "cd:split": "tsx scripts/split-congressional.mts",
-    "measure:extrusion": "tsx scripts/measure-extrusion.mts"
+    "measure:extrusion": "tsx scripts/measure-extrusion.mts",
+    "measure:focus": "tsx scripts/measure-focus.mts",
+    "measure:fly": "tsx scripts/measure-fly.mts",
+    "measure:panels": "tsx scripts/measure-panels.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

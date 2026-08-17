@@ -3,6 +3,7 @@ import { test } from "node:test";
 
 import {
   NO_STATE,
+  clipRingToBox,
   extrusionSpecForZoom,
   filterStateAbbr,
   riseAlphasFor,
@@ -10,6 +11,7 @@ import {
   stateAbbrFromOcdId,
   stateFilter,
   stateOcdIdAt,
+  type ScreenPoint,
   type StateOutlines,
 } from "../lib/map/state-focus.ts";
 import { DISTRICT_TYPES, filesFor } from "../lib/map/districts.ts";
@@ -242,4 +244,128 @@ test("the light is brighter than the shade on a light ground", () => {
     assert.ok(alphas.light > 0 && alphas.light <= 1);
     assert.ok(alphas.dark > 0 && alphas.dark <= 1);
   }
+});
+
+/* ------------------------------------------- the viewport clip (g5 #1) --- */
+
+/**
+ * The defect these pin, stated once: the scrim's `clip-path` was fed the
+ * active state's rings at full projected extent, which at city zoom is tens
+ * of thousands of pixels across. Chromium DROPS a clip that large instead of
+ * applying it, and a dropped clip on a `backdrop-filter` scrim mutes the
+ * whole map — the reader standing inside Arizona saw no crisp pixel anywhere.
+ *
+ * Cutting each ring to the filter region fixes it, and the two cases that
+ * look identical in the code and opposite on screen are the ones worth
+ * pinning: a viewport INSIDE the state clips to the box (nothing is muted),
+ * and a viewport OUTSIDE it clips to nothing (everything is muted).
+ */
+
+const BOX = { minX: -120, minY: -120, maxX: 780, maxY: 920 };
+
+const bboxOf = (points: readonly ScreenPoint[]) => {
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  for (const p of points) {
+    if (p.x < minX) minX = p.x;
+    if (p.x > maxX) maxX = p.x;
+    if (p.y < minY) minY = p.y;
+    if (p.y > maxY) maxY = p.y;
+  }
+  return { minX, minY, maxX, maxY };
+};
+
+test("a ring far larger than the viewport comes back no larger than the box", () => {
+  // Arizona at z11, near enough: roughly 16,800 x 20,000 CSS pixels.
+  const huge: ScreenPoint[] = [
+    { x: -10869, y: -16547 },
+    { x: 5940, y: -16547 },
+    { x: 5940, y: 3432 },
+    { x: -10869, y: 3432 },
+  ];
+  const clipped = clipRingToBox(huge, BOX);
+  assert.ok(clipped.length >= 3, "a viewport inside the state keeps a region");
+  const bbox = bboxOf(clipped);
+  assert.ok(bbox.minX >= BOX.minX - 0.001, `minX ${bbox.minX}`);
+  assert.ok(bbox.minY >= BOX.minY - 0.001, `minY ${bbox.minY}`);
+  assert.ok(bbox.maxX <= BOX.maxX + 0.001, `maxX ${bbox.maxX}`);
+  assert.ok(bbox.maxY <= BOX.maxY + 0.001, `maxY ${bbox.maxY}`);
+  // And it is the whole box, because the viewport is entirely inside: the
+  // scrim's even-odd clip then subtracts the box from the viewport rectangle
+  // and leaves an empty region, which is "nothing is muted".
+  assert.ok(bbox.maxX - bbox.minX > 800, "the box survives, not a sliver");
+});
+
+test("a ring entirely outside the viewport clips to NOTHING, which means everything is muted", () => {
+  const elsewhere: ScreenPoint[] = [
+    { x: 4000, y: 4000 },
+    { x: 5000, y: 4000 },
+    { x: 5000, y: 5000 },
+    { x: 4000, y: 5000 },
+  ];
+  assert.deepEqual(clipRingToBox(elsewhere, BOX), []);
+});
+
+test("a ring already inside the box is returned unchanged", () => {
+  const small: ScreenPoint[] = [
+    { x: 100, y: 100 },
+    { x: 300, y: 120 },
+    { x: 260, y: 400 },
+    { x: 90, y: 380 },
+  ];
+  assert.deepEqual(clipRingToBox(small, BOX), small);
+});
+
+test("a ring crossing the border keeps the crossing, on the border", () => {
+  // Half in, half out to the east: the surviving edge must sit exactly on
+  // maxX, because that is where the state's own edge leaves the screen and a
+  // shadow cast from anywhere further out cannot reach back into view.
+  const crossing: ScreenPoint[] = [
+    { x: 400, y: 200 },
+    { x: 9000, y: 200 },
+    { x: 9000, y: 600 },
+    { x: 400, y: 600 },
+  ];
+  const clipped = clipRingToBox(crossing, BOX);
+  const bbox = bboxOf(clipped);
+  assert.equal(bbox.minX, 400);
+  assert.equal(bbox.maxX, BOX.maxX);
+  assert.equal(bbox.minY, 200);
+  assert.equal(bbox.maxY, 600);
+});
+
+test("a hole is clipped like any other ring, so a viewport inside one cancels to nothing", () => {
+  // Even-odd: the outer ring and the hole both clip to the whole box, and two
+  // crossings is outside. A reader standing in a hole is outside the state,
+  // and the frame is muted — the same answer as standing in another state.
+  const outer: ScreenPoint[] = [
+    { x: -9000, y: -9000 },
+    { x: 9000, y: -9000 },
+    { x: 9000, y: 9000 },
+    { x: -9000, y: 9000 },
+  ];
+  const hole: ScreenPoint[] = [
+    { x: -4000, y: -4000 },
+    { x: 4000, y: -4000 },
+    { x: 4000, y: 4000 },
+    { x: -4000, y: 4000 },
+  ];
+  const clippedOuter = clipRingToBox(outer, BOX);
+  const clippedHole = clipRingToBox(hole, BOX);
+  assert.deepEqual(bboxOf(clippedOuter), bboxOf(clippedHole));
+});
+
+test("the clip runs before simplification and leaves a ring the simplifier can hold", () => {
+  const huge: ScreenPoint[] = [
+    { x: -10869, y: -16547 },
+    { x: 5940, y: -16547 },
+    { x: 5940, y: 3432 },
+    { x: -10869, y: 3432 },
+  ];
+  const simplified = simplifyScreenRing(clipRingToBox(huge, BOX), 0.9);
+  assert.ok(simplified.length >= 3, "never below a triangle");
+  const bbox = bboxOf(simplified);
+  assert.ok(bbox.maxX <= BOX.maxX + 0.001 && bbox.maxY <= BOX.maxY + 0.001);
 });

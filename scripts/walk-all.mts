@@ -56,6 +56,7 @@
 import { chromium, type Browser, type Page } from "playwright";
 
 import { mojibakePattern } from "../lib/text/mojibake.ts";
+import { decodePng, patchStats } from "./png.mts";
 
 const BASE = (process.env.SHOOT_BASE_URL ?? "https://sparkwtp.netlify.app").replace(
   /\/$/,
@@ -850,7 +851,7 @@ section("F. The reader's map and the folded panels (g4 items 1-5, 9, 11, 14, 15)
       focusOcdId: string | null;
       districtLayers: string[];
       districtFilterStates: (string | null)[];
-      zipShading: string[];
+      customSources: string[];
     } | null;
 
     if (!probe) {
@@ -878,12 +879,20 @@ section("F. The reader's map and the folded panels (g4 items 1-5, 9, 11, 14, 15)
       `${probe.districtLayers.length} layer(s); foreign filters ${JSON.stringify(foreign)}`,
     );
 
-    // g4 item 4 — the current zip is shaded, and the shading follows the zip.
+    /*
+     * RETIRED, not regressed: g4 item 4's "the current zip is shaded".
+     *
+     * The author removed zip shading from the product in g5 — the zip chooses
+     * the active state and centres the camera, and draws nothing. The claim
+     * behind the check is gone, so the check goes with it, which is the only
+     * ground on which this suite ever loses a check. Its replacement asserts
+     * the opposite and is the g5 line below.
+     */
     check(
-      "g4",
-      `${zip}: the current zip is shaded`,
-      probe.zipShading.length > 0,
-      probe.zipShading.join(",") || "no zip-shade layer",
+      "g5",
+      `${zip}: the zip draws nothing on the map`,
+      !probe.customSources.some((id) => id.includes("zip-shade")),
+      `custom sources ${JSON.stringify(probe.customSources)}`,
     );
 
     await page.context().close();
@@ -1090,6 +1099,139 @@ section("F. The reader's map and the folded panels (g4 items 1-5, 9, 11, 14, 15)
   await page.context().close();
 }
 
+
+// ═══════════════════════════════════════════════════════════════════════════
+// g5 — the active-state model, and the panel that would not paint.
+// ═══════════════════════════════════════════════════════════════════════════
+
+{
+  /*
+   * g5 item 1 — THE ACTIVE STATE'S INTERIOR IS CRISP.
+   *
+   * The claim in one assertion, at the zoom it failed at. The scrim's clip
+   * path was the state's rings at full projected extent — about 16,800 ×
+   * 20,000 px at z11 — and Chromium DROPS a clip that large rather than
+   * applying it, so the scrim painted over the whole map and the reader
+   * standing in the middle of Arizona saw no crisp pixel anywhere.
+   *
+   * Sampled at a real place FAR FROM THE ENTERED ZIP, because near the centre
+   * there is nothing to compare and the shipped defect was invisible to any
+   * check that looked there. `pnpm measure:focus` is the full pass across
+   * three zooms, two zips and both themes; this is the one line of it that
+   * has to hold on every deploy.
+   */
+  const page = await openWideAt(browser, "85701");
+  const probe = await page.evaluate(
+    () =>
+      (
+        window as unknown as {
+          __wtpProject?: (p: [number, number]) => { x: number; y: number };
+        }
+      ).__wtpProject?.([-110.98, 32.3]) ?? null,
+  );
+  if (!probe) {
+    cannotRun("g5", "85701: the active state's interior is crisp", "no __wtpProject");
+  } else {
+    const canvas = page.locator("canvas.maplibregl-canvas");
+    const on = decodePng(await canvas.screenshot());
+    await page.evaluate(() => {
+      const el = document.querySelector(".state-focus-layer") as HTMLElement | null;
+      if (el) el.style.visibility = "hidden";
+    });
+    await page.waitForTimeout(500);
+    const off = decodePng(await canvas.screenshot());
+    const x = Math.round(probe.x);
+    const y = Math.round(probe.y);
+    const delta = Math.abs(
+      patchStats(on, x, y, 8).luma - patchStats(off, x, y, 8).luma,
+    );
+    check(
+      "g5",
+      "85701: north Tucson renders crisp, not muted, at city zoom",
+      delta <= 2.5,
+      `north Tucson at (${x},${y}), effect on vs off delta ${delta.toFixed(2)} <= 2.5`,
+    );
+  }
+  await page.context().close();
+}
+
+{
+  /*
+   * g5 item 2 — THE MEETINGS PANEL PAINTS WITHOUT BEING TOUCHED.
+   *
+   * The mouse never moves: the panel is opened with a DOM `click()` issued
+   * from inside the page, because a pointer move is the thing that repaired
+   * the defect and a walk that hovers cannot see it. Measured on PIXELS — the
+   * DOM was never wrong, and a guard that read it would have passed on every
+   * broken build.
+   *
+   * `pnpm measure:panels` is the full pass at four zips, two viewports and
+   * repeated for the intermittency; this is the claim that has to hold.
+   */
+  const page = await openAt(browser, "85701");
+  const menu = page.locator('button[aria-label="Open menu"]');
+  if (await menu.count()) {
+    await menu.first().evaluate((el: HTMLElement) => el.click());
+    await page.waitForTimeout(800);
+  }
+  const opened = await page.evaluate(() => {
+    const cards = Array.from(document.querySelectorAll("button, [role=button]"));
+    for (const c of cards) {
+      const text = c.textContent ?? "";
+      if (/meetings/i.test(text) && /\d/.test(text)) {
+        (c as HTMLElement).click();
+        return true;
+      }
+    }
+    return false;
+  });
+  if (!opened) {
+    cannotRun("g5", "85701: the meetings panel paints on first render", "no meetings door");
+  } else {
+    await page.waitForTimeout(1600);
+    const shape = await page.evaluate(() => {
+      const header = document.querySelector(".al-overlay-count");
+      const heads = Array.from(document.querySelectorAll(".al-group-head"));
+      const counts: number[] = [];
+      for (const h of heads) {
+        const n = Number((h.querySelector(".al-group-count")?.textContent ?? "").trim());
+        if (Number.isFinite(n)) counts.push(n);
+      }
+      return {
+        stated: Number((header?.textContent ?? "").replace(/[^\d]/g, "")),
+        groups: heads.length,
+        sum: counts.reduce((a, b) => a + b, 0),
+        rect: heads[0] ? heads[0].getBoundingClientRect().toJSON() : null,
+      };
+    });
+    const png = decodePng(await page.screenshot());
+    let detail = 0;
+    if (shape.rect && shape.rect.width > 8) {
+      // The walk's phone context runs at deviceScaleFactor 2, so a CSS rect
+      // is half the pixels the screenshot is measured in. Sampling the CSS
+      // coordinates straight would read the top-left quarter of the frame.
+      detail = patchStats(
+        png,
+        Math.round((shape.rect.x + shape.rect.width / 2) * 2),
+        Math.round((shape.rect.y + shape.rect.height / 2) * 2),
+        20,
+      ).detail;
+    }
+    check(
+      "g5",
+      "85701: the meetings panel body paints on first render, no pointer",
+      shape.groups > 0 && detail >= 1,
+      `${shape.groups} group header(s), paint detail ${detail.toFixed(1)} >= 1`,
+    );
+    check(
+      "g5",
+      "85701: the panel's group counts sum to the stated count",
+      shape.stated > 0 && shape.sum === shape.stated,
+      `groups sum ${shape.sum}, header states ${shape.stated}`,
+    );
+  }
+  await page.context().close();
+}
 
 // ═══════════════════════════════════════════════════════════════════════════
 // The summary.

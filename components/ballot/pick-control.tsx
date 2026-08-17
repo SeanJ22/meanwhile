@@ -94,13 +94,35 @@ export function PickControl({
               onClick={() =>
                 togglePick(contestId, contestTitle, option.id, option.label, voteFor)
               }
+              /*
+               * g4 item 7: a MEASURE's Yes/No wears the vote grammar — green
+               * fill for yes, red for no — while a CANDIDATE pick keeps the
+               * neutral selected treatment.
+               *
+               * The distinction is not decorative. Green-for-yes and
+               * red-for-no is a statement about a POSITION, and colouring a
+               * candidate by it would be the product taking a view of a
+               * person. A measure's Yes and No are the two sides of one
+               * question and carry no such reading.
+               */
               className={`reaction-choice ${
                 on
-                  ? "border-[var(--text)] bg-[var(--text)]/10 font-semibold"
+                  ? measureTone(option.label) === "yes"
+                    ? "reaction-choice--settled vote-pill--yes"
+                    : measureTone(option.label) === "no"
+                      ? "reaction-choice--settled vote-pill--no"
+                      : "border-[var(--text)] bg-[var(--text)]/10 font-semibold"
                   : "border-[var(--panel-border)] text-paper-dim hover:text-paper"
               }`}
             >
-              {on ? "✓ " : ""}
+              {/* The mark carries the state, the colour reinforces it — the
+                  same rule the reaction row follows, so a Yes reads as a Yes
+                  on both surfaces and with colour stripped. */}
+              {on && (
+                <span className="reaction-mark" aria-hidden="true">
+                  {measureTone(option.label) === "no" ? "✕" : "✓"}
+                </span>
+              )}
               {option.label}
             </button>
           );
@@ -122,4 +144,24 @@ export function PickControl({
           pins the single statement. */}
     </div>
   );
+}
+
+/**
+ * Whether a pick option is a measure's Yes or No (g4 item 7).
+ *
+ * Matched on the option's own LABEL rather than on a flag, because a
+ * measure's options are built from the ballot record's Yes/No wording and
+ * there is no separate field saying "this contest is a proposition". The
+ * match is deliberately tight — exactly "yes" or "no", case-insensitively,
+ * after trimming — so a candidate named Yeswitha or a write-in reading "No
+ * preference" is never coloured as a position.
+ *
+ * Anything else is a candidate and keeps the neutral selected treatment: the
+ * product does not colour a person green.
+ */
+function measureTone(label: string): "yes" | "no" | null {
+  const normalized = label.trim().toLowerCase();
+  if (normalized === "yes") return "yes";
+  if (normalized === "no") return "no";
+  return null;
 }

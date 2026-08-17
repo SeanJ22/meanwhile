@@ -74,10 +74,21 @@ export const INITIAL_STATE: UiState = {
   showDistricts: false,
   listOverlayOpen: false,
   door: null,
-  filtersPanelOpen: true,
+  /*
+   * COLLAPSED (g4 item 14, the author).
+   *
+   * Filters is machinery for narrowing what is already on screen, and it
+   * opened with six groups expanded above the fold on a rail whose first
+   * job is the ballot and the ask. A reader who has not asked to narrow
+   * anything was being shown every knob for doing it. Item 14 also moves
+   * "Limit radius" and "Show districts" INSIDE it, which makes an
+   * always-open panel longer still.
+   */
+  filtersPanelOpen: false,
   listSort: "date",
   listGroupBy: "jurisdiction",
-  collapsedGroups: [],
+  // Every group starts CLOSED (g4 item 11). Empty means none is open.
+  expandedGroups: [],
   coverage: null,
   droppedCount: 0,
 };

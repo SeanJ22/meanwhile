@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemberDirectory } from "@/hooks/use-member-directory";
 import type { SeatHolder } from "@/lib/officials/lookup";
 
 import {
@@ -102,18 +103,88 @@ export function ContactPills({
   const pills: React.ReactNode[] = [];
   const full = scope === "all";
 
-  // Order is the reader's likely need, not the source's field order: the
-  // phone rings a human, the form reaches the office, the pages explain it,
-  // the accounts are where the office talks.
+  /*
+   * The district offices' own numbers (item 8).
+   *
+   * Fetched through the shared hook, so this and the offices section make one
+   * request between them. A non-federal holder resolves to an empty
+   * directory and this whole branch simply does not fire — bodies and
+   * non-federal officials follow the same rule with whatever numbers are
+   * held, which for them is the one on the holder.
+   */
+  const { directory } = useMemberDirectory(holder.id);
+  const districtPhones = (directory?.districtOffices ?? [])
+    .filter((office): office is typeof office & { phone: string } =>
+      Boolean(office.phone),
+    )
+    // One pill per DISTINCT number: a member with four offices sharing a
+    // switchboard would otherwise get four identical pills, which is the
+    // "stated N equals rendered rows" rule failing in the small.
+    .filter(
+      (office, index, all) =>
+        all.findIndex((other) => other.phone === office.phone) === index,
+    )
+    .map((office) => ({
+      phone: office.phone,
+      // The city where one is held, so two district pills are told apart by
+      // the thing that actually differs. Never an invented placeholder.
+      label: office.city ? `${office.city} office` : "District office",
+    }));
+
+  // Named only in contrast to a district office. The federal directory is the
+  // only source that gives us both, and "Washington office" is what that
+  // member's own site calls it.
+  const washingtonLabel = "Washington office";
+
+  /*
+   * **BOTH NUMBERS, LABELLED, DISTRICT FIRST** — g4 item 8, the author.
+   *
+   * Grijalva's card holds a Washington number and a Tucson district number
+   * and the row showed one of them: `holder.phone` is the member's DC line,
+   * and every district office's number lives in the directory payload, which
+   * only the offices section ever asked for. A reader who wants to reach
+   * their representative about something local was being handed the number
+   * that is furthest from the answer.
+   *
+   * District first, because it is the one that answers. The label says which
+   * is which and names the district office's CITY where one is held, so two
+   * pills reading "Phone" never sit side by side. Multiple district offices
+   * each carry their own city; the full list with addresses stays in
+   * Offices-near-you rather than being duplicated here.
+   *
+   * The order is otherwise the reader's likely need rather than the source's
+   * field order: the phone rings a human, the form reaches the office, the
+   * pages explain it, the accounts are where the office talks.
+   */
+  for (const [index, office] of districtPhones.entries()) {
+    pills.push(
+      <Pill
+        key={`district-phone-${index}`}
+        href={`tel:${office.phone.replace(/[^\d+]/g, "")}`}
+        // Taps to dial on a phone. The visible number stays exactly as the
+        // source published it, formatting and all — a reformatted number is a
+        // number we typed rather than one they published.
+        label={`${office.label}: ${office.phone}`}
+        mark={<PhoneMark />}
+        external={false}
+      />,
+    );
+  }
+
   if (holder.phone) {
     pills.push(
       <Pill
         key="phone"
-        // Taps to dial on a phone. The visible label stays the number the
-        // source published, formatting and all — a reformatted number is a
-        // number we typed rather than one they published.
         href={`tel:${holder.phone.replace(/[^\d+]/g, "")}`}
-        label={holder.phone}
+        // Labelled only when there is something to distinguish it FROM. A
+        // school-board member with one number gets a number, not a lesson in
+        // which building it rings in — the label is there to answer "which of
+        // these two", and with one pill there is no question to answer.
+        label={
+          districtPhones.length > 0
+            ? `${washingtonLabel}: ${holder.phone}`
+            : holder.phone
+        }
         mark={<PhoneMark />}
         external={false}
       />,

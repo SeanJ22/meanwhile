@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { haversineKm } from "@/lib/geo/distance";
+import { hasConcluded, orderByUpcomingFirst } from "@/lib/meetings/ordering";
 import { concludedGapNote } from "@/lib/meetings/history-gaps";
 import { formatMeetingDate, formatMiles, meetingHeadline } from "@/lib/map/format";
 import { TIER_LABEL } from "@/lib/ocd/tiers";
@@ -102,6 +103,35 @@ export function ListOverlay({
     return () => window.removeEventListener("keydown", onKey);
   }, [ui.listOverlayOpen, dispatch]);
 
+  /*
+   * ONE `now` for the whole render.
+   *
+   * The ordering and the Concluded pill both hang off it, and reading the
+   * clock separately in each would let a row sort as upcoming and render as
+   * concluded on the same pass. Recomputed when the meetings change, which is
+   * the only moment the answer can move.
+   */
+  const [now, setNow] = useState(0);
+  useEffect(() => {
+    /*
+     * Read in an EFFECT and published on a FRAME.
+     *
+     * `Date.now()` is impure, so calling it during render makes the same
+     * component render differently on two passes with identical props — for
+     * this value that means a row could sort as upcoming and paint its
+     * Concluded pill on the same commit. And setting state synchronously
+     * inside an effect cascades a render, which is the same pattern
+     * `state-focus-overlay.tsx` routes through an animation frame for the
+     * same reason.
+     *
+     * Zero until the frame runs puts every meeting in the upcoming block for
+     * one paint, which is the safe direction: nothing is labelled finished on
+     * the strength of a clock we have not read yet.
+     */
+    const frame = window.requestAnimationFrame(() => setNow(Date.now()));
+    return () => window.cancelAnimationFrame(frame);
+  }, [meetings]);
+
   const sorted = useMemo(() => {
     const list = [...meetings];
     const center = ui.nearMe ?? location;
@@ -119,11 +149,16 @@ export function ListOverlay({
       case "jurisdiction":
         return list.sort((a, b) => a.jurisdiction.localeCompare(b.jurisdiction));
       default:
-        return list.sort(
-          (a, b) => Date.parse(a.startsAt) - Date.parse(b.startsAt),
-        );
+        /*
+         * g4 item 11: UPCOMING FIRST, then past — never a plain ascending
+         * sort. With ninety days of history in the serving window, ascending
+         * put three months of finished meetings above everything a reader
+         * could still attend. The rule is shared with every other surface
+         * that lists meetings; see lib/meetings/ordering.ts.
+         */
+        return orderByUpcomingFirst(list, now);
     }
-  }, [meetings, ui.listSort, ui.nearMe, location]);
+  }, [meetings, ui.listSort, ui.nearMe, location, now]);
 
   const groups = useMemo(() => {
     if (ui.listGroupBy === "none") {
@@ -228,7 +263,8 @@ export function ListOverlay({
         )}
 
         {groups.map((group) => {
-          const collapsed = ui.collapsedGroups.includes(group.key);
+          // Closed unless the reader opened it (g4 item 11).
+          const collapsed = !ui.expandedGroups.includes(group.key);
 
           return (
             <div key={group.key || "all"}>
@@ -282,6 +318,23 @@ export function ListOverlay({
                         </span>
                       </span>
                       <span className="al-row-meta">
+                        {/*
+                          g4 item 11: a finished sitting says so, and a
+                          cancelled one says so in its own shade. A filled
+                          pill rather than a word in the metadata line,
+                          because the point is that a reader scanning the past
+                          half of the list can tell at a glance which rows are
+                          history and which were called off.
+                        */}
+                        {meeting.status === "CANCELED" ? (
+                          <span className="meeting-status-pill" data-status="canceled">
+                            Cancelled
+                          </span>
+                        ) : hasConcluded(meeting, now) ? (
+                          <span className="meeting-status-pill" data-status="concluded">
+                            Concluded
+                          </span>
+                        ) : null}
                         {when}
                         {km !== null &&
                           // Anything under a mile rounds to 0, which reads as

@@ -18,6 +18,7 @@ import {
 } from "@/lib/signal/reactions";
 import {
   REACTION_LABELS,
+  REACTION_MARK,
   SCALE_GROUP_LEADERS,
   reactionChoiceClass,
 } from "@/lib/reactions/pill";
@@ -205,6 +206,19 @@ export function ReactionControl({
                 onClick={() => choose(value)}
                 className={reactionChoiceClass(value, isSelected, outcome)}
               >
+                {/*
+                  g4 item 7: the MARK carries the state and the colour
+                  reinforces it. A reader who cannot separate this green from
+                  this red still reads the answer off the tick or the cross.
+                  aria-hidden because `aria-pressed` above already says the
+                  same thing to a screen reader, and a literal "✓" read aloud
+                  in front of "Yes" is noise.
+                */}
+                {isSelected && REACTION_MARK[value] && (
+                  <span className="reaction-mark" aria-hidden="true">
+                    {REACTION_MARK[value]}
+                  </span>
+                )}
                 {REACTION_LABELS[value]}
               </button>
             </Fragment>

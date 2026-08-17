@@ -134,7 +134,18 @@ export interface UiState {
   listSort: ListSort;
   listGroupBy: ListGroupBy;
   /** Group keys the reader has collapsed. */
-  collapsedGroups: string[];
+  /**
+   * Which meeting groups the reader has OPENED (g4 item 11).
+   *
+   * It was `collapsedGroups` — the list of groups the reader had shut — and
+   * the default of an empty list therefore meant "everything is open". The
+   * author's comparison screenshots ruled the other way: grouped-and-collapsed
+   * is right, auto-expanded is wrong. Inverting the field rather than adding a
+   * "start collapsed" flag keeps ONE source of truth about a group's state; a
+   * flag beside a list is two, and they disagree the first time a group is
+   * added while the flag is set.
+   */
+  expandedGroups: string[];
 
   /** Reported by the last search, shown persistently. docs/state.md §2: a
    *  silently widened search is a wrong answer. */

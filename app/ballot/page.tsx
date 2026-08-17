@@ -415,8 +415,7 @@ export default async function BallotPage({
           >
             {/* 3c: the author's line, verbatim. Marijuana stays in the
                 section; it left the teaser. */}
-            Moving here? Know the basics — Taxes, schools, registering, and
-            more. →
+            Moving here? Know the basics →
           </Link>
         </p>
       )}

@@ -243,12 +243,12 @@ export function uiReducer(state: UiState, action: UiAction): UiState {
     case "list/groupBy":
       // Group keys are namespaced by grouping, so switching groupings would
       // leave stale collapse state that could not be reopened.
-      return { ...state, listGroupBy: action.groupBy, collapsedGroups: [] };
+      return { ...state, listGroupBy: action.groupBy, expandedGroups: [] };
 
     case "list/toggleGroup":
       return {
         ...state,
-        collapsedGroups: toggle(state.collapsedGroups, action.key),
+        expandedGroups: toggle(state.expandedGroups, action.key),
       };
 
     case "coverage/report":

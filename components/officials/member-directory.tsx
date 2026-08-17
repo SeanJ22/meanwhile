@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 
+import { useMemberDirectory } from "@/hooks/use-member-directory";
 import type { SeatHolder } from "@/lib/officials/lookup";
 
 import { CardSection } from "./card-section";
@@ -46,47 +46,17 @@ interface DirectoryOffice {
   phone: string | null;
 }
 
-interface DirectoryCommittee {
-  committeeId: string;
-  name: string;
-  rank: number | null;
-  title: string | null;
-  jurisdiction?: string | null;
-  jurisdictionSource?: string | null;
-  url?: string | null;
-}
-
 export function MemberDirectory({ holder }: { holder: SeatHolder }) {
   return <MemberDirectoryInner key={holder.id} holder={holder} />;
 }
 
 function MemberDirectoryInner({ holder }: { holder: SeatHolder }) {
-  const [offices, setOffices] = useState<DirectoryOffice[] | null>(null);
-  const [committees, setCommittees] = useState<DirectoryCommittee[] | null>(null);
-  const [failed, setFailed] = useState(false);
-
-  useEffect(() => {
-    if (!holder.id.startsWith("congress:")) return;
-    const controller = new AbortController();
-    void (async () => {
-      try {
-        const response = await fetch(
-          `/api/directory?member=${encodeURIComponent(holder.id)}`,
-          { signal: controller.signal },
-        );
-        if (!response.ok) throw new Error(String(response.status));
-        const payload = (await response.json()) as {
-          districtOffices: DirectoryOffice[];
-          committees: DirectoryCommittee[];
-        };
-        setOffices(payload.districtOffices);
-        setCommittees(payload.committees);
-      } catch {
-        if (!controller.signal.aborted) setFailed(true);
-      }
-    })();
-    return () => controller.abort();
-  }, [holder.id]);
+  // The fetch moved to hooks/use-member-directory.ts when g4 item 8 gave the
+  // contact pill row a use for the same payload — one request, one arrival,
+  // and no way for the two surfaces to disagree about whether it landed.
+  const { directory, failed } = useMemberDirectory(holder.id);
+  const offices = directory?.districtOffices ?? null;
+  const committees = directory?.committees ?? null;
 
   // The source's scope is sitting federal members. A state legislator or a
   // school-board member renders nothing here rather than an empty

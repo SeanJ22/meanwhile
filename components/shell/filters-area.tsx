@@ -1,5 +1,8 @@
 "use client";
 
+import { useState } from "react";
+
+import { RadiusControl } from "@/components/shell/radius-control";
 import { useDistrictLayer } from "@/hooks/use-district-layer";
 import type { MeetingStatus } from "@/lib/sources/types";
 import { BODY_TYPE_LABEL } from "@/lib/state/derive";
@@ -43,7 +46,24 @@ const DISTRICT_LABEL: Record<DistrictType, string> = {
   municipal: "Municipal",
 };
 
-export function FiltersArea() {
+export function FiltersArea({
+  showDistricts,
+  districtsFailed,
+  onToggleDistricts,
+}: {
+  /**
+   * The district overlay's master switch (g4 item 14).
+   *
+   * Owned by `use-district-layer`, which persists it, and threaded down from
+   * the sidebar rather than read again here — two components each holding
+   * their own copy of one switch is how a control ends up disagreeing with
+   * itself. `useDistrictLayer` is still called below for the "touching a
+   * type turns the overlay on" rule, which is a different question.
+   */
+  showDistricts: boolean;
+  districtsFailed: boolean;
+  onToggleDistricts: (value: boolean) => void;
+}) {
   const ui = useUi();
   const dispatch = useUiDispatch();
   // Counts every registered control, not just `filters` — and "active" means
@@ -90,6 +110,29 @@ export function FiltersArea() {
 
       {ui.filtersPanelOpen && (
         <>
+          {/* g4 item 14: the two narrowing controls that used to live loose
+              in the rail. Radius first, because it is the one that changes
+              what is on the map rather than what is drawn over it. */}
+          <RadiusControl />
+
+          <div className="prox-control">
+            <label className="prox-toggle">
+              <input
+                type="checkbox"
+                checked={showDistricts}
+                disabled={districtsFailed}
+                onChange={(e) => onToggleDistricts(e.target.checked)}
+              />
+              <span className="prox-slider" />
+              <span className="prox-label">Show districts</span>
+            </label>
+            {districtsFailed && (
+              <p className="prox-note" style={{ color: "var(--danger)" }}>
+                Boundary file didn&apos;t load.
+              </p>
+            )}
+          </div>
+
           <Group
             label="Body type"
             onClear={
@@ -206,6 +249,10 @@ export function FiltersArea() {
               all-on. Labels hold back at low zoom to keep it legible. */}
           <Group
             label="District types"
+            // g4 item 14: collapsed by default, with the count on the header
+            // so a reader can see how many types are on without opening it.
+            collapsible
+            badge={`${ui.filters.districtTypes.length}/${ALL_DISTRICT_TYPES.length}`}
             actions={[
               ...(ui.filters.districtTypes.length < ALL_DISTRICT_TYPES.length
                 ? [
@@ -283,6 +330,8 @@ function Group({
   label,
   onClear,
   actions,
+  collapsible,
+  badge,
   children,
 }: {
   label: string;
@@ -290,29 +339,59 @@ function Group({
   /** Named header links in the clear-btn style, for groups with more than
    *  one affordance (district types: select all / clear — M25). */
   actions?: Array<{ label: string; onClick: () => void }>;
+  /**
+   * Starts CLOSED, and its header becomes the control that opens it (g4
+   * item 14). Only the groups the author named collapse; the rest stay as
+   * they were, because collapsing everything would trade one wall of
+   * controls for a wall of headers.
+   */
+  collapsible?: boolean;
+  /**
+   * A count on the collapsed header, "where cheap" per the item.
+   *
+   * The whole point of collapsing a group is that a reader does not have to
+   * open it to know where it stands — a closed group with no state on its
+   * header is a question, not an answer.
+   */
+  badge?: string;
   children: React.ReactNode;
 }) {
+  const [open, setOpen] = useState(!collapsible);
+
   return (
     <div className="filter-group">
       <div className="filter-label">
-        {label}
-        {actions?.map((action) => (
+        {collapsible ? (
           <button
-            key={action.label}
             type="button"
-            className="clear-btn"
-            onClick={action.onClick}
+            className="filter-group-toggle"
+            aria-expanded={open}
+            onClick={() => setOpen((was) => !was)}
           >
-            {action.label}
+            <span aria-hidden="true">{open ? "▾" : "▸"}</span> {label}
+            {badge && <span className="filters-count">{badge}</span>}
           </button>
-        ))}
-        {onClear && (
+        ) : (
+          label
+        )}
+        {(!collapsible || open) &&
+          actions?.map((action) => (
+            <button
+              key={action.label}
+              type="button"
+              className="clear-btn"
+              onClick={action.onClick}
+            >
+              {action.label}
+            </button>
+          ))}
+        {(!collapsible || open) && onClear && (
           <button type="button" className="clear-btn" onClick={onClear}>
             clear
           </button>
         )}
       </div>
-      {children}
+      {open && children}
     </div>
   );
 }

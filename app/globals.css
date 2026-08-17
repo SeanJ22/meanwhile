@@ -1282,6 +1282,32 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   color: var(--action-on);
 }
 
+/*
+ * A collapsible filter group's header (g4 item 14).
+ *
+ * Inherits the `.filter-label` type rather than restating it — the header IS
+ * the label, and the only thing that changes is that it has become the
+ * control that opens the group. Nothing about a closed group is styled as
+ * disabled: it is closed, not unavailable.
+ */
+.filter-group-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.filter-group-toggle:hover {
+  color: var(--text);
+}
+
 .filter-group {
   margin-bottom: 16px;
   animation: fadeIn 0.25s ease-out both;
@@ -2340,11 +2366,69 @@ label:has(> input[type="checkbox"]) {
  * `align-self: stretch` rather than a fixed height, so it matches whatever
  * the row's tallest control is after wrapping at 390px.
  */
+/*
+ * The five-point scale's group dividers (g3 item 7, BOLDER for g4 item 7).
+ *
+ * They split the row into favourable | unfavourable | abstain so no option
+ * owns the visual centre. At 1px of `--panel-border` at 0.85 they were
+ * "barely visible" (the author) — which is the same as absent, because a
+ * divider a reader does not register cannot stop the middle button reading as
+ * the default. Two pixels, full opacity, inset from the row's own edges so it
+ * reads as a boundary between groups rather than as a border on a button.
+ */
 .scale-sep {
-  flex: 0 0 1px;
+  flex: 0 0 2px;
   align-self: stretch;
-  background: var(--panel-border);
-  opacity: 0.85;
+  margin: 3px 2px;
+  border-radius: 1px;
+  background: var(--text-muted, var(--panel-border));
+  opacity: 1;
+}
+
+/*
+ * The mark on a selected answer (g4 item 7).
+ *
+ * The carrier of the state; the fill colour reinforces it. Sized down and
+ * spaced from the label so it reads as a status mark rather than as part of
+ * the word.
+ */
+.reaction-mark {
+  margin-right: 0.35em;
+  font-size: 0.9em;
+  line-height: 1;
+}
+
+/*
+ * A meeting's status, as a FILLED pill (g4 item 11).
+ *
+ * Filled rather than outlined, because this is a present value and not a
+ * named gap — the render-default rule's other side. An outline is what an
+ * absence wears here; a sitting that has finished is a fact we hold.
+ *
+ * Cancelled takes its own token rather than sharing Concluded's: "it happened
+ * and is over" and "it was called off" are different things to know before
+ * travelling to a building, and one shade for both would flatten them.
+ */
+.meeting-status-pill {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 1px 6px;
+  border-radius: 20px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  vertical-align: 1px;
+  color: var(--bg);
+}
+
+.meeting-status-pill[data-status="concluded"] {
+  background: var(--concluded);
+}
+
+.meeting-status-pill[data-status="canceled"] {
+  background: var(--canceled);
 }
 
 .reaction-choice {

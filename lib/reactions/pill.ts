@@ -49,6 +49,41 @@ export const REACTION_TONE: Record<ReactionValue, string> = {
 };
 
 /**
+ * **The MARK a selected answer wears** — g4 item 7, the author.
+ *
+ * A checkmark on every affirmative, a small × on every negative, nothing on
+ * the neutrals. The rule is stated as "the mark is the carrier, the colour is
+ * reinforcement", and that ordering is an accessibility requirement rather
+ * than a stylistic preference: the author's own neumorphism reference insists
+ * that an active element must be identifiable without relying on contrast,
+ * and roughly one reader in twelve cannot separate this green from this red.
+ * A selected state carried by colour alone is a state those readers cannot
+ * read at all.
+ *
+ * The checkmark already shipped on the pick control and nowhere else, so the
+ * two halves of one grammar disagreed: a Yes on a candidate was ticked while a
+ * Yes on a proposition was merely green. `tests/reaction-pill.test.ts` taps
+ * every value and asserts the pairing, which is what stops the next scale
+ * arriving with a colour and no mark.
+ *
+ * Nothing is marked when it is not SELECTED — an unselected row of ticks and
+ * crosses would read as a set of answers already given.
+ */
+export const REACTION_MARK: Record<ReactionValue, string | null> = {
+  YES: "✓",
+  NO: "✕",
+  // Unsure and abstain keep dark gray and NO mark, per the item. A mark on
+  // an abstention would dress "I have no view" as a view.
+  UNSURE: null,
+  SOMEONE_ELSE: null,
+  LOVE: "✓",
+  LIKE: "✓",
+  DISLIKE: "✕",
+  HATE: "✕",
+  DONT_CARE: null,
+};
+
+/**
  * The labels, per value. The SCALE decides which of them a surface offers —
  * `scaleForTargetType` is the same function the server uses to decide what
  * it will accept, so the control cannot offer a button the write path would

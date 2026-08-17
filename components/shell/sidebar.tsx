@@ -8,7 +8,6 @@ import { AskBox } from "@/components/ask/ask-box";
 
 import { FiltersArea } from "./filters-area";
 import { NearMeControl } from "./near-me-control";
-import { RadiusControl } from "./radius-control";
 import { ScopeSelectors } from "./scope-selectors";
 import { SearchBox } from "./search-box";
 import { StatsBar } from "./stats-bar";
@@ -188,29 +187,27 @@ export function Sidebar({
       <div className="sidebar-scroll">
         <StatsBar />
         <SearchBox onPick={onSearchPick} />
-        <RadiusControl />
-        {/* 6f: the resolved point rides up to the map, which answers at it. */}
+        {/*
+          g4 item 14: "Limit radius" and "Show districts" MOVED INSIDE
+          Filters; "Near me" stays out here.
+
+          The distinction the author is drawing is what each control is FOR.
+          Near me answers "where am I" — it is a way of telling the product
+          where the reader is standing, which is the same job as the zip, and
+          it keeps its honest approximate-location note beside it. Limiting
+          the radius and drawing district boundaries are both ways of
+          narrowing or annotating what is ALREADY on screen, which is what
+          Filters is.
+
+          6f: the resolved point rides up to the map, which answers at it.
+        */}
         <NearMeControl onPoint={onNearMePoint} />
 
-        <div className="prox-control">
-          <label className="prox-toggle">
-            <input
-              type="checkbox"
-              checked={showDistricts}
-              disabled={districtsFailed}
-              onChange={(e) => onToggleDistricts(e.target.checked)}
-            />
-            <span className="prox-slider" />
-            <span className="prox-label">Show districts</span>
-          </label>
-          {districtsFailed && (
-            <p className="prox-note" style={{ color: "var(--danger)" }}>
-              Boundary file didn&apos;t load.
-            </p>
-          )}
-        </div>
-
-        <FiltersArea />
+        <FiltersArea
+          showDistricts={showDistricts}
+          districtsFailed={districtsFailed}
+          onToggleDistricts={onToggleDistricts}
+        />
 
         {/* The sidebar's footer: the disclosure link and the feedback path.
             One line each — the transparency page carries the substance. */}

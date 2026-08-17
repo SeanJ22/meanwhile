@@ -477,7 +477,7 @@ function CoverageBody({
           {shown.map((body) => (
             <li
               key={body.bodyId}
-              className="flex items-baseline justify-between gap-3 border-b border-[var(--panel-border)] pb-1 last:border-0"
+              className="flex items-baseline justify-between gap-3 pb-1"
             >
               {/*
                 ITEM 3 (2026-08-16, the author's ruling): A BODY ROW OPENS ITS
@@ -625,8 +625,7 @@ function CoverageBody({
             href={`/about-area?zip=${zip}`}
             className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
           >
-            Moving here? Know the basics — Taxes, schools, registering, and
-            more. →
+            Moving here? Know the basics →
           </a>
         </p>
       )}
@@ -701,7 +700,9 @@ function CoverageBody({
               than implied complete. */}
           {(stateSeats.length > 0 || statewideExecutives.length > 0) && (
             <>
-              <p className="t-structure mt-3 text-state">State</p>
+              <p className="t-structure mt-4 border-t border-[var(--panel-border)] pt-3 text-state">
+                State
+              </p>
               <ul className="mt-1 space-y-1">
                 {stateSeats.map((seat) => (
                   <li
@@ -765,7 +766,9 @@ function CoverageBody({
               matches every ballot and source the app cites. */}
           {(federalSeats.length > 0 || senators.length > 0) && (
             <>
-              <p className="t-structure mt-3 text-national">Federal</p>
+              <p className="t-structure mt-4 border-t border-[var(--panel-border)] pt-3 text-national">
+                Federal
+              </p>
               <ul className="mt-1 space-y-1">
                 {federalSeats.map((seat) => (
                   <li

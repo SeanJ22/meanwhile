@@ -149,7 +149,7 @@ export const NON_CONTROL_FIELDS: Partial<Record<keyof UiState, string>> = {
   filtersPanelOpen: "view state",
   listSort: "list presentation, constrains nothing",
   listGroupBy: "list presentation",
-  collapsedGroups: "list presentation",
+  expandedGroups: "list presentation",
   coverage: "reported by the server, not reader-adjustable",
   droppedCount: "reported by the adapter, not reader-adjustable",
 };

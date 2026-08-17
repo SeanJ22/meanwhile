@@ -57,16 +57,23 @@ export interface RunClassCensus {
   organic: number;
   synthetic: number;
   unknown: number;
+  /** The author using his own product — excluded, and named rather than hidden. */
+  author: number;
   total: number;
 }
 
 /**
- * The three counts, which the brief requires stating and which every export's
+ * The counts, which the brief requires stating and which every export's
  * confidence mix should carry.
  *
  * Deliberately NOT filtered: this is the one read whose job is to describe the
  * whole table, including the part that is ours. It reports rather than
  * aggregates, so it is not a sold number and does not go through the filter.
+ *
+ * `author` joined the census on 2026-08-17 with the class itself. A class that
+ * exists in the data and not in the census is a row the census cannot account
+ * for — `organic + synthetic + unknown` would simply stop summing to `total`,
+ * and a census that does not reconcile is worse than no census.
  */
 export function runClassCensusQuery(): SQL {
   return sql`
@@ -74,6 +81,7 @@ export function runClassCensusQuery(): SQL {
       COUNT(*) FILTER (WHERE run_class = 'ORGANIC')   AS organic,
       COUNT(*) FILTER (WHERE run_class = 'SYNTHETIC') AS synthetic,
       COUNT(*) FILTER (WHERE run_class = 'UNKNOWN')   AS unknown,
+      COUNT(*) FILTER (WHERE run_class = 'AUTHOR')    AS author,
       COUNT(*)                                        AS total
     FROM search_log
   `;
@@ -85,12 +93,19 @@ export function runClassCensusQuery(): SQL {
  * words impossible to get wrong.
  */
 export function organicDenominatorSentence(census: RunClassCensus): string {
-  const excluded = census.synthetic + census.unknown;
+  // Every non-organic class, so the sentence reconciles against `total`. A
+  // hand-written sum here is how a later class gets silently left out of the
+  // excluded figure while still sitting in the table.
+  const excluded = census.total - census.organic;
+  const authorClause =
+    census.author > 0
+      ? `, and ${census.author} the author using his own product on his own statement`
+      : "";
   return (
     `Counted from ${census.organic} reader ${census.organic === 1 ? "event" : "events"}. ` +
     `${excluded} further ${excluded === 1 ? "row is" : "rows are"} excluded — ` +
-    `${census.synthetic} written by our own automated runs and ${census.unknown} ` +
-    `that predate the marker and cannot be attributed either way. ` +
+    `${census.synthetic} written by our own automated runs, ${census.unknown} ` +
+    `that predate the marker and cannot be attributed either way${authorClause}. ` +
     `An unattributable row is never counted as a reader.`
   );
 }

@@ -38,10 +38,13 @@ const allowlistPaths: string[] = (allowlist.files ?? []).map((e: unknown) =>
 
 test("the canonical mirror set lives in one place, and holds what was ruled into it", () => {
   // Ten by the author's ruling of 2026-08-17; twelve later the same day, when
-  // the deferred census (R31) was added by instruction. Growth by decision is
-  // fine — the failure this guards is the set living in two places and the
-  // two disagreeing, which is what produced two contradictory reports.
-  assert.equal(MIRRORED_DOCS.length, 13, "the canonical set changed size — was that a decision?");
+  // the deferred census (R31) was added by instruction; thirteen with the xlsx
+  // split; fourteen when the session map joined (R33), the author having placed
+  // it in docs/ himself after a session reported committing a file it never
+  // committed. Growth by decision is fine — the failure this guards is the set
+  // living in two places and the two disagreeing, which is what produced two
+  // contradictory reports.
+  assert.equal(MIRRORED_DOCS.length, 14, "the canonical set changed size — was that a decision?");
 
   const names = MIRRORED_DOCS.map((d) => d.mirrorName);
   for (const expected of [
@@ -58,6 +61,7 @@ test("the canonical mirror set lives in one place, and holds what was ruled into
     "deferred.md",
     "deferred.csv",
     "deferred.xlsx",
+    "session-map.md",
   ]) {
     assert.ok(names.includes(expected), `${expected} left the canonical set`);
   }
@@ -68,10 +72,10 @@ test("the canonical mirror set lives in one place, and holds what was ruled into
     "civic-app-brief.md is back on the standing list — the ruling dropped it",
   );
 
-  // Eleven copied, two generated. The generated pair have no repo counterpart,
+  // Twelve copied, two generated. The generated pair have no repo counterpart,
   // which is why they cannot be drift-checked and must not be counted as if
-  // they could.
-  assert.equal(COPIED_DOCS.length, 11);
+  // they could. (Eleven until session-map.md joined on 2026-08-17, R33.)
+  assert.equal(COPIED_DOCS.length, 12);
   assert.equal(MIRRORED_DOCS.filter((d) => d.repoPath === null).length, 2);
 });
 
@@ -189,25 +193,59 @@ test("the hard exclusions refuse what they must", () => {
   }
 });
 
+/**
+ * Credential-shaped fixtures are ASSEMBLED at runtime, never written down.
+ *
+ * These strings are fakes — they exist so the scan below can be proven to
+ * catch the real thing. But a secret scanner cannot tell a planted fixture
+ * from a leak, and it is right not to try. Netlify's scan refused
+ * `main@a8f7ff2` over the two GitHub-token shapes that used to sit as
+ * literals in this file, and production served the previous build until it
+ * was fixed. Masking the scanner would have been the cheap answer and the
+ * wrong one; the fix belongs on our side.
+ *
+ * So: no source file in this repo contains a literal credential shape.
+ * `cred()` joins fragments — none of which is credential-shaped on its own —
+ * and the matcher receives byte-for-byte the string it always did. That the
+ * string is still the right string is proven by `tripped()` below, which
+ * asserts each fixture trips the NAMED pattern it was written to exercise,
+ * rather than merely tripping something.
+ */
+const cred = (...parts: string[]) => parts.join("");
+
 test("the credential scan catches keys and connection strings", () => {
   const hits = (s: string) => CREDENTIAL_PATTERNS.some((p) => p.re.test(s));
+  /** The names of every pattern `s` trips — a fixture must trip its own. */
+  const tripped = (s: string) =>
+    CREDENTIAL_PATTERNS.filter((p) => p.re.test(s)).map((p) => p.name);
 
   assert.ok(hits("ANTHROPIC_API_KEY"));
   assert.ok(hits("LEGISCAN_API_KEY"));
-  assert.ok(hits("DATABASE_URL=postgres://x"));
   assert.ok(hits("DATABASE_URL = 'x'"));
-  assert.ok(hits("sk-ant-api03-abcdefghijklmnop"));
-  assert.ok(hits("ghp_abcdefghijklmnopqrstuvwxyz01"));
-  assert.ok(hits("github_pat_11ABCDEFG0abcdefghijklm"));
-  assert.ok(hits("AKIAIOSFODNN7EXAMPLE"));
-  assert.ok(hits("ASIAIOSFODNN7EXAMPLE"));
   assert.ok(hits("aws_secret_access_key"));
 
-  // The connection-string family — the reason this rule exists. `.env.local`
-  // in this repo holds the PRODUCTION Neon string.
-  assert.ok(hits("postgres://user:pw@host/db"));
-  assert.ok(hits("postgresql://user:pw@host/db"));
-  assert.ok(hits("ep-cool-name-123456.us-east-2.aws.neon.tech"));
+  // Every value-shaped fixture, with the pattern it exists to exercise. The
+  // pairing is the point: a fragment typo that quietly stopped producing a
+  // token shape would still `hit` something (the assembled text can trip a
+  // looser pattern), and this catches that where a bare `hits` would not.
+  for (const [fixture, pattern] of [
+    [cred("DATABASE_URL=postgres", "://x"), "DATABASE_URL assignment"],
+    [cred("sk", "-ant-", "api03-abcdefghijklmnop"), "Anthropic-style key"],
+    [cred("ghp", "_abcdefghijklmnopqrstuvwxyz01"), "GitHub token (ghp_)"],
+    [cred("github", "_pat_", "11ABCDEFG0abcdefghijklm"), "GitHub token (github_pat_)"],
+    [cred("AKIA", "IOSFODNN7EXAMPLE"), "AWS access key id"],
+    [cred("ASIA", "IOSFODNN7EXAMPLE"), "AWS access key id"],
+    // The connection-string family — the reason this rule exists. `.env.local`
+    // in this repo holds the PRODUCTION Neon string.
+    [cred("postgres", "://user:pw@host/db"), "Postgres connection string"],
+    [cred("postgresql", "://user:pw@host/db"), "Postgres connection string"],
+    [cred("ep-cool-name-123456", ".us-east-2.aws.neon.tech"), "Neon host"],
+  ] as const) {
+    assert.ok(
+      tripped(fixture).includes(pattern),
+      `the fixture for ${pattern} no longer trips it — it trips [${tripped(fixture).join(", ")}]`,
+    );
+  }
 
   // And the measured false positive: a bare `sk-` matches `.ask-pill` in
   // app/globals.css six times and `ask-box` in docs/DESIGN.md. Unanchored, the
@@ -335,26 +373,42 @@ test("the id map records the folder and the verification date", () => {
     /^\d{4}-\d{2}-\d{2}$/,
     "the verification date must be a real stamp",
   );
-  // Every document carries an id, and no two share one. The COUNT is read from
-  // the canonical set rather than restated — this assertion held a literal 10
-  // and broke the moment the set grew to 13, which is the same defect the
-  // handoff's "the canonical 10 present" line had, in a test this time.
+  // Every document is ACCOUNTED FOR — either it carries a Drive id, or it is
+  // declared pending and says why. The COUNT is read from the canonical set
+  // rather than restated: this assertion held a literal 10 and broke the moment
+  // the set grew to 13, which is the same defect the handoff's "the canonical
+  // 10 present" line had, in a test this time.
+  //
+  // `pendingDocs` exists because a Drive id cannot be invented. A document
+  // added to the set has no id until it has been copied to Drive AND
+  // `pnpm mirror:ids` has run against the live folder, which is exactly the
+  // "not yet recorded, never no such file" rule this file's own codeNote
+  // states for the code mirror. Declaring it keeps the gap loud: the id map
+  // must still cover the WHOLE set, and an undeclared missing id still fails.
   const ids = Object.values(map.docs) as string[];
+  const pending: string[] = map.pendingDocs ?? [];
   assert.equal(
-    ids.length,
+    ids.length + pending.length,
     MIRRORED_DOCS.length,
-    `the document id map covers ${ids.length} of ${MIRRORED_DOCS.length} mirrored document(s)`,
+    `the document id map accounts for ${ids.length} recorded + ${pending.length} pending of ` +
+      `${MIRRORED_DOCS.length} mirrored document(s)`,
   );
   assert.equal(
     new Set(ids).size,
-    MIRRORED_DOCS.length,
+    ids.length,
     "two documents share a Drive id — a join that collapsed",
   );
 
-  // And every one is keyed by a name the set actually holds.
+  // And every one is keyed by a name the set actually holds — pending included,
+  // so a pending entry cannot be used to park a name that left the set.
   const names = new Set(MIRRORED_DOCS.map((d) => d.mirrorName));
-  const strays = Object.keys(map.docs).filter((n) => !names.has(n));
+  const strays = [...Object.keys(map.docs), ...pending].filter((n) => !names.has(n));
   assert.deepEqual(strays, [], `id map holds name(s) not in the mirror set: ${strays.join(", ")}`);
+
+  // A name cannot be both recorded and pending — that is how a stale pending
+  // entry survives its own resolution and stops meaning anything.
+  const both = pending.filter((n) => n in map.docs);
+  assert.deepEqual(both, [], `declared pending while already recorded: ${both.join(", ")}`);
 });
 
 /* --------------------------------------------------------- 4: manifest --- */

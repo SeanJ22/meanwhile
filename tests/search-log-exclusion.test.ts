@@ -199,10 +199,42 @@ test("the denominator sentence states the organic count and what was excluded", 
     organic: 12,
     synthetic: 565,
     unknown: 537,
+    author: 0,
     total: 1114,
   });
   assert.match(sentence, /12 reader events/);
   assert.match(sentence, /565/);
   assert.match(sentence, /537/);
   assert.match(sentence, /never counted as a reader/);
+  // 1114 - 12. The excluded figure is derived from the total, never summed by
+  // hand, so a class added later cannot quietly fall out of it.
+  assert.match(sentence, /1102 further rows are excluded/);
+});
+
+test("the author class is named in the sentence and counted in the exclusion", () => {
+  const sentence = organicDenominatorSentence({
+    organic: 0,
+    synthetic: 717,
+    unknown: 2845,
+    author: 17,
+    total: 3579,
+  });
+  assert.match(sentence, /0 reader events/);
+  assert.match(sentence, /3579 further rows are excluded/);
+  assert.match(sentence, /17 the author using his own product/);
+});
+
+test("a class the sentence does not know about still cannot inflate the reader count", () => {
+  // The failure this pins: a future class lands in the table, nobody updates
+  // this file, and the excluded figure silently stops reconciling. Derived
+  // from the total, the arithmetic holds whatever the class is called.
+  const sentence = organicDenominatorSentence({
+    organic: 10,
+    synthetic: 5,
+    unknown: 5,
+    author: 0,
+    total: 100, // 80 rows in some class this code has never heard of
+  });
+  assert.match(sentence, /10 reader events/);
+  assert.match(sentence, /90 further rows are excluded/);
 });

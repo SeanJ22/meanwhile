@@ -14,15 +14,9 @@ import type { BallotSource } from "./types.ts";
 export const BALLOT_SOURCES: readonly { state: string; source: BallotSource }[] =
   [
     { state: "nj", source: ballotNjMorrisSource },
-    {
-      state: "az",
-      source: curatedBallotSource("ballot-az-pima", "data/ballot/az-pima-2026.json"),
-    },
-    {
-      state: "nh",
-      source: curatedBallotSource(
-        "ballot-nh-merrimack",
-        "data/ballot/nh-merrimack-2026.json",
-      ),
-    },
+    // The file each name reads is an explicit named read in
+    // `lib/sources/ballot-curated/index.ts` — R23. A path passed through here
+    // was a path Turbopack could not trace, and it traced the whole project.
+    { state: "az", source: curatedBallotSource("ballot-az-pima") },
+    { state: "nh", source: curatedBallotSource("ballot-nh-merrimack") },
   ];

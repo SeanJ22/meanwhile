@@ -9,6 +9,7 @@
     "dev": "node scripts/dev.mjs",
     "prebuild": "node scripts/build-map-worker.mjs",
     "build": "next build",
+    "postbuild": "node scripts/check-build-output.mjs",
     "start": "next start",
     "lint": "eslint",
     "test": "node --test --experimental-strip-types --import ./scripts/register-test-loader.mjs tests/**/*.test.ts",

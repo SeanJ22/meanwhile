@@ -180,8 +180,26 @@ export const searchLog = pgTable(
      *   counted as organic**, which is the whole discipline: every row
      *   written before this column existed is UNKNOWN, and that is an honest
      *   statement about what we can and cannot sell.
+     * - `AUTHOR` — the author using his own product (added 2026-08-17). Not a
+     *   robot and not a reader, and collapsing it into either would be a lie
+     *   in a different direction each way: `SYNTHETIC` would call a human
+     *   session a script, and `ORGANIC` would sell the author's own clicks
+     *   back to a buyer as district signal. It is excluded from every
+     *   aggregate exactly as `SYNTHETIC` and `UNKNOWN` are, and it exists so
+     *   the exclusion can be stated with its reason rather than hidden inside
+     *   a bucket that means something else. It is attributed ONLY on the
+     *   author's own statement about his own traffic — never inferred, which
+     *   is the same rule the other classes carry.
+     *
+     * Adding a value costs no migration: the column is `text`, with no CHECK
+     * constraint (`lib/db/migrations/0004_blushing_zarda.sql`), so the enum is
+     * a TypeScript-level union. The reads are the thing to keep honest, and
+     * they are safe by construction — every sold query filters on
+     * `run_class = 'ORGANIC'` (an allowlist in `lib/signal/search-log-reads.ts`),
+     * so a new class is excluded the moment it exists rather than the moment
+     * someone remembers to exclude it.
      */
-    runClass: text("run_class", { enum: ["ORGANIC", "SYNTHETIC", "UNKNOWN"] })
+    runClass: text("run_class", { enum: ["ORGANIC", "SYNTHETIC", "UNKNOWN", "AUTHOR"] })
       .notNull()
       .default("ORGANIC"),
     /**

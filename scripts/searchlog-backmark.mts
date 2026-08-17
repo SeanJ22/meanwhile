@@ -36,8 +36,25 @@
  * in the ledger carries evidence, and a window without evidence is a guess and
  * does not belong in the file.
  *
+ * ## The AUTHOR class, added 2026-08-17
+ *
+ * A window now declares WHICH class it writes. `SYNTHETIC` is a robot;
+ * `AUTHOR` is the author using his own product, attributed on his own
+ * statement about his own traffic — which is not the inference C05 forbids,
+ * because nothing is being guessed from a user agent or a timing pattern. It
+ * is excluded from every aggregate exactly as `SYNTHETIC` is; it exists so the
+ * exclusion can carry its reason instead of calling a human session a script.
+ *
+ * ## Which database, said out loud
+ *
+ * `.env.local`'s `DATABASE_URL` now points at a LOCAL Neon branch (R34), so
+ * the default target is local and a run against production is an explicit act:
+ * `--target=production` reads `WTP_PRODUCTION_DATABASE_URL_READONLY`. The
+ * target is printed by role and host on every run, because a backmark against
+ * the wrong database is a silent no-op that reports success.
+ *
  * Run: `pnpm searchlog:backmark` (needs DATABASE_URL). `--dry` prints the
- * counts and writes nothing.
+ * counts and writes nothing. `--target=production` writes to production.
  */
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -48,17 +65,38 @@ import { neon } from "@neondatabase/serverless";
 loadEnv({ path: join(process.cwd(), ".env.local") });
 
 const DRY = process.argv.includes("--dry");
+const PRODUCTION = process.argv.includes("--target=production");
 
-if (!process.env.DATABASE_URL) {
-  console.error("searchlog:backmark: DATABASE_URL is not set — refusing to guess");
+const connection = PRODUCTION
+  ? process.env.WTP_PRODUCTION_DATABASE_URL_READONLY
+  : process.env.DATABASE_URL;
+const which = PRODUCTION ? "WTP_PRODUCTION_DATABASE_URL_READONLY" : "DATABASE_URL";
+
+if (!connection) {
+  console.error(`searchlog:backmark: ${which} is not set — refusing to guess`);
   process.exit(1);
 }
-const sql = neon(process.env.DATABASE_URL);
+
+// Named, never assumed. A backmark against the wrong database updates nothing
+// and prints a clean run, which is the empty-success shape this repo keeps
+// finding; saying which host was touched is what makes the run checkable.
+{
+  const u = new URL(connection);
+  console.log(
+    `target: ${which}  role=${u.username}  host=${u.hostname}  ` +
+      `WTP_DB_ROLE=${JSON.stringify(process.env.WTP_DB_ROLE ?? null)}`,
+  );
+}
+
+type RunClass = "SYNTHETIC" | "AUTHOR";
+
+const sql = neon(connection);
 
 interface Window {
   runId: string;
   from: string;
   to: string;
+  runClass: RunClass;
 }
 
 /**
@@ -74,11 +112,24 @@ function readLedger(): Window[] {
   for (const line of text.split("\n")) {
     if (!line.trim().startsWith("|")) continue;
     const cells = line.split("|").slice(1, -1).map((c) => c.trim());
-    if (cells.length < 4) continue;
     if (/^-+$/.test(cells[0]) || cells[0] === "runId") continue;
+    if (cells.length < 5) {
+      throw new Error(
+        `docs/synthetic-runs.md: row "${cells[0]}" has ${cells.length} cells — the class column ` +
+          `is required and has no default, because a row nobody classified must not quietly ` +
+          `become SYNTHETIC`,
+      );
+    }
     const runId = cells[0].replace(/^`|`$/g, "");
     const from = cells[1];
     const to = cells[2];
+    const runClass = cells[3];
+    if (runClass !== "SYNTHETIC" && runClass !== "AUTHOR") {
+      throw new Error(
+        `docs/synthetic-runs.md: window "${runId}" declares class "${runClass}" — ` +
+          `only SYNTHETIC and AUTHOR may be written by a backmark`,
+      );
+    }
     const iso = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;
     if (!iso.test(from) || !iso.test(to)) {
       throw new Error(
@@ -89,7 +140,7 @@ function readLedger(): Window[] {
     if (Date.parse(from) > Date.parse(to)) {
       throw new Error(`docs/synthetic-runs.md: window "${runId}" ends before it starts`);
     }
-    windows.push({ runId, from, to });
+    windows.push({ runId, from, to, runClass });
   }
   return windows;
 }
@@ -105,32 +156,45 @@ const before = (await sql`
     COUNT(*) FILTER (WHERE run_class = 'ORGANIC')::int   AS organic,
     COUNT(*) FILTER (WHERE run_class = 'SYNTHETIC')::int AS synthetic,
     COUNT(*) FILTER (WHERE run_class = 'UNKNOWN')::int   AS unknown,
+    COUNT(*) FILTER (WHERE run_class = 'AUTHOR')::int    AS author,
     COUNT(*)::int                                        AS total
   FROM search_log
-`) as { organic: number; synthetic: number; unknown: number; total: number }[];
+`) as {
+  organic: number;
+  synthetic: number;
+  unknown: number;
+  author: number;
+  total: number;
+}[];
 
 console.log(
   `before: ${before[0].organic} organic, ${before[0].synthetic} synthetic, ` +
-    `${before[0].unknown} unknown, ${before[0].total} total`,
+    `${before[0].unknown} unknown, ${before[0].author} author, ${before[0].total} total`,
 );
 
 let marked = 0;
 for (const w of windows) {
-  // Not already SYNTHETIC. See the header for why ORGANIC is in scope: it is
-  // the column's DEFAULT, so a row that said nothing and a row that said
-  // "reader" are byte-identical, and the first version of this script was
-  // protecting a declaration that does not exist.
+  // Not already IN THIS WINDOW'S OWN CLASS — idempotent, and it will not
+  // re-attribute a row another window already settled. See the header for why
+  // ORGANIC is in scope: it is the column's DEFAULT, so a row that said
+  // nothing and a row that said "reader" are byte-identical, and the first
+  // version of this script was protecting a declaration that does not exist.
+  //
+  // The exclusion is the window's OWN class rather than a hardcoded
+  // 'SYNTHETIC', which used to be the same thing and stopped being when the
+  // AUTHOR class arrived: an author window against a table of synthetic rows
+  // would otherwise have rewritten every one of them.
   const rows = DRY
     ? ((await sql`
         SELECT COUNT(*)::int AS n FROM search_log
-        WHERE run_class <> 'SYNTHETIC'
+        WHERE run_class NOT IN ('SYNTHETIC', 'AUTHOR')
           AND occurred_at >= ${w.from}::timestamptz
           AND occurred_at <= ${w.to}::timestamptz
       `) as { n: number }[])
     : ((await sql`
         UPDATE search_log
-        SET run_class = 'SYNTHETIC', run_id = ${w.runId}
-        WHERE run_class <> 'SYNTHETIC'
+        SET run_class = ${w.runClass}, run_id = ${w.runId}
+        WHERE run_class NOT IN ('SYNTHETIC', 'AUTHOR')
           AND occurred_at >= ${w.from}::timestamptz
           AND occurred_at <= ${w.to}::timestamptz
         RETURNING 1
@@ -141,8 +205,8 @@ for (const w of windows) {
   // because a deliberate clip must not read as a failure and a real failure
   // must not read as a clip.
   console.log(
-    `  ${DRY ? "would mark" : "marked"} ${n} row(s)  ${w.runId}  [${w.from} .. ${w.to}]` +
-      (n === 0 ? "  — matched nothing" : ""),
+    `  ${DRY ? "would mark" : "marked"} ${n} row(s) ${w.runClass}  ${w.runId}  ` +
+      `[${w.from} .. ${w.to}]` + (n === 0 ? "  — matched nothing" : ""),
   );
 }
 
@@ -151,15 +215,31 @@ const after = (await sql`
     COUNT(*) FILTER (WHERE run_class = 'ORGANIC')::int   AS organic,
     COUNT(*) FILTER (WHERE run_class = 'SYNTHETIC')::int AS synthetic,
     COUNT(*) FILTER (WHERE run_class = 'UNKNOWN')::int   AS unknown,
+    COUNT(*) FILTER (WHERE run_class = 'AUTHOR')::int    AS author,
     COUNT(*)::int                                        AS total
   FROM search_log
-`) as { organic: number; synthetic: number; unknown: number; total: number }[];
+`) as {
+  organic: number;
+  synthetic: number;
+  unknown: number;
+  author: number;
+  total: number;
+}[];
 
 console.log(
   `after:  ${after[0].organic} organic, ${after[0].synthetic} synthetic, ` +
-    `${after[0].unknown} unknown, ${after[0].total} total` +
+    `${after[0].unknown} unknown, ${after[0].author} author, ${after[0].total} total` +
     (DRY ? "  (dry run — nothing written)" : ""),
 );
+const unaccounted =
+  after[0].total -
+  (after[0].organic + after[0].synthetic + after[0].unknown + after[0].author);
+if (unaccounted !== 0) {
+  console.log(
+    `WARNING: ${unaccounted} row(s) are in a class this census does not name — ` +
+      `the counts do not reconcile against the total.`,
+  );
+}
 console.log(
   `${windows.length} window(s) in docs/synthetic-runs.md; ${marked} row(s) ${DRY ? "would be " : ""}attributed. ` +
     `The remaining ${after[0].unknown} unknown row(s) are excluded from every aggregate — ` +

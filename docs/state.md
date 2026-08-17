@@ -8709,3 +8709,151 @@ being true when the data grows a new case**. It carries the failure, the four
 forbidden repairs, the recount-against-the-rows rule, the plant-the-failure
 discipline, and the observation that a defect of this shape usually has a
 render half one layer up.
+
+## 40. The 2026-08-17 code mirror — the reviewer stops guessing at source
+
+A small task, run between sessions. Nothing in it touches the product, the map,
+the meetings panel, or any parked row. G05, G07 and G09 stayed parked.
+
+### What it is, and what it is not
+
+The strategic reviewer reads session reports and writes briefs without ever
+seeing source, which is how a brief fills up with NAMED SUSPECTS where a
+verified cause would do. Twelve curated files now sit in `G:/My Drive/we-the-
+people/code/`, refreshed by every `pnpm handoff`, and the reviewer reads them at
+orientation the way it already reads `context.md`.
+
+It is a READ path. **Not a backup, not a deployment, not a second source of
+truth.** The repository is the only source of truth, and the manifest's commit
+SHA is what makes a stale copy visible instead of misleading.
+
+### How the mirror is maintained — the question item 1 asked
+
+**A programmatic path exists, and it was extended rather than replaced.** The
+file and function: `scripts/handoff.mjs`, the mirror block that runs
+`copyFileSync(from, to)` over the `MIRRORED` list, now reading that list from
+`scripts/mirror-set.mjs`. The code mirror is `mirrorCode()` in
+`scripts/mirror-code.mjs`, called unconditionally from `handoff.mjs`.
+
+The fact that governs every design decision below: **there is no Drive API in
+this repo and none was added.** `G:/My Drive/we-the-people` is a Google Drive
+for Desktop folder on the local filesystem. Handoff writes files to a PATH;
+Google Drive syncs them afterwards and assigns the file IDs. So no staging
+directory was needed — the second branch of item 1 does not apply.
+
+### ID stability, checked instead of assumed
+
+The brief recorded that the reviewer's stored ID for `CLAUDE.md` had come to
+resolve to `git-state.txt`, and asked that the mechanism be established before
+anything was built on it. It was checked against live Drive, and the folder does
+not support a swap:
+
+* Drive holds exactly ONE `CLAUDE.md` (`1xRIB7Cq…`) and exactly ONE
+  `git-state.txt` (`1P_r7BWB…`). No duplicates, no trashed twins.
+* Every one of the ten documents has a `createdTime` days older than its
+  `modifiedTime` — `CLAUDE.md` created 2026-08-11T08:13:10Z, modified
+  2026-08-17T07:50:43Z. That is the signature of **update in place**: Drive for
+  Desktop turns a `copyFileSync` overwrite into a new revision of the same file
+  and keeps the ID. Delete-and-recreate would reset `createdTime` every run.
+* The code mirror proved the same thing about itself directly within the hour:
+  its thirteen files were created at 16:03:51Z by one handoff run and modified
+  at 16:04:49Z by the next, keeping their IDs across the overwrite.
+
+**So the mechanism is update-in-place, and the document mirror does not recreate
+files.** What could not be reproduced is the reviewer's specific observation, and
+that is reported as UNREPRODUCED rather than refuted — the recorded ID it refers
+to was not available to check, so the likeliest reading is that the fault was in
+the recording rather than in the folder. The author should treat any stored ID
+older than this section as worth re-reading from `docs/mirror-code-ids.json`
+rather than trusted.
+
+The verification was built anyway. It lives in `verifyIdMap()` and
+`pnpm mirror:ids`, not in handoff, and that placement is the point: **the copy
+addresses files by path and never by ID, so it has no way to mis-address a
+write.** A wrong ID cannot overwrite an unrelated file here; it can only send the
+reviewer to the wrong one. A mismatch is a hard stop that writes nothing and
+exits 1 — proven by feeding the refresher a listing in which a recorded ID
+resolved to `git-state.txt`, the exact shape the brief described.
+
+### Where things live
+
+* **The allowlist** is `docs/mirror-code.json` — twelve files, under the ~15
+  cap. The author edits that file to change what the reviewer can see; nothing
+  else needs changing. Being listed is a request, never a guarantee.
+* **The exclusions** are in `scripts/mirror-code.mjs`, in code and not in the
+  JSON, because a rule the author can edit in the same file as the request is
+  not a rule. Path exclusions (`.env*`, `*.pem`, `*.key`, `*credentials*`,
+  `*secret*`, `node_modules/`, `.next/`, build output, lockfiles, `.mirror/`), a
+  content scan (Anthropic/GitHub/AWS key shapes, `DATABASE_URL=`,
+  `LEGISCAN_API_KEY`, and the `postgres://` / `postgresql://` / `*.neon.tech`
+  family), and the caps: 120 KB per file, 1.5 MB total.
+* **The manifest** is `docs/code-manifest.md`, mirrored beside the code as the
+  reviewer's entry point. It is GENERATED and gitignored: it records the commit
+  SHA it mirrored at, a SHA that cannot exist inside the commit which would
+  contain it, and committing it would dirty the tree on every run and refuse the
+  next ship.
+* **The ID map** is `docs/mirror-code-ids.json`, committed, written only by
+  `pnpm mirror:ids <listing.json> [--code]`, which needs live Drive access and is
+  deliberately not run by handoff.
+
+### The canonical ten (item 6b)
+
+Two consecutive reports named different sets as "the mirror" — seven and ten,
+four overlapping. Neither was lying: the copied list lived as a literal in
+`handoff.mjs` and the two GENERATED files lived nowhere, so the set was
+reassembled in prose every time. It now lives once, in
+`scripts/mirror-set.mjs`, read by the document mirror, the code mirror's
+duplicate refusal, and the report. `civic-app-brief.md` is dropped by the same
+ruling. "Seven mirror file sizes" is retired: the report now states all ten by
+name with bytes, and a file the drive does not hold prints as `absent` rather
+than `0` — a zero is a size, absence is not.
+
+**The folder is checked against the ten on every run, after both mirrors have
+written.** Ordering there is not cosmetic: the first version checked before the
+code mirror had created `code/` and reported a missing directory that existed by
+the time the run ended.
+
+**One judgement call, and it is the author's to overturn.** The folder holds
+three CSV exports the author put there — `primary-rhetoric.csv`,
+`primary-rhetoric-sample.csv`, `primary-rhetoric-members.csv`, 182 MB between
+them. The ruling says a difference is a loud failure and never a silent
+reconciliation, and failing every handoff over them would make the check
+permanently red — which is the state in which a check stops being read at all,
+the same end state as the skip flag the deploy gate refuses to have. So they are
+DECLARED in `DECLARED_EXTRAS` in `scripts/mirror-set.mjs`, named on every run,
+and not counted as failures. Anything extra that is NOT declared still fails.
+Nothing is ever deleted either way — a mirror script that removes what it did
+not expect is a script that can destroy the author's own files.
+
+### Verified
+
+`pnpm handoff` and `pnpm handoff --check` and `pnpm handoff --ship` all run the
+code mirror; `--no-code` skips it. `--check` was confirmed to write nothing —
+the mirrored manifest's mtime was unchanged after a check run.
+
+Refusals were proven by mutation rather than asserted. Seven bad entries were
+added to the allowlist and each was refused with its own reason: `CLAUDE.md`,
+`lib/sources/types.ts` and `docs/tracker.csv` as documents the mirror already
+carries, `.env.local` by path, a missing file, and a 471,833-byte file over the
+per-file cap. The content scan was then proven on real bytes — a file holding a
+Neon `postgresql://` string and a file holding an `sk-ant-` key shape were both
+refused, each naming the pattern it matched.
+
+**A measured deviation from the brief, recorded so it reads as a decision.** The
+brief listed `sk-` as a content pattern. Unanchored, `sk-` matches `.ask-pill`
+in `app/globals.css` six times and `ask-box` in `docs/DESIGN.md`, so it would
+have refused two of the twelve seeded files over CSS class names. It is anchored
+to `\bsk-[A-Za-z0-9_-]{16,}`, with `sk-ant-` kept as its own pattern. Every
+other pattern is left deliberately loose: over-refusing something
+credential-shaped costs the reviewer one file and says so out loud.
+
+**`app/globals.css` is 120,124 bytes against a 122,880-byte cap — 2,756 bytes of
+headroom.** Handoff now warns on every run while a file is within 10% of the
+cap, so the tokens file being about to fall out of the reviewer's reach is
+announced before it happens rather than after.
+
+test 768 of 768 pass (17 new in `tests/mirror-code.test.ts`), lint 0 errors and
+16 pre-existing warnings none in the touched files, build green. The build gate
+earned its keep again: it caught three TypeScript errors in the new test file
+that `pnpm test` had passed over, because TypeScript resolves the `.mjs`
+exports and the file's `@ts-expect-error` directives were unused.

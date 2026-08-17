@@ -1255,6 +1255,48 @@ section("F. The reader's map and the folded panels (g4 items 1-5, 9, 11, 14, 15)
 // The summary.
 // ═══════════════════════════════════════════════════════════════════════════
 
+
+// ── Section G ─────────────────────────────────────────────────────────────
+
+section("G. The frozen denominator (h item 1)");
+
+/**
+ * The one claim h shipped that production can be asked about.
+ *
+ * h enumerated 03255 against the 2022 Census of Governments and froze the
+ * answer: THREE units govern this point — Merrimack County, the Town of
+ * Newbury, and Kearsarge Regional School District. That number comes from
+ * OUTSIDE our own records, which is the whole reason it is worth pinning:
+ * if production ever renders a different governing count at 03255, either a
+ * body was added without the denominator moving or the denominator moved
+ * without anyone saying so, and both are the failure CLAUDE.md names.
+ *
+ * It is deliberately pinned to the UNIT count rather than the body count.
+ * The body denominator is UNENUMERABLE today (H02) — the Census has one row
+ * for the Town of Newbury and the product renders five of its boards — so a
+ * check against a body count would be pinning our own registry to itself,
+ * which is exactly the self-defining denominator this check exists to
+ * refuse.
+ */
+{
+  const payload = await getJson<{
+    coverage: { counts: { governing: { total: number } } } | null;
+  }>("/api/meetings?lat=43.31403&lng=-72.02455");
+
+  if (!payload) {
+    cannotRun("h", "03255: the governing count matches the frozen external denominator", "/api/meetings did not answer");
+  } else {
+    const governing = payload.coverage?.counts.governing.total ?? -1;
+    check(
+      "h",
+      "03255: the governing count matches the frozen external denominator",
+      governing === 3,
+      `production says ${governing} governing; the 2022 Census of Governments says 3 ` +
+        `(Merrimack County, Newbury town, Kearsarge Regional SD)`,
+    );
+  }
+}
+
 await browser.close();
 
 const EXCLUDED = [

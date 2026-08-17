@@ -109,7 +109,7 @@ test("the search log carries no identifier of any kind and no foreign keys", () 
  * identifying key, no foreign keys across them, and the reaction continuity
  * key exists on the reactions table only.
  */
-const COLLECTION_STORES = ["searchLog", "reactions"] as const;
+const COLLECTION_STORES = ["searchLog", "reactions", "feedback"] as const;
 
 test("every collection store is identifier-free and joins nothing", () => {
   for (const storeName of COLLECTION_STORES) {
@@ -140,20 +140,72 @@ test("the collection stores share no joinable column", () => {
         (c) => c.name,
       ),
     );
-  const searchCols = columnsOf(schema.searchLog);
-  const reactionCols = columnsOf(schema.reactions);
 
-  // Context columns that carry no per-person value and cannot join rows:
-  // random uuid pks, timestamps, and the division context every store needs.
-  const allowedShared = new Set(["id", "occurred_at", "ocd_ids", "division_vintage"]);
-  for (const name of searchCols) {
-    if (reactionCols.has(name)) {
-      assert.ok(
-        allowedShared.has(name),
-        `search_log and reactions share column "${name}" — the stores must not be joinable`,
-      );
+  /*
+   * Context columns that carry no per-person value and cannot join rows:
+   *
+   * - `id` — a random uuid primary key, different in every store.
+   * - `occurred_at` / `received_at` — timestamps.
+   * - `ocd_ids` / `division_vintage` — the division context, identical for
+   *   every reader looking at the same place.
+   * - `run_class` / `run_id` (R40, 2026-08-17) — the C05 declaration. It is
+   *   NULL on every ORGANIC row by construction, so it can never relate two
+   *   readers' rows; on a synthetic row it relates a ROBOT's rows to the
+   *   robot, which is the whole point of the column and the opposite of the
+   *   thing this test exists to stop.
+   * - `suspect_reason` — a two-value quarantine enum. A column that can hold
+   *   "VELOCITY" cannot single anyone out.
+   */
+  const allowedShared = new Set([
+    "id",
+    "occurred_at",
+    "received_at",
+    "ocd_ids",
+    "division_vintage",
+    "run_class",
+    "run_id",
+    "suspect_reason",
+  ]);
+
+  // EVERY PAIR, not one pair. Three stores make three pairs, and a fourth
+  // store would make six — a hand-written pair was how the check would have
+  // silently stopped covering the new one.
+  for (let i = 0; i < COLLECTION_STORES.length; i++) {
+    for (let j = i + 1; j < COLLECTION_STORES.length; j++) {
+      const [a, b] = [COLLECTION_STORES[i], COLLECTION_STORES[j]];
+      const aCols = columnsOf((schema as Record<string, unknown>)[a]);
+      const bCols = columnsOf((schema as Record<string, unknown>)[b]);
+      for (const name of aCols) {
+        if (!bCols.has(name)) continue;
+        assert.ok(
+          allowedShared.has(name),
+          `${a} and ${b} share column "${name}" — the stores must not be joinable`,
+        );
+      }
     }
   }
+});
+
+test("the feedback store holds no continuity key of any kind", () => {
+  // Reactions need one (an answer can be changed); feedback has nothing to
+  // change, so there is no reason for a key — and where there is no reason
+  // there is no key. This is the difference stated as a schema property.
+  const config = getTableConfig(schema.feedback);
+  const names = config.columns.map((c) => c.name);
+  assert.deepEqual(names.filter((n) => /key|hash|digest/.test(n)), []);
+  assert.deepEqual(
+    names.sort(),
+    [
+      "id",
+      "message",
+      "received_at",
+      "run_class",
+      "run_id",
+      "surface",
+      "suspect_reason",
+    ],
+    "the feedback store holds the message, when, where from, and nothing else",
+  );
 });
 
 test("the reaction continuity key exists only on the reactions table", () => {
@@ -224,7 +276,7 @@ test("a generated migration exists and creates every schema table", () => {
   assert.ok(files.length >= 1, "no migration files in lib/db/migrations");
 
   const sql = files.map((f) => readFileSync(join(dir, f), "utf8")).join("\n");
-  for (const tableName of ["meetings", "agenda_documents", "search_log", "reactions", "intake_limiter"]) {
+  for (const tableName of ["meetings", "agenda_documents", "search_log", "reactions", "intake_limiter", "feedback"]) {
     assert.ok(
       sql.includes(`CREATE TABLE "${tableName}"`),
       `no migration creates "${tableName}"`,

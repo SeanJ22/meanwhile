@@ -87,7 +87,11 @@ test("the contact pills stack in one column, primary channels only", () => {
     assert.ok(PILLS.includes(gated), `the primary scope must gate: ${gated}`);
   }
   for (const kept of [
-    "if (holder.phone)",
+    // R39 (2026-08-17) collapsed the per-number pills into one; the phone is
+    // still a primary channel and still on the small popup, it just branches
+    // on the COUNT now. tests/contact-phone.test.ts holds that rule.
+    "phoneChoices.length > 1",
+    "phoneChoices.length === 1",
     "if (holder.email)",
     "if (holder.contactFormUrl)",
     "if (holder.websiteUrl)",

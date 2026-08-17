@@ -344,6 +344,74 @@ export const reactions = pgTable(
 );
 
 /**
+ * **Reader feedback** — R40, 2026-08-17, the author's ruling (1A: in-app).
+ *
+ * The product used to put the author's personal email address on three
+ * surfaces. It is gone, and this is what replaced it: an in-app form whose
+ * submissions land here and nowhere else.
+ *
+ * ## It is a collection store, and it obeys the n-stores rule
+ *
+ * Four stores now, same rule for every n. This one holds what the reader
+ * typed and nothing about the reader:
+ *
+ * - **No continuity key.** Unlike reactions, there is nothing to change
+ *   later, so there is no engineering reason for a key — and where there is
+ *   no reason there is no key. The rate limiter still counts this path, in
+ *   its OWN digest space (`feedback-limiter:`), and that state lives in
+ *   `intake_limiter` and expires on its own schedule.
+ * - **No zip, no divisions, no IP, no email, no foreign key.** The reader
+ *   cannot be located, contacted, or joined to a search-log row or a
+ *   reaction. `tests/db-schema.test.ts` holds all four stores to that.
+ * - **Scrubbed before storage.** The message runs through `lib/log/scrub.ts`
+ *   (T09) at the single write path, so a reader who types their own phone
+ *   number into a complaint does not make "identifier-free" false. The
+ *   consequence is stated to the reader ON the form rather than buried: this
+ *   is one-way, and we cannot write back.
+ *
+ * ## And it is never sold
+ *
+ * Feedback is read by the author and enters no aggregate and no export.
+ * That is a sentence on /transparency, shipped in the same commit as this
+ * table per the coupling rule, and it is also a property of the code: there
+ * is no read path from `lib/signal/`, only `scripts/read-feedback.mts`.
+ */
+export const feedback = pgTable(
+  "feedback",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    receivedAt: timestamp("received_at", { withTimezone: true, mode: "string" }).notNull(),
+    /** What the reader wrote, scrubbed (T09). Capped at the route. */
+    message: text("message").notNull(),
+    /**
+     * WHICH ENTRY POINT this came through — a closed enum, never a URL.
+     *
+     * The author reading a queue of reports needs to know whether someone was
+     * looking at a coverage gap or at the site as a whole; a free-form
+     * referrer would carry query strings and therefore whatever a reader had
+     * typed. SIDEBAR ships now; COVERAGE is H02's missing-body link, which is
+     * this same surface with a second entry point.
+     */
+    surface: text("surface", { enum: ["SIDEBAR", "TRANSPARENCY", "COVERAGE"] }).notNull(),
+    /** Same declaration and the same meanings as the search log's (C05). */
+    runClass: text("run_class", { enum: ["ORGANIC", "SYNTHETIC", "UNKNOWN", "AUTHOR"] })
+      .notNull()
+      .default("ORGANIC"),
+    /** Null on every ORGANIC row by construction — a run identity, never a person's. */
+    runId: text("run_id"),
+    /**
+     * Quarantine, not deletion, exactly as reactions (T08). A submission past
+     * the soft threshold lands marked with WHY and is skipped by the author's
+     * read path unless he asks for it. Nothing auto-deletes.
+     */
+    suspectReason: text("suspect_reason", {
+      enum: ["VELOCITY", "LIMITER_UNAVAILABLE"],
+    }),
+  },
+  (table) => [index("feedback_received_at_idx").on(table.receivedAt)],
+);
+
+/**
  * Transient intake-limiter state (T08) — NOT a collection store, and never
  * to become one. This table exists so the per-device rate limit and daily
  * ceiling count across every serverless instance, which in-memory windows

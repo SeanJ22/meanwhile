@@ -9351,3 +9351,198 @@ Fourteen now — `session-map.md` joined the canonical set (R33). It has no Driv
 id yet and one cannot be invented, so it is DECLARED pending in
 `docs/mirror-code-ids.json`; the id map must still account for the whole set, so
 an undeclared missing id still fails.
+
+## 44. The 2026-08-17 g9 session — the author's feedback, and what verification found underneath it
+
+Two pieces of production feedback from the author, both built whole. Then the
+queue, where the third item turned out not to be closed and said so.
+
+### One Phone pill, and the 531 cards nobody had counted (R39)
+
+Jeanne Shaheen's card rendered **seven stacked phone rows**. The author's
+standing rule is that a named instance is an example of a class, so the first
+question was how big the class is: **531 of the 1,157 officeholder records
+carry more than one recorded number** — 229 with two, 143 with three, 68 with
+four, 33 with five, 21 with six, 22 with seven, 11 with eight, two with nine,
+two with ten. 124 carry exactly one, 502 carry none. Shaheen sat in the
+seven bucket with 21 others.
+
+The fix is at the shared component, so every one of those cards gets it at
+every zip, on both card sizes and on every surface. `lib/officials/phone-numbers.ts`
+collects the numbers **once** and the count decides the shape: more than one is
+a single pill reading `Phone` opening a chooser; exactly one is the number
+itself as a direct `tel:` link, because a dialog with one row is friction with
+nothing to choose.
+
+Two dedupes, both the stated-N-equals-rendered-rows rule in the small: offices
+sharing a switchboard collapse to one row, and a Washington number that IS one
+of the district numbers is one number rather than two.
+
+**Labels come from the record and nowhere else.** The district office's own
+published city; Washington for the line a member's term record holds. Never an
+area code — an office label guessed from where a number was *issued* is a
+generated claim about a public official, wearing the register of a researched
+one. Guarded in `tests/contact-phone.test.ts`.
+
+**Emails were checked, not assumed.** The row asked for the same treatment if
+any official carries several. `SeatHolder.email` is one nullable string and a
+census of all 1,157 records found zero whose email field holds a list, so there
+was nothing to collapse and nothing changed. Stated rather than skipped:
+"we looked and there were none" and "we did not look" are different claims.
+
+**The audit of every other `tel:` in the app**, because the class question does
+not stop at one component: `candidate-card.tsx`, `meeting-popup.tsx`,
+`ask-box.tsx` and `member-directory.tsx` each render ONE number in a context
+that has one — a candidate's line, a meeting's office, a service contact, and
+the offices-with-addresses list R39 explicitly keeps. None stacks. None changed.
+
+Walked at 390 and 1280, dark and light: 33 of 33, one Phone pill, zero stacked
+rows, seven modal rows against six recorded district numbers plus Washington,
+every row a `tel:`, and Escape returning the card with all four pills untouched.
+
+### The address left the product, and the form arrived with it (R40)
+
+`seanj22@gmail.com` was on three rendered links across two surfaces. The two
+halves of R40 are one subject and shipped in one commit, because removing the
+address without the form leaves a reader with no way to reach anyone.
+
+The permanent test has two halves — a source scan over `app/`, `components/`,
+`hooks/` and `lib/`, and a scan of every built client chunk. **Proven by
+planting it once**, as the row required: the address went back into the
+sidebar's Feedback link, `pnpm build` ran, and both guards failed, naming
+`components/shell/sidebar.tsx` and `.next/static/chunks/3u-i1b6z-3cuz.js`. The
+plant was removed and the build re-run green. The bundle half reports CANNOT RUN
+rather than passing when `.next/static` is absent.
+
+The one place the address survives is `app/api/geocode/route.ts`'s **outbound**
+User-Agent, which CLAUDE.md's courteous-client rule requires and which R40
+scoped out. It is the single documented exemption in the guard.
+
+**The store is its own store, and it has no key.** Seven columns: id,
+received_at, message, surface, run_class, run_id, suspect_reason. Reactions need
+a continuity key because an answer can be changed; feedback has nothing to
+change, so there is no reason for one — and where there is no reason there is no
+key. `tests/db-schema.test.ts` now runs the join check over **every pair** of the
+three collection stores rather than one hand-written pair, which is how it would
+have silently stopped covering a fourth.
+
+T09 scrubs at the single write path, asserted **positionally** — the scrub's
+index in the source must precede the insert's. A message that is entirely
+contact-shaped is refused with a sentence saying why, never stored as an empty
+row.
+
+Rate limiting is proportionate and argued in `docs/abuse-policy.md`: the
+adversary model driving T08 is a campaign faking district signal, and feedback
+enters no aggregate and no export, so faking it buys nothing but the author's
+reading time. Same-origin, in-memory windows, a 2,000-character cap, and one
+authoritative counter in a **separate limiter digest space** (`feedback-limiter:`
+against `intake-limiter:`) so neither path spends the other's budget.
+
+**A submission never silently succeeds into a void.** The route answers 204,
+503, 500, 400, 413, 403 or 429 and never 200; the client returns STORED only for
+a 204; the form thanks nobody otherwise and **keeps the reader's text**, because
+a form that clears the field on failure has destroyed the thing it failed to
+save.
+
+Submissions reach the author by **export**, `pnpm feedback:read` — an admin page
+would need authentication this product does not have, and would be a new attack
+surface for a handful of messages.
+
+One thing went to the author rather than being decided here. R40's spec says
+"identifier-free beyond what the reader types" and also "T09 scrub before
+storage", and both cannot hold for the same field: the scrub removes exactly the
+contact detail a reader would type deliberately. The build took the strict
+reading — one field, scrubbed, and the form says out loud that we cannot write
+back. What that costs is stated rather than hidden, and whether an optional
+reply address should exist is a user-data-field decision and therefore the
+author's. **R41.**
+
+### R36 did not close, and the reason was a swapped line
+
+The brief reported the author had recreated the readonly role by SQL and put its
+string in `WTP_PRODUCTION_DATABASE_URL_READONLY`. The brief also said to close on
+evidence rather than on the confirmation. The evidence says the variable did not
+change.
+
+`pnpm verify:readonly` — new, read-only, creates nothing and alters no role —
+reports six failures of nine: `current_user` is still `neondb_owner`,
+`pg_has_role(current_user, 'neon_superuser', 'member')` is **true**,
+`has_table_privilege` reports INSERT/UPDATE/DELETE all true on `search_log`,
+`reactions` and `intake_limiter`, and a real attempted write —
+`delete from search_log where false`, which matches no rows and changes nothing
+whether permitted or refused — **was permitted**. The SELECT probe passed.
+
+The author's four SQL statements did succeed. **The credentials went into the
+wrong line.** `.env.local`'s `DATABASE_URL` — the LOCAL branch,
+`ep-weathered-cherry`, `WTP_DB_ROLE=local` — now carries role `readonly`, and
+`WTP_PRODUCTION_DATABASE_URL_READONLY` on `ep-dry-river` still carries
+`neondb_owner`. The two were swapped, and the swap is dead in both directions: a
+role created on one Neon branch is not present on a sibling, so the local line
+cannot authenticate where it was pasted. A direct probe returns *password
+authentication failed for user 'readonly'*.
+
+That second half is its own defect and its own row — **R42** — and it is not
+cosmetic: every local write path now fails at the driver, which is how the
+feedback form's local submission returned 500 and named its own cause in the dev
+server's log. The stored path was verified against production after deploy
+instead.
+
+`verify:readonly` exits non-zero printing **R36 STAYS OPEN** until every check
+passes, and exits 0 printing **R36 CLOSES** when they do. This session created
+no role and altered none, per the brief.
+
+The row's complaint was also demonstrated rather than argued: applying migration
+0005 to production needed a **writing** handle, and the only one available is
+the variable named READONLY.
+
+### The walk can see a single check die now
+
+g8's identity set named its own blind spot — 173 distinct identities across 176
+checks, three sharing a name. A set diff cannot see one of three same-named
+checks disappear, which is the failure the set exists to catch, one level up.
+
+The cause was neither zoom nor theme. **03255 appears twice in the state-focus
+journey** — first, and again at the end to prove the raised state comes back
+after two other states — and both hops emitted their three checks under
+identical names. The name carries the journey position now, which is the thing
+that actually differs.
+
+And a shared identity is a **named regression** rather than advice. It printed
+as a suggestion nobody was obliged to act on, and three shared names sat in the
+set across two sessions. The detection had to move above the summary block too:
+pushed where it was, a duplicate would have set the exit code without ever
+appearing in the failure list.
+
+### Overlapping pins fan out (M19)
+
+The author ruled **A, spiderfy**, and that is exactly what was built. The two
+other options in the row are recorded as rejected so nobody re-proposes them:
+clustering replaces pins with a number, costing a click the map never needed;
+coarser grouping by zoom would merge two governments' venues into one pin, which
+is a claim that two buildings are one place.
+
+A press on a stacked pin fans the group and **selects nothing** — a click
+landing on a stack is a click whose target the reader has not chosen yet, and
+choosing for them is how the top pin came to swallow its neighbour. The next
+press selects. A pin that never collides still opens in one press.
+
+Markers move by MapLibre's own `setOffset` in screen pixels, not a CSS
+transform: MapLibre owns the element's transform and rewrites it every frame, so
+a fanned group survives a pan and a zoom. A fanned pin wears a dashed halo,
+because a pin sitting away from its building would otherwise read as a wrong
+location — and deliberately not a colour, which already means which level of
+government meets there.
+
+The load-bearing test is not a look-at-it: at **every group size from 2 to 14**,
+re-running the collision detector over the fanned positions returns zero groups.
+
+**The walk check found two defects in itself on its first run**, and both are
+fixed. It ran at 390 where the who-governs card covers the middle of the map, so
+the press landed on an overlay and reported a working fan as broken — it runs
+wide now and asserts via `elementFromPoint` that the press *can* land, reporting
+a covered point as CANNOT-RUN rather than FAIL. And its dismissal sibling passed
+trivially beside it: zero fanned, nothing moved, all true and all meaningless.
+It is gated on the fan having actually opened.
+
+Verified live at 85701: four pins in one Tucson stack, four fanned, every pair
+clearing 28px, and Escape returning all four to within 2px.

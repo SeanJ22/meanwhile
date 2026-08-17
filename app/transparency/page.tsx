@@ -269,13 +269,13 @@ export default function TransparencyPage() {
           </p>
           <p>
             If you are pictured here and would like your photograph removed,
-            write to{" "}
-            <a
-              href="mailto:seanj22@gmail.com"
+            say so on the{" "}
+            <Link
+              href="/feedback"
               className="underline decoration-dotted underline-offset-2"
             >
-              seanj22@gmail.com
-            </a>{" "}
+              feedback form
+            </Link>{" "}
             and we will take it down. You do not have to give a reason, and
             the rest of the entry stays as it is — the page will simply show
             initials instead.
@@ -309,17 +309,36 @@ export default function TransparencyPage() {
           </p>
         </Section>
 
-        <Section title="Questions">
+        {/*
+          R40 (2026-08-17). The two `mailto:` links to the author's personal
+          address are gone from this page and from the sidebar; the feedback
+          form replaced them. The coupling rule applies as it does to every
+          other capture on this site: the form's store is disclosed in the
+          same commit that shipped it, immediately below.
+        */}
+        <Section title="Feedback">
           <p>
-            Write to{" "}
-            <a
-              href="mailto:seanj22@gmail.com"
+            The{" "}
+            <Link
+              href="/feedback"
               className="text-paper underline decoration-dotted underline-offset-2 hover:text-signal"
             >
-              seanj22@gmail.com
-            </a>
-            . This demo is run by one person; you&apos;ll get an answer from
-            the person who built it.
+              feedback form
+            </Link>{" "}
+            stores what you write, and the time, in a store of its own. It is
+            read by the person who built this and never enters anything that
+            is aggregated or licensed. It holds no name, no address, no zip, and
+            nothing that could connect it to your searches or your reactions —
+            and, like the question box, it is stripped of anything shaped like
+            a phone number, an email address, or a street address before it is
+            stored, which is why nobody can write back to you.
+          </p>
+          <p>
+            The first time you send feedback, your browser makes up a random
+            string. It exists to stop one browser flooding the form and for
+            nothing else: it is never stored with your message, and the only
+            trace it leaves anywhere is a counter that expires within 48
+            hours.
           </p>
         </Section>
 

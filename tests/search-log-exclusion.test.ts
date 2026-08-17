@@ -150,6 +150,15 @@ test("no module reads search_log without the organic filter", async () => {
       // DECLARED_EXTRAS pattern, because an exception that lives in code can
       // be argued with and a silent one cannot.
       "scripts/walk-all.mts",
+      // R36, 2026-08-17: the read-only-credential probe. It SELECTs from
+      // search_log to prove the connection can read a real store table —
+      // grants are per-table, so `select 1` against nothing would prove
+      // nothing — and it deliberately takes no count and prints no total, so
+      // there is no number here for the organic filter to be protecting.
+      // Declared with its reason, the DECLARED_EXTRAS pattern, because an
+      // exception that lives in code can be argued with and a silent one
+      // cannot.
+      "scripts/verify-readonly.mts",
     ].map((p) => p.replace(/\//g, sep)),
   );
 

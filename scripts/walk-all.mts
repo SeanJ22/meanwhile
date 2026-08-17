@@ -990,7 +990,22 @@ section("F. The reader's map and the folded panels (g4 items 1-5, 9, 11, 14, 15)
     ["03255", "ocd-division/country:us/state:nh"],
   ];
 
-  for (const [zip, expected] of hops) {
+  for (const [index, [zip, expected]] of hops.entries()) {
+    /*
+     * THE HOP'S OWN NAME (g9 item 4, 2026-08-17).
+     *
+     * 03255 appears twice in this journey — first, and again at the end to
+     * prove the raised state comes BACK after two other states. That return
+     * is the whole point of the fourth hop and it is a different claim from
+     * the first, but both hops emitted three checks under identical names, so
+     * the identity set collapsed six checks into three and the diff could not
+     * have seen one of them die. The distinguishing fact is the journey
+     * position, so that is what the name carries — not a measured value,
+     * which would churn the diff on every run.
+     */
+    const hop = `hop ${index + 1} of ${hops.length}${
+      index === hops.length - 1 ? ", returning" : ""
+    }`;
     /*
      * A FRESH CONTEXT per hop.
      *
@@ -1016,14 +1031,14 @@ section("F. The reader's map and the folded panels (g4 items 1-5, 9, 11, 14, 15)
     } | null;
 
     if (!probe) {
-      cannotRun("g4", `${zip}: the map probe`, "no __wtpMapProbe on the page");
+      cannotRun("g4", `${zip} (${hop}): the map probe`, "no __wtpMapProbe on the page");
       await page.context().close();
       continue;
     }
 
     check(
       "g4",
-      `${zip}: the raised state is the state the reader is in`,
+      `${zip} (${hop}): the raised state is the state the reader is in`,
       probe.focusOcdId === expected,
       `focus ${probe.focusOcdId ?? "none"}, wanted ${expected}`,
     );
@@ -1035,7 +1050,7 @@ section("F. The reader's map and the folded panels (g4 items 1-5, 9, 11, 14, 15)
     );
     check(
       "g4",
-      `${zip}: only the active state draws district boundaries`,
+      `${zip} (${hop}): only the active state draws district boundaries`,
       foreign.length === 0,
       `${probe.districtLayers.length} layer(s); foreign filters ${JSON.stringify(foreign)}`,
     );
@@ -1051,7 +1066,7 @@ section("F. The reader's map and the folded panels (g4 items 1-5, 9, 11, 14, 15)
      */
     check(
       "g5",
-      `${zip}: the zip draws nothing on the map`,
+      `${zip} (${hop}): the zip draws nothing on the map`,
       !probe.customSources.some((id) => id.includes("zip-shade")),
       `custom sources ${JSON.stringify(probe.customSources)}`,
     );
@@ -1841,14 +1856,395 @@ section("K. Reader surfaces speak plain language (g8)");
   }
 }
 
+// ═══════════════════════════════════════════════════════════════════════════
+// g9 — one Phone pill (R39) and the address that left the product (R40).
+// ═══════════════════════════════════════════════════════════════════════════
+
+section("L. Contact surfaces (g9: R39 the phone pill, R40 the address)");
+
+{
+  /*
+   * R39. Jeanne Shaheen's card rendered seven stacked phone rows; 531 of the
+   * 1,157 officeholder records carry more than one number, so this is a
+   * class-wide claim checked at its loudest instance. Its own fresh page,
+   * because the per-zip loop's page has been clicked through by a dozen
+   * checks and a bare querySelector would find whatever they left open.
+   */
+  const page = await openAt(browser, "03255");
+
+  const opened = (await page.evaluate(`(() => {
+    const card = document.querySelector(".coverage-notice");
+    if (!card) return false;
+    for (const b of card.querySelectorAll("button")) {
+      if (/Shaheen/i.test(b.textContent || "")) { b.click(); return true; }
+    }
+    return false;
+  })()`)) as boolean;
+
+  if (!opened) {
+    cannotRun("g9", "03255: Shaheen renders ONE Phone pill", "no Shaheen row on who-governs");
+    cannotRun("g9", "03255: the phone chooser lists every recorded number", "no Shaheen row");
+  } else {
+    await page.waitForTimeout(2500);
+    const pills = (await page.evaluate(`(() => {
+      const row = document.querySelector(".contact-pill-row");
+      if (!row) return null;
+      const p = [...row.querySelectorAll(".contact-pill")];
+      return {
+        total: p.length,
+        phonePills: p.filter((x) => x.tagName === "BUTTON" && /Phone/.test(x.textContent || "")).length,
+        showingANumber: p.filter((x) => /\\d{3}[).\\- ]\\s?\\d{3}[-. ]\\d{4}/.test(x.textContent || "")).length,
+      };
+    })()`)) as { total: number; phonePills: number; showingANumber: number } | null;
+
+    if (!pills) {
+      cannotRun("g9", "03255: Shaheen renders ONE Phone pill", "no contact pill row on the card");
+      cannotRun("g9", "03255: the phone chooser lists every recorded number", "no contact pill row");
+    } else {
+      check(
+        "g9",
+        "03255: Shaheen renders ONE Phone pill",
+        pills.phonePills === 1 && pills.showingANumber === 0,
+        `${pills.phonePills} Phone pill(s), ${pills.showingANumber} pill(s) showing a number, ` +
+          `${pills.total} pill(s) total`,
+      );
+
+      await page.evaluate(`(() => {
+        for (const p of document.querySelectorAll("button.contact-pill")) {
+          if (/Phone/.test(p.textContent || "")) { p.click(); return; }
+        }
+      })()`);
+      await page.waitForTimeout(700);
+
+      // The chooser's rows against the RECORDED count, read from the same
+      // route the card reads. A modal with the wrong number of rows is the
+      // stated-N-equals-rendered-rows rule failing where a reader dials.
+      const modal = (await page.evaluate(`(async () => {
+        const overlay = document.querySelector(".phone-modal-overlay");
+        if (!overlay) return null;
+        const rows = [...overlay.querySelectorAll(".phone-modal-row")];
+        const r = await fetch("/api/directory?member=congress:S001181");
+        const recorded = r.ok
+          ? new Set(((await r.json()).districtOffices || []).map((o) => o.phone).filter(Boolean)).size
+          : null;
+        return {
+          rows: rows.length,
+          tel: rows.filter((x) => (x.getAttribute("href") || "").startsWith("tel:")).length,
+          labelled: rows.filter((x) => ((x.querySelector(".phone-modal-row-label") || {}).textContent || "").trim()).length,
+          recorded,
+          overCard: Number(getComputedStyle(overlay).zIndex) > 1300,
+        };
+      })()`)) as {
+        rows: number;
+        tel: number;
+        labelled: number;
+        recorded: number | null;
+        overCard: boolean;
+      } | null;
+
+      if (!modal) {
+        cannotRun("g9", "03255: the phone chooser lists every recorded number", "the pill opened nothing");
+      } else if (modal.recorded === null) {
+        cannotRun("g9", "03255: the phone chooser lists every recorded number", "the directory route did not answer");
+      } else {
+        check(
+          "g9",
+          "03255: the phone chooser lists every recorded number",
+          modal.rows === modal.recorded + 1 &&
+            modal.tel === modal.rows &&
+            modal.labelled === modal.rows &&
+            modal.overCard,
+          `${modal.rows} row(s) against ${modal.recorded} recorded district number(s) + 1 Washington; ` +
+            `${modal.tel} are tel: links, ${modal.labelled} carry an office label; over the card ${modal.overCard}`,
+        );
+      }
+    }
+  }
+  await page.context().close();
+}
+
+{
+  /*
+   * R40. The author's personal address left the product. This is the
+   * class-wide form of it: not "the sidebar no longer shows it" but "no
+   * surface a reader is served carries it at all", checked in the SERVED
+   * HTML rather than in rendered text, because a string in an attribute or a
+   * script payload is just as reachable and does not show up in innerText.
+   */
+  const ADDRESS = ["seanj22", "gmail.com"].join("@");
+  for (const [surface, path] of [
+    ["the map", "/?zip=03255"],
+    ["/transparency", "/transparency"],
+    ["/feedback", "/feedback"],
+  ] as const) {
+    const res = await get(path);
+    if (res.status !== 200) {
+      cannotRun("g9", `${surface}: carries no personal email address`, `HTTP ${res.status}`);
+      continue;
+    }
+    check(
+      "g9",
+      `${surface}: carries no personal email address`,
+      !res.text.includes(ADDRESS) && !/href="mailto:/.test(res.text),
+      res.text.includes(ADDRESS)
+        ? "the address is in the served HTML"
+        : /href="mailto:/.test(res.text)
+          ? "a mailto: link is in the served HTML"
+          : "neither the address nor a mailto: link",
+    );
+  }
+
+  // The replacement exists and is in-app, and its disclosure shipped with it.
+  const map = await get("/?zip=03255");
+  if (map.status !== 200) {
+    cannotRun("g9", "the sidebar offers the in-app feedback route", `HTTP ${map.status}`);
+  } else {
+    check(
+      "g9",
+      "the sidebar offers the in-app feedback route",
+      /href="\/feedback"/.test(map.text),
+      /href="\/feedback"/.test(map.text) ? "/feedback is linked" : "no link to /feedback",
+    );
+  }
+  const transparency = await get("/transparency");
+  if (transparency.status !== 200) {
+    cannotRun("g9", "/transparency discloses the feedback store", `HTTP ${transparency.status}`);
+  } else {
+    check(
+      "g9",
+      "/transparency discloses the feedback store",
+      /feedback form/i.test(transparency.text) &&
+        /aggregated or licensed/i.test(transparency.text),
+      `names the form ${/feedback form/i.test(transparency.text)}, ` +
+        `states never-licensed ${/aggregated or licensed/i.test(transparency.text)}`,
+    );
+  }
+  const form = await get("/feedback");
+  if (form.status !== 200) {
+    cannotRun("g9", "/feedback serves the form and says what happens to it", `HTTP ${form.status}`);
+  } else {
+    check(
+      "g9",
+      "/feedback serves the form and says what happens to it",
+      /data-feedback-input/.test(form.text) && /cannot write back/i.test(form.text),
+      `input present ${/data-feedback-input/.test(form.text)}, ` +
+        `states we cannot write back ${/cannot write back/i.test(form.text)}`,
+    );
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// g9 / M19 — overlapping pins fan out, and dismissal returns them.
+// ═══════════════════════════════════════════════════════════════════════════
+
+section("M. Overlapping pins are each reachable (g9: M19, the author's ruling)");
+
+{
+  /*
+   * The claim: two pins sitting on top of each other are BOTH tappable.
+   *
+   * The walk cannot guess which pins collide — that depends on zoom, data and
+   * viewport — so it asks the map, through the same projection and the same
+   * collision rule the click path uses. Then it FORCES a collision by zooming
+   * out, because a build where nothing happens to overlap would otherwise
+   * report green on a check that never ran, which is the g3 lesson.
+   *
+   * Its own page, and no selection is made: the first press on a stacked pin
+   * fans and selects nothing, which is precisely the behaviour under test, so
+   * this check opens no popup and writes no MEETING_OPENED row.
+   *
+   * DESKTOP width, for g4 item 5's reason: at 390px the who-governs card
+   * covers the middle of the map, so a press aimed at a pin lands on an
+   * overlay and the check reports a working fan as a broken one. That is not
+   * a hypothetical — the first run of this check FAILED exactly that way, 4
+   * pins in the stack and 0 fanned, because the press never reached a pin.
+   */
+  const page = await openWideAt(browser, "85701");
+
+  type SpiderProbe = {
+    visible: number;
+    groups: string[][];
+    fanned: string[];
+    boxes: Record<string, { x: number; y: number }>;
+  };
+  const probe = async () =>
+    (await page.evaluate(
+      `(window.__wtpSpiderProbe ? window.__wtpSpiderProbe() : null)`,
+    )) as SpiderProbe | null;
+
+  let reading = await probe();
+  if (!reading) {
+    cannotRun("g9", "85701: overlapping pins fan out when pressed", "no __wtpSpiderProbe");
+    cannotRun("g9", "85701: dismissing the fan returns every pin", "no __wtpSpiderProbe");
+  } else {
+    // Zoom out until something collides, or give up and say so. Each step is
+    // a real gesture through the settle path, like a reader's wheel.
+    for (let step = 0; step < 5 && reading.groups.length === 0; step++) {
+      await page.evaluate(`window.__wtpZoomOut && window.__wtpZoomOut(1.5)`);
+      await page.waitForTimeout(1600);
+      reading = (await probe())!;
+    }
+
+    if (reading.groups.length === 0) {
+      cannotRun(
+        "g9",
+        "85701: overlapping pins fan out when pressed",
+        `no two of the ${reading.visible} visible pins overlap even after zooming out — ` +
+          `nothing to fan, so the claim could not be exercised`,
+      );
+      cannotRun("g9", "85701: dismissing the fan returns every pin", "no collision to dismiss");
+    } else {
+      const group = reading.groups[0];
+      const before = { ...reading.boxes };
+
+      const at = before[group[0]];
+      if (!at) {
+        cannotRun("g9", "85701: overlapping pins fan out when pressed", "no box for the stacked pin");
+        cannotRun("g9", "85701: dismissing the fan returns every pin", "no box for the stacked pin");
+      } else {
+        /*
+         * A REAL PRESS, at the stack's own coordinates.
+         *
+         * Deliberately the mouse rather than an injected hook: the defect
+         * being fixed IS pointer interception, so a walk that bypassed the
+         * pointer would be testing everything except the thing that broke.
+         * Whichever pin is on top receives it, which is fine — any member of
+         * a stack fans the whole stack, and "whichever is on top" is exactly
+         * what a reader gets.
+         */
+        // ASSERT THE PRESS CAN LAND BEFORE ASSERTING WHAT IT DID. A point
+        // covered by an overlay is a check that could not run, not a broken
+        // fan, and the two must never print the same way.
+        const under = (await page.evaluate(
+          `(() => {
+            const el = document.elementFromPoint(${at.x}, ${at.y});
+            if (!el) return "nothing";
+            const pin = el.closest(".wtp-pin");
+            return pin ? "pin" : (el.className || el.tagName || "unknown").toString().slice(0, 60);
+          })()`,
+        )) as string;
+
+        if (under !== "pin") {
+          cannotRun(
+            "g9",
+            "85701: overlapping pins fan out when pressed",
+            `the stack's own coordinates are covered by "${under}", so a press cannot reach a pin`,
+          );
+          cannotRun(
+            "g9",
+            "85701: dismissing the fan returns every pin",
+            "the fan could not be opened, so there was nothing to dismiss",
+          );
+        } else {
+          await page.mouse.click(at.x, at.y);
+          await page.waitForTimeout(900);
+
+          const fannedReading = (await probe())!;
+          const separated = (() => {
+            const pts = group
+              .map((k) => fannedReading.boxes[k])
+              .filter(Boolean) as { x: number; y: number }[];
+            if (pts.length < 2) return false;
+            for (let i = 0; i < pts.length; i++) {
+              for (let j = i + 1; j < pts.length; j++) {
+                if (Math.hypot(pts[i].x - pts[j].x, pts[i].y - pts[j].y) < 28) return false;
+              }
+            }
+            return true;
+          })();
+
+          const fanned = check(
+            "g9",
+            "85701: overlapping pins fan out when pressed",
+            fannedReading.fanned.length === group.length && separated,
+            `${group.length} pin(s) in the stack; ${fannedReading.fanned.length} fanned; ` +
+              `every pair now clears 28px: ${separated}`,
+          );
+
+          /*
+           * The dismissal check is GATED on the fan having happened.
+           *
+           * Ungated it passes trivially when nothing ever fanned — 0 still
+           * fanned, every pin within 2px of where it started, all true and
+           * all meaningless. The first run of this check did exactly that
+           * beside its own failing sibling, which is the empty-success shape
+           * one line away from the failure it was hiding.
+           */
+          if (!fanned) {
+            cannotRun(
+              "g9",
+              "85701: dismissing the fan returns every pin",
+              "the fan did not open, so a dismissal proves nothing",
+            );
+          } else {
+            // Escape, the explicit control beside the map-press gesture.
+            await page.keyboard.press("Escape");
+            await page.waitForTimeout(700);
+            const returned = (await probe())!;
+            const backWhereTheyWere = group.every((k) => {
+              const a = before[k];
+              const b = returned.boxes[k];
+              if (!a || !b) return false;
+              return Math.hypot(a.x - b.x, a.y - b.y) < 2;
+            });
+            check(
+              "g9",
+              "85701: dismissing the fan returns every pin",
+              returned.fanned.length === 0 && backWhereTheyWere,
+              `${returned.fanned.length} still fanned; every pin back within 2px: ${backWhereTheyWere}`,
+            );
+          }
+        }
+      }
+    }
+  }
+  await page.context().close();
+}
+
 await browser.close();
 
 const EXCLUDED = [
   "tester-walk-0814b — the reaction-capture write half (taps a real reaction row)",
   "tester-walk-0814d — the T08 human-paced write gate (taps a real reaction row)",
   "tester-walk-0815 — the reaction half of item 5 (writes); its read half is carried here",
+  // g9: R40's stored-path check WRITES a feedback row, so it stays out of the
+  // standing suite by the same rule as the reaction taps. It lives in
+  // scripts/walk-r40.mts and is run deliberately, with WTP_RUN_ID set.
+  "walk-r40 — the feedback form's stored path (writes a real feedback row)",
   "pnpm pairs / pnpm shoot — screenshot passes; a human rules on pixels",
 ];
+
+/*
+ * THE IDENTITY UNIQUENESS CHECK RUNS FIRST (g9 item 4, 2026-08-17).
+ *
+ * The identity SET is diffed at the bottom of this file, but the duplicate
+ * detection has to happen up here — before the summary prints — or a
+ * duplicate would set the exit code without ever appearing in the named
+ * regressions, which is a failure nobody reads. It fails through `failures`
+ * so it lands in the list beside everything else.
+ *
+ * Why a duplicate is a failure at all: the suite exists to catch a win dying
+ * quietly, and two checks sharing a name is how a CHECK dies quietly inside
+ * the suite that was supposed to notice. Three shared names sat in the set
+ * across two sessions while this printed as advice nobody was obliged to act
+ * on.
+ */
+const sharedIdentities = (() => {
+  const seen = new Map<string, number>();
+  for (const id of identities) seen.set(id, (seen.get(id) ?? 0) + 1);
+  return [...seen].filter(([, n]) => n > 1).sort((a, b) => b[1] - a[1]);
+})();
+const duplicates = identities.length - new Set(identities).size;
+if (duplicates > 0) {
+  failures.push({
+    session: "g9",
+    name: "every check identity is unique",
+    evidence:
+      `${duplicates} duplicate(s) across ${sharedIdentities.length} shared name(s): ` +
+      sharedIdentities.map(([id, n]) => `${id} ×${n}`).join("; ") +
+      ` — the identity set counts them once, so the diff cannot see one of them die`,
+  });
+}
 
 console.log(`\n${new Array(60).fill("─").join("")}`);
 console.log(`${passed} check(s) passed, ${failures.length} regression(s), ${blocked.length} could not run`);
@@ -1886,7 +2282,6 @@ for (const e of EXCLUDED) console.log(`  · ${e}`);
 /* ── The check-identity set, diffed rather than subtracted ──────────────── */
 
 const ranNow = [...new Set(identities)].sort();
-const duplicates = identities.length - ranNow.length;
 const previous = existsSync(CHECKS_FILE)
   ? readFileSync(CHECKS_FILE, "utf8")
       .split("\n")
@@ -1896,18 +2291,16 @@ const previous = existsSync(CHECKS_FILE)
 
 console.log(`\nCHECK IDENTITIES: ${ranNow.length} distinct of ${identities.length} run`);
 if (duplicates > 0) {
-  // Two checks with the same identity collapse in the set, so the diff would
-  // under-report. Said out loud AND NAMED — a bare count tells a session that
-  // its instrument is partly blind without telling it where.
-  const seen = new Map<string, number>();
-  for (const id of identities) seen.set(id, (seen.get(id) ?? 0) + 1);
+  // Already recorded as a NAMED REGRESSION above (g9 item 4); this is where
+  // the offending names are printed, because this is the section a session
+  // reads when it is working on the set.
   console.log(
     `  ${duplicates} check(s) share an identity with another — the set counts them once, ` +
       `so the diff cannot see them separately. Give them distinguishing names:`,
   );
-  for (const [id, n] of [...seen].filter(([, n]) => n > 1).sort((a, b) => b[1] - a[1])) {
-    console.log(`    ×${n}  ${id}`);
-  }
+  for (const [id, n] of sharedIdentities) console.log(`    ×${n}  ${id}`);
+} else {
+  console.log(`  every identity is unique — the diff below can see any single check die.`);
 }
 if (previous === null) {
   console.log(

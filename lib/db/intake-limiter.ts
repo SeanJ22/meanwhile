@@ -20,9 +20,31 @@ import { assertWriteAllowed } from "./write-guard.ts";
 
 const DIGEST_CONTEXT = "intake-limiter:";
 
-export function hashLimiterKey(rawKey: string): string {
+/**
+ * A SECOND, separately-bucketed counter space (R40, 2026-08-17).
+ *
+ * The feedback form is rate-limited too, and it must not share a counter with
+ * reactions in either direction: a reader who has been tapping answers all
+ * afternoon must still be able to report a wrong number, and someone pumping
+ * the feedback form must not be spending a budget that also gates reactions.
+ * A different context string is a different digest is a different row — the
+ * same isolation argument the limiter already makes against the stores it
+ * protects, applied between two protected paths.
+ */
+const FEEDBACK_DIGEST_CONTEXT = "feedback-limiter:";
+
+export type LimiterSpace = "reactions" | "feedback";
+
+function contextFor(space: LimiterSpace): string {
+  return space === "feedback" ? FEEDBACK_DIGEST_CONTEXT : DIGEST_CONTEXT;
+}
+
+export function hashLimiterKey(
+  rawKey: string,
+  space: LimiterSpace = "reactions",
+): string {
   return createHash("sha256")
-    .update(DIGEST_CONTEXT + rawKey, "utf8")
+    .update(contextFor(space) + rawKey, "utf8")
     .digest("hex");
 }
 
@@ -44,6 +66,7 @@ export interface IntakeCounters {
 export async function noteSubmission(
   rawKey: string,
   now: Date = new Date(),
+  space: LimiterSpace = "reactions",
 ): Promise<IntakeCounters | null> {
   if (!process.env.DATABASE_URL) return null;
 
@@ -64,7 +87,7 @@ export async function noteSubmission(
     const rows = await getDb()
       .insert(intakeLimiter)
       .values({
-        digest: hashLimiterKey(rawKey),
+        digest: hashLimiterKey(rawKey, space),
         dayBucket,
         dayCount: 1,
         minuteBucket,

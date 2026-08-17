@@ -39,10 +39,70 @@ export interface MarkerPool {
   entries: Map<string, MarkerPoolEntry>;
   /** Keys visible after the last apply. The diff basis. */
   previouslyVisibleKeys: Set<string>;
+  /**
+   * The keys currently fanned out (M19), or empty. At most one group is fanned
+   * at a time: a second fan while the first is open would put the new
+   * positions on top of the old ones, which is the collision this fixes,
+   * rebuilt by the fix.
+   */
+  spiderfiedKeys: Set<string>;
 }
 
 export function createMarkerPool(): MarkerPool {
-  return { entries: new Map(), previouslyVisibleKeys: new Set() };
+  return {
+    entries: new Map(),
+    previouslyVisibleKeys: new Set(),
+    spiderfiedKeys: new Set(),
+  };
+}
+
+/**
+ * Fan a group of colliding pins apart, or put them back (M19, 2026-08-17).
+ *
+ * The offset is MapLibre's own `Marker.setOffset`, in screen pixels, which is
+ * the reason this works rather than a CSS transform: MapLibre owns the
+ * element's `transform` and rewrites it on every frame, so anything written
+ * there is gone by the next render. An offset is re-applied by the library
+ * itself, which means a fanned group survives a pan and a zoom exactly as a
+ * reader would expect.
+ *
+ * Returns the number of markers moved, because an operation that can move
+ * nothing must say what it moved.
+ */
+export function applySpiderfy(
+  pool: MarkerPool,
+  offsets: { key: string; dx: number; dy: number }[],
+): number {
+  let moved = 0;
+
+  // Put back anything fanned that is not in the new set, first — otherwise a
+  // pin could carry an old offset and a new one at once.
+  for (const key of pool.spiderfiedKeys) {
+    if (offsets.some((o) => o.key === key)) continue;
+    const entry = pool.entries.get(key);
+    if (!entry) continue;
+    entry.marker.setOffset([0, 0]);
+    delete entry.element.dataset.spiderfied;
+    moved++;
+  }
+
+  for (const { key, dx, dy } of offsets) {
+    const entry = pool.entries.get(key);
+    if (!entry) continue;
+    entry.marker.setOffset([dx, dy]);
+    // The reader is told the pin moved. Without it, a pin sitting somewhere
+    // other than its building is a wrong location rather than a fanned one.
+    entry.element.dataset.spiderfied = "true";
+    moved++;
+  }
+
+  pool.spiderfiedKeys = new Set(offsets.map((o) => o.key));
+  return moved;
+}
+
+/** Put every fanned pin back. Returns how many moved. */
+export function clearSpiderfy(pool: MarkerPool): number {
+  return applySpiderfy(pool, []);
 }
 
 function levelColor(level: GovernmentLevel): string {
@@ -193,6 +253,10 @@ export function rebuildMarkerPool(
     entry.marker.remove();
     pool.entries.delete(key);
     pool.previouslyVisibleKeys.delete(key);
+    // A removed pin cannot stay in the fanned set: `applySpiderfy` would
+    // otherwise keep trying to put back a marker that no longer exists, and
+    // the set would grow without bound across data refreshes.
+    pool.spiderfiedKeys.delete(key);
   }
 
   for (const venue of venues) {
@@ -275,4 +339,5 @@ export function destroyMarkerPool(pool: MarkerPool): void {
   for (const entry of pool.entries.values()) entry.marker.remove();
   pool.entries.clear();
   pool.previouslyVisibleKeys.clear();
+  pool.spiderfiedKeys.clear();
 }

@@ -47,6 +47,27 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const TRACKER = "docs/tracker.csv";
 const MD_OUT = "docs/deferred.md";
 const CSV_OUT = "docs/deferred.csv";
+const ASKS_PATH = "docs/deferred-asks.json";
+
+/**
+ * The one composed column, and the only composed content anywhere in the
+ * census.
+ *
+ * Everything else here is reproduced from the tracker as written, which is the
+ * discipline that makes the census trustworthy. A plain-English explainer
+ * cannot be — somebody has to write it. So it is quarantined:
+ *
+ *   - it lives in its own author-editable file, never in this generator, so
+ *     the generator stays a pure reader of the tracker;
+ *   - it renders ONLY in the triage CSV, never in the readable `.md`, so that
+ *     file's "nothing is composed" claim stays literally true;
+ *   - the tracker row wins wherever the two disagree, and the file says so;
+ *   - a row with no explainer written renders as a NAMED GAP, never as a
+ *     blank. A blank cell in a triage sheet reads as "nothing to decide here",
+ *     which is a claim, and it would be a false one.
+ */
+const ASK_COLUMN = "What this is asking you";
+const ASK_MISSING = "— no explainer written yet (see docs/deferred-asks.json) —";
 
 /** The census must stay readable at orientation. */
 const MD_CAP_BYTES = 40 * 1024;
@@ -260,6 +281,23 @@ function sessionsSince(entryDate, dates) {
 const trackerText = readFileSync(join(ROOT, TRACKER), "utf8");
 const { records } = readTrackerFull(trackerText);
 
+/**
+ * The explainers. A missing FILE and a missing ROW are different failures and
+ * are kept apart: no file at all is worth saying out loud once, while a row
+ * without an explainer is a per-row gap the CSV names in place.
+ */
+let asks = {};
+let asksProblem = null;
+if (!existsSync(join(ROOT, ASKS_PATH))) {
+  asksProblem = `${ASKS_PATH} not found — every row will render its explainer as a named gap`;
+} else {
+  try {
+    asks = JSON.parse(readFileSync(join(ROOT, ASKS_PATH), "utf8")).asks ?? {};
+  } catch (error) {
+    asksProblem = `${ASKS_PATH} is not valid JSON (${error.message}) — explainers render as named gaps`;
+  }
+}
+
 const total = records.length;
 const closed = records.filter((r) => CLOSED_STATUSES.includes(r.Status));
 const open = records.filter((r) => !CLOSED_STATUSES.includes(r.Status));
@@ -363,8 +401,16 @@ L.push(
   "**This is a GENERATED file.** `docs/tracker.csv` is the source of truth and nothing " +
     "is edited here — an edit to this file changes nothing and will be overwritten. " +
     "Every field below is reproduced from the tracker as written; nothing is composed, " +
-    "summarised or reworded. Decisions go in `docs/deferred.csv`, which carries the same " +
-    "rows with full unclipped notes and an empty `Disposition` column.",
+    "summarised or reworded.",
+);
+L.push("");
+L.push(
+  "Decisions go in `docs/deferred.csv`, which carries the same rows with full unclipped " +
+    `notes, a plain-English **${ASK_COLUMN}** column, and an empty \`Disposition\` column ` +
+    "to fill in. That explainer column is the ONE piece of composed writing in the census — " +
+    "it is written by hand in `docs/deferred-asks.json`, it carries no authority, and where " +
+    "it and the tracker row disagree the tracker row is right. It is deliberately absent " +
+    "from this file, so the paragraph above stays literally true.",
 );
 L.push("");
 L.push(`Generated **${stamp}** (\`pnpm stamp\`, America/Phoenix) by \`pnpm deferred\`.`);
@@ -538,9 +584,17 @@ if (problems.length > 0) {
 writeFileSync(join(ROOT, MD_OUT), md, "utf8");
 
 const csvCols = ["ID", "Area", "Item", "Detail", "Priority", "Status", "Depends on", "Target", "Notes"];
-const csvLines = [[...csvCols, "Disposition"].map(csvCell).join(",")];
+// The explainer sits between Notes and Disposition: read the row, read what it
+// is asking, then rule on it.
+const csvLines = [[...csvCols, ASK_COLUMN, "Disposition"].map(csvCell).join(",")];
 for (const r of open) {
-  csvLines.push([...csvCols.map((c) => csvCell(r[c])), csvCell("")].join(","));
+  csvLines.push(
+    [
+      ...csvCols.map((c) => csvCell(r[c])),
+      csvCell(asks[r.ID] ?? ASK_MISSING),
+      csvCell(""),
+    ].join(","),
+  );
 }
 const csv = `${csvLines.join("\n")}\n`;
 writeFileSync(join(ROOT, CSV_OUT), csv, "utf8");
@@ -556,6 +610,33 @@ console.log(`  statuses in tracker   ${statusTally.size} — ${[...statusTally.k
 console.log(`  outside known set     ${unknownRows.length} open row(s)${unknownRows.length ? ` — ${unknownRows.map((r) => r.ID).join(", ")}` : ""}`);
 console.log(`  in progress           ${stalled.length}, of which ${flagged.length} stalled past two sessions`);
 console.log(`  history walked        ${history.walked} commit(s), ${history.dates.length} distinct date(s)`);
+
+// Denominators always stated. An explainer count without the total it is out of
+// would let 3 of 117 read the same as 117 of 117.
+const withAsk = open.filter((r) => asks[r.ID]);
+const withoutAsk = open.filter((r) => !asks[r.ID]);
+const openIds = new Set(open.map((r) => r.ID));
+const allIds = new Set(records.map((r) => r.ID));
+const staleAsks = Object.keys(asks).filter((id) => !openIds.has(id));
+const unknownAsks = staleAsks.filter((id) => !allIds.has(id));
+
+console.log(
+  `  plain-English asks    ${withAsk.length} of ${open.length} open row(s)` +
+    (withoutAsk.length
+      ? ` — ${withoutAsk.length} render a NAMED GAP: ${withoutAsk.map((r) => r.ID).join(", ")}`
+      : " — every open row explained"),
+);
+if (staleAsks.length) {
+  console.log(
+    `  asks for closed rows  ${staleAsks.length} — ${staleAsks.join(", ")} (harmless, but dead weight)`,
+  );
+}
+if (unknownAsks.length) {
+  console.log(
+    `  asks for UNKNOWN ids  ${unknownAsks.length} — ${unknownAsks.join(", ")} (a typo, or a row that was deleted)`,
+  );
+}
+if (asksProblem) console.log(`  asks file             ${asksProblem}`);
 console.log(`  ${MD_OUT}    ${mdBytes} bytes of ${MD_CAP_BYTES}`);
 console.log(`  ${CSV_OUT}   ${Buffer.byteLength(csv, "utf8")} bytes (no cap — it is for the spreadsheet)`);
 console.log("");

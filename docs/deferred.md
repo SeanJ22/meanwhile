@@ -1,6 +1,8 @@
 # The deferred census — everything still open
 
-**This is a GENERATED file.** `docs/tracker.csv` is the source of truth and nothing is edited here — an edit to this file changes nothing and will be overwritten. Every field below is reproduced from the tracker as written; nothing is composed, summarised or reworded. Decisions go in `docs/deferred.csv`, which carries the same rows with full unclipped notes and an empty `Disposition` column.
+**This is a GENERATED file.** `docs/tracker.csv` is the source of truth and nothing is edited here — an edit to this file changes nothing and will be overwritten. Every field below is reproduced from the tracker as written; nothing is composed, summarised or reworded.
+
+Decisions go in `docs/deferred.csv`, which carries the same rows with full unclipped notes, a plain-English **What this is asking you** column, and an empty `Disposition` column to fill in. That explainer column is the ONE piece of composed writing in the census — it is written by hand in `docs/deferred-asks.json`, it carries no authority, and where it and the tracker row disagree the tracker row is right. It is deliberately absent from this file, so the paragraph above stays literally true.
 
 Generated **2026-08-17** (`pnpm stamp`, America/Phoenix) by `pnpm deferred`.
 
@@ -41,7 +43,7 @@ The full set, counted across all 330 rows. The author has not seen this enumerat
 
 A row that has been `In progress` for a long time reads as progress on a status line and functions as a deferral. These are the most misleading rows on the board for a decks-clearing pass, because they are the ones that look alive.
 
-Derived from the git history of `docs/tracker.csv` (first-parent), 55 commit(s) walked across 6 distinct date(s), 2026-08-12 to 2026-08-17. A **session** here is a distinct calendar date on which the tracker was committed. That UNDERCOUNTS sessions — this repo often runs several in a day — so a row flagged as spanning more than two sessions has certainly spanned more than two.
+Derived from the git history of `docs/tracker.csv` (first-parent), 56 commit(s) walked across 6 distinct date(s), 2026-08-12 to 2026-08-17. A **session** here is a distinct calendar date on which the tracker was committed. That UNDERCOUNTS sessions — this repo often runs several in a day — so a row flagged as spanning more than two sessions has certainly spanned more than two.
 
 **14 of 18** `In progress` row(s) qualify.
 

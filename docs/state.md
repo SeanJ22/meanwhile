@@ -8953,6 +8953,41 @@ left unclosed, and no future date left without a complete one. Cutting away a
 legal date is a smaller loss than shipping an illegal one, and the `…` says
 something was cut either way.
 
+### The one composed column
+
+The author asked for a plain-English column between `Notes` and
+`Disposition` saying what each row is asking him to rule on. It ships as
+**What this is asking you**, and it is the ONLY composed writing anywhere in
+the census — everything else is reproduced from the tracker as written, which
+is the discipline that makes the census worth trusting. So it is quarantined
+rather than simply added:
+
+* the explainers live in `docs/deferred-asks.json`, hand-written and
+  author-editable, never in the generator — which stays a pure reader of the
+  tracker;
+* they render ONLY in the triage CSV, never in `docs/deferred.md`, so that
+  file’s “nothing is composed” claim stays literally true, and
+  `tests/deferred-census.test.ts` fails if explainer text ever leaks into it;
+* the file states that the explainers carry no authority and that **the
+  tracker row is right wherever the two disagree**;
+* a row with no explainer renders a NAMED GAP, never a blank. A blank cell in
+  a triage sheet reads as “nothing to decide here”, which is a claim, and it
+  would be a false one. Proven by deleting two explainers: both rows rendered
+  the gap with its reason, and the run reported `115 of 117`.
+
+Coverage is REPORTED against its denominator on every run rather than
+asserted in the suite — **117 of 117 open rows today**. A test demanding full
+coverage would fail the whole suite the moment anyone opened a tracker row,
+blocking unrelated work over a documentation gap. What the suite does assert
+is that no explainer points at an ID the tracker does not hold, which catches
+the typo without the hostage-taking; the run reports stale and unknown IDs
+separately.
+
+The column was first named “The ask, in plain English” and renamed because the
+comma inside it broke a naive CSV header split — the guard now parses on quote
+boundaries as well, since a test that passes only because the data avoids the
+hazard is not testing anything.
+
 ### Mirrored, and the canonical set is now twelve
 
 Both files joined the mirror. `MIRRORED_DOCS` in `scripts/mirror-set.mjs` goes

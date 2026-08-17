@@ -55,7 +55,9 @@
     "measure:extrusion": "tsx scripts/measure-extrusion.mts",
     "measure:focus": "tsx scripts/measure-focus.mts",
     "measure:fly": "tsx scripts/measure-fly.mts",
-    "measure:panels": "tsx scripts/measure-panels.mts"
+    "measure:panels": "tsx scripts/measure-panels.mts",
+    "gus:extract": "tsx scripts/gus-extract.mts",
+    "zip:universe": "tsx scripts/zip-universe.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

@@ -8645,6 +8645,62 @@ could-not-run — so two runs of the same commit can differ with no code change.
 That is the argument for the printed census over a transcribed number, and it
 is why this table states which count was observed and which were derived.
 
+### The walk, and this session's production rows
+
+`pnpm walk:all` against production, appended permanently and run twice: **148
+of 148 before this session's checks, 152 of 152 after** — 0 regressions, 0
+could not run, in both runs. The four new checks are `[hotfix-0817]` in the
+census. The first of the two runs is the one that failed on the stated-instant
+check above, which is why there are two.
+
+Every row this session wrote against production, read off the table rather
+than recalled (C05's marker), 14:05Z onward:
+
+| run id | rows |
+|---|---|
+| `h2-walk-baseline@2026-08-17T14:10:55Z` | 38 |
+| `hotfix-0817-deploy@…14:22:56Z` / `…14:23:05Z` | 1 + 16 |
+| `hotfix-0817-deploy2@…14:26:34Z` | 17 |
+| `hotfix-0817-deploywait@…14:30:00Z` | 22 |
+| `hotfix-0817-deploywait2@…14:44:00Z` | 12 |
+| `hotfix-0817-check@…` through `check5@…` | 5 |
+| `hotfix-0817-carried-shot@…` (four runs) | 9 |
+| `hotfix-0817-console@…` | 2 |
+| `hotfix-0817-walk-final@…14:57:48Z` | 34 |
+| `hotfix-0817-walk-final2@…15:08:33Z` | 37 |
+| `hotfix-0817-preview-pane@2026-08-17` | 1 |
+
+**193 rows, all SYNTHETIC. No reaction was tapped and no ask submitted.** The
+baseline walk carries the label `h2-walk-baseline` because it ran before the
+session renamed itself off `h2`; the id is reported as it was written rather
+than as it should have been.
+
+**One of those rows landed ORGANIC and was corrected.** Opening the Browser
+pane at `http://localhost:3000` to verify item 2 against real carried rows
+wrote to the PRODUCTION search log, because `.env.local` holds the production
+connection string — and the pane sends no run header, since it is the app in a
+browser rather than a script. It is the third undeclared run in one day and the
+first whose writer was the preview browser, which is a gap
+`tests/run-marker-coverage.test.ts` cannot close: that guard covers the repo's
+scripts. Recorded as a window in `docs/synthetic-runs.md` and attributed by
+`pnpm searchlog:backmark` — 0 organic, 680 synthetic, 2845 unknown afterwards.
+
+### The deploys
+
+**The substantive deploy is verified landed.** Production served
+`generatedAt 2026-08-17T14:24:45.795Z` with 25 marked carried rows and the
+client `carried` block at 15:04Z, about forty minutes after the merge; the
+walk's section J read the real footer sentence off the real page.
+
+**The second deploy — the oldest-instant correction — cannot be verified by
+output, and is reported that way rather than assumed.** In today's snapshot the
+first carried row IS the oldest, so the corrected code produces a
+byte-identical answer. What is verified: `main` carries it, the R22 build gate
+passed on that exact tree, and `pnpm handoff` reports all five surfaces
+agreeing. Netlify exposes no deploy state to this session — its API answers 401
+without the author's login and the repo carries no deploy status — so a
+positive claim would have nothing behind it.
+
 ### Playbook diff
 
 One entry added to `docs/zip-playbook.md`: **a count derived at read time stops

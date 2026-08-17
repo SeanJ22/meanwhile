@@ -545,6 +545,46 @@ const md = `${L.join("\n")}\n`;
 
 const problems = [];
 
+/**
+ * **THE AUTHOR'S MARKINGS ARE NOT THIS SCRIPT'S TO OVERWRITE.**
+ *
+ * `Disposition` is the one column in the triage sheet that the author writes
+ * and this generator does not. It is also the column with no backup: the
+ * tracker does not carry it, so a regenerated CSV would not be a stale copy of
+ * anything — the rulings would simply be gone, and nothing in the output would
+ * say they had ever existed.
+ *
+ * The trigger is not hypothetical. On 2026-08-17 the author marked 116 of 117
+ * rows and left them in the working tree; any routine `pnpm deferred` between
+ * that moment and the commit would have destroyed the lot.
+ *
+ * So: if the CSV on disk carries a single non-empty `Disposition`, this run
+ * refuses through the same gate as every other refusal and writes NOTHING —
+ * not the CSV, and not the `.md` either, because a half-regenerated pair is
+ * worse than an untouched one.
+ *
+ * **There is deliberately no flag.** An escape hatch on a gate is how the gate
+ * stops meaning anything, and this one guards work that cannot be recovered by
+ * re-running anything. The way past it is to move the marked file aside by
+ * hand, which is a decision a person makes once rather than a flag they learn
+ * to type.
+ */
+if (existsSync(join(ROOT, CSV_OUT))) {
+  const existing = readTrackerFull(readFileSync(join(ROOT, CSV_OUT), "utf8"));
+  const marked = existing.records.filter(
+    (r) => (r.Disposition ?? "").trim() !== "",
+  );
+  if (marked.length > 0) {
+    problems.push(
+      `${CSV_OUT} carries ${marked.length} row(s) with a Disposition the author wrote ` +
+        `(${marked.slice(0, 5).map((r) => r.ID).join(", ")}${marked.length > 5 ? ", …" : ""}). ` +
+        "Regenerating would destroy them and the tracker does not carry that column, so " +
+        "nothing could restore it. There is no flag for this: move the marked file aside " +
+        "by hand if you genuinely want a fresh census.",
+    );
+  }
+}
+
 if (rendered !== open.length) {
   problems.push(
     `the header states ${open.length} open row(s) and the body rendered ${rendered} — they must be equal`,

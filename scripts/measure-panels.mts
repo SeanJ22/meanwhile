@@ -224,9 +224,22 @@ for (const [viewport, width, height] of ([
         };
       });
 
-      const shot = await page.screenshot({
-        path: join(OUT, `${viewport}-${zip}-${rep}-open.png`),
-      });
+      /*
+       * The screenshot is the MEASUREMENT — `decodePng` reads it — so it is
+       * always taken. `PANEL_FRAMES=0` drops only the disk write, which is
+       * what costs minutes and 300-odd files on a 40-rep pass.
+       *
+       * The first version of this wrote `if (WRITE_FRAMES) await
+       * page.screenshot(…)`, which would have thrown the pixels away and left
+       * the measurement reading an undefined frame. It never applied, so the
+       * 320-trial run wrote all 346 frames and `PANEL_FRAMES=0` did nothing —
+       * caught only because lint flagged `WRITE_FRAMES` as unused. A flag
+       * that silently does nothing is the empty-success shape wearing a
+       * config's clothes.
+       */
+      const shot = await page.screenshot(
+        WRITE_FRAMES ? { path: join(OUT, `${viewport}-${zip}-${rep}-open.png`) } : {},
+      );
       const png = decodePng(shot);
       let detail = 0;
       if (shape.bodyRect && shape.bodyRect.width > 8) {
@@ -324,9 +337,11 @@ for (const [viewport, width, height] of ([
           }
           return { rows: rows.length, rect };
         });
-        const shot2 = await page.screenshot({
-          path: join(OUT, `${viewport}-${zip}-${rep}-expanded.png`),
-        });
+        const shot2 = await page.screenshot(
+          WRITE_FRAMES
+            ? { path: join(OUT, `${viewport}-${zip}-${rep}-expanded.png`) }
+            : {},
+        );
         const png2 = decodePng(shot2);
         let rowDetail = 0;
         if (after.rect && after.rect.width > 8 && after.rect.height > 4) {

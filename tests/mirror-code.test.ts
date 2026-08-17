@@ -38,10 +38,13 @@ const allowlistPaths: string[] = (allowlist.files ?? []).map((e: unknown) =>
 
 test("the canonical mirror set lives in one place, and holds what was ruled into it", () => {
   // Ten by the author's ruling of 2026-08-17; twelve later the same day, when
-  // the deferred census (R31) was added by instruction. Growth by decision is
-  // fine — the failure this guards is the set living in two places and the
-  // two disagreeing, which is what produced two contradictory reports.
-  assert.equal(MIRRORED_DOCS.length, 13, "the canonical set changed size — was that a decision?");
+  // the deferred census (R31) was added by instruction; thirteen with the xlsx
+  // split; fourteen when the session map joined (R33), the author having placed
+  // it in docs/ himself after a session reported committing a file it never
+  // committed. Growth by decision is fine — the failure this guards is the set
+  // living in two places and the two disagreeing, which is what produced two
+  // contradictory reports.
+  assert.equal(MIRRORED_DOCS.length, 14, "the canonical set changed size — was that a decision?");
 
   const names = MIRRORED_DOCS.map((d) => d.mirrorName);
   for (const expected of [
@@ -58,6 +61,7 @@ test("the canonical mirror set lives in one place, and holds what was ruled into
     "deferred.md",
     "deferred.csv",
     "deferred.xlsx",
+    "session-map.md",
   ]) {
     assert.ok(names.includes(expected), `${expected} left the canonical set`);
   }
@@ -68,10 +72,10 @@ test("the canonical mirror set lives in one place, and holds what was ruled into
     "civic-app-brief.md is back on the standing list — the ruling dropped it",
   );
 
-  // Eleven copied, two generated. The generated pair have no repo counterpart,
+  // Twelve copied, two generated. The generated pair have no repo counterpart,
   // which is why they cannot be drift-checked and must not be counted as if
-  // they could.
-  assert.equal(COPIED_DOCS.length, 11);
+  // they could. (Eleven until session-map.md joined on 2026-08-17, R33.)
+  assert.equal(COPIED_DOCS.length, 12);
   assert.equal(MIRRORED_DOCS.filter((d) => d.repoPath === null).length, 2);
 });
 
@@ -369,26 +373,42 @@ test("the id map records the folder and the verification date", () => {
     /^\d{4}-\d{2}-\d{2}$/,
     "the verification date must be a real stamp",
   );
-  // Every document carries an id, and no two share one. The COUNT is read from
-  // the canonical set rather than restated — this assertion held a literal 10
-  // and broke the moment the set grew to 13, which is the same defect the
-  // handoff's "the canonical 10 present" line had, in a test this time.
+  // Every document is ACCOUNTED FOR — either it carries a Drive id, or it is
+  // declared pending and says why. The COUNT is read from the canonical set
+  // rather than restated: this assertion held a literal 10 and broke the moment
+  // the set grew to 13, which is the same defect the handoff's "the canonical
+  // 10 present" line had, in a test this time.
+  //
+  // `pendingDocs` exists because a Drive id cannot be invented. A document
+  // added to the set has no id until it has been copied to Drive AND
+  // `pnpm mirror:ids` has run against the live folder, which is exactly the
+  // "not yet recorded, never no such file" rule this file's own codeNote
+  // states for the code mirror. Declaring it keeps the gap loud: the id map
+  // must still cover the WHOLE set, and an undeclared missing id still fails.
   const ids = Object.values(map.docs) as string[];
+  const pending: string[] = map.pendingDocs ?? [];
   assert.equal(
-    ids.length,
+    ids.length + pending.length,
     MIRRORED_DOCS.length,
-    `the document id map covers ${ids.length} of ${MIRRORED_DOCS.length} mirrored document(s)`,
+    `the document id map accounts for ${ids.length} recorded + ${pending.length} pending of ` +
+      `${MIRRORED_DOCS.length} mirrored document(s)`,
   );
   assert.equal(
     new Set(ids).size,
-    MIRRORED_DOCS.length,
+    ids.length,
     "two documents share a Drive id — a join that collapsed",
   );
 
-  // And every one is keyed by a name the set actually holds.
+  // And every one is keyed by a name the set actually holds — pending included,
+  // so a pending entry cannot be used to park a name that left the set.
   const names = new Set(MIRRORED_DOCS.map((d) => d.mirrorName));
-  const strays = Object.keys(map.docs).filter((n) => !names.has(n));
+  const strays = [...Object.keys(map.docs), ...pending].filter((n) => !names.has(n));
   assert.deepEqual(strays, [], `id map holds name(s) not in the mirror set: ${strays.join(", ")}`);
+
+  // A name cannot be both recorded and pending — that is how a stale pending
+  // entry survives its own resolution and stops meaning anything.
+  const both = pending.filter((n) => n in map.docs);
+  assert.deepEqual(both, [], `declared pending while already recorded: ${both.join(", ")}`);
 });
 
 /* --------------------------------------------------------- 4: manifest --- */

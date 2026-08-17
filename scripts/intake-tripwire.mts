@@ -60,17 +60,25 @@ const searchRows = (await sql`
   GROUP BY 1 ORDER BY 1
 `) as { day: string; total: number }[];
 
-// The three counts, stated every run. An unattributable row is never counted
-// as a reader, so saying how many there are is the honest half of excluding
-// them.
+// Every class, stated every run. An unattributable row is never counted as a
+// reader, so saying how many there are is the honest half of excluding them —
+// and the counts have to SUM to the total, or the census is describing a table
+// that is not the one we have.
 const census = (await sql`
   SELECT
     COUNT(*) FILTER (WHERE run_class = 'ORGANIC')::int   AS organic,
     COUNT(*) FILTER (WHERE run_class = 'SYNTHETIC')::int AS synthetic,
     COUNT(*) FILTER (WHERE run_class = 'UNKNOWN')::int   AS unknown,
+    COUNT(*) FILTER (WHERE run_class = 'AUTHOR')::int    AS author,
     COUNT(*)::int                                        AS total
   FROM search_log
-`) as { organic: number; synthetic: number; unknown: number; total: number }[];
+`) as {
+  organic: number;
+  synthetic: number;
+  unknown: number;
+  author: number;
+  total: number;
+}[];
 
 const reactionDays: IntakeDayCount[] = reactionRows.map((r) => ({
   day: r.day,
@@ -105,11 +113,15 @@ const flags = [
   ...analyzeStore("reactions", reactionDays),
   ...analyzeStore("search_log", searchLogDays),
 ];
-const c = census[0] ?? { organic: 0, synthetic: 0, unknown: 0, total: 0 };
+const c = census[0] ?? { organic: 0, synthetic: 0, unknown: 0, author: 0, total: 0 };
+const unaccounted = c.total - (c.organic + c.synthetic + c.unknown + c.author);
 console.log(
   `search_log by run class (C05): ${c.organic} organic, ${c.synthetic} synthetic, ` +
-    `${c.unknown} unknown, ${c.total} total. ` +
-    `${organicDenominatorSentence(c)}`,
+    `${c.unknown} unknown, ${c.author} author, ${c.total} total` +
+    // A class in the data that the census does not name would otherwise vanish
+    // silently into the difference. It is stated, loudly, as its own number.
+    (unaccounted === 0 ? "" : ` — ${unaccounted} row(s) IN A CLASS THIS CENSUS DOES NOT NAME`) +
+    `. ${organicDenominatorSentence(c)}`,
 );
 console.log(
   `tripwire: ${reactionDays.length} reaction days, ${searchLogDays.length} search-log days analyzed; ` +

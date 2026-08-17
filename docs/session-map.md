@@ -1,0 +1,189 @@
+# The session map — built from the author's 117 dispositions
+
+2026-08-17. Source: `docs/deferred.csv`, Disposition column, read in full.
+Every ruling folded as written; nothing relitigated.
+
+**Updated after g7 (PR #71):** Queue 0 is DONE — M120, G09, M131, R16,
+R17, R02, V02, B06 closed; T04, T03, D03 recorded; T10 deliberate
+non-ruling. Queue 1 partial: R01, R19, R18, R08, R11, the stamp
+allowlist, and the build-stamp endpoint shipped; the remaining
+thirteen Queue 1 sub-items and all of Queues 2–3 carry to g8. New
+rows from g7: R33 (this file was missing from the repo — resolved by
+this commit), R34 (Neon local branch, author console action), R35
+(eight rows cite branch `claude/apple-clean-0816`, which never
+existed).
+
+The deck is clear: **every row has a disposition.** Under the author's
+ruling, H is unblocked the moment the pre-H queue below is worked — and
+several of your dispositions put items *inside* H itself, so H grows.
+
+---
+
+## Queue 0 — Closures and recordings (one small task, no build)
+
+These commit to the tracker and are done. One pasteable task closes all
+of them in a single run.
+
+| Row | Your ruling | Action |
+|---|---|---|
+| M120 | Close — hasn't reproduced | Status → Done (not reproduced) |
+| G09 | Close — this is resolved | Status → Done. **This also closes Q1 and Q2**: no ramp measurement, no sixteen frames, the two `measure:focus` could-not-run checks stay recorded as could-not-run permanently |
+| M131 | Light mode looks fine — keep as is | Status → Done (author-accepted) |
+| R16 | Accept as stands | Status → Done (allowlist accepted, 81 SUSPICIOUS entries stand) |
+| R17 | Close | Status → Done |
+| R02 | (You were unsure of the ask) | The ask was "is anything left, or close it" — the work shipped long ago. **Close as Done** |
+| V02 | Already used, no issues | Status → Done |
+| B06 | Idea on 8/7/2026 | Record the date in the row, Status → Done |
+| T04 | Never to solely one side, equal offers always made | **Ruling recorded in the tracker now**; published on the transparency page when T01 un-tables |
+| T03 | Full review does not happen before open | **Ruling recorded as accepted risk** — see flag 3 below |
+| R18 | No — use EST as standard | Generated-at lines carry EST; small config change, rides with Queue 1 |
+| R19 | Raise the number | Rides with Queue 1 |
+
+## Queue 1 — Do now: repo, truth, and small fixes (1–2 sessions)
+
+Your "now" rulings that are small, independent, and unblock everything
+else. Includes the six items you ruled on earlier in this chat that were
+never built.
+
+**From earlier rulings, still unbuilt:** the `.env.local` / production
+database split (P0 — a browser tab can still write unmarked rows into the
+sellable table), the `schedulepage` → human-name rename, `walk:all`
+reporting check identities instead of a count, the two stamp-audit
+allowlists, and the build-stamp endpoint.
+
+**From the sheet:** R01 (CLAUDE.md clobber guard — "approved, build now"),
+R05 (map layer tests now), R08 (harden mirror comparison now), R23
+(Turbopack warning — fix now), R19, R18, G04 (walk counts rows landed,
+not requests issued), M19 (overlapping pins — fix now), D19 (sitting-as
+attribution — fix now; the join is built, persistence and live-path are
+the remainder), M12 (split the school overlay), D18 (virtual meetings
+render as "online" with join info), D24 (chase the 348 OCD matches), D31
+(settle the curated-ID convention, keep them in), D22 (NovusAgenda
+adapter), R11 (branch-exists check — pre H), B01 interim rename (flag 2
+below).
+
+## Queue 2 — g7: the interface and ask-surface session (series)
+
+Your interface pass plus everything you ruled into it. This is more than
+one session; under the deferral rule it runs as g7, g7b… with the
+boundary between items.
+
+- **G05** — rules 4a–4f and 4h, whole ("Build Pre H")
+- **G07** — the pill label ("Build in G7")
+- **D35** — positions three-answer machinery ("Build in G7")
+- **The ask surface, consolidated into ONE build** (flag 1): **A01**
+  ("do now — high priority") + **A02** ("do now") + **M119** ("do the
+  merge now") + **A07** (coupling confirmed — ships in the same PR) +
+  **A06** (logging starts day one of the ask box, which is this build)
+- **M134** — a Yes becomes the pick ("build now")
+- **M136** — body battlecards ("build now and deploy with what we already
+  have; continue to add")
+- **M139** — the half-load and the load budget ("finish now")
+- **M135** — the every-row-opens-a-card audit ("finish now")
+- **M07** — returning-user state, per your adjustment: remember the zip
+  but force re-entry on return; never assume the district
+- **B15** — the laws half of key votes ("do now — finish laws")
+- **G10** — 8a's remainder ("finish now")
+- **P01** — measure decomposition into provisions ("finish now")
+- **P03** — reaction extensions to measures and positions ("finish now")
+- **D25** — comment access, keep curating at scale ("do now")
+- **D29** — Tucson's 56 boards wired through ("finish now")
+- **D06** — funding tracker unblocked per your ruling (flag 4)
+- **M93** — I owe you a default-vs-one-tap-down proposal for the WGH
+  card; you rule and it builds post H
+
+## Queue 3 — Post-g7, pre-H
+
+Everything you stamped "pre H" or "post G7, pre H":
+
+**A03, A04, A05** (data-center search, contact routing, docket
+summaries — post G7, pre H) · **B14** (blurb-equalization sweep — post
+G7) · **B19 + B16** (polling place in-app, siblings, built together —
+your B16 ruling accepts the accuracy bar with SoS / Vote411 / whatever
+works, reader stays in app) · **D05** (candidate info, PRL-fed — pre H,
+post G7) · **D52** (state campaign finance: **NH, AZ, NJ in that
+order** — pre H) · **D62** (PRL adopted — "yes, probably will use PRL
+downloads"; feeds D05) · **M81** (jurisdiction badge — pre H) · **M95**
+(governors' term end and age — pre H) · **P02** (ballot mapping — pre H)
+· **P06 + P07 + P08** (consolidated into the **"What do I do now?"
+link** you described — one surface answering all three) · **D47**
+(state comparison — pre H) · **H03** (the re-walk cohort — post G7,
+pre H) · **M123** (Kearsarge towns — "wire them in now"; moves here from
+h2's brief since you've pulled it forward)
+
+## Queue 4 — H itself (the hunt, briefs already written)
+
+h2 / h3 / h4 stand, amended by your rulings:
+
+- **H01** — "sweep scheduled for H" (h3)
+- **H02** — the denominator states what's found; readers who know of a
+  missing body are pointed at the **feedback link (to be built)** — this
+  adds a small build to h2's spec
+- **H04** — "schedule in H" (h4, all 47, no tiers — unchanged)
+- **D36** — the 29 NOT_ATTEMPTED candidate-link hunts ("run hunts in H")
+- **D46** — prop sponsor attribution ("build in H")
+- **X07** — the Facebook-as-campaign-site sweep ("run sweep, defer to H")
+- **D08** — ballot source hunt ("find other sources, defer to H")
+- **D50** — photos to 750, **with rungs generated so it scales** — the
+  rung-generation requirement goes into the brief
+- **D03** — finish state voting records for the named states and deploy;
+  defer the rest (flag 5: state list needs one confirmation)
+
+## Queue 5 — Post-H
+
+B18 · C01 · C02 · C03 · C04 · D04 · D07 · D51 · H05 ("attempt other
+routes, report back, post H build") · H06 · M13 · M18 (address at the
+time; ideally fix derivation) · M75 (legend-as-pill design, measure and
+fix) · M92 · M93's build · P04 · P05 · P10 (**Marana** as the second
+jurisdiction) · T07 · V03 · V04 · V06 · V08
+
+## Queue 6 — Tabled / non-code / kept in tracker
+
+Per your rulings, no scheduling: B02 (waits on the name) · B03 · B04 ·
+B05 · B07 · B08 · B09 · D23 (tabled for lawyer) · T01 · T02 · T06 ·
+P09 ("maybe, depending on sourcing — table") · P12 · V01 · V05 · V07 ·
+X02 · X03 · T10 (fires at testing end) · R13 (rule kept, anchor stands)
+
+---
+
+## Flags — each raised once, then folded as you rule
+
+**1 — The ask surface is one build wearing six IDs.** A01, A02, A07,
+M119, A06, and G05's rule 4d all describe the same surface: one input,
+keyword-first, routing to curated answers, refusing without a source,
+logging from day one. Building them as separate rows would produce six
+partial versions of one thing. The map consolidates them into a single
+g7 build; the tracker rows all close against it.
+
+**2 — "Meanwhile" as the interim name.** Your B01 ruling renames the
+product across all spots while B02 says the trademark search waits. The
+standing rule is no name committed before USPTO classes 9 and 42. An
+interim name *appearing publicly* is a soft commitment — testers and any
+early coverage will attach to it. The rename is queued as ruled; if you
+want "Meanwhile" internal-only until B02 runs, say so in one line.
+
+**3 — T03 is an accepted risk and connects to three tabled rows.** No
+full security review before open, with T02 (verification), T05 (abuse
+review), and T06 (calibration) all tabled. Together that means the
+reaction store opens on demo-grade hardening with anonymous-tier rows
+only. That's a coherent position — tier-weighting was always the design
+— but it's the bot-flooding surface Victoria named on day one, so it's
+recorded here as your accepted risk rather than an oversight.
+
+**4 — D06 unblocked, with the structural rule intact.** Your ruling
+unblocks the funding tracker; the settled FEC posture stands unchanged:
+reader-facing display is protected accountability use, and contributor
+data never enters anything sold — that's structural, not a per-feature
+decision. D23's counsel question stays tabled and doesn't block the
+build.
+
+**5 — One typo to confirm.** D03 reads "finish for only NH, NH, AZ" —
+taken as **NH, NJ, AZ**, matching the three covered states. Say
+otherwise if you meant it.
+
+**6 — T05, answered for you to confirm.** You wrote "unsure what the ask
+is." The ask: does a human abuse-review path exist before free-text
+comments open? Since P03's free-text remainder is in your "finish now"
+pile, this becomes load-bearing — the map assumes **free text does not
+ship until the review path exists**, which is what the abuse policy
+already promises. Overrule in one line if you want free text sooner.

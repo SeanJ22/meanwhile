@@ -78,9 +78,21 @@ export const MIRRORED_DOCS = [
   // committed version" check reads text and trims whitespace, which on a zip
   // compares two corrupted strings and would refuse every ordinary update.
   { mirrorName: "deferred.xlsx", repoPath: "docs/deferred.xlsx", binary: true },
+  // Joined 2026-08-17, taking the set to FOURTEEN — R33 closed. The session map
+  // is the author's 117 dispositions folded into a work order, and it was
+  // reported as committed by a session that never committed it: the reviewer
+  // was reading a file that did not exist in the repo. The author placed it in
+  // `docs/` himself; mirroring it is what stops the same gap recurring, because
+  // an absent mirror file now fails the set check out loud.
+  { mirrorName: "session-map.md", repoPath: "docs/session-map.md" },
 ];
 
-/** The eight with a repo counterpart, as `handoff` wants them. */
+/**
+ * The ones with a repo counterpart, as `handoff` wants them — the rest are
+ * generated at handoff time. Deliberately not stated as a count: the last one
+ * said "eight" while the answer was twelve, because the set grew and the
+ * sentence did not. The count that is asserted lives in the test.
+ */
 export const COPIED_DOCS = MIRRORED_DOCS.filter((d) => d.repoPath !== null);
 
 /**

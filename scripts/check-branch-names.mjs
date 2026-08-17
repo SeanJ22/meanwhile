@@ -66,6 +66,10 @@ const DECLARED_PROSE = new Map([
     "claude/d17-nh-agenda-wording",
     "named in D17 and R11 as the branch that never existed; both rows carry the correction (real branch: claude/link-ladder-and-coverage-audit)",
   ],
+  [
+    "claude/apple-clean-0816",
+    "named in R11 and R35 as the branch that never existed; R35 closed 2026-08-17 (g8) by correcting all eight rows to commit SHAs, which is stronger evidence than a branch name — the g4 work entered main WITHOUT a merge commit (780283c, ca4d31c, cd0a9da, d6d477d on main's first-parent chain), so whatever branch carried it left no trace by design, and no branch name can honestly be substituted",
+  ],
 ]);
 
 function git(args) {

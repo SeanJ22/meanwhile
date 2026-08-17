@@ -5,6 +5,7 @@ import { sql } from "drizzle-orm";
 import { getDb } from "./index.ts";
 import { reactions } from "./schema.ts";
 import { DIVISION_VINTAGE } from "./search-log.ts";
+import { assertWriteAllowed } from "./write-guard.ts";
 import {
   scaleForTargetType,
   type ReactionTargetType,
@@ -51,6 +52,11 @@ export interface StorableReaction {
  */
 export async function writeReaction(row: StorableReaction): Promise<boolean> {
   if (!process.env.DATABASE_URL) return false;
+
+  // See the note in search-log.ts: no database is a state, the wrong database
+  // is a misconfiguration. A reaction is the highest-value row in the product,
+  // so this refusal is the one that matters most.
+  assertWriteAllowed("a reaction");
 
   const occurredAt = new Date().toISOString();
   const suspectReason = row.suspectReason ?? null;

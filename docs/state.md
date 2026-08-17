@@ -8669,8 +8669,9 @@ than recalled (C05's marker), 14:05Z onward:
 | `hotfix-0817-walk-final@…14:57:48Z` | 34 |
 | `hotfix-0817-walk-final2@…15:08:33Z` | 37 |
 | `hotfix-0817-preview-pane@2026-08-17` | 1 |
+| `hotfix-0817-final@2026-08-17T15:30:00Z` | 1 |
 
-**193 rows, all SYNTHETIC. No reaction was tapped and no ask submitted.** The
+**194 rows across 19 run ids, all SYNTHETIC — counted off the table after the last of them. No reaction was tapped and no ask submitted.** The
 baseline walk carries the label `h2-walk-baseline` because it ran before the
 session renamed itself off `h2`; the id is reported as it was written rather
 than as it should have been.

@@ -1,125 +1,127 @@
-# Session brief — g9 (successor to g8, 2026-08-17)
+# Session brief — g10 (written 2026-08-17 by g9)
 
-The g8 session ended having landed the deploy and worked the top of the g7
-queue. This brief is written for whoever picks it up. **Nothing here is
-cuttable.** Work the items in order, complete each whole, keep starting the
-next until the session genuinely ends, defer whatever remains whole and
-specced, and report completion against the denominator.
+The queue, exactly where g9 stopped. Resolution, no drift.
+On completion, overwrite this file.
 
-Where a disposition in `docs/deferred.csv` and this brief disagree, **the
-disposition governs**. Read each row's full Notes in `docs/tracker.csv` before
-building; the specs live there, and g8's rows carry the evidence so you do not
-have to gather it twice.
+This session runs unattended. Nobody is available to answer.
 
-## Four things you would otherwise rediscover
+**NOTHING IN THIS BRIEF IS CUTTABLE.** Work items in order, complete each
+whole, keep starting the next until the session genuinely ends, defer whole
+with a row, and report completion against the denominator. Where a disposition
+in `docs/deferred.csv` and this brief disagree, the disposition governs. Read
+each row's full Notes in `docs/tracker.csv` before building; the specs live
+there and this brief does not restate what a row already holds.
 
-1. **The deploy is landed and verifiable.** `/api/build` returns a real SHA
-   now. `main` is at `e8f7b77` or later; the endpoint is the check, not the
-   green build. `pnpm handoff --ship` polls it and refuses to claim a landing
-   it did not see.
-2. **`.env.local` points `DATABASE_URL` at a LOCAL Neon branch** (R34). Do not
-   repoint it at production. A script that must read or write production reads
-   `WTP_PRODUCTION_DATABASE_URL_READONLY` explicitly — and note R36: **that
-   variable is not read-only.** Its role is `neondb_owner`.
-3. **`docs/deferred.csv` is never regenerated.** The refusal guard stands and
-   the author's Disposition column lives only there.
-4. **The walk emits a check-identity SET** to `docs/walk-checks.txt` and diffs
-   against the committed one. Do not compare totals by subtraction; read the
-   `added` / `GONE` lines. Three checks currently share an identity with
-   another — the run names them, and giving them distinguishing names is a
-   small work item.
-
-## The author's standing rule, law for every fix below
-
-A screenshot or named instance is an **EXAMPLE of a class-wide defect**, never
-the only occurrence. Fix the class at the shared code path, audit everywhere
-the pattern occurs, and report the full count found and fixed.
+**THE AUTHOR'S STANDING RULE:** a screenshot or named instance is an EXAMPLE of
+a class-wide defect. Fix the class at the shared code path, audit everywhere
+the pattern occurs, report the full count found and fixed.
 
 ---
 
-## 1 — The author's production feedback of 2026-08-17 (P0, first)
+## 0 — Two things that need the author's hands, stated first because they block measurement
 
-g8 opened both rows with their full specs and deferred them WHOLE rather than
-half-build them. They are the author's own words about the shipped product and
-they go first.
+Neither is buildable by an agent. Both are one-line edits in `.env.local` and
+both are the same mistake, so they are fixed together.
 
-**1a — R39: one "Phone" pill replaces stacked numbers, everywhere.** The
-Shaheen card renders seven phone rows and is the EXAMPLE; the scope is every
-official with more than one recorded number, at every zip, on every surface the
-contact pills render, fixed at the shared component. One pill labelled "Phone".
-Multiple numbers → a modal centred on screen, numbers listed vertically, each
-labelled by its office **from the recorded data** (never inferred from an area
-code — an inferred office label is a generated claim about a public official),
-each a `tel:` link. Exactly one number → the pill is a direct `tel:` link, no
-modal. The modal sits OVER the battlecard; dismissing it returns the card
-untouched; one modal at a time; native dismissal per M90's pattern. Provenance
-unchanged. If any official carries multiple emails, same treatment; if none,
-state that and change nothing. Report the count of officials with more than one
-number and that every one renders the single pill. Walk checks at Shaheen and
-at a single-number official, both viewports, both themes.
+**R36 and R42 are one swapped line.** The readonly role the author created by
+SQL on the production branch had its connection string written over
+`DATABASE_URL` — the LOCAL branch line, host `ep-weathered-cherry`,
+`WTP_DB_ROLE=local` — instead of over `WTP_PRODUCTION_DATABASE_URL_READONLY`,
+which still carries `neondb_owner` on `ep-dry-river`. Verified by
+`pnpm verify:readonly` on 2026-08-17: `current_user = neondb_owner`,
+`pg_has_role(neon_superuser) = true`, INSERT/UPDATE/DELETE all granted on all
+three stores, and `delete from search_log where false` **permitted**.
 
-**1b — R40: the personal email leaves the product; Feedback becomes an in-app
-form.** The two halves are ONE SUBJECT — removing the address without shipping
-the form leaves a reader with no way to reach anyone. Full spec on R40,
-including the one boundary g8 found while scoping: `app/api/geocode/route.ts`
-sends the address in an OUTBOUND User-Agent, which is a server-side contact
-route the courteous-client rule requires, and is outside the row's scope.
+- **R36:** put a readonly string pointed at the PRODUCTION endpoint
+  (`ep-dry-river-axwtolzc-pooler`) into `WTP_PRODUCTION_DATABASE_URL_READONLY`.
+  Then `pnpm verify:readonly` — it exits non-zero printing "R36 STAYS OPEN"
+  until every check passes and exits 0 printing "R36 CLOSES" when they do.
+- **R42:** point `DATABASE_URL` back at a role that EXISTS on the local branch.
+  Today it cannot authenticate at all, so every local write path fails at the
+  driver and no local run can prove a write succeeds. The fastest check is
+  submitting the form at `/feedback` locally: a 204 means fixed, a 500 means
+  not.
+- If a writing handle to production is still wanted for migrations and backmark
+  passes, carry it under a name that says so — `WTP_PRODUCTION_DATABASE_URL_WRITE`.
+  g9 had to use the variable named READONLY to apply migration 0005, which is
+  R36's complaint demonstrated.
 
-## 2 — The g7 queue's eight remaining sub-items, in order
+**Do not create or alter roles yourself, and do not force it.** If the author
+has not done this by the time you run, say so and carry on; every other item
+below is reachable without it.
 
-g8 closed five of the thirteen (R05, R23, G04, R37 the check identities, R38
-the reader-facing source name) and shipped B01's interim rename. These eight
-remain, each with its full spec on its own row:
+**One decision is waiting on the author and blocks nothing: R41.** Should the
+feedback form collect an OPTIONAL reply address? R40's spec said both
+"identifier-free beyond what the reader types" and "T09 scrub before storage",
+and both cannot hold for one field. g9 took the strict reading and the form
+says out loud that we cannot write back. If the author rules yes, the shape is
+already specced in the row and is purely additive.
 
-**M19** (overlapping pins swallow each other's clicks) · **D19** (sitting-as
-persistence and the live path) · **D18** (virtual meetings render as "online"
-with join info, a list overlay, never a fabricated pin) · **D24** (the 348
-unmatched OCD divisions) · **D31** (curated-ID convention settled) · **M12**
-(the school overlay split into three) · **D22** (the NovusAgenda adapter —
-**read the row's own correction first**: the Vail tenant is an archive, the
-adapter is built against a LIVE tenant only, and if no live tenant exists in
-scope, that finding is the deliverable).
+---
 
-M19 is the largest and it is first: it needs a real decision between spiderfy,
-clustering and zoom-dependent grouping, and a walk check that can see a pin
-intercepting another's clicks.
+## 1 — The six remainders of g8's item 4, same order, specs in each row
 
-## 3 — g7 items 4 through 8, whole, in order
+They do not change. In order:
 
-Never started, still deferred whole with their specs intact. In order:
+* **D19** — sitting-as persistence and the live ingest path. An unresolved
+  heading still attributes to NOTHING, never to the host.
+* **D18** — virtual meetings render as "online" with join info, in the list
+  overlay, never a fabricated pin. The class is EVERY adapter's virtual events,
+  not just Legistar's two.
+* **D24** — the 348 unmatched canonical OCD divisions: close where a match
+  exists, record per-division why none exists where it does not. Never a fuzzy
+  join.
+* **D31** — the curated-ID convention settled per the row: check opencivicdata's
+  own convention first, adopt or mint under the documented `curated:` scheme,
+  fix the two named consequences.
+* **M12** — the school overlay split into unified / elementary / secondary:
+  three types, three sources, three toggles, tests updated.
+* **D22** — the NovusAgenda adapter against a LIVE tenant only; the Vail tenant
+  is an archive. If no live tenant exists in scope, that finding is the
+  deliverable and the row records it.
+
+M19 is DONE (g9) and leaves this list.
+
+## 2 — Resume the g7 item 4–8 block, whole, in order
+
+The full specs are in the g7 brief and its referenced rows, unchanged:
 
 * **item 4** — the ask surface: one build closing A01, A02, A07-same-PR, M119,
   A06, G05-4d; copy promises only what routes.
 * **item 5** — G05: rules 4a–4c, 4e, 4f, 4h.
 * **item 6** — G07: the pill label.
-* **item 7** — D35: the positions three-answer machinery.
+* **item 7** — D35: positions three-answer machinery.
 * **item 8** — the fourteen finish-now rows: M134, M136, M139, M135, M07, B15,
   G10/8a, P01, P03 with free-text gated on T05, D25, D29, D06 under the
   unchanged structural FEC rule, M93 proposal-only.
 
-## 4 — Two small debts g8 created and named
+## 3 — H02, whose surface now exists
 
-* Three walk checks share an identity with another, so the identity diff counts
-  them once. The run names them. Give them distinguishing names.
-* `docs/mirror-code-ids.json` declares `session-map.md` **pending**: it has no
-  Drive id until it has been copied to Drive and `pnpm mirror:ids` has run
-  against the live folder. Run it and move the entry from `pendingDocs` into
-  `docs`.
+H02's missing-body feedback link is the surface R40 shipped, with a second
+entry point. The `feedback` store's `surface` column already holds `COVERAGE`
+for exactly this, so the link needs no new page and no new store — wire it,
+pass `surface="COVERAGE"`, and the author's queue tells the two apart.
+
+---
 
 ## Handoff
 
 `pnpm walk:all` against production, new checks appended, old and new counts
-stated, with the identity diff (`added` / `GONE`) quoted rather than summarised.
+stated, the identity set emitted — it must stay 100% distinct, and a duplicate
+is now a NAMED REGRESSION that fails the run rather than a printed suggestion.
 `state.md` via `pnpm stamp`. Tracker rows by ID; `docs/deferred.csv` NOT
-regenerated. Playbook diff or an explicit "nothing new". Overwrite this file.
-`pnpm handoff --ship` with the R22 gate, and verify the deploy LANDS via
-`/api/build` — state the SHA it returns.
+regenerated. Update `docs/session-map.md` with this session's closures — it is
+in the repo and the mirror, and keeping it current is part of every handoff.
+Playbook diff or explicit "nothing new". Overwrite `docs/session-brief.md`.
+`pnpm handoff --ship` with the R22 gate; verify the deploy LANDS via
+`/api/build` and state the SHA.
 
 Standing report in the established format: ship status; test, lint, build
 counts with allowlisted warnings named; every mirror file by name with bytes;
 `context.md` against its 40 KB cap; tracker rows touched by ID;
-`stamp-audit.md` inline; production rows by run-id census. Completion against
-the denominator. Ending with "Needs your hands."
+`stamp-audit.md` inline; production rows by run-id census — expected 0 organic
+throughout. Completion against the denominator, and within each item, sub-items
+completed of sub-items listed. Ending with "Needs your hands."
 
 ## Standing rules
 

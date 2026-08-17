@@ -13,6 +13,32 @@ this commit), R34 (Neon local branch, author console action), R35
 (eight rows cite branch `claude/apple-clean-0816`, which never
 existed).
 
+**Updated after g8 (PR #74):** R23 closed (the Turbopack trace — the
+deploy that had been stale since `main@a8f7ff2` landed), G04 closed (the
+walk counts rows LANDED, not requests issued), R38 answered clean and
+its precondition put in place, B01 interim shipped (the display name is
+**Meanwhile** on every on-site surface, the repo name and every off-site
+identifier deliberately unchanged), R22 rebuilt after the build stamp
+was found incapable of its one measurement. New rows from g8: R36 (the
+connection string named READONLY is not read-only), R39 and R40 (the
+author's production feedback of 2026-08-17), both deferred whole with
+their specs intact.
+
+**Updated after g9 (this session):** R39 and R40 **closed** — the phone
+pill across all 531 multi-number officials, and the personal address out
+of the product with the in-app feedback form and its own store in its
+place. M19 **closed** to the author's spiderfy ruling. The walk's
+identity set is 100% distinct and a shared identity is a named
+regression now. R36 **verified and still open** — the readonly
+credentials went into the wrong `.env.local` line, so the variable named
+READONLY still connects as `neondb_owner` with full write and DDL. New
+rows from g9: R41 (should the feedback form collect an optional reply
+address — a user-data-field decision, the author's), R42 (the local
+`DATABASE_URL` cannot authenticate, so no local run can prove a write).
+**Still carrying:** item 5's remaining six — D19, D18, D24, D31, M12,
+D22 — and all five of the g7 item 4–8 block (the ask surface, G05, G07,
+D35, and the fourteen finish-now rows).
+
 The deck is clear: **every row has a disposition.** Under the author's
 ruling, H is unblocked the moment the pre-H queue below is worked — and
 several of your dispositions put items *inside* H itself, so H grows.

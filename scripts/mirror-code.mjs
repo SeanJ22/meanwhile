@@ -84,6 +84,7 @@ import {
 import { join } from "node:path";
 
 import { today } from "./doc-dates.mjs";
+import { generatedAtEastern } from "./generated-at.mjs";
 import { MIRRORED_DOCS, MIRRORED_DOC_NAMES, MIRRORED_DOC_REPO_PATHS } from "./mirror-set.mjs";
 
 /** The subfolder inside the mirror. Kept out of the ten documents deliberately. */
@@ -253,7 +254,10 @@ export function verifyIdMap(recorded, live) {
  */
 export function mirrorCode({ root, mirrorPath, checkOnly = false, headSha = null }) {
   const stampedToday = today();
-  const generatedAt = new Date().toISOString();
+  // R18: this is the generated-at instant on a generated document, so Eastern.
+  // `stampedToday` beside it stays America/Phoenix — the session DAY, which is
+  // a different question with a different rule.
+  const generatedAt = generatedAtEastern();
 
   const { error, entries, seededOn } = readAllowlist(root);
   if (error) {

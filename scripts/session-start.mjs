@@ -130,9 +130,25 @@ if (!hasOriginMain || !hasLocalMain) {
 // most expensive way for this particular file to fail.
 const CLAUDE = join(ROOT, "CLAUDE.md");
 // Grown deliberately: the friction constitution (0a, 2026-08-14), the
-// n-stores and plain-language non-negotiables (2026-08-15). The clobber
-// signature is a *tiny* file, so only the floor really guards.
-const EXPECTED_KB = 17;
+// n-stores and plain-language non-negotiables (2026-08-15), the transparency
+// mandate and the ladder (2026-08-16/17). The clobber signature is a *tiny*
+// file, so only the floor really guards.
+//
+// R19, 2026-08-17: this was 17 while the file was 44.4 KB, against a hardcoded
+// [8, 24] KB band — so the warning fired on EVERY session open for weeks. A
+// warning that always fires is one nobody reads, which is how the real one
+// gets missed, so the noise was itself the defect.
+//
+// The band now DERIVES from this number instead of being written beside it.
+// That is the actual fix: the previous shape had two facts to keep in sync and
+// they drifted the moment the file grew, and raising the constant alone would
+// just restart the same clock. CLAUDE.md grows every time the author adopts a
+// rule, so anything fixed here goes stale by design.
+const EXPECTED_KB = 44;
+// Half to double. Wide enough that ordinary growth is silent, narrow enough
+// that a file which has halved still gets looked at.
+const WARN_BELOW_KB = EXPECTED_KB / 2;
+const WARN_ABOVE_KB = EXPECTED_KB * 2;
 
 if (!existsSync(CLAUDE)) {
   fail("CLAUDE.md", "missing entirely");
@@ -148,10 +164,13 @@ if (!existsSync(CLAUDE)) {
   } else if (bytes < 1024) {
     fail("CLAUDE.md", `${bytes} bytes — under 1 KB, so it has been overwritten`);
     notes.push(...restoreNote());
-  } else if (bytes < 8 * 1024 || bytes > 24 * 1024) {
-    // Not fatal: the file legitimately grows. But a large swing from ~10 KB is
-    // worth a look before trusting it.
-    warn("CLAUDE.md", `${kb} KB — expected roughly ${EXPECTED_KB} KB, check it`);
+  } else if (bytes < WARN_BELOW_KB * 1024 || bytes > WARN_ABOVE_KB * 1024) {
+    // Not fatal: the file legitimately grows. But a large swing is worth a look
+    // before trusting it.
+    warn(
+      "CLAUDE.md",
+      `${kb} KB — outside ${WARN_BELOW_KB}–${WARN_ABOVE_KB} KB (expected roughly ${EXPECTED_KB} KB), check it`,
+    );
   } else {
     ok("CLAUDE.md", `${kb} KB, intact`);
   }

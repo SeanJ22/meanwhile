@@ -86,9 +86,11 @@ import {
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { checkBranchNames } from "./check-branch-names.mjs";
 import { CAP_BYTES, writeContext } from "./context-file.mjs";
 import { stopDevServer } from "./dev-server.mjs";
 import { today } from "./doc-dates.mjs";
+import { generatedAtEastern } from "./generated-at.mjs";
 import { mirrorCode } from "./mirror-code.mjs";
 import { COPIED_DOCS, MIRRORED_DOCS, checkMirrorContents } from "./mirror-set.mjs";
 
@@ -174,10 +176,37 @@ function gitShowBuffer(rev, repoPath) {
   }
 }
 
-function sameBytes(a, b) {
+/**
+ * Is the mirror copy already current? (R08, hardened 2026-08-17.)
+ *
+ * Renamed from `sameBytes` because raw bytes were the bug. The two halves of
+ * the mirror step disagreed about what "same" means: this comparison read raw
+ * bytes while the divergence check twenty lines below normalized CRLF first.
+ * On Windows the working tree is CRLF and git stores LF, so any mirror copy
+ * written with LF — by a different tool, a non-Windows checkout, or an editor
+ * that normalizes on save — reads as DIFFERENT here forever. The result is a
+ * full recopy every run and a permanently red line on the one gate meant to
+ * catch a genuinely diverged mirror.
+ *
+ * It is not hypothetical arithmetic: CLAUDE.md is 45417 bytes in the working
+ * tree and 45147 in git, and the 270-byte gap is exactly its 270 CRLF line
+ * endings. A byte comparison across that boundary can only ever say "differs".
+ *
+ * Binary entries keep the raw comparison, for the reason the divergence check
+ * already records: newline-normalizing a `.xlsx` compares two corrupted
+ * strings. So the flag has to reach this function rather than being applied
+ * only downstream of it — which is what let the two halves drift apart.
+ */
+function sameContent(a, b, isBinary) {
   if (!existsSync(a) || !existsSync(b)) return false;
-  if (statSync(a).size !== statSync(b).size) return false;
-  return readFileSync(a).equals(readFileSync(b));
+  if (isBinary) {
+    if (statSync(a).size !== statSync(b).size) return false;
+    return readFileSync(a).equals(readFileSync(b));
+  }
+  // No size shortcut for text: two files that differ only in line endings have
+  // different sizes and identical content, which is the whole case above.
+  const normalize = (s) => s.replace(/\r\n/g, "\n").trimEnd();
+  return normalize(readFileSync(a, "utf8")) === normalize(readFileSync(b, "utf8"));
 }
 
 /* ------------------------------------------------------------------ 1-3 --- */
@@ -371,7 +400,8 @@ function writeGitState() {
   const lines = [];
   const put = (label, value) => lines.push(`${label}: ${value}`);
 
-  put("generated", new Date().toISOString());
+  // R18: git-state.txt is a generated mirror document, so Eastern.
+  put("generated", generatedAtEastern());
   put("branch", branch);
 
   const subject = (rev) => tryRun("git", ["log", "-1", "--format=%s", rev]);
@@ -468,7 +498,10 @@ async function writeContextFile(note) {
   try {
     const built = await writeContext(MIRROR, {
       gitFacts,
-      generatedAt: new Date().toISOString(),
+      // R18: the generated-at line on a generated DOCUMENT is Eastern.
+      // `stampToday` below stays America/Phoenix — different question, and
+      // context.md deliberately carries both.
+      generatedAt: generatedAtEastern(),
       stampToday: today(),
     });
     const kb = (built.bytes / 1024).toFixed(1);
@@ -509,6 +542,28 @@ if (CHECK_ONLY) {
   else ok("dev server", CHECK_ONLY ? `${detail}` : detail);
 }
 
+/* ------------------------------------------------------- 3b branch names --- */
+
+// R11: a branch named in a tracker Note has to be one this repository
+// remembers. R03 requires every Done row to name its branch, and until this ran
+// nothing checked that the name was real — so the requirement produced
+// well-formatted fiction three times. Reports, never blocks: the rows it flags
+// are history, and failing a ship over old prose would teach everyone to skip
+// the line.
+{
+  const { unresolved, checked } = checkBranchNames(join(ROOT, "docs/tracker.csv"));
+  if (unresolved.size === 0) {
+    ok("branch names", `${checked} named in tracker Notes, all remembered by git`);
+  } else {
+    for (const [name, rowIds] of unresolved) {
+      warn(
+        "branch names",
+        `${name} is claimed by ${rowIds.join(", ")} but is not a ref, a merge subject, or in the reflog`,
+      );
+    }
+  }
+}
+
 /* -------------------------------------------------------------- 4 mirror --- */
 
 if (!existsSync(MIRROR)) {
@@ -522,7 +577,13 @@ if (!existsSync(MIRROR)) {
     const from = join(ROOT, repoPath);
     const to = join(MIRROR, mirrorName);
 
-    if (sameBytes(from, to)) {
+    // Hoisted above the comparison (R08). `sameContent` needs to know whether
+    // this entry is binary, and computing it after the call is what allowed the
+    // comparison and the divergence check below to use different rules.
+    const entry = MIRRORED_DOCS.find((d) => d.repoPath === repoPath);
+    const isBinary = entry?.binary === true;
+
+    if (sameContent(from, to, isBinary)) {
       already++;
       continue;
     }
@@ -547,9 +608,7 @@ if (!existsSync(MIRROR)) {
     // version" on the first ordinary update of a mirrored workbook and refused
     // it — a protection misfiring into a permanent block. `deferred.xlsx` was
     // the first binary in the set and found this before it shipped.
-    const entry = MIRRORED_DOCS.find((d) => d.repoPath === repoPath);
-    const isBinary = entry?.binary === true;
-
+    // (`entry` and `isBinary` are computed above, before the sameContent call.)
     const mirrorBytes = existsSync(to)
       ? readFileSync(to, isBinary ? null : "utf8")
       : null;

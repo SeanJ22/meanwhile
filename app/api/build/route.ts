@@ -11,16 +11,23 @@
  * the commit SHA the deploy was built from, so a deploy is verifiable even
  * when it has no visible output.
  *
- * ## Where the SHA comes from, and why it is read at module scope
+ * ## Where the SHA comes from — and the premise that was wrong
  *
- * Netlify sets `COMMIT_REF` in the BUILD environment. Next inlines a
- * `process.env.X` reference it can see at build time into the server bundle,
- * so reading it here — at module scope, with the full property access written
- * out literally rather than destructured or looked up dynamically — captures
- * the value of the build rather than of the request. A dynamic read
- * (`process.env[name]`) would defeat that inlining and return undefined at
- * runtime, which is the quiet way this endpoint would end up reporting nothing
- * forever.
+ * Netlify sets `COMMIT_REF` in the BUILD environment and NOT in the function
+ * runtime. This route's first version read `process.env.COMMIT_REF` at module
+ * scope, on the stated understanding that Next inlines a statically-visible
+ * env reference into the server bundle. IT DOES NOT. Server code keeps the
+ * reference as a runtime read — the built chunk was checked, 2026-08-17, and
+ * still contained the literal text `process.env.COMMIT_REF??null` — so on the
+ * live deploy the read happened at cold start, found nothing, and the endpoint
+ * answered `"commit":"unknown"` on every request. The quiet failure its own
+ * header warned about, arriving through the other door: not a dynamic lookup
+ * defeating the inlining, but no inlining ever happening.
+ *
+ * The mechanism that actually inlines is `env` in `next.config.ts`, which
+ * substitutes values into the bundle at build time. The route reads the
+ * `WTP_BUILD_*` names it defines. Only build metadata goes through it —
+ * anything inlined there is readable by anyone who can read the bundle.
  *
  * `unknown` is returned honestly when the variable is absent — a local `next
  * build` has no COMMIT_REF, and inventing a plausible SHA would make this
@@ -41,12 +48,20 @@
  * `process.env`, because that is how a token ends up in a public JSON body.
  */
 
-// Read at module scope so the build-time value is what gets inlined.
-const COMMIT_REF = process.env.COMMIT_REF ?? null;
-const BRANCH = process.env.BRANCH ?? null;
-const CONTEXT = process.env.CONTEXT ?? null;
-const DEPLOY_ID = process.env.DEPLOY_ID ?? null;
-const NETLIFY = process.env.NETLIFY ?? null;
+/**
+ * The build's values, inlined by `next.config.ts`'s `env`. An empty string is
+ * what the config writes for an absent variable, so it reads as absence here
+ * rather than as a value — `""` would otherwise be a SHA seven characters
+ * long once sliced, which is the render default this repo forbids.
+ */
+const present = (value: string | undefined): string | null =>
+  value === undefined || value === "" ? null : value;
+
+const COMMIT_REF = present(process.env.WTP_BUILD_COMMIT);
+const BRANCH = present(process.env.WTP_BUILD_BRANCH);
+const CONTEXT = present(process.env.WTP_BUILD_CONTEXT);
+const DEPLOY_ID = present(process.env.WTP_BUILD_DEPLOY_ID);
+const NETLIFY = present(process.env.WTP_BUILD_ON_NETLIFY);
 
 export function GET() {
   return Response.json(

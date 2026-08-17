@@ -42,12 +42,24 @@ require a change to it was to stop and record a row instead.
 
 ## What happened
 
-**Three of eight items landed, plus the standing rule and one rule of item 4.
-Five items were never started.**
+**Five of eight items landed whole, plus the standing rule, one rule of item 4,
+and two thirds of item 8. Two items were never started.**
 
 Stated that way on purpose: the rule this session wrote requires a denominator
 rather than a narrative, and "the consolidation was deferred" would be the
 sentence it exists to forbid.
+
+| item | state |
+|---|---|
+| the standing rule | **done**, first, before any other work |
+| **1a 1b 1c 1d** | **done** — three fixed, one confirmed |
+| **2 (C05)** | **done** whole |
+| **3 (M141)** | **done** — mechanism named from the code, 320 of 320 |
+| **4** | rule **4g done**; 4a–4f and 4h deferred whole (**G05**) |
+| **5** | **not started** (**G07**) — deliberately, see below |
+| **6** | **done**, with per-zip reachability reported |
+| **7** | **not started** (**G09**) |
+| **8** | **8b done**, **8c** three bullets of four, **8a** one deliverable of three (**G10**) |
 
 ### What landed
 
@@ -77,27 +89,52 @@ sentence it exists to forbid.
 - **Rule 4g**, taken out of order because it is a one-line copy ruling that
   cannot half-land. One surface carried the line.
 
-### Item 3, and why it is not closed here
+### Item 3 (M141) — closed, on the measurement
 
-The mechanism is named from the code rather than inferred: `.al-row:hover`
-(`app/globals.css`) is the style rule a pointer move recalculates, which is the
-"something dirtied the layer" g5's account referred to. The high-n re-run was
-launched — 320 trials, phone viewport, no pointer events, both device pixel
-ratios, four zips — and its result is recorded in `docs/state.md` §38. The row
-stays open or closes on that number, not on this paragraph.
+**The author's objection was right about the scrim and wrong about the claim.**
+A stacked scrim does not respond to pointer movement, and it never had to: the
+scrim is what PREVENTED the paint, and something else FORCED the repaint. g5
+named only the first half.
+
+The second half, read out of the stylesheet rather than inferred:
+`app/globals.css:2828`, `.al-row:hover`. The rows inside the panel body carry a
+hover rule, so a pointer entering the panel triggers a style recalc that
+invalidates paint **inside `.al-overlay-body`** — the exact container whose
+pixels were missing. A phone has no hover, which is why a phone reader never got
+the free repair.
+
+**320 of 320** on the paint assertion — 390×844, both device pixel ratios, four
+zips, 40 cold trials each, no pointer event of any kind. 960 of 960 across all
+three assertions. Stated as a bound rather than as green: 4 of 4 against a 25%
+failure rate happens 32% of the time and was correctly dismissed; 320
+consecutive passes put the **95% upper bound on the failure rate at 0.93%**.
+What the measurement cannot see — one machine, one Chromium build — is stated
+too.
+
+### Item 6 — done, with the finding the brief asked for
+
+Reachability was established from the committed rosters **before** anything was
+removed: 85701 and 07866 keep their mayors (row → battlecard → Representation);
+85641 and 03255 have no mayor to lose. **No zip loses the office.** Newbury's
+M32 no-mayor fact survives untouched — it is keyed on the office title, not on
+"Mayor". The cost is named: the mayor moved from zero clicks to two.
 
 ### What did not, and where its spec lives
 
 | Row | What |
 |---|---|
-| **item 4** | the interface consolidation, rules 4a–4f and 4h; M137 and M138 are marked Absorbed and point here |
-| **item 5** | Ask discoverability — the pill's label carries the teaching |
-| **item 6** | Mayor out of Who Governs Here, with per-zip reachability reported |
-| **item 7** | the ramp measurement for NH and NJ, and sixteen frames |
-| **item 8** | g5's three unreported deliverables, `pnpm perf`, `context.md` |
+| **G05** | item 4, rules 4a–4f and 4h; M137 and M138 are marked Absorbed and point here |
+| **G07** | item 5, Ask discoverability |
+| **G09** | item 7, the ramp measurement for NH and NJ, and sixteen frames |
+| **G10** | item 8a's two measurement deliverables, and 8c's R16 remainder |
 
-Each carries its whole spec in the g6 brief, unchanged. Nothing was thinned and
-nothing was reported as done that was not.
+Each carries its whole spec, unchanged. Nothing was thinned and nothing was
+reported as done that was not.
+
+**Item 5 was deliberately not attempted, and the reason is a coupling rather
+than doubt.** It is the designed compensation for rule 4a's discoverability
+cost, and 4a is not built. Shipping 4a alone would have left two Ask boxes and
+hidden both — worse than today, not better — so rules 4a–4f stayed whole.
 
 ### The findings worth carrying forward
 

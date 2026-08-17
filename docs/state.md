@@ -8300,6 +8300,86 @@ The other two 8a deliverables — the per-state byte and layer counts, and the
 both-themes frame set — need measurement runs and are **not** done; they stay in
 G10.
 
+### The handoff, and the count that closes
+
+`pnpm walk:all` against production: **148 checks passed, 0 regressions, 0 could
+not run.**
+
+**The count reconciles against item 1c's enumeration, exactly:**
+
+```
+135   at session open (h's merge, eb4df50 — observed)
+ -1   [0818] 07866: the mayor line renders, retired (the author retired the claim, item 6)
++14   g6's new checks
+────
+148   observed at session end
+```
+
+g6's fourteen, by name and multiplicity: `who-governs states one number for one
+list` ×4 zips; `the meetings count agrees with itself` ×4 zips ×2 viewports = 8;
+`the Mayor row is gone from the who-governs panel` ×1; `the mayor is reachable
+from who-governs` ×1.
+
+The suite now prints that census itself every run, so the next session diffs
+against a number the instrument produced rather than one a report transcribed.
+
+**`pnpm overlaps`: 0 overlaps across 9 of 9 states** at 390×844 — run because
+item 6 changed the who-governs card's height and the sidebar footer, map legend
+and count doors have collided at that width before. **`pnpm contrast`: all pairs
+clear their bar.**
+
+#### A guard that failed against a working build, and what it cost to notice
+
+The mayor-reachability check **failed twice before it was right**, and both
+failures were the instrument rather than the product. Worth recording because
+the second one is a trap any future walk check can fall into.
+
+1. **First failure — it stopped at the card.** The roster lives on the
+   Representation tab, and the card opens on Overview. The check read the card
+   and reported the office missing when it was one tab away.
+2. **Second failure — it ran on a page a dozen other checks had already used.**
+   It lived inside the shared per-zip loop in section C. The `Representation`
+   button it found and clicked belonged to whatever surface an earlier check had
+   left open, not to the card this check had just opened. It reported a **named
+   regression against a production build where the office was demonstrably
+   present** — the precise failure mode `walk-0815g` established the `cannotRun`
+   channel for, arriving from the other direction.
+
+The fix is isolation: the pair now runs in **section I on its own fresh page**,
+and every query is scoped to the dialog it opened — `[role="dialog"]`, its own
+`[role="tablist"]`, its own `[role="tabpanel"]`. Nothing is read off
+`document.body`.
+
+**And a third mangling, in the diagnostic rather than the suite, caught before
+it became a finding.** A throwaway probe printed the roster as `Jo eph Jack on`
+and `Council Pre ident` — every lowercase "s" gone. That reads exactly like a
+font or encoding defect in the product, and it was the probe: its
+`replace(/\s+/g, " ")` reached the page as `/s+/g` and replaced runs of the
+letter s with spaces. **The product was never wrong.** A near-miss on reporting
+an instrument as a defect, which is the same class of error as the two above,
+and the reason the check now asserts against a scoped element with a character
+count printed beside it.
+
+#### Item 6's real cost, stated
+
+The mayor moved from **zero clicks** (a row on the who-governs panel) to **two**
+(the body row → its battlecard → the Representation tab). The author ruled the
+placement awkward and ruled it out, so the distance is his call — but it is a
+cost, it is not zero, and the walk check prints the path so it stays visible
+rather than being rediscovered as a complaint.
+
+#### An operational consequence of item 1b, for whoever verifies the next deploy
+
+`/api/meetings` now refuses unknown query parameters by name, so **cache-busting
+with `?cb=…` is refused**:
+
+```
+{"error":"unknown parameter: cb. This route accepts: lat, lng, radiusKm, zip"}
+```
+
+That is the rule working, and it cost this session one confused verification
+loop. Bust the cache with a `Cache-Control: no-cache` header instead.
+
 ### What was NOT started
 
 **Items 5 and 7 were never begun, and items 4 and 8 are part-done.** Each

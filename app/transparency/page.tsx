@@ -84,6 +84,25 @@ export default function TransparencyPage() {
             it is never treated as your address and never used to work out
             your ballot.
           </p>
+          {/* C05 (2026-08-17). Ships in the same commit as the run_class
+              column and the exclusion filter, per the coupling rule — a
+              collection change that reaches this page later is a collection
+              change nobody disclosed. */}
+          <p>
+            Some of the rows in that log are ours. We run automated tests
+            against the live site every day, and each one leaves the same kind
+            of row a reader would. Every row now says which it is — a reader,
+            one of our own test runs, or unknown — and our test runs mark
+            themselves as they write, rather than being guessed at afterwards.
+          </p>
+          <p>
+            Only rows marked as readers are ever counted in anything we
+            publish or license. Rows we cannot tell apart are counted as unknown
+            and left out too — we would rather report a smaller number than a
+            flattering one. Every row written before 17 August 2026 is unknown,
+            which means the log&apos;s whole history is excluded, and any figure
+            we report says how many rows it left out and why.
+          </p>
           <p>
             The &quot;Who do I talk to about…?&quot; box matches your question
             against a fixed list of topics on your device. When that match

@@ -55,6 +55,7 @@
  */
 import { chromium, type Browser, type Page } from "playwright";
 
+import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
 import { mojibakePattern } from "../lib/text/mojibake.ts";
 import { decodePng, patchStats, regionChange } from "./png.mts";
 
@@ -86,6 +87,30 @@ const failures: Failure[] = [];
 let passed = 0;
 
 /**
+ * Every check that actually RAN, by the session that shipped it.
+ *
+ * ITEM 1c (g6, 2026-08-17). The suite's count did not reconcile across two
+ * sessions: g5 reported 133 before its work, retired 4 and added 7, and
+ * reported 134 — which is arithmetic that does not close — and h then took
+ * 134 as given and grew it to 135.
+ *
+ * The enumeration found no lost check. What it found was that **the starting
+ * number was wrong**: the count at g5's parent commit was 131, not 133, and
+ * 131 - 4 + 7 = 134 closes exactly. 131 is also the number g4's own report
+ * recorded ("Green locally: 131 of 131"). A single mis-transcribed integer
+ * propagated through two sessions and a merge and looked, from the far end,
+ * exactly like two checks silently dying.
+ *
+ * The count is data-dependent — several checks live inside per-zip loops and
+ * eleven more come off the `MEETING_FLOORS` table — so it can never be
+ * derived by reading the file, which is why it was being copied by hand. So
+ * the suite prints its own census: no session has to transcribe a number
+ * again, and a session that adds checks can diff its own run against the
+ * previous one instead of trusting a sentence in a report.
+ */
+const census = new Map<string, number>();
+
+/**
  * One assertion, owned by the session that shipped the claim.
  *
  * `session` is not decoration: a failure prints as "the win <session> shipped
@@ -93,6 +118,7 @@ let passed = 0;
  * bare check name cannot produce.
  */
 function check(session: string, name: string, ok: boolean, evidence = ""): boolean {
+  census.set(session, (census.get(session) ?? 0) + 1);
   if (ok) passed += 1;
   else failures.push({ session, name, evidence });
   console.log(
@@ -119,7 +145,24 @@ function section(title: string): void {
   console.log(`\n${title}`);
 }
 
-// ── Probe accounting ───────────────────────────────────────────────────────
+// ── Probe accounting, and the run's own identity (C05) ─────────────────────
+
+/**
+ * This run declares itself, at write time, from its own environment.
+ *
+ * C05 (2026-08-17): every row this walk creates in production's `search_log`
+ * is ours, and nothing sold may contain it. The runner cannot mark the row —
+ * the route writes it, on Netlify — so the runner says who it is in a header
+ * and the route records the declaration. Never a user-agent guess, never a
+ * heuristic applied afterwards.
+ *
+ * `WTP_RUN_ID` from CI when it is set, so a CI run keeps its own identity;
+ * otherwise a local id stamped with this run's start. Both are SYNTHETIC.
+ */
+const RUN_ID =
+  process.env.WTP_RUN_ID?.trim() ||
+  makeRunId(process.env.CI ? "walk-all-ci" : "walk-all-local", new Date().toISOString());
+const RUN_HEADERS = syntheticRunHeaders({ ...process.env, WTP_RUN_ID: RUN_ID });
 
 let searchLogRows = 0;
 let askRows = 0;
@@ -140,7 +183,10 @@ async function get(path: string): Promise<Fetched> {
   const url = `${BASE}${path}`;
   countProbe(url);
   const response = await fetch(url, {
-    headers: { "User-Agent": "we-the-people walk:all (regression net)" },
+    headers: {
+      "User-Agent": "we-the-people walk:all (regression net)",
+      ...RUN_HEADERS,
+    },
   });
   return { status: response.status, text: await response.text() };
 }
@@ -148,7 +194,9 @@ async function get(path: string): Promise<Fetched> {
 async function getJson<T>(path: string): Promise<T | null> {
   const url = `${BASE}${path}`;
   countProbe(url);
-  const response = await fetch(url, { headers: { accept: "application/json" } });
+  const response = await fetch(url, {
+    headers: { accept: "application/json", ...RUN_HEADERS },
+  });
   if (!response.ok) return null;
   return (await response.json()) as T;
 }
@@ -166,6 +214,10 @@ async function getJson<T>(path: string): Promise<T | null> {
  */
 async function openAt(browser: Browser, zip: string): Promise<Page> {
   const context = await browser.newContext({
+    // C05: the browser declares this run synthetic too. The page's own
+    // /api/meetings fetches write search-log rows exactly like the direct
+    // probes do, and they are the bulk of what a walk creates.
+    extraHTTPHeaders: RUN_HEADERS,
     viewport: PHONE,
     deviceScaleFactor: 2,
     reducedMotion: "reduce",
@@ -204,6 +256,8 @@ async function openAt(browser: Browser, zip: string): Promise<Page> {
  */
 async function openWideAt(browser: Browser, zip: string): Promise<Page> {
   const context = await browser.newContext({
+    // C05: same declaration on the wide viewport.
+    extraHTTPHeaders: RUN_HEADERS,
     viewport: { width: 1280, height: 900 },
     deviceScaleFactor: 1,
     reducedMotion: "reduce",
@@ -563,6 +617,68 @@ for (const { zip } of FOUR) {
     repeated.length ? `${repeated.length} repeat(s): "${repeated[0].slice(0, 64)}…"` : "",
   );
 
+  /*
+   * ITEM 1a (g6, 2026-08-17) — ONE DENOMINATOR, asserted in the DOM.
+   *
+   * Production at 85701 read "4 bodies govern the area around 85701" above a
+   * disclosure reading "Why these 5?" above 5 rows. Three numbers, one list,
+   * on the surface whose entire job is telling a stranger who governs them.
+   *
+   * All three are parsed out of the rendered page — the prose number, the
+   * disclosure link's number, and the actual `<li>` count — and asserted
+   * equal. Parsing the rendered thing is the point: the two definitions each
+   * looked right in isolation, and only the screen showed them disagreeing.
+   */
+  const denominators = await page.evaluate(`(() => {
+    const card = document.querySelector(".coverage-notice");
+    if (!card) return { reason: "no who-governs card" };
+
+    const flat = (card.textContent || "").replace(/\\s+/g, " ");
+    // "N bodies govern the area around 85701" / "One body governs the area"
+    // / "We track the calendars of M of the N bodies that govern the area".
+    let prose = null;
+    const ofThe = flat.match(/of the (\\d+) bodies that govern the area/);
+    const govern = flat.match(/(\\d+) bodies govern the area/);
+    const one = /One body governs the area/.test(flat);
+    if (ofThe) prose = Number(ofThe[1]);
+    else if (govern) prose = Number(govern[1]);
+    else if (one) prose = 1;
+
+    // The disclosure link: "Why these N?"
+    let link = null;
+    for (const s of card.querySelectorAll("summary")) {
+      const m = (s.textContent || "").match(/Why these (\\d+)\\?/);
+      if (m) link = Number(m[1]);
+    }
+
+    // The rendered rows, off an explicit hook rather than a Tailwind class —
+    // a class is a styling decision, and the next design pass would have
+    // disarmed this guard without anyone noticing.
+    const rows = card.querySelectorAll("li[data-governing-row]").length;
+    return { prose, link, rows, sample: flat.slice(0, 160) };
+  })()`) as { reason?: string; prose?: number | null; link?: number | null; rows?: number | null; sample?: string };
+
+  if (denominators.reason) {
+    cannotRun("g6", `${zip}: who-governs states one number for one list`, denominators.reason);
+  } else {
+    const { prose, link, rows } = denominators;
+    const all = [prose, link, rows];
+    if (all.some((n) => n === null || n === undefined)) {
+      cannotRun(
+        "g6",
+        `${zip}: who-governs states one number for one list`,
+        `could not parse all three: prose=${prose} link=${link} rows=${rows} — "${denominators.sample}"`,
+      );
+    } else {
+      check(
+        "g6",
+        `${zip}: who-governs states one number for one list`,
+        prose === link && link === rows,
+        `prose ${prose}, disclosure link ${link}, rendered rows ${rows}`,
+      );
+    }
+  }
+
   // A09/A10 — the ask box is on the card, and its beat never claims thought.
   check("0819", `${zip}: the ask box is on the who-governs card`, /ask/i.test(text));
   check(
@@ -701,7 +817,12 @@ for (const { zip } of FOUR) {
 section("D. The ballot page (0814c, D53, g3)");
 
 {
-  const context = await browser.newContext({ viewport: PHONE, reducedMotion: "reduce" });
+  const context = await browser.newContext({
+    // C05: this run is ours, declared at write time.
+    extraHTTPHeaders: RUN_HEADERS,
+    viewport: PHONE,
+    reducedMotion: "reduce",
+  });
   const page = await context.newPage();
   page.on("response", (r) => countProbe(r.url()));
   await page.goto(`${BASE}/ballot?zip=85701`, {
@@ -1252,13 +1373,107 @@ section("F. The reader's map and the folded panels (g4 items 1-5, 9, 11, 14, 15)
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// ITEM 1d (g6, 2026-08-17) — the meetings count, all four places, all four
+// zips, one run.
+//
+// g5 measured group headers summing to 78 and never named the header count it
+// compared against; an earlier frame of the author's read 86. Production now
+// reads 78 in all three places, so the 86 is a different moment rather than a
+// live defect — but "confirmed by reading one number in one place" is how a
+// stated-N defect survives, so this closes it mechanically and permanently.
+//
+// Four numbers per zip: the sidebar counter, the map chip, the panel's header
+// and the sum of its group counts. The chip is `sm:` and up, so on a phone
+// viewport it is legitimately absent — absent is reported as absent, never as
+// a zero and never as a pass.
+// ═══════════════════════════════════════════════════════════════════════════
+section("G. The meetings count agrees with itself (g6 item 1d)");
+
+for (const { zip } of FOUR) {
+  const page = await openAt(browser, zip);
+  await page.waitForTimeout(600);
+
+  const numbers = await page.evaluate(`(() => {
+    const readInt = (el) => {
+      if (!el) return null;
+      const n = Number((el.textContent || "").replace(/[^0-9]/g, ""));
+      return Number.isFinite(n) ? n : null;
+    };
+    const sidebarEl = document.querySelector('[data-stat="meetings"] .num');
+    const chipEl = document.querySelector("[data-meeting-count]");
+    const sidebar = readInt(sidebarEl);
+    const chip = chipEl ? Number(chipEl.getAttribute("data-meeting-count")) : null;
+    const chipVisible = chipEl ? chipEl.getClientRects().length > 0 : false;
+
+    // Open the meetings door, then read the panel.
+    let opened = false;
+    const door = document.querySelector('[data-stat="meetings"]');
+    if (door) { door.click(); opened = true; }
+    return { sidebar, chip, chipVisible, opened };
+  })()`) as {
+    sidebar: number | null;
+    chip: number | null;
+    chipVisible: boolean;
+    opened: boolean;
+  };
+
+  if (!numbers.opened) {
+    cannotRun("g6", `${zip}: the meetings count agrees with itself`, "no meetings door on the sidebar");
+    await page.context().close();
+    continue;
+  }
+  await page.waitForTimeout(1400);
+
+  const panel = await page.evaluate(`(() => {
+    const header = document.querySelector(".al-overlay-count");
+    if (!header) return { reason: "the meetings panel did not open" };
+    const counts = [];
+    for (const h of document.querySelectorAll(".al-group-head")) {
+      const n = Number((h.querySelector(".al-group-count")?.textContent || "").trim());
+      if (Number.isFinite(n)) counts.push(n);
+    }
+    return {
+      stated: Number((header.textContent || "").replace(/[^0-9]/g, "")),
+      groups: counts.length,
+      sum: counts.reduce((a, b) => a + b, 0),
+    };
+  })()`) as { reason?: string; stated?: number; groups?: number; sum?: number };
+
+  if (panel.reason) {
+    cannotRun("g6", `${zip}: the meetings count agrees with itself`, panel.reason);
+    await page.context().close();
+    continue;
+  }
+
+  // The chip is hidden below the `sm` breakpoint by design. Hidden is stated,
+  // not silently treated as agreement and not counted as a failure.
+  const chipNote = numbers.chipVisible
+    ? `chip ${numbers.chip}`
+    : `chip not rendered at this width (sm: and up only)`;
+  const comparable = [numbers.sidebar, panel.stated, panel.sum].concat(
+    numbers.chipVisible ? [numbers.chip] : [],
+  );
+  const allEqual = comparable.every((n) => n !== null && n === comparable[0]);
+
+  check(
+    "g6",
+    `${zip}: the meetings count agrees with itself`,
+    allEqual && (panel.stated ?? 0) >= 0,
+    `sidebar ${numbers.sidebar}, ${chipNote}, panel header ${panel.stated}, ` +
+      `group counts sum ${panel.sum} across ${panel.groups} group(s)`,
+  );
+
+  await page.context().close();
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // The summary.
 // ═══════════════════════════════════════════════════════════════════════════
 
 
 // ── Section G ─────────────────────────────────────────────────────────────
 
-section("G. The frozen denominator (h item 1)");
+section("H. The frozen denominator (h item 1)");
 
 /**
  * The one claim h shipped that production can be asked about.
@@ -1308,6 +1523,21 @@ const EXCLUDED = [
 
 console.log(`\n${new Array(60).fill("─").join("")}`);
 console.log(`${passed} check(s) passed, ${failures.length} regression(s), ${blocked.length} could not run`);
+
+/*
+ * ITEM 1c: the suite's own census, printed every run. See `census` above for
+ * why — the total is data-dependent and was being copied by hand between
+ * session reports, and one wrong integer looked like two dead checks for two
+ * sessions running.
+ */
+console.log(`\nCHECKS THAT RAN, BY THE SESSION THAT SHIPPED THEM (total ${passed + failures.length}):`);
+for (const [session, n] of [...census].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))) {
+  console.log(`  ${String(n).padStart(4)}  [${session}]`);
+}
+console.log(
+  `  (${blocked.length} further check(s) could not run and are NOT in the total — ` +
+    `an unreachable service is not a missing feature.)`,
+);
 
 if (failures.length > 0) {
   console.log("\nNAMED REGRESSIONS — a win a prior session shipped is undone:");

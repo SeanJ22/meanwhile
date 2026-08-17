@@ -156,6 +156,10 @@ function Card({
     <button
       type="button"
       className="stat-card cursor-pointer text-left"
+      /* ITEM 1d (2026-08-17): the sidebar counter names itself, so the
+         permanent walk check that asserts this number equals the map chip's
+         and the panel's does not have to find it by its visible label. */
+      data-stat={label.toLowerCase()}
       data-open={open || undefined}
       aria-expanded={open}
       style={style}

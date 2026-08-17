@@ -153,8 +153,54 @@ export const searchLog = pgTable(
      * opened. Never free text a person typed.
      */
     detail: jsonb("detail").$type<Record<string, string | number | boolean>>(),
+    /**
+     * WHOSE TRAFFIC THIS ROW IS (C05, 2026-08-17).
+     *
+     * Roughly 537 rows on production are OURS — written by local and CI
+     * Playwright runs against the production database, because `.env.local`
+     * holds the production `DATABASE_URL` and every `/api/meetings` GET
+     * writes a row. Each walk adds about 28 more. The number only grows, and
+     * nothing sold may ever contain it.
+     *
+     * The obvious fix — stop writing to production — was REJECTED by the
+     * author and the rejection is recorded so nobody re-proposes it: it would
+     * delete the only end-to-end proof that the write path works, and a
+     * silently broken write path is how we would discover months from now
+     * that reactions had stopped recording.
+     *
+     * So the row says which it is:
+     *
+     * - `ORGANIC` — a reader. The only class any aggregate may count.
+     * - `SYNTHETIC` — an automated run, declared BY THE RUNNER at write time
+     *   from its own environment. Never inferred later, never a user-agent
+     *   guess: a heuristic applied to rows already written is exactly the
+     *   investigation this column exists to make unnecessary.
+     * - `UNKNOWN` — cannot be attributed either way. Excluded from every
+     *   aggregate alongside the synthetic ones. **An unknown row is never
+     *   counted as organic**, which is the whole discipline: every row
+     *   written before this column existed is UNKNOWN, and that is an honest
+     *   statement about what we can and cannot sell.
+     */
+    runClass: text("run_class", { enum: ["ORGANIC", "SYNTHETIC", "UNKNOWN"] })
+      .notNull()
+      .default("ORGANIC"),
+    /**
+     * Which automated run wrote this row — a run identity, never a person's.
+     *
+     * It is null on every `ORGANIC` row BY CONSTRUCTION (asserted in
+     * `tests/db-schema.test.ts`), so it can never become a session key that
+     * relates two readers' rows to each other. It relates a robot's rows to
+     * the robot, and to nothing else: no other store carries it, and the
+     * n-stores-never-join rule is unaffected.
+     */
+    runId: text("run_id"),
   },
-  (table) => [index("search_log_occurred_at_idx").on(table.occurredAt)],
+  (table) => [
+    index("search_log_occurred_at_idx").on(table.occurredAt),
+    // Every aggregate reads through the exclusion filter (C05), so the class
+    // is on the hot path of every sold query.
+    index("search_log_run_class_idx").on(table.runClass),
+  ],
 );
 
 /**

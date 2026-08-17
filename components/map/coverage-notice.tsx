@@ -11,6 +11,7 @@ import { NarrowingPrompt } from "./narrowing-prompt";
 import type { StreetPoint } from "@/lib/geo/census-geocoder";
 import type { CoverageTier } from "@/lib/meetings/query";
 import type { CoverageSummary, CoveredBody, Seat } from "@/lib/registry/coverage";
+import { deriveWhoGoverns } from "@/lib/registry/who-governs";
 import { rosterHoldersForBody } from "@/lib/registry/body-rosters";
 import {
   hasRepresentation,
@@ -79,8 +80,14 @@ interface CoverageNoticeProps {
   onStreetPoint?: (point: StreetPoint) => void;
 }
 
-/** How many bodies to name before collapsing the rest into a count. */
-const NAME_LIMIT = 5;
+/*
+ * `NAME_LIMIT = 5` lived here until item 1a (2026-08-17) and is deliberately
+ * gone rather than left unused. It cut the body list at five while the lead
+ * sentence counted the governing set, which is how one surface came to state
+ * three different numbers for one list. The governing list is now rendered
+ * whole; there is no cut left to configure, and re-introducing one re-opens
+ * the defect.
+ */
 
 /**
  * Opens the rep popup (3c). Seat label and tier ride along for the card;
@@ -304,24 +311,53 @@ function CoverageBody({
    */
   const narrowing = useNarrowing(zip);
   const selected = new Set(narrowing.divisions);
-  const narrowedTypes = new Set(
-    bodies
-      .filter((b) => b.ocdId !== null && selected.has(b.ocdId))
-      .map((b) => b.divisionType),
-  );
-  const narrowedBodies = bodies.filter(
-    (b) =>
-      !narrowedTypes.has(b.divisionType) ||
-      (b.ocdId !== null && selected.has(b.ocdId)),
-  );
 
-  const shown = narrowedBodies.slice(0, NAME_LIMIT);
-  const hidden = narrowedBodies.length - shown.length;
+  /*
+   * ITEM 1a (2026-08-17, the author's ruling): ONE DENOMINATOR.
+   *
+   * Production at 85701 read "4 bodies govern the area around 85701" above a
+   * disclosure reading "Why these 5?" above 5 rows. Three numbers, one list.
+   *
+   * The cause was two definitions on one surface, and the brief's named
+   * suspect was half right. The prose read the SERVER's `counts.governing`
+   * (bodies whose class is GOVERNING — 4 at 85701). The rows were the first
+   * `NAME_LIMIT` of ALL bodies, governing and not. The row that moved between
+   * them was NOT the Public Housing Authority board — that board IS classed
+   * GOVERNING and is inside the 4. It was the Board of Adjustment, a
+   * COMMISSION, sitting fifth in a list cut from the 60-body array.
+   *
+   * A second, latent instance of the same defect sat underneath it and would
+   * have survived any fix that only re-pointed the prose at a server count:
+   * the reader's device-local narrowing (M26) shrinks the RENDERED list on the
+   * client, while `counts.governing` is computed on the server and cannot see
+   * it. A reader who narrowed to one school district would have re-opened the
+   * gap by hand.
+   *
+   * So every number below is derived from ONE array, after narrowing, in the
+   * component that renders it. Prose N, disclosure N and rendered row count
+   * are the same expression — they cannot disagree, at any zip, for any
+   * reader, regardless of how many bodies the registry grows.
+   *
+   * Both definitions are real and both are needed — 50 Tucson advisory
+   * committees must never read as 50 governments (D29) — so BOTH are said on
+   * screen in plain language: the governments in the list, the boards and
+   * committees in their own sentence below it.
+   */
+  const derived = deriveWhoGoverns(bodies, selected);
+  const shown = derived.rows;
+  /*
+   * The governing list is NOT cut. A cut would put the prose count and the row
+   * count back into disagreement the moment a zip had more governments than the
+   * limit — an invariant that holds only because of today's data is not an
+   * invariant. A reader is governed by a handful of governments; the card
+   * scrolls (4f) if that is ever untrue.
+   */
   const seatLine = seatPhrase(seats);
   const kind = leadKind(coverage);
-  const g = counts.governing;
-  const others = counts.total - g.total;
-  const othersWithSource = counts.withSource - g.withSource;
+  const g = { total: derived.governingCount, withSource: derived.governingWithSource };
+  const others = derived.others;
+  const othersWithSource = derived.othersWithSource;
+  const hidden = others;
 
   const lead =
     kind === "unmapped" ? (
@@ -459,16 +495,32 @@ function CoverageBody({
         judgement, and no ordering by anything a reader could mistake for one.
         Saying so is cheaper than being asked.
       */}
-      {hidden > 0 && (
+      {/*
+        ITEM 1a (2026-08-17): the disclosure renders whenever there are rows,
+        not only when something is hidden. Its number is `shown.length` — the
+        same expression the lead sentence counts and the same rows the list
+        renders — so the walk's three-way equality holds by construction.
+
+        The question it answers has changed with the list. It used to be "why
+        these five of sixty"; the list is now exactly the governments, so the
+        honest question is what makes something a government here and where the
+        boards and committees went.
+      */}
+      {shown.length > 0 && (
         <details className="mt-1">
           <summary className="cursor-pointer text-[0.6875rem] text-link">
             Why these {shown.length}?
           </summary>
           <p className="mt-1 text-[0.6875rem] leading-relaxed text-voice">
-            These are the bodies whose calendars we watch here, listed in the
-            order our coverage check returns them and cut at {shown.length}.
-            It isn&apos;t a ranking — nothing here is scored or ordered by
-            importance. The {hidden} others are counted in the line below.
+            {shown.length === 1
+              ? "This is the government whose boundary covers this area"
+              : `These are the ${shown.length} governments whose boundaries cover this area`}{" "}
+            — the county, the city or town, the school district, and any
+            special district that governs here. All of them are listed; none is
+            left out. It isn&apos;t a ranking — nothing here is scored or
+            ordered by importance.
+            {others > 0 &&
+              ` Boards, committees and commissions are real bodies you can follow, but they aren't governments, so they're counted separately: ${others} of them here.`}
           </p>
         </details>
       )}
@@ -477,6 +529,15 @@ function CoverageBody({
           {shown.map((body) => (
             <li
               key={body.bodyId}
+              /*
+               * ITEM 1a (2026-08-17): an explicit hook for the permanent walk
+               * check that counts rendered government rows against the two
+               * numbers the card states. The check used to have to infer a
+               * row from a Tailwind class, and a class is a styling decision
+               * — the next design pass would have silently disarmed the guard
+               * that exists because this list once disagreed with itself.
+               */
+              data-governing-row=""
               className="flex items-baseline justify-between gap-3 pb-1"
             >
               {/*
@@ -598,9 +659,15 @@ function CoverageBody({
               )),
             ];
           })}
+          {/*
+            ITEM 1a (2026-08-17): the list above is now exactly the
+            governments, so a bare "and 55 more" hanging off it would read as
+            55 more GOVERNMENTS — the very conflation this item was opened to
+            remove. It names what they are.
+          */}
           {hidden > 0 && (
             <li className="pt-0.5 text-[0.75rem] text-muted">
-              and {hidden} more
+              and {hidden} more {hidden === 1 ? "board or committee" : "boards and committees"}
             </li>
           )}
         </ul>

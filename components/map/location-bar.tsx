@@ -66,7 +66,14 @@ export function LocationBar({ zip, meetingCount, onChange }: LocationBarProps) {
           </p>
         </div>
 
-        <div className="hidden border-l border-rule-soft px-4 py-2.5 sm:block">
+        {/* ITEM 1d (2026-08-17): an explicit hook. This chip, the sidebar
+            counter and the meetings panel all state the same number, and the
+            permanent walk check asserts they agree — it must not have to find
+            them by matching visible label text, which is copy and moves. */}
+        <div
+          data-meeting-count={meetingCount}
+          className="hidden border-l border-rule-soft px-4 py-2.5 sm:block"
+        >
           <p className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-muted">
             Meetings
           </p>

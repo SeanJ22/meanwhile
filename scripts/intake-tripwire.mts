@@ -18,6 +18,7 @@ import { neon } from "@neondatabase/serverless";
 loadEnv({ path: join(process.cwd(), ".env.local") });
 
 import { purgeExpiredLimiterState } from "../lib/db/intake-limiter.ts";
+import { organicDenominatorSentence } from "../lib/signal/search-log-reads.ts";
 import {
   renderIntakeReport,
   analyzeStore,
@@ -42,12 +43,34 @@ const reactionRows = (await sql`
   GROUP BY 1 ORDER BY 1
 `) as { day: string; total: number; suspect: number }[];
 
+/*
+ * C05 (2026-08-17): reader traffic only.
+ *
+ * This is an aggregate over the search log, so it reads through the exclusion
+ * filter like every other one. It also gets STRICTER by doing so rather than
+ * looser: a `pnpm walk:all` run fires roughly 28 events in about three
+ * minutes, which is precisely the timing burst this tripwire exists to flag.
+ * It was analysing our own robots and calling them anomalies.
+ */
 const searchRows = (await sql`
   SELECT occurred_at::date::text AS day, count(*)::int AS total
   FROM search_log
   WHERE occurred_at > now() - interval '30 days'
+    AND run_class = 'ORGANIC'
   GROUP BY 1 ORDER BY 1
 `) as { day: string; total: number }[];
+
+// The three counts, stated every run. An unattributable row is never counted
+// as a reader, so saying how many there are is the honest half of excluding
+// them.
+const census = (await sql`
+  SELECT
+    COUNT(*) FILTER (WHERE run_class = 'ORGANIC')::int   AS organic,
+    COUNT(*) FILTER (WHERE run_class = 'SYNTHETIC')::int AS synthetic,
+    COUNT(*) FILTER (WHERE run_class = 'UNKNOWN')::int   AS unknown,
+    COUNT(*)::int                                        AS total
+  FROM search_log
+`) as { organic: number; synthetic: number; unknown: number; total: number }[];
 
 const reactionDays: IntakeDayCount[] = reactionRows.map((r) => ({
   day: r.day,
@@ -82,6 +105,12 @@ const flags = [
   ...analyzeStore("reactions", reactionDays),
   ...analyzeStore("search_log", searchLogDays),
 ];
+const c = census[0] ?? { organic: 0, synthetic: 0, unknown: 0, total: 0 };
+console.log(
+  `search_log by run class (C05): ${c.organic} organic, ${c.synthetic} synthetic, ` +
+    `${c.unknown} unknown, ${c.total} total. ` +
+    `${organicDenominatorSentence(c)}`,
+);
 console.log(
   `tripwire: ${reactionDays.length} reaction days, ${searchLogDays.length} search-log days analyzed; ` +
     `${flags.length} flag(s); ${limiterRowsPurged} limiter rows purged, ${remaining[0]?.n ?? 0} remain; report written to docs/intake-report.md`,

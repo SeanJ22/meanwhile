@@ -104,6 +104,9 @@ export async function GET(request: Request) {
   // it is missing — a failed source's bodies would otherwise show nothing
   // with no hint that the gap is ours and temporary.
   const meta = getActiveSnapshotMeta();
+  // `meta.carried` rides along untouched (hotfix-0817): the footer's one age is true of
+  // the fresh rows only, and the count of rows it is NOT true of has to reach
+  // the client or the line keeps speaking for them.
   const snapshot = meta
     ? {
         ...meta,

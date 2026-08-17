@@ -9,6 +9,7 @@ import {
   locationLine,
   meetingHeadline,
 } from "@/lib/map/format";
+import { relativeAge } from "@/lib/meetings/freshness";
 import type { Venue } from "@/lib/meetings/venues";
 import { commentAccessFor } from "@/lib/registry/comment-access";
 import { venueLink } from "@/lib/registry/links";
@@ -238,6 +239,29 @@ function MeetingEntry({
             <>
               <br />
               <span className="text-signal-dim">Not independently verified</span>
+            </>
+          )}
+          {/*
+            hotfix-0817 (2026-08-17): this row was NOT retrieved by the run behind the
+            map's "last checked" line — its calendar refused us, and it is
+            here because a failed fetch may never silently empty a
+            previously-full surface. It does not inherit that line's
+            freshness: it states its own, on the row, where the reader
+            deciding whether to trust it is actually looking.
+          */}
+          {meeting.carried && (
+            <>
+              <br />
+              Last reached{" "}
+              <time
+                dateTime={meeting.carried.lastFreshAt}
+                title={new Date(
+                  Date.parse(meeting.carried.lastFreshAt),
+                ).toLocaleString()}
+              >
+                {relativeAge(meeting.carried.lastFreshAt)}
+              </time>
+              {" — our latest check couldn't reach this calendar"}
             </>
           )}
         </p>

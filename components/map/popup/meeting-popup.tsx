@@ -13,6 +13,7 @@ import { tierForMeeting } from "@/lib/state/derive";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { CoveredBody } from "@/lib/registry/coverage";
 import { linksForMeeting, type OutboundLink } from "@/lib/registry/links";
+import { relativeAge } from "@/lib/meetings/freshness";
 import { minutesSummaryForMeeting } from "@/lib/meetings/minutes-summaries";
 import { officePhoneForBody } from "@/lib/meetings/office-phone";
 import type { Meeting } from "@/lib/sources/types";
@@ -121,6 +122,27 @@ export function MeetingPopup({
       </PopupRow>
 
       <PopupRow label="Status">{STATUS_LABEL[meeting.status]}</PopupRow>
+
+      {/*
+        hotfix-0817 (2026-08-17): a carried row does not inherit the snapshot's
+        freshness. The map's "last checked" line belongs to the run that
+        fetched the fresh rows; this sitting was carried forward because its
+        calendar refused that run, so it states when we actually last reached
+        it. No badge, no colour — the fact, in the rows the card already has.
+      */}
+      {meeting.carried && (
+        <PopupRow label="Last reached">
+          <time
+            dateTime={meeting.carried.lastFreshAt}
+            title={new Date(Date.parse(meeting.carried.lastFreshAt)).toLocaleString()}
+          >
+            {relativeAge(meeting.carried.lastFreshAt)}
+          </time>
+          <span className="ml-1.5 text-muted">
+            our latest check couldn&apos;t reach this calendar
+          </span>
+        </PopupRow>
+      )}
 
       {/* 6b: the upcoming meeting goes on the reader's own calendar. */}
       {!concluded && meeting.status === "SCHEDULED" && (

@@ -42,6 +42,18 @@ import type { Meeting } from "../sources/types.ts";
  *   refusal.** A body that genuinely stopped publishing must be allowed to
  *   go quiet — the honest empty calendar is a real answer, and pinning stale
  *   sittings over it would be the mirror-image lie.
+ *
+ * ## What hotfix-0817 added, 2026-08-17: the row says so itself
+ *
+ * The original shipped the COUNT and not the MARK. Carried rows went into the
+ * same array as fresh ones with no field distinguishing them, so the per-source
+ * `carriedForward` number could not be reconciled against the rows it claimed
+ * to count, and every freshness statement a reader sees — all of them derived
+ * from the snapshot's `generatedAt` — spoke for rows the run had never
+ * reached. Each carried row now carries `carried: { source, lastFreshAt }`,
+ * stamped here at write time, and an existing mark is preserved rather than
+ * restamped: a row carried through three failed runs still names the run that
+ * actually fetched it.
  */
 export interface CarryForwardChild {
   source: string;
@@ -54,6 +66,24 @@ export interface CarryForwardResult {
   meetings: Meeting[];
   /** Per source, how many rows came from the previous snapshot. */
   carried: Map<string, number>;
+}
+
+/**
+ * Stamp a row as carried, without ever overwriting an older true stamp.
+ *
+ * `lastFreshAt` is the row's own `provenance.collectedAt` — the instant the
+ * adapter actually read the page. A row already carrying a mark keeps it: the
+ * second failed run did not make the row any fresher, and restamping it would
+ * walk the timestamp forward one refusal at a time until a row nobody has
+ * fetched in a week claimed to be hours old.
+ */
+function mark(meeting: Meeting, source: string, previousGeneratedAt: string): Meeting {
+  if (meeting.carried) return meeting;
+  const collected = meeting.provenance?.collectedAt;
+  const lastFreshAt = Number.isFinite(Date.parse(collected ?? ""))
+    ? (collected as string)
+    : previousGeneratedAt;
+  return { ...meeting, carried: { source, lastFreshAt } };
 }
 
 export function carryForward(
@@ -85,7 +115,7 @@ export function carryForward(
       if (haveId.has(meeting.id)) continue;
       const at = Date.parse(meeting.startsAt);
       if (!Number.isFinite(at) || at < windowStart || at > windowEnd) continue;
-      out.push(meeting);
+      out.push(mark(meeting, child.source, previous.generatedAt));
       haveId.add(meeting.id);
       count += 1;
     }

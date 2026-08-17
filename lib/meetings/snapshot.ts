@@ -57,10 +57,40 @@ export interface SnapshotSourceReport {
   carriedForward?: number;
 }
 
+/**
+ * The two numbers this file holds, both stated (hotfix-0817, 2026-08-17).
+ *
+ * A snapshot after a partial refusal contains rows from two different runs,
+ * and until now it stated one number for them. The scheduled refresh has
+ * failed twice on exactly that: 193 fetched fresh, 24 carried forward for
+ * `schedulepage`, 217 in the file, and an invariant that predated
+ * carry-forward asserting 217 === 193. The gate was right and the arithmetic
+ * was incomplete — so both numbers are recorded, and they are required to
+ * reconcile against each other, against the per-source reports, and against
+ * the rows themselves.
+ */
+export interface SnapshotCounts {
+  /** Rows this run actually retrieved. Equals the sum of `normalized`. */
+  fresh: number;
+  /** Rows carried out of the previous snapshot. Equals the marked rows. */
+  carried: number;
+  /** `fresh + carried`, and the length of `meetings`. */
+  total: number;
+}
+
 export interface MeetingsSnapshot {
   formatVersion: 1;
   /** When the refresh that produced this file ran. Rendered to the reader. */
   generatedAt: string;
+  /**
+   * Fresh, carried, total — stated, not derived (hotfix-0817).
+   *
+   * Required, deliberately: an optional reconciliation is one a later writer
+   * can omit, and the check would then pass by not running. The committed
+   * snapshot gained the block in the same commit that made it mandatory, so
+   * no refresh ever reads a previous file without one.
+   */
+  counts: SnapshotCounts;
   /** Per-source accounting — the same numbers the ingest gate prints. */
   sources: SnapshotSourceReport[];
   meetings: Meeting[];
@@ -90,6 +120,102 @@ const DROP_KEYS: Array<keyof NormalizeDropCounts> = [
  * not each state their fetched/normalized counts, or which claims success
  * with no source succeeding, is refused rather than written.
  */
+/**
+ * Both numbers, and they close — or the snapshot is refused (hotfix-0817, 2026-08-17).
+ *
+ * The old invariant was `meetings.length === sum(normalized)`. It was correct
+ * for every snapshot written before carry-forward existed and wrong for every
+ * one written after a partial refusal, which is how the scheduled refresh came
+ * to fail twice with `217 !== 193` while the data behind it was right.
+ *
+ * The repair is NOT a loosened comparison. `total >= claims`, a tolerance, or
+ * a skip-when-carried would each make the test pass and make it worthless —
+ * a measurement that cannot tell correct from incorrect is not a correctness
+ * test. Instead the snapshot states BOTH numbers and four equalities have to
+ * hold at once:
+ *
+ * 1. `fresh + carried === total`, and `total` is the row count.
+ * 2. `fresh === sum(normalized)` — the original assertion, preserved exactly,
+ *    now pointed at the number it was always about.
+ * 3. `carried === ` the number of rows carrying a carry mark, per source as
+ *    well as in total. A count that cannot be recounted against its own rows
+ *    is the defect this whole change exists to remove.
+ * 4. Every marked row names its source and a parseable last-fresh instant.
+ *
+ * Exported so the write boundary, the read path and `tests/snapshot.test.ts`
+ * all use one implementation rather than three that can drift apart.
+ */
+export function reconcileCounts(snap: MeetingsSnapshot): void {
+  const counts = snap.counts;
+  if (!counts || typeof counts !== "object") {
+    throw new Error("snapshot must state its counts: fresh, carried, total");
+  }
+  for (const key of ["fresh", "carried", "total"] as const) {
+    if (!Number.isInteger(counts[key])) {
+      throw new Error(`snapshot count "${key}" must be stated as an integer`);
+    }
+  }
+  if (counts.total !== snap.meetings.length) {
+    throw new Error(
+      `snapshot states ${counts.total} total meetings but holds ${snap.meetings.length}`,
+    );
+  }
+  if (counts.fresh + counts.carried !== counts.total) {
+    throw new Error(
+      `snapshot counts do not close: ${counts.fresh} fresh + ${counts.carried} carried !== ${counts.total} total`,
+    );
+  }
+
+  const claimed = snap.sources.reduce((n, s) => n + s.normalized, 0);
+  if (counts.fresh !== claimed) {
+    throw new Error(
+      `snapshot states ${counts.fresh} fresh meetings but sources claim ${claimed}`,
+    );
+  }
+
+  // The mark, per row: a carried row that cannot say where it came from or
+  // when it was last real is a stale row wearing a fresh row's clothes.
+  const markedBySource = new Map<string, number>();
+  const sourceNames = new Set(snap.sources.map((s) => s.source));
+  for (const m of snap.meetings) {
+    const carried = m.carried;
+    if (!carried) continue;
+    if (!carried.source || typeof carried.source !== "string") {
+      throw new Error(`carried meeting "${m.id}" does not name the source it came from`);
+    }
+    if (!sourceNames.has(carried.source)) {
+      throw new Error(
+        `carried meeting "${m.id}" names source "${carried.source}", which this snapshot does not account for`,
+      );
+    }
+    if (
+      typeof carried.lastFreshAt !== "string" ||
+      !Number.isFinite(Date.parse(carried.lastFreshAt))
+    ) {
+      throw new Error(
+        `carried meeting "${m.id}" does not state a parseable instant at which it was last fresh`,
+      );
+    }
+    markedBySource.set(carried.source, (markedBySource.get(carried.source) ?? 0) + 1);
+  }
+
+  const marked = [...markedBySource.values()].reduce((a, b) => a + b, 0);
+  if (counts.carried !== marked) {
+    throw new Error(
+      `snapshot states ${counts.carried} carried meetings but ${marked} row(s) carry the mark`,
+    );
+  }
+  for (const s of snap.sources) {
+    const claimedCarried = s.carriedForward ?? 0;
+    const actual = markedBySource.get(s.source) ?? 0;
+    if (claimedCarried !== actual) {
+      throw new Error(
+        `${s.source}: reports ${claimedCarried} meeting(s) carried forward but ${actual} row(s) carry its mark`,
+      );
+    }
+  }
+}
+
 export function validateSnapshot(value: unknown): asserts value is MeetingsSnapshot {
   const snap = value as MeetingsSnapshot;
   if (!snap || typeof snap !== "object") throw new Error("snapshot is not an object");
@@ -157,6 +283,7 @@ export function validateSnapshot(value: unknown): asserts value is MeetingsSnaps
       );
     }
   }
+  reconcileCounts(snap);
   if (!Array.isArray(snap.agendaDocuments)) {
     throw new Error("agendaDocuments must be an array");
   }
@@ -220,9 +347,35 @@ export function writeSnapshot(snapshot: MeetingsSnapshot, root?: string): string
   return path;
 }
 
+/**
+ * What the whole snapshot holds that the run behind it did not retrieve (hotfix-0817).
+ *
+ * The footer states one age for the file. That age is true of the fresh rows
+ * and false of the carried ones, so the footer needs the count and, where the
+ * carried rows agree on a single last-fresh day, that day — stated in the
+ * footer rather than left for a reader to discover by opening a card.
+ */
+export interface SnapshotCarriedMeta {
+  /** How many rows in the whole snapshot came from an earlier run. */
+  count: number;
+  /**
+   * The instant those rows were last fresh — non-null ONLY when every carried
+   * row agrees on the same calendar day.
+   *
+   * Null when they disagree, and the surface then says each row carries its
+   * own date instead of naming one. Naming the oldest would understate the
+   * freshness of some rows and naming the newest would overstate others;
+   * both are claims we cannot make, and a null here renders as its own
+   * sentence rather than as a plausible date.
+   */
+  lastFreshAt: string | null;
+}
+
 /** What the client is told about the snapshot behind its answer. */
 export interface SnapshotClientMeta {
   generatedAt: string;
+  /** Present only when the snapshot actually holds carried rows. */
+  carried?: SnapshotCarriedMeta;
   sources: Array<{
     source: string;
     ok: boolean;
@@ -235,8 +388,22 @@ export interface SnapshotClientMeta {
 }
 
 export function snapshotClientMeta(snapshot: MeetingsSnapshot): SnapshotClientMeta {
+  const stamps = snapshot.meetings.flatMap((m) =>
+    m.carried ? [m.carried.lastFreshAt] : [],
+  );
+  const days = new Set(stamps.map((iso) => iso.slice(0, 10)));
   return {
     generatedAt: snapshot.generatedAt,
+    ...(stamps.length > 0
+      ? {
+          carried: {
+            count: stamps.length,
+            // One day, one date. More than one, and the footer says the rows
+            // carry their own dates rather than picking one of them.
+            lastFreshAt: days.size === 1 ? stamps[0] : null,
+          },
+        }
+      : {}),
     sources: snapshot.sources.map(
       ({ source, ok, error, unreachableOcdIds, carriedForward }) => ({
         source,

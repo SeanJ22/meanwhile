@@ -383,10 +383,17 @@ interface MeetingsPayload {
     ocdId: string | null;
     status: string;
     location: { name: string };
+    /** hotfix-0817: present exactly when the last refresh could not reach this row. */
+    carried?: { source: string; lastFreshAt: string };
   }>;
   tier: string;
   coverage: { bodies: Array<{ name: string | null; ocdId: string | null }> } | null;
-  snapshot: { generatedAt: string; failed: Array<{ source: string }> } | null;
+  snapshot: {
+    generatedAt: string;
+    failed: Array<{ source: string }>;
+    /** hotfix-0817: the rows this snapshot holds that its own run never retrieved. */
+    carried?: { count: number; lastFreshAt: string | null };
+  } | null;
 }
 
 /**
@@ -1614,6 +1621,118 @@ section("I. The mayor after item 6 (g6)");
     }
   }
   await page.context().close();
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// hotfix-0817 — a carried row never inherits the snapshot's freshness.
+// ═══════════════════════════════════════════════════════════════════════════
+
+section("J. Carried rows state their own freshness (hotfix-0817 item 2)");
+
+/*
+ * The defect: the footer says "LAST CHECKED 6 hours ago", which is true of the
+ * snapshot and FALSE of the rows carried forward out of the previous one
+ * because a source refused. At 03255 those rows are Kearsarge's and Newbury's
+ * — the calendars whose host refuses the CI runner's egress — and a reader
+ * looking at one had no way to know they were looking at something we could
+ * not reach.
+ *
+ * THIS CHECK CANNOT ALWAYS RUN, and that is not a defect in it. Carried rows
+ * exist only when a source was unreachable on the refresh that wrote the
+ * committed snapshot. When every source was reachable there is nothing to
+ * assert, and the honest report is that it could not run, named, with the
+ * reason — never a pass it did not earn. It is never retired for being unable
+ * to run: the condition it guards is exactly the condition it cannot rehearse.
+ */
+{
+  const payload = await getJson<MeetingsPayload>(
+    `/api/meetings?lat=${ZIPS.newbury.lat}&lng=${ZIPS.newbury.lng}&zip=03255`,
+  );
+  const NAME = "03255: no carried row is claimed to be as fresh as the snapshot";
+  if (!payload) {
+    cannotRun("hotfix-0817", NAME, "/api/meetings did not answer");
+  } else {
+    const carriedRows = payload.meetings.filter((m) => m.carried);
+    const meta = payload.snapshot?.carried ?? null;
+    const generatedAt = payload.snapshot?.generatedAt ?? null;
+
+    // The fresh rows are unaffected — asserted whether or not anything was
+    // carried, because marks smeared across rows that WERE retrieved is the
+    // mirror-image failure: a working calendar wearing a staleness it does
+    // not have. A mark is only legitimate on a row whose source reported a
+    // gap, so any other marked row fails this.
+    const withGaps = new Set((payload.snapshot?.failed ?? []).map((f) => f.source));
+    const misplaced = carriedRows.filter((m) => !withGaps.has(m.carried!.source));
+    check(
+      "hotfix-0817",
+      "03255: only rows from a source that reported a gap carry a mark",
+      misplaced.length === 0,
+      `${carriedRows.length} marked of ${payload.meetings.length} row(s); sources reporting a gap: ` +
+        `${[...withGaps].join(", ") || "none"}${misplaced.length > 0 ? `; misplaced: ${misplaced.map((m) => m.id).join(", ")}` : ""}`,
+    );
+
+    if (carriedRows.length === 0) {
+      cannotRun(
+        "hotfix-0817",
+        NAME,
+        `the snapshot generated ${generatedAt ?? "unknown"} holds no carried rows at this zip — ` +
+          "every source serving 03255 was reachable on the last refresh, so there is " +
+          "no stale row for a freshness statement to speak for",
+      );
+    } else {
+      // 1. Every carried row names its origin and an instant, and that instant
+      //    is OLDER than the snapshot's own — a carried row that claims to be
+      //    as new as the run that never reached it is the defect itself.
+      const older = carriedRows.filter(
+        (m) =>
+          Number.isFinite(Date.parse(m.carried!.lastFreshAt)) &&
+          generatedAt !== null &&
+          Date.parse(m.carried!.lastFreshAt) < Date.parse(generatedAt),
+      );
+      check(
+        "hotfix-0817",
+        NAME,
+        older.length === carriedRows.length,
+        `${older.length} of ${carriedRows.length} carried row(s) state an instant strictly older ` +
+          `than the snapshot's ${generatedAt}`,
+      );
+
+      // 2. The snapshot's own record and the rows agree. The count is a
+      //    whole-file number and this zip is a slice of it, so the slice must
+      //    not exceed it and every row's stamp must be one the file records.
+      check(
+        "hotfix-0817",
+        "03255: each carried row's stated timestamp is the one the snapshot records",
+        meta !== null &&
+          carriedRows.length <= meta.count &&
+          (meta.lastFreshAt === null ||
+            carriedRows.every((m) => m.carried!.lastFreshAt === meta.lastFreshAt)),
+        `${carriedRows.length} carried here of ${meta?.count ?? "?"} in the snapshot; ` +
+          `file says ${meta?.lastFreshAt ?? "the rows disagree, each states its own"}`,
+      );
+
+      // 3. And the reader is told. The footer must state the carried count
+      //    rather than letting one age speak for every row, and the row's own
+      //    card must carry its own stamp.
+      const page = await openAt(browser, "03255");
+      const footer = await page.evaluate(`(() => {
+        const el = [...document.querySelectorAll("p")].find((p) =>
+          /Last checked/i.test(p.textContent || ""));
+        return el ? (el.textContent || "").replace(/\\s+/g, " ") : null;
+      })()`) as string | null;
+      if (footer === null) {
+        cannotRun("hotfix-0817", "03255: the footer does not speak for the carried rows", "no last-checked line on the page");
+      } else {
+        check(
+          "hotfix-0817",
+          "03255: the footer does not speak for the carried rows",
+          /older than that/i.test(footer),
+          `footer reads "${footer.slice(0, 160)}"`,
+        );
+      }
+      await page.context().close();
+    }
+  }
 }
 
 await browser.close();

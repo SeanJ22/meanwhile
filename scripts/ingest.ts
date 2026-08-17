@@ -253,9 +253,21 @@ function writeMeetingsSnapshot(
   );
 
   const meetingIds = new Set(served.map((m) => m.id));
+  // Both numbers, stated (hotfix-0817). `fresh` is what this run retrieved and
+  // `carried` is what it could not — counted off the marks the rows actually
+  // carry, never off the difference between two other numbers, because a
+  // count derived from an assumption stops being true when the assumption
+  // grows a new case. `validateSnapshot` refuses the file if they disagree.
+  const carriedRows = served.filter((m) => m.carried).length;
   const snapshot: MeetingsSnapshot = {
     formatVersion: 1,
     generatedAt: now.toISOString(),
+    counts: {
+      // `meetings` is this run's own normalized output, not a subtraction.
+      fresh: meetings.length,
+      carried: carriedRows,
+      total: served.length,
+    },
     sources: report.children.map((c) => ({
       source: c.source,
       ok: c.ok,
@@ -299,6 +311,12 @@ function writeMeetingsSnapshot(
           `${[...carried.entries()].map(([s, n]) => `${s}:${n}`).join(", ")} — ` +
           "their sources were unreachable this run; nothing about them claims to be freshly checked"
       : "  0 meetings carried forward — every source that serves a body was reachable",
+  );
+  // The reconciliation, printed where the job's log will show it (hotfix-0817): the
+  // two numbers this file counts and the one it states, side by side.
+  console.log(
+    `  counts: ${snapshot.counts.fresh} fresh + ${snapshot.counts.carried} carried = ` +
+      `${snapshot.counts.total} total`,
   );
 }
 

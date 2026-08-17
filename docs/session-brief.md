@@ -1,160 +1,90 @@
 # Session brief
 
-The last brief executed was **g6** — one surface at a time, and the numbers
-that contradict each other. This file is overwritten by each session with the
-brief it ran; what follows is what g6 was asked to do, what it did, and — at
-greater length, because it is the more useful half — what it did not.
+The last brief executed was the **2026-08-17 carry-forward hotfix**
+(`hotfix-0817`, branch `claude/h2-carry-forward-truth-0817`). This file is
+overwritten by each session with the brief it ran; what follows is what this
+session was asked to do, what it did, and what it deliberately did not.
 
-## What g6 was asked for
+## What this session was asked for
 
-A standing rule to be written into `CLAUDE.md` before any other work, then
-eight items in a completion order that was explicitly **not** a cut order.
-Items 1, 2 and 3 were named not cuttable. The whole brief was governed by one
-ruling: **the neumorphic active-state treatment landed, keep it exactly as it
-is** — no token, no layer, no shadow, no mask, and any item that appeared to
-require a change to it was to stop and record a row instead.
+A small, bounded hotfix. Two items, both about the same false claim, plus one
+inherited row to close. The brief was explicit about scope: do not touch the
+interface rules deferred as G05, do not start G07 or G09, do not restyle
+anything, and leave the author's production pass parked as the next session's
+whole subject.
 
-- **The standing rule** — the deferral boundary falls between subjects, never
-  inside one; a session does not stop starting subjects because it doubts it
-  can finish them, and it reports completions against a denominator. Plus,
-  separately, a record of the h session's one documented deviation from the
-  transparency mandate's source text.
-- **Item 1** — four places where a stated number and a rendered thing
-  disagree: (a) Who Governs Here stating 4 / 5 / 5 for one list, (b) a route
-  answering at 0,0, (c) the `walk:all` count not reconciling across two
-  sessions, (d) the meetings panel's stated N, to be confirmed mechanically.
-- **Item 2 (C05)** — our own automated traffic stops contaminating the
-  sold aggregate, with the "just stop writing to production" fix explicitly
-  rejected in the brief.
-- **Item 3 (M141)** — name the mechanism by which pointer movement changed the
-  render, then re-run at high n on a phone viewport with no pointer events at
-  all: 390×844, both device pixel ratios, four zips, ≥40 trials per
-  configuration, cold each time.
-- **Item 4** — the interface consolidates: eight rules, 4a–4h, absorbing the
-  parked rows M137 and M138.
-- **Item 5** — Ask discoverability: the pill's label carries the teaching.
-- **Item 6** — Mayor comes out of Who Governs Here, with per-zip reachability
-  reported rather than decided.
-- **Item 7** — measure the active-state ramp for New Hampshire and New Jersey
-  and capture sixteen frames. Change nothing.
-- **Item 8** — g5's three unreported deliverables, `pnpm perf`, and
-  `context.md`'s loud-failure cleanup.
+- **Item 1 (P0)** — the meetings snapshot counts two things and states one
+  number. The scheduled *Refresh meetings snapshot* job had failed at least
+  twice with `snapshot holds 217 meetings but sources claim 193`, and the
+  brief supplied the facts so nothing would be re-diagnosed from scratch: 193
+  fetched fresh, 24 carried forward for `schedulepage`, 193 + 24 = 217. The
+  invariant predated carry-forward and had never been taught it exists.
+- **Item 2 (P0, truth defect)** — the reader is told a freshness that is not
+  true of every row. `LAST CHECKED 6 hours ago` is true of the snapshot and
+  false of the 24 carried rows.
+- **Item 1c** — closed properly, at four points, with nothing inherited.
 
-## What happened
+The brief led with a prohibition, and it is the whole point of item 1: **do
+not** change the assertion to `total >= claims`, **do not** add a tolerance,
+**do not** skip the check when carried rows are present, and **do not** make
+the per-source claims include the carried rows so the sums match. Every one of
+those makes the test pass and makes it worthless.
 
-**Five of eight items landed whole, plus the standing rule, one rule of item 4,
-and two thirds of item 8. Two items were never started.**
+## What shipped
 
-Stated that way on purpose: the rule this session wrote requires a denominator
-rather than a narrative, and "the consolidation was deferred" would be the
-sentence it exists to forbid.
+**Item 1 — the invariant learns that carry-forward exists.** The snapshot now
+states `fresh`, `carried` and `total`; every carried row carries
+`{ source, lastFreshAt }` stamped at write time; and `reconcileCounts()`
+enforces four equalities at the write boundary and on every read —
+`fresh + carried = total`, `total` = the rows present, `fresh` = the sum of the
+per-source `normalized` (the original assertion, preserved exactly, aimed at
+the right number), and `carried` = the rows carrying the mark, per source as
+well as in total. Nothing was loosened; the forbidden repair of folding carried
+rows into `normalized` is itself a test that must still fail.
 
-| item | state |
-|---|---|
-| the standing rule | **done**, first, before any other work |
-| **1a 1b 1c 1d** | **done** — three fixed, one confirmed |
-| **2 (C05)** | **done** whole |
-| **3 (M141)** | **done** — mechanism named from the code, 320 of 320 |
-| **4** | rule **4g done**; 4a–4f and 4h deferred whole (**G05**) |
-| **5** | **not started** (**G07**) — deliberately, see below |
-| **6** | **done**, with per-zip reachability reported |
-| **7** | **not started** (**G09**) |
-| **8** | **8b done**, **8c** three bullets of four, **8a** one deliverable of three (**G10**) |
+**Item 2 — a carried row states its own freshness.** The footer names the
+count and, when the carried rows agree on one day, that day; the panel card and
+the popup each gain a `Last reached` line reading the row's own stamp. No
+badge, no colour, no new component, no filtering — the truth fix only.
 
-### What landed
+**Item 1c — four counts, derived backward from an observed run.**
+`d6d477d` 131, `68987ee` 134, `eb4df50` 135, `2dbae55` **148 observed**. No
+check was ever missing; the discrepancy was a mis-transcribed 133 for 131.
 
-- **The standing rule**, in `CLAUDE.md` immediately below the fourteen-rung
-  ladder, and the h deviation recorded beside the mandate text — two clauses
-  that read without a reference to experimental control C5, which the h brief
-  itself forbade copying in.
-- **Item 1a.** Fixed, and **the brief's named suspect was half wrong**: the
-  Public Housing Authority board IS classed `GOVERNING` and is inside the four;
-  the row that moved was the Board of Adjustment, a commission. A **second,
-  latent instance** was found in the same pass — the M26 narrowing shrinks the
-  list on the client while the count came from the server, so a reader
-  narrowing to their own school district would have re-opened the gap by hand.
-- **Item 1b.** Root cause `Number(null) === 0`. Eleven routes audited, two
-  affected (`/api/meetings`, `/api/directory`). No 0,0 coordinate default
-  exists anywhere else in the codebase. The repo-wide guard was proven to fail
-  before it was trusted.
-- **Item 1c.** Reconciled by enumeration: **nothing was lost.** The counts are
-  131 → 134 → 135 and both deltas close exactly. The discrepancy was the
-  STARTING number — g5's report said 133 where the real count was 131, which
-  is the figure g4's own report recorded. `walk:all` now prints its own census
-  so no session transcribes a count again.
-- **Item 1d.** A permanent four-way check at all four zips.
-- **Item 2 (C05).** Built whole. The three counts: **0 organic, 46 synthetic,
-  2845 unknown, 2891 total** — the brief estimated ~537 rows were ours, the
-  table holds 2891, and none of the history is attributable.
-- **Rule 4g**, taken out of order because it is a one-line copy ruling that
-  cannot half-land. One surface carried the line.
+**A permanent walk check**, and a playbook entry: *a count derived at read time
+stops being true when the data grows a new case*.
 
-### Item 3 (M141) — closed, on the measurement
+## What was proven before it was trusted
 
-**The author's objection was right about the scrim and wrong about the claim.**
-A stacked scrim does not respond to pointer movement, and it never had to: the
-scrim is what PREVENTED the paint, and something else FORCED the repaint. g5
-named only the first half.
+Four mutations of the real committed snapshot were run against the real CI
+gate, and each one reddened it. Three of four mutations of the item-2 render
+guard passed the first version of that guard — a dead `{false && (` branch
+still contains the field names it was grepping for — so the guard was tightened
+to pin the conditional each surface renders behind, and re-proven.
 
-The second half, read out of the stylesheet rather than inferred:
-`app/globals.css:2828`, `.al-row:hover`. The rows inside the panel body carry a
-hover rule, so a pointer entering the panel triggers a style recalc that
-invalidates paint **inside `.al-overlay-body`** — the exact container whose
-pixels were missing. A phone has no hover, which is why a phone reader never got
-the free repair.
+The refresh was run end to end (`pnpm ingest composite`, 10 of 10 sources
+reachable, 217 fresh + 0 carried), and because a developer's egress is not the
+one `kearsarge.org` refuses, the carry path was driven separately on real data
+with `schedulepage` forced to fail: 189 fresh + 28 carried = 217, written, read
+back, marks intact.
 
-**320 of 320** on the paint assertion — 390×844, both device pixel ratios, four
-zips, 40 cold trials each, no pointer event of any kind. 960 of 960 across all
-three assertions. Stated as a bound rather than as green: 4 of 4 against a 25%
-failure rate happens 32% of the time and was correctly dismissed; 320
-consecutive passes put the **95% upper bound on the failure rate at 0.93%**.
-What the measurement cannot see — one machine, one Chromium build — is stated
-too.
+## What this session deliberately did NOT do
 
-### Item 6 — done, with the finding the brief asked for
+- **It did not fix the egress wall.** `schedulepage` is still unreachable from
+  CI. That is ladder rung 5, the CivicPlus rung-12 attempt belongs to the
+  planned `h2` depth session's item 3, and carry-forward masks the wall
+  honestly rather than repairing it.
+- **It did not decide how staleness should look.** Removing a false claim is a
+  truth fix; the visual treatment is the author's and belongs to the next
+  interface session.
+- **It touched none of G05, G07 or G09**, restyled nothing, and left the
+  author's production pass parked.
 
-Reachability was established from the committed rosters **before** anything was
-removed: 85701 and 07866 keep their mayors (row → battlecard → Representation);
-85641 and 03255 have no mayor to lose. **No zip loses the office.** Newbury's
-M32 no-mayor fact survives untouched — it is keyed on the office title, not on
-"Mayor". The cost is named: the mayor moved from zero clicks to two.
+## Standing rules this session inherited
 
-### What did not, and where its spec lives
-
-| Row | What |
-|---|---|
-| **G05** | item 4, rules 4a–4f and 4h; M137 and M138 are marked Absorbed and point here |
-| **G07** | item 5, Ask discoverability |
-| **G09** | item 7, the ramp measurement for NH and NJ, and sixteen frames |
-| **G10** | item 8a's two measurement deliverables, and 8c's R16 remainder |
-
-Each carries its whole spec, unchanged. Nothing was thinned and nothing was
-reported as done that was not.
-
-**Item 5 was deliberately not attempted, and the reason is a coupling rather
-than doubt.** It is the designed compensation for rule 4a's discoverability
-cost, and 4a is not built. Shipping 4a alone would have left two Ask boxes and
-hidden both — worse than today, not better — so rules 4a–4f stayed whole.
-
-### The findings worth carrying forward
-
-1. **`Number(null)` is 0, not NaN**, and every `isFinite` guard downstream of a
-   `Number(params.get(...))` is therefore decorative. It produced a populated
-   200 in the Gulf of Guinea AND a row in the store we sell.
-2. **A mis-transcribed integer is indistinguishable from lost coverage.** One
-   wrong starting count propagated through two sessions and a merge and looked
-   exactly like two checks silently dying. Instruments should print their own
-   census rather than let a number be copied by hand.
-3. **The search log's history is not sellable.** Not because it is
-   contaminated by a known amount, but because nothing in a pre-marker row
-   distinguishes our robot from a reader. The sellable record starts
-   2026-08-17.
-4. **A run that forgets its marker is worse than an unmarked one.** This
-   session mislabelled four of its own rows as readers within an hour of
-   shipping the marker, while verifying its own deploy.
-
-## Standing rules this session inherited and kept
-
-The neumorphic active-state treatment was **not touched** — no item required
-it, and none was allowed to. Zip shading stayed deleted. HEAD at session open
-was `eb4df50`, `main` with h merged.
+All of `CLAUDE.md`'s non-negotiables. Diagnose before fixing. Stated N equals
+rendered rows. A failed operation never renders as an empty success, and a wall
+never renders as an emptiness — the carried rows exist because a wall held, and
+the product must not imply otherwise. Never assert absence. Denominators always
+stated. Where a measurement can pass while wrong, measure the right thing.
+Every reader-facing date is wall clock via `pnpm stamp`.

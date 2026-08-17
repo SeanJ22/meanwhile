@@ -44,7 +44,6 @@ console.log(`  db   = ${url.pathname.slice(1).split("?")[0]}\n`);
 
 const sql = neon(connection);
 const STORES = ["search_log", "reactions", "intake_limiter"];
-const WRITES = ["INSERT", "UPDATE", "DELETE"] as const;
 
 let failures = 0;
 function report(label: string, ok: boolean, detail: string) {

@@ -72,10 +72,17 @@ mkdirSync(OUT, { recursive: true });
  * measuring the edge while claiming to measure the interior.
  *
  * Taking it from `extrusionSpecForZoom` rather than pinning a number is what
- * keeps the exclusion honest as the spec is tuned: 64 px at neighbourhood
- * zoom falls to 35 px at continental zoom, which is the difference between a
- * check that can run over a small state and one that cannot. The distance
- * used is printed on every frame.
+ * keeps the exclusion honest as the spec is tuned. The distance used is
+ * printed on every frame.
+ *
+ * **The numbers, corrected 2026-08-17 (item 8a).** This comment used to say
+ * "64 px at neighbourhood zoom falls to 35 px at continental zoom". Those are
+ * the `offsetPx + 3·blurPx` values — the exclusion is what comes out AFTER the
+ * `max` and the `+ 6` slack, so it is **70 px at neighbourhood zoom (10+) and
+ * 41 px at continental (3–4)**, via 51 px at zoom 6 and 61 px at zoom 8. The
+ * code was always right; the sentence describing it was off by the slack it
+ * adds, and g5's report named no exclusion at all — which is how a tolerance
+ * gets loosened until it proves nothing.
  */
 function borderExclusionPx(zoom: number): number {
   const spec = extrusionSpecForZoom(zoom);

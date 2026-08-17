@@ -8182,6 +8182,46 @@ the warnings retire themselves while the wrong dates stay in the documents,
 uncorrected and no longer flagged. That is worse than a warning that nags, and
 it is the reason to finish this rather than wait.
 
+### Item 8a, third deliverable — the exclusion distance, stated
+
+g5's report never named the exclusion distance used for the effect-off
+equivalence check, and the brief is right that an unstated exclusion is how a
+tolerance gets loosened until it proves nothing. It is answerable from the code
+without re-running anything, so it is answered here.
+
+**It is not a constant.** `borderExclusionPx(zoom)` reads the SHIPPED spec for
+the zoom being measured:
+
+```
+ceil( max( offsetPx + 3·blurPx , 3·featherPx ) + 6 )
+```
+
+**The reasoning**, which is sound: the rise is a silhouette displaced by
+`offsetPx` and blurred at `blurPx`, so it reaches `offsetPx + 3σ` from the
+border and no further; the mask's own feather reaches `3 × featherPx`. A sample
+closer than the larger of those may legitimately differ from an effect-off
+frame, so including it would be measuring the edge while claiming to measure the
+interior. The `+ 6` is slack. Deriving it from the spec rather than pinning a
+number is what keeps it honest as the spec is tuned — a pinned constant would
+silently stop excluding the edge the first time the blur grew.
+
+| zoom | offset | blur | feather | offset + 3·blur | 3·feather | **exclusion** |
+|---|---|---|---|---|---|---|
+| 3–4 (continental) | 8 | 9 | 4 | 35 | 12 | **41 px** |
+| 6 | 10.67 | 11.33 | 5 | 44.7 | 15 | **51 px** |
+| 8 | 13.33 | 13.67 | 6 | 54.3 | 18 | **61 px** |
+| 10+ (neighbourhood) | 16 | 16 | 7 | 64 | 21 | **70 px** |
+
+**One correction while reading it.** The function's own doc comment says the
+exclusion is "64 px at neighbourhood zoom … 35 px at continental zoom". Those
+are the `offset + 3·blur` values, not the exclusion — the exclusion is 70 and 41
+after the `max` and the `+ 6`. The code is right and the sentence describing it
+is off by the slack it adds. Corrected in the comment.
+
+The other two 8a deliverables — the per-state byte and layer counts, and the
+both-themes frame set — need measurement runs and are **not** done; they stay in
+G10.
+
 ### What was NOT started
 
 **Items 5 and 7 were never begun, and items 4 and 8 are part-done.** Each

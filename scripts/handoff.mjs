@@ -86,9 +86,11 @@ import {
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { checkBranchNames } from "./check-branch-names.mjs";
 import { CAP_BYTES, writeContext } from "./context-file.mjs";
 import { stopDevServer } from "./dev-server.mjs";
 import { today } from "./doc-dates.mjs";
+import { generatedAtEastern } from "./generated-at.mjs";
 import { mirrorCode } from "./mirror-code.mjs";
 import { COPIED_DOCS, MIRRORED_DOCS, checkMirrorContents } from "./mirror-set.mjs";
 
@@ -174,10 +176,37 @@ function gitShowBuffer(rev, repoPath) {
   }
 }
 
-function sameBytes(a, b) {
+/**
+ * Is the mirror copy already current? (R08, hardened 2026-08-17.)
+ *
+ * Renamed from `sameBytes` because raw bytes were the bug. The two halves of
+ * the mirror step disagreed about what "same" means: this comparison read raw
+ * bytes while the divergence check twenty lines below normalized CRLF first.
+ * On Windows the working tree is CRLF and git stores LF, so any mirror copy
+ * written with LF — by a different tool, a non-Windows checkout, or an editor
+ * that normalizes on save — reads as DIFFERENT here forever. The result is a
+ * full recopy every run and a permanently red line on the one gate meant to
+ * catch a genuinely diverged mirror.
+ *
+ * It is not hypothetical arithmetic: CLAUDE.md is 45417 bytes in the working
+ * tree and 45147 in git, and the 270-byte gap is exactly its 270 CRLF line
+ * endings. A byte comparison across that boundary can only ever say "differs".
+ *
+ * Binary entries keep the raw comparison, for the reason the divergence check
+ * already records: newline-normalizing a `.xlsx` compares two corrupted
+ * strings. So the flag has to reach this function rather than being applied
+ * only downstream of it — which is what let the two halves drift apart.
+ */
+function sameContent(a, b, isBinary) {
   if (!existsSync(a) || !existsSync(b)) return false;
-  if (statSync(a).size !== statSync(b).size) return false;
-  return readFileSync(a).equals(readFileSync(b));
+  if (isBinary) {
+    if (statSync(a).size !== statSync(b).size) return false;
+    return readFileSync(a).equals(readFileSync(b));
+  }
+  // No size shortcut for text: two files that differ only in line endings have
+  // different sizes and identical content, which is the whole case above.
+  const normalize = (s) => s.replace(/\r\n/g, "\n").trimEnd();
+  return normalize(readFileSync(a, "utf8")) === normalize(readFileSync(b, "utf8"));
 }
 
 /* ------------------------------------------------------------------ 1-3 --- */
@@ -371,7 +400,8 @@ function writeGitState() {
   const lines = [];
   const put = (label, value) => lines.push(`${label}: ${value}`);
 
-  put("generated", new Date().toISOString());
+  // R18: git-state.txt is a generated mirror document, so Eastern.
+  put("generated", generatedAtEastern());
   put("branch", branch);
 
   const subject = (rev) => tryRun("git", ["log", "-1", "--format=%s", rev]);
@@ -468,7 +498,10 @@ async function writeContextFile(note) {
   try {
     const built = await writeContext(MIRROR, {
       gitFacts,
-      generatedAt: new Date().toISOString(),
+      // R18: the generated-at line on a generated DOCUMENT is Eastern.
+      // `stampToday` below stays America/Phoenix — different question, and
+      // context.md deliberately carries both.
+      generatedAt: generatedAtEastern(),
       stampToday: today(),
     });
     const kb = (built.bytes / 1024).toFixed(1);
@@ -509,6 +542,28 @@ if (CHECK_ONLY) {
   else ok("dev server", CHECK_ONLY ? `${detail}` : detail);
 }
 
+/* ------------------------------------------------------- 3b branch names --- */
+
+// R11: a branch named in a tracker Note has to be one this repository
+// remembers. R03 requires every Done row to name its branch, and until this ran
+// nothing checked that the name was real — so the requirement produced
+// well-formatted fiction three times. Reports, never blocks: the rows it flags
+// are history, and failing a ship over old prose would teach everyone to skip
+// the line.
+{
+  const { unresolved, checked } = checkBranchNames(join(ROOT, "docs/tracker.csv"));
+  if (unresolved.size === 0) {
+    ok("branch names", `${checked} named in tracker Notes, all remembered by git`);
+  } else {
+    for (const [name, rowIds] of unresolved) {
+      warn(
+        "branch names",
+        `${name} is claimed by ${rowIds.join(", ")} but is not a ref, a merge subject, or in the reflog`,
+      );
+    }
+  }
+}
+
 /* -------------------------------------------------------------- 4 mirror --- */
 
 if (!existsSync(MIRROR)) {
@@ -522,7 +577,13 @@ if (!existsSync(MIRROR)) {
     const from = join(ROOT, repoPath);
     const to = join(MIRROR, mirrorName);
 
-    if (sameBytes(from, to)) {
+    // Hoisted above the comparison (R08). `sameContent` needs to know whether
+    // this entry is binary, and computing it after the call is what allowed the
+    // comparison and the divergence check below to use different rules.
+    const entry = MIRRORED_DOCS.find((d) => d.repoPath === repoPath);
+    const isBinary = entry?.binary === true;
+
+    if (sameContent(from, to, isBinary)) {
       already++;
       continue;
     }
@@ -547,9 +608,7 @@ if (!existsSync(MIRROR)) {
     // version" on the first ordinary update of a mirrored workbook and refused
     // it — a protection misfiring into a permanent block. `deferred.xlsx` was
     // the first binary in the set and found this before it shipped.
-    const entry = MIRRORED_DOCS.find((d) => d.repoPath === repoPath);
-    const isBinary = entry?.binary === true;
-
+    // (`entry` and `isBinary` are computed above, before the sameContent call.)
     const mirrorBytes = existsSync(to)
       ? readFileSync(to, isBinary ? null : "utf8")
       : null;
@@ -996,8 +1055,72 @@ function fastForwardMain() {
   }
 }
 
+/**
+ * Did the deploy actually LAND? (2026-08-17, the author's ruling.)
+ *
+ * The R22 gate proves the tree BUILDS — it runs the same command Netlify runs,
+ * before shipping. It cannot prove that what Netlify then served is this
+ * commit. Those are different claims, and the gap between them is an hour of
+ * production quietly serving the previous build, which is how R22 was born.
+ *
+ * `/api/build` closes it by reporting the commit the running deploy was built
+ * from. Polling behaviour, which is what the g6 session did, only works when a
+ * change alters observable behaviour; a doc-only or internal change has
+ * nothing to poll, and this session's own work is mostly that shape.
+ *
+ * A TIMEOUT IS REPORTED AS A COULD-NOT-RUN, NEVER AS A FAILURE. Netlify's
+ * build queue is not this script's to wait on, and an unreachable service is
+ * not a missing feature — the same distinction `walk:all` draws. What it must
+ * never do is report success without having seen the SHA.
+ */
+async function verifyDeployLanded(expectedSha) {
+  const url = `${(process.env.SHOOT_BASE_URL ?? "https://sparkwtp.netlify.app").replace(/\/+$/, "")}/api/build`;
+  const deadline = Date.now() + 5 * 60 * 1000;
+  const short = expectedSha.slice(0, 7);
+  let last = null;
+
+  while (Date.now() < deadline) {
+    try {
+      const response = await fetch(url, {
+        cache: "no-store",
+        headers: {
+          "cache-control": "no-cache",
+          // Declare ourselves (C05). This is a GET on a route that writes
+          // nothing, but the rule is that automated traffic says so.
+          "x-wtp-synthetic-run": `handoff-deploy-verify@${new Date().toISOString()}`,
+        },
+      });
+      if (response.ok) {
+        const body = await response.json();
+        last = body.commit ?? "unknown";
+        if (last === expectedSha) {
+          ok("ship · deploy", `production is serving ${short} (/api/build)`);
+          return;
+        }
+      }
+    } catch {
+      // Network flake or a deploy mid-swap; keep polling until the deadline.
+    }
+    await new Promise((r) => setTimeout(r, 15_000));
+  }
+
+  warn(
+    "ship · deploy",
+    last === null
+      ? `could not reach ${url} within 5 min — deploy NOT verified (could-not-run, not a failure)`
+      : `production still serving ${String(last).slice(0, 7)}, expected ${short} after 5 min — deploy NOT verified`,
+  );
+}
+
 if (SHIP) {
   ship();
+
+  // Only worth asking once the merge and fast-forward actually succeeded —
+  // otherwise the SHA we would be waiting for is not the one being deployed.
+  if (!results.some((r) => r.level === "fail" && r.label.startsWith("ship"))) {
+    const shipped = tryRun("git", ["rev-parse", "origin/main"]);
+    if (shipped) await verifyDeployLanded(shipped);
+  }
 
   // The branch, main and PR lines above were measured *before* shipping, so
   // once it succeeds they describe a state that no longer exists — and they

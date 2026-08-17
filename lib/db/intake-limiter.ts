@@ -4,6 +4,7 @@ import { lt, sql } from "drizzle-orm";
 
 import { getDb } from "./index.ts";
 import { intakeLimiter } from "./schema.ts";
+import { assertWriteAllowed } from "./write-guard.ts";
 
 /**
  * The authoritative per-device intake counters (T08) — one upsert per
@@ -45,6 +46,12 @@ export async function noteSubmission(
   now: Date = new Date(),
 ): Promise<IntakeCounters | null> {
   if (!process.env.DATABASE_URL) return null;
+
+  // Deliberately OUTSIDE the try below. A refused write is a misconfiguration
+  // and must not be laundered into LIMITER_UNAVAILABLE, which means "the
+  // limiter is down, quarantine the row" — a different fact with a different
+  // fix, and the one an operator would go chasing.
+  assertWriteAllowed("an intake limiter counter");
 
   const iso = now.toISOString();
   const dayBucket = iso.slice(0, 10);
@@ -97,6 +104,7 @@ export async function purgeExpiredLimiterState(
   now: Date = new Date(),
 ): Promise<number> {
   if (!process.env.DATABASE_URL) return 0;
+  assertWriteAllowed("an intake limiter purge");
   const cutoff = new Date(now.getTime() - 48 * 3600 * 1000).toISOString();
   const deleted = await getDb()
     .delete(intakeLimiter)

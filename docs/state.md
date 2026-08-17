@@ -4,7 +4,36 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-17 — **the snapshot counted two things and stated one
+Last updated: 2026-08-17 — **local development stopped being a production
+client, and the author's 117 dispositions started becoming the work.** The g7
+session. `.env.local` carried the production `DATABASE_URL`, so `pnpm dev` was
+a production client and opening a browser at `localhost:3000` wrote an unmarked
+ORGANIC row into the table the business sells from. Both halves shipped: a
+write guard that refuses any non-production runtime writing to a database it
+believes is production — unset means production, so anything undeclared is
+refused rather than trusted — and `DATABASE_URL` unset in `.env.local`
+entirely, which costs nothing because **nothing in the app reads the database**;
+all four `getDb()` call sites are writes. Proved with two planted breaks, three
+refused write paths against the real production string, and a control showing
+the guard is the gate. Production census identical either side: 3543 rows,
+ORGANIC 17, SYNTHETIC 681, UNKNOWN 2845, reactions 35. **The brief's premise
+that the census stands at 0 organic is wrong — there are 17, none of them this
+session's, none attributable, and none back-marked.**
+
+Twelve of the author's dispositions are recorded verbatim in their rows, eight
+of them closing. Seven of item 3's twenty small fixes shipped, and two found
+more than they fixed: the mirror comparison was **not** dormant (CLAUDE.md is
+45417 bytes in the working tree and 45147 in git, exactly its 270 CRLF line
+endings, and eight files were being needlessly recopied every run), and the new
+branch-name check found a **third** fabricated branch on its first run —
+`claude/apple-clean-0816`, claimed by eight rows and existing nowhere.
+`docs/session-map.md` could not be committed because it does not exist: eight
+rungs walked, recorded on R33, and deliberately not reconstructed from the
+census, whose 117 dispositions carry 87 distinct free-text strings. **Items 1
+and 2 of 9 whole, item 3 at 7 of 20, items 4–8 never started and deferred
+whole.** See `docs/session-brief.md`.
+
+Before that: 2026-08-17 — **the snapshot counted two things and stated one
 number.** A bounded hotfix. The scheduled meetings refresh had been failing on
 its own gate since 2026-08-16T20:50Z with `snapshot holds 217 meetings but
 sources claim 193`: 193 rows fetched fresh, 24 carried forward for the source

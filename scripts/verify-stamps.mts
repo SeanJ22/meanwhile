@@ -238,12 +238,72 @@ function investigate(entry: Stamp): Finding {
 
 /* ----------------------------------------------------------------- run --- */
 
+/**
+ * Disagreements the author has ruled are EXPECTED BEHAVIOUR, not defects.
+ *
+ * The audit recovers when a rule's text entered `CLAUDE.md`. That is a good
+ * proxy for when the rule became law, and it is exactly right for the usual
+ * case. It is wrong for a rule ADOPTED BEFORE THE COMMIT THAT WROTE IT DOWN —
+ * which is what a negative delta means, and which the four-door photo
+ * restructure produced honestly: doors 1 and 2 became law on 2026-08-13 and
+ * 2026-08-14, and commit `f5de914` rewrote the whole photo rule into its
+ * four-door shape on 2026-08-15, carrying both earlier stamps with it.
+ *
+ * The stamps are RIGHT and the method cannot see it. The author ruled on
+ * 2026-08-17 to allowlist both so the report stops presenting expected
+ * behaviour as disagreement — a report whose known-good rows are permanently
+ * flagged is one nobody reads to the end, which is how a real one would be
+ * missed.
+ *
+ * Each entry pins the clause, BOTH dates and the commit. That is deliberate:
+ * an allowlist keyed on the clause alone would go on suppressing this row if
+ * the claimed date were later changed to something genuinely wrong. Pinned
+ * this way, any different disagreement on the same rule surfaces as normal.
+ */
+const RULED_EXPECTED: Array<{
+  clause: string;
+  claimed: string;
+  recovered: string;
+  sha: string;
+  why: string;
+}> = [
+  {
+    clause: "An explicit recorded license",
+    claimed: "2026-08-13",
+    recovered: "2026-08-15",
+    sha: "f5de914",
+    why: "photo door 1, adopted 2026-08-13; the four-door restructure wrote it into CLAUDE.md two days later. Author-ruled expected 2026-08-17.",
+  },
+  {
+    clause: "An official government-published portrait",
+    claimed: "2026-08-14",
+    recovered: "2026-08-15",
+    sha: "f5de914",
+    why: "photo door 2, adopted 2026-08-14; same restructure commit the day after. Author-ruled expected 2026-08-17.",
+  },
+];
+
+function ruledExpected(f: Finding): boolean {
+  return RULED_EXPECTED.some(
+    (r) =>
+      f.clause.startsWith(r.clause) &&
+      f.claimed === r.claimed &&
+      f.recovered === r.recovered &&
+      (f.sha ?? "").startsWith(r.sha),
+  );
+}
+
 const text = readFileSync(join(ROOT, TARGET), "utf8");
 const stamps = readStamps(text);
 const findings = stamps.map(investigate);
 
 const today = stamp();
-const wrong = findings.filter((f) => f.deltaDays !== null && f.deltaDays !== 0);
+const expected = findings.filter(ruledExpected);
+// A ruled-expected row still appears in the table with its real delta — it is
+// filtered out of the DISAGREEMENT list, never out of the record.
+const wrong = findings.filter(
+  (f) => f.deltaDays !== null && f.deltaDays !== 0 && !ruledExpected(f),
+);
 const missing = findings.filter((f) => f.recovered === null);
 const future = findings.filter((f) => f.claimed > today);
 
@@ -307,7 +367,30 @@ const doc = [
   `- **${wrong.length} stamp(s) disagree with git history.**`,
   `- **${future.length} stamp(s) are still later than today** (${today}) — a date that had not happened when it was written.`,
   `- **${missing.length} stamp(s) could not be recovered** and are printed \`NOT FOUND\` rather than guessed.`,
+  `- **${expected.length} stamp(s) disagree BY DESIGN and the author has ruled them expected** — listed below, and still carrying their real delta in the table above.`,
   "",
+  ...(expected.length > 0
+    ? [
+        "### Ruled expected, not defects",
+        "",
+        "These carry a NEGATIVE delta, which means the rule was adopted BEFORE the",
+        "commit that wrote it into `CLAUDE.md`. The audit recovers when a rule's text",
+        "entered the file, which is the right proxy in the ordinary case and cannot",
+        "see this one. The stamps are correct; the method is blind here.",
+        "",
+        "They are filtered out of the disagreement count and nowhere else — the table",
+        "above still shows each one's real delta, because suppressing the number as",
+        "well would leave nothing to re-audit if the ruling is ever revisited.",
+        "",
+        "| Line | Claimed | Recovered | Delta | Why this is expected |",
+        "|---|---|---|---|---|",
+        ...expected.map((f) => {
+          const rule = RULED_EXPECTED.find((r) => f.clause.startsWith(r.clause))!;
+          return `| \`CLAUDE.md:${f.line}\` | ${f.claimed} | ${f.recovered} | ${f.deltaDays} d | ${rule.why} |`;
+        }),
+        "",
+      ]
+    : []),
   ...(wrong.length > 0
     ? [
         "| Line | Claimed | Recovered | Delta | Note |",
@@ -371,6 +454,7 @@ for (const f of findings) {
 console.log("");
 console.log(`  ${findings.length} stamp(s) audited.`);
 console.log(`  ${wrong.length} disagree with git history.`);
+console.log(`  ${expected.length} disagree by design and are author-ruled expected (photo doors 1 and 2).`);
 console.log(`  ${future.length} are later than today (${today}).`);
 console.log(`  ${missing.length} could not be recovered — printed NOT FOUND, never guessed.`);
 console.log("");

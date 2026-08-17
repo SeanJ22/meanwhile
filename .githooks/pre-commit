@@ -15,9 +15,14 @@
 set -e
 
 if ! command -v node >/dev/null 2>&1; then
-  echo "pre-commit: node not on PATH — the document date check did not run." >&2
+  echo "pre-commit: node not on PATH — the staged-document checks did not run." >&2
   echo "pre-commit: refusing rather than passing a check that never ran." >&2
   exit 1
 fi
 
+# Both checks run, and `set -e` means the first failure stops the commit.
+# CLAUDE.md's size is checked FIRST and deliberately: a clobbered constraints
+# file is the one failure that makes every later check meaningless, because
+# the rules those checks enforce are the thing that just went missing (R01).
+node scripts/check-claude-size.mjs
 exec node scripts/check-staged-dates.mjs

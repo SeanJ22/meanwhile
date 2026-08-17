@@ -56,14 +56,26 @@ lying. The recovered dates come from the unfiltered pickaxe.
 
 ## What the deltas say
 
-- **2 stamp(s) disagree with git history.**
+- **0 stamp(s) disagree with git history.**
 - **0 stamp(s) are still later than today** (2026-08-17) — a date that had not happened when it was written.
 - **0 stamp(s) could not be recovered** and are printed `NOT FOUND` rather than guessed.
+- **2 stamp(s) disagree BY DESIGN and the author has ruled them expected** — listed below, and still carrying their real delta in the table above.
 
-| Line | Claimed | Recovered | Delta | Note |
+### Ruled expected, not defects
+
+These carry a NEGATIVE delta, which means the rule was adopted BEFORE the
+commit that wrote it into `CLAUDE.md`. The audit recovers when a rule's text
+entered the file, which is the right proxy in the ordinary case and cannot
+see this one. The stamps are correct; the method is blind here.
+
+They are filtered out of the disagreement count and nowhere else — the table
+above still shows each one's real delta, because suppressing the number as
+well would leave nothing to re-audit if the ruling is ever revisited.
+
+| Line | Claimed | Recovered | Delta | Why this is expected |
 |---|---|---|---|---|
-| `CLAUDE.md:114` | 2026-08-13 | 2026-08-15 | -2 d | claimed date is later than the introducing commit |
-| `CLAUDE.md:115` | 2026-08-14 | 2026-08-15 | -1 d | claimed date is later than the introducing commit |
+| `CLAUDE.md:114` | 2026-08-13 | 2026-08-15 | -2 d | photo door 1, adopted 2026-08-13; the four-door restructure wrote it into CLAUDE.md two days later. Author-ruled expected 2026-08-17. |
+| `CLAUDE.md:115` | 2026-08-14 | 2026-08-15 | -1 d | photo door 2, adopted 2026-08-14; same restructure commit the day after. Author-ruled expected 2026-08-17. |
 
 ## The literal `--diff-filter=A` result, per stamp
 

@@ -25,6 +25,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { CAMPAIGN_SITES } from "../lib/officials/campaign-sites.ts";
+import { generatedAtEastern } from "./generated-at.mjs";
 
 const UA = "we-the-people civic meeting index (contact: seanj22@gmail.com)";
 const DELAY_MS = 250;
@@ -119,7 +120,8 @@ async function main() {
   const lines: string[] = [
     "# Officials audit — the Kelly standard",
     "",
-    `Generated ${new Date().toISOString()} by \`pnpm officials:audit\`.`,
+    // R18: generated-at lines on generated documents carry Eastern.
+    `Generated ${generatedAtEastern()} by \`pnpm officials:audit\`.`,
     "",
     "Five fields per official: **page** (specific official page, fetch-verified to",
     "name the member), **contact** (form or email present), **phone**, **photo**",

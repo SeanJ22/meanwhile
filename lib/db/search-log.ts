@@ -3,6 +3,7 @@ import { scrubFreeText } from "../log/scrub.ts";
 import { getDb } from "./index.ts";
 import { ORGANIC, type RunMarker } from "./run-marker.ts";
 import { searchLog } from "./schema.ts";
+import { assertWriteAllowed } from "./write-guard.ts";
 
 /**
  * Writes to the search log — what was asked and where, never who.
@@ -144,6 +145,12 @@ export async function logSearchEvent(event: SearchLogEvent): Promise<boolean> {
   const marker = event.marker ?? ORGANIC;
 
   if (!process.env.DATABASE_URL) return false;
+
+  // Ordered after the DATABASE_URL check on purpose: "there is no database" is
+  // an ordinary state that returns false, while "there is a database and it is
+  // the production one, and we are not production" is a misconfiguration that
+  // throws. Collapsing the two would hide the second inside the first.
+  assertWriteAllowed("a search log event");
 
   // The scrub pass (session brief 4, wall clock 2026-08-14): free text —
   // the refusal log's question field, and any string a future event

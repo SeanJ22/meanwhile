@@ -99,8 +99,18 @@ test("handoff reads the canonical set rather than keeping its own copy", () => {
   );
 });
 
-test("all ten sizes are reported, and an absent file is not a zero", () => {
-  assert.match(HANDOFF, /ok\("mirror sizes"/, "the ten sizes are no longer reported");
+test("every mirror size is reported, and an absent file is not a zero", () => {
+  assert.match(HANDOFF, /ok\("mirror sizes"/, "the mirror sizes are no longer reported");
+
+  // The set's SIZE is read from the set, never restated as a literal. It
+  // shipped as a hardcoded "10" for one run and printed "the canonical 10
+  // present" on a run that listed twelve — the same defect as the context
+  // generator saying "of 20 KB" after its cap had been raised to 40.
+  assert.match(
+    HANDOFF,
+    /the canonical \$\{MIRRORED_DOCS\.length\} present/,
+    "the mirror-set count is a hardcoded literal again — it goes stale the next time the set changes",
+  );
   const at = HANDOFF.indexOf('ok("mirror sizes"');
   assert.match(
     HANDOFF.slice(at - 400, at + 200),

@@ -1,9 +1,9 @@
 {
  "formatVersion": 1,
- "generatedAt": "2026-08-17T14:08:13.701Z",
+ "generatedAt": "2026-08-17T14:24:45.795Z",
  "counts": {
-  "fresh": 217,
-  "carried": 0,
+  "fresh": 192,
+  "carried": 25,
   "total": 217
  },
  "sources": [
@@ -119,9 +119,9 @@
    "normalized": 15,
    "drops": {
     "placeless": 0,
-    "unknownVenue": 0,
+    "unknownVenue": 1,
     "unplaceableInTime": 0,
-    "notConfigured": 1
+    "notConfigured": 0
    }
   },
   {
@@ -129,13 +129,18 @@
    "ok": true,
    "error": null,
    "fetched": 5,
-   "normalized": 28,
+   "normalized": 3,
    "drops": {
     "placeless": 0,
     "unknownVenue": 0,
     "unplaceableInTime": 0,
-    "notConfigured": 3
-   }
+    "notConfigured": 4
+   },
+   "unreachableOcdIds": [
+    "ocd-division/country:us/state:nh/school_district:kearsarge_regional_school_district",
+    "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town"
+   ],
+   "carriedForward": 25
   }
  ],
  "meetings": [
@@ -158,7 +163,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1803&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-17T14:08:01.943Z",
+    "collectedAt": "2026-08-17T14:24:37.703Z",
     "verifiedAt": null
    }
   },
@@ -181,7 +186,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1804&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-17T14:08:01.943Z",
+    "collectedAt": "2026-08-17T14:24:37.703Z",
     "verifiedAt": null
    }
   },
@@ -204,7 +209,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1816&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-17T14:08:01.943Z",
+    "collectedAt": "2026-08-17T14:24:37.703Z",
     "verifiedAt": null
    }
   },
@@ -227,7 +232,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1817&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-17T14:08:01.943Z",
+    "collectedAt": "2026-08-17T14:24:37.703Z",
     "verifiedAt": null
    }
   },
@@ -250,7 +255,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1820&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-17T14:08:01.943Z",
+    "collectedAt": "2026-08-17T14:24:37.703Z",
     "verifiedAt": null
    }
   },
@@ -273,7 +278,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1821&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-17T14:08:01.943Z",
+    "collectedAt": "2026-08-17T14:24:37.703Z",
     "verifiedAt": null
    }
   },
@@ -296,7 +301,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1822&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-17T14:08:01.943Z",
+    "collectedAt": "2026-08-17T14:24:37.703Z",
     "verifiedAt": null
    }
   },
@@ -319,7 +324,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1823&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-17T14:08:01.943Z",
+    "collectedAt": "2026-08-17T14:24:37.703Z",
     "verifiedAt": null
    }
   },
@@ -342,7 +347,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1824&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-17T14:08:01.943Z",
+    "collectedAt": "2026-08-17T14:24:37.703Z",
     "verifiedAt": null
    }
   },
@@ -365,7 +370,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1854&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-17T14:08:01.943Z",
+    "collectedAt": "2026-08-17T14:24:37.703Z",
     "verifiedAt": null
    }
   },
@@ -388,7 +393,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1858&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-17T14:08:01.943Z",
+    "collectedAt": "2026-08-17T14:24:37.703Z",
     "verifiedAt": null
    }
   },
@@ -411,7 +416,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1869&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-17T14:08:01.943Z",
+    "collectedAt": "2026-08-17T14:24:37.703Z",
     "verifiedAt": null
    }
   },
@@ -434,7 +439,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T14:08:01.885Z",
+    "collectedAt": "2026-08-17T14:24:38.176Z",
     "verifiedAt": null
    }
   },
@@ -457,7 +462,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T14:08:01.885Z",
+    "collectedAt": "2026-08-17T14:24:38.176Z",
     "verifiedAt": null
    }
   },
@@ -480,7 +485,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T14:08:01.885Z",
+    "collectedAt": "2026-08-17T14:24:38.176Z",
     "verifiedAt": null
    }
   },
@@ -503,7 +508,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T14:08:01.885Z",
+    "collectedAt": "2026-08-17T14:24:38.176Z",
     "verifiedAt": null
    }
   },
@@ -526,7 +531,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T14:08:01.885Z",
+    "collectedAt": "2026-08-17T14:24:38.176Z",
     "verifiedAt": null
    }
   },
@@ -549,7 +554,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T14:08:01.885Z",
+    "collectedAt": "2026-08-17T14:24:38.176Z",
     "verifiedAt": null
    }
   },
@@ -572,7 +577,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T14:08:01.885Z",
+    "collectedAt": "2026-08-17T14:24:38.176Z",
     "verifiedAt": null
    }
   },
@@ -595,7 +600,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T14:08:01.885Z",
+    "collectedAt": "2026-08-17T14:24:38.176Z",
     "verifiedAt": null
    }
   },
@@ -618,7 +623,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T14:08:01.885Z",
+    "collectedAt": "2026-08-17T14:24:38.176Z",
     "verifiedAt": null
    }
   },
@@ -642,7 +647,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T14:08:01.885Z",
+    "collectedAt": "2026-08-17T14:24:38.176Z",
     "verifiedAt": null
    }
   },
@@ -666,7 +671,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T14:08:01.885Z",
+    "collectedAt": "2026-08-17T14:24:38.176Z",
     "verifiedAt": null
    }
   },
@@ -690,7 +695,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T14:08:01.885Z",
+    "collectedAt": "2026-08-17T14:24:38.176Z",
     "verifiedAt": null
    }
   },
@@ -714,7 +719,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T14:08:01.885Z",
+    "collectedAt": "2026-08-17T14:24:38.176Z",
     "verifiedAt": null
    }
   },
@@ -738,7 +743,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T14:08:01.885Z",
+    "collectedAt": "2026-08-17T14:24:38.176Z",
     "verifiedAt": null
    }
   },
@@ -762,7 +767,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T14:08:01.885Z",
+    "collectedAt": "2026-08-17T14:24:38.176Z",
     "verifiedAt": null
    }
   },
@@ -786,7 +791,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T14:08:01.885Z",
+    "collectedAt": "2026-08-17T14:24:38.176Z",
     "verifiedAt": null
    }
   },
@@ -810,7 +815,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T14:08:01.885Z",
+    "collectedAt": "2026-08-17T14:24:38.176Z",
     "verifiedAt": null
    }
   },
@@ -834,7 +839,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T14:08:01.885Z",
+    "collectedAt": "2026-08-17T14:24:38.176Z",
     "verifiedAt": null
    }
   },
@@ -858,7 +863,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T14:08:01.885Z",
+    "collectedAt": "2026-08-17T14:24:38.176Z",
     "verifiedAt": null
    }
   },
@@ -882,7 +887,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T14:08:01.885Z",
+    "collectedAt": "2026-08-17T14:24:38.176Z",
     "verifiedAt": null
    }
   },
@@ -906,7 +911,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T14:08:01.885Z",
+    "collectedAt": "2026-08-17T14:24:38.176Z",
     "verifiedAt": null
    }
   },
@@ -930,7 +935,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T14:08:01.885Z",
+    "collectedAt": "2026-08-17T14:24:38.176Z",
     "verifiedAt": null
    }
   },
@@ -953,7 +958,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-17T14:08:02.548Z",
+    "collectedAt": "2026-08-17T14:24:38.633Z",
     "verifiedAt": null
    }
   },
@@ -976,7 +981,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-17T14:08:02.548Z",
+    "collectedAt": "2026-08-17T14:24:38.633Z",
     "verifiedAt": null
    }
   },
@@ -999,7 +1004,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-17T14:08:02.548Z",
+    "collectedAt": "2026-08-17T14:24:38.633Z",
     "verifiedAt": null
    }
   },
@@ -1022,7 +1027,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-17T14:08:02.548Z",
+    "collectedAt": "2026-08-17T14:24:38.633Z",
     "verifiedAt": null
    }
   },
@@ -1045,7 +1050,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-17T14:08:02.548Z",
+    "collectedAt": "2026-08-17T14:24:38.633Z",
     "verifiedAt": null
    }
   },
@@ -1069,7 +1074,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-17T14:08:02.548Z",
+    "collectedAt": "2026-08-17T14:24:38.633Z",
     "verifiedAt": null
    }
   },
@@ -1093,7 +1098,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-17T14:08:02.548Z",
+    "collectedAt": "2026-08-17T14:24:38.633Z",
     "verifiedAt": null
    }
   },
@@ -1117,7 +1122,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-17T14:08:02.548Z",
+    "collectedAt": "2026-08-17T14:24:38.633Z",
     "verifiedAt": null
    }
   },
@@ -1141,7 +1146,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-17T14:08:02.548Z",
+    "collectedAt": "2026-08-17T14:24:38.633Z",
     "verifiedAt": null
    }
   },
@@ -1165,7 +1170,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-17T14:08:02.548Z",
+    "collectedAt": "2026-08-17T14:24:38.633Z",
     "verifiedAt": null
    }
   },
@@ -1189,7 +1194,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-17T14:08:02.548Z",
+    "collectedAt": "2026-08-17T14:24:38.633Z",
     "verifiedAt": null
    }
   },
@@ -1213,7 +1218,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-17T14:08:02.548Z",
+    "collectedAt": "2026-08-17T14:24:38.633Z",
     "verifiedAt": null
    }
   },
@@ -1236,7 +1241,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T14:08:03.275Z",
+    "collectedAt": "2026-08-17T14:24:39.080Z",
     "verifiedAt": null
    }
   },
@@ -1259,7 +1264,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T14:08:03.275Z",
+    "collectedAt": "2026-08-17T14:24:39.080Z",
     "verifiedAt": null
    }
   },
@@ -1282,7 +1287,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T14:08:03.275Z",
+    "collectedAt": "2026-08-17T14:24:39.080Z",
     "verifiedAt": null
    }
   },
@@ -1305,7 +1310,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T14:08:03.275Z",
+    "collectedAt": "2026-08-17T14:24:39.080Z",
     "verifiedAt": null
    }
   },
@@ -1328,7 +1333,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T14:08:03.275Z",
+    "collectedAt": "2026-08-17T14:24:39.080Z",
     "verifiedAt": null
    }
   },
@@ -1351,7 +1356,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T14:08:03.275Z",
+    "collectedAt": "2026-08-17T14:24:39.080Z",
     "verifiedAt": null
    }
   },
@@ -1374,7 +1379,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T14:08:03.275Z",
+    "collectedAt": "2026-08-17T14:24:39.080Z",
     "verifiedAt": null
    }
   },
@@ -1397,7 +1402,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T14:08:03.275Z",
+    "collectedAt": "2026-08-17T14:24:39.080Z",
     "verifiedAt": null
    }
   },
@@ -1421,7 +1426,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T14:08:03.275Z",
+    "collectedAt": "2026-08-17T14:24:39.080Z",
     "verifiedAt": null
    }
   },
@@ -1445,7 +1450,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T14:08:03.275Z",
+    "collectedAt": "2026-08-17T14:24:39.080Z",
     "verifiedAt": null
    }
   },
@@ -1469,7 +1474,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T14:08:03.275Z",
+    "collectedAt": "2026-08-17T14:24:39.080Z",
     "verifiedAt": null
    }
   },
@@ -1493,7 +1498,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T14:08:03.275Z",
+    "collectedAt": "2026-08-17T14:24:39.080Z",
     "verifiedAt": null
    }
   },
@@ -1517,7 +1522,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T14:08:03.275Z",
+    "collectedAt": "2026-08-17T14:24:39.080Z",
     "verifiedAt": null
    }
   },
@@ -1541,7 +1546,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T14:08:03.275Z",
+    "collectedAt": "2026-08-17T14:24:39.080Z",
     "verifiedAt": null
    }
   },
@@ -1565,7 +1570,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T14:08:03.275Z",
+    "collectedAt": "2026-08-17T14:24:39.080Z",
     "verifiedAt": null
    }
   },
@@ -1589,7 +1594,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T14:08:03.275Z",
+    "collectedAt": "2026-08-17T14:24:39.080Z",
     "verifiedAt": null
    }
   },
@@ -1613,7 +1618,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T14:08:03.275Z",
+    "collectedAt": "2026-08-17T14:24:39.080Z",
     "verifiedAt": null
    }
   },
@@ -1637,7 +1642,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T14:08:03.275Z",
+    "collectedAt": "2026-08-17T14:24:39.080Z",
     "verifiedAt": null
    }
   },
@@ -1661,7 +1666,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T14:08:03.275Z",
+    "collectedAt": "2026-08-17T14:24:39.080Z",
     "verifiedAt": null
    }
   },
@@ -1685,7 +1690,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T14:08:03.275Z",
+    "collectedAt": "2026-08-17T14:24:39.080Z",
     "verifiedAt": null
    }
   },
@@ -1708,7 +1713,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1946&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.824Z",
+    "collectedAt": "2026-08-17T14:24:37.503Z",
     "verifiedAt": null
    }
   },
@@ -1731,7 +1736,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1957&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.824Z",
+    "collectedAt": "2026-08-17T14:24:37.503Z",
     "verifiedAt": null
    }
   },
@@ -1754,7 +1759,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1981&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.824Z",
+    "collectedAt": "2026-08-17T14:24:37.503Z",
     "verifiedAt": null
    }
   },
@@ -1777,7 +1782,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1942&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.824Z",
+    "collectedAt": "2026-08-17T14:24:37.503Z",
     "verifiedAt": null
    }
   },
@@ -1800,7 +1805,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1927&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.824Z",
+    "collectedAt": "2026-08-17T14:24:37.503Z",
     "verifiedAt": null
    }
   },
@@ -1823,7 +1828,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1943&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.824Z",
+    "collectedAt": "2026-08-17T14:24:37.503Z",
     "verifiedAt": null
    }
   },
@@ -1846,7 +1851,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1928&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.824Z",
+    "collectedAt": "2026-08-17T14:24:37.503Z",
     "verifiedAt": null
    }
   },
@@ -1869,7 +1874,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1945&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.824Z",
+    "collectedAt": "2026-08-17T14:24:37.503Z",
     "verifiedAt": null
    }
   },
@@ -1892,7 +1897,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1956&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.824Z",
+    "collectedAt": "2026-08-17T14:24:37.503Z",
     "verifiedAt": null
    }
   },
@@ -1915,7 +1920,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-19",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:01.889Z",
+    "collectedAt": "2026-08-17T14:24:38.458Z",
     "verifiedAt": null
    }
   },
@@ -1938,7 +1943,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-19",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:01.889Z",
+    "collectedAt": "2026-08-17T14:24:38.458Z",
     "verifiedAt": null
    }
   },
@@ -1961,7 +1966,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-19",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:01.889Z",
+    "collectedAt": "2026-08-17T14:24:38.458Z",
     "verifiedAt": null
    }
   },
@@ -1984,7 +1989,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-19",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:01.889Z",
+    "collectedAt": "2026-08-17T14:24:38.458Z",
     "verifiedAt": null
    }
   },
@@ -2007,7 +2012,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-19",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:01.889Z",
+    "collectedAt": "2026-08-17T14:24:38.458Z",
     "verifiedAt": null
    }
   },
@@ -2030,7 +2035,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-19",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:01.889Z",
+    "collectedAt": "2026-08-17T14:24:38.458Z",
     "verifiedAt": null
    }
   },
@@ -2053,7 +2058,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-19",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:01.889Z",
+    "collectedAt": "2026-08-17T14:24:38.458Z",
     "verifiedAt": null
    }
   },
@@ -2076,7 +2081,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-19",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:01.889Z",
+    "collectedAt": "2026-08-17T14:24:38.458Z",
     "verifiedAt": null
    }
   },
@@ -2099,7 +2104,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-19",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:01.889Z",
+    "collectedAt": "2026-08-17T14:24:38.458Z",
     "verifiedAt": null
    }
   },
@@ -2122,7 +2127,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-19",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-17T14:08:04.112Z",
+    "collectedAt": "2026-08-17T14:24:41.702Z",
     "verifiedAt": null
    }
   },
@@ -2145,7 +2150,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-19",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-17T14:08:04.112Z",
+    "collectedAt": "2026-08-17T14:24:41.702Z",
     "verifiedAt": null
    }
   },
@@ -2168,7 +2173,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-19",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-17T14:08:04.112Z",
+    "collectedAt": "2026-08-17T14:24:41.702Z",
     "verifiedAt": null
    }
   },
@@ -2191,7 +2196,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-19",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-17T14:08:04.112Z",
+    "collectedAt": "2026-08-17T14:24:41.702Z",
     "verifiedAt": null
    }
   },
@@ -2214,7 +2219,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-19",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-17T14:08:04.112Z",
+    "collectedAt": "2026-08-17T14:24:41.702Z",
     "verifiedAt": null
    }
   },
@@ -2237,7 +2242,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-19",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-17T14:08:04.112Z",
+    "collectedAt": "2026-08-17T14:24:41.702Z",
     "verifiedAt": null
    }
   },
@@ -2260,7 +2265,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=493",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:01.667Z",
+    "collectedAt": "2026-08-17T14:24:37.795Z",
     "verifiedAt": null
    }
   },
@@ -2283,7 +2288,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=496",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:01.667Z",
+    "collectedAt": "2026-08-17T14:24:37.795Z",
     "verifiedAt": null
    }
   },
@@ -2306,7 +2311,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=492",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:01.667Z",
+    "collectedAt": "2026-08-17T14:24:37.795Z",
     "verifiedAt": null
    }
   },
@@ -2329,7 +2334,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=485",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:01.667Z",
+    "collectedAt": "2026-08-17T14:24:37.795Z",
     "verifiedAt": null
    }
   },
@@ -2352,7 +2357,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=489",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:01.667Z",
+    "collectedAt": "2026-08-17T14:24:37.795Z",
     "verifiedAt": null
    }
   },
@@ -2375,7 +2380,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=484",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:01.667Z",
+    "collectedAt": "2026-08-17T14:24:37.795Z",
     "verifiedAt": null
    }
   },
@@ -2398,7 +2403,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=483",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:01.667Z",
+    "collectedAt": "2026-08-17T14:24:37.795Z",
     "verifiedAt": null
    }
   },
@@ -2421,7 +2426,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=481",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:01.667Z",
+    "collectedAt": "2026-08-17T14:24:37.795Z",
     "verifiedAt": null
    }
   },
@@ -2444,7 +2449,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=480",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:01.667Z",
+    "collectedAt": "2026-08-17T14:24:37.795Z",
     "verifiedAt": null
    }
   },
@@ -2467,7 +2472,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=169",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:02.344Z",
+    "collectedAt": "2026-08-17T14:24:38.217Z",
     "verifiedAt": null
    }
   },
@@ -2490,7 +2495,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=168",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:02.344Z",
+    "collectedAt": "2026-08-17T14:24:38.217Z",
     "verifiedAt": null
    }
   },
@@ -2513,7 +2518,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=167",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:02.344Z",
+    "collectedAt": "2026-08-17T14:24:38.217Z",
     "verifiedAt": null
    }
   },
@@ -2536,7 +2541,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=166",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:02.344Z",
+    "collectedAt": "2026-08-17T14:24:38.217Z",
     "verifiedAt": null
    }
   },
@@ -2559,7 +2564,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=175",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:02.344Z",
+    "collectedAt": "2026-08-17T14:24:38.217Z",
     "verifiedAt": null
    }
   },
@@ -2582,7 +2587,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=165",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:02.344Z",
+    "collectedAt": "2026-08-17T14:24:38.217Z",
     "verifiedAt": null
    }
   },
@@ -2605,7 +2610,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=174",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:02.344Z",
+    "collectedAt": "2026-08-17T14:24:38.217Z",
     "verifiedAt": null
    }
   },
@@ -2628,7 +2633,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=163",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:02.344Z",
+    "collectedAt": "2026-08-17T14:24:38.217Z",
     "verifiedAt": null
    }
   },
@@ -2651,7 +2656,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=162",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:02.344Z",
+    "collectedAt": "2026-08-17T14:24:38.217Z",
     "verifiedAt": null
    }
   },
@@ -2674,7 +2679,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=156",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:02.344Z",
+    "collectedAt": "2026-08-17T14:24:38.217Z",
     "verifiedAt": null
    }
   },
@@ -2697,7 +2702,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=155",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:02.344Z",
+    "collectedAt": "2026-08-17T14:24:38.217Z",
     "verifiedAt": null
    }
   },
@@ -2720,7 +2725,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=159",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:02.344Z",
+    "collectedAt": "2026-08-17T14:24:38.217Z",
     "verifiedAt": null
    }
   },
@@ -2743,7 +2748,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=154",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:02.344Z",
+    "collectedAt": "2026-08-17T14:24:38.217Z",
     "verifiedAt": null
    }
   },
@@ -2766,7 +2771,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3371",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-17T14:08:02.960Z",
+    "collectedAt": "2026-08-17T14:24:38.447Z",
     "verifiedAt": null
    }
   },
@@ -2789,7 +2794,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3370",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-17T14:08:02.960Z",
+    "collectedAt": "2026-08-17T14:24:38.447Z",
     "verifiedAt": null
    }
   },
@@ -2812,7 +2817,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3368",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-17T14:08:02.960Z",
+    "collectedAt": "2026-08-17T14:24:38.447Z",
     "verifiedAt": null
    }
   },
@@ -2835,7 +2840,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3367",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-17T14:08:02.960Z",
+    "collectedAt": "2026-08-17T14:24:38.447Z",
     "verifiedAt": null
    }
   },
@@ -2858,7 +2863,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3364",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-17T14:08:02.960Z",
+    "collectedAt": "2026-08-17T14:24:38.447Z",
     "verifiedAt": null
    }
   },
@@ -2881,7 +2886,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3363",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-17T14:08:02.960Z",
+    "collectedAt": "2026-08-17T14:24:38.447Z",
     "verifiedAt": null
    }
   },
@@ -2904,7 +2909,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3361",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-17T14:08:02.960Z",
+    "collectedAt": "2026-08-17T14:24:38.447Z",
     "verifiedAt": null
    }
   },
@@ -2927,7 +2932,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=705",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-17T14:08:03.498Z",
+    "collectedAt": "2026-08-17T14:24:38.740Z",
     "verifiedAt": null
    }
   },
@@ -2950,7 +2955,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=707",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-17T14:08:03.498Z",
+    "collectedAt": "2026-08-17T14:24:38.740Z",
     "verifiedAt": null
    }
   },
@@ -2973,7 +2978,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=706",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-17T14:08:03.498Z",
+    "collectedAt": "2026-08-17T14:24:38.740Z",
     "verifiedAt": null
    }
   },
@@ -2996,7 +3001,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=695",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-17T14:08:03.498Z",
+    "collectedAt": "2026-08-17T14:24:38.740Z",
     "verifiedAt": null
    }
   },
@@ -3019,7 +3024,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=696",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-17T14:08:03.498Z",
+    "collectedAt": "2026-08-17T14:24:38.740Z",
     "verifiedAt": null
    }
   },
@@ -3042,7 +3047,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.300Z",
+    "collectedAt": "2026-08-17T14:24:37.741Z",
     "verifiedAt": null
    }
   },
@@ -3065,7 +3070,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.300Z",
+    "collectedAt": "2026-08-17T14:24:37.741Z",
     "verifiedAt": null
    }
   },
@@ -3088,7 +3093,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.300Z",
+    "collectedAt": "2026-08-17T14:24:37.741Z",
     "verifiedAt": null
    }
   },
@@ -3111,7 +3116,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.300Z",
+    "collectedAt": "2026-08-17T14:24:37.741Z",
     "verifiedAt": null
    }
   },
@@ -3134,7 +3139,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.300Z",
+    "collectedAt": "2026-08-17T14:24:37.741Z",
     "verifiedAt": null
    }
   },
@@ -3157,7 +3162,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.365Z",
+    "collectedAt": "2026-08-17T14:24:37.814Z",
     "verifiedAt": null
    }
   },
@@ -3180,7 +3185,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.365Z",
+    "collectedAt": "2026-08-17T14:24:37.814Z",
     "verifiedAt": null
    }
   },
@@ -3203,7 +3208,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.365Z",
+    "collectedAt": "2026-08-17T14:24:37.814Z",
     "verifiedAt": null
    }
   },
@@ -3226,7 +3231,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.365Z",
+    "collectedAt": "2026-08-17T14:24:37.814Z",
     "verifiedAt": null
    }
   },
@@ -3249,7 +3254,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.365Z",
+    "collectedAt": "2026-08-17T14:24:37.814Z",
     "verifiedAt": null
    }
   },
@@ -3272,7 +3277,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.409Z",
+    "collectedAt": "2026-08-17T14:24:37.888Z",
     "verifiedAt": null
    }
   },
@@ -3295,7 +3300,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.409Z",
+    "collectedAt": "2026-08-17T14:24:37.888Z",
     "verifiedAt": null
    }
   },
@@ -3318,7 +3323,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.409Z",
+    "collectedAt": "2026-08-17T14:24:37.888Z",
     "verifiedAt": null
    }
   },
@@ -3341,7 +3346,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.409Z",
+    "collectedAt": "2026-08-17T14:24:37.888Z",
     "verifiedAt": null
    }
   },
@@ -3364,7 +3369,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.474Z",
+    "collectedAt": "2026-08-17T14:24:37.961Z",
     "verifiedAt": null
    }
   },
@@ -3387,7 +3392,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.474Z",
+    "collectedAt": "2026-08-17T14:24:37.961Z",
     "verifiedAt": null
    }
   },
@@ -3410,7 +3415,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.474Z",
+    "collectedAt": "2026-08-17T14:24:37.961Z",
     "verifiedAt": null
    }
   },
@@ -3433,7 +3438,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.474Z",
+    "collectedAt": "2026-08-17T14:24:37.961Z",
     "verifiedAt": null
    }
   },
@@ -3456,7 +3461,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.474Z",
+    "collectedAt": "2026-08-17T14:24:37.961Z",
     "verifiedAt": null
    }
   },
@@ -3479,7 +3484,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.533Z",
+    "collectedAt": "2026-08-17T14:24:38.036Z",
     "verifiedAt": null
    }
   },
@@ -3502,7 +3507,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.533Z",
+    "collectedAt": "2026-08-17T14:24:38.036Z",
     "verifiedAt": null
    }
   },
@@ -3525,7 +3530,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.533Z",
+    "collectedAt": "2026-08-17T14:24:38.036Z",
     "verifiedAt": null
    }
   },
@@ -3548,7 +3553,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.533Z",
+    "collectedAt": "2026-08-17T14:24:38.036Z",
     "verifiedAt": null
    }
   },
@@ -3571,7 +3576,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T14:08:01.533Z",
+    "collectedAt": "2026-08-17T14:24:38.036Z",
     "verifiedAt": null
    }
   },
@@ -3594,7 +3599,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:01.627Z",
+    "collectedAt": "2026-08-17T14:24:37.959Z",
     "verifiedAt": null
    }
   },
@@ -3617,7 +3622,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:01.627Z",
+    "collectedAt": "2026-08-17T14:24:37.959Z",
     "verifiedAt": null
    }
   },
@@ -3640,7 +3645,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:01.627Z",
+    "collectedAt": "2026-08-17T14:24:37.959Z",
     "verifiedAt": null
    }
   },
@@ -3663,7 +3668,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:01.627Z",
+    "collectedAt": "2026-08-17T14:24:37.959Z",
     "verifiedAt": null
    }
   },
@@ -3686,7 +3691,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:01.627Z",
+    "collectedAt": "2026-08-17T14:24:37.959Z",
     "verifiedAt": null
    }
   },
@@ -3709,7 +3714,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-17T14:08:01.627Z",
+    "collectedAt": "2026-08-17T14:24:37.959Z",
     "verifiedAt": null
    }
   },
@@ -3732,7 +3737,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2225",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.962Z",
+    "collectedAt": "2026-08-17T14:24:38.384Z",
     "verifiedAt": null
    }
   },
@@ -3755,7 +3760,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2227",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.962Z",
+    "collectedAt": "2026-08-17T14:24:38.384Z",
     "verifiedAt": null
    }
   },
@@ -3778,7 +3783,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2228",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.962Z",
+    "collectedAt": "2026-08-17T14:24:38.384Z",
     "verifiedAt": null
    }
   },
@@ -3801,7 +3806,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2234",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.962Z",
+    "collectedAt": "2026-08-17T14:24:38.384Z",
     "verifiedAt": null
    }
   },
@@ -3824,7 +3829,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2235",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.962Z",
+    "collectedAt": "2026-08-17T14:24:38.384Z",
     "verifiedAt": null
    }
   },
@@ -3847,7 +3852,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2229",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.962Z",
+    "collectedAt": "2026-08-17T14:24:38.384Z",
     "verifiedAt": null
    }
   },
@@ -3870,7 +3875,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2233",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.962Z",
+    "collectedAt": "2026-08-17T14:24:38.384Z",
     "verifiedAt": null
    }
   },
@@ -3893,7 +3898,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2239",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.962Z",
+    "collectedAt": "2026-08-17T14:24:38.384Z",
     "verifiedAt": null
    }
   },
@@ -3916,7 +3921,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2240",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.962Z",
+    "collectedAt": "2026-08-17T14:24:38.384Z",
     "verifiedAt": null
    }
   },
@@ -3939,7 +3944,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2236",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.962Z",
+    "collectedAt": "2026-08-17T14:24:38.384Z",
     "verifiedAt": null
    }
   },
@@ -3962,7 +3967,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2241",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.962Z",
+    "collectedAt": "2026-08-17T14:24:38.384Z",
     "verifiedAt": null
    }
   },
@@ -3985,7 +3990,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2242",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.962Z",
+    "collectedAt": "2026-08-17T14:24:38.384Z",
     "verifiedAt": null
    }
   },
@@ -4008,7 +4013,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2243",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.962Z",
+    "collectedAt": "2026-08-17T14:24:38.384Z",
     "verifiedAt": null
    }
   },
@@ -4031,7 +4036,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2244",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.962Z",
+    "collectedAt": "2026-08-17T14:24:38.384Z",
     "verifiedAt": null
    }
   },
@@ -4054,7 +4059,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2245",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.962Z",
+    "collectedAt": "2026-08-17T14:24:38.384Z",
     "verifiedAt": null
    }
   },
@@ -4077,7 +4082,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2246",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.962Z",
+    "collectedAt": "2026-08-17T14:24:38.384Z",
     "verifiedAt": null
    }
   },
@@ -4100,7 +4105,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2247",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.962Z",
+    "collectedAt": "2026-08-17T14:24:38.384Z",
     "verifiedAt": null
    }
   },
@@ -4123,7 +4128,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2248",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.962Z",
+    "collectedAt": "2026-08-17T14:24:38.384Z",
     "verifiedAt": null
    }
   },
@@ -4146,7 +4151,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2249",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.962Z",
+    "collectedAt": "2026-08-17T14:24:38.384Z",
     "verifiedAt": null
    }
   },
@@ -4169,7 +4174,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2250",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.962Z",
+    "collectedAt": "2026-08-17T14:24:38.384Z",
     "verifiedAt": null
    }
   },
@@ -4177,7 +4182,7 @@
    "id": "revize:merrimack:2026-08-24",
    "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
    "bodyName": "Merrimack County Board of Commissioners",
-   "title": "Board of Commissioners Mtg.",
+   "title": "Board of Commissioners Mtg",
    "startsAt": "2026-08-24T10:00:00-04:00",
    "timeZone": "America/New_York",
    "location": {
@@ -4186,13 +4191,13 @@
     "lat": 43.210534,
     "lng": -71.538023
    },
-   "agendaUrl": null,
+   "agendaUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/Public%20Notice%208.24.26.pdf",
    "jurisdiction": "Merrimack County, NH",
    "status": "SCHEDULED",
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.594Z",
+    "collectedAt": "2026-08-17T14:24:37.865Z",
     "verifiedAt": null
    }
   },
@@ -4216,7 +4221,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.594Z",
+    "collectedAt": "2026-08-17T14:24:37.865Z",
     "verifiedAt": null
    }
   },
@@ -4240,7 +4245,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.594Z",
+    "collectedAt": "2026-08-17T14:24:37.865Z",
     "verifiedAt": null
    }
   },
@@ -4264,7 +4269,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.594Z",
+    "collectedAt": "2026-08-17T14:24:37.865Z",
     "verifiedAt": null
    }
   },
@@ -4288,7 +4293,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.594Z",
+    "collectedAt": "2026-08-17T14:24:37.865Z",
     "verifiedAt": null
    }
   },
@@ -4312,7 +4317,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.594Z",
+    "collectedAt": "2026-08-17T14:24:37.865Z",
     "verifiedAt": null
    }
   },
@@ -4336,7 +4341,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.594Z",
+    "collectedAt": "2026-08-17T14:24:37.865Z",
     "verifiedAt": null
    }
   },
@@ -4360,7 +4365,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.594Z",
+    "collectedAt": "2026-08-17T14:24:37.865Z",
     "verifiedAt": null
    }
   },
@@ -4384,7 +4389,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.594Z",
+    "collectedAt": "2026-08-17T14:24:37.865Z",
     "verifiedAt": null
    }
   },
@@ -4408,7 +4413,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.594Z",
+    "collectedAt": "2026-08-17T14:24:37.865Z",
     "verifiedAt": null
    }
   },
@@ -4432,7 +4437,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.594Z",
+    "collectedAt": "2026-08-17T14:24:37.865Z",
     "verifiedAt": null
    }
   },
@@ -4456,7 +4461,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.594Z",
+    "collectedAt": "2026-08-17T14:24:37.865Z",
     "verifiedAt": null
    }
   },
@@ -4480,7 +4485,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.594Z",
+    "collectedAt": "2026-08-17T14:24:37.865Z",
     "verifiedAt": null
    }
   },
@@ -4504,7 +4509,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.594Z",
+    "collectedAt": "2026-08-17T14:24:37.865Z",
     "verifiedAt": null
    }
   },
@@ -4528,7 +4533,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-17T14:08:01.594Z",
+    "collectedAt": "2026-08-17T14:24:37.865Z",
     "verifiedAt": null
    }
   },
@@ -4551,7 +4556,7 @@
    "provenance": {
     "sourceUrl": "https://www.mhrd.org/administration/board-of-education/boe-meetings",
     "sourceOrg": "Morris Hills Regional District Board of Education",
-    "collectedAt": "2026-08-17T14:08:03.158Z",
+    "collectedAt": "2026-08-17T14:24:39.415Z",
     "verifiedAt": null
    }
   },
@@ -4574,7 +4579,7 @@
    "provenance": {
     "sourceUrl": "https://www.mhrd.org/administration/board-of-education/boe-meetings",
     "sourceOrg": "Morris Hills Regional District Board of Education",
-    "collectedAt": "2026-08-17T14:08:03.158Z",
+    "collectedAt": "2026-08-17T14:24:39.415Z",
     "verifiedAt": null
    }
   },
@@ -4597,7 +4602,7 @@
    "provenance": {
     "sourceUrl": "https://www.mhrd.org/administration/board-of-education/boe-meetings",
     "sourceOrg": "Morris Hills Regional District Board of Education",
-    "collectedAt": "2026-08-17T14:08:03.158Z",
+    "collectedAt": "2026-08-17T14:24:39.415Z",
     "verifiedAt": null
    }
   },
@@ -4622,6 +4627,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-17T14:08:05.200Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-17T14:08:05.200Z"
    }
   },
   {
@@ -4645,6 +4654,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-17T14:08:05.200Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-17T14:08:05.200Z"
    }
   },
   {
@@ -4668,6 +4681,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-17T14:08:05.200Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-17T14:08:05.200Z"
    }
   },
   {
@@ -4691,6 +4708,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-17T14:08:05.200Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-17T14:08:05.200Z"
    }
   },
   {
@@ -4714,6 +4735,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-17T14:08:05.200Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-17T14:08:05.200Z"
    }
   },
   {
@@ -4737,6 +4762,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-17T14:08:05.200Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-17T14:08:05.200Z"
    }
   },
   {
@@ -4760,6 +4789,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-17T14:08:05.200Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-17T14:08:05.200Z"
    }
   },
   {
@@ -4783,6 +4816,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-17T14:08:05.200Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-17T14:08:05.200Z"
    }
   },
   {
@@ -4806,6 +4843,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-17T14:08:05.200Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-17T14:08:05.200Z"
    }
   },
   {
@@ -4829,6 +4870,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-17T14:08:05.200Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-17T14:08:05.200Z"
    }
   },
   {
@@ -4852,6 +4897,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-17T14:08:05.200Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-17T14:08:05.200Z"
    }
   },
   {
@@ -4875,6 +4924,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-17T14:08:05.200Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-17T14:08:05.200Z"
    }
   },
   {
@@ -4898,6 +4951,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-17T14:08:05.200Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-17T14:08:05.200Z"
    }
   },
   {
@@ -4921,6 +4978,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-17T14:08:05.200Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-17T14:08:05.200Z"
    }
   },
   {
@@ -4944,6 +5005,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-17T14:08:05.200Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-17T14:08:05.200Z"
    }
   },
   {
@@ -4967,6 +5032,10 @@
     "sourceOrg": "Newbury Planning Board",
     "collectedAt": "2026-08-17T14:08:05.811Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-17T14:08:05.811Z"
    }
   },
   {
@@ -4990,6 +5059,10 @@
     "sourceOrg": "Newbury Planning Board",
     "collectedAt": "2026-08-17T14:08:05.811Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-17T14:08:05.811Z"
    }
   },
   {
@@ -5013,6 +5086,10 @@
     "sourceOrg": "Newbury Planning Board",
     "collectedAt": "2026-08-17T14:08:05.811Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-17T14:08:05.811Z"
    }
   },
   {
@@ -5036,6 +5113,10 @@
     "sourceOrg": "Newbury Planning Board",
     "collectedAt": "2026-08-17T14:08:05.811Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-17T14:08:05.811Z"
    }
   },
   {
@@ -5059,6 +5140,10 @@
     "sourceOrg": "Newbury Conservation Commission",
     "collectedAt": "2026-08-17T14:08:06.951Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-17T14:08:06.951Z"
    }
   },
   {
@@ -5082,6 +5167,10 @@
     "sourceOrg": "Newbury Conservation Commission",
     "collectedAt": "2026-08-17T14:08:06.951Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-17T14:08:06.951Z"
    }
   },
   {
@@ -5105,6 +5194,10 @@
     "sourceOrg": "Newbury Conservation Commission",
     "collectedAt": "2026-08-17T14:08:06.951Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-17T14:08:06.951Z"
    }
   },
   {
@@ -5128,6 +5221,10 @@
     "sourceOrg": "Newbury Conservation Commission",
     "collectedAt": "2026-08-17T14:08:06.951Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-17T14:08:06.951Z"
    }
   },
   {
@@ -5151,6 +5248,10 @@
     "sourceOrg": "Newbury Conservation Commission",
     "collectedAt": "2026-08-17T14:08:06.951Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-17T14:08:06.951Z"
    }
   },
   {
@@ -5174,6 +5275,10 @@
     "sourceOrg": "Newbury Zoning Board of Adjustment",
     "collectedAt": "2026-08-17T14:08:07.512Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-17T14:08:07.512Z"
    }
   }
  ],
@@ -6715,6 +6820,70 @@
    "extractionNote": null
   },
   {
+   "id": "iqm2:morriscountynj:2235@ac564c9dae491a82b6aa5712dde0b34fd2b434eaa51f9342b7b1b1c1ec4e5ff9",
+   "meetingId": "iqm2:morriscountynj:2235",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris",
+   "documentUrl": "https://morriscountynj.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1663&Inline=True",
+   "contentHash": "ac564c9dae491a82b6aa5712dde0b34fd2b434eaa51f9342b7b1b1c1ec4e5ff9",
+   "retrievedAt": "2026-08-17T14:24:42.283Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1663&Inline=True",
+   "sourceOrg": "Morris County Board of County Commissioners",
+   "collectedAt": "2026-08-17T14:24:42.283Z",
+   "verifiedAt": null,
+   "text": "BOARD OF COUNTY COMMISSIONERS MORRIS COUNTY, NEW JERSEY June 24, 2026 Work Session Agenda TIME: 5:00 PM Generated 6/22/2026 10:22 AM This meeting is being held in person and livestreamed via WebEx. There is no public comment session during the meeting, but the public is invited to attend in person or to access the meeting by following the link below or by calling in to the phone number listed below the link. WebEx viewer link: https://morriscountynj.webex.com/morriscountynj/j.php?MTID=m859002cf07f16f68ea107f69b9 611acb Webinar password: xeXxG4kyE28 (93994459 when dialing from a phone or video system) Phone number: 1-408-418-9388 Event number/Access Code: 234 718 69787 ANNOUNCEMENT Adequate notice of this meeting held the 24th day of June, 2026 has been provided through resolution adopted by this Board on January 2, 2026 at its Stated Annual Meeting held at the Administration and Records Building, Morristown, New Jersey and by electronic mailing to the Star Ledger and the Daily Record, through posting on the County website and by filing a copy of same with the Morris County Clerk and the Clerk of this Board. ROLL CALL Stephen H. Shaw Director John Krickus Deputy Director Douglas R. Cabana Thomas J. Mastrangelo Christine Myers Tayfun Selen Deborah Smith FLAG SALUTE PRESENTATION 4-H Youth Members Presentation An Invitation to the Morris County 4-H Fair 2026 Morris County Historic Preservation Funding Recommendations Ray Chang, Historic Preservation Program Coordinator Lawrence Fast, Chairman, Historic Preservation Trust Fund Review Board COUNTY COMMISSIONER REPORTS\nJUNE 24, 2026 WORK SESSION MEETING 2 | P a g e ADMINISTRATOR'S REPORT COUNTY COUNSEL'S REPORT CLERK OF THE BOARD'S REPORT DEPARTMENT HEAD REPORTS REVIEW RESOLUTIONS CLOSED SESSION ADJOURNMENT",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "iqm2:morriscountynj:2229@9f0883dff8a67fc19f5fcbb03356e1a9823008c60c654c97b3d5000156d16caf",
+   "meetingId": "iqm2:morriscountynj:2229",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris",
+   "documentUrl": "https://morriscountynj.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1664&Inline=True",
+   "contentHash": "9f0883dff8a67fc19f5fcbb03356e1a9823008c60c654c97b3d5000156d16caf",
+   "retrievedAt": "2026-08-17T14:24:44.499Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1664&Inline=True",
+   "sourceOrg": "Morris County Board of County Commissioners",
+   "collectedAt": "2026-08-17T14:24:44.499Z",
+   "verifiedAt": null,
+   "text": "BOARD OF COUNTY COMMISSIONERS MORRIS COUNTY, NEW JERSEY June 24, 2026 Regular Meeting Agenda TIME: 7:00 PM Generated 6/23/2026 3:33 PM This meeting is being held in person and livestreamed via WebEx. The public is invited to attend in person or to view the meeting by following the link below or by calling in to the phone number listed below the link. Public comments are welcome in person or by submitting written comments to the Clerk of the Board, which may be read or summarized during the public portion of the meeting. Written comments may be submitted via email with the subject line “Public Comment” to the Clerk of the Board, Debra Lynch at dlynch@co.morris.nj.us or by mail addressed to Debra L. Lynch, Clerk of the Board, Morris County Board of County Commissioners, PO Box 900, Morristown, NJ 07963-0900. Emailed comments must be received at least eight (8) hours prior to the meeting. Mailed comments must be received by 4:00 p.m. the day before the meeting. WebEx viewer link: https://morriscountynj.webex.com/morriscountynj/j.php?MTID=m2b0d5fc26de6559e3a1e59de5 4299178 Webinar password : grXq6Ht8Dt3 (47976488 when dialing from a phone or video system) Phone number: 1-408-418-9388 Event number/Access Code: 234 409 89132 ANNOUNCEMENT Adequate notice of this meeting held the 24th day of June, 2026 has been provided through resolution adopted by this Board on January 2, 2026 at its Stated Annual Meeting held at the Administration and Records Building, Morristown, New Jersey and by electronic mailing to the Star Ledger and the Daily Record, through posting on the County website and by filing a copy of same with the Morris County Clerk and the Clerk of this Board. ROLL CALL Stephen H. Shaw Director John Krickus Deputy Director Douglas R. Cabana Thomas J. Mastrangelo Christine Myers Tayfun Selen Deborah Smith OTHERS PRESENT Deena Leary, County Administrator; Brian Murray, Assistant County Administrator; John Napolitano, County Counsel; Staci Santucci, Assistant County Counsel; Debra Lynch, Clerk of the Board\nJUNE 24, 2026 REGULAR COMMISSIONER MEETING 2 | P a g e PRAYER AND FLAG SALUTE PRESENTATION MINUTES FOR APPROVAL June 10, 2026 Work Session Meeting Minutes and Regular Meeting Minutes Action Taken: COMMUNICATIONS 1. Chester Borough Recreation is requesting permission to hang a banner across Main Street/Route 24 (CR 510) in Chester Borough from August 7, 2026 to August 18, 2026 to advertise the Summer Sidewalk Sales. 2. The Maoli Charitable Foundation is requesting permission to hang a banner over Main Street/Route 24 (CR 510) in Mendham Borough from September 4, 2026 to September 21, 2026 to advertise a Car Show for the benefit of a “Calling All Kids Storytime Network” program. 3. Our Lady of Mt. Carmel Society is requesting permission to close Valley Road (CR 512), Long Hill from Mountain Avenue to the bridge at the Berkeley Heights border from 6:00 p.m. to 11:00 p.m. on July 16, 2026, for the Mt. Carmel Feast. Action Taken: ORDINANCES: First Reading/Introduction ORD-2026-34. Bond Ordinance providing for the digitization of records for the Morris County Surrogate’s Office in and by the County of Morris, New Jersey, appropriating $400,000 therefor and authorizing the issuance of $380,000 bonds or notes of the County to finance part of the cost thereof. (ID #14172) Action Taken: ORD-2026-35. Bond Ordinance reappropriating $100,196.72, including $96,000 of the proceeds of obligations not needed for their original purpose and $4,196.72 from the Capital Improvement Fund, in order to provide for the digitization of records for the Morris County Surrogate’s Office, in and by the County of Morris, New Jersey. (ID #14173) Action Taken: ORDINANCES: Second Reading/Public Hearing OPEN TO THE PUBLIC RESOLUTIONS Action Taken: PAYMENT OF BILLS Action Taken: COMMISSIONER COMMENTS ADJOURNMENT\nJUNE 24, 2026 REGULAR COMMISSIONER MEETING 3 | P a g e\nJUNE 24, 2026 REGULAR COMMISSIONER MEETING 4 | P a g e REGULAR COMMISSIONER MEETING RESOLUTIONS RES-2026-500. Resolution Approving Plans & Specs for Replacement of County Br. 1400-073 on Landing Road over NJ Transit and the Morris Canal in the Township of Roxbury. (Bid# 25-57) (Department of Public Works) (ID #14180) RES-2026-501. Resolution Authorizing an increase under the State of New Jersey Office of Homeland Security and Preparedness FFY 2026 C-UAS Grant for a new grant total of $9,941,060.00. (Department of Law & Public Safety) (ID #14164) RES-2026-502. Resolution Authorizing a decrease under the State of New Jersey Office of Homeland Security and Preparedness FFY 2024 UASI Grant for a new grant total of $2,310,313.82 (Department of Law & Public Safety) (ID #14163) RES-2026-503. Resolution Accepting FFY25-STOP Violence Against Women Act (VAWA) Grant Subaward Number VAWA-44-25 for the Period July 1, 2026 to June 30, 2027 (Prosecutor) (ID #14155) RES-2026-504. Resolution Authorizing a Change Order with Top Line Construction Corp. for M23-63 milling and resurfacing, Sussex Turnpike/Sussex Ave (CR617) in the Township of Randolph, Township of Morris and the Town of Morristown to increase the contract by $391,205.97 for as-built quantities. The new contract total is $2,948,210.97 (Office of Planning & Preservation) (ID #14151) RES-2026-505. Resolution Authorizing a Lease Agreement Between the County of Morris and the Workforce Development Board of Northwest New Jersey (Administration) (ID #14150) RES-2026-506. Resolution Approving the Plans & Specifications for Milling and Resurfacing for Sussex Turnpike (CR 617) in the Township of Randolph, Morris County (B25-37) (Department of Public Works) (ID #14148) RES-2026-507. Resolution Concurring with the Borough of Wharton Municipal Ordinance 17-25, has designated Hance Street in the westerly direction from South Main Street (CR 634) to St. Marys Street as a one-way street (Department of Public Works) (ID #14147) RES-2026-508. Resolution Approving the Plans & Specifications for Milling and Resurfacing for Long Hill Rd (CR 657) in the Township of Long Hill, Morris County (B25-32) (Department of Public Works) (ID #14139) RES-2026-509. Resolution of Appointment to the Morris County Insurance Fund Commission (Clerk of the Board) (ID #14145) RES-2026-510. Resolution Appointing Michele Reilly as Clerk of the Board of County Commissioners (Clerk of the Board) (ID #14144) RES-2026-511. Resolution Appointing Michele Reilly to the Equal Opportunity Complaint Resolution Committee (Clerk of the Board) (ID #14143) RES-2026-512. Resolution Appointing LaJuan Tucker to the Alcohol & Drug Abuse Advisory Committee (Clerk of the Board) (ID #14142) RES-2026-513. Resolution Authorizing a Proposal for the Digital Equity Training FY26 in Response to New Jersey Department of Labor and Workforce Development Notice of Grant Opportunity (Office of Planning & Preservation) (ID #14160) RES-2026-514. Resolution Authorizing the County Chief Financial Officer to reissue check(s) that has/have been lost and payment has/have been stopped (Department of Finance) (ID #14156) RES-2026-515. Resolution Authorizing the County Chief Financial Officer to issue checks per Chapter 127 P.L. 1985 (Department of Finance) (ID #14154)\nJUNE 24, 2026 REGULAR COMMISSIONER MEETING 5 | P a g e RES-2026-516. Resolution Authorizing the Chief Financial Officer to debit departments for expenses regarding Vehicle Maintenance for January - March 2026 for Weights & Measures ($1,458.35), Nutrition ($4,143.39), and Office of Temporary Assistance ($1,130.80) and credit Public Works for these expenses (Department of Finance) (ID #14146) RES-2026-517. Resolution Authorizing the County Chief Financial Officer to Reclassify Payments from One Account to Another (Department of Finance) (ID #14141) RES-2026-518. Resolution Authorizing the Insertion of a Special Item of Revenue into the 2026 Budget under Chapter 159, New Jersey Office of Homeland Security and Preparedness, FFY26 Counter Unmanned Aircraft Systems Grant Program (C- UASGP), in the amount of $550,156.00 (Department of Finance) (ID #14169) RES-2026-519. Resolution Authorizing the Insertion of a Special Item of Revenue into the 2026 Budget under Chapter 159, New Jersey Department of Transportation, Upgrade Railroad Crossing Surface – Mercer Street, in the amount of $178,370.00 (Department of Finance) (ID #14168) RES-2026-520. Resolution Authorizing the Insertion of a Special Item of Revenue into the 2026 Budget under Chapter 159, New Jersey Department of State, HAVA 2018 Election Security Grant, in the amount of $10,806.42 (Department of Finance) (ID #14167) RES-2026-521. Resolution Authorizing the Chief Financial Officer to void a check that is no longer needed and will be re-deposited (Department of Finance) (ID #14157) RES-2026-522. Resolution Approving a Partial Fee Taking Bridge Easement and Temporary Construction Easement on Tax Block 412, Lots 10 and 11 (1159 Parsippany Boulevard) in the Township of Parsippany-Troy Hills as Part of a Project Replacing the Parsippany Boulevard Bridge Over Troy Brook and Appropriating the Sum of $145,500.00 from Capital Account Number 04-216-24- 953662-940 (Clerk of the Board) (ID #14174) RES-2026-523. Resolution Amending Resolution 2026-339 to change account 04-216-23- 954647-940 to 04-216-26-954718-940 (Sheriff's Office) (ID #14152) RES-2026-524. Resolution Authorizing the award of Contract for RFP P26-89 Technical Assistance Services for Morris County HUD Continuum of Care to Monarch Housing Associates for an amount not to exceed $73,500.00 (Department of Human Services) (ID #14158) RES-2026-525. Resolution Authorizing the award of contract to C&M Door Controls, Inc. for Bid # B26-76 Labor Rates for Door Installation, Repair, and Maintenance Services at Various County of Morris Locations for an amount not to exceed $100,000.00 for a term of twelve (12) months (Department of Public Works) (ID #14159) RES-2026-526. Resolution Authorizing Award of Contract for Drainage Improvements for Whippany Road (C.R. 511), Township of Hanover (#B26-95) to Cifelli & Son General Contracting, Inc. for an amount not to exceed $232,430.00 (Department of Public Works) (ID #14166) RES-2026-527. Resolution Authorizing Award of Contract for Labor Rates for Excavation Services for Morris County (#B26-98) to John Garcia Construction Co., Inc. for an amount not to exceed $82,280.00 annually (Department of Public Works) (ID #14171)\nJUNE 24, 2026 REGULAR COMMISSIONER MEETING 6 | P a g e RES-2026-528. Resolution Authorizing a contract extension to Genserve LLC for Bid #B24-49 Generator Remote Monitoring Services for twenty-four (24) months from June 12, 2026 through June 11, 2028 for an amount not to exceed $52,113.60 annually (Department of Public Works) (ID #14177) RES-2026-529. Resolution Authorizing Award of Contract for Recovery Housing for Individuals with Substance Use Disorder (P#26-107) to The Milestone House, Inc. for an amount not to exceed $64,227.00 (Department of Human Services) (ID #14179) RES-2026-530. Resolution Authorizing Award of Contract for Schooley's Mountain Road (CR 517) Realignment & Replacement of County Bridge No. 1401-227 & 1401- 228 in the Township of Washington, Morris County, NJ (#B25-122) to Furino and Sons, Inc. for an amount not to exceed $4,196,562.46 (Department of Public Works) (ID #14181) RES-2026-531. Resolution Accepting a Grant from the NJ Division of Elections for the HAVA 2018 Election Security Grant in the Amount of $10,806.42 (County Clerk) (ID #14175) RES-2026-532. Resolution Executing PY2025 CDBG and ESG subgrant agreements (Department of Human Services) (ID #14117) RES-2026-533. Resolution Authorizing Submission of Personal Assistance Services Program (PASP) Grant Application for FY 2027 from the State of New Jersey Division of Disability Services (Department of Human Services) (ID #14149) RES-2026-534. Resolution to Amend Certificates of Availability of Funds Contract #'s 2025-1098-1 and 2025-1098-2 to change account numbers for “P24-178N Transportation Services for Morris County Office of Workforce Development, Employment and Training, Department of Aging, Office of Temporary Assistance\" (Department of Human Services) (ID #14161) RES-2026-535. Resolution Authorizing Award of Contract for Rehabilitation of Morris County Bridge No.1400-914 Morris Avenue Over Beaver Brook in the Township of Denville, Morris County, New Jersey (#B26-79) to CMS Construction, Inc. for an amount not to exceed $352,725.00 (Department of Public Works) (ID #14170) RES-2026-536. Resolution Approving the 5 Year Capital Plan for Constitutional Office Surcharge Fees 2026-2030 (Sheriff's Office) (ID #14184) RES-2026-537. Resolution to Submit FY 2027 New Jersey Department of Military and Veterans' Affairs Transportation Grant Application (Department of Human Services) (ID #14153) RES-2026-538. Resolution Authorizing Reallocation of CDBG Funding (Department of Human Services) (ID #14129) RES-2026-539. Resolution Authorizing an Agreement with the NJ Department of Human Services-Division of Family Development for funding in the amount of $473,074 for the period 7/1/2026 to 6/30/2027 for Case Management & Transportation (Contract #TS27104) (Department of Human Services) (ID #14125) RES-2026-540. Resolution Authorizing the Indemnity and Hold Harmless Agreement between Morristown Associates and the County of Morris for property located in Morristown, New Jersey (County Counsel) (ID #14182)",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "iqm2:morriscountynj:2233@fd7fa3578fad68d065e2dd8a5704b3ff3a2993d34134310ac5ba946003f16a12",
+   "meetingId": "iqm2:morriscountynj:2233",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris",
+   "documentUrl": "https://morriscountynj.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1666&Inline=True",
+   "contentHash": "fd7fa3578fad68d065e2dd8a5704b3ff3a2993d34134310ac5ba946003f16a12",
+   "retrievedAt": "2026-08-17T14:24:44.812Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1666&Inline=True",
+   "sourceOrg": "Morris County Board of County Commissioners",
+   "collectedAt": "2026-08-17T14:24:44.812Z",
+   "verifiedAt": null,
+   "text": "BOARD OF COUNTY COMMISSIONERS MORRIS COUNTY, NEW JERSEY July 8, 2026 Work Session Agenda TIME: 5:00 PM Generated 7/17/2026 3:24 PM This meeting is being held in person and livestreamed via WebEx. There is no public comment session during the meeting, but the public is invited to attend in person or to access the meeting by following the link below or by calling in to the phone number listed below the link. WebEx viewer link: https://morriscountynj.webex.com/morriscountynj/j.php?MTID=mb97b2df2c62f1e071cd92dac1f 27ca3d Webinar password: ymPreNpg238 (96773674 when dialing from a phone or video system) Phone number: 1-408-418-9388 Event number/Access Code: 234 388 64241 ANNOUNCEMENT Adequate notice of this meeting held the 8th day of July, 2026 has been provided through resolution adopted by this Board on January 2, 2026 at its Stated Annual Meeting held at the Administration and Records Building, Morristown, New Jersey and by electronic mailing to the Star Ledger and the Daily Record, through posting on the County website and by filing a copy of same with the Morris County Clerk and the Clerk of this Board. ROLL CALL Stephen H. Shaw Director John Krickus Deputy Director Douglas R. Cabana Thomas J. Mastrangelo Christine Myers Tayfun Selen Deborah Smith FLAG SALUTE PRESENTATION COUNTY COMMISSIONER REPORTS ADMINISTRATOR'S REPORT COUNTY COUNSEL'S REPORT CLERK OF THE BOARD'S REPORT\nJULY 8, 2026 WORK SESSION MEETING 2 | P a g e DEPARTMENT HEAD REPORTS REVIEW RESOLUTIONS CLOSED SESSION ADJOURNMENT",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "iqm2:morriscountynj:2239@f54751bf3a79de7d4e33102e85e05d576cae18a87d0adde9b5317334fe918bbf",
+   "meetingId": "iqm2:morriscountynj:2239",
+   "ocdId": "ocd-division/country:us/state:nj/county:morris",
+   "documentUrl": "https://morriscountynj.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1665&Inline=True",
+   "contentHash": "f54751bf3a79de7d4e33102e85e05d576cae18a87d0adde9b5317334fe918bbf",
+   "retrievedAt": "2026-08-17T14:24:45.346Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1665&Inline=True",
+   "sourceOrg": "Morris County Board of County Commissioners",
+   "collectedAt": "2026-08-17T14:24:45.346Z",
+   "verifiedAt": null,
+   "text": "BOARD OF COUNTY COMMISSIONERS MORRIS COUNTY, NEW JERSEY July 8, 2026 Regular Meeting Agenda TIME: 7:00 PM Generated 7/8/2026 12:12 PM This meeting is being held in person and livestreamed via WebEx. The public is invited to attend in person or to view the meeting by following the link below or by calling in to the phone number listed below the link. Public comments are welcome in person or by submitting written comments to the Clerk of the Board, which may be read or summarized during the public portion of the meeting. Written comments may be submitted via email with the subject line “Public Comment”’ to the Clerk of the Board, Michele Reilly at mreilly@co.morris.nj.us or by mail addressed to Michele Reilly, Clerk of the Board, Morris County Board of County Commissioners, PO Box 900, Morristown, NJ 07963-0900. Emailed comments must be received at least eight (8) hours prior to the meeting. Mailed comments must be received by 4:00 p.m. the day before the meeting. WebEx viewer link: https://morriscountynj.webex.com/morriscountynj/j.php?MTID=m10c389d332ed062ff0087709c 5697e41 Webinar password : PUuSKrvy383 (78875789 when dialing from a phone or video system) Phone number: 1-408-418-9388 Event number/Access Code: 234 737 03674 ANNOUNCEMENT Adequate notice of this meeting held the 8th day of July, 2026 has been provided through resolution adopted by this Board on January 2, 2026 at its Stated Annual Meeting held at the Administration and Records Building, Morristown, New Jersey and by electronic mailing to the Star Ledger and the Daily Record, through posting on the County website and by filing a copy of same with the Morris County Clerk and the Clerk of this Board. ROLL CALL Stephen H. Shaw Director John Krickus Deputy Director Douglas R. Cabana Thomas J. Mastrangelo Christine Myers Tayfun Selen Deborah Smith OTHERS PRESENT Deena Leary, County Administrator; Brian Murray, Assistant County Administrator; John Napolitano, County Counsel; Michele Reilly, Clerk of the Board\nJULY 8, 2026 REGULAR COMMISSIONER MEETING 2 | P a g e PRAYER AND FLAG SALUTE PRESENTATION MINUTES FOR APPROVAL June 24, 2026 Work Session Meeting Minutes and Regular Meeting Minutes Action Taken: COMMUNICATIONS 1. The Chester Volunteer First Aid Squad is requesting to hold a coin drop fundraiser at the intersection of North Road (CR 513) and Route 24 (CR 513 and 510) in Chester Borough from 8:30 a.m. to 2:00 p.m. on the following dates: Saturday, July 11, 2026; Sunday, July 12, 2026; Saturday, July 18, 2026; Sunday, July 19, 2026; Saturday, July 25, 2026; Sunday, July 26, 2026; Saturday, August 1, 2026; Sunday, August 2, 2026; Saturday, August 8, 2026; Sunday, August 9, 2026; Saturday, August 15, 2026; Sunday, August 16, 2026; Saturday, August 22, 2026; Sunday, August 23, 2026; Saturday, August 29, 2026; Sunday, August 30, 2026; Saturday, September 5, 2026; Sunday September 6, 2026; Saturday, September 12, 2026; Sunday, September 13, 2026; Saturday, September 19, 2026; Sunday, September 20, 2026; Saturday, September 26, 2026; Sunday, September 27, 2026; Saturday, October 3, 2026; Sunday, October 4, 2026; Saturday, October 10, 2026; Sunday, October 11, 2026; Saturday, October 17, 2026; Sunday, October 18, 2026; Saturday, October 24, 2026; Sunday, October 25, 2026. 2. DJB Event Consultants, Inc. is requesting permission to use a portion of Washington Street (CR 510) between Conklin Avenue and Colonial Road, and Sussex Avenue (CR 617) between Mill Street and Elliot Street, Morristown for the Morristown Corporate Classic 5K Run for JWBS on Thursday, July 16, 2026, from 6:00 p.m. to 9:30 p.m. Action Taken: ORDINANCES: First Reading/Introduction ORDINANCES: Second Reading/Public Hearing ORD-2026-35. Bond Ordinance reappropriating $100,196.72, including $96,000 of the proceeds of obligations not needed for their original purpose and $4,196.72 from the Capital Improvement Fund, in order to provide for the digitization of records for the Morris County Surrogate’s Office, in and by the County of Morris, New Jersey. (ID #14173) Action Taken: ORD-2026-34. Bond Ordinance providing for the digitization of records for the Morris County Surrogate’s Office in and by the County of Morris, New Jersey, appropriating $400,000 therefor and authorizing the issuance of $380,000 bonds or notes of the County to finance part of the cost thereof. (ID #14172) Action Taken: OPEN TO THE PUBLIC RESOLUTIONS Action Taken:\nJULY 8, 2026 REGULAR COMMISSIONER MEETING 3 | P a g e PAYMENT OF BILLS Action Taken: COMMISSIONER COMMENTS ADJOURNMENT\nJULY 8, 2026 REGULAR COMMISSIONER MEETING 4 | P a g e REGULAR COMMISSIONER MEETING RESOLUTIONS RES-2026-541. Resolution Approving Specifications for the Tree Removal Phase 1 on Berkshire Valley Road (CR 699) Township of Jefferson, Morris County, New Jersey Bid (B26-116) (Department of Public Works) (ID #14186) RES-2026-542. Resolution Accepting State Facilities Education Act (SFEA) Funding (Department of Human Services) (ID #14185) RES-2026-543. Resolution Authorizing Execution of Application of FFY24 Victims of Crime Act (VOCA) Grant Subaward V-14-24 for the period July 1, 2025 to June 30, 2026 (Prosecutor) (ID #14183) RES-2026-544. Resolution Accepting the 2026 Morris County Historic Preservation Trust Fund Grant Award - 35 Grants (Office of Planning & Preservation) (ID #14187) RES-2026-545. Resolution Amending Clerk of the Board Appointment Term (Clerk of the Board) (ID #14196) RES-2026-546. Memorandum of Understanding Between the County of Morris, the Morris County Sheriff's Office, and the Hanover Township Police Department Pertaining to the Morris County Sheriff's Emergency Response Team (SERT) (Administration) (ID #14200) RES-2026-547. Resolution Approving Plans & Specs for Replacement of County Br. 1400-831 on Berkshire Valley Rd over Tributary to Rockaway River in the Township of Jefferson, Morris County, New (Bid# 26-123) (Department of Public Works) (ID #14198) RES-2026-548. Resolution Authorizing the Chief Financial Officer to void a check that is no longer needed and will be re-deposited (Department of Finance) (ID #14188) RES-2026-549. Resolution Authorizing the County Chief Financial Officer to reissue check(s) that has/have been lost and payment has/have been stopped (Department of Finance) (ID #14190) RES-2026-550. Resolution Authorizing a Cooperative Contract Purchase from Axon Enterprise, Inc. for Dedrone equipment software hosting and licensing in the amount of $550,156.00 (R26-127) (Department of Law & Public Safety) (ID #14191) RES-2026-551. Resolution Authorizing the County Chief Financial Officer to issue checks per Chapter 127 P.L. 1985 (Department of Finance) (ID #14193) RES-2026-552. Resolution Authorizing a Contract Amendment for Microsoft Annual Enterprise Agreement requesting an increase to the contract in the amount of $23,292.90, for a new contract total of $2,432,914.35 (Department of Information Technology) (ID #14195) RES-2026-553. Resolution Authorizing Award of Contract for Generator Repair Services- Labor Rates Rebid (#B26-97R) to GenServe, LLC for an amount not to exceed $54,629.00 (12 months) (Department of Public Works) (ID #14199) RES-2026-554. Resolution Authorizing the Insertion of a Special Item of Revenue into the 2026 Budget under Chapter 159, New Jersey Department of Labor and Workforce Development, Workforce Innovation and Opportunity Act - Adult, in the amount of $1,227,118.00 (Department of Finance) (ID #14202) RES-2026-555. Resolution Authorizing the Insertion of a Special Item of Revenue into the 2026 Budget under Chapter 159, New Jersey Department of Labor and Workforce Development, Workforce Innovation and Opportunity Act – Dislocated Worker, in the amount of $2,272,991.00 (Department of Finance) (ID #14203)\nJULY 8, 2026 REGULAR COMMISSIONER MEETING 5 | P a g e RES-2026-556. Resolution Authorizing the Insertion of a Special Item of Revenue into the 2026 Budget under Chapter 159, New Jersey Department of Labor and Workforce Development, Workforce Innovation and Opportunity Act – Youth, in the amount of $995,094.00 (Department of Finance) (ID #14204) RES-2026-557. Resolution Authorizing the Insertion of a Special Item of Revenue into the 2026 Budget under Chapter 159, New Jersey Department of Labor and Workforce Development, Workforce Innovation and Opportunity Act - Data Reporting & Analysis, in the amount of $12,971.00 (Department of Finance) (ID #14205) RES-2026-558. Resolution Authorizing the Insertion of a Special Item of Revenue into the 2026 Budget under Chapter 159, National Environmental Health Association, NEHA-FDA Retail Flexible Funding Model Grant Program, in the amount of $14,000.00 (Department of Finance) (ID #14206) RES-2026-559. Resolution Authorizing the Insertion of a Special Item of Revenue into the 2026 Budget under Chapter 159, New Jersey Department of State, 2025 General Election Early Voting Grant, in the amount of $7,920.00 (Department of Finance) (ID #14207) RES-2026-560. Resolution Authorizing the County Chief Financial Officer to Reclassify Payments from One Account to Another (Department of Finance) (ID #14208) RES-2026-561. Resolution Approving a Partial Fee Taking, Bridge Maintenance Easement, Sidewalk Easement, Drainage Easement and Two Temporary Construction Easements on Tax Block 412, Lot 15 (1111 Parsippany Boulevard) in the Township of Parsippany-Troy Hills as Part of a Project Replacing the Parsippany Boulevard Bridge Over Troy Brook and Appropriating the Sum of $220,200.00 From Capital Account Number 04-216-24-953662-940 (County Counsel) (ID #14211) RES-2026-562. Resolution Authorizing the Insertion of a Special Item of Revenue into the 2026 Budget under Chapter 159, New Jersey Department of Human Services, National Opioid Litigation Resolution, in the amount of $50,448.11 (Department of Finance) (ID #14214) RES-2026-563. Resolution Authorizing Execution of Application FFY24 Stop Violence Against Women Act (VAWA) Grant Subaward VAWA-44-24 for the period July 1, 2025 to June 30, 2026 (Prosecutor) (ID #14189) RES-2026-564. Resolution Accepting National Opioid Litigation Settlement Funds in the Amount of $50,448.11 (Clerk of the Board) (ID #14212) RES-2026-565. Resolution Accepting a Grant from the New Jersey Division of Elections for the 2025 General Election Early Voting in the Amount of $7,920.00 (Clerk of the Board) (ID #14213) RES-2026-566. Resolution Authorizing the award of contract to White Rock Corp for Bid # B26-69R Carpet, Flooring and Flooring Installation at Various County of Morris Locations Rebid, for a not to exceed amount of $150,000.00 for a term of twelve (12) months (Department of Public Works) (ID #14176) RES-2026-567. Resolution to Amend Certificates of Availability of Funds Contract #2026-530 to change account numbers (Department of Public Works) (ID #14178) RES-2026-568. Resolution Amending Resolution #2024-583 (6/26/24) for Construction Administration Services for the Morris County Department of Public Works, Replacement of the Morris County Road Department Building at 306 West\nJULY 8, 2026 REGULAR COMMISSIONER MEETING 6 | P a g e Dewey Avenue, Wharton, NJ 07855 to Increase Contract Amount and Duration (Department of Public Works) (ID #14192) RES-2026-569. Resolution Authorizing the purchase of end user systems to facilitate the deployment of current Microsoft Windows OS and modern cyber security applications, from Dell Marketing L.P., Under the State of New Jersey Cooperative Purchasing Program in the amount of $420,500 (Department of Information Technology) (ID #14194) RES-2026-570. Resolution Authorizing Award of Contract for RFP #P26-100 Construction Inspection Services for the Replacement of Bridge No. 1400-490 to Colliers at $105.00 per hour, not to exceed $306,600.00 (Department of Public Works) (ID #14197) RES-2026-571. Resolution Authorizing Award of Contract for Professional Engineering Services for Traffic Signal Intersection Improvements Project Schooley's Mountain Road/ Fairmount Road (CR 517) and E/W Mill Road (CR 513), Washington Township, County of Morris, New Jersey (P#26-92) to Dynamic Traffic for $77,800.00 (Department of Public Works) (ID #14201) RES-2026-572. Resolution Authorizing Award of Contract for Pedestrian Improvements on Sussex Turnpike at Harvey Terrace, Randolph Township (#B26-101) to Foggia Trinity Electric LLC for $137,002.40 (Department of Public Works) (ID #14209) RES-2026-573. Resolution to Transfer Balances to the New WIOA (Workforce Innovations and Opportunity Act) Youth Account from the previously established CAFs for FY25 (Office of Planning & Preservation) (ID #14210) RES-2026-574. Resolution Authorizing Award of Contract for Labor Rates for Asbestos Abatement Services for Morris County Buildings Rebid (#B26-74R) to Academy Construction, Inc. for an amount not to exceed $25,000.00 annually (Department of Public Works) (ID #14215) RES-2026-575. Resolution Proclaiming July 14, 2026 \"Fentanyl Poisoning Awareness Day\" in Morris County (Clerk of the Board) (ID #14221)",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
    "id": "iqm2:morriscountynj:2240@e69c0571b05241b6ed33fc2babc3e38ef3e4d48f71129c3432cc20e7349a4c00",
    "meetingId": "iqm2:morriscountynj:2240",
    "ocdId": "ocd-division/country:us/state:nj/county:morris",
@@ -6775,6 +6944,38 @@
    "collectedAt": "2026-08-14T03:15:55.986Z",
    "verifiedAt": null,
    "text": "BOARD OF COUNTY COMMISSIONERS MORRIS COUNTY, NEW JERSEY August 12, 2026 Regular Meeting Agenda TIME: 7:00 PM Generated 8/12/2026 10:06 AM This meeting is being held in person and livestreamed via WebEx. The public is invited to attend in person or to view the meeting by following the link below or by calling in to the phone number listed below the link. Public comments are welcome in person or by submitting written comments to the Clerk of the Board, which may be read or summarized during the public portion of the meeting. Written comments may be submitted via email with the subject line “Public Comment”’ to the Clerk of the Board, Michele Reilly at mreilly@co.morris.nj.us or by mail addressed to Michele Reilly, Clerk of the Board, Morris County Board of County Commissioners, PO Box 900, Morristown, NJ 07963-0900. Emailed comments must be received at least eight (8) hours prior to the meeting. Mailed comments must be received by 4:00 p.m. the day before the meeting. WebEx viewer link: https://morriscountynj.webex.com/morriscountynj/j.php?MTID=mf793eb2090b2166f799b34363 1fa375f Webinar password : hcE365fWD3y (42336539 when dialing from a phone or video system) Phone number: 1-408-418-9388 Event number/Access Code: 2331 194 0263 ANNOUNCEMENT Adequate notice of this meeting held the 12th day of August, 2026 has been provided through resolution adopted by this Board on January 2, 2026 at its Stated Annual Meeting held at the Administration and Records Building, Morristown, New Jersey and by electronic mailing to the Star Ledger and the Daily Record, through posting on the County website and by filing a copy of same with the Morris County Clerk and the Clerk of this Board. ROLL CALL Stephen H. Shaw Director John Krickus Deputy Director Douglas R. Cabana Thomas J. Mastrangelo Christine Myers Tayfun Selen Deborah Smith OTHERS PRESENT Deena Leary, County Administrator; John Napolitano, County Counsel; Staci Santucci, Assistant County Counsel; Michele Reilly, Clerk of the Board\nAUGUST 12, 2026 REGULAR COMMISSIONER MEETING 2 | P a g e PRAYER AND FLAG SALUTE PRESENTATION MINUTES FOR APPROVAL July 22, 2026 Work Session Meeting Minutes and Regular Meeting Minutes Action Taken: COMMUNICATIONS 1. Chester PTO is requesting permission to hang a banner over Main Street/Route 24 (CR 513/510) in Chester Borough from October 1, 2026, to October 18, 2026, to advertise the Food Truck Festival at Chubb Park. 2. Chester PTO is requesting permission to hang a banner over Main Street/Route 24 (CR 510) in Mendham Borough from October 1, 2026, to October 18, 2026, to advertise the Food Truck Festival at Chubb Park. 3. To confirm and ratify the approval of a request from Full Sweep Productions - NETFLIX for permission to leave an 80ft boom lift and a generator on Green Village Road (CR 647) between Kings Road and Madison Avenue (CR 124) August 5 through August 7, 2026 at the discretion of the Borough of Madison and the Madison Police Department, and to close Green Village Road (CR 647) from Main Street (CR 124) to Kings Road on August 6th from 7 a.m. to 10 p.m. as per Patrolman DiRocco. 4. The Long Hill Chamber of Commerce is requesting permission to close a portion of Long Hill Road and a portion of Division Avenue in Long Hill Township, from the intersection of Northfield and Long Hill Road down to Oaks Road and Long Hill Road and Division Avenue to Long Hill Road to Meadowview Road at Long Hill Road on October 4, 2026 (rain date October 11, 2026) from 9:00 a.m. to 9:00 p.m. for the Millington Music Festival. Action Taken: ORDINANCES: First Reading/Introduction ORDINANCES: Second Reading/Public Hearing OPEN TO THE PUBLIC RESOLUTIONS Action Taken: PAYMENT OF BILLS Action Taken: COMMISSIONER COMMENTS ADJOURNMENT\nAUGUST 12, 2026 REGULAR COMMISSIONER MEETING 3 | P a g e REGULAR COMMISSIONER MEETING RESOLUTIONS RES-2026-606. Resolution Approving the Plans and Specifications for Milling and Resurfacing Park Ave (C.R.623) in the Township of Morris, New Jersey (Bid# M25-35) (Department of Public Works) (ID #14249) RES-2026-607. Resolution Approving the Plans and Specifications for Milling and Resurfacing Ridgedale Ave (C.R. 632) in the Township of East Hanover, New Jersey (Bid# M24-45) (Department of Public Works) (ID #14251) RES-2026-608. Resolution Authorizing the Chief Financial Officer to process a payment to the State of New Jersey Department of Treasury in the total amount of $162,728.06 that remits 50% of interest earnings on unspent Chapter 12 proceeds to the State (Department of Finance) (ID #14264) RES-2026-609. Resolution Authorizing the Commissioner Director to Execute a Deed of Historic Preservation Easement between The Township of East Hanover and The County of Morris, for a 30-year deed restriction and protection for the preservation work at the Cook House which was assisted by grants from the Open Space, Recreation, Farmland and Historic Preservation Trust (Office of Planning & Preservation) (ID #14255) RES-2026-610. Resolution Authorizing the Commissioner Director to Execute an Amendment to Historic Preservation Easement between the Town of Morristown, Township of Morris and The County of Morris, for a 30-year deed restriction and protection for the preservation work at the Morristown & Morris Township Library which was assisted by grants from the Open Space, Recreation, Farmland and Historic Preservation Trust (Office of Planning & Preservation) (ID #14256) RES-2026-611. Resolution Approving the Plans and Specifications for Milling and Resurfacing Spring Valley Rd (C.R. 601) in the Township of Morris, New Jersey (Bid# M25-36) (Department of Public Works) (ID #14258) RES-2026-612. Resolution Authorizing the Commissioner Director to execute a grant agreement between the County of Morris and the Morris County Historical Society for $140,000 in historic preservation funding from the Open Space, Recreation, Farmland and Historic Preservation Trust for Acorn Hall (Office of Planning & Preservation) (ID #14263) RES-2026-613. Resolution Authorizing the Execution of a Memorandum of Agreement (MOA) between the NJ Department of Health/Greystone Park Psychiatric Hospital and the Morris County Office of Emergency Management for Basic Life Support Ambulance Service in the amount of $621,644.87 (Department of Law & Public Safety) (ID #14261) RES-2026-614. Resolution Authorizing the County Chief Financial Officer to issue checks per Chapter 127 P.L. 1985 (Department of Finance) (ID #14259) RES-2026-615. Resolution Authorizing the County Chief Financial Officer to reissue check(s) that has/have been lost and payment has/have been stopped (Department of Finance) (ID #14260) RES-2026-616. Resolution Authorizing the Transfer of Ownership of an Out-of-service Decontamination Trailer to Parsippany Fire District 6 (Department of Law & Public Safety) (ID #14262) RES-2026-617. Resolution Authorizing the County Chief Financial Officer to Reclassify Payments from One Account to Another (Department of Finance) (ID #14265)\nAUGUST 12, 2026 REGULAR COMMISSIONER MEETING 4 | P a g e RES-2026-618. Resolution Authorizing the Insertion of a Special Item of Revenue into the 2026 Budget under Chapter 159, New Jersey Department of Labor and Workforce Development, WorkFirst New Jersey - Digital Equity Training, in the amount of $1,000,000.00 (Department of Finance) (ID #14280) RES-2026-619. Resolution Authorizing the Insertion of a Special Item of Revenue into the 2026 Budget under Chapter 159, New Jersey Department of Labor and Workforce Development, WorkFirst New Jersey – Supplemental Nutrition Assistance Program, in the amount of $100,000.00 (Department of Finance) (ID #14281) RES-2026-620. Resolution Authorizing the Insertion of a Special Item of Revenue into the 2026 Budget under Chapter 159, New Jersey Department of Health, Local Public Health Overdose Fatality Review Teams 2027, in the amount of $75,000.00 (Department of Finance) (ID #14283) RES-2026-621. Resolution Authorizing Appointment to the Youth Services Advisory Committee (Clerk of the Board) (ID #14267) RES-2026-622. Resolution Authorizing Award of Contract for Labor Rates for HVAC Repairs and Services for Trane Systems (#B26-125) to Air Systems Maintenance, Inc. for an amount not to exceed $70,481.00 annually (Department of Public Works) (ID #14295) RES-2026-623. Resolution Authorizing Agreement for One-Stop Operator and Career Services Provider, between the Workforce Development Board of Northwest New Jersey and the County of Morris in the amount of $2,500,000 for the period July 1, 2026 to June 30, 2027 (Office of Planning & Preservation) (ID #14247) RES-2026-624. Resolution Authorizing Award of Contract for Grade Crossing Repairs to Union & Mercer Street on the Dover and Rockaway River Railroad, Town of Dover, Morris County, New Jersey (#B26-64) to Railroad Construction Company, Inc. for an amount not to exceed $358,985.50 (Department of Public Works) (ID #14290) RES-2026-625. Resolution to Extend a Contract with Hindsight, Inc. for Bid#23-139 Support and Maintenance of Integrated Software for the Morris County Office of Temporary Assistance (Department of Human Services) (ID #14289) RES-2026-626. Resolution Authorizing Award of Contract for B26-122 Delivery of Voting Machines & Associated Equipment for Elections to D.C. Express for an amount not to exceed $183,057.00 per year (Purchasing) (ID #14288) RES-2026-627. Resolution Authorizing a State Contract purchase from Axon Enterprise, Inc. to maintain equipment for the Prosecutor's Office Body Worn Camera Program for the amount of $223,950.24 (R26-139) (Sheriff's Office) (ID #14287) RES-2026-628. Resolution Authorizing Award of Contract for Professional Engineering Services Traffic Signal Intersection Improvements Project Main Street and Mountain Avenue/Hilltop Avenue; Mendham Borough, County of Morris, New Jersey (#P26-114) to Dynamic Traffic, LLC for an amount not to exceed $79,800.00 (Department of Public Works) (ID #14286) RES-2026-629. Resolution Authorizing a Memorandum of Understanding with the Center on Policing of Rutgers University, to continue participation in the support of the Newark/Jersey City UASI Office of Management and Regional Integration (Department of Law & Public Safety) (ID #14285) RES-2026-630. Resolution Authorizing the Insertion of a Special Item of Revenue into the 2026 Budget under Chapter 159, New Jersey Department of Transportation, Rte.\nAUGUST 12, 2026 REGULAR COMMISSIONER MEETING 5 | P a g e 24 EB Ramp to CR 510 (Columbia Turnpike), in the amount of $156,240.02 (Department of Finance) (ID #14284) RES-2026-631. Resolution Authorizing the Insertion of a Special Item of Revenue into the 2026 Budget under Chapter 159, New Jersey Department of Health, Local Public Health Infrastructure Grant (PHIG) Program 2027, in the amount of $119,372.00 (Department of Finance) (ID #14282) RES-2026-632. Resolution Authorizing Reimbursement for June 2026 Emergency Expenditure (Department of Human Services) (ID #14278) RES-2026-633. Resolution Authorizing Reimbursement for May 2026 Emergency Expenditure (Department of Human Services) (ID #14277) RES-2026-634. Resolution Authorizing Reimbursement for April 2026 Emergency Expenditure (Department of Human Services) (ID #14276) RES-2026-635. Resolution Authorizing the Commissioner Director to Execute a Grant Agreement between the County of Morris and the Borough of Mendham for $357,200 in Historic Preservation Funding from the Open Space, Recreation, Farmland and Historic Preservation Trust for the Phoenix House (Office of Planning & Preservation) (ID #14275) RES-2026-636. Resolution Authorizing the Commissioner Director to Execute a Grant Agreement between the County of Morris and the Borough of Mendham for $31,520 in Historic Preservation Funding from the Open Space, Recreation, Farmland and Historic Preservation Trust for the Bowers Building (Office of Planning & Preservation) (ID #14274) RES-2026-637. Resolution Authorizing the Commissioner Director to Execute a Grant Agreement between the County of Morris and the Borough of Mendham for $428,900 in Historic Preservation Funding from the Open Space, Recreation, Farmland and Historic Preservation Trust for the Scott Farm Barn (Office of Planning & Preservation) (ID #14273) RES-2026-638. Resolution Authorizing the Commissioner Director to Execute a Grant Agreement between the County of Morris and the Township of East Hanover for $330,000 in Historic Preservation Funding from the Open Space, Recreation, Farmland and Historic Preservation Trust for the East Hanover Historic Church (Office of Planning & Preservation) (ID #14272) RES-2026-639. Resolution Authorizing the Commissioner Director to Execute a Grant Agreement between the County of Morris and the Borough of Madison for $339,235 in Historic Preservation Funding from the Open Space, Recreation, Farmland and Historic Preservation Trust for the Hartley Dodge Memorial (Office of Planning & Preservation) (ID #14271) RES-2026-640. Resolution Authorizing the Commissioner Director to Execute a Grant Agreement between the County of Morris and the First Reformed Church of Pompton Plains for $365,184 in Historic Preservation Funding from the Open Space, Recreation, Farmland and Historic Preservation Trust for the First Reformed Church of Pompton Plains (Office of Planning & Preservation) (ID #14270) RES-2026-641. Resolution Authorizing Award of Contract for Milling and Resurfacing of Ridgedale Avenue (C.R. 632) in the Township of East Hanover (M24-45) to Top Line Construction Corp. for an amount not to exceed $2,616,330.01 (Department of Public Works) (ID #14269)\nAUGUST 12, 2026 REGULAR COMMISSIONER MEETING 6 | P a g e RES-2026-642. Resolution Amending Resolution #2026-290 (4/8/26) for Professional Engineering Services for NJDEP MS4 Highway Agency Infrastructure Mapping for Morris County to Increase Contract Amount and Extend Contract Term (Department of Public Works) (ID #14268) RES-2026-643. Resolution Authorization for a Competitive Contracting Process for the Hiring of a Consultant for Ambulance Billing and Collection Services (Purchasing) (ID #14266) RES-2026-644. Resolution Authorizing the Award of Contract to TNT Construction Group, LLC for Bid # B26-118 Labor Rates for As-Needed Roofing Repairs and Services at Various County of Morris Locations for an amount not to exceed $150,000.00 for a term of twelve (12) months (Department of Public Works) (ID #14257) RES-2026-645. Resolution Authorizing Award of Contract for Tree & Brush Clearing Along Berkshire Valley Road (C.R. 699) From Route 15 to Taylor Road in the Township of Jefferson, Phase 1 (#B26-116) to Downes Tree Service Co, Inc. for an amount not to exceed $155,925.00 (Department of Public Works) (ID #14294) RES-2026-646. Resolution Authorizing an Agreement Between the County of Morris and the Township of Parsippany-Troy Hills and the Town of Dover for the Establishment of a Consortium to Conduct the HOME Investment Partnerships Program (Department of Human Services) (ID #14291) RES-2026-647. Resolution Authorizing Execution of Application for the FFY25 New Jersey Victim Assistance Grant (VAG) Program (Prosecutor) (ID #14309)",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "revize:merrimack:2026-08-24@2376ef29e8c18be82445f14d978555ab3b6b962b204e474d92eae0004def2f44",
+   "meetingId": "revize:merrimack:2026-08-24",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
+   "documentUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/Public%20Notice%208.24.26.pdf",
+   "contentHash": "2376ef29e8c18be82445f14d978555ab3b6b962b204e474d92eae0004def2f44",
+   "retrievedAt": "2026-08-17T14:24:45.602Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/Public%20Notice%208.24.26.pdf",
+   "sourceOrg": "Merrimack County Board of Commissioners",
+   "collectedAt": "2026-08-17T14:24:45.602Z",
+   "verifiedAt": null,
+   "text": "COUNTY OF MERRIMACK 333 DANIEL WEBSTER HIGHWAY, SUITE 2 BOSCAWEN, NEW HAMPSHIRE 03303-2415 (603) 796-6800 FAX: (603) 796-6840 www.merrimackcounty.net COMMISSIONERS COUNTY ADMINISTRATOR ROSS L. CUNNINGHAM STUART D. TRACHY, Chair, Franklin DAVID M. LOVLIEN JR., Vice Chair, Pembroke STEPHEN SHURTLEFF, Clerk, Penacook August 17, 2026 PUBLIC NOTICE MERRIMACK COUNTY BOARD OF COMMISSIONERS The Merrimack County Board of Commissioners will hold a meeting on: Date: Monday, August 24, 2026 Time: 10:00 a.m. Location: OCH, 163 N. Main St., Concord, NH 03301 This meeting is open to the public for the discussion of any matters that may come before the Board. BOARD OF COMMISSIONERS: Stuart D. Trachy, Chair David M. Lovlien Jr., Vice Chair Stephen Shurtleff, Clerk Posted on: Merrimack County Website – August 17, 2026 Merrimack County Sheriff’s Office – August 17, 2026 Ross L. Cunningham County Administrator Special accommodations for individuals with disabilities are available upon request, in accordance with the Americans with Disabilities Act of 1990. Members of the public are welcome to attend. Please Note: This meeting is being recorded (audio and video). By participating, you consent to being recorded.",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "revize:merrimack:2026-02-09@ef1fbdfbba049dbc74c2d692e3c73acf7955f60967788eeb06a33aebd67485f5",
+   "meetingId": "revize:merrimack:2026-02-09",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
+   "documentUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/BOC%20Packet%202.9.26.pdf",
+   "contentHash": "ef1fbdfbba049dbc74c2d692e3c73acf7955f60967788eeb06a33aebd67485f5",
+   "retrievedAt": "2026-08-17T14:24:45.766Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/BOC%20Packet%202.9.26.pdf",
+   "sourceOrg": "Merrimack County Board of Commissioners",
+   "collectedAt": "2026-08-17T14:24:45.766Z",
+   "verifiedAt": null,
+   "text": "",
    "extraction": "pdf",
    "extractionNote": null
   }

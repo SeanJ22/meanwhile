@@ -123,9 +123,40 @@ function readStamps(text: string): Stamp[] {
     for (const match of line.matchAll(STAMP_RE)) {
       const before = line.slice(0, match.index);
       const bold = [...before.matchAll(/\*\*(.+?)\*\*/g)].pop();
-      const clause = (bold ? bold[1] : before)
+      let clause = (bold ? bold[1] : before)
         .replace(/^[\s*(]+|[\s*(—-]+$/g, "")
         .trim();
+
+      /*
+       * THE HEADING FALLBACK (2026-08-17, g6).
+       *
+       * Most rules in `CLAUDE.md` are a bold sentence with the stamp inside
+       * it, and the bold lead is the pickaxe string. **A rule that is a
+       * SECTION is not** — its title lives in a `###` heading a line or two
+       * above, and the stamp's own line opens with a bare `(Adopted …`. Those
+       * produced an EMPTY clause, which the pickaxe then searched for,
+       * matched nothing with, and reported as `NOT FOUND` — a blank row in
+       * the table with a date and no rule name.
+       *
+       * Two stamps were in that state: THE TRANSPARENCY MANDATE, and THE
+       * DEFERRAL BOUNDARY, which this same session had just written. So a
+       * session added a rule and the auditor could not name it on the same
+       * day, which is precisely the failure `CLAUDE.md` warns about in the
+       * photo rule — "a stamp nothing audits is a stamp nobody can catch" —
+       * arriving through the back door: audited, counted, and anonymous.
+       *
+       * The nearest preceding heading is the rule's title in that shape, and
+       * it is just as unique a string in the file as a bold lead.
+       */
+      if (clause.length < 3) {
+        for (let back = i; back >= 0 && i - back < 12; back -= 1) {
+          const heading = /^#{2,4}\s+(.+?)\s*$/.exec(lines[back]);
+          if (heading) {
+            clause = heading[1].trim();
+            break;
+          }
+        }
+      }
 
       stamps.push({
         line: i + 1,

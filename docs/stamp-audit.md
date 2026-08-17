@@ -8,7 +8,7 @@ walked straight past the `Author-revised` stamp on the disclosure rule.
 each one, and the corrected date is typed into `CLAUDE.md` by hand from
 `pnpm stamp` or from the recovered column below.**
 
-Run on 2026-08-16 (America/Phoenix). 23 stamp(s) audited.
+Run on 2026-08-17 (America/Phoenix). 25 stamp(s) audited.
 
 **Method.** Each rule's opening clause — the bold title it leads with — is a
 long string that entered `CLAUDE.md` once. `git log -S<clause> -- CLAUDE.md`
@@ -28,6 +28,8 @@ lying. The recovered dates come from the unfiltered pickaxe.
 
 | Rule (opening clause) | Claimed | Recovered | Delta | Introducing commit |
 |---|---|---|---|---|
+| THE TRANSPARENCY MANDATE | 2026-08-16 | 2026-08-16 | 0 | `5745c71` The mandate becomes law before the hunting starts, and the tracker stops carrying two rows per ID |
+| THE DEFERRAL BOUNDARY FALLS BETWEEN SUBJECTS, NEVER INSID… | 2026-08-17 | 2026-08-17 | 0 | `af766f5` The numbers stop contradicting each other, and our own robots stop counting as readers |
 | The design system is committed, not improvised. | 2026-08-15 | 2026-08-15 | 0 | `b8b6f7d` The system goes on the record |
 | The register is chosen by surface, and the ask-box beat d… | 2026-08-15 | 2026-08-15 | 0 | `800fecf` The money tells its story: sorting, the second hop, honest percentages, and a geocoder that works (#39) |
 | The stranger test. | 2026-08-14 | 2026-08-14 | 0 | `b25ac80` 2: NH/NJ depth — Kelly cards, the name-case pass, Newbury's Select Board, and the office explainers |
@@ -46,27 +48,29 @@ lying. The recovered dates come from the unfiltered pickaxe.
 | A join that can collapse must be asked for distinctness —… | 2026-08-14 | 2026-08-14 | 0 | `8046820` 1: the FEC replication bug (D40) — the cache key, not the join |
 | The zip playbook is append-only, and every depth run ends… | 2026-08-15 | 2026-08-15 | 0 | `f5de914` The structures are born: state folders, notes, and the zip playbook |
 | A render default may never manufacture a claim — a null r… | 2026-08-16 | 2026-08-16 | 0 | `cc10808` Pictures first, the counters breathe, and the documents |
-| Every session ends by running `pnpm walk:all` against pro… | 2026-08-16 | **NOT FOUND** | — | — |
-| A failed fetch never silently empties a previously-full s… | 2026-08-16 | **NOT FOUND** | — | — |
-| A read from the subject's own official source IS the veri… | 2026-08-16 | **NOT FOUND** | — | — |
-| More viewport must never mean fewer pins. | 2026-08-16 | **NOT FOUND** | — | — |
+| Every session ends by running `pnpm walk:all` against pro… | 2026-08-16 | 2026-08-16 | 0 | `ea54049` The documents: four standing rules, the cuts, and the conflict left for the author |
+| A failed fetch never silently empties a previously-full s… | 2026-08-16 | 2026-08-16 | 0 | `ea54049` The documents: four standing rules, the cuts, and the conflict left for the author |
+| A read from the subject's own official source IS the veri… | 2026-08-16 | 2026-08-16 | 0 | `ea54049` The documents: four standing rules, the cuts, and the conflict left for the author |
+| More viewport must never mean fewer pins. | 2026-08-16 | 2026-08-16 | 0 | `ea54049` The documents: four standing rules, the cuts, and the conflict left for the author |
 | Disclosure at the point of capture — the one-time acknowl… | 2026-08-13 | 2026-08-13 | 0 | `8fa5759` 3: the defect batch — what-first titles, the narrowing modal, the one-time disclosure, candidate reactions, the mayor, the past, the smalls |
 
 ## What the deltas say
 
 - **2 stamp(s) disagree with git history.**
-- **0 stamp(s) are still later than today** (2026-08-16) — a date that had not happened when it was written.
-- **4 stamp(s) could not be recovered** and are printed `NOT FOUND` rather than guessed.
+- **0 stamp(s) are still later than today** (2026-08-17) — a date that had not happened when it was written.
+- **0 stamp(s) could not be recovered** and are printed `NOT FOUND` rather than guessed.
 
 | Line | Claimed | Recovered | Delta | Note |
 |---|---|---|---|---|
-| `CLAUDE.md:60` | 2026-08-13 | 2026-08-15 | -2 d | claimed date is later than the introducing commit |
-| `CLAUDE.md:61` | 2026-08-14 | 2026-08-15 | -1 d | claimed date is later than the introducing commit |
+| `CLAUDE.md:114` | 2026-08-13 | 2026-08-15 | -2 d | claimed date is later than the introducing commit |
+| `CLAUDE.md:115` | 2026-08-14 | 2026-08-15 | -1 d | claimed date is later than the introducing commit |
 
 ## The literal `--diff-filter=A` result, per stamp
 
 | Rule (opening clause) | `--diff-filter=A` returned | Unfiltered matches |
 |---|---|---|
+| THE TRANSPARENCY MANDATE | none | 1 |
+| THE DEFERRAL BOUNDARY FALLS BETWEEN SUBJECTS, NEVER INSID… | none | 1 |
 | The design system is committed, not improvised. | none | 1 |
 | The register is chosen by surface, and the ask-box beat d… | none | 1 |
 | The stranger test. | none | 1 |
@@ -85,10 +89,10 @@ lying. The recovered dates come from the unfiltered pickaxe.
 | A join that can collapse must be asked for distinctness —… | none | 1 |
 | The zip playbook is append-only, and every depth run ends… | none | 1 |
 | A render default may never manufacture a claim — a null r… | none | 1 |
-| Every session ends by running `pnpm walk:all` against pro… | none | 0 |
-| A failed fetch never silently empties a previously-full s… | none | 0 |
-| A read from the subject's own official source IS the veri… | none | 0 |
-| More viewport must never mean fewer pins. | none | 0 |
+| Every session ends by running `pnpm walk:all` against pro… | none | 1 |
+| A failed fetch never silently empties a previously-full s… | none | 1 |
+| A read from the subject's own official source IS the veri… | none | 1 |
+| More viewport must never mean fewer pins. | none | 1 |
 | Disclosure at the point of capture — the one-time acknowl… | none | 1 |
 
 A `1` in the last column means the clause entered the file exactly once and

@@ -72,6 +72,12 @@ export const MIRRORED_DOCS = [
   // files in the folder because an undeclared file now fails the set check.
   { mirrorName: "deferred.md", repoPath: "docs/deferred.md" },
   { mirrorName: "deferred.csv", repoPath: "docs/deferred.csv" },
+  // Joined 2026-08-17: the census split into Build and Non-code decisions, the
+  // author's ruling that non-code work was confusing mixed in with build work.
+  // `binary: true` is load-bearing — the mirror's "does this copy match any
+  // committed version" check reads text and trims whitespace, which on a zip
+  // compares two corrupted strings and would refuse every ordinary update.
+  { mirrorName: "deferred.xlsx", repoPath: "docs/deferred.xlsx", binary: true },
 ];
 
 /** The eight with a repo counterpart, as `handoff` wants them. */

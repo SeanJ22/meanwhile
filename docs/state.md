@@ -8078,23 +8078,126 @@ errs toward exclusion like everything else in C05. `docs/synthetic-runs.md`
 carries the windows, each read off the table rather than recalled — the first
 attempt at that entry guessed a time range from memory and matched nothing.
 
-### What was NOT started, and it is five of eight
+### Item 6 — the mayor moves to where he already lived
 
-**Items 4, 5, 6, 7 and 8 were never begun.** Not thinned, not partially built —
-not started. Each is deferred whole with its spec intact:
+The author's ruling: the placement on who-governs is awkward and the office
+already renders in the battlecard's Representation tab. The Mayor row is out of
+that panel everywhere, no exceptions.
 
-| item | what |
+**Reachability was established from the committed rosters BEFORE anything was
+removed**, which is the half of this item that is a finding rather than an
+edit — the brief asked for it to be reported, not decided:
+
+| zip | the office | reachable after removal, by what path |
+|---|---|---|
+| 85701 | Mayor Regina Romero | the Tucson row → its large battlecard → Representation tab; also on Tucson meeting cards |
+| 85641 | **none exists** | Vail is unincorporated, and the card's own first line already says it has no mayor or city council |
+| 07866 | Mayor Joseph Jackson | the Rockaway township row → battlecard → Representation tab |
+| 03255 | **none exists** | Newbury is run by a Selectboard |
+
+**No zip loses the office from the product**, so there is no finding to escalate
+and the WGH row is not reinstated.
+
+**The honest no-mayor fact survives, and it was never in the blast radius.**
+Newbury's select-board fact and explainer (M32) is a separate block keyed on the
+office TITLE rather than on "Mayor", so removing the Mayor filter does not reach
+it. It still renders on the who-governs card at 03255 with its three Selectboard
+members underneath — which is the point of M32: the statement is about how the
+town IS governed, not about what it lacks.
+
+The walk check `[0818] 07866: the mayor line renders` is **retired** — the only
+way a check ever may leave that suite, because the author retired the claim
+behind it. It is replaced rather than dropped: what was worth guarding was never
+the row but that a reader at 07866 can still reach their mayor, so the new check
+opens the township battlecard and asserts the office and the holder are inside
+it.
+
+### Rule 4g, and one more duplicate found on the way
+
+**4g:** the incumbency line ends at "them". Taken out of order and named as
+such — it is a one-line copy ruling that cannot half-land, unlike 4a–4f, which
+are coupled to item 5 by design. **One surface** carried the line
+(`components/ballot/incumbent-record-link.tsx`); the doc comment further down
+the same file quoted the cut clause as the equal-effort rule's answer and was
+updated with it.
+
+**And a duplicate this session introduced, removed.** Once item 1a made the list
+exactly the governments, the trailing "and N more" row read "and 56 more boards
+and committees" four lines beneath a sentence already saying "We also track 5
+more board and committee calendars here. 51 more bodies are being added." Same
+set, same number, twice.
+
+It also turned out to be **a bare `<li>` with no link**, which matters for the
+deferred item 4b: the brief keeps that row on the reasoning that removing it
+"makes 55 bodies unreachable from the surface whose job is coverage." It never
+made anything reachable. The reachability concern is real and is now stated as
+the open question it is, rather than answered by an element that only looked
+like an answer.
+
+### Item 8b — the invented budget is retired to nothing
+
+`pnpm perf` ships: one command, no profiler knowledge, launching **the Chrome
+actually installed on the machine**, visibly, so the numbers come from the GPU
+and display stack a reader would have. It writes `docs/perf-baseline.md` with
+time to first meaningful paint, median frame during the fly-in, worst frame,
+dropped-frame count, and whether hardware acceleration was active — read from
+`chrome://gpu`'s own feature status and stated in the FIRST line, because a run
+without acceleration is not a baseline and confusing those two is how the 32 ms
+number survived this long. A dropped frame is judged against the display's own
+median interval rather than an assumed 60 Hz.
+
+**The 32 ms absolute is retired and deliberately replaced with nothing.**
+`measure:fly` still measures and prints every frame number; it stops judging
+them. **The frame budget is UNSET pending the author's baseline** — recorded
+here because the brief asked for it to be recorded here, and because inventing a
+substitute would be the same mistake one number smaller.
+
+### Item 8c — three bullets of four
+
+`context.md` now builds at **22.7 KB against a 40 KB cap with zero truncation**,
+where this session's own first handoff reported "19.4 KB of 20 KB — TRUNCATED:
+tracker-change section: 10 of 10 rows dropped; P0 notes clipped from 130 to 110
+characters."
+
+- **The cap is 40 KB**, per the author's ruling: raise the cap rather than cut
+  rows.
+- **The phases parser learns the paragraph shape.** h restructured §7 into
+  "**Phase A — …**" paragraphs and the parser only knew bullets, so it printed
+  "_No phase standings found in state.md — the section heading moved._" **The
+  heading had not moved.** It was exactly where it had always been; the message
+  asserted a cause nobody had checked, in the file whose only job is orienting a
+  session with no other context. All five phases render now.
+- **A section that cannot be built fails loudly**, naming what actually
+  happened — "heading not found" and "heading found, shape unrecognised" are
+  different failures and now read differently, and both were **proven to fire**
+  before being trusted. The tracker-change section likewise distinguishes "none
+  recovered" from "recovered and then cut to fit", which the last handoff
+  reported as both at once.
+
+**The fourth bullet, R16's session-label date warnings, is NOT done** and stays
+in G10 — with one correction to the brief's premise. The brief says they "warn
+on every run and never resolve." They do resolve: the count has fallen from 64
+to **23 hits of 81 declared**, purely because the calendar passed the dates. So
+the warnings retire themselves while the wrong dates stay in the documents,
+uncorrected and no longer flagged. That is worse than a warning that nags, and
+it is the reason to finish this rather than wait.
+
+### What was NOT started
+
+**Items 5 and 7 were never begun, and items 4 and 8 are part-done.** Each
+remainder is deferred whole with its spec intact:
+
+| row | what |
 |---|---|
-| **4** | the interface consolidation — eight rules, 4a–4h; absorbs M137 and M138 |
-| **5** | Ask discoverability: the pill's label carries the teaching |
-| **6** | Mayor comes out of Who Governs Here, with per-zip reachability reported |
-| **7** | measure the active-state ramp for NH and NJ, and capture sixteen frames |
-| **8** | g5's three unreported deliverables, `pnpm perf`, and `context.md` |
+| **G05** | item 4, rules 4a–4f and 4h — absorbs M137 and M138 |
+| **G07** | item 5, Ask discoverability |
+| **G09** | item 7, the ramp measurement for NH and NJ, and sixteen frames |
+| **G10** | item 8a, and 8c's R16 remainder |
+
+**Item 5 was deliberately not attempted, and the reason is a coupling rather
+than doubt:** it is the designed compensation for rule 4a's discoverability
+cost, and 4a is not built. Shipping the compensation for a regression that does
+not exist yet would be building against a surface that is still hypothetical.
 
 M137 and M138 are marked **Absorbed** in the tracker, per the brief, and their
 notes say where their spec now lives.
-
-The brief's completion order was 1 through 8 and it was explicitly not a cut
-order. The order was followed; the session ended inside it. Under the rule this
-session wrote, that is reported as **three of eight items completed** rather
-than as "the consolidation was deferred."

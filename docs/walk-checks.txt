@@ -115,26 +115,29 @@
 [g3] 85701: zooming out never removes pins
 [g3] an official-source read never says 'Verified: not yet'
 [g3] the large card carries no duplicate 'How to reach them' accordion
-[g4] 03255: only the active state draws district boundaries
-[g4] 03255: the raised state is the state the reader is in
-[g4] 07866: only the active state draws district boundaries
-[g4] 07866: the raised state is the state the reader is in
+[g4] 03255 (hop 1 of 4): only the active state draws district boundaries
+[g4] 03255 (hop 1 of 4): the raised state is the state the reader is in
+[g4] 03255 (hop 4 of 4, returning): only the active state draws district boundaries
+[g4] 03255 (hop 4 of 4, returning): the raised state is the state the reader is in
+[g4] 07866 (hop 3 of 4): only the active state draws district boundaries
+[g4] 07866 (hop 3 of 4): the raised state is the state the reader is in
+[g4] 85701 (hop 2 of 4): only the active state draws district boundaries
+[g4] 85701 (hop 2 of 4): the raised state is the state the reader is in
 [g4] 85701: District types is collapsed inside Filters
 [g4] 85701: Filters renders collapsed
 [g4] 85701: Limit radius and Show districts moved inside Filters
 [g4] 85701: Near me stays outside Filters
-[g4] 85701: only the active state draws district boundaries
 [g4] 85701: opening Filters reveals radius and districts
 [g4] 85701: the camera stays where the reader put it
 [g4] 85701: the meetings panel opens with every group collapsed
-[g4] 85701: the raised state is the state the reader is in
 [g4] the moving-here line reads exactly
-[g5] 03255: the zip draws nothing on the map
-[g5] 07866: the zip draws nothing on the map
+[g5] 03255 (hop 1 of 4): the zip draws nothing on the map
+[g5] 03255 (hop 4 of 4, returning): the zip draws nothing on the map
+[g5] 07866 (hop 3 of 4): the zip draws nothing on the map
+[g5] 85701 (hop 2 of 4): the zip draws nothing on the map
 [g5] 85701: north Tucson renders crisp, not muted, at city zoom
 [g5] 85701: the meetings panel body paints on first render, no pointer
 [g5] 85701: the panel's group counts sum to the stated count
-[g5] 85701: the zip draws nothing on the map
 [g6] 03255 (desktop): the meetings count agrees with itself
 [g6] 03255 (phone): the meetings count agrees with itself
 [g6] 03255: who-governs states one number for one list
@@ -173,6 +176,16 @@
 [g8] 85701: no internal source id on /ballot
 [g8] 85701: no internal source id on the map's server HTML
 [g8] 85701: the map's server HTML carries the current product name, not the old one
+[g9] /feedback serves the form and says what happens to it
+[g9] /feedback: carries no personal email address
+[g9] /transparency discloses the feedback store
+[g9] /transparency: carries no personal email address
+[g9] 03255: Shaheen renders ONE Phone pill
+[g9] 03255: the phone chooser lists every recorded number
+[g9] 85701: dismissing the fan returns every pin
+[g9] 85701: overlapping pins fan out when pressed
+[g9] the map: carries no personal email address
+[g9] the sidebar offers the in-app feedback route
 [h] 03255: the governing count matches the frozen external denominator
 [hotfix-0817] 03255: each carried row's stated timestamp is the one the snapshot records
 [hotfix-0817] 03255: no carried row is claimed to be as fresh as the snapshot

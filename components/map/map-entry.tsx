@@ -19,6 +19,7 @@ import { DataProvider, type ShellData } from "@/lib/state/data";
 import { applyFilters, noticeShouldExpand } from "@/lib/state/derive";
 import { deriveActiveDistrictTypes } from "@/lib/state/district-intent";
 import { RADIUS_LADDER_KM } from "@/lib/meetings/constants";
+import { carryPins } from "@/lib/map/carry-pins";
 import { requestRadiusKm, shouldRequery } from "@/lib/map/viewport-radius";
 import { useStateFocus } from "@/hooks/use-state-focus";
 import { StateCrossingPrompt } from "./state-crossing-prompt";
@@ -385,17 +386,63 @@ function MapEntryInner() {
   // Adjust-during-render, the pattern this file already uses for `seenFilters`
   // and the door/list guards — a ref would be read during render, which React
   // forbids and the lint rule catches.
-  const [held, setHeld] = useState<TaggedResult | null>(null);
-  if (current && current !== held) setHeld(current);
-  const shown = current ?? held;
+  const [held, setHeld] = useState<{
+    result: TaggedResult;
+    /*
+     * The zip the held answer BELONGS to. Carried because the pins below hold
+     * on a narrower rule than the card does, and telling the two cases apart
+     * needs to know whether the area itself changed.
+     */
+    forZip: string | null;
+  } | null>(null);
+  if (current && held?.result !== current) {
+    setHeld({ result: current, forZip: location?.zip ?? null });
+  }
+  const shown = current ?? held?.result ?? null;
   const refreshing = current === null && shown !== null;
+
+  /*
+   * R47 (2026-08-18) — THE PINS GET THE SAME CARRY-FORWARD THE CARD GOT.
+   *
+   * 6f above fixed this gap for the who-governs card and stopped there, so
+   * `meetings` still read `current` and emptied to `[]` for the whole gap
+   * between a settle and its answer. Every pin left the map for the duration.
+   *
+   * MEASURED before it was touched, because a single-sample walk check could
+   * not tell a wipe from a slow refill and reported this 1 of 2 runs, which
+   * read as a race. It is not a race. Sampling the pin count every 100 ms
+   * through a zoom-out at 85701 (`pnpm probe:r47`, 4 of 4 runs against
+   * production): the pool drops to ZERO for 200–500 ms on EVERY zoom-out that
+   * re-queries, while an `/api/meetings` request is in flight and while the
+   * card beside it already carries `data-refreshing`. What was intermittent
+   * was the instrument, never the defect — one sample per zoom lands inside a
+   * 300 ms window only sometimes.
+   *
+   * So the map holds its last answer through the gap, which is CLAUDE.md's
+   * own refresh corollary — "a failed fetch never silently empties a
+   * previously-full surface" — applied one layer up, and its render-default
+   * rule too: an empty map during a refresh is absence rendered as a finding.
+   * Nothing new is claimed; these are the pins that were already on screen.
+   *
+   * THE SCOPE IS THE POINT, and it is narrower than the card's. `held` alone
+   * would carry pins across a ZIP CHANGE, and holding one area's entities
+   * while another area loads is the stale-data bug this file names at
+   * `search()` — Tucson's pins under a New Hampshire zip. So the pins hold
+   * only while the held answer belongs to the zip still being shown; a new
+   * zip drops them on the same render it always did.
+   */
+  const pinned = carryPins({
+    current,
+    held,
+    locationZip: location?.zip ?? null,
+  });
 
   // Everything downstream reads this one filtered list.
   const meetings = useMemo<Meeting[]>(
     () =>
-      current
+      pinned
         ? applyFilters({
-            meetings: current.meetings,
+            meetings: pinned.meetings,
             ui,
             // Only constrain by radius once the reader has actually moved the
             // slider. Before that the cascade's own radius is the answer, and
@@ -405,7 +452,7 @@ function MapEntryInner() {
             center: ui.radiusOverridden ? (ui.nearMe ?? view) : null,
           })
         : [],
-    [current, ui, view],
+    [pinned, ui, view],
   );
 
   const venues = useMemo<Venue[]>(() => groupByVenue(meetings), [meetings]);

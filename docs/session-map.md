@@ -325,3 +325,27 @@ the same order.
 `package.json` would silence the warning on every test file, but it is a
 package-wide change to module resolution and wants deliberate evaluation,
 not a reflex edit. Both rows say what to check before touching them.
+
+
+**Updated after g14 (2026-08-18):** Items 0 and 1 whole, item 2 at 1 row of
+10. **R45** and **R46** both close — the action pins land on **v7, not the v5
+the row named**, because setup-node v5 auto-caches on a `packageManager`
+field and pnpm is not on the runner until `corepack enable` runs after it;
+and `"type": "module"` goes in after an enumeration that found the repo has
+**no `.js` or `.cjs` files at all** (112 warnings per test run → 0).
+**R47** closes, and the row's own reading was overturned: the pin wipe was
+**4 of 4 runs**, not 1 of 2 — a deterministic 200–500 ms gap while the
+re-query is in flight, seen only sometimes because the walk sampled once per
+zoom. The pins now carry the last answer through the gap, scoped so they
+never carry across a zip change. **M139** closes whole: the half-load was one
+missing effect dependency (`ensureDistricts` reads the active state through a
+**ref**, so nothing re-ran the pass when the state resolved — and
+`exhaustive-deps` cannot see a ref); the zip pill's square-inside-a-round is
+fixed on both halves; the districts door is two sections with a count each,
+**without** the row's "Districts in this zip" wording, which a ZCTA cannot
+support; and the load budget is measured on production with a cold cache, all
+four surfaces PASS. **R43 and R44 are named here for the first time** — both
+opened and closed by g13, never reported under their row ids: the tripwire's
+refused purge and the carry-forward archive clip. Neither is outstanding.
+**Nine rows carry to the next brief in the same order** — M135, M07, B15,
+G10/8a, P01, P03, D25, D29, D06 — deferred whole, each with its spec intact.

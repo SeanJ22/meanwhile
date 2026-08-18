@@ -787,6 +787,8 @@ for (const { zip } of FOUR) {
    */
   const zooms: number[] = [];
   const counts: number[] = [];
+  /** R47: the lowest pin count held at any instant during each settle. */
+  const floors: number[] = [];
   for (let step = 0; step < 3; step++) {
     const state = await page.evaluate(() => {
       const w = window as unknown as {
@@ -804,7 +806,35 @@ for (const { zip } of FOUR) {
       await page.evaluate(() =>
         (window as unknown as { __wtpZoomOut?: (by?: number) => void }).__wtpZoomOut?.(2),
       );
-      await page.waitForTimeout(4000);
+      /*
+       * R47 (g14) — SAMPLED THROUGH THE SETTLE, not once at the end of it.
+       *
+       * This wait used to be a blind `waitForTimeout`. That is what made the
+       * pin wipe look like a race: the map emptied for 200–500 ms while its
+       * next answer was in flight, and a single sample after a fixed wait
+       * landed inside that window on some runs and not others. The suite
+       * reported the same build red and then green minutes apart, and the
+       * row it opened called it intermittent. It was not — the DEFECT was
+       * deterministic and the INSTRUMENT was intermittent.
+       *
+       * So the wait is now forty samples instead of one, and the floor it
+       * records is the lowest pin count the map held at any instant between
+       * this zoom and the next. That is what makes a single green run
+       * sufficient for this class: the check no longer has to be lucky about
+       * when it looks, because it looks the whole time. `pnpm probe:r47`
+       * carries the same instrument at higher resolution for diagnosis.
+       */
+      let floor = Number.POSITIVE_INFINITY;
+      const until = Date.now() + 4000;
+      while (Date.now() < until) {
+        const pins = await page.evaluate(() => {
+          const w = window as unknown as { __wtpPinCount?: () => number };
+          return typeof w.__wtpPinCount === "function" ? w.__wtpPinCount() : -1;
+        });
+        if (pins >= 0 && pins < floor) floor = pins;
+        await page.waitForTimeout(100);
+      }
+      floors.push(Number.isFinite(floor) ? floor : -1);
     }
   }
 
@@ -855,6 +885,33 @@ for (const { zip } of FOUR) {
       counts[1] >= counts[0] && counts[2] >= counts[1],
       `pins ${counts.join(" → ")} across zooms ${zooms.map((z) => z.toFixed(1)).join(" → ")}`,
     );
+
+    /*
+     * R47 (g14) — and never empties on the way there either.
+     *
+     * g3's check above compares the SETTLED counts at each zoom tier, so a
+     * map that drops every pin and puts them all back between two samples
+     * passes it while a reader watching sees the map blank. This asserts the
+     * floor instead: the lowest count held at ANY instant across the settle,
+     * at every zoom tier the walk reaches.
+     *
+     * A zero floor is the defect whether the pins come back or not. That is
+     * CLAUDE.md's refresh corollary applied to the render — a retrieval in
+     * flight may not be shown as an absence — and it is why this is its own
+     * check rather than a tightening of g3's: they are two different claims,
+     * and folding them together would let one hide behind the other.
+     */
+    if (floors.some((f) => f < 0)) {
+      cannotRun("g14", `${zip}: pin floor`, "the map exposes no pin-count probe mid-settle");
+    } else {
+      check(
+        "g14",
+        `${zip}: the map never empties while a wider view loads`,
+        floors.every((f) => f > 0),
+        `floor ${floors.join(" → ")} across the settles (40 samples each, 100ms apart) — ` +
+          "sampled throughout rather than once, so a single green run is sufficient here",
+      );
+    }
   }
 
   await page.context().close();

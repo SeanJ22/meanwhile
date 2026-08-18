@@ -1672,6 +1672,19 @@ label:has(> input[type="checkbox"]) {
   white-space: nowrap;
 }
 
+/* M139 (2026-08-18) — the two halves carry the pill's own curve.
+
+   The zip half reads as "a SQUARE outline inside a rounded pill" because it
+   had square corners and a CONTRASTING border (1px solid var(--signal))
+   against a rounded parent. `.ballot-pill` has overflow: hidden, so the
+   corners were being cut off mid-line rather than following the curve — the
+   border ran straight to the clip and stopped.
+
+   `.ballot-pill-main` had the same square corners all along and nobody saw
+   it, because its border colour and its background are both var(--action):
+   there was no line to see being cut. Giving both halves the matching radius
+   fixes the visible defect and the invisible one in the same rule, which is
+   the point — the next colour change to the left half would have exposed it. */
 .ballot-pill-main {
   display: inline-flex;
   align-items: center;
@@ -1684,6 +1697,7 @@ label:has(> input[type="checkbox"]) {
   letter-spacing: -0.01em;
   border: 1px solid var(--action);
   border-right: none;
+  border-radius: 999px 0 0 999px;
 }
 
 .ballot-pill-main:hover {
@@ -1711,6 +1725,9 @@ label:has(> input[type="checkbox"]) {
   font-weight: 600;
   letter-spacing: 0.04em;
   cursor: pointer;
+  /* The right half of the pill, so its outline follows the pill's edge
+     instead of being clipped square against it (M139). */
+  border-radius: 0 999px 999px 0;
   /* 44px thumb target at phone width — the padding above already clears it,
      stated here so a later type change cannot quietly shrink it. */
   min-height: 44px;

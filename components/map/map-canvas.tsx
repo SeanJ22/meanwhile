@@ -917,9 +917,34 @@ export function MapCanvas({
    * loaded, `map.loaded()` is never true, and `idle` never fires. Gating here
    * on either one hung forever, leaving the toggle enabled and the map empty.
    */
+  /*
+   * M139 (2026-08-18) — `focusStateOcdId` is in these deps, and leaving it out
+   * was the half-load.
+   *
+   * `ensureDistricts` reads the active state off `focusAbbrRef`, a REF, and a
+   * ref changing re-runs nothing. So when this pass ran before the state had
+   * resolved, `abbr` was null, `wanted` was emptied, every district layer came
+   * off — and nothing ever called it again, because neither `districtTypes`
+   * nor `ensureDistricts` changes when a state activates. The layers stayed
+   * off for the life of the page.
+   *
+   * On a cold arrival it usually recovered by luck: `ensureDistricts` is also
+   * subscribed to `styledata`, which tends to fire after the state has
+   * activated. Coming BACK from the ballot page the style is already parsed,
+   * so that second chance fires early or not at all — which is why the report
+   * on this row was "returning from the ballot page, the sidebar renders
+   * half" and why it was intermittent. Measured at 03255 before the fix
+   * (`pnpm probe:m139`, sampling every 100 ms): the districts tile read 0 for
+   * the whole ten-second window on 1 of 3 returns, recovered after ~2s on
+   * another, and was fine on the third.
+   *
+   * Naming the state here is the fix: the pass re-runs when the state
+   * resolves, and the ref-sync effect above is declared earlier so it has
+   * already landed by the time this runs.
+   */
   useEffect(() => {
     ensureDistricts();
-  }, [districtTypes, ensureDistricts]);
+  }, [districtTypes, ensureDistricts, focusStateOcdId]);
 
   // Selection is feature-state, never a source mutation.
   useEffect(() => {

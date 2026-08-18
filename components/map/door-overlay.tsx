@@ -82,13 +82,15 @@ export function DoorOverlay({
   // across the whole viewport, so at 85701 it holds Marana and Oro Valley —
   // districts the reader is emphatically not in. The other two doors ARE
   // "here": they come from the coverage summary for the reader's point.
+  // M139: the districts door is headed plainly, because its two sections now
+  // carry the specific claims ("Districts you're in", "Districts in view").
+  // Naming one of them up here too printed the same heading twice on the same
+  // panel, which reads as a rendering fault rather than as structure.
   const title =
     door === "bodies"
       ? "Bodies here"
       : door === "districts"
-        ? atAddress
-          ? "Districts you're in"
-          : "Districts in view"
+        ? "Districts"
         : "Officials here";
 
   return (
@@ -240,62 +242,137 @@ function DistrictsDoor({
     tier: "local" | "state" | "national",
   ) => void;
 }) {
-  // The governing mode. A resolved street address makes "the districts you
-  // are in" a sayable fact, and it is the one the reader came for. It does
-  // NOT depend on the overlay: whether boundaries are drawn is a display
-  // choice, while containment is geometry.
-  if (atAddress && coverage) {
-    const rows = governingDoorRows(coverage, (ocdId) =>
-      representationForDivision(coverage, ocdId),
-    );
-    return (
-      <>
-        <p className="mt-3 text-[0.8125rem] text-muted">
-          Every district your address sits inside. The map may be showing more
-          than these — those are the ones near you, not the ones you&apos;re in.
-        </p>
-        <DistrictRows rows={rows} onOpenOfficial={onOpenOfficial} />
-        {!districtOverlayOn && (
-          <button
-            type="button"
-            onClick={onShowDistricts}
-            className="mt-3 cursor-pointer rounded border border-[var(--panel-border)] px-3 py-1.5 text-[0.8125rem] text-paper hover:border-paper"
-          >
-            Show district boundaries
-          </button>
-        )}
-      </>
-    );
-  }
+  /*
+   * M139 sub-item 3 (2026-08-18) — TWO SECTIONS, ALWAYS BOTH, NEVER CONFLATED.
+   *
+   * This door used to be either/or: at a resolved address it showed the
+   * governing set and nothing else, and everywhere else it showed the drawn
+   * set and nothing else. So the reader at an address could not see what the
+   * map was drawing, and the reader at a zip was never told that the question
+   * they actually have — which districts am I IN — has an answer they can
+   * reach. Two different lists were also wearing one heading depending on
+   * where you stood, which is the conflation the row names.
+   *
+   * They are different claims and they now render as two, each with its own
+   * COUNT beside its own heading:
+   *
+   *   "Districts you're in" — divisions whose boundary CONTAINS the reader's
+   *   resolved point. Geometry, not display: it does not depend on whether
+   *   boundaries are drawn.
+   *
+   *   "Districts in view"  — what the map is drawing across the whole
+   *   viewport. At 85701 that includes Marana and Oro Valley, which the
+   *   reader is emphatically not in.
+   *
+   * THE ROW'S OWN WORDING WAS "Districts in this zip" AND THAT IS THE ONE
+   * THING NOT BUILT, deliberately. `deriveStatsView` already settles it and
+   * CLAUDE.md's entry rule settles it above that: a ZCTA crosses city, county
+   * and school lines, so a zip centroid can sit in a different town than the
+   * reader and a heading claiming otherwise would be the exact overclaim the
+   * product forbids. Without an address the first section renders its honest
+   * gap instead of a list — a fact about what we cannot know from a zip,
+   * named as ours.
+   */
+  const governingRows =
+    atAddress && coverage
+      ? governingDoorRows(coverage, (ocdId) =>
+          representationForDivision(coverage, ocdId),
+        )
+      : null;
 
-  if (!districtOverlayOn) {
-    // M57: the switch is here, not somewhere the reader has to go find.
-    return (
-      <div className="mt-3">
-        <p className="text-[0.8125rem] text-muted">
-          District boundaries are switched off, so none are drawn and there
-          is nothing to count.
-        </p>
-        <button
-          type="button"
-          onClick={onShowDistricts}
-          className="mt-2 cursor-pointer rounded border border-[var(--panel-border)] px-3 py-1.5 text-[0.8125rem] text-paper hover:border-paper"
-        >
-          Show district boundaries
-        </button>
+  const drawnRows =
+    districtOverlayOn && drawnDistricts.length > 0
+      ? districtDoorRows(drawnDistricts, coverage?.seats ?? [])
+      : null;
+
+  return (
+    <>
+      <DoorSection
+        heading="Districts you're in"
+        count={governingRows?.length ?? null}
+      >
+        {governingRows ? (
+          <>
+            <p className="mt-2 text-[0.8125rem] text-muted">
+              Every district your address sits inside.
+            </p>
+            <DistrictRows rows={governingRows} onOpenOfficial={onOpenOfficial} />
+          </>
+        ) : (
+          // The named gap, in the gap's own register: a fact about the limits
+          // of a zip, not a claim that the reader is in nothing.
+          <p className="mt-2 text-[0.8125rem] text-muted">
+            A zip code crosses city, county and school district lines, so it
+            can&apos;t say which districts you&apos;re in. Adding your street
+            address answers this section.
+          </p>
+        )}
+      </DoorSection>
+
+      {/* The dividing line the row asks for: two sections, visibly two. */}
+      <div className="mt-4 border-t border-[var(--panel-border)]" />
+
+      <DoorSection heading="Districts in view" count={drawnRows?.length ?? null}>
+        {drawnRows ? (
+          // 3g: EXACTLY one row per drawn district — the count stated above.
+          <DistrictRows rows={drawnRows} onOpenOfficial={onOpenOfficial} />
+        ) : !districtOverlayOn ? (
+          // M57: the switch is here, not somewhere the reader has to go find.
+          <div className="mt-2">
+            <p className="text-[0.8125rem] text-muted">
+              District boundaries are switched off, so none are drawn and there
+              is nothing to count.
+            </p>
+            <button
+              type="button"
+              onClick={onShowDistricts}
+              className="mt-2 cursor-pointer rounded border border-[var(--panel-border)] px-3 py-1.5 text-[0.8125rem] text-paper hover:border-paper"
+            >
+              Show district boundaries
+            </button>
+          </div>
+        ) : (
+          <p className="mt-2 text-[0.8125rem] text-muted">
+            No district boundaries are drawn in this view yet.
+          </p>
+        )}
+      </DoorSection>
+    </>
+  );
+}
+
+/**
+ * One section of the districts door: a heading, its own count, its own body.
+ *
+ * The count sits WITH the heading it belongs to and nowhere else. A single
+ * number floating above two lists is how "179 districts" came to read as a
+ * claim about the reader's government while the list underneath meant
+ * something else entirely — the defect `deriveStatsView` was rewritten for.
+ * A null count renders no number at all rather than a zero: "we can't tell
+ * you from a zip" and "the answer is none" are different sentences.
+ */
+function DoorSection({
+  heading,
+  count,
+  children,
+}: {
+  heading: string;
+  count: number | null;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="mt-3">
+      <div className="flex items-baseline gap-2">
+        <h3 className="font-mono text-[0.625rem] uppercase tracking-[0.16em] text-paper-dim">
+          {heading}
+        </h3>
+        {count !== null && (
+          <span className="font-mono text-[0.625rem] text-muted">{count}</span>
+        )}
       </div>
-    );
-  }
-  if (drawnDistricts.length === 0) {
-    return (
-      <p className="mt-3 text-[0.8125rem] text-muted">
-        No district boundaries are drawn in this view yet.
-      </p>
-    );
-  }
-  // 3g: EXACTLY one row per drawn district — the count the card stated.
-  const rows = districtDoorRows(drawnDistricts, coverage?.seats ?? []);
-  return <DistrictRows rows={rows} onOpenOfficial={onOpenOfficial} />;
+      {children}
+    </section>
+  );
 }
 
 /** One row per district, shared by both modes so they cannot drift apart. */

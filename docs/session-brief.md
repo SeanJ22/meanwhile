@@ -1,7 +1,7 @@
-# Session brief — g14 (written by g13, 2026-08-18)
+# Session brief — g15 (written by g14, 2026-08-18)
 
-The queue is the same eleven rows minus one, with two new P0-class rows in
-front of them. Resolution, no drift.
+Nine rows, in order. No P0 in front of them for the first time in four
+sessions.
 
 This session runs unattended. Nobody is available to answer.
 
@@ -21,61 +21,39 @@ classifier, refusal when it is unreachable. 4c's desktop default stands as g12
 shipped it. `pnpm perf` is deferred to the author's walkthrough day by his
 ruling; the budget stays unset and nothing here invents one.
 
-## 0 — R47, the intermittent pin wipe (P0)
+## What g14 leaves you
 
-**Read this before running the walk, or you will close it wrongly.** The walk
-is currently GREEN on this check. It was red an hour earlier, on the same
-build, for the same zip.
+The pre-H queue is NOT empty: nine of item 2's ten rows are untouched. R45,
+R46, R47 and M139 are closed. There is no open P0.
 
-At 85701 the first run reported `pins 11 → 12 → 0 across zooms 11.0 → 9.0 →
-7.0`. The second reported `11 → 12 → 12`. **Reproduced 1 of 2 runs.** A total
-pin wipe that happens sometimes is a race, and a race is worse for a reader
-than a deterministic bug: it cannot be reproduced on demand, so it arrives as
-"the map lost everything" with nothing to show. It still undoes the g3 win
-behind CLAUDE.md's "More viewport must never mean fewer pins."
+**Two instruments are new and both are worth reusing before writing another
+one.** `pnpm probe:r47` samples the map's pin count every 100 ms through a
+zoom-out while watching in-flight requests; `pnpm probe:m139` samples the four
+stat tiles every 100 ms through a cold arrival and a return from `/ballot`.
+The shape they exist to catch is the one that burned three sessions: **a
+surface that is empty for a few hundred milliseconds reads as "sometimes
+broken" to anything that looks once.** If a row says "sometimes", sample
+continuously before believing any single result — in either direction.
 
-**Two things are already settled — do not re-derive them.**
+**And read the three instrument corrections in `state.md` §g14 before trusting
+a new probe.** Each one produced a confident false report: a probe that closed
+the card it came to measure (rule 4c), a probe that started sampling after the
+event had finished, and a screenshot pass that shot dark twice while claiming
+both themes.
 
-1. **The server is innocent.** `/api/meetings` at 85701's centre returns 89
-   meetings at `radiusKm=25`, 97 at 60, 97 at 150 and 97 at 400 (clamped to
-   150 and saying so in its own `radiusKm`). Monotonic at every rung. The data
-   is on the wire; the pins are not on screen.
-2. **The shape is timing, not geometry.** A dropped clip-path or a culling
-   bound would fail every run. That demotes the mask theory and promotes the
-   settle re-query: the check zooms and waits a fixed 1600 ms, so a slow
-   `/api/meetings` at the widest rung could leave the pin pool emptied and not
-   yet refilled when the probe reads it.
-
-If the pool is CLEARED before its replacement arrives, a reader zooming out
-sees the same flash of nothing — still a real defect, and a different fix from
-a dropped mask. Instrument before ruling: log the pool size AND the in-flight
-request state at z7, not the pin count alone. **The walk check as written
-cannot tell a slow refill from a wipe, so a green run is not an answer.**
-
-## 1 — R48, the scheduled-job push race (P2, small, fix it early)
-
-`intake-tripwire.yml` and `refresh-meetings-snapshot.yml` both `git push origin
-main` with no pull, rebase or retry. When they run close together the second is
-rejected `fetch first` and the job goes red having done all its work correctly.
-Fix BOTH in one edit — fixing one only moves which job loses.
-
-The failure mode the fix must not create: a rebase that silently drops the
-commit turns a red run into a green one that changed nothing, which is the
-empty success `CLAUDE.md` forbids. Verify the push landed and stay red if it
-did not.
-
-## 2 — The ten finish-now rows, in this order
+## 1 — The nine finish-now rows, in this order
 
 Each carries its spec and remainder in `docs/tracker.csv`; read the row before
-building. M136 is DONE and is no longer in this list.
+building. M139 is DONE and is no longer in this list.
 
-* **M139** — the half-load, the zip control's geometry, the districts panel's
-  two sections, the load budget. Diagnose the half-load before fixing; the
-  row's suspects are recorded.
 * **M135** — the every-row-opens-a-card audit across every list surface. Walk
-  each surface; state found and converted per surface.
+  each surface; state found and converted per surface. NOTE: the districts
+  door changed shape in g14 — it is now two sections, so the audit covers both
+  of them, not one list.
 * **M07** — returning user: zip remembered, reader confirms or re-enters on
-  return, district NEVER assumed.
+  return, district NEVER assumed. The third clause is the one that matters;
+  the first is already shipped via `hooks/use-stored-zip.ts`, and the second
+  is the actual build.
 * **B15** — the laws half of key votes. congress.gov API by official title,
   bill number from the record, then its roll calls. Never a bill number from
   memory. 0 of 20 → as many as verify; misses render the recorded gap.
@@ -93,13 +71,15 @@ building. M136 is DONE and is no longer in this list.
   the ladder; record rungs per body.
 * **D29** — Tucson's 56 boards: wire the remaining KNOWN_UNCOVERED where a
   schedule format exists; D18's "online" rendering gives virtual-only bodies a
-  surface. State N wired of M total.
+  surface. State N wired of M total. `pnpm meetings:report` currently reports
+  85701 as **60 bodies governing, 52 without a wired source** — that is the
+  denominator, read on 2026-08-18.
 * **D06** — the funding tracker, under the UNCHANGED structural FEC rule:
   reader-facing display is the protected accountability use; contributor-level
   data never enters any aggregation path that produces anything sold. Build on
   the already-aggregated endpoints per the row; the FEC key may be wired.
 
-## 3 — M136's stated gap, if the queue reaches it
+## 2 — M136's stated gap, if the queue reaches it
 
 `lib/officials/body-blurbs.ts` holds sourced role blurbs for Arizona's county
 and school-district classes plus Tucson's charter. **New Hampshire has none** —
@@ -120,9 +100,9 @@ diff or explicit "nothing new". Overwrite `docs/session-brief.md`. `pnpm
 handoff --ship` with the R22 gate; verify the deploy LANDS via `/api/build` and
 state the SHA.
 
-Completion against the denominator: items 0–2, N of 3 whole, and within item 2,
-rows completed of ten. "Needs your hands." followed IMMEDIATELY by the numbered
-list, or "Nothing — the queue continues."
+Completion against the denominator: item 1, rows completed of nine. "Needs your
+hands." followed IMMEDIATELY by the numbered list, or "Nothing — the queue
+continues."
 
 **Report format, as law.** Author-ruled-expected items appear in the
 stamp-audit line ONLY and never under "Needs your hands", not even with a

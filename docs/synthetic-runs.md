@@ -211,3 +211,71 @@ reason given above: that needs a production write nobody has sanctioned.
 This is the third time in this session that a change which looked right did
 nothing until it was measured. The lesson is not new and it is the repo's own:
 verify the result, never the absence of an error.
+
+---
+
+## 2026-08-18, g15 — organic is 60, not 7, and this session wrote some of them
+
+**The brief for this session instructed that any census it reports "states
+organic 7 with one clause: all seven author-acknowledged test rows, standing per
+his ruling." Production says 60.** That instruction was written against the
+number as it stood; it is no longer the number, and reporting 7 because a brief
+said 7 would be the exact defect this session spent its day fixing elsewhere.
+
+`corepack pnpm census:runs --target=production`, run at the close of g15:
+
+```
+search_log: organic 60 · synthetic 2206 · unknown 2845 · author 17 · TOTAL 5128
+RECONCILES 5128 accounted of 5128 rows
+```
+
+### Every organic row, by window
+
+All 60 fall on **2026-08-18**. Times below are `America/Phoenix`, which is what
+`pnpm stamp` uses; the earlier record above quotes the same rows in UTC.
+
+| Window | Rows | What they are |
+|---|---|---|
+| 11:13:00 – 11:37:52 | **7** | The author-acknowledged set. All `QUESTION_ASKED`, all `run_id` null. **Standing per his ruling — not touched, not backmarked, not re-raised.** |
+| 11:50:44 – 11:56:11 | **9** | `SEARCH` (85701, 85757, 03255, 85701, 85701), `DISTRICT_SELECTED` ×3, `QUESTION_ASKED`. **Before this session opened** (g15's first tool call was ~13:19). Not this session's, and not attributable from here — `run_id` is null. |
+| 13:39:41 – 14:31:22 | **44** | Inside this session's wall clock. See below. |
+
+### The 44, stated as honestly as the data allows
+
+**They cannot be attributed row-by-row, because `run_id` is null on every one of
+them — that is the whole shape of R50.** What can be said:
+
+* They fall entirely inside g15's working window.
+* Their event types are all CLIENT-side (`SEARCH`, `DISTRICT_SELECTED`,
+  `OFFICIAL_OPENED`, `BODY_OPENED`, `FILTER_APPLIED`, `QUESTION_ASKED`) — they
+  come from a browser driving the app, not from a plain `fetch`. Every plain
+  fetch this session made carried `x-wtp-synthetic-run` and landed SYNTHETIC;
+  the M135 audit's four GETs are in the census under
+  `m135-search-audit@…` exactly as intended.
+* **Two of the zips are near-conclusive.** 14:08:49 logs `SEARCH 88045` and
+  14:08:52 logs `SEARCH 79247`. Those are Lordsburg, New Mexico and the Amarillo,
+  Texas area — which are *named exterior sample points in
+  `scripts/measure-focus.mts`*. Nothing but that instrument would pan the map
+  there. g15 ran `pnpm measure:focus` four times (one baseline, one after the
+  chroma fix, one planted-margin run, one control).
+* The remaining rows are consistent with the same runs: `measure:focus` loads
+  the app at 85701 and 03255 in both themes at three zooms, which is exactly the
+  shape of the `SEARCH`/`DISTRICT_SELECTED` traffic in that window.
+
+**Why they landed ORGANIC despite the run marker: R50.** `measure-focus.mts`
+sets `extraHTTPHeaders: RUN_HEADERS` on the Playwright context, and that works
+for ordinary requests — but the client's `logEvent` goes out over `sendBeacon`,
+which does not carry those headers. The override that fixes it
+(`Object.defineProperty(navigator, "sendBeacon", { value: undefined })`) was
+added to the ten walk contexts and **was never added to `measure-focus.mts`**.
+`tests/run-marker-coverage.test.ts` guards "every live browser script", so the
+gap is worth checking there too.
+
+**Nothing was backmarked and nothing was deleted.** R50's disposition is PENDING
+the author by the standing rulings, and a backmark is a production write nobody
+has sanctioned. This entry is the record until he rules.
+
+**What it costs if nobody acts:** organic is the only countable class in the
+store the business sells from, and it went 7 → 60 in a day, of which a
+substantial share is our own instrument. A denominator that includes the
+measuring apparatus is not a reader signal.

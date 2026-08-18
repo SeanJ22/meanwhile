@@ -1,9 +1,9 @@
 {
  "formatVersion": 1,
- "generatedAt": "2026-08-18T00:19:32.413Z",
+ "generatedAt": "2026-08-18T01:52:38.742Z",
  "counts": {
-  "fresh": 227,
-  "carried": 0,
+  "fresh": 203,
+  "carried": 24,
   "total": 227
  },
  "sources": [
@@ -129,13 +129,18 @@
    "ok": true,
    "error": null,
    "fetched": 5,
-   "normalized": 27,
+   "normalized": 3,
    "drops": {
     "placeless": 0,
     "unknownVenue": 0,
     "unplaceableInTime": 0,
-    "notConfigured": 3
-   }
+    "notConfigured": 4
+   },
+   "unreachableOcdIds": [
+    "ocd-division/country:us/state:nh/school_district:kearsarge_regional_school_district",
+    "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town"
+   ],
+   "carriedForward": 24
   }
  ],
  "meetings": [
@@ -158,7 +163,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1803&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T00:19:23.026Z",
+    "collectedAt": "2026-08-18T01:52:30.223Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -192,7 +197,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1804&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T00:19:23.026Z",
+    "collectedAt": "2026-08-18T01:52:30.223Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -253,7 +258,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1816&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T00:19:23.026Z",
+    "collectedAt": "2026-08-18T01:52:30.223Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -368,7 +373,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1817&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T00:19:23.026Z",
+    "collectedAt": "2026-08-18T01:52:30.223Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -492,7 +497,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1820&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T00:19:23.026Z",
+    "collectedAt": "2026-08-18T01:52:30.223Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -526,7 +531,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1821&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T00:19:23.026Z",
+    "collectedAt": "2026-08-18T01:52:30.223Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -596,7 +601,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1822&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T00:19:23.026Z",
+    "collectedAt": "2026-08-18T01:52:30.223Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -657,7 +662,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1823&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T00:19:23.026Z",
+    "collectedAt": "2026-08-18T01:52:30.223Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -691,7 +696,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1824&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T00:19:23.026Z",
+    "collectedAt": "2026-08-18T01:52:30.223Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -751,7 +756,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1851&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T00:19:23.026Z",
+    "collectedAt": "2026-08-18T01:52:30.223Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -785,7 +790,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1854&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T00:19:23.026Z",
+    "collectedAt": "2026-08-18T01:52:30.223Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -818,7 +823,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1855&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T00:19:23.026Z",
+    "collectedAt": "2026-08-18T01:52:30.223Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -852,7 +857,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1858&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T00:19:23.026Z",
+    "collectedAt": "2026-08-18T01:52:30.223Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -885,7 +890,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1864&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T00:19:23.026Z",
+    "collectedAt": "2026-08-18T01:52:30.223Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -919,7 +924,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1869&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T00:19:23.026Z",
+    "collectedAt": "2026-08-18T01:52:30.223Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -953,7 +958,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T00:19:23.001Z",
+    "collectedAt": "2026-08-18T01:52:30.244Z",
     "verifiedAt": null
    }
   },
@@ -976,7 +981,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T00:19:23.001Z",
+    "collectedAt": "2026-08-18T01:52:30.244Z",
     "verifiedAt": null
    }
   },
@@ -999,7 +1004,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T00:19:23.001Z",
+    "collectedAt": "2026-08-18T01:52:30.244Z",
     "verifiedAt": null
    }
   },
@@ -1022,7 +1027,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T00:19:23.001Z",
+    "collectedAt": "2026-08-18T01:52:30.244Z",
     "verifiedAt": null
    }
   },
@@ -1045,7 +1050,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T00:19:23.001Z",
+    "collectedAt": "2026-08-18T01:52:30.244Z",
     "verifiedAt": null
    }
   },
@@ -1068,7 +1073,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T00:19:23.001Z",
+    "collectedAt": "2026-08-18T01:52:30.244Z",
     "verifiedAt": null
    }
   },
@@ -1091,7 +1096,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T00:19:23.001Z",
+    "collectedAt": "2026-08-18T01:52:30.244Z",
     "verifiedAt": null
    }
   },
@@ -1114,7 +1119,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T00:19:23.001Z",
+    "collectedAt": "2026-08-18T01:52:30.244Z",
     "verifiedAt": null
    }
   },
@@ -1137,7 +1142,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T00:19:23.001Z",
+    "collectedAt": "2026-08-18T01:52:30.244Z",
     "verifiedAt": null
    }
   },
@@ -1161,7 +1166,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T00:19:23.001Z",
+    "collectedAt": "2026-08-18T01:52:30.244Z",
     "verifiedAt": null
    }
   },
@@ -1185,7 +1190,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T00:19:23.001Z",
+    "collectedAt": "2026-08-18T01:52:30.244Z",
     "verifiedAt": null
    }
   },
@@ -1209,7 +1214,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T00:19:23.001Z",
+    "collectedAt": "2026-08-18T01:52:30.244Z",
     "verifiedAt": null
    }
   },
@@ -1233,7 +1238,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T00:19:23.001Z",
+    "collectedAt": "2026-08-18T01:52:30.244Z",
     "verifiedAt": null
    }
   },
@@ -1257,7 +1262,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T00:19:23.001Z",
+    "collectedAt": "2026-08-18T01:52:30.244Z",
     "verifiedAt": null
    }
   },
@@ -1281,7 +1286,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T00:19:23.001Z",
+    "collectedAt": "2026-08-18T01:52:30.244Z",
     "verifiedAt": null
    }
   },
@@ -1305,7 +1310,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T00:19:23.001Z",
+    "collectedAt": "2026-08-18T01:52:30.244Z",
     "verifiedAt": null
    }
   },
@@ -1329,7 +1334,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T00:19:23.001Z",
+    "collectedAt": "2026-08-18T01:52:30.244Z",
     "verifiedAt": null
    }
   },
@@ -1353,7 +1358,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T00:19:23.001Z",
+    "collectedAt": "2026-08-18T01:52:30.244Z",
     "verifiedAt": null
    }
   },
@@ -1377,7 +1382,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T00:19:23.001Z",
+    "collectedAt": "2026-08-18T01:52:30.244Z",
     "verifiedAt": null
    }
   },
@@ -1401,7 +1406,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T00:19:23.001Z",
+    "collectedAt": "2026-08-18T01:52:30.244Z",
     "verifiedAt": null
    }
   },
@@ -1425,7 +1430,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T00:19:23.001Z",
+    "collectedAt": "2026-08-18T01:52:30.244Z",
     "verifiedAt": null
    }
   },
@@ -1449,7 +1454,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T00:19:23.001Z",
+    "collectedAt": "2026-08-18T01:52:30.244Z",
     "verifiedAt": null
    }
   },
@@ -1472,7 +1477,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T00:19:23.490Z",
+    "collectedAt": "2026-08-18T01:52:30.613Z",
     "verifiedAt": null
    }
   },
@@ -1495,7 +1500,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T00:19:23.490Z",
+    "collectedAt": "2026-08-18T01:52:30.613Z",
     "verifiedAt": null
    }
   },
@@ -1518,7 +1523,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T00:19:23.490Z",
+    "collectedAt": "2026-08-18T01:52:30.613Z",
     "verifiedAt": null
    }
   },
@@ -1541,7 +1546,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T00:19:23.490Z",
+    "collectedAt": "2026-08-18T01:52:30.613Z",
     "verifiedAt": null
    }
   },
@@ -1564,7 +1569,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T00:19:23.490Z",
+    "collectedAt": "2026-08-18T01:52:30.613Z",
     "verifiedAt": null
    }
   },
@@ -1588,7 +1593,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T00:19:23.490Z",
+    "collectedAt": "2026-08-18T01:52:30.613Z",
     "verifiedAt": null
    }
   },
@@ -1612,7 +1617,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T00:19:23.490Z",
+    "collectedAt": "2026-08-18T01:52:30.613Z",
     "verifiedAt": null
    }
   },
@@ -1636,7 +1641,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T00:19:23.490Z",
+    "collectedAt": "2026-08-18T01:52:30.613Z",
     "verifiedAt": null
    }
   },
@@ -1660,7 +1665,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T00:19:23.490Z",
+    "collectedAt": "2026-08-18T01:52:30.613Z",
     "verifiedAt": null
    }
   },
@@ -1684,7 +1689,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T00:19:23.490Z",
+    "collectedAt": "2026-08-18T01:52:30.613Z",
     "verifiedAt": null
    }
   },
@@ -1708,7 +1713,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T00:19:23.490Z",
+    "collectedAt": "2026-08-18T01:52:30.613Z",
     "verifiedAt": null
    }
   },
@@ -1732,7 +1737,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T00:19:23.490Z",
+    "collectedAt": "2026-08-18T01:52:30.613Z",
     "verifiedAt": null
    }
   },
@@ -1755,7 +1760,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T00:19:24.141Z",
+    "collectedAt": "2026-08-18T01:52:30.978Z",
     "verifiedAt": null
    }
   },
@@ -1778,7 +1783,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T00:19:24.141Z",
+    "collectedAt": "2026-08-18T01:52:30.978Z",
     "verifiedAt": null
    }
   },
@@ -1801,7 +1806,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T00:19:24.141Z",
+    "collectedAt": "2026-08-18T01:52:30.978Z",
     "verifiedAt": null
    }
   },
@@ -1824,7 +1829,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T00:19:24.141Z",
+    "collectedAt": "2026-08-18T01:52:30.978Z",
     "verifiedAt": null
    }
   },
@@ -1847,7 +1852,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T00:19:24.141Z",
+    "collectedAt": "2026-08-18T01:52:30.978Z",
     "verifiedAt": null
    }
   },
@@ -1870,7 +1875,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T00:19:24.141Z",
+    "collectedAt": "2026-08-18T01:52:30.978Z",
     "verifiedAt": null
    }
   },
@@ -1893,7 +1898,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T00:19:24.141Z",
+    "collectedAt": "2026-08-18T01:52:30.978Z",
     "verifiedAt": null
    }
   },
@@ -1916,7 +1921,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T00:19:24.141Z",
+    "collectedAt": "2026-08-18T01:52:30.978Z",
     "verifiedAt": null
    }
   },
@@ -1940,7 +1945,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T00:19:24.141Z",
+    "collectedAt": "2026-08-18T01:52:30.978Z",
     "verifiedAt": null
    }
   },
@@ -1964,7 +1969,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T00:19:24.141Z",
+    "collectedAt": "2026-08-18T01:52:30.978Z",
     "verifiedAt": null
    }
   },
@@ -1988,7 +1993,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T00:19:24.141Z",
+    "collectedAt": "2026-08-18T01:52:30.978Z",
     "verifiedAt": null
    }
   },
@@ -2012,7 +2017,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T00:19:24.141Z",
+    "collectedAt": "2026-08-18T01:52:30.978Z",
     "verifiedAt": null
    }
   },
@@ -2036,7 +2041,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T00:19:24.141Z",
+    "collectedAt": "2026-08-18T01:52:30.978Z",
     "verifiedAt": null
    }
   },
@@ -2060,7 +2065,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T00:19:24.141Z",
+    "collectedAt": "2026-08-18T01:52:30.978Z",
     "verifiedAt": null
    }
   },
@@ -2084,7 +2089,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T00:19:24.141Z",
+    "collectedAt": "2026-08-18T01:52:30.978Z",
     "verifiedAt": null
    }
   },
@@ -2108,7 +2113,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T00:19:24.141Z",
+    "collectedAt": "2026-08-18T01:52:30.978Z",
     "verifiedAt": null
    }
   },
@@ -2132,7 +2137,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T00:19:24.141Z",
+    "collectedAt": "2026-08-18T01:52:30.978Z",
     "verifiedAt": null
    }
   },
@@ -2156,7 +2161,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T00:19:24.141Z",
+    "collectedAt": "2026-08-18T01:52:30.978Z",
     "verifiedAt": null
    }
   },
@@ -2180,7 +2185,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T00:19:24.141Z",
+    "collectedAt": "2026-08-18T01:52:30.978Z",
     "verifiedAt": null
    }
   },
@@ -2204,7 +2209,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T00:19:24.141Z",
+    "collectedAt": "2026-08-18T01:52:30.978Z",
     "verifiedAt": null
    }
   },
@@ -2227,7 +2232,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1946&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.626Z",
+    "collectedAt": "2026-08-18T01:52:29.958Z",
     "verifiedAt": null
    }
   },
@@ -2250,7 +2255,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1957&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.626Z",
+    "collectedAt": "2026-08-18T01:52:29.958Z",
     "verifiedAt": null
    }
   },
@@ -2273,7 +2278,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1981&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.626Z",
+    "collectedAt": "2026-08-18T01:52:29.958Z",
     "verifiedAt": null
    }
   },
@@ -2296,7 +2301,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1942&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.626Z",
+    "collectedAt": "2026-08-18T01:52:29.958Z",
     "verifiedAt": null
    }
   },
@@ -2319,7 +2324,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1927&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.626Z",
+    "collectedAt": "2026-08-18T01:52:29.958Z",
     "verifiedAt": null
    }
   },
@@ -2342,7 +2347,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1943&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.626Z",
+    "collectedAt": "2026-08-18T01:52:29.958Z",
     "verifiedAt": null
    }
   },
@@ -2365,7 +2370,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1928&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.626Z",
+    "collectedAt": "2026-08-18T01:52:29.958Z",
     "verifiedAt": null
    }
   },
@@ -2388,7 +2393,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1945&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.626Z",
+    "collectedAt": "2026-08-18T01:52:29.958Z",
     "verifiedAt": null
    }
   },
@@ -2411,7 +2416,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1956&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.626Z",
+    "collectedAt": "2026-08-18T01:52:29.958Z",
     "verifiedAt": null
    }
   },
@@ -2434,7 +2439,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:22.859Z",
+    "collectedAt": "2026-08-18T01:52:30.152Z",
     "verifiedAt": null
    }
   },
@@ -2457,7 +2462,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:22.859Z",
+    "collectedAt": "2026-08-18T01:52:30.152Z",
     "verifiedAt": null
    }
   },
@@ -2480,7 +2485,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:22.859Z",
+    "collectedAt": "2026-08-18T01:52:30.152Z",
     "verifiedAt": null
    }
   },
@@ -2503,7 +2508,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:22.859Z",
+    "collectedAt": "2026-08-18T01:52:30.152Z",
     "verifiedAt": null
    }
   },
@@ -2526,7 +2531,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:22.859Z",
+    "collectedAt": "2026-08-18T01:52:30.152Z",
     "verifiedAt": null
    }
   },
@@ -2549,7 +2554,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:22.859Z",
+    "collectedAt": "2026-08-18T01:52:30.152Z",
     "verifiedAt": null
    }
   },
@@ -2572,7 +2577,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:22.859Z",
+    "collectedAt": "2026-08-18T01:52:30.152Z",
     "verifiedAt": null
    }
   },
@@ -2595,7 +2600,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:22.859Z",
+    "collectedAt": "2026-08-18T01:52:30.152Z",
     "verifiedAt": null
    }
   },
@@ -2618,7 +2623,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:22.859Z",
+    "collectedAt": "2026-08-18T01:52:30.152Z",
     "verifiedAt": null
    }
   },
@@ -2641,7 +2646,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-18T00:19:24.566Z",
+    "collectedAt": "2026-08-18T01:52:31.356Z",
     "verifiedAt": null
    }
   },
@@ -2664,7 +2669,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-18T00:19:24.566Z",
+    "collectedAt": "2026-08-18T01:52:31.356Z",
     "verifiedAt": null
    }
   },
@@ -2687,7 +2692,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-18T00:19:24.566Z",
+    "collectedAt": "2026-08-18T01:52:31.356Z",
     "verifiedAt": null
    }
   },
@@ -2710,7 +2715,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-18T00:19:24.566Z",
+    "collectedAt": "2026-08-18T01:52:31.356Z",
     "verifiedAt": null
    }
   },
@@ -2733,7 +2738,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-18T00:19:24.566Z",
+    "collectedAt": "2026-08-18T01:52:31.356Z",
     "verifiedAt": null
    }
   },
@@ -2756,7 +2761,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-18T00:19:24.566Z",
+    "collectedAt": "2026-08-18T01:52:31.356Z",
     "verifiedAt": null
    }
   },
@@ -2778,7 +2783,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=495",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:22.657Z",
+    "collectedAt": "2026-08-18T01:52:30.070Z",
     "verifiedAt": null
    }
   },
@@ -2800,7 +2805,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=479",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:22.657Z",
+    "collectedAt": "2026-08-18T01:52:30.070Z",
     "verifiedAt": null
    }
   },
@@ -2823,7 +2828,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=493",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:22.657Z",
+    "collectedAt": "2026-08-18T01:52:30.070Z",
     "verifiedAt": null
    }
   },
@@ -2846,7 +2851,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=496",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:22.657Z",
+    "collectedAt": "2026-08-18T01:52:30.070Z",
     "verifiedAt": null
    }
   },
@@ -2864,11 +2869,11 @@
    },
    "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=494",
    "jurisdiction": "Tucson Unified School District, AZ",
-   "status": "SCHEDULED",
+   "status": "CONCLUDED",
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=494",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:22.657Z",
+    "collectedAt": "2026-08-18T01:52:30.070Z",
     "verifiedAt": null
    }
   },
@@ -2891,7 +2896,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=492",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:22.657Z",
+    "collectedAt": "2026-08-18T01:52:30.070Z",
     "verifiedAt": null
    }
   },
@@ -2913,7 +2918,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=491",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:22.657Z",
+    "collectedAt": "2026-08-18T01:52:30.070Z",
     "verifiedAt": null
    }
   },
@@ -2936,7 +2941,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=485",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:22.657Z",
+    "collectedAt": "2026-08-18T01:52:30.070Z",
     "verifiedAt": null
    }
   },
@@ -2958,7 +2963,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=490",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:22.657Z",
+    "collectedAt": "2026-08-18T01:52:30.070Z",
     "verifiedAt": null
    }
   },
@@ -2981,7 +2986,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=489",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:22.657Z",
+    "collectedAt": "2026-08-18T01:52:30.070Z",
     "verifiedAt": null
    }
   },
@@ -3004,7 +3009,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=484",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:22.657Z",
+    "collectedAt": "2026-08-18T01:52:30.070Z",
     "verifiedAt": null
    }
   },
@@ -3027,7 +3032,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=483",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:22.657Z",
+    "collectedAt": "2026-08-18T01:52:30.070Z",
     "verifiedAt": null
    }
   },
@@ -3050,7 +3055,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=481",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:22.657Z",
+    "collectedAt": "2026-08-18T01:52:30.070Z",
     "verifiedAt": null
    }
   },
@@ -3073,7 +3078,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=480",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:22.657Z",
+    "collectedAt": "2026-08-18T01:52:30.070Z",
     "verifiedAt": null
    }
   },
@@ -3095,7 +3100,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=482",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:22.657Z",
+    "collectedAt": "2026-08-18T01:52:30.070Z",
     "verifiedAt": null
    }
   },
@@ -3118,7 +3123,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=169",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:23.183Z",
+    "collectedAt": "2026-08-18T01:52:30.586Z",
     "verifiedAt": null
    }
   },
@@ -3141,7 +3146,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=168",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:23.183Z",
+    "collectedAt": "2026-08-18T01:52:30.586Z",
     "verifiedAt": null
    }
   },
@@ -3164,7 +3169,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=167",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:23.183Z",
+    "collectedAt": "2026-08-18T01:52:30.586Z",
     "verifiedAt": null
    }
   },
@@ -3187,7 +3192,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=166",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:23.183Z",
+    "collectedAt": "2026-08-18T01:52:30.586Z",
     "verifiedAt": null
    }
   },
@@ -3210,7 +3215,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=175",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:23.183Z",
+    "collectedAt": "2026-08-18T01:52:30.586Z",
     "verifiedAt": null
    }
   },
@@ -3233,7 +3238,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=165",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:23.183Z",
+    "collectedAt": "2026-08-18T01:52:30.586Z",
     "verifiedAt": null
    }
   },
@@ -3256,7 +3261,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=174",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:23.183Z",
+    "collectedAt": "2026-08-18T01:52:30.586Z",
     "verifiedAt": null
    }
   },
@@ -3279,7 +3284,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=163",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:23.183Z",
+    "collectedAt": "2026-08-18T01:52:30.586Z",
     "verifiedAt": null
    }
   },
@@ -3302,7 +3307,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=162",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:23.183Z",
+    "collectedAt": "2026-08-18T01:52:30.586Z",
     "verifiedAt": null
    }
   },
@@ -3325,7 +3330,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=156",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:23.183Z",
+    "collectedAt": "2026-08-18T01:52:30.586Z",
     "verifiedAt": null
    }
   },
@@ -3348,7 +3353,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=155",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:23.183Z",
+    "collectedAt": "2026-08-18T01:52:30.586Z",
     "verifiedAt": null
    }
   },
@@ -3371,7 +3376,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=159",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:23.183Z",
+    "collectedAt": "2026-08-18T01:52:30.586Z",
     "verifiedAt": null
    }
   },
@@ -3394,7 +3399,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=154",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:23.183Z",
+    "collectedAt": "2026-08-18T01:52:30.586Z",
     "verifiedAt": null
    }
   },
@@ -3417,7 +3422,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3371",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-18T00:19:23.600Z",
+    "collectedAt": "2026-08-18T01:52:30.828Z",
     "verifiedAt": null
    }
   },
@@ -3440,7 +3445,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3370",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-18T00:19:23.600Z",
+    "collectedAt": "2026-08-18T01:52:30.828Z",
     "verifiedAt": null
    }
   },
@@ -3463,7 +3468,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3368",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-18T00:19:23.600Z",
+    "collectedAt": "2026-08-18T01:52:30.828Z",
     "verifiedAt": null
    }
   },
@@ -3486,7 +3491,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3367",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-18T00:19:23.600Z",
+    "collectedAt": "2026-08-18T01:52:30.828Z",
     "verifiedAt": null
    }
   },
@@ -3509,7 +3514,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3364",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-18T00:19:23.600Z",
+    "collectedAt": "2026-08-18T01:52:30.828Z",
     "verifiedAt": null
    }
   },
@@ -3532,7 +3537,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3363",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-18T00:19:23.600Z",
+    "collectedAt": "2026-08-18T01:52:30.828Z",
     "verifiedAt": null
    }
   },
@@ -3555,7 +3560,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3361",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-18T00:19:23.600Z",
+    "collectedAt": "2026-08-18T01:52:30.828Z",
     "verifiedAt": null
    }
   },
@@ -3577,7 +3582,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=699",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-18T00:19:24.090Z",
+    "collectedAt": "2026-08-18T01:52:31.194Z",
     "verifiedAt": null
    }
   },
@@ -3600,7 +3605,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=705",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-18T00:19:24.090Z",
+    "collectedAt": "2026-08-18T01:52:31.194Z",
     "verifiedAt": null
    }
   },
@@ -3623,7 +3628,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=707",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-18T00:19:24.090Z",
+    "collectedAt": "2026-08-18T01:52:31.194Z",
     "verifiedAt": null
    }
   },
@@ -3645,7 +3650,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=698",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-18T00:19:24.090Z",
+    "collectedAt": "2026-08-18T01:52:31.194Z",
     "verifiedAt": null
    }
   },
@@ -3668,7 +3673,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=706",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-18T00:19:24.090Z",
+    "collectedAt": "2026-08-18T01:52:31.194Z",
     "verifiedAt": null
    }
   },
@@ -3690,7 +3695,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=664",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-18T00:19:24.090Z",
+    "collectedAt": "2026-08-18T01:52:31.194Z",
     "verifiedAt": null
    }
   },
@@ -3713,7 +3718,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=695",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-18T00:19:24.090Z",
+    "collectedAt": "2026-08-18T01:52:31.194Z",
     "verifiedAt": null
    }
   },
@@ -3736,7 +3741,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=696",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-18T00:19:24.090Z",
+    "collectedAt": "2026-08-18T01:52:31.194Z",
     "verifiedAt": null
    }
   },
@@ -3759,7 +3764,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.391Z",
+    "collectedAt": "2026-08-18T01:52:30.064Z",
     "verifiedAt": null
    }
   },
@@ -3782,7 +3787,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.391Z",
+    "collectedAt": "2026-08-18T01:52:30.064Z",
     "verifiedAt": null
    }
   },
@@ -3805,7 +3810,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.391Z",
+    "collectedAt": "2026-08-18T01:52:30.064Z",
     "verifiedAt": null
    }
   },
@@ -3828,7 +3833,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.391Z",
+    "collectedAt": "2026-08-18T01:52:30.064Z",
     "verifiedAt": null
    }
   },
@@ -3851,7 +3856,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.391Z",
+    "collectedAt": "2026-08-18T01:52:30.064Z",
     "verifiedAt": null
    }
   },
@@ -3874,7 +3879,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.433Z",
+    "collectedAt": "2026-08-18T01:52:30.132Z",
     "verifiedAt": null
    }
   },
@@ -3897,7 +3902,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.433Z",
+    "collectedAt": "2026-08-18T01:52:30.132Z",
     "verifiedAt": null
    }
   },
@@ -3920,7 +3925,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.433Z",
+    "collectedAt": "2026-08-18T01:52:30.132Z",
     "verifiedAt": null
    }
   },
@@ -3943,7 +3948,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.433Z",
+    "collectedAt": "2026-08-18T01:52:30.132Z",
     "verifiedAt": null
    }
   },
@@ -3966,7 +3971,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.433Z",
+    "collectedAt": "2026-08-18T01:52:30.132Z",
     "verifiedAt": null
    }
   },
@@ -3989,7 +3994,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.482Z",
+    "collectedAt": "2026-08-18T01:52:30.205Z",
     "verifiedAt": null
    }
   },
@@ -4012,7 +4017,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.482Z",
+    "collectedAt": "2026-08-18T01:52:30.205Z",
     "verifiedAt": null
    }
   },
@@ -4035,7 +4040,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.482Z",
+    "collectedAt": "2026-08-18T01:52:30.205Z",
     "verifiedAt": null
    }
   },
@@ -4058,7 +4063,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.482Z",
+    "collectedAt": "2026-08-18T01:52:30.205Z",
     "verifiedAt": null
    }
   },
@@ -4081,7 +4086,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.525Z",
+    "collectedAt": "2026-08-18T01:52:30.275Z",
     "verifiedAt": null
    }
   },
@@ -4104,7 +4109,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.525Z",
+    "collectedAt": "2026-08-18T01:52:30.275Z",
     "verifiedAt": null
    }
   },
@@ -4127,7 +4132,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.525Z",
+    "collectedAt": "2026-08-18T01:52:30.275Z",
     "verifiedAt": null
    }
   },
@@ -4150,7 +4155,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.525Z",
+    "collectedAt": "2026-08-18T01:52:30.275Z",
     "verifiedAt": null
    }
   },
@@ -4173,7 +4178,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.525Z",
+    "collectedAt": "2026-08-18T01:52:30.275Z",
     "verifiedAt": null
    }
   },
@@ -4196,7 +4201,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.568Z",
+    "collectedAt": "2026-08-18T01:52:30.345Z",
     "verifiedAt": null
    }
   },
@@ -4219,7 +4224,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.568Z",
+    "collectedAt": "2026-08-18T01:52:30.345Z",
     "verifiedAt": null
    }
   },
@@ -4242,7 +4247,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.568Z",
+    "collectedAt": "2026-08-18T01:52:30.345Z",
     "verifiedAt": null
    }
   },
@@ -4265,7 +4270,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T00:19:22.568Z",
+    "collectedAt": "2026-08-18T01:52:30.345Z",
     "verifiedAt": null
    }
   },
@@ -4288,7 +4293,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:22.682Z",
+    "collectedAt": "2026-08-18T01:52:30.078Z",
     "verifiedAt": null
    }
   },
@@ -4311,7 +4316,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:22.682Z",
+    "collectedAt": "2026-08-18T01:52:30.078Z",
     "verifiedAt": null
    }
   },
@@ -4334,7 +4339,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:22.682Z",
+    "collectedAt": "2026-08-18T01:52:30.078Z",
     "verifiedAt": null
    }
   },
@@ -4357,7 +4362,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:22.682Z",
+    "collectedAt": "2026-08-18T01:52:30.078Z",
     "verifiedAt": null
    }
   },
@@ -4380,7 +4385,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:22.682Z",
+    "collectedAt": "2026-08-18T01:52:30.078Z",
     "verifiedAt": null
    }
   },
@@ -4403,7 +4408,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-18T00:19:22.682Z",
+    "collectedAt": "2026-08-18T01:52:30.078Z",
     "verifiedAt": null
    }
   },
@@ -4426,7 +4431,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2225",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.862Z",
+    "collectedAt": "2026-08-18T01:52:30.804Z",
     "verifiedAt": null
    }
   },
@@ -4449,7 +4454,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2227",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.862Z",
+    "collectedAt": "2026-08-18T01:52:30.804Z",
     "verifiedAt": null
    }
   },
@@ -4472,7 +4477,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2228",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.862Z",
+    "collectedAt": "2026-08-18T01:52:30.804Z",
     "verifiedAt": null
    }
   },
@@ -4495,7 +4500,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2234",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.862Z",
+    "collectedAt": "2026-08-18T01:52:30.804Z",
     "verifiedAt": null
    }
   },
@@ -4518,7 +4523,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2235",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.862Z",
+    "collectedAt": "2026-08-18T01:52:30.804Z",
     "verifiedAt": null
    }
   },
@@ -4541,7 +4546,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2229",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.862Z",
+    "collectedAt": "2026-08-18T01:52:30.804Z",
     "verifiedAt": null
    }
   },
@@ -4564,7 +4569,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2233",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.862Z",
+    "collectedAt": "2026-08-18T01:52:30.804Z",
     "verifiedAt": null
    }
   },
@@ -4587,7 +4592,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2239",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.862Z",
+    "collectedAt": "2026-08-18T01:52:30.804Z",
     "verifiedAt": null
    }
   },
@@ -4610,7 +4615,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2240",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.862Z",
+    "collectedAt": "2026-08-18T01:52:30.804Z",
     "verifiedAt": null
    }
   },
@@ -4633,7 +4638,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2236",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.862Z",
+    "collectedAt": "2026-08-18T01:52:30.804Z",
     "verifiedAt": null
    }
   },
@@ -4656,7 +4661,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2241",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.862Z",
+    "collectedAt": "2026-08-18T01:52:30.804Z",
     "verifiedAt": null
    }
   },
@@ -4679,7 +4684,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2242",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.862Z",
+    "collectedAt": "2026-08-18T01:52:30.804Z",
     "verifiedAt": null
    }
   },
@@ -4702,7 +4707,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2243",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.862Z",
+    "collectedAt": "2026-08-18T01:52:30.804Z",
     "verifiedAt": null
    }
   },
@@ -4725,7 +4730,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2244",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.862Z",
+    "collectedAt": "2026-08-18T01:52:30.804Z",
     "verifiedAt": null
    }
   },
@@ -4748,7 +4753,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2245",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.862Z",
+    "collectedAt": "2026-08-18T01:52:30.804Z",
     "verifiedAt": null
    }
   },
@@ -4771,7 +4776,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2246",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.862Z",
+    "collectedAt": "2026-08-18T01:52:30.804Z",
     "verifiedAt": null
    }
   },
@@ -4794,7 +4799,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2247",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.862Z",
+    "collectedAt": "2026-08-18T01:52:30.804Z",
     "verifiedAt": null
    }
   },
@@ -4817,7 +4822,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2248",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.862Z",
+    "collectedAt": "2026-08-18T01:52:30.804Z",
     "verifiedAt": null
    }
   },
@@ -4840,7 +4845,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2249",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.862Z",
+    "collectedAt": "2026-08-18T01:52:30.804Z",
     "verifiedAt": null
    }
   },
@@ -4863,7 +4868,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2250",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.862Z",
+    "collectedAt": "2026-08-18T01:52:30.804Z",
     "verifiedAt": null
    }
   },
@@ -4886,7 +4891,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.568Z",
+    "collectedAt": "2026-08-18T01:52:30.182Z",
     "verifiedAt": null
    }
   },
@@ -4910,7 +4915,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.568Z",
+    "collectedAt": "2026-08-18T01:52:30.182Z",
     "verifiedAt": null
    }
   },
@@ -4934,7 +4939,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.568Z",
+    "collectedAt": "2026-08-18T01:52:30.182Z",
     "verifiedAt": null
    }
   },
@@ -4958,7 +4963,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.568Z",
+    "collectedAt": "2026-08-18T01:52:30.182Z",
     "verifiedAt": null
    }
   },
@@ -4982,7 +4987,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.568Z",
+    "collectedAt": "2026-08-18T01:52:30.182Z",
     "verifiedAt": null
    }
   },
@@ -5006,7 +5011,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.568Z",
+    "collectedAt": "2026-08-18T01:52:30.182Z",
     "verifiedAt": null
    }
   },
@@ -5030,7 +5035,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.568Z",
+    "collectedAt": "2026-08-18T01:52:30.182Z",
     "verifiedAt": null
    }
   },
@@ -5054,7 +5059,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.568Z",
+    "collectedAt": "2026-08-18T01:52:30.182Z",
     "verifiedAt": null
    }
   },
@@ -5078,7 +5083,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.568Z",
+    "collectedAt": "2026-08-18T01:52:30.182Z",
     "verifiedAt": null
    }
   },
@@ -5102,7 +5107,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.568Z",
+    "collectedAt": "2026-08-18T01:52:30.182Z",
     "verifiedAt": null
    }
   },
@@ -5126,7 +5131,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.568Z",
+    "collectedAt": "2026-08-18T01:52:30.182Z",
     "verifiedAt": null
    }
   },
@@ -5150,7 +5155,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.568Z",
+    "collectedAt": "2026-08-18T01:52:30.182Z",
     "verifiedAt": null
    }
   },
@@ -5174,7 +5179,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.568Z",
+    "collectedAt": "2026-08-18T01:52:30.182Z",
     "verifiedAt": null
    }
   },
@@ -5198,7 +5203,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.568Z",
+    "collectedAt": "2026-08-18T01:52:30.182Z",
     "verifiedAt": null
    }
   },
@@ -5222,7 +5227,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T00:19:22.568Z",
+    "collectedAt": "2026-08-18T01:52:30.182Z",
     "verifiedAt": null
    }
   },
@@ -5245,7 +5250,7 @@
    "provenance": {
     "sourceUrl": "https://www.mhrd.org/administration/board-of-education/boe-meetings",
     "sourceOrg": "Morris Hills Regional District Board of Education",
-    "collectedAt": "2026-08-18T00:19:25.013Z",
+    "collectedAt": "2026-08-18T01:52:33.872Z",
     "verifiedAt": null
    }
   },
@@ -5268,7 +5273,7 @@
    "provenance": {
     "sourceUrl": "https://www.mhrd.org/administration/board-of-education/boe-meetings",
     "sourceOrg": "Morris Hills Regional District Board of Education",
-    "collectedAt": "2026-08-18T00:19:25.013Z",
+    "collectedAt": "2026-08-18T01:52:33.872Z",
     "verifiedAt": null
    }
   },
@@ -5291,7 +5296,7 @@
    "provenance": {
     "sourceUrl": "https://www.mhrd.org/administration/board-of-education/boe-meetings",
     "sourceOrg": "Morris Hills Regional District Board of Education",
-    "collectedAt": "2026-08-18T00:19:25.013Z",
+    "collectedAt": "2026-08-18T01:52:33.872Z",
     "verifiedAt": null
    }
   },
@@ -5316,6 +5321,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-18T00:19:25.961Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T00:19:25.961Z"
    }
   },
   {
@@ -5339,6 +5348,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-18T00:19:25.961Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T00:19:25.961Z"
    }
   },
   {
@@ -5362,6 +5375,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-18T00:19:25.961Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T00:19:25.961Z"
    }
   },
   {
@@ -5385,6 +5402,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-18T00:19:25.961Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T00:19:25.961Z"
    }
   },
   {
@@ -5408,6 +5429,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-18T00:19:25.961Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T00:19:25.961Z"
    }
   },
   {
@@ -5431,6 +5456,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-18T00:19:25.961Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T00:19:25.961Z"
    }
   },
   {
@@ -5454,6 +5483,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-18T00:19:25.961Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T00:19:25.961Z"
    }
   },
   {
@@ -5477,6 +5510,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-18T00:19:25.961Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T00:19:25.961Z"
    }
   },
   {
@@ -5500,6 +5537,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-18T00:19:25.961Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T00:19:25.961Z"
    }
   },
   {
@@ -5523,6 +5564,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-18T00:19:25.961Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T00:19:25.961Z"
    }
   },
   {
@@ -5546,6 +5591,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-18T00:19:25.961Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T00:19:25.961Z"
    }
   },
   {
@@ -5569,6 +5618,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-18T00:19:25.961Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T00:19:25.961Z"
    }
   },
   {
@@ -5592,6 +5645,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-18T00:19:25.961Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T00:19:25.961Z"
    }
   },
   {
@@ -5615,6 +5672,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-18T00:19:25.961Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T00:19:25.961Z"
    }
   },
   {
@@ -5638,6 +5699,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-18T00:19:25.961Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T00:19:25.961Z"
    }
   },
   {
@@ -5661,6 +5726,10 @@
     "sourceOrg": "Newbury Planning Board",
     "collectedAt": "2026-08-18T00:19:26.459Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T00:19:26.459Z"
    }
   },
   {
@@ -5684,6 +5753,10 @@
     "sourceOrg": "Newbury Planning Board",
     "collectedAt": "2026-08-18T00:19:26.459Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T00:19:26.459Z"
    }
   },
   {
@@ -5707,6 +5780,10 @@
     "sourceOrg": "Newbury Planning Board",
     "collectedAt": "2026-08-18T00:19:26.459Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T00:19:26.459Z"
    }
   },
   {
@@ -5730,6 +5807,10 @@
     "sourceOrg": "Newbury Conservation Commission",
     "collectedAt": "2026-08-18T00:19:26.805Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T00:19:26.805Z"
    }
   },
   {
@@ -5753,6 +5834,10 @@
     "sourceOrg": "Newbury Conservation Commission",
     "collectedAt": "2026-08-18T00:19:26.805Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T00:19:26.805Z"
    }
   },
   {
@@ -5776,6 +5861,10 @@
     "sourceOrg": "Newbury Conservation Commission",
     "collectedAt": "2026-08-18T00:19:26.805Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T00:19:26.805Z"
    }
   },
   {
@@ -5799,6 +5888,10 @@
     "sourceOrg": "Newbury Conservation Commission",
     "collectedAt": "2026-08-18T00:19:26.805Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T00:19:26.805Z"
    }
   },
   {
@@ -5822,6 +5915,10 @@
     "sourceOrg": "Newbury Conservation Commission",
     "collectedAt": "2026-08-18T00:19:26.805Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T00:19:26.805Z"
    }
   },
   {
@@ -5845,6 +5942,10 @@
     "sourceOrg": "Newbury Zoning Board of Adjustment",
     "collectedAt": "2026-08-18T00:19:27.321Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T00:19:27.321Z"
    }
   }
  ],
@@ -6954,6 +7055,22 @@
    "extractionNote": null
   },
   {
+   "id": "diligent:tusd1:491@bd23de5abc301c800dfbf3f51cfc8b6218b5fb97187a1d383299e2f29216c2bd",
+   "meetingId": "diligent:tusd1:491",
+   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+   "documentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=491",
+   "contentHash": "bd23de5abc301c800dfbf3f51cfc8b6218b5fb97187a1d383299e2f29216c2bd",
+   "retrievedAt": "2026-08-18T01:52:35.393Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=491",
+   "sourceOrg": "Tucson Unified School District Governing Board",
+   "collectedAt": "2026-08-18T01:52:35.393Z",
+   "verifiedAt": null,
+   "text": "Tucson Unified School District - Meeting Information Skip Navigation Jump to SideBar Quick Menu Public site Sign in History, Tradition, Culture, and YOU! Your Javascript is turned off, without it, this site will not operate as intended. Home » Meeting Schedule » Meeting Information Welcome to Tucson Unified School District Home Calendar Meetings Search Share GOVERNING BOARD AGENDA SPECIAL MEETING THE MEETING WILL BEGIN AT 4:30 P.M. TO VOTE TO GO INTO EXECUTIVE SESSION AND RECONVENE IN OPEN SESSION AT 5:30 P.M. PUBLIC ACCESS FOR EACH MEETING WILL BEGIN 15 MINUTES PRIOR TO THE VOTE TO GO INTO EXECUTIVE SESSION. -One or more Governing Board members will/may participate by telephonic or video communications. -Names and details, including available support documents, may be obtained during regular business hours at the TUSD Governing Board Office. -Upon request, TUSD will provide a certified interpreter to interpret Governing Board meetings whenever possible. Please contact Translations/Interpretations Services at 520-225-4858 at least 72 hours prior to the event. Every effort will be made to honor requests for interpretation services made with less than 72 hours notice. -A petición previa, TUSD proporcionará un intérprete titulado para interpretar las reuniones de la Mesa Directiva cuando lo sea posible. Favor de comunicarse a los Servicios de Traducción e Interpretación al 520-225-4858 al menos de 72 horas antes del evento. Se hará todo lo posible por atender a todas las solicitudes de interpretación realizados con menos de 72 horas de aviso previo. -If authorized by a majority vote of the members of the Governing Board, any matter on the open meeting agenda may be discussed in executive session for the purpose of obtaining legal advice thereon, pursuant to A.R.S. 38-431.03 (A)(3). The executive session will be held immediately after the vote and will not be open to the public. -The order of items on this agenda may be modified during the meeting at the discretion of the Board President or upon a motion to amend the order of business which is approved by the Board. Governing Board Members Aug 04 2026 GOVERNING BOARD AGENDA SPECIAL MEETING Jul 28 2026 GOVERNING BOARD AGENDA SPECIAL MEETING Jun 16 2026 GOVERNING BOARD AGENDA SPECIAL MEETING May 26 2026 GOVERNING BOARD AGENDA SPECIAL MEETING Apr 28 2026 GOVERNING BOARD AGENDA SPECIAL MEETING Mar 31 2026 GOVERNING BOARD AGENDA SPECIAL MEETING Feb 24 2026 GOVERNING BOARD AGENDA SPECIAL MEETING Jan 27 2026 GOVERNING BOARD AGENDA SPECIAL MEETING Time: Location: Private Version For: Public User Agenda Splitscreen Live Meeting Minutes Print Version Versions Signed Minutes Accessible Web Version Annotate Agenda Show Map Hide Map Board Application: -Select- Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals Members Val Romero Sadie Shaw Jennifer Eckstrom Natalie Luna Rose Ravi Shah © Diligent Community 2026 Tucson Unified School District User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
    "id": "diligent:tusd1:485@d94ab0837cd3d4f1e8e011efd242a0aedade5b4d9c9d0ef177a6df662ced4f28",
    "meetingId": "diligent:tusd1:485",
    "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
@@ -6966,6 +7083,22 @@
    "collectedAt": "2026-08-14T03:15:48.002Z",
    "verifiedAt": null,
    "text": "Tucson Unified School District - Meeting Information Skip Navigation Jump to SideBar Quick Menu Public site Sign in History, Tradition, Culture, and YOU! Your Javascript is turned off, without it, this site will not operate as intended. Home » Meetings » Meeting Information Welcome to Tucson Unified School District Home Calendar Meetings Search Share GOVERNING BOARD AGENDA SPECIAL MEETING THE MEETING WILL BEGIN AT 4:30 P.M. TO VOTE TO GO INTO EXECUTIVE SESSION AND RECONVENE IN OPEN SESSION AT 5:30 P.M. PUBLIC ACCESS FOR EACH MEETING WILL BEGIN 15 MINUTES PRIOR TO THE VOTE TO GO INTO EXECUTIVE SESSION. -One or more Governing Board members will/may participate by telephonic or video communications. -Names and details, including available support documents, may be obtained during regular business hours at the TUSD Governing Board Office. -Upon request, TUSD will provide a certified interpreter to interpret Governing Board meetings whenever possible. Please contact Translations/Interpretations Services at 520-225-4858 at least 72 hours prior to the event. Every effort will be made to honor requests for interpretation services made with less than 72 hours notice. -A petición previa, TUSD proporcionará un intérprete titulado para interpretar las reuniones de la Mesa Directiva cuando lo sea posible. Favor de comunicarse a los Servicios de Traducción e Interpretación al 520-225-4858 al menos de 72 horas antes del evento. Se hará todo lo posible por atender a todas las solicitudes de interpretación realizados con menos de 72 horas de aviso previo. -If authorized by a majority vote of the members of the Governing Board, any matter on the open meeting agenda may be discussed in executive session for the purpose of obtaining legal advice thereon, pursuant to A.R.S. 38-431.03 (A)(3). The executive session will be held immediately after the vote and will not be open to the public. -The order of items on this agenda may be modified during the meeting at the discretion of the Board President or upon a motion to amend the order of business which is approved by the Board. Governing Board Members Aug 04 2026 GOVERNING BOARD AGENDA SPECIAL MEETING Jul 28 2026 GOVERNING BOARD AGENDA SPECIAL MEETING Jun 16 2026 GOVERNING BOARD AGENDA SPECIAL MEETING May 26 2026 GOVERNING BOARD AGENDA SPECIAL MEETING Apr 28 2026 GOVERNING BOARD AGENDA SPECIAL MEETING Mar 31 2026 GOVERNING BOARD AGENDA SPECIAL MEETING Feb 24 2026 GOVERNING BOARD AGENDA SPECIAL MEETING Jan 27 2026 GOVERNING BOARD AGENDA SPECIAL MEETING Time: Location: Private Version For: Public User Agenda Splitscreen Live Meeting Minutes Print Version Versions Signed Minutes Accessible Web Version Annotate Agenda Show Map Hide Map Board Application: -Select- Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals Members Val Romero Sadie Shaw Jennifer Eckstrom Natalie Luna Rose Ravi Shah © Diligent Community 2026 Tucson Unified School District User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "diligent:tusd1:490@523d605f9505fdb815c0b489a2ec0efa2e9a23ebf32e00a26207e1784f3e2831",
+   "meetingId": "diligent:tusd1:490",
+   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+   "documentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=490",
+   "contentHash": "523d605f9505fdb815c0b489a2ec0efa2e9a23ebf32e00a26207e1784f3e2831",
+   "retrievedAt": "2026-08-18T01:52:35.707Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=490",
+   "sourceOrg": "Tucson Unified School District Governing Board",
+   "collectedAt": "2026-08-18T01:52:35.707Z",
+   "verifiedAt": null,
+   "text": "Tucson Unified School District - Meeting Information Skip Navigation Jump to SideBar Quick Menu Public site Sign in History, Tradition, Culture, and YOU! Your Javascript is turned off, without it, this site will not operate as intended. Home » Meeting Schedule » Meeting Information Welcome to Tucson Unified School District Home Calendar Meetings Search Share GOVERNING BOARD AGENDA SPECIAL EXECUTIVE SESSION MEETING THE MEETING WILL BEGIN AT 5:00 P.M. TO VOTE TO GO INTO EXECUTIVE SESSION AND ADJOURN FROM EXECUTIVE SESSION. Governing Board Members Jul 21 2026 GOVERNING BOARD AGENDA SPECIAL EXECUTIVE SESSION MEETING May 04 2026 GOVERNING BOARD AGENDA SPECIAL EXECUTIVE SESSION MEETING Mar 03 2026 GOVERNING BOARD AGENDA SPECIAL EXECUTIVE SESSION MEETING Nov 18 2025 AGENDA FOR REGULAR BOARD MEETING Oct 28 2025 AGENDA FOR SPECIAL BOARD MEETING Oct 14 2025 AGENDA FOR REGULAR BOARD MEETING Sep 30 2025 AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Sep 16 2025 AGENDA FOR SPECIAL BOARD MEETING Sep 09 2025 AGENDA FOR REGULAR BOARD MEETING Aug 26 2025 AGENDA FOR SPECIAL BOARD MEETING Aug 12 2025 AGENDA FOR REGULAR BOARD MEETING Time: Location: Private Version For: Public User Agenda Splitscreen Live Meeting Minutes Print Version Versions Signed Minutes Accessible Web Version Annotate Agenda Show Map Hide Map Board Application: -Select- Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals Members Val Romero Sadie Shaw Jennifer Eckstrom Natalie Luna Rose Ravi Shah © Diligent Community 2026 Tucson Unified School District User name Password Sign In Remember me next time. Forgot password?",
    "extraction": "html",
    "extractionNote": null
   },
@@ -7046,6 +7179,22 @@
    "collectedAt": "2026-08-16T04:34:30.927Z",
    "verifiedAt": null,
    "text": "Tucson Unified School District - Meeting Information Skip Navigation Jump to SideBar Quick Menu Public site Sign in History, Tradition, Culture, and YOU! Your Javascript is turned off, without it, this site will not operate as intended. Home » Meeting Schedule » Meeting Information Welcome to Tucson Unified School District Home Calendar Meetings Search Share GOVERNING BOARD AGENDA REGULAR MEETING THE MEETING WILL BEGIN AT 4:30 P.M. TO VOTE TO GO INTO EXECUTIVE SESSION AND RECONVENE IN OPEN SESSION AT 5:30 P.M. PUBLIC ACCESS FOR EACH MEETING WILL BEGIN 15 MINUTES PRIOR TO THE VOTE TO GO INTO EXECUTIVE SESSION. -One or more Governing Board members will/may participate by telephonic or video communications. -Names and details, including available support documents, may be obtained during regular business hours at the TUSD Governing Board Office. -Upon request, TUSD will provide a certified interpreter to interpret Governing Board meetings whenever possible. Please contact Translations/Interpretations Services at 520-225-4858 at least 72 hours prior to the event. Every effort will be made to honor requests for interpretation services made with less than 72 hours notice. -A petición previa, TUSD proporcionará un intérprete titulado para interpretar las reuniones de la Mesa Directiva cuando lo sea posible. Favor de comunicarse a los Servicios de Traducción e Interpretación al 520-225-4858 al menos de 72 horas antes del evento. Se hará todo lo posible por atender a todas las solicitudes de interpretación realizados con menos de 72 horas de aviso previo. -If authorized by a majority vote of the members of the Governing Board, any matter on the open meeting agenda may be discussed in executive session for the purpose of obtaining legal advice thereon, pursuant to A.R.S. 38-431.03 (A)(3). The executive session will be held immediately after the vote and will not be open to the public. -The order of items on this agenda may be modified during the meeting at the discretion of the Board President or upon a motion to amend the order of business which is approved by the Board. Governing Board Members Aug 11 2026 GOVERNING BOARD AGENDA REGULAR MEETING Jul 14 2026 GOVERNING BOARD AGENDA REGULAR MEETING Jun 09 2026 GOVERNING BOARD AGENDA REGULAR MEETING May 12 2026 GOVERNING BOARD AGENDA REGULAR MEETING Apr 14 2026 GOVERNING BOARD AGENDA REGULAR MEETING Mar 10 2026 GOVERNING BOARD AGENDA REGULAR MEETING Feb 10 2026 GOVERNING BOARD AGENDA REGULAR MEETING Dec 09 2025 AGENDA FOR REGULAR BOARD MEETING Jul 22 2025 AGENDA FOR SPECIAL BOARD MEETING Jul 21 2025 AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Jul 15 2025 AGENDA FOR REGULAR BOARD MEETING Jun 17 2025 AGENDA FOR SPECIAL BOARD MEETING Jun 10 2025 AGENDA FOR REGULAR BOARD MEETING May 27 2025 AGENDA FOR SPECIAL BOARD MEETING May 13 2025 AGENDA FOR REGULAR BOARD MEETING Apr 29 2025 AGENDA FOR SPECIAL BOARD MEETING Apr 15 2025 AGENDA FOR REGULAR BOARD MEETING Mar 25 2025 AGENDA FOR SPECIAL BOARD MEETING Mar 04 2025 AGENDA FOR REGULAR BOARD MEETING Feb 25 2025 AGENDA FOR SPECIAL BOARD MEETING Feb 11 2025 AGENDA FOR REGULAR BOARD MEETING Jan 28 2025 AGENDA FOR SPECIAL BOARD MEETING Jan 21 2025 AGENDA FOR ORGANIZATIONAL AND REGULAR BOARD MEETING Jan 14 2025 MEETING POSTPONED DUE TO WATERLINE BREAK - RESCHEDULED TO JANUARY 21, 2025 (LOCATION TO FOLLOW PENDING STATUS OF REPAIRS) - AGENDA FOR ORGANIZATIONAL AND REGULAR BOARD MEETING Dec 10 2024 AGENDA FOR REGULAR BOARD MEETING Nov 19 2024 AGENDA FOR REGULAR BOARD MEETING Oct 29 2024 AGENDA FOR SPECIAL BOARD MEETING Oct 15 2024 AGENDA FOR REGULAR BOARD MEETING Sep 24 2024 AGENDA FOR SPECIAL BOARD MEETING Sep 10 2024 AGENDA FOR REGULAR BOARD MEETING Aug 27 2024 AGENDA FOR SPECIAL BOARD MEETING Aug 13 2024 AGENDA FOR REGULAR BOARD MEETING Jul 30 2024 AGENDA FOR SPECIAL BOARD MEETING Jul 23 2024 AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Jul 15 2024 AGENDA FOR REGULAR BOARD MEETING Jul 09 2024 AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Jun 11 2024 AGENDA FOR SPECIAL BOARD MEETING Jun 04 2024 AGENDA FOR REGULAR BOARD MEETING May 21 2024 AGENDA FOR SPECIAL BOARD MEETING May 14 2024 AGENDA FOR REGULAR BOARD MEETING Apr 23 2024 AGENDA FOR SPECIAL BOARD MEETING Apr 09 2024 AGENDA FOR REGULAR BOARD MEETING Apr 02 2024 AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Mar 26 2024 AGENDA FOR SPECIAL BOARD MEETING Mar 05 2024 AGENDA FOR REGULAR BOARD MEETING Feb 27 2024 AGENDA FOR SPECIAL BOARD MEETING Feb 13 2024 AGENDA FOR REGULAR BOARD MEETING Jan 30 2024 AGENDA FOR SPECIAL BOARD MEETING Jan 23 2024 AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Jan 16 2024 AGENDA FOR REGULAR BOARD MEETING Dec 12 2023 AGENDA FOR REGULAR BOARD MEETING Nov 28 2023 AGENDA FOR SPECIAL BOARD MEETING Nov 14 2023 AGENDA FOR REGULAR BOARD MEETING Oct 24 2023 AGENDA FOR SPECIAL BOARD MEETING Oct 17 2023 AGENDA FOR REGULAR BOARD MEETING Sep 26 2023 AGENDA FOR SPECIAL BOARD MEETING Sep 12 2023 AGENDA FOR REGULAR BOARD MEETING Aug 29 2023 AGENDA FOR SPECIAL BOARD MEETING Aug 22 2023 AGENDA FOR SPECIAL BOARD MEETING Aug 08 2023 AGENDA FOR REGULAR BOARD MEETING Jul 25 2023 AGENDA FOR SPECIAL BOARD MEETING Jul 18 2023 AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Jul 11 2023 AGENDA FOR REGULAR BOARD MEETING Jun 13 2023 AGENDA FOR REGULAR BOARD MEETING Jun 06 2023 AGENDA FOR SPECIAL BOARD MEETING - STUDY SESSION May 23 2023 AGENDA FOR SPECIAL BOARD MEETING May 09 2023 AGENDA FOR REGULAR BOARD MEETING Apr 25 2023 AGENDA FOR SPECIAL BOARD MEETING Apr 11 2023 AGENDA FOR REGULAR BOARD MEETING Mar 28 2023 AGENDA FOR SPECIAL BOARD MEETING Mar 14 2023 AGENDA FOR REGULAR BOARD MEETING Feb 28 2023 AGENDA FOR SPECIAL BOARD MEETING Feb 16 2023 AGENDA FOR REGULAR BOARD MEETING Jan 31 2023 AGENDA FOR SPECIAL BOARD MEETING Jan 24 2023 AGENDA FOR REGULAR BOARD MEETING Jan 10 2023 AGENDA FOR SPECIAL BOARD MEETING (ORGANIZATIONAL MEETING) Dec 06 2022 AGENDA FOR REGULAR BOARD MEETING Nov 29 2022 AGENDA FOR SPECIAL BOARD MEETING Nov 15 2022 AGENDA FOR REGULAR BOARD MEETING Oct 25 2022 AGENDA FOR SPECIAL BOARD MEETING Oct 06 2022 AGENDA FOR REGULAR BOARD MEETING Sep 20 2022 AGENDA FOR SPECIAL BOARD MEETING Sep 13 2022 AGENDA FOR REGULAR BOARD MEETING Aug 25 2022 CANCELED - AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Aug 24 2022 AGENDA FOR SPECIAL EXECUTIVE SESSION BOARD MEETING Aug 23 2022 AGENDA FOR SPECIAL BOARD MEETING Aug 16 2022 AGENDA FOR SPECIAL BOARD MEETING Aug 09 2022 AGENDA FOR REGULAR BOARD MEETING Jul 26 2022 AGENDA FOR SPECIAL BOARD MEETING Jul 21 2022 AGENDA FOR EXECUTIVE SESSION BOARD MEETING Jul 12 2022 AGENDA FOR REGULAR BOARD MEETING Jun 23 2022 CANCELLED AGENDA FOR EXECUTIVE SESSION BOARD MEETING Jun 21 2022 AGENDA FOR SPECIAL BOARD MEETING Jun 14 2022 AGENDA FOR REGULAR BOARD MEETING May 24 2022 AGENDA FOR SPECIAL BOARD MEETING May 19 2022 AGENDA FOR EXECUTIVE SESSION BOARD MEETING May 10 2022 AGENDA FOR REGULAR BOARD MEETING Apr 26 2022 AGENDA FOR SPECIAL BOARD MEETING Apr 12 2022 AGENDA FOR REGULAR BOARD MEETING Mar 22 2022 AGENDA FOR SPECIAL BOARD MEETING Mar 08 2022 AGENDA FOR REGULAR BOARD MEETING Feb 22 2022 AGENDA FOR SPECIAL BOARD MEETING Feb 08 2022 AGENDA FOR REGULAR BOARD MEETING Jan 25 2022 AGENDA FOR SPECIAL BOARD MEETING Jan 11 2022 AGENDA FOR REGULAR BOARD MEETING Jan 04 2022 AGENDA FOR SPECIAL BOARD MEETING Dec 07 2021 AGENDA FOR REGULAR BOARD MEETING Nov 23 2021 CANCELLED - AGENDA FOR SPECIAL BOARD MEETING Nov 09 2021 AGENDA FOR REGULAR BOARD MEETING Oct 26 2021 AGENDA FOR SPECIAL BOARD MEETING Oct 05 2021 AGENDA FOR REGULAR BOARD MEETING Sep 23 2021 AGENDA FOR SPECIAL BOARD MEETING Sep 09 2021 AGENDA FOR REGULAR BOARD MEETING Aug 24 2021 AGENDA FOR SPECIAL BOARD MEETING Aug 10 2021 AGENDA FOR REGULAR BOARD MEETING Aug 04 2021 AGENDA FOR EMERGENCY BOARD MEETING Jul 22 2021 AGENDA FOR EXECUTIVE SESSION BOARD MEETING Jul 20 2021 AGENDA FOR SPECIAL BOARD MEETING Jul 13 2021 AGENDA FOR REGULAR BOARD MEETING Jun 22 2021 AGENDA FOR SPECIAL BOARD MEETING Jun 08 2021 AGENDA FOR REGULAR BOARD MEETING May 25 2021 AGENDA FOR SPECIAL BOARD MEETING May 11 2021 AGENDA FOR REGULAR BOARD MEETING Apr 27 2021 AGENDA FOR SPECIAL BOARD MEETING Apr 13 2021 AGENDA FOR REGULAR BOARD MEETING Apr 07 2021 AGENDA FOR SPECIAL BOARD MEETING Mar 30 2021 AGENDA FOR SPECIAL BOARD MEETING Mar 09 2021 AGENDA FOR REGULAR BOARD MEETING Mar 02 2021 AGENDA FOR EXECUTIVE SESSION BOARD MEETING Mar 01 2021 AGENDA FOR SPECIAL BOARD MEETING Feb 23 2021 AGENDA FOR SPECIAL BOARD MEETING Feb 09 2021 AGENDA FOR REGULAR BOARD MEETING Jan 26 2021 AGENDA FOR SPECIAL BOARD MEETING Jan 19 2021 AGENDA FOR SPECIAL BOARD MEETING Jan 12 2021 AGENDA FOR REGULAR BOARD MEETING Jan 05 2021 AGENDA FOR SPECIAL BOARD MEETING Dec 08 2020 AGENDA FOR REGULAR BOARD MEETING Nov 17 2020 AGENDA FOR REGULAR BOARD MEETING Oct 27 2020 AGENDA FOR SPECIAL BOARD MEETING Oct 06 2020 AGENDA FOR REGULAR BOARD MEETING Sep 22 2020 AGENDA FOR SPECIAL BOARD MEETING Sep 09 2020 AGENDA FOR REGULAR BOARD MEETING Aug 25 2020 AGENDA FOR SPECIAL BOARD MEETING Aug 11 2020 AGENDA FOR REGULAR BOARD MEETING Aug 10 2020 AGENDA FOR EXECUTIVE SESSION BOARD MEETING Jul 29 2020 AGENDA FOR EXECUTIVE SESSION BOARD MEETING Jul 28 2020 AGENDA FOR SPECIAL BOARD MEETING Jul 14 2020 AGENDA FOR REGULAR BOARD MEETING Jun 23 2020 AGENDA FOR SPECIAL BOARD MEETING Jun 16 2020 AGENDA FOR SPECIAL BOARD MEETING Jun 09 2020 AGENDA FOR REGULAR BOARD MEETING Jun 02 2020 AGENDA FOR SPECIAL BOARD MEETING May 27 2020 AGENDA FOR SPECIAL BOARD MEETING May 12 2020 AGENDA FOR REGULAR BOARD MEETING Apr 28 2020 AGENDA FOR SPECIAL BOARD MEETING Apr 07 2020 AGENDA FOR REGULAR BOARD MEETING Mar 27 2020 AGENDA FOR SPECIAL BOARD MEETING Mar 18 2020 AGENDA FOR SPECIAL BOARD MEETING Mar 10 2020 AGENDA FOR REGULAR BOARD MEETING Mar 03 2020 AGENDA FOR SPECIAL BOARD MEETING Feb 18 2020 AGENDA FOR SPECIAL BOARD MEETING Feb 11 2020 AGENDA FOR REGULAR BOARD MEETING Jan 28 2020 AGENDA FOR SPECIAL BOARD MEETING Jan 14 2020 AGENDA FOR REGULAR BOARD MEETING Jan 07 2020 AGENDA FOR SPECIAL BOARD MEETING Dec 10 2019 AGENDA FOR REGULAR BOARD MEETING Nov 12 2019 AGENDA FOR REGULAR BOARD MEETING Oct 16 2019 AGENDA FOR REGULAR BOARD MEETING Oct 02 2019 AGENDA FOR SPECIAL BOARD MEETING Sep 24 2019 AGENDA FOR SPECIAL BOARD MEETING Sep 10 2019 AGENDA FOR REGULAR BOARD MEETING Aug 27 2019 AGENDA FOR SPECIAL BOARD MEETING Aug 22 2019 AGENDA FOR SPECIAL BOARD MEETING Aug 15 2019 AGENDA FOR SPECIAL BOARD MEETING Aug 13 2019 AGENDA FOR REGULAR BOARD MEETING Jul 23 2019 AGENDA FOR SPECIAL BOARD MEETING Jul 09 2019 AGENDA FOR REGULAR BOARD MEETING Jun 25 2019 AGENDA FOR SPECIAL BOARD MEETING Jun 18 2019 AGENDA FOR REGULAR BOARD MEETING May 28 2019 AGENDA FOR SPECIAL BOARD MEETING May 21 2019 AGENDA FOR SPECIAL BOARD MEETING May 14 2019 AGENDA FOR REGULAR BOARD MEETING Apr 30 2019 AGENDA FOR SPECIAL BOARD MEETING Apr 23 2019 AGENDA FOR SPECIAL BOARD MEETING Apr 09 2019 AGENDA FOR REGULAR BOARD MEETING Mar 26 2019 AGENDA FOR SPECIAL BOARD MEETING Mar 12 2019 AGENDA FOR REGULAR BOARD MEETING Feb 26 2019 AGENDA FOR SPECIAL BOARD MEETING Feb 12 2019 AGENDA FOR REGULAR BOARD MEETING Time: Location: Private Version For: Public User Agenda Splitscreen Live Meeting Minutes Print Version Versions Signed Minutes Accessible Web Version Annotate Agenda Show Map Hide Map Board Application: -Select- Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals Members Natalie Luna Rose Val Romero Sadie Shaw Jennifer Eckstrom Ravi Shah © Diligent Community 2026 Tucson Unified School District User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "diligent:tusd1:482@5a59c40c89788adf742d28e26fbe3ef17382d53680739905b63b9bd6679bb83a",
+   "meetingId": "diligent:tusd1:482",
+   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+   "documentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=482",
+   "contentHash": "5a59c40c89788adf742d28e26fbe3ef17382d53680739905b63b9bd6679bb83a",
+   "retrievedAt": "2026-08-18T01:52:35.964Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=482",
+   "sourceOrg": "Tucson Unified School District Governing Board",
+   "collectedAt": "2026-08-18T01:52:35.964Z",
+   "verifiedAt": null,
+   "text": "Tucson Unified School District - Meeting Information Skip Navigation Jump to SideBar Quick Menu Public site Sign in History, Tradition, Culture, and YOU! Your Javascript is turned off, without it, this site will not operate as intended. Home » Meeting Schedule » Meeting Information Welcome to Tucson Unified School District Home Calendar Meetings Search Share Alternative Education Advisory Committee Meeting Agenda The meeting will be available live for public viewing via Zoom Webinar using the link available on the Alternative Education Advisory Committee website, https://govboard.tusd1.org/alternative-education-advisory-committee. La reunión estará disponible en vivo para el público a través de un seminario web de Zoom. Puedes encontrar el enlace para acceder al seminario web en el sitio web de la Alternative Education Advisory Committee, https://govboard.tusd1.org/alternative-education-advisory-committee. -Names and details, including available support documents, may be obtained during regular business hours at the TUSD Governing Board Office. -Upon request, TUSD will provide a certified interpreter to interpret Alternative Education Advisory Committee meetings whenever possible. Please contact Translations/Interpretations Services at 520-225-4858 at least 72 hours prior to the event. Every effort will be made to honor requests for interpretation services made with less than 72 hours’ notice. -A petición previa, TUSD proporcionará un intérprete titulado para interpretar las reuniones del Comité de Asesoramiento para la Educación Alternativa cuando lo sea posible. Favor de comunicarse a los Servicios de Traducción e Interpretación al 520-225-4858 al menos de 72 horas antes del evento. Se hará todo lo posible por atender a todas las solicitudes de interpretación realizados con menos de 72 horas de aviso previo. -If authorized by a majority vote of the members of the Alternative Education Advisory Committee, any matter on the open meeting agenda may be discussed in executive session for the purpose of obtaining legal advice thereon, pursuant to A.R.S. 38-431.03 (A)(3). The executive session will be held immediately after the vote and will not be open to the public. -The order of items on this agenda may be modified during the meeting at the discretion of the Alternative Education Advisory Committee or upon a motion to amend the order of business which is approved by the Committee. Alternative Education Advisory Committee Members Aug 17 2026 Alternative Education Advisory Committee Meeting Agenda Jun 08 2026 Alternative Education Advisory Committee Meeting Agenda May 18 2026 Alternative Education Advisory Committee Meeting Agenda Apr 20 2026 Alternative Education Advisory Committee Meeting Agenda Mar 09 2026 Alternative Education Advisory Committee Meeting Agenda Feb 02 2026 Alternative Education Advisory Committee Meeting Agenda Jan 12 2026 Alternative Education Advisory Committee Nov 17 2025 AGENDA FOR ALTERNATIVE EDUCATION ADVISORY COMMITTEE Oct 20 2025 CANCELLED DUE TO LACK OF QUORUM - AGENDA FOR ALTERNATIVE EDUCATION ADVISORY COMMITTEE Aug 18 2025 AGENDA FOR ALTERNATIVE EDUCATION ADVISORY COMMITTEE Jun 16 2025 AGENDA FOR ALTERNATIVE EDUCATION ADVISORY COMMITTEE Apr 21 2025 AGENDA FOR ALTERNATIVE EDUCATION ADVISORY COMMITTEE Mar 17 2025 AGENDA FOR ALTERNATIVE EDUCATION ADVISORY COMMITTEE Feb 17 2025 AGENDA FOR ALTERNATIVE EDUCATION ADVISORY COMMITTEE Jan 13 2025 CANCELLED DUE TO LACK OF QUORUM - AGENDA FOR ALTERNATIVE EDUCATION ADVISORY COMMITTEE Nov 18 2024 AGENDA FOR ALTERNATIVE EDUCATION ADVISORY COMMITTEE Oct 21 2024 AGENDA FOR ALTERNATIVE EDUCATION ADVISORY COMMITTEE Sep 16 2024 AGENDA FOR ALTERNATIVE EDUCATION ADVISORY COMMITTEE Aug 19 2024 AGENDA FOR ALTERNATIVE EDUCATION ADVISORY COMMITTEE Jun 10 2024 AGENDA FOR ALTERNATIVE EDUCATION ADVISORY COMMITTEE Apr 15 2024 AGENDA FOR ALTERNATIVE EDUCATION ADVISORY COMMITTEE Time: Location: Private Version For: Public User Agenda Splitscreen Live Meeting Minutes Print Version Versions Signed Minutes Accessible Web Version Annotate Agenda Show Map Hide Map Board Application: -Select- Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals Members Alonzo Bailey Felicia Chew Brieanna Chillious Paulette Muhammad (Absent) Betts Putnam-Hidalgo Luke Skiba © Diligent Community 2026 Tucson Unified School District User name Password Sign In Remember me next time. Forgot password?",
    "extraction": "html",
    "extractionNote": null
   },
@@ -7286,6 +7435,22 @@
    "collectedAt": "2026-08-14T03:15:53.292Z",
    "verifiedAt": null,
    "text": "Pima Community College - Meeting Information Skip Navigation Jump to SideBar Quick Menu Public site Sign in Your Javascript is turned off, without it, this site will not operate as intended. Home » Meetings » Meeting Information Welcome to Pima Community College Home Calendar Meetings Search Share Study Session Members Aug 10 2026 Study Session Jun 15 2026 Study Session Apr 27 2026 Study Session Mar 30 2026 Study Session Feb 17 2026 Study Session Nov 17 2025 Study Session Oct 27 2025 Study Session Sep 29 2025 Study Session May 27 2025 Study Session Apr 28 2025 Study Session Time: Location: Private Version For: Public User Agenda Splitscreen Live Meeting Minutes Print Version Versions Signed Minutes Accessible Web Version Annotate Agenda Show Map Hide Map Board Application: -Select- Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals Members Greg Taylor Theresa Riel Nicole Barraza Kristen Randall Karla Morales © Diligent Community 2026 Pima Community College User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "diligent:pcc:664@ac591f10463ce7bd7c8e0b30eb4ccbc9cc59a80e737cb93177f64caa7802dec2",
+   "meetingId": "diligent:pcc:664",
+   "ocdId": null,
+   "documentUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=664",
+   "contentHash": "ac591f10463ce7bd7c8e0b30eb4ccbc9cc59a80e737cb93177f64caa7802dec2",
+   "retrievedAt": "2026-08-18T01:52:36.659Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=664",
+   "sourceOrg": "Pima Community College Governing Board",
+   "collectedAt": "2026-08-18T01:52:36.659Z",
+   "verifiedAt": null,
+   "text": "Pima Community College - Meeting Information Skip Navigation Jump to SideBar Quick Menu Public site Sign in Your Javascript is turned off, without it, this site will not operate as intended. Home » Meeting Schedule » Meeting Information Welcome to Pima Community College Home Calendar Meetings Search Share Finance and Audit Committee Meeting Jun 12 2026 Finance and Audit Committee Meeting Apr 17 2026 Finance and Audit Committee Meeting Feb 20 2026 Finance and Audit Committee Meeting Dec 12 2025 Finance and Audit Committee Meeting Oct 31 2025 Finance and Audit Committee Meeting Aug 22 2025 Finance and Audit Committee Meeting Jun 13 2025 Finance and Audit Committee Meeting Apr 18 2025 Finance and Audit Committee Meeting Time: Location: Private Version For: Public User Agenda Splitscreen Live Meeting Minutes Print Version Versions Signed Minutes Accessible Web Version Annotate Agenda Show Map Hide Map Board Application: -Select- Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals © Diligent Community 2026 Pima Community College User name Password Sign In Remember me next time. Forgot password?",
    "extraction": "html",
    "extractionNote": null
   },
@@ -7830,6 +7995,22 @@
    "collectedAt": "2026-08-18T00:08:32.425Z",
    "verifiedAt": null,
    "text": "",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "schedulepage:mhrd:2026-08-17@a6ed4a94ca93f37637444e6acacfdd5a160a88e72025e11185832c89c688678a",
+   "meetingId": "schedulepage:mhrd:2026-08-17",
+   "ocdId": "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district",
+   "documentUrl": "https://resources.finalsite.net/images/v1786724489/mhrdorg/yxozzjyygnrh7qhqmymm/08172026AGENDAFINAL.pdf",
+   "contentHash": "a6ed4a94ca93f37637444e6acacfdd5a160a88e72025e11185832c89c688678a",
+   "retrievedAt": "2026-08-18T01:52:36.849Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://resources.finalsite.net/images/v1786724489/mhrdorg/yxozzjyygnrh7qhqmymm/08172026AGENDAFINAL.pdf",
+   "sourceOrg": "Morris Hills Regional District Board of Education",
+   "collectedAt": "2026-08-18T01:52:36.849Z",
+   "verifiedAt": null,
+   "text": "MORRIS HILLS REGIONAL DISTRICT BOARD OF EDUCATION AGENDA: REGULAR MEETING Monday, August 17, 2026 6:30 p.m., BOE Conference Room I. SALUTE TO THE FLAG II. ROLL CALL Meeting Roll Call Michael Bertram Christie D’Asti Frank Francia Barbara C. Levy William Maher Patrick Napolitano William Sera fi n Michael Wieczerzak Theresa Yeager Others in Attendance Nicholas Norcia Nisha Zoeller Danielle Matovski Alicia Valverde-Mesa Dan Haug Ryan MacNaughton Todd Toriello Dezaray Semer III. OPENING STATEMENT - NOTICE OF MEETING “Adequate notice of this meeting was advertised in the Daily Record and The Citizen on January 9, 2026 . In addition, it was mailed to the municipal offices at Denville Township, Rockaway Borough, Rockaway Township, and Wharton Borough for posting; mailed to the Morris County Clerk's Office; posted in the lobbies of Morris Hills and Morris Knolls High School, and the Board of Education building on January 6, 2026.” IV. PRIOR MEETING MINUTES A. Approval to accept the minutes: June 15, 2026 and July 20, 2026 Motion By: Seconded By: Roll Call Mr. Bertram Mrs. D’Asti Mr. Francia Ms. Levy Mr. Maher Mr. Napolitano Mr. Sera fi n Mrs. Yeager Mr. Wieczerzak AYES: NAYS: ABSTAIN: V. CHIEF SCHOOL ADMINISTRATOR’S REPORT & CORRESPONDENCE VI. STUDENT REPRESENTATIVES’ REPORTS VII. PUBLIC COMMENT STATEMENT “Please know that the Board of Education recognizes and respects your right to make public comments under Federal and State law, as well as Board Bylaw 0167. This is not a dialogue between the commenter and the Board. This is an opportunity for the Board to hear comments from the community. Questions regarding District operations or procedures should be directed to the appropriate administrative staff. Consistent with the Bylaw, public comment is limited to fi ve minutes. The board may interrupt, warn, or terminate public comment when the statement is too lengthy, abusive, obscene, or irrelevant. Further, the Board may request anyone to leave its meeting if that person does not observe reasonable decorum. Again, we respect your right to public comment, but please be aware of this caution and warning, the rights of other persons, and the Board’s rights concerning your comments.” VIII. FIRST PUBLIC PORTION - AGENDA ITEMS ONLY IX. FIRST BOARD DISCUSSION PERIOD 1\nMORRIS HILLS REGIONAL DISTRICT BOARD OF EDUCATION AGENDA: REGULAR MEETING Monday, August 17, 2026 6:30 p.m., BOE Conference Room X. AGENDA A. Buildings, Grounds, and Transportation (Items 1-3) 1. Approval of the use of the facilities requests by the following priority groups III, IV, and V: Priority Requestor/Activity Permit IIIA Charlene Scott / MK Thespian Booster Club Mattress Fundraiser 2608-0013 2. Approval of the bus routes for the 2026-2027 school year as listed . 3. Approval of the hazardous roads listing for the 2026-2027 school year as listed . Motion By: Mr. Frank Francia, Chair. Seconded By: Roll Call Mr. Bertram Mrs. D’Asti Mr. Francia Ms. Levy Mr. Maher Mr. Napolitano Mr. Sera fi n Mrs. Yeager Mr. Wieczerzak AYES: NAYS: ABSTAIN: B. Finance (Items 1-14) 1. Acceptance of the following reports: Name Month / Year a. Treasurer’s Report June 2026 b. Board Secretary’s Report June 2026 2. Rati fi cation of Payments: Type Month / Year a. Accounts Payable Detail June 2026 / FY26 July 2026 / July 2026 b. Agency AP Summary June 2026 / July 2026 c. Accounts Payable Voids June 2026 / July 2026 3. Rati fi cation of Budget Transfers w/ no over expenditure lines: Type Month / Year a. Budget Transfer Summary June 2026 / July 2026 b. Budget Transfer Detail June 2026 / July 2026 4. Rati fi cation of Special Services Evaluation and Related Services as follows: OUTSIDE PLACEMENT – SCHOOL YEAR/ESY 2026-2027 Student School Placement Start Date / Aide Cost (Prorated) ODP07286 Lake Drive School ESY Summer $8,075.00 ODP75561 Fusion Academy ESY Summer $750.00 ODP74180 BCSS New Bridges HS ESY Summer $9,525.00 ODP85293 Shepard Preparatory 07/01/2026 (incl. ESY) $74,571.30 ODP07286 Lake Drive School 08/26/26 $85,500.00 ODP96463 Lake Drive School 08/26/26 $88,150.00 ODP74180 BCSS New Bridges HS 08/31/26 / 1:1 Aide $99,621.00 / $56,754.00 ODP75561 Fusion Academy 08/11/26 $6,125.00 SPECIAL SERVICES EVALUATIONS & RELATED SERVICES - SCHOOL YEAR 2026-2027 (Psychiatric, Physical, Speech, Occupational, Social, Educational, etc.) Student School Eval./Service Provider/Services Cost 20262047 MK Transition Services SCESC $42,273.00 ODP74180 MK ESY Related Services BCSS - New Bridges $80.00 ea 20296393 MK Itinerant Services Lake Drive School $1,480.00 20306881 MK Itinerant Services Lake Drive School $1,080.00 40602027 MK Itinerant Services Lake Drive School $1,080.00 ODP07335 MH In-Home Services North Jersey Outreach $52,825.00 5. Rati fi cation of the following tuition agreements for the 2026-2027 school year: Student Sending District School Program Related Services Amount 20296525 Morris Plains SD MKHS RP ESS $61,795.00 2\nMORRIS HILLS REGIONAL DISTRICT BOARD OF EDUCATION AGENDA: REGULAR MEETING Monday, August 17, 2026 6:30 p.m., BOE Conference Room Student Sending District School Program Related Services Amount 20266623 Dover Public Schools MKHS MD Speech / OT $52,909.00 20266521 Dover Public Schools MKHS MD Speech $51,037.00 20274576 Dover Public Schools MKHS MD Speech / Para $80,452.00 6. Approval of the following revised interlocal service agreements: Vendor Service Type Term Cost Year 1 Cost Year 2 Borough of Rockaway Police Security Officer 07/01/2026 - 06/30/2028 $62.00 / hr $64.00 / hr Township of Denville Police Security Officer 07/01/2026 - 06/30/2028 $62.00 / hr $64.00 / hr Borough of Rockaway Security Resource Officer 07/01/2026 - 06/30/2028 $92,700.00 / annual $95,481.00 / annual Township of Denville Security Resource Officer 07/01/2026 - 06/30/2028 $89,351.00 / annual $92,031.50 / annual Borough of Rockaway Class III Officer 07/01/2026 - 06/30/2028 $115,111.00 / annual $118,564.00 / annual Township of Denville Class III Officer 07/01/2026 - 06/30/2028 $115,111.00 / annual $118,564.00 / annual 7. Approval of a tuition share-time contract agreement with the Morris County Vocational School District, effective immediately and terminating on June 16, 2027, at the following rates: Enrollment Regular Education / Special Education Full-Time Student $10,562.00 / $15,361.00 Part-Time Student $5,221.00 / $7,681.00 8. Approval to accept the 2026-2027 Uni fi ed Champion Schools Grant in the amount of $1,500.00 from the Special Olympics of New Jersey. 9. Approval of a resolution to accept the following grants for the 2026-2027 school year: IDEA FY 2027 funds in the total amount of $710,424. Including the Non-Public portion in the amount of $78,567, and to submit an application for the use of these funds in the 2026-2027 school year. 10. Approval of a resolution to accept the ESEA Consolidated Formula Subgrant FY 2027 funds in the total amount of $179,211, with the following details, and to submit an application for the use of these funds in the 2026-2027 school year: Title I Title II Title III Title III Immigrant Title IV $96,513 $36,415 (Non Public $291) $24,270 $12,013 $10,000 11. WHEREAS, N.J.S.A. 18A:18B-1, et seq., enables boards of education to join with other boards of education in school board insurance trusts for the purpose of forming self-insurance pools; WHEREAS, the New Jersey Schools Insurance Group (“NJSIG”) is a joint insurance fund authorized by N.J.S.A. 18A:18B-1, et seq. to provide insurance coverage and risk management services for its members; WHEREAS, the [Morris Hills Regional District Board of Education, herein after referred to as the “Educational Institution,” has resolved to renew its membership with NJSIG; WHEREAS, the Educational Institution certi fi es that it has not defaulted on a claim, and has not been cancelled for non-payment of insurance premium for a period of at least two (2) years prior to the date of its application to NJSIG; WHEREAS, the Educational Institution desires to secure protection, services, and savings relating to insurance and self-insurance for itself and its departments and employees; and, WHEREAS, the Educational Institution fi nds that the best and most efficient way of securing this protection and services is by cooperating with other boards of education in the State of New Jersey. NOW THEREFORE, BE IT RESOLVED, THAT: 1) This agreement is made by and between NJSIG and the Educational Institution; 2) The Educational Institution joins with other boards of education in organizing and becoming members of NJSIG pursuant to N.J.S.A. 18A:18B-3(a), for a period of three years, beginning on July 1, 2026, and ending July 1, 2029 at 12:01 a.m.; 3\nMORRIS HILLS REGIONAL DISTRICT BOARD OF EDUCATION AGENDA: REGULAR MEETING Monday, August 17, 2026 6:30 p.m., BOE Conference Room 3) In consideration of membership in NJSIG, the Educational Institution agrees that for those types of coverage in which it participates, the Educational Institution shall jointly and severally assume and discharge the liabilities of each and every member of NJSIG to such agreement arising from their participation in NJSIG. By execution hereof the full faith and credit of the Educational Institution is pledged to the punctual payment of any sums which shall become due to NJSIG in accordance with the bylaws thereof, the plan of risk management, this Agreement and any applicable statute or regulation; 4) The Educational Institution and NJSIG agree that NJSIG shall hold all monies paid by the Educational Institution to NJSIG as fi duciaries for the bene fi t of NJSIG claimants all in accordance with applicable statutes and/or regulations; 5) NJSIG shall establish and maintain Trust Accounts in accordance with N.J.S.A. 18A:18B-1, et seq. and such other statutes and regulations as may be applicable; 6) By adoption and signing of this resolution, the Educational Institution is hereby joining NJSIG in accordance with the terms of this Indemnity and Trust Agreement and Resolution to Join / Renew Membership, effective the date indicated below, for the types of insurance as indicated in the Insurance Binder issued by NJSIG; 7) The Educational Institution hereby rati fi es and affirms the bylaws and other organizational and operational documents of NJSIG, and as from time to time amended by NJSIG and/or the State of New Jersey, Department of Banking and Insurance, in accordance with the applicable statutes and regulations as if each and every one of said documents were re-executed contemporaneously herewith; 8) The Educational Institution agrees to be a participating member of NJSIG for the period herein provided for and to comply with all of the rules and regulations and obligations associated with said membership, including, but not limited to the NJSIG’s Plan of Risk Management; 9) The Educational Institution under its obligations as a member of NJSIG agrees to allow for safety inspections of its properties, to pay contributions in a timely fashion and to comply with the bylaws and standards of participation of NJSIG including the plan of risk management; 10) If NJSIG, in the enforcement of any part of this Agreement, shall incur necessary expense or become obligated to pay attorney’s fees and/or court costs, the Educational Institution agrees to reimburse NJSIG for all such reasonable expenses, fees and costs on demand; 11) The Business Administrator is hereby authorized in accordance with the Public School Contracts Law, N.J.S.A. 18A:18A-1, et seq., to execute such contracts and documentation with NJSIG as is necessary to effectuate this resolution; and, 12) The Business Administrator is directed to send a certi fi ed copy of this Indemnity and Trust Agreement and Resolution to Join / Renew Membership to NJSIG. 12. Approval of a settlement agreement for student ODP75561 on fi le in the Business Office. 13. Approval of a settlement agreement for student 20296202 on fi le in the Business Office. 14. Approval of the following revised shared services agreements for the 2026-2027 school year: District Provider Service Cost Wharton Board of Education Morris Hills Regional District Child Study Team $427,200.00 Wharton Board of Education Morris Hills Regional District Custodial $483,197.00 Rockaway Borough School District Morris Hills Regional District Child Study Team $383,007.00 4\nMORRIS HILLS REGIONAL DISTRICT BOARD OF EDUCATION AGENDA: REGULAR MEETING Monday, August 17, 2026 6:30 p.m., BOE Conference Room 15. Approval of a renewal agreement with Thomson Reuters Enterprise Centre GmbH and West Publishing Corporation for CLEAR Pro fl ex - investigative and data analytics proprietary software to support school operations for the 2026-2027 school year in the amount of $19,256.28. Motion By: Mr. William Maher, Chair. Seconded By: Roll Call Mr. Bertram Mrs. D’Asti Mr. Francia Ms. Levy Mr. Maher Mr. Napolitano Mr. Sera fi n Mrs. Yeager Mr. Wieczerzak AYES: NAYS: ABSTAIN: C. Curriculum, Extended Education, Athletics, and Student Activities (Items 1-24) 1. Approval of Literacy Passport and Independent Reading Initiative at Morris Hills High School and Morris Knolls High School for the 2026-2027 school year. 2. Approval of the 2026-2027 Adult High School fees, payment schedule, and refund policy . 3. Approval of the Dual Enrollment Agreement with Warren County Community College for Drone and UAS Technology class. 4. Approval of Memorandum of Understanding for New Jersey Institute of Technology . 5. Approval of title changes for Academy for Performing Arts courses for 2026-2027 and beyond: Current Title Proposed Title VP716 Academy Technical Theatre 1 H VP716 Academy Technical Theatre H VP710 Academy Musical Theatre 1 H VP710 Academy Acting 1/Mus. Theatre H VP720 Academy Musical Theatre 2 H VP720 Academy Acting 2/Mus. Theatre H VP723 Academy Piano Studio for MT H VP723 Academy Vocal/Piano Studio H 6. Approval of International Exchange student #STU07626 to attend Morris Knolls High School CHANGED TO: MORRIS HILLS HIGH SCHOOL for the 2026-2027 school year through the Pan Atlantic Foundation. 7. Approval of Morris Hills High School and Morris Knolls High School 2026 Fall Sports Schedules. 8. Rati fi cation of Athletic Schedule Changes for June 2026 for Morris Hills High School and Morris Knolls High School . 9. Approval of the following 8th-graders participating in the Morris Hills and Morris Knolls High School Marching Bands for 2026 - 2027: Morris Hills High School Morris Knolls High School A.A., P.F., Z.G., N.H., A.K., A.L., E.L., R.M., J.M., C.M., M.Q. J.R I.A., V.F., C.K., D.S, A.W., A.W, ADDED: A.K. 10. Approval of the following Programs & Services for 2026-2027: MORRIS HILLS HIGH SCHOOL MORRIS KNOLLS HIGH SCHOOL African Culture Club (unpaid/non-curricular) Academic Decathlon Team Art Honor Society Art Services Club Asian Heritage Club Astronomy/Physics Club (unpaid/non-curricular) Band Front/Color Guard Business Honor Society Chess Club (unpaid/non-curricular) Choreographer Chorus Concert Band – Advanced & Freshman Costuming D.E.C.A. (Distributive Education Clubs of America) English Honor Society Environmental Action Club (unpaid/non-curricular) E.R.A.S.E. (Eliminating Racism & Sexism Everywhere) Esports ESL Honor Society (unpaid/non-curricular) Academic Decathlon Team Art Service Club Asian American Heritage Club(unpaid/non-curricular) Band Front/Color Guard Bible Club (unpaid/non-curricular) Biz-Tech Club Business Honor Society Chess Club (unpaid/non-curricular) Chorus/Chorale Computer Club (unpaid/non-curricular) Concert Band Conservative Club (unpaid/non-curricular) Culinary Club Dance Club (unpaid/non-curricular) D.E.C.A. (Distributive Education Club of America) Ecology Club (unpaid/non-curricular) Economics Club (unpaid/non-curricular) English Honor Society 5\nMORRIS HILLS REGIONAL DISTRICT BOARD OF EDUCATION AGENDA: REGULAR MEETING Monday, August 17, 2026 6:30 p.m., BOE Conference Room MORRIS HILLS HIGH SCHOOL MORRIS KNOLLS HIGH SCHOOL F.B.L.A. (Future Business Leaders of America) F.C.C.L.A. (Family, Career & Community Leaders of America) French Club (unpaid/non-curricular) French Honor Society Freshman Class Games Club (unpaid/non-curricular) MH Pride (unpaid/non-curricular) German Club (unpaid/non-curricular) German Honor Society H.O.P.E. Club Indian Cultural Club (unpaid/non-curricular) Interact Club International Relations Club (unpaid/non-curricular) International Thespian Society (unpaid/non-curricular) Jazz Band Junior Class Junior Statesmen of America (JSA) Key Club Knights Templar String Theory (unpaid/non-curricular) Leo Club Library Council (unpaid/non-curricular) Literary Publication ( Knight Writers) Madrigals Marching Band Math Team NJML Math Honor Society – Mu Alpha Theta Media Services Medical Club (unpaid/non-curricular) Mock Trial National Honor Society Parades – Marching Band Peer Tutoring Club (unpaid/non-curricular) Photography Club (unpaid/non-curricular) Pit Band Portable Sound Programming Club (unpaid/non-curricular) Project Lead School Musical School Newspaper ( Hilltopper) School Play Science Honor Society Science Olympiad Senior Class Set Designer S.G.A. (Student Government Association) Ski/Snowboard Club Skills USA Social Studies Honor Society Sophomore Class Sound and Lighting Spanish Club (unpaid/non-curricular) Spanish Honor Society Spoken Word Society (unpaid/non-curricular) Sports Medicine Club (unpaid/non-curricular) Spring Musical String Ensemble Technology Honor Society T.L.C. (Teen Leadership Council) T.S.A. (Technology Student Association) Tri-M Music Honor Society TV Production Club (unpaid/non-curricular) Varsity Club Esports Fall Play F.B.L.A. (Future Business Leaders of America) F.C.C.L.A. (Family, Career & Community Leaders of America) F.E.A. (Future Educators of America) (unpaid/non-curricular) Forensics & Debate French Club (unpaid/non-curricular) French Honor Society Freshman Class Gaming Club (unpaid/non-curricular) German Club (unpaid/non-curricular) German Honor Society H.O.P.E. Club H.O.S.A. Club (unpaid/non-curricular) Interact Club Jazz Ensemble Junior Class Junior Statesmen of America (JSA) Key Club Knots of Fun Club Leo Club Lighting & Sound Literary Publication ( Spectrum) Literary Society of MK (unpaid/non-curricular) Marching Band Math Honor Society – Mu Alpha Theta Math Club (unpaid/non-curricular) Mathematics Team MK Pride (unpaid/non-curricular) Multicultural/Club/E.R.A.S.E. National Art Honor Society National Honor Society National Science Honor Society Newspaper (Quill) Philosophy Club (unpaid/non-curricular) Pit Band Project Lead Psychology Club (unpaid/non-curricular) Racial Justice Alliance (unpaid/non-curricular) Robotics Club School Musical Senior Class Set Design/Stage Craft S.G.A. (Student Government Association) Sign Language Club (unpaid/non-curricular) Ski/Snowboard Club Skills USA Social Studies Honor Society Society of Young Women in Science (unpaid/non-curricular) Songwriters Club (unpaid/non-curricular) Sophomore Class Spanish Club (unpaid/non-curricular) Spanish Honor Society Spring Musical Stagecraft String Ensemble Symphony Orchestra Technology Honor Society T.L.C. (Teen Leadership Council) T.S.A. (Technology Student Association) Thespian Society (unpaid/non-curricular) TRI-M Music Honor Society 6\nMORRIS HILLS REGIONAL DISTRICT BOARD OF EDUCATION AGENDA: REGULAR MEETING Monday, August 17, 2026 6:30 p.m., BOE Conference Room MORRIS HILLS HIGH SCHOOL MORRIS KNOLLS HIGH SCHOOL Wind Ensemble Winter Guard (Excalibur) Women’s Chorale Yearbook Club ( Torch) Youth Alive (unpaid/non-curricular) TV Production/Film Club (unpaid/non-curricular) Uni fi ed Circles Club Varsity Club Winter Guard Winter Percussion (unpaid/non-curricular) World Language Honor Society Yearbook Sales Club Yearbook ( Talon) DISTRICT SERVICES Adult High School Drug and Alcohol Instruction Substance Abuse Prevention Program Emergency & Crisis Management English as a Second Language for Adults Family Life Instruction as per State requirements Guidance Services Health Services/School Nursing Plan Home Instruction In School Suspension Transportation Services All Basic and Supplemental Textbooks Violence & Vandalism Prevention Special Education Services and Programs: Academic Support Assistive Technology Behavioral Disabilities Child Study Team Services Effective School Solutions Flex School Gifted and Talented In-Class Support Learning/Language Disabilities Multiple Disabilities Occupational Support Resource Centers Supplemental Instruction Transition Services 11. Approval of the following Academy for the Performing Arts Guest Artists for 2026-2027: Program Guest Artist Description Total Fee Dance Sam Behrens Jazz Dance Repertory - 10 sessions: September 2026 - June 2027 $2,750.00 Dance Dereck Crescenti Contemporary Repertory - 10 sessions: September 2026 - June 2027 $2,500.00 Dance Tammy Klinck Ballet Repertory, Yoga and Performance Coach - 20 sessions: September 2026 - June 2027 $5,500.00 Dance Arlick Thomas Modern Technique Repertory - 10 sessions: September 2026 - June 2027 $3,000.00 12. Approval of OSHA 10 training and certi fi cation for Academy for the Performing Arts staff and students: Program Vendor Dates Fee Technical Theatre Matthew Miller 10/12/2026 & 10/21/2026 (Staff only), 11/13/2026, 12/4/2026, 12/9/2026, 1/8/2027, 2/5/2027, 3/25/2027, 4/9/2027, 5/7/2027 $150.00 per participant 13. Approval of the following Supplemental Textbook Adoptions: Course Title Author(s) Publisher Copyright Cost Academy Vocal/Piano Studio H One-Minute Theory Books 1-3 Slabbinck & Shaw-Slabbinck Neil A. Kjos Music Co. 2005 MK = $249.75 ($9.99 x 25 copies) MH = $0 English 9 CPB The Bitter Side of Sweet Tara Sullivan Penguin Books 2016 Dist = $1,299.00 ($12.99 x 100 copies) AP Language & Composition Sitting Pretty Rebekah Taussig HarperOne 2020 Dist = $849.50 ($16.99 x 50 copies) 14. Approval of the renewal of a 3-year license of the following digital resource: Course Title Author(s) Publisher Copyright Cost AP Spanish Language / IB Spanish SL 2 AP Spanish Language and Culture Exam Preparation, 3rd edition Trujilo & Raducanu Vista 2024 MK = 0 MH = $4,587.75 ($101.95 x 45 copies) 15. Approval of the disposition of the following Math textbooks: Title Author Publisher Year Quantity Reason Multiple-Choice & Free Response Questions in Preparation for the AP Computer Science Examination, Ninth Edition Leon Schram D&S Marketing 2015 66 Outdated 16. Approval of the disposition of library materials . 17. Approval of Delta Math as a supplemental instructional tool for Algebra I, Geometry, Algebra 2, Precalculus, and Calculus for the 2026 - 2027 school year at Morris Hills High School and Morris Knolls High School at the total cost of $2,925.00. 7\nMORRIS HILLS REGIONAL DISTRICT BOARD OF EDUCATION AGENDA: REGULAR MEETING Monday, August 17, 2026 6:30 p.m., BOE Conference Room 18. Approval of piloting the Math Medic platform for use in AP Statistics during the 2026-2027 school yea r at the cost of $325.00 per user for two users ($650.00 total). 19. Approval of the following off-site locations for CBI curricular fi eld trips for the 2026-2027 school year: Location Name Address Aldi 212 Route 46 East, Rockaway, NJ 07866 Applebees 425 US-46, Dover, NJ 07801 Barnes and Noble Ledgewood 461 NJ-10 Building B300, Ledgewood, NJ 07852 Buffalo Wild Wings 343 Mt Hope Ave, Rockaway, NJ 07866 Chatham Hickory Cinema 641 Shunpike Road, Chatham, NJ 07928 Denville Dog 99 Bloom fi eld Ave, Denville, NJ 07834 Dick's Sporting Goods 381 Mt Hope Ave, Rockaway Township, NJ 07866 Dollar Tree 423 US-46, Dover, NJ 07801 Field House at Grove Street Park in Chester 107 Seminary Ave., Chester, NJ 07930 Hanover Lanes 119 NJ-10, East Hanover, NJ 07936 Home Depot 530 Mt Pleasant Ave, Dover, NJ 07801 Home Goods / TJ Maxx (Rockaway/Dover) 426 US-46, Dover, NJ 07801 Home Goods Cedar Knolls 110 E Hanover Ave, Cedar Knolls, NJ 07927 IHOP 102 E Hanover Ave, Cedar Knolls, NJ 07927 Michael's (Rockaway) 327 Mount Hope Avenue, Ste 1002, Rockaway, NJ 07866 Morris County Arboretum 353 E Hanover Ave, Morristown, NJ 07960 Olive Garden 323 Mt Hope Ave, Rockaway, NJ 07866 Parks Lake Gazebo 8 Mt Hope Rd, Rockaway, NJ 07866-2407 PetSmart 367 Mt Hope Ave, Rockaway Township, NJ 07866 Randolph Diner 517 NJ-10, Randolph, NJ 07869 Rockaway Lanes 365 US-46, Rockaway, NJ 07866 Rockaway Townsquare Mall 301 Mt Hope Ave, Rockaway, NJ 07866 Shoprite of Greater Morristown 178 E Hanover Ave, Cedar Knolls, NJ 07927 Shoprite of Rockaway 437 US-46, Dover, NJ 07801 Target 381 Mt Hope Ave, Rockaway Township, NJ 07866 The Shoppes at Ledgewood Commons 461 NJ-10, Ledgewood, NJ 07852 Trader Joes 3056 NJ-10, Denville, NJ 07834 Tranquility Farms 47 Decker Pond Rd, Green Township, NJ 07821 Walmart Rockaway 220 Enterprise Dr, Rockaway Township, NJ 07866 Wegmans 34 Sylvan Way, Parsippany, NJ 07054 Hackettstown High School 599 Warren Street, Hackettstown, NJ 07840 Hanover Park High School 63 Mt Pleasant Ave, East Hanover, NJ 07936 Mount Olive High School 18 Corey Rd, Flanders, NJ 07836 Parsippany High School 309 Baldwin Rd, Parsippany, NJ 07054 West Essex High School 65 W Greenbrook Rd, North Caldwell, NJ 07006 West Morris High School 259 Bartley Rd, Chester, NJ 07930 20. Approval of the following 2026 Curriculum Revisions: Subject Area Course Title Standard Alignments English Multimedia Journalism 2020/2023 NJSLS English News in the Digital Age 2020/2023 NJSLS Science AP Environmental Science 2026 Science NJSLS Science AP Research 2026 Science NJSLS Science Environmental Science CP 2026 Science NJSLS Science Geology 2026 Science NJSLS 8\nMORRIS HILLS REGIONAL DISTRICT BOARD OF EDUCATION AGENDA: REGULAR MEETING Monday, August 17, 2026 6:30 p.m., BOE Conference Room 21. Approval of the following Staff Conferences: Name / School Location / Date Conference Account Est. District Cost Est. Employee Reim.* Krystal Beck / Dist. Trenton, NJ & Online 7/29/2026 8/12/2026 8/18/2026 8/26/2026 NJDOE Social Studies Implementation Committee N/A $0.00 $0.00 Alyson Seltzer / MH Online 9/10/2026 The NJ Department of Human Services 11th Suicide Prevention Conference: Building the Bridges of Hope -- Upstream Approaches to Suicide Prevention N/A $0.00 $0.00 Lara Carlson / MK Online 9/16/2026 9/23/2026 9/30/2026 Stronge & Associates: New Administrator 3-Day Series 27-11-000-240-500-000-04 $825.00 $0.00 Krystal Beck / Dist. Mountain Lakes, NJ 9/17/2026 11/19/2026 Denville, NJ 12/17/2026 1/21/2027 2/18/2027 3/25/2027 4/22/2027 5/20/2027 Whippany, NJ 10/15/2026 Morris Area Curriculum Network Meetings N/A $0.00 $0.00 Brenda Gupta / MH Yesenia Rivera-Carney /AHS East Brunswick, NJ 10/5/2026 10/6/2026 NJSCA: 2026 NJ School Counselors Association Annual Conference 27-11-000-218-580-000-03 (B.G) 27-13-601-200-580-000-13 (Y.R.C.) $683.44 $165.44 Cheryl Engel / Dist. Alyssa Radigan / MK Kevin Doyle / Dist. Yesenia Rivera-Carney / AHS Atlantic City, NJ 10/14/2026 - 10/16/2026 2026 NJPSA/FEA Fall Conference 27-12-190-100-580-108-03 (C.E.) 27 - 11-000-218-580-000-04 (A.R.) 27-11-190-100-580-111-03 (K.D.) 27-13-601-200-580-000-13 (Y.R.C.) $3,893.92 $2,093.92 Nicholas Norcia/Dist. Danielle Matovski /Dist. Daniel Haug / Dist. Neil Charles / Dist. ADDED: JOHN ESCHMANN / Dist. Atlantic City, NJ 10/19/2026 - 10/22/2026 NJ School Boards Association Workshop 2026: Charting Paths, Empowering Journeys 27-11-000-230-580-000-01 (N.N.) 27-11-000-251-580-000-02 (D.M) 27-11-000-251-580-236-09 (D.H.) 27-11-000-252-580-291-11 (N.C.) 27-11-000-261-580-000-07 (J.E.) $4,605.12 $5,756.40 $3,897.12 $4,871.40 Patrick Napolitano / BOE Mbr. Barbara Levy /BOE Mbr. Christie D’Asti / Board Mbr. Atlantic City, NJ 10/19/2026 - 10/22/2026 NJ School Boards Association Workshop 2026: Charting Paths, Empowering Journeys 27-11-000-230-585-000-02 (P.N ., B.L., C.D . ) $3,453.84 $2,302.56 $2,922.84 $1,948.56 Adam Trollinger / MK Iwona Doyle / MH Princeton, NJ 10/20/2026 New Jersey Science Convention 27-11-190-100-580-111-04 (A.T.) 27-11-190-100-580-111-03 (I.D.) $580.00 $100.00 Kevin Doyle / Dist. Princeton, NJ 10/20/2026 10/21/2026 New Jersey Science Convention 27-11-190-100-580-111-04 $532.10 $162.10 Jennifer Toriello / Dist. Keith Bigora / Dist. Kevin Doyle / Dist. Online 10/27/2026 NJPSA/FEA: Hot Issues in School Law 2026-2027 27-11-190-100-580-103-04 (J.T.) 27-11-190-100-580-807-03/04 (K.B.) 27-11-190-100-580-111-04 (K.D.) $375.00 $0.00 9\nMORRIS HILLS REGIONAL DISTRICT BOARD OF EDUCATION AGENDA: REGULAR MEETING Monday, August 17, 2026 6:30 p.m., BOE Conference Room Name / School Location / Date Conference Account Est. District Cost Est. Employee Reim.* Keith Bigora / Dist. Holmdel, NJ 11/13/2026 NJTEEA Conference 27-11-190-100-580-807-03/04 $234.82 $59.82 Keith Bigora / Dist Whippany, NJ 12/3/2026 NJ Aviation Roundtable N/A $0.00 $0.00 Jennifer Toriello / Dist. Online 3/16/2027 NJPSA/FEA: AI - Friend or Foe? 27-11-190-100-580-103-04 $125.00 $0.00 *Estimated Employee Reimbursement may include Lodging, Meals, Mileage, Parking, Tolls, Baggage, Taxis, Airfare,etc. 22. Rati fi cation of the following Staff Conference: Name / School Location / Date Conference Account Est. District Cost Est. Employee Reimbursement* Lora Santucci / MH Ewing, NJ & Online 8/3/2026 (Ewing, NJ) 8/4/2026 - 8/6/2026 (online) CHANGED TO: Ewing, NJ, Hoboken, NJ & Online 8/3/2026 (Ewing, NJ) 8/4/2026 (Online) 8/5/2026 (Hoboken, NJ) 8/6/2026 (Online) The Computer Science Teachers Association of NJ Annual Professional Development Week 27-11-190-100-580-108-03 $156.76 CHANGED TO: $190.51 $71.76 CHANGED TO: $105.51 *Estimated Employee Reimbursement may include Lodging, Meals, Mileage, Parking, Tolls, Baggage, Taxis, Airfare,etc. 23. Approval of the following Field Trips: Name / School Dept./ Trip # Location / Date Field Trip Summary Cost to Student Est. BOE Cost Heather Almeida / MK Lisa O’Shea / MK Athletics Randolph, NJ 8/18/2026 Morris Knolls High School Cheerleading JV and Freshmen team members will travel to NFinite All Stars to learn choreography. $0.00 $0.00 Bryan Gallagher / MK Bruce Campbell /MH Athletics East Rutherford, NJ 8/19/2026 Morris Hills High School and Morris Knolls High School Football team members will participate in the Jets x SFC HS Football Media Day presented by Nike at MetLife Stadium. $0.00 $0.00 Patricia Fornaro / MK Bryan Gallagher / MK Constance Conti / MK Drew Reinhardt /MK Peter Staluppi / MK Cara Bodnar / MK Stephan Zdanowicz / MK Michael Mugavero /MK Meaghan Barger / MH Bruce Campbell / MH Andres Diaz / MH Christina Hobson / MH Timothy Mein / MH Sara Pratt / MH Jeffrey Jimenez / MH Annie Mulligan / MH Mark DiGennaro, Jr. /MH Athletics Randolph, NJ 8/20/2026 Morris Hills High School and Morris Knolls High School Fall Sports teams will attend the Big State Sports Media Day at the County College of Morris. $0.00 $0.00 Michelle Lis / MK Interact Club AT-09013 Dover, NJ 9/14/2026 Morris Knolls High School Interact Club members will help at Nourish NJ. $0.00 MHRD buses* Irene Fischetti / MK Amanda Manjorin / MK Adrian Cortes / MK Joseph Kelly / MK Anna Nazzaro / MK Special Education Denville, NJ 9/25/2026 Morris Knolls High School FLEX students will participate in Community Day, including team-building activities and breakfast, at Morris Knolls High School. $0.00 $300.00 (breakfast cost) Ciana Roman / MH Parent Chaperone Technology AT-09410 AT-09408 AT-09409 Bridgewater, NJ 9/25/2026 9/26/2026 9/27/2026 Morris Hills High School and Morris Knolls High School Robotics students will participate in a FRC Robotics RoboCon Competition at Bridgewater Commons. $0.00 MHRD buses* 10\nMORRIS HILLS REGIONAL DISTRICT BOARD OF EDUCATION AGENDA: REGULAR MEETING Monday, August 17, 2026 6:30 p.m., BOE Conference Room Name / School Dept./ Trip # Location / Date Field Trip Summary Cost to Student Est. BOE Cost Jason Collinsworth / MK Cara Russo / MH Daniel Schwartz / MK English AT-09037 Hardwick & Rockaway, NJ 10/9/2026 Morris Knolls High School and Morris Hills High School Film Studies students will visit the original fi lm location of the cult classic Friday the 13th, Camp Crystal Lake, and will be guided through the world of fi lmmaking through the tour guides at the camp. Students will stop for lunch at Panera Bread. $90.00 $180.00 (chaperone fees - 1 free) + MHRD buses* Susan Metzger / MK Laura Foley / MK Debra McNally /MK Jenny Malin / MK Michelle Uhler / MH Jenna Miller / MH Student Wellness Committee AT-TBD Denville, NJ 10/9/2026 Morris Hills High School students who applied to be a part of the Student Wellness Committee will travel to Morris Knolls High School to work collaboratively to create wellness goals for the district and make speci fi c plans on how to execute the plan at their respective schools. $0.00 MHRD buses* Michelle Uhler / Dist. Kristen Markowski / MK Music AT-09032 Glassboro, NJ 10/14/2026 Morris Hills High School and Morris Knolls High School Choir students will participate in the Tenor/Bass Festival at Rowan University. $18.00 MHRD buses* Jason Collinsworth / MK Andrew Curtis / MK Alicia Pepperman / MK Andres Diaz / MH Nicole Sanchez / MH English AT-09041 Newark, NJ 10/16/2026 Morris Hills High School and Morris Knolls High School students from selected English courses will immerse themselves in a day-long festival of poetry and storytelling at the Dodge Poetry Festival at NJPAC. $0.00 MHRD buses* Michelle Lis / MK Interact Club AT-09014 Dover, NJ 10/19/2026 Morris Knolls High School Interact Club members will help at Nourish NJ. $0.00 MHRD buses* Richard Hartsuiker / MH Michelle Uhler / MH Allyson Moreno / MH Parent Chaperones Nurse Music AT-08988 Rockaway, NJ 10/20/2026 Morris Hills High School Band students will perform at Thomas Jefferson Middle School, Copeland Middle School, and MacKinnon Middle School. $0.00 MHRD buses* Jason Collinsworth / MK Andrew Curtis / MK English AT-09040 Budd Lake, NJ 10/28/2026 Morris Knolls High School English 10 CPA students will view multiple works by Edgar Allan Poe at the Pax Amicus Theatre. $22.00 $44.00 (chaperone fees) + MHRD buses* Michelle Lis / MK Interact Club AT-09015 Dover, NJ 11/2/2026 Morris Knolls High School Interact Club members will help at Nourish NJ. $0.00 MHRD buses* Robert Moore / MK Robert Geary /MK Business AT-09353 East Rutherford, NJ 11/17/2026 Morris Knolls High School Sports and Entertainment Marketing classes will attend the NY Jets Business Day at Met Life Stadium. $55.00 MHRD buses* Tiffany Doltz / MH Kadeem Dennis / MK Aviation AT-09397 Whippany, NJ 11/17/2026 Morris Hills High School and Morris Knolls High School Aviation students will tour CAE, which provides pilot, technical, and fl ight crew training to business aircraft operators. $0.00 MHRD buses* Keith Bigora / Dist. Ciana Roman / MH Peter Koza / MK Lauren Jackson / MH CTE AT-09405 Wharton & Rockaway, NJ 12/11/2026 Morris Hills High School and Morris Knolls High School CTE students will create and facilitate hands-on, interactive activities to share 9th-grade course offerings with current 8th-grade students at Thomas Jefferson Middle School and MacKinnon Middle School. Students will stop for lunch at the Rockaway Mall. Cost of lunch (optional) MHRD buses* Michelle Lis / MK Interact Club AT-09016 Dover, NJ 1/25/2027 Morris Knolls High School Interact Club members will help at Nourish NJ. $0.00 MHRD buses* Michelle Lis / MK Interact Club AT-09017 Dover, NJ 2/8/2027 Morris Knolls High School Interact Club members will help at Nourish NJ. $0.00 MHRD buses* Martha Fundora / MK Justine Sobieski / MH Aviation AT-09354 Phillipsburg, NJ 3/12/2027 Morris Hills High School and Morris Knolls High School Aviation students will engage in hands-on exposure to industry-standard equipment and real-world applications during a trip to Warren County Community College’s Drone and UAS facilities. $0.00 MHRD buses* Michelle Lis / MK Interact Club AT-09018 Dover, NJ 3/15/2027 Morris Knolls High School Interact Club members will help at Nourish NJ. $0.00 MHRD buses* Michelle Lis / MK Interact Club AT-09019 Dover, NJ 4/12/2027 Morris Knolls High School Interact Club members will help at Nourish NJ. $0.00 MHRD buses* 11\nMORRIS HILLS REGIONAL DISTRICT BOARD OF EDUCATION AGENDA: REGULAR MEETING Monday, August 17, 2026 6:30 p.m., BOE Conference Room Name / School Dept./ Trip # Location / Date Field Trip Summary Cost to Student Est. BOE Cost Brett Izsa / Dist. Daniel Schwartz / MK Kristen Markowski / MK Administrator TBD Parent Chaperones Nurse Music Nashville, TN 4/13/2027 - 4/17/2027 Morris Knolls High School Band, Choir, and Orchestra students and Morris Hills High School Orchestra students will perform for public audiences, participate in a professional recording session at Ocean Way Studios, and attend a performance by the Nashville Symphony during the 2027 Music Performance Tour to Nashville. $1,200.00 - $1,300.00 $0.00 *Per the MHRD Transportation Trip Rate Guide 24. Rati fi cation of the following Field Trips: Name / School Dept./ Trip # Location / Date Field Trip Summary Cost to Student Est. BOE Cost Michael Mugavero / MK Stephan Zdanowicz /MK Jeffrey Jimenez / MH Andres Diaz / MH Athletics Randolph, NJ August 17, 2026 Morris Hills High School and Morris Knolls High School representatives from the Boys and Girls soccer teams will represent MHRD at the NJAC Sportsmanship Summit at County College of Morris. $0.00 $0.00 Heather Almeida / MK Lisa O’Shea / MK Athletics Randolph, NJ August 17, 2026 Morris Knolls High School Cheerleading JV and Freshmen team members will travel to NFinite All Stars to learn choreography. $0.00 $0.00 D. Community Relations (Item 1-6) 1. Consider approval of a revision to the 2026-2027 District Calendar , as submitted. 2. Consider approving the submission of the Period 2 Bullying Report for January - June 2026: School Jan Feb Mar Apr May June Total Morris Hills HS Incident Reports 0 2 1 0 0 0 3 Morris Hills HS Bullying Reports 1 4 0 0 0 0 5 School Jan Feb Mar Apr May June Total Morris Knolls HS Incident Reports 4 0 1 2 1 3 11 Morris Knolls HS Bullying Reports 1 1 2 3 3 5 15 3. Consider approving the submission of the Statement of Assurance (SOA) regarding the School Self-Assessment for Determining Grades Under the Anti-Bullying Bill of Rights for Morris Hills High School and Morris Knolls High School . 4. Consider accepting a donation in the amount of $1,000 from NJ4S Morris & Sussex to the Morris Hills High School Athletic Department. 5. Consider accepting a donation in the amount of $2,000 from the Morris Hill High School Sideout Booster Club to the Morris Hills High School Athletic Department. 6. Consider accepting the donation of a 2008 Chevrolet Cobalt, with an approximate value of $1,645, from Mr. Thomas Singer, to the Morris Hills Regional District Automotive Program. Motion By: Mrs. Christie D’Asti, Chair Seconded By: Roll Call Mr. Bertram Mrs. D’Asti Mr. Francia Ms. Levy Mr. Maher Mr. Napolitano Mr. Sera fi n Mrs. Yeager Mr. Wieczerzak AYES: NAYS: ABSTAIN: 12 Motion By: Mrs. Barbara Levy, Chair. Seconded By: Roll Call Mr. Bertram Mrs. D’Asti Mr. Francia Ms. Levy Mr. Maher Mr. Napolitano Mr. Sera fi n Mrs. Yeager Mr. Wieczerzak AYES: NAYS: ABSTAIN:\nMORRIS HILLS REGIONAL DISTRICT BOARD OF EDUCATION AGENDA: REGULAR MEETING Monday, August 17, 2026 6:30 p.m., BOE Conference Room E. General (Items 0-0) - NONE F. Personnel (Items 1-2) 1. Consider accepting, with regret, the resignation of the following personnel for the purpose of retirement: Name Position Loc. Position # Distribution Number Eff. Date Smedberg, Arthur Security Support Aide MK FF-0004-00-04A 27-11-000-266-106-000-04 12/31/2026 2. Consider accepting the resignation of the following personnel: Name Position Loc. Position # Distribution Number Eff. Date Arteage, Luisa Transportation Aide AM or PM Dist. FF-0008-00-15A 27-11-000-270-107-000-08 07/31/2026 Moore, Robert BizTech Club Volunteer MK N/A N/A 08/12/2026 Motion By: Mr. Patrick Napolitano, Chair. Seconded By: IN FAVOR: OPPOSED: ABSTAIN: F. Personnel Continued (Items 3-22) 3. Consider accepting the rescinding of contract for the following personnel: Name Position Loc. Position # Distribution Number Eff. Date Hiremath, Gouramma Teacher of Family & Consumer Science (Lv Repl) MH V-0003-08-02A 27-11-140-100-101-000-03 08/24/2026 Sabo, Melissa Mentor for Gouramma Hiremath MH 99-0000-70-000 27-11-140-100-101-000-02 08/24/2026 Vinci, Alice Administrative Assistant to the Director of Human Resources DIST FF-0009-00-02A 27-11-000-251-100-236-09 09/01/2026 Vinci, Alice Summer Human Resources Substitute Secretary DIST 99-0000-61-000 27-11-000-251-100-236-09 07/16/2026 Levinstone, Lawrence Volunteer Wrestling Coach MH N/A N/A 08/11/2026 Weiner, Samuel Volunteer Wrestling Coach MH N/A N/A 08/11/2026 Maione, Robert Substitute Teacher Renewal Dist. FF-0901-00-01A 27-11-140-100-101-000-09 07/01/2026 4. The Chief School Administrator recommends authorizing for the 2026-2027 school year the Seniority Sidebar Agreement between the Morris Hills Regional District Board of Education and the Morris Hills Regional District Transportation Association. 5. The Chief School Administrator recommends authorizing for the 2026-2027 school year the following leaves of absence: Name Position Loc. Position # Distribution Number Effective Dates (all dates are on or about) Sick and/ or Personal FMLA / NJFLA Unpaid Return to Work De La Paz, Arenis Custodian MH BB-0003-22-02A 27-11-000-262-100-000-03 8/3/26 - 8/28/26 08/31/26 Chirico-Berman, Jenna Teacher of Science MH V-0003-13-03A 27-70-990-100-101-000-03 50% 27-11-140-100-101-000-03 50% 10/26/26 - 11/20/26 FMLA: 11/23/26 - 2/19/27 NJFLA: 12/21/26 - 3/19/27 3/22/27 - 4/30/27 05/03/27 6. The Chief School Administrator recommends authorizing for the 2026-2027 school year the appointment of staff and payment of stipend for the following 1/6 positions: Name Position Loc. Position # Distribution Number Stipend (*prorated) Effective Dates (all dates are on or about) Erickson, William Teacher of Technology, Electricity MK V-0004-18-02A 27-11-140-100-101-000-04 MA+30, $19,338 + $1,133 Longevity 08/24/26-06/30/27 Miraldi, John Teacher of Technology, Woods MK V-0004-18-08A 27-11-140-100-101-000-04 MA+30, $19,338 + $417 Longevity 08/24/26-06/30/27 Amicucci, Deborah Teacher of English MK V-0004-03-18A 27-11-140-100-101-000-04 MA+30, $19,338 08/24/26-06/30/27 Collinsworth, Jason Teacher of English MK V-0004-03-05A 27-11-140-100-101-000-04 MA+30, $19,338 + 08/24/26-06/30/27 13\nMORRIS HILLS REGIONAL DISTRICT BOARD OF EDUCATION AGENDA: REGULAR MEETING Monday, August 17, 2026 6:30 p.m., BOE Conference Room Name Position Loc. Position # Distribution Number Stipend (*prorated) Effective Dates (all dates are on or about) $1,133 Longevity Obra, Rusty Teacher of Family & Consumer Sciences MK V-0004-08-02A 27-11-140-100-101-000-04 BA, $17,254* 08/25/26-11/15/26 Sabo, Melissa Teacher of Family & Consumer Sciences (2) 1/6 positions MH V-0003-08-02A 27-11-140-100-101-000-03 $19,338* x 2 = $38,676* 08/25/26-11/15/26 Simpson, Debbian Teacher of Family & Consumer Sciences (2) 1/6 positions MH V-0003-08-02A 27-11-140-100-101-000-03 $19,338* x 2 = $38,676* 08/25/26-11/15/26 Maclay, Andrew Teacher of Family & Consumer Sciences MH V-0003-08-02A 27-11-140-100-101-000-03 $19,338* + $517* Longevity 08/25/26-11/15/26 Petti, Carla Teacher of Spanish MK V-0004-15-06A 27-11-140-100-101-000-04 $19,338* + $1,133* Longevity 08/25/26-12/15/26 Kong, Marlene Teacher of Spanish MK V-0004-15-06A 27-11-140-100-101-000-04 $18,338* 08/25/26-12/15/26 Oliva, Ana Teacher of Spanish MK V-0004-15-06A 27-11-140-100-101-000-04 $18,338* 08/25/26-12/15/26 Jimenez-Arias Teacher of Spanish MK V-0004-15-06A 27-11-140-100-101-000-04 $18,338* + $517* Longevity 08/25/26-12/15/26 Cedano-Rondon, Melissa Teacher of Spanish MK V-0004-15-06A 27-11-140-100-101-000-04 $17,254* 08/25/26-12/15/26 7. The Chief School Administrator recommends authorizing for the 2026-2027 school year the appointment of staff and payment of stipend for the following 2/6 positions: Name Position Loc. Position # Distribution Number Stipend (*prorated) Effective Dates (all dates are on or about) Callanan, Maria Learning Disability Teacher Consultant MK U-0004-17-02A 27-11-000-219-104-000-04 $7,735* + $453* Longevity 08/24/26-12/23/26 DiFulco, Bianca Learning Disability Teacher Consultant MK U-0004-17-02A 27-11-000-219-104-000-04 $7,735* 08/24/26-12/23/26 McMally, Debra Learning Disability Teacher Consultant MK U-0004-17-02A 27-11-000-219-104-000-04 $7,735* 08/24/26-12/23/26 Vetter, Robyn Learning Disability Teacher Consultant MK U-0004-17-02A 27-11-000-219-104-000-04 $7,735* 08/24/26-12/23/26 Ossa, Jovanna Learning Disability Teacher Consultant MK U-0004-17-02A 27-11-000-219-104-000-04 $7,735* 08/24/26-12/23/26 8. The Chief School Administrator recommends authorizing for the 2026-2027 school year a change of assignment and payment of salary of the following staff member: Name Position Loc. Position # Distribution Number Step / Salary (*prorated) Effective Dates (all dates are on or about) Hoffman, Matthew From : Assistant Baseball Coach To : Head Baseball Coach No Change MH From : X-0003-28-54A To : X-0003-28-52A No Change 27-11-402-100-100-947-03 From: $6,781 + $180 Longevity To : $9,099 + $180 Longevity No Change 03/16/27-06/30/27 9. The Chief School Administrator recommends authorizing for the 2026-2027 school year the appointment of staff and payment of salary of the following certi fi ed position, subject to appropriate New Jersey Department of Education certi fi cation and required documentation: Name Position Loc. Position # Distribution Number Step / Salary (*prorated) Effective Dates (all dates are on or about) Mickens-Perara, Chris Teacher of Special Education MK V-0004-16-22A 27-11-213-100-101-000-04 MA+30, Step 8, $95,250 08/24/26 - 06/30/27 10. The Chief School Administrator recommends authorizing for the 2026-2027 school year a revision to the appointment and salary of the following certi fi ed staff members: Name Position Loc. Position # Distribution Number Step / Salary (*prorated) Effective Dates (all dates are on or about) Pollison, Haley Teacher of Science MK V-0004-13-08A 27-11-140-100-101-000-04 From : BA, Step 6, $78,520 To: MA, Step 6, $83,520 08/24/26 - 06/30/27 Leftowitz, Peter Teacher of Technology MH V-0003-18-03A 27-11-140-100-101-000-03 BA Step 1, $72,125 From: 11/02/26 - 06/30/27 To : 08/24/26 - 06/30/27 14\nMORRIS HILLS REGIONAL DISTRICT BOARD OF EDUCATION AGENDA: REGULAR MEETING Monday, August 17, 2026 6:30 p.m., BOE Conference Room 11. The Chief School Administrator recommends authorizing for the 2026-2027 school year the appointment of staff and payment of salary of the following non-certi fi ed positions, subject to receipt of required documentation: Name Position Loc. Position # Distribution Number Step / Salary (*prorated) Effective Dates (all dates are on or about) Reina, Claudia Boiler’s License Stipend MK 99-0000-03-01A 27-11-000-262-100-000-04 $825* 08/17/26 - 06/30/27 Erickson, Kaitlyn Assistant Fall Cheerleading Coach MH X-0003-28-28A 27-11-402-100-100-947-03 $4,129 09/01/26 - 11/30/26 Berkheiser, Melissa Girls Assistant Basketball Coach MK X-0004-28-38A 27-11-402-100-100-947-04 $6,781 12/01/26 - 03/15/27 Hartsuiker, Michelle Ticket Sales Chairperson MH FF-0003-29-25A 27-11-401-100-100-160-03 $1,980 09/01/26 - 06/30/27 Roman, Ciana Robotics Club Advisor MH FF-0003-29-71A 27-11-401-100-100-160-03 $5,282 09/01/26 - 06/30/27 Roman, Ciana TSA Club Advisor MH FF-0003-29-57A 27-11-401-100-100-160-03 $3,000 09/01/26 - 06/30/27 Lakatos, Sara National English Honor Society Advisor MK FF-0004-29-77A 27-11-401-100-100-160-04 $210.40 09/01/26 - 12/31/26 Alexander, Christina National English Honor Society Advisor MK FF-0004-29-77A 27-11-401-100-100-160-04 $315.60 From : Full Year To : 01/01/27 - 06/30/27 Adessa, Jodie Thespian Honor Society MK FF-0004-29-87A 27-11-401-100-100-160-04 $526 03/16/27 - 06/30/27 Raybould, Leandra French Honor Society MK FF-0004-29-65A 27-11-401-100-100-160-04 $526 03/16/27 - 06/30/27 Collinsworth, Jason ACT Coordinator MK FF-0004-00-10A 27-11-424-100-101-000-04 $1,565 Up to 5 tests 09/01/26 - 06/30/27 Ghetti, Marcia SAT Coordinator MH FF-0003-00-11A 27-11-424-100-101-000-03 $1,565 Up to 5 tests 09/01/26 - 06/30/27 12. The Chief School Administrator recommends authorizing for the 2026-2027 school year a horizontal advancement for the following certi fi ed personnel, in accordance with the 2024-2029 Negotiated Agreement between the Morris Hills Regional District Education Association and the Morris Hills Regional District Board of Education: Name Position Loc. Position # Distribution Number Step / Salary Effective Dates (all dates are on or about) Bollette, Brian Teacher of Social Studies MH V-0003-14-01A 27-11-140-100-101-000-03 From : MA Step 14 $98,545 To : MA+30 Step 14 $106,045 08/24/26 - 06/30/27 13. The Chief School Administrator recommends authorizing for the 2026-2027 school year the appointment and rate of pay of part-time staff as follows: Name Position Loc. Position # Distribution Number Stipend Effective Dates (all dates are on or about) Fernandez, Avelino Substitute Trip Driver Dist. 99-0000-61-000 27-11-000-270-162-000-08 $37.05/hr. As needed 07/01/26 - 06/30/27 Plumb, Lawrence Substitute Bus Driver Dist. 99-0000-61-000 27-11-000-270-162-000-08 $37.05/hr. As needed 07/01/26 - 06/30/27 14. The Chief School Administrator recommends authorizing for the 2026-2027 school year the appointments of the following staff members as Professional Support Team Mentors, in accordance with N.J.A.C. 6:11 et.seq. (mentor fee paid by mentee): Mentor Mentee Loc. Position Position # Distribution # Period (dates are on or about) Mazur, Joy Assadourian, Nicole MK Teacher of English 99-0000-70-000 27-11-140-100-101-000-02 08/24/26-12/23/26 Miraldi, Mary Koza, Jr., Peter MK Teacher of A/V TV Production 99-0000-70-000 27-11-140-100-101-000-02 08/24/26-06/30/27 15\nMORRIS HILLS REGIONAL DISTRICT BOARD OF EDUCATION AGENDA: REGULAR MEETING Monday, August 17, 2026 6:30 p.m., BOE Conference Room 15. The Chief School Administrator recommends authorizing for the Summer of 2026 and 2026-2027 school year the appointments of staff and payments of fees for the following Revised and New Staff Development Workshops: Workshop/Program Date Presenter and Participants Expense Account Number Social Studies Summer Program Development July 6 - 9, 2026 and July 27 - 30, 2026 Presenter: Krystal Beck* Participants: Peter Adams Holly Bridge Joseph Ellis Laura Foley Kevin Kane Nicholas DiPaolo Justin Scrufari New Teacher TBD UPDATED: JOSEPH VISAGGIO *No pay for Administrator Participant fee : $20.00 an hour for up to 48 hours (each participant) 27-20-272-200-100-000-03 27-20-272-200-100-000-04 (Title II) OR 27-11-000-223-110-000-03 27-11-000-223-110-000-04 Summer Program Development - Lesson Design for Cultivating Curiosity Session #1 July 13 - 15, 2026 Presenters: Lori Vertucci** Stefana Niemocyznski** Participants: Jihanne Radzieski Tiffany Doltz Vincent Limon Allyson Moreno ADDED: CATHERINE HUDAK **No pay for Instructional Coaches Participant fee : $20.00 an hour for up to 18 hours (each participant) 27-20-272-200-100-000-03 27-20-272-200-100-000-04 (Title II) OR 27-11-000-223-110-000-03 27-11-000-223-110-000-04 Summer Program Development - Lesson Design for Cultivating Curiosity Session #3 July 13 - 17, 2026 Presenters: Lori Vertucci** Stefana Niemocyznski** Jaclyn Weisz (7/15 only) Nicholas DiPaolo (7/15 only) Brienne Patterson (7/15 only) Tracy Petrosino (7/15 only) Participants: Deborah Fuhrmann Robert Geary Erick Gill -removed Heather Jensen Rachel Mandel Daniel Mortensen Samantha Pino Lora Santucci Kimberly Steimke Michele Vikete Monika Weissensee Jaclyn Weisz (presenter rate on 7/15 only) Peter Adams Christina Hobson Presenter Fee : $55.00 an hour for up to 6 hours **No pay for Instructional Coaches Participant fee : $20.00 an hour for up to 30 hours (each participant) 27-20-272-200-100-000-03 27-20-272-200-100-000-04 (Title II) OR 27-11-000-223-110-000-03 27-11-000-223-110-000-04 Science Summer Program Development: AP Research July 20 - 24, 2026 CHANGED TO: JULY 21 - 24 AND JULY 28, 2026 Presenter: Kevin Doyle* Participants: Jennifer McGrath Amanda Orenstein *No pay for Administrator Participant fee:$20.00 an hour for up to 30 hours (each participant) 27-20-272-200-100-000-03 27-20-272-200-100-000-04 (Title II) OR 27-11-000-223-110-000-03 27-11-000-223-110-000-04 Special Education Summer Program Development: Cross- Curricular Experiences in the Classroom July 28, 2026 CHANGED TO: JULY 30, 2026 Presenter: Nicholas DiPaalo Participants: Diana Burlick Kimberly Steimke Constance Conti Alina Escobar*** Presenter Fee : $55.00 an hour for up to 2 hours Participant fee : $20.00 an hour for up to 2 hours (each participant) ***$12.50 an hour for up to 2 hours (each participant) 27-20-272-200-100-000-03 27-20-272-200-100-000-04 (Title II) OR ***27-11-000-223-110-000-03 ***27-11-000-223-110-000-04 (Staff Assistant rate paid out of general funds only) Math Summer Program Development August 3 - 6, 2026 ADDED: AUGUST 7, 2026 Presenter: Cheryl Engel* Participants: Melissa Berkheiser Michael Bermel Theresa Caruso Kristi Diamond Marissa DiStasio Michele Hudak *No pay for Administrator Participant fee : $20.00 an hour for up to 30 hours (each participant) 27-20-272-200-100-000-03 27-20-272-200-100-000-04 (Title II) OR 27-11-000-223-110-000-03 27-11-000-223-110-000-04 16\nMORRIS HILLS REGIONAL DISTRICT BOARD OF EDUCATION AGENDA: REGULAR MEETING Monday, August 17, 2026 6:30 p.m., BOE Conference Room Workshop/Program Date Presenter and Participants Expense Account Number Kyle Huncken Shane Johnson Michelle Lis Lynn Lubrecht Krista McNaught Michael Moncalieri Kaitlyn Penkalski Samantha Pino Kyle Plucinsky Lisa Predenkoski Victoria Rama Lora Santucci Joseph Shubert Nicole Taddeo Jennifer Volz ADDED: Michael Landshof Summer Program Development - Lesson Design for Cultivating Curiosity Session #6 August 3 - 7, 2026 Presenters : Jenny Malin** Lauren Sherburne** Jaclyn Weisz (8/5 only) Nicholas DiPaolo (8/5 only) Joy Mazur (8/5 only) Tracy Petrosino (8/5 only) Participants: Richard Abad Rebecca Brennan Samora Brice Dominique Brock Nicholas DiPaolo (presenter rate on 8/5 only) Christina Dickinson Vanessa Fudrini Martha Fundora Shane Johnson Eleni Koukoularis Laura Malec Joy Mazur (presenter rate on 8/5 only) Jennifer Nienstadt Rusty Obra Ana Oliva Sandra Ostrowski Alicia Pepperman Tracy Petrosino (presenter rate on 8/5 only) Jacqueline Quinones Ciana Roman Justin Scrufari Tanya Stevenson Adam Trollinger Lori Vertucci Stacy Wieringa ADDED: Erick Gill Presenter Fee : $55.00 an hour for up to 6 hours **No pay for Instructional Coaches Participant fee : $20.00 an hour for up to 30 hours (each participant) 27-20-272-200-100-000-03 27-20-272-200-100-000-04 (Title II) OR 27-11-000-223-110-000-03 27-11-000-223-110-000-04 Foundations Year 1, Days 1 & 2 August 12 - 13, 2026 Presenters: Jenny Malin** Lori Vertucci** Lauren Sherburne** Stefana Niemoczynski** Nisha Zoeller* Jennifer Toriello* Meghan Burgin (New Teacher Orientation - August 11th) Participants: New teachers TBD Haley Pollison Daniel McGovern Heather Olson Dominique Brock ADDED: Peter Lefkowitz Christopher Frangipane Joseph Visaggio Michael Landshof Haley Lindstrom Peter Koza, Jr. Nicole Assadourian Chris Mickens-Perara *No pay for Administrators **No pay for Instructional Coaches Presenter Fee : $55.00 an hour for up to 6 hours No pay for participants 27-20-272-200-100-000-03 27-20-272-200-100-000-04 (Title II) OR 27-11-000-223-110-000-03 27-11-000-223-110-000-04 17\nMORRIS HILLS REGIONAL DISTRICT BOARD OF EDUCATION AGENDA: REGULAR MEETING Monday, August 17, 2026 6:30 p.m., BOE Conference Room Workshop/Program Date Presenter and Participants Expense Account Number Foundations Year 1, Day 3 September 30, 2026 Presenters: Lauren Sherburne** Stefana Niemoczynski** Nisha Zoeller* Krystal Beck* Participants: Nicole Assadourian Dominique Brock Christopher Frangipane Peter Koza, Jr. Michael Landshof Peter Lefkowitz Haley Lindstrom Daniel McGovern Chris Mickens-Perara Haley Pollison Joseph Visaggio *No pay for Administrators **No pay for Instructional Coaches No pay for participants N/A Foundations Year 1, Day 4 December 8, 2026 Presenters: Jenny Malin** Lori Vertucci** Participants: Nicole Assadourian Dominique Brock Christopher Frangipane Peter Koza, Jr. Michael Landshof Peter Lefkowitz Haley Lindstrom Daniel McGovern Chris Mickens-Perara Haley Pollison Joseph Visaggio Erick Gill **No pay for Instructional Coaches No pay for participants N/A Foundations Year 1, Day 5 February 9, 2027 Presenters: Stefana Niemoczynski** Lori Vertucci** Participants: Nicole Assadourian Dominique Brock Christopher Frangipane Peter Koza, Jr. Michael Landshof Peter Lefkowitz Haley Lindstrom Daniel McGovern Chris Mickens-Perara Haley Pollison Joseph Visaggio **No pay for Instructional Coaches No pay for participants N/A Foundations Year 1, Day 6 March 16, 2027 Presenters: Jenny Malin** Lauren Sherburne** Participants: Nicole Assadourian Dominique Brock Christopher Frangipane Peter Koza, Jr. Michael Landshof Peter Lefkowitz Haley Lindstrom 0Daniel McGovern Chris Mickens-Perara Haley Pollison Joseph Visaggio Daniel DiStasio Erick Gill **No pay for Instructional Coaches No pay for participants N/A Foundations Year 2, Day 1 October 15, 2026 Presenters: Stefana Niemoczynski** Jenny Malin** Participants: Melissa Berkheiser Melissa Cedano Rondon Erick Gill Justin Hill Marlene Kong Kayley Moran Heather Olson Kerby Perez **No pay for Instructional Coaches No pay for participants N/A 18\nMORRIS HILLS REGIONAL DISTRICT BOARD OF EDUCATION AGENDA: REGULAR MEETING Monday, August 17, 2026 6:30 p.m., BOE Conference Room Workshop/Program Date Presenter and Participants Expense Account Number Samantha Pino Victoria Rama Ciana Roman Justin Scrufari Foundations Year 2, Day 2 January 12, 2027 Presenters: Stacey Feiss Gina Giorgianni Lori Vertucci** Lauren Sherburne** Participants: Melissa Berkheiser Melissa Cedano Rondon Erick Gill Justin Hill Marlene Kong Kayley Moran Heather Olson Kerby Perez Samantha Pino Victoria Rama Ciana Roman Justin Scrufari Presenter Fee: $27.50 an hour for up to 6 hours **No pay for Instructional Coaches 27-20-272-200-100-000-03 27-20-272-200-100-000-04 (Title II) OR 27-11-000-223-110-000-03 27-11-000-223-110-000-04 Foundations Year 3 October 19, 2026 Presenters: Lauren Sherburne** Lori Vertucci** Participants: Jenna Chirico-Berman Sanoussi Diaby Brian Dillon Daniel DiStasio Thomas Fischer Bryan Gallagher Jeffrey Jimenez Vincent Limon Eileen Ninivaggi Stacy Wieringa **No pay for Instructional Coaches N/A Foundations Year 4 March 9, 2027 Presenters: Bruce Campbell Brienne Patterson Jenna Miller Participants: Holly Bridge Nancy Chiang Kathryn Cullen Nicholas DiPaolo Rachel Gallo Daniel Gust Jamie Ingling Rebecca Jacobson Sara Lakatos Seth Mandel Melissa Montoya Kyle Plucinsky Justine Sobieski Kimberly Steimke Presenter Fee: $27.50 an hour for up to 6 hours 27-20-272-200-100-000-03 27-20-272-200-100-000-04 (Title II) OR 27-11-000-223-110-000-03 27-11-000-223-110-000-04 Mentor Training Session #1 September 10, 2026 Presenters: Jenny Malin** Lauren Sherburne** Participants: Joy Mazur Brian Hamilton Irene Fischetti Joseph Ellis **No pay for Instructional Coaches N/A Mentor Training Session #2 December 10, 2026 Presenters: Lori Vertucci** Lauren Sherburne** Participants: Joy Mazur Brian Hamilton Irene Fischetti Joseph Ellis **No pay for Instructional Coaches N/A Mentor Training Session #3 March 18, 2027 Presenters: Jenny Malin** Stefana Niemoczynski** Participants: Joy Mazur **No pay for Instructional Coaches N/A 19\nMORRIS HILLS REGIONAL DISTRICT BOARD OF EDUCATION AGENDA: REGULAR MEETING Monday, August 17, 2026 6:30 p.m., BOE Conference Room Workshop/Program Date Presenter and Participants Expense Account Number Brian Hamilton Irene Fischetti Joseph Ellis Peter Lefkowitz Haley Lindstrom Joseph Visaggio 16. The Chief School Administrator recommends authorizing for the 2026-2027 school year the appointment of the following Student Teachers: Name Position College Assignment School Dates Keating, Alexander Student Teacher Kean University Mathematics Morris Hills 2026 - 2027 School Year Keating, Luke Student Teacher Kean University Science Morris Hills 2026 - 2027 School Year 17. The Chief School Administrator recommends authorizing for the 2026-2027 school year the appointment of the following Substitute employees: Name Substitute Position Position # Distribution # Period Certi fi cate Rate Aschoff, Kathryn Substitute Teacher FF-0901-00-01A 27-11-140-100-101-000-09 8/24/26-6/10/27 Teacher Certi fi cate $130/day Mindrebo, Karl Substitute Teacher FF-0901-00-01A 27-11-140-100-101-000-09 8/24/26-6/10/27 County Certi fi cate $120/day Skelly, Tyler Substitute Teacher FF-0901-00-01A 27-11-140-100-101-000-09 8/24/26-6/10/27 County Certi fi cate $120/day Lowke, Matthew Substitute Teacher FF-0901-00-01A 27-11-140-100-101-000-09 8/24/26-6/10/27 County Certi fi cate $120/day Honig, David Substitute Teacher FF-0901-00-01A 27-11-140-100-101-000-09 8/24/26-6/10/27 Teacher Certi fi cate $130/day 18. The Chief School Administrator recommends authorizing for the 2026-2027 school year the appointment of the following anti-bullying position, effective July 1, 2026 to June 30, 2027: Shari Russo, Anti-Bullying Specialist, Morris Hills 19. The Chief School Administrator recommends authorizing for the Summer of 2026 the appointment of staff and rate of pay for the following positions: Name Position Loc. Position # Distribution Number Period (all dates are on or about) Add’l Info. Rate of Pay Job Code McNally, Debra ESY CST Testing Days MK 99-0000-60-000 27-11-000-219-104-000-04 Summer 2026 From : 7 days To: 8 days Per diem rate ESY 20. The Chief School Administrator recommends authorizing for the 2026-2027 School Year the appointment of staff and rate of pay for the following positions: 20 Name Position Loc. Position # Distribution Number Period (all dates are on or about) Add’l Info. Rate of Pay Job Code Barkocy, Emily Saturday Detention Administrator MH 99-0000-62-000 27-11-000-240-103-000-03 8/24/26- 6/30/27 Up to 7 days $300/day DAILY Bigora, Keith Saturday Detention Administrator MH 99-0000-62-000 27-11-000-240-103-000-03 8/24/26- 6/30/27 Up to 7 days $300/day DAILY Bouroult, Michael Saturday Detention Administrator MK 99-0000-62-000 27-11-000-240-103-000-04 8/24/26- 6/30/27 Up to 7 days $300/day DAILY Carlson, Lara Saturday Detention Administrator MK 99-0000-62-000 27-11-000-240-103-000-04 8/24/26- 6/30/27 Up to 7 days $300/day DAILY Cirigliano, Joseph Saturday Detention Administrator MK 99-0000-62-000 27-11-000-240-103-000-04 8/24/26- 6/30/27 Up to 7 days $300/day DAILY Dixon, Dominique Saturday Detention Administrator MH 99-0000-62-000 27-11-000-240-103-000-03 8/24/26- 6/30/27 Up to 7 days $300/day DAILY Engel, Cheryl Saturday Detention Administrator MH 99-0000-62-000 27-11-000-240-103-000-03 8/24/26- 6/30/27 Up to 7 days $300/day DAILY Gupta, Brenda Saturday Detention Administrator MH 99-0000-62-000 27-70-990-218-104-000-03 50% 27-11-000-218-104-000-03 50% 8/24/26- 6/30/27 Up to 7 days $300/day DAILY Herman, Claire Saturday Detention Administrator MH 99-0000-62-000 27-11-402-100-100-000-03 8/24/26- 6/30/27 Up to 7 days $300/day DAILY Melvin, Eugene Saturday Detention Administrator MH 99-0000-62-000 27-11-000-240-103-000-03 8/24/26- 6/30/27 Up to 7 days $300/day DAILY Palmerrezzi, Laura Saturday Detention Administrator MK 99-0000-62-000 27-11-000-240-103-000-04 8/24/26- 6/30/27 Up to 7 days $300/day DAILY Radigan, Alyssa Saturday Detention Administrator MK 99-0000-62-000 27-70-990-218-104-000-04 50% 27-11-000-218-104-000-04 50% 8/24/26- 6/30/27 Up to 7 days $300/day DAILY Rivera-Carney, Yesenia Saturday Detention Administrator MH 99-0000-62-000 27-13-601-100-101-000-13 8/24/26- 6/30/27 Up to 7 days $300/day DAILY\nMORRIS HILLS REGIONAL DISTRICT BOARD OF EDUCATION AGENDA: REGULAR MEETING Monday, August 17, 2026 6:30 p.m., BOE Conference Room 21. The Chief School Administrator recommends authorizing for the Summer of 2026 the appointment of the following volunteer, pending documentation: Name Position School Serna, Andres IT Department District 22. The Chief School Administrator recommends authorizing for the 2026-2027 school year the appointment of the following volunteer advisors, pending documentation: Name Position School Scarlett, Dean Marching Band Volunteer Morris Knolls Murray, Joann Marching Band Volunteer Morris Knolls Gidos, Hannah Marching Band Volunteer Morris Knolls Skelly, Tyler After School Orchestra(s) and Sound & Lighting Volunteer Morris Knolls Motion By: Patrick Napolitano, Chair. Seconded By: Roll Call Mr. Bertram Mrs. D’Asti Mr. Francia Ms. Levy Mr. Maher Mr. Napolitano Mr. Sera fi n Mrs. Yeager Mr. Wieczerzak AYES: NAYS: ABSTAIN: G. Policy (Item 1-3) 1. Consider authorizing the Board to suspend Bylaw 0131 that requires two readings and adopt Policy and Regulation 5516 as listed below with one reading to have the Policy and Regulation in place for September 2026; the action suspending Bylaw 0131 shall only be in effect for the adoption of Policy and Regulation 5516. 2. Consider authorizing for the fi rst reading the following Policies and Regulations: Number Title New or Revised a. Policy 6112 Reimbursement of Federal and Other Grant Expenditure Revised b. Policy 6115.02 Federal Awards/Funds Internal Controls - Mandatory Disclosures Revised c. Policy 6311 Contracts for Goods or Services Funded by Federal Grants Revised d. Policy 8660 Transportation by Private Vehicles - To and From School-Related Activities Revised 21 Name Position Loc. Position # Distribution Number Period (all dates are on or about) Add’l Info. Rate of Pay Job Code Berk, Jennifer Additional Nursing Hours Dist. 99-0000-64-000 27-11-000-213-100-000-03 27-11-000-213-100-000-04 8/24/26- 6/30/27 As needed $35.71 / hour ATHH ATKH Johnson, Shane ACT Bootcamp - Math MK 99-0000-61-000 27-11-140-100-101-000-04 2/25/27 As needed $45/hr. For 1.5 hours WKSH Brock, Dominique ACT Bootcamp - English/Reading MK 99-0000-61-000 27-11-140-100-101-000-04 2/25/27 As needed $45/hr. For 1.5 hours WKSH Trollinger, Adam ACT Bootcamp - Science MK 99-0000-61-000 27-11-140-100-101-000-04 2/25/27 As needed $45/hr. For 1.5 hours WKSH Petrosino, Tracy SAT Bootcamp - English MH 99-0000-61-000 27-11-140-100-101-000-03 9/30/26 & 4/29/27 As needed $45/hr. WKSH Rama, Victoria SAT Bootcamp - Math MH 99-0000-61-000 27-11-140-100-101-000-03 9/30/26 & 4/29/27 As needed $45/hr. WKSH Johnson, Shane SAT Bootcamp - Math MK 99-0000-61-000 27-11-140-100-101-000-04 12/2/26 & 12/3 26 3/2/27 & 3/4/27 4/28/27 & 4/29/27 As needed $45/hr. For 2 hrs./day WKSH Brock, Dominique SAT Bootcamp - Verbal MK 99-0000-61-000 27-11-140-100-101-000-04 12/2/26 & 12/3 26 3/2/27 & 3/4/27 4/28/27 & 4/29/27 As needed $45/hr. For 2 hrs./day WKSH Number Title New or Revised a. Policy 5516 Student Use of Internet-Enabled Devices Revised b. Regulation 5516 Student Use of Internet-Enabled Devices Revised\nMORRIS HILLS REGIONAL DISTRICT BOARD OF EDUCATION AGENDA: REGULAR MEETING Monday, August 17, 2026 6:30 p.m., BOE Conference Room Number Title New or Revised e. Regulation 6115.01 Federal Awards/Funds Internal Controls-Allowability of Costs Revised 3. Consider authorizing for the second reading the following Policies and Regulations: Number Title New or Revised a. Policy 2499 Physical Education Revised b. Policy 2530 Resource Materials Revised c. Policy 2535 Library Material New d. Policy 5117 Interdistrict Public School Choice Revised e. Policy 5460 High School Graduation Revised f. Policy 5461 High School Diplomas New g. Regulation 2530 Resource Materials Revised h. Regulation 2535 Library Material New i. Regulation 5117 Interdistrict Public School Choice Revised Motion By: Michael Bertram, Chair. Seconded By: Roll Call Mr. Bertram Mrs. D’Asti Mr. Francia Ms. Levy Mr. Maher Mr. Napolitano Mr. Sera fi n Mrs. Yeager Mr. Wieczerzak AYES: NAYS: ABSTAIN: XI. SECOND PUBLIC PORTION - ANY ITEM XII. SECOND BOARD DISCUSSION XIII. ADJOURNMENT A. Approval to adjourn the regular meeting. Motion By: Seconded By: IN FAVOR: OPPOSED: ABSTAIN: 22",
    "extraction": "pdf",
    "extractionNote": null
   }

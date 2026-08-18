@@ -48,9 +48,21 @@ jobs:
       - name: Install
         run: corepack pnpm install --frozen-lockfile
 
+      # The limiter purge is a WRITE to production, from a runtime that is not
+      # production. lib/db/write-guard.ts refused it every day from
+      # 2026-08-18, and it was right to: nothing here had ever said who it was.
+      #
+      # The guard is not loosened. This job declares itself instead — a named
+      # sanction scoped to one operation, connecting through the one sanctioned
+      # write path by its own name. The declaration opens the limiter purge and
+      # nothing else: this same job's reaction and search-log access stays
+      # read-only, and any other script carrying this declaration is still
+      # refused. Both halves are planted in tests/write-guard.test.ts.
       - name: Run the tripwire
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          WTP_PRODUCTION_DATABASE_URL_WRITE: ${{ secrets.DATABASE_URL }}
+          WTP_SANCTIONED_WRITE: intake-limiter-purge
         run: corepack pnpm intake:tripwire
 
       - name: Commit the report if changed

@@ -353,6 +353,14 @@ export function makeRevizeSource(
   return {
     name: SOURCE_NAME,
 
+    // The archive rung above walks every dated document the notices page
+    // lists and clips nothing off the back, so this source's own window is
+    // the publisher's, not the app's 90-day serving window. Carry-forward
+    // reads this to decide what a healthy run WOULD have produced; nothing
+    // else does, and the reader still only ever sees the serving window,
+    // which `lib/meetings/query.ts` clips independently.
+    publishedLookbackDays: null,
+
     async fetch(): Promise<RevizeRaw[]> {
       const collected: RevizeRaw[] = [];
       for (const wiring of wiringRows) {

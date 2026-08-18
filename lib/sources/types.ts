@@ -340,6 +340,32 @@ export interface ReportingMeetingSource<Raw = unknown>
 export interface MeetingSource<Raw = unknown> {
   /** Stable slug, matching the directory name. */
   readonly name: string;
+  /**
+   * How far back this source's own retrieval actually reaches, in days
+   * (g13, 2026-08-18). `null` means "the publisher's whole listed archive,
+   * with no back clip"; omitted means the app's serving window.
+   *
+   * ## Why a source has to say this out loud
+   *
+   * `lib/meetings/carry-forward.ts` carries a failed source's last known rows
+   * "clipped to the same serving window a fresh normalize applies", and until
+   * now that clip was one global constant — `CONCLUDED_LOOKBACK_DAYS`. That is
+   * true of every adapter that clips to the window itself (schedulepage, iqm2,
+   * clerksboards all pass it to their own fetch), and it was FALSE of revize,
+   * whose M59 archive rung emits every dated document on the notices page and
+   * applies no back clip at all.
+   *
+   * So on 2026-08-18 a 403 to the CI runner carried 8 of Merrimack County's
+   * 14 archive sittings forward and dropped the other 6 — the refresh
+   * corollary's own defect, in miniature, inside the code written to prevent
+   * it. A failed fetch partially emptied a previously-full surface, and the
+   * count line said "8 carried" with nothing to compare it against.
+   *
+   * The window a carried row is judged against is therefore the window the
+   * SOURCE produces, declared here, rather than a constant that happens to be
+   * right for most of them.
+   */
+  readonly publishedLookbackDays?: number | null;
   /** Hit the upstream system. The only step allowed to touch the network. */
   fetch(query: MeetingQuery): Promise<Raw[]>;
   /**

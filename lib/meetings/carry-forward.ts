@@ -35,9 +35,12 @@ import type { Meeting } from "../sources/types.ts";
  *
  * - **A fresh row always wins.** A carried row is only ever a row the current
  *   run does not have.
- * - **The window still applies.** A sitting that has aged out is not
- *   resurrected because its source went dark; that would be a refresh
- *   inventing history.
+ * - **The window still applies — the SOURCE's window** (g13, 2026-08-18). A
+ *   sitting a healthy run would not have produced is not resurrected because
+ *   its source went dark; that would be a refresh inventing history. Which
+ *   sittings those are is decided by the failed source's own declared
+ *   `publishedLookbackDays`, not by one global constant — see `backEdgeFor`
+ *   below for the Merrimack County miss that proved the difference.
  * - **Nothing is carried for a source that succeeded and reported no
  *   refusal.** A body that genuinely stopped publishing must be allowed to
  *   go quiet — the honest empty calendar is a real answer, and pinning stale
@@ -60,6 +63,12 @@ export interface CarryForwardChild {
   ok: boolean;
   /** Divisions this source could not reach while otherwise succeeding. */
   unreachableOcdIds?: string[];
+  /**
+   * The source's own `MeetingSource.publishedLookbackDays` (g13, 2026-08-18).
+   * `null` means the publisher's whole listed archive; omitted means the
+   * serving window. See the g13 note below.
+   */
+  publishedLookbackDays?: number | null;
 }
 
 export interface CarryForwardResult {
@@ -95,8 +104,32 @@ export function carryForward(
   const carried = new Map<string, number>();
   if (!previous) return { meetings: fresh, carried };
 
-  const windowStart = now.getTime() - CONCLUDED_LOOKBACK_DAYS * 86_400_000;
   const windowEnd = now.getTime() + UPCOMING_HORIZON_DAYS * 86_400_000;
+
+  /**
+   * The back edge, per source (g13, 2026-08-18).
+   *
+   * "The window still applies" is still the rule — a sitting that a healthy
+   * run would NOT have produced is not resurrected because its source went
+   * dark. What changed is whose window decides. It used to be
+   * `CONCLUDED_LOOKBACK_DAYS` for everyone, which silently assumed every
+   * adapter clips its retrieval to the serving window. Most do. Revize does
+   * not: its M59 archive rung emits every dated document the notices page
+   * lists, so on 2026-08-18 a 403 to the CI runner carried 8 of Merrimack
+   * County's 14 archive sittings and dropped 6 — this module partially
+   * committing the exact emptying it exists to prevent.
+   *
+   * `null` therefore means no back clip, and it is not a loosening: the
+   * reader never sees past `CONCLUDED_LOOKBACK_DAYS` either way, because
+   * `lib/meetings/query.ts` clips reads independently. All this decides is
+   * whether the snapshot stays as whole as the last healthy run left it.
+   */
+  const backEdgeFor = (child: CarryForwardChild): number => {
+    const declared = child.publishedLookbackDays;
+    if (declared === null) return -Infinity;
+    const days = declared ?? CONCLUDED_LOOKBACK_DAYS;
+    return now.getTime() - days * 86_400_000;
+  };
 
   const haveId = new Set(fresh.map((m) => m.id));
   const out = [...fresh];
@@ -108,6 +141,7 @@ export function carryForward(
     const divisions = new Set(child.unreachableOcdIds ?? []);
     if (!wholeSource && divisions.size === 0) continue;
 
+    const windowStart = backEdgeFor(child);
     let count = 0;
     for (const meeting of previous.meetings) {
       if (meeting.id.split(":")[0] !== child.source) continue;

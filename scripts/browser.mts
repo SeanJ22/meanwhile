@@ -1,0 +1,167 @@
+/**
+ * THE ONE PLACE A BROWSER IS OPENED (R50, closed 2026-08-18, g16).
+ *
+ * ## What went wrong twice
+ *
+ * `lib/log/client.ts` prefers `navigator.sendBeacon`, and Playwright's
+ * `extraHTTPHeaders` do not apply to a beacon. So a walk that declared itself
+ * on every fetch still wrote undeclared rows the moment a page unloaded with a
+ * queued beacon — rows landing ORGANIC, our own robots counted as readers in
+ * the store this business sells.
+ *
+ * It fired twice in two days. Seven rows on 2026-08-18 (g14, walks 7 and 8),
+ * then forty-four more (g15). Both times the fix was applied to the contexts
+ * that had leaked, and both times the next unguarded context leaked again,
+ * because `scripts/` held fifty of them and each one was a fresh chance to
+ * forget. Ten were guarded; forty were not.
+ *
+ * ## Why this file exists rather than a fiftieth copy of the guard
+ *
+ * A census of instances is not a fix for a class. The construction of a
+ * browser context is now a single function, `launchGuarded`, and
+ * `tests/browser-construction.test.ts` refuses any other script that calls
+ * `chromium.launch`, `browser.newContext` or `browser.newPage` directly. A new
+ * script cannot open an unguarded context without deleting a test.
+ *
+ * ## What the guard actually does, and what it costs
+ *
+ * 1. Every context carries `x-wtp-synthetic-run` on every request it makes.
+ * 2. Every context has `navigator.sendBeacon` overridden to `undefined` before
+ *    the first script runs, which forces `lib/log/client.ts` onto its `fetch`
+ *    fallback — and fetch carries the header. It is an OVERRIDE, not a
+ *    `delete`: g14's first attempt deleted the own-property, `sendBeacon` lives
+ *    on `Navigator.prototype`, and the deletion was a no-op that type-checked,
+ *    read correctly, and let four more rows through.
+ * 3. A run that set no `WTP_RUN_ID` gets one minted here from its label rather
+ *    than sending nothing. `syntheticRunHeaders()` returns `{}` for an unset
+ *    env, and `{}` means ORGANIC — a silent, total leak available to anyone who
+ *    forgot one export. The declaration is no longer optional.
+ *
+ * THE COST, STATED RATHER THAN HIDDEN: a run through this file does not
+ * exercise the beacon transport at all. That is the right trade — a suite that
+ * pollutes the sold store on every run is worse than one that tests a
+ * transport one layer down — but it is a trade, and R50 records the
+ * alternative that would not need it: teach the marker to travel in the request
+ * BODY, which `lib/log/client.ts` already sends, so it survives both
+ * transports. That is a change to production code and to the route's trust
+ * rules; this is not.
+ */
+
+import { chromium } from "playwright";
+import type {
+  Browser,
+  BrowserContext,
+  BrowserContextOptions,
+  LaunchOptions,
+  Page,
+} from "playwright";
+
+import { makeRunId, syntheticRunHeaders, SYNTHETIC_RUN_HEADER } from "../lib/db/run-marker.ts";
+
+/**
+ * The init script, as a string rather than a function.
+ *
+ * `addInitScript` accepts either, but a function is serialised by Playwright
+ * and tsx's esbuild transform rewrites named functions through a `__name`
+ * helper the page does not have. A string cannot be rewritten.
+ */
+const KILL_BEACON = `(() => {
+  try {
+    Object.defineProperty(navigator, "sendBeacon", {
+      value: undefined,
+      configurable: true,
+    });
+  } catch {
+    // If it cannot be overridden the run still declares itself on every fetch.
+  }
+})()`;
+
+export interface GuardedOptions extends LaunchOptions {
+  /**
+   * What to call this run in the search log when the environment did not say.
+   *
+   * Required, and required for a reason: an unlabelled run that also has no
+   * `WTP_RUN_ID` would have nothing to declare, and the whole point of this
+   * file is that there is no path through it that declares nothing.
+   */
+  label: string;
+  /** The clock, passed in so the run id is reproducible in a test. */
+  now?: () => Date;
+}
+
+/**
+ * A browser that can only make guarded contexts.
+ *
+ * The raw Playwright `Browser` is deliberately NOT exposed. Handing it back
+ * would restore the exact hole this file closes, one convenience call at a
+ * time. A script needing a browser-level API adds it here, where the guard
+ * comes with it.
+ */
+export interface GuardedBrowser {
+  /** The run id every context of this browser declares. Print it; name it in reports. */
+  readonly runId: string;
+  /**
+   * Named `context`, not `newContext`, and `page`, not `newPage`.
+   *
+   * Playwright's own names must stay unmistakable in a diff: the whole guard
+   * rests on `tests/browser-construction.test.ts` being able to refuse
+   * `browser.newContext(` and `browser.newPage(` outright, and it cannot do
+   * that if the guarded API answers to the same words.
+   */
+  context(options?: BrowserContextOptions): Promise<BrowserContext>;
+  /** A context and its first page, for the common case of wanting one page. */
+  page(options?: BrowserContextOptions): Promise<Page>;
+  close(): Promise<void>;
+}
+
+/** The run id this process declares: the environment's, or one minted from the label. */
+export function runIdFor(label: string, now: () => Date = () => new Date()): string {
+  const declared = process.env.WTP_RUN_ID?.trim();
+  if (declared) return declared;
+  return makeRunId(label, now().toISOString());
+}
+
+/**
+ * Open a browser whose every context declares itself and cannot beacon.
+ *
+ * ```ts
+ * const browser = await launchGuarded({ label: "walk-all" });
+ * const page = await browser.page({ viewport: PHONE });
+ * ```
+ */
+export async function launchGuarded(options: GuardedOptions): Promise<GuardedBrowser> {
+  const { label, now, ...launchOptions } = options;
+  const runId = runIdFor(label, now);
+  const headers = syntheticRunHeaders({ WTP_RUN_ID: runId });
+  /* Belt and braces: a header set that somehow lost the marker is a leak with
+   * no symptom, so it is refused here rather than discovered in the store. */
+  if (!headers[SYNTHETIC_RUN_HEADER]) {
+    throw new Error(
+      `launchGuarded(${label}): the run marker is empty, so every row this run writes ` +
+        "would land ORGANIC. Refusing to open a browser.",
+    );
+  }
+
+  const browser: Browser = await chromium.launch(launchOptions);
+
+  async function guardedContext(contextOptions: BrowserContextOptions = {}): Promise<BrowserContext> {
+    const context = await browser.newContext({
+      ...contextOptions,
+      // The caller's headers are kept, and the marker is not one a caller may
+      // overwrite: it goes on last.
+      extraHTTPHeaders: { ...contextOptions.extraHTTPHeaders, ...headers },
+    });
+    await context.addInitScript(KILL_BEACON);
+    return context;
+  }
+
+  return {
+    runId,
+    context: guardedContext,
+    async page(contextOptions?: BrowserContextOptions): Promise<Page> {
+      const context = await guardedContext(contextOptions);
+      return context.newPage();
+    },
+    close: () => browser.close(),
+  };
+}

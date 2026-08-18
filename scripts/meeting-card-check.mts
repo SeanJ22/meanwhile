@@ -3,14 +3,15 @@
  * phone width and read its header — the WHAT must lead, the address render
  * once. Also: the ballot page's first-tap one-time notice (3c/3d).
  */
-import { chromium } from "playwright";
+
 import { join } from "node:path";
+import { launchGuarded } from "./browser.mts";
 
 const OUT = "C:/Users/seanj/dev/we-the-people/screenshots";
 const zip = process.argv[2] ?? "85641";
 
-const browser = await chromium.launch();
-const context = await browser.newContext({
+const browser = await launchGuarded({ label: "meeting-card-check" });
+const context = await browser.context({
   viewport: { width: 390, height: 844 },
   deviceScaleFactor: 2,
   reducedMotion: "reduce",

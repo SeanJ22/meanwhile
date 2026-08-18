@@ -20,7 +20,7 @@
  * run summary with a non-zero exit.
  */
 
-import { chromium, type Page } from "playwright";
+import { type Page } from "playwright";
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
 
 /**
@@ -37,6 +37,7 @@ const RUN_HEADERS = syntheticRunHeaders({
 import { mkdir } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { launchGuarded } from "./browser.mts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT_DIR = join(root, "screenshots");
@@ -306,12 +307,12 @@ if (!wanted.length) {
 }
 
 await mkdir(OUT_DIR, { recursive: true });
-const browser = await chromium.launch();
+const browser = await launchGuarded({ label: "pairs" });
 const failures: string[] = [];
 
 for (const shot of wanted) {
   const label = `${phase}-${shot.item}-${shot.name}`;
-  const context = await browser.newContext({
+  const context = await browser.context({
     // C05: this run is ours, declared at write time.
     extraHTTPHeaders: RUN_HEADERS,
     viewport: shot.viewport ?? PHONE,

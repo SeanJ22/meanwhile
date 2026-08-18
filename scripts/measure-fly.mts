@@ -24,9 +24,10 @@
  * is printed either way, and a missed target is reported with its
  * measurement, never smoothed into a pass.
  */
-import { chromium } from "playwright";
+
 
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
+import { launchGuarded } from "./browser.mts";
 
 /**
  * C05 (2026-08-17): this run declares itself so the rows it writes to
@@ -78,11 +79,11 @@ interface Run {
   medianFrame: number;
 }
 
-const browser = await chromium.launch();
+const browser = await launchGuarded({ label: "measure-fly" });
 const runs: Run[] = [];
 
 for (let i = 0; i < RUNS; i += 1) {
-  const context = await browser.newContext({
+  const context = await browser.context({
     // C05: this run is ours, declared at write time.
     extraHTTPHeaders: RUN_HEADERS,
     viewport: { width: 1280, height: 900 },

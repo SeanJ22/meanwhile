@@ -9,9 +9,10 @@
  *   SHOOT_BASE_URL=https://… pnpm tsx scripts/shoot-0816g2.mts prod
  */
 
-import { chromium, type Page } from "playwright";
+import { type Page } from "playwright";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { launchGuarded } from "./browser.mts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(root, "screenshots");
@@ -19,7 +20,7 @@ const BASE = process.env.SHOOT_BASE_URL ?? "http://localhost:3000";
 const PROD = process.argv[2] === "prod";
 const PREFIX = PROD ? "prod-0816g2" : "after-0816g2";
 
-const browser = await chromium.launch();
+const browser = await launchGuarded({ label: "shoot-0816g2" });
 const notes: string[] = [];
 function say(line: string) {
   notes.push(line);
@@ -27,7 +28,7 @@ function say(line: string) {
 }
 
 async function open(width: number, height: number, zip: string, theme = "dark") {
-  const context = await browser.newContext({
+  const context = await browser.context({
     viewport: { width, height },
     deviceScaleFactor: 2,
     reducedMotion: "reduce",

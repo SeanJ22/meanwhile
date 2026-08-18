@@ -52,7 +52,7 @@
  *
  * `MEASURE_BASE_URL=… pnpm measure:extrusion`
  */
-import { chromium } from "playwright";
+
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
 
 /**
@@ -67,6 +67,7 @@ const RUN_HEADERS = syntheticRunHeaders({
 });
 
 import { inflateSync } from "node:zlib";
+import { launchGuarded } from "./browser.mts";
 
 const BASE = (process.env.MEASURE_BASE_URL ?? "http://localhost:3000").replace(
   /\/$/,
@@ -195,12 +196,12 @@ function decodePng(buffer: Buffer): {
 
 /* ---------------------------------------------------------- the pass --- */
 
-const browser = await chromium.launch();
+const browser = await launchGuarded({ label: "measure-extrusion" });
 let failures = 0;
 let frames = 0;
 
 for (const theme of ["dark", "light"] as const) {
-  const context = await browser.newContext({
+  const context = await browser.context({
     // C05: this run is ours, declared at write time.
     extraHTTPHeaders: RUN_HEADERS,
     viewport: { width: 1100, height: 900 },

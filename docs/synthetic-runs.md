@@ -268,7 +268,7 @@ for ordinary requests — but the client's `logEvent` goes out over `sendBeacon`
 which does not carry those headers. The override that fixes it
 (`Object.defineProperty(navigator, "sendBeacon", { value: undefined })`) was
 added to the ten walk contexts and **was never added to `measure-focus.mts`**.
-`tests/run-marker-coverage.test.ts` guards "every live browser script", so the
+`tests/browser-construction.test.ts` makes scripts/browser.mts the only place a browser is opened (R50, 2026-08-18), so the
 gap is worth checking there too.
 
 **Nothing was backmarked and nothing was deleted.** R50's disposition is PENDING

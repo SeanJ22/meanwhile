@@ -35,11 +35,12 @@
  * the difference between "the map is slow" and "the runner has no GPU" — and
  * confusing the two is exactly how the 32 ms number survived this long.
  */
-import { chromium, type Browser } from "playwright";
+import { type Browser } from "playwright";
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
+import { launchGuarded, type GuardedBrowser } from "./browser.mts";
 
 const BASE = (process.env.SHOOT_BASE_URL ?? "https://sparkwtp.netlify.app").replace(/\/$/, "");
 const ZIP = process.env.PERF_ZIP ?? "85701";
@@ -69,15 +70,15 @@ interface Run {
  * Falling back to bundled Chromium WITHOUT saying so would produce a file
  * labelled "the author's baseline" measured on a browser he does not use.
  */
-async function launch(): Promise<{ browser: Browser; what: string }> {
+async function launch(): Promise<{ browser: GuardedBrowser; what: string }> {
   if (HEADLESS) {
-    return { browser: await chromium.launch(), what: "bundled Chromium, headless (NOT a baseline)" };
+    return { browser: await launchGuarded({ label: "perf" }), what: "bundled Chromium, headless (NOT a baseline)" };
   }
   try {
-    const browser = await chromium.launch({ channel: "chrome", headless: false });
+    const browser = await launchGuarded({ label: "perf", channel: "chrome", headless: false  });
     return { browser, what: "the Chrome installed on this machine, visible" };
   } catch {
-    const browser = await chromium.launch({ headless: false });
+    const browser = await launchGuarded({ label: "perf", headless: false  });
     return {
       browser,
       what: "bundled Chromium, visible — REAL CHROME NOT FOUND, so this is not the author's browser",
@@ -86,9 +87,9 @@ async function launch(): Promise<{ browser: Browser; what: string }> {
 }
 
 /** Chrome's own answer to "is the GPU doing the work?", read from chrome://gpu. */
-async function accelerationStatus(browser: Browser): Promise<{ on: boolean; detail: string }> {
+async function accelerationStatus(browser: GuardedBrowser): Promise<{ on: boolean; detail: string }> {
   try {
-    const page = await browser.newPage();
+    const page = await browser.page();
     await page.goto("chrome://gpu", { waitUntil: "domcontentloaded", timeout: 30_000 });
     await page.waitForTimeout(1500);
     const text = (await page.evaluate(`document.body.innerText`)) as string;
@@ -123,7 +124,7 @@ console.log(
 
 const runs: Run[] = [];
 for (let i = 0; i < RUNS; i += 1) {
-  const context = await browser.newContext({
+  const context = await browser.context({
     extraHTTPHeaders: RUN_HEADERS,
     viewport: { width: 1280, height: 900 },
     deviceScaleFactor: 1,

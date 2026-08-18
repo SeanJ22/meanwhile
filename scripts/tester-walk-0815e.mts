@@ -9,8 +9,9 @@
  *
  * Prints PASS/FAIL with counts; screenshots per surface.
  */
-import { chromium, type Browser, type Page } from "playwright";
+import { type Page } from "playwright";
 import { join } from "node:path";
+import { launchGuarded } from "./browser.mts";
 
 const OUT = "C:/Users/seanj/dev/we-the-people/screenshots";
 const zip = process.argv[2] ?? "85701";
@@ -19,10 +20,10 @@ function check(name: string, ok: boolean, detail = "") {
   results.push(`${ok ? "PASS" : "FAIL"} ${name}${detail ? ` — ${detail}` : ""}`);
 }
 
-const browser: Browser = await chromium.launch();
+const browser = await launchGuarded({ label: "tester-walk-0815e" });
 
 async function openAt(width: number, height: number): Promise<Page> {
-  const context = await browser.newContext({
+  const context = await browser.context({
     viewport: { width, height },
     deviceScaleFactor: 2,
     reducedMotion: "reduce",

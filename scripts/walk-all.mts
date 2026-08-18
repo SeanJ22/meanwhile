@@ -58,13 +58,14 @@ import { join } from "node:path";
 
 import { neon } from "@neondatabase/serverless";
 import { config as loadEnv } from "dotenv";
-import { chromium, type Browser, type Page } from "playwright";
+import { type Page } from "playwright";
 
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
 import { PRODUCT_NAME } from "../lib/brand.ts";
 import { internalSourceIds } from "../lib/meetings/source-labels.ts";
 import { mojibakePattern } from "../lib/text/mojibake.ts";
 import { decodePng, patchStats, regionChange } from "./png.mts";
+import { launchGuarded, type GuardedBrowser } from "./browser.mts";
 
 const BASE = (process.env.SHOOT_BASE_URL ?? "https://sparkwtp.netlify.app").replace(
   /\/$/,
@@ -254,8 +255,8 @@ async function getJson<T>(path: string): Promise<T | null> {
  * app does not have. The tutorial flag is seeded too: the first-run tour is
  * its own check, not a thing every other check has to dismiss.
  */
-async function openAt(browser: Browser, zip: string): Promise<Page> {
-  const context = await browser.newContext({
+async function openAt(browser: GuardedBrowser, zip: string): Promise<Page> {
+  const context = await browser.context({
     // C05: the browser declares this run synthetic too. The page's own
     // /api/meetings fetches write search-log rows exactly like the direct
     // probes do, and they are the bulk of what a walk creates.
@@ -263,45 +264,6 @@ async function openAt(browser: Browser, zip: string): Promise<Page> {
     viewport: PHONE,
     deviceScaleFactor: 2,
     reducedMotion: "reduce",
-  });
-  // C05: sendBeacon ignores extraHTTPHeaders, so anything leaving by that
-  // path is recorded ORGANIC — our own run counted as a reader in the store
-  // we sell. Removing it forces the fetch fallback, which carries the header.
-  await context.addInitScript(() => {
-    try {
-      Object.defineProperty(navigator, "sendBeacon", {
-        value: undefined,
-        configurable: true,
-      });
-    } catch {
-      // Still declared on every fetch if it cannot be removed.
-    }
-  });
-  /*
-   * C05, THE BEACON HOLE (g14, 2026-08-18).
-   *
-   * lib/log/client.ts prefers navigator.sendBeacon over fetch, and
-   * Playwright extraHTTPHeaders DO NOT apply to a beacon. So every event
-   * that leaves by that path arrives with no x-wtp-synthetic-run header and
-   * is recorded ORGANIC - a walk row counted as a reader in the store we
-   * sell. It cost 3 QUESTION_ASKED rows the day this was found, flushed on
-   * the page unloads that the fresh-page ask fix introduced.
-   *
-   * Removing sendBeacon forces the fetch fallback, which carries the header.
-   * The cost is stated rather than hidden: this walk no longer exercises the
-   * beacon path itself. That is the right trade - a suite that pollutes the
-   * sold store every run is worse than one that tests a transport one layer
-   * down.
-   */
-  await context.addInitScript(() => {
-    try {
-      Object.defineProperty(navigator, "sendBeacon", {
-        value: undefined,
-        configurable: true,
-      });
-    } catch {
-      // If it cannot be removed the run still declares itself on every fetch.
-    }
   });
   await context.addInitScript(
     ({ zip }) => {
@@ -335,52 +297,13 @@ async function openAt(browser: Browser, zip: string): Promise<Page> {
  * run" four times over, which is honest and useless: the check has to be able
  * to reach its subject before its result means anything.
  */
-async function openWideAt(browser: Browser, zip: string): Promise<Page> {
-  const context = await browser.newContext({
+async function openWideAt(browser: GuardedBrowser, zip: string): Promise<Page> {
+  const context = await browser.context({
     // C05: same declaration on the wide viewport.
     extraHTTPHeaders: RUN_HEADERS,
     viewport: { width: 1280, height: 900 },
     deviceScaleFactor: 1,
     reducedMotion: "reduce",
-  });
-  // C05: sendBeacon ignores extraHTTPHeaders, so anything leaving by that
-  // path is recorded ORGANIC — our own run counted as a reader in the store
-  // we sell. Removing it forces the fetch fallback, which carries the header.
-  await context.addInitScript(() => {
-    try {
-      Object.defineProperty(navigator, "sendBeacon", {
-        value: undefined,
-        configurable: true,
-      });
-    } catch {
-      // Still declared on every fetch if it cannot be removed.
-    }
-  });
-  /*
-   * C05, THE BEACON HOLE (g14, 2026-08-18).
-   *
-   * lib/log/client.ts prefers navigator.sendBeacon over fetch, and
-   * Playwright extraHTTPHeaders DO NOT apply to a beacon. So every event
-   * that leaves by that path arrives with no x-wtp-synthetic-run header and
-   * is recorded ORGANIC - a walk row counted as a reader in the store we
-   * sell. It cost 3 QUESTION_ASKED rows the day this was found, flushed on
-   * the page unloads that the fresh-page ask fix introduced.
-   *
-   * Removing sendBeacon forces the fetch fallback, which carries the header.
-   * The cost is stated rather than hidden: this walk no longer exercises the
-   * beacon path itself. That is the right trade - a suite that pollutes the
-   * sold store every run is worse than one that tests a transport one layer
-   * down.
-   */
-  await context.addInitScript(() => {
-    try {
-      Object.defineProperty(navigator, "sendBeacon", {
-        value: undefined,
-        configurable: true,
-      });
-    } catch {
-      // If it cannot be removed the run still declares itself on every fetch.
-    }
   });
   await context.addInitScript(
     ({ zip }) => {
@@ -408,7 +331,7 @@ async function bodyText(page: Page): Promise<string> {
   return page.locator("body").innerText();
 }
 
-const browser = await chromium.launch();
+const browser = await launchGuarded({ label: "walk-all" });
 
 console.log(`walk:all — ${BASE}\n${new Array(60).fill("─").join("")}`);
 
@@ -1002,24 +925,11 @@ for (const { zip } of FOUR) {
 section("D. The ballot page (0814c, D53, g3)");
 
 {
-  const context = await browser.newContext({
+  const context = await browser.context({
     // C05: this run is ours, declared at write time.
     extraHTTPHeaders: RUN_HEADERS,
     viewport: PHONE,
     reducedMotion: "reduce",
-  });
-  // C05: sendBeacon ignores extraHTTPHeaders, so anything leaving by that
-  // path is recorded ORGANIC — our own run counted as a reader in the store
-  // we sell. Removing it forces the fetch fallback, which carries the header.
-  await context.addInitScript(() => {
-    try {
-      Object.defineProperty(navigator, "sendBeacon", {
-        value: undefined,
-        configurable: true,
-      });
-    } catch {
-      // Still declared on every fetch if it cannot be removed.
-    }
   });
   const page = await context.newPage();
   page.on("response", (r) => countProbe(r.url()));
@@ -3203,6 +3113,132 @@ section("M136. Body battlecards reach person-card depth (g13)");
       await page.context().close();
     }
   }
+}
+
+/* ── g15's M135: an autocomplete row opens a card ───────────────────────── */
+
+/**
+ * THE CHECK g15 CORRECTLY WITHHELD, appended now that its code is deployed.
+ *
+ * g15 converted the ask panel's autocomplete rows to M135's rule — a row opens
+ * a card — and deliberately added no walk check for it, because nothing from
+ * that session had reached production and a check against undeployed code
+ * reads as a NAMED REGRESSION against a working build. That was the right
+ * call and it left a stated debt. Production has served the fix since
+ * 714abb0 (2026-08-18, g16), so the debt is paid here.
+ *
+ * WHAT IS ASSERTED, and why it is not "every body row opens a card": a body
+ * row opens a card only when its body resolves DISTINCTLY — several bodies
+ * share one division, `CoveredBody.name` is null on derived rows, and g15's
+ * handler falls back to flying rather than opening one body's card from
+ * another body's row. So the honest assertion is that the conversion is live
+ * at all: among the body rows this zip offers, at least one opens the large
+ * card. Before g15, the answer was none, at every zip. The number tried and
+ * the number that opened are both printed, so a drop from many to one is
+ * visible even while the check stays green.
+ *
+ * Its own fresh page per zip, and every query scoped to what this section
+ * opened — the per-zip loop's page has been clicked through by a dozen checks
+ * and a bare selector finds whatever they left behind.
+ */
+const AC_ROW = ".search-ac-item";
+
+/**
+ * Open the rail, type into the ask box, and wait for the autocomplete to HAVE
+ * rows (R49 — an outcome, not a duration).
+ *
+ * THE TWO STEPS ARE NOT OPTIONAL AND THE FIRST DRAFT SKIPPED THEM. The ask
+ * panel is not on the page at rest: the who-governs card is, and the rail sits
+ * behind it. A check that looked straight for `[data-ask-box]` reported COULD
+ * NOT RUN at both zips — honest, and useless. Minimize, then open the ask
+ * pill, which is what M119 and A02 above already do.
+ */
+async function offerRows(page: Page, typed: string): Promise<number> {
+  const minimize = page.locator(".coverage-notice button[aria-label^='Minimize']").first();
+  if ((await minimize.count()) > 0) {
+    await minimize.click();
+    await page.locator(".coverage-notice").waitFor({ state: "detached", timeout: 6000 }).catch(() => {});
+  }
+  if ((await page.locator("[data-ask-panel]").count()) === 0) {
+    await page.locator("[data-ask-pill]").first().click().catch(() => {});
+    await page
+      .locator("[data-ask-panel]")
+      .first()
+      .waitFor({ state: "visible", timeout: 6000 })
+      .catch(() => {});
+  }
+
+  const input = page.locator("[data-ask-box]").first();
+  if ((await input.count()) === 0) return -1;
+  await input.fill(typed);
+  await page
+    .locator(AC_ROW)
+    .first()
+    .waitFor({ state: "visible", timeout: 8000 })
+    .catch(() => {});
+  return page.locator(AC_ROW).count();
+}
+
+for (const zip of ["85701", "85641"]) {
+  const name = `M135: an autocomplete body row opens a card at ${zip}`;
+  /*
+   * A FRESH PAGE PER ATTEMPT, not a loop inside one page: picking a row calls
+   * `dismissSidebar()`, which at phone width takes the ask panel away with it,
+   * so a second attempt in the same page would be measuring a panel that is no
+   * longer there and would read as a failure of the conversion.
+   */
+  let offered = -1;
+  let tried = 0;
+  let opened = 0;
+  let firstOpened = "";
+  let why = "";
+
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const page = await openAt(browser, zip);
+    try {
+      const count = await offerRows(page, "a");
+      if (count === -1) {
+        why = "no ask box";
+        break;
+      }
+      const bodyRows = page.locator(AC_ROW, {
+        has: page.locator(".search-ac-type", { hasText: /^Body$/ }),
+      });
+      offered = await bodyRows.count();
+      if (offered === 0) {
+        why = `the autocomplete offered no body row for "a" at this zip (${count} row(s) of other kinds)`;
+        break;
+      }
+      if (attempt >= offered) break;
+
+      const row = bodyRows.nth(attempt);
+      const label = (await row.locator(".search-ac-name").innerText()).trim();
+      tried += 1;
+      await row.click();
+      const card = page.locator(".account-modal").first();
+      const cardOpened = await card
+        .waitFor({ state: "visible", timeout: 6000 })
+        .then(() => true)
+        .catch(() => false);
+      if (cardOpened) {
+        opened += 1;
+        if (!firstOpened) firstOpened = label;
+        break;
+      }
+    } finally {
+      await page.context().close();
+    }
+  }
+
+  if (tried === 0) cannotRun("g15", name, why || "no body row could be clicked");
+  else
+    check(
+      "g15",
+      name,
+      opened > 0,
+      `${offered} body row(s) offered, ${tried} clicked, ${opened} opened the large card` +
+        (firstOpened ? ` (first: ${JSON.stringify(firstOpened)})` : ""),
+    );
 }
 
 await browser.close();

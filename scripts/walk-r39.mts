@@ -12,10 +12,11 @@
  *
  * `pnpm tsx scripts/walk-r39.mts`
  */
-import { chromium, type Browser, type Page } from "playwright";
+import { type Page } from "playwright";
 import { join } from "node:path";
 
 import { syntheticRunHeaders } from "../lib/db/run-marker.ts";
+import { launchGuarded, type GuardedBrowser } from "./browser.mts";
 
 const BASE = process.env.SHOOT_BASE_URL ?? "http://localhost:3000";
 const OUT = "C:/Users/seanj/dev/we-the-people/screenshots";
@@ -34,12 +35,12 @@ const PHONE: Size = { width: 390, height: 844 };
 const DESKTOP: Size = { width: 1280, height: 900 };
 
 async function openAt(
-  browser: Browser,
+  browser: GuardedBrowser,
   zip: string,
   viewport: Size,
   theme: "dark" | "light",
 ): Promise<Page> {
-  const context = await browser.newContext({
+  const context = await browser.context({
     extraHTTPHeaders: HEADERS,
     viewport,
     deviceScaleFactor: 1,
@@ -115,7 +116,7 @@ const MODAL_CENSUS = `(() => {
   };
 })()`;
 
-const browser = await chromium.launch();
+const browser = await launchGuarded({ label: "walk-r39" });
 
 // ── Shaheen: the example, at both viewports and both themes ──────────────
 for (const viewport of [PHONE, DESKTOP]) {

@@ -3,15 +3,16 @@
  * read the who-governs card, open a meeting card, and (85701) run the 3f
  * district-shading diagnosis with feature-state readback.
  */
-import { chromium } from "playwright";
+
 import { join } from "node:path";
+import { launchGuarded } from "./browser.mts";
 
 const OUT = "C:/Users/seanj/dev/we-the-people/screenshots";
 const zip = process.argv[2] ?? "85701";
 const doShading = process.argv.includes("--shading");
 
-const browser = await chromium.launch();
-const context = await browser.newContext({
+const browser = await launchGuarded({ label: "tester-drive" });
+const context = await browser.context({
   viewport: { width: 390, height: 844 },
   deviceScaleFactor: 2,
   reducedMotion: "reduce",

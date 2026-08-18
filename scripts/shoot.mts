@@ -17,7 +17,7 @@
  * loaded, so `loaded()` is false forever. See map-canvas.tsx.
  */
 
-import { chromium } from "playwright";
+
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
 
 /**
@@ -34,6 +34,7 @@ const RUN_HEADERS = syntheticRunHeaders({
 import { mkdir } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { launchGuarded } from "./browser.mts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT_DIR = join(root, "screenshots");
@@ -66,8 +67,8 @@ const theme = arg("theme", "dark");
 const path = arg("path", "/") as string;
 const settle = Number(arg("wait", "9000"));
 
-const browser = await chromium.launch();
-const context = await browser.newContext({
+const browser = await launchGuarded({ label: "shoot" });
+const context = await browser.context({
     // C05: this run is ours, declared at write time.
     extraHTTPHeaders: RUN_HEADERS,
   viewport: { width, height },

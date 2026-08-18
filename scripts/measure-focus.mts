@@ -47,7 +47,7 @@
  * fails, because a threshold with no measurement behind it is a threshold
  * nobody can re-rule on.
  */
-import { chromium, type Page } from "playwright";
+import { type Page } from "playwright";
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
 
 /**
@@ -66,6 +66,7 @@ import { join } from "node:path";
 
 import { extrusionSpecForZoom } from "../lib/map/state-focus.ts";
 import { decodePng, patchStats, type DecodedPng } from "./png.mts";
+import { launchGuarded } from "./browser.mts";
 
 const BASE = (process.env.SHOOT_BASE_URL ?? "https://sparkwtp.netlify.app").replace(
   /\/$/,
@@ -393,7 +394,7 @@ async function framePair(
 
 /* ------------------------------------------------------------ the run --- */
 
-const browser = await chromium.launch();
+const browser = await launchGuarded({ label: "measure-focus" });
 const ZOOMS: [string, number][] = [
   ["city", 0],
   ["state", 4],
@@ -406,7 +407,7 @@ for (const theme of ["dark", "light"] as const) {
   if (!ONLY_THEMES.includes(theme)) continue;
   for (const zip of ["85701", "03255"] as const) {
     if (!ONLY_ZIPS.includes(zip)) continue;
-    const context = await browser.newContext({
+    const context = await browser.context({
     // C05: this run is ours, declared at write time.
     extraHTTPHeaders: RUN_HEADERS,
       viewport: { width: 1280, height: 900 },
@@ -416,29 +417,6 @@ for (const theme of ["dark", "light"] as const) {
     });
     /** Every geometry request the page makes, for the data-scoping family. */
     const requested: string[] = [];
-    /*
-     * C05 / R50 (added g15, 2026-08-18): sendBeacon ignores extraHTTPHeaders,
-     * so every client event this run produces was leaving UNDECLARED and being
-     * recorded ORGANIC — our own instrument counted as a reader in the store we
-     * sell. RUN_HEADERS below is real and works for ordinary requests; it never
-     * applied to the beacon path, and this script was missed when the override
-     * went into the ten walk contexts. Removing sendBeacon forces the fetch
-     * fallback, which carries the header.
-     *
-     * The rows this omission already wrote are enumerated in
-     * docs/synthetic-runs.md and are NOT backmarked: R50 is pending the
-     * author, and a backmark is a production write nobody has sanctioned.
-     */
-    await context.addInitScript(() => {
-      try {
-        Object.defineProperty(navigator, "sendBeacon", {
-          value: undefined,
-          configurable: true,
-        });
-      } catch {
-        // Still declared on every fetch if it cannot be removed.
-      }
-    });
     await context.addInitScript(
       ({ zip, theme }) => {
         try {
@@ -728,36 +706,13 @@ for (const [label, zip] of [
   ["no-zip", null],
   ["uncovered-06716", "06716"],
 ] as const) {
-  const context = await browser.newContext({
+  const context = await browser.context({
     // C05: this run is ours, declared at write time.
     extraHTTPHeaders: RUN_HEADERS,
     viewport: { width: 1280, height: 900 },
     deviceScaleFactor: 1,
     reducedMotion: "reduce",
     colorScheme: "dark",
-  });
-  /*
-   * C05 / R50 (added g15, 2026-08-18): sendBeacon ignores extraHTTPHeaders,
-   * so every client event this run produces was leaving UNDECLARED and being
-   * recorded ORGANIC — our own instrument counted as a reader in the store we
-   * sell. RUN_HEADERS below is real and works for ordinary requests; it never
-   * applied to the beacon path, and this script was missed when the override
-   * went into the ten walk contexts. Removing sendBeacon forces the fetch
-   * fallback, which carries the header.
-   *
-   * The rows this omission already wrote are enumerated in
-   * docs/synthetic-runs.md and are NOT backmarked: R50 is pending the
-   * author, and a backmark is a production write nobody has sanctioned.
-   */
-  await context.addInitScript(() => {
-    try {
-      Object.defineProperty(navigator, "sendBeacon", {
-        value: undefined,
-        configurable: true,
-      });
-    } catch {
-      // Still declared on every fetch if it cannot be removed.
-    }
   });
   await context.addInitScript(
     ({ zip }) => {

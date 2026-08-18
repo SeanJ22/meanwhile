@@ -10,7 +10,7 @@
  *   SHOOT_BASE_URL=https://… pnpm tsx scripts/verify-sources-tab.mts
  */
 
-import { chromium } from "playwright";
+
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
 
 /**
@@ -26,6 +26,7 @@ const RUN_HEADERS = syntheticRunHeaders({
 
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { launchGuarded } from "./browser.mts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const BASE = process.env.SHOOT_BASE_URL ?? "http://localhost:3000";
@@ -33,8 +34,8 @@ const TAG = process.env.SHOOT_BASE_URL ? "prod" : "after";
 
 const FALSE_SENTENCE = "Nothing on this card came from an external record";
 
-const browser = await chromium.launch();
-const context = await browser.newContext({
+const browser = await launchGuarded({ label: "verify-sources-tab" });
+const context = await browser.context({
     // C05: this run is ours, declared at write time.
     extraHTTPHeaders: RUN_HEADERS,
   viewport: { width: 1440, height: 950 },

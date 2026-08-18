@@ -10,8 +10,9 @@
  * Screenshots land in scripts/shots-0815d/. Every check prints PASS/FAIL
  * with what it looked for, so a silent pass is impossible.
  */
-import { chromium } from "playwright";
+
 import { mkdirSync } from "node:fs";
+import { launchGuarded } from "./browser.mts";
 
 const BASE = process.env.WALK_BASE ?? "http://localhost:3000";
 const OUT = "scripts/shots-0815d";
@@ -25,8 +26,8 @@ function check(label: string, ok: boolean, detail = "") {
   console.log(`  ${ok ? "PASS" : "FAIL"}  ${label}${detail ? ` — ${detail}` : ""}`);
 }
 
-const browser = await chromium.launch();
-const page = await browser.newPage({
+const browser = await launchGuarded({ label: "tester-walk-0815d" });
+const page = await browser.page({
   viewport: { width: 390, height: 844 },
   deviceScaleFactor: 2,
 });

@@ -11,10 +11,11 @@
  *
  * `pnpm tsx scripts/walk-r40.mts`
  */
-import { chromium, type Page } from "playwright";
+import { type Page } from "playwright";
 import { join } from "node:path";
 
 import { syntheticRunHeaders } from "../lib/db/run-marker.ts";
+import { launchGuarded } from "./browser.mts";
 
 const BASE = process.env.SHOOT_BASE_URL ?? "http://localhost:3000";
 const OUT = "C:/Users/seanj/dev/we-the-people/screenshots";
@@ -31,11 +32,11 @@ function cannotRun(name: string, why: string) {
   results.push(`CANNOT-RUN ${name} — ${why}`);
 }
 
-const browser = await chromium.launch();
+const browser = await launchGuarded({ label: "walk-r40" });
 
 // ── The sidebar footer, desktop (where the rail renders) ─────────────────
 {
-  const context = await browser.newContext({
+  const context = await browser.context({
     extraHTTPHeaders: HEADERS,
     viewport: { width: 1280, height: 900 },
     reducedMotion: "reduce",
@@ -115,7 +116,7 @@ const browser = await chromium.launch();
 
 // ── The form: a real submission, declared synthetic ──────────────────────
 {
-  const context = await browser.newContext({
+  const context = await browser.context({
     extraHTTPHeaders: HEADERS,
     viewport: { width: 390, height: 844 },
     reducedMotion: "reduce",
@@ -178,7 +179,7 @@ const browser = await chromium.launch();
 
 // ── The forced-failure path: the reader is told, and keeps their text ────
 {
-  const context = await browser.newContext({
+  const context = await browser.context({
     extraHTTPHeaders: HEADERS,
     viewport: { width: 390, height: 844 },
     reducedMotion: "reduce",

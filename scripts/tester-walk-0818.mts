@@ -7,8 +7,9 @@
  * check with counts; screenshots per surface. The log supersedes
  * docs/tester-pass.md.
  */
-import { chromium, type Page } from "playwright";
+import { type Page } from "playwright";
 import { join } from "node:path";
+import { launchGuarded } from "./browser.mts";
 
 const OUT = "C:/Users/seanj/dev/we-the-people/screenshots";
 const zip = process.argv[2] ?? "03255";
@@ -18,8 +19,8 @@ function check(name: string, ok: boolean, detail = "") {
   results.push(`${ok ? "PASS" : "FAIL"} ${name}${detail ? ` — ${detail}` : ""}`);
 }
 
-const browser = await chromium.launch();
-const context = await browser.newContext({
+const browser = await launchGuarded({ label: "tester-walk-0818" });
+const context = await browser.context({
   viewport: { width: 390, height: 844 },
   deviceScaleFactor: 2,
   reducedMotion: "reduce",

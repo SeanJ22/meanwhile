@@ -8,12 +8,12 @@
  * More → Sources — and prints every Verified row it renders, so the claim is
  * read off the page rather than off the component.
  */
-import { chromium } from "playwright";
+import { launchGuarded } from "./browser.mts";
 
 const BASE = (process.env.SHOOT_BASE_URL ?? "http://localhost:3000").replace(/\/$/, "");
 
-const browser = await chromium.launch();
-const context = await browser.newContext({
+const browser = await launchGuarded({ label: "shot-hobbs" });
+const context = await browser.context({
   viewport: { width: 390, height: 844 },
   deviceScaleFactor: 2,
   reducedMotion: "reduce",

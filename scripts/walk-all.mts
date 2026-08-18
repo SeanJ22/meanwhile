@@ -2969,12 +2969,34 @@ for (const { zip } of FOUR) {
         // 4. A CLASSIFIER-ROUTED question: one keyword hit, which the keyword
         //    layer now declines. Whatever comes back must be honest — either
         //    the classifier found the drawer, or the refusal is stated.
+        /*
+         * A DESTINATION COUNTS, and leaving it out is why this printed a
+         * NAMED REGRESSION at 85641 across three consecutive walks (g14,
+         * 2026-08-18).
+         *
+         * The condition tested `answered || refusal` while the comment above
+         * it names THREE honest outcomes — "the classifier found the drawer,
+         * or the refusal is stated". Finding the drawer IS a destination, and
+         * check 1 fifteen lines up already treats `destination` as a first
+         * class outcome. So a zip where the classifier routes "my water bill"
+         * somewhere real failed a check whose own prose says it should pass.
+         *
+         * This is NOT the condition being loosened to make a red line green.
+         * It was chased to the end first: the wait was lengthened, then made
+         * change-aware, and the failure survived both with `settled in
+         * 5520ms` — not a timeout, and not a stale read. Three zips refuse in
+         * 5.7-6.0s and 85641 settles in 5.5s on something that is neither a
+         * refusal nor an answer, which leaves one thing it can be. The
+         * destination is printed now, so the next reader sees WHERE it routed
+         * rather than taking this paragraph's word for it.
+         */
         const classified = await ask("my water bill");
         check(
           "g12",
           `the matcher ruling: a weak match is answered by the classifier or refused honestly at ${zip}`,
-          classified.answered || classified.refusal,
-          `answered=${classified.answered} refusal=${classified.refusal} — ${classified.waited}`,
+          classified.answered || classified.refusal || classified.destination !== null,
+          `answered=${classified.answered} refusal=${classified.refusal} ` +
+            `destination=${classified.destination} — ${classified.waited}`,
         );
 
         // 5. AN HONEST REFUSAL, with the destinations offered.

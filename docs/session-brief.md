@@ -59,6 +59,22 @@ said something — a refusal or an answer, a count or a named gap — and then
 judging what it said. A poll that exits only on success turns a flaky check
 into one that cannot fail.
 
+## 0b — R50, the beacon hole (P1, and it already bit)
+
+Three QUESTION_ASKED rows landed **ORGANIC** in the store we sell, written by
+g14's own walk. `lib/log/client.ts` prefers `navigator.sendBeacon`, and
+Playwright's `extraHTTPHeaders` **do not apply to a beacon** — so anything
+leaving that way is recorded as a reader.
+
+Fixed in 10 contexts by removing `sendBeacon` so the fetch fallback carries
+the header. **The class: `scripts/` holds 50 browser contexts, 10 guarded, 40
+NOT**, across 36 scripts. R50 carries them — and prices the better fix, which
+is to make the marker travel in the request BODY too, so it survives both
+transports and closes the class once instead of once per script.
+
+**The three rows are not backmarked, and a session must not grant itself the
+write.** The window is exact in `docs/synthetic-runs.md`.
+
 ## 1 — The nine finish-now rows, in this order
 
 Each carries its spec and remainder in `docs/tracker.csv`; read the row before

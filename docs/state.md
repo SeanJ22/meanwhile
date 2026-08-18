@@ -10630,6 +10630,46 @@ named regressions**, with the ask checks settling consistently at 3.1–5.3s
 where they had been reporting 262 ms and 2089 ms. Seven full walks were run
 this session; the first six are the diagnosis and are not hidden.
 
+### The leak this session created, named because the rule says name it
+
+**Three `QUESTION_ASKED` rows landed ORGANIC** — `run_id` null — at
+`18:13:00Z`, `18:14:12Z` and `18:15:25Z`, inside walk 7's window
+(`18:05:43Z`–`18:16:18Z`). They are ours, not a reader's. The organic count on
+this table went from 0 to 3 during this session, and that is how they were
+found: by checking a number that should not have moved.
+
+**The mechanism.** `lib/log/client.ts` prefers `navigator.sendBeacon` over
+`fetch`, and **Playwright's `extraHTTPHeaders` do not apply to a beacon.** So
+any event leaving by that path arrives with no `x-wtp-synthetic-run` header
+and is recorded ORGANIC — our own robots counted as readers in the store we
+sell, which is the exact failure C05 exists to prevent.
+
+**Why now and not before.** g14's fresh-page-per-ask fix reloads the page
+between questions, and a page unload is exactly when a queued beacon flushes.
+The hole was always there; the reload made it fire. That matters, because it
+means this is a latent hole in every browser script rather than a consequence
+of the reload.
+
+**Fixed forward in 10 contexts** — all five in `walk-all.mts` and one each in
+this session's five probe scripts — by deleting `navigator.sendBeacon` in an
+init script before the page loads, forcing the fetch fallback. **The cost is
+stated rather than hidden: those runs no longer exercise the beacon transport
+at all.**
+
+**The class, as a count: `scripts/` holds 50 browser contexts. 10 are guarded.
+40 are not**, across 36 scripts — every tester-walk, every shoot, every
+measure, `pairs`, `perf`, `overlap-audit`, `verify-sources-tab`, `walk-0815g`,
+`walk-r39`, `walk-r40`, `walk-r41`. **R50** carries them, and it also prices
+the better fix: teach the marker to travel in the request BODY as well as the
+header, so it survives both transports and the class closes once instead of
+once per script.
+
+**The three rows are NOT backmarked, deliberately.** `pnpm searchlog:backmark`
+needs a write to production, and the only sanctioned write path is
+`intake-limiter-purge` (R43). Correcting them needs the author at the console
+or a new named sanction, and a session must not grant itself one. The window
+above is exact, so the correction is a filter and never a hunt.
+
 ### R43 and R44, named because the numbering implies them
 
 Both were opened AND closed by g13 on 2026-08-18 and never appeared in a

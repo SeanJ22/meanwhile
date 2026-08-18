@@ -1765,6 +1765,29 @@ heading match turns into the name-string join `CLAUDE.md` forbids.
 `export {}`), and the adapter does not fetch event items during an ordinary
 ingest, so this runs against the recorded fixture rather than in the live path.
 
+### 4.13 The standing architectural decision — the stack (2026-08-18)
+
+**The stack is ruled right for this product, and no language or framework
+migration happens without a new author ruling.** An independent external
+codebase audit read this repository on 2026-08-18 and considered whether the
+product should move off TypeScript and Next; it concluded it should not, and
+the author accepted that finding (tracker `AUD01`, the audit's own `AUD-01`).
+It is recorded here rather than left in a closed tracker row because the
+question recurs — a slow surface invites a rewrite proposal, and the proposal
+is cheaper to refuse once, in writing, than to re-argue per session. The
+reasoning is the part worth keeping: **the bottlenecks this product actually
+has are algorithmic, not linguistic.** Every performance finding the same audit
+raised is a shape problem rather than a language problem — a point resolved
+against the same polygons twice in one request (`AUD04`), a snapshot scanned
+where it could be indexed (`AUD05`), a spatial access path that belongs at the
+Postgres cutover and nowhere earlier (`AUD08`), a gate run against data that did
+not move (`AUD07`). Each of those is fixed by doing less work, and a rewrite in
+a faster language would carry every one of them across intact, having spent the
+whole budget on the carrying. The corollary is the operative half: a proposal to
+change language or framework is out of scope for a session and belongs to the
+author, while a proposal to remove redundant work is ordinary and needs no
+ruling at all.
+
 ---
 
 ## 5. Open questions

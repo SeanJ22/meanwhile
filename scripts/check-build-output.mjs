@@ -181,7 +181,82 @@ if (leaks.length > 0) {
  */
 const budget = JSON.parse(readFileSync(join(ROOT, "scripts", "bundle-budget.json"), "utf8"));
 
-const worst = Math.max(...manifests.map((m) => JSON.parse(readFileSync(m, "utf8")).files.length));
+/*
+ * BUDGET 1 IS TWO NUMBERS, AND IT IS MEASURED IN THE MODE THAT DEPLOYS
+ * (R51 remainder, 2026-08-18, g16).
+ *
+ * The first form of this budget took `Math.max` over every manifest and
+ * compared it to one ceiling. That maximum is always `next-server.js` — the
+ * FRAMEWORK's own server runtime trace, which contains zero files of ours —
+ * so the number the budget refused on was a number this repo does not write.
+ * Two consequences, and both bit:
+ *
+ * 1. IT REFUSED A DEPLOY FOR A REASON UNRELATED TO WHAT IT GUARDS. Netlify's
+ *    Next runtime plugin builds in STANDALONE mode, which makes Next trace its
+ *    own server runtime for a self-contained deployment. Measured here rather
+ *    than argued: default mode 927 files, standalone 1130, and the 203 that
+ *    joined are ALL under `node_modules/next/dist` — `dist/lib/metadata`,
+ *    `dist/build/*`, `dist/compiled/*` — with zero repo files and every app
+ *    route manifest byte-identical across the two modes. On Linux the same
+ *    build is +8 (`@img/sharp-linux*` in place of `sharp-win32`), which is the
+ *    1138 Netlify refused. The baseline of 927 had been measured on Windows in
+ *    a mode Netlify never builds in: the budget had never once run under the
+ *    conditions it gates.
+ * 2. IT COULD PASS WHILE WRONG, WHICH IS WORSE. R23's defect lived in APP
+ *    manifests — two of them went to 2554 and 2567 files. Under one maximum,
+ *    an app route could grow from 195 files to 900 and still sit far below a
+ *    ceiling pinned to the framework's 927. The guard would have been green
+ *    for the very shape it exists to catch.
+ *
+ * So the two questions are separated, exactly as AUD-02 separated trace
+ * cardinality from client bytes one level up:
+ *
+ *   1a. THE LARGEST APP MANIFEST — the routes that carry our code. This is
+ *       what R23 blew up, and it is mode-independent (proven: identical file
+ *       counts in both modes). A tight ceiling belongs here.
+ *   1b. THE FRAMEWORK RUNTIME TRACE — `next-server.js` and friends. Ours to
+ *       observe, not to control; it moves with the build mode and with any
+ *       Next release. Its baseline is recorded PER MODE and the mode is
+ *       printed, because comparing a standalone build to a default baseline is
+ *       how this went wrong the first time.
+ *
+ * Standalone mode duplicates every manifest under `standalone/.next/`. Those
+ * copies are folded onto their originals rather than counted twice — a budget
+ * that doubles its own population when the deploy mode changes is measuring
+ * the mode, not the build.
+ */
+
+/** `standalone/.next/server/app/x.nft.json` and `server/app/x.nft.json` are one manifest. */
+function manifestKey(m) {
+  return relative(NEXT, m).replace(/\\/g, "/").replace(/^standalone\/\.next\//, "");
+}
+
+/**
+ * The build mode, read off the output rather than off the environment.
+ *
+ * `NEXT_PRIVATE_STANDALONE` is set by Netlify's plugin in ITS process, and this
+ * script is a child of the build command; asking the artifact what it is
+ * survives that and any other way the mode gets set.
+ */
+const mode = existsSync(join(NEXT, "standalone")) ? "standalone" : "default";
+
+const appManifests = [];
+const frameworkManifests = [];
+const seen = new Set();
+for (const m of manifests) {
+  const key = manifestKey(m);
+  if (seen.has(key)) continue;
+  seen.add(key);
+  const entry = { key, files: JSON.parse(readFileSync(m, "utf8")).files.length };
+  if (key.startsWith("server/app/")) appManifests.push(entry);
+  else frameworkManifests.push(entry);
+}
+appManifests.sort((a, b) => b.files - a.files);
+frameworkManifests.sort((a, b) => b.files - a.files);
+
+const worstApp = appManifests[0] ?? null;
+const worstFramework = frameworkManifests[0] ?? null;
+const frameworkBudget = budget.serverTrace.frameworkRuntime[mode] ?? null;
 
 /**
  * The reader's initial JavaScript for `/`, read off the EMITTED HTML.
@@ -235,9 +310,20 @@ console.log(
     `named placeholders skipped ${placeholders}`,
 );
 console.log(
-  `budget 1 · server trace cardinality: largest manifest ${worst} files ` +
-    `(baseline ${budget.serverTrace.largestManifestFiles}, ceiling ${budget.serverTrace.ceiling}) ` +
-    `— a FILE COUNT, not bytes, and not the reader's JavaScript`,
+  `budget 1a · largest APP trace: ${worstApp === null ? "NONE FOUND" : `${worstApp.files} files`} ` +
+    `${worstApp === null ? "" : `(${worstApp.key}) `}` +
+    `(baseline ${budget.serverTrace.appManifest.largestManifestFiles}, ` +
+    `ceiling ${budget.serverTrace.appManifest.ceiling}) ` +
+    `— a FILE COUNT, not bytes, and not the reader's JavaScript. This is the number R23 blew up.`,
+);
+console.log(
+  `budget 1b · framework runtime trace, ${mode} mode: ` +
+    `${worstFramework === null ? "NONE FOUND" : `${worstFramework.files} files`} ` +
+    `${worstFramework === null ? "" : `(${worstFramework.key}) `}` +
+    (frameworkBudget === null
+      ? "— NO BASELINE COMMITTED FOR THIS MODE"
+      : `(baseline ${frameworkBudget.largestManifestFiles}, ceiling ${frameworkBudget.ceiling})`) +
+    " — Next's own server runtime, containing no file of ours",
 );
 if (client === null) {
   console.log(
@@ -259,14 +345,41 @@ if (client === null) {
   );
 }
 
-if (worst > budget.serverTrace.ceiling) {
+if (worstApp === null) {
   failures.push(
-    `server trace cardinality ${worst} files exceeds the committed ceiling of ` +
-      `${budget.serverTrace.ceiling} (baseline ${budget.serverTrace.largestManifestFiles}).\n` +
-      "  Something is being traced into the server bundle that was not before — this is\n" +
+    "no app route trace manifest was found under .next/server/app — budget 1a measured\n" +
+      "  nothing. Reported as a failure rather than as a pass: an unmeasured budget is the\n" +
+      "  state this check exists to end.",
+  );
+} else if (worstApp.files > budget.serverTrace.appManifest.ceiling) {
+  failures.push(
+    `app trace cardinality ${worstApp.files} files (${worstApp.key}) exceeds the committed\n` +
+      `  ceiling of ${budget.serverTrace.appManifest.ceiling} ` +
+      `(baseline ${budget.serverTrace.appManifest.largestManifestFiles}).\n` +
+      "  Something is being traced into a route bundle that was not before — this is\n" +
       "  the shape R23 had, where a runtime-computed path made Turbopack trace the whole\n" +
-      "  project. Find what joined, or raise the ceiling deliberately in\n" +
-      "  scripts/bundle-budget.json with a reason.",
+      "  project. Run `node scripts/trace-census.mjs --files after.txt` and diff it against\n" +
+      "  a clean build's to see WHICH files joined; fix the read at the source with the\n" +
+      "  static-map pattern in lib/sources/ballot-curated/index.ts, or raise the ceiling\n" +
+      "  deliberately in scripts/bundle-budget.json with the file list as its reason.",
+  );
+}
+if (frameworkBudget === null) {
+  failures.push(
+    `no framework-runtime baseline is committed for ${mode} mode, so budget 1b compared\n` +
+      "  nothing. Add one to scripts/bundle-budget.json from a measured build. A budget with\n" +
+      "  no baseline for the mode that deploys is exactly how a correct refusal became\n" +
+      "  unactionable on 2026-08-18.",
+  );
+} else if (worstFramework !== null && worstFramework.files > frameworkBudget.ceiling) {
+  failures.push(
+    `framework runtime trace ${worstFramework.files} files (${worstFramework.key}, ${mode} mode)\n` +
+      `  exceeds the committed ceiling of ${frameworkBudget.ceiling} ` +
+      `(baseline ${frameworkBudget.largestManifestFiles}).\n` +
+      "  This trace holds no file of ours, so the cause is almost certainly a Next upgrade\n" +
+      "  or a build-mode change rather than anything in this repo. Confirm that with\n" +
+      "  scripts/trace-census.mjs before touching the number, then move the baseline for\n" +
+      "  THIS MODE with what joined recorded as its reason.",
   );
 }
 if (client !== null) {

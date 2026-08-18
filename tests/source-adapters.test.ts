@@ -92,7 +92,7 @@ test("civicplus: iCal parses and council sittings normalize with venues", () => 
       m.ocdId,
       "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
     );
-    assert.equal(m.location.name, "Rockaway Township Municipal Building");
+    assert.equal(m.location!.name, "Rockaway Township Municipal Building");
     assert.equal(m.timeZone, "America/New_York");
   }
 
@@ -255,13 +255,13 @@ test("onbase: rows parse and mapped venues normalize; unmapped drop counted", ()
     (m) => m.bodyName === "Public Housing Authority Board of Commissioners",
   );
   assert.ok(pha, "the PHA Board sitting should now place");
-  assert.equal(pha.location.address, "255 W. Alameda St, Tucson, AZ 85701");
+  assert.equal(pha.location!.address, "255 W. Alameda St, Tucson, AZ 85701");
 
   const regular = meetings.find((m) => m.id === "onbase:tucson:1957");
   assert.ok(regular);
   assert.equal(regular.bodyName, "Mayor & Council");
   assert.equal(regular.title, "Mayor & Council - Regular");
-  assert.equal(regular.location.address, "255 W. Alameda St, Tucson, AZ 85701");
+  assert.equal(regular.location!.address, "255 W. Alameda St, Tucson, AZ 85701");
   // 2026-08-18 17:30 America/Phoenix (UTC-7, no DST).
   assert.equal(
     new Date(regular.startsAt).toISOString(),
@@ -319,8 +319,8 @@ test("apptegy: board meetings filter from district calendars, coords from feed",
     m.startsAt.startsWith("2026-08-2"),
   );
   assert.ok(vailAug25, "Vail board meets 2026-08-25");
-  assert.equal(vailAug25.location.lat, 32.0149457);
-  assert.equal(vailAug25.location.lng, -110.6984644);
+  assert.equal(vailAug25.location!.lat, 32.0149457);
+  assert.equal(vailAug25.location!.lng, -110.6984644);
   // The agenda link is the district's own published pointer to its portal.
   assert.ok(
     vailAug25.agendaUrl?.includes("highbond.com"),
@@ -329,7 +329,7 @@ test("apptegy: board meetings filter from district calendars, coords from feed",
 
   const rtsdSep9 = rtsdMeetings.find((m) => m.startsAt.startsWith("2026-09-09"));
   assert.ok(rtsdSep9, "RTSD board meets 2026-09-09");
-  assert.equal(rtsdSep9.location.lat, 40.917793);
+  assert.equal(rtsdSep9.location!.lat, 40.917793);
   assert.equal(
     rtsdSep9.ocdId,
     "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district",
@@ -338,7 +338,7 @@ test("apptegy: board meetings filter from district calendars, coords from feed",
 
 // ── Diligent / CivicWeb (TUSD + Newbury) ───────────────────────────────────
 
-test("diligent: TUSD meetings normalize, Zoom sittings count as placeless", () => {
+test("diligent: TUSD meetings normalize, Zoom sittings are kept with no place", () => {
   const rows = wiringForTypes(["DILIGENT", "CIVICWEB"]);
   const source = makeDiligentSource(rows);
   const tusd = rows.find((r) => r.config.slug === "tusd1");
@@ -355,12 +355,26 @@ test("diligent: TUSD meetings normalize, Zoom sittings count as placeless", () =
   const { meetings, drops } = source.normalizeWithDrops(raw, NOW);
 
   // The recorded window holds 11 rows: Duffy Center sittings place, the Zoom
-  // webinars are placeless (a real meeting with nothing to pin), and any
-  // location the cache does not know drops as unknownVenue.
-  assert.ok(meetings.length >= 3, `placed meetings: ${meetings.length}`);
+  // webinars have nothing to pin but are KEPT (D18), and any location the
+  // cache does not know drops as unknownVenue.
+  const placed = meetings.filter((m) => m.location !== null);
+  const online = meetings.filter((m) => m.location === null);
+  assert.ok(placed.length >= 3, `placed meetings: ${placed.length}`);
   assert.ok(drops.placeless >= 3, `zoom sittings counted: ${drops.placeless}`);
   assert.equal(
-    meetings.length + drops.placeless + drops.unknownVenue + drops.unplaceableInTime,
+    online.length,
+    drops.placeless,
+    "every placeless row is now a kept meeting, not a drop",
+  );
+  for (const m of online) {
+    assert.match(m.online?.label ?? "", /zoom/i, "the published string, verbatim");
+    assert.equal(m.online?.joinUrl, null, "the service publishes no join link");
+  }
+  // The conservation law, restated for the change: rows in, rows accounted
+  // for. `placed` replaces the old `meetings.length` because the online rows
+  // are now on BOTH sides of the sum and would be counted twice.
+  assert.equal(
+    placed.length + drops.placeless + drops.unknownVenue + drops.unplaceableInTime,
     11,
     "every row accounted for",
   );
@@ -368,7 +382,7 @@ test("diligent: TUSD meetings normalize, Zoom sittings count as placeless", () =
   const regular = meetings.find((m) => m.id === "diligent:tusd1:492");
   assert.ok(regular, "Governing Board regular meeting of 2026-08-11");
   assert.equal(regular.bodyName, "GOVERNING BOARD AGENDA REGULAR MEETING");
-  assert.equal(regular.location.name, "Duffy Community Center, Multipurpose Room");
+  assert.equal(regular.location!.name, "Duffy Community Center, Multipurpose Room");
   // 16:30 America/Phoenix.
   assert.equal(
     new Date(regular.startsAt).toISOString(),
@@ -411,7 +425,7 @@ test("civicweb: Newbury Selectboard names from the cited type map", () => {
   assert.ok(upcoming, "Selectboard 2026-08-17 — the row the gate turns on");
   assert.equal(upcoming.bodyName, "Selectboard");
   assert.equal(upcoming.status, "SCHEDULED");
-  assert.equal(upcoming.location.address, "937 Route 103, Newbury, NH 03255");
+  assert.equal(upcoming.location!.address, "937 Route 103, Newbury, NH 03255");
   // 18:00 America/New_York (EDT, UTC-4).
   assert.equal(
     new Date(upcoming.startsAt).toISOString(),

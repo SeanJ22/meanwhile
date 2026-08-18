@@ -2201,6 +2201,156 @@ section("M. Overlapping pins are each reachable (g9: M19, the author's ruling)")
   await page.context().close();
 }
 
+// ═══════════════════════════════════════════════════════════════════════════
+// Section G10 (2026-08-17) — the two data rows this session shipped, asked of
+// production rather than of the tree they were written in.
+// ═══════════════════════════════════════════════════════════════════════════
+
+section("G10. Online meetings, and agenda attribution");
+
+/**
+ * D18 — a meeting held online is REACHABLE and is NEVER A PIN.
+ *
+ * The defect these pin: twelve real public meetings were dropped at normalize
+ * because the map could not carry them, and the drop was counted honestly in
+ * a log nobody reads. What has to stay true is a conjunction, and it is
+ * checked as one — a build that kept them and pinned them would be worse than
+ * the drop, because a pin on a building nobody is going to sends a reader
+ * across town.
+ *
+ * Tucson, where the twelve live: three Pima County Board of Supervisors
+ * sittings, six TUSD committee meetings, three Pima Community College Finance
+ * and Audit Committee meetings. The floor is 1 rather than 12 on purpose —
+ * these are real calendars and a body may simply not meet online this
+ * fortnight, so pinning the exact number would fail for a reason that is not
+ * a regression. Zero is the regression.
+ */
+{
+  const payload = await getJson<{
+    meetings: {
+      id: string;
+      location: unknown;
+      online?: { label: string; joinUrl: string | null };
+    }[];
+  }>("/api/meetings?lat=32.2226&lng=-110.9747&radiusKm=25");
+
+  if (!payload) {
+    cannotRun("g10", "85701: meetings held online are reachable", "/api/meetings did not answer");
+  } else {
+    const online = payload.meetings.filter((m) => m.location === null);
+    check(
+      "g10",
+      "85701: meetings held online are reachable at all",
+      online.length > 0,
+      `${online.length} of ${payload.meetings.length} meetings have no physical place; ` +
+        "before D18 every one of them was dropped at normalize",
+    );
+
+    // Absent is not empty, one layer up: a null location with no online
+    // block is a meeting nobody can attend and nothing may serve one.
+    const mute = online.filter((m) => !m.online?.label);
+    check(
+      "g10",
+      "85701: every online meeting says how it is held",
+      online.length > 0 && mute.length === 0,
+      mute.length === 0
+        ? `all ${online.length} carry the body's published location string`
+        : `${mute.length} carry no label: ${mute.map((m) => m.id).join(", ")}`,
+    );
+
+    // And the other half of the conjunction: no coordinates were invented for
+    // them anywhere on the way through.
+    const placed = online.filter(
+      (m) => m.location !== null && m.location !== undefined,
+    );
+    check(
+      "g10",
+      "85701: no online meeting was given a place",
+      placed.length === 0,
+      placed.length === 0
+        ? "none of them carry a location"
+        : `${placed.length} were placed: ${placed.map((m) => m.id).join(", ")}`,
+    );
+  }
+}
+
+/**
+ * D19 — the agenda attribution reaches production, and never names the host.
+ *
+ * The rule is enforced at the snapshot write boundary, which means a build
+ * that broke it could not have been written; this asks the SERVED payload
+ * anyway, because the boundary and the wire are two different places and this
+ * suite exists to catch the second one dying quietly.
+ *
+ * The unresolved rows are the interesting half: seven distinct special
+ * districts sitting inside a county feed that exposes four bodies. Each one
+ * must carry its published heading and NO division — attributing them to Pima
+ * County is the exact misattribution D19 exists to prevent.
+ */
+{
+  const payload = await getJson<{
+    meetings: {
+      id: string;
+      ocdId: string | null;
+      actingBodies?: {
+        attribution: string;
+        bodyId: string | null;
+        ocdId: string | null;
+        evidence: string;
+      }[];
+    }[];
+  }>("/api/meetings?lat=32.2226&lng=-110.9747&radiusKm=25");
+
+  if (!payload) {
+    cannotRun("g10", "85701: agenda attribution is served", "/api/meetings did not answer");
+  } else {
+    const withRows = payload.meetings.filter((m) => m.actingBodies !== undefined);
+    const rows = withRows.flatMap((m) => m.actingBodies ?? []);
+    check(
+      "g10",
+      "85701: agenda attribution reaches the served payload",
+      rows.length > 0,
+      `${withRows.length} of ${payload.meetings.length} meetings carry acting-body rows, ` +
+        `${rows.length} row(s) in total`,
+    );
+
+    const unresolved = rows.filter((r) => r.attribution === "UNRESOLVED");
+    const smuggled = unresolved.filter((r) => r.bodyId !== null || r.ocdId !== null);
+    check(
+      "g10",
+      "85701: an unresolved heading is attributed to NOTHING, never to the host",
+      rows.length > 0 && smuggled.length === 0,
+      smuggled.length === 0
+        ? `${unresolved.length} unresolved segment(s), none carrying a body or a division`
+        : `${smuggled.length} attributed: ${smuggled.map((r) => r.evidence).join(", ")}`,
+    );
+
+    const mute = rows.filter((r) => !r.evidence);
+    check(
+      "g10",
+      "85701: every acting-body row quotes the heading it was read from",
+      rows.length > 0 && mute.length === 0,
+      mute.length === 0
+        ? "every row can be checked against the published agenda"
+        : `${mute.length} row(s) assert an attribution with no evidence`,
+    );
+
+    // Typography is not a government. "PAGE BREAK" opened a segment on the
+    // first live run and cut an item off the district actually acting.
+    const typography = rows.filter(
+      (r) => /^page\s*break$/i.test(r.evidence.trim()) || !/\p{L}/u.test(r.evidence),
+    );
+    check(
+      "g10",
+      "85701: no acting body was read off a layout marker",
+      typography.length === 0,
+      typography.length === 0
+        ? "no PAGE BREAK, rule or signature line opened a segment"
+        : `${typography.length}: ${typography.map((r) => JSON.stringify(r.evidence)).join(", ")}`,
+    );
+  }
+}
+
 await browser.close();
 
 const EXCLUDED = [

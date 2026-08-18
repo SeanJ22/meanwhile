@@ -5,7 +5,7 @@ import { markerFromRequest } from "@/lib/db/run-marker";
 import { RADIUS_LADDER_KM, searchMeetings } from "@/lib/meetings/query";
 import { getActiveSnapshotMeta } from "@/lib/meetings/snapshot";
 import { wiringForSourceName } from "@/lib/sources/composite/wiring";
-import { coverageAt } from "@/lib/registry/server";
+import { coverageAt, divisionsAt } from "@/lib/registry/server";
 import { matching, numeric, numericInRange, refuse, rejectUnknown } from "@/lib/api/params";
 
 /**
@@ -88,7 +88,26 @@ export async function GET(request: Request) {
   const zipRead = matching(params, "zip", /^\d{5}$/, { default: null });
   if (!zipRead.ok) return refuse(zipRead.error);
 
-  const result = await searchMeetings(lat, lng, radiusKm);
+  /*
+   * D18: which divisions actually contain this point.
+   *
+   * The cascade filters by distance, and a meeting held online has none — so
+   * without this a virtual sitting is invisible at every radius. This is the
+   * exact answer for a body we hold a division for, resolved from the SAME
+   * committed geometry the coverage summary and the who-governs card use.
+   * It runs before the search because the search needs it, and it degrades to
+   * an empty set rather than failing the request: `within()` then falls back
+   * to its body-in-view clause, which is a narrower answer and never a wrong
+   * one.
+   */
+  let divisionsAtPoint = new Set<string>();
+  try {
+    divisionsAtPoint = new Set((await divisionsAt(lat, lng)).map((d) => d.ocdId));
+  } catch (error) {
+    console.error("division lookup failed; online meetings fall back to body-in-view", error);
+  }
+
+  const result = await searchMeetings(lat, lng, radiusKm, new Date(), divisionsAtPoint);
 
   // A coverage statement we cannot stand behind is worse than none, so a
   // registry that fails to load degrades to the cascade's own answer rather

@@ -138,7 +138,7 @@ test("normalizes Planning Commission meetings with venue, agenda and cancellatio
   for (const m of meetings) {
     assert.equal(m.ocdId, TUCSON);
     assert.equal(m.bodyName, "Planning Commission");
-    assert.equal(m.location.address, "255 W. Alameda St, Tucson, AZ 85701");
+    assert.equal(m.location!.address, "255 W. Alameda St, Tucson, AZ 85701");
     assert.match(m.startsAt, /-07:00$/, "Phoenix never observes DST");
     assert.match(
       m.provenance.sourceUrl ?? "",
@@ -147,9 +147,12 @@ test("normalizes Planning Commission meetings with venue, agenda and cancellatio
   }
 });
 
-test("a virtual-only board drops placeless, counted", () => {
+test("a virtual-only board is KEPT, with no place and no invented pin (D18)", () => {
   // Design Review Board publishes "Microsoft Teams (Virtual)" — a real body
-  // with real sittings and no place on a map (D18).
+  // with real sittings and no place on a map (D18). This is the case the row
+  // was opened about: a board that meets ONLY online used to have its entire
+  // calendar dropped, so the app reported nothing where a government was
+  // meeting every month.
   const source = makeClerksBoardsSource([wiringFor("26", "design-review-board")]);
   const raw: ClerksBoardsRaw[] = [
     {
@@ -159,7 +162,16 @@ test("a virtual-only board drops placeless, counted", () => {
     },
   ];
   const { meetings, drops } = source.normalizeWithDrops(raw, NOW);
-  assert.equal(meetings.length, 0);
-  assert.ok(drops.placeless > 0, "virtual sittings must count as placeless");
+  assert.ok(meetings.length > 0, "a virtual-only board still has meetings");
+  for (const m of meetings) {
+    assert.equal(m.location, null, "no building means no coordinates");
+    assert.equal(m.online?.label, "Microsoft Teams (Virtual)");
+    assert.equal(m.online?.joinUrl, null, "the Clerk publishes no join link");
+  }
+  assert.equal(
+    drops.placeless,
+    meetings.length,
+    "the counter counts meetings with no physical place — same quantity, now kept",
+  );
   assert.equal(drops.unknownVenue, 0);
 });

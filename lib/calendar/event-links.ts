@@ -126,9 +126,15 @@ export function meetingCalendarEvent(
     ...(timed
       ? { startsAtIso: meeting.startsAt }
       : { allDayDate: meetingLocalDate(meeting) }),
-    location: [meeting.location.name, meeting.location.address]
-      .filter(Boolean)
-      .join(", "),
+    /*
+     * An online meeting's LOCATION line carries what the body published —
+     * "Virtual Meeting" — and the join link when there is one (D18). It never
+     * carries an address, because there is not one, and a calendar entry that
+     * invented a building would send someone across town.
+     */
+    location: meeting.location
+      ? [meeting.location.name, meeting.location.address].filter(Boolean).join(", ")
+      : [meeting.online?.label, meeting.online?.joinUrl].filter(Boolean).join(" — "),
     description: lines.join("\n"),
   };
 }

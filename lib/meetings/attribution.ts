@@ -106,6 +106,34 @@ const RETURNS_TO_HOST = /\b(sitting|acting)\s+as\s+the\s+board\s+of\s+supervisor
 const GENERIC_SITTING_AS = /\b(sitting|acting)\s+as\b/i;
 
 /**
+ * Typography that is not a body (g10, found by running the live path).
+ *
+ * Inside the sitting-as region a bare heading names the acting board, and the
+ * first live run took Pima's page-break markers at their word: **"PAGE BREAK"
+ * opened a segment**, so the item that followed it was cut off the district
+ * actually acting and attributed to a board that does not exist. Measured
+ * against fifteen live Pima agendas, the region contains eight distinct
+ * headings — seven real district boards and this one artifact, five times.
+ *
+ * The two rules are deliberately different in kind. The first is STRUCTURAL:
+ * a heading with no letter in it (`* * *`, a rule of underscores, the
+ * signature line) cannot be naming a government. The second is a NAMED list
+ * of one, because "PAGE BREAK" is real text and only a clerk's layout habit
+ * makes it meaningless — exactly the kind of judgment that has to be written
+ * down with its evidence rather than inferred by a cleverer regex.
+ *
+ * An artifact neither opens a segment nor closes one. The body that was
+ * acting keeps acting across the page break, which is what a page break
+ * means.
+ */
+const LAYOUT_ARTIFACT_HEADINGS = [/^page\s*break$/i];
+
+function isLayoutArtifact(text: string): boolean {
+  if (!/\p{L}/u.test(text)) return true;
+  return LAYOUT_ARTIFACT_HEADINGS.some((pattern) => pattern.test(text));
+}
+
+/**
  * Is this item a heading rather than business?
  *
  * A heading has no matter file — Legistar attaches one to anything with a
@@ -169,6 +197,11 @@ export function segmentAgenda(
     if (!text && isHeading(item)) continue;
 
     if (isHeading(item)) {
+      // Typography first, before anything reads this as a body: a page break
+      // is not a change of government, and treating it as one steals the
+      // items after it from the district that is actually acting.
+      if (isLayoutArtifact(text)) continue;
+
       if (OPENS_OTHER_BOARDS.test(text)) {
         // Announces the region; does not itself name a body. Nothing is
         // attributed until a heading actually names one.
@@ -235,7 +268,39 @@ export function resolveSegment(
 ): AgendaSegment {
   if (segment.role === "HOST") return segment;
 
-  const heading = segment.heading.toLowerCase();
+  const verdict = matchHeading(segment.heading, bodies, divisionLabels, hostOcdId);
+  if (verdict.body) {
+    return {
+      ...segment,
+      attribution: "RESOLVED",
+      bodyId: verdict.body.id,
+      ocdId: verdict.body.ocdId,
+      unresolvedReason: null,
+    };
+  }
+  return {
+    ...segment,
+    attribution: "UNRESOLVED",
+    bodyId: null,
+    ocdId: null,
+    unresolvedReason: verdict.reason,
+  };
+}
+
+/**
+ * The one place a heading is compared against the registry.
+ *
+ * Extracted so the segment path and the row path (`resolveMeetingBodies`,
+ * below) cannot drift into two slightly different ideas of what counts as a
+ * match — which is how a scoping rule this narrow quietly widens.
+ */
+function matchHeading(
+  heading: string,
+  bodies: Body[],
+  divisionLabels: Map<string, string>,
+  hostOcdId: OcdId | null,
+): { body: Body | null; reason: string | null } {
+  const text = heading.toLowerCase();
 
   const candidates = bodies.filter((body) => {
     if (!body.ocdId) return false;
@@ -243,29 +308,51 @@ export function resolveSegment(
     // in another county, and widening this is how a name match goes wrong.
     if (hostOcdId && !body.ocdId.startsWith(hostOcdId)) return false;
     const label = divisionLabels.get(body.ocdId);
-    return !!label && heading.includes(label.toLowerCase());
+    return !!label && text.includes(label.toLowerCase());
   });
 
-  if (candidates.length === 1) {
-    return {
-      ...segment,
-      attribution: "RESOLVED",
-      bodyId: candidates[0].id,
-      ocdId: candidates[0].ocdId,
-      unresolvedReason: null,
-    };
-  }
-
+  if (candidates.length === 1) return { body: candidates[0], reason: null };
   return {
-    ...segment,
-    attribution: "UNRESOLVED",
-    bodyId: null,
-    ocdId: null,
-    unresolvedReason:
+    body: null,
+    reason:
       candidates.length > 1
         ? `heading matches ${candidates.length} divisions; ambiguous`
         : "no division in the registry corresponds to this heading",
   };
+}
+
+/**
+ * Resolve join rows that were built without the registry in hand (D19, g10).
+ *
+ * The adapter runs `segmentAgenda`, which is pure and needs nothing but the
+ * agenda; the registry lives on disk and is loaded by the ingest run. So the
+ * rows arrive UNRESOLVED with their evidence intact and this upgrades the ones
+ * the registry can name, at the layer that actually holds it. An adapter that
+ * had to load `registry.json` to normalize would be an adapter that cannot run
+ * in a test, and every other adapter would inherit the requirement.
+ *
+ * HOST rows pass through untouched, and an already-RESOLVED row is never
+ * re-decided. A row this cannot name keeps `bodyId: null` and `ocdId: null` —
+ * **the host's identifiers are never written onto it**, which is the whole
+ * rule, stated once more at the only other place that could break it.
+ */
+export function resolveMeetingBodies(
+  rows: MeetingBody[],
+  bodies: Body[],
+  divisionLabels: Map<string, string>,
+  hostOcdId: OcdId | null,
+): MeetingBody[] {
+  return rows.map((row) => {
+    if (row.role === "HOST" || row.attribution === "RESOLVED") return row;
+    const verdict = matchHeading(row.evidence, bodies, divisionLabels, hostOcdId);
+    if (!verdict.body) return row;
+    return {
+      ...row,
+      attribution: "RESOLVED" as const,
+      bodyId: verdict.body.id,
+      ocdId: verdict.body.ocdId,
+    };
+  });
 }
 
 /** Flatten resolved segments into join rows. */

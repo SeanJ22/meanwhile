@@ -137,13 +137,20 @@ export function ListOverlay({
     const center = ui.nearMe ?? location;
 
     switch (ui.listSort) {
-      case "distance":
+      case "distance": {
         if (!center) return list;
-        return list.sort(
-          (a, b) =>
-            haversineKm(center.lat, center.lng, a.location.lat, a.location.lng) -
-            haversineKm(center.lat, center.lng, b.location.lat, b.location.lng),
-        );
+        /*
+         * A meeting held online has no distance (D18), so it cannot be
+         * ordered against ones that do. It sorts to the END rather than to
+         * the front, because Infinity at the front would read as "nearest"
+         * — a number nobody stated, rendered as a claim.
+         */
+        const km = (m: Meeting) =>
+          m.location
+            ? haversineKm(center.lat, center.lng, m.location.lat, m.location.lng)
+            : Number.POSITIVE_INFINITY;
+        return list.sort((a, b) => km(a) - km(b));
+      }
       case "body":
         return list.sort((a, b) => a.bodyName.localeCompare(b.bodyName));
       case "jurisdiction":
@@ -286,14 +293,15 @@ export function ListOverlay({
               {!collapsed &&
                 group.items.map((meeting) => {
                   const when = formatMeetingDate(meeting);
-                  const km = center
-                    ? haversineKm(
-                        center.lat,
-                        center.lng,
-                        meeting.location.lat,
-                        meeting.location.lng,
-                      )
-                    : null;
+                  const km =
+                    center && meeting.location
+                      ? haversineKm(
+                          center.lat,
+                          center.lng,
+                          meeting.location.lat,
+                          meeting.location.lng,
+                        )
+                      : null;
 
                   return (
                     <button
@@ -335,6 +343,19 @@ export function ListOverlay({
                             Concluded
                           </span>
                         ) : null}
+                        {/*
+                          D18: a meeting held online has no pin, so the LIST is
+                          the only place a reader can find it — and it has to
+                          say why it is not on the map. An outline pill rather
+                          than a filled one: the two above are claims about
+                          what happened to the sitting, and this is a claim
+                          about where it is.
+                        */}
+                        {meeting.location === null && (
+                          <span className="meeting-status-pill" data-status="online">
+                            Online
+                          </span>
+                        )}
                         {when}
                         {km !== null &&
                           // Anything under a mile rounds to 0, which reads as

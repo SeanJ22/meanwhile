@@ -159,6 +159,18 @@ test("no module reads search_log without the organic filter", async () => {
       // exception that lives in code can be argued with and a silent one
       // cannot.
       "scripts/verify-readonly.mts",
+      // R42, 2026-08-17: the local-write probe. It writes one SYNTHETIC row
+      // through the real write path and reads it back BY ITS OWN run id —
+      // the same "count of OUR rows" exception the walk carries, and
+      // filtering it to ORGANIC would make it read zero and report the write
+      // as failed. Its only other read of the table is a before/after
+      // count(*) whose PURPOSE is to prove the probe row was removed again,
+      // and it prints the DELTA rather than the total for exactly the reason
+      // verify-readonly.mts gives: a raw total out of this table is a number
+      // somebody can quote. Declared with its reason, the DECLARED_EXTRAS
+      // pattern, because an exception that lives in code can be argued with
+      // and a silent one cannot.
+      "scripts/verify-local-write.mts",
     ].map((p) => p.replace(/\//g, sep)),
   );
 

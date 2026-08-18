@@ -163,7 +163,14 @@ export function applyFilters({
     if (days > ui.filters.daysAhead) return false;
     if (days < -ui.filters.daysBack) return false;
 
-    if (center) {
+    /*
+     * An online meeting has no distance to the centre, so the radius filter
+     * cannot speak to it (D18). It is kept: the server already decided it is
+     * in view — either its division contains the centre or its body's
+     * in-person sittings are in radius — and re-deciding that here with a
+     * measurement that does not exist would drop it after all.
+     */
+    if (center && meeting.location) {
       const km = haversineKm(
         center.lat,
         center.lng,
@@ -175,7 +182,9 @@ export function applyFilters({
 
     if (query.length > 0) {
       const haystack =
-        `${meeting.title} ${meeting.bodyName} ${meeting.jurisdiction} ${meeting.location.name}`.toLowerCase();
+        `${meeting.title} ${meeting.bodyName} ${meeting.jurisdiction} ${
+          meeting.location?.name ?? meeting.online?.label ?? ""
+        }`.toLowerCase();
       if (!haystack.includes(query)) return false;
     }
 

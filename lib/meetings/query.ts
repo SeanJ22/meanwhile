@@ -57,10 +57,70 @@ function byStartDescending(a: Meeting, b: Meeting) {
   return Date.parse(b.startsAt) - Date.parse(a.startsAt);
 }
 
-function within(meetings: Meeting[], lat: number, lng: number, radiusKm: number) {
-  return meetings.filter(
-    (m) => haversineKm(lat, lng, m.location.lat, m.location.lng) <= radiusKm,
+/**
+ * The key that says "these sittings belong to the same government".
+ *
+ * `ocdId` where there is one; otherwise the meeting id's source-and-tenant
+ * prefix, because every adapter namespaces `<source>:<tenant>:<id>` and the
+ * tenant IS the government — `diligent:pcc` is Pima Community College, whose
+ * division does not exist.
+ *
+ * It is deliberately NOT `bodyName`. The first version keyed on it and Pima
+ * Community College's three online committee sittings stayed invisible while
+ * five of its in-person sittings were on screen: Diligent publishes a
+ * per-sitting name ("Regular Governing Board", "Finance and Audit Committee
+ * Meeting"), so a name key says every committee is a different government.
+ * Caught by asking the live route what it returned rather than by reading the
+ * code back.
+ */
+function bodyKey(m: Meeting): string {
+  return m.ocdId ?? m.id.split(":").slice(0, 2).join(":");
+}
+
+/**
+ * Which meetings are in view — including the ones held nowhere (D18).
+ *
+ * A meeting with no physical place has no distance to a map centre, so a
+ * radius filter silently excludes every one of them. That is the drop this
+ * row exists to end, one layer further along: the adapter now keeps the
+ * meeting, and this is where it would have been lost again.
+ *
+ * An online meeting is in view when EITHER holds:
+ *
+ * - the division it belongs to contains the centre. The exact answer, and the
+ *   only one that reaches a body which meets ONLY online, since nothing about
+ *   such a body would otherwise be in radius. `divisionsAtPoint` is the
+ *   point-in-polygon set the route already resolves for the coverage summary
+ *   — the same committed geometry, never a second source.
+ * - one of the same body's PHYSICAL sittings is in radius. This is what covers
+ *   a division-less government, where the first clause has no identifier to
+ *   test: Pima Community College's board is in view exactly when its in-person
+ *   sittings are.
+ *
+ * Neither clause invents a coordinate, and an online meeting that satisfies
+ * neither is simply not in view — the same answer a distant building gets.
+ */
+function within(
+  meetings: Meeting[],
+  lat: number,
+  lng: number,
+  radiusKm: number,
+  divisionsAtPoint: ReadonlySet<string> = new Set(),
+) {
+  const physical = meetings.filter((m) => m.location !== null);
+  const inRadius = physical.filter(
+    (m) => haversineKm(lat, lng, m.location!.lat, m.location!.lng) <= radiusKm,
   );
+  const bodiesInView = new Set(inRadius.map(bodyKey));
+
+  const online = meetings.filter(
+    (m) =>
+      m.location === null &&
+      ((m.ocdId !== null && divisionsAtPoint.has(m.ocdId)) || bodiesInView.has(bodyKey(m))),
+  );
+
+  // Ordering is applied by the caller; concatenating keeps this a filter.
+  return [...inRadius, ...online];
 }
 
 /**
@@ -74,6 +134,16 @@ export async function searchMeetings(
   lng: number,
   startRadiusKm: number = RADIUS_LADDER_KM[0],
   now: Date = new Date(),
+  /**
+   * Divisions whose boundary contains the centre (D18).
+   *
+   * Supplied by the caller because this module stays geometry-free — the
+   * route already resolves this set for the coverage summary, and resolving
+   * it twice in two places is how two answers to one question appear. Absent
+   * falls back to the body-in-view clause alone, which is what every
+   * non-route caller wants.
+   */
+  divisionsAtPoint: ReadonlySet<string> = new Set(),
 ): Promise<MeetingSearchResult> {
   const source = getMeetingSource();
   const center = { lat, lng };
@@ -121,10 +191,10 @@ export async function searchMeetings(
   });
 
   for (const radiusKm of rungs) {
-    const hits = within(upcoming, lat, lng, radiusKm);
+    const hits = within(upcoming, lat, lng, radiusKm, divisionsAtPoint);
     if (hits.length > 0) {
       return {
-        meetings: [...hits, ...within(recentPast, lat, lng, radiusKm)].sort(
+        meetings: [...hits, ...within(recentPast, lat, lng, radiusKm, divisionsAtPoint)].sort(
           byStartAscending,
         ),
         tier: radiusKm === rungs[0] ? "exact" : "widened",
@@ -148,6 +218,7 @@ export async function searchMeetings(
     lat,
     lng,
     widest,
+    divisionsAtPoint,
   );
 
   if (concluded.length > 0) {

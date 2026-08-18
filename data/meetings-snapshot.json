@@ -1,10 +1,10 @@
 {
  "formatVersion": 1,
- "generatedAt": "2026-08-17T18:59:55.670Z",
+ "generatedAt": "2026-08-18T00:19:32.413Z",
  "counts": {
-  "fresh": 192,
-  "carried": 25,
-  "total": 217
+  "fresh": 227,
+  "carried": 0,
+  "total": 227
  },
  "sources": [
   {
@@ -12,7 +12,7 @@
    "ok": true,
    "error": null,
    "fetched": 15,
-   "normalized": 12,
+   "normalized": 15,
    "drops": {
     "placeless": 3,
     "unknownVenue": 0,
@@ -64,7 +64,7 @@
    "ok": true,
    "error": null,
    "fetched": 4,
-   "normalized": 34,
+   "normalized": 43,
    "drops": {
     "placeless": 9,
     "unknownVenue": 3,
@@ -77,7 +77,7 @@
    "ok": true,
    "error": null,
    "fetched": 5,
-   "normalized": 24,
+   "normalized": 23,
    "drops": {
     "placeless": 0,
     "unknownVenue": 0,
@@ -129,18 +129,13 @@
    "ok": true,
    "error": null,
    "fetched": 5,
-   "normalized": 3,
+   "normalized": 27,
    "drops": {
     "placeless": 0,
     "unknownVenue": 0,
     "unplaceableInTime": 0,
-    "notConfigured": 4
-   },
-   "unreachableOcdIds": [
-    "ocd-division/country:us/state:nh/school_district:kearsarge_regional_school_district",
-    "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town"
-   ],
-   "carriedForward": 25
+    "notConfigured": 3
+   }
   }
  ],
  "meetings": [
@@ -163,9 +158,20 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1803&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-17T18:59:49.360Z",
+    "collectedAt": "2026-08-18T00:19:23.026Z",
     "verifiedAt": null
-   }
+   },
+   "actingBodies": [
+    {
+     "meetingId": "legistar:pima:1803",
+     "bodyId": null,
+     "ocdId": "ocd-division/country:us/state:az/county:pima",
+     "role": "HOST",
+     "attribution": "HOST_BODY",
+     "evidence": "Board of Supervisors",
+     "itemCount": 11
+    }
+   ]
   },
   {
    "id": "legistar:pima:1804",
@@ -186,9 +192,47 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1804&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-17T18:59:49.360Z",
+    "collectedAt": "2026-08-18T00:19:23.026Z",
     "verifiedAt": null
-   }
+   },
+   "actingBodies": [
+    {
+     "meetingId": "legistar:pima:1804",
+     "bodyId": null,
+     "ocdId": "ocd-division/country:us/state:az/county:pima",
+     "role": "HOST",
+     "attribution": "HOST_BODY",
+     "evidence": "Board of Supervisors",
+     "itemCount": 2
+    },
+    {
+     "meetingId": "legistar:pima:1804",
+     "bodyId": null,
+     "ocdId": null,
+     "role": "SITTING_AS",
+     "attribution": "UNRESOLVED",
+     "evidence": "FLOOD CONTROL DISTRICT BOARD",
+     "itemCount": 1
+    },
+    {
+     "meetingId": "legistar:pima:1804",
+     "bodyId": null,
+     "ocdId": null,
+     "role": "SITTING_AS",
+     "attribution": "UNRESOLVED",
+     "evidence": "LIBRARY DISTRICT BOARD",
+     "itemCount": 1
+    },
+    {
+     "meetingId": "legistar:pima:1804",
+     "bodyId": null,
+     "ocdId": "ocd-division/country:us/state:az/county:pima",
+     "role": "HOST",
+     "attribution": "HOST_BODY",
+     "evidence": "SITTING AS THE BOARD OF SUPERVISORS",
+     "itemCount": 60
+    }
+   ]
   },
   {
    "id": "legistar:pima:1816",
@@ -209,9 +253,101 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1816&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-17T18:59:49.360Z",
+    "collectedAt": "2026-08-18T00:19:23.026Z",
     "verifiedAt": null
-   }
+   },
+   "actingBodies": [
+    {
+     "meetingId": "legistar:pima:1816",
+     "bodyId": null,
+     "ocdId": "ocd-division/country:us/state:az/county:pima",
+     "role": "HOST",
+     "attribution": "HOST_BODY",
+     "evidence": "Board of Supervisors",
+     "itemCount": 5
+    },
+    {
+     "meetingId": "legistar:pima:1816",
+     "bodyId": null,
+     "ocdId": null,
+     "role": "SITTING_AS",
+     "attribution": "UNRESOLVED",
+     "evidence": "FLOOD CONTROL DISTRICT BOARD",
+     "itemCount": 1
+    },
+    {
+     "meetingId": "legistar:pima:1816",
+     "bodyId": null,
+     "ocdId": null,
+     "role": "SITTING_AS",
+     "attribution": "UNRESOLVED",
+     "evidence": "IMPROVEMENT DISTRICT BOARD",
+     "itemCount": 1
+    },
+    {
+     "meetingId": "legistar:pima:1816",
+     "bodyId": null,
+     "ocdId": null,
+     "role": "SITTING_AS",
+     "attribution": "UNRESOLVED",
+     "evidence": "LIBRARY DISTRICT BOARD",
+     "itemCount": 1
+    },
+    {
+     "meetingId": "legistar:pima:1816",
+     "bodyId": null,
+     "ocdId": null,
+     "role": "SITTING_AS",
+     "attribution": "UNRESOLVED",
+     "evidence": "ROCKING K SOUTH COMMUNITY FACILITIES DISTRICT BOARD",
+     "itemCount": 1
+    },
+    {
+     "meetingId": "legistar:pima:1816",
+     "bodyId": null,
+     "ocdId": null,
+     "role": "SITTING_AS",
+     "attribution": "UNRESOLVED",
+     "evidence": "STADIUM DISTRICT BOARD",
+     "itemCount": 1
+    },
+    {
+     "meetingId": "legistar:pima:1816",
+     "bodyId": null,
+     "ocdId": null,
+     "role": "SITTING_AS",
+     "attribution": "UNRESOLVED",
+     "evidence": "WILDFLOWER COMMUNITY FACILITIES DISTRICT",
+     "itemCount": 1
+    },
+    {
+     "meetingId": "legistar:pima:1816",
+     "bodyId": null,
+     "ocdId": "ocd-division/country:us/state:az/county:pima",
+     "role": "HOST",
+     "attribution": "HOST_BODY",
+     "evidence": "SITTING AS THE BOARD OF SUPERVISORS",
+     "itemCount": 2
+    },
+    {
+     "meetingId": "legistar:pima:1816",
+     "bodyId": null,
+     "ocdId": null,
+     "role": "SITTING_AS",
+     "attribution": "UNRESOLVED",
+     "evidence": "ROCKING K SOUTH COMMUNITY FACILITIES DISTRICT BOARD",
+     "itemCount": 1
+    },
+    {
+     "meetingId": "legistar:pima:1816",
+     "bodyId": null,
+     "ocdId": "ocd-division/country:us/state:az/county:pima",
+     "role": "HOST",
+     "attribution": "HOST_BODY",
+     "evidence": "SITTING AS THE BOARD OF SUPERVISORS",
+     "itemCount": 53
+    }
+   ]
   },
   {
    "id": "legistar:pima:1817",
@@ -232,9 +368,110 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1817&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-17T18:59:49.360Z",
+    "collectedAt": "2026-08-18T00:19:23.026Z",
     "verifiedAt": null
-   }
+   },
+   "actingBodies": [
+    {
+     "meetingId": "legistar:pima:1817",
+     "bodyId": null,
+     "ocdId": "ocd-division/country:us/state:az/county:pima",
+     "role": "HOST",
+     "attribution": "HOST_BODY",
+     "evidence": "Board of Supervisors",
+     "itemCount": 3
+    },
+    {
+     "meetingId": "legistar:pima:1817",
+     "bodyId": null,
+     "ocdId": null,
+     "role": "SITTING_AS",
+     "attribution": "UNRESOLVED",
+     "evidence": "FLOOD CONTROL DISTRICT BOARD",
+     "itemCount": 2
+    },
+    {
+     "meetingId": "legistar:pima:1817",
+     "bodyId": null,
+     "ocdId": null,
+     "role": "SITTING_AS",
+     "attribution": "UNRESOLVED",
+     "evidence": "IMPROVEMENT DISTRICT BOARD",
+     "itemCount": 1
+    },
+    {
+     "meetingId": "legistar:pima:1817",
+     "bodyId": null,
+     "ocdId": null,
+     "role": "SITTING_AS",
+     "attribution": "UNRESOLVED",
+     "evidence": "LIBRARY DISTRICT BOARD",
+     "itemCount": 2
+    },
+    {
+     "meetingId": "legistar:pima:1817",
+     "bodyId": null,
+     "ocdId": null,
+     "role": "SITTING_AS",
+     "attribution": "UNRESOLVED",
+     "evidence": "ROCKING K SOUTH COMMUNITY FACILITIES DISTRICT BOARD",
+     "itemCount": 1
+    },
+    {
+     "meetingId": "legistar:pima:1817",
+     "bodyId": null,
+     "ocdId": null,
+     "role": "SITTING_AS",
+     "attribution": "UNRESOLVED",
+     "evidence": "STADIUM DISTRICT BOARD",
+     "itemCount": 1
+    },
+    {
+     "meetingId": "legistar:pima:1817",
+     "bodyId": null,
+     "ocdId": null,
+     "role": "SITTING_AS",
+     "attribution": "UNRESOLVED",
+     "evidence": "WILDFLOWER COMMUNITY FACILITIES DISTRICT",
+     "itemCount": 1
+    },
+    {
+     "meetingId": "legistar:pima:1817",
+     "bodyId": null,
+     "ocdId": "ocd-division/country:us/state:az/county:pima",
+     "role": "HOST",
+     "attribution": "HOST_BODY",
+     "evidence": "SITTING AS THE BOARD OF SUPERVISORS",
+     "itemCount": 2
+    },
+    {
+     "meetingId": "legistar:pima:1817",
+     "bodyId": null,
+     "ocdId": null,
+     "role": "SITTING_AS",
+     "attribution": "UNRESOLVED",
+     "evidence": "FLOOD CONTROL DISTRICT BOARD",
+     "itemCount": 2
+    },
+    {
+     "meetingId": "legistar:pima:1817",
+     "bodyId": null,
+     "ocdId": null,
+     "role": "SITTING_AS",
+     "attribution": "UNRESOLVED",
+     "evidence": "LIBRARY DISTRICT BOARD",
+     "itemCount": 2
+    },
+    {
+     "meetingId": "legistar:pima:1817",
+     "bodyId": null,
+     "ocdId": "ocd-division/country:us/state:az/county:pima",
+     "role": "HOST",
+     "attribution": "HOST_BODY",
+     "evidence": "SITTING AS THE BOARD OF SUPERVISORS",
+     "itemCount": 60
+    }
+   ]
   },
   {
    "id": "legistar:pima:1820",
@@ -255,9 +492,20 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1820&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-17T18:59:49.360Z",
+    "collectedAt": "2026-08-18T00:19:23.026Z",
     "verifiedAt": null
-   }
+   },
+   "actingBodies": [
+    {
+     "meetingId": "legistar:pima:1820",
+     "bodyId": null,
+     "ocdId": "ocd-division/country:us/state:az/county:pima",
+     "role": "HOST",
+     "attribution": "HOST_BODY",
+     "evidence": "Board of Supervisors",
+     "itemCount": 10
+    }
+   ]
   },
   {
    "id": "legistar:pima:1821",
@@ -278,9 +526,56 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1821&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-17T18:59:49.360Z",
+    "collectedAt": "2026-08-18T00:19:23.026Z",
     "verifiedAt": null
-   }
+   },
+   "actingBodies": [
+    {
+     "meetingId": "legistar:pima:1821",
+     "bodyId": null,
+     "ocdId": "ocd-division/country:us/state:az/county:pima",
+     "role": "HOST",
+     "attribution": "HOST_BODY",
+     "evidence": "Board of Supervisors",
+     "itemCount": 3
+    },
+    {
+     "meetingId": "legistar:pima:1821",
+     "bodyId": null,
+     "ocdId": null,
+     "role": "SITTING_AS",
+     "attribution": "UNRESOLVED",
+     "evidence": "FLOOD CONTROL DISTRICT BOARD",
+     "itemCount": 3
+    },
+    {
+     "meetingId": "legistar:pima:1821",
+     "bodyId": null,
+     "ocdId": "ocd-division/country:us/state:az/county:pima",
+     "role": "HOST",
+     "attribution": "HOST_BODY",
+     "evidence": "SITTING AS THE BOARD OF SUPERVISORS",
+     "itemCount": 16
+    },
+    {
+     "meetingId": "legistar:pima:1821",
+     "bodyId": null,
+     "ocdId": null,
+     "role": "SITTING_AS",
+     "attribution": "UNRESOLVED",
+     "evidence": "LIBRARY DISTRICT BOARD",
+     "itemCount": 1
+    },
+    {
+     "meetingId": "legistar:pima:1821",
+     "bodyId": null,
+     "ocdId": "ocd-division/country:us/state:az/county:pima",
+     "role": "HOST",
+     "attribution": "HOST_BODY",
+     "evidence": "SITTING AS THE BOARD OF SUPERVISORS",
+     "itemCount": 42
+    }
+   ]
   },
   {
    "id": "legistar:pima:1822",
@@ -301,9 +596,47 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1822&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-17T18:59:49.360Z",
+    "collectedAt": "2026-08-18T00:19:23.026Z",
     "verifiedAt": null
-   }
+   },
+   "actingBodies": [
+    {
+     "meetingId": "legistar:pima:1822",
+     "bodyId": null,
+     "ocdId": "ocd-division/country:us/state:az/county:pima",
+     "role": "HOST",
+     "attribution": "HOST_BODY",
+     "evidence": "Board of Supervisors",
+     "itemCount": 3
+    },
+    {
+     "meetingId": "legistar:pima:1822",
+     "bodyId": null,
+     "ocdId": null,
+     "role": "SITTING_AS",
+     "attribution": "UNRESOLVED",
+     "evidence": "FLOOD CONTROL DISTRICT BOARD",
+     "itemCount": 2
+    },
+    {
+     "meetingId": "legistar:pima:1822",
+     "bodyId": null,
+     "ocdId": null,
+     "role": "SITTING_AS",
+     "attribution": "UNRESOLVED",
+     "evidence": "LIBRARY DISTRICT BOARD",
+     "itemCount": 1
+    },
+    {
+     "meetingId": "legistar:pima:1822",
+     "bodyId": null,
+     "ocdId": "ocd-division/country:us/state:az/county:pima",
+     "role": "HOST",
+     "attribution": "HOST_BODY",
+     "evidence": "SITTING AS THE BOARD OF SUPERVISORS",
+     "itemCount": 37
+    }
+   ]
   },
   {
    "id": "legistar:pima:1823",
@@ -324,9 +657,20 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1823&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-17T18:59:49.360Z",
+    "collectedAt": "2026-08-18T00:19:23.026Z",
     "verifiedAt": null
-   }
+   },
+   "actingBodies": [
+    {
+     "meetingId": "legistar:pima:1823",
+     "bodyId": null,
+     "ocdId": "ocd-division/country:us/state:az/county:pima",
+     "role": "HOST",
+     "attribution": "HOST_BODY",
+     "evidence": "Board of Supervisors",
+     "itemCount": 8
+    }
+   ]
   },
   {
    "id": "legistar:pima:1824",
@@ -347,9 +691,80 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1824&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-17T18:59:49.360Z",
+    "collectedAt": "2026-08-18T00:19:23.026Z",
     "verifiedAt": null
-   }
+   },
+   "actingBodies": [
+    {
+     "meetingId": "legistar:pima:1824",
+     "bodyId": null,
+     "ocdId": "ocd-division/country:us/state:az/county:pima",
+     "role": "HOST",
+     "attribution": "HOST_BODY",
+     "evidence": "Board of Supervisors",
+     "itemCount": 3
+    },
+    {
+     "meetingId": "legistar:pima:1824",
+     "bodyId": null,
+     "ocdId": null,
+     "role": "SITTING_AS",
+     "attribution": "UNRESOLVED",
+     "evidence": "AJO DOMESTIC WATER IMPROVEMENT DISTRICT",
+     "itemCount": 1
+    },
+    {
+     "meetingId": "legistar:pima:1824",
+     "bodyId": null,
+     "ocdId": null,
+     "role": "SITTING_AS",
+     "attribution": "UNRESOLVED",
+     "evidence": "LIBRARY DISTRICT BOARD",
+     "itemCount": 1
+    },
+    {
+     "meetingId": "legistar:pima:1824",
+     "bodyId": null,
+     "ocdId": "ocd-division/country:us/state:az/county:pima",
+     "role": "HOST",
+     "attribution": "HOST_BODY",
+     "evidence": "SITTING AS THE BOARD OF SUPERVISORS",
+     "itemCount": 44
+    }
+   ]
+  },
+  {
+   "id": "legistar:pima:1851",
+   "ocdId": "ocd-division/country:us/state:az/county:pima",
+   "bodyName": "Board of Supervisors",
+   "title": "Special Meeting",
+   "startsAt": "2026-08-03T13:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Virtual Meeting",
+    "joinUrl": null
+   },
+   "agendaUrl": "https://legistar.granicus.com/pima/meetings/2026/8/1851_A_Board_of_Supervisors_26-08-03_Online_Agenda.pdf",
+   "jurisdiction": "Pima County, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1851&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+    "sourceOrg": "Pima County Clerk of the Board",
+    "collectedAt": "2026-08-18T00:19:23.026Z",
+    "verifiedAt": null
+   },
+   "actingBodies": [
+    {
+     "meetingId": "legistar:pima:1851",
+     "bodyId": null,
+     "ocdId": "ocd-division/country:us/state:az/county:pima",
+     "role": "HOST",
+     "attribution": "HOST_BODY",
+     "evidence": "Board of Supervisors",
+     "itemCount": 1
+    }
+   ]
   },
   {
    "id": "legistar:pima:1854",
@@ -370,9 +785,53 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1854&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-17T18:59:49.360Z",
+    "collectedAt": "2026-08-18T00:19:23.026Z",
     "verifiedAt": null
-   }
+   },
+   "actingBodies": [
+    {
+     "meetingId": "legistar:pima:1854",
+     "bodyId": null,
+     "ocdId": "ocd-division/country:us/state:az/county:pima",
+     "role": "HOST",
+     "attribution": "HOST_BODY",
+     "evidence": "Board of Supervisors",
+     "itemCount": 2
+    }
+   ]
+  },
+  {
+   "id": "legistar:pima:1855",
+   "ocdId": "ocd-division/country:us/state:az/county:pima",
+   "bodyName": "Board of Supervisors",
+   "title": "Special Meeting",
+   "startsAt": "2026-06-01T16:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Virtual Meeting",
+    "joinUrl": null
+   },
+   "agendaUrl": "https://legistar.granicus.com/pima/meetings/2026/6/1855_A_Board_of_Supervisors_26-06-01_Online_Agenda.pdf",
+   "jurisdiction": "Pima County, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1855&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+    "sourceOrg": "Pima County Clerk of the Board",
+    "collectedAt": "2026-08-18T00:19:23.026Z",
+    "verifiedAt": null
+   },
+   "actingBodies": [
+    {
+     "meetingId": "legistar:pima:1855",
+     "bodyId": null,
+     "ocdId": "ocd-division/country:us/state:az/county:pima",
+     "role": "HOST",
+     "attribution": "HOST_BODY",
+     "evidence": "Board of Supervisors",
+     "itemCount": 2
+    }
+   ]
   },
   {
    "id": "legistar:pima:1858",
@@ -393,9 +852,53 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1858&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-17T18:59:49.360Z",
+    "collectedAt": "2026-08-18T00:19:23.026Z",
     "verifiedAt": null
-   }
+   },
+   "actingBodies": [
+    {
+     "meetingId": "legistar:pima:1858",
+     "bodyId": null,
+     "ocdId": "ocd-division/country:us/state:az/county:pima",
+     "role": "HOST",
+     "attribution": "HOST_BODY",
+     "evidence": "Board of Supervisors",
+     "itemCount": 4
+    }
+   ]
+  },
+  {
+   "id": "legistar:pima:1864",
+   "ocdId": "ocd-division/country:us/state:az/county:pima",
+   "bodyName": "Board of Supervisors",
+   "title": "Special Meeting",
+   "startsAt": "2026-08-17T13:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Virtual Meeting",
+    "joinUrl": null
+   },
+   "agendaUrl": "https://legistar.granicus.com/pima/meetings/2026/8/1864_A_Board_of_Supervisors_26-08-17_Online_Agenda.pdf",
+   "jurisdiction": "Pima County, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1864&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+    "sourceOrg": "Pima County Clerk of the Board",
+    "collectedAt": "2026-08-18T00:19:23.026Z",
+    "verifiedAt": null
+   },
+   "actingBodies": [
+    {
+     "meetingId": "legistar:pima:1864",
+     "bodyId": null,
+     "ocdId": "ocd-division/country:us/state:az/county:pima",
+     "role": "HOST",
+     "attribution": "HOST_BODY",
+     "evidence": "Board of Supervisors",
+     "itemCount": 2
+    }
+   ]
   },
   {
    "id": "legistar:pima:1869",
@@ -416,9 +919,20 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1869&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-17T18:59:49.360Z",
+    "collectedAt": "2026-08-18T00:19:23.026Z",
     "verifiedAt": null
-   }
+   },
+   "actingBodies": [
+    {
+     "meetingId": "legistar:pima:1869",
+     "bodyId": null,
+     "ocdId": "ocd-division/country:us/state:az/county:pima",
+     "role": "HOST",
+     "attribution": "HOST_BODY",
+     "evidence": "Board of Supervisors",
+     "itemCount": 1
+    }
+   ]
   },
   {
    "id": "civicplus:rockaway_township:1830",
@@ -439,7 +953,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T18:59:49.431Z",
+    "collectedAt": "2026-08-18T00:19:23.001Z",
     "verifiedAt": null
    }
   },
@@ -462,7 +976,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T18:59:49.431Z",
+    "collectedAt": "2026-08-18T00:19:23.001Z",
     "verifiedAt": null
    }
   },
@@ -485,7 +999,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T18:59:49.431Z",
+    "collectedAt": "2026-08-18T00:19:23.001Z",
     "verifiedAt": null
    }
   },
@@ -508,7 +1022,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T18:59:49.431Z",
+    "collectedAt": "2026-08-18T00:19:23.001Z",
     "verifiedAt": null
    }
   },
@@ -531,7 +1045,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T18:59:49.431Z",
+    "collectedAt": "2026-08-18T00:19:23.001Z",
     "verifiedAt": null
    }
   },
@@ -554,7 +1068,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T18:59:49.431Z",
+    "collectedAt": "2026-08-18T00:19:23.001Z",
     "verifiedAt": null
    }
   },
@@ -577,7 +1091,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T18:59:49.431Z",
+    "collectedAt": "2026-08-18T00:19:23.001Z",
     "verifiedAt": null
    }
   },
@@ -600,7 +1114,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T18:59:49.431Z",
+    "collectedAt": "2026-08-18T00:19:23.001Z",
     "verifiedAt": null
    }
   },
@@ -623,7 +1137,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T18:59:49.431Z",
+    "collectedAt": "2026-08-18T00:19:23.001Z",
     "verifiedAt": null
    }
   },
@@ -647,7 +1161,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T18:59:49.431Z",
+    "collectedAt": "2026-08-18T00:19:23.001Z",
     "verifiedAt": null
    }
   },
@@ -671,7 +1185,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T18:59:49.431Z",
+    "collectedAt": "2026-08-18T00:19:23.001Z",
     "verifiedAt": null
    }
   },
@@ -695,7 +1209,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T18:59:49.431Z",
+    "collectedAt": "2026-08-18T00:19:23.001Z",
     "verifiedAt": null
    }
   },
@@ -719,7 +1233,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T18:59:49.431Z",
+    "collectedAt": "2026-08-18T00:19:23.001Z",
     "verifiedAt": null
    }
   },
@@ -743,7 +1257,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T18:59:49.431Z",
+    "collectedAt": "2026-08-18T00:19:23.001Z",
     "verifiedAt": null
    }
   },
@@ -767,7 +1281,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T18:59:49.431Z",
+    "collectedAt": "2026-08-18T00:19:23.001Z",
     "verifiedAt": null
    }
   },
@@ -791,7 +1305,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T18:59:49.431Z",
+    "collectedAt": "2026-08-18T00:19:23.001Z",
     "verifiedAt": null
    }
   },
@@ -815,7 +1329,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T18:59:49.431Z",
+    "collectedAt": "2026-08-18T00:19:23.001Z",
     "verifiedAt": null
    }
   },
@@ -839,7 +1353,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T18:59:49.431Z",
+    "collectedAt": "2026-08-18T00:19:23.001Z",
     "verifiedAt": null
    }
   },
@@ -863,7 +1377,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T18:59:49.431Z",
+    "collectedAt": "2026-08-18T00:19:23.001Z",
     "verifiedAt": null
    }
   },
@@ -887,7 +1401,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T18:59:49.431Z",
+    "collectedAt": "2026-08-18T00:19:23.001Z",
     "verifiedAt": null
    }
   },
@@ -911,7 +1425,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T18:59:49.431Z",
+    "collectedAt": "2026-08-18T00:19:23.001Z",
     "verifiedAt": null
    }
   },
@@ -935,7 +1449,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-17T18:59:49.431Z",
+    "collectedAt": "2026-08-18T00:19:23.001Z",
     "verifiedAt": null
    }
   },
@@ -958,7 +1472,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-17T18:59:49.848Z",
+    "collectedAt": "2026-08-18T00:19:23.490Z",
     "verifiedAt": null
    }
   },
@@ -981,7 +1495,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-17T18:59:49.848Z",
+    "collectedAt": "2026-08-18T00:19:23.490Z",
     "verifiedAt": null
    }
   },
@@ -1004,7 +1518,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-17T18:59:49.848Z",
+    "collectedAt": "2026-08-18T00:19:23.490Z",
     "verifiedAt": null
    }
   },
@@ -1027,7 +1541,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-17T18:59:49.848Z",
+    "collectedAt": "2026-08-18T00:19:23.490Z",
     "verifiedAt": null
    }
   },
@@ -1050,7 +1564,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-17T18:59:49.848Z",
+    "collectedAt": "2026-08-18T00:19:23.490Z",
     "verifiedAt": null
    }
   },
@@ -1074,7 +1588,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-17T18:59:49.848Z",
+    "collectedAt": "2026-08-18T00:19:23.490Z",
     "verifiedAt": null
    }
   },
@@ -1098,7 +1612,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-17T18:59:49.848Z",
+    "collectedAt": "2026-08-18T00:19:23.490Z",
     "verifiedAt": null
    }
   },
@@ -1122,7 +1636,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-17T18:59:49.848Z",
+    "collectedAt": "2026-08-18T00:19:23.490Z",
     "verifiedAt": null
    }
   },
@@ -1146,7 +1660,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-17T18:59:49.848Z",
+    "collectedAt": "2026-08-18T00:19:23.490Z",
     "verifiedAt": null
    }
   },
@@ -1170,7 +1684,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-17T18:59:49.848Z",
+    "collectedAt": "2026-08-18T00:19:23.490Z",
     "verifiedAt": null
    }
   },
@@ -1194,7 +1708,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-17T18:59:49.848Z",
+    "collectedAt": "2026-08-18T00:19:23.490Z",
     "verifiedAt": null
    }
   },
@@ -1218,7 +1732,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-17T18:59:49.848Z",
+    "collectedAt": "2026-08-18T00:19:23.490Z",
     "verifiedAt": null
    }
   },
@@ -1241,7 +1755,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T18:59:50.277Z",
+    "collectedAt": "2026-08-18T00:19:24.141Z",
     "verifiedAt": null
    }
   },
@@ -1264,7 +1778,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T18:59:50.277Z",
+    "collectedAt": "2026-08-18T00:19:24.141Z",
     "verifiedAt": null
    }
   },
@@ -1287,7 +1801,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T18:59:50.277Z",
+    "collectedAt": "2026-08-18T00:19:24.141Z",
     "verifiedAt": null
    }
   },
@@ -1310,7 +1824,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T18:59:50.277Z",
+    "collectedAt": "2026-08-18T00:19:24.141Z",
     "verifiedAt": null
    }
   },
@@ -1333,7 +1847,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T18:59:50.277Z",
+    "collectedAt": "2026-08-18T00:19:24.141Z",
     "verifiedAt": null
    }
   },
@@ -1356,7 +1870,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T18:59:50.277Z",
+    "collectedAt": "2026-08-18T00:19:24.141Z",
     "verifiedAt": null
    }
   },
@@ -1379,7 +1893,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T18:59:50.277Z",
+    "collectedAt": "2026-08-18T00:19:24.141Z",
     "verifiedAt": null
    }
   },
@@ -1402,7 +1916,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T18:59:50.277Z",
+    "collectedAt": "2026-08-18T00:19:24.141Z",
     "verifiedAt": null
    }
   },
@@ -1426,7 +1940,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T18:59:50.277Z",
+    "collectedAt": "2026-08-18T00:19:24.141Z",
     "verifiedAt": null
    }
   },
@@ -1450,7 +1964,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T18:59:50.277Z",
+    "collectedAt": "2026-08-18T00:19:24.141Z",
     "verifiedAt": null
    }
   },
@@ -1474,7 +1988,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T18:59:50.277Z",
+    "collectedAt": "2026-08-18T00:19:24.141Z",
     "verifiedAt": null
    }
   },
@@ -1498,7 +2012,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T18:59:50.277Z",
+    "collectedAt": "2026-08-18T00:19:24.141Z",
     "verifiedAt": null
    }
   },
@@ -1522,7 +2036,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T18:59:50.277Z",
+    "collectedAt": "2026-08-18T00:19:24.141Z",
     "verifiedAt": null
    }
   },
@@ -1546,7 +2060,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T18:59:50.277Z",
+    "collectedAt": "2026-08-18T00:19:24.141Z",
     "verifiedAt": null
    }
   },
@@ -1570,7 +2084,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T18:59:50.277Z",
+    "collectedAt": "2026-08-18T00:19:24.141Z",
     "verifiedAt": null
    }
   },
@@ -1594,7 +2108,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T18:59:50.277Z",
+    "collectedAt": "2026-08-18T00:19:24.141Z",
     "verifiedAt": null
    }
   },
@@ -1618,7 +2132,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T18:59:50.277Z",
+    "collectedAt": "2026-08-18T00:19:24.141Z",
     "verifiedAt": null
    }
   },
@@ -1642,7 +2156,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T18:59:50.277Z",
+    "collectedAt": "2026-08-18T00:19:24.141Z",
     "verifiedAt": null
    }
   },
@@ -1666,7 +2180,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T18:59:50.277Z",
+    "collectedAt": "2026-08-18T00:19:24.141Z",
     "verifiedAt": null
    }
   },
@@ -1690,7 +2204,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-17T18:59:50.277Z",
+    "collectedAt": "2026-08-18T00:19:24.141Z",
     "verifiedAt": null
    }
   },
@@ -1713,7 +2227,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1946&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:48.983Z",
+    "collectedAt": "2026-08-18T00:19:22.626Z",
     "verifiedAt": null
    }
   },
@@ -1736,7 +2250,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1957&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:48.983Z",
+    "collectedAt": "2026-08-18T00:19:22.626Z",
     "verifiedAt": null
    }
   },
@@ -1759,7 +2273,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1981&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:48.983Z",
+    "collectedAt": "2026-08-18T00:19:22.626Z",
     "verifiedAt": null
    }
   },
@@ -1782,7 +2296,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1942&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:48.983Z",
+    "collectedAt": "2026-08-18T00:19:22.626Z",
     "verifiedAt": null
    }
   },
@@ -1805,7 +2319,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1927&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:48.983Z",
+    "collectedAt": "2026-08-18T00:19:22.626Z",
     "verifiedAt": null
    }
   },
@@ -1828,7 +2342,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1943&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:48.983Z",
+    "collectedAt": "2026-08-18T00:19:22.626Z",
     "verifiedAt": null
    }
   },
@@ -1851,7 +2365,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1928&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:48.983Z",
+    "collectedAt": "2026-08-18T00:19:22.626Z",
     "verifiedAt": null
    }
   },
@@ -1874,7 +2388,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1945&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:48.983Z",
+    "collectedAt": "2026-08-18T00:19:22.626Z",
     "verifiedAt": null
    }
   },
@@ -1897,7 +2411,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1956&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:48.983Z",
+    "collectedAt": "2026-08-18T00:19:22.626Z",
     "verifiedAt": null
    }
   },
@@ -1918,9 +2432,9 @@
    "jurisdiction": "Vail Unified School District, AZ",
    "status": "CONCLUDED",
    "provenance": {
-    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-19",
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:49.322Z",
+    "collectedAt": "2026-08-18T00:19:22.859Z",
     "verifiedAt": null
    }
   },
@@ -1941,9 +2455,9 @@
    "jurisdiction": "Vail Unified School District, AZ",
    "status": "CONCLUDED",
    "provenance": {
-    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-19",
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:49.322Z",
+    "collectedAt": "2026-08-18T00:19:22.859Z",
     "verifiedAt": null
    }
   },
@@ -1964,9 +2478,9 @@
    "jurisdiction": "Vail Unified School District, AZ",
    "status": "CONCLUDED",
    "provenance": {
-    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-19",
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:49.322Z",
+    "collectedAt": "2026-08-18T00:19:22.859Z",
     "verifiedAt": null
    }
   },
@@ -1987,9 +2501,9 @@
    "jurisdiction": "Vail Unified School District, AZ",
    "status": "CONCLUDED",
    "provenance": {
-    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-19",
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:49.322Z",
+    "collectedAt": "2026-08-18T00:19:22.859Z",
     "verifiedAt": null
    }
   },
@@ -2010,9 +2524,9 @@
    "jurisdiction": "Vail Unified School District, AZ",
    "status": "SCHEDULED",
    "provenance": {
-    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-19",
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:49.322Z",
+    "collectedAt": "2026-08-18T00:19:22.859Z",
     "verifiedAt": null
    }
   },
@@ -2033,9 +2547,9 @@
    "jurisdiction": "Vail Unified School District, AZ",
    "status": "SCHEDULED",
    "provenance": {
-    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-19",
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:49.322Z",
+    "collectedAt": "2026-08-18T00:19:22.859Z",
     "verifiedAt": null
    }
   },
@@ -2056,9 +2570,9 @@
    "jurisdiction": "Vail Unified School District, AZ",
    "status": "SCHEDULED",
    "provenance": {
-    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-19",
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:49.322Z",
+    "collectedAt": "2026-08-18T00:19:22.859Z",
     "verifiedAt": null
    }
   },
@@ -2079,9 +2593,9 @@
    "jurisdiction": "Vail Unified School District, AZ",
    "status": "SCHEDULED",
    "provenance": {
-    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-19",
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:49.322Z",
+    "collectedAt": "2026-08-18T00:19:22.859Z",
     "verifiedAt": null
    }
   },
@@ -2102,9 +2616,9 @@
    "jurisdiction": "Vail Unified School District, AZ",
    "status": "SCHEDULED",
    "provenance": {
-    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-19",
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:49.322Z",
+    "collectedAt": "2026-08-18T00:19:22.859Z",
     "verifiedAt": null
    }
   },
@@ -2125,9 +2639,9 @@
    "jurisdiction": "Rockaway Township School District, NJ",
    "status": "CONCLUDED",
    "provenance": {
-    "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-19",
+    "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-17T18:59:51.153Z",
+    "collectedAt": "2026-08-18T00:19:24.566Z",
     "verifiedAt": null
    }
   },
@@ -2148,9 +2662,9 @@
    "jurisdiction": "Rockaway Township School District, NJ",
    "status": "CONCLUDED",
    "provenance": {
-    "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-19",
+    "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-17T18:59:51.153Z",
+    "collectedAt": "2026-08-18T00:19:24.566Z",
     "verifiedAt": null
    }
   },
@@ -2171,9 +2685,9 @@
    "jurisdiction": "Rockaway Township School District, NJ",
    "status": "CONCLUDED",
    "provenance": {
-    "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-19",
+    "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-17T18:59:51.153Z",
+    "collectedAt": "2026-08-18T00:19:24.566Z",
     "verifiedAt": null
    }
   },
@@ -2194,9 +2708,9 @@
    "jurisdiction": "Rockaway Township School District, NJ",
    "status": "CONCLUDED",
    "provenance": {
-    "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-19",
+    "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-17T18:59:51.153Z",
+    "collectedAt": "2026-08-18T00:19:24.566Z",
     "verifiedAt": null
    }
   },
@@ -2217,9 +2731,9 @@
    "jurisdiction": "Rockaway Township School District, NJ",
    "status": "SCHEDULED",
    "provenance": {
-    "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-19",
+    "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-17T18:59:51.153Z",
+    "collectedAt": "2026-08-18T00:19:24.566Z",
     "verifiedAt": null
    }
   },
@@ -2240,9 +2754,53 @@
    "jurisdiction": "Rockaway Township School District, NJ",
    "status": "SCHEDULED",
    "provenance": {
-    "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-19",
+    "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-17T18:59:51.153Z",
+    "collectedAt": "2026-08-18T00:19:24.566Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "diligent:tusd1:495",
+   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+   "bodyName": "AGENDA FOR AUDIT COMMITTEE MEETING",
+   "title": "AGENDA FOR AUDIT COMMITTEE MEETING - Sep 16 2026",
+   "startsAt": "2026-09-16T14:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Via Zoom Webinar",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson Unified School District, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=495",
+    "sourceOrg": "Tucson Unified School District Governing Board",
+    "collectedAt": "2026-08-18T00:19:22.657Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "diligent:tusd1:479",
+   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+   "bodyName": "Employee Benefit Trust Committee",
+   "title": "Employee Benefit Trust Committee - Sep 14 2026",
+   "startsAt": "2026-09-14T17:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Via Zoom Webinar",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson Unified School District, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=479",
+    "sourceOrg": "Tucson Unified School District Governing Board",
+    "collectedAt": "2026-08-18T00:19:22.657Z",
     "verifiedAt": null
    }
   },
@@ -2265,7 +2823,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=493",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:51.355Z",
+    "collectedAt": "2026-08-18T00:19:22.657Z",
     "verifiedAt": null
    }
   },
@@ -2288,7 +2846,29 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=496",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:51.355Z",
+    "collectedAt": "2026-08-18T00:19:22.657Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "diligent:tusd1:494",
+   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+   "bodyName": "Alternative Education Advisory Committee Meeting Agenda",
+   "title": "Alternative Education Advisory Committee Meeting Agenda - Aug 17 2026",
+   "startsAt": "2026-08-17T18:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Via Zoom Webinar",
+    "joinUrl": null
+   },
+   "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=494",
+   "jurisdiction": "Tucson Unified School District, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=494",
+    "sourceOrg": "Tucson Unified School District Governing Board",
+    "collectedAt": "2026-08-18T00:19:22.657Z",
     "verifiedAt": null
    }
   },
@@ -2311,7 +2891,29 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=492",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:51.355Z",
+    "collectedAt": "2026-08-18T00:19:22.657Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "diligent:tusd1:491",
+   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+   "bodyName": "GOVERNING BOARD AGENDA SPECIAL MEETING",
+   "title": "GOVERNING BOARD AGENDA SPECIAL MEETING  - Aug 04 2026",
+   "startsAt": "2026-08-04T17:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "via Zoom",
+    "joinUrl": null
+   },
+   "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=491",
+   "jurisdiction": "Tucson Unified School District, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=491",
+    "sourceOrg": "Tucson Unified School District Governing Board",
+    "collectedAt": "2026-08-18T00:19:22.657Z",
     "verifiedAt": null
    }
   },
@@ -2334,7 +2936,29 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=485",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:51.355Z",
+    "collectedAt": "2026-08-18T00:19:22.657Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "diligent:tusd1:490",
+   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+   "bodyName": "GOVERNING BOARD AGENDA SPECIAL EXECUTIVE SESSION MEETING",
+   "title": "GOVERNING BOARD AGENDA SPECIAL EXECUTIVE SESSION MEETING - Jul 21 2026",
+   "startsAt": "2026-07-21T17:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Via Zoom",
+    "joinUrl": null
+   },
+   "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=490",
+   "jurisdiction": "Tucson Unified School District, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=490",
+    "sourceOrg": "Tucson Unified School District Governing Board",
+    "collectedAt": "2026-08-18T00:19:22.657Z",
     "verifiedAt": null
    }
   },
@@ -2357,7 +2981,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=489",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:51.355Z",
+    "collectedAt": "2026-08-18T00:19:22.657Z",
     "verifiedAt": null
    }
   },
@@ -2380,7 +3004,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=484",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:51.355Z",
+    "collectedAt": "2026-08-18T00:19:22.657Z",
     "verifiedAt": null
    }
   },
@@ -2403,7 +3027,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=483",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:51.355Z",
+    "collectedAt": "2026-08-18T00:19:22.657Z",
     "verifiedAt": null
    }
   },
@@ -2426,7 +3050,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=481",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:51.355Z",
+    "collectedAt": "2026-08-18T00:19:22.657Z",
     "verifiedAt": null
    }
   },
@@ -2449,7 +3073,29 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=480",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:51.355Z",
+    "collectedAt": "2026-08-18T00:19:22.657Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "diligent:tusd1:482",
+   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+   "bodyName": "Alternative Education Advisory Committee Meeting Agenda",
+   "title": "Alternative Education Advisory Committee Meeting Agenda - Jun 08 2026",
+   "startsAt": "2026-06-08T18:15:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Via Zoom Webinar",
+    "joinUrl": null
+   },
+   "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=482",
+   "jurisdiction": "Tucson Unified School District, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=482",
+    "sourceOrg": "Tucson Unified School District Governing Board",
+    "collectedAt": "2026-08-18T00:19:22.657Z",
     "verifiedAt": null
    }
   },
@@ -2472,7 +3118,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=169",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:52.123Z",
+    "collectedAt": "2026-08-18T00:19:23.183Z",
     "verifiedAt": null
    }
   },
@@ -2495,7 +3141,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=168",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:52.123Z",
+    "collectedAt": "2026-08-18T00:19:23.183Z",
     "verifiedAt": null
    }
   },
@@ -2518,7 +3164,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=167",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:52.123Z",
+    "collectedAt": "2026-08-18T00:19:23.183Z",
     "verifiedAt": null
    }
   },
@@ -2541,7 +3187,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=166",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:52.123Z",
+    "collectedAt": "2026-08-18T00:19:23.183Z",
     "verifiedAt": null
    }
   },
@@ -2564,7 +3210,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=175",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:52.123Z",
+    "collectedAt": "2026-08-18T00:19:23.183Z",
     "verifiedAt": null
    }
   },
@@ -2587,7 +3233,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=165",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:52.123Z",
+    "collectedAt": "2026-08-18T00:19:23.183Z",
     "verifiedAt": null
    }
   },
@@ -2610,7 +3256,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=174",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:52.123Z",
+    "collectedAt": "2026-08-18T00:19:23.183Z",
     "verifiedAt": null
    }
   },
@@ -2633,7 +3279,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=163",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:52.123Z",
+    "collectedAt": "2026-08-18T00:19:23.183Z",
     "verifiedAt": null
    }
   },
@@ -2656,7 +3302,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=162",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:52.123Z",
+    "collectedAt": "2026-08-18T00:19:23.183Z",
     "verifiedAt": null
    }
   },
@@ -2679,7 +3325,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=156",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:52.123Z",
+    "collectedAt": "2026-08-18T00:19:23.183Z",
     "verifiedAt": null
    }
   },
@@ -2702,7 +3348,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=155",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:52.123Z",
+    "collectedAt": "2026-08-18T00:19:23.183Z",
     "verifiedAt": null
    }
   },
@@ -2725,7 +3371,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=159",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:52.123Z",
+    "collectedAt": "2026-08-18T00:19:23.183Z",
     "verifiedAt": null
    }
   },
@@ -2748,7 +3394,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=154",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:52.123Z",
+    "collectedAt": "2026-08-18T00:19:23.183Z",
     "verifiedAt": null
    }
   },
@@ -2767,11 +3413,11 @@
    },
    "agendaUrl": null,
    "jurisdiction": "Newbury, NH",
-   "status": "SCHEDULED",
+   "status": "CONCLUDED",
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3371",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-17T18:59:52.299Z",
+    "collectedAt": "2026-08-18T00:19:23.600Z",
     "verifiedAt": null
    }
   },
@@ -2794,7 +3440,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3370",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-17T18:59:52.299Z",
+    "collectedAt": "2026-08-18T00:19:23.600Z",
     "verifiedAt": null
    }
   },
@@ -2817,7 +3463,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3368",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-17T18:59:52.299Z",
+    "collectedAt": "2026-08-18T00:19:23.600Z",
     "verifiedAt": null
    }
   },
@@ -2840,7 +3486,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3367",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-17T18:59:52.299Z",
+    "collectedAt": "2026-08-18T00:19:23.600Z",
     "verifiedAt": null
    }
   },
@@ -2863,7 +3509,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3364",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-17T18:59:52.299Z",
+    "collectedAt": "2026-08-18T00:19:23.600Z",
     "verifiedAt": null
    }
   },
@@ -2886,7 +3532,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3363",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-17T18:59:52.299Z",
+    "collectedAt": "2026-08-18T00:19:23.600Z",
     "verifiedAt": null
    }
   },
@@ -2909,7 +3555,29 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3361",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-17T18:59:52.299Z",
+    "collectedAt": "2026-08-18T00:19:23.600Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "diligent:pcc:699",
+   "ocdId": null,
+   "bodyName": "Finance and Audit Committee Meeting",
+   "title": "Finance and Audit Committee Meeting  - Oct 16 2026",
+   "startsAt": "2026-10-16T09:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "VIRTUAL MEETING",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Pima Community College District, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=699",
+    "sourceOrg": "Pima Community College Governing Board",
+    "collectedAt": "2026-08-18T00:19:24.090Z",
     "verifiedAt": null
    }
   },
@@ -2932,7 +3600,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=705",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-17T18:59:53.109Z",
+    "collectedAt": "2026-08-18T00:19:24.090Z",
     "verifiedAt": null
    }
   },
@@ -2955,7 +3623,29 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=707",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-17T18:59:53.109Z",
+    "collectedAt": "2026-08-18T00:19:24.090Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "diligent:pcc:698",
+   "ocdId": null,
+   "bodyName": "Finance and Audit Committee Meeting",
+   "title": "Finance and Audit Committee Meeting  - Aug 28 2026",
+   "startsAt": "2026-08-28T09:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "VIRTUAL MEETING",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Pima Community College District, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=698",
+    "sourceOrg": "Pima Community College Governing Board",
+    "collectedAt": "2026-08-18T00:19:24.090Z",
     "verifiedAt": null
    }
   },
@@ -2978,7 +3668,29 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=706",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-17T18:59:53.109Z",
+    "collectedAt": "2026-08-18T00:19:24.090Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "diligent:pcc:664",
+   "ocdId": null,
+   "bodyName": "Finance and Audit Committee Meeting",
+   "title": "Finance and Audit Committee Meeting - June 12, 2026",
+   "startsAt": "2026-06-12T09:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "VIRTUAL MEETING",
+    "joinUrl": null
+   },
+   "agendaUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=664",
+   "jurisdiction": "Pima Community College District, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=664",
+    "sourceOrg": "Pima Community College Governing Board",
+    "collectedAt": "2026-08-18T00:19:24.090Z",
     "verifiedAt": null
    }
   },
@@ -3001,7 +3713,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=695",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-17T18:59:53.109Z",
+    "collectedAt": "2026-08-18T00:19:24.090Z",
     "verifiedAt": null
    }
   },
@@ -3024,7 +3736,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=696",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-17T18:59:53.109Z",
+    "collectedAt": "2026-08-18T00:19:24.090Z",
     "verifiedAt": null
    }
   },
@@ -3047,7 +3759,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:49.162Z",
+    "collectedAt": "2026-08-18T00:19:22.391Z",
     "verifiedAt": null
    }
   },
@@ -3070,7 +3782,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:49.162Z",
+    "collectedAt": "2026-08-18T00:19:22.391Z",
     "verifiedAt": null
    }
   },
@@ -3093,7 +3805,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:49.162Z",
+    "collectedAt": "2026-08-18T00:19:22.391Z",
     "verifiedAt": null
    }
   },
@@ -3116,7 +3828,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:49.162Z",
+    "collectedAt": "2026-08-18T00:19:22.391Z",
     "verifiedAt": null
    }
   },
@@ -3139,7 +3851,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:49.162Z",
+    "collectedAt": "2026-08-18T00:19:22.391Z",
     "verifiedAt": null
    }
   },
@@ -3162,7 +3874,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:49.249Z",
+    "collectedAt": "2026-08-18T00:19:22.433Z",
     "verifiedAt": null
    }
   },
@@ -3185,7 +3897,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:49.249Z",
+    "collectedAt": "2026-08-18T00:19:22.433Z",
     "verifiedAt": null
    }
   },
@@ -3208,7 +3920,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:49.249Z",
+    "collectedAt": "2026-08-18T00:19:22.433Z",
     "verifiedAt": null
    }
   },
@@ -3231,7 +3943,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:49.249Z",
+    "collectedAt": "2026-08-18T00:19:22.433Z",
     "verifiedAt": null
    }
   },
@@ -3254,7 +3966,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:49.249Z",
+    "collectedAt": "2026-08-18T00:19:22.433Z",
     "verifiedAt": null
    }
   },
@@ -3277,7 +3989,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:49.319Z",
+    "collectedAt": "2026-08-18T00:19:22.482Z",
     "verifiedAt": null
    }
   },
@@ -3300,7 +4012,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:49.319Z",
+    "collectedAt": "2026-08-18T00:19:22.482Z",
     "verifiedAt": null
    }
   },
@@ -3323,7 +4035,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:49.319Z",
+    "collectedAt": "2026-08-18T00:19:22.482Z",
     "verifiedAt": null
    }
   },
@@ -3346,7 +4058,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:49.319Z",
+    "collectedAt": "2026-08-18T00:19:22.482Z",
     "verifiedAt": null
    }
   },
@@ -3369,7 +4081,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:49.390Z",
+    "collectedAt": "2026-08-18T00:19:22.525Z",
     "verifiedAt": null
    }
   },
@@ -3392,7 +4104,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:49.390Z",
+    "collectedAt": "2026-08-18T00:19:22.525Z",
     "verifiedAt": null
    }
   },
@@ -3415,7 +4127,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:49.390Z",
+    "collectedAt": "2026-08-18T00:19:22.525Z",
     "verifiedAt": null
    }
   },
@@ -3438,7 +4150,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:49.390Z",
+    "collectedAt": "2026-08-18T00:19:22.525Z",
     "verifiedAt": null
    }
   },
@@ -3461,30 +4173,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:49.390Z",
-    "verifiedAt": null
-   }
-  },
-  {
-   "id": "clerksboards:19:2026-05-19",
-   "ocdId": "ocd-division/country:us/state:az/place:tucson",
-   "bodyName": "Community Police Advisory Review Board",
-   "title": "Community Police Advisory Review Board",
-   "startsAt": "2026-05-19T17:30:00-07:00",
-   "timeZone": "America/Phoenix",
-   "location": {
-    "name": "Ward 6 Council Office",
-    "address": "3202 E. 1st Street, Tucson, AZ 85716",
-    "lat": 32.235068,
-    "lng": -110.925106
-   },
-   "agendaUrl": null,
-   "jurisdiction": "Tucson, AZ",
-   "status": "CONCLUDED",
-   "provenance": {
-    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
-    "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:49.460Z",
+    "collectedAt": "2026-08-18T00:19:22.525Z",
     "verifiedAt": null
    }
   },
@@ -3507,7 +4196,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:49.460Z",
+    "collectedAt": "2026-08-18T00:19:22.568Z",
     "verifiedAt": null
    }
   },
@@ -3530,7 +4219,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:49.460Z",
+    "collectedAt": "2026-08-18T00:19:22.568Z",
     "verifiedAt": null
    }
   },
@@ -3553,7 +4242,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:49.460Z",
+    "collectedAt": "2026-08-18T00:19:22.568Z",
     "verifiedAt": null
    }
   },
@@ -3576,7 +4265,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-17T18:59:49.460Z",
+    "collectedAt": "2026-08-18T00:19:22.568Z",
     "verifiedAt": null
    }
   },
@@ -3599,7 +4288,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:49.061Z",
+    "collectedAt": "2026-08-18T00:19:22.682Z",
     "verifiedAt": null
    }
   },
@@ -3622,7 +4311,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:49.061Z",
+    "collectedAt": "2026-08-18T00:19:22.682Z",
     "verifiedAt": null
    }
   },
@@ -3645,7 +4334,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:49.061Z",
+    "collectedAt": "2026-08-18T00:19:22.682Z",
     "verifiedAt": null
    }
   },
@@ -3668,7 +4357,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:49.061Z",
+    "collectedAt": "2026-08-18T00:19:22.682Z",
     "verifiedAt": null
    }
   },
@@ -3691,7 +4380,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:49.061Z",
+    "collectedAt": "2026-08-18T00:19:22.682Z",
     "verifiedAt": null
    }
   },
@@ -3714,7 +4403,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-17T18:59:49.061Z",
+    "collectedAt": "2026-08-18T00:19:22.682Z",
     "verifiedAt": null
    }
   },
@@ -3737,7 +4426,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2225",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T18:59:50.193Z",
+    "collectedAt": "2026-08-18T00:19:22.862Z",
     "verifiedAt": null
    }
   },
@@ -3760,7 +4449,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2227",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T18:59:50.193Z",
+    "collectedAt": "2026-08-18T00:19:22.862Z",
     "verifiedAt": null
    }
   },
@@ -3783,7 +4472,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2228",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T18:59:50.193Z",
+    "collectedAt": "2026-08-18T00:19:22.862Z",
     "verifiedAt": null
    }
   },
@@ -3806,7 +4495,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2234",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T18:59:50.193Z",
+    "collectedAt": "2026-08-18T00:19:22.862Z",
     "verifiedAt": null
    }
   },
@@ -3829,7 +4518,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2235",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T18:59:50.193Z",
+    "collectedAt": "2026-08-18T00:19:22.862Z",
     "verifiedAt": null
    }
   },
@@ -3852,7 +4541,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2229",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T18:59:50.193Z",
+    "collectedAt": "2026-08-18T00:19:22.862Z",
     "verifiedAt": null
    }
   },
@@ -3875,7 +4564,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2233",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T18:59:50.193Z",
+    "collectedAt": "2026-08-18T00:19:22.862Z",
     "verifiedAt": null
    }
   },
@@ -3898,7 +4587,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2239",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T18:59:50.193Z",
+    "collectedAt": "2026-08-18T00:19:22.862Z",
     "verifiedAt": null
    }
   },
@@ -3921,7 +4610,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2240",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T18:59:50.193Z",
+    "collectedAt": "2026-08-18T00:19:22.862Z",
     "verifiedAt": null
    }
   },
@@ -3944,7 +4633,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2236",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T18:59:50.193Z",
+    "collectedAt": "2026-08-18T00:19:22.862Z",
     "verifiedAt": null
    }
   },
@@ -3967,7 +4656,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2241",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T18:59:50.193Z",
+    "collectedAt": "2026-08-18T00:19:22.862Z",
     "verifiedAt": null
    }
   },
@@ -3990,7 +4679,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2242",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T18:59:50.193Z",
+    "collectedAt": "2026-08-18T00:19:22.862Z",
     "verifiedAt": null
    }
   },
@@ -4013,7 +4702,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2243",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T18:59:50.193Z",
+    "collectedAt": "2026-08-18T00:19:22.862Z",
     "verifiedAt": null
    }
   },
@@ -4036,7 +4725,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2244",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T18:59:50.193Z",
+    "collectedAt": "2026-08-18T00:19:22.862Z",
     "verifiedAt": null
    }
   },
@@ -4059,7 +4748,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2245",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T18:59:50.193Z",
+    "collectedAt": "2026-08-18T00:19:22.862Z",
     "verifiedAt": null
    }
   },
@@ -4082,7 +4771,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2246",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T18:59:50.193Z",
+    "collectedAt": "2026-08-18T00:19:22.862Z",
     "verifiedAt": null
    }
   },
@@ -4105,7 +4794,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2247",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T18:59:50.193Z",
+    "collectedAt": "2026-08-18T00:19:22.862Z",
     "verifiedAt": null
    }
   },
@@ -4128,7 +4817,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2248",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T18:59:50.193Z",
+    "collectedAt": "2026-08-18T00:19:22.862Z",
     "verifiedAt": null
    }
   },
@@ -4151,7 +4840,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2249",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T18:59:50.193Z",
+    "collectedAt": "2026-08-18T00:19:22.862Z",
     "verifiedAt": null
    }
   },
@@ -4174,7 +4863,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2250",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-17T18:59:50.193Z",
+    "collectedAt": "2026-08-18T00:19:22.862Z",
     "verifiedAt": null
    }
   },
@@ -4197,7 +4886,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-17T18:59:49.121Z",
+    "collectedAt": "2026-08-18T00:19:22.568Z",
     "verifiedAt": null
    }
   },
@@ -4221,7 +4910,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-17T18:59:49.121Z",
+    "collectedAt": "2026-08-18T00:19:22.568Z",
     "verifiedAt": null
    }
   },
@@ -4245,7 +4934,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-17T18:59:49.121Z",
+    "collectedAt": "2026-08-18T00:19:22.568Z",
     "verifiedAt": null
    }
   },
@@ -4269,7 +4958,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-17T18:59:49.121Z",
+    "collectedAt": "2026-08-18T00:19:22.568Z",
     "verifiedAt": null
    }
   },
@@ -4293,7 +4982,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-17T18:59:49.121Z",
+    "collectedAt": "2026-08-18T00:19:22.568Z",
     "verifiedAt": null
    }
   },
@@ -4317,7 +5006,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-17T18:59:49.121Z",
+    "collectedAt": "2026-08-18T00:19:22.568Z",
     "verifiedAt": null
    }
   },
@@ -4341,7 +5030,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-17T18:59:49.121Z",
+    "collectedAt": "2026-08-18T00:19:22.568Z",
     "verifiedAt": null
    }
   },
@@ -4365,7 +5054,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-17T18:59:49.121Z",
+    "collectedAt": "2026-08-18T00:19:22.568Z",
     "verifiedAt": null
    }
   },
@@ -4389,7 +5078,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-17T18:59:49.121Z",
+    "collectedAt": "2026-08-18T00:19:22.568Z",
     "verifiedAt": null
    }
   },
@@ -4413,7 +5102,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-17T18:59:49.121Z",
+    "collectedAt": "2026-08-18T00:19:22.568Z",
     "verifiedAt": null
    }
   },
@@ -4437,7 +5126,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-17T18:59:49.121Z",
+    "collectedAt": "2026-08-18T00:19:22.568Z",
     "verifiedAt": null
    }
   },
@@ -4461,7 +5150,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-17T18:59:49.121Z",
+    "collectedAt": "2026-08-18T00:19:22.568Z",
     "verifiedAt": null
    }
   },
@@ -4485,7 +5174,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-17T18:59:49.121Z",
+    "collectedAt": "2026-08-18T00:19:22.568Z",
     "verifiedAt": null
    }
   },
@@ -4509,7 +5198,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-17T18:59:49.121Z",
+    "collectedAt": "2026-08-18T00:19:22.568Z",
     "verifiedAt": null
    }
   },
@@ -4533,7 +5222,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-17T18:59:49.121Z",
+    "collectedAt": "2026-08-18T00:19:22.568Z",
     "verifiedAt": null
    }
   },
@@ -4556,7 +5245,7 @@
    "provenance": {
     "sourceUrl": "https://www.mhrd.org/administration/board-of-education/boe-meetings",
     "sourceOrg": "Morris Hills Regional District Board of Education",
-    "collectedAt": "2026-08-17T18:59:52.251Z",
+    "collectedAt": "2026-08-18T00:19:25.013Z",
     "verifiedAt": null
    }
   },
@@ -4575,11 +5264,11 @@
    },
    "agendaUrl": "https://resources.finalsite.net/images/v1786724489/mhrdorg/yxozzjyygnrh7qhqmymm/08172026AGENDAFINAL.pdf",
    "jurisdiction": "Morris Hills Regional School District, NJ",
-   "status": "SCHEDULED",
+   "status": "CONCLUDED",
    "provenance": {
     "sourceUrl": "https://www.mhrd.org/administration/board-of-education/boe-meetings",
     "sourceOrg": "Morris Hills Regional District Board of Education",
-    "collectedAt": "2026-08-17T18:59:52.251Z",
+    "collectedAt": "2026-08-18T00:19:25.013Z",
     "verifiedAt": null
    }
   },
@@ -4602,7 +5291,7 @@
    "provenance": {
     "sourceUrl": "https://www.mhrd.org/administration/board-of-education/boe-meetings",
     "sourceOrg": "Morris Hills Regional District Board of Education",
-    "collectedAt": "2026-08-17T18:59:52.251Z",
+    "collectedAt": "2026-08-18T00:19:25.013Z",
     "verifiedAt": null
    }
   },
@@ -4625,12 +5314,8 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-17T14:08:05.200Z",
+    "collectedAt": "2026-08-18T00:19:25.961Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-17T14:08:05.200Z"
    }
   },
   {
@@ -4652,12 +5337,8 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-17T14:08:05.200Z",
+    "collectedAt": "2026-08-18T00:19:25.961Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-17T14:08:05.200Z"
    }
   },
   {
@@ -4679,12 +5360,8 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-17T14:08:05.200Z",
+    "collectedAt": "2026-08-18T00:19:25.961Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-17T14:08:05.200Z"
    }
   },
   {
@@ -4706,12 +5383,8 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-17T14:08:05.200Z",
+    "collectedAt": "2026-08-18T00:19:25.961Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-17T14:08:05.200Z"
    }
   },
   {
@@ -4733,12 +5406,8 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-17T14:08:05.200Z",
+    "collectedAt": "2026-08-18T00:19:25.961Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-17T14:08:05.200Z"
    }
   },
   {
@@ -4760,12 +5429,8 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-17T14:08:05.200Z",
+    "collectedAt": "2026-08-18T00:19:25.961Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-17T14:08:05.200Z"
    }
   },
   {
@@ -4787,12 +5452,8 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-17T14:08:05.200Z",
+    "collectedAt": "2026-08-18T00:19:25.961Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-17T14:08:05.200Z"
    }
   },
   {
@@ -4814,12 +5475,8 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-17T14:08:05.200Z",
+    "collectedAt": "2026-08-18T00:19:25.961Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-17T14:08:05.200Z"
    }
   },
   {
@@ -4841,12 +5498,8 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-17T14:08:05.200Z",
+    "collectedAt": "2026-08-18T00:19:25.961Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-17T14:08:05.200Z"
    }
   },
   {
@@ -4868,12 +5521,8 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-17T14:08:05.200Z",
+    "collectedAt": "2026-08-18T00:19:25.961Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-17T14:08:05.200Z"
    }
   },
   {
@@ -4895,12 +5544,8 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-17T14:08:05.200Z",
+    "collectedAt": "2026-08-18T00:19:25.961Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-17T14:08:05.200Z"
    }
   },
   {
@@ -4922,12 +5567,8 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-17T14:08:05.200Z",
+    "collectedAt": "2026-08-18T00:19:25.961Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-17T14:08:05.200Z"
    }
   },
   {
@@ -4949,12 +5590,8 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-17T14:08:05.200Z",
+    "collectedAt": "2026-08-18T00:19:25.961Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-17T14:08:05.200Z"
    }
   },
   {
@@ -4976,12 +5613,8 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-17T14:08:05.200Z",
+    "collectedAt": "2026-08-18T00:19:25.961Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-17T14:08:05.200Z"
    }
   },
   {
@@ -5003,39 +5636,8 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-17T14:08:05.200Z",
+    "collectedAt": "2026-08-18T00:19:25.961Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-17T14:08:05.200Z"
-   }
-  },
-  {
-   "id": "schedulepage:newbury-planning-board:2026-05-19",
-   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
-   "bodyName": "Planning Board",
-   "title": "Planning Board",
-   "startsAt": "2026-05-19T19:00:00-04:00",
-   "timeZone": "America/New_York",
-   "location": {
-    "name": "Newbury Town Office",
-    "address": "937 Route 103, Newbury, NH 03255",
-    "lat": 43.321682,
-    "lng": -72.03705
-   },
-   "agendaUrl": "https://www.newbury.nh.gov/planning-board/agenda/agenda-13",
-   "jurisdiction": "Newbury, NH",
-   "status": "CONCLUDED",
-   "provenance": {
-    "sourceUrl": "https://www.newbury.nh.gov/planning-board",
-    "sourceOrg": "Newbury Planning Board",
-    "collectedAt": "2026-08-17T14:08:05.811Z",
-    "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-17T14:08:05.811Z"
    }
   },
   {
@@ -5057,12 +5659,8 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/planning-board",
     "sourceOrg": "Newbury Planning Board",
-    "collectedAt": "2026-08-17T14:08:05.811Z",
+    "collectedAt": "2026-08-18T00:19:26.459Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-17T14:08:05.811Z"
    }
   },
   {
@@ -5084,12 +5682,8 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/planning-board",
     "sourceOrg": "Newbury Planning Board",
-    "collectedAt": "2026-08-17T14:08:05.811Z",
+    "collectedAt": "2026-08-18T00:19:26.459Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-17T14:08:05.811Z"
    }
   },
   {
@@ -5111,12 +5705,8 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/planning-board",
     "sourceOrg": "Newbury Planning Board",
-    "collectedAt": "2026-08-17T14:08:05.811Z",
+    "collectedAt": "2026-08-18T00:19:26.459Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-17T14:08:05.811Z"
    }
   },
   {
@@ -5138,12 +5728,8 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/conservation-commission",
     "sourceOrg": "Newbury Conservation Commission",
-    "collectedAt": "2026-08-17T14:08:06.951Z",
+    "collectedAt": "2026-08-18T00:19:26.805Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-17T14:08:06.951Z"
    }
   },
   {
@@ -5165,12 +5751,8 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/conservation-commission",
     "sourceOrg": "Newbury Conservation Commission",
-    "collectedAt": "2026-08-17T14:08:06.951Z",
+    "collectedAt": "2026-08-18T00:19:26.805Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-17T14:08:06.951Z"
    }
   },
   {
@@ -5192,12 +5774,8 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/conservation-commission",
     "sourceOrg": "Newbury Conservation Commission",
-    "collectedAt": "2026-08-17T14:08:06.951Z",
+    "collectedAt": "2026-08-18T00:19:26.805Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-17T14:08:06.951Z"
    }
   },
   {
@@ -5219,12 +5797,8 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/conservation-commission",
     "sourceOrg": "Newbury Conservation Commission",
-    "collectedAt": "2026-08-17T14:08:06.951Z",
+    "collectedAt": "2026-08-18T00:19:26.805Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-17T14:08:06.951Z"
    }
   },
   {
@@ -5246,12 +5820,8 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/conservation-commission",
     "sourceOrg": "Newbury Conservation Commission",
-    "collectedAt": "2026-08-17T14:08:06.951Z",
+    "collectedAt": "2026-08-18T00:19:26.805Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-17T14:08:06.951Z"
    }
   },
   {
@@ -5273,12 +5843,8 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/zoning-board-adjustment",
     "sourceOrg": "Newbury Zoning Board of Adjustment",
-    "collectedAt": "2026-08-17T14:08:07.512Z",
+    "collectedAt": "2026-08-18T00:19:27.321Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-17T14:08:07.512Z"
    }
   }
  ],
@@ -5428,6 +5994,22 @@
    "extractionNote": null
   },
   {
+   "id": "legistar:pima:1851@786834dc255349a657c34a5e1c3f50d3a2d44b29d776d8256569dc81063db86c",
+   "meetingId": "legistar:pima:1851",
+   "ocdId": "ocd-division/country:us/state:az/county:pima",
+   "documentUrl": "https://legistar.granicus.com/pima/meetings/2026/8/1851_A_Board_of_Supervisors_26-08-03_Online_Agenda.pdf",
+   "contentHash": "786834dc255349a657c34a5e1c3f50d3a2d44b29d776d8256569dc81063db86c",
+   "retrievedAt": "2026-08-18T00:19:28.052Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://legistar.granicus.com/pima/meetings/2026/8/1851_A_Board_of_Supervisors_26-08-03_Online_Agenda.pdf",
+   "sourceOrg": "Pima County Clerk of the Board",
+   "collectedAt": "2026-08-18T00:19:28.052Z",
+   "verifiedAt": null,
+   "text": "Board of Supervisors Pima County Meeting Agenda MEETING LOCATION Virtual (Television viewing available at 130 W. Congress Street 1st Floor Tucson, AZ 85701) Public Access to Lobby at 12:40 p.m. Virtual Meeting 1:00 PM Monday, August 3, 2026 Special Meeting MEETING NOTE: This meeting will be conducted remotely through technological means, as permitted by Arizona law. Subject to technological availability, individuals interested in viewing or listening to the meeting can email COB_mail@pima.gov for instructions on how to remotely access the meeting. The Hearing Room will be closed to the public, but the following options are available for public viewing. The meeting can be streamed via the following links: BOS Agenda July 28, 2026 (http://pima.granicus.com/ViewPublisher.php?view_id=3), on YouTube (https://www.youtube.com/c/PimaCountyArizona/), or via Cox Cable Channel 96. Television viewing will be available in the lobby at 130 West Congress, 1st Floor and citizens can submit comments regarding the agenda item to COB_mail@pima.gov. 1. ROLL CALL 2. PLEDGE OF ALLEGIANCE 3. LAND ACKNOWLEDGEMENT STATEMENT ELECTIONS 4. Canvass Pursuant to A.R.S. §16-642(A), canvass of the election results for the July 21, 2026, Primary Election. EL_BOSAIR_PrimaryElectionCanvass EL_PrimaryElectionCanvass_7-30-26 Attachments: Page 1 Pima County Printed on 7/30/2026\nAugust 3, 2026 Board of Supervisors Meeting Agenda 5. ADJOURNMENT POSTED: 130 W. Congress Street, 1st Floor Tucson, AZ 85701 Pima County Homepage: www.pima.gov DATE/TIME POSTED: 7/28/26 @ 3:00 p.m. DATE/TIME REPOSTED (additional attachments only): 7/30/26 @ 5:30 p.m. Page 2 Pima County Printed on 7/30/2026",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
    "id": "legistar:pima:1854@5f3fb7b118afc36f17729be79645e45d9885fb68aa44e014ac1d9988bc1d79f5",
    "meetingId": "legistar:pima:1854",
    "ocdId": "ocd-division/country:us/state:az/county:pima",
@@ -5444,6 +6026,22 @@
    "extractionNote": null
   },
   {
+   "id": "legistar:pima:1855@34f2619cfce27cca1b8740dadd98f1ae7c2e14e1816f54030aa7273813a7a0fd",
+   "meetingId": "legistar:pima:1855",
+   "ocdId": "ocd-division/country:us/state:az/county:pima",
+   "documentUrl": "https://legistar.granicus.com/pima/meetings/2026/6/1855_A_Board_of_Supervisors_26-06-01_Online_Agenda.pdf",
+   "contentHash": "34f2619cfce27cca1b8740dadd98f1ae7c2e14e1816f54030aa7273813a7a0fd",
+   "retrievedAt": "2026-08-18T00:19:29.166Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://legistar.granicus.com/pima/meetings/2026/6/1855_A_Board_of_Supervisors_26-06-01_Online_Agenda.pdf",
+   "sourceOrg": "Pima County Clerk of the Board",
+   "collectedAt": "2026-08-18T00:19:29.166Z",
+   "verifiedAt": null,
+   "text": "Board of Supervisors Pima County Meeting Agenda MEETING LOCATION Virtual (Television viewing available at 130 W. Congress Street 1st Floor Tucson, AZ 85701 Public Access to Lobby at 3:40 p.m. Virtual Meeting 4:00 PM Monday, June 1, 2026 Special Meeting MEETING NOTE: This meeting will be conducted remotely through technological means, as permitted by Arizona law. Subject to technological availability, individuals interested in viewing or listening to the meeting can email COB_mail@pima.gov for instructions on how to remotely access the meeting. The Hearing Room will be closed to the public, but the following options are available for public viewing. The meeting can be streamed via the following links: BOS Agenda June 1, 2026 (http://pima.granicus.com/ViewPublisher.php?view_id=3), on YouTube (https://www.youtube.com/c/PimaCountyArizona/), or via Cox Cable Channel 96. Television viewing will be available in the lobby at 130 West Congress, 1st Floor. 1. ROLL CALL 2. PLEDGE OF ALLEGIANCE 3. LAND ACKNOWLEDGEMENT STATEMENT EXECUTIVE SESSION (Clerk's Note: In addition to the executive session listed below, pursuant to A.R.S. §38-431.03(A)(3) the Board of Supervisors, or the Board sitting as other boards, may vote to go into executive session for the purpose of obtaining legal advice from its counsel with respect to any item listed on this agenda or any addendum thereto.) 4. Pursuant to A.R.S. §38-431.03(A)(3) and (4), for legal advice and direction regarding the Affordable Care Act and potential legal action up to and including initiating/joining a lawsuit against the federal government. PCA_ExecSession_ACA Attachments: COUNTY ATTORNEY 5. Consideration of Legal Action Related to the Affordable Care Act Discussion/Direction/Action regarding the Affordable Care Act and potential legal action up to and including initiating/joining a lawsuit against the federal government. PCA_ConsiderationofLegalAction_ACA Attachments: Page 1 Pima County Printed on 5/27/2026\nJune 1, 2026 Board of Supervisors Meeting Agenda 6. ADJOURNMENT POSTED: 130 W. Congress Street, 1st Floor Tucson, AZ 85701 Pima County Homepage: www.pima.gov DATE/TIME POSTED: 5/27/26 @ 4:00 p.m. Page 2 Pima County Printed on 5/27/2026",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
    "id": "legistar:pima:1858@d7667f58f8512128d8e621aaf6957dfcd46a5b1315f1dab354c81b600d1d2c51",
    "meetingId": "legistar:pima:1858",
    "ocdId": "ocd-division/country:us/state:az/county:pima",
@@ -5456,6 +6054,22 @@
    "collectedAt": "2026-08-15T22:49:27.329Z",
    "verifiedAt": null,
    "text": "Board of Supervisors Pima County Meeting Agenda MEETING LOCATION Administration Bldg - East 130 W. Congress Street 1st Floor Tucson, AZ 85701 Public Access to Hearing Room at 2:40 p.m. Board of Supervisors' Hearing Room 3:00 PM Tuesday, June 23, 2026 Study Session PIMA COUNTY BOARD OF SUPERVISORS Jennifer Allen, Chair, District 3 Dr. Matt Heinz, Vice Chair, District 2 Rex Scott, Member, District 1 Steve Christy, Member, District 4 Andrés Cano, Member, District 5 AGENDA/ADDENDUM AND BROADCAST INFORMATION At least 24 hours before each scheduled meeting, the agenda/addendum is available online at www.pima.gov and in the Clerk of the Board’s Office, 130 W. Congress Street, 1st Floor, Tucson, AZ 85701, Mon-Fri, 8am to 5pm. Cable Channels: Cox 96 Webcast: www.pima.gov PUBLIC COMMENTS Written comments to the Board of Supervisors regarding the agenda items can be submitted to COB_mail@pima.gov. All comments will be provided to the Board of Supervisors. HEARING ROOM NOTICE Law permits that a video and/or audio recording of all or part of this meeting may be made if doing so does not interfere with the conduct of the meeting. Pima County has no control over the use and distribution of any such recordings. In addition to the official meeting proceedings, these recordings may include images of and comments made by the public prior to the start, during a recess and after adjournment of the meeting, and may be posted on social media or other internet sites. ACCESSIBILITY The Board Hearing Room is wheelchair and handicapped accessible. Any person who is in need of special services (e.g., assistive listening device, Braille or large print agenda material, signer for hearing impaired, accessible parking, etc.) due to any disability will be accommodated. Please contact the Clerk of the Board at (520) 724-8449 for these services at least three (3) business days prior to the Board Meeting. Page 1 Pima County Printed on 6/22/2026\nJune 23, 2026 Board of Supervisors Meeting Agenda Clerk's Note: Members of the Pima County Board of Supervisors will attend either in person or by telephone, video or internet conferencing. The meeting can be streamed via the following links: BOS Agenda June 23, 2026 (http://pima.granicus.com/ViewPublisher.php?view_id=3), on YouTube (https://www.youtube.com/c/PimaCountyArizona/), or via Cox Cable Channel 96. Television viewing will be available in the lobby at 130 West Congress, 1st Floor. 1. ROLL CALL 2. AGENDA ADJUSTMENTS EXECUTIVE SESSION (Clerk's Note: In addition to the executive session listed below, pursuant to A.R.S. §38-431.03(A)(3) the Board of Supervisors, or the Board sitting as other boards, may vote to go into executive session for the purpose of obtaining legal advice from its counsel with respect to any item listed on this agenda or any addendum thereto.) 3. Pursuant to A.R.S. §38-431.03(A)(3) and (4), for legal advice and direction regarding the Memorandum of Understanding (MOU) between American Federation of State, County and Municipal Employees (AFSCME) Arizona Local 449 and Pima County. PCA_ExecSession-MOUbtwAFSCME Attachments: 4. ADJOURNMENT POSTED: 130 W. Congress Street, 1st Floor Tucson, AZ 85701 Pima County Homepage: www.pima.gov DATE/TIME POSTED: 6/17/26 @ 3:00 p.m. DATE/TIME REPOSTED (combined Agenda/Addendum): 6/22/26 @ 5:00 p.m. Page 2 Pima County Printed on 6/22/2026\nJune 23, 2026 Board of Supervisors Meeting Agenda ADDENDUM 1 EXECUTIVE SESSION 1. Pursuant to A.R.S. §38-431.03(A)(3) and (4), for legal advice and direction regarding potential legal action in Stone v. Pima County , up to and including petitioning the Supreme Court for review. PCA_ExecSession-Stone Attachments: 2. Pursuant to A.R.S. §38-431.03(A)(3) and (4), for legal advice and direction regarding potential litigation related to A.R.S. §13-4296 (Erroneous Convictions). PCA_ExecSession-PotentialLitigationARS13-4296 Attachments: 3. Pursuant to A.R.S. §38-431.03(A)(3) and (4), for legal advice and direction regarding release of the Attorney-Client Privileged Memorandum regarding Notices of Property Correction. PCA_ExecSession-Atty-ClientPrivilegeMemoNOPC Attachments: POSTED: 1st Floor, 130 W. Congress Street, Tucson, AZ 85701 Pima County Homepage: www.pima.gov DATE/TIME POSTED: 6/19/26 @ 11:45 a.m. Page 3 Pima County Printed on 6/22/2026",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "legistar:pima:1864@24e7333f68656e848cd0dab938bd082ccb386e32b2e3c7ec85a815cfe1adb16a",
+   "meetingId": "legistar:pima:1864",
+   "ocdId": "ocd-division/country:us/state:az/county:pima",
+   "documentUrl": "https://legistar.granicus.com/pima/meetings/2026/8/1864_A_Board_of_Supervisors_26-08-17_Online_Agenda.pdf",
+   "contentHash": "24e7333f68656e848cd0dab938bd082ccb386e32b2e3c7ec85a815cfe1adb16a",
+   "retrievedAt": "2026-08-18T00:19:29.392Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://legistar.granicus.com/pima/meetings/2026/8/1864_A_Board_of_Supervisors_26-08-17_Online_Agenda.pdf",
+   "sourceOrg": "Pima County Clerk of the Board",
+   "collectedAt": "2026-08-18T00:19:29.392Z",
+   "verifiedAt": null,
+   "text": "Board of Supervisors Pima County Meeting Agenda MEETING LOCATION Virtual (Television viewing available at 130 W. Congress Street 1st Floor Tucson, AZ 85701) Public Access to Lobby at 12:40 p.m. Virtual Meeting 1:00 PM Monday, August 17, 2026 Special Meeting MEETING NOTE: This meeting will be conducted remotely through technological means, as permitted by Arizona law. Subject to technological availability, individuals interested in viewing or listening to the meeting can email COB_mail@pima.gov for instructions on how to remotely access the meeting. The Hearing Room will be closed to the public, but the following options are available for public viewing. The meeting can be streamed via the following links: BOS Agenda August 17, 2026 (http://pima.granicus.com/ViewPublisher.php?view_id=3), on YouTube (https://www.youtube.com/c/PimaCountyArizona/), or via Cox Cable Channel 96. Television viewing will be available in the lobby at 130 West Congress, 1st Floor and citizens can submit comments regarding the agenda items to COB_mail@pima.gov. 1. ROLL CALL 2. PLEDGE OF ALLEGIANCE 3. LAND ACKNOWLEDGEMENT STATEMENT 4. AGENDA ADJUSTMENTS *** HEARINGS *** Individuals wishing to address the Board on a Public Hearing item, but wish to participate remotely, can contact the Clerk of the Board's Office at 520-724-8449, to obtain remote access information. BOARD OF SUPERVISORS 5. Hearing - Tax Levy Resolution RESOLUTION NO. 2026 - 43 , of the Board of Supervisors, for the levy of taxes for Fiscal Year 2026/2027. Page 1 Pima County Printed on 8/11/2026\nAugust 17, 2026 Board of Supervisors Meeting Agenda BOS_ResoTaxLevy Attachments: 6. Hearing - Tax Collection Resolution RESOLUTION NO. 2026 - 44 , of the Board of Supervisors, authorizing the delivery of tax statements and the collection of the 2026 taxes. BOS_ResoTaxCollection Attachments: * * * 7. ADJOURNMENT POSTED: 130 W. Congress Street, 1st Floor Tucson, AZ 85701 Pima County Homepage: www.pima.gov DATE/TIME POSTED: 8/11/26 @ 3:00 p.m. Page 2 Pima County Printed on 8/11/2026",
    "extraction": "pdf",
    "extractionNote": null
   },
@@ -6244,6 +6858,38 @@
    "extractionNote": null
   },
   {
+   "id": "diligent:tusd1:495@a4e463c75cbcea1d716697766c7b8d40d81435ccacdd371c0fdddeca6c394e2c",
+   "meetingId": "diligent:tusd1:495",
+   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+   "documentUrl": "https://govboard.tusd1.org/",
+   "contentHash": "a4e463c75cbcea1d716697766c7b8d40d81435ccacdd371c0fdddeca6c394e2c",
+   "retrievedAt": "2026-08-18T00:19:30.872Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://govboard.tusd1.org/",
+   "sourceOrg": "Tucson Unified School District Governing Board",
+   "collectedAt": "2026-08-18T00:19:30.872Z",
+   "verifiedAt": null,
+   "text": "Tucson Unified Governing Board Next Meeting View the Governing Board Meeting Live. Alternative Education Advisory Committee Meeting 8/17/2026 6:00pm - 8:00pm × Alternative Education Advisory Committee Meeting Date & Time: 8/17/2026 6:00pm - 8:00pm Committee meetings are held via Zoom. Please see meeting notice on the Alternative Education Advisory Committee website for the Zoom link, website address is: https://govboard.tusd1.org/alternative-education-advisory-committee . All meeting notices, agendas, minutes, actions, recordings, and other resources are available on Diligent Community . For additional information visit the Alternative Education Advisory Committee website . Close Board Members Dr. Ravi Shah Email Dr. Ravi Shah Board President Term expires: December 31, 2028 Natalie Luna Rose Email Natalie Luna Rose Board Clerk Term expires: December 31, 2028 Jennifer Eckstrom Email Jennifer Eckstrom Term expires: December 31, 2026 Val Romero Email Val Romero Term Expires: December 31, 2026 Sadie Shaw Email Sadie Shaw Term expires: December 31, 2028 Current Members' Bios Members: 1867-Present (PDF) Contact the Board Email Governing Board ( [email protected] ) Phone: (520) 225-6070 FAX: (520) 798-8767 Policies for Review: When the Governing Board is soliciting feedback on policies proposed for elimination, revision, and adoption, please click here to: Share your feedback Board Meeting The Governing Board will hold a Special Meeting on Tuesday, August 25, 2026 with Executive Session beginning at 4:30 p.m. and the Public meeting scheduled to begin at 5:30 p.m. at the Duffy Community Center - Multipurpose Room, 5145 E. Fifth Street, Tucson, AZ 85711. There will be a Public Hearing at the August 25th meeting for the Revision of Instructional Time Model (ITM) for Palo Verde High Magnet School Effective for the 2026-2027 School Year. Public access for each meeting will begin 15 minutes prior to the vote to go into Executive Session. Meeting notices are posted outside the front door at the TUSD District Office at 1010 E. Tenth Street, Tucson, AZ 85719. Call to the Audience The following procedures related to the Call to the Audience portion of Board meetings will be observed: Members of the public who wish to address the Board shall complete a Request to Address Board form and submit electronically to the Board office by noon the day of the meeting or physically to Board Staff at the start of the meeting before the close of Call to the Audience. Submission must include name of speaker, topic of comments and should indicate which agenda item your comments relate to. Submission must indicate whether individuals will address the Board in person or will submit written comments to be read into the record (email written comments to [email protected] ) by noon the day of the meeting. The complete rules for Call to the Audience are located in Governing Board Policy BEDH - Public Participation at Board Meetings, Policy-Code-BEDH (tusd1.org) . Se observar&aacute;n los siguientes procedimientos relacionados con la porci&oacute;n del Llamado a la Audiencia: Los miembros del p&uacute;blico que deseen abordar a la Mesa Directiva deben llenar la forma Petici&oacute;n para Dirigirse a La Mesa Directiva y someta esta forma electronicamente a la oficina de la Mesa Directiva para el mediodia el dia de la junta, o fisicamente al personal de la Mesa Directiva en la reuni&oacute;n en cualquier momento antes del cierre del Llamado a la Audiencia. Debe incluir su nombre, tema de los comentarios y debe incluir cu&aacute;l asunto de la agenda se relacionan sus comentarios. Debe indicar si desea dirigirse a la Mesa Directiva en persona o someter sus comentarios escritos para ser leidos (comentarios escritos pueden ser eviados por correo electr&oacute;nico al [email protected] ) para el mediodia del dia de la junta. Las reglas completes para la Llamado a la Audiencia pueden encontrar en la Pol&iacute;tica de la Mesa Directiva BEDH &ndash; Public Participation at Board Meetings, Policy-Code-BEDH (tusd1.org) . Meeting Materials Beginning January 13, 2026, Tucson Unified will be using Diligent Community to provide easy access to support materials, greater efficiency for the district, and increased transparency. To access agenda items and support materials go to Diligent Community . Recordings Audio-video recordings are available after the meetings on Diligent Community just choose the meeting you wish to view and then select video. Vacancies Events with 3 or More Members Impact Tucson Community and Family Resource Fair - July 25, 2026 Proclamations Resolutions National School Counseling Week Proclamation - February 2-6, 2026 Career & Technical Education (CTE) Month Proclamation - February 2026 Purchasing Month Proclamation - March 2026 Social Worker Month Proclamation - March 2026 Live Meeting Videos Governing Board meetings will be available here when meetings are in session. On district Windows devices, students and staff may find that these videos on YouTube are blocked. If so, please log into Google with your district credentials . Error Message: For more details and instructions, please visit our TS Article on YouTube Videos (Sharepoint) . Thank you for your patience, as we work to resolve this.",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "diligent:tusd1:479@74259bf54a6e7739fc3b1a8f502f11d7c61e795da7c58f21a4e993e8c6733b8d",
+   "meetingId": "diligent:tusd1:479",
+   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+   "documentUrl": "https://govboard.tusd1.org/",
+   "contentHash": "74259bf54a6e7739fc3b1a8f502f11d7c61e795da7c58f21a4e993e8c6733b8d",
+   "retrievedAt": "2026-08-18T00:19:31.537Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://govboard.tusd1.org/",
+   "sourceOrg": "Tucson Unified School District Governing Board",
+   "collectedAt": "2026-08-18T00:19:31.537Z",
+   "verifiedAt": null,
+   "text": "Tucson Unified Governing Board Next Meeting View the Governing Board Meeting Live. Alternative Education Advisory Committee Meeting 8/17/2026 6:00pm - 8:00pm × Alternative Education Advisory Committee Meeting Date & Time: 8/17/2026 6:00pm - 8:00pm Committee meetings are held via Zoom. Please see meeting notice on the Alternative Education Advisory Committee website for the Zoom link, website address is: https://govboard.tusd1.org/alternative-education-advisory-committee . All meeting notices, agendas, minutes, actions, recordings, and other resources are available on Diligent Community . For additional information visit the Alternative Education Advisory Committee website . Close Board Members Dr. Ravi Shah Email Dr. Ravi Shah Board President Term expires: December 31, 2028 Natalie Luna Rose Email Natalie Luna Rose Board Clerk Term expires: December 31, 2028 Jennifer Eckstrom Email Jennifer Eckstrom Term expires: December 31, 2026 Val Romero Email Val Romero Term Expires: December 31, 2026 Sadie Shaw Email Sadie Shaw Term expires: December 31, 2028 Current Members' Bios Members: 1867-Present (PDF) Contact the Board Email Governing Board ( [email protected] ) Phone: (520) 225-6070 FAX: (520) 798-8767 Policies for Review: When the Governing Board is soliciting feedback on policies proposed for elimination, revision, and adoption, please click here to: Share your feedback Board Meeting The Governing Board will hold a Special Meeting on Tuesday, August 25, 2026 with Executive Session beginning at 4:30 p.m. and the Public meeting scheduled to begin at 5:30 p.m. at the Duffy Community Center - Multipurpose Room, 5145 E. Fifth Street, Tucson, AZ 85711. There will be a Public Hearing at the August 25th meeting for the Revision of Instructional Time Model (ITM) for Palo Verde High Magnet School Effective for the 2026-2027 School Year. Public access for each meeting will begin 15 minutes prior to the vote to go into Executive Session. Meeting notices are posted outside the front door at the TUSD District Office at 1010 E. Tenth Street, Tucson, AZ 85719. Call to the Audience The following procedures related to the Call to the Audience portion of Board meetings will be observed: Members of the public who wish to address the Board shall complete a Request to Address Board form and submit electronically to the Board office by noon the day of the meeting or physically to Board Staff at the start of the meeting before the close of Call to the Audience. Submission must include name of speaker, topic of comments and should indicate which agenda item your comments relate to. Submission must indicate whether individuals will address the Board in person or will submit written comments to be read into the record (email written comments to [email protected] ) by noon the day of the meeting. The complete rules for Call to the Audience are located in Governing Board Policy BEDH - Public Participation at Board Meetings, Policy-Code-BEDH (tusd1.org) . Se observar&aacute;n los siguientes procedimientos relacionados con la porci&oacute;n del Llamado a la Audiencia: Los miembros del p&uacute;blico que deseen abordar a la Mesa Directiva deben llenar la forma Petici&oacute;n para Dirigirse a La Mesa Directiva y someta esta forma electronicamente a la oficina de la Mesa Directiva para el mediodia el dia de la junta, o fisicamente al personal de la Mesa Directiva en la reuni&oacute;n en cualquier momento antes del cierre del Llamado a la Audiencia. Debe incluir su nombre, tema de los comentarios y debe incluir cu&aacute;l asunto de la agenda se relacionan sus comentarios. Debe indicar si desea dirigirse a la Mesa Directiva en persona o someter sus comentarios escritos para ser leidos (comentarios escritos pueden ser eviados por correo electr&oacute;nico al [email protected] ) para el mediodia del dia de la junta. Las reglas completes para la Llamado a la Audiencia pueden encontrar en la Pol&iacute;tica de la Mesa Directiva BEDH &ndash; Public Participation at Board Meetings, Policy-Code-BEDH (tusd1.org) . Meeting Materials Beginning January 13, 2026, Tucson Unified will be using Diligent Community to provide easy access to support materials, greater efficiency for the district, and increased transparency. To access agenda items and support materials go to Diligent Community . Recordings Audio-video recordings are available after the meetings on Diligent Community just choose the meeting you wish to view and then select video. Vacancies Events with 3 or More Members Impact Tucson Community and Family Resource Fair - July 25, 2026 Proclamations Resolutions National School Counseling Week Proclamation - February 2-6, 2026 Career & Technical Education (CTE) Month Proclamation - February 2026 Purchasing Month Proclamation - March 2026 Social Worker Month Proclamation - March 2026 Live Meeting Videos Governing Board meetings will be available here when meetings are in session. On district Windows devices, students and staff may find that these videos on YouTube are blocked. If so, please log into Google with your district credentials . Error Message: For more details and instructions, please visit our TS Article on YouTube Videos (Sharepoint) . Thank you for your patience, as we work to resolve this.",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
    "id": "diligent:tusd1:493@afbbca07a6910525e545c94156982a078aeed9f8e8e9ec31d48114c052457e58",
    "meetingId": "diligent:tusd1:493",
    "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
@@ -6272,6 +6918,22 @@
    "collectedAt": "2026-08-14T03:15:46.607Z",
    "verifiedAt": null,
    "text": "Tucson Unified Governing Board Next Meeting View the Governing Board Meeting Live. Governing Board Meeting 8/25/2026 4:30pm - 8:30pm &times; Governing Board Meeting Date & Time: 8/25/2026 4:30pm - 8:30pm Governing Board meetings are held at the Duffy Community Center, 5145 E. 5 th Street, 85711, in the Multipurpose Room. All meeting notices, agendas, minutes, actions, recordings, and other resources are available on Diligent Community . Audio-video recordings are available shortly after the meetings also on Diligent Community . Close Board Members Dr. Ravi Shah Email Dr. Ravi Shah Board President Term expires: December 31, 2028 Natalie Luna Rose Email Natalie Luna Rose Board Clerk Term expires: December 31, 2028 Jennifer Eckstrom Email Jennifer Eckstrom Term expires: December 31, 2026 Val Romero Email Val Romero Term Expires: December 31, 2026 Sadie Shaw Email Sadie Shaw Term expires: December 31, 2028 Current Members' Bios Members: 1867-Present (PDF) Contact the Board Email Governing Board ( [email&#160;protected] ) Phone: (520) 225-6070 FAX: (520) 798-8767 Policies for Review: When the Governing Board is soliciting feedback on policies proposed for elimination, revision, and adoption, please click here to: Share your feedback Board Meeting The Governing Board will hold a Special Meeting on Tuesday, August 25, 2026 with Executive Session beginning at 4:30 p.m. and the Public meeting scheduled to begin at 5:30 p.m. at the Duffy Community Center - Multipurpose Room, 5145 E. Fifth Street, Tucson, AZ 85711. There will be a Public Hearing at the August 25th meeting for the Revision of Instructional Time Model (ITM) for Palo Verde High Magnet School Effective for the 2026-2027 School Year. Public access for each meeting will begin 15 minutes prior to the vote to go into Executive Session. Meeting notices are posted outside the front door at the TUSD District Office at 1010 E. Tenth Street, Tucson, AZ 85719. Call to the Audience The following procedures related to the Call to the Audience portion of Board meetings will be observed: Members of the public who wish to address the Board shall complete a Request to Address Board form and submit electronically to the Board office by noon the day of the meeting or physically to Board Staff at the start of the meeting before the close of Call to the Audience. Submission must include name of speaker, topic of comments and should indicate which agenda item your comments relate to. Submission must indicate whether individuals will address the Board in person or will submit written comments to be read into the record (email written comments to [email&#160;protected] ) by noon the day of the meeting. The complete rules for Call to the Audience are located in Governing Board Policy BEDH - Public Participation at Board Meetings, Policy-Code-BEDH (tusd1.org) . Se observar&aacute;n los siguientes procedimientos relacionados con la porci&oacute;n del Llamado a la Audiencia: Los miembros del p&uacute;blico que deseen abordar a la Mesa Directiva deben llenar la forma Petici&oacute;n para Dirigirse a La Mesa Directiva y someta esta forma electronicamente a la oficina de la Mesa Directiva para el mediodia el dia de la junta, o fisicamente al personal de la Mesa Directiva en la reuni&oacute;n en cualquier momento antes del cierre del Llamado a la Audiencia. Debe incluir su nombre, tema de los comentarios y debe incluir cu&aacute;l asunto de la agenda se relacionan sus comentarios. Debe indicar si desea dirigirse a la Mesa Directiva en persona o someter sus comentarios escritos para ser leidos (comentarios escritos pueden ser eviados por correo electr&oacute;nico al [email&#160;protected] ) para el mediodia del dia de la junta. Las reglas completes para la Llamado a la Audiencia pueden encontrar en la Pol&iacute;tica de la Mesa Directiva BEDH &ndash; Public Participation at Board Meetings, Policy-Code-BEDH (tusd1.org) . Meeting Materials Beginning January 13, 2026, Tucson Unified will be using Diligent Community to provide easy access to support materials, greater efficiency for the district, and increased transparency. To access agenda items and support materials go to Diligent Community . Recordings Audio-video recordings are available after the meetings on Diligent Community just choose the meeting you wish to view and then select video. Vacancies Events with 3 or More Members Impact Tucson Community and Family Resource Fair - July 25, 2026 Proclamations Resolutions National School Counseling Week Proclamation - February 2-6, 2026 Career & Technical Education (CTE) Month Proclamation - February 2026 Purchasing Month Proclamation - March 2026 Social Worker Month Proclamation - March 2026 Live Meeting Videos Governing Board meetings will be available here when meetings are in session. August 11, 2026 Meeting Vote to Convene On district Windows devices, students and staff may find that these videos on YouTube are blocked. If so, please log into Google with your district credentials . Error Message: For more details and instructions, please visit our TS Article on YouTube Videos (Sharepoint) . Thank you for your patience, as we work to resolve this.",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "diligent:tusd1:494@1e0eeedd27628584aab07586e05ced6911231bb15fd13abb6de7d89fd25eef0f",
+   "meetingId": "diligent:tusd1:494",
+   "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+   "documentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=494",
+   "contentHash": "1e0eeedd27628584aab07586e05ced6911231bb15fd13abb6de7d89fd25eef0f",
+   "retrievedAt": "2026-08-18T00:19:32.411Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=494",
+   "sourceOrg": "Tucson Unified School District Governing Board",
+   "collectedAt": "2026-08-18T00:19:32.411Z",
+   "verifiedAt": null,
+   "text": "Tucson Unified School District - Meeting Information Skip Navigation Jump to SideBar Quick Menu Public site Sign in History, Tradition, Culture, and YOU! Your Javascript is turned off, without it, this site will not operate as intended. Home » Meeting Schedule » Meeting Information Welcome to Tucson Unified School District Home Calendar Meetings Search Share Alternative Education Advisory Committee Meeting Agenda The meeting will be available live for public viewing via Zoom Webinar using the link available on the Alternative Education Advisory Committee website, https://govboard.tusd1.org/alternative-education-advisory-committee. La reunión estará disponible en vivo para el público a través de un seminario web de Zoom. Puedes encontrar el enlace para acceder al seminario web en el sitio web de la Alternative Education Advisory Committee, https://govboard.tusd1.org/alternative-education-advisory-committee. -Names and details, including available support documents, may be obtained during regular business hours at the TUSD Governing Board Office. -Upon request, TUSD will provide a certified interpreter to interpret Alternative Education Advisory Committee meetings whenever possible. Please contact Translations/Interpretations Services at 520-225-4858 at least 72 hours prior to the event. Every effort will be made to honor requests for interpretation services made with less than 72 hours’ notice. -A petición previa, TUSD proporcionará un intérprete titulado para interpretar las reuniones del Comité de Asesoramiento para la Educación Alternativa cuando lo sea posible. Favor de comunicarse a los Servicios de Traducción e Interpretación al 520-225-4858 al menos de 72 horas antes del evento. Se hará todo lo posible por atender a todas las solicitudes de interpretación realizados con menos de 72 horas de aviso previo. -If authorized by a majority vote of the members of the Alternative Education Advisory Committee, any matter on the open meeting agenda may be discussed in executive session for the purpose of obtaining legal advice thereon, pursuant to A.R.S. 38-431.03 (A)(3). The executive session will be held immediately after the vote and will not be open to the public. -The order of items on this agenda may be modified during the meeting at the discretion of the Alternative Education Advisory Committee or upon a motion to amend the order of business which is approved by the Committee. Alternative Education Advisory Committee Members Aug 17 2026 Alternative Education Advisory Committee Meeting Agenda Jun 08 2026 Alternative Education Advisory Committee Meeting Agenda May 18 2026 Alternative Education Advisory Committee Meeting Agenda Apr 20 2026 Alternative Education Advisory Committee Meeting Agenda Mar 09 2026 Alternative Education Advisory Committee Meeting Agenda Feb 02 2026 Alternative Education Advisory Committee Meeting Agenda Jan 12 2026 Alternative Education Advisory Committee Nov 17 2025 AGENDA FOR ALTERNATIVE EDUCATION ADVISORY COMMITTEE Oct 20 2025 CANCELLED DUE TO LACK OF QUORUM - AGENDA FOR ALTERNATIVE EDUCATION ADVISORY COMMITTEE Aug 18 2025 AGENDA FOR ALTERNATIVE EDUCATION ADVISORY COMMITTEE Jun 16 2025 AGENDA FOR ALTERNATIVE EDUCATION ADVISORY COMMITTEE Apr 21 2025 AGENDA FOR ALTERNATIVE EDUCATION ADVISORY COMMITTEE Mar 17 2025 AGENDA FOR ALTERNATIVE EDUCATION ADVISORY COMMITTEE Feb 17 2025 AGENDA FOR ALTERNATIVE EDUCATION ADVISORY COMMITTEE Jan 13 2025 CANCELLED DUE TO LACK OF QUORUM - AGENDA FOR ALTERNATIVE EDUCATION ADVISORY COMMITTEE Nov 18 2024 AGENDA FOR ALTERNATIVE EDUCATION ADVISORY COMMITTEE Oct 21 2024 AGENDA FOR ALTERNATIVE EDUCATION ADVISORY COMMITTEE Sep 16 2024 AGENDA FOR ALTERNATIVE EDUCATION ADVISORY COMMITTEE Aug 19 2024 AGENDA FOR ALTERNATIVE EDUCATION ADVISORY COMMITTEE Jun 10 2024 AGENDA FOR ALTERNATIVE EDUCATION ADVISORY COMMITTEE Apr 15 2024 AGENDA FOR ALTERNATIVE EDUCATION ADVISORY COMMITTEE Time: Location: Private Version For: Public User Agenda Splitscreen Live Meeting Minutes Print Version Versions Signed Minutes Accessible Web Version Annotate Agenda Show Map Hide Map Board Application: -Select- Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals Members Alonzo Bailey Lindsay Brown Brieanna Chillious Paulette Muhammad Betts Putnam-Hidalgo Luke Skiba Felicia Chew © Diligent Community 2026 Tucson Unified School District User name Password Sign In Remember me next time. Forgot password?",
    "extraction": "html",
    "extractionNote": null
   },
@@ -7072,6 +7734,102 @@
    "collectedAt": "2026-08-17T18:59:55.644Z",
    "verifiedAt": null,
    "text": "COUNTY OF MERRIMACK 333 DANIEL WEBSTER HIGHWAY, SUITE 2 BOSCAWEN, NEW HAMPSHIRE 03303-2415 (603) 796-6800 FAX: (603) 796-6840 www.merrimackcounty.net COMMISSIONERS COUNTY ADMINISTRATOR ROSS L. CUNNINGHAM STUART D. TRACHY, Chair, Franklin DAVID M. LOVLIEN JR., Vice Chair, Pembroke STEPHEN SHURTLEFF, Clerk, Penacook May 5, 2026 PUBLIC NOTICE MERRIMACK COUNTY BOARD OF COMMISSIONERS The Merrimack County Board of Commissioners will hold a meeting on: Date: Monday, May 11, 2026 Time: 10:00 a.m. Location: 4 th Floor Conference Room McLeod Building 333 Daniel Webster Highway, Boscawen, NH 03303 This meeting is open to the public for the discussion of any matters that may come before the Board. BOARD OF COMMISSIONERS: • Stuart D. Trachy, Chair • David M. Lovlien Jr., Vice Chair • Stephen Shurtleff, Clerk Posted on: • Merrimack County Website – May 5, 2026 • Merrimack County Sheriff’s Office – May 5, 2026 Ross L. Cunningham County Administrator Special accommodations for individuals with disabilities are available upon request, in accordance with the Americans with Disabilities Act of 1990. Members of the public are welcome to attend. Please Note: This meeting is being recorded (audio and video). By participating, you consent to being recorded.",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "revize:merrimack:2026-05-26@f0ab219829d78e8f83d1655f3c2b923039be9c12d007bbfac46bd1cef4e45753",
+   "meetingId": "revize:merrimack:2026-05-26",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
+   "documentUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/BOC%20PACKET%205.26.26.pdf",
+   "contentHash": "f0ab219829d78e8f83d1655f3c2b923039be9c12d007bbfac46bd1cef4e45753",
+   "retrievedAt": "2026-08-18T00:08:30.566Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/BOC%20PACKET%205.26.26.pdf",
+   "sourceOrg": "Merrimack County Board of Commissioners",
+   "collectedAt": "2026-08-18T00:08:30.566Z",
+   "verifiedAt": null,
+   "text": "",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "revize:merrimack:2026-06-01@4092b284ebcd8756e6c0210af9be6cf37f7c694ecf5c05efe1d29a5193e70b69",
+   "meetingId": "revize:merrimack:2026-06-01",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
+   "documentUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/Public%20Notice%206.1.26.pdf",
+   "contentHash": "4092b284ebcd8756e6c0210af9be6cf37f7c694ecf5c05efe1d29a5193e70b69",
+   "retrievedAt": "2026-08-18T00:08:31.395Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/Public%20Notice%206.1.26.pdf",
+   "sourceOrg": "Merrimack County Board of Commissioners",
+   "collectedAt": "2026-08-18T00:08:31.395Z",
+   "verifiedAt": null,
+   "text": "COUNTY OF MERRIMACK 333 DANIEL WEBSTER HIGHWAY, SUITE 2 BOSCAWEN, NEW HAMPSHIRE 03303-2415 (603) 796-6800 FAX: (603) 796-6840 www.merrimackcounty.net COMMISSIONERS COUNTY ADMINISTRATOR ROSS L. CUNNINGHAM STUART D. TRACHY, Chair, Franklin DAVID M. LOVLIEN JR., Vice Chair, Pembroke STEPHEN SHURTLEFF, Clerk, Penacook June 1, 2026 PUBLIC NOTICE MERRIMACK COUNTY BOARD OF COMMISSIONERS The Merrimack County Board of Commissioners will hold a meeting on: Date: Monday, June 8, 2026 Time: 10:00 a.m. Location: 4 th Floor Conference Room McLeod Building 333 Daniel Webster Highway, Boscawen, NH 03303 This meeting is open to the public for the discussion of any matters that may come before the Board. BOARD OF COMMISSIONERS: • Stuart D. Trachy, Chair • David M. Lovlien Jr., Vice Chair • Stephen Shurtleff, Clerk Posted on: • Merrimack County Website – June 1, 2026 • Merrimack County Sheriff’s Office – June 1, 2026 Ross L. Cunningham County Administrator Special accommodations for individuals with disabilities are available upon request, in accordance with the Americans with Disabilities Act of 1990. Members of the public are welcome to attend. Please Note: This meeting is being recorded (audio and video). By participating, you consent to being recorded.",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "revize:merrimack:2026-06-22@b381a73d0e3ef59dc5565569704a16b4958b7114a29b0aacbb46d9fd9cb5152d",
+   "meetingId": "revize:merrimack:2026-06-22",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
+   "documentUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/6.22.26%20BOC%20Agenda.pdf",
+   "contentHash": "b381a73d0e3ef59dc5565569704a16b4958b7114a29b0aacbb46d9fd9cb5152d",
+   "retrievedAt": "2026-08-18T00:08:31.682Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/6.22.26%20BOC%20Agenda.pdf",
+   "sourceOrg": "Merrimack County Board of Commissioners",
+   "collectedAt": "2026-08-18T00:08:31.682Z",
+   "verifiedAt": null,
+   "text": "",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "revize:merrimack:2026-07-13@f3d06165fcec32147f622ed334aab835b675a3948f7ad9d7e0796ae15b1f78df",
+   "meetingId": "revize:merrimack:2026-07-13",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
+   "documentUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/Public%20Notice%207.13.26.pdf",
+   "contentHash": "f3d06165fcec32147f622ed334aab835b675a3948f7ad9d7e0796ae15b1f78df",
+   "retrievedAt": "2026-08-18T00:08:31.877Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/Public%20Notice%207.13.26.pdf",
+   "sourceOrg": "Merrimack County Board of Commissioners",
+   "collectedAt": "2026-08-18T00:08:31.877Z",
+   "verifiedAt": null,
+   "text": "COUNTY OF MERRIMACK 333 DANIEL WEBSTER HIGHWAY, SUITE 2 BOSCAWEN, NEW HAMPSHIRE 03303-2415 (603) 796-6800 FAX: (603) 796-6840 www.merrimackcounty.net COMMISSIONERS COUNTY ADMINISTRATOR ROSS L. CUNNINGHAM STUART D. TRACHY, Chair, Franklin DAVID M. LOVLIEN JR., Vice Chair, Pembroke STEPHEN SHURTLEFF, Clerk, Penacook June 24, 2026 PUBLIC NOTICE MERRIMACK COUNTY BOARD OF COMMISSIONERS The Merrimack County Board of Commissioners will hold a meeting on: Date: Monday, July 13, 2026 Time: 10:00 a.m. Location: 333 Daniel Webster Highway, Ste. 2 Boscawen, NH 03303 This meeting is open to the public for the discussion of any matters that may come before the Board. BOARD OF COMMISSIONERS: Stuart D. Trachy, Chair David M. Lovlien Jr., Vice Chair Stephen Shurtleff, Clerk Posted on: Merrimack County Website – June 24, 2026 Merrimack County Sheriff’s Office – June 24, 2026 Ross L. Cunningham County Administrator Special accommodations for individuals with disabilities are available upon request, in accordance with the Americans with Disabilities Act of 1990. Members of the public are welcome to attend. Please Note: This meeting is being recorded (audio and video). By participating, you consent to being recorded.",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "revize:merrimack:2026-07-27@b6c20bb18385c61b696f4a9d2c79c4ee07efa37df86e8f45c3c60ff8872c8659",
+   "meetingId": "revize:merrimack:2026-07-27",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
+   "documentUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/BOC%20Packet%207.27.26.pdf",
+   "contentHash": "b6c20bb18385c61b696f4a9d2c79c4ee07efa37df86e8f45c3c60ff8872c8659",
+   "retrievedAt": "2026-08-18T00:08:32.190Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/BOC%20Packet%207.27.26.pdf",
+   "sourceOrg": "Merrimack County Board of Commissioners",
+   "collectedAt": "2026-08-18T00:08:32.190Z",
+   "verifiedAt": null,
+   "text": "",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "revize:merrimack:2026-08-10@00ad49a1b59c97f39a0351598daaf6c1d0cf1b44211c044a68a975e8012349b7",
+   "meetingId": "revize:merrimack:2026-08-10",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
+   "documentUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/Agenda%20-%20August%2010.pdf",
+   "contentHash": "00ad49a1b59c97f39a0351598daaf6c1d0cf1b44211c044a68a975e8012349b7",
+   "retrievedAt": "2026-08-18T00:08:32.425Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/Agenda%20-%20August%2010.pdf",
+   "sourceOrg": "Merrimack County Board of Commissioners",
+   "collectedAt": "2026-08-18T00:08:32.425Z",
+   "verifiedAt": null,
+   "text": "",
    "extraction": "pdf",
    "extractionNote": null
   }

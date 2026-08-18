@@ -3,7 +3,12 @@ import {
   CONCLUDED_LOOKBACK_DAYS,
   UPCOMING_HORIZON_DAYS,
 } from "../../meetings/constants.ts";
-import type { AgendaItem } from "../../meetings/attribution.ts";
+import {
+  meetingBodiesFor,
+  segmentAgenda,
+  type AgendaItem,
+  type MeetingBody,
+} from "../../meetings/attribution.ts";
 import { toZonedIso } from "../../time/zoned.ts";
 import type {
   Meeting,
@@ -12,7 +17,7 @@ import type {
   MeetingStatus,
 } from "../types.ts";
 
-import { fetchEvents } from "./client.ts";
+import { fetchEvents, fetchEventItems } from "./client.ts";
 import {
   findClient,
   findVenue,
@@ -56,6 +61,16 @@ export interface LegistarEventWithClient {
   event: LegistarEvent;
   slug: string;
   collectedAt: string;
+  /**
+   * The event's agenda items, when this run fetched them (D19, g10).
+   *
+   * **`null` is not `[]`.** Null means nobody asked — the item fetch was
+   * capped, or refused, or this is a fixture that predates the fetch. An
+   * empty array means the agenda was read and had no items on it. The two
+   * become the same fact the moment they share a value, and the one that
+   * gets rendered would be a claim about a meeting nobody looked at.
+   */
+  items: LegistarEventItem[] | null;
 }
 
 function isoDate(date: Date): string {
@@ -138,15 +153,19 @@ export interface NormalizeDrops {
 export function normalizeWithDrops(
   raw: LegistarEventWithClient[],
   now: Date = new Date(),
-): { meetings: Meeting[]; drops: NormalizeDrops } {
+): { meetings: Meeting[]; drops: NormalizeDrops; agendasRead: number } {
   const meetings: Meeting[] = [];
   const drops: NormalizeDrops = {
     placeless: 0,
     unknownVenue: 0,
     unplaceableInTime: 0,
   };
+  // How many of the meetings that survived had their agenda actually read.
+  // Its denominator is `meetings.length`, and the ingest prints both — a run
+  // where nothing was read must not look like a run where nothing was found.
+  let agendasRead = 0;
 
-  for (const { event, slug, collectedAt } of raw) {
+  for (const { event, slug, collectedAt, items } of raw) {
     const client = findClient(slug);
     if (!client) continue;
 
@@ -163,16 +182,23 @@ export function normalizeWithDrops(
       continue;
     }
 
-    if (isPlaceless(location)) {
-      drops.placeless++;
-      continue;
-    }
+    /*
+     * A meeting held online is KEPT (D18). It has no building, so it gets no
+     * coordinates and no pin — but it is a real public meeting a reader could
+     * attend, and dropping it was the map's constraint being applied to the
+     * reader. `label` is the published string verbatim ("Virtual Meeting");
+     * Legistar publishes no join link on the event, so `joinUrl` is null and
+     * renders as the gap it is rather than as the InSite page dressed up as a
+     * way in.
+     */
+    const online = isPlaceless(location) ? { label: location, joinUrl: null } : null;
+    if (online) drops.placeless++;
 
-    const venue = findVenue(client, location);
+    const venue = online ? null : findVenue(client, location);
     // No coordinates and no venue entry. Dropping is the contract: a meeting
     // that cannot be placed is not a pin, and an approximate pin sends someone
     // to the wrong building.
-    if (!venue) {
+    if (!online && !venue) {
       drops.unknownVenue++;
       continue;
     }
@@ -186,8 +212,29 @@ export function normalizeWithDrops(
       client.timeZone,
     );
 
+    const id = `${SOURCE_NAME}:${slug}:${event.EventId}`;
+
+    /*
+     * D19's live path. The segmentation is PURE — it reads the agenda and
+     * nothing else — so it belongs here, where the items are. Naming the
+     * bodies it finds needs the registry, which lives on disk and is applied
+     * one layer up by `resolveMeetingBodies`; until then every non-host
+     * segment carries `bodyId: null`, which is the correct claim and not a
+     * placeholder for one.
+     */
+    let actingBodies: MeetingBody[] | undefined;
+    if (items !== null) {
+      agendasRead++;
+      const segments = segmentAgenda(toAgendaItems(items), {
+        bodyId: null,
+        ocdId: client.ocdId,
+        name: event.EventBodyName,
+      });
+      actingBodies = meetingBodiesFor(id, segments);
+    }
+
     meetings.push({
-      id: `${SOURCE_NAME}:${slug}:${event.EventId}`,
+      id,
       ocdId: client.ocdId,
       bodyName: event.EventBodyName,
       // The comment is what distinguishes one sitting from another — "Study
@@ -196,12 +243,15 @@ export function normalizeWithDrops(
       title: event.EventComment?.trim() || event.EventBodyName,
       startsAt,
       timeZone: client.timeZone,
-      location: {
-        name: venue.name,
-        address: venue.address,
-        lat: venue.lat,
-        lng: venue.lng,
-      },
+      location: venue
+        ? {
+            name: venue.name,
+            address: venue.address,
+            lat: venue.lat,
+            lng: venue.lng,
+          }
+        : null,
+      ...(online ? { online } : {}),
       agendaUrl: event.EventAgendaFile,
       jurisdiction: client.jurisdiction,
       status: statusOf(event, startsAt, now),
@@ -214,10 +264,13 @@ export function normalizeWithDrops(
         // Nothing human has confirmed this row against the portal.
         verifiedAt: null,
       },
+      // Omitted, never `[]`, when this run did not read the agenda — see the
+      // field's own note on why absent and empty are different facts.
+      ...(actingBodies ? { actingBodies } : {}),
     });
   }
 
-  return { meetings, drops };
+  return { meetings, drops, agendasRead };
 }
 
 /**
@@ -293,7 +346,12 @@ export const legistarSource: MeetingSource<LegistarEventWithClient> = {
       const collectedAt = new Date().toISOString();
 
       for (const event of events) {
-        collected.push({ event, slug: client.slug, collectedAt });
+        collected.push({
+          event,
+          slug: client.slug,
+          collectedAt,
+          items: await readAgendaItems(client.slug, event.EventId),
+        });
       }
     }
 
@@ -311,6 +369,36 @@ export const legistarSource: MeetingSource<LegistarEventWithClient> = {
     return { inserted: 0, updated: meetings.length };
   },
 };
+
+/**
+ * Read one event's agenda items, or say honestly that we did not (D19, g10).
+ *
+ * This is one extra request per event, which is why it was not in the live
+ * path before. It is affordable because it runs at INGEST — once per refresh,
+ * on the cron, serialized behind the same spacing as everything else — and
+ * never per reader; the one wired Legistar client publishes around fourteen
+ * events in the served window, so the fan-out is small and stays counted.
+ *
+ * A refusal returns `null`, NOT `[]`. The whole point of the field is that
+ * "nobody read this agenda" and "this agenda named no other body" are
+ * different facts about a meeting, and a catch that swallowed the difference
+ * would put the second sentence in front of a reader on the strength of the
+ * first.
+ */
+async function readAgendaItems(
+  slug: string,
+  eventId: number,
+): Promise<LegistarEventItem[] | null> {
+  try {
+    return await fetchEventItems<LegistarEventItem>(slug, eventId);
+  } catch (error) {
+    console.warn(
+      `  legistar: agenda items unavailable for ${slug}/${eventId} — ${error}; ` +
+        "this meeting records NO acting-body reading rather than an empty one",
+    );
+    return null;
+  }
+}
 
 /** Is any of this client's known venues inside the query radius? */
 function withinRadius(client: LegistarClient, query: MeetingQuery): boolean {

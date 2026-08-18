@@ -741,14 +741,34 @@ function MapEntryInner() {
       );
       if (venue) dispatch({ type: "select/venue", key: venue.key });
       setNoticeCollapsed(true);
-      setFocus({
-        lat: meeting.location.lat,
-        lng: meeting.location.lng,
-        zoom: 14,
-        key: meeting.id,
-      });
+      /*
+       * D18: a meeting held online has nowhere to fly the camera to, and it
+       * is in no venue — so the venue selection above finds nothing and the
+       * meeting panel, which is a panel ABOUT a venue, can never open for it.
+       * Picking such a row did nothing at all, which is the reader-friction
+       * rule's plainest case: a row that answers a click with silence.
+       *
+       * It opens the same large card every other route to a meeting opens,
+       * built by the same subject builder, and leaves the camera exactly
+       * where the reader left it — moving it to the last place they looked,
+       * or to the body's building, would both answer a question they did not
+       * ask.
+       */
+      if (meeting.location) {
+        setFocus({
+          lat: meeting.location.lat,
+          lng: meeting.location.lng,
+          zoom: 14,
+          key: meeting.id,
+        });
+      } else {
+        openLarge({
+          kind: "entity",
+          subject: meetingSubject(meeting, bodyFor(meeting.ocdId)),
+        });
+      }
     },
-    [venues, dispatch],
+    [venues, dispatch, openLarge, bodyFor],
   );
 
   // Reset clears the filters a reader has got tangled in and offers the
@@ -1465,10 +1485,28 @@ function meetingSubject(
     facts: [
       { label: "Date", value: formatMeetingDate(meeting) },
       { label: "Time", value: formatMeetingTime(meeting), mono: true },
-      {
-        label: "Location",
-        value: locationLine(meeting.location.name, meeting.location.address),
-      },
+      meeting.location
+        ? {
+            label: "Location",
+            value: locationLine(meeting.location.name, meeting.location.address),
+          }
+        : {
+            // D18. The same two rows the popup shows, in the compact card's
+            // own vocabulary: what it is, then how to get in — and the gap
+            // named as the body's when they published no way in.
+            label: "Where",
+            value: "Online only — there is no room to attend in person.",
+          },
+      ...(meeting.online
+        ? [
+            {
+              label: "How to join",
+              value:
+                meeting.online.joinUrl ??
+                `${meeting.online.label} — the body hasn't published a join link`,
+            },
+          ]
+        : []),
       { label: "Status", value: STATUS_LABEL[meeting.status] },
     ],
     agenda: { meetingId: meeting.id, agendaUrl: meeting.agendaUrl },

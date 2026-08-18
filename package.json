@@ -65,7 +65,8 @@
     "deferred": "node scripts/deferred.mjs",
     "deferred:xlsx": "node scripts/deferred-xlsx.mjs",
     "feedback:read": "tsx scripts/read-feedback.mts",
-    "verify:readonly": "tsx scripts/verify-readonly.mts"
+    "verify:readonly": "tsx scripts/verify-readonly.mts",
+    "verify:local-write": "tsx scripts/verify-local-write.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

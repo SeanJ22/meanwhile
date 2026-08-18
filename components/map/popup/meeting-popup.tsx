@@ -117,9 +117,47 @@ export function MeetingPopup({
         {formatMeetingTime(meeting)}
       </PopupRow>
 
-      <PopupRow label="Location">
-        {locationLine(meeting.location.name, meeting.location.address)}
-      </PopupRow>
+      {meeting.location ? (
+        <PopupRow label="Location">
+          {locationLine(meeting.location.name, meeting.location.address)}
+        </PopupRow>
+      ) : (
+        /*
+         * D18: a meeting held online. The label is the body's own published
+         * string, and the row says plainly that there is no room to go to —
+         * a reader who reads "Location: Virtual Meeting" and nothing else
+         * may still turn up at city hall.
+         */
+        <PopupRow label="Where">
+          Online only — there is no room to attend in person.
+        </PopupRow>
+      )}
+
+      {meeting.online && (
+        <PopupRow label="How to join">
+          {meeting.online.joinUrl ? (
+            <a
+              href={meeting.online.joinUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline"
+            >
+              {meeting.online.label}
+            </a>
+          ) : (
+            /*
+             * The render-default rule, exactly. The body published a location
+             * that names no place and NO way in, and the gap gets a name that
+             * says whose gap it is: theirs, not ours. Anything plausible here
+             * — the body's homepage, the portal, the agenda — would look like
+             * a way in and not be one.
+             */
+            <span className="text-muted">
+              {meeting.online.label} — the body hasn&apos;t published a join link
+            </span>
+          )}
+        </PopupRow>
+      )}
 
       <PopupRow label="Status">{STATUS_LABEL[meeting.status]}</PopupRow>
 

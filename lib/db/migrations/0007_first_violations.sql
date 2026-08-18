@@ -1,0 +1,1 @@
+ALTER TABLE "meetings" ADD CONSTRAINT "meetings_division_vintage_pairing" CHECK (("meetings"."ocd_id" is null) = ("meetings"."division_vintage" is null));

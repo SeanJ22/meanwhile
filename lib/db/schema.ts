@@ -1,4 +1,6 @@
+import { sql } from "drizzle-orm";
 import {
+  check,
   doublePrecision,
   index,
   integer,
@@ -49,18 +51,61 @@ export const meetings = pgTable(
   {
     /** Source-namespaced: `<adapter>:<tenant>:<upstream id>`. */
     id: text("id").primaryKey(),
-    ocdId: text("ocd_id").notNull(),
-    /** Dataset vintage `ocdId` was resolved against — see header. */
-    divisionVintage: text("division_vintage").notNull(),
+    /**
+     * The division whose government is meeting — **nullable** (D31, g10).
+     *
+     * It was NOT NULL, and that made this table unable to hold a meeting of a
+     * government the Census does not enumerate: Pima Community College's
+     * board, an authority, any of the seven special districts the D19
+     * attribution pass found inside Pima County's own agendas. Those meetings
+     * are in the served snapshot today with `ocdId: null`, so the constraint
+     * would have failed the first adapter that tried to persist one — and the
+     * available repairs were both worse than a nullable column: drop the
+     * meeting (the D18 failure, again), or mint a canonical identifier for a
+     * division that does not exist (the fabrication rule, again).
+     *
+     * A curated key may be stored here instead of a null once one has been
+     * minted; see `lib/ocd/curated.ts` for what makes ours distinguishable
+     * from opencivicdata's at a glance.
+     */
+    ocdId: text("ocd_id"),
+    /**
+     * Dataset vintage `ocdId` was resolved against — see header. Nullable
+     * with it, and for the same reason: a vintage on a null division would be
+     * stating which release of a dataset an absent identifier came from.
+     */
+    divisionVintage: text("division_vintage"),
     bodyName: text("body_name").notNull(),
     title: text("title").notNull(),
     /** Instant of the meeting's start; wall-clock lives with timeZone. */
     startsAt: timestamp("starts_at", { withTimezone: true, mode: "string" }).notNull(),
     timeZone: text("time_zone").notNull(),
-    locationName: text("location_name").notNull(),
+    /**
+     * Where the meeting is held — **all four nullable together** (D18, g10).
+     *
+     * A meeting held online has no building, no address and no coordinates,
+     * and it is a real public meeting. These were NOT NULL, so persisting one
+     * meant either dropping it or inventing a place; the served snapshot now
+     * carries twelve of them. Null here means the same thing it means in
+     * `Meeting.location`: there is nothing to place, and `online_label`
+     * says what there is instead.
+     */
+    locationName: text("location_name"),
     locationAddress: text("location_address"),
-    locationLat: doublePrecision("location_lat").notNull(),
-    locationLng: doublePrecision("location_lng").notNull(),
+    locationLat: doublePrecision("location_lat"),
+    locationLng: doublePrecision("location_lng"),
+    /**
+     * The published location string for a meeting held online, verbatim
+     * ("Virtual Meeting", "Via Zoom Webinar") — D18. Present exactly when
+     * the location columns are null.
+     */
+    onlineLabel: text("online_label"),
+    /**
+     * The join link the body published, or null when it published none. A
+     * null is rendered as the named gap and never filled with the body's
+     * homepage or a portal URL.
+     */
+    onlineJoinUrl: text("online_join_url"),
     agendaUrl: text("agenda_url"),
     /** Display only — join on ocdId, never on this. */
     jurisdiction: text("jurisdiction").notNull(),
@@ -74,6 +119,25 @@ export const meetings = pgTable(
   (table) => [
     index("meetings_ocd_id_idx").on(table.ocdId),
     index("meetings_starts_at_idx").on(table.startsAt),
+    /*
+     * THE VINTAGE PAIRING, restated for a nullable identifier (D31, g10).
+     *
+     * The rule has not weakened. A division identifier without the dataset
+     * vintage it was resolved against is a silent wrong-match waiting for the
+     * next redistricting cycle — it joins successfully and reports something,
+     * which is worse than nothing. What changed is that a meeting may now
+     * legitimately have NO identifier, and NOT NULL on both columns was the
+     * only way the old schema could say "these two travel together".
+     *
+     * So the pairing is enforced directly, by the DATABASE, across both
+     * columns: either both are present or neither is. That is what the two
+     * NOT NULLs were reaching for, said exactly, and it is the assertion
+     * tests/db-schema.test.ts now makes.
+     */
+    check(
+      "meetings_division_vintage_pairing",
+      sql`(${table.ocdId} is null) = (${table.divisionVintage} is null)`,
+    ),
   ],
 );
 

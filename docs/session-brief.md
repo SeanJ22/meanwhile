@@ -1,6 +1,6 @@
-# Session brief — g10 (written 2026-08-17 by g9)
+# Session brief — g11 (written 2026-08-17 by g10)
 
-The queue, exactly where g9 stopped. Resolution, no drift.
+The queue, exactly where g10 stopped. Resolution, no drift.
 On completion, overwrite this file.
 
 This session runs unattended. Nobody is available to answer.
@@ -18,73 +18,60 @@ the pattern occurs, report the full count found and fixed.
 
 ---
 
-## 0 — Two things that need the author's hands, stated first because they block measurement
+## 0 — R36, and why it now costs more than a row
 
-Neither is buildable by an agent. Both are one-line edits in `.env.local` and
-both are the same mistake, so they are fixed together.
+**The author swapped the variable NAMES and not the hosts.** g9 diagnosed the
+swap; the author acted; the fix landed half-right.
+`WTP_PRODUCTION_DATABASE_URL_READONLY` now carries role `readonly` — that half
+is genuinely done — but it points at `ep-weathered-cherry`, the LOCAL branch,
+instead of the production endpoint `ep-dry-river-axwtolzc-pooler`. A Neon role
+lives on the branch it was created on and nowhere else, and this one was
+created on production, so **the variable does not authenticate at all**.
 
-**R36 and R42 are one swapped line.** The readonly role the author created by
-SQL on the production branch had its connection string written over
-`DATABASE_URL` — the LOCAL branch line, host `ep-weathered-cherry`,
-`WTP_DB_ROLE=local` — instead of over `WTP_PRODUCTION_DATABASE_URL_READONLY`,
-which still carries `neondb_owner` on `ep-dry-river`. Verified by
-`pnpm verify:readonly` on 2026-08-17: `current_user = neondb_owner`,
-`pg_has_role(neon_superuser) = true`, INSERT/UPDATE/DELETE all granted on all
-three stores, and `delete from search_log where false` **permitted**.
+The second consequence is bigger than the row and it will keep costing every
+session until it is fixed: **there is no handle to the production database.**
+g10 could not run the run-id census the standing report calls for,
+`pnpm feedback:read --target=production` cannot work, and `pnpm walk:all`
+prints its landed-rows line as COULD NOT READ rather than as a number.
 
-- **R36:** put a readonly string pointed at the PRODUCTION endpoint
-  (`ep-dry-river-axwtolzc-pooler`) into `WTP_PRODUCTION_DATABASE_URL_READONLY`.
-  Then `pnpm verify:readonly` — it exits non-zero printing "R36 STAYS OPEN"
-  until every check passes and exits 0 printing "R36 CLOSES" when they do.
-- **R42:** point `DATABASE_URL` back at a role that EXISTS on the local branch.
-  Today it cannot authenticate at all, so every local write path fails at the
-  driver and no local run can prove a write succeeds. The fastest check is
-  submitting the form at `/feedback` locally: a 204 means fixed, a 500 means
-  not.
-- If a writing handle to production is still wanted for migrations and backmark
-  passes, carry it under a name that says so — `WTP_PRODUCTION_DATABASE_URL_WRITE`.
-  g9 had to use the variable named READONLY to apply migration 0005, which is
-  R36's complaint demonstrated.
+To close it, in `.env.local`: put the `readonly:…` string at the PRODUCTION
+endpoint `ep-dry-river-axwtolzc-pooler` into
+`WTP_PRODUCTION_DATABASE_URL_READONLY`. Then `pnpm verify:readonly` — it exits
+non-zero printing "R36 STAYS OPEN" until all ten checks pass, and exits 0
+printing "R36 CLOSES" when they do. **Do not create or alter roles yourself,
+and do not force it.** If the author has not done this by the time you run, say
+so and carry on; everything below is reachable without it.
 
-**Do not create or alter roles yourself, and do not force it.** If the author
-has not done this by the time you run, say so and carry on; every other item
-below is reachable without it.
+**R42's own defect is FIXED and proven** — `pnpm verify:local-write` writes
+through the application's own paths, reads back by run id, and cleans up. The
+row stays open only on R36's remaining half and on the production census that
+cannot be taken. Both clear together.
 
-**One decision is waiting on the author and blocks nothing: R41.** Should the
-feedback form collect an OPTIONAL reply address? R40's spec said both
-"identifier-free beyond what the reader types" and "T09 scrub before storage",
-and both cannot hold for one field. g9 took the strict reading and the form
-says out loud that we cannot write back. If the author rules yes, the shape is
-already specced in the row and is purely additive.
+**R41 still has no ruling anywhere in the repo.** Not in `docs/deferred.csv`,
+not in `state.md`, and `docs/abuse-policy.md` still records the question as
+open. If a ruling of A appears, build the optional reply field exactly as R41's
+Notes spec it — one optional field, its own column, joined to nothing, excluded
+from the T09 scrub while the message body stays scrubbed, `/transparency`
+updated in the same commit. If the ruling is B or still absent: touch nothing,
+note it, and the row stays the author's call. T05's gate on ask-box free text
+stands either way — R41 does not move it.
 
 ---
 
-## 1 — The six remainders of g8's item 4, same order, specs in each row
+## 1 — The two remainders of g8's item 4, same order, specs in each row
 
-They do not change. In order:
+D19, D18, D24 and D31 are DONE (g10) and leave this list. Two remain:
 
-* **D19** — sitting-as persistence and the live ingest path. An unresolved
-  heading still attributes to NOTHING, never to the host.
-* **D18** — virtual meetings render as "online" with join info, in the list
-  overlay, never a fabricated pin. The class is EVERY adapter's virtual events,
-  not just Legistar's two.
-* **D24** — the 348 unmatched canonical OCD divisions: close where a match
-  exists, record per-division why none exists where it does not. Never a fuzzy
-  join.
-* **D31** — the curated-ID convention settled per the row: check opencivicdata's
-  own convention first, adopt or mint under the documented `curated:` scheme,
-  fix the two named consequences.
 * **M12** — the school overlay split into unified / elementary / secondary:
   three types, three sources, three toggles, tests updated.
-* **D22** — the NovusAgenda adapter against a LIVE tenant only; the Vail tenant
-  is an archive. If no live tenant exists in scope, that finding is the
+* **D22** — the NovusAgenda adapter against a LIVE tenant only; the Vail
+  tenant is an archive. If no live tenant exists in scope, that finding is the
   deliverable and the row records it.
-
-M19 is DONE (g9) and leaves this list.
 
 ## 2 — Resume the g7 item 4–8 block, whole, in order
 
-The full specs are in the g7 brief and its referenced rows, unchanged:
+Untouched by g8, g9 and g10. The full specs are in the g7 brief and its
+referenced rows, unchanged:
 
 * **item 4** — the ask surface: one build closing A01, A02, A07-same-PR, M119,
   A06, G05-4d; copy promises only what routes.
@@ -92,15 +79,34 @@ The full specs are in the g7 brief and its referenced rows, unchanged:
 * **item 6** — G07: the pill label.
 * **item 7** — D35: positions three-answer machinery.
 * **item 8** — the fourteen finish-now rows: M134, M136, M139, M135, M07, B15,
-  G10/8a, P01, P03 with free-text gated on T05, D25, D29, D06 under the
-  unchanged structural FEC rule, M93 proposal-only.
+  G10/8a (the tracker row G10, distinct from the g10 session letter), P01, P03
+  with free-text gated on T05, D25, D29, D06 under the unchanged structural FEC
+  rule, M93 proposal-only.
 
-## 3 — H02, whose surface now exists
+## 3 — H02, whose surface exists
 
 H02's missing-body feedback link is the surface R40 shipped, with a second
 entry point. The `feedback` store's `surface` column already holds `COVERAGE`
 for exactly this, so the link needs no new page and no new store — wire it,
 pass `surface="COVERAGE"`, and the author's queue tells the two apart.
+
+## 4 — What g10 left as work, named rather than left to be found
+
+Not new rows; each is recorded in the row it belongs to.
+
+* **The seven Pima special districts are UNRESOLVED and resolvable.** D19 found
+  Flood Control, Library, Improvement, Stadium, Rocking K South CFD, Wildflower
+  CFD and Ajo Domestic Water ID acting inside Pima County's own agendas. D31
+  settled how to identify them. What is missing is a READ of each district's
+  own published page — a heading proves a government acted, it is not a source
+  for its name or its boundary. That read is the next step and it is the 4.7.6
+  thesis becoming coverage.
+* **85 active governments are absent from the canonical list**, named in full
+  in `docs/canonical-reconciliation.md`. Contributing them upstream would close
+  D24's remaining gap at the source; nothing here depends on it.
+* **`PLACELESS_LOCATIONS` is append-only and short.** A vendor phrasing not on
+  the list makes that vendor's virtual sittings drop as an unknown venue. Add
+  as observed.
 
 ---
 
@@ -108,20 +114,24 @@ pass `surface="COVERAGE"`, and the author's queue tells the two apart.
 
 `pnpm walk:all` against production, new checks appended, old and new counts
 stated, the identity set emitted — it must stay 100% distinct, and a duplicate
-is now a NAMED REGRESSION that fails the run rather than a printed suggestion.
-`state.md` via `pnpm stamp`. Tracker rows by ID; `docs/deferred.csv` NOT
-regenerated. Update `docs/session-map.md` with this session's closures — it is
-in the repo and the mirror, and keeping it current is part of every handoff.
-Playbook diff or explicit "nothing new". Overwrite `docs/session-brief.md`.
-`pnpm handoff --ship` with the R22 gate; verify the deploy LANDS via
-`/api/build` and state the SHA.
+is a NAMED REGRESSION that fails the run. `state.md` via `pnpm stamp`. Tracker
+rows by ID; `docs/deferred.csv` NOT regenerated. Update `docs/session-map.md`
+with this session's closures. Playbook diff or explicit "nothing new".
+Overwrite `docs/session-brief.md`. `pnpm handoff --ship` with the R22 gate;
+verify the deploy LANDS via `/api/build` and state the SHA.
 
 Standing report in the established format: ship status; test, lint, build
 counts with allowlisted warnings named; every mirror file by name with bytes;
 `context.md` against its 40 KB cap; tracker rows touched by ID;
 `stamp-audit.md` inline; production rows by run-id census — expected 0 organic
-throughout. Completion against the denominator, and within each item, sub-items
-completed of sub-items listed. Ending with "Needs your hands."
+throughout, and stated as COULD NOT READ rather than as zero while R36 is open.
+Completion against the denominator, and within each item, sub-items completed
+of sub-items listed.
+
+The report ends with **"Needs your hands."** followed IMMEDIATELY by a NUMBERED
+list of exactly what needs the author — every ruling, every console action,
+every open question — even where it repeats the body. An empty list is stated
+as "Nothing — the queue continues."
 
 ## Standing rules
 

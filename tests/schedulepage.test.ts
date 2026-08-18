@@ -121,8 +121,8 @@ test("normalize windows the year, times it from the page, and cites its source",
   for (const m of meetings) {
     assert.equal(m.bodyName, "Board of Education");
     assert.equal(m.jurisdiction, "Morris Hills Regional School District, NJ");
-    assert.equal(m.location.address, "48 Knoll Drive, Rockaway, NJ 07866");
-    assert.ok(Number.isFinite(m.location.lat) && Number.isFinite(m.location.lng));
+    assert.equal(m.location!.address, "48 Knoll Drive, Rockaway, NJ 07866");
+    assert.ok(Number.isFinite(m.location!.lat) && Number.isFinite(m.location!.lng));
     // 6:30 P.M. Eastern in June/August/September is UTC-4.
     assert.match(m.startsAt, /T18:30:00-04:00$/);
     // The page it was read from, not a constructed permalink.
@@ -264,7 +264,7 @@ test("Kearsarge normalizes with the page's time, place and documents", () => {
 
   for (const m of meetings) {
     assert.equal(m.bodyName, "School Board");
-    assert.equal(m.location.address, "114 Main Street, New London, NH 03257");
+    assert.equal(m.location!.address, "114 Main Street, New London, NH 03257");
     assert.match(m.startsAt, /T18:30:00-04:00$/, "6:30 PM, off the page's bullet");
     assert.equal(m.startPrecision, undefined);
     assert.equal(
@@ -360,7 +360,7 @@ test("the Conservation Commission's two shapes union by date", () => {
   for (const m of meetings) {
     assert.equal(m.bodyName, "Conservation Commission");
     assert.equal(m.title, "Conservation Commission");
-    assert.equal(m.location.address, "937 Route 103, Newbury, NH 03255");
+    assert.equal(m.location!.address, "937 Route 103, Newbury, NH 03255");
     assert.match(m.startsAt, /T18:00:00-04:00$/);
   }
 
@@ -386,7 +386,7 @@ test("the Planning Board normalizes to the venue its own agenda states", () => {
   for (const m of meetings) {
     assert.equal(m.bodyName, "Planning Board");
     assert.equal(m.title, "Planning Board", "never the document's label");
-    assert.equal(m.location.name, "Newbury Town Office");
+    assert.equal(m.location!.name, "Newbury Town Office");
     assert.ok(m.agendaUrl?.startsWith("https://www.newbury.nh.gov/planning-board/"));
   }
 });
@@ -429,8 +429,8 @@ test("the Zoning Board is wired, on a venue the town publishes in markup", () =>
   assert.equal(aug.title, "Zoning Board of Adjustment", "never the document's label");
   // The town's own label for the building, and its own address — neither
   // borrowed from the sibling boards' rows.
-  assert.equal(aug.location.name, "Newbury Offices");
-  assert.equal(aug.location.address, "937 Route 103, Newbury, NH 03255");
+  assert.equal(aug.location!.name, "Newbury Offices");
+  assert.equal(aug.location!.address, "937 Route 103, Newbury, NH 03255");
   assert.match(aug.startsAt, /T19:00:00-04:00$/);
   assert.ok(
     aug.agendaUrl?.startsWith("https://www.newbury.nh.gov/zoning-board-adjustment/"),

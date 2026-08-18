@@ -7,6 +7,7 @@ import {
   normalizeWithDrops,
   type LegistarEventWithClient,
 } from "../lib/sources/legistar/index.ts";
+import { groupByVenue } from "../lib/meetings/venues.ts";
 import { describeStatus } from "../lib/sources/legistar/client.ts";
 import {
   findVenue,
@@ -46,11 +47,20 @@ const ITEMS_REGULAR = load<LegistarEventItem[]>(
 const COLLECTED_AT = "2026-08-12T22:00:00.000Z";
 const NOW = new Date("2026-08-12T22:00:00.000Z");
 
-function wrap(events: LegistarEvent[]): LegistarEventWithClient[] {
+/**
+ * `items` defaults to `null` — "this run did not read the agenda" — because
+ * that is what the recorded events fixture actually represents. The item
+ * fixtures are attached deliberately, per event, by the D19 tests below.
+ */
+function wrap(
+  events: LegistarEvent[],
+  itemsByEventId: Record<number, LegistarEventItem[]> = {},
+): LegistarEventWithClient[] {
   return events.map((event) => ({
     event,
     slug: "pima",
     collectedAt: COLLECTED_AT,
+    items: itemsByEventId[event.EventId] ?? null,
   }));
 }
 
@@ -106,12 +116,28 @@ test("a meeting with no known venue is dropped, never given an approximate pin",
   assert.equal(drops.unknownVenue, 1);
 });
 
-test("a virtual meeting is dropped as placeless, counted apart from an unknown venue", () => {
+test("a virtual meeting is KEPT, with no place and no invented pin (D18)", () => {
   const virtual = EVENTS.find((e) => e.EventLocation === "Virtual Meeting");
   assert.ok(virtual, "fixture must still contain a virtual meeting");
 
   const { meetings, drops } = normalizeWithDrops(wrap([virtual]), NOW);
-  assert.equal(meetings.length, 0);
+
+  // It used to be DROPPED. It is a real public meeting a reader could have
+  // attended, and the map's constraint was being applied to the reader.
+  assert.equal(meetings.length, 1, "a virtual meeting is a meeting");
+  assert.equal(meetings[0].location, null, "no building means no coordinates");
+  assert.equal(
+    meetings[0].online?.label,
+    "Virtual Meeting",
+    "the published location string, verbatim",
+  );
+  assert.equal(
+    meetings[0].online?.joinUrl,
+    null,
+    "Legistar publishes no join link on the event, and nothing invents one",
+  );
+  // The counter keeps its name and its meaning: it counts meetings with no
+  // physical place, which is the same quantity it always counted.
   assert.equal(drops.placeless, 1);
   assert.equal(
     drops.unknownVenue,
@@ -120,16 +146,31 @@ test("a virtual meeting is dropped as placeless, counted apart from an unknown v
   );
 });
 
+test("a virtual meeting is never a pin", () => {
+  const virtual = EVENTS.find((e) => e.EventLocation === "Virtual Meeting")!;
+  const { meetings } = normalizeWithDrops(wrap([virtual]), NOW);
+  // groupByVenue is the one gate that decides what becomes a marker.
+  assert.deepEqual(groupByVenue(meetings), [], "no venue, therefore no pin");
+});
+
 test("coordinates only ever come from the curated venue table", () => {
   const { meetings } = normalizeWithDrops(wrap(EVENTS), NOW);
   const known = LEGISTAR_CLIENTS[0].venues;
 
-  for (const meeting of meetings) {
+  // A meeting held online has no coordinates at all, which satisfies this
+  // rule in the strongest possible way (D18) — but `some()` over an empty
+  // comparison would report it as a violation, so it is stated rather than
+  // swept into the loop.
+  const online = meetings.filter((m) => m.location === null);
+  assert.ok(online.length > 0, "the fixture still contains a virtual meeting");
+  for (const meeting of online) assert.equal(meeting.online?.joinUrl, null);
+
+  for (const meeting of meetings.filter((m) => m.location !== null)) {
     assert.ok(
       known.some(
-        (v) => v.lat === meeting.location.lat && v.lng === meeting.location.lng,
+        (v) => v.lat === meeting.location!.lat && v.lng === meeting.location!.lng,
       ),
-      `${meeting.location.name} has coordinates from outside the venue table`,
+      `${meeting.location!.name} has coordinates from outside the venue table`,
     );
   }
 });

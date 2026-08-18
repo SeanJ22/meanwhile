@@ -72,8 +72,8 @@ test("normalize emits windowed meetings with cited venues and real agenda links"
 
   for (const m of meetings) {
     assert.equal(m.ocdId, WIRING.ocdId);
-    assert.ok(Number.isFinite(m.location.lat) && Number.isFinite(m.location.lng));
-    assert.ok(m.location.address, "venue address missing");
+    assert.ok(Number.isFinite(m.location!.lat) && Number.isFinite(m.location!.lng));
+    assert.ok(m.location!.address, "venue address missing");
     if (m.agendaUrl) {
       assert.match(
         m.agendaUrl,
@@ -97,6 +97,6 @@ test("an unobserved venue drops the meeting, counted, never guessed", () => {
   const { meetings, drops } = source.normalizeWithDrops!(raw, NOW);
   assert.ok(drops.unknownVenue >= 1, "unknown venue was not counted");
   for (const m of meetings) {
-    assert.notEqual(m.location.name, "Some Room The Cache Has Never Seen");
+    assert.notEqual(m.location!.name, "Some Room The Cache Has Never Seen");
   }
 });

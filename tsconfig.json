@@ -34,5 +34,9 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  // `.scratch/` is the gitignored session-scratch directory, and its own
+  // note in .gitignore says it must never be type-checked by the deploy.
+  // `**/*.mts` above would otherwise sweep a one-off probe into the build
+  // that `pnpm handoff --ship` gates on. See eslint.config.mjs, same pass.
+  "exclude": ["node_modules", ".scratch"]
 }

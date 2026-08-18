@@ -295,6 +295,59 @@ export function validateSnapshot(value: unknown): asserts value is MeetingsSnaps
       );
     }
   }
+  assertAttributionIsHonest(snap);
+}
+
+/**
+ * D19's rule, enforced where a file gets written rather than where it gets
+ * rendered (g10).
+ *
+ * "An unresolved heading attributes to NOTHING, never to the host" is a claim
+ * about data, and by the time a null reaches a component the lie is already
+ * in the file — the same argument the refresh corollary makes about a failed
+ * fetch. So the write boundary refuses it:
+ *
+ * - a row must cite the meeting it belongs to, so the join cannot drift;
+ * - an UNRESOLVED row must carry no body and no division. Copying the host's
+ *   identifiers onto a segment the agenda said in capital letters was NOT the
+ *   host is precisely the misattribution the whole feature exists to prevent;
+ * - a RESOLVED row must actually name a body, or it is asserting a match it
+ *   does not have;
+ * - every row must quote the heading it was read from, so an attribution can
+ *   be checked against the published agenda instead of trusted.
+ */
+function assertAttributionIsHonest(snap: MeetingsSnapshot): void {
+  for (const m of snap.meetings) {
+    // Absent is not empty, and only absent is skipped: a meeting whose agenda
+    // was read and named nobody legitimately carries zero rows.
+    if (m.actingBodies === undefined) continue;
+    if (!Array.isArray(m.actingBodies)) {
+      throw new Error(`meeting ${m.id}: actingBodies must be an array when present`);
+    }
+    for (const row of m.actingBodies) {
+      if (row.meetingId !== m.id) {
+        throw new Error(
+          `meeting ${m.id} carries an acting-body row citing ${row.meetingId}`,
+        );
+      }
+      if (!row.evidence || typeof row.evidence !== "string") {
+        throw new Error(
+          `meeting ${m.id}: an acting-body row does not quote the heading it was read from`,
+        );
+      }
+      if (row.attribution === "UNRESOLVED" && (row.bodyId !== null || row.ocdId !== null)) {
+        throw new Error(
+          `meeting ${m.id}: the unresolved segment "${row.evidence}" was attributed to ` +
+            `${row.bodyId ?? row.ocdId} — an unresolved heading attributes to NOTHING, never to the host`,
+        );
+      }
+      if (row.attribution === "RESOLVED" && !row.bodyId) {
+        throw new Error(
+          `meeting ${m.id}: the segment "${row.evidence}" claims RESOLVED and names no body`,
+        );
+      }
+    }
+  }
 }
 
 interface CachedRead {

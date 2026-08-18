@@ -44,10 +44,46 @@ test("every table carrying a division identifier carries a NOT NULL vintage", ()
     if (!ocd) continue;
     carriers++;
 
-    assert.ok(ocd.notNull, `${name}: ocd_id must be NOT NULL`);
     const vintage = byName.get("division_vintage");
     assert.ok(vintage, `${name}: carries ocd_id but no division_vintage column`);
-    assert.ok(vintage.notNull, `${name}: division_vintage must be NOT NULL`);
+
+    /*
+     * THE PAIRING, which is what this rule was always about (D31, g10).
+     *
+     * It used to be asserted as "both NOT NULL", and that was right while
+     * every division identifier was mandatory. `meetings.ocd_id` is now
+     * nullable, because a government the Census does not enumerate — Pima
+     * Community College's board, an authority, the seven special districts
+     * inside Pima County's own agendas — has no division to name, and the
+     * two ways to keep the old constraint were to drop those meetings or to
+     * mint a canonical identifier for a division that does not exist.
+     *
+     * So the assertion follows the rule rather than its old spelling: the
+     * identifier and its vintage are nullable TOGETHER or not at all, and a
+     * table that lets them diverge fails here. Where the pair is nullable,
+     * the schema must additionally carry a CHECK so the DATABASE refuses a
+     * row with one and not the other — a rule only the application enforces
+     * is a rule the next writer skips.
+     */
+    if (ocd.notNull) {
+      assert.ok(
+        vintage.notNull,
+        `${name}: ocd_id is NOT NULL, so division_vintage must be too`,
+      );
+      continue;
+    }
+
+    assert.ok(
+      !vintage.notNull,
+      `${name}: ocd_id is nullable while division_vintage is NOT NULL — ` +
+        "a vintage with no identifier states which release an absence came from",
+    );
+    const checks = config.checks.map((c) => c.name);
+    assert.ok(
+      checks.some((c) => /vintage/i.test(c)),
+      `${name}: a nullable ocd_id/division_vintage pair needs a CHECK binding them; ` +
+        `found ${checks.length === 0 ? "no checks" : checks.join(", ")}`,
+    );
   }
   // The mechanism check: this test must actually have inspected something.
   assert.ok(carriers >= 2, `expected at least 2 ocd-carrying tables, found ${carriers}`);

@@ -6,6 +6,10 @@
  * adapter will produce exactly these too, and nothing downstream changes.
  */
 
+// Type-only, so this stays a one-way dependency at runtime: attribution.ts
+// imports `OcdId` from here, and nothing is emitted for either import.
+import type { MeetingBody } from "../meetings/attribution.ts";
+
 /**
  * An OCD division identifier, e.g.
  * `ocd-division/country:us/state:az/place:tucson`.
@@ -111,6 +115,29 @@ export interface MeetingLocation {
 }
 
 /**
+ * How to attend a meeting that is held online (D18).
+ *
+ * A meeting with no physical place is REAL, PUBLIC and attendable, and it used
+ * to be dropped at normalize because the map could not carry it — twelve of
+ * them across one refresh, each a public meeting a reader could have joined
+ * and never saw. The map was right and the drop was wrong: the answer is a
+ * meeting that exists everywhere the map is not.
+ *
+ * `label` is the location string EXACTLY as the body published it, because
+ * "Virtual Meeting" and "Microsoft Teams (Virtual)" are what the reader will
+ * see on the notice and rewriting them helps nobody. `joinUrl` is null far
+ * more often than not, and a null is rendered as the gap it is — never
+ * replaced with the body's homepage, a portal search, or anything else that
+ * would look like a way in and not be one.
+ */
+export interface OnlineAccess {
+  /** The published location string, verbatim. */
+  label: string;
+  /** The join link the body published, or null when it published none. */
+  joinUrl: string | null;
+}
+
+/**
  * Where a meeting sits relative to now.
  *
  * `SCHEDULED` — upcoming, on the published calendar.
@@ -172,7 +199,26 @@ export interface Meeting {
   startPrecision?: "MINUTE" | "DAY";
   /** IANA zone the meeting is held in, for rendering times honestly. */
   timeZone: string;
-  location: MeetingLocation;
+  /**
+   * Where the meeting is held — **null when it is held nowhere** (D18).
+   *
+   * Null is a real, load-bearing value and not a missing one: the body
+   * published a location string that names no place ("Virtual Meeting",
+   * "Microsoft Teams (Virtual)"), so there is no building, no address and no
+   * coordinates to have. `online` carries what there IS instead, and the two
+   * fields are required to agree — a null location with no `online` is a
+   * meeting nobody can attend and nothing may write one.
+   *
+   * It is deliberately nullable rather than faked. Giving a virtual meeting
+   * its body's home coordinates would put a pin on a building nobody is going
+   * to, which is the same class of invention as a constructed agenda URL.
+   */
+  location: MeetingLocation | null;
+  /**
+   * Present exactly when the meeting is held online (D18). Set together with
+   * a null `location`; see both notes.
+   */
+  online?: OnlineAccess;
   /** Link to the published agenda. Null when the body hasn't posted one yet. */
   agendaUrl: string | null;
   /** Display name of the jurisdiction: "Tucson, AZ". Display only — join on ocdId. */
@@ -185,6 +231,27 @@ export interface Meeting {
    * nothing about a carried row may render a freshness it does not have.
    */
   carried?: CarriedForward;
+  /**
+   * Which bodies actually acted at this sitting, when the agenda says (D19).
+   *
+   * `ocdId` above is the HOST — the body whose calendar this is — and it is a
+   * single field that cannot express "the county board sat as the library
+   * district's board for these nineteen items". Pima County does exactly that,
+   * twice on one agenda, so the join rides on the meeting: many rows, each
+   * naming the heading it was read from.
+   *
+   * **Absent is not empty.** An absent field means nobody looked at this
+   * meeting's agenda items — most sources do not publish them and the adapter
+   * did not ask. An empty array would mean the agenda was read and named no
+   * acting body, which is a different fact, and collapsing the two is the
+   * render-default failure one layer down.
+   *
+   * The rule the rows are built under, restated here because this is where a
+   * later reader meets them: **an unresolved heading attributes to NOTHING,
+   * never to the host.** `lib/meetings/attribution.ts` builds them and
+   * `lib/meetings/snapshot.ts` refuses a snapshot that breaks it.
+   */
+  actingBodies?: MeetingBody[];
 }
 
 /**
@@ -211,6 +278,18 @@ export interface MeetingQuery {
  * are dropped by configuration rather than by failure.
  */
 export interface NormalizeDropCounts {
+  /**
+   * Meetings whose published location names no physical place.
+   *
+   * **These are no longer dropped (D18, 2026-08-17).** They are kept, with a
+   * null `location` and an `online` block, and they render in the list
+   * overlay and never as a pin. The counter stays under this name because it
+   * counts exactly the same quantity it always counted, so the number remains
+   * comparable across every snapshot ever written — and because zeroing it
+   * would make a real, growing category of public meeting read as absent,
+   * which is the failure this row was opened about in the first place. The
+   * ingest prints it as kept, not as dropped.
+   */
   placeless: number;
   unknownVenue: number;
   unplaceableInTime: number;

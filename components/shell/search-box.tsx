@@ -39,7 +39,7 @@ export function SearchBox({
   /** Fly the map to a result and open its popup. */
   onPick: (item: SearchItem) => void;
 }) {
-  const { venues } = useShellData();
+  const { venues, meetings } = useShellData();
   const ui = useUi();
   const dispatch = useUiDispatch();
 
@@ -54,9 +54,19 @@ export function SearchBox({
   // Rebuilt only when the venue set actually changes — Edia's
   // getAutocompleteCache / invalidateCaches, keyed on a cheap token.
   const index = useMemo(() => {
-    const token = venues.map((v) => v.key).join(",");
-    return getSearchIndex(token, () => buildSearchIndex(venues));
-  }, [venues]);
+    /*
+     * D18: a meeting held online is in no venue, because a venue is a place
+     * and it has none. It is still a real public meeting a reader will type
+     * the name of, so it is indexed alongside — and the cache token has to
+     * count them, or turning up an online meeting would not invalidate an
+     * index built before it arrived.
+     */
+    const online = meetings.filter((m) => m.location === null);
+    const token = `${venues.map((v) => v.key).join(",")}|online:${online
+      .map((m) => m.id)
+      .join(",")}`;
+    return getSearchIndex(token, () => buildSearchIndex(venues, [], online));
+  }, [venues, meetings]);
 
   const groups = useMemo(
     () => groupResults(searchItems(index, draft)),

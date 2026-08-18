@@ -14,6 +14,16 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Vendored, minified third-party assets served as-is.
     "public/**",
+    /*
+     * Session scratch (2026-08-17, g10). `.gitignore` already says this
+     * directory "must never be type-checked by the deploy or reviewed as
+     * work", and neither gate honoured it: `pnpm lint` reported a one-off
+     * probe's `any` as thirteen ERRORS, and `tsconfig.json`'s mts glob would
+     * have taken the same files into the build the ship gate runs.
+     * A throwaway probe that can fail the ship is a probe nobody writes,
+     * and the ladder needs probes. Excluded in both places, together.
+     */
+    ".scratch/**",
   ]),
 ]);
 

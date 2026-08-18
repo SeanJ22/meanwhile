@@ -23,6 +23,7 @@ import { CURATED_BODIES } from "../lib/registry/curated-bodies.ts";
 import { bodiesFor, slotsFor, type SkipReason } from "../lib/registry/derive.ts";
 import type {
   Body,
+  CanonicalGap,
   CanonicalMatch,
   CoverageStatus,
   Division,
@@ -73,6 +74,8 @@ interface GeoFeature {
     lsad?: string;
     funcstat?: string;
     classfp?: string;
+    /** Census GEOID — the exact key the canonical join uses (D24). */
+    geoid?: string;
   };
 }
 
@@ -133,6 +136,7 @@ async function loadDivisions(now: string): Promise<Division[]> {
         lsad: p.lsad ?? null,
         funcstat: p.funcstat ?? null,
         classfp: p.classfp ?? null,
+        geoid: p.geoid ?? null,
         canonicalOcdId: null,
         canonicalMatch: "none",
         sourceDataset: "TIGER_GENZ2025",
@@ -168,11 +172,44 @@ async function reconcile(divisions: Division[]): Promise<void> {
   }
 
   const canonical = new Set<string>();
-  for (const line of text.split("\n")) {
-    const id = line.split(",")[0]?.trim();
-    if (id.startsWith("ocd-division/")) canonical.add(id);
+  /*
+   * D24: the canonical CSV publishes a `census_geoid` column, and every
+   * boundary feature here carries the same GEOID. That is an EXACT key on
+   * both sides — the Census Bureau's own primary key for the entity — so it
+   * is the join, and the slug comparisons below are only what is left when it
+   * finds nothing. Reading it is what closed 348 unmatched divisions into a
+   * real number plus a stated reason apiece.
+   *
+   * The header is read rather than assumed: a column's POSITION is not a
+   * contract, and a hardcoded index that silently pointed at the wrong column
+   * would produce confident wrong matches — the failure mode this whole row
+   * is about.
+   */
+  const lines = text.split(/\r?\n/);
+  const header = (lines[0] ?? "").split(",").map((h) => h.trim());
+  const geoidColumn = header.indexOf("census_geoid");
+  if (geoidColumn < 0) {
+    console.log(
+      "  canonical CSV has no census_geoid column — the GEOID join cannot run, " +
+        "falling back to slug comparison alone",
+    );
   }
-  console.log(`  canonical identifiers: ${canonical.size}`);
+  const byGeoid = new Map<string, string[]>();
+  for (const line of lines) {
+    const columns = line.split(",");
+    const id = columns[0]?.trim();
+    if (!id?.startsWith("ocd-division/")) continue;
+    canonical.add(id);
+    if (geoidColumn < 0) continue;
+    const geoid = columns[geoidColumn]?.trim();
+    if (!geoid) continue;
+    const list = byGeoid.get(geoid) ?? [];
+    list.push(id);
+    byGeoid.set(geoid, list);
+  }
+  console.log(
+    `  canonical identifiers: ${canonical.size}, of which ${byGeoid.size} carry a census_geoid`,
+  );
 
   // Index by the last segment so a differently-nested identifier can still be
   // found: canonical nests NJ places under county and AZ school districts under
@@ -192,6 +229,55 @@ async function reconcile(divisions: Division[]): Promise<void> {
       continue;
     }
 
+    /*
+     * The GEOID join, before any slug comparison (D24). Both sides carry the
+     * Census Bureau's key for the entity, so a hit here is an identifier
+     * match and not a name match — which is the distinction CLAUDE.md draws
+     * between a join and a review item.
+     *
+     * More than one canonical id on one GEOID means the canonical list holds
+     * the same entity twice; that is ambiguous and takes the same `low`
+     * treatment a multi-candidate slug match takes, never a first-wins pick
+     * dressed as certainty.
+     */
+    const geoidHits = division.geoid ? (byGeoid.get(division.geoid) ?? []) : [];
+    if (geoidHits.length === 1) {
+      division.canonicalOcdId = geoidHits[0];
+      division.canonicalMatch = "geoid";
+      continue;
+    }
+    if (geoidHits.length > 1) {
+      division.canonicalOcdId = geoidHits[0];
+      division.canonicalMatch = "low";
+      continue;
+    }
+
+    /*
+     * The Census-name join, third and narrowest (D24).
+     *
+     * The canonical list carries NO census_geoid for legislative districts —
+     * it keys them on `openstates_district` — and New Hampshire is the one
+     * state whose House districts it slugs by COUNTY and number
+     * (`sldl:merrimack_8`) where this repo carries the Census SLDLST code
+     * (`sldl:608`). All 43 of New Hampshire's unmatched lower-house
+     * districts are exactly that, and no other state or chamber is affected:
+     * Arizona, New Jersey and every senate district already match by number.
+     *
+     * **This is not a fuzzy join, and the difference is the whole point.**
+     * The Census publishes the county and the number in its own name field
+     * ("State House District Merrimack 08"); this reads them, builds the
+     * canonical identifier they imply, and accepts it ONLY if that exact
+     * identifier is in the canonical set. There is no similarity, no nearest
+     * match and no scoring — a constructed id that is not present is a miss,
+     * and stays a miss.
+     */
+    const named = canonicalIdFromCensusName(division);
+    if (named && canonical.has(named)) {
+      division.canonicalOcdId = named;
+      division.canonicalMatch = "census_name";
+      continue;
+    }
+
     const tail = division.ocdId.split("/").pop()!;
     const stateSegment = division.ocdId.split("/")[2];
     const candidates = (byTail.get(tail) ?? []).filter((id) =>
@@ -208,7 +294,82 @@ async function reconcile(divisions: Division[]): Promise<void> {
     } else {
       division.canonicalOcdId = null;
       division.canonicalMatch = "none";
+      division.canonicalGap = gapReason(division);
     }
+  }
+}
+
+/**
+ * Build the canonical identifier a division's CENSUS NAME implies (D24).
+ *
+ * Returns null unless the name matches the one published shape this handles,
+ * and the caller still has to find the result in the canonical set — so a
+ * wrong guess cannot become a match. Deliberately one narrow rule rather
+ * than a general name parser: a general one would start matching things that
+ * merely look alike, which is what `CLAUDE.md` forbids joining on.
+ */
+function canonicalIdFromCensusName(division: Division): string | null {
+  if (division.divisionType !== "sldl") return null;
+  // "State House District Merrimack 08" — county, then a zero-padded number.
+  const match = /^State House District ([A-Za-z .'-]+?)\s+0*(\d+)$/.exec(
+    division.label.trim(),
+  );
+  if (!match) return null;
+  const county = match[1].trim().toLowerCase().replace(/[^a-z0-9]+/g, "_");
+  const state = division.ocdId.split("/")[2];
+  return `ocd-division/country:us/${state}/sldl:${county}_${Number(match[2])}`;
+}
+
+/**
+ * Why this division has no canonical counterpart (D24).
+ *
+ * Read entirely off Census FUNCSTAT, which this repo already carries per
+ * division. Nothing here inspects a name, and nothing guesses: a value that
+ * cannot be established says so.
+ *
+ * FUNCSTAT, from the Census Bureau's own definitions:
+ *   A  active government, primary general-purpose functions
+ *   B  active, partially consolidated with another government
+ *   C  active, consolidated with another government
+ *   G  active, subordinate to another unit of government
+ *   F  fictitious entity, created only to fill the geographic hierarchy
+ *   N  nonfunctioning legal entity
+ *   S  statistical entity — a CDP and its kind
+ *
+ * S and F are correctly absent from a list of governments. A, B, C and G are
+ * governments the canonical list does not enumerate, which is a gap in that
+ * list and is stated as one.
+ */
+function gapReason(division: Division): CanonicalGap {
+  switch (division.funcstat) {
+    case "S":
+      return "NOT_A_GOVERNMENT";
+    case "F":
+      return "FICTITIOUS";
+    case "A":
+    case "B":
+    case "C":
+    case "G":
+      return "GOVERNMENT_NOT_LISTED";
+    default:
+      /*
+       * FUNCSTAT is null here — the legislative and school layers do not
+       * publish it — but that is not the end of what can be established.
+       *
+       * A GEOID whose last five digits are 99997/99998/99999 is a Census
+       * PSEUDO-ENTITY: "school district not defined", drawn so the school
+       * layer tiles the state completely. Nobody is elected to it and no
+       * canonical list should carry it.
+       *
+       * Every other school district has an elected board by construction, so
+       * its absence from the canonical list is a gap in that list.
+       */
+      if (division.divisionType === "school_district") {
+        return /9999[789]$/.test(division.geoid ?? "")
+          ? "NOT_A_GOVERNMENT"
+          : "GOVERNMENT_NOT_LISTED";
+      }
+      return "UNDETERMINED";
   }
 }
 
@@ -350,6 +511,23 @@ async function main() {
   console.log("\n  canonical match");
   for (const [m, n] of [...matches.entries()].sort()) {
     console.log(`  ${m.padEnd(10)} ${String(n).padStart(5)}`);
+  }
+
+  /*
+   * D24: an unmatched division is not a failure until you know what it is,
+   * and this is the denominator that says so. Printed here rather than left
+   * in the file, because a number nobody prints is a number nobody chases —
+   * the same reason the attribution summary prints its unresolved segments.
+   */
+  const gaps = new Map<CanonicalGap | "(unset)", number>();
+  for (const d of divisions.filter((x) => x.canonicalMatch === "none")) {
+    const key = d.canonicalGap ?? "(unset)";
+    gaps.set(key, (gaps.get(key) ?? 0) + 1);
+  }
+  const unmatched = [...gaps.values()].reduce((a, b) => a + b, 0);
+  console.log(`\n  canonical gap, for the ${unmatched} of ${divisions.length} with no match`);
+  for (const [g, n] of [...gaps.entries()].sort()) {
+    console.log(`  ${g.padEnd(22)} ${String(n).padStart(5)}`);
   }
 
   const registry: Registry = { generatedAt: now, divisions, bodies };

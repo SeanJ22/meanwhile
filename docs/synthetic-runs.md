@@ -178,3 +178,36 @@ sanctioned write path is `intake-limiter-purge` (R43). Correcting them needs
 either the author at the console or a new named sanction — it is not something
 a session should grant itself. The window above is exact so the correction is
 a filter and never a hunt.
+
+### CORRECTION — the first guard was a no-op, and four more rows leaked proving it
+
+The fix written above was `delete navigator.sendBeacon`. **It does nothing.**
+`sendBeacon` lives on `Navigator.prototype`, so deleting the own property on
+`navigator` removes a property that was never there and the prototype method
+still resolves. The guard type-checked, read correctly, and changed nothing.
+
+It was caught the only way it could be: by re-running the walk and checking a
+number that should not have moved. **Organic went 3 → 7.** Four more of our own
+rows landed as readers, in the very run that was supposed to prove the fix.
+
+**The working form** is an explicit override, now in all ten contexts:
+
+```js
+Object.defineProperty(navigator, "sendBeacon", {
+  value: undefined,
+  configurable: true,
+});
+```
+
+**Verified by measurement, not by reading it again.** Organic before a run that
+asks three questions: 7. Organic after: 7. Synthetic over the same run:
+2143 → 2150. The events landed declared.
+
+**The full leak is seven rows, all `QUESTION_ASKED`, all `run_id` null**, in
+two windows — `18:13:00Z`, `18:14:12Z`, `18:15:25Z` (walk 7), and `18:34:23Z`,
+`18:35:32Z`, `18:36:43Z`, `18:37:52Z` (walk 8). None are backmarked, for the
+reason given above: that needs a production write nobody has sanctioned.
+
+This is the third time in this session that a change which looked right did
+nothing until it was measured. The lesson is not new and it is the repo's own:
+verify the result, never the absence of an error.

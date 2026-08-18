@@ -102,8 +102,10 @@ async function measure(
   // we sell. Removing it forces the fetch fallback, which carries the header.
   await context.addInitScript(() => {
     try {
-      // @ts-expect-error — removing a DOM method on purpose, in a test context
-      delete navigator.sendBeacon;
+      Object.defineProperty(navigator, "sendBeacon", {
+        value: undefined,
+        configurable: true,
+      });
     } catch {
       // Still declared on every fetch if it cannot be removed.
     }

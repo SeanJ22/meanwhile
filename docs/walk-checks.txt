@@ -91,6 +91,13 @@
 [0819] 85701: the ask box is on the who-governs card
 [0819] D40: distinct officials render distinct campaign books
 [f] 03255: Kearsarge Regional School District's sittings
+[g10] 85701: agenda attribution reaches the served payload
+[g10] 85701: an unresolved heading is attributed to NOTHING, never to the host
+[g10] 85701: every acting-body row quotes the heading it was read from
+[g10] 85701: every online meeting says how it is held
+[g10] 85701: meetings held online are reachable at all
+[g10] 85701: no acting body was read off a layout marker
+[g10] 85701: no online meeting was given a place
 [g3] /ballot names the pick as a ballot-building action at 03255
 [g3] /ballot names the pick as a ballot-building action at 07866
 [g3] /ballot names the pick as a ballot-building action at 85641
@@ -187,7 +194,4 @@
 [g9] the map: carries no personal email address
 [g9] the sidebar offers the in-app feedback route
 [h] 03255: the governing count matches the frozen external denominator
-[hotfix-0817] 03255: each carried row's stated timestamp is the one the snapshot records
-[hotfix-0817] 03255: no carried row is claimed to be as fresh as the snapshot
 [hotfix-0817] 03255: only rows from a source that reported a gap carry a mark
-[hotfix-0817] 03255: the footer does not speak for the carried rows

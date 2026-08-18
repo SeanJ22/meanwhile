@@ -46,6 +46,8 @@
     "sheet": "tsx scripts/contact-sheet.mts",
     "walk:0815g": "tsx scripts/walk-0815g.mts",
     "walk:all": "tsx scripts/walk-all.mts",
+    "probe:r47": "tsx scripts/probe-r47.mts",
+    "probe:m139": "tsx scripts/probe-m139.mts",
     "congress:fetch": "tsx scripts/fetch-congress-legislators.mts",
     "congress:migrate": "tsx scripts/migrate-congress-directory.mts",
     "shoot:0816": "tsx scripts/shoot-0816.mts",

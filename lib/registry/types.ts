@@ -175,7 +175,65 @@ export type SourceDataset =
  * prescribes for national scale anyway. Anything below `high` is a review
  * item, not a join.
  */
-export type CanonicalMatch = "exact" | "high" | "low" | "none";
+export type CanonicalMatch =
+  /** The identifiers are the same string. */
+  | "exact"
+  /**
+   * Matched on **Census GEOID**, which both sides carry and neither invents
+   * (D24, 2026-08-17).
+   *
+   * The strongest match after an identical string, and stronger than `high`:
+   * a GEOID is the Census Bureau's own primary key for the entity, so this is
+   * a join on an identifier rather than on a name. It exists because the
+   * canonical list nests differently from this repo — New Jersey places under
+   * county, Arizona school districts under county — and slugs the same
+   * government differently often enough that a tail comparison misses it.
+   * `census_geoid` is a column of the canonical CSV; nothing here derives it.
+   */
+  | "geoid"
+  /**
+   * Built from the Census's own NAME field and then FOUND in the canonical
+   * set (D24). Not a similarity match: the identifier is constructed from
+   * published components and accepted only on exact membership. Today this
+   * is New Hampshire's House districts alone, which the canonical list slugs
+   * by county and number where this repo carries the Census SLDLST code.
+   */
+  | "census_name"
+  /** Same terminal segment, same state, different nesting. */
+  | "high"
+  /** Same terminal segment, several candidates. A review item, never a join. */
+  | "low"
+  /** Nothing corresponds. `canonicalGap` says what was established about why. */
+  | "none";
+
+/**
+ * Why a division has no canonical counterpart (D24, 2026-08-17).
+ *
+ * The row asked for the gap to be closed where a match exists and RECORDED
+ * PER DIVISION where it does not, and this is that record. Every value is
+ * read off a Census field this repo already carries — never inferred from a
+ * name, and never a guess dressed as a category.
+ *
+ * `NOT_A_GOVERNMENT` and `FICTITIOUS` are not failures. A CDP is a
+ * statistical area the Census draws so it can publish numbers for a populated
+ * place with no government; nobody is elected to it and no canonical list
+ * should carry it. A fictitious entity exists only to fill the geographic
+ * hierarchy. Both are correctly absent, and saying so is the finding.
+ *
+ * `GOVERNMENT_NOT_LISTED` is the one that is a real gap, and it is a gap in
+ * the CANONICAL LIST rather than here: an active general-purpose government,
+ * with a boundary the Census publishes, that opencivicdata does not enumerate.
+ * It is stated as what it is and never smoothed over.
+ */
+export type CanonicalGap =
+  /** Census FUNCSTAT S — a statistical entity, not a government. */
+  | "NOT_A_GOVERNMENT"
+  /** Census FUNCSTAT F — created only to fill the geographic hierarchy. */
+  | "FICTITIOUS"
+  /** Active government (FUNCSTAT A/B/C/G) absent from the canonical list. */
+  | "GOVERNMENT_NOT_LISTED"
+  /** FUNCSTAT is not published for this layer, so nothing can be established. */
+  | "UNDETERMINED";
 
 export interface RegistryProvenance {
   sourceUrl: string | null;
@@ -206,9 +264,25 @@ export interface Division {
   funcstat: string | null;
   /** Census class code. Names the duplicate directly — `C2`/`C5`/`C6`, `Z7`. */
   classfp: string | null;
+  /**
+   * The Census Bureau's own primary key for this entity (D24).
+   *
+   * Carried on every boundary feature and, until this row, dropped at the
+   * registry build — which is why 348 divisions had no canonical counterpart
+   * while the canonical list published a `census_geoid` column that would
+   * have matched many of them exactly. Retained so the canonical join is on
+   * an identifier and the whole reconciliation is re-derivable from an exact
+   * key rather than from slug rules.
+   */
+  geoid: string | null;
   /** The canonical identifier, if one could be matched. */
   canonicalOcdId: OcdId | null;
   canonicalMatch: CanonicalMatch;
+  /**
+   * Present exactly when `canonicalMatch` is `none` — what was established
+   * about why (D24). Never a guess; see `CanonicalGap`.
+   */
+  canonicalGap?: CanonicalGap;
   sourceDataset: SourceDataset;
   provenance: RegistryProvenance;
 }

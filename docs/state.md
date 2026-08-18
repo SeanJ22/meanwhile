@@ -1988,7 +1988,22 @@ replaced.
 
 ## 7. Current state of the branch
 
-**Working on `claude/h2-carry-forward-truth-0817`** (2026-08-17, the
+**Working on `claude/g11-env-and-queue-0817`** (2026-08-17, the g11 session),
+branched from `main` at `4900d5e` — section §46 records it in full: R36 and
+R42 CLOSED on thirteen passing checks and the first production run-id census
+since the marker shipped (3,888 rows, 0 organic); the one sanctioned production
+write handle with both refusals planted and demonstrated; migrations 0006, 0007
+and 0008 applied to production and verified by column query; R41 built as the
+author ruled (the optional reply field, its own column, joined to nothing);
+M12 (the school overlay split three ways, with the class audited at three
+sites); D22 CLOSED AS A FINDING (no live NovusAgenda tenant in scope — the
+vendor wildcards its subdomain namespace and answers 200 to everything); and
+G05 rule 4d (the router learns four in-app destinations, so the copy may name
+them). **test 909 pass · lint 0 errors, 16 pre-existing warnings · build exit
+0**, verified by exit code. Four of five brief items whole; within the fifth,
+one sub-item of five.
+
+**Previously: `claude/h2-carry-forward-truth-0817`** (2026-08-17, the
 carry-forward hotfix), branched from `main` at `2dbae55` — the session §39
 records: the snapshot invariant taught that carry-forward exists (D66), the
 carried row that no longer inherits the footer's freshness (M142), and item
@@ -9752,3 +9767,221 @@ both-null accepted, each mismatch refused by Postgres by name.
 g7 item 4–8 block — the ask surface, G05, G07, D35 and the fourteen finish-now
 rows — was not started. Every one keeps its tracker row unchanged; nothing was
 half-built.
+
+## 46. The 2026-08-17 g11 session — the env rows close, a reply becomes possible, and a namespace answers 200 to everything
+
+Written 2026-08-17 (`pnpm stamp`). The session was told to close the two
+environment rows, apply the waiting migrations, build R41, then work the
+queue. **Four of five items are whole; the fifth is one sub-item of five whole
+and four deferred.** Stated against its denominator below.
+
+### R36 and R42 close, on thirteen checks and a census
+
+The author corrected the host. `WTP_PRODUCTION_DATABASE_URL_READONLY` now
+points at the production endpoint `ep-dry-river-axwtolzc-pooler` carrying role
+`readonly`, and `pnpm verify:readonly` passes every check and prints
+**R36 CLOSES**. Thirteen checks ran and thirteen passed — the count is stated
+rather than carried forward from g10's note that said nine, because the
+instrument grew a branch probe and a fourth store since that number was
+written. One BRANCH check, two IDENTITY (`current_user = readonly`,
+`pg_has_role(neon_superuser) = false`), eight PRIVILEGE (SELECT granted and all
+three writes denied on each of `search_log`, `reactions`, `intake_limiter`,
+`feedback`), and two ATTEMPTED OPERATIONS — a SELECT that returns a row, and a
+DELETE the database refuses in its own words.
+
+`pnpm verify:local-write` passes all of its, **branch separation included** —
+which is what closes R42. g10 could only offer a structural inference that its
+local write had not reached production; the two variables now demonstrably name
+different branches, so it is an assertion.
+
+**The production census ran for the first time since the marker shipped.**
+`search_log` holds **3,888 rows: 0 ORGANIC, 1,026 SYNTHETIC, 2,845 UNKNOWN, 17
+AUTHOR**, reconciling exactly to the total, across 52 distinct non-organic run
+ids. `feedback` holds 1 row, 0 organic, 1 synthetic — g9's R40 probe, correctly
+labelled. Zero organic is the expected and correct number: nobody who is not us
+has used this yet.
+
+The census is now a command, `pnpm census:runs`, rather than something each
+session assembles. This is the table the business sells, and a number a session
+assembles by hand is a number a session can assemble differently. It prints the
+connection first, reconciles the classes against the total and FAILS if they do
+not, carries the organic denominator sentence in the exact words every export
+uses, and reports an unreadable table as COULD NOT READ with the database's own
+words — never as zero, which would read as "no readers used the product."
+
+**One thing found and left alone, because it is a grant the author owns:** the
+`readonly` role has no USAGE on the `drizzle` schema, so a migration-journal
+read through that variable returns *permission denied for schema drizzle*. Not
+a blocker — the journal is read through the write handle — but a future
+schema-currency check on the read handle will need the grant.
+
+### The write handle, and the two refusals that are proven rather than described
+
+`WTP_PRODUCTION_DATABASE_URL_WRITE` holds the production owner string, per the
+author's ruling A. `pnpm verify:write-handle` proves it end to end: it resolves,
+confirms it is not the branch `DATABASE_URL` calls local, writes one
+SYNTHETIC-marked row, reads it back BY its run id, deletes it and prints
+`search_log 3888 -> 3888, delta 0`.
+
+`lib/db/write-handle.ts` is the one sanctioned path, and it refuses two ways.
+**By variable name:** `WTP_PRODUCTION_DATABASE_URL_READONLY` is refused
+whatever it contains, because a variable whose name says read is never a write
+handle — which is not hypothetical, since it held an owner string for the whole
+of this repo's life until yesterday. **By connection user:** any string whose
+user is `readonly` is refused whatever variable it arrives in, so the mirror
+mistake fails at the script instead of ten statements into a migration.
+
+Both refusals are planted and demonstrated — at the unit in
+`tests/write-handle.test.ts`, and at the script, where a readonly string planted
+into the write variable makes both `pnpm db:apply` and `pnpm searchlog:backmark`
+refuse before opening a connection. A guard whose refusal has never been seen is
+a comment.
+
+`searchlog:backmark` moved onto the handle in the same change. Until today it
+read the READONLY variable for `--target=production`: a variable named read was
+this repo's actual write path to production.
+
+### The migrations, and a runner that stops the hand pass
+
+Migrations **0006 and 0007** are applied to production and verified by column
+query through the independent read handle: `meetings.ocd_id`,
+`division_vintage`, `location_name`, `location_lat`, `location_lng` all
+nullable, `online_label` and `online_join_url` present, and the CHECK constraint
+`meetings_division_vintage_pairing` on the table by name. **0008** — R41's
+`feedback.reply_to` — followed the same path. The production journal holds 9 of
+9.
+
+`pnpm db:apply` exists because `drizzle-kit migrate` exits 1 with no message on
+this machine, and the hand pass that replaced it twice — execute the SQL, insert
+the journal row with a matching sha256 — was one hash away from going wrong the
+third time. It refuses a migration that contains no statements, and it stops on
+the first failing statement without journalling, saying how many statements
+landed.
+
+One thing worth keeping: the runner first exited **3221226505** on a fully
+successful dry run. The Neon HTTP driver still holds a libuv handle at
+`process.exit()`, and exiting through it aborts. A script that did its work
+correctly was reporting failure to every caller that checks an exit code.
+
+### R41: the reply becomes possible, and one sentence stops being true
+
+The author ruled **A**. The form has one optional email field, blank by default,
+with the optionality in its own label — `Your email — optional` — rather than in
+fine print below it. The submit button never waits on it; it can only be blocked
+by a value the reader actually typed being malformed.
+
+**The scrub asymmetry is the whole ruling, and it is separated by WHERE the text
+was typed rather than by what it looks like.** The message body still goes
+through T09 exactly as before — a reader who puts their number inside a
+complaint is protected, because they did not ask to be contacted. The reply
+field is stored unscrubbed, because typing into a box labelled "your email —
+optional" is a deliberate, disclosed act, and scrubbing it would delete the
+thing the reader asked for. Tests pin the write path at **exactly one** scrub
+call and assert the address can never be derived from the message body.
+
+**The sentence that had to change.** The form promised flatly that we cannot
+write back. That is now true of exactly one case, so the page says which case
+the reader is in, and so does the confirmation after sending: a blank submission
+is told plainly that no reply is possible; one carrying an address is told a
+reply is possible. Two different facts, never rendered as the same sentence.
+
+The join check is extended two ways. `tests/db-schema.test.ts` pins `reply_to`
+to the feedback table alone — the same guard shape the reaction continuity key
+carries — asserts it is nullable, and asserts it is NOT in the `allowedShared`
+list. The fragment exception is an exact `(store, column)` allow-list rather
+than a softened `FORBIDDEN_FRAGMENTS`, because loosening the fragment list would
+quietly permit the next contact column anyone adds anywhere.
+`scripts/walk-r41.mts` checks the same property against the LIVE database, which
+is a different claim a migration could have broken.
+
+### M12: three school districts stop being drawn as one
+
+A K-8 elementary boundary and a regional secondary boundary trace the same
+ground in Rockaway. `districtsAt` already returned both as separate hits with
+distinct labels; the map drew them identically. The reader who has never been
+there cannot infer two governments from one line style.
+
+Three types, three sources, three toggles — the Filters header reads 8/8 where
+it read 6/6. The three read apart on purpose: unified is heaviest because it
+covers everything, elementary stays the fine dot, and secondary is a long-short
+dash deliberately least like the other two, because secondary is the one that
+overlaps elementary and being confusable there is the defect.
+
+**The class was audited rather than the instance fixed.** Every place mapping a
+division to a map layer wanted the single school type, and an OCD id says
+`school_district:` and stops there. Three sites found, three fixed: the
+narrowed-district shading, the apply-narrowing overlay turn-on, and the
+reachability test's layer map. The two runtime sites reach every school type,
+which is exact — the Census gives each district exactly one — where guessing at
+one would have shaded nothing for two thirds of the country's school districts.
+
+Verified in a real browser at 07866: nine layers on the style, three checkboxes,
+badge 8/8.
+
+### D22: a namespace that answers 200 to everything
+
+The row asked for a NovusAgenda adapter against a live tenant. **There is no
+live tenant in scope**, and that was settled by sweeping the vendor's namespace
+rather than by re-reading the one body the row was opened on.
+
+The Vail tenant was re-read on 2026-08-17 rather than taken from a three-day-old
+note: 200, and **zero** meeting rows. Then 23 candidate tenant names covering
+every body in the four zips were probed at
+`<tenant>.novusagenda.com/agendapublic/`, serialized at a 600 ms pace with an
+identified `User-Agent`. Zero carry a meeting row.
+
+**Twenty-two of the 23 answered HTTP 200 — with NovusAgenda's own `Error.aspx`
+page**, styled, logo'd, left nav intact, 1,384 bytes against a real tenant's
+78,576. The vendor wildcards its per-client subdomain namespace, so a 200 from
+`novusagenda.com` is not evidence that a body is a client — which is exactly how
+the 2026-08-12 HIT that opened this row was recorded. Fifth sighting of "exists
+and carries nothing", and now a permanent playbook rung: a per-client subdomain
+is a namespace and a namespace can have a wildcard, so fetch a known-good tenant
+in the same sweep and compare length and shape, never a status code.
+
+No adapter was built, and the reason is data rather than difficulty: its only
+possible fixture would be an empty portal, so it would report success while
+returning nothing. `NOVUSAGENDA` stays typed so a real tenant is a wiring row.
+
+### G05 rule 4d: the router learns four places, so the copy may name them
+
+Rule 4d's gate is one sentence — *the copy may only promise what the router can
+route* — and it is why this was built before any of the ask surface's copy. The
+router knew one kind of answer: the office that owns a problem. A reader asking
+what is on their ballot is not asking who owns a problem.
+
+So there is a second kind: a **destination**, an in-app surface pointed at by
+name. Four of them, exactly the four the rule names. It generates nothing —
+every label, sentence and phrase is a committed row in
+`lib/routing/destinations.ts`, which imports nothing at all.
+
+**The overlap is what made this delicate.** "Ballot" is already a keyword of
+`elections-voting`, whose answer is right for "how do I vote" and wrong for
+"what is on my ballot". A single word is therefore never asked to separate them:
+destinations match multi-word phrases only, every single-word case falls through
+exactly as before, and twelve previously-routed questions are held to the same
+topic by a regression net that runs first in the test file.
+
+The gate is code rather than a promise: the explainer reads its category names
+from the routes, so removing a route removes its promise in the same edit.
+
+**One defect found while building, and it is the render-default rule wearing a
+logging hat.** A question answered only by a destination would have been logged
+`NO_ROUTE` with its text. A06's refusal log IS the roadmap, so the product would
+have filed "what is on my ballot" under things it cannot do, seconds after
+answering it. A destination is an answer and is logged as one — verified by
+reading the rows back out of the store.
+
+### What was deferred, whole and specced
+
+**The rest of the g7 item 4–8 block.** Item 4's remaining halves — **A01** (the
+natural-language entry point), **A02** (the "what's going on where I live"
+digest) and **M119** (merging the sidebar's two inputs into one, keyword-first)
+— are untouched. **A06** and **A07** are verified working and their rows carry
+that evidence, but both are specced to close in A01's own PR and so stay open.
+**G05's other six rules** (4a, 4b, 4c, 4e, 4f, 4h), **G07**, **D35** and the
+**fourteen finish-now rows** were not started.
+
+Nothing is half-built. The deferral boundary fell between subjects: rule 4d is
+its own numbered rule, listed separately in the brief's own enumeration, and it
+was completed whole.

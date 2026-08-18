@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 
 import { answerQuestion, REFUSAL_LOG_MAX_CHARS, type AskAnswer } from "@/lib/routing/ask";
+import { ROUTABLE_CATEGORIES } from "@/lib/routing/destinations";
 import { ASK_BEAT_POOL, beatStem, drawAskBeat } from "@/lib/routing/ask-beat-pool";
 import type { CoverageSummary } from "@/lib/registry/coverage";
 import { logEvent } from "@/lib/log/client";
@@ -111,14 +112,35 @@ export function AskBox({
         if (topic) result = answerQuestion(question, coverage, zip, topic);
       }
 
-      if (result.answer.kind === "ROUTED" && result.match) {
+      /*
+       * G05 rule 4d (2026-08-17): a destination IS an answer, so a question
+       * that reached one is not a refusal.
+       *
+       * This mattered more than it looks. The refusal log is the roadmap —
+       * A06's whole reason for existing is that every unanswered question is
+       * a data gap or a feature. Logging "what's on my ballot" as NO_ROUTE
+       * after showing the reader the ballot page would put an ANSWERED
+       * question into the list of things this product cannot do, and the
+       * roadmap would be built on it. The same rule as everywhere else: a
+       * record may never assert something the surface did not do.
+       *
+       * The destination id is a curated constant — one of four — and carries
+       * no more about a reader than a topic id does.
+       */
+      const routedSomewhere = Boolean(
+        (result.answer.kind === "ROUTED" && result.match) || result.destination,
+      );
+      if (routedSomewhere) {
         // The topic id, as always. `via` marks the rung that found it so a
         // later audit can tell a classifier route from a keyword one — a
         // fact about our machinery, never about the reader.
         logEvent("QUESTION_ASKED", ocdIds, {
-          topic: result.match.topicId,
+          topic: result.match?.topicId ?? "DESTINATION_ONLY",
           routed: true,
-          ...(result.match.via ? { via: result.match.via } : {}),
+          ...(result.match?.via ? { via: result.match.via } : {}),
+          ...(result.destination
+            ? { destination: result.destination.destination.id }
+            : {}),
         });
       } else {
         // The refusal is the roadmap: the question rides along, capped,
@@ -152,9 +174,24 @@ export function AskBox({
       >
         Who do I talk to about…?
       </label>
+      {/*
+        G05 rule 4d (2026-08-17): the copy may only promise what the router
+        can route. The four in-app categories are READ FROM the router
+        (`ROUTABLE_CATEGORIES`), so a category cannot be named here unless a
+        route for it exists in destinations.ts, and removing a route removes
+        its promise in the same edit. The topic half of the sentence keeps
+        its concrete examples, which is what actually teaches the box.
+      */}
       <p className="mt-0.5 text-[0.6875rem] leading-relaxed text-voice">
         A pothole, the library, your kid&apos;s school — we&apos;ll point you
-        at the office that owns it.
+        at the office that owns it. Or ask for{" "}
+        {ROUTABLE_CATEGORIES.map((category, i) => (
+          <span key={category}>
+            {i > 0 && (i === ROUTABLE_CATEGORIES.length - 1 ? " or " : ", ")}
+            <span className="text-paper">{category.toLowerCase()}</span>
+          </span>
+        ))}
+        .
       </p>
       <div className="mt-2.5 flex gap-2">
         <input
@@ -191,6 +228,39 @@ export function AskBox({
           {beatStem(beat)}
           <span aria-hidden="true">{".".repeat(dots)}</span>
         </p>
+      )}
+
+      {asked && asked.destination && (
+        /*
+          G05 rule 4d: the in-app destination. It rides ALONGSIDE the topic
+          answer rather than replacing it — "when does the school board meet"
+          is both a meetings destination and a schools topic, and dropping one
+          would answer less than we know.
+
+          Level throughout: every word describes what is on a surface, and
+          none of it claims the surface is complete. The gaps each surface
+          already states stay that surface's job to state.
+        */
+        <div
+          data-ask-destination={asked.destination.destination.id}
+          className="mt-3 rounded-md border border-[var(--signal)]/35 bg-[var(--signal)]/5 p-3"
+        >
+          <p className="t-eyebrow text-signal">Where to look</p>
+          <p className="mt-1 text-[0.9375rem] font-semibold leading-snug text-paper">
+            {asked.destination.destination.label}
+          </p>
+          <p className="mt-1 text-[0.75rem] leading-relaxed text-voice">
+            {asked.destination.destination.statement}
+          </p>
+          {asked.destination.destination.href && (
+            <a
+              href={asked.destination.destination.href}
+              className="mt-1.5 inline-block text-[0.75rem] text-link underline decoration-dotted underline-offset-2"
+            >
+              {asked.destination.destination.label}
+            </a>
+          )}
+        </div>
       )}
 
       {asked && asked.answer.kind === "NO_ROUTE" && (

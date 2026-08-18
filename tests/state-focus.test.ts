@@ -118,14 +118,28 @@ test("each state fetches its own files and no other state's", () => {
   const az = filesFor("congressional", "AZ");
   assert.deepEqual(az, ["cd119-04.geojson"]);
 
-  const school = filesFor("school", "NH");
-  assert.ok(school.length > 0, "New Hampshire fetches some school geometry");
-  for (const file of school) {
-    assert.ok(
-      file.includes("-33."),
-      `${file} is not New Hampshire's and must not be fetched for it`,
-    );
+  /*
+   * M12 (2026-08-17): each of the three school types now fetches its OWN
+   * state file, and each is checked. Asserting one of them and calling it
+   * "school" would have left two thirds of the split unverified — and the
+   * per-type file lists are exactly where a copy-paste split goes wrong.
+   */
+  for (const type of ["school-unified", "school-elementary", "school-secondary"] as const) {
+    const files = filesFor(type, "NH");
+    assert.ok(files.length > 0, `New Hampshire fetches some ${type} geometry`);
+    for (const file of files) {
+      assert.ok(
+        file.includes("-33."),
+        `${file} is not New Hampshire's and must not be fetched for ${type}`,
+      );
+    }
   }
+
+  // And the three do not fetch each other's files — the check that a
+  // copy-paste split would fail.
+  assert.deepEqual(filesFor("school-unified", "NH"), ["unsd-33.geojson"]);
+  assert.deepEqual(filesFor("school-elementary", "NH"), ["elsd-33.geojson"]);
+  assert.deepEqual(filesFor("school-secondary", "NH"), ["scsd-33.geojson"]);
 });
 
 test("a national file is fetched for every state", () => {

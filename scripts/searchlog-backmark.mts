@@ -49,9 +49,16 @@
  *
  * `.env.local`'s `DATABASE_URL` now points at a LOCAL Neon branch (R34), so
  * the default target is local and a run against production is an explicit act:
- * `--target=production` reads `WTP_PRODUCTION_DATABASE_URL_READONLY`. The
- * target is printed by role and host on every run, because a backmark against
- * the wrong database is a silent no-op that reports success.
+ * `--target=production` resolves the ONE sanctioned production write handle
+ * through `lib/db/write-handle.ts`. The target is printed by role and host on
+ * every run, because a backmark against the wrong database is a silent no-op
+ * that reports success.
+ *
+ * Until 2026-08-17 this script read `WTP_PRODUCTION_DATABASE_URL_READONLY` for
+ * that target — a variable whose name says read, used as this repo's actual
+ * write path to production. It is now refused by name (g11), whatever it
+ * happens to contain, and this script asks for the write variable by its own
+ * name instead.
  *
  * Run: `pnpm searchlog:backmark` (needs DATABASE_URL). `--dry` prints the
  * counts and writes nothing. `--target=production` writes to production.
@@ -62,19 +69,36 @@ import { join } from "node:path";
 import { config as loadEnv } from "dotenv";
 import { neon } from "@neondatabase/serverless";
 
+import { resolveProductionWriteHandle, WriteHandleRefused } from "../lib/db/write-handle.ts";
+
 loadEnv({ path: join(process.cwd(), ".env.local") });
 
 const DRY = process.argv.includes("--dry");
 const PRODUCTION = process.argv.includes("--target=production");
 
-const connection = PRODUCTION
-  ? process.env.WTP_PRODUCTION_DATABASE_URL_READONLY
-  : process.env.DATABASE_URL;
-const which = PRODUCTION ? "WTP_PRODUCTION_DATABASE_URL_READONLY" : "DATABASE_URL";
+let connection: string;
+let which: string;
 
-if (!connection) {
-  console.error(`searchlog:backmark: ${which} is not set — refusing to guess`);
-  process.exit(1);
+if (PRODUCTION) {
+  try {
+    const handle = resolveProductionWriteHandle();
+    connection = handle.connection;
+    which = handle.variable;
+  } catch (error) {
+    if (error instanceof WriteHandleRefused) {
+      console.error(`searchlog:backmark: REFUSED — ${error.message}`);
+      process.exit(1);
+    }
+    throw error;
+  }
+} else {
+  const local = process.env.DATABASE_URL;
+  which = "DATABASE_URL";
+  if (!local) {
+    console.error(`searchlog:backmark: ${which} is not set — refusing to guess`);
+    process.exit(1);
+  }
+  connection = local;
 }
 
 // Named, never assumed. A backmark against the wrong database updates nothing

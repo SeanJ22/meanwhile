@@ -26,7 +26,26 @@ export type DistrictType =
   | "state-senate"
   | "state-house"
   | "county"
-  | "school"
+  /**
+   * THREE SCHOOL TYPES, NOT ONE (M12, 2026-08-17; the author's disposition,
+   * "Split and be clear").
+   *
+   * Until now `unsd`, `elsd` and `scsd` were merged into a single `school`
+   * type, so a K-8 elementary boundary and the regional high school boundary
+   * drawn over the same ground were indistinguishable — same dash, same
+   * weight, one checkbox. Rockaway 07866 is the case that makes it a defect
+   * rather than a simplification: a point there genuinely sits in an
+   * elementary district AND a secondary district at once, `districtsAt`
+   * already returned both as separate hits with distinct labels, and the map
+   * drew them as if they were the same kind of thing.
+   *
+   * They are three different governments with three different remits, and
+   * the reader who has never been there — the stranger — cannot infer that
+   * from one line style.
+   */
+  | "school-unified"
+  | "school-elementary"
+  | "school-secondary"
   | "municipal";
 
 /** Coarse body classification, used only for filtering chips. Display names

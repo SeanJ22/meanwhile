@@ -457,6 +457,26 @@ export const feedback = pgTable(
      * this same surface with a second entry point.
      */
     surface: text("surface", { enum: ["SIDEBAR", "TRANSPARENCY", "COVERAGE"] }).notNull(),
+    /**
+     * THE ONE THING A READER MAY DELIBERATELY TELL US ABOUT THEMSELVES (R41,
+     * 2026-08-17, the author's ruling A).
+     *
+     * Optional and nullable — blank is the default and blank submits. It is
+     * filled ONLY from its own labelled field, never from the message body,
+     * which stays scrubbed by T09 exactly as before. It is stored UNSCRUBBED
+     * because scrubbing it would delete the deliberate act of typing it into
+     * a field that asked for it, which is the contradiction inside R40's own
+     * spec that this row existed to settle.
+     *
+     * It is not a key and it is not ours: we minted nothing, and a reader
+     * chose to hand it over for one purpose. So the n-stores rule is
+     * unaffected, and it is held to that structurally rather than on the
+     * argument — `reply_to` exists on this table alone (asserted in
+     * `tests/db-schema.test.ts` the same way the reaction continuity key is),
+     * it appears in no export and no aggregate, and it is deleted on the same
+     * schedule as the message it came with.
+     */
+    replyTo: text("reply_to"),
     /** Same declaration and the same meanings as the search log's (C05). */
     runClass: text("run_class", { enum: ["ORGANIC", "SYNTHETIC", "UNKNOWN", "AUTHOR"] })
       .notNull()

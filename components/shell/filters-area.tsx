@@ -42,7 +42,11 @@ const DISTRICT_LABEL: Record<DistrictType, string> = {
   "state-senate": "State Senate",
   "state-house": "State House",
   county: "County",
-  school: "School",
+  // M12 (2026-08-17): three checkboxes, three labels. Plain language — a
+  // reader who has never met an "scsd" reads "School (secondary)".
+  "school-unified": "School (unified)",
+  "school-elementary": "School (elementary)",
+  "school-secondary": "School (secondary)",
   municipal: "Municipal",
 };
 

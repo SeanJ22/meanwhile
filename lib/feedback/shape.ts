@@ -12,6 +12,34 @@
 
 export const FEEDBACK_MAX_CHARS = 2000;
 
+/**
+ * The optional reply address (R41, 2026-08-17, the author's ruling A).
+ *
+ * Capped well under any real address so the field cannot be used as a second
+ * message body — a 2000-character "address" would be free text sneaking past
+ * the T09 scrub that the message half still passes through.
+ */
+export const REPLY_TO_MAX_CHARS = 254;
+
+/**
+ * Is this shaped like an address we could actually reply to?
+ *
+ * DELIBERATELY SHALLOW. It checks that there is one `@` with something either
+ * side and no whitespace — enough to catch a reader who typed a sentence into
+ * the wrong box, and nothing more. It makes NO claim that the address exists
+ * or is deliverable, and nothing anywhere renders it as though it did: a
+ * validator that implies "we checked" is the render-default rule broken at
+ * the point of collection.
+ *
+ * Blank is valid, because the field is optional and blank is its default.
+ */
+export function isReplyToShaped(value: string): boolean {
+  const trimmed = value.trim();
+  if (!trimmed) return true;
+  if (trimmed.length > REPLY_TO_MAX_CHARS) return false;
+  return /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/.test(trimmed);
+}
+
 export const FEEDBACK_SURFACES = ["SIDEBAR", "TRANSPARENCY", "COVERAGE"] as const;
 
 export type FeedbackSurface = (typeof FEEDBACK_SURFACES)[number];

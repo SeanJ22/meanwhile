@@ -147,10 +147,21 @@ test("every body the who-governs card counts is reachable on the map with defaul
     "all district-type layers default on",
   );
 
-  const LAYER_FOR_DIVISION: Record<string, string> = {
-    county: "county",
-    place: "municipal",
-    school_district: "school",
+  /*
+   * A division type maps to the CANDIDATE layers that could hold it, not to
+   * one layer (M12, 2026-08-17).
+   *
+   * Before the school split there was one school layer and one right answer.
+   * There are now three, and the Census assigns every district exactly one of
+   * them — so "reachable" means the body's feature is in AT LEAST ONE of the
+   * candidates, and every candidate has to be in the default draw set, since
+   * a body reachable only on a layer that defaults off is exactly the
+   * Kearsarge failure this test exists to catch.
+   */
+  const LAYERS_FOR_DIVISION: Record<string, string[]> = {
+    county: ["county"],
+    place: ["municipal"],
+    school_district: ["school-unified", "school-elementary", "school-secondary"],
   };
 
   const featureIds = new Map<string, Set<string>>();
@@ -176,18 +187,32 @@ test("every body the who-governs card counts is reachable on the map with defaul
     const coverage = await coverageAt(lat, lng, 1);
     for (const body of coverage.bodies) {
       if (!body.ocdId) continue; // division-less curated bodies have no layer
-      const layer = LAYER_FOR_DIVISION[body.divisionType];
+      // Hoisted: the narrowing above does not survive into the closure below,
+      // because `body.ocdId` is a mutable property.
+      const ocdId = body.ocdId;
+      const layers = LAYERS_FOR_DIVISION[body.divisionType];
       assert.ok(
-        layer,
+        layers,
         `${zip}: body ${body.ocdId} has divisionType ${body.divisionType} with no mapped layer`,
       );
+      for (const layer of layers) {
+        assert.ok(
+          (DEFAULT_DISTRICT_TYPES as readonly string[]).includes(layer),
+          `${zip}: layer ${layer} for counted body ${body.ocdId} is not in the default draw set`,
+        );
+      }
+      const found = layers.filter((layer) => idsForLayer(layer).has(ocdId));
       assert.ok(
-        (DEFAULT_DISTRICT_TYPES as readonly string[]).includes(layer),
-        `${zip}: layer ${layer} for counted body ${body.ocdId} is not in the default draw set`,
+        found.length > 0,
+        `${zip}: counted body ${body.ocdId} has no feature in any of ${layers.join(", ")} — the card claims what the map cannot show`,
       );
-      assert.ok(
-        idsForLayer(layer).has(body.ocdId),
-        `${zip}: counted body ${body.ocdId} has no feature in the ${layer} layer — the card claims what the map cannot show`,
+      // One district is one KIND of district. A body appearing in two of the
+      // three school layers would mean the source files overlap, and the
+      // reader would see the same government drawn twice in two styles.
+      assert.equal(
+        found.length,
+        1,
+        `${zip}: counted body ${body.ocdId} appears in ${found.length} layers (${found.join(", ")}) — a district belongs to exactly one`,
       );
     }
   }

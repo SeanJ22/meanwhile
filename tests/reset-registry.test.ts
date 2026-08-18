@@ -108,14 +108,28 @@ test("the reducer's filter/reset applies the registry", () => {
 test("select all and clear set the district types outright, in canonical order", () => {
   const all = reducer(INITIAL_STATE, {
     type: "filter/districtTypesSet",
-    value: ["municipal", "school", "county", "state-house", "state-senate", "congressional"],
+    value: [
+      "municipal",
+      // M12 (2026-08-17): deliberately shuffled, and deliberately naming all
+      // three school types — canonical order is what this test asserts, and
+      // it has to survive the split rather than be re-derived from it.
+      "school-elementary",
+      "school-secondary",
+      "school-unified",
+      "county",
+      "state-house",
+      "state-senate",
+      "congressional",
+    ],
   });
   assert.deepEqual(all.filters.districtTypes, [
     "congressional",
     "state-senate",
     "state-house",
     "county",
-    "school",
+    "school-unified",
+    "school-elementary",
+    "school-secondary",
     "municipal",
   ]);
 

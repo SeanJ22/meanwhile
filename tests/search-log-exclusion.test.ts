@@ -171,6 +171,23 @@ test("no module reads search_log without the organic filter", async () => {
       // pattern, because an exception that lives in code can be argued with
       // and a silent one cannot.
       "scripts/verify-local-write.mts",
+      // R36/R42, 2026-08-17 (g11): the run-id census. It is the command form
+      // of `runClassCensusQuery()`, whose documented job is to describe the
+      // WHOLE table INCLUDING the part that is ours — the one read that
+      // reports rather than aggregates. Filtering it to ORGANIC would delete
+      // the thing it exists to print: how many rows are not readers. It never
+      // emits an organic figure without the denominator sentence beside it,
+      // which is the protection the filter gives elsewhere. Declared with its
+      // reason, the DECLARED_EXTRAS pattern, because an exception that lives
+      // in code can be argued with and a silent one cannot.
+      "scripts/census-run-class.mts",
+      // R36, 2026-08-17 (g11): the production write-handle probe. It writes
+      // one SYNTHETIC row and reads it back BY ITS OWN run id — the same
+      // "count of OUR rows" exception the walk and the local-write probe
+      // carry — and its before/after count(*) exists to prove the row was
+      // removed again, printing the delta rather than the total for the same
+      // reason verify-readonly.mts gives.
+      "scripts/verify-write-handle.mts",
     ].map((p) => p.replace(/\//g, sep)),
   );
 

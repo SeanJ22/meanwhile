@@ -59,6 +59,12 @@ const UNREACHABLE =
 export async function submitFeedback(
   message: string,
   surface: FeedbackSurface,
+  /**
+   * The OPTIONAL reply address (R41). Blank is the ordinary case and is sent
+   * as an empty string rather than omitted, so the server sees the same shape
+   * whether the reader filled the field or left it alone.
+   */
+  replyTo = "",
 ): Promise<SubmitOutcome> {
   let response: Response;
   try {
@@ -68,6 +74,7 @@ export async function submitFeedback(
       body: JSON.stringify({
         message,
         surface,
+        replyTo,
         feedbackKey: getOrCreateFeedbackKey(),
       }),
     });

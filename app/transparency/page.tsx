@@ -327,11 +327,26 @@ export default function TransparencyPage() {
             </Link>{" "}
             stores what you write, and the time, in a store of its own. It is
             read by the person who built this and never enters anything that
-            is aggregated or licensed. It holds no name, no address, no zip, and
-            nothing that could connect it to your searches or your reactions —
-            and, like the question box, it is stripped of anything shaped like
-            a phone number, an email address, or a street address before it is
-            stored, which is why nobody can write back to you.
+            is aggregated or licensed. It holds no name, no zip, and nothing
+            that could connect it to your searches or your reactions — and,
+            like the question box, the message itself is stripped of anything
+            shaped like a phone number, an email address, or a street address
+            before it is stored.
+          </p>
+          {/*
+            R41 (2026-08-17, the author's ruling A). The form gained one
+            optional field; the coupling rule says this page changes in the
+            same commit, and it says what the field is for, what it is never
+            used for, and how long it lasts.
+          */}
+          <p>
+            The form has one optional box for your email address. Leaving it
+            blank is the default and sends fine — it only exists so that a
+            question can be answered or a request confirmed. If you do fill it
+            in, it is kept exactly as you typed it, next to that one message
+            and nowhere else: it is never added to a mailing list, never used
+            to contact you about anything but that message, never connected to
+            your searches or reactions, and it goes when the message goes.
           </p>
           <p>
             The first time you send feedback, your browser makes up a random

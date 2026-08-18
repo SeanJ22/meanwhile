@@ -265,6 +265,30 @@ the "exists and carries nothing" failure shape. No terms question was reached
 because no adapter is warranted; if another body genuinely publishes through
 NovusAgenda, review then.
 
+**RESOLVED 2026-08-17 (g11, D22): no live tenant exists in scope, and the
+namespace was swept rather than inferred from one body.** The Vail tenant was
+re-read on 2026-08-17 — still 200, still **zero** meeting rows, so the archive
+finding stands on a fresh read and not on a three-day-old note. Then 23
+candidate tenant names covering every body in the four zips were probed at
+`<tenant>.novusagenda.com/agendapublic/`: Tucson, TUSD, Pima County, Vail,
+Newbury, Kearsarge, Merrimack County, Rockaway Township, Morris County and
+Morris Hills among them.
+
+**Twenty-two of the 23 answered HTTP 200 — with NovusAgenda's own
+`Error.aspx` page.** The vendor wildcards its per-client subdomain namespace,
+so a 200 from `novusagenda.com` is worth nothing at all; the real tenant is
+78,576 bytes and the wildcard is 1,384. That is the fifth sighting of "exists
+and carries nothing" and it is now a playbook rung (`docs/zip-playbook.md`,
+"A vendor subdomain that does not exist can still answer 200").
+
+So the adapter is NOT built, and the reason is data rather than difficulty:
+there is no live NovusAgenda tenant for this product to read. Building one
+against the archive would mean shipping an adapter whose only fixture is an
+empty portal — an adapter that would report success while returning nothing,
+which is the exact shape the four-sighting rule exists to stop. The vendor
+stays typed in `AgendaSourceType`, so the day a real tenant appears the
+wiring is a row and not a refactor.
+
 ---
 
 ## Granicus — IQM2 / Accela Meeting Portal (added 2026-08-13)

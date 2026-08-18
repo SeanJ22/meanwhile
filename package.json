@@ -75,7 +75,8 @@
     "verify:local-write": "tsx scripts/verify-local-write.mts",
     "census:runs": "tsx scripts/census-run-class.mts",
     "db:apply": "tsx scripts/apply-migrations.mts",
-    "verify:write-handle": "tsx scripts/verify-write-handle.mts"
+    "verify:write-handle": "tsx scripts/verify-write-handle.mts",
+    "lint:allowlist": "node scripts/check-lint-allowlist.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

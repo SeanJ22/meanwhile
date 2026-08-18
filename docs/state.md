@@ -227,8 +227,35 @@ works.
 | `corepack pnpm session:start` | Start-of-session sweep, then the dev server — see §8. `--check` starts nothing |
 | `corepack pnpm dev` | Development server. Refuses if 3000 is taken; records its pid in `.dev-server.pid` |
 | `corepack pnpm build` | Production build |
-| `corepack pnpm test` | `node --test` over `tests/` — 371 tests (2026-08-18) |
+| `corepack pnpm test` | `node --test` over `tests/*.test.ts` — **992 tests at `13634bd`** (2026-08-18). The runner prints its own `tests / pass / fail`; that is the number, and this line is a snapshot of it |
 | `corepack pnpm lint` | ESLint |
+| `corepack pnpm lint:allowlist` | The same run, checked against `lint-allowlist.json` — refuses a warning that is not listed with a reason, and names allowlist entries that no longer occur |
+
+<!--
+  Two numbers in our own documents stopped describing the code, found by the
+  2026-08-18 external audit and fixed in g15. Recorded here rather than only in
+  a session section, because this is where both of them lived.
+
+  THE TEST COUNT DID NOT RECONCILE. This table said 371 (2026-08-18); the g14
+  report said 968. Both could not describe one suite. Neither was a
+  differently-scoped count: 371 was simply STALE. Every session through the
+  commit that wrote it had updated this line — 107, 129, 132, 162, 197, 226,
+  250, 281, 315, 349, 371 — and then it stopped being updated while sessions
+  kept adding tests, so it drifted by 611. The 968 in the g14 section is a
+  HISTORICAL record, correctly frozen at what g14 measured; a session section
+  is not supposed to track the present. The one true number is what the runner
+  prints, and the runner is the only thing that should be trusted for it.
+
+  "ALLOWLISTED WARNINGS" WAS A WORD WITH NO MECHANISM. Reports had described
+  the lint warnings as allowlisted for several sessions; the auditor went
+  looking for the allowlist and there was none — they were merely tolerated.
+  The word implied somebody had reviewed and accepted each one, and nobody
+  had. `lint-allowlist.json` and `corepack pnpm lint:allowlist` are that
+  mechanism now: 15 warnings, each listed with what it actually is, refusing
+  loudly when a sixteenth appears. Both refusal directions were proven by
+  planting.
+-->
+
 | `corepack pnpm ingest <source>` | Run one adapter end to end — `composite` prints per-source accounting and retrieves agenda documents |
 | `corepack pnpm meetings:report` | The four-zip gate: meetings per zip, contributing sources, unwired bodies. Live network |
 | `corepack pnpm zcta:fetch` | Rebuild zip centroids from Census (see §3.2) |

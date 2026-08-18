@@ -810,15 +810,93 @@ function MapEntryInner() {
     [current, meetings, venues, location, drawnDistricts, failure, view],
   );
 
+  /*
+   * M135 (2026-08-18) — the autocomplete's rows join the rule the rest of the
+   * product already follows: a row opens a card.
+   *
+   * MEASURED BEFORE, across the four pilot zips: 227 rows, of which 163 opened
+   * something (a meeting row with a venue opens the MeetingPanel, agenda link
+   * inside), 43 moved the camera and opened nothing, and **21 did nothing at
+   * all** — `onSearchPick` selected a venue when the row carried a venueKey and
+   * flew when it carried a lat/lng, and a row carrying neither fell off the end
+   * of the function. D18 named that defect ("a row that answers a click with
+   * silence") and fixed it for the meetings LIST; its sibling here never got
+   * the same fix. Two changes close it, and the geometry half is upstream in
+   * `buildSearchIndex` (see `represents`).
+   *
+   * THE CARD HALF, here:
+   *
+   * - A MEETING row with no venue opens the large meeting card. This is D18's
+   *   fix verbatim — an online sitting is in no venue, so the venue-shaped
+   *   route can never answer for it, and the card is the answer that does.
+   *   The camera stays where the reader left it: an online meeting has nowhere
+   *   to fly to, and moving to the last place they looked answers a question
+   *   they did not ask.
+   *
+   * - A BODY row opens that body's large battlecard, which is this item's
+   *   ruling in its own words ("Selecting a body ANYWHERE opens that body's
+   *   large battlecard"), built by the same `bodySubject` the who-governs list
+   *   and the sidebar's Bodies door both use. Two doors onto one card, never
+   *   two cards. It still flies where it can, because the reader who picked a
+   *   body on a map surface wants both.
+   *
+   * RESOLUTION IS REFUSED RATHER THAN GUESSED. A body row is matched to a
+   * covered body on the division AND the name, because several bodies share
+   * one division — Pima County alone carries a dozen — and `CoveredBody.name`
+   * is null on derived rows, so an ocdId-only match would open one body's card
+   * from another body's row. Where the match is ambiguous or absent the row
+   * falls back to flying, exactly as it does today: no card is strictly worse
+   * than the wrong card, and the wrong card is a false claim about a
+   * government.
+   *
+   * A PLACE row is deliberately not converted here, and that is a finding
+   * rather than an omission: a place is a division that several bodies sit in,
+   * this product has no committed card for a place subject, and picking one of
+   * N bodies to stand for it would be an invented answer. Place rows fly (and
+   * after the `represents` fix they always can); the card they should open is
+   * the author's to rule on.
+   */
   const onSearchPick = useCallback((item: SearchItem) => {
     if (item.venueKey) dispatch({ type: "select/venue", key: item.venueKey });
     if (item.lat !== null && item.lng !== null) {
       setFocus({ lat: item.lat, lng: item.lng, zoom: 13, key: item.id });
     }
+
+    if (!item.venueKey) {
+      if (item.kind === "meeting") {
+        const meeting = (current?.meetings ?? []).find(
+          (m) => `meeting:${m.id}` === item.id,
+        );
+        if (meeting) {
+          openLarge({
+            kind: "entity",
+            subject: meetingSubject(meeting, bodyFor(meeting.ocdId)),
+          });
+        }
+      } else if (item.kind === "body") {
+        const candidates = (current?.coverage?.bodies ?? []).filter(
+          (b) => b.ocdId !== null && b.ocdId === item.ocdId,
+        );
+        const named = candidates.filter((b) => b.name === item.label);
+        const body =
+          named.length === 1
+            ? named[0]
+            : candidates.length === 1
+              ? candidates[0]
+              : null;
+        if (body) {
+          openLarge({
+            kind: "entity",
+            subject: bodySubject(body, current?.meetings ?? []),
+          });
+        }
+      }
+    }
+
     // Picking a result means the reader wants the map, not the drawer that
     // may be covering it at phone width.
     dismissSidebar();
-  }, [dispatch, dismissSidebar]);
+  }, [dispatch, dismissSidebar, current, openLarge, bodyFor]);
 
   const onPickMeeting = useCallback(
     (meeting: Meeting) => {

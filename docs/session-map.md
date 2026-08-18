@@ -39,6 +39,25 @@ address — a user-data-field decision, the author's), R42 (the local
 D22 — and all five of the g7 item 4–8 block (the ask surface, G05, G07,
 D35, and the fourteen finish-now rows).
 
+**Updated after g10 (this session):** Four data rows **closed** — D19
+(sitting-as persistence and the live ingest path, which found SEVEN
+special districts inside a county feed that exposes four bodies), D18
+(twelve real public meetings held online, recovered from being dropped
+at normalize and rendered without a pin), D24 (the canonical
+reconciliation joined on Census GEOID; the 64 slug-similarity matches
+are gone and all 229 remaining gaps carry a stated reason), D31 (the
+curated-identifier convention settled against opencivicdata's own list,
+with both named consequences fixed). **R36 and R42 both stay open**: the
+author swapped the variable NAMES without swapping the hosts, so the
+readonly string now sits on the local branch and authenticates nowhere —
+which also left this session with **no handle to the production
+database**, so the run-id census could not be run. R42's own defect is
+fixed and proven by `pnpm verify:local-write`. **R41 has no ruling
+recorded anywhere in the repo**, so nothing was built and the shape
+stays as g9 specced it. **Still carrying:** item 5's remaining two — M12
+and D22 — and all five of the g7 item 4–8 block (the ask surface, G05,
+G07, D35, and the fourteen finish-now rows).
+
 The deck is clear: **every row has a disposition.** Under the author's
 ruling, H is unblocked the moment the pre-H queue below is worked — and
 several of your dispositions put items *inside* H itself, so H grows.

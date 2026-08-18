@@ -9546,3 +9546,209 @@ It is gated on the fan having actually opened.
 
 Verified live at 85701: four pins in one Tucson stack, four fanned, every pair
 clearing 28px, and Escape returning all four to within 2px.
+
+
+## 45. The 2026-08-17 g10 session — the env rows, and four data rows closed
+
+Written 2026-08-17 (`pnpm stamp`). The session was told to close the two
+environment rows and then work the queue in order. Two of the four items are
+whole; within the third, four of six sub-items are whole and two are deferred
+with rows; the fourth was not started. Stated against its denominator below
+rather than described as "the sweep".
+
+### R36 and R42: the author swapped the variable NAMES and not the hosts
+
+g9 diagnosed the swap exactly, and the author acted on it. The fix landed
+half-right, and the half that landed is the half that matters least.
+
+`WTP_PRODUCTION_DATABASE_URL_READONLY` now carries role `readonly` — it
+carried `neondb_owner` yesterday, so that part is done. But it points at
+`ep-weathered-cherry`, the LOCAL branch, instead of the production endpoint
+`ep-dry-river`. A Neon role lives on the branch it was created on and nowhere
+else, and this one was created on production, so the variable **does not
+authenticate at all**: 0 of the 9 privilege and write-refusal checks could run,
+and they are reported as CANNOT-RUN rather than as passes.
+
+The second consequence is larger than the row: **this session had no handle to
+the production database.** The run-id census the standing report calls for
+could not be run, and `pnpm feedback:read --target=production` cannot work
+either. That is stated as an unrun measurement, not smoothed over.
+
+`DATABASE_URL` is now correct — `neondb_owner` on the local branch, with
+`WTP_DB_ROLE=local` — and **R42's own defect is fixed and proven**.
+`pnpm verify:local-write` writes through the APPLICATION's own paths rather
+than a hand-written INSERT (`logSearchEvent` and `writeFeedback`, both marked
+SYNTHETIC with a run id it mints), reads each row back by that run id, deletes
+both, and prints the delta across each store so a repeat run cannot
+accumulate. It refuses to run at all unless `WTP_DB_ROLE` says local. The
+local branch was also a migration behind, so R40's feedback table did not
+exist there — a second reason local writes failed that looks exactly like R42
+and is not.
+
+Both rows stay open, per the brief's rule that a failing check keeps both.
+
+**Two improvements to the instrument, because it could not see this failure.**
+A BRANCH probe now runs before `verify:readonly`'s other nine and fails when
+the variable names the same host as the line declared local — which matters
+beyond today, because a readonly string that DID authenticate against the local
+branch would have passed all nine checks while reading a database production
+has never seen. And a refused connection now reports as a FAIL with the
+database's own words plus a CANNOT-RUN list, where it used to escape as an
+unhandled rejection and a Node stack trace. A failed retrieval reported as a
+failed retrieval, applied to our own tooling.
+
+### R41 is still the author's call
+
+No ruling is recorded anywhere in the repo — not in `docs/deferred.csv`, not
+in `state.md` beyond g9's own statement that the question is open, and
+`docs/abuse-policy.md` still records it as open. The brief's own fallback
+governs: touch nothing, note it. The shape g9 specced is unchanged so a later
+session builds rather than re-derives.
+
+### D19: seven special districts inside a feed that exposes four bodies
+
+The sitting-as rows now persist and the live path produces them. Segmentation
+is pure and runs in the adapter where the agenda items are; NAMING needs the
+registry and runs once at the ingest layer that already holds it. The rows ride
+on the meeting as `Meeting.actingBodies`, so they travel through the composite,
+the carry-forward and the committed snapshot with no new store — which is
+right, because the meetings themselves live in the snapshot and a Postgres join
+onto a JSON file would be an orphan.
+
+**Absent is not empty**, enforced at the type: the adapter's `items` is null
+when nobody read the agenda and `[]` when the agenda was read and was empty,
+and `actingBodies` is OMITTED rather than `[]` in the first case. An empty
+array would say "we read this and nobody else acted" about a meeting nobody
+looked at.
+
+**The rule is enforced where the FILE is written.** `validateSnapshot` refuses
+a snapshot in which an UNRESOLVED row carries any `bodyId` or `ocdId`, a
+RESOLVED row names no body, a row cites a meeting it is not on, or a row does
+not quote its heading. That is the render-default argument one layer down: by
+the time a null reaches a component the lie is already in the data.
+
+Measured on production data: 47 acting-body rows across 15 of 227 meetings —
+24 host, 0 resolved, 23 unresolved, 30 items attributed to nobody, and **0 rows
+carrying the host's division**.
+
+**A defect found by running it rather than by reading it.** Pima publishes
+"PAGE BREAK" as an agenda item, and it opened a segment — cutting the item
+after it off the district actually acting. 45 rows became 44 and FLOOD
+CONTROL's items reassembled from 2+1 into 3, with the 30-item total unchanged;
+the conservation law showed the repair rather than a drop. Fixed as a class: a
+heading with no letter in it is structurally not a body, plus a named list of
+layout markers, and neither opens a segment nor closes one.
+
+**The finding is worth more than the row.** Fifteen live Pima agendas name
+SEVEN distinct special districts — Flood Control, Library, Improvement,
+Stadium, Rocking K South CFD, Wildflower CFD, Ajo Domestic Water ID — none of
+which appear anywhere else in a feed that exposes four bodies. That is the
+4.7.6 thesis measured rather than asserted. All seven are UNRESOLVED and that
+is correct: Census publishes no boundary, so no division exists to match.
+
+### D18: twelve real public meetings were being thrown away
+
+A meeting whose published location names no place was DROPPED at normalize and
+counted honestly as "placeless". A drop counter is a number in a log; the
+reader still saw nothing. Twelve in one refresh — three Pima County Board of
+Supervisors sittings, six TUSD committee meetings, three Pima Community College
+Finance and Audit Committee meetings.
+
+`Meeting.location` is nullable now and the null is load-bearing, paired with
+`online: { label, joinUrl }`. The label is the body's published string verbatim
+and `joinUrl` is null on every row we hold — rendered as the named gap "the
+body hasn't published a join link", never as a portal or homepage dressed up as
+a way in. Six adapters changed identically.
+
+**Never a pin:** `groupByVenue` is the single gate and it skips a null
+location, so an online meeting cannot become a marker at any call site.
+Verified live at 85701 — 12 markers for 12 physical venues while 12 online
+meetings were in the list.
+
+A radius filter cannot speak to a meeting with no distance, so they are reached
+two other ways: the division containing the map centre (resolved by the route
+from the same committed geometry the coverage summary uses), or the same
+government's in-person sittings being in radius. **Asking the live route caught
+the second clause keying on `bodyName`** — Diligent publishes a per-sitting
+name, so Pima Community College's three online committees stayed invisible while
+five of its in-person sittings were on screen. The key is the meeting id's
+`source:tenant` prefix, which IS the government for a division-less body.
+
+The reader sees a violet ONLINE pill in the list overlay on its own committed
+token, and on the card "Online only — there is no room to attend in person."
+with "How to join" below it. Also fixed while proving it: **clicking an online
+row did nothing at all**, because the meeting panel is a panel about a venue.
+
+### D24: the key was in both files and nobody had read it
+
+The canonical CSV publishes a `census_geoid` column. Every committed boundary
+feature carries the same GEOID. The registry build was **dropping it** when it
+wrote a division, so the join fell back to comparing slug tails.
+
+348 unmatched became 229 — but the composition matters more than the number.
+**The 64 slug matches are gone.** Every division that used to be settled on
+"same terminal segment, same state" — a NAME comparison, which `CLAUDE.md`
+forbids joining geographic entities on — now matches on the Census Bureau's own
+primary key, and a test fails if slug similarity ever returns.
+
+The one remaining name-derived join is not a fuzzy one and a test scopes it to
+the case it was measured on. The canonical list publishes no `census_geoid` for
+ANY legislative layer, and New Hampshire alone slugs House districts by county
+and number (`sldl:merrimack_8`) where this repo carries the Census SLDLST code
+(`sldl:608`). The Census name field publishes both components; the build
+constructs the identifier they imply and accepts it ONLY on exact membership.
+43 of 43.
+
+The other half of the row — record per division WHY none exists — is
+`Division.canonicalGap`, read off Census FUNCSTAT rather than inferred from a
+name. **144 of the 229 are not governments at all**: statistical entities the
+Bureau draws so it can publish numbers for a place with no government, and
+fictitious entities that exist to fill the hierarchy. Correctly absent, and
+their absence is not a gap. The remaining **85 are active governments with a
+Census boundary that opencivicdata does not enumerate** — a gap in THAT list.
+Nothing is minted for them; they are named in full, with GEOID and FUNCSTAT, in
+the new `docs/canonical-reconciliation.md`. UNDETERMINED is zero and a test
+fails if it ever is not, because an unestablished reason is indistinguishable
+from nobody having looked.
+
+### D31: adopt the shape, mint in our own namespace
+
+Checked opencivicdata's list first, as the row asks. **There IS a convention
+and it is consistent**: a function segment nested under the containing county,
+slugged from the government's published name — `water:castaic_lake_water_agency`,
+`sanitation:harkers_island`, `sewer:mwrd`. Six such types exist nationally
+across **fifty-one identifiers in the whole country**.
+
+**And it carries none of the governments we need.** Arizona's segment types, in
+full: country, state, cd, county, council_district, precinct, school_district,
+court_of_appeals, place, ward, sldl, sldu. Not one of D19's seven districts.
+Not Pima Community College. No `community_college` segment exists anywhere in
+the file.
+
+So the shape is followed exactly and the namespace is ours. Writing an OCD path
+opencivicdata does not carry, in opencivicdata's namespace, is a minted
+identifier wearing a public vocabulary's clothes. Strip our prefix and you have
+the identifier we would propose upstream; keep it and nothing can mistake ours
+for theirs. It mints nothing by itself: a heading proves a government acted, it
+is not a source for its name or its boundary.
+
+**Consequence one** — the venue key collapsed on a null division, so every
+division-less body on a source was one body, and Diligent already serves three
+tenants with one of them division-less. Scoped per tenant, with a test that a
+row resolves for its own tenant and not another's.
+
+**Consequence two** — the meetings row could not hold these meetings at all.
+`ocd_id` and `division_vintage` are nullable now, but **the pairing is enforced
+by the DATABASE** (migration 0007, `CHECK (ocd_id is null) = (division_vintage
+is null)`), which is strictly stronger than the two NOT NULLs it replaces:
+those could never have caught a vintage belonging to a different identifier.
+Exercised against the local branch rather than assumed — both-set accepted,
+both-null accepted, each mismatch refused by Postgres by name.
+
+### What was deferred, whole and specced
+
+**M12** (the school overlay split into unified / elementary / secondary) and
+**D22** (the NovusAgenda adapter against a live tenant) were not started. The
+g7 item 4–8 block — the ask surface, G05, G07, D35 and the fourteen finish-now
+rows — was not started. Every one keeps its tracker row unchanged; nothing was
+half-built.

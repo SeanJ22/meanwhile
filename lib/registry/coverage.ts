@@ -257,8 +257,20 @@ export function summarizeCoverage(
    * the cascade's own answer.
    */
   officials: OfficeholderIndex = new Map(),
+  /**
+   * The divisions covering this point, when the caller has already resolved
+   * them (AUD-04, 2026-08-18). Omitted, this resolves them itself exactly as it
+   * always did — every caller that does not pass it is unaffected.
+   */
+  resolvedDivisions?: Division[],
 ): CoverageSummary {
-  const { divisions, bodies } = bodiesAt(point, features, divisionsById, allBodies);
+  const { divisions, bodies } = bodiesAt(
+    point,
+    features,
+    divisionsById,
+    allBodies,
+    resolvedDivisions,
+  );
 
   const covered: CoveredBody[] = bodies.map((body) => {
     const division = body.ocdId ? divisionsById.get(body.ocdId) : undefined;

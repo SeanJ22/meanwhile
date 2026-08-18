@@ -264,6 +264,20 @@ export async function coverageAt(
   lat: number,
   lng: number,
   meetingCount: number,
+  /**
+   * The divisions covering this same point, when the caller already has them
+   * (AUD-04, 2026-08-18) — `/api/meetings` resolves them for its online-meeting
+   * filter and used to pay for the identical sweep a second time here.
+   *
+   * MUST be the result of resolving THIS lat/lng and nothing else: handing in
+   * another point's divisions would answer confidently about somewhere the
+   * reader is not. Omitted, this resolves them itself as it always did, which
+   * is also what a caller whose own resolution FAILED must do — passing an
+   * empty set from a failed lookup would turn a retrieval failure into a
+   * coverage answer of "nothing governs here", and a failed fetch may never be
+   * written into the data as an absence.
+   */
+  resolvedDivisions?: Division[],
 ): Promise<CoverageSummary> {
   const { features, divisionsById, registry, officials } = await loaded();
   return summarizeCoverage(
@@ -273,5 +287,6 @@ export async function coverageAt(
     registry.bodies,
     meetingCount,
     officials,
+    resolvedDivisions,
   );
 }

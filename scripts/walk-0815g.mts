@@ -11,9 +11,10 @@
  * Deliberately NOT a screenshot pass — `pnpm pairs` is that. This is the
  * behavioural half: gestures, state, counts.
  */
-import { chromium, type Page } from "playwright";
+import { type Page } from "playwright";
 
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
+import { launchGuarded } from "./browser.mts";
 
 /**
  * C05 (2026-08-17): this run declares itself so the rows it writes to
@@ -35,11 +36,11 @@ function check(name: string, ok: boolean, evidence = "") {
   console.log(`  ${ok ? "ok  " : "FAIL"} ${name}${evidence ? ` — ${evidence}` : ""}`);
 }
 
-const browser = await chromium.launch();
+const browser = await launchGuarded({ label: "walk-0815g" });
 
 /** A profile with a zip already in play, the way a mid-session reader has. */
 async function returningPage(zip: string): Promise<Page> {
-  const context = await browser.newContext({
+  const context = await browser.context({
     // C05: this run is ours, declared at write time.
     extraHTTPHeaders: RUN_HEADERS,
     viewport: PHONE,
@@ -71,7 +72,7 @@ console.log(`Walk 0815g — ${BASE}, 390×844\n`);
 // ── A fresh profile ────────────────────────────────────────────────────────
 console.log("fresh profile");
 {
-  const context = await browser.newContext({
+  const context = await browser.context({
     // C05: this run is ours, declared at write time.
     extraHTTPHeaders: RUN_HEADERS,
     viewport: PHONE,

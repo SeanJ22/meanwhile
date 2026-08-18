@@ -14,8 +14,9 @@
  * at the run's wall-clock time on the first ballot candidate at 85701 —
  * the session report names it so the tester-activity delta can exclude it.
  */
-import { chromium, type Page } from "playwright";
+import { type Page } from "playwright";
 import { join } from "node:path";
+import { launchGuarded } from "./browser.mts";
 
 const OUT = "C:/Users/seanj/dev/we-the-people/screenshots";
 const BASE = process.env.WALK_BASE_URL ?? "https://sparkwtp.netlify.app";
@@ -25,8 +26,8 @@ function check(name: string, ok: boolean, detail = "") {
   results.push(`${ok ? "PASS" : "FAIL"} ${name}${detail ? ` — ${detail}` : ""}`);
 }
 
-const browser = await chromium.launch();
-const context = await browser.newContext({
+const browser = await launchGuarded({ label: "tester-walk-0814d" });
+const context = await browser.context({
   viewport: { width: 390, height: 844 },
   deviceScaleFactor: 2,
   reducedMotion: "reduce",

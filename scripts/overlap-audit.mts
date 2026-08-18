@@ -27,7 +27,7 @@
  *   real findings.
  */
 
-import { chromium, type Page } from "playwright";
+import { type Page } from "playwright";
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
 
 /**
@@ -43,6 +43,7 @@ const RUN_HEADERS = syntheticRunHeaders({
 
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { launchGuarded } from "./browser.mts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 void root;
@@ -196,8 +197,8 @@ async function audit(page: Page, state: string): Promise<Finding[]> {
   );
 }
 
-const browser = await chromium.launch();
-const context = await browser.newContext({
+const browser = await launchGuarded({ label: "overlap-audit" });
+const context = await browser.context({
     // C05: this run is ours, declared at write time.
     extraHTTPHeaders: RUN_HEADERS,
   viewport: { width: WIDTH, height: HEIGHT },

@@ -19,7 +19,8 @@
  *
  * `pnpm exec tsx scripts/tester-walk-0815b.mts [zip] [baseUrl]`
  */
-import { chromium, type Page } from "playwright";
+import { type Page } from "playwright";
+import { launchGuarded } from "./browser.mts";
 
 declare global {
   interface Window {
@@ -51,8 +52,8 @@ function skip(name: string, why: string) {
 const MOJIBAKE =
   /[\u00c2\u00c3\u00e2\u00e3\u00f0\u00f1][\u0080-\u00bf\u2010-\u203a\u20ac\u2122]/;
 
-const browser = await chromium.launch();
-const context = await browser.newContext({
+const browser = await launchGuarded({ label: "tester-walk-0815b" });
+const context = await browser.context({
   viewport: { width: 390, height: 844 },
   deviceScaleFactor: 2,
   reducedMotion: "reduce",

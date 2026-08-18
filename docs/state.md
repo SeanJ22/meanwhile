@@ -11009,3 +11009,230 @@ failures verify PRIOR sessions' claims and say nothing about this session's. And
 fix would fail against undeployed code and read as a false regression. Both are
 gaps against the standing handoff, and both close by themselves once a deploy
 lands.
+
+---
+
+## g16 — 2026-08-18: the deploy lands, the leak class closes, the measures come apart
+
+**Branch `claude/g16-deploy-leaks-queue-0818`, from `main@c99d9a5`.**
+
+### The deploy landed, and R51's second half is diagnosed to the file
+
+**Production served `bf0cd7b` when this session opened and serves this
+session's merges now.** The first ship of the session (PR #95) put `714abb0`
+live, verified through `/api/build`, and a PR-merge push produced a Netlify
+build inside the handoff gate's own five-minute window — which answers the
+question g15 left open. The trigger works.
+
+The second failure — a build that DID fire and was REFUSED — is now explained
+to the file, and the guard that refused it is **not weakened**.
+
+`scripts/check-build-output.mjs` refused a server trace cardinality of 1138
+against the 1050 ceiling AUD-02 had committed hours earlier. Four measurements
+settle why:
+
+| platform | mode | largest manifest |
+|---|---|---|
+| windows | default | 927 |
+| linux | default | 935 |
+| windows | standalone | 1130 |
+| linux | standalone | **1138** |
+
+Netlify's Next runtime plugin sets `NEXT_PRIVATE_STANDALONE` in its own
+`onPreBuild`, so **a deploy is always a standalone build** — and 1138 is the
+only one of those four numbers that describes a deploy, while the committed
+baseline of 927 was the only one that describes nothing that ships. The budget
+had never once run under the conditions it gates.
+
+**The diff, which is what the ceiling's reason now records:** 203 files joined
+between default and standalone mode and zero left. Every one of the 203 is
+under `node_modules/next/dist` — `dist/lib/metadata` (20), `dist/lib/typescript`
+(11), `dist/compiled/@edge-runtime` (11), `dist/shared/lib` (9),
+`dist/lib/helpers` (8), `dist/build/swc` (7), and singles and pairs across
+`dist/build`, `dist/compiled` and `dist/lib`. **Not one is a file of this
+repo's**, and every app-route manifest is byte-identical across the two modes.
+So this is not R23's class: no computed import, no `fs` read over a variable
+path, nothing for the static-map pattern to fix. Standalone mode exists to make
+the server runnable without `node_modules`; tracing Next's own runtime is that
+mode working.
+
+**The second finding matters more, because the guard could have passed while
+wrong.** `Math.max` over every manifest is always `next-server.js` — the
+framework's own runtime trace, holding zero files of ours. Under one ceiling an
+app route could have grown from 195 files to 900 and stayed far below a bar
+pinned to the framework's 927 — green for the exact defect the check exists to
+catch. R23's explosion was in APP manifests, at 2554 and 2567.
+
+**So budget 1 is two numbers**, the same split AUD-02 made one level up:
+
+- **1a — the largest APP manifest.** 195 files
+  (`server/app/api/meetings/route.js.nft.json`), ceiling 240. Mode-independent,
+  proven identical in both modes. This is the number R23 blew up.
+- **1b — the framework runtime trace**, baselined PER MODE: standalone 1138 /
+  ceiling 1300, default 935 / ceiling 1050. The mode is read off the artifact
+  rather than the environment, because the check is a child of the build
+  command and the plugin sets the variable in its own process. Standalone
+  duplicates every manifest under `standalone/.next/`; those copies are folded
+  onto their originals rather than counted twice.
+
+Every refusal direction was replanted — 1a's ceiling at 100 refuses naming 195,
+standalone's at 1000 refuses naming 1138, a mode with no committed baseline
+refuses rather than passing unmeasured — each with a green control after. The
+1138 baseline was predicted from the decomposition and then **measured** on
+linux standalone at exactly 1138 before being committed.
+
+**Two instruments exist now that did not when the refusal happened.**
+`scripts/trace-census.mjs` prints every manifest with its file count, the
+largest broken down by package, and dumps every traced path for diffing — so
+the next refusal names files instead of moving a maximum.
+`.github/workflows/build-check.yml` runs the literal `netlify.toml` build
+command on ubuntu **in both modes on every push**, so the deployed number is
+measured in a log this repo can read with `gh run view` rather than one behind
+the author's Netlify login.
+
+**One correction to g15's R51 evidence:** GitHub's commit status reads `pending`
+for *every* commit in this repo, including `bf0cd7b`, which deployed
+successfully. Netlify posts no commit status here at all, so the stale-pending
+observation is not evidence about any particular commit. The Netlify API half of
+g15's finding stands untouched.
+
+### R50 — a browser is opened in exactly one place
+
+`scripts/browser.mts` is now the only file in the tree that constructs a browser
+or a context, and **45 scripts** come through `launchGuarded`. It applies three
+things at construction so none can be forgotten: the run header on every
+context; the `sendBeacon` override installed before the page's first script
+runs; and **a run id minted from the script's label when the environment set
+none** — a hole nobody had named, because `syntheticRunHeaders()` returns `{}`
+for an unset `WTP_RUN_ID` and `{}` means ORGANIC. `launchGuarded` refuses to
+open a browser at all if the marker comes out empty.
+
+The guarded API is deliberately **not** named like Playwright's — `browser
+.context()` and `browser.page()` — because the whole guard rests on a test being
+able to refuse `newContext(`/`newPage(` outright, which it cannot do if the
+guarded API answers to the same words. Seven duplicated local guard blocks came
+out at the same time; `walk-all.mts` alone carried the same override five times.
+
+`tests/run-marker-coverage.test.ts` is **deleted**, and the deletion is the
+point: it asserted that a script MENTIONS `syntheticRunHeaders` in its source,
+which every leaking script did. It was green through both leaks.
+`tests/browser-construction.test.ts` replaces it structurally (proven to refuse
+by planting `browser.newContext(` back into `scripts/pairs.mts`), and
+`tests/beacon-guard.test.ts` replaces it behaviourally: a real browser through
+the shared site, against a local capture server, with `markerFromRequest` — the
+production function that decides a row's class — asked what the landed row would
+be. SYNTHETIC, with the run id. **The plant is permanent**, so a day when
+Playwright starts carrying the header itself fails loudly rather than leaving a
+guard that proves nothing.
+
+**A new finding sharpens R50's own diagnosis.** The header is not
+unconditionally lost on a beacon. Measured across four conditions: a beacon
+fired while the page is ALIVE arrives **declared**; one flushed at `pagehide`
+during a reload or a navigation arrives **undeclared**; at page close it arrives
+declared. The leak is the **unload-time** beacon specifically — which is exactly
+why it surfaced when g14's ask checks began reloading the page between
+questions, and not before. The first plant, written to the old understanding,
+passed the header and failed the test; chasing that is what produced the
+measurement.
+
+The seven g14 rows and the forty-four g15 rows are **still not backmarked** —
+that needs a production write nobody has sanctioned, and it remains the one
+author decision on this row.
+
+### R49 — 36 fixed waits down to 12, and the conversion's own defect
+
+Every one of the 12 survivors carries a comment saying why a duration is the
+right instrument, in one of three named forms — `R49 POLL INTERVAL`,
+`R49 SAMPLING INTERVAL`, `R49 DURATION, DELIBERATE` — and
+`tests/walk-waits.test.ts` asserts both that every call is justified and that
+the count may fall but never rise. Proven to refuse by planting a bare
+`waitForTimeout(1234)` into `openAt`. The two biggest wins are invisible in that
+number: `openAt` and `openWideAt` each slept **nine seconds** after every page
+load, roughly sixty page loads a run.
+
+**The conversion shipped a defect first and the walk caught it, and that is the
+part worth keeping.** The first settle read the app as ready when
+`.coverage-notice` OR a `canvas` existed — and a canvas exists almost the
+instant MapLibre mounts, so every page was read mid-resolve and **thirteen
+working checks printed as NAMED REGRESSIONS**: four governors missing from
+who-governs, four state focuses reading `none`, Kearsarge and Newbury absent at
+03255, two pin floors at zero, and a cluster placement. That is R49's own defect
+wearing the other face — **an outcome wait on the wrong outcome is no better
+than a duration, and it fails faster.**
+
+The fix is one named helper, `appSettled`, waiting for both halves of what a
+reader sees at a zip: the who-governs card, which only renders once the division
+resolve has returned the governor and the bodies, AND the state focus layer,
+which only mounts once the map knows which state the reader is in. A second
+instance of the same mistake survived one more run — the Shaheen phone-pill
+check waited for `.contact-pill-row` to EXIST and read it while it still held
+four pills and no Phone — and now waits for the pill it asserts on.
+
+### P01 — the eleven measures come apart
+
+All 11 AZ measures are decomposed into **52 contested provisions** at
+`lib/ballot/measure-provisions.ts`, rendered on the ballot page between the
+plain-language summary and the official analysis — summary, then what is
+actually in it, then the state's own words.
+
+**The decomposition is the Legislative Council's own enumeration**, not ours:
+where the adopted analysis numbers the parts, those numbers are the provisions.
+Nothing is split finer than the official text splits it and nothing is merged
+that it kept apart.
+
+The shape, measured rather than expected: **FUNDING 10, PROGRAM 26, OVERSIGHT
+12, SUNSET 4.** Proposition 212 carries 11 provisions on its own; Proposition
+141 carries 3 and has no oversight and no clock. **Not every measure has all
+four kinds, and that is the finding** — manufacturing a funding provision for a
+measure that funds nothing would be inventing a claim about a real measure.
+
+**One reading was widened deliberately and is the author's to narrow:** SUNSET
+is read as the measure's CLOCK — when it starts, when it ends, when it must be
+renewed — because a strict expiry-only reading would leave Proposition 143's
+"applies beginning January 1, 2028" and Proposition 316's two-year freeze with
+no kind at all. No fifth kind was added: the kinds are what reactions get
+bucketed by, and changing that bucketing is an ask-the-author change.
+
+**A mistake worth recording:** the first draft hand-typed the eleven analysis
+URLs and got **six of them wrong**. A plausible URL is not a URL. The citation is
+now read off the analysis record the page already renders verbatim, and a
+contest with no record throws rather than getting an invented link.
+
+Every provision id is the reaction target P03 will use, shaped
+`<contestId>#<slug>` and stated in the module to be permanent — a renumbered id
+silently orphans every reaction already collected against it.
+
+### The author's testing pass arrived mid-session
+
+`docs/Feedback 8.18 1421 pm.docx` appeared in `docs/` during this session, with
+29 matching screenshots in the Drive mirror under `Screenshots from Feedback`
+(13:42–14:40 local). It is a full testing pass — roughly forty findings across
+cards and navigation, meetings ordering, pills and panels, the votes surface,
+the gap language, the ask box, the ballot page, the map, and who-governs
+spacing. **None of it was built this session**, because it is in no brief and
+the brief's order is law. It is recorded whole as tracker row **F01** so a later
+session can split it into per-surface rows without re-reading the document.
+
+Two of its items need naming here rather than only on the row. He liked two
+things and a defect list that drops them misreports the pass: the AZ6 shading
+and deselect behaviour ("excellent behavior, I like that a lot") and the phone
+chooser. And **one finding is a data claim, not a UI one**: the New Hampshire
+who-governs card says Kearsarge Regional and Newbury Town could not be reached
+while the maroon pin in New London shows Kearsarge meetings. That is the refresh
+corollary's own territory and the one item in the pass that could be rendering
+something untrue.
+
+### The audit document landed
+
+`docs/audit-2026-08-18.md` is committed and joined the canonical mirror set,
+taking it from 14 to 15. All nine AUD rows' `SOURCE DOCUMENT PENDING` notes are
+closed with the evidence the audit actually cites for each finding and the
+auditor's own confidence rating. The `Screenshots from Feedback` folder is
+declared in `scripts/mirror-set.mjs` rather than failing every handoff.
+
+### What this session did NOT do
+
+**Item 3 completed 1 of its 5 rows.** P01 is done; **P03, D25, D29 and D06 were
+not started** and are deferred whole. **Item 4 completed 1 of its 3 rulings** —
+the audit document — and the place card (4a) and the `^_` lint config line (4b)
+were not built. Items 1 and 2 are whole. The order was followed as written.

@@ -35,12 +35,13 @@
  * Three assertions, in the brief's own order, plus the audit of every other
  * surface that carries counted rows over the map.
  */
-import { chromium, type Page } from "playwright";
+import { type Page } from "playwright";
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
 
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
 import { decodePng, patchStats, regionChange } from "./png.mts";
+import { launchGuarded } from "./browser.mts";
 
 const BASE = (process.env.SHOOT_BASE_URL ?? "https://sparkwtp.netlify.app").replace(/\/$/, "");
 const OUT = join(process.cwd(), "screenshots", "panels");
@@ -148,7 +149,7 @@ async function openDoor(page: Page, label: RegExp): Promise<boolean> {
   }, label.source);
 }
 
-const browser = await chromium.launch();
+const browser = await launchGuarded({ label: "measure-panels" });
 
 for (const [viewport, width, height] of ([
   ["phone", 390, 844],
@@ -162,7 +163,7 @@ for (const [viewport, width, height] of ([
     const readings: string[] = [];
 
     for (let rep = 0; rep < REPS; rep += 1) {
-      const context = await browser.newContext({
+      const context = await browser.context({
         viewport: { width, height },
         deviceScaleFactor: DSF,
         // C05: this run is ours, declared at write time.
@@ -416,7 +417,7 @@ for (const [name, label, selector] of DOORS) {
     ["phone", 390, 844],
     ["desktop", 1280, 900],
   ] as const) {
-    const context = await browser.newContext({
+    const context = await browser.context({
       viewport: { width, height },
       deviceScaleFactor: DSF,
       // C05: this run is ours, declared at write time.

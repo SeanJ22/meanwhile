@@ -58,13 +58,14 @@ import { join } from "node:path";
 
 import { neon } from "@neondatabase/serverless";
 import { config as loadEnv } from "dotenv";
-import { chromium, type Browser, type Page } from "playwright";
+import { type Page } from "playwright";
 
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
 import { PRODUCT_NAME } from "../lib/brand.ts";
 import { internalSourceIds } from "../lib/meetings/source-labels.ts";
 import { mojibakePattern } from "../lib/text/mojibake.ts";
 import { decodePng, patchStats, regionChange } from "./png.mts";
+import { launchGuarded, type GuardedBrowser } from "./browser.mts";
 
 const BASE = (process.env.SHOOT_BASE_URL ?? "https://sparkwtp.netlify.app").replace(
   /\/$/,
@@ -187,6 +188,89 @@ function section(title: string): void {
   console.log(`\n${title}`);
 }
 
+/* ── R49: wait for an OUTCOME, never for a duration ────────────────────────── */
+
+/**
+ * Poll until `settled()` is true, and return whether it ever was.
+ *
+ * R49 (2026-08-18, g14/g16) — THE CLASS THIS REPLACES. A fixed wait followed
+ * by a single read cannot tell GONE from NOT YET, and it reports the first
+ * when it means the second. It produced FOUR FALSE REGRESSION REPORTS in one
+ * session against a build with nothing wrong with it: the pin floor (R47), the
+ * ask refusal (A07), the A02 digest, and the classifier route — each a working
+ * surface reported as broken because the walk looked at a moment rather than
+ * at an outcome.
+ *
+ * THE CEILING STILL READS. `until` returning false is not itself a failure and
+ * never short-circuits an assertion: the caller reads anyway and the check
+ * fails on the truth. A genuine absence must still fail — the point is that a
+ * SLOW surface must not.
+ *
+ * The poll interval below is the one legitimate use of a duration in this
+ * file: it is how often the question gets asked, not how long the answer is
+ * assumed to take.
+ */
+async function until(
+  page: Page,
+  settled: () => Promise<boolean>,
+  ms = 15_000,
+  step = 150,
+): Promise<boolean> {
+  const deadline = Date.now() + ms;
+  for (;;) {
+    try {
+      if (await settled()) return true;
+    } catch {
+      // A detached element or a navigation mid-poll is a NOT YET, not an answer.
+    }
+    if (Date.now() >= deadline) return false;
+    // R49 POLL INTERVAL — a duration by definition, and the only kind this
+    // file keeps.
+    await page.waitForTimeout(step);
+  }
+}
+
+/** `until` for a selector existing, which is most of what this suite waits on. */
+async function untilPresent(page: Page, selector: string, ms = 15_000): Promise<boolean> {
+  return until(page, async () => (await page.locator(selector).count()) > 0, ms);
+}
+
+/** `until` for the page's text containing something. */
+async function untilText(page: Page, re: RegExp, ms = 15_000): Promise<boolean> {
+  return until(page, async () => re.test(await page.evaluate("document.body.innerText")), ms);
+}
+
+/**
+ * The app has FINISHED ARRIVING at a seeded zip.
+ *
+ * THE FIRST VERSION OF THIS WAS WRONG AND THE WALK SAID SO. It settled on
+ * "`.coverage-notice` OR a `canvas`", and a canvas exists almost the instant
+ * MapLibre mounts — so every page was read while the app was still resolving,
+ * and thirteen working checks printed as NAMED REGRESSIONS: four governors
+ * missing from who-governs, four state focuses reading "none", Kearsarge and
+ * Newbury absent, and two pin floors at zero. That is R49's own defect wearing
+ * the other face: an outcome wait on the WRONG outcome is no better than a
+ * duration, and it fails faster.
+ *
+ * So the outcome is both halves of what the reader sees at a zip: the
+ * who-governs card, which only renders once the division resolve has returned
+ * the governor and the bodies, AND the state focus layer, which only mounts
+ * once the map has been told which state the reader is in. Those are the two
+ * things the nine-second sleep was really buying.
+ *
+ * Returning false is not a failure and is not reported as one — the caller
+ * reads anyway at the ceiling, so a genuine absence still fails on the truth.
+ */
+async function appSettled(page: Page, ms = 20_000): Promise<boolean> {
+  return until(
+    page,
+    async () =>
+      (await page.locator(".coverage-notice").count()) > 0 &&
+      (await page.locator(".state-focus-layer").count()) > 0,
+    ms,
+  );
+}
+
 // ── Probe accounting, and the run's own identity (C05) ─────────────────────
 
 /**
@@ -254,8 +338,8 @@ async function getJson<T>(path: string): Promise<T | null> {
  * app does not have. The tutorial flag is seeded too: the first-run tour is
  * its own check, not a thing every other check has to dismiss.
  */
-async function openAt(browser: Browser, zip: string): Promise<Page> {
-  const context = await browser.newContext({
+async function openAt(browser: GuardedBrowser, zip: string): Promise<Page> {
+  const context = await browser.context({
     // C05: the browser declares this run synthetic too. The page's own
     // /api/meetings fetches write search-log rows exactly like the direct
     // probes do, and they are the bulk of what a walk creates.
@@ -263,45 +347,6 @@ async function openAt(browser: Browser, zip: string): Promise<Page> {
     viewport: PHONE,
     deviceScaleFactor: 2,
     reducedMotion: "reduce",
-  });
-  // C05: sendBeacon ignores extraHTTPHeaders, so anything leaving by that
-  // path is recorded ORGANIC — our own run counted as a reader in the store
-  // we sell. Removing it forces the fetch fallback, which carries the header.
-  await context.addInitScript(() => {
-    try {
-      Object.defineProperty(navigator, "sendBeacon", {
-        value: undefined,
-        configurable: true,
-      });
-    } catch {
-      // Still declared on every fetch if it cannot be removed.
-    }
-  });
-  /*
-   * C05, THE BEACON HOLE (g14, 2026-08-18).
-   *
-   * lib/log/client.ts prefers navigator.sendBeacon over fetch, and
-   * Playwright extraHTTPHeaders DO NOT apply to a beacon. So every event
-   * that leaves by that path arrives with no x-wtp-synthetic-run header and
-   * is recorded ORGANIC - a walk row counted as a reader in the store we
-   * sell. It cost 3 QUESTION_ASKED rows the day this was found, flushed on
-   * the page unloads that the fresh-page ask fix introduced.
-   *
-   * Removing sendBeacon forces the fetch fallback, which carries the header.
-   * The cost is stated rather than hidden: this walk no longer exercises the
-   * beacon path itself. That is the right trade - a suite that pollutes the
-   * sold store every run is worse than one that tests a transport one layer
-   * down.
-   */
-  await context.addInitScript(() => {
-    try {
-      Object.defineProperty(navigator, "sendBeacon", {
-        value: undefined,
-        configurable: true,
-      });
-    } catch {
-      // If it cannot be removed the run still declares itself on every fetch.
-    }
   });
   await context.addInitScript(
     ({ zip }) => {
@@ -321,7 +366,14 @@ async function openAt(browser: Browser, zip: string): Promise<Page> {
   const page = await context.newPage();
   page.on("response", (r) => countProbe(r.url()));
   await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 90_000 });
-  await page.waitForTimeout(9000);
+  /*
+   * R49: the app has RENDERED, rather than nine seconds have passed. The
+   * seeded zip makes the who-governs card the first surface; the map canvas
+   * is the fallback for a zip that renders no card. Neither arriving inside
+   * the ceiling leaves the page exactly where the old fixed wait left it, so
+   * a genuine failure still fails on the read below rather than here.
+   */
+  await appSettled(page);
   return page;
 }
 
@@ -335,52 +387,13 @@ async function openAt(browser: Browser, zip: string): Promise<Page> {
  * run" four times over, which is honest and useless: the check has to be able
  * to reach its subject before its result means anything.
  */
-async function openWideAt(browser: Browser, zip: string): Promise<Page> {
-  const context = await browser.newContext({
+async function openWideAt(browser: GuardedBrowser, zip: string): Promise<Page> {
+  const context = await browser.context({
     // C05: same declaration on the wide viewport.
     extraHTTPHeaders: RUN_HEADERS,
     viewport: { width: 1280, height: 900 },
     deviceScaleFactor: 1,
     reducedMotion: "reduce",
-  });
-  // C05: sendBeacon ignores extraHTTPHeaders, so anything leaving by that
-  // path is recorded ORGANIC — our own run counted as a reader in the store
-  // we sell. Removing it forces the fetch fallback, which carries the header.
-  await context.addInitScript(() => {
-    try {
-      Object.defineProperty(navigator, "sendBeacon", {
-        value: undefined,
-        configurable: true,
-      });
-    } catch {
-      // Still declared on every fetch if it cannot be removed.
-    }
-  });
-  /*
-   * C05, THE BEACON HOLE (g14, 2026-08-18).
-   *
-   * lib/log/client.ts prefers navigator.sendBeacon over fetch, and
-   * Playwright extraHTTPHeaders DO NOT apply to a beacon. So every event
-   * that leaves by that path arrives with no x-wtp-synthetic-run header and
-   * is recorded ORGANIC - a walk row counted as a reader in the store we
-   * sell. It cost 3 QUESTION_ASKED rows the day this was found, flushed on
-   * the page unloads that the fresh-page ask fix introduced.
-   *
-   * Removing sendBeacon forces the fetch fallback, which carries the header.
-   * The cost is stated rather than hidden: this walk no longer exercises the
-   * beacon path itself. That is the right trade - a suite that pollutes the
-   * sold store every run is worse than one that tests a transport one layer
-   * down.
-   */
-  await context.addInitScript(() => {
-    try {
-      Object.defineProperty(navigator, "sendBeacon", {
-        value: undefined,
-        configurable: true,
-      });
-    } catch {
-      // If it cannot be removed the run still declares itself on every fetch.
-    }
   });
   await context.addInitScript(
     ({ zip }) => {
@@ -400,7 +413,14 @@ async function openWideAt(browser: Browser, zip: string): Promise<Page> {
   const page = await context.newPage();
   page.on("response", (r) => countProbe(r.url()));
   await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 90_000 });
-  await page.waitForTimeout(9000);
+  /*
+   * R49: the app has RENDERED, rather than nine seconds have passed. The
+   * seeded zip makes the who-governs card the first surface; the map canvas
+   * is the fallback for a zip that renders no card. Neither arriving inside
+   * the ceiling leaves the page exactly where the old fixed wait left it, so
+   * a genuine failure still fails on the read below rather than here.
+   */
+  await appSettled(page);
   return page;
 }
 
@@ -408,7 +428,7 @@ async function bodyText(page: Page): Promise<string> {
   return page.locator("body").innerText();
 }
 
-const browser = await chromium.launch();
+const browser = await launchGuarded({ label: "walk-all" });
 
 console.log(`walk:all — ${BASE}\n${new Array(60).fill("─").join("")}`);
 
@@ -910,6 +930,10 @@ for (const { zip } of FOUR) {
           return typeof w.__wtpPinCount === "function" ? w.__wtpPinCount() : -1;
         });
         if (pins >= 0 && pins < floor) floor = pins;
+        // R49 SAMPLING INTERVAL: this loop is the fix R49 was opened for. It
+        // samples CONTINUOUSLY for the lowest pin count rather than reading
+        // once after a duration - the read that turned a 200-500ms dip into
+        // "reproduced 1 of 2 runs, a race" when it was 4 of 4.
         await page.waitForTimeout(100);
       }
       floors.push(Number.isFinite(floor) ? floor : -1);
@@ -1002,24 +1026,11 @@ for (const { zip } of FOUR) {
 section("D. The ballot page (0814c, D53, g3)");
 
 {
-  const context = await browser.newContext({
+  const context = await browser.context({
     // C05: this run is ours, declared at write time.
     extraHTTPHeaders: RUN_HEADERS,
     viewport: PHONE,
     reducedMotion: "reduce",
-  });
-  // C05: sendBeacon ignores extraHTTPHeaders, so anything leaving by that
-  // path is recorded ORGANIC — our own run counted as a reader in the store
-  // we sell. Removing it forces the fetch fallback, which carries the header.
-  await context.addInitScript(() => {
-    try {
-      Object.defineProperty(navigator, "sendBeacon", {
-        value: undefined,
-        configurable: true,
-      });
-    } catch {
-      // Still declared on every fetch if it cannot be removed.
-    }
   });
   const page = await context.newPage();
   page.on("response", (r) => countProbe(r.url()));
@@ -1027,7 +1038,8 @@ section("D. The ballot page (0814c, D53, g3)");
     waitUntil: "domcontentloaded",
     timeout: 90_000,
   });
-  await page.waitForTimeout(3500);
+  // R49: the ballot has rendered, rather than 3.5s have passed.
+  await untilPresent(page, "[data-pick], .ballot-measure, main", 12_000);
 
   // M49/M50 — a pick renders the reader's running ballot.
   //
@@ -1048,7 +1060,9 @@ section("D. The ballot page (0814c, D53, g3)");
     );
   } else {
     await pickButtons.first().click();
-    await page.waitForTimeout(900);
+    // R49: wait for the surface this check is about, and read anyway at the
+    // ceiling so a real absence still fails.
+    await untilText(page, /my picks/i, 10_000);
     const after = await bodyText(page);
     check(
       "0814c",
@@ -1057,7 +1071,11 @@ section("D. The ballot page (0814c, D53, g3)");
       /my picks/i.test(after) ? "" : "no My picks surface after a pick",
     );
     await pickButtons.first().click();
-    await page.waitForTimeout(400);
+    // R49: the pick is undone, rather than 400ms have passed. Nothing is read
+    // after this — it exists so the next section starts from a clean ballot.
+    await untilText(page, /my picks/i, 8_000).then(async (still) =>
+      still ? until(page, async () => !/my picks/i.test(await bodyText(page)), 8_000) : true,
+    );
   }
 
   // g3 item 7 — candidate names on the ballot open their large battlecards.
@@ -1100,11 +1118,13 @@ section("E. Sources and officials (g3 items 5, 8, 9)");
   if (!opened) {
     cannotRun("g3", "the sources tab's vocabulary", "no official row on the who-governs card");
   } else {
-    await page.waitForTimeout(900);
+    // R49: the popup card is on the page, rather than 900ms have passed.
+    await untilPresent(page, ".popup-card", 10_000);
     const more = page.locator('.popup-card button:has-text("More")');
     if (await more.count()) {
       await more.first().click();
-      await page.waitForTimeout(1200);
+      // R49: the large card is open, rather than 1.2s have passed.
+      await untilPresent(page, ".account-modal-body", 10_000);
     }
     const card = await page.locator(".account-modal-body, .popup-card").first().innerText();
     check(
@@ -1271,7 +1291,17 @@ section("F. The reader's map and the folded panels (g4 items 1-5, 9, 11, 14, 15)
       { steps: 12 },
     );
     await page.mouse.up();
-    await page.waitForTimeout(1200);
+    /* R49: the camera has MOVED, rather than 1.2s have passed. The check below
+     * needs a drag that took effect, and polling for it is the difference
+     * between "the drag did nothing" and "the drag had not landed yet". */
+    await until(
+      page,
+      async () => {
+        const now = await centreNow();
+        return now !== null && before !== null && (Math.abs(now.lat - before.lat) > 1e-6 || Math.abs(now.lng - before.lng) > 1e-6);
+      },
+      8_000,
+    );
 
     const panned = await centreNow();
     // The experiment has to have RUN before its result means anything — g3's
@@ -1285,7 +1315,11 @@ section("F. The reader's map and the folded panels (g4 items 1-5, 9, 11, 14, 15)
     if (!moved || !panned) {
       cannotRun("g4", "the pan-and-wait check", "the drag did not move the camera");
     } else {
-      // Past the 2800 ms auto-frame timer and its 1400 ms flight.
+      /* R49 DURATION, DELIBERATE: this waits for a timer NOT to fire. The
+       * check is that the camera does not auto-frame after a manual pan, and
+       * the only honest way to assert a non-event is to outlast it - a 2800ms
+       * timer plus a 1400ms flight. There is no outcome to poll for; the
+       * outcome is silence. */
       await page.waitForTimeout(5000);
       const after = await centreNow();
       const drift = after
@@ -1358,7 +1392,8 @@ section("F. The reader's map and the folded panels (g4 items 1-5, 9, 11, 14, 15)
     );
   } else {
     await filtersButton.click();
-    await page.waitForTimeout(500);
+    // R49: the rail is on the page, rather than 500ms have passed.
+    await untilPresent(page, ".sidebar-scroll", 8_000);
     const opened = await page.locator(".sidebar-scroll").innerText();
     check(
       "g4",
@@ -1413,7 +1448,8 @@ section("F. The reader's map and the folded panels (g4 items 1-5, 9, 11, 14, 15)
       cannotRun("g4", "the meetings panel", "the list control is not visible at this width");
     } else {
     await listButton.click();
-    await page.waitForTimeout(900);
+    // R49: the list has groups, rather than 900ms have passed.
+    await untilPresent(page, ".al-group-head", 10_000);
     const groups = await page.locator(".al-group-head").count();
     const expanded = await page
       .locator(".al-group-head[aria-expanded='true']")
@@ -1472,6 +1508,9 @@ section("F. The reader's map and the folded panels (g4 items 1-5, 9, 11, 14, 15)
       const el = document.querySelector(".state-focus-layer") as HTMLElement | null;
       if (el) el.style.visibility = "hidden";
     });
+    /* R49 DURATION, DELIBERATE: a repaint after hiding a layer. The DOM
+     * already says the layer is hidden; what this waits for is the compositor,
+     * which fires no event a page can poll. */
     await page.waitForTimeout(500);
     const off = decodePng(await canvas.screenshot());
     const x = Math.round(probe.x);
@@ -1506,7 +1545,8 @@ section("F. The reader's map and the folded panels (g4 items 1-5, 9, 11, 14, 15)
   const menu = page.locator('button[aria-label="Open menu"]');
   if (await menu.count()) {
     await menu.first().evaluate((el: HTMLElement) => el.click());
-    await page.waitForTimeout(800);
+    // R49: the drawer is on the page, rather than 800ms have passed.
+    await untilPresent(page, ".sidebar-scroll, [data-ask-pill]", 8_000);
   }
   // The frame BEFORE the panel opens. Every paint claim below is measured
   // against it, so no absolute threshold has to know what the basemap looks
@@ -1526,7 +1566,9 @@ section("F. The reader's map and the folded panels (g4 items 1-5, 9, 11, 14, 15)
   if (!opened) {
     cannotRun("g5", "85701: the meetings panel paints on first render", "no meetings door");
   } else {
-    await page.waitForTimeout(1600);
+    // R49: the panel's own count element is present, rather than 1.6s have
+    // passed. The paint assertions below still read whatever is there.
+    await untilPresent(page, ".al-overlay-count", 10_000);
     const shape = await page.evaluate(() => {
       const header = document.querySelector(".al-overlay-count");
       const heads = Array.from(document.querySelectorAll(".al-group-head"));
@@ -1610,7 +1652,8 @@ for (const { zip } of FOUR) {
   // and dropping the desktop would leave the chip permanently unchecked.
   const page = wide ? await openWideAt(browser, zip) : await openAt(browser, zip);
   const where = `${zip}${wide ? " (desktop)" : " (phone)"}`;
-  await page.waitForTimeout(600);
+  // R49: openAt/openWideAt now return on a RENDERED page, so the numbers this
+  // reads are there or genuinely absent. No further duration is owed.
 
   const numbers = await page.evaluate(`(() => {
     const readInt = (el) => {
@@ -1641,7 +1684,8 @@ for (const { zip } of FOUR) {
     await page.context().close();
     continue;
   }
-  await page.waitForTimeout(1400);
+  // R49: the panel's count element is present, rather than 1.4s have passed.
+  await untilPresent(page, ".al-overlay-count", 10_000);
 
   const panel = await page.evaluate(`(() => {
     const header = document.querySelector(".al-overlay-count");
@@ -1764,7 +1808,8 @@ section("I. The mayor after item 6 (g6)");
 
 {
   const page = await openAt(browser, "07866");
-  await page.waitForTimeout(700);
+  // R49: openAt returns on a rendered page; the who-governs card below is
+  // read directly, and a genuine absence still fails there.
 
   const onPanel = await page.evaluate(`(() => {
     const card = document.querySelector(".coverage-notice");
@@ -1794,7 +1839,8 @@ section("I. The mayor after item 6 (g6)");
     if (!opened) {
       cannotRun("g6", "07866: the mayor is reachable from who-governs", "no Rockaway township row to open");
     } else {
-      await page.waitForTimeout(2500);
+      // R49: the opened card is present, rather than 2.5s have passed.
+      await untilPresent(page, ".account-modal, .popup-card", 12_000);
       /*
        * TWO GRAMMARS, because M136 (g13, 2026-08-18) gave BODY cards
        * collapsible sections while district and meeting cards kept their
@@ -1822,7 +1868,8 @@ section("I. The mayor after item 6 (g6)");
       if (opened2 !== "tab" && opened2 !== "section") {
         cannotRun("g6", "07866: the mayor is reachable from who-governs", opened2);
       } else {
-        await page.waitForTimeout(1800);
+        // R49: the opened surface is present, rather than 1.8s have passed.
+        await untilPresent(page, "[role=tabpanel], .account-modal-body", 10_000);
         // Scope to the tab panel where there is one, and to the whole dialog
         // body where the section grammar is in play — never to the document,
         // which would let anything else on the page answer for this card.
@@ -2083,7 +2130,19 @@ section("L. Contact surfaces (g9: R39 the phone pill, R40 the address)");
     cannotRun("g9", "03255: Shaheen renders ONE Phone pill", "no Shaheen row on who-governs");
     cannotRun("g9", "03255: the phone chooser lists every recorded number", "no Shaheen row");
   } else {
-    await page.waitForTimeout(2500);
+    /* R49: the row has POPULATED, not merely mounted. Waiting for the
+     * container alone read it while it still held four pills and no Phone,
+     * and printed a NAMED REGRESSION against a working card - the same
+     * mistake the app-settled helper made one level up, and the reason both
+     * now wait for the thing being asserted rather than its parent. Reading
+     * anyway at the ceiling keeps a genuine 0 or 2 a real failure. */
+    await until(
+      page,
+      async () =>
+        (await page.locator(".contact-pill-row").count()) > 0 &&
+        /Phone/.test(await page.locator(".contact-pill-row").first().innerText()),
+      15_000,
+    );
     const pills = (await page.evaluate(`(() => {
       const row = document.querySelector(".contact-pill-row");
       if (!row) return null;
@@ -2112,7 +2171,8 @@ section("L. Contact surfaces (g9: R39 the phone pill, R40 the address)");
           if (/Phone/.test(p.textContent || "")) { p.click(); return; }
         }
       })()`);
-      await page.waitForTimeout(700);
+      // R49: the chooser is on the page, rather than 700ms have passed.
+      await untilPresent(page, "[role=dialog] a[href^='tel:'], .contact-chooser", 8_000);
 
       // The chooser's rows against the RECORDED count, read from the same
       // route the card reads. A modal with the wrong number of rows is the
@@ -2334,6 +2394,10 @@ section("M. Overlapping pins are each reachable (g9: M19, the author's ruling)")
     // a real gesture through the settle path, like a reader's wheel.
     for (let step = 0; step < 5 && reading.groups.length === 0; step++) {
       await page.evaluate(`window.__wtpZoomOut && window.__wtpZoomOut(1.5)`);
+      /* R49 DURATION, DELIBERATE: a MAP SETTLE before a GEOMETRY read. The camera
+       * animates, and the probe below measures pin positions - polling for "it
+       * changed" would return mid-flight, which is precisely the wrong moment for a
+       * geometry assertion. The duration is the settle, not a guess at latency. */
       await page.waitForTimeout(1600);
       reading = (await probe())!;
     }
@@ -2409,6 +2473,10 @@ section("M. Overlapping pins are each reachable (g9: M19, the author's ruling)")
             return true;
           })()`,
         );
+        /* R49 DURATION, DELIBERATE: a MAP SETTLE before a GEOMETRY read. The camera
+         * animates, and the probe below measures pin positions - polling for "it
+         * changed" would return mid-flight, which is precisely the wrong moment for a
+         * geometry assertion. The duration is the settle, not a guess at latency. */
         await page.waitForTimeout(700);
         reading = (await probe())!;
         ({ landing, blockedBy } = await findLanding(reading));
@@ -2443,6 +2511,10 @@ section("M. Overlapping pins are each reachable (g9: M19, the author's ruling)")
            * what a reader gets.
            */
           await page.mouse.click(at.x, at.y);
+          /* R49 DURATION, DELIBERATE: a MAP SETTLE before a GEOMETRY read. The camera
+           * animates, and the probe below measures pin positions - polling for "it
+           * changed" would return mid-flight, which is precisely the wrong moment for a
+           * geometry assertion. The duration is the settle, not a guess at latency. */
           await page.waitForTimeout(900);
 
           const fannedReading = (await probe())!;
@@ -2485,6 +2557,10 @@ section("M. Overlapping pins are each reachable (g9: M19, the author's ruling)")
           } else {
             // Escape, the explicit control beside the map-press gesture.
             await page.keyboard.press("Escape");
+            /* R49 DURATION, DELIBERATE: a MAP SETTLE before a GEOMETRY read. The camera
+             * animates, and the probe below measures pin positions - polling for "it
+             * changed" would return mid-flight, which is precisely the wrong moment for a
+             * geometry assertion. The duration is the settle, not a guess at latency. */
             await page.waitForTimeout(700);
             const returned = (await probe())!;
             const backWhereTheyWere = group.every((k) => {
@@ -2753,7 +2829,9 @@ for (const { zip } of FOUR) {
           .first()
           .click();
       }
-      await page.waitForTimeout(900);
+      // R49: the who-governs card is GONE, which is what minimizing it means
+      // and what the very next check asserts.
+      await until(page, async () => (await page.locator(".coverage-notice").count()) === 0, 8_000);
       const rail = await clusterCensus(page);
       check(
         "g12",
@@ -2770,7 +2848,8 @@ for (const { zip } of FOUR) {
       // M119 — one input, and it is inside the cluster's expansion.
       if ((await page.locator("[data-ask-panel]").count()) === 0) {
         await page.locator("[data-ask-pill]").first().click();
-        await page.waitForTimeout(500);
+        // R49: the ask panel is open, rather than 500ms have passed.
+        await untilPresent(page, "[data-ask-panel]", 8_000);
       }
       const opened = await clusterCensus(page);
       check(
@@ -2789,6 +2868,10 @@ for (const { zip } of FOUR) {
           .locator("[data-ask-panel] button", { hasText: "Ask" })
           .first()
           .click();
+        /* R49 DURATION, DELIBERATE: the geometry measured below is of the rail
+         * holding its LONGEST content, and the answer streams in. Polling for
+         * "the answer arrived" would measure the rail mid-growth, which is the
+         * wrong moment for a bounds check. */
         await page.waitForTimeout(4500);
         /*
          * MEASURE THE RIGHT THING. The first cut of this computed the gap
@@ -2867,6 +2950,8 @@ for (const { zip } of FOUR) {
               return d ? (d as HTMLElement).innerText : "";
             });
             if (digest.trim().length > 0) break;
+            // R49 POLL INTERVAL: how often the question is asked, not how long the
+            // answer is assumed to take. The loop exits on the OUTCOME.
             await page.waitForTimeout(250);
           }
         }
@@ -2931,10 +3016,12 @@ for (const { zip } of FOUR) {
          */
         const ask = async (question: string) => {
           await page.reload({ waitUntil: "domcontentloaded", timeout: 90_000 });
-          await page.waitForTimeout(6000);
+          // R49: the reloaded app has rendered, rather than 6s have passed.
+          await appSettled(page);
           if ((await page.locator("[data-ask-panel]").count()) === 0) {
             await page.locator("[data-ask-pill]").first().click();
-            await page.waitForTimeout(600);
+            // R49: the ask panel is open, rather than 600ms have passed.
+            await untilPresent(page, "[data-ask-panel]", 8_000);
           }
           const input = page.locator("[data-ask-box]").first();
 
@@ -2970,6 +3057,8 @@ for (const { zip } of FOUR) {
               settledAt = Date.now() - started;
               break;
             }
+            // R49 POLL INTERVAL: how often the question is asked, not how long the
+            // answer is assumed to take. The loop exits on the OUTCOME.
             await page.waitForTimeout(250);
           }
           const waited =
@@ -3023,9 +3112,10 @@ for (const { zip } of FOUR) {
         //    the page's own autocomplete, so the check cannot go stale
         //    against a body this zip does not have.
         await input.fill("");
-        await page.waitForTimeout(400);
+        // R49: the autocomplete has cleared, then has rows for the new text.
+        await until(page, async () => (await page.locator(".search-ac-item").count()) === 0, 6_000);
         await input.fill("Board");
-        await page.waitForTimeout(700);
+        await untilPresent(page, ".search-ac-item", 8_000);
         const offered = await page.evaluate(
           () =>
             (
@@ -3040,6 +3130,10 @@ for (const { zip } of FOUR) {
             .locator("[data-ask-panel] button", { hasText: "Ask" })
             .first()
             .click();
+          /* R49 DURATION, DELIBERATE: this check asserts an ABSENCE — that an
+           * exact name navigates and asks nothing, so neither a refusal nor a
+           * digest renders. Polling for a thing that must not appear would
+           * return instantly and prove nothing; outlasting it is the assertion. */
           await page.waitForTimeout(2500);
           const named = await page.evaluate(() => ({
             refusal: Boolean(document.querySelector("[data-ask-refusal]")),
@@ -3167,7 +3261,8 @@ section("M136. Body battlecards reach person-card depth (g13)");
         continue;
       }
       await row.click();
-      await page.waitForTimeout(1200);
+      // R49: the card is open, rather than 1.2s have passed.
+      await untilPresent(page, ".account-modal", 10_000);
 
       const card = page.locator(".account-modal").first();
       if ((await card.count()) === 0) {
@@ -3203,6 +3298,132 @@ section("M136. Body battlecards reach person-card depth (g13)");
       await page.context().close();
     }
   }
+}
+
+/* ── g15's M135: an autocomplete row opens a card ───────────────────────── */
+
+/**
+ * THE CHECK g15 CORRECTLY WITHHELD, appended now that its code is deployed.
+ *
+ * g15 converted the ask panel's autocomplete rows to M135's rule — a row opens
+ * a card — and deliberately added no walk check for it, because nothing from
+ * that session had reached production and a check against undeployed code
+ * reads as a NAMED REGRESSION against a working build. That was the right
+ * call and it left a stated debt. Production has served the fix since
+ * 714abb0 (2026-08-18, g16), so the debt is paid here.
+ *
+ * WHAT IS ASSERTED, and why it is not "every body row opens a card": a body
+ * row opens a card only when its body resolves DISTINCTLY — several bodies
+ * share one division, `CoveredBody.name` is null on derived rows, and g15's
+ * handler falls back to flying rather than opening one body's card from
+ * another body's row. So the honest assertion is that the conversion is live
+ * at all: among the body rows this zip offers, at least one opens the large
+ * card. Before g15, the answer was none, at every zip. The number tried and
+ * the number that opened are both printed, so a drop from many to one is
+ * visible even while the check stays green.
+ *
+ * Its own fresh page per zip, and every query scoped to what this section
+ * opened — the per-zip loop's page has been clicked through by a dozen checks
+ * and a bare selector finds whatever they left behind.
+ */
+const AC_ROW = ".search-ac-item";
+
+/**
+ * Open the rail, type into the ask box, and wait for the autocomplete to HAVE
+ * rows (R49 — an outcome, not a duration).
+ *
+ * THE TWO STEPS ARE NOT OPTIONAL AND THE FIRST DRAFT SKIPPED THEM. The ask
+ * panel is not on the page at rest: the who-governs card is, and the rail sits
+ * behind it. A check that looked straight for `[data-ask-box]` reported COULD
+ * NOT RUN at both zips — honest, and useless. Minimize, then open the ask
+ * pill, which is what M119 and A02 above already do.
+ */
+async function offerRows(page: Page, typed: string): Promise<number> {
+  const minimize = page.locator(".coverage-notice button[aria-label^='Minimize']").first();
+  if ((await minimize.count()) > 0) {
+    await minimize.click();
+    await page.locator(".coverage-notice").waitFor({ state: "detached", timeout: 6000 }).catch(() => {});
+  }
+  if ((await page.locator("[data-ask-panel]").count()) === 0) {
+    await page.locator("[data-ask-pill]").first().click().catch(() => {});
+    await page
+      .locator("[data-ask-panel]")
+      .first()
+      .waitFor({ state: "visible", timeout: 6000 })
+      .catch(() => {});
+  }
+
+  const input = page.locator("[data-ask-box]").first();
+  if ((await input.count()) === 0) return -1;
+  await input.fill(typed);
+  await page
+    .locator(AC_ROW)
+    .first()
+    .waitFor({ state: "visible", timeout: 8000 })
+    .catch(() => {});
+  return page.locator(AC_ROW).count();
+}
+
+for (const zip of ["85701", "85641"]) {
+  const name = `M135: an autocomplete body row opens a card at ${zip}`;
+  /*
+   * A FRESH PAGE PER ATTEMPT, not a loop inside one page: picking a row calls
+   * `dismissSidebar()`, which at phone width takes the ask panel away with it,
+   * so a second attempt in the same page would be measuring a panel that is no
+   * longer there and would read as a failure of the conversion.
+   */
+  let offered = -1;
+  let tried = 0;
+  let opened = 0;
+  let firstOpened = "";
+  let why = "";
+
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const page = await openAt(browser, zip);
+    try {
+      const count = await offerRows(page, "a");
+      if (count === -1) {
+        why = "no ask box";
+        break;
+      }
+      const bodyRows = page.locator(AC_ROW, {
+        has: page.locator(".search-ac-type", { hasText: /^Body$/ }),
+      });
+      offered = await bodyRows.count();
+      if (offered === 0) {
+        why = `the autocomplete offered no body row for "a" at this zip (${count} row(s) of other kinds)`;
+        break;
+      }
+      if (attempt >= offered) break;
+
+      const row = bodyRows.nth(attempt);
+      const label = (await row.locator(".search-ac-name").innerText()).trim();
+      tried += 1;
+      await row.click();
+      const card = page.locator(".account-modal").first();
+      const cardOpened = await card
+        .waitFor({ state: "visible", timeout: 6000 })
+        .then(() => true)
+        .catch(() => false);
+      if (cardOpened) {
+        opened += 1;
+        if (!firstOpened) firstOpened = label;
+        break;
+      }
+    } finally {
+      await page.context().close();
+    }
+  }
+
+  if (tried === 0) cannotRun("g15", name, why || "no body row could be clicked");
+  else
+    check(
+      "g15",
+      name,
+      opened > 0,
+      `${offered} body row(s) offered, ${tried} clicked, ${opened} opened the large card` +
+        (firstOpened ? ` (first: ${JSON.stringify(firstOpened)})` : ""),
+    );
 }
 
 await browser.close();

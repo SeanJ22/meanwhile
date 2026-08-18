@@ -20,9 +20,9 @@
  * The nonsense question is the one the walk uses, verbatim, because a
  * different string would be measuring a different question.
  */
-import { chromium, type Browser } from "playwright";
 
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
+import { launchGuarded, type GuardedBrowser } from "./browser.mts";
 
 const BASE = (process.env.SHOOT_BASE_URL ?? "https://sparkwtp.netlify.app").replace(
   /\/$/,
@@ -41,24 +41,11 @@ const WALK_WAIT_MS = 4500;
 
 let asks = 0;
 
-async function probe(browser: Browser, zip: string): Promise<string> {
-  const context = await browser.newContext({
+async function probe(browser: GuardedBrowser, zip: string): Promise<string> {
+  const context = await browser.context({
     extraHTTPHeaders: RUN_HEADERS,
     viewport: { width: 1280, height: 800 },
     reducedMotion: "reduce",
-  });
-  // C05: sendBeacon ignores extraHTTPHeaders, so anything leaving by that
-  // path is recorded ORGANIC — our own run counted as a reader in the store
-  // we sell. Removing it forces the fetch fallback, which carries the header.
-  await context.addInitScript(() => {
-    try {
-      Object.defineProperty(navigator, "sendBeacon", {
-        value: undefined,
-        configurable: true,
-      });
-    } catch {
-      // Still declared on every fetch if it cannot be removed.
-    }
   });
   await context.addInitScript(
     ({ zip }) => {
@@ -141,7 +128,7 @@ async function probe(browser: Browser, zip: string): Promise<string> {
   }
 }
 
-const browser = await chromium.launch();
+const browser = await launchGuarded({ label: "probe-a07" });
 console.log(`\nA07 refusal latency — ${BASE}, run id ${RUN_ID}`);
 console.log(`question: ${JSON.stringify(NONSENSE)}, polling every ${POLL_MS}ms\n`);
 

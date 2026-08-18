@@ -7,20 +7,21 @@
  * `pnpm tsx scripts/funding-shots.mts`
  */
 
-import { chromium } from "playwright";
+
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { launchGuarded } from "./browser.mts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(root, "screenshots");
 const BASE_URL = process.env.SHOOT_BASE_URL ?? "http://localhost:3000";
 
-const browser = await chromium.launch();
+const browser = await launchGuarded({ label: "funding-shots" });
 let failures = 0;
 
 // ── 1. Ballot cards, three zips ──────────────────────────────────────────
 for (const zip of ["85641", "07866", "03255"]) {
-  const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  const page = await browser.page({ viewport: { width: 390, height: 844 } });
   await page.goto(`${BASE_URL}/ballot?zip=${zip}`, { waitUntil: "networkidle" });
   const sections = await page.locator("text=Campaign money · FEC").count();
   const contributors = await page.locator("text=Largest reported contributions").count();
@@ -49,7 +50,7 @@ for (const zip of ["85641", "07866", "03255"]) {
 }
 
 // ── 2. Ciscomani's official large popup, the reader's path ───────────────
-const context = await browser.newContext({
+const context = await browser.context({
   viewport: { width: 1440, height: 900 },
   deviceScaleFactor: 2,
   reducedMotion: "reduce",

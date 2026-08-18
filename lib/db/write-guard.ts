@@ -8,7 +8,7 @@
  * unmarked ORGANIC row into `search_log` — the table the business sells from.
  * That was the third undeclared run in one day and the first from a writer
  * that is not a script, which is why nothing caught it:
- * `tests/run-marker-coverage.test.ts` guards every live browser SCRIPT, and
+ * `tests/browser-construction.test.ts` guards every live browser SCRIPT, and
  * structurally cannot see a human opening a browser.
  *
  * The author's ruling was a separate local database, so local never touches

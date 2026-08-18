@@ -6,10 +6,11 @@
  * Builds an HTML grid of `data:` URIs with a caption per cell and shoots it
  * full-page. Twenty screenshots reviewed in one look instead of twenty.
  */
-import { chromium } from "playwright";
+
 import { readFileSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { launchGuarded } from "./browser.mts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const DIR = join(root, "screenshots");
@@ -45,8 +46,8 @@ img{width:100%;border:1px solid #444;display:block}
 figcaption{padding:4px 0;font-family:ui-monospace,monospace;font-size:11px}
 </style>${cells}`;
 
-const browser = await chromium.launch();
-const page = await browser.newPage({ viewport: { width: 1600, height: 900 } });
+const browser = await launchGuarded({ label: "contact-sheet" });
+const page = await browser.page({ viewport: { width: 1600, height: 900 } });
 await page.setContent(html);
 await page.waitForTimeout(500);
 const out = join(DIR, "contact-sheet.png");

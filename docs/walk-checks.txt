@@ -208,6 +208,8 @@
 [g14] 07866: the map never empties while a wider view loads
 [g14] 85641: the map never empties while a wider view loads
 [g14] 85701: the map never empties while a wider view loads
+[g15] M135: an autocomplete body row opens a card at 85641
+[g15] M135: an autocomplete body row opens a card at 85701
 [g3] /ballot names the pick as a ballot-building action at 03255
 [g3] /ballot names the pick as a ballot-building action at 07866
 [g3] /ballot names the pick as a ballot-building action at 85641
@@ -297,7 +299,6 @@
 [g9] /transparency discloses the feedback store
 [g9] /transparency: carries no personal email address
 [g9] 03255: Shaheen renders ONE Phone pill
-[g9] 03255: the phone chooser lists every recorded number
 [g9] 85701: dismissing the fan returns every pin
 [g9] 85701: overlapping pins fan out when pressed
 [g9] the map: carries no personal email address

@@ -11,16 +11,17 @@
  * `pnpm tsx scripts/wiring-shots.mts`
  */
 
-import { chromium } from "playwright";
+
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { launchGuarded } from "./browser.mts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(root, "screenshots");
 const BASE_URL = process.env.SHOOT_BASE_URL ?? "http://localhost:3000";
 
-const browser = await chromium.launch();
-const context = await browser.newContext({
+const browser = await launchGuarded({ label: "wiring-shots" });
+const context = await browser.context({
   viewport: { width: 1440, height: 900 },
   deviceScaleFactor: 2,
   reducedMotion: "reduce",

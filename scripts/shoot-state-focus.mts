@@ -14,7 +14,7 @@
  * layers are on the map, and what the camera's zoom actually was. A pretty
  * frame with no scrim in it is a frame of a broken feature.
  */
-import { chromium } from "playwright";
+
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
 
 /**
@@ -30,15 +30,16 @@ const RUN_HEADERS = syntheticRunHeaders({
 
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
+import { launchGuarded } from "./browser.mts";
 
 const BASE = (process.env.SHOOT_BASE_URL ?? "http://localhost:3000").replace(/\/$/, "");
 const OUT = join(process.cwd(), "screenshots", "state-focus");
 mkdirSync(OUT, { recursive: true });
 
-const browser = await chromium.launch();
+const browser = await launchGuarded({ label: "shoot-state-focus" });
 
 for (const theme of ["dark", "light"] as const) {
-  const context = await browser.newContext({
+  const context = await browser.context({
     // C05: this run is ours, declared at write time.
     extraHTTPHeaders: RUN_HEADERS,
     viewport: { width: 900, height: 900 },

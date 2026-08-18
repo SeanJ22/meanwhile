@@ -5,14 +5,15 @@
  * click again → screenshot. The screenshots are the evidence — this prints
  * what happened, it does not decide.
  */
-import { chromium } from "playwright";
+
 import { join } from "node:path";
+import { launchGuarded } from "./browser.mts";
 
 const OUT = "C:/Users/seanj/dev/we-the-people/screenshots";
 const zip = process.argv[2] ?? "85701";
 
-const browser = await chromium.launch();
-const context = await browser.newContext({
+const browser = await launchGuarded({ label: "shading-check" });
+const context = await browser.context({
   viewport: { width: 1440, height: 900 },
   deviceScaleFactor: 1,
   reducedMotion: "reduce",

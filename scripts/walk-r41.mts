@@ -24,13 +24,14 @@
  *
  * `WTP_RUN_ID=<label> pnpm tsx scripts/walk-r41.mts` (SHOOT_BASE_URL to aim it)
  */
-import { chromium } from "playwright";
+
 import { join } from "node:path";
 
 import { config as loadEnv } from "dotenv";
 import { neon } from "@neondatabase/serverless";
 
 import { syntheticRunHeaders } from "../lib/db/run-marker.ts";
+import { launchGuarded } from "./browser.mts";
 
 loadEnv({ path: join(process.cwd(), ".env.local") });
 
@@ -57,11 +58,11 @@ if (!RUN_ID) {
   process.exit(1);
 }
 
-const browser = await chromium.launch();
+const browser = await launchGuarded({ label: "walk-r41" });
 
 /** Fill the form and submit, returning the HTTP status and the rendered state. */
 async function submit(message: string, replyTo: string | null) {
-  const context = await browser.newContext({
+  const context = await browser.context({
     extraHTTPHeaders: HEADERS,
     viewport: { width: 390, height: 844 },
     reducedMotion: "reduce",
@@ -104,7 +105,7 @@ const REPLY_ADDRESS = `r41-walk-${Date.now().toString(36)}@example.invalid`;
 
 // ── 1. The field exists, is labelled optional, and is empty on arrival ───
 {
-  const context = await browser.newContext({
+  const context = await browser.context({
     extraHTTPHeaders: HEADERS,
     viewport: { width: 390, height: 844 },
     reducedMotion: "reduce",

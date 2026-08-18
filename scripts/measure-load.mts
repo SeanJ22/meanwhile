@@ -49,9 +49,9 @@
  * prints NOT REACHED and is excluded from the median rather than counted as
  * a success.
  */
-import { chromium, type Browser } from "playwright";
 
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
+import { launchGuarded, type GuardedBrowser } from "./browser.mts";
 
 const BASE = (process.env.SHOOT_BASE_URL ?? "https://sparkwtp.netlify.app").replace(
   /\/$/,
@@ -87,28 +87,15 @@ interface Measurement {
 }
 
 async function measure(
-  browser: Browser,
+  browser: GuardedBrowser,
   surface: Surface,
   viewport: Which,
 ): Promise<Measurement> {
-  const context = await browser.newContext({
+  const context = await browser.context({
     extraHTTPHeaders: RUN_HEADERS,
     viewport: VIEWPORTS[viewport],
     deviceScaleFactor: 2,
     reducedMotion: "reduce",
-  });
-  // C05: sendBeacon ignores extraHTTPHeaders, so anything leaving by that
-  // path is recorded ORGANIC — our own run counted as a reader in the store
-  // we sell. Removing it forces the fetch fallback, which carries the header.
-  await context.addInitScript(() => {
-    try {
-      Object.defineProperty(navigator, "sendBeacon", {
-        value: undefined,
-        configurable: true,
-      });
-    } catch {
-      // Still declared on every fetch if it cannot be removed.
-    }
   });
   await context.addInitScript(
     ({ zip }) => {
@@ -195,7 +182,7 @@ function median(values: number[]): number {
   return sorted[Math.floor(sorted.length / 2)];
 }
 
-const browser = await chromium.launch();
+const browser = await launchGuarded({ label: "measure-load" });
 
 console.log(`\nM139 load budget — ${BASE}, zip ${ZIP}, run id ${RUN_ID}`);
 console.log(

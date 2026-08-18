@@ -49,10 +49,10 @@ const SETUP_NODE_STEP = /-\s*uses:\s*actions\/setup-node@/;
 
 const workflows = readdirSync(DIR).filter((f) => f.endsWith(".yml"));
 
-test("the workflow set is still the five this rule was audited against", () => {
+test("the workflow set is still the six this rule was audited against", () => {
   assert.equal(
     workflows.length,
-    5,
+    6,
     `the workflow set changed: ${workflows.join(", ")} — audit the new one's action pins too`,
   );
 });
@@ -73,8 +73,8 @@ test("R45: no workflow pins an action major that targets Node 20", () => {
 
   assert.equal(
     pins,
-    10,
-    `expected two Node-runtime action pins in each of five workflows, found ${pins}`,
+    12,
+    `expected two Node-runtime action pins in each of six workflows, found ${pins}`,
   );
   assert.deepEqual(
     stale,

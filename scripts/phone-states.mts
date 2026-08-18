@@ -8,13 +8,13 @@
  *
  *   corepack pnpm tsx scripts/phone-states.mts
  */
-import { chromium } from "playwright";
+import { launchGuarded } from "./browser.mts";
 
 const BASE = process.env.SHOOT_BASE_URL ?? "http://localhost:3000";
 
 async function main() {
-  const browser = await chromium.launch();
-  const page = await browser.newPage({
+  const browser = await launchGuarded({ label: "phone-states" });
+  const page = await browser.page({
     viewport: { width: 390, height: 844 },
     hasTouch: true,
     isMobile: true,

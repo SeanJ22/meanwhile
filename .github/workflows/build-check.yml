@@ -90,7 +90,7 @@ jobs:
 
       - name: Keep the trace list
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: trace-files-${{ matrix.mode }}-${{ github.sha }}
           path: trace-files.txt

@@ -17,7 +17,8 @@
  *
  * `pnpm exec tsx scripts/tester-walk-0815c.mts [zip] [baseUrl]`
  */
-import { chromium, type Page } from "playwright";
+import { type Page } from "playwright";
+import { launchGuarded } from "./browser.mts";
 
 const OUT = "C:/Users/seanj/dev/we-the-people/screenshots";
 const zip = process.argv[2] ?? "07866";
@@ -36,8 +37,8 @@ const MOJIBAKE =
 /** Identifiers a reader must never meet outside a technical disclosure. */
 const IDENTIFIER = /ocd-division|school_district:|NO_SOURCE_FOUND|NOT_ATTEMPTED|sldl:|sldu:/;
 
-const browser = await chromium.launch();
-const context = await browser.newContext({
+const browser = await launchGuarded({ label: "tester-walk-0815c" });
+const context = await browser.context({
   viewport: { width: 390, height: 844 },
   deviceScaleFactor: 2,
   reducedMotion: "reduce",

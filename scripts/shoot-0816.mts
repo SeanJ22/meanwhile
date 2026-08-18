@@ -9,7 +9,7 @@
  *   SHOOT_BASE_URL=https://… pnpm tsx scripts/shoot-0816.mts prod
  */
 
-import { chromium, type Page } from "playwright";
+import { type Page } from "playwright";
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
 
 /**
@@ -25,16 +25,17 @@ const RUN_HEADERS = syntheticRunHeaders({
 
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { launchGuarded } from "./browser.mts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(root, "screenshots");
 const BASE = process.env.SHOOT_BASE_URL ?? "http://localhost:3000";
 const PREFIX = process.argv[2] === "prod" ? "prod-0816" : "after-0816";
 
-const browser = await chromium.launch();
+const browser = await launchGuarded({ label: "shoot-0816" });
 
 async function open(width: number, height: number, zip: string) {
-  const context = await browser.newContext({
+  const context = await browser.context({
     // C05: this run is ours, declared at write time.
     extraHTTPHeaders: RUN_HEADERS,
     viewport: { width, height },

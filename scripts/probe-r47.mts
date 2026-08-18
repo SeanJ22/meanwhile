@@ -43,9 +43,10 @@
  * itself SYNTHETIC through `syntheticRunHeaders()` so those rows are never
  * counted as reader signal, and the total is printed at the end.
  */
-import { chromium, type Browser, type Page } from "playwright";
+import { type Page } from "playwright";
 
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
+import { launchGuarded, type GuardedBrowser } from "./browser.mts";
 
 const BASE = (process.env.SHOOT_BASE_URL ?? "https://sparkwtp.netlify.app").replace(
   /\/$/,
@@ -109,29 +110,16 @@ type RunResult = {
 };
 
 async function openAt(
-  browser: Browser,
+  browser: GuardedBrowser,
   viewport: Viewport,
   theme: Theme,
 ): Promise<{ page: Page; inFlight: () => number }> {
-  const context = await browser.newContext({
+  const context = await browser.context({
     extraHTTPHeaders: RUN_HEADERS,
     viewport: viewport === "phone" ? PHONE : DESKTOP,
     deviceScaleFactor: 2,
     reducedMotion: "reduce",
     colorScheme: theme,
-  });
-  // C05: sendBeacon ignores extraHTTPHeaders, so anything leaving by that
-  // path is recorded ORGANIC — our own run counted as a reader in the store
-  // we sell. Removing it forces the fetch fallback, which carries the header.
-  await context.addInitScript(() => {
-    try {
-      Object.defineProperty(navigator, "sendBeacon", {
-        value: undefined,
-        configurable: true,
-      });
-    } catch {
-      // Still declared on every fetch if it cannot be removed.
-    }
   });
   await context.addInitScript(
     ({ zip }) => {
@@ -191,7 +179,7 @@ async function sampleOnce(page: Page): Promise<{
 }
 
 async function runOnce(
-  browser: Browser,
+  browser: GuardedBrowser,
   viewport: Viewport,
   theme: Theme,
   index: number,
@@ -301,7 +289,7 @@ function describe(run: RunResult): string {
   );
 }
 
-const browser = await chromium.launch();
+const browser = await launchGuarded({ label: "probe-r47" });
 const results: RunResult[] = [];
 
 console.log(`\nR47 probe — ${BASE}, zip ${ZIP}, run id ${RUN_ID}`);

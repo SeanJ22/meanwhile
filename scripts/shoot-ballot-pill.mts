@@ -19,9 +19,10 @@
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
 
-import { chromium } from "playwright";
+
 
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
+import { launchGuarded } from "./browser.mts";
 
 const BASE = (process.env.SHOOT_BASE_URL ?? "https://sparkwtp.netlify.app").replace(
   /\/$/,
@@ -34,28 +35,15 @@ const ZIP = process.env.M139_ZIP ?? "85701";
 
 mkdirSync(OUT, { recursive: true });
 
-const browser = await chromium.launch();
+const browser = await launchGuarded({ label: "shoot-ballot-pill" });
 
 for (const theme of ["dark", "light"] as const) {
-  const context = await browser.newContext({
+  const context = await browser.context({
     extraHTTPHeaders: syntheticRunHeaders({ ...process.env, WTP_RUN_ID: RUN_ID }),
     viewport: { width: 900, height: 700 },
     deviceScaleFactor: 3,
     reducedMotion: "reduce",
     colorScheme: theme,
-  });
-  // C05: sendBeacon ignores extraHTTPHeaders, so anything leaving by that
-  // path is recorded ORGANIC — our own run counted as a reader in the store
-  // we sell. Removing it forces the fetch fallback, which carries the header.
-  await context.addInitScript(() => {
-    try {
-      Object.defineProperty(navigator, "sendBeacon", {
-        value: undefined,
-        configurable: true,
-      });
-    } catch {
-      // Still declared on every fetch if it cannot be removed.
-    }
   });
   await context.addInitScript(
     ({ zip, theme }) => {

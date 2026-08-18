@@ -406,3 +406,49 @@ state.md, and it is yours to overrule.
 **Needs your hands** is in the report, and it is short: the place-row card is a
 design decision nobody but you should make, and the `^_` lint pattern is a
 config line rather than an edit.
+
+---
+
+## g16 — 2026-08-18: the deploy landed, the leak class closed, the measures came apart
+
+**The deploy is live.** Production had been serving `bf0cd7b` — a snapshot-refresh
+commit from before g15 — and now serves this session's merges. The PR-merge
+trigger worked inside the handoff gate's own five-minute window, which answers
+the half of R51 that g15 had to leave open.
+
+**The budget refusal was correct and is now explained to the file.** Netlify
+builds in standalone mode, which this repo had never measured: 927 windows
+default, 935 linux default, 1130 windows standalone, **1138 linux standalone** —
+and 1138 is the only one of the four that describes a deploy. The 203 files that
+join are all `node_modules/next/dist`, none of them ours, every app manifest
+byte-identical. **The ceiling was not raised to get green.** Budget 1 is now two
+numbers — the largest APP manifest (195, ceiling 240, the number R23 blew up)
+and the framework runtime trace baselined per mode — because the old single
+maximum could have stayed green while an app route grew from 195 files to 900.
+
+**The leak class is closed at one construction site.** 45 scripts open browsers
+through `scripts/browser.mts`; a test refuses any other construction, and a
+second test proves non-leak by *running* it, with a permanent plant that must
+keep leaking. The old guard was deleted: it asserted a constant appears in
+source, which every leaking script satisfied. A new measurement narrows the
+diagnosis — the header survives a live beacon and is lost only on the **unload**
+path.
+
+**36 fixed waits down to 12**, each survivor justified in one of three named
+forms and guarded both ways. The first conversion filed **thirteen false
+regressions** by settling on a canvas that mounts instantly; the fix and the
+lesson are both at the helper.
+
+**Item 3 completed 1 of 5 rows.** P01 is done — all 11 AZ measures decomposed
+into **52 contested provisions** from the Legislative Council's own enumeration,
+rendered between the summary and the official text, every id already the
+reaction target P03 will attach to. **P03, D25, D29 and D06 were not started**
+and carry forward whole. **Item 4 completed 1 of 3** — the audit document landed
+and all nine AUD rows have their citations; the place card and the `^_` config
+line were not built.
+
+**Your testing pass arrived mid-session and is recorded whole, not built.**
+`docs/Feedback 8.18 1421 pm.docx` and 29 screenshots, roughly forty findings, on
+tracker row **F01**. One of them is a data claim rather than a UI one and is
+called out separately: the New Hampshire card says Kearsarge could not be reached
+while the New London pin shows its meetings.

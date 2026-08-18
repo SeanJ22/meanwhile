@@ -1,41 +1,121 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 
-import { answerQuestion, REFUSAL_LOG_MAX_CHARS, type AskAnswer } from "@/lib/routing/ask";
+import {
+  answerQuestion,
+  askWasAnswered,
+  REFUSAL_LOG_MAX_CHARS,
+  type AskAnswer,
+} from "@/lib/routing/ask";
+import { buildDigest, type Digest } from "@/lib/routing/digest";
 import { ROUTABLE_CATEGORIES } from "@/lib/routing/destinations";
+import type { NameableEntity } from "@/lib/routing/exact-name";
 import { ASK_BEAT_POOL, beatStem, drawAskBeat } from "@/lib/routing/ask-beat-pool";
 import type { CoverageSummary } from "@/lib/registry/coverage";
 import { logEvent } from "@/lib/log/client";
+import {
+  KIND_LABEL,
+  buildSearchIndex,
+  flattenGroups,
+  getSearchIndex,
+  groupResults,
+  highlightParts,
+  searchItems,
+  type SearchItem,
+  type SearchKind,
+} from "@/lib/search";
+import { formatMeetingDate } from "@/lib/map/format";
+import { useShellData } from "@/lib/state/data";
+import { useUi, useUiDispatch } from "@/lib/state/provider";
+import { tierVars } from "@/components/shell/tier-style";
 
 /**
- * The ask box, v1 (session brief 5, 2026-08-19): routing without
- * generation. Free text goes through keyword matching into the curated
- * routing map — the answer names real bodies and sourced people with the
- * denominator stated, or refuses honestly (A07). NO LLM, NO generative
- * text: every rendered sentence is curated copy or registry data.
+ * THE ASK PANEL — one input, and the whole brain behind it.
+ *
+ * ## What this is
+ *
+ * It began (session brief 5, 2026-08-19) as routing without generation: free
+ * text through keyword matching into the curated routing map, naming real
+ * bodies and sourced people with the denominator stated, or refusing honestly
+ * (A07). That contract is unchanged and load-bearing: **every sentence a
+ * reader sees here is curated copy or registry data.**
+ *
+ * M119 (2026-08-17) merges the sidebar's two inputs into this one. The
+ * author's ruling was one input, keyword-first: text matching a known meeting,
+ * body, district or person filters and navigates exactly as the search did,
+ * and anything else routes as an ask. Both halves now live on one control, and
+ * **the two logs do not blur** — a keystroke lands in exactly one of them:
+ *
+ * * A pick from the autocomplete, or an EXACT NAME typed whole, is a SEARCH.
+ *   It navigates. It never writes a question row, and it certainly never
+ *   writes a refusal row.
+ * * Anything submitted that is not a name is an ASK. It logs its topic when it
+ *   routed, or the capped question text when it did not.
+ *
+ * ## The author's matcher ruling (2026-08-17), as it lands here
+ *
+ * The keyword layer routes only on a STRONG match — two or more distinct
+ * keyword hits, or an exact name. Anything weaker falls through to the Level 1
+ * classifier, which reads the whole question and either picks the right
+ * curated drawer or says nothing routes. The classifier is consulted ONLY
+ * after `answerQuestion` has already refused, so it can never overrule a
+ * deterministic match; it generates nothing and selects only among curated
+ * destinations; and when it is off, over its ceiling or unreachable, the weak
+ * match gets the honest refusal with the destinations offered rather than a
+ * low-confidence route.
+ *
+ * ## A06's roadmap contains only what we could not do
+ *
+ * `askWasAnswered` is the single definition of "answered", read by both the
+ * render and the log so they cannot disagree. A destination, a digest or an
+ * exact name is an ANSWER — logging one as `NO_ROUTE` would put a question the
+ * product just answered into the roadmap of things it cannot do, and the
+ * roadmap would be built on it.
  *
  * The question is stored NOWHERE beyond the identifier-free search log's
- * rules: a routed ask logs its topic id only; a refusal logs the question
- * text (capped) because unanswered questions are the roadmap. No state
- * survives this component and nothing is written to device storage.
- * Disclosed on /transparency in the same commit (tests/ask-box.test.ts
- * pins the coupling).
+ * rules, and no state survives this component. Disclosed on /transparency in
+ * the same commit (tests/ask-box.test.ts pins the coupling).
  */
+
+const DEBOUNCE_MS = 120;
+const BLUR_CLOSE_MS = 150;
+
+/** The kinds the exact-name rung honors, mapped from the index's own kinds. */
+const NAME_CLASS: Readonly<Record<SearchKind, NameableEntity["nameClass"]>> = {
+  meeting: "meeting",
+  body: "body",
+  district: "district",
+  place: "place",
+  officeholder: "person",
+};
 
 export function AskBox({
   coverage,
   zip,
   ocdIds,
+  onSearchPick,
 }: {
   coverage: CoverageSummary;
   /** Orientation only, for the log — never district truth. */
   zip: string | null;
   /** The divisions in view, for the log row. */
   ocdIds: string[];
+  /**
+   * M119's search half: fly the map to a result and open its popup, exactly
+   * as the sidebar's search box did. Absent, the panel is ask-only and the
+   * autocomplete does not render — which is what a placement with no map
+   * behind it needs.
+   */
+  onSearchPick?: (item: SearchItem) => void;
 }) {
+  const { venues, meetings, allMeetings } = useShellData();
+  const ui = useUi();
+  const dispatch = useUiDispatch();
+
   const [text, setText] = useState("");
   const [asked, setAsked] = useState<AskAnswer | null>(null);
+  const [digest, setDigest] = useState<Digest | null>(null);
   // The visible-work beat (the author's presentation call, session brief
   // 3). PRESENTATION ONLY — the routing below runs instantly and
   // deterministically on-device before the timer starts, and nothing new
@@ -50,6 +130,9 @@ export function AskBox({
   // hydration. Seeded with the first entry so the type is never null.
   const [beat, setBeat] = useState<string>(ASK_BEAT_POOL[0]);
   const beatTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const debounce = useRef<number | undefined>(undefined);
+  const blurTimer = useRef<number | undefined>(undefined);
+  const listRef = useRef<HTMLDivElement>(null);
   // 6e (2026-08-14 second session), the author's retune: the beat showed
   // ~250ms and disappeared too quickly. It now holds ~3 seconds with the
   // trailing dots animating in sequence for the duration. Presentation
@@ -63,9 +146,82 @@ export function AskBox({
     }, 400);
     return () => clearInterval(interval);
   }, [working]);
-  // Two instances mount at once (the who-governs card and the sidebar
-  // rail) — the label/input pairing must not share a DOM id.
   const inputId = useId();
+
+  useEffect(() => {
+    return () => {
+      window.clearTimeout(debounce.current);
+      window.clearTimeout(blurTimer.current);
+      if (beatTimer.current) clearTimeout(beatTimer.current);
+    };
+  }, []);
+
+  /*
+   * The autocomplete index, carried over from the sidebar's search box
+   * unchanged — including D18's reason for counting online meetings in the
+   * cache token: a meeting held online is in no venue, so an index built
+   * before it arrived would never be invalidated by it turning up.
+   */
+  const index = useMemo(() => {
+    const online = meetings.filter((m) => m.location === null);
+    const token = `${venues.map((v) => v.key).join(",")}|online:${online
+      .map((m) => m.id)
+      .join(",")}`;
+    return getSearchIndex(token, () => buildSearchIndex(venues, [], online));
+  }, [venues, meetings]);
+
+  const groups = useMemo(
+    () => (onSearchPick ? groupResults(searchItems(index, text)) : []),
+    [index, text, onSearchPick],
+  );
+  const flat = useMemo(() => flattenGroups(groups), [groups]);
+
+  /** Everything the reader could name outright, for the exact-name rung. */
+  const entities: NameableEntity[] = useMemo(
+    () =>
+      index.map((item) => ({
+        id: item.id,
+        name: item.label,
+        nameClass: NAME_CLASS[item.kind],
+      })),
+    [index],
+  );
+
+  /*
+   * M119's sharpest edge, caught in a screenshot rather than reasoned about:
+   * ONE INPUT, TWO JOBS, AND ONLY ONE OF THEM SHOULD TOUCH THE MAP.
+   *
+   * The rail's search box committed every keystroke to `search/input`, which
+   * is a FILTER — `lib/state/derive.ts` drops every meeting whose text does
+   * not match it. That was right when the box could only be a search. Merged,
+   * it is wrong the moment someone types a question: "whats going on where i
+   * live" matched no meeting, so the count badge read **0 meetings** and the
+   * map emptied while the reader was mid-sentence. An empty map is the one
+   * thing this product may never render, and here it was rendering one in
+   * response to a question it was about to answer.
+   *
+   * So the filter commits only when the text actually MATCHES something in the
+   * index. Typing a body name still narrows the map keystroke by keystroke,
+   * exactly as before; typing a question leaves the map alone. The rule is
+   * mechanical and checkable — it is the same `searchItems` the autocomplete
+   * below renders from, so what filters is always exactly what the reader can
+   * see offered.
+   */
+  function commit(value: string) {
+    window.clearTimeout(debounce.current);
+    debounce.current = window.setTimeout(() => {
+      const matches = value.trim() ? searchItems(index, value).length : 0;
+      dispatch({ type: "search/input", query: matches > 0 ? value : "" });
+    }, DEBOUNCE_MS);
+  }
+
+  function pick(item: SearchItem) {
+    window.clearTimeout(blurTimer.current);
+    setText(item.label);
+    dispatch({ type: "search/input", query: item.label });
+    dispatch({ type: "search/open", open: false });
+    onSearchPick?.(item);
+  }
 
   /**
    * The second rung (6d, 2026-08-15). Asked ONLY when the on-device keyword
@@ -99,43 +255,70 @@ export function AskBox({
     // reader sees the same acknowledgment either way.
     if (beatTimer.current) clearTimeout(beatTimer.current);
     setAsked(null);
+    setDigest(null);
     setBeat(drawAskBeat());
     setWorking(true);
+    // Submitting an ASK releases the map filter and closes the autocomplete.
+    // The question is not a narrowing, and leaving a stale one applied would
+    // answer beside a map showing less than the answer talks about.
+    window.clearTimeout(debounce.current);
+    dispatch({ type: "search/input", query: "" });
+    dispatch({ type: "search/open", open: false });
 
     void (async () => {
       const started = Date.now();
-      let result = answerQuestion(question, coverage, zip);
+      let result = answerQuestion(question, coverage, zip, { entities });
+
+      /*
+       * M119's first rule: an exact name is a SEARCH, not a question.
+       *
+       * The reader typed a body, a person, a district, a place or a meeting
+       * whole. There is nothing to answer — they asked to be taken there. It
+       * navigates through the same path the autocomplete uses, so it lands in
+       * the search log exactly as it always did, and NOTHING is written to the
+       * question log. That is the "two logs must not blur" rule, and it is
+       * checked here rather than promised: this branch returns before any
+       * `logEvent("QUESTION_ASKED", …)` can run.
+       */
+      if (result.exactName && onSearchPick) {
+        const hit = index.find((item) => item.id === result.exactName!.entity.id);
+        if (hit) {
+          setWorking(false);
+          pick(hit);
+          return;
+        }
+      }
+
       // Keyword-first, structurally: the classifier is consulted only after
-      // the deterministic matcher has already refused.
+      // the deterministic matcher has already refused. The author's ruling
+      // makes this rung carry more than it used to — a single-keyword hit is
+      // now weak and lands here instead of routing on one word.
       if (result.answer.kind !== "ROUTED") {
         const topic = await classify(question);
-        if (topic) result = answerQuestion(question, coverage, zip, topic);
+        if (topic) {
+          result = answerQuestion(question, coverage, zip, {
+            classified: topic,
+            entities,
+          });
+        }
       }
 
       /*
-       * G05 rule 4d (2026-08-17): a destination IS an answer, so a question
-       * that reached one is not a refusal.
+       * A06's roadmap contains only what we could not do.
        *
-       * This mattered more than it looks. The refusal log is the roadmap —
-       * A06's whole reason for existing is that every unanswered question is
-       * a data gap or a feature. Logging "what's on my ballot" as NO_ROUTE
-       * after showing the reader the ballot page would put an ANSWERED
-       * question into the list of things this product cannot do, and the
-       * roadmap would be built on it. The same rule as everywhere else: a
-       * record may never assert something the surface did not do.
+       * `askWasAnswered` is the one definition, shared with the render, so a
+       * question the surface answered can never be logged as one it could
+       * not. G05 rule 4d found this the first time with destinations; A02's
+       * digest and M119's exact names are the same shape and are covered by
+       * the same function rather than by three copies of the same check.
        *
-       * The destination id is a curated constant — one of four — and carries
-       * no more about a reader than a topic id does.
+       * Every id logged is a curated constant — a topic, one of four
+       * destinations, or the digest — and carries no more about a reader than
+       * a topic id always has.
        */
-      const routedSomewhere = Boolean(
-        (result.answer.kind === "ROUTED" && result.match) || result.destination,
-      );
-      if (routedSomewhere) {
-        // The topic id, as always. `via` marks the rung that found it so a
-        // later audit can tell a classifier route from a keyword one — a
-        // fact about our machinery, never about the reader.
+      if (askWasAnswered(result)) {
         logEvent("QUESTION_ASKED", ocdIds, {
-          topic: result.match?.topicId ?? "DESTINATION_ONLY",
+          topic: result.match?.topicId ?? (result.digest ? "DIGEST" : "DESTINATION_ONLY"),
           routed: true,
           ...(result.match?.via ? { via: result.match.via } : {}),
           ...(result.destination
@@ -152,27 +335,76 @@ export function AskBox({
         });
       }
 
+      // A02 is assembled from rows this product already holds, at ask time,
+      // from `allMeetings` — the cascade's answer before the UI's filters, so
+      // a chip the reader left on cannot silently shrink a digest that claims
+      // to be about their divisions.
+      const built = result.digest
+        ? buildDigest(coverage, allMeetings, Date.now())
+        : null;
+
       // The beat holds its full length whatever the rung cost, so the box
       // never flickers on a fast answer or feels stalled on a slow one.
       const remaining = Math.max(0, BEAT_MS - (Date.now() - started));
       beatTimer.current = setTimeout(() => {
         setAsked(result);
+        setDigest(built);
         setWorking(false);
       }, remaining);
     })();
   };
 
+  function onKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+    if (event.key === "Escape") {
+      dispatch({ type: "search/open", open: false });
+      return;
+    }
+
+    if (
+      onSearchPick &&
+      (event.key === "ArrowDown" || event.key === "ArrowUp")
+    ) {
+      if (flat.length === 0) return;
+      event.preventDefault();
+      const step = event.key === "ArrowDown" ? 1 : -1;
+      // Wraps, so holding an arrow key never dead-ends at either edge.
+      const next =
+        (ui.search.highlighted + step + flat.length + 1) % (flat.length + 1);
+      dispatch({ type: "search/highlight", index: next === flat.length ? -1 : next });
+      dispatch({ type: "search/open", open: true });
+      return;
+    }
+
+    if (event.key === "Enter") {
+      // M119: Enter on a highlighted autocomplete row is a SEARCH. Enter with
+      // nothing highlighted is an ASK. One key, two jobs, and which one fired
+      // is never ambiguous to the reader — the highlight is on screen.
+      const item = onSearchPick ? flat[ui.search.highlighted] : undefined;
+      event.preventDefault();
+      if (item) {
+        pick(item);
+        return;
+      }
+      ask();
+    }
+  }
+
+  const acOpen = Boolean(onSearchPick) && ui.search.open && flat.length > 0;
+  let cursor = -1;
+
   // The flagship treatment (design pass, item 1): a standout feature
   // dressed as one — a raised block, a real heading, an input that
-  // invites, a filled Ask. Behavior is untouched: same routing, same
-  // logging, same beat, same words.
+  // invites, a filled Ask.
   return (
-    <div className="mt-3.5 rounded-[10px] border border-[var(--panel-border)] bg-[var(--panel-bg)] p-3.5 shadow-[var(--shadow-panel)]">
+    <div
+      data-ask-panel
+      className="mt-3.5 rounded-[10px] border border-[var(--panel-border)] bg-[var(--panel-bg)] p-3.5 shadow-[var(--shadow-panel)]"
+    >
       <label
         htmlFor={inputId}
         className="block text-[0.9375rem] font-semibold leading-snug text-paper"
       >
-        Who do I talk to about…?
+        Ask, or find a thing by name
       </label>
       {/*
         G05 rule 4d (2026-08-17): the copy may only promise what the router
@@ -191,21 +423,94 @@ export function AskBox({
             <span className="text-paper">{category.toLowerCase()}</span>
           </span>
         ))}
-        .
+        {onSearchPick
+          ? ". Type a meeting, body or district by name to go straight to it."
+          : "."}
       </p>
       <div className="mt-2.5 flex gap-2">
-        <input
-          id={inputId}
-          data-ask-box
-          type="text"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") ask();
-          }}
-          placeholder="the library, a pothole, my kid's school…"
-          className="min-w-0 flex-1 rounded-md border border-[var(--panel-border)] bg-[var(--bg)] px-3 py-2 text-[0.875rem] placeholder:text-muted focus:border-[var(--signal)] focus:outline-none"
-        />
+        <div className="relative min-w-0 flex-1">
+          <input
+            id={inputId}
+            data-ask-box
+            type="text"
+            value={text}
+            role={onSearchPick ? "combobox" : undefined}
+            aria-expanded={onSearchPick ? acOpen : undefined}
+            aria-controls={onSearchPick ? "search-autocomplete" : undefined}
+            autoComplete="off"
+            onChange={(e) => {
+              setText(e.target.value);
+              if (onSearchPick) commit(e.target.value);
+            }}
+            onKeyDown={onKeyDown}
+            onFocus={() => {
+              if (onSearchPick && text.trim()) {
+                dispatch({ type: "search/open", open: true });
+              }
+            }}
+            onBlur={() => {
+              // Delayed so a mousedown on a row still registers.
+              blurTimer.current = window.setTimeout(
+                () => dispatch({ type: "search/open", open: false }),
+                BLUR_CLOSE_MS,
+              );
+            }}
+            placeholder={
+              onSearchPick
+                ? "a pothole, my kid's school, Planning Commission…"
+                : "the library, a pothole, my kid's school…"
+            }
+            className="w-full min-w-0 rounded-md border border-[var(--panel-border)] bg-[var(--bg)] px-3 py-2 text-[0.875rem] placeholder:text-muted focus:border-[var(--signal)] focus:outline-none"
+          />
+
+          {onSearchPick && (
+            <div
+              id="search-autocomplete"
+              ref={listRef}
+              className={`search-autocomplete${acOpen ? " open" : ""}`}
+              role="listbox"
+            >
+              {groups.map((group) => (
+                <div key={group.kind}>
+                  <div className="search-ac-group">{group.kind}</div>
+                  {group.items.map((item) => {
+                    cursor++;
+                    const idx = cursor;
+                    const [before, hit, after] = highlightParts(item.label, text);
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        className="search-ac-item"
+                        data-index={idx}
+                        data-selected={idx === ui.search.highlighted}
+                        role="option"
+                        aria-selected={idx === ui.search.highlighted}
+                        style={tierVars(item.tier)}
+                        onMouseEnter={() =>
+                          dispatch({ type: "search/highlight", index: idx })
+                        }
+                        onClick={() => pick(item)}
+                      >
+                        <span className="search-ac-type">
+                          {KIND_LABEL[item.kind]}
+                        </span>
+                        <span className="search-ac-name">
+                          {before}
+                          <b>{hit}</b>
+                          {after}
+                        </span>
+                        {item.meta && (
+                          <span className="search-ac-meta">{item.meta}</span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
         <button
           type="button"
           onClick={ask}
@@ -229,6 +534,8 @@ export function AskBox({
           <span aria-hidden="true">{".".repeat(dots)}</span>
         </p>
       )}
+
+      {asked && digest && <DigestAnswer digest={digest} />}
 
       {asked && asked.destination && (
         /*
@@ -263,10 +570,29 @@ export function AskBox({
         </div>
       )}
 
-      {asked && asked.answer.kind === "NO_ROUTE" && (
-        <p className="mt-2.5 text-[0.8125rem] leading-relaxed text-voice">
-          {asked.answer.statement}
-        </p>
+      {asked && !askWasAnswered(asked) && (
+        <div data-ask-refusal className="mt-2.5">
+          <p className="text-[0.8125rem] leading-relaxed text-voice">
+            {asked.answer.statement}
+          </p>
+          {/*
+            The author's ruling: where the classifier is pulled or unavailable,
+            a weak match gets the honest refusal WITH THE DESTINATIONS OFFERED
+            — never a low-confidence route. The offer is the four curated
+            surfaces, named, so a refusal still leaves the reader somewhere to
+            go. It claims nothing about their question.
+          */}
+          <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
+            You can still head straight to{" "}
+            {ROUTABLE_CATEGORIES.map((category, i) => (
+              <span key={category}>
+                {i > 0 && (i === ROUTABLE_CATEGORIES.length - 1 ? " or " : ", ")}
+                <span className="text-paper">{category.toLowerCase()}</span>
+              </span>
+            ))}
+            .
+          </p>
+        </div>
       )}
 
       {asked && asked.answer.kind === "ROUTED" && asked.answer.topic && (
@@ -422,6 +748,161 @@ export function AskBox({
             person we can actually name.
           </p>
         </div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * A02 — the digest, rendered. Three blocks, three denominators, three named
+ * gaps; nothing here is written, and every row is a record the product already
+ * holds. See `lib/routing/digest.ts` for why the blocks never share a count.
+ */
+function DigestAnswer({ digest }: { digest: Digest }) {
+  return (
+    <div data-ask-digest className="mt-3">
+      <p className="t-eyebrow text-signal">Where you live</p>
+      <p className="mt-1 text-[0.9375rem] font-semibold leading-snug text-paper">
+        What&apos;s going on
+      </p>
+      <p className="mt-0.5 text-[0.625rem] leading-relaxed text-muted">
+        Scoped to the {digest.divisionLabels.length} division
+        {digest.divisionLabels.length === 1 ? "" : "s"} your point sits in.
+      </p>
+
+      <DigestSection
+        title={`Coming up — next ${digest.windows.upcomingDays} days`}
+        shown={digest.upcoming.rows.length}
+        total={digest.upcoming.total}
+        gap={digest.upcoming.gap}
+      >
+        {digest.upcoming.rows.map((row) => (
+          <li key={row.id} className="text-[0.75rem] leading-relaxed">
+            <span className="font-medium text-paper">{row.bodyName}</span>
+            <span className="text-muted"> · </span>
+            <span className="text-voice">
+              {row.startPrecision === "DAY"
+                ? `${formatMeetingDate(row)} (no start time published)`
+                : formatMeetingDate(row)}
+            </span>
+            {row.agendaUrl && (
+              <>
+                {" "}
+                <a
+                  href={row.agendaUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[0.6875rem] text-link underline decoration-dotted underline-offset-2"
+                >
+                  agenda
+                </a>
+              </>
+            )}
+          </li>
+        ))}
+      </DigestSection>
+
+      <DigestSection
+        title={`Recently decided — last ${digest.windows.recentDays} days`}
+        shown={digest.recent.rows.length}
+        total={digest.recent.total}
+        gap={digest.recent.gap}
+      >
+        {digest.recent.rows.map((row) => (
+          <li key={row.id} className="text-[0.75rem] leading-relaxed">
+            <span className="font-medium text-paper">{row.bodyName}</span>
+            <span className="text-muted"> · </span>
+            <span className="text-voice">
+              {formatMeetingDate(row)}
+            </span>
+            {row.agendaUrl && (
+              <>
+                {" "}
+                <a
+                  href={row.agendaUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[0.6875rem] text-link underline decoration-dotted underline-offset-2"
+                >
+                  agenda
+                </a>
+              </>
+            )}
+          </li>
+        ))}
+      </DigestSection>
+
+      <DigestSection
+        title="Who represents you"
+        shown={digest.representation.rows.length}
+        total={digest.representation.total}
+        gap={digest.representation.gap}
+      >
+        {digest.representation.rows.map(({ seatLabel, holder }) => (
+          <li key={`${seatLabel}|${holder.id}`} className="text-[0.75rem] leading-relaxed">
+            <span className="font-medium text-paper">{holder.name}</span>
+            <span className="text-muted"> · {holder.officeTitle}</span>
+            {holder.sourceUrl && (
+              <>
+                {" "}
+                <a
+                  href={holder.sourceUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="source-tag font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted underline decoration-dotted underline-offset-2 hover:text-link"
+                >
+                  source
+                </a>
+              </>
+            )}
+          </li>
+        ))}
+      </DigestSection>
+
+      {digest.unscopedMeetingCount > 0 && (
+        // Never dropped: Census enumerates no boundary for these governments,
+        // so they cannot be scoped to a point — which is a fact about the
+        // boundary file, not evidence that they are not the reader's.
+        <p className="mt-2 text-[0.625rem] leading-relaxed text-muted">
+          {digest.unscopedMeetingCount} meeting
+          {digest.unscopedMeetingCount === 1 ? "" : "s"} we hold belong to
+          bodies with no Census division, so they cannot be matched to your
+          point by boundary. They are on the map.
+        </p>
+      )}
+    </div>
+  );
+}
+
+function DigestSection({
+  title,
+  shown,
+  total,
+  gap,
+  children,
+}: {
+  title: string;
+  shown: number;
+  total: number;
+  gap: string | null;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="mt-2.5 border-t border-[var(--panel-border)] pt-2">
+      <p className="t-eyebrow text-muted">{title}</p>
+      {gap ? (
+        // The named gap, in the gap's own register — never an empty section
+        // and never a sentence borrowed from another block.
+        <p className="mt-1 text-[0.6875rem] leading-relaxed text-voice">{gap}</p>
+      ) : (
+        <>
+          <ul className="mt-1 space-y-1">{children}</ul>
+          {/* Stated N equals rendered rows, and the denominator is always
+              said — a clip must never read as the whole of what we hold. */}
+          <p className="mt-1 text-[0.625rem] text-muted">
+            Showing {shown} of {total}.
+          </p>
+        </>
       )}
     </div>
   );

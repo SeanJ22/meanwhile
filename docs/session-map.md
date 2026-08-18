@@ -147,14 +147,25 @@ Your interface pass plus everything you ruled into it. This is more than
 one session; under the deferral rule it runs as g7, g7b… with the
 boundary between items.
 
-- **G05** — rules 4a–4f and 4h, whole ("Build Pre H")
-- **G07** — the pill label ("Build in G7")
-- **D35** — positions three-answer machinery ("Build in G7")
-- **The ask surface, consolidated into ONE build** (flag 1): **A01**
-  ("do now — high priority") + **A02** ("do now") + **M119** ("do the
-  merge now") + **A07** (coupling confirmed — ships in the same PR) +
-  **A06** (logging starts day one of the ask box, which is this build)
-- **M134** — a Yes becomes the pick ("build now")
+**Queue 2 is now MOSTLY CLOSED (g12, 2026-08-17).** The interface half and
+the ask half are done: G05 closes at 7 of 7 rules, G07 shipped with 4a as
+its designed compensation, D35 is built, and the consolidated ask surface
+closed A01, A02, A06, A07 and M119 in one PR under your matcher ruling.
+M134 and M93 are done. **Eleven rows remain and they are the whole of what
+is left in this queue** — struck through below as they closed.
+
+- ~~**G05** — rules 4a–4f and 4h, whole ("Build Pre H")~~ **DONE (g11 4d,
+  g12 the rest)**
+- ~~**G07** — the pill label ("Build in G7")~~ **DONE (g12)** — labels and
+  the widths that forced them in `lib/routing/ask-pill-labels.ts`
+- ~~**D35** — positions three-answer machinery ("Build in G7")~~ **DONE
+  (g12)**
+- ~~**The ask surface, consolidated into ONE build** (flag 1): **A01** +
+  **A02** + **M119** + **A07** + **A06**~~ **DONE (g12)**, in one PR, under
+  your matcher ruling: strong-match keywords, exact names, the classifier
+  behind its ripcord for everything weaker, and the refusal with the
+  destinations offered when it is unavailable
+- ~~**M134** — a Yes becomes the pick ("build now")~~ **DONE (g12)**
 - **M136** — body battlecards ("build now and deploy with what we already
   have; continue to add")
 - **M139** — the half-load and the load budget ("finish now")
@@ -168,8 +179,13 @@ boundary between items.
 - **D25** — comment access, keep curating at scale ("do now")
 - **D29** — Tucson's 56 boards wired through ("finish now")
 - **D06** — funding tracker unblocked per your ruling (flag 4)
-- **M93** — I owe you a default-vs-one-tap-down proposal for the WGH
-  card; you rule and it builds post H
+- ~~**M93** — I owe you a default-vs-one-tap-down proposal for the WGH
+  card; you rule and it builds post H~~ **PROPOSAL WRITTEN (g12)** — in
+  `docs/DESIGN.md`, nothing built. **It ends with one question that is
+  yours:** whether an EMPTY section collapses closed with its honest line
+  inside, or stays open showing it. The battlecard chose to stay open; this
+  card carries more sections, so the same choice costs more space here —
+  and the crowding is why the row exists.
 
 ## Queue 3 — Post-g7, pre-H
 

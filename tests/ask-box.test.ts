@@ -70,12 +70,34 @@ test("a tie between topics refuses — evidence that does not decide is not a ro
 
 test("golden, live at 85701: the pothole question returns Tucson's street-maintenance owner with a working phone", async () => {
   const coverage = await coverageAt(...TUCSON, 1);
+  /*
+   * THE MATCHER RULING CHANGED WHICH RUNG ANSWERS THIS, and the change is
+   * recorded here rather than hidden by rewording the fixture.
+   *
+   * "There's a pothole in front of my house — who do I call?" produces exactly
+   * ONE keyword hit (`pothole`); "who do I call" is a question shape, not
+   * topic evidence. Under the author's 2026-08-17 ruling one hit is weak, so
+   * the keyword layer declines and the Level 1 classifier is what reads the
+   * sentence and picks `roads-local`. The surface does that automatically; the
+   * test does it explicitly, because a test that quietly passed the classifier
+   * a topic it had not earned would prove nothing.
+   *
+   * The everyday contact — which is what this golden actually guards — rides
+   * the answer identically whichever rung found the topic.
+   */
+  assert.equal(
+    matchTopic("There's a pothole in front of my house — who do I call?"),
+    null,
+    "one keyword hit is weak: the ruling sends this to the classifier",
+  );
   const { match, answer, contacts } = answerQuestion(
     "There's a pothole in front of my house — who do I call?",
     coverage,
     "85701",
+    "roads-local",
   );
   assert.equal(match?.topicId, "roads-local");
+  assert.equal(match?.via, "classifier");
   assert.equal(answer.kind, "ROUTED");
   const streetMaintenance = contacts.find((c) =>
     c.body.includes("Street Maintenance"),
@@ -256,8 +278,27 @@ test("the hang-tight beat is presentation only — routed and logged before the 
   assert.ok(!timerBody.includes("logEvent"), "the beat must not log");
 });
 
+/**
+ * Every module in the ask pipeline that may not generate, reach a network,
+ * or hold a key. The list GROWS with the pipeline: `digest.ts`,
+ * `exact-name.ts` and `destinations.ts` joined it on 2026-08-17 with A02 and
+ * the author's matcher ruling. A new module in this path that the guard does
+ * not name is a module the guard does not cover, and covering all of it is the
+ * guard's whole value.
+ */
+const NON_GENERATING_ROUTING_MODULES = [
+  "match.ts",
+  "ask.ts",
+  "resolve.ts",
+  "topics.ts",
+  "everyday.ts",
+  "digest.ts",
+  "exact-name.ts",
+  "destinations.ts",
+];
+
 test("no generation: the ask pipeline touches no LLM, no network, no API key", () => {
-  for (const file of ["match.ts", "ask.ts", "resolve.ts", "topics.ts", "everyday.ts"]) {
+  for (const file of NON_GENERATING_ROUTING_MODULES) {
     const source = readFileSync(join(ROOT, "lib", "routing", file), "utf8");
     for (const banned of ["fetch(", "anthropic", "openai", "API_KEY", "llm"]) {
       assert.ok(
@@ -426,18 +467,21 @@ test("the classifier answers with a curated topic id, or nothing", async () => {
 test("keyword-first: the classifier can never overrule a deterministic match", async () => {
   const coverage = await coverageAt(...TUCSON, 1);
 
-  // The library question matches by keyword. Handing the classifier a
-  // DIFFERENT topic changes nothing — the fourth argument is read only when
-  // matchTopic returned null.
-  const keyworded = answerQuestion("who do I call about the library", coverage, "85701");
-  assert.equal(keyworded.match?.topicId, "libraries");
-  const overruled = answerQuestion(
-    "who do I call about the library",
-    coverage,
-    "85701",
-    "roads-local",
-  );
-  assert.equal(overruled.match?.topicId, "libraries");
+  /*
+   * The fixture is a STRONG match — two distinct hits, `pothole` and `street`
+   * — because after the 2026-08-17 ruling only a strong match can demonstrate
+   * this property at all. The prior fixture ("who do I call about the
+   * library") carried one hit, so it now falls through by design and would
+   * have tested the opposite of what this test is named for.
+   */
+  const strong = "there is a pothole on my street";
+  assert.equal(matchTopic(strong)?.matchedOn.length, 2);
+  const keyworded = answerQuestion(strong, coverage, "85701");
+  assert.equal(keyworded.match?.topicId, "roads-local");
+  // Handing the classifier a DIFFERENT topic changes nothing — the fourth
+  // argument is read only when matchTopic returned null.
+  const overruled = answerQuestion(strong, coverage, "85701", "libraries");
+  assert.equal(overruled.match?.topicId, "roads-local");
   assert.equal(overruled.match?.via, undefined, "a keyword match is not a classifier one");
 
   // And where the keyword matcher refuses, the classifier's topic is used —
@@ -545,7 +589,7 @@ test("the classifier writes no reader-facing sentence, and the key stays server-
   // The whole doctrine, held in source. The classifier module may speak to
   // Anthropic; nothing else in the routing pipeline may, and no component
   // may read its output as text.
-  for (const file of ["match.ts", "ask.ts", "resolve.ts", "topics.ts", "everyday.ts"]) {
+  for (const file of NON_GENERATING_ROUTING_MODULES) {
     const source = readFileSync(join(ROOT, "lib", "routing", file), "utf8");
     for (const b of ["fetch(", "anthropic", "openai", "API_KEY", "llm"]) {
       assert.ok(

@@ -1,15 +1,13 @@
 "use client";
 
-import { ThemeToggle } from "@/components/theme-toggle";
-import type { SearchItem } from "@/lib/search";
-import { useShellData } from "@/lib/state/data";
+import type { ReactNode } from "react";
 
-import { AskBox } from "@/components/ask/ask-box";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { useShellData } from "@/lib/state/data";
 
 import { FiltersArea } from "./filters-area";
 import { NearMeControl } from "./near-me-control";
 import { ScopeSelectors } from "./scope-selectors";
-import { SearchBox } from "./search-box";
 import { StatsBar } from "./stats-bar";
 import { ViewToggle } from "./view-toggle";
 import { PRODUCT_NAME } from "@/lib/brand";
@@ -20,31 +18,23 @@ import { PRODUCT_NAME } from "@/lib/brand";
  * Structure follows EdiaStratMap: a header that does not scroll, holding the
  * brand, the theme and reset buttons, the view toggle and the scope selectors;
  * then everything else in a scrolling column.
+ *
+ * ## M119 — ONE INPUT (2026-08-17)
+ *
+ * The rail used to carry two text inputs: the ask box near the top and the
+ * entity search five controls down. The author's ruling was one, keyword-
+ * first, with anything else routing as an ask. Both are now the single input
+ * inside the pill cluster's Ask expansion (`components/ask/ask-box.tsx`), and
+ * `search-box.tsx` is gone rather than left dark — a second component that
+ * still renders an input is how "one input" quietly becomes two again.
+ *
+ * The rail therefore renders NO input of its own. What it renders is the slot
+ * (4e) where the single pill cluster lands when the rail is the surface on
+ * screen, and the cluster is constructed in `map-entry` so there is exactly
+ * one of it.
  */
-function SidebarAskBox() {
-  const { result, location } = useShellData();
-  const coverage = result?.coverage ?? null;
-  if (!coverage) return null;
-  return (
-    <div className="px-1">
-      <AskBox
-        coverage={coverage}
-        zip={location?.zip ?? null}
-        ocdIds={[
-          ...new Set(
-            [
-              ...coverage.bodies.map((b) => b.ocdId),
-              ...coverage.seats.map((s) => s.ocdId),
-            ].filter((id): id is string => Boolean(id)),
-          ),
-        ]}
-      />
-    </div>
-  );
-}
 
 export function Sidebar({
-  onSearchPick,
   onReset,
   onChangeLocation,
   showDistricts,
@@ -53,8 +43,9 @@ export function Sidebar({
   mobileOpen,
   onMobileClose,
   onNearMePoint,
+  pillCluster,
+  clusterElsewhere = false,
 }: {
-  onSearchPick: (item: SearchItem) => void;
   onReset: () => void;
   /** Reopens the welcome overlay. */
   onChangeLocation: () => void;
@@ -67,6 +58,20 @@ export function Sidebar({
   onMobileClose: () => void;
   /** 6f: Near me resolved a point — the map answers at it (D53 machinery). */
   onNearMePoint?: (point: { lat: number; lng: number }) => void;
+  /**
+   * 4e: the single pill cluster, when the rail is where it belongs. Null at
+   * every other moment — the rail never builds one of its own, because a
+   * second constructor is a second instance waiting to happen.
+   */
+  pillCluster?: ReactNode;
+  /**
+   * A cluster painted SOMEWHERE — here, or on the who-governs card. The rail's
+   * own ballot link is the fallback for there being no cluster AT ALL, so it
+   * is suppressed by this rather than by the local slot being empty. Without
+   * the distinction, a desktop showing the rail and the card at once carries
+   * two doors onto one surface.
+   */
+  clusterElsewhere?: boolean;
 }) {
   const { location } = useShellData();
 
@@ -162,24 +167,27 @@ export function Sidebar({
           width, in words rather than an icon. The product's core surface
           does not live at the bottom of a menu.
         */}
-        <a
-          href={location ? `/ballot?zip=${location.zip}` : "/ballot"}
-          className="sidebar-ballot-entry"
-        >
-          <span>What&apos;s on the ballot</span>
-          <span aria-hidden="true">→</span>
-        </a>
-
         {/*
-          Item 2 (2026-08-15): the ask box moves to the TOP of the rail,
-          directly under the ballot entry — "first things first," the author.
-          It used to sit below the filters, five controls down a scrolling
-          column, which is the same burial the ballot link was rescued from
-          on 2026-08-14. The two doors a reader actually came for now open
-          the rail; the machinery for narrowing what is already on screen
-          follows underneath.
+          4e: when the cluster is here, IT carries the ballot door — its
+          ballot pill is the same entry, with the zip beside it. Rendering the
+          rail's own link as well would be two doors onto one surface, which is
+          the duplicate-entry-point friction CLAUDE.md calls a defect.
+
+          The plain link stays as the fallback for the moments the cluster is
+          somewhere else (the first paint before the breakpoint is read, and
+          the case where no zip has resolved and the cluster renders nothing).
+          The rail never loses its ballot door; it just stops carrying two.
         */}
-        <SidebarAskBox />
+        {pillCluster ??
+          (clusterElsewhere ? null : (
+            <a
+              href={location ? `/ballot?zip=${location.zip}` : "/ballot"}
+              className="sidebar-ballot-entry"
+            >
+              <span>What&apos;s on the ballot</span>
+              <span aria-hidden="true">→</span>
+            </a>
+          ))}
 
         <ViewToggle />
         <ScopeSelectors />
@@ -187,7 +195,8 @@ export function Sidebar({
 
       <div className="sidebar-scroll">
         <StatsBar />
-        <SearchBox onPick={onSearchPick} />
+        {/* M119: the rail's second input is gone. Searching a meeting, body,
+            district or person by name happens in the one input above. */}
         {/*
           g4 item 14: "Limit radius" and "Show districts" MOVED INSIDE
           Filters; "Near me" stays out here.
@@ -212,7 +221,11 @@ export function Sidebar({
 
         {/* The sidebar's footer: the disclosure link and the feedback path.
             One line each — the transparency page carries the substance. */}
-        <div className="mt-auto border-t border-[var(--panel-border)] px-1 pt-3 pb-2 text-[0.6875rem] leading-relaxed text-muted">
+        {/* 4f: `mt-auto` is gone. It pushed this block to the bottom of a
+            full-height column, which is precisely the dead space the rule
+            says must not exist — the card now ends where its content ends, so
+            the footer simply follows the last section. */}
+        <div className="mt-6 border-t border-[var(--panel-border)] px-1 pt-3 pb-2 text-[0.6875rem] leading-relaxed text-muted">
           <p>
             <a
               href="/transparency"

@@ -1,12 +1,11 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, type ReactNode } from "react";
 
 import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
 import { useNarrowing } from "@/hooks/use-narrowing";
 import { formatMiles } from "@/lib/map/format";
 
-import { AskBox } from "@/components/ask/ask-box";
 import { NarrowingPrompt } from "./narrowing-prompt";
 import type { StreetPoint } from "@/lib/geo/census-geocoder";
 import type { CoverageTier } from "@/lib/meetings/query";
@@ -78,6 +77,14 @@ interface CoverageNoticeProps {
   onNarrowApplied?: () => void;
   /** D53: the narrowed street resolved to a point. Passed straight through. */
   onStreetPoint?: (point: StreetPoint) => void;
+  /**
+   * 4e: the single pill cluster, when this card is the surface on screen.
+   * Null otherwise — this card never constructs one, because a second
+   * constructor is a second instance waiting to happen.
+   */
+  pillCluster?: ReactNode;
+  /** A cluster painted SOMEWHERE. Same reason as the rail's copy. */
+  clusterElsewhere?: boolean;
 }
 
 /*
@@ -685,44 +692,27 @@ function CoverageBody({
         </ul>
       )}
 
-      {/* The M26 narrowing affordance — a passive chip (item 6), rendered
-          only where the computed street index says the answer would change.
-          Keyed on the zip so a new zip mounts a fresh chip. */}
-      {/^\d{5}$/.test(zip) && (
-        <NarrowingPrompt
-          key={zip}
-          zip={zip}
-          onApplied={onNarrowApplied}
-          onPoint={onStreetPoint}
-        />
-      )}
+      {/*
+        G05 RULE 4b (2026-08-17): three things left this position.
 
-      {/* 7 (2026-08-17): the mover's page, one tap from who-governs. */}
-      {/^\d{5}$/.test(zip) && (
-        <p className="mt-2 text-[0.75rem]">
-          <a
-            href={`/about-area?zip=${zip}`}
-            className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
-          >
-            Moving here? Know the basics →
-          </a>
-        </p>
-      )}
+        The rule: *"WGH contains exactly: the Ballot/zip+Ask pill cluster, the
+        explainer of the bodies that govern the area, then Local/State/Federal.
+        Remove What's on the ballot from the panel. The Who do I talk to about
+        box does not render by default."*
 
-      {/* 5 (2026-08-19): the ask box — routing without generation, on the
-          card that answers who governs. */}
-      <AskBox
-        coverage={coverage}
-        zip={/^\d{5}$/.test(zip) ? zip : null}
-        ocdIds={[
-          ...new Set(
-            [
-              ...coverage.bodies.map((b) => b.ocdId),
-              ...coverage.seats.map((s) => s.ocdId),
-            ].filter((id): id is string => Boolean(id)),
-          ),
-        ]}
-      />
+        * The **ask box** is gone from here entirely. It is not hidden and it
+          is not duplicated: there is now exactly one ask input in the product
+          and it lives in the pill cluster's expansion, which renders at the
+          TOP of this card whenever this card is the open surface (4e). "Does
+          not render by default" is literally true — the pill is closed until
+          the reader taps it.
+        * The **narrowing prompt** and the **Moving here** link move to AFTER
+          Local/State/Federal, which is where G05's own preserve-and-report
+          clause puts the things this rule keeps. The narrowing prompt keeps
+          every property CLAUDE.md's second load-bearing friction requires:
+          declining stays the effortless default, and moving it changes only
+          where it sits, never how easy it is to ignore.
+      */}
 
       {/*
         D17, split 2026-08-13. The statutory sentence — New Hampshire does not
@@ -944,6 +934,32 @@ function CoverageBody({
           )}
         </p>
       )}
+
+      {/*
+        4b's preserve-and-report tail: the two affordances the rule KEEPS,
+        placed after Local/State/Federal exactly as G05 words it. Neither is a
+        new element and neither changed — only where they sit.
+      */}
+      {/^\d{5}$/.test(zip) && (
+        <NarrowingPrompt
+          key={zip}
+          zip={zip}
+          onApplied={onNarrowApplied}
+          onPoint={onStreetPoint}
+        />
+      )}
+
+      {/* 7 (2026-08-17): the mover's page, one tap from who-governs. */}
+      {/^\d{5}$/.test(zip) && (
+        <p className="mt-2 text-[0.75rem]">
+          <a
+            href={`/about-area?zip=${zip}`}
+            className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
+          >
+            Moving here? Know the basics →
+          </a>
+        </p>
+      )}
     </>
   );
 }
@@ -962,6 +978,8 @@ export function CoverageNotice({
   onMinimize,
   onNarrowApplied,
   onStreetPoint,
+  pillCluster,
+  clusterElsewhere = false,
 }: CoverageNoticeProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
   // Item 1 (2026-08-15): a press outside minimizes the card, the way a native
@@ -1039,29 +1057,36 @@ export function CoverageNotice({
         </p>
 
         {/*
-          Item 2 of the tester's mobile pass (2026-08-14). Her words: the
-          floater never appears on her phone and "I don't think I would have
-          found that without knowing it existed" — the only entry she could
-          find sat at the very bottom of the drawer, under the browser
-          chrome. The floater's occlusion is fixed above; this is the entry
-          that does not depend on a reader spotting a 10px pill among the
-          map controls. It says what it is in words, it sits at the top of
-          the surface she was actually reading, and it is pinned outside the
-          card's scroll so it is on screen the moment the card is.
+          G05 RULE 4b: *"Remove What's on the ballot from the panel."*
 
-          Reader friction is a defect: same tab, zip attached, no
-          interstitial. This is the product's core surface — reactions, the
-          picks card — and a reader who cannot reach it does not have it.
+          The tester's 2026-08-14 finding is the reason this entry existed and
+          it is NOT being reversed. Her words — the floater never appeared on
+          her phone, and "I don't think I would have found that without knowing
+          it existed" — were about REACHABILITY, and reachability is now better
+          than the link she was rescued with: the pill cluster renders at the
+          top of this card whenever this card is the open surface (4e), pinned
+          outside the scroll exactly as this link was, carrying the ballot pill
+          AND the zip it is about. What is removed is the DUPLICATE, not the
+          door. A reader who cannot reach the ballot does not have it, and this
+          card still reaches it in one tap at the same place on the screen.
+
+          The fallback below is not a second door. It renders only when the
+          cluster is somewhere else — the frame before the breakpoint is read,
+          or a card with no resolved zip — so the count on screen is always
+          exactly one.
         */}
-        <a
-          href={ballotZip ? `/ballot?zip=${ballotZip}` : "/ballot"}
-          className="coverage-notice-ballot mt-2 flex items-center justify-between gap-2 rounded border border-[var(--signal)]/45 bg-[var(--signal)]/5 px-2.5 py-2 text-[0.8125rem] leading-snug text-paper hover:border-[var(--signal)]"
-        >
-          <span className="font-semibold">What&apos;s on the ballot</span>
-          <span aria-hidden="true" className="shrink-0 text-signal">
-            →
-          </span>
-        </a>
+        {pillCluster ??
+          (clusterElsewhere ? null : (
+            <a
+              href={ballotZip ? `/ballot?zip=${ballotZip}` : "/ballot"}
+              className="coverage-notice-ballot mt-2 flex items-center justify-between gap-2 rounded border border-[var(--signal)]/45 bg-[var(--signal)]/5 px-2.5 py-2 text-[0.8125rem] leading-snug text-paper hover:border-[var(--signal)]"
+            >
+              <span className="font-semibold">What&apos;s on the ballot</span>
+              <span aria-hidden="true" className="shrink-0 text-signal">
+                →
+              </span>
+            </a>
+          ))}
       </div>
 
       <div className="coverage-notice-body">

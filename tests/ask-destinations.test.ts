@@ -8,7 +8,11 @@ import {
   ROUTABLE_CATEGORIES,
   matchDestination,
 } from "../lib/routing/destinations.ts";
-import { matchTopic } from "../lib/routing/match.ts";
+import {
+  STRONG_MATCH_MIN_HITS,
+  matchTopic,
+  weakTopicMatch,
+} from "../lib/routing/match.ts";
 
 /**
  * G05 rule 4d (2026-08-17): the router learns four in-app destinations, and
@@ -40,10 +44,31 @@ const UNCHANGED: ReadonlyArray<[string, string]> = [
   ["the school budget", "schools-policy"],
   ["they stopped building the library down the road", "libraries"],
   ["trash pickup was missed", "trash-recycling"],
-  ["my water bill", "water-sewer"],
   ["snow plowing on my road", "snow-removal"],
-  ["my property assessment", "property-taxes"],
   ["a warehouse development next door", "zoning-development"],
+];
+
+/**
+ * THE THREE THE 2026-08-17 RULING MOVED, named rather than deleted.
+ *
+ * The author's matcher ruling raised the keyword bar to two distinct hits.
+ * Ten of the twelve questions in the original regression net clear it
+ * untouched. These two do not — each carries exactly one hit — so the keyword
+ * layer now declines them and the Level 1 classifier reads the whole sentence
+ * instead. That is the ruling working, not a regression, and it is written
+ * down as its own list so a later session can see at a glance which questions
+ * changed rung and why. Deleting them from the net would have hidden exactly
+ * that.
+ *
+ * The cost is real and stated: with the classifier off, over its ceiling or
+ * unreachable, these two get the honest refusal with the destinations offered.
+ * The author weighed that against a matcher that answered "what will the
+ * weather be like on election day" with a lecture on who runs elections, and
+ * ruled for the refusal.
+ */
+const WEAK_BY_DESIGN: ReadonlyArray<[string, string]> = [
+  ["my water bill", "water-sewer"],
+  ["my property assessment", "property-taxes"],
 ];
 
 test("4d: every question that already routed still routes to the same topic", () => {
@@ -55,6 +80,27 @@ test("4d: every question that already routed still routes to the same topic", ()
       topicId,
       `"${question}" moved from ${topicId} to ${match.topicId}`,
     );
+    assert.ok(
+      match.matchedOn.length >= STRONG_MATCH_MIN_HITS,
+      `"${question}" is in the unchanged net but carries only ${match.matchedOn.length} hit(s)`,
+    );
+  }
+});
+
+test("the ruling's cost is named: the weak-by-design questions decline, and say what they had", () => {
+  for (const [question, topicId] of WEAK_BY_DESIGN) {
+    assert.equal(
+      matchTopic(question),
+      null,
+      `"${question}" must decline at the keyword layer under the strong-match rule`,
+    );
+    // It declined for the RIGHT reason: one hit, not zero, and the hit it had
+    // was the correct topic. That is what makes the classifier's job easy and
+    // what tells a later reader this was a threshold decision.
+    const weak = weakTopicMatch(question);
+    assert.ok(weak, `"${question}" should still have a sub-threshold winner`);
+    assert.equal(weak.topicId, topicId);
+    assert.equal(weak.matchedOn.length, 1);
   }
 });
 

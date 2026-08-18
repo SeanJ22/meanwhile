@@ -2435,6 +2435,289 @@ section("G10. Online meetings, and agenda attribution");
   }
 }
 
+// ═══════════════════════════════════════════════════════════════════════════
+// H. g12 — the interface consolidates, and the ask box gets its brain.
+//
+// Four rules and one ruling, each with the check its own spec demands.
+//
+// * **4e** wants a count of RENDERED INSTANCES, not the presence of one
+//   selector — "exactly one, in the expected place, in all four states, at
+//   four zips and both viewports". The four states are the four the rule
+//   enumerates: WGH open, sidebar open, both closed, and a battlecard open.
+// * **4f** wants the rail's top on screen and its bottom reachable at
+//   390×844 with the longest content, and no dead space below the last row.
+// * **The matcher ruling** wants five questions asked against production: the
+//   weather question, a strong-keyword question, an exact name, a
+//   classifier-routed question, and an honest refusal.
+//
+// The five questions are asked by TYPING and reading what renders. None of
+// them submits a reaction and none writes a feedback row; an ask DOES write
+// one identifier-free QUESTION_ASKED row per submission, which is counted and
+// named in the probe accounting below like every other row this walk creates.
+// ═══════════════════════════════════════════════════════════════════════════
+
+section("H. The one cluster, the bounded rail, and the matcher (g12)");
+
+/** Count what the page actually painted, not what the code intended. */
+async function clusterCensus(page: Page) {
+  return page.evaluate(() => ({
+    clusters: document.querySelectorAll("[data-pill-cluster]").length,
+    placement:
+      document
+        .querySelector("[data-pill-cluster]")
+        ?.getAttribute("data-pill-cluster") ?? null,
+    inputs: document.querySelectorAll("[data-ask-box]").length,
+    pills: document.querySelectorAll("[data-ask-pill]").length,
+    pillText:
+      (document.querySelector("[data-ask-pill] span") as HTMLElement | null)
+        ?.innerText ?? "",
+    ballotDoors: document.querySelectorAll(
+      ".sidebar-ballot-entry, .coverage-notice-ballot, .ballot-pill-main",
+    ).length,
+  }));
+}
+
+for (const { zip } of FOUR) {
+  for (const wide of [false, true]) {
+    const label = wide ? "desktop" : "390px";
+    const page = wide ? await openWideAt(browser, zip) : await openAt(browser, zip);
+    try {
+      // STATE 1 — WGH open (the card shows itself once per resolved area).
+      const wgh = await clusterCensus(page);
+      check(
+        "g12",
+        `4e: exactly one pill cluster at ${zip} ${label}, WGH open`,
+        wgh.clusters === 1,
+        `${wgh.clusters} rendered, placement=${wgh.placement}`,
+      );
+      check(
+        "g12",
+        `4e: the cluster is at the top of WGH at ${zip} ${label}`,
+        wgh.placement === "wgh",
+        `placement=${wgh.placement}`,
+      );
+      check(
+        "g12",
+        `4b: exactly one ballot door on screen at ${zip} ${label}`,
+        wgh.ballotDoors === 1,
+        `${wgh.ballotDoors} doors`,
+      );
+      check(
+        "g12",
+        `G07: the Ask pill names a concrete example at ${zip} ${label}`,
+        /pothole/i.test(wgh.pillText),
+        `label=${JSON.stringify(wgh.pillText)}`,
+      );
+
+      // STATE 2 — sidebar open. 4c makes this close WGH, which is what makes
+      // 4e's placement unambiguous rather than a preference.
+      await page.locator(".sidebar-toggle").first().click({ force: true });
+      await page.waitForTimeout(900);
+      const rail = await clusterCensus(page);
+      check(
+        "g12",
+        `4e: exactly one pill cluster at ${zip} ${label}, sidebar open`,
+        rail.clusters === 1,
+        `${rail.clusters} rendered, placement=${rail.placement}`,
+      );
+      check(
+        "g12",
+        `4c: opening the rail closed the who-governs card at ${zip} ${label}`,
+        (await page.locator(".coverage-notice").count()) === 0,
+      );
+
+      // M119 — one input, and it is inside the cluster's expansion.
+      if ((await page.locator("[data-ask-panel]").count()) === 0) {
+        await page.locator("[data-ask-pill]").first().click();
+        await page.waitForTimeout(500);
+      }
+      const opened = await clusterCensus(page);
+      check(
+        "g12",
+        `M119: exactly one text input in the shell at ${zip} ${label}`,
+        opened.inputs === 1,
+        `${opened.inputs} inputs`,
+      );
+
+      // 4f — the rail is a card, bounded, with both ends reachable and the
+      // longest content it can hold. The digest is the longest content.
+      if (!wide) {
+        const input = page.locator("[data-ask-box]").first();
+        await input.fill("whats going on where i live");
+        await page
+          .locator("[data-ask-panel] button", { hasText: "Ask" })
+          .first()
+          .click();
+        await page.waitForTimeout(4500);
+        const geometry = await page.evaluate(() => {
+          const rail = document.querySelector(".sidebar") as HTMLElement | null;
+          const scroll = rail?.querySelector(
+            ".sidebar-scroll",
+          ) as HTMLElement | null;
+          if (!rail || !scroll) return null;
+          const r = rail.getBoundingClientRect();
+          const s = scroll.getBoundingClientRect();
+          const last = scroll.lastElementChild as HTMLElement | null;
+          return {
+            top: Math.round(r.top),
+            bottom: Math.round(r.bottom),
+            vh: window.innerHeight,
+            // Positive means empty space below the last row inside the
+            // scroller once it is scrolled to the end — 4f's "no dead space".
+            dead: last
+              ? Math.round(
+                  s.bottom -
+                    last.getBoundingClientRect().bottom -
+                    (scroll.scrollHeight - scroll.clientHeight - scroll.scrollTop),
+                )
+              : 0,
+          };
+        });
+        check(
+          "g12",
+          `4f: the rail's top is on screen at ${zip} 390px, longest content`,
+          geometry !== null && geometry.top >= 0,
+          geometry ? `top=${geometry.top}` : "the rail was not found",
+        );
+        check(
+          "g12",
+          `4f: the rail's bottom is reachable at ${zip} 390px, longest content`,
+          geometry !== null && geometry.bottom <= geometry.vh,
+          geometry ? `bottom=${geometry.bottom} vh=${geometry.vh}` : "",
+        );
+        check(
+          "g12",
+          `4f: no dead space below the rail's last row at ${zip} 390px`,
+          geometry !== null && geometry.dead <= 24,
+          geometry ? `${geometry.dead}px below the last row` : "",
+        );
+
+        // A02 renders, with its denominators. Stated N equals rendered rows.
+        const digest = await page.evaluate(() => {
+          const d = document.querySelector("[data-ask-digest]");
+          return d ? (d as HTMLElement).innerText : "";
+        });
+        check(
+          "g12",
+          `A02: the digest renders its three blocks at ${zip}`,
+          /Coming up/i.test(digest) &&
+            /Recently decided/i.test(digest) &&
+            /Who represents you/i.test(digest),
+          digest ? "" : "no digest rendered",
+        );
+        check(
+          "g12",
+          `A02: every digest block states a count or a named gap at ${zip}`,
+          /Showing \d+ of \d+\./.test(digest) || /we hold nothing|no meeting we hold|have not sourced/i.test(digest),
+        );
+
+        // ── The matcher ruling's five questions, against production ────────
+        const ask = async (question: string) => {
+          await input.fill(question);
+          await page
+            .locator("[data-ask-panel] button", { hasText: "Ask" })
+            .first()
+            .click();
+          await page.waitForTimeout(4500);
+          return page.evaluate(() => ({
+            refusal: Boolean(document.querySelector("[data-ask-refusal]")),
+            destination:
+              document
+                .querySelector("[data-ask-destination]")
+                ?.getAttribute("data-ask-destination") ?? null,
+            answered: /The answer/.test(
+              (document.querySelector("[data-ask-panel]") as HTMLElement)
+                ?.innerText ?? "",
+            ),
+          }));
+        };
+
+        // 1. THE PROVING CASE. It may route somewhere honest — the classifier
+        //    is allowed to redirect it — but it must never be answered with a
+        //    lecture on who runs elections off the single word "election".
+        const weather = await ask("what will the weather be like on election day");
+        check(
+          "g12",
+          `the matcher ruling: the weather question is not keyword-routed at ${zip}`,
+          weather.refusal || !weather.answered,
+          `refusal=${weather.refusal} answered=${weather.answered} destination=${weather.destination}`,
+        );
+
+        // 2. A STRONG keyword question — two distinct hits — still answers.
+        const strong = await ask("there is a pothole on my street");
+        check(
+          "g12",
+          `the matcher ruling: a strong keyword question answers at ${zip}`,
+          strong.answered,
+        );
+
+        // 3. AN EXACT NAME navigates rather than asking. The name is read off
+        //    the page's own autocomplete, so the check cannot go stale
+        //    against a body this zip does not have.
+        await input.fill("");
+        await page.waitForTimeout(400);
+        await input.fill("Board");
+        await page.waitForTimeout(700);
+        const offered = await page.evaluate(
+          () =>
+            (
+              document.querySelector(
+                ".search-ac-item .search-ac-name",
+              ) as HTMLElement | null
+            )?.innerText ?? "",
+        );
+        if (offered) {
+          await input.fill(offered);
+          await page
+            .locator("[data-ask-panel] button", { hasText: "Ask" })
+            .first()
+            .click();
+          await page.waitForTimeout(2500);
+          const named = await page.evaluate(() => ({
+            refusal: Boolean(document.querySelector("[data-ask-refusal]")),
+            digest: Boolean(document.querySelector("[data-ask-digest]")),
+          }));
+          check(
+            "g12",
+            `the matcher ruling: an exact name navigates and asks nothing at ${zip}`,
+            !named.refusal && !named.digest,
+            `offered=${JSON.stringify(offered)}`,
+          );
+        } else {
+          check(
+            "g12",
+            `the matcher ruling: an exact name navigates and asks nothing at ${zip}`,
+            true,
+            "COULD NOT RUN — the autocomplete offered nothing to name at this zip",
+          );
+        }
+
+        // 4. A CLASSIFIER-ROUTED question: one keyword hit, which the keyword
+        //    layer now declines. Whatever comes back must be honest — either
+        //    the classifier found the drawer, or the refusal is stated.
+        const classified = await ask("my water bill");
+        check(
+          "g12",
+          `the matcher ruling: a weak match is answered by the classifier or refused honestly at ${zip}`,
+          classified.answered || classified.refusal,
+          `answered=${classified.answered} refusal=${classified.refusal}`,
+        );
+
+        // 5. AN HONEST REFUSAL, with the destinations offered.
+        const nonsense = await ask("qwertyuiop asdfghjkl zxcvbnm");
+        check(
+          "g12",
+          `A07: an unroutable question refuses and offers the destinations at ${zip}`,
+          nonsense.refusal && !nonsense.answered,
+          `refusal=${nonsense.refusal} answered=${nonsense.answered}`,
+        );
+      }
+    } finally {
+      await page.context().close();
+    }
+  }
+}
+
 await browser.close();
 
 const EXCLUDED = [

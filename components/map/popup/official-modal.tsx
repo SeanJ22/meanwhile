@@ -21,6 +21,7 @@ import { identityChipsFor } from "@/lib/officials/identity-chips";
 import { ContactPills } from "@/components/officials/contact-pills";
 import { MemberDirectory } from "@/components/officials/member-directory";
 import { PersonIdentity } from "@/components/officials/person-identity";
+import { PositionsSection } from "@/components/officials/positions-section";
 
 import { OfficeBlurb, RecentVotes } from "./official-popup";
 
@@ -190,6 +191,16 @@ export function OfficialModal({
           <CardSection title="What this office does">
             <OfficeBlurb holder={holder} bare />
           </CardSection>
+
+          {/*
+            D35 (2026-08-17): the Positions section, in the large popup, as the
+            row specifies — topic-searchable against THIS PERSON'S corpus only,
+            never the routing chat. Three answers, each its own sentence and
+            its own register: what they published (quoted, linked, dated), what
+            our bounded search did not find, or that we have not collected
+            anything of theirs yet. Nothing here characterises anybody.
+          */}
+          <PositionsSection subjectId={holder.id} subjectName={holder.name} />
 
           {/*
             g3 item 9 (2026-08-16): the "How to reach them" accordion is GONE.

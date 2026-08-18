@@ -955,3 +955,42 @@ Three rungs come out of this and they generalize past this vendor:
   build, a scripted edit that edited nothing and exited 0, and the original
   NovusAgenda 200 that D22 was opened on. The rung is always the same — ask
   what came back, by count, and compare the count to something.
+
+
+## An egress wall is intermittent, and the ladder rung to walk is a DIFFERENT EGRESS (g13, 2026-08-18)
+
+Rung 5 already says a CI runner's refused IP is an egress wall and not a header
+problem. This adds the shape that made it hard to see, and it is worth its own
+paragraph because the tell is a *pattern across runs*, not a single response.
+
+`revize` took `HTTP 403 for https://www.merrimackcounty.net/` on the scheduled
+refresh, and `iqm2` failed the same run. Both had succeeded from the same
+runner six hours earlier and both succeeded again six hours later. Meanwhile a
+plain `curl` from a developer's egress — **no browser headers, no client swap,
+nothing from rungs 3 or 4** — returned 200 and 184 KB, with the notices page's
+sixteen dated documents intact.
+
+Three things follow, and each cost time before it was written down:
+
+- **Do not hunt headers on an intermittent 403.** Rungs 3 and 4 are the natural
+  reflex and they are the wrong ladder entirely. One fetch from a second egress
+  settles it in seconds: same client, same headers, different IP.
+- **The confirmation is CONTENT, not the status code.** A 200 from another
+  egress only proves the host answers you. Fetch the actual page the adapter
+  parses and count what is on it — sixteen dated PDFs spanning 2.9.26 to
+  8.24.26 is what rejects "the archive moved or vanished upstream". A status
+  code alone would have left that suspect open.
+- **An intermittent egress wall is a WAF reputation call, not a policy.** There
+  is nothing to negotiate and nothing to route around permanently; the correct
+  response is that the pipeline survives it honestly. That is what
+  carry-forward is for, and it is why `publishedLookbackDays` now exists: a
+  source refused for one run must come back whole, not partly.
+
+**The failure this uncovered, worth checking on any source with an archive
+rung:** carry-forward clipped the carried rows to the app's 90-day serving
+window, but the revize archive rung applies no back clip at all. Eight of
+fourteen sittings carried and six vanished. Where an adapter deliberately
+retrieves further back than the serving window, its carry-forward window has to
+say so — otherwise a refused run silently returns a shorter archive than the
+last good one, and the count line reads "8 carried" with nothing to compare it
+against.

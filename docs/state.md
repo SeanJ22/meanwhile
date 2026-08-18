@@ -10367,3 +10367,199 @@ That probe also confirmed M136 live on a body nobody had targeted — Rockaway
 Township at 07866 renders What this body does / Who sits on it (10) / Meetings
 (9 upcoming) / Contact / Where it governs / Sources. The seven sections
 generalize past the three the row named.
+
+
+## g14 — 2026-08-18. The intermittent map was never intermittent, and the half-load was one missing dependency
+
+The brief was two oil changes, one P0, and ten finish-now rows, in that order.
+
+**Completion against the denominator: items 0–2, 2 of 3 whole. Within item 2,
+1 row of 10 (M139).** The other nine are deferred WHOLE — not thinned, not
+partially built — under the deferral boundary that says a subject is never
+left half-hunted.
+
+### 0 — the two oil changes, both evaluated rather than reflexed
+
+**R45.** Five workflows, ten action pins, all bumped. The runtime claim was
+READ rather than assumed: `actions/checkout@v4` and `actions/setup-node@v4`
+declare `using: node20` in their own `action.yml`; v5 through v7 declare
+`using: node24`.
+
+The row named v5 and that is **not** where this landed, for a reason found in
+the release notes rather than in the version number: setup-node **v5**
+introduced automatic caching whenever `package.json` names a `packageManager`,
+and this repo names `pnpm@10.33.0` — but pnpm does not exist on the runner
+until the `corepack enable` step that runs AFTER setup-node. v5 would have
+broken all five jobs looking for it. v6 narrowed auto-caching to npm only, so
+v7 is safe today, with `package-manager-cache: false` set explicitly so it
+stays safe if a later major widens the default again.
+
+Proven by dispatch, both sides. BEFORE, run `32017791048` on `main`: one
+warning naming `checkout@v4` and `setup-node@v4`. AFTER, run `32156102225` on
+this branch: **completed success, and 0 occurrences of "deprecated" and 0 of
+"Node.js 20" in a 255,895-byte log** — with the job doing its real work
+(16,501 domains, 693 election-typed, both above the thin-guard floors).
+
+**R46.** `"type": "module"`, and the MODULE_TYPELESS warning's fate is a
+number: **112 per `pnpm test` run before, 0 after**, with 968 tests passing
+both ways. The row was right that this is a package-wide change to module
+resolution rather than a warning suppression, so the enumeration it demanded
+was done first — and it is the reason the ripple was small. **This package
+contains no `.js` and no `.cjs` files at all.** All 22 of its JavaScript files
+are already `.mjs`, which is unconditionally ESM either way; every config the
+row named is `.ts` or `.mjs`; and no tracked source file anywhere uses
+`require(`, `__dirname`, `__filename` or `module.exports`. The field flips
+exactly one thing — `.ts` from "ambiguous, reparse and warn" to "ESM", which
+is what those files already were.
+
+The whole battery ran rather than being summarised as green: test, tsc, build,
+lint, `drizzle-kit` loading the `.ts` config (6 tables, no schema changes, no
+migration written), stamp, verify-stamps, verify:readonly, census:runs,
+`handoff.mjs` running its full checklist, and `pnpm meetings:report` — a
+tsx-run plain `.ts` script, the extension whose semantics this field actually
+changes. **Not reverted, and the reason is recorded rather than the outcome
+alone: nothing broke because there was nothing here for it to break.**
+
+### 1 — R47: the instrument was intermittent, the defect was not
+
+The row recorded the pin wipe on 1 of 2 runs and called it a race, and
+forbade closing it on a green walk. Both instincts were right and the
+conclusion was wrong.
+
+`scripts/probe-r47.mts` samples `__wtpPinCount()` every 100 ms straight
+through a zoom-out, beside whether an `/api/meetings` request is in flight —
+counted off Playwright's own request events, so nothing had to be added to the
+product to see it — and beside the who-governs card's `data-refreshing`.
+
+**Against production, before any change: 4 of 4 runs flashed.** The pool sits
+at ZERO for 200–500 ms (median 300 ms) on EVERY zoom-out that re-queries. So
+the defect was deterministic and the INSTRUMENT was intermittent: `walk:all`
+samples once per zoom after a fixed wait, and one sample lands inside a 300 ms
+window only sometimes.
+
+**The cause, at the line.** `map-entry.tsx` derived its meetings from
+`current`, the answer keyed to the view being shown, and `current` is null for
+the whole gap between a settle and its reply. That gap was **already
+documented in that same file** — 6f gave the who-governs CARD a carry-forward
+through it and stopped there. The pins never got one. The card knew it was
+holding a stale answer while the map beside it asserted there was nothing
+there.
+
+`lib/map/carry-pins.ts` holds the last answer through the gap — CLAUDE.md's
+refresh corollary one layer up from the snapshot it was written for. **The
+scope is narrower than the card's, and that is the part that needed care:**
+`held` alone would carry pins across a ZIP CHANGE, and holding one area's
+entities while another loads is the stale-data bug this file names at
+`search()` — Tucson's pins under a New Hampshire zip. So `held` now carries
+the zip it belongs to, and pins are carried only while that zip is still the
+one being shown.
+
+**Proven by repetition and by planting.** After: **0 of 24** — twenty-four
+consecutive cold runs, six per combination, phone and desktop, light and dark.
+And reverting the one expression locally reproduced the flash (1 of 3, 100 ms
+— shorter than production's because localhost answers faster, which is also
+why it took three runs to catch rather than one), so the 0 of 24 means
+something.
+
+**The walk check no longer samples once.** It replaces its blind 4 s wait with
+forty samples 100 ms apart and records the FLOOR at every zoom tier. Because
+it samples the whole settle rather than a moment of it, a single green run IS
+sufficient for this class — and the evidence line says so rather than leaving
+it implied. g3's check is untouched beside it; they are two different claims.
+
+### 2 — M139, all four sub-items, and the half-load was one missing dependency
+
+**The half-load.** Reported across three sessions, never diagnosed. Measured
+first: `pnpm probe:m139` samples the four stat tiles every 100 ms through both
+reported entrances. BEFORE, the districts tile read 0 for the whole
+ten-second window on 1 of 3 returns from `/ballot`, recovered after ~2 s on
+another, was fine on the third.
+
+`ensureDistricts()` reads the active state off `focusAbbrRef` — a **ref**. A
+ref changing re-renders nothing and re-runs no effect, and the effect that
+CALLS it depended only on `[districtTypes, ensureDistricts]`, neither of which
+changes when a state activates. A pass that ran before the state resolved saw
+`abbr === null`, emptied `wanted`, took every district layer off the map, and
+was **never called again**. A cold arrival usually recovered by luck, because
+`ensureDistricts` is also subscribed to `styledata` and that tends to fire
+after the state activates; coming back from the ballot page the style is
+already parsed, so the second chance fires early or not at all. That is the
+"sometimes", and it is why the ballot return was the entrance people noticed.
+AFTER: 8 of 8 returns reached the full 54 districts within ~1.6 s.
+
+`react-hooks/exhaustive-deps` cannot catch this — the value the effect really
+depends on is read through a ref, invisible to that rule by design — so the
+requirement is written down where it can fail.
+
+**The zip control.** `.ballot-pill-zip` had `border-radius: 0` and a
+contrasting border inside a pill at `999px` with `overflow: hidden`, so its
+corners were cut off mid-line by the clip instead of following the curve.
+`.ballot-pill-main` had the same square corners all along and nobody saw it,
+because its border and background are the same colour and there was no line to
+see being cut. Both halves now carry the pill's curve. Evidence:
+`docs/evidence/m139-pill-{before,after}-{dark,light}.png`, before and after on
+the SAME build.
+
+**The districts panel.** Two sections now, a rule between them, a count beside
+each heading. It was either/or before, so two different claims wore one
+heading depending on where the reader stood. **The row's wording for the first
+section was "Districts in this zip" and that is the one thing deliberately not
+built**: a ZCTA crosses city, county and school lines, which `deriveStatsView`
+already settles in as many words and CLAUDE.md's entry rule settles above it.
+The section is gated on a resolved ADDRESS and renders a named gap otherwise.
+A section with no answer renders NO number rather than a 0 — "we can't tell
+you from a zip" and "the answer is none" are different sentences.
+
+**The load budget, measured on production with a cold cache**, method stated
+so a later session can compare rather than guess. `pnpm measure:load`, 3 cold
+runs per surface per viewport, fresh context each run, Chromium headless, no
+throttling, zip 85701:
+
+| surface | median | worst | budget | |
+|---|---|---|---|---|
+| desktop ballot interactive | 0.78s | 2.38s | 2.5s | PASS |
+| desktop map first meaningful paint | 1.54s | 1.54s | 3.0s | PASS |
+| phone ballot interactive | 0.60s | 0.65s | 2.5s | PASS |
+| phone map first meaningful paint | 1.25s | 1.27s | 3.0s | PASS |
+
+Both numbers are defined against the reader's question rather than a
+convenient event: ballot interactive is the LATER of `domInteractive` and a
+real ballot element being present, because either alone passes on a page that
+is not usable; map FMP is the first PIN in the pool, not the canvas existing,
+because a map of your area with no pins has not answered anything yet. **The
+one number worth watching, stated rather than smoothed: desktop ballot worst
+case 2.38 s against a 2.5 s budget on a cold Netlify function — inside budget,
+with 0.12 s of headroom.**
+
+### Three instruments corrected mid-session, each named
+
+Every one of these would have produced a confident false report, and each is
+recorded because the correction is the reusable part.
+
+1. **The M139 probe closed the card it came to measure.** It ran at 390 px and
+   opened the drawer to reach the stats — but rule 4c makes the rail and the
+   who-governs card mutually exclusive. It reported the card empty in 74 of 74
+   samples. That was the instrument, not a finding. Moved to 1280 px, where
+   both surfaces are on screen at once.
+2. **The same probe measured after the thing it was looking for had finished.**
+   Its first version waited four seconds before sampling and reported a
+   perfectly healthy rail every time.
+3. **The pill screenshots shot dark twice and called it "both themes."**
+   Playwright's `colorScheme` drives `prefers-color-scheme`; this app reads
+   `localStorage["wtp.theme"]`. Two identical images disproved the claim the
+   run was about to make.
+
+A fourth, in a test rather than a probe: the zip-claim guard failed against a
+correct file by finding the forbidden phrase inside the paragraph forbidding
+it. It strips comments now.
+
+### R43 and R44, named because the numbering implies them
+
+Both were opened AND closed by g13 on 2026-08-18 and never appeared in a
+standing report under their own numbers, because g13's report described them
+as "the two P0 scheduled-job failures" without their row ids. They are:
+**R43** — the intake tripwire's scheduled purge refused by the write guard,
+fixed with a narrow third door (`SANCTIONED_WRITES`), **Done**. **R44** —
+carry-forward clipping a failed source's archive to a window that source never
+applied, which dropped 6 of Merrimack County's 14 archive sittings, fixed with
+`publishedLookbackDays`, **Done**. Neither is outstanding.

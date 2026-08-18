@@ -10596,6 +10596,40 @@ Why it is a P2 and not a P0: a false NAMED REGRESSION is loud, not silent. It
 costs a session's time and it erodes trust in the suite, but it never ships a
 wrong number to a reader. The direction of the error is the safe one.
 
+### The three wrong fixes before the right one
+
+The instrument class above did not yield to the first fix, or the second, or
+the third — and each was disproved by production rather than by argument,
+which is the only reason the fourth is trustworthy.
+
+1. **Wait until an outcome is PRESENT.** It latched onto the previous
+   question's outcome and read while the panel was being cleared: `settled in
+   2089ms` about a question a fresh-page probe measured refusing at 8161 ms.
+2. **Wait until the panel TEXT CHANGED and an outcome is present.** Obvious in
+   hindsight: the typed question is INSIDE the panel, so the text changes the
+   instant the input is filled while the old answer is still rendered.
+   `settled in 262ms`, and it turned A07 red at THREE zips — worse than the
+   state it replaced.
+3. **Accept a DESTINATION as an honest outcome.** Added because 85641 printed
+   `destination=meetings` across three walks. Once pages were fresh that
+   destination stopped appearing at all: it was the stale panel, not a routing
+   decision. The clause stays — the check's own comment names three honest
+   outcomes and check 1 already treats `destination` as one — but on that
+   intent rather than on the reading that prompted it, and the code comment
+   was corrected rather than left asserting something that had turned out
+   false.
+
+**What held: every ask question gets a FRESH PAGE.** There is no reliable way
+to tell a stale outcome from a new one on a page that already has one, so the
+page stops already having one. That is the repo's own standing note about the
+per-zip loop applied rather than worked around, and it costs one reload per
+question.
+
+**`pnpm walk:all` against production `534f631`: 302 checks, 302 ok, 0 FAIL, 0
+named regressions**, with the ask checks settling consistently at 3.1–5.3s
+where they had been reporting 262 ms and 2089 ms. Seven full walks were run
+this session; the first six are the diagnosis and are not hidden.
+
 ### R43 and R44, named because the numbering implies them
 
 Both were opened AND closed by g13 on 2026-08-18 and never appeared in a

@@ -44,10 +44,12 @@ both themes.
 ## 0 — R49, before the rows: the suite reads outcomes on a timer
 
 Three checks in `scripts/walk-all.mts` reported WORKING surfaces as NAMED
-REGRESSIONS in one session, all against the same build, because they slept a
-fixed interval and then read the DOM once. All three are fixed. **The class
-audit is a count: 36 `waitForTimeout` calls in that file, 3 converted, 33 NOT
-audited individually.** R49 carries the walk-and-split: decide per call whether
+REGRESSIONS in one session, all against the same build, because they read a
+rendered outcome on a timer. All are fixed and the suite is 302 ok / 0 FAIL
+against production — but it took FOUR attempts, and the three that failed are
+written up in `state.md` §g14 because each one looked right. **The class audit
+is a count: 36 `waitForTimeout` calls in that file, the 4 in the ask family
+converted, 32 NOT audited individually.** R49 carries the walk-and-split: decide per call whether
 it waits for a SETTLE (fine) or for an OUTCOME (must poll), and state the
 split.
 

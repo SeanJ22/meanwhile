@@ -2984,14 +2984,20 @@ for (const { zip } of FOUR) {
          * class outcome. So a zip where the classifier routes "my water bill"
          * somewhere real failed a check whose own prose says it should pass.
          *
-         * This is NOT the condition being loosened to make a red line green.
-         * It was chased to the end first: the wait was lengthened, then made
-         * change-aware, and the failure survived both with `settled in
-         * 5520ms` — not a timeout, and not a stale read. Three zips refuse in
-         * 5.7-6.0s and 85641 settles in 5.5s on something that is neither a
-         * refusal nor an answer, which leaves one thing it can be. The
-         * destination is printed now, so the next reader sees WHERE it routed
-         * rather than taking this paragraph's word for it.
+         * CORRECTED, because the evidence first cited for this clause did not
+         * survive the next fix. It was added after 85641 failed three walks
+         * running and printed `destination=meetings` — which looked like a
+         * zip where the classifier routes rather than refuses. Once every
+         * question got its own FRESH PAGE, that destination stopped appearing
+         * at all: it was the stale panel from the previous question, not a
+         * routing decision. On fresh pages the weak match answers or refuses
+         * at all four zips and this branch is not currently exercised.
+         *
+         * It stays anyway, on the check's own documented intent rather than
+         * on that reading — the comment above names three honest outcomes and
+         * check 1 already treats `destination` as one, so a zip that genuinely
+         * routes should pass. The destination is printed either way, so
+         * nobody has to take this paragraph's word for it.
          */
         const classified = await ask("my water bill");
         check(

@@ -1,6 +1,6 @@
 # Intake tripwire report
 
-Generated 2026-08-17T11:00:07.988Z by `scripts/intake-tripwire.mts` (T08 1f).
+Generated 2026-08-18T14:23:58.649Z by `scripts/intake-tripwire.mts` (T08 1f).
 Everything in this file is a date, a count, or a threshold — never an
 identifier. Flags are flagged, never auto-acted-on: the author decides.
 
@@ -27,6 +27,6 @@ _No rows in the window._
 
 ## Limiter housekeeping
 
-Expired limiter rows purged this run: 6. Rows
-remaining: 9. (Transient state only — the
+Expired limiter rows purged this run: 1. Rows
+remaining: 11. (Transient state only — the
 limiter table holds counters against an unjoinable digest, nothing else.)

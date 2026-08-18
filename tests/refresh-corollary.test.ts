@@ -5,6 +5,7 @@ import { test } from "node:test";
 
 import { wiringForTypes } from "../lib/registry/source-wiring.ts";
 import { makeSchedulePageSource } from "../lib/sources/schedulepage/index.ts";
+import { makeRevizeSource } from "../lib/sources/revize/index.ts";
 import { CompositeSource } from "../lib/sources/composite/index.ts";
 import { carryForward } from "../lib/meetings/carry-forward.ts";
 import {
@@ -515,4 +516,152 @@ test("every surface that states a meeting's freshness reads the row's own stamp"
     /Last reached/.test(panel),
     "the card dropped its last-reached line",
   );
+});
+
+/* ------------------------------------ g13: whose window clips a carried row --- */
+
+/**
+ * A revize sitting from the M59 archive rung, at an arbitrary date.
+ *
+ * The archive rung stamps local midnight and `startPrecision: "DAY"` because
+ * the notices page publishes a date and no hour; what matters here is only
+ * that these rows exist further back than the app's serving window, which is
+ * exactly the condition that made the 2026-08-18 miss possible.
+ */
+function merrimackSitting(date: string): Meeting {
+  return {
+    id: `revize:merrimack:${date}`,
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack",
+    bodyName: "Merrimack County Board of Commissioners",
+    title: "Merrimack County Board of Commissioners",
+    startsAt: `${date}T00:00:00-04:00`,
+    startPrecision: "DAY",
+    timeZone: "America/New_York",
+    location: { name: "OCH", address: "163 N. Main St., Concord, NH", lat: 43.21, lng: -71.54 },
+    agendaUrl: null,
+    jurisdiction: "Merrimack County, NH",
+    status: "CONCLUDED",
+    provenance: {
+      sourceUrl: "https://www.merrimackcounty.net/",
+      sourceOrg: "Merrimack County Board of Commissioners",
+      collectedAt: "2026-08-15T20:00:00.000Z",
+      verifiedAt: null,
+    },
+  };
+}
+
+function archiveSnapshot(): MeetingsSnapshot {
+  return {
+    formatVersion: 1,
+    generatedAt: "2026-08-15T20:00:00.000Z",
+    counts: { fresh: 4, carried: 0, total: 4 },
+    sources: [
+      {
+        source: "revize",
+        ok: true,
+        error: null,
+        fetched: 1,
+        normalized: 4,
+        drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 },
+      },
+    ],
+    meetings: [
+      // Inside the 90-day serving window from NOW (2026-08-15).
+      merrimackSitting("2026-07-27"),
+      merrimackSitting("2026-06-22"),
+      // OUTSIDE it — the six rows the 2026-08-18 refresh silently dropped.
+      merrimackSitting("2026-03-09"),
+      merrimackSitting("2026-02-09"),
+    ],
+    agendaDocuments: [],
+  };
+}
+
+test("g13: a source that publishes its whole archive carries its whole archive", () => {
+  // 2026-08-18: revize took HTTP 403 at the CI runner's egress. Carry-forward
+  // fired, and clipped the carried rows to CONCLUDED_LOOKBACK_DAYS — a window
+  // revize's own archive rung has never applied. Eight of Merrimack County's
+  // fourteen archive sittings carried and six vanished, so the refresh
+  // corollary's own module committed a partial version of the emptying it
+  // exists to prevent, and the M59 day-precision floor is what caught it.
+  const { meetings, carried } = carryForward(
+    [{ source: "revize", ok: false, publishedLookbackDays: null }],
+    [],
+    archiveSnapshot(),
+    NOW,
+  );
+
+  assert.equal(
+    meetings.length,
+    4,
+    "a source declaring no back clip lost rows anyway — the serving window is " +
+      "still deciding what a healthy run of it would have produced",
+  );
+  assert.equal(carried.get("revize"), 4, "the carried count was not stated");
+  assert.ok(
+    meetings.some((m) => m.id === "revize:merrimack:2026-02-09"),
+    "the oldest archive sitting was clipped — this is the exact row the " +
+      "2026-08-18 refresh dropped",
+  );
+  // Not a loosening: every carried row still says it was carried, and still
+  // names the run that actually fetched it.
+  for (const m of meetings) {
+    assert.equal(m.carried?.source, "revize");
+    assert.equal(m.carried?.lastFreshAt, "2026-08-15T20:00:00.000Z");
+  }
+});
+
+test("g13: declaring no back clip is per source, not a global loosening", () => {
+  // The same previous snapshot, the same failure, with the declaration absent
+  // — which is every other adapter, all of which DO clip their own retrieval
+  // to the serving window. Those two out-of-window rows must stay dropped, or
+  // this change would have turned one source's honest archive into every
+  // source's licence to resurrect history.
+  const { meetings, carried } = carryForward(
+    [{ source: "revize", ok: false }],
+    [],
+    archiveSnapshot(),
+    NOW,
+  );
+
+  assert.equal(meetings.length, 2, "an undeclared source stopped clipping at the serving window");
+  assert.equal(carried.get("revize"), 2);
+  assert.ok(
+    !meetings.some((m) => m.id === "revize:merrimack:2026-02-09"),
+    "an undeclared source resurrected a sitting from outside the window",
+  );
+});
+
+test("g13: a declared window survives the composite's FAILURE branch", () => {
+  // The declaration is useless unless it reaches the report on the one path
+  // that matters. A failed child is precisely the child carry-forward judges,
+  // and an earlier draft of this change forwarded the field on success only —
+  // which would have left the defect exactly where it was found.
+  const source = makeRevizeSource(wiringForTypes(["REVIZE"]), (async () => {
+    throw new Error("HTTP 403 for https://www.merrimackcounty.net/");
+  }) as unknown as typeof fetch);
+
+  assert.equal(
+    source.publishedLookbackDays,
+    null,
+    "revize stopped declaring that its archive rung applies no back clip",
+  );
+
+  const composite = new CompositeSource([
+    source as unknown as ReportingMeetingSource<unknown>,
+  ]);
+  return composite
+    .fetch({ lat: 43.2, lng: -71.5, radiusKm: 5000 })
+    .then((raw) => {
+      composite.normalize(raw, NOW);
+      const child = composite.lastReport?.children.find((c) => c.source === "revize");
+      assert.ok(child, "the composite produced no report row for revize");
+      assert.equal(child?.ok, false, "the planted 403 did not fail the child");
+      assert.equal(
+        child?.publishedLookbackDays,
+        null,
+        "the child's declared window was dropped on the failure path — carry-forward " +
+          "would clip its archive at the serving window again",
+      );
+    });
 });

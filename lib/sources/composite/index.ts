@@ -44,6 +44,15 @@ export interface ChildRunReport {
    * `ok` flag to say".
    */
   unreachableOcdIds?: string[];
+  /**
+   * The child's own `publishedLookbackDays` (g13), forwarded verbatim so
+   * carry-forward can judge a carried row against the window that child
+   * actually produces rather than against the app's serving window. Copied
+   * here rather than looked up later because the report is the only thing
+   * that survives the run — by the time the snapshot is written the source
+   * objects are out of scope.
+   */
+  publishedLookbackDays?: number | null;
 }
 
 export interface CompositeReport {
@@ -207,6 +216,15 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
         fetched: byChild.get(child.name)?.length ?? 0,
       };
 
+      // The child's declared window travels with every report it appears in,
+      // and the FAILURE branch is the one that matters: a failed child is
+      // exactly the child carry-forward has to judge, and a report that
+      // dropped the declaration on failure would have kept the g13 defect.
+      const declaredWindow =
+        child.publishedLookbackDays === undefined
+          ? {}
+          : { publishedLookbackDays: child.publishedLookbackDays };
+
       if (!fetched.ok) {
         children.push({
           source: child.name,
@@ -215,6 +233,7 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
           fetched: 0,
           normalized: 0,
           drops: { ...ZERO_DROPS },
+          ...declaredWindow,
         });
         continue;
       }
@@ -239,6 +258,7 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
             fetched: fetched.fetched,
             normalized: 0,
             drops: { ...ZERO_DROPS },
+            ...declaredWindow,
           });
           continue;
         }
@@ -254,6 +274,7 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
           ...(unreachableOcdIds && unreachableOcdIds.length > 0
             ? { unreachableOcdIds }
             : {}),
+          ...declaredWindow,
         });
       } catch (error) {
         children.push({
@@ -263,6 +284,7 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
           fetched: fetched.fetched,
           normalized: 0,
           drops: { ...ZERO_DROPS },
+          ...declaredWindow,
         });
       }
     }

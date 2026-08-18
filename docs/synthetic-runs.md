@@ -126,3 +126,55 @@ route writes no search-log row.
 The local browser passes — the pill-cluster walk at four zips and two
 viewports, the D35 card drive, the M134 pick states — ran against
 `http://localhost:3000` and reached production not at all.
+
+## g14 — 2026-08-18
+
+Every run declared, and one leak found and named rather than discovered later.
+
+| run id | rows | what it was |
+|---|---|---|
+| `g14-r47-probe@2026-08-18T15:53:06.680Z` | 7 | the R47 pin-flash measurement against production, BEFORE the fix — 4 of 4 runs flashed |
+| `g14-m139-load@2026-08-18T16:36:55.154Z` | 6 | the load budget, first attempt (the ballot selector was wrong) |
+| `g14-m139-load@2026-08-18T16:41:29.353Z` | 6 | the load budget, corrected — all four surfaces PASS |
+| `g14-a07-probe@2026-08-18T17:02:22.441Z` | 4 | the A07 refusal-latency probe, first attempt (wrong ask selector) |
+| `g14-a07-probe@2026-08-18T17:03:27.332Z` | 8 | the A07 refusal-latency probe, corrected |
+| `g14-a07-probe@2026-08-18T17:40:56.608Z` | 6 | the same probe on "my water bill" |
+| `walk-all-local@2026-08-18T16:50:11.644Z` | 74 | walk 1 — 2 named regressions (A07), both later proved to be the instrument |
+| `walk-all-local@2026-08-18T17:05:13.139Z` | 73 | walk 2 — A02 red, A07 green |
+| `walk-all-local@2026-08-18T17:16:32.090Z` | 68 | walk 3 |
+| `walk-all-local@2026-08-18T17:30:26.804Z` | 70 | walk 4 |
+| `walk-all-local@2026-08-18T17:43:36.435Z` | 75 | walk 5 |
+| `walk-all-local@2026-08-18T17:54:44.637Z` | 74 | walk 6 |
+| `walk-all-local@2026-08-18T18:05:39.195Z` | 89 | walk 7 — **302 ok, 0 FAIL** |
+
+Two `GET /api/build` deploy checks and two `POST /api/ask/classify` probes
+carried a run id and wrote no search-log row: `/api/build` writes none, and
+the classify probes were refused 403 as cross-origin.
+
+### THE LEAK: three ORGANIC rows this session created, and how
+
+**Three `QUESTION_ASKED` rows landed ORGANIC**, with `run_id` null, at
+`2026-08-18T18:13:00Z`, `18:14:12Z` and `18:15:25Z` — inside walk 7's window
+(`18:05:43Z` → `18:16:18Z`). They are ours, not a reader's.
+
+**The mechanism.** `lib/log/client.ts` prefers `navigator.sendBeacon` over
+`fetch`, and **Playwright's `extraHTTPHeaders` do not apply to a beacon**. So
+any event leaving by that path arrives with no `x-wtp-synthetic-run` header
+and is recorded ORGANIC — a walk row counted as a reader in the store we sell.
+It surfaced now because g14's fresh-page-per-ask fix reloads the page between
+questions, and a page unload is exactly when a beacon flushes.
+
+**Fixed forward:** every browser context in `walk-all.mts` and in this
+session's five probe scripts now deletes `navigator.sendBeacon` before the
+page loads, forcing the fetch fallback, which carries the header. The cost is
+stated rather than hidden — these runs no longer exercise the beacon transport.
+
+**The class, as a count:** `scripts/` holds **50 browser contexts; 10 are now
+guarded and 40 are not** (36 other scripts). `R50` carries the rest.
+
+**These three rows are NOT backmarked**, and that is deliberate rather than
+forgotten. `pnpm searchlog:backmark` needs a write to production, and the only
+sanctioned write path is `intake-limiter-purge` (R43). Correcting them needs
+either the author at the console or a new named sanction — it is not something
+a session should grant itself. The window above is exact so the correction is
+a filter and never a hunt.

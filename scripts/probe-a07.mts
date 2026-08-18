@@ -47,6 +47,17 @@ async function probe(browser: Browser, zip: string): Promise<string> {
     viewport: { width: 1280, height: 800 },
     reducedMotion: "reduce",
   });
+  // C05: sendBeacon ignores extraHTTPHeaders, so anything leaving by that
+  // path is recorded ORGANIC — our own run counted as a reader in the store
+  // we sell. Removing it forces the fetch fallback, which carries the header.
+  await context.addInitScript(() => {
+    try {
+      // @ts-expect-error — removing a DOM method on purpose, in a test context
+      delete navigator.sendBeacon;
+    } catch {
+      // Still declared on every fetch if it cannot be removed.
+    }
+  });
   await context.addInitScript(
     ({ zip }) => {
       try {

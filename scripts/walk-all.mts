@@ -264,6 +264,41 @@ async function openAt(browser: Browser, zip: string): Promise<Page> {
     deviceScaleFactor: 2,
     reducedMotion: "reduce",
   });
+  // C05: sendBeacon ignores extraHTTPHeaders, so anything leaving by that
+  // path is recorded ORGANIC — our own run counted as a reader in the store
+  // we sell. Removing it forces the fetch fallback, which carries the header.
+  await context.addInitScript(() => {
+    try {
+      // @ts-expect-error — removing a DOM method on purpose, in a test context
+      delete navigator.sendBeacon;
+    } catch {
+      // Still declared on every fetch if it cannot be removed.
+    }
+  });
+  /*
+   * C05, THE BEACON HOLE (g14, 2026-08-18).
+   *
+   * lib/log/client.ts prefers navigator.sendBeacon over fetch, and
+   * Playwright extraHTTPHeaders DO NOT apply to a beacon. So every event
+   * that leaves by that path arrives with no x-wtp-synthetic-run header and
+   * is recorded ORGANIC - a walk row counted as a reader in the store we
+   * sell. It cost 3 QUESTION_ASKED rows the day this was found, flushed on
+   * the page unloads that the fresh-page ask fix introduced.
+   *
+   * Removing sendBeacon forces the fetch fallback, which carries the header.
+   * The cost is stated rather than hidden: this walk no longer exercises the
+   * beacon path itself. That is the right trade - a suite that pollutes the
+   * sold store every run is worse than one that tests a transport one layer
+   * down.
+   */
+  await context.addInitScript(() => {
+    try {
+      // @ts-expect-error - deleting a DOM method on purpose, in a test context
+      delete navigator.sendBeacon;
+    } catch {
+      // If it cannot be removed the run still declares itself on every fetch.
+    }
+  });
   await context.addInitScript(
     ({ zip }) => {
       try {
@@ -303,6 +338,41 @@ async function openWideAt(browser: Browser, zip: string): Promise<Page> {
     viewport: { width: 1280, height: 900 },
     deviceScaleFactor: 1,
     reducedMotion: "reduce",
+  });
+  // C05: sendBeacon ignores extraHTTPHeaders, so anything leaving by that
+  // path is recorded ORGANIC — our own run counted as a reader in the store
+  // we sell. Removing it forces the fetch fallback, which carries the header.
+  await context.addInitScript(() => {
+    try {
+      // @ts-expect-error — removing a DOM method on purpose, in a test context
+      delete navigator.sendBeacon;
+    } catch {
+      // Still declared on every fetch if it cannot be removed.
+    }
+  });
+  /*
+   * C05, THE BEACON HOLE (g14, 2026-08-18).
+   *
+   * lib/log/client.ts prefers navigator.sendBeacon over fetch, and
+   * Playwright extraHTTPHeaders DO NOT apply to a beacon. So every event
+   * that leaves by that path arrives with no x-wtp-synthetic-run header and
+   * is recorded ORGANIC - a walk row counted as a reader in the store we
+   * sell. It cost 3 QUESTION_ASKED rows the day this was found, flushed on
+   * the page unloads that the fresh-page ask fix introduced.
+   *
+   * Removing sendBeacon forces the fetch fallback, which carries the header.
+   * The cost is stated rather than hidden: this walk no longer exercises the
+   * beacon path itself. That is the right trade - a suite that pollutes the
+   * sold store every run is worse than one that tests a transport one layer
+   * down.
+   */
+  await context.addInitScript(() => {
+    try {
+      // @ts-expect-error - deleting a DOM method on purpose, in a test context
+      delete navigator.sendBeacon;
+    } catch {
+      // If it cannot be removed the run still declares itself on every fetch.
+    }
   });
   await context.addInitScript(
     ({ zip }) => {
@@ -929,6 +999,17 @@ section("D. The ballot page (0814c, D53, g3)");
     extraHTTPHeaders: RUN_HEADERS,
     viewport: PHONE,
     reducedMotion: "reduce",
+  });
+  // C05: sendBeacon ignores extraHTTPHeaders, so anything leaving by that
+  // path is recorded ORGANIC — our own run counted as a reader in the store
+  // we sell. Removing it forces the fetch fallback, which carries the header.
+  await context.addInitScript(() => {
+    try {
+      // @ts-expect-error — removing a DOM method on purpose, in a test context
+      delete navigator.sendBeacon;
+    } catch {
+      // Still declared on every fetch if it cannot be removed.
+    }
   });
   const page = await context.newPage();
   page.on("response", (r) => countProbe(r.url()));

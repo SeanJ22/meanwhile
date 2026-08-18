@@ -5,6 +5,7 @@ import test from "node:test";
 
 import { hashLimiterKey } from "../lib/db/intake-limiter.ts";
 import { scrubFreeText } from "../lib/log/scrub.ts";
+import { REPLY_TO_MAX_CHARS, isReplyToShaped } from "../lib/feedback/shape.ts";
 import {
   FEEDBACK_MAX_CHARS,
   FEEDBACK_SURFACES,
@@ -135,11 +136,111 @@ test("the transparency page discloses the store in the same commit as the form",
   );
   // And the form page itself carries the disclosure at the point of typing.
   const form = readFileSync(join(ROOT, "app", "feedback", "page.tsx"), "utf8");
-  assert.ok(/cannot write back/i.test(form), "the form must say we cannot write back");
+  /*
+   * R41 (2026-08-17): this used to assert the flat promise "we cannot write
+   * back". That promise is now true of exactly one case — the blank field —
+   * so the assertion moved with it. The page must still tell the reader which
+   * case they are in, because "a reply is possible" and "a reply is not
+   * possible" are two different facts and a render default may never turn one
+   * into the other.
+   */
+  assert.ok(
+    /only write back if you fill in the optional email box/i.test(form),
+    "the form page must say a reply depends on the optional field",
+  );
+  assert.ok(
+    /an address left in the message itself is removed/i.test(form),
+    "the form page must still say an address inside the MESSAGE is scrubbed",
+  );
   assert.ok(
     /aggregated or licensed/i.test(form),
     "the form must say the message enters nothing licensed",
   );
+  // The disclosure of the new field is on /transparency in this same commit.
+  assert.ok(
+    /one optional box for your email address/i.test(page),
+    "/transparency must disclose the optional reply address",
+  );
+  assert.ok(
+    /never added to a mailing list/i.test(page),
+    "/transparency must state what the reply address is never used for",
+  );
+});
+
+/**
+ * R41 (2026-08-17, the author's ruling A) — the optional reply field.
+ *
+ * The row's whole risk is that an OPTIONAL field stops being optional in
+ * practice, or that the one deliberate exception to T09 quietly widens to the
+ * message body. Both are asserted here rather than described.
+ */
+test("R41: blank is the default and a blank submission is not blocked", () => {
+  // Shape-level: blank is VALID, so nothing downstream can treat it as an error.
+  assert.equal(isReplyToShaped(""), true, "blank must be valid — the field is optional");
+  assert.equal(isReplyToShaped("   "), true, "whitespace-only must be valid");
+
+  const form = readFileSync(
+    join(ROOT, "components", "feedback", "feedback-form.tsx"),
+    "utf8",
+  );
+  // The submit button may never wait on the reply field being filled. It may
+  // only wait on a value the reader actually typed being malformed.
+  assert.ok(
+    form.includes(
+      "const replyMalformed = trimmedReply.length > 0 && !isReplyToShaped(trimmedReply)",
+    ),
+    "an untouched reply field must never be able to disable the button",
+  );
+  assert.ok(
+    /Your email — optional/.test(form),
+    "the optionality must be in the label itself, not in fine print below it",
+  );
+});
+
+test("R41: the reply address is shape-checked, and the check claims nothing more", () => {
+  assert.equal(isReplyToShaped("someone@example.com"), true);
+  assert.equal(isReplyToShaped("not an address"), false);
+  assert.equal(isReplyToShaped("two@@example.com"), false);
+  assert.equal(isReplyToShaped("no-domain@localhost"), false);
+  assert.equal(isReplyToShaped("has space@example.com"), false);
+  assert.equal(isReplyToShaped(`${"a".repeat(REPLY_TO_MAX_CHARS)}@example.com`), false);
+});
+
+test("R41: T09 still scrubs the MESSAGE, and the exception is exactly one field", () => {
+  const source = readFileSync(join(ROOT, "lib", "db", "feedback.ts"), "utf8");
+  // The message half is untouched by R41 — asserted positionally, as before.
+  assert.ok(source.includes("scrubFreeText(raw)"), "the message must still be scrubbed");
+  assert.ok(
+    source.indexOf("scrubFreeText(raw)") < source.indexOf(".insert(feedback)"),
+    "the scrub must still run before the insert",
+  );
+  // And the reply address must NOT pass through the scrub — that is the ruling.
+  assert.ok(
+    !/scrubFreeText\(\s*(submission\.)?replyTo/.test(source),
+    "the reply address is stored as typed; scrubbing it would delete what the reader asked for",
+  );
+  // Exactly one scrub call in the write path: the message's.
+  assert.equal(
+    (source.match(/scrubFreeText\(/g) ?? []).length,
+    1,
+    "there must be exactly one scrub call — the message's",
+  );
+});
+
+test("R41: the reply address is filled only from its own field, never the message", () => {
+  const route = readFileSync(join(ROOT, "app", "api", "feedback", "route.ts"), "utf8");
+  // It reads submission.replyTo and nothing else. A route deriving an address
+  // from the message body would re-create precisely the conflict R41 settled.
+  assert.ok(
+    route.includes("submission.replyTo"),
+    "the route must read the reply address from its own field",
+  );
+  assert.ok(
+    !/replyTo:\s*submission\.message/.test(route),
+    "the reply address may never be derived from the message body",
+  );
+  const client = readFileSync(join(ROOT, "lib", "feedback", "client.ts"), "utf8");
+  assert.ok(/replyTo/.test(client), "the client must send the field");
 });
 
 test("the feedback store carries no key, and its limiter counters cannot join reactions'", () => {
@@ -232,10 +333,28 @@ test("a submission never silently succeeds into a void", () => {
     join(ROOT, "components", "feedback", "feedback-form.tsx"),
     "utf8",
   );
-  // The thank-you is gated on STORED and on nothing else.
+  /*
+   * The thank-you is gated on STORED and on nothing else.
+   *
+   * Asserted as "there is exactly one way in, and it is inside the STORED
+   * branch" rather than by matching the two lines adjacently — R41 added a
+   * second statement to that branch and the adjacency form broke on a change
+   * that did not weaken the guarantee at all. A test that fails on formatting
+   * gets relaxed by the next person in a hurry; this one fails only if a
+   * second path to the thank-you appears.
+   */
+  const storedTransitions = form.match(/setState\("stored"\)/g) ?? [];
+  assert.equal(
+    storedTransitions.length,
+    1,
+    "there must be exactly one path to the thank-you state",
+  );
+  const branchAt = form.indexOf('outcome.kind === "STORED"');
+  const thanksAt = form.indexOf('setState("stored")');
+  assert.ok(branchAt !== -1, "the STORED branch must exist");
   assert.ok(
-    /outcome\.kind === "STORED"\)\s*\{\s*setState\("stored"\)/.test(form),
-    "the form may only thank a reader on STORED",
+    thanksAt > branchAt && thanksAt - branchAt < 300,
+    "the form may only thank a reader inside the STORED branch",
   );
   // And the failure branch keeps the reader's text.
   assert.ok(

@@ -1,5 +1,10 @@
 import { writeFeedback } from "@/lib/db/feedback";
-import { FEEDBACK_MAX_CHARS, isFeedbackSurface } from "@/lib/feedback/shape";
+import {
+  FEEDBACK_MAX_CHARS,
+  REPLY_TO_MAX_CHARS,
+  isFeedbackSurface,
+  isReplyToShaped,
+} from "@/lib/feedback/shape";
 import { noteSubmission } from "@/lib/db/intake-limiter";
 import { markerFromRequest } from "@/lib/db/run-marker";
 import {
@@ -85,6 +90,7 @@ export async function POST(request: Request) {
   const submission = body as {
     message?: unknown;
     surface?: unknown;
+    replyTo?: unknown;
     feedbackKey?: unknown;
   };
 
@@ -102,6 +108,37 @@ export async function POST(request: Request) {
   }
   if (!isFeedbackSurface(submission.surface)) {
     return Response.json({ stored: false, error: "Unknown surface." }, { status: 400 });
+  }
+  /*
+   * R41 (2026-08-17): the optional reply address. Absent, null and empty are
+   * all the ordinary case — the field is optional and blank submits, so none
+   * of them is an error. A value that IS present must be shaped like an
+   * address and within the cap; anything else is a 400 the reader can act on,
+   * never a silently dropped field. Validity checks are never behind a flag.
+   */
+  if (
+    submission.replyTo !== undefined &&
+    submission.replyTo !== null &&
+    typeof submission.replyTo !== "string"
+  ) {
+    return Response.json({ stored: false, error: "Malformed request." }, { status: 400 });
+  }
+  const replyTo = typeof submission.replyTo === "string" ? submission.replyTo.trim() : "";
+  if (replyTo.length > REPLY_TO_MAX_CHARS) {
+    return Response.json(
+      { stored: false, error: "That reply address is longer than we can accept." },
+      { status: 400 },
+    );
+  }
+  if (!isReplyToShaped(replyTo)) {
+    return Response.json(
+      {
+        stored: false,
+        error:
+          "That does not look like an email address. Leave it blank if you would rather not hear back.",
+      },
+      { status: 400 },
+    );
   }
   // Validity, never behind a flag: the key is opaque and its only job is to be
   // stable per browser, so the only thing to check is its shape.
@@ -166,6 +203,7 @@ export async function POST(request: Request) {
     result = await writeFeedback({
       message: submission.message,
       surface: submission.surface,
+      replyTo,
       suspectReason,
       // C05: an automated run declares itself, so a walk's test submission is
       // never mistaken for a reader's report.

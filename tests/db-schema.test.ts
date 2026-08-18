@@ -147,6 +147,19 @@ test("the search log carries no identifier of any kind and no foreign keys", () 
  */
 const COLLECTION_STORES = ["searchLog", "reactions", "feedback"] as const;
 
+/**
+ * THE ONE DELIBERATE EXCEPTION, NAMED PER STORE AND PER COLUMN (R41,
+ * 2026-08-17, the author's ruling A).
+ *
+ * `feedback.reply_to` holds a contact detail on purpose: a reader typed it
+ * into a field labelled as an optional reply address. The exception is
+ * written as an exact allow-list of (store, column) pairs rather than by
+ * softening FORBIDDEN_FRAGMENTS, because loosening the fragment list would
+ * quietly permit the NEXT contact column anyone adds anywhere. A second entry
+ * here is a decision someone has to type out.
+ */
+const DELIBERATE_IDENTIFIER_COLUMNS = new Set(["feedback.reply_to"]);
+
 test("every collection store is identifier-free and joins nothing", () => {
   for (const storeName of COLLECTION_STORES) {
     const table = (schema as Record<string, unknown>)[storeName];
@@ -154,6 +167,7 @@ test("every collection store is identifier-free and joins nothing", () => {
     const config = getTableConfig(table as Parameters<typeof getTableConfig>[0]);
 
     for (const column of config.columns) {
+      if (DELIBERATE_IDENTIFIER_COLUMNS.has(`${config.name}.${column.name}`)) continue;
       for (const fragment of FORBIDDEN_FRAGMENTS) {
         assert.ok(
           !column.name.toLowerCase().includes(fragment),
@@ -203,6 +217,19 @@ test("the collection stores share no joinable column", () => {
     "suspect_reason",
   ]);
 
+  /*
+   * R41: `reply_to` is deliberately NOT in `allowedShared`. It is the one
+   * column in any collection store that could identify a person, so if it
+   * ever appears on a second store this loop fails — which is the whole
+   * protection. The reader gave one address for one message; a copy of it on
+   * the search log or the reactions table would make the two joinable and
+   * would break the n-stores rule outright.
+   */
+  assert.ok(
+    !allowedShared.has("reply_to"),
+    "reply_to may never be an allowed shared column — it is the one identifying column that exists",
+  );
+
   // EVERY PAIR, not one pair. Three stores make three pairs, and a fourth
   // store would make six — a hand-written pair was how the check would have
   // silently stopped covering the new one.
@@ -235,12 +262,40 @@ test("the feedback store holds no continuity key of any kind", () => {
       "id",
       "message",
       "received_at",
+      "reply_to",
       "run_class",
       "run_id",
       "surface",
       "suspect_reason",
     ],
-    "the feedback store holds the message, when, where from, and nothing else",
+    "the feedback store holds the message, when, where from, the optional reply address, and nothing else",
+  );
+});
+
+test("the optional reply address exists on the feedback store and nowhere else", () => {
+  // The same shape as the reaction-continuity-key guard: a column that may
+  // identify a person is pinned to exactly one table, so no later store can
+  // grow a copy and become joinable to this one (R41, n-stores rule).
+  for (const [name, table] of tables) {
+    const config = getTableConfig(table as Parameters<typeof getTableConfig>[0]);
+    for (const column of config.columns) {
+      if (column.name === "reply_to") {
+        assert.equal(
+          name,
+          "feedback",
+          `${name}.reply_to: the reply address may exist nowhere but feedback`,
+        );
+      }
+    }
+  }
+
+  // The mechanism check: it exists where it should, and it is OPTIONAL.
+  const column = getTableConfig(schema.feedback).columns.find((c) => c.name === "reply_to");
+  assert.ok(column, "feedback.reply_to missing");
+  assert.equal(
+    column.notNull,
+    false,
+    "reply_to must be nullable — blank is the default and blank must submit",
   );
 });
 

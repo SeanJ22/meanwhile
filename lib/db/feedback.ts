@@ -1,4 +1,9 @@
-import { FEEDBACK_MAX_CHARS, type FeedbackSurface } from "../feedback/shape.ts";
+import {
+  FEEDBACK_MAX_CHARS,
+  REPLY_TO_MAX_CHARS,
+  isReplyToShaped,
+  type FeedbackSurface,
+} from "../feedback/shape.ts";
 import { scrubFreeText } from "../log/scrub.ts";
 
 import { getDb } from "./index.ts";
@@ -39,6 +44,14 @@ export type FeedbackWriteResult =
 export interface FeedbackSubmission {
   message: string;
   surface: FeedbackSurface;
+  /**
+   * The OPTIONAL reply address (R41, 2026-08-17, the author's ruling A).
+   *
+   * Absent or blank is the ordinary case and stores NULL. When present it is
+   * stored exactly as the reader typed it — see the scrub note below for why
+   * that is not an inconsistency.
+   */
+  replyTo?: string | null;
   suspectReason?: "VELOCITY" | "LIMITER_UNAVAILABLE" | null;
   marker?: RunMarker;
 }
@@ -73,6 +86,28 @@ export async function writeFeedback(
     throw new Error("feedback message is empty after the scrub");
   }
 
+  /*
+   * R41: the reply address is NOT scrubbed, and that is the point of the row.
+   *
+   * T09 exists because a reader typing their phone number into a complaint
+   * would quietly falsify the store's public description as identifier-free.
+   * A reader typing an address into a field LABELLED as an optional reply
+   * address is doing the opposite — a deliberate, disclosed act, for one
+   * stated purpose. Scrubbing it would delete the thing they asked for.
+   *
+   * The exclusion is EXACTLY this one field. The message body above still
+   * goes through `scrubFreeText` unchanged, so a reader who puts contact
+   * details in their prose is protected exactly as before.
+   */
+  const replyToRaw = (submission.replyTo ?? "").trim();
+  if (replyToRaw.length > REPLY_TO_MAX_CHARS) {
+    throw new Error(`feedback reply address exceeds ${REPLY_TO_MAX_CHARS} characters`);
+  }
+  if (!isReplyToShaped(replyToRaw)) {
+    throw new Error("feedback reply address is not shaped like an address");
+  }
+  const replyTo = replyToRaw || null;
+
   const marker = submission.marker ?? ORGANIC;
 
   if (!process.env.DATABASE_URL) return { kind: "NO_STORE" };
@@ -89,6 +124,7 @@ export async function writeFeedback(
         receivedAt: new Date().toISOString(),
         message,
         surface: submission.surface,
+        replyTo,
         runClass: marker.runClass,
         runId: marker.runClass === "ORGANIC" ? null : marker.runId,
         suspectReason: submission.suspectReason ?? null,

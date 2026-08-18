@@ -179,18 +179,43 @@ reaction free-text names a specific consequence of a specific bargain: those
 words go into an aggregate that is sold. Feedback is sold to nobody and shown
 to nobody, so the sentence would be describing something that does not
 happen. The page states what IS true — stored, read by one person, never
-aggregated, and unable to be replied to. If the contents prove this reasoning
-wrong, the notice extends here on the same terms it would extend to the ask
-box.
+aggregated, and replied to only where the writer asked to be. If the contents
+prove this reasoning wrong, the notice extends here on the same terms it would
+extend to the ask box.
 
-**The open question the build left open, for the author.** The form collects
-no way to reach the writer, and the scrub would eat one typed into the
-message. That is the strictest reading of "identifier-free beyond what the
-reader types," and it costs something real: a person asking a question gets no
-answer, and a person asking for their photograph to be removed gets no
-confirmation. Whether an OPTIONAL, deliberately-supplied reply address should
-be stored — unscrubbed, in its own nullable column, with its own disclosure —
-is a user-data-field decision and therefore the author's, not the builder's.
+**The optional reply address — RULED AND BUILT (R41, 2026-08-17, the author's
+ruling A).** The question this section previously recorded as open is closed.
+The form collects one OPTIONAL email address, blank by default, in its own
+labelled field.
+
+The reasoning the ruling settles: "identifier-free beyond what the reader
+types" and "T09 scrub before storage" both applied to the same field and could
+not both hold. They are now separated by WHERE the text was typed rather than
+by what it looks like. The message body is scrubbed exactly as before — a
+reader who puts their number inside a complaint is protected, because they
+did not ask to be contacted. The reply field is stored unscrubbed, because
+typing into a box labelled "your email — optional" is a deliberate,
+disclosed act with one stated purpose, and scrubbing it would delete the
+thing the reader asked for.
+
+The limits that come with it, and none of them is a promise made only here —
+each is a property of the code or the schema:
+
+- Its own nullable `reply_to` column on the feedback table, on that table
+  alone, joined to nothing. `tests/db-schema.test.ts` asserts it exists
+  nowhere else, exactly as it asserts of the reaction continuity key.
+- Never a mailing list, and never used to contact the writer about anything
+  other than the message it arrived with.
+- Never in an export and never in an aggregate — feedback enters neither, and
+  this column changes nothing about that.
+- Deleted on the same schedule as the message it came with.
+- Disclosed at the point of typing and on `/transparency`, changed in the
+  same commit that shipped the field.
+
+What it does NOT change: T05's gate on ask-box free text, which is a different
+act on a different surface — text captured beside a reaction is not an address
+a reader volunteered into a field asking for one.
+
 Tracker row R41.
 
 ## Open items for counsel

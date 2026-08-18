@@ -2052,12 +2052,67 @@ section("L. Contact surfaces (g9: R39 the phone pill, R40 the address)");
   if (form.status !== 200) {
     cannotRun("g9", "/feedback serves the form and says what happens to it", `HTTP ${form.status}`);
   } else {
+    /*
+     * g11: the "cannot write back" half of this check MOVED rather than being
+     * dropped. R41 shipped the optional reply field, so the flat promise is
+     * now true only of a blank submission and the page says which case the
+     * reader is in. The check still asserts a claim about replies is made —
+     * it just asserts the CURRENT one, and the g9 identity stays on the
+     * surviving half so a real regression in the form still prints as g9's.
+     */
     check(
       "g9",
       "/feedback serves the form and says what happens to it",
-      /data-feedback-input/.test(form.text) && /cannot write back/i.test(form.text),
+      /data-feedback-input/.test(form.text) &&
+        /only write back if you fill in the optional email box/i.test(form.text),
       `input present ${/data-feedback-input/.test(form.text)}, ` +
-        `states we cannot write back ${/cannot write back/i.test(form.text)}`,
+        `states when a reply is possible ` +
+        `${/only write back if you fill in the optional email box/i.test(form.text)}`,
+    );
+    /*
+     * R41 (g11, 2026-08-17, the author's ruling A). The READ half of the row's
+     * walk checks — the write half writes real feedback rows and lives in
+     * scripts/walk-r41.mts, named in EXCLUDED below.
+     *
+     * What is asserted here is that the field ships, that it ships OPTIONAL,
+     * and that the message body's scrub promise survived the change. The
+     * third matters most: R41's whole risk is that the one deliberate
+     * exception to T09 widens, and a page that stopped saying the message is
+     * scrubbed would be the first visible sign of it.
+     */
+    check(
+      "g11",
+      "/feedback ships the optional reply field",
+      /data-feedback-reply/.test(form.text),
+      `field present ${/data-feedback-reply/.test(form.text)}`,
+    );
+    check(
+      "g11",
+      "the reply field is labelled optional and required by nothing",
+      /Your email — optional/.test(form.text) && !/data-feedback-reply[^>]*\srequired/.test(form.text),
+      `label present ${/Your email — optional/.test(form.text)}, ` +
+        `not marked required ${!/data-feedback-reply[^>]*\srequired/.test(form.text)}`,
+    );
+    check(
+      "g11",
+      "the message body is still promised the T09 scrub",
+      /an address left in the message itself is removed/i.test(form.text),
+      `scrub promise present ${/an address left in the message itself is removed/i.test(form.text)}`,
+    );
+  }
+  const transparencyAgain = await get("/transparency");
+  if (transparencyAgain.status !== 200) {
+    cannotRun("g11", "/transparency discloses the optional reply address", `HTTP ${transparencyAgain.status}`);
+  } else {
+    // The coupling rule: the field and its disclosure ship together, and the
+    // disclosure states what the address is NEVER used for, not only what it is.
+    check(
+      "g11",
+      "/transparency discloses the optional reply address",
+      /one optional box for your email address/i.test(transparencyAgain.text) &&
+        /never added to a mailing list/i.test(transparencyAgain.text),
+      `names the field ${/one optional box for your email address/i.test(transparencyAgain.text)}, ` +
+        `states the limits ${/never added to a mailing list/i.test(transparencyAgain.text)}`,
     );
   }
 }
@@ -2390,6 +2445,10 @@ const EXCLUDED = [
   // standing suite by the same rule as the reaction taps. It lives in
   // scripts/walk-r40.mts and is run deliberately, with WTP_RUN_ID set.
   "walk-r40 — the feedback form's stored path (writes a real feedback row)",
+  // g11: R41's blank-submit and address-stores checks write two real feedback
+  // rows each run, so they join the same exclusion. scripts/walk-r41.mts, run
+  // deliberately with WTP_RUN_ID set — it refuses to run without one.
+  "walk-r41 — the optional reply field's stored path (writes two real feedback rows)",
   "pnpm pairs / pnpm shoot — screenshot passes; a human rules on pixels",
 ];
 

@@ -59,19 +59,27 @@ export default function FeedbackPage() {
               query that could put it there.
             </p>
             <p>
-              We store the message and the time. Not your name, not your
-              address, not your zip, not a way to reach you, and nothing that
-              could connect this to anything else you have done on the site.
+              We store the message and the time, plus your email address if you
+              choose to leave one. Not your name, not your postal address, not
+              your zip, and nothing that could connect this to anything else
+              you have done on the site.
             </p>
+            {/*
+              R41 (2026-08-17, the author's ruling A). This paragraph used to
+              promise flatly that we could not write back. That sentence is now
+              true of exactly one case — the blank field — so it says which,
+              rather than continuing to make a claim the product has outgrown.
+            */}
             <p>
               Before it is stored, the message is stripped of anything shaped
               like a phone number, an email address, or a street address —
-              mechanically, without anyone reading it first. That means{" "}
+              mechanically, without anyone reading it first. So{" "}
               <strong className="font-semibold text-paper">
-                we cannot write back
+                we can only write back if you fill in the optional email box
               </strong>
-              , even if you leave an address in the message. If you need a
-              reply, that is a real gap and worth saying so here.
+              ; an address left in the message itself is removed with
+              everything else. Leaving the box blank is fine and sends
+              normally — it just means this is one-way.
             </p>
             <p>
               If you are pictured on this site and want your photograph

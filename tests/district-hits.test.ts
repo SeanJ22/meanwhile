@@ -154,6 +154,50 @@ test("Rockaway 07866 sits in two school districts at once", async () => {
     distinct.size >= 2,
     `expected 2+ distinct school OCD-IDs, got ${[...distinct].join(", ")}`,
   );
+
+  /*
+   * M12 (2026-08-17, the author's disposition "Split and be clear"): the two
+   * districts must come from DIFFERENT source layers, and therefore now draw
+   * as different map types with their own dash, weight and checkbox.
+   *
+   * This is the payoff of the split stated as a test. Before it, both hits
+   * mapped to the single `school` type and the map drew them identically —
+   * the picker could tell them apart and the map could not, which is the
+   * defect the row named. If a future change ever merges them back, this
+   * fails here rather than being noticed by a reader in Rockaway.
+   */
+  const sourceLayers = new Set(schools.map((s) => s.layer));
+  assert.ok(
+    sourceLayers.size >= 2,
+    `Rockaway's two school districts must come from different source layers ` +
+      `(unsd/elsd/scsd), got only ${[...sourceLayers].join(", ")}`,
+  );
+
+  const { DISTRICT_LAYERS } = await import("../lib/map/districts.ts");
+  const drawnTypes = new Set<string>();
+  for (const [type, spec] of Object.entries(DISTRICT_LAYERS)) {
+    for (const layer of sourceLayers) {
+      if (spec.files.some((f) => f.startsWith(`${layer}-`))) drawnTypes.add(type);
+    }
+  }
+  assert.ok(
+    drawnTypes.size >= 2,
+    `the overlapping districts must render as ${drawnTypes.size >= 2 ? "" : "at least "}` +
+      `two distinct map types, got ${[...drawnTypes].join(", ") || "none"}`,
+  );
+
+  // Distinct types are not enough — they must be VISUALLY distinct, which is
+  // what a reader actually uses to tell them apart.
+  const dashes = new Set(
+    [...drawnTypes].map((t) =>
+      DISTRICT_LAYERS[t as keyof typeof DISTRICT_LAYERS].dash.join(","),
+    ),
+  );
+  assert.equal(
+    dashes.size,
+    drawnTypes.size,
+    `the overlapping school types must not share a dash pattern: ${[...dashes].join(" | ")}`,
+  );
 });
 
 /*

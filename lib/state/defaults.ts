@@ -15,7 +15,12 @@ export const ALL_DISTRICT_TYPES: readonly DistrictType[] = [
   "state-senate",
   "state-house",
   "county",
-  "school",
+  // M12 (2026-08-17): three school types where there was one. Order matters
+  // only for the checkbox list, and unified reads first because it is the
+  // one that covers everything.
+  "school-unified",
+  "school-elementary",
+  "school-secondary",
   "municipal",
 ] as const;
 

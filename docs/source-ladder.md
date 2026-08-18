@@ -211,6 +211,12 @@ audit rows.
   it; dead in a real browser (BoardDocs' own not-here page).
 - `https://vailschools.novusagenda.com/agendapublic/` — 200 and empty: the
   archive for pre-2017 material; zero meetings in any queried window.
+  Re-read 2026-08-17 (D22): unchanged, still zero.
+- `https://<anything>.novusagenda.com/agendapublic/` — **the whole namespace
+  is wildcarded.** 22 of 23 candidate tenant names for the four zips' bodies
+  returned HTTP 200 carrying NovusAgenda's own `Error.aspx` page (1,384 bytes;
+  a real tenant is 78,576). A 200 here is not evidence of a tenant. Swept
+  2026-08-17 (D22); no live tenant exists in scope.
 - `https://www.newbury.nh.gov/rss.xml` — 200, valid RSS, zero items.
 - `https://www.newbury.nh.gov/sitemap.xml` — 403; robots declares none.
 - `https://newburynh.civicweb.net/api/meetings` — 500.

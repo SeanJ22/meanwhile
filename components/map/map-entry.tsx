@@ -53,6 +53,7 @@ import {
   meetingHeadline,
 } from "@/lib/map/format";
 
+import { SCHOOL_DISTRICT_TYPES } from "@/lib/map/districts";
 import type { DistrictHit, DrawnDistrict } from "@/lib/map/districts";
 import type { DistrictType } from "@/lib/state/types";
 
@@ -812,14 +813,26 @@ function MapEntryInner() {
   const noticeZip =
     result && /^\d{5}$/.test(result.zip) ? result.zip : (location?.zip ?? "");
   const narrowing = useNarrowing(noticeZip);
+  /*
+   * M12 (2026-08-17): an OCD id says `school_district:` and stops there — it
+   * does not say whether the district is unified, elementary or secondary,
+   * and now that those are three separate sources the shading has to reach
+   * the right one.
+   *
+   * It asks all three rather than guessing at one. That is exact rather than
+   * scattershot: the Census assigns every district exactly ONE of unsd/elsd/
+   * scsd, so the id can appear in at most one of the three sources and the
+   * other two calls set state on an id they do not hold, which is a no-op.
+   * Guessing a single type would silently shade nothing for two thirds of
+   * the school districts in the country.
+   */
   const narrowedDistricts = useMemo(
     () =>
-      narrowing.divisions.map((ocdId) => ({
-        ocdId,
-        type: (ocdId.includes("school_district:")
-          ? "school"
-          : "municipal") as DistrictType,
-      })),
+      narrowing.divisions.flatMap((ocdId) =>
+        ocdId.includes("school_district:")
+          ? SCHOOL_DISTRICT_TYPES.map((type) => ({ ocdId, type }))
+          : [{ ocdId, type: "municipal" as DistrictType }],
+      ),
     [narrowing.divisions],
   );
 
@@ -835,7 +848,11 @@ function MapEntryInner() {
         ...new Set([
           ...ui.filters.districtTypes,
           "municipal" as DistrictType,
-          "school" as DistrictType,
+          // M12: all three school layers, so an applied narrowing turns on
+          // whichever one actually holds the reader's district. Turning on
+          // one of three would leave two thirds of readers looking at an
+          // overlay that does not contain the thing they just narrowed to.
+          ...SCHOOL_DISTRICT_TYPES,
         ]),
       ],
     });

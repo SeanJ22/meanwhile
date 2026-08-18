@@ -70,13 +70,19 @@ interface LayerSpec {
   /**
    * Dash pattern, in multiples of the line width.
    *
-   * Hue is the tier signal, but the Local tier holds three types that overlap
-   * heavily around any city — county, municipal and school all trace the same
-   * ground. Drawn in one colour with one dash they were indistinguishable, so
-   * the pattern separates types *within* a tier: long dashes for the widest
-   * containing shape, down to a fine dot for the most nested one.
+   * Hue is the tier signal, but the Local tier holds five types that overlap
+   * heavily around any city — county, municipal and the three school types
+   * all trace the same ground. Drawn in one colour with one dash they were
+   * indistinguishable, so the pattern separates types *within* a tier: long
+   * dashes for the widest containing shape, down to a fine dot for the most
+   * nested one.
+   *
+   * M12 (2026-08-17) widened this from a fixed pair to any even-length
+   * pattern, because splitting the school layer needed a fifth Local pattern
+   * that was not a variation of the four already in use — and a dash/gap
+   * array is exactly where MapLibre expects the extra pair.
    */
-  dash: [number, number];
+  dash: number[];
   /**
    * Stroke weight relative to the base ramp.
    *
@@ -158,27 +164,61 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
     labelMinZoom: 8,
     governingOnly: true,
   },
-  school: {
-    files: [
-      "unsd-04.geojson",
-      "unsd-34.geojson",
-      "unsd-33.geojson",
-      "elsd-04.geojson",
-      "elsd-34.geojson",
-      "elsd-33.geojson",
-      "scsd-04.geojson",
-      "scsd-34.geojson",
-      "scsd-33.geojson",
-    ],
+  /*
+   * THE THREE SCHOOL TYPES (M12, 2026-08-17, the author's disposition
+   * "Split and be clear"). One `school` spec merged all nine files.
+   *
+   * The three read APART, which is the whole point of the split — a reader
+   * looking at Rockaway must be able to see that the two lines over the same
+   * ground are two different governments:
+   *
+   * - **unified** covers everything, so it is the heaviest of the three and
+   *   the one whose label appears first;
+   * - **elementary** is a fine dot, the most nested shape;
+   * - **secondary** is a long-short dash — deliberately the least like the
+   *   other two, because a regional secondary district is the one that
+   *   overlaps an elementary district and being confusable there is the
+   *   defect this row exists to fix.
+   *
+   * All three stay the lightest weights on the Local tier and stay held back
+   * to high zoom: three school layers over a county and a municipality at
+   * z8 is the noise the 4.5.2 pass was fixing.
+   */
+  "school-unified": {
+    files: ["unsd-04.geojson", "unsd-34.geojson", "unsd-33.geojson"],
     tier: "local",
-    label: "School",
-    // The most nested Local shape, and the one carrying the most features —
-    // a fine dot at the lightest weight, held back to high zoom.
+    label: "School (unified)",
+    dash: [2, 2],
+    weight: 0.9,
+    labelMinZoom: 10,
+  },
+  "school-elementary": {
+    files: ["elsd-04.geojson", "elsd-34.geojson", "elsd-33.geojson"],
+    tier: "local",
+    label: "School (elementary)",
     dash: [1, 2],
     weight: 0.75,
     labelMinZoom: 10,
   },
+  "school-secondary": {
+    files: ["scsd-04.geojson", "scsd-34.geojson", "scsd-33.geojson"],
+    tier: "local",
+    label: "School (secondary)",
+    dash: [6, 2, 1, 2],
+    weight: 0.75,
+    labelMinZoom: 10,
+  },
 };
+
+/**
+ * The three school types, in one place so a caller that means "the school
+ * layers" does not have to spell them out and drift when a fourth appears.
+ * Derived from the registry rather than hand-listed — a hand list is how the
+ * split would have silently stopped covering one of them.
+ */
+export const SCHOOL_DISTRICT_TYPES = (
+  Object.keys(DISTRICT_LAYERS) as DistrictType[]
+).filter((t) => t.startsWith("school-"));
 
 export const DISTRICT_TYPES = Object.keys(DISTRICT_LAYERS) as DistrictType[];
 

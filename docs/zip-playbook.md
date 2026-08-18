@@ -926,3 +926,32 @@ and the assumption is invisible in the expression that derives it.**
   footer said "last checked 6 hours ago" about rows nobody had reached in a
   day. Where data grows a second kind, look for every surface that summarizes
   it with one number.
+
+## A vendor subdomain that does not exist can still answer 200 (D22, 2026-08-17)
+
+NovusAgenda serves an `Error.aspx` page — styled, logo'd, with a working left
+nav — for **any** `<anything>.novusagenda.com/agendapublic/` subdomain that has
+no tenant behind it. It answers HTTP 200, 1384 bytes, `Microsoft-IIS/10.0`, and
+the only thing distinguishing it from a real tenant is the `action="Error.aspx"`
+on its form and a base64 `__VIEWSTATE` that decodes to "An HTTP error occurred."
+
+Twenty-three candidate tenant names were probed for the four zips' bodies.
+Twenty-two returned that page. One — `vailschools` — returned a real 78 KB
+portal carrying **zero** meeting rows, which is the archive already recorded on
+D22.
+
+Three rungs come out of this and they generalize past this vendor:
+
+- **A per-client subdomain is a namespace, and a namespace can have a
+  wildcard.** "The subdomain resolves and answers 200" is not evidence that a
+  body is a client. Probing tenant names is still a good rung — it is how you
+  find a tenant nobody linked — but the ANSWER has to come from the content.
+- **Measure the body against a sibling you know is real.** 1384 bytes against
+  78576 bytes settles it in one comparison; a status code never would. Where a
+  vendor namespace is being swept, fetch one known-good tenant in the same run
+  so there is a length and a shape to compare against.
+- **This is the fifth sighting of "exists and carries nothing".** The others:
+  an empty RSS feed recorded as working, a zero-match join presented as a clean
+  build, a scripted edit that edited nothing and exited 0, and the original
+  NovusAgenda 200 that D22 was opened on. The rung is always the same — ask
+  what came back, by count, and compare the count to something.

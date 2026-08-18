@@ -39,6 +39,7 @@
  *
  * The run prints matched-over-total with denominators and names every miss.
  */
+import { config as loadEnv } from "dotenv";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -50,6 +51,16 @@ const SNAPSHOT = join(ROOT, "data", "votes", "key-votes-snapshot.json");
 const TITLES_CACHE = join(ROOT, "data", "votes", "law-titles-cache.json");
 const TODAY = "2026-08-15";
 const CONGRESSES = [116, 117, 118, 119];
+
+/*
+ * The key lives in .env.local like every other credential in this repo, and
+ * this script used to read process.env directly — so a plain
+ * `pnpm law-votes:fetch` refused with "CONGRESS_API_KEY is not set" while the
+ * key sat committed two directories up. The refusal was right and loud; it was
+ * just answering about an environment nobody had loaded. Its siblings
+ * (fetch-fec, walk-all) load dotenv first, and now so does this.
+ */
+loadEnv({ path: ".env.local", quiet: true });
 
 const key = process.env.CONGRESS_API_KEY;
 if (!key) {

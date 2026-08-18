@@ -6,6 +6,7 @@ import { RADIUS_LADDER_KM, searchMeetings } from "@/lib/meetings/query";
 import { getActiveSnapshotMeta } from "@/lib/meetings/snapshot";
 import { wiringForSourceName } from "@/lib/sources/composite/wiring";
 import { coverageAt, divisionsAt } from "@/lib/registry/server";
+import type { Division } from "@/lib/registry/types";
 import { matching, numeric, numericInRange, refuse, rejectUnknown } from "@/lib/api/params";
 
 /**
@@ -101,8 +102,23 @@ export async function GET(request: Request) {
    * one.
    */
   let divisionsAtPoint = new Set<string>();
+  /*
+   * AUD-04 (2026-08-18): the resolved divisions are KEPT, not just reduced to
+   * their ids, so the coverage summary below can reuse them instead of sweeping
+   * the same point against the same polygons a second time. One geometry answer
+   * reused inside one request; nothing is stored and nothing is joined.
+   *
+   * It stays null when the lookup FAILED, and that distinction is the whole
+   * safety of the change: an empty result from a failed resolution must not be
+   * handed to `coverageAt` as though it were an answer, or a lookup failure
+   * would render as "no body governs here" — a retrieval failure written into
+   * the data as an absence. Null means "resolve it yourself", which is exactly
+   * what happened before this change.
+   */
+  let resolvedDivisions: Division[] | null = null;
   try {
-    divisionsAtPoint = new Set((await divisionsAt(lat, lng)).map((d) => d.ocdId));
+    resolvedDivisions = await divisionsAt(lat, lng);
+    divisionsAtPoint = new Set(resolvedDivisions.map((d) => d.ocdId));
   } catch (error) {
     console.error("division lookup failed; online meetings fall back to body-in-view", error);
   }
@@ -114,7 +130,12 @@ export async function GET(request: Request) {
   // than failing the whole request or guessing.
   let coverage = null;
   try {
-    coverage = await coverageAt(lat, lng, result.meetings.length);
+    coverage = await coverageAt(
+      lat,
+      lng,
+      result.meetings.length,
+      resolvedDivisions ?? undefined,
+    );
   } catch (error) {
     console.error("coverage lookup failed", error);
   }

@@ -118,6 +118,35 @@ const INTERIOR_TOLERANCE = 2.5;
 const EXTERIOR_MARGIN = 4;
 
 /**
+ * The same requirement in CHROMA units, for the theme whose mute is chromatic
+ * (G10 item 8a, 2026-08-18).
+ *
+ * ## The instrument was measuring the wrong quantity, and only in one theme
+ *
+ * This check asked whether the effect moved an exterior sample's LUMINANCE by
+ * `EXTERIOR_MARGIN`. In light theme it does, enormously — Δ46.78 at every
+ * sampled point. In dark theme it barely moves luminance at all (Δ2.01) while
+ * dropping CHROMA from 13.0 to 7.0, which is the same desaturation light theme
+ * performs (13.0 → 8.0). The mute is doing its job in both; the ruler only had
+ * markings for one of them.
+ *
+ * So every dark-theme exterior check failed — four of them, at 85701/state,
+ * 85701/regional, 03255/state and 03255/regional — against a build whose map
+ * effect the author has ACCEPTED and which this row explicitly does not change.
+ * The failures were the instrument's, and they had never been seen before
+ * because g5's report contained no themes at all, which is the omission item 8a
+ * exists to correct. A measurement that cannot pass on a correct build is the
+ * thing that gets its tolerance loosened until it proves nothing; the script's
+ * own header says so about the interior family. The fix is to measure the other
+ * axis, not to lower the bar on this one.
+ *
+ * A sample must now move measurably in luminance OR in chroma. Both thresholds
+ * stay where they were — nothing is loosened — and a point the effect does not
+ * touch still fails, because it moves in neither.
+ */
+const EXTERIOR_CHROMA_MARGIN = 4;
+
+/**
  * Places, not pixels.
  *
  * Every sample is a real lng/lat run through the live map's own projection,
@@ -402,10 +431,43 @@ for (const theme of ["dark", "light"] as const) {
       },
       { zip, theme },
     );
+    /*
+     * BYTES, not only request counts (G10 item 8a, 2026-08-18).
+     *
+     * The row asks for "bytes and layer counts held per active state", and the
+     * data-scoping family was answering only the second half: it counted
+     * geometry REQUESTS and asserted none of them named a foreign state. That
+     * catches a wrong state's file being fetched; it says nothing about how
+     * much geometry an active state actually costs, which is the number the
+     * row wants and the one a later session would need to notice growth.
+     *
+     * Measured off the response, not the request, and summed per active state.
+     * A response that never arrives contributes nothing rather than a guessed
+     * size, and the count of unsized responses is printed beside the total so a
+     * partial figure can never read as a complete one.
+     */
+    let geometryBytes = 0;
+    let unsizedResponses = 0;
     const page = await context.newPage();
     page.on("request", (r) => {
       const url = r.url();
       if (/\.geojson(\?|$)/.test(url) || url.includes("/api/zcta/")) requested.push(url);
+    });
+    page.on("response", async (r) => {
+      const url = r.url();
+      if (!/\.geojson(\?|$)/.test(url) && !url.includes("/api/zcta/")) return;
+      try {
+        const header = r.headers()["content-length"];
+        if (header) {
+          geometryBytes += Number(header);
+          return;
+        }
+        geometryBytes += (await r.body()).byteLength;
+      } catch {
+        // The body was gone by the time it was asked for — counted as unsized
+        // rather than skipped silently, so the total states its own denominator.
+        unsizedResponses += 1;
+      }
     });
     await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 90_000 });
     await page.waitForTimeout(12_000);
@@ -544,25 +606,41 @@ for (const theme of ["dark", "light"] as const) {
           `  ....  ${label} exterior — no neighbouring state in view at this zoom (not a failure)`,
         );
       } else {
+        // The weakest sample is the one whose STRONGER axis is smallest: a
+        // point the effect touched on either axis is a point it touched, and
+        // the check is looking for one it missed entirely.
         let weakest = Infinity;
         let weakestName = "";
+        let weakestAxis = "";
         const detail: string[] = [];
         for (const s of outside) {
           const a = patchStats(on, s.x, s.y, 8);
           const b = patchStats(off, s.x, s.y, 8);
-          const delta = Math.abs(a.luma - b.luma);
+          const dLuma = Math.abs(a.luma - b.luma);
+          const dChroma = Math.abs(a.chroma - b.chroma);
+          // Each axis scored against its own threshold, then the better of the
+          // two taken — so neither margin is relaxed by the presence of the
+          // other, and a 1.0 that has to clear 4 cannot be rescued by a 1.0
+          // that has to clear 4 on the other axis.
+          const lumaScore = dLuma / EXTERIOR_MARGIN;
+          const chromaScore = dChroma / EXTERIOR_CHROMA_MARGIN;
+          const best = Math.max(lumaScore, chromaScore);
           detail.push(
-            `${s.name} Δ${delta.toFixed(2)} chroma ${a.chroma.toFixed(1)}→ from ${b.chroma.toFixed(1)}`,
+            `${s.name} Δluma ${dLuma.toFixed(2)} Δchroma ${dChroma.toFixed(2)} ` +
+              `(chroma ${a.chroma.toFixed(1)}→ from ${b.chroma.toFixed(1)})`,
           );
-          if (delta < weakest) {
-            weakest = delta;
+          if (best < weakest) {
+            weakest = best;
             weakestName = s.name;
+            weakestAxis = lumaScore >= chromaScore ? "luminance" : "chroma";
           }
         }
         check(
           `${label} @z${zoom.toFixed(1)}: land outside the active state is muted`,
-          weakest >= EXTERIOR_MARGIN,
-          `${outside.length} sample(s), weakest ${weakestName} Δ${weakest.toFixed(2)} ≥ ${EXTERIOR_MARGIN}; ${detail.join(", ")}`,
+          weakest >= 1,
+          `${outside.length} sample(s), weakest ${weakestName} at ${(weakest * 100).toFixed(0)}% ` +
+            `of its ${weakestAxis} threshold (luma ≥${EXTERIOR_MARGIN}, chroma ≥${EXTERIOR_CHROMA_MARGIN}); ` +
+            detail.join(", "),
         );
       }
     }
@@ -595,7 +673,9 @@ for (const theme of ["dark", "light"] as const) {
       `${theme}/${zip}: no other state's geometry is fetched`,
       foreignFiles.length === 0,
       foreignFiles.length === 0
-        ? `${requested.length} geometry request(s), all national or -${mine}`
+        ? `${requested.length} geometry request(s), all national or -${mine}; ` +
+          `${(geometryBytes / 1024).toFixed(1)} KB fetched` +
+          (unsizedResponses > 0 ? ` (+${unsizedResponses} response(s) unsized)` : "")
         : foreignFiles.join(", "),
     );
     const wantAbbr = zip === "85701" ? "AZ" : "NH";

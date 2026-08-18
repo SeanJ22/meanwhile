@@ -25,7 +25,15 @@ on:
     # Mondays 09:17 UTC — the D54 weekly slot, off the top of the hour and
     # clear of the Sunday LegiScan rebuild.
     - cron: "17 9 * * 1"
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      simulate_change:
+        description: >-
+          Exercise the CHANGED path — run the full gate as though the snapshot
+          had moved, and commit nothing. Exists so the branch that guards real
+          data can be proven to execute without waiting for the data to move.
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -63,11 +71,52 @@ jobs:
       - name: Refresh the snapshot (thin-guarded, SHA-pinned)
         run: corepack pnpm dotgov:fetch
 
+      # AUD-07 (2026-08-18): the diff moved AHEAD of the gate. Same reasoning
+      # as the meetings refresh — this job pinned a commit and re-fetched it,
+      # so the overwhelmingly common outcome is an artifact that did not move,
+      # and the suite was running against it anyway. The CHANGED path is
+      # untouched: real new rows still face the full gate before they commit.
+      - name: Diff the governed artifact
+        id: diff
+        run: |
+          if [ "${{ inputs.simulate_change }}" = "true" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "simulated=true" >> "$GITHUB_OUTPUT"
+            echo "SIMULATED CHANGE (dispatch input): the gate below runs in full."
+            echo "Nothing will be committed — this exists to prove the changed path executes."
+            exit 0
+          fi
+          if git diff --quiet -- data/dotgov/snapshot.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "data/dotgov/snapshot.json is UNCHANGED — the pinned commit still answers with the same rows."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "data/dotgov/snapshot.json CHANGED — the full gate runs before anything commits."
+            git diff --stat -- data/dotgov/snapshot.json
+          fi
+
+      - name: Unchanged — stating what was skipped and why
+        if: steps.diff.outputs.changed != 'true'
+        run: |
+          echo "The refresh ran and the governed artifact did not move."
+          echo ""
+          echo "SKIPPED: corepack pnpm test, and the commit."
+          echo "The snapshot on main is byte-identical to the one this run produced,"
+          echo "and it was already validated by the run that committed it."
+          echo ""
+          echo "This is a stated early exit, not a silent one, and it is not a pass"
+          echo "of the gate: the gate did not run because there was nothing to gate."
+
       - name: Validate before committing
+        if: steps.diff.outputs.changed == 'true'
         run: corepack pnpm test
 
-      - name: Commit if changed
+      - name: Commit
+        # A simulated run reaches the gate and stops here: it must never commit.
+        if: steps.diff.outputs.changed == 'true' && steps.diff.outputs.simulated != 'true'
         run: |
+          # The real diff is re-checked at the point of committing, so a
+          # simulated or stale `changed` output can never push an empty commit.
           if git diff --quiet -- data/dotgov/snapshot.json; then
             echo "snapshot unchanged — the pinned commit still answers with the same rows, nothing to commit"
             exit 0

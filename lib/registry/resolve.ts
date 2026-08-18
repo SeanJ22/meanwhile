@@ -78,14 +78,28 @@ export function divisionsAt(
   return hits;
 }
 
-/** Every body associated with the divisions covering a point. */
+/**
+ * Every body associated with the divisions covering a point.
+ *
+ * `resolved` (AUD-04, 2026-08-18) lets a caller that has ALREADY run
+ * `divisionsAt` for this exact point hand the answer in rather than paying for
+ * a second identical sweep. `/api/meetings` was the case: it resolved the point
+ * for the online-meeting filter, then called this, which resolved the same
+ * point against the same features all over again.
+ *
+ * It is an optional input and not a required one on purpose. Passing a
+ * DIFFERENT point's divisions would silently answer about somewhere else, so
+ * the only caller that may pass it is one holding this point's own result, and
+ * every caller that does not simply gets the resolution it always got.
+ */
 export function bodiesAt(
   point: [number, number],
   features: GeoFeature[],
   divisions: Map<string, Division>,
   bodies: Body[],
+  resolved?: Division[],
 ): { divisions: Division[]; bodies: Body[] } {
-  const hit = divisionsAt(point, features, divisions);
+  const hit = resolved ?? divisionsAt(point, features, divisions);
   const ids = new Set(hit.map((d) => d.ocdId));
   return { divisions: hit, bodies: bodies.filter((b) => b.ocdId && ids.has(b.ocdId)) };
 }

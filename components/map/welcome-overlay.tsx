@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { isWellFormedZip, nearestZcta, resolveZip } from "@/lib/geo/zcta";
 
+import { useRecentZips } from "@/hooks/use-recent-zips";
 import { ZipComb } from "./zip-comb";
 import { PRODUCT_NAME } from "@/lib/brand";
 
@@ -56,6 +57,7 @@ export function WelcomeOverlay({
   onDismiss,
 }: WelcomeOverlayProps) {
   const [zip, setZip] = useState("");
+  const recents = useRecentZips();
   const [error, setError] = useState<string | null>(null);
   const [locating, setLocating] = useState(false);
 
@@ -191,6 +193,49 @@ export function WelcomeOverlay({
         >
           Show meetings
         </button>
+
+        {/*
+          M07 (2026-08-18) — the returning reader gets their OWN places back,
+          at the one moment it matters.
+
+          The 6f ruling made the current location session-scoped: reopening the
+          app does not restore where you were, it ASKS. That ruling is right and
+          this does not touch it — nothing here restores anything. But the
+          re-ask was landing on a card that offered four zips belonging to
+          somebody else, while the list of places this reader had actually
+          looked at sat unused in `wtp.recent_zips`, reachable only from the zip
+          switcher, which cannot be opened until a location already exists. So a
+          returning reader's only route back to their own town was to retype it,
+          and the recents list — built so the second visit costs one tap
+          (item 3, 2026-08-15) — was unreachable on the second visit.
+
+          Offering a tap is still asking. Being shown your own recent places and
+          choosing one is the "confirms" half of this item; typing a new zip is
+          the "re-enters" half; and neither assumes anything, which is the third
+          and load-bearing clause — a zip stays `approximate_location`, and no
+          district is resolved from it here or anywhere else.
+
+          The reader's own places come FIRST and our coverage showcase second,
+          because a list of where they have been outranks a list of where we
+          happen to be good.
+        */}
+        {recents.length > 0 && (
+          <>
+            <p className="welcome-divider">Pick up where you left off</p>
+            <div className="welcome-teams">
+              {recents.map((zip) => (
+                <button
+                  key={zip}
+                  type="button"
+                  className="welcome-team-btn"
+                  onClick={() => submit(zip)}
+                >
+                  {zip}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
 
         <p className="welcome-divider">Or try a place we cover well</p>
 

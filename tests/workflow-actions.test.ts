@@ -111,3 +111,74 @@ test("R45: setup-node never tries to restore a cache before pnpm exists", () => 
     `setup-node may auto-cache pnpm before corepack installs it in: ${unguarded.join(", ")}`,
   );
 });
+
+/**
+ * AUD-07 (2026-08-18) — a refresh that changed nothing skips the suite it
+ * would prove nothing with.
+ *
+ * Both scheduled refresh workflows used to run the full gate on EVERY run and
+ * only then ask whether the governed artifact had moved. The overwhelmingly
+ * common outcome of a refresh is that it did not move, so the suite was
+ * executing against a snapshot byte-identical to the one already committed and
+ * already validated — four times a day for meetings, weekly for dotgov.
+ *
+ * The order is now diff, then branch. This guards the order, because the
+ * failure mode is silent: putting the gate back in front of the diff costs
+ * nothing visible and simply resumes burning runner minutes proving a
+ * tautology. It also guards the thing that must NOT change — the gate still
+ * stands between changed data and the commit.
+ */
+test("AUD-07: both refresh workflows diff before they gate, and still gate before they commit", () => {
+  const refreshers = [
+    { file: "refresh-meetings-snapshot.yml", artifact: "data/meetings-snapshot.json" },
+    { file: "refresh-dotgov-snapshot.yml", artifact: "data/dotgov/snapshot.json" },
+  ];
+
+  for (const { file, artifact } of refreshers) {
+    const source = readFileSync(join(DIR, file), "utf8");
+
+    const diffAt = source.indexOf("id: diff");
+    const gateAt = source.indexOf("run: corepack pnpm test");
+    const commitAt = source.indexOf("git push origin main");
+
+    assert.ok(diffAt > 0, `${file}: the diff step is still there`);
+    assert.ok(gateAt > 0, `${file}: the gate is still there`);
+    assert.ok(commitAt > 0, `${file}: the commit is still there`);
+
+    assert.ok(
+      diffAt < gateAt,
+      `${file}: the artifact must be diffed BEFORE the suite runs — otherwise every ` +
+        "no-op refresh validates data that did not move",
+    );
+    assert.ok(
+      gateAt < commitAt,
+      `${file}: the suite must still run BEFORE the commit — the changed-data path ` +
+        "does not weaken",
+    );
+
+    // The gate runs only on the changed branch, and the commit only when the
+    // change is real rather than simulated.
+    assert.match(
+      source,
+      /if: steps\.diff\.outputs\.changed == 'true'\s*\n\s*run: corepack pnpm test/,
+      `${file}: the gate is conditioned on the artifact having changed`,
+    );
+    assert.match(
+      source,
+      /steps\.diff\.outputs\.simulated != 'true'/,
+      `${file}: a simulated run reaches the gate and can never commit`,
+    );
+    assert.ok(
+      source.includes(artifact),
+      `${file}: still diffing its own governed artifact (${artifact})`,
+    );
+
+    // The early exit STATES itself. A silent skip is indistinguishable from a
+    // gate that passed, which is the thing this whole change must not become.
+    assert.match(
+      source,
+      /SKIPPED: corepack pnpm test/,
+      `${file}: the skipped run says what it skipped and why`,
+    );
+  }
+});

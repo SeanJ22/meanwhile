@@ -36,6 +36,7 @@
  */
 
 import { readdirSync, readFileSync, existsSync } from "node:fs";
+import { gzipSync } from "node:zlib";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -166,14 +167,128 @@ if (leaks.length > 0) {
   );
 }
 
-/* -- the report always states its counts ---------------------------------- */
+/* -- two budgets, not one number (AUD-02) ---------------------------------- */
+
+/*
+ * This block used to print `largest bundle ${worst} files` and every standing
+ * report read it as a bundle SIZE. It is neither a size nor a bundle: it is the
+ * cardinality of a Next server trace manifest, and it says nothing about the
+ * JavaScript a reader downloads. One ambiguous number was standing in for two
+ * questions, so neither was being answered.
+ *
+ * Both are answered now, both against committed baselines with stated ceilings,
+ * and a ceiling breach REFUSES rather than warns.
+ */
+const budget = JSON.parse(readFileSync(join(ROOT, "scripts", "bundle-budget.json"), "utf8"));
 
 const worst = Math.max(...manifests.map((m) => JSON.parse(readFileSync(m, "utf8")).files.length));
+
+/**
+ * The reader's initial JavaScript for `/`, read off the EMITTED HTML.
+ *
+ * The prerendered page names the scripts it loads, so this is what is served
+ * rather than what a manifest planned to serve. Returns null when the page was
+ * not prerendered — reported as unmeasured rather than as zero, because a
+ * budget that reads a missing file as 0 bytes passes loudest exactly when it
+ * has stopped working.
+ */
+function clientCost() {
+  const html = join(NEXT, "server", "app", "index.html");
+  if (!existsSync(html)) return null;
+  const text = readFileSync(html, "utf8");
+  const srcs = [
+    ...new Set([...text.matchAll(/<script[^>]+src="([^"]+)"/g)].map((m) => m[1])),
+  ];
+  if (srcs.length === 0) return null;
+
+  let raw = 0;
+  let transfer = 0;
+  let mapRaw = 0;
+  let mapTransfer = 0;
+  let missing = 0;
+  for (const src of srcs) {
+    const file = join(NEXT, src.replace(/^\/_next\//, ""));
+    if (!existsSync(file)) {
+      missing += 1;
+      continue;
+    }
+    const bytes = readFileSync(file);
+    const gz = gzipSync(bytes, { level: 9 }).length;
+    raw += bytes.length;
+    transfer += gz;
+    // MapLibre identifies itself in its own source. Read from the buffer rather
+    // than guessed from a filename: Turbopack's chunk names are content hashes
+    // and carry no library name at all.
+    if (/maplibre|mapbox-gl/i.test(bytes.toString("utf8"))) {
+      mapRaw += bytes.length;
+      mapTransfer += gz;
+    }
+  }
+  return { chunks: srcs.length, raw, transfer, mapRaw, mapTransfer, missing };
+}
+
+const client = clientCost();
+
 console.log(
   `build-output · ${manifests.length} trace manifests · ${traced.size} repo files traced · ` +
-    `largest bundle ${worst} files · tests/ traced ${testFiles.length} · ` +
-    `credential shapes ${leaks.length} · named placeholders skipped ${placeholders}`,
+    `tests/ traced ${testFiles.length} · credential shapes ${leaks.length} · ` +
+    `named placeholders skipped ${placeholders}`,
 );
+console.log(
+  `budget 1 · server trace cardinality: largest manifest ${worst} files ` +
+    `(baseline ${budget.serverTrace.largestManifestFiles}, ceiling ${budget.serverTrace.ceiling}) ` +
+    `— a FILE COUNT, not bytes, and not the reader's JavaScript`,
+);
+if (client === null) {
+  console.log(
+    "budget 2 · client cost for /: NOT MEASURED — no prerendered index.html with scripts. " +
+      "Reported as unmeasured rather than as zero.",
+  );
+} else {
+  const kb = (n) => `${(n / 1024).toFixed(1)} KB`;
+  console.log(
+    `budget 2 · client cost for /: ${kb(client.raw)} initial JS, ${kb(client.transfer)} gzip, ` +
+      `across ${client.chunks} chunks ` +
+      `(baseline ${kb(budget.client.initialJsBytes)} / ${kb(budget.client.transferBytes)}, ` +
+      `ceiling ${kb(budget.client.initialJsCeiling)} / ${kb(budget.client.transferCeiling)})`,
+  );
+  console.log(
+    `           of which MapLibre ${kb(client.mapRaw)} / ${kb(client.mapTransfer)} gzip, ` +
+      `application ${kb(client.raw - client.mapRaw)} / ${kb(client.transfer - client.mapTransfer)} gzip` +
+      (client.missing > 0 ? ` · ${client.missing} referenced chunk(s) MISSING from disk` : ""),
+  );
+}
+
+if (worst > budget.serverTrace.ceiling) {
+  failures.push(
+    `server trace cardinality ${worst} files exceeds the committed ceiling of ` +
+      `${budget.serverTrace.ceiling} (baseline ${budget.serverTrace.largestManifestFiles}).\n` +
+      "  Something is being traced into the server bundle that was not before — this is\n" +
+      "  the shape R23 had, where a runtime-computed path made Turbopack trace the whole\n" +
+      "  project. Find what joined, or raise the ceiling deliberately in\n" +
+      "  scripts/bundle-budget.json with a reason.",
+  );
+}
+if (client !== null) {
+  if (client.raw > budget.client.initialJsCeiling) {
+    failures.push(
+      `initial JS for / is ${client.raw} bytes, over the committed ceiling of ` +
+        `${budget.client.initialJsCeiling}.`,
+    );
+  }
+  if (client.transfer > budget.client.transferCeiling) {
+    failures.push(
+      `compressed transfer for / is ${client.transfer} bytes, over the committed ceiling of ` +
+        `${budget.client.transferCeiling}.`,
+    );
+  }
+  if (client.missing > 0) {
+    failures.push(
+      `${client.missing} chunk(s) referenced by the prerendered / are absent from .next — ` +
+        "the measurement is incomplete and the page would 404 them.",
+    );
+  }
+}
 
 if (failures.length > 0) {
   console.error("\nbuild-output · REFUSED\n");

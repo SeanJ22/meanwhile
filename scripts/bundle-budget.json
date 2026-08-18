@@ -1,0 +1,49 @@
+{
+  "$comment": [
+    "TWO BUDGETS, NOT ONE NUMBER (AUD-02, 2026-08-18).",
+    "",
+    "The postbuild check used to print one figure, `largest bundle 927 files`,",
+    "and every standing report read it as a bundle size. It is not a size and it",
+    "is not a bundle: it is the CARDINALITY of a Next server trace manifest — how",
+    "many files the server bundle traces — and it says nothing at all about the",
+    "JavaScript a reader downloads. The two questions were being answered by one",
+    "ambiguous number, so neither was being answered.",
+    "",
+    "They are separate budgets now, both printed by the postbuild check, and both",
+    "numbers appear in standing reports from here on in place of the old figure.",
+    "",
+    "ON THE CEILINGS. Each is set a little above what was measured on the day —",
+    "close enough that a real regression trips it, loose enough that an ordinary",
+    "dependency bump does not fail the build and teach people to raise the",
+    "ceiling. Raising one is a deliberate act with a number attached, which is the",
+    "whole point of committing it.",
+    "",
+    "ON MAPLIBRE. It is reported separately because 75% of the reader's initial",
+    "JavaScript is the map library, and a total that hides that tells nobody",
+    "anything actionable. It is NOT excluded from the total, and it must not be:",
+    "the author's instruction is explicit — the map IS the landing product, and a",
+    "budget gamed by moving the biggest thing out of scope measures nothing."
+  ],
+  "recordedAt": "2026-08-18",
+  "serverTrace": {
+    "what": "Files traced into the largest Next server trace manifest (*.nft.json). A COUNT, not bytes. Rises when the server bundle starts pulling in files it does not need — which is exactly how tests/ ended up in a deployed artifact (R23).",
+    "largestManifestFiles": 927,
+    "ceiling": 1050,
+    "ceilingNote": "About 13% above the measured 927. R23's defect took two manifests to 2554 and 2567, so a real tracing regression is enormous and this catches it long before that; ordinary growth does not."
+  },
+  "client": {
+    "route": "/",
+    "what": "The scripts the prerendered / actually references — the reader's initial JavaScript on the landing page. Read from the emitted HTML rather than from a manifest, so it is what is served rather than what was planned.",
+    "chunks": 10,
+    "initialJsBytes": 2861445,
+    "initialJsCeiling": 3100000,
+    "transferBytes": 861210,
+    "transferCeiling": 950000,
+    "transferNote": "gzip -9. The wire figure depends on the CDN's encoding (Netlify may serve brotli, which is smaller), so this is a consistent upper-bound comparison rather than a claim about a particular reader's download.",
+    "maplibreBytes": 2155360,
+    "maplibreTransferBytes": 649813,
+    "applicationBytes": 706085,
+    "applicationTransferBytes": 211397,
+    "split": "MapLibre is 75% of the raw initial JS and 75% of the transfer. Tracked apart so a change in application code is visible against it, never to lower the total."
+  }
+}

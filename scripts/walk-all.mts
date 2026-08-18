@@ -168,8 +168,18 @@ function check(session: string, name: string, ok: boolean, evidence = ""): boole
  * blocked check throws with what blocked it; the suite records it separately.
  */
 const blocked: string[] = [];
+/**
+ * Every identity that DECLARED it could not run (g10, 2026-08-17).
+ *
+ * Kept beside `blocked` rather than parsed back out of it: a check name and a
+ * reason are both free text and both contain em-dashes, so splitting the
+ * formatted line would truncate exactly the names that need matching.
+ */
+const declinedIdentities: string[] = [];
+
 function cannotRun(session: string, name: string, why: string): void {
   blocked.push(`[${session}] ${name} — ${why}`);
+  declinedIdentities.push(`[${session}] ${name}`);
   console.log(`  ??  [${session}] ${name} — COULD NOT RUN: ${why}`);
 }
 
@@ -1719,13 +1729,32 @@ section("J. Carried rows state their own freshness (hotfix-0817 item 2)");
     );
 
     if (carriedRows.length === 0) {
-      cannotRun(
-        "hotfix-0817",
-        NAME,
+      /*
+       * ALL THREE report, not just the first (g10, 2026-08-17).
+       *
+       * Only `NAME` used to be named here, and the other two live inside the
+       * `else` below — so when a refresh reached every source they did not
+       * report CANNOT-RUN, they simply ceased to exist. The identity diff saw
+       * "GONE 3" against a run where one was accounted for and two were not,
+       * which is precisely the shape the diff exists to catch: a check dying
+       * quietly inside the suite that was supposed to notice.
+       *
+       * Found by this session's own refresh, which reached every source and
+       * carried nothing forward — a strictly better snapshot that made two
+       * checks vanish. A condition a check cannot rehearse is still a check;
+       * it says so by name.
+       */
+      const reason =
         `the snapshot generated ${generatedAt ?? "unknown"} holds no carried rows at this zip — ` +
-          "every source serving 03255 was reachable on the last refresh, so there is " +
-          "no stale row for a freshness statement to speak for",
-      );
+        "every source serving 03255 was reachable on the last refresh, so there is " +
+        "no stale row for a freshness statement to speak for";
+      for (const name of [
+        NAME,
+        "03255: each carried row's stated timestamp is the one the snapshot records",
+        "03255: the footer does not speak for the carried rows",
+      ]) {
+        cannotRun("hotfix-0817", name, reason);
+      }
     } else {
       // 1. Every carried row names its origin and an instant, and that instant
       //    is OLDER than the snapshot's own — a carried row that claims to be
@@ -2463,9 +2492,26 @@ if (previous === null) {
   const gone = previous.filter((c) => !ranNow.includes(c));
   console.log(`  baseline ${previous.length} · added ${added.length} · GONE ${gone.length}`);
   for (const c of added) console.log(`    +  ${c}`);
-  // A removal is the thing integer subtraction cannot see, so it prints even
-  // when the total went up.
-  for (const c of gone) console.log(`    -  ${c}   <- a check that ran last time did not run now`);
+  /*
+   * A removal is the thing integer subtraction cannot see, so it prints even
+   * when the total went up.
+   *
+   * And it says WHICH KIND of removal (g10, 2026-08-17). A check that
+   * declared CANNOT-RUN this run has not died — it reported, by name, that
+   * the condition it guards was not present, which is the suite's own
+   * discipline working. A check that is simply absent from both lists is the
+   * silent death the diff exists to catch. Printing both as the same line
+   * made a strictly-better snapshot — every source reachable, nothing carried
+   * forward — read like three checks going missing.
+   */
+  const declared = new Set(declinedIdentities);
+  for (const c of gone) {
+    console.log(
+      declared.has(c)
+        ? `    -  ${c}   <- did not run, and SAID SO: it reported COULD NOT RUN above`
+        : `    -  ${c}   <- a check that ran last time did not run now, and said nothing`,
+    );
+  }
   if (added.length === 0 && gone.length === 0) console.log("    (the same set, exactly)");
 }
 

@@ -20,7 +20,6 @@
  * The nonsense question is the one the walk uses, verbatim, because a
  * different string would be measuring a different question.
  */
-import { type Browser } from "playwright";
 
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
 import { launchGuarded, type GuardedBrowser } from "./browser.mts";

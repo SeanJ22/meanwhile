@@ -35,7 +35,6 @@
  * the difference between "the map is slow" and "the runner has no GPU" — and
  * confusing the two is exactly how the 32 ms number survived this long.
  */
-import { type Browser } from "playwright";
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 

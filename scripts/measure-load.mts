@@ -49,7 +49,6 @@
  * prints NOT REACHED and is excluded from the median rather than counted as
  * a success.
  */
-import { type Browser } from "playwright";
 
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
 import { launchGuarded, type GuardedBrowser } from "./browser.mts";

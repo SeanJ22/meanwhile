@@ -5,6 +5,10 @@ import { BALLOT_SOURCES } from "@/lib/ballot/registry";
 import { analysisForContest } from "@/lib/ballot/analyses";
 import { summaryForContest } from "@/lib/ballot/measure-summaries";
 import {
+  PROVISION_KIND_LABEL,
+  provisionsForContest,
+} from "@/lib/ballot/measure-provisions";
+import {
   getGeneralLineup,
   lineupForContest,
 } from "@/lib/ballot/general-lineup";
@@ -940,6 +944,56 @@ export default async function BallotPage({
                     {/* 3b: the product's voice renders BOLD. */}
                     <p className="mt-1.5 text-[0.8125rem] font-semibold leading-relaxed">
                       {summary.summary}
+                    </p>
+                  </div>
+                )}
+
+                {/*
+                  P01 (2026-08-18) — the measure, decomposed into the parts a
+                  reader can hold separate opinions about.
+
+                  CLAUDE.md: reactions attach to PROVISIONS, never to the
+                  measure as a whole — a reader can want Proposition 320's
+                  classroom spending floor and not want the penalty that
+                  enforces it, and one Yes/No throws that away. This renders
+                  the decomposition; P03 attaches the reactions to it, which is
+                  why every row already carries its own stable id.
+
+                  Between the plain-language summary and the official text on
+                  purpose: summary, then what is actually in it, then the
+                  state's own words. It is NOT collapsed — this is the
+                  explanation the reader came for, and hiding it behind a click
+                  would be the reader friction rule's own defect.
+                */}
+                {provisionsForContest(contest.id).length > 0 && (
+                  <div className="mt-3.5">
+                    <p className="t-eyebrow text-muted">
+                      What&apos;s in it, part by part
+                    </p>
+                    <ul className="mt-1.5 space-y-2.5">
+                      {provisionsForContest(contest.id).map((provision) => (
+                        <li
+                          key={provision.id}
+                          data-provision-id={provision.id}
+                          className="border-l-2 border-[var(--panel-border)] pl-3"
+                        >
+                          <p className="text-[0.8125rem] font-semibold leading-snug">
+                            {provision.label}
+                          </p>
+                          {/* The kind names itself in the reader's words. The
+                              enum never renders — a label map or no row. */}
+                          <p className="t-eyebrow mt-0.5 text-muted">
+                            {PROVISION_KIND_LABEL[provision.kind]}
+                          </p>
+                          <p className="mt-1 text-[0.75rem] leading-relaxed text-paper-dim">
+                            {provision.what}
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+                    <p className="mt-2 text-[0.6875rem] text-muted">
+                      Each part is written from the official analysis below, and
+                      says what it would do — never whether it is a good idea.
                     </p>
                   </div>
                 )}

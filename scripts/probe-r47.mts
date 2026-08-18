@@ -43,7 +43,7 @@
  * itself SYNTHETIC through `syntheticRunHeaders()` so those rows are never
  * counted as reader signal, and the total is printed at the end.
  */
-import { type Browser, type Page } from "playwright";
+import { type Page } from "playwright";
 
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
 import { launchGuarded, type GuardedBrowser } from "./browser.mts";

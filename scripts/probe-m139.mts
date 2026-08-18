@@ -31,7 +31,7 @@
  *
  * Declared SYNTHETIC. The count is printed and named against the base it hit.
  */
-import { type Browser, type Page } from "playwright";
+import { type Page } from "playwright";
 
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
 import { launchGuarded, type GuardedBrowser } from "./browser.mts";

@@ -2751,11 +2751,34 @@ for (const { zip } of FOUR) {
             : "",
         );
 
-        // A02 renders, with its denominators. Stated N equals rendered rows.
-        const digest = await page.evaluate(() => {
-          const d = document.querySelector("[data-ask-digest]");
-          return d ? (d as HTMLElement).innerText : "";
-        });
+        /*
+         * A02 renders, with its denominators. Stated N equals rendered rows.
+         *
+         * WAITED FOR, not read on arrival (g14, 2026-08-18). This read the DOM
+         * once, at whatever moment the preceding geometry checks happened to
+         * finish, with no wait of its own — so whether the digest was there
+         * depended entirely on how long those checks had taken. It passed the
+         * whole suite on one run and failed at 85701 and 85641 on the next,
+         * same build, twenty minutes apart, printing "no digest rendered"
+         * about a digest that renders.
+         *
+         * Third member of the same class this session, after the map's pin
+         * floor (R47) and the ask box's refusal (A07): a fixed or accidental
+         * wait plus a single read cannot tell GONE from NOT YET, and reports
+         * the first when it means the second.
+         */
+        let digest = "";
+        {
+          const deadline = Date.now() + 20_000;
+          while (Date.now() < deadline) {
+            digest = await page.evaluate(() => {
+              const d = document.querySelector("[data-ask-digest]");
+              return d ? (d as HTMLElement).innerText : "";
+            });
+            if (digest.trim().length > 0) break;
+            await page.waitForTimeout(250);
+          }
+        }
         check(
           "g12",
           `A02: the digest renders its three blocks at ${zip}`,
@@ -2771,14 +2794,66 @@ for (const { zip } of FOUR) {
         );
 
         // ── The matcher ruling's five questions, against production ────────
+        /*
+         * R47's lesson, applied to the ask box (g14, 2026-08-18).
+         *
+         * This used to sleep a fixed 4500 ms and read ONCE. The classifier is
+         * a network round trip whose latency varies a lot — measured against
+         * production at 3.1s, 3.2s, 3.2s and 8.4s across the four zips — so a
+         * single read at 4.5s catches whichever zip happened to be slow that
+         * run and reports a WORKING refusal as a NAMED REGRESSION. It did
+         * exactly that, at 85701 and 07866, while a probe minutes later found
+         * those two fast and 85641 slow instead. The behaviour never varied;
+         * only which zip lost the race did.
+         *
+         * So it waits for an OUTCOME rather than for a duration: poll until
+         * the panel says something — a refusal or an answer — and only then
+         * read. This does NOT wait until the check passes. A refusal and an
+         * answer are both outcomes and the caller still decides which was
+         * required; if neither arrives inside the ceiling, the read happens
+         * anyway and the check fails on the truth.
+         */
         const ask = async (question: string) => {
           await input.fill(question);
           await page
             .locator("[data-ask-panel] button", { hasText: "Ask" })
             .first()
             .click();
-          await page.waitForTimeout(4500);
-          return page.evaluate(() => ({
+
+          /*
+           * The ceiling is 30s and the WAIT ITSELF is reported, because a
+           * failure here has two very different causes and the evidence line
+           * has to say which. "Waited the whole ceiling and nothing rendered"
+           * is a slow or dead classifier; "settled in 3s and said neither" is
+           * a behaviour change. Walk 3 printed `answered=false refusal=false`
+           * with no way to tell them apart, which is the same ambiguity this
+           * whole class keeps producing one level up.
+           */
+          const started = Date.now();
+          let settledAt: number | null = null;
+          while (Date.now() - started < 30_000) {
+            const settled = await page.evaluate(() => {
+              const panel = document.querySelector(
+                "[data-ask-panel]",
+              ) as HTMLElement | null;
+              return (
+                Boolean(document.querySelector("[data-ask-refusal]")) ||
+                Boolean(document.querySelector("[data-ask-destination]")) ||
+                /the answer/i.test(panel?.innerText ?? "")
+              );
+            });
+            if (settled) {
+              settledAt = Date.now() - started;
+              break;
+            }
+            await page.waitForTimeout(250);
+          }
+          const waited =
+            settledAt === null
+              ? `TIMED OUT after ${Date.now() - started}ms with nothing rendered`
+              : `settled in ${settledAt}ms`;
+
+          const read = await page.evaluate(() => ({
             refusal: Boolean(document.querySelector("[data-ask-refusal]")),
             destination:
               document
@@ -2796,6 +2871,8 @@ for (const { zip } of FOUR) {
                 ?.innerText ?? "",
             ),
           }));
+
+          return { ...read, waited };
         };
 
         // 1. THE PROVING CASE. It may route somewhere honest — the classifier
@@ -2806,7 +2883,7 @@ for (const { zip } of FOUR) {
           "g12",
           `the matcher ruling: the weather question is not keyword-routed at ${zip}`,
           weather.refusal || !weather.answered,
-          `refusal=${weather.refusal} answered=${weather.answered} destination=${weather.destination}`,
+          `refusal=${weather.refusal} answered=${weather.answered} destination=${weather.destination} — ${weather.waited}`,
         );
 
         // 2. A STRONG keyword question — two distinct hits — still answers.
@@ -2815,6 +2892,7 @@ for (const { zip } of FOUR) {
           "g12",
           `the matcher ruling: a strong keyword question answers at ${zip}`,
           strong.answered,
+          `answered=${strong.answered} — ${strong.waited}`,
         );
 
         // 3. AN EXACT NAME navigates rather than asking. The name is read off
@@ -2866,7 +2944,7 @@ for (const { zip } of FOUR) {
           "g12",
           `the matcher ruling: a weak match is answered by the classifier or refused honestly at ${zip}`,
           classified.answered || classified.refusal,
-          `answered=${classified.answered} refusal=${classified.refusal}`,
+          `answered=${classified.answered} refusal=${classified.refusal} — ${classified.waited}`,
         );
 
         // 5. AN HONEST REFUSAL, with the destinations offered.
@@ -2875,7 +2953,7 @@ for (const { zip } of FOUR) {
           "g12",
           `A07: an unroutable question refuses and offers the destinations at ${zip}`,
           nonsense.refusal && !nonsense.answered,
-          `refusal=${nonsense.refusal} answered=${nonsense.answered}`,
+          `refusal=${nonsense.refusal} answered=${nonsense.answered} — ${nonsense.waited}`,
         );
       }
     } finally {

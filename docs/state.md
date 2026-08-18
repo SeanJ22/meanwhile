@@ -10553,6 +10553,49 @@ A fourth, in a test rather than a probe: the zip-claim guard failed against a
 correct file by finding the forbidden phrase inside the paragraph forbidding
 it. It strips comments now.
 
+### The suite named two regressions that were not regressions, and that is the same class again
+
+The handoff walk against the shipped build printed **A07 — "an unroutable
+question refuses and offers the destinations"** as a NAMED REGRESSION at 85701
+and 07866, passing at 85641 and 03255. Same check, same build, four zips, and
+every OTHER ask check passing at all four.
+
+Diagnosed rather than assumed. `pnpm probe:a07` polls every 250 ms instead of
+sleeping: **the refusal renders at all four zips — 3190 ms, 3171 ms, 8397 ms,
+3166 ms.** The classifier is a network round trip and its latency varies. The
+check slept a fixed 4500 ms and read once, so it caught whichever zip happened
+to be slow. In the probe run the slow zip was **85641 — one the walk had
+passed** — which is the proof it is a race and not per-zip behaviour.
+
+Fixed, and the re-run turned **A02** red at 85701 and 85641 — "no digest
+rendered" — having passed the whole suite twenty minutes earlier on the same
+build. That check read the DOM **once, with no wait of its own at all**, at
+whatever moment the preceding geometry checks happened to finish.
+
+So: three members of one class in a single session — the map's pin floor, the
+ask box's refusal, and the digest. **A fixed or accidental wait plus a single
+read cannot tell GONE from NOT YET, and it reports the first when it means the
+second.** All three now wait for an OUTCOME rather than a duration, and all
+three still read at the ceiling so a genuine absence fails on the truth rather
+than hanging.
+
+The conversion has one rule and it is written into `R49`: **it must never wait
+until the check PASSES.** Waiting for an outcome means waiting until the
+surface has said something — a refusal or an answer, a count or a named gap —
+and then judging what it said. A poll that exits only on success turns a flaky
+check into one that cannot fail, which is worse than the flake.
+
+**The class audit, as a count rather than a description: `walk-all.mts` holds
+36 `waitForTimeout` calls. Three are converted. The other 33 are NOT audited
+individually**, and that is stated rather than implied — most are settle waits
+after a navigation rather than waits on a rendered outcome, and converting
+them blindly at the end of a session would be a large untested change to the
+one instrument every session depends on. **R49** carries the walk-and-split.
+
+Why it is a P2 and not a P0: a false NAMED REGRESSION is loud, not silent. It
+costs a session's time and it erodes trust in the suite, but it never ships a
+wrong number to a reader. The direction of the error is the safe one.
+
 ### R43 and R44, named because the numbering implies them
 
 Both were opened AND closed by g13 on 2026-08-18 and never appeared in a

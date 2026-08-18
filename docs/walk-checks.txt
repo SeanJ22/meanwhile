@@ -204,6 +204,10 @@
 [g13] M136: Tucson Unified (school) renders every section
 [g13] M136: Tucson Unified's card renders no internal identifier
 [g13] M136: Tucson's card renders no internal identifier
+[g14] 03255: the map never empties while a wider view loads
+[g14] 07866: the map never empties while a wider view loads
+[g14] 85641: the map never empties while a wider view loads
+[g14] 85701: the map never empties while a wider view loads
 [g3] /ballot names the pick as a ballot-building action at 03255
 [g3] /ballot names the pick as a ballot-building action at 07866
 [g3] /ballot names the pick as a ballot-building action at 85641
@@ -256,6 +260,7 @@
 [g6] 07866 (desktop): the meetings count agrees with itself
 [g6] 07866 (phone): the meetings count agrees with itself
 [g6] 07866: the Mayor row is gone from the who-governs panel
+[g6] 07866: the mayor is reachable from who-governs
 [g6] 07866: who-governs states one number for one list
 [g6] 85641 (desktop): the meetings count agrees with itself
 [g6] 85641 (phone): the meetings count agrees with itself

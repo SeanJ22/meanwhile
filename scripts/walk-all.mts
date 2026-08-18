@@ -2178,48 +2178,101 @@ section("M. Overlapping pins are each reachable (g9: M19, the author's ruling)")
       );
       cannotRun("g9", "85701: dismissing the fan returns every pin", "no collision to dismiss");
     } else {
-      const group = reading.groups[0];
-      const before = { ...reading.boxes };
-
-      const at = before[group[0]];
-      if (!at) {
-        cannotRun("g9", "85701: overlapping pins fan out when pressed", "no box for the stacked pin");
-        cannotRun("g9", "85701: dismissing the fan returns every pin", "no box for the stacked pin");
-      } else {
-        /*
-         * A REAL PRESS, at the stack's own coordinates.
-         *
-         * Deliberately the mouse rather than an injected hook: the defect
-         * being fixed IS pointer interception, so a walk that bypassed the
-         * pointer would be testing everything except the thing that broke.
-         * Whichever pin is on top receives it, which is fine — any member of
-         * a stack fans the whole stack, and "whichever is on top" is exactly
-         * what a reader gets.
-         */
-        // ASSERT THE PRESS CAN LAND BEFORE ASSERTING WHAT IT DID. A point
-        // covered by an overlay is a check that could not run, not a broken
-        // fan, and the two must never print the same way.
-        const under = (await page.evaluate(
+      /*
+       * g13, 2026-08-18 — these two checks are made to RUN.
+       *
+       * They had settled into permanent `cannotRun`, which is the state this
+       * suite is least able to notice: it prints, it is honest, and it proves
+       * nothing, run after run. The cause was that the check took
+       * `groups[0]` — whichever stack the probe happened to list first — and
+       * at 85701 that one sits under the who-governs card, so every run
+       * reported "covered by ..." and stopped.
+       *
+       * A stack is not special. Any member of any stack fans the whole stack,
+       * so the fix is to ASK WHICH STACK IS REACHABLE rather than to hope the
+       * first one is: every group, and every pin within a group, until one
+       * lands on a pin. The overlay is never named or worked around, so this
+       * does not rot the day the card moves or a new one appears.
+       *
+       * Only if no stack anywhere is reachable does it fall back to closing
+       * the open card and asking again — the brief's other option, kept as
+       * the second rung rather than the first because closing a card is a
+       * state change and scanning is not. Which rung ran is printed in the
+       * evidence, so a green line always says how it was earned.
+       */
+      const whatIsAt = async (p: { x: number; y: number }) =>
+        (await page.evaluate(
           `(() => {
-            const el = document.elementFromPoint(${at.x}, ${at.y});
+            const el = document.elementFromPoint(${p.x}, ${p.y});
             if (!el) return "nothing";
             const pin = el.closest(".wtp-pin");
             return pin ? "pin" : (el.className || el.tagName || "unknown").toString().slice(0, 60);
           })()`,
         )) as string;
 
-        if (under !== "pin") {
-          cannotRun(
-            "g9",
-            "85701: overlapping pins fan out when pressed",
-            `the stack's own coordinates are covered by "${under}", so a press cannot reach a pin`,
-          );
-          cannotRun(
-            "g9",
-            "85701: dismissing the fan returns every pin",
-            "the fan could not be opened, so there was nothing to dismiss",
-          );
-        } else {
+      type Landing = { group: string[]; at: { x: number; y: number } };
+      const findLanding = async (
+        r: SpiderProbe,
+      ): Promise<{ landing: Landing | null; blockedBy: string[] }> => {
+        const blockedBy: string[] = [];
+        for (const group of r.groups) {
+          for (const key of group) {
+            const at = r.boxes[key];
+            if (!at) continue;
+            const under = await whatIsAt(at);
+            if (under === "pin") return { landing: { group, at }, blockedBy };
+            blockedBy.push(under);
+          }
+        }
+        return { landing: null, blockedBy };
+      };
+
+      let { landing, blockedBy } = await findLanding(reading);
+      let via = `a stack clear of every overlay (${reading.groups.length} stack(s) offered)`;
+
+      if (!landing) {
+        // Second rung: close whatever card is open and ask again.
+        await page.evaluate(
+          `(() => {
+            document
+              .querySelectorAll('.popup-card button[aria-label="Close"]')
+              .forEach((b) => b.click());
+            return true;
+          })()`,
+        );
+        await page.waitForTimeout(700);
+        reading = (await probe())!;
+        ({ landing, blockedBy } = await findLanding(reading));
+        via = `the open card closed first (${reading.groups.length} stack(s) offered)`;
+      }
+
+      if (!landing) {
+        const covers = [...new Set(blockedBy)].join(", ") || "no stack had a box";
+        cannotRun(
+          "g9",
+          "85701: overlapping pins fan out when pressed",
+          `no stack anywhere is reachable, even with the card closed — covered by: ${covers}`,
+        );
+        cannotRun(
+          "g9",
+          "85701: dismissing the fan returns every pin",
+          "the fan could not be opened, so there was nothing to dismiss",
+        );
+      } else {
+        const group = landing.group;
+        const at = landing.at;
+        const before = { ...reading.boxes };
+        {
+          /*
+           * A REAL PRESS, at the stack's own coordinates.
+           *
+           * Deliberately the mouse rather than an injected hook: the defect
+           * being fixed IS pointer interception, so a walk that bypassed the
+           * pointer would be testing everything except the thing that broke.
+           * Whichever pin is on top receives it, which is fine — any member of
+           * a stack fans the whole stack, and "whichever is on top" is exactly
+           * what a reader gets.
+           */
           await page.mouse.click(at.x, at.y);
           await page.waitForTimeout(900);
 
@@ -2242,7 +2295,7 @@ section("M. Overlapping pins are each reachable (g9: M19, the author's ruling)")
             "85701: overlapping pins fan out when pressed",
             fannedReading.fanned.length === group.length && separated,
             `${group.length} pin(s) in the stack; ${fannedReading.fanned.length} fanned; ` +
-              `every pair now clears 28px: ${separated}`,
+              `every pair now clears 28px: ${separated}; pressed via ${via}`,
           );
 
           /*
@@ -2275,7 +2328,8 @@ section("M. Overlapping pins are each reachable (g9: M19, the author's ruling)")
               "g9",
               "85701: dismissing the fan returns every pin",
               returned.fanned.length === 0 && backWhereTheyWere,
-              `${returned.fanned.length} still fanned; every pin back within 2px: ${backWhereTheyWere}`,
+              `${returned.fanned.length} still fanned; every pin back within 2px: ${backWhereTheyWere}; ` +
+                `pressed via ${via}`,
             );
           }
         }
@@ -2746,6 +2800,97 @@ for (const { zip } of FOUR) {
           `refusal=${nonsense.refusal} answered=${nonsense.answered}`,
         );
       }
+    } finally {
+      await page.context().close();
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Section M136 (g13, 2026-08-18) — the body battlecard's seven sections.
+// ═══════════════════════════════════════════════════════════════════════════
+
+section("M136. Body battlecards reach person-card depth (g13)");
+
+{
+  /*
+   * The row's own done-test, verbatim: Pima (county), Tucson (municipal) and
+   * Tucson Unified (school) each render EVERY applicable section, with either
+   * content or an honest line.
+   *
+   * The assertion is deliberately on the SET of section headers rather than on
+   * their contents. A card that hid its empty sections would still look
+   * plausible section-by-section while quietly making a well-covered body's
+   * card taller than a thin one's — the layout thumb on the scale that the
+   * equal-effort rule exists to catch. So the check is: all six headers, on
+   * all three bodies, whatever is inside them.
+   *
+   * Its own page per body, with its own `openAt` — a page a dozen earlier
+   * checks have clicked through would let an already-open card answer for the
+   * one this check meant to open.
+   */
+  const SECTIONS = [
+    "What this body does",
+    "Who sits on it",
+    "Meetings",
+    "Contact",
+    "Where it governs",
+    "Sources",
+  ];
+
+  const BODIES = [
+    { label: "Pima", zip: "85701", what: "county" },
+    { label: "Tucson", zip: "85701", what: "municipal" },
+    { label: "Tucson Unified", zip: "85701", what: "school" },
+  ];
+
+  for (const body of BODIES) {
+    const page = await openAt(browser, body.zip);
+    try {
+      const row = page
+        .locator(`.coverage-notice button:has-text("${body.label}")`)
+        .first();
+      if ((await row.count()) === 0) {
+        cannotRun(
+          "g13",
+          `M136: ${body.label} (${body.what}) renders every section`,
+          `no who-governs row named "${body.label}" at ${body.zip}`,
+        );
+        continue;
+      }
+      await row.click();
+      await page.waitForTimeout(1200);
+
+      const card = page.locator(".account-modal").first();
+      if ((await card.count()) === 0) {
+        cannotRun(
+          "g13",
+          `M136: ${body.label} (${body.what}) renders every section`,
+          "the row opened no battlecard",
+        );
+        continue;
+      }
+      const text = await card.innerText();
+
+      const missing = SECTIONS.filter((s) => !text.includes(s));
+      check(
+        "g13",
+        `M136: ${body.label} (${body.what}) renders every section`,
+        missing.length === 0,
+        missing.length === 0
+          ? `all ${SECTIONS.length} sections present`
+          : `missing: ${missing.join(", ")}`,
+      );
+
+      // An identifier must never reach a reader. The section grammar puts the
+      // division in front of them for the first time, so this is where an
+      // OCD-ID would surface if one ever leaked into `divisionLabel`.
+      check(
+        "g13",
+        `M136: ${body.label}'s card renders no internal identifier`,
+        !/ocd-division\//.test(text) && !/school_district:/.test(text),
+        (text.match(/ocd-division\/[^\s]*|school_district:[^\s]*/) ?? ["clean"])[0],
+      );
     } finally {
       await page.context().close();
     }

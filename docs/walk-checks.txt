@@ -288,6 +288,8 @@
 [g9] /transparency: carries no personal email address
 [g9] 03255: Shaheen renders ONE Phone pill
 [g9] 03255: the phone chooser lists every recorded number
+[g9] 85701: dismissing the fan returns every pin
+[g9] 85701: overlapping pins fan out when pressed
 [g9] the map: carries no personal email address
 [g9] the sidebar offers the in-app feedback route
 [h] 03255: the governing count matches the frozen external denominator

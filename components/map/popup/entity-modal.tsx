@@ -5,6 +5,8 @@ import { X } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 
 import { formatMeetingDate, formatMeetingTime } from "@/lib/map/format";
+import { hasConcluded, orderByUpcomingFirst } from "@/lib/meetings/ordering";
+import { NO_BODY_BLURB_LINE } from "@/lib/officials/body-blurbs";
 import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyColorVar } from "@/lib/officials/party-color";
@@ -14,6 +16,7 @@ import {
 } from "@/lib/officials/card-sources";
 import type { Meeting } from "@/lib/sources/types";
 
+import { CardSection } from "@/components/officials/card-section";
 import { CardSourcesList } from "@/components/officials/card-sources-list";
 
 import { HowToBeHeard } from "../meeting-panel";
@@ -51,6 +54,57 @@ const TABS: { id: ModalTab; label: string }[] = [
   { id: "sources", label: "Sources" },
 ];
 
+/**
+ * One collapsible section of a body's battlecard (M136, 2026-08-18).
+ *
+ * `content` is null when the product holds nothing for this section, and the
+ * section STILL RENDERS: header visible, collapsed closed, the honest absence
+ * line inside — the author's ruling of 2026-08-17 on M93's empty sections.
+ *
+ * Hiding an empty section would make a well-covered body's card taller than a
+ * thin one's, which is the same layout thumb on the scale the equal-effort
+ * rule catches for candidates. The SET of sections is identical for every
+ * body; only what is inside them differs.
+ */
+export interface BodyCardSection {
+  id: string;
+  title: string;
+  /** Beside the title — a count, a date range. Never a judgement. */
+  meta?: string;
+  content: ReactNode | null;
+  /** Renders inside when `content` is null. Describes US, never the body. */
+  absence: string;
+}
+
+/**
+ * The plain data a body battlecard needs beyond what every subject carries.
+ *
+ * Deliberately DATA, not `ReactNode`s: the caller (`bodySubject` in
+ * map-entry) decides what is held and the modal decides how it looks, so a
+ * section cannot end up rendered two different ways by two callers.
+ */
+export interface BodyCardData {
+  /** Section 2, or null where no statute has been read for this body. */
+  whatItDoes: {
+    text: string;
+    basis: string;
+    basisUrl: string | null;
+    readOn: string;
+  } | null;
+  /**
+   * Section 3's extra seat for a school district: the superintendent is not
+   * on the board and is not elected, so a card that lists only the board
+   * leaves out the person who actually runs the district.
+   */
+  superintendent: SeatHolder | null;
+  /** Whether this body is a school district at all — decides section 3's line. */
+  isSchoolDistrict: boolean;
+  /** Section 5. Empty means no contact route has been sourced. */
+  contact: { label: string; value: string; href: string | null }[];
+  /** Section 6. Jurisdiction facts where held. */
+  jurisdiction: { label: string; value: string }[];
+}
+
 /** Everything the modal renders, whichever entity opened it. */
 export interface ModalSubject {
   title: string;
@@ -59,6 +113,11 @@ export interface ModalSubject {
   badges?: { label: string; status?: string }[];
   /** Overview rows. */
   facts: { label: string; value: ReactNode; mono?: boolean }[];
+  /**
+   * A body battlecard (M136). Present ONLY on body subjects; when present the
+   * modal renders the seven sections instead of the tab strip.
+   */
+  bodyCard?: BodyCardData;
   /**
    * When the subject is a meeting: its stored agenda content renders in the
    * overview (4c) — what the meeting is about, on the surface, not behind a
@@ -109,6 +168,184 @@ interface EntityModalProps {
   onOpenHolder?: (holder: SeatHolder) => void;
   /** Overridden in tests and screenshots so a tab can be captured directly. */
   initialTab?: ModalTab;
+}
+
+/**
+ * The body battlecard's section grammar, rendered instead of the tab strip
+ * when a subject supplies it (M136).
+ *
+ * A body card carrying BOTH would say everything twice — the tabs and the
+ * sections read the same data — and a duplicate route to the same fact is
+ * reader friction with nothing earning its place. So a subject picks one, and
+ * the district and meeting cards keep their tabs untouched.
+ */
+function BodySections({
+  subject,
+  onOpenHolder,
+}: {
+  subject: ModalSubject;
+  onOpenHolder?: (holder: SeatHolder) => void;
+}) {
+  const card = subject.bodyCard!;
+  /*
+   * One `now` for the whole card (item 11's rule): the ordering and the
+   * "upcoming" count below are computed from the same instant, so the number
+   * in the header can never disagree with the block it is counting.
+   *
+   * Pinned at mount rather than read during render — reading the clock in a
+   * render body is impure, and it would also let a re-render reshuffle the
+   * list under a reader mid-scroll if a meeting's start time passed between
+   * two renders.
+   */
+  const [now] = useState(() => Date.now());
+  const meetings = orderByUpcomingFirst(subject.meetings, now);
+  const upcoming = meetings.filter((m) => !hasConcluded(m, now)).length;
+
+  const sections: BodyCardSection[] = [
+    {
+      id: "what",
+      title: "What this body does",
+      content: card.whatItDoes ? (
+        <>
+          <p className="text-[0.8125rem] leading-relaxed text-paper-dim">
+            {card.whatItDoes.text}
+          </p>
+          <p className="mt-1.5 text-[0.625rem] text-muted">
+            Powers defined in:{" "}
+            {card.whatItDoes.basisUrl ? (
+              <a
+                href={card.whatItDoes.basisUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="underline decoration-dotted hover:text-link"
+              >
+                {card.whatItDoes.basis}
+              </a>
+            ) : (
+              card.whatItDoes.basis
+            )}
+            , read {card.whatItDoes.readOn}
+          </p>
+        </>
+      ) : null,
+      absence: NO_BODY_BLURB_LINE,
+    },
+    {
+      id: "representation",
+      title: "Who sits on it",
+      meta:
+        subject.representation.length > 0
+          ? `${subject.representation.length}`
+          : undefined,
+      content:
+        subject.representation.length > 0 || card.superintendent ? (
+          <>
+            <Representation
+              holders={subject.representation}
+              note={subject.representationNote}
+              onOpenHolder={onOpenHolder}
+            />
+            {/* The school district's non-elected seat, labelled as what it
+                is. Absent for every other body kind rather than rendered
+                empty, because a county has no superintendent to be missing. */}
+            {card.isSchoolDistrict && (
+              <div className="mt-2 border-t border-[var(--rule)] pt-2">
+                <PopupSectionLabel>Runs the district day to day</PopupSectionLabel>
+                {card.superintendent ? (
+                  <Representation
+                    holders={[card.superintendent]}
+                    note=""
+                    onOpenHolder={onOpenHolder}
+                  />
+                ) : (
+                  <Empty>
+                    We haven&rsquo;t sourced who the superintendent is. They are
+                    hired by this board, not elected.
+                  </Empty>
+                )}
+              </div>
+            )}
+          </>
+        ) : null,
+      absence: subject.representationNote,
+    },
+    {
+      id: "meetings",
+      title: "Meetings",
+      meta: meetings.length > 0 ? `${upcoming} upcoming` : undefined,
+      content: meetings.length > 0 ? <Meetings meetings={meetings} /> : null,
+      absence:
+        "No meetings on file for this body. That is our coverage, not a statement that nothing is scheduled.",
+    },
+    {
+      id: "contact",
+      title: "Contact",
+      content:
+        card.contact.length > 0 ? (
+          <>
+            {card.contact.map((row) => (
+              <PopupRow key={row.label} label={row.label}>
+                {row.href ? (
+                  <a
+                    href={row.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
+                  >
+                    {row.value}
+                  </a>
+                ) : (
+                  row.value
+                )}
+              </PopupRow>
+            ))}
+          </>
+        ) : null,
+      absence: "We haven't found a published way to contact this body yet.",
+    },
+    {
+      id: "jurisdiction",
+      title: "Where it governs",
+      content:
+        card.jurisdiction.length > 0 ? (
+          <>
+            {card.jurisdiction.map((row) => (
+              <PopupRow key={row.label} label={row.label}>
+                {row.value}
+              </PopupRow>
+            ))}
+          </>
+        ) : null,
+      absence: "We haven't recorded the area this body covers yet.",
+    },
+    {
+      id: "sources",
+      title: "Sources",
+      meta: sourceCountLabel(subject.sources) ?? undefined,
+      content:
+        subject.sources.length > 0 ? <Sources sources={subject.sources} /> : null,
+      absence: "Nothing on this card came from an external record.",
+    },
+  ];
+
+  return (
+    <div className="account-modal-body">
+      {/* Section 1, IDENTITY — never collapsed. The card's own header already
+          carries the name, tier and jurisdiction; these are the rows that
+          qualify it. */}
+      {subject.facts.map((fact) => (
+        <PopupRow key={fact.label} label={fact.label} mono={fact.mono}>
+          {fact.value}
+        </PopupRow>
+      ))}
+
+      {sections.map((section) => (
+        <CardSection key={section.id} title={section.title} meta={section.meta}>
+          {section.content ?? <Empty>{section.absence}</Empty>}
+        </CardSection>
+      ))}
+    </div>
+  );
 }
 
 export function EntityModal({
@@ -178,6 +415,10 @@ export function EntityModal({
           </button>
         </header>
 
+        {subject.bodyCard ? (
+          <BodySections subject={subject} onOpenHolder={onOpenHolder} />
+        ) : (
+        <>
         <div className="account-modal-tabs" role="tablist">
           {TABS.map((entry) => (
             <button
@@ -290,6 +531,8 @@ export function EntityModal({
 
           {tab === "sources" && <Sources sources={subject.sources} />}
         </div>
+        </>
+        )}
       </div>
     </div>
   );

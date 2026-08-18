@@ -349,3 +349,60 @@ opened and closed by g13, never reported under their row ids: the tripwire's
 refused purge and the carry-forward archive clip. Neither is outstanding.
 **Nine rows carry to the next brief in the same order** — M135, M07, B15,
 G10/8a, P01, P03, D25, D29, D06 — deferred whole, each with its spec intact.
+
+---
+
+## g15 — 2026-08-18. What changed for you
+
+**The external audit is in the tracker as nine rows, `AUD01`–`AUD09`, each with
+your disposition on it.** The audit document itself is NOT here — the brief says
+to commit it from your Drive copy and it is in neither the repo nor the mirror,
+so every row records that its content came from the brief and names what is
+missing (the evidence citations, except AUD04's). The IDs drop the dash because
+`tests/tracker-integrity.test.ts` requires `^[A-Z]+\d+$`; each row carries the
+audit's own label in prose rather than weakening that guard.
+
+**The stack question is closed in writing** (`AUD01`, Done) at state.md §4.13 —
+no migration without a new ruling, and the reasoning kept is that this product's
+bottlenecks are algorithmic rather than linguistic.
+
+**Three of our own numbers had stopped describing the code, and all three are
+fixed.** The commands table said 371 tests dated today; the true count is
+**993**, and 371 had simply stopped being updated while sessions kept adding
+tests — it drifted by 622. "Allowlisted warnings" was a word with no mechanism,
+and now has one: `lint-allowlist.json` plus `corepack pnpm lint:allowlist`,
+which refuses a warning that is not listed with a reason. And "largest bundle
+927 files" was never a bundle size — it is the file count in a server trace
+manifest, and every standing report had been reading it as reader JavaScript.
+
+**Two budgets replace that one figure from here on**, and both belong in future
+reports: server trace cardinality **927 files** (ceiling 1050), and the actual
+client cost for `/` — **2,861,445 bytes of initial JavaScript, 861,210 gzip**,
+of which **MapLibre is 75%**. MapLibre is tracked apart and counted in the
+total, never excluded, per your instruction.
+
+**`/api/meetings` now resolves the governing geography once instead of twice** —
+measured, 2 point-in-polygon sweeps per request before, 1 after — with the four
+pilot zips plus one out-of-coverage point proven **byte-identical** before and
+after.
+
+**Both scheduled refreshes stop running the suite against data that did not
+move.** Proven by dispatch on both branches, run ids in the report.
+
+**Four queue rows landed, five did not, and none is half-built.** M135's audit
+finished across all seven list surfaces and found the ask panel's autocomplete
+leaving **21 of 227 rows answering a click with silence** — now 2, both named
+refusals. M07 done. B15 done, and the remainder it kept describing had already
+been closed three days earlier by B17 — the row was never updated, so a stale
+gap propagated into two later documents and into this brief. G10 8a reported
+with its numbers, and its dark-theme failures turned out to be the instrument's,
+not the map's.
+
+**Five rows carry forward, deferred whole with specs intact** — **P01, P03,
+D25, D29, D06**. This session took items 2 and 3 ahead of them, which is a
+deviation from the brief's stated order; the reasoning is in the report and in
+state.md, and it is yours to overrule.
+
+**Needs your hands** is in the report, and it is short: the place-row card is a
+design decision nobody but you should make, and the `^_` lint pattern is a
+config line rather than an edit.

@@ -1,9 +1,9 @@
 {
  "formatVersion": 1,
- "generatedAt": "2026-08-18T14:18:03.091Z",
+ "generatedAt": "2026-08-18T14:26:46.641Z",
  "counts": {
-  "fresh": 226,
-  "carried": 0,
+  "fresh": 202,
+  "carried": 24,
   "total": 226
  },
  "sources": [
@@ -129,13 +129,18 @@
    "ok": true,
    "error": null,
    "fetched": 5,
-   "normalized": 27,
+   "normalized": 3,
    "drops": {
     "placeless": 0,
     "unknownVenue": 0,
     "unplaceableInTime": 0,
-    "notConfigured": 3
-   }
+    "notConfigured": 4
+   },
+   "unreachableOcdIds": [
+    "ocd-division/country:us/state:nh/school_district:kearsarge_regional_school_district",
+    "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town"
+   ],
+   "carriedForward": 24
   }
  ],
  "meetings": [
@@ -158,7 +163,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1803&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T14:17:51.855Z",
+    "collectedAt": "2026-08-18T14:26:40.239Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -192,7 +197,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1804&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T14:17:51.855Z",
+    "collectedAt": "2026-08-18T14:26:40.239Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -253,7 +258,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1816&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T14:17:51.855Z",
+    "collectedAt": "2026-08-18T14:26:40.239Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -368,7 +373,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1817&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T14:17:51.855Z",
+    "collectedAt": "2026-08-18T14:26:40.239Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -492,7 +497,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1820&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T14:17:51.855Z",
+    "collectedAt": "2026-08-18T14:26:40.239Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -526,7 +531,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1821&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T14:17:51.855Z",
+    "collectedAt": "2026-08-18T14:26:40.239Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -596,7 +601,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1822&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T14:17:51.855Z",
+    "collectedAt": "2026-08-18T14:26:40.239Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -657,7 +662,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1823&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T14:17:51.855Z",
+    "collectedAt": "2026-08-18T14:26:40.239Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -691,7 +696,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1824&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T14:17:51.855Z",
+    "collectedAt": "2026-08-18T14:26:40.239Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -751,7 +756,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1851&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T14:17:51.855Z",
+    "collectedAt": "2026-08-18T14:26:40.239Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -785,7 +790,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1854&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T14:17:51.855Z",
+    "collectedAt": "2026-08-18T14:26:40.239Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -818,7 +823,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1855&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T14:17:51.855Z",
+    "collectedAt": "2026-08-18T14:26:40.239Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -852,7 +857,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1858&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T14:17:51.855Z",
+    "collectedAt": "2026-08-18T14:26:40.239Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -885,7 +890,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1864&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T14:17:51.855Z",
+    "collectedAt": "2026-08-18T14:26:40.239Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -919,7 +924,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1869&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T14:17:51.855Z",
+    "collectedAt": "2026-08-18T14:26:40.239Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -953,7 +958,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T14:17:52.053Z",
+    "collectedAt": "2026-08-18T14:26:40.406Z",
     "verifiedAt": null
    }
   },
@@ -976,7 +981,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T14:17:52.053Z",
+    "collectedAt": "2026-08-18T14:26:40.406Z",
     "verifiedAt": null
    }
   },
@@ -999,7 +1004,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T14:17:52.053Z",
+    "collectedAt": "2026-08-18T14:26:40.406Z",
     "verifiedAt": null
    }
   },
@@ -1022,7 +1027,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T14:17:52.053Z",
+    "collectedAt": "2026-08-18T14:26:40.406Z",
     "verifiedAt": null
    }
   },
@@ -1045,7 +1050,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T14:17:52.053Z",
+    "collectedAt": "2026-08-18T14:26:40.406Z",
     "verifiedAt": null
    }
   },
@@ -1068,7 +1073,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T14:17:52.053Z",
+    "collectedAt": "2026-08-18T14:26:40.406Z",
     "verifiedAt": null
    }
   },
@@ -1091,7 +1096,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T14:17:52.053Z",
+    "collectedAt": "2026-08-18T14:26:40.406Z",
     "verifiedAt": null
    }
   },
@@ -1114,7 +1119,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T14:17:52.053Z",
+    "collectedAt": "2026-08-18T14:26:40.406Z",
     "verifiedAt": null
    }
   },
@@ -1137,7 +1142,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T14:17:52.053Z",
+    "collectedAt": "2026-08-18T14:26:40.406Z",
     "verifiedAt": null
    }
   },
@@ -1161,7 +1166,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T14:17:52.053Z",
+    "collectedAt": "2026-08-18T14:26:40.406Z",
     "verifiedAt": null
    }
   },
@@ -1185,7 +1190,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T14:17:52.053Z",
+    "collectedAt": "2026-08-18T14:26:40.406Z",
     "verifiedAt": null
    }
   },
@@ -1209,7 +1214,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T14:17:52.053Z",
+    "collectedAt": "2026-08-18T14:26:40.406Z",
     "verifiedAt": null
    }
   },
@@ -1233,7 +1238,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T14:17:52.053Z",
+    "collectedAt": "2026-08-18T14:26:40.406Z",
     "verifiedAt": null
    }
   },
@@ -1257,7 +1262,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T14:17:52.053Z",
+    "collectedAt": "2026-08-18T14:26:40.406Z",
     "verifiedAt": null
    }
   },
@@ -1281,7 +1286,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T14:17:52.053Z",
+    "collectedAt": "2026-08-18T14:26:40.406Z",
     "verifiedAt": null
    }
   },
@@ -1305,7 +1310,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T14:17:52.053Z",
+    "collectedAt": "2026-08-18T14:26:40.406Z",
     "verifiedAt": null
    }
   },
@@ -1329,7 +1334,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T14:17:52.053Z",
+    "collectedAt": "2026-08-18T14:26:40.406Z",
     "verifiedAt": null
    }
   },
@@ -1353,7 +1358,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T14:17:52.053Z",
+    "collectedAt": "2026-08-18T14:26:40.406Z",
     "verifiedAt": null
    }
   },
@@ -1377,7 +1382,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T14:17:52.053Z",
+    "collectedAt": "2026-08-18T14:26:40.406Z",
     "verifiedAt": null
    }
   },
@@ -1401,7 +1406,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T14:17:52.053Z",
+    "collectedAt": "2026-08-18T14:26:40.406Z",
     "verifiedAt": null
    }
   },
@@ -1425,7 +1430,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T14:17:52.053Z",
+    "collectedAt": "2026-08-18T14:26:40.406Z",
     "verifiedAt": null
    }
   },
@@ -1449,7 +1454,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T14:17:52.053Z",
+    "collectedAt": "2026-08-18T14:26:40.406Z",
     "verifiedAt": null
    }
   },
@@ -1472,7 +1477,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T14:17:52.674Z",
+    "collectedAt": "2026-08-18T14:26:40.815Z",
     "verifiedAt": null
    }
   },
@@ -1495,7 +1500,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T14:17:52.674Z",
+    "collectedAt": "2026-08-18T14:26:40.815Z",
     "verifiedAt": null
    }
   },
@@ -1518,7 +1523,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T14:17:52.674Z",
+    "collectedAt": "2026-08-18T14:26:40.815Z",
     "verifiedAt": null
    }
   },
@@ -1541,7 +1546,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T14:17:52.674Z",
+    "collectedAt": "2026-08-18T14:26:40.815Z",
     "verifiedAt": null
    }
   },
@@ -1565,7 +1570,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T14:17:52.674Z",
+    "collectedAt": "2026-08-18T14:26:40.815Z",
     "verifiedAt": null
    }
   },
@@ -1589,7 +1594,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T14:17:52.674Z",
+    "collectedAt": "2026-08-18T14:26:40.815Z",
     "verifiedAt": null
    }
   },
@@ -1613,7 +1618,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T14:17:52.674Z",
+    "collectedAt": "2026-08-18T14:26:40.815Z",
     "verifiedAt": null
    }
   },
@@ -1637,7 +1642,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T14:17:52.674Z",
+    "collectedAt": "2026-08-18T14:26:40.815Z",
     "verifiedAt": null
    }
   },
@@ -1661,7 +1666,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T14:17:52.674Z",
+    "collectedAt": "2026-08-18T14:26:40.815Z",
     "verifiedAt": null
    }
   },
@@ -1685,7 +1690,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T14:17:52.674Z",
+    "collectedAt": "2026-08-18T14:26:40.815Z",
     "verifiedAt": null
    }
   },
@@ -1709,7 +1714,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T14:17:52.674Z",
+    "collectedAt": "2026-08-18T14:26:40.815Z",
     "verifiedAt": null
    }
   },
@@ -1732,7 +1737,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T14:17:53.208Z",
+    "collectedAt": "2026-08-18T14:26:41.199Z",
     "verifiedAt": null
    }
   },
@@ -1755,7 +1760,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T14:17:53.208Z",
+    "collectedAt": "2026-08-18T14:26:41.199Z",
     "verifiedAt": null
    }
   },
@@ -1778,7 +1783,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T14:17:53.208Z",
+    "collectedAt": "2026-08-18T14:26:41.199Z",
     "verifiedAt": null
    }
   },
@@ -1801,7 +1806,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T14:17:53.208Z",
+    "collectedAt": "2026-08-18T14:26:41.199Z",
     "verifiedAt": null
    }
   },
@@ -1824,7 +1829,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T14:17:53.208Z",
+    "collectedAt": "2026-08-18T14:26:41.199Z",
     "verifiedAt": null
    }
   },
@@ -1847,7 +1852,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T14:17:53.208Z",
+    "collectedAt": "2026-08-18T14:26:41.199Z",
     "verifiedAt": null
    }
   },
@@ -1870,7 +1875,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T14:17:53.208Z",
+    "collectedAt": "2026-08-18T14:26:41.199Z",
     "verifiedAt": null
    }
   },
@@ -1893,7 +1898,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T14:17:53.208Z",
+    "collectedAt": "2026-08-18T14:26:41.199Z",
     "verifiedAt": null
    }
   },
@@ -1917,7 +1922,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T14:17:53.208Z",
+    "collectedAt": "2026-08-18T14:26:41.199Z",
     "verifiedAt": null
    }
   },
@@ -1941,7 +1946,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T14:17:53.208Z",
+    "collectedAt": "2026-08-18T14:26:41.199Z",
     "verifiedAt": null
    }
   },
@@ -1965,7 +1970,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T14:17:53.208Z",
+    "collectedAt": "2026-08-18T14:26:41.199Z",
     "verifiedAt": null
    }
   },
@@ -1989,7 +1994,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T14:17:53.208Z",
+    "collectedAt": "2026-08-18T14:26:41.199Z",
     "verifiedAt": null
    }
   },
@@ -2013,7 +2018,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T14:17:53.208Z",
+    "collectedAt": "2026-08-18T14:26:41.199Z",
     "verifiedAt": null
    }
   },
@@ -2037,7 +2042,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T14:17:53.208Z",
+    "collectedAt": "2026-08-18T14:26:41.199Z",
     "verifiedAt": null
    }
   },
@@ -2061,7 +2066,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T14:17:53.208Z",
+    "collectedAt": "2026-08-18T14:26:41.199Z",
     "verifiedAt": null
    }
   },
@@ -2085,7 +2090,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T14:17:53.208Z",
+    "collectedAt": "2026-08-18T14:26:41.199Z",
     "verifiedAt": null
    }
   },
@@ -2109,7 +2114,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T14:17:53.208Z",
+    "collectedAt": "2026-08-18T14:26:41.199Z",
     "verifiedAt": null
    }
   },
@@ -2133,7 +2138,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T14:17:53.208Z",
+    "collectedAt": "2026-08-18T14:26:41.199Z",
     "verifiedAt": null
    }
   },
@@ -2157,7 +2162,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T14:17:53.208Z",
+    "collectedAt": "2026-08-18T14:26:41.199Z",
     "verifiedAt": null
    }
   },
@@ -2181,7 +2186,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T14:17:53.208Z",
+    "collectedAt": "2026-08-18T14:26:41.199Z",
     "verifiedAt": null
    }
   },
@@ -2204,7 +2209,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1946&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.446Z",
+    "collectedAt": "2026-08-18T14:26:42.013Z",
     "verifiedAt": null
    }
   },
@@ -2227,7 +2232,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1957&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.446Z",
+    "collectedAt": "2026-08-18T14:26:42.013Z",
     "verifiedAt": null
    }
   },
@@ -2250,7 +2255,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1981&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.446Z",
+    "collectedAt": "2026-08-18T14:26:42.013Z",
     "verifiedAt": null
    }
   },
@@ -2273,7 +2278,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1942&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.446Z",
+    "collectedAt": "2026-08-18T14:26:42.013Z",
     "verifiedAt": null
    }
   },
@@ -2296,7 +2301,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1927&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.446Z",
+    "collectedAt": "2026-08-18T14:26:42.013Z",
     "verifiedAt": null
    }
   },
@@ -2319,7 +2324,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1943&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.446Z",
+    "collectedAt": "2026-08-18T14:26:42.013Z",
     "verifiedAt": null
    }
   },
@@ -2342,7 +2347,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1928&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.446Z",
+    "collectedAt": "2026-08-18T14:26:42.013Z",
     "verifiedAt": null
    }
   },
@@ -2365,7 +2370,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1945&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.446Z",
+    "collectedAt": "2026-08-18T14:26:42.013Z",
     "verifiedAt": null
    }
   },
@@ -2388,7 +2393,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1956&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.446Z",
+    "collectedAt": "2026-08-18T14:26:42.013Z",
     "verifiedAt": null
    }
   },
@@ -2411,7 +2416,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:51.794Z",
+    "collectedAt": "2026-08-18T14:26:40.120Z",
     "verifiedAt": null
    }
   },
@@ -2434,7 +2439,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:51.794Z",
+    "collectedAt": "2026-08-18T14:26:40.120Z",
     "verifiedAt": null
    }
   },
@@ -2457,7 +2462,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:51.794Z",
+    "collectedAt": "2026-08-18T14:26:40.120Z",
     "verifiedAt": null
    }
   },
@@ -2480,7 +2485,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:51.794Z",
+    "collectedAt": "2026-08-18T14:26:40.120Z",
     "verifiedAt": null
    }
   },
@@ -2503,7 +2508,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:51.794Z",
+    "collectedAt": "2026-08-18T14:26:40.120Z",
     "verifiedAt": null
    }
   },
@@ -2526,7 +2531,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:51.794Z",
+    "collectedAt": "2026-08-18T14:26:40.120Z",
     "verifiedAt": null
    }
   },
@@ -2549,7 +2554,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:51.794Z",
+    "collectedAt": "2026-08-18T14:26:40.120Z",
     "verifiedAt": null
    }
   },
@@ -2572,7 +2577,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:51.794Z",
+    "collectedAt": "2026-08-18T14:26:40.120Z",
     "verifiedAt": null
    }
   },
@@ -2595,7 +2600,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:51.794Z",
+    "collectedAt": "2026-08-18T14:26:40.120Z",
     "verifiedAt": null
    }
   },
@@ -2618,7 +2623,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-18T14:17:53.424Z",
+    "collectedAt": "2026-08-18T14:26:41.442Z",
     "verifiedAt": null
    }
   },
@@ -2641,7 +2646,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-18T14:17:53.424Z",
+    "collectedAt": "2026-08-18T14:26:41.442Z",
     "verifiedAt": null
    }
   },
@@ -2664,7 +2669,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-18T14:17:53.424Z",
+    "collectedAt": "2026-08-18T14:26:41.442Z",
     "verifiedAt": null
    }
   },
@@ -2687,7 +2692,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-18T14:17:53.424Z",
+    "collectedAt": "2026-08-18T14:26:41.442Z",
     "verifiedAt": null
    }
   },
@@ -2710,7 +2715,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-18T14:17:53.424Z",
+    "collectedAt": "2026-08-18T14:26:41.442Z",
     "verifiedAt": null
    }
   },
@@ -2733,7 +2738,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-20",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-18T14:17:53.424Z",
+    "collectedAt": "2026-08-18T14:26:41.442Z",
     "verifiedAt": null
    }
   },
@@ -2755,7 +2760,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=495",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:51.752Z",
+    "collectedAt": "2026-08-18T14:26:40.184Z",
     "verifiedAt": null
    }
   },
@@ -2777,7 +2782,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=479",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:51.752Z",
+    "collectedAt": "2026-08-18T14:26:40.184Z",
     "verifiedAt": null
    }
   },
@@ -2800,7 +2805,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=493",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:51.752Z",
+    "collectedAt": "2026-08-18T14:26:40.184Z",
     "verifiedAt": null
    }
   },
@@ -2823,7 +2828,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=496",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:51.752Z",
+    "collectedAt": "2026-08-18T14:26:40.184Z",
     "verifiedAt": null
    }
   },
@@ -2845,7 +2850,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=494",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:51.752Z",
+    "collectedAt": "2026-08-18T14:26:40.184Z",
     "verifiedAt": null
    }
   },
@@ -2868,7 +2873,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=492",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:51.752Z",
+    "collectedAt": "2026-08-18T14:26:40.184Z",
     "verifiedAt": null
    }
   },
@@ -2890,7 +2895,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=491",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:51.752Z",
+    "collectedAt": "2026-08-18T14:26:40.184Z",
     "verifiedAt": null
    }
   },
@@ -2913,7 +2918,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=485",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:51.752Z",
+    "collectedAt": "2026-08-18T14:26:40.184Z",
     "verifiedAt": null
    }
   },
@@ -2935,7 +2940,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=490",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:51.752Z",
+    "collectedAt": "2026-08-18T14:26:40.184Z",
     "verifiedAt": null
    }
   },
@@ -2958,7 +2963,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=489",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:51.752Z",
+    "collectedAt": "2026-08-18T14:26:40.184Z",
     "verifiedAt": null
    }
   },
@@ -2981,7 +2986,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=484",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:51.752Z",
+    "collectedAt": "2026-08-18T14:26:40.184Z",
     "verifiedAt": null
    }
   },
@@ -3004,7 +3009,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=483",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:51.752Z",
+    "collectedAt": "2026-08-18T14:26:40.184Z",
     "verifiedAt": null
    }
   },
@@ -3027,7 +3032,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=481",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:51.752Z",
+    "collectedAt": "2026-08-18T14:26:40.184Z",
     "verifiedAt": null
    }
   },
@@ -3050,7 +3055,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=480",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:51.752Z",
+    "collectedAt": "2026-08-18T14:26:40.184Z",
     "verifiedAt": null
    }
   },
@@ -3072,7 +3077,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=482",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:51.752Z",
+    "collectedAt": "2026-08-18T14:26:40.184Z",
     "verifiedAt": null
    }
   },
@@ -3095,7 +3100,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=169",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:52.377Z",
+    "collectedAt": "2026-08-18T14:26:40.767Z",
     "verifiedAt": null
    }
   },
@@ -3118,7 +3123,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=168",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:52.377Z",
+    "collectedAt": "2026-08-18T14:26:40.767Z",
     "verifiedAt": null
    }
   },
@@ -3141,7 +3146,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=167",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:52.377Z",
+    "collectedAt": "2026-08-18T14:26:40.767Z",
     "verifiedAt": null
    }
   },
@@ -3164,7 +3169,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=166",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:52.377Z",
+    "collectedAt": "2026-08-18T14:26:40.767Z",
     "verifiedAt": null
    }
   },
@@ -3187,7 +3192,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=175",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:52.377Z",
+    "collectedAt": "2026-08-18T14:26:40.767Z",
     "verifiedAt": null
    }
   },
@@ -3210,7 +3215,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=165",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:52.377Z",
+    "collectedAt": "2026-08-18T14:26:40.767Z",
     "verifiedAt": null
    }
   },
@@ -3233,7 +3238,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=174",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:52.377Z",
+    "collectedAt": "2026-08-18T14:26:40.767Z",
     "verifiedAt": null
    }
   },
@@ -3256,7 +3261,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=163",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:52.377Z",
+    "collectedAt": "2026-08-18T14:26:40.767Z",
     "verifiedAt": null
    }
   },
@@ -3279,7 +3284,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=162",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:52.377Z",
+    "collectedAt": "2026-08-18T14:26:40.767Z",
     "verifiedAt": null
    }
   },
@@ -3302,7 +3307,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=156",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:52.377Z",
+    "collectedAt": "2026-08-18T14:26:40.767Z",
     "verifiedAt": null
    }
   },
@@ -3325,7 +3330,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=155",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:52.377Z",
+    "collectedAt": "2026-08-18T14:26:40.767Z",
     "verifiedAt": null
    }
   },
@@ -3348,7 +3353,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=159",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:52.377Z",
+    "collectedAt": "2026-08-18T14:26:40.767Z",
     "verifiedAt": null
    }
   },
@@ -3371,7 +3376,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=154",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:52.377Z",
+    "collectedAt": "2026-08-18T14:26:40.767Z",
     "verifiedAt": null
    }
   },
@@ -3394,7 +3399,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3371",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-18T14:17:52.744Z",
+    "collectedAt": "2026-08-18T14:26:41.133Z",
     "verifiedAt": null
    }
   },
@@ -3417,7 +3422,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3370",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-18T14:17:52.744Z",
+    "collectedAt": "2026-08-18T14:26:41.133Z",
     "verifiedAt": null
    }
   },
@@ -3440,7 +3445,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3368",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-18T14:17:52.744Z",
+    "collectedAt": "2026-08-18T14:26:41.133Z",
     "verifiedAt": null
    }
   },
@@ -3463,7 +3468,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3367",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-18T14:17:52.744Z",
+    "collectedAt": "2026-08-18T14:26:41.133Z",
     "verifiedAt": null
    }
   },
@@ -3486,7 +3491,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3364",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-18T14:17:52.744Z",
+    "collectedAt": "2026-08-18T14:26:41.133Z",
     "verifiedAt": null
    }
   },
@@ -3509,7 +3514,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3363",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-18T14:17:52.744Z",
+    "collectedAt": "2026-08-18T14:26:41.133Z",
     "verifiedAt": null
    }
   },
@@ -3532,7 +3537,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3361",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-18T14:17:52.744Z",
+    "collectedAt": "2026-08-18T14:26:41.133Z",
     "verifiedAt": null
    }
   },
@@ -3554,7 +3559,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=699",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-18T14:17:53.284Z",
+    "collectedAt": "2026-08-18T14:26:41.555Z",
     "verifiedAt": null
    }
   },
@@ -3577,7 +3582,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=705",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-18T14:17:53.284Z",
+    "collectedAt": "2026-08-18T14:26:41.555Z",
     "verifiedAt": null
    }
   },
@@ -3600,7 +3605,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=707",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-18T14:17:53.284Z",
+    "collectedAt": "2026-08-18T14:26:41.555Z",
     "verifiedAt": null
    }
   },
@@ -3622,7 +3627,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=698",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-18T14:17:53.284Z",
+    "collectedAt": "2026-08-18T14:26:41.555Z",
     "verifiedAt": null
    }
   },
@@ -3645,7 +3650,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=706",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-18T14:17:53.284Z",
+    "collectedAt": "2026-08-18T14:26:41.555Z",
     "verifiedAt": null
    }
   },
@@ -3667,7 +3672,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=664",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-18T14:17:53.284Z",
+    "collectedAt": "2026-08-18T14:26:41.555Z",
     "verifiedAt": null
    }
   },
@@ -3690,7 +3695,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=695",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-18T14:17:53.284Z",
+    "collectedAt": "2026-08-18T14:26:41.555Z",
     "verifiedAt": null
    }
   },
@@ -3713,7 +3718,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=696",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-18T14:17:53.284Z",
+    "collectedAt": "2026-08-18T14:26:41.555Z",
     "verifiedAt": null
    }
   },
@@ -3736,7 +3741,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.241Z",
+    "collectedAt": "2026-08-18T14:26:40.058Z",
     "verifiedAt": null
    }
   },
@@ -3759,7 +3764,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.241Z",
+    "collectedAt": "2026-08-18T14:26:40.058Z",
     "verifiedAt": null
    }
   },
@@ -3782,7 +3787,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.241Z",
+    "collectedAt": "2026-08-18T14:26:40.058Z",
     "verifiedAt": null
    }
   },
@@ -3805,7 +3810,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.241Z",
+    "collectedAt": "2026-08-18T14:26:40.058Z",
     "verifiedAt": null
    }
   },
@@ -3828,7 +3833,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.241Z",
+    "collectedAt": "2026-08-18T14:26:40.058Z",
     "verifiedAt": null
    }
   },
@@ -3851,7 +3856,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.289Z",
+    "collectedAt": "2026-08-18T14:26:40.118Z",
     "verifiedAt": null
    }
   },
@@ -3874,7 +3879,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.289Z",
+    "collectedAt": "2026-08-18T14:26:40.118Z",
     "verifiedAt": null
    }
   },
@@ -3897,7 +3902,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.289Z",
+    "collectedAt": "2026-08-18T14:26:40.118Z",
     "verifiedAt": null
    }
   },
@@ -3920,7 +3925,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.289Z",
+    "collectedAt": "2026-08-18T14:26:40.118Z",
     "verifiedAt": null
    }
   },
@@ -3943,7 +3948,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.289Z",
+    "collectedAt": "2026-08-18T14:26:40.118Z",
     "verifiedAt": null
    }
   },
@@ -3966,7 +3971,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.332Z",
+    "collectedAt": "2026-08-18T14:26:40.178Z",
     "verifiedAt": null
    }
   },
@@ -3989,7 +3994,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.332Z",
+    "collectedAt": "2026-08-18T14:26:40.178Z",
     "verifiedAt": null
    }
   },
@@ -4012,7 +4017,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.332Z",
+    "collectedAt": "2026-08-18T14:26:40.178Z",
     "verifiedAt": null
    }
   },
@@ -4035,7 +4040,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.332Z",
+    "collectedAt": "2026-08-18T14:26:40.178Z",
     "verifiedAt": null
    }
   },
@@ -4058,7 +4063,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.364Z",
+    "collectedAt": "2026-08-18T14:26:40.240Z",
     "verifiedAt": null
    }
   },
@@ -4081,7 +4086,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.364Z",
+    "collectedAt": "2026-08-18T14:26:40.240Z",
     "verifiedAt": null
    }
   },
@@ -4104,7 +4109,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.364Z",
+    "collectedAt": "2026-08-18T14:26:40.240Z",
     "verifiedAt": null
    }
   },
@@ -4127,7 +4132,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.364Z",
+    "collectedAt": "2026-08-18T14:26:40.240Z",
     "verifiedAt": null
    }
   },
@@ -4150,7 +4155,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.364Z",
+    "collectedAt": "2026-08-18T14:26:40.240Z",
     "verifiedAt": null
    }
   },
@@ -4173,7 +4178,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.406Z",
+    "collectedAt": "2026-08-18T14:26:40.299Z",
     "verifiedAt": null
    }
   },
@@ -4196,7 +4201,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.406Z",
+    "collectedAt": "2026-08-18T14:26:40.299Z",
     "verifiedAt": null
    }
   },
@@ -4219,7 +4224,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.406Z",
+    "collectedAt": "2026-08-18T14:26:40.299Z",
     "verifiedAt": null
    }
   },
@@ -4242,7 +4247,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T14:17:51.406Z",
+    "collectedAt": "2026-08-18T14:26:40.299Z",
     "verifiedAt": null
    }
   },
@@ -4265,7 +4270,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:51.567Z",
+    "collectedAt": "2026-08-18T14:26:40.053Z",
     "verifiedAt": null
    }
   },
@@ -4288,7 +4293,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:51.567Z",
+    "collectedAt": "2026-08-18T14:26:40.053Z",
     "verifiedAt": null
    }
   },
@@ -4311,7 +4316,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:51.567Z",
+    "collectedAt": "2026-08-18T14:26:40.053Z",
     "verifiedAt": null
    }
   },
@@ -4334,7 +4339,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:51.567Z",
+    "collectedAt": "2026-08-18T14:26:40.053Z",
     "verifiedAt": null
    }
   },
@@ -4357,7 +4362,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:51.567Z",
+    "collectedAt": "2026-08-18T14:26:40.053Z",
     "verifiedAt": null
    }
   },
@@ -4380,7 +4385,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-18T14:17:51.567Z",
+    "collectedAt": "2026-08-18T14:26:40.053Z",
     "verifiedAt": null
    }
   },
@@ -4403,7 +4408,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2225",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.786Z",
+    "collectedAt": "2026-08-18T14:26:40.701Z",
     "verifiedAt": null
    }
   },
@@ -4426,7 +4431,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2227",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.786Z",
+    "collectedAt": "2026-08-18T14:26:40.701Z",
     "verifiedAt": null
    }
   },
@@ -4449,7 +4454,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2228",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.786Z",
+    "collectedAt": "2026-08-18T14:26:40.701Z",
     "verifiedAt": null
    }
   },
@@ -4472,7 +4477,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2234",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.786Z",
+    "collectedAt": "2026-08-18T14:26:40.701Z",
     "verifiedAt": null
    }
   },
@@ -4495,7 +4500,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2235",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.786Z",
+    "collectedAt": "2026-08-18T14:26:40.701Z",
     "verifiedAt": null
    }
   },
@@ -4518,7 +4523,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2229",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.786Z",
+    "collectedAt": "2026-08-18T14:26:40.701Z",
     "verifiedAt": null
    }
   },
@@ -4541,7 +4546,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2233",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.786Z",
+    "collectedAt": "2026-08-18T14:26:40.701Z",
     "verifiedAt": null
    }
   },
@@ -4564,7 +4569,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2239",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.786Z",
+    "collectedAt": "2026-08-18T14:26:40.701Z",
     "verifiedAt": null
    }
   },
@@ -4587,7 +4592,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2240",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.786Z",
+    "collectedAt": "2026-08-18T14:26:40.701Z",
     "verifiedAt": null
    }
   },
@@ -4610,7 +4615,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2236",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.786Z",
+    "collectedAt": "2026-08-18T14:26:40.701Z",
     "verifiedAt": null
    }
   },
@@ -4633,7 +4638,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2241",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.786Z",
+    "collectedAt": "2026-08-18T14:26:40.701Z",
     "verifiedAt": null
    }
   },
@@ -4656,7 +4661,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2242",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.786Z",
+    "collectedAt": "2026-08-18T14:26:40.701Z",
     "verifiedAt": null
    }
   },
@@ -4679,7 +4684,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2243",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.786Z",
+    "collectedAt": "2026-08-18T14:26:40.701Z",
     "verifiedAt": null
    }
   },
@@ -4702,7 +4707,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2244",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.786Z",
+    "collectedAt": "2026-08-18T14:26:40.701Z",
     "verifiedAt": null
    }
   },
@@ -4725,7 +4730,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2245",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.786Z",
+    "collectedAt": "2026-08-18T14:26:40.701Z",
     "verifiedAt": null
    }
   },
@@ -4748,7 +4753,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2246",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.786Z",
+    "collectedAt": "2026-08-18T14:26:40.701Z",
     "verifiedAt": null
    }
   },
@@ -4771,7 +4776,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2247",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.786Z",
+    "collectedAt": "2026-08-18T14:26:40.701Z",
     "verifiedAt": null
    }
   },
@@ -4794,7 +4799,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2248",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.786Z",
+    "collectedAt": "2026-08-18T14:26:40.701Z",
     "verifiedAt": null
    }
   },
@@ -4817,7 +4822,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2249",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.786Z",
+    "collectedAt": "2026-08-18T14:26:40.701Z",
     "verifiedAt": null
    }
   },
@@ -4840,7 +4845,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2250",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.786Z",
+    "collectedAt": "2026-08-18T14:26:40.701Z",
     "verifiedAt": null
    }
   },
@@ -4863,7 +4868,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.456Z",
+    "collectedAt": "2026-08-18T14:26:40.294Z",
     "verifiedAt": null
    }
   },
@@ -4887,7 +4892,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.456Z",
+    "collectedAt": "2026-08-18T14:26:40.294Z",
     "verifiedAt": null
    }
   },
@@ -4911,7 +4916,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.456Z",
+    "collectedAt": "2026-08-18T14:26:40.294Z",
     "verifiedAt": null
    }
   },
@@ -4935,7 +4940,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.456Z",
+    "collectedAt": "2026-08-18T14:26:40.294Z",
     "verifiedAt": null
    }
   },
@@ -4959,7 +4964,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.456Z",
+    "collectedAt": "2026-08-18T14:26:40.294Z",
     "verifiedAt": null
    }
   },
@@ -4983,7 +4988,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.456Z",
+    "collectedAt": "2026-08-18T14:26:40.294Z",
     "verifiedAt": null
    }
   },
@@ -5007,7 +5012,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.456Z",
+    "collectedAt": "2026-08-18T14:26:40.294Z",
     "verifiedAt": null
    }
   },
@@ -5031,7 +5036,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.456Z",
+    "collectedAt": "2026-08-18T14:26:40.294Z",
     "verifiedAt": null
    }
   },
@@ -5055,7 +5060,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.456Z",
+    "collectedAt": "2026-08-18T14:26:40.294Z",
     "verifiedAt": null
    }
   },
@@ -5079,7 +5084,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.456Z",
+    "collectedAt": "2026-08-18T14:26:40.294Z",
     "verifiedAt": null
    }
   },
@@ -5103,7 +5108,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.456Z",
+    "collectedAt": "2026-08-18T14:26:40.294Z",
     "verifiedAt": null
    }
   },
@@ -5127,7 +5132,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.456Z",
+    "collectedAt": "2026-08-18T14:26:40.294Z",
     "verifiedAt": null
    }
   },
@@ -5151,7 +5156,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.456Z",
+    "collectedAt": "2026-08-18T14:26:40.294Z",
     "verifiedAt": null
    }
   },
@@ -5175,7 +5180,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.456Z",
+    "collectedAt": "2026-08-18T14:26:40.294Z",
     "verifiedAt": null
    }
   },
@@ -5199,7 +5204,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T14:17:51.456Z",
+    "collectedAt": "2026-08-18T14:26:40.294Z",
     "verifiedAt": null
    }
   },
@@ -5222,7 +5227,7 @@
    "provenance": {
     "sourceUrl": "https://www.mhrd.org/administration/board-of-education/boe-meetings",
     "sourceOrg": "Morris Hills Regional District Board of Education",
-    "collectedAt": "2026-08-18T14:17:55.283Z",
+    "collectedAt": "2026-08-18T14:26:40.470Z",
     "verifiedAt": null
    }
   },
@@ -5245,7 +5250,7 @@
    "provenance": {
     "sourceUrl": "https://www.mhrd.org/administration/board-of-education/boe-meetings",
     "sourceOrg": "Morris Hills Regional District Board of Education",
-    "collectedAt": "2026-08-18T14:17:55.283Z",
+    "collectedAt": "2026-08-18T14:26:40.470Z",
     "verifiedAt": null
    }
   },
@@ -5268,7 +5273,7 @@
    "provenance": {
     "sourceUrl": "https://www.mhrd.org/administration/board-of-education/boe-meetings",
     "sourceOrg": "Morris Hills Regional District Board of Education",
-    "collectedAt": "2026-08-18T14:17:55.283Z",
+    "collectedAt": "2026-08-18T14:26:40.470Z",
     "verifiedAt": null
    }
   },
@@ -5293,6 +5298,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-18T14:17:56.396Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T14:17:56.396Z"
    }
   },
   {
@@ -5316,6 +5325,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-18T14:17:56.396Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T14:17:56.396Z"
    }
   },
   {
@@ -5339,6 +5352,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-18T14:17:56.396Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T14:17:56.396Z"
    }
   },
   {
@@ -5362,6 +5379,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-18T14:17:56.396Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T14:17:56.396Z"
    }
   },
   {
@@ -5385,6 +5406,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-18T14:17:56.396Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T14:17:56.396Z"
    }
   },
   {
@@ -5408,6 +5433,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-18T14:17:56.396Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T14:17:56.396Z"
    }
   },
   {
@@ -5431,6 +5460,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-18T14:17:56.396Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T14:17:56.396Z"
    }
   },
   {
@@ -5454,6 +5487,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-18T14:17:56.396Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T14:17:56.396Z"
    }
   },
   {
@@ -5477,6 +5514,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-18T14:17:56.396Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T14:17:56.396Z"
    }
   },
   {
@@ -5500,6 +5541,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-18T14:17:56.396Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T14:17:56.396Z"
    }
   },
   {
@@ -5523,6 +5568,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-18T14:17:56.396Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T14:17:56.396Z"
    }
   },
   {
@@ -5546,6 +5595,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-18T14:17:56.396Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T14:17:56.396Z"
    }
   },
   {
@@ -5569,6 +5622,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-18T14:17:56.396Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T14:17:56.396Z"
    }
   },
   {
@@ -5592,6 +5649,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-18T14:17:56.396Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T14:17:56.396Z"
    }
   },
   {
@@ -5615,6 +5676,10 @@
     "sourceOrg": "Kearsarge Regional School District School Board",
     "collectedAt": "2026-08-18T14:17:56.396Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T14:17:56.396Z"
    }
   },
   {
@@ -5638,6 +5703,10 @@
     "sourceOrg": "Newbury Planning Board",
     "collectedAt": "2026-08-18T14:17:56.947Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T14:17:56.947Z"
    }
   },
   {
@@ -5661,6 +5730,10 @@
     "sourceOrg": "Newbury Planning Board",
     "collectedAt": "2026-08-18T14:17:56.947Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T14:17:56.947Z"
    }
   },
   {
@@ -5684,6 +5757,10 @@
     "sourceOrg": "Newbury Planning Board",
     "collectedAt": "2026-08-18T14:17:56.947Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T14:17:56.947Z"
    }
   },
   {
@@ -5707,6 +5784,10 @@
     "sourceOrg": "Newbury Conservation Commission",
     "collectedAt": "2026-08-18T14:17:57.326Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T14:17:57.326Z"
    }
   },
   {
@@ -5730,6 +5811,10 @@
     "sourceOrg": "Newbury Conservation Commission",
     "collectedAt": "2026-08-18T14:17:57.326Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T14:17:57.326Z"
    }
   },
   {
@@ -5753,6 +5838,10 @@
     "sourceOrg": "Newbury Conservation Commission",
     "collectedAt": "2026-08-18T14:17:57.326Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T14:17:57.326Z"
    }
   },
   {
@@ -5776,6 +5865,10 @@
     "sourceOrg": "Newbury Conservation Commission",
     "collectedAt": "2026-08-18T14:17:57.326Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T14:17:57.326Z"
    }
   },
   {
@@ -5799,6 +5892,10 @@
     "sourceOrg": "Newbury Conservation Commission",
     "collectedAt": "2026-08-18T14:17:57.326Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T14:17:57.326Z"
    }
   },
   {
@@ -5822,6 +5919,10 @@
     "sourceOrg": "Newbury Zoning Board of Adjustment",
     "collectedAt": "2026-08-18T14:17:57.885Z",
     "verifiedAt": null
+   },
+   "carried": {
+    "source": "schedulepage",
+    "lastFreshAt": "2026-08-18T14:17:57.885Z"
    }
   }
  ],

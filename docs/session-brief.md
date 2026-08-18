@@ -1,7 +1,10 @@
-# Session brief — g12 (written 2026-08-17 by g11)
+# Session brief — g13 (written 2026-08-17 by g12)
 
-The queue, exactly where g11 stopped. The environment rows are closed and the
-migrations are applied, so nothing below is blocked on the author.
+Queue 2 is nearly empty. What is left of it is eleven rows the g12 brief
+called "finish now" and g12 did not reach — they were deferred whole, never
+started, and each carries a dated row saying exactly that. **This session is
+those eleven rows, in the brief's own order, and nothing else until they are
+gone.**
 
 This session runs unattended. Nobody is available to answer.
 
@@ -12,95 +15,102 @@ in `docs/deferred.csv` and this brief disagree, the disposition governs. Read
 each row's full Notes in `docs/tracker.csv` before building; the specs live
 there and this brief does not restate what a row already holds.
 
-**THE AUTHOR'S STANDING RULE:** a screenshot or named instance is an EXAMPLE of
-a class-wide defect. Fix the class at the shared code path, audit everywhere
+**THE AUTHOR'S STANDING RULE:** a screenshot or named instance is an EXAMPLE
+of a class-wide defect. Fix the class at the shared code path, audit everywhere
 the pattern occurs, report the full count found and fixed.
 
 ---
 
-## 0 — What g11 cleared, so you do not re-derive it
+## 0 — What g12 closed, so you do not re-derive it
 
-**R36 and R42 are CLOSED.** There is a working handle to production in both
-directions and you should use both rather than rebuilding either:
+**Do not re-open any of these.** A01, A02, A06, A07, M119, G05 (all seven
+rules), G07, D35, M134, M93.
 
-* `WTP_PRODUCTION_DATABASE_URL_READONLY` — reads. `pnpm verify:readonly`
-  passes thirteen checks. `pnpm census:runs --target=production` prints the
-  run-id census the standing report asks for; do not assemble that number by
-  hand. `pnpm feedback:read --target=production` works.
-* `WTP_PRODUCTION_DATABASE_URL_WRITE` — the ONE sanctioned write path, for
-  migrations and explicit maintenance only. Resolve it through
-  `lib/db/write-handle.ts`; never read it directly and never write through the
-  READONLY variable, which the guard refuses by name.
-* `pnpm db:apply --target=production` applies committed migrations and
-  verifies the journal. `drizzle-kit migrate` still exits 1 with no message on
-  this machine — do not spend time on it. Production is current at 9 of 9.
+Four things g12 built that the rows below now inherit, stated so you build ON
+them rather than beside them:
 
-**One thing the author may want to do, and nothing here depends on it:** the
-`readonly` role has no USAGE on the `drizzle` schema, so a migration-journal
-read through the read handle returns *permission denied for schema drizzle*.
-
-**R41, M12, D22 and G05 rule 4d are CLOSED.** Do not re-open them. Rule 4d
-matters to item 1 below: the ask box can now route to four in-app destinations,
-and the copy reads its promises from `ROUTABLE_CATEGORIES` rather than naming
-them by hand. Extend that mechanism rather than writing a second list.
+* **The matcher is strong-match only.** Two distinct keyword hits, or an exact
+  name, or a curated destination phrase. Everything weaker falls to the
+  classifier; where that is unavailable the reader gets the refusal with the
+  four destinations offered. `STRONG_MATCH_MIN_HITS` in `lib/routing/match.ts`,
+  `lib/routing/exact-name.ts`, and the proving case is permanent in
+  `tests/ask-matcher.test.ts` AND in `walk-all` section H.
+* **There is ONE pill cluster and ONE text input.** `clusterPlacement`
+  (`lib/map/cluster-placement.ts`) decides where the cluster goes from two
+  booleans; `components/shell/search-box.tsx` is DELETED. If you need a search
+  box, you need the one in the ask panel.
+* **The rail is a bounded card**, not a full-height column. It ends where its
+  content ends and scrolls internally past `100dvh` minus insets and safe
+  areas. `--rail-width`, `--rail-inset`, `--rail-gutter`.
+* **`askWasAnswered` is the single definition of "answered".** If you add a
+  fourth kind of answer to the ask box, add it THERE — not to a second
+  expression in the component.
 
 ---
 
-## 1 — Finish g7 item 4: the ask surface, whole
+## 1 — The eleven rows, in this order
 
-g11 completed the precondition (rule 4d) and nothing else in this item. What
-remains is one build, and the row IDs it closes are A01, A02, M119, and — in
-the same PR, per their own notes — A06 and A07.
+Each row carries its spec and its remainder. Read it, ship the remainder,
+close or update honestly.
 
-* **M119** — ONE input in the sidebar. Keyword-first: text matching a known
-  meeting, body, district or person filters and navigates exactly as
-  `components/shell/search-box.tsx` does today. Anything else routes as an ask
-  through the existing curated path — keyword layer first, the classifier
-  behind its ripcord, A07's refusal unchanged. One placeholder teaching both
-  uses; the Ask affordance stays the submit action. **The two logs must not
-  blur:** a keystroke lands in exactly one of them and the stores never join.
-* **A01 / A02** — the natural-language entry point, and the "what's going on
-  where I live" digest scoped to the reader's divisions. Every sentence is
-  curated copy or registry data; nothing generated.
-* **A07 and A06 are VERIFIED WORKING** (g11 read the log rows back out of the
-  store) and close with A01. A06 carries one handover: g11 observed that "what
-  will the weather be like on election day" routes to `elections-voting` on the
-  single word "election". Nothing was fabricated and everything rendered was
-  sourced, so A07's contract holds — but whether the matcher should require
-  more than one hit before routing is a matching question this build owns.
+**M136** — body battlecards to person-card depth. Seven sections, an honest
+absence line per section, and the test is named in the row: Pima, Tucson and
+Tucson Unified each render every applicable section with either content or an
+honest line, and the walk asserts it on all three.
 
-## 2 — G05's remaining six rules: 4a, 4b, 4c, 4e, 4f, 4h
+**M139** — the half-load, diagnosed BEFORE it is fixed. Two mechanisms worth
+checking first, both from g12's own work rather than speculation: the rail is
+no longer full-height, so a blank rail is now content that did not arrive
+rather than a rail that painted empty; and g12 found a real hydration mismatch
+of exactly the class this row's suspects describe (a component reading
+`localStorage` during render, server and client disagreeing, React discarding
+the tree). Then the zip control's geometry, the districts panel's two sections
+with a stated N each, and the load budget measured on production with a cold
+cache, method and profile stated.
 
-The full text is in G05's Detail column, unchanged. Note two things g6 and g11
-already settled so they are not re-litigated: rule 4g shipped separately as
-G06, and 4b's "and N more" affordance was a bare `li` with no handler — it has
-been removed, and the reachability concern it was supposed to answer stands as
-the open question.
+**M135** — the every-row-opens-a-card audit, per-surface counts. The districts
+panel's rows, the meetings list's rows and the search results have not been
+walked one by one. Note that "the search results" now means the autocomplete
+inside the single ask input.
 
-Rules 4e and 4f each demand a PERMANENT check, and both are specific about
-what it must measure: 4e COUNTS RENDERED INSTANCES in the DOM (not the
-presence of one selector) and asserts exactly one, in all four states, at four
-zips and both viewports. 4f asserts the card's top is on screen and its bottom
-reachable at 390x844 with the longest content. Append both to
-`scripts/walk-all.mts`. Re-run `pnpm contrast` and `pnpm overlaps` after 4f.
+**M07** — returning user: zip remembered, confirm on return, district NEVER
+assumed.
 
-## 3 — G07: the pill label
+**B15** — the laws half. 0 of 20 law rows carry a verified roll call, and the
+route that closes it is unchanged: congress.gov API, search the bill by title,
+take its number FROM THE RECORD, then take that bill's roll calls in both
+chambers. **Bill numbers from the record, never from memory.**
 
-Depends on item 2 — it is the designed compensation for 4a's discoverability
-cost, and shipping 4a without it ships a known regression. Record the chosen
-label at each of the three placements in `docs/DESIGN.md` with the width that
-forced each choice.
+**The tracker row G10, sub-item 8a** — bytes and layer counts per active state
+at 85701 and at 03255 with neither containing the other's; both themes, twelve
+frames plus the two no-active-state frames; the stated exclusion distance and
+the reasoning for it.
 
-## 4 — D35: the positions three-answer machinery
+**P01** — measures decomposed into contested provisions: funding, program,
+oversight, sunset.
 
-Spec in the row.
+**P03** — reactions extend to measures and provisions. **FREE TEXT DOES NOT
+SHIP.** The T05 gate stands and R41's reply field does not change it. One thing
+you inherit: `lib/ballot/derived-picks.ts` does not know what a candidate is,
+so the moment a measure carries a reaction target, a Yes or No on it becomes
+the pick with no second code path — M134's rule 5 is already tested against
+that.
 
-## 5 — The fourteen finish-now rows, in order
+**D25** — comment access, ladder per body. The honest UNKNOWNs want real rules
+and the per-meeting override has no consumer.
 
-M134, M136, M139, M135, M07, B15, the tracker row G10 (distinct from the g10
-session letter), P01, P03 with free-text gated on T05 — R41's reply field does
-NOT move that gate — D25, D29, D06 under the unchanged structural FEC rule,
-and M93 proposal-only.
+**D29** — Tucson's 56 boards: 5 wired of 56 stated. Move the number, and state
+both halves whichever way it moves.
+
+**D06** — the funding tracker under the unchanged structural FEC rule:
+reader-facing display only, contributor data never enters anything sold.
+
+---
+
+## 2 — Only if item 1 is genuinely finished
+
+Queue 3, in the session map's own order. Do not start it while any of the
+eleven remain.
 
 ---
 
@@ -109,7 +119,11 @@ and M93 proposal-only.
 `pnpm walk:all` against production, new checks appended, old and new counts
 stated, the identity set emitted — it must stay 100% distinct, and a duplicate
 is a NAMED REGRESSION that fails the run. Do not transcribe the check count
-from a report; diff your run's census against the previous run's.
+from a report; diff your run's census against the previous run's. **Section H
+is new this session and it is the one most likely to be affected by anything
+you touch in the shell** — it counts rendered pill clusters, measures the
+rail's geometry at 390×844, and asks the ask box five questions.
+
 `scripts/walk-r41.mts` writes real feedback rows and is excluded by name from
 the standing suite — run it deliberately with `WTP_RUN_ID` set, which it
 requires and refuses to run without.
@@ -123,9 +137,7 @@ Standing report in the established format: ship status; test, lint, build
 counts with allowlisted warnings named; every mirror file by name with bytes;
 `context.md` against its 40 KB cap; tracker rows touched by ID;
 `stamp-audit.md` inline; **production rows by run-id census, from
-`pnpm census:runs --target=production`** — expected 0 organic throughout, and
-now readable, so COULD NOT READ is no longer an acceptable answer unless the
-command itself fails and says why.
+`pnpm census:runs --target=production`** — expected 0 organic throughout.
 
 Items the author has already ruled expected — the two photo-door stamp
 disagreements — are stated in the stamp-audit line and NEVER appear under
@@ -136,8 +148,7 @@ list of exactly what needs the author — every ruling, every console action,
 every open question — even where it repeats the body. An empty list is stated
 as "Nothing — the queue continues."
 
-Completion against the denominator: items 1–5, N of 5 whole, and within each
-item, sub-items completed of sub-items listed.
+Completion against the denominator: item 1, N of 11 rows whole.
 
 ## Standing rules
 

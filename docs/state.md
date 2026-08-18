@@ -9985,3 +9985,173 @@ that evidence, but both are specced to close in A01's own PR and so stay open.
 Nothing is half-built. The deferral boundary fell between subjects: rule 4d is
 its own numbered rule, listed separately in the brief's own enumeration, and it
 was completed whole.
+
+## 47. The 2026-08-17 g12 session — the matcher stops answering questions nobody asked, and the interface stops repeating itself
+
+Six items in the brief, numbered 0 through 5. **Five of the six are complete
+whole**; the sixth is a list of thirteen rows and two of them shipped. Nothing
+is half-built.
+
+| item | what it was | state |
+|---|---|---|
+| 0 | two verifications from g11's asks | **done** — 2 of 2 |
+| 1 | the ask surface, and the author's matcher ruling | **done** — A01, A02, A06, A07, M119 all closed |
+| 2 | G05's six remaining rules | **done** — 4a, 4b, 4c, 4e, 4f, 4h, so G05 closes at 7 of 7 |
+| 3 | G07, the pill label that teaches | **done** |
+| 4 | D35, the positions three-answer machinery | **done** |
+| 5 | thirteen finish-now rows | **2 of 13** — M134 and M93; eleven deferred whole with rows |
+
+### 0 — the two verifications
+
+**The drizzle grant works.** The author's `GRANT USAGE ON SCHEMA drizzle` and
+`GRANT SELECT ON ALL TABLES IN SCHEMA drizzle` were applied to `readonly` on
+production, and a migration-journal read through the READ handle now succeeds:
+nine rows, latest id 9, matching the 9-of-9 g11 recorded. The read was made as
+`readonly` against `ep-dry-river-axwtolzc-pooler`, wrote nothing, and altered
+nothing.
+
+**The two feedback rows are untouched.** `pnpm feedback:read
+--target=production --all` shows three rows, all three declared automated, zero
+organic: the two `g11-r41-prod@2026-08-17` probes the author ruled KEEP, and
+g9's earlier `g9-r40-prod` probe. They are standing evidence and nothing this
+session touched them.
+
+### 1 — THE AUTHOR'S MATCHER RULING, which is what item 1 actually was
+
+The keyword layer used to route on evidence it could count, and one hit was
+enough. So *"what will the weather be like on election day"* got a routed
+answer about who runs elections — nothing fabricated, every sentence sourced,
+A07's contract intact, and still an answer to a question nobody had asked.
+
+**The threshold implemented: two or more distinct keyword hits**
+(`STRONG_MATCH_MIN_HITS`, `lib/routing/match.ts`). One hit is evidence that a
+word appeared, not evidence of what was asked.
+
+**The exact-name classes honored, five of them**, all things the product
+already holds a record for: `body`, `person`, `district`, `place` and `meeting`,
+matched WHOLE against the whole input (`lib/routing/exact-name.ts`). A name
+inside a sentence is not this rung — *"when does the Planning Commission
+meet"* is a question that happens to name a body. Ambiguity refuses; a
+three-character floor stops a fragment mid-typing from navigating. The fourth
+class the ruling names — a destination named as such — stays in
+`destinations.ts`, which already matches curated phrases whole.
+
+**Everything weaker falls through** to the Level 1 classifier, which reads the
+sentence and either picks a curated drawer or says nothing routes. Where the
+ripcord is pulled or the API unreachable, a weak match reaches the reader as
+the honest refusal **with the four destinations offered** — there is no
+low-confidence fallback anywhere in the path.
+
+**The cost is named rather than hidden.** Ten of the twelve questions in the
+old regression net clear the new bar untouched. Three do not, each carrying
+exactly one hit: `my water bill`, `my property assessment`, and the golden
+`There's a pothole in front of my house — who do I call?`. They are listed as
+`WEAK_BY_DESIGN` in `tests/ask-destinations.test.ts` with their near-miss
+asserted, so a later session can see which questions changed rung and why.
+
+**A06's roadmap now contains only what we could not do.** `askWasAnswered` is
+the single definition of answered, read by both the render and the log. g11
+found the destination case; the digest and the exact name are the same shape
+and are covered by the same function rather than by three copies of one check.
+
+**A02 shipped as `lib/routing/digest.ts`** — upcoming items, recent decisions,
+who represents you, scoped to `coverage.divisions` and not to the viewport,
+assembled from records the product already holds. Three blocks, three separate
+denominators, three differently-worded named gaps; meetings with no Census
+division are counted in a fourth named line rather than dropped. Live: 7
+divisions at 85701, 6 at 03255, "Showing 5 of 16".
+
+**M119 merged the two inputs and deleted `search-box.tsx`.** The two logs do
+not blur: an autocomplete pick or an exact name is a SEARCH and returns before
+any `QUESTION_ASKED` can run; anything else is an ASK.
+
+### 2 and 3 — the interface consolidates
+
+One pill cluster, constructed once in `map-entry` and handed to one of three
+slots. Its address is `clusterPlacement`, a total function of two booleans that
+cannot take the battlecard. One text input. One ballot door. Ask expands under
+its own pill and closes nothing. `openSurface` makes the rail, WGH and the
+battlecard mutually exclusive on every reader-initiated open — the DEFAULT
+state is deliberately untouched, because closing the desktop rail on page load
+would remove the app's primary navigation to satisfy a rule written about phone
+stacking.
+
+The rail is now a card that ends where its content ends, bounded in one
+expression beside the growth:
+
+```
+max-height = 100dvh − (2 × --rail-inset) − safe-area-top − safe-area-bottom
+```
+
+M54/M55 were an unbounded overlay that grew to 893px against an 844px viewport
+and put its own top at y = −113; `height: auto` without a ceiling re-opens
+exactly that. Measured at 390×844 with the longest content: top 12, bottom 832,
+scrolling internally.
+
+The Ask pill never reads a bare "Ask" (G07). Labels, accessible names, the
+width each placement affords and the reason each form was chosen are committed
+in `lib/routing/ask-pill-labels.ts`; `docs/DESIGN.md` cites that file rather
+than restating it.
+
+### 4 — D35, and the overclaim only the real output could show
+
+Three answers, a test each. MATCHED quotes verbatim with the page and the read
+date. SEARCHED_NOTHING_MATCHED states OUR bounded search with its denominator
+and says in as many words that it is not a statement about the person.
+NOT_YET_COLLECTED is a different sentence about a different thing. Unreadable
+snapshots are counted apart and never as searched.
+
+**Reading the real output caught what the code could not.** A state
+legislator's official page is often a BILL LIST, so a passage matching
+"housing" can be a row of bill titles — verbatim and genuinely theirs, but
+under a header reading "Positions" a bill title could be read as a stance.
+Filtering would be us deciding which of their words count. The line says what
+the match actually is instead: a mention on a page they publish, and a mention
+is not a position.
+
+Across the committed corpus for "housing": 22 subjects, 5 MATCHED, 17
+SEARCHED_NOTHING_MATCHED, 0 fell through.
+
+### FIVE DEFECTS FOUND BY MEASURING, NOT BY REASONING
+
+Every one of these was invisible in the code and obvious the moment something
+measured it. They are listed together because the pattern is the finding.
+
+1. **The cluster overflowed a 340px card to the LEFT** at 390px, running the
+   who-governs card's text off the phone. The floating form (right-aligned,
+   `nowrap`) is correct on the map and wrong in a bounded box. Caught in a
+   screenshot.
+2. **The desktop default rendered TWO ballot doors** — 4c does not touch the
+   default state, so the rail and WGH are both on screen at first paint and
+   both offered the ballot. Caught by counting.
+3. **The merged input emptied the map while a question was typed.** Every
+   keystroke committed to `search/input`, which is a filter; "whats going on
+   where i live" matched no meeting and the count badge read **0 meetings**.
+   An empty map is the one thing this product may never render.
+4. **G07's longer label pushed the map cluster's box under the hamburger.**
+   Wrapping fixed the ink and not the box, and `pnpm overlaps` is right to
+   measure boxes — the next longer label would have put ink there.
+5. **The derived pick hydrated wrong.** It read `localStorage` during render,
+   so the server rendered the ask and the client the pick; React logs the
+   mismatch and discards the tree.
+
+### The date gate caught a document the handoff itself writes
+
+`docs/code-manifest.md`'s generated-at instant is Eastern (R18) while the
+session day is Phoenix, so g11's 21:03 local handoff stamped
+`2026-08-18 00:03:24 EDT` on the session day 2026-08-17 <!-- expected-future: quoting the Eastern instant this section is ABOUT; verified against `pnpm stamp`, which printed 2026-08-17 -->
+and `tests/doc-dates` correctly called it a future date. The suite was red on a
+document the handoff had just written, for a timestamp that was not wrong.
+
+It is ANNOTATED at the generator rather than changed, because the instant is
+true and the gate is right: this is exactly the case the expected-future marker
+exists for. The marker is emitted only when the two zones actually disagree.
+
+### What was deferred, and the denominator
+
+Item 5's remaining eleven rows — M136, M139, M135, M07, B15, G10/8a, P01, P03,
+D25, D29, D06 — were **not started**, not thinned, and not partially built.
+Each carries a dated row saying so, and several carry a note about what THIS
+session changed underneath them: the rail's new geometry for M139's half-load,
+the deleted search box for M135's audit, and M134's measure-agnostic resolver
+for P03's rule 5.

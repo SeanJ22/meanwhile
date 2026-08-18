@@ -23,7 +23,15 @@ on:
   schedule:
     # Minute 17 to stay off the busy top of the hour.
     - cron: "17 */6 * * *"
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      simulate_change:
+        description: >-
+          Exercise the CHANGED path — run the full gate as though the snapshot
+          had moved, and commit nothing. Exists so the branch that guards real
+          data can be proven to execute without waiting for the data to move.
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -65,13 +73,62 @@ jobs:
           INGEST_CONTACT_EMAIL: ${{ vars.INGEST_CONTACT_EMAIL }}
         run: corepack pnpm ingest composite
 
+      # AUD-07 (2026-08-18): the diff moved AHEAD of the gate.
+      #
+      # This job used to refresh, run the whole suite, and only then ask
+      # whether anything had changed — so most scheduled runs executed a full
+      # validation against a snapshot byte-identical to the one already
+      # committed and already validated. That is not a safety margin; it is a
+      # suite proving nothing, on a schedule, four times a day.
+      #
+      # Nothing about the CHANGED path weakens. When the artifact moves, the
+      # full existing gate runs exactly as it did before, and it still stands
+      # between the new data and the commit.
+      - name: Diff the governed artifact
+        id: diff
+        run: |
+          if [ "${{ inputs.simulate_change }}" = "true" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "simulated=true" >> "$GITHUB_OUTPUT"
+            echo "SIMULATED CHANGE (dispatch input): the gate below runs in full."
+            echo "Nothing will be committed — this exists to prove the changed path executes."
+            exit 0
+          fi
+          if git diff --quiet -- data/meetings-snapshot.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "data/meetings-snapshot.json is UNCHANGED by this refresh."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "data/meetings-snapshot.json CHANGED — the full gate runs before anything commits."
+            git diff --stat -- data/meetings-snapshot.json
+          fi
+
+      - name: Unchanged — stating what was skipped and why
+        if: steps.diff.outputs.changed != 'true'
+        run: |
+          echo "The refresh ran and the governed artifact did not move."
+          echo ""
+          echo "SKIPPED: corepack pnpm test, and the commit."
+          echo "The snapshot on main is byte-identical to the one this run produced,"
+          echo "and it was already validated by the run that committed it. Re-running"
+          echo "the suite against unchanged data would prove nothing it has not"
+          echo "already proved."
+          echo ""
+          echo "This is a stated early exit, not a silent one, and it is not a pass"
+          echo "of the gate: the gate did not run because there was nothing to gate."
+
       - name: Validate before committing
+        if: steps.diff.outputs.changed == 'true'
         run: corepack pnpm test
 
-      - name: Commit if changed
+      - name: Commit
+        # A simulated run reaches the gate and stops here: it must never commit.
+        if: steps.diff.outputs.changed == 'true' && steps.diff.outputs.simulated != 'true'
         run: |
+          # The real diff is re-checked at the point of committing, so a
+          # simulated or stale `changed` output can never push an empty commit.
           if git diff --quiet -- data/meetings-snapshot.json; then
-            echo "snapshot unchanged — nothing to commit"
+            echo "snapshot unchanged at commit time — nothing to commit"
             exit 0
           fi
           git config user.name "snapshot-refresh[bot]"

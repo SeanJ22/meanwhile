@@ -1,0 +1,80 @@
+# The build Netlify runs, run where the log is readable (R51, 2026-08-18, g16).
+#
+# TWO FAILURES IN SEQUENCE PRODUCED THIS FILE.
+#
+# First, Netlify started no build at all for g15's two PR merges — no queued,
+# building or failed deploy behind a healthy current one. Then a build did
+# fire, and `scripts/check-build-output.mjs` refused it: server trace
+# cardinality 1138 against the ceiling of 1050. Both times, production kept
+# serving a build from before the session and the only record of why lived in
+# a build log behind the author's Netlify login.
+#
+# A gate whose verdict nobody in the session can read is a gate that stops the
+# work and explains nothing. So the same command Netlify runs — the literal
+# string from `netlify.toml` — runs here on every push, on ubuntu, on the
+# runner image class Netlify builds on. When the budget refuses, the refusal
+# is in a log this repo's own tooling can fetch with `gh run view`.
+#
+# It also answers the platform question the refusal raised and could not
+# settle: a Windows build and a Linux build trace different node_modules, and
+# `scripts/trace-census.mjs` prints the per-manifest, per-package breakdown on
+# both, so "which files joined" is a diff rather than a guess. The census runs
+# whether the build passed or failed — a refused build is exactly when its
+# numbers are wanted.
+#
+# This does not deploy anything and holds no secrets. `pnpm build` needs none:
+# every data file it reads is committed, and the database is not touched at
+# build time.
+
+name: Build check
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      # v7 targets Node 24 natively; package-manager-cache off because pnpm is
+      # not on PATH until corepack enable. Same reasoning as
+      # intake-tripwire.yml, where R45 worked it out.
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Enable corepack (pnpm pinned by packageManager)
+        run: corepack enable
+
+      - name: Install
+        run: corepack pnpm install --frozen-lockfile
+
+      # The literal command from netlify.toml's [build] section, minus the
+      # `corepack enable` already done above. If these two ever drift apart
+      # this job stops standing in for the deploy, so they are named together
+      # here and in netlify.toml's header.
+      - name: Build (the command netlify.toml gives Netlify)
+        run: corepack pnpm run build
+
+      - name: Trace census
+        if: always()
+        run: node scripts/trace-census.mjs --files trace-files.txt
+
+      - name: Keep the trace list
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trace-files-${{ github.sha }}
+          path: trace-files.txt
+          if-no-files-found: warn

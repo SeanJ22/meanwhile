@@ -880,10 +880,57 @@ function buildGate() {
       return false;
     }
 
+    const out = `${error.stdout ?? ""}${error.stderr ?? ""}`;
+
+    /*
+     * THE BUILD NEVER STARTED — a third state, and it is the one that cost
+     * g11 two ship attempts (2026-08-17).
+     *
+     * The separation above catches a gate that could not SPAWN pnpm at all
+     * (no exit status). It does not catch pnpm spawning, refusing, and
+     * exiting 1 without ever running the build — which is what happens when
+     * the nested `pnpm` is a different version from the one `packageManager`
+     * pins. Invoking handoff as `corepack pnpm handoff` puts corepack's shim
+     * directory ahead on PATH, the nested `pnpm run build` resolves to a
+     * DIFFERENT pnpm, and that pnpm refuses on the version guard.
+     *
+     * The gate then said "pnpm build failed: exit 1, and no TS diagnostic in
+     * the output" about a tree that builds clean — the exact untrustworthy
+     * reading this gate's own header warns about, one layer further in. A
+     * check that could not RUN must never print like a failure of the thing
+     * it checks (CLAUDE.md, and `walk-all`'s cannotRun for the same reason).
+     *
+     * Detected on the tool's OWN words rather than on the absence of a TS
+     * diagnostic, because "no diagnostic" is also what a genuine non-type
+     * build failure looks like.
+     */
+    const neverStarted = [
+      /This project is configured to use [\d.]+ of pnpm/i,
+      /Your current pnpm is v/i,
+      /Unsupported engine/i,
+      /ERR_PNPM_UNSUPPORTED_ENGINE/i,
+      /command not found|is not recognized as an internal or external command/i,
+    ].find((pattern) => pattern.test(out));
+
+    if (neverStarted) {
+      const words = out
+        .split("\n")
+        .map((l) => l.trim())
+        .filter(Boolean)
+        .find((l) => neverStarted.test(l));
+      fail(
+        "ship · build",
+        `refused — the gate could not RUN pnpm build; the build never started, so this ` +
+          `says NOTHING about the tree. The tool's own words: ${words}. ` +
+          `If this is the corepack/pnpm version guard, run "pnpm handoff --ship" ` +
+          `directly rather than through corepack.`,
+      );
+      return false;
+    }
+
     // The diagnostic is the whole value here. Netlify's log is behind the
     // author's login, so a gate that only said "build failed" would move the
     // wall rather than remove it.
-    const out = `${error.stdout ?? ""}${error.stderr ?? ""}`;
     const diagnostic =
       out
         .split("\n")

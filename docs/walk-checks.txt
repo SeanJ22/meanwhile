@@ -235,6 +235,7 @@
 [g4] 85701: Limit radius and Show districts moved inside Filters
 [g4] 85701: Near me stays outside Filters
 [g4] 85701: opening Filters reveals radius and districts
+[g4] 85701: the meetings panel opens with every group collapsed
 [g4] the moving-here line reads exactly
 [g5] 03255 (hop 1 of 4): the zip draws nothing on the map
 [g5] 03255 (hop 4 of 4, returning): the zip draws nothing on the map

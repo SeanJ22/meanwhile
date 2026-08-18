@@ -236,10 +236,13 @@ test("D35: the surface renders three different sentences, in the gap's own regis
 // ── A07, the party guard, and the search's own scope ───────────────────────
 
 test("D35: nothing in this path generates, and nothing reads party", () => {
-  const module = readFileSync(join(ROOT, "lib", "corpus", "positions.ts"), "utf8");
+  const positionsSource = readFileSync(
+    join(ROOT, "lib", "corpus", "positions.ts"),
+    "utf8",
+  );
   for (const banned of ["anthropic", "openai", "API_KEY", "Math.random", "partyLabel"]) {
     assert.ok(
-      !module.toLowerCase().includes(banned.toLowerCase()),
+      !positionsSource.toLowerCase().includes(banned.toLowerCase()),
       `lib/corpus/positions.ts contains "${banned}"`,
     );
   }

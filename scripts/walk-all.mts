@@ -2751,11 +2751,34 @@ for (const { zip } of FOUR) {
             : "",
         );
 
-        // A02 renders, with its denominators. Stated N equals rendered rows.
-        const digest = await page.evaluate(() => {
-          const d = document.querySelector("[data-ask-digest]");
-          return d ? (d as HTMLElement).innerText : "";
-        });
+        /*
+         * A02 renders, with its denominators. Stated N equals rendered rows.
+         *
+         * WAITED FOR, not read on arrival (g14, 2026-08-18). This read the DOM
+         * once, at whatever moment the preceding geometry checks happened to
+         * finish, with no wait of its own — so whether the digest was there
+         * depended entirely on how long those checks had taken. It passed the
+         * whole suite on one run and failed at 85701 and 85641 on the next,
+         * same build, twenty minutes apart, printing "no digest rendered"
+         * about a digest that renders.
+         *
+         * Third member of the same class this session, after the map's pin
+         * floor (R47) and the ask box's refusal (A07): a fixed or accidental
+         * wait plus a single read cannot tell GONE from NOT YET, and reports
+         * the first when it means the second.
+         */
+        let digest = "";
+        {
+          const deadline = Date.now() + 20_000;
+          while (Date.now() < deadline) {
+            digest = await page.evaluate(() => {
+              const d = document.querySelector("[data-ask-digest]");
+              return d ? (d as HTMLElement).innerText : "";
+            });
+            if (digest.trim().length > 0) break;
+            await page.waitForTimeout(250);
+          }
+        }
         check(
           "g12",
           `A02: the digest renders its three blocks at ${zip}`,

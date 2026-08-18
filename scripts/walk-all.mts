@@ -2813,31 +2813,39 @@ for (const { zip } of FOUR) {
          * required; if neither arrives inside the ceiling, the read happens
          * anyway and the check fails on the truth.
          */
+        /*
+         * EVERY QUESTION GETS A FRESH PAGE (g14, 2026-08-18).
+         *
+         * Five questions were asked in a row on ONE page, and the previous
+         * answer is still on screen when the next is submitted. Two weaker
+         * fixes were tried first and both failed against production, which is
+         * why this one is worth its cost:
+         *
+         *   - "wait until an outcome is present" latched onto the PREVIOUS
+         *     question's outcome and read while the panel was being cleared,
+         *     printing `settled in 2089ms` about a question a fresh-page probe
+         *     measured refusing at 8.2s.
+         *   - "wait until the panel TEXT changed and an outcome is present"
+         *     failed too, and for an obvious reason once seen: the typed
+         *     question is INSIDE the panel, so the text changes the instant
+         *     the input is filled, while the old answer is still rendered.
+         *     That produced `settled in 262ms`.
+         *
+         * There is no reliable way to tell a stale outcome from a new one on
+         * a page that already has one, so the page stops already having one.
+         * This is the repo's own standing note about the per-zip loop — its
+         * page has been clicked through by a dozen checks, so a bare
+         * querySelector finds whatever an earlier one left behind — applied
+         * rather than worked around. It costs one reload per question.
+         */
         const ask = async (question: string) => {
-          /*
-           * THE PANEL'S STATE BEFORE THIS QUESTION, because four questions are
-           * asked in a row on ONE page and the previous answer is still on
-           * screen when the next is submitted.
-           *
-           * Waiting for "an outcome is present" is not enough on a page that
-           * already has one: the poll latched onto the PREVIOUS question's
-           * rendered outcome, broke immediately, and read the panel a moment
-           * later while it was being cleared for the new request — reporting
-           * `answered=false refusal=false` about a question that refuses. It
-           * printed `settled in 2089ms` while a probe polling a FRESH page
-           * measured the same question refusing at 8.2s, at the same zip, on
-           * the same build. That gap is the stale read.
-           *
-           * So the wait is for a CHANGE plus an outcome, never for an outcome
-           * alone. This is the repo's own standing note about the per-zip loop
-           * — its page has been clicked through by a dozen checks, so a bare
-           * querySelector finds whatever an earlier one left behind.
-           */
-          const before = await page.evaluate(
-            () =>
-              (document.querySelector("[data-ask-panel]") as HTMLElement)
-                ?.innerText ?? "",
-          );
+          await page.reload({ waitUntil: "domcontentloaded", timeout: 90_000 });
+          await page.waitForTimeout(6000);
+          if ((await page.locator("[data-ask-panel]").count()) === 0) {
+            await page.locator("[data-ask-pill]").first().click();
+            await page.waitForTimeout(600);
+          }
+          const input = page.locator("[data-ask-box]").first();
 
           await input.fill(question);
           await page
@@ -2857,21 +2865,16 @@ for (const { zip } of FOUR) {
           const started = Date.now();
           let settledAt: number | null = null;
           while (Date.now() - started < 30_000) {
-            const settled = await page.evaluate((previous) => {
+            const settled = await page.evaluate(() => {
               const panel = document.querySelector(
                 "[data-ask-panel]",
               ) as HTMLElement | null;
-              const text = panel?.innerText ?? "";
-              // Changed AND finished. Either half alone is a stale read: the
-              // old outcome is still there before the change, and the panel is
-              // briefly empty after it.
-              if (text === previous) return false;
               return (
                 Boolean(document.querySelector("[data-ask-refusal]")) ||
                 Boolean(document.querySelector("[data-ask-destination]")) ||
-                /the answer/i.test(text)
+                /the answer/i.test(panel?.innerText ?? "")
               );
-            }, before);
+            });
             if (settled) {
               settledAt = Date.now() - started;
               break;

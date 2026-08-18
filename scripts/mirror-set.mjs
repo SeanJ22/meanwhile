@@ -85,6 +85,13 @@ export const MIRRORED_DOCS = [
   // `docs/` himself; mirroring it is what stops the same gap recurring, because
   // an absent mirror file now fails the set check out loud.
   { mirrorName: "session-map.md", repoPath: "docs/session-map.md" },
+  // Joined 2026-08-18 (g16), taking the set to FIFTEEN. The independent
+  // codebase audit the nine AUD tracker rows were dispositioned from. Those
+  // rows were written from the session brief because the document itself was
+  // in neither the repo nor the mirror when g15 looked; the author placed it
+  // in docs/ during g16, and it is mirrored so the reviewer can read the
+  // evidence behind the rows rather than the summary of it.
+  { mirrorName: "audit-2026-08-18.md", repoPath: "docs/audit-2026-08-18.md" },
 ];
 
 /**
@@ -103,6 +110,18 @@ export const COPIED_DOCS = MIRRORED_DOCS.filter((d) => d.repoPath !== null);
  * neither is a document and neither belongs in the ten.
  */
 export const EXPECTED_DIRS = ["transcripts", "code"];
+
+/**
+ * Subdirectories that are the AUTHOR'S, not the mirror's.
+ *
+ * The same reasoning as DECLARED_EXTRAS one level up, for folders. He put
+ * "Screenshots from Feedback" in the mirror on 2026-08-18 - 29 screenshots
+ * taken during his own testing pass, matching docs/Feedback 8.18 1421 pm.docx
+ * - and handoff failed on it, correctly, because nothing had declared it.
+ * Declaring it here reports it and stops failing on it; an undeclared
+ * directory still fails, and nothing is ever deleted either way.
+ */
+export const DECLARED_EXTRA_DIRS = ["Screenshots from Feedback"];
 
 /**
  * Files in the folder that are the author's, not the mirror's.
@@ -170,8 +189,11 @@ export function checkMirrorContents(mirrorPath) {
   const unexpected = files.filter((name) => !MIRRORED_DOC_NAMES.has(name));
   const extra = unexpected.filter((name) => !DECLARED_EXTRAS.includes(name));
   const declaredExtras = unexpected.filter((name) => DECLARED_EXTRAS.includes(name));
-  const extraDirs = dirs.filter((name) => !EXPECTED_DIRS.includes(name));
+  const extraDirs = dirs.filter(
+    (name) => !EXPECTED_DIRS.includes(name) && !DECLARED_EXTRA_DIRS.includes(name),
+  );
+  const declaredExtraDirs = dirs.filter((name) => DECLARED_EXTRA_DIRS.includes(name));
   const missingDirs = EXPECTED_DIRS.filter((name) => !dirs.includes(name));
 
-  return { missing, extra, declaredExtras, extraDirs, missingDirs, files, dirs };
+  return { missing, extra, declaredExtras, extraDirs, declaredExtraDirs, missingDirs, files, dirs };
 }

@@ -44,7 +44,7 @@ test("the canonical mirror set lives in one place, and holds what was ruled into
   // committed. Growth by decision is fine — the failure this guards is the set
   // living in two places and the two disagreeing, which is what produced two
   // contradictory reports.
-  assert.equal(MIRRORED_DOCS.length, 14, "the canonical set changed size — was that a decision?");
+  assert.equal(MIRRORED_DOCS.length, 15, "the canonical set changed size — was that a decision?");
 
   const names = MIRRORED_DOCS.map((d) => d.mirrorName);
   for (const expected of [
@@ -62,6 +62,7 @@ test("the canonical mirror set lives in one place, and holds what was ruled into
     "deferred.csv",
     "deferred.xlsx",
     "session-map.md",
+    "audit-2026-08-18.md",
   ]) {
     assert.ok(names.includes(expected), `${expected} left the canonical set`);
   }
@@ -75,7 +76,7 @@ test("the canonical mirror set lives in one place, and holds what was ruled into
   // Twelve copied, two generated. The generated pair have no repo counterpart,
   // which is why they cannot be drift-checked and must not be counted as if
   // they could. (Eleven until session-map.md joined on 2026-08-17, R33.)
-  assert.equal(COPIED_DOCS.length, 12);
+  assert.equal(COPIED_DOCS.length, 13);
   assert.equal(MIRRORED_DOCS.filter((d) => d.repoPath === null).length, 2);
 });
 

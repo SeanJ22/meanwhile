@@ -2820,8 +2820,18 @@ for (const { zip } of FOUR) {
             .first()
             .click();
 
-          const deadline = Date.now() + 20_000;
-          while (Date.now() < deadline) {
+          /*
+           * The ceiling is 30s and the WAIT ITSELF is reported, because a
+           * failure here has two very different causes and the evidence line
+           * has to say which. "Waited the whole ceiling and nothing rendered"
+           * is a slow or dead classifier; "settled in 3s and said neither" is
+           * a behaviour change. Walk 3 printed `answered=false refusal=false`
+           * with no way to tell them apart, which is the same ambiguity this
+           * whole class keeps producing one level up.
+           */
+          const started = Date.now();
+          let settledAt: number | null = null;
+          while (Date.now() - started < 30_000) {
             const settled = await page.evaluate(() => {
               const panel = document.querySelector(
                 "[data-ask-panel]",
@@ -2832,11 +2842,18 @@ for (const { zip } of FOUR) {
                 /the answer/i.test(panel?.innerText ?? "")
               );
             });
-            if (settled) break;
+            if (settled) {
+              settledAt = Date.now() - started;
+              break;
+            }
             await page.waitForTimeout(250);
           }
+          const waited =
+            settledAt === null
+              ? `TIMED OUT after ${Date.now() - started}ms with nothing rendered`
+              : `settled in ${settledAt}ms`;
 
-          return page.evaluate(() => ({
+          const read = await page.evaluate(() => ({
             refusal: Boolean(document.querySelector("[data-ask-refusal]")),
             destination:
               document
@@ -2854,6 +2871,8 @@ for (const { zip } of FOUR) {
                 ?.innerText ?? "",
             ),
           }));
+
+          return { ...read, waited };
         };
 
         // 1. THE PROVING CASE. It may route somewhere honest — the classifier
@@ -2864,7 +2883,7 @@ for (const { zip } of FOUR) {
           "g12",
           `the matcher ruling: the weather question is not keyword-routed at ${zip}`,
           weather.refusal || !weather.answered,
-          `refusal=${weather.refusal} answered=${weather.answered} destination=${weather.destination}`,
+          `refusal=${weather.refusal} answered=${weather.answered} destination=${weather.destination} — ${weather.waited}`,
         );
 
         // 2. A STRONG keyword question — two distinct hits — still answers.
@@ -2873,6 +2892,7 @@ for (const { zip } of FOUR) {
           "g12",
           `the matcher ruling: a strong keyword question answers at ${zip}`,
           strong.answered,
+          `answered=${strong.answered} — ${strong.waited}`,
         );
 
         // 3. AN EXACT NAME navigates rather than asking. The name is read off
@@ -2924,7 +2944,7 @@ for (const { zip } of FOUR) {
           "g12",
           `the matcher ruling: a weak match is answered by the classifier or refused honestly at ${zip}`,
           classified.answered || classified.refusal,
-          `answered=${classified.answered} refusal=${classified.refusal}`,
+          `answered=${classified.answered} refusal=${classified.refusal} — ${classified.waited}`,
         );
 
         // 5. AN HONEST REFUSAL, with the destinations offered.
@@ -2933,7 +2953,7 @@ for (const { zip } of FOUR) {
           "g12",
           `A07: an unroutable question refuses and offers the destinations at ${zip}`,
           nonsense.refusal && !nonsense.answered,
-          `refusal=${nonsense.refusal} answered=${nonsense.answered}`,
+          `refusal=${nonsense.refusal} answered=${nonsense.answered} — ${nonsense.waited}`,
         );
       }
     } finally {

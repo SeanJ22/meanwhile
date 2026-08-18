@@ -1,7 +1,7 @@
 # Session brief — g15 (written by g14, 2026-08-18)
 
-Nine rows, in order. No P0 in front of them for the first time in four
-sessions.
+One instrument row, then nine rows, in order. No P0 in front of them for the
+first time in four sessions.
 
 This session runs unattended. Nobody is available to answer.
 
@@ -40,6 +40,22 @@ a new probe.** Each one produced a confident false report: a probe that closed
 the card it came to measure (rule 4c), a probe that started sampling after the
 event had finished, and a screenshot pass that shot dark twice while claiming
 both themes.
+
+## 0 — R49, before the rows: the suite reads outcomes on a timer
+
+Three checks in `scripts/walk-all.mts` reported WORKING surfaces as NAMED
+REGRESSIONS in one session, all against the same build, because they slept a
+fixed interval and then read the DOM once. All three are fixed. **The class
+audit is a count: 36 `waitForTimeout` calls in that file, 3 converted, 33 NOT
+audited individually.** R49 carries the walk-and-split: decide per call whether
+it waits for a SETTLE (fine) or for an OUTCOME (must poll), and state the
+split.
+
+The one rule, which the row also carries: **a conversion must never wait until
+the check PASSES.** Waiting for an outcome means waiting until the surface has
+said something — a refusal or an answer, a count or a named gap — and then
+judging what it said. A poll that exits only on success turns a flaky check
+into one that cannot fail.
 
 ## 1 — The nine finish-now rows, in this order
 
@@ -100,7 +116,8 @@ diff or explicit "nothing new". Overwrite `docs/session-brief.md`. `pnpm
 handoff --ship` with the R22 gate; verify the deploy LANDS via `/api/build` and
 state the SHA.
 
-Completion against the denominator: item 1, rows completed of nine. "Needs your
+Completion against the denominator: items 0-1, and within item 1, rows
+completed of nine. "Needs your
 hands." followed IMMEDIATELY by the numbered list, or "Nothing — the queue
 continues."
 

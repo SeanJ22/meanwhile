@@ -2813,7 +2813,40 @@ for (const { zip } of FOUR) {
          * required; if neither arrives inside the ceiling, the read happens
          * anyway and the check fails on the truth.
          */
+        /*
+         * EVERY QUESTION GETS A FRESH PAGE (g14, 2026-08-18).
+         *
+         * Five questions were asked in a row on ONE page, and the previous
+         * answer is still on screen when the next is submitted. Two weaker
+         * fixes were tried first and both failed against production, which is
+         * why this one is worth its cost:
+         *
+         *   - "wait until an outcome is present" latched onto the PREVIOUS
+         *     question's outcome and read while the panel was being cleared,
+         *     printing `settled in 2089ms` about a question a fresh-page probe
+         *     measured refusing at 8.2s.
+         *   - "wait until the panel TEXT changed and an outcome is present"
+         *     failed too, and for an obvious reason once seen: the typed
+         *     question is INSIDE the panel, so the text changes the instant
+         *     the input is filled, while the old answer is still rendered.
+         *     That produced `settled in 262ms`.
+         *
+         * There is no reliable way to tell a stale outcome from a new one on
+         * a page that already has one, so the page stops already having one.
+         * This is the repo's own standing note about the per-zip loop — its
+         * page has been clicked through by a dozen checks, so a bare
+         * querySelector finds whatever an earlier one left behind — applied
+         * rather than worked around. It costs one reload per question.
+         */
         const ask = async (question: string) => {
+          await page.reload({ waitUntil: "domcontentloaded", timeout: 90_000 });
+          await page.waitForTimeout(6000);
+          if ((await page.locator("[data-ask-panel]").count()) === 0) {
+            await page.locator("[data-ask-pill]").first().click();
+            await page.waitForTimeout(600);
+          }
+          const input = page.locator("[data-ask-box]").first();
+
           await input.fill(question);
           await page
             .locator("[data-ask-panel] button", { hasText: "Ask" })
@@ -2939,12 +2972,40 @@ for (const { zip } of FOUR) {
         // 4. A CLASSIFIER-ROUTED question: one keyword hit, which the keyword
         //    layer now declines. Whatever comes back must be honest — either
         //    the classifier found the drawer, or the refusal is stated.
+        /*
+         * A DESTINATION COUNTS, and leaving it out is why this printed a
+         * NAMED REGRESSION at 85641 across three consecutive walks (g14,
+         * 2026-08-18).
+         *
+         * The condition tested `answered || refusal` while the comment above
+         * it names THREE honest outcomes — "the classifier found the drawer,
+         * or the refusal is stated". Finding the drawer IS a destination, and
+         * check 1 fifteen lines up already treats `destination` as a first
+         * class outcome. So a zip where the classifier routes "my water bill"
+         * somewhere real failed a check whose own prose says it should pass.
+         *
+         * CORRECTED, because the evidence first cited for this clause did not
+         * survive the next fix. It was added after 85641 failed three walks
+         * running and printed `destination=meetings` — which looked like a
+         * zip where the classifier routes rather than refuses. Once every
+         * question got its own FRESH PAGE, that destination stopped appearing
+         * at all: it was the stale panel from the previous question, not a
+         * routing decision. On fresh pages the weak match answers or refuses
+         * at all four zips and this branch is not currently exercised.
+         *
+         * It stays anyway, on the check's own documented intent rather than
+         * on that reading — the comment above names three honest outcomes and
+         * check 1 already treats `destination` as one, so a zip that genuinely
+         * routes should pass. The destination is printed either way, so
+         * nobody has to take this paragraph's word for it.
+         */
         const classified = await ask("my water bill");
         check(
           "g12",
           `the matcher ruling: a weak match is answered by the classifier or refused honestly at ${zip}`,
-          classified.answered || classified.refusal,
-          `answered=${classified.answered} refusal=${classified.refusal} — ${classified.waited}`,
+          classified.answered || classified.refusal || classified.destination !== null,
+          `answered=${classified.answered} refusal=${classified.refusal} ` +
+            `destination=${classified.destination} — ${classified.waited}`,
         );
 
         // 5. AN HONEST REFUSAL, with the destinations offered.

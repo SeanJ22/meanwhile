@@ -32,7 +32,7 @@ const RUN_ID =
   process.env.WTP_RUN_ID ?? makeRunId("g14-a07-probe", new Date().toISOString());
 const RUN_HEADERS = syntheticRunHeaders({ ...process.env, WTP_RUN_ID: RUN_ID });
 
-const NONSENSE = "qwertyuiop asdfghjkl zxcvbnm";
+const NONSENSE = process.env.A07_QUESTION ?? "qwertyuiop asdfghjkl zxcvbnm";
 const ZIPS = (process.env.A07_ZIPS ?? "85701,07866,85641,03255").split(",");
 const POLL_MS = 250;
 const LIMIT_MS = 30_000;
@@ -95,13 +95,19 @@ async function probe(browser: Browser, zip: string): Promise<string> {
     while (Date.now() - started < LIMIT_MS) {
       const state = (await page.evaluate(() => ({
         refusal: Boolean(document.querySelector("[data-ask-refusal]")),
+        destination: document.querySelector("[data-ask-destination]")?.getAttribute("data-ask-destination") ?? null,
         answered: /the answer/i.test(
           (document.querySelector("[data-ask-panel]") as HTMLElement)?.innerText ?? "",
         ),
-      }))) as { refusal: boolean; answered: boolean };
+      }))) as {
+        refusal: boolean;
+        answered: boolean;
+        destination: string | null;
+      };
 
       if (state.refusal && refusedAt === null) refusedAt = Date.now() - started;
       if (state.answered && answeredAt === null) answeredAt = Date.now() - started;
+      if (state.destination) return `${zip}: DESTINATION "${state.destination}" at ${Date.now()-started}ms — routed, not refused`;
       if (refusedAt !== null) break;
       await page.waitForTimeout(POLL_MS);
     }

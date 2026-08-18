@@ -282,3 +282,46 @@ comments open? Since P03's free-text remainder is in your "finish now"
 pile, this becomes load-bearing — the map assumes **free text does not
 ship until the review path exists**, which is what the abuse policy
 already promises. Overrule in one line if you want free text sooner.
+
+---
+
+## g13 — 2026-08-18. What changed for you
+
+**1 — Both dead scheduled jobs are alive, and verified by running them.**
+The intake tripwire and the meetings refresh had each been failing on
+schedule. Both are fixed and both were dispatched for real rather than
+reasoned about: the tripwire purged 1 limiter row (11 remain) and committed
+its report; the refresh wrote 202 fresh + 24 carried = 226 total with all
+ten sources reachable. Neither guard was loosened — in both cases the guard
+was correct and the thing it guarded had never been taught to declare
+itself.
+
+**2 — R47 is a P0 you should know about before the walkthrough.** At 85701,
+zooming all the way out wipes every pin. `pnpm walk:all` catches it and is
+red until it is fixed. Half the diagnosis is done and written down: the
+server is innocent — 89, 97, 97 meetings across the radius rungs, monotonic
+— so the pins are being dropped on the client. The other half is not
+guessed at, and the row says where to start. It was found by the standing
+suite, which is exactly what that suite is for.
+
+**3 — Body cards now say what a body can decide.** Seven sections, and the
+prose behind "what this body does" is a paraphrase of a statute or charter
+read on the day, cited with its URL. Arizona's county and school-district
+classes and Tucson's charter are entered. **New Hampshire is not** — those
+bodies render the honest absence line until somebody reads RSA 28, 47 and
+189. There is deliberately no national default, because what a county board
+does is a different answer in fifty states and one plausible sentence would
+be wrong somewhere without ever saying so.
+
+**4 — The eleven finish-now rows are now ten, and that is the denominator.**
+M136 is done. The two P0 jobs took the front of the session by instruction
+and by weight; the remaining ten are deferred whole, not thinned and not
+partially built, each with its spec intact. The next brief carries them in
+the same order.
+
+**5 — Two small rows opened, not fixed, deliberately.** R45: the Node 20 →
+24 forced-actions warning on every workflow run (`actions/checkout@v4` and
+`actions/setup-node@v4` need version bumps). R46: `"type": "module"` in
+`package.json` would silence the warning on every test file, but it is a
+package-wide change to module resolution and wants deliberate evaluation,
+not a reflex edit. Both rows say what to check before touching them.

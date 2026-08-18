@@ -10155,3 +10155,164 @@ Each carries a dated row saying so, and several carry a note about what THIS
 session changed underneath them: the rail's new geometry for M139's half-load,
 the deleted search box for M135's audit, and M134's measure-agnostic resolver
 for P03's rule 5.
+
+---
+
+## g13 — 2026-08-18. Two dead jobs, one deep card, and a regression the suite caught
+
+The brief was eleven finish-now rows behind two P0 scheduled-job failures.
+The P0s took the front of the session by instruction and by weight — the
+meetings refresh had been blocked since the previous day — and both are fixed,
+proven by planting, and verified by dispatching the real workflows rather than
+by reasoning about them.
+
+**Completion against the denominator: items 0–2, 2 of 3 whole. Within item 2,
+1 row of 11 (M136).** The other ten are deferred WHOLE — not thinned, not
+partially built — under the deferral boundary that says a subject is never
+left half-hunted.
+
+### 0a — the write guard was right, and the job had never introduced itself
+
+`intake-tripwire.yml` had failed every scheduled run. `purgeExpiredLimiterState`
+runs where `NODE_ENV` and `WTP_DB_ROLE` are both unset, so `lib/db/write-guard.ts`
+read a non-production runtime writing to the sold store — which is precisely
+what it was. Every tempting fix widens the guard for every writer to unblock
+one job, so the guard's default is untouched.
+
+Instead a third door, and it is narrow. `SANCTIONED_WRITES` is a closed table
+mapping a named purpose to exactly ONE operation string, and a write is
+sanctioned only when all three of these hold: the declaration names a sanction
+in the table, the operation being attempted is that sanction's operation
+exactly, and `DATABASE_URL` **is** `WTP_PRODUCTION_DATABASE_URL_WRITE`. The
+third condition is the one that matters most — without it a declared purpose
+would open a write to whatever string happened to be nearest, and a sanction
+would be standing in for a destination.
+
+Both refusals the brief demanded are planted: the same script without the
+declaration is still refused, and an unrelated script carrying the declaration
+is still refused (asserted for a reaction, a search-log event, a feedback
+submission and a limiter counter). The refusal message now names the sanctioned
+path, because its only previous remedy — point `DATABASE_URL` at a local
+database — is advice a CI runner cannot take.
+
+**The class audit, asserted rather than described.** Five scheduled workflows
+exist. One writes to the database (the tripwire's purge, now sanctioned). The
+other four — meetings, FEC, dotgov and LegiScan snapshots — never open a
+connection; they commit a JSON file. The test pins the workflow count at five
+and pins database access to the tripwire alone, so a workflow that grows a
+`DATABASE_URL` later cannot join the class silently.
+
+**Verified live:** run 32148015134 succeeded and the purge ran — *1 limiter row
+purged, 11 remain* — and the report committed.
+
+### 0b — carry-forward clipped an archive to a window its source never applied
+
+The M59 day-precision gate blocked the commit because Merrimack County's
+archive was missing. The gate told the truth and was not loosened.
+
+Three suspects, each ruled on with evidence:
+
+- **Carry-forward gap — CONFIRMED**, and more precisely than the suspect was
+  written. Carry-forward DID fire for revize and carried 8 rows. It then
+  clipped them to `CONCLUDED_LOOKBACK_DAYS`, a window revize's own M59 archive
+  rung has never applied — that rung emits every dated document the notices
+  page lists. Six of fourteen sittings were dropped, by the module written to
+  prevent exactly this.
+- **Moved or vanished upstream — REJECTED.** The notices page serves HTTP 200
+  from this egress with 16 dated documents spanning 2.9.26 to 8.24.26.
+- **A g12 registry regression — REJECTED.** The last commits touching
+  `source-wiring.ts` (3de8d0b) and `lib/sources/revize/` (269a3ce) both predate
+  g12's merges, which touched neither.
+
+**The wall is ladder rung 5, an EGRESS wall** — 403 to the GitHub runner, 200
+here on a plain fetch with no special headers. `iqm2` recovered the same way.
+
+The fix: `MeetingSource.publishedLookbackDays` — how far back a source's own
+retrieval reaches, `null` meaning the publisher's whole listed archive. revize
+declares `null`; the composite forwards it through the FAILURE branch, which is
+the only branch carry-forward reads; `carryForward` computes its back edge per
+source. Not a loosening — `lib/meetings/query.ts` clips reads at 90 days
+independently, so the reader sees the same window either way. All this decides
+is whether the snapshot stays as whole as the last healthy run left it.
+
+**Proof against the real snapshot, simulating the exact failure:** without the
+declaration, carried 8 and Merrimack day-only falls 14 → 7, reproducing the
+failed run's own `revize:8` line. With it: carried 15, all 14 day-only rows
+survive, all 15 marked.
+
+**Verified live:** run 32148299931 succeeded — **202 fresh + 24 carried = 226
+total**, 10 of 10 sources reachable, and the M59 test green on the committed
+file.
+
+### The push race, found by verifying rather than by reasoning
+
+Dispatching both workflows at once to prove the two fixes exposed a third
+thing: both push to `main` with no pull, rebase or retry. The tripwire's report
+landed first and the meetings refresh — whose ingest, gate and commit had all
+succeeded — failed on the push alone. Re-dispatched by itself it passed, which
+is the proof. **R48**, P2, with the note that the fix must not turn a red run
+into a green one that changed nothing.
+
+### 1 — two checks stop being permanently unrunnable
+
+The overlapping-pin checks had settled into `cannotRun`, which is the state
+this suite is least able to notice: it prints, it is honest, and it proves
+nothing, run after run. They took `groups[0]` — whichever stack the probe
+listed first — and at 85701 that one sits under the who-governs card.
+
+A stack is not special. They now ask WHICH stack is reachable, scanning every
+group and every pin within a group, and only if none is reachable anywhere do
+they fall back to closing the open card and asking again. The overlay is never
+named, so this does not rot when the card moves. Which rung earned the press is
+printed in the evidence.
+
+**Both now RUN and PASS** — the run's own diff reads `baseline 290 · added 2 ·
+GONE 0`, and neither appears in the could-not-run list.
+
+**g4's pan-and-wait check is NOT covered by this fix and stays as it was.** Its
+blocker is different in kind — "the drag did not move the camera", a gesture
+that does not take, not an overlay in the way — and it remains the single
+could-not-run in the suite.
+
+### M136 — the body battlecard
+
+Seven sections in the collapsible grammar, and the SET is identical for every
+body: an empty section collapses closed with its own honest line inside and its
+header visible, per the author's ruling on M93. Hiding empties would make a
+well-covered body's card taller than a thin one's, which is the same layout
+thumb on the scale the equal-effort rule exists to catch.
+
+Section 2 is sourced, never generated: A.R.S. § 11-251 for Pima, § 15-341 for
+Tucson Unified, and the Tucson City Charter's council-manager form for Tucson —
+which overrides any state-level municipal answer, because a generic one would
+falsely say its council runs the city. **There is deliberately no national
+default.** What a county board does differs in fifty states, and a paraphrase
+that reads plausibly everywhere would be wrong somewhere without saying so.
+
+**Stated gap:** New Hampshire's three governing classes have no entry and
+render the absence line, identically to every other unsourced body, until a
+session reads RSA 28, RSA 47 and RSA 189 the way this one read the Arizona
+statutes.
+
+### R47 — a named regression, found and NOT half-fixed
+
+`pnpm walk:all` reported *pins 11 → 12 → 0 across zooms 11.0 → 9.0 → 7.0* at
+85701. The g3 win behind "more viewport must never mean fewer pins" is undone
+at the widest zoom.
+
+Half of the diagnosis is settled and is written down so it is not repeated:
+**the server is innocent.** `/api/meetings` at 85701 returns 89 meetings at
+radius 25, 97 at 60, 97 at 150 and 97 at 400 (clamped to 150, and saying so in
+its own `radiusKm`). Monotonic at every rung. The data is on the wire and the
+pins are not on screen, so the defect is client-side.
+
+The other half — which client layer drops them — is NOT diagnosed, and under
+the deferral boundary it is not half-fixed on the way past. R47 carries the two
+candidate shapes and where to start.
+
+### What was deferred, and the denominator
+
+Ten of item 2's eleven rows — M139, M135, M07, B15, G10/8a, P01, P03, D25, D29,
+D06 — were **not started**, not thinned, not partially built. M136 is the one
+completed. The ordering was the brief's own, and the two P0s in front of it
+were jobs that could not run at all.

@@ -47,6 +47,7 @@ import {
   representationNoteFor,
 } from "@/lib/registry/representation";
 import { TIER_LABEL } from "@/lib/ocd/tiers";
+import { blurbForBody } from "@/lib/officials/body-blurbs";
 import { tierForMeeting } from "@/lib/state/derive";
 import {
   formatMeetingDate,
@@ -1714,7 +1715,52 @@ function bodySubject(
       "We know this body governs here because its division exists. We haven't sourced who sits on it.",
     meetings,
     sources: districtCardSources(roster, meetings),
+    // M136 (2026-08-18): the seven sections. Every one renders for every
+    // body — content where the product holds it, the section's own honest
+    // absence line where it does not, and never a hidden section.
+    bodyCard: {
+      whatItDoes: blurbForBody(body.ocdId, body.divisionType),
+      isSchoolDistrict: body.divisionType === "school_district",
+      // The superintendent is HIRED by the board, so they are not in the
+      // elected roster and have to be asked for separately. Null renders as
+      // the named gap, never as an absent row.
+      superintendent:
+        body.divisionType === "school_district"
+          ? (roster.find((h) => /superintendent/i.test(h.officeTitle)) ?? null)
+          : null,
+      contact: bodyContactRows(body),
+      jurisdiction: [
+        { label: "Governs", value: body.divisionLabel },
+        { label: "Level", value: TIER_LABEL[body.tier] },
+      ],
+    },
   };
+}
+
+/**
+ * A body's published contact routes (M136 section 5).
+ *
+ * Only what the registry actually holds. No pattern-built addresses, no
+ * "info@" guessed from a domain — a contact route we invented is a claim
+ * about how to reach a government, and a reader who writes to it and hears
+ * nothing has been failed more thoroughly than one who was told we don't
+ * know.
+ */
+function bodyContactRows(
+  body: CoveredBody,
+): { label: string; value: string; href: string | null }[] {
+  const rows: { label: string; value: string; href: string | null }[] = [];
+  if (body.homepageUrl) {
+    rows.push({
+      label: "Official site",
+      value: new URL(body.homepageUrl).hostname.replace(/^www\./, ""),
+      href: body.homepageUrl,
+    });
+  }
+  // The registry holds no phone or email for a BODY today — those live on the
+  // people, on their own cards. Stated here rather than left as an empty
+  // branch somebody later reads as "we checked and there is none".
+  return rows;
 }
 
 /** A body's own kind where it is curated; its division's kind where derived. */

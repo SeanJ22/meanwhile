@@ -25,11 +25,65 @@
     "budget gamed by moving the biggest thing out of scope measures nothing."
   ],
   "recordedAt": "2026-08-18",
+  "$serverTraceComment": [
+    "SPLIT INTO TWO NUMBERS AND MEASURED PER MODE (R51 remainder, 2026-08-18, g16).",
+    "",
+    "The single figure below used to be `Math.max` over every manifest, which is",
+    "always next-server.js — the FRAMEWORK's own runtime trace, holding zero files",
+    "of ours. It refused a deploy for a reason unrelated to what it guards, and it",
+    "could have passed for the exact defect it exists to catch: under one maximum,",
+    "an app route could grow 195 -> 900 files and stay far under a ceiling pinned",
+    "to the framework's 927.",
+    "",
+    "THE MEASUREMENTS THAT SETTLED IT, all four taken 2026-08-18:",
+    "  927  windows, default mode      (what the old baseline was)",
+    "  935  linux,   default mode      (+8: @img/sharp-linux* for sharp-win32)",
+    " 1130  windows, standalone mode   (+203, all of them node_modules/next/dist)",
+    " 1138  linux,   standalone mode   (what Netlify built, and refused)",
+    "",
+    "Netlify's Next runtime plugin builds in STANDALONE mode, so 1138 is the only",
+    "one of the four that describes a deploy. The old baseline was the only one of",
+    "the four that described nothing that ships.",
+    "",
+    "THE 203 FILES THAT JOINED IN STANDALONE MODE, recorded as this ceiling's",
+    "reason rather than summarised: every one is under node_modules/next/dist and",
+    "none is a file of this repo's — dist/lib/metadata (20), dist/lib/typescript",
+    "(11), dist/compiled/@edge-runtime (11), dist/shared/lib (9), dist/lib/helpers",
+    "(8), dist/build/swc (7), dist/telemetry/events (5), dist/trace/report (4),",
+    "dist/lib/memory (4), dist/build/segment-config (3), and singles and pairs",
+    "across dist/build, dist/compiled and dist/lib. Standalone mode exists to make",
+    "the server runnable without node_modules, so tracing its own runtime is the",
+    "mode working. Zero app-route manifests changed between the two modes: every",
+    "one is byte-identical, which is what makes 1a mode-independent.",
+    "",
+    "Reproduce any of it with `node scripts/trace-census.mjs --files out.txt` and",
+    "diff two builds' dumps; .github/workflows/build-check.yml runs both modes on",
+    "linux so the deployed number is measured before Netlify measures it."
+  ],
   "serverTrace": {
-    "what": "Files traced into the largest Next server trace manifest (*.nft.json). A COUNT, not bytes. Rises when the server bundle starts pulling in files it does not need — which is exactly how tests/ ended up in a deployed artifact (R23).",
-    "largestManifestFiles": 927,
-    "ceiling": 1050,
-    "ceilingNote": "About 13% above the measured 927. R23's defect took two manifests to 2554 and 2567, so a real tracing regression is enormous and this catches it long before that; ordinary growth does not."
+    "appManifest": {
+      "what": "Files traced into the largest manifest under .next/server/app — the routes that carry OUR code. A COUNT, not bytes. This is the number R23 blew up to 2554 and 2567 when a runtime-computed path made Turbopack trace the whole project, tests/ included.",
+      "largestManifestFiles": 195,
+      "largest": "server/app/api/meetings/route.js.nft.json",
+      "ceiling": 240,
+      "ceilingNote": "About 23% above the measured 195. Wider headroom than a pure percentage because /api/meetings legitimately traces public/geo/** through outputFileTracingIncludes, so committing new boundary files moves this number by design; 240 still catches a tracing explosion an order of magnitude before R23's shape.",
+      "modeIndependent": "Measured identical in default and standalone mode on 2026-08-18. If these ever diverge, the divergence is the finding."
+    },
+    "frameworkRuntime": {
+      "what": "Files traced into next-server.js — Next's own server runtime. Contains no file of this repo. Recorded per BUILD MODE because the mode changes it by 200+ files, and compared against the mode actually built, never across modes.",
+      "standalone": {
+        "largestManifestFiles": 1138,
+        "ceiling": 1300,
+        "modeNote": "The mode Netlify builds in: its Next runtime plugin sets NEXT_PRIVATE_STANDALONE. Measured on linux, the platform Netlify builds on.",
+        "ceilingNote": "About 14% above 1138. A Next patch release moves this by a few files; a major upgrade may move it by more, and moving the baseline then is the correct response, with what joined recorded."
+      },
+      "default": {
+        "largestManifestFiles": 935,
+        "ceiling": 1050,
+        "modeNote": "A plain `pnpm build` with no standalone output — what a developer runs locally. Measured on linux; windows reads 927, and the 8-file gap is @img/sharp-linux* standing in for @img/sharp-win32-x64.",
+        "ceilingNote": "The original AUD-02 ceiling, kept: it is about 12% above 935 and it has never been the number that refused a deploy."
+      }
+    }
   },
   "client": {
     "route": "/",

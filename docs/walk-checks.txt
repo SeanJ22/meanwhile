@@ -102,6 +102,102 @@
 [g11] /transparency discloses the optional reply address
 [g11] the message body is still promised the T09 scrub
 [g11] the reply field is labelled optional and required by nothing
+[g12] 4b: exactly one ballot door on screen at 03255 390px
+[g12] 4b: exactly one ballot door on screen at 03255 desktop
+[g12] 4b: exactly one ballot door on screen at 07866 390px
+[g12] 4b: exactly one ballot door on screen at 07866 desktop
+[g12] 4b: exactly one ballot door on screen at 85641 390px
+[g12] 4b: exactly one ballot door on screen at 85641 desktop
+[g12] 4b: exactly one ballot door on screen at 85701 390px
+[g12] 4b: exactly one ballot door on screen at 85701 desktop
+[g12] 4c: opening the rail closed the who-governs card at 03255 390px
+[g12] 4c: opening the rail closed the who-governs card at 03255 desktop
+[g12] 4c: opening the rail closed the who-governs card at 07866 390px
+[g12] 4c: opening the rail closed the who-governs card at 07866 desktop
+[g12] 4c: opening the rail closed the who-governs card at 85641 390px
+[g12] 4c: opening the rail closed the who-governs card at 85641 desktop
+[g12] 4c: opening the rail closed the who-governs card at 85701 390px
+[g12] 4c: opening the rail closed the who-governs card at 85701 desktop
+[g12] 4e: exactly one pill cluster at 03255 390px, WGH open
+[g12] 4e: exactly one pill cluster at 03255 390px, sidebar open
+[g12] 4e: exactly one pill cluster at 03255 desktop, WGH open
+[g12] 4e: exactly one pill cluster at 03255 desktop, sidebar open
+[g12] 4e: exactly one pill cluster at 07866 390px, WGH open
+[g12] 4e: exactly one pill cluster at 07866 390px, sidebar open
+[g12] 4e: exactly one pill cluster at 07866 desktop, WGH open
+[g12] 4e: exactly one pill cluster at 07866 desktop, sidebar open
+[g12] 4e: exactly one pill cluster at 85641 390px, WGH open
+[g12] 4e: exactly one pill cluster at 85641 390px, sidebar open
+[g12] 4e: exactly one pill cluster at 85641 desktop, WGH open
+[g12] 4e: exactly one pill cluster at 85641 desktop, sidebar open
+[g12] 4e: exactly one pill cluster at 85701 390px, WGH open
+[g12] 4e: exactly one pill cluster at 85701 390px, sidebar open
+[g12] 4e: exactly one pill cluster at 85701 desktop, WGH open
+[g12] 4e: exactly one pill cluster at 85701 desktop, sidebar open
+[g12] 4e: the cluster is at the top of WGH at 03255 390px
+[g12] 4e: the cluster is at the top of WGH at 03255 desktop
+[g12] 4e: the cluster is at the top of WGH at 07866 390px
+[g12] 4e: the cluster is at the top of WGH at 07866 desktop
+[g12] 4e: the cluster is at the top of WGH at 85641 390px
+[g12] 4e: the cluster is at the top of WGH at 85641 desktop
+[g12] 4e: the cluster is at the top of WGH at 85701 390px
+[g12] 4e: the cluster is at the top of WGH at 85701 desktop
+[g12] 4f: no dead space below the rail's last row at 03255 390px
+[g12] 4f: no dead space below the rail's last row at 07866 390px
+[g12] 4f: no dead space below the rail's last row at 85641 390px
+[g12] 4f: no dead space below the rail's last row at 85701 390px
+[g12] 4f: the rail's bottom is reachable at 03255 390px, longest content
+[g12] 4f: the rail's bottom is reachable at 07866 390px, longest content
+[g12] 4f: the rail's bottom is reachable at 85641 390px, longest content
+[g12] 4f: the rail's bottom is reachable at 85701 390px, longest content
+[g12] 4f: the rail's top is on screen at 03255 390px, longest content
+[g12] 4f: the rail's top is on screen at 07866 390px, longest content
+[g12] 4f: the rail's top is on screen at 85641 390px, longest content
+[g12] 4f: the rail's top is on screen at 85701 390px, longest content
+[g12] A02: every digest block states a count or a named gap at 03255
+[g12] A02: every digest block states a count or a named gap at 07866
+[g12] A02: every digest block states a count or a named gap at 85641
+[g12] A02: every digest block states a count or a named gap at 85701
+[g12] A02: the digest renders its three blocks at 03255
+[g12] A02: the digest renders its three blocks at 07866
+[g12] A02: the digest renders its three blocks at 85641
+[g12] A02: the digest renders its three blocks at 85701
+[g12] A07: an unroutable question refuses and offers the destinations at 03255
+[g12] A07: an unroutable question refuses and offers the destinations at 07866
+[g12] A07: an unroutable question refuses and offers the destinations at 85641
+[g12] A07: an unroutable question refuses and offers the destinations at 85701
+[g12] G07: the Ask pill names a concrete example at 03255 390px
+[g12] G07: the Ask pill names a concrete example at 03255 desktop
+[g12] G07: the Ask pill names a concrete example at 07866 390px
+[g12] G07: the Ask pill names a concrete example at 07866 desktop
+[g12] G07: the Ask pill names a concrete example at 85641 390px
+[g12] G07: the Ask pill names a concrete example at 85641 desktop
+[g12] G07: the Ask pill names a concrete example at 85701 390px
+[g12] G07: the Ask pill names a concrete example at 85701 desktop
+[g12] M119: exactly one text input in the shell at 03255 390px
+[g12] M119: exactly one text input in the shell at 03255 desktop
+[g12] M119: exactly one text input in the shell at 07866 390px
+[g12] M119: exactly one text input in the shell at 07866 desktop
+[g12] M119: exactly one text input in the shell at 85641 390px
+[g12] M119: exactly one text input in the shell at 85641 desktop
+[g12] M119: exactly one text input in the shell at 85701 390px
+[g12] M119: exactly one text input in the shell at 85701 desktop
+[g12] the matcher ruling: a strong keyword question answers at 03255
+[g12] the matcher ruling: a strong keyword question answers at 07866
+[g12] the matcher ruling: a strong keyword question answers at 85641
+[g12] the matcher ruling: a strong keyword question answers at 85701
+[g12] the matcher ruling: a weak match is answered by the classifier or refused honestly at 03255
+[g12] the matcher ruling: a weak match is answered by the classifier or refused honestly at 07866
+[g12] the matcher ruling: a weak match is answered by the classifier or refused honestly at 85641
+[g12] the matcher ruling: a weak match is answered by the classifier or refused honestly at 85701
+[g12] the matcher ruling: an exact name navigates and asks nothing at 03255
+[g12] the matcher ruling: an exact name navigates and asks nothing at 07866
+[g12] the matcher ruling: an exact name navigates and asks nothing at 85641
+[g12] the matcher ruling: an exact name navigates and asks nothing at 85701
+[g12] the matcher ruling: the weather question is not keyword-routed at 03255
+[g12] the matcher ruling: the weather question is not keyword-routed at 07866
+[g12] the matcher ruling: the weather question is not keyword-routed at 85641
+[g12] the matcher ruling: the weather question is not keyword-routed at 85701
 [g3] /ballot names the pick as a ballot-building action at 03255
 [g3] /ballot names the pick as a ballot-building action at 07866
 [g3] /ballot names the pick as a ballot-building action at 85641
@@ -139,8 +235,6 @@
 [g4] 85701: Limit radius and Show districts moved inside Filters
 [g4] 85701: Near me stays outside Filters
 [g4] 85701: opening Filters reveals radius and districts
-[g4] 85701: the camera stays where the reader put it
-[g4] 85701: the meetings panel opens with every group collapsed
 [g4] the moving-here line reads exactly
 [g5] 03255 (hop 1 of 4): the zip draws nothing on the map
 [g5] 03255 (hop 4 of 4, returning): the zip draws nothing on the map
@@ -193,8 +287,6 @@
 [g9] /transparency: carries no personal email address
 [g9] 03255: Shaheen renders ONE Phone pill
 [g9] 03255: the phone chooser lists every recorded number
-[g9] 85701: dismissing the fan returns every pin
-[g9] 85701: overlapping pins fan out when pressed
 [g9] the map: carries no personal email address
 [g9] the sidebar offers the in-app feedback route
 [h] 03255: the governing count matches the frozen external denominator

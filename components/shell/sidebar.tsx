@@ -76,7 +76,29 @@ export function Sidebar({
   const { location } = useShellData();
 
   return (
-    <aside className={`sidebar${mobileOpen ? " sidebar-open" : ""}`}>
+    /*
+     * `data-dismiss-exempt` — g12, and the defect it fixes is a real one that
+     * `pnpm walk:all` caught against production before anybody read a line of
+     * this file.
+     *
+     * The who-governs card dismisses on any press outside it. Before 4e that
+     * was harmless: the rail's header was a static ballot link and minimizing
+     * the card changed nothing in the rail. Now the card minimizing MOVES THE
+     * PILL CLUSTER INTO THE RAIL'S HEADER, which grows it by about a hundred
+     * pixels — so the reader's first press on any rail control at desktop
+     * minimized the card, shifted everything under their finger downward, and
+     * the mouseup landed somewhere else. **The click did nothing**, which is
+     * the exact class of defect this session's own rules name.
+     *
+     * The rail is a PEER SURFACE, not the background: pressing it is using the
+     * app, not putting down what you were reading. So it is exempt, the layout
+     * never shifts under a press, and 4c is untouched — every explicit open
+     * still goes through `openSurface`, which closes the other two.
+     */
+    <aside
+      data-dismiss-exempt
+      className={`sidebar${mobileOpen ? " sidebar-open" : ""}`}
+    >
       <div className="sidebar-header">
         <div className="brand">
           {/* Slide the rail away — any width (2f); 44px thumb target. The

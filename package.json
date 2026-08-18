@@ -2,6 +2,7 @@
   "name": "we-the-people",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "map:worker": "node scripts/build-map-worker.mjs",
     "session:start": "node scripts/session-start.mjs",

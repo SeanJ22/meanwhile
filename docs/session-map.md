@@ -64,6 +64,40 @@ several of your dispositions put items *inside* H itself, so H grows.
 
 ---
 
+**Updated after g11 (this session):** **R36 and R42 both CLOSED.** The author
+corrected the host, `pnpm verify:readonly` passes all thirteen checks and
+`pnpm verify:local-write` passes all of its including branch separation — so
+the production run-id census ran for the first time since the marker shipped
+(`search_log` 3,888 rows: 0 organic, 1,026 synthetic, 2,845 unknown, 17
+author, reconciling exactly, across 52 runs), and `pnpm feedback:read
+--target=production` works. The census is now a command, `pnpm census:runs`.
+**The one sanctioned production write handle exists and is proven** —
+`WTP_PRODUCTION_DATABASE_URL_WRITE`, resolved through `lib/db/write-handle.ts`,
+which refuses the READONLY variable by name and refuses any read-only string in
+any variable, both planted and demonstrated at the unit and at the script.
+`searchlog:backmark` moved onto it: until today a variable named read was this
+repo's actual write path to production. **Migrations 0006, 0007 and 0008
+applied to production** through that handle and verified by column query; the
+production journal holds 9 of 9. **R41 CLOSED and built** on the author's
+ruling A — one optional reply field, its own nullable column on the feedback
+table alone, stored unscrubbed because the reader typed it into a box that
+asked for it, with the message body's T09 scrub unchanged and pinned at
+exactly one call. The form's flat promise that nobody can write back is now
+true of one case only, and the page and the confirmation both say which case
+the reader is in. **M12 CLOSED** — the school overlay splits into unified /
+elementary / secondary, with the class audited at all three sites that mapped
+a division to a map layer. **D22 CLOSED AS A FINDING**: no live NovusAgenda
+tenant exists in scope, established by sweeping 23 candidate tenants rather
+than re-reading one body — and 22 of them answer HTTP 200 with the vendor's own
+error page, because NovusAgenda wildcards its per-client subdomain namespace.
+That is now a playbook rung. **G05 rule 4d CLOSED** — the router learns four
+in-app destinations (ballot, meetings, districts, contact) and the ask copy
+reads its promises from the routes, so the copy cannot name what the router
+cannot route. **Still carrying:** the rest of the g7 item 4–8 block — A01, A02
+and M119 (item 4's remaining halves, with A06 and A07 verified working but
+specced to close in A01's PR), G05's other six rules, G07, D35, and the
+fourteen finish-now rows.
+
 ## Queue 0 — Closures and recordings (one small task, no build)
 
 These commit to the tracker and are done. One pasteable task closes all

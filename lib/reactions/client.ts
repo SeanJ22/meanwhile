@@ -72,6 +72,15 @@ export function getStoredReaction(
   return readSelections()[selectionKey(targetType, targetId)] ?? null;
 }
 
+/**
+ * M134: a cross-component change signal within this tab, the sibling of the
+ * picks file's own. A Yes has to become a pick the moment it is tapped, and
+ * the pick control is a different component in a different part of the tree —
+ * `storage` fires only for OTHER tabs, so without this the two would agree
+ * only after a reload.
+ */
+export const REACTIONS_EVENT = "wtp:reactions-changed";
+
 function rememberReaction(
   targetType: ReactionTargetType,
   targetId: string,
@@ -85,6 +94,27 @@ function rememberReaction(
   } catch {
     memorySelections.set(key, reaction);
   }
+  // Guarded: the suite calls `submitReaction` in Node, where the write above
+  // falls to the memory map and there is no `window` to signal on. An
+  // unguarded dispatch here turned three passing reaction tests red — the
+  // signal is a browser convenience, never part of the contract.
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new Event(REACTIONS_EVENT));
+  }
+}
+
+/**
+ * Subscribe to this device's own answer record. Read-only, device-local, and
+ * joined to nothing — the same store `getStoredReaction` already reads, with a
+ * way to be told when it changes.
+ */
+export function subscribeReactions(callback: () => void): () => void {
+  window.addEventListener(REACTIONS_EVENT, callback);
+  window.addEventListener("storage", callback);
+  return () => {
+    window.removeEventListener(REACTIONS_EVENT, callback);
+    window.removeEventListener("storage", callback);
+  };
 }
 
 export interface ReactionViewContext {

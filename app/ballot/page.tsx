@@ -745,9 +745,12 @@ export default async function BallotPage({
                   contestId={contest.id}
                   contestTitle={contest.title}
                   voteFor={contest.voteFor}
+                  /* M134: the reaction target for this nominee, so a Yes on
+                     the control above becomes the pick here. */
                   options={lineup.nominees.map((n) => ({
                     id: n.name,
                     label: n.name,
+                    reactionTargetId: `${contest.id}|${n.name}`,
                   }))}
                 />
                 </>
@@ -845,9 +848,11 @@ export default async function BallotPage({
                     contestId={contest.id}
                     contestTitle={contest.title}
                     voteFor={contest.voteFor}
+                    /* M134: same, keyed the way this branch keys reactions. */
                     options={candidatesOf(set, contest).map((cand) => ({
                       id: cand.id,
                       label: `${cand.givenName} ${surnameDisplayCase(cand.familyName)}`,
+                      reactionTargetId: cand.id,
                     }))}
                   />
                 </>

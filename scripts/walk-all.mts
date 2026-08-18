@@ -2509,9 +2509,27 @@ for (const { zip } of FOUR) {
         `label=${JSON.stringify(wgh.pillText)}`,
       );
 
-      // STATE 2 — sidebar open. 4c makes this close WGH, which is what makes
-      // 4e's placement unambiguous rather than a preference.
-      await page.locator(".sidebar-toggle").first().click({ force: true });
+      /*
+       * STATE 2 — sidebar on screen. 4c makes this close WGH, which is what
+       * makes 4e's placement unambiguous rather than a preference.
+       *
+       * The two viewports get there DIFFERENTLY and the first cut of this
+       * check did not know it: at 390px the rail is a drawer behind the
+       * hamburger, but at desktop the rail is already on screen and the
+       * hamburger is hidden by CSS — `locator.click` on it threw "Element is
+       * not visible" and took the whole run down. At desktop the thing that
+       * has to happen is the OTHER half of 4c: minimize the who-governs card,
+       * and the cluster moves to the rail on its own.
+       */
+      const toggle = page.locator(".sidebar-toggle").first();
+      if (await toggle.isVisible()) {
+        await toggle.click();
+      } else {
+        await page
+          .locator(".coverage-notice button[aria-label^='Minimize']")
+          .first()
+          .click();
+      }
       await page.waitForTimeout(900);
       const rail = await clusterCensus(page);
       check(
@@ -2549,12 +2567,24 @@ for (const { zip } of FOUR) {
           .first()
           .click();
         await page.waitForTimeout(4500);
+        /*
+         * MEASURE THE RIGHT THING. The first cut of this computed the gap
+         * from the scroller's CURRENT scroll position and reported −850px —
+         * a number with no meaning that nonetheless passed a `<= 24` test,
+         * which is precisely the measurement that can pass while wrong.
+         *
+         * Dead space is only a question at the END of the scroll, so the
+         * scroller is driven there first and the gap is read after. A
+         * positive result is empty space below the last row with nothing
+         * left to scroll to; that is what 4f forbids.
+         */
         const geometry = await page.evaluate(() => {
           const rail = document.querySelector(".sidebar") as HTMLElement | null;
           const scroll = rail?.querySelector(
             ".sidebar-scroll",
           ) as HTMLElement | null;
           if (!rail || !scroll) return null;
+          scroll.scrollTop = scroll.scrollHeight;
           const r = rail.getBoundingClientRect();
           const s = scroll.getBoundingClientRect();
           const last = scroll.lastElementChild as HTMLElement | null;
@@ -2562,14 +2592,9 @@ for (const { zip } of FOUR) {
             top: Math.round(r.top),
             bottom: Math.round(r.bottom),
             vh: window.innerHeight,
-            // Positive means empty space below the last row inside the
-            // scroller once it is scrolled to the end — 4f's "no dead space".
+            scrollable: scroll.scrollHeight > scroll.clientHeight + 1,
             dead: last
-              ? Math.round(
-                  s.bottom -
-                    last.getBoundingClientRect().bottom -
-                    (scroll.scrollHeight - scroll.clientHeight - scroll.scrollTop),
-                )
+              ? Math.round(s.bottom - last.getBoundingClientRect().bottom)
               : 0,
           };
         });
@@ -2589,7 +2614,9 @@ for (const { zip } of FOUR) {
           "g12",
           `4f: no dead space below the rail's last row at ${zip} 390px`,
           geometry !== null && geometry.dead <= 24,
-          geometry ? `${geometry.dead}px below the last row` : "",
+          geometry
+            ? `${geometry.dead}px below the last row, scrolled to the end (scrollable=${geometry.scrollable})`
+            : "",
         );
 
         // A02 renders, with its denominators. Stated N equals rendered rows.
@@ -2625,7 +2652,14 @@ for (const { zip } of FOUR) {
               document
                 .querySelector("[data-ask-destination]")
                 ?.getAttribute("data-ask-destination") ?? null,
-            answered: /The answer/.test(
+            /*
+             * CASE-INSENSITIVE, and the reason is worth a line: the answer's
+             * eyebrow is `t-eyebrow`, which uppercases in CSS, and
+             * `innerText` returns the RENDERED text. A case-sensitive
+             * /The answer/ found nothing and reported two real, working
+             * answers as failures on the first production run.
+             */
+            answered: /the answer/i.test(
               (document.querySelector("[data-ask-panel]") as HTMLElement)
                 ?.innerText ?? "",
             ),

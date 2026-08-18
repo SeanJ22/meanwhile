@@ -21,29 +21,36 @@ classifier, refusal when it is unreachable. 4c's desktop default stands as g12
 shipped it. `pnpm perf` is deferred to the author's walkthrough day by his
 ruling; the budget stays unset and nothing here invents one.
 
-## 0 — R47, the named regression (P0)
+## 0 — R47, the intermittent pin wipe (P0)
 
-`pnpm walk:all` fails on it every run, so the suite is red until it is fixed.
+**Read this before running the walk, or you will close it wrongly.** The walk
+is currently GREEN on this check. It was red an hour earlier, on the same
+build, for the same zip.
 
-**At 85701, zooming out to z7 wipes every pin** — the walk reports `pins 11 →
-12 → 0 across zooms 11.0 → 9.0 → 7.0`. 11 → 12 is correct; 12 → 0 is the
-defect, and it undoes the g3 win behind CLAUDE.md's "More viewport must never
-mean fewer pins."
+At 85701 the first run reported `pins 11 → 12 → 0 across zooms 11.0 → 9.0 →
+7.0`. The second reported `11 → 12 → 12`. **Reproduced 1 of 2 runs.** A total
+pin wipe that happens sometimes is a race, and a race is worse for a reader
+than a deterministic bug: it cannot be reproduced on demand, so it arrives as
+"the map lost everything" with nothing to show. It still undoes the g3 win
+behind CLAUDE.md's "More viewport must never mean fewer pins."
 
-**Half the diagnosis is already done and is in the row — do not repeat it.**
-The server is innocent, proven: `/api/meetings` at 85701's centre returns 89
-meetings at `radiusKm=25`, 97 at 60, 97 at 150 and 97 at 400 (clamped to 150
-and saying so in its own `radiusKm`). Monotonic at every rung. The data is on
-the wire; the pins are not on screen.
+**Two things are already settled — do not re-derive them.**
 
-The unfinished half is WHICH CLIENT LAYER drops them. Two candidate shapes,
-both in R47: the pin pool marking every entry hidden at low zoom, or the map
-effect's clip/mask — this repo has already been bitten once by Chromium
-dropping an oversized clip-path, and projected geometry at z7 is far larger
-than at z11. Start with `components/map/map-canvas.tsx`, logging
-`__wtpSpiderProbe`'s visible count and each element's `dataset.hidden` at z11,
-z9 and z7. The walk check already exists and already fails, so the fix is
-provable the moment it lands.
+1. **The server is innocent.** `/api/meetings` at 85701's centre returns 89
+   meetings at `radiusKm=25`, 97 at 60, 97 at 150 and 97 at 400 (clamped to
+   150 and saying so in its own `radiusKm`). Monotonic at every rung. The data
+   is on the wire; the pins are not on screen.
+2. **The shape is timing, not geometry.** A dropped clip-path or a culling
+   bound would fail every run. That demotes the mask theory and promotes the
+   settle re-query: the check zooms and waits a fixed 1600 ms, so a slow
+   `/api/meetings` at the widest rung could leave the pin pool emptied and not
+   yet refilled when the probe reads it.
+
+If the pool is CLEARED before its replacement arrives, a reader zooming out
+sees the same flash of nothing — still a real defect, and a different fix from
+a dropped mask. Instrument before ruling: log the pool size AND the in-flight
+request state at z7, not the pin count alone. **The walk check as written
+cannot tell a slow refill from a wipe, so a green run is not an answer.**
 
 ## 1 — R48, the scheduled-job push race (P2, small, fix it early)
 

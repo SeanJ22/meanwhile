@@ -1647,22 +1647,43 @@ section("I. The mayor after item 6 (g6)");
       cannotRun("g6", "07866: the mayor is reachable from who-governs", "no Rockaway township row to open");
     } else {
       await page.waitForTimeout(2500);
-      const tabbed = await page.evaluate(`(() => {
+      /*
+       * TWO GRAMMARS, because M136 (g13, 2026-08-18) gave BODY cards
+       * collapsible sections while district and meeting cards kept their
+       * tabs. This check went COULD-NOT-RUN the moment the body card stopped
+       * having a Representation tab — a check that stops running is the
+       * quietest way for a claim to die, so it is taught the new shape here
+       * rather than left reporting an honest nothing.
+       *
+       * The CLAIM is unchanged and is still two clicks from the panel: row →
+       * card → open the seats. Only the second click's affordance moved, and
+       * the evidence line below says which one answered.
+       */
+      const opened2 = await page.evaluate(`(() => {
         const dlg = document.querySelector('[role="dialog"]');
         if (!dlg) return "no dialog";
         for (const b of dlg.querySelectorAll('[role="tablist"] button')) {
-          if (/representation/i.test(b.textContent || "")) { b.click(); return "ok"; }
+          if (/representation/i.test(b.textContent || "")) { b.click(); return "tab"; }
         }
-        return "no Representation tab in the dialog";
+        for (const b of dlg.querySelectorAll("button")) {
+          if (/who sits on it/i.test(b.textContent || "")) { b.click(); return "section"; }
+        }
+        return "neither a Representation tab nor a Who-sits-on-it section in the dialog";
       })()`) as string;
 
-      if (tabbed !== "ok") {
-        cannotRun("g6", "07866: the mayor is reachable from who-governs", tabbed);
+      if (opened2 !== "tab" && opened2 !== "section") {
+        cannotRun("g6", "07866: the mayor is reachable from who-governs", opened2);
       } else {
         await page.waitForTimeout(1800);
+        // Scope to the tab panel where there is one, and to the whole dialog
+        // body where the section grammar is in play — never to the document,
+        // which would let anything else on the page answer for this card.
         const inPanel = await page.evaluate(`(() => {
           const dlg = document.querySelector('[role="dialog"]');
-          const panel = dlg && dlg.querySelector('[role="tabpanel"]');
+          const panel =
+            (dlg && dlg.querySelector('[role="tabpanel"]')) ||
+            (dlg && dlg.querySelector('.account-modal-body')) ||
+            dlg;
           const t = (panel && panel.textContent) || "";
           return { mayor: /Mayor/.test(t), jackson: /Joseph Jackson/.test(t), chars: t.length };
         })()`) as { mayor: boolean; jackson: boolean; chars: number };
@@ -1671,8 +1692,8 @@ section("I. The mayor after item 6 (g6)");
           "g6",
           "07866: the mayor is reachable from who-governs",
           inPanel.mayor && inPanel.jackson,
-          `two clicks from the panel (row → card → Representation): the office renders ${inPanel.mayor}, ` +
-            `the holder renders ${inPanel.jackson}, over ${inPanel.chars} chars of tab panel`,
+          `two clicks from the panel (row → card → ${opened2}): the office renders ${inPanel.mayor}, ` +
+            `the holder renders ${inPanel.jackson}, over ${inPanel.chars} chars`,
         );
       }
     }

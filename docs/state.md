@@ -10316,3 +10316,54 @@ Ten of item 2's eleven rows — M139, M135, M07, B15, G10/8a, P01, P03, D25, D29
 D06 — were **not started**, not thinned, not partially built. M136 is the one
 completed. The ordering was the brief's own, and the two P0s in front of it
 were jobs that could not run at all.
+
+
+### R47, corrected within the session: it is intermittent
+
+The second walk of the same session, against the same build minutes later,
+reported *pins 11 → 12 → 12 across zooms 11.0 → 9.0 → 7.0*. **The check
+passes on a re-run.**
+
+That does not close R47; it re-scopes it, and the re-scoping is the more
+useful finding. A total pin wipe that happens *sometimes* is a race, and a
+race is worse for a reader than a deterministic bug — it cannot be reproduced
+on demand, so it arrives as "the map lost everything" with nothing to show.
+Reproduced 1 of 2 runs, both against production, same build.
+
+It also rules something in. A dropped clip-path or a culling bound would fail
+every run, so the shape is timing, not geometry. The likeliest candidate is
+now the settle re-query: the check zooms and waits a fixed 1600 ms, so a slow
+`/api/meetings` at the widest rung could leave the pin pool emptied and not
+yet refilled when the probe reads it. If the pool is CLEARED before the
+replacement arrives, a reader zooming out sees the same flash of nothing —
+still a real defect, and a different fix from the one the first run implied.
+
+**The instruction on the row is not to close it on a green walk.** One green
+run is exactly what the re-run produced, and the check as written cannot tell
+a slow refill from a wipe. It needs the pool size and the in-flight request
+state logged at z7 before anyone rules on it.
+
+This is why a suite is run twice rather than once when it names a regression,
+and it is the reason the first run's finding was written down as evidence
+rather than as a conclusion.
+
+
+### The check my own change silenced
+
+The final walk was green, and one check had stopped RUNNING: `[g6] 07866: the
+mayor is reachable from who-governs — no Representation tab in the dialog`.
+M136 replaced the tab strip with sections on body cards, so the tab the check
+clicked no longer exists. The suite noticed and said so in its own diff
+(`GONE 1`, annotated "did not run, and SAID SO"), which is the one thing that
+kept this from being a claim that quietly died under a green run.
+
+The CLAIM was never affected — the mayor is still two clicks from the panel.
+Only the second click's affordance moved. The check now tries the tab, then the
+section, and prints which one answered. Verified against production `d548d3e`
+without a forty-minute re-run: `second click: section`, the office renders,
+Joseph Jackson renders, 687 chars of panel. **RUNS AND PASSES.**
+
+That probe also confirmed M136 live on a body nobody had targeted — Rockaway
+Township at 07866 renders What this body does / Who sits on it (10) / Meetings
+(9 upcoming) / Contact / Where it governs / Sources. The seven sections
+generalize past the three the row named.

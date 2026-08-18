@@ -99,3 +99,30 @@ rule broken to tidy a ledger. Those rows stay `UNKNOWN`.
 The same is true of every session before h. The honest reading of the search
 log's history is that it is not sellable, and the sellable record starts on
 2026-08-17.
+
+## g12, 2026-08-17 — every production row this session created, by run id
+
+Read back from production with `pnpm census:runs --target=production` rather
+than counted from the terminal, because the two measure different things and
+this file already records why.
+
+| run id | rows | what it was |
+|---|---|---|
+| `walk-all-local@2026-08-18T05:50:33.171Z` | 48 | the first `walk:all` after the deploy. **Aborted** — its own new desktop path clicked a hamburger that CSS hides at that width and threw.  <!-- expected-future: a run id is a UTC instant and this session ran after 17:00 Phoenix, so the id reads 08-18 on the session day 2026-08-17; verified against pnpm stamp --> |
+| `walk-all-local@2026-08-18T05:57:57.623Z` | 73 | the second run, complete, 2 named regressions.  <!-- expected-future: a run id is a UTC instant and this session ran after 17:00 Phoenix, so the id reads 08-18 on the session day 2026-08-17; verified against pnpm stamp --> |
+| `walk-all-local@2026-08-18T06:06:47.335Z` | 72 | the third, capturing the output to a file.  <!-- expected-future: a run id is a UTC instant and this session ran after 17:00 Phoenix, so the id reads 08-18 on the session day 2026-08-17; verified against pnpm stamp --> |
+| `walk-all-local@2026-08-18T06:24:13.227Z` | 73 | the final run after the rail-press fix shipped: 290 passed, 0 regressions.  <!-- expected-future: a run id is a UTC instant and this session ran after 17:00 Phoenix, so the id reads 08-18 on the session day 2026-08-17; verified against pnpm stamp --> |
+| `g12-filters-probe` | 3 | the diagnosis of the two regressions — three page loads at 85701, phone and desktop, reading whether a press on Filters landed. |
+
+**269 rows in total, all five declared, all five SYNTHETIC, 0 organic.** No
+reaction was tapped and no feedback row was written; the two
+`g11-r41-prod@2026-08-17` rows the author ruled KEEP were read and not touched.
+
+Two further production requests carried a run id and wrote nothing, which is
+worth stating so a later reconciliation does not look for them:
+`g12-deploy-check` and `g12-deploy-check-2` were `GET /api/build`, and that
+route writes no search-log row.
+
+The local browser passes — the pill-cluster walk at four zips and two
+viewports, the D35 card drive, the M134 pick states — ran against
+`http://localhost:3000` and reached production not at all.

@@ -637,15 +637,55 @@
    Every colour goes through a token, so all of it themes.
    ========================================================================== */
 
+/* G05 RULE 4f — THE RAIL IS A CARD OVER THE MAP, AND IT ENDS WHERE ITS
+   CONTENT ENDS.
+ *
+ * *"The sidebar sizes to its contents - a card over the map whose height ends
+ * where its content ends, growing and shrinking as the Ask box and sections
+ * open. BOUND: ... the card never exceeds viewport minus safe areas and map
+ * chrome; beyond that it scrolls internally and both its top and bottom stay
+ * reachable."*
+ *
+ * It was `height: 100vh` — a full-height column whose footer sat under
+ * `mt-auto` at the bottom of the screen with dead space above it whenever the
+ * content was short, which at 03255 is most of the time.
+ *
+ * THE BOUND IS THE HALF THAT MATTERS AND IT IS WRITTEN AS ONE EXPRESSION.
+ * M54/M55 were one root cause: an unbounded overlay grew to 893px against an
+ * 844px viewport, put its own top at y = −113, and made the ballot entry
+ * untappable. `height: auto` without a ceiling re-opens exactly that, because
+ * the rail now grows with the Ask expansion and an answer inside it. So the
+ * ceiling is stated here, in the same rule as the growth:
+ *
+ *   max-height = viewport − (top inset + bottom inset) − both safe areas
+ *
+ * and `.sidebar-scroll` takes the overflow internally. The top is pinned at
+ * `--rail-inset`, so it is on screen by construction; the bottom is reachable
+ * because the scroller, not the card, is what runs out of room. */
+:root {
+  /* One number, so the rail's width and every offset that clears it cannot
+     drift apart. The map canvas and MapLibre's controls both read it. */
+  --rail-width: 340px;
+  --rail-inset: 12px;
+  --rail-gutter: 364px; /* rail-width + 2 × rail-inset */
+}
+
 .sidebar {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 340px;
-  height: 100vh;
-  max-height: 100dvh;
+  top: calc(var(--rail-inset) + env(safe-area-inset-top, 0px));
+  left: var(--rail-inset);
+  width: var(--rail-width);
+  /* 4f: ends where the content ends. */
+  height: auto;
+  max-height: calc(
+    100dvh - (var(--rail-inset) * 2) - env(safe-area-inset-top, 0px) -
+      env(safe-area-inset-bottom, 0px)
+  );
   background: var(--panel);
-  border-right: 1px solid var(--panel-border);
+  border: 1px solid var(--panel-border);
+  /* The committed radius token — never a new ad-hoc scale (CLAUDE.md). */
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-panel);
   display: flex;
   flex-direction: column;
   z-index: 1000;
@@ -700,8 +740,13 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   color: var(--signal);
 }
 
+/* 4f: the scroller takes what is left and NO MORE. `flex: 1` made it claim
+   the whole column even when its content was three rows, which is where the
+   dead space above the footer came from. `0 1 auto` lets the card shrink to
+   its content and lets the scroller absorb the overflow only once the card's
+   ceiling is reached. */
 .sidebar-scroll {
-  flex: 1;
+  flex: 0 1 auto;
   overflow-y: auto;
   min-height: 0;
   scrollbar-width: thin;
@@ -1531,6 +1576,88 @@ label:has(> input[type="checkbox"]) {
   display: flex;
   align-items: stretch;
   gap: 8px;
+  /* G07 (2026-08-17): THE LABEL GOT LONGER, SO THE ROW HAS TO BE ABLE TO WRAP.
+   *
+   * The pill used to read a bare "Ask" and two pills fitted on one line at
+   * 390px. G07 makes the label carry a concrete example, and `pnpm overlaps`
+   * caught the consequence immediately: the row grew to 350px inside a ~334px
+   * band, its left edge landed at −16, and the hamburger at (12,12) was
+   * sitting on top of it. Shortening the label further would answer the
+   * measurement by giving up the rule; wrapping answers it by giving the row
+   * a second line, which is what the corner has room for. */
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+/* The cluster can never be wider than what holds it, at any placement. The
+   overflow above went unnoticed because nothing said it could not happen. */
+.map-floaters {
+  max-width: 100%;
+}
+
+/* The map placement starts CLEAR OF THE HAMBURGER, which is fixed at (12,12)
+   and paints over everything.
+ *
+ * Wrapping alone was not enough and the difference is worth writing down: the
+ * pills wrapped to the right and nothing was painted under the button, but the
+ * cluster's BOX still spanned the full band and still began at x = 12. `pnpm
+ * overlaps` measures boxes, and it is right to — an element the reader cannot
+ * tap through is covered whether or not it currently has ink there, and the
+ * next longer label would put ink there. So the band itself begins after the
+ * control rather than under it. */
+[data-pill-cluster="map"] {
+  margin-left: 56px;
+}
+
+/* G05 rule 4e: THE SAME CLUSTER, IN A BOUNDED CONTAINER.
+ *
+ * The rules above were written for one placement — the map's top-right
+ * corner, where the cluster floats against an unbounded viewport and is right
+ * aligned so it hugs the edge. Rule 4e now puts the SAME cluster at the top of
+ * the who-governs card and at the top of the rail, both of which are ~340px
+ * boxes, and `align-items: flex-end` on a `nowrap` row of `white-space:
+ * nowrap` pills does not shrink inside a bounded box — it overflows to the
+ * LEFT. Caught in a 390px screenshot before this shipped: the card's text ran
+ * off the left edge of the phone.
+ *
+ * So the two bounded placements get the opposite of the floating one: full
+ * width, left aligned, and a row that WRAPS. Nothing about the map placement
+ * changes, which is why this is scoped by the placement attribute rather than
+ * written into the base rules. */
+[data-pill-cluster="wgh"],
+[data-pill-cluster="sidebar"] {
+  width: 100%;
+  align-items: stretch;
+}
+
+[data-pill-cluster="wgh"] .map-floaters-row,
+[data-pill-cluster="sidebar"] .map-floaters-row {
+  flex-wrap: wrap;
+}
+
+/* The ballot pill keeps its intrinsic size; the Ask pill takes whatever is
+   left on the row and truncates rather than pushing the row wider. G07's
+   label is chosen per placement to fit (lib/routing/ask-pill-labels.ts), and
+   this is the belt to that braces: a longer label degrades to an ellipsis
+   inside the pill instead of off the side of the card. */
+[data-pill-cluster="wgh"] .ask-pill,
+[data-pill-cluster="sidebar"] .ask-pill {
+  flex: 1 1 auto;
+  min-width: 0;
+  justify-content: flex-start;
+}
+
+[data-pill-cluster="wgh"] .ask-pill span,
+[data-pill-cluster="sidebar"] .ask-pill span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 4a: the expansion hangs under the pill that produced it, at the container's
+   full width — it is a panel, not a floater, and it never right-hugs. */
+.ask-expansion {
+  width: 100%;
 }
 
 /* One shell, two tap targets: an <a> cannot contain a <button>, and the zip
@@ -3159,7 +3286,9 @@ label:has(> input[type="checkbox"]) {
 /* MapLibre's own controls must clear the sidebar. Edia does the equivalent
    with `.leaflet-left { left: 350px !important; }`. */
 .maplibregl-ctrl-top-left {
-  left: 350px;
+  /* 4f: clears the rail CARD — inset + width + inset — plus a breath. Read
+     from the same variable the rail is drawn from, so the two cannot drift. */
+  left: calc(var(--rail-gutter) + 10px);
 }
 
 /*

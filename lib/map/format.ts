@@ -51,7 +51,12 @@ export function formatDateMDY(iso: string): string {
  * expected in the room.
  */
 
-export function formatMeetingDate(meeting: Meeting): string {
+export function formatMeetingDate(
+  // Widened to the two fields it reads (A02, 2026-08-17) so the digest's own
+  // row type can be formatted by the SAME function the map uses rather than by
+  // a second date formatter that would drift from the author's convention.
+  meeting: Pick<Meeting, "startsAt" | "timeZone">,
+): string {
   // Weekday plus mm/dd/yyyy — the author's date convention (3h), with the
   // weekday kept because "is that a Tuesday" is half of deciding to attend.
   const d = new Date(meeting.startsAt);

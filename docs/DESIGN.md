@@ -629,3 +629,140 @@ nothing about coverage or quality. It follows the current zip and disappears
 when no zip resolves — and a zip we hold no polygon for renders nothing, never
 a neighbour's outline, which would be a wrong claim about where the reader is
 standing.
+
+# The g12 pass — one cluster, one input, and a pill that teaches
+
+## The pill cluster has ONE instance, and its address is a function (2026-08-17, G05 rule 4e)
+
+Ballot, zip and Ask are one cluster and there is exactly one of it on screen at
+any moment. Where it sits is decided by two booleans and nothing else:
+
+| who-governs open | rail on screen | the cluster is |
+|---|---|---|
+| yes | either | at the top of the who-governs card |
+| no | yes | at the top of the rail |
+| no | no | the map's top-right pill |
+
+A large battlecard is deliberately not an input to that table, so with one open
+the cluster is on the map. The rule is `clusterPlacement` in
+`components/shell/pill-cluster.tsx`, and the cluster is CONSTRUCTED once in
+`map-entry` and handed to one of three slots — three conditional mounts of the
+same markup is the shape that puts two on screen the day a fourth state
+appears. `tests/pill-cluster.test.ts` holds the function; `scripts/walk-all.mts`
+section H counts what the page actually painted, at four zips and both
+viewports, in every state the table has a row for.
+
+The cluster's floating form (right-aligned, no wrap) is right for the map and
+wrong inside a ~340px card, where a non-wrapping row of nowrap pills overflows
+to the LEFT. The two bounded placements are scoped by the placement attribute:
+full width, left aligned, wrapping row, and the Ask pill takes the remainder
+and truncates rather than widening the row.
+
+## Ask expands in place, and opens nothing (2026-08-17, G05 rule 4a)
+
+Tapping Ask reveals the panel under the pill that produced it. It closes no
+surface and no surface closes it — Ask is explicitly outside the
+one-surface-at-a-time rule. Before this, the map's Ask pill un-collapsed the
+who-governs card and scrolled a cursor into the box living inside it; tapping
+Ask opened a different surface, which is exactly what the rule forbids.
+
+## The Ask pill's label, per placement (2026-08-17, G07)
+
+The pill never reads a bare "Ask". Hiding the box behind a pill is cleaner and
+gets used less, so the LABEL does the teaching the open box used to do — the
+reader learns what can be asked without the box being open.
+
+The strings and the width that forced each one are committed in
+`lib/routing/ask-pill-labels.ts`, and this document cites that file rather than
+restating it: two copies of a label drift, and the copy in the doc is the one
+nothing renders. Recorded there today:
+
+- **map** — the tightest placement. It shares `map-top-row` with the ballot
+  pill and clears MapLibre's zoom column, so at 390px the two pills split
+  roughly 330px. The full example string does not fit; the shortest form that
+  still names an example is used.
+- **sidebar** — the 340px rail less its padding, ~316px, the pill alone on its
+  row. Measured at 289px rendered. The full example string fits.
+- **wgh** — the same envelope as the rail at phone width. Measured at 332px
+  rendered inside a 358px card. The full example string fits.
+
+Where a width forbids the full string the rule is the shortest form that STILL
+NAMES A CONCRETE EXAMPLE. A label that degrades to "Ask" has lost the point,
+and the guard in `tests/pill-cluster.test.ts` refuses one.
+
+## The rail is a card over the map, and it ends where its content ends (2026-08-17, G05 rule 4f)
+
+The rail was a full-height column: its footer sat at the bottom of the screen
+under `mt-auto`, with dead space above it whenever the content was short — at
+03255, most of the time. It is now a card inset from the top-left, sized to its
+contents, growing and shrinking as the Ask panel and the sections open.
+
+The bound is the half that matters and it is written as one expression beside
+the growth, because M54/M55 were one unbounded overlay that grew to 893px
+against an 844px viewport and put its own top at y = −113:
+
+```
+max-height = 100dvh − (2 × --rail-inset) − safe-area-top − safe-area-bottom
+```
+
+Beyond that the card does not grow; `.sidebar-scroll` takes the overflow
+internally. The top is pinned, so it is on screen by construction; the bottom
+is reachable because the scroller runs out of room rather than the card. The
+rail's width, its inset and every offset that clears it come from one set of
+variables (`--rail-width`, `--rail-inset`, `--rail-gutter`), so the map canvas
+and MapLibre's controls cannot drift from the shape they are clearing.
+
+## The filing provenance is an annotation, not a paragraph (2026-08-17, G05 rule 4h)
+
+A short pointer, always visible, in small type, attached to the candidate list.
+The full record — link, issuing body, read date, verbatim — is one tap away, in
+place, in the app.
+
+The pointer NAMES the source organisation. "Where this came from" collapsed to
+an unlabelled icon would be de-sourcing wearing a tidy face; the org name is
+what keeps the summary honest standing alone. The control is a real `<button>`
+with `aria-expanded`, so it takes focus in DOM order and answers Enter and
+Space without a keyboard handler of its own, and the panel is a full-width
+sibling so nothing overflows at 390px.
+
+## PROPOSAL, FOR THE AUTHOR TO RULE ON — the who-governs card's information order (M93)
+
+**Not built. This is the proposal the row asks for and nothing more.** The
+battlecard's version of this shipped as M98 and is the pattern this follows: a
+`CardSection`, a recorded order, and collapse as ORGANISATION rather than
+deletion. Everything stays reachable; nothing is removed.
+
+The author's own division, restated as the order it implies:
+
+**Open by default, in this order**
+
+1. The pill cluster — ballot, zip, Ask. It is the top of the card under rule
+   4e, so the order starts where the reader's eye already lands.
+2. The lead sentence: how many bodies govern this area, and how many of their
+   calendars we watch. The denominator, first.
+3. The top bodies — the division's own governing bodies, the rows that open
+   battlecards.
+4. LOCAL / STATE / FEDERAL headings with the seats named.
+
+**One tap down, in this order**
+
+5. The full rosters behind each body — every seat, not just the governing ones.
+6. The everyday explainers: what this kind of body does, why this step owns
+   this topic.
+7. The secondary links: the body's own site, the mover's page, the "Why these
+   N?" disclosure.
+
+**What may never collapse, whatever the card's length**
+
+- Any named gap. A collapsed absence reads as no absence, which is the
+  render-default rule with a chevron on it.
+- Any source-failure footnote. "We couldn't reach their calendar" is the
+  difference between a gap of ours and a fact about their government.
+- The coverage denominator in the lead sentence.
+
+**The open question the author has to answer, because it is a judgement and not
+a derivation:** whether a section that is EMPTY collapses closed with its
+honest line inside, or stays open showing the line. The battlecard chose to
+stay open. This card carries more sections, so the same choice costs more
+vertical space here — and the whole reason M93 exists is that the card is
+crowding.

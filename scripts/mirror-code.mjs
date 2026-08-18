@@ -477,7 +477,31 @@ function renderManifest({
       "during a build and is not expected to. Mid-session these copies reflect the last handoff.",
   );
   L.push("");
-  L.push(`- Mirrored on: **${stampedToday}** (\`pnpm stamp\`, America/Phoenix); instant \`${generatedAt}\``);
+  /*
+   * g12 (2026-08-17): THE INSTANT COULD FAIL THE PROJECT'S OWN DATE GATE.
+   *
+   * R18 made this instant Eastern deliberately, and that stays. But Eastern
+   * runs three hours ahead of Phoenix, so any handoff after 21:00 local writes
+   * an instant whose DATE is tomorrow — g11's run stamped
+   * `2026-08-18 00:03:24 EDT` on the session day 2026-08-17. `tests/doc-dates`
+   * scans every `docs/*.md` for dates ahead of the Phoenix clock and correctly
+   * called that a future date, so the suite went red on a document the handoff
+   * itself had just written, for a timestamp that was not wrong.
+   *
+   * It is annotated rather than changed, because the instant is TRUE and the
+   * gate is RIGHT: this is exactly the case the expected-future marker exists
+   * for. The marker is emitted only when the two zones actually disagree — an
+   * annotation on a date that is not in the future would be noise, and the
+   * next reader would not know which kind of claim it was.
+   */
+  const easternDay = generatedAt.slice(0, 10);
+  const zoneNote =
+    easternDay > stampedToday
+      ? ` <!-- expected-future: the generated-at instant is America/New_York (R18) and the session day is America/Phoenix; after 21:00 local the Eastern date is the next day. Verified against \`pnpm stamp\`, which printed ${stampedToday}. -->`
+      : "";
+  L.push(
+    `- Mirrored on: **${stampedToday}** (\`pnpm stamp\`, America/Phoenix); instant \`${generatedAt}\`${zoneNote}`,
+  );
   L.push(`- Repository commit at mirror time: \`${headSha ?? "unknown — git could not be read"}\``);
   L.push(`- Files mirrored: **${kept.length}**; refused: **${skipped.length}**; removed this run: **${removed.length}**`);
   L.push(`- Total mirrored payload: **${totalBytes} bytes** (cap ${MAX_TOTAL_BYTES}); per-file cap ${MAX_FILE_BYTES} bytes`);

@@ -22,7 +22,9 @@ import { RADIUS_LADDER_KM } from "@/lib/meetings/constants";
 import { requestRadiusKm, shouldRequery } from "@/lib/map/viewport-radius";
 import { useStateFocus } from "@/hooks/use-state-focus";
 import { StateCrossingPrompt } from "./state-crossing-prompt";
-import { MapFloaters } from "./map-floaters";
+import { PillCluster } from "@/components/shell/pill-cluster";
+import { clusterPlacement } from "@/lib/map/cluster-placement";
+import { useSidebarVisible } from "@/hooks/use-sidebar-visible";
 import { UiProvider, useUi, useUiDispatch } from "@/lib/state/provider";
 import type { MeetingSearchResult } from "@/lib/meetings/query";
 import type { SnapshotStatus } from "@/lib/meetings/freshness";
@@ -412,10 +414,45 @@ function MapEntryInner() {
     [venues, ui.selectedVenueKey],
   );
 
+  /*
+   * G05 RULE 4c — ONE SURFACE OPEN AT A TIME, MUTUAL AND SYMMETRIC.
+   *
+   * *"One surface open at a time - sidebar, WGH and the large battlecard each
+   * close the others, mutual and symmetric."*
+   *
+   * Before this the rule ran in exactly one direction and only between two of
+   * the three: a large surface closed the popups, the list overlay and the
+   * doors, and nothing at all closed the sidebar or the who-governs card. So
+   * a phone could carry the rail, the card and a battlecard at once, stacked,
+   * which is the clutter class M54/M55 came out of.
+   *
+   * It is one function rather than three call sites for the same reason 4e's
+   * placement is one function: symmetry that lives in three places stops being
+   * symmetric the first time a fourth entry point is added. Every opener goes
+   * through here, and the closes are explicit — `setSidebarState("closed")`
+   * rather than `dismissSidebar()`, because the desktop rail is a surface too
+   * and "dismiss" only ever returned the phone drawer to its default.
+   *
+   * Ask is deliberately NOT one of the three (rule 4a, the author's words):
+   * *"Ask's expansion is NOT a surface for 4c and never closes the sidebar,
+   * WGH or a battlecard."* It is left untouched here on purpose.
+   */
+  const openSurface = useCallback(
+    (surface: "sidebar" | "wgh" | "large") => {
+      setSidebarState(surface === "sidebar" ? "open" : "closed");
+      setNoticeCollapsed(surface !== "wgh");
+      if (surface !== "large") setLarge(null);
+    },
+    [],
+  );
+
   /** The one-at-a-time rule: any large surface replaces every other. */
   const openLarge = useCallback(
     (next: NonNullable<typeof large>) => {
       setLarge(next);
+      // 4c: the sidebar and the who-governs card are surfaces too, and they
+      // yield to a battlecard exactly as a battlecard yields to them.
+      openSurface("large");
       // The large tier subsumes the compact card that opened it, and the
       // list overlay yields — three surfaces at once was the defect.
       if (next.kind === "official") setOfficialPopup(null);
@@ -424,7 +461,7 @@ function MapEntryInner() {
       // 8a: a sidebar door is a large surface too, and yields the same way.
       dispatch({ type: "door/close" });
     },
-    [dispatch],
+    [dispatch, openSurface],
   );
 
   const openOfficial = useCallback(
@@ -949,27 +986,30 @@ function MapEntryInner() {
   const onTileError = useCallback(() => setTilesFailed(true), []);
   const onDistrictError = useCallback(() => setDistrictsFailed(true), []);
   /*
-   * The Ask pill's whole job (item 2): expand the who-governs card and put
-   * the cursor in the ask box that is already inside it.
+   * G05 RULE 4a — THE ASK PILL OPENS ASK, AND NOTHING ELSE.
    *
-   * Two frames, and both are needed rather than decorative: the card has to
-   * mount before there is an input to reach, and the browser has to have laid
-   * it out before `scrollIntoView` knows where it is. Anything narrower is a
-   * race that passes on a fast machine and silently does nothing on a phone —
-   * and "the button did nothing" is exactly the class of defect this session
-   * is fixing.
+   * What it used to do is the whole reason the rule exists: `openAsk`
+   * un-collapsed the who-governs card and scrolled the cursor into the ask box
+   * living inside it, across two animation frames. Tapping "Ask" opened a
+   * different surface — which is precisely *"tapping the Ask pill never opens
+   * WGH"*. The two frames were needed because the box was somewhere else; now
+   * the box is under the pill, so there is nothing to wait for and nothing to
+   * scroll to.
+   *
+   * The expansion is one boolean, and it deliberately does not participate in
+   * 4c: opening Ask closes no surface, and no surface closes Ask.
    */
-  const openAsk = useCallback(() => {
-    setNoticeCollapsed(false);
+  const [askOpen, setAskOpen] = useState(false);
+  // 4a: focus lands in the input the expansion just mounted. One frame,
+  // because the input is a child of the pill's own cluster rather than a
+  // surface that has to be opened first.
+  const onToggleAsk = useCallback((open: boolean) => {
+    setAskOpen(open);
+    if (!open) return;
     requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        const box = document.querySelector<HTMLInputElement>(
-          ".coverage-notice [data-ask-box]",
-        );
-        if (!box) return;
-        box.scrollIntoView({ block: "center", behavior: "smooth" });
-        box.focus({ preventScroll: true });
-      });
+      document
+        .querySelector<HTMLInputElement>("[data-ask-panel] [data-ask-box]")
+        ?.focus({ preventScroll: true });
     });
   }, []);
 
@@ -1003,6 +1043,74 @@ function MapEntryInner() {
     [dispatch],
   );
 
+  /*
+   * G05 RULE 4e — THE SINGLE PILL CLUSTER.
+   *
+   * ONE `<PillCluster>` is constructed here and handed to exactly one of the
+   * three slots below. That is the enforcement: the placements are not three
+   * conditional mounts of the same markup, which is the shape that renders two
+   * the day a fourth state appears — they are one node, placed. The rule's own
+   * check counts rendered instances in the live DOM (`scripts/walk-all.mts`),
+   * because a variable holding one node and a page painting one cluster are
+   * different claims and only the second one is what a reader sees.
+   *
+   * Location is a function of two booleans and nothing else, exactly as the
+   * rule states — a large battlecard is not a parameter, so with one open the
+   * cluster is on the map.
+   */
+  const wghOpen = Boolean(shown) && !noticeCollapsed;
+  const sidebarVisible = useSidebarVisible(sidebarState);
+  const clusterAt = clusterPlacement({ wgh: wghOpen, sidebar: sidebarVisible });
+  const clusterZip = shown
+    ? /^\d{5}$/.test(shown.zip)
+      ? shown.zip
+      : (shown.nearZip ?? null)
+    : (location?.zip ?? null);
+  const clusterCoverage = shown?.coverage ?? result?.coverage ?? null;
+  const cluster = (
+    <PillCluster
+      placement={clusterAt}
+      zip={clusterZip}
+      coverage={clusterCoverage}
+      onPickZip={search}
+      askOpen={askOpen}
+      onToggleAsk={onToggleAsk}
+      ocdIds={
+        clusterCoverage
+          ? [
+              ...new Set(
+                [
+                  ...clusterCoverage.bodies.map((b) => b.ocdId),
+                  ...clusterCoverage.seats.map((s) => s.ocdId),
+                ].filter((id): id is string => Boolean(id)),
+              ),
+            ]
+          : []
+      }
+      onSearchPick={onSearchPick}
+    />
+  );
+  /*
+   * Is a cluster on screen ANYWHERE? `PillCluster` renders null without a
+   * resolved five-digit zip, so "we placed it" and "it painted" are different
+   * claims and only the second one decides whether a fallback ballot door is
+   * needed.
+   *
+   * THE DEFECT THIS FIXES, caught in a 390px screenshot rather than reasoned
+   * about: 4c makes the rail and the who-governs card mutually exclusive on
+   * every reader-initiated open, but it does not touch the DEFAULT state, and
+   * on desktop the default is a visible rail plus WGH's automatic first-show.
+   * With the cluster at WGH, the rail fell through to its own ballot link and
+   * the reader had two doors onto one surface — the duplicate-entry friction
+   * CLAUDE.md calls a defect. Each fallback is now conditioned on there being
+   * no cluster at all, so the count on screen is exactly one.
+   *
+   * The default state is deliberately left alone: closing the desktop rail on
+   * page load, before the reader has touched anything, would remove the app's
+   * primary navigation to satisfy a rule written about phone stacking.
+   */
+  const clusterRendered = Boolean(clusterZip && /^\d{5}$/.test(clusterZip));
+
   return (
     <DataProvider value={data}>
       <main
@@ -1010,7 +1118,6 @@ function MapEntryInner() {
         data-sidebar={sidebarState}
       >
         <Sidebar
-          onSearchPick={onSearchPick}
           onReset={onReset}
           onChangeLocation={() => setWelcomeRequested(true)}
           showDistricts={showDistricts}
@@ -1018,6 +1125,12 @@ function MapEntryInner() {
           onToggleDistricts={setShowDistricts}
           mobileOpen={sidebarState === "open"}
           onMobileClose={() => setSidebarState("closed")}
+          onNearMePoint={onNearMePoint}
+          /* 4e: the sidebar slot. `clusterElsewhere` tells the rail whether a
+             cluster painted anywhere, so its fallback ballot link can never
+             become a second door onto the same surface. */
+          pillCluster={clusterAt === "sidebar" ? cluster : null}
+          clusterElsewhere={clusterRendered}
         />
 
         {/* The hamburger (2f) — rendered always, shown by CSS whenever the
@@ -1028,7 +1141,9 @@ function MapEntryInner() {
           type="button"
           className="sidebar-toggle"
           aria-label="Open menu"
-          onClick={() => setSidebarState("open")}
+          /* 4c: opening the rail closes the who-governs card and any
+             battlecard — mutual and symmetric with both. */
+          onClick={() => openSurface("sidebar")}
         >
           <svg
             width="18"
@@ -1055,7 +1170,7 @@ function MapEntryInner() {
             is hidden at any width (2f). */}
         <div
           className={`absolute inset-y-0 right-0 left-0 ${
-            sidebarState === "closed" ? "" : "sm:left-[340px]"
+            sidebarState === "closed" ? "" : "sm:left-[364px]"
           }`}
         >
           <MapCanvas
@@ -1107,7 +1222,7 @@ function MapEntryInner() {
 
         <div
           className={`pointer-events-none absolute inset-y-0 right-0 left-0 ${
-            sidebarState === "closed" ? "" : "sm:left-[340px]"
+            sidebarState === "closed" ? "" : "sm:left-[364px]"
           } flex flex-col`}
         >
           {/* pr clears MapLibre's zoom control in the top-right corner. The
@@ -1121,20 +1236,11 @@ function MapEntryInner() {
               ballot entry. Ordering this load-bearing is written down, not
               inferred. */}
           <div className="map-top-row flex items-start justify-end gap-3 p-3 pr-14 sm:p-5 sm:pr-16">
-            <div className="pointer-events-auto">
-              <MapFloaters
-                zip={
-                  shown
-                    ? /^\d{5}$/.test(shown.zip)
-                      ? shown.zip
-                      : (shown.nearZip ?? null)
-                    : (location?.zip ?? null)
-                }
-                coverage={shown?.coverage ?? null}
-                onPickZip={search}
-                onAsk={openAsk}
-              />
-            </div>
+            {/* 4e: the map slot. Occupied only when neither the sidebar nor
+                the who-governs card is on screen. */}
+            {clusterAt === "map" && (
+              <div className="pointer-events-auto">{cluster}</div>
+            )}
             {selectedVenue && (
               <div className="pointer-events-auto hidden sm:block">
                 <MeetingPanel
@@ -1189,7 +1295,8 @@ function MapEntryInner() {
                   type="button"
                   className="notice-fab pointer-events-auto"
                   aria-label="Show who governs here"
-                  onClick={() => setNoticeCollapsed(false)}
+                  /* 4c: opening WGH closes the rail and any battlecard. */
+                  onClick={() => openSurface("wgh")}
                 >
                   <svg
                     width="12"
@@ -1234,6 +1341,9 @@ function MapEntryInner() {
                   onMinimize={() => setNoticeCollapsed(true)}
                   onNarrowApplied={onNarrowApplied}
                   onStreetPoint={onStreetPoint}
+                  /* 4e: the WGH slot, which wins over the other two. */
+                  pillCluster={clusterAt === "wgh" ? cluster : null}
+                  clusterElsewhere={clusterRendered}
                 />
               ))}
 
@@ -1259,7 +1369,7 @@ function MapEntryInner() {
             click that produced it. */}
         <div
           className={`pointer-events-none absolute inset-y-0 right-0 left-0 ${
-            sidebarState === "closed" ? "" : "sm:left-[340px]"
+            sidebarState === "closed" ? "" : "sm:left-[364px]"
           }`}
         >
           <DistrictPicker />

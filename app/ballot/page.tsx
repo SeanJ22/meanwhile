@@ -20,6 +20,7 @@ import {
 } from "@/lib/ballot/candidate-cards";
 import { BallotNarrowing } from "@/components/ballot/ballot-narrowing";
 import { photosFirst } from "@/lib/ballot/photo-order";
+import { FilingNote } from "@/components/ballot/filing-note";
 import { CandidateCard } from "@/components/ballot/candidate-card";
 import { MyPicks } from "@/components/ballot/my-picks";
 import { jurisdictionKeyForContestId } from "@/lib/ballot/pick-jurisdiction";
@@ -619,8 +620,20 @@ export default async function BallotPage({
                   — never buried at the page bottom. When the identical line
                   covers several contests it collapses to the marker above
                   (item 5) — de-cluttering, never de-sourcing. */}
+              {/*
+                G05 rule 4h (2026-08-17): the same record, behind one tap.
+                The pointer NAMES the source organisation, so the summary is
+                honest standing alone; the panel carries the link and the read
+                date, verbatim and complete, in the app.
+              */}
               {!sourceRef.shared && (
-                <p className="mt-1 text-[0.6875rem] text-muted">
+                <FilingNote
+                  summary={
+                    lineup && canvass
+                      ? `Nominees per the certified primary canvass (${canvass.issuedBy})`
+                      : `Candidates as filed with ${contest.provenance.sourceOrg}`
+                  }
+                >
                   {lineup && canvass ? (
                     <>
                       Nominees per the{" "}
@@ -647,7 +660,7 @@ export default async function BallotPage({
                       · read {formatDateMDY(contest.provenance.collectedAt)}
                     </>
                   )}
-                </p>
+                </FilingNote>
               )}
 
               {/* The certified lineup retires the filing-list fallback (6a):

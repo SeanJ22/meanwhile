@@ -2771,13 +2771,48 @@ for (const { zip } of FOUR) {
         );
 
         // ── The matcher ruling's five questions, against production ────────
+        /*
+         * R47's lesson, applied to the ask box (g14, 2026-08-18).
+         *
+         * This used to sleep a fixed 4500 ms and read ONCE. The classifier is
+         * a network round trip whose latency varies a lot — measured against
+         * production at 3.1s, 3.2s, 3.2s and 8.4s across the four zips — so a
+         * single read at 4.5s catches whichever zip happened to be slow that
+         * run and reports a WORKING refusal as a NAMED REGRESSION. It did
+         * exactly that, at 85701 and 07866, while a probe minutes later found
+         * those two fast and 85641 slow instead. The behaviour never varied;
+         * only which zip lost the race did.
+         *
+         * So it waits for an OUTCOME rather than for a duration: poll until
+         * the panel says something — a refusal or an answer — and only then
+         * read. This does NOT wait until the check passes. A refusal and an
+         * answer are both outcomes and the caller still decides which was
+         * required; if neither arrives inside the ceiling, the read happens
+         * anyway and the check fails on the truth.
+         */
         const ask = async (question: string) => {
           await input.fill(question);
           await page
             .locator("[data-ask-panel] button", { hasText: "Ask" })
             .first()
             .click();
-          await page.waitForTimeout(4500);
+
+          const deadline = Date.now() + 20_000;
+          while (Date.now() < deadline) {
+            const settled = await page.evaluate(() => {
+              const panel = document.querySelector(
+                "[data-ask-panel]",
+              ) as HTMLElement | null;
+              return (
+                Boolean(document.querySelector("[data-ask-refusal]")) ||
+                Boolean(document.querySelector("[data-ask-destination]")) ||
+                /the answer/i.test(panel?.innerText ?? "")
+              );
+            });
+            if (settled) break;
+            await page.waitForTimeout(250);
+          }
+
           return page.evaluate(() => ({
             refusal: Boolean(document.querySelector("[data-ask-refusal]")),
             destination:

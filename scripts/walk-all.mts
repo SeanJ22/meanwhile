@@ -269,8 +269,10 @@ async function openAt(browser: Browser, zip: string): Promise<Page> {
   // we sell. Removing it forces the fetch fallback, which carries the header.
   await context.addInitScript(() => {
     try {
-      // @ts-expect-error — removing a DOM method on purpose, in a test context
-      delete navigator.sendBeacon;
+      Object.defineProperty(navigator, "sendBeacon", {
+        value: undefined,
+        configurable: true,
+      });
     } catch {
       // Still declared on every fetch if it cannot be removed.
     }
@@ -293,8 +295,10 @@ async function openAt(browser: Browser, zip: string): Promise<Page> {
    */
   await context.addInitScript(() => {
     try {
-      // @ts-expect-error - deleting a DOM method on purpose, in a test context
-      delete navigator.sendBeacon;
+      Object.defineProperty(navigator, "sendBeacon", {
+        value: undefined,
+        configurable: true,
+      });
     } catch {
       // If it cannot be removed the run still declares itself on every fetch.
     }
@@ -344,8 +348,10 @@ async function openWideAt(browser: Browser, zip: string): Promise<Page> {
   // we sell. Removing it forces the fetch fallback, which carries the header.
   await context.addInitScript(() => {
     try {
-      // @ts-expect-error — removing a DOM method on purpose, in a test context
-      delete navigator.sendBeacon;
+      Object.defineProperty(navigator, "sendBeacon", {
+        value: undefined,
+        configurable: true,
+      });
     } catch {
       // Still declared on every fetch if it cannot be removed.
     }
@@ -368,8 +374,10 @@ async function openWideAt(browser: Browser, zip: string): Promise<Page> {
    */
   await context.addInitScript(() => {
     try {
-      // @ts-expect-error - deleting a DOM method on purpose, in a test context
-      delete navigator.sendBeacon;
+      Object.defineProperty(navigator, "sendBeacon", {
+        value: undefined,
+        configurable: true,
+      });
     } catch {
       // If it cannot be removed the run still declares itself on every fetch.
     }
@@ -1005,8 +1013,10 @@ section("D. The ballot page (0814c, D53, g3)");
   // we sell. Removing it forces the fetch fallback, which carries the header.
   await context.addInitScript(() => {
     try {
-      // @ts-expect-error — removing a DOM method on purpose, in a test context
-      delete navigator.sendBeacon;
+      Object.defineProperty(navigator, "sendBeacon", {
+        value: undefined,
+        configurable: true,
+      });
     } catch {
       // Still declared on every fetch if it cannot be removed.
     }

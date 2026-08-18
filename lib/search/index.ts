@@ -76,13 +76,29 @@ export interface DistrictFeatureLike {
 export function buildSearchIndex(
   venues: Venue[],
   districts: DistrictFeatureLike[] = [],
+  /**
+   * Meetings held online (D18).
+   *
+   * They arrive separately because they are not in any venue — a meeting with
+   * no place cannot be grouped by one. Everything else about them is
+   * searchable exactly as a physical meeting is; only `lat`/`lng` are null,
+   * which `SearchItem` already describes as "the row still shows, it just
+   * does not fly". Leaving them out would hide a real public meeting behind a
+   * data-structure decision, which is the whole of what D18 is about.
+   */
+  onlineMeetings: Meeting[] = [],
 ): SearchItem[] {
   const items: SearchItem[] = [];
   const bodies = new Map<string, { meeting: Meeting; count: number }>();
   const places = new Map<string, { meeting: Meeting; count: number }>();
 
-  for (const venue of venues) {
-    for (const meeting of venue.meetings) {
+  const venueMeetings = venues.flatMap((venue) =>
+    venue.meetings.map((meeting) => ({ meeting, venueKey: venue.key as string | null })),
+  );
+  const onlineRows = onlineMeetings.map((meeting) => ({ meeting, venueKey: null }));
+
+  {
+    for (const { meeting, venueKey } of [...venueMeetings, ...onlineRows]) {
       items.push({
         id: `meeting:${meeting.id}`,
         kind: "meeting",
@@ -93,15 +109,18 @@ export function buildSearchIndex(
         label: `${meeting.bodyName} — ${meeting.title}`,
         meta: formatMeetingDate(meeting),
         tier: tierForMeeting(meeting),
-        lat: meeting.location.lat,
-        lng: meeting.location.lng,
+        lat: meeting.location?.lat ?? null,
+        lng: meeting.location?.lng ?? null,
         ocdId: meeting.ocdId,
-        venueKey: venue.key,
+        venueKey,
         haystack: [
           meeting.title,
           meeting.bodyName,
           meeting.jurisdiction,
-          meeting.location.name,
+          // The published location string either way: a room name for a
+          // physical sitting, "Virtual Meeting" for an online one. A reader
+          // searching either term should find the meeting they mean.
+          meeting.location?.name ?? meeting.online?.label ?? "",
         ]
           .join(" ")
           .toLowerCase(),
@@ -131,8 +150,8 @@ export function buildSearchIndex(
       label: meeting.bodyName,
       meta: `${count}`,
       tier: tierForMeeting(meeting),
-      lat: meeting.location.lat,
-      lng: meeting.location.lng,
+      lat: meeting.location?.lat ?? null,
+      lng: meeting.location?.lng ?? null,
       ocdId: meeting.ocdId,
       venueKey: null,
       haystack: `${meeting.bodyName} ${meeting.jurisdiction}`.toLowerCase(),
@@ -146,8 +165,8 @@ export function buildSearchIndex(
       label: meeting.jurisdiction,
       meta: `${count}`,
       tier: tierForOcdId(ocdId),
-      lat: meeting.location.lat,
-      lng: meeting.location.lng,
+      lat: meeting.location?.lat ?? null,
+      lng: meeting.location?.lng ?? null,
       ocdId,
       venueKey: null,
       haystack: meeting.jurisdiction.toLowerCase(),

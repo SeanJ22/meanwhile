@@ -22,6 +22,10 @@ import {
   CONCLUDED_LOOKBACK_DAYS,
   UPCOMING_HORIZON_DAYS,
 } from "../lib/meetings/constants.ts";
+import {
+  attributionSummary,
+  resolveMeetingBodies,
+} from "../lib/meetings/attribution.ts";
 import { carryForward } from "../lib/meetings/carry-forward.ts";
 import {
   readSnapshot,
@@ -38,8 +42,17 @@ import { makeRevizeSource } from "../lib/sources/revize/index.ts";
 import { legistarSource } from "../lib/sources/legistar/index.ts";
 import { makeOnBaseSource } from "../lib/sources/onbase/index.ts";
 import { mockSource } from "../lib/sources/mock/index.ts";
+import registryJson from "../lib/registry/registry.json" with { type: "json" };
 import { SOURCE_WIRING, wiringForTypes } from "../lib/registry/source-wiring.ts";
+import type { Registry } from "../lib/registry/types.ts";
 import type { Meeting, MeetingSource } from "../lib/sources/types.ts";
+
+/*
+ * The committed registry, read the same way lib/registry/server.ts reads it:
+ * a build output whose JSON widens to string where the type wants a union.
+ * Cast once, here, rather than at each use.
+ */
+const REGISTRY = registryJson as unknown as Registry;
 
 const SOURCES: Record<string, () => MeetingSource<never>> = {
   mock: () => mockSource as unknown as MeetingSource<never>,
@@ -162,7 +175,7 @@ async function main() {
     ).toISOString(),
   });
 
-  const meetings: Meeting[] = source.normalize(raw);
+  const meetings: Meeting[] = resolveAttribution(source.normalize(raw));
   const result = await source.upsert(meetings);
 
   console.log(`${source.name}: ${raw.length} fetched, ${meetings.length} normalized`);
@@ -174,8 +187,12 @@ async function main() {
       console.log(
         child.ok
           ? `  ${child.source}: ${child.fetched} fetched, ${child.normalized} normalized, ` +
-              `drops: ${d.unknownVenue} unknownVenue / ${d.placeless} placeless / ` +
-              `${d.unplaceableInTime} unplaceableInTime / ${d.notConfigured} notConfigured`
+              `drops: ${d.unknownVenue} unknownVenue / ${d.unplaceableInTime} unplaceableInTime / ` +
+              `${d.notConfigured} notConfigured` +
+              // D18: `placeless` is no longer a drop — those meetings are KEPT,
+              // with no place and no pin. Printing it under "drops" would say
+              // the opposite of what the run did.
+              `, kept online: ${d.placeless}`
           : `  ${child.source}: FAILED — ${child.error}`,
       );
     }
@@ -197,6 +214,62 @@ async function main() {
       console.warn(`  ${dropped} record(s) dropped — unplaceable in time or space`);
     }
   }
+}
+
+/**
+ * Name the bodies an adapter's agenda segmentation could only describe (D19).
+ *
+ * The adapters are pure and the registry is a file, so segmentation happens
+ * where the agenda is and NAMING happens here, once, where the registry is
+ * already loaded. Every row arrives UNRESOLVED with its published heading
+ * intact; this upgrades the ones the registry can account for and leaves the
+ * rest exactly as they are — `bodyId: null`, `ocdId: null`, never the host's.
+ *
+ * The counts are printed with their denominator, because an unresolved
+ * segment is a WORK ITEM: it is usually a special district reachable through
+ * a county feed that this repo holds no division for, which is the whole
+ * reason D19 exists, and a number nobody prints is a number nobody chases.
+ */
+function resolveAttribution(meetings: Meeting[]): Meeting[] {
+  const withAgenda = meetings.filter((m) => m.actingBodies !== undefined);
+  if (withAgenda.length === 0) {
+    console.log(
+      `attribution: 0 of ${meetings.length} meetings had their agenda items read — ` +
+        "no source in this run publishes them, so nothing is claimed about who acted",
+    );
+    return meetings;
+  }
+
+  const divisionLabels = new Map(
+    REGISTRY.divisions.map((d) => [d.ocdId, d.label] as const),
+  );
+  const resolved = meetings.map((m) =>
+    m.actingBodies === undefined
+      ? m
+      : {
+          ...m,
+          actingBodies: resolveMeetingBodies(
+            m.actingBodies,
+            REGISTRY.bodies,
+            divisionLabels,
+            m.ocdId,
+          ),
+        },
+  );
+
+  const rows = resolved.flatMap((m) => m.actingBodies ?? []);
+  const summary = attributionSummary(rows);
+  console.log(
+    `attribution: ${withAgenda.length} of ${meetings.length} meetings had their agenda ` +
+      `items read, producing ${rows.length} acting-body row(s) — ` +
+      `${summary.host} host, ${summary.resolved} resolved, ${summary.unresolved} unresolved ` +
+      `(${summary.itemsUnattributed} item(s) attributed to nobody, which is the honest answer ` +
+      "and a work item, never the host)",
+  );
+  for (const row of rows.filter((r) => r.attribution === "UNRESOLVED")) {
+    console.log(`  unresolved: "${row.evidence}" — ${row.itemCount} item(s)`);
+  }
+  return resolved;
 }
 
 function readPreviousSnapshot(): MeetingsSnapshot | null {

@@ -179,12 +179,20 @@ export function makeBoardBookSource(
           drops.unknownVenue += 1;
           continue;
         }
-        if (isPlacelessLocation(location)) {
-          drops.placeless += 1;
-          continue;
-        }
-        const venue = resolveVenue(SOURCE_NAME, wiring.ocdId, location);
-        if (!venue) {
+        /*
+         * A meeting held online is KEPT (D18). No building means no
+         * coordinates and no pin, but it is a real public meeting a reader
+         * could attend, and dropping it applied the map's constraint to the
+         * reader. The label is the published string verbatim; nothing here
+         * publishes a join link, so joinUrl is null and renders as the gap
+         * it is rather than as some other URL dressed up as a way in.
+         */
+        const online = isPlacelessLocation(location)
+          ? { label: location, joinUrl: null }
+          : null;
+        if (online) drops.placeless += 1;
+        const venue = online ? null : resolveVenue(SOURCE_NAME, wiring.ocdId, location);
+        if (!online && !venue) {
           drops.unknownVenue += 1;
           continue;
         }
@@ -198,12 +206,15 @@ export function makeBoardBookSource(
           title: row.title,
           startsAt,
           timeZone: wiring.timeZone,
-          location: {
-            name: venue.name,
-            address: venue.address,
-            lat: venue.lat,
-            lng: venue.lng,
-          },
+          location: venue
+            ? {
+                name: venue.name,
+                address: venue.address,
+                lat: venue.lat,
+                lng: venue.lng,
+              }
+            : null,
+          ...(online ? { online } : {}),
           agendaUrl:
             row.hasAgenda && row.meetingId
               ? `${BASE}/Public/Agenda/${wiring.config.orgId}?meeting=${row.meetingId}`

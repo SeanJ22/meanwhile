@@ -266,12 +266,19 @@ export function makeClerksBoardsSource(
         drops.unknownVenue += instances.length;
         continue;
       }
-      if (isPlacelessLocation(location)) {
-        drops.placeless += instances.length;
-        continue;
-      }
-      const venue = resolveVenue(SOURCE_NAME, wiring.ocdId, location);
-      if (!venue) {
+      /*
+       * A meeting held online is KEPT (D18). No building means no coordinates
+       * and no pin, but it is a real public meeting a reader could attend.
+       * Tucson's Clerk publishes "Microsoft Teams (Virtual)" for bodies that
+       * meet this way and no join link beside it, so joinUrl is null and
+       * renders as the gap it is.
+       */
+      const online = isPlacelessLocation(location)
+        ? { label: location, joinUrl: null }
+        : null;
+      if (online) drops.placeless += instances.length;
+      const venue = online ? null : resolveVenue(SOURCE_NAME, wiring.ocdId, location);
+      if (!online && !venue) {
         drops.unknownVenue += instances.length;
         continue;
       }
@@ -306,12 +313,15 @@ export function makeClerksBoardsSource(
           title: bodyName,
           startsAt,
           timeZone: wiring.timeZone,
-          location: {
-            name: venue.name,
-            address: venue.address,
-            lat: venue.lat,
-            lng: venue.lng,
-          },
+          location: venue
+            ? {
+                name: venue.name,
+                address: venue.address,
+                lat: venue.lat,
+                lng: venue.lng,
+              }
+            : null,
+          ...(online ? { online } : {}),
           // The Clerk posts one current agenda; it belongs to the instance
           // whose date its title names, and to no other.
           agendaUrl:

@@ -120,7 +120,7 @@ test("the body homepage rung is labelled with the division, never a minted body 
 });
 
 test("a venue with no usable coordinates produces no map link", () => {
-  assert.equal(venueLink({ ...BASE.location, lat: NaN, lng: -72 }), null);
+  assert.equal(venueLink({ ...BASE.location!, lat: NaN, lng: -72 }), null);
 });
 
 test("every audit row points at a body that exists", () => {

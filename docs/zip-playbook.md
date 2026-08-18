@@ -474,6 +474,71 @@ the *town's own* enumeration and the coverage rule's denominator still comes
 from the Census of Governments — the two are cross-checks on each other, and
 a body on one and not the other is a finding.
 
+### The county feed's agenda ITEMS are a special-district directory (D19, 2026-08-17)
+
+Not the county's body list — its **agenda items**. Pima County's Legistar
+client exposes exactly four bodies, all Board of Supervisors variants, so a
+body-list rung says the county has no special districts. Its agendas say
+otherwise: reading the items under "BOARD OF SUPERVISORS SITTING AS OTHER
+BOARDS" across fifteen live agendas names **seven** distinct governments, none
+of which appear anywhere else in the feed —
+
+- Flood Control District Board
+- Library District Board
+- Improvement District Board
+- Stadium District Board
+- Rocking K South Community Facilities District Board
+- Wildflower Community Facilities District
+- Ajo Domestic Water Improvement District
+
+**How to walk it.** `GET <slug>/events/<EventId>/eventitems` per event, one
+request each, serialized. An item with no `EventItemMatterFile` is a heading;
+inside the sitting-as region each heading names the acting board, and
+"SITTING AS THE BOARD OF SUPERVISORS" hands control back. This is a
+per-EVENT fetch, so it belongs at ingest and never per reader.
+
+**Two traps, both found by running it rather than by reading it.**
+
+1. **Typography is not a government.** "PAGE BREAK" appears five times inside
+   the region across those agendas and opened a segment on the first live run,
+   cutting the item after it off the district that was actually acting. Rule
+   the ladder inherits: a heading with no letter in it, and a named list of
+   layout markers, name no body — and neither opens a segment nor closes one.
+2. **A per-sitting name is not a body key.** Diligent publishes a different
+   `bodyName` for every committee of one government ("Regular Governing
+   Board", "Finance and Audit Committee Meeting"), so keying anything on it
+   splits one college district into several. The meeting id's
+   `<source>:<tenant>` prefix is the government.
+
+**Why it matters beyond Pima.** ~39,555 special districts nationally, and this
+is the 4.7.6 thesis measured: a large share sit inside county feeds already
+wired, reachable by reading items rather than by 39,555 separate hunts. All
+seven resolve to UNRESOLVED against the registry today and that is the correct
+answer — Census publishes no boundary for a special district, so no division
+exists to match. They are recorded as unresolved with their published heading
+as evidence, never attributed to the county. Naming them is D31.
+
+### A virtual meeting is invisible to every radius filter (D18, 2026-08-17)
+
+A meeting whose published location names no place — "Virtual Meeting", "Via
+Zoom Webinar", "Microsoft Teams (Virtual)" — has no coordinates, so a
+distance filter excludes it silently at every rung. **Twelve real public
+meetings across one refresh**, three of them a body that meets ONLY online.
+Counting the drop is not enough; a drop counter is a number in a log, and the
+reader still sees nothing.
+
+The rung: fetch and keep them, place them nowhere, and reach them by asking a
+different question than distance —
+
+- the division containing the map centre, for a body that has one;
+- the same government's in-person sittings being in radius, for a body that
+  does not (a community-college district, an authority, a special district).
+
+Neither invents a coordinate. Detection is a location-string list
+(`PLACELESS_LOCATIONS`), which is append-only like everything else here: a new
+vendor's phrasing is a new entry, and until it is added that vendor's virtual
+sittings drop as an unknown venue rather than being kept.
+
 ## 4. The scripts that exist
 
 | Command | What it does |

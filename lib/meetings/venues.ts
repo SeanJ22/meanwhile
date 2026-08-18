@@ -24,6 +24,15 @@ export function groupByVenue(meetings: Meeting[]): Venue[] {
   const venues = new Map<string, Venue>();
 
   for (const meeting of meetings) {
+    /*
+     * A meeting held online has no place, so it is not a venue and never a
+     * pin (D18). This is the ONE gate that decides that: everything upstream
+     * keeps such a meeting so the reader can see it, and giving it a
+     * coordinate here — the body's home, the map centre, anything — would put
+     * a marker on a building nobody is going to.
+     */
+    if (meeting.location === null) continue;
+
     const { lat, lng, name, address } = meeting.location;
     const key = `${lat.toFixed(COORD_PRECISION)},${lng.toFixed(COORD_PRECISION)}`;
 

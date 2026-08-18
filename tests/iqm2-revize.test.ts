@@ -44,7 +44,7 @@ test("iqm2: the calendar parse states its count, and it is not zero", () => {
     assert.ok(row.detailId, "a row lost its Detail_Meeting id");
     assert.equal(row.board, "Board of County Commissioners");
     assert.match(row.when, /2026/);
-    assert.ok(row.location.includes("10 Court Street"), row.location);
+    assert.ok(row.location!.includes("10 Court Street"), row.location);
   }
 });
 
@@ -61,7 +61,7 @@ test("iqm2: normalize places every row, resolves both venues, keeps agenda links
   assert.ok(meetings.length >= 8, `normalized ${meetings.length}`);
   assert.equal(drops.unknownVenue, 0, "both published venues must resolve");
 
-  const venues = new Set(meetings.map((m) => m.location.name));
+  const venues = new Set(meetings.map((m) => m.location!.name));
   assert.equal(venues.size, 2, "work sessions and regular meetings sit in two rooms");
 
   for (const m of meetings) {
@@ -140,7 +140,7 @@ test("revize: normalize wires the BOC, drops the delegation's committee counted"
   assert.equal(m.ocdId, "ocd-division/country:us/state:nh/county:merrimack");
   assert.equal(m.bodyName, "Merrimack County Board of Commissioners");
   assert.equal(m.status, "SCHEDULED");
-  assert.equal(m.location.name, "OCH, 163 N. Main St., Concord");
+  assert.equal(m.location!.name, "OCH, 163 N. Main St., Concord");
   // No agenda posted for 8/24 when the fixture was recorded; the field must
   // say so rather than pointing at a constructed URL.
   assert.equal(m.agendaUrl, null);
@@ -150,7 +150,7 @@ test("revize: normalize wires the BOC, drops the delegation's committee counted"
   // Every archived row is midnight-anchored and carries the body's own venue.
   for (const archived of dayOnly) {
     assert.match(archived.startsAt, /T00:00:00/);
-    assert.equal(archived.location.name, "OCH, 163 N. Main St., Concord");
+    assert.equal(archived.location!.name, "OCH, 163 N. Main St., Concord");
     assert.equal(archived.ocdId, "ocd-division/country:us/state:nh/county:merrimack");
   }
   // The archive never overwrites a date the timed block already produced.

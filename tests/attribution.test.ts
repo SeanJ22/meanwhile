@@ -6,13 +6,19 @@ import { test } from "node:test";
 import {
   attributionSummary,
   meetingBodiesFor,
+  resolveMeetingBodies,
   resolveSegment,
   segmentAgenda,
   type AgendaItem,
 } from "../lib/meetings/attribution.ts";
+import { validateSnapshot } from "../lib/meetings/snapshot.ts";
 import registry from "../lib/registry/registry.json" with { type: "json" };
 import type { Body } from "../lib/registry/types.ts";
-import type { LegistarEventItem } from "../lib/sources/legistar/types.ts";
+import { normalizeWithDrops } from "../lib/sources/legistar/index.ts";
+import type {
+  LegistarEvent,
+  LegistarEventItem,
+} from "../lib/sources/legistar/types.ts";
 
 /**
  * Agenda attribution — 4.6.9 / D19.
@@ -193,4 +199,200 @@ test("resolution never reaches outside the host's own division", () => {
   );
   assert.equal(resolved.attribution, "UNRESOLVED");
   assert.equal(resolved.bodyId, null);
+});
+
+// ── The live path, D19's remaining half (g10) ─────────────────────────────
+
+test("the adapter produces acting-body rows from a real fetch shape", () => {
+  // The rows are built by normalizeWithDrops now, not only by a test calling
+  // segmentAgenda directly. This exercises the path an ingest actually takes:
+  // agenda items arrive attached to the raw event, and the meeting carries the
+  // join rows out the other side.
+  const events = JSON.parse(
+    readFileSync(join(import.meta.dirname, "fixtures", "legistar-pima-events.json"), "utf8"),
+  ) as LegistarEvent[];
+  const rawItems = JSON.parse(
+    readFileSync(
+      join(import.meta.dirname, "fixtures", "legistar-pima-eventitems-1824.json"),
+      "utf8",
+    ),
+  ) as LegistarEventItem[] | { value: LegistarEventItem[] };
+  const items = Array.isArray(rawItems) ? rawItems : rawItems.value;
+
+  const { meetings, agendasRead } = normalizeWithDrops(
+    events.map((event) => ({
+      event,
+      slug: "pima",
+      collectedAt: "2026-08-12T22:00:00.000Z",
+      items: event.EventId === 1824 ? items : null,
+    })),
+    new Date("2026-08-12T22:00:00.000Z"),
+  );
+
+  assert.equal(agendasRead, 1, "exactly one agenda was read, and the count says so");
+  const withRows = meetings.filter((m) => m.actingBodies !== undefined);
+  assert.equal(withRows.length, 1, "only the meeting whose agenda was read carries rows");
+  assert.ok(withRows[0].actingBodies!.length > 1, "the Pima agenda has more than one acting body");
+  assert.ok(
+    withRows[0].actingBodies!.every((r) => r.meetingId === withRows[0].id),
+    "every row cites the meeting it belongs to",
+  );
+});
+
+test("a meeting whose agenda was NOT read carries no rows at all — absent, not empty", () => {
+  // The distinction the whole field rests on. An empty array would say "we
+  // read this agenda and nobody else acted", which is a claim about a meeting
+  // nobody looked at.
+  const events = JSON.parse(
+    readFileSync(join(import.meta.dirname, "fixtures", "legistar-pima-events.json"), "utf8"),
+  ) as LegistarEvent[];
+  const { meetings, agendasRead } = normalizeWithDrops(
+    events.map((event) => ({
+      event,
+      slug: "pima",
+      collectedAt: "2026-08-12T22:00:00.000Z",
+      items: null,
+    })),
+    new Date("2026-08-12T22:00:00.000Z"),
+  );
+  assert.equal(agendasRead, 0);
+  assert.ok(meetings.length > 0, "the meetings still normalize");
+  for (const m of meetings) {
+    assert.equal(m.actingBodies, undefined, "no agenda read means no rows, not zero rows");
+  }
+});
+
+test("resolving join rows against the registry never writes the host onto an unresolved one", () => {
+  const rows = meetingBodiesFor("legistar:pima:1824", segmentAgenda(loadItems(), PIMA_HOST));
+  const labels = new Map(registry.divisions.map((d) => [d.ocdId, d.label]));
+  const resolved = resolveMeetingBodies(
+    rows,
+    registry.bodies as Body[],
+    labels,
+    PIMA_HOST.ocdId,
+  );
+
+  assert.equal(resolved.length, rows.length, "resolution adds and drops nothing");
+  const unresolved = resolved.filter((r) => r.attribution === "UNRESOLVED");
+  assert.ok(unresolved.length > 0, "Pima's two special districts have no Census division");
+  for (const row of unresolved) {
+    assert.equal(row.bodyId, null, `"${row.evidence}" was given a body id`);
+    assert.equal(row.ocdId, null, `"${row.evidence}" was given the host's division`);
+    assert.notEqual(row.ocdId, PIMA_HOST.ocdId);
+  }
+  // And the host's own rows are untouched by the pass.
+  for (const row of resolved.filter((r) => r.role === "HOST")) {
+    assert.equal(row.attribution, "HOST_BODY");
+    assert.equal(row.ocdId, PIMA_HOST.ocdId);
+  }
+});
+
+test("the write boundary refuses a snapshot that attributes an unresolved heading to the host", () => {
+  // The rule is enforced where the FILE is written, not where a component
+  // renders — by the time a null reaches a component the lie is already in
+  // the data. This is the same argument the refresh corollary makes.
+  const base = {
+    formatVersion: 1 as const,
+    generatedAt: "2026-08-17T00:00:00.000Z",
+    counts: { fresh: 1, carried: 0, total: 1 },
+    sources: [
+      {
+        source: "legistar",
+        ok: true,
+        error: null,
+        fetched: 1,
+        normalized: 1,
+        drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 },
+      },
+    ],
+    agendaDocuments: [],
+  };
+  const meeting = {
+    id: "legistar:pima:1824",
+    ocdId: PIMA_HOST.ocdId,
+    bodyName: "Board of Supervisors",
+    title: "Regular Meeting",
+    startsAt: "2026-08-11T13:30:00-07:00",
+    timeZone: "America/Phoenix",
+    location: { name: "Board Chambers", address: null, lat: 32.22, lng: -110.97 },
+    agendaUrl: null,
+    jurisdiction: "Pima County, AZ",
+    status: "CONCLUDED" as const,
+    provenance: {
+      sourceUrl: null,
+      sourceOrg: "Pima County",
+      collectedAt: "2026-08-12T22:00:00.000Z",
+      verifiedAt: null,
+    },
+  };
+
+  const honest = {
+    ...base,
+    meetings: [
+      {
+        ...meeting,
+        actingBodies: [
+          {
+            meetingId: "legistar:pima:1824",
+            bodyId: null,
+            ocdId: null,
+            role: "SITTING_AS" as const,
+            attribution: "UNRESOLVED" as const,
+            evidence: "LIBRARY DISTRICT BOARD",
+            itemCount: 19,
+          },
+        ],
+      },
+    ],
+  };
+  assert.doesNotThrow(() => validateSnapshot(honest));
+
+  const smuggled = {
+    ...base,
+    meetings: [
+      {
+        ...meeting,
+        actingBodies: [
+          {
+            ...honest.meetings[0].actingBodies[0],
+            ocdId: PIMA_HOST.ocdId,
+          },
+        ],
+      },
+    ],
+  };
+  assert.throws(() => validateSnapshot(smuggled), /attributes to NOTHING, never to the host/);
+});
+
+test("a page-break marker is typography, not a body — the items after it stay put", () => {
+  // Found by running the live path (g10). Pima prints "PAGE BREAK" as an
+  // agenda item inside the sitting-as region, and the first live run opened a
+  // segment on it, cutting the following item off the district that was
+  // actually acting. Fifteen live agendas contain eight distinct headings in
+  // that region: seven real district boards and this one artifact, five times.
+  const segments = segmentAgenda(
+    [
+      { id: 1, sequence: 1, title: "BOARD OF SUPERVISORS SITTING AS OTHER BOARDS", matterFile: null },
+      { id: 2, sequence: 2, title: "FLOOD CONTROL DISTRICT BOARD", matterFile: null },
+      { id: 3, sequence: 3, title: "First flood control item", matterFile: "FC-1" },
+      { id: 4, sequence: 4, title: "PAGE BREAK", matterFile: null },
+      { id: 5, sequence: 5, title: "Second flood control item", matterFile: "FC-2" },
+      { id: 6, sequence: 6, title: "* * *", matterFile: null },
+      { id: 7, sequence: 7, title: "Third flood control item", matterFile: "FC-3" },
+      { id: 8, sequence: 8, title: "SITTING AS THE BOARD OF SUPERVISORS", matterFile: null },
+    ],
+    PIMA_HOST,
+  );
+
+  const flood = segments.filter((s) => /flood control/i.test(s.heading));
+  assert.equal(flood.length, 1, "the page break must not split the district into two segments");
+  assert.deepEqual(
+    flood[0].itemIds,
+    [3, 5, 7],
+    "every item between the district heading and the return belongs to the district",
+  );
+  assert.ok(
+    !segments.some((s) => /page\s*break/i.test(s.heading) || /^[^\p{L}]+$/u.test(s.heading)),
+    "no segment is opened by typography",
+  );
 });

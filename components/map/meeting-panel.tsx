@@ -35,9 +35,12 @@ interface MeetingPanelProps {
 export function MeetingPanel({ venue, onClose, onOpenMeeting }: MeetingPanelProps) {
   // A venue is a group of meetings at one building, so any of them carries the
   // building's coordinates. `groupByVenue` keys on them, so they agree.
-  const directions = venue.meetings[0]
-    ? venueLink(venue.meetings[0].location)
-    : null;
+  // A venue is a group of meetings at one building, so any of them carries
+  // the building's coordinates — and a venue never holds an online meeting,
+  // because `groupByVenue` keys on coordinates and skips the ones with none
+  // (D18). The null check is the type being honest, not a case that occurs.
+  const first = venue.meetings[0];
+  const directions = first?.location ? venueLink(first.location) : null;
 
   return (
     <aside

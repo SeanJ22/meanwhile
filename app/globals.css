@@ -70,9 +70,21 @@
   --tier-fill-on: #0f1117;
 
   /* Meeting status. Concluded is cool and quiet — present, clearly not
-     something you can still attend. Canceled shares the danger hue. */
+     something you can still attend. Canceled shares the danger hue.
+
+     Online (D18) is a THIRD fact of the same kind and takes the same
+     treatment: a filled pill, because it is a present value and not a named
+     gap — we know exactly where this meeting is, and "nowhere you can drive
+     to" is knowledge, not absence. Its own hue rather than a shared one,
+     for the reason Canceled has its own: "it is over", "it was called off"
+     and "it is held online" are three different things to know before
+     leaving the house, and one shade for any two of them flattens them.
+     Violet is the only unused hue in the palette above — no tier, no
+     accent and no other status claims it, so the pill cannot be mistaken
+     for a tier marker. */
   --concluded: #6fa8a5;
   --canceled: #e17055;
+  --online: #9b7fd4;
 
   /*
     Boundary strokes. docs/state.md §4.1: the basemap draws its roads as one
@@ -330,6 +342,9 @@
 
   --concluded: #4a8481;
   --canceled: #c0392b;
+  /* Darkened for the light theme like its two siblings: the pill paints its
+     text in --bg, so the token itself carries the contrast. */
+  --online: #6f5aa8;
 
   --district-line: #5a7280;
 
@@ -406,6 +421,7 @@
 
   --color-concluded: var(--concluded);
   --color-canceled: var(--canceled);
+  --color-online: var(--online);
   --color-district-line: var(--district-line);
 
   /* The three registers (design pass): text-voice for the app's
@@ -2429,6 +2445,10 @@ label:has(> input[type="checkbox"]) {
 
 .meeting-status-pill[data-status="canceled"] {
   background: var(--canceled);
+}
+
+.meeting-status-pill[data-status="online"] {
+  background: var(--online);
 }
 
 .reaction-choice {

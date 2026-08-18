@@ -180,7 +180,10 @@ export function linksForMeeting(
     });
   }
 
-  const venue = venueLink(meeting.location);
+  // A venue link is a map link, and a meeting held online has no venue to
+  // map (D18). The reader's way in is the join link, which the card renders
+  // from `online` — or the named gap, when the body published none.
+  const venue = meeting.location ? venueLink(meeting.location) : null;
   if (venue) links.push(venue);
 
   return links;

@@ -135,12 +135,20 @@ export function makeDiligentSource(
           drops.unknownVenue++;
           continue;
         }
-        if (isPlacelessLocation(location)) {
-          drops.placeless++;
-          continue;
-        }
-        const venue = resolveVenue(SOURCE_NAME, wiring.ocdId, location);
-        if (!venue) {
+        /*
+         * A meeting held online is KEPT (D18). No building means no
+         * coordinates and no pin, but it is a real public meeting a reader
+         * could attend, and dropping it applied the map's constraint to the
+         * reader. The label is the published string verbatim; nothing here
+         * publishes a join link, so joinUrl is null and renders as the gap
+         * it is rather than as some other URL dressed up as a way in.
+         */
+        const online = isPlacelessLocation(location)
+          ? { label: location, joinUrl: null }
+          : null;
+        if (online) drops.placeless++;
+        const venue = online ? null : resolveVenue(SOURCE_NAME, wiring.ocdId, location);
+        if (!online && !venue) {
           drops.unknownVenue++;
           continue;
         }
@@ -157,12 +165,15 @@ export function makeDiligentSource(
           title: (m.CleanName ?? m.Name ?? bodyName).trim(),
           startsAt,
           timeZone: wiring.timeZone,
-          location: {
-            name: venue.name,
-            address: venue.address,
-            lat: venue.lat,
-            lng: venue.lng,
-          },
+          location: venue
+            ? {
+                name: venue.name,
+                address: venue.address,
+                lat: venue.lat,
+                lng: venue.lng,
+              }
+            : null,
+          ...(online ? { online } : {}),
           // The meeting page hosts the agenda once the tenant publishes it;
           // `Published` is the service's own flag for exactly that.
           agendaUrl: m.Published ? meetingUrl : null,

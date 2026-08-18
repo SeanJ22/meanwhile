@@ -147,7 +147,11 @@ export function makeDiligentSource(
           ? { label: location, joinUrl: null }
           : null;
         if (online) drops.placeless++;
-        const venue = online ? null : resolveVenue(SOURCE_NAME, wiring.ocdId, location);
+        // D31: the tenant is passed so a division-less body keys on itself
+        // rather than on a null every other division-less body also has.
+        const venue = online
+          ? null
+          : resolveVenue(SOURCE_NAME, wiring.ocdId, location, wiring.config.slug);
         if (!online && !venue) {
           drops.unknownVenue++;
           continue;

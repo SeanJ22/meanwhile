@@ -1,3 +1,4 @@
+import { CURATED_PREFIX } from "../ocd/curated.ts";
 import type { OcdId } from "../sources/types.ts";
 
 /**
@@ -27,11 +28,20 @@ export interface VenueEntry {
   sourceId: string;
   /**
    * The body whose meetings this resolution applies to. Second key segment.
-   * Null for a body with no Census division (D28) — the key then degrades to
-   * `(sourceId, rawLocationString)`, which holds until two division-less
-   * bodies share a source and a location string; D31 owns the real fix.
+   *
+   * Null for a body with no Census division (D28). **The key no longer
+   * degrades when it is null** (D31, g10): `venueScope()` below substitutes
+   * a distinct value per source, so two division-less bodies sharing a source
+   * and a location string cannot resolve to each other's building. That was
+   * not hypothetical — Diligent already serves three tenants and one of them,
+   * Pima Community College, has no division.
    */
   bodyOcdId: OcdId | null;
+  /**
+   * The source's own tenant id, for a row whose body has no division (D31).
+   * Absent on every row with an `ocdId`, where the division already keys it.
+   */
+  tenant?: string;
   /** The raw location string as observed in the feed. Third key segment. */
   match: string;
   /** Rendered to the reader. */
@@ -104,6 +114,8 @@ export const VENUE_CACHE: VenueEntry[] = [
   {
     sourceId: "diligent",
     bodyOcdId: null,
+    // D31: the tenant keys these rows now that the division cannot.
+    tenant: "pcc",
     match: "District Office, Community/Board Room C-105",
     name: "PCC District Office, Community/Board Room C-105",
     address: "4905 E. Broadway Blvd., Tucson, AZ 85709",
@@ -118,6 +130,8 @@ export const VENUE_CACHE: VenueEntry[] = [
   {
     sourceId: "diligent",
     bodyOcdId: null,
+    // D31: the tenant keys these rows now that the division cannot.
+    tenant: "pcc",
     match: "District Office, Board Conference Room C-228",
     name: "PCC District Office, Board Conference Room C-228",
     address: "4905 E. Broadway Blvd., Tucson, AZ 85709",
@@ -132,6 +146,8 @@ export const VENUE_CACHE: VenueEntry[] = [
   {
     sourceId: "diligent",
     bodyOcdId: null,
+    // D31: the tenant keys these rows now that the division cannot.
+    tenant: "pcc",
     match: "District Office TBD",
     name: "PCC District Office",
     address: "4905 E. Broadway Blvd., Tucson, AZ 85709",
@@ -556,16 +572,45 @@ export const VENUE_CACHE: VenueEntry[] = [
   },
 ];
 
+/**
+ * The second key segment, which must never be a value two different bodies
+ * can share (D31, g10).
+ *
+ * A division-less body used to key on `null`, and `null === null` — so the
+ * cache silently treated every division-less body on a source as one body.
+ * With one such body per source that is invisible; with two it hands a
+ * reader the wrong building, which is the failure the whole venue cache
+ * exists to prevent.
+ *
+ * The substitute is derived from the venue row's own `sourceId` plus the
+ * caller's tenant, both of which the caller already has, so nothing new has
+ * to be curated for the fix to hold. It is stated as a function rather than
+ * inlined at the two call sites because a key computed in two places is a key
+ * that gets computed two ways.
+ */
+export function venueScope(bodyOcdId: OcdId | null, tenant: string | null): string {
+  return bodyOcdId ?? `${CURATED_PREFIX}tenant/${tenant ?? "unnamed"}`;
+}
+
 export function resolveVenue(
   sourceId: string,
   bodyOcdId: OcdId | null,
   rawLocation: string,
+  /**
+   * The source's own tenant for this body, when the body has no division —
+   * `pcc`, `tusd1`. Optional so every existing caller keeps working; a
+   * division-less body with no tenant given is scoped to "unnamed", which is
+   * exactly the old behaviour and is the one case that can still collide. The
+   * adapters that serve a division-less body pass it.
+   */
+  tenant: string | null = null,
 ): VenueEntry | undefined {
   const key = venueKey(rawLocation);
+  const scope = venueScope(bodyOcdId, tenant);
   return VENUE_CACHE.find(
     (v) =>
       v.sourceId === sourceId &&
-      v.bodyOcdId === bodyOcdId &&
+      venueScope(v.bodyOcdId, v.tenant ?? null) === scope &&
       venueKey(v.match) === key,
   );
 }

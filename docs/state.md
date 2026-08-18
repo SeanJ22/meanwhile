@@ -10974,3 +10974,38 @@ stays first. It also asked for completion against "items 0–3, N of 4 whole".
 Finishing items 2 and 3 whole makes that 3 of 4; adding one more row to item 1
 would have left item 1 incomplete anyway and items 2 and 3 at zero. The author
 can overrule; the five rows carry their specs unchanged.
+
+### NONE OF THIS IS LIVE — the deploy never started (R51)
+
+**Everything above is on `main` at `2681234` and production is serving
+`bf0cd7b`, thirteen commits behind.** The sections above were written before
+that was known and read as though the ship succeeded; it did not, and this
+paragraph is the correction rather than a rewrite of them.
+
+`pnpm handoff --ship` built clean, pushed, opened and merged the PR, and then
+reported `deploy NOT verified`. A further 20-minute poll and later manual checks
+all returned `bf0cd7b` from `/api/build`.
+
+**The first reading was wrong and is kept because it is the more useful half.**
+GitHub's commit status on the merge read `pending`, which looks exactly like a
+slow build; it is a stale context that never resolved. The Netlify API says
+otherwise: the project's `currentDeploy` is `6a84ab85ff8876000891050b`, `state:
+current`, `ready`, created `2026-08-18T18:59:17Z` for `bf0cd7b` — the
+`github-actions[bot]` snapshot refresh — with `error_message: null`,
+`plugin_state: success`, `deploy_time: 54`. **There is no queued, building or
+failed deploy behind it.** Netlify never started a build for either merge.
+
+So it is neither the tree nor the build: `pnpm build` is clean locally in 11s,
+the same command Netlify runs, and the last deploy that did run finished in 54
+seconds with a clean secret scan over 5,533 files. The asymmetry worth chasing
+first is that the working deploy came from the bot pushing **directly to main**
+(`deploy_source: api`) while the two that produced nothing came through **PR
+merges**.
+
+**Two consequences, so no later session misreads the record.** g15's
+`pnpm walk:all` ran against `bf0cd7b`, the PRE-g15 build — its 302 checks and 0
+failures verify PRIOR sessions' claims and say nothing about this session's. And
+**no new walk checks were appended**, because a check for the M135 autocomplete
+fix would fail against undeployed code and read as a false regression. Both are
+gaps against the standing handoff, and both close by themselves once a deploy
+lands.

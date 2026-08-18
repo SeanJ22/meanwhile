@@ -35,7 +35,29 @@ class-wide defect. Fix the class, audit everywhere, report the full count.
   fill each row's citation from it.** If he has not, say so again — do not
   quietly stop mentioning it.
 
-## 0 — The five rows g15 deferred whole (the pre-H queue; it stays first)
+## 0 — FIRST: production is thirteen commits behind (R51, P0)
+
+g15 merged to `main` (`2681234`) and **Netlify never started a build**.
+Production serves `bf0cd7b`, the 18:59Z bot snapshot-refresh commit. Nothing
+from g15 is live — not the M135 autocomplete fix, not AUD-04, not the budgets.
+
+It is not the tree and not the build: `pnpm build` is clean in 11s, and the
+last deploy that ran finished in 54s. There is no queued, building or failed
+deploy behind the current one; GitHub's `pending` status on the merge is a
+stale context, not a build in progress. The asymmetry to chase: the deploy that
+works came from the bot pushing DIRECTLY to main (`deploy_source: api`); the
+two that produced nothing came through PR merges. Build hook, GitHub App
+webhook deliveries for merge commits, or stopped builds / auto-publishing.
+
+**Two standing-handoff gaps close by themselves when a deploy lands, and not
+before:** g15's `walk:all` ran against the PRE-g15 build, so its 302 checks
+verify prior sessions only; and no new walk checks were appended, because a
+check for the M135 fix would fail against undeployed code and read as a false
+regression. **Land a deploy, re-run `walk:all`, then append the M135 check.**
+
+Full evidence on tracker row **R51** and in state.md's g15 section.
+
+## 1 — The five rows g15 deferred whole (the pre-H queue; it stays first)
 
 g15 completed four of the nine and deferred five WHOLE, none half-built. Each
 carries its spec on its tracker row; read the full Notes before building.
@@ -66,7 +88,7 @@ carries its spec on its tracker row; read the full Notes before building.
 sweep: one body row at 85701 that cannot be resolved distinctly, and one place
 row. The second is an AUTHOR RULING, below.
 
-## 1 — AUD06, the one coverage manifest
+## 2 — AUD06, the one coverage manifest
 
 Dispositioned here by the author, and it **lands before any second-state
 hunting** — that ordering is the disposition, not a preference. A second state
@@ -78,7 +100,7 @@ the OFFICIAL universe (Census of Governments, NCES, state rosters), never
 against our own registry; the per-county audit is
 `docs/coverage-audit-by-county.md`.
 
-## 2 — The H hunt itself
+## 3 — The H hunt itself
 
 Per the standing H briefs, after AUD06 lands.
 
@@ -116,7 +138,7 @@ Playbook diff or explicit "nothing new". Overwrite `docs/session-brief.md`.
 `pnpm handoff --ship` with the R22 gate; verify the deploy LANDS via
 `/api/build` and state the SHA.
 
-Completion against the denominator: items 0–2, N of 3 whole; within item 0, rows
+Completion against the denominator: items 0–3, N of 4 whole; within item 1, rows
 completed of five. "Needs your hands." followed IMMEDIATELY by the numbered
 list, or "Nothing — the queue continues." Author-ruled-expected items never
 appear there.

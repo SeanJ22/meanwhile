@@ -36,13 +36,21 @@ jobs:
   refresh:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: main
 
-      - uses: actions/setup-node@v4
+      # R45 (2026-08-18): checkout and setup-node were pinned at v4, which
+      # target Node 20 — GitHub forces them onto Node 24 and warns on every
+      # run. v7 targets Node 24 natively. setup-node v5 was NOT the landing
+      # spot: v5 auto-caches whenever package.json names a packageManager,
+      # and pnpm is not on PATH until corepack enable below, so v5 would
+      # have broken this step. v6 narrowed auto-caching to npm only; the
+      # explicit false below pins that off regardless of a later default.
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
+          package-manager-cache: false
 
       - name: Enable corepack (pnpm pinned by packageManager)
         run: corepack enable

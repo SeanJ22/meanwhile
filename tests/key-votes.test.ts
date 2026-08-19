@@ -662,3 +662,70 @@ test("F01 5.6: the shutdown row resolves to H.R. 5371 in both chambers, with tal
     "funding-fight is resolved and still listed as a miss",
   );
 });
+
+/**
+ * **F01 5.2 (2026-08-19, the author): "if he was in session we'd need to
+ * record what he did."**
+ *
+ * We did record it. The key-votes pill map had no key for `NOT_VOTING` — the
+ * value the fetcher writes for a member who was SEATED and did not vote — so
+ * 140 stored positions fell through to a generic "Position recorded" branch,
+ * which tells a reader nothing where "Did not vote" is the true and useful
+ * answer. The Recent view had it right all along, which is exactly how two
+ * views of one record come to say different things.
+ */
+test("F01 5.2: every position the store can hold has a pill, in both views", () => {
+  const keyVotes = readFileSync(
+    join(ROOT, "components", "officials", "key-votes-section.tsx"),
+    "utf8",
+  );
+  const recent = readFileSync(
+    join(ROOT, "components", "map", "popup", "official-popup.tsx"),
+    "utf8",
+  );
+
+  // The vocabulary the fetcher can actually produce, read off the fetcher so
+  // this cannot drift from what lands in the store.
+  const fetcher = readFileSync(
+    join(ROOT, "scripts", "fetch-key-vote-positions.mts"),
+    "utf8",
+  );
+  const produced = [...fetcher.matchAll(/return "(YES|NO|PRESENT|NOT_VOTING)"/g)].map(
+    (m) => m[1],
+  );
+  assert.ok(produced.length >= 4, "the fetcher's position vocabulary was not found");
+
+  for (const position of new Set(produced)) {
+    assert.ok(
+      new RegExp(`^[ ]*${position}: [{]`, "m").test(keyVotes),
+      `the key-votes pill map has no entry for ${position} — it will render the generic fallback`,
+    );
+    assert.ok(
+      new RegExp(`^[ ]*${position}: [{]`, "m").test(recent),
+      `the recent-votes pill map has no entry for ${position}`,
+    );
+  }
+
+  // A recorded absence is neutral in both. It is not a position (never the
+  // yes/no colour) and it is not a gap (never the outline) — three states,
+  // three treatments.
+  assert.match(keyVotes, /NOT_VOTING: \{ label: "Did not vote", tone: "neutral" \}/);
+  assert.match(recent, /NOT_VOTING: \{ label: "Did not vote", tone: "neutral" \}/);
+});
+
+test("F01 5.2: the store actually holds recorded absences, so the pill is not theoretical", () => {
+  // 140 of them at the time of writing. A guard for a value nothing produces
+  // is a guard that proves nothing, so the denominator is asserted.
+  const positions = JSON.parse(
+    readFileSync(join(ROOT, "data", "votes", "key-vote-positions.json"), "utf8"),
+  ) as { positions: Record<string, Record<string, string>> };
+  const counts: Record<string, number> = {};
+  for (const roll of Object.values(positions.positions)) {
+    for (const value of Object.values(roll)) counts[value] = (counts[value] ?? 0) + 1;
+  }
+  assert.ok(
+    (counts.NOT_VOTING ?? 0) > 0,
+    "no recorded absence in the store — this guard is asserting nothing",
+  );
+  assert.ok((counts.YES ?? 0) > 0 && (counts.NO ?? 0) > 0);
+});

@@ -82,9 +82,17 @@ test("the count of fixed waits may fall, never rise", () => {
    * Lowering this number is ordinary work. Raising it needs a reason written
    * beside the new wait AND this number moved on purpose.
    */
+  /*
+   * F01 (2026-08-19): 12 → 13, moved deliberately with its reason. The new one
+   * is the 9.6 preservation check’s settle after a real map click, justified
+   * beside the wait: the click can open a picker, a card, or nothing, and
+   * “nothing” is a legitimate outcome the check reports as COULD NOT RUN — so
+   * there is no single element to poll for, and polling for “either of two
+   * things or neither” is a fixed wait wearing a loop.
+   */
   assert.ok(
-    callSites.length <= 12,
-    `walk-all.mts now has ${callSites.length} fixed waits, up from the committed 12. ` +
+    callSites.length <= 13,
+    `walk-all.mts now has ${callSites.length} fixed waits, up from the committed 13. ` +
       "A new blind wait is the defect R49 exists to stop — convert it to an outcome " +
       "wait, or move this number deliberately with the reason beside the wait.",
   );

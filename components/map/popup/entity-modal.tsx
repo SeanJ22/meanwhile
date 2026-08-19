@@ -942,12 +942,9 @@ function Empty({ children }: { children: ReactNode }) {
   );
 }
 
-function hostOf(url: string): string {
-  try {
-    return new URL(url).host;
-  } catch {
-    return url;
-  }
-}
+/* `hostOf` REMOVED (F01 3.2, 2026-08-19). Its only caller was the per-row
+   provenance line the attribution collapse retired; a helper nothing calls is
+   dead weight that reads as a capability. Deleted rather than allowlisted — an
+   allowlist entry for an unused symbol is permission for the next one. */
 
 export { PopupSectionLabel };

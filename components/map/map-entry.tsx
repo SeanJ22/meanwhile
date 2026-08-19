@@ -403,7 +403,7 @@ function MapEntryInner() {
       setSettled(null);
       remember({ zip, lat, lng });
     },
-    [remember, dispatch, dismissSidebar],
+    [remember, dispatch, dismissSidebar, setLarge],
   );
 
   /*
@@ -573,7 +573,7 @@ function MapEntryInner() {
       setNoticeCollapsed(surface !== "wgh");
       if (surface !== "large") setLarge(null);
     },
-    [],
+    [setLarge],
   );
 
   /**

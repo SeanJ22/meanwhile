@@ -4432,9 +4432,28 @@ label:has(> input[type="checkbox"]) {
 
 /* Explicit, because it is load-bearing: the top row wins over the bottom
    stack. Relying on DOM order is what let a tall card bury the ballot. */
+/* F01 7.3 (2026-08-19), caught by MEASURING rather than by looking.
+
+   The row is `justify-end` and did not wrap, so its first child overflowed to
+   the LEFT the moment the row's content exceeded the band. Measured at 390×844
+   with a battlecard open: the pill cluster sat at x = −8, under the hamburger
+   and under the new map reset.
+
+   The trigger was F01 1e in this same session — making "Where can I vote?"
+   pill-shaped gave it a 44px min-height and wider padding, and the row it
+   shares had no slack left. That is worth saying plainly: a change to one
+   control's SHAPE moved a different control off the screen, and nothing in
+   either change would have shown it. `pnpm overlaps` and this measurement are
+   the only instruments that catch this class.
+
+   Wrapping is the same answer G07 reached for the cluster's own row when its
+   label got longer: the corner has vertical room and does not have horizontal
+   room. `justify-end` is kept so wrapped lines stay right-aligned against the
+   zoom column. */
 .map-top-row {
   position: relative;
   z-index: 2;
+  flex-wrap: wrap;
 }
 
 .map-bottom-stack {
@@ -4597,10 +4616,16 @@ label:has(> input[type="checkbox"]) {
 /* F01 9.4 (2026-08-19): the small reset, on the map, under the hamburger.
    Same visibility rule as the hamburger — see the note at its render — so
    exactly one reset control is on screen at any moment. */
+/* BESIDE the hamburger, not under it. Measured at 390×844 before this moved:
+   at top: 62px the 32px button ran from y 62 to 94 and the count badge starts
+   at y 88 — a six-pixel overlap, the new control sitting on an existing one.
+   `pnpm overlaps` exists because this class of defect is invisible in code and
+   obvious in a measurement. 18px top centres the 32px button against the 44px
+   hamburger; 64px left clears it with the same 8px gutter the pills use. */
 .map-reset-btn {
   position: absolute;
-  top: 62px;
-  left: 18px;
+  top: 18px;
+  left: 64px;
   z-index: 1050;
   display: none;
   align-items: center;
@@ -4635,10 +4660,26 @@ main[data-sidebar="closed"] .map-reset-btn {
   display: inline-flex;
 }
 
+/* F01 7.3: the top row starts AFTER the fixed control band, whenever that band
+   is on screen. The hamburger and the reset are absolutely positioned and take
+   no space in the flow, so a right-aligned row that wrapped to two lines put
+   its second line straight under them — measured, 28px of overlap at 390px.
+   104px is the reset's right edge (96) plus the 8px gutter the pills use. The
+   rule is bound to the SAME condition that shows the controls, so the padding
+   cannot outlive them. */
+main[data-sidebar="closed"] .map-top-row {
+  padding-left: 104px;
+}
+
 @media (max-width: 639px) {
   main:not([data-sidebar="open"]) .sidebar-toggle,
   main:not([data-sidebar="open"]) .map-reset-btn {
     display: inline-flex;
+  }
+
+  /* F01 7.3 — see the note above. Same condition, same clearance. */
+  main:not([data-sidebar="open"]) .map-top-row {
+    padding-left: 104px;
   }
 }
 

@@ -68,6 +68,29 @@ const POSITION_PILL: Record<string, { label: string; tone: "yes" | "no" | "neutr
   YES: { label: "Voted yes", tone: "yes" },
   NO: { label: "Voted no", tone: "no" },
   PRESENT: { label: "Voted present", tone: "neutral" },
+  /*
+   * **F01 5.2 (2026-08-19, the author): *"if he was in session we'd need to
+   * record what he did."*** We did record it, and then failed to say it.
+   *
+   * `NOT_VOTING` is what `scripts/fetch-key-vote-positions.mts` writes for a
+   * member who WAS SEATED and did not vote — the chambers publish "Not Voting"
+   * and "Absent" and the fetcher maps both to it. This map had no key for it,
+   * so 140 stored positions fell through to the generic branch below and
+   * rendered "Position recorded": a string that tells a reader nothing, in
+   * place of the true and useful answer.
+   *
+   * `DID_NOT_VOTE` is the OTHER vocabulary — `KeyVoteRowData.positions` types
+   * both — and it stays, because a caller may supply either. Two names for one
+   * state is not ideal and is deliberately not renamed here: the snapshot, the
+   * fetcher and the row type all use `NOT_VOTING`, and a rename touching all
+   * three is a bigger change than this item, tracked rather than smuggled in.
+   *
+   * Neutral tone on both, because a recorded absence is a fact about the
+   * member and not a position — it must never wear the yes or no colour, and
+   * it is equally never a GAP, which is the outline. Three states, three
+   * treatments (item 12).
+   */
+  NOT_VOTING: { label: "Did not vote", tone: "neutral" },
   DID_NOT_VOTE: { label: "Did not vote", tone: "neutral" },
 };
 

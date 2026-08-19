@@ -51,12 +51,6 @@
       "reason": "Superseded by M112's division-keyed resolver. Its own comment records that it used to be the resolution and that the battlecard now asks representationForDivision directly. Dead, and its comment is the useful part — delete the callback, keep the note."
     },
     {
-      "file": "components/map/popup/entity-modal.tsx",
-      "rule": "@typescript-eslint/no-unused-vars",
-      "symbol": "hostOf",
-      "reason": "Dead helper. Formatted a URL's host for a card line that no longer renders one. Safe to delete."
-    },
-    {
       "file": "components/map/popup/official-popup.tsx",
       "rule": "@typescript-eslint/no-unused-vars",
       "symbol": "PopupRow",

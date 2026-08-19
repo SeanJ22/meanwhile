@@ -102,6 +102,24 @@ function outcomeAfter(
     if (found) return "card";
   }
   if (item.kind === "body" && resolveBody(bodies, item) !== null) return "card";
+  /*
+   * A PLACE ROW OPENS THE PLACE CARD (g18, the author's ruling A).
+   *
+   * g15 left this row as the audit's one non-defect miss: a place is a
+   * division several bodies sit in, and electing one of them to stand for it
+   * would be an invented answer, so the card a place row should open was the
+   * author's to rule on rather than a build to guess at. He ruled: the place's
+   * own small card, listing every body in it, each row opening that body's
+   * battlecard.
+   *
+   * No resolution condition, unlike the body branch above. A place card is
+   * about the DIVISION, which the row already carries as its `ocdId` — there
+   * is no one-of-N pick to get wrong, which is the whole reason the card is
+   * shaped the way it is. An `ocdId` of null is the only miss, and it cannot
+   * happen: `lib/search/index.ts` only mints a place item inside a
+   * `meeting.ocdId !== null` branch.
+   */
+  if (item.kind === "place" && item.ocdId !== null) return "card";
   if (item.lat !== null && item.lng !== null) return "flies only";
   return "SILENT";
 }

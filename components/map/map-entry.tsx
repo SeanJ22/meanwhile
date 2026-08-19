@@ -48,9 +48,9 @@ import {
   representationForDivision,
   representationNoteFor,
 } from "@/lib/registry/representation";
-import { TIER_LABEL } from "@/lib/ocd/tiers";
+import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
 import { blurbForBody } from "@/lib/officials/body-blurbs";
-import { tierForMeeting } from "@/lib/state/derive";
+import { divisionTypeLabel, tierForMeeting } from "@/lib/state/derive";
 import {
   formatMeetingDate,
   formatMeetingTime,
@@ -934,6 +934,20 @@ function MapEntryInner() {
             subject: bodySubject(body, current?.meetings ?? []),
           });
         }
+      } else if (item.kind === "place" && item.ocdId !== null) {
+        // g18, ruling A: the place card. It elects nobody to stand for the
+        // place — it lists every body we hold in it and lets the reader
+        // choose, which is the only honest resolution of a one-to-many.
+        openLarge({
+          kind: "entity",
+          subject: placeSubject(
+            item.ocdId,
+            item.label,
+            item.tier,
+            current?.coverage?.bodies ?? [],
+            current?.meetings ?? [],
+          ),
+        });
       }
     }
 
@@ -1666,6 +1680,30 @@ function MapEntryInner() {
                 tier: "local",
               })
             }
+            /*
+             * A place card's body row opens that body's battlecard — the same
+             * `bodySubject` every other door onto a body uses, so the reader
+             * never meets two cards for one body (g18, ruling A).
+             *
+             * Matched on `bodyId`, which is unique per body, NOT on the OCD-ID
+             * the place row carries: several bodies share one division, and an
+             * ocdId match would open one body's card from another's row. That
+             * is M135's other open case and this row does not repeat it. A key
+             * that resolves to nothing opens nothing rather than opening the
+             * first match — no card is worse than the wrong card only when the
+             * wrong card is impossible.
+             */
+            onOpenPlaceBody={(key) => {
+              const body = (current?.coverage?.bodies ?? []).find(
+                (b) => b.bodyId === key,
+              );
+              if (body) {
+                openLarge({
+                  kind: "entity",
+                  subject: bodySubject(body, current?.meetings ?? []),
+                });
+              }
+            }}
           />
         )}
         {large?.kind === "official" && (
@@ -1930,6 +1968,109 @@ function bodyContactRows(
   // people, on their own cards. Stated here rather than left as an empty
   // branch somebody later reads as "we checked and there is none".
   return rows;
+}
+
+/**
+ * A PLACE'S CARD (g18, 2026-08-18, the author's ruling A).
+ *
+ * M135's last unconverted row. A place row — "Pima County, AZ" in the ask
+ * panel's autocomplete — flew the camera and opened nothing, because a place
+ * is a division several bodies sit in and this product had no card for one.
+ *
+ * NOBODY IS ELECTED TO STAND FOR THE PLACE. The card names the place and its
+ * type and then lists every body we hold in it, each row opening that body's
+ * own battlecard. Choosing the largest body, or the first, or the one with
+ * the most sittings, would be this product answering "who speaks for Pima
+ * County?" out of its own convenience — an invented claim about a government,
+ * which is the thing it exists not to do.
+ *
+ * A place we hold NO bodies for renders the stated absence, never an empty
+ * list: "we hold no bodies here" is a fact about us, and it may not wear the
+ * shape of a fact about the place.
+ */
+function placeSubject(
+  ocdId: string,
+  label: string,
+  rowTier: Tier | null,
+  bodies: CoveredBody[],
+  meetings: Meeting[],
+): ModalSubject {
+  const mine = bodies.filter((b) => b.ocdId === ocdId);
+  const divisionType = mine[0]?.divisionType ?? typeFromOcdId(ocdId);
+
+  /*
+   * THE TIER IS NEVER GUESSED, AND NULL IS A REAL ANSWER.
+   *
+   * `tierForOcdId` returns null when it does not recognise a division's
+   * deepest segment, and its own note says callers must handle that rather
+   * than walk up to an ancestor — a `water_district` inheriting the state
+   * tier would be filed wrong with nothing on screen to show it had been
+   * guessed at. So: the row's tier, else the tier of a body we actually hold
+   * in this place (a sourced division, not an inference), else null.
+   *
+   * Null reaches the card as a named gap in the Tier row. The header still
+   * paints an accent, because a modal has to paint something and there is no
+   * fourth palette; the accent is the only part of this that falls back, and
+   * the part that makes a claim IN WORDS renders the gap.
+   */
+  const tier: Tier | null = rowTier ?? mine[0]?.tier ?? null;
+
+  return {
+    title: label,
+    subtitle: divisionTypeLabel(divisionType),
+    tier: tier ?? "local",
+    /*
+     * NULL, deliberately, exactly as `bodySubject` sets it. `divisionOcdId` is
+     * M112's re-derive key: a card carrying one is rebuilt as a DISTRICT card
+     * whenever the selected district shares that OCD-ID. A place and a
+     * district can share one — `county:pima` is both — so carrying it here
+     * would let a place card silently become a district card under the
+     * reader. The re-derive exists to fill in a roster that arrived late, and
+     * a place card has no roster to fill in.
+     */
+    divisionOcdId: null,
+    facts: [],
+    placeCard: {
+      typeLabel: divisionTypeLabel(divisionType),
+      tierLabel: tier ? TIER_LABEL[tier] : null,
+      bodies: mine
+        .map((b) => {
+          const count = meetings.filter(
+            (m) => m.ocdId === ocdId && m.bodyName === (b.name ?? b.divisionLabel),
+          ).length;
+          return {
+            key: b.bodyId,
+            name: b.name ?? b.divisionLabel,
+            tier: b.tier,
+            // A count of sittings we hold, never a judgement. Omitted at zero
+            // rather than rendered as "0", which reads as "sits never".
+            meta: count > 0 ? `${count}` : undefined,
+          };
+        })
+        .sort((a, b) => a.name.localeCompare(b.name)),
+      absence:
+        "We haven't recorded any governing body in this place yet. That's a gap in our coverage, not a statement about the place.",
+    },
+    // A place has no roster of its own — the people are on the bodies' cards,
+    // one level down, and saying so is better than an empty tab.
+    representation: [],
+    representationNote:
+      "A place isn't governed by one body. Open a body above to see who sits on it.",
+    meetings: meetings.filter((m) => m.ocdId === ocdId),
+    sources: [],
+  };
+}
+
+/**
+ * The division kind an OCD-ID's last segment names.
+ *
+ * Only reached when we hold no body in the place, so `divisionType` cannot be
+ * read off one. `divisionTypeLabel` falls back to "District" for a key it has
+ * no word for, which is the plain-language rule doing its job: an unrecognised
+ * segment must never leak `school_district` onto a reader's card.
+ */
+function typeFromOcdId(ocdId: string): string {
+  return (ocdId.split("/").pop() ?? "").split(":")[0];
 }
 
 /** A body's own kind where it is curated; its division's kind where derived. */

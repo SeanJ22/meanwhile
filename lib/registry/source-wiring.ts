@@ -1,5 +1,9 @@
 import type { OcdId } from "../sources/types.ts";
 import type { AgendaSourceType } from "./types.ts";
+import { TUCSON_CLERKSBOARDS } from "./curated-bodies.ts";
+
+/** The one Tucson division every clerksboards body sits on. */
+const TUCSON_OCD_ID = "ocd-division/country:us/state:az/place:tucson" as OcdId;
 
 /**
  * Which bodies the composite meeting source serves, and how — 4.6.4.
@@ -204,65 +208,35 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     verifiedAt: "2026-08-14",
   },
 
-  // ── D29: Tucson boards and commissions via the Clerk's boards app ───────
-  // clerksboards.tucsonaz.gov serves one server-rendered page per body with
-  // the published schedule, location and current agenda. These five carry a
-  // parseable schedule and a physical venue the page itself publishes; the
-  // other 51 bodies in the directory are curated registry rows awaiting
-  // either a schedule this parser reads or a venue citation.
-  {
-    bodyId: "ocd-division/country:us/state:az/place:tucson#planning-commission",
-    ocdId: "ocd-division/country:us/state:az/place:tucson",
-    agendaSourceType: "CLERKSBOARDS",
-    jurisdiction: "Tucson, AZ",
-    publishingOrg: "City of Tucson Clerk",
-    timeZone: "America/Phoenix",
-    config: { boardId: "38" },
-    verifiedAt: "2026-08-14",
-  },
-  {
-    bodyId: "ocd-division/country:us/state:az/place:tucson#board-of-adjustment",
-    ocdId: "ocd-division/country:us/state:az/place:tucson",
-    agendaSourceType: "CLERKSBOARDS",
-    jurisdiction: "Tucson, AZ",
-    publishingOrg: "City of Tucson Clerk",
-    timeZone: "America/Phoenix",
-    config: { boardId: "8" },
-    verifiedAt: "2026-08-14",
-  },
-  {
-    bodyId:
-      "ocd-division/country:us/state:az/place:tucson#citizens-water-advisory-committee",
-    ocdId: "ocd-division/country:us/state:az/place:tucson",
-    agendaSourceType: "CLERKSBOARDS",
-    jurisdiction: "Tucson, AZ",
-    publishingOrg: "City of Tucson Clerk",
-    timeZone: "America/Phoenix",
-    config: { boardId: "23" },
-    verifiedAt: "2026-08-14",
-  },
-  {
-    bodyId:
-      "ocd-division/country:us/state:az/place:tucson#tucson-parks-and-recreation-commission",
-    ocdId: "ocd-division/country:us/state:az/place:tucson",
-    agendaSourceType: "CLERKSBOARDS",
-    jurisdiction: "Tucson, AZ",
-    publishingOrg: "City of Tucson Clerk",
-    timeZone: "America/Phoenix",
-    config: { boardId: "63" },
-    verifiedAt: "2026-08-14",
-  },
-  {
-    bodyId:
-      "ocd-division/country:us/state:az/place:tucson#community-police-advisory-review-board",
-    ocdId: "ocd-division/country:us/state:az/place:tucson",
-    agendaSourceType: "CLERKSBOARDS",
-    jurisdiction: "Tucson, AZ",
-    publishingOrg: "City of Tucson Clerk",
-    timeZone: "America/Phoenix",
-    config: { boardId: "19" },
-    verifiedAt: "2026-08-14",
-  },
+  /*
+   * D29: Tucson boards and commissions via the Clerk's boards app.
+   *
+   * clerksboards.tucsonaz.gov serves one server-rendered page per body with
+   * the published schedule, location and current agenda.
+   *
+   * DERIVED, NOT LISTED (g18). These were five hand-written entries sitting
+   * beside a five-entry LIVE_BOARD_IDS in curated-bodies.ts, and BOTH had to
+   * be edited for a board to actually be read. Widening one alone marked
+   * bodies LIVE with nothing fetching them - a coverage status claiming a
+   * calendar nobody had asked for. Now there is one list: LIVE_BOARD_IDS
+   * decides, and the wiring follows it.
+   *
+   * 24 boards as of 2026-08-18, from 5. The 32 still uncovered are classified
+   * in curated-bodies.ts - 30 of them publish no fixed schedule at all, which
+   * is a finding about those bodies and not a gap in our retrieval.
+   */
+  ...TUCSON_CLERKSBOARDS.map(
+    ({ bodyId, boardId }): BodySourceWiring => ({
+      bodyId,
+      ocdId: TUCSON_OCD_ID,
+      agendaSourceType: "CLERKSBOARDS",
+      jurisdiction: "Tucson, AZ",
+      publishingOrg: "City of Tucson Clerk",
+      timeZone: "America/Phoenix",
+      config: { boardId },
+      verifiedAt: "2026-08-18",
+    }),
+  ),
 
   // ── BoardBook Premier (Sparq Data Solutions) ────────────────────────────
   // Amphitheater USD's agenda portal, named on the district's own

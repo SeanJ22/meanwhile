@@ -14,7 +14,15 @@ import type { Meeting } from "@/lib/sources/types";
  * (`corepack pnpm exec tsx scripts/audit-search-rows.mts`):
  *
  *   BEFORE  227 rows — 163 venue panel,  0 card, 43 fly only, 21 SILENT
- *   AFTER   227 rows — 163 venue panel, 36 card, 26 fly only,  2 SILENT
+ *   AFTER   227 rows — 163 venue panel, 49 card, 14 fly only,  1 SILENT
+ *
+ * The AFTER row was 36 card / 26 fly / 2 SILENT at g15, when the place row was
+ * the one deliberate non-conversion. g18 shipped the place card on the
+ * author's ruling A, and re-measuring on 2026-08-19 (run id
+ * `m135-search-audit@2026-08-19T02:55:19.310Z`, 4 production GETs, all
+ * declared SYNTHETIC) moved 13 place rows from fly-only to card and closed the
+ * last silent place row. ONE row of 227 is still silent, and it is a refusal
+ * rather than an oversight — see the distinctness test at the bottom.
  *
  * A row was silent when it carried no venue and no geometry: `onSearchPick`
  * selected a venue for the first, flew for the second, and a row with neither
@@ -31,13 +39,15 @@ import type { Meeting } from "@/lib/sources/types";
  * preferred a located representative. The change was reverted rather than
  * shipped with a plausible story attached, and no test here asserts it.
  *
- * THE TWO ROWS STILL SILENT are named rather than rounded away, and each is a
+ * THE ONE ROW STILL SILENT is named rather than rounded away, and it is a
  * refusal rather than an oversight:
  *   - `85701 body: Finance and Audit Committee Meeting` — the body could not be
  *     resolved distinctly, so no card opens. See the refusal test below.
- *   - `85641 place: Pima County, AZ` — a place is a division several bodies sit
- *     in, this product has no committed card for a place subject, and electing
- *     one of N bodies to stand for it would be an invented answer.
+ *
+ * `85641 place: Pima County, AZ` was the second, and it is now converted. The
+ * card it opens elects nobody: it lists every body in the division and lets
+ * the reader choose, which is the only resolution of a one-to-many that does
+ * not invent an answer about who speaks for a jurisdiction.
  */
 
 const PIMA = "ocd-division/country:us/state:az/county:pima";
@@ -156,6 +166,67 @@ test("onSearchPick opens a card for the rows it cannot fly to", () => {
     pick,
     /bodySubject\(/,
     "a body row opens that body's large battlecard (M135's ruling)",
+  );
+  assert.match(
+    pick,
+    /placeSubject\(/,
+    "a place row opens the place card (g18, the author's ruling A)",
+  );
+});
+
+test("the place card elects nobody to stand for the place", () => {
+  /*
+   * THE REASON THE CARD HAS THIS SHAPE (g18, the author's ruling A).
+   *
+   * g15 left the place row unconverted deliberately, and the reason is the
+   * useful part: a place is a division several bodies sit in, and choosing one
+   * of them — the largest, the first, the one with the most sittings — would
+   * be this product answering "who speaks for Pima County?" out of its own
+   * convenience. That is an invented claim about a government.
+   *
+   * So the guard is not that a card opens. It is that the card lists EVERY
+   * body and elects none, and that its onward click matches on `bodyId`
+   * rather than on the OCD-ID the place row carries — an ocdId match would
+   * open one body's card from another body's row, which is the collapse
+   * M135's other open row refuses by name.
+   */
+  const source = readFileSync("components/map/map-entry.tsx", "utf8");
+  const start = source.indexOf("function placeSubject(");
+  const end = source.indexOf("function typeFromOcdId(");
+  assert.ok(start > 0 && end > start, "placeSubject is still where the guard expects it");
+  const builder = source.slice(start, end);
+
+  assert.match(
+    builder,
+    /bodies\.filter\(\(b\) => b\.ocdId === ocdId\)/,
+    "every body in the division is listed, not a chosen one",
+  );
+  assert.doesNotMatch(
+    builder,
+    /\.slice\(0, ?1\)|bodies\.find\(/,
+    "no single body is elected to stand for the place",
+  );
+  assert.match(
+    builder,
+    /divisionOcdId: null/,
+    "the place card carries no re-derive key — a place and a district can share an OCD-ID",
+  );
+  assert.match(
+    builder,
+    /absence:/,
+    "a place with no bodies renders a stated absence, never an empty list",
+  );
+  assert.match(
+    builder,
+    /rowTier \?\? mine\[0\]\?\.tier \?\? null/,
+    "the tier is taken or left null, never guessed",
+  );
+
+  const onward = source.slice(source.indexOf("onOpenPlaceBody={"), source.indexOf("onOpenPlaceBody={") + 700);
+  assert.match(
+    onward,
+    /b\.bodyId === key/,
+    "the onward click matches on bodyId, never on the place row's OCD-ID",
   );
 });
 

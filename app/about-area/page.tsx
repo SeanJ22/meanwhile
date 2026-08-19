@@ -2,6 +2,7 @@ import { ShuffledFacts } from "@/components/area/shuffled-facts";
 import Link from "next/link";
 
 import { areaFactsForState } from "@/lib/area/facts";
+import { COVERED } from "@/lib/coverage/artifacts";
 import { resolveZip } from "@/lib/geo/zcta";
 import { divisionsAt } from "@/lib/registry/server";
 import { PRODUCT_NAME, titleFor } from "@/lib/brand";
@@ -108,23 +109,22 @@ export default async function AboutAreaPage({
       {facts && (
         <p className="mt-6 text-[0.8125rem] leading-relaxed text-paper-dim">
           Curious how another state compares?{" "}
-          {(["AZ", "NJ", "NH"] as const)
-            .filter((s) => s !== state)
-            .map((s, i) => (
-              <span key={s}>
-                {i > 0 && <span className="text-muted"> · </span>}
-                <Link
-                  href={`/about-area?state=${s}`}
-                  className="underline decoration-dotted hover:text-signal"
-                >
-                  {s === "AZ"
-                    ? "Arizona"
-                    : s === "NJ"
-                      ? "New Jersey"
-                      : "New Hampshire"}
-                </Link>
-              </span>
-            ))}
+          {/* AUD-06 (g18): the list and the names both come from the coverage
+              manifest. It was a hardcoded triple whose label was a ternary
+              chain ending in a bare `: "New Hampshire"` — so a fourth state
+              would have rendered under New Hampshire's name. A render default
+              manufacturing a false claim about a place, one onboarding away. */}
+          {COVERED.filter((s) => s.usps !== state).map((s, i) => (
+            <span key={s.usps}>
+              {i > 0 && <span className="text-muted"> · </span>}
+              <Link
+                href={`/about-area?state=${s.usps}`}
+                className="underline decoration-dotted hover:text-signal"
+              >
+                {s.name}
+              </Link>
+            </span>
+          ))}
         </p>
       )}
 

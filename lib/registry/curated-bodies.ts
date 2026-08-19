@@ -126,8 +126,59 @@ const TUCSON_BOARDS: Array<[name: string, boardId: number, cls?: BodyClass]> = [
   ["Zoning Examiner Hearings", 113],
 ];
 
-/** Boards a live adapter reads today (the clerksboards source). */
-const LIVE_BOARD_IDS = new Set([38, 8, 23, 63, 19]);
+/**
+ * Boards a live adapter reads today (the clerksboards source).
+ *
+ * D29, WIDENED 2026-08-18 (g18) FROM 5 TO 24, and the widening needed no new
+ * adapter code at all — which is the finding.
+ *
+ * ## What was actually measured
+ *
+ * All 51 `KNOWN_UNCOVERED` clerksboards bodies were fetched and their
+ * published "5) Meeting Time" text run through the parser this repo already
+ * ships (`expandSchedule`). Denominators, stated:
+ *
+ *   51 surveyed
+ *   19 the existing parser understands  ← wired here
+ *   32 it does not, and 30 of those are not a parser problem at all
+ *
+ * ## The 32, classified, because "unwired" is not one thing
+ *
+ * **30 publish no fixed schedule.** Their Meeting Time reads "Meets as
+ * required" (28 of them), "Meets as required." or "To be provided." That is a
+ * FINDING about the body, not a gap in our retrieval: a board that meets when
+ * called has no calendar to wire, and its meetings are noticed individually.
+ * They stay `KNOWN_UNCOVERED` because that is exactly what they are — we know
+ * the body exists and we have no calendar for it — and nothing here may render
+ * as "this board never meets".
+ *
+ * **1 publishes a QUARTERLY rule the parser has no case for** — board 128,
+ * "Quarterly basis: every 3 months on the 3rd Monday (Jan, Apr, Jul, and Oct)
+ * @ 5:30 p.m." That IS a machine-readable recurrence and it is a real parser
+ * gap, named rather than folded into the 30 above.
+ *
+ * **1 publishes dates that are half TBD** — board 15, "January 22, April 16,
+ * 2026 and July and October 2026 TBD". The two real dates are in the past; the
+ * two future ones the body itself has not set.
+ *
+ * ## One of the 19 will expand to nothing, and that is correct
+ *
+ * Board 43's dates are enumerated and every one of them (1/22 through
+ * 6/18/2026) is behind us. It is wired anyway: its schedule is published and
+ * parseable, so "we have their calendar and it lists nothing ahead" is a true
+ * statement we can now make, where `KNOWN_UNCOVERED` said "we have not looked".
+ * An empty answer we can stand behind beats an honest shrug.
+ */
+const LIVE_BOARD_IDS = new Set([
+  // Wired before g18.
+  38, 8, 23, 63, 19,
+  // g18: an "Nth weekday of each month" rule the parser already handles.
+  9, 12, 3, 131, 39, 42, 57, 50, 49, 40, 58, 41, 59, 133, 61, 65,
+  // g18: enumerated dates.
+  26, 25,
+  // g18: enumerated dates, all of them past. See the note above.
+  43,
+]);
 
 function slugOf(name: string): string {
   return name
@@ -167,6 +218,28 @@ function tucsonBoardRow(entry: [string, number, BodyClass?]): Body {
     },
   };
 }
+
+/**
+ * The board id behind every clerksboards body that is LIVE, keyed by body id.
+ *
+ * EXPORTED SO THE SOURCE WIRING CAN DERIVE ITSELF (g18). `source-wiring.ts`
+ * held five hand-written `CLERKSBOARDS` entries beside this file's five-entry
+ * `LIVE_BOARD_IDS`, and the two had to agree for a board to actually be read.
+ * Widening `LIVE_BOARD_IDS` alone would have marked nineteen bodies LIVE with
+ * nothing fetching them — a coverage status that claims a calendar we never
+ * asked for, which is green standing in for verified.
+ *
+ * That was caught by asking the adapter what it returned rather than trusting
+ * the status field, and the fix is the one AUD-06 makes everywhere else this
+ * session: one list, derived, instead of two lists that must be kept in step.
+ */
+export const TUCSON_CLERKSBOARDS: { bodyId: string; boardId: string }[] =
+  TUCSON_BOARDS.filter(([, boardId]) => LIVE_BOARD_IDS.has(boardId)).map(
+    ([name, boardId]) => ({
+      bodyId: `${TUCSON_OCD}#${slugOf(name)}`,
+      boardId: String(boardId),
+    }),
+  );
 
 export const CURATED_BODIES: Body[] = [
   // ── D28: Pima Community College Governing Board ─────────────────────────

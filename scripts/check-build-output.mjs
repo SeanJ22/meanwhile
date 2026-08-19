@@ -50,6 +50,8 @@
 
 import { readdirSync, readFileSync, existsSync } from "node:fs";
 import { gzipSync } from "node:zlib";
+
+import { attributeByProvenance } from "./attribute-client-bytes.mjs";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
@@ -186,7 +188,20 @@ function clientCost(next) {
       mapTransfer += gz;
     }
   }
-  return { chunks: srcs.length, raw, transfer, mapRaw, mapTransfer, missing };
+  // R53 (g18): the split by MODULE PROVENANCE, when the build emitted source
+  // maps. It attributes WITHIN a chunk, so re-chunking cannot move it. The
+  // substring figures above are kept and reported as the ESTIMATE they are.
+  const provenance = attributeByProvenance({ next, srcs });
+
+  return {
+    chunks: srcs.length,
+    raw,
+    transfer,
+    mapRaw,
+    mapTransfer,
+    missing,
+    provenance,
+  };
 }
 
 /**
@@ -379,16 +394,42 @@ export function evaluate({ root, budget }) {
         `(baseline ${kb(budget.client.initialJsBytes)} / ${kb(budget.client.transferBytes)}, ` +
         `ceiling ${kb(budget.client.initialJsCeiling)} / ${kb(budget.client.transferCeiling)})`,
     );
-    lines.push(
-      `           of which MapLibre ${kb(client.mapRaw)} / ${kb(client.mapTransfer)} gzip, ` +
-        `application ${kb(client.raw - client.mapRaw)} / ${kb(client.transfer - client.mapTransfer)} gzip` +
-        (client.missing > 0 ? ` · ${client.missing} referenced chunk(s) MISSING from disk` : ""),
-    );
-    lines.push(
-      `           exact bytes · raw ${client.raw} · gzip ${client.transfer} · ` +
-        `maplibre raw ${client.mapRaw} gzip ${client.mapTransfer} · ` +
-        `application raw ${client.raw - client.mapRaw} gzip ${client.transfer - client.mapTransfer}`,
-    );
+    /*
+     * R53 (g18): the split, by MODULE PROVENANCE where the build emitted
+     * source maps and LABELLED AS AN ESTIMATE where it did not.
+     *
+     * The substring form attributes a WHOLE chunk to MapLibre if the chunk
+     * mentions it, so it moves when chunks are reshuffled and it moved by
+     * this session own application-only change. It is not deleted - the
+     * auditor asked for the two tracked apart and deleting the split would
+     * discard the requirement - it is named for what it is.
+     *
+     * Gzip is deliberately NOT split either way. Compression is not additive,
+     * so a per-module gzip figure is arithmetic on a number with no per-module
+     * meaning.
+     */
+    if (client.provenance.available) {
+      const p = client.provenance;
+      lines.push(
+        `           of which MapLibre ${kb(p.mapLibrary)}, application ${kb(p.application)}, ` +
+          `unattributed ${kb(p.unmapped)} · BY MODULE PROVENANCE ` +
+          `(${p.chunksWithMaps}/${p.chunksTotal} chunks mapped)` +
+          (client.missing > 0 ? ` · ${client.missing} referenced chunk(s) MISSING from disk` : ""),
+      );
+      lines.push(
+        `           exact bytes · maplibre raw ${p.mapLibrary} · application raw ${p.application} · ` +
+          `unattributed raw ${p.unmapped} · gzip is NOT split (compression is not additive)`,
+      );
+    } else {
+      lines.push(
+        `           of which MapLibre ~${kb(client.mapRaw)}, application ~${kb(client.raw - client.mapRaw)} ` +
+          `· ESTIMATE ONLY, NOT MEASUREMENT — whole chunks are attributed by a substring test, ` +
+          `so this moves when chunks are reshuffled and it must not be compared across a ` +
+          `chunking change. ${client.provenance.why}.` +
+          (client.missing > 0 ? ` · ${client.missing} referenced chunk(s) MISSING from disk` : ""),
+      );
+    }
+    lines.push(`           exact bytes · raw ${client.raw} · gzip ${client.transfer}`);
   }
 
   if (worstApp === null) {

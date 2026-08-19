@@ -3,6 +3,7 @@ import type { Map as MapLibreMap, MapGeoJSONFeature } from "maplibre-gl";
 // Relative, extension-bearing imports — the style the rest of lib/ uses —
 // because node --test cannot resolve the `@/` alias and this module is now
 // exercised by tests/municipal-layer.test.ts (the §4.2 lesson again).
+import { FIPS_BY_USPS, geoFilesFor } from "../coverage/states.ts";
 import { TIER_ACCENT_VAR, type Tier } from "../ocd/tiers.ts";
 import type { DistrictType } from "../state/types.ts";
 import { stateFilter } from "./state-focus.ts";
@@ -110,7 +111,7 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
     // Split per state by `pnpm cd:split` (g4 item 3). The national file is
     // 1.59 MB — larger than every other overlay put together — and a reader
     // in Tucson has no use for Ohio's boundaries. Arizona's share is 23 KB.
-    files: ["cd119-04.geojson", "cd119-33.geojson", "cd119-34.geojson"],
+    files: geoFilesFor("cd119"),
     tier: "national",
     label: "Congressional",
     dash: [8, 3],
@@ -118,7 +119,7 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
     labelMinZoom: 5,
   },
   "state-senate": {
-    files: ["sldu-04.geojson", "sldu-34.geojson", "sldu-33.geojson"],
+    files: geoFilesFor("sldu"),
     tier: "state",
     label: "State Senate",
     dash: [5, 2],
@@ -126,7 +127,7 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
     labelMinZoom: 7,
   },
   "state-house": {
-    files: ["sldl-04.geojson", "sldl-34.geojson", "sldl-33.geojson"],
+    files: geoFilesFor("sldl"),
     tier: "state",
     label: "State House",
     dash: [2, 2],
@@ -149,14 +150,7 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
     // Hampshire — Rockaway Township and Newbury have no place polygon at
     // all. FUNCSTAT (governingOnly) is what stops the merge double-drawing
     // Concord and friends and keeps Arizona's statistical CCDs off the map.
-    files: [
-      "place-04.geojson",
-      "place-34.geojson",
-      "place-33.geojson",
-      "cousub-04.geojson",
-      "cousub-34.geojson",
-      "cousub-33.geojson",
-    ],
+    files: geoFilesFor("place", "cousub"),
     tier: "local",
     label: "Municipal",
     dash: [3, 2],
@@ -185,7 +179,7 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
    * z8 is the noise the 4.5.2 pass was fixing.
    */
   "school-unified": {
-    files: ["unsd-04.geojson", "unsd-34.geojson", "unsd-33.geojson"],
+    files: geoFilesFor("unsd"),
     tier: "local",
     label: "School (unified)",
     dash: [2, 2],
@@ -193,7 +187,7 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
     labelMinZoom: 10,
   },
   "school-elementary": {
-    files: ["elsd-04.geojson", "elsd-34.geojson", "elsd-33.geojson"],
+    files: geoFilesFor("elsd"),
     tier: "local",
     label: "School (elementary)",
     dash: [1, 2],
@@ -201,7 +195,7 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
     labelMinZoom: 10,
   },
   "school-secondary": {
-    files: ["scsd-04.geojson", "scsd-34.geojson", "scsd-33.geojson"],
+    files: geoFilesFor("scsd"),
     tier: "local",
     label: "School (secondary)",
     dash: [6, 2, 1, 2],
@@ -279,7 +273,8 @@ export function keepFeature(
  * reader-facing label would be. Adding a state adds a line here and a line in
  * `scripts/fetch-state-outlines.mts`.
  */
-const FIPS_BY_ABBR: Record<string, string> = { AZ: "04", NH: "33", NJ: "34" };
+// Was an inline three-state literal; derived from the coverage manifest since
+// AUD-06 (g18).
 
 /**
  * Which of a type's files are worth fetching for one state (g4 item 3).
@@ -300,7 +295,7 @@ export function filesFor(
   stateAbbr: string | null,
 ): string[] {
   if (!stateAbbr) return [];
-  const fips = FIPS_BY_ABBR[stateAbbr];
+  const fips = FIPS_BY_USPS[stateAbbr];
   if (!fips) return [];
   return DISTRICT_LAYERS[type].files.filter((file) => {
     const match = /-(\d{2})\.geojson$/.exec(file);

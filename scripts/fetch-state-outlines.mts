@@ -32,6 +32,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
+import { COVERED_FIPS, SLUG_BY_FIPS } from "../lib/coverage/artifacts.ts";
 import { stamp } from "./stamp.mts";
 
 const SOURCE_ORG = "U.S. Census Bureau";
@@ -39,7 +40,7 @@ const SERVICE =
   "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/0/query";
 
 /** FIPS for the states the product covers. Adding a state adds a code here. */
-const STATE_FIPS = ["04", "33", "34"] as const;
+const STATE_FIPS = COVERED_FIPS;
 
 /** Roughly half a kilometre. Stated, not tuned by eye — see the header. */
 const MAX_ALLOWABLE_OFFSET = 0.005;
@@ -102,8 +103,7 @@ const out = {
 };
 
 function stateAbbrFor(fips: string): string {
-  const byFips: Record<string, string> = { "04": "az", "33": "nh", "34": "nj" };
-  const abbr = byFips[fips];
+  const abbr = SLUG_BY_FIPS[fips];
   if (!abbr) throw new Error(`no abbreviation recorded for state FIPS ${fips}`);
   return abbr;
 }

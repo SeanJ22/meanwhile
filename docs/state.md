@@ -4,6 +4,46 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
+Last updated: 2026-08-18 — **four numbers this repo prints turned out to be
+describing something other than what they were named, and each was caught by
+asking an instrument what it actually returned.** The g18 session, five items
+of five.
+
+The through-line is not "we found bugs". It is that in every case the
+*measurement* was the defect and the code was fine. **The MapLibre share of the
+reader's JavaScript was 43% and is 32%** — the old split attributed a whole
+chunk to MapLibre whenever the chunk's bytes contained the string, so it
+credited 51,533 bytes of application code that merely mentions the library, and
+it moved 21,490 bytes on a re-chunk that touched no map code. It is now read
+from the build's own source maps, module by module, and the same re-chunk moves
+it 48 bytes. **The coverage of Tucson's boards was "5 of 56 wired" and the
+widening nearly shipped as a lie**: `LIVE_BOARD_IDS` sets a body's coverage
+status, but the fetching is driven by a separate hand-written list, so marking
+nineteen bodies LIVE would have claimed nineteen calendars nobody was asking
+for — caught by asking the adapter for its count (24 wirings, 60 meetings) and
+fixed by deriving the second list from the first. **"Three hand-kept state
+registries" was fourteen**, found by sweeping the tree instead of trusting the
+audit's own description of it. And **R52's flake was reproduced at 1 in 30 and
+then proven at the source**: the served HTML of `/ballot` contains the pick
+button itself, so the walk's gate could be satisfied while the button was
+rendered and completely dead — a window measured at 13–233ms, present in 10 of
+10 trials.
+
+Two things shipped for readers rather than for us. **The place card** (the
+author's ruling A) closes M135: a place row in the ask panel used to fly the
+camera and open nothing, and it now opens a card that names the place and lists
+every body in it — electing none, because choosing one to stand for a
+jurisdiction would be an invented answer about who speaks for it. **Three
+bodies gained real comment-access rules** — Tucson Unified, Morris County and
+Merrimack County — each from the body's own published rule, with the rungs
+recorded per body and the two that stayed UNKNOWN carrying the rungs already
+walked so the next session starts below them rather than at the top.
+
+One correction to the sold store: the 45th g15 row, `SEARCH 03255` at
+21:31:22.492Z, was marked SYNTHETIC under the author's corrected window.
+Organic 104 → 103, total unchanged at 6019. Full detail in the g18 section at
+the end. The previous entry follows.
+
 Last updated: 2026-08-18 — **the audit entered the tracker, and four of our own
 numbers stopped describing the code.** The g15 session. An independent external
 codebase audit reported against pre-g15 code; its nine findings are now rows
@@ -11422,3 +11462,213 @@ PR preview builds are turned off from the repo, in `netlify.toml`, with an
 available here writes env vars, forms, access controls and the project name and
 **no build settings at all**, so the dashboard toggle and the ship cadence are
 named for the author rather than claimed.
+
+## g18 — 2026-08-18: four instruments were asked what they actually returned, and four of them were wrong
+
+Five items of five, in the order the brief set them. Every item opened with a
+verification step against the tree rather than against a document, because the
+g18 brief opened with a standing correction: two of the three audit rows briefed
+into g17 had already been built, and both had been briefed from documents
+without checking the code. That correction earned its keep twice in this
+session — once when a "three registries" finding turned out to be fourteen, and
+once when a coverage widening turned out not to widen anything.
+
+### 1. AUD-06 — one coverage manifest, and the fourteen lists that now derive from it
+
+The auditor read **three** independently maintained state registries against
+`bf0cd7b`. Re-swept against `86283bb` before writing a line: there are
+**fourteen, across thirteen files**. `lib/map/districts.ts` alone held eight of
+them — `FIPS_BY_ABBR`, plus a hand-written per-state filename array on each of
+its seven per-state layers. The others: `lib/ballot/covered-states.ts`,
+`lib/registry/server.ts`'s `ROSTERS`, and lists in `split-congressional`,
+`build-officeholders`, `fetch-districts`, `fetch-state-outlines` (two),
+`measure-focus`, `fetch-legiscan` (two), `audit-officials`, `photo-census`
+(two), `build-commons-targets` (two), and the reader-facing state picker in
+`app/about-area/page.tsx`.
+
+`lib/coverage/states.ts` is the manifest and is client-safe, three fields per
+state. `lib/coverage/artifacts.ts` is its server-and-scripts projection — names,
+clipped counties, generated filenames, and the four lookup directions only
+`scripts/` ever asks for. **Both export their derivation as a function**, which
+is the part that makes the one-edit claim testable: `tests/coverage-manifest.test.ts`
+calls them with a throwaway state appended and asserts every derived list sees
+it, then greps the tree for a fifteenth hand-kept list. Both directions proven
+by plant.
+
+**The client budget was measured, not assumed, and the first cut failed it.**
+Exporting all seven lookups from the client module cost +159 raw bytes on every
+reader's initial JavaScript. Four moved to the server projection and the
+re-measure read **raw 2,716,565 → 2,716,442, a fall of 123 bytes**; gzip +34,
+because the removed literals compressed well. Same machine, same mode, both
+ends. No ceiling moved, and a test now pins the client module's exports to
+exactly the two the browser reads.
+
+One of the fourteen was a live render defect. `/about-area` labelled its state
+links with a ternary chain ending in a bare `: "New Hampshire"`, so a fourth
+state would have rendered under New Hampshire's name — a render default
+manufacturing a false claim about a place, one onboarding away.
+
+### 2. The place card, and the `^_` discards
+
+**The place card** (the author's ruling A) is M135's last row. A place row in
+the ask panel's autocomplete flew the camera and opened nothing, because a place
+is a division several bodies sit in and there was no card for one. g15 left it
+deliberately rather than bodging it, and that reasoning is the card's shape: it
+**elects nobody**. It names the place and its type and lists every body we hold
+in the division, each row opening that body's own battlecard through the same
+`bodySubject` every other door uses.
+
+Three refusals are built in rather than assumed. The onward click matches on
+`bodyId`, never on the OCD-ID the place row carries — an ocdId match would open
+one body's card from another body's row, which is exactly the collapse M135's
+other open row refuses. `divisionOcdId` is null, because a place and a district
+can share an OCD-ID (`county:pima` is both) and M112's re-derive would have
+rebuilt the place card as a district card under the reader. And the tier is
+taken from the row or from a body we actually hold, else left null and rendered
+as a named gap — `tierForOcdId`'s own note says callers must handle null rather
+than walk up to an ancestor.
+
+Re-measured against production: **227 rows, card 36 → 49, fly-only 26 → 14,
+SILENT 2 → 1**. Thirteen place rows converted. The one row still silent is the
+`Finance and Audit Committee Meeting` distinctness refusal, named rather than
+rounded away.
+
+**The lint config.** The ruling named `varsIgnorePattern: "^_"`, and that alone
+would have legalised **none** of the three discards: `_whichVote`, `_ok` and
+`_d` are all function *parameters*, so `argsIgnorePattern` is the option that
+reaches them. Both are set and the difference from the ruling is recorded in the
+config rather than smoothed over. `caughtErrorsIgnorePattern` is deliberately
+not set — there is no warning of that class, and legalising an empty category is
+a change nobody can check. Warnings 15 → 12, allowlist entries 15 → 12, delta
+three. Both refusal directions re-proven by plant after the change.
+
+### 3. R53 — the MapLibre split becomes a measurement
+
+The split attributed a **whole chunk** to MapLibre if the chunk's bytes
+contained the string. `scripts/attribute-client-bytes.mjs` now reads the build's
+own source maps, decodes the VLQ mappings, and credits each run of generated
+bytes to the module that produced it — so it attributes *within* a chunk.
+
+Proven on a real re-chunk, not only in the suite. `DistrictPopup` was moved from
+a `next/dynamic` boundary to a static import; no map code was touched.
+
+| method | before | after | moved |
+|---|---|---|---|
+| substring | 1,149,452 | 1,127,962 | **21,490 bytes** |
+| provenance | 873,003 | 872,955 | **48 bytes** (0.006%) |
+
+The same plant is in `tests/build-attribution.test.ts` as a synthetic fixture,
+**with the substring method asserted to fail it** — a control, so the new method
+passing proves something.
+
+What the old number got wrong, now that both can be read: it put MapLibre at
+**43%** of the initial JS; by provenance it is **32%**. The gap is two chunks it
+credited whole — one of 1,096,720 bytes that is mostly but not only the library,
+and one of 51,533 bytes of application code that merely *mentions* it. This
+session's own AUD-06 change was the tell: it touched application modules only,
+and `applicationBytes` read 1,568,189 across three consecutive builds while
+`maplibreBytes` absorbed the entire delta in both directions (+159, then −123).
+
+Three honesty constraints, each of which cost a simpler design. Unmapped bytes
+are their own bucket and are never folded into application. **Gzip is no longer
+split at all** — compression is not additive, so the old per-side gzip figures
+were arithmetic on a number with no per-module meaning. And a missing map
+*refuses*: without `WTP_ATTRIBUTION_BUILD=1` the check prints the substring
+figure labelled `ESTIMATE ONLY, NOT MEASUREMENT` and says how to measure it
+properly, rather than reporting a zero. The three buckets reconcile to the byte,
+asserted at measurement time — which caught the first cut counting UTF-16
+columns against a UTF-8 total, 671 bytes out.
+
+### 4. R52 reproduced, and Node parity confirmed
+
+**R52 is real.** 30 fresh-context trials against production: 29 first clicks
+raised the running ballot, one did not, and the second click on the same button
+did — the exact shape g17 predicted. Rate **3.3%**; with g17's own 1 of 4, 2 of
+34.
+
+Then it was proven at the source, which is what makes it a diagnosis rather than
+a plausible story. The served HTML of `/ballot?zip=85701`, fetched with no
+JavaScript at all, contains `.ballot-measure`, `<main>`, **and the pick locator
+itself**. The button the walk clicks is fully rendered and completely dead
+before hydration. The window was then measured: after the presence gate is
+satisfied the button takes a further **13–233ms** to carry a React fiber, in 10
+of 10 trials, median ~105ms.
+
+Why the failure is rare rather than constant, since the objection deserves an
+answer: React attaches a root listener early and *replays* events captured
+before a node hydrates, so nearly every click in the window is replayed. The
+1-in-30 is the narrower sub-window replay does not reach.
+
+**The class is one site, and that is evidence rather than inspection.** The same
+no-JavaScript fetch against `/` shows `.coverage-notice` and `.state-focus-layer`
+**both absent** from the served HTML — they are created by client code, so
+`appSettled` already proves React is running, which is why the map gates have
+never flaked. Swept across the suite for gates satisfiable by server markup that
+precede an interaction: one.
+
+**Node parity was already correct**, and this is the verification rather than a
+fix. `build-check.yml` pins `node-version: 24`; `netlify.toml` sets
+`NODE_VERSION = "24"` in `[build.environment]`, which overrides the dashboard.
+Two independent sources agree, so no baseline moved in either direction. **R45
+is closed and stays closed** — all six workflows carry `actions/checkout@v7`,
+`actions/setup-node@v7` and `actions/upload-artifact@v5`, thirteen pins, every
+one a Node-24-native major.
+
+### 5. D25 and D29
+
+**D25: UNKNOWN 11 of 18 before, 8 after**, with rungs recorded per body either
+way. Three filled from the body's own published rule — Tucson Unified (policy
+BEDH, revised 12/12/2023), Morris County, and Merrimack County (policy adopted
+7/14/25 under RSA 91-A:2).
+
+Three rungs came out of it and are in the playbook. **The rung is the policy
+code**: a school board files its participation rule under BEDH, and going to the
+manual's section index beat reading agendas. **The rule is on the body's own
+site, not the vendor's**: Morris County's `iqm2` calendar answers 200 and
+contains no comment language at all, because a vendor calendar is a list of
+dates. And **a relative document link can resolve against the section path and
+404 from outside** — Merrimack's policy PDF 404s at the URL its own page
+implies, and lives at the site root; what proved it was the path and not the
+file was a second document 404ing identically. A 404 there is a URL we built
+wrong, and reporting it as an absence would have been asserting absence from our
+own bug.
+
+The two still UNKNOWN carry their rungs. Newbury's Selectboard is a **wall** —
+403 at rungs 2 and 3, which per g3 is a fingerprint or egress wall rather than a
+header problem, so rungs 4, 5, 6 and 11 are named as next. Rockaway Township had
+three pages fetched, 200 each, no comment language, with the next targets named.
+
+**D29: 5 wired of 56 before, 24 of 56 after.** All 51 `KNOWN_UNCOVERED`
+clerksboards bodies were fetched and their published Meeting Time run through
+the parser this repo already ships. Nineteen the parser understands — wired with
+**no new adapter code**. The 32 that remain are classified rather than left as
+one number: **30 publish no fixed schedule at all** ("Meets as required"), which
+is a finding about those bodies and not a gap in our retrieval; one publishes a
+quarterly rule the parser has no case for; one has dates half TBD.
+
+**The bug this caught is the reason for the rule about asking an operation what
+it returned.** `LIVE_BOARD_IDS` sets a body's `coverageStatus`, but the actual
+fetching is driven by hand-written entries in `source-wiring.ts`. Widening the
+first alone would have marked nineteen bodies LIVE with nothing fetching them —
+a coverage status claiming a calendar nobody had asked for. The wiring now
+derives from the same list. Counted, not assumed: **24 wirings, 60 normalized
+meetings**, up from 5 and 15.
+
+### The corrections owed
+
+1. **The 45th g15 row.** `SEARCH 03255` at `2026-08-18T21:31:22.492Z` marked
+   SYNTHETIC under the author's corrected window; the ledger end moves
+   21:31:20Z → 21:31:23Z, the smallest extension that reaches it. Dry run first:
+   exactly one row, in that window only. **Organic 104 → 103**, synthetic 3053 →
+   3054, total unchanged at 6019.
+2. **g17 made three merges, not four.** #98, #99 and #100 are the whole of it —
+   three merge commits from `claude/g17-budgets-geo-cadence-0818` on main's
+   first-parent chain, and zero non-merge commits between #97 and #100. The PR
+   numbers were right; the count was wrong.
+3. **The `[g4]` pan-and-wait is diagnosed and fixed.** Reproduced under the
+   walk's own seeding at 1280×900: `document.elementFromPoint` at the canvas
+   centre returns `DIV.coverage-notice … pointer-events-auto`. The mousedown
+   landed on the panel, MapLibre never saw the gesture, and the camera read
+   byte-identical before and after — g3's lesson exactly, and the `cannotRun`
+   was the check behaving correctly. The drag origin is now the first candidate
+   point the *page* says is the canvas.

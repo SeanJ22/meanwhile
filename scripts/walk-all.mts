@@ -241,6 +241,66 @@ async function untilText(page: Page, re: RegExp, ms = 15_000): Promise<boolean> 
 }
 
 /**
+ * `until` for an element being PRESENT AND HYDRATED — R52, confirmed g18.
+ *
+ * ## The defect this closes
+ *
+ * `untilPresent` waits for a selector to exist. On a server-rendered page that
+ * is satisfied by markup, and markup is not a handler. A click landing between
+ * "the button is on the page" and "React has wired it" does nothing at all,
+ * and the surface it should raise never appears — which reads exactly like a
+ * broken feature. g17 diagnosed it; g18 measured it and then proved it at the
+ * source.
+ *
+ * MEASURED: 30 fresh-context trials of the ballot pick against production
+ * (`scripts/r52-pick-rate.mts`). 29 first clicks raised the running ballot; ONE
+ * did not and the second click on the same button did — the R52 shape exactly,
+ * a rate of 3.3%. With g17's own 1 of 4 that is 2 of 34.
+ *
+ * PROVEN AT THE SOURCE, which is what makes it a diagnosis rather than a
+ * plausible story. The served HTML of `/ballot?zip=85701` was fetched with no
+ * JavaScript at all and searched for the walk's own selectors: `.ballot-measure`,
+ * `<main>`, and the pick locator itself — `.reaction-box[data-kind="pick"]
+ * .reaction-choice` — are ALL in it. The button the walk clicks is fully
+ * rendered and completely dead before hydration.
+ *
+ * ## Why this is one site and not sixteen
+ *
+ * The same fetch was run against `/`, where `appSettled` gates every map
+ * check: `.coverage-notice` and `.state-focus-layer` are BOTH ABSENT from the
+ * served HTML. They are created by client code, so waiting for them already
+ * proves React is running. That is why the map gates have never flaked, and it
+ * is why the class here is "a gate satisfiable by server markup that precedes
+ * an interaction" rather than "every gate". Swept across the suite, that is
+ * ONE site: the ballot pick. The finding is the scope, and the scope is
+ * evidence, not inspection.
+ *
+ * ## How hydration is detected
+ *
+ * React attaches its fiber and props to the DOM node itself when it hydrates
+ * that node. Their presence is the signal — not a timer, not a Next internal,
+ * and not a guess about how long hydration takes on a cold phone.
+ */
+/**
+ * The pick box own choices — the ballot-builder, not the reaction sensor
+ * sharing its styling. Named once because the R52 gate and the click must
+ * address the SAME element: a gate on a broader selector is how a click came
+ * to land on something the gate had never waited for.
+ */
+const PICK_CHOICE = '.reaction-box[data-kind="pick"] .reaction-choice';
+
+async function untilInteractive(page: Page, selector: string, ms = 15_000): Promise<boolean> {
+  const expr = `(() => {
+    const el = document.querySelector(${JSON.stringify(selector)});
+    if (!el) return false;
+    return Object.keys(el).some(
+      (k) => k.startsWith("__reactFiber$") || k.startsWith("__reactProps$"),
+    );
+  })()`;
+  return until(page, async () => Boolean(await page.evaluate(expr)), ms);
+}
+
+/**
  * The app has FINISHED ARRIVING at a seeded zip.
  *
  * THE FIRST VERSION OF THIS WAS WRONG AND THE WALK SAID SO. It settled on
@@ -1060,8 +1120,15 @@ section("D. The ballot page (0814c, D53, g3)");
     waitUntil: "domcontentloaded",
     timeout: 90_000,
   });
-  // R49: the ballot has rendered, rather than 3.5s have passed.
-  await untilPresent(page, "[data-pick], .ballot-measure, main", 12_000);
+  /*
+   * R49 gave this a real gate instead of a 3.5s sleep; R52 (g18) gave it the
+   * RIGHT one. `untilPresent(page, "[data-pick], .ballot-measure, main")` is
+   * satisfied by server markup — all three of those are in the HTML before a
+   * line of JavaScript runs — so it let a click land on a rendered, dead
+   * button once in thirty. The gate now waits on the ELEMENT THE CHECK ACTUALLY
+   * CLICKS, and waits for it to be hydrated rather than merely present.
+   */
+  await untilInteractive(page, PICK_CHOICE, 12_000);
 
   // M49/M50 — a pick renders the reader's running ballot.
   //
@@ -1070,9 +1137,7 @@ section("D. The ballot page (0814c, D53, g3)");
   // the same `.reaction-box` styling. An earlier draft looked for a
   // `[data-pick-choice]` attribute this walk had invented and the product
   // never had, and reported the round trip as un-runnable at every zip.
-  const pickButtons = page.locator(
-    '.reaction-box[data-kind="pick"] .reaction-choice',
-  );
+  const pickButtons = page.locator(PICK_CHOICE);
   const pickCount = await pickButtons.count();
   if (pickCount === 0) {
     cannotRun(
@@ -1335,13 +1400,55 @@ section("F. The reader's map and the folded panels (g4 items 1-5, 9, 11, 14, 15)
       before ? "no map canvas to drag" : "no __wtpMapProbe on the page",
     );
   } else {
-    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    /*
+     * DRAG FROM A POINT THE MAP CAN ACTUALLY RECEIVE (g18, correction 5).
+     *
+     * This check reported "the drag did not move the camera" in g17 and was
+     * recorded as could-not-run with no cause. The cause, reproduced under the
+     * walk's own seeding at 1280×900: `document.elementFromPoint` at the
+     * canvas centre returns `DIV.coverage-notice … pointer-events-auto`. The
+     * who-governs notice sits over the middle of the map, so `mouse.down()`
+     * landed on the panel, MapLibre never saw the gesture, and the camera was
+     * byte-identical before and after.
+     *
+     * That is g3's lesson exactly — a gesture that landed on an overlay and
+     * never moved the map — and the `cannotRun` below was the check behaving
+     * correctly: it refused to report a result for an experiment that had not
+     * run. What was missing was a drag origin chosen against the page rather
+     * than assumed from the geometry.
+     *
+     * So the origin is now the first candidate point the PAGE ITSELF says is
+     * the canvas. Fixed offsets would rot the moment an overlay moves; asking
+     * `elementFromPoint` cannot. If no candidate is clear the check still
+     * reports could-not-run rather than dragging somewhere useless.
+     */
+    const origin = (await page.evaluate(`(() => {
+      const b = ${JSON.stringify({ x: box.x, y: box.y, w: box.width, h: box.height })};
+      const pts = [
+        [b.x + b.w / 2, b.y + b.h / 2],
+        [b.x + b.w / 2, b.y + b.h * 0.22],
+        [b.x + b.w * 0.25, b.y + b.h * 0.3],
+        [b.x + b.w * 0.75, b.y + b.h * 0.3],
+        [b.x + b.w * 0.25, b.y + b.h * 0.7],
+        [b.x + b.w * 0.75, b.y + b.h * 0.7],
+      ];
+      for (const [x, y] of pts) {
+        const el = document.elementFromPoint(x, y);
+        if (el && el.tagName === "CANVAS") return { x, y };
+      }
+      return null;
+    })()`)) as { x: number; y: number } | null;
+
+    if (!origin) {
+      cannotRun(
+        "g4",
+        "the pan-and-wait check",
+        "every candidate drag origin is covered by an overlay — no point on the canvas is reachable",
+      );
+    } else {
+    await page.mouse.move(origin.x, origin.y);
     await page.mouse.down();
-    await page.mouse.move(
-      box.x + box.width / 2 - 160,
-      box.y + box.height / 2 - 90,
-      { steps: 12 },
-    );
+    await page.mouse.move(origin.x - 160, origin.y - 90, { steps: 12 });
     await page.mouse.up();
     /* R49: the camera has MOVED, rather than 1.2s have passed. The check below
      * needs a drag that took effect, and polling for it is the difference
@@ -1383,6 +1490,7 @@ section("F. The reader's map and the folded panels (g4 items 1-5, 9, 11, 14, 15)
         drift < 1e-3,
         `drift ${drift.toFixed(5)} degrees after four seconds`,
       );
+    }
     }
   }
 

@@ -33,6 +33,7 @@ import {
   subdivisionIdentity,
   type DivisionIdentity,
 } from "../lib/ocd/divisions.ts";
+import { CLIP_COUNTIES, COVERED_FIPS } from "../lib/coverage/artifacts.ts";
 import { districtIdentity } from "../lib/ocd/fips.ts";
 
 const VINTAGE = "2025";
@@ -59,14 +60,11 @@ const TIGER_BASE = `https://www2.census.gov/geo/tiger/TIGER${VINTAGE}`;
  * tiling decision until coverage actually expands. These three are the counties
  * behind the four target zips.
  */
-const CLIP_COUNTIES = [
-  { fips: "04019", label: "Pima County, AZ" },
-  { fips: "34027", label: "Morris County, NJ" },
-  { fips: "33013", label: "Merrimack County, NH" },
-] as const;
-
-/** State FIPS codes the clip counties sit in. */
-const CLIP_STATES = ["04", "34", "33"] as const;
+/*
+ * CLIP_COUNTIES and CLIP_STATES both come from the coverage manifest since
+ * AUD-06 (g18). They were two of fourteen hand-kept state lists.
+ */
+const CLIP_STATES = COVERED_FIPS;
 
 type Row = Record<string, string>;
 

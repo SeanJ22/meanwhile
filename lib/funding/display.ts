@@ -3,6 +3,10 @@ import {
   concentrationSentences,
   type FundingConcentration,
 } from "./concentration.ts";
+import {
+  typeConcentrationOf,
+  typeConcentrationSentences,
+} from "./type-concentration.ts";
 import { groupContributions, type ContributorGroups } from "./grouping.ts";
 import {
   contributorRowsForDisplay,
@@ -56,6 +60,14 @@ export interface FundingDisplayData {
    */
   concentration: FundingConcentration | null;
   concentrationSentences: string[];
+  /**
+   * **Concentration on the FEC's own axis** — D06's third feature, shipped
+   * g20. How the committee money divides across the categories the
+   * contributing committees filed for themselves. Empty when there is no
+   * committee money among the rows shown; never a zero row, which would
+   * read as a claim about the campaign rather than about our sample.
+   */
+  typeConcentrationSentences: string[];
   sourceUrl: string | null;
   sourceOrg: string;
   collectedAt: string;
@@ -151,6 +163,11 @@ export function fundingAnswerForTarget(targetKey: string): FundingAnswer {
     // the table below it can never disagree — and it is null, not zero,
     // when the display is ripcorded off or nothing was fetched.
     const concentration = concentrationOf(contributors, candidate.state ?? null);
+    // D06's third feature (g20): the same rows, on the FEC's own committee
+    // categories. Committee side only — the two lists were sampled
+    // separately, so a band crossing them would be a share of a base we
+    // picked rather than of anything the campaign reported.
+    const typeConcentration = typeConcentrationOf(contributors);
 
     return {
       kind: "funding",
@@ -167,6 +184,9 @@ export function fundingAnswerForTarget(targetKey: string): FundingAnswer {
         concentration,
         concentrationSentences: concentration
           ? concentrationSentences(concentration, candidate.state ?? null)
+          : [],
+        typeConcentrationSentences: typeConcentration
+          ? typeConcentrationSentences(typeConcentration)
           : [],
         sourceUrl: candidate.provenance.sourceUrl,
         sourceOrg: candidate.provenance.sourceOrg,

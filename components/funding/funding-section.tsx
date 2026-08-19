@@ -163,6 +163,37 @@ export function FundingDisplay({
         </div>
       )}
 
+      {data.contributorsShown && data.typeConcentrationSentences.length > 0 && (
+        <div className="mt-3">
+          <p className={SECTION_LABEL_CLASS}>What kind of money it was</p>
+          {/*
+            D06's third feature (2026-08-19, g20), on the author's ruling
+            "Accept": concentration on the FEC's OWN axis, because an
+            industry axis would need a taxonomy no government body
+            publishes — see lib/funding/type-concentration.ts.
+
+            LEVEL register. Every band is a category the contributing
+            committee filed for itself; the app never decides what kind of
+            thing an organization is, and never says whether a category is
+            good, bad or unusual.
+
+            Committee money only, and the first sentence says so: the
+            committee and individual lists were sampled separately, so a
+            band spanning both would be a share of a base we chose.
+          */}
+          <ul className="mt-1 space-y-1.5">
+            {data.typeConcentrationSentences.map((sentence) => (
+              <li
+                key={sentence}
+                className="text-[0.75rem] leading-relaxed text-paper-dim"
+              >
+                {sentence}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       <p className="mt-2 text-[0.625rem] text-muted">
         {data.sourceUrl ? (
           <a

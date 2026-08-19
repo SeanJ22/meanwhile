@@ -25,6 +25,10 @@ import type { ContributionRow } from "./types.ts";
  *
  * ## 2. Concentration ships by the FEC's OWN codes, not by industry
  *
+ * **Shipped 2026-08-19 (g20) on the author's ruling — "Accept." The band
+ * computation itself lives in `./type-concentration.ts`; the reasoning below
+ * is why it takes the shape it does, and it has not changed.**
+ *
  * D06's wording is "industry concentration", and that cannot ship honestly.
  * An industry figure requires an employer-to-industry taxonomy. The FEC
  * publishes none — its itemized records carry employer and occupation as
@@ -39,8 +43,10 @@ import type { ContributionRow } from "./types.ts";
  * So concentration renders on the axis the filings themselves supply: how
  * much of the reported money came from COMMITTEES AND ORGANIZATIONS versus
  * from INDIVIDUALS, which is the FEC's own entity typing, and how much of it
- * the single largest contributor accounts for. Recorded in the session
- * report for the author to overrule.
+ * the single largest contributor accounts for — and, since g20, how the
+ * committee money divides across the FEC's own committee CATEGORIES
+ * (`./type-concentration.ts`), each one a category the contributing
+ * committee filed for itself.
  *
  * ## 3. The base is not "the ten largest", and the first draft said it was
  *

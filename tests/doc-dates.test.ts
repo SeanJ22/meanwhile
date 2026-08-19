@@ -85,16 +85,32 @@ import {
  * entries / 81 — the six election-day dates left for the annotation, and the
  * rest retired themselves when the clock passed them.
  *
- * What is left in the allowlist is 81 occurrences of 2026-08-16 through
+ * What was left in the allowlist was 81 occurrences of 2026-08-16 through
  * 2026-08-19 across eight files: the session-label convention (state.md §18 —
  * labels that ran ahead of the wall clock, history deliberately not
  * rewritten). The mapping from label to wall clock is settled and recorded
- * (labels 08-15/08-16 ran on 2026-08-13; 08-17/08-18/08-19 on 2026-08-14),
- * so correcting them is evidence-backed work rather than a judgement call —
- * but it is a bulk rewrite of eight documents, some of whose dates are
- * §-section labels that a recorded decision says stay as written, and it was
- * not done in the session that built this split. It stays R16's remainder,
- * warned about loudly and counted every run.
+ * (labels 08-15/08-16 ran on 2026-08-13; 08-17/08-18/08-19 on 2026-08-14).
+ *
+ * ## 2026-08-19 (g20): R16's remainder closed itself, and two guards fought it
+ *
+ * The clock reached 2026-08-19 and the last of those 81 occurrences stopped
+ * being a future date. The allowlist is now **empty** — the check at full
+ * strength, nothing tolerated — and the documents are untouched, which is
+ * exactly the retirement the R16 split was built for.
+ *
+ * Two guards failed on that, and both failed the same way: they asserted the
+ * BROKEN state and so fired on the day it got fixed.
+ *
+ *   - `assert.ok(suspicious >= 1, "the residue vanished silently?")` — now
+ *     asserts the healthy state instead: zero suspicious hits, and no entry
+ *     left standing whose date has passed.
+ *   - `readAllowlist` threw on zero entries as "extraction is broken" — now
+ *     tells an empty literal from a failed parse by whether a `file:` key
+ *     survives in the block.
+ *
+ * This is session correction 9.8's shape in a second place: a check that
+ * only holds while things are unhealthy is not a check, it is a thermometer
+ * that only reads a fever.
  */
 /**
  * **Why each remaining suspicious date is still here** — G10's 8c bullet,
@@ -192,22 +208,23 @@ const ALLOWLIST = [
   // ---- now, which is both a better record and one this list cannot
   // ---- contradict. Entries whose date has passed were removed in the same
   // ---- pass — a pin that can no longer be hit is not a pin.
-  { file: "docs/coverage-audit-by-county.md", date: "2026-08-17", count: 14, group: "SUSPICIOUS" },
-  { file: "docs/defects.md", date: "2026-08-19", count: 1, group: "SUSPICIOUS" },
-  { file: "docs/officials-audit.md", date: "2026-08-16", count: 1, group: "SUSPICIOUS" },
-  { file: "docs/photo-report.md", date: "2026-08-19", count: 1, group: "SUSPICIOUS" },
-  { file: "docs/source-ladder.md", date: "2026-08-16", count: 3, group: "SUSPICIOUS" },
-  { file: "docs/source-ladder.md", date: "2026-08-17", count: 5, group: "SUSPICIOUS" },
-  { file: "docs/source-ladder.md", date: "2026-08-18", count: 2, group: "SUSPICIOUS" },
-  { file: "docs/state.md", date: "2026-08-16", count: 3, group: "SUSPICIOUS" },
-  { file: "docs/state.md", date: "2026-08-17", count: 4, group: "SUSPICIOUS" },
-  { file: "docs/state.md", date: "2026-08-18", count: 5, group: "SUSPICIOUS" },
-  { file: "docs/state.md", date: "2026-08-19", count: 4, group: "SUSPICIOUS" },
-  { file: "docs/vendor-review.md", date: "2026-08-18", count: 2, group: "SUSPICIOUS" },
-  { file: "docs/tracker.csv", date: "2026-08-16", count: 10, group: "SUSPICIOUS" },
-  { file: "docs/tracker.csv", date: "2026-08-17", count: 18, group: "SUSPICIOUS" },
-  { file: "docs/tracker.csv", date: "2026-08-18", count: 4, group: "SUSPICIOUS" },
-  { file: "docs/tracker.csv", date: "2026-08-19", count: 4, group: "SUSPICIOUS" },
+  // ---- 2026-08-19 (g20): THE LIST IS NOW EMPTY, and that is the outcome
+  // ---- rather than an oversight. Sixteen entries stood here, every one
+  // ---- dated 2026-08-16 through 2026-08-19; the clock reached the last of
+  // ---- them today and not one can be hit again. This file's own rule
+  // ---- decides what happens next — "a pin that can no longer be hit is
+  // ---- not a pin" — so they are removed rather than left standing as a
+  // ---- toleration nothing can exercise.
+  // ----
+  // ---- The DOCUMENTS are unchanged: those dates are still written where
+  // ---- they always were, and SUSPICIOUS_REASONS above still records why
+  // ---- each was left as written. What changed is only that they are past
+  // ---- dates now, which is the retirement the R16 split was designed for.
+  // ----
+  // ---- An empty allowlist is the check at full strength: every future
+  // ---- date in a scanned document now fails outright, with nothing
+  // ---- tolerated. The R16 test below asserts that empty state directly,
+  // ---- so this cannot quietly refill.
 ];
 
 /* ----------------------------------------------------------------- scan --- */
@@ -380,11 +397,38 @@ test("R16: the two species of future date are told apart, and neither hides", ()
   expected += csv.expected.length;
   suspicious += csv.allowed.length;
 
-  // Both categories are non-empty today, which is what makes this test
-  // meaningful: a scan that classified everything one way would pass a
-  // weaker assertion without telling anything apart.
+  // The expected-future category is non-empty and must stay so: an election
+  // day in November is supposed to postdate every scan until it happens, and
+  // a scan finding none of them has stopped reaching the annotations.
   assert.ok(expected >= 6, `only ${expected} expected-future date(s) recognised`);
-  assert.ok(suspicious >= 1, `${suspicious} suspicious — the residue vanished silently?`);
+
+  // ── 2026-08-19 (g20): this assertion used to read `suspicious >= 1`, and
+  // ── it failed the moment the residue was gone — which is to say, it
+  // ── failed on the day the thing it was guarding got FIXED. That is the
+  // ── same shape as a walk check that vanishes when a source is healthy
+  // ── (session correction 9.8): a guard that only holds while things are
+  // ── broken stops holding exactly when it matters least and complains
+  // ── exactly when it matters least too.
+  // ──
+  // ── The healthy state is what gets asserted now, and it is the stronger
+  // ── claim: NOTHING is tolerated. Every future date in a scanned document
+  // ── fails outright. The two ways that could rot are both named here —
+  // ── a stale entry that can never fire again, and a hit with no entry
+  // ── behind it — so refilling the allowlist requires a live, dated,
+  // ── still-future pin and nothing else will pass.
+  for (const entry of ALLOWLIST) {
+    assert.ok(
+      entry.date > todayStr,
+      `${entry.file} ${entry.date} has passed — a pin that can no longer be ` +
+        `hit is not a pin, and leaving it here makes the declared budget lie`,
+    );
+  }
+  assert.equal(
+    suspicious,
+    0,
+    `${suspicious} suspicious future date(s) hit against an allowlist of ` +
+      `${ALLOWLIST.length} entr(ies) — every one must be declared above`,
+  );
 
   // The allowlist is the SUSPICIOUS set and nothing else. An expected-future
   // date that also sat in the allowlist would be tolerated twice and
@@ -422,4 +466,45 @@ test("R16: a bare annotation is not an escape hatch", () => {
   for (const reason of annotated) {
     assert.ok(reason.length >= 20, `"${reason}" is too short to be a reason`);
   }
+});
+
+/* ---------------------------------------------------------- g20, R16 --- */
+
+test("an empty allowlist is legitimate; a broken extraction still throws", async () => {
+  // 2026-08-19 (g20). Both of these guards used to read "empty means
+  // broken", and both failed on the day the last tolerated date passed into
+  // the past — that is, on the day the thing they guarded got fixed. The
+  // distinction they were missing is asserted here so it cannot be lost
+  // again: an entry that fails to parse leaves its `file:` key behind, and
+  // a genuinely empty literal leaves nothing.
+  const { mkdtempSync, writeFileSync: write } = await import("node:fs");
+  const { tmpdir } = await import("node:os");
+  const dir = mkdtempSync(join(tmpdir(), "doc-dates-"));
+
+  const empty = join(dir, "empty.ts");
+  write(empty, "const ALLOWLIST = [\n  // nothing tolerated\n];\n", "utf8");
+  assert.deepEqual(
+    readAllowlist(empty),
+    [],
+    "a genuinely empty allowlist must extract as empty, not throw — an empty " +
+      "list is the check at full strength",
+  );
+
+  const broken = join(dir, "broken.ts");
+  // An entry whose shape the extractor cannot read. It must NOT be silently
+  // dropped: a toleration that vanishes is a hole nobody sees.
+  write(
+    broken,
+    'const ALLOWLIST = [\n  { file: "docs/x.md", date: "2026-99-99" },\n];\n',
+    "utf8",
+  );
+  assert.throws(
+    () => readAllowlist(broken),
+    /extraction is broken/,
+    "an unparseable entry must fail closed",
+  );
+
+  const missing = join(dir, "missing.ts");
+  write(missing, "const SOMETHING_ELSE = [];\n", "utf8");
+  assert.throws(() => readAllowlist(missing), /no ALLOWLIST literal/);
 });

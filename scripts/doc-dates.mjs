@@ -191,14 +191,30 @@ export function scanTrackerCsv(text, columns = ["Notes", "Detail"]) {
  * quietly passes when it cannot find its own rules is not a check.
  */
 export function readAllowlist(path) {
-  const source = readFileSync(path, "utf8");
+  return parseAllowlistSource(readFileSync(path, "utf8"), path);
+}
+
+/**
+ * The same extraction, against text already in hand — which is what the
+ * pre-commit hook needs, because it must read the list out of the STAGED
+ * copy of the test file rather than the one on disk.
+ *
+ * 2026-08-19 (g20): this used to be a second implementation living in
+ * `scripts/check-staged-dates.mjs`. The header above says duplicating the
+ * list would guarantee the two disagree — and the PARSER was duplicated,
+ * which is the same defect one level down. It bit exactly as predicted:
+ * `readAllowlist` was taught to tell an empty list from a broken parse, the
+ * hook's private copy was not, and the hook refused the very commit that
+ * emptied the list. One implementation now, imported by both.
+ */
+export function parseAllowlistSource(source, label) {
   const start = source.indexOf("ALLOWLIST = [");
   if (start === -1) {
-    throw new Error(`${path}: no ALLOWLIST literal found — cannot check anything`);
+    throw new Error(`${label}: no ALLOWLIST literal found — cannot check anything`);
   }
   const end = source.indexOf("\n];", start);
   if (end === -1) {
-    throw new Error(`${path}: ALLOWLIST literal is not closed`);
+    throw new Error(`${label}: ALLOWLIST literal is not closed`);
   }
   const block = source.slice(start, end);
 
@@ -208,8 +224,19 @@ export function readAllowlist(path) {
   for (const m of block.matchAll(entryRe)) {
     entries.push({ file: m[1], date: m[2], count: Number(m[3]) });
   }
-  if (entries.length === 0) {
-    throw new Error(`${path}: ALLOWLIST parsed to zero entries — extraction is broken`);
+  // 2026-08-19 (g20): "zero entries means the extractor broke" was true for
+  // as long as the list was expected to hold something, and it stopped being
+  // true the day the last entry's date passed and the list emptied honestly.
+  // The two cases have to be told apart, or the hook fails closed on the
+  // healthiest possible state — nothing tolerated at all.
+  //
+  // The discriminator is the block's own text: an entry that failed to parse
+  // still leaves its `file:` key behind, so `file:` present with no entry
+  // extracted is a real extraction failure and still throws. `file:` absent
+  // means the literal is genuinely empty, which is legitimate and is asserted
+  // as such in tests/doc-dates.test.ts.
+  if (entries.length === 0 && /\bfile:/.test(block)) {
+    throw new Error(`${label}: ALLOWLIST parsed to zero entries — extraction is broken`);
   }
   return entries;
 }

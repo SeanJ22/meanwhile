@@ -107,6 +107,21 @@ jobs:
           echo "This is a stated early exit, not a silent one, and it is not a pass"
           echo "of the gate: the gate did not run because there was nothing to gate."
 
+      # THE GATE NEEDS A BROWSER (g17, 2026-08-18).
+      #
+      # R50 added tests/beacon-guard.test.ts, which proves the synthetic-run
+      # guard by RUNNING a real Chromium — a source scan was the guard that
+      # was green through two live leaks. No refresh workflow installed a
+      # browser, so from R50 onward every changed-data run failed at the gate
+      # with "Executable doesn't exist" and committed nothing. Caught by
+      # dispatching the changed path on purpose (run 32202786858); it would
+      # otherwise have surfaced as a snapshot that quietly stopped moving.
+      #
+      # Chromium only, and only on the path that runs the suite: a no-op run
+      # pays nothing, which is the whole point of the ordering above.
+      - name: Install the browser the gate needs
+        if: steps.diff.outputs.changed == 'true'
+        run: corepack pnpm exec playwright install --with-deps chromium
       - name: Validate before committing
         if: steps.diff.outputs.changed == 'true'
         run: corepack pnpm test

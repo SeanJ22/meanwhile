@@ -237,6 +237,10 @@ const CONTENT_FILES = new Set(
     // CONTENT in the same sense as polling-place-links.ts above — no
     // manifest can generate a county ArcGIS org id or a rowspan parser.
     "scripts/fetch-voting-sites.mts",
+    // D52: one vocabulary record per state authority, each with its own
+    // filing system and its own recorded wall. Per-state CONTENT in the same
+    // sense as the rows above — no manifest can generate an Akamai refusal.
+    "lib/funding/state-vocabulary.ts",
   ].map((p) => p.replace(/\//g, "\\")),
 );
 

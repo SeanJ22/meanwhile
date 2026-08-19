@@ -1602,3 +1602,24 @@ is being held back; the empty slots are genuinely uncollected.
 That is the honest answer to "put the picture we have in there": there was no
 such picture, and the way to know was to compute the intersection rather than
 to assert it either way.
+
+### 17. "The browser rung clears it" is the most perishable entry in this file
+
+Twice in one session a standing entry saying rung 6 opens a host did not
+reproduce:
+
+* **Sutton NH** — the table above records 403 to the index profile, 200 to the
+  BROWSER profile. On 2026-08-19 both profiles took a 403.
+* **`cfs.sos.nh.gov`** — entry 1 above records rung 6 clearing it, measured
+  earlier the same day. A real headless Chromium took a **403** from it hours
+  later, with an Akamai body.
+
+Neither is deleted; this file is append-only and the next state may hit the
+same wall from a different side. But a session planning around "rung 6 clears
+this host" should **re-measure before relying on it**, and should treat a
+WAF's disposition as a fact with a shelf life rather than a property of the
+host. Egress reputation, rule updates and rate history all move it.
+
+The stable entries in this file are the ones about STRUCTURE — where a feed
+lives, how a platform keys its records, what a field means. Those keep. The
+ones about who a WAF lets through do not.

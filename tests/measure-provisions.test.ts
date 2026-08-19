@@ -21,7 +21,13 @@ import { MEASURE_SUMMARIES } from "../lib/ballot/measure-summaries.ts";
  * collected against it.
  */
 
-const KINDS: ProvisionKind[] = ["FUNDING", "PROGRAM", "OVERSIGHT", "SUNSET"];
+const KINDS: ProvisionKind[] = [
+  "FUNDING",
+  "PROGRAM",
+  "OVERSIGHT",
+  "SUNSET",
+  "START",
+];
 
 test("every measure with an analysis is decomposed, and nothing else is", () => {
   const file = getMeasureAnalyses();
@@ -101,11 +107,11 @@ test("ids are unique, stable-shaped, and resolvable", () => {
   assert.equal(provisionById("ballot-az-pima:prop-141#not-a-provision"), null);
 });
 
-test("every kind is one of the four, and every kind has a reader-facing label", () => {
+test("every kind is one of the five, and every kind has a reader-facing label", () => {
   for (const provision of MEASURE_PROVISIONS) {
     assert.ok(
       KINDS.includes(provision.kind),
-      `${provision.id} carries the kind ${provision.kind}, which is not one of the four`,
+      `${provision.id} carries the kind ${provision.kind}, which is not one of the five`,
     );
   }
   for (const kind of KINDS) {
@@ -167,7 +173,7 @@ test("every provision says something, and says it in plain language", () => {
 
 test("the shape of the decomposition, stated as measured", () => {
   /*
-   * MEASURED, NOT EXPECTED. Not every measure has all four kinds and it would
+   * MEASURED, NOT EXPECTED. Not every measure has all five kinds and it would
    * be a defect if it did: Proposition 141 funds nothing and expires never, and
    * manufacturing a sunset provision for it would be inventing a claim about a
    * real measure. These numbers are what the eleven analyses actually contain,
@@ -178,7 +184,39 @@ test("the shape of the decomposition, stated as measured", () => {
     byKind[provision.kind] = (byKind[provision.kind] ?? 0) + 1;
   }
   assert.equal(MEASURE_PROVISIONS.length, 52, `provision count changed: ${MEASURE_PROVISIONS.length}`);
-  assert.deepEqual(byKind, { FUNDING: 10, PROGRAM: 26, OVERSIGHT: 12, SUNSET: 4 });
+  /*
+   * THE CENSUS, BEFORE AND AFTER RULING 7C (2026-08-18), SIDE BY SIDE.
+   *
+   *            before   after
+   *   FUNDING      10      10
+   *   PROGRAM      26      26
+   *   OVERSIGHT    12      12
+   *   SUNSET        4       2   <- narrowed to expiry and renewal only
+   *   START         -       2   <- the fifth kind
+   *   total        52      52
+   *
+   * TWO PROVISIONS MOVED, both pure commencement dates with nothing expiring
+   * and nothing renewed in either: prop-143#starts-2028 and prop-144#starts-2028.
+   * The other two SUNSET rows were re-derived against the narrowed definition
+   * and stay — prop-316#freeze-window ends on a stated date, and
+   * prop-319#ten-year-renewal is renewal in the strict sense.
+   *
+   * The total is unchanged at 52, which is the check that matters: a kind
+   * change that altered the number of provisions would mean a provision had
+   * been invented or dropped, and both are claims about a real measure.
+   */
+  assert.deepEqual(byKind, {
+    FUNDING: 10,
+    PROGRAM: 26,
+    OVERSIGHT: 12,
+    SUNSET: 2,
+    START: 2,
+  });
+  assert.equal(
+    Object.values(byKind).reduce((a, b) => a + b, 0),
+    52,
+    "the kinds no longer sum to the provision count",
+  );
 
   // Every measure has at least one provision; the largest is Proposition 212.
   const perContest = new Map<string, number>();
@@ -190,4 +228,75 @@ test("the shape of the decomposition, stated as measured", () => {
   }
   assert.equal(perContest.get("ballot-az-pima:prop-212"), 11);
   assert.equal(perContest.get("ballot-az-pima:prop-141"), 3);
+});
+
+test("Proposition 141's absences survive the fifth kind", () => {
+  /*
+   * RULING 7C, 5e. Proposition 141 has no oversight and no clock, and that is a
+   * MEASURED absence in the Legislative Council's own enumeration rather than a
+   * gap in our reading. A new kind must not quietly fill it: the failure mode of
+   * adding a bucket is that something gets swept into it to make the taxonomy
+   * look complete, and a manufactured provision is a false claim about a real
+   * measure.
+   *
+   * If 141 ever does gain a kind, that is a finding requiring evidence from the
+   * analysis — not a default, and not this test being relaxed.
+   */
+  const kinds = MEASURE_PROVISIONS.filter(
+    (p) => p.contestId === "ballot-az-pima:prop-141",
+  ).map((p) => p.kind);
+
+  assert.deepEqual(
+    kinds.slice().sort(),
+    ["FUNDING", "PROGRAM", "PROGRAM"],
+    "Proposition 141's provision kinds changed",
+  );
+  for (const absent of ["OVERSIGHT", "SUNSET", "START"] as const) {
+    assert.ok(
+      !kinds.includes(absent),
+      `Proposition 141 gained a ${absent} provision. It has none in the analysis — ` +
+        "if this is real it needs the citation, and if it is not it is an invented claim.",
+    );
+  }
+
+  /* And no provision of 141's carries a date at all, which is WHY it has no
+   * clock. Asserted on the text rather than on the kind, so a mis-kinded
+   * provision cannot satisfy both halves by accident. */
+  for (const provision of MEASURE_PROVISIONS.filter(
+    (p) => p.contestId === "ballot-az-pima:prop-141",
+  )) {
+    assert.ok(
+      !/\b(19|20)\d{2}\b/.test(provision.what),
+      `${provision.id} carries a year, so 141 may have a clock after all`,
+    );
+  }
+});
+
+test("the fifth kind's name and label carry no stance", () => {
+  /*
+   * A kind whose name implies a provision is good or bad tilts every reaction
+   * it collects. That is the vote-recommendation ban arriving through the back
+   * door of a taxonomy, and it is treated with the same seriousness.
+   *
+   * The labels are also what a reader sees, so they take the 15-year-old test:
+   * plain words, no identifier, no jargon.
+   */
+  const LOADED =
+    /\b(good|bad|better|worse|best|worst|fair|unfair|safe|risky|reform|loophole|protect|threat|burden|relief|giveaway|handout|common.?sense)\b/i;
+  for (const [kind, label] of Object.entries(PROVISION_KIND_LABEL)) {
+    assert.doesNotMatch(label, LOADED, `${kind}'s label takes a side: "${label}"`);
+    assert.doesNotMatch(
+      label,
+      /[A-Z]{2,}|_|ocd-division/,
+      `${kind}'s label reads like an identifier: "${label}"`,
+    );
+    assert.ok(label.length <= 40, `${kind}'s label is too long to sit on a chip: "${label}"`);
+  }
+
+  /* The two clock kinds must not read as each other — the whole point of 7C is
+   * that "does this expire" and "when does this start" are different questions
+   * and were being answered by one bucket. */
+  assert.notEqual(PROVISION_KIND_LABEL.SUNSET, PROVISION_KIND_LABEL.START);
+  assert.match(PROVISION_KIND_LABEL.START, /starts/i);
+  assert.match(PROVISION_KIND_LABEL.SUNSET, /ends|renew/i);
 });

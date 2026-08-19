@@ -35,19 +35,51 @@
  *   attached to nothing. It stays in the verbatim text on the page, where the
  *   reader can see exactly as much as the state published.
  *
- * ## The four kinds, and the one reading that was widened deliberately
+ * ## FIVE kinds — the author's ruling 7C, 2026-08-18
  *
- * `FUNDING`, `PROGRAM`, `OVERSIGHT`, `SUNSET` are the four CLAUDE.md names and
- * no fifth was added — the kinds are what reactions will be bucketed by, and
- * changing that bucketing is an ask-the-author change.
+ * P01 shipped with the four CLAUDE.md names and SUNSET widened to mean THE
+ * MEASURE'S WHOLE CLOCK — start, end and renewal — because a strict reading
+ * left provisions with no kind at all. That widening is now reversed on the
+ * author's ruling, and the reason is not tidiness. **Kinds are the reaction
+ * bucketing.** A bucket meaning both "does this expire" and "when does this
+ * start" collects answers to two different questions and reports them as one
+ * number, which is unreadable to a buyer; and a provision with no kind
+ * captures no reaction at all, which is signal deleted rather than deferred.
  *
- * SUNSET is read as THE MEASURE'S CLOCK: when it starts, when it ends, and
- * when it must be renewed. A strict reading would cover only expiry, which
- * would leave Proposition 143's "applies beginning January 1, 2028" and
- * Proposition 316's two-year freeze with no kind at all — both plainly
- * contested, both about time. Proposition 319's ten-year re-approval cycle is
- * a sunset in the strict sense too. The widening is recorded here rather than
- * done quietly, and it is the author's to narrow.
+ * SUNSET now means EXPIRY AND RENEWAL ONLY. The fifth kind, `START`, means the
+ * date a measure's rules begin to apply.
+ *
+ * **The name is derived from the two provisions, not chosen and then fitted.**
+ * Re-deriving all four SUNSET assignments against the narrowed definition
+ * leaves exactly two with no kind:
+ *
+ * - `prop-143#starts-2028` — "The measure would apply beginning January 1,
+ *   2028."
+ * - `prop-144#starts-2028` — "It would apply to all elections taking place on
+ *   or after January 1, 2028."
+ *
+ * Both say the same thing in the analysis's own words: WHEN THE MEASURE STARTS
+ * APPLYING. Nothing expires and nothing is renewed in either. `START`, reader
+ * label "When it starts", is what those two sentences say and nothing more.
+ * It encodes no stance — a start date is neither good nor bad, and a kind
+ * whose name implied otherwise would tilt every reaction it collected, which
+ * is the vote-recommendation ban arriving through a taxonomy's back door.
+ *
+ * The other two stay SUNSET, and the reasoning is written down because the
+ * pre-narrowing header named a different pair as the orphans:
+ *
+ * - `prop-316#freeze-window` — the freeze runs "between June 30, 2025 and June
+ *   30, 2027". It ENDS on a stated date; a rule that stops is exactly what a
+ *   sunset is, whatever the measure around it does.
+ * - `prop-319#ten-year-renewal` — ten years, then another vote. Renewal, in
+ *   the strict sense.
+ *
+ * Every non-SUNSET provision was re-read for the same shape. Three carry dates
+ * and none of them moves, because in each the date QUALIFIES a substantive
+ * rule rather than being the provision's subject: `prop-145#later-laws-void`
+ * (the subject is voiding later laws), `prop-320#half-percent-a-year` (the
+ * subject is the catch-up requirement) and `prop-316`'s two food-tax
+ * provisions (the date says which jurisdictions are covered).
  *
  * ## Not every measure has all four, and that is the finding
  *
@@ -56,18 +88,32 @@
  * that funds nothing would be inventing a claim about a real measure, which is
  * the one thing this product cannot do. The count per kind is asserted in the
  * test as measured, never as expected.
+ *
+ * **Proposition 141 gains nothing from the fifth kind, and that is checked
+ * rather than assumed.** Its three provisions are the mileage-tax
+ * prohibition, the monitoring prohibition and two exceptions; none of them
+ * carries a date, so it still has no clock of any sort. A new kind that
+ * quietly filled a measured absence would be manufacturing a claim, and
+ * `tests/measure-provisions.test.ts` asserts 141 has neither OVERSIGHT, SUNSET
+ * nor START.
  */
 
 import { analysisForContest } from "./analyses.ts";
 
-export type ProvisionKind = "FUNDING" | "PROGRAM" | "OVERSIGHT" | "SUNSET";
+export type ProvisionKind =
+  | "FUNDING"
+  | "PROGRAM"
+  | "OVERSIGHT"
+  | "SUNSET"
+  | "START";
 
 /** The reader-facing name of each kind. No identifier reaches a reader. */
 export const PROVISION_KIND_LABEL: Readonly<Record<ProvisionKind, string>> = {
   FUNDING: "Money",
   PROGRAM: "What it does",
   OVERSIGHT: "Who checks it",
-  SUNSET: "When it starts and ends",
+  SUNSET: "When it ends or must be renewed",
+  START: "When it starts",
 };
 
 export interface MeasureProvision {
@@ -231,7 +277,7 @@ export const MEASURE_PROVISIONS: MeasureProvision[] = [
   p(
     "prop-143",
     "starts-2028",
-    "SUNSET",
+    "START",
     "Starts January 1, 2028",
     "The measure would apply beginning January 1, 2028.",
   ),
@@ -282,7 +328,7 @@ export const MEASURE_PROVISIONS: MeasureProvision[] = [
   p(
     "prop-144",
     "starts-2028",
-    "SUNSET",
+    "START",
     "Applies to elections from January 1, 2028",
     "It would apply to all elections taking place on or after January 1, 2028.",
   ),

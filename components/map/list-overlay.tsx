@@ -6,6 +6,7 @@ import { haversineKm } from "@/lib/geo/distance";
 import { hasConcluded, orderByUpcomingFirst } from "@/lib/meetings/ordering";
 import { concludedGapNote } from "@/lib/meetings/history-gaps";
 import { formatMeetingDate, formatMiles, meetingHeadline } from "@/lib/map/format";
+import { BADGE_COPY, badgeFor } from "@/lib/meetings/jurisdiction-badge";
 import { TIER_LABEL } from "@/lib/ocd/tiers";
 import { tierForMeeting } from "@/lib/state/derive";
 import { useShellData } from "@/lib/state/data";
@@ -70,7 +71,7 @@ export function ListOverlay({
 }: {
   onPickMeeting: (meeting: Meeting) => void;
 }) {
-  const { meetings, location, result } = useShellData();
+  const { meetings, location, result, governing } = useShellData();
   const ui = useUi();
   const dispatch = useUiDispatch();
   const [limit, setLimit] = useState(PAGE);
@@ -356,6 +357,20 @@ export function ListOverlay({
                             Online
                           </span>
                         )}
+                        {/*
+                          M81. Impact is jurisdiction MEMBERSHIP, not distance
+                          — a meeting forty miles away at the county seat
+                          governs the reader and the next town's select board
+                          four miles away does not. So this sits AHEAD of the
+                          mileage, and the mileage stays as the secondary
+                          fact it should always have been.
+                        */}
+                        <span
+                          className="jurisdiction-badge"
+                          data-badge={badgeFor(meeting, governing)}
+                        >
+                          {BADGE_COPY[badgeFor(meeting, governing)].label}
+                        </span>
                         {when}
                         {km !== null &&
                           // Anything under a mile rounds to 0, which reads as

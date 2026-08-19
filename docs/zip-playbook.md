@@ -1335,3 +1335,291 @@ turns the same requests into 200s.
 
 A "Failed to fetch" from a page is not a wall on the server. It is a wall
 between two origins, and the way past it is to stand on the other one.
+
+## Rungs discovered by g21, 2026-08-19 (the voting-locations hunt, B19/B16)
+
+Append-only, per R13. Six entries, all from real walls.
+
+### 1. A CivicPlus page's own widget state names the map app, and the map app's item data names the data
+
+The chain that landed Pima County's 148 vote centers is three rungs deep and
+none of them is HTML scraping:
+
+1. **Rung 8** — `www.pima.gov/3199/Pima-Votes` is CivicPlus, and its page
+   embeds its whole widget tree as JSON. A `Voting Locations` BUTTON in that
+   JSON carries `"link":"https://experience.arcgis.com/experience/<id>/"`.
+   The prose said "here is a map"; the markup said which map.
+2. **Rung 12** — an ArcGIS Experience Builder app's configuration is public
+   at `https://www.arcgis.com/sharing/rest/content/items/<id>/data?f=json`,
+   and `.../items/<id>?f=json` names its OWNER, which is how you prove the
+   app is the authority's own rather than a lookalike (`julia.jones@pima.gov_Pima`).
+3. **Rung 7** — grep that config for `FeatureServer|MapServer` and the data
+   layers fall out. Query one with
+   `/0/query?where=1=1&outFields=*&returnGeometry=true&outSR=4326&f=json`.
+
+Any county whose "find your polling place" is an ArcGIS map is reachable this
+way, and what comes back is better than the HTML: coordinates, election
+labels and room names, machine-readable, from the authority's own service.
+
+### 2. An ArcGIS ORG SEARCH finds layers the same body's open-data portal does not list
+
+`gisopendata.pima.gov` publishes 190 datasets and NOT ONE polling or voting
+location among them — g20 recorded that correctly, and it is true of the
+portal. It is not true of the county.
+
+`https://www.arcgis.com/sharing/rest/search?q=orgid:<ORGID>+(vote OR voting
+OR poll OR election)&sortField=modified&sortOrder=desc&f=json` returned 33
+items on Pima's org, including "Election Day Vote Centers", "EVS Locations"
+and "mobileVotingSites", all edited the day of the walk.
+
+**A body's open-data portal is a CURATED subset of what it publishes.** The
+org search is the uncurated one. Get the org id from any one of the body's
+feature-service URLs (`services2.arcgis.com/<ORGID>/...`) or from an item's
+`orgId`.
+
+### 3. A found endpoint gated by a captcha is a rung WALKED AND REFUSED, not a wall
+
+New Hampshire's statewide list of clerks and polling places
+(`app.sos.nh.gov/statelistclerkandpolling`) refuses rungs 2, 3, 4, 5, 6 and 9.
+Rung 11 recovered the archived Angular bundle, and the bundle named the
+endpoint: `ClerkandPolling/GetClerkandPollingList`, with `GeneratePDF` and
+`GenerateCsv` beside it.
+
+**It was not called.** The tool gates that call behind reCAPTCHA, and
+circumventing bot detection is one of the four things `CLAUDE.md` says we
+never do — alongside authenticating, breaching clickwrap, and degrading
+service.
+
+Record it as what it is: the rung was reached, the door was found, and it was
+left shut on principle. That is neither a wall nor an exhaustion claim, and
+the next rung (13, the Department of State's public-records request path) is
+where the next session starts.
+
+### 4. `sos.nh.gov` and `app.sos.nh.gov` refuse rung 6 as well — g20's entry 1 does not reach them
+
+Entry 1 above says NH state hosts fall at rung 6, the live browser. That was
+measured on `governor.nh.gov`, `council.nh.gov` and `cfs.sos.nh.gov`, and it
+holds for those three.
+
+**It does not hold for the Department of State's own hosts.** A real headless
+Chromium, JavaScript executed and content awaited, takes a 403 from both
+`www.sos.nh.gov` and `app.sos.nh.gov`, with an Akamai body
+(`errors.edgesuite.net`, `Reference #18....`). A hosted fetcher on a
+completely different network takes the same 403, so it is not this egress
+alone.
+
+Two walls wear one hostname suffix. Do not generalise a `*.nh.gov` result
+from one host to another; measure the host you are on.
+
+### 5. A layer's `dataLastEditDate` is the rung that decides whether geometry is usable
+
+New Jersey's own Office of GIS publishes statewide `Election Districts for
+New Jersey` and `Ward Boundaries for New Jersey` — an unambiguous rung-12 hit
+from the state's own organisation, exactly the geometry a precinct-level
+polling-place answer needs.
+
+Its `editingInfo.dataLastEditDate` is **2021-11-24**, and the publisher's own
+title begins `MATURE SUPPORT`.
+
+A HIT is not the end of the check. Every ArcGIS layer's `?f=json` carries
+`editingInfo` with `lastEditDate`, `schemaLastEditDate` and
+`dataLastEditDate` in epoch milliseconds, and a layer five years older than
+the election it would be used to answer about is not usable for that answer.
+**Read the edit date before building on the layer**, and where it fails,
+refuse with the date named rather than shipping a stale assignment.
+
+### 6. An HTML table's `rowspan` silently drops rows, and the drop looks like the authority's silence
+
+Morris County's polling-place tables share one location across several wards
+with `rowspan`. A naive read — split `<tr>`, split `<td>` — gives Boonton's
+ward 1 a location and wards 2, 3 and 4 nothing, which renders as a town
+whose county published no location for most of its voters.
+
+Carry a pending-spans map keyed by column when parsing any government table.
+The parser in `scripts/fetch-voting-sites.mts` is the shape.
+
+Same run, same class: the first cut **dropped** any site whose address did not
+geocode, and 25 real published locations vanished — a cross-street address
+("21 Blue Mill Road & Sand Spring Rd") is not something the Census one-line
+geocoder resolves. A retrieval failure on our side may never be written into
+the data as the authority not having published. Keep the row, drop the pin,
+and say which.
+
+## The Kearsarge towns, walked to page level — g21, 2026-08-19 (M123)
+
+The table at the top of this section recorded these six towns at host level.
+This is what they look like from the page.
+
+### 7. An `.ics` feed serves the CURRENT VIEW, not the calendar — a 5x silent clip
+
+`https://www.wilmotnh.org/events/?ical=1` returns **four** events. HTTP 200,
+`text/calendar`, valid iCalendar, nothing to complain about.
+
+`https://www.wilmotnh.org/events/list/?ical=1` returns **twenty-three** — the
+same total the plugin's own REST API reports at
+`/wp-json/tribe/events/v1/events`.
+
+The default URL exports whatever view the page is on, and the default view is
+the month. Nineteen public meetings are missing and every signal says the
+retrieval worked. **Name the list view explicitly, and cross-check the count
+against the plugin's own API before believing a feed.**
+
+### 8. `CATEGORIES` is how one town feed serves several boards
+
+The Events Calendar files each event under the board that owns it —
+`Select Board`, `Planning Board`, `Cemetery Trustees`. That is better than
+matching on the title, and it is better in a way that matters: Wilmot files a
+"Transfer Station Advisory Group meeting" under Select Board, which a
+title match would have dropped and which is a real sitting of that board.
+
+Where a feed carries no categories, the fallback is a title match, and a title
+match with no needle must match NOTHING rather than everything.
+
+### 9. A month GRID does not have to be parsed as a grid
+
+New London's GovOffice calendar is a `<table>` of day cells. Every event
+inside one carries its own tooltip block:
+
+```html
+<div class="eventTip">
+  <div class="tipTitle">Board of Selectmen - 5:30 PM - Whipple Memorial Town Hall</div>
+  Thursday, August 20, 2026 at 5:30 PM
+</div>
+```
+
+Date, weekday, year and time, in the town's own words, beside the title —
+which also names the room. So the grid's geometry never has to be understood,
+and there is no cell-position arithmetic to be wrong about.
+
+**But it serves ONE MONTH**, and the page publishes its own
+`?Type=B_EV&SEC=<id>&month=9&year=2026` navigation. A row that reads only the
+default view reports this month as the body's whole calendar — for a board
+that sits twice a month, two sittings — and that reads exactly like a body
+with nothing scheduled.
+
+### 10. Sutton's browser rung no longer clears it (dated note on the table above)
+
+The table above records Sutton NH as **403 to the index profile, 200 to the
+BROWSER profile**. On **2026-08-19** `www.suttonnh.gov` and `suttonnh.gov`
+both answered **403 to both profiles** from this egress. The entry is not
+deleted — this file is append-only and the next state may hit the same wall
+from a different side — but a session starting from it should expect the
+browser rung to fail and go to rung 5, a different egress.
+
+### 11. A "no calendar" town can be a vendor town with a JavaScript front end
+
+`bradfordnh.gov/calendar` 404s, which is where the earlier walk stopped. The
+town's HOME page carries `/_app/immutable/chunks/Calendar-*.js` — a SvelteKit
+build — and, in its server-rendered payload, twelve links of the form
+`https://towncloud.io/go/bradford-nh/agendas/359` with a sibling
+`.../PDF/get_agenda_document_link`.
+
+So Bradford is a **TownCloud** town: a vendor this repo has not met, with a
+predictable per-tenant path. A 404 on a guessed calendar path is not evidence
+that a town publishes nothing; the platform underneath is rung 12 and it was
+sitting in the homepage's own markup.
+
+### 12. A feed can be STALE rather than empty, and the two need different words
+
+`https://springfieldnh.org/events/?ical=1` answers 200 with **fifty** events.
+Every one of them is from **2024**. Meanwhile `springfieldnh.org/events/`
+lists sittings dated 2026 — `select-board-meeting-2026-08-24`, <!-- expected-future: the town's own event slug, read 2026-08-19 -->
+
+`cemetery-trustees-meeting-2026-08-11` — on a plugin that is not The Events
+Calendar (its own `wp-json/tribe/...` is a 404, and its listing pages carry
+`?pagination=1&event_archetype=event`).
+
+A feed with fifty rows passes every count check a zero-row feed would fail.
+**Check the newest date in a feed, not only its length**, and where it is
+older than the body's own listing, the feed is not the source.
+
+## Portrait rungs, at scale — g21, 2026-08-19 (D50 item 7d)
+
+The half that makes the remaining portraits survivable. Round 3's findings are
+the template and they are written down here so the next state costs what this
+one did.
+
+### 13. A chamber does not key its portraits by the id you have
+
+Two chambers, two schemes, and neither is the member id our registry carries:
+
+* **The New Hampshire Senate keys its portraits by DISTRICT**, not by member.
+  A hunt that walks member ids finds nothing and reports a chamber that
+  publishes no portraits — which is false about a chamber whose every member
+  has one.
+* **The New Hampshire House declares its portrait by TEMPLATE CONTROL ID** —
+  `id="pageBody_imgMember"` — with a filename id (`409302.jpg`) that appears
+  **nowhere else on the page**. There is no pattern to derive and no id to
+  join on; the control id is the only stable handle.
+
+**Find the handle before walking the list.** Open one member page, find what
+identifies the portrait, and confirm the same handle on a second member of the
+same chamber. A scheme confirmed on one page is a guess.
+
+### 14. `alt` text can assert an absence that is not there
+
+Two New Hampshire senators were recorded as having **no portrait**. Both had
+one. Their pages label the image `alt="NH State Seal"` — a template default
+the chamber never edited — and a hunt filtering on alt text discarded a real
+portrait as a placeholder.
+
+**A fabricated absence, found by going to look.** Filter on what the image IS
+(dimensions, bytes, content type), never on what the page CALLS it. Alt text
+is authored by whoever last edited the template and is not a claim about the
+file.
+
+### 15. Staged is not shipped, and the difference is a human
+
+The portrait pipeline has two terminal states and they must not be collapsed:
+
+* **STAGED** — fetched, EXIF-strippable, sole subject, door recorded. Every
+  machine-checkable rung passed.
+* **SHIPPED** — a person looked at it.
+
+`docs/photo-review.md` (`pnpm photo:review`) is where the second happens. A row
+may ship carrying a stated doubt — the `review` field on the manifest row — and
+the list says WHAT the doubt is, so the reviewer is not asked to guess what
+they are looking at. Two rows carry one today: distance shots the author asked
+to see.
+
+**Identity and composition are different questions.** Any doubt about identity
+fails at every door, permanently. Composition is a judgment the author makes,
+and it is the one the flagged rows are asking about.
+
+### 16. Collecting a portrait and rendering one are different numbers, and they drift
+
+g20 shipped 110 portraits and the rendered count moved by **zero**, because
+none of those officials sits on a covered division. The manifest counts people
+we HOLD a portrait for (902 today); the census counts people the product
+RENDERS (750, of whom 591 have one).
+
+Both numbers, every time. And the join between them is worth running rather
+than assuming: asked directly whether any portrait we hold sits beside a slot
+rendering initials — across all 231 empty state-legislator and curated-roster
+slots, matched by id and by normalised name — the answer is **zero**. Nothing
+is being held back; the empty slots are genuinely uncollected.
+
+That is the honest answer to "put the picture we have in there": there was no
+such picture, and the way to know was to compute the intersection rather than
+to assert it either way.
+
+### 17. "The browser rung clears it" is the most perishable entry in this file
+
+Twice in one session a standing entry saying rung 6 opens a host did not
+reproduce:
+
+* **Sutton NH** — the table above records 403 to the index profile, 200 to the
+  BROWSER profile. On 2026-08-19 both profiles took a 403.
+* **`cfs.sos.nh.gov`** — entry 1 above records rung 6 clearing it, measured
+  earlier the same day. A real headless Chromium took a **403** from it hours
+  later, with an Akamai body.
+
+Neither is deleted; this file is append-only and the next state may hit the
+same wall from a different side. But a session planning around "rung 6 clears
+this host" should **re-measure before relying on it**, and should treat a
+WAF's disposition as a fact with a shelf life rather than a property of the
+host. Egress reputation, rule updates and rate history all move it.
+
+The stable entries in this file are the ones about STRUCTURE — where a feed
+lives, how a platform keys its records, what a field means. Those keep. The
+ones about who a WAF lets through do not.

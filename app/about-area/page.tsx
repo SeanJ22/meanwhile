@@ -103,9 +103,12 @@ export default async function AboutAreaPage({
         </section>
       )}
 
-      {/* 6d (2026-08-14 second session): one line, the state picker. The
-          full side-by-side comparison is deliberately NOT built — tracker
-          row for later. */}
+      {/* 6d (2026-08-14) shipped one line, the state picker, and deferred
+          the side-by-side to D47. D47 is built (g21, 2026-08-19), so the
+          picker's links now go to the comparison rather than to the other
+          state's own page — the reader asked how it COMPARES, and sending
+          them somewhere they have to hold two pages in their head was the
+          friction the row existed to remove. */}
       {facts && (
         <p className="mt-6 text-[0.8125rem] leading-relaxed text-paper-dim">
           Curious how another state compares?{" "}
@@ -118,7 +121,9 @@ export default async function AboutAreaPage({
             <span key={s.usps}>
               {i > 0 && <span className="text-muted"> · </span>}
               <Link
-                href={`/about-area?state=${s.usps}`}
+                href={`/about-area/compare?a=${state}&b=${s.usps}${
+                  zip ? `&zip=${zip}` : ""
+                }`}
                 className="underline decoration-dotted hover:text-signal"
               >
                 {s.name}

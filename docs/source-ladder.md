@@ -1430,3 +1430,214 @@ response carries **no total**: 20 is what came back and there is no field
 saying whether 20 is all of them. D62's "Posts tracked: N as the DENOMINATOR"
 adoption therefore has no source on this endpoint, which is a real blocker
 for rendering any share off it and is why v1 renders the profiles file only.
+
+---
+
+## Voting locations, per covered jurisdiction — g21, 2026-08-19 (B19 / B16)
+
+Every retrieval below is the JURISDICTION'S OWN election authority. No
+aggregator supplied a location; Vote411 and the secretary-of-state portals
+were used only to find what the authority publishes, which is what the
+author's ruling permits them for.
+
+**306 sites across 44 jurisdictions — 41 with sites, 3 recorded as refusals
+with their rungs.** `pnpm voting-sites:fetch` regenerates
+`data/voting-sites.json` and prints every count.
+
+### Arizona — Pima County: HIT at rung 8 → 12 → 7
+
+| Rung | Attempt | Result | Attempted |
+|---|---|---|---|
+| 2 | `recorder.pima.gov` | 302 → 200; `EarlyVotingSites.aspx` carries no site list between elections, `PollingLocationSearch.aspx` is an address→district form | 2026-08-19 |
+| 10 | `gisopendata.pima.gov` DCAT + item search, 190 datasets | Voter Precincts and Justice Precincts as boundaries; **no location dataset** | 2026-08-19 |
+| 8 | `www.pima.gov/3199/Pima-Votes` embedded CivicPlus widget JSON | HIT — a `Voting Locations` button naming an ArcGIS Experience Builder app | 2026-08-19 |
+| 12 | `arcgis.com/sharing/rest/content/items/21445fb1…/data` | HIT — the app config, owner `julia.jones@pima.gov_Pima`, org `UTBp78iglGpbqp1B` | 2026-08-19 |
+| 7 | `services2.arcgis.com/UTBp78iglGpbqp1B/.../Primary_2024_Vote_Centers/FeatureServer/0/query` | **HIT — 148 election-day vote centers with coordinates, addresses, rooms and election labels** | 2026-08-19 |
+
+**Model: VOTE CENTERS.** Confirmed against the authority's own words, not
+assumed: `pima.gov/3199/Pima-Votes` says the site is where you "find polling
+and vote center locations", and the county's own locator app is titled
+"Election Day Vote Center Locator".
+
+**What was excluded and why.** The early-voting and mobile layers carry PAST
+elections beside the current one — `CD7 General`, `CoT General`, `RTA`,
+`2026 Mid Term Primary`. 49 rows excluded; shipping them as places a reader
+can vote now would be a false claim about a date. 21 election-day rows the
+county left UNLABELED are kept and render as a named gap.
+
+### New Jersey — Morris County: HIT at rung 2
+
+| Rung | Attempt | Result | Attempted |
+|---|---|---|---|
+| 2 | `morriscountynj.gov/Government/Voting-and-Elections/Election-Day-Polling-Places` | HTTP 200, links one page per municipality | 2026-08-19 |
+| 2 | 39 municipality pages | HTTP 200 each; ward/district → location tables, "2026 General Election, Tuesday, November 3, 2026" | 2026-08-19 |
+
+**157 locations across 39 of 39 municipalities.** Model: ASSIGNED BY VOTING
+DISTRICT. 25 addresses did not geocode and are LISTED WITHOUT A PIN with the
+address the county published.
+
+### New Jersey — precinct geometry for B16: FOUND, and REFUSED on its date
+
+| Rung | Attempt | Result | Attempted |
+|---|---|---|---|
+| 12 | NJOGIS on ArcGIS Online | HIT — `Election Districts for New Jersey`, `Ward Boundaries for New Jersey`, statewide | 2026-08-19 |
+| 7 | The layer's own `editingInfo` | `dataLastEditDate` **2021-11-24**; title prefixed `MATURE SUPPORT` | 2026-08-19 |
+| 12 | Morris County's own GIS for a current layer | No published election-district layer found under the county | 2026-08-19 |
+| 13 | The county Board of Elections' records request path | NOT YET WALKED — named as the next session's start | 2026-08-19 |
+
+Five years older than the election it would be used to answer about, and
+districts get redrawn. B16 refuses with the date named rather than computing
+an assignment from it.
+
+### New Hampshire — the statewide list: WALLED, 11 rungs recorded
+
+`app.sos.nh.gov/statelistclerkandpolling` — the Department of State's own
+State List of Clerks & Polling Places.
+
+| Rung | Attempt | Result | Attempted |
+|---|---|---|---|
+| 2 | `www.sos.nh.gov/elections/voters` | HTTP 403, Akamai edge denial | 2026-08-19 |
+| 3 | Full browser header set on `app.sos.nh.gov` | HTTP 403 | 2026-08-19 |
+| 4 | curl's TLS fingerprint, both hosts | HTTP 403 | 2026-08-19 |
+| 5 | A hosted fetcher on a different network | HTTP 403 — not this egress alone | 2026-08-19 |
+| 6 | Live headless Chromium, JS executed, content awaited | HTTP 403, "Access Denied", `errors.edgesuite.net` | 2026-08-19 |
+| 7 | The tool's own call, `ClerkandPolling/GetClerkandPollingList` | **FOUND and DELIBERATELY NOT CALLED — reCAPTCHA-gated; we do not circumvent bot detection** | 2026-08-19 |
+| 9 | The Department's own PDFs on `sos.nh.gov` | HTTP 403 and 503 — the wall covers documents | 2026-08-19 |
+| 10 | Search index | Named the tool; no machine-readable copy on an authority host | 2026-08-19 |
+| 11 | Internet Archive, `app.sos.nh.gov` | **HIT** — the archived Angular bundle, which is what gave rung 7 its endpoint name | 2026-08-19 |
+| 12 | The platform (Angular SPA behind Akamai) | Identified; no unguarded interface | 2026-08-19 |
+| 13 | The Department's public-records request path | NOT YET WALKED | 2026-08-19 |
+
+**A third-party mirror of this PDF exists on an advocacy organisation's site
+and was deliberately not used.** `CLAUDE.md` sends us to the underlying
+government publication, and a mirror is not the authority.
+
+### New Hampshire — towns, walked individually
+
+In New Hampshire the TOWN runs the election, so the town's own page is the
+authority rather than a fallback.
+
+| Town | Rung | Result | Attempted |
+|---|---|---|---|
+| New London | 2 | **HIT** — `newlondon.nh.gov` ELECTIONS & VOTING names Whipple Memorial Town Hall, 25 Seamans Rd, for both the 2026 State Primary and the 2026 State General | 2026-08-19 |
+| Newbury | 2 | Town clerk page 200 — points readers at `app.sos.nh.gov` rather than naming the place | 2026-08-19 |
+| Newbury | 2 | Voter Information page 200 — ballots and results, no polling place | 2026-08-19 |
+| Newbury | 10 | Sitemap 403 / 404 | 2026-08-19 |
+| Newbury | 9 | The town's own election PDFs (warrant results, election results) — retrieved, 200 | They report outcomes, not the venue | 2026-08-19 |
+| Wilmot | 2 | Town clerk page 200 — registration and absentee ballots, no polling place stated | 2026-08-19 |
+| Warner | 2 | `warnernh.gov/town-clerk` 404 | 2026-08-19 |
+| Sutton | 2 | `sutton-nh.gov` does not resolve — the host in our notes is wrong and the right one is not yet found | 2026-08-19 |
+| Bradford | 2 | `bradfordnh.org` 301 → `bradfordnh.gov`; not yet followed | 2026-08-19 |
+| Springfield | — | NOT ATTEMPTED | — |
+
+**50 New Hampshire towns sit in the registry and 10 were walked here.** That
+is stated as 1 of 50 landed rather than left to read as coverage; the
+remaining 40 are `NOT_ATTEMPTED`, which is a work item and never a finding.
+
+---
+
+## The six Kearsarge towns, walked to page level — g21, 2026-08-19 (M123)
+
+**2 of 6 wired and live.** None is `NOT_ATTEMPTED`, and none is claimed to
+publish nothing.
+
+| Town | Rung | Result | Attempted |
+|---|---|---|---|
+| **Wilmot** | 2 | `/calendar` 200, WordPress | 2026-08-19 |
+| Wilmot | 7 | `/wp-json/tribe/events/v1/events` → **200, `total: 23`** | 2026-08-19 |
+| Wilmot | 8 | `/events/?ical=1` → 200 with **4** events (the month view) | 2026-08-19 |
+| Wilmot | 8 | `/events/list/?ical=1` → **200 with all 23** — WIRED | 2026-08-19 |
+| Wilmot | 8 | `/events/list/?tribe_event_display=past&ical=1` → **30 past sittings** — WIRED | 2026-08-19 |
+| Wilmot | 2 | `/board/board-of-selectmen/` states the meeting place in the board's own words | 2026-08-19 |
+| **New London** | 2 | `/calendar` 200, GovOffice month grid, 24 events with per-event dates and times — WIRED | 2026-08-19 |
+| New London | 2 | `?Type=B_EV&SEC=…&month=&year=` month navigation — WIRED, 2 months ahead | 2026-08-19 |
+| **Bradford** | 2 | `/calendar` **404** (as previously recorded) | 2026-08-19 |
+| Bradford | 12 | The home page's own markup names **TownCloud** — `towncloud.io/go/bradford-nh/agendas/NNN` plus `.../PDF/get_agenda_document_link`, twelve of them. A vendor this repo has not met. | 2026-08-19 |
+| Bradford | 6 | The SvelteKit front end renders its agendas client-side — NOT YET WALKED, and it is the next rung | — |
+| **Springfield** | 8 | `/events/?ical=1` → 200 with **50 events, latest 2024**. STALE, not empty. | 2026-08-19 |
+| Springfield | 7 | `/wp-json/tribe/events/v1/events` → **404**; the plugin is not The Events Calendar | 2026-08-19 |
+| Springfield | 2 | `/events/` lists **2026** sittings (`select-board-meeting-2026-08-24` <!-- expected-future: the town own event slug, read 2026-08-19 -->, `cemetery-trustees-meeting-2026-08-11`) with `?pagination=&event_archetype=event` — the live listing, NOT YET PARSED | 2026-08-19 |
+| **Warner** | 2 | `/calendar` 200 with **zero dates in the HTML** | 2026-08-19 |
+| Warner | 2 | The town's own nav names `/meeting-schedules/` and `/agenda/` — both 200, content not in the served HTML | 2026-08-19 |
+| Warner | 7 | `/wp-json/tribe/events/v1/events` → 404 | 2026-08-19 |
+| Warner | 6 | The live browser — NOT YET WALKED, and it is the next rung | — |
+| **Sutton** | 2 | `www.suttonnh.gov` and `suttonnh.gov` → **403** | 2026-08-19 |
+| Sutton | 3 | Full browser header set → **403** | 2026-08-19 |
+| Sutton | 5 | A different egress — NOT YET WALKED. The playbook's standing entry says the browser rung clears this host; it did not today, and that is recorded as a dated note beside the entry rather than a deletion. | — |
+
+---
+
+## H03 — the re-walk cohort, 03255 scope, g21 2026-08-19
+
+**C6 accounting: this is a SEPARATE COHORT and does not blend into fresh-sweep
+acquisition cost.** A re-walk carries prior knowledge, prior URLs and a
+narrower target, and its incremental cost is a fraction of a first hunt: 17
+requests plus one geocode, against a fresh sweep's per-body discovery.
+
+### M, enumerated first — 13
+
+Every 03255-scope record in this repo that says "not published", "not
+machine-readable" or "could not reach". Ten are consolidated-MISS entries, two
+are bodies with a recorded coverage gap, one is a named open browser errand.
+There are **no `KNOWN_UNCOVERED` bodies in 03255 scope at all**: all 31 in the
+registry are Tucson (29) and Rockaway Township NJ (2).
+
+### Recovered: 1 of 13
+
+| # | Record | Rung that recovered it | What it buys |
+|---|---|---|---|
+| 12 | **Kearsarge's KRMS deliberative session** — "held at KRMS rather than 114 Main Street and drops counted until that address is curated" (g3, 2026-08-16) | **Rung 4.** Rungs 2 and 3 take a 403 from `kearsarge.org` and so does a second egress; **curl sending browser headers is served**, and `www.kearsarge.org/middle-school` states it in the district's own words — "Kearsarge Regional Middle School (KRMS) / 32 Gile Pond Road • North Sutton, NH 03260" | The wiring row has carried `otherVenueMarkers: "KRMS"` since August waiting on exactly one venue row. It is curated now and `resolveVenue` returns it. The sitting is in JANUARY, outside the 60-day serving window, so nothing renders differently today — the gap is closed in the data and will show when the date arrives. Stated rather than claimed as a visible win. |
+
+### Already recovered, and the DOCUMENT was wrong: 1 of 13
+
+**Newbury Zoning Board of Adjustment.** `states/nh/NOTES.md` recorded it
+`KNOWN_UNCOVERED` — "schedule found, venue not published" — and the registry
+has had it **LIVE since 2026-08-15**. The curated venue row shipped in the
+mobile round-two session; this file was never brought forward.
+
+**This is the fifth time in three sessions that a document has described built
+work as unbuilt**, and it is worse here than elsewhere: a re-walk cohort read
+off a stale document walks the wrong bodies. Corrected in place, with the
+correction named rather than quietly applied.
+
+### Confirmed misses, re-dated: 10 of 13
+
+Re-walked 2026-08-19 against rungs 2 and 3, and the verdicts hold. Two changed
+SHAPE, which is itself the argument for re-walking:
+
+| Record | Was | Now | Verdict |
+|---|---|---|---|
+| `newbury.nh.gov/rss.xml` | 200, valid RSS, zero items | **403** | Miss holds; the host TIGHTENED. A recorded miss is not a frozen fact. |
+| `newbury.nh.gov/sitemap.xml` | 403 | 403; `robots.txt` retrieved at 200 and declares no sitemap | Holds, now with the robots read behind it |
+| `newburynh.civicweb.net/api/meetings` | 500 | 500 | Holds |
+| `newburynh.civicweb.net/Portal/ICal.aspx` | "200 but the portal HTML shell" | **302 to `/`** | Holds, and the old wording was generous — it never served a feed at all |
+| `newburynh.civicweb.net/Portal/RSSFeed.aspx` | as above | **302 to `/`** | Holds |
+| `kearsarge.org` bare | TLS handshake failure | connection failure; `www.` is the host | Holds |
+| `merrimackcounty.org` | DNS does not resolve | DNS does not resolve | Holds |
+| `merrimackcounty.net/sitemap.xml` | 404 | 404; `robots.txt` 404 too | Holds |
+| `merrimackcounty.net/calendar.php` | ignores `month`/`year`/`format=json` | 200, 41 KB, no dates in the served HTML | Holds; the calendar is client-rendered and rung 6 is its next step |
+| `nhmunicipal.org/public-notices` | NHMA's own board, not a clearinghouse | 200, unchanged | Holds — the finding is about WHOSE board it is, and that does not expire |
+
+### Deliberately not walked: 1 of 13
+
+`sites.google.com/a/kearsarge.org/...` → **302 to a Google login**. That is an
+access control, and `CLAUDE.md`'s four prohibitions include never
+authenticating past one. Recorded as walked-and-refused, not as a wall.
+
+### A rung this re-walk added
+
+**A CivicWeb tenant enumerates its own meeting types**, at
+`/Portal/MeetingTypeList.aspx`. Newbury's returns exactly one — `Selectboard`,
+`type=10`. The prior record inferred the same thing from a whole-year query
+whose every row came back TypeId 10; this is the portal SAYING it. Where a
+record rests on an inference, ask whether the platform will state it instead.
+
+### Still open, with its next rung named
+
+**The Kearsarge Google Calendar embed** at
+`/district/family-community/pages/calendars` was not pursued, and the reason
+stands: the district's own schedule page is already wired through the
+`month-table` shape and carries more than an `.ics` would — the board's own
+words beside many sittings, the meeting time, and the venue with its entrance.
+An ics here would be a second, thinner source for a body that already has a
+good one. Recorded as a decision, not an omission.

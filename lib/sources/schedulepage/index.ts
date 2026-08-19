@@ -107,7 +107,35 @@ export type ScheduleShape =
   | "weekday-list"
   | "month-table"
   | "dated-list"
-  | "agenda-list";
+  | "agenda-list"
+  /**
+   * A MONTH GRID whose every event carries its own full date and time in a
+   * tooltip block — New London NH's GovOffice calendar (M123, 2026-08-19),
+   * and the shape a great many New England towns publish their whole
+   * government in:
+   *
+   * ```html
+   * <div class="eventTip">
+   *   <div class="tipTitle">Board of Selectmen - 5:30 PM - Whipple Memorial Town Hall</div>
+   *   Thursday, August 20, 2026 at 5:30 PM
+   * </div>
+   * ```
+   *
+   * The grid itself is unparseable without knowing which month it is — but
+   * nothing here has to parse the grid, because every event states its own
+   * date beside its own title. That is the whole reason this shape is cheap.
+   *
+   * **It is one town-wide calendar, not one board's page**, so a row must
+   * carry `titleMatch` naming the body in the calendar's own words. Without
+   * it a band concert becomes a sitting of the Planning Board.
+   *
+   * **It serves ONE MONTH.** The page has `&month=&year=` navigation, and a
+   * row that reads only the default view reports the current month as the
+   * body's whole calendar — a real clip that reads exactly like a body with
+   * nothing scheduled. `monthsAhead` on the row walks them, and the count is
+   * stated per run.
+   */
+  | "event-tip";
 
 export interface SchedulePageRaw {
   wiring: BodySourceWiring;
@@ -407,6 +435,88 @@ export function parseDatedList(html: string): {
 }
 
 /**
+ * Shape 5 — a month grid whose every event states its own date and time.
+ *
+ * New London NH's GovOffice calendar (M123, 2026-08-19). The grid is a
+ * `<table>` of day cells, and every event inside one carries:
+ *
+ * ```html
+ * <div class="eventTip">
+ *   <div class="tipTitle">Board of Selectmen - 5:30 PM - Whipple Memorial Town Hall</div>
+ *   Thursday, August 20, 2026 at 5:30 PM
+ * </div>
+ * ```
+ *
+ * So the grid never has to be understood: each event is self-describing, and
+ * the date beside it is the town's own words rather than a cell position this
+ * parser would have to be right about.
+ *
+ * `titleMatch` is REQUIRED and is the whole safety of the shape. This is the
+ * TOWN's calendar — band concerts, transfer-station hours and eleven boards
+ * share it — so a row that matched nothing in particular would file a concert
+ * as a sitting of the Planning Board. Rows whose title does not carry the
+ * match are counted as `notSittings`, which is what makes "this board has
+ * nothing this month" distinguishable from "the parser matched nothing".
+ */
+export function parseEventTips(
+  html: string,
+  titleMatch: string,
+): { sittings: ScheduledSitting[]; counts: ParseCounts } {
+  const byDate = new Map<string, ScheduledSitting>();
+  const counts: ParseCounts = { notSittings: 0, undated: 0 };
+  if (!titleMatch) return { sittings: [], counts };
+
+  const needle = titleMatch.toLowerCase();
+  const blocks = html.matchAll(
+    /<div class="tipTitle">([\s\S]*?)<\/div>([\s\S]*?)<\/div>/g,
+  );
+
+  for (const block of blocks) {
+    const title = cellText(block[1]);
+    const when = cellText(block[2]);
+    if (!title.toLowerCase().includes(needle)) {
+      counts.notSittings += 1;
+      continue;
+    }
+    if (NOT_A_SITTING.test(title)) {
+      counts.notSittings += 1;
+      continue;
+    }
+
+    // `Thursday, August 20, 2026 at 5:30 PM` — the weekday is decoration and
+    // the year is on the line, so nothing has to be carried from the grid.
+    const m =
+      /([A-Za-z]{3,9})\s+(\d{1,2}),\s*(\d{4})(?:\s+at\s+([0-9:]+\s*[APap]\.?[Mm]\.?))?/.exec(
+        when,
+      );
+    if (!m) {
+      counts.undated += 1;
+      continue;
+    }
+    const month = monthIndex(m[1]);
+    const day = Number(m[2]);
+    if (month === 0 || day < 1 || day > 31) {
+      counts.undated += 1;
+      continue;
+    }
+    const date = `${m[3]}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    if (byDate.has(date)) continue;
+
+    byDate.set(date, {
+      ...emptySitting(date, `${m[1]} ${day}, ${m[3]}`),
+      note: title,
+      time: m[4] ? parseClockTime(m[4]) : null,
+      canceled: CANCELED.test(title),
+    });
+  }
+
+  return {
+    sittings: [...byDate.values()].sort((a, b) => a.date.localeCompare(b.date)),
+    counts,
+  };
+}
+
+/**
  * Shape 4 — the document listing *is* the schedule.
  *
  * Newbury's Drupal publishes one row per sitting carrying a machine-readable
@@ -636,6 +746,14 @@ export function makeSchedulePageSource(
           lists.push(sittings);
           drops.notConfigured += counts.notSittings;
           drops.unplaceableInTime += counts.undated;
+        } else if (shape === "event-tip") {
+          const { sittings, counts } = parseEventTips(
+            schedule,
+            wiring.config.titleMatch ?? "",
+          );
+          lists.push(sittings);
+          drops.notConfigured += counts.notSittings;
+          drops.unplaceableInTime += counts.undated;
         }
       }
 
@@ -748,6 +866,52 @@ export function makeSchedulePageSource(
             accept: "text/html",
             profile,
           });
+          /*
+           * A MONTH GRID SERVES ONE MONTH, and reading only the default view
+           * reports this month as the body's whole calendar — a real clip
+           * that reads exactly like a body with nothing scheduled. New
+           * London's Board of Selectmen sits twice a month all year; the
+           * default view carries two of them.
+           *
+           * `monthsAhead` walks the page's OWN `&month=&year=` navigation,
+           * which the page publishes as links, and the extra months are
+           * concatenated onto the same HTML — every event in this shape
+           * states its own full date, so there is nothing to keep separate.
+           */
+          let schedule = text;
+          const ahead = Number(wiring.config.monthsAhead ?? 0);
+          if (Number.isFinite(ahead) && ahead > 0) {
+            const base = new URL(wiring.config.schedulePage);
+            const start = new Date();
+            for (let i = 1; i <= ahead; i++) {
+              const when = new Date(
+                Date.UTC(start.getUTCFullYear(), start.getUTCMonth() + i, 1),
+              );
+              const next = new URL(
+                wiring.config.monthPagePath ?? base.pathname,
+                base.origin,
+              );
+              for (const [k, v] of new URLSearchParams(
+                wiring.config.monthPageQuery ?? "",
+              )) {
+                next.searchParams.set(k, v);
+              }
+              next.searchParams.set("month", String(when.getUTCMonth() + 1));
+              next.searchParams.set("year", String(when.getUTCFullYear()));
+              try {
+                const page = await politeGetText(next.toString(), {
+                  fetchImpl,
+                  accept: "text/html",
+                  profile,
+                });
+                schedule += page.text;
+              } catch {
+                // One month refused is not the body's calendar refused. The
+                // months that answered still produce, and the shortfall shows
+                // in the count this run reports rather than in silence.
+              }
+            }
+          }
           let documents: string | undefined;
           if (wiring.config.documentsPage) {
             const page = await politeGetText(wiring.config.documentsPage, {
@@ -759,7 +923,7 @@ export function makeSchedulePageSource(
           }
           collected.push({
             wiring,
-            schedule: text,
+            schedule,
             documents,
             collectedAt: new Date().toISOString(),
           });

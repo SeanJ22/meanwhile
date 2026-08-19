@@ -45,7 +45,14 @@ const ADDRESS = ["seanj22", "gmail.com"].join("@");
  * Changing it needs a contact address that still reaches the author, which is
  * the author's call and not this row's.
  */
-const SERVER_ONLY_ALLOWED = new Set([join("app", "api", "geocode", "route.ts")]);
+/*
+ * ONE file, not a growing list. The address used to be written into each
+ * route that calls an upstream on a reader's behalf; the second such route
+ * (B19) copied the literal and this guard caught it. The fix was to give the
+ * string one home rather than to widen the exemption — see
+ * lib/geo/outbound-agent.ts.
+ */
+const SERVER_ONLY_ALLOWED = new Set([join("lib", "geo", "outbound-agent.ts")]);
 
 function walk(dir: string, out: string[] = []): string[] {
   for (const entry of readdirSync(dir)) {

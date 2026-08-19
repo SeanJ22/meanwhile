@@ -395,6 +395,29 @@ export function evaluate({ root, budget }) {
         `ceiling ${kb(budget.client.initialJsCeiling)} / ${kb(budget.client.transferCeiling)})`,
     );
     /*
+     * THE CEILINGS IN EXACT BYTES, and this line exists because the KB one
+     * above misled a session (g20 correction 9.2, 2026-08-19).
+     *
+     * g19's report stated the client ceilings as "3,027,315 / 940,032",
+     * which reads as ceilings that had been moved off the committed
+     * 3,100,000 / 940,000 — and the raw figure looked precisely like
+     * measured-plus-300,000, which is not the ceiling rule and would have
+     * been a real violation of the author's standing order.
+     *
+     * Nothing had moved. `scripts/bundle-budget.json` has not been touched
+     * since g18. 3,100,000 / 1024 prints as "3027.3 KB" and 940,000 / 1024
+     * prints as "918.0 KB", and both were read back out of the display as
+     * byte figures — one multiplied by 1000, one by 1024.
+     *
+     * A whole session-brief correction came out of a rounded display, so the
+     * exact numbers are now printed beside it. The measurement already
+     * printed its own exact bytes on the next line; the CEILINGS did not,
+     * which is the asymmetry that made the trap.
+     */
+    lines.push(
+      `           exact ceilings · raw ${budget.client.initialJsCeiling} · gzip ${budget.client.transferCeiling}`,
+    );
+    /*
      * R53 (g18): the split, by MODULE PROVENANCE where the build emitted
      * source maps and LABELLED AS AN ESTIMATE where it did not.
      *

@@ -83,7 +83,8 @@
     "lint:allowlist": "node scripts/check-lint-allowlist.mjs",
     "voting-sites:fetch": "tsx scripts/fetch-voting-sites.mts",
     "b14:links": "tsx scripts/b14-official-links.mts",
-    "photo:review": "tsx scripts/photo-review.mts"
+    "photo:review": "tsx scripts/photo-review.mts",
+    "queue:homes": "tsx scripts/queue-homes.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

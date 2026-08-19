@@ -1415,3 +1415,197 @@ test("the contributions rewording is recorded, and the author's version bump wit
   );
   assert.ok(bump.why.length > 40, "a scale break without a reason is a mystery");
 });
+
+/** A contribution row with only the fields a test cares about set. */
+function row(
+  overrides: Partial<import("../lib/funding/types.ts").ContributionRow>,
+): import("../lib/funding/types.ts").ContributionRow {
+  return {
+    dataClass: "FEC_CONTRIBUTOR",
+    kind: "INDIVIDUAL",
+    contributorName: "SOMEBODY, A",
+    amount: 100,
+    receiptDate: "2026-01-01",
+    city: null,
+    state: null,
+    entityType: null,
+    lineNumber: "11AI",
+    committeeType: null,
+    organizationType: null,
+    designation: null,
+    contributorCommitteeId: null,
+    ...overrides,
+  };
+}
+
+/* ══ D06, 2026-08-18: where the money came from ═════════════════════════
+ *
+ * Shipped on the author's disposition ("Unblock"). The whole risk here is
+ * the DENOMINATOR: these figures are computed over the five biggest
+ * committee gifts plus the five biggest individual gifts, which is not the
+ * ten largest contributions and is not the campaign's book. The first draft
+ * of the sentences claimed it was, and the real snapshot caught it.
+ */
+
+test("D06: the sentences state their base before they state any figure", async () => {
+  const { concentrationOf, concentrationSentences } = await import(
+    "../lib/funding/concentration.ts"
+  );
+  const rows = [
+    row({ kind: "COMMITTEE_OR_ORGANIZATION", amount: 5000, state: "AZ" }),
+    row({ kind: "INDIVIDUAL", amount: 1000, state: "NY" }),
+  ];
+  const concentration = concentrationOf(rows, "AZ");
+  assert.ok(concentration);
+  const sentences = concentrationSentences(concentration, "Arizona");
+
+  // The base comes FIRST — every number after it is a share of it.
+  assert.match(sentences[0], /listed above/i);
+  assert.match(sentences[0], /not the whole of what it raised/i);
+
+  // And it never claims to be the largest contributions overall, which is
+  // what the first draft said and what the fetch loop does not do.
+  for (const sentence of sentences) {
+    assert.doesNotMatch(
+      sentence,
+      /\d+ largest contributions this campaign reported/i,
+      `a sentence still describes the base as the N largest: ${sentence}`,
+    );
+  }
+});
+
+test("D06: a small non-zero share never renders as zero", async () => {
+  const { shareWords } = await import("../lib/funding/concentration.ts");
+
+  // The Booker case: two real in-state contributions against a $2.9M base.
+  // "0%" beside "across 2 of them" is a contradiction the reader cannot
+  // resolve, and it asserts an absence that is not true.
+  assert.equal(shareWords(31_000, 2_916_000), "1%", "1.06% is 1%, not 'under'");
+  assert.equal(shareWords(11_000, 2_916_000), "under 1%");
+  assert.equal(shareWords(1, 1_000_000), "under 1%");
+  // A true zero is still zero — the rule fixes rounding, not arithmetic.
+  assert.equal(shareWords(0, 2_916_000), "0%");
+  assert.equal(shareWords(999_999, 1_000_000), "over 99%");
+  assert.equal(shareWords(1_000_000, 1_000_000), "100%");
+  assert.equal(shareWords(500_000, 1_000_000), "50%");
+});
+
+test("D06: no district is claimed from a filing that gives only a state", async () => {
+  const { concentrationOf, concentrationSentences } = await import(
+    "../lib/funding/concentration.ts"
+  );
+  const concentration = concentrationOf(
+    [row({ amount: 1000, state: "AZ" }), row({ amount: 1000, state: "NY" })],
+    "AZ",
+  );
+  assert.ok(concentration);
+  const sentences = concentrationSentences(concentration, "Arizona").join(" ");
+
+  // A congressional district is a ballot fact, and zip cannot resolve one
+  // (CLAUDE.md). The surface says state, and says the filings give no
+  // district, rather than letting a reader assume otherwise.
+  assert.match(sentences, /the filings don't give a district/i);
+  assert.doesNotMatch(sentences, /in-district|out-of-district|their district/i);
+});
+
+test("D06: nothing is sorted into an industry, and the org split is dollars not a share", async () => {
+  const { concentrationOf, concentrationSentences } = await import(
+    "../lib/funding/concentration.ts"
+  );
+  const concentration = concentrationOf(
+    [
+      row({ kind: "COMMITTEE_OR_ORGANIZATION", amount: 10_000, state: "AZ" }),
+      row({ kind: "INDIVIDUAL", amount: 2_000, state: "AZ" }),
+    ],
+    "AZ",
+  );
+  assert.ok(concentration);
+  const sentences = concentrationSentences(concentration, "Arizona").join(" ");
+
+  // D06's wording asks for "industry concentration". It cannot ship: the
+  // FEC publishes no employer-to-industry taxonomy, this snapshot carries
+  // no employer field, and the taxonomies that exist belong to third-party
+  // aggregators CLAUDE.md's source rule excludes. Inventing one would be
+  // the app characterizing an organization, which is forbidden outright.
+  assert.doesNotMatch(sentences, /industry|sector|interest group|lobby/i);
+  assert.match(sentences, /don't sort donors into industries or causes/i);
+
+  // The two groups are fetched as separate top-fives, so a percentage
+  // between them would be a percentage of a base we chose. Dollars only.
+  assert.match(sentences, /\$10,000 came from committees/);
+  assert.match(sentences, /\$2,000\s+from individual people/);
+});
+
+test("D06: an unknown state is a named gap, never a zero that reads as 'none from home'", async () => {
+  const { concentrationOf, concentrationSentences } = await import(
+    "../lib/funding/concentration.ts"
+  );
+  const concentration = concentrationOf([row({ amount: 500, state: null })], null);
+  assert.ok(concentration);
+  assert.equal(concentration.hasGeography, false);
+  const sentences = concentrationSentences(concentration, null).join(" ");
+  assert.match(sentences, /isn't something we can state here/i);
+  assert.doesNotMatch(sentences, /\b0% of/);
+});
+
+test("D06: nothing to compute over renders nothing, not a row of zeros", async () => {
+  const { concentrationOf } = await import("../lib/funding/concentration.ts");
+  assert.equal(concentrationOf([], "AZ"), null);
+  assert.equal(concentrationOf([row({ amount: 0, state: "AZ" })], "AZ"), null);
+});
+
+test("D06: planted contributor-level data reaches no sold aggregate", async () => {
+  // The constraint that makes this row hard rather than long (D23, 52
+  // U.S.C. 30111(a)(4)): contributor-level data must never enter the
+  // aggregation path that produces anything sold. Reader display and sold
+  // aggregate are two paths, and this plants a row to prove they are.
+  const planted = {
+    targetType: "CONTRIBUTOR_REACTION" as const,
+    targetId: "S6AZ00253",
+    reaction: "HATE" as const,
+    scaleVersion: 3 as const,
+    ocdIds: ["ocd-division/country:us/state:az"],
+    verificationTier: "ANONYMOUS" as const,
+    // Everything a contributor row carries, handed straight to the
+    // aggregator the way a careless read path would hand it over.
+    contributorName: "PLANTED-CONTRIBUTOR-SENTINEL-g19, JANE",
+    amount: 3300,
+    city: "BETHESDA",
+    state: "MD",
+    employer: "PLANTED-EMPLOYER-SENTINEL-g19",
+    freeText: "PLANTED-VERBATIM-SENTINEL-d06",
+  };
+
+  const tallies = aggregateReactions([
+    planted as unknown as Parameters<typeof aggregateReactions>[0][number],
+  ]);
+  const serialized = JSON.stringify(tallies);
+
+  for (const sentinel of [
+    "PLANTED-CONTRIBUTOR-SENTINEL-g19",
+    "PLANTED-EMPLOYER-SENTINEL-g19",
+    "PLANTED-VERBATIM-SENTINEL-d06",
+    "BETHESDA",
+    "3300",
+  ]) {
+    assert.doesNotMatch(
+      serialized,
+      new RegExp(sentinel),
+      `a sold aggregate carried ${sentinel}`,
+    );
+  }
+
+  // The target ID survives — that is the point of a tally, and it is an
+  // FEC CANDIDATE id (public, and the campaign's own), never a contributor.
+  assert.match(serialized, /S6AZ00253/);
+
+  // And the exclusion is structural, not a filter: the concentration
+  // module, which is the only new reader-facing consumer of contributor
+  // rows, is never imported by the aggregation layer.
+  const aggregateSource = readFileSync(
+    join(process.cwd(), "lib/signal/aggregate.ts"),
+    "utf8",
+  );
+  assert.doesNotMatch(aggregateSource, /funding\/concentration/);
+  assert.doesNotMatch(aggregateSource, /concentrationOf/);
+});

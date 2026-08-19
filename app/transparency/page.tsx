@@ -262,6 +262,24 @@ export default function TransparencyPage() {
             so the two are not the same measurement.
           </p>
           <p>
+            Under the list of contributions we show a few figures about
+            those contributions: how much of the money was filed from inside
+            the candidate&apos;s own state, how it split between committees
+            and individual people, and how much the single largest one
+            accounts for. Each of those sentences says what it is counting —
+            the biggest contributions the campaign reported, which is not
+            everything it raised.
+          </p>
+          <p>
+            Two things we deliberately do not do here. We do not say what
+            share came from inside a candidate&apos;s district: the filings
+            give a state, not a district, and a zip code cannot stand in for
+            one. And we do not sort donors into industries, sectors or
+            causes — the FEC publishes no such classification, so any we
+            showed would be ours, and deciding what kind of group something
+            is is exactly what this site never does.
+          </p>
+          <p>
             Where a contributor is itself a committee, its label — a super
             PAC, a leadership PAC, a PAC connected to a corporation, a union,
             a trade association — comes only from the codes that committee

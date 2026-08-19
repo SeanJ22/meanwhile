@@ -131,6 +131,38 @@ export function FundingDisplay({
         </div>
       )}
 
+      {data.contributorsShown && data.concentrationSentences.length > 0 && (
+        <div className="mt-3">
+          <p className={SECTION_LABEL_CLASS}>Where that money came from</p>
+          {/*
+            D06 (2026-08-18). Placed AFTER the contributions table on
+            purpose: these are figures ABOUT the rows above, and a summary
+            that appears before the thing it summarises reads as an
+            independent claim.
+
+            LEVEL register throughout — a claim surface about a real
+            person's money. It states shares; it never says whether a share
+            is high, unusual, or a problem, and it never sorts a donor into
+            an industry or a cause.
+
+            Every sentence carries its denominator, built in
+            lib/funding/concentration.ts: these are computed over the
+            LARGEST reported contributions and not the campaign's whole
+            book, and a percentage without that base is a false claim.
+          */}
+          <ul className="mt-1 space-y-1.5">
+            {data.concentrationSentences.map((sentence) => (
+              <li
+                key={sentence}
+                className="text-[0.75rem] leading-relaxed text-paper-dim"
+              >
+                {sentence}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       <p className="mt-2 text-[0.625rem] text-muted">
         {data.sourceUrl ? (
           <a

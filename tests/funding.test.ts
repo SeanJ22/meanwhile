@@ -205,6 +205,7 @@ test("every ripcord is registered with question, closer, and tracker rows", () =
     "ripcord.fecContributorDisplay",
     "ripcord.fundingReactionsInAggregates",
     "ripcord.rateLimits",
+    "ripcord.reactionFreeText",
     "ripcord.reactionIntake",
   ]);
   for (const name of RIPCORD_NAMES) {

@@ -65,6 +65,40 @@ armor on (same env-var + trigger-deploy procedure):
 | `WTP_LIMIT_LOG_IP_PER_MINUTE` | 240 | per-IP search-log window |
 | `WTP_LIMIT_LOG_DETAIL_MAX_CHARS` | 500 | server cap on any log detail string |
 
+## Turn off comments on reactions (moderation cannot keep up)
+
+**Flag:** `ripcord.reactionFreeText` · **Env var:** `WTP_RIPCORD_REACTION_FREE_TEXT`
+
+Added 2026-08-18 (P03/T05), on the author's order in the same instruction
+that unblocked free text for the testing window. Ships **live**.
+
+Pulling it stops the optional comment box being captured. Same procedure as
+above with value `pulled`; restore with `live`.
+
+**What a pull does, exactly:**
+
+* The **button answer still counts.** Free text is the part with the open
+  question; reaction capture is the revenue path. Taking the second down to
+  close the first would cost more than it saves, so it does not.
+* The comment is **dropped, not stored and hidden.** Nothing lands in
+  `reactions.free_text` while the flag is out.
+* The reader is **told**, in the same response: the route sets
+  `x-wtp-free-text: closed` and the control renders "Your answer was
+  counted. Comments are turned off right now, so what you typed wasn't
+  saved." A pull that silently swallowed somebody's words would be a lie
+  wearing a success state.
+* **Rows already stored are untouched.** A capture switch never rewrites
+  history.
+
+**What a pull is NOT for.** Nothing downstream needs it: the aggregation
+input type has no field for free text, so a verbatim cannot reach a total or
+an export whatever position this flag is in. This flag governs capture only.
+If the worry is what is already stored, that is moderation
+(`docs/abuse-policy.md`), not this switch.
+
+**Prefer nothing over pulling** — there is no threshold to tune here. It is
+on or off.
+
 ## The FEC pair
 
 Documented for completeness; the procedure is identical (env var, value

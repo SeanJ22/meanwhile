@@ -15,6 +15,7 @@ import {
   isValidReactionValue,
   isValidTargetType,
   isValueOnScaleFor,
+  questionForTargetType,
   scaleForTargetType,
   valuesForScaleVersion,
 } from "../lib/signal/reactions.ts";
@@ -774,5 +775,348 @@ test("the funding surfaces ask the author's question, and offer only its scale",
   assert.ok(control.includes("scaleForTargetType(targetType)"));
   for (const label of ["Love it", "Like it", "Don't like it", "Hate it", "Don't care"]) {
     assert.ok(control.includes(label), `the control is missing "${label}"`);
+  }
+});
+
+
+/* ══ P03, 2026-08-18: provisions, the verbatim, and its ripcord ══════════
+ *
+ * Free text was unblocked by the author for the testing window, with the
+ * ripcord ordered in the same breath. These are the guards that make the
+ * shipping of it safe: the target class is real, the verbatim never reaches
+ * an aggregate, and a pull actually stops capture rather than hiding a box.
+ */
+
+test("P03: every provision is a valid reaction target, and reactions attach to the PART", async () => {
+  const { MEASURE_PROVISIONS, getProvisionTargetIds } = await import(
+    "../lib/ballot/measure-provisions.ts"
+  );
+  const ids = getProvisionTargetIds();
+
+  // Count, not merely absence-of-error: an empty target set would make
+  // every provision reaction 400 and read as "nobody has an opinion".
+  assert.ok(MEASURE_PROVISIONS.length > 0, "no provisions to react to");
+  assert.equal(ids.size, MEASURE_PROVISIONS.length, "a provision lost its target id");
+
+  // The reaction attaches to a PROVISION of a measure and never to the
+  // measure as a whole — CLAUDE.md, reaction capture. The id carries both,
+  // which is how a stored row names the part it answered.
+  for (const provision of MEASURE_PROVISIONS) {
+    assert.ok(
+      provision.id.startsWith(provision.contestId + "#"),
+      `${provision.id} does not name its contest`,
+    );
+    assert.ok(provision.id.length > provision.contestId.length + 1);
+  }
+
+  // All five kinds collect. A kind that could never be reacted to would
+  // report a measure's parts as less contested than readers found them.
+  const kinds = new Set(MEASURE_PROVISIONS.map((provision) => provision.kind));
+  for (const kind of ["FUNDING", "PROGRAM", "OVERSIGHT", "SUNSET", "START"] as const) {
+    assert.ok(kinds.has(kind), `no provision of kind ${kind} exists to react to`);
+  }
+});
+
+test("P03: the provision question asks about the part, never how to vote", () => {
+  const question = scaleForTargetType("MEASURE_PROVISION").question;
+  const asked = questionForTargetType("MEASURE_PROVISION");
+  assert.notEqual(asked, question, "the provision question must be its own wording");
+  assert.ok(asked.length > 0);
+  // The product never tells anyone how to vote, and a question is a surface
+  // like any other: "would you vote yes on this" is a recommendation
+  // wearing a question mark.
+  assert.doesNotMatch(asked, /vote (yes|no)|should you|recommend/i);
+});
+
+test("P03: the write path accepts a real provision and refuses an invented one", async () => {
+  process.env.WTP_RIPCORD_RATE_LIMITS = "pulled";
+  const { POST } = await import("../app/api/reactions/route.ts");
+  const { getProvisionTargetIds } = await import(
+    "../lib/ballot/measure-provisions.ts"
+  );
+  const real = [...getProvisionTargetIds()][0];
+  assert.ok(real, "no provision to test against");
+
+  const post = (targetId: string, extra: Record<string, unknown> = {}) =>
+    POST(
+      new Request("https://sparkwtp.netlify.app/api/reactions", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          targetType: "MEASURE_PROVISION",
+          targetId,
+          reaction: "YES",
+          reactionKey: "p03provisionkeyp03provision",
+          ...extra,
+        }),
+      }),
+    );
+
+  const accepted = await post(real);
+  assert.notEqual(accepted.status, 400, "a real provision was refused");
+
+  const invented = await post("ballot-az-pima:prop-999#not-a-real-provision");
+  assert.equal(invented.status, 400, "an invented provision was accepted");
+
+  // The five-point funding scale is refused here, in both directions —
+  // a provision collects on v1 and nothing else.
+  const wrongScale = await post(real, { reaction: "LOVE" });
+  assert.equal(wrongScale.status, 400);
+});
+
+test("P03: the verbatim is optional, capped, and its shape is checked with no flag", async () => {
+  const { isValidFreeText, normalizeFreeText, FREE_TEXT_MAX_CHARS } = await import(
+    "../lib/signal/reactions.ts"
+  );
+
+  // Optional means absent is VALID — never required, CLAUDE.md.
+  assert.equal(isValidFreeText(undefined), true);
+  assert.equal(isValidFreeText(null), true);
+  assert.equal(isValidFreeText("this is a real opinion"), true);
+  assert.equal(isValidFreeText("x".repeat(FREE_TEXT_MAX_CHARS)), true);
+  assert.equal(isValidFreeText("x".repeat(FREE_TEXT_MAX_CHARS + 1)), false);
+  assert.equal(isValidFreeText(42), false);
+  assert.equal(isValidFreeText({ text: "hi" }), false);
+
+  // Whitespace is absence, not a blank comment somebody meant to leave.
+  assert.equal(normalizeFreeText("   \n  "), null);
+  assert.equal(normalizeFreeText("  said something  "), "said something");
+  assert.equal(normalizeFreeText(undefined), null);
+});
+
+test("P03: the threat notice sits beside the field, and reserves rather than promises", async () => {
+  const { FREE_TEXT_THREAT_NOTICE } = await import("../lib/signal/reactions.ts");
+
+  // CLAUDE.md: "may", not "will" — a stated commitment that is not honoured
+  // on every instance is worse than a reserved right.
+  assert.match(FREE_TEXT_THREAT_NOTICE, /may be reported/i);
+  assert.doesNotMatch(FREE_TEXT_THREAT_NOTICE, /will be reported/i);
+  assert.match(FREE_TEXT_THREAT_NOTICE, /threats of violence/i);
+
+  // Adjacent to the input, in the control itself — not in a policy page and
+  // not behind a link.
+  const control = readFileSync(
+    join(process.cwd(), "components/reactions/reaction-control.tsx"),
+    "utf8",
+  );
+  assert.match(control, /FREE_TEXT_THREAT_NOTICE/);
+  // The RENDERED reference, not the import at the top of the file.
+  const noticeAt = control.indexOf("{FREE_TEXT_THREAT_NOTICE}");
+  assert.ok(noticeAt > 0, "the notice is imported but never rendered");
+  const textareaAt = control.indexOf("<textarea");
+  assert.ok(textareaAt >= 0, "no free-text input in the control");
+  assert.ok(
+    noticeAt > textareaAt && noticeAt - textareaAt < 2000,
+    "the threat notice is not adjacent to the field it warns about",
+  );
+});
+
+test("P03: a planted verbatim reaches no aggregate — the input type has no room for it", async () => {
+  const { aggregateReactions, rowsEligibleForAggregation } = await import(
+    "../lib/signal/aggregate.ts"
+  );
+
+  // Plant one. The cast is the point of the test: this is what a careless
+  // caller would hand the aggregator if it ever selected the column.
+  const planted = {
+    targetType: "MEASURE_PROVISION",
+    targetId: "ballot-az-pima:prop-141#no-mileage-tax",
+    reaction: "YES",
+    ocdIds: ["ocd-division/country:us/state:az"],
+    verificationTier: "ANONYMOUS",
+    // The extra field IS the test: this is what a careless caller would
+    // hand the aggregator if the read path ever selected the column. The
+    // cast is required precisely because the interface has no room for it,
+    // which is the guarantee being demonstrated.
+    freeText: "PLANTED-VERBATIM-SENTINEL-g19 my neighbour Dave said this",
+  } as unknown as Parameters<typeof aggregateReactions>[0][number];
+
+  const eligible = rowsEligibleForAggregation([planted]);
+  assert.equal(eligible.length, 1, "the row itself must still be counted");
+
+  const tallies = aggregateReactions([planted]);
+  assert.equal(tallies.length, 1, "the binary must aggregate normally");
+  assert.equal(tallies[0].n, 1);
+
+  // The sentinel must appear NOWHERE in what a buyer would receive.
+  const serialized = JSON.stringify(tallies);
+  assert.doesNotMatch(serialized, /PLANTED-VERBATIM-SENTINEL-g19/);
+  assert.doesNotMatch(serialized, /neighbour Dave/);
+  assert.doesNotMatch(serialized, /freeText|free_text/);
+
+  // And the guarantee is structural, not a filter that could be forgotten:
+  // the aggregation input interface declares no verbatim field at all.
+  const aggregateSource = readFileSync(
+    join(process.cwd(), "lib/signal/aggregate.ts"),
+    "utf8",
+  );
+  const iface = aggregateSource.slice(
+    aggregateSource.indexOf("export interface ReactionRowForAggregation"),
+    aggregateSource.indexOf("export type AnswerCounts"),
+  );
+  assert.ok(iface.length > 0);
+  assert.doesNotMatch(iface, /freeText|free_text|text\s*[?:]/);
+});
+
+test("P03: the free-text ripcord is registered, ships live, and both positions are demonstrable", async () => {
+  const { RIPCORDS, ripcordPulled } = await import("../lib/ripcords.ts");
+  const ripcord = RIPCORDS["ripcord.reactionFreeText"];
+  assert.ok(ripcord, "the ripcord the author ordered is not registered");
+  assert.equal(ripcord.pulled, false, "it ships LIVE for the testing window");
+  assert.ok(ripcord.question.length > 20);
+  assert.match(ripcord.closer, /author/i);
+  assert.match(ripcord.trackerRows, /P03/);
+  assert.match(ripcord.trackerRows, /T05/);
+
+  const previous = process.env[ripcord.envVar];
+  try {
+    process.env[ripcord.envVar] = "pulled";
+    assert.equal(ripcordPulled("ripcord.reactionFreeText"), true);
+    process.env[ripcord.envVar] = "live";
+    assert.equal(ripcordPulled("ripcord.reactionFreeText"), false);
+  } finally {
+    if (previous === undefined) delete process.env[ripcord.envVar];
+    else process.env[ripcord.envVar] = previous;
+  }
+});
+
+test("P03: pulling the ripcord stops capture and SAYS SO — the binary still counts", async () => {
+  // "pulled", not "1": ripcordPulled reads "pulled" | "live" and treats
+  // anything else as the committed state, so "1" left the intake limits ON
+  // and the second POST came back 429 with no header — a rate limit reading
+  // as a missing signal.
+  process.env.WTP_RIPCORD_RATE_LIMITS = "pulled";
+  const { POST } = await import("../app/api/reactions/route.ts");
+  const { getProvisionTargetIds } = await import(
+    "../lib/ballot/measure-provisions.ts"
+  );
+  const { FREE_TEXT_CLOSED_HEADER } = await import("../lib/signal/reactions.ts");
+  const real = [...getProvisionTargetIds()][0];
+
+  const post = () =>
+    POST(
+      new Request("https://sparkwtp.netlify.app/api/reactions", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          targetType: "MEASURE_PROVISION",
+          targetId: real,
+          reaction: "NO",
+          reactionKey: "p03ripcordkeyp03ripcordkey",
+          text: "something the reader typed",
+        }),
+      }),
+    );
+
+  const previous = process.env.WTP_RIPCORD_REACTION_FREE_TEXT;
+  try {
+    // LIVE: no closed header, the verbatim was taken.
+    process.env.WTP_RIPCORD_REACTION_FREE_TEXT = "live";
+    const live = await post();
+    assert.ok(
+      live.status === 204 || live.status === 202,
+      `live write did not land (status ${live.status})`,
+    );
+    assert.equal(live.headers.get(FREE_TEXT_CLOSED_HEADER), null);
+
+    // PULLED: the binary still lands — a free-text pull must never take
+    // reaction capture down with it — and the reader is TOLD the words did
+    // not, rather than shown success over nothing.
+    process.env.WTP_RIPCORD_REACTION_FREE_TEXT = "pulled";
+    const pulled = await post();
+    assert.ok(
+      pulled.status === 204 || pulled.status === 202,
+      `pulling free text took the binary down with it (status ${pulled.status})`,
+    );
+    assert.equal(pulled.headers.get(FREE_TEXT_CLOSED_HEADER), "closed");
+  } finally {
+    if (previous === undefined) delete process.env.WTP_RIPCORD_REACTION_FREE_TEXT;
+    else process.env.WTP_RIPCORD_REACTION_FREE_TEXT = previous;
+  }
+});
+
+test("P03: a reader who types nothing is never told their words were dropped", async () => {
+  process.env.WTP_RIPCORD_RATE_LIMITS = "pulled";
+  const { POST } = await import("../app/api/reactions/route.ts");
+  const { getProvisionTargetIds } = await import(
+    "../lib/ballot/measure-provisions.ts"
+  );
+  const { FREE_TEXT_CLOSED_HEADER } = await import("../lib/signal/reactions.ts");
+  const real = [...getProvisionTargetIds()][0];
+
+  const previous = process.env.WTP_RIPCORD_REACTION_FREE_TEXT;
+  try {
+    process.env.WTP_RIPCORD_REACTION_FREE_TEXT = "pulled";
+    const response = await POST(
+      new Request("https://sparkwtp.netlify.app/api/reactions", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          targetType: "MEASURE_PROVISION",
+          targetId: real,
+          reaction: "UNSURE",
+          reactionKey: "p03notextkeyp03notextkey00",
+        }),
+      }),
+    );
+    // Nothing to drop, so nothing to report. The line only fires on words.
+    // The status is asserted too: a refusal also carries no header, and
+    // "no header" must mean "nothing was dropped", not "nothing was tried".
+    assert.ok(
+      response.status === 204 || response.status === 202,
+      `the write did not land (status ${response.status})`,
+    );
+    assert.equal(response.headers.get(FREE_TEXT_CLOSED_HEADER), null);
+  } finally {
+    if (previous === undefined) delete process.env.WTP_RIPCORD_REACTION_FREE_TEXT;
+    else process.env.WTP_RIPCORD_REACTION_FREE_TEXT = previous;
+  }
+});
+
+test("P03: an oversized verbatim is refused, and validation sits outside every flag", async () => {
+  process.env.WTP_RIPCORD_RATE_LIMITS = "pulled";
+  const { POST } = await import("../app/api/reactions/route.ts");
+  const { getProvisionTargetIds } = await import(
+    "../lib/ballot/measure-provisions.ts"
+  );
+  const { FREE_TEXT_MAX_CHARS } = await import("../lib/signal/reactions.ts");
+  const real = [...getProvisionTargetIds()][0];
+
+  const post = (text: unknown) =>
+    POST(
+      new Request("https://sparkwtp.netlify.app/api/reactions", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          targetType: "MEASURE_PROVISION",
+          targetId: real,
+          reaction: "YES",
+          reactionKey: "p03capkeyp03capkeyp03capkey",
+          text,
+        }),
+      }),
+    );
+
+  // Over the cap: refused. Note the payload cap (4096 bytes) would also
+  // catch a very long one, so the string here stays under it to prove THIS
+  // guard fires rather than that one.
+  assert.ok(FREE_TEXT_MAX_CHARS + 50 < 3500, "the cap outgrew this test's assumption");
+  const tooLong = await post("x".repeat(FREE_TEXT_MAX_CHARS + 1));
+  assert.equal(tooLong.status, 400);
+
+  // Wrong type: refused.
+  const wrongType = await post(42);
+  assert.equal(wrongType.status, 400);
+
+  // And both refusals hold with EVERY ripcord pulled — validity checks are
+  // never behind a flag (CLAUDE.md, the collection-stores rule).
+  const previous = process.env.WTP_RIPCORD_REACTION_FREE_TEXT;
+  try {
+    process.env.WTP_RIPCORD_REACTION_FREE_TEXT = "pulled";
+    assert.equal((await post("x".repeat(FREE_TEXT_MAX_CHARS + 1))).status, 400);
+    assert.equal((await post(42)).status, 400);
+  } finally {
+    if (previous === undefined) delete process.env.WTP_RIPCORD_REACTION_FREE_TEXT;
+    else process.env.WTP_RIPCORD_REACTION_FREE_TEXT = previous;
   }
 });

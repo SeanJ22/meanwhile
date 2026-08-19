@@ -322,12 +322,23 @@ export const reactions = pgTable(
       // the ripcord provenance tag: FUNDING_TOTAL_REACTION and
       // CONTRIBUTOR_REACTION rows are excluded from aggregation while
       // ripcord.fundingReactionsInAggregates is pulled (it ships pulled).
-      enum: ["FEDERAL_VOTE", "CANDIDATE", "FUNDING_TOTAL_REACTION", "CONTRIBUTOR_REACTION"],
+      // MEASURE_PROVISION joined 2026-08-18 (P03): reactions attach to a
+      // contested PROVISION of a measure, never to the measure as a whole,
+      // which is what CLAUDE.md's reaction-capture section asks for. The
+      // target id is the provision's own `<contestId>#<slug>` key.
+      enum: [
+        "FEDERAL_VOTE",
+        "CANDIDATE",
+        "FUNDING_TOTAL_REACTION",
+        "CONTRIBUTOR_REACTION",
+        "MEASURE_PROVISION",
+      ],
     }).notNull(),
     /** The roll-call key (`house:119-2:283`) — validated against the votes snapshot. */
     targetId: text("target_id").notNull(),
     /**
-     * The one-tap answer. There is deliberately no free-text column yet.
+     * The one-tap answer. The free-text column below carries the colour;
+     * this carries the volume, and it is the only one an aggregate reads.
      *
      * SOMEONE_ELSE (M63) is accepted only on a candidate in a contest with
      * exactly one candidate; the write path enforces that, and a stored row
@@ -394,6 +405,32 @@ export const reactions = pgTable(
     suspectReason: text("suspect_reason", {
       enum: ["VELOCITY", "LIMITER_UNAVAILABLE"],
     }),
+    /**
+     * **The optional verbatim** (P03, 2026-08-18; free text unblocked by the
+     * author for the testing window, and shipped behind
+     * `ripcord.reactionFreeText`).
+     *
+     * "Binary carries volume; text carries color. Never require the text."
+     * — CLAUDE.md. Nullable, and null is the ordinary case.
+     *
+     * ## It never reaches an aggregate, and the type system is the guarantee
+     *
+     * `ReactionRowForAggregation` in lib/signal/aggregate.ts has NO field
+     * for this and never will. That is deliberate and it is stronger than a
+     * filter: a filter can be forgotten, a missing field cannot be summed.
+     * Free text leaves this table only through moderation, which is a human
+     * path — CLAUDE.md: "Moderation runs before any export."
+     *
+     * ## It is still identifier-free, and that is not automatic
+     *
+     * A reader can type their own name into a text box, and no schema stops
+     * them. What the n-stores rule requires is that this COLUMN carries no
+     * key to anything: it sits on the reactions row beside the same hashed
+     * continuity key the binary uses, joins nothing, and appears in no
+     * export. The moderation path is where a self-identifying verbatim is
+     * caught, and `docs/abuse-policy.md` owns that.
+     */
+    freeText: text("free_text"),
   },
   (table) => [
     // One reaction per browser key per target: a changed answer overwrites

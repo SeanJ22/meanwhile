@@ -13,6 +13,10 @@ import {
 } from "@/lib/reactions/client";
 import {
   scaleForTargetType,
+  FREE_TEXT_CLOSED_LINE,
+  FREE_TEXT_MAX_CHARS,
+  FREE_TEXT_PROMPT,
+  FREE_TEXT_THREAT_NOTICE,
   type ReactionTargetType,
   type ReactionValue,
 } from "@/lib/signal/reactions";
@@ -134,11 +138,55 @@ export function ReactionControl({
   const [outcome, setOutcome] = useState<ReactionSubmitOutcome | "SAVING" | null>(
     null,
   );
+  /*
+   * THE OPTIONAL VERBATIM (P03, 2026-08-18).
+   *
+   * "Binary carries volume; text carries color. Never require the text."
+   * So the box does not exist until an answer has landed: it opens only
+   * after a COUNTED tap, it is never a precondition for anything, and a
+   * reader who ignores it forever has given a complete answer.
+   *
+   * It also only opens on this session's tap. A reader returning to a
+   * control they answered last week sees their pill, not a text box asking
+   * them to elaborate — that would be the product nagging.
+   */
+  const [text, setText] = useState("");
+  const [textOpen, setTextOpen] = useState(false);
+  const [textOutcome, setTextOutcome] = useState<
+    "SAVING" | "SAVED" | "DROPPED" | "FAILED" | null
+  >(null);
 
   const record = async (value: ReactionValue) => {
     setOverride(value);
     setOutcome("SAVING");
-    setOutcome(await submitReaction(targetType, targetId, value, context));
+    // A changed answer re-sends whatever the reader has already written, so
+    // switching from Yes to No does not silently discard their sentence.
+    const result = await submitReaction(
+      targetType,
+      targetId,
+      value,
+      context,
+      text.trim() || null,
+    );
+    setOutcome(result);
+    if (result === "TEXT_DROPPED") setTextOutcome("DROPPED");
+  };
+
+  /** Send the verbatim alongside the answer already given. */
+  const sendText = async () => {
+    const value = selected;
+    if (!value) return;
+    setTextOutcome("SAVING");
+    const result = await submitReaction(
+      targetType,
+      targetId,
+      value,
+      context,
+      text.trim() || null,
+    );
+    setTextOutcome(
+      result === "COUNTED" ? "SAVED" : result === "TEXT_DROPPED" ? "DROPPED" : "FAILED",
+    );
   };
 
   const choose = (value: ReactionValue) => {
@@ -231,6 +279,82 @@ export function ReactionControl({
         <p className="mt-1 text-[0.6875rem] leading-relaxed text-muted">
           {NOT_COUNTED_LINE}
         </p>
+      )}
+      {/*
+        The optional verbatim (P03). Opens only after an answer has landed
+        this session, because the text is the colour on an answer and never
+        the answer itself.
+
+        Register, per the voice doctrine: the EXPANDER is an interaction
+        surface and speaks playfully; every word INSIDE it is a claim
+        surface and speaks level — the threat notice above all, which is
+        about a real consequence for a real person and says "may" because a
+        commitment we cannot honour every time is worse than a reserved
+        right.
+      */}
+      {(outcome === "COUNTED" || outcome === "TEXT_DROPPED") && (
+        <div className="mt-2">
+          {!textOpen ? (
+            <button
+              type="button"
+              className="cursor-pointer text-[0.6875rem] text-muted underline decoration-dotted underline-offset-2 hover:text-signal"
+              onClick={() => setTextOpen(true)}
+            >
+              Want to say more?
+            </button>
+          ) : (
+            <div>
+              <label
+                htmlFor={`rx-text-${targetType}-${targetId}`}
+                className="block text-[0.6875rem] text-muted"
+              >
+                {FREE_TEXT_PROMPT}
+              </label>
+              <textarea
+                id={`rx-text-${targetType}-${targetId}`}
+                value={text}
+                maxLength={FREE_TEXT_MAX_CHARS}
+                rows={3}
+                onChange={(e) => {
+                  setText(e.target.value);
+                  if (textOutcome !== null) setTextOutcome(null);
+                }}
+                className="mt-1 w-full rounded border border-[var(--panel-border)] bg-transparent p-2 text-[0.75rem] leading-relaxed text-paper placeholder:text-muted focus:border-[var(--signal)] focus:outline-none"
+              />
+              {/* Adjacent to the field, as CLAUDE.md requires — not in a
+                  policy page, not behind a link. */}
+              <p className="mt-1 text-[0.6875rem] leading-relaxed text-muted">
+                {FREE_TEXT_THREAT_NOTICE}
+              </p>
+              <div className="mt-1.5 flex items-center gap-2">
+                <button
+                  type="button"
+                  disabled={text.trim().length === 0 || textOutcome === "SAVING"}
+                  onClick={() => void sendText()}
+                  className="min-h-8 cursor-pointer rounded border border-[var(--signal)] px-2.5 text-[0.75rem] font-medium text-signal transition-colors hover:bg-[var(--signal)]/10 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  {textOutcome === "SAVING" ? "Sending…" : "Send it"}
+                </button>
+                {textOutcome === "SAVED" && (
+                  <span className="text-[0.6875rem] text-muted">Got it.</span>
+                )}
+                {textOutcome === "FAILED" && (
+                  <span className="text-[0.6875rem] text-muted">
+                    {NOT_COUNTED_LINE}
+                  </span>
+                )}
+              </div>
+              {textOutcome === "DROPPED" && (
+                // The free-text ripcord is out. The binary counted and the
+                // words did not, and the reader is told exactly that rather
+                // than shown a success state over nothing.
+                <p className="mt-1 text-[0.6875rem] leading-relaxed text-muted">
+                  {FREE_TEXT_CLOSED_LINE}
+                </p>
+              )}
+            </div>
+          )}
+        </div>
       )}
       {pendingValue !== null && (
         // The one-time notice: shown on this device's first-ever tap, gone

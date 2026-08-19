@@ -1,5 +1,6 @@
 "use client";
 
+import { FREE_TEXT_CLOSED_HEADER } from "@/lib/signal/reactions";
 import type {
   ReactionTargetType,
   ReactionValue,
@@ -132,7 +133,13 @@ export interface ReactionViewContext {
  * is live in production; if it ever reappears it renders as failure, not
  * success) — is NOT_COUNTED, and the control says so.
  */
-export type ReactionSubmitOutcome = "COUNTED" | "NOT_COUNTED";
+/**
+ * TEXT_DROPPED (P03, 2026-08-18) is the third outcome and it is a SUCCESS
+ * with a caveat: the binary landed, and the verbatim did not, because
+ * `ripcord.reactionFreeText` is out. It exists so a pulled ripcord cannot
+ * render as "saved" over words that went nowhere.
+ */
+export type ReactionSubmitOutcome = "COUNTED" | "NOT_COUNTED" | "TEXT_DROPPED";
 
 /**
  * The honest line for anything short of a 204. The device-local half of
@@ -161,6 +168,18 @@ export async function submitReaction(
   targetId: string,
   reaction: ReactionValue,
   context: ReactionViewContext | null,
+  /**
+   * The optional verbatim (P03). Never required, and a reader who never
+   * opens the box submits exactly the payload they always did.
+   *
+   * NOT remembered device-locally, unlike the binary. The binary is
+   * remembered so the control can render what this browser answered
+   * without asking the server; a verbatim has nothing to render back —
+   * reactions are write-only from the reader's side, text included — and
+   * keeping a person's typed words in their browser after they submitted
+   * them buys nothing and leaves them lying around.
+   */
+  freeText?: string | null,
 ): Promise<ReactionSubmitOutcome> {
   rememberReaction(targetType, targetId, reaction);
   try {
@@ -172,13 +191,19 @@ export async function submitReaction(
         targetId,
         reaction,
         reactionKey: getOrCreateReactionKey(),
+        text: freeText ?? null,
         zip: context?.zip ?? null,
         lat: context?.lat ?? null,
         lng: context?.lng ?? null,
       }),
       keepalive: true,
     });
-    return response.status === 204 ? "COUNTED" : "NOT_COUNTED";
+    if (response.status !== 204) return "NOT_COUNTED";
+    // The route sets this only when it actually dropped a verbatim, so a
+    // reader who typed nothing never sees the comments-are-off line.
+    return response.headers.get(FREE_TEXT_CLOSED_HEADER) === "closed"
+      ? "TEXT_DROPPED"
+      : "COUNTED";
   } catch {
     return "NOT_COUNTED";
   }

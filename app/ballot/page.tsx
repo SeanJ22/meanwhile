@@ -49,6 +49,7 @@ import {
   StateFundingNote,
 } from "@/components/funding/funding-section";
 import { ReactionControl } from "@/components/reactions/reaction-control";
+import { questionForTargetType } from "@/lib/signal/reactions";
 import { electionDatesFor } from "@/lib/ballot/election-dates";
 import { AddToCalendar } from "@/components/calendar/add-to-calendar";
 import type {
@@ -988,6 +989,32 @@ export default async function BallotPage({
                           <p className="mt-1 text-[0.75rem] leading-relaxed text-paper-dim">
                             {provision.what}
                           </p>
+                          {/*
+                            P03 (2026-08-18): the reaction attaches HERE —
+                            to the contested provision, never to the measure
+                            as a whole, which is what CLAUDE.md's reaction
+                            section asks for and what the provision id was
+                            shaped for.
+
+                            AFTER the explanation, always: the label, the
+                            kind and what it would do are all above this, so
+                            the reader is answering about something they have
+                            just read rather than being asked cold.
+
+                            `compact` because a measure carries several of
+                            these and a column of full-size frames turns an
+                            explanation into a questionnaire — the same
+                            reason the vote rows inside a battlecard use it.
+                          */}
+                          <div className="mt-1.5">
+                            <ReactionControl
+                              targetType="MEASURE_PROVISION"
+                              targetId={provision.id}
+                              prompt={questionForTargetType("MEASURE_PROVISION")}
+                              context={null}
+                              frame="compact"
+                            />
+                          </div>
                         </li>
                       ))}
                     </ul>

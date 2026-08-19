@@ -105,6 +105,46 @@ export interface BodyCardData {
   jurisdiction: { label: string; value: string }[];
 }
 
+/**
+ * A PLACE CARD (g18, 2026-08-18, the author's ruling A on M135's last row).
+ *
+ * M135's rule is that every row opens a card. Two rows did not, and this is
+ * the one the author kept for himself: a PLACE row — "Pima County, AZ" in the
+ * ask panel's autocomplete — flew the camera and opened nothing, because a
+ * place is not a body and this product had no card for one.
+ *
+ * The reason it was left rather than bodged is the useful part. A place is a
+ * division that SEVERAL bodies sit in, and electing one of them to stand for
+ * the place — the largest, the first, the one with the most meetings — would
+ * be an invented answer about who speaks for a jurisdiction. So the card
+ * elects nobody. It says what the place is and lists every body we hold in
+ * it, and each of those rows opens that body's own battlecard: the reader
+ * chooses, which is the only honest resolution of a one-to-many.
+ *
+ * Deliberately SMALL. No tab strip, no seven sections — a place has no
+ * roster, no statute, no contact route and no sittings of its own, and a card
+ * with five empty sections would be five gaps wearing the shape of content.
+ */
+export interface PlaceCardData {
+  /** What kind of division this is, in reader language. Never an enum. */
+  typeLabel: string;
+  /**
+   * The tier's label, or NULL when `tierForOcdId` did not recognise the
+   * division and no body we hold in the place supplied one. Null renders as
+   * the named gap — a fact about us — and never as a tier we picked.
+   */
+  tierLabel: string | null;
+  /**
+   * Every body we hold in this place. EMPTY IS A STATED ABSENCE, not an empty
+   * list: the card renders the named gap below rather than nothing, because a
+   * place with no visible bodies and a place we hold no bodies for are
+   * different facts and may never render the same way.
+   */
+  bodies: { key: string; name: string; tier: Tier; meta?: string }[];
+  /** Renders in place of the list when `bodies` is empty. Describes US. */
+  absence: string;
+}
+
 /** Everything the modal renders, whichever entity opened it. */
 export interface ModalSubject {
   title: string;
@@ -118,6 +158,13 @@ export interface ModalSubject {
    * modal renders the seven sections instead of the tab strip.
    */
   bodyCard?: BodyCardData;
+  /**
+   * A place card (g18). Present ONLY on place subjects; when present the
+   * modal renders the body list instead of the tab strip. A subject carrying
+   * both this and `bodyCard` would be a contradiction — a place is not a body
+   * — and the modal reads `bodyCard` first, so the two can never stack.
+   */
+  placeCard?: PlaceCardData;
   /**
    * When the subject is a meeting: its stored agenda content renders in the
    * overview (4c) — what the meeting is about, on the surface, not behind a
@@ -166,6 +213,13 @@ interface EntityModalProps {
   onClose: () => void;
   /** A representation row opens the person's full card (5a). */
   onOpenHolder?: (holder: SeatHolder) => void;
+  /**
+   * A place card's body row opens that body's battlecard (g18). Keyed by the
+   * same `key` the caller put in `placeCard.bodies`, so the modal never has
+   * to re-resolve a body it was handed — re-resolution is where the wrong
+   * card comes from, and M135's other open row is that failure exactly.
+   */
+  onOpenPlaceBody?: (key: string) => void;
   /** Overridden in tests and screenshots so a tab can be captured directly. */
   initialTab?: ModalTab;
 }
@@ -179,6 +233,71 @@ interface EntityModalProps {
  * reader friction with nothing earning its place. So a subject picks one, and
  * the district and meeting cards keep their tabs untouched.
  */
+/**
+ * The place card's body (g18). Name, type, and who sits in it.
+ *
+ * Every row is a button that opens that body's battlecard — the reader stays
+ * in the product, which is M135's whole ruling. Nothing here links out.
+ */
+function PlaceSections({
+  subject,
+  onOpenPlaceBody,
+}: {
+  subject: ModalSubject;
+  onOpenPlaceBody?: (key: string) => void;
+}) {
+  const card = subject.placeCard!;
+  return (
+    <div className="account-modal-body">
+      <PopupRow label="Type">{card.typeLabel}</PopupRow>
+      <PopupRow label="Tier">
+        {card.tierLabel ?? (
+          // The gap in its own register — never the tier the header painted.
+          <span className="text-muted">
+            We don&apos;t recognise this division type yet
+          </span>
+        )}
+      </PopupRow>
+
+      <PopupSectionLabel>
+        Who governs here
+        {card.bodies.length > 0 && (
+          <span className="account-modal-tab-count">{card.bodies.length}</span>
+        )}
+      </PopupSectionLabel>
+
+      {card.bodies.length === 0 ? (
+        <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
+          {card.absence}
+        </p>
+      ) : (
+        <ul className="mt-1.5 flex flex-col gap-1">
+          {card.bodies.map((body) => (
+            <li key={body.key}>
+              <button
+                type="button"
+                onClick={() => onOpenPlaceBody?.(body.key)}
+                className="flex w-full items-baseline justify-between gap-2 rounded border border-[var(--panel-border)] px-2.5 py-1.5 text-left hover:border-[var(--accent-local)]"
+              >
+                <span className="min-w-0 truncate text-[0.8125rem] text-paper">
+                  {body.name}
+                </span>
+                <span
+                  className="shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em]"
+                  style={{ color: `var(--accent-${body.tier})` }}
+                >
+                  {TIER_LABEL[body.tier]}
+                  {body.meta ? ` · ${body.meta}` : ""}
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 function BodySections({
   subject,
   onOpenHolder,
@@ -352,6 +471,7 @@ export function EntityModal({
   subject,
   onClose,
   onOpenHolder,
+  onOpenPlaceBody,
   initialTab = "overview",
 }: EntityModalProps) {
   const [tab, setTab] = useState<ModalTab>(initialTab);
@@ -417,6 +537,8 @@ export function EntityModal({
 
         {subject.bodyCard ? (
           <BodySections subject={subject} onOpenHolder={onOpenHolder} />
+        ) : subject.placeCard ? (
+          <PlaceSections subject={subject} onOpenPlaceBody={onOpenPlaceBody} />
         ) : (
         <>
         <div className="account-modal-tabs" role="tablist">

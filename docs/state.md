@@ -2099,7 +2099,30 @@ replaced.
 
 ## 7. Current state of the branch
 
-**CURRENT: `claude/g17-budgets-geo-cadence-0818`** (2026-08-18, the g17
+**CURRENT: `claude/g21-final-queue-0819`** (2026-08-19, the g21 session, the
+LAST QUEUE SESSION), branched from `main@5ad703e` and merged as `fea7626`.
+Nine items briefed, all nine addressed — **seven finished whole, two stopped
+cleanly at a stated boundary, none never reached**. B19 and B16 shipped in the
+ruled shape (306 voting locations, 44 jurisdictions, Pima's 148 vote centers,
+and B16 refusing New Jersey on the geometry's own 2021 edit date); M123 wired
+Wilmot and New London, 2 of 6 towns, each needing a retrieval class the repo
+did not have; H03 enumerated 13, recovered 1 at rung 4 and corrected a
+four-day-stale document; M81 rendered the jurisdiction badge on three surfaces
+from one division set; D47 shipped the side-by-side; B14 shipped the rung
+underneath the blurbs; D50 reported both numbers and computed 7a to zero; D52
+encoded its approval gate; and item 9 named the four rows owed since g19 and
+swept the deferred queue to `NEEDS A HOME = 0`. **test 1183 pass · lint 0
+errors, 12 allowlisted warnings · tsc clean · build green · `walk:all` 316
+passed, 0 regressions, added 7, GONE 0.** The g21 section at the end of this
+document records it in full.
+
+**§7 had been stale since g17** — it named that branch as CURRENT for four
+sessions while g18, g19, g20 and g21 came and went. Recorded rather than
+quietly fixed, because it is the same failure g21 spent the session finding
+elsewhere: a document describing a state the tree left behind. The paragraph
+below is g17's, demoted to the record.
+
+**`claude/g17-budgets-geo-cadence-0818`** (2026-08-18, the g17
 session), branched from `main@57b15bc`. Five items, all five whole: the client
 budget re-baselined on the ubuntu standalone build with one stated ceiling rule
 and twelve planted refusals; AUD-03 built on a measured 42,824-byte saving

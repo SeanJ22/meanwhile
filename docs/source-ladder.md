@@ -1533,3 +1533,34 @@ authority rather than a fallback.
 **50 New Hampshire towns sit in the registry and 10 were walked here.** That
 is stated as 1 of 50 landed rather than left to read as coverage; the
 remaining 40 are `NOT_ATTEMPTED`, which is a work item and never a finding.
+
+---
+
+## The six Kearsarge towns, walked to page level — g21, 2026-08-19 (M123)
+
+**2 of 6 wired and live.** None is `NOT_ATTEMPTED`, and none is claimed to
+publish nothing.
+
+| Town | Rung | Result | Attempted |
+|---|---|---|---|
+| **Wilmot** | 2 | `/calendar` 200, WordPress | 2026-08-19 |
+| Wilmot | 7 | `/wp-json/tribe/events/v1/events` → **200, `total: 23`** | 2026-08-19 |
+| Wilmot | 8 | `/events/?ical=1` → 200 with **4** events (the month view) | 2026-08-19 |
+| Wilmot | 8 | `/events/list/?ical=1` → **200 with all 23** — WIRED | 2026-08-19 |
+| Wilmot | 8 | `/events/list/?tribe_event_display=past&ical=1` → **30 past sittings** — WIRED | 2026-08-19 |
+| Wilmot | 2 | `/board/board-of-selectmen/` states the meeting place in the board's own words | 2026-08-19 |
+| **New London** | 2 | `/calendar` 200, GovOffice month grid, 24 events with per-event dates and times — WIRED | 2026-08-19 |
+| New London | 2 | `?Type=B_EV&SEC=…&month=&year=` month navigation — WIRED, 2 months ahead | 2026-08-19 |
+| **Bradford** | 2 | `/calendar` **404** (as previously recorded) | 2026-08-19 |
+| Bradford | 12 | The home page's own markup names **TownCloud** — `towncloud.io/go/bradford-nh/agendas/NNN` plus `.../PDF/get_agenda_document_link`, twelve of them. A vendor this repo has not met. | 2026-08-19 |
+| Bradford | 6 | The SvelteKit front end renders its agendas client-side — NOT YET WALKED, and it is the next rung | — |
+| **Springfield** | 8 | `/events/?ical=1` → 200 with **50 events, latest 2024**. STALE, not empty. | 2026-08-19 |
+| Springfield | 7 | `/wp-json/tribe/events/v1/events` → **404**; the plugin is not The Events Calendar | 2026-08-19 |
+| Springfield | 2 | `/events/` lists **2026** sittings (`select-board-meeting-2026-08-24` <!-- expected-future: the town own event slug, read 2026-08-19 -->, `cemetery-trustees-meeting-2026-08-11`) with `?pagination=&event_archetype=event` — the live listing, NOT YET PARSED | 2026-08-19 |
+| **Warner** | 2 | `/calendar` 200 with **zero dates in the HTML** | 2026-08-19 |
+| Warner | 2 | The town's own nav names `/meeting-schedules/` and `/agenda/` — both 200, content not in the served HTML | 2026-08-19 |
+| Warner | 7 | `/wp-json/tribe/events/v1/events` → 404 | 2026-08-19 |
+| Warner | 6 | The live browser — NOT YET WALKED, and it is the next rung | — |
+| **Sutton** | 2 | `www.suttonnh.gov` and `suttonnh.gov` → **403** | 2026-08-19 |
+| Sutton | 3 | Full browser header set → **403** | 2026-08-19 |
+| Sutton | 5 | A different egress — NOT YET WALKED. The playbook's standing entry says the browser rung clears this host; it did not today, and that is recorded as a dated note beside the entry rather than a deletion. | — |

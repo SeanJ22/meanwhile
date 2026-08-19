@@ -1444,3 +1444,91 @@ geocode, and 25 real published locations vanished — a cross-street address
 geocoder resolves. A retrieval failure on our side may never be written into
 the data as the authority not having published. Keep the row, drop the pin,
 and say which.
+
+## The Kearsarge towns, walked to page level — g21, 2026-08-19 (M123)
+
+The table at the top of this section recorded these six towns at host level.
+This is what they look like from the page.
+
+### 7. An `.ics` feed serves the CURRENT VIEW, not the calendar — a 5x silent clip
+
+`https://www.wilmotnh.org/events/?ical=1` returns **four** events. HTTP 200,
+`text/calendar`, valid iCalendar, nothing to complain about.
+
+`https://www.wilmotnh.org/events/list/?ical=1` returns **twenty-three** — the
+same total the plugin's own REST API reports at
+`/wp-json/tribe/events/v1/events`.
+
+The default URL exports whatever view the page is on, and the default view is
+the month. Nineteen public meetings are missing and every signal says the
+retrieval worked. **Name the list view explicitly, and cross-check the count
+against the plugin's own API before believing a feed.**
+
+### 8. `CATEGORIES` is how one town feed serves several boards
+
+The Events Calendar files each event under the board that owns it —
+`Select Board`, `Planning Board`, `Cemetery Trustees`. That is better than
+matching on the title, and it is better in a way that matters: Wilmot files a
+"Transfer Station Advisory Group meeting" under Select Board, which a
+title match would have dropped and which is a real sitting of that board.
+
+Where a feed carries no categories, the fallback is a title match, and a title
+match with no needle must match NOTHING rather than everything.
+
+### 9. A month GRID does not have to be parsed as a grid
+
+New London's GovOffice calendar is a `<table>` of day cells. Every event
+inside one carries its own tooltip block:
+
+```html
+<div class="eventTip">
+  <div class="tipTitle">Board of Selectmen - 5:30 PM - Whipple Memorial Town Hall</div>
+  Thursday, August 20, 2026 at 5:30 PM
+</div>
+```
+
+Date, weekday, year and time, in the town's own words, beside the title —
+which also names the room. So the grid's geometry never has to be understood,
+and there is no cell-position arithmetic to be wrong about.
+
+**But it serves ONE MONTH**, and the page publishes its own
+`?Type=B_EV&SEC=<id>&month=9&year=2026` navigation. A row that reads only the
+default view reports this month as the body's whole calendar — for a board
+that sits twice a month, two sittings — and that reads exactly like a body
+with nothing scheduled.
+
+### 10. Sutton's browser rung no longer clears it (dated note on the table above)
+
+The table above records Sutton NH as **403 to the index profile, 200 to the
+BROWSER profile**. On **2026-08-19** `www.suttonnh.gov` and `suttonnh.gov`
+both answered **403 to both profiles** from this egress. The entry is not
+deleted — this file is append-only and the next state may hit the same wall
+from a different side — but a session starting from it should expect the
+browser rung to fail and go to rung 5, a different egress.
+
+### 11. A "no calendar" town can be a vendor town with a JavaScript front end
+
+`bradfordnh.gov/calendar` 404s, which is where the earlier walk stopped. The
+town's HOME page carries `/_app/immutable/chunks/Calendar-*.js` — a SvelteKit
+build — and, in its server-rendered payload, twelve links of the form
+`https://towncloud.io/go/bradford-nh/agendas/359` with a sibling
+`.../PDF/get_agenda_document_link`.
+
+So Bradford is a **TownCloud** town: a vendor this repo has not met, with a
+predictable per-tenant path. A 404 on a guessed calendar path is not evidence
+that a town publishes nothing; the platform underneath is rung 12 and it was
+sitting in the homepage's own markup.
+
+### 12. A feed can be STALE rather than empty, and the two need different words
+
+`https://springfieldnh.org/events/?ical=1` answers 200 with **fifty** events.
+Every one of them is from **2024**. Meanwhile `springfieldnh.org/events/`
+lists sittings dated 2026 — `select-board-meeting-2026-08-24`, <!-- expected-future: the town's own event slug, read 2026-08-19 -->
+
+`cemetery-trustees-meeting-2026-08-11` — on a plugin that is not The Events
+Calendar (its own `wp-json/tribe/...` is a 404, and its listing pages carry
+`?pagination=1&event_archetype=event`).
+
+A feed with fifty rows passes every count check a zero-row feed would fail.
+**Check the newest date in a feed, not only its length**, and where it is
+older than the body's own listing, the feed is not the source.

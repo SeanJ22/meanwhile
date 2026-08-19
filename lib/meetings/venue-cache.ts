@@ -570,6 +570,138 @@ export const VENUE_CACHE: VenueEntry[] = [
       "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=25+W+Calle+Concordia%2C+Oro+Valley%2C+AZ+85704&benchmark=Public_AR_Current&format=json",
     verifiedAt: "2026-08-14",
   },
+
+  // ── iCalendar: Wilmot NH's Town Office (M123, 2026-08-19) ───────────────
+  // The town's own feed writes the full street address into `LOCATION`, so
+  // unlike most rows here nothing had to be hunted for the ADDRESS — it is
+  // the feed's own words. Two spellings occur in the same feed, one naming
+  // the Town Clerk's office inside the same building, and both are keyed
+  // because a spelling variant must never read as an unknown venue.
+  //
+  // Nine of the twenty-three events write `LOCATION:NH`. That is a state,
+  // not a building, and it is deliberately NOT keyed: those rows drop as
+  // `unknownVenue` and show in the counts, because a pin in the middle of
+  // New Hampshire would be a fabricated location.
+  {
+    sourceId: "ical",
+    bodyOcdId: "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town",
+    match: "Town Office, 9 Kearsarge Valley Road, Wilmot, NH, 03287, United States",
+    name: "Wilmot Town Office",
+    address: "9 Kearsarge Valley Road, Wilmot, NH 03287",
+    lat: 43.414131,
+    lng: -71.901487,
+    addressSourceUrl: "https://www.wilmotnh.org/events/list/?ical=1",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=9+Kearsarge+Valley+Road%2C+Wilmot%2C+NH+03287&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-19",
+  },
+  {
+    sourceId: "ical",
+    bodyOcdId: "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town",
+    match:
+      "Town Office – Town Clerk’s Office, 9 Kearsarge Valley Road, Wilmot, NH, 03287, United States",
+    name: "Wilmot Town Office",
+    address: "9 Kearsarge Valley Road, Wilmot, NH 03287",
+    lat: 43.414131,
+    lng: -71.901487,
+    addressSourceUrl: "https://www.wilmotnh.org/events/list/?ical=1",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=9+Kearsarge+Valley+Road%2C+Wilmot%2C+NH+03287&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-19",
+  },
+  // The Selectboard's own standing statement, for the nine sittings its feed
+  // writes as `LOCATION:NH`. The board's page says it in its own words —
+  // "The Selectboard meets every other Wednesday at 6:00 p.m. in the Town
+  // Office Building at 9 Kearsarge Valley Road in Wilmot" — so this is a
+  // sourced claim with a citation, not an inference from a sibling event.
+  // Reached only when the feed itself gave nothing usable.
+  {
+    sourceId: "ical",
+    bodyOcdId: "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town",
+    match: "Wilmot Town Office Building",
+    name: "Wilmot Town Office",
+    address: "9 Kearsarge Valley Road, Wilmot, NH 03287",
+    lat: 43.414131,
+    lng: -71.901487,
+    addressSourceUrl: "https://www.wilmotnh.org/board/board-of-selectmen/",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=9+Kearsarge+Valley+Road%2C+Wilmot%2C+NH+03287&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-19",
+  },
+
+  // ── SchedulePage: New London NH (M123, 2026-08-19) ──────────────────────
+  // The town's calendar writes the venue INTO the event title — "Board of
+  // Selectmen - 5:30 PM - Whipple Memorial Town Hall" — in three spellings
+  // for the same building. All three are keyed, because a spelling variant
+  // must never read as an unknown venue and send a real sitting to the drop
+  // count.
+  //
+  // The address is New London's own: `newlondon.nh.gov`'s ELECTIONS & VOTING
+  // page names "Whipple Memorial Town Hall, 25 Seamans Rd" as where the town
+  // votes, which is the same hall its boards sit in. Read 2026-08-19 for
+  // B19, cited here rather than re-hunted.
+  {
+    sourceId: "schedulepage",
+    bodyOcdId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
+    match: "Whipple Memorial Town Hall",
+    name: "Whipple Memorial Town Hall",
+    address: "25 Seamans Road, New London, NH 03257",
+    lat: 43.413148,
+    lng: -71.980242,
+    addressSourceUrl:
+      "https://newlondon.nh.gov/?SEC=78EB571E-6FA5-46AB-B16D-CFF45739DF7E&Type=B_BASIC",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=25+Seamans+Road%2C+New+London%2C+NH+03257&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-19",
+  },
+  {
+    sourceId: "schedulepage",
+    bodyOcdId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
+    match: "Whipple Memorial Hall",
+    name: "Whipple Memorial Town Hall",
+    address: "25 Seamans Road, New London, NH 03257",
+    lat: 43.413148,
+    lng: -71.980242,
+    addressSourceUrl:
+      "https://newlondon.nh.gov/?SEC=78EB571E-6FA5-46AB-B16D-CFF45739DF7E&Type=B_BASIC",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=25+Seamans+Road%2C+New+London%2C+NH+03257&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-19",
+  },
+  {
+    sourceId: "schedulepage",
+    bodyOcdId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
+    match: "Whipple Hall",
+    name: "Whipple Memorial Town Hall",
+    address: "25 Seamans Road, New London, NH 03257",
+    lat: 43.413148,
+    lng: -71.980242,
+    addressSourceUrl:
+      "https://newlondon.nh.gov/?SEC=78EB571E-6FA5-46AB-B16D-CFF45739DF7E&Type=B_BASIC",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=25+Seamans+Road%2C+New+London%2C+NH+03257&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-19",
+  },
+  // The town's other named room, keyed on its own string. A board meeting at
+  // the Town Office is at a different building from one at Whipple Hall, and
+  // pinning both at the hall would send a reader to the wrong door.
+  {
+    sourceId: "schedulepage",
+    bodyOcdId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
+    match: "New London Town Office",
+    name: "New London Town Office",
+    address: "375 Main Street, New London, NH 03257",
+    lat: 43.413674,
+    lng: -71.983147,
+    addressSourceUrl: "https://newlondon.nh.gov/calendar",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=375+Main+Street%2C+New+London%2C+NH+03257&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-19",
+  },
 ];
 
 /**

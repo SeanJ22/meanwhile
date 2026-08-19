@@ -1,0 +1,198 @@
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import test from "node:test";
+
+import { makeIcalSource, parseDtStart, parseIcs } from "../lib/sources/ical/index.ts";
+import { wiringForTypes } from "../lib/registry/source-wiring.ts";
+import type { IcalRaw } from "../lib/sources/ical/index.ts";
+
+/**
+ * The `ICAL` adapter — M123, 2026-08-19.
+ *
+ * No live calls. The fixture is Wilmot NH's real feed, retrieved 2026-08-19
+ * from `https://www.wilmotnh.org/events/list/?ical=1`.
+ *
+ * The counts below are asserted as MINIMUMS against a recorded fixture rather
+ * than as "no error was thrown", because a parser that returns nothing throws
+ * nothing.
+ */
+
+const FIXTURE = readFileSync(
+  join(process.cwd(), "tests", "fixtures", "ical", "wilmot-2026-08-19.ics"),
+  "utf8",
+);
+
+/** The middle of the fixture's window, so the same rows are in range always. */
+const NOW = new Date("2026-08-19T12:00:00Z");
+
+function rawFor(): IcalRaw[] {
+  return wiringForTypes(["ICAL"]).map((wiring) => ({
+    wiring,
+    ics: FIXTURE,
+    collectedAt: "2026-08-19T00:00:00.000Z",
+    sourceUrl: wiring.config.feedUrl ?? "",
+  }));
+}
+
+/* ------------------------------------------------------------- parsing --- */
+
+test("ICAL: the fixture parses to the events it actually contains", () => {
+  const events = parseIcs(FIXTURE);
+  assert.equal(events.length, 23, "the recorded feed holds 23 events");
+  // Every one carries a start. A parser that silently produced empty events
+  // would still return 23 objects, so check a field that must be there.
+  assert.equal(events.filter((e) => e.dtstart).length, 23);
+  assert.ok(events.some((e) => e.categories === "Select Board"));
+  assert.ok(events.some((e) => e.categories === "Planning Board"));
+  assert.ok(events.some((e) => e.categories === "Cemetery Trustees"));
+});
+
+test("ICAL: line folding is unfolded before the address is read", () => {
+  // RFC 5545 folds any line past 75 octets, and a street address is routinely
+  // longer. Parsing without unfolding truncates at a byte boundary and
+  // produces a venue string that matches nothing — which would render as "we
+  // could not place this meeting" about a meeting whose address the town
+  // published in full.
+  const events = parseIcs(FIXTURE);
+  const withAddress = events.filter((e) =>
+    (e.location ?? "").includes("Kearsarge Valley Road"),
+  );
+  assert.ok(withAddress.length >= 12, `only ${withAddress.length} full addresses`);
+  for (const e of withAddress) {
+    assert.ok(
+      (e.location ?? "").includes("03287"),
+      `an address stops short of its zip: ${e.location}`,
+    );
+  }
+});
+
+test("ICAL: escaped commas come back as commas", () => {
+  const events = parseIcs(FIXTURE);
+  const loc = events.find((e) => (e.location ?? "").includes("Kearsarge"))!.location!;
+  assert.ok(!loc.includes("\\,"), "an escape survived into the venue string");
+  assert.ok(loc.includes(", "), "the address lost its separators");
+});
+
+/* --------------------------------------------------------------- time --- */
+
+test("ICAL: a wall-clock time resolves through its own TZID, across DST", () => {
+  // 6:30 PM in New York is 22:30Z in August and 23:30Z in January. A fixed
+  // offset is right for half the year, which is the half nobody tests.
+  const summer = parseDtStart("TZID=America/New_York:20260820T183000", "UTC");
+  const winter = parseDtStart("TZID=America/New_York:20270121T183000", "UTC");
+  assert.equal(summer?.iso, "2026-08-20T22:30:00.000Z");
+  assert.equal(winter?.iso, "2027-01-21T23:30:00.000Z");
+  assert.equal(summer?.dayOnly, false);
+});
+
+test("ICAL: a DATE-only value is DAY precision, never an invented hour", () => {
+  const d = parseDtStart("VALUE=DATE:20260820", "America/New_York");
+  assert.equal(d?.dayOnly, true);
+  const bare = parseDtStart(":20260820", "America/New_York");
+  assert.equal(bare?.dayOnly, true);
+});
+
+test("ICAL: a Z suffix is already UTC", () => {
+  assert.equal(
+    parseDtStart("TZID=America/New_York:20260820T223000Z", "UTC")?.iso,
+    "2026-08-20T22:30:00.000Z",
+  );
+});
+
+/* ---------------------------------------------------------- normalize --- */
+
+test("ICAL: the wired boards produce meetings, and the counts are stated", () => {
+  const source = makeIcalSource(wiringForTypes(["ICAL"]));
+  const { meetings, drops } = source.normalizeWithDrops(rawFor(), NOW);
+
+  assert.ok(meetings.length >= 10, `only ${meetings.length} meetings`);
+  // Three boards, all present. A row that produced nothing would leave its
+  // board silently absent, which is exactly what this adapter exists to stop.
+  for (const board of ["Selectboard", "Planning Board", "Cemetery Trustees"]) {
+    assert.ok(
+      meetings.some((m) => m.bodyName === board),
+      `${board} produced no meetings`,
+    );
+  }
+  assert.equal(
+    drops.unknownVenue,
+    0,
+    "a wired board lost a sitting to an unresolved venue",
+  );
+  assert.equal(drops.unplaceableInTime, 0);
+  // The cross-product: three rows each see all 23 events and keep only their
+  // own category. `notConfigured` is that arithmetic, not a failure.
+  assert.ok(drops.notConfigured > 0, "the category filter did nothing at all");
+});
+
+test("ICAL: CATEGORIES is what assigns a sitting to a board, not the title", () => {
+  const source = makeIcalSource(wiringForTypes(["ICAL"]));
+  const { meetings } = source.normalizeWithDrops(rawFor(), NOW);
+  // Wilmot files a "Transfer Station Advisory Group meeting" under Select
+  // Board. Assigning by title would have lost it; assigning by the town's own
+  // category keeps it, under the board the town filed it under.
+  assert.ok(
+    meetings.some(
+      (m) => m.bodyName === "Selectboard" && /Transfer Station/.test(m.title),
+    ),
+    "a sitting the town filed under Select Board did not land there",
+  );
+});
+
+test("ICAL: every meeting carries a placed venue and its provenance", () => {
+  const source = makeIcalSource(wiringForTypes(["ICAL"]));
+  const { meetings } = source.normalizeWithDrops(rawFor(), NOW);
+  for (const m of meetings) {
+    assert.ok(m.location, `${m.title} has no location`);
+    assert.ok(Number.isFinite(m.location.lat) && Number.isFinite(m.location.lng));
+    assert.ok(m.provenance.sourceOrg.length > 0);
+    assert.match(m.provenance.sourceUrl ?? "", /^https:\/\//);
+    assert.equal(m.provenance.verifiedAt, null);
+  }
+});
+
+/* ------------------------------------------ a refusal is not an absence --- */
+
+test("ICAL: a refused row reports as unreachable and empties nothing else", () => {
+  const rows = wiringForTypes(["ICAL"]);
+  const source = makeIcalSource(rows);
+  const raw: IcalRaw[] = rows.map((wiring, i) => ({
+    wiring,
+    ics: i === 0 ? "" : FIXTURE,
+    collectedAt: "2026-08-19T00:00:00.000Z",
+    refused: i === 0,
+    sourceUrl: wiring.config.feedUrl ?? "",
+  }));
+  const { meetings, unreachableOcdIds } = source.normalizeWithDrops(raw, NOW);
+  assert.ok(unreachableOcdIds && unreachableOcdIds.length === 1);
+  // The refusal corollary at the adapter: the other rows still produced.
+  assert.ok(
+    meetings.some((m) => m.bodyName === "Planning Board"),
+    "one row's refusal emptied a different body",
+  );
+  assert.ok(
+    !meetings.some((m) => m.bodyName === (rows[0].config.bodyName ?? "")),
+    "a refused row produced meetings out of an empty body",
+  );
+});
+
+/* ------------------------------------------------------- the 5x trap --- */
+
+test("ICAL: every wired feed names the LIST view, never the default view", () => {
+  // `/events/?ical=1` returns the current VIEW. On this town that is the
+  // month: four events, HTTP 200, well-formed, and nineteen public meetings
+  // missing. The empty-success shape wearing a healthier face. A wiring row
+  // that names the default URL is a five-fold silent clip.
+  for (const row of wiringForTypes(["ICAL"])) {
+    const url = row.config.feedUrl ?? "";
+    assert.match(url, /ical=1/, `${row.config.slug} has no ical feed url`);
+    if (/wilmotnh\.org/.test(url)) {
+      assert.match(
+        url,
+        /\/events\/list\//,
+        `${row.config.slug} names the default view, which returns a fifth of the calendar`,
+      );
+    }
+  }
+});

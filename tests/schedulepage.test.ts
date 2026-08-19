@@ -8,6 +8,7 @@ import {
   parseAgendaList,
   parseDatedList,
   parseDocuments,
+  parseEventTips,
   parseMonthTable,
   parseSchedule,
   parseStatedTime,
@@ -441,5 +442,78 @@ test("the Zoning Board is wired, on a venue the town publishes in markup", () =>
   assert.equal(
     parsed.sittings.find((s) => s.date === "2026-04-08")?.canceled,
     true,
+  );
+});
+
+/* ---------------------------------------------------------------------- *
+ * Shape 5 — `event-tip`, the month grid whose events state their own dates.
+ * New London NH's GovOffice calendar, retrieved 2026-08-19 (M123, g21).
+ * ---------------------------------------------------------------------- */
+
+const NEWLONDON = fixture("newlondon-calendar-2026-08.html");
+
+test("event-tip: a board's own sittings come out of a town-wide calendar", () => {
+  const { sittings, counts } = parseEventTips(NEWLONDON, "Board of Selectmen");
+  // Minimums against a recorded fixture, never merely "no error thrown": a
+  // parser that matched nothing returns an empty list and throws nothing.
+  assert.ok(sittings.length >= 2, `only ${sittings.length} sittings`);
+  assert.ok(
+    sittings.every((s) => /Board of Selectmen/.test(s.note ?? "")),
+    "a sitting landed that the town did not file under this board",
+  );
+  // The rest of the town's calendar is COUNTED, not silently skipped. A
+  // board with nothing this month and a parser that matched nothing must not
+  // look alike.
+  assert.ok(counts.notSittings > 10, "the title filter did nothing at all");
+});
+
+test("event-tip: the time comes off the event's own line", () => {
+  const { sittings } = parseEventTips(NEWLONDON, "Board of Selectmen");
+  const august = sittings.find((s) => s.date === "2026-08-06");
+  assert.ok(august, "the fixture's 6 August sitting is missing");
+  assert.deepEqual(august.time, { hour: 17, minute: 30 });
+});
+
+test("event-tip: a band concert is not a meeting of the Planning Board", () => {
+  // The whole safety of this shape. The town's calendar carries concerts,
+  // transfer-station hours and eleven boards on one page.
+  const { sittings } = parseEventTips(NEWLONDON, "Planning Board");
+  assert.ok(sittings.length > 0);
+  assert.ok(
+    !sittings.some((s) => /Band Concert/i.test(s.note ?? "")),
+    "a band concert was filed as a Planning Board sitting",
+  );
+});
+
+test("event-tip: an empty titleMatch matches NOTHING rather than everything", () => {
+  // The failure this guards is the one that ships quietly: a row missing its
+  // `titleMatch` filing every event in the town as a sitting of one board.
+  const { sittings } = parseEventTips(NEWLONDON, "");
+  assert.equal(sittings.length, 0);
+});
+
+test("event-tip: four New London boards are wired, each with its own match", () => {
+  const rows = wiringForTypes(["SCHEDULEPAGE"]).filter((r) =>
+    (r.config.shapes ?? "").includes("event-tip"),
+  );
+  assert.ok(rows.length >= 4, `only ${rows.length} event-tip rows`);
+  for (const row of rows) {
+    assert.ok(
+      (row.config.titleMatch ?? "").length > 0,
+      `${row.config.slug} has no titleMatch — it would file the whole town's calendar`,
+    );
+    // A month grid serves ONE month. A row that reads only the default view
+    // reports this month as the body's whole calendar, which reads exactly
+    // like a body with nothing scheduled.
+    assert.ok(
+      Number(row.config.monthsAhead ?? 0) > 0,
+      `${row.config.slug} reads one month and calls it a calendar`,
+    );
+  }
+  const matches = rows.map((r) => r.config.titleMatch);
+  assert.equal(
+    new Set(matches).size,
+    matches.length,
+    "two boards share a titleMatch — one town calendar, two bodies, same rows",
   );
 });

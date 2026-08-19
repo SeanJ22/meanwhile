@@ -55,6 +55,10 @@ export const CALENDAR_LABELS: Readonly<Record<string, string>> = {
   iqm2: "their online agenda portal",
   revize: "their town website's meetings page",
   schedulepage: "their own published schedule page",
+  // Plain words for a format a reader has no reason to know the name of. Not
+  // "their iCalendar feed": the reader is trying to find out when their town
+  // meets, and "iCalendar" is an identifier wearing a label's clothes.
+  ical: "their town website's events calendar",
 };
 
 /** The human name, or null when there is none — never a plausible stand-in. */

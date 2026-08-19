@@ -43,8 +43,14 @@ import {
  * unkeepable the moment the feature needed a browser, and a promise quietly
  * retracted is worse than one honestly rewritten. Both the narrowing prompt
  * and the transparency page now say what is true and stays true: your
- * address passes through our server to the Census Bureau's geocoder, and we
- * never store or log it. `tests/geocoder.test.ts` pins that coupling.
+ * address passes through our server to the Census Bureau's geocoder, which
+ * turns it into a point.
+ *
+ * F01 1e (2026-08-19, the author, ordered verbatim): the never-store/never-log
+ * half of that sentence is STRUCK from every reader surface — "we are going to
+ * store and log at some point." The copy now describes the mechanism as it
+ * works today and makes no forward commitment in either direction.
+ * `tests/geocoder.test.ts` pins the ban.
  */
 
 export const runtime = "nodejs";

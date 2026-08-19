@@ -227,9 +227,8 @@ export function NarrowingPrompt({
                 Bureau sends no CORS header. Rewritten to the promise an
                 engineer can actually keep. */}
             <p className="mt-1 text-[0.625rem] leading-relaxed text-muted">
-              Used once to place the point, then dropped. It passes through
-              our server to the Census Bureau&apos;s lookup; we never store or
-              log it.
+              It passes through our server to the Census Bureau&apos;s lookup,
+              which returns the matching point.
             </p>
           </div>
         )}
@@ -423,9 +422,9 @@ export function NarrowingPrompt({
       <p className="mt-2 text-[0.625rem] leading-relaxed text-muted">
         Your choice stays on this device and is never tied to an account. To
         put your street on the map, your address passes through our server to
-        the U.S. Census Bureau&apos;s free address lookup — we never store or
-        log it. We send the street name and this zip code, never a house
-        number.
+        the U.S. Census Bureau&apos;s free address lookup, which returns the
+        matching point. We send the street name and this zip code, never a
+        house number.
       </p>
     </div>
   );

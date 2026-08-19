@@ -3,6 +3,7 @@ import {
   KEY_VOTES_CRITERIA,
   type KeyVoteEntry,
 } from "@/lib/votes/key-votes";
+import { votedCount } from "@/lib/votes/participation";
 import type { VotePosition } from "@/lib/votes/types";
 import { formatDateMDY } from "@/lib/map/format";
 
@@ -67,6 +68,29 @@ const POSITION_PILL: Record<string, { label: string; tone: "yes" | "no" | "neutr
   YES: { label: "Voted yes", tone: "yes" },
   NO: { label: "Voted no", tone: "no" },
   PRESENT: { label: "Voted present", tone: "neutral" },
+  /*
+   * **F01 5.2 (2026-08-19, the author): *"if he was in session we'd need to
+   * record what he did."*** We did record it, and then failed to say it.
+   *
+   * `NOT_VOTING` is what `scripts/fetch-key-vote-positions.mts` writes for a
+   * member who WAS SEATED and did not vote — the chambers publish "Not Voting"
+   * and "Absent" and the fetcher maps both to it. This map had no key for it,
+   * so 140 stored positions fell through to the generic branch below and
+   * rendered "Position recorded": a string that tells a reader nothing, in
+   * place of the true and useful answer.
+   *
+   * `DID_NOT_VOTE` is the OTHER vocabulary — `KeyVoteRowData.positions` types
+   * both — and it stays, because a caller may supply either. Two names for one
+   * state is not ideal and is deliberately not renamed here: the snapshot, the
+   * fetcher and the row type all use `NOT_VOTING`, and a rename touching all
+   * three is a bigger change than this item, tracked rather than smuggled in.
+   *
+   * Neutral tone on both, because a recorded absence is a fact about the
+   * member and not a position — it must never wear the yes or no colour, and
+   * it is equally never a GAP, which is the outline. Three states, three
+   * treatments (item 12).
+   */
+  NOT_VOTING: { label: "Did not vote", tone: "neutral" },
   DID_NOT_VOTE: { label: "Did not vote", tone: "neutral" },
 };
 
@@ -149,16 +173,36 @@ export function KeyVotesSection({
         keep their headers, their counts and their chevrons, and they now
         INDENT as sub-groups, so what they are is legible: a thing containing
         two things, each still a thing to click.
+
+        **F01 5.3 (2026-08-19) REVERSES the `defaultOpen` half of that**, on
+        the author's direct instruction: *"when I hit when it mattered it
+        should drop down like it does but it should not automatically expand
+        both votes on laws and votes on people. They both should be
+        collapsed."* Recorded as a reversal rather than a tidy-up so a later
+        session reading the paragraph above does not restore it.
+
+        The friction the old decision was protecting against is answered a
+        different way and is still answered: the pane is no longer a criteria
+        sentence over two bare bars, because each bar now states its COUNT in
+        the header ("Votes on laws 20", "Votes on people none"), which is the
+        pane's actual answer visible without a tap. The indent and the scale
+        step from that same pass stay.
       */}
       {laws.length > 0 && (
         <CardSection
           title="Votes on laws"
-          // The stated N counts every entry, INCLUDING the two whose roll
-          // calls were correctly refused. A count that quietly dropped them
-          // would make our own gap invisible.
-          meta={`${laws.length}`}
+          /* F01 5.1 (2026-08-19): TWO numbers, not one. The first is what the
+             member actually voted on — which is what the headline above now
+             counts, so the two agree — and the second is the full curated
+             list, which keeps our own gaps visible as the difference. The
+             prior single N counted every entry and was therefore a number
+             that described neither. */
+          meta={
+            votedCount(laws) === laws.length
+              ? `${laws.length}`
+              : `${votedCount(laws)} of ${laws.length}`
+          }
           level="sub"
-          defaultOpen
         >
           <KeyVoteGroupBlock chamber={chamber} rows={laws} />
         </CardSection>
@@ -167,7 +211,7 @@ export function KeyVotesSection({
       {houseNominationsLine ? (
         // One header, one sentence behind it. Never sixteen rows of the same
         // sentence — but open, because the sentence IS the answer.
-        <CardSection title="Votes on people" meta="none" level="sub" defaultOpen>
+        <CardSection title="Votes on people" meta="none" level="sub">
           <p className="text-[0.75rem] leading-relaxed text-voice">
             {houseNominationsLine}
           </p>
@@ -176,9 +220,12 @@ export function KeyVotesSection({
         people.length > 0 && (
           <CardSection
             title="Votes on people"
-            meta={`${people.length}`}
+            meta={
+              votedCount(people) === people.length
+                ? `${people.length}`
+                : `${votedCount(people)} of ${people.length}`
+            }
             level="sub"
-            defaultOpen
           >
             <KeyVoteGroupBlock chamber={chamber} rows={people} />
           </CardSection>
@@ -302,7 +349,7 @@ function KeyVoteGroupBlock({
                     legislature; its absence is a fact about us, and they are
                     never allowed to render as the same sentence. */}
                 {row.note ??
-                  "We haven't recorded this chamber's vote on this yet — that's a gap in our research, not a statement that no vote happened."}
+                  "We haven't recorded this chamber's vote on this yet. This is not a statement that no vote happened."}
               </p>
             )}
           </li>

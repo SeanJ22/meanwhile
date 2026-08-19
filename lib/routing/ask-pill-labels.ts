@@ -11,7 +11,7 @@
  * string literals in three components: *"Where the pill's width forbids the
  * full example string, use the shortest form that still names at least one
  * concrete example."* A label that degrades to "Ask" under pressure has lost
- * the entire point, so the shortest form here still names a pothole. Each row
+ * the entire point, so the shortest form here still names an example. Each row
  * records the width that forced it, and `docs/DESIGN.md` cites this file
  * rather than restating the strings — two copies of a label drift, and the one
  * in the doc is the copy nothing renders.
@@ -50,24 +50,24 @@ export const ASK_PILL_LABELS: Readonly<Record<AskPillPlacement, AskPillLabel>> =
   {
     map: {
       placement: "map",
-      label: "Ask: a pothole?",
-      ariaLabel: "Ask about your area — a pothole, a meeting, your ballot",
+      label: "Ask: a meeting?",
+      ariaLabel: "Ask about your area — a meeting, your school board, your ballot",
       maxPx: 150,
       note:
         "Shares map-top-row with the ballot pill and clears MapLibre's zoom column (pr-14). At 390px the two pills split ~330px, so the full example string overflows and the shortest form that still names an example is used.",
     },
     sidebar: {
       placement: "sidebar",
-      label: "Ask about a pothole, a meeting…",
-      ariaLabel: "Ask about your area — a pothole, a meeting, your ballot",
+      label: "Ask about a meeting, a school…",
+      ariaLabel: "Ask about your area — a meeting, your school board, your ballot",
       maxPx: 316,
       note:
         "The 340px rail less its 12px horizontal padding on each side. The pill is alone on its row, so the full example string fits.",
     },
     wgh: {
       placement: "wgh",
-      label: "Ask about a pothole, a meeting…",
-      ariaLabel: "Ask about your area — a pothole, a meeting, your ballot",
+      label: "Ask about a meeting, a school…",
+      ariaLabel: "Ask about your area — a meeting, your school board, your ballot",
       maxPx: 316,
       note:
         "The who-governs card at phone width is the same 340px envelope as the rail, and the pill is alone on its row.",
@@ -75,4 +75,4 @@ export const ASK_PILL_LABELS: Readonly<Record<AskPillPlacement, AskPillLabel>> =
   };
 
 /** Every label names a concrete example — the guard G07 asks for, as code. */
-export const ASK_PILL_EXAMPLES: readonly string[] = ["pothole", "meeting"];
+export const ASK_PILL_EXAMPLES: readonly string[] = ["meeting", "school"];

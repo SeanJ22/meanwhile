@@ -54,6 +54,28 @@ interface CoverageNoticeProps {
    */
   failedSourceOcdIds?: string[];
   /**
+   * **F01 7.2 (2026-08-19, the author)** — which of those bodies nevertheless
+   * has meetings ON SCREEN right now.
+   *
+   * His finding: the New Hampshire card said it couldn’t reach Kearsarge’s and
+   * Newbury’s calendar sources “so their meetings may be missing here”, and
+   * clicking the maroon dot in New London showed Kearsarge meetings anyway.
+   * *"Something’s not right."*
+   *
+   * Diagnosed before fixing, and neither surface was lying — they were
+   * answering different questions. `carry-forward.ts` exists precisely so a
+   * refused source does not empty a previously-full surface, so the pins stay
+   * and each carried row states its own age. The WARNING never learned that:
+   * it fired on the REFUSAL alone and said “may be missing” about rows the
+   * reader could see.
+   *
+   * So the card is told what the map is showing, and the two sentences split:
+   * a body with rows on screen is one whose calendar we could not REFRESH; a
+   * body with none is one whose meetings may genuinely be missing. Both are
+   * true, they are different facts, and only one of them was ever being said.
+   */
+  ocdIdsWithMeetings?: string[];
+  /**
    * The answer under this card is the previous area's, and a fresher one is
    * in flight (6f). The card DIMS rather than un-rendering — un-rendering is
    * what made the bubble blink on every pan — and the dim is what keeps a
@@ -277,6 +299,7 @@ function CoverageBody({
   zip,
   coverage,
   failedSourceOcdIds = [],
+  ocdIdsWithMeetings = [],
   onOpenOfficial,
   onOpenBody,
   onNarrowApplied,
@@ -285,6 +308,8 @@ function CoverageBody({
   zip: string;
   coverage: CoverageSummary;
   failedSourceOcdIds?: string[];
+  /** F01 7.2: which of those bodies has rows on screen anyway. */
+  ocdIdsWithMeetings?: string[];
   onOpenOfficial?: OpenOfficial;
   onOpenBody?: (body: CoveredBody) => void;
   onNarrowApplied?: () => void;
@@ -368,8 +393,8 @@ function CoverageBody({
   const lead =
     kind === "unmapped" ? (
       <>
-        We haven&apos;t mapped the governing bodies covering {zip} yet. That is a
-        gap in our data, not a gap in your government.
+        We haven&apos;t mapped the governing bodies covering {zip} yet. This is
+        not a statement that no government covers it.
       </>
     ) : kind === "none-scheduled" ? (
       <>
@@ -728,9 +753,42 @@ function CoverageBody({
         bodies exactly like bodies with nothing scheduled — a gap of ours
         presented as a fact about their government.
       */}
+      {/* F01 7.2 (2026-08-19) — TWO SENTENCES, because there are two facts.
+
+          This used to be one footnote over every body whose source refused,
+          saying their meetings “may be missing here”. For a body whose rows
+          were carried forward that is false ON ITS FACE: the rows are on the
+          map, and the author clicked one. What is true of that body is that we
+          could not REFRESH it — which is what the carried rows already say
+          individually, and what this card was contradicting.
+
+          A body with no rows on screen keeps the original sentence, which was
+          right all along for the case it was written for. */}
       {collapseFootnotes(
         shown.filter(
-          (body) => body.ocdId !== null && failedSourceOcdIds.includes(body.ocdId),
+          (body) =>
+            body.ocdId !== null &&
+            failedSourceOcdIds.includes(body.ocdId) &&
+            ocdIdsWithMeetings.includes(body.ocdId),
+        ),
+        () =>
+          "we couldn’t reach their calendar source at the last check, so what’s on the map for them is from our previous check.",
+      ).map((footnote) => (
+        <p
+          key={`source-stale:${footnote.subjects}`}
+          className="mt-1.5 text-[0.6875rem] leading-relaxed text-signal"
+        >
+          <span className="text-paper-dim">{footnote.subjects}</span> —{" "}
+          {footnote.note}
+        </p>
+      ))}
+
+      {collapseFootnotes(
+        shown.filter(
+          (body) =>
+            body.ocdId !== null &&
+            failedSourceOcdIds.includes(body.ocdId) &&
+            !ocdIdsWithMeetings.includes(body.ocdId),
         ),
         () =>
           "we couldn’t reach their calendar source at the last check, so their meetings may be missing here.",
@@ -769,7 +827,7 @@ function CoverageBody({
               than implied complete. */}
           {(stateSeats.length > 0 || statewideExecutives.length > 0) && (
             <>
-              <p className="t-structure mt-4 border-t border-[var(--panel-border)] pt-3 text-state">
+              <p className="t-structure mt-4 text-state">
                 State
               </p>
               <ul className="mt-1 space-y-1">
@@ -835,7 +893,7 @@ function CoverageBody({
               matches every ballot and source the app cites. */}
           {(federalSeats.length > 0 || senators.length > 0) && (
             <>
-              <p className="t-structure mt-4 border-t border-[var(--panel-border)] pt-3 text-national">
+              <p className="t-structure mt-4 text-national">
                 Federal
               </p>
               <ul className="mt-1 space-y-1">
@@ -972,6 +1030,7 @@ export function CoverageNotice({
   count,
   coverage,
   failedSourceOcdIds,
+  ocdIdsWithMeetings,
   refreshing = false,
   onOpenOfficial,
   onOpenBody,
@@ -1118,6 +1177,7 @@ export function CoverageNotice({
           zip={zip}
           coverage={coverage}
           failedSourceOcdIds={failedSourceOcdIds}
+          ocdIdsWithMeetings={ocdIdsWithMeetings}
           onOpenOfficial={onOpenOfficial}
           onOpenBody={onOpenBody}
           onNarrowApplied={onNarrowApplied}

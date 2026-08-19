@@ -175,7 +175,8 @@ test("an unresolved roll call renders OUR gap, never the legislature's", () => {
   // Three different kinds of "no vote here", and they must say three
   // different things. Collapsing the third into the first two would turn a
   // hole in our research into a claim about a legislature.
-  assert.ok(surface.includes("gap in our research"));
+  assert.ok(surface.includes("We haven't recorded this chamber's vote on this yet"));
+  assert.ok(!/gap in our (data|research)/i.test(surface), "F01 6.1: the gap phrasing is struck product-wide");
   assert.ok(surface.includes("{row.note ??"), "the stated note must win over the generic gap line");
   assert.ok(surface.includes("Did not vote"));
 
@@ -240,17 +241,24 @@ test("B17: the law rows carry roll calls from the chambers' own records", () => 
   // the House, and the false-miss shape this codebase keeps naming. The
   // measure still has no Senate vote, which is what its card says.
   //
-  // The one that remains is the shutdown entry, and it is a real refusal
-  // rather than a gap in effort: the 119th carries five appropriations laws
-  // and the entry's own title names two things at once — reopening the
-  // government and funding the rest of the year. Which law the author means
-  // is the author's to say, and the list is closed.
+  // **20 of 20 since 2026-08-19 (F01 5.6).** The shutdown entry was the last
+  // one open, and it was open for a reason that turned out to be wrong: the
+  // park said the 119th carries five appropriations laws and the entry names
+  // two things at once, so no single vote could answer it. The record says
+  // otherwise — the House Clerk's 2025 index and the Senate's 119-1 vote menu
+  // both name ONE bill, H.R. 5371, and the fight over it runs from 19 Sep to
+  // 12 Nov. Resolved from the roll-call record itself, which is the rung the
+  // popular-name route could not reach: "Continuing Appropriations" matches
+  // several laws by title while only one of them is this episode.
   //
   // Exact, so a regression cannot hide behind "at least".
   const resolved = laws.filter((e) => e.house.length > 0 || e.senate.length > 0);
-  assert.equal(resolved.length, 19, resolved.map((e) => e.id).join(", "));
+  assert.equal(resolved.length, 20, resolved.map((e) => e.id).join(", "));
   const unresolved = laws.filter((e) => e.house.length === 0 && e.senate.length === 0);
-  assert.deepEqual(unresolved.map((e) => e.id).sort(), ["funding-fight"]);
+  assert.deepEqual(unresolved.map((e) => e.id).sort(), []);
+  // Kept for the day another row goes unresolved: an unresolved entry with no
+  // recorded reason is the empty-success shape, and the guard must survive the
+  // list happening to be complete today.
   for (const entry of unresolved) {
     const miss = snapshot.misses.find((m) => m.id === entry.id);
     assert.ok(miss, `${entry.id}: unresolved with no recorded reason`);
@@ -343,25 +351,63 @@ function assertPassageQuestion(id: string, chamber: string, question: string | n
  * the pane opens with its content, and its sub-groups read as sub-groups.
  */
 
-test("the key-votes pane opens with its content, not with two closed bars", () => {
+/**
+ * **F01 5.3 (2026-08-19) REVERSED THIS TEST'S FIRST HALF**, on the author's
+ * direct instruction: *"it should not automatically expand both votes on laws
+ * and votes on people. They both should be collapsed."*
+ *
+ * So the assertion flips: no sub-group may ship `defaultOpen`. The concern the
+ * old rule was protecting — a pane whose whole visible content is one small
+ * paragraph over two bare bars — is now answered by the bars themselves, which
+ * carry their COUNT in the header. That is asserted here too, so the reversal
+ * cannot quietly take the compensating half with it.
+ *
+ * The sub-group MARKING half of the old test is unchanged and still enforced.
+ */
+test("F01 5.3: the key-votes sub-groups ship collapsed, and say how many they hold", () => {
   const surface = readFileSync(
     join(ROOT, "components", "officials", "key-votes-section.tsx"),
     "utf8",
   );
-  // Every CardSection this file renders opens with the pane. A view the
-  // reader just selected must not need two more taps to show anything.
   const sections = surface.match(/<CardSection[\s\S]*?>/g) ?? [];
   assert.ok(sections.length >= 3, "the pane should render its sub-groups");
   for (const section of sections) {
     assert.ok(
-      /defaultOpen/.test(section),
-      `a key-votes sub-group ships closed:\n${section}`,
+      !/defaultOpen/.test(section),
+      `a key-votes sub-group ships OPEN, which F01 5.3 reversed:\n${section}`,
     );
     assert.ok(
       /level="sub"/.test(section),
       `a key-votes sub-group is not marked as one:\n${section}`,
     );
+    // The count in the header is what a closed bar answers with.
+    assert.ok(
+      /meta=/.test(section),
+      `a collapsed sub-group with no count states nothing at all:\n${section}`,
+    );
   }
+});
+
+/**
+ * F01 5.1 — the headline counts what sits under it.
+ *
+ * `votedCount` is the whole of the fix, so it is tested directly rather than
+ * through a string match on a component.
+ */
+test("F01 5.1: only rows the member actually voted on are counted", async () => {
+  const { votedCount } = await import("../lib/votes/participation.ts");
+  const row = (positions: (string | null)[]) =>
+    ({ positions, refs: [], breakdowns: [], note: null }) as never;
+
+  // A recorded position of any kind counts — including a recorded absence
+  // from a roll call the member was seated for.
+  assert.equal(votedCount([row(["YES"]), row(["NO"]), row(["DID_NOT_VOTE"])]), 3);
+  // Every position null means either "not in this chamber" or "we haven't
+  // recorded it" — neither is a vote the member cast.
+  assert.equal(votedCount([row([null]), row([null, null])]), 0);
+  // A row with one held roll call and one gap still counts once, not twice.
+  assert.equal(votedCount([row(["YES", null])]), 1);
+  assert.equal(votedCount([]), 0);
 });
 
 test("a sub-group is visually a sub-group, and still a thing to click", () => {
@@ -502,22 +548,31 @@ test("B15 g20: D68's overwrite is repaired — every House ref is distinct and d
   assert.deepEqual(rolls, [145, 146, 151, 152], "an April 2024 House roll call moved");
 
   // House coverage, exact rather than "at least" — the floor a total hid.
+  // F01 5.6 (2026-08-19): 19 → 20. `funding-fight` was the one row without a
+  // House roll call; the author unparked it and the Clerk's own 2025 index
+  // resolved it to H.R. 5371, roll 285.
   assert.equal(
     laws.filter((e) => e.house.length > 0).length,
-    19,
+    20,
     "House coverage across the LAWS list",
   );
 });
 
-test("B15 g20: the shutdown entry is PARKED by the author, and a run cannot close it", async () => {
+test("B15 g20 / F01 5.6: the park MECHANISM still holds, with the map now empty", async () => {
   const { PARKED_KEY_VOTES } = await import("../lib/votes/key-votes.ts");
 
   // A MISS is what a resolver could not find; it invites a better rung. A
   // PARK is the author's decision that no attempt should be made, because
   // the answer is his to give. The two must not be told apart only in prose.
-  assert.ok(PARKED_KEY_VOTES["funding-fight"]);
-  assert.match(PARKED_KEY_VOTES["funding-fight"], /Skip for now/);
-  assert.match(PARKED_KEY_VOTES["funding-fight"], /2026-08-19/);
+  //
+  // F01 5.6 (2026-08-19): the author UNPARKED `funding-fight`, so the map is
+  // now EMPTY — and the mechanism below is guarded exactly as hard, because
+  // the next park has to work the day it is written. The loop over the map is
+  // vacuous today and is kept deliberately.
+  assert.ok(
+    !("funding-fight" in PARKED_KEY_VOTES),
+    "funding-fight is parked again — F01 5.6 unparked it and resolved it",
+  );
 
   const snapshot = getKeyVotesSnapshot();
   for (const id of Object.keys(PARKED_KEY_VOTES)) {
@@ -546,19 +601,131 @@ test("B15 g20: the shutdown entry is PARKED by the author, and a run cannot clos
   );
 });
 
-test("B15 g20: the parked entry tells the reader what happened, not just that nothing is here", () => {
-  const entry = KEY_VOTES_LAWS.find((e) => e.id === "funding-fight");
-  assert.ok(entry);
+/**
+ * **F01 5.6 (2026-08-19) — the shutdown row is RESOLVED, and B15 closes at
+ * 20 of 20.**
+ *
+ * This test replaces "the parked entry tells the reader what happened". That
+ * one guarded the two notes explaining why the row was open; the author
+ * unparked the row and both notes are gone, so guarding their wording would be
+ * guarding a sentence the product no longer makes.
+ *
+ * What is guarded instead is the resolution itself, ref by ref, against the
+ * chambers' own records — because a row that went from "we couldn't say" to a
+ * specific claim about how 526 named members voted is exactly the kind of
+ * change that has to be checkable rather than trusted.
+ */
+test("F01 5.6: the shutdown row resolves to H.R. 5371 in both chambers, with tallies", () => {
+  const snapshot = getKeyVotesSnapshot();
+  const entry = snapshot.entries.find((e) => e.id === "funding-fight")!;
+  assert.ok(entry, "funding-fight left the list");
 
-  // The generic gap line is true and vague — it reads as "nobody looked".
-  // What happened is a fact about OUR list: the entry names two things and
-  // Congress answered with more than one law. Both chambers say so, because
-  // the ambiguity is in the question rather than in either chamber's record.
-  for (const note of [entry.houseNote, entry.senateNote]) {
-    assert.ok(note, "a parked entry with no note falls to the generic line");
-    assert.match(note, /more than one appropriations law/);
-    assert.match(note, /rather than guessing/);
-    // Never a claim about the member.
-    assert.doesNotMatch(note, /did not vote|didn't vote|voted against/i);
+  // The House's meaningful act on a Senate-amended bill is the concurrence —
+  // the same rule obbba uses, and the reason `whichVote` exists.
+  assert.deepEqual(entry.whichVote, {
+    house: "concurrence in the Senate amendment",
+    senate: "final passage",
+  });
+
+  assert.equal(entry.house.length, 1);
+  const house = entry.house[0];
+  assert.equal(house.congress, 119);
+  assert.equal(house.session, 1);
+  assert.equal(house.rollNumber, 285);
+  assert.equal(house.tally, "222-209");
+  assert.equal(house.url, "https://clerk.house.gov/evs/2025/roll285.xml");
+  assert.match(house.question ?? "", /Concur in the Senate Amendment/i);
+  assert.match(house.verifiedAt ?? "", /^\d{4}-\d{2}-\d{2}$/);
+
+  assert.equal(entry.senate.length, 1);
+  const senate = entry.senate[0];
+  assert.equal(senate.congress, 119);
+  assert.equal(senate.session, 1);
+  assert.equal(senate.rollNumber, 618);
+  assert.equal(senate.tally, "60-40");
+  assert.match(
+    senate.url ?? "",
+    /^https:\/\/www\.senate\.gov\/legislative\/LIS\/roll_call_votes\//,
+    "the Senate ref must cite the Senate's own record, never an aggregator",
+  );
+  assert.match(senate.question ?? "", /On Passage of the Bill/i);
+
+  // The notes that explained the park are GONE, not reworded: what they said
+  // stopped being true.
+  const source = KEY_VOTES_LAWS.find((e) => e.id === "funding-fight")!;
+  assert.equal(source.houseNote, undefined);
+  assert.equal(source.senateNote, undefined);
+
+  // And the entry is no longer a recorded MISS.
+  assert.ok(
+    !snapshot.misses.some((m) => m.id === "funding-fight"),
+    "funding-fight is resolved and still listed as a miss",
+  );
+});
+
+/**
+ * **F01 5.2 (2026-08-19, the author): "if he was in session we'd need to
+ * record what he did."**
+ *
+ * We did record it. The key-votes pill map had no key for `NOT_VOTING` — the
+ * value the fetcher writes for a member who was SEATED and did not vote — so
+ * 140 stored positions fell through to a generic "Position recorded" branch,
+ * which tells a reader nothing where "Did not vote" is the true and useful
+ * answer. The Recent view had it right all along, which is exactly how two
+ * views of one record come to say different things.
+ */
+test("F01 5.2: every position the store can hold has a pill, in both views", () => {
+  const keyVotes = readFileSync(
+    join(ROOT, "components", "officials", "key-votes-section.tsx"),
+    "utf8",
+  );
+  const recent = readFileSync(
+    join(ROOT, "components", "map", "popup", "official-popup.tsx"),
+    "utf8",
+  );
+
+  // The vocabulary the fetcher can actually produce, read off the fetcher so
+  // this cannot drift from what lands in the store.
+  const fetcher = readFileSync(
+    join(ROOT, "scripts", "fetch-key-vote-positions.mts"),
+    "utf8",
+  );
+  const produced = [...fetcher.matchAll(/return "(YES|NO|PRESENT|NOT_VOTING)"/g)].map(
+    (m) => m[1],
+  );
+  assert.ok(produced.length >= 4, "the fetcher's position vocabulary was not found");
+
+  for (const position of new Set(produced)) {
+    assert.ok(
+      new RegExp(`^[ ]*${position}: [{]`, "m").test(keyVotes),
+      `the key-votes pill map has no entry for ${position} — it will render the generic fallback`,
+    );
+    assert.ok(
+      new RegExp(`^[ ]*${position}: [{]`, "m").test(recent),
+      `the recent-votes pill map has no entry for ${position}`,
+    );
   }
+
+  // A recorded absence is neutral in both. It is not a position (never the
+  // yes/no colour) and it is not a gap (never the outline) — three states,
+  // three treatments.
+  assert.match(keyVotes, /NOT_VOTING: \{ label: "Did not vote", tone: "neutral" \}/);
+  assert.match(recent, /NOT_VOTING: \{ label: "Did not vote", tone: "neutral" \}/);
+});
+
+test("F01 5.2: the store actually holds recorded absences, so the pill is not theoretical", () => {
+  // 140 of them at the time of writing. A guard for a value nothing produces
+  // is a guard that proves nothing, so the denominator is asserted.
+  const positions = JSON.parse(
+    readFileSync(join(ROOT, "data", "votes", "key-vote-positions.json"), "utf8"),
+  ) as { positions: Record<string, Record<string, string>> };
+  const counts: Record<string, number> = {};
+  for (const roll of Object.values(positions.positions)) {
+    for (const value of Object.values(roll)) counts[value] = (counts[value] ?? 0) + 1;
+  }
+  assert.ok(
+    (counts.NOT_VOTING ?? 0) > 0,
+    "no recorded absence in the store — this guard is asserting nothing",
+  );
+  assert.ok((counts.YES ?? 0) > 0 && (counts.NO ?? 0) > 0);
 });

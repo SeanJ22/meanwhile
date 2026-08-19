@@ -5,8 +5,14 @@ import { X } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 
 import { formatMeetingDate, formatMeetingTime } from "@/lib/map/format";
-import { hasConcluded, orderByUpcomingFirst } from "@/lib/meetings/ordering";
+import { attributionNotesFor } from "@/lib/meetings/list-attribution";
+import {
+  groupMeetingsForReading,
+  hasConcluded,
+  orderByUpcomingFirst,
+} from "@/lib/meetings/ordering";
 import { NO_BODY_BLURB_LINE } from "@/lib/officials/body-blurbs";
+import { TOP_OFFICES_GAP, topOfficesFor } from "@/lib/officials/top-offices";
 import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyColorVar } from "@/lib/officials/party-color";
@@ -16,10 +22,14 @@ import {
 } from "@/lib/officials/card-sources";
 import type { Meeting } from "@/lib/sources/types";
 
-import { CardSection } from "@/components/officials/card-section";
+import {
+  CardSection,
+  CardSectionGroup,
+} from "@/components/officials/card-section";
 import { CardSourcesList } from "@/components/officials/card-sources-list";
+import { IdentityPortrait } from "@/components/officials/person-identity";
 
-import { HowToBeHeard } from "../meeting-panel";
+import { HowToBeHeard, MeetingAttributionNotes } from "../meeting-panel";
 import { CalendarLinks } from "./calendar-links";
 import { AgendaSection } from "./agenda-section";
 import { NoValue, PopupRow, PopupSectionLabel } from "./popup-card";
@@ -317,6 +327,9 @@ function BodySections({
    * two renders.
    */
   const [now] = useState(() => Date.now());
+  // The body card states "N upcoming" beside the section title, so it keeps
+  // the flat ordering for the COUNT and hands the raw list to <Meetings>,
+  // which groups it. One list, one order, computed once.
   const meetings = orderByUpcomingFirst(subject.meetings, now);
   const upcoming = meetings.filter((m) => !hasConcluded(m, now)).length;
 
@@ -371,9 +384,12 @@ function BodySections({
               <div className="mt-2 border-t border-[var(--rule)] pt-2">
                 <PopupSectionLabel>Runs the district day to day</PopupSectionLabel>
                 {card.superintendent ? (
+                  // F01 2.2: this block IS the top office, so it must not print
+                  // a “Who runs it” heading over a duplicate of its one row.
                   <Representation
                     holders={[card.superintendent]}
                     note=""
+                    showTopOffices={false}
                     onOpenHolder={onOpenHolder}
                   />
                 ) : (
@@ -458,11 +474,16 @@ function BodySections({
         </PopupRow>
       ))}
 
-      {sections.map((section) => (
-        <CardSection key={section.id} title={section.title} meta={section.meta}>
-          {section.content ?? <Empty>{section.absence}</Empty>}
-        </CardSection>
-      ))}
+      {/* F01 4.1 (2026-08-19), applied as a CLASS: the author named the person
+          card, and a body battlecard is the same stack of pills with the same
+          failure available to it. One group, one open pill. */}
+      <CardSectionGroup>
+        {sections.map((section) => (
+          <CardSection key={section.id} title={section.title} meta={section.meta}>
+            {section.content ?? <Empty>{section.absence}</Empty>}
+          </CardSection>
+        ))}
+      </CardSectionGroup>
     </div>
   );
 }
@@ -634,6 +655,11 @@ export function EntityModal({
             />
           )}
 
+          {/* F01 3.1 (2026-08-19): this tab used to render `subject.meetings`
+              RAW — the one meetings surface that never called the shared
+              ordering — so a division card opened on Meetings showed June
+              sittings above everything a reader could still attend. It now
+              renders the same three groups the venue panel does. */}
           {tab === "meetings" && <Meetings meetings={subject.meetings} />}
 
           {tab === "activity" && (
@@ -664,17 +690,97 @@ function Representation({
   holders,
   note,
   onOpenHolder,
+  /**
+   * F01 2.2 (2026-08-19): lead with WHO RUNS IT.
+   *
+   * Default ON, so a surface that forgets to ask for it still gets it — the
+   * author’s rule is that every Representation list carries its top offices,
+   * and a default-off flag is how half of them would end up without one. Set
+   * false only where the list is ALREADY the top offices (a single-seat
+   * division), which would otherwise print the same person twice.
+   */
+  showTopOffices = true,
 }: {
   holders: SeatHolder[];
   note: string;
   onOpenHolder?: (holder: SeatHolder) => void;
+  showTopOffices?: boolean;
 }) {
   if (holders.length === 0) return <Empty>{note}</Empty>;
 
+  const topOffices = showTopOffices ? topOfficesFor(holders) : [];
+  // One person in the list IS the top office; a heading over a duplicate of
+  // the only row is furniture, not information.
+  const leadsWorthShowing = topOffices.length > 0 && holders.length > 1;
+
   return (
     <>
+      {/*
+        F01 2.2 — the same question the small card answers, answered the same
+        way, from the same precedence table. *"When I look at representation, as
+        mentioned, there should be the superintendent in there."*
+
+        The list below is the roster in the body’s own published order, which
+        answers “who sits on it”. This answers “who runs it”, and a reader
+        should not have to work the second out of the first.
+      */}
+      {leadsWorthShowing && (
+        <div className="mb-2.5 border-b border-[var(--rule)] pb-2.5">
+          <PopupSectionLabel>Who runs it</PopupSectionLabel>
+          {topOffices.map((office) => (
+            <p
+              key={`top:${office.holder.id}`}
+              className="mt-1 text-[0.8125rem] leading-snug text-paper"
+            >
+              {onOpenHolder ? (
+                <button
+                  type="button"
+                  onClick={() => onOpenHolder(office.holder)}
+                  className="cursor-pointer font-medium hover:text-signal hover:underline"
+                >
+                  {office.holder.name}
+                </button>
+              ) : (
+                <span className="font-medium">{office.holder.name}</span>
+              )}
+              <span className="text-muted">
+                {" — "}
+                {office.role}
+              </span>
+            </p>
+          ))}
+        </div>
+      )}
+      {showTopOffices && topOffices.length === 0 && (
+        <p className="mb-2.5 border-b border-[var(--rule)] pb-2.5 text-[0.6875rem] leading-relaxed text-muted">
+          {TOP_OFFICES_GAP}
+        </p>
+      )}
       {holders.map((holder) => (
-        <div key={holder.id} className="account-modal-person">
+        <div key={holder.id} className="account-modal-person flex items-start gap-3">
+          {/*
+            F01 2.3 (2026-08-19, the author): *"On AZ-6, when I look at
+            Representation, we should have the picture of that person — we
+            already have it — so we should just simply put it on the left,
+            essentially left of both his name and his party affiliation, the
+            same size as the battlecard when I click into Ciscomani."*
+
+            He is right that we already have it: `holder.photoUrl` has ridden
+            on the seat holder all along and this list was the one place that
+            rendered a person WITHOUT the circle every other surface gives them.
+            902 portraits were collected and this list showed none of them.
+
+            `IdentityPortrait` rather than an `<img>`: it is the one geometry,
+            it carries the neutral ring the party colour may never touch, and
+            it renders honest INITIALS where no portrait exists — so a person
+            we hold no picture of gets the same circle at the same size rather
+            than a ragged row, which is the equal-effort rule applied to
+            layout. `--sm` is the small battlecard's size, which is the size he
+            asked for by name.
+          */}
+          <IdentityPortrait name={holder.name} photoUrl={holder.photoUrl} />
+
+          <div className="min-w-0 flex-1">
           <div className="flex items-baseline justify-between gap-3">
             <span className="text-[0.875rem] font-medium text-paper">
               {onOpenHolder ? (
@@ -732,13 +838,26 @@ function Representation({
               <NoValue>no source recorded</NoValue>
             )}
           </p>
+          </div>
         </div>
       ))}
     </>
   );
 }
 
+/**
+ * Every meetings list on a battlecard — F01 3.1 and 3.2, 2026-08-19.
+ *
+ * Both callers (the division card's Meetings tab, the body card's Meetings
+ * section) render through here, so the three groups and the collapsed
+ * attribution cannot diverge between them. That was the actual defect: the tab
+ * path never sorted at all while the body path did, and one shared function
+ * used by half its callers is not a shared function.
+ */
 function Meetings({ meetings }: { meetings: Meeting[] }) {
+  // Pinned at mount — never a clock read in a render body (item 11's rule).
+  const [now] = useState(() => Date.now());
+
   if (meetings.length === 0) {
     return (
       <Empty>
@@ -748,24 +867,55 @@ function Meetings({ meetings }: { meetings: Meeting[] }) {
     );
   }
 
+  const groups = groupMeetingsForReading(meetings, now);
+  const { notes, markerFor } = attributionNotesFor(
+    groups.flatMap((group) => group.meetings),
+  );
+
   return (
     <>
-      {meetings.map((meeting) => (
-        <div key={meeting.id} className="account-modal-person">
-          <div className="flex items-baseline justify-between gap-3">
-            <span className="text-[0.875rem] text-paper">{meeting.title}</span>
-            <span className="shrink-0 font-mono text-[0.6875rem] text-muted">
-              {formatMeetingDate(meeting)}
-            </span>
-          </div>
-          <p className="mt-0.5 text-[0.6875rem] text-muted">
-            {meeting.bodyName} · {formatMeetingTime(meeting)}
+      {groups.map((group) => (
+        <section key={group.id}>
+          <p className="t-structure mt-3 mb-1 text-label first:mt-0">
+            {group.label}
           </p>
-          {/* 3i (2026-08-19): calendar links on every upcoming-meeting
-              surface, this tab included. */}
-          {meeting.status === "SCHEDULED" && <CalendarLinks meeting={meeting} />}
-        </div>
+          {group.meetings.map((meeting) => (
+            <div key={meeting.id} className="account-modal-person">
+              <div className="flex items-baseline justify-between gap-3">
+                <span className="text-[0.875rem] text-paper">
+                  {meeting.title}
+                </span>
+                <span className="shrink-0 font-mono text-[0.6875rem] text-muted">
+                  {formatMeetingDate(meeting)}
+                </span>
+              </div>
+              <p className="mt-0.5 text-[0.6875rem] text-muted">
+                {markerFor(meeting) && (
+                  <span aria-hidden="true" className="mr-1 text-paper-dim">
+                    {markerFor(meeting)}
+                  </span>
+                )}
+                {formatMeetingTime(meeting)}
+              </p>
+              {/* 3i (2026-08-19): calendar links on every upcoming-meeting
+                  surface, this tab included. */}
+              {meeting.status === "SCHEDULED" && (
+                <CalendarLinks meeting={meeting} />
+              )}
+            </div>
+          ))}
+        </section>
       ))}
+
+      {/* F01 3.2: the body name used to sit on every row beside the time. It
+          is the same string on every row of a single body's card, so it moved
+          here — once per distinct body, with the marker above pointing at it.
+          The jurisdiction rides along, which is MORE provenance per note than
+          the row carried, not less. */}
+      <MeetingAttributionNotes
+        notes={notes}
+        className="mt-3 border-t border-[var(--rule)] pt-2.5"
+      />
     </>
   );
 }
@@ -792,12 +942,9 @@ function Empty({ children }: { children: ReactNode }) {
   );
 }
 
-function hostOf(url: string): string {
-  try {
-    return new URL(url).host;
-  } catch {
-    return url;
-  }
-}
+/* `hostOf` REMOVED (F01 3.2, 2026-08-19). Its only caller was the per-row
+   provenance line the attribution collapse retired; a helper nothing calls is
+   dead weight that reads as a capability. Deleted rather than allowlisted — an
+   allowlist entry for an unused symbol is permission for the next one. */
 
 export { PopupSectionLabel };

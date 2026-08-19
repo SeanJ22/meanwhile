@@ -130,3 +130,67 @@ test("a body with nothing to say contributes no footnote at all", () => {
   );
   assert.deepEqual(collapsed, [], "an empty note became a rendered line");
 });
+
+/* ------------------------------------------------- F01 6.1, the gap sweep --- */
+
+/**
+ * F01 6.1 / 6.2 (2026-08-19, the author's walkthrough): *"we need to stop
+ * calling out potential errors we are making."*
+ *
+ * The product used to append an apology to every honest absence — "that's a
+ * gap in our research" / "this is a gap in our data" — and then argue the
+ * point ("not a statement that no vote happened"). The FACTUAL half stays and
+ * is load-bearing: `CLAUDE.md`'s render-default rule requires a named gap to
+ * say WHOSE gap it is, and "we haven't recorded / collected / wired" does
+ * exactly that. What is struck is the editorial about our own shortcomings.
+ *
+ * **This guard is the class, not the instance.** It reads every reader-facing
+ * source file rather than the seven call sites the sweep happened to find, so
+ * a new surface cannot reintroduce the phrasing.
+ */
+test("F01 6.1: no reader surface calls an absence a gap in our research or data", async () => {
+  const { readdirSync, readFileSync: read, statSync } = await import("node:fs");
+  const { join: j } = await import("node:path");
+
+  const roots = ["app", "components", "lib", "data"];
+  const offenders: string[] = [];
+  const walk = (dir: string) => {
+    for (const name of readdirSync(dir)) {
+      const p = j(dir, name);
+      if (statSync(p).isDirectory()) {
+        walk(p);
+        continue;
+      }
+      if (!/\.(tsx?|json)$/.test(name)) continue;
+      const text = read(p, "utf8");
+      if (/gap in our (data|research)/i.test(text)) offenders.push(p);
+    }
+  };
+  for (const r of roots) walk(j(process.cwd(), r));
+
+  assert.deepEqual(
+    offenders,
+    [],
+    `F01 6.1: the struck gap phrasing is back in ${offenders.length} file(s):\n${offenders.join("\n")}`,
+  );
+});
+
+/**
+ * The other half of 6.2 — the factual clause is not optional. An absence that
+ * says nothing about whose absence it is would satisfy the ban above and
+ * violate the render-default rule, so both halves are guarded together.
+ */
+test("F01 6.2: the struck clause leaves the whose-gap attribution standing", async () => {
+  const { readFileSync: read } = await import("node:fs");
+  const { join: j } = await import("node:path");
+  const surface = read(
+    j(process.cwd(), "components", "officials", "key-votes-section.tsx"),
+    "utf8",
+  );
+  assert.ok(
+    /We haven[’']t recorded this chamber[’']s vote on this yet\. This is not a statement that no vote happened\./.test(
+      surface,
+    ),
+    "the key-votes absence line lost its whose-gap attribution",
+  );
+});

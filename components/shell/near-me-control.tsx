@@ -92,8 +92,8 @@ export function NearMeControl({
       <div className="prox-radius-wrap">
         <p className="prox-note">
           Approximate — a browser&apos;s location is a rough fix, not your
-          doorstep. We use it to find your districts and then discard it;
-          it&apos;s never stored or logged.
+          doorstep. We use it to find your districts and then drop it from the
+          page.
         </p>
         {error && (
           <p className="prox-note" style={{ color: "var(--danger)" }}>

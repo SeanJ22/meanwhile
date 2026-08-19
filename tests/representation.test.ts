@@ -604,7 +604,23 @@ test("M57: districts off says Off, not the couldn't-check dash", async () => {
   const off = computeStats({ meetings: [], coverage: null, drawnDistricts: null });
   assert.equal(off.districts, null, "nothing drawn is null, not a count of zero");
   assert.equal(deriveStatsView(off, false, false).districts, "Off");
-  // Even with a drawn list in hand, the master switch decides.
+
+  /*
+   * **F01 9.2 (2026-08-19) REVERSES the second half of this test.** It used to
+   * assert "even with a drawn list in hand, the master switch decides", and
+   * the author caught exactly what that produces: "districts in view is listed
+   * as off... obviously that's not the case", reproduced at 85701 with
+   * boundaries plainly on screen.
+   *
+   * The switch is a MIRROR of `use-district-layer`'s persisted preference, and
+   * a mirror can diverge from the map. `stats.districts` cannot: it is counted
+   * off the live map after rendering settles. A tile whose label claims
+   * something about THE VIEW must answer from the view.
+   *
+   * "Off" keeps the case it was written for — nothing drawn and the switch
+   * off, which is a state the reader made and can undo, and which must not
+   * spend the couldn't-check dash.
+   */
   const drawn = [
     {
       type: "county" as const,
@@ -615,8 +631,17 @@ test("M57: districts off says Off, not the couldn't-check dash", async () => {
     },
   ];
   const on = computeStats({ meetings: [], coverage: null, drawnDistricts: drawn });
-  assert.equal(deriveStatsView(on, false, false).districts, "Off");
+  assert.equal(
+    deriveStatsView(on, false, false).districts,
+    1,
+    "a district on screen may never render as Off, whatever the switch believes",
+  );
   assert.equal(deriveStatsView(on, true, false).districts, 1);
+  // Nothing drawn and the switch ON is a real zero, not "Off": the reader
+  // asked for outlines and this view has none to give.
+  const noneHere = computeStats({ meetings: [], coverage: null, drawnDistricts: [] });
+  assert.equal(deriveStatsView(noneHere, true, false).districts, 0);
+  assert.equal(deriveStatsView(noneHere, false, false).districts, "Off");
 
   // And the coverage-less state does not claim zeros for the two counters
   // whose door says it could not resolve who governs.

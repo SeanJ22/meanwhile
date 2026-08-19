@@ -251,8 +251,7 @@ export function answerSentence(answer: CandidateAnswer, topicLabel: string): str
   if (answer.kind === "NOTHING_COLLECTED") {
     return (
       `We haven't collected anything this candidate has published, so we ` +
-      `can't answer this yet. That's a gap in our research, not a statement ` +
-      `about them.`
+      `can't answer this yet. This is not a statement about them.`
     );
   }
   const n = answer.scope.documents.length;

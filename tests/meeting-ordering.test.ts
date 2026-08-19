@@ -92,3 +92,78 @@ test("the input array is not mutated", () => {
   orderByUpcomingFirst(input, NOW);
   assert.deepEqual(input.map((m) => m.id), before);
 });
+
+/* -------------------------------------------- F01 3.1, the three groups --- */
+
+import { groupMeetingsForReading, SOON_DAYS } from "../lib/meetings/ordering.ts";
+
+const DAY = 24 * 60 * 60 * 1000;
+const meetingAt = (offsetDays: number, status: "SCHEDULED" | "CONCLUDED" | "CANCELED" = "SCHEDULED") => ({
+  id: `m${offsetDays}${status}`,
+  startsAt: new Date(NOW + offsetDays * DAY).toISOString(),
+  status,
+});
+
+test("F01 3.1: three groups, in the author's order, and nothing else", () => {
+  const groups = groupMeetingsForReading(
+    [meetingAt(70), meetingAt(-3, "CONCLUDED"), meetingAt(2), meetingAt(31), meetingAt(0), meetingAt(-40, "CONCLUDED")],
+    NOW,
+  );
+  assert.deepEqual(
+    groups.map((g) => g.id),
+    ["soon", "later", "closed"],
+  );
+  assert.deepEqual(
+    groups.map((g) => g.label),
+    [
+      `Meetings in the next ${SOON_DAYS} days`,
+      "Upcoming meetings after that",
+      "Canceled or concluded",
+    ],
+  );
+});
+
+test("F01 3.1: every meeting lands in exactly one group — the partition holds", () => {
+  // CLAUDE.md: an operation that can return nothing must be asked what it
+  // returned. A grouping that silently drops a row is that defect wearing a
+  // tidy face, so the count is asserted against the denominator.
+  const input = [meetingAt(70), meetingAt(-3, "CONCLUDED"), meetingAt(2), meetingAt(31), meetingAt(0), meetingAt(-40, "CONCLUDED"), meetingAt(5, "CANCELED")];
+  const groups = groupMeetingsForReading(input, NOW);
+  const total = groups.reduce((n, g) => n + g.meetings.length, 0);
+  assert.equal(total, input.length, "a meeting was dropped or duplicated");
+  const ids = new Set(groups.flatMap((g) => g.meetings.map((m) => m.id)));
+  assert.equal(ids.size, input.length);
+});
+
+test("F01 3.1: a canceled meeting is closed even when its date is still ahead", () => {
+  // "Canceled or concluded meetings, last." A meeting that will not happen is
+  // not something a reader can attend, whatever its date says.
+  const groups = groupMeetingsForReading([meetingAt(5, "CANCELED"), meetingAt(5)], NOW);
+  assert.deepEqual(groups.map((g) => g.id), ["soon", "closed"]);
+  assert.equal(groups[1].meetings[0].status, "CANCELED");
+});
+
+test("F01 3.1: the 30-day boundary is inclusive and the day after is not", () => {
+  const groups = groupMeetingsForReading([meetingAt(SOON_DAYS), meetingAt(SOON_DAYS + 1)], NOW);
+  assert.deepEqual(groups.map((g) => g.id), ["soon", "later"]);
+  assert.equal(groups[0].meetings.length, 1);
+  assert.equal(groups[1].meetings.length, 1);
+});
+
+test("F01 3.1: an empty group never renders a header over nothing", () => {
+  const groups = groupMeetingsForReading([meetingAt(2), meetingAt(3)], NOW);
+  assert.deepEqual(groups.map((g) => g.id), ["soon"]);
+  assert.equal(groupMeetingsForReading([], NOW).length, 0);
+});
+
+test("F01 3.1: soonest first inside the upcoming blocks, most recent first inside closed", () => {
+  const groups = groupMeetingsForReading(
+    [meetingAt(9), meetingAt(2), meetingAt(-2, "CONCLUDED"), meetingAt(-9, "CONCLUDED"), meetingAt(90), meetingAt(45)],
+    NOW,
+  );
+  const days = (g: (typeof groups)[number]) =>
+    g.meetings.map((m) => Math.round((Date.parse(m.startsAt) - NOW) / DAY));
+  assert.deepEqual(days(groups[0]), [2, 9]);
+  assert.deepEqual(days(groups[1]), [45, 90]);
+  assert.deepEqual(days(groups[2]), [-2, -9]);
+});

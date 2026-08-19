@@ -30,7 +30,8 @@ import { locateAddressInZip } from "@/lib/geo/census-geocoder";
  * `no-store` POSTs that write nothing on the server. The promise the
  * narrowing chip makes on the map is the same one here, in the same words:
  * your address passes through our server to the Census Bureau's geocoder,
- * and we never store or log it.
+ * and it is not tied to an account. (F01 1e, 2026-08-19: the
+ * never-store/never-log promise is struck by the author's order.)
  */
 export function BallotNarrowing({ zip }: { zip: string }) {
   const [open, setOpen] = useState(false);
@@ -199,7 +200,7 @@ export function BallotNarrowing({ zip }: { zip: string }) {
       {error && <p className="ballot-narrow-error">{error}</p>}
       <p className="ballot-narrow-promise">
         Your address passes through our server to the Census Bureau&apos;s
-        geocoder. We never store it or log it.{" "}
+        geocoder, which turns it into a point we match to your districts.{" "}
         <button type="button" onClick={() => setOpen(false)}>
           No thanks
         </button>

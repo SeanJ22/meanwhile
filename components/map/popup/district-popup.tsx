@@ -2,6 +2,7 @@
 
 import { TIER_LABEL } from "@/lib/ocd/tiers";
 import type { SeatHolder } from "@/lib/officials/lookup";
+import { TOP_OFFICES_GAP, topOfficesFor } from "@/lib/officials/top-offices";
 import type { DistrictHit } from "@/lib/map/districts";
 import { representationNoteFor } from "@/lib/registry/representation";
 
@@ -32,8 +33,38 @@ interface DistrictPopupProps {
    * of those sentences is about us rather than about a government.
    */
   representationNoteState?: "gap" | "looking" | "unavailable";
-  /** Municipalities inside this division, where the registry knows them. */
-  placesWithin?: string[];
+  /*
+   * `placesWithin` REMOVED — F01 1.1, 2026-08-19, the author's ruling:
+   * *"I need clarification on what 'places within' means. It's listed as
+   * blank... either populate it with real data or remove it. As written,
+   * nobody can tell what it's supposed to mean."*
+   *
+   * REMOVED, and here is the reasoning, because the choice was his to inform
+   * and mine to make:
+   *
+   * 1. **Nothing ever produced it.** No caller anywhere passed this prop, so
+   *    the row rendered an em-dash on every district card at every zip since
+   *    the day it shipped. It was not a gap in the data; it was a field with
+   *    no producer, which is worse — a reader cannot tell those apart, and the
+   *    em-dash reads as "we looked and found none".
+   *
+   * 2. **It has no stable meaning to populate.** This one card renders
+   *    congressional, state-house, state-senate, county, municipal and
+   *    school-district subjects. "Places within" a county is a containment
+   *    question; within a congressional district it is a PARTIAL-OVERLAP
+   *    question, because municipalities routinely straddle district lines and
+   *    a count would silently assert containment we did not compute. One label
+   *    meaning different things per row is what the plain-language rule
+   *    forbids, and populating it would have been a claim, not a count.
+   *
+   * 3. **The useful version is already answered, better, twice.** The PLACE
+   *    CARD (g18) lists every body we hold in a place, each row opening that
+   *    body's card; Who Governs Here lists the bodies covering a point. A
+   *    third, weaker, uncountable answer beside those is not coverage.
+   *
+   * If a future session wants this back it needs a definition per division
+   * type and a source per row — at which point it is a new field, not this one.
+   */
   /**
    * Upcoming meetings on file for this division. Null means the fetch that
    * would answer failed — "couldn't check" and 0 are different facts (2a).
@@ -49,12 +80,15 @@ export function DistrictPopup({
   district,
   representation = [],
   representationNoteState = "gap",
-  placesWithin,
   upcomingMeetings,
   onOpenOfficial,
   onExpand,
   onClose,
 }: DistrictPopupProps) {
+  // F01 1.2: derived from the same roster the list below renders, so the two
+  // can never name a different set of people.
+  const topOffices = topOfficesFor(representation);
+
   return (
     <PopupCard
       type={district.typeLabel}
@@ -69,16 +103,6 @@ export function DistrictPopup({
       <PopupRow label="Type">{district.typeLabel}</PopupRow>
       <PopupRow label="Tier">{TIER_LABEL[district.tier]}</PopupRow>
 
-      <PopupRow label="Places within" mono>
-        {placesWithin === undefined ? (
-          // The registry does not compute containment for every division type,
-          // and an absent count is not zero.
-          <NoValue>—</NoValue>
-        ) : (
-          placesWithin.length
-        )}
-      </PopupRow>
-
       <PopupRow label="Upcoming" mono>
         {upcomingMeetings === null ? (
           <NoValue>couldn&apos;t check</NoValue>
@@ -86,6 +110,59 @@ export function DistrictPopup({
           upcomingMeetings
         )}
       </PopupRow>
+
+      {/*
+        **F01 1.2 (2026-08-19, the author)** — WHO RUNS IT, AT THE TOP.
+
+        *"As a reminder, the superintendent also should be listed at the top.
+        There should be a little bit of representation on the small card."* And
+        as the class: every small battlecard carries its top two office
+        holders, whatever those offices are called for that body type.
+
+        The list below is the body’s full roster in the body’s own published
+        order, which is an answer to “who sits on it” and not to “who runs
+        it”. Those are different questions and the card was only answering the
+        first — on Tucson Unified it opened with a board member, and the
+        district’s superintendent and board president were somewhere in a
+        five-row list a reader had to read to find.
+
+        The precedence is `lib/officials/top-offices.ts`, shared with the large
+        card, so the two cannot disagree about who leads a body.
+
+        THE GAP IS NAMED. A body whose top offices are not sourced renders a
+        sentence about OUR research — never a blank slot, which would read as
+        “this body has no leader”. */}
+      <PopupSectionLabel>Who runs it</PopupSectionLabel>
+      {topOffices.length > 0 ? (
+        topOffices.map((office) => (
+          <div key={`top:${office.holder.id}`} className="person-row">
+            <span className="person-row-name">
+              {onOpenOfficial ? (
+                <button
+                  type="button"
+                  onClick={() => onOpenOfficial(office.holder)}
+                  className="cursor-pointer text-left hover:text-link hover:underline"
+                >
+                  {office.holder.name}
+                </button>
+              ) : (
+                office.holder.name
+              )}
+            </span>
+            {/* What they DO here, in reader language, with the body’s own
+                published title beneath it — the role is our word, the title is
+                theirs, and the two are never merged. */}
+            <span className="person-row-office">
+              {office.role}
+              {office.holder.officeTitle ? ` · ${office.holder.officeTitle}` : ""}
+            </span>
+          </div>
+        ))
+      ) : (
+        <p className="mt-1 text-[0.6875rem] leading-relaxed text-muted">
+          {TOP_OFFICES_GAP}
+        </p>
+      )}
 
       <PopupSectionLabel>Representation</PopupSectionLabel>
       {representation.length > 0 ? (

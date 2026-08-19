@@ -24,7 +24,7 @@ import {
  */
 
 const STATE_OFFICIAL_NOTE =
-  "Campaign money for state offices is filed with state campaign-finance systems, not the FEC. We haven't wired those yet — this is a gap in our data, not a statement that no money was raised.";
+  "Campaign money for state offices is filed with state campaign-finance systems, not the FEC. We haven't wired those yet. This is not a statement that no money was raised.";
 
 export function FundingBlock(props: {
   holder: SeatHolder;

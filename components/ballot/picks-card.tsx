@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 
+import { useStoredTheme } from "@/hooks/use-stored-theme";
 import { clearAllPicks, type StoredPick } from "@/lib/ballot/picks";
 import { PRODUCT_NAME } from "@/lib/brand";
 
@@ -29,14 +30,62 @@ const WIDTH = 360;
 const SCALE = 3; // crisp on a phone screen
 const PAD = 24;
 
-const COLORS = {
-  // One deliberate look, independent of app theme — the card leaves the
-  // app, so it must stand alone.
-  bg: "#101418",
-  rule: "#2a3138",
-  muted: "#8a949e",
-  paper: "#f2f4f6",
-  accent: "#ffb000",
+/**
+ * **THE CARD FOLLOWS THE THEME** — F01 12.2, 2026-08-19, the author.
+ *
+ * *"I'm in the light version and it's shown as dark, and it needs to follow
+ * whatever I've selected, whether I've selected light or dark."*
+ *
+ * The old single palette was a DELIBERATE choice with a stated reason — "the
+ * card leaves the app, so it must stand alone" — and the author has overruled
+ * it. He is right about the thing that matters: a reader in light mode presses
+ * a button and gets a dark rectangle, which reads as a bug long before anyone
+ * reasons about where the image will end up.
+ *
+ * The old reason is not thrown away, it is answered: BOTH palettes stand alone.
+ * The card is drawn on a `<canvas>`, so it cannot inherit a CSS variable and
+ * has to carry literal values either way; what changes is that there are now
+ * two sets and the reader's own choice picks between them.
+ *
+ * ## The class audit 12.2 asks for
+ *
+ * *"Class-wide: audit for any other surface that ignores the theme."* Swept
+ * every hard-coded hex in `app/`, `components/` and `lib/`. Three kinds, and
+ * only one was a defect:
+ *
+ *  1. **This file** — the defect, fixed here.
+ *  2. `components/calendar/calendar-marks.tsx` — the Apple, Google and Outlook
+ *     logos. Third-party marks are fixed by their owners and MUST NOT follow
+ *     our theme; recolouring a trademark is not theme support.
+ *  3. `components/map/state-focus-overlay.tsx` — already switches on `theme`.
+ *
+ * No other surface ignores the reader's choice.
+ */
+type CardPalette = {
+  bg: string;
+  rule: string;
+  muted: string;
+  paper: string;
+  accent: string;
+};
+
+const PALETTES: Record<"dark" | "light", CardPalette> = {
+  dark: {
+    bg: "#101418",
+    rule: "#2a3138",
+    muted: "#8a949e",
+    paper: "#f2f4f6",
+    accent: "#ffb000",
+  },
+  light: {
+    bg: "#fbfaf7",
+    rule: "#dcd8d0",
+    muted: "#6b7280",
+    paper: "#14181c",
+    // Darkened from the dark palette's amber: #ffb000 on near-white fails
+    // contrast outright, and the label above it is the card's own name.
+    accent: "#8a5a00",
+  },
 };
 
 function wrapLines(
@@ -60,7 +109,11 @@ function wrapLines(
   return lines;
 }
 
-function drawCard(picks: StoredPick[], madeOn: string): string {
+function drawCard(
+  picks: StoredPick[],
+  madeOn: string,
+  colors: CardPalette,
+): string {
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
   if (!ctx) return "";
@@ -93,17 +146,17 @@ function drawCard(picks: StoredPick[], madeOn: string): string {
   canvas.height = height * SCALE;
   ctx.scale(SCALE, SCALE);
 
-  ctx.fillStyle = COLORS.bg;
+  ctx.fillStyle = colors.bg;
   ctx.fillRect(0, 0, WIDTH, height);
 
   // Header.
-  ctx.fillStyle = COLORS.accent;
+  ctx.fillStyle = colors.accent;
   ctx.font = "600 11px ui-monospace, monospace";
   ctx.fillText("MY PICKS", PAD, PAD + 10);
-  ctx.fillStyle = COLORS.muted;
+  ctx.fillStyle = colors.muted;
   ctx.font = "10px ui-monospace, monospace";
   ctx.fillText("This is my own list — written by me, not the app.", PAD, PAD + 26);
-  ctx.strokeStyle = COLORS.rule;
+  ctx.strokeStyle = colors.rule;
   ctx.beginPath();
   ctx.moveTo(PAD, headerH);
   ctx.lineTo(WIDTH - PAD, headerH);
@@ -112,13 +165,13 @@ function drawCard(picks: StoredPick[], madeOn: string): string {
   // Contest blocks.
   let y = headerH + 22;
   for (const block of blocks) {
-    ctx.fillStyle = COLORS.muted;
+    ctx.fillStyle = colors.muted;
     ctx.font = "11px ui-monospace, monospace";
     for (const line of block.title) {
       ctx.fillText(line, PAD, y);
       y += 15;
     }
-    ctx.fillStyle = COLORS.paper;
+    ctx.fillStyle = colors.paper;
     ctx.font = "600 15px system-ui, sans-serif";
     for (const line of block.choices) {
       ctx.fillText(line, PAD, y + 3);
@@ -128,12 +181,12 @@ function drawCard(picks: StoredPick[], madeOn: string): string {
   }
 
   // Footer — the app name and the date, nothing evaluative.
-  ctx.strokeStyle = COLORS.rule;
+  ctx.strokeStyle = colors.rule;
   ctx.beginPath();
   ctx.moveTo(PAD, y - 4);
   ctx.lineTo(WIDTH - PAD, y - 4);
   ctx.stroke();
-  ctx.fillStyle = COLORS.muted;
+  ctx.fillStyle = colors.muted;
   ctx.font = "10px ui-monospace, monospace";
   ctx.fillText(`My picks — made with ${PRODUCT_NAME}, ${madeOn}`, PAD, y + 14);
 
@@ -148,6 +201,12 @@ export function PicksCardControls({ picks }: { picks: StoredPick[] }) {
   // every change while open, so a stale card never sits behind a fresh
   // list. The picks serialization is the dependency the list identity
   // can't provide.
+  // F01 12.2: the reader's own choice decides the card's palette. Before
+  // hydration `restored` is false and the snapshot answers dark, which is the
+  // safe way round — the card is not drawn until the reader presses the button,
+  // which cannot happen before hydration.
+  const { theme } = useStoredTheme();
+
   const picksKey = JSON.stringify(picks);
   const cardUrl = useMemo(() => {
     if (!showCard || picks.length === 0) return null;
@@ -158,9 +217,10 @@ export function PicksCardControls({ picks }: { picks: StoredPick[] }) {
         day: "numeric",
         year: "numeric",
       }),
+      PALETTES[theme],
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showCard, picksKey]);
+  }, [showCard, picksKey, theme]);
 
   return (
     <div className="mt-2.5">
@@ -247,31 +307,84 @@ export function PicksCardControls({ picks }: { picks: StoredPick[] }) {
           document.body,
         )}
 
-      {cardUrl && (
-        <div className="mt-3">
-          {/* The card itself — a plain <img>, so a long-press or
-              screenshot works exactly as the reader expects. */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={cardUrl}
-            alt="My picks card — your own choices, drawn on this device"
-            className="w-full max-w-[360px] rounded border border-[var(--panel-border)]"
-          />
-          <p className="mt-1.5 text-[0.75rem]">
-            <a
-              href={cardUrl}
-              download="my-picks.png"
-              className="text-signal underline decoration-dotted hover:no-underline"
-            >
-              Download as image
-            </a>{" "}
-            <span className="text-muted">
-              — or just screenshot it. Drawn on your device; nothing is sent
-              anywhere.
-            </span>
-          </p>
-        </div>
-      )}
+      {/*
+        F01 12.1 (2026-08-19, the author): *"The 'Create my card' thing is ugly.
+        What I would like it to do is pop up as if it's its own phone kind of
+        screenshot, rounded at the edges, so that I can still see the
+        background. It should be like I'm taking a screenshot of what's going on
+        right now."*
+
+        It used to render inline, in the page flow, as a bare rectangle under
+        two links — the thing itself, unframed, with no sense that it was a
+        picture the reader was about to take out of the app.
+
+        It is now a PORTALED overlay: the live page stays visible behind a light
+        scrim, and the card sits inside a phone-shaped frame — rounded corners,
+        a device bezel, the shadow that lifts it off what is behind. The reader
+        is looking at a screenshot of their own screen, which is exactly the
+        thing they are about to make.
+
+        Portaled to `<body>` for the same reason the clear dialog is: an
+        ancestor transform would trap a fixed overlay. Dismissal follows the
+        product's rule — the scrim closes it, Escape closes it, and there is an
+        explicit control, because a gesture nobody discovers is not an exit.
+      */}
+      {cardUrl &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="My picks card"
+            className="fixed inset-0 z-[80] flex items-center justify-center p-4"
+            onKeyDown={(e) => {
+              if (e.key === "Escape") setShowCard(false);
+            }}
+          >
+            {/* Light enough that the page reads THROUGH it — the point is that
+                the reader can still see what they were looking at. */}
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 bg-black/30 backdrop-blur-[2px]"
+              onClick={() => setShowCard(false)}
+            />
+
+            <div className="relative flex max-h-full w-full max-w-[320px] flex-col items-center">
+              <div className="picks-phone">
+                {/* A plain <img> inside the frame, so a long-press or a
+                    screenshot works exactly as the reader expects. */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={cardUrl}
+                  alt="My picks card — your own choices, drawn on this device"
+                  className="picks-phone-shot"
+                />
+              </div>
+
+              <p className="mt-3 flex flex-wrap justify-center gap-x-3 gap-y-1 text-center text-[0.75rem]">
+                <a
+                  href={cardUrl}
+                  download="my-picks.png"
+                  className="text-signal underline decoration-dotted hover:no-underline"
+                >
+                  Download as image
+                </a>
+                <button
+                  type="button"
+                  onClick={() => setShowCard(false)}
+                  className="cursor-pointer text-muted underline decoration-dotted hover:text-paper"
+                >
+                  Close
+                </button>
+              </p>
+              <p className="mt-1 text-center text-[0.6875rem] leading-relaxed text-muted">
+                Or just screenshot it. Drawn on your device; nothing is sent
+                anywhere.
+              </p>
+            </div>
+          </div>,
+          document.body,
+        )}
     </div>
   );
 }

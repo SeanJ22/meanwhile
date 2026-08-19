@@ -83,6 +83,10 @@ export function applySpiderfy(
     if (!entry) continue;
     entry.marker.setOffset([0, 0]);
     delete entry.element.dataset.spiderfied;
+    // F01 9.3: the leg goes with the offset. A stale --spider-len on an
+    // un-fanned pin would draw a line to a point it no longer came from.
+    entry.element.style.removeProperty("--spider-len");
+    entry.element.style.removeProperty("--spider-angle");
     moved++;
   }
 
@@ -93,6 +97,31 @@ export function applySpiderfy(
     // The reader is told the pin moved. Without it, a pin sitting somewhere
     // other than its building is a wrong location rather than a fanned one.
     entry.element.dataset.spiderfied = "true";
+
+    /*
+     * F01 9.3 (2026-08-19, the author): *"when those are spidered it looks
+     * like it just simply is moving. It's not like a spider effect... the
+     * spidering effect is not very clear at all."* His before/after pair is in
+     * the Drive folder (2026-08-18_14-29-42 and _14-30-01) and he is right:
+     * the two shots differ only in where two dots sit. A dashed halo says "this
+     * pin moved"; it does not say WHERE FROM, and without that the fan reads as
+     * pins drifting rather than as one place opening up.
+     *
+     * So each fanned pin draws a LEADER LINE back to the anchor it came from,
+     * and the line's far end carries the anchor dot. That is what makes it a
+     * spider: N legs meeting at one visible point, which is the shape a reader
+     * already knows means "these all live here".
+     *
+     * The geometry is written as custom properties rather than as a transform,
+     * because MapLibre owns this element's `transform` and rewrites it every
+     * frame — the same reason the offset itself goes through `setOffset`. CSS
+     * reads these and rotates a pseudo-element, which MapLibre never touches.
+     * The angle points BACK toward the anchor: the leg is drawn from the pin.
+     */
+    const length = Math.round(Math.hypot(dx, dy) * 100) / 100;
+    const angle = (Math.atan2(-dy, -dx) * 180) / Math.PI;
+    entry.element.style.setProperty("--spider-len", `${length}px`);
+    entry.element.style.setProperty("--spider-angle", `${Math.round(angle * 100) / 100}deg`);
     moved++;
   }
 

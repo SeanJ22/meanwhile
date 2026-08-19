@@ -1606,6 +1606,55 @@ label:has(> input[type="checkbox"]) {
   max-width: 100%;
 }
 
+/*
+ * F01 10.2 (2026-08-19, the author): *"The order — Ballot, then zip, then Ask
+ * — is right. However Ballot and zip should be the same width as Ask about a
+ * pothole or meeting. That should also be the case in the who-governs-here
+ * pop-up."*
+ *
+ * In the two RAIL placements the cluster owns its whole row, and the two rows
+ * each sized to their own content — a short [Ballot|85701] pair above a much
+ * wider Ask pill, ragged on both edges. The MAP placement is deliberately
+ * excluded: there the cluster floats in a corner beside MapLibre's zoom column
+ * and shrink-to-fit is the whole point, so stretching it would be applying a
+ * rail rule to a floater.
+ *
+ * Stretching rather than fixing a width: both children fill the container, so
+ * they are equal BY CONSTRUCTION and stay equal when the rail's width changes
+ * or the label does. Inside the ballot pill the zip half keeps its natural
+ * width and the "Ballot" half absorbs the rest, which is what "filling the
+ * width without stretching" means for a two-part control.
+ */
+.map-floaters[data-pill-cluster="sidebar"],
+.map-floaters[data-pill-cluster="wgh"] {
+  align-items: stretch;
+}
+
+.map-floaters[data-pill-cluster="sidebar"] .map-floaters-row,
+.map-floaters[data-pill-cluster="wgh"] .map-floaters-row {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.map-floaters[data-pill-cluster="sidebar"] .ballot-pill,
+.map-floaters[data-pill-cluster="wgh"] .ballot-pill,
+.map-floaters[data-pill-cluster="sidebar"] .ask-pill,
+.map-floaters[data-pill-cluster="wgh"] .ask-pill {
+  width: 100%;
+}
+
+/* The label can wrap now that the pill is as wide as the rail; nowrap would
+   make it overflow instead of using the width it was just given. */
+.map-floaters[data-pill-cluster="sidebar"] .ask-pill,
+.map-floaters[data-pill-cluster="wgh"] .ask-pill {
+  justify-content: flex-start;
+}
+
+.map-floaters[data-pill-cluster="sidebar"] .ballot-pill-main,
+.map-floaters[data-pill-cluster="wgh"] .ballot-pill-main {
+  flex: 1 1 auto;
+}
+
 /* The map placement starts CLEAR OF THE HAMBURGER, which is fixed at (12,12)
    and paints over everything.
  *
@@ -1667,8 +1716,30 @@ label:has(> input[type="checkbox"]) {
 
 /* 4a: the expansion hangs under the pill that produced it, at the container's
    full width — it is a panel, not a floater, and it never right-hugs. */
+/* F01 8.2 (2026-08-19, the author): "the expanded Ask bar is enormously wide
+   on desktop. Narrow it substantially; it can grow slightly taller in
+   exchange."
+ *
+ * `width: 100%` is correct in the two RAIL placements — the sidebar and the
+ * who-governs card are ~340px envelopes and the panel should fill them. On the
+ * MAP placement the same rule let the panel take the whole top band, which at
+ * 1440px is a ~1400px-wide box holding one input: a line of body text at that
+ * measure is unreadable and the box reads as a takeover rather than a panel
+ * hanging off a pill.
+ *
+ * So the width stays 100% and gains a CEILING. 30rem is a comfortable reading
+ * measure for the explainer sentence and still wide enough that the input and
+ * the Ask button sit on one line at every size; below 640px nothing changes,
+ * because there the ceiling is already above the viewport. Taller is the
+ * accepted trade — the explainer wraps to three lines instead of one. */
 .ask-expansion {
   width: 100%;
+}
+
+@media (min-width: 640px) {
+  .ask-expansion {
+    max-width: 30rem;
+  }
 }
 
 /* One shell, two tap targets: an <a> cannot contain a <button>, and the zip
@@ -2325,16 +2396,27 @@ label:has(> input[type="checkbox"]) {
    `.pv`'s `word-break: break-word` rendered the person's NAME one character
    per line. Stacked, nothing competes for the width: the name leads at full
    width and the office sits under it. */
+/* F01 7.1 (2026-08-19, the author's walkthrough): "Section headers get one
+   line and that's it."
+ *
+ * Every person row used to draw its own rule, so a STATE section with four
+ * officials in it rendered five horizontal lines — one per row plus the
+ * section's own — and the reader could not tell which line meant "new
+ * section" and which meant "new person". The author's named instances were
+ * the orphan rule between Alma Hernández and Betty Villegas in Tucson and the
+ * same shape between Greg Sargent and Karen Ebel at 03255; his pattern to
+ * copy is New Hampshire's LOCAL section, which draws exactly one.
+ *
+ * The rules are gone; the vertical rhythm does the separating. Padding went
+ * up to keep the rows from reading as one block now that nothing divides
+ * them. This is the class fix — `.person-row` is the shared row on the
+ * who-governs card AND the map's district popup, so both surfaces change
+ * together, which is the point. */
 .person-row {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding: 7px 0;
-  border-bottom: 1px solid var(--panel-border);
-}
-
-.person-row:last-of-type {
-  border-bottom: none;
+  padding: 5px 0;
 }
 
 .person-row-name {
@@ -2925,6 +3007,8 @@ label:has(> input[type="checkbox"]) {
 }
 
 .al-overlay-header {
+  /* F01 2.5, the same class — fixed furniture never shrinks. */
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -2943,6 +3027,8 @@ label:has(> input[type="checkbox"]) {
 }
 
 .al-overlay-controls {
+  /* F01 2.5, the same class. */
+  flex-shrink: 0;
   display: flex;
   gap: 8px;
   padding: 10px 22px;
@@ -3066,9 +3152,14 @@ label:has(> input[type="checkbox"]) {
   pointer-events: auto;
   min-width: 210px;
   max-width: 280px;
-  max-height: 340px;
+  /* F01 9.1 (2026-08-19): the cap follows the VIEWPORT as well as the design
+     token, so a box on a short screen can always be placed whole and scrolls
+     inside itself instead of running off the bottom. The `translate` that used
+     to nudge it away from the cursor is GONE — that offset is now data
+     (`anchorInViewport`’s offsetX/offsetY), because a transform the placement
+     arithmetic cannot see is an offset it cannot clamp against. */
+  max-height: min(340px, calc(100dvh - 24px));
   overflow-y: auto;
-  transform: translate(12px, -12px);
   background: var(--panel);
   border: 1px solid var(--panel-border);
   border-radius: var(--radius);
@@ -3159,18 +3250,44 @@ label:has(> input[type="checkbox"]) {
   background: var(--panel);
   border: 1px solid var(--panel-border);
   border-radius: 16px;
-  padding: 40px 48px;
+  /* F01 13.2: less vertical padding, and the horizontal padding comes in a
+     little so the extra width goes to the TEXT rather than to the margins. */
+  padding: 30px 34px;
   text-align: center;
-  max-width: 460px;
-  width: 90%;
+  /* F01 13.2: "we can make this box wider if necessary to accommodate" — the
+     author's own trade. Wider means fewer wrapped lines, which is the biggest
+     saving available without touching a word or a type size. `width: 92%` keeps
+     the phone case unchanged, where the viewport is the constraint anyway. */
+  max-width: 540px;
+  width: 92%;
   max-height: 100%;
   overflow-y: auto;
   box-shadow: var(--shadow-card);
 }
 
+/* F01 13.1 (2026-08-19): the icon and the name are ONE LOCKUP on one line.
+   See welcome-overlay.tsx for why the icon used to sit up and to the left —
+   Tailwind's preflight makes an <svg> a block, so the card's text-align could
+   not centre it. A flex row does not care. */
+.welcome-lockup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
 .welcome-icon {
   color: var(--link);
-  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+
+/* The thin gray line the author asked for, directly under the lockup. It is
+   the header's own rule, not a section divider — quieter than --panel-border
+   on purpose. */
+.welcome-rule {
+  margin: 14px 0 18px;
+  border: 0;
+  border-top: 1px solid color-mix(in srgb, var(--text-dim) 26%, transparent);
 }
 
 /* 6e2 (2026-08-15, the author, on BOTH desktop and phone): "the overlay's
@@ -3183,18 +3300,32 @@ label:has(> input[type="checkbox"]) {
   font-size: 1.75rem;
   font-weight: 700;
   letter-spacing: -0.02em;
-  margin-bottom: 18px;
+  /* F01 13.1: the gap below is the rule's now, not the title's. */
+  margin-bottom: 0;
   color: var(--text);
 }
 
 /* `.welcome-subtitle` retired 6e2 (2026-08-15) — the institutional line it
    styled is gone; see welcome-overlay.tsx for why. */
 
+/* F01 13.2 (2026-08-19, the author): *"The mission also can be shrunk
+   vertically. It's definitely too long on mobile... not in terms of what the
+   words are saying, we just need to not even make the words smaller. We can
+   make this box wider if necessary to accommodate but it's too vertically
+   long."*
+
+   Every constraint he set is kept. The WORDS are untouched —
+   `tests/welcome-copy.test.ts` pins every sentence and still passes — and the
+   TYPE SIZE is untouched at 0.9375rem, which 6e2 raised for a reason. What
+   gives is the air: leading from 1.65 to 1.5, the gap between paragraphs from
+   8px to 5px, and the space below the block from 26px to 18px. The card is
+   wider too (see .welcome-card), which is the trade he offered — fewer wrapped
+   lines is the largest single saving and it costs nothing but width. */
 .welcome-msg {
   font-size: 0.9375rem;
   color: var(--text-dim);
-  line-height: 1.65;
-  margin-bottom: 26px;
+  line-height: 1.5;
+  margin-bottom: 18px;
 }
 
 .welcome-field {
@@ -3420,15 +3551,25 @@ label:has(> input[type="checkbox"]) {
  * text colours and the violet accent all come from the variables above.
  * ---------------------------------------------------------------------- */
 
+/* F01 1e (2026-08-19, the author): "make the box pill-shaped, matching the
+   pills beside it." This button sits in the same top band as the Ballot / zip
+   / Ask cluster, and it was the one rounded-rectangle in a row of pills. The
+   geometry now matches `.ask-pill` exactly — radius, min-height and vertical
+   rhythm — while the voting accent stays, so it still reads as its own thing
+   without reading as a different SHAPE of thing. */
 .voting-open-button {
+  display: inline-flex;
+  align-items: center;
   border: 1px solid color-mix(in srgb, var(--accent-voting) 45%, transparent);
   background: color-mix(in srgb, var(--surface) 92%, var(--accent-voting));
   color: var(--text);
-  border-radius: var(--radius);
-  padding: 0.5rem 0.85rem;
+  border-radius: 999px;
+  padding: 11px 15px;
+  min-height: 44px;
   font-size: 0.86rem;
   font-weight: 600;
   cursor: pointer;
+  white-space: nowrap;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
 }
 
@@ -3492,7 +3633,8 @@ label:has(> input[type="checkbox"]) {
 .voting-panel-input {
   width: 100%;
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  /* F01 1e: the entry inside the pill matches the pill. */
+  border-radius: 999px;
   background: var(--bg);
   color: var(--text);
   padding: 0.45rem 0.6rem;
@@ -3520,7 +3662,7 @@ label:has(> input[type="checkbox"]) {
   border: 1px solid var(--accent-voting);
   background: var(--accent-voting);
   color: var(--bg);
-  border-radius: var(--radius-sm);
+  border-radius: 999px;
   padding: 0.4rem 0.8rem;
   font-size: 0.85rem;
   font-weight: 600;
@@ -3796,6 +3938,66 @@ label:has(> input[type="checkbox"]) {
   outline-offset: 5px;
 }
 
+/*
+ * F01 9.3 (2026-08-19, the author) — THE FAN READS AS A SPIDER.
+ *
+ * *"When those are spidered it looks like it just simply is moving. It's not
+ * like a spider effect... the spidering effect is not very clear at all."* His
+ * before/after pair (Drive, 2026-08-18_14-29-42 and _14-30-01) differs only in
+ * where two dots sit, which is exactly his complaint.
+ *
+ * The halo above says "this pin moved". It cannot say WHERE FROM, and that is
+ * the missing half: without a visible origin the fan is indistinguishable from
+ * two pins drifting apart. Each fanned pin now draws a LEG back to the shared
+ * anchor, with the anchor dot on the leg's far end — N legs meeting at one
+ * point, which is the shape that reads as "these all live here".
+ *
+ * `--spider-len` and `--spider-angle` are written per pin by `applySpiderfy`,
+ * because only it knows the offset. They are custom properties and not a
+ * transform on the element itself: MapLibre owns that transform and rewrites
+ * it every frame, which is the same reason the offset goes through
+ * `setOffset`. A pseudo-element's transform is ours alone.
+ *
+ * Under the dot in z-order and never interactive: a leg is an explanation, not
+ * a target, and it must not steal the tap the fan exists to make possible.
+ */
+.wtp-pin[data-spiderfied="true"]::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: -1;
+  width: var(--spider-len, 0);
+  height: 0;
+  border-top: 1px solid color-mix(in srgb, var(--text-dim) 55%, transparent);
+  transform-origin: 0 0;
+  transform: rotate(var(--spider-angle, 0deg));
+  pointer-events: none;
+}
+
+/* The anchor: one dot where every leg meets. Every fanned pin in a group
+   paints it at the same point, so N of them read as one. */
+.wtp-pin[data-spiderfied="true"]::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: -1;
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--text-dim) 55%, transparent);
+  transform-origin: 2.5px 2.5px;
+  transform: rotate(var(--spider-angle, 0deg)) translateX(var(--spider-len, 0));
+  pointer-events: none;
+}
+
+/* The pin is a grid container; the legs are positioned against it. */
+.wtp-pin[data-spiderfied="true"] {
+  position: relative;
+}
+
 /* The zip centroid. Deliberately unlike a pin — it is not a place you can go,
    it is where the map was pointed. */
 .wtp-here {
@@ -3880,12 +4082,18 @@ label:has(> input[type="checkbox"]) {
    choices somebody made here.
    ========================================================================== */
 
+/* F01 1.3 (2026-08-19): the card is three bands, not one scroller — fixed
+   head, scrolling body, PINNED More. See popup-card.tsx for the author's
+   words; the short version is that the door to the large battlecard was
+   behind a scroll, and a hidden entry point is a defect. */
 .popup-card {
   position: relative;
+  display: flex;
+  flex-direction: column;
   width: 300px;
   max-width: calc(100vw - 2rem);
   max-height: 55vh;
-  overflow-y: auto;
+  overflow: hidden;
   padding: 16px 18px;
   background: var(--panel);
   border: 1px solid var(--panel-border);
@@ -3893,21 +4101,33 @@ label:has(> input[type="checkbox"]) {
   box-shadow: var(--shadow-popup);
 }
 
-/* 5px thin scrollbar, matching the sidebar's treatment. */
-.popup-card::-webkit-scrollbar {
+.popup-card-head,
+.popup-card-more {
+  flex-shrink: 0;
+}
+
+.popup-card-body {
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* 5px thin scrollbar, matching the sidebar's treatment. It moved from the
+   card to the BODY with the scroll (F01 1.3). */
+.popup-card-body::-webkit-scrollbar {
   width: 5px;
 }
 
-.popup-card::-webkit-scrollbar-track {
+.popup-card-body::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.popup-card::-webkit-scrollbar-thumb {
+.popup-card-body::-webkit-scrollbar-thumb {
   background: var(--panel-border);
   border-radius: 3px;
 }
 
-.popup-card {
+.popup-card-body {
   scrollbar-width: thin;
   scrollbar-color: var(--panel-border) transparent;
 }
@@ -4212,9 +4432,28 @@ label:has(> input[type="checkbox"]) {
 
 /* Explicit, because it is load-bearing: the top row wins over the bottom
    stack. Relying on DOM order is what let a tall card bury the ballot. */
+/* F01 7.3 (2026-08-19), caught by MEASURING rather than by looking.
+
+   The row is `justify-end` and did not wrap, so its first child overflowed to
+   the LEFT the moment the row's content exceeded the band. Measured at 390×844
+   with a battlecard open: the pill cluster sat at x = −8, under the hamburger
+   and under the new map reset.
+
+   The trigger was F01 1e in this same session — making "Where can I vote?"
+   pill-shaped gave it a 44px min-height and wider padding, and the row it
+   shares had no slack left. That is worth saying plainly: a change to one
+   control's SHAPE moved a different control off the screen, and nothing in
+   either change would have shown it. `pnpm overlaps` and this measurement are
+   the only instruments that catch this class.
+
+   Wrapping is the same answer G07 reached for the cluster's own row when its
+   label got longer: the corner has vertical room and does not have horizontal
+   room. `justify-end` is kept so wrapped lines stay right-aligned against the
+   zoom column. */
 .map-top-row {
   position: relative;
   z-index: 2;
+  flex-wrap: wrap;
 }
 
 .map-bottom-stack {
@@ -4338,6 +4577,75 @@ label:has(> input[type="checkbox"]) {
   box-shadow: var(--shadow-card);
 }
 
+/* F01 12.1 (2026-08-19, the author) — THE PICKS CARD AS A PHONE.
+
+   *"It should pop up as if it's its own phone kind of screenshot, rounded at
+   the edges, so that I can still see the background."*
+
+   A bezel, not a decoration: the frame is what tells the reader the thing
+   inside is a PICTURE they are about to take out of the app, rather than
+   another panel of the app. The inner image keeps its own rounding so the
+   screenshot itself looks like a screenshot, and the frame's padding is the
+   bezel. It scrolls inside itself on a short screen — a card with twelve picks
+   on it is taller than a phone. */
+.picks-phone {
+  width: 100%;
+  max-width: 300px;
+  max-height: calc(100dvh - 9rem);
+  overflow-y: auto;
+  padding: 10px;
+  border-radius: 34px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.45),
+    0 0 0 1px color-mix(in srgb, var(--text-dim) 18%, transparent);
+  scrollbar-width: none;
+}
+
+.picks-phone::-webkit-scrollbar {
+  width: 0;
+}
+
+.picks-phone-shot {
+  display: block;
+  width: 100%;
+  border-radius: 26px;
+}
+
+/* F01 9.4 (2026-08-19): the small reset, on the map, under the hamburger.
+   Same visibility rule as the hamburger — see the note at its render — so
+   exactly one reset control is on screen at any moment. */
+/* BESIDE the hamburger, not under it. Measured at 390×844 before this moved:
+   at top: 62px the 32px button ran from y 62 to 94 and the count badge starts
+   at y 88 — a six-pixel overlap, the new control sitting on an existing one.
+   `pnpm overlaps` exists because this class of defect is invisible in code and
+   obvious in a measurement. 18px top centres the 32px button against the 44px
+   hamburger; 64px left clears it with the same 8px gutter the pills use. */
+.map-reset-btn {
+  position: absolute;
+  top: 18px;
+  left: 64px;
+  z-index: 1050;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  color: var(--text-muted);
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+}
+
+.map-reset-btn:hover,
+.map-reset-btn:focus-visible {
+  color: var(--text);
+  border-color: var(--signal);
+}
+
 .sidebar-backdrop {
   position: fixed;
   inset: 0;
@@ -4347,13 +4655,31 @@ label:has(> input[type="checkbox"]) {
 
 /* When the hamburger shows: explicitly closed at any width, or the phone
    default (hidden) when not explicitly opened. */
-main[data-sidebar="closed"] .sidebar-toggle {
+main[data-sidebar="closed"] .sidebar-toggle,
+main[data-sidebar="closed"] .map-reset-btn {
   display: inline-flex;
 }
 
+/* F01 7.3: the top row starts AFTER the fixed control band, whenever that band
+   is on screen. The hamburger and the reset are absolutely positioned and take
+   no space in the flow, so a right-aligned row that wrapped to two lines put
+   its second line straight under them — measured, 28px of overlap at 390px.
+   104px is the reset's right edge (96) plus the 8px gutter the pills use. The
+   rule is bound to the SAME condition that shows the controls, so the padding
+   cannot outlive them. */
+main[data-sidebar="closed"] .map-top-row {
+  padding-left: 104px;
+}
+
 @media (max-width: 639px) {
-  main:not([data-sidebar="open"]) .sidebar-toggle {
+  main:not([data-sidebar="open"]) .sidebar-toggle,
+  main:not([data-sidebar="open"]) .map-reset-btn {
     display: inline-flex;
+  }
+
+  /* F01 7.3 — see the note above. Same condition, same clearance. */
+  main:not([data-sidebar="open"]) .map-top-row {
+    padding-left: 104px;
   }
 }
 
@@ -4404,7 +4730,21 @@ main[data-sidebar="closed"] .sidebar-toggle {
   overflow: hidden;
 }
 
+/* F01 2.5 (2026-08-19, the author): "those need to be fully in view at all
+   times."
+ *
+ * The header and the tab row are FIXED furniture in a flex column whose body
+ * scrolls — but neither declared `flex-shrink: 0`, so the flexbox default of
+ * `flex-shrink: 1` let a tall Meetings list squeeze them. The tab row kept its
+ * labels and lost its height, and the first meeting painted over the bottom
+ * half of "Overview / Representation / Activity / Notes / Sources". A fixed
+ * row that can be compressed is not fixed. Both now refuse to shrink, so the
+ * only thing that scrolls is the thing that is supposed to.
+ *
+ * This is the class, not the instance: the same two lines are applied to the
+ * official card's header and pill rail below, which is the same shape. */
 .account-modal-header {
+  flex-shrink: 0;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -4428,6 +4768,8 @@ main[data-sidebar="closed"] .sidebar-toggle {
 }
 
 .account-modal-tabs {
+  /* F01 2.5 — see the note on .account-modal-header. */
+  flex-shrink: 0;
   display: flex;
   gap: 2px;
   padding: 0 12px;
@@ -4539,6 +4881,8 @@ main[data-sidebar="closed"] .sidebar-toggle {
 }
 
 .phone-modal-header {
+  /* F01 2.5, the same class. */
+  flex-shrink: 0;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;

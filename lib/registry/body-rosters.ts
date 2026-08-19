@@ -245,6 +245,32 @@ export const BODY_ROSTERS: BodyRoster[] = [
         phone: "(520) 225-6070",
         websiteUrl: "https://govboard.tusd1.org/",
       },
+      {
+        /*
+         * F01 1.2 / 0b (2026-08-19, the author): *"the superintendent also
+         * should be listed at the top."*
+         *
+         * **This person is NOT ELECTED and does not sit on the board.** He is
+         * hired by it, and that distinction is the whole reason the schema has
+         * a separate `superintendent` slot on the body card. He is stored in
+         * `members` because that slot resolves out of this array — and
+         * `bodySubject` removes him from the "who sits on it" list in the same
+         * change, so he appears once, under what he actually does, and never
+         * as a board member.
+         *
+         * SOURCE, rung 2, plain fetch, HTTP 200: the district's own
+         * superintendent page, https://www.tusd1.org/superintendent, read
+         * 2026-08-19. It names "Dr. Gabriel Trujillo, Superintendent, Tucson
+         * Unified School District" in the page's own words, three times.
+         */
+        id: "roster:tusd#supt",
+        name: "Dr. Gabriel Trujillo",
+        officeTitle: "Superintendent",
+        termNote: "Appointed by the Governing Board, not elected",
+        email: null,
+        phone: "(520) 225-6000",
+        websiteUrl: "https://www.tusd1.org/superintendent",
+      },
     ],
   },
   {

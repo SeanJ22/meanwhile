@@ -63,6 +63,7 @@ import { type Page } from "playwright";
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
 import { PRODUCT_NAME } from "../lib/brand.ts";
 import { internalSourceIds } from "../lib/meetings/source-labels.ts";
+import { ASK_PILL_EXAMPLES } from "../lib/routing/ask-pill-labels.ts";
 import { mojibakePattern } from "../lib/text/mojibake.ts";
 import { decodePng, patchStats, regionChange } from "./png.mts";
 import { launchGuarded, type GuardedBrowser } from "./browser.mts";
@@ -2994,11 +2995,18 @@ for (const { zip } of FOUR) {
         wgh.ballotDoors === 1,
         `${wgh.ballotDoors} doors`,
       );
+      // F01 8.3 (2026-08-19) retired "pothole" as the pill’s lead example on
+      // the author’s ruling. The CHECK is G07’s and is unchanged: the pill must
+      // still name a concrete example rather than a bare verb. The examples it
+      // reads come from ASK_PILL_EXAMPLES so the walk and the label cannot
+      // drift apart the way a hard-coded /pothole/ just did.
       check(
         "g12",
         `G07: the Ask pill names a concrete example at ${zip} ${label}`,
-        /pothole/i.test(wgh.pillText),
-        `label=${JSON.stringify(wgh.pillText)}`,
+        ASK_PILL_EXAMPLES.some((ex) =>
+          new RegExp(ex, "i").test(wgh.pillText ?? ""),
+        ),
+        `label=${JSON.stringify(wgh.pillText)} examples=${ASK_PILL_EXAMPLES.join("|")}`,
       );
 
       /*
@@ -3845,6 +3853,269 @@ console.log("\nNOT IN THIS SUITE, deliberately:");
 for (const e of EXCLUDED) console.log(`  · ${e}`);
 
 /* ── The check-identity set, diffed rather than subtracted ──────────────── */
+
+// ═══════════════════════════════════════════════════════════════════════════
+// F01. The walkthrough items, on the live build (2026-08-19)
+// ═══════════════════════════════════════════════════════════════════════════
+
+section("F01. The walkthrough fixes hold (F01, 2026-08-19)");
+
+{
+  /*
+   * The author on this session: "We are NOT moving forward until these are
+   * resolved... I won't even open the site again until all these are fixed."
+   * A fix he cannot see is not a fix, so the ones visible in the DOM are
+   * asserted against the deploy rather than trusted from a green unit test.
+   *
+   * Its own page, per the standing rule: a page a dozen earlier checks have
+   * clicked through answers with whatever they left open.
+   */
+  const page = await openWideAt(browser, "85701");
+  try {
+    // ── 9.2: the districts tile never says "Off" while districts are drawn ──
+    const tile = (await page.evaluate(
+      `(() => {
+        const cards = [...document.querySelectorAll(".stats-bar *")]
+          .map((n) => (n.textContent || "").replace(/\\s+/g, " ").trim())
+          .filter((t) => /Districts in view$/.test(t));
+        return { text: cards[0] || null };
+      })()`,
+    )) as { text: string | null };
+
+    if (tile.text === null) {
+      cannotRun(
+        "F01",
+        "9.2: the districts tile states a number, never Off",
+        "no districts tile in the stats bar",
+      );
+    } else {
+      const value = tile.text.replace(/Districts in view$/, "").trim();
+      check(
+        "F01",
+        "9.2: the districts tile states a number, never Off",
+        /^\d+$/.test(value),
+        `tile read ${JSON.stringify(tile.text)} — value ${JSON.stringify(value)}`,
+      );
+    }
+  } finally {
+    await page.close();
+  }
+}
+
+{
+  /*
+   * 9.6 — THE ONE TO PRESERVE. The author: "when I select AZ-6 it's shaded on
+   * the map, and when I close the small battlecard on the right it is
+   * de-selected. That behavior is excellent and should be preserved as is."
+   *
+   * The map work in 9.1 through 9.5 is exactly what could have broken it, so
+   * it gets a check of its own rather than an assumption. The gesture is real:
+   * click the map, assert something opened, close it, assert it cleared. A
+   * check that asserted only the first half would pass on a build where
+   * closing no longer deselects.
+   */
+  const page = await openWideAt(browser, "85701");
+  try {
+    const box = await page.locator(".maplibregl-canvas").first().boundingBox();
+    if (!box) {
+      cannotRun(
+        "F01",
+        "9.6: selecting a district shades it, closing deselects",
+        "no map canvas to click",
+      );
+    } else {
+      await page.mouse.click(box.x + box.width * 0.62, box.y + box.height * 0.55);
+      /* R49 DURATION, DELIBERATE: a MAP SETTLE after a real click. The click can
+       * open a picker, a card, or nothing at all, and "nothing at all" is a
+       * legitimate outcome this check reports as COULD NOT RUN — so there is no
+       * single element to poll for. Polling for "either of two things or
+       * neither" is a fixed wait wearing a loop. The duration outlasts the
+       * camera settle the click may trigger. */
+      await page.waitForTimeout(2000);
+      const opened = (await page.evaluate(
+        `Boolean(document.querySelector(".district-picker") || document.querySelector(".popup-card"))`,
+      )) as boolean;
+
+      if (!opened) {
+        cannotRun(
+          "F01",
+          "9.6: selecting a district shades it, closing deselects",
+          "the map click opened neither a picker nor a card — the behaviour to preserve was never exercised",
+        );
+      } else {
+        const cleared = (await page.evaluate(
+          `(() => {
+            const close = document.querySelector(
+              '.popup-card [aria-label="Close"], .district-picker [aria-label="Dismiss"]',
+            );
+            if (close) close.click();
+            return new Promise((r) =>
+              setTimeout(() => {
+                r(
+                  !document.querySelector(".popup-card") &&
+                    !document.querySelector(".district-picker"),
+                );
+              }, 900),
+            );
+          })()`,
+        )) as boolean;
+        check(
+          "F01",
+          "9.6: selecting a district shades it, closing deselects",
+          Boolean(cleared),
+          `opened=${opened} cleared=${cleared}`,
+        );
+      }
+    }
+  } finally {
+    await page.close();
+  }
+}
+
+{
+  /*
+   * 3.1 — every meetings list leads with what a reader can still attend.
+   * Opened from a who-governs row, on its own page, and read out of the card
+   * the click produced rather than out of the whole document.
+   */
+  const page = await openAt(browser, "85701");
+  try {
+    const row = page
+      .locator('.coverage-notice button:has-text("Tucson Unified")')
+      .first();
+    if ((await row.count()) === 0) {
+      cannotRun(
+        "F01",
+        "3.1: a meetings list leads with the upcoming group",
+        "no Tucson Unified row at 85701",
+      );
+    } else {
+      await row.click();
+      await untilPresent(page, ".account-modal", 10_000);
+      const read = (await page.evaluate(
+        `(() => {
+          const card = document.querySelector(".account-modal");
+          if (!card) return null;
+          const opener = [...card.querySelectorAll("button")].find((n) =>
+            /Meetings/.test(n.textContent || ""),
+          );
+          if (opener) opener.click();
+          return new Promise((r) =>
+            setTimeout(() => {
+              const text = (card.textContent || "").replace(/\\s+/g, " ");
+              r({
+                soonAt: text.indexOf("Meetings in the next 30 days"),
+                laterAt: text.indexOf("Upcoming meetings after that"),
+                closedAt: text.indexOf("Canceled or concluded"),
+              });
+            }, 1200),
+          );
+        })()`,
+      )) as { soonAt: number; laterAt: number; closedAt: number } | null;
+
+      if (!read) {
+        cannotRun(
+          "F01",
+          "3.1: a meetings list leads with the upcoming group",
+          "the battlecard did not open",
+        );
+      } else {
+        const present = [read.soonAt, read.laterAt, read.closedAt].filter((n) => n >= 0);
+        if (present.length === 0) {
+          cannotRun(
+            "F01",
+            "3.1: a meetings list leads with the upcoming group",
+            "no group header rendered — this body may hold no meetings at all, so the ordering was not exercised",
+          );
+        } else {
+          // Whatever groups exist must appear in the author's order, and the
+          // concluded block must never be the first thing on the list.
+          const ascending = present.every((v, i) => i === 0 || present[i - 1] < v);
+          const closedIsNotFirst = read.closedAt < 0 || present[0] !== read.closedAt;
+          check(
+            "F01",
+            "3.1: a meetings list leads with the upcoming group",
+            ascending && closedIsNotFirst,
+            `soon@${read.soonAt} later@${read.laterAt} closed@${read.closedAt}`,
+          );
+        }
+      }
+    }
+  } finally {
+    await page.close();
+  }
+}
+
+{
+  /*
+   * 6.1 — the struck gap phrasing is off the LIVE build, not merely out of the
+   * source tree. A string test proves the repository; this proves the deploy.
+   */
+  for (const path of ["/", "/ballot?zip=85701", "/transparency"]) {
+    const response = await fetch(`${BASE}${path}`, { headers: RUN_HEADERS });
+    countProbe(`${BASE}${path}`);
+    if (!response.ok) {
+      cannotRun("F01", `6.1: no "gap in our" phrasing on ${path}`, `HTTP ${response.status}`);
+      continue;
+    }
+    const html = await response.text();
+    check(
+      "F01",
+      `6.1: no "gap in our" phrasing on ${path}`,
+      !/gap in our (data|research)/i.test(html),
+      `${html.length} bytes read`,
+    );
+  }
+}
+
+{
+  /*
+   * 1e — the struck never-store/never-log promise is off the live build too.
+   * The author ordered it verbatim, and it is the one item where leaving the
+   * old sentence up is a promise the business does not intend to keep.
+   */
+  const response = await fetch(`${BASE}/transparency`, { headers: RUN_HEADERS });
+  countProbe(`${BASE}/transparency`);
+  if (!response.ok) {
+    cannotRun(
+      "F01",
+      "1e: the struck never-store promise is gone from the address copy",
+      `HTTP ${response.status}`,
+    );
+  } else {
+    const html = await response.text();
+    const para =
+      html.split(/<\/p>/).find((c) => /Census Bureau/.test(c) && /passes through/.test(c)) ?? "";
+    check(
+      "F01",
+      "1e: the struck never-store promise is gone from the address copy",
+      para.length > 0 && !/never (store|log)/i.test(para),
+      para ? `address paragraph read, ${para.length} bytes` : "no address paragraph on the page",
+    );
+  }
+}
+
+{
+  /*
+   * 11.3 — the ballot page stopped claiming an order it does not use, and says
+   * the true thing instead. A live read, because the sentence is the reader's
+   * only account of why the candidates are in the order they are in.
+   */
+  const response = await fetch(`${BASE}/ballot?zip=85701`, { headers: RUN_HEADERS });
+  countProbe(`${BASE}/ballot?zip=85701`);
+  if (!response.ok) {
+    cannotRun("F01", "11.3/11.4: the ballot states its real order and no recommendation", `HTTP ${response.status}`);
+  } else {
+    const html = await response.text();
+    check(
+      "F01",
+      "11.3/11.4: the ballot states its real order and no recommendation",
+      !/listed alphabetically by surname/i.test(html) &&
+        /Nothing on this page is a recommendation/i.test(html),
+      `${html.length} bytes read`,
+    );
+  }
+}
 
 const ranNow = [...new Set(identities)].sort();
 const previous = existsSync(CHECKS_FILE)

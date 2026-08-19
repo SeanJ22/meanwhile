@@ -97,29 +97,49 @@ export function PopupCard({
         </button>
       )}
 
-      <p className="popup-type" style={{ color: TIER_VAR[tier] }}>
-        {type}
-        {badges.map((badge) => (
-          <span
-            key={badge.label}
-            className="popup-badge"
-            data-status={badge.status}
-          >
-            {badge.label}
-          </span>
-        ))}
-      </p>
+      {/*
+        F01 1.3 (2026-08-19, the author): *"On the small battlecard I have to
+        scroll to expand for More. What I would like is to have More locked at
+        the bottom — and if there is more to scroll, maybe Sadie Shaw doesn't
+        show up on the first shot, I want to scroll into the data. But if I
+        want to just simply click More, that should never be hidden."*
 
-      {!titleInBody && <h3>{title}</h3>}
+        Everything used to scroll together inside a `max-height: 55vh` card, so
+        a district with five board members pushed the one control that opens
+        the FULL card off the bottom. The path to the large battlecard was
+        behind a scroll — a hidden entry point, which the friction rule counts
+        as a defect with the same standing as a wrong number.
 
-      <div className={titleInBody ? "" : "mt-2.5"}>{children}</div>
+        Three bands now, in one flex column: the type and title are fixed
+        furniture, the content scrolls, and More is pinned. Rows falling below
+        the fold is expected and fine, which is exactly what the author said.
+      */}
+      <div className="popup-card-head">
+        <p className="popup-type" style={{ color: TIER_VAR[tier] }}>
+          {type}
+          {badges.map((badge) => (
+            <span
+              key={badge.label}
+              className="popup-badge"
+              data-status={badge.status}
+            >
+              {badge.label}
+            </span>
+          ))}
+        </p>
+        {!titleInBody && <h3>{title}</h3>}
+      </div>
+
+      <div className={`popup-card-body${titleInBody ? "" : " mt-2.5"}`}>
+        {children}
+      </div>
 
       {onExpand && (
         <button
           type="button"
           onClick={onExpand}
           aria-label={expandLabel ?? `More about ${title}`}
-          className="mt-3 flex w-full cursor-pointer items-center justify-center gap-1.5 rounded border border-[var(--panel-border)] px-3 py-2 text-[0.75rem] font-medium text-paper hover:border-[var(--signal)] hover:text-signal"
+          className="popup-card-more mt-3 flex w-full cursor-pointer items-center justify-center gap-1.5 rounded border border-[var(--panel-border)] px-3 py-2 text-[0.75rem] font-medium text-paper hover:border-[var(--signal)] hover:text-signal"
         >
           More
           <Maximize2 className="size-3" />

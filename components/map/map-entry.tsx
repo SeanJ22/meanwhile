@@ -228,16 +228,52 @@ function MapEntryInner() {
    * opened it, and closes the list overlay.
    */
   const [popupMeeting, setPopupMeeting] = useState<Meeting | null>(null);
-  const [large, setLarge] = useState<
+  /*
+   * **F01 2.4 (2026-08-19, the author) — THE LARGE SURFACE IS A STACK.**
+   *
+   * *"If I go to More to open a large battle card, open Representation, and
+   * select Dr. Ravi Shah, his card pops up, which is right. However, if I
+   * close out Dr. Ravi Shah, it brings me back to the map. It doesn't bring
+   * me back to Tucson Unified."* His rule: **navigation unwinds one level at
+   * a time, everywhere.**
+   *
+   * This was ONE SLOT. A person's card opened from inside a body's card
+   * REPLACED it, so closing had nowhere to go but the map, and the reader lost
+   * the card they had been reading with no way back but to find it again.
+   *
+   * It is now a stack, and the distinction that makes it work is WHERE the
+   * card was opened from:
+   *
+   *  - from OUTSIDE any large surface — a map pin, a who-governs row, a list
+   *    row — `openLarge` REPLACES the stack. That is the one-at-a-time rule
+   *    and it is unchanged; two unrelated battlecards were never meant to nest.
+   *  - from INSIDE an open large surface — a roster name, a place card's body
+   *    row — `pushLarge` appends, and closing pops back to what opened it.
+   *
+   * The depth cap is a cycle guard, not a design limit: a reader can bounce
+   * between a board's card and a member's card indefinitely, and an unbounded
+   * array would grow for as long as they enjoyed themselves. At the cap the
+   * OLDEST frame is dropped, so the most recent history — which is the history
+   * a Back gesture is about — always survives.
+   */
+  type LargeSurface =
     | { kind: "entity"; subject: ModalSubject }
     | {
         kind: "official";
         holder: SeatHolder;
         seatLabel: string | null;
         tier: "local" | "state" | "national";
-      }
-    | null
-  >(null);
+      };
+  const LARGE_STACK_LIMIT = 8;
+  const [largeStack, setLargeStack] = useState<LargeSurface[]>([]);
+  const large = largeStack.length > 0 ? largeStack[largeStack.length - 1] : null;
+  const setLarge = useCallback((next: LargeSurface | null) => {
+    setLargeStack(next ? [next] : []);
+  }, []);
+  /** Close the top card and return to the one under it — never straight out. */
+  const closeLarge = useCallback(() => {
+    setLargeStack((stack) => stack.slice(0, -1));
+  }, []);
   const [officialPopup, setOfficialPopup] = useState<{
     holder: SeatHolder;
     seatLabel: string | null;
@@ -367,7 +403,7 @@ function MapEntryInner() {
       setSettled(null);
       remember({ zip, lat, lng });
     },
-    [remember, dispatch, dismissSidebar],
+    [remember, dispatch, dismissSidebar, setLarge],
   );
 
   /*
@@ -537,12 +573,24 @@ function MapEntryInner() {
       setNoticeCollapsed(surface !== "wgh");
       if (surface !== "large") setLarge(null);
     },
-    [],
+    [setLarge],
   );
+
+  /**
+   * F01 2.4 — open a card FROM INSIDE another one, keeping the way back.
+   *
+   * Everything `openLarge` does to the other surfaces has already been done by
+   * the card this was opened from, so this only grows the stack.
+   */
+  const pushLarge = useCallback((next: LargeSurface) => {
+    setLargeStack((stack) =>
+      [...stack, next].slice(-LARGE_STACK_LIMIT),
+    );
+  }, []);
 
   /** The one-at-a-time rule: any large surface replaces every other. */
   const openLarge = useCallback(
-    (next: NonNullable<typeof large>) => {
+    (next: LargeSurface) => {
       setLarge(next);
       // 4c: the sidebar and the who-governs card are surfaces too, and they
       // yield to a battlecard exactly as a battlecard yields to them.
@@ -555,7 +603,7 @@ function MapEntryInner() {
       // 8a: a sidebar door is a large surface too, and yields the same way.
       dispatch({ type: "door/close" });
     },
-    [dispatch, openSurface],
+    [dispatch, openSurface, setLarge],
   );
 
   const openOfficial = useCallback(
@@ -1007,14 +1055,40 @@ function MapEntryInner() {
     [venues, dispatch, openLarge, bodyFor],
   );
 
-  // Reset clears the filters a reader has got tangled in and offers the
-  // location prompt again — the two things that put them somewhere they did
-  // not mean to be.
+  /*
+   * RESET = "PUT ME BACK WHERE I STARTED" — F01 9.5, 2026-08-19, the author.
+   *
+   * *"The reset view should not be a pop-up of the zip again like 'hey, what
+   * zip do you want to go back to?' The reset view should be the last zip that
+   * I selected, so it'll zoom back. If the last zip I selected was 85701,
+   * hitting reset should act as if I just simply put in 85701 again. If I want
+   * to change it then I can click Change. The reset view option is doing more
+   * work than it needs to."*
+   *
+   * It was: it cleared the filters AND reopened the welcome overlay, which
+   * asks a question the reader has already answered. Two jobs where one was
+   * wanted, and the second one undid the reader's own answer.
+   *
+   * Now it clears the controls and re-runs the zip they are already on,
+   * through `search` — the SAME path a typed zip takes, which is what makes
+   * "acts as if I put in 85701 again" literally true rather than approximately
+   * true. `search` drops the settled viewport, so a reader who panned to the
+   * next county is flown home; it also clears the selections and open cards,
+   * which is the tangle reset existed to undo in the first place.
+   *
+   * The welcome prompt survives for the ONE case where it is the honest
+   * answer: no zip yet, so there is nowhere to return to. Reset with nothing
+   * to reset to has to ask.
+   */
   const onReset = useCallback(() => {
     dispatch({ type: "reset" });
     setFocus(null);
+    if (location) {
+      search(location.zip, location.lat, location.lng);
+      return;
+    }
     setWelcomeRequested(true);
-  }, [dispatch]);
+  }, [dispatch, location, search]);
 
   // Which overlays are drawn: the district-type checkboxes, gated by the
   // master toggle. Empty when the toggle is off. The derivation is a pure
@@ -1278,6 +1352,17 @@ function MapEntryInner() {
    */
   const wghOpen = Boolean(shown) && !noticeCollapsed;
   const sidebarVisible = useSidebarVisible(sidebarState);
+  /*
+   * F01 10.3 — is the rail a SIDE panel covering part of the map, or a
+   * full-width drawer over all of it?
+   *
+   * `useSidebarVisible("default")` is the media query on its own: at `sm` and
+   * up the rail shows by default, below it the rail is a drawer. Padding the
+   * camera by 364px while a phone drawer covers the whole screen would frame
+   * the map around a rail that is not there once the drawer closes, so the
+   * inset applies only where the rail is genuinely a 364px column.
+   */
+  const railIsAColumn = useSidebarVisible("default") && sidebarVisible;
   const clusterAt = clusterPlacement({ wgh: wghOpen, sidebar: sidebarVisible });
   const clusterZip = shown
     ? /^\d{5}$/.test(shown.zip)
@@ -1351,6 +1436,43 @@ function MapEntryInner() {
           clusterElsewhere={clusterRendered}
         />
 
+        {/* F01 9.4 (2026-08-19, the author): *"I don't like that I have to open
+            the sidebar to reset. A very, very, very small reset button or
+            widget should be available if I'm just looking around the map."*
+
+            Reset was reachable only from inside the rail, so a reader who had
+            panned somewhere strange had to open a panel to get home — a hidden
+            entry point, which the friction rule counts as a defect with the
+            same standing as a wrong number.
+
+            Deliberately governed by the SAME CSS rule as the hamburger it sits
+            under: visible exactly when the rail is not. The rail has its own
+            reset, and two reset buttons on one screen is worse than one in the
+            wrong place — the reader would have to work out whether they do the
+            same thing. 32px against the hamburger's 44 because it is the
+            secondary control of the pair, and it is what "very, very, very
+            small" translates to inside the committed scale. */}
+        <button
+          type="button"
+          className="map-reset-btn"
+          title="Reset view"
+          aria-label="Reset view"
+          onClick={onReset}
+        >
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            aria-hidden="true"
+          >
+            <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
+            <path d="M3 3v5h5" />
+          </svg>
+        </button>
+
         {/* The hamburger (2f) — rendered always, shown by CSS whenever the
             sidebar is effectively hidden, at any width. The backdrop is
             phone-only: it sits under the sidebar's z-1000 so tapping the map
@@ -1384,13 +1506,27 @@ function MapEntryInner() {
           />
         )}
 
-        {/* The map starts where the sidebar ends — full width when the rail
-            is hidden at any width (2f). */}
-        <div
-          className={`absolute inset-y-0 right-0 left-0 ${
-            sidebarState === "closed" ? "" : "sm:left-[364px]"
-          }`}
-        >
+        {/* F01 10.3 (2026-08-19, the author): *"the main sidebar is floating
+            over essentially empty gray space... the floater should be over the
+            map."*
+
+            The map used to START where the rail ended (`sm:left-[364px]`).
+            The rail is content-height and floats, so the 364px column BELOW it
+            was reserved for a map that was not allowed to be there — the empty
+            gray block he drew a red box around.
+
+            The canvas is full-bleed now and the rail floats over it. Framing is
+            preserved by handing the rail's width to the camera as PADDING
+            (`leftInset` below), so a centroid still lands in the middle of what
+            the reader can SEE rather than sliding half a rail to the left.
+
+            The OVERLAY containers below keep their offset on purpose: the
+            who-governs card, the pill cluster and the meeting panel are things
+            a reader reads, and moving them under the rail to fix a background
+            would be trading a cosmetic gap for a covered card. Only the
+            district picker follows the canvas, because its coordinates come
+            from a click on the canvas and the two must share one space. */}
+        <div className="absolute inset-0">
           <MapCanvas
             venues={venues}
             camera={camera}
@@ -1418,6 +1554,10 @@ function MapEntryInner() {
             narrowedDistricts={narrowedDistricts}
             onDistrictClick={onDistrictClick}
             theme={theme}
+            /* F01 10.3: what the rail covers, so the camera can frame around it.
+               Zero when the rail is hidden — then nothing is covered. The
+               breakpoint matches the `sm:` the overlays still use. */
+            leftInset={railIsAColumn ? 364 : 0}
             onDistrictError={onDistrictError}
             onDrawnDistricts={setDrawnDistricts}
             onSelectVenue={onSelectVenue}
@@ -1575,6 +1715,18 @@ function MapEntryInner() {
                   failedSourceOcdIds={
                     shown.snapshot?.failed.flatMap((f) => f.ocdIds) ?? []
                   }
+                  /* F01 7.2: what the MAP is actually showing, so the card
+                     cannot say “may be missing” about a body whose pins the
+                     reader can see. Read off the same meeting array the pins
+                     are drawn from — a second derivation is how two surfaces
+                     come to disagree, which is the defect this closes. */
+                  ocdIdsWithMeetings={[
+                    ...new Set(
+                      (shown.meetings ?? []).flatMap((m) =>
+                        m.ocdId ? [m.ocdId] : [],
+                      ),
+                    ),
+                  ]}
                   onOpenOfficial={openOfficial}
                   onOpenBody={(body) =>
                     openLarge({
@@ -1610,12 +1762,11 @@ function MapEntryInner() {
         </div>
 
         {/* Positioned against the map area, so its coordinates match the
-            click that produced it. */}
-        <div
-          className={`pointer-events-none absolute inset-y-0 right-0 left-0 ${
-            sidebarState === "closed" ? "" : "sm:left-[364px]"
-          }`}
-        >
+            click that produced it — which is why this one followed the canvas
+            to full-bleed in F01 10.3 while the reader-facing overlays did not.
+            A picker offset 364px from the click it belongs to is worse than
+            any gap it could have been protecting against. */}
+        <div className="pointer-events-none absolute inset-0">
           <DistrictPicker />
         </div>
 
@@ -1729,11 +1880,12 @@ function MapEntryInner() {
                   )
                 : large.subject
             }
-            onClose={() => setLarge(null)}
-            // A roster name opens the person's full card — the one-at-a-time
-            // rule swaps the large surfaces (3).
+            onClose={closeLarge}
+            /* F01 2.4: a roster name opens the person's full card ON TOP of this
+               one, so closing theirs returns here rather than to the map. This
+               is the author's Dr. Ravi Shah case exactly. */
             onOpenHolder={(holder) =>
-              openLarge({
+              pushLarge({
                 kind: "official",
                 holder,
                 seatLabel: null,
@@ -1758,7 +1910,9 @@ function MapEntryInner() {
                 (b) => b.bodyId === key,
               );
               if (body) {
-                openLarge({
+                // F01 2.4: opened from inside the place card, so it stacks —
+                // closing the body card returns to the place it was listed on.
+                pushLarge({
                   kind: "entity",
                   subject: bodySubject(body, current?.meetings ?? []),
                 });
@@ -1785,7 +1939,10 @@ function MapEntryInner() {
                   }
                 : null
             }
-            onClose={() => setLarge(null)}
+            /* F01 2.4: pops one level. A person opened from a body card returns
+               to that body card; a person opened from the map returns to the
+               map, because their frame is the only one on the stack. */
+            onClose={closeLarge}
           />
         )}
 
@@ -1949,6 +2106,21 @@ function bodySubject(
     .filter((m) => m.ocdId !== null && m.ocdId === body.ocdId)
     .sort((a, b) => a.startsAt.localeCompare(b.startsAt));
 
+  /*
+   * F01 1.2 (2026-08-19): the superintendent is HIRED by the board and does
+   * not sit on it, so they belong in exactly one place on this card — “Runs
+   * the district day to day” — and never in “Who sits on it”. They live in the
+   * roster array because that is where this slot resolves from; pulling them
+   * out of the seated list is the other half of the same decision.
+   */
+  const superintendent =
+    body.divisionType === "school_district"
+      ? (roster.find((h) => /superintendent/i.test(h.officeTitle ?? "")) ?? null)
+      : null;
+  const seated = superintendent
+    ? roster.filter((h) => h.id !== superintendent.id)
+    : roster;
+
   return {
     title: body.name ?? body.divisionLabel,
     subtitle: body.divisionLabel,
@@ -1977,7 +2149,7 @@ function bodySubject(
           ]
         : []),
     ],
-    representation: roster,
+    representation: seated,
     representationNote:
       "We know this body governs here because its division exists. We haven't sourced who sits on it.",
     meetings,
@@ -1991,10 +2163,7 @@ function bodySubject(
       // The superintendent is HIRED by the board, so they are not in the
       // elected roster and have to be asked for separately. Null renders as
       // the named gap, never as an absent row.
-      superintendent:
-        body.divisionType === "school_district"
-          ? (roster.find((h) => /superintendent/i.test(h.officeTitle)) ?? null)
-          : null,
+      superintendent: superintendent,
       contact: bodyContactRows(body),
       jurisdiction: [
         { label: "Governs", value: body.divisionLabel },
@@ -2206,6 +2375,25 @@ function districtSubject(
       { label: "Type", value: district.typeLabel },
       { label: "Tier", value: TIER_LABEL[district.tier] },
       { label: "State", value: district.state, mono: true },
+      /*
+       * F01 2.1 (2026-08-19, the author): *"When looking at the large
+       * battlecard in Overview, the district's website should be present in
+       * Overview."* His instance was Tucson Unified District, whose Overview
+       * was three identifiers — Type, Tier, State — and no door to the
+       * district itself.
+       *
+       * The BODY card already had this row; the DIVISION card never did, and
+       * a division card is what a who-governs row and a district click both
+       * open. `bodyHomepageRows` is shared with `bodySubject` so the two
+       * cards cannot render a body’s own site two different ways.
+       *
+       * A division can be governed by more than one body — a county board and
+       * a library district sit in the same division — so this lists each
+       * distinct site rather than electing one, which would be inventing an
+       * answer about who speaks for a jurisdiction (the same reason the place
+       * card elects nobody).
+       */
+      ...bodyHomepageFacts(coverage, district.ocdId),
     ],
     /*
      * 6f2 (2026-08-15): the enrichment. The overview was three identifiers
@@ -2240,6 +2428,54 @@ function districtSubject(
      */
     sources: districtCardSources(roster, meetings),
   };
+}
+
+/**
+ * **The body's own website, as an Overview row** — F01 2.1, 2026-08-19.
+ *
+ * Shared by `bodySubject` and `districtSubject` so a body's site cannot render
+ * two different ways on the two cards that can show it. The label and the
+ * host-only display are the body card's, unchanged.
+ *
+ * **Nothing is invented.** A body with no `homepageUrl` contributes no row —
+ * never a guessed domain, and never a row claiming a site exists. Measured on
+ * the shipped registry (2026-08-19): 95 of 347 bodies carry one, and every
+ * body without is `NOT_ATTEMPTED` — nobody has hunted it yet. So this is not a
+ * render suppressing data; every body the product actually covers has its site
+ * and now shows it on both cards.
+ */
+function bodyHomepageFacts(
+  coverage: CoverageSummary | null,
+  ocdId: string,
+): { label: string; value: React.ReactNode }[] {
+  const seen = new Set<string>();
+  const rows: { label: string; value: React.ReactNode }[] = [];
+  for (const body of coverage?.bodies ?? []) {
+    if (body.ocdId !== ocdId || !body.homepageUrl) continue;
+    if (seen.has(body.homepageUrl)) continue;
+    seen.add(body.homepageUrl);
+    let host: string;
+    try {
+      host = new URL(body.homepageUrl).hostname.replace(/^www\./, "");
+    } catch {
+      // A malformed stored URL renders no row rather than a broken link.
+      continue;
+    }
+    rows.push({
+      label: "Official site",
+      value: (
+        <a
+          href={body.homepageUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
+        >
+          {host} →
+        </a>
+      ),
+    });
+  }
+  return rows;
 }
 
 /**

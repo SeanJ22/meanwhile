@@ -18,6 +18,7 @@ import {
   KeyVotesSection,
   type KeyVoteRow,
 } from "@/components/officials/key-votes-section";
+import { votedCount } from "@/lib/votes/participation";
 import { explainVoteQuestion } from "@/lib/votes/vote-explainers";
 import {
   summaryForBill,
@@ -405,7 +406,15 @@ function RecentVotesInner({
             <KeyVotesSection chamber={chamber} rows={keyVotes} />
           ) : null
         }
-        keyVotesMeta={keyVotes.length > 0 ? String(keyVotes.length) : null}
+        /* F01 5.1 (2026-08-19): this used to be `keyVotes.length` — every
+           entry in the curated list, including the sixteen nomination
+           questions a House member cannot vote on. The headline now counts
+           the votes the member ACTUALLY PARTICIPATED IN, which is what a
+           reader opening it expects to find underneath. The full denominator
+           has not vanished: it is stated inside, per group. */
+        keyVotesMeta={
+          keyVotes.length > 0 ? String(votedCount(keyVotes)) : null
+        }
       />
     </CardSection>
   );

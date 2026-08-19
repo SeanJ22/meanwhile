@@ -28,6 +28,7 @@ import { FilingNote } from "@/components/ballot/filing-note";
 import { CandidateCard } from "@/components/ballot/candidate-card";
 import { CandidatePositions } from "@/components/ballot/candidate-positions";
 import { positionsFor, positionsHeadline } from "@/lib/candidates/positions";
+import { derivedBlurbFor } from "@/lib/candidates/blurbs";
 import { MyPicks } from "@/components/ballot/my-picks";
 import { jurisdictionKeyForContestId } from "@/lib/ballot/pick-jurisdiction";
 import { PickControl } from "@/components/ballot/pick-control";
@@ -693,6 +694,7 @@ export default async function BallotPage({
                         }
                         card={cardForNominee(contest.id, nominee.name)}
                         links={linksForNominee(contest.id, nominee.name)}
+                        derivedBlurb={derivedBlurbFor(`${contest.id}|${nominee.name}`)}
                         nameSlot={
                           <IncumbentName
                             targetKey={`${contest.id}|${nominee.name}`}
@@ -807,6 +809,7 @@ export default async function BallotPage({
                           }
                           card={cardForCandidacy(cand.id)}
                           links={linksForCandidacy(cand.id)}
+                          derivedBlurb={derivedBlurbFor(cand.id)}
                           filedSiteUrl={cand.websiteUrl}
                           nameSlot={
                             <IncumbentName

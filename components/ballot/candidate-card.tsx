@@ -35,7 +35,20 @@ export function CandidateCard({
   links,
   filedSiteUrl,
   nameSlot,
+  derivedBlurb,
 }: {
+  /**
+   * **B14's blurb rung** — the campaign's own one-line self-description,
+   * captured on the corpus retrieval. Rendered ONLY where no curated bio
+   * exists: a session that hand-read a candidate's site and wrote the bio
+   * down beats a meta tag, and this fills the gap underneath, which is
+   * exactly where the information asymmetry lives.
+   */
+  derivedBlurb?: {
+    text: string;
+    sourceUrl: string;
+    sourceLabel: string;
+  } | null;
   name: string;
   /**
    * The name rendered as the door to this person's large battlecard (g3 item
@@ -128,6 +141,25 @@ export function CandidateCard({
                 {card.bioSourceLabel ?? "source"}
               </a>
             )}
+          </p>
+        )}
+
+        {!card?.bio && derivedBlurb && (
+          // B14 (2026-08-19, g20). The same shape and the same label rule as
+          // a curated bio, because it is the same kind of claim: the
+          // campaign's own words, quoted, with the page and the read date.
+          // Rendered only where no curated bio exists — the gap is where the
+          // information asymmetry lives, and filling it is the whole row.
+          <p className="mt-1 text-[0.8125rem] leading-relaxed text-paper-dim">
+            &ldquo;{derivedBlurb.text}&rdquo;{" "}
+            <a
+              href={derivedBlurb.sourceUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="text-muted underline decoration-dotted underline-offset-2 hover:text-link"
+            >
+              {derivedBlurb.sourceLabel}
+            </a>
           </p>
         )}
 

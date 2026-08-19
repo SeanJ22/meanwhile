@@ -34,6 +34,8 @@ function doc(over: Partial<CandidateDocument> = {}): CandidateDocument {
     id: "k@h",
     candidateKey: "k",
     sourceClass: "CAMPAIGN_SITE",
+    basis: "HUNTED_AND_VERIFIED",
+    metaDescription: null,
     documentUrl: "https://example.org/",
     contentHash: "h",
     retrievedAt: "2026-08-19T00:00:00.000Z",
@@ -265,4 +267,82 @@ test("P02: no issue phrase is a single loose word that turns a search into noise
     singles.length <= 6,
     `${singles.length} short single-word phrases: ${singles.join(", ")}`,
   );
+});
+
+/* ══ B14, 2026-08-19 (g20): the blurb-equalization hunt ═════════════════════ */
+
+test("B14: the denominator is measured from the ballot, not quoted", async () => {
+  const { measureCoverage, ballotPeople } = await import("../scripts/b14-coverage.mts");
+  const people = ballotPeople();
+  // 136: every filed candidacy in the three county files plus every
+  // certified nominee in the Arizona general lineup. Both are the reader's
+  // ballot and both count, and they are keyed differently — which is exactly
+  // how a count goes wrong when it is carried forward instead of re-derived.
+  assert.equal(people.length, 136);
+  assert.equal(new Set(people.map((p) => p.key)).size, 136, "a duplicate key");
+
+  const coverage = measureCoverage();
+  assert.equal(coverage.total, 136);
+  // The headline number this row turns on.
+  assert.equal(coverage.bare, coverage.bareKeys.length);
+  assert.ok(coverage.bare > 0, "nothing bare — the measurement stopped measuring");
+});
+
+test("B14: the blurb rung reaches every candidate whose page we hold, equally", async () => {
+  const { derivedBlurbFor } = await import("../lib/candidates/blurbs.ts");
+  const { getCandidateCorpus } = await import("../lib/candidates/positions.ts");
+
+  // Equal depth: the rung is run for EVERY candidate, and the ones it
+  // reaches are exactly the ones whose page carries a self-description.
+  // There is no path that skips a candidate for being obscure.
+  const withMeta = new Set(
+    getCandidateCorpus()
+      .documents.filter((d) => d.metaDescription)
+      .map((d) => d.candidateKey),
+  );
+  for (const key of withMeta) {
+    assert.ok(derivedBlurbFor(key), `${key} has a description we did not use`);
+  }
+  assert.ok(withMeta.size >= 30, `the rung reached only ${withMeta.size} candidates`);
+});
+
+test("B14: a derived blurb carries its source class, exactly as a curated one does", async () => {
+  const { derivedBlurbFor } = await import("../lib/candidates/blurbs.ts");
+  const { getCandidateCorpus } = await import("../lib/candidates/positions.ts");
+  const key = getCandidateCorpus().documents.find((d) => d.metaDescription)!.candidateKey;
+  const blurb = derivedBlurbFor(key)!;
+
+  // "Every blurb carries its source class" — a description without one is
+  // treated as a generated claim and removed. Same register as the curated
+  // bios already ship.
+  assert.match(blurb.sourceLabel, /In the (campaign's|office's own) words — .+, read \d{4}-\d{2}-\d{2}/);
+  assert.match(blurb.sourceUrl, /^https?:\/\//);
+  // And it is the campaign's own sentence, not one we picked out of a page.
+  assert.ok(blurb.text.length >= 20);
+});
+
+test("B14: no markup ever reaches a reader inside a blurb", async () => {
+  const { getCandidateCorpus } = await import("../lib/candidates/positions.ts");
+  // Alexander Kolodin's description read "AZ&#x27;s Chief of Elections"
+  // before the numeric references were decoded generically — the same
+  // lesson extractHtmlText already learned, in a second copy that had not.
+  for (const doc of getCandidateCorpus().documents) {
+    if (!doc.metaDescription) continue;
+    assert.doesNotMatch(
+      doc.metaDescription,
+      /&#\d+;|&#x[0-9a-f]+;|&amp;|&quot;|&nbsp;|<[a-z]/i,
+      `${doc.candidateKey}: markup in a blurb — ${doc.metaDescription.slice(0, 60)}`,
+    );
+  }
+});
+
+test("B14: a curated bio always outranks a derived one", () => {
+  const card = readFileSync(
+    join(ROOT, "components", "ballot", "candidate-card.tsx"),
+    "utf8",
+  );
+  // A session that hand-read a candidate's site beats a meta tag, and the
+  // derived line fills the gap underneath — which is where the information
+  // asymmetry actually lives.
+  assert.match(card, /\{!card\?\.bio && derivedBlurb && \(/);
 });

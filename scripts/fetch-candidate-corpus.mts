@@ -38,7 +38,47 @@ import type {
   CandidateCorpus,
   CandidateDocument,
   CandidateSourceClass,
+  CandidateUrlBasis,
 } from "../lib/candidates/corpus.ts";
+import { ballotPeople } from "./b14-coverage.mts";
+
+/**
+ * **The campaign's own one-line self-description** — B14's blurb rung.
+ *
+ * `og:description`, then `<meta name="description">`. A sentence the campaign
+ * wrote to describe itself to a search engine is the campaign's words about
+ * the campaign; a lead sentence WE picked out of a page would be an editorial
+ * act attributed to a real person. Taking the one they authored for exactly
+ * this purpose is not the same thing.
+ */
+function metaDescriptionOf(html: string): string | null {
+  const patterns = [
+    /<meta[^>]+property=["']og:description["'][^>]+content=["']([^"']{20,400})["']/i,
+    /<meta[^>]+content=["']([^"']{20,400})["'][^>]+property=["']og:description["']/i,
+    /<meta[^>]+name=["']description["'][^>]+content=["']([^"']{20,400})["']/i,
+    /<meta[^>]+content=["']([^"']{20,400})["'][^>]+name=["']description["']/i,
+  ];
+  for (const pattern of patterns) {
+    const m = pattern.exec(html);
+    if (m) {
+      const text = m[1]
+        // Numeric references GENERICALLY. The named-entity list missed
+        // `&#x27;` and Alexander Kolodin's description read
+        // "AZ&#x27;s Chief of Elections" — markup reaching a reader, which
+        // extractHtmlText already learned once and this copy had not.
+        .replace(/&#x([0-9a-f]+);/gi, (_, hex) => String.fromCodePoint(parseInt(hex, 16)))
+        .replace(/&#(\d+);/g, (_, dec) => String.fromCodePoint(Number(dec)))
+        .replace(/&apos;/g, "'")
+        .replace(/&quot;/g, '"')
+        .replace(/&nbsp;/g, " ")
+        .replace(/&amp;/g, "&")
+        .replace(/\s+/g, " ")
+        .trim();
+      if (text.length >= 20) return text;
+    }
+  }
+  return null;
+}
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(ROOT, "data", "candidates", "corpus-2026.json");
@@ -67,14 +107,54 @@ const targets: Array<{
   candidateKey: string;
   url: string;
   sourceClass: CandidateSourceClass;
+  basis: CandidateUrlBasis;
 }> = [];
 for (const [candidateKey, entry] of Object.entries(linkFile.links)) {
   if (entry.official) {
-    targets.push({ candidateKey, url: entry.official.url, sourceClass: "OFFICIAL_SITE" });
+    targets.push({
+      candidateKey,
+      url: entry.official.url,
+      sourceClass: "OFFICIAL_SITE",
+      basis: "HUNTED_AND_VERIFIED",
+    });
   }
   if (entry.campaign) {
-    targets.push({ candidateKey, url: entry.campaign.url, sourceClass: "CAMPAIGN_SITE" });
+    targets.push({
+      candidateKey,
+      url: entry.campaign.url,
+      sourceClass: "CAMPAIGN_SITE",
+      basis: "HUNTED_AND_VERIFIED",
+    });
   }
+}
+
+/*
+ * B14, 2026-08-19 (g20): THE FILED URLs COUNT, and leaving them out was a
+ * quiet inequality.
+ *
+ * A candidacy record carries `websiteUrl` — the site the candidate typed
+ * into their own filing. A prior session hunted links for 42 candidates and
+ * recorded those; the filed URLs were never retrieved from. That means the
+ * candidates a session had time to hunt for got a corpus and the rest did
+ * not, which is the information asymmetry the equal-effort rule exists to
+ * catch, produced by our own scheduling rather than by anything about them.
+ *
+ * A filed URL is a WEAKER claim than a hunted one — nobody has confirmed the
+ * page is theirs — so it carries `STATED_IN_FILING` and the surface can say
+ * so. It is not treated as equivalent; it is simply not skipped.
+ */
+const alreadyTargeted = new Set(targets.map((t) => `${t.candidateKey}|${t.url}`));
+for (const person of ballotPeople()) {
+  const url = person.filedSiteUrl?.trim();
+  if (!url || !/^https?:\/\//i.test(url)) continue;
+  if (alreadyTargeted.has(`${person.key}|${url}`)) continue;
+  if (targets.some((t) => t.candidateKey === person.key && t.url === url)) continue;
+  targets.push({
+    candidateKey: person.key,
+    url,
+    sourceClass: "CAMPAIGN_SITE",
+    basis: "STATED_IN_FILING",
+  });
 }
 const candidates = new Set(targets.map((t) => t.candidateKey));
 console.log(
@@ -153,12 +233,14 @@ for (const target of targets) {
     }
     const bytes = new Uint8Array(await response.arrayBuffer());
     const contentType = response.headers.get("content-type") ?? "";
+    const rawHtml = new TextDecoder().decode(bytes);
+    const metaDescription = metaDescriptionOf(rawHtml);
 
     let text: string | null = null;
     let extraction: CandidateDocument["extraction"] = "html";
     let extractionNote: string | null = null;
     try {
-      text = extractHtmlText(new TextDecoder().decode(bytes));
+      text = extractHtmlText(rawHtml);
       if (!text || text.length < 40) {
         // A page that extracts to almost nothing is a JS-rendered shell, and
         // recording it as text would make a false miss look like a search.
@@ -205,6 +287,8 @@ for (const target of targets) {
       id,
       candidateKey: target.candidateKey,
       sourceClass: target.sourceClass,
+      basis: target.basis,
+      metaDescription,
       documentUrl: target.url,
       contentHash: hash,
       retrievedAt: attemptedAt,

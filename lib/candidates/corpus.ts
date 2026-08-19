@@ -48,6 +48,15 @@ export type CandidateSourceClass =
   /** The official page of an office the person currently holds. */
   | "OFFICIAL_SITE";
 
+/**
+ * How we came to have this URL. Two different claims with two different
+ * provenances, and `lib/ballot/candidate-sites.ts` already draws the same
+ * line: a link a prior session FETCHED AND READ is not the same fact as a
+ * URL a candidate typed into a filing, and a reader is entitled to know
+ * which one a quote came from.
+ */
+export type CandidateUrlBasis = "HUNTED_AND_VERIFIED" | "STATED_IN_FILING";
+
 /** One retrieved version of one page. Append-only. */
 export interface CandidateDocument {
   /** `<candidateKey>@<contentHash>` — one row per distinct version. */
@@ -55,6 +64,18 @@ export interface CandidateDocument {
   /** The ballot candidacy key this belongs to. */
   candidateKey: string;
   sourceClass: CandidateSourceClass;
+  basis: CandidateUrlBasis;
+  /**
+   * **The campaign's own one-line description of itself** — its `og:description`
+   * or `<meta name="description">`, verbatim. B14's blurb rung.
+   *
+   * This is a sentence the campaign wrote to describe itself to a search
+   * engine, which makes it the campaign's words about the campaign rather
+   * than a passage we chose out of a page. Choosing a lead sentence
+   * ourselves would be an editorial act; taking the one they authored for
+   * exactly this purpose is not. Null when the page declares none.
+   */
+  metaDescription: string | null;
   /** Where it was fetched from. Observed, never constructed. */
   documentUrl: string;
   /** SHA-256 of the raw bytes. The revision detector. */

@@ -36,6 +36,7 @@
     "fec:fetch": "tsx scripts/fetch-fec.mts",
     "prl:fetch": "tsx scripts/fetch-prl.mts",
     "candidates:fetch": "tsx scripts/fetch-candidate-corpus.mts",
+    "b14:coverage": "tsx scripts/b14-coverage.mts",
     "intake:tripwire": "tsx scripts/intake-tripwire.mts",
     "streets:build": "tsx scripts/build-street-index.mts",
     "legiscan:fetch": "tsx scripts/fetch-legiscan.mts",

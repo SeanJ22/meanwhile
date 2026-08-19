@@ -994,3 +994,52 @@ retrieves further back than the serving window, its carry-forward window has to
 say so — otherwise a refused run silently returns a shorter archive than the
 last good one, and the count line reads "8 carried" with nothing to compare it
 against.
+
+## A relative document link resolves against the SECTION PATH, and 404s from outside (g18, 2026-08-18)
+
+Found hunting Merrimack County's public comment policy (D25). The Board's
+notices page names the policy and links it, and following that link from
+outside the site returns 404 — as does every other document on the page.
+
+**What is actually happening.** The CMS serves the page under a section path
+(`/board_of_commissioners_/public_notices,_agendas,_minutes,_.php`) and writes
+its document hrefs RELATIVE. Resolving a relative href against that page URL
+builds `/board_of_commissioners_/Board%20of%20Commissioners/…`, which does not
+exist. The documents live at the **site root**:
+`https://www.merrimackcounty.net/Board%20of%20Commissioners/…`.
+
+**The rung.** When a document link off a CMS page 404s, strip the section
+prefix the page itself is served under and re-resolve from the root before
+concluding anything about the document.
+
+**What proves it is the path and not the file**, and this is the checkable
+half: fetch a SECOND document from the same page. Every document 404ing the
+same way is a path fault; one document 404ing while its siblings answer is a
+missing file. Merrimack's `Public Notice 2.9.26.pdf` 404'd identically, which
+settled it in one extra fetch.
+
+A 404 here is not "the body publishes no policy". It is a URL this end built
+wrong, and reporting it as an absence would have been asserting absence from
+our own bug.
+
+## The comment-access rung is the policy CODE, not the meetings page (g18, 2026-08-18)
+
+Also from D25, and it generalises past one district.
+
+- **A school board files its rule under a policy code.** Tucson Unified's is
+  **BEDH, "Public Participation at Board Meetings"** — the NEPN/ASBA code most
+  American districts use. Going straight to the manual's section index and
+  looking for BEDH beat reading agendas. Try BEDH first on any district with a
+  coded policy manual.
+- **A county or municipality's rule is on its OWN site, not the vendor's.**
+  Morris County's `iqm2` calendar answers 200 and contains no comment language
+  at all, because a vendor calendar is a list of dates. The rule was one fetch
+  away on `morriscountynj.gov`.
+- **"public comment" is a FALSE-LEAD string on a school board site.** Tucson
+  Unified's `/Comments` page matched it and is about commenting on PROPOSED
+  POLICIES during their reading period — nothing to do with speaking at a
+  meeting. Match the string, then read what it is attached to.
+- **Ask whether the rule distinguishes MEETING KINDS before recording it.**
+  Morris County has a comment portion at every evening meeting and none at its
+  5 p.m. work sessions unless the Director grants one. A row that said "there
+  is a comment period" would have sent a reader to a work session to speak.

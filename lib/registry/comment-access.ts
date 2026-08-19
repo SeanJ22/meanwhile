@@ -76,6 +76,21 @@ export const COMMENT_ACCESS: CommentAccess[] = [
   // Honest UNKNOWNs: the Clerk's board pages publish schedule and venue but
   // not a comment procedure, and a comment period must never be inferred
   // from a meeting being public. The hunt continues on each body's page.
+  //
+  // RE-WALKED 2026-08-18 (g18, D25), rung 2 with an identified User-Agent:
+  // `clerksboards.tucsonaz.gov/boards` (HTTP 200, 22,065 bytes) and the
+  // per-board page `?board=38` (HTTP 200, 15,043 bytes) BOTH carry no
+  // comment-access language at all — not "public comment", not "call to the
+  // audience", not a time limit. So there is no shared platform-level rule to
+  // find, and one rung cannot close all five; each board needs its own.
+  //
+  // The rung that WOULD close them, named rather than left for rediscovery:
+  // Tucson's Mayor & Council rule (already curated above, YES) comes from a
+  // City participation notice, and the boards are creatures of city code —
+  // so the target is the Tucson City Code chapter creating each board, and
+  // each board's own bylaws where it publishes them. NOT ATTEMPTED. Nothing
+  // is inferred from the Mayor & Council rule: a council's speaker-card
+  // procedure is not evidence about its Planning Commission.
   ...(
     [
       ["planning-commission", "Planning Commission", "38"],
@@ -208,21 +223,64 @@ export const COMMENT_ACCESS: CommentAccess[] = [
       "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
     ocdId:
       "ocd-division/country:us/state:az/school_district:tucson_unified_district",
-    commentPeriod: "UNKNOWN",
-    commentPeriodDetail: null,
-    signup: null,
-    writtenComment: null,
+    /*
+     * FOUND 2026-08-18 (g18, D25). Policy BEDH, "Public Participation at
+     * Board Meetings", revised 12/12/2023, in the district's own policy
+     * manual on its own domain.
+     *
+     * THE RUNGS, so the next hunt starts below this one. Rung 2 on
+     * `govboard.tusd1.org/Meetings` returned 200 and matched "public comment"
+     * — a FALSE LEAD: the nav item it matched is `/Comments`, which is the
+     * district's page for commenting on PROPOSED POLICIES during their
+     * reading period, not for speaking at a meeting. Recording that it was
+     * checked and rejected, because the next reader will match the same
+     * string. The rule is in Section B of the policy manual, reached by
+     * scanning the manual's own section index for the NEPN/ASBA code a school
+     * board files this under (BEDH). That code is the rung: a school district
+     * with a coded policy manual will have its participation rule at BEDH,
+     * and looking there directly is faster than reading agendas.
+     */
+    commentPeriod: "YES",
+    commentPeriodDetail:
+      "Call to the Audience. The comment period is 45 minutes at regular meetings and 20 minutes at special meetings, and is extended only by the Board's approval. Speakers whose comments relate to an item on the agenda are taken first; the rest are taken in the order their forms arrived.",
+    signup:
+      "Complete a Request to Address Board form and give it to Board staff — electronically to the Board office by noon on the day of the meeting, or in person at the meeting any time before Call to the Audience closes. The form must name the speaker and the topic, and say whether the comments relate to an agenda item.",
+    writtenComment:
+      "The same form asks whether you want to speak in person or have your comments read into the record by the Governing Board Clerk. All written comments go to Board members whether or not they are read aloud.",
     attend: null,
-    timeLimit: null,
-    sourceUrl: "https://govboard.tusd1.org/Meetings",
-    collectedAt: "2026-08-13",
-    verifiedAt: null,
+    timeLimit:
+      "Up to three minutes per speaker, or per written comment read aloud. The presiding officer may shorten it when many people have signed up, and speakers may not give their time to someone else.",
+    sourceUrl: "https://govboard.tusd1.org/Policy-Code-BEDH",
+    collectedAt: "2026-08-18",
+    verifiedAt: "2026-08-18",
   },
   {
     bodyId:
       "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing",
     ocdId:
       "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+    /*
+     * STILL UNKNOWN after g18's hunt, and the rungs are recorded so the next
+     * session starts below them rather than at the top again (D25's own rule).
+     *
+     * Walked 2026-08-18, all with an identified User-Agent carrying a contact
+     * address:
+     *   rung 2, `/157/Township-Council` — HTTP 200, 112,590 bytes, NO
+     *     comment-access language of any kind (no "public comment", no
+     *     "public portion", no time limit).
+     *   rung 2, `/AgendaCenter` — HTTP 200, 203,609 bytes, none.
+     *   rung 2, `/158/Council-Meetings` — HTTP 200, 112,326 bytes, none.
+     *
+     * This is a CivicPlus site (rung 12 is the platform), and the rule for a
+     * New Jersey municipality is most often in the council's annual
+     * organizational-meeting resolution or its Rules of Procedure — neither
+     * of which is on the three pages above. NOT ATTEMPTED yet, and named so
+     * the next hunt has a target: the organizational meeting agenda packet in
+     * AgendaCenter (January), and the township code's council-procedure
+     * chapter on eCode360. Nothing here is inferred from N.J.S.A. 10:4-12(a)
+     * requiring a comment period at regular meetings — the statute is real,
+     * but a claim about THIS body needs this body's own published rule.
+     */
     commentPeriod: "UNKNOWN",
     commentPeriodDetail: null,
     signup: null,
@@ -238,6 +296,25 @@ export const COMMENT_ACCESS: CommentAccess[] = [
       "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#governing",
     ocdId:
       "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+    /*
+     * STILL UNKNOWN after g18's hunt, and it is a WALL rather than an
+     * emptiness — the difference matters and this row states which.
+     *
+     * Walked 2026-08-18:
+     *   rung 2, plain fetch with an identified User-Agent — HTTP 403.
+     *   rung 3, the full browser header set (Chrome UA, Accept,
+     *     Accept-Language) — HTTP 403.
+     *
+     * Two rungs, both refused, and the refusal is the finding: nothing here
+     * says Newbury publishes no comment rule. The ladder is NOT exhausted and
+     * the next rungs are named — rung 4 (a different client whose TLS
+     * fingerprint passes; curl beat this exact class of filter in the f
+     * session), rung 5 (a different egress), rung 6 (the live browser), and
+     * rung 11 (the Internet Archive, which is not blocked by this host's WAF
+     * because it is not this host). g3's rule applies: a 403 to a CI-shaped
+     * client is an EGRESS or fingerprint wall, not a header problem, so
+     * hunting more headers here would be the wrong rung.
+     */
     commentPeriod: "UNKNOWN",
     commentPeriodDetail: null,
     signup: null,
@@ -257,34 +334,67 @@ export const COMMENT_ACCESS: CommentAccess[] = [
   {
     bodyId: "ocd-division/country:us/state:nj/county:morris#governing",
     ocdId: "ocd-division/country:us/state:nj/county:morris",
-    commentPeriod: "UNKNOWN",
-    commentPeriodDetail: null,
+    /*
+     * FOUND 2026-08-18 (g18, D25), and the rung is the point: the rule was
+     * never going to be on the VENDOR calendar this row was pointed at.
+     * `morriscountynj.iqm2.com/Citizens/Calendar.aspx` returns 200 and
+     * contains no comment-access language at all, which is what a vendor
+     * calendar is — a list of dates. The rule is on the BODY'S OWN `.gov`
+     * page, one fetch away.
+     *
+     * The distinction it draws is why this is worth having and why a
+     * meeting-agnostic row would be wrong: evening meetings carry a public
+     * comment portion, and the 5pm WORK SESSIONS do not unless the Director
+     * grants one. A reader told "there is a comment period" and sent to a
+     * work session would have been sent by us.
+     */
+    commentPeriod: "YES",
+    commentPeriodDetail:
+      "There is a public comment portion at every evening meeting. Work sessions, which start at 5:00 p.m., have no public comment portion unless the Commissioner Director grants one.",
     signup: null,
     writtenComment: null,
-    attend: null,
+    attend:
+      "Evening meetings begin at 7:00 p.m., most of them in the Public Meeting Room on the 5th floor of the Administration & Records Building, Court Street, Morristown. Work sessions are in the Knox Room on the same floor and the public may attend those too.",
     timeLimit: null,
     sourceUrl:
-      "https://morriscountynj.iqm2.com/Citizens/Calendar.aspx",
-    collectedAt: "2026-08-13",
-    verifiedAt: null,
+      "https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners",
+    collectedAt: "2026-08-18",
+    verifiedAt: "2026-08-18",
   },
   {
     bodyId: "ocd-division/country:us/state:nh/county:merrimack#governing",
     ocdId: "ocd-division/country:us/state:nh/county:merrimack",
-    commentPeriod: "UNKNOWN",
-    commentPeriodDetail: null,
+    /*
+     * FOUND 2026-08-18 (g18, D25): the county's own Public Comment Policy,
+     * adopted by the Board 7/14/25, under RSA 91-A:2.
+     *
+     * THE RUNG, AND IT IS NEW — it is now in `docs/zip-playbook.md`. The
+     * notices page names the policy and links it, and that link 404s from
+     * outside. The href is RELATIVE and the CMS serves the page under a
+     * section path (`/board_of_commissioners_/…`), so resolving the href
+     * against the page URL builds `/board_of_commissioners_/Board%20of%20
+     * Commissioners/…` — a path that does not exist. Every document on the
+     * page 404s the same way, which is what proved it was the path and not
+     * the file. The documents live at the SITE ROOT:
+     * `https://www.merrimackcounty.net/Board%20of%20Commissioners/…`. Strip
+     * the section prefix and re-resolve from the root.
+     *
+     * Then rung 9: it is a PDF, and PDFs are data. Text-layer extraction
+     * through `extractPdfText` read the whole policy.
+     */
+    commentPeriod: "YES",
+    commentPeriodDetail:
+      "A designated public comment period at Board meetings, for matters within the Board's jurisdiction. Comments about individual county employees or private individuals are not taken there — the policy directs those to the Human Resources Director or the County Administrator during business hours.",
     signup: null,
-    // The notices state each meeting "is open to the public for the
-    // discussion of any matters that may come before the Board" and publish
-    // Zoom access; that is attendance information, not a comment-period rule.
     writtenComment: null,
     attend:
       "Venue alternates per meeting and is stated in each public notice; Zoom links are published for remote attendance (per the Board's notices page).",
-    timeLimit: null,
+    timeLimit:
+      "Up to four minutes per speaker. The Chairperson may extend that at their discretion, and a timer may be used.",
     sourceUrl:
-      "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
-    collectedAt: "2026-08-13",
-    verifiedAt: null,
+      "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices,%20Agenda,%20Minutes/Public%20Comment%20Policy.pdf",
+    collectedAt: "2026-08-18",
+    verifiedAt: "2026-08-18",
   },
 
   // ── Sunnyside USD Governing Board (item 2, 2026-08-18 session) ──────────

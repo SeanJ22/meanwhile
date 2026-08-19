@@ -47,6 +47,12 @@ const ROCKAWAY_AGENDA_CENTER = "https://www.rockawaytownship.org/AgendaCenter";
 const ROCKAWAY_OCD =
   "ocd-division/country:us/state:nj/county:morris/place:rockaway_township";
 
+/** Wilmot's and New London's own sites — the source for their board rows. */
+const WILMOT_OCD =
+  "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town";
+const NEW_LONDON_OCD =
+  "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town";
+
 /** Newbury's own site — the source for every board row below. */
 const NEWBURY_OCD =
   "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town";
@@ -355,6 +361,8 @@ export const CURATED_BODIES: Body[] = [
   // that refuses this pipeline's ordinary client. The browser rung reached
   // them (M79).
   ...newburyBoardRows(),
+  ...wilmotBoardRows(),
+  ...newLondonBoardRows(),
 ];
 
 function newburyBoardRows(): Body[] {
@@ -596,6 +604,92 @@ function specialDistrictRows(): Body[] {
     provenance: {
       sourceUrl: row.homepage,
       sourceOrg: `${GUS}; the body's own site`,
+      collectedAt: collected,
+      verifiedAt: collected,
+    },
+  }));
+}
+
+
+/**
+ * Wilmot NH's three wired boards (M123, 2026-08-19).
+ *
+ * The Census derivation produces the TOWN and no board inside it, which is
+ * D28's shape: a real government body with no division of its own. Each row's
+ * name is the town's own — the board pages at `/board/<slug>/` head with these
+ * exact words — and each `coverageStatus` is LIVE because the town's own
+ * iCalendar feed files sittings under that board's name today.
+ */
+function wilmotBoardRows(): Body[] {
+  const collected = "2026-08-19";
+  const rows: Array<{ slug: string; name: string; path: string }> = [
+    { slug: "selectboard", name: "Selectboard", path: "/board/board-of-selectmen/" },
+    { slug: "planning-board", name: "Planning Board", path: "/board/planning-board/" },
+    {
+      slug: "cemetery-trustees",
+      name: "Cemetery Trustees",
+      path: "/board/cemetery-trustees/",
+    },
+  ];
+  return rows.map((row) => ({
+    id: `${WILMOT_OCD}#${row.slug}`,
+    ocdId: WILMOT_OCD,
+    name: row.name,
+    bodyClass: "COMMISSION" as const,
+    bodyOrigin: "CURATED" as const,
+    coverageStatus: "LIVE" as const,
+    agendaSourceType: "ICAL" as const,
+    agendaSourceRef: "https://www.wilmotnh.org/events/list/?ical=1",
+    meetingCadence: null,
+    homepageUrl: `https://www.wilmotnh.org${row.path}`,
+    demandCount: 0,
+    sourceDataset: "GOV_DIRECTORY" as const,
+    provenance: {
+      sourceUrl: `https://www.wilmotnh.org${row.path}`,
+      sourceOrg: "Town of Wilmot",
+      collectedAt: collected,
+      verifiedAt: collected,
+    },
+  }));
+}
+
+/**
+ * New London NH's four wired boards (M123, 2026-08-19).
+ *
+ * Named as the town's own calendar names them, because that calendar is the
+ * source: "Board of Selectmen", "Planning Board", "Zoning Board",
+ * "Conservation Commission" are the strings the town writes into its own
+ * event titles, and the wiring matches on exactly those. Using a tidier name
+ * here than the town uses there would put two vocabularies on one body.
+ */
+function newLondonBoardRows(): Body[] {
+  const collected = "2026-08-19";
+  const rows: Array<{ slug: string; name: string; path: string }> = [
+    { slug: "board-of-selectmen", name: "Board of Selectmen", path: "/selectmen" },
+    { slug: "planning-board", name: "Planning Board", path: "/planningboard" },
+    { slug: "zoning-board", name: "Zoning Board", path: "/zoningboard" },
+    {
+      slug: "conservation-commission",
+      name: "Conservation Commission",
+      path: "/calendar",
+    },
+  ];
+  return rows.map((row) => ({
+    id: `${NEW_LONDON_OCD}#${row.slug}`,
+    ocdId: NEW_LONDON_OCD,
+    name: row.name,
+    bodyClass: "COMMISSION" as const,
+    bodyOrigin: "CURATED" as const,
+    coverageStatus: "LIVE" as const,
+    agendaSourceType: "SCHEDULEPAGE" as const,
+    agendaSourceRef: "https://newlondon.nh.gov/calendar",
+    meetingCadence: null,
+    homepageUrl: `https://newlondon.nh.gov${row.path}`,
+    demandCount: 0,
+    sourceDataset: "GOV_DIRECTORY" as const,
+    provenance: {
+      sourceUrl: "https://newlondon.nh.gov/calendar",
+      sourceOrg: "Town of New London",
       collectedAt: collected,
       verifiedAt: collected,
     },

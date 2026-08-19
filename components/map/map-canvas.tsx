@@ -168,6 +168,29 @@ interface MapCanvasProps {
    * name string.
    */
   focusStateOcdId?: string | null;
+  /**
+   * Voting locations (B19), drawn as their OWN pin class.
+   *
+   * Deliberately not folded into `venues`. A meeting pin and a voting-site
+   * pin answer different questions, and a reader scanning a map for "where do
+   * I vote" must be able to tell them apart at a glance — B19's spec says
+   * "visually unmistakable against meeting pins", so they carry a separate
+   * element class, a separate colour token, and a separate marker set with no
+   * pooling, because this list is small and static where the venue list is
+   * neither.
+   */
+  votingSites?: VotingSitePin[];
+  onSelectVotingSite?: (id: string) => void;
+  /** The site whose card is open, so its pin can show it. */
+  selectedVotingSiteId?: string | null;
+}
+
+/** The map's whole view of a voting location. */
+export interface VotingSitePin {
+  id: string;
+  name: string;
+  lat: number;
+  lng: number;
 }
 
 function prefersReducedMotion() {
@@ -208,6 +231,9 @@ export function MapCanvas({
   onViewportSettle,
   allowAutoFrame,
   focusStateOcdId = null,
+  votingSites,
+  onSelectVotingSite,
+  selectedVotingSiteId = null,
 }: MapCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
@@ -219,6 +245,8 @@ export function MapCanvas({
   );
   const poolRef = useRef(createMarkerPool());
   const hereRef = useRef<Marker | null>(null);
+  /** Voting-site markers, keyed by site id. Their own set, never the pool. */
+  const votePinsRef = useRef(new Map<string, Marker>());
   /**
    * Has the reader taken the camera by hand? (g4 item 5.)
    *
@@ -235,6 +263,10 @@ export function MapCanvas({
   useEffect(() => {
     onSelectRef.current = onSelectVenue;
   }, [onSelectVenue]);
+  const onSelectVotingSiteRef = useRef(onSelectVotingSite);
+  useEffect(() => {
+    onSelectVotingSiteRef.current = onSelectVotingSite;
+  }, [onSelectVotingSite]);
 
   const onDistrictErrorRef = useRef(onDistrictError);
   useEffect(() => {
@@ -691,6 +723,60 @@ export function MapCanvas({
       .getElement()
       .setAttribute("aria-label", `Center of zip code ${camera.zip}`);
   }, [camera]);
+
+  /*
+   * Voting-site pins (B19).
+   *
+   * Reconciled by id — create what is new, move what stayed, remove only what
+   * the answer no longer contains. A site with no coordinate never reaches
+   * here: `isPinnable` filters upstream, and the card lists it with its
+   * address instead, because a location we could not place is a gap in OUR
+   * geocoding and pinning it at a plausible point would be the guess this
+   * whole row exists to refuse.
+   */
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    const pins = votePinsRef.current;
+    const wanted = new Map((votingSites ?? []).map((s) => [s.id, s]));
+
+    for (const [id, marker] of pins) {
+      if (wanted.has(id)) continue;
+      marker.remove();
+      pins.delete(id);
+    }
+
+    for (const [id, site] of wanted) {
+      const existing = pins.get(id);
+      if (existing) {
+        existing.setLngLat([site.lng, site.lat]);
+        continue;
+      }
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "wtp-vote-pin";
+      button.dataset.siteId = id;
+      button.setAttribute("aria-label", `Voting location: ${site.name}`);
+      const dot = document.createElement("span");
+      dot.className = "wtp-vote-pin-dot";
+      button.appendChild(dot);
+      button.addEventListener("click", (event) => {
+        event.stopPropagation();
+        onSelectVotingSiteRef.current?.(id);
+      });
+      const marker = new Marker({ element: button, anchor: "bottom" })
+        .setLngLat([site.lng, site.lat])
+        .addTo(map);
+      pins.set(id, marker);
+    }
+  }, [votingSites]);
+
+  // Selection is a data attribute on the element, so it survives re-renders.
+  useEffect(() => {
+    for (const [id, marker] of votePinsRef.current) {
+      marker.getElement().dataset.selected = String(id === selectedVotingSiteId);
+    }
+  }, [selectedVotingSiteId, votingSites]);
 
   // Fly to a new center, at the zip's deliberate first-view altitude (6f).
   useEffect(() => {

@@ -67,9 +67,23 @@ expect notice pages rather than calendars.
 | Newbury Selectboard | CivicWeb (`newburynh.civicweb.net`), TypeId 10 | LIVE |
 | Newbury Planning Board | town site, `agenda-list` shape (browser rung) | LIVE |
 | Newbury Conservation Commission | town site, `dated-list` + `agenda-list` | LIVE |
-| Newbury Zoning Board of Adjustment | town site — schedule found, **venue not published** | KNOWN_UNCOVERED |
+| Newbury Zoning Board of Adjustment | town site, `agenda-list`; venue from the page's own contact markup | LIVE |
 | Merrimack County Board of Commissioners | Revize, upcoming block + notices archive | LIVE |
 | Kearsarge Regional School District Board | `kearsarge.org` schedule page, `month-table` shape | LIVE |
+| New London Board of Selectmen / Planning / Zoning / Conservation | town calendar, `event-tip` shape, month paging | LIVE |
+| Wilmot Selectboard / Planning Board / Cemetery Trustees | town events calendar, `.ics` feed, board named in `CATEGORIES` | LIVE |
+
+**Corrected 2026-08-19 (H03).** The Zoning Board row above read
+`KNOWN_UNCOVERED` until this session, and it had been **LIVE since
+2026-08-15** — the curated venue row that closes it shipped in the mobile
+round-two session and this file was never brought forward. The registry was
+right and the document was four days stale.
+
+That is the same failure H03 exists to catch, one layer up: a coverage record
+that describes a wall which is no longer there. It is worth naming rather than
+quietly fixing, because it is the fifth time in three sessions that a document
+has described built work as unbuilt, and a re-walk cohort read off a stale
+document walks the wrong bodies.
 
 The county's own index page is **stale** — it names a former District 1
 commissioner. The FY2025 annual report and the minutes are what the roster

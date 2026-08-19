@@ -11864,3 +11864,116 @@ of either item is half-built.
   3644, unknown 2845, author 17, total 6613, reconciling exactly.
 * Tracker **369 rows**, no duplicate IDs, **84 open** (79 after Tabled and
   Standing).
+
+## g21 — 2026-08-19: the last queue session, and every item lands
+
+Nine items briefed. **All nine addressed; seven finished whole, two stopped
+cleanly at a stated boundary, none never reached.** The deferred queue is
+swept: every open row has a home that will exist, and `NEEDS A HOME` is zero.
+
+### The pattern this session kept hitting: a document describing built work
+
+g19's finding was four items already built. g20's was four numbers describing
+something other than what they were read as. **g21's is the mechanism
+underneath both: in three of g19's four, the stale claim lived in a DOCUMENT
+while the code was already right.** It happened twice more here.
+
+* `states/nh/NOTES.md` recorded Newbury's Zoning Board of Adjustment as
+  `KNOWN_UNCOVERED` — "venue not published". The registry has had it **LIVE
+  since 2026-08-15**. Four days stale, and it is the worst possible place for
+  it: H03's re-walk cohort is READ OFF THAT FILE, so a stale document sends
+  the re-walk at the wrong bodies.
+* `docs/zip-playbook.md` recorded that the browser rung clears
+  `cfs.sos.nh.gov`, measured earlier the same day. A real headless Chromium
+  took a **403**. The second such non-reproduction this session — Sutton NH
+  was the first — and now its own playbook entry: entries about STRUCTURE
+  keep, entries about who a WAF lets through have a shelf life.
+
+**The four rows g19 found already built, named by ID at last (item 9.1):
+`B15`, `D06`, `D03`, `A04`.**
+
+### What shipped
+
+* **Item 1 — B19 and B16, in the ruled shape.** 306 voting locations across
+  44 jurisdictions, every one from the jurisdiction's OWN election authority.
+  Pima County's 148 **vote centers** came out of a three-rung chain nobody had
+  walked: the county's CivicPlus page embeds its widget state, which names an
+  ArcGIS app, whose item data names the feature services. Morris County's 157
+  locations across 39 of 39 municipalities came off the Board of Elections'
+  own ward/district tables, with a `rowspan`-aware parser because a
+  rowspan-blind read leaves two of Boonton's four wards with nowhere to vote.
+  New Hampshire's state list refuses rungs 2 through 6 from two egresses;
+  rung 11 recovered its endpoint from the archive and **rung 7 was left
+  unwalked because the tool gates it behind a captcha**. B16 refuses New
+  Jersey on a DATE: the state's own GIS publishes the election districts and
+  the layer was last edited in 2021.
+* **Item 2 — M123, 2 of 6 Kearsarge towns, both needing a retrieval class the
+  repo did not have.** Wilmot is the first body ever served by the `ICAL`
+  source type, which had sat in the enum with no adapter behind it. New London
+  is a fifth `schedulepage` shape: a month grid whose events each state their
+  own date, so the grid never has to be understood. Snapshot **270 → 313**
+  across 11 of 11 sources; near 03255, **70 meetings across 12 bodies, up from
+  5**.
+* **Item 3 — H03 enumerated 13, recovered 1 at rung 4.** Enumerating changed
+  what H03 is: there are **no `KNOWN_UNCOVERED` bodies in 03255 scope at all**.
+  Kearsarge's KRMS venue recovered — the wiring row has carried
+  `otherVenueMarkers: "KRMS"` since August waiting on exactly one venue row —
+  and stated honestly, the sitting is in January so nothing renders
+  differently today.
+* **Item 4 — M81, the jurisdiction badge.** At 03255, of 70 meetings on the
+  reader's screen **31 govern them and 39 do not**, and the two biggest pins
+  on the map are both the next town over. Two nulls, not one: the row named
+  the division-less body; the more dangerous one is a FAILED lookup, whose
+  empty set would badge everything on screen as a different jurisdiction.
+* **Item 5 — D47.** Six pairs, seven questions, all seven answered on both
+  sides of every pair. The guard that matters is not the obvious one: no
+  `score` key is easy to check, and an ORDERING derived from the content is a
+  ranking wearing a sort, so the page may not call `.sort()` at all.
+* **Item 6 — B14's blurbs did not move, and that is the finding.** 94 of 136
+  carry no link at all, so another blurb pass would have moved nothing while
+  looking like effort. The upstream rung shipped instead: the repo already
+  held 620 sitting officeholders and had never joined them to a ballot card.
+  7 joined, 87 recorded misses, links 42 → 49.
+* **Item 7 — D50 under the two-number regime.** Collected **900 → 902**,
+  rendered **591 of 750, unchanged**. 7a asked whether a portrait we HOLD sits
+  beside an empty slot; computed rather than asserted across all 231 empty
+  slots by id and by name: **zero**.
+* **Item 8 — D52's gate is encoded rather than remembered.** An unapproved
+  mapping table returns the state's own filing word, and a guard refuses an
+  approval whose `approvedBy` reads "session" or "agent". All three covered
+  states are walled, each with its rungs; the `terms` arrays are empty on
+  purpose.
+* **Item 9 — the clearances and the sweep.** `pnpm queue:homes` assigns every
+  open queue row a home and REFUSES to call the queue swept while any row has
+  none.
+
+### Two items stopped cleanly at a boundary, and why
+
+* **M123 (item 2) is 2 of 6 towns**, stated as 2 of 6. The other four are
+  hunted to page level with their rungs recorded and their next rung named —
+  Bradford is a **TownCloud** town (a vendor this repo had not met, found in
+  the home page's own markup after a guessed `/calendar` 404'd), Springfield's
+  feed is STALE rather than empty, Warner's real paths are named and
+  JS-rendered, and Sutton's browser rung stopped working.
+* **D52 (item 8) built the program and no state adapter.** Not a deferral — a
+  measurement. A mapping table proposed from a vocabulary we could not READ
+  would be this product inventing the meaning the gate exists to stop it
+  inventing.
+
+### The defects this session created and fixed
+
+* **`node:fs` reached the client graph** through the voting-sites panel's
+  import chain, and the dev server refused to build the page at all. The lucky
+  version of that mistake. Split into two projections, guarded at the import
+  level.
+* **25 published voting locations were being DROPPED** because their addresses
+  do not geocode — writing our failure into the data as a county's silence.
+  Kept, listed without a pin, counted.
+* **The jurisdiction badge's first fill borrowed the tier amber**, and
+  `tests/amber-remnant.test.ts` caught it: a jurisdiction is not a tier.
+
+### Numbers corrected
+
+* **Tracker row count.** g20 reported 369 rows; the file held **368 data
+  rows** — the count included the header. It is **374** now, after this
+  session's six additions.

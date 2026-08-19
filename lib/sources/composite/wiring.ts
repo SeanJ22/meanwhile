@@ -8,6 +8,7 @@ import { makeBoardBookSource } from "../boardbook/index.ts";
 import { makeCivicPlusSource } from "../civicplus/index.ts";
 import { makeClerksBoardsSource } from "../clerksboards/index.ts";
 import { makeDiligentSource } from "../diligent/index.ts";
+import { makeIcalSource } from "../ical/index.ts";
 import { makeIqm2Source } from "../iqm2/index.ts";
 import { makeRevizeSource } from "../revize/index.ts";
 import { makeSchedulePageSource } from "../schedulepage/index.ts";
@@ -107,6 +108,13 @@ export const CAPABILITIES: Array<{
     types: ["SCHEDULEPAGE"],
     make: (rows) =>
       makeSchedulePageSource(rows) as ReportingMeetingSource<unknown>,
+  },
+  {
+    // Not a vendor, a FORMAT. Ladder rung 8: an `.ics` feed is a calendar
+    // handed to us, and one parse serves every town that publishes one.
+    name: "ical",
+    types: ["ICAL"],
+    make: (rows) => makeIcalSource(rows) as ReportingMeetingSource<unknown>,
   },
 ];
 

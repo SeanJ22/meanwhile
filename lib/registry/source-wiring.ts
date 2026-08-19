@@ -625,6 +625,143 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     },
     verifiedAt: "2026-08-13",
   },
+
+  // ── Wilmot, NH — three boards from one iCalendar feed (M123, 2026-08-19) ──
+  //
+  // The first rows on the `ICAL` type, which had been in the enum with no
+  // adapter behind it. Wilmot runs WordPress with The Events Calendar, and
+  // the plugin hands over the whole calendar as `.ics`: start, end, title,
+  // the street address in `LOCATION`, and the BOARD'S OWN NAME in
+  // `CATEGORIES`. That last field is what makes one feed serve three bodies
+  // without guessing from a title.
+  //
+  // **`feedUrl` names the LIST view on purpose.** `/events/?ical=1` returns
+  // the current VIEW — four events, HTTP 200, well-formed, and missing
+  // nineteen public meetings. `/events/list/?ical=1` returns all
+  // twenty-three, which is the same total the plugin's own REST API reports.
+  // The row names the full feed rather than letting the adapter construct
+  // one, so that trap cannot be re-entered by an adapter change.
+  //
+  // Retrieved 2026-08-19: 23 events, categories `Select Board` (10),
+  // `Planning Board` (8), `Cemetery Trustees` (4), one uncategorised.
+  {
+    bodyId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town#selectboard",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town",
+    agendaSourceType: "ICAL",
+    jurisdiction: "Wilmot, NH",
+    publishingOrg: "Wilmot Selectboard",
+    timeZone: "America/New_York",
+    config: {
+      slug: "wilmot-selectboard",
+      feedUrl: "https://www.wilmotnh.org/events/list/?ical=1",
+      // The archive, at the same feed. Without it the Concluded filter would
+      // be empty by construction rather than by fact (M58).
+      pastFeedUrl:
+        "https://www.wilmotnh.org/events/list/?tribe_event_display=past&ical=1",
+      categoryMatch: "Select Board",
+      bodyName: "Selectboard",
+      // Every Selectboard sitting in this feed writes `LOCATION:NH` — a
+      // state, not a building. The board's OWN page states where it meets,
+      // and the curated venue cites that page. Reached only when the feed
+      // itself gives nothing usable.
+      venueMatch: "Wilmot Town Office Building",
+    },
+    verifiedAt: "2026-08-19",
+  },
+  {
+    bodyId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town#planning-board",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town",
+    agendaSourceType: "ICAL",
+    jurisdiction: "Wilmot, NH",
+    publishingOrg: "Wilmot Planning Board",
+    timeZone: "America/New_York",
+    config: {
+      slug: "wilmot-planning-board",
+      feedUrl: "https://www.wilmotnh.org/events/list/?ical=1",
+      // The archive, at the same feed. Without it the Concluded filter would
+      // be empty by construction rather than by fact (M58).
+      pastFeedUrl:
+        "https://www.wilmotnh.org/events/list/?tribe_event_display=past&ical=1",
+      categoryMatch: "Planning Board",
+      bodyName: "Planning Board",
+    },
+    verifiedAt: "2026-08-19",
+  },
+  {
+    bodyId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town#cemetery-trustees",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town",
+    agendaSourceType: "ICAL",
+    jurisdiction: "Wilmot, NH",
+    publishingOrg: "Wilmot Cemetery Trustees",
+    timeZone: "America/New_York",
+    config: {
+      slug: "wilmot-cemetery-trustees",
+      feedUrl: "https://www.wilmotnh.org/events/list/?ical=1",
+      // The archive, at the same feed. Without it the Concluded filter would
+      // be empty by construction rather than by fact (M58).
+      pastFeedUrl:
+        "https://www.wilmotnh.org/events/list/?tribe_event_display=past&ical=1",
+      categoryMatch: "Cemetery Trustees",
+      bodyName: "Cemetery Trustees",
+    },
+    verifiedAt: "2026-08-19",
+  },
+
+  // ── New London, NH — four boards off one town calendar (M123, 2026-08-19) ──
+  //
+  // The first rows on the `event-tip` shape. New London runs GovOffice, whose
+  // calendar is a month grid — but every event inside it carries its own full
+  // date and time in a tooltip block, so the grid never has to be understood.
+  //
+  // `titleMatch` is what makes one town-wide calendar serve four bodies, and
+  // it is the safety of the whole shape: band concerts, transfer-station
+  // hours and eleven boards share this page.
+  //
+  // `monthsAhead` walks the page's OWN `&month=&year=` navigation. Without
+  // it, the default view is ONE MONTH and the Board of Selectmen — which
+  // sits twice a month all year — would report two sittings as its whole
+  // calendar. That is a clip that reads exactly like a body with nothing
+  // scheduled.
+  //
+  // The venue is written into each event's own title in three spellings of
+  // one building, plus the Town Office; all four are keyed in the venue
+  // cache, and an unkeyed room drops and counts rather than inheriting an
+  // address that would send a reader to the wrong door.
+  ...(
+    [
+      ["board-of-selectmen", "Board of Selectmen", "Board of Selectmen"],
+      ["planning-board", "Planning Board", "Planning Board"],
+      ["zoning-board", "Zoning Board", "Zoning Board"],
+      ["conservation-commission", "Conservation Commission", "Conservation Commission"],
+    ] as const
+  ).map(([slug, titleMatch, bodyName]) => ({
+    bodyId: `ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#${slug}`,
+    ocdId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town" as OcdId,
+    agendaSourceType: "SCHEDULEPAGE" as const,
+    jurisdiction: "New London, NH",
+    publishingOrg: `New London ${bodyName}`,
+    timeZone: "America/New_York",
+    config: {
+      slug: `new-london-${slug}`,
+      shapes: "event-tip",
+      schedulePage: "https://newlondon.nh.gov/calendar",
+      monthPagePath: "/index.asp",
+      monthPageQuery: "Type=B_EV&SEC=D43F63EA-A7A8-4400-AFB3-BCF489A6B5E5",
+      monthsAhead: "2",
+      titleMatch,
+      bodyName,
+      // The hall the calendar names most often. A row naming a different
+      // room resolves on its own string via `otherVenueMarkers`.
+      venueMatch: "Whipple Memorial Town Hall",
+      otherVenueMarkers:
+        "Whipple Memorial Hall,Whipple Hall,New London Town Office",
+    },
+    verifiedAt: "2026-08-19",
+  })),
 ];
 
 /** Rows a given adapter capability should serve. */

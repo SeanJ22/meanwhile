@@ -24,6 +24,8 @@ import { carryPins } from "@/lib/map/carry-pins";
 import { requestRadiusKm, shouldRequery } from "@/lib/map/viewport-radius";
 import { useStateFocus } from "@/hooks/use-state-focus";
 import { StateCrossingPrompt } from "./state-crossing-prompt";
+import { VotingSitesPanel } from "./voting-sites-panel";
+import type { VotingSitePin } from "./map-canvas";
 import { PillCluster } from "@/components/shell/pill-cluster";
 import { clusterPlacement } from "@/lib/map/cluster-placement";
 import { useSidebarVisible } from "@/hooks/use-sidebar-visible";
@@ -850,6 +852,18 @@ function MapEntryInner() {
       // `onStreetPoint` mints exactly this prefix. Reading the key rather
       // than carrying a second flag keeps the two from disagreeing.
       atAddress: view?.key.startsWith("street:") ?? false,
+      /*
+       * M81. Built here rather than in each consumer so the SAME set answers
+       * the popup, the list and any surface added later — a badge computed
+       * twice is a badge that can disagree with itself.
+       *
+       * `undefined` (an older cached payload with no such field) and `null`
+       * (the server's resolution failed) both mean "we cannot say", and both
+       * become null rather than an empty set.
+       */
+      governing: current?.governingOcdIds
+        ? new Set(current.governingOcdIds)
+        : null,
     }),
     [current, meetings, venues, location, drawnDistricts, failure, view],
   );
@@ -1184,6 +1198,26 @@ function MapEntryInner() {
    * 4c: opening Ask closes no surface, and no surface closes Ask.
    */
   const [askOpen, setAskOpen] = useState(false);
+
+  /*
+   * B19 — where the reader can actually vote.
+   *
+   * Three pieces of state and no more: whether the panel is open, the pins
+   * the answer produced, and which pin is selected. The pins live HERE rather
+   * than inside the panel because the map draws them and the panel does not,
+   * and a component that owns a list the map renders is the one that has to
+   * clear it when it closes.
+   */
+  const [votingOpen, setVotingOpen] = useState(false);
+  const [votingPins, setVotingPins] = useState<VotingSitePin[]>([]);
+  const [selectedVotingSiteId, setSelectedVotingSiteId] = useState<string | null>(
+    null,
+  );
+  const closeVoting = useCallback(() => {
+    setVotingOpen(false);
+    setVotingPins([]);
+    setSelectedVotingSiteId(null);
+  }, []);
   // 4a: focus lands in the input the expansion just mounted. One frame,
   // because the input is a child of the pill's own cluster rather than a
   // surface that has to be opened first.
@@ -1391,6 +1425,9 @@ function MapEntryInner() {
             onViewportSettle={onViewportSettle}
             allowAutoFrame={view?.kind !== "settled"}
             focusStateOcdId={focusState.activeOcdId}
+            votingSites={votingPins}
+            onSelectVotingSite={setSelectedVotingSiteId}
+            selectedVotingSiteId={selectedVotingSiteId}
           />
           {/* e's 6b2, built in g3 item 10: quiet within a state, explicit
               between states. Once per ordered border pair per session. */}
@@ -1425,6 +1462,29 @@ function MapEntryInner() {
             {clusterAt === "map" && (
               <div className="pointer-events-auto">{cluster}</div>
             )}
+            {/* B19's entry point, in the top band beside the ballot cluster.
+                One tap, no menu to hunt through — a hidden entry point is
+                reader friction and friction is a defect. Playful register on
+                the button, because it is an INTERACTION surface; every word
+                inside the panel it opens is level. */}
+            <div className="pointer-events-auto">
+              {votingOpen ? (
+                <VotingSitesPanel
+                  onSites={setVotingPins}
+                  selectedSiteId={selectedVotingSiteId}
+                  onSelectSite={setSelectedVotingSiteId}
+                  onClose={closeVoting}
+                />
+              ) : (
+                <button
+                  type="button"
+                  className="voting-open-button"
+                  onClick={() => setVotingOpen(true)}
+                >
+                  Where can I vote?
+                </button>
+              )}
+            </div>
             {selectedVenue && (
               <div className="pointer-events-auto hidden sm:block">
                 <MeetingPanel

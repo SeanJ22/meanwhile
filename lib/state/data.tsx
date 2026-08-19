@@ -41,6 +41,15 @@ export interface ShellData {
    * town entirely.
    */
   atAddress: boolean;
+  /**
+   * Which divisions the reader's point is in — M81's jurisdiction badge.
+   *
+   * A SET, so a list row's membership test is O(1) rather than a scan per row
+   * per render. `null` when the point could not be resolved at all, which is
+   * not the same as an empty set: see `lib/meetings/jurisdiction-badge.ts` for
+   * why that distinction is the whole safety of the badge.
+   */
+  governing: ReadonlySet<string> | null;
 }
 
 const DataContext = createContext<ShellData | null>(null);

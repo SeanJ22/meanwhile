@@ -530,3 +530,70 @@ said nothing about where agendas live, exactly as the rule warns.
 | Revize | n/a — county's own site | n/a | plain HTML + stable PDFs | Found, unbuilt (Merrimack County) |
 | NovusAgenda | not reached | — | — | No live tenant in scope — Vail's is a pre-2017 archive |
 | Plural Open | none — bulk data is the intended use | n/a, not a records holder | CC-0 bulk CSV | **Cleared** (D03); 500/day API cap is a ceiling, not a restriction |
+
+---
+
+## Two clearances the author granted, recorded — g21, 2026-08-19
+
+### Vote Smart's Political Courage Test — **AUTHOR-APPROVED**
+
+**What it is.** A questionnaire Vote Smart sends every candidate for federal
+and state office; the answers published are **the candidate's own**, in their
+own words, against a fixed question set.
+
+**Why the never-an-endorsement-site rule is not touched.** `CLAUDE.md` says
+"do not add advocacy organizations, PACs, or endorsement sites as sources. Go
+to the underlying government filing." The PCT is not an endorsement, not a
+scorecard, and carries no rating by Vote Smart of anybody: it is a candidate's
+self-reported answers, which is the same source class as a candidate's own
+site and their own filing, and D05's own spec already names it alongside
+those two.
+
+**Where it may be used.** D05 (the statement corpus) and B14 (the blurb
+equalization hunt). It is a candidate's own words about their own positions,
+so it carries the same source-class label a campaign site's words do — *in the
+candidate's own answers to Vote Smart's questionnaire, read <date>* — and
+never a label implying we asked them.
+
+**What it must never become.** Vote Smart also publishes ratings BY OTHER
+ORGANISATIONS. Those are advocacy scorecards, they are exactly what the rule
+excludes, and the clearance does not reach them. A future adapter that pulls
+the PCT must not pull the ratings alongside it, and the reason is written here
+so it is not re-litigated.
+
+**Status:** cleared, not built. No adapter, no key, no retrieval this session.
+
+### Permit and zoning-application systems — **APPROVED IN PRINCIPLE**
+
+**Why.** A03 asks "is there a data center coming?" and that question cannot be
+answered from agendas alone. g20 shipped A03's honest silence — a zero-hit
+agenda search now says it searched, and says it searched AGENDAS rather than
+the permit record — and the permit record is the missing half.
+
+**The class.** These are government-published primary records of applications
+made to a government, held by a software vendor on the government's behalf.
+That is the Legistar class exactly, and the same reasoning applies: a vendor
+hosting a public record does not acquire rights over it.
+
+**The gate that does not move.** Approval in principle is **not** blanket
+approval of every platform. Each vendor system enters as its OWN tracker row
+with its OWN clearance, reviewed the way Granicus, Hyland, Diligent, CivicPlus
+and Apptegy each were above — the terms read, the automated-access clause
+quoted, the scope checked against the tenant host, the machine route named.
+
+**Rows created this session, none run:** `V09` Accela, `V10` Tyler EnerGov,
+`V11` OpenGov Permitting, `V12` CityView. Nothing was fetched from any of
+them.
+
+| Vendor | Automated access clause | Scoped to tenant portals? | Machine route | Status (2026-08-19) |
+|---|---|---|---|---|
+| Vote Smart (Political Courage Test) | not read | n/a — not a records holder | not read | **Cleared in principle**, unbuilt — the candidate's own answers only, never the third-party ratings |
+| Accela | not read | not read | not read | Row `V09` created, unreviewed, nothing fetched |
+| Tyler EnerGov | not read | not read | not read | Row `V10` created, unreviewed, nothing fetched |
+| OpenGov Permitting | not read | not read | not read | Row `V11` created, unreviewed, nothing fetched |
+| CityView | not read | not read | not read | Row `V12` created, unreviewed, nothing fetched |
+
+**"Not read" is the honest entry.** Every other row in the summary table above
+carries a clause somebody actually read. These four carry a clearance in
+principle and nothing else, and writing anything more confident would put four
+unreviewed vendors in a table whose whole value is that its rows were checked.

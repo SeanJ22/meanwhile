@@ -26,6 +26,7 @@ import {
   CardSectionGroup,
 } from "@/components/officials/card-section";
 import { CardSourcesList } from "@/components/officials/card-sources-list";
+import { IdentityPortrait } from "@/components/officials/person-identity";
 
 import { HowToBeHeard, MeetingAttributionNotes } from "../meeting-panel";
 import { CalendarLinks } from "./calendar-links";
@@ -695,7 +696,30 @@ function Representation({
   return (
     <>
       {holders.map((holder) => (
-        <div key={holder.id} className="account-modal-person">
+        <div key={holder.id} className="account-modal-person flex items-start gap-3">
+          {/*
+            F01 2.3 (2026-08-19, the author): *"On AZ-6, when I look at
+            Representation, we should have the picture of that person — we
+            already have it — so we should just simply put it on the left,
+            essentially left of both his name and his party affiliation, the
+            same size as the battlecard when I click into Ciscomani."*
+
+            He is right that we already have it: `holder.photoUrl` has ridden
+            on the seat holder all along and this list was the one place that
+            rendered a person WITHOUT the circle every other surface gives them.
+            902 portraits were collected and this list showed none of them.
+
+            `IdentityPortrait` rather than an `<img>`: it is the one geometry,
+            it carries the neutral ring the party colour may never touch, and
+            it renders honest INITIALS where no portrait exists — so a person
+            we hold no picture of gets the same circle at the same size rather
+            than a ragged row, which is the equal-effort rule applied to
+            layout. `--sm` is the small battlecard's size, which is the size he
+            asked for by name.
+          */}
+          <IdentityPortrait name={holder.name} photoUrl={holder.photoUrl} />
+
+          <div className="min-w-0 flex-1">
           <div className="flex items-baseline justify-between gap-3">
             <span className="text-[0.875rem] font-medium text-paper">
               {onOpenHolder ? (
@@ -753,6 +777,7 @@ function Representation({
               <NoValue>no source recorded</NoValue>
             )}
           </p>
+          </div>
         </div>
       ))}
     </>

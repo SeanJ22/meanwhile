@@ -61,6 +61,90 @@ function doorOf(license: string): string {
   return "unstated in the licence field";
 }
 
+/**
+ * **WHERE DOES THIS PORTRAIT ACTUALLY RENDER?** — F01 2.3, 2026-08-19.
+ *
+ * The author's complaint, and it is about this file rather than about a
+ * picture: *"fix docs/photo-review.md — it currently lists portraits with no
+ * way to find them. Every entry states the zip and surface where it renders,
+ * or says 'not rendered anywhere'. The author could not locate Taylor or Harb
+ * because the file does not say where to look."*
+ *
+ * He could not locate them because **they do not render**. Brian Taylor and
+ * Bob Harb are New Hampshire state representatives in `officeholders-33.json`
+ * with NO division mapping — no `sldl:` seat — so no zip resolves to them and
+ * no surface in this product draws their face. A review list that shows a
+ * reviewer a picture and cannot tell them where it appears is asking them to
+ * hunt for something that is not there.
+ *
+ * So each row now resolves its person against the shipped officeholder files
+ * and the curated body rosters, and says one of three things: the DIVISION it
+ * renders under (with a zip that reaches it, where one of the covered four
+ * does), the ROSTER it sits on, or — truthfully — that nothing renders it.
+ *
+ * The division → zip map is deliberately SMALL and literal. It covers the four
+ * zips this product actually covers in depth; anything outside them says which
+ * division to look under without inventing a zip that might not resolve to it.
+ */
+function renderSites(): Map<string, string> {
+  const sites = new Map<string, string>();
+
+  const ZIP_FOR_STATE: Record<string, string> = {
+    az: "85701",
+    nj: "07866",
+    nh: "03255",
+  };
+
+  for (const file of [
+    "officeholders-us.json",
+    "officeholders-04.json",
+    "officeholders-33.json",
+    "officeholders-34.json",
+  ]) {
+    let parsed: {
+      officeholders?: { id: string }[];
+      divisions?: Record<string, { officeholderId: string; ocdId: string }>;
+    };
+    try {
+      parsed = JSON.parse(
+        readFileSync(join(ROOT, "lib", "registry", file), "utf8"),
+      );
+    } catch {
+      continue;
+    }
+    for (const seat of Object.values(parsed.divisions ?? {})) {
+      if (!seat?.officeholderId || !seat.ocdId) continue;
+      const state = /state:(\w\w)/.exec(seat.ocdId)?.[1] ?? "";
+      const zip = ZIP_FOR_STATE[state];
+      sites.set(
+        seat.officeholderId,
+        zip
+          ? `${seat.ocdId} — reachable at ${zip}`
+          : `${seat.ocdId} — outside the four covered zips`,
+      );
+    }
+  }
+
+  // The curated local rosters key their own ids and render on the body card.
+  try {
+    const rosterPhotos = JSON.parse(
+      readFileSync(join(ROOT, "lib", "registry", "roster-photos.json"), "utf8"),
+    ) as Record<string, unknown>;
+    for (const id of Object.keys(rosterPhotos)) {
+      if (!sites.has(id)) sites.set(id, `curated body roster (${id.split("#")[0]})`);
+    }
+  } catch {
+    // A missing roster file is not a reason to write nothing for the rest.
+  }
+
+  return sites;
+}
+
+const SITES = renderSites();
+
+const NOT_RENDERED =
+  "**not rendered anywhere** — no division maps to this person, so no zip reaches them";
+
 const sinceArg = process.argv.find((a) => a.startsWith("--since="));
 const since = sinceArg ? sinceArg.slice("--since=".length) : null;
 
@@ -68,22 +152,27 @@ const manifest = JSON.parse(
   readFileSync(join(ROOT, "lib", "registry", "official-photos.json"), "utf8"),
 ) as { photos: Photo[]; missing: unknown[] };
 
+const rendered = manifest.photos.filter((p) => SITES.has(p.officeholderId)).length;
+
 const flagged = manifest.photos.filter((p) => p.review);
 const newSince = since
   ? manifest.photos.filter((p) => !p.review && p.collectedAt.slice(0, 10) >= since)
   : [];
 
 function table(rows: Photo[], withNote: boolean): string {
+  // F01 2.3: WHERE IT RENDERS is a column, on both tables. A review list a
+  // reviewer cannot navigate from is a list of pictures, not a review.
   const head = withNote
-    ? "| Person | Portrait | Door | Source | What to look at |\n|---|---|---|---|---|"
-    : "| Person | Portrait | Door | Source | Collected |";
-  const sep = withNote ? "" : "\n|---|---|---|---|---|";
+    ? "| Person | Portrait | Door | Source | Where it renders | What to look at |\n|---|---|---|---|---|---|"
+    : "| Person | Portrait | Door | Source | Where it renders | Collected |";
+  const sep = withNote ? "" : "\n|---|---|---|---|---|---|";
   const body = rows
     .map((p) => {
       const img = `![${p.name}](../public${p.url})`;
       const src = `[page](${p.sourceUrl})`;
+      const where = (SITES.get(p.officeholderId) ?? NOT_RENDERED).replace(/\|/g, "/");
       const tail = withNote ? p.review!.replace(/\|/g, "/") : p.collectedAt.slice(0, 10);
-      return `| ${p.name} | ${img} | ${doorOf(p.license)} | ${src} | ${tail} |`;
+      return `| ${p.name} | ${img} | ${doorOf(p.license)} | ${src} | ${where} | ${tail} |`;
     })
     .join("\n");
   return `${head}${sep}\n${body}`;
@@ -102,6 +191,15 @@ const lines: string[] = [
   "",
   `Generated ${today()}. Manifest holds **${manifest.photos.length}** portraits and`,
   `**${manifest.missing.length}** named misses.`,
+  "",
+  // F01 2.3: the shape of the collection, stated before any table, because it
+  // is the first thing a reviewer needs and it is not what anyone assumed.
+  `**${rendered}** of those **${manifest.photos.length}** belong to a person some division`,
+  `maps to, so a zip can reach them. The other **${manifest.photos.length - rendered}** belong to people`,
+  "with no division mapping — mostly state legislators whose seat is not wired to",
+  "a district yet — and **nothing in the product renders them**. That is why a",
+  "portrait can be in the manifest and impossible to find on screen, and it is a",
+  "MAPPING gap rather than a photo gap: the picture is fine, the seat is missing.",
   "",
   "---",
   "",

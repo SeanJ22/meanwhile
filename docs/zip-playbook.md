@@ -1269,3 +1269,69 @@ notice: **a total that stays flat can hide a component that fell.** The run
 printed "18 of 20 carry at least one roll call", which was true before and
 after, while House coverage went 18 to 15 — the entries kept their Senate refs.
 Report the components, not just the total.
+
+---
+
+## 2026-08-19 (g20) — five rungs, from four real walls
+
+### 1. A New Hampshire STATE host is a different wall from a New Hampshire MUNICIPAL one
+
+The playbook already records Newbury falling at rung 4: curl, sending the same
+identified User-Agent that got a 403, is served 200. **That does not
+generalise to the state's own hosts.** Three `*.nh.gov` state hosts —
+`www.governor.nh.gov`, `www.council.nh.gov`, `cfs.sos.nh.gov` — refuse this
+egress at rungs 2, 3 AND 4 alike: an identified User-Agent, a full browser
+header set, and a browser User-Agent through curl all take a 403 of 370–422
+bytes titled "Access Denied".
+
+**The rung that clears it is 6, the live browser.** `cfs.sos.nh.gov` renders
+fully in a real Chromium from the same machine and the same IP that curl is
+refused from, which means the filter is on the CLIENT rather than the egress.
+
+So: on a `nh.gov` host, do not spend rungs 3 and 4 hunting headers. Try rung
+4 once (municipal sites still fall there) and go straight to rung 6.
+
+### 2. Rung 11 is cheap and should be wired in, not walked by hand
+
+Where a host refuses every rung, the Internet Archive frequently holds the
+page — and an archived copy of a government's own page is that government's
+own published words with a date attached. `scripts/fetch-candidate-corpus.mts`
+now calls `archive.org/wayback/available` automatically on any non-OK
+response and records what it found beside what the live host did. It found
+`governor.nh.gov` at 2026-06-16 and `council.nh.gov` at 2025-05-24 on its
+first run.
+
+Record the snapshot as what it is — the archive's URL and the archive's
+timestamp. Never restamp it as a fresh read of the live site.
+
+### 3. A 405 from a single-page app is NOT evidence that a route exists
+
+Probing five invented `/api/...` paths on `cfs.sos.nh.gov` returned **405
+Method Not Allowed** for every one, which reads exactly like "the route is
+there and POST is the wrong verb". It is not. The same paths answered **200
+with the 65,928-byte SPA shell** to a GET: the host serves a catch-all, and
+its static handler rejects POST on everything.
+
+**Disprove a 405 with a GET before recording a route.** Five plausible
+endpoint names were one step from being written down as findings.
+
+### 4. An SPA's API base lives in the LAZY chunks, not the main bundle
+
+`main-*.js` on an Angular build carries the router and the chunk names and
+nothing else useful. Grepping it for `/api/` returns zero. Fetching all 50
+chunks it names and grepping those returns the API host in one line —
+`https://cfsapi.sos.nh.gov/api` for the New Hampshire Campaign Finance
+System, a hostname that is not guessable from the site's own.
+
+The sweep is one browser call: read the main bundle, extract every
+`chunk-*.js` it names, fetch each, and search the lot.
+
+### 5. A cross-origin API host needs the tab NAVIGATED to it, not fetched from the page
+
+`fetch("https://cfsapi.sos.nh.gov/...")` from a page on `cfs.sos.nh.gov`
+fails with `TypeError: Failed to fetch` — that is the browser's CORS block
+and says nothing about the server. Navigating the tab to the API host itself
+turns the same requests into 200s.
+
+A "Failed to fetch" from a page is not a wall on the server. It is a wall
+between two origins, and the way past it is to stand on the other one.

@@ -278,8 +278,31 @@ if (!outPath) {
   process.exit(1);
 }
 const onlyArg = process.argv.indexOf("--only");
+/*
+ * `--only-file` (2026-08-19, g20, D50's scale half).
+ *
+ * `--only` takes a comma list on the command line, and a re-hunt of the 250
+ * members whose portraits were refused before the confirmation rungs existed
+ * is 250 UUIDs — about 9,000 characters, which Windows refuses outright with
+ * "The command line is too long."
+ *
+ * A cohort you cannot name is a cohort you cannot re-walk, so the id list
+ * gets a file form. One newline- or comma-separated id per entry, blank
+ * lines and `#` comments ignored, so a cohort can be checked in and re-run
+ * rather than reconstructed from a report.
+ */
+const onlyFileArg = process.argv.indexOf("--only-file");
 const only =
-  onlyArg > 0 ? new Set(process.argv[onlyArg + 1].split(",")) : null;
+  onlyFileArg > 0
+    ? new Set(
+        (await readFile(process.argv[onlyFileArg + 1], "utf8"))
+          .split(/[\s,]+/)
+          .map((s) => s.trim())
+          .filter((s) => s && !s.startsWith("#")),
+      )
+    : onlyArg > 0
+      ? new Set(process.argv[onlyArg + 1].split(","))
+      : null;
 
 const holders: Officeholder[] = [];
 for (const file of [

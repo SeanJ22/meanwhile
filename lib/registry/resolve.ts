@@ -54,12 +54,34 @@ export function contains(point: [number, number], feature: GeoFeature): boolean 
   return polys.some((poly) => inPolygon(point, poly as Polygon));
 }
 
+/**
+ * How many point-in-polygon sweeps this process has run — AUD-04's instrument.
+ *
+ * The change that made `/api/meetings` resolve its geography once was verified
+ * with a counter bolted onto the resolver for one afternoon and then removed,
+ * which means the property it proved has been unguarded ever since. A second
+ * sweep can return the identical answer, so an equivalence test cannot see one
+ * come back: the only thing that can is a count.
+ *
+ * It is one integer increment on a function that walks every committed polygon,
+ * so its cost is not measurable against the work it is counting.
+ * `tests/resolve-once.test.ts` reads it across a real request and asserts
+ * exactly one.
+ */
+let sweeps = 0;
+
+/** Sweeps run since the process started. Monotonic; read deltas, never totals. */
+export function sweepsRun(): number {
+  return sweeps;
+}
+
 /** Every division whose boundary contains the point. */
 export function divisionsAt(
   point: [number, number],
   features: GeoFeature[],
   divisions: Map<string, Division>,
 ): Division[] {
+  sweeps += 1;
   const hits: Division[] = [];
   const seen = new Set<string>();
 

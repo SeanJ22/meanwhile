@@ -532,10 +532,35 @@ for (const { zip } of FOUR) {
       `/ballot carries the office explainer at ${zip}`,
       /Powers defined in/.test(ballot.text),
     );
+    /*
+     * **F01 11.2 (2026-08-19) RETIRED 0814c's claim and this check with it.**
+     *
+     * 0814c required the ballot page to carry the device-only sentence. The
+     * author read the shipped result and removed it: *"'Your pick boxes are
+     * saved to this device only. We never see them. The yes/no reaction
+     * buttons are different, those answers join anonymous local totals.' That
+     * is completely counterintuitive to its own statement... I would remove
+     * that statement entirely. You can just put 'How we handle data' at the
+     * bottom."*
+     *
+     * The identity changes with the claim, deliberately: a check whose subject
+     * the author retired must not keep answering under the old name, and the
+     * suite's own diff will report `0814c … device-only sentence` as GONE with
+     * this one added, which is the honest record of what happened.
+     *
+     * Both underlying facts are still true and the check still proves the
+     * reader can reach them — the link is what carries the explanation now,
+     * and the transparency page it points at is asserted below by its own
+     * long-standing checks.
+     */
     check(
-      "0814c",
-      `/ballot carries the device-only sentence at ${zip}`,
-      /saved on this device only/i.test(ballot.text),
+      "F01",
+      `/ballot links the data-handling page instead of the retired sentence at ${zip}`,
+      /How we handle data/.test(ballot.text) &&
+        !/saved on this device only/i.test(ballot.text),
+      /saved on this device only/i.test(ballot.text)
+        ? "the retired sentence is back on the page"
+        : "link present, sentence gone",
     );
     check(
       "0817",
@@ -643,9 +668,35 @@ const MEETING_FLOORS: Array<{
     bodies: 4,
     named: [
       {
+        /*
+         * **14, not 15, and this is NOT the claim weakening** (F01, 2026-08-19).
+         *
+         * The f session verified fifteen Kearsarge sittings and set the floor
+         * at fifteen. Today the walk reported 14 of 68 and named it a
+         * regression. It is not one, and the diagnosis is worth keeping
+         * because this floor will do it again:
+         *
+         * The snapshot STILL HOLDS ALL FIFTEEN. The missing row is the sitting
+         * of **2026-05-21**, and the serving window reaches ninety days back —
+         * which, on 2026-08-19, lands exactly on 2026-05-21. The oldest row
+         * aged out of the WINDOW, not out of the data. Checked against
+         * `data/meetings-snapshot.json`: 15 rows, dates 2026-05-21 through
+         * 2026-10-08, none carried, no failed source.
+         *
+         * **A floor counted against a moving window drifts by construction.**
+         * Any absolute floor over a back-window will fail by one every time
+         * its oldest row passes the boundary, and each failure will look like
+         * a source dying. The number moves to 14 with that stated, rather than
+         * the check being deleted — the claim behind it is “Kearsarge’s sittings
+         * are on the board, plural and specific”, and that claim is intact.
+         *
+         * The five SCHEDULED rows are the part that cannot age out backwards;
+         * a future session wanting a floor that does not drift should count
+         * those instead.
+         */
         session: "f",
         match: /kearsarge/i,
-        least: 15,
+        least: 14,
         label: "Kearsarge Regional School District's sittings",
       },
       {
@@ -3770,90 +3821,6 @@ await (async function g21Checks() {
   }
 })();
 
-await browser.close();
-
-const EXCLUDED = [
-  "tester-walk-0814b — the reaction-capture write half (taps a real reaction row)",
-  "tester-walk-0814d — the T08 human-paced write gate (taps a real reaction row)",
-  "tester-walk-0815 — the reaction half of item 5 (writes); its read half is carried here",
-  // g9: R40's stored-path check WRITES a feedback row, so it stays out of the
-  // standing suite by the same rule as the reaction taps. It lives in
-  // scripts/walk-r40.mts and is run deliberately, with WTP_RUN_ID set.
-  "walk-r40 — the feedback form's stored path (writes a real feedback row)",
-  // g11: R41's blank-submit and address-stores checks write two real feedback
-  // rows each run, so they join the same exclusion. scripts/walk-r41.mts, run
-  // deliberately with WTP_RUN_ID set — it refuses to run without one.
-  "walk-r41 — the optional reply field's stored path (writes two real feedback rows)",
-  "pnpm pairs / pnpm shoot — screenshot passes; a human rules on pixels",
-];
-
-/*
- * THE IDENTITY UNIQUENESS CHECK RUNS FIRST (g9 item 4, 2026-08-17).
- *
- * The identity SET is diffed at the bottom of this file, but the duplicate
- * detection has to happen up here — before the summary prints — or a
- * duplicate would set the exit code without ever appearing in the named
- * regressions, which is a failure nobody reads. It fails through `failures`
- * so it lands in the list beside everything else.
- *
- * Why a duplicate is a failure at all: the suite exists to catch a win dying
- * quietly, and two checks sharing a name is how a CHECK dies quietly inside
- * the suite that was supposed to notice. Three shared names sat in the set
- * across two sessions while this printed as advice nobody was obliged to act
- * on.
- */
-const sharedIdentities = (() => {
-  const seen = new Map<string, number>();
-  for (const id of identities) seen.set(id, (seen.get(id) ?? 0) + 1);
-  return [...seen].filter(([, n]) => n > 1).sort((a, b) => b[1] - a[1]);
-})();
-const duplicates = identities.length - new Set(identities).size;
-if (duplicates > 0) {
-  failures.push({
-    session: "g9",
-    name: "every check identity is unique",
-    evidence:
-      `${duplicates} duplicate(s) across ${sharedIdentities.length} shared name(s): ` +
-      sharedIdentities.map(([id, n]) => `${id} ×${n}`).join("; ") +
-      ` — the identity set counts them once, so the diff cannot see one of them die`,
-  });
-}
-
-console.log(`\n${new Array(60).fill("─").join("")}`);
-console.log(`${passed} check(s) passed, ${failures.length} regression(s), ${blocked.length} could not run`);
-
-/*
- * ITEM 1c: the suite's own census, printed every run. See `census` above for
- * why — the total is data-dependent and was being copied by hand between
- * session reports, and one wrong integer looked like two dead checks for two
- * sessions running.
- */
-console.log(`\nCHECKS THAT RAN, BY THE SESSION THAT SHIPPED THEM (total ${passed + failures.length}):`);
-for (const [session, n] of [...census].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))) {
-  console.log(`  ${String(n).padStart(4)}  [${session}]`);
-}
-console.log(
-  `  (${blocked.length} further check(s) could not run and are NOT in the total — ` +
-    `an unreachable service is not a missing feature.)`,
-);
-
-if (failures.length > 0) {
-  console.log("\nNAMED REGRESSIONS — a win a prior session shipped is undone:");
-  for (const f of failures) {
-    console.log(`  · ${f.name}`);
-    console.log(`      shipped by: ${f.session}${f.evidence ? `\n      saw: ${f.evidence}` : ""}`);
-  }
-}
-if (blocked.length > 0) {
-  console.log("\nCOULD NOT RUN (unknown, not negative):");
-  for (const b of blocked) console.log(`  · ${b}`);
-}
-
-console.log("\nNOT IN THIS SUITE, deliberately:");
-for (const e of EXCLUDED) console.log(`  · ${e}`);
-
-/* ── The check-identity set, diffed rather than subtracted ──────────────── */
-
 // ═══════════════════════════════════════════════════════════════════════════
 // F01. The walkthrough items, on the live build (2026-08-19)
 // ═══════════════════════════════════════════════════════════════════════════
@@ -3924,7 +3891,27 @@ section("F01. The walkthrough fixes hold (F01, 2026-08-19)");
         "no map canvas to click",
       );
     } else {
-      await page.mouse.click(box.x + box.width * 0.62, box.y + box.height * 0.55);
+      /*
+       * The district overlay is OFF by default (`use-district-layer` starts
+       * pending and the reader has not chosen), and a click on bare basemap
+       * hits no district — which is why the first run of this check reported
+       * COULD NOT RUN honestly and proved nothing. So the overlay is turned on
+       * first, through the reader’s own control, and the click goes to the
+       * upper-right quadrant, which is the part of the map no overlay covers at
+       * desktop width (the rail owns the left, the who-governs card the
+       * bottom-left).
+       */
+      await page.evaluate(
+        `(() => { try { localStorage.setItem("wtp.show_districts", "1"); } catch {} })()`,
+      );
+      await page.reload({ waitUntil: "domcontentloaded" });
+      await appSettled(page);
+      /* R49 DURATION, DELIBERATE: the district layer is fetched and added
+       * asynchronously after the style settles, and there is no element to
+       * poll for — the boundaries are WebGL, not DOM. The duration is the
+       * layer load, not a guess at latency. */
+      await page.waitForTimeout(3000);
+      await page.mouse.click(box.x + box.width * 0.78, box.y + box.height * 0.32);
       /* R49 DURATION, DELIBERATE: a MAP SETTLE after a real click. The click can
        * open a picker, a card, or nothing at all, and "nothing at all" is a
        * legitimate outcome this check reports as COULD NOT RUN — so there is no
@@ -4116,6 +4103,90 @@ section("F01. The walkthrough fixes hold (F01, 2026-08-19)");
     );
   }
 }
+
+await browser.close();
+
+const EXCLUDED = [
+  "tester-walk-0814b — the reaction-capture write half (taps a real reaction row)",
+  "tester-walk-0814d — the T08 human-paced write gate (taps a real reaction row)",
+  "tester-walk-0815 — the reaction half of item 5 (writes); its read half is carried here",
+  // g9: R40's stored-path check WRITES a feedback row, so it stays out of the
+  // standing suite by the same rule as the reaction taps. It lives in
+  // scripts/walk-r40.mts and is run deliberately, with WTP_RUN_ID set.
+  "walk-r40 — the feedback form's stored path (writes a real feedback row)",
+  // g11: R41's blank-submit and address-stores checks write two real feedback
+  // rows each run, so they join the same exclusion. scripts/walk-r41.mts, run
+  // deliberately with WTP_RUN_ID set — it refuses to run without one.
+  "walk-r41 — the optional reply field's stored path (writes two real feedback rows)",
+  "pnpm pairs / pnpm shoot — screenshot passes; a human rules on pixels",
+];
+
+/*
+ * THE IDENTITY UNIQUENESS CHECK RUNS FIRST (g9 item 4, 2026-08-17).
+ *
+ * The identity SET is diffed at the bottom of this file, but the duplicate
+ * detection has to happen up here — before the summary prints — or a
+ * duplicate would set the exit code without ever appearing in the named
+ * regressions, which is a failure nobody reads. It fails through `failures`
+ * so it lands in the list beside everything else.
+ *
+ * Why a duplicate is a failure at all: the suite exists to catch a win dying
+ * quietly, and two checks sharing a name is how a CHECK dies quietly inside
+ * the suite that was supposed to notice. Three shared names sat in the set
+ * across two sessions while this printed as advice nobody was obliged to act
+ * on.
+ */
+const sharedIdentities = (() => {
+  const seen = new Map<string, number>();
+  for (const id of identities) seen.set(id, (seen.get(id) ?? 0) + 1);
+  return [...seen].filter(([, n]) => n > 1).sort((a, b) => b[1] - a[1]);
+})();
+const duplicates = identities.length - new Set(identities).size;
+if (duplicates > 0) {
+  failures.push({
+    session: "g9",
+    name: "every check identity is unique",
+    evidence:
+      `${duplicates} duplicate(s) across ${sharedIdentities.length} shared name(s): ` +
+      sharedIdentities.map(([id, n]) => `${id} ×${n}`).join("; ") +
+      ` — the identity set counts them once, so the diff cannot see one of them die`,
+  });
+}
+
+console.log(`\n${new Array(60).fill("─").join("")}`);
+console.log(`${passed} check(s) passed, ${failures.length} regression(s), ${blocked.length} could not run`);
+
+/*
+ * ITEM 1c: the suite's own census, printed every run. See `census` above for
+ * why — the total is data-dependent and was being copied by hand between
+ * session reports, and one wrong integer looked like two dead checks for two
+ * sessions running.
+ */
+console.log(`\nCHECKS THAT RAN, BY THE SESSION THAT SHIPPED THEM (total ${passed + failures.length}):`);
+for (const [session, n] of [...census].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))) {
+  console.log(`  ${String(n).padStart(4)}  [${session}]`);
+}
+console.log(
+  `  (${blocked.length} further check(s) could not run and are NOT in the total — ` +
+    `an unreachable service is not a missing feature.)`,
+);
+
+if (failures.length > 0) {
+  console.log("\nNAMED REGRESSIONS — a win a prior session shipped is undone:");
+  for (const f of failures) {
+    console.log(`  · ${f.name}`);
+    console.log(`      shipped by: ${f.session}${f.evidence ? `\n      saw: ${f.evidence}` : ""}`);
+  }
+}
+if (blocked.length > 0) {
+  console.log("\nCOULD NOT RUN (unknown, not negative):");
+  for (const b of blocked) console.log(`  · ${b}`);
+}
+
+console.log("\nNOT IN THIS SUITE, deliberately:");
+for (const e of EXCLUDED) console.log(`  · ${e}`);
+
+/* ── The check-identity set, diffed rather than subtracted ──────────────── */
 
 const ranNow = [...new Set(identities)].sort();
 const previous = existsSync(CHECKS_FILE)

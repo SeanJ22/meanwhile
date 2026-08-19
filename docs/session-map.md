@@ -580,3 +580,63 @@ New commands: `pnpm voting-sites:fetch`, `pnpm b14:links`, `pnpm photo:review`,
    returned a fifth of a calendar with every signal healthy; a month grid read
    at its default view reports one month as a year; a feed answered 200 with
    fifty events whose newest was two years old.
+
+---
+
+## F01 — the walkthrough gate (2026-08-19)
+
+Branch `claude/f01-walkthrough-0819`, merged as `a119578` in one PR (#108).
+The author's own voice walkthrough of 2026-08-18 plus twenty-nine screenshots,
+read in full after the F01 brief retired the standing lock on both.
+**55 live items, 52 closed, 10.1 withdrawn by the author, 2 open as data hunts
+(`F02`, `F03`). Screenshots read: 29 of 29.**
+
+### Where the work landed, by item
+
+| Items | Files |
+|---|---|
+| 6.1, 6.2 — the gap sweep | `components/officials/key-votes-section.tsx`, `components/funding/funding-block.tsx`, `components/map/coverage-notice.tsx`, `lib/funding/display.ts`, `lib/candidates/positions.ts`, `lib/candidates/corpus.ts`, `app/ballot/page.tsx`, `data/ballot/az-pima-2026.json`, `tests/wording.test.ts` |
+| 1e — the address copy | `components/map/voting-sites-panel.tsx`, `components/map/narrowing-prompt.tsx`, `components/ballot/ballot-narrowing.tsx`, `app/transparency/page.tsx`, `components/shell/near-me-control.tsx`, `app/api/geocode/route.ts` |
+| 1.1, 1.2, 1.3 — the small card | `components/map/popup/district-popup.tsx`, `components/map/popup/popup-card.tsx`, **`lib/officials/top-offices.ts` (new)** |
+| 2.1–2.5 — the large card | `components/map/map-entry.tsx`, `components/map/popup/entity-modal.tsx`, `app/globals.css` |
+| 3.1, 3.2 — meetings | **`lib/meetings/list-attribution.ts` (new)**, `lib/meetings/ordering.ts`, `components/map/meeting-panel.tsx`, `components/map/popup/entity-modal.tsx` |
+| 4.1–4.3 — the official card | `components/officials/card-section.tsx`, `components/officials/member-directory.tsx`, **`lib/officials/committee-tree.ts` (new)**, `lib/registry/links.ts` |
+| 5.1–5.6 — votes | **`lib/votes/participation.ts` (new)**, `lib/votes/key-votes.ts`, `data/votes/key-votes-snapshot.json`, `data/votes/key-vote-positions.json`, `components/officials/key-votes-section.tsx` |
+| 7.1, 7.2 — who governs here | `components/map/coverage-notice.tsx`, `components/map/map-entry.tsx`, `app/globals.css` |
+| 8.1–8.3 — Ask | `components/shell/pill-cluster.tsx`, `components/ask/ask-box.tsx`, `lib/routing/ask-pill-labels.ts`, `app/globals.css` |
+| 9.1–9.6 — the map | **`lib/map/anchor-in-viewport.ts` (new)**, `components/map/district-picker.tsx`, `lib/state/derive.ts`, `lib/map/marker-pool.ts`, `components/map/map-entry.tsx`, `components/map/map-canvas.tsx` |
+| 10.2, 10.3 — sidebar and chrome | `app/globals.css`, `components/map/map-entry.tsx` |
+| 11.1–11.4 — the ballot | **`lib/ballot/shared-notes.ts` (new)**, `app/ballot/page.tsx` |
+| 12.1, 12.2, 13.1, 13.2 | `components/ballot/picks-card.tsx`, `components/map/welcome-overlay.tsx`, `app/globals.css` |
+
+New modules: `lib/officials/top-offices.ts`, `lib/officials/committee-tree.ts`,
+`lib/meetings/list-attribution.ts`, `lib/map/anchor-in-viewport.ts`,
+`lib/ballot/shared-notes.ts`, `lib/votes/participation.ts`.
+New tests: `top-offices`, `committee-tree`, `meeting-list-attribution`,
+`anchor-in-viewport`, `shared-notes`, `card-navigation`.
+No new commands.
+
+### The four things worth carrying forward
+
+1. **A MIRROR of a preference is not the state.** 9.2's "Districts in view:
+   Off" beside districts on screen was a tile answering from
+   `ui.showDistricts`, a copy of `use-district-layer`'s persisted value kept in
+   step by an effect. Any surface whose LABEL is a claim about the view must
+   answer from the view — measured after render — and not from the switch that
+   was supposed to have caused it.
+2. **Two surfaces can both be honest and still contradict each other.** 7.2's
+   Kearsarge case: carry-forward kept the pins, each carried row stated its own
+   age, and the warning fired on the REFUSAL alone. Neither was lying; they were
+   answering different questions and only one of them said which. When a rule
+   creates a new state (carried), every surface that reports on that subject has
+   to learn the new state exists.
+3. **A shared function used by half its callers is not shared.**
+   `orderByUpcomingFirst` had put upcoming first since g4 and TWO of its four
+   surfaces never called it. The fix was not a third call site — it was making
+   the surfaces render GROUPS, which cannot be produced by forgetting to sort.
+4. **Changing one control's SHAPE can move a different control off the
+   screen.** Making "Where can I vote?" pill-shaped (1e) widened a
+   `justify-end` row that did not wrap, and its FIRST child overflowed to
+   `x = -8`. Nothing in either change would have shown it; a measurement at
+   390×844 did. Two of this session's own defects were found that way, and
+   neither was findable by reading.

@@ -9,10 +9,6 @@
 [0814b] 07866: no deliberation label anywhere on the map
 [0814b] 85641: no deliberation label anywhere on the map
 [0814b] 85701: no deliberation label anywhere on the map
-[0814c] /ballot carries the device-only sentence at 03255
-[0814c] /ballot carries the device-only sentence at 07866
-[0814c] /ballot carries the device-only sentence at 85641
-[0814c] /ballot carries the device-only sentence at 85701
 [0814c] 03255: "Federal" is the label, never "National"
 [0814c] 03255: Kearsarge Regional is named on who-governs
 [0814c] 03255: the map answers with something about this place
@@ -90,6 +86,18 @@
 [0819] 85641: the ask box is on the who-governs card
 [0819] 85701: the ask box is on the who-governs card
 [0819] D40: distinct officials render distinct campaign books
+[F01] /ballot links the data-handling page instead of the retired sentence at 03255
+[F01] /ballot links the data-handling page instead of the retired sentence at 07866
+[F01] /ballot links the data-handling page instead of the retired sentence at 85641
+[F01] /ballot links the data-handling page instead of the retired sentence at 85701
+[F01] 11.3/11.4: the ballot states its real order and no recommendation
+[F01] 1e: the struck never-store promise is gone from the address copy
+[F01] 3.1: a meetings list leads with the upcoming group
+[F01] 6.1: no "gap in our" phrasing on /
+[F01] 6.1: no "gap in our" phrasing on /ballot?zip=85701
+[F01] 6.1: no "gap in our" phrasing on /transparency
+[F01] 9.2: the districts tile states a number, never Off
+[F01] 9.6: selecting a district shades it, closing deselects
 [f] 03255: Kearsarge Regional School District's sittings
 [g10] 85701: agenda attribution reaches the served payload
 [g10] 85701: an unresolved heading is attributed to NOTHING, never to the host

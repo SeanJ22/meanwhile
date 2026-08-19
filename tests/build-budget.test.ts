@@ -344,6 +344,21 @@ test("the green control passes, and budget 2 splits MapLibre from application by
     measurements.client!.mapRaw > 0 && measurements.client!.mapRaw < measurements.client!.raw,
     "the MapLibre split collapsed — it is either everything or nothing",
   );
+  /*
+   * R53 (g18): a tree with no source maps must report the split as an ESTIMATE
+   * and say so, not print it as measurement. The fixture builds chunks with no
+   * `sourceMappingURL`, which is exactly the deployed build's shape.
+   */
+  assert.equal(
+    measurements.client!.provenance.available,
+    false,
+    "a tree with no maps must not report a provenance split",
+  );
+  assert.match(
+    String(measurements.client!.provenance.why ?? ""),
+    /WTP_ATTRIBUTION_BUILD/,
+    "and must say how to measure it properly",
+  );
 });
 
 test("standalone mode is read off the artifact, not off the environment", () => {
@@ -429,14 +444,41 @@ test("the client baseline records where it was measured", () => {
     "client.measuredOn does not name the platform the baseline was taken on",
   );
   assert.match(String(b.client.measuredOn ?? ""), /standalone/i);
+});
+
+test("the client split is by provenance, and the gzip split stays retired", () => {
+  /*
+   * R53 (g18). This test used to assert that MapLibre + application summed to
+   * the total, raw AND gzip. Both halves of that were wrong in a way the sum
+   * could not see.
+   *
+   * The RAW figures summed because the substring method attributes every chunk
+   * to one side or the other — so they always summed, and they were still
+   * wrong: whole chunks were credited to MapLibre for mentioning it, and the
+   * figure moved 21,490 bytes across a re-chunk that touched no map code.
+   *
+   * The GZIP figures summed by construction and meant nothing at all.
+   * Compression is not additive: the gzipped size of a subset of a stream is
+   * not a share of the whole, because matches reach across module boundaries.
+   * A test asserting they sum was asserting arithmetic, not a fact about the
+   * build. They are retired rather than recomputed, and this pins that.
+   */
+  const b = committedBudget(ROOT);
+
   assert.equal(
-    b.client.applicationTransferBytes + b.client.maplibreTransferBytes,
-    b.client.transferBytes,
-    "the MapLibre and application transfer figures do not sum to the total",
+    b.client.maplibreTransferBytes,
+    undefined,
+    "gzip is not splittable by module — this field must not come back",
   );
-  assert.equal(
-    b.client.applicationBytes + b.client.maplibreBytes,
-    b.client.initialJsBytes,
-    "the MapLibre and application raw figures do not sum to the total",
+  assert.equal(b.client.applicationTransferBytes, undefined);
+  assert.match(
+    String(b.client.splitMethod ?? ""),
+    /attribute-client-bytes\.mjs/,
+    "the split must name the instrument that produces it",
+  );
+  assert.match(
+    String(b.client.splitMethod ?? ""),
+    /reconcile/i,
+    "and state that its buckets reconcile to the total",
   );
 });

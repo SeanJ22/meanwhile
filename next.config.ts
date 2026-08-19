@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  productionBrowserSourceMaps: process.env.WTP_ATTRIBUTION_BUILD === "1",
   /**
    * The build's own identity, inlined at BUILD time — the fix for a premise
    * that turned out to be false (R22, corrected 2026-08-17).

@@ -234,10 +234,13 @@ test("askWasAnswered is the single definition, and the surface reads it rather t
   assert.equal(askWasAnswered(named), true);
 
   // A genuine refusal is still a refusal.
-  assert.equal(
-    askWasAnswered(answerQuestion("qwertyuiop asdfgh", coverage, "85701")),
-    false,
-  );
+  const refused = answerQuestion("qwertyuiop asdfgh", coverage, "85701");
+  assert.equal(askWasAnswered(refused), false);
+
+  // A03: an agenda hit is an answer even when nothing else matched, and no
+  // hits leaves the refusal a refusal.
+  assert.equal(askWasAnswered(refused, { agendaHits: 0 }), false);
+  assert.equal(askWasAnswered(refused, { agendaHits: 3 }), true);
 
   /*
    * The component must not carry a SECOND definition of answered. g11's defect
@@ -250,10 +253,18 @@ test("askWasAnswered is the single definition, and the surface reads it rather t
     join(process.cwd(), "components", "ask", "ask-box.tsx"),
     "utf8",
   );
+  // The call may carry extra evidence (A03's agenda hits, 2026-08-18) —
+  // what it may NOT do is decide "answered" itself. The pin is on the call,
+  // not on its argument list, so extending the definition stays legal and
+  // re-implementing it does not.
   assert.match(
     source,
-    /if \(askWasAnswered\(result\)\) \{/,
+    /if \(askWasAnswered\(result[,)]/,
     "the log branch must read the shared definition of answered",
+  );
+  assert.ok(
+    !/askWasAnswered\(result\)\s*\|\|/.test(source),
+    "the component is ORing something onto the shared definition — extend the function instead",
   );
   assert.ok(
     !/routedSomewhere/.test(source),

@@ -315,13 +315,32 @@ let refusedShrink = 0;
  * therefore not this script's job. It is a deliberate edit, made by someone
  * who has looked at both.
  */
-const keepBigger = (
+/*
+ * FILL-ONLY. A run may put refs into a chamber that has NONE. It may not
+ * touch a chamber that already has one.
+ *
+ * The first version of this rule was "never write FEWER refs", and that was
+ * not enough — it preserved the COUNT while allowing a REPLACEMENT. The run
+ * then swapped one April 2024 sibling's Senate roll call for a different
+ * one of equal length, and the count-based guard passed it. The four
+ * siblings share ONE Senate vote by construction (the Senate took the
+ * package as a single measure), and the swap made that two.
+ *
+ * The general lesson, which is worth more than the fix: a guard on the SIZE
+ * of a result does not guard its IDENTITY. Same-count is not same-answer.
+ *
+ * Filling an empty chamber is safe because there is no verified claim to
+ * overwrite. Changing a resolved one is a correction, and a correction to a
+ * claim about how a named member of Congress voted is a deliberate edit by
+ * someone who has read both — not a side effect of a refresh.
+ */
+const fillOnly = (
   next: RollCallRef[],
   prior: RollCallRef[],
 ): { refs: RollCallRef[]; refused: boolean } =>
-  next.length >= prior.length
+  prior.length === 0
     ? { refs: next, refused: false }
-    : { refs: prior, refused: true };
+    : { refs: prior, refused: next.length > 0 };
 
 const merged = priorEntries.map((entry) => {
   if (entry.group !== "LAWS") return entry;
@@ -332,12 +351,12 @@ const merged = priorEntries.map((entry) => {
     if (entry.house.length > 0 || entry.senate.length > 0) keptPrior++;
     return entry;
   }
-  const house = keepBigger(rolls.house, entry.house);
-  const senate = keepBigger(rolls.senate, entry.senate);
+  const house = fillOnly(rolls.house, entry.house);
+  const senate = fillOnly(rolls.senate, entry.senate);
   if (house.refused || senate.refused) {
     refusedShrink++;
     console.log(
-      `    KEPT PRIOR ${entry.id}: this run found ${rolls.house.length}H/${rolls.senate.length}S against ${entry.house.length}H/${entry.senate.length}S already recorded — a run never removes a ref`,
+      `    KEPT PRIOR ${entry.id}: this run found ${rolls.house.length}H/${rolls.senate.length}S against ${entry.house.length}H/${entry.senate.length}S already recorded — a run only FILLS an empty chamber, it never changes a resolved one`,
     );
   }
   if (
@@ -386,7 +405,7 @@ console.log("\n=== law votes resolved ===");
 console.log(`  bills identified in the official record: ${resolvedLaw.size}/${entriesWithSearch.length} searchable entries`);
 console.log(`  entries whose roll calls this run replaced: ${replaced}`);
 console.log(`  entries keeping an earlier run's verified rolls: ${keptPrior}`);
-console.log(`  entries where this run found FEWER refs and was refused: ${refusedShrink}`);
+console.log(`  entries where a resolved chamber was left alone: ${refusedShrink}`);
 console.log(`  LAWS carrying at least one roll call: ${lawsWithVotes}/${lawsTotal}`);
 console.log(`  of the ${lawsTotal}, ${pendingCount} is pending and has no law to resolve`);
 console.log(`  misses recorded: ${misses.length}`);

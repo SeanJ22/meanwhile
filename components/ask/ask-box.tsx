@@ -90,6 +90,29 @@ const NAME_CLASS: Readonly<Record<SearchKind, NameableEntity["nameClass"]>> = {
   officeholder: "person",
 };
 
+/**
+ * What `/api/ask/agenda` returns for A03. Every string in it is read off a
+ * document a government published — the quote is the clerk's own line.
+ */
+interface AgendaAnswer {
+  topic: { id: string; label: string } | null;
+  radiusMiles: number | null;
+  hits: {
+    quote: string;
+    matchedPhrase: string;
+    documentUrl: string;
+    sourceOrg: string;
+    bodyName: string | null;
+    title: string | null;
+    startsAt: string | null;
+    agendaUrl: string | null;
+  }[];
+  /** The denominators — stated N equals rendered rows. */
+  hitsFound: number;
+  searched: number;
+  unreadable: number;
+}
+
 export function AskBox({
   coverage,
   zip,
@@ -125,6 +148,9 @@ export function AskBox({
   // reader sees here is generated, and a deliberation word would claim
   // otherwise. The prohibited list lives with the pool.
   const [working, setWorking] = useState(false);
+  // A03's answer, kept beside the routed answer rather than inside it:
+  // an agenda hit is evidence from a document, not a step in a route.
+  const [agenda, setAgenda] = useState<AgendaAnswer | null>(null);
   // Drawn per ask, in the browser, at click time — never during server
   // render, which would freeze one line into the HTML or mismatch on
   // hydration. Seeded with the first entry so the type is never null.
@@ -246,6 +272,38 @@ export function AskBox({
     }
   };
 
+  /**
+   * A03 (2026-08-18): the agenda rung.
+   *
+   * Asked BEFORE the classifier and independently of the topic router,
+   * because "is there a data center coming?" is not a question about who
+   * owns a topic — it is a question about what is on an agenda, and the two
+   * are different answers to different questions. The corpus lives on the
+   * server (about 850 KB of extracted document text), so the client asks it
+   * rather than carrying it.
+   *
+   * Everything it returns is a line a clerk typed, quoted. Nothing here is
+   * summarised or generated, and a failure of any kind returns null and
+   * leaves the rest of the pipeline exactly as it was.
+   */
+  const askAgenda = async (question: string): Promise<AgendaAnswer | null> => {
+    try {
+      const response = await fetch("/api/ask/agenda", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        // The divisions the reader is standing in — the same approximate
+        // basis the log row uses, and a better scope than distance: a
+        // rezoning in your own town is your business at any distance.
+        body: JSON.stringify({ question, ocdIds }),
+      });
+      if (!response.ok) return null;
+      const body = (await response.json()) as AgendaAnswer;
+      return body.topic ? body : null;
+    } catch {
+      return null;
+    }
+  };
+
   const ask = () => {
     const question = text.trim();
     if (!question) return;
@@ -256,6 +314,7 @@ export function AskBox({
     if (beatTimer.current) clearTimeout(beatTimer.current);
     setAsked(null);
     setDigest(null);
+    setAgenda(null);
     setBeat(drawAskBeat());
     setWorking(true);
     // Submitting an ASK releases the map filter and closes the autocomplete.
@@ -289,6 +348,24 @@ export function AskBox({
         }
       }
 
+      /*
+       * A03 (2026-08-18): the agenda rung runs FIRST and independently.
+       *
+       * "Is there a data center coming?" is not a question about who owns a
+       * topic — it is a question about what a government has put on an
+       * agenda, and the topic router has no answer to it however well it
+       * routes. So this is asked before the classifier, and its result rides
+       * BESIDE the routed answer rather than replacing it: a reader asking
+       * about a rezoning is well served by both the agenda line and the body
+       * that owns rezonings.
+       *
+       * It is additive by construction, exactly like the destination rung
+       * (G05 rule 4d): nothing it returns changes what the router already
+       * decided.
+       */
+      const agendaAnswer = await askAgenda(question);
+      if (agendaAnswer && agendaAnswer.hits.length > 0) setAgenda(agendaAnswer);
+
       // Keyword-first, structurally: the classifier is consulted only after
       // the deterministic matcher has already refused. The author's ruling
       // makes this rung carry more than it used to — a single-keyword hit is
@@ -316,9 +393,20 @@ export function AskBox({
        * destinations, or the digest — and carries no more about a reader than
        * a topic id always has.
        */
-      if (askWasAnswered(result)) {
+      // An agenda hit is an ANSWER, and the roadmap contains only what we
+      // could not do — so a question this rung answered must not be logged
+      // as a refusal. Same defect G05 rule 4d found with destinations, and
+      // the fix is the same: the shared definition learns about the new
+      // rung, rather than the component growing a second opinion.
+      if (askWasAnswered(result, { agendaHits: agendaAnswer?.hits.length ?? 0 })) {
         logEvent("QUESTION_ASKED", ocdIds, {
-          topic: result.match?.topicId ?? (result.digest ? "DIGEST" : "DESTINATION_ONLY"),
+          topic:
+            result.match?.topicId ??
+            (result.digest
+              ? "DIGEST"
+              : result.destination
+                ? "DESTINATION_ONLY"
+                : `AGENDA_${agendaAnswer?.topic?.id ?? "TOPIC"}`),
           routed: true,
           ...(result.match?.via ? { via: result.match.via } : {}),
           ...(result.destination
@@ -570,8 +658,16 @@ export function AskBox({
         </div>
       )}
 
-      {asked && !askWasAnswered(asked) && (
-        <div data-ask-refusal className="mt-2.5">
+      {/*
+        A03 (2026-08-18): the refusal reads the SHARED definition of
+        answered, with the agenda rung's evidence passed in — otherwise a
+        reader who got a real answer off a real agenda would be told
+        underneath it that we have no sourced answer for their question.
+        Two contradictory sentences on one screen is worse than either.
+      */}
+      {asked &&
+        !askWasAnswered(asked, { agendaHits: agenda?.hits.length ?? 0 }) && (
+          <div data-ask-refusal className="mt-2.5">
           <p className="text-[0.8125rem] leading-relaxed text-voice">
             {asked.answer.statement}
           </p>
@@ -594,6 +690,69 @@ export function AskBox({
           </p>
         </div>
       )}
+
+        {agenda && agenda.hits.length > 0 && (
+          /*
+            A03 (2026-08-18). Placed ABOVE the routed steps on purpose: the
+            reader asked whether a thing is coming, and a line a clerk put
+            on an agenda answers that question, where the body that owns
+            the topic answers a different one. Both render; the direct
+            answer leads.
+
+            LEVEL register — this is a claim surface about what a
+            government has scheduled. Every line inside is the document's
+            own words, quoted, with the document linked beside it. Nothing
+            here is summarised: a summary of a zoning agenda is a claim
+            about what a government is about to do, made by us.
+
+            The denominator is in the sentence, not in a tooltip. "3 of 3"
+            and "3 of 40" are different answers and a reader who sees only
+            the three cannot tell which they got.
+          */
+          <div className="mt-2">
+            <p className="t-eyebrow text-muted">
+              On an agenda near you
+            </p>
+            <p className="mt-0.5 text-[0.75rem] leading-relaxed text-paper-dim">
+              {agenda.hits.length === agenda.hitsFound
+                ? `${agenda.hitsFound} mention${agenda.hitsFound === 1 ? "" : "s"} of ${agenda.topic?.label ?? "this"} across the ${agenda.searched} agenda${agenda.searched === 1 ? "" : "s"} we hold for your area.`
+                : `${agenda.hitsFound} mentions of ${agenda.topic?.label ?? "this"} across the ${agenda.searched} agendas we hold for your area — the first ${agenda.hits.length} are below.`}
+              {agenda.unreadable > 0 &&
+                ` ${agenda.unreadable} more agenda${agenda.unreadable === 1 ? "" : "s"} we hold but could not read, so ${agenda.unreadable === 1 ? "it is" : "they are"} not included.`}
+            </p>
+            <ul className="mt-1.5 space-y-2">
+              {agenda.hits.map((hit) => (
+                <li
+                  key={`${hit.documentUrl}-${hit.quote.slice(0, 40)}`}
+                  className="border-l-2 border-[var(--panel-border)] pl-3"
+                >
+                  {hit.bodyName && (
+                    <p className="text-[0.75rem] font-medium text-paper">
+                      {hit.bodyName}
+                    </p>
+                  )}
+                  {/* The clerk's own line. Never rewritten, never trimmed
+                      of meaning — only of length, and then it says so. */}
+                  <p className="mt-0.5 text-[0.75rem] leading-relaxed text-paper-dim">
+                    &ldquo;{hit.quote}&rdquo;
+                  </p>
+                  <p className="mt-0.5 text-[0.6875rem] text-muted">
+                    {hit.sourceOrg}
+                    {" · "}
+                    <a
+                      href={hit.agendaUrl ?? hit.documentUrl}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="underline decoration-dotted underline-offset-2 hover:text-link"
+                    >
+                      the agenda
+                    </a>
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
       {asked && asked.answer.kind === "ROUTED" && asked.answer.topic && (
         <div className="mt-3">
@@ -690,10 +849,27 @@ export function AskBox({
                   </p>
                 )}
                 {step.people.length > 0 && (
-                  <p className="mt-0.5 text-[0.8125rem]">
-                    {step.people.map((person, j) => (
-                      <span key={person.id}>
-                        {j > 0 && <span className="text-muted">, </span>}
+                  /*
+                    A04 (2026-08-18): "Who can I contact about X?" — the row
+                    now answers the second half of its own question.
+                    `SeatHolder` has carried `phone`, `email` and
+                    `contactFormUrl` since 3a; this list rendered a name, an
+                    office and a source link, and stopped. A reader who has
+                    just been told WHO owns their problem and is then left to
+                    go and find them has been given a lookup, not an answer,
+                    and every click between them and the phone number is the
+                    reader-friction rule's own defect.
+
+                    An absence is an absence: a person with no published
+                    contact renders their name and nothing after it. Nothing
+                    is inferred from a colleague's number or a body's
+                    switchboard — a wrong phone number for a named official
+                    is a false claim about a real person, and the reader
+                    finds out by being ignored.
+                  */
+                  <ul className="mt-0.5 space-y-1 text-[0.8125rem]">
+                    {step.people.map((person) => (
+                      <li key={person.id}>
                         <span className="font-medium text-paper">
                           {person.name}
                         </span>
@@ -711,9 +887,48 @@ export function AskBox({
                             </a>
                           </>
                         )}
-                      </span>
+                        {(person.phone || person.email || person.contactFormUrl) && (
+                          <span className="ml-1 text-[0.75rem]">
+                            {person.phone && (
+                              <a
+                                href={`tel:${person.phone.replace(/[^\d+]/g, "")}`}
+                                className="text-link underline decoration-dotted underline-offset-2"
+                              >
+                                {person.phone}
+                              </a>
+                            )}
+                            {person.phone && (person.email || person.contactFormUrl) && (
+                              <span className="text-muted"> · </span>
+                            )}
+                            {person.email && (
+                              <a
+                                href={`mailto:${person.email}`}
+                                className="text-link underline decoration-dotted underline-offset-2"
+                              >
+                                {person.email}
+                              </a>
+                            )}
+                            {person.email && person.contactFormUrl && (
+                              <span className="text-muted"> · </span>
+                            )}
+                            {!person.email && person.phone && person.contactFormUrl && (
+                              <span className="text-muted"> · </span>
+                            )}
+                            {person.contactFormUrl && (
+                              <a
+                                href={person.contactFormUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-link underline decoration-dotted underline-offset-2"
+                              >
+                                contact form
+                              </a>
+                            )}
+                          </span>
+                        )}
+                      </li>
                     ))}
-                  </p>
+                  </ul>
                 )}
                 {/*
                   M94 (2026-08-16), the footnote collapse: a gap sentence is

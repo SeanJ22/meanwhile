@@ -86,3 +86,50 @@ threshold, and that the candidate set above was the one measured. A kill with no
 number attached is a deferral wearing a decision's clothes, and this row is not
 allowed to be deferred — the author's instruction is that either outcome is a
 close.
+
+---
+
+# The measurement, and the decision
+
+Run **after** everything above was committed. Both builds are the ubuntu
+standalone job of `.github/workflows/build-check.yml` — the same command, runner
+class and mode as the Netlify deploy — and both are named here so either can be
+re-read rather than trusted.
+
+| | static (control) | candidate set async | change |
+|---|---|---|---|
+| initial JS, raw | 2,861,740 | 2,716,714 | **−145,026** |
+| compressed transfer (gzip -9) | 861,269 | 818,445 | **−42,824** |
+| chunks referenced by `/` | 10 | 12 | +2 |
+
+Control: GitHub Actions run `32201893815`, job `95917264172`, commit `f5cd6e8`.
+Candidate: GitHub Actions run `32202237032`, job `95918284374`, commit `33f6f52`
+on branch `claude/g17-aud03-measure`.
+
+**Measured saving: 42,824 bytes of compressed transfer.** The threshold was
+20,480. AUD-03 is **BUILT**.
+
+The saving comes out of the initial graph rather than moving between chunks:
+the total fell, and the chunk count rose by two because the async boundaries
+are new chunks that `/` no longer references at load.
+
+## One reporting artifact, named rather than left to be discovered
+
+The MapLibre/application split moved far more than the totals did — MapLibre
+reads 2,155,530 raw before and 1,148,412 after. **No MapLibre code moved.** The
+split is a heuristic: a chunk counts as MapLibre if its bytes contain the string
+`maplibre`, and the whole chunk's bytes are attributed. Re-chunking redrew where
+that string lands, so the attribution moved and the library did not. The
+threshold is measured on the TOTAL transfer for exactly this reason, and the
+re-baselined split in `scripts/bundle-budget.json` records the new attribution
+with this caveat attached to it.
+
+## What was proven besides the bytes
+
+A build cannot tell anyone whether a reader still sees a deferred surface: a
+chunk that fails to load renders nothing, and a correctly-hidden overlay also
+renders nothing. So `scripts/verify-aud03.mts` drives a real browser through
+`scripts/browser.mts` and asks the DOM. 6 of 6, 2026-08-18, against `pnpm dev`:
+the welcome overlay arrives on a cold load and its zip still searches (85701,
+HTTP 200), the quick tour arrives over the map, the list overlay renders on
+click, no chunk 404s, no page errors.

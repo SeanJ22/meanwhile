@@ -55,6 +55,7 @@
     "congress:migrate": "tsx scripts/migrate-congress-directory.mts",
     "shoot:0816": "tsx scripts/shoot-0816.mts",
     "verify:sources": "tsx scripts/verify-sources-tab.mts",
+    "verify:aud03": "tsx scripts/verify-aud03.mts",
     "dotgov:fetch": "tsx scripts/fetch-dotgov.mts",
     "states:fetch": "tsx scripts/fetch-state-outlines.mts",
     "shoot:focus": "tsx scripts/shoot-state-focus.mts",

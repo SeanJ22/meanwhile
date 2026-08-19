@@ -2,9 +2,10 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+import dynamic from "next/dynamic";
+
 import { CountBadge } from "@/components/map/count-badge";
 import { Legend } from "@/components/map/legend";
-import { ListOverlay } from "@/components/map/list-overlay";
 import { Sidebar } from "@/components/shell/sidebar";
 import { useDistrictLayer } from "@/hooks/use-district-layer";
 import {
@@ -66,14 +67,57 @@ import { DataFreshness } from "./data-freshness";
 import { DistrictPicker } from "./district-picker";
 import { MapCanvas, type CameraTarget, type MapFocus } from "./map-canvas";
 import { MeetingPanel } from "./meeting-panel";
-import { DistrictPopup } from "./popup/district-popup";
-import { MeetingPopup } from "./popup/meeting-popup";
-import { OfficialPopup } from "./popup/official-popup";
-import { OfficialModal } from "./popup/official-modal";
-import { EntityModal, type ModalSubject } from "./popup/entity-modal";
 import { DoorOverlay } from "./door-overlay";
-import { WelcomeOverlay } from "./welcome-overlay";
-import { TutorialOverlay } from "./tutorial-overlay";
+import type { ModalSubject } from "./popup/entity-modal";
+
+/*
+ * AUD-03 MEASUREMENT BRANCH (g17, 2026-08-18) — see docs/aud-03-prereg.md.
+ *
+ * The eight surfaces below are the pre-registered candidate set: none is on the
+ * first paint of `/`, and every one of them was in the initial chunk. They are
+ * behind async boundaries here so the build can be measured against the same
+ * build with them static. The threshold was committed BEFORE this measurement,
+ * in its own earlier commit, and the decision follows the number.
+ *
+ * `ssr: false` on every one is a statement of fact rather than a choice: each
+ * already renders nothing on the server. The three popups and the two modals
+ * are gated on click state; `ListOverlay` returns null unless the reader has
+ * opened it; `WelcomeOverlay` and `TutorialOverlay` are gated on `restored`,
+ * which only becomes true in a client effect. The map is NOT here — the
+ * author's instruction is explicit and MapLibre is the landing product.
+ */
+const DistrictPopup = dynamic(
+  () => import("./popup/district-popup").then((m) => m.DistrictPopup),
+  { ssr: false },
+);
+const MeetingPopup = dynamic(
+  () => import("./popup/meeting-popup").then((m) => m.MeetingPopup),
+  { ssr: false },
+);
+const OfficialPopup = dynamic(
+  () => import("./popup/official-popup").then((m) => m.OfficialPopup),
+  { ssr: false },
+);
+const OfficialModal = dynamic(
+  () => import("./popup/official-modal").then((m) => m.OfficialModal),
+  { ssr: false },
+);
+const EntityModal = dynamic(
+  () => import("./popup/entity-modal").then((m) => m.EntityModal),
+  { ssr: false },
+);
+const ListOverlay = dynamic(
+  () => import("./list-overlay").then((m) => m.ListOverlay),
+  { ssr: false },
+);
+const WelcomeOverlay = dynamic(
+  () => import("./welcome-overlay").then((m) => m.WelcomeOverlay),
+  { ssr: false },
+);
+const TutorialOverlay = dynamic(
+  () => import("./tutorial-overlay").then((m) => m.TutorialOverlay),
+  { ssr: false },
+);
 
 /**
  * The entry screen.

@@ -2099,7 +2099,72 @@ replaced.
 
 ## 7. Current state of the branch
 
-**CURRENT: `claude/g21-final-queue-0819`** (2026-08-19, the g21 session, the
+**CURRENT: `claude/f01-walkthrough-0819`** (2026-08-19, the F01 session, THE
+FEEDBACK GATE), branched from `main@b1a46b2` and merged as `a119578`.
+
+F01 carried **fifty-five live items across thirteen surfaces** from the
+author's own voice walkthrough of 2026-08-18, plus twenty-nine screenshots. The
+standing lock forbidding a session to open that document or the Drive folder was
+retired by the F01 brief; both were read in full, **29 of 29 screenshots**.
+**Fifty-two of the fifty-five closed. 10.1 is WITHDRAWN by the author** — the
+pill cluster is not broken and was not touched. **Two remain open, and both are
+DATA hunts rather than unbuilt work**, each with its own row and its ladder
+recorded: `F02` (committee jurisdiction text, 186 rendered rows) and `F03`
+(appointed executives, 11 of 12 covered bodies).
+
+Two items — **6.3 and 6.4** — were already satisfied in code before the session
+began, by rules 4g and 4h on 2026-08-17. Verified against the deploy rather
+than assumed, and reported as already-satisfied rather than as new work.
+
+**What the session found by diagnosing rather than by patching**, which is the
+part worth carrying forward:
+
+* **9.2** — "Districts in view: Off" while districts were on screen. The tile
+  answered from `ui.showDistricts`, a MIRROR of `use-district-layer`'s
+  persisted preference, and a mirror can diverge from the map. The drawn set,
+  counted off the live map after render, now wins. Verified live: **31**
+  districts in view at 85701 where the tile used to say Off.
+* **10.3** — the empty grey block the author boxed in red was the map STARTING
+  at `sm:left-[364px]`. The rail is content-height and floats, so the column
+  below it was reserved for a map not allowed to be there. Canvas is full-bleed
+  now, and framing is preserved by handing the rail's width to the camera as
+  padding through `setPadding`, which one line applies to `flyTo`, `jumpTo` and
+  `fitBounds` alike. Verified live: canvas `x=0 w=1280`, was `x=364 w=916`.
+* **7.2** — the Kearsarge contradiction. **Neither surface was lying.**
+  Carry-forward exists so a refused source does not empty a full surface, so
+  the pins stayed and each carried row stated its own age; the WARNING never
+  learned that had happened and said "may be missing" about rows the author
+  could click. The card is now told what the map is showing.
+* **5.2** — "if he was in session we'd need to record what he did." We DID
+  record it and then failed to say it: the key-votes pill map had no key for
+  `NOT_VOTING`, so **140 stored positions** rendered as "Position recorded".
+  The Recent view had it right all along.
+* **13.1** — the pin sat up and to the left because the card is
+  `text-align: center` and Tailwind's preflight makes an `<svg>` a block, which
+  `text-align` cannot reach.
+* **5.6** — the author unparked `funding-fight` and the park's PREMISE turned
+  out to be wrong. The roll-call record names ONE bill for the whole episode,
+  H.R. 5371, and B15 closes at **20 of 20**.
+* **7.3** — measured rather than eyeballed, and it caught two defects this
+  session had just introduced: the new map reset overlapping the count badge by
+  six pixels, and the pill-shaped "Where can I vote?" pushing the whole cluster
+  to `x = -8`, off the left edge. A change to one control's SHAPE moved a
+  different control off the screen.
+
+**Gates: test 1240 pass · lint 0 errors, 11 allowlisted warnings · tsc clean ·
+build green in BOTH default and standalone mode · `walk:all` 324 passed, 0
+regressions, 0 could-not-run.** The F01 section at the end of this document
+records it in full.
+
+**Two walk regressions were reported and both were diagnosed as NOT
+regressions**, which is recorded because the diagnosis is the value: the ballot
+device-only check was holding the author to a claim he had just retired, and
+Kearsarge's floor of 15 counted rows inside a MOVING ninety-day window whose
+oldest row aged out on exactly this date. The snapshot still holds all fifteen.
+
+The paragraph below is g21's, demoted to the record.
+
+**`claude/g21-final-queue-0819`** (2026-08-19, the g21 session, the
 LAST QUEUE SESSION), branched from `main@5ad703e` and merged as `fea7626`.
 Nine items briefed, all nine addressed — **seven finished whole, two stopped
 cleanly at a stated boundary, none never reached**. B19 and B16 shipped in the
@@ -12041,3 +12106,70 @@ while the code was already right.** It happened twice more here.
   unrecoverable.
 * `context.md` **25.5 KB of 40 KB**. Mirror: the canonical 15 present, nothing
   undeclared; code mirror 12 files, 445.7 KB.
+
+### State as of 2026-08-19 (F01)
+
+* Deploy `a119578`, verified via `/api/build` — instrument: a `curl` against
+  `https://sparkwtp.netlify.app/api/build` carrying
+  `x-wtp-synthetic-run: f01-deploy-check@…` and `cache-control: no-cache`,
+  which returned `{"commitShort":"a119578","branch":"main","context":"production"}`.
+  **One merge** (PR #108).
+* `walk:all` against the SHIPPED build: **324 passed, 0 regressions, 0
+  could-not-run.** 324 distinct identities of 324 run; baseline 316,
+  **added 12, GONE 4**. The four that went are the `0814c` ballot device-only
+  checks, retired with the claim the author removed in 11.2 — replaced under a
+  NEW identity so the diff reports the swap rather than silently redefining a
+  passing name.
+* **Two reported regressions, both diagnosed as NOT regressions.** (1) The
+  ballot device-only checks were holding the author to a claim he had just
+  retired. (2) Kearsarge's floor of 15 counts rows inside a MOVING ninety-day
+  window; the sitting of 2026-05-21 sits exactly on today's boundary and aged
+  out of the WINDOW, not out of the data — `data/meetings-snapshot.json` still
+  holds all fifteen, none carried, no failed source. The floor moved to 14 with
+  the diagnosis written at the site, because a floor over a back-window drifts
+  by construction and will do this again.
+* Gates: test **1240 pass / 0 fail**, lint **0 errors / 11 allowlisted
+  warnings** (was 12 with 1 stale; the stale `hostOf` entry was removed and its
+  dead helper deleted rather than allowlisted), `tsc --noEmit` clean.
+* Build green in **BOTH** modes. Budget 1a: **196** files (baseline 195,
+  ceiling 220) — identical in default and standalone. Budget 1b default:
+  **927** (baseline 935, ceiling 1050); **standalone: 1130** (baseline 1138,
+  ceiling 1300) — the mode that actually deploys, run explicitly with
+  `NEXT_PRIVATE_STANDALONE=true`. Budget 2: raw **2,741,934** / gzip
+  **826,483** across 13 chunks, against committed ceilings **3,100,000 /
+  940,000**, read from `scripts/bundle-budget.json` and not off the rounded KB
+  line. **No ceiling moved.**
+* Production rows this session: **607**, all SYNTHETIC, across **13 run ids** —
+  six `walk:all` runs (89 + 93 + 92 + 92 + 94 + 92 against production, each
+  with its 9-row `walk-all-local@…` sibling) and one hand `curl`
+  (`f01-kearsarge@2026-08-19T23:02:09Z`, 1 row) used to diagnose the Kearsarge
+  floor. The sixth walk is the one against the FINAL shipped build. **No
+  reaction was tapped, no ask submitted, no feedback row written.** The
+  `f01-deploy-check` curl hit `/api/build`, which writes no search-log row, and
+  the three `f01-probe…` browser runs and the `f01-supt-hunt` ran against
+  `localhost:3000` and external district sites respectively, so none of them
+  landed in the production store.
+* `search_log` **organic 125** — up from g21's 107, **delta +18** — synthetic
+  4642, unknown 2845, author 17, total 7629, reconciling exactly. Feedback
+  store: 3 rows, all synthetic, 0 organic, unchanged.
+* Tracker **376 rows**, no duplicate IDs. Rows touched: `F01` updated IN PLACE
+  to In progress with the close appended (it already existed as g16's intake
+  record — never a second row per ID); `F02` and `F03` created for the two
+  open data hunts. The first attempt named them `F01-A`/`F01-B` and
+  `tests/tracker-integrity.test.ts` refused them: the committed ID shape is
+  `^[A-Z]+\d+$` and it is load-bearing, because the renumber that fixed the
+  M128/M129 collision is only safe while every ID is mechanically enumerable.
+* `CLAUDE.md` **clarified, not amended.** Item 6.2 said to amend the named-gap
+  rule IF it mandated the literal struck phrase. It does not — it mandates the
+  ATTRIBUTION — so one sentence was added saying exactly that, so a later
+  session cannot read the rule as requiring the phrasing and put it back.
+* `stamp-audit.md`: 25 stamps audited, **0 disagree with git history**, 2
+  author-ruled expected (photo doors 1 and 2), 0 later than today, 0
+  unrecoverable.
+* Playbook diff: **nothing new for `docs/zip-playbook.md`** — no zip or depth
+  run happened this session. `docs/source-ladder.md` gained TWO new sections:
+  the committee-jurisdiction ladder (three rungs walked, rung 3 broke
+  `jct.gov`'s header filter) and the top-office-holder ladder (1 of 12 landed,
+  every remaining body's next rung named).
+* `context.md` **25.5 KB of 40 KB**. Mirror: the canonical 15 present, nothing
+  undeclared; code mirror 12 files, 465.4 KB at `93c5385`.

@@ -11994,16 +11994,17 @@ while the code was already right.** It happened twice more here.
   gzip **824,489** across 13 chunks, against committed ceilings **3,100,000 /
   940,000** — read from `scripts/bundle-budget.json` as the check now prints
   them exactly, never off the rounded KB line. **The ceilings did not move.**
-* Production rows this session: **292**, all SYNTHETIC, across six run ids
-  from three `walk:all` runs — `walk-all@…19:15:00.555Z` (90) +
-  `walk-all-local@…19:15:00.554Z` (8), `walk-all@…19:20:05.049Z` (89) +
-  `…local@…19:20:05.048Z` (8), `walk-all@…19:26:55.463Z` (88) +
-  `…local@…19:26:55.463Z` (9). **No reaction was tapped, no ask submitted, no
+* Production rows this session: **391**, all SYNTHETIC, across EIGHT run ids
+  from FOUR `walk:all` runs — 98 + 97 + 97 + 99, each run a `walk-all@…`
+  pair with its `walk-all-local@…` sibling, timestamped 19:15:00.555Z,
+  19:20:05.049Z, 19:26:55.463Z and 19:36:17.692Z. The fourth run is the one
+  against the FINAL shipped build, which the close-out rule requires and which
+  the first three could not be. **No reaction was tapped, no ask submitted, no
   feedback row written.** Every other probe this session ran against
   `localhost:3000`, whose `DATABASE_URL` points at a local Neon branch that
   cannot authenticate, so none of them landed anywhere.
 * `search_log` **organic 107** — unchanged from g19 AND g20, **delta 0** —
-  synthetic 3936, unknown 2845, author 17, total 6905, reconciling exactly.
+  synthetic 4035, unknown 2845, author 17, total 7004, reconciling exactly.
   Feedback store: 3 rows, all synthetic, 0 organic.
 * Tracker **374 rows**, no duplicate IDs, **85 open** — of which **79 are
   deferred-queue rows and 6 are tracker rows outside the queue**. Rows touched:

@@ -58,7 +58,8 @@ with the correction named.
 * `pnpm deferred` still refuses to regenerate, correctly: `docs/deferred.csv`
   carries 75 author dispositions the tracker does not hold.
 * **`walk:all` 316 passed, 0 regressions, 0 could-not-run.** Baseline 309,
-  added 7, GONE 0.
+  added 7, GONE 0 — then re-run against the FINAL shipped build at baseline
+  316, added 0, GONE 0.
 
 ---
 

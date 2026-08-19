@@ -3,6 +3,7 @@ import {
   KEY_VOTES_CRITERIA,
   type KeyVoteEntry,
 } from "@/lib/votes/key-votes";
+import { votedCount } from "@/lib/votes/participation";
 import type { VotePosition } from "@/lib/votes/types";
 import { formatDateMDY } from "@/lib/map/format";
 
@@ -149,16 +150,36 @@ export function KeyVotesSection({
         keep their headers, their counts and their chevrons, and they now
         INDENT as sub-groups, so what they are is legible: a thing containing
         two things, each still a thing to click.
+
+        **F01 5.3 (2026-08-19) REVERSES the `defaultOpen` half of that**, on
+        the author's direct instruction: *"when I hit when it mattered it
+        should drop down like it does but it should not automatically expand
+        both votes on laws and votes on people. They both should be
+        collapsed."* Recorded as a reversal rather than a tidy-up so a later
+        session reading the paragraph above does not restore it.
+
+        The friction the old decision was protecting against is answered a
+        different way and is still answered: the pane is no longer a criteria
+        sentence over two bare bars, because each bar now states its COUNT in
+        the header ("Votes on laws 20", "Votes on people none"), which is the
+        pane's actual answer visible without a tap. The indent and the scale
+        step from that same pass stay.
       */}
       {laws.length > 0 && (
         <CardSection
           title="Votes on laws"
-          // The stated N counts every entry, INCLUDING the two whose roll
-          // calls were correctly refused. A count that quietly dropped them
-          // would make our own gap invisible.
-          meta={`${laws.length}`}
+          /* F01 5.1 (2026-08-19): TWO numbers, not one. The first is what the
+             member actually voted on — which is what the headline above now
+             counts, so the two agree — and the second is the full curated
+             list, which keeps our own gaps visible as the difference. The
+             prior single N counted every entry and was therefore a number
+             that described neither. */
+          meta={
+            votedCount(laws) === laws.length
+              ? `${laws.length}`
+              : `${votedCount(laws)} of ${laws.length}`
+          }
           level="sub"
-          defaultOpen
         >
           <KeyVoteGroupBlock chamber={chamber} rows={laws} />
         </CardSection>
@@ -167,7 +188,7 @@ export function KeyVotesSection({
       {houseNominationsLine ? (
         // One header, one sentence behind it. Never sixteen rows of the same
         // sentence — but open, because the sentence IS the answer.
-        <CardSection title="Votes on people" meta="none" level="sub" defaultOpen>
+        <CardSection title="Votes on people" meta="none" level="sub">
           <p className="text-[0.75rem] leading-relaxed text-voice">
             {houseNominationsLine}
           </p>
@@ -176,9 +197,12 @@ export function KeyVotesSection({
         people.length > 0 && (
           <CardSection
             title="Votes on people"
-            meta={`${people.length}`}
+            meta={
+              votedCount(people) === people.length
+                ? `${people.length}`
+                : `${votedCount(people)} of ${people.length}`
+            }
             level="sub"
-            defaultOpen
           >
             <KeyVoteGroupBlock chamber={chamber} rows={people} />
           </CardSection>

@@ -1,7 +1,14 @@
 "use client";
 
 
+import { ExternalLink } from "lucide-react";
+
 import { useMemberDirectory } from "@/hooks/use-member-directory";
+import {
+  buildCommitteeTree,
+  type CommitteeNode,
+} from "@/lib/officials/committee-tree";
+import { officeDirectionsUrl } from "@/lib/registry/links";
 import type { SeatHolder } from "@/lib/officials/lookup";
 
 import { CardSection } from "./card-section";
@@ -80,42 +87,30 @@ function MemberDirectoryInner({ holder }: { holder: SeatHolder }) {
             No committee seat on record for this member.
           </p>
         ) : (
+          /* F01 4.2 (2026-08-19): PARENTS AND SUBCOMMITTEES, TOLD APART.
+             The list was flat, so "Senate Committee on Armed Services" and
+             "Senate Committee on Armed Services — Airland" read as two peers
+             and the author could not see that the second sits under the
+             first. Subcommittees now indent behind a rule under the parent
+             they belong to, and drop the parent's name from their own label
+             because it is directly above them. See lib/officials/committee-tree.ts
+             for how the relationship is derived and what happens if the
+             source's convention ever stops holding. */
           <ul>
-            {committees.map((seat) => (
+            {buildCommitteeTree(committees).map((node) => (
               <li
-                key={seat.committeeId}
+                key={node.seat.committeeId}
                 className="border-b border-[var(--panel-border)] py-2 last:border-0"
               >
-                <p className="text-[0.8125rem] leading-snug text-paper">
-                  {/* Names AS FILED, and the title in front of the committee
-                      the way the chamber states it: "Chairman, Armed
-                      Services". Never a rank rendered as a rating. */}
-                  {seat.title ? `${seat.title}, ` : ""}
-                  {seat.name}
-                </p>
-                {seat.jurisdiction && (
-                  <details className="mt-1">
-                    <summary className="cursor-pointer text-[0.6875rem] text-paper-dim underline decoration-dotted hover:text-link">
-                      What this committee handles
-                    </summary>
-                    <p className="mt-1 text-[0.6875rem] leading-relaxed text-voice">
-                      {seat.jurisdiction}
-                    </p>
-                    {seat.jurisdictionSource && (
-                      <p className="mt-0.5 text-[0.625rem] text-muted">
-                        Jurisdiction text from{" "}
-                        <a
-                          href={seat.jurisdictionSource}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="underline decoration-dotted hover:text-link"
-                        >
-                          the committee&apos;s own statement
-                        </a>
-                        .
-                      </p>
-                    )}
-                  </details>
+                <CommitteeRow node={node} />
+                {node.children.length > 0 && (
+                  <ul className="mt-1.5 border-l border-[var(--panel-border)] pl-3">
+                    {node.children.map((child) => (
+                      <li key={child.seat.committeeId} className="py-1.5">
+                        <CommitteeRow node={child} sub />
+                      </li>
+                    ))}
+                  </ul>
                 )}
               </li>
             ))}
@@ -153,12 +148,46 @@ function MemberDirectoryInner({ holder }: { holder: SeatHolder }) {
                     {office.city}
                     {office.state ? `, ${office.state}` : ""}
                   </p>
-                  {office.address && (
-                    <p className="mt-0.5 text-[0.75rem] leading-relaxed text-paper-dim">
-                      {office.address}
-                      {office.zip ? ` ${office.zip}` : ""}
-                    </p>
-                  )}
+                  {/* F01 4.3 (2026-08-19): the address is a handoff to Google
+                      Maps with the office loaded and ready to navigate. A
+                      DECLARED exception to nothing-leaves-the-app, in the same
+                      class as B19's directions link from a polling-place pin —
+                      the reader's next action is physically going there. The
+                      link carries the published address verbatim; nothing is
+                      geocoded here.
+
+                      A row whose address is missing renders as plain text
+                      rather than a dead link, because a link that opens a map
+                      of a city is an answer-shaped non-answer. */}
+                  {office.address &&
+                    (() => {
+                      const url = officeDirectionsUrl({
+                        address: office.address,
+                        city: office.city,
+                        state: office.state,
+                        zip: office.zip,
+                      });
+                      const text = `${office.address}${office.zip ? ` ${office.zip}` : ""}`;
+                      return url ? (
+                        <a
+                          href={url}
+                          target="_blank"
+                          rel="noreferrer"
+                          title={`Directions to the ${office.city ?? "district"} office (Google Maps)`}
+                          className="mt-0.5 inline-flex items-baseline gap-1 text-[0.75rem] leading-relaxed text-paper-dim underline decoration-dotted underline-offset-2 hover:text-link hover:decoration-solid"
+                        >
+                          {text}
+                          <ExternalLink
+                            className="size-3 shrink-0 translate-y-0.5"
+                            aria-hidden="true"
+                          />
+                        </a>
+                      ) : (
+                        <p className="mt-0.5 text-[0.75rem] leading-relaxed text-paper-dim">
+                          {text}
+                        </p>
+                      );
+                    })()}
                   {office.phone && (
                     <a
                       href={`tel:${office.phone.replace(/[^\d+]/g, "")}`}
@@ -173,6 +202,83 @@ function MemberDirectoryInner({ holder }: { holder: SeatHolder }) {
           </>
         )}
       </CardSection>
+    </>
+  );
+}
+
+/**
+ * One committee seat — F01 4.2, 2026-08-19.
+ *
+ * ## "Only some rows say what the committee handles"
+ *
+ * The author's other half of 4.2: *"there's multiple committees that he is a
+ * part of however there's only two that says what this committee handles."*
+ *
+ * That is a SOURCE fact, and it is now stated as one instead of rendering as
+ * silence. The directory's jurisdiction text comes from
+ * `unitedstates/congress-legislators`, whose `committees-current` file carries
+ * `jurisdiction` on 42 of 49 parent committees and — verified against the LIVE
+ * file on 2026-08-19, not only the pinned snapshot — on **0 of 181
+ * subcommittees**. The field does not exist there. So a subcommittee row with
+ * no description is not a row somebody forgot to fill in; it is a rung of the
+ * ladder that this source does not have, and the next rung is each committee's
+ * own published rules. That hunt is recorded in `docs/source-ladder.md` and
+ * tracked; it is not something a render change can close.
+ *
+ * Until it lands, the row says so, in the gap's own register (`CLAUDE.md`: a
+ * null renders as its NAMED GAP, on every surface, always — and the name says
+ * whose gap it is). "We haven't sourced what this subcommittee handles yet" is
+ * a fact about us. Silence would have read as a fact about the subcommittee.
+ */
+function CommitteeRow({ node, sub = false }: { node: CommitteeNode; sub?: boolean }) {
+  const { seat, label } = node;
+  return (
+    <>
+      <p
+        className={
+          sub
+            ? "text-[0.75rem] leading-snug text-paper-dim"
+            : "text-[0.8125rem] leading-snug text-paper"
+        }
+      >
+        {/* Names AS FILED, and the title in front of the committee the way the
+            chamber states it: "Chairman, Armed Services". Never a rank
+            rendered as a rating. On a child row the title belongs to the
+            SUBCOMMITTEE — Kelly is ranking member of Airland, not of Armed
+            Services — which the flat list made impossible to see. */}
+        {seat.title ? `${seat.title}, ` : ""}
+        {label}
+      </p>
+      {seat.jurisdiction ? (
+        <details className="mt-1">
+          <summary className="cursor-pointer text-[0.6875rem] text-paper-dim underline decoration-dotted hover:text-link">
+            What this committee handles
+          </summary>
+          <p className="mt-1 text-[0.6875rem] leading-relaxed text-voice">
+            {seat.jurisdiction}
+          </p>
+          {seat.jurisdictionSource && (
+            <p className="mt-0.5 text-[0.625rem] text-muted">
+              Jurisdiction text from{" "}
+              <a
+                href={seat.jurisdictionSource}
+                target="_blank"
+                rel="noreferrer"
+                className="underline decoration-dotted hover:text-link"
+              >
+                the committee&apos;s own statement
+              </a>
+              .
+            </p>
+          )}
+        </details>
+      ) : (
+        <p className="mt-0.5 text-[0.625rem] leading-relaxed text-muted">
+          {sub
+            ? "We haven’t sourced what this subcommittee handles yet."
+            : "We haven’t sourced what this committee handles yet."}
+        </p>
+      )}
     </>
   );
 }

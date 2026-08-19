@@ -1,6 +1,70 @@
 "use client";
 
-import { useId, useState } from "react";
+// @server-boundary-exempt setOpenId is a REACT CONTEXT value, not a component
+// prop. It is created by CardSectionGroup and read by CardSection, both of them
+// client components inside one boundary, so it never crosses from a Server
+// Component and the 500 this guard prevents cannot occur here. The guard reads
+// interface members and cannot tell a context value from a prop; renaming it to
+// onSetOpen would slip past while making the name worse.
+
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useId,
+  useMemo,
+  useState,
+} from "react";
+
+/**
+ * **ONE PILL OPEN AT A TIME** — F01 4.1, 2026-08-19, the author.
+ *
+ * *"anytime I click on a new pill all other pills should collapse so I should
+ * only have one pill that's expanded at a time."* His instance was Ciscomani's
+ * card with Committees and Offices near you both standing open; his rule was
+ * the class.
+ *
+ * ## Why a context and not a prop
+ *
+ * The pills on a person's card are constructed by FIVE different components —
+ * `official-modal` owns four of them directly, and `MemberDirectory`,
+ * `PositionsSection`, `RecentVotes` and `KeyVotes` each own their own. Lifting
+ * `open` into a prop would mean threading it through all five and every future
+ * one, and the first component that forgot would silently reintroduce exactly
+ * the defect. A context makes the DEFAULT correct: a `CardSection` inside a
+ * group is exclusive without its author doing anything, and a `CardSection`
+ * outside one keeps its own state as before, so nothing that is not a person
+ * card changes behaviour.
+ *
+ * This is the pill sibling of the standing one-popup-at-a-time rule. There was
+ * no shared implementation of that rule to extend — it is enforced per surface
+ * in `map-entry` — so this is the first one, and it is written to be the one a
+ * later surface reuses rather than a second copy of the idea.
+ *
+ * ## Sub-sections are deliberately NOT exclusive
+ *
+ * `level="sub"` sections ("Votes on laws", "Votes on people") live INSIDE
+ * another section's open pane. Closing one because the reader opened its
+ * sibling would collapse half of a pane the reader had just chosen to look at,
+ * and the author's rule is about the top-level pills he was clicking. Subs keep
+ * their own state; F01 5.3 governs what they default to.
+ */
+interface CardSectionGroupValue {
+  openId: string | null;
+  setOpenId: (id: string | null) => void;
+}
+
+const CardSectionGroupContext = createContext<CardSectionGroupValue | null>(null);
+
+export function CardSectionGroup({ children }: { children: React.ReactNode }) {
+  const [openId, setOpenId] = useState<string | null>(null);
+  const value = useMemo(() => ({ openId, setOpenId }), [openId]);
+  return (
+    <CardSectionGroupContext.Provider value={value}>
+      {children}
+    </CardSectionGroupContext.Provider>
+  );
+}
 
 /**
  * A collapsible section of a person's battlecard — item 6b4, 2026-08-15.
@@ -63,8 +127,29 @@ export function CardSection({
   level?: "top" | "sub";
   children: React.ReactNode;
 }) {
-  const [open, setOpen] = useState(defaultOpen);
   const id = useId();
+  const group = useContext(CardSectionGroupContext);
+  // Only TOP-LEVEL pills join the group. See the note on CardSectionGroup.
+  const grouped = group !== null && level !== "sub";
+
+  const [localOpen, setLocalOpen] = useState(defaultOpen);
+  const open = grouped ? group.openId === id : localOpen;
+
+  // A grouped section that asks to start open claims the group's one slot at
+  // mount. Two such sections on one card would be a contradiction the group
+  // resolves the same way a reader's click does — last one wins — rather than
+  // by silently rendering two open pills, which is the defect itself.
+  useEffect(() => {
+    if (grouped && defaultOpen) group!.setOpenId(id);
+    // Mount only: re-running on `openId` would reopen the section every time
+    // the reader closed it.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const toggle = () => {
+    if (grouped) group!.setOpenId(open ? null : id);
+    else setLocalOpen((v) => !v);
+  };
 
   return (
     <section
@@ -77,7 +162,7 @@ export function CardSection({
         className="card-section-header"
         aria-expanded={open}
         aria-controls={id}
-        onClick={() => setOpen((v) => !v)}
+        onClick={toggle}
       >
         <span className="card-section-title">{title}</span>
         {meta && <span className="card-section-meta">{meta}</span>}

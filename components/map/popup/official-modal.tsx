@@ -14,7 +14,10 @@ import {
 import { CONGRESS_DIRECTORY_SOURCE } from "@/lib/officials/directory-source";
 
 import { FundingBlock } from "@/components/funding/funding-block";
-import { CardSection } from "@/components/officials/card-section";
+import {
+  CardSection,
+  CardSectionGroup,
+} from "@/components/officials/card-section";
 import { CardSourcesList } from "@/components/officials/card-sources-list";
 
 import { identityChipsFor } from "@/lib/officials/identity-chips";
@@ -164,6 +167,11 @@ export function OfficialModal({
           at all (a mayor, a selectboard member) has no votes section, because
           there is no such thing as their voting record to be missing.
         */}
+        {/* F01 4.1 (2026-08-19): every top-level pill on this card belongs to
+            ONE group, so opening any collapses the rest. The wrap is here, at
+            the card, because the pills are constructed by five different
+            components and only their common ancestor can hold the state. */}
+        <CardSectionGroup>
         <div className="account-modal-body">
           {/*
             Item 3 (2026-08-16), the author's ruling. Circle portrait with a
@@ -265,6 +273,7 @@ export function OfficialModal({
             )}
           </CardSection>
         </div>
+        </CardSectionGroup>
       </div>
     </div>
   );

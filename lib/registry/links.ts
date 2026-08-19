@@ -86,6 +86,52 @@ function directionsUrl(lat: number, lng: number): string {
   return `https://www.google.com/maps/dir/?api=1&destination=${lat.toFixed(6)}%2C${lng.toFixed(6)}`;
 }
 
+/**
+ * **A district office's address, handed to Google Maps** — F01 4.3, 2026-08-19.
+ *
+ * The author: *"When I look at 'Offices near you' the address for these I would
+ * like to be hyperlinked out to Google Maps. If I click on 2201 East Camelback
+ * Road, it should take that address and put it into Google Maps and pop up 'hey,
+ * you want to go here?'"*
+ *
+ * ## A DECLARED EXCEPTION to nothing-leaves-the-app
+ *
+ * `CLAUDE.md`'s standing rule is that every row opens a card and nothing leaves
+ * the product. This is the second sanctioned exception, in the same class as
+ * B19's directions handoff from a polling-place pin, and for the same reason:
+ * the reader's next action is physically going there, and no card this product
+ * could build is a substitute for turn-by-turn navigation on the device they
+ * are holding. Recording it as an exception rather than quietly making one.
+ *
+ * ## Why the ADDRESS and not coordinates
+ *
+ * `directionsUrl` above is the coordinate form, used where we hold a geocoded
+ * point. A congressional district office in the directory carries a street
+ * address, a city, a state and a zip and NO coordinates that we have sourced —
+ * `lat`/`lng` are present in the schema and null for these rows. Geocoding them
+ * ourselves to build a coordinate link would be inventing a point; passing the
+ * published address straight through hands Google the same string the member
+ * publishes, and lets their geocoder be the one that resolves it.
+ *
+ * The `?api=1&destination=` form is Google's documented universal link: it opens
+ * the native app where one is installed and the website everywhere else.
+ */
+export function officeDirectionsUrl(parts: {
+  address: string | null;
+  city: string | null;
+  state: string | null;
+  zip: string | null;
+}): string | null {
+  // The street is the load-bearing part. A link to "Tucson, AZ" would open a
+  // map of the city, which looks like an answer and is not one.
+  if (!parts.address?.trim()) return null;
+  const destination = [parts.address, parts.city, parts.state, parts.zip]
+    .map((part) => part?.trim())
+    .filter((part): part is string => Boolean(part))
+    .join(", ");
+  return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}`;
+}
+
 /** Reject anything that is not an http(s) URL before it reaches an href. */
 function usable(url: string | null | undefined): url is string {
   if (!url) return false;

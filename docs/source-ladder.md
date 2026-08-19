@@ -1641,3 +1641,79 @@ stands: the district's own schedule page is already wired through the
 words beside many sittings, the meeting time, and the venue with its entrance.
 An ics here would be a second, thinner source for a body that already has a
 good one. Recorded as a decision, not an omission.
+
+## Congressional committee JURISDICTION text — F01 4.2, 2026-08-19
+
+**The question.** F01 4.2 requires "what this committee handles" on every
+committee row of a member's card. The card renders it on 42 rows and on nothing
+else, and the author read that as an omission. It is not: it is where this
+source's coverage ends.
+
+**What the current source holds, counted rather than assumed.**
+`data/congress-legislators/directory.json` (unitedstates/congress-legislators,
+SHA `4458244308621d0570a15008f46888b7a87645eb`, collected 2026-08-16) carries 230
+committees — 49 parents, 181 subcommittees.
+
+| | with `jurisdiction` | without |
+|---|---|---|
+| Parents | 42 | **7** |
+| Subcommittees | 0 | **181** |
+
+Every one of the 49 parents and 179 of the 181 subcommittees actually render,
+because we hold all 537 sitting members. So the gap a reader can hit is **186
+rows**.
+
+### Rung 1 — committed snapshot: PARTIAL (42 of 230), attemptedAt 2026-08-19
+
+The numbers above. Recorded rather than inferred from the render.
+
+### Rung 2 — plain fetch of the LIVE source: SAME GAP, attemptedAt 2026-08-19
+
+`https://unitedstates.github.io/congress-legislators/committees-current.json`
+→ **200**, 74,732 bytes. Parsed: 49 parents (42 with `jurisdiction`), 181
+subcommittees (**0** with `jurisdiction`). The subcommittee records carry
+`name`, `thomas_id`, `address`, `phone`, `wikipedia` — and no jurisdiction
+field at all. **The snapshot is not stale; the field does not exist upstream.**
+This is the finding that matters: no refresh of the existing source closes this.
+
+### Rung 2 — the seven parents, at their own committees' pages: MIXED
+
+| Committee | URL | Result |
+|---|---|---|
+| Joint Committee on Taxation | `https://www.jct.gov/about-us/overview/` | 403 plain |
+| Joint Economic Committee | `https://www.jec.senate.gov/public/index.cfm/about-the-jec` | 403 plain |
+| Commission on Security and Cooperation in Europe | `https://www.csce.gov/about-csce/` | 404 — path is wrong, not walled |
+| Joint Committee on Printing | `https://www.congress.gov/committee/joint-committee-on-printing/jspr00` | 403 plain |
+
+### Rung 3 — full browser header set: ONE WALL FELL, attemptedAt 2026-08-19
+
+Same URLs, with a complete browser header set (`User-Agent`, `Accept`,
+`Accept-Language`), serialized, one request every two seconds.
+
+* **Joint Committee on Taxation → 200**, 22,803 bytes. The wall was a
+  header filter, not an access control. **This is a rung: `jct.gov` refuses a
+  bare client and serves a full header set.**
+* Joint Economic Committee → still **403**. Next rung is 4 (a different client
+  whose TLS fingerprint passes — curl beat this class in the f session) and then
+  5 (a different egress).
+* CSCE → still 404 on that path; the path is the problem. Next rung is 10
+  (the site's own sitemap) or 12 (identify the platform).
+
+### State: OPEN, with the next rungs named
+
+Not exhausted and not reported as a finding. The render says so in the gap's own
+register — "We haven't sourced what this subcommittee handles yet" — which is a
+fact about us, and never silence, which would have read as a fact about the
+subcommittee.
+
+**The next rungs, in order, for the 181 subcommittees:** rung 9 (linked
+documents — the House and Senate publish committee rules as PDFs, and a standing
+committee's rules state its subcommittees' jurisdictions), then rung 12 (the
+chamber platforms: `docs.house.gov`, `congress.gov`'s committee API), then rung
+7 (the committee sites' own JSON endpoints where they have them). For the 7
+parents: rungs 4, 5 and 10 as named per row above.
+
+**Deliberately not walked this session** (F01 carried 55 items and this one is a
+186-body hunt across ~40 hosts): the subcommittee sweep. Tracked, specced, and
+its first three rungs recorded above so the next session starts on rung 4 rather
+than on rung 1.

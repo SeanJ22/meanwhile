@@ -21,7 +21,10 @@ import {
 } from "@/lib/officials/card-sources";
 import type { Meeting } from "@/lib/sources/types";
 
-import { CardSection } from "@/components/officials/card-section";
+import {
+  CardSection,
+  CardSectionGroup,
+} from "@/components/officials/card-section";
 import { CardSourcesList } from "@/components/officials/card-sources-list";
 
 import { HowToBeHeard, MeetingAttributionNotes } from "../meeting-panel";
@@ -466,11 +469,16 @@ function BodySections({
         </PopupRow>
       ))}
 
-      {sections.map((section) => (
-        <CardSection key={section.id} title={section.title} meta={section.meta}>
-          {section.content ?? <Empty>{section.absence}</Empty>}
-        </CardSection>
-      ))}
+      {/* F01 4.1 (2026-08-19), applied as a CLASS: the author named the person
+          card, and a body battlecard is the same stack of pills with the same
+          failure available to it. One group, one open pill. */}
+      <CardSectionGroup>
+        {sections.map((section) => (
+          <CardSection key={section.id} title={section.title} meta={section.meta}>
+            {section.content ?? <Empty>{section.absence}</Empty>}
+          </CardSection>
+        ))}
+      </CardSectionGroup>
     </div>
   );
 }

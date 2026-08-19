@@ -344,25 +344,63 @@ function assertPassageQuestion(id: string, chamber: string, question: string | n
  * the pane opens with its content, and its sub-groups read as sub-groups.
  */
 
-test("the key-votes pane opens with its content, not with two closed bars", () => {
+/**
+ * **F01 5.3 (2026-08-19) REVERSED THIS TEST'S FIRST HALF**, on the author's
+ * direct instruction: *"it should not automatically expand both votes on laws
+ * and votes on people. They both should be collapsed."*
+ *
+ * So the assertion flips: no sub-group may ship `defaultOpen`. The concern the
+ * old rule was protecting — a pane whose whole visible content is one small
+ * paragraph over two bare bars — is now answered by the bars themselves, which
+ * carry their COUNT in the header. That is asserted here too, so the reversal
+ * cannot quietly take the compensating half with it.
+ *
+ * The sub-group MARKING half of the old test is unchanged and still enforced.
+ */
+test("F01 5.3: the key-votes sub-groups ship collapsed, and say how many they hold", () => {
   const surface = readFileSync(
     join(ROOT, "components", "officials", "key-votes-section.tsx"),
     "utf8",
   );
-  // Every CardSection this file renders opens with the pane. A view the
-  // reader just selected must not need two more taps to show anything.
   const sections = surface.match(/<CardSection[\s\S]*?>/g) ?? [];
   assert.ok(sections.length >= 3, "the pane should render its sub-groups");
   for (const section of sections) {
     assert.ok(
-      /defaultOpen/.test(section),
-      `a key-votes sub-group ships closed:\n${section}`,
+      !/defaultOpen/.test(section),
+      `a key-votes sub-group ships OPEN, which F01 5.3 reversed:\n${section}`,
     );
     assert.ok(
       /level="sub"/.test(section),
       `a key-votes sub-group is not marked as one:\n${section}`,
     );
+    // The count in the header is what a closed bar answers with.
+    assert.ok(
+      /meta=/.test(section),
+      `a collapsed sub-group with no count states nothing at all:\n${section}`,
+    );
   }
+});
+
+/**
+ * F01 5.1 — the headline counts what sits under it.
+ *
+ * `votedCount` is the whole of the fix, so it is tested directly rather than
+ * through a string match on a component.
+ */
+test("F01 5.1: only rows the member actually voted on are counted", async () => {
+  const { votedCount } = await import("../lib/votes/participation.ts");
+  const row = (positions: (string | null)[]) =>
+    ({ positions, refs: [], breakdowns: [], note: null }) as never;
+
+  // A recorded position of any kind counts — including a recorded absence
+  // from a roll call the member was seated for.
+  assert.equal(votedCount([row(["YES"]), row(["NO"]), row(["DID_NOT_VOTE"])]), 3);
+  // Every position null means either "not in this chamber" or "we haven't
+  // recorded it" — neither is a vote the member cast.
+  assert.equal(votedCount([row([null]), row([null, null])]), 0);
+  // A row with one held roll call and one gap still counts once, not twice.
+  assert.equal(votedCount([row(["YES", null])]), 1);
+  assert.equal(votedCount([]), 0);
 });
 
 test("a sub-group is visually a sub-group, and still a thing to click", () => {

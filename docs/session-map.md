@@ -200,11 +200,19 @@ post G7) · **D52** (state campaign finance: **NH, AZ, NJ in that
 order** — pre H) · **D62** (PRL adopted — "yes, probably will use PRL
 downloads"; feeds D05) · **M81** (jurisdiction badge — pre H) · **M95**
 (governors' term end and age — pre H) · **P02** (ballot mapping — pre H)
-· **P06 + P07 + P08** (consolidated into the **"What do I do now?"
-link** you described — one surface answering all three) · **D47**
-(state comparison — pre H) · **H03** (the re-walk cohort — post G7,
-pre H) · **M123** (Kearsarge towns — "wire them in now"; moves here from
-h2's brief since you've pulled it forward)
+· **D47** (state comparison — pre H) · **H03** (the re-walk cohort —
+post G7, pre H; the H prefix is its ID, not its queue, and it has been
+in this queue all along) · **M123** (Kearsarge towns — "wire them in
+now"; moves here from h2's brief since you've pulled it forward) ·
+**D50** (photos to 750, with rungs generated so it scales — moved here
+2026-08-18, g19: "Finish to 750, generate rungs so it can be done at
+scale" is a pre-H build and it was sitting in Queue 4) · **D03's
+three-state half** (NH, AZ, NJ — moved here 2026-08-18 for the same
+reason; the remaining 47 states stay in Queue 4)
+
+**Moved OUT of this queue 2026-08-18 (g19):** P06, P07 and P08 are
+TABLED by your ruling and now sit in Queue 6. Their "What do I do now?"
+consolidation is recorded there, not lost.
 
 ## Queue 4 — H itself (the hunt, briefs already written)
 
@@ -219,10 +227,12 @@ h2 / h3 / h4 stand, amended by your rulings:
 - **D46** — prop sponsor attribution ("build in H")
 - **X07** — the Facebook-as-campaign-site sweep ("run sweep, defer to H")
 - **D08** — ballot source hunt ("find other sources, defer to H")
-- **D50** — photos to 750, **with rungs generated so it scales** — the
-  rung-generation requirement goes into the brief
-- **D03** — finish state voting records for the named states and deploy;
-  defer the rest (flag 5: state list needs one confirmation)
+- **D03** — the REMAINING 47 states only. The three-state half moved to
+  Queue 3 on 2026-08-18 (g19), where its disposition always put it, and
+  has since been confirmed shipped: NH, AZ and NJ all serve state roll
+  calls today. What is deferred to H is the other 47.
+
+*(**D50** moved to Queue 3 on 2026-08-18 — see the note there.)*
 
 ## Queue 5 — Post-H
 
@@ -233,6 +243,13 @@ fix) · M92 · M93's build · P04 · P05 · P10 (**Marana** as the second
 jurisdiction) · T07 · V03 · V04 · V06 · V08
 
 ## Queue 6 — Tabled / non-code / kept in tracker
+
+**P06 + P07 + P08** — tabled 2026-08-18 (g19), your ruling. They were
+in Queue 3 as the consolidated **"What do I do now?" link** — one
+surface answering all three — and that consolidation is the shape they
+come back in if they come back. Nothing about them is deleted; they are
+tabled, not closed, and the tracker rows stand.
+
 
 Per your rulings, no scheduling: B02 (waits on the name) · B03 · B04 ·
 B05 · B07 · B08 · B09 · D23 (tabled for lawyer) · T01 · T02 · T06 ·

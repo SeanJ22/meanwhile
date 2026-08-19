@@ -233,3 +233,88 @@ test("A03/A05: nothing in this module generates a sentence", () => {
   // extraction can never stand in place of the record.
   assert.match(route, /agendaUrl/);
 });
+
+/* ══ g20, 2026-08-19: A03 and A05's named remainders ══════════════════════ */
+
+test("A03: a search that ran and found nothing renders, and says so", () => {
+  const source = readFileSync(
+    join(import.meta.dirname, "..", "components/ask/ask-box.tsx"),
+    "utf8",
+  );
+
+  // The rung used to render ONLY on a hit, so a reader who asked "is there
+  // a data center coming?" and got nothing saw no trace that anything had
+  // been searched. Silence there reads as "no", and "no" is the claim we
+  // are not entitled to make. Absence is never asserted; a search that ran
+  // and found nothing is a different fact from a search that never ran, and
+  // both are different from a rung that had no opinion at all.
+  assert.match(
+    source,
+    /\{agenda && agenda\.topic && \(/,
+    "the agenda block still gates on hits rather than on a recognised topic",
+  );
+  assert.match(source, /No mention of \$\{agenda\.topic\?\.label/);
+
+  // Nothing searched is not nothing found.
+  assert.match(source, /agenda\.searched === 0/);
+  assert.match(
+    source,
+    /don't hold any readable agendas for your area yet/,
+    "a zero-corpus search must say the corpus was empty, not that nothing was found",
+  );
+  assert.match(source, /not a statement that nothing is planned/);
+});
+
+test("A03: the corpus limit rides with the answer — agendas are not the permit record", () => {
+  const source = readFileSync(
+    join(import.meta.dirname, "..", "components/ask/ask-box.tsx"),
+    "utf8",
+  );
+
+  // A03's own recorded remainder: this searches AGENDAS, which is where
+  // zoning and permit items surface but is not the permit record itself. A
+  // permit application exists in a planning department's system before it
+  // reaches an agenda, and often never reaches one — so an unqualified "no
+  // mention on an agenda" lets a reader take it for "nothing has been
+  // filed", a much larger claim about records we have not wired.
+  assert.match(source, /not the permit or zoning-application record/i);
+  assert.match(source, /filed with a planning department long before/i);
+  assert.match(source, /haven&apos;t wired those systems/i);
+
+  // And it rides on the HIT case too, not only the empty one: a reader who
+  // found one mention still needs to know there may be filings behind it.
+  const block = source.slice(source.indexOf("{agenda && agenda.topic && ("));
+  const limitAt = block.indexOf("not the permit or zoning-application record");
+  const listAt = block.indexOf("{agenda.hits.map(");
+  assert.ok(limitAt > 0 && listAt > 0);
+  assert.ok(
+    limitAt < listAt,
+    "the corpus limit renders only after the hits — it must apply to both cases",
+  );
+});
+
+test("A05: the meeting card renders the clerk's items, using the one extractor", () => {
+  const source = readFileSync(
+    join(import.meta.dirname, "..", "components/map/popup/agenda-section.tsx"),
+    "utf8",
+  );
+
+  // g19 built agendaItems() and the route's meeting mode and recorded that
+  // nothing rendered them. This is the surface. It calls the SAME function
+  // the route calls rather than posting to it — one definition of what an
+  // agenda item is, so the two can never disagree on the same card.
+  assert.match(source, /import \{ agendaItems \} from "@\/lib\/routing\/agenda-search"/);
+  assert.match(source, /const items = agendaItems\(/);
+  assert.match(source, /On the docket/);
+
+  // A05's own rule: it sits alongside the raw agenda link and never
+  // replaces it. The document's full text still renders below the items.
+  assert.match(source, /sanitizeStoredText\(latest\.text\)/);
+  assert.match(source, /the full text is the record/i);
+
+  // An empty item list renders NOTHING — never "no items". The extraction
+  // is best-effort against collapsed PDF text, and our parser's failure
+  // must not become a claim about a government's agenda.
+  assert.match(source, /\{items\.length > 0 && \(/);
+  assert.doesNotMatch(source, /No items on this agenda/i);
+});

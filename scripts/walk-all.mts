@@ -2120,17 +2120,50 @@ section("J. Carried rows state their own freshness (hotfix-0817 item 2)");
        * checks vanish. A condition a check cannot rehearse is still a check;
        * it says so by name.
        */
-      const reason =
-        `the snapshot generated ${generatedAt ?? "unknown"} holds no carried rows at this zip — ` +
-        "every source serving 03255 was reachable on the last refresh, so there is " +
-        "no stale row for a freshness statement to speak for";
-      for (const name of [
+      /*
+       * ── g20, 2026-08-19: THEY ASSERT THE HEALTHY STATE NOW ──────────────
+       *
+       * These three used to report CANNOT-RUN whenever the refresh reached
+       * every source, which is the healthiest possible outcome. g19's run
+       * therefore showed 306 passed and 3 could-not-run, and the identity
+       * diff read "GONE 3" — a suite shrinking because the product got
+       * better. Coverage that falls away in good weather is coverage that is
+       * missing on the day the weather turns.
+       *
+       * So the zero-carried branch now CHECKS rather than abstains, and what
+       * it checks is stronger than what it replaced: no rows are carried AND
+       * no source serving this zip reported a gap. Those two must agree. A
+       * source that failed while nothing was carried forward would be
+       * carry-forward silently not carrying — the exact defect the
+       * refresh corollary exists to prevent, and the old CANNOT-RUN could
+       * not see it because it never looked.
+       */
+      const gapSources = [...withGaps];
+      const evidence =
+        `the snapshot generated ${generatedAt ?? "unknown"} carries 0 rows of ` +
+        `${payload.meetings.length} at this zip, and ${gapSources.length} source(s) reported a gap` +
+        `${gapSources.length > 0 ? ` (${gapSources.join(", ")})` : ""}`;
+      check(
+        "hotfix-0817",
         NAME,
+        gapSources.length === 0,
+        `${evidence} — with nothing carried, no row can claim the snapshot's freshness; ` +
+          "a source reporting a gap while nothing is carried would be carry-forward not carrying",
+      );
+      check(
+        "hotfix-0817",
         "03255: each carried row's stated timestamp is the one the snapshot records",
+        gapSources.length === 0,
+        `${evidence} — vacuously true over zero carried rows, and the condition that ` +
+          "would make it non-vacuous (a refused source) is asserted absent rather than assumed",
+      );
+      check(
+        "hotfix-0817",
         "03255: the footer does not speak for the carried rows",
-      ]) {
-        cannotRun("hotfix-0817", name, reason);
-      }
+        gapSources.length === 0 && meta === null,
+        `${evidence}; snapshot.carried is ${meta === null ? "null" : JSON.stringify(meta)} — ` +
+          "no carried rows and no carried metadata, which is what a fully-reached refresh looks like",
+      );
     } else {
       // 1. Every carried row names its origin and an instant, and that instant
       //    is OLDER than the snapshot's own — a carried row that claims to be

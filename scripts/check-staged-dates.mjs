@@ -32,6 +32,7 @@ import {
   scanText,
   scanTrackerCsv,
   today,
+  parseAllowlistSource,
 } from "./doc-dates.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -86,21 +87,15 @@ function loadAllowlist() {
   return readAllowlist(path);
 }
 
-/** `readAllowlist`'s extraction, against text already in hand. */
-function parseAllowlist(source) {
-  const start = source.indexOf("ALLOWLIST = [");
-  const end = source.indexOf("\n];", start);
-  if (start === -1 || end === -1) {
-    throw new Error(`no ALLOWLIST literal in ${ALLOWLIST_SOURCE}`);
-  }
-  const entries = [];
-  const re = /file:\s*"([^"]+)"[\s\S]*?date:\s*"(\d{4}-\d{2}-\d{2})"[\s\S]*?count:\s*(\d+)/g;
-  for (const m of source.slice(start, end).matchAll(re)) {
-    entries.push({ file: m[1], date: m[2], count: Number(m[3]) });
-  }
-  if (entries.length === 0) throw new Error("ALLOWLIST parsed to zero entries");
-  return entries;
-}
+/**
+ * 2026-08-19 (g20): this was a SECOND implementation of the extraction the
+ * test uses, and it drifted the moment the shared one learned to tell an
+ * honestly-empty allowlist from a broken parse — the hook then refused the
+ * very commit that emptied the list. It now calls the shared parser, which
+ * is what the file header above already claimed.
+ */
+const parseAllowlist = (source) =>
+  parseAllowlistSource(source, ALLOWLIST_SOURCE);
 
 let allowlist;
 try {

@@ -469,3 +469,96 @@ test("B15 g19: every recorded roll call carries its tally, its link and its veri
   // it, which is the empty-success shape this repo keeps catching.
   assert.ok(refs >= 53, `only ${refs} roll calls in the snapshot — expected at least 53`);
 });
+
+/* ══ B15 closes at 19 of 20, 2026-08-19 (g20) ═══════════════════════════════ */
+
+test("B15 g20: D68's overwrite is repaired — every House ref is distinct and dated", () => {
+  const snapshot = getKeyVotesSnapshot();
+  const laws = snapshot.entries.filter((e) => e.group === "LAWS");
+
+  // g19 overwrote four verified House roll calls with a Senate vehicle that
+  // has no House vote of its own, and the run printed a total that did not
+  // move because the entries kept their Senate refs. The symptom to check
+  // for is therefore NOT the total: it is two entries pointing at one ref.
+  const byRef = new Map<string, string[]>();
+  for (const entry of laws) {
+    for (const ref of entry.house) {
+      const key = ref.url ?? `${ref.congress}/${ref.session}/${ref.rollNumber}`;
+      byRef.set(key, [...(byRef.get(key) ?? []), entry.id]);
+    }
+  }
+  for (const [key, ids] of byRef) {
+    assert.equal(
+      ids.length,
+      1,
+      `${ids.join(" and ")} share the House roll call ${key} — the D68 shape`,
+    );
+  }
+
+  // The four April 2024 siblings, by name, each on its own House roll call.
+  const april = laws.filter((e) => e.id.startsWith("april-2024-"));
+  assert.equal(april.length, 4);
+  const rolls = april.map((e) => e.house[0]?.rollNumber).sort((a, b) => (a ?? 0) - (b ?? 0));
+  assert.deepEqual(rolls, [145, 146, 151, 152], "an April 2024 House roll call moved");
+
+  // House coverage, exact rather than "at least" — the floor a total hid.
+  assert.equal(
+    laws.filter((e) => e.house.length > 0).length,
+    19,
+    "House coverage across the LAWS list",
+  );
+});
+
+test("B15 g20: the shutdown entry is PARKED by the author, and a run cannot close it", async () => {
+  const { PARKED_KEY_VOTES } = await import("../lib/votes/key-votes.ts");
+
+  // A MISS is what a resolver could not find; it invites a better rung. A
+  // PARK is the author's decision that no attempt should be made, because
+  // the answer is his to give. The two must not be told apart only in prose.
+  assert.ok(PARKED_KEY_VOTES["funding-fight"]);
+  assert.match(PARKED_KEY_VOTES["funding-fight"], /Skip for now/);
+  assert.match(PARKED_KEY_VOTES["funding-fight"], /2026-08-19/);
+
+  const snapshot = getKeyVotesSnapshot();
+  for (const id of Object.keys(PARKED_KEY_VOTES)) {
+    const entry = snapshot.entries.find((e) => e.id === id);
+    assert.ok(entry, `${id} is parked but is not in the list`);
+    assert.equal(entry.house.length, 0, `${id}: parked and yet resolved`);
+    assert.equal(entry.senate.length, 0, `${id}: parked and yet resolved`);
+  }
+
+  /*
+   * THE DOOR THE LAST FIX LEFT OPEN. D68's mitigation is fill-only, which
+   * protects a chamber that ALREADY has a roll call. A parked entry has
+   * none, so fill-only would let the next run write one in — the exact
+   * failure the park exists to prevent. The resolver has to skip parked ids
+   * before it reaches the fill-only rule, and it has to say so.
+   */
+  const script = readFileSync(join(ROOT, "scripts", "fetch-law-votes.mts"), "utf8");
+  assert.match(script, /PARKED_KEY_VOTES\[entry\.id\]/);
+  assert.match(script, /PARKED \$\{entry\.id\}/);
+  assert.match(script, /author has PARKED and this run did not touch/);
+  const skipAt = script.indexOf("PARKED_KEY_VOTES[entry.id]");
+  const fillAt = script.indexOf("const house = fillOnly(");
+  assert.ok(
+    skipAt > 0 && skipAt < fillAt,
+    "the park is checked after fill-only — fill-only cannot protect an empty chamber",
+  );
+});
+
+test("B15 g20: the parked entry tells the reader what happened, not just that nothing is here", () => {
+  const entry = KEY_VOTES_LAWS.find((e) => e.id === "funding-fight");
+  assert.ok(entry);
+
+  // The generic gap line is true and vague — it reads as "nobody looked".
+  // What happened is a fact about OUR list: the entry names two things and
+  // Congress answered with more than one law. Both chambers say so, because
+  // the ambiguity is in the question rather than in either chamber's record.
+  for (const note of [entry.houseNote, entry.senateNote]) {
+    assert.ok(note, "a parked entry with no note falls to the generic line");
+    assert.match(note, /more than one appropriations law/);
+    assert.match(note, /rather than guessing/);
+    // Never a claim about the member.
+    assert.doesNotMatch(note, /did not vote|didn't vote|voted against/i);
+  }
+});

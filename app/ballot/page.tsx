@@ -26,6 +26,9 @@ import { BallotNarrowing } from "@/components/ballot/ballot-narrowing";
 import { photosFirst } from "@/lib/ballot/photo-order";
 import { FilingNote } from "@/components/ballot/filing-note";
 import { CandidateCard } from "@/components/ballot/candidate-card";
+import { CandidatePositions } from "@/components/ballot/candidate-positions";
+import { positionsFor, positionsHeadline } from "@/lib/candidates/positions";
+import { derivedBlurbFor } from "@/lib/candidates/blurbs";
 import { MyPicks } from "@/components/ballot/my-picks";
 import { jurisdictionKeyForContestId } from "@/lib/ballot/pick-jurisdiction";
 import { PickControl } from "@/components/ballot/pick-control";
@@ -691,6 +694,7 @@ export default async function BallotPage({
                         }
                         card={cardForNominee(contest.id, nominee.name)}
                         links={linksForNominee(contest.id, nominee.name)}
+                        derivedBlurb={derivedBlurbFor(`${contest.id}|${nominee.name}`)}
                         nameSlot={
                           <IncumbentName
                             targetKey={`${contest.id}|${nominee.name}`}
@@ -702,6 +706,17 @@ export default async function BallotPage({
                             }
                           />
                         }
+                      />
+                      {/* P02 + D05 (2026-08-19, g20): their own words, per
+                          issue, sourced. The SAME issue list for every
+                          candidate in the contest — that is the equal-effort
+                          rule made visible, and the header states the
+                          denominator before any count. */}
+                      <CandidatePositions
+                        headline={positionsHeadline(
+                          positionsFor(`${contest.id}|${nominee.name}`),
+                        )}
+                        positions={positionsFor(`${contest.id}|${nominee.name}`)}
                       />
                       <IncumbentRecord
                         targetKey={`${contest.id}|${nominee.name}`}
@@ -794,6 +809,7 @@ export default async function BallotPage({
                           }
                           card={cardForCandidacy(cand.id)}
                           links={linksForCandidacy(cand.id)}
+                          derivedBlurb={derivedBlurbFor(cand.id)}
                           filedSiteUrl={cand.websiteUrl}
                           nameSlot={
                             <IncumbentName
@@ -806,6 +822,14 @@ export default async function BallotPage({
                               }
                             />
                           }
+                        />
+                        {/* P02 + D05, the filed-candidate side. Identical
+                            call, identical issue list — a build where the
+                            two sides could diverge would produce a ranking
+                            by accident. */}
+                        <CandidatePositions
+                          headline={positionsHeadline(positionsFor(cand.id))}
+                          positions={positionsFor(cand.id)}
                         />
                         <IncumbentRecord
                           targetKey={cand.id}

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import { noticeSummaryFor } from "@/lib/meetings/notice-summaries";
 import { formatDateMDY } from "@/lib/map/format";
+import { agendaItems } from "@/lib/routing/agenda-search";
 
 /**
  * What the meeting is actually about (4c) — the stored notice/agenda text,
@@ -151,9 +152,56 @@ export function AgendaSection({ meetingId, agendaUrl }: AgendaSectionProps) {
   }
 
   const summary = noticeSummaryFor(meetingId, latest.contentHash);
+  /*
+   * A05's reader-facing surface (2026-08-19, g20) — the row's remainder,
+   * and the last thing between it and Done.
+   *
+   * g19 built the extraction and `POST /api/ask/agenda` in meeting mode and
+   * said plainly that nothing rendered it. This is where it renders: on the
+   * meeting card, above the document's own text, beside the raw link the
+   * row requires it to sit beside and never replace.
+   *
+   * It calls `agendaItems` DIRECTLY rather than posting to the route. Same
+   * function, so the two can never disagree about what an item is — and it
+   * is one fewer request for a reader who already has the text on screen,
+   * which the friction rule makes the default rather than the optimisation.
+   *
+   * NOT A SUMMARY. These are the clerk's own numbered and lettered lines,
+   * verbatim, cut only at length. The row's word is "summarized" and this
+   * deliberately is not one: a summary of an agenda is a claim about what a
+   * government is about to do, made by us.
+   *
+   * An empty list renders NOTHING — never "no items". The extraction is
+   * best-effort against collapsed PDF text (see A05's note: adjacent items
+   * merge where neither ends in a sentence mark), and the full document is
+   * directly below, so silence here costs the reader nothing while a "none"
+   * would be our parser's failure wearing the agenda's clothes.
+   */
+  const items = agendaItems(sanitizeStoredText(latest.text));
 
   return (
     <div className="mt-1.5">
+      {items.length > 0 && (
+        <div className="mb-2">
+          <p className="font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
+            On the docket — the agenda&apos;s own items, in its words
+          </p>
+          <ol className="mt-1.5 space-y-1">
+            {items.map((item) => (
+              <li
+                key={item}
+                className="text-[0.75rem] leading-relaxed text-paper-dim"
+              >
+                {item}
+              </li>
+            ))}
+          </ol>
+          <p className="mt-1 text-[0.625rem] text-muted">
+            Read straight off the document below — nothing here is
+            summarised, and the full text is the record.
+          </p>
+        </div>
+      )}
       {summary && (
         // Curated from this exact document version (4d): labeled, above,
         // never replacing the official text below.

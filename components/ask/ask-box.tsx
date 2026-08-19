@@ -364,7 +364,24 @@ export function AskBox({
        * decided.
        */
       const agendaAnswer = await askAgenda(question);
-      if (agendaAnswer && agendaAnswer.hits.length > 0) setAgenda(agendaAnswer);
+      /*
+       * A03's remainder, closed 2026-08-19 (g20): a ZERO-HIT search is a
+       * result and it renders.
+       *
+       * Until now this block rendered only when there was a hit, so a
+       * reader who asked "is there a data center coming?" and got nothing
+       * saw no trace that anything had been searched. Silence there reads
+       * as "no", and "no" is precisely the claim we are not entitled to
+       * make — the standing rule is that absence is never asserted, and a
+       * search that ran and found nothing is not the same fact as a search
+       * that never ran.
+       *
+       * So the rung reports whenever it RECOGNISED the topic, and the
+       * sentence carries what it actually looked at. A null topic still
+       * renders nothing: that means this rung had no opinion, not that it
+       * looked and came back empty.
+       */
+      if (agendaAnswer && agendaAnswer.topic) setAgenda(agendaAnswer);
 
       // Keyword-first, structurally: the classifier is consulted only after
       // the deterministic matcher has already refused. The author's ruling
@@ -691,7 +708,7 @@ export function AskBox({
         </div>
       )}
 
-        {agenda && agenda.hits.length > 0 && (
+        {agenda && agenda.topic && (
           /*
             A03 (2026-08-18). Placed ABOVE the routed steps on purpose: the
             reader asked whether a thing is coming, and a line a clerk put
@@ -711,14 +728,41 @@ export function AskBox({
           */
           <div className="mt-2">
             <p className="t-eyebrow text-muted">
-              On an agenda near you
+              {agenda.hitsFound > 0
+                ? "On an agenda near you"
+                : "What we searched"}
             </p>
             <p className="mt-0.5 text-[0.75rem] leading-relaxed text-paper-dim">
-              {agenda.hits.length === agenda.hitsFound
-                ? `${agenda.hitsFound} mention${agenda.hitsFound === 1 ? "" : "s"} of ${agenda.topic?.label ?? "this"} across the ${agenda.searched} agenda${agenda.searched === 1 ? "" : "s"} we hold for your area.`
-                : `${agenda.hitsFound} mentions of ${agenda.topic?.label ?? "this"} across the ${agenda.searched} agendas we hold for your area — the first ${agenda.hits.length} are below.`}
+              {agenda.searched === 0
+                ? // Nothing searched is NOT nothing found. The two read the
+                  // same to a reader unless we say which one happened.
+                  `We don't hold any readable agendas for your area yet, so nothing was searched for ${agenda.topic?.label ?? "this"}. That is a gap in what we have, not a statement that nothing is planned.`
+                : agenda.hitsFound === 0
+                  ? `No mention of ${agenda.topic?.label ?? "this"} in the ${agenda.searched} agenda${agenda.searched === 1 ? "" : "s"} we hold for your area.`
+                  : agenda.hits.length === agenda.hitsFound
+                    ? `${agenda.hitsFound} mention${agenda.hitsFound === 1 ? "" : "s"} of ${agenda.topic?.label ?? "this"} across the ${agenda.searched} agenda${agenda.searched === 1 ? "" : "s"} we hold for your area.`
+                    : `${agenda.hitsFound} mentions of ${agenda.topic?.label ?? "this"} across the ${agenda.searched} agendas we hold for your area — the first ${agenda.hits.length} are below.`}
               {agenda.unreadable > 0 &&
                 ` ${agenda.unreadable} more agenda${agenda.unreadable === 1 ? "" : "s"} we hold but could not read, so ${agenda.unreadable === 1 ? "it is" : "they are"} not included.`}
+            </p>
+            {/*
+              A03's remainder, stated where the reader is (2026-08-19, g20).
+              This rung searches AGENDAS. A permit application, a rezoning
+              filing and a site-plan submission all exist in a jurisdiction's
+              permitting system BEFORE they reach an agenda, and often
+              without ever reaching one. Letting "no mention on an agenda"
+              stand unqualified would let a reader take it for "nothing has
+              been filed" — a much bigger claim, about records we have not
+              wired. So the limit of the corpus rides with the answer, in
+              the hit case as well as the empty one: a reader who found one
+              mention also needs to know there may be filings behind it.
+            */}
+            <p className="mt-1 text-[0.6875rem] leading-relaxed text-muted">
+              This searches meeting agendas — what bodies have scheduled to
+              discuss. It is not the permit or zoning-application record:
+              something can be filed with a planning department long before
+              it reaches an agenda, and we haven&apos;t wired those systems
+              yet.
             </p>
             <ul className="mt-1.5 space-y-2">
               {agenda.hits.map((hit) => (

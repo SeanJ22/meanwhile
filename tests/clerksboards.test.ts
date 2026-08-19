@@ -287,3 +287,144 @@ test("a body that publishes no schedule is still declined", () => {
     assert.equal(expandSchedule(text, G19_START, G19_END), null, text);
   }
 });
+
+/* ══ D67, 2026-08-19 (g20): a qualifier the parser read past ════════════════
+ *
+ * THE WINDOW IS DELIBERATELY A FULL YEAR IN THESE TESTS. The defect was
+ * invisible in the serving window — 90 days back plus 60 forward — because
+ * the recurrence loop walked exactly five months and never reached June. A
+ * test written against today's window would have passed on the broken
+ * parser, which is D67's own note and the reason these assert the NEGATIVE.
+ */
+
+const YEAR_START = new Date(Date.UTC(2026, 0, 1));
+const YEAR_END = new Date(Date.UTC(2026, 11, 31));
+
+test("D67: a season restriction removes the months the body does not sit", () => {
+  // Board 40, verbatim from the Clerk's page.
+  const out = expandSchedule(
+    "2nd Tuesday of each month September through May @ 6:00 p.m.",
+    YEAR_START,
+    YEAR_END,
+  );
+  assert.ok(out);
+  const months = [...new Set(out.map((i) => i.mo))].sort((a, b) => a - b);
+
+  // THE NEGATIVE FIRST — it is the whole finding. A board publishing nine
+  // sittings would have been given twelve, and June, July and August would
+  // have carried this government's name on dates it never scheduled.
+  for (const summer of [6, 7, 8]) {
+    assert.ok(
+      !months.includes(summer),
+      `month ${summer} is outside "September through May" and was emitted anyway`,
+    );
+  }
+  // The range WRAPS the year end. Read as an ascending span it would be empty.
+  assert.deepEqual(months, [1, 2, 3, 4, 5, 9, 10, 11, 12]);
+  assert.equal(out.length, 9);
+});
+
+test("D67: a published per-month date override wins over the recurrence", () => {
+  // Boards 58 and 59, verbatim.
+  const out = expandSchedule(
+    "1st Thursday of each month @ 9:00 a.m. (except January it will be 01/08/26 and July will be 07/09/26)",
+    YEAR_START,
+    YEAR_END,
+  );
+  assert.ok(out);
+  const byMonth = new Map(out.map((i) => [i.mo, i.d]));
+
+  // The Clerk said these two months are different, twice a year, on two
+  // boards. Reading past that printed the ordinary Nth-weekday date.
+  assert.equal(byMonth.get(1), 8, "January must be the published 01/08, not the 1st Thursday");
+  assert.equal(byMonth.get(7), 9, "July must be the published 07/09, not the 1st Thursday");
+  // Every other month keeps the rule — an exception is not a replacement.
+  assert.equal(byMonth.get(2), 5);
+  assert.equal(byMonth.get(12), 3);
+  assert.equal(out.length, 12);
+});
+
+test("D67: an override written for one year is not carried into another", () => {
+  // "01/08/26" is a fact about January 2026. In January 2027 we know only
+  // that the ordinary rule did not hold once, and not what replaces it —
+  // so the month yields NOTHING rather than the rule's date. Same reasoning
+  // as a TBD month in grammar D.
+  const out = expandSchedule(
+    "1st Thursday of each month @ 9:00 a.m. (except January it will be 01/08/26 and July will be 07/09/26)",
+    new Date(Date.UTC(2027, 0, 1)),
+    new Date(Date.UTC(2027, 2, 31)),
+  );
+  assert.ok(out);
+  assert.ok(
+    !out.some((i) => i.mo === 1),
+    "a 2026 override was applied to, or overridden in, 2027",
+  );
+  assert.deepEqual([...new Set(out.map((i) => i.mo))].sort(), [2, 3]);
+});
+
+test("D67: a qualifier the parser cannot read declines the board, never expands around it", () => {
+  // The rule that makes the two above safe rather than merely better. A
+  // grammar that silently ignores a clause it does not understand emits
+  // dates the body never published — which is this defect exactly.
+  for (const text of [
+    "2nd Tuesday of each month except in the summer @ 6:00 p.m.",
+    "2nd Tuesday of each month, September through the spring @ 6:00 p.m.",
+    "1st Thursday of each month @ 9:00 a.m. (except as announced)",
+  ]) {
+    assert.equal(
+      expandSchedule(text, YEAR_START, YEAR_END),
+      null,
+      `expanded around a qualifier it did not read: ${text}`,
+    );
+  }
+});
+
+test("D67: an exception parenthetical is never read as a month restriction", () => {
+  // Grammar C reads a month SET out of a parenthetical. An exception
+  // parenthetical also names months and means the opposite — reading one as
+  // a set would cut a monthly board to two sittings a year.
+  const out = expandSchedule(
+    "1st Thursday of each month @ 9:00 a.m. (except January it will be 01/08/26 and July will be 07/09/26)",
+    YEAR_START,
+    YEAR_END,
+  );
+  assert.ok(out);
+  assert.equal(out.length, 12, "the board meets monthly, not in January and July only");
+});
+
+test("D67: the recurrence walks the WINDOW, and stops dropping its last sitting", () => {
+  /*
+   * A SECOND DEFECT, found by widening the walk and asked for rather than
+   * assumed: the fixed five-iteration loop did not match the serving window,
+   * it only looked like it did.
+   *
+   * The window is 90 days back and 60 forward. The cursor is normalised to
+   * the FIRST of the window's opening month, so five iterations from (say)
+   * May 1 reach September — while the window itself runs into October. Every
+   * monthly board was therefore losing its last in-window sitting, silently,
+   * on every run. Not an invented date; a real published one, dropped.
+   *
+   * A count check would not have caught it either: five months walked, five
+   * or so meetings emitted, nothing obviously missing. It surfaced only when
+   * the walk was bounded by the thing it was supposed to be bounded by.
+   */
+  const now = new Date(Date.UTC(2026, 7, 19));
+  const start = new Date(now.getTime() - 90 * 86_400_000); // 2026-05-21
+  const end = new Date(now.getTime() + 60 * 86_400_000); // 2026-10-18
+  const plain = expandSchedule("1st Wednesday of each month @ 8:00 a.m.", start, end);
+  assert.ok(plain);
+
+  // 10/7 is inside the window and the old loop never reached it.
+  assert.deepEqual(
+    plain.map((i) => `${i.mo}/${i.d}`),
+    ["6/3", "7/1", "8/5", "9/2", "10/7"],
+  );
+  // And nothing outside the window: 5/6 is before it, 11/4 after it.
+  for (const inst of plain) {
+    const t = Date.UTC(inst.y, inst.mo - 1, inst.d);
+    assert.ok(
+      t >= start.getTime() - 86_400_000 && t <= end.getTime(),
+      `${inst.mo}/${inst.d} is outside the serving window`,
+    );
+  }
+});

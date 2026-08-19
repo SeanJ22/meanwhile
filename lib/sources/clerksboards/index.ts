@@ -148,6 +148,11 @@ const MONTH_NAMES = [
 function monthsInParens(text: string): number[] | null {
   const paren = /\(([^)]*)\)/.exec(text);
   if (!paren) return null;
+  // An EXCEPTION parenthetical also names months, and they mean the
+  // opposite: not "these are the months" but "these months move". Reading
+  // one as a month set would restrict a monthly board to two sittings a
+  // year. (D67, 2026-08-19.)
+  if (/except/i.test(paren[1])) return null;
   const months: number[] = [];
   for (const token of paren[1].toLowerCase().split(/[^a-z]+/)) {
     if (!token) continue;
@@ -155,6 +160,112 @@ function monthsInParens(text: string): number[] | null {
     if (idx >= 0 && !months.includes(idx + 1)) months.push(idx + 1);
   }
   return months.length > 0 ? months.sort((a, b) => a - b) : null;
+}
+
+/**
+ * **A season restriction on a recurrence** — `2nd Tuesday of each month
+ * September through May @ 6:00 p.m.` (board 40). Returns the 1-12 months the
+ * rule actually covers, or null when no restriction is written.
+ *
+ * D67, fixed 2026-08-19 (g20). The parser read past this clause entirely, so
+ * a board that publishes nine sittings a year would have been given twelve —
+ * June, July and August dates the body never scheduled, printed under its
+ * name. It produced no wrong date in the serving window only because the
+ * recurrence loop walks five months from the window start; the defect was
+ * one window widening away from being visible, which is not the same as
+ * being absent.
+ *
+ * The range WRAPS. September through May is nine months across a year
+ * boundary, and reading it as an ascending span would return nothing at all.
+ */
+function monthRestriction(text: string): Set<number> | null {
+  const span = new RegExp(
+    "\\b(" +
+      MONTH_NAMES.join("|") +
+      ")\\b\\s*(?:through|thru|to|—|–|-)\\s*\\b(" +
+      MONTH_NAMES.join("|") +
+      ")\\b",
+    "i",
+  ).exec(text);
+  if (!span) return null;
+  const from = MONTH_NAMES.indexOf(span[1].toLowerCase()) + 1;
+  const to = MONTH_NAMES.indexOf(span[2].toLowerCase()) + 1;
+  if (from < 1 || to < 1) return null;
+  const months = new Set<number>();
+  for (let m = from, guard = 0; guard < 12; guard += 1) {
+    months.add(m);
+    if (m === to) break;
+    m = (m % 12) + 1;
+  }
+  return months;
+}
+
+/**
+ * **A per-month date override** — `1st Thursday of each month @ 9:00 a.m.
+ * (except January it will be 01/08/26 and July will be 07/09/26)` (boards 58
+ * and 59). Returns month → the published date for that month.
+ *
+ * The other half of D67, and a different shape from the restriction above:
+ * this does not remove a sitting, it MOVES one. Reading past it printed the
+ * ordinary Nth-weekday date for January and July — two dates a year, on both
+ * boards, that the Clerk had explicitly said were different.
+ *
+ * Only read out of a parenthetical containing "except", so an ordinary date
+ * elsewhere in the text cannot be mistaken for an exception.
+ */
+function monthOverrides(text: string): Map<number, { y: number; mo: number; d: number }> {
+  const out = new Map<number, { y: number; mo: number; d: number }>();
+  for (const paren of text.matchAll(/\(([^)]*)\)/g)) {
+    const inner = paren[1];
+    if (!/except/i.test(inner)) continue;
+    const pairs = inner.matchAll(
+      new RegExp(
+        "\\b(" + MONTH_NAMES.join("|") + ")\\b[^0-9]{0,40}(\\d{1,2})/(\\d{1,2})/(\\d{2,4})",
+        "gi",
+      ),
+    );
+    for (const p of pairs) {
+      const month = MONTH_NAMES.indexOf(p[1].toLowerCase()) + 1;
+      const mo = Number(p[2]);
+      const d = Number(p[3]);
+      const rawYear = Number(p[4]);
+      const y = rawYear < 100 ? 2000 + rawYear : rawYear;
+      // The named month and the date's own month must agree. "except
+      // January it will be 07/09/26" is not something to interpret; it is
+      // something to decline, and dropping it here means the ordinary rule
+      // stands for January — which `unreadableQualifier` then catches.
+      if (month >= 1 && mo === month && d >= 1 && d <= 31) out.set(month, { y, mo, d });
+    }
+  }
+  return out;
+}
+
+/**
+ * **Does this text carry a qualifier we did not read?**
+ *
+ * The rule that makes the two functions above safe rather than merely
+ * better. A grammar that silently ignores a clause it does not understand
+ * emits dates the body never published — which is D67 exactly. So a
+ * recurrence carrying the WORDS of a restriction or an exception, from which
+ * we extracted neither, is DECLINED: it returns null, the caller counts the
+ * drop, and the board renders as one whose schedule we could not read rather
+ * than as one with sittings it never scheduled.
+ *
+ * Declining costs us a board. Guessing costs a reader a wrong date under a
+ * government's name, and this product's order of trade has been settled.
+ */
+function unreadableQualifier(
+  text: string,
+  restriction: Set<number> | null,
+  overrides: Map<number, unknown>,
+): boolean {
+  const hasRestrictionWords =
+    /\b(?:through|thru)\b/i.test(text) ||
+    new RegExp("\\b(" + MONTH_NAMES.join("|") + ")\\b\\s*(?:to|—|–)\\s*\\b(" + MONTH_NAMES.join("|") + ")\\b", "i").test(text);
+  const hasExceptWords = /\bexcept\b/i.test(text);
+  if (hasRestrictionWords && !restriction) return true;
+  if (hasExceptWords && overrides.size === 0) return true;
+  return false;
 }
 
 /** Calendar date of the Nth <weekday> of a month, as UTC parts. */
@@ -212,20 +323,49 @@ export function expandSchedule(
     "i",
   ).exec(scheduleText);
   if (recur) {
+    // D67 (2026-08-19, g20). A recurrence may carry a SEASON — "September
+    // through May" — and per-month DATE OVERRIDES — "(except January it will
+    // be 01/08/26...)". Both were read past, so the expansion was broader
+    // than what the body published. A qualifier we cannot read declines the
+    // whole board rather than expanding around it.
+    const restriction = monthRestriction(scheduleText);
+    const overrides = monthOverrides(scheduleText);
+    if (unreadableQualifier(scheduleText, restriction, overrides)) return null;
+
     const nth = Number(recur[1][0]);
     const weekday = WEEKDAYS.indexOf(recur[2].toLowerCase());
     const out: ScheduleInstance[] = [];
     const cursor = new Date(windowStart);
     cursor.setUTCDate(1);
-    for (let i = 0; i < 5; i++) {
-      const inst = nthWeekdayOf(
-        cursor.getUTCFullYear(),
-        cursor.getUTCMonth() + 1,
-        weekday,
-        nth,
-      );
-      if (inst && inWindow({ ...inst, ...time })) out.push({ ...inst, ...time });
+    /*
+     * Walk the WINDOW, not a fixed five months (D67, 2026-08-19).
+     *
+     * The old loop walked exactly five iterations, which happens to match
+     * today's window — 90 days back plus 60 forward. That coincidence is
+     * what hid this whole defect: a season restriction being read past could
+     * not produce a wrong date while the loop never reached June. Bounding
+     * the walk by the window instead makes the restriction observable, keeps
+     * the output identical at today's window, and stops the fix from being
+     * one constant change away from useless. The 24 is a runaway guard, the
+     * same one grammar C uses.
+     */
+    for (let i = 0; i < 24; i++) {
+      const y = cursor.getUTCFullYear();
+      const mo = cursor.getUTCMonth() + 1;
       cursor.setUTCMonth(cursor.getUTCMonth() + 1);
+      if (Date.UTC(y, mo - 1, 1) > windowEnd.getTime()) break;
+      // Outside the published season: the body said it does not sit.
+      if (restriction && !restriction.has(mo)) continue;
+      // The Clerk named this month's date explicitly. It wins over the rule.
+      //
+      // An override is written for ONE year ("01/08/26"). In a later year we
+      // know only that the ordinary rule does not hold for that month and
+      // not what replaces it, so the month yields NOTHING rather than the
+      // rule's date — the same reasoning as a TBD month in grammar D.
+      const override = overrides.get(mo);
+      if (override && override.y !== y) continue;
+      const inst = override ?? nthWeekdayOf(y, mo, weekday, nth);
+      if (inst && inWindow({ ...inst, ...time })) out.push({ ...inst, ...time });
     }
     return out;
   }

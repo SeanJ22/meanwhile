@@ -1609,3 +1609,270 @@ test("D06: planted contributor-level data reaches no sold aggregate", async () =
   assert.doesNotMatch(aggregateSource, /funding\/concentration/);
   assert.doesNotMatch(aggregateSource, /concentrationOf/);
 });
+
+/* ══ D06's third feature, 2026-08-19 (g20): concentration on the FEC's axis ══
+ *
+ * The author's ruling was "Accept" — industry concentration ships as
+ * concentration by the FEC's OWN entity typing, because a real industry
+ * taxonomy is always an aggregator's proprietary classification and the
+ * source rule excludes those. These guard the two things that could turn
+ * that from carrying meaning into generating it.
+ */
+
+test("D06 g20: bands come from the FEC's filed typing, and cross no sampled base", async () => {
+  const { typeConcentrationOf, typeConcentrationSentences } = await import(
+    "../lib/funding/type-concentration.ts"
+  );
+  const concentration = typeConcentrationOf([
+    // A trade association's PAC: committee type N, org type T.
+    row({
+      kind: "COMMITTEE_OR_ORGANIZATION",
+      contributorName: "SOME TRADE ASSOCIATION PAC",
+      amount: 10_000,
+      committeeType: "N",
+      organizationType: "T",
+    }),
+    // A labor PAC: committee type Q, org type L.
+    row({
+      kind: "COMMITTEE_OR_ORGANIZATION",
+      contributorName: "SOME UNION PAC",
+      amount: 4_000,
+      committeeType: "Q",
+      organizationType: "L",
+    }),
+    // An individual — must never appear in a band.
+    row({ kind: "INDIVIDUAL", contributorName: "SOMEBODY, A", amount: 99_000 }),
+  ]);
+  assert.ok(concentration);
+
+  // Committee side only. The individual's $99,000 is the biggest number in
+  // the list and must not be in the base: the two lists are separately
+  // sampled top-fives, so a band spanning them would be a share of a base
+  // we chose rather than of anything the campaign reported.
+  assert.equal(concentration.totalAmount, 14_000);
+  assert.equal(concentration.contributionCount, 2);
+  assert.equal(concentration.bandCount, 2);
+  assert.equal(concentration.bands[0].id, "pac-trade-association");
+  assert.equal(concentration.bands[0].amount, 10_000);
+  assert.equal(concentration.bands[1].id, "pac-labor");
+
+  const sentences = typeConcentrationSentences(concentration).join(" ");
+  assert.match(sentences, /didn't come from individual donors/);
+  assert.match(sentences, /\$14,000/);
+  assert.doesNotMatch(sentences, /99,000/);
+  // Never an industry, and it says so rather than leaving the reader to
+  // assume these categories are one.
+  assert.match(sentences, /don't sort donors into industries or causes/i);
+});
+
+test("D06 g20: a filing with no typing is a named gap, not the generic organization", async () => {
+  const { typeConcentrationOf, UNFILED_BAND_ID } = await import(
+    "../lib/funding/type-concentration.ts"
+  );
+  const concentration = typeConcentrationOf([
+    row({
+      kind: "COMMITTEE_OR_ORGANIZATION",
+      contributorName: "UNTYPED COMMITTEE",
+      amount: 2_500,
+      committeeType: null,
+      organizationType: null,
+      designation: null,
+    }),
+  ]);
+  assert.ok(concentration);
+  // The render-default rule, one layer down: defaulting an absent typing
+  // into "an organization" would convert our gap into a claim about the
+  // filer. The band's label says whose gap it is — the filing's.
+  assert.equal(concentration.bands[0].id, UNFILED_BAND_ID);
+  assert.match(concentration.bands[0].label, /filing doesn't state its type/i);
+});
+
+test("D06 g20: no committee money renders nothing, not an empty category list", async () => {
+  const { typeConcentrationOf } = await import(
+    "../lib/funding/type-concentration.ts"
+  );
+  assert.equal(typeConcentrationOf([]), null);
+  assert.equal(
+    typeConcentrationOf([row({ kind: "INDIVIDUAL", amount: 500 })]),
+    null,
+    "an all-individual list has no committee base — a zero row would read as a claim",
+  );
+});
+
+test("D06 g20: every band label comes from the one author-reviewable table", async () => {
+  const { typeConcentrationOf, UNFILED_BAND_ID } = await import(
+    "../lib/funding/type-concentration.ts"
+  );
+  const { COMMITTEE_TYPE_LABELS } = await import(
+    "../lib/funding/committee-types.ts"
+  );
+  const { NON_TABLE_BAND_IDS } = await import("../lib/funding/labels.ts");
+  const allowed = new Set<string>(COMMITTEE_TYPE_LABELS.map((l) => l.id));
+  for (const id of NON_TABLE_BAND_IDS) allowed.add(id);
+  assert.ok(allowed.has(UNFILED_BAND_ID));
+
+  // Every committee type and organization type the FEC publishes, so a new
+  // band cannot appear without appearing in the table first.
+  const codes = "HSPNQOUVWXYZDEIC".split("");
+  const orgTypes = [null, "C", "L", "M", "T", "V", "W"];
+  const designations = [null, "A", "B", "D", "J", "P", "U"];
+  const rows = [];
+  for (const committeeType of codes) {
+    for (const organizationType of orgTypes) {
+      for (const designation of designations) {
+        rows.push(
+          row({
+            kind: "COMMITTEE_OR_ORGANIZATION",
+            amount: 100,
+            committeeType,
+            organizationType,
+            designation,
+          }),
+        );
+      }
+    }
+  }
+  const concentration = typeConcentrationOf(rows);
+  assert.ok(concentration);
+  for (const band of concentration.bands) {
+    assert.ok(
+      allowed.has(band.id),
+      `band ${band.id} is not in COMMITTEE_TYPE_LABELS — a label reached a reader from outside the table`,
+    );
+  }
+  // And the parts equal the whole: no row silently dropped out of a band.
+  const summed = concentration.bands.reduce((s, b) => s + b.amount, 0);
+  assert.equal(summed, concentration.totalAmount);
+  const counted = concentration.bands.reduce((s, b) => s + b.count, 0);
+  assert.equal(counted, concentration.contributionCount);
+});
+
+test("D06 g20: the type bands reach no sold aggregate either", async () => {
+  const aggregateSource = readFileSync(
+    join(process.cwd(), "lib/signal/aggregate.ts"),
+    "utf8",
+  );
+  assert.doesNotMatch(aggregateSource, /type-concentration/);
+  assert.doesNotMatch(aggregateSource, /typeConcentrationOf/);
+});
+
+test("D06 g20: the candidate's own money is never typed as an untyped committee", async () => {
+  const { typeConcentrationOf, typeConcentrationSentences, OWN_MONEY_BAND_ID } =
+    await import("../lib/funding/type-concentration.ts");
+
+  // THE REAL DEFECT, caught by reading data/fec/fec-2026.json rather than a
+  // fixture: a candidate lending their campaign money files as entity CAN
+  // on line 13A, and the FEC puts that on the NON-individual side. The
+  // first draft asked the committee table directly, which does not answer
+  // for CAN, so Lily Tang Williams' $80,000 of her own money would have
+  // rendered as "a committee whose filing doesn't state its type" — the
+  // largest number on her card, and a false claim about a filing that
+  // states its type perfectly well.
+  const concentration = typeConcentrationOf([
+    row({
+      kind: "COMMITTEE_OR_ORGANIZATION",
+      contributorName: "WILLIAMS, LILY TANG",
+      amount: 80_000,
+      entityType: "CAN",
+      lineNumber: "13A",
+    }),
+    row({
+      kind: "COMMITTEE_OR_ORGANIZATION",
+      contributorName: "SOME PAC",
+      amount: 5_000,
+      committeeType: "N",
+      organizationType: "C",
+    }),
+  ]);
+  assert.ok(concentration);
+  const own = concentration.bands.find((b) => b.id === OWN_MONEY_BAND_ID);
+  assert.ok(own, "the candidate's own money has no band of its own");
+  assert.equal(own.amount, 80_000);
+  assert.match(own.label, /the candidate's own money/i);
+
+  const sentences = typeConcentrationSentences(concentration).join(" ");
+  assert.doesNotMatch(sentences, /filing doesn't state its type/i);
+  // And it reads as English: the own-money band is the money, not a source.
+  assert.match(sentences, /\$80,000 was the candidate's own money/);
+});
+
+test("D06 g20: the FEC's entity typing answers where committee typing is absent", async () => {
+  const { typeConcentrationOf } = await import(
+    "../lib/funding/type-concentration.ts"
+  );
+
+  // The other half of the same real finding: ActBlue and WinRed file as
+  // entity ORG, a county party as COM, a candidate's second account as CCM
+  // — all with no committee_type at all. The FEC classified every one of
+  // them; only the committee table does not reach them, and calling that
+  // OUR gap the FILING's gap is the manufactured claim.
+  const concentration = typeConcentrationOf([
+    row({
+      kind: "COMMITTEE_OR_ORGANIZATION",
+      contributorName: "ACTBLUE",
+      amount: 7_000,
+      entityType: "ORG",
+      lineNumber: "11AI",
+    }),
+    row({
+      kind: "COMMITTEE_OR_ORGANIZATION",
+      contributorName: "CAMDEN COUNTY REPUBLICAN COMMITTEE",
+      amount: 500,
+      entityType: "COM",
+      lineNumber: "11C",
+    }),
+    row({
+      kind: "COMMITTEE_OR_ORGANIZATION",
+      contributorName: "VOTE VDO",
+      amount: 825,
+      entityType: "CCM",
+      lineNumber: "11AI",
+    }),
+  ]);
+  assert.ok(concentration);
+  const ids = concentration.bands.map((b) => b.id).sort();
+  assert.deepEqual(ids, ["entity-ccm", "entity-com", "entity-org"]);
+  for (const band of concentration.bands) {
+    assert.doesNotMatch(
+      band.label,
+      /doesn't state its type/i,
+      `${band.id} was rendered as an unfiled gap despite carrying an FEC entity type`,
+    );
+  }
+});
+
+test("D06 g20: the band ladder and the row suffix are one derivation", async () => {
+  const { contributorBand, plainContributorLabel } = await import(
+    "../lib/funding/labels.ts"
+  );
+  // One question, one answer. A second implementation of "what kind of
+  // filer is this" is how the two surfaces drift into contradicting each
+  // other on the same card — so the suffix is the ladder's own label, and
+  // this asserts they cannot come apart.
+  const cases = [
+    { kind: "COMMITTEE_OR_ORGANIZATION", entityType: "CAN", lineNumber: "13A" },
+    { kind: "COMMITTEE_OR_ORGANIZATION", entityType: "ORG", lineNumber: "11AI" },
+    { kind: "COMMITTEE_OR_ORGANIZATION", entityType: "COM", lineNumber: "11C" },
+    {
+      kind: "COMMITTEE_OR_ORGANIZATION",
+      entityType: "PAC",
+      lineNumber: "11C",
+      committeeType: "N",
+      organizationType: "L",
+    },
+    { kind: "INDIVIDUAL", entityType: "IND", lineNumber: "11AI" },
+  ] as const;
+  for (const c of cases) {
+    const band = contributorBand(row({ ...c }));
+    const suffix = plainContributorLabel(row({ ...c }));
+    if (band === null) {
+      assert.equal(suffix, null, `${c.entityType}: band says none, suffix says ${suffix}`);
+    } else {
+      assert.equal(
+        suffix,
+        band.label,
+        `${c.entityType}: the suffix and the band disagree about the same row`,
+      );
+    }
+  }
+});

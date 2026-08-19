@@ -1,4 +1,4 @@
-import { markerFromRequest } from "@/lib/db/run-marker";
+import { markerFromRequestWithBody } from "@/lib/db/run-marker";
 import {
   assertDetailIsAnonymous,
   isValidEventType,
@@ -143,7 +143,12 @@ export async function POST(request: Request) {
       ocdIds: event.ocdIds as string[],
       detail: event.detail as Record<string, string | number | boolean> | undefined,
       // C05: whose traffic this is, declared by the caller at write time.
-      marker: markerFromRequest(request),
+      //
+      // Item 4b (g17): the BODY is read here as well as the header, because
+      // this is the one route a `sendBeacon` reaches, and an unload-time
+      // beacon does not carry Playwright's extraHTTPHeaders. A run that
+      // declared itself in either place is not recorded as a reader.
+      marker: markerFromRequestWithBody(request, body),
     });
     return new Response(null, { status: stored ? 204 : 202 });
   } catch (error) {

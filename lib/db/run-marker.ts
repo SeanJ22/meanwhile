@@ -41,6 +41,33 @@
 /** The header the runner declares itself in. */
 export const SYNTHETIC_RUN_HEADER = "x-wtp-synthetic-run";
 
+/**
+ * THE SAME DECLARATION, IN THE BODY, BECAUSE THE HEADER DOES NOT SURVIVE
+ * UNLOAD (item 4b, g17, 2026-08-18).
+ *
+ * `lib/log/client.ts` prefers `navigator.sendBeacon`, and a beacon flushed
+ * during an UNLOAD — a reload or a navigation — does not carry Playwright's
+ * `extraHTTPHeaders`. Measured four ways on 2026-08-18: alive → declared,
+ * pagehide-during-reload → undeclared, pagehide-during-navigation →
+ * undeclared, page close → declared. So the header is real and the transport
+ * is real and they do not meet on the one path that mattered — which is how
+ * seven rows (g14) and then forty-four (g15) landed in the sold store labelled
+ * as readers.
+ *
+ * R50's fix was to make every guarded context DELETE `sendBeacon`, forcing the
+ * fetch fallback. That works and it stays, but it is a workaround with a cost
+ * R50 stated itself: a guarded run never exercises the beacon transport at
+ * all, so nothing proves the beacon path. This is the fix R50 recorded as the
+ * alternative — teach the marker to travel in the request BODY, which the
+ * client already sends and which no transport strips.
+ *
+ * The trust model is unchanged and is argued above: the declaration is
+ * self-made either way, and the only thing it can do is move a row OUT of what
+ * is sold. A body field is no more forgeable than a header, and both fail in
+ * the safe direction.
+ */
+export const SYNTHETIC_RUN_BODY_KEY = "syntheticRun";
+
 export type RunClass = "ORGANIC" | "SYNTHETIC" | "UNKNOWN";
 
 export interface RunMarker {
@@ -68,13 +95,52 @@ const RUN_ID_SHAPE = /^[A-Za-z0-9._:@+-]{1,120}$/;
  * the row out of what we sell.
  */
 export function markerFromRequest(request: Request): RunMarker {
-  const raw = request.headers.get(SYNTHETIC_RUN_HEADER);
-  if (raw === null) return ORGANIC;
-  const trimmed = raw.trim();
-  if (!RUN_ID_SHAPE.test(trimmed)) {
-    return { runClass: "SYNTHETIC", runId: null };
+  return markerFrom(request.headers.get(SYNTHETIC_RUN_HEADER));
+}
+
+/**
+ * The resolver both doors go through.
+ *
+ * Either declaration marks the row. Neither may be preferred on the grounds of
+ * being "more trustworthy" — they are equally self-declared, and the whole
+ * point is that a run which declared itself SOMEWHERE is not recorded as a
+ * reader because the transport it happened to use dropped one of the two.
+ *
+ * A malformed declaration in either place is SYNTHETIC with a null id, never
+ * ORGANIC: something said it was automated and got the label wrong, and
+ * resolving that ambiguity in favour of "reader" is the mistake this file
+ * exists to stop.
+ */
+export function markerFrom(
+  headerValue: string | null | undefined,
+  bodyValue?: unknown,
+): RunMarker {
+  const declared: unknown[] = [];
+  if (headerValue !== null && headerValue !== undefined) declared.push(headerValue);
+  if (bodyValue !== null && bodyValue !== undefined) declared.push(bodyValue);
+  if (declared.length === 0) return ORGANIC;
+
+  for (const value of declared) {
+    if (typeof value !== "string") continue;
+    const trimmed = value.trim();
+    if (RUN_ID_SHAPE.test(trimmed)) return { runClass: "SYNTHETIC", runId: trimmed };
   }
-  return { runClass: "SYNTHETIC", runId: trimmed };
+  return { runClass: "SYNTHETIC", runId: null };
+}
+
+/**
+ * The marker for a request whose body may carry the declaration.
+ *
+ * `/api/log` is the only route that needs this, because it is the only one
+ * reached by `navigator.sendBeacon`. Every other route is a `fetch`, where the
+ * header arrives.
+ */
+export function markerFromRequestWithBody(request: Request, body: unknown): RunMarker {
+  const declared =
+    typeof body === "object" && body !== null
+      ? (body as Record<string, unknown>)[SYNTHETIC_RUN_BODY_KEY]
+      : undefined;
+  return markerFrom(request.headers.get(SYNTHETIC_RUN_HEADER), declared);
 }
 
 /**

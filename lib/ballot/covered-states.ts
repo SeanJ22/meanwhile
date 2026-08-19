@@ -8,7 +8,16 @@
  *
  * Lowercase postal codes, matching the `state:xx` segment of an OCD-ID.
  */
-export const BALLOT_COVERED_STATES: readonly string[] = ["nj", "az", "nh"];
+import { COVERED_SLUGS } from "../coverage/states.ts";
+
+/**
+ * Derived from the coverage manifest since AUD-06 (g18) — it was a fourth
+ * hand-kept copy of the state set. Deriving it makes onboarding a state
+ * ASSERT that its ballot surface exists: the drift test below holds this list
+ * against the registered ballot sources, so a state added to the manifest
+ * with no ballot source fails the suite instead of rendering as covered.
+ */
+export const BALLOT_COVERED_STATES: readonly string[] = COVERED_SLUGS;
 
 export function ballotCoveredForState(state: string | null): boolean {
   return state !== null && BALLOT_COVERED_STATES.includes(state.toLowerCase());

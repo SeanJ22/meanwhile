@@ -64,6 +64,7 @@ const RUN_HEADERS = syntheticRunHeaders({
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
 
+import { COVERED_FIPS } from "../lib/coverage/states.ts";
 import { extrusionSpecForZoom } from "../lib/map/state-focus.ts";
 import { decodePng, patchStats, type DecodedPng } from "./png.mts";
 import { launchGuarded } from "./browser.mts";
@@ -666,7 +667,7 @@ for (const theme of ["dark", "light"] as const) {
 
     // FIPS: 04 Arizona, 33 New Hampshire, 34 New Jersey.
     const mine = zip === "85701" ? "04" : "33";
-    const foreignFips = ["04", "33", "34"].filter((f) => f !== mine);
+    const foreignFips = COVERED_FIPS.filter((f) => f !== mine);
     const foreignFiles = requested.filter((url) =>
       foreignFips.some((fips) => url.includes(`-${fips}.geojson`)),
     );

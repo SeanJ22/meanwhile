@@ -42,17 +42,16 @@ import type {
 } from "../lib/sources/legiscan/types.ts";
 import { readZip } from "../lib/sources/legiscan/zip.ts";
 
+import { COVERED_USPS } from "../lib/coverage/states.ts";
+import { ROSTER_BY_USPS } from "../lib/coverage/artifacts.ts";
+
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 loadEnv({ path: join(ROOT, ".env.local") });
 
-const STATES = ["AZ", "NJ", "NH"] as const;
+const STATES = COVERED_USPS;
 
-/** Roster file per state FIPS, matching lib/registry/server.ts's list. */
-const ROSTERS: Record<string, string> = {
-  AZ: "officeholders-04.json",
-  NJ: "officeholders-34.json",
-  NH: "officeholders-33.json",
-};
+/** Roster file per state. The coverage manifest, not a copy of it (AUD-06). */
+const ROSTERS: Record<string, string> = ROSTER_BY_USPS;
 
 const SNAPSHOT = join(ROOT, "data", "votes", "state-votes-snapshot.json");
 

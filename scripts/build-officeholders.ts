@@ -17,6 +17,7 @@
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 
+import { FIPS_BY_SLUG } from "../lib/coverage/states.ts";
 import { congressSource } from "../lib/sources/congress/index.ts";
 import {
   fetchAll,
@@ -31,7 +32,7 @@ import registry from "../lib/registry/registry.json" with { type: "json" };
 const OUT = join(process.cwd(), "lib", "registry", "officeholders-us.json");
 
 /** Per-state files are named by FIPS, so adding a state is adding a file. */
-const STATE_FIPS: Record<string, string> = { az: "04", nh: "33", nj: "34" };
+const STATE_FIPS: Record<string, string> = FIPS_BY_SLUG;
 
 function stateOut(state: string): string {
   return join(

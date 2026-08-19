@@ -30,14 +30,16 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
+import { USPS_BY_FIPS } from "../lib/coverage/states.ts";
+
 interface Feature {
   type: "Feature";
   properties: { ocdId: string; state: string; district: string; label: string };
   geometry: unknown;
 }
 
-/** FIPS → USPS, the same table the rest of the geo pipeline uses. */
-const STATES: Record<string, string> = { "04": "AZ", "33": "NH", "34": "NJ" };
+/** FIPS → USPS. The coverage manifest since AUD-06 (g18), not a fourth copy. */
+const STATES: Record<string, string> = USPS_BY_FIPS;
 
 const dir = join(process.cwd(), "public", "geo");
 const source = join(dir, "cd119.geojson");

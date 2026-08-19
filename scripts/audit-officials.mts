@@ -24,6 +24,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
+import { COVERED, rosterFile } from "../lib/coverage/artifacts.ts";
 import { CAMPAIGN_SITES } from "../lib/officials/campaign-sites.ts";
 import { generatedAtEastern } from "./generated-at.mjs";
 
@@ -110,11 +111,10 @@ async function verifyPage(o: Officeholder): Promise<PageVerdict> {
 }
 
 async function main() {
+  // The manifest, not a fourth copy of it (AUD-06, g18).
   const files = [
     { label: "US (federal)", file: "officeholders-us.json" },
-    { label: "AZ", file: "officeholders-04.json" },
-    { label: "NH", file: "officeholders-33.json" },
-    { label: "NJ", file: "officeholders-34.json" },
+    ...COVERED.map((s) => ({ label: s.usps, file: rosterFile(s) })),
   ];
 
   const lines: string[] = [

@@ -8,6 +8,7 @@ import {
   type PhotoIndex,
   type SeatHolder,
 } from "../officials/lookup.ts";
+import { ROSTER_FILES } from "../coverage/artifacts.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
 import { collapsePhotoIndexByPerson } from "../photos/person.ts";
 
@@ -40,16 +41,12 @@ interface Loaded {
 /**
  * The generated officeholder rosters, by scope.
  *
- * The federal roster plus one file per state, named by FIPS — 04 Arizona, 33
- * New Hampshire, 34 New Jersey. Adding a state is adding a file and a line
- * here, rather than regenerating everything.
+ * The federal roster plus one file per state, named by FIPS. Derived from the
+ * coverage manifest since AUD-06 (g18) — it was a hand-kept list, and "adding
+ * a state is adding a file and a line here" was true of thirteen other files
+ * too, which is exactly the omission the manifest exists to make impossible.
  */
-const ROSTERS = [
-  "officeholders-us.json",
-  "officeholders-04.json",
-  "officeholders-33.json",
-  "officeholders-34.json",
-];
+const ROSTERS = ROSTER_FILES;
 
 let cache: Promise<Loaded> | null = null;
 

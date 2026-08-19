@@ -13,17 +13,15 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { BALLOT_FILES, NAME_BY_USPS } from "../lib/coverage/artifacts.ts";
 import { BODY_ROSTERS } from "../lib/registry/body-rosters.ts";
 import { STATEWIDE_EXECUTIVES } from "../lib/officials/statewide-executives.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (p: string) => JSON.parse(readFileSync(join(ROOT, p), "utf8"));
 
-const STATE_PLACE: Record<string, string> = {
-  AZ: "Arizona",
-  NH: "New Hampshire",
-  NJ: "New Jersey",
-};
+/** USPS → the state name, from the coverage manifest (AUD-06, g18). */
+const STATE_PLACE: Record<string, string> = NAME_BY_USPS;
 
 interface Target {
   key: string;
@@ -65,11 +63,7 @@ const cardsFile = read("data/ballot/candidate-cards-2026.json") as {
 };
 const hasPhoto = (key: string) => Boolean(cardsFile.cards[key]?.photoUrl);
 
-for (const { file, state } of [
-  { file: "nj-morris-2026.json", state: "NJ" },
-  { file: "az-pima-2026.json", state: "AZ" },
-  { file: "nh-merrimack-2026.json", state: "NH" },
-]) {
+for (const { file, state } of BALLOT_FILES) {
   const data = read(`data/ballot/${file}`) as {
     candidacies: { id: string; contestId?: string; familyName: string; givenName: string }[];
   };

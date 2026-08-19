@@ -1564,3 +1564,80 @@ publish nothing.
 | **Sutton** | 2 | `www.suttonnh.gov` and `suttonnh.gov` → **403** | 2026-08-19 |
 | Sutton | 3 | Full browser header set → **403** | 2026-08-19 |
 | Sutton | 5 | A different egress — NOT YET WALKED. The playbook's standing entry says the browser rung clears this host; it did not today, and that is recorded as a dated note beside the entry rather than a deletion. | — |
+
+---
+
+## H03 — the re-walk cohort, 03255 scope, g21 2026-08-19
+
+**C6 accounting: this is a SEPARATE COHORT and does not blend into fresh-sweep
+acquisition cost.** A re-walk carries prior knowledge, prior URLs and a
+narrower target, and its incremental cost is a fraction of a first hunt: 17
+requests plus one geocode, against a fresh sweep's per-body discovery.
+
+### M, enumerated first — 13
+
+Every 03255-scope record in this repo that says "not published", "not
+machine-readable" or "could not reach". Ten are consolidated-MISS entries, two
+are bodies with a recorded coverage gap, one is a named open browser errand.
+There are **no `KNOWN_UNCOVERED` bodies in 03255 scope at all**: all 31 in the
+registry are Tucson (29) and Rockaway Township NJ (2).
+
+### Recovered: 1 of 13
+
+| # | Record | Rung that recovered it | What it buys |
+|---|---|---|---|
+| 12 | **Kearsarge's KRMS deliberative session** — "held at KRMS rather than 114 Main Street and drops counted until that address is curated" (g3, 2026-08-16) | **Rung 4.** Rungs 2 and 3 take a 403 from `kearsarge.org` and so does a second egress; **curl sending browser headers is served**, and `www.kearsarge.org/middle-school` states it in the district's own words — "Kearsarge Regional Middle School (KRMS) / 32 Gile Pond Road • North Sutton, NH 03260" | The wiring row has carried `otherVenueMarkers: "KRMS"` since August waiting on exactly one venue row. It is curated now and `resolveVenue` returns it. The sitting is in JANUARY, outside the 60-day serving window, so nothing renders differently today — the gap is closed in the data and will show when the date arrives. Stated rather than claimed as a visible win. |
+
+### Already recovered, and the DOCUMENT was wrong: 1 of 13
+
+**Newbury Zoning Board of Adjustment.** `states/nh/NOTES.md` recorded it
+`KNOWN_UNCOVERED` — "schedule found, venue not published" — and the registry
+has had it **LIVE since 2026-08-15**. The curated venue row shipped in the
+mobile round-two session; this file was never brought forward.
+
+**This is the fifth time in three sessions that a document has described built
+work as unbuilt**, and it is worse here than elsewhere: a re-walk cohort read
+off a stale document walks the wrong bodies. Corrected in place, with the
+correction named rather than quietly applied.
+
+### Confirmed misses, re-dated: 10 of 13
+
+Re-walked 2026-08-19 against rungs 2 and 3, and the verdicts hold. Two changed
+SHAPE, which is itself the argument for re-walking:
+
+| Record | Was | Now | Verdict |
+|---|---|---|---|
+| `newbury.nh.gov/rss.xml` | 200, valid RSS, zero items | **403** | Miss holds; the host TIGHTENED. A recorded miss is not a frozen fact. |
+| `newbury.nh.gov/sitemap.xml` | 403 | 403; `robots.txt` retrieved at 200 and declares no sitemap | Holds, now with the robots read behind it |
+| `newburynh.civicweb.net/api/meetings` | 500 | 500 | Holds |
+| `newburynh.civicweb.net/Portal/ICal.aspx` | "200 but the portal HTML shell" | **302 to `/`** | Holds, and the old wording was generous — it never served a feed at all |
+| `newburynh.civicweb.net/Portal/RSSFeed.aspx` | as above | **302 to `/`** | Holds |
+| `kearsarge.org` bare | TLS handshake failure | connection failure; `www.` is the host | Holds |
+| `merrimackcounty.org` | DNS does not resolve | DNS does not resolve | Holds |
+| `merrimackcounty.net/sitemap.xml` | 404 | 404; `robots.txt` 404 too | Holds |
+| `merrimackcounty.net/calendar.php` | ignores `month`/`year`/`format=json` | 200, 41 KB, no dates in the served HTML | Holds; the calendar is client-rendered and rung 6 is its next step |
+| `nhmunicipal.org/public-notices` | NHMA's own board, not a clearinghouse | 200, unchanged | Holds — the finding is about WHOSE board it is, and that does not expire |
+
+### Deliberately not walked: 1 of 13
+
+`sites.google.com/a/kearsarge.org/...` → **302 to a Google login**. That is an
+access control, and `CLAUDE.md`'s four prohibitions include never
+authenticating past one. Recorded as walked-and-refused, not as a wall.
+
+### A rung this re-walk added
+
+**A CivicWeb tenant enumerates its own meeting types**, at
+`/Portal/MeetingTypeList.aspx`. Newbury's returns exactly one — `Selectboard`,
+`type=10`. The prior record inferred the same thing from a whole-year query
+whose every row came back TypeId 10; this is the portal SAYING it. Where a
+record rests on an inference, ask whether the platform will state it instead.
+
+### Still open, with its next rung named
+
+**The Kearsarge Google Calendar embed** at
+`/district/family-community/pages/calendars` was not pursued, and the reason
+stands: the district's own schedule page is already wired through the
+`month-table` shape and carries more than an `.ics` would — the board's own
+words beside many sittings, the meeting time, and the venue with its entrance.
+An ics here would be a second, thinner source for a body that already has a
+good one. Recorded as a decision, not an omission.

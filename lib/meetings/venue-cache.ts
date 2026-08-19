@@ -685,6 +685,32 @@ export const VENUE_CACHE: VenueEntry[] = [
       "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=25+Seamans+Road%2C+New+London%2C+NH+03257&benchmark=Public_AR_Current&format=json",
     verifiedAt: "2026-08-19",
   },
+  // ── SchedulePage: Kearsarge's KRMS deliberative session (H03, 2026-08-19) ──
+  // The gap g3 named and left open on 2026-08-16: "the January deliberative
+  // session is held at KRMS rather than 114 Main Street and drops counted
+  // until that address is curated". The wiring row has carried
+  // `otherVenueMarkers: "KRMS"` since then, waiting on exactly this row.
+  //
+  // Recovered at RUNG 4, which is worth recording because rungs 2, 3 and a
+  // second egress all take a 403 from this host: curl sending browser headers
+  // is served, and `www.kearsarge.org/middle-school` states the address in
+  // the district's own words — "Kearsarge Regional Middle School (KRMS) / 32
+  // Gile Pond Road • North Sutton, NH 03260".
+  {
+    sourceId: "schedulepage",
+    bodyOcdId:
+      "ocd-division/country:us/state:nh/school_district:kearsarge_regional_school_district",
+    match: "KRMS",
+    name: "Kearsarge Regional Middle School",
+    address: "32 Gile Pond Road, North Sutton, NH 03260",
+    lat: 43.347731,
+    lng: -71.933622,
+    addressSourceUrl: "https://www.kearsarge.org/middle-school",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=32+Gile+Pond+Road%2C+North+Sutton%2C+NH+03260&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-19",
+  },
+
   // The town's other named room, keyed on its own string. A board meeting at
   // the Town Office is at a different building from one at Whipple Hall, and
   // pinning both at the hall would send a reader to the wrong door.

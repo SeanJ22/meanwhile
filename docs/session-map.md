@@ -469,3 +469,68 @@ line were not built.
 tracker row **F01**. One of them is a data claim rather than a UI one and is
 called out separately: the New Hampshire card says Kearsarge could not be reached
 while the New London pin shows its meetings.
+
+
+---
+
+# g20 — 2026-08-19: the deferred queue, items 1 through 9
+
+Shipped `026f48e`, one merge. **Six items addressed, one hunted to a boundary
+and correctly not built, two never reached.** `walk:all` 309 passed, 0
+regressions, 0 could-not-run — baseline 306, **added 3, GONE 0**.
+
+## What this session actually is
+
+The queue in order, and a running theme it did not go looking for: **four
+numbers turned out to describe something other than what they were read as**,
+and three of the four had already been quoted forward into a brief as fact.
+
+* The client ceilings never moved — `bundle-budget.json` is untouched since
+  g18. The postbuild check prints KB, and `3027.3 KB` / `918.0 KB` were read
+  back out as bytes. A session-brief correction came out of a rounded display.
+* B14's denominator is **75 of 136**, not 101.
+* D29's 27 + 30 = 57 quoted a superseded figure; re-derived live it is
+  27 + 29 = 56.
+* 110 portraits shipped and the rendered census did not move, because 0 of
+  them sit on a covered division. Manifest and census are two denominators.
+
+## Items
+
+| Item | Row(s) | Outcome |
+|---|---|---|
+| 1a | D06 | Concentration on the FEC's own axis. The real snapshot caught a candidate's own $80,000 about to render as an untyped committee. |
+| 1b | A03, A05 | A zero-hit agenda search now renders; A05's items reach the meeting card. **A05 Done.** |
+| 1c | B15 | **Done at 19 of 20.** `funding-fight` parked structurally, because fill-only cannot protect an empty chamber. |
+| 1d | D29, D67 | **Both Done.** Three boards stopped emitting dates their governments never set; the fix surfaced a loop dropping every monthly board's last in-window sitting. |
+| 2 | D62, D05, P02 | The candidate corpus chain, whole. PRL 537/537 by bioguide; 59 documents; 12 issues for every candidate, no composite at any remove. |
+| 3 | B14 | Blurbs 17 → 36. **The bare count did not move**, and that is the finding. |
+| 4 | D52 | **Hunted, not built.** Five rungs into the playbook; nothing half-built. |
+| 5 | B19, B16 | **Not built.** Three states use three polling models, which is a question about the row's own spec. |
+| 6 | D50 | 110 portraits shipped after three contact sheets; two held back by the gate. Rendered census unmoved. |
+| 7 | M123, H03 | **Never reached.** |
+| 8 | M81, D47 | **Never reached** (D47's status and title corrected). |
+| 9 | — | All nine corrections addressed. |
+
+## The correction shape this session kept finding
+
+**A guard that asserts the BROKEN state fails on the day the thing gets
+fixed.** Found four times:
+
+* `tests/doc-dates.test.ts` asserted `suspicious >= 1`.
+* `readAllowlist` threw on an allowlist that parsed to zero entries.
+* The pre-commit hook kept a **private copy** of that parser — the exact
+  duplication its own header says would guarantee drift.
+* `walk:all`'s three carried-row checks reported CANNOT-RUN whenever every
+  source was reachable.
+
+All four now assert the healthy state, and in three of the four the healthy
+assertion is strictly stronger than what it replaced.
+
+## New in the tree
+
+`lib/sources/prl/`, `lib/candidates/` (corpus, issues, positions, blurbs),
+`data/prl/prl-profiles.json`, `data/candidates/corpus-2026.json`,
+`components/ballot/candidate-positions.tsx`,
+`lib/funding/type-concentration.ts`, `scripts/b14-coverage.mts`,
+`scripts/tracker-append-note.mjs`, `scripts/tracker-add-row.mjs`.
+Commands: `pnpm prl:fetch`, `pnpm candidates:fetch`, `pnpm b14:coverage`.

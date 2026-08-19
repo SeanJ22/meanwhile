@@ -11769,3 +11769,98 @@ A same-session diff against `git HEAD` was what caught it. Recorded as **D68**.
   total 6424, reconciling exactly. No reaction was tapped.
 * `outputs/` is present in the working tree, untracked, and was not read,
   written, committed or counted.
+
+## g20 — 2026-08-19: the corpus arrives, and four numbers turn out to describe nothing
+
+Nine items briefed. **Six addressed, two never reached, one whole item
+(4) hunted to a boundary and correctly not built.** Shipped as `026f48e`,
+one merge, verified via `/api/build`.
+
+### The pattern this session kept hitting: a number that describes nothing
+
+Four separate figures in the brief or the repo turned out to be measurements
+of something other than what they were being read as. None was a lie; each
+was a real number in the wrong frame.
+
+* **The client ceilings.** g19 reported "3,027,315 / 940,032" and the brief
+  asked for the committed ceilings to be restored. Nothing had moved:
+  `bundle-budget.json` has not been touched since g18. The postbuild check
+  prints KB, `3,100,000/1024` is `3027.3 KB`, `940,000/1024` is `918.0 KB`,
+  and both were read back out of the display as bytes — one multiplied by
+  1000, one by 1024. **A whole session-brief correction came out of a rounded
+  display**, and the check now prints exact ceilings beside the KB line.
+* **B14's denominator.** The brief said 101 of 136 ballot candidates carry
+  nothing. Measured from the ballot itself: **75**.
+* **D29's arithmetic.** The brief's 27 + 30 = 57 quoted g18's superseded 30
+  against g19's 27. g19 had already corrected it to 29, and a fresh
+  re-derivation against all 56 live Clerk pages lands on 27 + 29 = 56.
+* **The photo census.** 110 portraits shipped, manifest 790 → 900, and the
+  rendered count did not move at all: 591 of 750 before and after. **0 of
+  the 110 sit on a covered division.** The census counts people the product
+  RENDERS; the manifest counts people we hold a portrait for. Two
+  denominators, and the work buys a reader nothing today.
+
+### What shipped
+
+* **Item 1a — D06's third feature.** Concentration on the FEC's own axis, on
+  the author's ruling. The real snapshot caught the first draft: it asked the
+  committee table directly and skipped two rungs above it, so Lily Tang
+  Williams' **$80,000 of her own money** would have rendered as "a committee
+  whose filing doesn't state its type" — the largest number on her card.
+  Fixed at the shared path; `contributorBand()` is now the one ladder.
+* **Item 1b — A03's silence, and A05's surface.** A zero-hit agenda search
+  rendered NOTHING, so a reader who asked "is there a data center coming?"
+  saw no trace that anything had been searched, and silence there reads as
+  "no". It reports whenever it recognises the topic now, with the corpus
+  limit riding on the hit case too: this searches agendas, not the permit
+  record. A05 is Done — its items render on the meeting card.
+* **Item 1c — B15 closes at 19 of 20.** D68's overwrite verified repaired
+  against the artifact. `funding-fight` is PARKED **structurally**, because
+  fill-only protects a chamber that already has a roll call and a parked
+  entry has none — the failure the park prevents, arriving through the door
+  the last fix left open.
+* **Item 1d — D29 Done, and D67 fixed with it.** Three of D29's 27 wired
+  boards were emitting dates their bodies never published. The fix surfaced a
+  second defect of the opposite sign: the recurrence loop walked a fixed five
+  iterations that only LOOKED like the serving window, so every monthly board
+  was silently losing its last in-window sitting.
+* **Item 2 — the candidate corpus chain, whole.** D62 (PRL, 537 of 537 by
+  bioguide), D05 (59 documents, three answers, quote-and-link), P02 (12
+  issues, the same list for every candidate, no composite at any remove). A
+  New Hampshire state house candidate who had a thin card now carries 11
+  sourced issues.
+* **Item 3 — B14's blurb rung.** Blurbs 17 → 36, and the bare count did not
+  move: every candidate the rung reaches already had a link, so the rung is
+  downstream of the one that is missing.
+* **Item 6 — D50.** The rungs this row asked to be generated already existed.
+  The cohort was the problem: 250 misses stamped 2026-08-14, rungs landed
+  2026-08-15. 110 shipped after three contact sheets and two held back.
+* **Item 9 — the corrections owed.** All nine addressed.
+
+### Two items never reached, and why
+
+**Item 7 (M123, H03) and item 8 (M81, D47) were not started.** The gas light
+was called at the close of item 6, and the room went to item 9's corrections
+— which fix numbers currently wrong in the repo — and the close-out. Nothing
+of either item is half-built.
+
+### State as of 2026-08-19 (g20)
+
+* Deploy `026f48e`, verified via `/api/build`.
+* `walk:all`: **309 passed, 0 regressions, 0 could-not-run.** 309 distinct
+  identities of 309 run; baseline 306, **added 3, GONE 0** — the three
+  hotfix-0817 checks that used to vanish in good weather now assert the
+  healthy state.
+* Gates: test **1129 pass / 0 fail**, lint **0 errors / 12 allowlisted
+  warnings**, `tsc --noEmit` clean, build green.
+* Budget 1a: 195 files, ceiling 220. Budget 1b **both modes on ubuntu CI**,
+  run **32222799367**: standalone **1138** (ceiling 1300), default **935**
+  (ceiling 1050). Budget 2: raw **2,727,606** / gzip **821,909** across 13
+  chunks, against committed ceilings **3,100,000 / 940,000** — which never
+  moved.
+* Production rows this session: **189**, all one run id, `g20-walk-all`
+  (two walk runs). No reaction was tapped, no ask submitted.
+  `search_log` **organic 107** — unchanged from g19, **delta 0** — synthetic
+  3644, unknown 2845, author 17, total 6613, reconciling exactly.
+* Tracker **369 rows**, no duplicate IDs, **84 open** (79 after Tabled and
+  Standing).

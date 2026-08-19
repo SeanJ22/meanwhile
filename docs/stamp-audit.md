@@ -8,7 +8,7 @@ walked straight past the `Author-revised` stamp on the disclosure rule.
 each one, and the corrected date is typed into `CLAUDE.md` by hand from
 `pnpm stamp` or from the recovered column below.**
 
-Run on 2026-08-18 (America/Phoenix). 25 stamp(s) audited.
+Run on 2026-08-19 (America/Phoenix). 25 stamp(s) audited.
 
 **Method.** Each rule's opening clause — the bold title it leads with — is a
 long string that entered `CLAUDE.md` once. `git log -S<clause> -- CLAUDE.md`
@@ -57,7 +57,7 @@ lying. The recovered dates come from the unfiltered pickaxe.
 ## What the deltas say
 
 - **0 stamp(s) disagree with git history.**
-- **0 stamp(s) are still later than today** (2026-08-18) — a date that had not happened when it was written.
+- **0 stamp(s) are still later than today** (2026-08-19) — a date that had not happened when it was written.
 - **0 stamp(s) could not be recovered** and are printed `NOT FOUND` rather than guessed.
 - **2 stamp(s) disagree BY DESIGN and the author has ruled them expected** — listed below, and still carrying their real delta in the table above.
 

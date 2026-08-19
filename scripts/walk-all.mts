@@ -1081,16 +1081,46 @@ section("D. The ballot page (0814c, D53, g3)");
       "no pick control on the page",
     );
   } else {
+    /*
+     * R52 (g17): THIS CHECK FAILED ONCE IN THREE PRODUCTION RUNS, on identical
+     * code against an identical deploy, and the retry below is a DIAGNOSIS
+     * rather than a way to make it green.
+     *
+     * The readiness gate above waits for `[data-pick], .ballot-measure, main`
+     * to be PRESENT. Presence is server-rendered markup; it is not a React
+     * handler being attached. A click that lands between those two moments
+     * does nothing at all, and the surface it should raise never appears —
+     * which reads exactly like a broken feature. That is R49's own defect one
+     * layer over: the wait before the ACTION was on the wrong outcome.
+     *
+     * So the click is retried once, and WHICH ATTEMPT WORKED IS THE EVIDENCE.
+     * A first-attempt miss is recorded in the check's evidence even when the
+     * check passes, because a walk that silently retried until it was happy
+     * would be hiding a real hydration delay a reader also waits through. Two
+     * misses is a genuine regression and still fails.
+     */
     await pickButtons.first().click();
     // R49: wait for the surface this check is about, and read anyway at the
     // ceiling so a real absence still fails.
-    await untilText(page, /my picks/i, 10_000);
+    let raised = await untilText(page, /my picks/i, 10_000);
+    let attempts = 1;
+    if (!raised) {
+      await pickButtons.first().click();
+      raised = await untilText(page, /my picks/i, 10_000);
+      attempts = 2;
+    }
     const after = await bodyText(page);
+    const present = /my picks/i.test(after);
     check(
       "0814c",
       "85701: a pick raises the reader's running ballot",
-      /my picks/i.test(after),
-      /my picks/i.test(after) ? "" : "no My picks surface after a pick",
+      present,
+      present
+        ? attempts === 1
+          ? ""
+          : "R52: the FIRST click raised nothing and the second did — the button was " +
+            "almost certainly not hydrated yet. Passing, and saying so."
+        : "no My picks surface after two picks, 10s apart — this is the feature, not the timing",
     );
     await pickButtons.first().click();
     // R49: the pick is undone, rather than 400ms have passed. Nothing is read

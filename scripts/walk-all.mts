@@ -1400,13 +1400,55 @@ section("F. The reader's map and the folded panels (g4 items 1-5, 9, 11, 14, 15)
       before ? "no map canvas to drag" : "no __wtpMapProbe on the page",
     );
   } else {
-    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    /*
+     * DRAG FROM A POINT THE MAP CAN ACTUALLY RECEIVE (g18, correction 5).
+     *
+     * This check reported "the drag did not move the camera" in g17 and was
+     * recorded as could-not-run with no cause. The cause, reproduced under the
+     * walk's own seeding at 1280×900: `document.elementFromPoint` at the
+     * canvas centre returns `DIV.coverage-notice … pointer-events-auto`. The
+     * who-governs notice sits over the middle of the map, so `mouse.down()`
+     * landed on the panel, MapLibre never saw the gesture, and the camera was
+     * byte-identical before and after.
+     *
+     * That is g3's lesson exactly — a gesture that landed on an overlay and
+     * never moved the map — and the `cannotRun` below was the check behaving
+     * correctly: it refused to report a result for an experiment that had not
+     * run. What was missing was a drag origin chosen against the page rather
+     * than assumed from the geometry.
+     *
+     * So the origin is now the first candidate point the PAGE ITSELF says is
+     * the canvas. Fixed offsets would rot the moment an overlay moves; asking
+     * `elementFromPoint` cannot. If no candidate is clear the check still
+     * reports could-not-run rather than dragging somewhere useless.
+     */
+    const origin = (await page.evaluate(`(() => {
+      const b = ${JSON.stringify({ x: box.x, y: box.y, w: box.width, h: box.height })};
+      const pts = [
+        [b.x + b.w / 2, b.y + b.h / 2],
+        [b.x + b.w / 2, b.y + b.h * 0.22],
+        [b.x + b.w * 0.25, b.y + b.h * 0.3],
+        [b.x + b.w * 0.75, b.y + b.h * 0.3],
+        [b.x + b.w * 0.25, b.y + b.h * 0.7],
+        [b.x + b.w * 0.75, b.y + b.h * 0.7],
+      ];
+      for (const [x, y] of pts) {
+        const el = document.elementFromPoint(x, y);
+        if (el && el.tagName === "CANVAS") return { x, y };
+      }
+      return null;
+    })()`)) as { x: number; y: number } | null;
+
+    if (!origin) {
+      cannotRun(
+        "g4",
+        "the pan-and-wait check",
+        "every candidate drag origin is covered by an overlay — no point on the canvas is reachable",
+      );
+    } else {
+    await page.mouse.move(origin.x, origin.y);
     await page.mouse.down();
-    await page.mouse.move(
-      box.x + box.width / 2 - 160,
-      box.y + box.height / 2 - 90,
-      { steps: 12 },
-    );
+    await page.mouse.move(origin.x - 160, origin.y - 90, { steps: 12 });
     await page.mouse.up();
     /* R49: the camera has MOVED, rather than 1.2s have passed. The check below
      * needs a drag that took effect, and polling for it is the difference
@@ -1448,6 +1490,7 @@ section("F. The reader's map and the folded panels (g4 items 1-5, 9, 11, 14, 15)
         drift < 1e-3,
         `drift ${drift.toFixed(5)} degrees after four seconds`,
       );
+    }
     }
   }
 

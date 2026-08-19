@@ -11672,3 +11672,100 @@ meetings**, up from 5 and 15.
    byte-identical before and after — g3's lesson exactly, and the `cannotRun`
    was the check behaving correctly. The drag origin is now the first candidate
    point the *page* says is the canvas.
+
+
+## g19 — 2026-08-18: the deferred queue, and four times the brief's premise was already built
+
+Ten items briefed. **Seven whole, one partial, one not reached, one — item 8 —
+never started.** Shipped as `bcbe466`, one merge, verified via `/api/build`.
+
+### The pattern worth carrying forward
+
+Four separate items turned out to be largely or entirely built already, and in
+each case the brief's description of prior state was a last-known reading
+rather than a fact — which the brief itself said it would be, and which is the
+reason "verify before building" is the first instruction.
+
+* **B15** (item 4): briefed as "votes on laws is the named remainder". It was
+  already 18 of 20, both chambers, verified. A stale docblock in
+  `lib/votes/key-votes.ts` still said the LAWS entries carried none, which is
+  how the wrong premise survived long enough to be briefed.
+* **D06** (item 3): briefed as needing the key wired and the surface shipped.
+  Both were done; two of the row's three named features were not.
+* **D03** (item 7a): briefed as needing a three-state build. All three states
+  already serve state roll calls live.
+* **A04** (item 6): the topic-to-body-to-people mapping was built. It stopped
+  one field short of the reader — the contacts were on the record and never
+  rendered.
+
+**The cost of not checking, concretely.** The B15 resolver was written on the
+stale premise and run against the committed snapshot. It "resolved" the four
+April 2024 siblings to their Senate vehicle, which carries no House vote of
+its own, and wrote that over four verified House roll calls. House coverage
+went 18 → 15 and the run printed *"LAWS carrying at least one roll call:
+18/20"* — true before and after, because the entries kept their Senate refs.
+A same-session diff against `git HEAD` was what caught it. Recorded as **D68**.
+
+### What shipped
+
+* **Item 1 — D25 8 UNKNOWN → 0; D29 27 wired of 56, all 56 accounted for.**
+  Five Tucson boards closed on a rung one BELOW the one named for them: the
+  Clerk's board page links its own agenda, and the agenda header carries the
+  participation rule. Newbury was a wall and fell at rung 4 — curl, sending
+  the same identified User-Agent that got a 403, is served 200; the filter is
+  also path-scoped, so the way in was the front page. Its walled agendas path
+  302s to a CivicWeb portal nothing here knew about. Board 130 was sitting in
+  a "publishes no fixed schedule" bucket because its rule says "of THE month".
+  g18's "30 publish no fixed schedule" was wrong by one; the figure is 29.
+* **Item 2 — provisions collect, free text ships.** `MEASURE_PROVISION` is the
+  fifth reaction class and attaches to a provision, never the measure whole;
+  all five kinds collect. Free text behind `ripcord.reactionFreeText`, which
+  ships LIVE: pulled, the verbatim drops and the binary still counts, and the
+  reader is TOLD which. Free text reaches no aggregate **structurally** — the
+  aggregation input type has no field for it, proven with a planted sentinel.
+  Migration `0009_keen_vulcan` applied to production. **T05 moved off
+  In progress after five sessions and stays Open**: what it blocked shipped;
+  the review path it is actually about does not exist.
+* **Item 3 — D06.** In-district ships as IN-STATE, because the filings give a
+  state and the only route to a district is a zip. Industry concentration does
+  not ship at all: it needs a taxonomy the FEC does not publish, from
+  aggregators the source rule excludes. The real snapshot caught the first
+  draft describing its own base wrongly — `topContributions` is the top five
+  committees PLUS the top five individuals, not the ten largest.
+* **Item 4 — B15 18 → 19 of 20.** The pending measure's House vote, found
+  through the House's own roll-call index (which carries IDs and no titles).
+  The remaining one is a refusal, not a gap: the shutdown entry's title names
+  two things and the congress carries five appropriations laws.
+* **Item 5 — G10 closes.** g5's three deliverables measured against
+  production; ten suspicious dates → eight, each carrying its species, its
+  recovered commit date and its reason.
+* **Item 6 — A03/A04/A05.** The ask box reads agendas: eight topics, quotes
+  never summaries, scoped by DIVISION rather than distance. Verified live at
+  Pima — the second hit is a 120-day moratorium on data centers.
+* **Item 7 — D03 verified serving; M95 walked and wrote nothing.** A term end
+  derived from a constitutional rule plus an election year is arithmetic on
+  two facts I had one of.
+* **Item 9 — the queue re-measured.** 366 rows, 280 done or absorbed, 86 open.
+  All 75 author dispositions carried across the regeneration.
+* **Item 10 — D69** (Montana's 387 vs 311) and **D70** (the crawler, shipped
+  `Blocked` because nothing may run without clearance).
+
+### State as of 2026-08-18 (g19)
+
+* Deploy `bcbe466`, verified via `/api/build`.
+* `walk:all`: **306 passed, 0 regressions, 3 could-not-run**, all three named
+  and all three the same honest shape — 03255 holds no carried rows because
+  every source serving it was reachable, so there is no stale row for a
+  freshness statement to speak for. 306 distinct identities of 306 run.
+* Gates: test **1083 pass / 0 fail**, lint **0 errors / 12 allowlisted
+  warnings**, `tsc --noEmit` clean, build green.
+* Client budget: raw **2,727,315** / gzip **821,848**, against a ceiling of
+  3,027,315 / 940,032. **The g17→g18 baseline discrepancy is NOT resolved**
+  and the committed baseline is deliberately not restated at the lower figure
+  — see AUD09.
+* Production rows this session: **207**, every one synthetic and attributed —
+  `g19-walk-all` 98, `g19-walk-all-2` 96, `g19-measure-focus` 13.
+  `search_log` **organic 107**, synthetic 3455, unknown 2845, author 17,
+  total 6424, reconciling exactly. No reaction was tapped.
+* `outputs/` is present in the working tree, untracked, and was not read,
+  written, committed or counted.

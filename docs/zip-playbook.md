@@ -1175,3 +1175,97 @@ greedily ate the first two digits of a bare four-digit year, so "October 2026"
 parsed as **day 20** — a date the body never published, invented by a
 quantifier, with the year left unset. The day group needs a non-digit after it.
 A greedy quantifier next to an optional year is a date-fabrication machine.
+
+## An index that carries IDs and no titles: searching its text is a FALSE MISS (g19, 2026-08-18)
+
+The House publishes an index of every roll call it has taken. It carries the
+congress, the session, the roll number, the result, and the bill's TYPE and
+NUMBER. It does not carry a single bill title.
+
+So searching that index for "stock" returns zero across 645 roll calls, and
+the sentence that wants to come next — "the House has not voted on banning
+congressional stock trading" — is a claim about the House built entirely out
+of a fact about the index. It is the false-miss shape at its purest: the
+answer is right there and we asked the wrong question of it.
+
+The rung is one step further in. Take the DISTINCT measures the chamber
+actually voted on (645 roll calls collapse to 397 measures), resolve each to
+its official title, and search the titles. H.R. 7008, the Stop Insider Trading
+Act, is the third hit. Then read that bill's own actions for the roll call —
+roll 280, on passage, 232-198, verified at the Clerk's own XML where the party
+totals add to exactly that.
+
+**The general rule: before concluding from a search, ask what the thing you
+searched actually contains.** An index of identifiers cannot answer a question
+about subjects, however many rows it has. Cache the resolved titles — 397
+requests once is fine, 397 requests per run is not.
+
+## A bill folded into another one appears in NO public-law list (g19, 2026-08-18)
+
+The April 2024 package: the House passed four separate bills, the Senate took
+one of them as the vehicle and passed the package, and **only the vehicle
+became a public law**. So three of the four appear in no public-law list, for
+any congress, under any title — searching `/law/{congress}` for "Israel
+Security Supplemental Appropriations Act" is structurally guaranteed to return
+nothing, and reporting that as "no such law" describes our route rather than
+the record.
+
+The record names them itself. `/bill/{congress}/{type}/{number}/relatedbills`
+on the vehicle (H.R. 815) returns all four by their official titles with their
+bill numbers. Read from the official record, never typed from memory.
+
+**Generalised: when a measure is missing from the list it "should" be in, ask
+what it was folded into, and read the container's own cross-references.** A
+bill, an amendment, a consolidated appropriation and a reconciliation package
+all do this.
+
+## PDF agenda text: two extraction traps, both caught by the real corpus (g19, 2026-08-18)
+
+Extracting agenda ITEMS out of PDF text that has lost its layout. Both of
+these produced confident, wrong, reader-facing rows against the committed
+corpus, and neither would have shown up against a hand-written fixture.
+
+**A single-letter item marker is ambiguous with an abbreviation.** Agendas
+really do letter their items — "A. Hearing - Rezoning Closure" — so `[A-Z]\.`
+looks like a fair marker. It also matches `W. Congress Street, 1st Floor`,
+which was extracted as an agenda item off a Pima County agenda, twice.
+Compass directions (N/S/E/W) at the head of a line are addresses far more
+often than items; refusing them loses a genuine item lettered W. if one ever
+exists, and that is the right trade, because losing a true row costs less than
+printing a false one.
+
+**A numeric marker fires mid-sentence.** Splitting on `(?=\s\d{1,2}\.\s+[A-Z])`
+turns "Cable Channels: Cox 96. Television viewing will be available in the
+lobby" into an agenda item that is half of somebody's sentence about a cable
+channel. An agenda item begins after the previous one ENDS, so require the
+marker to follow a sentence terminator: `(?<=[.:;)])(?=\s\d{1,2}\.\s+[A-Z])`.
+
+**And the quantifier trap beside them, from the same session's date parsing:**
+`(\d{1,2})?` for a day, sitting next to an optional four-digit year, ate the
+first two digits of the year — "October 2026" parsed as **day 20**, with the
+year left unset. A greedy quantifier next to an optional year is a
+date-fabrication machine. The day needs a non-digit after it.
+
+The discipline all three share: **run the parser over the real corpus and read
+the output**, not just the count. Every one of these passed its own tests and
+produced a wrong row on real text.
+
+## A guard on the SIZE of a result does not guard its IDENTITY (g19, 2026-08-18)
+
+A fetch script rewrote a committed artifact and lost verified data while
+reporting success. The first fix was "never write FEWER refs than are already
+there". It was not enough: it preserved the COUNT and allowed a REPLACEMENT,
+and the next run swapped one entry's verified roll call for a different one of
+equal length. The count-based guard passed it.
+
+**Same-count is not same-answer.** Where the existing value is a verified
+claim, the rule has to be FILL-ONLY — a run may populate what is empty and may
+not touch what is resolved — because changing a resolved claim is a correction,
+and a correction is a deliberate edit by someone who has read both, not a side
+effect of a refresh.
+
+The related discipline, which cost a same-session diff against `git HEAD` to
+notice: **a total that stays flat can hide a component that fell.** The run
+printed "18 of 20 carry at least one roll call", which was true before and
+after, while House coverage went 18 to 15 — the entries kept their Senate refs.
+Report the components, not just the total.

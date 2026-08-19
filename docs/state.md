@@ -2100,7 +2100,9 @@ replaced.
 ## 7. Current state of the branch
 
 **CURRENT: `claude/f01-walkthrough-0819`** (2026-08-19, the F01 session, THE
-FEEDBACK GATE), branched from `main@b1a46b2` and merged as `a119578`.
+FEEDBACK GATE), branched from `main@b1a46b2`, code merged as `a119578` and the
+close-out records as `1203d48` — **two merges, and the brief asked for one**;
+the reason is stated in the F01 block at the end of this document.
 
 F01 carried **fifty-five live items across thirteen surfaces** from the
 author's own voice walkthrough of 2026-08-18, plus twenty-nine screenshots. The
@@ -12109,14 +12111,21 @@ while the code was already right.** It happened twice more here.
 
 ### State as of 2026-08-19 (F01)
 
-* Deploy `a119578`, verified via `/api/build` — instrument: a `curl` against
-  `https://sparkwtp.netlify.app/api/build` carrying
-  `x-wtp-synthetic-run: f01-deploy-check@…` and `cache-control: no-cache`,
-  which returned `{"commitShort":"a119578","branch":"main","context":"production"}`.
-  **One merge** (PR #108).
-* `walk:all` against the SHIPPED build: **324 passed, 0 regressions, 0
-  could-not-run.** 324 distinct identities of 324 run; baseline 316,
-  **added 12, GONE 4**. The four that went are the `0814c` ballot device-only
+* Deploy **`1203d48`**, verified via `/api/build` — instrument: a `curl`
+  against `https://sparkwtp.netlify.app/api/build` carrying
+  `x-wtp-synthetic-run: f01-final-deploy@…` and `cache-control: no-cache`,
+  which returned
+  `{"commitShort":"1203d48","branch":"main","context":"production"}`.
+* **TWO merges, not one, and the brief asked for one.** PR #108 shipped the
+  code (`a119578`); PR #109 shipped the close-out records (`1203d48`). Stated
+  rather than smoothed: the ordering is forced, because `state.md` has to carry
+  the deploy SHA and the real `walk:all` numbers, and neither exists until the
+  code has shipped and been walked. Batching them would have meant writing the
+  SHA before it was known, which is the fabrication rule. Every ITEM shipped in
+  the first merge; the second carries documents only.
+* `walk:all` against the FINAL shipped build `1203d48`: **324 passed, 0
+  regressions, 0 could-not-run.** 324 distinct identities of 324 run; against
+  the baseline this session inherited (316), **added 12, GONE 4**. The four that went are the `0814c` ballot device-only
   checks, retired with the claim the author removed in 11.2 — replaced under a
   NEW identity so the diff reports the swap rather than silently redefining a
   passing name.
@@ -12139,18 +12148,18 @@ while the code was already right.** It happened twice more here.
   **826,483** across 13 chunks, against committed ceilings **3,100,000 /
   940,000**, read from `scripts/bundle-budget.json` and not off the rounded KB
   line. **No ceiling moved.**
-* Production rows this session: **607**, all SYNTHETIC, across **13 run ids** —
-  six `walk:all` runs (89 + 93 + 92 + 92 + 94 + 92 against production, each
-  with its 9-row `walk-all-local@…` sibling) and one hand `curl`
+* Production rows this session: **710**, all SYNTHETIC, across **15 run ids** —
+  seven `walk:all` runs against production, each with its 9-row
+  `walk-all-local@…` sibling, and one hand `curl`
   (`f01-kearsarge@2026-08-19T23:02:09Z`, 1 row) used to diagnose the Kearsarge
-  floor. The sixth walk is the one against the FINAL shipped build. **No
+  floor. The seventh walk is the one against the FINAL shipped build. **No
   reaction was tapped, no ask submitted, no feedback row written.** The
   `f01-deploy-check` curl hit `/api/build`, which writes no search-log row, and
   the three `f01-probe…` browser runs and the `f01-supt-hunt` ran against
   `localhost:3000` and external district sites respectively, so none of them
   landed in the production store.
 * `search_log` **organic 125** — up from g21's 107, **delta +18** — synthetic
-  4642, unknown 2845, author 17, total 7629, reconciling exactly. Feedback
+  4745, unknown 2845, author 17, total 7732, reconciling exactly. Feedback
   store: 3 rows, all synthetic, 0 organic, unchanged.
 * Tracker **376 rows**, no duplicate IDs. Rows touched: `F01` updated IN PLACE
   to In progress with the close appended (it already existed as g16's intake

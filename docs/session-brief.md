@@ -7,7 +7,10 @@ session; what it says is what the last session actually left behind, not a plan.
 
 ## Where the tree is
 
-`main` at **`a119578`**, which is what production is serving (`/api/build`).
+`main` at **`1203d48`**, which is what production is serving (`/api/build`).
+The code merged as `a119578` (PR #108) and these records as `1203d48`
+(PR #109) — two merges, because `state.md` cannot carry a deploy SHA or a
+`walk:all` result that does not exist yet.
 Working tree clean, no open PRs, local `main` fast-forwarded.
 
 Gates at the close: **test 1240 pass / 0 fail · lint 0 errors, 11 allowlisted

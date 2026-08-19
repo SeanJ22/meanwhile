@@ -31,7 +31,15 @@ on:
     # Sundays 11:41 UTC — after LegiScan's own Sunday dataset rebuild, and
     # off the top of the hour where every other cron in the world lands.
     - cron: "41 11 * * 0"
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      simulate_change:
+        description: >-
+          Exercise the CHANGED path — run the full gate as though the snapshot
+          had moved, and commit nothing. Exists so the branch that guards real
+          data can be proven to execute without waiting for the data to move.
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -71,10 +79,66 @@ jobs:
           LEGISCAN_API_KEY: ${{ secrets.LEGISCAN_API_KEY }}
         run: corepack pnpm legiscan:fetch
 
+      # AUD-07 (2026-08-18, applied here by g17): the diff moves AHEAD of the
+      # gate. The audit named the meetings and dotgov refreshes; this workflow
+      # has the identical shape and the identical waste, and a defect found at
+      # one site is audited across every site that shares the code path.
+      #
+      # Nothing about the CHANGED path weakens. When the artifact moves, the
+      # full existing gate runs exactly as it did before, and it still stands
+      # between the new data and the commit.
+      - name: Diff the governed artifact
+        id: diff
+        run: |
+          if [ "${{ inputs.simulate_change }}" = "true" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "simulated=true" >> "$GITHUB_OUTPUT"
+            echo "SIMULATED CHANGE (dispatch input): the gate below runs in full."
+            echo "Nothing will be committed — this exists to prove the changed path executes."
+            exit 0
+          fi
+          if git diff --quiet -- data/votes/state-votes-snapshot.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "data/votes/state-votes-snapshot.json is UNCHANGED by this refresh."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "data/votes/state-votes-snapshot.json CHANGED — the full gate runs before anything commits."
+            git diff --stat -- data/votes/state-votes-snapshot.json
+          fi
+
+      - name: Unchanged — stating what was skipped and why
+        if: steps.diff.outputs.changed != 'true'
+        run: |
+          echo "The refresh ran and the governed artifact did not move."
+          echo ""
+          echo "SKIPPED: corepack pnpm test, and the commit."
+          echo "The dataset_hash matched for every state, nothing was downloaded, and the snapshot on main is byte-identical to the one this run produced."
+          echo ""
+          echo "This is a stated early exit, not a silent one, and it is not a pass"
+          echo "of the gate: the gate did not run because there was nothing to gate."
+
+      # THE GATE NEEDS A BROWSER (g17, 2026-08-18).
+      #
+      # R50 added tests/beacon-guard.test.ts, which proves the synthetic-run
+      # guard by RUNNING a real Chromium — a source scan was the guard that
+      # was green through two live leaks. No refresh workflow installed a
+      # browser, so from R50 onward every changed-data run failed at the gate
+      # with "Executable doesn't exist" and committed nothing. Caught by
+      # dispatching the changed path on purpose (run 32202786858); it would
+      # otherwise have surfaced as a snapshot that quietly stopped moving.
+      #
+      # Chromium only, and only on the path that runs the suite: a no-op run
+      # pays nothing, which is the whole point of the ordering above.
+      - name: Install the browser the gate needs
+        if: steps.diff.outputs.changed == 'true'
+        run: corepack pnpm exec playwright install --with-deps chromium
       - name: Validate before committing
+        if: steps.diff.outputs.changed == 'true'
         run: corepack pnpm test
 
       - name: Commit if changed
+        # A simulated run reaches the gate and stops here: it must never commit.
+        if: steps.diff.outputs.changed == 'true' && steps.diff.outputs.simulated != 'true'
         run: |
           if git diff --quiet -- data/votes/state-votes-snapshot.json; then
             echo "snapshot unchanged — dataset_hash matched for every state, nothing downloaded, nothing to commit"

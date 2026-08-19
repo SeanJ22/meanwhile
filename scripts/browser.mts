@@ -76,6 +76,18 @@ const KILL_BEACON = `(() => {
   }
 })()`;
 
+/**
+ * The run declaration, planted on `window` before the page's first script.
+ *
+ * A string for the same reason `KILL_BEACON` is one: tsx's esbuild transform
+ * rewrites named functions through a `__name` helper the page does not have.
+ * `JSON.stringify` on the id rather than interpolation, so a run id can never
+ * close the quote and become page script.
+ */
+export function declareRun(runId: string): string {
+  return `window.__WTP_SYNTHETIC_RUN__ = ${JSON.stringify(runId)};`;
+}
+
 export interface GuardedOptions extends LaunchOptions {
   /**
    * What to call this run in the search log when the environment did not say.
@@ -152,6 +164,21 @@ export async function launchGuarded(options: GuardedOptions): Promise<GuardedBro
       extraHTTPHeaders: { ...contextOptions.extraHTTPHeaders, ...headers },
     });
     await context.addInitScript(KILL_BEACON);
+    /*
+     * ITEM 4b (g17): the declaration in the page, so it can ride in the BODY.
+     *
+     * `KILL_BEACON` above forces the fetch fallback, where the header arrives.
+     * That is a workaround for a transport, and R50 recorded its cost in its
+     * own header: a guarded run never exercises the beacon path, so nothing
+     * proves it. This closes the gap at the source instead — `lib/log/client.ts`
+     * copies this global into the request body, and no transport strips a body.
+     *
+     * Both stay. The override keeps a context safe if the body path ever
+     * regresses; the body marker keeps a row declared if the override ever
+     * becomes a no-op again, which is exactly what happened in g14 when a
+     * `delete` was used on a prototype method.
+     */
+    await context.addInitScript(declareRun(runId));
     return context;
   }
 

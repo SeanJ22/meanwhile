@@ -133,10 +133,48 @@ function readLedger(): Window[] {
   const path = join(process.cwd(), "docs", "synthetic-runs.md");
   const text = readFileSync(path, "utf8");
   const windows: Window[] = [];
-  for (const line of text.split("\n")) {
-    if (!line.trim().startsWith("|")) continue;
+
+  /*
+   * ONLY THE WINDOW TABLES ARE WINDOWS (g17, 2026-08-18).
+   *
+   * This loop used to treat every table row in the file as a window. The
+   * ledger has since grown SESSION-RECORD tables — g12's, g14's, g15's, each
+   * `| run id | rows | what it was |` — and the strict three-cell refusal
+   * below fired on the first of them, so `pnpm searchlog:backmark` threw
+   * before it read a single window. The tool has been unrunnable since those
+   * tables landed, and nothing noticed because nothing ran it.
+   *
+   * The refusal was right and stays exactly as it was. What was wrong was the
+   * population: a window table is one whose HEADER is the window schema, and
+   * every other table in this document is prose. The header is tracked, tables
+   * are counted, and both counts are printed — a parser that silently found no
+   * windows would be the empty success this file's own header warns about.
+   */
+  const WINDOW_HEADER = ["runId", "from", "to", "class", "evidence"];
+  let inWindowTable = false;
+  let tables = 0;
+  let windowTables = 0;
+
+  for (const raw of text.split("\n")) {
+    const line = raw.trim();
+    if (!line.startsWith("|")) {
+      inWindowTable = false;
+      continue;
+    }
     const cells = line.split("|").slice(1, -1).map((c) => c.trim());
-    if (/^-+$/.test(cells[0]) || cells[0] === "runId") continue;
+    if (/^-+$/.test(cells[0])) continue; // the separator row under a header
+
+    const isHeader = cells[0] === WINDOW_HEADER[0] || cells[0] === "run id";
+    if (isHeader) {
+      tables += 1;
+      inWindowTable =
+        cells.length === WINDOW_HEADER.length &&
+        WINDOW_HEADER.every((h, i) => cells[i] === h);
+      if (inWindowTable) windowTables += 1;
+      continue;
+    }
+    if (!inWindowTable) continue;
+
     if (cells.length < 5) {
       throw new Error(
         `docs/synthetic-runs.md: row "${cells[0]}" has ${cells.length} cells — the class column ` +
@@ -166,6 +204,12 @@ function readLedger(): Window[] {
     }
     windows.push({ runId, from, to, runClass });
   }
+
+  console.log(
+    `ledger: ${tables} table(s) in docs/synthetic-runs.md, ${windowTables} of them window ` +
+      `table(s), ${windows.length} window(s) read. The rest are session records, which are ` +
+      `prose about runs rather than windows to attribute by.`,
+  );
   return windows;
 }
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { SYNTHETIC_RUN_BODY_KEY } from "@/lib/db/run-marker";
 import type { SearchLogEventType } from "@/lib/db/search-log";
 
 /**
@@ -29,7 +30,29 @@ export function logEvent(
   detail?: Record<string, string | number | boolean>,
 ): void {
   try {
-    const body = JSON.stringify({ eventType, ocdIds, detail });
+    /*
+     * ITEM 4b (g17, 2026-08-18): the run declaration rides in the BODY.
+     *
+     * A beacon flushed at unload does not carry the `x-wtp-synthetic-run`
+     * header, so an automated run's rows landed in the sold store labelled as
+     * a reader's — seven of them in g14, forty-four in g15. The body survives
+     * every transport. `scripts/browser.mts` sets the global on every guarded
+     * context before the page's first script runs; a real reader has no such
+     * global and sends nothing, which is exactly the organic default.
+     *
+     * Read defensively and never thrown from: this is fire-and-forget
+     * bookkeeping, and a log row may never cost the reader their page.
+     */
+    const declared =
+      typeof window !== "undefined" &&
+      typeof (window as { __WTP_SYNTHETIC_RUN__?: unknown }).__WTP_SYNTHETIC_RUN__ === "string"
+        ? (window as unknown as { __WTP_SYNTHETIC_RUN__: string }).__WTP_SYNTHETIC_RUN__
+        : undefined;
+    const body = JSON.stringify(
+      declared === undefined
+        ? { eventType, ocdIds, detail }
+        : { eventType, ocdIds, detail, [SYNTHETIC_RUN_BODY_KEY]: declared },
+    );
     if (typeof navigator !== "undefined" && navigator.sendBeacon) {
       navigator.sendBeacon(
         "/api/log",

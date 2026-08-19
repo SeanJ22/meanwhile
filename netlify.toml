@@ -21,6 +21,27 @@
   # see docs/state.md §1).
   NODE_VERSION = "24"
 
+# PR PREVIEWS DO NOT BUILD (g17, 2026-08-18, the author's configuration order).
+#
+# Netlify's own switch for this lives in the dashboard under Project
+# configuration > Build & deploy > Continuous deployment > Deploy Previews,
+# and the connector this repo has exposes no build-settings write at all — it
+# can set env vars, forms, access controls and the project name, and nothing
+# else. So the half that CAN be done from the repo is done here, and the
+# dashboard toggle is named in the session report rather than claimed.
+#
+# The `ignore` command runs before the build: exit 0 CANCELS it, a non-zero
+# exit lets it run. Scoped to deploy-preview, so production and branch deploys
+# are untouched — a preview that never builds cannot break a deploy that does.
+#
+# Every session here merges its own PR minutes after opening it, so a preview
+# build is a full Next build nobody looks at, on every push to every session
+# branch. .github/workflows/build-check.yml already runs the same command on
+# ubuntu in both modes and its log is readable without a Netlify login, which
+# is the check the preview was standing in for.
+[context.deploy-preview]
+  ignore = "exit 0"
+
 [functions]
   directory = "netlify/functions"
 

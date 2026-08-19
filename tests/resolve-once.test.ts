@@ -7,7 +7,8 @@ import { fileURLToPath } from "node:url";
 
 import { resolveZip } from "../lib/geo/zcta.ts";
 import { summarizeCoverage } from "../lib/registry/coverage.ts";
-import { divisionsAt, type GeoFeature } from "../lib/registry/resolve.ts";
+import { divisionsAt, sweepsRun, type GeoFeature } from "../lib/registry/resolve.ts";
+import { GET as meetingsGET } from "../app/api/meetings/route.ts";
 import type { Division, Registry } from "../lib/registry/types.ts";
 
 /**
@@ -143,5 +144,83 @@ test("the route passes its divisions only when the lookup succeeded", () => {
     source,
     /let resolvedDivisions: Division\[\] \| null = null/,
     "the failed state is representable — null means resolve it yourself",
+  );
+});
+
+/* -- the count itself, which is the only thing that can see a second sweep -- */
+
+/**
+ * AUD-04's DONE CONDITION, built a session late (g17, 2026-08-18).
+ *
+ * The change shipped with an equivalence proof and a hazard guard, and both are
+ * above. Neither can see the defect come back. A second sweep over the same
+ * polygons returns the same divisions, so the responses stay byte-identical and
+ * the empty-set guard stays green while the route quietly pays twice again —
+ * which is precisely the state the row existed to end. The property is a COUNT,
+ * and only a count can assert it.
+ *
+ * `sweepsRun()` in lib/registry/resolve.ts is the instrument: one integer
+ * increment inside `divisionsAt`, the function that walks every committed
+ * polygon. Deltas, never totals — the module is process-wide and other tests in
+ * the same run move it.
+ */
+
+test("one /api/meetings request runs exactly one point-in-polygon sweep", async () => {
+  const before = sweepsRun();
+  const response = await meetingsGET(
+    new Request("https://example.test/api/meetings?zip=85701&lat=32.21696&lng=-110.971"),
+  );
+  const swept = sweepsRun() - before;
+
+  assert.equal(response.status, 200, "the probe request did not succeed");
+  const body = (await response.json()) as { meetings: unknown[]; coverage: unknown };
+  assert.ok(Array.isArray(body.meetings), "no meetings array — the request did not do the work");
+  assert.ok(body.coverage, "no coverage block — the second consumer of the geometry never ran");
+
+  assert.equal(
+    swept,
+    1,
+    `the request ran ${swept} point-in-polygon sweep(s) over the committed geometry.\n` +
+      "  Exactly one is the AUD-04 condition: the route resolves the point for its\n" +
+      "  online-meeting filter and hands that same answer to coverageAt. Two means a\n" +
+      "  caller stopped passing its resolved divisions and is paying for the identical\n" +
+      "  sweep again; zero means this request answered without consulting the geometry\n" +
+      "  at all, which is a different and worse defect.",
+  );
+});
+
+test("the counter can read two, so a one is a measurement and not a constant", () => {
+  /*
+   * The control. An assertion of "exactly 1" is worthless if the instrument
+   * cannot produce anything else — a counter stuck at one is indistinguishable
+   * from a route that resolves once, and this repo has already shipped a guard
+   * that was green because it could not fail (the source-level synthetic-run
+   * check, green through two live leaks).
+   *
+   * So the pre-AUD-04 shape is reproduced deliberately: resolve the point, then
+   * ask summarizeCoverage to resolve it AGAIN by withholding the pre-resolved
+   * set. That is exactly what /api/meetings used to do, and the counter reads
+   * the 2 it used to cost.
+   */
+  const resolved = resolveZip("85701");
+  assert.ok(resolved.ok);
+  const point: [number, number] = [resolved.centroid.lng, resolved.centroid.lat];
+
+  const before = sweepsRun();
+  divisionsAt(point, features, byId);
+  summarizeCoverage(point, features, byId, registry.bodies, 3);
+  assert.equal(
+    sweepsRun() - before,
+    2,
+    "the pre-AUD-04 call shape no longer costs two sweeps — the counter is not measuring",
+  );
+
+  const withPre = sweepsRun();
+  const pre = divisionsAt(point, features, byId);
+  summarizeCoverage(point, features, byId, registry.bodies, 3, new Map(), pre);
+  assert.equal(
+    sweepsRun() - withPre,
+    1,
+    "handing the divisions in still costs two sweeps — the reuse is not happening",
   );
 });

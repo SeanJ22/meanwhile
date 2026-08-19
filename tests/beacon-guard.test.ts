@@ -5,8 +5,11 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { chromium } from "playwright";
 
-import { launchGuarded } from "../scripts/browser.mts";
-import { markerFromRequest } from "../lib/db/run-marker.ts";
+import { declareRun, launchGuarded } from "../scripts/browser.mts";
+import {
+  markerFromRequest,
+  markerFromRequestWithBody,
+} from "../lib/db/run-marker.ts";
 
 /**
  * R50: THE GUARD IS PROVEN BY RUNNING IT (2026-08-18, g16).
@@ -202,5 +205,162 @@ test("the transport this guards is still the one lib/log/client.ts prefers", asy
     src,
     /navigator\.sendBeacon\)/,
     "lib/log/client.ts no longer prefers sendBeacon — re-read tests/beacon-guard.test.ts's fixture",
+  );
+});
+
+/* -- item 4b: the unload beacon itself, fixed and proven ------------------- */
+
+/**
+ * THE LEAKING PATH, DRIVEN AND ASKED (g17, 2026-08-18, item 4b).
+ *
+ * The two tests above prove the WORKAROUND: a guarded context has no
+ * `sendBeacon` to prefer, so it falls back to `fetch` and the header arrives.
+ * Neither of them exercises the transport that actually leaked. The plant
+ * proves the leak is still there; nothing proved it could be closed.
+ *
+ * This does. The context here is built the unguarded way — no
+ * `extraHTTPHeaders`, no `sendBeacon` override, so the beacon really fires and
+ * really flushes at unload — with ONE addition: the run declaration planted on
+ * `window` by `declareRun`, exactly as `scripts/browser.mts` plants it. The
+ * page copies it into the request body the way `lib/log/client.ts` does, the
+ * navigation flushes the beacon, and `markerFrom` — the production resolver —
+ * is asked what the row would be recorded as.
+ *
+ * The header is deliberately absent. If it were sent too, a pass here would
+ * prove nothing about the body.
+ */
+
+/** The client's transport choice AND its body, including the declaration. */
+const PAGE_HTML_WITH_BODY_MARKER = `<!doctype html><meta charset="utf-8"><title>beacon</title>
+<script>
+  window.fire = function () {
+    var payload = { eventType: "SEARCH", ocdIds: [], detail: {} };
+    if (typeof window.__WTP_SYNTHETIC_RUN__ === "string") {
+      payload.syntheticRun = window.__WTP_SYNTHETIC_RUN__;
+    }
+    var body = JSON.stringify(payload);
+    if (typeof navigator !== "undefined" && navigator.sendBeacon) {
+      navigator.sendBeacon("/api/log", new Blob([body], { type: "application/json" }));
+      return "beacon";
+    }
+    fetch("/api/log", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: body,
+      keepalive: true,
+    });
+    return "fetch";
+  };
+  addEventListener("pagehide", function () { window.fire(); });
+</script>`;
+
+interface LandedWithBody extends Landed {
+  body: string;
+}
+
+/** The same stand-in, keeping the BODY as well as the headers. */
+async function serveWithBody(
+  landed: LandedWithBody[],
+): Promise<{ server: Server; origin: string }> {
+  const server = createServer((req, res) => {
+    if (req.url === "/api/log") {
+      const headers: Record<string, string> = {};
+      for (const [k, v] of Object.entries(req.headers)) {
+        if (typeof v === "string") headers[k] = v;
+      }
+      const chunks: Buffer[] = [];
+      req.on("data", (c: Buffer) => chunks.push(c));
+      req.on("end", () => {
+        landed.push({
+          transport: req.headers["content-type"] ?? "",
+          headers,
+          body: Buffer.concat(chunks).toString("utf8"),
+        });
+        res.writeHead(204).end();
+      });
+      return;
+    }
+    res.writeHead(200, { "content-type": "text/html" }).end(PAGE_HTML_WITH_BODY_MARKER);
+  });
+  await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+  const address = server.address();
+  if (address === null || typeof address === "string") throw new Error("no port");
+  return { server, origin: `http://127.0.0.1:${address.port}` };
+}
+
+test("an UNLOAD beacon carrying no header is still recorded as synthetic", async (t) => {
+  const landed: LandedWithBody[] = [];
+  const { server, origin } = await serveWithBody(landed);
+  t.after(() => new Promise<void>((r) => server.close(() => r())));
+
+  const raw = await chromium.launch();
+  t.after(() => raw.close());
+  /* No extraHTTPHeaders and no sendBeacon override: the leaking configuration,
+   * with the run declared in the page instead. */
+  const context = await raw.newContext();
+  await context.addInitScript(declareRun(RUN_ID));
+  const page = await context.newPage();
+  await page.goto(origin, { waitUntil: "domcontentloaded" });
+
+  /* Nothing is fired while the page is alive — a live beacon would prove
+   * nothing, since a live beacon already carried the header. The navigation
+   * below is what flushes it, and that flush is the one that leaked in
+   * production. */
+  await page.goto(`${origin}/elsewhere`, { waitUntil: "domcontentloaded" });
+
+  assert.ok(await waitForRow(landed), "no request reached /api/log at all");
+
+  const request = new Request(`${origin}/api/log`, {
+    method: "POST",
+    headers: landed[0].headers,
+  });
+  assert.equal(
+    markerFromRequest(request).runClass,
+    "ORGANIC",
+    "the header arrived after all — this test is no longer measuring the unload path",
+  );
+
+  const body = JSON.parse(landed[0].body) as Record<string, unknown>;
+  const marker = markerFromRequestWithBody(request, body);
+  assert.equal(
+    marker.runClass,
+    "SYNTHETIC",
+    "the unload beacon's row would still be recorded as a READER — the body marker did not survive",
+  );
+  assert.equal(marker.runId, RUN_ID, "the row carries no run id to attribute it by");
+});
+
+test("the shared site plants the declaration, and the client sends it", async () => {
+  /* The chain has three links and this test can only run two of them in a
+   * browser, so the third is pinned in source: the site must plant the global,
+   * and the client must copy it into the body. A page fixture is a COPY of the
+   * client's behaviour, and a copy goes stale silently. */
+  const site = await readFile(join(process.cwd(), "scripts", "browser.mts"), "utf8");
+  assert.match(
+    site,
+    /addInitScript\(declareRun\(runId\)\)/,
+    "the shared site no longer plants the run declaration in the page",
+  );
+
+  const client = await readFile(join(process.cwd(), "lib", "log", "client.ts"), "utf8");
+  assert.match(
+    client,
+    /__WTP_SYNTHETIC_RUN__/,
+    "lib/log/client.ts no longer reads the planted declaration",
+  );
+  assert.match(
+    client,
+    /SYNTHETIC_RUN_BODY_KEY/,
+    "lib/log/client.ts no longer puts the declaration in the body under the shared key",
+  );
+
+  const route = await readFile(
+    join(process.cwd(), "app", "api", "log", "route.ts"),
+    "utf8",
+  );
+  assert.match(
+    route,
+    /markerFromRequestWithBody\(request, body\)/,
+    "/api/log reads the header only again — an unload beacon's declaration would be dropped",
   );
 });

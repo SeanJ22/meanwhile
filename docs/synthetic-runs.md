@@ -41,6 +41,8 @@ shape of mistake this whole file exists to stop.
 | `g6-overlaps-unmarked@2026-08-17` | 2026-08-17T09:44:50Z | 2026-08-17T09:45:10Z | SYNTHETIC | g6 session, `pnpm overlaps` at 85701 — run because item 6 changed the who-governs card's height. `scripts/overlap-audit.mts` did not send the run header, so its page load landed as a single `ORGANIC` row at 09:44:58.102. **The second time in one day that a run forgot to declare itself**, which is why it is now a guard (`tests/run-marker-coverage.test.ts`) rather than a third reminder. Window read off the table. |
 | `g6-deploy-verification@2026-08-17` | 2026-08-17T07:51:00Z | 2026-08-17T07:53:30Z | SYNTHETIC | g6 session, verifying that the item 1b fix reached production: eight cache-busted GETs to `/api/meetings?zip=85701`, polled 25 seconds apart until the route answered 400. **These rows landed marked `ORGANIC`** — the polls did not send the run header — and correcting them is why this script may now overwrite `ORGANIC` inside an evidenced window. Window read off the table (rows at 07:51:17.269 through 07:53:00.108); a first attempt at this entry guessed 08:05–08:20 from memory and matched nothing, which is the reason every window in this file is now read from the data rather than recalled. |
 | `hotfix-0817-preview-pane@2026-08-17` | 2026-08-17T14:38:00Z | 2026-08-17T14:38:30Z | SYNTHETIC | hotfix-0817 session. The Browser pane opened http://localhost:3000 when the dev server was started to verify item 2 against the real carried rows, and `.env.local` holds the PRODUCTION connection string, so that page load wrote to the production search log. The pane load sends no run header - it is the app in a browser, not a script - so it landed as a single `ORGANIC` row at 14:38:12.768. The THIRD time in one day a run reached production undeclared, and the first where the writer was the preview browser rather than a script, which is a gap `tests/run-marker-coverage.test.ts` cannot close: it guards the repo scripts. Window read off the table, not recalled. |
+| `g14-ask-walk-unload-leak@2026-08-18` | 2026-08-18T18:13:00Z | 2026-08-18T18:37:53Z | SYNTHETIC | g14's ask-box walks 7 and 8. Seven `QUESTION_ASKED` rows, `run_id` null on every one, written by the unload beacon that Playwright's `extraHTTPHeaders` do not reach — the leak R50 diagnosed and item 4b fixed at the source. g14 recorded the seven instants exactly (18:13:00, 18:14:12, 18:15:25 for walk 7; 18:34:23, 18:35:32, 18:36:43, 18:37:52 for walk 8) and left them unmarked because a production write was unsanctioned. **The author sanctioned this window on 2026-08-18 (g17 brief, item 4c).** Window re-read off the table before it was written, never recalled: exactly 7 organic rows fall inside it. g15's ledger entry below described these same seven as "the author-acknowledged set" — that reading is superseded by the author's own scoping of this write. |
+| `g15-measure-focus-unload-leak@2026-08-18` | 2026-08-18T20:39:41Z | 2026-08-18T21:31:20Z | SYNTHETIC | g15's instrument runs, four `pnpm measure:focus` passes among them. All client-side event types, `run_id` null on every row, leaked by the same unload beacon; two of the zips are near-conclusive — `SEARCH 88045` (Lordsburg NM) and `SEARCH 79247` (Amarillo TX area) are named exterior sample points in `scripts/measure-focus.mts` and nothing else pans the map there. **The author sanctioned this window on 2026-08-18 (g17 brief, item 4c) at 44 rows.** ONE-ROW DISCREPANCY, stated rather than smoothed: g15's own record gives the window as 13:39:41–14:31:22 MST, and that window read off the table today holds **45** rows, not 44. This window deliberately closes at 21:31:20Z so it marks exactly the sanctioned 44 (through 21:31:19.326Z), leaving `SEARCH 03255` at 2026-08-18T21:31:22.492Z ORGANIC and untouched — marking it would be marking a row outside the 51, which the author's ruling forbids. It awaits his ruling. |
 
 
 ## The author's own traffic
@@ -279,3 +281,71 @@ has sanctioned. This entry is the record until he rules.
 store the business sells from, and it went 7 → 60 in a day, of which a
 substantial share is our own instrument. A denominator that includes the
 measuring apparatus is not a reader signal.
+
+---
+
+## 2026-08-18, g17 — the sanctioned write, executed, and what it did not reach
+
+The author sanctioned one narrow write through `WTP_PRODUCTION_DATABASE_URL_WRITE`,
+scoped to the g14 and g15 harness runs and nothing else. It was executed with
+`pnpm searchlog:backmark --target=production` against the two windows added to
+the table above — the same tool, the same ledger, no hand-written SQL.
+
+```
+target: WTP_PRODUCTION_DATABASE_URL_WRITE  role=neondb_owner  host=ep-dry-river-…
+before: 155 organic, 2611 synthetic, 2845 unknown, 17 author, 5628 total
+  marked  7 SYNTHETIC  g14-ask-walk-unload-leak@2026-08-18        [18:13:00Z .. 18:37:53Z]
+  marked 44 SYNTHETIC  g15-measure-focus-unload-leak@2026-08-18   [20:39:41Z .. 21:31:20Z]
+after:  104 organic, 2662 synthetic, 2845 unknown, 17 author, 5628 total
+```
+
+**Read before 155. Written 51. Read after 104.** The total is unchanged at
+5628: nothing was created and nothing was deleted, and `synthetic` rose by
+exactly the 51 that `organic` fell by.
+
+### The brief expected 101, and production says 104
+
+Stated rather than reconciled away. 101 was arithmetic on g16's reported figure
+of 152 organic; production read **155** when this session opened it. The three
+extra rows are `QUESTION_ASKED` at 23:12:20Z, 23:13:15Z and 23:13:42Z, and they
+fall inside g16's own `g16-walk-final@2026-08-18T23:10:00Z` window
+(23:10:23Z–23:14:05Z). **g16's final walk leaked three more rows after g16 took
+its census.** Neither number was wrong when it was written; the store moved
+between them, which is the reason a census is read at the moment it is
+reported rather than carried forward.
+
+### The 104 that remain, by burst — and the presumption, tested rather than repeated
+
+All 104 fall on 2026-08-18. Nothing organic survives from any earlier day.
+
+| Window (America/Phoenix) | Rows | What can be said |
+|---|---|---|
+| 11:50:44 – 11:56:11 | 9 | Before g15 opened. `run_id` null. Unattributable from here; g15 recorded the same finding. |
+| 14:31:22 – 14:47:10 | 82 | Begins with the single row the sanctioned window deliberately stops short of. Heavily `DISTRICT_SELECTED` (46) and `FILTER_APPLIED` (11) — the shape of an instrument driving the app, not a reader. **Outside the sanctioned 51 and untouched.** |
+| 15:24:14 – 15:25:29 | 3 | `SEARCH` + two `OFFICIAL_OPENED`, four minutes before g16's first walk. |
+| 15:35:47 – 15:38:07 | 3 | `QUESTION_ASKED`, **inside `g16-walk-1`'s window** (15:29:34–15:40:30). |
+| 15:55:08 – 15:56:35 | 4 | `QUESTION_ASKED`, **inside `g16-walk-3`'s window** (15:53:16–15:57:00). |
+| 16:12:20 – 16:13:42 | 3 | `QUESTION_ASKED`, **inside `g16-walk-final`'s window** (16:10:23–16:14:05). |
+
+**The presumption the brief asked to be named, named and then failed.** The
+instruction was to report the remainder as "presumed the author's own
+testing-era rows." That presumption does not survive contact with the data for
+at least **10** of the 104: the last three bursts sit inside g16's own declared
+walk windows, are all `QUESTION_ASKED` — the ask-box path that reloads the page
+between questions, which is exactly the unload beacon item 4b fixed — and are
+g16's instrument wearing a reader's clothes. The 82-row burst is the same shape
+one window earlier.
+
+They are **outside the 51 the author sanctioned, so they were not touched.**
+Naming them is what this file is for; marking them is his ruling to make.
+
+### What is now fixed at the source
+
+Every one of the 51 rows written here, and every one of the 10 named above,
+exists because a `sendBeacon` flushed at unload carries no
+`x-wtp-synthetic-run` header. Item 4b moved the declaration into the request
+BODY, which no transport strips, and proved it by driving a real browser
+through a real unload and asking `markerFromRequest` what the row would be
+(`tests/beacon-guard.test.ts`). A run from here on declares itself on both
+transports. This ledger's job is the rows that were written before that was
+true.

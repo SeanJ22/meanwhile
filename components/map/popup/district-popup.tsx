@@ -2,6 +2,7 @@
 
 import { TIER_LABEL } from "@/lib/ocd/tiers";
 import type { SeatHolder } from "@/lib/officials/lookup";
+import { TOP_OFFICES_GAP, topOfficesFor } from "@/lib/officials/top-offices";
 import type { DistrictHit } from "@/lib/map/districts";
 import { representationNoteFor } from "@/lib/registry/representation";
 
@@ -84,6 +85,10 @@ export function DistrictPopup({
   onExpand,
   onClose,
 }: DistrictPopupProps) {
+  // F01 1.2: derived from the same roster the list below renders, so the two
+  // can never name a different set of people.
+  const topOffices = topOfficesFor(representation);
+
   return (
     <PopupCard
       type={district.typeLabel}
@@ -105,6 +110,59 @@ export function DistrictPopup({
           upcomingMeetings
         )}
       </PopupRow>
+
+      {/*
+        **F01 1.2 (2026-08-19, the author)** — WHO RUNS IT, AT THE TOP.
+
+        *"As a reminder, the superintendent also should be listed at the top.
+        There should be a little bit of representation on the small card."* And
+        as the class: every small battlecard carries its top two office
+        holders, whatever those offices are called for that body type.
+
+        The list below is the body’s full roster in the body’s own published
+        order, which is an answer to “who sits on it” and not to “who runs
+        it”. Those are different questions and the card was only answering the
+        first — on Tucson Unified it opened with a board member, and the
+        district’s superintendent and board president were somewhere in a
+        five-row list a reader had to read to find.
+
+        The precedence is `lib/officials/top-offices.ts`, shared with the large
+        card, so the two cannot disagree about who leads a body.
+
+        THE GAP IS NAMED. A body whose top offices are not sourced renders a
+        sentence about OUR research — never a blank slot, which would read as
+        “this body has no leader”. */}
+      <PopupSectionLabel>Who runs it</PopupSectionLabel>
+      {topOffices.length > 0 ? (
+        topOffices.map((office) => (
+          <div key={`top:${office.holder.id}`} className="person-row">
+            <span className="person-row-name">
+              {onOpenOfficial ? (
+                <button
+                  type="button"
+                  onClick={() => onOpenOfficial(office.holder)}
+                  className="cursor-pointer text-left hover:text-link hover:underline"
+                >
+                  {office.holder.name}
+                </button>
+              ) : (
+                office.holder.name
+              )}
+            </span>
+            {/* What they DO here, in reader language, with the body’s own
+                published title beneath it — the role is our word, the title is
+                theirs, and the two are never merged. */}
+            <span className="person-row-office">
+              {office.role}
+              {office.holder.officeTitle ? ` · ${office.holder.officeTitle}` : ""}
+            </span>
+          </div>
+        ))
+      ) : (
+        <p className="mt-1 text-[0.6875rem] leading-relaxed text-muted">
+          {TOP_OFFICES_GAP}
+        </p>
+      )}
 
       <PopupSectionLabel>Representation</PopupSectionLabel>
       {representation.length > 0 ? (

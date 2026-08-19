@@ -74,11 +74,51 @@ test("the author's named example is covered: TUSD renders a full board", () => {
   const holders = rosterHoldersForBody(
     "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
   );
-  assert.equal(holders.length, 5, "TUSD's board has five seats");
-  assert.ok(holders.some((h) => h.officeTitle.includes("President")));
+  /*
+   * F01 1.2 (2026-08-19): 5 → 6. The sixth is the SUPERINTENDENT, who is hired
+   * by this board and does not sit on it. He is in the roster array because
+   * that is where the body card's `superintendent` slot resolves from, and
+   * `bodySubject` removes him from the seated list in the same change — so the
+   * board is still five seats, and the count below says which is which rather
+   * than just growing by one.
+   */
+  const seated = holders.filter((h) => !/superintendent/i.test(h.officeTitle));
+  const hired = holders.filter((h) => /superintendent/i.test(h.officeTitle));
+  assert.equal(seated.length, 5, "TUSD's board has five ELECTED seats");
+  assert.equal(hired.length, 1, "and one hired superintendent");
+  assert.equal(holders.length, 6);
+  assert.ok(seated.some((h) => h.officeTitle.includes("President")));
   for (const holder of holders) {
     assert.ok(holder.sourceUrl, `${holder.name}: no source — a name without one may not render`);
   }
+
+  // The hired executive must never be labelled as a board seat. A reader who
+  // reads "Governing Board Member" beside the superintendent's name has been
+  // told something false about how the district is governed.
+  assert.equal(hired[0].officeTitle, "Superintendent");
+  assert.ok(
+    !/board member|board president|board clerk/i.test(hired[0].officeTitle),
+    "the superintendent must not wear a board title",
+  );
+});
+
+/**
+ * F01 1.2 — the seated/hired split, held at the render.
+ *
+ * A person appearing under BOTH "Who sits on it" and "Runs the district day to
+ * day" would be the card saying two different things about one person's job.
+ */
+test("F01 1.2: the superintendent is pulled out of the seated list, not duplicated", () => {
+  const entry = readFileSync(
+    join(process.cwd(), "components", "map", "map-entry.tsx"),
+    "utf8",
+  );
+  assert.match(
+    entry,
+    /const seated = superintendent\s*\n?\s*\? roster\.filter\(\(h\) => h\.id !== superintendent\.id\)\s*\n?\s*: roster;/,
+    "the seated list must exclude the hired superintendent",
+  );
+  assert.match(entry, /representation: seated,/);
 });
 
 test("the mayor joins the model (5b): Tucson's roster includes the Mayor", () => {

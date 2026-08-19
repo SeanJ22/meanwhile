@@ -1717,3 +1717,46 @@ parents: rungs 4, 5 and 10 as named per row above.
 186-body hunt across ~40 hosts): the subcommittee sweep. Tracked, specced, and
 its first three rungs recorded above so the next session starts on rung 4 rather
 than on rung 1.
+
+## Top office holders per body — F01 1.2 / 2.2 / item 0b, 2026-08-19
+
+**Item 0b, answered before anything was built.** *"Do we hold the top-office-holder
+data at all?"* — **Partly.** Every curated roster holds the ELECTED head under
+the body's own published title (Governing Board President, Chairman of the
+Board of Supervisors, Commissioner Director, Mayor, Selectboard Chair). None
+held the APPOINTED executive — the superintendent, the county administrator,
+the town manager — because the rosters are of people who SIT on the body and
+that person does not.
+
+So 1.2/2.2 was a render change for one half and a source hunt for the other,
+and it is recorded as both. `lib/officials/top-offices.ts` carries the
+precedence and `tests/top-offices.test.ts` asserts all **12** shipped rosters
+resolve at least a presiding officer, so the render half is complete for every
+covered body today.
+
+### The hunt: appointed executives, 1 of 12 landed
+
+| Body | Rung | Result |
+|---|---|---|
+| Tucson Unified School District | 2 — plain fetch | **HIT.** `https://www.tusd1.org/superintendent` → 200, 46,854 bytes. Names "Dr. Gabriel Trujillo, Superintendent, Tucson Unified School District" in the district's own words, three times on the page. **Shipped.** |
+| Vail Unified School District | 2 → 6 | Rung 2: `/superintendent` → 404; the site's own nav links `/page/superintendent`. Rung 6 (live browser) → 200, and the rendered text names "Superintendent Carruth" — **a surname only**. NOT SHIPPED: a person's name is the one thing this product may not half-source, and a surname with no verified given name is a wrong-name risk. Next rung: 9 (the district's linked board documents, which name officers in full) or 7 (the site's own JSON endpoint). |
+| Sunnyside Unified School District | 2 | `https://www.susd12.org/superintendent` → 200, 228,581 bytes. The page is the superintendent's PERFORMANCE GOALS and names the office throughout without naming the person. Next rung: 8 (structured markup) or 9 (board minutes). |
+| Amphitheater Unified School District | 2 → 6 | `/domain/62` and `/domain/8` → 404. The home page's own links reach the Governing Board but no administration page. Next rung: 10 (sitemap) or 12 (identify the CMS — the `/domain/NNN` path is Blackboard/Finalsite and its directory module has a predictable path). |
+| Kearsarge Regional School District | 2 → 6 | Home page → 200 but no superintendent mention; the only link found is a board press release at `/district/files/interim-superintendent`, which suggests the post is INTERIM and is exactly the case where a stale name would be worst. Rung 6 on `/district/superintendent` → **403** (the same host that refused the calendar refresh). Next rung: 4 (a different client), then 11 (the Internet Archive). |
+| Rockaway Township Board of Education | 2 → 6 | `rocktwp.net` is the TOWNSHIP, not the school district — the wrong host, which is a finding about our own note rather than a wall. Next rung: 2 against the district's own domain, which is not recorded in the registry yet. |
+| Pima County · Morris County · Merrimack County | — | NOT ATTEMPTED. County administrators/managers. |
+| Tucson · Newbury · Rockaway Township (council) | — | NOT ATTEMPTED. City/town managers. |
+
+### State: OPEN, 1 of 12, with every next rung named
+
+Not exhausted and not reported as one. The render does not depend on it: every
+body resolves its ELECTED head today, so no card is blank, and a body with no
+appointed executive on record shows one row rather than two — which is the
+honest answer, not a gap.
+
+**Why it stopped here.** F01 carried 55 items across 13 surfaces. This is a
+12-body hunt across 12 different content-management systems, three of which are
+JS-rendered and one of which returns 403 to a live browser. The rungs above are
+recorded so the next session starts on rung 4 or 9 per body rather than on
+rung 1, and so the two REAL findings — Kearsarge's post may be interim, and the
+Rockaway BOE domain is not in the registry — are not rediscovered.

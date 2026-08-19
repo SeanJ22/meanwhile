@@ -2106,6 +2106,21 @@ function bodySubject(
     .filter((m) => m.ocdId !== null && m.ocdId === body.ocdId)
     .sort((a, b) => a.startsAt.localeCompare(b.startsAt));
 
+  /*
+   * F01 1.2 (2026-08-19): the superintendent is HIRED by the board and does
+   * not sit on it, so they belong in exactly one place on this card — “Runs
+   * the district day to day” — and never in “Who sits on it”. They live in the
+   * roster array because that is where this slot resolves from; pulling them
+   * out of the seated list is the other half of the same decision.
+   */
+  const superintendent =
+    body.divisionType === "school_district"
+      ? (roster.find((h) => /superintendent/i.test(h.officeTitle ?? "")) ?? null)
+      : null;
+  const seated = superintendent
+    ? roster.filter((h) => h.id !== superintendent.id)
+    : roster;
+
   return {
     title: body.name ?? body.divisionLabel,
     subtitle: body.divisionLabel,
@@ -2134,7 +2149,7 @@ function bodySubject(
           ]
         : []),
     ],
-    representation: roster,
+    representation: seated,
     representationNote:
       "We know this body governs here because its division exists. We haven't sourced who sits on it.",
     meetings,
@@ -2148,10 +2163,7 @@ function bodySubject(
       // The superintendent is HIRED by the board, so they are not in the
       // elected roster and have to be asked for separately. Null renders as
       // the named gap, never as an absent row.
-      superintendent:
-        body.divisionType === "school_district"
-          ? (roster.find((h) => /superintendent/i.test(h.officeTitle)) ?? null)
-          : null,
+      superintendent: superintendent,
       contact: bodyContactRows(body),
       jurisdiction: [
         { label: "Governs", value: body.divisionLabel },
@@ -2363,6 +2375,25 @@ function districtSubject(
       { label: "Type", value: district.typeLabel },
       { label: "Tier", value: TIER_LABEL[district.tier] },
       { label: "State", value: district.state, mono: true },
+      /*
+       * F01 2.1 (2026-08-19, the author): *"When looking at the large
+       * battlecard in Overview, the district's website should be present in
+       * Overview."* His instance was Tucson Unified District, whose Overview
+       * was three identifiers — Type, Tier, State — and no door to the
+       * district itself.
+       *
+       * The BODY card already had this row; the DIVISION card never did, and
+       * a division card is what a who-governs row and a district click both
+       * open. `bodyHomepageRows` is shared with `bodySubject` so the two
+       * cards cannot render a body’s own site two different ways.
+       *
+       * A division can be governed by more than one body — a county board and
+       * a library district sit in the same division — so this lists each
+       * distinct site rather than electing one, which would be inventing an
+       * answer about who speaks for a jurisdiction (the same reason the place
+       * card elects nobody).
+       */
+      ...bodyHomepageFacts(coverage, district.ocdId),
     ],
     /*
      * 6f2 (2026-08-15): the enrichment. The overview was three identifiers
@@ -2397,6 +2428,54 @@ function districtSubject(
      */
     sources: districtCardSources(roster, meetings),
   };
+}
+
+/**
+ * **The body's own website, as an Overview row** — F01 2.1, 2026-08-19.
+ *
+ * Shared by `bodySubject` and `districtSubject` so a body's site cannot render
+ * two different ways on the two cards that can show it. The label and the
+ * host-only display are the body card's, unchanged.
+ *
+ * **Nothing is invented.** A body with no `homepageUrl` contributes no row —
+ * never a guessed domain, and never a row claiming a site exists. Measured on
+ * the shipped registry (2026-08-19): 95 of 347 bodies carry one, and every
+ * body without is `NOT_ATTEMPTED` — nobody has hunted it yet. So this is not a
+ * render suppressing data; every body the product actually covers has its site
+ * and now shows it on both cards.
+ */
+function bodyHomepageFacts(
+  coverage: CoverageSummary | null,
+  ocdId: string,
+): { label: string; value: React.ReactNode }[] {
+  const seen = new Set<string>();
+  const rows: { label: string; value: React.ReactNode }[] = [];
+  for (const body of coverage?.bodies ?? []) {
+    if (body.ocdId !== ocdId || !body.homepageUrl) continue;
+    if (seen.has(body.homepageUrl)) continue;
+    seen.add(body.homepageUrl);
+    let host: string;
+    try {
+      host = new URL(body.homepageUrl).hostname.replace(/^www\./, "");
+    } catch {
+      // A malformed stored URL renders no row rather than a broken link.
+      continue;
+    }
+    rows.push({
+      label: "Official site",
+      value: (
+        <a
+          href={body.homepageUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
+        >
+          {host} →
+        </a>
+      ),
+    });
+  }
+  return rows;
 }
 
 /**

@@ -12,6 +12,7 @@ import {
   orderByUpcomingFirst,
 } from "@/lib/meetings/ordering";
 import { NO_BODY_BLURB_LINE } from "@/lib/officials/body-blurbs";
+import { TOP_OFFICES_GAP, topOfficesFor } from "@/lib/officials/top-offices";
 import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyColorVar } from "@/lib/officials/party-color";
@@ -383,9 +384,12 @@ function BodySections({
               <div className="mt-2 border-t border-[var(--rule)] pt-2">
                 <PopupSectionLabel>Runs the district day to day</PopupSectionLabel>
                 {card.superintendent ? (
+                  // F01 2.2: this block IS the top office, so it must not print
+                  // a “Who runs it” heading over a duplicate of its one row.
                   <Representation
                     holders={[card.superintendent]}
                     note=""
+                    showTopOffices={false}
                     onOpenHolder={onOpenHolder}
                   />
                 ) : (
@@ -686,15 +690,72 @@ function Representation({
   holders,
   note,
   onOpenHolder,
+  /**
+   * F01 2.2 (2026-08-19): lead with WHO RUNS IT.
+   *
+   * Default ON, so a surface that forgets to ask for it still gets it — the
+   * author’s rule is that every Representation list carries its top offices,
+   * and a default-off flag is how half of them would end up without one. Set
+   * false only where the list is ALREADY the top offices (a single-seat
+   * division), which would otherwise print the same person twice.
+   */
+  showTopOffices = true,
 }: {
   holders: SeatHolder[];
   note: string;
   onOpenHolder?: (holder: SeatHolder) => void;
+  showTopOffices?: boolean;
 }) {
   if (holders.length === 0) return <Empty>{note}</Empty>;
 
+  const topOffices = showTopOffices ? topOfficesFor(holders) : [];
+  // One person in the list IS the top office; a heading over a duplicate of
+  // the only row is furniture, not information.
+  const leadsWorthShowing = topOffices.length > 0 && holders.length > 1;
+
   return (
     <>
+      {/*
+        F01 2.2 — the same question the small card answers, answered the same
+        way, from the same precedence table. *"When I look at representation, as
+        mentioned, there should be the superintendent in there."*
+
+        The list below is the roster in the body’s own published order, which
+        answers “who sits on it”. This answers “who runs it”, and a reader
+        should not have to work the second out of the first.
+      */}
+      {leadsWorthShowing && (
+        <div className="mb-2.5 border-b border-[var(--rule)] pb-2.5">
+          <PopupSectionLabel>Who runs it</PopupSectionLabel>
+          {topOffices.map((office) => (
+            <p
+              key={`top:${office.holder.id}`}
+              className="mt-1 text-[0.8125rem] leading-snug text-paper"
+            >
+              {onOpenHolder ? (
+                <button
+                  type="button"
+                  onClick={() => onOpenHolder(office.holder)}
+                  className="cursor-pointer font-medium hover:text-signal hover:underline"
+                >
+                  {office.holder.name}
+                </button>
+              ) : (
+                <span className="font-medium">{office.holder.name}</span>
+              )}
+              <span className="text-muted">
+                {" — "}
+                {office.role}
+              </span>
+            </p>
+          ))}
+        </div>
+      )}
+      {showTopOffices && topOffices.length === 0 && (
+        <p className="mb-2.5 border-b border-[var(--rule)] pb-2.5 text-[0.6875rem] leading-relaxed text-muted">
+          {TOP_OFFICES_GAP}
+        </p>
+      )}
       {holders.map((holder) => (
         <div key={holder.id} className="account-modal-person flex items-start gap-3">
           {/*

@@ -210,6 +210,10 @@
 [g14] 85701: the map never empties while a wider view loads
 [g15] M135: an autocomplete body row opens a card at 85641
 [g15] M135: an autocomplete body row opens a card at 85701
+[g17] /ballot no longer renders the widened SUNSET label at 85641
+[g17] /ballot no longer renders the widened SUNSET label at 85701
+[g17] /ballot renders the fifth provision kind at 85641
+[g17] /ballot renders the fifth provision kind at 85701
 [g3] /ballot names the pick as a ballot-building action at 03255
 [g3] /ballot names the pick as a ballot-building action at 07866
 [g3] /ballot names the pick as a ballot-building action at 85641

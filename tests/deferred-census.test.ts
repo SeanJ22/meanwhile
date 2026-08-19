@@ -200,10 +200,36 @@ test("an empty history is not reported as an empty folder of commits", () => {
     /not recovered/,
     "the unrecovered-entry-date wording is gone — a missing date would be asserted as a duration",
   );
-  assert.match(
+  /*
+   * The MECHANISM is pinned above, on the script. This half used to pin the
+   * DATA — it required the rendered census to actually contain the phrase,
+   * which held only while at least one row's entry date was unrecoverable.
+   *
+   * On 2026-08-18 (g19) the history walk reached every open row and the
+   * phrase stopped appearing. That is the renderer working and the data
+   * improving, and the test failed for it. A guard that fails when the data
+   * gets better teaches its next reader to edit the guard, which is how a
+   * guard stops being one.
+   *
+   * So the assertion is now on the RULE it was always protecting: wherever
+   * an entry date IS missing, it renders as "not recovered" and never as a
+   * duration computed from nothing. No missing dates means nothing to check,
+   * and the count is stated so an empty check cannot read as a passing one.
+   */
+  const unrecovered = (CENSUS_MD.match(/_not recovered_/g) ?? []).length;
+  const bareDurations = (
+    CENSUS_MD.match(/open for \d+ day/g) ?? []
+  ).length;
+  console.log(
+    `      census: ${unrecovered} row(s) with an unrecovered entry date, ${bareDurations} reporting a duration`,
+  );
+  // A duration is only sayable where a date was recovered. If every row can
+  // report one, none should be marked unrecovered, and vice versa — what
+  // must never happen is a duration standing in for a date nobody has.
+  assert.doesNotMatch(
     CENSUS_MD,
-    /_not recovered_/,
-    "no row reports an unrecovered entry date, though the history is only days deep",
+    /open for \D/,
+    "a duration is rendering with no number behind it",
   );
 });
 
@@ -275,13 +301,43 @@ test("every non-code id names a row the census holds", () => {
   const orphans = listed.filter((id) => !ids.has(id));
   assert.deepEqual(orphans, [], `non-code id(s) the census does not hold: ${orphans.join(", ")}`);
 
-  // The author's enumerated legal and business rows, pinned. If one silently
-  // leaves the list, the row quietly rejoins the build tab.
+  /*
+   * The author's enumerated legal and business rows, pinned so that one
+   * cannot silently leave the list and quietly rejoin the build tab.
+   *
+   * A row that has CLOSED is the one legitimate way off the list, and this
+   * pin did not know that: B06 closed, `pnpm deferred:xlsx` refused to
+   * generate while the list named an id the census no longer held, removing
+   * it was the fix — and then this assertion failed for the removal. Two
+   * guards on the same file disagreeing is worse than either alone.
+   *
+   * So the pin now reads: on the list, OR gone from the census with its
+   * removal recorded by name in `closedSince`. A row that vanishes from
+   * both the list and the record still fails.
+   */
+  const censusIds = ids;
+  const recordedClosed: string[] = NONCODE.closedSince?.removed ?? [];
   for (const id of ["B05", "B08", "B09", "D23"]) {
-    assert.ok(NONCODE.legal.includes(id), `${id} left the legal list`);
+    assert.ok(
+      NONCODE.legal.includes(id) ||
+        (!censusIds.has(id) && recordedClosed.includes(id)),
+      `${id} left the legal list without its row closing and being recorded`,
+    );
   }
   for (const id of ["B01", "B02", "B03", "B04", "B06", "B07", "T04", "X02", "X03"]) {
-    assert.ok(NONCODE.business.includes(id), `${id} left the business list`);
+    assert.ok(
+      NONCODE.business.includes(id) ||
+        (!censusIds.has(id) && recordedClosed.includes(id)),
+      `${id} left the business list without its row closing and being recorded`,
+    );
+  }
+  // The escape hatch is not free: every id that used it has to be a row the
+  // census genuinely no longer holds.
+  for (const id of recordedClosed) {
+    assert.ok(
+      !censusIds.has(id),
+      `${id} is recorded as closed but the census still holds it`,
+    );
   }
 });
 

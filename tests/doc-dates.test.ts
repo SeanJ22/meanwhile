@@ -193,7 +193,17 @@ export const SUSPICIOUS_REASONS: Readonly<
   },
 };
 
-const ALLOWLIST = [
+/** One tolerated future date, pinned to its file and its exact count. */
+interface DateAllowEntry {
+  file: string;
+  date: string;
+  count: number;
+  group: string;
+}
+
+// The annotation is load-bearing now that the list is empty: an empty array
+// literal has no element type to infer. `parseAllowlistSource` reads past it.
+const ALLOWLIST: DateAllowEntry[] = [
   // ---- AUTHOR_DECISION (R14): EMPTY, and that is the outcome, not an
   // ---- oversight. All five stamps were recovered from two independent
   // ---- sources — the introducing commit's author date (already in -0700)

@@ -208,7 +208,13 @@ export function readAllowlist(path) {
  * emptied the list. One implementation now, imported by both.
  */
 export function parseAllowlistSource(source, label) {
-  const start = source.indexOf("ALLOWLIST = [");
+  // The marker tolerates a TYPE ANNOTATION between the name and the `=`.
+  // An empty literal has no element type for TypeScript to infer, so the
+  // declaration needs one — and a strict `indexOf("ALLOWLIST = [")` would
+  // then stop finding its own list, which is the check silently losing its
+  // rules rather than failing on them.
+  const opener = /ALLOWLIST(?:\s*:[^=\n]*)?\s*=\s*\[/.exec(source);
+  const start = opener ? opener.index : -1;
   if (start === -1) {
     throw new Error(`${label}: no ALLOWLIST literal found — cannot check anything`);
   }

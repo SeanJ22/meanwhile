@@ -11977,3 +11977,43 @@ while the code was already right.** It happened twice more here.
 * **Tracker row count.** g20 reported 369 rows; the file held **368 data
   rows** — the count included the header. It is **374** now, after this
   session's six additions.
+
+### State as of 2026-08-19 (g21)
+
+* Deploy `b6dc706`, verified via `/api/build`. One merge.
+* `walk:all`: **316 passed, 0 regressions, 0 could-not-run.** 316 distinct
+  identities of 316 run; baseline 309, **added 7, GONE 0**. The seven new
+  checks assert the SHAPE of this session's claims, not just their presence —
+  that Pima comes back `VOTE_CENTER` with 100+ sites, that a walled
+  jurisdiction renders 21 rungs, and that at 03255 the badge SPLITS the answer
+  (31 of 70) rather than blessing all of it.
+* Gates: test **1183 pass / 0 fail**, lint **0 errors / 12 allowlisted
+  warnings**, `tsc --noEmit` clean, build green.
+* Budget 1a: **196** files (baseline 195, ceiling 220). Budget 1b default
+  mode: **927** (baseline 935, ceiling 1050). Budget 2: raw **2,736,316** /
+  gzip **824,489** across 13 chunks, against committed ceilings **3,100,000 /
+  940,000** — read from `scripts/bundle-budget.json` as the check now prints
+  them exactly, never off the rounded KB line. **The ceilings did not move.**
+* Production rows this session: **292**, all SYNTHETIC, across six run ids
+  from three `walk:all` runs — `walk-all@…19:15:00.555Z` (90) +
+  `walk-all-local@…19:15:00.554Z` (8), `walk-all@…19:20:05.049Z` (89) +
+  `…local@…19:20:05.048Z` (8), `walk-all@…19:26:55.463Z` (88) +
+  `…local@…19:26:55.463Z` (9). **No reaction was tapped, no ask submitted, no
+  feedback row written.** Every other probe this session ran against
+  `localhost:3000`, whose `DATABASE_URL` points at a local Neon branch that
+  cannot authenticate, so none of them landed anywhere.
+* `search_log` **organic 107** — unchanged from g19 AND g20, **delta 0** —
+  synthetic 3936, unknown 2845, author 17, total 6905, reconciling exactly.
+  Feedback store: 3 rows, all synthetic, 0 organic.
+* Tracker **374 rows**, no duplicate IDs, **85 open** — of which **79 are
+  deferred-queue rows and 6 are tracker rows outside the queue**. Rows touched:
+  `B19` `B16` → Done; `M123` `H03` `B14` `D50` `D52` → In progress; `M81`
+  `D47` → Done; `R03` `D70` `B15` `AUD09` notes; `V09` `V10` `V11` `V12` `V13`
+  `R54` created.
+* `docs/queue-homes.md`: **NEEDS A HOME = 0.** 7 finished, 19 H, 29 post-H,
+  6 feedback session, 25 killed.
+* `stamp-audit.md`: 25 stamps audited, **0 disagree with git history**, 2
+  author-ruled expected (photo doors 1 and 2), 0 later than today, 0
+  unrecoverable.
+* `context.md` **25.5 KB of 40 KB**. Mirror: the canonical 15 present, nothing
+  undeclared; code mirror 12 files, 445.7 KB.

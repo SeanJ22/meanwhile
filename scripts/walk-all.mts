@@ -3619,6 +3619,149 @@ for (const zip of ["85701", "85641"]) {
     );
 }
 
+
+/* ═══════════════════════════════════════════════════════════════════════
+ * g21 — the last queue session. Four claims, appended per the standing rule.
+ *
+ * The suite only grows: a win shipped in one session and broken in the next
+ * dies silently unless something owns it once the session ends.
+ * ═══════════════════════════════════════════════════════════════════════ */
+
+await (async function g21Checks() {
+  console.log("\n── g21: voting locations, the Kearsarge towns, the badge, the comparison ──");
+
+  // ── B19 — where a reader can actually vote ────────────────────────────
+  //
+  // Asserted through the ROUTE rather than the page, because the claim is
+  // about the answer: Pima runs vote centers and the card has to say so.
+  try {
+    const res = await fetch(`${BASE}/api/voting-sites`, {
+      method: "POST",
+      headers: { "content-type": "application/json", ...RUN_HEADERS },
+      body: JSON.stringify({ address: "240 N Stone Avenue, Tucson, AZ 85701" }),
+    });
+    if (!res.ok) {
+      cannotRun("g21", "B19: a Tucson address gets Pima's vote centers", `HTTP ${res.status}`);
+    } else {
+      const answer = (await res.json()) as {
+        jurisdictions: {
+          name: string;
+          model: string;
+          sites: unknown[];
+          narrowing: { kind: string };
+        }[];
+      };
+      const pima = answer.jurisdictions.find((j) => /Pima/.test(j.name));
+      check(
+        "g21",
+        "B19: a Tucson address gets Pima's vote centers, and the model is VOTE_CENTER",
+        Boolean(pima) && pima!.model === "VOTE_CENTER" && pima!.sites.length >= 100,
+        pima
+          ? `${pima.name}: ${pima.sites.length} site(s), model ${pima.model}, narrowing ${pima.narrowing.kind}`
+          : "no Pima jurisdiction in the answer",
+      );
+      // B16's whole point: a vote-center county is NOT_NEEDED, never a gap.
+      check(
+        "g21",
+        "B16: a vote-center county narrows to NOT_NEEDED, never to a failure",
+        pima?.narrowing.kind === "NOT_NEEDED",
+        `narrowing = ${pima?.narrowing.kind ?? "(absent)"}`,
+      );
+    }
+  } catch (error) {
+    cannotRun("g21", "B19: a Tucson address gets Pima's vote centers", (error as Error).message.slice(0, 90));
+  }
+
+  // A walled jurisdiction renders its rungs, never an emptiness. This is the
+  // transparency mandate's own assertion and it must survive a refactor.
+  try {
+    const res = await fetch(`${BASE}/api/voting-sites`, {
+      method: "POST",
+      headers: { "content-type": "application/json", ...RUN_HEADERS },
+      body: JSON.stringify({ address: "937 Route 103, Newbury, NH 03255" }),
+    });
+    if (!res.ok) {
+      cannotRun("g21", "B19: a walled jurisdiction renders its rungs", `HTTP ${res.status}`);
+    } else {
+      const answer = (await res.json()) as {
+        jurisdictions: { name: string; refusal: { rungs: unknown[] } | null }[];
+      };
+      const withRungs = answer.jurisdictions.filter((j) => (j.refusal?.rungs.length ?? 0) > 0);
+      const rungs = withRungs.reduce((n, j) => n + j.refusal!.rungs.length, 0);
+      check(
+        "g21",
+        "B19: a walled jurisdiction renders its RUNGS, never an emptiness",
+        withRungs.length > 0 && rungs >= 10,
+        `${withRungs.length} jurisdiction(s) carrying ${rungs} recorded rung(s)`,
+      );
+    }
+  } catch (error) {
+    cannotRun("g21", "B19: a walled jurisdiction renders its rungs", (error as Error).message.slice(0, 90));
+  }
+
+  // ── M123 — the Kearsarge towns, and M81's division set ────────────────
+  try {
+    const res = await fetch(
+      `${BASE}/api/meetings?lat=43.3217&lng=-72.0371&zip=03255`,
+      { headers: RUN_HEADERS },
+    );
+    if (!res.ok) {
+      cannotRun("g21", "M123: Wilmot and New London sit in 03255's answer", `HTTP ${res.status}`);
+    } else {
+      const body = (await res.json()) as {
+        meetings: { jurisdiction: string; ocdId: string | null }[];
+        governingOcdIds: string[] | null;
+      };
+      const towns = new Set(body.meetings.map((m) => m.jurisdiction));
+      check(
+        "g21",
+        "M123: Wilmot AND New London are in 03255's own answer",
+        towns.has("Wilmot, NH") && towns.has("New London, NH"),
+        `${body.meetings.length} meeting(s) across ${towns.size} jurisdiction(s): ${[...towns].join(" · ")}`,
+      );
+      // M81 — the badge cannot be computed without this, and a NULL here is
+      // deliberately different from an empty array.
+      check(
+        "g21",
+        "M81: the meetings route sends the reader's own division set",
+        Array.isArray(body.governingOcdIds) && body.governingOcdIds.length > 0,
+        `governingOcdIds = ${
+          body.governingOcdIds === null ? "null (resolution FAILED)" : `${body.governingOcdIds.length} division(s)`
+        }`,
+      );
+      // And the badge's whole argument: at this zip most of what is on screen
+      // does NOT govern the reader. A flat "everything governs" answer would
+      // mean the division set had collapsed.
+      const governing = new Set(body.governingOcdIds ?? []);
+      const governs = body.meetings.filter((m) => m.ocdId && governing.has(m.ocdId)).length;
+      check(
+        "g21",
+        "M81: at 03255 the badge splits the answer rather than blessing all of it",
+        governs > 0 && governs < body.meetings.length,
+        `${governs} of ${body.meetings.length} meeting(s) govern this reader`,
+      );
+    }
+  } catch (error) {
+    cannotRun("g21", "M123: Wilmot and New London sit in 03255's answer", (error as Error).message.slice(0, 90));
+  }
+
+  // ── D47 — two states side by side ─────────────────────────────────────
+  try {
+    const res = await fetch(`${BASE}/about-area/compare?a=NH&b=NJ`, { headers: RUN_HEADERS });
+    const html = res.ok ? await res.text() : "";
+    check(
+      "g21",
+      "D47: the side-by-side renders both states and says it does not rank",
+      res.ok &&
+        /New Hampshire and New Jersey/.test(html) &&
+        /(don&#x27;t|don't|do not) rank/i.test(html),
+      `HTTP ${res.status}, ${html.length} bytes`,
+    );
+  } catch (error) {
+    cannotRun("g21", "D47: the side-by-side renders", (error as Error).message.slice(0, 90));
+  }
+})();
+
 await browser.close();
 
 const EXCLUDED = [

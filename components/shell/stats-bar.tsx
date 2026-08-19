@@ -37,10 +37,15 @@ export function StatsBar() {
       computeStats({
         meetings,
         coverage: result?.coverage ?? null,
-        drawnDistricts: ui.showDistricts ? drawnDistricts : null,
+        /* F01 9.2 (2026-08-19): the real list, always. This used to be
+           nulled whenever the mirrored switch read false, which is what
+           turned "the map is drawing seven districts" into "Off" while
+           seven were on screen. `deriveStatsView` decides what the value
+           means; this hands it the evidence rather than pre-judging it. */
+        drawnDistricts,
         atAddress,
       }),
-    [meetings, drawnDistricts, ui.showDistricts, result, atAddress],
+    [meetings, drawnDistricts, result, atAddress],
   );
 
   // The failed-fetch rule (2a): a failed operation may not render as an

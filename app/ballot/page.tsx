@@ -61,6 +61,7 @@ import type {
   Candidacy,
   Contest,
 } from "@/lib/ballot/types";
+import { sharedNotesFor } from "@/lib/ballot/shared-notes";
 import { resolveZip } from "@/lib/geo/zcta";
 import { divisionsAt } from "@/lib/registry/server";
 import { PRODUCT_NAME } from "@/lib/brand";
@@ -82,8 +83,36 @@ import { PRODUCT_NAME } from "@/lib/brand";
 
 export const runtime = "nodejs";
 
+/**
+ * **F01 11.3 and 11.4 (2026-08-19, the author).**
+ *
+ * 11.3, the defect: *"'Candidates are listed alphabetically by surname.' That's
+ * no longer the case, because we prioritize pictures as we should."* He is
+ * right, and it had been wrong since the photo-first ordering shipped — the
+ * page was making a checkable claim about its own contents that its own
+ * contents contradicted. `photosFirst` puts candidates with a portrait above
+ * those without, and surname order runs inside each of those two blocks.
+ *
+ * 11.4, what replaces it: *"the official ballot order either has not been drawn
+ * yet or was not machine-readable from the authorities' filings; labels and
+ * slogans appear as filed. Nothing on the page is a recommendation. Say that,
+ * and stop claiming alphabetical order."*
+ *
+ * The ordering sentence now describes what the page actually does, and says
+ * why in the same breath — a portrait is what makes a stranger able to tell two
+ * candidates apart, and the alternative to leading with it is leading with the
+ * alphabet, which is no less arbitrary and less useful. Naming the criterion is
+ * what keeps it neutral: order by a stated, uniform, non-substantive property
+ * is what `CLAUDE.md`'s never-rank rule permits, and equal effort per candidate
+ * is what stops the photo block tracking incumbency.
+ *
+ * "Nothing on this page is a recommendation" is the vote-recommendation ban
+ * made visible to the reader, and it is worded as a fact about the page rather
+ * than as a disclaimer defending it — the author's distinction, and the same
+ * one rule 4g drew when it cut "that's not a bias, it's a record".
+ */
 const NEUTRAL_NOTE =
-  "Candidates are listed alphabetically by surname — the official ballot order either has not been drawn yet or was not machine-readable from the authority's publication. Party labels (and slogans where filed) are shown as filed. Nothing here is a recommendation.";
+  "The official ballot order either hasn't been drawn yet or wasn't machine-readable from the authority's filings. Candidates with a photo are listed first, then the rest, alphabetically by surname within each group — a photo is what lets someone tell two names apart. Party labels and slogans appear as filed. Nothing on this page is a recommendation.";
 
 function candidatesOf(set: BallotSet, contest: Contest): Candidacy[] {
   return set.candidacies
@@ -273,6 +302,26 @@ export default async function BallotPage({
       });
     }
   }
+  /*
+   * F01 11.1 (2026-08-19, the author) — THE SAME TRADE, APPLIED TO SCOPE NOTES.
+   *
+   * Eleven Arizona measures carry a byte-identical paragraph about the ballot
+   * wording not being published yet. The mechanism above already exists for
+   * exactly this shape (a source line repeated on every contest), so this uses
+   * it rather than inventing a second one — same symbols, same first-appearance
+   * order, same only-what-actually-repeats threshold — and CONTINUES the
+   * sequence, so a `*` on this page means one thing.
+   *
+   * Both contest kinds go in: a scope note repeated across candidacy contests
+   * is the same defect as one repeated across measures, and fixing only the
+   * eleven the author happened to be looking at would be the instance rather
+   * than the class.
+   */
+  const scopeNotes = sharedNotesFor(
+    matched?.contests ?? [],
+    sharedSources.length,
+  );
+
   const contestSourceRef = (
     key: string,
   ): { shared: boolean; marker: string | null; anchor: string | null } => {
@@ -775,11 +824,23 @@ export default async function BallotPage({
                 </>
               ) : (
                 <>
-                  {contest.scopeNote && (
-                    <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
-                      {contest.scopeNote}
-                    </p>
-                  )}
+                  {/* F01 11.1: inline when this note is this contest's alone;
+                      a marker when it is the same note eleven contests carry. */}
+                  {contest.scopeNote &&
+                    (scopeNotes.isShared(contest.id) ? (
+                      <p className="mt-1.5 font-mono text-[0.6875rem] text-muted">
+                        <a
+                          href="#scope-notes"
+                          className="underline decoration-dotted underline-offset-2 hover:text-link"
+                        >
+                          {scopeNotes.markerFor(contest.id)} see note
+                        </a>
+                      </p>
+                    ) : (
+                      <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
+                        {contest.scopeNote}
+                      </p>
+                    ))}
                   <ul className="mt-3.5 space-y-3">
                     {photosFirst(candidatesOf(set, contest), (x) => Boolean(cardForCandidacy(x.id)?.photoUrl)).map((cand) => (
                       <li
@@ -1072,11 +1133,25 @@ export default async function BallotPage({
                   )
                 )}
 
-                {contest.scopeNote && (
-                  <p className="mt-2 text-[0.75rem] leading-relaxed text-muted">
-                    {contest.scopeNote}
-                  </p>
-                )}
+                {/* F01 11.1 — the author's named instance: eleven Arizona
+                    measures each carrying the identical "the Secretary of State
+                    has not yet published the final ballot wording" paragraph.
+                    Marker here, the note once at the page's foot. */}
+                {contest.scopeNote &&
+                  (scopeNotes.isShared(contest.id) ? (
+                    <p className="mt-2 font-mono text-[0.6875rem] text-muted">
+                      <a
+                        href="#scope-notes"
+                        className="underline decoration-dotted underline-offset-2 hover:text-link"
+                      >
+                        {scopeNotes.markerFor(contest.id)} see note
+                      </a>
+                    </p>
+                  ) : (
+                    <p className="mt-2 text-[0.75rem] leading-relaxed text-muted">
+                      {contest.scopeNote}
+                    </p>
+                  ))}
 
                 {/* 4a: the private pick on measures — Yes/No, this device
                     only, stated in the control. 6a: prominent here — the
@@ -1154,33 +1229,62 @@ export default async function BallotPage({
             </section>
           ))}
 
+          {/* F01 11.1: every scope note that repeats, once, at the foot —
+              verbatim, with the count so a reader can see it is shared. */}
+          {scopeNotes.notes.length > 0 && (
+            <div
+              id="scope-notes"
+              className="mt-6 border-t border-[var(--panel-border)] pt-4"
+            >
+              {scopeNotes.notes.map((note) => (
+                <p
+                  key={note.marker}
+                  className="mt-1.5 text-[0.75rem] leading-relaxed text-muted first:mt-0"
+                >
+                  <span aria-hidden="true" className="mr-1 font-mono text-paper-dim">
+                    {note.marker}
+                  </span>
+                  {note.text}{" "}
+                  <span className="text-paper-dim">
+                    (applies to {note.count} contests on this page)
+                  </span>
+                </p>
+              ))}
+            </div>
+          )}
+
           <p className="mt-6 text-[0.75rem] leading-relaxed text-voice">
             {NEUTRAL_NOTE}
           </p>
         </>
       )}
 
-      {/* 3e (2026-08-19): the picks disclosure, stated ONCE — the TOS
-          pattern. It carried the same sentence under every contest before;
-          the distinction from the reaction buttons lives here now.
+      {/* 3e (2026-08-19) put the picks disclosure here, stated ONCE, after it
+          had repeated under every contest. F01 11.2 removes it entirely — the
+          note below is the whole account, and the 3e paragraph is not a thing
+          to restore.
 
-          g3 item 7 (2026-08-16): the label this sentence QUOTES changed with
-          the control, so the quote changed with it. A disclosure quoting
-          wording that is no longer on the page points the reader at
-          nothing. */}
-      {matched && matched.contests.length > 0 && (
-        <p className="mt-6 text-[0.6875rem] leading-relaxed text-voice">
-          &ldquo;Your pick&rdquo; boxes are saved on this device only — we
-          never see them. The Yes/No/Unsure reaction buttons are different:
-          those answers join anonymous local totals.{" "}
-          <Link
-            href="/transparency"
-            className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
-          >
-            How we handle data →
-          </Link>
-        </p>
-      )}
+          F01 11.2 (2026-08-19, the author): *"'Your pick boxes are saved to
+          this device only. We never see them. The yes/no reaction buttons are
+          different, those answers join anonymous local totals.' That is
+          completely counterintuitive to its own statement. It's saying we
+          don't know who you picked — however if you pick yes or no, we totally
+          know. That needs to change. I would remove that statement entirely.
+          You can just put 'How we handle data' at the bottom."*
+
+          Both underlying facts are still true and neither has changed: picks
+          are device-local, and reactions are write-only and never rendered
+          back to any reader, in aggregate or otherwise. What was wrong was
+          asking one small paragraph to hold both at once — read quickly it
+          says "we can't see your choices" and then "we can see your choices",
+          and a reader who catches that stops believing either half.
+
+          So the paragraph is GONE and the link carries the explanation. The
+          link is not new and it is not hidden: it already sat in the footer
+          below, which is where the author asked for it, and the reaction
+          buttons keep their own disclosure at the point of capture — the
+          one-time acknowledged notice `CLAUDE.md` requires, which is the
+          load-bearing consent surface and is untouched by this. */}
 
       <p className="mt-8 border-t border-[var(--panel-border)] pt-4 text-[0.75rem]">
         <Link

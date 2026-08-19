@@ -63,6 +63,7 @@ import { type Page } from "playwright";
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
 import { PRODUCT_NAME } from "../lib/brand.ts";
 import { internalSourceIds } from "../lib/meetings/source-labels.ts";
+import { ASK_PILL_EXAMPLES } from "../lib/routing/ask-pill-labels.ts";
 import { mojibakePattern } from "../lib/text/mojibake.ts";
 import { decodePng, patchStats, regionChange } from "./png.mts";
 import { launchGuarded, type GuardedBrowser } from "./browser.mts";
@@ -2994,11 +2995,18 @@ for (const { zip } of FOUR) {
         wgh.ballotDoors === 1,
         `${wgh.ballotDoors} doors`,
       );
+      // F01 8.3 (2026-08-19) retired "pothole" as the pill’s lead example on
+      // the author’s ruling. The CHECK is G07’s and is unchanged: the pill must
+      // still name a concrete example rather than a bare verb. The examples it
+      // reads come from ASK_PILL_EXAMPLES so the walk and the label cannot
+      // drift apart the way a hard-coded /pothole/ just did.
       check(
         "g12",
         `G07: the Ask pill names a concrete example at ${zip} ${label}`,
-        /pothole/i.test(wgh.pillText),
-        `label=${JSON.stringify(wgh.pillText)}`,
+        ASK_PILL_EXAMPLES.some((ex) =>
+          new RegExp(ex, "i").test(wgh.pillText ?? ""),
+        ),
+        `label=${JSON.stringify(wgh.pillText)} examples=${ASK_PILL_EXAMPLES.join("|")}`,
       );
 
       /*

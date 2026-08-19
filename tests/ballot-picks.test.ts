@@ -39,19 +39,61 @@ test("3e: the picks disclosure is stated ONCE, on the ballot page, with the reac
   // The TOS pattern (author-ordered 2026-08-19): one statement at the
   // bottom of the ballot page, not a repeat under every contest. The
   // distinction from reaction buttons lives in that statement.
-  const page = read("app", "ballot", "page.tsx");
+  /*
+   * Comments stripped, the same way the picks-card guard below does it: a
+   * docstring may QUOTE the removed sentence to record why it went, and a
+   * quotation does not render. Matching source text that no reader can see is
+   * how a guard starts failing on its own explanation.
+   */
+  const page = read("app", "ballot", "page.tsx")
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/^\s*\/\/.*$/gm, "");
+
+  /*
+   * **F01 11.2 (2026-08-19) REVERSES the first half of this test.**
+   *
+   * 3e put ONE paragraph at the foot of the page holding both facts: picks are
+   * device-local, and reactions join anonymous local totals. The author read
+   * the result and called it what it is: *"That is completely counterintuitive
+   * to its own statement. It's saying we don't know who you picked — however if
+   * you pick yes or no, we totally know. I would remove that statement
+   * entirely. You can just put 'How we handle data' at the bottom."*
+   *
+   * Both facts are still TRUE and neither has moved: picks never leave the
+   * device, reactions are write-only and never rendered back to any reader.
+   * What failed was asking one small paragraph to carry both — read at speed it
+   * says "we can't see your choices" and then "we can see your choices", and a
+   * reader who notices stops believing either half.
+   *
+   * So the assertions invert. The page must NOT make the combined statement,
+   * and must link the page that explains it properly — which is asserted to
+   * carry both halves below, so the explanation is not merely delegated to
+   * somewhere it might not exist.
+   */
   assert.ok(
-    /saved on this device only/i.test(page),
-    "the ballot page must carry the device-only statement",
+    !/saved on this device only/i.test(page),
+    "the combined picks/reactions paragraph is back on the ballot page (F01 11.2)",
   );
   assert.ok(
-    /join anonymous local totals/.test(page),
-    "the single statement must name the difference from reactions",
+    !/join anonymous local totals/.test(page),
+    "the combined picks/reactions paragraph is back on the ballot page (F01 11.2)",
   );
   assert.ok(
-    /transparency/.test(page),
-    "the statement must link the data-handling page",
+    /How we handle data/.test(page) && /transparency/.test(page),
+    "the ballot page must still link the data-handling page",
   );
+
+  // The explanation has to actually be there. Delegating to a page that does
+  // not say it would be removing a disclosure rather than relocating one.
+  const transparency = read("app", "transparency", "page.tsx");
+  assert.match(transparency, /saved only in your browser/);
+  assert.match(transparency, /join anonymous local totals/);
+
+  // And the load-bearing consent surface is untouched: the one-time
+  // acknowledged notice at the point of reaction capture, which CLAUDE.md
+  // requires and which this item never touched.
+  const reactions = read("components", "reactions", "reaction-control.tsx");
+  assert.match(reactions, /anonymous local totals/);
   // Once means once: the control no longer repeats it per contest. The
   // control keeps the author's label; MyPicks keeps its device-only header
   // as a label (a heading, not a second disclosure paragraph).
@@ -71,10 +113,9 @@ test("3e: the picks disclosure is stated ONCE, on the ballot page, with the reac
   );
   // The page's single disclosure quotes this control. A disclosure quoting
   // wording that is no longer on screen points the reader at nothing.
-  assert.ok(
-    /Your pick/.test(read("app", "ballot", "page.tsx")),
-    "the picks disclosure no longer quotes the control it describes",
-  );
+  // F01 11.2: the disclosure it used to quote is gone, so the quotation
+  // requirement goes with it. What must survive is the CONTROL's own label,
+  // which is asserted above and is where the reader actually meets it.
   assert.ok(
     !/Saved on this device only\./.test(control),
     "the per-contest disclosure paragraph is gone (3e) — it lives on the page once",

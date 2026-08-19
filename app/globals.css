@@ -1667,8 +1667,30 @@ label:has(> input[type="checkbox"]) {
 
 /* 4a: the expansion hangs under the pill that produced it, at the container's
    full width — it is a panel, not a floater, and it never right-hugs. */
+/* F01 8.2 (2026-08-19, the author): "the expanded Ask bar is enormously wide
+   on desktop. Narrow it substantially; it can grow slightly taller in
+   exchange."
+ *
+ * `width: 100%` is correct in the two RAIL placements — the sidebar and the
+ * who-governs card are ~340px envelopes and the panel should fill them. On the
+ * MAP placement the same rule let the panel take the whole top band, which at
+ * 1440px is a ~1400px-wide box holding one input: a line of body text at that
+ * measure is unreadable and the box reads as a takeover rather than a panel
+ * hanging off a pill.
+ *
+ * So the width stays 100% and gains a CEILING. 30rem is a comfortable reading
+ * measure for the explainer sentence and still wide enough that the input and
+ * the Ask button sit on one line at every size; below 640px nothing changes,
+ * because there the ceiling is already above the viewport. Taller is the
+ * accepted trade — the explainer wraps to three lines instead of one. */
 .ask-expansion {
   width: 100%;
+}
+
+@media (min-width: 640px) {
+  .ask-expansion {
+    max-width: 30rem;
+  }
 }
 
 /* One shell, two tap targets: an <a> cannot contain a <button>, and the zip
@@ -3081,9 +3103,14 @@ label:has(> input[type="checkbox"]) {
   pointer-events: auto;
   min-width: 210px;
   max-width: 280px;
-  max-height: 340px;
+  /* F01 9.1 (2026-08-19): the cap follows the VIEWPORT as well as the design
+     token, so a box on a short screen can always be placed whole and scrolls
+     inside itself instead of running off the bottom. The `translate` that used
+     to nudge it away from the cursor is GONE — that offset is now data
+     (`anchorInViewport`’s offsetX/offsetY), because a transform the placement
+     arithmetic cannot see is an offset it cannot clamp against. */
+  max-height: min(340px, calc(100dvh - 24px));
   overflow-y: auto;
-  transform: translate(12px, -12px);
   background: var(--panel);
   border: 1px solid var(--panel-border);
   border-radius: var(--radius);
@@ -3822,6 +3849,66 @@ label:has(> input[type="checkbox"]) {
   outline-offset: 5px;
 }
 
+/*
+ * F01 9.3 (2026-08-19, the author) — THE FAN READS AS A SPIDER.
+ *
+ * *"When those are spidered it looks like it just simply is moving. It's not
+ * like a spider effect... the spidering effect is not very clear at all."* His
+ * before/after pair (Drive, 2026-08-18_14-29-42 and _14-30-01) differs only in
+ * where two dots sit, which is exactly his complaint.
+ *
+ * The halo above says "this pin moved". It cannot say WHERE FROM, and that is
+ * the missing half: without a visible origin the fan is indistinguishable from
+ * two pins drifting apart. Each fanned pin now draws a LEG back to the shared
+ * anchor, with the anchor dot on the leg's far end — N legs meeting at one
+ * point, which is the shape that reads as "these all live here".
+ *
+ * `--spider-len` and `--spider-angle` are written per pin by `applySpiderfy`,
+ * because only it knows the offset. They are custom properties and not a
+ * transform on the element itself: MapLibre owns that transform and rewrites
+ * it every frame, which is the same reason the offset goes through
+ * `setOffset`. A pseudo-element's transform is ours alone.
+ *
+ * Under the dot in z-order and never interactive: a leg is an explanation, not
+ * a target, and it must not steal the tap the fan exists to make possible.
+ */
+.wtp-pin[data-spiderfied="true"]::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: -1;
+  width: var(--spider-len, 0);
+  height: 0;
+  border-top: 1px solid color-mix(in srgb, var(--text-dim) 55%, transparent);
+  transform-origin: 0 0;
+  transform: rotate(var(--spider-angle, 0deg));
+  pointer-events: none;
+}
+
+/* The anchor: one dot where every leg meets. Every fanned pin in a group
+   paints it at the same point, so N of them read as one. */
+.wtp-pin[data-spiderfied="true"]::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: -1;
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--text-dim) 55%, transparent);
+  transform-origin: 2.5px 2.5px;
+  transform: rotate(var(--spider-angle, 0deg)) translateX(var(--spider-len, 0));
+  pointer-events: none;
+}
+
+/* The pin is a grid container; the legs are positioned against it. */
+.wtp-pin[data-spiderfied="true"] {
+  position: relative;
+}
+
 /* The zip centroid. Deliberately unlike a pin — it is not a place you can go,
    it is where the map was pointed. */
 .wtp-here {
@@ -4364,6 +4451,33 @@ label:has(> input[type="checkbox"]) {
   box-shadow: var(--shadow-card);
 }
 
+/* F01 9.4 (2026-08-19): the small reset, on the map, under the hamburger.
+   Same visibility rule as the hamburger — see the note at its render — so
+   exactly one reset control is on screen at any moment. */
+.map-reset-btn {
+  position: absolute;
+  top: 62px;
+  left: 18px;
+  z-index: 1050;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  color: var(--text-muted);
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+}
+
+.map-reset-btn:hover,
+.map-reset-btn:focus-visible {
+  color: var(--text);
+  border-color: var(--signal);
+}
+
 .sidebar-backdrop {
   position: fixed;
   inset: 0;
@@ -4373,12 +4487,14 @@ label:has(> input[type="checkbox"]) {
 
 /* When the hamburger shows: explicitly closed at any width, or the phone
    default (hidden) when not explicitly opened. */
-main[data-sidebar="closed"] .sidebar-toggle {
+main[data-sidebar="closed"] .sidebar-toggle,
+main[data-sidebar="closed"] .map-reset-btn {
   display: inline-flex;
 }
 
 @media (max-width: 639px) {
-  main:not([data-sidebar="open"]) .sidebar-toggle {
+  main:not([data-sidebar="open"]) .sidebar-toggle,
+  main:not([data-sidebar="open"]) .map-reset-btn {
     display: inline-flex;
   }
 }

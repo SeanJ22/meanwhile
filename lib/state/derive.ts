@@ -429,8 +429,32 @@ export function deriveStatsView(
   showDistricts: boolean,
   searchFailed: boolean,
 ): StatsView {
+  /*
+   * F01 9.2 (2026-08-19, the author): *"districts in view right now is listed
+   * as off... obviously that's not the case, there ARE districts in view on
+   * this screen."* Reproduced at 85701.
+   *
+   * The tile said "Off" because it answered from the master SWITCH, and the
+   * switch is a mirror: `use-district-layer` owns the persisted preference,
+   * the map reads it directly, and `ui.showDistricts` is a copy kept in step
+   * by an effect. A mirror can lag or diverge from the thing it mirrors, and
+   * when it does, this tile — whose label is a claim about THE VIEW — reports
+   * the state of a checkbox instead.
+   *
+   * So the drawn set wins when there is one. `stats.districts` is counted off
+   * the live map AFTER rendering settles (`drawnDistrictsOn`, called on `idle`
+   * and `sourcedata`), which makes it the only value here that is evidence
+   * rather than intent. If the map drew districts, "Districts in view" says
+   * how many, whatever any switch believes.
+   *
+   * "Off" survives for the case it was written for and is still honest there:
+   * nothing drawn AND the switch off is a state the reader created and can
+   * undo, and a dash — this product's word for "we could not check" — would
+   * make the one number that was never broken read as the broken one (M57).
+   */
+  const nothingDrawn = stats.districts === null || stats.districts === 0;
   const drawn: StatsView["districts"] =
-    !showDistricts || stats.districts === null ? "Off" : stats.districts;
+    nothingDrawn && !showDistricts ? "Off" : (stats.districts ?? 0);
 
   // The governing mode needs the address AND the overlay's own number is
   // still worth keeping underneath — including when the overlay is off, where

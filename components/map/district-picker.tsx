@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
+import { anchorInViewport, type AnchorPosition } from "@/lib/map/anchor-in-viewport";
 import { TIERS, TIER_LABEL } from "@/lib/ocd/tiers";
 import { useUi, useUiDispatch } from "@/lib/state/provider";
 
@@ -25,6 +26,56 @@ export function DistrictPicker() {
   const { districtPick, selectedDistrictOcdId } = useUi();
   const dispatch = useUiDispatch();
 
+  /*
+   * F01 9.1 — measured, then placed.
+   *
+   * The clamp needs the box’s real size, and the box’s size depends on how
+   * many districts the click landed in, so it cannot be known in advance. The
+   * measurement runs in a LAYOUT effect: it reads the rendered size and sets
+   * the position before the browser paints, so the reader never sees the box
+   * at its unclamped anchor. The first render is hidden rather than misplaced
+   * — a frame of nothing is better than a frame of a box half off the screen.
+   */
+  const boxRef = useRef<HTMLDivElement>(null);
+  const [placed, setPlaced] = useState<AnchorPosition | null>(null);
+
+  const anchorX = districtPick?.at.x ?? 0;
+  const anchorY = districtPick?.at.y ?? 0;
+  const choiceCount = districtPick?.choices.length ?? 0;
+
+  useLayoutEffect(() => {
+    const node = boxRef.current;
+    if (!node || !districtPick) {
+      setPlaced(null);
+      return;
+    }
+    const measure = () => {
+      const box = boxRef.current;
+      if (!box) return;
+      setPlaced(
+        anchorInViewport({
+          x: anchorX,
+          y: anchorY,
+          // offsetHeight, the PAINTED height: the CSS cap below already keeps
+          // the box inside the viewport and lets it scroll internally past
+          // that, so what has to be placed is what is actually drawn.
+          width: box.offsetWidth,
+          height: box.offsetHeight,
+          containerWidth: window.innerWidth,
+          containerHeight: window.innerHeight,
+        }),
+      );
+    };
+    measure();
+    // A resize or an orientation change moves the edges the box was clamped
+    // against, so the same arithmetic runs again rather than leaving a box
+    // clamped to a viewport that no longer exists.
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+    // choiceCount is in the deps because it is what changes the box’s HEIGHT;
+    // the ref itself never changes identity and would not re-trigger this.
+  }, [districtPick, anchorX, anchorY, choiceCount]);
+
   useEffect(() => {
     if (!districtPick) return;
     const onKey = (e: KeyboardEvent) => {
@@ -43,8 +94,20 @@ export function DistrictPicker() {
 
   return (
     <div
+      ref={boxRef}
       className="district-picker"
-      style={{ left: districtPick.at.x, top: districtPick.at.y }}
+      /* F01 9.1 (2026-08-19): the box lands WHOLE, wherever the reader clicked.
+         `left: at.x; top: at.y` anchored its top-left corner to the click,
+         which put most of the box below the fold on any click near the bottom
+         edge — the author's "five districts here" showing one row. `placed` is
+         null on the first paint, before the box has been measured; the raw
+         anchor is used for that one frame and the clamp applies as soon as the
+         size is known, which is the same frame a reader could see it. */
+      style={
+        placed
+          ? { left: placed.left, top: placed.top }
+          : { left: districtPick.at.x, top: districtPick.at.y, visibility: "hidden" }
+      }
       role="dialog"
       aria-label="Choose a district"
     >

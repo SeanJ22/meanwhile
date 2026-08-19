@@ -173,3 +173,70 @@ test("a fanned pin says it moved, and not in a colour that already means somethi
     "the fanned mark must not use the pin's colour channel",
   );
 });
+
+/**
+ * F01 9.3 (2026-08-19, the author) — the fan has to READ as a spider.
+ *
+ * *"When those are spidered it looks like it just simply is moving. It's not
+ * like a spider effect."* The halo the test above guards says a pin moved; it
+ * cannot say where from, and without a visible origin the fan is
+ * indistinguishable from two pins drifting apart.
+ */
+test("F01 9.3: every fanned pin draws a leg back to a shared anchor", () => {
+  const css = readFileSync(join(process.cwd(), "app", "globals.css"), "utf8");
+
+  // The leg, and the anchor dot on its far end.
+  assert.match(css, /\.wtp-pin\[data-spiderfied="true"\]::before/);
+  assert.match(css, /\.wtp-pin\[data-spiderfied="true"\]::after/);
+  // Its length and direction are DATA, written per pin by applySpiderfy.
+  assert.match(css, /var\(--spider-len/);
+  assert.match(css, /rotate\(var\(--spider-angle/);
+  // A leg explains; it never takes the tap the fan exists to make possible.
+  const legs = css.slice(css.indexOf('.wtp-pin[data-spiderfied="true"]::before'));
+  assert.match(legs.slice(0, 900), /pointer-events: none/);
+});
+
+test("F01 9.3: applySpiderfy writes the leg geometry, and clearing removes it", async () => {
+  const { applySpiderfy, clearSpiderfy } = await import("../lib/map/marker-pool.ts");
+
+  // A stand-in for MapLibre's marker + its element. Only the two surfaces
+  // applySpiderfy touches are modelled.
+  const make = () => {
+    const style = new Map<string, string>();
+    return {
+      marker: { setOffset: () => {} },
+      element: {
+        dataset: {} as Record<string, string | undefined>,
+        style: {
+          setProperty: (k: string, v: string) => style.set(k, v),
+          removeProperty: (k: string) => style.delete(k),
+        },
+        _read: style,
+      },
+    };
+  };
+
+  const a = make();
+  const pool = {
+    entries: new Map([["a", a]]),
+    spiderfiedKeys: new Set<string>(),
+  } as unknown as Parameters<typeof applySpiderfy>[0];
+
+  // A pin fanned straight up: dy is negative on screen, so the leg points
+  // straight DOWN, back at the anchor — 90 degrees in CSS's coordinate space.
+  applySpiderfy(pool, [{ key: "a", dx: 0, dy: -46 }]);
+  assert.equal(a.element.dataset.spiderfied, "true");
+  assert.equal(a.element._read.get("--spider-len"), "46px");
+  assert.equal(a.element._read.get("--spider-angle"), "90deg");
+
+  // Length is the true distance, not a component of it.
+  applySpiderfy(pool, [{ key: "a", dx: 3, dy: 4 }]);
+  assert.equal(a.element._read.get("--spider-len"), "5px");
+
+  // Putting a pin back takes the leg with it: a stale length would draw a
+  // line to a point the pin no longer came from.
+  clearSpiderfy(pool);
+  assert.equal(a.element.dataset.spiderfied, undefined);
+  assert.equal(a.element._read.has("--spider-len"), false);
+  assert.equal(a.element._read.has("--spider-angle"), false);
+});

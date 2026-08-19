@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
+
+import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
 
 import { AskBox } from "@/components/ask/ask-box";
 import { ZipSwitcher } from "@/components/map/zip-switcher";
@@ -79,6 +81,29 @@ export function PillCluster({
 }) {
   const [switching, setSwitching] = useState(false);
 
+  /*
+   * F01 8.1 (2026-08-19, the author): "there is also no way for me to close
+   * the ask pop-up... tapping or clicking anywhere else should close that ask
+   * box. It does that if I click on who governs here, but if I click on a
+   * meeting pin it does not. Make it uniform."
+   *
+   * It was never uniform, because the Ask expansion had NO dismiss path of its
+   * own. What looked like "it works on who-governs" was the who-governs card
+   * minimising itself and taking the cluster it hosts down with it — a side
+   * effect of a DIFFERENT surface's dismissal, which is exactly why it vanished
+   * the moment the cluster was on the map instead.
+   *
+   * So the expansion gets the SAME hook every other dismissible surface on the
+   * map already uses (`useDismissOnOutside`, M90) rather than a second
+   * implementation of the idea: pointerdown in the capture phase, no history
+   * entry, and it dismisses nothing but itself. The ref is on the whole
+   * cluster, so pressing the pill, the ballot link or the zip switcher is an
+   * INSIDE press and the pill's own toggle stays the explicit control.
+   */
+  const rootRef = useRef<HTMLDivElement>(null);
+  const closeAsk = useCallback(() => onToggleAsk(false), [onToggleAsk]);
+  useDismissOnOutside(rootRef, closeAsk, askOpen);
+
   if (!zip || !/^\d{5}$/.test(zip)) return null;
 
   const state = coverage
@@ -91,7 +116,7 @@ export function PillCluster({
   const pill = ASK_PILL_LABELS[placement];
 
   return (
-    <div className="map-floaters" data-pill-cluster={placement}>
+    <div className="map-floaters" data-pill-cluster={placement} ref={rootRef}>
       <div className="map-floaters-row">
         <div className="ballot-pill">
           <Link

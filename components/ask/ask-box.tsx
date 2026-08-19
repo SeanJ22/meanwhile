@@ -520,8 +520,14 @@ export function AskBox({
         its concrete examples, which is what actually teaches the box.
       */}
       <p className="mt-0.5 text-[0.6875rem] leading-relaxed text-voice">
-        A pothole, the library, your kid&apos;s school — we&apos;ll point you
-        at the office that owns it. Or ask for{" "}
+        {/* F01 8.3 (2026-08-19, the author): "a pothole is close to the worst
+            possible example to lead with." It reads as "report a pothole", and
+            this box does not file service requests — it NAMES the office that
+            owns the thing, which is a different and smaller promise. The
+            routing itself is unchanged and a pothole still routes; it simply
+            stops being the first thing a reader is taught to expect. */}
+        Your kid&apos;s school, the library, a pothole in the road —
+        we&apos;ll point you at the office that owns it. Or ask for{" "}
         {ROUTABLE_CATEGORIES.map((category, i) => (
           <span key={category}>
             {i > 0 && (i === ROUTABLE_CATEGORIES.length - 1 ? " or " : ", ")}
@@ -562,8 +568,8 @@ export function AskBox({
             }}
             placeholder={
               onSearchPick
-                ? "a pothole, my kid's school, Planning Commission…"
-                : "the library, a pothole, my kid's school…"
+                ? "my kid's school, a meeting, Planning Commission…"
+                : "the library, my kid's school, a meeting…"
             }
             className="w-full min-w-0 rounded-md border border-[var(--panel-border)] bg-[var(--bg)] px-3 py-2 text-[0.875rem] placeholder:text-muted focus:border-[var(--signal)] focus:outline-none"
           />

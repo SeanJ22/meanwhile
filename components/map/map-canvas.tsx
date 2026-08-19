@@ -133,6 +133,18 @@ interface MapCanvasProps {
   frameAllVenues: boolean;
   /** Basemap follows the UI theme; changing it restyles the map in place. */
   theme: Theme;
+  /**
+   * **F01 10.3 (2026-08-19)** — how much of the map’s left edge is covered by
+   * the floating rail, in CSS pixels. 0 when the rail is hidden.
+   *
+   * The canvas is now FULL-BLEED and the rail floats over it, which is what
+   * removed the dead column under the rail. That would have moved every
+   * framing decision half a rail to the left, so the number is handed to
+   * MapLibre as camera PADDING: `flyTo`, `jumpTo` and `fitBounds` all honour
+   * it, so a zip centroid still lands in the middle of what the reader can
+   * actually SEE rather than in the middle of what is painted.
+   */
+  leftInset?: number;
   onSelectVenue: (venue: Venue) => void;
   onTileError: () => void;
   /**
@@ -223,6 +235,7 @@ export function MapCanvas({
   selectedDistrict,
   narrowedDistricts,
   theme,
+  leftInset = 0,
   onDistrictError,
   onDrawnDistricts,
   onDistrictClick,
@@ -777,6 +790,24 @@ export function MapCanvas({
       marker.getElement().dataset.selected = String(id === selectedVotingSiteId);
     }
   }, [selectedVotingSiteId, votingSites]);
+
+  /*
+   * F01 10.3 — the rail covers part of the canvas, and the camera knows it.
+   *
+   * `setPadding` is persistent: every subsequent flyTo, jumpTo and fitBounds
+   * honours it without a single call site being touched, which is exactly why
+   * it is used instead of threading a padding object through the three of them
+   * (and through the next one somebody adds).
+   *
+   * It runs on every change and once at mount, and it does NOT animate: a
+   * padding change is a correction to the frame, not a journey, and animating
+   * it would slide the map sideways every time the reader opened the rail.
+   */
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    map.setPadding({ top: 0, bottom: 0, left: leftInset, right: 0 }, { duration: 0 });
+  }, [leftInset]);
 
   // Fly to a new center, at the zip's deliberate first-view altitude (6f).
   useEffect(() => {

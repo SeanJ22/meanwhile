@@ -494,6 +494,28 @@ for (const { zip } of FOUR) {
       `/ballot's picks disclosure quotes wording that is on the page at ${zip}`,
       !/&ldquo;What do you think\?&rdquo; picks/.test(ballot.text),
     );
+    /*
+     * RULING 7C (g17): the fifth provision kind reaches the reader, and the
+     * widened SUNSET label does not. Kinds are the reaction bucketing, so a
+     * page still reading "When it starts and ends" would be collecting two
+     * different questions into one bucket in front of a reader.
+     *
+     * Arizona only: 07866 and 03255 carry no decomposed measure, so the
+     * absence of the label there is correct rather than a regression, and a
+     * check that fired at every zip would be reporting one.
+     */
+    if (zip.startsWith("85")) {
+      check(
+        "g17",
+        `/ballot renders the fifth provision kind at ${zip}`,
+        /When it starts</.test(ballot.text),
+      );
+      check(
+        "g17",
+        `/ballot no longer renders the widened SUNSET label at ${zip}`,
+        !/When it starts and ends/.test(ballot.text),
+      );
+    }
   }
 }
 

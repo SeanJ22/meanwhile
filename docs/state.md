@@ -2059,7 +2059,24 @@ replaced.
 
 ## 7. Current state of the branch
 
-**Working on `claude/g11-env-and-queue-0817`** (2026-08-17, the g11 session),
+**CURRENT: `claude/g17-budgets-geo-cadence-0818`** (2026-08-18, the g17
+session), branched from `main@57b15bc`. Five items, all five whole: the client
+budget re-baselined on the ubuntu standalone build with one stated ceiling rule
+and twelve planted refusals; AUD-03 built on a measured 42,824-byte saving
+against a threshold committed first; AUD-04 given the count that can see a
+second sweep return; AUD-07 evidenced on both paths, which found the changed
+path dead in all four refresh workflows since R50 and fixed it; the browser
+denominator established, the unload beacon taught to declare itself in the
+request body, and the sanctioned backmark executed (155 organic before, 51
+written, 104 after); and ruling 7C's fifth provision kind named from the
+evidence. **test 1032 pass · lint 0 errors, 15 pre-existing warnings · tsc
+clean · build exit 0.** The g17 section at the end of this document records it
+in full.
+
+The paragraphs below are kept as the record of earlier branches rather than
+rewritten, because each one carries what its session verified.
+
+**`claude/g11-env-and-queue-0817`** (2026-08-17, the g11 session),
 branched from `main` at `4900d5e` — section §46 records it in full: R36 and
 R42 CLOSED on thirteen passing checks and the first production run-id census
 since the marker shipped (3,888 rows, 0 organic); the one sanctioned production
@@ -11236,3 +11253,172 @@ declared in `scripts/mirror-set.mjs` rather than failing every handoff.
 not started** and are deferred whole. **Item 4 completed 1 of its 3 rulings** —
 the audit document — and the place card (4a) and the `^_` lint config line (4b)
 were not built. Items 1 and 2 are whole. The order was followed as written.
+
+## g17 — 2026-08-18: the budgets learn to refuse, the beacon learns to declare itself, and a fifth kind is named
+
+**Branch `claude/g17-budgets-geo-cadence-0818`, from `main@57b15bc`.**
+
+Five items, all five whole. Three of them turned out to be already built and
+missing only the thing that makes a build checkable — a derivation, a count, a
+run — and that pattern is the session's own finding: a row can be closed and
+still have no way to tell whether it is working.
+
+### Item 1 — the client budget, the ceiling rule, and twelve planted refusals
+
+**The brief's premise was superseded and the row was not.** It said the client
+budget "does not exist at all"; it was committed in `e27c21e` during g16. What
+had never happened is the thing the row's own standard asks for: it was
+measured on **windows in default mode**, which is the same class of mistake the
+framework baseline made at 927 — a real measurement of a build nobody ships.
+
+Re-baselined on the ubuntu standalone job of `.github/workflows/build-check.yml`,
+the same command and runner class and mode as the deploy. The
+windows-to-ubuntu difference is **+295 bytes raw and +59 gzip**, and it is the
+PLATFORM rather than the mode: both ubuntu jobs printed client figures identical
+to the byte.
+
+**One rule replaced four unexplained numbers.** A ceiling is at most the
+measured baseline plus 15%, rounded DOWN to a readable unit, never raised toward
+the cap, and moving only because a re-measured baseline moved under it. `1300`
+turns out to be exactly the cap for 1138, which is the derivation it was
+missing; `240` was above the cap for 195 and came down to `220`.
+`tests/build-budget.test.ts` holds every committed ceiling to `HEADROOM`.
+
+**Twelve refusal directions planted, each with a green control.** The whole
+evaluation is `evaluate({ root, budget })` — a pure read of a directory tree —
+which is what makes a synthetic `.next` possible. The control is not decoration:
+a check that refuses everything and a check that refuses nothing are both
+broken, and only a control tells them apart. One behaviour change fell out of
+the work: an **unmeasured** client budget now refuses rather than printing "NOT
+MEASURED" and passing.
+
+**AUD-03 was closed by building it, on a number registered first.** The
+threshold — 20,480 bytes of compressed transfer removed from the initial graph
+for `/` — and the candidate set of eight surfaces were committed in `2e90a32`,
+before either build ran. Measured saving: **145,026 raw and 42,824 gzip**. The
+map is not in the candidate set.
+
+One artifact is named rather than left to be discovered: the
+MapLibre/application split moved far more than the totals did, and **no map code
+moved**. The split attributes a whole chunk to MapLibre if its bytes contain the
+string, and re-chunking redrew the attribution. The threshold is measured on the
+total for exactly that reason.
+
+### Item 2 — AUD-04's missing half was a count, and only a count could see it
+
+The de-duplication shipped in g15 with an equivalence proof and a hazard guard.
+**Neither can see the defect return.** A second sweep over the same polygons
+returns the same divisions, so the responses stay byte-identical and the guard
+stays green while the route quietly pays twice again.
+
+Proven by planting it: the two-sweep shape restored, all five probe points still
+byte-identical, and only the new counter went red at 2. `sweepsRun()` is one
+integer increment inside `divisionsAt`, and a control reproduces the pre-AUD-04
+call shape so a 1 is a measurement rather than a constant.
+
+### Item 3 — the evidence AUD-07 asked for found the gate broken
+
+Dispatching the CHANGED path on purpose is the row's own done condition, and it
+**failed**. R50 shipped `tests/beacon-guard.test.ts`, which launches a real
+Chromium, and no refresh workflow installs a browser — so every changed-data run
+since has died at the gate with "Executable doesn't exist" and committed
+nothing. **The meetings snapshot could not refresh.** Run `32202786858` is the
+failure, and it would otherwise have surfaced as a snapshot that quietly stopped
+moving.
+
+A browser install step now sits on the changed path only, in all four
+workflows. And the class rather than the instance: the audit named meetings and
+dotgov; FEC and LegiScan have the identical shape and get the same ordering, so
+the count is **4 of 4** where it was 2 of 4.
+
+### Item 4 — the denominator, the beacon, and the sanctioned write
+
+**The five unaccounted browser contexts were never missing.** 50 counted
+`.newContext(` CALL SITES before R50; 45 counted the FILES holding them. Both
+are correct and they are different denominators. All 45 converted, and the 46th
+at `main` is `probe-m135.mts`, created in the R50 commit itself.
+
+**The real hole was elsewhere**, and it is closed: the guard read
+`scripts/*.mts` only, so a browser opened from a `.mjs` file, a `lib/` helper or
+a test was invisible to it. `scripts/browser-census.mts` walks the whole tree —
+526 files, every one in exactly one bucket, buckets summing to the total — and
+the guard imports `census()` so the guard and the report cannot count different
+populations. Today: 47 guarded, 1 raw construction allowed and NAMED, 2 files
+whose match is a regex literal, 0 unguarded.
+
+**The unload beacon carries the marker now, in the body.** R50's override stays;
+this is the alternative R50 itself recorded, because a guarded run never
+exercises the beacon transport and so nothing proved it. Proven behaviourally: a
+raw context with no header and no override, a real navigation to flush the
+queued beacon, and `markerFrom` asked what the row would be — ORGANIC on the
+header alone, SYNTHETIC with the body. The permanent plant is unchanged and
+still leaks.
+
+**The sanctioned write executed: 155 organic before, 51 written, 104 after.**
+The total is unchanged at 5,628 — nothing created, nothing deleted. Two things
+the brief expected that the data did not give, both stated rather than
+reconciled away:
+
+- **101 vs 104.** 101 was arithmetic on g16's reported 152. Production read
+  **155**, because g16's own final walk leaked three more `QUESTION_ASKED` rows
+  after g16 took its census.
+- **44 vs 45.** g15's own window boundaries enclose 45 rows. The window closes at
+  `21:31:20Z` so it marks exactly the sanctioned 44; the 45th is named and left
+  ORGANIC, because marking it would be marking outside the 51.
+
+And **the presumption failed on inspection**. The brief asked for the remainder
+to be reported as presumed the author's own testing-era rows. At least **10 of
+the 104** sit inside g16's own declared walk windows, all `QUESTION_ASKED` — the
+ask-box path that reloads between questions, which is precisely the leak item 4b
+fixed. They are outside the 51 and were not touched.
+
+**The tool the write went through was broken and nobody knew.**
+`searchlog-backmark`'s ledger reader treated every table in
+`docs/synthetic-runs.md` as a window table, and the session-record tables g12,
+g14 and g15 added have three columns — so its strict refusal fired on the first
+of them and the script threw before reading a single window. Unrunnable since
+those tables landed, and nothing noticed because nothing ran it.
+
+### Item 5 — ruling 7C: SUNSET narrows, and `START` is the fifth kind
+
+Kinds are the reaction bucketing, so a bucket meaning both "does this expire"
+and "when does this start" reports two questions as one number.
+
+The two orphans under the narrowed definition, reported before any kind was
+proposed: `prop-143#starts-2028` ("The measure would apply beginning January 1,
+2028.") and `prop-144#starts-2028` ("It would apply to all elections taking
+place on or after January 1, 2028."). Both say when the measure starts applying,
+so the kind is `START`, reader label "When it starts".
+
+All four SUNSET rows were re-derived, not just the orphans. **Two moved.** The
+two that stay are `prop-316#freeze-window`, which ends on a stated date, and
+`prop-319#ten-year-renewal` — a **different pair** from the one the
+pre-narrowing header named as orphans, and the re-derivation is why.
+
+Census, before and after: FUNDING 10/10, PROGRAM 26/26, OVERSIGHT 12/12, SUNSET
+4/2, START –/2, total 52/52. **Proposition 141 survives intact**, asserted twice
+— on its kinds, and on the absence of any year in any of its three provisions.
+
+### The numbers this session had to correct
+
+- **Test counts.** `pnpm test` runs **1,032** `node --test` tests. `state.md`
+  recorded 371 on 2026-08-18 and the audit prompt said ~950; both are older
+  readings of a suite that only grows. `walk:all`'s 304 checks are a **separate,
+  dynamically counted production regression net** and are never summed with
+  `node --test` — they run against a deployed site and count claims, not tests.
+- **Fixed waits.** 32 in the g16 brief, **36** as measured, down to 12
+  survivors each carrying its justification.
+- **Browser contexts.** 50 call sites, 45 files, 46 guarded at `main`, 47 now.
+- **The census.** 155 organic before this session's write, 104 after, of which
+  at least 10 are demonstrably g16's instrument rather than anyone's testing.
+- **`c99d9a5`** is the merge of PR #94 and is the SHA g16 branched from — it
+  appears in this document's g16 header. It was superseded as a ship target by
+  PRs #96 and #97; `57b15bc` is #97's merge and is what production serves.
+
+### Configuration
+
+PR preview builds are turned off from the repo, in `netlify.toml`, with an
+`ignore` command scoped to the `deploy-preview` context. The Netlify connector
+available here writes env vars, forms, access controls and the project name and
+**no build settings at all**, so the dashboard toggle and the ship cadence are
+named for the author rather than claimed.

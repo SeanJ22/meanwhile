@@ -1328,3 +1328,105 @@ The snapshot carries that sentence in its own `boundary` field, and
 to its .gov domain automatically, and offering it as a rung when a hunt comes
 back empty. The snapshot is the half that had to land; the wiring is the half
 that can wait for a session with a hunt in front of it.
+
+---
+
+## 2026-08-19 (g20) — the Polarization Research Lab, D62
+
+**The subject.** America's Political Pulse, the Polarization Research Lab at
+Dartmouth. D62 owed three things before a byte was fetched: the licence read
+verbatim off the data page through the ladder, a coverage table, and both
+join rates with denominators. All three are below.
+
+**What the walk had to get past.** The data pages are a JavaScript-rendered
+single-page app. Reading a plain fetch of them as "nothing published" would
+be a FALSE MISS, not a wall — the rung that clears it is the page's own
+bundle, and the bundle turned out to be better than the rendered page anyway,
+because it carries the file list and both citation strings as literals.
+
+| Rung | Attempt | `attemptedAt` | Result |
+|---|---|---|---|
+| 2 | Plain fetch, identified UA — `https://americaspoliticalpulse.com/data/` | 2026-08-19 | **200, 2,977 bytes.** A shell: `<div id="root">` and nothing in it. No licence text, no file list. A false miss if believed. |
+| 2 | Plain fetch — `https://polarization-research-lab.github.io/americas-pulse-dashboard/tabs/download.html` (the URL a search engine still indexes) | 2026-08-19 | **404.** A stale path, recorded so it is not re-walked. |
+| 7 | **The page's own JS bundle** — `/assets/index-BAigJC-u.js`, then the lazily-loaded route chunks it names | 2026-08-19 | **HIT.** 245,842 bytes; it lists 40 route chunks by name, including `Data-*` and `ElitesData-*`. |
+| 7 | `/assets/Data-DDCbAhag.js` | 2026-08-19 | **HIT.** Carries the Open Data page's licence sentence and citation as string literals. |
+| 7 | `/assets/ElitesData-CjtVgNhS.js` | 2026-08-19 | **HIT.** Carries the congressional-rhetoric licence sentence, its own citation, and all four dataset URLs with their sizes. |
+| 7 | `/assets/PrimaryCandidate-CiA2qO-T.js` | 2026-08-19 | **HIT.** Names the API the primary pages call: `GET https://7brsvfk435.execute-api.us-east-1.amazonaws.com/primary/statements/{fecCandidateId}`. |
+| 9 | The data file itself — `/data/elite/profiles-all-national.zip` | 2026-08-19 | **HIT.** 321,911 bytes, one deflate member, 1,974,648 bytes of CSV. |
+
+**The licence, verbatim, from the page's own code.**
+
+- Open Data page: *"All data is provided under a"* → link to
+  `https://creativecommons.org/licenses/by/4.0/` → *"Creative Commons
+  Attribution 4.0"* → *"license."*
+- Congressional rhetoric page: *"All data is provided under a Creative
+  Commons Attribution license."* — **no version named on this page.** Recorded
+  as read rather than upgraded to 4.0 from the other page's wording.
+
+**Two citation strings, and they are not interchangeable.** D62's row
+recorded one; the files this build uses want the other.
+
+- Survey / Open Data: `Westwood, S. J., & Lelkes, Y. (2024). America's
+  Political Pulse [Data set]. https://americaspoliticalpulse.com/data`
+- Congressional rhetoric: `America's Political Pulse. (2024). Congressional
+  Rhetoric Dataset. Available at: https://americaspoliticalpulse.com/elites/data`
+
+Both are in `lib/sources/prl/types.ts`, so the difference is a fact in the
+code rather than something a later session rediscovers by shipping the wrong
+one under a licence whose only condition is attribution.
+
+**The files, as the page lists them today** (D62's row recorded different
+sizes from 2026-08-15 — these are the ones read on 2026-08-19):
+
+| File | Size | Taken? |
+|---|---|---|
+| `/data/elite/profiles-all-national.zip` | 317 KB | **yes** — the v1 build |
+| `/data/elite/profiles.zip` | ~5 MB | no |
+| `/data/elite/rhetoric-all.zip` | ~100 MB | no |
+| `/data/elite/rhetoric-all-national.zip` | 461 MB | no |
+
+Taking the small one is deliberate: v1 renders aggregates, and pulling half a
+gigabyte to recompute numbers the lab has already computed would be rude to a
+source that gives its work away.
+
+**Coverage, from the file itself.**
+
+- 906 rows, 51 columns.
+- **536 of 906** carry at least one classified statement.
+- Statement counts across those 536: min 4 · median 8,116 · max 61,624.
+- `communication_last_update` is **2026-08-16** on every row — one distinct
+  value, three days before this read.
+- 543 of 906 carry a `date_of_birth`, which is D62's named rung for the age
+  line.
+- **17 columns are ranks, percentiles or an ideology score.** None crosses
+  the boundary; the adapter reads an allowlist and refuses on any of them.
+
+**Join rate 1 — our roster → PRL, by bioguide.** **537 of 537, 100%.** Every
+federal officeholder we hold has a PRL row. One of the 537 (`V000139`) has a
+row with nothing classified, so 536 profiles are kept and that one is named
+in `rosterMisses` rather than dropped.
+
+**Join rate 2 — our funding rows → PRL, by FEC candidate id.** **5 of 24.**
+The profiles file is current and former MEMBERS; our funding snapshot is
+mostly 2026 ballot candidates, most of whom have never sat. This is the
+expected shape and not a defect — it is also exactly why the primary
+endpoint matters, since challengers are the thin-candidate problem.
+
+**The primary endpoint, probed.** `GET /primary/statements/{fecCandidateId}`
+on the API named in the bundle, five of our own ballot candidates:
+
+| FEC id | HTTP | Rows |
+|---|---|---|
+| `H2NH02260` Lily Tang Williams | 200 | 20 |
+| `S6NH00166` Scott P. Brown | 200 | 20 |
+| `H6AZ06099` JoAnna Mendoza | 200 | 20 |
+| `H6AZ07121` Adelita S. Grijalva | 200 | **0** |
+| `S6NH00141` Chris Pappas | 200 | **0** |
+
+**Two things recorded rather than assumed.** A 200 carrying zero rows is the
+empty-success shape and is NOT a hit — three of five is the honest reading,
+and the two zeros are unexplained rather than "no statements". And the
+response carries **no total**: 20 is what came back and there is no field
+saying whether 20 is all of them. D62's "Posts tracked: N as the DENOMINATOR"
+adoption therefore has no source on this endpoint, which is a real blocker
+for rendering any share off it and is why v1 renders the profiles file only.

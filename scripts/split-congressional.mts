@@ -30,7 +30,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { USPS_BY_FIPS } from "../lib/coverage/states.ts";
+import { USPS_BY_FIPS } from "../lib/coverage/artifacts.ts";
 
 interface Feature {
   type: "Feature";

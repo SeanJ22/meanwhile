@@ -32,7 +32,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { COVERED_FIPS, SLUG_BY_FIPS } from "../lib/coverage/states.ts";
+import { COVERED_FIPS, SLUG_BY_FIPS } from "../lib/coverage/artifacts.ts";
 import { stamp } from "./stamp.mts";
 
 const SOURCE_ORG = "U.S. Census Bureau";

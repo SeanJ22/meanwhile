@@ -25,6 +25,36 @@ const eslintConfig = defineConfig([
      */
     ".scratch/**",
   ]),
+  /*
+   * THE `^_` DISCARD CONVENTION (g18, 2026-08-18, the author's ruling A).
+   *
+   * A leading underscore is this repo's existing way of writing "deliberately
+   * unused" — `_whichVote` keeps a signature honest, `_ok` and `_d` absorb a
+   * stub lambda's arguments. Three of them sat in `lint-allowlist.json`, which
+   * is a file for warnings we have LOOKED AT and tolerated. A deliberate
+   * discard is not a tolerated warning; it is not a warning at all, and
+   * carrying it in the allowlist made the allowlist's count mean less.
+   *
+   * THE RULING NAMED `varsIgnorePattern`, AND THAT ALONE WOULD LEGALIZE NONE
+   * OF THEM. All three are function PARAMETERS, so `argsIgnorePattern` is the
+   * option that reaches them — recorded here rather than silently substituted,
+   * because the next reader comparing this file to the ruling deserves to find
+   * the difference stated. Both are set: `varsIgnorePattern` as ruled, and
+   * `argsIgnorePattern` because it is what makes the ruling do what it says.
+   *
+   * `caughtErrorsIgnorePattern` is deliberately NOT set. There is no warning
+   * of that class today, so setting it would legalize an empty category — a
+   * change nobody can check, which is the shape of change this repo refuses
+   * everywhere else.
+   */
+  {
+    rules: {
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { varsIgnorePattern: "^_", argsIgnorePattern: "^_" },
+      ],
+    },
+  },
 ]);
 
 export default eslintConfig;

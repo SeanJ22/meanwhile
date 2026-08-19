@@ -15,11 +15,18 @@
  * throwaway state and asserting every derived list sees it.
  *
  * TWO PROJECTIONS, DELIBERATELY SEPARATE. This module is CLIENT-SAFE and holds
- * only the three fields client code reads. Everything a build script or the
- * server needs — the state's name, its clipped county, the generated artifact
- * filenames — lives in `./artifacts.ts`, which the browser graph never
- * imports. The map is 75% of the reader's initial JavaScript already; a
- * manifest is not permitted to make that worse.
+ * only the three fields client code reads, and only the two derived lists the
+ * browser actually asks for. Everything a build script or the server needs —
+ * the state's name, its clipped county, the generated artifact filenames, and
+ * the four other lookup directions — lives in `./artifacts.ts`, which the
+ * browser graph never imports. The map is 75% of the reader's initial
+ * JavaScript already; a manifest is not permitted to make that worse.
+ *
+ * That split is MEASURED, not assumed. The first cut of this module exported
+ * all seven lookups from here, and a before/after build read +159 raw bytes on
+ * the client — small, and still a real cost paid by every reader for lookups
+ * only `scripts/` ever calls. The four script-side directions moved out and
+ * the measurement was re-taken. The figures are in the g18 report.
  *
  * WHY USPS IS WRITTEN OUT RATHER THAN DERIVED. `lib/ocd/fips.ts` holds the
  * authoritative FIPS -> postal table for all 50 states and the territories,
@@ -68,45 +75,18 @@ export function deriveClientLists(states: readonly CoveredState[]) {
   return {
     /** USPS -> FIPS, the map layer's file-suffix lookup. */
     fipsByUsps: Object.fromEntries(states.map((s) => [s.usps, s.fips])),
-    /** FIPS -> lower-case postal, the geo pipeline's inverse lookup. */
-    slugByFips: Object.fromEntries(states.map((s) => [s.fips, s.slug])),
-    /** FIPS -> USPS, the congressional splitter's lookup. */
-    uspsByFips: Object.fromEntries(states.map((s) => [s.fips, s.usps])),
-    /** Lower-case postal -> FIPS, the officeholder builder's lookup. */
-    fipsBySlug: Object.fromEntries(states.map((s) => [s.slug, s.fips])),
-    fips: states.map((s) => s.fips),
-    usps: states.map((s) => s.usps),
+    /** Lower-case postal codes — the ballot bubble's covered-state answer. */
     slugs: states.map((s) => s.slug),
   };
 }
 
 const derived = deriveClientLists(COVERED_STATES);
 
-/** USPS -> FIPS. Was `FIPS_BY_ABBR`, inline in `lib/map/districts.ts`. */
+/** USPS -> FIPS. Was FIPS_BY_ABBR, inline in lib/map/districts.ts. */
 export const FIPS_BY_USPS: Readonly<Record<string, string>> = derived.fipsByUsps;
 
-/** FIPS -> lower-case postal. Was inline in `scripts/fetch-state-outlines.mts`. */
-export const SLUG_BY_FIPS: Readonly<Record<string, string>> = derived.slugByFips;
-
-/** FIPS -> USPS. Was `STATES` in `scripts/split-congressional.mts`. */
-export const USPS_BY_FIPS: Readonly<Record<string, string>> = derived.uspsByFips;
-
-/** Lower-case postal -> FIPS. Was `STATE_FIPS` in `scripts/build-officeholders.ts`. */
-export const FIPS_BY_SLUG: Readonly<Record<string, string>> = derived.fipsBySlug;
-
-/** Every covered state's FIPS code. Was `CLIP_STATES` / `STATE_FIPS`. */
-export const COVERED_FIPS: readonly string[] = derived.fips;
-
-/** Every covered state's USPS code. Was `STATES` in three scripts. */
-export const COVERED_USPS: readonly string[] = derived.usps;
-
-/** Every covered state's lower-case postal code. Was `BALLOT_COVERED_STATES`. */
+/** Every covered state lower-case postal code. Was BALLOT_COVERED_STATES. */
 export const COVERED_SLUGS: readonly string[] = derived.slugs;
-
-/** Whether a postal code, in either case, names a covered state. */
-export function isCoveredState(code: string | null | undefined): boolean {
-  return code != null && COVERED_SLUGS.includes(code.toLowerCase());
-}
 
 /** `place-04.geojson` — one geometry file, one layer type, one state. */
 export function geoFile(type: string, state: CoveredState): string {

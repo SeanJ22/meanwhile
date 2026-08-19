@@ -42,8 +42,7 @@ import type {
 } from "../lib/sources/legiscan/types.ts";
 import { readZip } from "../lib/sources/legiscan/zip.ts";
 
-import { COVERED_USPS } from "../lib/coverage/states.ts";
-import { ROSTER_BY_USPS } from "../lib/coverage/artifacts.ts";
+import { COVERED_USPS, ROSTER_BY_USPS } from "../lib/coverage/artifacts.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 loadEnv({ path: join(ROOT, ".env.local") });

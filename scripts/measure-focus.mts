@@ -64,7 +64,7 @@ const RUN_HEADERS = syntheticRunHeaders({
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
 
-import { COVERED_FIPS } from "../lib/coverage/states.ts";
+import { COVERED_FIPS } from "../lib/coverage/artifacts.ts";
 import { extrusionSpecForZoom } from "../lib/map/state-focus.ts";
 import { decodePng, patchStats, type DecodedPng } from "./png.mts";
 import { launchGuarded } from "./browser.mts";

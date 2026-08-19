@@ -102,6 +102,22 @@ export function deriveArtifacts(
 
   return {
     states: full,
+    /*
+     * The four lookup directions only `scripts/` ever asks for. They lived in
+     * the client-safe module until a before/after build priced them at +159
+     * raw bytes on every reader's initial JavaScript — a small bill, and one
+     * no reader has any use for. They are here now.
+     */
+    /** FIPS -> lower-case postal. Was inline in `fetch-state-outlines.mts`. */
+    slugByFips: Object.fromEntries(states.map((s) => [s.fips, s.slug])),
+    /** FIPS -> USPS. Was `STATES` in `split-congressional.mts`. */
+    uspsByFips: Object.fromEntries(states.map((s) => [s.fips, s.usps])),
+    /** Lower-case postal -> FIPS. Was `STATE_FIPS` in `build-officeholders.ts`. */
+    fipsBySlug: Object.fromEntries(states.map((s) => [s.slug, s.fips])),
+    /** Every covered FIPS. Was `CLIP_STATES` and two `STATE_FIPS` arrays. */
+    fips: states.map((s) => s.fips),
+    /** Every covered USPS. Was `STATES` in `fetch-legiscan.mts`. */
+    usps: states.map((s) => s.usps),
     /** The generated officeholder roster per state, federal roster first. */
     rosters: ["officeholders-us.json", ...full.map(rosterFile)],
     /** USPS -> its roster filename. Was three separate tables in scripts/. */
@@ -142,3 +158,8 @@ export const CLIP_COUNTIES: readonly { fips: string; label: string }[] =
   derived.clipCounties;
 export const BALLOT_FILES: readonly { file: string; state: string }[] =
   derived.ballotFiles;
+export const SLUG_BY_FIPS: Readonly<Record<string, string>> = derived.slugByFips;
+export const USPS_BY_FIPS: Readonly<Record<string, string>> = derived.uspsByFips;
+export const FIPS_BY_SLUG: Readonly<Record<string, string>> = derived.fipsBySlug;
+export const COVERED_FIPS: readonly string[] = derived.fips;
+export const COVERED_USPS: readonly string[] = derived.usps;

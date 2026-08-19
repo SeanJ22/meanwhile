@@ -33,8 +33,7 @@ import {
   subdivisionIdentity,
   type DivisionIdentity,
 } from "../lib/ocd/divisions.ts";
-import { COVERED_FIPS } from "../lib/coverage/states.ts";
-import { CLIP_COUNTIES } from "../lib/coverage/artifacts.ts";
+import { CLIP_COUNTIES, COVERED_FIPS } from "../lib/coverage/artifacts.ts";
 import { districtIdentity } from "../lib/ocd/fips.ts";
 
 const VINTAGE = "2025";

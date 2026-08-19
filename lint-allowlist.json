@@ -25,7 +25,16 @@
     "symbol, and most are dead references that should simply be deleted. They",
     "are recorded rather than fixed because deleting code is not this session's",
     "brief; the file states what each one is so the next person can act on it",
-    "instead of rediscovering it."
+    "instead of rediscovering it.",
+    "",
+    "THE `^_` DISCARDS LEFT THIS FILE (g18, 2026-08-18, the author's ruling A).",
+    "Fifteen entries became twelve. The three removed - _whichVote, _ok and _d -",
+    "were deliberate discards, and a deliberate discard is not a warning we",
+    "tolerated; it is not a warning. eslint.config.mjs now carries the `^_`",
+    "convention, so they are legal at the linter rather than excused here.",
+    "The ruling named varsIgnorePattern; all three are PARAMETERS, so",
+    "argsIgnorePattern is what reaches them. Both are set and the difference is",
+    "recorded in the config, not smoothed over."
   ],
   "recordedAt": "2026-08-18",
   "warnings": [
@@ -78,12 +87,6 @@
       "reason": "Dead type import in a fetch script. Safe to delete."
     },
     {
-      "file": "scripts/fetch-law-votes.mts",
-      "rule": "@typescript-eslint/no-unused-vars",
-      "symbol": "_whichVote",
-      "reason": "DELIBERATE DISCARD, not dead code. The leading underscore is this repo's convention for a binding kept for shape and intentionally unread. The ESLint config carries no argsIgnorePattern/varsIgnorePattern for ^_, so the convention and the linter disagree. The fix is a config line, not an edit here — recorded so the author can rule on it."
-    },
-    {
       "file": "scripts/measure-panels.mts",
       "rule": "@typescript-eslint/no-unused-vars",
       "symbol": "patchStats",
@@ -106,18 +109,6 @@
       "rule": "@typescript-eslint/no-unused-vars",
       "symbol": "ln",
       "reason": "Destructured coordinate kept for shape in a one-off walk script, never read. Safe to delete."
-    },
-    {
-      "file": "scripts/tester-walk-0815b.mts",
-      "rule": "@typescript-eslint/no-unused-vars",
-      "symbol": "_ok",
-      "reason": "DELIBERATE DISCARD, as _whichVote above: underscore-prefixed and intentionally unread, in a config with no ^_ ignore pattern."
-    },
-    {
-      "file": "scripts/tester-walk-0815b.mts",
-      "rule": "@typescript-eslint/no-unused-vars",
-      "symbol": "_d",
-      "reason": "DELIBERATE DISCARD, as _whichVote above: underscore-prefixed and intentionally unread, in a config with no ^_ ignore pattern."
     }
   ]
 }

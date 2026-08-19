@@ -22,26 +22,25 @@ import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 import {
-  COVERED_FIPS,
   COVERED_SLUGS,
   COVERED_STATES,
-  COVERED_USPS,
-  FIPS_BY_SLUG,
   FIPS_BY_USPS,
-  SLUG_BY_FIPS,
-  USPS_BY_FIPS,
   deriveClientLists,
   geoFilesFor,
-  isCoveredState,
   type CoveredState,
 } from "../lib/coverage/states.ts";
 import {
   BALLOT_FILES,
   CLIP_COUNTIES,
   COVERED,
+  COVERED_FIPS,
+  COVERED_USPS,
+  FIPS_BY_SLUG,
   NAME_BY_USPS,
   ROSTER_BY_USPS,
   ROSTER_FILES,
+  SLUG_BY_FIPS,
+  USPS_BY_FIPS,
   deriveArtifacts,
 } from "../lib/coverage/artifacts.ts";
 import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
@@ -96,17 +95,16 @@ test("adding one state to the manifest reaches every CLIENT-side derived list", 
   const d = deriveClientLists(WITH_EXTRA);
   const checks: [string, boolean][] = [
     ["fipsByUsps", d.fipsByUsps.CA === "06"],
-    ["slugByFips", d.slugByFips["06"] === "ca"],
-    ["uspsByFips", d.uspsByFips["06"] === "CA"],
-    ["fipsBySlug", d.fipsBySlug.ca === "06"],
-    ["fips", d.fips.includes("06")],
-    ["usps", d.usps.includes("CA")],
     ["slugs", d.slugs.includes("ca")],
   ];
   for (const [name, saw] of checks) {
     assert.ok(saw, `client list ${name} did not see the added state`);
   }
-  assert.equal(checks.length, 7, "every client derivation must be checked, not a subset");
+  assert.equal(
+    checks.length,
+    Object.keys(d).length,
+    "every client derivation must be checked — a new one must not slip in unchecked",
+  );
 });
 
 test("adding one state to the manifest reaches every SERVER-side derived list", () => {
@@ -124,11 +122,20 @@ test("adding one state to the manifest reaches every SERVER-side derived list", 
     ["nameByUsps", d.nameByUsps.CA === "California"],
     ["clipCounties", d.clipCounties.some((c) => c.fips === "06037")],
     ["ballotFiles", d.ballotFiles.some((b) => b.file === "ca-los-angeles-2026.json")],
+    ["slugByFips", d.slugByFips["06"] === "ca"],
+    ["uspsByFips", d.uspsByFips["06"] === "CA"],
+    ["fipsBySlug", d.fipsBySlug.ca === "06"],
+    ["fips", d.fips.includes("06")],
+    ["usps", d.usps.includes("CA")],
   ];
   for (const [name, saw] of checks) {
     assert.ok(saw, `server list ${name} did not see the added state`);
   }
-  assert.equal(checks.length, 6, "every server derivation must be checked, not a subset");
+  assert.equal(
+    checks.length,
+    Object.keys(d).length,
+    "every server derivation must be checked — a new one must not slip in unchecked",
+  );
 });
 
 test("adding one state reaches the geometry filenames on every layer type", () => {
@@ -159,11 +166,6 @@ test("a manifest state with no artifacts detail row throws rather than being ski
 test("the exported lists equal the derivation of the live manifest", () => {
   const c = deriveClientLists(COVERED_STATES);
   assert.deepEqual({ ...FIPS_BY_USPS }, c.fipsByUsps);
-  assert.deepEqual({ ...SLUG_BY_FIPS }, c.slugByFips);
-  assert.deepEqual({ ...USPS_BY_FIPS }, c.uspsByFips);
-  assert.deepEqual({ ...FIPS_BY_SLUG }, c.fipsBySlug);
-  assert.deepEqual([...COVERED_FIPS], c.fips);
-  assert.deepEqual([...COVERED_USPS], c.usps);
   assert.deepEqual([...COVERED_SLUGS], c.slugs);
 
   const a = deriveArtifacts(COVERED_STATES);
@@ -171,14 +173,25 @@ test("the exported lists equal the derivation of the live manifest", () => {
   assert.deepEqual([...ROSTER_FILES], a.rosters);
   assert.deepEqual({ ...ROSTER_BY_USPS }, a.rosterByUsps);
   assert.deepEqual({ ...NAME_BY_USPS }, a.nameByUsps);
+  assert.deepEqual({ ...SLUG_BY_FIPS }, a.slugByFips);
+  assert.deepEqual({ ...USPS_BY_FIPS }, a.uspsByFips);
+  assert.deepEqual({ ...FIPS_BY_SLUG }, a.fipsBySlug);
+  assert.deepEqual([...COVERED_FIPS], a.fips);
+  assert.deepEqual([...COVERED_USPS], a.usps);
 });
 
-test("isCoveredState answers on either case and refuses an uncovered state", () => {
-  assert.equal(isCoveredState("az"), true);
-  assert.equal(isCoveredState("AZ"), true);
-  assert.equal(isCoveredState("CA"), false, "the control — an uncovered state must read false");
-  assert.equal(isCoveredState(null), false);
-  assert.equal(isCoveredState(undefined), false);
+test("the client module exports ONLY what the browser reads", () => {
+  // The measured half of the split (g18): the four script-side lookups cost
+  // +159 raw bytes on every reader's initial JavaScript while they lived in
+  // the client module. This asserts they stayed out. A new export here is not
+  // forbidden — it is required to be a deliberate act with a re-measurement
+  // behind it, which a silently-passing test would not make anyone do.
+  const d = deriveClientLists(COVERED_STATES);
+  assert.deepEqual(
+    Object.keys(d).sort(),
+    ["fipsByUsps", "slugs"],
+    "a lookup added to the client module must be paid for — re-measure budget 2 and record it",
+  );
 });
 
 /* -- no fifteenth hand-kept list ----------------------------------------- */

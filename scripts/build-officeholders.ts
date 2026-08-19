@@ -17,7 +17,7 @@
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { FIPS_BY_SLUG } from "../lib/coverage/states.ts";
+import { FIPS_BY_SLUG } from "../lib/coverage/artifacts.ts";
 import { congressSource } from "../lib/sources/congress/index.ts";
 import {
   fetchAll,

@@ -581,3 +581,16 @@ export function provisionsForContest(contestId: string): MeasureProvision[] {
 export function provisionById(id: string): MeasureProvision | null {
   return MEASURE_PROVISIONS.find((provision) => provision.id === id) ?? null;
 }
+
+/**
+ * The set of provision ids a MEASURE_PROVISION reaction may target (P03).
+ *
+ * The write path checks against this the way vote reactions check the votes
+ * snapshot: the surface only renders the control on real provisions, so
+ * anything else is a client bug or a probe, and it fails closed. Derived
+ * from the committed provisions rather than kept as a second list, because
+ * two lists that must agree are the shape D29 just caught in the registry.
+ */
+export function getProvisionTargetIds(): Set<string> {
+  return new Set(MEASURE_PROVISIONS.map((p) => p.id));
+}

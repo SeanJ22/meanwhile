@@ -148,6 +148,12 @@ export interface KeyVoteEntry {
    * typed here from memory is the assumption this whole file refuses.
    */
   lawSearch?: string;
+  /**
+   * The official short title of a PENDING measure, for the route that goes
+   * through the chamber's roll-call index rather than the public-law list
+   * (B15, 2026-08-18). Matching data, never an asserted bill number.
+   */
+  pendingSearch?: string;
 }
 
 /** The House does not vote on nominations. Stated, never left blank. */
@@ -318,8 +324,13 @@ function law(
 }
 
 /**
- * VOTES ON LAWS — seventeen entries, the author's list, including the April
- * 2024 package as FOUR siblings.
+ * VOTES ON LAWS — twenty entries, the author's list, including the April
+ * 2024 package as FOUR siblings and one pending measure.
+ *
+ * The count read "seventeen" until 2026-08-18 (g19), when it was checked
+ * against the array rather than against the previous comment. A stale count
+ * in a docblock is a small thing; a stale count that a report quotes as a
+ * denominator is not.
  *
  * Every explainer is drafted in the register the author approved on the
  * three samples he wrote himself (BSCA, Social Security Fairness, Ukraine
@@ -506,7 +517,10 @@ const SENATE_SEARCH: Readonly<Record<string, string>> = {
  * for the phrase and refuses on zero or ambiguous matches.
  */
 const LAW_SEARCH: Readonly<Record<string, string>> = {
-  "cares-act": "CARES Act",
+  // "CARES Act" matches three public laws across two congresses — the
+    // relief act, an unrelated 2019 bill, and a 2024 one. The full name the
+    // law itself carries is unambiguous. Matching data, never an assertion.
+  "cares-act": "Coronavirus Aid, Relief, and Economic Security Act",
   "american-rescue-plan": "American Rescue Plan",
   iija: "Infrastructure Investment and Jobs Act",
   bsca: "Bipartisan Safer Communities Act",
@@ -526,11 +540,28 @@ const LAW_SEARCH: Readonly<Record<string, string>> = {
   "road-to-housing": "21st Century ROAD to Housing Act",
 };
 
+/**
+ * The phrase that finds a PENDING measure in the chamber's own record.
+ *
+ * Separate from `LAW_SEARCH` because the route is different: a pending bill
+ * is in no public-law list, so it is found through the House's own
+ * roll-call index and the titles of the measures it voted on.
+ *
+ * Curated matching data, exactly like the two above — a phrase to search
+ * the official record for, never an asserted bill number. The phrase here
+ * is the bill's own official short title, which is what the record prints.
+ */
+const PENDING_SEARCH: Readonly<Record<string, string>> = {
+  "stock-trading-ban": "Stop Insider Trading Act",
+};
+
 for (const entry of KEY_VOTES_LAWS) {
   const phrase = SENATE_SEARCH[entry.id];
   if (phrase) entry.senateSearch = phrase;
   const popular = LAW_SEARCH[entry.id];
   if (popular) entry.lawSearch = popular;
+  const pending = PENDING_SEARCH[entry.id];
+  if (pending) entry.pendingSearch = pending;
 }
 
 

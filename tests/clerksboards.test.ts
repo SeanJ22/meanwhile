@@ -175,3 +175,115 @@ test("a virtual-only board is KEPT, with no place and no invented pin (D18)", ()
   );
   assert.equal(drops.unknownVenue, 0);
 });
+
+/*
+ * Grammars C and D, and the widened B — tracker D29, added 2026-08-18 (g19).
+ *
+ * All three schedule texts below are the Clerk's own words, copied from the
+ * board pages named in each test. Minimum date counts are asserted, never the
+ * absence of an error: a grammar that quietly matches nothing has to fail
+ * here, which is exactly how board 130 hid inside "publishes no schedule".
+ */
+
+// The serving window these run against: a year from the day the grammars
+// landed. Fixed, so the expectations below do not drift with the clock.
+const G19_START = new Date(Date.UTC(2026, 7, 18));
+const G19_END = new Date(Date.UTC(2027, 7, 18));
+
+test("grammar C: a quarterly rule with its months named expands to those months", () => {
+  // Board 128, as published.
+  const out = expandSchedule(
+    "Quarterly basis: every 3 months on the 3rd Monday (Jan, Apr, Jul, and Oct) @ 5:30 p.m.",
+    G19_START,
+    G19_END,
+  );
+  assert.ok(out, "a fully determined recurrence must not be declined");
+  assert.equal(out.length, 4, "four quarters fall inside a one-year window");
+  assert.deepEqual(
+    out.map((i) => [i.mo, i.d]),
+    [
+      [10, 19],
+      [1, 18],
+      [4, 19],
+      [7, 19],
+    ],
+    "the 3rd Monday of each named month, and no other month",
+  );
+  for (const i of out) {
+    assert.equal(i.h, 17);
+    assert.equal(i.mi, 30);
+  }
+});
+
+test("grammar C declines a quarterly rule that names no months", () => {
+  // "Quarterly" alone does not say which quarter, and a guess would put a
+  // real body's meeting on a day it does not meet.
+  assert.equal(
+    expandSchedule(
+      "Quarterly basis: every 3 months on the 3rd Monday @ 5:30 p.m.",
+      G19_START,
+      G19_END,
+    ),
+    null,
+  );
+});
+
+test("grammar D reads month-name dates, and a TBD month yields no date", () => {
+  // Board 15, as published: two dates set, two months the body has not set.
+  const text = "January 22, April 16, 2026 and July and October 2026 TBD @ 9:30 a.m.";
+
+  // In a window containing them, both dated sittings must appear — proving
+  // the grammar READS them rather than always returning empty.
+  const y2026 = expandSchedule(
+    text,
+    new Date(Date.UTC(2026, 0, 1)),
+    new Date(Date.UTC(2026, 11, 31)),
+  );
+  assert.ok(y2026);
+  assert.equal(y2026.length, 2, "exactly the two dates the body has set");
+  assert.deepEqual(
+    y2026.map((i) => [i.y, i.mo, i.d]),
+    [
+      [2026, 1, 22],
+      [2026, 4, 16],
+    ],
+  );
+
+  // July and October are named but undated. Neither may become a date — the
+  // trap is a greedy day group eating the first two digits of "2026" and
+  // inventing "October 20".
+  assert.ok(!y2026.some((i) => i.mo === 7 || i.mo === 10), "no TBD month becomes a date");
+
+  // In the serving window both dated sittings are past, so the honest answer
+  // is an empty list from a parsed calendar — not a declined parse.
+  const serving = expandSchedule(text, G19_START, G19_END);
+  assert.ok(serving, "a readable calendar with nothing ahead is not a parse failure");
+  assert.equal(serving.length, 0);
+});
+
+test("grammar B accepts 'of the month', which is the same rule as 'of each month'", () => {
+  // Board 130, as published. This sat in the "publishes no fixed schedule"
+  // bucket for a session because the regex required the word "each".
+  const the = expandSchedule("4th Wednesday of the month @ 5:30 p.m.", G19_START, G19_END);
+  const each = expandSchedule(
+    "4th Wednesday of each month @ 5:30 p.m.",
+    G19_START,
+    G19_END,
+  );
+  assert.ok(the);
+  assert.ok(the.length >= 4, "a monthly rule yields at least four dates in a year");
+  assert.deepEqual(the, each, "one word of wording must not change the calendar");
+});
+
+test("a body that publishes no schedule is still declined", () => {
+  // The other side of the same coin: widening the grammars must not turn
+  // "Meets as required" into invented dates. 29 of Tucson's 56 say this.
+  for (const text of [
+    "Meets as required",
+    "Meets as required.",
+    "Meets as Required",
+    "To be provided.",
+  ]) {
+    assert.equal(expandSchedule(text, G19_START, G19_END), null, text);
+  }
+});

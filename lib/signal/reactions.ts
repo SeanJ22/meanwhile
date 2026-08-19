@@ -29,16 +29,31 @@
  * of these two types are stored but excluded from aggregation and every
  * export — see lib/signal/aggregate.ts.
  */
+/**
+ * MEASURE_PROVISION (P03, 2026-08-18) is the class CLAUDE.md's reaction
+ * section describes first and which shipped last: **a measure is decomposed
+ * into contested provisions and the reaction attaches to a PROVISION, never
+ * to the measure as a whole.** The target id is the provision's own
+ * `<contestId>#<slug>` key from lib/ballot/measure-provisions.ts, which was
+ * built in that shape for exactly this and has been sitting unused since.
+ *
+ * All five provision kinds collect — FUNDING, PROGRAM, OVERSIGHT, SUNSET and
+ * START. There is no kind that is asked about and no kind that is not: a
+ * sensor that skipped a kind would report a measure's parts as more or less
+ * contested than the reader found them.
+ */
 export type ReactionTargetType =
   | "FEDERAL_VOTE"
   | "CANDIDATE"
   | "FUNDING_TOTAL_REACTION"
-  | "CONTRIBUTOR_REACTION";
+  | "CONTRIBUTOR_REACTION"
+  | "MEASURE_PROVISION";
 export const REACTION_TARGET_TYPES: ReactionTargetType[] = [
   "FEDERAL_VOTE",
   "CANDIDATE",
   "FUNDING_TOTAL_REACTION",
   "CONTRIBUTOR_REACTION",
+  "MEASURE_PROVISION",
 ];
 
 /** The funding reaction classes — the filter a ripcord pull applies. */
@@ -237,7 +252,19 @@ export function scaleForTargetType(targetType: ReactionTargetType): ReactionScal
  * guards against is real and cheap to re-open, and because deleting it would
  * take the reasoning with it.
  */
-const QUESTION_BY_TYPE: Partial<Record<ReactionTargetType, string>> = {};
+const QUESTION_BY_TYPE: Partial<Record<ReactionTargetType, string>> = {
+  /**
+   * The provision question (P03, 2026-08-18). It shares the v1 scale with
+   * votes and candidates — the answer set is genuinely the same three — but
+   * it asks about a different civic object, so it gets its own wording here
+   * rather than inheriting "Do you like this vote?".
+   *
+   * It asks about the PART, not the ballot: this is a sensor, and the
+   * product never tells anyone how to vote. "Would you vote yes on this
+   * proposition" is a recommendation surface wearing a question mark.
+   */
+  MEASURE_PROVISION: "Do you like this part?",
+};
 
 export function questionForTargetType(targetType: ReactionTargetType): string {
   return QUESTION_BY_TYPE[targetType] ?? scaleForTargetType(targetType).question;
@@ -413,3 +440,82 @@ export function isValidReactionKey(value: unknown): value is string {
 export function isPlausibleTargetId(value: unknown): value is string {
   return typeof value === "string" && value.length > 0 && value.length <= 128;
 }
+
+
+/* ── The optional verbatim (P03, 2026-08-18) ─────────────────────────────
+ *
+ * "Each reaction has a one-tap binary and an optional free-text field.
+ * Binary carries volume; text carries color. Never require the text."
+ * — CLAUDE.md, reaction capture.
+ *
+ * Unblocked by the author 2026-08-18 for the testing window, and shipped
+ * behind `ripcord.reactionFreeText` — the ripcord is the author's order in
+ * the same breath as the unblocking, not a hedge added on top of it.
+ *
+ * Everything here is validation, and validation is NEVER behind a flag
+ * (CLAUDE.md, the collection-stores rule). The ripcord governs whether text
+ * is CAPTURED. It does not govern whether a malformed payload is refused.
+ */
+
+/**
+ * The length cap. Long enough for a paragraph of real opinion, short enough
+ * that the field is not a document upload — the point is colour beside a
+ * binary, not a submission.
+ */
+export const FREE_TEXT_MAX_CHARS = 1000;
+
+/**
+ * **The threat notice, adjacent to the field** — CLAUDE.md requires it, and
+ * requires the word "may" rather than "will": a stated commitment that is not
+ * honoured on every instance is worse than a reserved right.
+ *
+ * Pinned in tests/reactions.test.ts so a reword cannot quietly turn the
+ * reserved right into a promise. Level register — this is a claim surface,
+ * about a real consequence for a real person.
+ */
+export const FREE_TEXT_THREAT_NOTICE =
+  "Threats of violence are removed and may be reported to law enforcement.";
+
+/** What the field asks for. Optional, and it says so. */
+export const FREE_TEXT_PROMPT = "Anything you want to add? (optional)";
+
+/**
+ * Is this a storable verbatim?
+ *
+ * `undefined` and `null` are VALID — the field is optional and its absence
+ * is the ordinary case. A present value must be a string within the cap.
+ * Whitespace-only is treated as absent rather than refused: a reader who
+ * tabs through the box has not written anything, and refusing their binary
+ * over it would be friction with nothing behind it.
+ */
+export function isValidFreeText(value: unknown): value is string | null | undefined {
+  if (value === undefined || value === null) return true;
+  if (typeof value !== "string") return false;
+  return value.length <= FREE_TEXT_MAX_CHARS;
+}
+
+/**
+ * The value to store: trimmed, or null when there is nothing there.
+ *
+ * Call only after `isValidFreeText`. Returning null for whitespace keeps the
+ * column honest — an empty string in a text column reads, to anyone counting
+ * later, as a reader who submitted a blank comment on purpose.
+ */
+export function normalizeFreeText(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const trimmed = value.trim();
+  return trimmed.length === 0 ? null : trimmed;
+}
+
+/**
+ * **What the reader is told when the ripcord is out.**
+ *
+ * The binary still counts — pulling free-text capture must not take reaction
+ * capture down with it — so this says exactly that: the answer landed, the
+ * words did not. Never "saved" for words that were dropped.
+ */
+export const FREE_TEXT_CLOSED_LINE =
+  "Your answer was counted. Comments are turned off right now, so what you typed wasn't saved.";
+
+/** Response header the route sets when it dropped a verbatim. */
+export const FREE_TEXT_CLOSED_HEADER = "x-wtp-free-text";

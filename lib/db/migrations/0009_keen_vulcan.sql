@@ -1,0 +1,1 @@
+ALTER TABLE "reactions" ADD COLUMN "free_text" text;

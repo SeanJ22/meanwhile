@@ -10,13 +10,17 @@ import {
 import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
 import {
   CONTEXT_RESTRICTED_VALUES,
+  FREE_TEXT_CLOSED_HEADER,
   isPlausibleTargetId,
+  isValidFreeText,
   isValidReactionKey,
   isValidReactionValue,
   isValidTargetType,
   isValueOnScaleFor,
+  normalizeFreeText,
 } from "@/lib/signal/reactions";
 import { getCandidateTargetIds } from "@/lib/ballot/candidate-targets";
+import { getProvisionTargetIds } from "@/lib/ballot/measure-provisions";
 import { getSingleCandidateTargetIds } from "@/lib/ballot/uncontested";
 import {
   getContributorReactionTargetIds,
@@ -102,6 +106,8 @@ export async function POST(request: Request) {
     targetId?: unknown;
     reaction?: unknown;
     reactionKey?: unknown;
+    /** The optional verbatim (P03). Absent is the ordinary case. */
+    text?: unknown;
     zip?: unknown;
     lat?: unknown;
     lng?: unknown;
@@ -119,6 +125,12 @@ export async function POST(request: Request) {
   if (!isPlausibleTargetId(submission.targetId)) {
     return Response.json({ error: "malformed targetId" }, { status: 400 });
   }
+  // The verbatim's SHAPE is checked here and always — validation is never
+  // behind any flag (CLAUDE.md, the collection-stores rule). Whether the
+  // text is CAPTURED is the ripcord's business, further down.
+  if (!isValidFreeText(submission.text)) {
+    return Response.json({ error: "malformed text" }, { status: 400 });
+  }
 
   // The target must exist in the committed data for its type — votes in
   // the votes snapshot, candidates in the ballot files (3d), funding
@@ -133,11 +145,13 @@ export async function POST(request: Request) {
     validTargets =
       submission.targetType === "CANDIDATE"
         ? getCandidateTargetIds()
-        : submission.targetType === "FUNDING_TOTAL_REACTION"
-          ? getFundingTargetIds()
-          : submission.targetType === "CONTRIBUTOR_REACTION"
-            ? getContributorReactionTargetIds()
-            : getVoteIds();
+        : submission.targetType === "MEASURE_PROVISION"
+          ? getProvisionTargetIds()
+          : submission.targetType === "FUNDING_TOTAL_REACTION"
+            ? getFundingTargetIds()
+            : submission.targetType === "CONTRIBUTOR_REACTION"
+              ? getContributorReactionTargetIds()
+              : getVoteIds();
   } catch {
     return Response.json({ error: "target data unavailable" }, { status: 503 });
   }
@@ -267,6 +281,25 @@ export async function POST(request: Request) {
     }
   }
 
+  /*
+   * THE FREE-TEXT RIPCORD (P03/T05, 2026-08-18).
+   *
+   * Pulled, the verbatim is DROPPED and the binary is still stored. The
+   * asymmetry is deliberate: free text is the part with the open question,
+   * reaction capture is the revenue path, and taking the second down to
+   * close the first would cost more than it saves.
+   *
+   * The reader is TOLD. A 204 with no signal would let the control render
+   * "saved" over words that went nowhere, which is exactly the quiet lie
+   * this codebase keeps catching. The header rides back on the same 204 and
+   * the client turns it into FREE_TEXT_CLOSED_LINE.
+   */
+  const freeTextClosed = ripcordPulled("ripcord.reactionFreeText");
+  const submitted = normalizeFreeText(submission.text);
+  const freeText = freeTextClosed ? null : submitted;
+  // Only say text was dropped when there was text to drop.
+  const droppedText = freeTextClosed && submitted !== null;
+
   try {
     const stored = await writeReaction({
       targetType: submission.targetType,
@@ -275,8 +308,12 @@ export async function POST(request: Request) {
       reactionKey: submission.reactionKey,
       ocdIds,
       suspectReason,
+      freeText,
     });
-    return new Response(null, { status: stored ? 204 : 202 });
+    return new Response(null, {
+      status: stored ? 204 : 202,
+      headers: droppedText ? { [FREE_TEXT_CLOSED_HEADER]: "closed" } : undefined,
+    });
   } catch (error) {
     console.error("reaction write failed", error);
     return Response.json({ error: "could not store the reaction" }, { status: 500 });

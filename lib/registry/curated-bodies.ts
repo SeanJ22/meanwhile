@@ -152,23 +152,49 @@ const TUCSON_BOARDS: Array<[name: string, boardId: number, cls?: BodyClass]> = [
  * the body exists and we have no calendar for it — and nothing here may render
  * as "this board never meets".
  *
- * **1 publishes a QUARTERLY rule the parser has no case for** — board 128,
- * "Quarterly basis: every 3 months on the 3rd Monday (Jan, Apr, Jul, and Oct)
- * @ 5:30 p.m." That IS a machine-readable recurrence and it is a real parser
- * gap, named rather than folded into the 30 above.
+ * ## Re-measured 2026-08-18 (g19), and every one of the 56 is now accounted for
  *
- * **1 publishes dates that are half TBD** — board 15, "January 22, April 16,
- * 2026 and July and October 2026 TBD". The two real dates are in the past; the
- * two future ones the body itself has not set.
+ * All 56 board pages were fetched again and every published Meeting Time was
+ * run through the grammars the parser ships TODAY, rather than carrying a
+ * previous session's classification forward. **27 PARSEABLE, 29 DECLINED,
+ * 27 + 29 = 56.** Three moved, and one of the three is the reason a count is
+ * re-measured rather than inherited:
  *
- * ## One of the 19 will expand to nothing, and that is correct
+ *  - **board 128**, "Quarterly basis: every 3 months on the 3rd Monday (Jan,
+ *    Apr, Jul, and Oct) @ 5:30 p.m." — grammar C, months read from the
+ *    parenthetical. Named as a gap by g18 and closed here.
+ *  - **board 15**, "January 22, April 16, 2026 and July and October 2026 TBD
+ *    @ 9:30 a.m." — grammar D. Its two dated sittings are behind us, so it
+ *    expands to nothing in the serving window; the two TBD months yield no
+ *    date at all, because a month the body has not scheduled is not a date.
+ *  - **board 130**, "4th Wednesday of THE month @ 5:30 p.m." — this one was
+ *    NOT a gap anybody had named. It is an ordinary Nth-weekday rule that the
+ *    recurrence regex declined because it required the word "each", so it sat
+ *    inside the "publishes no fixed schedule" bucket looking like a finding
+ *    about the body when it was a finding about our own regex. One word.
  *
- * Board 43's dates are enumerated and every one of them (1/22 through
- * 6/18/2026) is behind us. It is wired anyway: its schedule is published and
- * parseable, so "we have their calendar and it lists nothing ahead" is a true
- * statement we can now make, where `KNOWN_UNCOVERED` said "we have not looked".
- * An empty answer we can stand behind beats an honest shrug.
- */
+ * **So the earlier "30 publish no fixed schedule" was wrong by one, and the
+ * true figure is 29** — 28 publishing "Meets as required" and 1 publishing
+ * "To be provided." That IS a finding about those bodies: they have no
+ * calendar to wire and their meetings are noticed individually. They stay
+ * `KNOWN_UNCOVERED`, and nothing here may render as "this board never meets".
+ *
+ * ## Two of the 27 expand to nothing, and that is correct
+ *
+ * Board 43's enumerated dates (1/22 through 6/18/2026) and board 15's two
+ * dated sittings are all behind us. Both are wired anyway: the schedule is
+ * published and parseable, so "we have their calendar and it lists nothing
+ * ahead" is a true statement we can now make, where `KNOWN_UNCOVERED` said
+ * "we have not looked". An empty answer we can stand behind beats a shrug.
+ *
+ * ## Known and NOT fixed here — see the tracker
+ *
+ * Three of the 27 publish a restriction the parser reads past: board 40's
+ * "September through May", and boards 58 and 59's "(except January it will be
+ * 01/08/26 and July will be 07/09/26)". Neither produces a wrong date in
+ * today's serving window, and both could. Recorded as a tracker row rather
+ * than folded in here, and named so it is not rediscovered as a surprise.
+  */
 const LIVE_BOARD_IDS = new Set([
   // Wired before g18.
   38, 8, 23, 63, 19,
@@ -178,6 +204,10 @@ const LIVE_BOARD_IDS = new Set([
   26, 25,
   // g18: enumerated dates, all of them past. See the note above.
   43,
+  // g19: the two the g18 pass named as parser gaps, plus one it did not see.
+  // 128 quarterly (grammar C), 15 month-name dates (grammar D), 130 an
+  // ordinary Nth-weekday rule written "of THE month" (grammar B, widened).
+  128, 15, 130,
 ]);
 
 function slugOf(name: string): string {

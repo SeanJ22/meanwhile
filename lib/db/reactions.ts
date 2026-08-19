@@ -42,6 +42,14 @@ export interface StorableReaction {
    * mechanical reason the intake limits assigned at write time.
    */
   suspectReason?: "VELOCITY" | "LIMITER_UNAVAILABLE" | null;
+  /**
+   * The optional verbatim (P03), already trimmed and length-checked, or null.
+   *
+   * Null when the reader typed nothing AND when the free-text ripcord is out
+   * — the route decides which, and both arrive here as the same null,
+   * because the row's job is to record what was stored and not why.
+   */
+  freeText?: string | null;
 }
 
 /**
@@ -79,6 +87,7 @@ export async function writeReaction(row: StorableReaction): Promise<boolean> {
       verificationTier: "ANONYMOUS",
       reactionKeyHash: hashReactionKey(row.reactionKey),
       suspectReason,
+      freeText: row.freeText ?? null,
     })
     .onConflictDoUpdate({
       target: [reactions.reactionKeyHash, reactions.targetType, reactions.targetId],
@@ -99,6 +108,19 @@ export async function writeReaction(row: StorableReaction): Promise<boolean> {
         // by re-submitting the same targets at human pace. Only the author
         // clears suspects, through their own review, never this path.
         suspectReason: sql`COALESCE(${reactions.suspectReason}, ${suspectReason})`,
+        /*
+         * The verbatim on an overwrite (P03).
+         *
+         * NOT sticky, unlike the quarantine mark above, and the two differ
+         * for opposite reasons. A quarantine is a finding ABOUT the row that
+         * the row must not be able to clear about itself. A verbatim is the
+         * reader's own words, and this path only ever fires for a row THIS
+         * browser wrote — so a reader who changes their answer and rewrites
+         * their comment gets the comment they meant, and one who clears the
+         * box has cleared it. Anything else would keep words a person
+         * deliberately deleted.
+         */
+        freeText: row.freeText ?? null,
       },
     });
   return true;

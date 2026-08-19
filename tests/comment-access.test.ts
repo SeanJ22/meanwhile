@@ -49,9 +49,15 @@ test("lookup is by division plus published body name, never the wrong body's rul
   assert.ok(mc);
   assert.equal(mc.timeLimit, "3 minutes per speaker.");
 
+  // Closed 2026-08-18 (g19) from the Commission's own agenda. The guard is
+  // stronger stated as identity than as a value: this must be the Planning
+  // Commission's OWN row, never Mayor & Council's, whatever either says.
   const pc = commentAccessFor(tucsonOcd, "Planning Commission");
   assert.ok(pc);
-  assert.equal(pc.commentPeriod, "UNKNOWN");
+  assert.ok(pc.bodyId.endsWith("#planning-commission"));
+  assert.notEqual(pc.bodyId, mc.bodyId);
+  assert.notEqual(pc.signup, mc.signup);
+  assert.notEqual(pc.timeLimit, mc.timeLimit);
 
   // A body with no row of its own gets nothing — never a sibling's rule.
   assert.equal(commentAccessFor(tucsonOcd, "Design Review Board"), undefined);

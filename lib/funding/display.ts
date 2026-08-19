@@ -1,3 +1,8 @@
+import {
+  concentrationOf,
+  concentrationSentences,
+  type FundingConcentration,
+} from "./concentration.ts";
 import { groupContributions, type ContributorGroups } from "./grouping.ts";
 import {
   contributorRowsForDisplay,
@@ -41,6 +46,16 @@ export interface FundingDisplayData {
    */
   secondHop: Record<string, SecondHopCommittee>;
   reportedThrough: string | null;
+  /**
+   * **Where the money came from, and how concentrated it is** (D06).
+   *
+   * Null when there is nothing to compute over — never a row of zeros,
+   * which would read as "no money came from anywhere". The sentences carry
+   * their own denominator, because these are computed over the LARGEST
+   * reported contributions and not the campaign's whole book.
+   */
+  concentration: FundingConcentration | null;
+  concentrationSentences: string[];
   sourceUrl: string | null;
   sourceOrg: string;
   collectedAt: string;
@@ -132,6 +147,11 @@ export function fundingAnswerForTarget(targetKey: string): FundingAnswer {
     if (smallDonor) sentences.push(smallDonor);
     const contributors = contributorRowsForDisplay(candidate);
     const contributorGroups = groupContributions(contributors);
+    // D06: computed over the rows the READER is shown, so the figure and
+    // the table below it can never disagree — and it is null, not zero,
+    // when the display is ripcorded off or nothing was fetched.
+    const concentration = concentrationOf(contributors, candidate.state ?? null);
+
     return {
       kind: "funding",
       data: {
@@ -144,6 +164,10 @@ export function fundingAnswerForTarget(targetKey: string): FundingAnswer {
         secondHop: secondHopForGroups(contributorGroups),
         contributorsShown: contributors.length > 0,
         reportedThrough: totals.coverageEndDate,
+        concentration,
+        concentrationSentences: concentration
+          ? concentrationSentences(concentration, candidate.state ?? null)
+          : [],
         sourceUrl: candidate.provenance.sourceUrl,
         sourceOrg: candidate.provenance.sourceOrg,
         collectedAt: candidate.provenance.collectedAt,

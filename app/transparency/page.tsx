@@ -202,6 +202,28 @@ export default function TransparencyPage() {
             or traceable to a person.
           </p>
           <p>
+            Ballot measures are broken into their parts — the money, what it
+            does, who checks it, when it starts, when it ends — and each part
+            carries its own buttons. You answer about a part you have just
+            read about, never about the measure as a whole, and never about
+            how you intend to vote.
+          </p>
+          <p>
+            After you answer, you can add a comment if you want to. It is
+            always optional, and an answer with no comment is a complete
+            answer. Comments are read by a person before anything built from
+            this data leaves here, and they never go into the totals that may
+            be licensed — the totals are counts of the buttons, and there is
+            no place in them for what you wrote. Threats of violence are
+            removed and may be reported to law enforcement.
+          </p>
+          <p>
+            We can turn comments off without changing the site. If that
+            happens while you are typing, your button answer still counts and
+            we tell you plainly that your words were not saved. Comments
+            already stored are left alone.
+          </p>
+          <p>
             To keep those totals honest, the site limits how fast and how
             often one device can submit answers. Submissions faster than any
             person could tap are refused, and answers that arrive at a
@@ -238,6 +260,24 @@ export default function TransparencyPage() {
             2026. Answers from before that date are kept separately and are
             never combined with answers from after it: the question changed,
             so the two are not the same measurement.
+          </p>
+          <p>
+            Under the list of contributions we show a few figures about
+            those contributions: how much of the money was filed from inside
+            the candidate&apos;s own state, how it split between committees
+            and individual people, and how much the single largest one
+            accounts for. Each of those sentences says what it is counting —
+            the biggest contributions the campaign reported, which is not
+            everything it raised.
+          </p>
+          <p>
+            Two things we deliberately do not do here. We do not say what
+            share came from inside a candidate&apos;s district: the filings
+            give a state, not a district, and a zip code cannot stand in for
+            one. And we do not sort donors into industries, sectors or
+            causes — the FEC publishes no such classification, so any we
+            showed would be ours, and deciding what kind of group something
+            is is exactly what this site never does.
           </p>
           <p>
             Where a contributor is itself a committee, its label — a super

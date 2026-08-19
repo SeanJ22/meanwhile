@@ -72,77 +72,167 @@ export const COMMENT_ACCESS: CommentAccess[] = [
     verifiedAt: "2026-08-14",
   },
 
-  // ── Tucson boards newly wired via clerksboards (D29) ────────────────────
-  // Honest UNKNOWNs: the Clerk's board pages publish schedule and venue but
-  // not a comment procedure, and a comment period must never be inferred
-  // from a meeting being public. The hunt continues on each body's page.
+  // ── Tucson boards wired via clerksboards (D29) ──────────────────────────
   //
-  // RE-WALKED 2026-08-18 (g18, D25), rung 2 with an identified User-Agent:
-  // `clerksboards.tucsonaz.gov/boards` (HTTP 200, 22,065 bytes) and the
-  // per-board page `?board=38` (HTTP 200, 15,043 bytes) BOTH carry no
-  // comment-access language at all — not "public comment", not "call to the
-  // audience", not a time limit. So there is no shared platform-level rule to
-  // find, and one rung cannot close all five; each board needs its own.
+  // CLOSED 2026-08-18 (g19, D25). All five were honest UNKNOWNs for four
+  // sessions because every hunt stopped at the Clerk's board PAGE, which
+  // publishes schedule and venue and no comment procedure. g18 re-walked
+  // those pages, confirmed there is no shared platform-level rule, and named
+  // the Tucson City Code as the next rung.
   //
-  // The rung that WOULD close them, named rather than left for rediscovery:
-  // Tucson's Mayor & Council rule (already curated above, YES) comes from a
-  // City participation notice, and the boards are creatures of city code —
-  // so the target is the Tucson City Code chapter creating each board, and
-  // each board's own bylaws where it publishes them. NOT ATTEMPTED. Nothing
-  // is inferred from the Mayor & Council rule: a council's speaker-card
-  // procedure is not evidence about its Planning Commission.
-  ...(
-    [
-      ["planning-commission", "Planning Commission", "38"],
-      ["board-of-adjustment", "Board of Adjustment", "8"],
-      ["citizens-water-advisory-committee", "Citizens' Water Advisory Committee", "23"],
-      [
-        "tucson-parks-and-recreation-commission",
-        "Tucson Parks and Recreation Commission",
-        "63",
-      ],
-      [
-        "community-police-advisory-review-board",
-        "Community Police Advisory Review Board",
-        "19",
-      ],
-    ] as const
-  ).map(
-    ([slot, name, boardId]): CommentAccess => ({
-      bodyId: `ocd-division/country:us/state:az/place:tucson#${slot}`,
-      ocdId: "ocd-division/country:us/state:az/place:tucson",
-      bodyNames: [name],
-      commentPeriod: "UNKNOWN",
-      commentPeriodDetail: null,
-      signup: null,
-      writtenComment: null,
-      attend: null,
-      timeLimit: null,
-      sourceUrl: `https://clerksboards.tucsonaz.gov/boards/?board=${boardId}`,
-      collectedAt: "2026-08-14",
-      verifiedAt: null,
-    }),
-  ),
+  // The rung that actually closed them was one rung lower and cheaper: the
+  // board page links its own AGENDA (`?run=currentagenda&board=N` and
+  // `?run=pastagenda&board=N`), and the agenda PDF carries the rule in its
+  // standing header — ladder rung 9, linked documents in every format. The
+  // City Code was never needed. **The playbook entry: for a body whose page
+  // is silent, read the body's own agenda before reading the law that made
+  // the body.** A published agenda is the body describing its own meeting.
+  //
+  // Each of the five carries a DIFFERENT rule, which is why one shared row
+  // could never have closed them and why the earlier shared `.map` shape is
+  // gone. Nothing below is inferred from Mayor & Council's speaker-card
+  // procedure; each field is read from that board's own agenda.
+  //
+  // Where an agenda publishes no per-speaker limit, `timeLimit` stays null.
+  // Two of these agendas allot minutes to the Call to the Audience ITEM on a
+  // timed agenda; an item duration is not a per-speaker limit and is never
+  // rendered as one.
+  {
+    bodyId: "ocd-division/country:us/state:az/place:tucson#planning-commission",
+    ocdId: "ocd-division/country:us/state:az/place:tucson",
+    bodyNames: ["Planning Commission"],
+    commentPeriod: "YES",
+    commentPeriodDetail:
+      "Call to the Audience is a standing item on the Commission's agenda, and cases set for Public Hearing take comment on the item.",
+    signup:
+      "Attending virtually and want to speak, at a Public Hearing item or at Call to the Audience: email PlanningCommission@tucsonaz.gov by 5:00 PM the day of the meeting.",
+    writtenComment: "Written comments may be sent to PlanningCommission@tucsonaz.gov.",
+    attend:
+      "In person, or by the hybrid link and dial-in published on each meeting's agenda.",
+    // The agenda publishes no per-speaker limit. Not inferred from any other
+    // Tucson body's limit.
+    timeLimit: null,
+    sourceUrl: "https://assets.tucsonaz.gov/share/bcc/42308.pdf",
+    collectedAt: "2026-08-18",
+    verifiedAt: "2026-08-18",
+  },
+  {
+    bodyId: "ocd-division/country:us/state:az/place:tucson#board-of-adjustment",
+    ocdId: "ocd-division/country:us/state:az/place:tucson",
+    bodyNames: ["Board of Adjustment"],
+    commentPeriod: "YES",
+    commentPeriodDetail:
+      "This board hears variance cases, and comment is taken on each case at its public hearing. Its agendas carry no general Call to the Audience item.",
+    signup:
+      "Notify staff of your intention to present information at the public hearing by emailing DSD_Zoning_Administration@tucsonaz.gov with your name, address and phone number.",
+    writtenComment: null,
+    attend:
+      "In person, or by the hybrid link at tucsonaz.gov/BOA and the dial-in published on each agenda.",
+    timeLimit: null,
+    sourceUrl: "https://assets.tucsonaz.gov/share/bcc/42516.pdf",
+    collectedAt: "2026-08-18",
+    verifiedAt: "2026-08-18",
+  },
+  {
+    bodyId:
+      "ocd-division/country:us/state:az/place:tucson#citizens-water-advisory-committee",
+    ocdId: "ocd-division/country:us/state:az/place:tucson",
+    bodyNames: ["Citizens' Water Advisory Committee"],
+    commentPeriod: "YES",
+    commentPeriodDetail:
+      "Call to the Audience appears twice on this committee's timed agenda — once near the start and once before adjournment.",
+    signup:
+      "Meetings are held virtually. Contact the committee's staff liaison (Jessica Rodriguez, jessica.rodriguez@tucsonaz.gov) to participate, by the deadline published on the meeting's agenda.",
+    writtenComment: null,
+    attend:
+      "Virtually, by the Microsoft Teams link published on each meeting's agenda.",
+    // The agenda allots 2 minutes to the Call to the Audience ITEM. That is
+    // the item's slot on a timed agenda, not a per-speaker limit, so it is
+    // not rendered as one.
+    timeLimit: null,
+    sourceUrl: "https://assets.tucsonaz.gov/share/bcc/42287.pdf",
+    collectedAt: "2026-08-18",
+    verifiedAt: "2026-08-18",
+  },
+  {
+    bodyId:
+      "ocd-division/country:us/state:az/place:tucson#tucson-parks-and-recreation-commission",
+    ocdId: "ocd-division/country:us/state:az/place:tucson",
+    bodyNames: ["Tucson Parks and Recreation Commission"],
+    commentPeriod: "YES",
+    commentPeriodDetail:
+      "Call to the Audience, early on the agenda: any member of the public may address the Commission. The Commission may not discuss or act on what is raised there, but may put it on a future agenda.",
+    signup:
+      "Email TPRC@tucsonaz.gov or call 520-837-8162 with your full name, mailing address, phone number and topic, by 5:00 PM the day before the meeting. Attending virtually, you may instead use the chat or Raise your hand during the meeting.",
+    writtenComment: null,
+    attend:
+      "In person, or by the hybrid link and dial-in published on each meeting's agenda.",
+    timeLimit: "Three minutes per speaker.",
+    sourceUrl: "https://assets.tucsonaz.gov/share/bcc/42521.pdf",
+    collectedAt: "2026-08-18",
+    verifiedAt: "2026-08-18",
+  },
+  {
+    bodyId:
+      "ocd-division/country:us/state:az/place:tucson#community-police-advisory-review-board",
+    ocdId: "ocd-division/country:us/state:az/place:tucson",
+    bodyNames: ["Community Police Advisory Review Board"],
+    commentPeriod: "YES",
+    commentPeriodDetail:
+      "Call to the Audience, early on the agenda: the community may address the board with their concerns. The board may not address a specific concern at that meeting, but may make it a future agenda item.",
+    signup: null,
+    writtenComment: null,
+    attend:
+      "In person — doors open 15 minutes before the start — or by the Microsoft Teams link and dial-in published on each meeting's agenda.",
+    timeLimit: "Three minutes per person.",
+    sourceUrl: "https://assets.tucsonaz.gov/share/bcc/42766.pdf",
+    collectedAt: "2026-08-18",
+    verifiedAt: "2026-08-18",
+  },
 
   // ── Tucson Public Housing Authority Board of Commissioners (D29) ────────
-  // Its agendas carry public hearings; whether a general comment period
-  // exists beyond noticed hearings is not stated. UNKNOWN until found.
+  //
+  // RESOLVED 2026-08-18 (g19, D25), and the scope of the answer is the whole
+  // point of the row. FOUR of the Board's own agendas were read on the
+  // Clerk's tenant — meetingIds 1981, 1903, 1894 and the 2026-08-18 notice —
+  // and NONE carries a Call to the Audience item. Two of the four carry a
+  // noticed PUBLIC HEARING (the PHA Annual Plan amendment, and one other).
+  //
+  // So the route to be heard is real and published, and it is item-scoped
+  // rather than general. `commentPeriodDetail` leads with that scope, because
+  // a reader who arrives expecting a general comment period would be wrong.
+  //
+  // NOTHING here is inferred from Mayor & Council's Call to the Audience,
+  // even though the Board IS the Mayor and Council sitting as commissioners:
+  // the Board's own agenda closes by saying the Mayor and Council REGULAR
+  // meeting commences after this one adjourns, so that Call to the Audience
+  // belongs to the meeting that follows, not to this one. Stating otherwise
+  // would send a reader to speak at the wrong meeting.
+  //
+  // NOT a standing rule: no published PHA participation policy was found.
+  // The rungs still open, named so the next hunt starts below them — the
+  // Board's own bylaws, HUD's resident-participation requirements as the PHA
+  // publishes them locally, and the City Clerk's records path.
+  //
+  // `verifiedAt` stays null on purpose: hylandcloud.com is a VENDOR portal,
+  // and CLAUDE.md types a vendor portal as not-official however authentic the
+  // records on it are.
   {
     bodyId: "ocd-division/country:us/state:az/place:tucson#public-housing-authority",
     ocdId: "ocd-division/country:us/state:az/place:tucson",
     bodyNames: ["Public Housing Authority Board of Commissioners"],
-    commentPeriod: "UNKNOWN",
-    // Its agendas carry noticed public hearings, but whether a general
-    // comment period exists is not stated — so this row states nothing.
-    commentPeriodDetail: null,
+    commentPeriod: "YES",
+    commentPeriodDetail:
+      "Comment is taken on the items this board sets for public hearing — its annual and five-year housing plans, for instance. Its agendas carry no general call-to-the-audience item, so check the agenda for a hearing on what you came to speak about.",
     signup: null,
     writtenComment: null,
-    attend: "Mayor and Council Chambers, City Hall, 255 W. Alameda, Tucson.",
+    attend:
+      "Mayor and Council Chambers, City Hall, 255 W. Alameda, Tucson; doors open 30 minutes before the start. Meetings stream live on the City's YouTube channel.",
     timeLimit: null,
     sourceUrl:
       "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/ViewDocument/agenda.pdf?meetingId=1981&documentType=1",
-    collectedAt: "2026-08-14",
-    verifiedAt: "2026-08-14",
+    collectedAt: "2026-08-18",
+    verifiedAt: null,
   },
 
   {
@@ -260,35 +350,35 @@ export const COMMENT_ACCESS: CommentAccess[] = [
     ocdId:
       "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
     /*
-     * STILL UNKNOWN after g18's hunt, and the rungs are recorded so the next
-     * session starts below them rather than at the top again (D25's own rule).
+     * CLOSED 2026-08-18 (g19, D25), on exactly the rung g18 named and did not
+     * walk: the township code's council-procedure chapter, on eCode360.
      *
-     * Walked 2026-08-18, all with an identified User-Agent carrying a contact
-     * address:
-     *   rung 2, `/157/Township-Council` — HTTP 200, 112,590 bytes, NO
-     *     comment-access language of any kind (no "public comment", no
-     *     "public portion", no time limit).
-     *   rung 2, `/AgendaCenter` — HTTP 200, 203,609 bytes, none.
-     *   rung 2, `/158/Council-Meetings` — HTTP 200, 112,326 bytes, none.
+     * The rule is Township Code § 2-5.14, "Addressing the Council" (1971 Code
+     * § 3-4N; Ord. No. 2-7-84; Ord. No. O-22-01), and the order of business at
+     * § 2-5.7 puts "Open to the public" fifth and takes comment on ordinances
+     * up for adoption separately. Both limits below are the code's own words.
      *
-     * This is a CivicPlus site (rung 12 is the platform), and the rule for a
-     * New Jersey municipality is most often in the council's annual
-     * organizational-meeting resolution or its Rules of Procedure — neither
-     * of which is on the three pages above. NOT ATTEMPTED yet, and named so
-     * the next hunt has a target: the organizational meeting agenda packet in
-     * AgendaCenter (January), and the township code's council-procedure
-     * chapter on eCode360. Nothing here is inferred from N.J.S.A. 10:4-12(a)
-     * requiring a comment period at regular meetings — the statute is real,
-     * but a claim about THIS body needs this body's own published rule.
+     * The three township-website pages g18 fetched (200 each, no comment
+     * language) were not a wall and not an emptiness — the rule was simply
+     * somewhere else. Recorded because it is the general lesson: a New Jersey
+     * municipality's comment rule lives in its CODE far more reliably than on
+     * its CivicPlus pages.
+     *
+     * `verifiedAt` stays null: ecode360.com is a third-party publisher, not
+     * the township's own host, so it is a second-rung read under CLAUDE.md's
+     * verification rule however faithful the text is.
      */
-    commentPeriod: "UNKNOWN",
-    commentPeriodDetail: null,
-    signup: null,
+    commentPeriod: "YES",
+    commentPeriodDetail:
+      "A portion of every regular and special meeting is open for public comment — it sits fifth on the order of business, after the ordinances up for adoption. Ordinances being adopted take their own comment before that.",
+    signup:
+      "No advance sign-up. Ask the presiding officer to recognize you, then give your name and address out loud.",
     writtenComment: null,
     attend: null,
-    timeLimit: null,
-    sourceUrl: "https://www.rockawaytownship.org/157/Township-Council",
-    collectedAt: "2026-08-13",
+    timeLimit:
+      "Three minutes during the regular public portion; two minutes when speaking on an ordinance outside it. The presiding officer may grant more.",
+    sourceUrl: "https://ecode360.com/33531816",
+    collectedAt: "2026-08-18",
     verifiedAt: null,
   },
   {
@@ -297,34 +387,54 @@ export const COMMENT_ACCESS: CommentAccess[] = [
     ocdId:
       "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
     /*
-     * STILL UNKNOWN after g18's hunt, and it is a WALL rather than an
-     * emptiness — the difference matters and this row states which.
+     * THE WALL FELL 2026-08-18 (g19, D25). g18 recorded a 403 at rung 2 and
+     * rung 3 and named rungs 4, 5, 6 and 11 as next. Rung 4 was enough:
+     * **curl, with the same identified User-Agent that got the 403, is served
+     * HTTP 200** — so it was a TLS-fingerprint filter, exactly the class curl
+     * beat in the f session, and not an egress or header problem.
      *
-     * Walked 2026-08-18:
-     *   rung 2, plain fetch with an identified User-Agent — HTTP 403.
-     *   rung 3, the full browser header set (Chrome UA, Accept,
-     *     Accept-Language) — HTTP 403.
+     * The walk, all with an identified User-Agent carrying a contact address:
+     *   rung 4, `/` — HTTP 200, 80,561 bytes. The wall is fingerprint-only.
+     *   rung 4, `/selectboard` — HTTP 200, 90,511 bytes. Carries a link
+     *     titled "Selecboard Public Input Rules of Participation" (the
+     *     town's own typo), which is the rule.
+     *   rung 9, the PDF behind it — HTTP 200, 115,680 bytes, one page, dated
+     *     May 12, 2025. Every field below is read from it.
+     *   rung 9, the request form — HTTP 200, 95,965 bytes; it confirms the
+     *     Wednesday 10 a.m. deadline in its own footer.
      *
-     * Two rungs, both refused, and the refusal is the finding: nothing here
-     * says Newbury publishes no comment rule. The ladder is NOT exhausted and
-     * the next rungs are named — rung 4 (a different client whose TLS
-     * fingerprint passes; curl beat this exact class of filter in the f
-     * session), rung 5 (a different egress), rung 6 (the live browser), and
-     * rung 11 (the Internet Archive, which is not blocked by this host's WAF
-     * because it is not this host). g3's rule applies: a 403 to a CI-shaped
-     * client is an EGRESS or fingerprint wall, not a header problem, so
-     * hunting more headers here would be the wrong rung.
+     * STILL WALLED, recorded rather than smoothed over: the deep paths
+     * `/administration/...` and `/minutes-and-agendas` return 403 even to
+     * curl, so the filter is path-scoped as well as fingerprint-scoped. That
+     * cost nothing here because the rule was reachable another way, and it is
+     * written down so the next session does not rediscover it.
+     *
+     * FOUND ON THE WAY, and it is worth more than this row: the walled
+     * agendas path 302-redirects to `newburynh.civicweb.net`, a CivicWeb
+     * portal (ladder rung 12) that answers HTTP 200. Newbury's meetings have
+     * a vendor platform underneath and nothing in this repo knew it.
+     *
+     * The time limit is the honest gap: the rule says the Chairperson HAS THE
+     * RIGHT to set time limits and publishes no number, so `timeLimit` is
+     * null and the detail says who decides. A plausible number here would be
+     * a fabrication about a real town.
      */
-    commentPeriod: "UNKNOWN",
-    commentPeriodDetail: null,
-    signup: null,
-    writtenComment: null,
+    commentPeriod: "YES",
+    commentPeriodDetail:
+      "There is a Public Input section on the agenda, and the Selectboard may keep comment to it. On an agenda item, you may speak when the Chair invites comment on it. On anything else, speak during public comment time — give your name and your topic first; the Chair may put the issue on a future agenda or send it to the Town Administrator rather than take it up on the spot. Newbury is direct about the limit: the public does not have a right to speak at Selectboard meetings unless the Selectboard opens Public Input.",
+    signup:
+      "To be put on the agenda, send the Request for Appointment with Selectboard form to the Selectboard's office — by mail, by email or in person — no later than 10:00 a.m. on the Wednesday before the meeting. Submitting it does not guarantee a slot on the next agenda.",
+    writtenComment:
+      "Attach any background material to the appointment request form.",
     attend: null,
-    timeLimit: null,
+    // The rule states the Chairperson may set limits and publishes no
+    // number, so none is stated here. Never inferred from a neighbouring
+    // town's rule.
+    timeLimit: "No published limit — the Chairperson sets time limits for public comment.",
     sourceUrl:
-      "https://www.newbury.nh.gov/administration/links/selectboard-meeting-minutes-agendas",
-    collectedAt: "2026-08-13",
-    verifiedAt: null,
+      "https://www.newbury.nh.gov/sites/g/files/vyhlif4761/f/uploads/pubic_input_rules_of_participation.pdf",
+    collectedAt: "2026-08-18",
+    verifiedAt: "2026-08-18",
   },
   // Wired 2026-08-13; no published comment rule found on the calendar or the
   // notices read so far. The agenda PDFs are the likely place a rule appears

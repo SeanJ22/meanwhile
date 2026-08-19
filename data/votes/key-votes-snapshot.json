@@ -591,7 +591,17 @@
    "explainer": "Would bar members of Congress, and in most versions their spouses, from buying and selling individual company shares while in office, requiring blind trusts or divestment instead.",
    "explainerSource": "congress.gov bill text and official summary",
    "explainerReadAt": "2026-08-15",
-   "house": [],
+   "house": [
+    {
+     "congress": 119,
+     "session": 2,
+     "rollNumber": 280,
+     "question": "On Passage — Stop Insider Trading Act (H R 7008). Passed by the Yeas and Nays.",
+     "url": "https://clerk.house.gov/evs/2026/roll280.xml",
+     "tally": "232-198",
+     "verifiedAt": "2026-08-18"
+    }
+   ],
    "senate": [],
    "pending": true,
    "senateNote": "The Senate hasn't voted on this. It passed the House and is waiting."
@@ -941,8 +951,8 @@
   },
   {
    "id": "stock-trading-ban",
-   "chamber": "both",
-   "reason": "the measure has not become law — there is no enacted bill to resolve, and the entry's own note says so on the card"
+   "chamber": "senate",
+   "reason": "the measure has not become law, so there is no enacted bill to resolve; the Senate has taken no vote and the entry's own note says so on the card. The HOUSE vote was resolved 2026-08-18 (g19) through the House's own roll-call index — the index carries bill numbers and no titles, so searching its text finds nothing and that is a fact about the index, not about the House."
   }
  ]
 }

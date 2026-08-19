@@ -1,6 +1,6 @@
 # Photo report — every shipped photo, its source, and the judgment
 
-The 2b rule (tightened 2026-08-19): **a clean solo portrait or honest
+The 2b rule (tightened 2026-08-14): **a clean solo portrait or honest
 initials — never a screengrab, banner, logo crop, or a photo where the
 person is not the unambiguous sole subject.** This report exists so a
 human can verify every photo the product ships without hunting through

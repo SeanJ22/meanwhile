@@ -159,12 +159,27 @@ export function answerQuestion(
  * caller routes it there and this function only says that it was not a
  * refusal.
  */
-export function askWasAnswered(result: AskAnswer): boolean {
+export function askWasAnswered(
+  result: AskAnswer,
+  /**
+   * A03 (2026-08-18): the agenda rung's result, which the CLIENT holds
+   * because the corpus is server-side and this function is pure.
+   *
+   * It is a parameter rather than a second check at the call site for the
+   * reason g11 wrote this function in the first place: a private copy of
+   * "answered" in the component knew about topics and destinations and
+   * would have had to learn the digest and exact names separately. The
+   * agenda rung is the fourth thing that would have had to be learned
+   * twice. One definition, one place to extend.
+   */
+  extra: { agendaHits?: number } = {},
+): boolean {
   return Boolean(
     (result.answer.kind === "ROUTED" && result.match) ||
       result.destination ||
       result.digest ||
-      result.exactName,
+      result.exactName ||
+      (extra.agendaHits ?? 0) > 0,
   );
 }
 

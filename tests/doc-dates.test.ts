@@ -96,6 +96,87 @@ import {
  * not done in the session that built this split. It stays R16's remainder,
  * warned about loudly and counted every run.
  */
+/**
+ * **Why each remaining suspicious date is still here** — G10's 8c bullet,
+ * resolved 2026-08-18 (g19).
+ *
+ * The bullet allowed two outcomes per date: fix it, or record why it cannot
+ * be recovered. Every one was first recovered from `git blame`, because
+ * neither outcome is choosable without knowing the real date.
+ *
+ * What blame gives is a COMMIT DATE, and that is an UPPER BOUND rather than
+ * a pin: a line committed on the 17th describes work done on or before the
+ * 17th. Substituting the 17th for an unknown 16th replaces one plausible
+ * date with another, which is the defect this whole check exists to catch,
+ * not a fix for it. So a stamp was corrected only where a second,
+ * independent, authoritative record states the date exactly.
+ *
+ * **Two were corrected on that basis** and are gone from this list:
+ *   - `docs/photo-report.md` "the 2b rule (tightened …)" — CLAUDE.md pins
+ *     door 2 at 2026-08-14, and the commit (92e8575c) agrees.
+ *   - `docs/tracker.csv` "NEW INVARIANT in CLAUDE.md (adopted …)" —
+ *     CLAUDE.md's own Adopted line for the distinct-join rule is 2026-08-14.
+ *
+ * **The eight below stay, each for a stated reason.** They are two species:
+ */
+export const SUSPICIOUS_REASONS: Readonly<
+  Record<string, { committed: string; species: string; why: string }>
+> = {
+  // ── Species 1: SESSION SEQUENCE LABELS ────────────────────────────────
+  // Not wall-clock dates at all. state.md documents this itself, in the
+  // very line that trips the check: the labels from "the … session" through
+  // "the 2026-08-19 session" ARE sequence labels, and state.md §18 rules
+  // that this history is deliberately not rewritten. Correcting them would
+  // renumber the session history to make a date checker quieter, which is
+  // the tail wagging the dog.
+  "docs/defects.md:80": {
+    committed: "2026-08-14",
+    species: "SESSION_LABEL",
+    why: "A section heading naming a session by its sequence label. Renaming it would break every cross-reference to that session in state.md and the tracker.",
+  },
+  "docs/state.md:226": {
+    committed: "2026-08-14",
+    species: "SESSION_LABEL",
+    why: "Prose referring to §17 by its sequence label. The label is the section's name.",
+  },
+  "docs/state.md:3925": {
+    committed: "2026-08-14",
+    species: "SESSION_LABEL",
+    why: "§17's own heading. This is the label the other references point at.",
+  },
+  "docs/state.md:4038": {
+    committed: "2026-08-14",
+    species: "SESSION_LABEL",
+    why: "§17's state-as-of line, carrying the same label as its heading.",
+  },
+  "docs/state.md:4057": {
+    committed: "2026-08-14",
+    species: "SESSION_LABEL",
+    why: "The line that DEFINES these as sequence labels rather than dates. Rewriting it would delete the explanation for the other seven.",
+  },
+
+  // ── Species 2: BOUNDED, NOT PINNED ────────────────────────────────────
+  // Real stamps on real work, written ahead of the wall clock. Their commit
+  // date bounds them from above and nothing pins them exactly, so a
+  // correction here would be a guess wearing a citation. Routed to the
+  // author rather than repaired.
+  "docs/tracker.csv:122": {
+    committed: "2026-08-17",
+    species: "BOUNDED",
+    why: "'2026-08-19: THE SURFACE SHIPPED as A09'. The work happened on or before 2026-08-17; which day is not recoverable from anything in the repo.",
+  },
+  "docs/tracker.csv:140": {
+    committed: "2026-08-17",
+    species: "BOUNDED",
+    why: "'audited 2026-08-19' on the photo audit. On or before 2026-08-17; the audit left no dated artifact of its own.",
+  },
+  "docs/tracker.csv:141": {
+    committed: "2026-08-17",
+    species: "BOUNDED",
+    why: "'Recorded 2026-08-19 per the session brief'. On or before 2026-08-17; the brief it cites is not in the repo.",
+  },
+};
+
 const ALLOWLIST = [
   // ---- AUTHOR_DECISION (R14): EMPTY, and that is the outcome, not an
   // ---- oversight. All five stamps were recovered from two independent
@@ -202,13 +283,22 @@ test("no date in CLAUDE.md, docs/*.md, or the tracker's prose columns is in the 
       `\n  WARN  ${allowed.length} SUSPICIOUS future date(s) hit, of ` +
         `${declaredTotal} declared (` +
         [...declared].map(([g, n]) => `${g} ${n}`).join(", ") +
-        `). These are session-label residue — dates written ahead of the ` +
-        `wall clock — and correcting them is R16's remainder. The gap is ` +
-        `entries whose date is now in the past; the allowlist retires ` +
-        `itself. See the ALLOWLIST at the top of tests/doc-dates.test.ts`,
+        `). EVERY ONE CARRIES A REASON — see SUSPICIOUS_REASONS above ` +
+        `(G10's 8c bullet, resolved 2026-08-18). Two species: a SESSION_LABEL ` +
+        `is not a wall-clock date at all and state.md rules that history is ` +
+        `not rewritten; a BOUNDED stamp has a commit date that bounds it from ` +
+        `above and nothing that pins it, so correcting it would be a guess ` +
+        `wearing a citation. The gap between hit and declared is entries ` +
+        `whose date is now in the past; the allowlist retires itself.`,
     );
     for (const hit of allowed) {
-      console.warn(`  warn  ${hit.file}:${hit.line}  ${hit.date}`);
+      const record = SUSPICIOUS_REASONS[`${hit.file}:${hit.line}`];
+      console.warn(
+        `  warn  ${hit.file}:${hit.line}  ${hit.date}  ` +
+          (record
+            ? `[${record.species}, committed ${record.committed}] ${record.why}`
+            : `NO REASON RECORDED — add one to SUSPICIOUS_REASONS`),
+      );
     }
   }
 

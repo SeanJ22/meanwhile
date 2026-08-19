@@ -1335,3 +1335,112 @@ turns the same requests into 200s.
 
 A "Failed to fetch" from a page is not a wall on the server. It is a wall
 between two origins, and the way past it is to stand on the other one.
+
+## Rungs discovered by g21, 2026-08-19 (the voting-locations hunt, B19/B16)
+
+Append-only, per R13. Six entries, all from real walls.
+
+### 1. A CivicPlus page's own widget state names the map app, and the map app's item data names the data
+
+The chain that landed Pima County's 148 vote centers is three rungs deep and
+none of them is HTML scraping:
+
+1. **Rung 8** — `www.pima.gov/3199/Pima-Votes` is CivicPlus, and its page
+   embeds its whole widget tree as JSON. A `Voting Locations` BUTTON in that
+   JSON carries `"link":"https://experience.arcgis.com/experience/<id>/"`.
+   The prose said "here is a map"; the markup said which map.
+2. **Rung 12** — an ArcGIS Experience Builder app's configuration is public
+   at `https://www.arcgis.com/sharing/rest/content/items/<id>/data?f=json`,
+   and `.../items/<id>?f=json` names its OWNER, which is how you prove the
+   app is the authority's own rather than a lookalike (`julia.jones@pima.gov_Pima`).
+3. **Rung 7** — grep that config for `FeatureServer|MapServer` and the data
+   layers fall out. Query one with
+   `/0/query?where=1=1&outFields=*&returnGeometry=true&outSR=4326&f=json`.
+
+Any county whose "find your polling place" is an ArcGIS map is reachable this
+way, and what comes back is better than the HTML: coordinates, election
+labels and room names, machine-readable, from the authority's own service.
+
+### 2. An ArcGIS ORG SEARCH finds layers the same body's open-data portal does not list
+
+`gisopendata.pima.gov` publishes 190 datasets and NOT ONE polling or voting
+location among them — g20 recorded that correctly, and it is true of the
+portal. It is not true of the county.
+
+`https://www.arcgis.com/sharing/rest/search?q=orgid:<ORGID>+(vote OR voting
+OR poll OR election)&sortField=modified&sortOrder=desc&f=json` returned 33
+items on Pima's org, including "Election Day Vote Centers", "EVS Locations"
+and "mobileVotingSites", all edited the day of the walk.
+
+**A body's open-data portal is a CURATED subset of what it publishes.** The
+org search is the uncurated one. Get the org id from any one of the body's
+feature-service URLs (`services2.arcgis.com/<ORGID>/...`) or from an item's
+`orgId`.
+
+### 3. A found endpoint gated by a captcha is a rung WALKED AND REFUSED, not a wall
+
+New Hampshire's statewide list of clerks and polling places
+(`app.sos.nh.gov/statelistclerkandpolling`) refuses rungs 2, 3, 4, 5, 6 and 9.
+Rung 11 recovered the archived Angular bundle, and the bundle named the
+endpoint: `ClerkandPolling/GetClerkandPollingList`, with `GeneratePDF` and
+`GenerateCsv` beside it.
+
+**It was not called.** The tool gates that call behind reCAPTCHA, and
+circumventing bot detection is one of the four things `CLAUDE.md` says we
+never do — alongside authenticating, breaching clickwrap, and degrading
+service.
+
+Record it as what it is: the rung was reached, the door was found, and it was
+left shut on principle. That is neither a wall nor an exhaustion claim, and
+the next rung (13, the Department of State's public-records request path) is
+where the next session starts.
+
+### 4. `sos.nh.gov` and `app.sos.nh.gov` refuse rung 6 as well — g20's entry 1 does not reach them
+
+Entry 1 above says NH state hosts fall at rung 6, the live browser. That was
+measured on `governor.nh.gov`, `council.nh.gov` and `cfs.sos.nh.gov`, and it
+holds for those three.
+
+**It does not hold for the Department of State's own hosts.** A real headless
+Chromium, JavaScript executed and content awaited, takes a 403 from both
+`www.sos.nh.gov` and `app.sos.nh.gov`, with an Akamai body
+(`errors.edgesuite.net`, `Reference #18....`). A hosted fetcher on a
+completely different network takes the same 403, so it is not this egress
+alone.
+
+Two walls wear one hostname suffix. Do not generalise a `*.nh.gov` result
+from one host to another; measure the host you are on.
+
+### 5. A layer's `dataLastEditDate` is the rung that decides whether geometry is usable
+
+New Jersey's own Office of GIS publishes statewide `Election Districts for
+New Jersey` and `Ward Boundaries for New Jersey` — an unambiguous rung-12 hit
+from the state's own organisation, exactly the geometry a precinct-level
+polling-place answer needs.
+
+Its `editingInfo.dataLastEditDate` is **2021-11-24**, and the publisher's own
+title begins `MATURE SUPPORT`.
+
+A HIT is not the end of the check. Every ArcGIS layer's `?f=json` carries
+`editingInfo` with `lastEditDate`, `schemaLastEditDate` and
+`dataLastEditDate` in epoch milliseconds, and a layer five years older than
+the election it would be used to answer about is not usable for that answer.
+**Read the edit date before building on the layer**, and where it fails,
+refuse with the date named rather than shipping a stale assignment.
+
+### 6. An HTML table's `rowspan` silently drops rows, and the drop looks like the authority's silence
+
+Morris County's polling-place tables share one location across several wards
+with `rowspan`. A naive read — split `<tr>`, split `<td>` — gives Boonton's
+ward 1 a location and wards 2, 3 and 4 nothing, which renders as a town
+whose county published no location for most of its voters.
+
+Carry a pending-spans map keyed by column when parsing any government table.
+The parser in `scripts/fetch-voting-sites.mts` is the shape.
+
+Same run, same class: the first cut **dropped** any site whose address did not
+geocode, and 25 real published locations vanished — a cross-street address
+("21 Blue Mill Road & Sand Spring Rd") is not something the Census one-line
+geocoder resolves. A retrieval failure on our side may never be written into
+the data as the authority not having published. Keep the row, drop the pin,
+and say which.

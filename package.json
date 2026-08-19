@@ -80,7 +80,8 @@
     "census:runs": "tsx scripts/census-run-class.mts",
     "db:apply": "tsx scripts/apply-migrations.mts",
     "verify:write-handle": "tsx scripts/verify-write-handle.mts",
-    "lint:allowlist": "node scripts/check-lint-allowlist.mjs"
+    "lint:allowlist": "node scripts/check-lint-allowlist.mjs",
+    "voting-sites:fetch": "tsx scripts/fetch-voting-sites.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

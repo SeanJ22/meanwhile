@@ -1,3 +1,4 @@
+import { OUTBOUND_USER_AGENT } from "@/lib/geo/outbound-agent";
 import {
   CENSUS_BENCHMARK,
   CENSUS_GEOCODER_URL,
@@ -86,7 +87,7 @@ export async function POST(request: Request) {
       headers: {
         accept: "application/json",
         // Identified, with a contact address, as every retrieval here is.
-        "user-agent": "we-the-people-civic-app/0.1 (contact: seanj22@gmail.com)",
+        "user-agent": OUTBOUND_USER_AGENT,
       },
       signal: controller.signal,
       cache: "no-store",

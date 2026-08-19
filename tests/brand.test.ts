@@ -102,8 +102,11 @@ test("the repo's off-site identity is deliberately unchanged", () => {
     join("lib", "sources", "congress", "index.ts"),
     join("lib", "sources", "legistar", "client.ts"),
     join("lib", "sources", "plural", "index.ts"),
-    // The geocoder's outbound User-Agent, same reasoning.
-    join("app", "api", "geocode", "route.ts"),
+    // The outbound User-Agent both geocoder-calling routes send, same
+    // reasoning. It moved out of app/api/geocode/route.ts in g21 when a
+    // second route needed it: one home for the string, one exemption in
+    // tests/feedback.test.ts, one place this check has to look.
+    join("lib", "geo", "outbound-agent.ts"),
   ]) {
     const source = readFileSync(join(ROOT, path), "utf8");
     assert.match(

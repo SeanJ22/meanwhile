@@ -50,6 +50,13 @@
   --accent-school: #e84393;
   --accent-school-glow: rgba(232, 67, 147, 0.25);
 
+  /* WHERE YOU VOTE (B19). Deliberately outside the tier family: a voting-site
+     pin answers a different question from every meeting pin on the map, and
+     the spec is that it be unmistakable against them. Violet is the one hue
+     the tier set does not use, and it holds against the basemap. */
+  --accent-voting: #b57bff;
+  --accent-voting-glow: rgba(181, 123, 255, 0.3);
+
   /* The FILLED form of a tier accent (item 5, 2026-08-15) — the selected tier
      toggle, and nothing else yet.
 
@@ -306,6 +313,10 @@
 
   --accent-local: #b8860b;
   --accent-local-glow: rgba(184, 134, 11, 0.18);
+  /* B19's violet, darkened for the light theme the same way every tier
+     accent above it is — the pin sits on a pale basemap here. */
+  --accent-voting: #6d28d9;
+  --accent-voting-glow: rgba(109, 40, 217, 0.2);
   --accent-state: #00896e;
   --accent-state-glow: rgba(0, 137, 110, 0.18);
   --accent-national: #3d5f9e;
@@ -3342,6 +3353,345 @@ label:has(> input[type="checkbox"]) {
     width 140ms ease,
     height 140ms ease,
     box-shadow 140ms ease;
+}
+
+/* ---------------------------------------------------------------------- *
+ * WHERE CAN I VOTE — B19's panel.
+ *
+ * Built on the committed tokens, never a new ad-hoc scale: surfaces, radii,
+ * text colours and the violet accent all come from the variables above.
+ * ---------------------------------------------------------------------- */
+
+.voting-open-button {
+  border: 1px solid color-mix(in srgb, var(--accent-voting) 45%, transparent);
+  background: color-mix(in srgb, var(--surface) 92%, var(--accent-voting));
+  color: var(--text);
+  border-radius: var(--radius);
+  padding: 0.5rem 0.85rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+}
+
+.voting-open-button:hover,
+.voting-open-button:focus-visible {
+  border-color: var(--accent-voting);
+}
+
+.voting-panel {
+  width: min(23rem, calc(100vw - 2rem));
+  max-height: min(32rem, calc(100vh - 8rem));
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.28);
+  padding: 0.9rem;
+  text-align: left;
+}
+
+.voting-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+
+.voting-panel-title {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.voting-panel-close {
+  border: 0;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.2rem;
+  border-radius: var(--radius-sm);
+}
+
+.voting-panel-close:hover,
+.voting-panel-close:focus-visible {
+  color: var(--text);
+}
+
+.voting-panel-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.voting-panel-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.voting-panel-input {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text);
+  padding: 0.45rem 0.6rem;
+  font-size: 0.9rem;
+}
+
+.voting-panel-input:focus-visible {
+  outline: 2px solid var(--accent-voting);
+  outline-offset: 1px;
+}
+
+.voting-panel-note,
+.voting-panel-status {
+  font-size: 0.76rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.voting-panel-status {
+  margin-top: 0.7rem;
+}
+
+.voting-panel-submit {
+  align-self: flex-start;
+  border: 1px solid var(--accent-voting);
+  background: var(--accent-voting);
+  color: var(--bg);
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.voting-jurisdiction {
+  margin-top: 0.9rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--border);
+}
+
+.voting-jurisdiction-name {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.voting-model,
+.voting-election {
+  margin-top: 0.3rem;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--text);
+}
+
+.voting-election {
+  color: var(--text-muted);
+}
+
+.voting-narrowing {
+  margin-top: 0.4rem;
+  font-size: 0.79rem;
+  line-height: 1.45;
+  color: var(--text);
+}
+
+/* A refusal is a named gap and wears the gap's register: outlined, never
+   filled, because a colour is a claim too. */
+.voting-narrowing[data-kind="refused"] {
+  padding: 0.4rem 0.5rem;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+}
+
+.voting-narrowing[data-kind="exact"] {
+  font-weight: 600;
+}
+
+.voting-narrowing-rungs {
+  margin-top: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.voting-refusal {
+  margin-top: 0.5rem;
+  padding: 0.55rem 0.6rem;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.voting-refusal-wall {
+  color: var(--text);
+}
+
+.voting-rungs {
+  margin: 0.4rem 0 0;
+  padding-left: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.voting-rungs li {
+  display: flex;
+  flex-direction: column;
+}
+
+.voting-rung-what {
+  color: var(--text);
+}
+
+.voting-rung-when {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.75;
+}
+
+.voting-sites {
+  margin-top: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.voting-site {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.6rem;
+}
+
+.voting-site[data-selected="true"] {
+  border-color: var(--accent-voting);
+  box-shadow: 0 0 0 1px var(--accent-voting);
+}
+
+.voting-site-head {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 0;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--text);
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-align: left;
+}
+
+.voting-site-icon {
+  color: var(--accent-voting);
+  flex: none;
+}
+
+.voting-site-address,
+.voting-site-room,
+.voting-site-kind,
+.voting-site-serves {
+  margin-top: 0.2rem;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+/* A named gap renders in the gap's own register — outlined, never filled,
+   because a colour is a claim too. */
+.voting-site-gap {
+  margin-top: 0.35rem;
+  padding: 0.25rem 0.4rem;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.74rem;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+.voting-site-directions {
+  display: inline-block;
+  margin-top: 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent-voting);
+  text-decoration: underline;
+}
+
+.voting-source {
+  margin-top: 0.6rem;
+  font-size: 0.74rem;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+/*
+ * WHERE YOU VOTE (B19).
+ *
+ * A different SHAPE as well as a different colour. Colour alone is not a
+ * distinction a colour-blind reader can use, and this pin has to be
+ * unmistakable against a meeting pin by the row's own spec — so it is a
+ * teardrop with a hole, anchored at its point, where a meeting pin is a
+ * round dot anchored at its centre.
+ */
+.wtp-vote-pin {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.wtp-vote-pin-dot {
+  width: 22px;
+  height: 22px;
+  background: var(--accent-voting);
+  border-radius: 999px 999px 999px 2px;
+  transform: rotate(-45deg);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--bg) 85%, transparent),
+    0 0 16px var(--accent-voting-glow);
+  transition:
+    width 140ms ease,
+    height 140ms ease,
+    box-shadow 140ms ease;
+}
+
+/* The hole, so the teardrop reads as a marker rather than a blob. */
+.wtp-vote-pin-dot::after {
+  content: "";
+  display: block;
+  width: 8px;
+  height: 8px;
+  margin: 7px;
+  border-radius: 999px;
+  background: var(--bg);
+}
+
+.wtp-vote-pin:hover .wtp-vote-pin-dot,
+.wtp-vote-pin:focus-visible .wtp-vote-pin-dot,
+.wtp-vote-pin[data-selected="true"] .wtp-vote-pin-dot {
+  width: 28px;
+  height: 28px;
+}
+
+.wtp-vote-pin[data-selected="true"] .wtp-vote-pin-dot {
+  box-shadow:
+    0 0 0 3px var(--bg),
+    0 0 0 5px var(--accent-voting),
+    0 0 22px var(--accent-voting-glow);
 }
 
 /* Concluded meetings are hollow — present, clearly not something to attend. */

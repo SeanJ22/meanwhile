@@ -35,6 +35,7 @@
     "votes:fetch": "tsx scripts/fetch-votes.mts",
     "fec:fetch": "tsx scripts/fetch-fec.mts",
     "prl:fetch": "tsx scripts/fetch-prl.mts",
+    "candidates:fetch": "tsx scripts/fetch-candidate-corpus.mts",
     "intake:tripwire": "tsx scripts/intake-tripwire.mts",
     "streets:build": "tsx scripts/build-street-index.mts",
     "legiscan:fetch": "tsx scripts/fetch-legiscan.mts",

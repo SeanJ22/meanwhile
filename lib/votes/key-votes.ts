@@ -438,6 +438,22 @@ export const KEY_VOTES_LAWS: KeyVoteEntry[] = [
     "funding-fight",
     "The shutdown and the 2026 appropriations that ended it",
     "Reopened the federal government after the longest shutdown on record and funded it for the rest of the year, restoring back pay to federal workers and resuming paused federal payments.",
+    {
+      /*
+       * PARKED (2026-08-19, g20 — see PARKED_KEY_VOTES below). The generic
+       * gap line would be true here and it would also be vague: it says we
+       * have not recorded the vote, and leaves a reader to assume nobody
+       * looked. What actually happened is more specific and more useful, and
+       * it is a fact about OUR list rather than about the chamber — this
+       * entry's own title names two things, and Congress answered them with
+       * more than one law. Both chambers get the same sentence, because the
+       * ambiguity is in the question and not in either chamber's record.
+       */
+      houseNote:
+        "We haven't tied this one to a single vote. This entry names two things at once — reopening the government and funding the rest of the year — and Congress passed more than one appropriations law that year. Picking one would risk showing you a vote on a different bill, so we're leaving it open rather than guessing.",
+      senateNote:
+        "We haven't tied this one to a single vote. This entry names two things at once — reopening the government and funding the rest of the year — and Congress passed more than one appropriations law that year. Picking one would risk showing you a vote on a different bill, so we're leaving it open rather than guessing.",
+    },
   ),
   law(
     "road-to-housing",
@@ -565,6 +581,29 @@ for (const entry of KEY_VOTES_LAWS) {
 }
 
 
+
+/**
+ * **Entries the AUTHOR has parked — not a gap in effort, and not something a
+ * later run may quietly close.** (2026-08-19, g20, B15 item 1c.)
+ *
+ * Distinct from a `miss`, and the distinction is the point. A miss is what a
+ * resolver could not find; it invites another attempt with a better rung. A
+ * PARK is a decision that no attempt should be made, because the answer is
+ * the author's to give and guessing it would put named members of Congress
+ * against a vote on a bill they may never have voted on.
+ *
+ * Why this is a list in code rather than a sentence in the tracker: the
+ * fill-only rule that mitigated D68 protects a chamber that ALREADY has a
+ * roll call. A parked entry has none, so fill-only would happily let the
+ * next run write one in — which is exactly the failure the park exists to
+ * prevent, arriving through the door the last fix left open.
+ * `scripts/fetch-law-votes.mts` skips these and prints that it did;
+ * `tests/key-votes.test.ts` holds both halves.
+ */
+export const PARKED_KEY_VOTES: Readonly<Record<string, string>> = {
+  "funding-fight":
+    "Parked by the author 2026-08-19 — his ruling: \"Skip for now.\" This entry's title names two things at once, reopening the government and funding the rest of the year, and the 119th Congress carries five appropriations laws. Which one the entry means is the author's to say. Until he says it, no run may resolve this, and the card renders the absence rather than a guess.",
+};
 
 /** The whole list, in the author's order: laws first, then people. */
 export const KEY_VOTES: KeyVoteEntry[] = [...KEY_VOTES_LAWS, ...KEY_VOTES_PEOPLE];

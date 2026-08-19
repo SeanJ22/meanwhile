@@ -29,6 +29,7 @@ import { config as loadEnv } from "dotenv";
 
 import {
   KEY_VOTES_LAWS,
+  PARKED_KEY_VOTES,
   type KeyVoteEntry,
   type RollCallRef,
 } from "../lib/votes/key-votes.ts";
@@ -342,8 +343,26 @@ const fillOnly = (
     ? { refs: next, refused: false }
     : { refs: prior, refused: next.length > 0 };
 
+let parkedSkipped = 0;
+
 const merged = priorEntries.map((entry) => {
   if (entry.group !== "LAWS") return entry;
+  /*
+   * A PARKED entry is left exactly as it is, whatever this run found.
+   *
+   * The fill-only rule above protects a chamber that already HAS a roll
+   * call. A parked entry has none, so fill-only would let this run write one
+   * in — the very failure the park exists to prevent, arriving through the
+   * door the D68 fix left open. Parking is the author's decision that the
+   * answer is his to give, and a run that resolves it anyway has overruled
+   * him with a guess about how named members of Congress voted.
+   */
+  const parked = PARKED_KEY_VOTES[entry.id];
+  if (parked) {
+    parkedSkipped += 1;
+    console.log(`    PARKED ${entry.id}: ${parked}`);
+    return entry;
+  }
   const rolls = rollsById.get(entry.id);
   if (!rolls) {
     // A law this run could not resolve keeps whatever an earlier run
@@ -406,6 +425,9 @@ console.log(`  bills identified in the official record: ${resolvedLaw.size}/${en
 console.log(`  entries whose roll calls this run replaced: ${replaced}`);
 console.log(`  entries keeping an earlier run's verified rolls: ${keptPrior}`);
 console.log(`  entries where a resolved chamber was left alone: ${refusedShrink}`);
+// Printed on every run, even at zero: a park nobody sees is a park that gets
+// quietly resolved by whoever runs this next.
+console.log(`  entries the author has PARKED and this run did not touch: ${parkedSkipped}`);
 console.log(`  LAWS carrying at least one roll call: ${lawsWithVotes}/${lawsTotal}`);
 console.log(`  of the ${lawsTotal}, ${pendingCount} is pending and has no law to resolve`);
 console.log(`  misses recorded: ${misses.length}`);

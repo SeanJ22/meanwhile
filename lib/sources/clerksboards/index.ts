@@ -123,6 +123,40 @@ const WEEKDAYS = [
   "saturday",
 ];
 
+const MONTH_NAMES = [
+  "january",
+  "february",
+  "march",
+  "april",
+  "may",
+  "june",
+  "july",
+  "august",
+  "september",
+  "october",
+  "november",
+  "december",
+];
+
+/**
+ * The month set inside a quarterly rule's parenthetical, as 1-12.
+ *
+ * `(Jan, Apr, Jul, and Oct)` → `[1, 4, 7, 10]`. Returns null when the
+ * parenthetical names no months, so grammar C declines rather than guessing
+ * a quarter offset — "quarterly" alone does not say WHICH quarter.
+ */
+function monthsInParens(text: string): number[] | null {
+  const paren = /\(([^)]*)\)/.exec(text);
+  if (!paren) return null;
+  const months: number[] = [];
+  for (const token of paren[1].toLowerCase().split(/[^a-z]+/)) {
+    if (!token) continue;
+    const idx = MONTH_NAMES.findIndex((m) => m.startsWith(token) && token.length >= 3);
+    if (idx >= 0 && !months.includes(idx + 1)) months.push(idx + 1);
+  }
+  return months.length > 0 ? months.sort((a, b) => a - b) : null;
+}
+
 /** Calendar date of the Nth <weekday> of a month, as UTC parts. */
 function nthWeekdayOf(year: number, month: number, weekday: number, nth: number) {
   const first = new Date(Date.UTC(year, month - 1, 1));
@@ -147,7 +181,15 @@ export interface ScheduleInstance {
  *  A. Enumerated dates — `1/28, 2/25, …, 12/30/2026, 1/27/2027; @ 12:30 p.m.`
  *     A date without a year takes the year of the next entry that has one,
  *     which is how the page itself reads.
- *  B. Recurrence — `1st Wednesday of each month @ 8:00 a.m.` (also `; at`).
+ *  B. Recurrence — `1st Wednesday of each month @ 8:00 a.m.` (also `; at`,
+ *     and `of the month`, which one board writes and which is the same rule).
+ *  C. A month-restricted Nth-weekday rule — `Quarterly basis: every 3 months
+ *     on the 3rd Monday (Jan, Apr, Jul, and Oct) @ 5:30 p.m.` The months come
+ *     from the parenthetical; "quarterly" with no months named is declined,
+ *     because the word alone does not place a date.
+ *  D. Dates written with month NAMES — `January 22, April 16, 2026 and July
+ *     and October 2026 TBD @ 9:30 a.m.` A month with no day is a sitting the
+ *     body has not scheduled yet: it yields no date and is never rounded.
  *
  * Anything else — "Meets as required", "Quarterly", a novel format — returns
  * null so the caller counts the drop. Never guessed.
@@ -166,7 +208,7 @@ export function expandSchedule(
   };
 
   const recur = new RegExp(
-    "(1st|2nd|3rd|4th|5th)\\s+(" + WEEKDAYS.join("|") + ")\\s+of\\s+each\\s+month",
+    "(1st|2nd|3rd|4th|5th)\\s+(" + WEEKDAYS.join("|") + ")\\s+of\\s+(?:each|the)\\s+month",
     "i",
   ).exec(scheduleText);
   if (recur) {
@@ -184,6 +226,86 @@ export function expandSchedule(
       );
       if (inst && inWindow({ ...inst, ...time })) out.push({ ...inst, ...time });
       cursor.setUTCMonth(cursor.getUTCMonth() + 1);
+    }
+    return out;
+  }
+
+  // Grammar C: a quarterly (or any month-restricted) Nth-weekday rule —
+  // `Quarterly basis: every 3 months on the 3rd Monday (Jan, Apr, Jul, and
+  // Oct) @ 5:30 p.m.` (board 128). This is grammar B with the months named
+  // instead of "each month", and it is fully determined: the parenthetical
+  // says which months, so nothing is inferred about where a quarter starts.
+  // A rule that says "quarterly" WITHOUT naming the months still returns
+  // null — the word alone does not place a single date.
+  const nthAny = new RegExp(
+    "(1st|2nd|3rd|4th|5th)\\s+(" + WEEKDAYS.join("|") + ")",
+    "i",
+  ).exec(scheduleText);
+  if (nthAny && !recur) {
+    const months = monthsInParens(scheduleText);
+    if (months) {
+      const nth = Number(nthAny[1][0]);
+      const weekday = WEEKDAYS.indexOf(nthAny[2].toLowerCase());
+      const out: ScheduleInstance[] = [];
+      // Walk the window month by month and keep the named months only.
+      const cursor = new Date(windowStart);
+      cursor.setUTCDate(1);
+      for (let i = 0; i < 24; i++) {
+        const y = cursor.getUTCFullYear();
+        const mo = cursor.getUTCMonth() + 1;
+        if (months.includes(mo)) {
+          const inst = nthWeekdayOf(y, mo, weekday, nth);
+          if (inst && inWindow({ ...inst, ...time })) out.push({ ...inst, ...time });
+        }
+        cursor.setUTCMonth(cursor.getUTCMonth() + 1);
+        if (Date.UTC(cursor.getUTCFullYear(), cursor.getUTCMonth(), 1) > windowEnd.getTime())
+          break;
+      }
+      return out;
+    }
+  }
+
+  // Grammar D: dates written with month NAMES — `January 22, April 16, 2026
+  // and July and October 2026 TBD @ 9:30 a.m.` (board 15). Same right-to-left
+  // year assignment as grammar A, because the Clerk writes the year once at
+  // the end of a run.
+  //
+  // The day group must be followed by a non-digit: without that, "October
+  // 2026" parsed as day 20 and left the year unset — a date the body never
+  // published, invented by a greedy quantifier.
+  //
+  // **A month with no day is a month the body has not scheduled yet.** It
+  // contributes NO date and is not rounded to the 1st — "July 2026 TBD" means
+  // the body has told us it will meet and has not said when, which is a
+  // different thing from a date we could print. Silently dropping it would
+  // read as a body that meets twice a year; see `tbdMonths` on the result.
+  const named = [
+    ...scheduleText.matchAll(
+      new RegExp(
+        "\\b(" +
+          MONTH_NAMES.join("|") +
+          ")\\b\\s*(?:(\\d{1,2})(?!\\d))?(?:\\s*,?\\s*(\\d{4}))?",
+        "gi",
+      ),
+    ),
+  ];
+  if (named.length > 0 && named.some((n) => n[2])) {
+    const parsed: { mo: number; d: number | null; y: number | null }[] = named.map(
+      (n) => ({
+        mo: MONTH_NAMES.indexOf(n[1].toLowerCase()) + 1,
+        d: n[2] ? Number(n[2]) : null,
+        y: n[3] ? Number(n[3]) : null,
+      }),
+    );
+    let year: number | null = null;
+    const out: ScheduleInstance[] = [];
+    for (let i = parsed.length - 1; i >= 0; i--) {
+      const e = parsed[i];
+      if (e.y) year = e.y;
+      if (e.d === null) continue; // TBD month — carries no date, by design
+      if (year === null) return null;
+      const inst = { y: year, mo: e.mo, d: e.d, ...time };
+      if (inWindow(inst)) out.unshift(inst);
     }
     return out;
   }

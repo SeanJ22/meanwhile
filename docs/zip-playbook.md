@@ -1043,3 +1043,135 @@ Also from D25, and it generalises past one district.
   Morris County has a comment portion at every evening meeting and none at its
   5 p.m. work sessions unless the Director grants one. A row that said "there
   is a comment period" would have sent a reader to a work session to speak.
+
+## Read the body's OWN AGENDA before the law that created the body (g19, 2026-08-18)
+
+Five Tucson boards sat as honest `UNKNOWN` comment-access rows for four
+sessions. Every hunt read the Clerk's per-board PAGE — schedule, venue, roster
+— found no comment procedure, and went looking for a harder rung. g18 re-walked
+those pages, confirmed there is no shared platform-level rule, and named the
+Tucson City Code chapter creating each board as the next target.
+
+**The rung that actually closed all five was one rung LOWER and free.** The
+board page links its own agenda:
+
+```
+https://clerksboards.tucsonaz.gov/boards/?run=currentagenda&board=<N>
+https://clerksboards.tucsonaz.gov/boards/?run=pastagenda&board=<N>
+```
+
+and the agenda PDF carries the participation rule in its standing header —
+ladder rung 9, linked documents in every format. All five closed in one pass,
+each with a DIFFERENT rule, which is why no single code chapter could have
+closed them either.
+
+**The generalisation: a published agenda is the body describing its own
+meeting, in its own words, on the record.** When a body's landing page is
+silent about procedure, the agenda is the next rung, ahead of the statute, the
+charter and the code. It is cheaper, it is per-body, and it is the body's own
+voice rather than a general rule that may or may not bind this board.
+
+Two traps came with it, both live:
+
+* **`currentagenda` is often a CANCELLATION NOTICE**, not an agenda. Tucson
+  board 38's current agenda was one page saying the August meeting was
+  cancelled — no procedure, no items. Fall through to `pastagenda` and take a
+  real one. A cancellation notice read as "the agenda carries no rule" is a
+  false miss.
+* **An agenda ITEM DURATION is not a per-speaker time limit.** Two of these
+  boards publish timed agendas — "4. Call to the Audience – 2 minutes (1:06
+  p.m.)". That is the slot the item occupies, not what one speaker gets.
+  Rendering it as a speaker limit would be a fabricated rule about a real
+  body. Where no per-speaker number is published, the field stays null.
+
+## A path-scoped WAF: the root answers, the deep link refuses (g19, 2026-08-18)
+
+Newbury, NH was recorded by g18 as a WALL — HTTP 403 at rung 2 (plain fetch,
+identified UA) and rung 3 (full browser header set) — with rungs 4, 5, 6 and 11
+named as next. **Rung 4 was enough, and it took one command.** `curl`, sending
+the SAME identified User-Agent that had just been refused, is served HTTP 200.
+So it was a TLS-fingerprint filter, exactly the class curl beat in the f
+session, and not an egress problem and not a header problem.
+
+The new part is what the 200 did NOT cover:
+
+```
+https://www.newbury.nh.gov/                      curl → 200   (80,561 bytes)
+https://www.newbury.nh.gov/selectboard           curl → 200   (90,511 bytes)
+https://www.newbury.nh.gov/administration/...    curl → 403
+https://www.newbury.nh.gov/minutes-and-agendas   curl → 403
+```
+
+**The filter is path-scoped as well as fingerprint-scoped.** A 403 on the URL
+you were handed is not evidence about the host. Re-enter at `/` and walk the
+site's own navigation: the rule was three links from the front page the whole
+time, in a PDF titled with the town's own typo ("Selecboard Public Input Rules
+of Participation"), which is also why a title search would have missed it.
+
+**Corollary worth more than the row it closed:** the walled
+`/administration/links/selectboard-meeting-minutes-agendas` path 302-redirects
+to `newburynh.civicweb.net/Portal/MeetingTypeList.aspx` — a **CivicWeb**
+portal that answers 200. Reading the redirect target of a refused URL is free
+and identifies the vendor platform (ladder rung 12). Newbury's meetings have a
+vendor platform underneath and nothing in this repo knew it.
+
+## A New Jersey municipality's comment rule lives in the CODE (g19, 2026-08-18)
+
+Rockaway Township, NJ: g18 fetched three township-website pages — the council
+page, AgendaCenter, and the council-meetings page — HTTP 200 each, 112KB to
+203KB, and **no comment language of any kind on any of them**. Not a wall and
+not an emptiness: the rule was simply somewhere else.
+
+It is in the township CODE, on eCode360: **§ 2-5.14, "Addressing the Council"**
+(three minutes in the regular public portion, two minutes on an ordinance
+outside it, presiding officer may grant more), with § 2-5.7 putting "Open to
+the public" fifth on the order of business.
+
+The rung, stated generally: **for a New Jersey municipality, go to the
+municipal code's council-procedure chapter before its CivicPlus pages.** The
+Open Public Meetings Act pushes the rule into an ordinance, and an ordinance
+lands in the codified code — which is indexed, searchable and stable — while
+the website carries meeting logistics. Find the code host by searching
+`<municipality> <state> eCode360` rather than guessing the customer id: the
+short ids (`RO1130`) 404, and the code lives at a numeric guid
+(`ecode360.com/33531816`) that only search returns.
+
+`verifiedAt` stays null on these: eCode360 is a third-party publisher, not the
+township's own host, so it is a second-rung read under the verification rule
+however faithful the text is.
+
+## Widening a schedule grammar is how a body escapes a "publishes nothing" bucket (g19, 2026-08-18)
+
+Tucson's 56 Clerk boards were re-classified by fetching all 56 pages again and
+running every published Meeting Time through the grammars the parser ships
+TODAY, rather than carrying the previous session's classification forward. The
+result: **27 parseable, 29 declined, 27 + 29 = 56.**
+
+Two of the three that moved were already named as parser gaps. **The third was
+not, and it is the lesson**: board 130 publishes "4th Wednesday of THE month @
+5:30 p.m." — an ordinary Nth-weekday rule that the recurrence regex declined
+because it required the word "each". So it sat inside the "publishes no fixed
+schedule" bucket, looking like a finding about the body when it was a finding
+about our own regex. **One word.**
+
+The discipline this pays for: **a classification count is re-measured against
+today's parser, never inherited.** A bucket labelled "publishes nothing" is a
+claim about somebody else, and every grammar widening silently makes that claim
+staler. Re-running the classification is cheap; the claim is not.
+
+Two grammars were added at the same time and both are general:
+
+* **Month-restricted Nth-weekday** — "Quarterly basis: every 3 months on the
+  3rd Monday (Jan, Apr, Jul, and Oct)". The months come from the parenthetical.
+  "Quarterly" with no months named is DECLINED, because the word alone does not
+  place a date.
+* **Month-name dates** — "January 22, April 16, 2026 and July and October 2026
+  TBD". A month with no day yields no date and is never rounded to the 1st: the
+  body has said it will meet and has not said when, which is a different fact
+  from a date we could print.
+
+The bug inside the second one is worth carrying: `(\d{1,2})?` for the day
+greedily ate the first two digits of a bare four-digit year, so "October 2026"
+parsed as **day 20** — a date the body never published, invented by a
+quantifier, with the year left unset. The day group needs a non-digit after it.
+A greedy quantifier next to an optional year is a date-fabrication machine.

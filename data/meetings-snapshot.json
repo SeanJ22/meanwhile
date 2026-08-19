@@ -1,10 +1,10 @@
 {
  "formatVersion": 1,
- "generatedAt": "2026-08-18T18:58:45.977Z",
+ "generatedAt": "2026-08-19T04:20:07.508Z",
  "counts": {
-  "fresh": 202,
-  "carried": 24,
-  "total": 226
+  "fresh": 270,
+  "carried": 0,
+  "total": 270
  },
  "sources": [
   {
@@ -25,12 +25,12 @@
    "ok": true,
    "error": null,
    "fetched": 3,
-   "normalized": 53,
+   "normalized": 52,
    "drops": {
     "placeless": 0,
     "unknownVenue": 0,
     "unplaceableInTime": 0,
-    "notConfigured": 18
+    "notConfigured": 17
    }
   },
   {
@@ -38,7 +38,7 @@
    "ok": true,
    "error": null,
    "fetched": 1,
-   "normalized": 9,
+   "normalized": 12,
    "drops": {
     "placeless": 0,
     "unknownVenue": 1,
@@ -51,12 +51,12 @@
    "ok": true,
    "error": null,
    "fetched": 2,
-   "normalized": 15,
+   "normalized": 16,
    "drops": {
     "placeless": 0,
     "unknownVenue": 0,
     "unplaceableInTime": 0,
-    "notConfigured": 205
+    "notConfigured": 204
    }
   },
   {
@@ -64,7 +64,7 @@
    "ok": true,
    "error": null,
    "fetched": 4,
-   "normalized": 43,
+   "normalized": 42,
    "drops": {
     "placeless": 9,
     "unknownVenue": 3,
@@ -76,11 +76,11 @@
    "source": "clerksboards",
    "ok": true,
    "error": null,
-   "fetched": 5,
-   "normalized": 23,
+   "fetched": 27,
+   "normalized": 65,
    "drops": {
-    "placeless": 0,
-    "unknownVenue": 0,
+    "placeless": 42,
+    "unknownVenue": 42,
     "unplaceableInTime": 0,
     "notConfigured": 0
    }
@@ -129,18 +129,13 @@
    "ok": true,
    "error": null,
    "fetched": 5,
-   "normalized": 3,
+   "normalized": 27,
    "drops": {
     "placeless": 0,
     "unknownVenue": 0,
     "unplaceableInTime": 0,
-    "notConfigured": 4
-   },
-   "unreachableOcdIds": [
-    "ocd-division/country:us/state:nh/school_district:kearsarge_regional_school_district",
-    "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town"
-   ],
-   "carriedForward": 24
+    "notConfigured": 3
+   }
   }
  ],
  "meetings": [
@@ -163,7 +158,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1803&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T18:58:38.519Z",
+    "collectedAt": "2026-08-19T04:19:56.358Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -197,7 +192,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1804&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T18:58:38.519Z",
+    "collectedAt": "2026-08-19T04:19:56.358Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -258,7 +253,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1816&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T18:58:38.519Z",
+    "collectedAt": "2026-08-19T04:19:56.358Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -373,7 +368,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1817&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T18:58:38.519Z",
+    "collectedAt": "2026-08-19T04:19:56.358Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -497,7 +492,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1820&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T18:58:38.519Z",
+    "collectedAt": "2026-08-19T04:19:56.358Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -531,7 +526,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1821&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T18:58:38.519Z",
+    "collectedAt": "2026-08-19T04:19:56.358Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -601,7 +596,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1822&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T18:58:38.519Z",
+    "collectedAt": "2026-08-19T04:19:56.358Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -662,7 +657,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1823&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T18:58:38.519Z",
+    "collectedAt": "2026-08-19T04:19:56.358Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -696,7 +691,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1824&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T18:58:38.519Z",
+    "collectedAt": "2026-08-19T04:19:56.358Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -756,7 +751,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1851&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T18:58:38.519Z",
+    "collectedAt": "2026-08-19T04:19:56.358Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -790,7 +785,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1854&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T18:58:38.519Z",
+    "collectedAt": "2026-08-19T04:19:56.358Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -823,7 +818,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1855&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T18:58:38.519Z",
+    "collectedAt": "2026-08-19T04:19:56.358Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -857,7 +852,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1858&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T18:58:38.519Z",
+    "collectedAt": "2026-08-19T04:19:56.358Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -890,7 +885,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1864&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T18:58:38.519Z",
+    "collectedAt": "2026-08-19T04:19:56.358Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -924,7 +919,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1869&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-18T18:58:38.519Z",
+    "collectedAt": "2026-08-19T04:19:56.358Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -958,7 +953,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T18:58:38.564Z",
+    "collectedAt": "2026-08-19T04:19:56.830Z",
     "verifiedAt": null
    }
   },
@@ -981,7 +976,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T18:58:38.564Z",
+    "collectedAt": "2026-08-19T04:19:56.830Z",
     "verifiedAt": null
    }
   },
@@ -1004,7 +999,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T18:58:38.564Z",
+    "collectedAt": "2026-08-19T04:19:56.830Z",
     "verifiedAt": null
    }
   },
@@ -1027,7 +1022,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T18:58:38.564Z",
+    "collectedAt": "2026-08-19T04:19:56.830Z",
     "verifiedAt": null
    }
   },
@@ -1050,7 +1045,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T18:58:38.564Z",
+    "collectedAt": "2026-08-19T04:19:56.830Z",
     "verifiedAt": null
    }
   },
@@ -1073,7 +1068,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T18:58:38.564Z",
+    "collectedAt": "2026-08-19T04:19:56.830Z",
     "verifiedAt": null
    }
   },
@@ -1096,7 +1091,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T18:58:38.564Z",
+    "collectedAt": "2026-08-19T04:19:56.830Z",
     "verifiedAt": null
    }
   },
@@ -1119,7 +1114,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T18:58:38.564Z",
+    "collectedAt": "2026-08-19T04:19:56.830Z",
     "verifiedAt": null
    }
   },
@@ -1142,7 +1137,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T18:58:38.564Z",
+    "collectedAt": "2026-08-19T04:19:56.830Z",
     "verifiedAt": null
    }
   },
@@ -1166,7 +1161,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T18:58:38.564Z",
+    "collectedAt": "2026-08-19T04:19:56.830Z",
     "verifiedAt": null
    }
   },
@@ -1190,7 +1185,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T18:58:38.564Z",
+    "collectedAt": "2026-08-19T04:19:56.830Z",
     "verifiedAt": null
    }
   },
@@ -1214,7 +1209,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T18:58:38.564Z",
+    "collectedAt": "2026-08-19T04:19:56.830Z",
     "verifiedAt": null
    }
   },
@@ -1238,7 +1233,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T18:58:38.564Z",
+    "collectedAt": "2026-08-19T04:19:56.830Z",
     "verifiedAt": null
    }
   },
@@ -1262,7 +1257,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T18:58:38.564Z",
+    "collectedAt": "2026-08-19T04:19:56.830Z",
     "verifiedAt": null
    }
   },
@@ -1286,7 +1281,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T18:58:38.564Z",
+    "collectedAt": "2026-08-19T04:19:56.830Z",
     "verifiedAt": null
    }
   },
@@ -1310,7 +1305,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T18:58:38.564Z",
+    "collectedAt": "2026-08-19T04:19:56.830Z",
     "verifiedAt": null
    }
   },
@@ -1334,7 +1329,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T18:58:38.564Z",
+    "collectedAt": "2026-08-19T04:19:56.830Z",
     "verifiedAt": null
    }
   },
@@ -1358,7 +1353,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T18:58:38.564Z",
+    "collectedAt": "2026-08-19T04:19:56.830Z",
     "verifiedAt": null
    }
   },
@@ -1382,7 +1377,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T18:58:38.564Z",
+    "collectedAt": "2026-08-19T04:19:56.830Z",
     "verifiedAt": null
    }
   },
@@ -1406,7 +1401,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T18:58:38.564Z",
+    "collectedAt": "2026-08-19T04:19:56.830Z",
     "verifiedAt": null
    }
   },
@@ -1430,7 +1425,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T18:58:38.564Z",
+    "collectedAt": "2026-08-19T04:19:56.830Z",
     "verifiedAt": null
    }
   },
@@ -1454,7 +1449,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-18T18:58:38.564Z",
+    "collectedAt": "2026-08-19T04:19:56.830Z",
     "verifiedAt": null
    }
   },
@@ -1477,7 +1472,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T18:58:39.111Z",
+    "collectedAt": "2026-08-19T04:19:57.872Z",
     "verifiedAt": null
    }
   },
@@ -1500,7 +1495,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T18:58:39.111Z",
+    "collectedAt": "2026-08-19T04:19:57.872Z",
     "verifiedAt": null
    }
   },
@@ -1523,7 +1518,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T18:58:39.111Z",
+    "collectedAt": "2026-08-19T04:19:57.872Z",
     "verifiedAt": null
    }
   },
@@ -1546,7 +1541,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T18:58:39.111Z",
+    "collectedAt": "2026-08-19T04:19:57.872Z",
     "verifiedAt": null
    }
   },
@@ -1570,7 +1565,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T18:58:39.111Z",
+    "collectedAt": "2026-08-19T04:19:57.872Z",
     "verifiedAt": null
    }
   },
@@ -1594,7 +1589,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T18:58:39.111Z",
+    "collectedAt": "2026-08-19T04:19:57.872Z",
     "verifiedAt": null
    }
   },
@@ -1618,7 +1613,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T18:58:39.111Z",
+    "collectedAt": "2026-08-19T04:19:57.872Z",
     "verifiedAt": null
    }
   },
@@ -1642,7 +1637,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T18:58:39.111Z",
+    "collectedAt": "2026-08-19T04:19:57.872Z",
     "verifiedAt": null
    }
   },
@@ -1666,7 +1661,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T18:58:39.111Z",
+    "collectedAt": "2026-08-19T04:19:57.872Z",
     "verifiedAt": null
    }
   },
@@ -1690,7 +1685,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T18:58:39.111Z",
+    "collectedAt": "2026-08-19T04:19:57.872Z",
     "verifiedAt": null
    }
   },
@@ -1714,7 +1709,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-18T18:58:39.111Z",
+    "collectedAt": "2026-08-19T04:19:57.872Z",
     "verifiedAt": null
    }
   },
@@ -1737,7 +1732,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T18:58:39.594Z",
+    "collectedAt": "2026-08-19T04:19:58.903Z",
     "verifiedAt": null
    }
   },
@@ -1760,7 +1755,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T18:58:39.594Z",
+    "collectedAt": "2026-08-19T04:19:58.903Z",
     "verifiedAt": null
    }
   },
@@ -1783,7 +1778,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T18:58:39.594Z",
+    "collectedAt": "2026-08-19T04:19:58.903Z",
     "verifiedAt": null
    }
   },
@@ -1806,7 +1801,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T18:58:39.594Z",
+    "collectedAt": "2026-08-19T04:19:58.903Z",
     "verifiedAt": null
    }
   },
@@ -1829,7 +1824,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T18:58:39.594Z",
+    "collectedAt": "2026-08-19T04:19:58.903Z",
     "verifiedAt": null
    }
   },
@@ -1852,7 +1847,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T18:58:39.594Z",
+    "collectedAt": "2026-08-19T04:19:58.903Z",
     "verifiedAt": null
    }
   },
@@ -1875,30 +1870,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T18:58:39.594Z",
-    "verifiedAt": null
-   }
-  },
-  {
-   "id": "civicplus:rockaway_township_board_of_adjustment:1774",
-   "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
-   "bodyName": "Board of Adjustment",
-   "title": "Board of Adjustment Meeting Cancelled 8/18/26",
-   "startsAt": "2026-08-18T19:00:00-04:00",
-   "timeZone": "America/New_York",
-   "location": {
-    "name": "Rockaway Township Municipal Building",
-    "address": "65 Mount Hope Road, Rockaway Township, NJ 07866",
-    "lat": 40.912595,
-    "lng": -74.530052
-   },
-   "agendaUrl": null,
-   "jurisdiction": "Rockaway Township, NJ",
-   "status": "CANCELED",
-   "provenance": {
-    "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
-    "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T18:58:39.594Z",
+    "collectedAt": "2026-08-19T04:19:58.903Z",
     "verifiedAt": null
    }
   },
@@ -1922,7 +1894,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T18:58:39.594Z",
+    "collectedAt": "2026-08-19T04:19:58.903Z",
     "verifiedAt": null
    }
   },
@@ -1946,7 +1918,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T18:58:39.594Z",
+    "collectedAt": "2026-08-19T04:19:58.903Z",
     "verifiedAt": null
    }
   },
@@ -1970,7 +1942,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T18:58:39.594Z",
+    "collectedAt": "2026-08-19T04:19:58.903Z",
     "verifiedAt": null
    }
   },
@@ -1994,7 +1966,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T18:58:39.594Z",
+    "collectedAt": "2026-08-19T04:19:58.903Z",
     "verifiedAt": null
    }
   },
@@ -2018,7 +1990,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T18:58:39.594Z",
+    "collectedAt": "2026-08-19T04:19:58.903Z",
     "verifiedAt": null
    }
   },
@@ -2042,7 +2014,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T18:58:39.594Z",
+    "collectedAt": "2026-08-19T04:19:58.903Z",
     "verifiedAt": null
    }
   },
@@ -2066,7 +2038,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T18:58:39.594Z",
+    "collectedAt": "2026-08-19T04:19:58.903Z",
     "verifiedAt": null
    }
   },
@@ -2090,7 +2062,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T18:58:39.594Z",
+    "collectedAt": "2026-08-19T04:19:58.903Z",
     "verifiedAt": null
    }
   },
@@ -2114,7 +2086,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T18:58:39.594Z",
+    "collectedAt": "2026-08-19T04:19:58.903Z",
     "verifiedAt": null
    }
   },
@@ -2138,7 +2110,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T18:58:39.594Z",
+    "collectedAt": "2026-08-19T04:19:58.903Z",
     "verifiedAt": null
    }
   },
@@ -2162,7 +2134,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T18:58:39.594Z",
+    "collectedAt": "2026-08-19T04:19:58.903Z",
     "verifiedAt": null
    }
   },
@@ -2186,7 +2158,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-18T18:58:39.594Z",
+    "collectedAt": "2026-08-19T04:19:58.903Z",
     "verifiedAt": null
    }
   },
@@ -2205,11 +2177,11 @@
    },
    "agendaUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Study_Session_1946_Agenda_8_18_2026_1_30_00_PM.pdf?documentType=1&meetingId=1946",
    "jurisdiction": "Tucson, AZ",
-   "status": "SCHEDULED",
+   "status": "CONCLUDED",
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1946&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:38.162Z",
+    "collectedAt": "2026-08-19T04:19:56.021Z",
     "verifiedAt": null
    }
   },
@@ -2228,11 +2200,11 @@
    },
    "agendaUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Regular_1957_Agenda_8_18_2026_5_30_00_PM.pdf?documentType=1&meetingId=1957",
    "jurisdiction": "Tucson, AZ",
-   "status": "SCHEDULED",
+   "status": "CONCLUDED",
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1957&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:38.162Z",
+    "collectedAt": "2026-08-19T04:19:56.021Z",
     "verifiedAt": null
    }
   },
@@ -2251,11 +2223,11 @@
    },
    "agendaUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Public_Housing_Authority_Board_of_Commissioners_1981_Agenda_8_18_2026_5_30_00_PM.pdf?documentType=1&meetingId=1981",
    "jurisdiction": "Tucson, AZ",
-   "status": "SCHEDULED",
+   "status": "CONCLUDED",
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1981&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:38.162Z",
+    "collectedAt": "2026-08-19T04:19:56.021Z",
     "verifiedAt": null
    }
   },
@@ -2278,7 +2250,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1942&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:38.162Z",
+    "collectedAt": "2026-08-19T04:19:56.021Z",
     "verifiedAt": null
    }
   },
@@ -2301,7 +2273,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1927&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:38.162Z",
+    "collectedAt": "2026-08-19T04:19:56.021Z",
     "verifiedAt": null
    }
   },
@@ -2324,7 +2296,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1943&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:38.162Z",
+    "collectedAt": "2026-08-19T04:19:56.021Z",
     "verifiedAt": null
    }
   },
@@ -2347,7 +2319,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1928&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:38.162Z",
+    "collectedAt": "2026-08-19T04:19:56.021Z",
     "verifiedAt": null
    }
   },
@@ -2370,7 +2342,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1945&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:38.162Z",
+    "collectedAt": "2026-08-19T04:19:56.021Z",
     "verifiedAt": null
    }
   },
@@ -2393,7 +2365,76 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1956&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:38.162Z",
+    "collectedAt": "2026-08-19T04:19:56.021Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "onbase:tucson:1946",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Mayor & Council",
+   "title": "Mayor & Council - Study Session",
+   "startsAt": "2026-08-18T13:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson City Hall, Mayor and Council Chambers",
+    "address": "255 W. Alameda St, Tucson, AZ 85701",
+    "lat": 32.223037,
+    "lng": -110.975001
+   },
+   "agendaUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Study_Session_1946_Agenda_8_18_2026_1_30_00_PM.pdf?documentType=1&meetingId=1946",
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1946&doctype=1",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.021Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "onbase:tucson:1957",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Mayor & Council",
+   "title": "Mayor & Council - Regular",
+   "startsAt": "2026-08-18T17:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson City Hall, Mayor and Council Chambers",
+    "address": "255 W. Alameda St, Tucson, AZ 85701",
+    "lat": 32.223037,
+    "lng": -110.975001
+   },
+   "agendaUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Regular_1957_Agenda_8_18_2026_5_30_00_PM.pdf?documentType=1&meetingId=1957",
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1957&doctype=1",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.021Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "onbase:tucson:1981",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Public Housing Authority Board of Commissioners",
+   "title": "Public Housing Authority Board of Commissioners",
+   "startsAt": "2026-08-18T17:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson City Hall, Mayor and Council Chambers",
+    "address": "255 W. Alameda St, Tucson, AZ 85701",
+    "lat": 32.223037,
+    "lng": -110.975001
+   },
+   "agendaUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Public_Housing_Authority_Board_of_Commissioners_1981_Agenda_8_18_2026_5_30_00_PM.pdf?documentType=1&meetingId=1981",
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1981&doctype=1",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.021Z",
     "verifiedAt": null
    }
   },
@@ -2414,9 +2455,9 @@
    "jurisdiction": "Vail Unified School District, AZ",
    "status": "CONCLUDED",
    "provenance": {
-    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-21",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:38.884Z",
+    "collectedAt": "2026-08-19T04:19:56.137Z",
     "verifiedAt": null
    }
   },
@@ -2437,9 +2478,9 @@
    "jurisdiction": "Vail Unified School District, AZ",
    "status": "CONCLUDED",
    "provenance": {
-    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-21",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:38.884Z",
+    "collectedAt": "2026-08-19T04:19:56.137Z",
     "verifiedAt": null
    }
   },
@@ -2460,9 +2501,9 @@
    "jurisdiction": "Vail Unified School District, AZ",
    "status": "CONCLUDED",
    "provenance": {
-    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-21",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:38.884Z",
+    "collectedAt": "2026-08-19T04:19:56.137Z",
     "verifiedAt": null
    }
   },
@@ -2483,9 +2524,9 @@
    "jurisdiction": "Vail Unified School District, AZ",
    "status": "CONCLUDED",
    "provenance": {
-    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-21",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:38.884Z",
+    "collectedAt": "2026-08-19T04:19:56.137Z",
     "verifiedAt": null
    }
   },
@@ -2506,9 +2547,9 @@
    "jurisdiction": "Vail Unified School District, AZ",
    "status": "SCHEDULED",
    "provenance": {
-    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-21",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:38.884Z",
+    "collectedAt": "2026-08-19T04:19:56.137Z",
     "verifiedAt": null
    }
   },
@@ -2529,9 +2570,9 @@
    "jurisdiction": "Vail Unified School District, AZ",
    "status": "SCHEDULED",
    "provenance": {
-    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-21",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:38.884Z",
+    "collectedAt": "2026-08-19T04:19:56.137Z",
     "verifiedAt": null
    }
   },
@@ -2552,9 +2593,9 @@
    "jurisdiction": "Vail Unified School District, AZ",
    "status": "SCHEDULED",
    "provenance": {
-    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-21",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:38.884Z",
+    "collectedAt": "2026-08-19T04:19:56.137Z",
     "verifiedAt": null
    }
   },
@@ -2575,9 +2616,9 @@
    "jurisdiction": "Vail Unified School District, AZ",
    "status": "SCHEDULED",
    "provenance": {
-    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-21",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:38.884Z",
+    "collectedAt": "2026-08-19T04:19:56.137Z",
     "verifiedAt": null
    }
   },
@@ -2598,9 +2639,32 @@
    "jurisdiction": "Vail Unified School District, AZ",
    "status": "SCHEDULED",
    "provenance": {
-    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-20",
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-21",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:38.884Z",
+    "collectedAt": "2026-08-19T04:19:56.137Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "apptegy:vail:60703702",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "bodyName": "Governing Board Meeting",
+   "title": "Governing Board Meeting",
+   "startsAt": "2026-11-11T02:00:00.000Z",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "address": "Calvin Baker Leadership Center 13801 E Benson Hwy, Vail, AZ 85641",
+    "lat": 32.0149457,
+    "lng": -110.6984644
+   },
+   "agendaUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "jurisdiction": "Vail Unified School District, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-21",
+    "sourceOrg": "Vail School District Governing Board",
+    "collectedAt": "2026-08-19T04:19:56.137Z",
     "verifiedAt": null
    }
   },
@@ -2621,9 +2685,9 @@
    "jurisdiction": "Rockaway Township School District, NJ",
    "status": "CONCLUDED",
    "provenance": {
-    "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-20",
+    "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-21",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-18T18:58:40.974Z",
+    "collectedAt": "2026-08-19T04:19:57.842Z",
     "verifiedAt": null
    }
   },
@@ -2644,9 +2708,9 @@
    "jurisdiction": "Rockaway Township School District, NJ",
    "status": "CONCLUDED",
    "provenance": {
-    "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-20",
+    "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-21",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-18T18:58:40.974Z",
+    "collectedAt": "2026-08-19T04:19:57.842Z",
     "verifiedAt": null
    }
   },
@@ -2667,9 +2731,9 @@
    "jurisdiction": "Rockaway Township School District, NJ",
    "status": "CONCLUDED",
    "provenance": {
-    "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-20",
+    "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-21",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-18T18:58:40.974Z",
+    "collectedAt": "2026-08-19T04:19:57.842Z",
     "verifiedAt": null
    }
   },
@@ -2690,9 +2754,9 @@
    "jurisdiction": "Rockaway Township School District, NJ",
    "status": "CONCLUDED",
    "provenance": {
-    "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-20",
+    "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-21",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-18T18:58:40.974Z",
+    "collectedAt": "2026-08-19T04:19:57.842Z",
     "verifiedAt": null
    }
   },
@@ -2713,9 +2777,9 @@
    "jurisdiction": "Rockaway Township School District, NJ",
    "status": "SCHEDULED",
    "provenance": {
-    "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-20",
+    "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-21",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-18T18:58:40.974Z",
+    "collectedAt": "2026-08-19T04:19:57.842Z",
     "verifiedAt": null
    }
   },
@@ -2736,9 +2800,9 @@
    "jurisdiction": "Rockaway Township School District, NJ",
    "status": "SCHEDULED",
    "provenance": {
-    "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-20",
+    "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-21",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-18T18:58:40.974Z",
+    "collectedAt": "2026-08-19T04:19:57.842Z",
     "verifiedAt": null
    }
   },
@@ -2760,7 +2824,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=495",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:38.750Z",
+    "collectedAt": "2026-08-19T04:19:56.030Z",
     "verifiedAt": null
    }
   },
@@ -2782,7 +2846,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=497",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:38.750Z",
+    "collectedAt": "2026-08-19T04:19:56.030Z",
     "verifiedAt": null
    }
   },
@@ -2805,7 +2869,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=493",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:38.750Z",
+    "collectedAt": "2026-08-19T04:19:56.030Z",
     "verifiedAt": null
    }
   },
@@ -2828,7 +2892,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=496",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:38.750Z",
+    "collectedAt": "2026-08-19T04:19:56.030Z",
     "verifiedAt": null
    }
   },
@@ -2850,7 +2914,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=494",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:38.750Z",
+    "collectedAt": "2026-08-19T04:19:56.030Z",
     "verifiedAt": null
    }
   },
@@ -2873,7 +2937,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=492",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:38.750Z",
+    "collectedAt": "2026-08-19T04:19:56.030Z",
     "verifiedAt": null
    }
   },
@@ -2895,7 +2959,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=491",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:38.750Z",
+    "collectedAt": "2026-08-19T04:19:56.030Z",
     "verifiedAt": null
    }
   },
@@ -2918,7 +2982,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=485",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:38.750Z",
+    "collectedAt": "2026-08-19T04:19:56.030Z",
     "verifiedAt": null
    }
   },
@@ -2940,7 +3004,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=490",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:38.750Z",
+    "collectedAt": "2026-08-19T04:19:56.030Z",
     "verifiedAt": null
    }
   },
@@ -2963,7 +3027,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=489",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:38.750Z",
+    "collectedAt": "2026-08-19T04:19:56.030Z",
     "verifiedAt": null
    }
   },
@@ -2986,7 +3050,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=484",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:38.750Z",
+    "collectedAt": "2026-08-19T04:19:56.030Z",
     "verifiedAt": null
    }
   },
@@ -3009,7 +3073,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=483",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:38.750Z",
+    "collectedAt": "2026-08-19T04:19:56.030Z",
     "verifiedAt": null
    }
   },
@@ -3032,7 +3096,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=481",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:38.750Z",
+    "collectedAt": "2026-08-19T04:19:56.030Z",
     "verifiedAt": null
    }
   },
@@ -3055,7 +3119,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=480",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:38.750Z",
+    "collectedAt": "2026-08-19T04:19:56.030Z",
     "verifiedAt": null
    }
   },
@@ -3077,7 +3141,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=482",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:38.750Z",
+    "collectedAt": "2026-08-19T04:19:56.030Z",
     "verifiedAt": null
    }
   },
@@ -3100,7 +3164,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=169",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:39.965Z",
+    "collectedAt": "2026-08-19T04:19:56.624Z",
     "verifiedAt": null
    }
   },
@@ -3123,7 +3187,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=168",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:39.965Z",
+    "collectedAt": "2026-08-19T04:19:56.624Z",
     "verifiedAt": null
    }
   },
@@ -3146,7 +3210,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=167",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:39.965Z",
+    "collectedAt": "2026-08-19T04:19:56.624Z",
     "verifiedAt": null
    }
   },
@@ -3154,8 +3218,8 @@
    "id": "diligent:susd12:166",
    "ocdId": "ocd-division/country:us/state:az/school_district:sunnyside_unified_district",
    "bodyName": "Governing Board",
-   "title": "Regular Governing Board Meeting - August 25, 2026",
-   "startsAt": "2026-08-25T18:30:00-07:00",
+   "title": "SUSD Governing Board Meeting - August 25, 2026",
+   "startsAt": "2026-08-25T18:15:00-07:00",
    "timeZone": "America/Phoenix",
    "location": {
     "name": "Sunnyside District Administration Building, Governing Board Room",
@@ -3169,30 +3233,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=166",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:39.965Z",
-    "verifiedAt": null
-   }
-  },
-  {
-   "id": "diligent:susd12:175",
-   "ocdId": "ocd-division/country:us/state:az/school_district:sunnyside_unified_district",
-   "bodyName": "Public Hearing",
-   "title": "Public Hearing - Aug 25 2026",
-   "startsAt": "2026-08-25T18:15:00-07:00",
-   "timeZone": "America/Phoenix",
-   "location": {
-    "name": "Sunnyside District Administration Building, Governing Board Room",
-    "address": "2238 E. Ginter Road, Tucson, AZ 85706",
-    "lat": 32.137642,
-    "lng": -110.938584
-   },
-   "agendaUrl": null,
-   "jurisdiction": "Sunnyside Unified School District, AZ",
-   "status": "SCHEDULED",
-   "provenance": {
-    "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=175",
-    "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:39.965Z",
+    "collectedAt": "2026-08-19T04:19:56.624Z",
     "verifiedAt": null
    }
   },
@@ -3215,7 +3256,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=165",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:39.965Z",
+    "collectedAt": "2026-08-19T04:19:56.624Z",
     "verifiedAt": null
    }
   },
@@ -3238,7 +3279,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=174",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:39.965Z",
+    "collectedAt": "2026-08-19T04:19:56.624Z",
     "verifiedAt": null
    }
   },
@@ -3261,7 +3302,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=163",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:39.965Z",
+    "collectedAt": "2026-08-19T04:19:56.624Z",
     "verifiedAt": null
    }
   },
@@ -3284,7 +3325,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=162",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:39.965Z",
+    "collectedAt": "2026-08-19T04:19:56.624Z",
     "verifiedAt": null
    }
   },
@@ -3307,7 +3348,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=156",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:39.965Z",
+    "collectedAt": "2026-08-19T04:19:56.624Z",
     "verifiedAt": null
    }
   },
@@ -3330,7 +3371,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=155",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:39.965Z",
+    "collectedAt": "2026-08-19T04:19:56.624Z",
     "verifiedAt": null
    }
   },
@@ -3353,7 +3394,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=159",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:39.965Z",
+    "collectedAt": "2026-08-19T04:19:56.624Z",
     "verifiedAt": null
    }
   },
@@ -3376,7 +3417,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=154",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:39.965Z",
+    "collectedAt": "2026-08-19T04:19:56.624Z",
     "verifiedAt": null
    }
   },
@@ -3399,7 +3440,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3371",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-18T18:58:40.625Z",
+    "collectedAt": "2026-08-19T04:19:57.068Z",
     "verifiedAt": null
    }
   },
@@ -3422,7 +3463,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3370",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-18T18:58:40.625Z",
+    "collectedAt": "2026-08-19T04:19:57.068Z",
     "verifiedAt": null
    }
   },
@@ -3445,7 +3486,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3368",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-18T18:58:40.625Z",
+    "collectedAt": "2026-08-19T04:19:57.068Z",
     "verifiedAt": null
    }
   },
@@ -3468,7 +3509,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3367",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-18T18:58:40.625Z",
+    "collectedAt": "2026-08-19T04:19:57.068Z",
     "verifiedAt": null
    }
   },
@@ -3491,7 +3532,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3364",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-18T18:58:40.625Z",
+    "collectedAt": "2026-08-19T04:19:57.068Z",
     "verifiedAt": null
    }
   },
@@ -3514,7 +3555,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3363",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-18T18:58:40.625Z",
+    "collectedAt": "2026-08-19T04:19:57.068Z",
     "verifiedAt": null
    }
   },
@@ -3537,7 +3578,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3361",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-18T18:58:40.625Z",
+    "collectedAt": "2026-08-19T04:19:57.068Z",
     "verifiedAt": null
    }
   },
@@ -3559,7 +3600,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=699",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-18T18:58:41.253Z",
+    "collectedAt": "2026-08-19T04:19:57.558Z",
     "verifiedAt": null
    }
   },
@@ -3582,7 +3623,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=705",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-18T18:58:41.253Z",
+    "collectedAt": "2026-08-19T04:19:57.558Z",
     "verifiedAt": null
    }
   },
@@ -3605,7 +3646,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=707",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-18T18:58:41.253Z",
+    "collectedAt": "2026-08-19T04:19:57.558Z",
     "verifiedAt": null
    }
   },
@@ -3627,7 +3668,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=698",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-18T18:58:41.253Z",
+    "collectedAt": "2026-08-19T04:19:57.558Z",
     "verifiedAt": null
    }
   },
@@ -3650,7 +3691,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=706",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-18T18:58:41.253Z",
+    "collectedAt": "2026-08-19T04:19:57.558Z",
     "verifiedAt": null
    }
   },
@@ -3672,7 +3713,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=664",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-18T18:58:41.253Z",
+    "collectedAt": "2026-08-19T04:19:57.558Z",
     "verifiedAt": null
    }
   },
@@ -3695,7 +3736,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=695",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-18T18:58:41.253Z",
+    "collectedAt": "2026-08-19T04:19:57.558Z",
     "verifiedAt": null
    }
   },
@@ -3718,122 +3759,183 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=696",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-18T18:58:41.253Z",
+    "collectedAt": "2026-08-19T04:19:57.558Z",
     "verifiedAt": null
    }
   },
   {
-   "id": "clerksboards:38:2026-06-03",
+   "id": "clerksboards:9:2026-06-16",
    "ocdId": "ocd-division/country:us/state:az/place:tucson",
-   "bodyName": "Planning Commission",
-   "title": "Planning Commission",
-   "startsAt": "2026-06-03T18:00:00-07:00",
+   "bodyName": "Armory Park Historic Zone Advisory Board",
+   "title": "Armory Park Historic Zone Advisory Board",
+   "startsAt": "2026-06-16T18:30:00-07:00",
    "timeZone": "America/Phoenix",
-   "location": {
-    "name": "Tucson City Hall, Mayor and Council Chambers",
-    "address": "255 W. Alameda St, Tucson, AZ 85701",
-    "lat": 32.223037,
-    "lng": -110.975001
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
    },
    "agendaUrl": null,
    "jurisdiction": "Tucson, AZ",
    "status": "CONCLUDED",
    "provenance": {
-    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=9",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:37.932Z",
+    "collectedAt": "2026-08-19T04:19:55.732Z",
     "verifiedAt": null
    }
   },
   {
-   "id": "clerksboards:38:2026-07-01",
+   "id": "clerksboards:9:2026-07-21",
    "ocdId": "ocd-division/country:us/state:az/place:tucson",
-   "bodyName": "Planning Commission",
-   "title": "Planning Commission",
-   "startsAt": "2026-07-01T18:00:00-07:00",
+   "bodyName": "Armory Park Historic Zone Advisory Board",
+   "title": "Armory Park Historic Zone Advisory Board",
+   "startsAt": "2026-07-21T18:30:00-07:00",
    "timeZone": "America/Phoenix",
-   "location": {
-    "name": "Tucson City Hall, Mayor and Council Chambers",
-    "address": "255 W. Alameda St, Tucson, AZ 85701",
-    "lat": 32.223037,
-    "lng": -110.975001
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
    },
    "agendaUrl": null,
    "jurisdiction": "Tucson, AZ",
    "status": "CONCLUDED",
    "provenance": {
-    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=9",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:37.932Z",
+    "collectedAt": "2026-08-19T04:19:55.732Z",
     "verifiedAt": null
    }
   },
   {
-   "id": "clerksboards:38:2026-08-12",
+   "id": "clerksboards:9:2026-08-18",
    "ocdId": "ocd-division/country:us/state:az/place:tucson",
-   "bodyName": "Planning Commission",
-   "title": "Planning Commission",
-   "startsAt": "2026-08-12T18:00:00-07:00",
+   "bodyName": "Armory Park Historic Zone Advisory Board",
+   "title": "Armory Park Historic Zone Advisory Board",
+   "startsAt": "2026-08-18T18:30:00-07:00",
    "timeZone": "America/Phoenix",
-   "location": {
-    "name": "Tucson City Hall, Mayor and Council Chambers",
-    "address": "255 W. Alameda St, Tucson, AZ 85701",
-    "lat": 32.223037,
-    "lng": -110.975001
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
    },
    "agendaUrl": null,
    "jurisdiction": "Tucson, AZ",
    "status": "CONCLUDED",
    "provenance": {
-    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=9",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:37.932Z",
+    "collectedAt": "2026-08-19T04:19:55.732Z",
     "verifiedAt": null
    }
   },
   {
-   "id": "clerksboards:38:2026-09-02",
+   "id": "clerksboards:9:2026-09-15",
    "ocdId": "ocd-division/country:us/state:az/place:tucson",
-   "bodyName": "Planning Commission",
-   "title": "Planning Commission",
-   "startsAt": "2026-09-02T18:00:00-07:00",
+   "bodyName": "Armory Park Historic Zone Advisory Board",
+   "title": "Armory Park Historic Zone Advisory Board",
+   "startsAt": "2026-09-15T18:30:00-07:00",
    "timeZone": "America/Phoenix",
-   "location": {
-    "name": "Tucson City Hall, Mayor and Council Chambers",
-    "address": "255 W. Alameda St, Tucson, AZ 85701",
-    "lat": 32.223037,
-    "lng": -110.975001
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
    },
    "agendaUrl": null,
    "jurisdiction": "Tucson, AZ",
    "status": "SCHEDULED",
    "provenance": {
-    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=9",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:37.932Z",
+    "collectedAt": "2026-08-19T04:19:55.732Z",
     "verifiedAt": null
    }
   },
   {
-   "id": "clerksboards:38:2026-10-07",
+   "id": "clerksboards:12:2026-06-08",
    "ocdId": "ocd-division/country:us/state:az/place:tucson",
-   "bodyName": "Planning Commission",
-   "title": "Planning Commission",
-   "startsAt": "2026-10-07T18:00:00-07:00",
+   "bodyName": "Barrio Historico Historic Zone Advisory Board",
+   "title": "Barrio Historico Historic Zone Advisory Board",
+   "startsAt": "2026-06-08T16:00:00-07:00",
    "timeZone": "America/Phoenix",
-   "location": {
-    "name": "Tucson City Hall, Mayor and Council Chambers",
-    "address": "255 W. Alameda St, Tucson, AZ 85701",
-    "lat": 32.223037,
-    "lng": -110.975001
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=12",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:55.833Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:12:2026-07-13",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Barrio Historico Historic Zone Advisory Board",
+   "title": "Barrio Historico Historic Zone Advisory Board",
+   "startsAt": "2026-07-13T16:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=12",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:55.833Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:12:2026-08-10",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Barrio Historico Historic Zone Advisory Board",
+   "title": "Barrio Historico Historic Zone Advisory Board",
+   "startsAt": "2026-08-10T16:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=12",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:55.833Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:12:2026-09-14",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Barrio Historico Historic Zone Advisory Board",
+   "title": "Barrio Historico Historic Zone Advisory Board",
+   "startsAt": "2026-09-14T16:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
    },
    "agendaUrl": null,
    "jurisdiction": "Tucson, AZ",
    "status": "SCHEDULED",
    "provenance": {
-    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=12",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:37.932Z",
+    "collectedAt": "2026-08-19T04:19:55.833Z",
     "verifiedAt": null
    }
   },
@@ -3856,7 +3958,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:37.971Z",
+    "collectedAt": "2026-08-19T04:19:55.893Z",
     "verifiedAt": null
    }
   },
@@ -3879,7 +3981,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:37.971Z",
+    "collectedAt": "2026-08-19T04:19:55.893Z",
     "verifiedAt": null
    }
   },
@@ -3902,7 +4004,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:37.971Z",
+    "collectedAt": "2026-08-19T04:19:55.893Z",
     "verifiedAt": null
    }
   },
@@ -3925,7 +4027,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:37.971Z",
+    "collectedAt": "2026-08-19T04:19:55.893Z",
     "verifiedAt": null
    }
   },
@@ -3948,7 +4050,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:37.971Z",
+    "collectedAt": "2026-08-19T04:19:55.893Z",
     "verifiedAt": null
    }
   },
@@ -3971,7 +4073,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:38.012Z",
+    "collectedAt": "2026-08-19T04:19:55.942Z",
     "verifiedAt": null
    }
   },
@@ -3994,7 +4096,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:38.012Z",
+    "collectedAt": "2026-08-19T04:19:55.942Z",
     "verifiedAt": null
    }
   },
@@ -4017,7 +4119,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:38.012Z",
+    "collectedAt": "2026-08-19T04:19:55.942Z",
     "verifiedAt": null
    }
   },
@@ -4040,122 +4142,183 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:38.012Z",
+    "collectedAt": "2026-08-19T04:19:55.942Z",
     "verifiedAt": null
    }
   },
   {
-   "id": "clerksboards:63:2026-05-27",
+   "id": "clerksboards:3:2026-06-17",
    "ocdId": "ocd-division/country:us/state:az/place:tucson",
-   "bodyName": "Tucson Parks and Recreation Commission",
-   "title": "Tucson Parks and Recreation Commission",
-   "startsAt": "2026-05-27T15:30:00-07:00",
+   "bodyName": "Commission on Disability Issues",
+   "title": "Commission on Disability Issues",
+   "startsAt": "2026-06-17T15:30:00-07:00",
    "timeZone": "America/Phoenix",
-   "location": {
-    "name": "Tucson Parks Administration Building",
-    "address": "900 S. Randolph Way, Tucson, AZ 85716",
-    "lat": 32.21063,
-    "lng": -110.918028
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
    },
    "agendaUrl": null,
    "jurisdiction": "Tucson, AZ",
    "status": "CONCLUDED",
    "provenance": {
-    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=3",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:38.048Z",
+    "collectedAt": "2026-08-19T04:19:56.037Z",
     "verifiedAt": null
    }
   },
   {
-   "id": "clerksboards:63:2026-06-24",
+   "id": "clerksboards:3:2026-07-15",
    "ocdId": "ocd-division/country:us/state:az/place:tucson",
-   "bodyName": "Tucson Parks and Recreation Commission",
-   "title": "Tucson Parks and Recreation Commission",
-   "startsAt": "2026-06-24T15:30:00-07:00",
+   "bodyName": "Commission on Disability Issues",
+   "title": "Commission on Disability Issues",
+   "startsAt": "2026-07-15T15:30:00-07:00",
    "timeZone": "America/Phoenix",
-   "location": {
-    "name": "Tucson Parks Administration Building",
-    "address": "900 S. Randolph Way, Tucson, AZ 85716",
-    "lat": 32.21063,
-    "lng": -110.918028
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
    },
    "agendaUrl": null,
    "jurisdiction": "Tucson, AZ",
    "status": "CONCLUDED",
    "provenance": {
-    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=3",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:38.048Z",
+    "collectedAt": "2026-08-19T04:19:56.037Z",
     "verifiedAt": null
    }
   },
   {
-   "id": "clerksboards:63:2026-07-22",
+   "id": "clerksboards:3:2026-08-19",
    "ocdId": "ocd-division/country:us/state:az/place:tucson",
-   "bodyName": "Tucson Parks and Recreation Commission",
-   "title": "Tucson Parks and Recreation Commission",
-   "startsAt": "2026-07-22T15:30:00-07:00",
+   "bodyName": "Commission on Disability Issues",
+   "title": "Commission on Disability Issues",
+   "startsAt": "2026-08-19T15:30:00-07:00",
    "timeZone": "America/Phoenix",
-   "location": {
-    "name": "Tucson Parks Administration Building",
-    "address": "900 S. Randolph Way, Tucson, AZ 85716",
-    "lat": 32.21063,
-    "lng": -110.918028
-   },
-   "agendaUrl": null,
-   "jurisdiction": "Tucson, AZ",
-   "status": "CONCLUDED",
-   "provenance": {
-    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
-    "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:38.048Z",
-    "verifiedAt": null
-   }
-  },
-  {
-   "id": "clerksboards:63:2026-08-26",
-   "ocdId": "ocd-division/country:us/state:az/place:tucson",
-   "bodyName": "Tucson Parks and Recreation Commission",
-   "title": "Tucson Parks and Recreation Commission",
-   "startsAt": "2026-08-26T15:30:00-07:00",
-   "timeZone": "America/Phoenix",
-   "location": {
-    "name": "Tucson Parks Administration Building",
-    "address": "900 S. Randolph Way, Tucson, AZ 85716",
-    "lat": 32.21063,
-    "lng": -110.918028
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
    },
    "agendaUrl": null,
    "jurisdiction": "Tucson, AZ",
    "status": "SCHEDULED",
    "provenance": {
-    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=3",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:38.048Z",
+    "collectedAt": "2026-08-19T04:19:56.037Z",
     "verifiedAt": null
    }
   },
   {
-   "id": "clerksboards:63:2026-09-23",
+   "id": "clerksboards:3:2026-09-16",
    "ocdId": "ocd-division/country:us/state:az/place:tucson",
-   "bodyName": "Tucson Parks and Recreation Commission",
-   "title": "Tucson Parks and Recreation Commission",
-   "startsAt": "2026-09-23T15:30:00-07:00",
+   "bodyName": "Commission on Disability Issues",
+   "title": "Commission on Disability Issues",
+   "startsAt": "2026-09-16T15:30:00-07:00",
    "timeZone": "America/Phoenix",
-   "location": {
-    "name": "Tucson Parks Administration Building",
-    "address": "900 S. Randolph Way, Tucson, AZ 85716",
-    "lat": 32.21063,
-    "lng": -110.918028
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
    },
    "agendaUrl": null,
    "jurisdiction": "Tucson, AZ",
    "status": "SCHEDULED",
    "provenance": {
-    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=3",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:38.048Z",
+    "collectedAt": "2026-08-19T04:19:56.037Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:131:2026-06-04",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Commission on Equitable Housing and Development",
+   "title": "Commission on Equitable Housing and Development",
+   "startsAt": "2026-06-04T16:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=131",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.123Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:131:2026-07-02",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Commission on Equitable Housing and Development",
+   "title": "Commission on Equitable Housing and Development",
+   "startsAt": "2026-07-02T16:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=131",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.123Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:131:2026-08-06",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Commission on Equitable Housing and Development",
+   "title": "Commission on Equitable Housing and Development",
+   "startsAt": "2026-08-06T16:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=131",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.123Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:131:2026-09-03",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Commission on Equitable Housing and Development",
+   "title": "Commission on Equitable Housing and Development",
+   "startsAt": "2026-09-03T16:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=131",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.123Z",
     "verifiedAt": null
    }
   },
@@ -4178,7 +4341,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:38.086Z",
+    "collectedAt": "2026-08-19T04:19:56.179Z",
     "verifiedAt": null
    }
   },
@@ -4201,7 +4364,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:38.086Z",
+    "collectedAt": "2026-08-19T04:19:56.179Z",
     "verifiedAt": null
    }
   },
@@ -4220,11 +4383,11 @@
    },
    "agendaUrl": null,
    "jurisdiction": "Tucson, AZ",
-   "status": "SCHEDULED",
+   "status": "CONCLUDED",
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:38.086Z",
+    "collectedAt": "2026-08-19T04:19:56.179Z",
     "verifiedAt": null
    }
   },
@@ -4247,7 +4410,809 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-18T18:58:38.086Z",
+    "collectedAt": "2026-08-19T04:19:56.179Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:130:2026-05-27",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Complete Streets Coordinating Council",
+   "title": "Complete Streets Coordinating Council",
+   "startsAt": "2026-05-27T17:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=130",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.225Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:130:2026-06-24",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Complete Streets Coordinating Council",
+   "title": "Complete Streets Coordinating Council",
+   "startsAt": "2026-06-24T17:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=130",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.225Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:130:2026-07-22",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Complete Streets Coordinating Council",
+   "title": "Complete Streets Coordinating Council",
+   "startsAt": "2026-07-22T17:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=130",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.225Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:130:2026-08-26",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Complete Streets Coordinating Council",
+   "title": "Complete Streets Coordinating Council",
+   "startsAt": "2026-08-26T17:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=130",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.225Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:130:2026-09-23",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Complete Streets Coordinating Council",
+   "title": "Complete Streets Coordinating Council",
+   "startsAt": "2026-09-23T17:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=130",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.225Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:26:2026-06-05",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Design Review Board",
+   "title": "Design Review Board",
+   "startsAt": "2026-06-05T08:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=26",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.278Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:26:2026-06-26",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Design Review Board",
+   "title": "Design Review Board",
+   "startsAt": "2026-06-26T08:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=26",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.278Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:26:2026-07-10",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Design Review Board",
+   "title": "Design Review Board",
+   "startsAt": "2026-07-10T08:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=26",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.278Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:26:2026-08-07",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Design Review Board",
+   "title": "Design Review Board",
+   "startsAt": "2026-08-07T08:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=26",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.278Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:26:2026-08-21",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Design Review Board",
+   "title": "Design Review Board",
+   "startsAt": "2026-08-21T08:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=26",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.278Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:26:2026-09-04",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Design Review Board",
+   "title": "Design Review Board",
+   "startsAt": "2026-09-04T08:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=26",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.278Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:26:2026-09-18",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Design Review Board",
+   "title": "Design Review Board",
+   "startsAt": "2026-09-18T08:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=26",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.278Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:26:2026-10-02",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Design Review Board",
+   "title": "Design Review Board",
+   "startsAt": "2026-10-02T08:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=26",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.278Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:26:2026-10-16",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Design Review Board",
+   "title": "Design Review Board",
+   "startsAt": "2026-10-16T08:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=26",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.278Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:42:2026-06-10",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Human Relations Commission",
+   "title": "Human Relations Commission",
+   "startsAt": "2026-06-10T17:15:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=42",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.398Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:42:2026-07-08",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Human Relations Commission",
+   "title": "Human Relations Commission",
+   "startsAt": "2026-07-08T17:15:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=42",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.398Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:42:2026-08-12",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Human Relations Commission",
+   "title": "Human Relations Commission",
+   "startsAt": "2026-08-12T17:15:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=42",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.398Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:42:2026-09-09",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Human Relations Commission",
+   "title": "Human Relations Commission",
+   "startsAt": "2026-09-09T17:15:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=42",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.398Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:57:2026-06-16",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Park Tucson Commission",
+   "title": "Park Tucson Commission",
+   "startsAt": "2026-06-16T08:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=57",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.529Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:57:2026-07-21",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Park Tucson Commission",
+   "title": "Park Tucson Commission",
+   "startsAt": "2026-07-21T08:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=57",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.529Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:57:2026-08-18",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Park Tucson Commission",
+   "title": "Park Tucson Commission",
+   "startsAt": "2026-08-18T08:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=57",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.529Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:57:2026-09-15",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Park Tucson Commission",
+   "title": "Park Tucson Commission",
+   "startsAt": "2026-09-15T08:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=57",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.529Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:38:2026-06-03",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Planning Commission",
+   "title": "Planning Commission",
+   "startsAt": "2026-06-03T18:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson City Hall, Mayor and Council Chambers",
+    "address": "255 W. Alameda St, Tucson, AZ 85701",
+    "lat": 32.223037,
+    "lng": -110.975001
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.626Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:38:2026-07-01",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Planning Commission",
+   "title": "Planning Commission",
+   "startsAt": "2026-07-01T18:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson City Hall, Mayor and Council Chambers",
+    "address": "255 W. Alameda St, Tucson, AZ 85701",
+    "lat": 32.223037,
+    "lng": -110.975001
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.626Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:38:2026-08-12",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Planning Commission",
+   "title": "Planning Commission",
+   "startsAt": "2026-08-12T18:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson City Hall, Mayor and Council Chambers",
+    "address": "255 W. Alameda St, Tucson, AZ 85701",
+    "lat": 32.223037,
+    "lng": -110.975001
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.626Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:38:2026-09-02",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Planning Commission",
+   "title": "Planning Commission",
+   "startsAt": "2026-09-02T18:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson City Hall, Mayor and Council Chambers",
+    "address": "255 W. Alameda St, Tucson, AZ 85701",
+    "lat": 32.223037,
+    "lng": -110.975001
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.626Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:38:2026-10-07",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Planning Commission",
+   "title": "Planning Commission",
+   "startsAt": "2026-10-07T18:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson City Hall, Mayor and Council Chambers",
+    "address": "255 W. Alameda St, Tucson, AZ 85701",
+    "lat": 32.223037,
+    "lng": -110.975001
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.626Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:63:2026-05-27",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Tucson Parks and Recreation Commission",
+   "title": "Tucson Parks and Recreation Commission",
+   "startsAt": "2026-05-27T15:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson Parks Administration Building",
+    "address": "900 S. Randolph Way, Tucson, AZ 85716",
+    "lat": 32.21063,
+    "lng": -110.918028
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.925Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:63:2026-06-24",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Tucson Parks and Recreation Commission",
+   "title": "Tucson Parks and Recreation Commission",
+   "startsAt": "2026-06-24T15:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson Parks Administration Building",
+    "address": "900 S. Randolph Way, Tucson, AZ 85716",
+    "lat": 32.21063,
+    "lng": -110.918028
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.925Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:63:2026-07-22",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Tucson Parks and Recreation Commission",
+   "title": "Tucson Parks and Recreation Commission",
+   "startsAt": "2026-07-22T15:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson Parks Administration Building",
+    "address": "900 S. Randolph Way, Tucson, AZ 85716",
+    "lat": 32.21063,
+    "lng": -110.918028
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.925Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:63:2026-08-26",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Tucson Parks and Recreation Commission",
+   "title": "Tucson Parks and Recreation Commission",
+   "startsAt": "2026-08-26T15:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson Parks Administration Building",
+    "address": "900 S. Randolph Way, Tucson, AZ 85716",
+    "lat": 32.21063,
+    "lng": -110.918028
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.925Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:63:2026-09-23",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Tucson Parks and Recreation Commission",
+   "title": "Tucson Parks and Recreation Commission",
+   "startsAt": "2026-09-23T15:30:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": {
+    "name": "Tucson Parks Administration Building",
+    "address": "900 S. Randolph Way, Tucson, AZ 85716",
+    "lat": 32.21063,
+    "lng": -110.918028
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:56.925Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:61:2026-06-10",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Tucson-Pima County Historical Commission",
+   "title": "Tucson-Pima County Historical Commission",
+   "startsAt": "2026-06-10T12:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=61",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:57.059Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:61:2026-07-08",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Tucson-Pima County Historical Commission",
+   "title": "Tucson-Pima County Historical Commission",
+   "startsAt": "2026-07-08T12:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=61",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:57.059Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:61:2026-08-12",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Tucson-Pima County Historical Commission",
+   "title": "Tucson-Pima County Historical Commission",
+   "startsAt": "2026-08-12T12:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=61",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:57.059Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "clerksboards:61:2026-09-09",
+   "ocdId": "ocd-division/country:us/state:az/place:tucson",
+   "bodyName": "Tucson-Pima County Historical Commission",
+   "title": "Tucson-Pima County Historical Commission",
+   "startsAt": "2026-09-09T12:00:00-07:00",
+   "timeZone": "America/Phoenix",
+   "location": null,
+   "online": {
+    "label": "Microsoft Teams (Virtual)",
+    "joinUrl": null
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Tucson, AZ",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=61",
+    "sourceOrg": "City of Tucson Clerk",
+    "collectedAt": "2026-08-19T04:19:57.059Z",
     "verifiedAt": null
    }
   },
@@ -4270,7 +5235,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:38.224Z",
+    "collectedAt": "2026-08-19T04:19:56.045Z",
     "verifiedAt": null
    }
   },
@@ -4293,7 +5258,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:38.224Z",
+    "collectedAt": "2026-08-19T04:19:56.045Z",
     "verifiedAt": null
    }
   },
@@ -4316,7 +5281,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:38.224Z",
+    "collectedAt": "2026-08-19T04:19:56.045Z",
     "verifiedAt": null
    }
   },
@@ -4339,7 +5304,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:38.224Z",
+    "collectedAt": "2026-08-19T04:19:56.045Z",
     "verifiedAt": null
    }
   },
@@ -4362,7 +5327,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:38.224Z",
+    "collectedAt": "2026-08-19T04:19:56.045Z",
     "verifiedAt": null
    }
   },
@@ -4385,7 +5350,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-18T18:58:38.224Z",
+    "collectedAt": "2026-08-19T04:19:56.045Z",
     "verifiedAt": null
    }
   },
@@ -4408,7 +5373,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2225",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.587Z",
+    "collectedAt": "2026-08-19T04:19:56.447Z",
     "verifiedAt": null
    }
   },
@@ -4431,7 +5396,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2227",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.587Z",
+    "collectedAt": "2026-08-19T04:19:56.447Z",
     "verifiedAt": null
    }
   },
@@ -4454,7 +5419,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2228",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.587Z",
+    "collectedAt": "2026-08-19T04:19:56.447Z",
     "verifiedAt": null
    }
   },
@@ -4477,7 +5442,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2234",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.587Z",
+    "collectedAt": "2026-08-19T04:19:56.447Z",
     "verifiedAt": null
    }
   },
@@ -4500,7 +5465,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2235",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.587Z",
+    "collectedAt": "2026-08-19T04:19:56.447Z",
     "verifiedAt": null
    }
   },
@@ -4523,7 +5488,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2229",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.587Z",
+    "collectedAt": "2026-08-19T04:19:56.447Z",
     "verifiedAt": null
    }
   },
@@ -4546,7 +5511,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2233",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.587Z",
+    "collectedAt": "2026-08-19T04:19:56.447Z",
     "verifiedAt": null
    }
   },
@@ -4569,7 +5534,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2239",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.587Z",
+    "collectedAt": "2026-08-19T04:19:56.447Z",
     "verifiedAt": null
    }
   },
@@ -4592,7 +5557,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2240",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.587Z",
+    "collectedAt": "2026-08-19T04:19:56.447Z",
     "verifiedAt": null
    }
   },
@@ -4615,7 +5580,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2236",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.587Z",
+    "collectedAt": "2026-08-19T04:19:56.447Z",
     "verifiedAt": null
    }
   },
@@ -4638,7 +5603,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2241",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.587Z",
+    "collectedAt": "2026-08-19T04:19:56.447Z",
     "verifiedAt": null
    }
   },
@@ -4661,7 +5626,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2242",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.587Z",
+    "collectedAt": "2026-08-19T04:19:56.447Z",
     "verifiedAt": null
    }
   },
@@ -4684,7 +5649,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2243",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.587Z",
+    "collectedAt": "2026-08-19T04:19:56.447Z",
     "verifiedAt": null
    }
   },
@@ -4707,7 +5672,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2244",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.587Z",
+    "collectedAt": "2026-08-19T04:19:56.447Z",
     "verifiedAt": null
    }
   },
@@ -4730,7 +5695,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2245",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.587Z",
+    "collectedAt": "2026-08-19T04:19:56.447Z",
     "verifiedAt": null
    }
   },
@@ -4753,7 +5718,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2246",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.587Z",
+    "collectedAt": "2026-08-19T04:19:56.447Z",
     "verifiedAt": null
    }
   },
@@ -4776,7 +5741,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2247",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.587Z",
+    "collectedAt": "2026-08-19T04:19:56.447Z",
     "verifiedAt": null
    }
   },
@@ -4799,7 +5764,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2248",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.587Z",
+    "collectedAt": "2026-08-19T04:19:56.447Z",
     "verifiedAt": null
    }
   },
@@ -4822,7 +5787,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2249",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.587Z",
+    "collectedAt": "2026-08-19T04:19:56.447Z",
     "verifiedAt": null
    }
   },
@@ -4845,7 +5810,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2250",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.587Z",
+    "collectedAt": "2026-08-19T04:19:56.447Z",
     "verifiedAt": null
    }
   },
@@ -4868,7 +5833,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.338Z",
+    "collectedAt": "2026-08-19T04:19:55.927Z",
     "verifiedAt": null
    }
   },
@@ -4892,7 +5857,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.338Z",
+    "collectedAt": "2026-08-19T04:19:55.927Z",
     "verifiedAt": null
    }
   },
@@ -4916,7 +5881,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.338Z",
+    "collectedAt": "2026-08-19T04:19:55.927Z",
     "verifiedAt": null
    }
   },
@@ -4940,7 +5905,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.338Z",
+    "collectedAt": "2026-08-19T04:19:55.927Z",
     "verifiedAt": null
    }
   },
@@ -4964,7 +5929,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.338Z",
+    "collectedAt": "2026-08-19T04:19:55.927Z",
     "verifiedAt": null
    }
   },
@@ -4988,7 +5953,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.338Z",
+    "collectedAt": "2026-08-19T04:19:55.927Z",
     "verifiedAt": null
    }
   },
@@ -5012,7 +5977,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.338Z",
+    "collectedAt": "2026-08-19T04:19:55.927Z",
     "verifiedAt": null
    }
   },
@@ -5036,7 +6001,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.338Z",
+    "collectedAt": "2026-08-19T04:19:55.927Z",
     "verifiedAt": null
    }
   },
@@ -5060,7 +6025,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.338Z",
+    "collectedAt": "2026-08-19T04:19:55.927Z",
     "verifiedAt": null
    }
   },
@@ -5084,7 +6049,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.338Z",
+    "collectedAt": "2026-08-19T04:19:55.927Z",
     "verifiedAt": null
    }
   },
@@ -5108,7 +6073,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.338Z",
+    "collectedAt": "2026-08-19T04:19:55.927Z",
     "verifiedAt": null
    }
   },
@@ -5132,7 +6097,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.338Z",
+    "collectedAt": "2026-08-19T04:19:55.927Z",
     "verifiedAt": null
    }
   },
@@ -5156,7 +6121,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.338Z",
+    "collectedAt": "2026-08-19T04:19:55.927Z",
     "verifiedAt": null
    }
   },
@@ -5180,7 +6145,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.338Z",
+    "collectedAt": "2026-08-19T04:19:55.927Z",
     "verifiedAt": null
    }
   },
@@ -5204,7 +6169,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-18T18:58:38.338Z",
+    "collectedAt": "2026-08-19T04:19:55.927Z",
     "verifiedAt": null
    }
   },
@@ -5227,7 +6192,7 @@
    "provenance": {
     "sourceUrl": "https://www.mhrd.org/administration/board-of-education/boe-meetings",
     "sourceOrg": "Morris Hills Regional District Board of Education",
-    "collectedAt": "2026-08-18T18:58:41.367Z",
+    "collectedAt": "2026-08-19T04:19:58.351Z",
     "verifiedAt": null
    }
   },
@@ -5250,7 +6215,7 @@
    "provenance": {
     "sourceUrl": "https://www.mhrd.org/administration/board-of-education/boe-meetings",
     "sourceOrg": "Morris Hills Regional District Board of Education",
-    "collectedAt": "2026-08-18T18:58:41.367Z",
+    "collectedAt": "2026-08-19T04:19:58.351Z",
     "verifiedAt": null
    }
   },
@@ -5273,7 +6238,7 @@
    "provenance": {
     "sourceUrl": "https://www.mhrd.org/administration/board-of-education/boe-meetings",
     "sourceOrg": "Morris Hills Regional District Board of Education",
-    "collectedAt": "2026-08-18T18:58:41.367Z",
+    "collectedAt": "2026-08-19T04:19:58.351Z",
     "verifiedAt": null
    }
   },
@@ -5296,12 +6261,8 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-18T14:17:56.396Z",
+    "collectedAt": "2026-08-19T04:19:59.440Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-18T14:17:56.396Z"
    }
   },
   {
@@ -5323,12 +6284,8 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-18T14:17:56.396Z",
+    "collectedAt": "2026-08-19T04:19:59.440Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-18T14:17:56.396Z"
    }
   },
   {
@@ -5350,12 +6307,8 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-18T14:17:56.396Z",
+    "collectedAt": "2026-08-19T04:19:59.440Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-18T14:17:56.396Z"
    }
   },
   {
@@ -5377,12 +6330,8 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-18T14:17:56.396Z",
+    "collectedAt": "2026-08-19T04:19:59.440Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-18T14:17:56.396Z"
    }
   },
   {
@@ -5404,12 +6353,8 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-18T14:17:56.396Z",
+    "collectedAt": "2026-08-19T04:19:59.440Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-18T14:17:56.396Z"
    }
   },
   {
@@ -5431,12 +6376,8 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-18T14:17:56.396Z",
+    "collectedAt": "2026-08-19T04:19:59.440Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-18T14:17:56.396Z"
    }
   },
   {
@@ -5458,12 +6399,8 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-18T14:17:56.396Z",
+    "collectedAt": "2026-08-19T04:19:59.440Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-18T14:17:56.396Z"
    }
   },
   {
@@ -5485,12 +6422,8 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-18T14:17:56.396Z",
+    "collectedAt": "2026-08-19T04:19:59.440Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-18T14:17:56.396Z"
    }
   },
   {
@@ -5512,12 +6445,8 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-18T14:17:56.396Z",
+    "collectedAt": "2026-08-19T04:19:59.440Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-18T14:17:56.396Z"
    }
   },
   {
@@ -5539,12 +6468,8 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-18T14:17:56.396Z",
+    "collectedAt": "2026-08-19T04:19:59.440Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-18T14:17:56.396Z"
    }
   },
   {
@@ -5566,12 +6491,8 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-18T14:17:56.396Z",
+    "collectedAt": "2026-08-19T04:19:59.440Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-18T14:17:56.396Z"
    }
   },
   {
@@ -5593,12 +6514,8 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-18T14:17:56.396Z",
+    "collectedAt": "2026-08-19T04:19:59.440Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-18T14:17:56.396Z"
    }
   },
   {
@@ -5620,12 +6537,8 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-18T14:17:56.396Z",
+    "collectedAt": "2026-08-19T04:19:59.440Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-18T14:17:56.396Z"
    }
   },
   {
@@ -5647,12 +6560,8 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-18T14:17:56.396Z",
+    "collectedAt": "2026-08-19T04:19:59.440Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-18T14:17:56.396Z"
    }
   },
   {
@@ -5674,12 +6583,8 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-18T14:17:56.396Z",
+    "collectedAt": "2026-08-19T04:19:59.440Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-18T14:17:56.396Z"
    }
   },
   {
@@ -5701,12 +6606,8 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/planning-board",
     "sourceOrg": "Newbury Planning Board",
-    "collectedAt": "2026-08-18T14:17:56.947Z",
+    "collectedAt": "2026-08-19T04:20:00.111Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-18T14:17:56.947Z"
    }
   },
   {
@@ -5728,12 +6629,8 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/planning-board",
     "sourceOrg": "Newbury Planning Board",
-    "collectedAt": "2026-08-18T14:17:56.947Z",
+    "collectedAt": "2026-08-19T04:20:00.111Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-18T14:17:56.947Z"
    }
   },
   {
@@ -5751,16 +6648,12 @@
    },
    "agendaUrl": "https://www.newbury.nh.gov/planning-board/agenda/agenda-15",
    "jurisdiction": "Newbury, NH",
-   "status": "SCHEDULED",
+   "status": "CONCLUDED",
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/planning-board",
     "sourceOrg": "Newbury Planning Board",
-    "collectedAt": "2026-08-18T14:17:56.947Z",
+    "collectedAt": "2026-08-19T04:20:00.111Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-18T14:17:56.947Z"
    }
   },
   {
@@ -5782,12 +6675,8 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/conservation-commission",
     "sourceOrg": "Newbury Conservation Commission",
-    "collectedAt": "2026-08-18T14:17:57.326Z",
+    "collectedAt": "2026-08-19T04:20:00.539Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-18T14:17:57.326Z"
    }
   },
   {
@@ -5809,12 +6698,8 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/conservation-commission",
     "sourceOrg": "Newbury Conservation Commission",
-    "collectedAt": "2026-08-18T14:17:57.326Z",
+    "collectedAt": "2026-08-19T04:20:00.539Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-18T14:17:57.326Z"
    }
   },
   {
@@ -5836,12 +6721,8 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/conservation-commission",
     "sourceOrg": "Newbury Conservation Commission",
-    "collectedAt": "2026-08-18T14:17:57.326Z",
+    "collectedAt": "2026-08-19T04:20:00.539Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-18T14:17:57.326Z"
    }
   },
   {
@@ -5863,12 +6744,8 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/conservation-commission",
     "sourceOrg": "Newbury Conservation Commission",
-    "collectedAt": "2026-08-18T14:17:57.326Z",
+    "collectedAt": "2026-08-19T04:20:00.539Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-18T14:17:57.326Z"
    }
   },
   {
@@ -5890,12 +6767,8 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/conservation-commission",
     "sourceOrg": "Newbury Conservation Commission",
-    "collectedAt": "2026-08-18T14:17:57.326Z",
+    "collectedAt": "2026-08-19T04:20:00.539Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-18T14:17:57.326Z"
    }
   },
   {
@@ -5917,12 +6790,8 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/zoning-board-adjustment",
     "sourceOrg": "Newbury Zoning Board of Adjustment",
-    "collectedAt": "2026-08-18T14:17:57.885Z",
+    "collectedAt": "2026-08-19T04:20:01.119Z",
     "verifiedAt": null
-   },
-   "carried": {
-    "source": "schedulepage",
-    "lastFreshAt": "2026-08-18T14:17:57.885Z"
    }
   }
  ],
@@ -6930,6 +7799,22 @@
    "sourceUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
    "sourceOrg": "Vail School District Governing Board",
    "collectedAt": "2026-08-13T21:01:27.266Z",
+   "verifiedAt": null,
+   "text": "Vail School District - Home Skip Navigation Jump to SideBar Quick Menu Public site Policy Sign in Vail School District Where Education is a Community Effort Your Javascript is turned off, without it, this site will not operate as intended. Home Welcome to Vail School District Home Calendar Meetings Search Home Vail School District Governing Board Board Meetings are held on the second and fourth Tuesday of the month (unless otherwise noted) at 7:00 p.m. at: Calvin Baker Leadership Center 13801 E. Benson Highway, Vail, Arizona Doors will be opened 15 minutes prior to the start of the meeting. The 2025/2026 schedule of Regular Meetings of the Vail School District Governing Board is as follows: 2025- July 8 July 22 August 12 August 26 September 9 September 23 October 14 October 28 November 12 December 9 2026- January 13 January 27 February 10 February 24 March 10 March 24 April 14 April 28 May 12 June 2 June 23 For more information, please contact Cindy Petersen . Share Welcome Welcome to our Community by Diligent public site, where you can find information about upcoming and recent meetings and participate in discussions about our community. Select the Welcome banner for additional information about using this site. Disclaimer: The documents contained in this system are intended for information only. To verify the accuracy and currency of this information, please contact us directly. Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals © Diligent Community 2026 Vail School District User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "apptegy:vail:60703702@794d11db125d1b97ea3ff2168d111a872024b9b73a3a8773c19e114def1f9ee9",
+   "meetingId": "apptegy:vail:60703702",
+   "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+   "documentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "contentHash": "794d11db125d1b97ea3ff2168d111a872024b9b73a3a8773c19e114def1f9ee9",
+   "retrievedAt": "2026-08-19T04:20:03.869Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
+   "sourceOrg": "Vail School District Governing Board",
+   "collectedAt": "2026-08-19T04:20:03.869Z",
    "verifiedAt": null,
    "text": "Vail School District - Home Skip Navigation Jump to SideBar Quick Menu Public site Policy Sign in Vail School District Where Education is a Community Effort Your Javascript is turned off, without it, this site will not operate as intended. Home Welcome to Vail School District Home Calendar Meetings Search Home Vail School District Governing Board Board Meetings are held on the second and fourth Tuesday of the month (unless otherwise noted) at 7:00 p.m. at: Calvin Baker Leadership Center 13801 E. Benson Highway, Vail, Arizona Doors will be opened 15 minutes prior to the start of the meeting. The 2025/2026 schedule of Regular Meetings of the Vail School District Governing Board is as follows: 2025- July 8 July 22 August 12 August 26 September 9 September 23 October 14 October 28 November 12 December 9 2026- January 13 January 27 February 10 February 24 March 10 March 24 April 14 April 28 May 12 June 2 June 23 For more information, please contact Cindy Petersen . Share Welcome Welcome to our Community by Diligent public site, where you can find information about upcoming and recent meetings and participate in discussions about our community. Select the Welcome banner for additional information about using this site. Disclaimer: The documents contained in this system are intended for information only. To verify the accuracy and currency of this information, please contact us directly. Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals © Diligent Community 2026 Vail School District User name Password Sign In Remember me next time. Forgot password?",
    "extraction": "html",
@@ -8085,6 +8970,70 @@
    "verifiedAt": null,
    "text": "Kearsarge Regional School District School Board Meeting Agenda Motto: “Show your work” Kearsarge Professional Development Center, 114 Cougar Court, New London July 23, 2026 - 5:00 pm I. Call to Order: Chair Alison Mastin II. Pledge of Allegiance III. Roll Call IV. Approval of Minutes: Chair Alison Mastin V. Public Comment - Note: In accordance with Policy BEDH, copies of a prepared statement must be provided to the Board. Participation in public comment is restricted to residents of the seven towns served by the Kearsarge Regional School District or by those pre-approved by the Board as having a legitimate interest to the district as per KRSD policy BEDH. VI. New Business: A. Recording School Board Meetings B. Budget Transfer: Interim Superintendent Bessette 1. Voc Ed Tuition HS - $105,237.47 VII. Old Business: A. Facilities A Report B. Facilities Discussion C. Strategic Plan: Interim Superintendent Bessette VIII. Non-public Session under RSA 91:A3, II The Board reserves the right to enter into “nonpublic” at any given time during the meeting. Zoom Link: https://us02web.zoom.us/j/84393750562 School Board Workshop: Saturday July 25, 8:30 Next Board Meetings: July 30, 2026 August 6, 2026",
    "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "schedulepage:kearsarge:2026-07-30@a72146bf2584c6e303ef9d33020508ad355a62cb01e96fca05b7f2ae3ca1aaaf",
+   "meetingId": "schedulepage:kearsarge:2026-07-30",
+   "ocdId": "ocd-division/country:us/state:nh/school_district:kearsarge_regional_school_district",
+   "documentUrl": "https://drive.google.com/file/d/1YyUQpUDfKebohR4-R1LrIjr458pvONRC/view?usp=sharing",
+   "contentHash": "a72146bf2584c6e303ef9d33020508ad355a62cb01e96fca05b7f2ae3ca1aaaf",
+   "retrievedAt": "2026-08-19T04:20:04.287Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://drive.google.com/file/d/1YyUQpUDfKebohR4-R1LrIjr458pvONRC/view?usp=sharing",
+   "sourceOrg": "Kearsarge Regional School District School Board",
+   "collectedAt": "2026-08-19T04:20:04.287Z",
+   "verifiedAt": null,
+   "text": "2026-7-30_agenda_only_word.docx.pdf - Google Drive Loading&hellip; Sign in",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "schedulepage:kearsarge:2026-08-06@b1db0d556f44c4114ffdaddf56d017d85799c81129b0cd98b818ef3bc47f2d27",
+   "meetingId": "schedulepage:kearsarge:2026-08-06",
+   "ocdId": "ocd-division/country:us/state:nh/school_district:kearsarge_regional_school_district",
+   "documentUrl": "https://www.kearsarge.org/sites/g/files/vyhlif731/f/pages/krsd_school_board_meeting_agenda_-_august_6_2026.pdf",
+   "contentHash": "b1db0d556f44c4114ffdaddf56d017d85799c81129b0cd98b818ef3bc47f2d27",
+   "retrievedAt": "2026-08-19T04:20:04.870Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://www.kearsarge.org/sites/g/files/vyhlif731/f/pages/krsd_school_board_meeting_agenda_-_august_6_2026.pdf",
+   "sourceOrg": "Kearsarge Regional School District School Board",
+   "collectedAt": "2026-08-19T04:20:04.870Z",
+   "verifiedAt": null,
+   "text": "Kearsarge Regional School District KRSD School Board Meeting Agenda School Administrative Unit 65 • “Show your work” DATE Thursday, August 6, 2026 TIME 6:30 p.m. LOCATION Kearsarge Professional Development Center 114 Cougar Court, New London, NH STRATEGIC PLAN: 2031 - PILLAR KEY : Each agenda item below is marked with the Strategic Plan 2031 pillar(s) it advances. A filled, checked box indicates alignment; an open box indicates the pillar does not apply to that item. P1 Educational Excellence & Student Growth P4 Sustainable Operations, Facilities & Finance P2 Personalized Pathways & Future Readiness P5 Workforce Excellence & Professional Growth P3 Student Wellness, Belonging & Engagement P6 Innovation, Trust & Regional Partnership AGENDA ITEMS: I. Call to Order - Chair Alison Mastin II. Pledge of Allegiance III. Roll Call IV. Approval of Minutes - Chair Alison Mastin V. Reports of Administration A. Chair - Alison Mastin B. Interim Superintendent - Michael Bessette Correspondence/Resignations/Nominations/Retirements/Other C. Business Administrator - Larry LeBoeuf VI. Public Comment In accordance with Policy BEDH, copies of a prepared statement must be provided to the Board. Participation in public comment is restricted to residents of the seven towns served by the Kearsarge Regional School District, or to those pre-approved by the Board as having a legitimate interest to the district as per KRSD Policy BEDH. STRATEGIC PLAN: 2031 PILLAR ALIGNMENT VII. NEW BUSINESS A. Superintendent Appointment P1 P2 P3 P4 ✓ P5 P6 B. HB 1300 Tax Cap Implications - Interim Superintendent Bessette P1 P2 P3 ✓ P4 P5 ✓ P6 C. Request for Purchase - Dir. of Curriculum - Andrea Castaldo ✓ P1 P2 P3 ✓ P4 P5 P6 1. Collaborative Classroom - Sole Source purchase request - $13,182.00 ✓ P1 P2 P3 ✓ P4 P5 P6 VIII. OLD BUSINESS A. Facilities Discussion on Potential Petition Plan for Closure P1 P2 P3 ✓ P4 P5 ✓ P6 B. Strategic Plan 2031 - Interim Superintendent Bessette ✓ P1 ✓ P2 ✓ P3 ✓ P4 ✓ P5 ✓ P6 IX. Non-Public Session under RSA 91-A:3, II The Board reserves the right to enter “non-public” session at any given time during the meeting. JOIN BY ZOOM https://us02web.zoom.us/j/81471468174 NEXT BOARD MEETINGS August 20, 2026 September 10, 2026",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "schedulepage:kearsarge:2026-08-20@a9790490f2c5cba423daf5c2e54888146ad2b50a1023d76cceb80469058b32ec",
+   "meetingId": "schedulepage:kearsarge:2026-08-20",
+   "ocdId": "ocd-division/country:us/state:nh/school_district:kearsarge_regional_school_district",
+   "documentUrl": "https://www.kearsarge.org/sites/g/files/vyhlif731/f/pages/krsd_school_board_meeting_agenda_-_august_20_2026.pdf",
+   "contentHash": "a9790490f2c5cba423daf5c2e54888146ad2b50a1023d76cceb80469058b32ec",
+   "retrievedAt": "2026-08-19T04:20:06.520Z",
+   "contentType": "application/pdf",
+   "sourceUrl": "https://www.kearsarge.org/sites/g/files/vyhlif731/f/pages/krsd_school_board_meeting_agenda_-_august_20_2026.pdf",
+   "sourceOrg": "Kearsarge Regional School District School Board",
+   "collectedAt": "2026-08-19T04:20:06.520Z",
+   "verifiedAt": null,
+   "text": "Kearsarge Regional School District KRSD School Board Meeting Agenda School Administrative Unit 65 • “Show your work” DATE Thursday, August 20, 2026 TIME 6:30 p.m. LOCATION Kearsarge Professional Development Center 114 Cougar Court, New London, NH STRATEGIC PLAN: 2031 - PILLAR KEY : Each agenda item below is marked with the Strategic Plan 2031 pillar(s) it advances. A filled, checked box indicates alignment; an open box indicates the pillar does not apply to that item. P1 Educational Excellence & Student Growth P4 Sustainable Operations, Facilities & Finance P2 Personalized Pathways & Future Readiness P5 Workforce Excellence & Professional Growth P3 Student Wellness, Belonging & Engagement P6 Innovation, Trust & Regional Partnership AGENDA ITEMS: I. Call to Order - Chair Alison Mastin II. Pledge of Allegiance III. Roll Call Public Hearing - Appropriation for Unanticipated Funds As required per NH RSA 198:20-b, III, the Kearsarge Regional School Board will conduct a public hearing to accept unanticipated funds from the New Hampshire Lead Remediation in Schools Drinking Water and Groundwater Trust Fund Grant in the amount of $75,000. By accepting the funds, the District is required to perform and use the funds for lead remediation in drinking outlets testing at or above 5 parts per billion at the District's schools. IV. Approval of Minutes - Chair Alison Mastin V. Reports of Administration A. Chair - Alison Mastin B. Superintendent - Michael Bessette Correspondence/Resignations/Nominations/Retirements/Other C. Business Administrator - Larry LeBoeuf VI. Public Comment In accordance with Policy BEDH, copies of a prepared statement must be provided to the Board. Participation in public comment is restricted to residents of the seven towns served by the Kearsarge Regional School District, or to those pre-approved by the Board as having a legitimate interest to the district as per KRSD Policy BEDH. STRATEGIC PLAN: 2031 PILLAR ALIGNMENT VII. NEW BUSINESS A. Request for Purchase - Dir. Of Facilities, Brett Paré 1. Lavallee Brensinger Contract Extension - Sole Source - $110,000 P1 P2 P3 P4 P5 P6 • Budget Transfer: $ 55,000 - Larry LeBoeuf • Budget Transfer: $ 55,000 - Larry LeBoeuf B. Request for Purchase - Principal, Charles Langille 1. FIRST Education Resources - Sole Source - $15,000.00 P1 P2 P3 P4 P5 P6 C. Special Education Contracts Approval over 10K - Dir. Of Student Support, Larry Elliott P1 P2 P3 P4 P5 P6 D. Transfers for 5K or less 2025-26 -Larry LeBoeuf P1 P2 P3 P4 P5 P6\nE. Encumbrances for 2026-27 from 2025-26 - Larry LeBoeuf P1 P2 P3 P4 P5 P6 F. DOE 25 / MS 25 - Board Signature - Larry LeBoeuf P1 P2 P3 P4 P5 P6 G. Fund Balance Approval - Larry LeBoeuf P1 P2 P3 P4 P5 P6 H. Bottinger Scholarship - $14,716.44 - Larry LeBoeuf P1 P2 P3 P4 P5 P6 VIII. OLD BUSINESS A. Facilities Discussion on Potential Petition Plan for Closure P1 P2 P3 P4 P5 P6 B. Strategic Plan 2031 - Superintendent Bessette P1 P2 P3 P4 P5 P6 IX. Non-Public Session under RSA 91-A:3, II The Board reserves the right to enter “non - public” session at any given time during the meeting. JOIN BY ZOOM https://us02web.zoom.us/j/82011843871 NEXT BOARD MEETINGS September 10, 2026 September 17, 2026",
+   "extraction": "pdf",
+   "extractionNote": null
+  },
+  {
+   "id": "schedulepage:newbury-planning-board:2026-07-21@0d97ccff72637227cf6de95e2b68b331aec4d3b7789f7ad6292be9ea6dbea8f1",
+   "meetingId": "schedulepage:newbury-planning-board:2026-07-21",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "documentUrl": "https://www.newbury.nh.gov/planning-board/agenda/meeting-agenda-17",
+   "contentHash": "0d97ccff72637227cf6de95e2b68b331aec4d3b7789f7ad6292be9ea6dbea8f1",
+   "retrievedAt": "2026-08-19T04:20:07.507Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://www.newbury.nh.gov/planning-board/agenda/meeting-agenda-17",
+   "sourceOrg": "Newbury Planning Board",
+   "collectedAt": "2026-08-19T04:20:07.507Z",
+   "verifiedAt": null,
+   "text": "Meeting Agenda | Newbury NH Skip to main content Home Keywords About Us Newbury Demographics 2024 2022 Newbury Annual Town Report Departments Departments: Administration Assessor Code Enforcement Officer Emergency Management Fire Department Health Officer Highway Department Land Use Library Police Department Tax Collector Town Clerk Transfer Station All Departments Boards & Committees Boards & Committees: 2026 Advisory Budget Committee Blodgett Sewer User Advisory Committee Cemetery Trustees Conservation Commission Joint Assessing Board, Newbury Sunapee & New London Joint Loss Management Committee Newbury Beautification Committee Newbury Energy Committee Newbury Public Library Trustees Newbury Septic Committee Planning Board Selectboard Trustees of the Trust Funds Zoning Board of Adjustment All Boards and Committees Minutes & Agendas Community Organizations Coalition Communities 2.0 Center Meeting House Friends of the John Hay National Wildlife Refuge Joint Board Newbury, Sunapee & New London Kearsarge Calendar Kearsarge Regional School District Lake Sunapee Protective Association Lake Sunapee Region VNA Historical Society Sunapee Area Watershed Coalition Sunapee Greenway The Fells Veterans Memorial Committee Useful Links Find It Fast Annual Town Report Assessing & Mapping Database Change of Address Form Code Enforcement Officer Community Organizations Dog License Application Master Plan Documents Online Payments Recreation Recycling Information Selectboard Tax Bills 2016 Transfer Station Winter Parking Ban Absentee Ballot Request Town Election Only Absentee Ballot Request State & Federal Election Useful Links Click Here for More... Selectboard Meeting Minutes You are here Home ›› Planning Board Meeting Agenda Submitted on July 10, 2026 - 1:32pm Date: Tuesday, July 21, 2026 - 7:00pm Planning Board Agenda July 21, 2026 Location – Newbury Town Office 7:00 p.m. Administrative Business Review and approval of minutes for June 16, 2026 7:05 p.m. Case 2026-001- Final Application - Major Site Plan Review; OKB, LLC (owner), db Landscaping and Bedford Design (agents) for Final Design Review-Major Site Plan proposing six detached hotel units/cabins located at Route 103B, Newbury NH, Tax Map 007-579-239. Other Business Case 2018-010, Earth Excavation Permit Expired- Mark & Anne Hilton (owners), for property located at 274 South Road, Newbury, NH Tax Map 045-382-409-excavation for hay fields and horse paddocks. CIP (Capital Improvement Plan) Contracted with UVLSRPC - Planning Board Fee Schedule 2023 2017 Master Plan Documents Application for Earth Excavation Permit (2018) Application for Preliminary Conceptual Consultation Site Plan Review (5/26) Capital Improvement Plan 2023-2028 Conditional Use Permit for Development in a Wetlands Buffer Zone Application (7/18) Downloadable Forms Driveway Permit (5/21) Driveway Regulations (12/20) Land Subdivision Control Regulations (2026) Regulations for Earth Evacuation (2018) Sign-off Sheet-Subdivision & Site Plan. (11/18) Site Plan Final Application (5/20) Site Plan Final Design Review (5/20) Site Plan Final Personal Wireless Service Facilities (5/20) Site Plan Final; Application Phase III Site Plan Regulations (3/26) Site Plan Review - Preliminary Design Review Phase II Subdivision Annexation Conceptional Application Subdivision-Annexation-Final-Application-(rev.-06-05-07) When Site Plan Review is Required (5/20) Contact Info Phone: (603) 763-4940 Fax: (603) 763-5298 Address: 937 Route 103 PO Box 296 Newbury , NH 03255 United States See map: Google Maps Newbury Offices, PO Box 296, US Rte 103, Newbury, NH 03255 PH: (603) 763-4940 FAX: (603) 763-5298 View Map Website Disclaimer Government Websites by CivicPlus ® Login",
+   "extraction": "html",
    "extractionNote": null
   }
  ]

@@ -120,20 +120,6 @@ export function WelcomeOverlay({
       }}
     >
       <div className="welcome-card">
-        <svg
-          className="welcome-icon"
-          width="32"
-          height="32"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          aria-hidden="true"
-        >
-          <path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z" />
-          <circle cx="12" cy="10" r="3" />
-        </svg>
-
         {/*
           6e2 (2026-08-15, the author): "NOTICE OF PUBLIC MEETINGS" is gone.
           It undersold the mission text doing the real work below it —
@@ -141,12 +127,47 @@ export function WelcomeOverlay({
           one surface that has to convince them this product is not a
           government portal. The header is the name and the mission, and
           nothing between them.
+
+          F01 13.1 (2026-08-19, the author): *"the map pin icon next to
+          'Meanwhile' is now up and to the left. It looks very wonky. The map
+          icon and 'Meanwhile' should be at the top and then a very grayish thin
+          line right under 'Meanwhile', and then the mission and then the zip
+          code."*
+
+          THE CAUSE, because it is not obvious from the old markup: the card is
+          `text-align: center`, and centring an inline SVG that way works — but
+          Tailwind's preflight sets `svg { display: block }`, so this one was a
+          BLOCK element and `text-align` could not reach it. It sat hard against
+          the card's left padding while the centred `<h1>` sat below it, which
+          is precisely "up and to the left".
+
+          Centring it by hand would have fixed the symptom. The author asked for
+          the arrangement instead, and it is the better answer: the icon and the
+          name are one lockup on one line, so nothing has to be centred
+          independently and the preflight rule stops mattering. The rule under
+          it is what closes the header off from the mission.
         */}
-        <h1 className="welcome-title">{PRODUCT_NAME}</h1>
+        <div className="welcome-lockup">
+          <svg
+            className="welcome-icon"
+            width="30"
+            height="30"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            aria-hidden="true"
+          >
+            <path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z" />
+            <circle cx="12" cy="10" r="3" />
+          </svg>
+          <h1 className="welcome-title">{PRODUCT_NAME}</h1>
+        </div>
+        <hr className="welcome-rule" />
 
         {/* The author's mission text, verbatim (session brief 1a). Do not
             edit it here: tests/welcome-copy.test.ts pins every sentence. */}
-        <div className="welcome-msg space-y-2 text-left">
+        <div className="welcome-msg space-y-[5px] text-left">
           <p>
             Whether you care about politics or not, politics cares about you.
           </p>

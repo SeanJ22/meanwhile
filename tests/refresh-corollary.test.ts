@@ -665,3 +665,63 @@ test("g13: a declared window survives the composite's FAILURE branch", () => {
       );
     });
 });
+
+/* ------------------- F01 7.2: the warning agrees with the map --------- */
+
+/**
+ * **F01 7.2 (2026-08-19, the author).**
+ *
+ * *"In the New Hampshire Who Governs Here card there are two messages:
+ * Kearsarge Regional School District, Newbury town — I couldn't reach their
+ * calendar source at the last check, so their meetings may be missing here.
+ * However if I click the maroon dot up in New London there ARE meetings for
+ * Kearsarge, so something's not right."*
+ *
+ * Diagnosed before fixing, and neither surface was lying — they were answering
+ * different questions. Carry-forward exists so a refused source does not empty
+ * a previously-full surface; the pins stayed and each carried row states its
+ * own age. The WARNING never learned that had happened, so it said "may be
+ * missing" about rows the reader could see and click.
+ *
+ * The fix is that the card is told what the map is showing. These guards hold
+ * the two sentences apart, because collapsing them back into one is exactly
+ * how the contradiction returns.
+ */
+test("F01 7.2: a refused body with rows on screen is STALE, not missing", () => {
+  const surface = readFileSync(
+    join(process.cwd(), "components", "map", "coverage-notice.tsx"),
+    "utf8",
+  );
+
+  // Two footnote groups, split on whether the body has meetings on screen.
+  assert.match(
+    surface,
+    /failedSourceOcdIds\.includes\(body\.ocdId\) &&\s*\n\s*ocdIdsWithMeetings\.includes\(body\.ocdId\)/,
+    "the stale group must be the refused bodies that DO have rows on screen",
+  );
+  assert.match(
+    surface,
+    /failedSourceOcdIds\.includes\(body\.ocdId\) &&\s*\n\s*!ocdIdsWithMeetings\.includes\(body\.ocdId\)/,
+    "the missing group must be the refused bodies that do NOT",
+  );
+
+  // And they must say different things. A body whose pins are on the map is
+  // never told its meetings may be missing.
+  assert.match(surface, /what’s on the map for them is from our previous check/);
+  assert.match(surface, /their meetings may be missing here/);
+});
+
+test("F01 7.2: the card reads the SAME meeting array the pins are drawn from", () => {
+  // A second derivation is how two surfaces come to disagree. The on-screen
+  // set is computed from `shown.meetings` — the array the map renders — and
+  // not re-queried or re-filtered somewhere else.
+  const entry = readFileSync(
+    join(process.cwd(), "components", "map", "map-entry.tsx"),
+    "utf8",
+  );
+  assert.match(
+    entry,
+    /ocdIdsWithMeetings=\{\[\s*\n\s*\.\.\.new Set\(\s*\n\s*\(shown\.meetings \?\? \[\]\)\.flatMap/,
+    "the on-screen set must come from the rendered meetings",
+  );
+});

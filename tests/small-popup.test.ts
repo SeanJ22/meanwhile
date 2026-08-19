@@ -112,9 +112,28 @@ test("the contact pills stack in one column, primary channels only", () => {
 test("More is the way down, and it is full width like the column", () => {
   const card = code(["components", "map", "popup", "popup-card.tsx"]);
   assert.ok(
-    /onExpand && \(\s*<button[\s\S]*?className="mt-3 flex w-full/.test(card),
+    /onExpand && \(\s*<button[\s\S]*?className="popup-card-more mt-3 flex w-full/.test(
+      card,
+    ),
     "the More footer must stay full width beneath the column",
   );
+
+  /*
+   * F01 1.3 (2026-08-19, the author): *"More locked at the bottom... if I want
+   * to just simply click More, that should never be hidden."*
+   *
+   * Full width was necessary and not sufficient: everything scrolled together
+   * inside a `max-height: 55vh` card, so a district with five board members
+   * pushed More off the bottom and the door to the large battlecard sat behind
+   * a scroll. The card is three bands now, and the two that must not move say
+   * so in CSS rather than relying on the flexbox default.
+   */
+  const css = readFileSync(join(process.cwd(), "app", "globals.css"), "utf8");
+  const shell = css.match(/\.popup-card \{[\s\S]*?\}/)?.[0] ?? "";
+  assert.match(shell, /flex-direction: column/, "the card must be three bands");
+  assert.match(shell, /overflow: hidden/, "the card itself must not be the scroller");
+  assert.match(css, /\.popup-card-head,\s*\n\.popup-card-more \{\s*\n\s*flex-shrink: 0;/);
+  assert.match(css, /\.popup-card-body \{[\s\S]*?overflow-y: auto;/);
   assert.ok(
     /onExpand=\{onExpand\}/.test(POPUP),
     "the small popup must offer the way into the large card",

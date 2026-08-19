@@ -32,8 +32,38 @@ interface DistrictPopupProps {
    * of those sentences is about us rather than about a government.
    */
   representationNoteState?: "gap" | "looking" | "unavailable";
-  /** Municipalities inside this division, where the registry knows them. */
-  placesWithin?: string[];
+  /*
+   * `placesWithin` REMOVED — F01 1.1, 2026-08-19, the author's ruling:
+   * *"I need clarification on what 'places within' means. It's listed as
+   * blank... either populate it with real data or remove it. As written,
+   * nobody can tell what it's supposed to mean."*
+   *
+   * REMOVED, and here is the reasoning, because the choice was his to inform
+   * and mine to make:
+   *
+   * 1. **Nothing ever produced it.** No caller anywhere passed this prop, so
+   *    the row rendered an em-dash on every district card at every zip since
+   *    the day it shipped. It was not a gap in the data; it was a field with
+   *    no producer, which is worse — a reader cannot tell those apart, and the
+   *    em-dash reads as "we looked and found none".
+   *
+   * 2. **It has no stable meaning to populate.** This one card renders
+   *    congressional, state-house, state-senate, county, municipal and
+   *    school-district subjects. "Places within" a county is a containment
+   *    question; within a congressional district it is a PARTIAL-OVERLAP
+   *    question, because municipalities routinely straddle district lines and
+   *    a count would silently assert containment we did not compute. One label
+   *    meaning different things per row is what the plain-language rule
+   *    forbids, and populating it would have been a claim, not a count.
+   *
+   * 3. **The useful version is already answered, better, twice.** The PLACE
+   *    CARD (g18) lists every body we hold in a place, each row opening that
+   *    body's card; Who Governs Here lists the bodies covering a point. A
+   *    third, weaker, uncountable answer beside those is not coverage.
+   *
+   * If a future session wants this back it needs a definition per division
+   * type and a source per row — at which point it is a new field, not this one.
+   */
   /**
    * Upcoming meetings on file for this division. Null means the fetch that
    * would answer failed — "couldn't check" and 0 are different facts (2a).
@@ -49,7 +79,6 @@ export function DistrictPopup({
   district,
   representation = [],
   representationNoteState = "gap",
-  placesWithin,
   upcomingMeetings,
   onOpenOfficial,
   onExpand,
@@ -68,16 +97,6 @@ export function DistrictPopup({
           The identifier still keys everything behind this card. */}
       <PopupRow label="Type">{district.typeLabel}</PopupRow>
       <PopupRow label="Tier">{TIER_LABEL[district.tier]}</PopupRow>
-
-      <PopupRow label="Places within" mono>
-        {placesWithin === undefined ? (
-          // The registry does not compute containment for every division type,
-          // and an absent count is not zero.
-          <NoValue>—</NoValue>
-        ) : (
-          placesWithin.length
-        )}
-      </PopupRow>
 
       <PopupRow label="Upcoming" mono>
         {upcomingMeetings === null ? (

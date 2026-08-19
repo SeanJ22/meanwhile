@@ -228,16 +228,52 @@ function MapEntryInner() {
    * opened it, and closes the list overlay.
    */
   const [popupMeeting, setPopupMeeting] = useState<Meeting | null>(null);
-  const [large, setLarge] = useState<
+  /*
+   * **F01 2.4 (2026-08-19, the author) — THE LARGE SURFACE IS A STACK.**
+   *
+   * *"If I go to More to open a large battle card, open Representation, and
+   * select Dr. Ravi Shah, his card pops up, which is right. However, if I
+   * close out Dr. Ravi Shah, it brings me back to the map. It doesn't bring
+   * me back to Tucson Unified."* His rule: **navigation unwinds one level at
+   * a time, everywhere.**
+   *
+   * This was ONE SLOT. A person's card opened from inside a body's card
+   * REPLACED it, so closing had nowhere to go but the map, and the reader lost
+   * the card they had been reading with no way back but to find it again.
+   *
+   * It is now a stack, and the distinction that makes it work is WHERE the
+   * card was opened from:
+   *
+   *  - from OUTSIDE any large surface — a map pin, a who-governs row, a list
+   *    row — `openLarge` REPLACES the stack. That is the one-at-a-time rule
+   *    and it is unchanged; two unrelated battlecards were never meant to nest.
+   *  - from INSIDE an open large surface — a roster name, a place card's body
+   *    row — `pushLarge` appends, and closing pops back to what opened it.
+   *
+   * The depth cap is a cycle guard, not a design limit: a reader can bounce
+   * between a board's card and a member's card indefinitely, and an unbounded
+   * array would grow for as long as they enjoyed themselves. At the cap the
+   * OLDEST frame is dropped, so the most recent history — which is the history
+   * a Back gesture is about — always survives.
+   */
+  type LargeSurface =
     | { kind: "entity"; subject: ModalSubject }
     | {
         kind: "official";
         holder: SeatHolder;
         seatLabel: string | null;
         tier: "local" | "state" | "national";
-      }
-    | null
-  >(null);
+      };
+  const LARGE_STACK_LIMIT = 8;
+  const [largeStack, setLargeStack] = useState<LargeSurface[]>([]);
+  const large = largeStack.length > 0 ? largeStack[largeStack.length - 1] : null;
+  const setLarge = useCallback((next: LargeSurface | null) => {
+    setLargeStack(next ? [next] : []);
+  }, []);
+  /** Close the top card and return to the one under it — never straight out. */
+  const closeLarge = useCallback(() => {
+    setLargeStack((stack) => stack.slice(0, -1));
+  }, []);
   const [officialPopup, setOfficialPopup] = useState<{
     holder: SeatHolder;
     seatLabel: string | null;
@@ -540,9 +576,21 @@ function MapEntryInner() {
     [],
   );
 
+  /**
+   * F01 2.4 — open a card FROM INSIDE another one, keeping the way back.
+   *
+   * Everything `openLarge` does to the other surfaces has already been done by
+   * the card this was opened from, so this only grows the stack.
+   */
+  const pushLarge = useCallback((next: LargeSurface) => {
+    setLargeStack((stack) =>
+      [...stack, next].slice(-LARGE_STACK_LIMIT),
+    );
+  }, []);
+
   /** The one-at-a-time rule: any large surface replaces every other. */
   const openLarge = useCallback(
-    (next: NonNullable<typeof large>) => {
+    (next: LargeSurface) => {
       setLarge(next);
       // 4c: the sidebar and the who-governs card are surfaces too, and they
       // yield to a battlecard exactly as a battlecard yields to them.
@@ -555,7 +603,7 @@ function MapEntryInner() {
       // 8a: a sidebar door is a large surface too, and yields the same way.
       dispatch({ type: "door/close" });
     },
-    [dispatch, openSurface],
+    [dispatch, openSurface, setLarge],
   );
 
   const openOfficial = useCallback(
@@ -1667,6 +1715,18 @@ function MapEntryInner() {
                   failedSourceOcdIds={
                     shown.snapshot?.failed.flatMap((f) => f.ocdIds) ?? []
                   }
+                  /* F01 7.2: what the MAP is actually showing, so the card
+                     cannot say “may be missing” about a body whose pins the
+                     reader can see. Read off the same meeting array the pins
+                     are drawn from — a second derivation is how two surfaces
+                     come to disagree, which is the defect this closes. */
+                  ocdIdsWithMeetings={[
+                    ...new Set(
+                      (shown.meetings ?? []).flatMap((m) =>
+                        m.ocdId ? [m.ocdId] : [],
+                      ),
+                    ),
+                  ]}
                   onOpenOfficial={openOfficial}
                   onOpenBody={(body) =>
                     openLarge({
@@ -1820,11 +1880,12 @@ function MapEntryInner() {
                   )
                 : large.subject
             }
-            onClose={() => setLarge(null)}
-            // A roster name opens the person's full card — the one-at-a-time
-            // rule swaps the large surfaces (3).
+            onClose={closeLarge}
+            /* F01 2.4: a roster name opens the person's full card ON TOP of this
+               one, so closing theirs returns here rather than to the map. This
+               is the author's Dr. Ravi Shah case exactly. */
             onOpenHolder={(holder) =>
-              openLarge({
+              pushLarge({
                 kind: "official",
                 holder,
                 seatLabel: null,
@@ -1849,7 +1910,9 @@ function MapEntryInner() {
                 (b) => b.bodyId === key,
               );
               if (body) {
-                openLarge({
+                // F01 2.4: opened from inside the place card, so it stacks —
+                // closing the body card returns to the place it was listed on.
+                pushLarge({
                   kind: "entity",
                   subject: bodySubject(body, current?.meetings ?? []),
                 });
@@ -1876,7 +1939,10 @@ function MapEntryInner() {
                   }
                 : null
             }
-            onClose={() => setLarge(null)}
+            /* F01 2.4: pops one level. A person opened from a body card returns
+               to that body card; a person opened from the map returns to the
+               map, because their frame is the only one on the stack. */
+            onClose={closeLarge}
           />
         )}
 

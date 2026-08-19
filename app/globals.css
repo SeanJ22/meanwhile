@@ -1606,6 +1606,55 @@ label:has(> input[type="checkbox"]) {
   max-width: 100%;
 }
 
+/*
+ * F01 10.2 (2026-08-19, the author): *"The order — Ballot, then zip, then Ask
+ * — is right. However Ballot and zip should be the same width as Ask about a
+ * pothole or meeting. That should also be the case in the who-governs-here
+ * pop-up."*
+ *
+ * In the two RAIL placements the cluster owns its whole row, and the two rows
+ * each sized to their own content — a short [Ballot|85701] pair above a much
+ * wider Ask pill, ragged on both edges. The MAP placement is deliberately
+ * excluded: there the cluster floats in a corner beside MapLibre's zoom column
+ * and shrink-to-fit is the whole point, so stretching it would be applying a
+ * rail rule to a floater.
+ *
+ * Stretching rather than fixing a width: both children fill the container, so
+ * they are equal BY CONSTRUCTION and stay equal when the rail's width changes
+ * or the label does. Inside the ballot pill the zip half keeps its natural
+ * width and the "Ballot" half absorbs the rest, which is what "filling the
+ * width without stretching" means for a two-part control.
+ */
+.map-floaters[data-pill-cluster="sidebar"],
+.map-floaters[data-pill-cluster="wgh"] {
+  align-items: stretch;
+}
+
+.map-floaters[data-pill-cluster="sidebar"] .map-floaters-row,
+.map-floaters[data-pill-cluster="wgh"] .map-floaters-row {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.map-floaters[data-pill-cluster="sidebar"] .ballot-pill,
+.map-floaters[data-pill-cluster="wgh"] .ballot-pill,
+.map-floaters[data-pill-cluster="sidebar"] .ask-pill,
+.map-floaters[data-pill-cluster="wgh"] .ask-pill {
+  width: 100%;
+}
+
+/* The label can wrap now that the pill is as wide as the rail; nowrap would
+   make it overflow instead of using the width it was just given. */
+.map-floaters[data-pill-cluster="sidebar"] .ask-pill,
+.map-floaters[data-pill-cluster="wgh"] .ask-pill {
+  justify-content: flex-start;
+}
+
+.map-floaters[data-pill-cluster="sidebar"] .ballot-pill-main,
+.map-floaters[data-pill-cluster="wgh"] .ballot-pill-main {
+  flex: 1 1 auto;
+}
+
 /* The map placement starts CLEAR OF THE HAMBURGER, which is fixed at (12,12)
    and paints over everything.
  *
@@ -3201,18 +3250,44 @@ label:has(> input[type="checkbox"]) {
   background: var(--panel);
   border: 1px solid var(--panel-border);
   border-radius: 16px;
-  padding: 40px 48px;
+  /* F01 13.2: less vertical padding, and the horizontal padding comes in a
+     little so the extra width goes to the TEXT rather than to the margins. */
+  padding: 30px 34px;
   text-align: center;
-  max-width: 460px;
-  width: 90%;
+  /* F01 13.2: "we can make this box wider if necessary to accommodate" — the
+     author's own trade. Wider means fewer wrapped lines, which is the biggest
+     saving available without touching a word or a type size. `width: 92%` keeps
+     the phone case unchanged, where the viewport is the constraint anyway. */
+  max-width: 540px;
+  width: 92%;
   max-height: 100%;
   overflow-y: auto;
   box-shadow: var(--shadow-card);
 }
 
+/* F01 13.1 (2026-08-19): the icon and the name are ONE LOCKUP on one line.
+   See welcome-overlay.tsx for why the icon used to sit up and to the left —
+   Tailwind's preflight makes an <svg> a block, so the card's text-align could
+   not centre it. A flex row does not care. */
+.welcome-lockup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
 .welcome-icon {
   color: var(--link);
-  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+
+/* The thin gray line the author asked for, directly under the lockup. It is
+   the header's own rule, not a section divider — quieter than --panel-border
+   on purpose. */
+.welcome-rule {
+  margin: 14px 0 18px;
+  border: 0;
+  border-top: 1px solid color-mix(in srgb, var(--text-dim) 26%, transparent);
 }
 
 /* 6e2 (2026-08-15, the author, on BOTH desktop and phone): "the overlay's
@@ -3225,18 +3300,32 @@ label:has(> input[type="checkbox"]) {
   font-size: 1.75rem;
   font-weight: 700;
   letter-spacing: -0.02em;
-  margin-bottom: 18px;
+  /* F01 13.1: the gap below is the rule's now, not the title's. */
+  margin-bottom: 0;
   color: var(--text);
 }
 
 /* `.welcome-subtitle` retired 6e2 (2026-08-15) — the institutional line it
    styled is gone; see welcome-overlay.tsx for why. */
 
+/* F01 13.2 (2026-08-19, the author): *"The mission also can be shrunk
+   vertically. It's definitely too long on mobile... not in terms of what the
+   words are saying, we just need to not even make the words smaller. We can
+   make this box wider if necessary to accommodate but it's too vertically
+   long."*
+
+   Every constraint he set is kept. The WORDS are untouched —
+   `tests/welcome-copy.test.ts` pins every sentence and still passes — and the
+   TYPE SIZE is untouched at 0.9375rem, which 6e2 raised for a reason. What
+   gives is the air: leading from 1.65 to 1.5, the gap between paragraphs from
+   8px to 5px, and the space below the block from 26px to 18px. The card is
+   wider too (see .welcome-card), which is the trade he offered — fewer wrapped
+   lines is the largest single saving and it costs nothing but width. */
 .welcome-msg {
   font-size: 0.9375rem;
   color: var(--text-dim);
-  line-height: 1.65;
-  margin-bottom: 26px;
+  line-height: 1.5;
+  margin-bottom: 18px;
 }
 
 .welcome-field {
@@ -3993,12 +4082,18 @@ label:has(> input[type="checkbox"]) {
    choices somebody made here.
    ========================================================================== */
 
+/* F01 1.3 (2026-08-19): the card is three bands, not one scroller — fixed
+   head, scrolling body, PINNED More. See popup-card.tsx for the author's
+   words; the short version is that the door to the large battlecard was
+   behind a scroll, and a hidden entry point is a defect. */
 .popup-card {
   position: relative;
+  display: flex;
+  flex-direction: column;
   width: 300px;
   max-width: calc(100vw - 2rem);
   max-height: 55vh;
-  overflow-y: auto;
+  overflow: hidden;
   padding: 16px 18px;
   background: var(--panel);
   border: 1px solid var(--panel-border);
@@ -4006,21 +4101,33 @@ label:has(> input[type="checkbox"]) {
   box-shadow: var(--shadow-popup);
 }
 
-/* 5px thin scrollbar, matching the sidebar's treatment. */
-.popup-card::-webkit-scrollbar {
+.popup-card-head,
+.popup-card-more {
+  flex-shrink: 0;
+}
+
+.popup-card-body {
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* 5px thin scrollbar, matching the sidebar's treatment. It moved from the
+   card to the BODY with the scroll (F01 1.3). */
+.popup-card-body::-webkit-scrollbar {
   width: 5px;
 }
 
-.popup-card::-webkit-scrollbar-track {
+.popup-card-body::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.popup-card::-webkit-scrollbar-thumb {
+.popup-card-body::-webkit-scrollbar-thumb {
   background: var(--panel-border);
   border-radius: 3px;
 }
 
-.popup-card {
+.popup-card-body {
   scrollbar-width: thin;
   scrollbar-color: var(--panel-border) transparent;
 }
@@ -4449,6 +4556,42 @@ label:has(> input[type="checkbox"]) {
   border: 1px solid var(--panel-border);
   color: var(--text);
   box-shadow: var(--shadow-card);
+}
+
+/* F01 12.1 (2026-08-19, the author) — THE PICKS CARD AS A PHONE.
+
+   *"It should pop up as if it's its own phone kind of screenshot, rounded at
+   the edges, so that I can still see the background."*
+
+   A bezel, not a decoration: the frame is what tells the reader the thing
+   inside is a PICTURE they are about to take out of the app, rather than
+   another panel of the app. The inner image keeps its own rounding so the
+   screenshot itself looks like a screenshot, and the frame's padding is the
+   bezel. It scrolls inside itself on a short screen — a card with twelve picks
+   on it is taller than a phone. */
+.picks-phone {
+  width: 100%;
+  max-width: 300px;
+  max-height: calc(100dvh - 9rem);
+  overflow-y: auto;
+  padding: 10px;
+  border-radius: 34px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.45),
+    0 0 0 1px color-mix(in srgb, var(--text-dim) 18%, transparent);
+  scrollbar-width: none;
+}
+
+.picks-phone::-webkit-scrollbar {
+  width: 0;
+}
+
+.picks-phone-shot {
+  display: block;
+  width: 100%;
+  border-radius: 26px;
 }
 
 /* F01 9.4 (2026-08-19): the small reset, on the map, under the hamburger.

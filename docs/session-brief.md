@@ -1,168 +1,182 @@
-# Session brief — written by g20, 2026-08-19
+# Session brief — written by g21, 2026-08-19
 
 Read `CLAUDE.md` first. Everything below sits under it.
 
 ---
 
-## What g20 was, in one line
+## What g21 was, in one line
 
-The deferred queue, items 1 through 9: **six addressed, one hunted to a
-boundary and correctly not built, two never reached**. Shipped as `026f48e`.
+The last queue session, items 1 through 9: **all nine addressed — seven
+finished whole, two stopped cleanly at a stated boundary, none never reached.**
+Shipped as `b6dc706`.
+
+**The deferred queue is swept.** `docs/queue-homes.md` gives every open queue
+row a home that will exist, and `NEEDS A HOME` is zero. Nothing points at a
+future g-session.
 
 ---
 
-## THE FIRST INSTRUCTION, and g20 is the evidence for it again
+## THE FIRST INSTRUCTION, and g21 found the mechanism underneath it
 
 **Verify before building. Read the tree. Re-measure the number.**
 
-g19's brief said this because four of its items were already built. g20's
-version of the same lesson is sharper, and it is worth the top of this brief:
+g19's version was *four items were already built*. g20's was *four numbers
+described something other than what they were read as*. g21's is the mechanism
+they share, and it is worth the top of this brief:
 
-**Four separate numbers turned out to describe something other than what they
-were being read as.** None was a lie. Each was a real measurement in the
-wrong frame, and three of the four had already been quoted forward into a
-brief as fact.
+**THE STALE CLAIM LIVES IN A DOCUMENT WHILE THE CODE IS ALREADY RIGHT.**
 
-1. **The client ceilings.** The brief asked g20 to restore ceilings g19 had
-   apparently moved off the committed figures — and to treat
-   "measured-plus-300,000" as a violation of the ceiling rule. Nothing had
-   moved. `scripts/bundle-budget.json` has not been touched since g18. The
-   postbuild check prints KB: `3,100,000 / 1024` is `3027.3 KB`, and
-   `940,000 / 1024` is `918.0 KB`. Both were read back out of the display as
-   byte figures — one multiplied by 1000, one by 1024. **A whole session-brief
-   correction came out of a rounded display.** The check now prints exact
-   ceilings beside the KB line, because the measurement already printed its
-   own exact bytes and the ceilings did not, and that asymmetry was the trap.
-2. **B14's denominator.** The brief said 101 of 136 ballot candidates carry
-   no photo, blurb, contact or link. Measured from the ballot itself: **75**.
-   `pnpm b14:coverage` now exists so the next session measures rather than
-   quotes.
-3. **D29's arithmetic.** The brief's 27 + 30 = 57 quoted g18's superseded 30
-   against g19's 27. g19 had already corrected 30 to 29 in the row and in the
-   code. Re-derived here against all 56 live Clerk pages: **27 + 29 + 0 = 56**.
-4. **The photo census.** 110 portraits shipped and the rendered count did not
-   move — 591 of 750 before and after. 0 of the 110 sit on a covered
-   division. The census counts people the product RENDERS (750); the manifest
-   counts people we hold a portrait for (900). Different denominators.
+Three of g19's four were exactly that — a docblock in `lib/votes/key-votes.ts`
+still said the LAWS entries carried no roll calls when they carried eighteen.
+It happened twice more this session:
 
-**If you take one thing from this brief:** before acting on a number a brief
-hands you, find the instrument that produced it and read what it actually
-measures. Three of these four were one step from being acted on.
+1. **`states/nh/NOTES.md` had Newbury's Zoning Board of Adjustment as
+   `KNOWN_UNCOVERED`** — "venue not published". The registry has had it LIVE
+   since 2026-08-15. Four days stale, and it is the worst possible file for it:
+   **H03's re-walk cohort is read off that document**, so a stale note sends
+   the re-walk at the wrong bodies.
+2. **`docs/zip-playbook.md` recorded that the browser rung clears
+   `cfs.sos.nh.gov`**, measured earlier the same day. A real headless Chromium
+   took a 403.
+
+**So: when a document and the tree disagree, the tree wins, and the document is
+a defect to fix rather than a premise to act on.** Both were corrected in place
+with the correction named.
+
+**The four rows g19 found already built, owed since then and named at last:
+`B15`, `D06`, `D03`, `A04`.**
 
 ---
 
-## Where the queue stands
+## Where things stand
 
-* **Tracker 369 rows · 285 done or absorbed · 84 open** (79 after Tabled and
-  Standing). No duplicate IDs.
-* `pnpm deferred` still REFUSES to regenerate, correctly — `docs/deferred.csv`
-  carries 75 author dispositions the tracker does not hold. The open count
-  above was computed from the tracker directly rather than by moving the
-  marked file aside, because the number was what was owed and the
-  dispositions were not worth risking for it.
-
----
-
-## What is genuinely open, in the order g20 would take it
-
-1. **Item 7, untouched** — M123 (the six Kearsarge towns; the rung table is
-   already in `docs/zip-playbook.md` and is the spec) and H03 (the re-walk
-   cohort; enumerating the prior failures is itself the first step, and it
-   does not need H01). Neither was started.
-2. **Item 8, untouched** — M81 (the jurisdiction badge; `bodiesAt()` already
-   does the point-in-polygon, so this is a call plus a label, and the design
-   question to settle first is what a null-`ocdId` body renders) and D47.
-3. **D52 (item 4)** — the NH retrieval is hunted and banked, no adapter
-   written. **The next rung is named**: the API host is
-   `https://cfsapi.sos.nh.gov/api`, found in the lazy chunks; it exposes no
-   swagger, and its endpoints come out by driving the site's own search UI in
-   a live browser and watching the calls. **Do not spend rungs 3 and 4 on an
-   `nh.gov` state host** — see the playbook.
-4. **B19 (item 5)** — not built, and the hunt found that the row's spec is
-   wrong for two of three states. Arizona runs VOTE CENTERS; there is no
-   "their polling place" to pin. Author question, in Needs your hands.
-5. **B14's remainder** — 75 candidates have no site in our records at all,
-   and the next rung is finding one. `CLAUDE.md`'s
-   campaign-that-lives-on-Facebook rule is its shape.
-6. **D50's remainder** — the RENDERED gap is 159 and is unchanged: ballot
-   candidates 34/109, state legislators 94/130, curated local rosters 23/71.
-   That is where a session aiming at 750 has to work, and it is NOT the
-   cohort g20 cleared.
+* **Tracker 374 rows** (g20 reported 369; the file held 368 and the count
+  included the header — corrected), no duplicate IDs, **85 open**.
+* **Of those 85 open rows, 79 are DEFERRED-QUEUE rows** — the ones the author
+  works — and **6 are tracker rows outside the queue**. Every prior report
+  conflated these; `pnpm queue:homes` prints both, every run.
+* `pnpm deferred` still refuses to regenerate, correctly: `docs/deferred.csv`
+  carries 75 author dispositions the tracker does not hold.
+* **`walk:all` 316 passed, 0 regressions, 0 could-not-run.** Baseline 309,
+  added 7, GONE 0.
 
 ---
 
-## Things g20 did that the next session should know about
+## The queue's homes, and the two the author may want to overturn
 
-* **`walk:all` grew by 3 and lost nothing.** 309 checks, baseline 306. The
-  three hotfix-0817 carried-row checks used to report CANNOT-RUN whenever the
-  refresh reached every source — a suite shrinking because the product got
-  better. They assert the healthy state now, and it is a stronger claim: no
-  rows carried AND no source reported a gap, which must agree.
-* **The same shape, twice more.** `tests/doc-dates.test.ts` asserted
-  `suspicious >= 1` and `readAllowlist` threw on zero entries; both fired on
-  the day R16's residue finally aged out. And the pre-commit hook kept a
-  PRIVATE COPY of the allowlist parser — the very duplication its own header
-  says would guarantee drift. All three fixed, one parser now.
-* **The date allowlist is EMPTY**, which is the check at full strength.
-* **New sources and stores**: `lib/sources/prl/` (PRL rhetoric, CC BY,
-  537/537 by bioguide), `lib/candidates/` (statement corpus, issues,
-  positions, blurbs), `data/candidates/corpus-2026.json`,
-  `data/prl/prl-profiles.json`. New commands: `pnpm prl:fetch`,
-  `pnpm candidates:fetch`, `pnpm b14:coverage`.
-* **Rung 11 is wired in.** `scripts/fetch-candidate-corpus.mts` asks the
-  Internet Archive automatically on any non-OK response and records what it
-  found beside what the live host did.
-* **A revision detector must hash TEXT, not bytes.** The corpus fetch
-  reported 14 revisions five minutes apart — pages carrying a nonce or a
-  build timestamp. A signal that fires constantly cannot carry the thing it
-  is for.
+`docs/queue-homes.md`, regenerated by `pnpm queue:homes`, which **refuses to
+call the queue swept while any row has no home**. Today: 7 finished, 19 H, 29
+post-H, 6 feedback session, 25 killed, **0 needing a home**.
+
+Two flags worth his eye:
+
+* **P06, P07, P08** are homed KILLED on the g21 brief's *"remain TABLED"*, and
+  that **contradicts their own dispositions**, which read "Build pre H". The
+  brief is the later ruling and the contradiction is printed beside each row.
+* **Sixteen rows had no home their disposition could decide** and carry g21's
+  own recorded calls, kept in a map separate from the author's words. Each is
+  one line to overturn. `R48` is the one with a live blast radius: two
+  scheduled workflows push to `main` with no rebase, so a collision loses a
+  run.
 
 ---
 
-## Standing constraints g20 operated under
+## What is genuinely open, in the order g21 would take it
 
-* **`outputs/` is gone.** The constraint is retired and the ship gate passed
-  normally, exactly as the brief predicted.
-* **F01 is parked whole.** `docs/Feedback 8.18 1421 pm.docx` is still IN the
-  repo — the brief said the author had removed it. It was not opened, listed
-  or referenced, and the Drive "Screenshots from Feedback" folder was not
-  touched. Named here because the brief's premise and the tree disagree.
+1. **M123's remaining four towns**, each hunted to page level with its next
+   rung named. **Bradford is the highest-value**: it is a **TownCloud** town
+   (tracker `V13`, a vendor this repo had not met), found in the home page's
+   own markup after a guessed `/calendar` 404'd. Springfield's `.ics` is STALE
+   rather than empty and its live listing is at `/events/` on a non-Tribe
+   plugin. Warner's real paths are `/meeting-schedules/` and `/agenda/`, both
+   JS-rendered — rung 6. Sutton's browser rung stopped working; rung 5.
+2. **B14's next sub-rung, identified and its hosts already verified.** The
+   Plural registry is state legislators ONLY, which is why the official-page
+   join landed 7 and not 30. Arizona's sitting statewide executives are on the
+   ballot and not in it; `azgovernor.gov`, `azag.gov`, `azsos.gov` and
+   `azed.gov` all answer 200 (`treasurer.az.gov` and `minesinspector.az.gov`
+   do not resolve).
+3. **D50's rendered gap is 159 and is where a session aiming at 750 has to
+   work**: ballot candidates 34/109, state legislators 94/130, curated local
+   rosters 23/71. **7a is closed as a question** — no portrait we hold sits
+   beside an empty slot; the intersection is zero, computed.
+4. **D52 needs one rung to clear.** All three states are walled. AZ's next
+   rung is the live browser driving See The Money's own search and watching
+   its calls — the same move that worked on New Hampshire's equivalent in g20.
+5. **H03's next cohort.** 03255 is walked; the same re-walk against Tucson's
+   and Morris's records is untouched, and **all 31 `KNOWN_UNCOVERED` bodies in
+   the registry live there**.
+
+---
+
+## Things g21 did that the next session should know about
+
+* **`walk:all` grew by 7 and lost nothing.** The g21 checks assert the shape
+  of the claims, not just their presence: that Pima comes back
+  `VOTE_CENTER` with 100+ sites, that a walled jurisdiction renders **21
+  rungs**, and that at 03255 the badge **splits** the answer (31 of 70) rather
+  than blessing all of it — a flat "everything governs" would mean the
+  division set had collapsed.
+* **`ICAL` had been in the source-type enum with no adapter behind it.**
+  `lib/sources/ical/` is that adapter, and an `.ics` feed is ladder rung 8:
+  one parse for every town that publishes one.
+* **Three retrievals returned SOMETHING and were still clips.**
+  `/events/?ical=1` returns the current VIEW — four events where the calendar
+  has twenty-three, HTTP 200, valid iCalendar. A month grid read at its
+  default view reports one month as a body's whole year. And a feed answered
+  200 with fifty events whose **newest was from 2024**. Check the newest date
+  in a feed, not only its length.
+* **A defect this session created and the dev server caught:** `node:fs`
+  reached the client graph through a panel's import chain, and the page would
+  not build at all. The lucky version. The unlucky one type-checks and ships a
+  filesystem shim to every reader on a map that is already 75% of their
+  initial JavaScript. Guarded at the import level now.
+
+---
+
+## Standing constraints g21 operated under
+
+* **F01 is parked whole.** `docs/Feedback 8.18 1421 pm.docx` had already been
+  deleted in the working tree when this session opened; the deletion was
+  staged and committed, and the file was never opened, listed or referenced.
+  The Drive "Screenshots from Feedback" folder was not touched.
 * **The organic census is closed as a question.** `search_log` organic is
-  **107**, unchanged from g19, **delta 0**.
-* `context.md`'s cap is **40 KB**; it is at 25.5 KB.
-* Ceilings move only on proof. They did not move this session, and they had
-  not moved in the one before it either.
+  **107** — unchanged from g19 and g20, **delta 0**.
+* `context.md`'s cap is **40 KB**; it is at **25.5 KB**.
+* **Ceilings move only on proof, and they did not move.** Read from
+  `scripts/bundle-budget.json` as the check now prints them exactly: raw
+  **3,100,000**, gzip **940,000**.
 * The one sanctioned write path is `WTP_PRODUCTION_DATABASE_URL_WRITE`.
 
 ---
 
-## The playbook grew by five entries
+## The playbook grew by eleven entries
 
-`docs/zip-playbook.md`, all from real walls:
+`docs/zip-playbook.md`, all from real walls. The six worth knowing before a
+hunt:
 
-1. A New Hampshire STATE host is a different wall from a municipal one —
-   `governor.nh.gov`, `council.nh.gov` and `cfs.sos.nh.gov` all refuse rungs
-   2, 3 AND 4, and rung 6 clears them. Newbury falling at rung 4 does not
-   generalise.
-2. Rung 11 is cheap and should be wired in, not walked by hand.
-3. **A 405 from a single-page app is NOT evidence that a route exists.** Five
-   invented `/api/…` paths returned 405; all five returned 200 with the SPA
-   shell to a GET. Five plausible endpoint names were one step from being
-   written down as findings.
-4. An SPA's API base lives in the LAZY chunks, not the main bundle.
-5. A cross-origin API host needs the tab NAVIGATED to it, not fetched from
-   the page — "Failed to fetch" is CORS and says nothing about the server.
+1. A CivicPlus page's own widget state names its map app, and the map app's
+   ArcGIS item data names the data. Three rungs, no HTML scraped.
+2. An ArcGIS **org search** finds layers the same body's open-data portal does
+   not list. A portal is a curated subset; the org search is not.
+3. A found endpoint gated by a **captcha** is a rung walked and refused, not a
+   wall.
+4. A layer's **`dataLastEditDate`** decides whether geometry is usable. New
+   Jersey's own election districts are a real rung-12 hit and were last edited
+   in 2021.
+5. An HTML table's **`rowspan`** silently drops rows, and the drop looks like
+   the authority's silence.
+6. **"The browser rung clears it" is the most perishable entry in the file.**
 
 ---
 
 ## Needs the author, carried forward
 
-* **B19's spec** — three states, three polling models. The pin has to become
-  SITES, or the row has to say which model a jurisdiction uses.
-* **D52's per-state mapping tables** — the gate has not moved and was not
-  approached.
-* **Two new external sources proposed, not added**: permit and
-  zoning-application systems (A03's remainder) and the Vote Smart Political
-  Courage Test (D05's). Both are `CLAUDE.md`'s "Ask before".
-* **Two portraits held back** by the never-wrong-face gate — Brian Taylor and
-  Bob Harb, both distance shots. One line reinstates either.
+* **The two flagged portraits** — Brian Taylor and Bob Harb, both distance
+  shots, both reinstated on his instruction and waiting in
+  `docs/photo-review.md`. One line pulls either back out.
+* **D52's per-state mapping tables** — the gate has not moved and cannot until
+  a state's filing vocabulary can be read.
+* **P06/P07/P08's contradiction** — the brief says tabled, their dispositions
+  say build pre H.
+* **The sixteen homing calls** in `docs/queue-homes.md` marked "g21's call".

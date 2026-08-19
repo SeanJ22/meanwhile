@@ -534,3 +534,49 @@ assertion is strictly stronger than what it replaced.
 `lib/funding/type-concentration.ts`, `scripts/b14-coverage.mts`,
 `scripts/tracker-append-note.mjs`, `scripts/tracker-add-row.mjs`.
 Commands: `pnpm prl:fetch`, `pnpm candidates:fetch`, `pnpm b14:coverage`.
+
+---
+
+## g21 — 2026-08-19. The last queue session: nine items, and the queue is swept
+
+**Nine briefed, all nine addressed. Seven finished whole, two stopped cleanly
+at a stated boundary, none never reached.** Shipped as `b6dc706`.
+
+| Item | Row | Ending | What landed |
+|---|---|---|---|
+| 1 | B19, B16 | **finished** | 306 voting locations across 44 jurisdictions; Pima's 148 vote centers; B16 refuses NJ on the geometry's own edit date |
+| 2 | M123 | **boundary — 2 of 6 towns** | Wilmot on a new `ICAL` adapter, New London on a fifth `schedulepage` shape; snapshot 270 → 313 |
+| 3 | H03 | **finished** | 13 enumerated, 1 recovered at rung 4, 1 stale document corrected, 10 misses re-dated |
+| 4 | M81 | **finished** | 31 of 70 meetings govern the reader at 03255; three surfaces, one division set |
+| 5 | D47 | **finished** | Six pairs, seven questions; guarded against ordering-as-ranking |
+| 6 | B14 | **finished** | The upstream rung: 7 official pages joined, 87 misses recorded; links 42 → 49 |
+| 7 | D50 | **finished** | Collected 900 → 902, rendered 591 unchanged; 7a computed to zero; two portraits reinstated and flagged |
+| 8 | D52 | **boundary — program, no adapter** | The approval gate encoded; all three states walled with rungs |
+| 9 | R03, V09–V13, R54 | **finished** | The four rows named; two clearances recorded; the queue swept to zero |
+
+### What is new in the tree
+
+`lib/sources/ical/` (the first adapter for a source type that had none),
+`lib/ballot/voting-sites.ts` + `voting-sites-server.ts`,
+`lib/meetings/jurisdiction-badge.ts`, `lib/area/comparison.ts`,
+`lib/funding/state-vocabulary.ts`, `lib/geo/outbound-agent.ts`,
+`app/api/voting-sites/route.ts`, `app/about-area/compare/page.tsx`,
+`components/map/voting-sites-panel.tsx`, `data/voting-sites.json`,
+`docs/photo-review.md`, `docs/queue-homes.md`.
+
+New commands: `pnpm voting-sites:fetch`, `pnpm b14:links`, `pnpm photo:review`,
+`pnpm queue:homes`.
+
+### The three things worth carrying forward
+
+1. **A stale DOCUMENT is the mechanism behind "already built".** Three of
+   g19's four had their wrong claim in a docblock or a row's prose while the
+   code was right. It happened twice more here, and one of them —
+   `states/nh/NOTES.md` — is the file H03's cohort is read off.
+2. **"The browser rung clears it" has a shelf life.** Twice this session a
+   standing playbook entry did not reproduce. Structure keeps; WAF
+   disposition does not.
+3. **A retrieval that returns SOMETHING can still be a clip.** `?ical=1`
+   returned a fifth of a calendar with every signal healthy; a month grid read
+   at its default view reports one month as a year; a feed answered 200 with
+   fifty events whose newest was two years old.

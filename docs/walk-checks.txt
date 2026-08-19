@@ -214,6 +214,13 @@
 [g17] /ballot no longer renders the widened SUNSET label at 85701
 [g17] /ballot renders the fifth provision kind at 85641
 [g17] /ballot renders the fifth provision kind at 85701
+[g21] B16: a vote-center county narrows to NOT_NEEDED, never to a failure
+[g21] B19: a Tucson address gets Pima's vote centers, and the model is VOTE_CENTER
+[g21] B19: a walled jurisdiction renders its RUNGS, never an emptiness
+[g21] D47: the side-by-side renders both states and says it does not rank
+[g21] M123: Wilmot AND New London are in 03255's own answer
+[g21] M81: at 03255 the badge splits the answer rather than blessing all of it
+[g21] M81: the meetings route sends the reader's own division set
 [g3] /ballot names the pick as a ballot-building action at 03255
 [g3] /ballot names the pick as a ballot-building action at 07866
 [g3] /ballot names the pick as a ballot-building action at 85641

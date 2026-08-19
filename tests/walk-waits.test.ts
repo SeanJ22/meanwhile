@@ -83,16 +83,18 @@ test("the count of fixed waits may fall, never rise", () => {
    * beside the new wait AND this number moved on purpose.
    */
   /*
-   * F01 (2026-08-19): 12 → 13, moved deliberately with its reason. The new one
-   * is the 9.6 preservation check’s settle after a real map click, justified
-   * beside the wait: the click can open a picker, a card, or nothing, and
-   * “nothing” is a legitimate outcome the check reports as COULD NOT RUN — so
-   * there is no single element to poll for, and polling for “either of two
-   * things or neither” is a fixed wait wearing a loop.
+   * F01 (2026-08-19): 12 → 14, moved deliberately, both with reasons beside
+   * the waits. Both belong to the 9.6 preservation check:
+   *
+   *   1. The district LAYER load. Boundaries are WebGL, not DOM, so there is
+   *      no element to poll for at all.
+   *   2. The settle after the map click. That click can open a picker, a card,
+   *      or nothing, and “nothing” is a legitimate COULD NOT RUN — polling for
+   *      “either of two things or neither” is a fixed wait wearing a loop.
    */
   assert.ok(
-    callSites.length <= 13,
-    `walk-all.mts now has ${callSites.length} fixed waits, up from the committed 13. ` +
+    callSites.length <= 14,
+    `walk-all.mts now has ${callSites.length} fixed waits, up from the committed 14. ` +
       "A new blind wait is the defect R49 exists to stop — convert it to an outcome " +
       "wait, or move this number deliberately with the reason beside the wait.",
   );

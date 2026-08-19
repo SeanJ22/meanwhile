@@ -454,8 +454,7 @@ export default async function BallotPage({
         <p className="mt-6 text-[0.8125rem] leading-relaxed text-muted">
           We haven&apos;t built the ballot for this area yet. Ballot coverage
           currently reaches Pima County AZ, Morris County NJ, and Merrimack
-          County NH. This is a gap in our data, not a statement that nothing
-          is on your ballot.
+          County NH. This is not a statement that nothing is on your ballot.
         </p>
       )}
 

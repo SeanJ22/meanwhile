@@ -145,12 +145,17 @@ export function VotingSitesPanel({
           autoComplete="off"
           inputMode="text"
         />
-        {/* The promise, where the reader can read it. Level register: this is
-            a claim about what we do with their address. */}
+        {/* F01 1e (2026-08-19, the author, ordered verbatim: "we are going
+            to store and log at some point — don't argue about it, just make
+            sure it's changed"). The never-store/never-log promise is struck.
+            This sentence describes the mechanism as it works today and stops:
+            no forward commitment in either direction, because the honest
+            version of a promise we may not keep is no promise. Level
+            register — a claim surface about a reader's own address. */}
         <p className="voting-panel-note">
-          Your address is used to find your voting locations and nothing else.
-          It passes through our server to the Census Bureau&rsquo;s geocoder.
-          We never store it and never log it.
+          Your address is used to find your voting locations. It passes through
+          our server to the Census Bureau&rsquo;s geocoder, which turns it into
+          a point on the map.
         </p>
         <button type="submit" className="voting-panel-submit">
           Show me
@@ -163,8 +168,7 @@ export function VotingSitesPanel({
 
       {state.kind === "failed" && (
         <p className="voting-panel-status">
-          Something went wrong on our end. Nothing about your address was kept.
-          Try again.
+          Something went wrong on our end. Try again.
         </p>
       )}
 

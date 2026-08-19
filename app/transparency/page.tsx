@@ -147,9 +147,8 @@ export default function TransparencyPage() {
             A street you type is first matched against a list downloaded to
             your device. To put it on the map as an actual point, your address
             passes through our server to the U.S. Census Bureau&apos;s free
-            address lookup: we never store or log it — it exists in memory for
-            the length of that one request and is gone. It is never tied to an
-            account.
+            address lookup, which returns the matching point. It is not tied to
+            an account.
           </p>
           <p>
             If you mark how you&apos;d vote on the ballot page (&quot;my

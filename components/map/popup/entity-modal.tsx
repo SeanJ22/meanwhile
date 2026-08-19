@@ -5,7 +5,12 @@ import { X } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 
 import { formatMeetingDate, formatMeetingTime } from "@/lib/map/format";
-import { hasConcluded, orderByUpcomingFirst } from "@/lib/meetings/ordering";
+import { attributionNotesFor } from "@/lib/meetings/list-attribution";
+import {
+  groupMeetingsForReading,
+  hasConcluded,
+  orderByUpcomingFirst,
+} from "@/lib/meetings/ordering";
 import { NO_BODY_BLURB_LINE } from "@/lib/officials/body-blurbs";
 import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
 import type { SeatHolder } from "@/lib/officials/lookup";
@@ -19,7 +24,7 @@ import type { Meeting } from "@/lib/sources/types";
 import { CardSection } from "@/components/officials/card-section";
 import { CardSourcesList } from "@/components/officials/card-sources-list";
 
-import { HowToBeHeard } from "../meeting-panel";
+import { HowToBeHeard, MeetingAttributionNotes } from "../meeting-panel";
 import { CalendarLinks } from "./calendar-links";
 import { AgendaSection } from "./agenda-section";
 import { NoValue, PopupRow, PopupSectionLabel } from "./popup-card";
@@ -317,6 +322,9 @@ function BodySections({
    * two renders.
    */
   const [now] = useState(() => Date.now());
+  // The body card states "N upcoming" beside the section title, so it keeps
+  // the flat ordering for the COUNT and hands the raw list to <Meetings>,
+  // which groups it. One list, one order, computed once.
   const meetings = orderByUpcomingFirst(subject.meetings, now);
   const upcoming = meetings.filter((m) => !hasConcluded(m, now)).length;
 
@@ -634,6 +642,11 @@ export function EntityModal({
             />
           )}
 
+          {/* F01 3.1 (2026-08-19): this tab used to render `subject.meetings`
+              RAW — the one meetings surface that never called the shared
+              ordering — so a division card opened on Meetings showed June
+              sittings above everything a reader could still attend. It now
+              renders the same three groups the venue panel does. */}
           {tab === "meetings" && <Meetings meetings={subject.meetings} />}
 
           {tab === "activity" && (
@@ -738,7 +751,19 @@ function Representation({
   );
 }
 
+/**
+ * Every meetings list on a battlecard — F01 3.1 and 3.2, 2026-08-19.
+ *
+ * Both callers (the division card's Meetings tab, the body card's Meetings
+ * section) render through here, so the three groups and the collapsed
+ * attribution cannot diverge between them. That was the actual defect: the tab
+ * path never sorted at all while the body path did, and one shared function
+ * used by half its callers is not a shared function.
+ */
 function Meetings({ meetings }: { meetings: Meeting[] }) {
+  // Pinned at mount — never a clock read in a render body (item 11's rule).
+  const [now] = useState(() => Date.now());
+
   if (meetings.length === 0) {
     return (
       <Empty>
@@ -748,24 +773,55 @@ function Meetings({ meetings }: { meetings: Meeting[] }) {
     );
   }
 
+  const groups = groupMeetingsForReading(meetings, now);
+  const { notes, markerFor } = attributionNotesFor(
+    groups.flatMap((group) => group.meetings),
+  );
+
   return (
     <>
-      {meetings.map((meeting) => (
-        <div key={meeting.id} className="account-modal-person">
-          <div className="flex items-baseline justify-between gap-3">
-            <span className="text-[0.875rem] text-paper">{meeting.title}</span>
-            <span className="shrink-0 font-mono text-[0.6875rem] text-muted">
-              {formatMeetingDate(meeting)}
-            </span>
-          </div>
-          <p className="mt-0.5 text-[0.6875rem] text-muted">
-            {meeting.bodyName} · {formatMeetingTime(meeting)}
+      {groups.map((group) => (
+        <section key={group.id}>
+          <p className="t-structure mt-3 mb-1 text-label first:mt-0">
+            {group.label}
           </p>
-          {/* 3i (2026-08-19): calendar links on every upcoming-meeting
-              surface, this tab included. */}
-          {meeting.status === "SCHEDULED" && <CalendarLinks meeting={meeting} />}
-        </div>
+          {group.meetings.map((meeting) => (
+            <div key={meeting.id} className="account-modal-person">
+              <div className="flex items-baseline justify-between gap-3">
+                <span className="text-[0.875rem] text-paper">
+                  {meeting.title}
+                </span>
+                <span className="shrink-0 font-mono text-[0.6875rem] text-muted">
+                  {formatMeetingDate(meeting)}
+                </span>
+              </div>
+              <p className="mt-0.5 text-[0.6875rem] text-muted">
+                {markerFor(meeting) && (
+                  <span aria-hidden="true" className="mr-1 text-paper-dim">
+                    {markerFor(meeting)}
+                  </span>
+                )}
+                {formatMeetingTime(meeting)}
+              </p>
+              {/* 3i (2026-08-19): calendar links on every upcoming-meeting
+                  surface, this tab included. */}
+              {meeting.status === "SCHEDULED" && (
+                <CalendarLinks meeting={meeting} />
+              )}
+            </div>
+          ))}
+        </section>
       ))}
+
+      {/* F01 3.2: the body name used to sit on every row beside the time. It
+          is the same string on every row of a single body's card, so it moved
+          here — once per distinct body, with the marker above pointing at it.
+          The jurisdiction rides along, which is MORE provenance per note than
+          the row carried, not less. */}
+      <MeetingAttributionNotes
+        notes={notes}
+        className="mt-3 border-t border-[var(--rule)] pt-2.5"
+      />
     </>
   );
 }

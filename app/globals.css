@@ -2325,16 +2325,27 @@ label:has(> input[type="checkbox"]) {
    `.pv`'s `word-break: break-word` rendered the person's NAME one character
    per line. Stacked, nothing competes for the width: the name leads at full
    width and the office sits under it. */
+/* F01 7.1 (2026-08-19, the author's walkthrough): "Section headers get one
+   line and that's it."
+ *
+ * Every person row used to draw its own rule, so a STATE section with four
+ * officials in it rendered five horizontal lines — one per row plus the
+ * section's own — and the reader could not tell which line meant "new
+ * section" and which meant "new person". The author's named instances were
+ * the orphan rule between Alma Hernández and Betty Villegas in Tucson and the
+ * same shape between Greg Sargent and Karen Ebel at 03255; his pattern to
+ * copy is New Hampshire's LOCAL section, which draws exactly one.
+ *
+ * The rules are gone; the vertical rhythm does the separating. Padding went
+ * up to keep the rows from reading as one block now that nothing divides
+ * them. This is the class fix — `.person-row` is the shared row on the
+ * who-governs card AND the map's district popup, so both surfaces change
+ * together, which is the point. */
 .person-row {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding: 7px 0;
-  border-bottom: 1px solid var(--panel-border);
-}
-
-.person-row:last-of-type {
-  border-bottom: none;
+  padding: 5px 0;
 }
 
 .person-row-name {
@@ -2925,6 +2936,8 @@ label:has(> input[type="checkbox"]) {
 }
 
 .al-overlay-header {
+  /* F01 2.5, the same class — fixed furniture never shrinks. */
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -2943,6 +2956,8 @@ label:has(> input[type="checkbox"]) {
 }
 
 .al-overlay-controls {
+  /* F01 2.5, the same class. */
+  flex-shrink: 0;
   display: flex;
   gap: 8px;
   padding: 10px 22px;
@@ -3420,15 +3435,25 @@ label:has(> input[type="checkbox"]) {
  * text colours and the violet accent all come from the variables above.
  * ---------------------------------------------------------------------- */
 
+/* F01 1e (2026-08-19, the author): "make the box pill-shaped, matching the
+   pills beside it." This button sits in the same top band as the Ballot / zip
+   / Ask cluster, and it was the one rounded-rectangle in a row of pills. The
+   geometry now matches `.ask-pill` exactly — radius, min-height and vertical
+   rhythm — while the voting accent stays, so it still reads as its own thing
+   without reading as a different SHAPE of thing. */
 .voting-open-button {
+  display: inline-flex;
+  align-items: center;
   border: 1px solid color-mix(in srgb, var(--accent-voting) 45%, transparent);
   background: color-mix(in srgb, var(--surface) 92%, var(--accent-voting));
   color: var(--text);
-  border-radius: var(--radius);
-  padding: 0.5rem 0.85rem;
+  border-radius: 999px;
+  padding: 11px 15px;
+  min-height: 44px;
   font-size: 0.86rem;
   font-weight: 600;
   cursor: pointer;
+  white-space: nowrap;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
 }
 
@@ -3492,7 +3517,8 @@ label:has(> input[type="checkbox"]) {
 .voting-panel-input {
   width: 100%;
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  /* F01 1e: the entry inside the pill matches the pill. */
+  border-radius: 999px;
   background: var(--bg);
   color: var(--text);
   padding: 0.45rem 0.6rem;
@@ -3520,7 +3546,7 @@ label:has(> input[type="checkbox"]) {
   border: 1px solid var(--accent-voting);
   background: var(--accent-voting);
   color: var(--bg);
-  border-radius: var(--radius-sm);
+  border-radius: 999px;
   padding: 0.4rem 0.8rem;
   font-size: 0.85rem;
   font-weight: 600;
@@ -4404,7 +4430,21 @@ main[data-sidebar="closed"] .sidebar-toggle {
   overflow: hidden;
 }
 
+/* F01 2.5 (2026-08-19, the author): "those need to be fully in view at all
+   times."
+ *
+ * The header and the tab row are FIXED furniture in a flex column whose body
+ * scrolls — but neither declared `flex-shrink: 0`, so the flexbox default of
+ * `flex-shrink: 1` let a tall Meetings list squeeze them. The tab row kept its
+ * labels and lost its height, and the first meeting painted over the bottom
+ * half of "Overview / Representation / Activity / Notes / Sources". A fixed
+ * row that can be compressed is not fixed. Both now refuse to shrink, so the
+ * only thing that scrolls is the thing that is supposed to.
+ *
+ * This is the class, not the instance: the same two lines are applied to the
+ * official card's header and pill rail below, which is the same shape. */
 .account-modal-header {
+  flex-shrink: 0;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -4428,6 +4468,8 @@ main[data-sidebar="closed"] .sidebar-toggle {
 }
 
 .account-modal-tabs {
+  /* F01 2.5 — see the note on .account-modal-header. */
+  flex-shrink: 0;
   display: flex;
   gap: 2px;
   padding: 0 12px;
@@ -4539,6 +4581,8 @@ main[data-sidebar="closed"] .sidebar-toggle {
 }
 
 .phone-modal-header {
+  /* F01 2.5, the same class. */
+  flex-shrink: 0;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;

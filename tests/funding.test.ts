@@ -774,7 +774,8 @@ test("item 4: the live Nicholson card renders the raw sentence, and Booker keeps
 
 test("the state-systems note is a stated gap, never silence pretending coverage", () => {
   assert.match(STATE_FUNDING_NOTE, /state campaign-finance systems/);
-  assert.match(STATE_FUNDING_NOTE, /gap in our data/);
+  assert.match(STATE_FUNDING_NOTE, /we haven’t wired those yet|we haven't wired those yet/i);
+  assert.doesNotMatch(STATE_FUNDING_NOTE, /gap in our (data|research)/i);
 });
 
 test("funding reaction target ids validate against the snapshot", () => {

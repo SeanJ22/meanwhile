@@ -55,7 +55,7 @@ test("D05: the three answers are three, and none of them is a blank", () => {
   // 1. Nothing collected — a fact about US.
   const none = answerFor([], ["housing"], "https://example.org");
   assert.equal(none.kind, "NOTHING_COLLECTED");
-  assert.match(answerSentence(none, "housing"), /gap in our research/i);
+  assert.match(answerSentence(none, "housing"), /we haven’t collected|we haven't collected/i);
   assert.match(answerSentence(none, "housing"), /not a statement about them/i);
 
   // 2. Searched and nothing matched — a fact about THEIR pages, with the
@@ -166,7 +166,7 @@ test("P02: equal effort — the same issue list for every candidate, no exceptio
   const stranger = positionsFor("nobody-at-all");
   assert.equal(stranger.length, expected);
   assert.ok(positionsSummary(stranger).nothingCollected);
-  assert.match(positionsHeadline(stranger), /gap in our research/i);
+  assert.match(positionsHeadline(stranger), /we haven’t collected|we haven't collected/i);
 });
 
 test("P02: the headline states the denominator before any count", () => {

@@ -1,6 +1,7 @@
 "use client";
 
 import { ExternalLink, X } from "lucide-react";
+import { useState } from "react";
 
 import {
   formatMeetingDate,
@@ -9,7 +10,12 @@ import {
   locationLine,
   meetingHeadline,
 } from "@/lib/map/format";
+import {
+  attributionNotesFor,
+  type AttributionNote,
+} from "@/lib/meetings/list-attribution";
 import { relativeAge } from "@/lib/meetings/freshness";
+import { groupMeetingsForReading } from "@/lib/meetings/ordering";
 import { BADGE_COPY, badgeFor } from "@/lib/meetings/jurisdiction-badge";
 import { useShellData } from "@/lib/state/data";
 import type { Venue } from "@/lib/meetings/venues";
@@ -35,6 +41,18 @@ interface MeetingPanelProps {
 }
 
 export function MeetingPanel({ venue, onClose, onOpenMeeting }: MeetingPanelProps) {
+  // One `now` per mount, never read during render (item 11's rule): a clock
+  // read in a render body would let a meeting crossing the 30-day line
+  // reshuffle the list under a reader mid-scroll.
+  const [now] = useState(() => Date.now());
+  const groups = groupMeetingsForReading(venue.meetings, now);
+  // Markers follow RENDER order, so the groups are flattened in group order
+  // before the notes are built — not `venue.meetings`, which is the order the
+  // reader no longer sees.
+  const { notes, markerFor } = attributionNotesFor(
+    groups.flatMap((group) => group.meetings),
+  );
+
   // A venue is a group of meetings at one building, so any of them carries the
   // building's coordinates. `groupByVenue` keys on them, so they agree.
   // A venue is a group of meetings at one building, so any of them carries
@@ -106,24 +124,79 @@ export function MeetingPanel({ venue, onClose, onOpenMeeting }: MeetingPanelProp
         </button>
       </header>
 
-      <div className="divide-y divide-rule-soft overflow-y-auto">
-        {venue.meetings.map((meeting) => (
-          <MeetingEntry
-            key={meeting.id}
-            meeting={meeting}
-            onOpen={onOpenMeeting}
-          />
+      {/* F01 3.1 + 3.2 (2026-08-19). This list used to render `venue.meetings`
+          in whatever order the venue grouper produced — which, with a serving
+          window reaching ninety days back, put "Concluded 70 days ago" in the
+          first row of an eight-meeting card. It now renders the three groups,
+          and every row's provenance collapses to a marker with the notes
+          printed once at the foot. */}
+      <div className="overflow-y-auto">
+        {groups.map((group) => (
+          <section key={group.id}>
+            <p className="t-structure sticky top-0 z-[1] bg-[var(--panel)] px-5 py-2 text-label">
+              {group.label}
+            </p>
+            <div className="divide-y divide-rule-soft">
+              {group.meetings.map((meeting) => (
+                <MeetingEntry
+                  key={meeting.id}
+                  meeting={meeting}
+                  marker={markerFor(meeting)}
+                  onOpen={onOpenMeeting}
+                />
+              ))}
+            </div>
+          </section>
         ))}
+
+        <MeetingAttributionNotes notes={notes} />
       </div>
     </aside>
   );
 }
 
+/**
+ * F01 3.2 — the attribution, once per distinct body, at the foot of the list.
+ *
+ * Level register: this is a claim surface. The jurisdiction and the publishing
+ * organisation render verbatim, exactly as they did on every row before; what
+ * changed is how many times.
+ */
+export function MeetingAttributionNotes({
+  notes,
+  className = "border-t border-rule-soft px-5 py-3",
+}: {
+  notes: AttributionNote[];
+  className?: string;
+}) {
+  if (notes.length === 0) return null;
+  return (
+    <div className={className}>
+      {notes.map((note) => (
+        <p
+          key={note.marker}
+          className="font-mono text-[0.6875rem] leading-relaxed text-muted"
+        >
+          <span aria-hidden="true" className="mr-1 text-paper-dim">
+            {note.marker}
+          </span>
+          <span className="text-paper-dim">{note.jurisdiction}</span>
+          {" — "}
+          {note.sourceOrg}
+        </p>
+      ))}
+    </div>
+  );
+}
+
 function MeetingEntry({
   meeting,
+  marker,
   onOpen,
 }: {
   meeting: Meeting;
+  /** F01 3.2: this row’s footnote symbol. Empty renders as nothing. */
+  marker: string;
   onOpen?: (meeting: Meeting) => void;
 }) {
   const concluded = meeting.status === "CONCLUDED";
@@ -227,11 +300,21 @@ function MeetingEntry({
 
       <footer className="mt-4 border-t border-rule-soft pl-4 pt-3">
         {/* No identifier here: internal keys never render to readers (4a).
-            Jurisdiction and source org are the reader-facing provenance. */}
+            Jurisdiction and source org are the reader-facing provenance.
+
+            F01 3.2 (2026-08-19): those two strings moved OUT of the row and
+            into one note per distinct body at the foot of the list, because on
+            an eight-sitting venue card they were the same two lines eight
+            times over. What stays on the row is the marker pointing at the
+            note, plus the two provenance facts that are genuinely PER ROW —
+            second-hand sourcing and the carry-forward stamp — which vary from
+            meeting to meeting and would be a lie if collapsed. */}
         <p className="font-mono text-[0.6875rem] leading-relaxed text-muted">
-          <span className="text-paper-dim">{meeting.jurisdiction}</span>
-          <br />
-          {meeting.provenance.sourceOrg}
+          {marker && (
+            <span aria-hidden="true" className="text-paper-dim">
+              {marker}
+            </span>
+          )}
           {/*
             6f2 (2026-08-15, the author's ruling): "Not independently
             verified" is RETIRED where the source is the body's own site or

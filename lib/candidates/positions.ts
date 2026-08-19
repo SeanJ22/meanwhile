@@ -124,8 +124,8 @@ export function positionsHeadline(positions: readonly IssuePosition[]): string {
   if (summary.nothingCollected) {
     return (
       "We haven't collected anything this candidate has published yet. " +
-      "That's a gap in our research, not a statement about them — we run " +
-      "the same search for every candidate in every contest."
+      "This is not a statement about them — we run the same search for " +
+      "every candidate in every contest."
     );
   }
   return (

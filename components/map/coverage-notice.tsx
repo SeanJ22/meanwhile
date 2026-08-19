@@ -368,8 +368,8 @@ function CoverageBody({
   const lead =
     kind === "unmapped" ? (
       <>
-        We haven&apos;t mapped the governing bodies covering {zip} yet. That is a
-        gap in our data, not a gap in your government.
+        We haven&apos;t mapped the governing bodies covering {zip} yet. This is
+        not a statement that no government covers it.
       </>
     ) : kind === "none-scheduled" ? (
       <>
@@ -769,7 +769,7 @@ function CoverageBody({
               than implied complete. */}
           {(stateSeats.length > 0 || statewideExecutives.length > 0) && (
             <>
-              <p className="t-structure mt-4 border-t border-[var(--panel-border)] pt-3 text-state">
+              <p className="t-structure mt-4 text-state">
                 State
               </p>
               <ul className="mt-1 space-y-1">
@@ -835,7 +835,7 @@ function CoverageBody({
               matches every ballot and source the app cites. */}
           {(federalSeats.length > 0 || senators.length > 0) && (
             <>
-              <p className="t-structure mt-4 border-t border-[var(--panel-border)] pt-3 text-national">
+              <p className="t-structure mt-4 text-national">
                 Federal
               </p>
               <ul className="mt-1 space-y-1">

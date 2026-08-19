@@ -549,9 +549,23 @@ test("M80: the promise changed in the same commit, on both surfaces", () => {
       /passes through our server/.test(page),
       `${name} does not say the address passes through our server`,
     );
+    // F01 1e (2026-08-19, the author): the never-store/never-log promise is
+    // struck wherever THE ADDRESS is described. The keepable half is the
+    // mechanism sentence asserted just above; the promise may not come back.
+    //
+    // Scoped to the address paragraph on purpose. The transparency page makes
+    // other never-logged promises — about ballot picks, which never leave the
+    // device, and about the feedback email — and those are keepable and
+    // unaffected. Banning the words page-wide would have deleted true
+    // statements to satisfy a guard, which is the opposite of the rule.
+    const addressPara =
+      page
+        .split(/\n\s*\n|<\/p>/)
+        .find((chunk) => /Census Bureau/.test(chunk) && /passes through/.test(chunk)) ?? "";
+    assert.ok(addressPara, `${name} has no address paragraph to check`);
     assert.ok(
-      /never store\s+(or|it and never)\s+log/.test(page.replace(/\s+/g, " ")),
-      `${name} does not say we never store or log it`,
+      !/never (store|log)/i.test(addressPara),
+      `${name} still makes the struck never-store/never-log promise about the address`,
     );
   }
 });

@@ -175,7 +175,8 @@ test("an unresolved roll call renders OUR gap, never the legislature's", () => {
   // Three different kinds of "no vote here", and they must say three
   // different things. Collapsing the third into the first two would turn a
   // hole in our research into a claim about a legislature.
-  assert.ok(surface.includes("gap in our research"));
+  assert.ok(surface.includes("We haven't recorded this chamber's vote on this yet"));
+  assert.ok(!/gap in our (data|research)/i.test(surface), "F01 6.1: the gap phrasing is struck product-wide");
   assert.ok(surface.includes("{row.note ??"), "the stated note must win over the generic gap line");
   assert.ok(surface.includes("Did not vote"));
 

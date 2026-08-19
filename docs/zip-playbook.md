@@ -1532,3 +1532,73 @@ Calendar (its own `wp-json/tribe/...` is a 404, and its listing pages carry
 A feed with fifty rows passes every count check a zero-row feed would fail.
 **Check the newest date in a feed, not only its length**, and where it is
 older than the body's own listing, the feed is not the source.
+
+## Portrait rungs, at scale — g21, 2026-08-19 (D50 item 7d)
+
+The half that makes the remaining portraits survivable. Round 3's findings are
+the template and they are written down here so the next state costs what this
+one did.
+
+### 13. A chamber does not key its portraits by the id you have
+
+Two chambers, two schemes, and neither is the member id our registry carries:
+
+* **The New Hampshire Senate keys its portraits by DISTRICT**, not by member.
+  A hunt that walks member ids finds nothing and reports a chamber that
+  publishes no portraits — which is false about a chamber whose every member
+  has one.
+* **The New Hampshire House declares its portrait by TEMPLATE CONTROL ID** —
+  `id="pageBody_imgMember"` — with a filename id (`409302.jpg`) that appears
+  **nowhere else on the page**. There is no pattern to derive and no id to
+  join on; the control id is the only stable handle.
+
+**Find the handle before walking the list.** Open one member page, find what
+identifies the portrait, and confirm the same handle on a second member of the
+same chamber. A scheme confirmed on one page is a guess.
+
+### 14. `alt` text can assert an absence that is not there
+
+Two New Hampshire senators were recorded as having **no portrait**. Both had
+one. Their pages label the image `alt="NH State Seal"` — a template default
+the chamber never edited — and a hunt filtering on alt text discarded a real
+portrait as a placeholder.
+
+**A fabricated absence, found by going to look.** Filter on what the image IS
+(dimensions, bytes, content type), never on what the page CALLS it. Alt text
+is authored by whoever last edited the template and is not a claim about the
+file.
+
+### 15. Staged is not shipped, and the difference is a human
+
+The portrait pipeline has two terminal states and they must not be collapsed:
+
+* **STAGED** — fetched, EXIF-strippable, sole subject, door recorded. Every
+  machine-checkable rung passed.
+* **SHIPPED** — a person looked at it.
+
+`docs/photo-review.md` (`pnpm photo:review`) is where the second happens. A row
+may ship carrying a stated doubt — the `review` field on the manifest row — and
+the list says WHAT the doubt is, so the reviewer is not asked to guess what
+they are looking at. Two rows carry one today: distance shots the author asked
+to see.
+
+**Identity and composition are different questions.** Any doubt about identity
+fails at every door, permanently. Composition is a judgment the author makes,
+and it is the one the flagged rows are asking about.
+
+### 16. Collecting a portrait and rendering one are different numbers, and they drift
+
+g20 shipped 110 portraits and the rendered count moved by **zero**, because
+none of those officials sits on a covered division. The manifest counts people
+we HOLD a portrait for (902 today); the census counts people the product
+RENDERS (750, of whom 591 have one).
+
+Both numbers, every time. And the join between them is worth running rather
+than assuming: asked directly whether any portrait we hold sits beside a slot
+rendering initials — across all 231 empty state-legislator and curated-roster
+slots, matched by id and by normalised name — the answer is **zero**. Nothing
+is being held back; the empty slots are genuinely uncollected.
+
+That is the honest answer to "put the picture we have in there": there was no
+such picture, and the way to know was to compute the intersection rather than
+to assert it either way.

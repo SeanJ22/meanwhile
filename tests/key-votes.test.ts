@@ -233,17 +233,24 @@ test("B17: the law rows carry roll calls from the chambers' own records", () => 
   const laws = snapshot.entries.filter((e) => e.group === "LAWS");
   assert.equal(laws.length, 20);
 
-  // 18 of 20, and the two that are not are STATED: the pending measure has
-  // no enacted bill, and the shutdown entry has no unambiguous popular name
-  // among a congress full of appropriations laws. Exact, so a regression
-  // cannot hide behind "at least".
+  // 19 of 20 since 2026-08-18 (g19), up from 18: the pending stock-trading
+  // measure's HOUSE vote was resolved through the House's own roll-call
+  // index. That index carries bill numbers and no titles, so searching its
+  // text for the subject finds nothing — a fact about the index, not about
+  // the House, and the false-miss shape this codebase keeps naming. The
+  // measure still has no Senate vote, which is what its card says.
+  //
+  // The one that remains is the shutdown entry, and it is a real refusal
+  // rather than a gap in effort: the 119th carries five appropriations laws
+  // and the entry's own title names two things at once — reopening the
+  // government and funding the rest of the year. Which law the author means
+  // is the author's to say, and the list is closed.
+  //
+  // Exact, so a regression cannot hide behind "at least".
   const resolved = laws.filter((e) => e.house.length > 0 || e.senate.length > 0);
-  assert.equal(resolved.length, 18, resolved.map((e) => e.id).join(", "));
+  assert.equal(resolved.length, 19, resolved.map((e) => e.id).join(", "));
   const unresolved = laws.filter((e) => e.house.length === 0 && e.senate.length === 0);
-  assert.deepEqual(unresolved.map((e) => e.id).sort(), [
-    "funding-fight",
-    "stock-trading-ban",
-  ]);
+  assert.deepEqual(unresolved.map((e) => e.id).sort(), ["funding-fight"]);
   for (const entry of unresolved) {
     const miss = snapshot.misses.find((m) => m.id === entry.id);
     assert.ok(miss, `${entry.id}: unresolved with no recorded reason`);
@@ -382,4 +389,83 @@ test("a sub-group is visually a sub-group, and still a thing to click", () => {
     ),
     "the chevron rotation must stay scoped to a section's own header",
   );
+});
+
+
+/* ══ B15, 2026-08-18 (g19): the coverage floor ══════════════════════════
+ *
+ * These exist because of a mistake made in this session, and they guard
+ * against exactly it.
+ *
+ * The brief said votes on laws was the named remainder. It was not — an
+ * earlier session had already resolved 18 of the 20 law entries against the
+ * chambers' own records, and the docblock in lib/votes/key-votes.ts still
+ * said otherwise, so a new resolver was written and run against a snapshot
+ * nobody had re-read. It "resolved" the four April 2024 siblings to their
+ * Senate VEHICLE, which carries no House vote of its own, and wrote that
+ * over four correct House roll calls. House coverage went 18 to 16 and the
+ * run reported it as a success.
+ *
+ * A number that can only go up is the cheapest guard there is for that.
+ */
+
+test("B15 g19: law coverage never falls below what has already been verified", () => {
+  const snapshot = getKeyVotesSnapshot();
+  const laws = snapshot.entries.filter((e) => e.group === "LAWS");
+
+  // The author's list is closed. Its size is a fact, not a floor.
+  assert.equal(laws.length, 20, "the author's law list changed size");
+
+  const withHouse = laws.filter((e) => e.house.length > 0).length;
+  const withSenate = laws.filter((e) => e.senate.length > 0).length;
+  const withEither = laws.filter(
+    (e) => e.house.length > 0 || e.senate.length > 0,
+  ).length;
+
+  // Floors, verified as of 2026-08-18. A run that finds MORE raises these;
+  // a run that finds fewer fails here rather than shipping.
+  assert.ok(withEither >= 19, `law entries carrying a roll call fell to ${withEither} (floor 19 of 20)`);
+  assert.ok(withHouse >= 19, `law entries carrying a HOUSE roll call fell to ${withHouse} (floor 19)`);
+  assert.ok(withSenate >= 18, `law entries carrying a SENATE roll call fell to ${withSenate} (floor 18)`);
+});
+
+test("B15 g19: every law entry without a roll call says why, in the record", () => {
+  const snapshot = getKeyVotesSnapshot();
+  const laws = snapshot.entries.filter((e) => e.group === "LAWS");
+  const empty = laws.filter((e) => e.house.length === 0 && e.senate.length === 0);
+
+  // Absence is never asserted. An entry with nothing must carry either a
+  // recorded miss naming the reason, or a note the reader sees.
+  for (const entry of empty) {
+    const miss = snapshot.misses.some((m) => m.id === entry.id);
+    const note = Boolean(entry.houseNote || entry.senateNote);
+    assert.ok(
+      miss || note,
+      `${entry.id} carries no roll call and no recorded reason — that is an unexplained gap`,
+    );
+  }
+});
+
+test("B15 g19: every recorded roll call carries its tally, its link and its verification date", () => {
+  const snapshot = getKeyVotesSnapshot();
+  let refs = 0;
+  for (const entry of snapshot.entries) {
+    for (const ref of [...entry.house, ...entry.senate]) {
+      refs++;
+      // A ref with no tally has nothing to check the roll call against, and
+      // a ref with no verifiedAt is a claim with no date on it.
+      assert.ok(ref.tally, `${entry.id} has a roll call with no tally`);
+      assert.match(ref.tally, /^\d+-\d+$/, `${entry.id}: tally "${ref.tally}" is not a tally`);
+      assert.ok(ref.url, `${entry.id} has a roll call with no official link`);
+      assert.match(
+        ref.url,
+        /^https:\/\/(www\.senate\.gov|clerk\.house\.gov)\//,
+        `${entry.id}: a roll call links somewhere that is not a chamber's own site`,
+      );
+      assert.ok(ref.verifiedAt, `${entry.id} has a roll call with no verification date`);
+    }
+  }
+  // Counted, not merely iterated: an empty loop passes every assertion in
+  // it, which is the empty-success shape this repo keeps catching.
+  assert.ok(refs >= 53, `only ${refs} roll calls in the snapshot — expected at least 53`);
 });

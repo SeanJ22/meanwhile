@@ -214,5 +214,26 @@ export async function GET(request: Request) {
     marker: markerFromRequest(request),
   }).catch((error) => console.error("search log write failed", error));
 
-  return Response.json({ ...result, coverage, snapshot, nearZip });
+  /*
+   * M81 — which of these bodies actually governs the reader.
+   *
+   * The division ids the point already resolved into, sent as an ARRAY so the
+   * client can badge every card without a second request and without a second
+   * geometry source. `null` when the resolution FAILED, which is not the same
+   * as an empty list: an empty list treated as an answer would badge every
+   * meeting on screen "Nearby, different jurisdiction" — a specific false
+   * claim produced by our own lookup failing. Null makes every badge read as
+   * the named gap it is.
+   */
+  const governingOcdIds = resolvedDivisions
+    ? resolvedDivisions.map((d) => d.ocdId)
+    : null;
+
+  return Response.json({
+    ...result,
+    coverage,
+    snapshot,
+    nearZip,
+    governingOcdIds,
+  });
 }

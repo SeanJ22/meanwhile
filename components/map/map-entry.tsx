@@ -852,6 +852,18 @@ function MapEntryInner() {
       // `onStreetPoint` mints exactly this prefix. Reading the key rather
       // than carrying a second flag keeps the two from disagreeing.
       atAddress: view?.key.startsWith("street:") ?? false,
+      /*
+       * M81. Built here rather than in each consumer so the SAME set answers
+       * the popup, the list and any surface added later — a badge computed
+       * twice is a badge that can disagree with itself.
+       *
+       * `undefined` (an older cached payload with no such field) and `null`
+       * (the server's resolution failed) both mean "we cannot say", and both
+       * become null rather than an empty set.
+       */
+      governing: current?.governingOcdIds
+        ? new Set(current.governingOcdIds)
+        : null,
     }),
     [current, meetings, venues, location, drawnDistricts, failure, view],
   );

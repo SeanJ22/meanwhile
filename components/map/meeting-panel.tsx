@@ -10,6 +10,8 @@ import {
   meetingHeadline,
 } from "@/lib/map/format";
 import { relativeAge } from "@/lib/meetings/freshness";
+import { BADGE_COPY, badgeFor } from "@/lib/meetings/jurisdiction-badge";
+import { useShellData } from "@/lib/state/data";
 import type { Venue } from "@/lib/meetings/venues";
 import { commentAccessFor } from "@/lib/registry/comment-access";
 import { venueLink } from "@/lib/registry/links";
@@ -125,6 +127,8 @@ function MeetingEntry({
   onOpen?: (meeting: Meeting) => void;
 }) {
   const concluded = meeting.status === "CONCLUDED";
+  const { governing } = useShellData();
+  const jurisdiction = badgeFor(meeting, governing);
 
   return (
     <article className="px-5 py-4">
@@ -161,6 +165,15 @@ function MeetingEntry({
           {meeting.title}
         </p>
       )}
+
+      {/* M81. Every meeting card and list row says which it is — this is the
+          third such surface, and all three read the SAME resolved division
+          set, so they cannot disagree with each other. */}
+      <p className="mt-2 pl-4">
+        <span className="jurisdiction-badge" data-badge={jurisdiction}>
+          {BADGE_COPY[jurisdiction].label}
+        </span>
+      </p>
 
       <dl className="mt-3 pl-4 font-mono text-[0.8125rem] tabular-nums">
         <div className="flex gap-2">

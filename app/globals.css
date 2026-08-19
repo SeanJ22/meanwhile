@@ -3356,6 +3356,64 @@ label:has(> input[type="checkbox"]) {
 }
 
 /* ---------------------------------------------------------------------- *
+ * THE JURISDICTION BADGE — M81.
+ *
+ * Three states, three registers. "Governs your area" is a positive claim and
+ * is filled. The other two are NOT the same thing as each other and must not
+ * look alike: "Nearby, different jurisdiction" is a real answer about a real
+ * boundary and gets a quiet outline; "Boundary not published" is a NAMED GAP
+ * and gets the dashed outline every named gap in this product wears, because
+ * a colour is a claim too.
+ * ---------------------------------------------------------------------- */
+
+.jurisdiction-badge {
+  display: inline-block;
+  padding: 0.05rem 0.4rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+/* FILLED, and deliberately not a tier colour. `--accent-local` is a TIER
+   token and may only be read where the tier is the meaning; a jurisdiction is
+   not a tier, and borrowing amber here would have said "local government"
+   where the badge means "governs you". Caught by tests/amber-remnant.test.ts,
+   which is exactly the guard that rule exists for.
+
+   So the distinction is FILL versus OUTLINE rather than hue — the same
+   grammar the status pills already use, and one a colour-blind reader can
+   still use. */
+.jurisdiction-badge[data-badge="GOVERNS"] {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--bg);
+}
+
+.jurisdiction-badge[data-badge="NEARBY"] {
+  background: none;
+  border-color: var(--border);
+  color: var(--text-muted);
+}
+
+.jurisdiction-badge[data-badge="NO_BOUNDARY"] {
+  background: none;
+  border-style: dashed;
+  border-color: var(--border);
+  color: var(--text-muted);
+}
+
+.jurisdiction-detail {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.76rem;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+/* ---------------------------------------------------------------------- *
  * WHERE CAN I VOTE — B19's panel.
  *
  * Built on the committed tokens, never a new ad-hoc scale: surfaces, radii,

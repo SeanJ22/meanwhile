@@ -47,6 +47,16 @@ export interface MeetingSearchResult {
    * saying only what the cascade knows.
    */
   coverage: CoverageSummary | null;
+  /**
+   * The OCD-IDs of every division the reader's point resolved into (M81).
+   *
+   * Attached by the route, like `coverage`, so `searchMeetings` stays pure and
+   * geometry-free. **NULL means the resolution FAILED** and is deliberately
+   * not the same as an empty array: an empty array treated as an answer would
+   * badge every meeting on screen "Nearby, different jurisdiction", which is a
+   * specific false claim produced by our own lookup failing.
+   */
+  governingOcdIds?: string[] | null;
 }
 
 function byStartAscending(a: Meeting, b: Meeting) {

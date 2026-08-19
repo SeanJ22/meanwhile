@@ -16,6 +16,12 @@ import { linksForMeeting, type OutboundLink } from "@/lib/registry/links";
 import { relativeAge } from "@/lib/meetings/freshness";
 import { minutesSummaryForMeeting } from "@/lib/meetings/minutes-summaries";
 import { officePhoneForBody } from "@/lib/meetings/office-phone";
+import {
+  BADGE_COPY,
+  badgeFor,
+  type JurisdictionBadge,
+} from "@/lib/meetings/jurisdiction-badge";
+import { useShellData } from "@/lib/state/data";
 import type { Meeting } from "@/lib/sources/types";
 
 import { CalendarLinks } from "./calendar-links";
@@ -80,6 +86,17 @@ export function MeetingPopup({
 }: MeetingPopupProps) {
   const tier = tierForMeeting(meeting) ?? "local";
   const badge = STATUS_BADGE[meeting.status];
+  /*
+   * M81 — does this body govern the reader, or is it just close?
+   *
+   * Read off the SAME division set the map's own layers resolved from, never
+   * a second geometry. It rides in the card's own row rather than the eyebrow
+   * badges beside "Concluded" and "Cancelled": those two are claims about what
+   * happened to the sitting, and this is a claim about who the body governs.
+   */
+  const { governing } = useShellData();
+  const jurisdiction: JurisdictionBadge = badgeFor(meeting, governing);
+  const jurisdictionCopy = BADGE_COPY[jurisdiction];
   // 6a (2026-08-17): a concluded meeting is a record, not an errand —
   // Directions drops (nobody drives to a meeting that already happened),
   // and the card gains what happened + the office phone instead.
@@ -105,6 +122,17 @@ export function MeetingPopup({
       {meeting.bodyName !== meeting.title && (
         <PopupRow label="Body">{meeting.bodyName}</PopupRow>
       )}
+
+      {/* M81. Geometry only — the badge says which area a body governs and
+          nothing about whether the reader should care. A reader who wants the
+          next town's select board is entitled to it; this is so they know
+          which one they clicked. */}
+      <PopupRow label="Jurisdiction">
+        <span className="jurisdiction-badge" data-badge={jurisdiction}>
+          {jurisdictionCopy.label}
+        </span>
+        <span className="jurisdiction-detail">{jurisdictionCopy.detail}</span>
+      </PopupRow>
 
       <PopupRow label="Date">
         {formatMeetingDate(meeting)}

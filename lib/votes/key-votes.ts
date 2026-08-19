@@ -440,19 +440,30 @@ export const KEY_VOTES_LAWS: KeyVoteEntry[] = [
     "Reopened the federal government after the longest shutdown on record and funded it for the rest of the year, restoring back pay to federal workers and resuming paused federal payments.",
     {
       /*
-       * PARKED (2026-08-19, g20 — see PARKED_KEY_VOTES below). The generic
-       * gap line would be true here and it would also be vague: it says we
-       * have not recorded the vote, and leaves a reader to assume nobody
-       * looked. What actually happened is more specific and more useful, and
-       * it is a fact about OUR list rather than about the chamber — this
-       * entry's own title names two things, and Congress answered them with
-       * more than one law. Both chambers get the same sentence, because the
-       * ambiguity is in the question and not in either chamber's record.
+       * UNPARKED 2026-08-19 (F01 5.6, the author, superseding his own g20
+       * ruling): "there are votes recorded for that, there is no doubt of it."
+       *
+       * He was right, and the two notes that used to sit here are gone rather
+       * than reworded, because what they said is no longer true. They said we
+       * had not tied the entry to a single vote and that Congress passed more
+       * than one appropriations law that year. The roll-call record — the House
+       * Clerk's 2025 index and the Senate's 119-1 vote menu, both read this
+       * session — shows ONE bill running the whole episode: H.R. 5371, the
+       * Continuing Appropriations and Extensions Act, 2026.
+       *
+       * The vote each chamber gets is the one that ENDED it, which is the same
+       * rule `obbba` uses and for the same reason: the House's meaningful act
+       * on a Senate-amended bill is the concurrence, not its own earlier
+       * passage of a text the Senate then replaced.
+       *
+       *   House  — roll 285, 12 Nov 2025, concurrence, 222–209
+       *   Senate — roll 618, 10 Nov 2025, passage as amended, 60–40
+       *
+       * Both are pinned in the snapshot with their chamber's own URL, tally and
+       * read date. See PARKED_KEY_VOTES below for why the park existed and what
+       * the record showed about its premise.
        */
-      houseNote:
-        "We haven't tied this one to a single vote. This entry names two things at once — reopening the government and funding the rest of the year — and Congress passed more than one appropriations law that year. Picking one would risk showing you a vote on a different bill, so we're leaving it open rather than guessing.",
-      senateNote:
-        "We haven't tied this one to a single vote. This entry names two things at once — reopening the government and funding the rest of the year — and Congress passed more than one appropriations law that year. Picking one would risk showing you a vote on a different bill, so we're leaving it open rather than guessing.",
+      whichVote: { house: "concurrence in the Senate amendment", senate: "final passage" },
     },
   ),
   law(
@@ -601,8 +612,37 @@ for (const entry of KEY_VOTES_LAWS) {
  * `tests/key-votes.test.ts` holds both halves.
  */
 export const PARKED_KEY_VOTES: Readonly<Record<string, string>> = {
-  "funding-fight":
-    "Parked by the author 2026-08-19 — his ruling: \"Skip for now.\" This entry's title names two things at once, reopening the government and funding the rest of the year, and the 119th Congress carries five appropriations laws. Which one the entry means is the author's to say. Until he says it, no run may resolve this, and the card renders the absence rather than a guess.",
+  /*
+   * EMPTY, AND DELIBERATELY KEPT.
+   *
+   * `funding-fight` was the only entry here. The author UNPARKED it in F01 5.6
+   * (2026-08-19): *"This is a data gap to close, not a display issue... there
+   * are votes recorded for that, there is no doubt of it."*
+   *
+   * **The park's premise turned out to be wrong, and the roll-call record is
+   * what showed it.** The park said this entry names two things at once and
+   * the 119th carries five appropriations laws, so picking one risked showing
+   * a reader a vote on a different bill. But the record names ONE bill for the
+   * whole episode: **H.R. 5371, the Continuing Appropriations and Extensions
+   * Act, 2026**. The House Clerk's 2025 roll index carries it from first
+   * passage (roll 281, 19 Sep) through concurrence in the Senate amendment
+   * (roll 285, 12 Nov, 222–209); the Senate's own 119-1 vote menu carries
+   * twenty-three H.R. 5371 votes, from the first failed cloture on 1 Oct to
+   * passage as amended (roll 618, 10 Nov, 60–40). There was never an ambiguity
+   * to resolve — there was one bill and a six-week fight over it, and the
+   * popular-name route could not see that because "Continuing Appropriations"
+   * matches several laws by TITLE while only one of them is this episode.
+   *
+   * Both refs are pinned in the snapshot with their tallies, their chamber's
+   * own URL and their read date, which is why the resolver's inability to
+   * guess a popular name no longer decides this row.
+   *
+   * The map stays because the MECHANISM is still right: an entry whose answer
+   * cannot be resolved without the author's judgement must block every run
+   * rather than let fill-only write a guess in. `scripts/fetch-law-votes.mts`
+   * skips whatever is here and prints that it did; `tests/key-votes.test.ts`
+   * holds both halves whether the map is empty or not.
+   */
 };
 
 /** The whole list, in the author's order: laws first, then people. */

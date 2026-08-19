@@ -1,6 +1,6 @@
 {
  "formatVersion": 1,
- "fetchedAt": "2026-08-16T03:43:44.410Z",
+ "fetchedAt": "2026-08-19T00:00:00.000Z",
  "criteria": "Major legislation that became law (plus one pending measure, marked), and consequential Senate confirmations, since 2020 — chosen before looking at how anyone voted.",
  "entries": [
   {
@@ -549,9 +549,33 @@
    "explainer": "Reopened the federal government after the longest shutdown on record and funded it for the rest of the year, restoring back pay to federal workers and resuming paused federal payments.",
    "explainerSource": "congress.gov bill text and official summary",
    "explainerReadAt": "2026-08-15",
-   "house": [],
-   "senate": [],
-   "senateSearch": "Continuing Appropriations"
+   "house": [
+    {
+     "congress": 119,
+     "session": 1,
+     "rollNumber": 285,
+     "question": "On Motion to Concur in the Senate Amendment — Continuing Appropriations and Extensions Act, 2026 (H R 5371). Passed.",
+     "url": "https://clerk.house.gov/evs/2025/roll285.xml",
+     "tally": "222-209",
+     "verifiedAt": "2026-08-19"
+    }
+   ],
+   "senate": [
+    {
+     "congress": 119,
+     "session": 1,
+     "rollNumber": 618,
+     "question": "On Passage of the Bill H.R. 5371, As Amended — a bill making continuing appropriations and extensions for fiscal year 2026. Bill Passed.",
+     "url": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_00618.xml",
+     "tally": "60-40",
+     "verifiedAt": "2026-08-19"
+    }
+   ],
+   "senateSearch": "Continuing Appropriations",
+   "whichVote": {
+    "house": "concurrence in the Senate amendment",
+    "senate": "final passage"
+   }
   },
   {
    "id": "road-to-housing",
@@ -944,11 +968,6 @@
   }
  ],
  "misses": [
-  {
-   "id": "funding-fight",
-   "chamber": "both",
-   "reason": "no unambiguous popular name: this entry names a shutdown-ending appropriations fight, and the congress carries several 'Continuing'/'Consolidated Appropriations' laws — refusing to pick one rather than putting members against a vote on a different bill"
-  },
   {
    "id": "stock-trading-ban",
    "chamber": "senate",

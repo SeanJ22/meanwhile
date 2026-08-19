@@ -241,17 +241,24 @@ test("B17: the law rows carry roll calls from the chambers' own records", () => 
   // the House, and the false-miss shape this codebase keeps naming. The
   // measure still has no Senate vote, which is what its card says.
   //
-  // The one that remains is the shutdown entry, and it is a real refusal
-  // rather than a gap in effort: the 119th carries five appropriations laws
-  // and the entry's own title names two things at once — reopening the
-  // government and funding the rest of the year. Which law the author means
-  // is the author's to say, and the list is closed.
+  // **20 of 20 since 2026-08-19 (F01 5.6).** The shutdown entry was the last
+  // one open, and it was open for a reason that turned out to be wrong: the
+  // park said the 119th carries five appropriations laws and the entry names
+  // two things at once, so no single vote could answer it. The record says
+  // otherwise — the House Clerk's 2025 index and the Senate's 119-1 vote menu
+  // both name ONE bill, H.R. 5371, and the fight over it runs from 19 Sep to
+  // 12 Nov. Resolved from the roll-call record itself, which is the rung the
+  // popular-name route could not reach: "Continuing Appropriations" matches
+  // several laws by title while only one of them is this episode.
   //
   // Exact, so a regression cannot hide behind "at least".
   const resolved = laws.filter((e) => e.house.length > 0 || e.senate.length > 0);
-  assert.equal(resolved.length, 19, resolved.map((e) => e.id).join(", "));
+  assert.equal(resolved.length, 20, resolved.map((e) => e.id).join(", "));
   const unresolved = laws.filter((e) => e.house.length === 0 && e.senate.length === 0);
-  assert.deepEqual(unresolved.map((e) => e.id).sort(), ["funding-fight"]);
+  assert.deepEqual(unresolved.map((e) => e.id).sort(), []);
+  // Kept for the day another row goes unresolved: an unresolved entry with no
+  // recorded reason is the empty-success shape, and the guard must survive the
+  // list happening to be complete today.
   for (const entry of unresolved) {
     const miss = snapshot.misses.find((m) => m.id === entry.id);
     assert.ok(miss, `${entry.id}: unresolved with no recorded reason`);
@@ -541,22 +548,31 @@ test("B15 g20: D68's overwrite is repaired — every House ref is distinct and d
   assert.deepEqual(rolls, [145, 146, 151, 152], "an April 2024 House roll call moved");
 
   // House coverage, exact rather than "at least" — the floor a total hid.
+  // F01 5.6 (2026-08-19): 19 → 20. `funding-fight` was the one row without a
+  // House roll call; the author unparked it and the Clerk's own 2025 index
+  // resolved it to H.R. 5371, roll 285.
   assert.equal(
     laws.filter((e) => e.house.length > 0).length,
-    19,
+    20,
     "House coverage across the LAWS list",
   );
 });
 
-test("B15 g20: the shutdown entry is PARKED by the author, and a run cannot close it", async () => {
+test("B15 g20 / F01 5.6: the park MECHANISM still holds, with the map now empty", async () => {
   const { PARKED_KEY_VOTES } = await import("../lib/votes/key-votes.ts");
 
   // A MISS is what a resolver could not find; it invites a better rung. A
   // PARK is the author's decision that no attempt should be made, because
   // the answer is his to give. The two must not be told apart only in prose.
-  assert.ok(PARKED_KEY_VOTES["funding-fight"]);
-  assert.match(PARKED_KEY_VOTES["funding-fight"], /Skip for now/);
-  assert.match(PARKED_KEY_VOTES["funding-fight"], /2026-08-19/);
+  //
+  // F01 5.6 (2026-08-19): the author UNPARKED `funding-fight`, so the map is
+  // now EMPTY — and the mechanism below is guarded exactly as hard, because
+  // the next park has to work the day it is written. The loop over the map is
+  // vacuous today and is kept deliberately.
+  assert.ok(
+    !("funding-fight" in PARKED_KEY_VOTES),
+    "funding-fight is parked again — F01 5.6 unparked it and resolved it",
+  );
 
   const snapshot = getKeyVotesSnapshot();
   for (const id of Object.keys(PARKED_KEY_VOTES)) {
@@ -585,19 +601,64 @@ test("B15 g20: the shutdown entry is PARKED by the author, and a run cannot clos
   );
 });
 
-test("B15 g20: the parked entry tells the reader what happened, not just that nothing is here", () => {
-  const entry = KEY_VOTES_LAWS.find((e) => e.id === "funding-fight");
-  assert.ok(entry);
+/**
+ * **F01 5.6 (2026-08-19) — the shutdown row is RESOLVED, and B15 closes at
+ * 20 of 20.**
+ *
+ * This test replaces "the parked entry tells the reader what happened". That
+ * one guarded the two notes explaining why the row was open; the author
+ * unparked the row and both notes are gone, so guarding their wording would be
+ * guarding a sentence the product no longer makes.
+ *
+ * What is guarded instead is the resolution itself, ref by ref, against the
+ * chambers' own records — because a row that went from "we couldn't say" to a
+ * specific claim about how 526 named members voted is exactly the kind of
+ * change that has to be checkable rather than trusted.
+ */
+test("F01 5.6: the shutdown row resolves to H.R. 5371 in both chambers, with tallies", () => {
+  const snapshot = getKeyVotesSnapshot();
+  const entry = snapshot.entries.find((e) => e.id === "funding-fight")!;
+  assert.ok(entry, "funding-fight left the list");
 
-  // The generic gap line is true and vague — it reads as "nobody looked".
-  // What happened is a fact about OUR list: the entry names two things and
-  // Congress answered with more than one law. Both chambers say so, because
-  // the ambiguity is in the question rather than in either chamber's record.
-  for (const note of [entry.houseNote, entry.senateNote]) {
-    assert.ok(note, "a parked entry with no note falls to the generic line");
-    assert.match(note, /more than one appropriations law/);
-    assert.match(note, /rather than guessing/);
-    // Never a claim about the member.
-    assert.doesNotMatch(note, /did not vote|didn't vote|voted against/i);
-  }
+  // The House's meaningful act on a Senate-amended bill is the concurrence —
+  // the same rule obbba uses, and the reason `whichVote` exists.
+  assert.deepEqual(entry.whichVote, {
+    house: "concurrence in the Senate amendment",
+    senate: "final passage",
+  });
+
+  assert.equal(entry.house.length, 1);
+  const house = entry.house[0];
+  assert.equal(house.congress, 119);
+  assert.equal(house.session, 1);
+  assert.equal(house.rollNumber, 285);
+  assert.equal(house.tally, "222-209");
+  assert.equal(house.url, "https://clerk.house.gov/evs/2025/roll285.xml");
+  assert.match(house.question ?? "", /Concur in the Senate Amendment/i);
+  assert.match(house.verifiedAt ?? "", /^\d{4}-\d{2}-\d{2}$/);
+
+  assert.equal(entry.senate.length, 1);
+  const senate = entry.senate[0];
+  assert.equal(senate.congress, 119);
+  assert.equal(senate.session, 1);
+  assert.equal(senate.rollNumber, 618);
+  assert.equal(senate.tally, "60-40");
+  assert.match(
+    senate.url ?? "",
+    /^https:\/\/www\.senate\.gov\/legislative\/LIS\/roll_call_votes\//,
+    "the Senate ref must cite the Senate's own record, never an aggregator",
+  );
+  assert.match(senate.question ?? "", /On Passage of the Bill/i);
+
+  // The notes that explained the park are GONE, not reworded: what they said
+  // stopped being true.
+  const source = KEY_VOTES_LAWS.find((e) => e.id === "funding-fight")!;
+  assert.equal(source.houseNote, undefined);
+  assert.equal(source.senateNote, undefined);
+
+  // And the entry is no longer a recorded MISS.
+  assert.ok(
+    !snapshot.misses.some((m) => m.id === "funding-fight"),
+    "funding-fight is resolved and still listed as a miss",
+  );
 });

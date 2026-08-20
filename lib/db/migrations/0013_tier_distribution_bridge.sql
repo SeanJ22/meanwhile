@@ -1,0 +1,39 @@
+-- THE BRIDGE: the default goes back on until the code that fills the column
+-- is actually deployed (Prompt C, 2026-08-20).
+--
+-- ## What this is repairing, and it is not a schema decision
+--
+-- `0012` adds `coverage_tier_distribution` NOT NULL and then drops its
+-- default, which is right — item 3.4 requires that a write which cannot state
+-- the distribution FAILS rather than landing a plausible `UNKNOWN` a buyer
+-- would weight by. It is right ONLY when the schema and the code that fills
+-- the column land together.
+--
+-- They did not, and they could not have. `0012` had to be applied early
+-- because `0011` had never been applied at all: the coverage tier shipped in
+-- Prompt B's code on 2026-08-20 and its migration never reached production, so
+-- every insert into `search_log` and `reactions` named a column that did not
+-- exist and failed. The last row either sold store accepted was
+-- 2026-08-20 15:53:51Z. The route catches that failure and logs it
+-- (`app/api/meetings/route.ts`: `.catch(...console.error)`), which is correct
+-- for a reader — a search still answers — and it means the loss is invisible
+-- from every surface this repo can see.
+--
+-- Applying `0011` fixed that half. `0012` then reintroduced it from the other
+-- side: the DEPLOYED build does not know about `coverage_tier_distribution`,
+-- so its insert omits a NOT NULL column with no default and fails again.
+--
+-- ## So the default comes back, deliberately and temporarily
+--
+-- With it, the live build's writes land and carry `UNKNOWN` — which is the
+-- honest value for them, because that build genuinely does not compute a
+-- distribution. Recording is restored immediately rather than at the next
+-- deploy.
+--
+-- `0014` drops the default again, and is applied only AFTER the code that
+-- fills the column is serving. That ordering is the whole point of splitting
+-- these, and it is the general lesson: a NOT NULL column with no default may
+-- only lose its default once the code that fills it is live.
+
+ALTER TABLE "reactions" ALTER COLUMN "coverage_tier_distribution" SET DEFAULT 'UNKNOWN';--> statement-breakpoint
+ALTER TABLE "search_log" ALTER COLUMN "coverage_tier_distribution" SET DEFAULT 'UNKNOWN';

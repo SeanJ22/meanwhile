@@ -1,0 +1,1910 @@
+{
+ "migratedAt": "2026-08-20",
+ "note": "RULING 18 (Prompt C item 2). Every Kelly field's hunt state, per candidate. FOUND means the field is present with its source recorded. NOT_HUNTED means no completed hunt. VERIFIED_ABSENT means a completed hunt walked every applicable rung and the thing does not exist, and it carries those rungs and the date checked — it is earned by a hunt session and NEVER by a migration, which is why this file contains none of it. A contest renders candidate cards only when no field anywhere in it is NOT_HUNTED.",
+ "candidates": {
+  "ballot-nj-morris:us-senate:booker": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-nj-morris:us-senate:fernandez": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-nj-morris:us-senate:kuniansky": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nj-morris:us-senate:murphy": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "FOUND"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-nj-morris:us-house-11:bond": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nj-morris:us-house-11:hathaway": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "FOUND"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-nj-morris:us-house-11:mejia": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "FOUND"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-nj-morris:county-commissioner:russo": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nj-morris:county-commissioner:selen": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-nj-morris:rockaway-twp-boe:mamoun": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nj-morris:rockaway-twp-boe:mezik": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nj-morris:rockaway-twp-boe:nydegger": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nj-morris:rockaway-twp-boe-unexpired:borno": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nj-morris:morris-hills-regional-boe-rockaway-twp:roach": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nj-morris:morris-hills-regional-boe-rockaway-twp:serafin": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:governor:hobbs-katie": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:governor:hourihan-teri-ann": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:governor:lombardo-risa": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:governor:lytle-hugh": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:governor:biggs-andy": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:governor:miceli-ken": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:governor:neely-scott": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:governor:schweikert-david": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:secretary-of-state:fontes-adrian": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:secretary-of-state:collier-duwayne": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:secretary-of-state:kolodin-alexander": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:secretary-of-state:swoboda-gina": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:attorney-general:mayes-kris": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:attorney-general:glassman-rodney": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:attorney-general:petersen-warren": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:state-treasurer:mansour-nick": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:state-treasurer:zepeda-michael": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:state-treasurer:haley-katherine": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:state-treasurer:norton-elijah": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:superintendent:butts-michael-d-": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:superintendent:leyba-ruiz-teresa": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:superintendent:newby-brett-matthew": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:superintendent:horne-tom": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:superintendent:yee-kimberly": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:mine-inspector:matlock-brian": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:us-house-6:mendoza-joanna": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:us-house-6:bah-iman": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:us-house-6:peters-jereme-lance": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:us-house-6:ciscomani-juan": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:us-house-7:grijalva-adelita": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:us-house-7:butierez-sr--daniel-francis": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:state-senate-19:slawson-ryan": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:state-senate-19:griffin-gail": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:state-senate-20:hernandez-alma": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:state-senate-20:perez-rocque": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:state-house-19:anderson-jackie-o-donnell": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:state-house-19:swallow-aiden-nicholette": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:state-house-19:caswell-cheryl": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:state-house-19:diaz-lupe": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:state-house-19:gowan-david": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:state-house-20:diaz-genoveva": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:state-house-20:gonzales-sally-ann": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:state-house-20:koehler-ben": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:state-house-20:villegas-betty": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:governor:warmington-cinde": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "FOUND"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-nh-merrimack:governor:ayotte-kelly": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-nh-merrimack:governor:fife-shaun": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:governor:mcclory-bob-wayne": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:us-senate:jarvis-david": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:us-senate:manzur-karishma": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:us-senate:pappas-chris": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-nh-merrimack:us-senate:saal-maxwell-l-": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:us-senate:vail-john": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:us-senate:alciere-tom": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:us-senate:brown-scott-p-": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "FOUND"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-nh-merrimack:us-senate:danley-sky": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:us-senate:martin-andy": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:us-senate:maxwell-mary": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:us-senate:mcmenamon-ii-richard-a-": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:us-senate:smith-sabrina-ann": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:us-senate:sununu-john-e-": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "FOUND"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-nh-merrimack:us-house-2:beauchemin-paige": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:us-house-2:goodlander-maggie": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-nh-merrimack:us-house-2:callis-michael-anthony": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:us-house-2:nicholson-dan": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:us-house-2:orlando-victor": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:us-house-2:tang-williams-lily": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-nh-merrimack:state-senate-7:harned-rebecca": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "FOUND"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-nh-merrimack:state-senate-7:innis-daniel-e-": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:state-house-merrimack-7:ebel-karen-elizabeth": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:state-house-merrimack-7:sargent-gregory-m-": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "FOUND"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-nh-merrimack:state-house-merrimack-7:rusis-cynthia": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:executive-council-2:liot-hill-karen": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "FOUND"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-nh-merrimack:executive-council-2:menard-tobin": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:executive-council-2:strathdee-kim": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:county-commissioner-2:ribas-vincent-s-": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:county-commissioner-2:bilodeau-richard": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:county-commissioner-2:french-harold-f-": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:county-sheriff:shephard-peter": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:county-sheriff:cassidy-frank-t-": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:county-sheriff:gerhard-jason": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:county-sheriff:weir-ben": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:county-attorney:endres-steven": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:county-attorney:hagaman-meg": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:county-attorney:raiche-jon": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:county-attorney:rogers-sarah": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:county-treasurer:donnelly-kathleen": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:county-treasurer:schuett-dianne-e-": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:register-of-deeds:davis-erica-s-": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:register-of-deeds:morse-samantha": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-nh-merrimack:register-of-probate:bradstreet-jane": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:governor|Katie Hobbs": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "FOUND"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-az-pima:governor|Andy Biggs": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-az-pima:governor|Risa Lombardo": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-az-pima:governor|Teri Ann Hourihan": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-az-pima:secretary-of-state|Adrian Fontes": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-az-pima:secretary-of-state|Alexander Kolodin": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-az-pima:secretary-of-state|Duwayne Collier": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:attorney-general|Kris Mayes": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-az-pima:attorney-general|Warren Petersen": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-az-pima:state-treasurer|Nick Mansour": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-az-pima:state-treasurer|Elijah Norton": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-az-pima:superintendent|Teresa Leyba Ruiz": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-az-pima:superintendent|Kimberly Yee": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-az-pima:mine-inspector|Brian Matlock": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:mine-inspector|Walter \"Les\" Presmyk": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-az-pima:us-house-6|JoAnna Mendoza": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-az-pima:us-house-6|Juan Ciscomani": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-az-pima:us-house-6|Jereme Lance Peters": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:us-house-6|Gary Swing": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-az-pima:us-house-7|Adelita Grijalva": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-az-pima:us-house-7|Daniel Francis Butierez Sr.": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-az-pima:state-senate-19|Gail Griffin": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:state-senate-19|Bob Karp": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-az-pima:state-senate-20|Alma Hernandez": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-az-pima:state-house-19|David Gowan": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:state-house-19|Lupe Diaz": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-az-pima:state-house-19|Jackie O'Donnell Anderson": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:state-house-19|Aiden Nicholette Swallow": {
+   "photo": {
+    "state": "NOT_HUNTED"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  },
+  "ballot-az-pima:state-house-20|Sally Ann Gonzales": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "NOT_HUNTED"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "NOT_HUNTED"
+   }
+  },
+  "ballot-az-pima:state-house-20|Betty Villegas": {
+   "photo": {
+    "state": "FOUND"
+   },
+   "blurb": {
+    "state": "FOUND"
+   },
+   "contact": {
+    "state": "NOT_HUNTED"
+   },
+   "campaignSite": {
+    "state": "FOUND"
+   }
+  }
+ }
+}

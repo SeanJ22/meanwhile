@@ -1,8 +1,12 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
-import { dirname, join, relative } from "node:path";
+import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
+
+// RULING 14: one normalizer, so an offender list reads identically on
+// Windows and on Linux.
+import { posixRelative } from "../scripts/repo-path.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -54,7 +58,7 @@ function walk(dir: string, found: string[] = []): string[] {
     if (NOT_OURS.has(entry.name)) continue;
     const full = join(dir, entry.name);
     if (entry.isDirectory()) walk(full, found);
-    else if (/\.(js|cjs)$/.test(entry.name)) found.push(relative(ROOT, full));
+    else if (/\.(js|cjs)$/.test(entry.name)) found.push(posixRelative(ROOT, full));
   }
   return found;
 }
@@ -107,16 +111,16 @@ test("R46: tracked source carries no CommonJS-only construct", () => {
       // Word-boundary anchored so `moduleResolution`, `requireAuth` and prose
       // about the rule do not read as uses of it.
       if (/(^|[^.\w])require\s*\(/.test(source)) {
-        offenders.push(`${relative(ROOT, full)}: require(`);
+        offenders.push(`${posixRelative(ROOT, full)}: require(`);
       }
       if (/(^|[^.\w])__dirname\b/.test(source)) {
-        offenders.push(`${relative(ROOT, full)}: __dirname`);
+        offenders.push(`${posixRelative(ROOT, full)}: __dirname`);
       }
       if (/(^|[^.\w])__filename\b/.test(source)) {
-        offenders.push(`${relative(ROOT, full)}: __filename`);
+        offenders.push(`${posixRelative(ROOT, full)}: __filename`);
       }
       if (/(^|[^.\w])module\.exports\b/.test(source)) {
-        offenders.push(`${relative(ROOT, full)}: module.exports`);
+        offenders.push(`${posixRelative(ROOT, full)}: module.exports`);
       }
     }
   }

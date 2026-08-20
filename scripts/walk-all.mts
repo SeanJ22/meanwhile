@@ -504,6 +504,64 @@ console.log(`walk:all — ${BASE}\n${new Array(60).fill("─").join("")}`);
 
 section("A. Top-level doors (0817, 0818, g3)");
 
+/*
+ * PROMPT C ITEM 1c (2026-08-20) — the deploy identifier AND the code SHA.
+ *
+ * Prompt B's report named two identifiers for one deploy: the merge that
+ * produced the code (`3bc8834`) and the commit production was serving
+ * (`1268657`). Both are git SHAs, the second contains the first, and the
+ * report said neither of those things — so a reader could not tell whether
+ * the deploy had landed, lagged, or drifted. `/api/build` already answers it:
+ * `commit` is the code SHA the bundle was built from and `deployId` is
+ * Netlify's own identifier for the deploy serving the request. Two names for
+ * two different facts, and the pair is what makes the answer checkable.
+ *
+ * This asserts BOTH are real values. `unknown` is what the route returns when
+ * the build-time variable was absent, and that has happened before — the
+ * route's own header records a stretch of `"commit":"unknown"` caused by
+ * assuming Next inlines `process.env` into server code. An endpoint that
+ * answers "unknown" is not a broken endpoint, but a session verifying its own
+ * ship against one is verifying nothing, and that is what this catches.
+ */
+{
+  const build = await get("/api/build");
+  check("promptC", "/api/build answers", build.status === 200, `HTTP ${build.status}`);
+  if (build.status === 200) {
+    let body: {
+      commit?: string;
+      commitShort?: string;
+      deployId?: string;
+      branch?: string;
+    } = {};
+    try {
+      body = JSON.parse(build.text) as typeof body;
+    } catch {
+      body = {};
+    }
+    const commit = body.commit ?? "unknown";
+    const deployId = body.deployId ?? "unknown";
+    check(
+      "promptC",
+      "/api/build states the code SHA",
+      /^[0-9a-f]{40}$/.test(commit),
+      `commit=${commit}`,
+    );
+    check(
+      "promptC",
+      "/api/build states the deploy identifier",
+      deployId !== "unknown" && deployId.length > 0,
+      `deployId=${deployId}`,
+    );
+    check(
+      "promptC",
+      "/api/build's two identifiers are distinct facts, not one repeated",
+      commit !== deployId,
+      `commit=${body.commitShort ?? "?"} deployId=${deployId}`,
+    );
+  }
+}
+
+
 for (const { zip } of FOUR) {
   const area = await get(`/about-area?zip=${zip}`);
   check(
@@ -2141,7 +2199,7 @@ section("H. The frozen denominator (h item 1)");
  * without anyone saying so, and both are the failure CLAUDE.md names.
  *
  * It is deliberately pinned to the UNIT count rather than the body count.
- * The body denominator is UNENUMERABLE today (H02) — the Census has one row
+ * The body denominator is UNENUMERABLE today (HUNT02) — the Census has one row
  * for the Town of Newbury and the product renders five of its boards — so a
  * check against a body count would be pinning our own registry to itself,
  * which is exactly the self-defining denominator this check exists to
@@ -4800,6 +4858,115 @@ if (duplicates > 0) {
   });
 }
 
+/*
+ * THE PROBE CENSUS RUNS BEFORE THE SUMMARY (Prompt C, 2026-08-20).
+ *
+ * It used to be the last thing in the file, after the summary and after the
+ * check-identity diff. That was fine while it only PRINTED — and it stopped
+ * being fine the moment it grew a check: a check registered after the summary
+ * is a check the summary does not count, so a run could print "N passed, 0
+ * regressions" and then exit 1. Every request has been issued by this point,
+ * which is the only thing the census actually waits on.
+ */
+/* ── Probe accounting: rows LANDED, not requests issued (G04) ───────────── */
+
+console.log(
+  `\nPRODUCTION ROWS THIS RUN CREATED: ${searchLogRows} search-log GET(s) issued ` +
+    `(every /api/meetings GET writes one), ${askRows} ask/log request(s) issued. ` +
+    `No reaction was tapped.`,
+);
+
+/**
+ * G04: the line above counts REQUESTS ISSUED, at the call site, before the
+ * response is known — and it reads as "rows created". A request that 404s,
+ * that `getJson` discards on a non-ok status, or that a CDN serves without
+ * reaching the route writes no row. Measured 2026-08-17: 28 issued, 25 landed.
+ *
+ * The C05 marker made the true number queryable for the first time, so the run
+ * now ASKS. `.env.local`'s DATABASE_URL points at the local branch since R34,
+ * so the production census reads the production string explicitly — and when
+ * there is none, the run says the number could not be read rather than
+ * printing the issued count as though it were the landed one.
+ */
+loadEnv({ path: join(process.cwd(), ".env.local") });
+const PRODUCTION_DB = process.env.WTP_PRODUCTION_DATABASE_URL_READONLY;
+
+if (BASE !== "https://sparkwtp.netlify.app") {
+  console.log(
+    `  rows landed: NOT READ — this run targeted ${BASE}, not production, so a production ` +
+      `census would be answering about someone else's rows.`,
+  );
+} else if (!PRODUCTION_DB) {
+  console.log(
+    `  rows landed: COULD NOT READ — WTP_PRODUCTION_DATABASE_URL_READONLY is not set. ` +
+      `The issued counts above stand as issued counts and are NOT the landed number.`,
+  );
+} else {
+  try {
+    const sql = neon(PRODUCTION_DB);
+    const landed = (await sql`
+      SELECT
+        COUNT(*)::int                                          AS total,
+        COUNT(*) FILTER (WHERE event_type = 'SEARCH')::int      AS searches,
+        COUNT(*) FILTER (WHERE run_class <> 'SYNTHETIC')::int   AS misclassed
+      FROM search_log WHERE run_id = ${RUN_ID}
+    `) as { total: number; searches: number; misclassed: number }[];
+    const { total, searches, misclassed } = landed[0];
+    console.log(
+      `  rows landed: ${total} row(s) carry run_id ${RUN_ID} (${searches} SEARCH). ` +
+        `Issued ${searchLogRows + askRows}, landed ${total} — a gap is ordinary ` +
+        `(a 404, a discarded non-ok response, or a CDN hit writes no row) and is not a failure.`,
+    );
+    if (misclassed > 0) {
+      console.log(
+        `  WARNING: ${misclassed} of this run's own rows are NOT marked SYNTHETIC — ` +
+          `our robot is sitting in the sold store as reader signal.`,
+      );
+    }
+
+    /*
+     * **ZERO LANDED IS NOT A GAP — PROMPT C, 2026-08-20.**
+     *
+     * The line above is right that a gap between issued and landed is
+     * ordinary: a 404, a discarded non-ok response and a CDN hit each write no
+     * row. What is NOT ordinary is landing NOTHING while issuing dozens, and
+     * treating the whole range as ordinary is how this walk read the sold
+     * store going dark and called it normal.
+     *
+     * What happened: migration 0011 added `coverage_tier` to both sold stores
+     * and shipped in Prompt B's code, and the migration was never applied to
+     * production. Every insert named a column that did not exist and failed.
+     * `app/api/meetings/route.ts` catches that and logs it — correct for a
+     * reader, because a search still answers — so the loss was invisible on
+     * every surface. The last row either store accepted was
+     * 2026-08-20 15:53:51Z; Prompt B's own walk ran at 17:53, issued 77
+     * search-log GETs, landed 0, and printed the gap as ordinary.
+     *
+     * So zero-against-nonzero is a CHECK now, and it fails. The revenue path
+     * has exactly one observable from outside — that a row lands — and this
+     * is it.
+     */
+    check(
+      "promptC",
+      "the sold store accepted this run's rows at all",
+      !(searchLogRows + askRows > 0 && total === 0),
+      total === 0
+        ? `issued ${searchLogRows + askRows} write-triggering requests and NOTHING landed — ` +
+          `the search log is not recording. Check the migration state against ` +
+          `lib/db/migrations/meta/_journal.json: a column in the code and not in the ` +
+          `database fails every insert, and the route catches it.`
+        : `${total} landed`,
+    );
+  } catch (error) {
+    // An unreadable census is COULD NOT RUN, never zero. Zero would read as
+    // "this run created nothing", which is the opposite of what is known.
+    console.log(
+      `  rows landed: COULD NOT READ — ${(error as Error).message.slice(0, 120)}. ` +
+        `The issued counts above stand as issued counts.`,
+    );
+  }
+}
+
 console.log(`\n${new Array(60).fill("─").join("")}`);
 console.log(`${passed} check(s) passed, ${failures.length} regression(s), ${blocked.length} could not run`);
 
@@ -4902,70 +5069,5 @@ writeFileSync(
     `${ranNow.join("\n")}\n`,
   "utf8",
 );
-
-/* ── Probe accounting: rows LANDED, not requests issued (G04) ───────────── */
-
-console.log(
-  `\nPRODUCTION ROWS THIS RUN CREATED: ${searchLogRows} search-log GET(s) issued ` +
-    `(every /api/meetings GET writes one), ${askRows} ask/log request(s) issued. ` +
-    `No reaction was tapped.`,
-);
-
-/**
- * G04: the line above counts REQUESTS ISSUED, at the call site, before the
- * response is known — and it reads as "rows created". A request that 404s,
- * that `getJson` discards on a non-ok status, or that a CDN serves without
- * reaching the route writes no row. Measured 2026-08-17: 28 issued, 25 landed.
- *
- * The C05 marker made the true number queryable for the first time, so the run
- * now ASKS. `.env.local`'s DATABASE_URL points at the local branch since R34,
- * so the production census reads the production string explicitly — and when
- * there is none, the run says the number could not be read rather than
- * printing the issued count as though it were the landed one.
- */
-loadEnv({ path: join(process.cwd(), ".env.local") });
-const PRODUCTION_DB = process.env.WTP_PRODUCTION_DATABASE_URL_READONLY;
-
-if (BASE !== "https://sparkwtp.netlify.app") {
-  console.log(
-    `  rows landed: NOT READ — this run targeted ${BASE}, not production, so a production ` +
-      `census would be answering about someone else's rows.`,
-  );
-} else if (!PRODUCTION_DB) {
-  console.log(
-    `  rows landed: COULD NOT READ — WTP_PRODUCTION_DATABASE_URL_READONLY is not set. ` +
-      `The issued counts above stand as issued counts and are NOT the landed number.`,
-  );
-} else {
-  try {
-    const sql = neon(PRODUCTION_DB);
-    const landed = (await sql`
-      SELECT
-        COUNT(*)::int                                          AS total,
-        COUNT(*) FILTER (WHERE event_type = 'SEARCH')::int      AS searches,
-        COUNT(*) FILTER (WHERE run_class <> 'SYNTHETIC')::int   AS misclassed
-      FROM search_log WHERE run_id = ${RUN_ID}
-    `) as { total: number; searches: number; misclassed: number }[];
-    const { total, searches, misclassed } = landed[0];
-    console.log(
-      `  rows landed: ${total} row(s) carry run_id ${RUN_ID} (${searches} SEARCH). ` +
-        `Issued ${searchLogRows + askRows}, landed ${total} — a gap is ordinary ` +
-        `(a 404, a discarded non-ok response, or a CDN hit writes no row) and is not a failure.`,
-    );
-    if (misclassed > 0) {
-      console.log(
-        `  WARNING: ${misclassed} of this run's own rows are NOT marked SYNTHETIC — ` +
-          `our robot is sitting in the sold store as reader signal.`,
-      );
-    }
-  } catch (error) {
-    // An unreadable census is COULD NOT RUN, never zero. Zero would read as
-    // "this run created nothing", which is the opposite of what is known.
-    console.log(
-      `  rows landed: COULD NOT READ — ${(error as Error).message.slice(0, 120)}. ` +
-        `The issued counts above stand as issued counts.`,
-    );
-  }
-}
 
 if (failures.length > 0) process.exit(1);

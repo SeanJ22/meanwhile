@@ -307,6 +307,37 @@ export const searchLog = pgTable(
     coverageTier: text("coverage_tier", {
       enum: ["TIER_0", "TIER_1", "TIER_2", "TIER_3", "UNKNOWN"],
     }).notNull(),
+    /**
+     * THE PER-GOVERNMENT TIER DISTRIBUTION (Prompt C item 3, 2026-08-20).
+     *
+     * The floor above is the honest public headline and it does not move. It
+     * is also `TIER_0` for 97.88% of zips nationally — no special district
+     * anywhere has resolved territory and nearly every zip contains one — so
+     * as a FIELD on a sold row it separates almost nothing. A buyer weighting
+     * a row cannot tell a place with a fully enumerated county and one
+     * unresolved fire district from a place where nothing at all is known,
+     * and those are not the same measurement.
+     *
+     * So the same stamped values are also carried COUNTED rather than
+     * floored: `T0:24,T1:0,T2:3,T3:0`. Written at write time from the stamped
+     * ledger, never inferred at read time and never recomputed.
+     *
+     * STORED ONLY. It appears on no reader-facing surface, in no headline
+     * figure, in no report summary and in no national distribution. The floor
+     * tier remains the only tier stated publicly.
+     *
+     * NOT NULLABLE AND NOT DEFAULTED, for the same reason as the tier: a write
+     * that cannot state it FAILS rather than landing as a plausible zero.
+     * `UNKNOWN` is the honest value where it genuinely cannot be recovered —
+     * four zeros would be a claim that we counted and found none.
+     *
+     * WHY THIS DOES NOT BREAK n-STORES-NEVER-JOIN: it is four small integers
+     * describing a PLACE's research depth, identical for every reader in that
+     * place, exactly as `coverage_tier` is. It singles nobody out, and
+     * `tests/db-schema.test.ts` carries it as an allowed shared column with
+     * this reasoning.
+     */
+    coverageTierDistribution: text("coverage_tier_distribution").notNull(),
   },
   (table) => [
     index("search_log_occurred_at_idx").on(table.occurredAt),
@@ -554,6 +585,37 @@ export const reactions = pgTable(
     coverageTier: text("coverage_tier", {
       enum: ["TIER_0", "TIER_1", "TIER_2", "TIER_3", "UNKNOWN"],
     }).notNull(),
+    /**
+     * THE PER-GOVERNMENT TIER DISTRIBUTION (Prompt C item 3, 2026-08-20).
+     *
+     * The floor above is the honest public headline and it does not move. It
+     * is also `TIER_0` for 97.88% of zips nationally — no special district
+     * anywhere has resolved territory and nearly every zip contains one — so
+     * as a FIELD on a sold row it separates almost nothing. A buyer weighting
+     * a row cannot tell a place with a fully enumerated county and one
+     * unresolved fire district from a place where nothing at all is known,
+     * and those are not the same measurement.
+     *
+     * So the same stamped values are also carried COUNTED rather than
+     * floored: `T0:24,T1:0,T2:3,T3:0`. Written at write time from the stamped
+     * ledger, never inferred at read time and never recomputed.
+     *
+     * STORED ONLY. It appears on no reader-facing surface, in no headline
+     * figure, in no report summary and in no national distribution. The floor
+     * tier remains the only tier stated publicly.
+     *
+     * NOT NULLABLE AND NOT DEFAULTED, for the same reason as the tier: a write
+     * that cannot state it FAILS rather than landing as a plausible zero.
+     * `UNKNOWN` is the honest value where it genuinely cannot be recovered —
+     * four zeros would be a claim that we counted and found none.
+     *
+     * WHY THIS DOES NOT BREAK n-STORES-NEVER-JOIN: it is four small integers
+     * describing a PLACE's research depth, identical for every reader in that
+     * place, exactly as `coverage_tier` is. It singles nobody out, and
+     * `tests/db-schema.test.ts` carries it as an allowed shared column with
+     * this reasoning.
+     */
+    coverageTierDistribution: text("coverage_tier_distribution").notNull(),
   },
   (table) => [
     // One reaction per browser key per target: a changed answer overwrites
@@ -616,7 +678,7 @@ export const feedback = pgTable(
      * The author reading a queue of reports needs to know whether someone was
      * looking at a coverage gap or at the site as a whole; a free-form
      * referrer would carry query strings and therefore whatever a reader had
-     * typed. SIDEBAR ships now; COVERAGE is H02's missing-body link, which is
+     * typed. SIDEBAR ships now; COVERAGE is HUNT02's missing-body link, which is
      * this same surface with a second entry point.
      */
     surface: text("surface", { enum: ["SIDEBAR", "TRANSPARENCY", "COVERAGE"] }).notNull(),

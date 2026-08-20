@@ -1,13 +1,40 @@
 # The source ladder
 
-How a body's meeting calendar and agendas get found. A standing document: every
-hunt walks these rungs in order and records what each returned, and **every new
-rung anyone discovers gets written back here** so the ladder compounds instead
-of being re-derived each session.
+**WHAT THIS FILE IS** (header corrected 2026-08-20, Prompt C item 6.3): it is
+the **EVIDENCE**. Roughly 1,900 lines of per-body hunt records — every rung
+walked, every miss with its URL and its date, every wall named and every wall
+that fell. It is not "the method"; the header said that for a week and it was
+wrong, and a reader who believed it went looking for the evidence somewhere
+else.
 
-The canonical per-body hunt records live in `lib/registry/coverage-audit.ts` —
-every rung walked, every miss with its URL, overlaid onto the registry at
-build. This document is the method; that file is the evidence.
+`lib/registry/coverage-audit.ts` carries the machine-readable per-body records
+that overlay onto the registry at build. **Both are evidence.** This one is
+where a human reads what actually happened; that one is where the product does.
+Neither is a summary of the other, and this document is not being migrated into
+it — **this is not a final structure and it is expected to keep adjusting.**
+
+**THE NUMBERED LIST OF THIRTEEN THAT USED TO BE HERE IS RETIRED IN PLACE**
+(2026-08-20, RULING 16 in `docs/rulings.md`).
+
+Two ladders existed in this repo and both were numbered:
+
+- **`CLAUDE.md`'s fourteen rungs** — the RETRIEVAL-MECHANICS ladder. How to get
+  bytes past a wall. Its numbering is the one that reaches the database as
+  `walledAtRung`, and it is **canonical**.
+- **The thirteen that lived here** — a DISCOVERY ladder. Where a document
+  lives. A different question entirely.
+
+So "rung 7" in a throw site and "rung 7" in this document were different rungs,
+and nothing in either file said so. The thirteen now live in
+`docs/zip-playbook.md` §2 as a **lettered** ladder, A through M — lettered
+precisely so the collision cannot come back. Nothing was lost: every rung moved
+with its examples intact.
+
+Rung values recorded in this file's hunt records BEFORE F22 (2026-08-20) are
+**provenance-unknown** and are marked as such rather than reinterpreted, per
+RULING 17. F22 is the session that made throw sites name their rung in the
+canonical numbering; guessing which ladder an older number meant would
+manufacture a retrieval history nobody walked.
 
 **The governing constraint is in `CLAUDE.md`** (public records are reachable):
 "not found" is a claim earned only by an enumerated record of rungs attempted.
@@ -20,60 +47,14 @@ unchanged `contentHash`, never authenticate or circumvent an access control,
 never accept clickwrap and then violate it, never retrieve what is not already
 public.
 
-## The rungs
+## Where the rungs are now
 
-1. **Resolve the real domain first.** Search results go stale — `newburynh.org`
-   does not resolve; `newbury.nh.gov` does. Common shapes: `<town>.<st>.gov`,
-   `<town><st>.gov`, `<town>.org`, `<district>.k12.<st>.us`, `<district>.org`,
-   `co.<county>.<st>.us`, `<county>county.gov`, and `.net` where `.org` is
-   dead (`merrimackcounty.net`).
-2. **The body's own page on that domain.** The specific board page, not the
-   jurisdiction homepage — it usually links the calendar directly.
-3. **The clerk, secretary or administrator page** — frequently different from
-   the body's page, and where notices actually get posted.
-4. **Machine-readable feeds on that domain.** Try, do not assume: `/rss`,
-   `/feed`, `/RSSFeed.aspx`, `/AgendaCenter`, `/Calendar.aspx`,
-   `/calendar.ics`, `?ical=1`, `/events.ics`, `/api`, `/sitemap.xml`,
-   `/robots.txt`. Read robots.txt and sitemap.xml as discovery.
-5. **CMS-standard paths for whichever platform the site runs.** Identify the
-   CMS first (CivicPlus, Granicus OpenCities, Revize, Municode, GovOffice,
-   Apptegy, WordPress, Squarespace), then try its conventions. **Never infer
-   the agenda vendor from the website CMS** — Tucson runs Granicus OpenCities
-   and is not a Legistar client, which would have been wrong twice.
-6. **The agenda vendor portal, and its API before its HTML.** Legistar, OnBase
-   Agenda Online, NovusAgenda, Diligent Community / BoardDocs, iCompass /
-   CivicWeb, Simbli, PrimeGov, CivicClerk, Municode Meetings, Apptegy
-   Thrillshare, Granicus IQM2. The list is open-ended; add every new one here.
-7. **Undocumented endpoints behind the portal.** Most portals render from JSON
-   they fetch themselves — watch the network requests on the meeting-list page
-   and use the endpoint the page uses. The same public data the page shows, in
-   the form the page already receives it.
-8. **Embedded third-party calendars.** A Google Calendar embed exposes
-   `calendar.google.com/calendar/ical/<id>/public/basic.ics`; Trumba and
-   Localist have derivable public feeds.
-9. **Statutory posting locations.** AZ requires the agenda on the body's
-   website 24h ahead (A.R.S. § 38-431.02); NJ requires 48h notice (N.J.S.A.
-   10:4-8); NH requires notice in two public places or a newspaper, and no
-   agenda at all (RSA 91-A:2). Follow the statute to where notice lives.
-   A *formal records request* is rung 9's manual sibling and is never
-   automated — in AZ it is where § 39-121.03's commercial-purpose machinery
-   attaches.
-10. **County and state clearinghouses.** County clerks aggregate; some states
-    run public-notice sites; press associations run legal-notice portals.
-    (Verified misses: NH has none; nhmunicipal.org's board is NHMA's own.)
-11. **The parent or overlapping body's feed.** Pima's board sat as the Library
-    District and Ajo Domestic Water; joint meetings appear on both parties'
-    calendars (Tucson content reachable via `pima.legistar.com`).
-12. **The Wayback Machine**, for a page that moved rather than vanished.
-13. **Community and social channels as leads only** — never a citation. A lead
-    is `UNVERIFIED` until the body's own posting is found.
-
-## Rung 14 is: add rungs
-
-The list above is a floor. Reaching thirteen without an answer is the point at
-which rungs get invented, and any route that works gets written back here.
-A body is exhausted when the *ideas* run out and that has been recorded —
-never when the list runs out.
+- **Retrieval mechanics, numbered 1–14:** `CLAUDE.md`, "THE LADDER,
+  EXHAUSTIVELY". Canonical. The only numbered ladder.
+- **Discovery, lettered A–M:** `docs/zip-playbook.md` §2.
+- **Per-jurisdiction-type first moves:** `docs/zip-playbook.md` §2, same
+  section.
+- **Rungs invented and verified, by session:** below in this file, unchanged.
 
 ## Rungs invented and verified, by session
 
@@ -684,7 +665,13 @@ question rather than an implied "nonpartisan".
   `tests/party.test.ts` fails the build if the two surfaces ever disagree
   about the party or cite different records for it.
 
-### M62 — the certified-results rung, walked 2026-08-15
+### M62 — the certified-results rung, walked 2026-08-15 — the evidence
+
+**The RECIPE is `docs/zip-playbook.md` §3, "The party recipe (M62, 2026-08-15) — verbatim from the session that found it", and it is not
+restated here.** This section is the EVIDENCE behind it: which body, which
+URL, which date, which numbers came back. Two copies of one rule can drift
+apart, and one pair already had.
+
 
 The next rung, walked to the end for all twelve curated bodies. What it
 found first is worth stating before the results, because it would have
@@ -885,7 +872,22 @@ and zip, never a house number.
 Four findings, each of which would have produced a false "not found" or a
 false "that's all there is" for anyone who stopped one rung early.
 
-### The served window was not the fetch window (M76)
+### The served window is the fetch window (M76) — the evidence
+
+**The RECIPE is `docs/zip-playbook.md` §3, "The served window is the fetch window (M76, 2026-08-15)", and it is not
+restated here.** This section is the EVIDENCE behind it: which body, which
+URL, which date, which numbers came back. Two copies of one rule can drift
+apart, and one pair already had.
+
+> **The two copies disagreed, and this is the resolution** (2026-08-20,
+> Prompt C item 7.3). This section was titled *"The served window was NOT the
+> fetch window"* — the defect, in the past tense — while the playbook titled the
+> same finding *"The served window IS the fetch window"* — the rule, in the
+> present. Same body text, opposite headings, and only this copy carried the
+> measurement table. **The playbook's title survives** as the finding's name,
+> because the playbook's job is the standing rule a later session applies. This
+> heading now names what this section actually is: the evidence behind it.
+
 
 Every adapter carried `WINDOW_BACK_DAYS = 30`, under a comment claiming it
 matched the cascade, while `CONCLUDED_LOOKBACK_DAYS` had been raised to 90.
@@ -902,10 +904,14 @@ Measured after deriving the windows from `lib/meetings/constants.ts`:
 | Tucson clerksboards | 15 | 24 |
 | Amphitheater USD | 2 | 6 |
 
-**The rung**: when a jurisdiction looks thinner than its portal, check the
-adapter's own window before hunting for a second source.
 
-### A township's boards are in a different calendar category (M77)
+### A township's boards are in a different calendar category (M77) — the evidence
+
+**The RECIPE is `docs/zip-playbook.md` §3, "CivicPlus: the boards live in a different calendar category (2026-08-15)", and it is not
+restated here.** This section is the EVIDENCE behind it: which body, which
+URL, which date, which numbers came back. Two copies of one rule can drift
+apart, and one pair already had.
+
 
 Rockaway Township's wired iCal feed is `catID=25` and carries the Township
 Council and nothing else. **`catID=30` is a second calendar** carrying the
@@ -939,7 +945,13 @@ Three sibling defects the new rows exposed, all of which existed before them:
   one `ocdId`, and the council's Tuesday would have deleted the planning
   board's Tuesday.
 
-### A town's portal may not be the town (M79)
+### A town's portal may not be the town (M79) — the evidence
+
+**The RECIPE is `docs/zip-playbook.md` §3, "A town's portal may not be the town (2026-08-15)", and it is not
+restated here.** This section is the EVIDENCE behind it: which body, which
+URL, which date, which numbers came back. Two copies of one rule can drift
+apart, and one pair already had.
+
 
 **Newbury's CivicWeb tenant carries only the Selectboard.** Proven rather than
 assumed: `MeetingsService.svc/meetings?from=2026-01-01&to=2026-12-31` returned <!-- expected-future: the end of the query range sent to the CivicWeb service, not a claim about when anything happened; the whole point of the query was to cover the rest of the calendar year -->
@@ -963,7 +975,13 @@ Both are the real-browser rung's, and it is the next rung, not the end of the
 list. The coverage audit already records that rung working for Kearsarge on
 2026-08-14 and naming its prize: `2026-2027_school_board_schedule.pdf`.
 
-### The published annual schedule is a source shape, not a vendor (M78)
+### The published annual schedule is a source shape, not a vendor (M78) — the evidence
+
+**The RECIPE is `docs/zip-playbook.md` §3, "The published annual schedule (2026-08-15)", and it is not
+restated here.** This section is the EVIDENCE behind it: which body, which
+URL, which date, which numbers came back. Two copies of one rule can drift
+apart, and one pair already had.
+
 
 Morris Hills Regional — 07866's high school district, `NOT_ATTEMPTED` until
 this session — **runs no agenda vendor at all** and publishes better than most
@@ -1020,7 +1038,13 @@ Sessions taken, all `2026-08-09` datasets:
 | NJ | 2250 (2026-2027 Regular) | 120 | 1,539 |
 | NH | 2236 (2026 Regular) | 426 | 360 |
 
-### The district mapping, and the failure it hides
+### The district mapping, and the failure it hides — the evidence
+
+**The RECIPE is `docs/zip-playbook.md` §3, "State roll calls: LegiScan, and the join that fails silently (2026-08-15)", and it is not
+restated here.** This section is the EVIDENCE behind it: which body, which
+URL, which date, which numbers came back. Two copies of one rule can drift
+apart, and one pair already had.
+
 
 LegiScan gives a district string; we need an OCD district key.
 
@@ -1082,7 +1106,13 @@ current membership and in neither of our roster snapshots for those seats.
 No join, no render — their votes are not stored against a guess at who they
 are.
 
-### The clip, stated
+### The clip, stated — the evidence
+
+**The RECIPE is `docs/zip-playbook.md` §3, "Let the surface drive the clip (2026-08-15)", and it is not
+restated here.** This section is the EVIDENCE behind it: which body, which
+URL, which date, which numbers came back. Two copies of one rule can drift
+apart, and one pair already had.
+
 
 Arizona alone published 7,283 roll calls in one session. The snapshot holds
 **the union of each matched member's twelve most recent** — 72 roll calls and

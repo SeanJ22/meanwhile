@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import type { ReactNode } from "react";
 import { DM_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { titleFor } from "@/lib/brand";
@@ -44,7 +45,21 @@ export const viewport: Viewport = {
 */
 const THEME_SCRIPT = `try{if(localStorage.getItem("wtp.theme")==="light")document.documentElement.setAttribute("data-theme","light")}catch(e){}`;
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+/*
+  `LayoutProps<"/">` — the global Next generates into `.next/types` during a
+  build — used to be the annotation here, and `tsc --noEmit` therefore could
+  not run on a checkout that had never been built (Prompt C item 1a, 2026-08-20).
+  It passed on developer machines only because `.next` was lying around from
+  the previous build, which meant every "tsc clean" ever reported was measured
+  on a tree carrying generated files. The type it resolved to is this, so
+  writing it out costs nothing and makes the type check runnable on a fresh
+  clone. `tests/clean-typecheck.test.ts` fails if a generated global comes back.
+*/
+export default function RootLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   return (
     <html
       lang="en"

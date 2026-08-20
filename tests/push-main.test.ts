@@ -254,27 +254,93 @@ test("RULING 13: the PR-gating workflow runs the suite, lint and types on Linux"
   assert.match(text, /run: corepack pnpm exec tsc --noEmit/, "build-check.yml type-checks");
 
   /*
-   * THE TYPE CHECK MUST FOLLOW A BUILD, and this asserts the ORDER rather than
-   * merely the presence.
+   * THE TYPE CHECK MUST RUN ON A CHECKOUT THAT WAS NEVER BUILT, and this
+   * asserts the JOB rather than merely the presence (Prompt C item 1a).
    *
-   * `tsconfig.json` includes `.next/types/**` and Next generates those types
-   * during the build — `LayoutProps` among them. Run before a build, on a
-   * clean checkout, tsc fails with "Cannot find name 'LayoutProps'". That is
-   * exactly what happened the first time this gate ran on Linux, and it had
-   * been latent for as long as the gate had only ever been run locally, where
-   * a stale `.next` from the last build makes it pass.
+   * It ran after the build for one day. That made it pass and made it
+   * worthless: `tsconfig.json` includes `.next/types/**`, so a check placed
+   * behind a build can only ever be measured on a tree carrying generated
+   * files — the exact condition that hid "Cannot find name 'LayoutProps'"
+   * from every developer machine until this job first ran on Linux. The fix
+   * was to stop depending on a generated global (app/layout.tsx writes its
+   * own props type), which is what makes a fresh-checkout check possible.
+   *
+   * So: the type check lives in the gates job, and the gates job does not
+   * build. If a later change adds a build step there to "fix" a type error,
+   * this fails and says why.
    */
-  const buildAt = text.indexOf("run: corepack pnpm run build");
-  const typesAt = text.indexOf("run: corepack pnpm exec tsc --noEmit");
-  assert.ok(buildAt > 0, "the build step is still there");
-  assert.ok(
-    typesAt > buildAt,
-    "tsc --noEmit must run AFTER pnpm build — it depends on types the build " +
-      "generates into .next/types, so on a clean checkout it cannot pass alone",
+  const gatesAt = text.indexOf("  gates:");
+  assert.ok(gatesAt > 0, "the gates job is still there");
+  const gates = text.slice(gatesAt);
+  assert.match(
+    gates,
+    /run: corepack pnpm exec tsc --noEmit/,
+    "the type check runs in the gates job",
   );
+  assert.ok(
+    !/run: corepack pnpm run build/.test(gates),
+    "the gates job must NOT build — a type check behind a build can only be " +
+      "measured on a tree carrying generated files, which is the condition " +
+      "that hid the LayoutProps defect for months",
+  );
+
   assert.match(
     text,
     /runs-on: ubuntu-latest/,
     "on Linux — the platform the author's machine is not",
+  );
+});
+
+/* ---- Prompt C 1b: the one check the gates job cannot run --------------- */
+
+/**
+ * The suite reports 1377 tests on both platforms and one fewer PASS on Linux,
+ * and exactly one test is responsible: `tests/feedback.test.ts`'s bundle half,
+ * which scans the built client chunks for a personal address and reports
+ * CANNOT RUN when `.next/static` is absent. On a developer's machine `.next`
+ * is lying around from the last build, so it runs; the gates job never builds,
+ * so it does not.
+ *
+ * The skip is right — a check that cannot reach its subject must not print
+ * like a passing one — but a guard that never executes on the platform
+ * production is built on is a guard on paper. So the build job runs it, on
+ * the build it just produced. This asserts that wiring, because the failure
+ * mode is silent: drop the step and the check simply stops happening on Linux
+ * while every job stays green.
+ */
+test("Prompt C 1b: the bundle-scanning check runs in the job that has a build", () => {
+  const text = readFileSync(join(WORKFLOWS, "build-check.yml"), "utf8");
+  const gatesAt = text.indexOf("  gates:");
+  const buildJob = text.slice(0, gatesAt);
+
+  assert.match(
+    buildJob,
+    /run: corepack pnpm run test:bundle/,
+    "the build job must run the bundle-scanning checks — they are the only " +
+      "tests in the suite that need a build, and the gates job never builds",
+  );
+  const buildAt = buildJob.indexOf("run: corepack pnpm run build");
+  const bundleAt = buildJob.indexOf("run: corepack pnpm run test:bundle");
+  assert.ok(buildAt > 0 && bundleAt > buildAt, "and it must run AFTER the build");
+
+  const pkg = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8"));
+  assert.match(
+    pkg.scripts["test:bundle"] ?? "",
+    /tests\/feedback\.test\.ts/,
+    "test:bundle names the file whose bundle half is the skipped check",
+  );
+});
+
+/**
+ * And the skip itself stays honest. If someone "fixes" the count gap by
+ * deleting the guard clause, the bundle scan would silently pass on a tree
+ * with no bundle — the exact shape of defect this repo keeps finding.
+ */
+test("Prompt C 1b: the bundle scan still reports CANNOT RUN rather than passing", () => {
+  const text = readFileSync(join(ROOT, "tests", "feedback.test.ts"), "utf8");
+  assert.match(
+    text,
+    /t\.skip\("CANNOT RUN: no \.next\/static/,
+    "the bundle scan must report that it could not run, never pass silently",
   );
 });

@@ -76,3 +76,11 @@ next-env.d.ts
 *.log
 .cache
 .promptb
+
+# Session capture directories. Screenshots are EVIDENCE A HUMAN READS, not
+# artifacts — RULING 2 requires them opened and read as images, and the reading
+# is what the report carries. Committing them would also trip the asset-store
+# guard (RULING 20), which is the guard working: a PNG is a binary and binaries
+# do not go in git.
+/.promptc/
+/.f22tmp/

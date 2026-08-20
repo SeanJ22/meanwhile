@@ -609,8 +609,12 @@ export const COVERAGE_AUDITS: BodyCoverageAudit[] = [
         note: "Document URLs are stable and directly fetchable without the ?t= cache token — canonical URLs for provenance.",
       },
       {
-        // The statutory posting location in practice (source-ladder rung 9),
-        // reached through the body's own agenda page.
+        // The statutory posting location in practice — DISCOVERY LADDER
+        // LETTER I (`docs/zip-playbook.md` §2), reached through the body's own
+        // agenda page. Renumbered from "source-ladder rung 9" on 2026-08-20
+        // (RULING 16): the discovery list was numbered, `CLAUDE.md`'s
+        // retrieval-mechanics ladder is numbered, and "rung 9" meant a
+        // different thing in each. Letters cannot collide with numbers.
         rung: "BODY_AGENDA_PAGE",
         outcome: "HIT",
         url: "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/Public%20Notice%207.27.26.pdf",

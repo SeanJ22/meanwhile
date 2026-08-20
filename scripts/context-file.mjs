@@ -278,6 +278,38 @@ export async function readRipcords() {
  * truncation would make a partial file read as a complete one, which is the
  * single thing this project's rules never permit.
  */
+/**
+ * THE RULINGS INDEX (Prompt C item 5, 2026-08-20).
+ *
+ * `docs/rulings.md` is the append-only record of every decision the author has
+ * made that is NOT law. Before it existed those decisions lived only in
+ * whichever chat window was open at the time, which meant a session could be
+ * told to "hardcode the ruling as fact" with no way to check what the ruling
+ * said, and a superseded ruling could return as drift because nothing recorded
+ * that it had been replaced.
+ *
+ * Surfacing it here is what makes every session open on it. **Nothing is
+ * composed** — the headings are read out of the file, exactly like every other
+ * section of this generator. The bodies are not copied: this is an index, and
+ * a session that needs one reads the file.
+ */
+function readRulings() {
+  let text;
+  try {
+    text = readFileSync(join(ROOT, "docs/rulings.md"), "utf8");
+  } catch (error) {
+    return { headings: [], failure: `could not read docs/rulings.md: ${error.message}` };
+  }
+  const headings = text
+    .split("\n")
+    .filter((line) => line.startsWith("### "))
+    .map((line) => line.slice(4).trim());
+  return {
+    headings,
+    failure: headings.length === 0 ? "docs/rulings.md carries no `###` ruling headings" : null,
+  };
+}
+
 export async function buildContext({
   gitFacts = [],
   generatedAt,
@@ -341,6 +373,29 @@ export async function buildContext({
     }
 
     /* P0 */
+    /* rulings — decisions that are not law, and where to read them */
+    const rulings = readRulings();
+    put(
+      `## Rulings — ${rulings.headings.length} recorded`,
+      "",
+      "Source: `docs/rulings.md`, append-only. **This is an index, not the text.**",
+      "`CLAUDE.md` is law; these are the author's calls that are not, and a session",
+      "told to hardcode a ruling as fact reads the file rather than the chat it came",
+      "from. Each entry there names what it supersedes.",
+      "",
+    );
+    if (rulings.failure) {
+      put(
+        `> **SECTION FAILED — the rulings index could not be built.** ${rulings.failure}`,
+        "",
+        "> This is a failure of this generator, not a statement that no ruling exists.",
+        "",
+      );
+    } else {
+      for (const h of rulings.headings) put(`- ${h}`);
+      put("");
+    }
+
     put(
       `## P0 tracker rows — ${p0.length} of ${records.length} rows`,
       "",

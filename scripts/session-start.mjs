@@ -8,7 +8,7 @@
  * **the environment lies quietly if you do not look.**
  *
  *   1. local `main` vs `origin/main`   a stale main looks like an empty repo
- *   2. `CLAUDE.md` is ~10 KB           a clobbered one looks like no constraints
+ *   2. `CLAUDE.md` is above 1 KB       a clobbered one looks like no constraints
  *   3. port 3000 is free               a stale dev server looks like a build
  *   4. `core.hooksPath` is set         an uninstalled guard looks like a passing
  *                                      one — it never fires and never says so
@@ -144,11 +144,18 @@ const CLAUDE = join(ROOT, "CLAUDE.md");
 // they drifted the moment the file grew, and raising the constant alone would
 // just restart the same clock. CLAUDE.md grows every time the author adopts a
 // rule, so anything fixed here goes stale by design.
-const EXPECTED_KB = 44;
-// Half to double. Wide enough that ordinary growth is silent, narrow enough
-// that a file which has halved still gets looked at.
-const WARN_BELOW_KB = EXPECTED_KB / 2;
-const WARN_ABOVE_KB = EXPECTED_KB * 2;
+// THE CEILING IS GONE (Prompt C item 4.2, 2026-08-20). The author's ruling:
+// CLAUDE.md has NO SIZE CAP. The 40 KB cap belongs to `docs/context.md` alone,
+// and an upper warning band here was that cap leaking into the one file it
+// does not govern — it fires on exactly the change the project wants, which is
+// the author adopting another rule. `scripts/check-claude-size.mjs` made the
+// same call at authorship for the same reason and kept only a floor.
+//
+// THE FLOOR STAYS, and it is a different guard entirely: a CLOBBERED file is
+// tiny, and a repo whose constraints file is gone does not look broken — it
+// looks like a repo with no rules, and every session after it inherits none
+// while believing it has read them.
+const FLOOR_KB = 1;
 
 if (!existsSync(CLAUDE)) {
   fail("CLAUDE.md", "missing entirely");
@@ -161,16 +168,12 @@ if (!existsSync(CLAUDE)) {
   if (body === "@AGENTS.md") {
     fail("CLAUDE.md", `clobbered — contains only @AGENTS.md (${bytes} bytes)`);
     notes.push(...restoreNote());
-  } else if (bytes < 1024) {
-    fail("CLAUDE.md", `${bytes} bytes — under 1 KB, so it has been overwritten`);
-    notes.push(...restoreNote());
-  } else if (bytes < WARN_BELOW_KB * 1024 || bytes > WARN_ABOVE_KB * 1024) {
-    // Not fatal: the file legitimately grows. But a large swing is worth a look
-    // before trusting it.
-    warn(
+  } else if (bytes < FLOOR_KB * 1024) {
+    fail(
       "CLAUDE.md",
-      `${kb} KB — outside ${WARN_BELOW_KB}–${WARN_ABOVE_KB} KB (expected roughly ${EXPECTED_KB} KB), check it`,
+      `${bytes} bytes — under the ${FLOOR_KB} KB floor, so it has been overwritten`,
     );
+    notes.push(...restoreNote());
   } else {
     ok("CLAUDE.md", `${kb} KB, intact`);
   }

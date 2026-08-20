@@ -356,7 +356,14 @@ function writeMeetingsSnapshot(
       ok: c.ok,
       error: c.error,
       ...(c.ok ? {} : { failure: c.failure ?? "WALL" }),
-      ...(typeof c.walledAtRung === "number" ? { walledAtRung: c.walledAtRung } : {}),
+      // The rung travels with its ladder, or it travels as an unmarked number
+      // that a later session has to go back and mark (RULING 17).
+      ...(typeof c.walledAtRung === "number"
+        ? {
+            walledAtRung: c.walledAtRung,
+            rungProvenance: c.rungProvenance ?? ("CANONICAL" as const),
+          }
+        : {}),
       fetched: c.fetched,
       normalized: c.normalized,
       drops: c.drops,

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
-import { join, relative } from "node:path";
+import { join } from "node:path";
 import test from "node:test";
 
 // Plain .mjs, shared with the plain-node scripts that never see tsx.
@@ -444,7 +444,7 @@ test("the feedback table is in the schema, the migration, and no export path", (
     if (posixRelative(ROOT, route).includes("api/feedback")) continue;
     assert.ok(
       !/db\/feedback/.test(source),
-      `${relative(ROOT, route)} reaches the feedback store — only its own route may`,
+      `${posixRelative(ROOT, route)} reaches the feedback store — only its own route may`,
     );
   }
   // And the feedback route itself only WRITES.

@@ -4,7 +4,11 @@ import { getDb } from "./index.ts";
 import { ORGANIC, type RunMarker } from "./run-marker.ts";
 import { searchLog } from "./schema.ts";
 import { assertWriteAllowed } from "./write-guard.ts";
-import { coverageTierForZip } from "../coverage/zip-tier.ts";
+import {
+  coverageTierForZip,
+  encodeTierDistribution,
+  tierDistributionForZip,
+} from "../coverage/zip-tier.ts";
 
 /**
  * Writes to the search log — what was asked and where, never who.
@@ -191,6 +195,10 @@ export async function logSearchEvent(event: SearchLogEvent): Promise<boolean> {
       // `UNKNOWN` when the zip has no stamped tier — never TIER_0, which
       // would claim we looked at its governments and found none.
       coverageTier: coverageTierForZip(zip),
+      // Prompt C item 3. Counted, not floored — see lib/db/schema.ts.
+      // UNKNOWN where the zip has no stamped distribution, never four
+      // zeros, which would claim we counted this place and found none.
+      coverageTierDistribution: encodeTierDistribution(tierDistributionForZip(zip)),
     });
   return true;
 }

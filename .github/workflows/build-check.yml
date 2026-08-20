@@ -88,14 +88,24 @@ jobs:
           NEXT_PRIVATE_STANDALONE: ${{ matrix.mode == 'standalone' && 'true' || '' }}
         run: corepack pnpm run build
 
-      # AFTER THE BUILD, because tsconfig.json includes .next/types/**/*.ts and
-      # Next generates those types during the build — see the gates job above.
-      # Only in default mode: the emitted types are mode-independent, and the
-      # matrix would otherwise pay for the same answer twice.
-      - name: Types
+      # THE ONE CHECK THE GATES JOB CANNOT RUN (Prompt C item 1b, 2026-08-20).
+      #
+      # `tests/feedback.test.ts`'s bundle half scans the BUILT client chunks for
+      # a personal address (R40). With no `.next/static` it reports CANNOT RUN
+      # and skips — correctly, because a check that cannot reach its subject
+      # must never print like a passing one. That is the whole of the 1377/1376
+      # gap between a developer's machine, where `.next` is lying around, and
+      # the gates job, which deliberately never builds.
+      #
+      # The gap was honest and it was also a check not running on Linux. It
+      # runs here instead, on the build this job just produced, so the counts
+      # differ for a stated reason and the guard is actually executed. It is
+      # the same file the gates job already ran; the one test that skipped
+      # there is the one that matters here.
+      - name: Bundle-scanning checks (need the build above)
         if: matrix.mode == 'default'
         timeout-minutes: 10
-        run: corepack pnpm exec tsc --noEmit
+        run: corepack pnpm run test:bundle
 
       - name: Trace census
         if: always()
@@ -161,18 +171,23 @@ jobs:
         timeout-minutes: 10
         run: corepack pnpm lint
 
-      # THE TYPE CHECK IS NOT HERE, AND THE FIRST RUN OF THIS JOB IS WHY.
+      # THE TYPE CHECK RUNS HERE, ON A CHECKOUT THAT HAS NEVER BEEN BUILT
+      # (Prompt C item 1a, 2026-08-20).
       #
-      # It was here, and it failed on Linux with
-      # "app/layout.tsx(47,50): error TS2304: Cannot find name 'LayoutProps'".
-      # `LayoutProps` is a type NEXT GENERATES into .next/types during a build,
-      # and tsconfig.json includes .next/types/**/*.ts to pick it up. So
-      # `tsc --noEmit` has never been runnable on its own — on a developer's
-      # machine it passes because .next is lying around from the last build,
-      # and nobody had ever run it on a clean checkout.
+      # It lived in the build job for one day, after the first run of this job
+      # failed with "app/layout.tsx: error TS2304: Cannot find name
+      # 'LayoutProps'" — a type Next generates into .next/types, picked up by
+      # tsconfig.json's include. Moving the check behind a build made it pass
+      # and made it worthless: it could then only ever be measured on a tree
+      # carrying generated files, which is the same condition that hid the
+      # defect on developer machines for months.
       #
-      # That is a real latent defect this gate found on its first run, and the
-      # honest fix is to type-check where the types exist: after the build, in
-      # the build job below. Running a build here purely to feed tsc would pay
-      # for a third build to answer a question the first two already have the
-      # inputs for.
+      # app/layout.tsx now writes its own props type, so nothing in the tree
+      # depends on a generated global, and the check belongs where it proves
+      # something: a fresh checkout, no build, no cached .next. This job
+      # deliberately does NOT build — tests/push-main.test.ts asserts that, so
+      # a future "just add a build step" cannot quietly restore the old lie.
+      - name: Types (fresh checkout, no build)
+        if: always()
+        timeout-minutes: 10
+        run: corepack pnpm exec tsc --noEmit

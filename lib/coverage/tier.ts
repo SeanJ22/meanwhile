@@ -68,7 +68,8 @@ export const COVERAGE_TIER_READER_LABEL: Record<CoverageTier, string> = {
  * our research, and "this town has nothing" would be a fact about the town.
  */
 export const COVERAGE_TIER_ZIP_HEADLINE: Record<CoverageTier, string> = {
-  TIER_0: "We are still working out which governments cover this ZIP code.",
+  TIER_0:
+    "We have some of the governments that cover this ZIP code, and we are still working out the rest.",
   TIER_1: "We know which governments cover this ZIP code. We are still finding their boards and councils.",
   TIER_2: "We have the governments here and the boards and councils inside them. We are still filling in the people.",
   TIER_3: "We have the governments here, their boards and councils, and the people who sit on them.",
@@ -76,7 +77,7 @@ export const COVERAGE_TIER_ZIP_HEADLINE: Record<CoverageTier, string> = {
 
 /** What specifically stands between a tier and the next one. Item 11.3. */
 export const COVERAGE_TIER_NEXT_STEP: Record<CoverageTier, string> = {
-  TIER_0: "Resolve which governments' territory contains this ZIP code.",
+  TIER_0: "Work out which of the remaining governments reach this ZIP code.",
   TIER_1: "Enumerate the governing bodies inside each resolved government.",
   TIER_2: "Fill in every official and candidate on those bodies to Kelly depth.",
   TIER_3: "Nothing. This is the top of the ladder.",

@@ -537,6 +537,54 @@ for (const { zip } of FOUR) {
       `/ballot carries the office explainer at ${zip}`,
       /Powers defined in/.test(ballot.text),
     );
+
+    /*
+     * **PROMPT B ITEM 7.6 (2026-08-20) — every zip surface states its tier.**
+     *
+     * RULING 6 put a coverage tier on every zip; item 7 puts it in front of
+     * the reader. A surface that renders WITHOUT it is the failure this whole
+     * model exists to prevent: a thin page with no explanation reads as a
+     * quiet town, and the town is not quiet — we have not finished looking.
+     *
+     * The check is on the DATA ATTRIBUTE rather than the prose, because the
+     * prose is meant to be rewritten. What must survive is that a tier
+     * statement is present; how it is worded may change any day, exactly as
+     * the render-default rule was clarified on 2026-08-19 to guard the
+     * ATTRIBUTION rather than a particular sentence.
+     */
+    check(
+      "promptB",
+      `/ballot states its coverage tier at ${zip}`,
+      /data-coverage-note="(TIER_[0-3]|UNKNOWN)"/.test(ballot.text),
+      "no coverage-tier statement on the page — a thin page with no explanation " +
+        "reads as a place with nothing happening",
+    );
+
+    /*
+     * **PROMPT B ITEM 7.5 (2026-08-20) — no contest renders candidates at
+     * unequal depth.**
+     *
+     * RULING 7, and the tester's finding behind it: "Karen might be the
+     * perfect fit for me, but she has no information here. So I'm only going
+     * to look at the folks that do." A thin card tracks incumbency and
+     * campaign professionalism, not merit.
+     *
+     * The gate lives in ONE place (`equalDepthGate` in lib/coverage/tier.ts)
+     * so this check asks the page for the gate's own verdict rather than
+     * re-deriving depth from rendered HTML — a second implementation of the
+     * rule would be a second thing to get wrong. A contest the gate withheld
+     * carries the withheld marker AND says why; a contest it allowed carries
+     * neither.
+     */
+    const withheld = [...ballot.text.matchAll(/data-equal-depth="withheld"/g)].length;
+    const withheldReasons = [...ballot.text.matchAll(/data-equal-depth-reason=/g)].length;
+    check(
+      "promptB",
+      `/ballot explains every contest it withholds at ${zip}`,
+      withheld === withheldReasons,
+      `${withheld} contest(s) withheld, ${withheldReasons} carry a reason — a ` +
+        "withheld contest that does not say why renders as an unexplained blank",
+    );
     /*
      * **F01 11.2 (2026-08-19) RETIRED 0814c's claim and this check with it.**
      *

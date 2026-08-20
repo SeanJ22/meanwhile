@@ -75,3 +75,4 @@ yarn-error.log*
 next-env.d.ts
 *.log
 .cache
+.promptb

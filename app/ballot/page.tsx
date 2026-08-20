@@ -79,6 +79,11 @@ import { sharedNotesFor } from "@/lib/ballot/shared-notes";
 import { resolveZip } from "@/lib/geo/zcta";
 import { divisionsAt } from "@/lib/registry/server";
 import { PRODUCT_NAME } from "@/lib/brand";
+import { CoverageNote } from "@/components/coverage/coverage-note";
+import { EqualDepth } from "@/components/ballot/equal-depth";
+import type { CandidateDepth } from "@/lib/coverage/tier";
+import type { CandidateCardData } from "@/lib/ballot/candidate-cards";
+import type { CandidateLinks } from "@/lib/ballot/candidate-sites";
 
 /**
  * The ballot surface — S2.
@@ -174,6 +179,32 @@ function pickOptionsFor(
     label: `${cand.givenName} ${surnameDisplayCase(cand.familyName)}`,
     reactionTargetId: cand.id,
   }));
+}
+
+/**
+ * **RULING 7's four fields, read for one person** (item 7.2, 2026-08-20).
+ *
+ * The Kelly standard's reader-visible half: a photo, something in the
+ * campaign's own words, a way to reach them, and their campaign's own site.
+ * A candidate carrying all four and one carrying none may not appear side by
+ * side, because the difference the reader sees is our research and not the
+ * candidates.
+ */
+function depthFor(
+  card: CandidateCardData | null,
+  links: CandidateLinks | null,
+  blurb: { text: string } | null,
+): CandidateDepth {
+  return {
+    candidateId: "",
+    hasPhoto: Boolean(card?.photoUrl),
+    // Either kind of self-description counts: a curated bio and a captured
+    // blurb are the same rung to a reader, and treating them differently
+    // would withhold contests over a distinction only we can see.
+    hasBlurb: Boolean(card?.bio) || Boolean(blurb?.text),
+    hasContact: Boolean(card?.email) || Boolean(card?.phone),
+    hasCampaignSite: Boolean(links?.campaign?.url),
+  };
 }
 
 /** Federal is decided by the contest, never by division shape — a governor's
@@ -442,6 +473,12 @@ export default async function BallotPage({
         election authorities, with the filing linked on every item.{" "}
         <span className="font-medium">We never suggest how to vote.</span>
       </p>
+
+      {/* RULING 6 / item 7 (2026-08-20): what the reader is actually
+          looking at. One of the four sanctioned frictions — honesty about
+          coverage gaps, which may never be smoothed into implied
+          completeness. */}
+      <CoverageNote zip={zip} />
 
       {/* Item 2 (2026-08-15): the way out of the limitation the sentence
           above states. Until now the page named the gap and stopped there;
@@ -873,6 +910,17 @@ export default async function BallotPage({
                   what a November voter actually chooses among. */}
               {lineup ? (
                 <>
+                <EqualDepth
+                  names={lineup.nominees.map((n) => n.name)}
+                  candidates={lineup.nominees.map((n) => ({
+                    ...depthFor(
+                      cardForNominee(contest.id, n.name),
+                      linksForNominee(contest.id, n.name),
+                      derivedBlurbFor(`${contest.id}|${n.name}`),
+                    ),
+                    candidateId: n.name,
+                  }))}
+                >
                 <ul className="mt-3.5 space-y-3">
                   {photosFirst(lineup.nominees, (n) => Boolean(cardForNominee(contest.id, n.name)?.photoUrl)).map((nominee) => (
                     <li
@@ -994,6 +1042,7 @@ export default async function BallotPage({
                     </li>
                   ))}
                 </ul>
+                </EqualDepth>
                 {!isFederalContest(contest) && (
                   <StateFundingNote note={STATE_FUNDING_NOTE} />
                 )}
@@ -1029,6 +1078,19 @@ export default async function BallotPage({
                         {contest.scopeNote}
                       </p>
                     ))}
+                  <EqualDepth
+                    names={candidatesOf(set, contest).map(
+                      (c) => `${c.givenName} ${surnameDisplayCase(c.familyName)}`,
+                    )}
+                    candidates={candidatesOf(set, contest).map((c) => ({
+                      ...depthFor(
+                        cardForCandidacy(c.id),
+                        linksForCandidacy(c.id),
+                        derivedBlurbFor(c.id),
+                      ),
+                      candidateId: c.id,
+                    }))}
+                  >
                   <ul className="mt-3.5 space-y-3">
                     {photosFirst(candidatesOf(set, contest), (x) => Boolean(cardForCandidacy(x.id)?.photoUrl)).map((cand) => (
                       <li
@@ -1137,6 +1199,7 @@ export default async function BallotPage({
                       </li>
                     ))}
                   </ul>
+                  </EqualDepth>
                   {!isFederalContest(contest) && (
                     <StateFundingNote note={STATE_FUNDING_NOTE} />
                   )}

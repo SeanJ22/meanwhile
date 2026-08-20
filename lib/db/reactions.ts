@@ -7,6 +7,7 @@ import { reactions } from "./schema.ts";
 import { DIVISION_VINTAGE } from "./search-log.ts";
 import { assertWriteAllowed } from "./write-guard.ts";
 import type { RunMarker } from "./run-marker.ts";
+import { coverageTierForOcdIds } from "../coverage/zip-tier.ts";
 import {
   scaleForTargetType,
   type ReactionTargetType,
@@ -176,6 +177,11 @@ export async function writeReaction(row: StorableReaction): Promise<boolean> {
       freeText: row.freeText ?? null,
       runClass: row.marker.runClass,
       runId,
+      // RULING 6 / item 8. A reaction is the highest-value row in the
+      // product, and interest from a Tier 3 zip with forty candidate cards
+      // is not the same measurement as interest from a Tier 0 zip with none.
+      // Derived from the row's own divisions here, never sent by the client.
+      coverageTier: coverageTierForOcdIds(row.ocdIds),
     })
     .onConflictDoUpdate({
       target: [reactions.reactionKeyHash, reactions.targetType, reactions.targetId],

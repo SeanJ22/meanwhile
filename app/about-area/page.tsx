@@ -6,6 +6,7 @@ import { COVERED } from "@/lib/coverage/artifacts";
 import { resolveZip } from "@/lib/geo/zcta";
 import { divisionsAt } from "@/lib/registry/server";
 import { PRODUCT_NAME, titleFor } from "@/lib/brand";
+import { CoverageNote } from "@/components/coverage/coverage-note";
 
 /**
  * "About this area" v1 (7, 2026-08-17) — built for the mover: the questions
@@ -72,6 +73,10 @@ export default async function AboutAreaPage({
         sources — the state agency or statute is linked on every answer.
         We state the rules; what to make of them is yours.
       </p>
+
+      {/* RULING 6 / item 7 (2026-08-20): every zip surface tells the reader
+          which tier of coverage it is showing them, in plain language. */}
+      <CoverageNote zip={zip} />
 
       {!facts && (
         <p className="mt-6 text-[0.8125rem] leading-relaxed text-muted">

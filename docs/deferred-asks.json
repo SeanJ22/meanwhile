@@ -114,12 +114,12 @@
     "M136": "Body cards should be as rich as person cards — your words were that they should be an overwhelming amount of information. Full spec is written. RULE ON: build?",
     "M139": "Arriving from some zips, the sidebar sometimes renders blank and the who-governs panel half. Part of the fix shipped. RULE ON: finish?",
 
-    "H01": "Run the full research recipe at full depth on every governing body around one New Hampshire zip. Two of roughly sixty were done. RULE ON: schedule the sweep.",
-    "H02": "The Census counts governments; the app shows bodies. Nobody publishes a body count anywhere, so you currently cannot honestly say what fraction of them you cover. RULE ON: how should that denominator be built?",
-    "H03": "Coverage records saying 'not published' or 'couldn't reach' were written before five research techniques existed. Every one that now falls is a public body becoming visible. RULE ON: re-walk them?",
-    "H04": "Twelve contests and 47 candidacies around that zip, none of them researched. The list itself is already frozen, so only the hunting is left. RULE ON: schedule it.",
-    "H05": "40 of the 166 governments around that zip can't be tied to the zip, because no boundaries are published for special districts at any vintage. RULE ON: accept 'unresolved' as a permanent state, or find another route?",
-    "H06": "Re-run some measurements so the reported costs reflect steady state rather than one-off build cost. RULE ON: run them?",
+    "HUNT01": "Run the full research recipe at full depth on every governing body around one New Hampshire zip. Two of roughly sixty were done. RULE ON: schedule the sweep.",
+    "HUNT02": "The Census counts governments; the app shows bodies. Nobody publishes a body count anywhere, so you currently cannot honestly say what fraction of them you cover. RULE ON: how should that denominator be built?",
+    "HUNT03": "Coverage records saying 'not published' or 'couldn't reach' were written before five research techniques existed. Every one that now falls is a public body becoming visible. RULE ON: re-walk them?",
+    "HUNT04": "Twelve contests and 47 candidacies around that zip, none of them researched. The list itself is already frozen, so only the hunting is left. RULE ON: schedule it.",
+    "HUNT05": "40 of the 166 governments around that zip can't be tied to the zip, because no boundaries are published for special districts at any vintage. RULE ON: accept 'unresolved' as a permanent state, or find another route?",
+    "HUNT06": "Re-run some measurements so the reported costs reflect steady state rather than one-off build cost. RULE ON: run them?",
 
     "X02": "Five content creators is the cheapest marketing channel available to you. RULE ON: start?",
     "X03": "A podcast pitch, shorter and more specific than feels natural. RULE ON: write it?",

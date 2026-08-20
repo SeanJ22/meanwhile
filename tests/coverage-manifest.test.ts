@@ -17,9 +17,12 @@
 
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync, statSync } from "node:fs";
-import { dirname, join, relative } from "node:path";
+import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
+
+// Plain .mjs, shared with the plain-node scripts that never see tsx.
+import { posixRelative } from "../scripts/repo-path.mjs";
 
 import {
   COVERED_SLUGS,
@@ -261,7 +264,7 @@ const CONTENT_FILES = new Set(
  * for two days. Repo-relative paths are POSIX here and are normalized at the
  * one place they are produced.
  */
-const posixRel = (abs: string): string => relative(ROOT, abs).replace(/\\/g, "/");
+const posixRel = (abs: string): string => posixRelative(ROOT, abs);
 
 /**
  * The allowlist has to BIND, and that is a separate claim from the sweep.

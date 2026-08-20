@@ -91,7 +91,18 @@
     "verify:positions": "tsx scripts/verify-positions-search.mts",
     "queue:homes": "tsx scripts/queue-homes.mts",
     "names:census": "tsx scripts/name-census.mts",
-    "chrome:sweep": "tsx scripts/chrome-sweep.mts"
+    "chrome:sweep": "tsx scripts/chrome-sweep.mts",
+    "reference:verify": "tsx scripts/reference-verify.mts",
+    "crosswalk:build": "tsx scripts/build-census-nces-crosswalk.mts",
+    "tiger:inventory": "tsx scripts/tiger-inventory.mts",
+    "tiger:fetch": "tsx scripts/fetch-tiger-national.mts",
+    "zipgov:build": "tsx scripts/build-zip-governments.mts",
+    "territory:resolve": "tsx scripts/resolve-census-territory.mts",
+    "pilot:verify": "tsx scripts/verify-pilot-zips.mts",
+    "tiers:stamp": "tsx scripts/stamp-coverage-tiers.mts",
+    "shoot:promptb": "tsx scripts/promptb-shots.mts",
+    "ledger:build": "tsx scripts/build-gap-ledger.mts",
+    "tracker:promptb": "tsx scripts/promptb-tracker.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

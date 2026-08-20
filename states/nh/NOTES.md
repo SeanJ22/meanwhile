@@ -73,13 +73,13 @@ expect notice pages rather than calendars.
 | New London Board of Selectmen / Planning / Zoning / Conservation | town calendar, `event-tip` shape, month paging | LIVE |
 | Wilmot Selectboard / Planning Board / Cemetery Trustees | town events calendar, `.ics` feed, board named in `CATEGORIES` | LIVE |
 
-**Corrected 2026-08-19 (H03).** The Zoning Board row above read
+**Corrected 2026-08-19 (HUNT03).** The Zoning Board row above read
 `KNOWN_UNCOVERED` until this session, and it had been **LIVE since
 2026-08-15** — the curated venue row that closes it shipped in the mobile
 round-two session and this file was never brought forward. The registry was
 right and the document was four days stale.
 
-That is the same failure H03 exists to catch, one layer up: a coverage record
+That is the same failure HUNT03 exists to catch, one layer up: a coverage record
 that describes a wall which is no longer there. It is worth naming rather than
 quietly fixing, because it is the fifth time in three sessions that a document
 has described built work as unbuilt, and a re-walk cohort read off a stale

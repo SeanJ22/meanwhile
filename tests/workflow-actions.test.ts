@@ -73,8 +73,11 @@ test("R45: no workflow pins an action major that targets Node 20", () => {
 
   assert.equal(
     pins,
-    12,
-    `expected two Node-runtime action pins in each of six workflows, found ${pins}`,
+    14,
+    // Six workflows, one checkout + one setup-node each, plus the second job
+    // build-check.yml grew in Prompt B item 1c (the Linux gate) with its own
+    // pair. Counted rather than assumed, so a new job without pins is caught.
+    `expected 14 Node-runtime action pins across the workflow set, found ${pins}`,
   );
   assert.deepEqual(
     stale,
@@ -139,11 +142,11 @@ test("AUD-07: both refresh workflows diff before they gate, and still gate befor
 
     const diffAt = source.indexOf("id: diff");
     const gateAt = source.indexOf("run: corepack pnpm test");
-    const commitAt = source.indexOf("git push origin main");
+    const commitAt = source.indexOf("node scripts/push-main.mjs");
 
     assert.ok(diffAt > 0, `${file}: the diff step is still there`);
     assert.ok(gateAt > 0, `${file}: the gate is still there`);
-    assert.ok(commitAt > 0, `${file}: the commit is still there`);
+    assert.ok(commitAt > 0, `${file}: the protected push is still there`);
 
     assert.ok(
       diffAt < gateAt,
@@ -160,7 +163,9 @@ test("AUD-07: both refresh workflows diff before they gate, and still gate befor
     // change is real rather than simulated.
     assert.match(
       source,
-      /if: steps\.diff\.outputs\.changed == 'true'\s*\n\s*run: corepack pnpm test/,
+      // F25 (2026-08-20) put a `timeout-minutes` between the condition and the
+      // command. The claim guarded here is the CONDITION, not the adjacency.
+      /if: steps\.diff\.outputs\.changed == 'true'\s*\n\s*timeout-minutes: \d+\s*\n\s*run: corepack pnpm test/,
       `${file}: the gate is conditioned on the artifact having changed`,
     );
     assert.match(

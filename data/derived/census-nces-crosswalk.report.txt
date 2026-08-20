@@ -1,0 +1,45 @@
+CENSUS <-> NCES SCHOOL-DISTRICT CROSSWALK
+
+JOIN KEY: fips_state + normalized district name. There is no shared
+identifier in the two files this repo holds; NCES publishes a Census ID on
+the F-33 fiscal survey, which is a separate acquisition.
+METHOD: one-to-one only. A normalized name resolving to more than one row
+on either side is AMBIGUOUS and is counted as UNMATCHED, not resolved.
+
+Census school systems loaded: 13859
+  independent (gov_type = SCHOOL DISTRICT):  12546
+  dependent (separate Census file):          1313
+NCES LEA records loaded: 19711
+  derived_census_comparable = Y:             13299
+
+MATCHED PAIRS: 9776
+AMBIGUOUS KEYS (counted as unmatched on both sides): 166
+
+UNMATCHED, CENSUS SIDE:
+  of 12,546 independent school districts:  3373 (26.89%)
+  of 1,313 dependent school systems:       710 (54.07%)
+  of 13,859 combined school systems:       4083 (29.46%)
+
+UNMATCHED, NCES SIDE:
+  of 19,711 CCD LEA records:               9935 (50.40%)
+  of 13,299 census-comparable LEAs:        3622 (27.24%)
+
+The 19,711 denominator is the honest one to state and the wrong one to be
+alarmed by: 6,412 of those records are charter agencies, service agencies,
+supervisory unions and state-operated agencies that are not governments and
+have no Census row to match, by construction.
+
+WORST TEN STATES BY UNMATCHED CENSUS SYSTEMS:
+  MO: 431 Census unmatched, 423 comparable-LEA unmatched
+  CA: 314 Census unmatched, 246 comparable-LEA unmatched
+  NY: 236 Census unmatched, 243 comparable-LEA unmatched
+  IL: 235 Census unmatched, 199 comparable-LEA unmatched
+  NJ: 229 Census unmatched, 201 comparable-LEA unmatched
+  ME: 218 Census unmatched, 208 comparable-LEA unmatched
+  MA: 207 Census unmatched, 211 comparable-LEA unmatched
+  OH: 201 Census unmatched, 167 comparable-LEA unmatched
+  CO: 159 Census unmatched, 158 comparable-LEA unmatched
+  TX: 143 Census unmatched, 90 comparable-LEA unmatched
+
+WROTE: data/derived/census-nces-crosswalk.csv — 9776 rows
+Provenance: data/derived/census-nces-crosswalk.md

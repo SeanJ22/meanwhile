@@ -43,6 +43,10 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # F25: the platform default is 360 minutes. Runs #25 and #26 sat at the
+    # gate until GitHub killed them at six hours and reported no step name. A
+    # job that overruns this fails loudly, named, while a human is awake.
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
@@ -84,6 +88,15 @@ jobs:
           NEXT_PRIVATE_STANDALONE: ${{ matrix.mode == 'standalone' && 'true' || '' }}
         run: corepack pnpm run build
 
+      # AFTER THE BUILD, because tsconfig.json includes .next/types/**/*.ts and
+      # Next generates those types during the build — see the gates job above.
+      # Only in default mode: the emitted types are mode-independent, and the
+      # matrix would otherwise pay for the same answer twice.
+      - name: Types
+        if: matrix.mode == 'default'
+        timeout-minutes: 10
+        run: corepack pnpm exec tsc --noEmit
+
       - name: Trace census
         if: always()
         run: node scripts/trace-census.mjs --files trace-files.txt
@@ -95,3 +108,71 @@ jobs:
           name: trace-files-${{ matrix.mode }}-${{ github.sha }}
           path: trace-files.txt
           if-no-files-found: warn
+
+  # ---------------------------------------------------------------------------
+  # THE SUITE, ON LINUX, ON EVERY PR (Prompt B item 1c, 2026-08-20).
+  #
+  # RULING 13: a green build check did not mean the tests ran. This file ran
+  # `pnpm build` and the bundle budgets and never `pnpm test`, so the four
+  # scheduled refresh gates were this repo's ONLY Linux runner of the suite.
+  # `tests/coverage-manifest.test.ts` shipped on 2026-08-18 passing on Windows
+  # and failing on every Linux runner, and the way the repo found out was the
+  # meetings snapshot going stale for two days — not a red PR check. Every
+  # green build check on PRs #73 through #115 was silent about tests on Linux.
+  #
+  # Its own job rather than a step in the matrix: the matrix builds twice, by
+  # mode, and the suite is mode-independent. Running it once is the honest
+  # amount of work, and a separate job names itself in the checks list, so
+  # "the tests ran" is readable without opening a log.
+  #
+  # Chromium because tests/beacon-guard.test.ts proves the synthetic-run guard
+  # by driving a real browser — the same reason the refresh gates install it.
+  gates:
+    name: gates (test · lint · tsc)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Enable corepack (pnpm pinned by packageManager)
+        run: corepack enable
+
+      - name: Install
+        run: corepack pnpm install --frozen-lockfile
+
+      - name: Install the browser the suite needs
+        timeout-minutes: 15
+        run: corepack pnpm exec playwright install --with-deps chromium
+
+      # `if: always()` on the two that follow, so one red gate does not hide
+      # the verdict of the others. A PR author gets all three answers from one
+      # run rather than three round trips.
+      - name: Test
+        timeout-minutes: 15
+        run: corepack pnpm test
+
+      - name: Lint
+        if: always()
+        timeout-minutes: 10
+        run: corepack pnpm lint
+
+      # THE TYPE CHECK IS NOT HERE, AND THE FIRST RUN OF THIS JOB IS WHY.
+      #
+      # It was here, and it failed on Linux with
+      # "app/layout.tsx(47,50): error TS2304: Cannot find name 'LayoutProps'".
+      # `LayoutProps` is a type NEXT GENERATES into .next/types during a build,
+      # and tsconfig.json includes .next/types/**/*.ts to pick it up. So
+      # `tsc --noEmit` has never been runnable on its own — on a developer's
+      # machine it passes because .next is lying around from the last build,
+      # and nobody had ever run it on a clean checkout.
+      #
+      # That is a real latent defect this gate found on its first run, and the
+      # honest fix is to type-check where the types exist: after the build, in
+      # the build job below. Running a build here purely to feed tsc would pay
+      # for a third build to answer a question the first two already have the
+      # inputs for.

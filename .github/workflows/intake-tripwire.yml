@@ -33,6 +33,10 @@ concurrency:
 jobs:
   tripwire:
     runs-on: ubuntu-latest
+    # F25: the platform default is 360 minutes. Runs #25 and #26 sat at the
+    # gate until GitHub killed them at six hours and reported no step name. A
+    # job that overruns this fails loudly, named, while a human is awake.
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
         with:
@@ -83,4 +87,5 @@ jobs:
           git config user.email "noreply@github.com"
           git add docs/intake-report.md
           git commit -m "Intake tripwire report: $(date -u +%Y-%m-%dT%H:%MZ)"
-          git push origin main
+          # R48: rebase-before-push with retry. A rejected push never exits zero.
+          node scripts/push-main.mjs

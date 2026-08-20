@@ -74,3 +74,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 *.log
+.cache
+.promptb

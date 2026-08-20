@@ -4,6 +4,7 @@ import { getDb } from "./index.ts";
 import { ORGANIC, type RunMarker } from "./run-marker.ts";
 import { searchLog } from "./schema.ts";
 import { assertWriteAllowed } from "./write-guard.ts";
+import { coverageTierForZip } from "../coverage/zip-tier.ts";
 
 /**
  * Writes to the search log — what was asked and where, never who.
@@ -183,6 +184,13 @@ export async function logSearchEvent(event: SearchLogEvent): Promise<boolean> {
       // readers' rows to each other.
       runClass: marker.runClass,
       runId: marker.runClass === "ORGANIC" ? null : marker.runId,
+      // RULING 6 / item 8: the coverage tier of the place this row is about,
+      // stamped from the ledger at WRITE time. A row a buyer weights by
+      // coverage depth has to carry the depth the reader actually saw, not
+      // the depth we happen to have reached by the time they export.
+      // `UNKNOWN` when the zip has no stamped tier — never TIER_0, which
+      // would claim we looked at its governments and found none.
+      coverageTier: coverageTierForZip(zip),
     });
   return true;
 }

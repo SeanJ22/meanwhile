@@ -61,6 +61,7 @@ import { config as loadEnv } from "dotenv";
 import { type Page } from "playwright";
 
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
+import { today as phoenixDay } from "./doc-dates.mjs";
 import { PRODUCT_NAME } from "../lib/brand.ts";
 import {
   CONCLUDED_LOOKBACK_DAYS,
@@ -4396,14 +4397,41 @@ for (const zip of ["07866", "85701"]) {
     if (dated.length === 0) {
       cannotRun("F01C2", `${zip}: every dated voting event can be calendared`, "no [data-dated-event] on the page");
     } else {
-      const missing = dated.filter((d) => !d.hasButton);
+      /*
+       * A PAST event is not calendar material, and this check has to know
+       * that or it reports the rule working as the rule broken.
+       *
+       * Caught by the first live run: 85701 failed on `07/21/2026`, which is
+       * Arizona's primary, held. Item 16 did not change the past-date
+       * exclusion — it changed the exclusion of WINDOWS, which is a different
+       * thing that had been swept up with it. The row still renders, because
+       * a voter reading the sequence needs to see that the primary happened;
+       * it just carries no button.
+       *
+       * The reader's today is read off the PAGE's own rendered dates rather
+       * than from this process's clock, so the check cannot drift from what
+       * the server decided.
+       */
+      // The Phoenix day from the ONE module that owns it (item 0B). A
+      // private copy here would be the sixth, and the guard that caught it
+      // is the one written this session.
+      const today = phoenixDay();
+      const upcoming = dated.filter((d) => {
+        const found = d.text.match(/\d{2}\/\d{2}\/\d{4}/g) ?? [];
+        if (found.length === 0) return false;
+        const last = found[found.length - 1];
+        const [m, day, y] = last.split("/");
+        return `${y}-${m}-${day}` >= today;
+      });
+      const missing = upcoming.filter((d) => !d.hasButton);
       check(
         "F01C2",
         `${zip}: every dated voting event can be calendared`,
         missing.length === 0,
         missing.length === 0
-          ? `${dated.length} dated events, all with the affordance`
-          : `${missing.length} of ${dated.length} without: ${missing.map((m) => m.text).join(" | ")}`,
+          ? `${upcoming.length} of ${dated.length} dated events are still ahead, all with the affordance` +
+            ` (${dated.length - upcoming.length} past, correctly without)`
+          : `${missing.length} of ${upcoming.length} upcoming without: ${missing.map((m) => m.text).join(" | ")}`,
       );
       const windows = dated.filter((d) => d.isWindow);
       check(
@@ -4414,10 +4442,45 @@ for (const zip of ["07866", "85701"]) {
       );
     }
 
-    // ITEM 12/13: open the first battlecard and read what is inside it.
-    await page.locator("[data-battlecard-pill]").first().scrollIntoViewIfNeeded();
-    await page.locator("[data-battlecard-pill]").first().click();
-    const opened = await untilInteractive(page, "[data-candidate-battlecard]", 10_000);
+    /*
+     * ITEM 12/13: open a battlecard and read what is inside it.
+     *
+     * The FIRST card is not good enough for item 13's half. The first
+     * candidate on 07866 mentions 0 of the 12 issues, so their card holds no
+     * quoted text to draw a search term from, and the first live run reported
+     * COULD NOT RUN on a zip where the check could plainly have run against
+     * the next card along. A cannot-run that is really a "did not look" is
+     * the shape this whole suite exists to refuse.
+     *
+     * So: open cards until one holds quoted positions text, up to a stated
+     * cap, and report which one was used. If none does, THAT is the honest
+     * cannot-run and it names how many were opened.
+     */
+    const CARDS_TO_TRY = 6;
+    let opened = false;
+    let cardIndex = -1;
+    for (let i = 0; i < Math.min(CARDS_TO_TRY, pills); i++) {
+      await page.locator("[data-battlecard-pill]").nth(i).scrollIntoViewIfNeeded();
+      await page.locator("[data-battlecard-pill]").nth(i).click();
+      opened = await untilInteractive(page, "[data-candidate-battlecard]", 10_000);
+      cardIndex = i;
+      if (!opened) break;
+      const hasQuotes = await page.evaluate(
+        `(() => {
+           const card = document.querySelector('[data-candidate-battlecard]');
+           if (!card) return false;
+           return card.querySelectorAll('blockquote, [data-candidate-positions] li').length > 0;
+         })()`,
+      );
+      if (hasQuotes) break;
+      if (i < Math.min(CARDS_TO_TRY, pills) - 1) {
+        await page.keyboard.press("Escape");
+        await page
+          .locator("[data-candidate-battlecard]")
+          .waitFor({ state: "detached", timeout: 5_000 })
+          .catch(() => {});
+      }
+    }
     if (!opened) {
       cannotRun("F01C2", `${zip}: the battlecard opens and holds the moved sections`, "the card never opened");
       continue;
@@ -4469,10 +4532,41 @@ for (const zip of ["07866", "85701"]) {
       cannotRun(
         "F01C2",
         `${zip}: the positions search finds a term from the card's own text`,
-        "this card holds no quoted positions text to draw a term from — not a zero result",
+        `opened ${cardIndex + 1} of ${Math.min(CARDS_TO_TRY, pills)} cards and none held quoted positions text to draw a term from — not a zero result`,
       );
     } else {
-      await page.locator("[data-positions-search]").first().fill(term);
+      /*
+       * THE SEARCH BOX IS INSIDE A COLLAPSED SECTION, and the first live run
+       * found that by CRASHING the whole suite on a 30-second `fill` timeout.
+       *
+       * Two things are wrong with that and both are this check's, not the
+       * product's. The card's grammar is collapsible sections — rule 6b4,
+       * every section a collapsed header — so `Positions` is shut when the
+       * card opens and its input is not there to fill. And a walk check that
+       * THROWS takes every check after it down with it, which is worse than
+       * any red line: the suite stops reporting rather than reporting a
+       * failure. It is wrapped, and an unreachable box is COULD NOT RUN.
+       */
+      const summary = page
+        .locator("[data-candidate-battlecard] summary", { hasText: /positions/i })
+        .first();
+      if ((await summary.count()) > 0) {
+        await summary.click().catch(() => {});
+      }
+      const box = page.locator("[data-positions-search]").first();
+      const reachable = await box
+        .waitFor({ state: "visible", timeout: 8_000 })
+        .then(() => true)
+        .catch(() => false);
+      if (!reachable) {
+        cannotRun(
+          "F01C2",
+          `${zip}: the positions search finds a term from the card's own text`,
+          "the search box did not become reachable inside the card — this is a " +
+            "failure to reach the control, never a zero-result search",
+        );
+      } else {
+      await box.fill(term);
       const answered = await untilText(page, /last checked|none of them mentions|only inside a block|could not read/i, 12_000);
       const got = (await page.evaluate(
         `(() => {
@@ -4488,6 +4582,7 @@ for (const zip of ["07866", "85701"]) {
         answered && got === "MATCHED",
         `term "${term}" -> ${got ?? "no answer element"}`,
       );
+      }
     }
 
     // ITEM 15/17: the polling-place affordance stays in the app, and its

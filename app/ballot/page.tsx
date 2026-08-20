@@ -549,12 +549,26 @@ export default async function BallotPage({
                     what it will ask for stated before the tap — a link that
                     demands a driver's licence number on arrival is friction
                     the reader could have been warned about. */}
-                {/* ITEM 15 (2026-08-19): the IN-APP answer, from the same
-                    panel the map pill opens. This was a link OUT to the
-                    state's tool while `data/voting-sites.json` held six
-                    retrieved, sourced, dated voting locations for this
-                    reader's own township. The authority's tool is still
-                    offered, below, labelled as leaving. */}
+                {/*
+                  ITEM 15 (2026-08-19): the IN-APP answer, from the same panel
+                  the map pill opens. This was a link OUT to the state's tool
+                  while `data/voting-sites.json` held six retrieved, sourced,
+                  dated voting locations for this reader's own township. The
+                  authority's tool is still offered below it, labelled as
+                  leaving.
+
+                  IT RENDERS IN BOTH PLACES, and that is a DEFERRAL rather
+                  than a preference. I removed the second instance — two
+                  identical pills read worse than the two links they replaced,
+                  because a repeated identical control makes a reader wonder
+                  which one is real — and the suite refused it: item 6
+                  (2026-08-15) committed a guard requiring the pointer in the
+                  dates header AND the checker box, by name. That is an
+                  author-directed decision about this page, and overturning it
+                  on my own judgment while fixing something else is exactly
+                  the scope creep a brief's order-is-law rule forbids. Both
+                  render; the observation is `F21` for the author to rule on.
+                */}
                 {polls && (
                   <li>
                     <WhereToVote fallback={polls} />

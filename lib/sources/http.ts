@@ -29,12 +29,28 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 export class SourceHttpError extends Error {
   readonly status: number;
   readonly url: string;
+  /**
+   * The FURTHEST LADDER RUNG this retrieval reached before it stopped (F22,
+   * 2026-08-20) — the numbering in `CLAUDE.md` and `docs/source-ladder.md`,
+   * never a parallel vocabulary invented here.
+   *
+   * `2` plain fetch · `3` fetch with the full browser header set · `4` a
+   * different CLIENT whose TLS fingerprint passes. A wall is recorded on the
+   * rung it stopped at so the next session starts at the next rung instead of
+   * re-walking the ones already known to fail — "every wall that falls becomes
+   * a rung, so it never costs a second session", read from the other side.
+   *
+   * This is deliberately not a terminal state and there is no `SOURCE_BLOCKED`
+   * beside it: rungs 5 through 14 exist and are unwalked by this client.
+   */
+  readonly rung: number;
 
-  constructor(message: string, status: number, url: string) {
+  constructor(message: string, status: number, url: string, rung = 2) {
     super(message);
     this.name = "SourceHttpError";
     this.status = status;
     this.url = url;
+    this.rung = rung;
   }
 }
 
@@ -131,7 +147,7 @@ async function curlGetText(
   const [code, contentType = ""] = stdout.slice(cut + 1).split(" ");
   const status = Number(code);
   if (!Number.isFinite(status)) {
-    throw new SourceHttpError(`curl returned no status for ${url}`, 0, url);
+    throw new SourceHttpError(`curl returned no status for ${url}`, 0, url, 4);
   }
   if (status < 200 || status >= 300) {
     throw new SourceHttpError(`HTTP ${status} for ${url}`, status, url);
@@ -227,6 +243,10 @@ export async function politeGetText(
             "than the document, on both clients. This is a WALL, not an empty page.",
           response.status,
           url,
+          // Rung 4 walked and refused: the other TLS stack was tried and
+          // challenged too. Rungs 5+ — a different egress, the live browser,
+          // the page's own JSON — are unwalked by this client, not exhausted.
+          4,
         );
       }
       throw new SourceHttpError(
@@ -234,6 +254,8 @@ export async function politeGetText(
           "document. This is a WALL, not an empty page.",
         response.status,
         url,
+        // Stopped at the profile in hand; rung 4 was not attempted here.
+        browser ? 3 : 2,
       );
     }
 
@@ -247,7 +269,12 @@ export async function politeGetText(
 
     const retryable = response.status === 429 || response.status >= 500;
     if (!retryable || attempt === MAX_RETRIES) {
-      throw new SourceHttpError(`HTTP ${response.status} for ${url}`, response.status, url);
+      throw new SourceHttpError(
+        `HTTP ${response.status} for ${url}`,
+        response.status,
+        url,
+        browser ? 3 : 2,
+      );
     }
 
     const retryAfter = Number(response.headers.get("retry-after"));
@@ -258,7 +285,7 @@ export async function politeGetText(
     await sleep(waitMs);
   }
 
-  throw new SourceHttpError(`HTTP ${lastStatus} for ${url}`, lastStatus, url);
+  throw new SourceHttpError(`HTTP ${lastStatus} for ${url}`, lastStatus, url, browser ? 3 : 2);
 }
 
 /** One polite GET returning parsed JSON. */

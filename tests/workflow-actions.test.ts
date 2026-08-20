@@ -182,3 +182,61 @@ test("AUD-07: both refresh workflows diff before they gate, and still gate befor
     );
   }
 });
+
+/* ---- F22: the four refresh gates are one gate, and they stay one --------- */
+
+/**
+ * **F22 (2026-08-20). One test failure stopped every governed artifact.**
+ *
+ * `tests/coverage-manifest.test.ts` shipped on 2026-08-18 with an allowlist
+ * keyed on Windows path separators. It passed on the author's machine and
+ * failed on every Linux runner — and `build-check.yml` runs `pnpm build` and
+ * the bundle budgets and never `pnpm test`, so the FOUR scheduled refresh
+ * gates are this repo's only Linux runner of the suite. The meetings refresh
+ * went red four times a day for two days, the snapshot stopped moving at
+ * 2026-08-18T18:59Z, and readers were served stale meetings the whole time.
+ * The other three refreshes were latent: their artifacts happened not to move,
+ * so each took the "unchanged, gate skipped" path and reported success.
+ *
+ * That shared gate is the thing worth guarding. Two claims:
+ *
+ * 1. Every workflow that refreshes a governed artifact gates on the SAME
+ *    full suite. A refresh that quietly validated a narrower set would be a
+ *    fifth artifact nobody is checking.
+ * 2. Every one of them still reaches that gate only on the CHANGED path
+ *    (AUD-07), so a no-op run stays cheap.
+ *
+ * A fifth refresh workflow added without the gate fails here, by name.
+ */
+const REFRESH_WORKFLOWS = [
+  "refresh-meetings-snapshot.yml",
+  "refresh-dotgov-snapshot.yml",
+  "refresh-fec-snapshot.yml",
+  "refresh-legiscan-snapshot.yml",
+];
+
+test("F22: every governed-artifact refresh gates on the same full suite", () => {
+  const found = readdirSync(DIR).filter((f) => /^refresh-.*\.ya?ml$/.test(f)).sort();
+  assert.deepEqual(
+    found,
+    [...REFRESH_WORKFLOWS].sort(),
+    "the set of refresh workflows moved — a new one must be added to this guard WITH its gate",
+  );
+
+  const missing: string[] = [];
+  for (const file of found) {
+    const text = readFileSync(join(DIR, file), "utf8");
+    // The gate itself: the whole suite, not a narrower selection.
+    if (!/run:\s*corepack pnpm test\s*$/m.test(text)) {
+      missing.push(`${file}: no "corepack pnpm test" gate step`);
+      continue;
+    }
+    // AUD-07: the gate hangs off the changed-artifact branch, so an
+    // unchanged run pays nothing. Asserted so a later edit cannot make the
+    // gate unconditional (expensive) or unreachable (unguarded).
+    if (!/if:\s*steps\.diff\.outputs\.changed == 'true'/.test(text)) {
+      missing.push(`${file}: the gate is not conditioned on the changed path`);
+    }
+  }
+  assert.deepEqual(missing, [], "a governed artifact can commit without the full gate");
+});

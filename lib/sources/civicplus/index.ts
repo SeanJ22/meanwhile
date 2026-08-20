@@ -368,6 +368,23 @@ export function makeCivicPlusSource(
   return {
     name: SOURCE_NAME,
 
+    // The g13 declaration, and the second adapter that owed it (F22,
+    // 2026-08-20). The M59 AgendaCenter rung above emits every dated sitting
+    // the archive category lists and clips nothing off the back, so this
+    // source's window is the publisher's and not the app's 90-day serving
+    // window — the same shape as revize, which declared this on 2026-08-18
+    // while civicplus (whose archive rung predates it, 269a3ce 2026-08-15)
+    // was missed.
+    //
+    // What the miss cost, measured rather than supposed: on 2026-08-20 run
+    // #30 of the meetings refresh, civicplus timed out at 20s, carry-forward
+    // judged its rows against the default 90 days, and 23 of Rockaway
+    // Township's 32 archived sittings — everything before 2026-05-21 —
+    // were dropped from the snapshot. A vendor timeout emptied two thirds of
+    // a township's published history, which is precisely the emptying
+    // lib/meetings/carry-forward.ts exists to prevent.
+    publishedLookbackDays: null,
+
     async fetch(): Promise<CivicPlusRaw[]> {
       const collected: CivicPlusRaw[] = [];
       // Serialized across bodies, same as every adapter here.

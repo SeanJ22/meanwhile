@@ -135,7 +135,32 @@ export function wiringForSourceName(name: string): BodySourceWiring[] {
  * and stays whatever its coverage audit says — the composite serves sources,
  * it does not invent them.
  */
-export function buildCompositeSource(): CompositeSource {
+/**
+ * The per-source budget a SCHEDULED refresh gets (F22, 2026-08-20).
+ *
+ * `CompositeSource` defaults to 20s, which is right for the live map: a
+ * reader is waiting, and a source that has not answered in twenty seconds is
+ * better reported as unreachable than left spinning. A four-times-a-day batch
+ * job has nobody waiting, and on 2026-08-20 that borrowed default is what
+ * walled civicplus — it serializes an iCal GET and an AgendaCenter GET per
+ * wired body, at the polite spacing every adapter honours, and ran past
+ * twenty seconds. Nothing was refusing us; we hung up.
+ *
+ * The cost of that hang-up was not one source: carry-forward clipped 23 of
+ * Rockaway Township's archived sittings (F23), the gate's floor caught the
+ * shortfall, and the whole refresh went red with ten healthy sources' fresh
+ * data uncommitted.
+ *
+ * This changes no request rate and no politeness: adapters still serialize,
+ * still identify themselves, still honour `Retry-After`. It only stops the
+ * batch job from abandoning a source the reader's own timeout was written
+ * for.
+ */
+export const SCHEDULED_REFRESH_TIMEOUT_MS = 120_000;
+
+export function buildCompositeSource(
+  options: { timeoutMs?: number } = {},
+): CompositeSource {
   const children: ReportingMeetingSource<unknown>[] = [];
   for (const capability of CAPABILITIES) {
     const rows = wiringForTypes(capability.types);
@@ -152,5 +177,5 @@ export function buildCompositeSource(): CompositeSource {
     }
     children.push(child);
   }
-  return new CompositeSource(children);
+  return new CompositeSource(children, options);
 }

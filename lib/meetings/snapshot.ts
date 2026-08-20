@@ -33,6 +33,22 @@ export interface SnapshotSourceReport {
   ok: boolean;
   /** Why the source contributed nothing, when it didn't. */
   error: string | null;
+  /**
+   * WHICH KIND of nothing (F22, 2026-08-20). Present exactly when `ok` is
+   * false. `WALL` — the retrieval did not land, the run continues, and
+   * carry-forward keeps this source's rows. `JOB` — our own code broke on a
+   * payload we did hold, and the refresh run goes red. Optional because
+   * snapshots committed before 2026-08-20 predate the field; a missing value
+   * is read as `WALL`, which is what every one of them was.
+   */
+  failure?: "WALL" | "JOB";
+  /**
+   * The furthest LADDER RUNG a walled retrieval reached, in `CLAUDE.md`'s
+   * numbering — so the next attempt starts at the next rung rather than
+   * re-walking the ones already known to fail. Absent when the client cannot
+   * say; a missing rung is never filled in with a plausible one.
+   */
+  walledAtRung?: number;
   fetched: number;
   normalized: number;
   drops: NormalizeDropCounts;

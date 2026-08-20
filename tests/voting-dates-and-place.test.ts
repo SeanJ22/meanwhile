@@ -167,13 +167,22 @@ test("15: the ballot's polling-place affordance opens the map's own panel", () =
   const page = read("app", "ballot", "page.tsx");
   const where = read("components", "ballot", "where-to-vote.tsx");
 
-  // Both affordances converge on one component…
+  // The affordance is the shared component, and there is exactly one of it.
+  //
+  // AMENDED 2026-08-20 (F21, the author's ruling). This assertion read `2`,
+  // with the message: "both polling-place affordances must use the shared
+  // component — item 6 (2026-08-15) committed a guard requiring the pointer
+  // in the dates header AND the checker box, so both render and both must be
+  // the in-app one." Item 6's both-places rule was written when the two were
+  // LINKS in different context; item 15 made both the same in-app pill, and a
+  // repeated identical control makes a reader wonder which is the real one.
+  // The ruling is once per page, in the dates header. What this guard was
+  // always protecting — that the affordance is the SHARED component and never
+  // a second implementation — is unchanged and is asserted below.
   assert.equal(
     (page.match(/<WhereToVote/g) ?? []).length,
-    2,
-    "both polling-place affordances must use the shared component — item 6 " +
-      "(2026-08-15) committed a guard requiring the pointer in the dates header " +
-      "AND the checker box, so both render and both must be the in-app one",
+    1,
+    "the polling-place affordance renders once per page, in the dates header (F21)",
   );
   // …and neither is a bare external link any more.
   assert.ok(

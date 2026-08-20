@@ -35,7 +35,10 @@ import {
 import { makeApptegySource } from "../lib/sources/apptegy/index.ts";
 import { makeCivicPlusSource } from "../lib/sources/civicplus/index.ts";
 import { CompositeSource } from "../lib/sources/composite/index.ts";
-import { buildCompositeSource } from "../lib/sources/composite/wiring.ts";
+import {
+  SCHEDULED_REFRESH_TIMEOUT_MS,
+  buildCompositeSource,
+} from "../lib/sources/composite/wiring.ts";
 import { makeDiligentSource } from "../lib/sources/diligent/index.ts";
 import { makeIqm2Source } from "../lib/sources/iqm2/index.ts";
 import { makeRevizeSource } from "../lib/sources/revize/index.ts";
@@ -71,7 +74,11 @@ const SOURCES: Record<string, () => MeetingSource<never>> = {
     makeIqm2Source(wiringForTypes(["IQM2"])) as unknown as MeetingSource<never>,
   revize: () =>
     makeRevizeSource(wiringForTypes(["REVIZE"])) as unknown as MeetingSource<never>,
-  composite: () => buildCompositeSource() as unknown as MeetingSource<never>,
+  // F22: the batch budget, not the reader's. See SCHEDULED_REFRESH_TIMEOUT_MS.
+  composite: () =>
+    buildCompositeSource({
+      timeoutMs: SCHEDULED_REFRESH_TIMEOUT_MS,
+    }) as unknown as MeetingSource<never>,
 };
 
 /** How many agenda documents one ingest run will fetch. Politeness, not coverage. */
@@ -193,7 +200,10 @@ async function main() {
               // with no place and no pin. Printing it under "drops" would say
               // the opposite of what the run did.
               `, kept online: ${d.placeless}`
-          : `  ${child.source}: FAILED — ${child.error}`,
+          : // F22: the two kinds of nothing, told apart in the line a human
+            // reads. A wall names the rung it stopped at and costs the run
+            // nothing; a JOB failure is our code and turns the run red.
+            `  ${child.source}: ${child.failure === "JOB" ? "JOB FAILURE" : "WALLED"} — ${child.error}`,
       );
     }
 
@@ -345,6 +355,8 @@ function writeMeetingsSnapshot(
       source: c.source,
       ok: c.ok,
       error: c.error,
+      ...(c.ok ? {} : { failure: c.failure ?? "WALL" }),
+      ...(typeof c.walledAtRung === "number" ? { walledAtRung: c.walledAtRung } : {}),
       fetched: c.fetched,
       normalized: c.normalized,
       drops: c.drops,
@@ -391,6 +403,48 @@ function writeMeetingsSnapshot(
     `  counts: ${snapshot.counts.fresh} fresh + ${snapshot.counts.carried} carried = ` +
       `${snapshot.counts.total} total`,
   );
+
+  /**
+   * THE RUN SUMMARY, printed every time, with every denominator (F22 item 2,
+   * 2026-08-20).
+   *
+   * Four numbers and they are not interchangeable: how many sources this run
+   * ASKED, how many it READ, how many were WALLED, and how many rows it
+   * WROTE. Stated unconditionally, because a line that only appears when
+   * something is wrong makes a healthy run unreadable and a zero ambiguous —
+   * the same discipline the carried-forward count already follows.
+   *
+   * The exit status below reflects the SECOND condition only. A walled vendor
+   * does not turn this run red: ten healthy sources must still commit their
+   * fresh data, which is exactly what did not happen between 2026-08-18 and
+   * 2026-08-20. What does turn it red is our own code breaking, and a run
+   * that read nothing at all — a job failure wearing a wall's clothes.
+   */
+  const walled = snapshot.sources.filter((s) => !s.ok && s.failure !== "JOB");
+  const jobFailed = snapshot.sources.filter((s) => !s.ok && s.failure === "JOB");
+  console.log(
+    `  RUN SUMMARY: ${snapshot.sources.length} source(s) attempted, ` +
+      `${okCount} read, ${walled.length} walled, ${jobFailed.length} job-failed, ` +
+      `${snapshot.meetings.length} row(s) written` +
+      (walled.length > 0
+        ? `\n  WALLED (named, skipped, rows carried; the run continues): ` +
+          walled
+            .map(
+              (s) =>
+                `${s.source} [stopped at ladder rung ` +
+                `${typeof s.walledAtRung === "number" ? s.walledAtRung : "unrecorded"}] — ${s.error}`,
+            )
+            .join("; ")
+        : ""),
+  );
+
+  if (jobFailed.length > 0) {
+    console.error(
+      `refresh FAILED: ${jobFailed.length} source(s) failed for a job reason, not a wall — ` +
+        jobFailed.map((s) => `${s.source}: ${s.error}`).join("; "),
+    );
+    process.exitCode = 1;
+  }
 }
 
 main().catch((error) => {

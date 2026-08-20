@@ -241,14 +241,52 @@ const CONTENT_FILES = new Set(
     // filing system and its own recorded wall. Per-state CONTENT in the same
     // sense as the rows above — no manifest can generate an Akamai refusal.
     "lib/funding/state-vocabulary.ts",
-  ].map((p) => p.replace(/\//g, "\\")),
+  ],
 );
+
+/**
+ * One separator, everywhere (F22, 2026-08-20).
+ *
+ * This allowlist used to be mapped through `.replace(/\//g, "\\")` and then
+ * matched against `relative()`, which yields backslashes on Windows and
+ * forward slashes on POSIX. The result was a guard that allowlisted all
+ * fourteen files on Windows and NONE of them on Linux, where every content
+ * table below reported itself as an offender — including
+ * `lib/coverage/states.ts`, the manifest the list exists to exempt.
+ *
+ * It shipped green on 2026-08-18 because `build-check.yml` runs `pnpm build`
+ * and the budgets and never `pnpm test`; the four scheduled refresh gates are
+ * this repo's only Linux runner of the suite, so the failure surfaced as
+ * "Refresh meetings snapshot is red" and the meetings snapshot stopped moving
+ * for two days. Repo-relative paths are POSIX here and are normalized at the
+ * one place they are produced.
+ */
+const posixRel = (abs: string): string => relative(ROOT, abs).replace(/\\/g, "/");
+
+/**
+ * The allowlist has to BIND, and that is a separate claim from the sweep.
+ *
+ * A guard whose exemption list silently matches nothing does not fail — it
+ * gets stricter, which is why the separator bug read as fourteen new
+ * offenders rather than as a broken test. This asserts every allowlisted path
+ * is a file the sweep actually walks, so a renamed file or a separator change
+ * fails HERE, naming the entry, on every platform.
+ */
+test("every allowlisted content file is a file the sweep actually reaches", () => {
+  const scanned = new Set(sourceFiles().map(posixRel));
+  const unbound = [...CONTENT_FILES].filter((p) => !scanned.has(p)).sort();
+  assert.deepEqual(
+    unbound,
+    [],
+    "these allowlist entries match no scanned file — renamed, deleted, or written with the wrong separator",
+  );
+});
 
 test("no file outside the manifest holds a hand-kept list of every covered state", () => {
   const offenders: string[] = [];
   for (const abs of sourceFiles()) {
-    const rel = relative(ROOT, abs);
-    if (CONTENT_FILES.has(rel) || CONTENT_FILES.has(rel.replace(/\\/g, "/"))) continue;
+    const rel = posixRel(abs);
+    if (CONTENT_FILES.has(rel)) continue;
     const text = readFileSync(abs, "utf8");
     const holdsEveryUsps = COVERED_USPS.every((c) => text.includes(`"${c}"`));
     const holdsEveryFips = COVERED_FIPS.every((c) => text.includes(`"${c}"`));

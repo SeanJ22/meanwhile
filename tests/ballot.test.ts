@@ -325,17 +325,61 @@ test("item 6: every covered state points at its own official polling-place looku
   );
 });
 
-test("item 6: the ballot page renders the polling-place pointer in both places", async () => {
+/**
+ * **F21, amended 2026-08-20 by the author's ruling. The guard's intent
+ * survives; its arithmetic does not.**
+ *
+ * This test used to read, in full:
+ *
+ * > `test("item 6: the ballot page renders the polling-place pointer in both
+ * > places", ...)` — "Both surfaces the brief named: the dates header and the
+ * > checker box." `assert.equal(occurrences, 2, "the pointer resolves N
+ * > time(s); it belongs in the dates header AND the checker box")`
+ *
+ * It now reads as below: the pointer is required ONCE PER PAGE, in the dates
+ * header.
+ *
+ * WHY THE OLD FORM WAS RIGHT WHEN IT WAS WRITTEN. On 2026-08-15 the two
+ * surfaces were LINKS, in different surrounding context, and a reader
+ * arriving at either one found the answer. Item 15 (2026-08-19) turned both
+ * into the same in-app `WhereToVote` pill, and two identical controls read
+ * worse than the two links had: a repeated identical control makes a reader
+ * wonder which one is the real one. That is reader friction, which
+ * `CLAUDE.md` ranks with a wrong number, and it claims none of the four
+ * exceptions.
+ *
+ * WHAT DID NOT CHANGE, and it is the whole point of keeping a guard here: a
+ * reader must always be able to FIND the pointer. Duplication was a means to
+ * that, never the end. So the count moves from 2 to 1 and the required
+ * LOCATION becomes explicit — a pointer that drifted out of the dates header
+ * into some third place would satisfy a bare count and fail the intent.
+ */
+test("F21: the ballot page renders the polling-place pointer exactly once, in the dates header", async () => {
   const { readFileSync } = await import("node:fs");
   const { join } = await import("node:path");
   const page = readFileSync(join(process.cwd(), "app", "ballot", "page.tsx"), "utf8");
   assert.ok(page.includes("pollingPlaceLinkFor"), "the ballot page never asks for it");
-  // Both surfaces the brief named: the dates header and the checker box.
+
   const occurrences = page.split("pollingPlaceLinkFor(set.election.state)").length - 1;
   assert.equal(
     occurrences,
-    2,
-    `the pointer resolves ${occurrences} time(s); it belongs in the dates header AND the checker box`,
+    1,
+    `the pointer resolves ${occurrences} time(s); once per page, in the dates header (F21)`,
   );
+
+  // Location, not just count. The dates header is the block that also
+  // resolves the registration deadline and early-voting steps; the checker
+  // box below it is the one that must NOT carry a second pill.
+  const header = page.indexOf("const reg = registrationLinkFor(set.election.state);");
+  const pointer = page.indexOf("pollingPlaceLinkFor(set.election.state)");
+  assert.ok(header >= 0 && pointer > header, "the pointer left the dates header");
+  assert.ok(
+    page.indexOf("registration checker, prominent") > pointer,
+    "the pointer resolves below the checker box — it belongs in the dates header above it",
+  );
+
+  // The warning travelled with the pointer rather than being deleted with the
+  // duplicate: what the state's tool demands on arrival is friction a reader
+  // is owed a word about before the tap.
   assert.ok(page.includes("{polls.note}"), "the reader is never told what the tool asks for");
 });

@@ -4660,6 +4660,19 @@ for (const zip of ["07866", "85701"]) {
       where > 0,
       `${where} in-app pill(s)`,
     );
+    // F22 (2026-08-20): the author's F21 ruling — the pointer is required
+    // ONCE PER PAGE, in the dates header. F01C2 shipped the check above
+    // asserting only that the affordance stays in the app, and reported "2
+    // in-app pill(s)" as evidence without holding the count to anything. The
+    // both-places rule of 2026-08-15 is retired, so the count is now a claim
+    // in its own right: a second identical pill returning here would be a
+    // regression rather than a number in an evidence string.
+    check(
+      "F22",
+      `${zip}: the polling-place pointer renders exactly once on the ballot`,
+      where === 1,
+      `${where} in-app pill(s) — once per page since the F21 ruling`,
+    );
     if (where > 0) {
       await page.locator("[data-where-to-vote-pill]").first().scrollIntoViewIfNeeded();
       await page.locator("[data-where-to-vote-pill]").first().click();

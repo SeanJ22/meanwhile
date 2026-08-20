@@ -24,6 +24,23 @@ export interface CalendarEventInput {
   startsAtIso?: string;
   /** All-day event: YYYY-MM-DD. */
   allDayDate?: string;
+  /**
+   * **The last day of a multi-day window, INCLUSIVE** — item 16, 2026-08-19.
+   *
+   * New Jersey's in-person early voting runs 10/24/2026 through 11/01/2026,
+   * and it rendered with no calendar affordance at all because the shape here
+   * could only hold one day. A window is the event a reader most needs in a
+   * calendar: a deadline is a thing to remember, a window is a thing to miss.
+   *
+   * INCLUSIVE, because that is what the authority published — "through
+   * November 1st". `.ics` and Google both want an EXCLUSIVE end, and that
+   * conversion happens once, in `allDayStamps`, where the off-by-one belongs
+   * rather than at every call site.
+   *
+   * Ignored unless `allDayDate` is set; a timed event with an end date would
+   * be two different things at once.
+   */
+  allDayEndDate?: string;
   location?: string;
   description?: string;
 }
@@ -37,10 +54,28 @@ function toCalStamp(iso: string): string {
   return `${iso.slice(0, 19).replace(/[-:]/g, "")}Z`.replace(/\.\d+Z$/, "Z");
 }
 
-/** YYYY-MM-DD → YYYYMMDD, and the exclusive next day for DTEND. */
-function allDayStamps(date: string): { start: string; end: string } {
+/**
+ * YYYY-MM-DD → YYYYMMDD, and the exclusive day AFTER the last one for DTEND.
+ *
+ * `lastDate` is the inclusive final day of a window, or absent for a single
+ * day — in which case the window is that day and the arithmetic is the same.
+ *
+ * **The arithmetic is deliberately in UTC and that is not the UTC bug.** An
+ * all-day event carries a DATE and no time (`DTSTART;VALUE=DATE`), so it does
+ * not sit in any zone and cannot be shifted by one: parsing `2026-11-01` at
+ * `T00:00:00Z` and adding a UTC day yields `2026-11-02` in every timezone the
+ * reader could be in.
+ *
+ * That is what makes the New Jersey window safe. `10/24 – 11/01` straddles
+ * the end of Eastern daylight time — 11/01 IS the transition day — and a
+ * timed event would need care there. A date-valued one needs none, which is
+ * the reason a window is emitted as all-day rather than as a 00:00–23:59
+ * pair.
+ */
+function allDayStamps(date: string, lastDate?: string): { start: string; end: string } {
   const start = date.replace(/-/g, "");
-  const next = new Date(`${date}T00:00:00Z`);
+  const final = lastDate && lastDate >= date ? lastDate : date;
+  const next = new Date(`${final}T00:00:00Z`);
   next.setUTCDate(next.getUTCDate() + 1);
   return { start, end: next.toISOString().slice(0, 10).replace(/-/g, "") };
 }
@@ -56,7 +91,7 @@ function timedStamps(iso: string): { start: string; end: string } {
 export function googleCalendarUrl(event: CalendarEventInput): string {
   const dates = event.allDayDate
     ? (() => {
-        const { start, end } = allDayStamps(event.allDayDate);
+        const { start, end } = allDayStamps(event.allDayDate, event.allDayEndDate);
         return `${start}/${end}`;
       })()
     : (() => {
@@ -77,7 +112,7 @@ export function icsDataHref(event: CalendarEventInput): string {
   const esc = (s: string) => s.replace(/([,;])/g, "\\$1");
   const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", `PRODID:-//${PRODUCT_NAME}//event//EN`, "BEGIN:VEVENT", `UID:${event.id}@wethepeople`];
   if (event.allDayDate) {
-    const { start, end } = allDayStamps(event.allDayDate);
+    const { start, end } = allDayStamps(event.allDayDate, event.allDayEndDate);
     lines.push(`DTSTAMP:${start}T000000Z`);
     lines.push(`DTSTART;VALUE=DATE:${start}`);
     lines.push(`DTEND;VALUE=DATE:${end}`);

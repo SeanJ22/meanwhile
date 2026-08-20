@@ -84,6 +84,11 @@
     "voting-sites:fetch": "tsx scripts/fetch-voting-sites.mts",
     "b14:links": "tsx scripts/b14-official-links.mts",
     "photo:review": "tsx scripts/photo-review.mts",
+    "photo:reconcile": "tsx scripts/photo-reconcile.mts",
+    "census:embedded-json": "tsx scripts/embedded-json-census.mts",
+    "measure:ballot": "tsx scripts/measure-ballot-scroll.mts",
+    "shoot:f01c2": "tsx scripts/shoot-f01c-s2.mts",
+    "verify:positions": "tsx scripts/verify-positions-search.mts",
     "queue:homes": "tsx scripts/queue-homes.mts",
     "names:census": "tsx scripts/name-census.mts",
     "chrome:sweep": "tsx scripts/chrome-sweep.mts"

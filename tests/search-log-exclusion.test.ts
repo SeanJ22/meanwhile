@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import { readFile, readdir } from "node:fs/promises";
 import { join, sep } from "node:path";
 
@@ -95,12 +98,78 @@ test("the marker columns exist and carry no identifier fragment", () => {
   }
 });
 
-test("reactions did not grow the marker — the stores still share no key", () => {
+/**
+ * **Reactions grew the marker, and the stores still share no key.**
+ * (Amended 2026-08-19, F01-continued session 2 item 0D.)
+ *
+ * This test used to assert that `reactions` had NO `run_class` and NO
+ * `run_id`, with the reason stated in its own message: *"run_id on both
+ * stores would be a join path."* That reason was right and it still is. What
+ * was wrong was the conclusion drawn from it — that the reactions table must
+ * therefore have no attribution at all.
+ *
+ * The consequence of that was worse than the risk it avoided. `search_log`
+ * could say which rows were ours and `reactions` could not, which is exactly
+ * the wrong way round: a search-log row is a lookup, and a reactions row is
+ * **the thing the business sells**. The only attribution the sold table
+ * carried was a timestamp, and attributing by timestamp is precisely the
+ * retrospective heuristic the marker exists to make unnecessary.
+ *
+ * So the column exists and the join path still does not, because the run id
+ * is stored **namespaced and digested** — `sha256("reaction-run:" + runId)`
+ * against the search log's raw label. Two columns sharing a name and no value
+ * space. The precedent is `intake_limiter`, which `CLAUDE.md` describes doing
+ * the identical thing against this same table's continuity hash.
+ *
+ * The assertion is therefore STRONGER than the one it replaces: absence of a
+ * column is a fact that stops being checkable the moment somebody has a good
+ * reason to add it, whereas this pins the property that actually matters.
+ */
+test("reactions grew the marker in its own value space — the stores still share no key", () => {
   const reactionCols = new Set(
     getTableConfig(schema.reactions).columns.map((c) => c.name),
   );
-  assert.ok(!reactionCols.has("run_id"), "run_id on both stores would be a join path");
-  assert.ok(!reactionCols.has("run_class"));
+  assert.ok(reactionCols.has("run_class"), "the sold table must be able to say whose traffic a row is");
+  assert.ok(reactionCols.has("run_id"));
+
+  // `run_class` is a four-value enum, not an identifier: joining on it would
+  // relate every row to every other row and single out nobody. It is the id
+  // that had to be put beyond reach.
+  const source = readFileSync(join(process.cwd(), "lib", "db", "reactions.ts"), "utf8");
+  assert.match(
+    source,
+    /createHash\("sha256"\)\.update\(`reaction-run:\$\{runId\}`/,
+    "the reaction run id must be namespaced and digested, never the raw label",
+  );
+
+  // The two spaces must be provably different, not merely described as such.
+  const raw = "f01c-s2@2026-08-19T00:00:00.000Z";
+  const digested = createHash("sha256").update(`reaction-run:${raw}`, "utf8").digest("hex");
+  assert.notEqual(digested, raw, "a digest that equalled the label would join");
+  // And different from the OTHER digest this table already computes, so a
+  // run id can never collide into the continuity-key space either.
+  const continuity = createHash("sha256").update(raw, "utf8").digest("hex");
+  assert.notEqual(digested, continuity, "the run digest must not share the continuity key's space");
+
+  // Nothing anywhere may query the two stores' run ids against each other.
+  const roots = ["lib", "app", "scripts"];
+  const offenders: string[] = [];
+  for (const root of roots) {
+    const files = execFileSync("git", ["ls-files", root], {
+      cwd: process.cwd(),
+      encoding: "utf8",
+      maxBuffer: 64e6,
+    })
+      .split("\n")
+      .map((f) => f.trim())
+      .filter((f) => /\.(ts|tsx|mts|mjs)$/.test(f));
+    for (const file of files) {
+      const text = readFileSync(join(process.cwd(), file), "utf8");
+      if (/searchLog\.runId[\s\S]{0,120}reactions\.runId/.test(text)) offenders.push(file);
+      if (/reactions\.runId[\s\S]{0,120}searchLog\.runId/.test(text)) offenders.push(file);
+    }
+  }
+  assert.deepEqual(offenders, [], `these files put the two run ids in one expression: ${offenders.join(", ")}`);
 });
 
 test("the migration marks pre-existing rows UNKNOWN, not organic", async () => {

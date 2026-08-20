@@ -6,6 +6,7 @@ import { getDb } from "./index.ts";
 import { reactions } from "./schema.ts";
 import { DIVISION_VINTAGE } from "./search-log.ts";
 import { assertWriteAllowed } from "./write-guard.ts";
+import type { RunMarker } from "./run-marker.ts";
 import {
   scaleForTargetType,
   type ReactionTargetType,
@@ -26,6 +27,54 @@ import {
 
 export function hashReactionKey(rawKey: string): string {
   return createHash("sha256").update(rawKey, "utf8").digest("hex");
+}
+
+/**
+ * **The run id, in its own space** (F01-continued session 2, item 0D,
+ * 2026-08-19).
+ *
+ * Item 0D asked for `run_class` / `run_id` on `reactions`, matching the shape
+ * the search log uses. It collided head-on with a guard that already existed
+ * and said exactly why:
+ *
+ * > `assert.ok(!reactionCols.has("run_id"), "run_id on both stores would be a
+ * > join path");`
+ *
+ * That guard is right. `CLAUDE.md`'s n-stores rule is not a preference — "No
+ * store carries a column that could join to another, and there is no mapping
+ * table between any pair" — and a literal shared `run_id` is a mapping table
+ * spelled differently. It would relate a run's SEARCHES to that run's
+ * REACTIONS.
+ *
+ * The counter-argument is real but not sufficient: `run_id` is null on every
+ * ORGANIC row, so a literal shared id could only ever join our own robots to
+ * each other, never a reader's search to a reader's reaction. The trouble is
+ * that this is a property of the DATA rather than of the SCHEMA, and the
+ * n-stores rule is deliberately a schema rule — it is written so it can be
+ * asserted mechanically rather than argued about, which is why it has held.
+ *
+ * So the run id is stored **namespaced and digested**, which is this
+ * codebase's own precedent rather than a new invention. `CLAUDE.md` describes
+ * the intake limiter doing the identical thing for the identical reason: a
+ * digest "deliberately different from the reaction store's continuity hash
+ * (`sha256("intake-limiter:" + key)` vs `sha256(key)`)".
+ *
+ * The result satisfies both:
+ *
+ * * the row **declares** which run wrote it, so a session can find and
+ *   exclude its own rows — it knows its own run id and computes the same
+ *   digest;
+ * * the value **cannot be joined** to `search_log.run_id`, which holds the
+ *   raw label in a different space. No query relates the two stores, and the
+ *   guard stays armed in a stronger form: it now asserts the digest rather
+ *   than merely the absence of a column.
+ *
+ * The SHAPE matches the search log — two columns, the same names, the same
+ * class enum, the same null-on-ORGANIC rule. Only the id's ENCODING differs,
+ * and this comment is why.
+ */
+export function hashRunId(runId: string): string {
+  return createHash("sha256").update(`reaction-run:${runId}`, "utf8").digest("hex");
 }
 
 export interface StorableReaction {
@@ -50,6 +99,23 @@ export interface StorableReaction {
    * because the row's job is to record what was stored and not why.
    */
   freeText?: string | null;
+  /**
+   * **WHOSE TRAFFIC THIS IS — required, not defaulted** (F01-continued
+   * session 2, item 0D, 2026-08-19).
+   *
+   * The search log takes the same marker and defaults a caller that says
+   * nothing to `ORGANIC`. That default has cost this project twice in one
+   * day — a `curl` deploy check landed four rows in the sold store labelled
+   * as readers, and `pnpm overlaps` landed one.
+   *
+   * A reaction row is the thing the business sells, so it is not defaulted
+   * here. Every caller declares, and a caller that does not gets a thrown
+   * error rather than a row that says "reader". The route's declaration comes
+   * from `markerFromRequest`, which resolves an absent header to `ORGANIC` —
+   * so a real browser is still a reader, decided in ONE place that can be
+   * read, instead of by an implicit default nobody sees.
+   */
+  marker: RunMarker;
 }
 
 /**
@@ -59,6 +125,20 @@ export interface StorableReaction {
  * caller says so with a 202.
  */
 export async function writeReaction(row: StorableReaction): Promise<boolean> {
+  // The declaration is REQUIRED (item 0D), and it is checked FIRST — before
+  // the database check and before the write guard. A caller that did not
+  // declare is malformed on its own terms, and it must fail the same way
+  // whether or not a database happens to be reachable: a refusal that only
+  // fires in production is a refusal the suite cannot see.
+  if (!row.marker || typeof row.marker.runClass !== "string") {
+    throw new Error(
+      "writeReaction: no run marker. Every reaction write must declare whose " +
+        "traffic it is — pass markerFromRequest(request) on the route, or an " +
+        "explicit SYNTHETIC marker from a script. There is no default: a row " +
+        "the store cannot attribute must not be sold as a reader.",
+    );
+  }
+
   if (!process.env.DATABASE_URL) return false;
 
   // See the note in search-log.ts: no database is a state, the wrong database
@@ -68,6 +148,12 @@ export async function writeReaction(row: StorableReaction): Promise<boolean> {
 
   const occurredAt = new Date().toISOString();
   const suspectReason = row.suspectReason ?? null;
+  // Null on ORGANIC by construction, exactly as on the search log, so the id
+  // can never relate two readers' rows to each other.
+  const runId =
+    row.marker.runClass === "ORGANIC" || !row.marker.runId
+      ? null
+      : hashRunId(row.marker.runId);
   await getDb()
     .insert(reactions)
     .values({
@@ -88,6 +174,8 @@ export async function writeReaction(row: StorableReaction): Promise<boolean> {
       reactionKeyHash: hashReactionKey(row.reactionKey),
       suspectReason,
       freeText: row.freeText ?? null,
+      runClass: row.marker.runClass,
+      runId,
     })
     .onConflictDoUpdate({
       target: [reactions.reactionKeyHash, reactions.targetType, reactions.targetId],
@@ -121,6 +209,22 @@ export async function writeReaction(row: StorableReaction): Promise<boolean> {
          * deliberately deleted.
          */
         freeText: row.freeText ?? null,
+        /*
+         * THE CLASS ON AN OVERWRITE MOVES ONE WAY ONLY (item 0D).
+         *
+         * An overwrite may take a row OUT of what is sold and may never put
+         * one in. So an `ORGANIC` row that is overwritten by a declared run
+         * becomes that run's; a row already `SYNTHETIC`, `UNKNOWN` or
+         * `AUTHOR` keeps what it has, whatever the incoming declaration says.
+         *
+         * Same shape as the `suspectReason` COALESCE above and the same
+         * reason: a write must not be able to launder its own row clean. The
+         * verification tier is held for the same reason one line up, and all
+         * three are the single rule that an overwrite can lower a row's
+         * standing in the sold pool but never raise it.
+         */
+        runClass: sql`CASE WHEN ${reactions.runClass} = 'ORGANIC' THEN ${row.marker.runClass} ELSE ${reactions.runClass} END`,
+        runId: sql`CASE WHEN ${reactions.runClass} = 'ORGANIC' THEN ${runId} ELSE ${reactions.runId} END`,
       },
     });
   return true;

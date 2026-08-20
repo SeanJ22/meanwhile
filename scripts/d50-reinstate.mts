@@ -37,14 +37,11 @@ const MANIFEST = join(ROOT, "lib", "registry", "official-photos.json");
 const UA =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
 
-function today(): string {
-  return new Intl.DateTimeFormat("en-CA", {
-    timeZone: "America/Phoenix",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(new Date());
-}
+// F01-continued session 2, item 0B: the Phoenix day comes from the one
+// module that owns it, exactly as `pnpm stamp` does. This file used to
+// carry its own byte-identical copy of the formatter — correct on the day
+// it was written, and one more place for the rule to drift.
+import { today } from "./doc-dates.mjs";
 const TODAY = today();
 
 /** The two, by the id their slot renders under. */

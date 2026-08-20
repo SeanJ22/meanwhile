@@ -87,6 +87,27 @@ export interface PositionAnswer {
     snapshots: number;
     /** Snapshots we hold but could not read — named, never counted as read. */
     unreadable: number;
+    /**
+     * **Passages that CONTAIN the term and are not quotable** (item 13,
+     * 2026-08-19). Found by the item-13 verification, not by reading code.
+     *
+     * `passagesOf` splits on sentence-ending punctuation, and a passage over
+     * `PASSAGE_MAX_CHARS` is skipped. A press-release rail — a run of
+     * headlines with no full stop in it — is therefore one enormous
+     * "passage", and it is skipped. That skip is CORRECT: quoting a link rail
+     * as somebody's own words is RULING 6, and clipping 420 characters out of
+     * a 1,428-character run breaks a word, which is RULING 7.
+     *
+     * What was NOT correct is what the reader was then told. Andy Biggs's
+     * house.gov page carries "Mining Engineering" in exactly such a rail, and
+     * the answer rendered as *"we read their pages and none of them mentions
+     * mining"* — a checkable, false statement about a named person, produced
+     * by our own passage cap. The named-gap rule is explicit that our gap and
+     * their absence may never render as the same sentence.
+     *
+     * So the skip is counted, and the surface says which happened.
+     */
+    presentButUnquotable: number;
   };
   /**
    * Somewhere of theirs to go when we have nothing. Their own published page,
@@ -208,6 +229,9 @@ export function positionsFor(
     pages: new Set(readable.map((s) => s.url)).size,
     snapshots: readable.length,
     unreadable: mine.length - readable.length,
+    // Filled below, once the terms are known. Declared here so every return
+    // path carries the field rather than some of them.
+    presentButUnquotable: 0,
   };
   const theirPage = theirPageFrom(mine);
 
@@ -235,7 +259,17 @@ export function positionsFor(
     const seen = new Set<string>();
     for (const snapshot of ordered) {
       for (const raw of passagesOf(snapshot.text as string)) {
-        if (raw.length > PASSAGE_MAX_CHARS) continue;
+        if (raw.length > PASSAGE_MAX_CHARS) {
+          // Item 13: the skip is right and the silence about it was not.
+          // Count the ones that would have matched, so the answer can say
+          // "we hold it and will not quote it" rather than "they never said
+          // it" — see `searched.presentButUnquotable`.
+          const long = ` ${normalize(raw)} `;
+          if (terms.some((t) => long.includes(` ${t} `))) {
+            searched.presentButUnquotable += 1;
+          }
+          continue;
+        }
         const normalized = ` ${normalize(raw)} `;
         const matched = terms.filter((t) => normalized.includes(` ${t} `));
         if (matched.length === 0) continue;

@@ -1495,14 +1495,14 @@ ballot candidacies and lineup nominees, federal officials attached to
 covered divisions, state legislators attached to covered divisions, and
 every curated local roster member.
 
-**591 of 751 rendered people have a portrait; 160 render initials.**
+**591 of 752 rendered people have a portrait; 161 render initials.**
 
 | Surface | Portraits | Initials | Total |
 |---|---|---|---|
 | ballot candidates | 34 | 75 | 109 |
 | federal officials | 437 | 0 | 437 |
 | state legislators | 94 | 36 | 130 |
-| curated local rosters | 23 | 49 | 72 |
+| curated local rosters | 23 | 50 | 73 |
 | statewide executives | 3 | 0 | 3 |
 
 | State | Portraits | Initials | Total |
@@ -1510,7 +1510,7 @@ every curated local roster member.
 | AK | 1 | 0 | 1 |
 | AL | 7 | 0 | 7 |
 | AR | 4 | 0 | 4 |
-| AZ | 78 | 38 | 116 |
+| AZ | 78 | 39 | 117 |
 | CA | 51 | 0 | 51 |
 | CO | 8 | 0 | 8 |
 | CT | 5 | 0 | 5 |
@@ -1568,7 +1568,7 @@ every curated local roster member.
 
 **state legislators — NH (36):** Bryan Morse; Cassandra Levesque; Christine Seibert; Connie Lane; Dave Nagel; Eileen Kelly; Ernesto Gonzalez; George Grant; Glen Aldrich; Greg Hill; Henry Giasson; Jim Spillane; James Roesener; James Newsom; Jessica Grill; Jim Guzofski; Joe Alexander; Judy Aron; Keith Erf; Lex Berezhny; Mary Murphy; Matthew Hicks; Merryl Gibbs; Paul Terry; Paul Tudor; Peter Mehegan; Riché Colcombe; Rick Devoid; Russ Dumais; Stephanie Payeur; Stephen Boyd; Steve Kesselring; Tom Schamberg; Travis Corcoran; Travis Toner; Yury Polozov
 
-**curated local rosters — AZ (11):** Dr. Gabriel Trujillo; Kevin Dahl; Allison Pratt; Callie Tippett; Jen Anderson; Ed Buster; Chris King; Beki Quintero; Ted Rodriquez; Edgar Bustamante; Roberto Jaramillo
+**curated local rosters — AZ (12):** Dr. Gabriel Trujillo; Kevin Dahl; Allison Pratt; Callie Tippett; Jen Anderson; Ed Buster; Chris King; John Carruth; Beki Quintero; Ted Rodriquez; Edgar Bustamante; Roberto Jaramillo
 
 **curated local rosters — NH (15):** Kristen Schultz; Scott Wheeler; Sandra Warde; Alison Mastin; Kristen Schultz; James MacKenna; David Keith; Art Bobruff; Patrick McGowan; Paul Lakevicius; Nancy Glynn; Eric Gregoire; Stuart D. Trachy; David M. Lovlien; Stephen Shurtleff
 

@@ -431,6 +431,67 @@ export const reactions = pgTable(
      * caught, and `docs/abuse-policy.md` owns that.
      */
     freeText: text("free_text"),
+    /**
+     * **WHOSE TRAFFIC THIS ROW IS** (F01-continued session 2, item 0D,
+     * 2026-08-19). The same column the search log has carried since C05, on
+     * the table where it matters most.
+     *
+     * The search log got this in August and reactions did not, so for three
+     * days the product could say which SEARCHES were ours and could not say
+     * which REACTIONS were. That is the wrong way round. A search-log row is
+     * a lookup; a reaction row is the thing the business sells, and the whole
+     * claim a buyer is paying for is that synthetic traffic is separable from
+     * real traffic. **This table could not make that claim.** The only
+     * attribution it carried was a timestamp and a key hash, and attributing
+     * by timestamp is precisely the retrospective heuristic the search log's
+     * column exists to make unnecessary — RULING 9 in this session's brief
+     * closes the same question for the organic census for the same reason.
+     *
+     * Semantics are the search log's, unchanged, because two tables meaning
+     * different things by one column name would be worse than no column:
+     *
+     * - `ORGANIC` — a reader. The only class any aggregate may count.
+     * - `SYNTHETIC` — an automated run, declared BY THE RUNNER at write time.
+     * - `UNKNOWN` — cannot be attributed. Excluded from every aggregate, and
+     *   **never counted as organic**. Every row written before this column
+     *   existed is UNKNOWN and stays UNKNOWN.
+     * - `AUTHOR` — the author using his own product. Excluded too, with its
+     *   reason stated rather than hidden in a bucket meaning something else.
+     *
+     * **The default differs from the search log's, deliberately.** There the
+     * column defaults to `ORGANIC`, and the cost of that decision is written
+     * into this repository's history: a `curl` deploy check landed four rows
+     * in the sold store labelled as readers, and `pnpm overlaps` landed one,
+     * on a single day. Here the write path REQUIRES the declaration —
+     * `writeReaction` will not insert without one — so a caller that says
+     * nothing gets an error rather than a reader. The database default is
+     * `UNKNOWN` for the backfill's sake, and no code path relies on it.
+     *
+     * It joins nothing. It is a run identity, never a person's, and the
+     * n-stores-never-join rule is unaffected: no other store carries a
+     * `run_id`, and `tests/db-schema.test.ts` asserts the schemas share no key.
+     */
+    runClass: text("run_class", { enum: ["ORGANIC", "SYNTHETIC", "UNKNOWN", "AUTHOR"] })
+      .notNull()
+      .default("UNKNOWN"),
+    /**
+     * Which automated run wrote this row — **as a namespaced digest, not the
+     * raw label**, and that difference from the search log is the whole of
+     * the n-stores-never-join rule surviving this column.
+     *
+     * `sha256("reaction-run:" + runId)`. The search log holds the raw id, so
+     * the two columns share a NAME and never a VALUE SPACE: no query can
+     * relate a run's searches to that run's reactions. The precedent is
+     * `intake_limiter`, which `CLAUDE.md` describes doing exactly this
+     * against this same table's continuity hash, for exactly this reason.
+     *
+     * Null on every `ORGANIC` row by construction, exactly as on the search
+     * log, so it can never become a session key relating two readers' rows.
+     *
+     * A session finds its own rows by computing the digest of the run id it
+     * already knows — `hashRunId` in `lib/db/reactions.ts`.
+     */
+    runId: text("run_id"),
   },
   (table) => [
     // One reaction per browser key per target: a changed answer overwrites
@@ -441,6 +502,9 @@ export const reactions = pgTable(
       table.targetId,
     ),
     index("reactions_target_idx").on(table.targetType, table.targetId),
+    // Every aggregate reads through the exclusion filter, so the class is on
+    // the hot path of every sold query — same reason as the search log's.
+    index("reactions_run_class_idx").on(table.runClass),
   ],
 );
 

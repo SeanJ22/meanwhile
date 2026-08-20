@@ -1,7 +1,5 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-
 import { positionsFor, positionMatchCount } from "@/lib/corpus/positions";
+import { unifiedCorpus } from "@/lib/corpus/unified";
 import type { StatementCorpus } from "@/lib/corpus/types";
 
 /**
@@ -38,12 +36,16 @@ export const runtime = "nodejs";
 /** A topic longer than this is not a topic. The cap is stated, not implied. */
 const MAX_TOPIC_CHARS = 120;
 
-let cached: StatementCorpus | null = null;
 function corpus(): StatementCorpus {
-  cached ??= JSON.parse(
-    readFileSync(join(process.cwd(), "data", "corpus", "statements.json"), "utf8"),
-  ) as StatementCorpus;
-  return cached;
+  // ITEM 13 (2026-08-19): the UNION of both statement stores.
+  //
+  // This route used to read  alone, which is
+  // keyed by OFFICEHOLDER id — so every candidate whose words live in the
+  // candidate corpus was absent from the index, and the search answered
+  // "we have not collected anything they have published" four inches below
+  // that candidate's published words.  carries the
+  // full diagnosis.
+  return unifiedCorpus();
 }
 
 export async function GET(

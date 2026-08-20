@@ -216,13 +216,44 @@ export function PositionsSection({
                 data-positions-answer="SEARCHED_NOTHING_MATCHED"
                 className="text-[0.75rem] leading-relaxed text-voice"
               >
-                We read {answer.searched.pages} page
-                {answer.searched.pages === 1 ? "" : "s"} of theirs (
-                {answer.searched.snapshots} snapshot
-                {answer.searched.snapshots === 1 ? "" : "s"}) and none of them
-                mentions &ldquo;{answer.topic}&rdquo;. That is what our search
-                found — it is not a statement that {subjectName} has no
-                position on it.
+                {answer.searched.presentButUnquotable > 0 ? (
+                  <>
+                    {/*
+                      ITEM 13 (2026-08-19). The two outcomes are DIFFERENT
+                      FACTS and used to render as one sentence.
+
+                      "None of their pages mentions it" is a claim about
+                      them. "It is on their page, in a block we will not
+                      quote" is a claim about US — our passage rules. A press
+                      release rail is a run of headlines with no full stop,
+                      so it is one enormous passage, and quoting a clip of it
+                      would break a word (RULING 7) and attribute template
+                      chrome to a person (RULING 6). Declining is right;
+                      saying they never mentioned it was not.
+                    */}
+                    &ldquo;{answer.topic}&rdquo; does appear on{" "}
+                    {answer.searched.presentButUnquotable === 1
+                      ? "a page"
+                      : `${answer.searched.presentButUnquotable} places on pages`}{" "}
+                    we hold from {subjectName} — but only inside a block we
+                    won&apos;t quote from, like a run of headlines or a list
+                    of links with no sentence in it. Those aren&apos;t their
+                    words about the topic, so we don&apos;t show them as such.
+                    We read {answer.searched.pages} page
+                    {answer.searched.pages === 1 ? "" : "s"} of theirs and
+                    found nothing quotable on it.
+                  </>
+                ) : (
+                  <>
+                    We read {answer.searched.pages} page
+                    {answer.searched.pages === 1 ? "" : "s"} of theirs (
+                    {answer.searched.snapshots} snapshot
+                    {answer.searched.snapshots === 1 ? "" : "s"}) and none of
+                    them mentions &ldquo;{answer.topic}&rdquo;. That is what
+                    our search found — it is not a statement that{" "}
+                    {subjectName} has no position on it.
+                  </>
+                )}
                 {answer.searched.unreadable > 0 && (
                   <>
                     {" "}

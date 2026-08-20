@@ -11,9 +11,9 @@ picture in front of a person who can say yes or no.
 Generated 2026-08-19. Manifest holds **902** portraits and
 **229** named misses.
 
-**554** of those **902** belong to a person some surface can
-reach, so a reader can find them. The other **348** belong to people
-with no division mapping — mostly state legislators whose seat is not wired to
+**557** of those **902** belong to a person some surface can
+reach, so a reader can find them. The other **345** belong to people
+no surface resolves — mostly state legislators whose seat is not wired to
 a district yet — and **nothing in the product renders them**. That is why a
 portrait can be in the manifest and impossible to find on screen, and it is a
 MAPPING gap rather than a photo gap: the picture is fine, the seat is missing.
@@ -21,26 +21,56 @@ MAPPING gap rather than a photo gap: the picture is fine, the seat is missing.
 ### The standing figure, and it reconciles
 
 Counted 2026-08-19 from `lib/registry/official-photos.json` against the
-shipped division mappings and the curated body rosters. Every manifest row
-lands in exactly ONE of these, which is the point:
+shipped division mappings, the curated body rosters and the who-governs
+card. Every manifest row lands in exactly ONE of these, which is the point:
 
 | | Count | What it means |
 |---|---|---|
 | **Collected** | **902** | rows in the portrait manifest |
 | — reachable, via a division mapping | 531 | a zip resolves to the seat, so the face renders |
 | — reachable, via a curated body roster | 23 | no division seat, but a body card lists the person |
-| — reachable by nobody | 348 | held, judged, and on no surface a reader can get to |
+| — reachable, via the who-governs card | 3 | a statewide executive, on every zip in the state |
+| — reachable by nobody | 345 | held, judged, and on no surface a reader can get to |
 
-**531 + 23 + 348 = 902.**
+**531 + 23 + 3 + 345 = 902.**
 
-**This is the MANIFEST-side number and it is not the census.** The two
-measure different populations and both are true at once: this file counts
-PORTRAITS WE HOLD and asks whether anything renders them; `pnpm exec tsx
-scripts/photo-census.mts` counts PEOPLE THE PRODUCT RENDERS and asks
-whether each has a portrait — a universe that includes ballot candidates
-whose photos never enter this manifest. Neither is a correction of the
-other, and a report that names one number without saying which side it was
-counted from has said nothing checkable.
+### The standing figure for PORTRAITS RENDERED is **591**, and everything else is derived from it
+
+**Method.** `scripts/photo-census.mts` walks the SLOT side — every person
+the product can put on a screen — and asks of each whether the surface
+serves a judged photo. That is the number that answers the only question a
+reader's experience turns on, so it is the standing one. It is a count of
+PEOPLE WITH A FACE, not of manifest rows, and it is quoted from here.
+
+| Figure | Count | How it is obtained |
+|---|---|---|
+| **Portraits rendered (STANDING)** | **591** | slot side: people the product renders who have a portrait |
+| — drawn from this manifest | 557 | derived: the standing figure less the candidate-card portraits |
+| — drawn from `candidate-cards-2026.json` | 34 | derived: ballot-candidate portraits, which never enter this manifest |
+| People rendering initials | 161 | derived: the slot denominator less the standing figure |
+| Slot denominator | 752 | every person the product renders |
+
+**The two sides now cross exactly**, which is what says the ledger is
+closed: 557 manifest rows are drawn by a rendered slot, and
+557 manifest rows are reachable — the same number.
+
+**What the 37 was.** F01-continued session 1 set `531 + 23 + 348` beside
+`591 + 311` as though both partitioned the same 902 and reported that they
+disagreed by 37 about how many portraits reach a reader. They never
+partitioned the same population. `pnpm photo:reconcile` intersects the two
+universes by id and resolves the 37 with no residue: **34 of it is
+ballot-candidate portraits**, which live in `candidate-cards-2026.json` and
+are not manifest rows at all, and **3 of it was a defect in this file** —
+the three governors render on the who-governs card at every zip in their
+state, and the reach map above could see neither a `sldl:` seat nor a
+roster key for them, so it called them unreachable. They are the third row
+of the partition table now.
+
+**Neither side is a correction of the other.** This file counts PORTRAITS
+WE HOLD and asks whether anything renders them; the census counts PEOPLE
+THE PRODUCT RENDERS and asks whether each has a portrait. A report naming
+one number without saying which side it was counted from has said nothing
+checkable — which is exactly how the 37 survived a session.
 
 ---
 

@@ -1,5 +1,6 @@
 import { writeReaction } from "@/lib/db/reactions";
 import { noteSubmission } from "@/lib/db/intake-limiter";
+import { markerFromRequest } from "@/lib/db/run-marker";
 import { coverageAt } from "@/lib/registry/server";
 import { ripcordPulled } from "@/lib/ripcords";
 import {
@@ -309,6 +310,12 @@ export async function POST(request: Request) {
       ocdIds,
       suspectReason,
       freeText,
+      // Item 0D: the declaration is required by `writeReaction`, and this is
+      // the one place a reaction row learns whose traffic it is. An absent
+      // header resolves to ORGANIC here — a real browser is still a reader,
+      // decided in a function that can be read rather than by a default
+      // sitting in a column definition where nobody looks.
+      marker: markerFromRequest(request),
     });
     return new Response(null, {
       status: stored ? 204 : 202,

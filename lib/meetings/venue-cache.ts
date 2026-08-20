@@ -685,7 +685,7 @@ export const VENUE_CACHE: VenueEntry[] = [
       "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=25+Seamans+Road%2C+New+London%2C+NH+03257&benchmark=Public_AR_Current&format=json",
     verifiedAt: "2026-08-19",
   },
-  // ── SchedulePage: Kearsarge's KRMS deliberative session (H03, 2026-08-19) ──
+  // ── SchedulePage: Kearsarge's KRMS deliberative session (HUNT03, 2026-08-19) ──
   // The gap g3 named and left open on 2026-08-16: "the January deliberative
   // session is held at KRMS rather than 114 Main Street and drops counted
   // until that address is curated". The wiring row has carried

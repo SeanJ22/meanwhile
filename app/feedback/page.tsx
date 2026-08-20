@@ -11,7 +11,7 @@ import { PRODUCT_NAME, titleFor } from "@/lib/brand";
  * removing the address without the form leaves a reader with no way to reach
  * anyone, which is worse than the address being there.
  *
- * H02's missing-body feedback link is this same surface with a second entry
+ * HUNT02's missing-body feedback link is this same surface with a second entry
  * point — the `surface` prop is why the store can tell them apart later
  * without the page being duplicated.
  *

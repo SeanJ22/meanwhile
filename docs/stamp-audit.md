@@ -8,7 +8,7 @@ walked straight past the `Author-revised` stamp on the disclosure rule.
 each one, and the corrected date is typed into `CLAUDE.md` by hand from
 `pnpm stamp` or from the recovered column below.**
 
-Run on 2026-08-20 (America/Phoenix). 28 stamp(s) audited.
+Run on 2026-08-20 (America/Phoenix). 37 stamp(s) audited.
 
 **Method.** Each rule's opening clause — the bold title it leads with — is a
 long string that entered `CLAUDE.md` once. `git log -S<clause> -- CLAUDE.md`
@@ -29,6 +29,7 @@ lying. The recovered dates come from the unfiltered pickaxe.
 | Rule (opening clause) | Claimed | Recovered | Delta | Introducing commit |
 |---|---|---|---|---|
 | THE TRANSPARENCY MANDATE | 2026-08-16 | 2026-08-16 | 0 | `5745c71` The mandate becomes law before the hunting starts, and the tracker stops carrying two rows per ID |
+| WHAT IS LAW HERE, AND WHAT IS A RULING | 2026-08-20 | **NOT FOUND** | — | — |
 | THE DEFERRAL BOUNDARY FALLS BETWEEN SUBJECTS, NEVER INSID… | 2026-08-17 | 2026-08-17 | 0 | `af766f5` The numbers stop contradicting each other, and our own robots stop counting as readers |
 | The design system is committed, not improvised. | 2026-08-15 | 2026-08-15 | 0 | `b8b6f7d` The system goes on the record |
 | The register is chosen by surface, and the ask-box beat d… | 2026-08-15 | 2026-08-15 | 0 | `800fecf` The money tells its story: sorting, the second hop, honest percentages, and a geocoder that works (#39) |
@@ -53,6 +54,14 @@ lying. The recovered dates come from the unfiltered pickaxe.
 | A failed fetch never silently empties a previously-full s… | 2026-08-16 | 2026-08-16 | 0 | `ea54049` The documents: four standing rules, the cuts, and the conflict left for the author |
 | A read from the subject's own official source IS the veri… | 2026-08-16 | 2026-08-16 | 0 | `ea54049` The documents: four standing rules, the cuts, and the conflict left for the author |
 | More viewport must never mean fewer pins. | 2026-08-16 | 2026-08-16 | 0 | `ea54049` The documents: four standing rules, the cuts, and the conflict left for the author |
+| Where collection and rendering can diverge, BOTH numbers … | 2026-08-20 | **NOT FOUND** | — | — |
+| A named instance is an example of a class-wide defect. | 2026-08-20 | **NOT FOUND** | — | — |
+| The Kelly standard, and there are no tiers of it. | 2026-08-20 | **NOT FOUND** | — | — |
+| Stated N equals rendered rows. | 2026-08-20 | **NOT FOUND** | — | — |
+| A ceiling moves only on proof, and the proof is a measure… | 2026-08-20 | **NOT FOUND** | — | — |
+| A session carries carryover and the deferred queue, and n… | 2026-08-20 | **NOT FOUND** | — | — |
+| Where a tool does not exist to reach a public record, BUI… | 2026-08-20 | **NOT FOUND** | — | — |
+| A zero-row extraction is a FAILED extraction, never an em… | 2026-08-20 | **NOT FOUND** | — | — |
 | Disclosure at the point of capture — the one-time acknowl… | 2026-08-13 | 2026-08-13 | 0 | `8fa5759` 3: the defect batch — what-first titles, the narrowing modal, the one-time disclosure, candidate reactions, the mayor, the past, the smalls |
 | One CODE merge per session; close-out records may follow … | 2026-08-19 | 2026-08-19 | 0 | `bd4b05b` F01-continued items 1-11: the numbers reconcile, and four reader-facing defects close |
 | The one exception, and it is the only one | 2026-08-20 | 2026-08-20 | 0 | `787e355` F22: the refresh was red on a path separator, and one vendor timeout emptied a township |
@@ -61,7 +70,7 @@ lying. The recovered dates come from the unfiltered pickaxe.
 
 - **0 stamp(s) disagree with git history.**
 - **0 stamp(s) are still later than today** (2026-08-20) — a date that had not happened when it was written.
-- **0 stamp(s) could not be recovered** and are printed `NOT FOUND` rather than guessed.
+- **9 stamp(s) could not be recovered** and are printed `NOT FOUND` rather than guessed.
 - **2 stamp(s) disagree BY DESIGN and the author has ruled them expected** — listed below, and still carrying their real delta in the table above.
 
 ### Ruled expected, not defects
@@ -77,14 +86,15 @@ well would leave nothing to re-audit if the ruling is ever revisited.
 
 | Line | Claimed | Recovered | Delta | Why this is expected |
 |---|---|---|---|---|
-| `CLAUDE.md:114` | 2026-08-13 | 2026-08-15 | -2 d | photo door 1, adopted 2026-08-13; the four-door restructure wrote it into CLAUDE.md two days later. Author-ruled expected 2026-08-17. |
-| `CLAUDE.md:115` | 2026-08-14 | 2026-08-15 | -1 d | photo door 2, adopted 2026-08-14; same restructure commit the day after. Author-ruled expected 2026-08-17. |
+| `CLAUDE.md:181` | 2026-08-13 | 2026-08-15 | -2 d | photo door 1, adopted 2026-08-13; the four-door restructure wrote it into CLAUDE.md two days later. Author-ruled expected 2026-08-17. |
+| `CLAUDE.md:182` | 2026-08-14 | 2026-08-15 | -1 d | photo door 2, adopted 2026-08-14; same restructure commit the day after. Author-ruled expected 2026-08-17. |
 
 ## The literal `--diff-filter=A` result, per stamp
 
 | Rule (opening clause) | `--diff-filter=A` returned | Unfiltered matches |
 |---|---|---|
 | THE TRANSPARENCY MANDATE | none | 1 |
+| WHAT IS LAW HERE, AND WHAT IS A RULING | none | 0 |
 | THE DEFERRAL BOUNDARY FALLS BETWEEN SUBJECTS, NEVER INSID… | none | 1 |
 | The design system is committed, not improvised. | none | 1 |
 | The register is chosen by surface, and the ask-box beat d… | none | 1 |
@@ -109,6 +119,14 @@ well would leave nothing to re-audit if the ruling is ever revisited.
 | A failed fetch never silently empties a previously-full s… | none | 1 |
 | A read from the subject's own official source IS the veri… | none | 1 |
 | More viewport must never mean fewer pins. | none | 1 |
+| Where collection and rendering can diverge, BOTH numbers … | none | 0 |
+| A named instance is an example of a class-wide defect. | none | 0 |
+| The Kelly standard, and there are no tiers of it. | none | 0 |
+| Stated N equals rendered rows. | none | 0 |
+| A ceiling moves only on proof, and the proof is a measure… | none | 0 |
+| A session carries carryover and the deferred queue, and n… | none | 0 |
+| Where a tool does not exist to reach a public record, BUI… | none | 0 |
+| A zero-row extraction is a FAILED extraction, never an em… | none | 0 |
 | Disclosure at the point of capture — the one-time acknowl… | none | 1 |
 | One CODE merge per session; close-out records may follow … | none | 1 |
 | The one exception, and it is the only one | none | 1 |

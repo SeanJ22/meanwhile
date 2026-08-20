@@ -64,7 +64,19 @@ const nextConfig: NextConfig = {
      * Only the 666 KB runtime file is traced. The 18 MB audit file stays in the
      * repo and out of every function bundle.
      */
-    "/ballot": ["./data/derived/zip-coverage-tiers-runtime.json"],
+    /*
+     * RULING 18's hunt states (Prompt C item 2). Named explicitly rather than
+     * left to the tracer, because the failure mode is the worst kind: an
+     * unreadable file reads as "nothing has been hunted", which withholds
+     * EVERY contest on the ballot behind the equal-depth gate — and a ballot
+     * page that withholds everything looks exactly like a ballot page doing
+     * its job. The other data/ballot files are traced today by the tracer's
+     * static read of a literal join(); this one does not rely on that.
+     */
+    "/ballot": [
+      "./data/derived/zip-coverage-tiers-runtime.json",
+      "./data/ballot/candidate-hunt-state.json",
+    ],
     "/about-area": ["./data/derived/zip-coverage-tiers-runtime.json"],
     "/api/reactions": ["./data/derived/zip-coverage-tiers-runtime.json"],
     "/api/log": ["./data/derived/zip-coverage-tiers-runtime.json"],

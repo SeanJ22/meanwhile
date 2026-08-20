@@ -48,9 +48,88 @@ done when every line is true or its exception is recorded with rungs.
 
 ## 2. The source ladder per jurisdiction type
 
-The general ladder — thirteen rungs and "rung 14 is: add rungs" — lives in
-`docs/source-ladder.md` and is not repeated here. What follows is what to try
-FIRST for each kind of government, which is the part that saves the hours.
+**TWO LADDERS, AND ONLY ONE OF THEM IS NUMBERED** (rewritten 2026-08-20, Prompt
+C item 6; `docs/rulings.md` RULING 16).
+
+- **The RETRIEVAL-MECHANICS ladder is `CLAUDE.md`'s fourteen rungs**, and its
+  numbering is the numbering that reaches the database as `walledAtRung`. It is
+  about getting bytes past a wall: plain fetch, header set, different client,
+  different egress, live browser, the page's own network calls, structured
+  markup, linked documents, sitemaps, the Archive, the vendor platform, the
+  records-request path.
+- **The DISCOVERY ladder is below, and it is LETTERED**, deliberately. It is
+  about where a document LIVES, which is a different question. It used to be
+  numbered one to thirteen in `docs/source-ladder.md`, and that meant "rung 7"
+  in a throw site and "rung 7" in a document were different rungs with nothing
+  saying so. Letters cannot collide with numbers, so the collision cannot come
+  back.
+
+`docs/source-ladder.md` keeps the per-body EVIDENCE — every hunt, every rung
+walked, every miss with its URL. Its own numbered header list is retired in
+place with a dated note and lives here now.
+
+### The discovery ladder, A to M
+
+Walked in order, each recorded with `attemptedAt` and its result. Reaching M
+without an answer is the point at which rungs get invented — a body is
+exhausted when the IDEAS run out and that has been recorded, never when the
+list runs out.
+
+- **A. Resolve the real domain first.** Search results go stale —
+  `newburynh.org` does not resolve; `newbury.nh.gov` does. Common shapes:
+  `<town>.<st>.gov`, `<town><st>.gov`, `<town>.org`, `<district>.k12.<st>.us`,
+  `<district>.org`, `co.<county>.<st>.us`, `<county>county.gov`, and `.net`
+  where `.org` is dead (`merrimackcounty.net`).
+- **B. The body's own page on that domain.** The specific board page, not the
+  jurisdiction homepage — it usually links the calendar directly.
+- **C. The clerk, secretary or administrator page** — frequently different
+  from the body's page, and where notices actually get posted.
+- **D. Machine-readable feeds on that domain.** Try, do not assume: `/rss`,
+  `/feed`, `/RSSFeed.aspx`, `/AgendaCenter`, `/Calendar.aspx`,
+  `/calendar.ics`, `?ical=1`, `/events.ics`, `/api`, `/sitemap.xml`,
+  `/robots.txt`. Read `robots.txt` and `sitemap.xml` as discovery.
+- **E. CMS-standard paths for whichever platform the site runs.** Identify the
+  CMS first (CivicPlus, Granicus OpenCities, Revize, Municode, GovOffice,
+  Apptegy, WordPress, Squarespace), then try its conventions. **Never infer
+  the agenda vendor from the website CMS** — Tucson runs Granicus OpenCities
+  and is not a Legistar client, which would have been wrong twice.
+- **F. The agenda vendor portal, and its API before its HTML.** Legistar,
+  OnBase Agenda Online, NovusAgenda, Diligent Community / BoardDocs,
+  iCompass / CivicWeb, Simbli, PrimeGov, CivicClerk, Municode Meetings,
+  Apptegy Thrillshare, Granicus IQM2. The list is open-ended; add every new
+  one here.
+- **G. Undocumented endpoints behind the portal.** Most portals render from
+  JSON they fetch themselves — watch the network requests on the meeting-list
+  page and use the endpoint the page uses. The same public data the page
+  shows, in the form the page already receives it.
+- **H. Embedded third-party calendars.** A Google Calendar embed exposes
+  `calendar.google.com/calendar/ical/<id>/public/basic.ics`; Trumba and
+  Localist have derivable public feeds.
+- **I. Statutory posting locations.** AZ requires the agenda on the body's
+  website 24h ahead (A.R.S. § 38-431.02); NJ requires 48h notice (N.J.S.A.
+  10:4-8); NH requires notice in two public places or a newspaper, and no
+  agenda at all (RSA 91-A:2). Follow the statute to where notice lives. A
+  *formal records request* is this rung's manual sibling and is never
+  automated — in AZ it is where § 39-121.03's commercial-purpose machinery
+  attaches.
+- **J. County and state clearinghouses.** County clerks aggregate; some states
+  run public-notice sites; press associations run legal-notice portals.
+  (Verified misses: NH has none; nhmunicipal.org's board is NHMA's own.)
+- **K. The parent or overlapping body's feed.** Pima's board sat as the
+  Library District and Ajo Domestic Water; joint meetings appear on both
+  parties' calendars (Tucson content reachable via `pima.legistar.com`).
+- **L. The Wayback Machine**, for a page that moved rather than vanished.
+- **M. Community and social channels as LEADS ONLY** — never a citation. A
+  lead is `UNVERIFIED` until the body's own posting is found.
+
+**And after M: add rungs.** Any route that works gets written back — into this
+lettered list when it is a new PLACE to look, and into `CLAUDE.md`'s numbered
+ladder only when it is a genuinely new RETRIEVAL CLASS. A new technique inside
+an existing mechanics rung enriches that rung and does not renumber anything.
+
+### What to try FIRST, per kind of government
+
+This is the part that saves the hours.
 
 ### County
 
@@ -114,6 +193,8 @@ Append here. Each entry: what it is, how to do it, when it was verified.
 
 ### The party recipe (M62, 2026-08-15) — verbatim from the session that found it
 
+*Evidence: `docs/source-ladder.md`, "M62 — the certified-results rung, walked 2026-08-15 — the evidence".*
+
 **A general-election canvass usually does not print party.** Pima County's
 certified general canvass and the Morris County Clerk's official summary
 report both carry candidate names and vote totals and no affiliation at all.
@@ -172,6 +253,8 @@ identified User-Agent**: `tucsonaz.gov` and `morriscountyclerk.org`.
 
 ### CivicPlus: the boards live in a different calendar category (2026-08-15)
 
+*Evidence: `docs/source-ladder.md`, "A township's boards are in a different calendar category (M77) — the evidence".*
+
 Rockaway Township's wired iCal feed is `catID=25`, and it carries the Township
 Council and nothing else. **`catID=30` is a second calendar** carrying the
 Planning Board and the Board of Adjustment with real start times. Probing the
@@ -191,6 +274,8 @@ will happen.
 
 ### The served window is the fetch window (M76, 2026-08-15)
 
+*Evidence: `docs/source-ladder.md`, "The served window is the fetch window (M76) — the evidence".*
+
 Every adapter had `WINDOW_BACK_DAYS = 30` while the app serves
 `CONCLUDED_LOOKBACK_DAYS = 90`. Sixty days of published, retrievable history
 were being dropped at the fetch, at every zip, silently — a density loss that
@@ -199,6 +284,8 @@ Adapter windows now derive from `lib/meetings/constants.ts`. **Check this
 first when a jurisdiction looks thinner than its portal.**
 
 ### A town's portal may not be the town (2026-08-15)
+
+*Evidence: `docs/source-ladder.md`, "A town's portal may not be the town (M79) — the evidence".*
 
 **Never read a vendor tenant as the government.** Newbury's iCompass CivicWeb
 portal published **20 sittings across the whole of 2026 and every one was the
@@ -217,6 +304,8 @@ tenant — every value 1–15 returned the identical page. Type discovery comes
 from the service payload's own `TypeId`s, never from the type-list page.
 
 ### The published annual schedule (2026-08-15)
+
+*Evidence: `docs/source-ladder.md`, "The published annual schedule is a source shape, not a vendor (M78) — the evidence".*
 
 A source shape, not a vendor, and the one to try when a body runs no portal:
 the body publishes its whole year of dates on one page with a single sentence
@@ -371,6 +460,8 @@ Adapter windows now derive from `lib/meetings/constants.ts`.
 
 ### State roll calls: LegiScan, and the join that fails silently (2026-08-15)
 
+*Evidence: `docs/source-ladder.md`, "The district mapping, and the failure it hides — the evidence".*
+
 Bulk first — `getDatasetList` → `getDataset`, one ZIP per state session,
 refreshed Sunday mornings. Store `dataset_hash`, compare it, **never
 re-download an unchanged dataset**. Never touch the legiscan.com front end.
@@ -404,6 +495,8 @@ count is usually not a gap: most of a legislature governs outside our clipped
 boundaries. What matters is that every roster seat that COULD match did.
 
 ### Let the surface drive the clip (2026-08-15)
+
+*Evidence: `docs/source-ladder.md`, "The clip, stated — the evidence".*
 
 A snapshot that holds "the N most recent" of anything must ask what the
 surface renders. Arizona published 7,283 roll calls in one session and
@@ -551,6 +644,48 @@ sittings drop as an unknown venue rather than being kept.
 | `pnpm stamp` | Today, `America/Phoenix`. Every written date comes from here. |
 | `pnpm verify-stamps` | Audits `CLAUDE.md`'s Adopted dates against git history. |
 | `pnpm legiscan:fetch` | State-legislature roll calls for AZ/NJ/NH, hash-gated. `--force` re-downloads. |
+
+### The extraction toolkit (F11, added 2026-08-20)
+
+Four layers, one contract. **A ZERO-ROW EXTRACTION IS A FAILED EXTRACTION,
+never an empty document** — every layer returns an outcome of `EXTRACTED`,
+`ZERO_ROWS` or `CANNOT_RUN` with its counts, and the CLI exits non-zero on
+anything but the first. `ZERO_ROWS` ("the layer ran and produced nothing") and
+`CANNOT_RUN` ("the layer could not look") are deliberately different: a
+scanned agenda recorded as a document that published nothing is a false claim
+about a public body.
+
+| Command | Layer | What it does |
+|---|---|---|
+| `pnpm extract text <file\|url>` | 1 · `lib/extract/text-layer.ts` | The text layer of a born-digital PDF, one row per page that carries text. All pages empty ⇒ `ZERO_ROWS` naming OCR as the next rung, never "the document is empty". A non-`%PDF` input is `CANNOT_RUN`, so a challenge page served at 200 cannot read as a silent PDF. |
+| `pnpm extract tables <file\|url>` | 2 · `lib/extract/tables.ts` | Agenda and budget grids, reconstructed from text-item POSITION — rows grouped by baseline, cells cut where the horizontal gap exceeds the row's own median character width. Limits stated in the refusal: no ruling-line detection, no spanned cells, no table joined across a page break. |
+| `pnpm extract ocr <file\|url>` | 3 · `lib/extract/ocr.ts` | Scanned PDFs, through a LOCAL `tesseract` binary. The engine is deliberately not a dependency — the deploy never OCRs anything, and the WASM build plus language data would join the file-count budget for a path that only runs in a hunt. No engine on PATH ⇒ `CANNOT_RUN` naming the install, NEVER "no text". `opts.engine` injects a better one. |
+| `pnpm extract payload <file\|url> [--find "text"]` | 4 · `lib/extract/embedded-payload.ts` | CMS pages that ship their content as an escaped JSON payload inside a `<script>`. Reads all three encodings — plain JSON script, assigned object literal, and the DOUBLY-encoded string-whose-value-is-JSON that is Apptegy's shape. `--find` reports every hit with its KEY PATH, which is what makes a hit evidence rather than a substring match. |
+| `pnpm extract auto <file\|url>` | 1 → 3 | The ladder in code: text layer first, escalating to OCR when the text layer reports a scan. |
+
+**Layer 4 is why F11 stopped being about PDFs, and it is verified against the
+page that produced the row.** Vail Unified's superintendent was carried as
+"Carruth" — a surname with no given name. The link was in the static HTML, the
+page answered 200 to a plain fetch, and "John Carruth" was in that HTML six
+times. Fetch and discovery both worked and the EXTRACTION read nothing, because
+Apptegy hydrates from an embedded payload and the rendered prose carries only a
+news blurb saying "Superintendent Carruth".
+
+Verified live on 2026-08-20 — one fetch, not a hunt:
+
+```
+pnpm extract payload https://www.vailschooldistrict.org/page/superintendent --find "John Carruth"
+FIND "John Carruth" — 6 hit(s)
+  script 3  page.content.structure.nodes[2].nodes[0].nodes[0].content.html
+  script 3  page.content.structure.nodes[2].nodes[0].nodes[1].content.altText
+  ...
+EMBEDDED_PAYLOAD EXTRACTED rows=1151 bytes=1401792  scripts=14 scriptsWithJson=6
+```
+
+Six hits, matching the six occurrences F07 recorded, each with the key path it
+came from. `tests/extract.test.ts` holds the shape offline, including the
+doubly-encoded case and the negative — a page whose prose has the name and
+whose payload does not.
 
 ## 5. The state folders
 

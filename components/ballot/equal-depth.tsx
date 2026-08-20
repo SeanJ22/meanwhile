@@ -1,9 +1,12 @@
 import { equalDepthGate } from "@/lib/coverage/tier";
 import type { CandidateDepth } from "@/lib/coverage/tier";
+import { KELLY_FIELD_LABEL } from "@/lib/ballot/hunt-state";
 
 /**
  * RULING 7 — no candidate cards ship in a contest until every candidate in
  * that contest can ship at equal depth (item 7.2 and 7.3, 2026-08-20).
+ * **RULING 18 (Prompt C item 2, 2026-08-20) re-points the measurement at hunt
+ * completion.**
  *
  * THE TESTER'S FINDING IS THE WHOLE REASON, in her words: *"Karen might be the
  * perfect fit for me, but she has no information here. So I'm only going to
@@ -21,11 +24,16 @@ import type { CandidateDepth } from "@/lib/coverage/tier";
  * surfaces each deciding for themselves is two things to get wrong, and the
  * second one is always the one nobody remembers to fix.
  *
- * WHAT IT IS NOT. The rule is EQUALITY, never richness: two candidates we know
- * nothing about are equally served by the thin-candidate line and both render.
+ * WHAT IT IS NOT. The rule is EQUALITY, never richness: two candidates whose
+ * hunts are both finished render together whatever those hunts found. A
+ * write-in who has no campaign site and never will is not a reason to withhold
+ * their contest forever — that was the strict-equality reading, and RULING 18
+ * replaced it. What withholds is an UNFINISHED hunt.
+ *
  * And nothing is deleted — a withheld contest still names its candidates and
  * says why the cards are not there, because an unexplained blank is the defect
- * one floor up.
+ * one floor up. It now also names, per candidate, WHICH fields are still
+ * unhunted, so the work the reader is waiting on is a list rather than a mood.
  */
 export function EqualDepth({
   candidates,
@@ -41,18 +49,21 @@ export function EqualDepth({
 
   if (decision.render) {
     return (
-      <div data-equal-depth="rendered" data-equal-depth-level={decision.depth}>
+      <div data-equal-depth="rendered" data-equal-depth-complete={decision.complete}>
         {children}
       </div>
     );
   }
 
+  const unhuntedByName = new Map(
+    decision.unhunted.map((u) => [u.candidateName, u.fields] as const),
+  );
+
   return (
     <div
       data-equal-depth="withheld"
       data-equal-depth-reason={decision.reason}
-      data-equal-depth-shallowest={decision.shallowest}
-      data-equal-depth-deepest={decision.deepest}
+      data-equal-depth-unhunted={decision.unhuntedFields}
       className="mt-3.5 rounded-md border border-dashed border-[var(--panel-border)] px-3 py-3"
     >
       {/*
@@ -60,11 +71,26 @@ export function EqualDepth({
         withhold the fact that these people are running — that would be a
         worse asymmetry than the one the gate exists to prevent, and the
         reader came here to find out who is on the ballot.
+
+        Beside each name, what is still owed. Plain-language field labels, never
+        the enum key: `campaignSite` is an internal identifier and no reader
+        surface renders one.
       */}
       <ul className="space-y-1 text-[0.875rem]">
-        {names.map((n) => (
-          <li key={n}>{n}</li>
-        ))}
+        {names.map((n) => {
+          const owed = unhuntedByName.get(n);
+          return (
+            <li key={n}>
+              {n}
+              {owed && owed.length > 0 && (
+                <span className="text-muted">
+                  {" — still looking for: "}
+                  {owed.map((f) => KELLY_FIELD_LABEL[f].toLowerCase()).join(", ")}
+                </span>
+              )}
+            </li>
+          );
+        })}
       </ul>
       {/* Level register: this is a claim about our own coverage, not a joke. */}
       <p className="mt-2.5 text-[0.75rem] leading-relaxed text-muted">

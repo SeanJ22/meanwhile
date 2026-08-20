@@ -160,6 +160,28 @@ type StampedZip = {
   unresolvedSpecialDistrictsInCounties: number;
   /** Per-edge tiers, so an edge carries its own claim and not the zip's. */
   edges: Array<{ layer: string; id: string; tier: CoverageTier }>;
+  /**
+   * THE PER-GOVERNMENT TIER DISTRIBUTION (Prompt C item 3, 2026-08-20).
+   *
+   * The floor tier above is the honest public headline and it stays exactly
+   * as it is. It is also, nationally, TIER_0 for 97.88% of zips — because no
+   * special district anywhere resolved and nearly every zip contains one — so
+   * as a FIELD on a sold row it carries almost no information. A buyer
+   * weighting a row cannot tell a zip with one unresolved fire district and a
+   * fully enumerated county from a zip where nothing at all is known, and
+   * those are not the same measurement.
+   *
+   * This is the same stamped values counted rather than floored: how many of
+   * this zip's governments sit at each tier. TIER_0 is the universe minus what
+   * resolved — the governments we know exist over this zip and could not
+   * attribute to it — and TIER_1 upward come from the edges, each carrying its
+   * own claim.
+   *
+   * STORED ONLY. It reaches no reader-facing surface, no headline figure, no
+   * report summary and no national distribution. The floor tier remains the
+   * only tier stated publicly.
+   */
+  governmentTierDistribution: Record<CoverageTier, number>;
 };
 
 const stamped: Record<string, StampedZip> = {};
@@ -221,7 +243,7 @@ for (const [zip, edges] of Object.entries(zipGov.zips)) {
     throw new Error(`${zip}: stamped tier ${tier} exceeds its own evidence — a bug in promote()`);
   }
 
-  const edgeTiers = governments.map((e) => {
+  const edgeTiers: StampedZip["edges"] = governments.map((e) => {
     // An EDGE's tier is about that one government-to-zip relationship, not the
     // zip's overall position. The edge exists because territory resolved, so it
     // is at least Tier 1; it reaches Tier 2 only if that government's bodies
@@ -235,12 +257,39 @@ for (const [zip, edges] of Object.entries(zipGov.zips)) {
     return { layer: e.layer, id: e.id, tier: t };
   });
 
+  /*
+   * Counted from the same stamped values the floor came from, never inferred
+   * and never recomputed at read time. TIER_0 is the arithmetic remainder:
+   * every government in this zip's universe that did not resolve to it — which
+   * is exactly the unresolved special districts, and is written as the
+   * subtraction so the four numbers always sum to the universe.
+   */
+  const governmentTierDistribution: Record<CoverageTier, number> = {
+    TIER_0: universeGovernments - edgeTiers.length,
+    TIER_1: edgeTiers.filter((e) => e.tier === "TIER_1").length,
+    TIER_2: edgeTiers.filter((e) => e.tier === "TIER_2").length,
+    TIER_3: edgeTiers.filter((e) => e.tier === "TIER_3").length,
+  };
+  const distSum =
+    governmentTierDistribution.TIER_0 +
+    governmentTierDistribution.TIER_1 +
+    governmentTierDistribution.TIER_2 +
+    governmentTierDistribution.TIER_3;
+  if (distSum !== universeGovernments) {
+    throw new Error(
+      `${zip}: the per-government tier distribution sums to ${distSum} against a ` +
+        `universe of ${universeGovernments} — a distribution that does not add up ` +
+        `to its own denominator is not a measurement`,
+    );
+  }
+
   stamped[zip] = {
     tier,
     stampedAt: STAMPED_AT,
     evidence,
     unresolvedSpecialDistrictsInCounties: unresolvedSpecialDistricts,
     edges: edgeTiers,
+    governmentTierDistribution,
   };
   distribution.set(tier, (distribution.get(tier) ?? 0) + 1);
 }
@@ -281,6 +330,75 @@ console.log(
   `\nOCD DIVISIONS STAMPED: ${ocdTiers.size} of ${divisionGeoid.size} divisions carrying a TIGER geoid`,
 );
 
+/* -------------------------------------------------------------------------- */
+/* THE SAME DISTRIBUTION, KEYED BY OCD DIVISION (Prompt C item 3, 2026-08-20)  */
+/*                                                                            */
+/* The reaction write path holds divisions, not a zip, so it needs the        */
+/* distribution in the shape it can ask in — and it must MEAN THE SAME THING  */
+/* as the search log's, or the column is two different measurements sharing a */
+/* name, which is worse than not having it.                                   */
+/*                                                                            */
+/* So it is counted over GOVERNMENTS, not over divisions: the distinct        */
+/* governments touching any zip this division covers, each at its own edge    */
+/* tier, plus the distinct unresolved special districts in the counties those */
+/* zips lie in. DISTINCT is the load-bearing word — a government touching     */
+/* nine of a county's zips is one government, and summing per-zip counts      */
+/* would count it nine times.                                                 */
+/* -------------------------------------------------------------------------- */
+
+const govsByOcd = new Map<string, Map<string, CoverageTier>>();
+const countiesByOcd = new Map<string, Set<string>>();
+for (const row of Object.values(stamped)) {
+  // Every division this zip touches, via any of its government edges.
+  const divisions = new Set<string>();
+  for (const e of row.edges) {
+    for (const ocdId of geoidToOcd.get(e.id) ?? []) divisions.add(ocdId);
+  }
+  if (divisions.size === 0) continue;
+  const counties = row.edges.filter((e) => e.layer === "county").map((e) => e.id);
+  for (const ocdId of divisions) {
+    let govs = govsByOcd.get(ocdId);
+    if (!govs) {
+      govs = new Map<string, CoverageTier>();
+      govsByOcd.set(ocdId, govs);
+    }
+    for (const e of row.edges) {
+      // A government's edge tier can differ by zip only if enumeration
+      // differed, which it cannot — enumeration is per government. Keeping
+      // the FLOOR anyway, so a future per-zip difference degrades safely.
+      const seen = govs.get(e.id);
+      if (!seen || RANK[e.tier] < RANK[seen]) govs.set(e.id, e.tier);
+    }
+    let cs = countiesByOcd.get(ocdId);
+    if (!cs) {
+      cs = new Set<string>();
+      countiesByOcd.set(ocdId, cs);
+    }
+    for (const c of counties) cs.add(c);
+  }
+}
+
+const ocdDistributions: Record<string, [number, number, number, number]> = {};
+for (const [ocdId, govs] of govsByOcd) {
+  let t1 = 0;
+  let t2 = 0;
+  let t3 = 0;
+  for (const t of govs.values()) {
+    if (t === "TIER_1") t1 += 1;
+    else if (t === "TIER_2") t2 += 1;
+    else if (t === "TIER_3") t3 += 1;
+  }
+  const t0 = [...(countiesByOcd.get(ocdId) ?? [])].reduce(
+    (n, geoid) => n + (specialDistrictsByCountyGeoid.get(geoid) ?? 0),
+    0,
+  );
+  ocdDistributions[ocdId] = [t0, t1, t2, t3];
+}
+console.log(
+  `OCD DIVISIONS WITH A GOVERNMENT TIER DISTRIBUTION: ${Object.keys(ocdDistributions).length}`,
+);
+
+
 const total = Object.keys(stamped).length;
 console.log("");
 console.log(`COVERAGE TIER STAMPED ON ${total} ZIPS (stamped ${STAMPED_AT}, America/Phoenix)`);
@@ -320,6 +438,7 @@ writeFileSync(
     distribution: Object.fromEntries(distribution),
     edgeDistribution: Object.fromEntries(edgeDistribution),
     ocdTiers: Object.fromEntries(ocdTiers),
+    ocdDistributions,
     zips: stamped,
   })}\n`,
   "utf8",
@@ -347,13 +466,20 @@ console.log("\nWROTE data/derived/zip-coverage-tiers.json");
 /* -------------------------------------------------------------------------- */
 
 const RUNTIME_TIERS: CoverageTier[] = ["TIER_0", "TIER_1", "TIER_2", "TIER_3"];
-const compact: Record<string, [number, number, number, number]> = {};
+type CompactZip = [number, number, number, number, number, number, number, number];
+const compact: Record<string, CompactZip> = {};
 for (const [zip, row] of Object.entries(stamped)) {
   compact[zip] = [
     RUNTIME_TIERS.indexOf(row.tier),
     row.evidence.territoryResolved,
     row.evidence.bodiesEnumeratedFor,
     row.unresolvedSpecialDistrictsInCounties,
+    // Item 3: the per-government distribution, so the write paths can stamp it
+    // without loading the 18 MB audit file. Four more integers per zip.
+    row.governmentTierDistribution.TIER_0,
+    row.governmentTierDistribution.TIER_1,
+    row.governmentTierDistribution.TIER_2,
+    row.governmentTierDistribution.TIER_3,
   ];
 }
 
@@ -367,10 +493,15 @@ writeFileSync(
       "territoryResolved",
       "bodiesEnumeratedFor",
       "unresolvedSpecialDistrictsInCounties",
+      "governmentsAtTier0",
+      "governmentsAtTier1",
+      "governmentsAtTier2",
+      "governmentsAtTier3",
     ],
     denominator: { zips: total },
     distribution: Object.fromEntries(distribution),
     ocdTiers: Object.fromEntries(ocdTiers),
+    ocdDistributions,
     zips: compact,
   })}\n`,
   "utf8",

@@ -228,6 +228,25 @@ test("the collection stores share no joinable column", () => {
      *   from a Tier 0 zip with none.
      */
     "coverage_tier",
+    /*
+     * - `coverage_tier_distribution` (Prompt C item 3, 2026-08-20) — the same
+     *   fact as `coverage_tier` directly above, counted rather than floored:
+     *   how many of that place's governments sit at each of the four tiers,
+     *   encoded `T0:24,T1:0,T2:3,T3:0`, or `UNKNOWN`.
+     *
+     *   It exists because the FLOOR is TIER_0 for 97.88% of zips nationally —
+     *   no special district anywhere has resolved territory and nearly every
+     *   zip contains one — so as a field on a sold row the floor separates
+     *   almost nothing. Four small integers about a PLACE, identical for every
+     *   reader in it, changing only when a session does research. It cannot
+     *   single anyone out and it cannot relate two readers' rows, exactly as
+     *   the tier cannot.
+     *
+     *   STORED ONLY: it reaches no reader-facing surface, no headline figure
+     *   and no national distribution. The floor stays the only tier stated
+     *   publicly.
+     */
+    "coverage_tier_distribution",
   ]);
 
   /*

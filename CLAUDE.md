@@ -4,13 +4,36 @@ Civic app, two halves. Consumer side shows what's on a user's ballot with source
 
 ## Stack
 
-- Next.js (App Router) + TypeScript + React
-- Tailwind + shadcn/ui
-- Postgres on Neon, accessed through Drizzle
-- Deployed on Vercel; ingestion runs as Vercel cron jobs
-- Auth via Auth.js, email magic link only — no OAuth, no social login
+**This section names DECISIONS, never versions.** (Rewritten 2026-08-20,
+Prompt C item 4.3.) A framework version written here goes stale the next time
+anyone runs an upgrade, and a stale constitution is worse than a short one — a
+session reads it as current and builds against a fact that is no longer true.
+So the shelf-life content lives where it is authoritative and this points at it:
+**`package.json` and `pnpm-lock.yaml`** for what is installed, **`netlify.toml`**
+for how the deploy builds, **`next.config.ts`** for what the build does, and
+**`drizzle.config.ts`** for the database wiring.
+
+What does not drift, and is therefore law:
+
+- Next.js (App Router) + TypeScript + React.
+- Tailwind + shadcn/ui. The design tokens are committed — see the design-system
+  rule below.
+- Postgres on Neon, accessed through Drizzle. **Schema changes go through
+  Drizzle migrations; no hand-edited SQL against the database**, and a
+  migration is applied with `pnpm db:apply`.
+- **Deployed on NETLIFY.** Not Vercel — the file said Vercel for months and it
+  was never true of this repo. The build Netlify runs is the literal command in
+  `netlify.toml`, and `.github/workflows/build-check.yml` runs that same string
+  on every push so a refused build is readable without the author's Netlify
+  login.
+- **The scheduler is GitHub Actions, not platform cron.** Five workflows push
+  `main` — the four governed-artifact refreshes plus the intake tripwire — and
+  each rebases and retries through `scripts/push-main.mjs`, because two of them
+  running close together used to lose one run's work (R48).
+- Auth via Auth.js, email magic link only — no OAuth, no social login.
 - MapLibre GL with a vector tile provider. Not Google Maps.
-- Mobile is responsive web first. A React Native client comes later if push notifications justify it, and will consume the same API.
+- Mobile is responsive web first. A React Native client comes later if push
+  notifications justify it, and will consume the same API.
 
 ## The order of every trade
 
@@ -46,11 +69,31 @@ Do not fail. Find every avenue, every back door, every nook, every cranny.
 
 **Recorded deviation from the source document, so a later comparison reads it as a decision and not as drift** (recorded 2026-08-17; the adaptation itself was made 2026-08-16 by the h session and reported then). The text above is verbatim from the h session brief with ONE adaptation: the brief's first bullet and its operational-interpretation paragraph each cited experimental control **C5**, and the same brief separately forbade copying its experimental controls into `CLAUDE.md`. Those two clauses therefore read here without the C5 reference. Nothing else was changed, compressed, reordered or paraphrased. A session diffing `CLAUDE.md` against the h brief will find exactly this difference and no other.
 
-### THE LADDER, EXHAUSTIVELY
+### THE LADDER, EXHAUSTIVELY — AND IT IS THE ONLY NUMBERED ONE
 
 (The standing definition — a hunt is over only when every rung below has been
 walked and recorded with `attemptedAt` and its result. These fourteen rungs are
 `ladder vH-start`.)
+
+**THIS IS THE CANONICAL RETRIEVAL-MECHANICS LADDER, and its numbering is the
+numbering that reaches the database.** (Named canonical 2026-08-20, the
+author's ruling; `docs/rulings.md` carries it as RULING 16.) A `walledAtRung`
+value written anywhere in this product is a rung number FROM THIS LIST and from
+no other.
+
+The collision this closes: `docs/source-ladder.md` carried its own numbered
+list of thirteen, and it is a DISCOVERY ladder — where a document lives, not
+how to get bytes past a wall. Two numbered ladders in one repo meant a "rung 7"
+in a throw site and a "rung 7" in a document were different rungs, and nothing
+said so. The thirteen are retired in place with a dated note and their content
+lives on as the lettered where-to-look ladder in `docs/zip-playbook.md` §2,
+lettered precisely so it can never collide with these numbers again.
+
+Rung values written before F22 (2026-08-20) are PROVENANCE-UNKNOWN. F22 was the
+session that made throw sites name their rung in this numbering, so everything
+earlier is uncertain — those values are MARKED as unknown and are never
+reinterpreted, because guessing which ladder an old number meant would
+manufacture a retrieval history nobody walked.
 
 1. Committed snapshot.
 2. Plain fetch.
@@ -68,6 +111,30 @@ walked and recorded with `attemptedAt` and its result. These fourteen rungs are
 14. The author's browser, last.
 
 Operational interpretation of "every wall that falls becomes a rung": every successful wall-breaking method becomes a PERMANENT reusable step in the playbook, whether it is code or procedure. Only a genuinely NEW RETRIEVAL CLASS increments the numbered ladder. A new technique inside an existing rung enriches that rung; it does not renumber the ladder. This preserves the mandate verbatim while keeping the ladder version stable.
+
+Every session reports RUNGS ADDED and where they landed — which existing rung
+was enriched, or, for a genuinely new retrieval class, which number was added.
+A run that learned a new way past a wall and did not write it down has spent the
+discovery and kept nothing.
+
+### WHAT IS LAW HERE, AND WHAT IS A RULING
+
+(Adopted 2026-08-20, Prompt C item 5.)
+
+**This file is law.** A rule here binds every session and is changed only by the
+author.
+
+**Most decisions are not law**, and until 2026-08-20 they lived only in whichever
+chat window was open when they were made — which meant a session could be told
+to "hardcode the ruling as fact" with no way to check what the ruling said, and
+a superseded ruling could come back as drift because nothing recorded that it
+had been superseded. `docs/rulings.md` is that record: append-only, dated, one
+entry per ruling, each naming what it supersedes. It is surfaced in
+`docs/context.md`, so every session opens on it.
+
+A ruling that becomes law is written INTO this file and its entry in
+`docs/rulings.md` says so. A ruling that contradicts this file does not
+silently win: the conflict is named, and the author rules.
 
 ### THE DEFERRAL BOUNDARY FALLS BETWEEN SUBJECTS, NEVER INSIDE ONE
 
@@ -150,6 +217,22 @@ Every shipped photo records WHICH door it shipped through (`docs/photo-report.md
 
 **More viewport must never mean fewer pins.** (Adopted 2026-08-16.) Zooming out is a request to see MORE, and a map that answers it with less is indistinguishable from a map losing data. The cause was never clustering or culling: the settle re-query carried no radius, so the server used the ladder's first rung at every zoom while a wheel zoom dragged the centre, and a fresh small circle was drawn around a new point. The requested radius follows the viewport, floored at the first rung and capped at the last, and a materially wider view is its own reason to re-ask — a centre-distance test alone misses zooming out in place entirely. `lib/map/viewport-radius.ts`.
 
+**Where collection and rendering can diverge, BOTH numbers are reported, always, as a pair.** (Adopted 2026-08-20, the D68 rule.) A single figure standing in front of two measurements is a data-destruction pattern, not a rounding choice: a flat total conceals a falling component, and the component that is falling is the one somebody needed to see. The ballot page counted contests one way and rendered them another and reported one number; the meetings snapshot counted two things and stated one. Both looked healthy. So a surface, a script, a report or a snapshot that can COLLECT one number and RENDER a different one states them BOTH, makes the pair reconcile, and names which is the standing figure. The rule above — an operation that can return nothing must be asked what it returned — catches a ZERO. It does not catch this, and D50 recurred in F01 because nobody had written the difference down. Where the two do not reconcile, that is the finding, and it renders as one.
+
+**A named instance is an example of a class-wide defect.** (Adopted 2026-08-20.) Every defect this project has found by name has turned out to have siblings: one separator-broken allowlist was fourteen hand-kept state registries; one campaign's books served for three politicians was every `public`-cached response keyed on a query string; one unparsed Apptegy page was a whole CMS family. So a reported defect is the START of a sweep, never the end of one. Fix at the SHARED CODE PATH, sweep the class with a non-skipping tool — `git grep -a --untracked`, or ripgrep with binary handling forced, because a NUL byte and a hidden path each make ripgrep report nothing found without having looked — and state COUNT FOUND and COUNT FIXED. Fixing the named instance alone and reporting it as closed is how a class defect survives the session that discovered it.
+
+**The Kelly standard, and there are no tiers of it.** (Adopted 2026-08-20.) Every official and every candidate carries a photo, a phone, a working contact, a specific verified page, and a campaign site. That is the standard, whole, for everybody — not a scale to be met partly, and not a target that well-covered people reach and thin ones do not. A tiered standard is the equal-effort rule's failure wearing a respectable name, because the tier a person lands in tracks incumbency and campaign professionalism rather than anything about them. Where a field genuinely does not exist, that is a FINDING and it is recorded as one with the rungs walked and the date checked; where nobody has looked yet, that is a gap and it reads as ours. The two may never render alike. See the equal-effort rule above, which this makes checkable.
+
+**Stated N equals rendered rows.** (Adopted 2026-08-20.) Any count a surface states is the count of the rows that surface actually rendered, built from the same list in the same pass. A number produced by a second query is free to disagree with what is on screen, and a denominator that can disagree with its own page is not a denominator — it is a second opinion presented as arithmetic. Where a count is deliberately clipped, the clip is stated with both numbers, per the pair rule above.
+
+**A ceiling moves only on proof, and the proof is a measurement.** (Adopted 2026-08-20.) The build budgets in `scripts/bundle-budget.json` are baselines with headroom — a ceiling is baseline +15%, rounded down — and `tests/build-budget.test.ts` enforces them. Raising one is a decision that needs a measured before and after on the same machine in the same mode, and the new baseline is what was measured, never what was wanted. Every budget figure in every report is READ FROM THAT FILE, both modes, with the CI run id named; the rounded KB line printed by the build is an estimate and is never the reported number. A ceiling raised to fit the change it was supposed to catch has stopped being a budget.
+
+**A session carries carryover and the deferred queue, and nothing else, until the queue clears.** (Adopted 2026-08-20.) The work a session takes is what the previous session left plus what the deferred queue holds. Nothing new is added to a session's own scope mid-flight: a defect discovered becomes a tracker row and the session keeps going, and writing the row is the whole response. **And a session does not stop early.** It drives until the gas light comes on — the old three-to-four item limit is dead, it is not to be reintroduced by any document, and a session that finishes its list starts the next thing rather than closing out. The instrument for "how much room is left" does not exist inside a session; two sessions in a row stopped at roughly a third and a half of their window while believing they were nearly done. The deferral boundary rule above still governs WHERE a session may stop: between subjects, never inside one.
+
+**Where a tool does not exist to reach a public record, BUILD IT.** (Adopted 2026-08-20.) The absence of a script is never a wall. The transparency mandate says difficulty is friction rather than refusal, and "we have no extractor for this format" is difficulty. So the tool gets built, committed, registered in `docs/zip-playbook.md` §4, and cited by the hunt that needed it — that is the work, not a detour from it. A hunt that stopped because no code existed to finish it has not exhausted the ladder, and may not be reported as though it had.
+
+**A zero-row extraction is a FAILED extraction, never an empty document.** (Adopted 2026-08-20.) A parser that returns nothing has told you about itself, not about the document. Every extraction layer reports rows found against what it was given, and zero rows is an error state that names the document, the layer and the reason — never a clean exit. This is the sibling of the operation-count rule above, and it exists because the same shape has now been sighted five times: an empty RSS feed recorded as working, a zero-match join presented as a clean build, a scripted edit that edited nothing and exited 0, a portal returning 200 with zero meetings recorded as a HIT, and rendered prose extracted from an Apptegy page that never contained the byline the page was fetched for.
+
 ## Entry experience
 
 The app opens on a map. The user enters a zip code, the map zooms, upcoming local meetings and hearings render as pins.
@@ -212,45 +295,68 @@ Signal snapshots are immutable and timestamped. Calibration depends on being abl
 
 ## External sources
 
-| Source | Purpose | Auth |
-|---|---|---|
-| Congress.gov | federal bills, members, House roll calls | API key |
-| clerk.house.gov / senate.gov | authoritative roll-call XML | none |
-| unitedstates/congress (GitHub) | public-domain roll-call collectors | none |
-| Plural Open (ex-Open States) | state bills and votes, all 50 states | API key via open.pluralpolicy.com |
-| OpenFEC | contributions, independent expenditures | API key |
-| Google Civic — Divisions | address → OCD-ID | API key |
-| Democracy Works Elections | elections and ballots to sub-municipal | licensed, contact |
-| Granicus Legistar | municipal agendas and hearings | mostly open web API |
-| Vote Smart | candidate questionnaires | API key |
-| Census TIGER/Line + ZCTA | boundaries and zoom centroids | none |
+**The register is `docs/sources.md`, and this section is the law that governs
+it.** (Rewritten 2026-08-20, Prompt C items 4.3 and 9.5.) A table of sources
+and their auth mechanisms is shelf-life content: a key gets added, an endpoint
+dies, a licence changes, and a stale table in the constitution is read as
+current by every session that opens it. `docs/sources.md` carries the live
+register — one row per source, with its status (wired / evaluated / not in
+use), its auth mechanism, its licence obligations, and the adapter that reads
+it. `.env.local`'s keys are enumerated there against what is actually wired, so
+a credential nobody uses is visible rather than forgotten.
 
-The Google Civic **Representatives** endpoint shut down April 2025. Any code or doc referencing it is dead — use Divisions for OCD-ID resolution and get officeholders elsewhere.
+What does not drift:
 
-GovTrack's API may have been discontinued in summer 2026. Verify before adding a dependency on it.
-
-Do not add advocacy organizations, PACs, or endorsement sites as sources. Go to the underlying government filing.
+- **Do not add advocacy organizations, PACs, or endorsement sites as sources.**
+  Go to the underlying government filing. An endorsement list is somebody
+  else's judgement about a candidate, and this product does not carry
+  judgements about candidates.
+- **A licence obligation is law, not a note.** Where a source's terms require
+  attribution — LegiScan's CC BY 4.0 is the live case — the attribution ships
+  with the data it describes, and `docs/sources.md` records the obligation
+  beside the source.
+- **Adding an external source is an ask-before**, listed at the foot of this
+  file. It is a standing commitment to a third party, and one of them is a
+  legal question wearing an API key.
+- **A dead endpoint is recorded as dead rather than deleted.** The Google Civic
+  **Representatives** endpoint shut down in April 2025 and any code or doc
+  referencing it is dead — use Divisions for OCD-ID resolution and get
+  officeholders elsewhere. Recording the death is what stops the next session
+  rediscovering it.
 
 ## Repo layout
 
-```
-app/                  routes and pages
-components/           UI, shadcn primitives in components/ui
-lib/
-  sources/<name>/     one ingestion adapter per external source
-  db/                 drizzle schema, migrations, queries
-  ocd/                OCD-ID parsing and district resolution
-  signal/             reaction aggregation, snapshots, export
-scripts/              backfills and data exploration
-docs/                 methodology, abuse policy, calibration log
-tests/fixtures/       recorded API responses, no live calls in tests
-```
+**The tree is the tree; read it.** (Rewritten 2026-08-20, Prompt C item 4.3.) A
+directory diagram in the constitution describes the repo on the day it was
+written and quietly stops describing it afterwards — `docs/code-manifest.md`
+and the tree itself are authoritative, and neither can drift from what exists.
+What belongs here is the small number of placement rules that are decisions
+rather than descriptions:
 
-Every source adapter exports `fetch()`, `normalize()`, `upsert()`. Adding a source means adding a directory, never editing shared ingestion logic.
+- **`lib/sources/<name>/` — one ingestion adapter per external source.** Every
+  adapter exports `fetch()`, `normalize()`, `upsert()`. **Adding a source means
+  adding a directory, never editing shared ingestion logic**, because a shared
+  path edited per source is a path where one source's quirk becomes every
+  source's behaviour.
+- **`lib/db/` — the Drizzle schema, its migrations, and the queries.** Schema
+  changes go through migrations; no hand-edited SQL against the database.
+- **`tests/fixtures/` — recorded API responses. No live calls in tests.** A
+  fixture is the bytes a server actually sent, and `.gitattributes` marks the
+  directory `-text` so nothing rewrites that evidence on checkout.
+- **`docs/` — methodology, policy, and the standing record.** `docs/state.md`
+  is the living state document, `docs/rulings.md` is the append-only record of
+  every ruling that is not law, and `docs/tracker.csv` is task status.
 
-Schema changes go through Drizzle migrations. No hand-edited SQL against the database.
-
-Task status lives in `docs/tracker.csv`. Update the Status and Notes of any item you work on, in the same commit as the work. **A status change edits the existing row. It never appends a second row with the same ID** — a tracker with two rows per ID cannot be read by anything, including the xlsx view generator, and it silently breaks every lookup by ID. M02 and M04 each carried a duplicate pair for a day before anyone noticed. Nothing is marked Done without evidence in Notes: the branch name, and which of `test` / `lint` / `build` passed. A commit SHA cannot be used — it does not exist inside the commit that would name it. An agent grading its own homework drifts optimistic; this tracker only earns its keep if it tells the truth.
+Task status lives in `docs/tracker.csv`. Update the Status and Notes of any item
+you work on, in the same commit as the work. **A status change edits the
+existing row. It never appends a second row with the same ID** — a tracker with
+two rows per ID cannot be read by anything, including the xlsx view generator,
+and it silently breaks every lookup by ID. M02 and M04 each carried a duplicate
+pair for a day before anyone noticed. Nothing is marked Done without evidence in
+Notes: the branch name, and which of `test` / `lint` / `build` passed. A commit
+SHA cannot be used — it does not exist inside the commit that would name it. An
+agent grading its own homework drifts optimistic; this tracker only earns its
+keep if it tells the truth.
 
 **One CODE merge per session; close-out records may follow as separate named commits.** (Adopted 2026-08-19, the author's amendment to the merge cadence, after F01 shipped three merges under a rule that asked for one and reported the deviation rather than smoothing it.) The one-merge rule was always about CODE — batching reader-facing change into a single reviewable ship — and it collided with the sentence directly above: **a document cannot name the commit that contains it.** `docs/state.md` must carry the deploy SHA and the real `walk:all` numbers; neither exists until the code has shipped and been walked; writing either before it is known would be the fabrication rule, and chasing the regress would merge forever. So the line is drawn where it actually falls. The session ships its code ONCE. `state.md`, the tracker, and any document carrying the deploy SHA or the walk numbers may follow in separate commits, and the report states the **code SHA and the close-out record SHAs separately and labels them as such** — a reader must be able to tell at a glance which commit changed what a reader sees and which changed only our account of it. F01's `a119578` / `1203d48` / `5daeb8f` / `5253e5f` split is correct under this rule and is not a violation.
 
@@ -260,16 +366,24 @@ Task status lives in `docs/tracker.csv`. Update the Status and Notes of any item
 
 ## Commands
 
-```
-pnpm dev
-pnpm test
-pnpm db:generate       # drizzle migration from schema changes
-pnpm db:migrate
-pnpm ingest <source>   # run one adapter locally
-pnpm signal:snapshot   # freeze current aggregates for calibration
-pnpm stamp             # today's date, YYYY-MM-DD, America/Phoenix
-pnpm verify-stamps     # audit CLAUDE.md's Adopted dates against git history
-```
+**`package.json`'s `scripts` block is the list.** (Rewritten 2026-08-20, Prompt
+C item 4.3.) It held ten entries when this section was written by hand and
+holds well over a hundred now, so any copy here is a copy that is wrong. Run
+`pnpm run` to see them.
+
+Four are named here because they are not conveniences — a rule elsewhere in
+this file depends on each one existing and being run:
+
+- **`pnpm stamp`** — today's date, `YYYY-MM-DD`, America/Phoenix. Every date
+  entering every document comes from here. See the date rule below.
+- **`pnpm verify-stamps`** — audits this file's own `Adopted` stamps against the
+  git history that would have to be true for them, and writes
+  `docs/stamp-audit.md` for the author to rule on.
+- **`pnpm walk:all`** — the standing regression net, run against production at
+  the end of every session. See the walk rule below.
+- **`pnpm db:apply`** — applies the committed Drizzle migrations to a database
+  this repo can reach. It is how a schema change reaches production, and
+  `--target=production` is required to touch it.
 
 ## Ask before
 

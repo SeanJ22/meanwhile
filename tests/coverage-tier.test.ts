@@ -20,7 +20,17 @@ import {
   promote,
   tierExceedsEvidence,
 } from "../lib/coverage/tier.ts";
-import type { CoverageEvidence, CoverageTier } from "../lib/coverage/tier.ts";
+import {
+  encodeTierDistribution,
+  decodeTierDistribution,
+} from "../lib/coverage/zip-tier.ts";
+import type {
+  CandidateDepth,
+  CoverageEvidence,
+  CoverageTier,
+} from "../lib/coverage/tier.ts";
+import { KELLY_FIELDS } from "../lib/ballot/hunt-state.ts";
+import type { HuntState, KellyField } from "../lib/ballot/hunt-state.ts";
 import { reactions, searchLog } from "../lib/db/schema.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -147,50 +157,97 @@ test("RULING 9: bodies enumerated is its own count, never derived from governmen
   );
 });
 
-/* ---- item 7.3: the equal-depth gate is shared, not per-surface ------------ */
+/* ---- item 7.3 + RULING 18: the shared gate, measured by hunt completion --- */
 
-const candidate = (n: string, depth: number) => ({
+/**
+ * RULING 18 (Prompt C item 2, 2026-08-20) supersedes the strict-equality
+ * implementation these tests used to assert. Equality is on HUNT COMPLETION,
+ * never on field presence: a write-in with no campaign site and a finished
+ * hunt is complete, and their contest renders. What withholds is an
+ * UNFINISHED hunt.
+ */
+
+/** Every field complete, by whichever of the two completed states. */
+const complete = (n: string, absent: KellyField[] = []): CandidateDepth => ({
   candidateId: n,
-  hasPhoto: depth > 0,
-  hasBlurb: depth > 1,
-  hasContact: depth > 2,
-  hasCampaignSite: depth > 3,
+  candidateName: n,
+  fields: Object.fromEntries(
+    KELLY_FIELDS.map((f) => [f, absent.includes(f) ? "VERIFIED_ABSENT" : "FOUND"]),
+  ) as Record<KellyField, HuntState>,
 });
 
-test("RULING 7: a contest renders only when every candidate is at equal depth", () => {
-  const even = equalDepthGate([candidate("a", 3), candidate("b", 3)]);
-  assert.equal(even.render, true);
+/** `unhunted` fields left NOT_HUNTED; the rest FOUND. */
+const partial = (n: string, unhunted: KellyField[]): CandidateDepth => ({
+  candidateId: n,
+  candidateName: n,
+  fields: Object.fromEntries(
+    KELLY_FIELDS.map((f) => [f, unhunted.includes(f) ? "NOT_HUNTED" : "FOUND"]),
+  ) as Record<KellyField, HuntState>,
+});
 
+test("RULING 18: a contest renders when every candidate's hunt is finished", () => {
+  const both = equalDepthGate([complete("a"), complete("b")]);
+  assert.equal(both.render, true);
+});
+
+test("RULING 18: VERIFIED_ABSENT is a finished hunt, so it does not withhold", () => {
+  /*
+   * THE WHOLE POINT OF THE RULING. Under strict equality this contest could
+   * never render: the incumbent carries four fields and the write-in carries
+   * three, and no amount of hunting closes a campaign site that does not
+   * exist. That was a permanent blackout produced by a candidate's
+   * circumstances, not by our effort.
+   */
+  const decision = equalDepthGate([
+    complete("incumbent"),
+    complete("write-in", ["campaignSite"]),
+  ]);
+  assert.equal(decision.render, true);
+});
+
+test("RULING 18: one NOT_HUNTED field anywhere in the contest withholds it", () => {
   // The tester's finding, in her words: "Karen might be the perfect fit for
   // me, but she has no information here. So I'm only going to look at the
   // folks that do." A thin card tracks incumbency and campaign
   // professionalism, not merit.
-  const uneven = equalDepthGate([candidate("incumbent", 4), candidate("karen", 0)]);
-  assert.equal(uneven.render, false);
-  if (!uneven.render) {
-    assert.equal(uneven.shallowest, 0);
-    assert.equal(uneven.deepest, 4);
+  const decision = equalDepthGate([
+    complete("incumbent"),
+    partial("karen", ["photo", "blurb", "contact", "campaignSite"]),
+  ]);
+  assert.equal(decision.render, false);
+  if (!decision.render) {
+    assert.equal(decision.unhunted.length, 1, "only Karen's hunt is unfinished");
+    assert.equal(decision.unhunted[0]!.candidateName, "karen");
+    assert.deepEqual(decision.unhunted[0]!.fields, [...KELLY_FIELDS]);
+    assert.equal(decision.unhuntedFields, 4);
     assert.ok(
-      uneven.reason.length > 40,
+      decision.reason.length > 40,
       "a surface that hides cards says WHY rather than rendering an unexplained blank",
     );
   }
 });
 
+test("RULING 18: an unfinished hunt on the WELL-COVERED candidate withholds too", () => {
+  // Symmetry check. The rule is completion, not who is ahead — a contest
+  // where the incumbent's contact was never hunted is as unfinished as one
+  // where the challenger's was.
+  const decision = equalDepthGate([
+    partial("incumbent", ["contact"]),
+    complete("challenger", ["campaignSite"]),
+  ]);
+  assert.equal(decision.render, false);
+  if (!decision.render) assert.equal(decision.unhuntedFields, 1);
+});
+
 test("RULING 7: an empty contest renders — there is nothing to skew", () => {
-  assert.deepEqual(equalDepthGate([]), { render: true, depth: 0 });
+  assert.deepEqual(equalDepthGate([]), { render: true, complete: 0 });
 });
 
-test("RULING 7: equal SHALLOW depth still renders — the rule is equality, not richness", () => {
-  // Two candidates we know nothing about are equally served by the thin-card
-  // line. The defect is asymmetry, never thinness.
-  const both = equalDepthGate([candidate("a", 0), candidate("b", 0)]);
-  assert.deepEqual(both, { render: true, depth: 0 });
-});
-
-test("depthOf counts the four Kelly-standard fields", () => {
-  assert.equal(depthOf(candidate("x", 0)), 0);
-  assert.equal(depthOf(candidate("x", 4)), 4);
+test("depthOf counts the Kelly fields whose hunt is FINISHED", () => {
+  assert.equal(depthOf(partial("x", [...KELLY_FIELDS])), 0);
+  assert.equal(depthOf(complete("x")), 4);
+  assert.equal(depthOf(complete("x", ["photo", "contact"])), 4);
+  assert.equal(depthOf(partial("x", ["photo"])), 3);
 });
 
 /* ---- item 8: every aggregate record carries a tier ------------------------ */
@@ -444,5 +501,187 @@ test("every route that reads the coverage ledger traces it into the deploy", () 
     !config.includes(`"./data/derived/zip-coverage-tiers.json"`),
     "the 18 MB AUDIT ledger must never be traced into a function bundle — only " +
       "the 666 KB runtime copy",
+  );
+});
+
+/* ---- item 3: the per-government tier distribution on every sold row ------- */
+
+/**
+ * PROMPT C ITEM 3 (2026-08-20). The floor tier is the honest public headline
+ * and it does not move. It is also `TIER_0` for 97.88% of zips nationally,
+ * which makes it nearly useless as a FIELD: a buyer cannot tell a place with a
+ * fully enumerated county and one unresolved fire district from a place where
+ * nothing at all is known, and those are not the same measurement.
+ *
+ * So the same stamped values are carried counted as well as floored. These
+ * assert the four things that make that safe rather than merely present.
+ */
+
+test("item 3.5: a sold row cannot be written without its tier distribution", () => {
+  /*
+   * NOT NULLABLE AND NOT DEFAULTED, on both stores. The migration adds the
+   * column with a default only long enough to fill the rows that already
+   * existed, then drops it — so a caller that forgets the column FAILS rather
+   * than landing a plausible `UNKNOWN` nobody ever looks at again. That is the
+   * same discipline `coverage_tier` got in 0011, for the same reason.
+   */
+  for (const { name, table } of SOLD_STORES) {
+    const col = getTableConfig(table).columns.find(
+      (c) => c.name === "coverage_tier_distribution",
+    );
+    assert.ok(col, `${name} carries coverage_tier_distribution`);
+    assert.equal(col!.notNull, true, `${name}: the column is NOT NULL`);
+    assert.equal(
+      col!.hasDefault,
+      false,
+      `${name}: no default — a write that cannot state the distribution must ` +
+        "fail, not land as UNKNOWN and be weighted by a buyer as a measurement",
+    );
+  }
+
+  const sql = readFileSync(
+    join(ROOT, "lib", "db", "migrations", "0012_spicy_changeling.sql"),
+    "utf8",
+  );
+  for (const t of ["reactions", "search_log"]) {
+    assert.match(
+      sql,
+      new RegExp(
+        `ALTER TABLE "${t}" ADD COLUMN "coverage_tier_distribution" text DEFAULT 'UNKNOWN' NOT NULL`,
+      ),
+      `${t}: the backfill fills existing rows with UNKNOWN`,
+    );
+    assert.match(
+      sql,
+      new RegExp(
+        `ALTER TABLE "${t}" ALTER COLUMN "coverage_tier_distribution" DROP DEFAULT`,
+      ),
+      `${t}: and then drops the default, so a future write cannot forget it`,
+    );
+  }
+  assert.ok(
+    !/DEFAULT 'T0:0/.test(sql),
+    "the backfill is never four zeros — that would claim we counted this " +
+      "place's governments and found none",
+  );
+});
+
+test("item 3: the distribution encodes and decodes, and absence is UNKNOWN", () => {
+  const d = { TIER_0: 24, TIER_1: 0, TIER_2: 3, TIER_3: 0 };
+  assert.equal(encodeTierDistribution(d), "T0:24,T1:0,T2:3,T3:0");
+  assert.deepEqual(decodeTierDistribution("T0:24,T1:0,T2:3,T3:0"), d);
+  // Absence is a named gap, never a plausible zero.
+  assert.equal(encodeTierDistribution(null), "UNKNOWN");
+  assert.equal(decodeTierDistribution("UNKNOWN"), null);
+  assert.equal(decodeTierDistribution("T0:1,T1:2"), null, "a partial encoding is not a value");
+});
+
+test("item 3.1: the distribution is written at write time from stamped values", () => {
+  // Read from the ledger, never derived from live data — the same rule that
+  // keeps the tier itself from drifting every time a vendor has a bad
+  // afternoon. Both write paths call the ledger accessor, and neither counts
+  // anything itself.
+  for (const file of ["lib/db/reactions.ts", "lib/db/search-log.ts"]) {
+    const src = readFileSync(join(ROOT, file), "utf8");
+    assert.match(
+      src,
+      /coverageTierDistribution: encodeTierDistribution\(/,
+      `${file} stamps the distribution on the row it writes`,
+    );
+    assert.match(
+      src,
+      /tierDistributionFor(Zip|OcdIds)\(/,
+      `${file} reads it from the stamped ledger`,
+    );
+  }
+});
+
+test("item 3.1: the stamped ledger carries a distribution for every zip", () => {
+  const runtime = JSON.parse(
+    readFileSync(join(ROOT, "data", "derived", "zip-coverage-tiers-runtime.json"), "utf8"),
+  ) as {
+    shape: string[];
+    zips: Record<string, number[]>;
+    ocdDistributions: Record<string, number[]>;
+  };
+
+  assert.deepEqual(
+    runtime.shape.slice(4),
+    ["governmentsAtTier0", "governmentsAtTier1", "governmentsAtTier2", "governmentsAtTier3"],
+    "the runtime tuple names its four new numbers",
+  );
+
+  const zips = Object.entries(runtime.zips);
+  assert.ok(zips.length > 30000, `expected the national ledger, found ${zips.length} zips`);
+
+  let short = 0;
+  let inconsistent = 0;
+  for (const [zip, t] of zips) {
+    if (t.length !== 8) {
+      short += 1;
+      continue;
+    }
+    // The distribution's TIER_1..TIER_3 must account for exactly the resolved
+    // governments, and TIER_0 for exactly the unresolved ones. A distribution
+    // that does not reconcile with the evidence beside it is not a measurement.
+    const resolved = t[1]!;
+    const unresolved = t[3]!;
+    if (t[5]! + t[6]! + t[7]! !== resolved || t[4]! !== unresolved) {
+      inconsistent += 1;
+      if (inconsistent === 1) {
+        console.error(`first inconsistent zip: ${zip} ${JSON.stringify(t)}`);
+      }
+    }
+  }
+  assert.equal(short, 0, "every zip carries all eight numbers");
+  assert.equal(
+    inconsistent,
+    0,
+    "the distribution must reconcile against the evidence stamped beside it",
+  );
+
+  assert.ok(
+    Object.keys(runtime.ocdDistributions).length > 0,
+    "the reaction write path holds divisions, so the ledger publishes the " +
+      "distribution keyed that way too",
+  );
+});
+
+test("item 3.2: the distribution reaches no reader-facing surface", () => {
+  /*
+   * STORED ONLY, and this is the guard rather than the intention. The floor
+   * tier is the only tier stated publicly; a per-government distribution on a
+   * reader surface would be a second coverage number for the reader to
+   * reconcile against the first, which is the shape that made the old
+   * registry-derived coverage figure worthless.
+   *
+   * `app/` and `components/` are the reader's tree. `lib/db` and
+   * `lib/coverage` are the write and stamp paths and are exempt by name.
+   */
+  const offenders: string[] = [];
+  const walk = (dir: string) => {
+    for (const entry of readdirSync(dir)) {
+      if (entry === "node_modules" || entry.startsWith(".")) continue;
+      const full = join(dir, entry);
+      if (statSync(full).isDirectory()) walk(full);
+      else if (/\.(ts|tsx)$/.test(entry)) {
+        const src = readFileSync(full, "utf8");
+        if (
+          /coverageTierDistribution|coverage_tier_distribution|tierDistributionFor/.test(src)
+        ) {
+          offenders.push(posixRelative(ROOT, full));
+        }
+      }
+    }
+  };
+  walk(join(ROOT, "app"));
+  walk(join(ROOT, "components"));
+
+  assert.deepEqual(
+    offenders,
+    [],
+    "the per-government tier distribution is a stored field. The floor tier is " +
+      "the only tier a reader is told, and a second coverage number on a reader " +
+      "surface is a number the reader has to reconcile against the first.",
   );
 });

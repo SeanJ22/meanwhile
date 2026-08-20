@@ -7,7 +7,11 @@ import { reactions } from "./schema.ts";
 import { DIVISION_VINTAGE } from "./search-log.ts";
 import { assertWriteAllowed } from "./write-guard.ts";
 import type { RunMarker } from "./run-marker.ts";
-import { coverageTierForOcdIds } from "../coverage/zip-tier.ts";
+import {
+  coverageTierForOcdIds,
+  encodeTierDistribution,
+  tierDistributionForOcdIds,
+} from "../coverage/zip-tier.ts";
 import {
   scaleForTargetType,
   type ReactionTargetType,
@@ -182,6 +186,12 @@ export async function writeReaction(row: StorableReaction): Promise<boolean> {
       // is not the same measurement as interest from a Tier 0 zip with none.
       // Derived from the row's own divisions here, never sent by the client.
       coverageTier: coverageTierForOcdIds(row.ocdIds),
+      // Prompt C item 3. The same stamped values counted rather than floored,
+      // because a floor that reads TIER_0 for 97.88% of the country carries
+      // almost nothing to a buyer. Stored only — no reader surface renders it.
+      coverageTierDistribution: encodeTierDistribution(
+        tierDistributionForOcdIds(row.ocdIds),
+      ),
     })
     .onConflictDoUpdate({
       target: [reactions.reactionKeyHash, reactions.targetType, reactions.targetId],

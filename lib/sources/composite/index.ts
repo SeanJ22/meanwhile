@@ -73,6 +73,22 @@ export interface ChildRunReport {
    * Absent when the client cannot say, and absent stays absent.
    */
   walledAtRung?: number;
+  /**
+   * WHICH LADDER THIS NUMBER IS IN (RULING 17, Prompt C item 8, 2026-08-20).
+   *
+   * `CANONICAL` means `CLAUDE.md`'s retrieval-mechanics fourteen, which is the
+   * only numbered ladder as of 2026-08-20 and is what every value written by
+   * this code means. `PRE_F22_LADDER_UNKNOWN` marks a value recorded before
+   * F22, when this repo carried TWO numbered ladders — the mechanics fourteen
+   * and `docs/source-ladder.md`'s discovery thirteen — and nothing recorded
+   * which one a writer meant.
+   *
+   * A marked value keeps its number and is NEVER reinterpreted: guessing which
+   * ladder an old number meant would manufacture a retrieval history nobody
+   * walked. Absent means the same as `CANONICAL` for anything this code wrote,
+   * and the marker exists so a reader of old data is not told otherwise.
+   */
+  rungProvenance?: "CANONICAL" | "PRE_F22_LADDER_UNKNOWN";
   fetched: number;
   normalized: number;
   drops: NormalizeDropCounts;
@@ -277,8 +293,10 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
           ok: false,
           error: fetched.error,
           failure: "WALL",
+          // The rung AND the ladder it is in, together — a number with no
+          // ladder is what RULING 17 had to go back and mark 50 values for.
           ...(typeof fetched.rung === "number"
-            ? { walledAtRung: fetched.rung }
+            ? { walledAtRung: fetched.rung, rungProvenance: "CANONICAL" as const }
             : {}),
           fetched: 0,
           normalized: 0,

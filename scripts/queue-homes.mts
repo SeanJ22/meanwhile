@@ -104,7 +104,7 @@ const BRIEF_HOMES: Record<string, { home: Home; why: string }> = {
   M07: { home: "FEEDBACK SESSION", why: 'the brief: "M07 remains with the feedback session."' },
   AUD09: { home: "KILLED", why: 'the brief: "the author has approved leaving both recorded as documented unknowns inside bundle-budget.json. Do not chase."' },
   F01: { home: "FEEDBACK SESSION", why: 'the brief: "F01 is parked whole ... until the author calls the feedback session by name."' },
-  H01: { home: "H", why: "the depth sweep H is named for." },
+  HUNT01: { home: "H", why: "the depth sweep H is named for." },
   T10: { home: "POST-H", why: "waiting on the author's own testing pass; it cannot be scheduled by a session." },
   R33: { home: "FEEDBACK SESSION", why: "status is 'Blocked on the author' — it is a question for him, which is what the feedback session is." },
   T05: { home: "FEEDBACK SESSION", why: 'its disposition is "Unsure what the ask is here" — that is a question for the author, not work for a session.' },
@@ -146,7 +146,7 @@ const SESSION_CALLS: Record<string, { home: Home; why: string }> = {
     home: "H",
     why: "g21's call. g20 shipped lib/sources/prl/ at 537 of 537 by bioguide, which is the disposition's 'yes'. What remains is downstream build.",
   },
-  H02: {
+  HUNT02: {
     home: "H",
     why: "g21's call. It is an H-family denominator row and its disposition describes what H should render.",
   },

@@ -117,7 +117,48 @@ const applied = (await sql`
 `) as { hash: string; created_at: string | number }[];
 const appliedWhen = new Set(applied.map((r) => Number(r.created_at)));
 
-const pending = journal.entries.filter((e) => !appliedWhen.has(e.when));
+/*
+ * `--upto=<tag>` — stop after that migration, inclusive (Prompt C, 2026-08-20).
+ *
+ * A NOT NULL column with no default may only lose its default once the code
+ * that fills it is live, so its two halves land on either side of a deploy.
+ * Without this flag the only way to apply the first half alone is to take the
+ * second out of the journal and put it back afterwards, which is a hand pass
+ * over the exact file that must not be hand-edited. See migrations 0013 and
+ * 0014, which are that pair.
+ *
+ * An unknown tag REFUSES rather than applying everything — a typo that
+ * silently means "all of it" is how this flag would cause the failure it
+ * exists to prevent.
+ */
+const uptoArg = process.argv.find((a) => a.startsWith("--upto="));
+const UPTO = uptoArg ? uptoArg.slice("--upto=".length) : null;
+
+const allPending = journal.entries.filter((e) => !appliedWhen.has(e.when));
+if (UPTO && !journal.entries.some((e) => e.tag === UPTO)) {
+  console.error(
+    `REFUSED: --upto=${UPTO} names no migration in the journal. Tags are: ` +
+      journal.entries.map((e) => e.tag).join(", "),
+  );
+  process.exit(1);
+}
+const uptoIndex = UPTO ? allPending.findIndex((e) => e.tag === UPTO) : -1;
+if (UPTO && uptoIndex < 0) {
+  console.log(`--upto=${UPTO} is already applied here; nothing before it is pending.`);
+}
+const pending = UPTO
+  ? uptoIndex >= 0
+    ? allPending.slice(0, uptoIndex + 1)
+    : []
+  : allPending;
+if (UPTO) {
+  const held = allPending.slice(uptoIndex + 1);
+  if (held.length > 0) {
+    console.log(
+      `  HELD BACK by --upto=${UPTO}: ${held.map((e) => e.tag).join(", ")}`,
+    );
+  }
+}
 
 console.log(
   `journal: ${journal.entries.length} migration(s) committed · ` +

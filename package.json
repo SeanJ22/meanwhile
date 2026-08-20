@@ -14,6 +14,7 @@
     "start": "next start",
     "lint": "eslint",
     "test": "node --test --experimental-strip-types --import ./scripts/register-test-loader.mjs tests/**/*.test.ts",
+    "test:bundle": "node --test --experimental-strip-types --import ./scripts/register-test-loader.mjs tests/feedback.test.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "ingest": "tsx scripts/ingest.ts",
@@ -102,7 +103,14 @@
     "tiers:stamp": "tsx scripts/stamp-coverage-tiers.mts",
     "shoot:promptb": "tsx scripts/promptb-shots.mts",
     "ledger:build": "tsx scripts/build-gap-ledger.mts",
-    "tracker:promptb": "tsx scripts/promptb-tracker.mts"
+    "tracker:promptb": "tsx scripts/promptb-tracker.mts",
+    "hunt:migrate": "tsx scripts/migrate-hunt-state.mts",
+    "hunt:gaps": "tsx scripts/hunt-gap-report.mts",
+    "status:report": "node scripts/status-report.mjs",
+    "extract": "tsx scripts/extract.mts",
+    "zip:add": "tsx scripts/zip-add.mts",
+    "assets": "tsx scripts/assets.mts",
+    "shoot:promptc": "tsx scripts/promptc-shots.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

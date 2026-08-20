@@ -1331,13 +1331,68 @@ section("D. The ballot page (0814c, D53, g3)");
     `${nameLinks} name link(s)`,
   );
 
-  // g3 item 7 — the five-point scale reads as three groups, not one centre.
-  const separators = await page.locator(".scale-sep").count();
+  /*
+   * g3 item 7 — the five-point scale reads as three groups, not one centre.
+   *
+   * THE SURFACE MOVED AND THE CLAIM DID NOT (F01-continued session 2 item 12,
+   * 2026-08-19). `.scale-sep` lives on the FUNDING reaction control, and item
+   * 12 moved the funding block off the inline ballot row and into the
+   * battlecard. This check counted separators on the page and, the first time
+   * it ran against the new build, reported 0 and printed g3's win as UNDONE.
+   *
+   * It was not undone — the check was looking where the content used to be.
+   * The walk's own rule is that a check leaves this suite only when the
+   * author retires the claim behind it, so the check FOLLOWS the surface: it
+   * opens a battlecard first, which is the one tap a reader now makes, and
+   * fails as loudly as before if the groups are not there.
+   *
+   * Counted on the page as well, so the two are told apart: separators on the
+   * row would mean the funding block came back inline.
+   */
+  const inlineSeparators = await page.locator(".scale-sep").count();
+  /*
+   * WHICH card, and the first fix got this wrong too.
+   *
+   * The five-point scale is the FUNDING control, and funding renders only on
+   * a FEDERAL contest. On 85701 the first fifteen pills are statewide Arizona
+   * offices — governor, attorney general, treasurer — and the funding block
+   * starts at the sixteenth, Adelita Grijalva (US House 7), whose card holds
+   * 4 separators. Opening the FIRST card and reporting 0 was the check
+   * looking in the wrong place twice over.
+   *
+   * Measured before this was written rather than guessed: all 20 cards on
+   * 85701 were opened and read, and exactly one class of them carries the
+   * block. So the check walks until it finds a card WITH funding, up to a
+   * stated cap, and names the denominator if it never does.
+   */
+  const pillCount = await page.locator("[data-battlecard-pill]").count();
+  const CARDS = Math.min(20, pillCount);
+  let separators = 0;
+  let searched = 0;
+  for (let i = 0; i < CARDS; i++) {
+    await page.locator("[data-battlecard-pill]").nth(i).scrollIntoViewIfNeeded();
+    await page.locator("[data-battlecard-pill]").nth(i).click();
+    const up = await page
+      .locator("[data-candidate-battlecard]")
+      .waitFor({ state: "visible", timeout: 10_000 })
+      .then(() => true)
+      .catch(() => false);
+    searched = i + 1;
+    if (up) separators = await page.locator(".scale-sep").count();
+    if (separators > 0) break;
+    await page.keyboard.press("Escape");
+    await page
+      .locator("[data-candidate-battlecard]")
+      .waitFor({ state: "detached", timeout: 5_000 })
+      .catch(() => {});
+  }
   check(
     "g3",
     "85701: the five-point scale carries its group separators",
     separators > 0,
-    `${separators} separator(s)`,
+    `${separators} separator(s), found on card ${searched} of ${CARDS} opened, ` +
+      `${inlineSeparators} on the row (item 12 moved the funding block into the ` +
+      "card; the claim is unchanged and only the place to look moved)",
   );
 
   await context.close();
@@ -4547,11 +4602,21 @@ for (const zip of ["07866", "85701"]) {
        * any red line: the suite stops reporting rather than reporting a
        * failure. It is wrapped, and an unreachable box is COULD NOT RUN.
        */
-      const summary = page
-        .locator("[data-candidate-battlecard] summary", { hasText: /positions/i })
+      /*
+       * The section's toggle is a `button.card-section-header`, NOT a
+       * `<summary>` — `components/officials/card-section.tsx`. The first fix
+       * targeted `summary`, found nothing, clicked nothing and reported COULD
+       * NOT RUN on both zips: honest, and still a check that had not run.
+       * Reading the component settled it.
+       */
+      const header = page
+        .locator("[data-candidate-battlecard] .card-section-header", {
+          hasText: /positions/i,
+        })
         .first();
-      if ((await summary.count()) > 0) {
-        await summary.click().catch(() => {});
+      if ((await header.count()) > 0) {
+        await header.scrollIntoViewIfNeeded().catch(() => {});
+        await header.click().catch(() => {});
       }
       const box = page.locator("[data-positions-search]").first();
       const reachable = await box

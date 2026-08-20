@@ -537,6 +537,51 @@ export const BODY_ROSTERS: BodyRoster[] = [
         phone: null,
         websiteUrl: "https://www.vailschooldistrict.org/o/vsd/page/governing-board",
       },
+      {
+        /*
+         * **John Carruth, and the reason the hunt came back with half a name**
+         * (F01-continued item 10b, 2026-08-19).
+         *
+         * F01 reached this person at rung 6 and got "Superintendent Carruth" —
+         * a surname alone — and correctly refused to ship it. The author ruled
+         * the full name: John Carruth, `/page/superintendent`.
+         *
+         * THE ROOT CAUSE, measured rather than guessed, and it is none of the
+         * three the brief proposed as likely:
+         *
+         *  · The home page's STATIC HTML already links `/page/superintendent`.
+         *    A plain fetch finds it. Link discovery was never blind.
+         *  · `/page/superintendent` answers **200 to a plain fetch** — rung 2,
+         *    no browser needed — and that HTML contains "John Carruth" six
+         *    times, including `<strong>John Carruth<br>Superintendent</strong>`.
+         *  · So the fetch and the discovery both worked. **The EXTRACTION
+         *    failed**: the district runs on Apptegy, which ships its page
+         *    content as an escaped JSON payload embedded in the HTML. Reading
+         *    the RENDERED prose finds the news blurb — "Superintendent Carruth
+         *    shares a message with the community" — and never the byline,
+         *    because the byline lives in the embedded data with its quotes
+         *    escaped and a `<br>` between the name and the title.
+         *
+         * The surname came from that news blurb. It is the ladder's rung 7 in
+         * miniature: the page's own data was right there and better than its
+         * prose, and the hunt read the prose. Two smaller findings ride along —
+         * the 404 at rung 2 was against a GUESSED path (`/superintendent`)
+         * rather than the site's own, and the platform is Apptegy rather than
+         * the Finalsite family the brief expected.
+         *
+         * SOURCE, rung 2, plain fetch, HTTP 200, 1,401,781 bytes:
+         * https://www.vailschooldistrict.org/page/superintendent, read
+         * 2026-08-19. Not elected — hired by the board, exactly like TUSD's,
+         * and `bodySubject` keeps him out of the seated-member list.
+         */
+        id: "roster:vail#supt",
+        name: "John Carruth",
+        officeTitle: "Superintendent",
+        termNote: "Appointed by the Governing Board, not elected",
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.vailschooldistrict.org/page/superintendent",
+      },
     ],
   },
   {

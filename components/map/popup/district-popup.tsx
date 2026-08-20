@@ -3,6 +3,7 @@
 import { TIER_LABEL } from "@/lib/ocd/tiers";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { TOP_OFFICES_GAP, topOfficesFor } from "@/lib/officials/top-offices";
+import { displayPersonName } from "@/lib/officials/person-name";
 import type { DistrictHit } from "@/lib/map/districts";
 import { representationNoteFor } from "@/lib/registry/representation";
 
@@ -143,10 +144,10 @@ export function DistrictPopup({
                   onClick={() => onOpenOfficial(office.holder)}
                   className="cursor-pointer text-left hover:text-link hover:underline"
                 >
-                  {office.holder.name}
+                  {displayPersonName(office.holder.name)}
                 </button>
               ) : (
-                office.holder.name
+                displayPersonName(office.holder.name)
               )}
             </span>
             {/* What they DO here, in reader language, with the body’s own

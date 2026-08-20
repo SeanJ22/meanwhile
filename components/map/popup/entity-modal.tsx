@@ -13,6 +13,7 @@ import {
 } from "@/lib/meetings/ordering";
 import { NO_BODY_BLURB_LINE } from "@/lib/officials/body-blurbs";
 import { TOP_OFFICES_GAP, topOfficesFor } from "@/lib/officials/top-offices";
+import { displayPersonName } from "@/lib/officials/person-name";
 import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyColorVar } from "@/lib/officials/party-color";
@@ -738,10 +739,10 @@ function Representation({
                   onClick={() => onOpenHolder(office.holder)}
                   className="cursor-pointer font-medium hover:text-signal hover:underline"
                 >
-                  {office.holder.name}
+                  {displayPersonName(office.holder.name)}
                 </button>
               ) : (
-                <span className="font-medium">{office.holder.name}</span>
+                <span className="font-medium">{displayPersonName(office.holder.name)}</span>
               )}
               <span className="text-muted">
                 {" — "}

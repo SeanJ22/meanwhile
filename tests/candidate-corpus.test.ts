@@ -171,7 +171,17 @@ test("P02: equal effort — the same issue list for every candidate, no exceptio
 
 test("P02: the headline states the denominator before any count", () => {
   const corpus = getCandidateCorpus();
-  const key = [...new Set(corpus.documents.map((d) => d.candidateKey))][0];
+  /*
+   * A candidate with a READABLE document, chosen rather than taken first
+   * (corrected 2026-08-19, F01-continued item 11). The old form took
+   * `[...keys][0]`, and after the chrome strip the first key in document
+   * order was a candidate whose only page is a JS-rendered shell — so the
+   * headline under test was the NOTHING_COLLECTED one, which correctly has
+   * no denominator in it. The test was reading a different sentence than it
+   * meant to and calling that a failure of the sentence.
+   */
+  const key = [...new Set(corpus.documents.filter((d) => d.text).map((d) => d.candidateKey))][0];
+  assert.ok(key, "no candidate in the corpus has a readable document");
   const headline = positionsHeadline(positionsFor(key));
   // "3 issues" means nothing without "of the 12 we search for everyone".
   assert.match(headline, new RegExp(`same ${CANDIDATE_ISSUES.length} issues`));
@@ -184,7 +194,26 @@ test("D05: the corpus is real, append-only, and states what it could not reach",
   ) as CandidateCorpus;
   assert.equal(corpus.formatVersion, 1);
   assert.ok(corpus.documents.length > 30, `only ${corpus.documents.length} documents`);
-  assert.ok(corpus.attempted >= corpus.documents.length);
+  /*
+   * **This used to assert `attempted >= documents.length`, and append-only
+   * guarantees that will break** (corrected 2026-08-19, F01-continued item 11).
+   *
+   * `attempted` is the LAST run's denominator — how many URLs that run tried.
+   * `documents` accumulates across every run, because a changed page is
+   * appended beside its predecessor rather than replacing it. The two were
+   * only ever comparable while the corpus had had exactly one run, and the
+   * first re-collection (68 attempted, 96 documents) failed an invariant the
+   * file's own design forbids holding.
+   *
+   * What is actually true, and what the assertion should always have said:
+   * `attempted` is a positive denominator, and it bounds the candidates a
+   * single run could have reached rather than the history it appended to.
+   */
+  assert.ok(corpus.attempted > 0, "the corpus states no denominator for its last run");
+  assert.ok(
+    corpus.attempted >= corpus.failures.length,
+    "more failures than URLs attempted — the denominator does not describe the run",
+  );
 
   // Every document carries its revision detector and its read date.
   for (const d of corpus.documents) {

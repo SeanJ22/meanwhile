@@ -84,7 +84,9 @@
     "voting-sites:fetch": "tsx scripts/fetch-voting-sites.mts",
     "b14:links": "tsx scripts/b14-official-links.mts",
     "photo:review": "tsx scripts/photo-review.mts",
-    "queue:homes": "tsx scripts/queue-homes.mts"
+    "queue:homes": "tsx scripts/queue-homes.mts",
+    "names:census": "tsx scripts/name-census.mts",
+    "chrome:sweep": "tsx scripts/chrome-sweep.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

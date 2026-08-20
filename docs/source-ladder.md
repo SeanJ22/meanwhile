@@ -1739,7 +1739,7 @@ covered body today.
 | Body | Rung | Result |
 |---|---|---|
 | Tucson Unified School District | 2 — plain fetch | **HIT.** `https://www.tusd1.org/superintendent` → 200, 46,854 bytes. Names "Dr. Gabriel Trujillo, Superintendent, Tucson Unified School District" in the district's own words, three times on the page. **Shipped.** |
-| Vail Unified School District | 2 → 6 | Rung 2: `/superintendent` → 404; the site's own nav links `/page/superintendent`. Rung 6 (live browser) → 200, and the rendered text names "Superintendent Carruth" — **a surname only**. NOT SHIPPED: a person's name is the one thing this product may not half-source, and a surname with no verified given name is a wrong-name risk. Next rung: 9 (the district's linked board documents, which name officers in full) or 7 (the site's own JSON endpoint). |
+| Vail Unified School District | 2 → 6, then **2 again** | **CLOSED 2026-08-19 (F01-continued item 10b): John Carruth**, read off `https://www.vailschooldistrict.org/page/superintendent` — HTTP 200, 1,401,781 bytes, **rung 2, a plain fetch.** F01 reached this person at rung 6 and got "Superintendent Carruth", a surname alone, and correctly refused to ship it; the author ruled the full name and the re-hunt found where the miss came from. **The measured root cause is none of the likely ones.** The home page's STATIC HTML already links `/page/superintendent`, so link discovery was never blind; that page answers 200 to a plain fetch, so no browser was needed; and its HTML contains "John Carruth" six times, including `<strong>John Carruth<br>Superintendent</strong>`. The fetch and the discovery both worked and **the EXTRACTION failed**: the district runs on **Apptegy**, which ships page content as an escaped JSON payload embedded in the HTML, so reading the RENDERED prose finds the news blurb ("Superintendent Carruth shares a message with the community") and never the byline, which sits in the embedded data with its quotes escaped and a `<br>` between name and title. This is rung 7 in miniature — the page's own data was right there and better than its prose. Two smaller findings ride along: F01's rung-2 404 was against a GUESSED path (`/superintendent`) rather than the site's own, and the platform is Apptegy rather than the Finalsite family. **Class size: 2.** Exactly two bodies in the database sit on Apptegy (2 of 19 wiring rows, `"APPTEGY"`; 2 of 12 curated rosters carry the `/o/{org}/page/{slug}` shape) — this one and Rockaway Township's. The consequence is bounded to person hunts, because `lib/sources/apptegy/index.ts` already reads the site's own `/api/v4/o/<org>/cms/events` JSON for meetings. Next rung for the remaining body: 7, the same endpoint the meetings adapter already walks. |
 | Sunnyside Unified School District | 2 | `https://www.susd12.org/superintendent` → 200, 228,581 bytes. The page is the superintendent's PERFORMANCE GOALS and names the office throughout without naming the person. Next rung: 8 (structured markup) or 9 (board minutes). |
 | Amphitheater Unified School District | 2 → 6 | `/domain/62` and `/domain/8` → 404. The home page's own links reach the Governing Board but no administration page. Next rung: 10 (sitemap) or 12 (identify the CMS — the `/domain/NNN` path is Blackboard/Finalsite and its directory module has a predictable path). |
 | Kearsarge Regional School District | 2 → 6 | Home page → 200 but no superintendent mention; the only link found is a board press release at `/district/files/interim-superintendent`, which suggests the post is INTERIM and is exactly the case where a stale name would be worst. Rung 6 on `/district/superintendent` → **403** (the same host that refused the calendar refresh). Next rung: 4 (a different client), then 11 (the Internet Archive). |
@@ -1747,12 +1747,14 @@ covered body today.
 | Pima County · Morris County · Merrimack County | — | NOT ATTEMPTED. County administrators/managers. |
 | Tucson · Newbury · Rockaway Township (council) | — | NOT ATTEMPTED. City/town managers. |
 
-### State: OPEN, 1 of 12, with every next rung named
+### State: OPEN, 2 of 12, with every next rung named
 
 Not exhausted and not reported as one. The render does not depend on it: every
 body resolves its ELECTED head today, so no card is blank, and a body with no
 appointed executive on record shows one row rather than two — which is the
 honest answer, not a gap.
+
+**2 of 12 as of 2026-08-19** (F01-continued item 10b closed Vail; TUSD closed in F01).
 
 **Why it stopped here.** F01 carried 55 items across 13 surfaces. This is a
 12-body hunt across 12 different content-management systems, three of which are

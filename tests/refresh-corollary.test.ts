@@ -8,7 +8,10 @@ import { makeSchedulePageSource } from "../lib/sources/schedulepage/index.ts";
 import { makeRevizeSource } from "../lib/sources/revize/index.ts";
 import { CompositeSource } from "../lib/sources/composite/index.ts";
 import { carryForward } from "../lib/meetings/carry-forward.ts";
+import { CAPABILITIES } from "../lib/sources/composite/wiring.ts";
+import { CONCLUDED_LOOKBACK_DAYS } from "../lib/meetings/constants.ts";
 import {
+  readSnapshot,
   snapshotClientMeta,
   validateSnapshot,
   type MeetingsSnapshot,
@@ -723,5 +726,84 @@ test("F01 7.2: the card reads the SAME meeting array the pins are drawn from", (
     entry,
     /ocdIdsWithMeetings=\{\[\s*\n\s*\.\.\.new Set\(\s*\n\s*\(shown\.meetings \?\? \[\]\)\.flatMap/,
     "the on-screen set must come from the rendered meetings",
+  );
+});
+
+/* ---- F22: the archive declaration is owed by every adapter that has one --- */
+
+/**
+ * **F22 (2026-08-20). The g13 defect, found on a second adapter.**
+ *
+ * `carryForward` judges a walled source's rows against that source's own
+ * `publishedLookbackDays`, defaulting to `CONCLUDED_LOOKBACK_DAYS`. That
+ * default is right for every adapter that clips its own retrieval to the
+ * serving window, and wrong for every adapter with an archive rung that does
+ * not. revize declared it on 2026-08-18; civicplus, whose M59 AgendaCenter
+ * rung shipped three days EARLIER, did not — so when civicplus timed out on
+ * 2026-08-20 the carry-forward that exists to stop a wall emptying a calendar
+ * dropped 23 of Rockaway Township's 32 archived sittings.
+ *
+ * Two adapters is a class. The guard is derived rather than listed, because a
+ * hand-kept list of archive sources is the same shape of thing that failed:
+ * it asks the COMMITTED SNAPSHOT which sources actually emit rows past the
+ * default back edge, and holds each of those to a declaration that reaches
+ * its own oldest row. A third adapter that grows an archive rung fails here
+ * on the first refresh that commits one, naming itself and its oldest row —
+ * it cannot join quietly.
+ */
+test("F22: every source whose rows outrun the serving window declares its own", () => {
+  const snapshot = readSnapshot(ROOT);
+  assert.ok(snapshot, "no committed snapshot to check");
+
+  const declared = new Map<string, number | null | undefined>();
+  for (const capability of CAPABILITIES) {
+    const rows = wiringForTypes(capability.types);
+    if (rows.length === 0) continue;
+    declared.set(capability.name, capability.make(rows).publishedLookbackDays);
+  }
+
+  const generatedAt = Date.parse(snapshot.generatedAt);
+  assert.ok(Number.isFinite(generatedAt), "the snapshot has no readable generatedAt");
+  const defaultBackEdge = generatedAt - CONCLUDED_LOOKBACK_DAYS * 86_400_000;
+
+  // Oldest row per source, off the snapshot itself — the denominator is
+  // stated so a source that legitimately holds nothing old reads as a zero
+  // rather than as a source that was skipped.
+  const oldest = new Map<string, number>();
+  for (const meeting of snapshot.meetings) {
+    const source = meeting.id.split(":")[0];
+    const at = Date.parse(meeting.startsAt);
+    if (!Number.isFinite(at)) continue;
+    oldest.set(source, Math.min(oldest.get(source) ?? Infinity, at));
+  }
+
+  const beyond = [...oldest].filter(([, at]) => at < defaultBackEdge).sort();
+  console.log(
+    `\n  ${beyond.length} of ${oldest.size} source(s) emit rows older than the ` +
+      `${CONCLUDED_LOOKBACK_DAYS}-day serving window: ` +
+      (beyond.map(([s, at]) => `${s} -> ${new Date(at).toISOString().slice(0, 10)}`).join(", ") ||
+        "none") +
+      "\n",
+  );
+
+  const undeclared: string[] = [];
+  for (const [source, at] of beyond) {
+    if (!declared.has(source)) continue; // a snapshot may name a source this build no longer has
+    const window = declared.get(source);
+    if (window === null) continue; // no back clip at all — the archive is whole
+    const days = window ?? CONCLUDED_LOOKBACK_DAYS;
+    if (generatedAt - days * 86_400_000 <= at) continue;
+    undeclared.push(
+      `${source} (oldest row ${new Date(at).toISOString().slice(0, 10)}, ` +
+        `declared window ${days}d)`,
+    );
+  }
+
+  assert.deepEqual(
+    undeclared,
+    [],
+    "these adapters emit an archive past the serving window without declaring it — " +
+      "carry-forward will clip it away the first time the source is walled. Declare " +
+      "publishedLookbackDays on the adapter (null means the publisher's whole archive).",
   );
 });

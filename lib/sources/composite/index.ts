@@ -30,11 +30,49 @@ import type {
  *   `wiring.ts` beside this file and `lib/registry/source-wiring.ts` (§0b).
  */
 
+/**
+ * WHY a child contributed nothing — and the two answers are not alike (F22,
+ * 2026-08-20).
+ *
+ * `ok: false` used to carry a vendor timeout and a violated id-namespace
+ * contract in the same flag, and `scripts/ingest.ts` treated both the same
+ * way: name it, skip it, carry its rows forward, exit 0. So a WALL and a
+ * defect in our own code were indistinguishable in the log, in the snapshot
+ * and in the run's exit status — and the defect rendered as a wall, which is
+ * the failed-operation-as-empty-success shape wearing the other face.
+ *
+ * - `WALL` — the retrieval did not land: a refusal, a timeout, a challenge
+ *   page, an unreachable host. The body's records are still there and the
+ *   ladder still has rungs; this is friction, and `CLAUDE.md` is explicit
+ *   that it is never a terminal state. Carry-forward keeps the source's last
+ *   known rows and the run stays green, because ten healthy sources must not
+ *   lose their refresh over one vendor's edge.
+ * - `JOB` — the run itself is broken: a child returned ids outside its own
+ *   namespace, or its `normalize` threw. Nothing about the ladder fixes it,
+ *   nobody is waiting for a wall to fall, and a green run would hide it. The
+ *   run goes red.
+ *
+ * `SOURCE_BLOCKED` is deliberately not among these: a wall is recorded on the
+ * rung it stopped at, and the next rung is attempted.
+ */
+export type ChildFailureKind = "WALL" | "JOB";
+
 export interface ChildRunReport {
   source: string;
   ok: boolean;
   /** Why the child contributed nothing, when it didn't. */
   error: string | null;
+  /**
+   * Present exactly when `ok` is false. A `WALL` is named and skipped and the
+   * run continues; a `JOB` failure turns the run red. See `ChildFailureKind`.
+   */
+  failure?: ChildFailureKind;
+  /**
+   * The furthest ladder rung a WALLED retrieval reached — the numbering in
+   * `CLAUDE.md` and `docs/source-ladder.md`, never a parallel vocabulary.
+   * Absent when the client cannot say, and absent stays absent.
+   */
+  walledAtRung?: number;
   fetched: number;
   normalized: number;
   drops: NormalizeDropCounts;
@@ -77,7 +115,7 @@ const ZERO_DROPS: NormalizeDropCounts = {
 interface CacheEntry {
   at: number;
   raw: TaggedRaw[];
-  fetchReports: Map<string, { ok: boolean; error: string | null; fetched: number }>;
+  fetchReports: Map<string, { ok: boolean; error: string | null; fetched: number; rung?: number }>;
 }
 
 export interface CompositeOptions {
@@ -155,7 +193,7 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
 
     const fetchReports = new Map<
       string,
-      { ok: boolean; error: string | null; fetched: number }
+      { ok: boolean; error: string | null; fetched: number; rung?: number }
     >();
     const tagged: TaggedRaw[] = [];
 
@@ -179,10 +217,16 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
       } else {
         // The failure is the report's job, not the map's problem: the other
         // children's rows are already in `tagged`.
+        // F22: the furthest ladder rung this retrieval reached, when the
+        // shared client knows it. A whole-child timeout from `withTimeout`
+        // knows no rung and stays undefined — absent is recorded as absent
+        // rather than filled in with a plausible number.
+        const rung = (result.reason as { rung?: number } | undefined)?.rung;
         fetchReports.set(child.name, {
           ok: false,
           error: String(result.reason?.message ?? result.reason),
           fetched: 0,
+          ...(typeof rung === "number" ? { rung } : {}),
         });
       }
     });
@@ -193,7 +237,7 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
   }
 
   private pendingFetch: {
-    reports: Map<string, { ok: boolean; error: string | null; fetched: number }>;
+    reports: Map<string, { ok: boolean; error: string | null; fetched: number; rung?: number }>;
     fromCache: boolean;
   } | null = null;
 
@@ -226,10 +270,16 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
           : { publishedLookbackDays: child.publishedLookbackDays };
 
       if (!fetched.ok) {
+        // The retrieval did not land. A wall, not a broken job — the run
+        // continues and carry-forward keeps this source's rows on screen.
         children.push({
           source: child.name,
           ok: false,
           error: fetched.error,
+          failure: "WALL",
+          ...(typeof fetched.rung === "number"
+            ? { walledAtRung: fetched.rung }
+            : {}),
           fetched: 0,
           normalized: 0,
           drops: { ...ZERO_DROPS },
@@ -255,6 +305,8 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
             source: child.name,
             ok: false,
             error: `meeting id "${offender.id}" is not namespaced under "${child.name}:"`,
+            // Our contract, our code, our bug. The vendor answered fine.
+            failure: "JOB",
             fetched: fetched.fetched,
             normalized: 0,
             drops: { ...ZERO_DROPS },
@@ -277,10 +329,14 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
           ...declaredWindow,
         });
       } catch (error) {
+        // The fetch landed and the TRANSFORM threw. The bytes are in hand, so
+        // no rung of the ladder is owed and no wall fell — this is our parser
+        // on the vendor's real payload, and it goes red.
         children.push({
           source: child.name,
           ok: false,
           error: String((error as Error)?.message ?? error),
+          failure: "JOB",
           fetched: fetched.fetched,
           normalized: 0,
           drops: { ...ZERO_DROPS },

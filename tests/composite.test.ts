@@ -195,3 +195,102 @@ test("drops from every child surface in the report, per source", async () => {
   assert.equal(report?.drops.placeless, 2);
   assert.equal(report?.drops.unknownVenue, 1);
 });
+
+/* ---- F22: a wall and a broken job are not the same kind of nothing ------- */
+
+/**
+ * **F22 item 2 (2026-08-20).**
+ *
+ * `ok: false` used to carry a vendor timeout and a violated id-namespace
+ * contract in the same flag, so `scripts/ingest.ts` treated a WALL and a
+ * defect in our own code identically: name it, skip it, carry its rows, exit
+ * 0. A broken adapter therefore rendered as a walled vendor and kept the run
+ * green — the failed-operation-as-empty-success shape, wearing the other
+ * face. And the converse cost more: because everything was a wall, nothing
+ * could be a job failure, so the run's exit status said nothing at all.
+ *
+ * The contract now: the retrieval not landing is a `WALL`; our own code
+ * breaking on bytes we did hold is a `JOB` failure. `scripts/ingest.ts` reads
+ * this to decide the exit status, which is why it is pinned here rather than
+ * left as a comment.
+ */
+test("F22: a failed FETCH is a WALL — named, skipped, and the run continues", async () => {
+  const composite = new CompositeSource([
+    stubChild("walled", { failFetch: true }),
+    stubChild("healthy", { rows: [1], meetings: () => [meetingOf("healthy:a")] }),
+  ]);
+
+  const meetings = composite.normalize(await composite.fetch(QUERY));
+  const report = composite.lastReport;
+  const walled = report?.children.find((c) => c.source === "walled");
+
+  assert.equal(walled?.ok, false, "the planted fetch failure did not fail the child");
+  assert.equal(walled?.failure, "WALL", "a retrieval that did not land is not a WALL");
+  assert.equal(
+    meetings.length,
+    1,
+    "the healthy child lost its rows to the other child's wall",
+  );
+});
+
+test("F22: a broken NAMESPACE is a JOB failure — the run must go red", async () => {
+  // The child fetches fine and returns rows under someone else's namespace.
+  // Nothing about the ladder fixes this and no wall fell; it is our bug.
+  const composite = new CompositeSource([
+    stubChild("offender", { rows: [1], meetings: () => [meetingOf("somebodyelse:a")] }),
+  ]);
+
+  composite.normalize(await composite.fetch(QUERY));
+  const child = composite.lastReport?.children.find((c) => c.source === "offender");
+
+  assert.equal(child?.ok, false);
+  assert.equal(
+    child?.failure,
+    "JOB",
+    "a violated namespace contract still reads as a wall — a code defect would keep the run green",
+  );
+});
+
+test("F22: a normalize that THROWS is a JOB failure, not a wall", async () => {
+  const composite = new CompositeSource([
+    stubChild("parser", {
+      rows: [1],
+      meetings: () => {
+        throw new Error("unexpected shape in the vendor payload");
+      },
+    }),
+  ]);
+
+  composite.normalize(await composite.fetch(QUERY));
+  const child = composite.lastReport?.children.find((c) => c.source === "parser");
+
+  assert.equal(child?.ok, false);
+  assert.equal(
+    child?.failure,
+    "JOB",
+    "the bytes were in hand and our parser threw — that is not a retrieval wall",
+  );
+});
+
+test("F22: a walled child records the ladder rung it stopped at", async () => {
+  // The shared client attaches `rung` to the error it throws; the composite
+  // forwards it verbatim and records ABSENT as absent — a rung is never
+  // filled in with a plausible number.
+  const withRung: ReportingMeetingSource<unknown> = {
+    ...stubChild("rung4", {}),
+    async fetch() {
+      throw Object.assign(new Error("HTTP 200 carrying a challenge page"), { rung: 4 });
+    },
+  };
+  const composite = new CompositeSource([withRung, stubChild("norung", { failFetch: true })]);
+
+  composite.normalize(await composite.fetch(QUERY));
+  const children = composite.lastReport?.children ?? [];
+
+  assert.equal(children.find((c) => c.source === "rung4")?.walledAtRung, 4);
+  assert.equal(
+    children.find((c) => c.source === "norung")?.walledAtRung,
+    undefined,
+    "a rung the client could not name was invented",
+  );
+});

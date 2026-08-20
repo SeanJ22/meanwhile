@@ -557,21 +557,34 @@ export default async function BallotPage({
                   authority's tool is still offered below it, labelled as
                   leaving.
 
-                  IT RENDERS IN BOTH PLACES, and that is a DEFERRAL rather
-                  than a preference. I removed the second instance — two
-                  identical pills read worse than the two links they replaced,
-                  because a repeated identical control makes a reader wonder
-                  which one is real — and the suite refused it: item 6
-                  (2026-08-15) committed a guard requiring the pointer in the
-                  dates header AND the checker box, by name. That is an
-                  author-directed decision about this page, and overturning it
-                  on my own judgment while fixing something else is exactly
-                  the scope creep a brief's order-is-law rule forbids. Both
-                  render; the observation is `F21` for the author to rule on.
+                F21 RESOLVED (2026-08-20, the author's ruling). It used to
+                  render in BOTH this header and the checker box below,
+                  because item 6 (2026-08-15) committed a guard naming both
+                  places — written when the two were LINKS with different
+                  surrounding context. Item 15 turned both into the same
+                  in-app pill, and two identical controls read worse than the
+                  two links did: a repeated identical control makes a reader
+                  wonder which one is the real one, which is reader friction
+                  and claims none of the four exceptions.
+
+                  The author's ruling: the pointer is required ONCE PER PAGE,
+                  and the dates header is where it lives. The guard's intent
+                  was that a reader can always find it; one pill satisfies
+                  that, and duplication was never the point.
+
+                  THE NOTE CAME WITH IT rather than being deleted with the
+                  duplicate. What the state's tool will ask for is worth
+                  stating before the tap — a link that demands a driver's
+                  licence number on arrival is friction the reader could have
+                  been warned about — and that warning belongs wherever the
+                  pointer now is.
                 */}
                 {polls && (
                   <li>
                     <WhereToVote fallback={polls} />
+                    <p className="mt-0.5 text-[0.75rem] leading-relaxed text-voice">
+                      {polls.note}
+                    </p>
                   </li>
                 )}
               </ul>
@@ -634,8 +647,7 @@ export default async function BallotPage({
           needs to know is whether they can vote at all. */}
       {dates && set && (() => {
         const reg = registrationLinkFor(set.election.state);
-        const polls = pollingPlaceLinkFor(set.election.state);
-        return reg || polls ? (
+        return reg ? (
           <div className="mt-6 rounded-[10px] border border-[var(--panel-border)] bg-[var(--panel-bg)] p-3.5 shadow-[var(--shadow-panel)]">
             {reg && (
               <p className="text-[0.9375rem]">
@@ -652,25 +664,17 @@ export default async function BallotPage({
                 </span>
               </p>
             )}
-            {/* Item 6: the second half of "can I vote, and where" — same
-                block, same weight.
-
-                ITEM 15 (2026-08-19): and now the same BEHAVIOUR as its
-                neighbour on the map. `WhereToVote` opens the shared panel
-                in-app and carries the authority's own tool below it,
-                labelled as leaving. The note about what that tool will ask
-                for stays: a link that demands a driver's licence number on
-                arrival is friction the reader could have been warned about,
-                and that warning is worth as much now that the link is the
-                second answer rather than the only one. */}
-            {polls && (
-              <div className={reg ? "mt-2" : undefined}>
-                <WhereToVote fallback={polls} />
-                <p className="mt-0.5 text-[0.75rem] leading-relaxed text-voice">
-                  {polls.note}
-                </p>
-              </div>
-            )}
+            {/* F21 (2026-08-20, the author's ruling): the polling-place
+                pointer USED TO RENDER HERE TOO, and no longer does. Item 6
+                (2026-08-15) required it in the dates header AND this box,
+                which was right while the two were links with different
+                surrounding context; item 15 made both the same in-app pill,
+                and a repeated identical control makes a reader wonder which
+                one is the real one. The ruling: once per page, in the dates
+                header. This box keeps the registration half, which is a
+                different question with a different answer. The note about
+                what the state's tool asks for moved UP with the pointer
+                rather than being lost with the duplicate. */}
           </div>
         ) : null;
       })()}

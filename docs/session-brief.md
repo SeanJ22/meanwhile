@@ -1,106 +1,148 @@
-# Session brief — written by F01-continued for whoever comes next
+# Session brief — written by F01-continued session 2 for whoever comes next
 
-**Written 2026-08-19 at the close of F01-continued.** This file is overwritten
-every session; what it says is what the last session actually left behind, not a
-plan.
+**Written 2026-08-19 at the close of F01-continued session 2.** This file is
+overwritten every session; what it says is what the last session actually left
+behind, not a plan.
 
 ---
 
 ## Where the tree is
 
-`main` at **`d722605`**, which is what production is serving (`/api/build`) and
-what the final `walk:all` ran against. **All the code shipped in `bd4b05b`
-through PR #112 — ONE code merge.** The close-out records follow in their own
-commit, which cannot name the SHA of the commit containing it; that is now
-written into `CLAUDE.md` as the amended merge cadence rather than reported as a
-deviation every session. Working tree clean, no open PRs, local `main`
-fast-forwarded.
+`main` at **`af2f208`**. Production is serving **`7d986cb`**, verified via
+`/api/build`, and that is what the final `walk:all` ran against — `af2f208` is
+a close-out record touching `scripts/walk-all.mts` and nothing a reader sees.
 
-Gates at the close: **test 1281 pass / 0 fail · lint 0 errors, 11 allowlisted
-warnings · `tsc --noEmit` clean · build green in default AND standalone ·
-`walk:all` 332 passed, 0 regressions, 0 could-not-run** (baseline 324, added 8,
-GONE 0).
+**F01 IS CLOSED.** Session 2 carried ten items — 0A through 0D and 12 through
+17 — and finished all ten. **The next artifact is Prompt B.**
 
----
+**Two code merges, and the second is a reported deviation from RULING 1:**
 
-## What this session was, and where it stopped
+| SHA | What it carries |
+|---|---|
+| `2c9e19f` → PR #113 → `1407c53` | Items 0A–0D and 12–17. |
+| `1fd1796` → PR #114 → `7d986cb` | The regression the first live walk found in what #113 had just shipped. |
+| `af2f208` | Close-out record: two standing walk checks follow the surfaces item 12 moved. Instrument only. |
 
-**F01-continued, items 1 through 11 of 17.** Items 1–7 were reconciliations of
-F01's own report; 8–11 were reader-facing defects from the author's 2026-08-19
-phone walkthrough.
+Gates at the close: **test 1320 pass / 0 fail · lint 0 errors, 11 allowlisted
+warnings · `tsc --noEmit` clean · build green in default AND standalone.**
+`walk:all` against the live build: **350 passed, 0 regressions, 0 could not
+run** — baseline 332, added 18, GONE 0.
 
-**Item 12 is the first item not started.** Items 12–17 are untouched and the
-next session is F01-continued again, in the same order, with nothing added:
-
-* **12** — move the long sections (in their own words, campaign funding) off the
-  inline ballot row and into the large battlecard, and add a full-width
-  **View Battlecard** pill beneath the links row. People only.
-* **13** — battlecard positions search returns nothing, including for terms in
-  the positions the card holds. Diagnose before fixing, and verify against the
-  post-11, post-12 state rather than against what shipped at `5253e5f`.
-* **14** — the eleven-issue gap block: annotate and bury. The count on the
-  ballot, the full enumeration inside the battlecard, the disclaimer clause
-  travelling with the list wherever it appears.
-* **15** — "Find your polling place" leaves the app; the map's "where to vote"
-  pill does not. The pill's behaviour is the standard.
-* **16** — New Jersey's in-person early-voting WINDOW has no add-to-calendar.
-  **Confirmed while shooting item 8's screenshots**: at 07866 every single-date
-  row carries "Add to calendar" and `10/24/2026 – 11/01/2026` carries none.
-  Note before starting: `lib/calendar/event-links.ts` slices a UTC ISO string,
-  which is item 16.4's timezone question sitting in the code already.
-* **17** — the dummy address becomes `123 Main St, Anywhere, USA` everywhere.
+Working tree clean. No open PRs.
 
 ---
 
-## Three things that will look wrong and are not
+## The one thing waiting for the author
 
-1. **Issue-mention counts went DOWN product-wide.** 72 → 64, and eight
-   candidates' counts moved, every one downward. That is item 11 working: the
-   extraction was reading press-release rails and navigation as candidate speech,
-   so the old number was partly measuring website software. It is a correction,
-   not a regression, and `pnpm chrome:sweep` reprints the pair any time.
-2. **The candidate corpus doubled to 96 documents with 0 revisions.** 30 of them
-   are RE-EXTRACTIONS — the same pages read by a better extractor. The new
-   `extractorVersion` field is what tells those apart from a campaign changing
-   its position, and `currentExtraction` stops the older copy being searched
-   beside its own successor. Do not "clean up" the older generation: the file is
-   append-only on purpose.
-3. **Kearsarge's meeting floor is no longer a number.** `least` is 2 — the
-   durable half of the claim — and the real expectation is computed each run from
-   the snapshot and the server's own window constants. A fixed floor over a
-   moving back-window drifts by construction, which is how it went red under F01
-   twice for a reason that was never a regression.
+**`F21` — two identical "Where can I vote?" pills on the ballot.** Item 15
+converged two polling-place LINKS onto one in-app pill, and the page renders it
+twice, because item 6 (2026-08-15) committed a guard requiring the pointer in
+the dates header AND the checker box, by name. Two identical controls read
+worse than two links did.
+
+I removed one and the suite refused it. Overturning an author-directed decision
+about this page while fixing something else is scope creep, so both render and
+the row states what changes under either answer. **It needs a sentence from the
+author, not a session.**
 
 ---
 
-## Two traps this session paid for
+## What to know before touching anything
 
-* **A source file holding a literal NUL is invisible to `Grep`.** ripgrep calls
-  it binary and skips it. `components/ballot/pick-control.tsx` carried two, on
-  the ballot surface, where four of this brief's items live — so any class sweep
-  run against this repo before 2026-08-19 did not see that file. Both pick
-  surfaces build their store snapshots with `JSON.stringify` now, with no
-  separator character at all.
-* **Unit tests all passed on a fix the four-zip browser walk failed on every
-  zip.** The clear's suppression was resolved against the reader's stored picks,
-  so a contest holding both an explicit pick and a Yes re-derived the Yes the
-  instant the file was emptied. `scripts/verify-picks-f01c.mts` is that walk; it
-  refuses any base URL that is not localhost, because it taps a reaction.
+### The ballot's long sections live in the battlecard now
+
+`components/ballot/candidate-battlecard.tsx`. Three sections moved — "in their
+own words", campaign money, the incumbent record door — and the row keeps
+portrait, name, party, the short sourced line, the links row, a one-line count
+and the pill.
+
+**Do not "simplify" this into `OfficialModal`.** That surface only opens for an
+INCUMBENT, and using it here would delete a CHALLENGER's own words and funding
+block in every contest while leaving the incumbent's. The header of the new
+component carries the full argument. If you are ever tempted to merge the two,
+read it first.
+
+**Two consequences for anything that looks at the ballot page:**
+
+* A check that counts something on the ballot ROW may now need to open a card.
+  Two standing checks got this wrong on the first live run and one of them
+  printed a prior session's win as a NAMED REGRESSION. **The claim was intact;
+  the check was looking where the content used to be.**
+* The funding block renders only on a FEDERAL contest, so on 85701 the first
+  fifteen cards have none — it starts at the sixteenth, Adelita Grijalva.
+
+### There are TWO statement corpora and the search index is their union
+
+`lib/corpus/unified.ts`. `data/corpus/statements.json` is keyed by officeholder
+id; `data/candidates/corpus-2026.json` is keyed by candidate key. The battlecard
+search read the first alone, so any candidate whose words live only in the
+second answered "we haven't collected anything they've published" four inches
+below their published words.
+
+**The files are deliberately NOT merged.** They are append-only evidence stores
+with different collectors, and rekeying either destroys the guarantee that makes
+them worth anything. The UNION is built at read time.
+
+### `politeGetText` now refuses a challenge page
+
+`lib/sources/http.ts`. A host can answer an unfamiliar client with `200 OK` and
+a bot-detection interstitial, and every layer above will behave perfectly and
+produce a lie. The client escalates to the other TLS stack (rung 4, unchanged)
+and THROWS naming the wall if that is challenged too.
+
+**If an adapter starts reporting a source as failed where it used to report
+zero rows, this is why, and the new answer is the true one.**
+
+### A reaction write must declare whose traffic it is
+
+`lib/db/reactions.ts`. `writeReaction` throws without a `marker`. There is no
+default — the search log's `ORGANIC` default cost this project five rows in the
+sold store in a single day, and a reaction row is the thing the business sells.
+
+The `run_id` is **namespaced and digested** against the search log's raw label,
+so the two stores share a column NAME and no VALUE SPACE. That is what keeps
+the n-stores-never-join rule intact. **Do not "fix" it to store the raw id.**
+
+### The sweeping instrument
+
+**`git grep -a`, or ripgrep with binary handling forced.** The default tool
+skips a file containing a literal NUL byte and skips hidden paths, and says
+nothing either time. Session 1 swept the NUL class with the skipping tool and
+found one of three files. `tests/nul-bytes.test.ts` guards the first condition;
+the second — 11 tracked files under dot-prefixed directories, 6 of them
+source-class — is recorded and not yet guarded.
 
 ---
 
-## The standing close-out, unchanged
+## Five things this session learned the hard way
 
-Every session ends with `pnpm walk:all` against the SHIPPED build, `pnpm
-census:runs --target=production`, `pnpm stamp` into `state.md`, tracker rows by
-ID with a duplicate check, `docs/session-map.md`, a playbook diff or an explicit
-"nothing new", this file overwritten, and `pnpm handoff --ship`.
+1. **A check that CRASHES is worse than a check that fails.** The positions
+   search box sits inside a collapsed section; `fill` waited thirty seconds and
+   threw, and took every check after it down. The suite stopped REPORTING
+   rather than reporting a failure.
+2. **A cannot-run can be a did-not-look.** The first candidate on 07866
+   mentions 0 of 12 issues, so their card holds no text to draw a search term
+   from — and the check gave up on a zip where the next card would have
+   answered.
+3. **Run the verification before believing the fix.** Item 13's verification
+   found a defect the fix had not addressed: a term we hold and will not quote
+   was rendering as the candidate's silence.
+4. **Two numbers that both sum to the same total can still be about different
+   populations.** 591 + 311 and 531 + 23 + 348 both make 902 and share no
+   denominator. The residue was 34 candidate-card portraits and 3 governors a
+   reach map could not see.
+5. **A guard can be right and its conclusion wrong.** "run_id on both stores
+   would be a join path" was correct; "therefore the sold table carries no
+   attribution" was not.
 
-**Run `handoff --ship` WITHOUT corepack** (`pnpm handoff --ship`). Through
-corepack the build gate cannot start — the packageManager pin refuses the newer
-global pnpm — and the gate says so honestly rather than passing, which is the
-gate working.
+---
 
-**New commands this session:** `pnpm names:census` (single-token person names
-across everyone held) and `pnpm chrome:sweep` (the issue-extraction before/after
-pair).
+## What the live walk catches that reading does not
+
+Every finding in the previous section except the fourth came from RUNNING
+something — the walk against the deploy, the verification against the corpus,
+the byte scan against the tree. The first live run of this session's own new
+checks found three defects in those checks and one reader-facing regression the
+session had shipped ten minutes earlier.
+
+**Run `pnpm walk:all` against the deploy before writing the report, not after.**

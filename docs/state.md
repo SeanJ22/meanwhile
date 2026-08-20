@@ -2099,7 +2099,77 @@ replaced.
 
 ## 7. Current state of the branch
 
-**CURRENT: `claude/f01-continued-0819`** (2026-08-19, F01-continued —
+**CURRENT: `main@af2f208`** (2026-08-19, F01-continued SESSION 2 — THE BALLOT
+STOPS BEING A WALL, AND FOUR INSTRUMENTS STOP LYING ABOUT WHAT THEY MEASURED),
+branched from `main@d913ca8`.
+
+**F01 IS CLOSED.** Session 2 carried ten items — 0A through 0D and 12 through
+17 — and finished all ten. Nothing is deferred, nothing is a boundary stop, and
+nothing was never reached. The next artifact is Prompt B.
+
+**SHAs, labelled, because a reader must be able to tell at a glance which
+commit changed what a reader sees and which changed only our account of it:**
+
+| SHA | What it is |
+|---|---|
+| `2c9e19f` → PR #113 → **`1407c53`** | **CODE.** Items 0A–0D and 12–17. |
+| `1fd1796` → PR #114 → **`7d986cb`** | **CODE, a second merge — a DEVIATION from RULING 1, reported as one.** The first live walk of the new checks found a reader-facing regression the previous merge had just shipped, and leaving it until a later session was worse than the deviation. |
+| **`af2f208`** | **CLOSE-OUT RECORD, instrument only.** Two standing walk checks follow the surfaces item 12 moved. The diff is `scripts/walk-all.mts` and nothing else; no reader-facing byte changes. |
+| this commit | **CLOSE-OUT RECORD.** `state.md`, which cannot name the SHA that contains it. |
+
+Deploy verified twice via `/api/build`, both with a declared synthetic run and
+`cache-control: no-cache`: `1407c53`, then `7d986cb`.
+
+`pnpm walk:all` against the deployed `7d986cb`: **350 check(s) passed, 0
+regression(s), 0 could not run.** 350 distinct of 350 run. Against the
+inherited baseline of 332: **added 18, GONE 0.**
+
+The headline findings, because each corrects something a previous report said
+or something the brief assumed:
+
+* **The ballot was 22 phone screens on 07866 and 44.6 on 85701.** It is 10.3
+  and 33.6. Measured before touching anything, and the BEFORE confirmed against
+  production at the identical figure so the baseline was the shipped state.
+* **A NEW battlecard rather than the existing one, and the reason is the
+  equal-effort rule.** `OfficialModal` only opens for an INCUMBENT, so moving
+  the long sections there would have deleted a CHALLENGER's own words and
+  funding block in every contest while leaving the incumbent's.
+* **The positions search was reading a different corpus, not an empty one.**
+  Two statement stores, two key spaces, one index. 36 of 36 candidates
+  findable, against the ten the brief asked for.
+* **A term we hold and will not quote was rendering as their silence** — found
+  by RUNNING the verification, not by reading code.
+* **`CLAUDE.md` has no rules 4g or 4h.** Item 14 asked whether they mandate the
+  gap phrasing; they do not exist, no guard mandates it, and nothing was
+  amended.
+* **The NUL class was three files and session 1's own sweep saw one**, because
+  it was run with the tool that skips. A second silent-skip condition —
+  hidden paths — had never been recorded at all.
+* **The 37 portraits are accounted for**, and 3 of them were a defect in the
+  reach map rather than a rounding argument.
+* **`reactions` could not say whose traffic a row was.** It can now, with the
+  run id namespaced so the n-stores rule survives it.
+* **A bot-detection interstitial served at HTTP 200 was being recorded as a
+  successful read of an empty page**, in the one function every adapter
+  fetches through.
+* **A malformed tracker record was hiding a duplicate ID from the guard.**
+
+**One thing is deferred to the author and it is the only one: `F21`.** Item 15
+converged two polling-place links onto one in-app pill, and the page renders it
+TWICE — because item 6 (2026-08-15) committed a guard requiring the pointer in
+the dates header AND the checker box, by name. Two identical pills read worse
+than two links did. I removed one, the suite refused it, and overturning an
+author-directed decision about this page while fixing something else is scope
+creep. The row states what changes under either answer.
+
+
+---
+
+### The previous entry
+
+**PREVIOUS: `claude/f01-continued-0819`**
+
+**PREVIOUS: `claude/f01-continued-0819`** (2026-08-19, F01-continued —
 VERIFICATION, CLASS FIXES AND THE NEW WALKTHROUGH DEFECTS), branched from
 `main@5253e5f`, code merged as `bd4b05b` through PR #112 (`d722605`) and the
 close-out records in their own commit after it. **ONE code merge**, which is
@@ -2134,11 +2204,12 @@ close-out records as `1203d48` and `5daeb8f` — **three merges, and the brief
 asked for one**; the reason, and which SHA carries what, are stated in the F01
 block at the end of this document.
 
-F01 carried **fifty-five live items across thirteen surfaces** from the
+F01 carried **fifty live items across thirteen surfaces** from the
 author's own voice walkthrough of 2026-08-18, plus twenty-nine screenshots. The
 standing lock forbidding a session to open that document or the Drive folder was
 retired by the F01 brief; both were read in full, **29 of 29 screenshots**.
-**Fifty-two of the fifty-five closed. 10.1 is WITHDRAWN by the author** — the
+**Forty-six of the fifty finished, three stopped at a boundary. 10.1 is
+WITHDRAWN by the author** — the
 pill cluster is not broken and was not touched. **Two remain open, and both are
 DATA hunts rather than unbuilt work**, each with its own row and its ladder
 recorded: `F02` (committee jurisdiction text, 186 rendered rows) and `F03`
@@ -12595,3 +12666,299 @@ descriptions the upstream file does not carry (`F02`).
 * **Items 1–11 finished. Item 12 — moving the long sections onto the battlecard —
   is the first item not started.** Items 12 through 17 are untouched, in the
   brief's order, with nothing added.
+
+
+## F01-continued session 2 — 2026-08-19: the ballot stops being a wall, and four instruments stop lying about what they measured
+
+Session 1 finished items 1 through 11 and never reached 12 through 17. This
+session is those six, plus four closures of questions session 1 opened. **Ten
+items, ten finished.** F01 closes.
+
+The through-line is not "we found bugs." It is that in six of the ten, **the
+thing that was wrong was an instrument reporting confidently about something
+it had not measured** — a sweep run with a tool that skips, a search reading a
+different corpus, a fetch recording a challenge page as a document, a reach map
+that could not see a surface, a guard whose ID check was defeated by a broken
+row boundary, and a walk check counting content on a row it had just been moved
+off. The code, in most of those, was fine.
+
+### The ballot was forty-four screens
+
+**Item 12.** Every long section rendered inline under every candidate while the
+large battlecard sat with slots for them. Measured at 430×932 before touching
+anything, and — this matters — the BEFORE was taken against **production**, on
+`d722605`, at the identical figure to the local build, so the baseline is the
+shipped state rather than a development artifact.
+
+| zip | before | after |
+|---|---|---|
+| 07866 | 20,510 px · **22.0 phone screens** | 9,574 px · **10.3** |
+| 85701 | 41,558 px · **44.6 screens** | 31,298 px · **33.6** |
+
+Three sections moved — "in their own words", campaign money, the incumbent
+record door — and the row keeps portrait, name, party, the short sourced line,
+the links row, a one-line count and a full-width **View Battlecard** pill.
+Class swept across all four pilot zips: **107 candidate rows, 107 pills, 0
+inline positions, 0 inline funding** (85701 20/20, 85641 25/25, 07866 15/15,
+03255 47/47).
+
+**The card is new, and the reason is the equal-effort rule rather than
+convenience.** `OfficialModal` is the existing large person surface and it
+already carries every slot the moved sections need. It is also built from a
+`SeatHolder`, which comes from the exact-key incumbent join — so **it only
+opens for an incumbent.** Moving the sections there would have deleted a
+CHALLENGER's own words and funding block in every contest while leaving the
+incumbent's. That is not a layout regression; it is `CLAUDE.md`'s "the app can
+say nothing about anyone and still tilt a race", wearing a tidiness argument.
+`CandidateBattlecard` takes children instead, so every candidate gets the
+identical pill opening the identical card, with whatever we actually hold
+inside — including, honestly, very little.
+
+**People only, structurally.** The pill is a slot on `CandidateCard`, and a
+measure renders through the measure path and never reaches that component.
+
+**The reaction and pick controls stay inline, and the decision is recorded
+rather than assumed.** They are not long sections; they have no candidate
+battlecard slot; and burying the revenue path changes what gets captured, which
+`CLAUDE.md`'s "Ask before" list reserves to the author. The tension with
+"reactions are always asked after the explanation" is real, and it is answered
+by the row keeping the sourced line and the blurb above the control with the
+fuller explanation one tap above it.
+
+### The search was reading a different corpus, not an empty one
+
+**Item 13.** The brief offered four causes and it is the third — **a
+differently-shaped record.** This product holds TWO statement corpora:
+
+| file | rows | keyed by | read by |
+|---|---|---|---|
+| `data/corpus/statements.json` | 32 snapshots, 22 subjects | OFFICEHOLDER id | the battlecard's Positions search |
+| `data/candidates/corpus-2026.json` | 96 documents, 49 candidates | CANDIDATE key | the ballot's "in their own words" |
+
+`PositionsSection` was handed a subject id and searched the first. Every
+candidate whose words live only in the second was **absent from the index**, so
+the search answered — honestly, for the corpus it had — *"we haven't collected
+anything they've published"*, four inches below that candidate's published
+words. Nothing was broken; two stores drifted and one surface knew about one.
+
+The index is the UNION now: **32 + 66 = 98 snapshots over 71 subjects, 79
+readable.** The FILES are not merged, and that is deliberate — they are
+append-only evidence stores with different collectors, and rekeying either
+would destroy the guarantee that makes them worth anything.
+
+**Verified with terms DRAWN FROM EACH CANDIDATE'S OWN TEXT**, because a
+hand-picked term would have passed against the broken index — "housing" matches
+nobody when the index lacks the person. **36 of 36 candidates findable**,
+against the ten the brief asked for, including the named one: `mejia` /
+"analilia" → MATCHED, 6 passages.
+
+**And running that verification found a second defect.** A term present in held
+text only inside an UNQUOTABLE block rendered as *"none of their pages mentions
+it"* — a checkable, false claim about a named person, produced by our own
+passage cap. Andy Biggs's house.gov page carries "Mining Engineering" in a
+press-release rail with no full stop in it, so one 1,428-character passage,
+over `PASSAGE_MAX_CHARS`, skipped. **The skip is right** — quoting a link rail
+as somebody's words is RULING 6, and clipping 420 characters out of it breaks a
+word, which is RULING 7. The sentence was not. The count is carried and the
+surface says whose rule produced the silence.
+
+### The enumeration is annotated and buried, and no guard mandated it
+
+**Item 14.** Ninety words under every candidate in every contest. The author's
+ruling: the honesty is right and stays, the volume is wrong. The row carries the
+COUNT; the list sits one tap inside the card behind a summary naming how many
+there are; **the disclaimer is guarded in the same block as the list it
+qualifies**, because without it twelve issue labels under a person's name read
+as a finding about the person. On 07866: 15 annotations on the row, 0
+enumerations on the row, 1 inside the opened card.
+
+**Step 3 answered by measurement, and the brief's premise is wrong.**
+`CLAUDE.md` has **no rule numbered 4g or 4h** — those numbers appear in tracker
+notes and code comments as references to author rulings of 2026-08-17 and name
+no rule in that file. The F01 6.1 guard BANS "gap in our data/research" and
+does not mandate the enumeration; the 6.2 guard pins one sentence in
+`key-votes-section.tsx`. **So nothing was owed and nothing was amended**, and a
+test holds that finding so a later session does not assume one was made.
+
+### Sending a reader away from an answer we already had
+
+**Item 15.** On 07866 the ballot handed the reader off to New Jersey's
+polling-place tool while `data/voting-sites.json` holds **six retrieved,
+sourced, dated voting locations for Rockaway Township**. 2 affordances found, 2
+fixed, both converged on the MAP'S OWN `VotingSitesPanel` — same route, same
+address-is-orientation copy, the map pill's words verbatim. The authority's
+tool still renders below, labelled as leaving, which is item 15's third clause
+and is a real case rather than a hypothetical: 3 of the 44 jurisdictions carry
+a recorded refusal and hold 0 sites.
+
+### The one event a reader could not save
+
+**Item 16.** Enumerated across all three covered states: **13 dated voting
+events, 12 single-day, 1 multi-day window, 0 official phrases. 12 of 13 carried
+the affordance before; 13 of 13 after.** The one that could not was the window
+— and a window is the event a reader most needs in a calendar, because it is
+the one with a window to miss rather than a deadline to remember.
+
+**The second bug was invisible.** "Is it still ahead" was decided by
+`new Date().toISOString().slice(0, 10)` — a UTC day, ahead of Phoenix for the
+seven hours after 5pm — so a step dated TODAY lost its affordance every
+evening. Same family as item 0B and worse, because a reader sees this one.
+
+**Windows emit as all-day date-valued events, which is what makes the DST
+question a non-question.** New Jersey's 10/24 – 11/01 straddles the end of
+Eastern daylight time and 11/01 IS the transition day. `DTSTART;VALUE=DATE:
+20261024` and `DTEND;VALUE=DATE:20261102`, byte-identical for 85701 (Arizona,
+no DST) and 07866 (Eastern), and the last day is not shifted.
+
+### A placeholder that told a New Jersey reader whose product this is
+
+**Item 17.** Swept with the non-skipping tool: **1 found, 1 fixed**, and one
+more examined and ruled OUT of the class rather than left silent ("e.g. 808" is
+a bare house number naming no place). The guard is an **allowlist of one** —
+equality, not a blocklist of towns, because a blocklist is unbounded and one
+that misses a town reads as a pass. It is never geocoded, and that is
+structural: an HTML placeholder on a controlled input can never be the value.
+
+### The four instruments
+
+**Item 0A — the NUL class was three files and session 1's sweep saw one.** A
+repo-wide BYTE scan over all 1,836 tracked files: 942 carry NULs, 940 of them
+images and `.ico` and `.xlsx` — bytes by design — and **2 were source**,
+`lib/meetings/list-attribution.ts` and `lib/signal/aggregate.ts`. **A second
+silent-skip condition had never been recorded at all**: ripgrep skips HIDDEN
+paths, and 11 tracked files sit under dot-prefixed directories, 6 of them
+source-class. Session 1's four sweeps re-run with `git grep -a`: **all four
+counts unchanged**, and neither newly-visible file is a member of any of the
+four classes — proven by running each predicate against them.
+
+**Item 0B — five more copies of the Phoenix formatter.** Every one correct on
+the day it was written, which is the point. The fifth was found by the new test
+rather than by my sweep, because it writes no file and a sweep scoped to
+document-writers missed it.
+
+**And the 37 portraits are accounted for.** 591 rendered = **557
+manifest-drawn + 34 candidate-card**, and **3 of the 37 were a defect in
+`photo-review.mts`** — the three governors render on the who-governs card at
+every zip in their state and the reach map could see neither a `sldl:` seat nor
+a roster key for them. The manifest partition is now 531 + 23 + 3 + 345 = 902,
+and **557 reachable equals 557 drawn exactly**. The ledger closes with no
+residue, which is what says it is closed. Three scripts now share one walk.
+
+**Item 0C — sized, not built** (RULING 12). 347 bodies held; 95 carry a
+homepage URL this census can ask; **252 have none and are NOT a clean result —
+they are bodies the census could not ask.** Of the 95 reached, **2 serve
+primary content as embedded JSON**, both Apptegy. And the larger finding:
+**bodies whose extraction has been verified against rendered page content: 0 of
+347.** No field, no file, no run. The blind spot is not N bodies wide; it is the
+whole registry, because the question has never been asked of any of them.
+
+**Item 0D — the sold table could not say whose traffic a row was.** `run_class`
+and `run_id` on `reactions`, matching the search log's shape, with two
+deliberate differences: the default is **UNKNOWN** and the write path REFUSES
+an undeclared write, because a reaction row is the thing the business sells;
+and the run id is **namespaced and digested**, `sha256("reaction-run:" + id)`,
+against the search log's raw label.
+
+That second one resolved a head-on collision with a guard reading *"run_id on
+both stores would be a join path."* **The guard was right and its conclusion
+was not** — it concluded that the sold table should therefore carry no
+attribution at all. Two columns sharing a NAME and no VALUE SPACE satisfy both;
+the precedent is `intake_limiter`, which `CLAUDE.md` describes doing the
+identical thing against this table's own continuity hash. The guard is AMENDED
+to assert the digest, which is strictly stronger than asserting a column's
+absence. Migration applied to production: **38 rows backfilled UNKNOWN**,
+reconciling.
+
+### Two found in passing, and both were quiet
+
+**A bot-detection interstitial served at HTTP 200 was being recorded as a
+successful read of an empty page** — in `politeGetText`, the one function every
+adapter fetches through. Apptegy's edge does not refuse an unfamiliar client;
+it answers `200 OK` with a 3,036-byte "Client Challenge" page. Measured: curl
+gets 259,887 bytes where undici gets 3,036. **Nothing defeats a challenge** —
+the request is re-issued through the client the host serves unchallenged, which
+is rung 4 as written, and if that is challenged too it THROWS naming the wall.
+The first run of the embedded-JSON census reported **0 of 95 sites clean**
+because of this, and that number is recorded in the ladder because it is the
+exact shape of a false all-clear.
+
+**A malformed tracker record was hiding a duplicate ID from the guard.** `F09`
+ended with no line break before `F10`, fusing them into one 17-field record —
+so the ID reader saw one `F10`, passed, and a genuine byte-identical second
+`F10` row went on standing. The guard now checks field counts too, because a
+broken record boundary defeats an ID check silently.
+
+### What the live walk found, which is the reason it exists
+
+The first run of the new checks against the deployed build found **three
+things, and two of them were the walk's own**: a check that CRASHED rather than
+failing (taking every check after it down), a green rule reported as red
+(Arizona's primary is past, and a past event is correctly not calendar
+material), and a could-not-run that was really a did-not-look. It also found a
+**reader-facing regression this session had just shipped** — item 15 turned two
+polling-place links into two identical pills, which reads worse than the links
+did.
+
+Fixing that last one required a **second code merge, which is a deviation from
+RULING 1 and is reported as one.** Leaving a regression on the deploy until a
+later session was worse than the deviation.
+
+And two standing checks were counting content on a row it had just been moved
+off. `.scale-sep` lives on the FUNDING control, and item 12 moved funding into
+the card — so g3's check printed a NAMED REGRESSION saying a prior session's
+win was undone. **It was not undone.** All twenty cards on 85701 were opened
+and read: the block starts at the sixteenth, Adelita Grijalva, whose card holds
+4 separators. **A check leaves this suite only when the author retires the
+claim behind it**, so the checks follow the surface rather than being deleted —
+deleting either would have been the easy read of a red line and would have
+retired a win nobody decided to retire.
+
+### One thing is deferred, and it is the only one
+
+**`F21`.** The polling-place affordance renders TWICE, because item 6
+(2026-08-15) committed a guard requiring the pointer in the dates header AND
+the checker box, by name. That was written when both were links with different
+surrounding context. I removed one; the suite refused it. Overturning an
+author-directed decision about this page while fixing something else is the
+scope creep order-is-law forbids, so both render, both are the in-app pill, and
+the row states exactly what changes under either answer.
+
+### State as of 2026-08-19 (F01-continued session 2)
+
+* **Code SHAs `1407c53`** (PR #113, merging `2c9e19f`) **and `7d986cb`** (PR
+  #114, merging `1fd1796`) — TWO code merges, the second a reported deviation.
+  Both verified via `/api/build` with a declared synthetic run and
+  `cache-control: no-cache`.
+* **Close-out records `af2f208`** (instrument only — `scripts/walk-all.mts`,
+  no reader-facing byte) **and the commit carrying this block**, which cannot
+  name itself.
+* **`pnpm walk:all` against the live `7d986cb`: 350 passed, 0 regressions, 0
+  could not run.** 350 distinct of 350. Baseline 332 → **added 18, GONE 0.**
+* **Gates:** `pnpm test` **1320 pass / 0 fail** (1281 inherited + 39);
+  `tsc --noEmit` clean; `pnpm lint` **0 errors, 11 allowlisted warnings**;
+  `pnpm build` green in BOTH modes.
+* **Budgets, exact from `scripts/bundle-budget.json`, no ceiling moved:** 1a
+  **196** of 220 · 1b default **927** (Windows local; the Linux CI figure is
+  935) of 1050 · 1b standalone **1130** of 1300 · client raw **2,742,298** and
+  gzip **826,704** against 3,100,000 and 940,000. Inherited was raw 2,742,154
+  and gzip 826,504, so +144 raw and +200 gzip.
+* **PRODUCTION ROWS THIS SESSION CREATED, by run id**, every one declared:
+  `f01c-s2-walk@…05:09:29Z` 103 · `f01c-s2-walk2@…05:23:00Z` 103 ·
+  `f01c-s2-walk3@…05:28:54Z` 102 · `f01c-s2-walk4@…05:33:59Z` 103 ·
+  `f01c-s2-walk4b@…05:38:17Z` 103 · `f01c-s2-walk5@…05:42:31Z` 103. <!-- expected-future: run id labels are UTC instants, one calendar day ahead of the Phoenix date -->
+  **617 rows, all SYNTHETIC, 0 ORGANIC.** The arithmetic closes: 822 synthetic
+  rows landed today, 617 of them this session's and 205 session 1's
+  (`f01c-final` 103 + `f01c-item3` 102). <!-- expected-future: same, session 1's run id labels are UTC instants -->
+* **NO REACTION ROW WAS WRITTEN.** The reactions table holds 38 rows, the same
+  38 it held before the migration. Every reaction tap is excluded from
+  `walk:all` by name — **the brief's premise that `walk:all` taps reactions is
+  wrong**, and the exclusion is printed on every run.
+* **14 ORGANIC search-log rows landed today**, between 17:46 and 18:15 Phoenix.
+  This session's first production request was at 21:0x, more than three hours
+  later, so **none of them is ours.** RULING 9: reported, not investigated.
+* **The organic census: 139.** Session 1 closed at 103. **Delta +36.** RULING
+  9: reported, not investigated.
+* **Screenshots: 6 taken, 3 read as images** — the deployed ballot top, the
+  deployed opened battlecard, and the local after-item-14 battlecard. The three
+  full-page captures were taken and not read as images, and that is said rather
+  than counted.

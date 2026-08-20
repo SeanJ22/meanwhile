@@ -588,7 +588,8 @@ New commands: `pnpm voting-sites:fetch`, `pnpm b14:links`, `pnpm photo:review`,
 Branch `claude/f01-walkthrough-0819`, merged as `a119578` in one PR (#108).
 The author's own voice walkthrough of 2026-08-18 plus twenty-nine screenshots,
 read in full after the F01 brief retired the standing lock on both.
-**55 live items, 52 closed, 10.1 withdrawn by the author, 2 open as data hunts
+**50 live items, 46 closed, 3 stopped at a boundary, 10.1 withdrawn by the
+author, 2 open as data hunts
 (`F02`, `F03`). Screenshots read: 29 of 29.**
 
 ### Where the work landed, by item
@@ -698,3 +699,55 @@ first draft of the clear: a contest holding both an explicit pick and a Yes came
 back EXPLICIT, escaped suppression, and re-derived the Yes the instant the
 explicit file was emptied. The unit tests I had written at that moment all
 passed.
+
+---
+
+## F01-continued session 2 — 2026-08-19
+
+**`main@d913ca8` → code `1407c53` (PR #113) and `7d986cb` (PR #114) → records
+`af2f208` and the state.md commit.** Ten items, ten finished. **F01 closes.**
+
+**Two code merges.** The second is a deviation from RULING 1 and is reported as
+one: the first live walk of the new checks found a reader-facing regression the
+first merge had just shipped, and leaving it until a later session was worse.
+
+**50 live items in F01's own numbering, not 55** — RULING 5, corrected here and
+in the source ladder and state.md.
+
+### The ten
+
+| # | What it was | Ending |
+|---|---|---|
+| 0A | Repo-wide NUL sweep, then re-verify session 1's counts | finished |
+| 0B | photo-census UTC dating, and D50's standing figure | finished |
+| 0C | Size the embedded-JSON blind spot (sizing only, RULING 12) | finished |
+| 0D | `reactions` gets `run_class` and `run_id` | finished |
+| 12 | The battlecard becomes the home for the long sections | finished |
+| 13 | Battlecard positions search returns nothing | finished |
+| 14 | The gap enumeration: annotate and bury | finished |
+| 15 | "Find your polling place" stays in the app | finished |
+| 16 | New Jersey's early-voting window gets a calendar affordance | finished |
+| 17 | The dummy address is `123 Main St, Anywhere, USA` | finished |
+
+**10 finished · 0 boundary · 0 never reached.**
+
+### The numbers
+
+* Ballot scroll at 430×932: 07866 **20,510 → 9,574 px** (22.0 → 10.3 screens),
+  85701 **41,558 → 31,298** (44.6 → 33.6).
+* 107 candidate rows across the four pilot zips, **107 pills, 0 inline**.
+* Positions search: **36 of 36** candidates findable by a term drawn from their
+  own text, against the ten asked for.
+* Dated voting events: **12 of 13 → 13 of 13** carry the calendar affordance.
+* Portraits: **591 rendered = 557 manifest-drawn + 34 candidate-card**, and the
+  manifest partition closes with no residue.
+* `reactions`: **38 rows backfilled UNKNOWN**, 0 organic, reconciling.
+* Embedded JSON: **2 of 95** reachable bodies; **252 bodies could not be
+  asked**; **0 of 347** have had extraction verified against rendered content.
+* `walk:all`: **350 passed, 0 regressions, 0 could not run.** Baseline 332,
+  **added 18, GONE 0**.
+
+### Deferred, and it is the only thing
+
+**`F21`** — two identical polling-place pills, held because item 6's committed
+guard requires the pointer in both places. Needs a sentence from the author.

@@ -171,7 +171,9 @@ test("15: the ballot's polling-place affordance opens the map's own panel", () =
   assert.equal(
     (page.match(/<WhereToVote/g) ?? []).length,
     2,
-    "both polling-place affordances must use the shared component",
+    "both polling-place affordances must use the shared component — item 6 " +
+      "(2026-08-15) committed a guard requiring the pointer in the dates header " +
+      "AND the checker box, so both render and both must be the in-app one",
   );
   // …and neither is a bare external link any more.
   assert.ok(

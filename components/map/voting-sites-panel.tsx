@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { MapPin, X } from "lucide-react";
 
+import { PLACEHOLDER_ADDRESS } from "@/lib/ballot/placeholder-address";
 import {
   directionsUrl,
   isPinnable,
@@ -141,7 +142,7 @@ export function VotingSitesPanel({
           className="voting-panel-input"
           value={address}
           onChange={(e) => setAddress(e.target.value)}
-          placeholder="123 Main St, Tucson, AZ"
+          placeholder={PLACEHOLDER_ADDRESS}
           autoComplete="off"
           inputMode="text"
         />

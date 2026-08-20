@@ -25,15 +25,24 @@ import {
 import { BallotNarrowing } from "@/components/ballot/ballot-narrowing";
 import { photosFirst } from "@/lib/ballot/photo-order";
 import { FilingNote } from "@/components/ballot/filing-note";
+import { CandidateBattlecard } from "@/components/ballot/candidate-battlecard";
 import { CandidateCard } from "@/components/ballot/candidate-card";
-import { CandidatePositions } from "@/components/ballot/candidate-positions";
-import { positionsFor, positionsHeadline } from "@/lib/candidates/positions";
+import {
+  CandidatePositions,
+  CandidatePositionsAnnotation,
+} from "@/components/ballot/candidate-positions";
+import {
+  positionsAnnotation,
+  positionsFor,
+  positionsHeadline,
+} from "@/lib/candidates/positions";
 import { derivedBlurbFor } from "@/lib/candidates/blurbs";
 import { MyPicks } from "@/components/ballot/my-picks";
 import { jurisdictionKeyForContestId } from "@/lib/ballot/pick-jurisdiction";
 import { PickControl } from "@/components/ballot/pick-control";
 import { registrationLinkFor } from "@/lib/ballot/registration-links";
 import { pollingPlaceLinkFor } from "@/lib/ballot/polling-place-links";
+import { WhereToVote } from "@/components/ballot/where-to-vote";
 import { incumbentHolderFor } from "@/lib/ballot/incumbent-record";
 import {
   IncumbentNameLink,
@@ -54,6 +63,11 @@ import {
 import { ReactionControl } from "@/components/reactions/reaction-control";
 import { questionForTargetType } from "@/lib/signal/reactions";
 import { electionDatesFor } from "@/lib/ballot/election-dates";
+import {
+  calendarableSteps,
+  isUpcoming,
+  windowOf,
+} from "@/lib/ballot/dated-events";
 import { AddToCalendar } from "@/components/calendar/add-to-calendar";
 import type {
   BallotAbsence,
@@ -229,8 +243,17 @@ function CandidateFunding({
     return null;
   }
   if (answer.kind === "none") return null;
-  if (answer.kind === "absence") return <FundingAbsence data={answer.data} />;
-  return <FundingDisplay data={answer.data} context={context} />;
+  // Item 12: the wrapper carries the marker `pnpm measure:ballot` counts, so
+  // "the section moved" is a measured claim rather than a described one.
+  return (
+    <div data-candidate-funding>
+      {answer.kind === "absence" ? (
+        <FundingAbsence data={answer.data} />
+      ) : (
+        <FundingDisplay data={answer.data} context={context} />
+      )}
+    </div>
+  );
 }
 
 export default async function BallotPage({
@@ -483,16 +506,42 @@ export default async function BallotPage({
                   </li>
                 )}
                 {earlyStep && (
-                  <li>
+                  <li data-dated-event>
                     {earlyStep.label}:{" "}
                     <span className="font-mono text-[0.8125rem] font-semibold">
-                      {/^\d{4}-\d{2}-\d{2}$/.test(earlyStep.date)
-                        ? formatDateMDY(earlyStep.date)
-                        : earlyStep.date
-                            .split("–")
-                            .map((d) => formatDateMDY(d.trim()))
-                            .join(" – ")}
+                      {formatDateMDY(earlyStep.date)}
                     </span>
+                    {/*
+                      ITEM 16 (2026-08-19): THIS IS THE LINE THE AUTHOR
+                      PHOTOGRAPHED. On 07866 it read
+                      "In-person early voting: 10/24/2026 – 11/01/2026" with
+                      no way to save it, sitting directly beneath an election
+                      day that had one.
+
+                      `formatDateMDY` already converts every ISO token in a
+                      string, so the hand-rolled split on an en dash above it
+                      was doing nothing the shared formatter did not — and it
+                      would have failed on any other separator an authority
+                      published.
+                    */}
+                    {(() => {
+                      const w = windowOf(earlyStep.date);
+                      if (!w || !isUpcoming(w)) return null;
+                      return (
+                        <>
+                          {" "}
+                          <AddToCalendar
+                            event={{
+                              id: `ballot-${set.election.state}-${w.start}-early-voting`,
+                              title: `${earlyStep.label} (${set.election.state})`,
+                              allDayDate: w.start,
+                              allDayEndDate: w.end ?? undefined,
+                              description: earlyStep.detail ?? undefined,
+                            }}
+                          />
+                        </>
+                      );
+                    })()}
                   </li>
                 )}
                 {/* Item 6 (2026-08-15): "where do I vote" beside the dates
@@ -500,19 +549,15 @@ export default async function BallotPage({
                     what it will ask for stated before the tap — a link that
                     demands a driver's licence number on arrival is friction
                     the reader could have been warned about. */}
+                {/* ITEM 15 (2026-08-19): the IN-APP answer, from the same
+                    panel the map pill opens. This was a link OUT to the
+                    state's tool while `data/voting-sites.json` held six
+                    retrieved, sourced, dated voting locations for this
+                    reader's own township. The authority's tool is still
+                    offered, below, labelled as leaving. */}
                 {polls && (
                   <li>
-                    <a
-                      href={polls.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
-                    >
-                      {polls.label} →
-                    </a>{" "}
-                    <span className="text-[0.75rem] text-muted">
-                      on the {polls.sourceOrg}&apos;s site
-                    </span>
+                    <WhereToVote fallback={polls} />
                   </li>
                 )}
               </ul>
@@ -594,24 +639,23 @@ export default async function BallotPage({
               </p>
             )}
             {/* Item 6: the second half of "can I vote, and where" — same
-                block, same weight, the authority's own tool. */}
+                block, same weight.
+
+                ITEM 15 (2026-08-19): and now the same BEHAVIOUR as its
+                neighbour on the map. `WhereToVote` opens the shared panel
+                in-app and carries the authority's own tool below it,
+                labelled as leaving. The note about what that tool will ask
+                for stays: a link that demands a driver's licence number on
+                arrival is friction the reader could have been warned about,
+                and that warning is worth as much now that the link is the
+                second answer rather than the only one. */}
             {polls && (
-              <p className={reg ? "mt-2 text-[0.9375rem]" : "text-[0.9375rem]"}>
-                <a
-                  href={polls.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="font-medium text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
-                >
-                  {polls.label} →
-                </a>{" "}
-                <span className="text-[0.75rem] text-muted">
-                  on the {polls.sourceOrg}&apos;s site
-                </span>
-                <span className="mt-0.5 block text-[0.75rem] leading-relaxed text-voice">
+              <div className={reg ? "mt-2" : undefined}>
+                <WhereToVote fallback={polls} />
+                <p className="mt-0.5 text-[0.75rem] leading-relaxed text-voice">
                   {polls.note}
-                </span>
-              </p>
+                </p>
+              </div>
             )}
           </div>
         ) : null;
@@ -630,31 +674,52 @@ export default async function BallotPage({
             Dates that decide whether you can vote
           </h2>
           <ul className="mt-2.5 space-y-1.5">
-            {dates.steps.map((step) => (
+            {calendarableSteps(dates.steps).map(({ step, window, upcoming }) => (
               <li key={step.label} className="flex items-baseline justify-between gap-3">
                 <span className="text-[0.8125rem]">{step.label}</span>
-                <span className="shrink-0 text-right">
+                <span className="shrink-0 text-right" data-dated-event>
                   <span className="font-mono text-[0.75rem] text-signal">
                     {formatDateMDY(step.date)}
                   </span>
-                  {/* Item 4: every rendered future date is one tap from
-                      the reader's calendar. Range and past dates render
-                      without a link — an event you can no longer act on
-                      isn't calendar material. */}
-                  {/^\d{4}-\d{2}-\d{2}$/.test(step.date) &&
-                    step.date >= new Date().toISOString().slice(0, 10) && (
-                      <>
-                        {" "}
-                        <AddToCalendar
-                          event={{
-                            id: `ballot-${set?.election.state ?? "xx"}-${step.date}-${step.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
-                            title: `${step.label} (${set?.election.state ?? ""})`,
-                            allDayDate: step.date,
-                            description: step.detail ?? undefined,
-                          }}
-                        />
-                      </>
-                    )}
+                  {/*
+                    ITEM 16 (2026-08-19): every dated voting event with a
+                    known date carries the affordance, WINDOWS INCLUDED.
+
+                    This used to read `/^\d{4}-\d{2}-\d{2}$/.test(step.date)`
+                    with a comment saying ranges render without a link — so
+                    New Jersey's in-person early voting, 10/24 through 11/01,
+                    was the one event on the page a reader could not save. It
+                    is also the one with a window to MISS rather than a
+                    deadline to remember.
+
+                    The second half was invisible: `upcoming` used to be
+                    decided by `new Date().toISOString().slice(0, 10)`, a UTC
+                    day, which is AHEAD of Phoenix for the seven hours after
+                    5pm — so a step dated today lost its affordance every
+                    evening. It is decided on the Phoenix wall clock now
+                    (`lib/ballot/dated-events.ts`), and a window counts as
+                    ahead until its LAST day is past.
+
+                    A step whose `date` is an official phrase rather than a
+                    date still gets nothing, and that is right: inventing a
+                    date to make a button possible is the fabrication rule.
+                  */}
+                  {window && upcoming && (
+                    <>
+                      {" "}
+                      <AddToCalendar
+                        event={{
+                          id: `ballot-${set?.election.state ?? "xx"}-${window.start}-${step.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+                          title: `${step.label} (${set?.election.state ?? ""})`,
+                          allDayDate: window.start,
+                          // Inclusive; the exclusive DTEND is computed once,
+                          // in lib/calendar/event-links.ts.
+                          allDayEndDate: window.end ?? undefined,
+                          description: step.detail ?? undefined,
+                        }}
+                      />
+                    </>
+                  )}
                 </span>
               </li>
             ))}
@@ -821,29 +886,79 @@ export default async function BallotPage({
                             }
                           />
                         }
-                      />
-                      {/* P02 + D05 (2026-08-19, g20): their own words, per
-                          issue, sourced. The SAME issue list for every
-                          candidate in the contest — that is the equal-effort
-                          rule made visible, and the header states the
-                          denominator before any count. */}
-                      <CandidatePositions
-                        headline={positionsHeadline(
-                          positionsFor(`${contest.id}|${nominee.name}`),
-                        )}
-                        positions={positionsFor(`${contest.id}|${nominee.name}`)}
-                      />
-                      <IncumbentRecord
-                        targetKey={`${contest.id}|${nominee.name}`}
-                        context={
-                          centroid && zip
-                            ? { zip, lat: centroid.lat, lng: centroid.lng }
-                            : null
+                        /* ITEM 14 (2026-08-19): the ROW carries the count and
+                           never the enumeration. The list, with its
+                           disclaimer, is inside the battlecard below. */
+                        annotationSlot={
+                          <CandidatePositionsAnnotation
+                            annotation={positionsAnnotation(
+                              positionsFor(`${contest.id}|${nominee.name}`),
+                            )}
+                          />
+                        }
+                        /* ITEM 12 (2026-08-19): the long sections moved off
+                           the inline row and into the battlecard. Three of
+                           them — "in their own words", campaign money, and
+                           the incumbent record door — and the ROW now keeps
+                           only portrait, name, party, the short sourced line,
+                           the links row and this pill.
+
+                           The sections are server components handed across
+                           the boundary as children, which is why they are
+                           written here rather than inside the pill. */
+                        battlecardSlot={
+                          <CandidateBattlecard
+                            name={nominee.name}
+                            partyLine={nominee.partyLabel}
+                            subjectId={`${contest.id}|${nominee.name}`}
+                          >
+                            {/* P02 + D05 (2026-08-19, g20): their own words,
+                                per issue, sourced. The SAME issue list for
+                                every candidate in the contest — that is the
+                                equal-effort rule made visible, and the header
+                                states the denominator before any count. */}
+                            <CandidatePositions
+                              headline={positionsHeadline(
+                                positionsFor(`${contest.id}|${nominee.name}`),
+                              )}
+                              positions={positionsFor(`${contest.id}|${nominee.name}`)}
+                            />
+                            <IncumbentRecord
+                              targetKey={`${contest.id}|${nominee.name}`}
+                              context={
+                                centroid && zip
+                                  ? { zip, lat: centroid.lat, lng: centroid.lng }
+                                  : null
+                              }
+                            />
+                            {isFederalContest(contest) && (
+                              <CandidateFunding
+                                targetKey={`${contest.id}|${nominee.name}`}
+                                context={
+                                  centroid && zip
+                                    ? { zip, lat: centroid.lat, lng: centroid.lng }
+                                    : null
+                                }
+                              />
+                            )}
+                          </CandidateBattlecard>
                         }
                       />
                       {/* 3d: reader expression, never a recommendation — the
                           answer is stored and aggregated, never rendered
-                          back, and nothing orders candidates by it. */}
+                          back, and nothing orders candidates by it.
+
+                          STAYS INLINE, and the decision is recorded rather
+                          than assumed. It is not a long section and step 3's
+                          constraint is "nothing long"; it has no battlecard
+                          slot on the candidate path; and moving the revenue
+                          path behind a tap changes WHAT GETS CAPTURED, which
+                          `CLAUDE.md`'s "Ask before" list reserves to the
+                          author. The tension with "reactions are always asked
+                          after the explanation" is real and is answered by
+                          the row keeping the short sourced line and the blurb
+                          above this control, with the fuller explanation one
+                          tap away in the pill directly above it. */}
                       <ReactionControl
                         targetType="CANDIDATE"
                         targetId={`${contest.id}|${nominee.name}`}
@@ -858,16 +973,6 @@ export default async function BallotPage({
                         // appears. The server derives the same set.
                         singleCandidateContest={lineup.nominees.length === 1}
                       />
-                      {isFederalContest(contest) && (
-                        <CandidateFunding
-                          targetKey={`${contest.id}|${nominee.name}`}
-                          context={
-                            centroid && zip
-                              ? { zip, lat: centroid.lat, lng: centroid.lng }
-                              : null
-                          }
-                        />
-                      )}
                     </li>
                   ))}
                 </ul>
@@ -947,24 +1052,54 @@ export default async function BallotPage({
                               }
                             />
                           }
-                        />
-                        {/* P02 + D05, the filed-candidate side. Identical
-                            call, identical issue list — a build where the
-                            two sides could diverge would produce a ranking
-                            by accident. */}
-                        <CandidatePositions
-                          headline={positionsHeadline(positionsFor(cand.id))}
-                          positions={positionsFor(cand.id)}
-                        />
-                        <IncumbentRecord
-                          targetKey={cand.id}
-                          context={
-                            centroid && zip
-                              ? { zip, lat: centroid.lat, lng: centroid.lng }
-                              : null
+                          /* ITEM 14: the identical annotation on this side.
+                             Both branches or neither — a build where one
+                             carried the count and the other the enumeration
+                             would be a ranking by layout. */
+                          annotationSlot={
+                            <CandidatePositionsAnnotation
+                              annotation={positionsAnnotation(positionsFor(cand.id))}
+                            />
+                          }
+                          /* ITEM 12: the identical move on the filed-candidate
+                             side. The two branches must carry the same
+                             sections in the same order — a build where they
+                             could diverge would produce a ranking by
+                             accident, which is the note the positions call
+                             already carried and applies to the whole card. */
+                          battlecardSlot={
+                            <CandidateBattlecard
+                              name={`${cand.givenName} ${surnameDisplayCase(cand.familyName)}`}
+                              partyLine={cand.partyLabel ?? "No party label filed"}
+                              subjectId={cand.id}
+                            >
+                              <CandidatePositions
+                                headline={positionsHeadline(positionsFor(cand.id))}
+                                positions={positionsFor(cand.id)}
+                              />
+                              <IncumbentRecord
+                                targetKey={cand.id}
+                                context={
+                                  centroid && zip
+                                    ? { zip, lat: centroid.lat, lng: centroid.lng }
+                                    : null
+                                }
+                              />
+                              {isFederalContest(contest) && (
+                                <CandidateFunding
+                                  targetKey={cand.id}
+                                  context={
+                                    centroid && zip
+                                      ? { zip, lat: centroid.lat, lng: centroid.lng }
+                                      : null
+                                  }
+                                />
+                              )}
+                            </CandidateBattlecard>
                           }
                         />
-                        {/* 3d: reader expression, never a recommendation. */}
+                        {/* 3d: reader expression, never a recommendation.
+                            Stays inline — see the note on the lineup branch. */}
                         <ReactionControl
                           targetType="CANDIDATE"
                           targetId={cand.id}
@@ -981,16 +1116,6 @@ export default async function BallotPage({
                             candidatesOf(set, contest).length === 1
                           }
                         />
-                        {isFederalContest(contest) && (
-                          <CandidateFunding
-                            targetKey={cand.id}
-                            context={
-                              centroid && zip
-                                ? { zip, lat: centroid.lat, lng: centroid.lng }
-                                : null
-                            }
-                          />
-                        )}
                       </li>
                     ))}
                   </ul>

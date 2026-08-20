@@ -271,6 +271,7 @@ const fundingRow = {
   scaleVersion: 2 as const,
   ocdIds: ["ocd-division/country:us/state:az"],
   verificationTier: "ANONYMOUS" as const,
+  runClass: "ORGANIC" as const,
 };
 /**
  * A contributions answer collected TODAY — v3 since g3 (2026-08-16).
@@ -1567,6 +1568,7 @@ test("D06: planted contributor-level data reaches no sold aggregate", async () =
     scaleVersion: 3 as const,
     ocdIds: ["ocd-division/country:us/state:az"],
     verificationTier: "ANONYMOUS" as const,
+    runClass: "ORGANIC" as const,
     // Everything a contributor row carries, handed straight to the
     // aggregator the way a careless read path would hand it over.
     contributorName: "PLANTED-CONTRIBUTOR-SENTINEL-g19, JANE",

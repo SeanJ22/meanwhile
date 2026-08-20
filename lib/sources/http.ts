@@ -140,6 +140,50 @@ async function curlGetText(
 }
 
 /**
+ * **A bot-detection interstitial served with HTTP 200.** (F01-continued
+ * session 2, item 0C, 2026-08-19.)
+ *
+ * The browser rung above escalates to a different TLS stack on a **403**. It
+ * had never been asked what to do about a **200** — and Apptegy's edge does
+ * not refuse an unfamiliar client, it answers it with a 3 KB page titled
+ * "Client Challenge" and a `200 OK`. Every layer above then behaved
+ * perfectly: the fetch succeeded, the parse succeeded, the extraction found
+ * no content because there was none, and the body was recorded as a page that
+ * says nothing.
+ *
+ * That is `CLAUDE.md`'s "an operation that can return nothing must be asked
+ * what it returned" and "a failed fetch never silently empties a previously
+ * full surface", both landing in the ONE function every adapter fetches
+ * through. It is also the fifth sighting of the shape.
+ *
+ * **Nothing here defeats a challenge.** These signatures cause the request to
+ * be re-issued through `curl` — the same rung 4 the 403 path already uses,
+ * and the same public page: the host serves the real 260 KB document to that
+ * client with no challenge, no token, and no authentication. If the second
+ * client is challenged too, the retrieval is reported as a FAILURE naming the
+ * wall, which is the whole point — a challenge page must never be mistaken
+ * for a body that publishes nothing.
+ */
+const CHALLENGE_SIGNATURES: readonly { name: string; test: RegExp }[] = [
+  { name: "Fastly/Imperva client challenge", test: /<title>\s*Client Challenge\s*<\/title>/i },
+  { name: "Cloudflare interstitial", test: /cdn-cgi\/challenge-platform|cf-browser-verification/i },
+  { name: "Cloudflare 'just a moment'", test: /<title>\s*Just a moment\.\.\.\s*<\/title>/i },
+  { name: "browser check", test: /Checking your browser before accessing/i },
+  { name: "Cloudflare attention-required", test: /Attention Required!\s*\|\s*Cloudflare/i },
+  { name: "Imperva/Incapsula", test: /_Incapsula_Resource|Incapsula incident ID/i },
+  { name: "PerimeterX", test: /px-captcha|PerimeterX/i },
+];
+
+/** The named wall, or null when the body is a real page. */
+export function challengeIn(text: string): string | null {
+  // Only worth asking of a SHORT body. A real 260 KB article that happens to
+  // quote the phrase "Checking your browser" is a page, not a wall, and a
+  // signature check with no size floor would refuse it.
+  if (text.length > 20_000) return null;
+  return CHALLENGE_SIGNATURES.find((s) => s.test.test(text))?.name ?? null;
+}
+
+/**
  * One polite GET returning the body as text. Retries 429 and 5xx a small
  * number of times, honouring `Retry-After`; everything else fails immediately.
  */
@@ -162,11 +206,35 @@ export async function politeGetText(
     lastStatus = response.status;
 
     if (response.ok) {
-      return {
-        status: response.status,
-        contentType: response.headers.get("content-type") ?? "",
-        text: await response.text(),
-      };
+      const text = await response.text();
+      const wall = challengeIn(text);
+      if (!wall) {
+        return {
+          status: response.status,
+          contentType: response.headers.get("content-type") ?? "",
+          text,
+        };
+      }
+      // A 200 that is not the page. Step to the other client — same rung as
+      // the 403 path — and if that is challenged too, say so out loud rather
+      // than handing an empty document upward as a successful read.
+      if (browser && !options.fetchImpl) {
+        const viaCurl = await curlGetText(url, headers);
+        const stillWalled = challengeIn(viaCurl.text);
+        if (!stillWalled) return viaCurl;
+        throw new SourceHttpError(
+          `${stillWalled} at ${url} — HTTP 200 carrying a challenge page rather ` +
+            "than the document, on both clients. This is a WALL, not an empty page.",
+          response.status,
+          url,
+        );
+      }
+      throw new SourceHttpError(
+        `${wall} at ${url} — HTTP 200 carrying a challenge page rather than the ` +
+          "document. This is a WALL, not an empty page.",
+        response.status,
+        url,
+      );
     }
 
     // The browser rung's second half: an in-process refusal is not the

@@ -40,6 +40,7 @@ test("aggregation: reactions in, per-division tier-split tallies out, n stated",
       reaction: "YES" as const,
       ocdIds: ["ocd-division/country:us/state:az", "ocd-division/country:us/state:az/cd:7"],
       verificationTier: "ANONYMOUS" as const,
+      runClass: "ORGANIC" as const,
     },
     {
       targetType: "FEDERAL_VOTE" as const,
@@ -47,6 +48,7 @@ test("aggregation: reactions in, per-division tier-split tallies out, n stated",
       reaction: "NO" as const,
       ocdIds: ["ocd-division/country:us/state:az/cd:7"],
       verificationTier: "ANONYMOUS" as const,
+      runClass: "ORGANIC" as const,
     },
     {
       targetType: "FEDERAL_VOTE" as const,
@@ -54,6 +56,7 @@ test("aggregation: reactions in, per-division tier-split tallies out, n stated",
       reaction: "UNSURE" as const,
       ocdIds: ["ocd-division/country:us/state:az/cd:7"],
       verificationTier: "LOCALITY_VERIFIED" as const,
+      runClass: "ORGANIC" as const,
     },
   ];
 
@@ -82,6 +85,7 @@ test("aggregation: every tier appears in every tally — the confidence mix is v
       reaction: "YES",
       ocdIds: ["ocd-division/country:us/state:nh"],
       verificationTier: "ANONYMOUS",
+      runClass: "ORGANIC" as const,
     },
   ]);
   assert.equal(tallies.length, 1);
@@ -109,6 +113,7 @@ test("aggregation: duplicate division ids on one row never double-count", () => 
       reaction: "YES",
       ocdIds: ["ocd-division/country:us/state:az", "ocd-division/country:us/state:az"],
       verificationTier: "ANONYMOUS",
+      runClass: "ORGANIC" as const,
     },
   ]);
   assert.equal(tallies.length, 1);
@@ -123,6 +128,7 @@ test("aggregation output carries no ranking vocabulary and no identifier", () =>
       reaction: "YES",
       ocdIds: ["ocd-division/country:us/state:az"],
       verificationTier: "ANONYMOUS",
+      runClass: "ORGANIC" as const,
     },
   ]);
   const forbidden = /score|rank|rating|match|fit|grade|alignment|recommend|key|hash|user|device/;
@@ -235,6 +241,7 @@ test("a missing database is a quiet false, never a throw or a fake success", asy
       reaction: "YES",
       reactionKey: "0123456789abcdef0123456789abcdef",
       ocdIds: [],
+      marker: { runClass: "SYNTHETIC", runId: "reactions-test" },
     });
     assert.equal(stored, false);
   } finally {
@@ -686,6 +693,7 @@ test("aggregates never mix scales, and the break is dated", () => {
     targetId: target,
     ocdIds,
     verificationTier: "ANONYMOUS" as const,
+    runClass: "ORGANIC" as const,
   };
 
   const tallies = aggregateReactions([
@@ -924,6 +932,7 @@ test("P03: a planted verbatim reaches no aggregate — the input type has no roo
     reaction: "YES",
     ocdIds: ["ocd-division/country:us/state:az"],
     verificationTier: "ANONYMOUS",
+    runClass: "ORGANIC" as const,
     // The extra field IS the test: this is what a careless caller would
     // hand the aggregator if the read path ever selected the column. The
     // cast is required precisely because the interface has no room for it,

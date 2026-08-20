@@ -4307,6 +4307,229 @@ for (const zip of ["85701", "03255"]) {
   }
 }
 
+
+// ═══════════════════════════════════════════════════════════════════════════
+// F01C2. The battlecard, the positions search, the calendar and the placeholder
+// ═══════════════════════════════════════════════════════════════════════════
+
+section("F01C2. Items 12-17 on the deploy (F01-continued session 2, 2026-08-19)");
+
+/*
+ * Four items land here, and all four were invisible from the source and
+ * obvious from a phone. Read-only: nothing below taps a reaction, submits an
+ * ask, or writes any row. Opening a battlecard and typing in its search box
+ * are both client-side; the positions search is a GET.
+ *
+ * ITEM 12 — the long sections moved into the battlecard, so the ballot stopped
+ * being a forever scroll. Measured at 430x932: 07866 went 20,510 px to 9,574,
+ * 85701 went 41,558 to 31,298.
+ *
+ * ITEM 13 — the battlecard's positions search read the officeholder-keyed
+ * corpus while the candidate's own words live in the candidate-keyed one, so
+ * a search for a term printed on the card returned "we haven't collected
+ * anything they've published".
+ *
+ * ITEM 14 — the twelve-issue enumeration ran under every candidate. The row
+ * carries the count now and the list is one tap inside the card.
+ *
+ * ITEM 16 — every dated voting event carries an add-to-calendar affordance,
+ * WINDOWS INCLUDED. New Jersey's in-person early voting, 10/24 to 11/01, was
+ * the one event on the page a reader could not save.
+ */
+for (const zip of ["07866", "85701"]) {
+  const context = await browser.context({
+    extraHTTPHeaders: RUN_HEADERS,
+    viewport: PHONE,
+    reducedMotion: "reduce",
+  });
+  const page = await context.newPage();
+  page.on("response", (r) => countProbe(r.url()));
+  try {
+    await page.goto(`${BASE}/ballot?zip=${zip}`, {
+      waitUntil: "domcontentloaded",
+      timeout: 90_000,
+    });
+    await untilInteractive(page, "[data-battlecard-pill]", 15_000);
+
+    const rows = await page.locator(".candidate-row").count();
+    const pills = await page.locator("[data-battlecard-pill]").count();
+    if (rows === 0) {
+      cannotRun("F01C2", `${zip}: every candidate row carries a battlecard pill`, "no candidate rows on the page");
+      continue;
+    }
+
+    // ITEM 12: equal effort is the point of the count. One pill per row, or
+    // some candidates are better rendered than others.
+    check(
+      "F01C2",
+      `${zip}: every candidate row carries a battlecard pill`,
+      pills === rows,
+      `${pills} pills for ${rows} rows`,
+    );
+
+    // ITEM 14: the row carries the count and NEVER the enumeration.
+    const onRow = (await page.evaluate(
+      `(() => ({
+         annotations: document.querySelectorAll('[data-gap-annotation]').length,
+         enumerations: document.querySelectorAll('[data-gap-enumeration]').length,
+       }))()`,
+    )) as { annotations: number; enumerations: number };
+    check(
+      "F01C2",
+      `${zip}: the ballot row carries the count, not the twelve-issue list`,
+      onRow.annotations > 0 && onRow.enumerations === 0,
+      `${onRow.annotations} annotations, ${onRow.enumerations} enumerations on the row`,
+    );
+
+    // ITEM 16: every dated voting event with a known date is one tap from a
+    // calendar. A window is the event a reader most needs there.
+    const dated = (await page.evaluate(
+      `(() => {
+         const rows = Array.from(document.querySelectorAll('[data-dated-event]'));
+         return rows.map((r) => ({
+           text: (r.textContent || '').trim().slice(0, 80),
+           hasButton: Boolean(r.querySelector('button')),
+           isWindow: /\\d{2}\\/\\d{2}\\/\\d{4}\\s*[-\\u2013\\u2014]\\s*\\d{2}\\/\\d{2}\\/\\d{4}/.test(r.textContent || ''),
+         }));
+       })()`,
+    )) as { text: string; hasButton: boolean; isWindow: boolean }[];
+    if (dated.length === 0) {
+      cannotRun("F01C2", `${zip}: every dated voting event can be calendared`, "no [data-dated-event] on the page");
+    } else {
+      const missing = dated.filter((d) => !d.hasButton);
+      check(
+        "F01C2",
+        `${zip}: every dated voting event can be calendared`,
+        missing.length === 0,
+        missing.length === 0
+          ? `${dated.length} dated events, all with the affordance`
+          : `${missing.length} of ${dated.length} without: ${missing.map((m) => m.text).join(" | ")}`,
+      );
+      const windows = dated.filter((d) => d.isWindow);
+      check(
+        "F01C2",
+        `${zip}: a multi-day window carries the affordance too`,
+        windows.every((w) => w.hasButton),
+        `${windows.length} window(s) rendered${windows.length ? `: ${windows.map((w) => w.text).join(" | ")}` : " — none on this zip, which is not a failure"}`,
+      );
+    }
+
+    // ITEM 12/13: open the first battlecard and read what is inside it.
+    await page.locator("[data-battlecard-pill]").first().scrollIntoViewIfNeeded();
+    await page.locator("[data-battlecard-pill]").first().click();
+    const opened = await untilInteractive(page, "[data-candidate-battlecard]", 10_000);
+    if (!opened) {
+      cannotRun("F01C2", `${zip}: the battlecard opens and holds the moved sections`, "the card never opened");
+      continue;
+    }
+
+    const inside = (await page.evaluate(
+      `(() => {
+         const card = document.querySelector('[data-candidate-battlecard]');
+         if (!card) return null;
+         return {
+           positions: card.querySelectorAll('[data-candidate-positions]').length,
+           enumerations: card.querySelectorAll('[data-gap-enumeration]').length,
+           search: card.querySelectorAll('[data-positions-search]').length,
+         };
+       })()`,
+    )) as { positions: number; enumerations: number; search: number } | null;
+    check(
+      "F01C2",
+      `${zip}: the battlecard holds the sections the row gave up`,
+      Boolean(inside && inside.positions > 0),
+      inside ? `positions ${inside.positions}, enumerations ${inside.enumerations}` : "no card",
+    );
+
+    /*
+     * ITEM 13's walk check, and it is the one the brief asks for by name: a
+     * battlecard holding positions must not return zero hits for a term drawn
+     * from its OWN positions text.
+     *
+     * The term is READ OFF THE CARD rather than chosen here. A hand-picked
+     * term would have passed against the broken index — "housing" matches
+     * nobody when the index does not contain the person — and that is exactly
+     * how this shipped.
+     */
+    const term = (await page.evaluate(
+      `(() => {
+         const card = document.querySelector('[data-candidate-battlecard]');
+         if (!card) return null;
+         const quotes = Array.from(card.querySelectorAll('blockquote, [data-candidate-positions] li'));
+         const text = quotes.map((q) => q.textContent || '').join(' ');
+         const words = (text.toLowerCase().match(/[a-z]{6,14}/g) || []);
+         const counted = new Map();
+         for (const w of words) counted.set(w, (counted.get(w) || 0) + 1);
+         const best = Array.from(counted.entries()).sort((a, b) => b[1] - a[1])[0];
+         return best ? best[0] : null;
+       })()`,
+    )) as string | null;
+
+    if (!term) {
+      cannotRun(
+        "F01C2",
+        `${zip}: the positions search finds a term from the card's own text`,
+        "this card holds no quoted positions text to draw a term from — not a zero result",
+      );
+    } else {
+      await page.locator("[data-positions-search]").first().fill(term);
+      const answered = await untilText(page, /last checked|none of them mentions|only inside a block|could not read/i, 12_000);
+      const got = (await page.evaluate(
+        `(() => {
+           const card = document.querySelector('[data-candidate-battlecard]');
+           if (!card) return null;
+           const el = card.querySelector('[data-positions-answer]');
+           return el ? el.getAttribute('data-positions-answer') : 'NONE';
+         })()`,
+      )) as string | null;
+      check(
+        "F01C2",
+        `${zip}: the positions search finds a term from the card's own text`,
+        answered && got === "MATCHED",
+        `term "${term}" -> ${got ?? "no answer element"}`,
+      );
+    }
+
+    // ITEM 15/17: the polling-place affordance stays in the app, and its
+    // placeholder names no region.
+    await page.keyboard.press("Escape");
+    const where = await page.locator("[data-where-to-vote-pill]").count();
+    check(
+      "F01C2",
+      `${zip}: the polling-place affordance is an in-app pill, not a link out`,
+      where > 0,
+      `${where} in-app pill(s)`,
+    );
+    if (where > 0) {
+      await page.locator("[data-where-to-vote-pill]").first().scrollIntoViewIfNeeded();
+      await page.locator("[data-where-to-vote-pill]").first().click();
+      const panel = await untilInteractive(page, ".voting-panel-input", 10_000);
+      if (!panel) {
+        cannotRun("F01C2", `${zip}: the in-app voting panel opens on the ballot`, "the panel never appeared");
+      } else {
+        const placeholder = await page
+          .locator(".voting-panel-input")
+          .first()
+          .getAttribute("placeholder");
+        check(
+          "F01C2",
+          `${zip}: the in-app voting panel opens on the ballot`,
+          true,
+          "the same panel the map pill opens",
+        );
+        check(
+          "F01C2",
+          `${zip}: the placeholder address names no region`,
+          placeholder === "123 Main St, Anywhere, USA",
+          `placeholder is "${placeholder}"`,
+        );
+      }
+    }
+  } finally {
+    await context.close();
+  }
+}
+
 await browser.close();
 
 const EXCLUDED = [

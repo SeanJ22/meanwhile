@@ -134,3 +134,46 @@ export function positionsHeadline(positions: readonly IssuePosition[]): string {
     `${summary.issuesWithPassages} of them, in their words below.`
   );
 }
+
+/**
+ * **The ballot row's annotation: the COUNT, never the enumeration.**
+ * (F01-continued session 2, item 14, 2026-08-19.)
+ *
+ * The author's finding: every person's "in their own words" ended with the
+ * full twelve-issue list — *"Nothing in the pages we hold from them mentions
+ * housing costs and homebuilding, health care and prescription costs, schools
+ * and education funding, taxes, immigration and the border, abortion and
+ * reproductive rights, guns, energy and the climate, water, veterans, Social
+ * Security and retirement, jobs and wages."* His ruling: **the honesty is
+ * right and stays; the volume is wrong. Annotate and bury.**
+ *
+ * Both halves matter and they pull in opposite directions. The enumeration is
+ * `CLAUDE.md`'s fourth friction exception — honesty about coverage gaps,
+ * which may never be smoothed into implied completeness — so it may not be
+ * deleted. It is also ninety words repeated under every candidate in a
+ * contest, which is the forever scroll item 12 measured.
+ *
+ * So the row gets the number and the battlecard gets the list. This sentence
+ * is the number: it states the denominator, states how many were found, and
+ * says where the rest is. **It never implies completeness** — "we searched
+ * 12 and found 2" cannot be read as "they have two positions", which is the
+ * thing the enumeration was protecting against.
+ *
+ * `positionsHeadline` above stays as it is: it renders INSIDE the battlecard,
+ * where "in their words below" is still true.
+ */
+export function positionsAnnotation(positions: readonly IssuePosition[]): string {
+  const summary = positionsSummary(positions);
+  if (summary.nothingCollected) {
+    return (
+      "We haven't collected anything this candidate has published yet — " +
+      "that's about our research, not about them. Their battlecard has the detail."
+    );
+  }
+  const { issuesSearched, issuesWithPassages } = summary;
+  return (
+    `Their own pages mention ${issuesWithPassages} of the ${issuesSearched} issues ` +
+    `we check for every candidate in this contest. ` +
+    `Which ones, in their words, is on their battlecard.`
+  );
+}

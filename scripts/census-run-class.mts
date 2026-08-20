@@ -85,7 +85,16 @@ interface CensusRow {
 
 const n = (v: string | number) => Number(v);
 
-async function censusOf(table: "search_log" | "feedback") {
+/**
+ * Which column dates a row, per table. `reactions` joined 2026-08-19 (item
+ * 0D) and dates on `occurred_at` like the search log; `feedback` is the odd
+ * one with `received_at`. Named in ONE place, because a per-call ternary is
+ * how the third table quietly gets the second table's column.
+ */
+const timeColumn = (table: "search_log" | "feedback" | "reactions") =>
+  table === "feedback" ? "received_at" : "occurred_at";
+
+async function censusOf(table: "search_log" | "feedback" | "reactions") {
   const rows = (await sql`
     SELECT
       COUNT(*) FILTER (WHERE run_class = 'ORGANIC')   AS organic,
@@ -107,7 +116,7 @@ async function censusOf(table: "search_log" | "feedback") {
 
 let failed = false;
 
-for (const table of ["search_log", "feedback"] as const) {
+for (const table of ["search_log", "feedback", "reactions"] as const) {
   console.log(`── ${table} ──`);
   let c;
   try {
@@ -147,15 +156,15 @@ for (const table of ["search_log", "feedback"] as const) {
   }
   const runs = (await sql`
     SELECT run_id, run_class, COUNT(*) AS rows,
-           MIN(${sql.unsafe(table === "search_log" ? "occurred_at" : "received_at")}) AS first_at,
-           MAX(${sql.unsafe(table === "search_log" ? "occurred_at" : "received_at")}) AS last_at
+           MIN(${sql.unsafe(timeColumn(table))}) AS first_at,
+           MAX(${sql.unsafe(timeColumn(table))}) AS last_at
     FROM ${sql.unsafe(table)}
     WHERE run_class <> 'ORGANIC'
       AND (${since ?? null}::text IS NULL
-           OR ${sql.unsafe(table === "search_log" ? "occurred_at" : "received_at")}
+           OR ${sql.unsafe(timeColumn(table))}
               >= ${since ?? null}::timestamptz)
     GROUP BY run_id, run_class
-    ORDER BY MAX(${sql.unsafe(table === "search_log" ? "occurred_at" : "received_at")}) DESC
+    ORDER BY MAX(${sql.unsafe(timeColumn(table))}) DESC
   `) as RunRow[];
 
   console.log(`\n  non-organic rows by run id: ${runs.length} distinct run(s)`);

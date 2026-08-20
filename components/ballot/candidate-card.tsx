@@ -35,6 +35,8 @@ export function CandidateCard({
   links,
   filedSiteUrl,
   nameSlot,
+  battlecardSlot,
+  annotationSlot,
   derivedBlurb,
 }: {
   /**
@@ -59,6 +61,35 @@ export function CandidateCard({
    * rather than becoming a link onto an empty card.
    */
   nameSlot?: React.ReactNode;
+  /**
+   * **The battlecard pill** — F01-continued session 2, item 12, 2026-08-19.
+   *
+   * Rendered directly beneath the links row, full width of the ballot
+   * column. A ReactNode for the same reason `nameSlot` is one: the pill is a
+   * client component and this card is a server component, and a function
+   * cannot cross that boundary.
+   *
+   * **PEOPLE ONLY**, and the distinction is structural rather than a
+   * condition anybody has to remember. This slot exists on the CANDIDATE
+   * card, and the candidate card is the component the ballot renders for a
+   * person — a nominee or a filed candidacy. A ballot measure never reaches
+   * this component at all: it renders through the measure path, with its
+   * provisions and its own reaction targets. So a measure cannot grow a
+   * "View Battlecard" pill by being forgotten about; it would have to be
+   * given one deliberately, by passing it a component built for people.
+   * `tests/candidate-battlecard.test.ts` holds that line.
+   */
+  battlecardSlot?: React.ReactNode;
+  /**
+   * **The positions annotation** — item 14, 2026-08-19. The COUNT, never the
+   * enumeration.
+   *
+   * It renders directly above the pill, so the reader meets the number and
+   * then the door to the detail behind it, in that order. The full list —
+   * and the "as we read them, not a statement about what they think" clause
+   * that must travel with it — lives inside the battlecard.
+   */
+  annotationSlot?: React.ReactNode;
   /** Party label (and slogan where filed), already formatted by the caller. */
   partyLine: React.ReactNode;
   card: CandidateCardData | null;
@@ -224,6 +255,14 @@ export function CandidateCard({
             {THIN_CANDIDATE_LINE}
           </p>
         )}
+
+        {annotationSlot}
+
+        {/* Item 12: directly beneath the links row, and beneath the thin
+            line where there is one — a candidate we hold little about still
+            gets the same door, because the pill is where the long sections
+            went and a card without one would simply have lost them. */}
+        {battlecardSlot}
       </div>
     </div>
   );

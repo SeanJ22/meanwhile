@@ -210,7 +210,21 @@ test("D35: the surface renders three different sentences, in the gap's own regis
   }
 
   // The two gaps say WHOSE gap they are, in different words.
-  assert.match(surface, /it is not a statement that \{subjectName\} has no\s*\n?\s*position on it/);
+  //
+  // The whitespace is `\s+` rather than a fixed wrap since 2026-08-19 (item
+  // 13). The sentence moved into a branch when the surface learned to
+  // distinguish "their pages don't mention it" from "it IS on their page,
+  // inside a block we won't quote", so it re-indented — and a guard pinned to
+  // a wrap depth fails on a reformat while passing on a deletion, which is
+  // the wrong way round. What is guarded is the SENTENCE.
+  assert.match(
+    surface,
+    /it is not a statement that(\{" "\}|\s)+\{subjectName\}\s+has no\s+position on it/,
+  );
+
+  // …and the third sentence that branch produces, which is a claim about OUR
+  // passage rules and must never collapse into either of the other two.
+  assert.match(surface, /only inside a block we\s+won&apos;t quote from/);
   assert.match(surface, /We haven&apos;t collected anything \{subjectName\} has published/);
 
   // A failed retrieval is reported as a failed retrieval — never as an

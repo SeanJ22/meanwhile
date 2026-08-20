@@ -24,27 +24,14 @@ import { fileURLToPath } from "node:url";
 // `pnpm stamp` exists to stop. The day comes from the one module that knows
 // the zone, exactly as `pnpm stamp` does.
 import { today } from "./doc-dates.mjs";
-import { BALLOT_FILES, COVERED, rosterFile } from "../lib/coverage/artifacts.ts";
-import { BODY_ROSTERS } from "../lib/registry/body-rosters.ts";
-import { STATEWIDE_EXECUTIVES } from "../lib/officials/statewide-executives.ts";
+import { photoSlots, type PhotoSlot } from "../lib/coverage/photo-slots.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (p: string) => JSON.parse(readFileSync(join(ROOT, p), "utf8"));
 
-interface PersonRow {
-  surface: string;
-  state: string;
-  name: string;
-  hasPortrait: boolean;
-  /** Where the portrait (or its absence) is recorded. */
-  note: string | null;
-}
-
-const people: PersonRow[] = [];
-
-// ── The photo manifest — the single source for official portraits ───────
-// Every surface with a stable officeholder-style id resolves through it,
-// so the census reflects whatever actually ships, tier by tier.
+// The manifest itself is still read here: the sections below tabulate every
+// shipped row and every recorded absence, which is a MANIFEST question and
+// not a slot one.
 const manifest = read("lib/registry/official-photos.json") as {
   photos: {
     officeholderId: string;
@@ -55,172 +42,15 @@ const manifest = read("lib/registry/official-photos.json") as {
   }[];
   missing: { officeholderId: string; name: string; reason: string }[];
 };
-const shippedIds = new Set(
-  manifest.photos.filter((p) => p.license).map((p) => p.officeholderId),
-);
 
-// ── The covered division universe — what can actually render ────────────
-const registry = read("lib/registry/registry.json") as {
-  divisions: { ocdId: string }[];
-};
-const coveredOcdIds = new Set(registry.divisions.map((d) => d.ocdId));
+// F01-continued session 2, item 0B: the five-surface walk this file used to
+// carry verbatim now lives in `lib/coverage/photo-slots.ts`, because
+// `photo-review.mts` and `photo-reconcile.mts` need exactly the same walk
+// and three copies of it is three ways for the portrait figures to disagree
+// — which is precisely what left 37 portraits unaccounted for.
+type PersonRow = PhotoSlot & { surface: string };
 
-function stateOfOcdId(ocdId: string): string {
-  const m = /state:(\w\w)/.exec(ocdId);
-  return m ? m[1].toUpperCase() : "??";
-}
-
-// ── Surface 1: ballot candidates (cards + lineup nominees) ──────────────
-const cardsFile = read("data/ballot/candidate-cards-2026.json") as {
-  cards: Record<string, { photoUrl: string | null }>;
-};
-
-// BALLOT_FILES comes from the coverage manifest since AUD-06 (g18).
-for (const { file, state } of BALLOT_FILES) {
-  const data = read(`data/ballot/${file}`) as {
-    candidacies: { id: string; familyName: string; givenName: string }[];
-  };
-  for (const cand of data.candidacies) {
-    const card = cardsFile.cards[cand.id];
-    people.push({
-      surface: "ballot candidates",
-      state,
-      name: `${cand.givenName} ${cand.familyName}`,
-      hasPortrait: Boolean(card?.photoUrl),
-      note: card
-        ? card.photoUrl
-          ? null
-          : "curated card, photo fell to initials (recorded hunt)"
-        : "no curated card — renders initials",
-    });
-  }
-}
-const lineup = read("data/ballot/az-general-lineup-2026.json") as {
-  contests: { contestId: string; nominees: { name: string }[] }[];
-};
-// Lineup nominees render on the AZ ballot surface; a nominee who is also
-// a candidacy (the governor's race) must not be double-counted.
-const candidacyNames = new Set(
-  people.filter((p) => p.surface === "ballot candidates").map((p) => p.name),
-);
-for (const contest of lineup.contests) {
-  for (const nominee of contest.nominees) {
-    if (candidacyNames.has(nominee.name)) continue;
-    const cardKey = `${contest.contestId}|${nominee.name}`;
-    const card = cardsFile.cards[cardKey];
-    people.push({
-      surface: "ballot candidates",
-      state: "AZ",
-      name: nominee.name,
-      hasPortrait: Boolean(card?.photoUrl),
-      note: card?.photoUrl ? null : "lineup nominee — renders initials",
-    });
-  }
-}
-
-// ── Surface 2: federal roster officials (map popups, official modal) ────
-const us = read("lib/registry/officeholders-us.json") as {
-  officeholders: { id: string; name: string }[];
-  divisions: { officeholderId: string; ocdId: string }[];
-};
-const usRendered = new Map<string, string>(); // id -> state
-// House members render through the NATIONAL congressional-district layer
-// (every cd division rides the registry), so all attached House members
-// are genuinely renderable via district popups anywhere on the map.
-for (const d of us.divisions) {
-  if (coveredOcdIds.has(d.ocdId)) {
-    usRendered.set(d.officeholderId, stateOfOcdId(d.ocdId));
-  }
-}
-// Senators attach to state-root divisions, which the registry does not
-// carry — they render through coverage.senators, resolved for the states
-// the registry covers at the local tier. Derive those states from the
-// registry itself, never hardcode.
-const localTierStates = new Set(
-  registry.divisions
-    .filter((d) => (d as { tier?: string }).tier === "local")
-    .map((d) => stateOfOcdId(d.ocdId)),
-);
-for (const d of us.divisions) {
-  const m = /^ocd-division\/country:us\/state:(\w\w)$/.exec(d.ocdId);
-  if (m && localTierStates.has(m[1].toUpperCase())) {
-    usRendered.set(d.officeholderId, m[1].toUpperCase());
-  }
-}
-for (const holder of us.officeholders) {
-  const state = usRendered.get(holder.id);
-  if (!state) continue; // not attached to a covered division — never renders
-  people.push({
-    surface: "federal officials",
-    state,
-    name: holder.name,
-    hasPortrait: shippedIds.has(holder.id),
-    note: shippedIds.has(holder.id)
-      ? null
-      : "recorded miss in official-photos.json (license or 404)",
-  });
-}
-
-// ── Surface 3: state legislators (district popups) ──────────────────────
-for (const { file, state } of [
-  ...COVERED.map((s) => ({ file: rosterFile(s), state: s.usps })),
-]) {
-  const data = read(`lib/registry/${file}`) as {
-    officeholders: { id: string; name: string }[];
-    divisions: { officeholderId: string; ocdId: string }[];
-  };
-  const rendered = new Set<string>();
-  for (const d of data.divisions) {
-    if (coveredOcdIds.has(d.ocdId)) rendered.add(d.officeholderId);
-  }
-  for (const holder of data.officeholders) {
-    if (!rendered.has(holder.id)) continue;
-    people.push({
-      surface: "state legislators",
-      state,
-      name: holder.name,
-      // State legislators resolve through the manifest exactly like
-      // federal members do (lib/registry/server.ts) — the census reads
-      // the same file the render path reads.
-      hasPortrait: shippedIds.has(holder.id),
-      note: shippedIds.has(holder.id)
-        ? null
-        : "recorded miss in official-photos.json (terms or absence)",
-    });
-  }
-}
-
-// ── Surface 4: curated local rosters (body popups, who-governs) ─────────
-for (const roster of BODY_ROSTERS) {
-  const state = stateOfOcdId(roster.bodyId);
-  for (const member of roster.members) {
-    people.push({
-      surface: "curated local rosters",
-      state,
-      name: member.name,
-      hasPortrait: shippedIds.has(member.id),
-      note: shippedIds.has(member.id)
-        ? null
-        : "no shipped photo for this roster member",
-    });
-  }
-}
-
-// ── Surface 5: statewide executives (who-governs card, B11) ─────────────
-// Added to the census 2026-08-14 (photo session): the governors render on
-// every zip's who-governs card and were people the product shows a reader,
-// so leaving them out of the denominator was a census gap. 747 → 750.
-for (const executive of STATEWIDE_EXECUTIVES) {
-  const holder = executive.holder;
-  const shipped = shippedIds.has(holder.id) || Boolean(holder.photoUrl);
-  people.push({
-    surface: "statewide executives",
-    state: stateOfOcdId(executive.stateOcdId),
-    name: holder.name,
-    hasPortrait: shipped,
-    note: shipped ? null : "recorded miss in official-photos.json (terms or absence)",
-  });
-}
+const people: PersonRow[] = photoSlots(ROOT);
 
 // ── The census — counts with denominators, and the named miss list ──────
 function count(rows: PersonRow[]) {

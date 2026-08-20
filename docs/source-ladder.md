@@ -1713,7 +1713,7 @@ chamber platforms: `docs.house.gov`, `congress.gov`'s committee API), then rung
 7 (the committee sites' own JSON endpoints where they have them). For the 7
 parents: rungs 4, 5 and 10 as named per row above.
 
-**Deliberately not walked this session** (F01 carried 55 items and this one is a
+**Deliberately not walked this session** (F01 carried 50 items — see RULING 5 — and this one is a
 186-body hunt across ~40 hosts): the subcommittee sweep. Tracked, specced, and
 its first three rungs recorded above so the next session starts on rung 4 rather
 than on rung 1.
@@ -1756,9 +1756,147 @@ honest answer, not a gap.
 
 **2 of 12 as of 2026-08-19** (F01-continued item 10b closed Vail; TUSD closed in F01).
 
-**Why it stopped here.** F01 carried 55 items across 13 surfaces. This is a
+**Why it stopped here.** F01 carried 50 items across 13 surfaces (corrected from 55, RULING 5). This is a
 12-body hunt across 12 different content-management systems, three of which are
 JS-rendered and one of which returns 403 to a live browser. The rungs above are
 recorded so the next session starts on rung 4 or 9 per body rather than on
 rung 1, and so the two REAL findings — Kearsarge's post may be interim, and the
 Rockaway BOE domain is not in the registry — are not rediscovered.
+
+
+---
+
+## A 200 that is not the page, and the extraction blind spot behind it — F01-continued session 2 item 0C, 2026-08-19
+
+**SIZING ONLY.** RULING 12: no extractor is built here. The count is the work;
+the build is `F11`, homed to H.
+
+### The rung this adds, and it belongs to rung 4
+
+Rung 4 of the ladder is *a different CLIENT whose TLS fingerprint passes*. It
+was walked, until now, only when a host **refused** — the browser profile
+escalates to `curl` on a 403. **Apptegy's edge does not refuse.** It answers an
+unfamiliar HTTP client with `200 OK` and a 3,036-byte document titled
+**"Client Challenge"**, and every layer above then behaves perfectly and
+produces a lie: the fetch succeeds, the parse succeeds, the extraction finds no
+content because there is none, and a school district that publishes its
+superintendent's name six times on that page is recorded as publishing nothing.
+
+Measured, both clients, same URL, same headers, 2026-08-19:
+
+| Client | Status | Bytes | What came back |
+|---|---|---|---|
+| Node `fetch` (undici) | **200** | 3,036 | `<title>Client Challenge</title>` |
+| `curl` | **200** | 259,887 | the Governing Board page |
+
+**Nothing here defeats a challenge.** No challenge is solved, no token is
+obtained, nothing is authenticated: the host serves the real document to the
+second client with no challenge at all. This is rung 4 as written — a different
+client, on the same public page.
+
+**The rung, as an enrichment of rung 4 rather than a new number** (the ladder's
+own rule: only a genuinely new retrieval class increments it): *a `200` is not
+proof of retrieval. A short body carrying a challenge signature is a WALL, and
+it is named as one.* Implemented in `lib/sources/http.ts` — `challengeIn()`
+plus escalation — so it holds for **every adapter in the product**, not for the
+one that found it. If the second client is challenged too, `politeGetText`
+throws naming the wall rather than returning an empty document, because a
+challenge page recorded as a page that says nothing is the "failed operation
+rendering as empty success" defect at its source. Guarded in
+`tests/challenge-at-200.test.ts`, including the negative: a long document that
+merely quotes the phrase is still a document.
+
+This was the fifth sighting of that shape and the first inside the shared HTTP
+client. It is worth stating plainly that **every retrieval this product has
+ever made through `politeGetText` against a challenge-fronted host was recorded
+as a successful read of an empty page.**
+
+### The sizing — method first, so the count is checkable
+
+`pnpm census:embedded-json` (`scripts/embedded-json-census.mts`). One polite
+serialized browser-profile GET per body homepage, our own `User-Agent` with a
+contact address, `Retry-After` honoured. Signatures looked for, per response:
+
+| Platform | Signature |
+|---|---|
+| Apptegy | `apptegy` / `thrillshare` in markup or asset hosts |
+| Next.js | a `__NEXT_DATA__` script tag, or `self.__next_f.push` |
+| Nuxt | `window.__NUXT__` or `__NUXT_DATA__` |
+| Gatsby | `window.___gatsby`, or a `page-data.json` fetch |
+| Generic | a `<script type="application/json">` block over 2 KB, JSON-LD excluded |
+
+JSON-LD is excluded deliberately: it is structured markup we already read at
+rung 8, not a payload hiding the content.
+
+**The detectors carry a positive AND a negative control**, because a sweep that
+cannot find anything and a sweep that found nothing print the same thing. Vail
+and Rockaway Township school both trip three signatures; `newlondon.nh.gov` and
+`rockawaytownship.org` trip none, with 0 bytes of `application/json` between
+them. The first run of this census reported **0 of 95** — every site clean —
+and that number was produced entirely by the challenge defect above. It is
+recorded here because it is the exact shape of a false all-clear.
+
+### The counts, 2026-08-19
+
+| | Count |
+|---|---|
+| bodies held in the registry | **347** |
+| — carrying a homepage URL this census can ask | **95** |
+| — with no homepage URL, so **not asked** | **252** |
+| fetched | 95 |
+| — reached (2xx, real document) | **95** |
+| — refused or failed | **0** |
+| of the 95 reached, serving primary content as embedded JSON | **2** |
+
+Per platform, counting each body once under its first match:
+
+| Platform | Bodies |
+|---|---|
+| APPTEGY | **2** |
+| NEXT | 0 |
+| NUXT | 0 |
+| GATSBY | 0 |
+| GENERIC_JSON_BLOCK | 0 |
+| no signature | 93 |
+
+A body can trip several, and saying so is the difference between "two
+platforms" and "two bodies" — both Apptegy sites also trip NUXT (Apptegy is
+built on Nuxt) and GENERIC_JSON_BLOCK. Every signature, counted across bodies:
+APPTEGY 2, NUXT 2, GENERIC_JSON_BLOCK 2.
+
+The two payloads, measured:
+
+| Body | Embedded JSON | Page | Share |
+|---|---|---|---|
+| `vailschooldistrict.org/page/governing-board` | 173,842 B | 1,443,894 B | 12.0% |
+| `rocktwp.net` | 117,948 B | 1,226,649 B | 9.6% |
+
+**The 252 bodies with no homepage URL are not a clean result.** They are bodies
+this census could not ask, and they are reported separately for exactly that
+reason. Sizing them means giving them a homepage URL first, which is its own
+work item and not this one.
+
+**Apptegy as an AGENDA WIRING is a different question and a different number:**
+2 bodies wired via `APPTEGY` out of 85 wired via anything. That is the number
+session 1 reported as "2 of 19"; the wiring denominator is 85 today. It counts
+where we FETCH AGENDAS from, not what platform a site runs, and the two
+questions happen to give the same numerator here.
+
+### Bodies whose extraction has been verified against rendered page content
+
+**0 of 347.**
+
+Nothing in this repository records such a verification for any body — no field,
+no file, no run, and no script that would produce one. That is the finding, and
+it is larger than the platform count: **the blind spot is not N bodies wide, it
+is the whole registry**, because the question has never been asked of any of
+them. The single-token-name census (`pnpm names:census`, 0 of 1,369) is not
+this check and cannot become it — it finds names that LOOK wrong, and a
+silently failed extraction's whole signature is that it leaves a plausible
+value behind. "Carruth" passed every check this product had.
+
+### State: SIZED, not fixed
+
+The extractor build is `F11`, homed to **H**, sized by these counts. Not started
+here, per RULING 12. The rung-4 enrichment above **did** ship, because it is a
+retrieval-honesty defect in the shared client rather than an extractor.

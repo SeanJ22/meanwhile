@@ -259,6 +259,7 @@ test("a quarantined row is excluded from aggregation unconditionally, and n coun
       reaction: "YES" as const,
       ocdIds: ["ocd-division/country:us/state:az"],
       verificationTier: "ANONYMOUS" as const,
+      runClass: "ORGANIC" as const,
       suspectReason: null,
     },
     {
@@ -267,6 +268,7 @@ test("a quarantined row is excluded from aggregation unconditionally, and n coun
       reaction: "YES" as const,
       ocdIds: ["ocd-division/country:us/state:az"],
       verificationTier: "ANONYMOUS" as const,
+      runClass: "ORGANIC" as const,
       suspectReason: "VELOCITY",
     },
     {
@@ -275,6 +277,7 @@ test("a quarantined row is excluded from aggregation unconditionally, and n coun
       reaction: "NO" as const,
       ocdIds: ["ocd-division/country:us/state:az"],
       verificationTier: "ANONYMOUS" as const,
+      runClass: "ORGANIC" as const,
       suspectReason: "LIMITER_UNAVAILABLE",
     },
   ];

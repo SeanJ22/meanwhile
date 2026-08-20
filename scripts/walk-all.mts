@@ -62,6 +62,10 @@ import { type Page } from "playwright";
 
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
 import { PRODUCT_NAME } from "../lib/brand.ts";
+import {
+  CONCLUDED_LOOKBACK_DAYS,
+  UPCOMING_HORIZON_DAYS,
+} from "../lib/meetings/constants.ts";
 import { internalSourceIds } from "../lib/meetings/source-labels.ts";
 import { ASK_PILL_EXAMPLES } from "../lib/routing/ask-pill-labels.ts";
 import { mojibakePattern } from "../lib/text/mojibake.ts";
@@ -652,6 +656,61 @@ interface MeetingsPayload {
  * the product working. A floor catches the thing that actually happens — a
  * source going dark and a previously-full calendar emptying.
  */
+/**
+ * **A floor counted over a moving window drifts by construction** — and the
+ * fix is to stop writing an integer down (F01-continued item 3.1, 2026-08-19).
+ *
+ * The f session verified fifteen Kearsarge sittings and wrote `15`. On
+ * 2026-08-19 the walk reported 14 and called it a regression. The snapshot
+ * still held all fifteen; the oldest row (2026-05-21) had reached the
+ * ninety-day back edge of the SERVING WINDOW and stopped being served. F01
+ * diagnosed that correctly and then wrote `14` — which is the same defect
+ * one day later, and it would have gone red again on 2026-09-02 when
+ * 2026-06-04 aged out, and again, and again.
+ *
+ * So the expectation is COMPUTED, from the snapshot the deploy is serving and
+ * the server's own window constants, every run:
+ *
+ *   SCHEDULED rows in [now, now + UPCOMING_HORIZON_DAYS]
+ *   + CONCLUDED/CANCELED rows in [now - CONCLUDED_LOOKBACK_DAYS, now + horizon]
+ *
+ * mirrored from `lib/meetings/query.ts`. The check then fails for exactly one
+ * reason: a row the snapshot holds and the window admits did not reach the
+ * reader. Ageing out is no longer a failure because it is no longer a
+ * surprise — it is in the expectation.
+ *
+ * **The staleness guard is the other half.** This reads the snapshot on disk
+ * while the check reads the deploy, and the refresh cron commits a new
+ * snapshot to `main` every six hours. If the two `generatedAt` stamps differ,
+ * the walk has no idea what the deploy is serving — so it reports COULD NOT
+ * RUN with the two stamps named, never a red. An unreachable comparison is
+ * not a missing feature.
+ */
+const LOCAL_SNAPSHOT: {
+  generatedAt?: string;
+  meetings?: Array<{ id: string; bodyName: string; startsAt: string; status: string }>;
+} = existsSync(join(process.cwd(), "data", "meetings-snapshot.json"))
+  ? JSON.parse(readFileSync(join(process.cwd(), "data", "meetings-snapshot.json"), "utf8"))
+  : {};
+
+/** What the serving window admits for one body, from the snapshot on disk. */
+function servedExpectation(match: RegExp, now: number): number {
+  const horizonMs = UPCOMING_HORIZON_DAYS * 86_400_000;
+  const lookbackMs = CONCLUDED_LOOKBACK_DAYS * 86_400_000;
+  let n = 0;
+  for (const m of LOCAL_SNAPSHOT.meetings ?? []) {
+    if (!match.test(m.id)) continue;
+    const t = Date.parse(m.startsAt);
+    if (!Number.isFinite(t)) continue;
+    if (m.status === "SCHEDULED") {
+      if (t >= now && t <= now + horizonMs) n += 1;
+    } else if (m.status === "CONCLUDED" || m.status === "CANCELED") {
+      if (t >= now - lookbackMs && t < now + horizonMs) n += 1;
+    }
+  }
+  return n;
+}
+
 const MEETING_FLOORS: Array<{
   session: string;
   zip: string;
@@ -669,34 +728,27 @@ const MEETING_FLOORS: Array<{
     named: [
       {
         /*
-         * **14, not 15, and this is NOT the claim weakening** (F01, 2026-08-19).
+         * **The number is no longer written down** (F01-continued item 3.1,
+         * 2026-08-19). See `servedExpectation` above for why.
          *
-         * The f session verified fifteen Kearsarge sittings and set the floor
-         * at fifteen. Today the walk reported 14 of 68 and named it a
-         * regression. It is not one, and the diagnosis is worth keeping
-         * because this floor will do it again:
+         * History, kept because it is the argument: the f session verified
+         * fifteen Kearsarge sittings and wrote `15`. On 2026-08-19 the walk
+         * reported 14 of 68 and named a regression. There was none — the
+         * snapshot held all fifteen and the sitting of 2026-05-21 had reached
+         * the ninety-day back edge of the serving window. F01 diagnosed that
+         * and wrote `14`, which is the same bug with a fresher number: it
+         * would have gone red again on 2026-09-02, and again in October.
          *
-         * The snapshot STILL HOLDS ALL FIFTEEN. The missing row is the sitting
-         * of **2026-05-21**, and the serving window reaches ninety days back —
-         * which, on 2026-08-19, lands exactly on 2026-05-21. The oldest row
-         * aged out of the WINDOW, not out of the data. Checked against
-         * `data/meetings-snapshot.json`: 15 rows, dates 2026-05-21 through
-         * 2026-10-08, none carried, no failed source.
-         *
-         * **A floor counted against a moving window drifts by construction.**
-         * Any absolute floor over a back-window will fail by one every time
-         * its oldest row passes the boundary, and each failure will look like
-         * a source dying. The number moves to 14 with that stated, rather than
-         * the check being deleted — the claim behind it is “Kearsarge’s sittings
-         * are on the board, plural and specific”, and that claim is intact.
-         *
-         * The five SCHEDULED rows are the part that cannot age out backwards;
-         * a future session wanting a floor that does not drift should count
-         * those instead.
+         * `least` is now the DURABLE half of the claim — Kearsarge's sittings
+         * are on the board, plural — and the precise half is computed against
+         * the window every run. Together they are strictly stronger than the
+         * old fifteen: `least` catches the rows vanishing from the data, and
+         * the computed expectation catches any row the window admits failing
+         * to reach the reader.
          */
         session: "f",
         match: /kearsarge/i,
-        least: 14,
+        least: 2,
         label: "Kearsarge Regional School District's sittings",
       },
       {
@@ -748,11 +800,33 @@ for (const floor of MEETING_FLOORS) {
   );
   for (const named of floor.named) {
     const hits = payload.meetings.filter((m) => named.match.test(m.id));
+    // F01-continued item 3.1. `least` is now a FLOOR ON THE CLAIM ("plural and
+    // specific"), not a transcription of one day's window. The window-derived
+    // expectation is the number that actually decides the check.
+    const servedStamp = payload.snapshot?.generatedAt ?? null;
+    const localStamp = LOCAL_SNAPSHOT.generatedAt ?? null;
+    if (!servedStamp || !localStamp || servedStamp !== localStamp) {
+      cannotRun(
+        named.session,
+        `${floor.zip}: ${named.label} against the window`,
+        `the deploy's snapshot (${servedStamp ?? "unstated"}) is not the one on disk ` +
+          `(${localStamp ?? "unstated"}) — nothing here can be compared`,
+      );
+      check(
+        named.session,
+        `${floor.zip}: ${named.label}`,
+        hits.length >= named.least,
+        `${hits.length} row(s) of ${payload.meetings.length}, claim floor ${named.least}`,
+      );
+      continue;
+    }
+    const expected = servedExpectation(named.match, Date.now());
     check(
       named.session,
       `${floor.zip}: ${named.label}`,
-      hits.length >= named.least,
-      `${hits.length} row(s) of ${payload.meetings.length}, floor ${named.least}`,
+      hits.length >= Math.max(named.least, expected),
+      `${hits.length} row(s) of ${payload.meetings.length}; the window admits ${expected} ` +
+        `of the snapshot's rows, claim floor ${named.least}`,
     );
   }
 
@@ -4101,6 +4175,135 @@ section("F01. The walkthrough fixes hold (F01, 2026-08-19)");
         /Nothing on this page is a recommendation/i.test(html),
       `${html.length} bytes read`,
     );
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// F01C. The reader's own ballot counts all of it, and a clear is a clear
+// ═══════════════════════════════════════════════════════════════════════════
+
+section("F01C. The picks tally and the clear (F01-continued, 2026-08-19)");
+
+/*
+ * ITEM 8.7 and ITEM 9.6, on the deploy.
+ *
+ * The two defects were invisible from the source and obvious from the phone.
+ * The tally counted MEASURES and not CANDIDATES — a measure pick can only be
+ * explicit, a candidate pick can be derived from a Yes on the reaction control
+ * — so the reader's own ballot was undercounting the reader's own ballot. And
+ * "Clear my picks" removed the box and left the picks standing underneath it.
+ *
+ * **Both halves are read-only against production.** A pick is device-local by
+ * construction (`lib/ballot/picks.ts` writes one localStorage key and touches
+ * no network), so tapping one here writes nothing anywhere — which is why the
+ * 0814c pick round-trip has always lived in this suite while every REACTION
+ * tap is excluded by name. The derived half of the tally cannot be exercised
+ * here for exactly that reason: deriving a pick needs a real Yes, and a Yes is
+ * a write. It is exercised at phone width against localhost by
+ * `scripts/verify-picks-f01c.mts`, and **that gap is stated rather than
+ * implied** — what this check holds is the DENOMINATOR and the CLEAR, both of
+ * which are what actually shipped wrong.
+ */
+for (const zip of ["85701", "03255"]) {
+  const context = await browser.context({
+    extraHTTPHeaders: RUN_HEADERS,
+    viewport: PHONE,
+    reducedMotion: "reduce",
+  });
+  const page = await context.newPage();
+  page.on("response", (r) => countProbe(r.url()));
+  try {
+    await page.goto(`${BASE}/ballot?zip=${zip}`, {
+      waitUntil: "domcontentloaded",
+      timeout: 90_000,
+    });
+    // R49/R52: wait for the element this check CLICKS, hydrated — presence is
+    // server markup and a click between the two does nothing at all.
+    await untilInteractive(page, PICK_CHOICE, 12_000);
+
+    const controls = await page.locator('.reaction-box[data-kind="pick"]').count();
+    if (controls === 0) {
+      cannotRun("F01C", `${zip}: the picks tally's denominator`, "no pick control on the page");
+      continue;
+    }
+
+    await page.locator(PICK_CHOICE).first().click();
+    const raised = await untilText(page, /races and measures on this ballot/i, 10_000);
+    if (!raised) {
+      cannotRun(
+        "F01C",
+        `${zip}: the picks tally's denominator`,
+        "the tally never appeared after a pick — see 0814c's hydration note",
+      );
+      continue;
+    }
+
+    const tally = (await page.evaluate(
+      `(() => {
+         const e = document.querySelector("[data-pick-tally]");
+         if (!e) return null;
+         return {
+           picked: Number(e.getAttribute("data-picked")),
+           pickable: Number(e.getAttribute("data-pickable")),
+           rows: document.querySelectorAll("[data-pick-tally] ~ ul > li").length,
+         };
+       })()`,
+    )) as { picked: number; pickable: number; rows: number } | null;
+
+    if (!tally) {
+      cannotRun("F01C", `${zip}: the picks tally's denominator`, "no [data-pick-tally] element");
+      continue;
+    }
+
+    // ITEM 8.7 — the denominator IS the rendered rows, not a number about them.
+    check(
+      "F01C",
+      `${zip}: the picks tally's denominator equals the pick controls on the page`,
+      tally.pickable === controls,
+      `M=${tally.pickable}, pick controls rendered=${controls}`,
+    );
+    // …and the numerator is matched by rows, which is the same rule upward.
+    check(
+      "F01C",
+      `${zip}: the picks tally's stated N equals its rendered rows`,
+      tally.picked === tally.rows && tally.picked >= 1,
+      `N=${tally.picked}, rows=${tally.rows}`,
+    );
+
+    // ITEM 9.6 — a clear is a clear, on every pick-bearing surface.
+    await page.getByRole("button", { name: "Clear my picks" }).click();
+    await untilPresent(page, '[role="dialog"][aria-label="Clear my picks"]', 8_000);
+    await page.getByRole("button", { name: "Clear", exact: true }).click();
+    await until(
+      page,
+      async () => !(await page.locator("[data-pick-tally]").count()),
+      8_000,
+    );
+
+    const after = (await page.evaluate(
+      `(() => ({
+         box: document.querySelectorAll("[data-pick-tally]").length,
+         stated: Array.from(document.querySelectorAll(".reaction-box-prompt"))
+           .map((e) => (e.textContent || "").trim())
+           .filter((t) => /^Your pick for this race:/.test(t)).length,
+         stored: window.localStorage.getItem("wtp.ballot_picks") || "",
+       }))()`,
+    )) as { box: number; stated: number; stored: string };
+
+    check(
+      "F01C",
+      `${zip}: after a clear, no surface still reflects a pick`,
+      after.box === 0 && after.stated === 0,
+      `picks box ${after.box}, contests still stating a pick ${after.stated}`,
+    );
+    check(
+      "F01C",
+      `${zip}: after a clear, the stored picks file holds none`,
+      !/"choiceIds"/.test(after.stored),
+      after.stored ? `${after.stored.length} bytes stored` : "nothing stored",
+    );
+  } finally {
+    await context.close();
   }
 }
 

@@ -34,6 +34,7 @@ import {
   extractHtmlText,
 } from "../lib/meetings/agenda-documents.ts";
 import { sourceUserAgent } from "../lib/sources/http.ts";
+import { stripChromeHtml } from "../lib/text/boilerplate.ts";
 import type {
   CandidateCorpus,
   CandidateDocument,
@@ -199,9 +200,21 @@ async function waybackFor(
   }
 }
 
+/*
+ * THE EXTRACTOR VERSION. Bump it when the extraction CHANGES what text a
+ * page yields, never for an unrelated edit — the whole point is that a text
+ * change carrying a new version number is our doing and a text change
+ * carrying the same one is theirs.
+ *
+ * 1 — the original: extractHtmlText over the whole document (or its <main>).
+ * 2 — F01-continued item 11 (2026-08-19): template chrome stripped first.
+ */
+const EXTRACTOR_VERSION = 2;
+
 const documents: CandidateDocument[] = [...priorDocs];
 const failures: CandidateCorpus["failures"] = [];
 let added = 0;
+let reextracted = 0;
 let unchanged = 0;
 let revised = 0;
 
@@ -240,7 +253,19 @@ for (const target of targets) {
     let extraction: CandidateDocument["extraction"] = "html";
     let extractionNote: string | null = null;
     try {
-      text = extractHtmlText(rawHtml);
+      /*
+       * F01-continued item 11.1, the STRUCTURAL half of the boilerplate test.
+       *
+       * `extractHtmlText` prefers `<main>` where a page declares one and takes
+       * the whole document where it does not — so on a page with no `<main>`,
+       * every navigation link, every footer address and every press-release
+       * index rail was flattened into the text a candidate's issue positions
+       * are searched over. That is how Analilia Mejia came to be credited with
+       * "health care and prescription costs" on the strength of a Read More
+       * rail. The strip runs FIRST, on every site, regardless of how many
+       * pages of it are held.
+       */
+      text = extractHtmlText(stripChromeHtml(rawHtml));
       if (!text || text.length < 40) {
         // A page that extracts to almost nothing is a JS-rendered shell, and
         // recording it as text would make a false miss look like a search.
@@ -278,10 +303,23 @@ for (const target of targets) {
       unchanged += 1;
       continue;
     }
-    const hadOther = priorDocs.some(
+    /*
+     * F01-continued item 11: a hash change is only a REVISION when the same
+     * extractor produced both sides of it. Stripping template chrome changed
+     * every text in the file at once, and counting those as revisions would
+     * have reported 59 campaigns changing their positions on a day none did —
+     * destroying the signal by using it for something else.
+     */
+    const sameUrl = priorDocs.filter(
       (d) => d.candidateKey === target.candidateKey && d.documentUrl === target.url,
     );
-    if (hadOther) revised += 1;
+    if (sameUrl.length > 0) {
+      if (sameUrl.every((d) => (d.extractorVersion ?? 1) !== EXTRACTOR_VERSION)) {
+        reextracted += 1;
+      } else {
+        revised += 1;
+      }
+    }
 
     documents.push({
       id,
@@ -296,6 +334,7 @@ for (const target of targets) {
       text,
       extraction,
       extractionNote,
+      extractorVersion: EXTRACTOR_VERSION,
     });
     added += 1;
   } catch (error) {
@@ -315,6 +354,10 @@ console.log(`  candidates with a verified link:   ${candidates.size}`);
 console.log(`  urls attempted:                    ${targets.length}`);
 console.log(`  documents added this run:          ${added}`);
 console.log(`    of those, a revision of a page we already held: ${revised}`);
+console.log(
+  `    of those, a RE-EXTRACTION of a page we already held: ${reextracted}` +
+    ` (our extractor changed, not their page — extractor v${EXTRACTOR_VERSION})`,
+);
 console.log(`  unchanged (same contentHash):      ${unchanged}`);
 console.log(`  retrieval failures:                ${failures.length}`);
 console.log(`  documents in the corpus:           ${documents.length}`);

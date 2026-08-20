@@ -5,6 +5,10 @@ import { createPortal } from "react-dom";
 
 import { useStoredTheme } from "@/hooks/use-stored-theme";
 import { clearAllPicks, type StoredPick } from "@/lib/ballot/picks";
+import {
+  derivedToSuppress,
+  type PickableContest,
+} from "@/lib/ballot/pick-tally";
 import { PRODUCT_NAME } from "@/lib/brand";
 
 /**
@@ -193,7 +197,25 @@ function drawCard(
   return canvas.toDataURL("image/png");
 }
 
-export function PicksCardControls({ picks }: { picks: StoredPick[] }) {
+export function PicksCardControls({
+  picks,
+  pickable = [],
+  yesTargets = new Set<string>(),
+  cleared = {},
+}: {
+  picks: StoredPick[];
+  /**
+   * F01-continued item 9. The clear has to reach DERIVED picks, and a
+   * derived pick exists nowhere to be deleted — it is recomputed at render
+   * from the device's own Yes answers. So the confirm records what is
+   * resolved on screen right now as suppressed, and these three props are
+   * what "right now" is made of. Defaulted so a caller with no ballot
+   * context still gets the old explicit-only clear rather than a crash.
+   */
+  pickable?: PickableContest[];
+  yesTargets?: ReadonlySet<string>;
+  cleared?: Record<string, string[]>;
+}) {
   const [showCard, setShowCard] = useState(false);
   const [confirmingClear, setConfirmingClear] = useState(false);
 
@@ -285,7 +307,21 @@ export function PicksCardControls({ picks }: { picks: StoredPick[] }) {
                 <button
                   type="button"
                   onClick={() => {
-                    clearAllPicks();
+                    /*
+                     * F01-continued item 9. `clearAllPicks()` alone emptied
+                     * the explicit file and left every derived pick standing
+                     * on the page below — the card went, the picks did not,
+                     * and a control that reads as a delete was not one.
+                     *
+                     * The suppression is resolved against NO explicit picks,
+                     * because this call is about to remove them: a contest
+                     * holding both a tapped pick and a Yes would otherwise
+                     * resolve EXPLICIT, escape suppression, and re-derive the
+                     * Yes in the same render. That is what shipped in the
+                     * first draft of this fix and what the four-zip walk
+                     * caught.
+                     */
+                    clearAllPicks(derivedToSuppress(pickable, yesTargets, cleared));
                     setConfirmingClear(false);
                     setShowCard(false);
                   }}

@@ -120,6 +120,48 @@ function candidatesOf(set: BallotSet, contest: Contest): Candidacy[] {
     .sort((a, b) => a.familyName.localeCompare(b.familyName));
 }
 
+/**
+ * **The pick options for one contest, built ONCE** (F01-continued item 8).
+ *
+ * Both the rendered `PickControl` and the manifest handed to `MyPicks` call
+ * this, so the tally's denominator is the rendered row count by construction.
+ * A second query that produced its own list would be free to disagree with
+ * what is on screen, and a denominator that can disagree with its own page is
+ * the shape the stated-N-equals-rendered-rows rule exists to refuse.
+ *
+ * The measure branch carries no `reactionTargetId` and that is correct rather
+ * than missing: a measure's reactions attach to its PROVISIONS, so there is no
+ * measure-level Yes to derive a pick from. A candidate has one, which is
+ * exactly why candidate picks were the half going uncounted.
+ */
+function pickOptionsFor(
+  set: BallotSet | null,
+  contest: Contest,
+): { id: string; label: string; reactionTargetId?: string }[] {
+  // A measure's options are the question itself and need no candidacy data,
+  // which is why the measure section can call this without a set in hand.
+  if (contest.type === "MEASURE") {
+    return [
+      { id: "YES", label: "Yes" },
+      { id: "NO", label: "No" },
+    ];
+  }
+  if (!set) return [];
+  const lineup = lineupForContest(contest.id);
+  if (lineup) {
+    return lineup.nominees.map((n) => ({
+      id: n.name,
+      label: n.name,
+      reactionTargetId: `${contest.id}|${n.name}`,
+    }));
+  }
+  return candidatesOf(set, contest).map((cand) => ({
+    id: cand.id,
+    label: `${cand.givenName} ${surnameDisplayCase(cand.familyName)}`,
+    reactionTargetId: cand.id,
+  }));
+}
+
 /** Federal is decided by the contest, never by division shape — a governor's
  *  division is the state root exactly like a US Senate seat's. */
 function isFederalContest(contest: Contest): boolean {
@@ -238,6 +280,28 @@ export default async function BallotPage({
     matched?.contests.filter((c) => c.type === "CANDIDACY") ?? [];
   const measureContests =
     matched?.contests.filter((c) => c.type === "MEASURE") ?? [];
+
+  /*
+   * F01-continued item 8 — THE TALLY'S DENOMINATOR, and it is the rendered
+   * rows rather than a number about them.
+   *
+   * Every contest below that renders a `PickControl` gets an entry here,
+   * built by the SAME `pickOptionsFor` the control is rendered with. The two
+   * candidacy branches and the measure branch all pass through it, so
+   * "N of M" cannot describe a different ballot from the one on screen.
+   *
+   * `set &&` because the options builder needs the ballot set; with no set
+   * there are no contests, hence no rows and nothing to count.
+   */
+  const pickableContests =
+    set && matched
+      ? [...candidacyContests, ...measureContests].map((contest) => ({
+          contestId: contest.id,
+          contestTitle: contest.title,
+          voteFor: contest.type === "MEASURE" ? 1 : contest.voteFor,
+          options: pickOptionsFor(set, contest),
+        }))
+      : [];
 
   /*
    * 4c (2026-08-15): which ballot this page IS, read off its own contests
@@ -555,7 +619,10 @@ export default async function BallotPage({
 
       {/* 4a: the private election-day list — renders only once something
           is marked. Device-local; the component says so itself. */}
-      <MyPicks currentJurisdictionKey={currentJurisdictionKey} />
+      <MyPicks
+        currentJurisdictionKey={currentJurisdictionKey}
+        pickable={pickableContests}
+      />
 
       {dates && (
         <section className="mt-6 rounded-[10px] border border-[var(--panel-border)] p-5">
@@ -814,12 +881,10 @@ export default async function BallotPage({
                   contestTitle={contest.title}
                   voteFor={contest.voteFor}
                   /* M134: the reaction target for this nominee, so a Yes on
-                     the control above becomes the pick here. */
-                  options={lineup.nominees.map((n) => ({
-                    id: n.name,
-                    label: n.name,
-                    reactionTargetId: `${contest.id}|${n.name}`,
-                  }))}
+                     the control above becomes the pick here. F01-continued
+                     item 8: through the shared builder, so the tally counts
+                     exactly these rows. */
+                  options={pickOptionsFor(set, contest)}
                 />
                 </>
               ) : (
@@ -938,11 +1003,7 @@ export default async function BallotPage({
                     contestTitle={contest.title}
                     voteFor={contest.voteFor}
                     /* M134: same, keyed the way this branch keys reactions. */
-                    options={candidatesOf(set, contest).map((cand) => ({
-                      id: cand.id,
-                      label: `${cand.givenName} ${surnameDisplayCase(cand.familyName)}`,
-                      reactionTargetId: cand.id,
-                    }))}
+                    options={pickOptionsFor(set, contest)}
                   />
                 </>
               )}
@@ -1161,10 +1222,7 @@ export default async function BallotPage({
                   contestTitle={contest.title}
                   voteFor={1}
                   prominent
-                  options={[
-                    { id: "YES", label: "Yes" },
-                    { id: "NO", label: "No" },
-                  ]}
+                  options={pickOptionsFor(set, contest)}
                 />
 
                 <p className="mt-2 text-[0.6875rem]">

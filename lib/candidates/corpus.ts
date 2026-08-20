@@ -41,6 +41,12 @@
  * the prior version was kept.
  */
 
+import {
+  excerptAround,
+  looksLikeChrome,
+  repeatedBlocks,
+} from "../text/boilerplate.ts";
+
 /** Where a document came from. The two D05 permits, and nothing else. */
 export type CandidateSourceClass =
   /** The candidate's or campaign's own site. */
@@ -89,6 +95,47 @@ export interface CandidateDocument {
   text: string | null;
   extraction: "html" | "failed";
   extractionNote: string | null;
+  /**
+   * **Which extractor produced `text`** (F01-continued item 11, 2026-08-19).
+   * Absent means 1, the pre-chrome-strip extractor.
+   *
+   * It exists because a corpus keyed on the hash of its own EXTRACTED TEXT
+   * cannot otherwise tell "the campaign changed the page" from "we got better
+   * at reading it". Stripping template chrome changes every text in the file,
+   * and without this the next collection would report 59 REVISIONS — burning
+   * out the one signal that carries this product's accountability half, on a
+   * day when nothing on any campaign site had changed at all.
+   *
+   * The file stays APPEND-ONLY: an older-extractor copy is kept, and
+   * `currentExtraction` below simply stops READING it once a newer one of the
+   * same page exists. The record is preserved; the search is not doubled.
+   */
+  extractorVersion?: number;
+}
+
+/**
+ * The documents to actually search: per page, only the copies produced by the
+ * newest extractor held for it.
+ *
+ * Genuine revisions at the SAME extractor all survive — two reads of one URL
+ * with different words are two facts, and the corpus exists to keep both. What
+ * is dropped is a stale-extractor copy of a page we have since re-read, which
+ * would otherwise be quoted beside its own successor as though the campaign
+ * had published it twice.
+ */
+export function currentExtraction(
+  documents: readonly CandidateDocument[],
+): CandidateDocument[] {
+  const newest = new Map<string, number>();
+  for (const doc of documents) {
+    const version = doc.extractorVersion ?? 1;
+    const key = `${doc.candidateKey}|${doc.documentUrl}`;
+    newest.set(key, Math.max(newest.get(key) ?? 0, version));
+  }
+  return documents.filter(
+    (doc) =>
+      (doc.extractorVersion ?? 1) === newest.get(`${doc.candidateKey}|${doc.documentUrl}`),
+  );
 }
 
 /** The committed corpus. */
@@ -184,7 +231,9 @@ export function answerFor(
     return { kind: "NOTHING_COLLECTED", ownSiteUrl };
   }
 
-  const readable = documents.filter((d) => d.text);
+  // F01-continued item 11: a page re-read by a newer extractor supersedes its
+  // own older copy for reading. Both stay in the file.
+  const readable = currentExtraction(documents).filter((d) => d.text);
   const scope: CorpusScope = {
     documents: readable.map((d) => ({
       documentUrl: d.documentUrl,
@@ -203,9 +252,36 @@ export function answerFor(
   const passages: MatchedPassage[] = [];
   const wanted = phrases.map((p) => p.toLowerCase()).filter(Boolean);
 
+  /*
+   * F01-continued item 11 — the REPETITION half of the boilerplate test,
+   * computed per SITE across the pages we hold from it. Runs only where three
+   * or more pages of a site are held; `ran` says which, so a caller can report
+   * how many sites got structural exclusion alone instead of implying both
+   * were applied. (`scripts/chrome-sweep.mts` prints that number.)
+   */
+  const bySite = new Map<string, string[]>();
+  for (const doc of readable) {
+    let host = doc.documentUrl;
+    try {
+      host = new URL(doc.documentUrl).host;
+    } catch {
+      /* a malformed URL is its own site; it cannot repeat with anything. */
+    }
+    bySite.set(host, [...(bySite.get(host) ?? []), doc.text!]);
+  }
+  const repeatsBySite = new Map<string, ReturnType<typeof repeatedBlocks>>();
+  for (const [host, texts] of bySite) repeatsBySite.set(host, repeatedBlocks(texts));
+
   for (const doc of readable) {
     const haystack = doc.text!;
     const lower = haystack.toLowerCase();
+    let host = doc.documentUrl;
+    try {
+      host = new URL(doc.documentUrl).host;
+    } catch {
+      /* as above */
+    }
+    const repeats = repeatsBySite.get(host)?.fingerprints ?? new Set<string>();
     let found = 0;
     const seen = new Set<string>();
     for (const phrase of wanted) {
@@ -214,11 +290,21 @@ export function answerFor(
         const at = lower.indexOf(phrase, from);
         if (at === -1) break;
         from = at + phrase.length;
-        const start = Math.max(0, at - PASSAGE_CHARS / 2);
-        const end = Math.min(haystack.length, at + phrase.length + PASSAGE_CHARS / 2);
-        const raw = haystack.slice(start, end).replace(/\s+/g, " ").trim();
-        const quote =
-          (start > 0 ? "…" : "") + raw + (end < haystack.length ? "…" : "");
+        // RULING 10, at the shared helper: the window grows OUT to a word
+        // boundary, and the ellipsis sits outside the word.
+        const quote = excerptAround(haystack, at, phrase.length, PASSAGE_CHARS);
+        /*
+         * RULING 9: text from a navigation rail, a press-release index, a
+         * related-links list or a signature block is NOT the candidate's
+         * words. It may not be quoted, and — because this is the only place a
+         * passage is created — it therefore cannot feed the "mentions N of
+         * them" tally either. That is deliberate: filtering the display and
+         * not the count would leave the asymmetry in the number being sold
+         * while hiding it from the reader.
+         */
+        if (looksLikeChrome(quote)) continue;
+        const key = quote.toLowerCase().replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
+        if (repeats.has(key)) continue;
         if (seen.has(quote)) continue;
         seen.add(quote);
         passages.push({
@@ -236,6 +322,11 @@ export function answerFor(
   // THE SECOND ANSWER. It carries the scope, so the sentence a reader gets
   // is "nothing matching in their campaign site as retrieved on <date>" and
   // never a bare "no".
+  //
+  // A candidate whose only matches were chrome lands HERE, which is the
+  // correct answer and not a downgrade: we read their pages and nothing they
+  // wrote mentioned it. The alternative — crediting them with their CMS —
+  // is the defect this replaces.
   if (passages.length === 0) return { kind: "SEARCHED_NOTHING_MATCHED", scope };
   return { kind: "MATCHED", passages, scope };
 }

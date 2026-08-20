@@ -17,6 +17,13 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
+// F01-continued item 1: this file used to date its own section with
+// `new Date().toISOString().slice(0, 10)`, which is UTC and therefore
+// TOMORROW for the seven hours after 5pm Phoenix. It wrote "2026-08-20" at
+// 18:19 on 2026-08-19 — the smaller sibling of the fabricated-date defect
+// `pnpm stamp` exists to stop. The day comes from the one module that knows
+// the zone, exactly as `pnpm stamp` does.
+import { today } from "./doc-dates.mjs";
 import { BALLOT_FILES, COVERED, rosterFile } from "../lib/coverage/artifacts.ts";
 import { BODY_ROSTERS } from "../lib/registry/body-rosters.ts";
 import { STATEWIDE_EXECUTIVES } from "../lib/officials/statewide-executives.ts";
@@ -275,7 +282,7 @@ const stateTable = states
 const censusSection = `## The census — every rendered person, counted by script
 
 Run \`pnpm exec tsx scripts/photo-census.mts\` to regenerate. Counted
-${new Date().toISOString().slice(0, 10)} against the committed data. "Portrait"
+${today()} against the committed data. "Portrait"
 means the surface serves an actual judged photo; everything else renders
 honest initials. The universe is people the product can actually render:
 ballot candidacies and lineup nominees, federal officials attached to

@@ -88,6 +88,15 @@ jobs:
           NEXT_PRIVATE_STANDALONE: ${{ matrix.mode == 'standalone' && 'true' || '' }}
         run: corepack pnpm run build
 
+      # AFTER THE BUILD, because tsconfig.json includes .next/types/**/*.ts and
+      # Next generates those types during the build — see the gates job above.
+      # Only in default mode: the emitted types are mode-independent, and the
+      # matrix would otherwise pay for the same answer twice.
+      - name: Types
+        if: matrix.mode == 'default'
+        timeout-minutes: 10
+        run: corepack pnpm exec tsc --noEmit
+
       - name: Trace census
         if: always()
         run: node scripts/trace-census.mjs --files trace-files.txt
@@ -152,7 +161,18 @@ jobs:
         timeout-minutes: 10
         run: corepack pnpm lint
 
-      - name: Types
-        if: always()
-        timeout-minutes: 10
-        run: corepack pnpm exec tsc --noEmit
+      # THE TYPE CHECK IS NOT HERE, AND THE FIRST RUN OF THIS JOB IS WHY.
+      #
+      # It was here, and it failed on Linux with
+      # "app/layout.tsx(47,50): error TS2304: Cannot find name 'LayoutProps'".
+      # `LayoutProps` is a type NEXT GENERATES into .next/types during a build,
+      # and tsconfig.json includes .next/types/**/*.ts to pick it up. So
+      # `tsc --noEmit` has never been runnable on its own — on a developer's
+      # machine it passes because .next is lying around from the last build,
+      # and nobody had ever run it on a clean checkout.
+      #
+      # That is a real latent defect this gate found on its first run, and the
+      # honest fix is to type-check where the types exist: after the build, in
+      # the build job below. Running a build here purely to feed tsc would pay
+      # for a third build to answer a question the first two already have the
+      # inputs for.

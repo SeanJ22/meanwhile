@@ -252,6 +252,26 @@ test("RULING 13: the PR-gating workflow runs the suite, lint and types on Linux"
   assert.match(text, /run: corepack pnpm test\b/, "build-check.yml runs the suite");
   assert.match(text, /run: corepack pnpm lint\b/, "build-check.yml runs lint");
   assert.match(text, /run: corepack pnpm exec tsc --noEmit/, "build-check.yml type-checks");
+
+  /*
+   * THE TYPE CHECK MUST FOLLOW A BUILD, and this asserts the ORDER rather than
+   * merely the presence.
+   *
+   * `tsconfig.json` includes `.next/types/**` and Next generates those types
+   * during the build — `LayoutProps` among them. Run before a build, on a
+   * clean checkout, tsc fails with "Cannot find name 'LayoutProps'". That is
+   * exactly what happened the first time this gate ran on Linux, and it had
+   * been latent for as long as the gate had only ever been run locally, where
+   * a stale `.next` from the last build makes it pass.
+   */
+  const buildAt = text.indexOf("run: corepack pnpm run build");
+  const typesAt = text.indexOf("run: corepack pnpm exec tsc --noEmit");
+  assert.ok(buildAt > 0, "the build step is still there");
+  assert.ok(
+    typesAt > buildAt,
+    "tsc --noEmit must run AFTER pnpm build — it depends on types the build " +
+      "generates into .next/types, so on a clean checkout it cannot pass alone",
+  );
   assert.match(
     text,
     /runs-on: ubuntu-latest/,

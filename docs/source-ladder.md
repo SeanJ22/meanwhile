@@ -1567,7 +1567,7 @@ publish nothing.
 
 ---
 
-## H03 — the re-walk cohort, 03255 scope, g21 2026-08-19
+## HUNT03 — the re-walk cohort, 03255 scope, g21 2026-08-19
 
 **C6 accounting: this is a SEPARATE COHORT and does not blend into fresh-sweep
 acquisition cost.** A re-walk carries prior knowledge, prior URLs and a

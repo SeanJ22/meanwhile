@@ -498,7 +498,7 @@ pointers for what the brief asked:
   in the repo** — the committed extract held Merrimack County alone and the
   25 km circle crosses two county lines.
 - Found BY building it: **units are not bodies, and no external enumeration of
-  bodies exists** → **H02**. One Census row for the Town of Newbury stands
+  bodies exists** → **HUNT02**. One Census row for the Town of Newbury stands
   behind five-plus bodies; `pnpm census:zip 03255` printing "6 of 6" is true
   against the registry and says nothing about the town.
 - Found BY building it: **a self-closing empty `.xlsx` cell swallows its
@@ -515,9 +515,9 @@ pointers for what the brief asked:
   it is **CivicPlus** (rung 12 available, never tried), and it carries a
   **RATE** wall distinct from the TLS-fingerprint wall already recorded.
 - **Deferred whole, nothing half-built, each carrying its full spec**:
-  **H01** (the depth sweep — 2 subjects hunted of ~60 bodies in scope),
-  **H03** (the re-walk cohort, 0 walked), **H04** (the candidate sweep, 0 of
-  47), **H05** (special-district territory, 40 UNRESOLVED), **H06** (the C7
+  **HUNT01** (the depth sweep — 2 subjects hunted of ~60 bodies in scope),
+  **HUNT03** (the re-walk cohort, 0 walked), **HUNT04** (the candidate sweep, 0 of
+  47), **HUNT05** (special-district territory, 40 UNRESOLVED), **HUNT06** (the C7
   same-subject replays and the C2b backfill).
 - The scorecard → `docs/scorecard-03255.md`. **Its headline is that the three
   cost views are not computable from what this session did**, and saying so is

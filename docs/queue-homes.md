@@ -48,9 +48,9 @@ Open tracker rows outside the queue: `V09`, `V10`, `V11`, `V12`, `V13`, `R54`.
 | `D05` | Candidate info | In progress | the author's disposition: "Build pre H, post G7 data available from PRL" |
 | `D52` | The state money-translation program (umbrella) | In progress | the author's disposition: "NH, AZ, NJ in that order.  Pre H" |
 | `D62` | The Polarization Research Lab — what members SAY, evaluated for the build brief | In progress | g21's call. g20 shipped lib/sources/prl/ at 537 of 537 by bioguide, which is the disposition's 'yes'. What remains is downstream build. |
-| `H01` | The 03255 depth sweep across the full body universe | Not started | the depth sweep H is named for. |
-| `H02` | Body enumeration per unit - the missing second layer of the who-governs denomina | Not started | g21's call. It is an H-family denominator row and its disposition describes what H should render. |
-| `H03` | The re-walk cohort - prior not-published and could-not-reach records against the | In progress | the author's disposition: "Re walk them post G7, pre H" |
+| `HUNT01` | The 03255 depth sweep across the full body universe | Not started | the depth sweep H is named for. |
+| `HUNT02` | Body enumeration per unit - the missing second layer of the who-governs denomina | Not started | g21's call. It is an H-family denominator row and its disposition describes what H should render. |
+| `HUNT03` | The re-walk cohort - prior not-published and could-not-reach records against the | In progress | the author's disposition: "Re walk them post G7, pre H" |
 | `M95` | A sourced term end and birth date for the statewide executives | Not started | the author's disposition: "Yes, pre H" |
 | `M123` | The Kearsarge towns: rungs walked, nothing wired | In progress | the author's disposition: "Wire them in now" |
 | `P02` | Ballot mapping | In progress | the author's disposition: "Build pre H" |
@@ -75,9 +75,9 @@ Open tracker rows outside the queue: `V09`, `V10`, `V11`, `V12`, `V13`, `R54`.
 | `D07` | OCD-ID resolution layer | Not started | the author's disposition: "Yes, post H" |
 | `D36` | Finish the candidate-link hunts recorded NOT_ATTEMPTED | Not started | the author's disposition: "Run hunts in H" |
 | `D51` | Independent expenditures - money spent ABOUT a race | Not started | the author's disposition: "Build after donation surface, post H" |
-| `H04` | The 03255 candidate sweep - 47 candidacies to the Kelly standard | Not started | the author's disposition: "Schedule in H" |
-| `H05` | Special-district territory resolution - 40 units UNRESOLVED at 03255 | Not started | the author's disposition: "attemp other routes, report back, post H build" |
-| `H06` | The C7 same-subject replays and the C2b backfill pass | Not started | the author's disposition: "Run post H" |
+| `HUNT04` | The 03255 candidate sweep - 47 candidacies to the Kelly standard | Not started | the author's disposition: "Schedule in H" |
+| `HUNT05` | Special-district territory resolution - 40 units UNRESOLVED at 03255 | Not started | the author's disposition: "attemp other routes, report back, post H build" |
+| `HUNT06` | The C7 same-subject replays and the C2b backfill pass | Not started | the author's disposition: "Run post H" |
 | `M13` | Radius control regression tests beyond the store | Not started | the author's disposition: "Add tests post H" |
 | `M18` | Merge consolidated city-county governments (FUNCSTAT=C) into one body | Not started | g21's call. 'Will address at the time' is a deferral to when a consolidated city-county actually enters scope, which is not before H. |
 | `M75` | Meeting panel's bottom edge sits under the map legend at phone width | Not started | the author's disposition: "Measure and fix. Ideally just a pill that says "legend" and when tapped, it opens.  Tapping anywhere elses puts it back to "Legend".  Build post H" |

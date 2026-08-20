@@ -67,7 +67,7 @@ verification rather than an agreement.
 | who-governs (units) | 3 | **3 resolved + 40 UNRESOLVED** | the three that govern are all rendered; the 40 are special districts with no Census boundary at any vintage |
 | who-governs (bodies) | 6 | **UNENUMERABLE at freeze** | see below — this is the finding, not a number |
 | meetings-near (units) | — | **47 by venue proxy / 29 by territory bound / 1 UNRESOLVED** | the product renders bodies, not units; the two are not comparable without the body layer |
-| candidates | 0 hunted | **47** across 12 contests | item 3 not started; row **H04** |
+| candidates | 0 hunted | **47** across 12 contests | item 3 not started; row **HUNT04** |
 | officials | 9 named (KRSD board) | 9 seats | the one body whose roster was hunted this session |
 
 **The who-governs body ratio is `UNENUMERABLE`, and that is the honest answer
@@ -229,7 +229,7 @@ hunting clients when the answer is to slow down.
 
 **Not run — 0 of an unknown M.** The brief's re-walk debt (existing "not
 published", "not machine-readable" and "could not reach" records re-walked
-against the full fourteen-rung ladder) was not attempted. Row **H03**.
+against the full fourteen-rung ladder) was not attempted. Row **HUNT03**.
 
 One re-walk target is named because the session tripped over it:
 `states/nh/NOTES.md` still records Newbury's Zoning Board of Adjustment as
@@ -304,16 +304,16 @@ materially different state environments," and nothing here is the latter.
 
 Named rather than smoothed, each carrying a tracker row with its whole spec:
 
-- **H01** — the depth sweep across the full body universe (item 2). 2 bodies
+- **HUNT01** — the depth sweep across the full body universe (item 2). 2 bodies
   touched of ~60 in scope.
-- **H02** — the body-enumeration layer: turning each unit's own board list
+- **HUNT02** — the body-enumeration layer: turning each unit's own board list
   into a body count, without which the who-governs ratio has no denominator.
-- **H03** — the re-walk cohort (item 2's inherited debt), 0 walked.
-- **H04** — the candidate sweep across the frozen 47-candidacy ballot universe
+- **HUNT03** — the re-walk cohort (item 2's inherited debt), 0 walked.
+- **HUNT04** — the candidate sweep across the frozen 47-candidacy ballot universe
   (item 3), 0 hunted.
-- **H05** — the special-district territory resolution for 40 `UNRESOLVED`
+- **HUNT05** — the special-district territory resolution for 40 `UNRESOLVED`
   units.
-- **H06** — the C7 same-subject replays and the C2b backfill pass, without
+- **HUNT06** — the C7 same-subject replays and the C2b backfill pass, without
   which every B0 carries a build cost and no steady-state figure.
 
 **The measurement thinned before the hunting did, which is the order the brief
@@ -331,7 +331,7 @@ only version of this document worth committing.
   production whether it still renders **three** governing units at 03255
   against the 2022 Census of Governments' three. It is deliberately pinned to
   the UNIT count and not the body count, because the body denominator is
-  `UNENUMERABLE` today (**H02**), and a check against a body count would pin
+  `UNENUMERABLE` today (**HUNT02**), and a check against a body count would pin
   our registry to itself — the self-defining denominator the check exists to
   refuse.
 - **The walk count changed, and that is expected rather than a regression:**

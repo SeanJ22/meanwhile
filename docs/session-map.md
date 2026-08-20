@@ -200,7 +200,7 @@ post G7) · **D52** (state campaign finance: **NH, AZ, NJ in that
 order** — pre H) · **D62** (PRL adopted — "yes, probably will use PRL
 downloads"; feeds D05) · **M81** (jurisdiction badge — pre H) · **M95**
 (governors' term end and age — pre H) · **P02** (ballot mapping — pre H)
-· **D47** (state comparison — pre H) · **H03** (the re-walk cohort —
+· **D47** (state comparison — pre H) · **HUNT03** (the re-walk cohort —
 post G7, pre H; the H prefix is its ID, not its queue, and it has been
 in this queue all along) · **M123** (Kearsarge towns — "wire them in
 now"; moves here from h2's brief since you've pulled it forward) ·
@@ -218,11 +218,11 @@ consolidation is recorded there, not lost.
 
 h2 / h3 / h4 stand, amended by your rulings:
 
-- **H01** — "sweep scheduled for H" (h3)
-- **H02** — the denominator states what's found; readers who know of a
+- **HUNT01** — "sweep scheduled for H" (h3)
+- **HUNT02** — the denominator states what's found; readers who know of a
   missing body are pointed at the **feedback link (to be built)** — this
   adds a small build to h2's spec
-- **H04** — "schedule in H" (h4, all 47, no tiers — unchanged)
+- **HUNT04** — "schedule in H" (h4, all 47, no tiers — unchanged)
 - **D36** — the 29 NOT_ATTEMPTED candidate-link hunts ("run hunts in H")
 - **D46** — prop sponsor attribution ("build in H")
 - **X07** — the Facebook-as-campaign-site sweep ("run sweep, defer to H")
@@ -236,8 +236,8 @@ h2 / h3 / h4 stand, amended by your rulings:
 
 ## Queue 5 — Post-H
 
-B18 · C01 · C02 · C03 · C04 · D04 · D07 · D51 · H05 ("attempt other
-routes, report back, post H build") · H06 · M13 · M18 (address at the
+B18 · C01 · C02 · C03 · C04 · D04 · D07 · D51 · HUNT05 ("attempt other
+routes, report back, post H build") · HUNT06 · M13 · M18 (address at the
 time; ideally fix derivation) · M75 (legend-as-pill design, measure and
 fix) · M92 · M93's build · P04 · P05 · P10 (**Marana** as the second
 jurisdiction) · T07 · V03 · V04 · V06 · V08
@@ -507,7 +507,7 @@ and three of the four had already been quoted forward into a brief as fact.
 | 4 | D52 | **Hunted, not built.** Five rungs into the playbook; nothing half-built. |
 | 5 | B19, B16 | **Not built.** Three states use three polling models, which is a question about the row's own spec. |
 | 6 | D50 | 110 portraits shipped after three contact sheets; two held back by the gate. Rendered census unmoved. |
-| 7 | M123, H03 | **Never reached.** |
+| 7 | M123, HUNT03 | **Never reached.** |
 | 8 | M81, D47 | **Never reached** (D47's status and title corrected). |
 | 9 | — | All nine corrections addressed. |
 
@@ -546,7 +546,7 @@ at a stated boundary, none never reached.** Shipped as `b6dc706`.
 |---|---|---|---|
 | 1 | B19, B16 | **finished** | 306 voting locations across 44 jurisdictions; Pima's 148 vote centers; B16 refuses NJ on the geometry's own edit date |
 | 2 | M123 | **boundary — 2 of 6 towns** | Wilmot on a new `ICAL` adapter, New London on a fifth `schedulepage` shape; snapshot 270 → 313 |
-| 3 | H03 | **finished** | 13 enumerated, 1 recovered at rung 4, 1 stale document corrected, 10 misses re-dated |
+| 3 | HUNT03 | **finished** | 13 enumerated, 1 recovered at rung 4, 1 stale document corrected, 10 misses re-dated |
 | 4 | M81 | **finished** | 31 of 70 meetings govern the reader at 03255; three surfaces, one division set |
 | 5 | D47 | **finished** | Six pairs, seven questions; guarded against ordering-as-ranking |
 | 6 | B14 | **finished** | The upstream rung: 7 official pages joined, 87 misses recorded; links 42 → 49 |
@@ -572,7 +572,7 @@ New commands: `pnpm voting-sites:fetch`, `pnpm b14:links`, `pnpm photo:review`,
 1. **A stale DOCUMENT is the mechanism behind "already built".** Three of
    g19's four had their wrong claim in a docblock or a row's prose while the
    code was right. It happened twice more here, and one of them —
-   `states/nh/NOTES.md` — is the file H03's cohort is read off.
+   `states/nh/NOTES.md` — is the file HUNT03's cohort is read off.
 2. **"The browser rung clears it" has a shelf life.** Twice this session a
    standing playbook entry did not reproduce. Structure keeps; WAF
    disposition does not.

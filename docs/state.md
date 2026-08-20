@@ -2274,7 +2274,7 @@ cleanly at a stated boundary, none never reached**. B19 and B16 shipped in the
 ruled shape (306 voting locations, 44 jurisdictions, Pima's 148 vote centers,
 and B16 refusing New Jersey on the geometry's own 2021 edit date); M123 wired
 Wilmot and New London, 2 of 6 towns, each needing a retrieval class the repo
-did not have; H03 enumerated 13, recovered 1 at rung 4 and corrected a
+did not have; HUNT03 enumerated 13, recovered 1 at rung 4 and corrected a
 four-day-stale document; M81 rendered the jurisdiction badge on three surfaces
 from one division set; D47 shipped the side-by-side; B14 shipped the rung
 underneath the blurbs; D50 reported both numbers and computed 7a to zero; D52
@@ -2535,7 +2535,7 @@ opens). This phase CLOSES when the PRL panel ships.
 (**DONE** — Plural), state votes (**DONE** — LegiScan, D54 weekly),
 jurisdiction depth (**IN PROGRESS, and further from done than the previous
 draft of this section assumed** — the h session froze 03255's denominator and
-ran two hunts against roughly sixty in-scope bodies; **H01** through **H06**
+ran two hunts against roughly sixty in-scope bodies; **HUNT01** through **HUNT06**
 carry what remains, each with its whole spec), state campaign finance (**NEXT
 SESSION** — NH, then AZ, then NJ). The scorecard at
 `docs/scorecard-03255.md` is what states 4–50 inherit, and its headline is
@@ -2568,7 +2568,7 @@ any FIPS in the country, and `pnpm zip:universe` maps it to a zip with the
 method recorded per row. What that surfaced is the part Phase E has to
 absorb — **the Census counts UNITS and the product renders BODIES, and no
 external enumeration of bodies exists anywhere.** One Census row for the Town
-of Newbury stands behind five-plus bodies. **H02** is that gap, and it is the
+of Newbury stands behind five-plus bodies. **HUNT02** is that gap, and it is the
 single highest-leverage missing piece for national scale.
 
 Two bodies the oracle names that the derivation **cannot** produce, and they
@@ -8154,7 +8154,7 @@ So the who-governs denominator is two layers, and the second is itself a hunt.
 `pnpm census:zip 03255` prints **6 of 6** today; that is true against the
 registry and says nothing whatever about the town. Newbury is
 `BODIES_UNENUMERATED` — its site reveals its board list on hover, and nobody
-has read it. **H02** is that gap and it generalizes to every municipality in
+has read it. **HUNT02** is that gap and it generalizes to every municipality in
 the country.
 
 Also frozen at item 1, before any hunting: field matrix **`vH-1`**
@@ -8212,9 +8212,9 @@ number is the most inviting way to break the venue rule.
 
 Two subjects were hunted of roughly sixty bodies in scope, and zero of 47
 candidacies. **That is one hunt, not a partial sweep, and it is recorded as
-one.** Six rows carry the whole specs: **H01** (the depth sweep), **H02** (body
-enumeration), **H03** (the re-walk cohort), **H04** (the candidate sweep),
-**H05** (special-district territory), **H06** (the C7 replays and C2b
+one.** Six rows carry the whole specs: **HUNT01** (the depth sweep), **HUNT02** (body
+enumeration), **HUNT03** (the re-walk cohort), **HUNT04** (the candidate sweep),
+**HUNT05** (special-district territory), **HUNT06** (the C7 replays and C2b
 backfill).
 
 ### Item 4 — the scorecard says the three views are not computable
@@ -12030,7 +12030,7 @@ was a real number in the wrong frame.
 
 ### Two items never reached, and why
 
-**Item 7 (M123, H03) and item 8 (M81, D47) were not started.** The gas light
+**Item 7 (M123, HUNT03) and item 8 (M81, D47) were not started.** The gas light
 was called at the close of item 6, and the room went to item 9's corrections
 — which fix numbers currently wrong in the repo — and the close-out. Nothing
 of either item is half-built.
@@ -12072,7 +12072,7 @@ while the code was already right.** It happened twice more here.
 * `states/nh/NOTES.md` recorded Newbury's Zoning Board of Adjustment as
   `KNOWN_UNCOVERED` — "venue not published". The registry has had it **LIVE
   since 2026-08-15**. Four days stale, and it is the worst possible place for
-  it: H03's re-walk cohort is READ OFF THAT FILE, so a stale document sends
+  it: HUNT03's re-walk cohort is READ OFF THAT FILE, so a stale document sends
   the re-walk at the wrong bodies.
 * `docs/zip-playbook.md` recorded that the browser rung clears
   `cfs.sos.nh.gov`, measured earlier the same day. A real headless Chromium
@@ -12105,8 +12105,8 @@ while the code was already right.** It happened twice more here.
   own date, so the grid never has to be understood. Snapshot **270 → 313**
   across 11 of 11 sources; near 03255, **70 meetings across 12 bodies, up from
   5**.
-* **Item 3 — H03 enumerated 13, recovered 1 at rung 4.** Enumerating changed
-  what H03 is: there are **no `KNOWN_UNCOVERED` bodies in 03255 scope at all**.
+* **Item 3 — HUNT03 enumerated 13, recovered 1 at rung 4.** Enumerating changed
+  what HUNT03 is: there are **no `KNOWN_UNCOVERED` bodies in 03255 scope at all**.
   Kearsarge's KRMS venue recovered — the wiring row has carried
   `otherVenueMarkers: "KRMS"` since August waiting on exactly one venue row —
   and stated honestly, the sitting is in January so nothing renders
@@ -12199,7 +12199,7 @@ while the code was already right.** It happened twice more here.
   Feedback store: 3 rows, all synthetic, 0 organic.
 * Tracker **374 rows**, no duplicate IDs, **85 open** — of which **79 are
   deferred-queue rows and 6 are tracker rows outside the queue**. Rows touched:
-  `B19` `B16` → Done; `M123` `H03` `B14` `D50` `D52` → In progress; `M81`
+  `B19` `B16` → Done; `M123` `HUNT03` `B14` `D50` `D52` → In progress; `M81`
   `D47` → Done; `R03` `D70` `B15` `AUD09` notes; `V09` `V10` `V11` `V12` `V13`
   `R54` created.
 * `docs/queue-homes.md`: **NEEDS A HOME = 0.** 7 finished, 19 H, 29 post-H,

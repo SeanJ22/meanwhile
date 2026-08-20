@@ -1900,3 +1900,40 @@ value behind. "Carruth" passed every check this product had.
 The extractor build is `F11`, homed to **H**, sized by these counts. Not started
 here, per RULING 12. The rung-4 enrichment above **did** ship, because it is a
 retrieval-honesty defect in the shared client rather than an extractor.
+
+## The 2026-08-20 rung set (F22 — the refresh-is-red session)
+
+**No new retrieval class, so the ladder does not renumber.** What changed is
+that a wall now RECORDS the rung it stopped at, automatically, on every
+scheduled run — which is the operational half of "every wall that falls
+becomes a rung, so it never costs a second session," read from the other side.
+
+* **`SourceHttpError` carries `rung`.** The shared client already escalated
+  (plain profile → browser header set → a different TLS client via `curl`); it
+  simply never said how far it had got. Every throw site now names its rung in
+  the numbering `CLAUDE.md` uses: **2** plain fetch, **3** fetch with the full
+  browser header set, **4** a different CLIENT whose TLS fingerprint passes.
+  A challenge answered at HTTP 200 on BOTH clients records rung 4; a refusal
+  the plain profile met records rung 2.
+* **It reaches the snapshot.** `lib/sources/composite/index.ts` forwards it as
+  `walledAtRung` and `lib/meetings/snapshot.ts` stores it, so a walled source
+  in a committed snapshot says where the next attempt should start rather than
+  making a later session re-walk rungs already known to fail.
+* **Absent stays absent.** A whole-child timeout from `withTimeout` knows no
+  rung, records none, and prints as `unrecorded`. A plausible rung is not a
+  rung — same law as a plausible date.
+* **Rungs 5 through 14 are unwalked by this client, not exhausted.** The record
+  says where we stopped, never that there was nowhere further to go, and there
+  is still no `SOURCE_BLOCKED` and no terminal state anywhere in the schema.
+
+**A wall found and NOT defeated, recorded as such:** `civicplus` answered
+nothing within twenty seconds on 2026-08-20 (run #30 of the meetings refresh).
+It turned out not to be a wall at all — the scheduled job was using the live
+map's 20-second per-source budget, and the source answers fine with a batch
+budget. Recorded here because "a vendor is refusing us" was the plausible
+reading and it was wrong: **before naming a wall, check whose stopwatch ran
+out.**
+
+**`go.boarddocs.com` continues to answer HTTP 403** to the agenda fetch for
+`apptegy:vail` on every run (seen again 2026-08-20). Rung 3 reached; unchanged
+since 2026-08-18 and still open.

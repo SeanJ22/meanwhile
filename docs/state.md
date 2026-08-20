@@ -12962,3 +12962,228 @@ the row states exactly what changes under either answer.
   deployed opened battlecard, and the local after-item-14 battlecard. The three
   full-page captures were taken and not read as images, and that is said rather
   than counted.
+
+## F22 — 2026-08-20: the refresh was red on a path separator, and one vendor timeout emptied a township
+
+**The reader-facing fact first: the meetings snapshot stopped moving at
+2026-08-18T18:59Z and did not move again until this session.** For roughly
+forty-two hours the live site served meetings data that was two days stale,
+four scheduled refreshes ran and committed nothing, and every one of them
+reported red without anyone reading why.
+
+### The brief's premise was wrong in a way worth recording
+
+The brief said two runs had failed — #30 and #31 — and that "everything before
+them on `main` is green, including build checks #73 through #78." The run list
+says otherwise: **#27, #28, #29, #30 and #31 all failed, and #25 and #26 were
+cancelled at the six-hour job limit.** The last successful run was **#23, on
+2026-08-18T18:58Z.**
+
+And the second half of that premise is the interesting half, because it is
+true and misleading at the same time. The build checks WERE green.
+`.github/workflows/build-check.yml` runs `pnpm build` and the bundle budgets
+and **never runs `pnpm test`.** The four scheduled refresh gates are this
+repository's **only Linux runner of the suite.** A test that passes on Windows
+and fails on Linux is therefore invisible everywhere except in the jobs that
+keep the reader's data current — which is where it surfaced, wearing a
+data-pipeline costume.
+
+### The ingest was never the failure
+
+This was worth establishing before touching anything, because the obvious
+story — a data job is red, so the data source must be broken — was false.
+
+In every failing run the ingest step **exited 0**, named its walls, and
+carried forward correctly. Run #30: `10/11 sources`, `civicplus: FAILED —
+civicplus timed out after 20000ms`, `40 meeting(s) CARRIED FORWARD`. Run #31:
+`11/11 sources`, 23 carried. The governed artifact CHANGED on every run, so
+the gate ran — and **the gate is what failed.**
+
+### Cause one: a path separator, and a guard that got stricter instead of failing
+
+`tests/coverage-manifest.test.ts` shipped on 2026-08-18 with AUD-06. Its
+allowlist of fourteen legitimate per-state content files was mapped through
+`.replace(/\//g, "\\")` and then matched against `relative()` — which yields
+backslashes on Windows and forward slashes on POSIX. On Linux **nothing was
+allowlisted**, so every content table reported itself an offender.
+
+The proof is in the offender list the CI log printed: it contains
+`lib/coverage/states.ts`, **the manifest the allowlist exists to exempt.** A
+file cannot be an offender against itself; the list had simply stopped
+matching.
+
+The fix normalizes repo-relative paths to POSIX at the single place they are
+produced. The more useful half is the second guard: **"every allowlisted
+content file is a file the sweep actually reaches."** A broken exemption list
+does not fail — it gets STRICTER, which is why this read as fourteen new
+offenders rather than as a broken test. That guard fails on either platform,
+naming the entry.
+
+### Cause two: civicplus never declared its archive, so a timeout deleted a township's history
+
+Run #30 failed a second test: `only 23 day-only meetings in the snapshot —
+M59 ingested 27`. That one is the g13 Merrimack defect of 2026-08-18,
+**repeating on a second adapter.**
+
+`lib/meetings/carry-forward.ts` judges a walled source's carried rows against
+that source's own `publishedLookbackDays`, defaulting to
+`CONCLUDED_LOOKBACK_DAYS` = 90. civicplus's M59 AgendaCenter rung — shipped
+`269a3ce` on 2026-08-15, three days BEFORE revize declared its own — emits
+every dated sitting the archive lists and clips nothing off the back. It never
+declared that. So when civicplus timed out, carry-forward clipped its archive
+at ninety days.
+
+**The arithmetic closes exactly.** A sweep of the committed snapshot by source
+against a 90-day back edge: 11 sources, **2** emit rows beyond the window —
+revize (15 rows, 7 older, back to 2026-02-09, declared) and civicplus (52
+rows, **23** older, back to 2026-01-06, undeclared). Run #30 logged
+`Rockaway Township, NJ 9` where the committed snapshot held 32. **32 − 9 =
+23**, the exact count of civicplus rows older than ninety days.
+
+One vendor's twenty-second timeout deleted two thirds of a New Jersey
+township's published meeting history, and then turned the whole four-times-daily
+refresh red so that ten healthy sources could not commit their fresh data
+either.
+
+The guard for it is **derived, not listed** — a hand-kept list of archive
+adapters is the same shape of thing that failed. It asks the committed
+snapshot which sources emit rows past the default back edge and holds each to
+a declaration reaching its own oldest row. **It was proved able to fail:** with
+the declaration removed it reports `civicplus (oldest row 2026-01-06, declared
+window 90d)`; with it restored, green.
+
+### Cause three, and it was ours: the batch job was using the reader's stopwatch
+
+The timeout itself was not a vendor refusing us. `CompositeSource` defaults to
+a 20-second per-source budget, which is right for the live map — a reader is
+waiting. `pnpm ingest composite` was silently borrowing it. civicplus
+serializes an iCal GET and an AgendaCenter GET per wired body at the polite
+spacing every adapter honours, and ran past twenty seconds. **Nothing refused
+us; we hung up.**
+
+`SCHEDULED_REFRESH_TIMEOUT_MS` (120s) now applies to the scheduled ingest
+only. No request rate changed and no politeness changed.
+
+### A wall and a broken job are two different kinds of nothing
+
+`ok: false` carried a vendor timeout and a violated id-namespace contract in
+the same flag, and `scripts/ingest.ts` treated both identically: name it, skip
+it, carry its rows, exit 0. So **a defect in our own code rendered as a walled
+vendor and kept the run green** — the failed-operation-as-empty-success shape
+wearing its other face. And the converse cost more: because everything was a
+wall, nothing could be a job failure, so the exit status said nothing at all.
+
+* **`WALL`** — the retrieval did not land. Named, skipped, rows carried, run
+  continues. Ten healthy sources must not lose their refresh over one vendor's
+  edge.
+* **`JOB`** — a child returned ids outside its namespace, or its `normalize`
+  threw. No rung of the ladder fixes it and no wall fell. The run goes red.
+
+The wall record carries **the ladder rung it stopped at**, in `CLAUDE.md`'s
+existing numbering and not a parallel vocabulary: `SourceHttpError` now knows
+whether it stopped at rung 2 (plain fetch), 3 (full browser header set) or 4
+(a different TLS client). **Absent stays absent** — a whole-child timeout
+knows no rung and prints as `unrecorded` rather than being given a plausible
+number. `SOURCE_BLOCKED` remains prohibited and no terminal state was added.
+
+Every run now prints, unconditionally:
+
+```
+RUN SUMMARY: 11 source(s) attempted, 11 read, 0 walled, 0 job-failed, 314 row(s) written
+```
+
+### The class, swept
+
+**Four** scheduled workflows fetch external sources —
+`refresh-meetings-snapshot`, `refresh-dotgov-snapshot`, `refresh-fec-snapshot`,
+`refresh-legiscan-snapshot`. All four gate on the identical full
+`corepack pnpm test`, so **one fix converged four.** Only the meetings refresh
+was actively red; the other three were **latent** — their artifacts happened
+not to move, so each took the "unchanged, gate skipped" path and reported
+success. `tests/workflow-actions.test.ts` now enumerates the four and asserts
+each gates on the full suite from the changed path, so a fifth cannot be added
+without one.
+
+The three single-artifact refreshes were checked rather than assumed:
+`scripts/fetch-dotgov.mts` already refuses to write a thin snapshot and throws.
+For a single-source refresh, "walled" and "read nothing" are the same event, so
+going red is correct and already the behaviour.
+
+### F21, closed on the author's ruling
+
+The polling-place pointer is required **once per page, in the dates header.**
+Item 6's both-places rule of 2026-08-15 was right while the two were LINKS in
+different context; item 15 made both the same in-app pill, and a repeated
+identical control makes a reader wonder which one is real.
+
+Two guards carried the number 2 and **both were amended with their old text
+quoted beside the new**. Neither was weakened: `tests/ballot.test.ts` now also
+asserts the pointer's LOCATION, because a bare count would pass a pointer that
+drifted into some third place, and `tests/voting-dates-and-place.test.ts` keeps
+every assertion that the affordance is the SHARED map panel. **The note
+travelled with the pointer** rather than dying with the duplicate — what the
+state's tool demands on arrival is friction a reader is owed a word about.
+
+### What is NOT fixed, and is named rather than guessed at
+
+**F25 — two scheduled runs hung and were cancelled at the six-hour limit.**
+Runs #25 (6h0m22s) and #26 (6h48m10s) both reached the gate and produced no
+further output. Run #27 reached it and took 46m28s where the suite takes about
+48s. Runs #28–#31 took 1–5 minutes, and this session's run took 3m21s. **It is
+not reproducing and it is not fixed.** Next rung recorded: a `timeout-minutes`
+on the gate step in all four refresh workflows, so a hang costs minutes and
+reports as a hang rather than costing six hours and reporting as a
+cancellation.
+
+### State as of 2026-08-20 (F22)
+
+* **Code SHA `9028521`** (PR #115, merging `787e355`) — **ONE planned code
+  merge**, per the amendment written into `CLAUDE.md` this session. No second
+  code merge was taken and no live-walk regression called for one.
+* **Data commit `e2b2978`** — `Snapshot refresh: 2026-08-20T15:46Z`, written
+  by the bot on the first run after the fix. Not a session code merge; the
+  workflow's own commit, which is the whole point of the session.
+* **Close-out records:** the commits carrying this block and the tracker,
+  which cannot name themselves.
+* **The refresh, re-run manually on `main` after the fix (run 32387951965):
+  exit 0.** `11 source(s) attempted, 11 read, 0 walled, 0 job-failed, 314
+  row(s) written`; gate `1327 tests / 1326 pass / 0 fail / 1 skipped` **on
+  Linux**, which is the platform proof the local run could not give; committed
+  `e2b2978`. **Green with rows written, not green with nothing done.**
+* **`pnpm walk:all` against the live `e2b2978`: 352 passed, 0 regressions, 0
+  could not run.** 352 distinct of 352. Baseline 350 → **added 2, GONE 0.**
+  Both additions are the F21 count check on the two zips whose ballot renders
+  a pointer (07866, 85701). **Nothing went GONE.**
+* **Gates:** `pnpm test` **1327 pass / 0 fail** (1320 inherited + 7);
+  `tsc --noEmit` clean; `pnpm lint` **0 errors, 11 allowlisted warnings**;
+  `pnpm build` green in BOTH modes.
+* **Budgets, exact from `scripts/bundle-budget.json`, nothing moved:** 1a
+  **196** of 220 · 1b default **927** (Windows local; Linux CI 935) of 1050 ·
+  1b standalone **1130** of 1300 · client raw **2,742,298** and gzip
+  **826,704** against 3,100,000 and 940,000. **Identical to the inherited
+  figures in every one of the five.**
+* **PRODUCTION ROWS THIS SESSION CREATED, by run id, every one declared:**
+  `F22-walk@2026-08-20T15:49:41Z` **103** · `F22-item4@2026-08-20T15:48:46Z`
+  **4** · `F22-shots@2026-08-20T15:55:28Z` and
+  `F22-pill-map@2026-08-20T15:57:37Z` / `…15:58:30Z` / `…15:59:00Z` (ballot
+  page loads). **All SYNTHETIC, 0 ORGANIC.** Counted off the table, not off
+  clicks. `F22-item4@2026-08-20T15:48:20Z` wrote **0** rows — those four
+  requests omitted `lat`/`lng` and the route refused them before logging,
+  which is item 1b working.
+* **NO REACTION ROW WAS WRITTEN.** The reactions table holds the same 38 rows.
+  Every tap is excluded from `walk:all` by name and printed on every run.
+* **The organic census: 139. F01-continued session 2 closed at 139. Delta 0.**
+  Reported, not investigated.
+* **Screenshots: 8 of 8 read as images** — four fold captures at 430×932 and
+  four whole-page pill maps, one per pilot zip. All eight show **exactly one**
+  polling-place pill.
+* **The instrument RULING 3 forced, and it is worth keeping.** The raw
+  full-page captures are 860×19,218 to 860×**68,304** pixels. Downscaled far
+  enough to view, a pill is sub-pixel — so those four captures **cannot be
+  read as images**, and under RULING 3 reporting them as evidence would be the
+  unread-evidence claim the ruling forbids. Rather than stop at that boundary,
+  `scripts/f22-pill-map.mts` shrinks the PAGE instead of the image and marks
+  every pill with a high-contrast band, producing a 430×1,677–5,915 capture in
+  which the pills on the WHOLE page are countable by eye. That is what was
+  read. The below-the-fold half of the claim rests on a picture, not on a DOM
+  query.

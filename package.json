@@ -91,7 +91,8 @@
     "verify:positions": "tsx scripts/verify-positions-search.mts",
     "queue:homes": "tsx scripts/queue-homes.mts",
     "names:census": "tsx scripts/name-census.mts",
-    "chrome:sweep": "tsx scripts/chrome-sweep.mts"
+    "chrome:sweep": "tsx scripts/chrome-sweep.mts",
+    "reference:verify": "tsx scripts/reference-verify.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

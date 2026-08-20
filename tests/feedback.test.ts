@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
-import { join, relative, sep } from "node:path";
+import { join, relative } from "node:path";
 import test from "node:test";
+
+// Plain .mjs, shared with the plain-node scripts that never see tsx.
+import { posixRelative } from "../scripts/repo-path.mjs";
 
 import { hashLimiterKey } from "../lib/db/intake-limiter.ts";
 import { scrubFreeText } from "../lib/log/scrub.ts";
@@ -52,7 +55,7 @@ const ADDRESS = ["seanj22", "gmail.com"].join("@");
  * string one home rather than to widen the exemption — see
  * lib/geo/outbound-agent.ts.
  */
-const SERVER_ONLY_ALLOWED = new Set([join("lib", "geo", "outbound-agent.ts")]);
+const SERVER_ONLY_ALLOWED = new Set(["lib/geo/outbound-agent.ts"]);
 
 function walk(dir: string, out: string[] = []): string[] {
   for (const entry of readdirSync(dir)) {
@@ -68,7 +71,7 @@ test("the author's personal address is gone from every source a browser can reac
   for (const root of ["app", "components", "hooks", "lib"]) {
     for (const file of walk(join(ROOT, root))) {
       if (!/\.(ts|tsx|js|jsx|css|json)$/.test(file)) continue;
-      const rel = relative(ROOT, file);
+      const rel = posixRelative(ROOT, file);
       if (SERVER_ONLY_ALLOWED.has(rel)) continue;
       if (readFileSync(file, "utf8").includes(ADDRESS)) hits.push(rel);
     }
@@ -113,7 +116,7 @@ test("the address is in no built client chunk", (t) => {
   for (const file of walk(staticDir)) {
     if (!/\.(js|css|json|txt)$/.test(file)) continue;
     if (readFileSync(file, "utf8").includes(ADDRESS)) {
-      hits.push(relative(ROOT, file).split(sep).join("/"));
+      hits.push(posixRelative(ROOT, file));
     }
   }
   assert.deepEqual(hits, [], `the address reached the client bundle: ${hits.join(", ")}`);
@@ -403,7 +406,7 @@ test("nothing in lib/signal can read the feedback store", () => {
   assert.ok(files.length > 0, "no lib/signal modules found — the scan found nothing");
   for (const file of files) {
     const source = readFileSync(file, "utf8");
-    const rel = relative(ROOT, file);
+    const rel = posixRelative(ROOT, file);
     assert.ok(
       !/from\s+"[^"]*db\/feedback/.test(source),
       `${rel} imports the feedback write path — it must not`,
@@ -438,7 +441,7 @@ test("the feedback table is in the schema, the migration, and no export path", (
   const routes = walk(join(ROOT, "app", "api")).filter((f) => f.endsWith("route.ts"));
   for (const route of routes) {
     const source = readFileSync(route, "utf8");
-    if (relative(ROOT, route).includes(join("api", "feedback"))) continue;
+    if (posixRelative(ROOT, route).includes("api/feedback")) continue;
     assert.ok(
       !/db\/feedback/.test(source),
       `${relative(ROOT, route)} reaches the feedback store — only its own route may`,

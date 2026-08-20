@@ -1,0 +1,316 @@
+import assert from "node:assert/strict";
+import { readFileSync, readdirSync, statSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import test from "node:test";
+
+// Plain .mjs, shared with the plain-node scripts that never see tsx.
+import { posixRelative } from "../scripts/repo-path.mjs";
+import {
+  BOARDDOCS_IS_DELIBERATELY_EMPTY,
+  CENSUS_BLANK_PLACE_TX_UNITS,
+  CENSUS_BLANK_WEB_ADDRESS,
+  CENSUS_INACTIVE_UNITS,
+  LEGISTAR_IS_FIXTURE_NOT_ENUMERATION,
+  REFERENCE_DATASETS,
+  REFERENCE_ROW_COUNTS,
+  parseCsv,
+  readTable,
+  referenceFiles,
+} from "../lib/reference/index.ts";
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+
+/**
+ * The reference universe (Prompt B item 2, 2026-08-20).
+ *
+ * `data/reference/` is where every coverage denominator in this product comes
+ * from. "We watch N of M bodies here" is only honest while M comes from the
+ * Census of Governments and NCES rather than from counting our own registry —
+ * a registry that defines its own denominator cannot be caught missing
+ * anything, which is the Sunnyside class of miss.
+ *
+ * So the files themselves are gated. A file going missing, a row count
+ * drifting, or a dormant unit being quietly filtered out all make M smaller,
+ * and a smaller M makes our coverage look better. None of that may happen
+ * without a test going red and naming it.
+ *
+ * The counts here were verified against the FILES on 2026-08-20, not read off
+ * the provenance notes — checking a note's claim against the note is not a
+ * reconciliation. `corepack pnpm reference:verify` prints the full found /
+ * expected table; this is the same reconciliation as a gate.
+ */
+
+/* ---- 2a / 2d.4: the inventory and its pairings ---------------------------- */
+
+test("data/reference holds 14 files: 7 data files and 7 provenance notes", () => {
+  const files = referenceFiles();
+  const data = files.filter((f) => f.endsWith(".csv"));
+  const notes = files.filter((f) => f.endsWith(".md"));
+
+  assert.equal(
+    files.length,
+    14,
+    `expected 14 files, found ${files.length}: ${files.join(", ")} — a file going ` +
+      "missing narrows a denominator, and a narrowed denominator flatters our coverage",
+  );
+  assert.equal(data.length, 7, `expected 7 data files, found ${data.length}`);
+  assert.equal(notes.length, 7, `expected 7 provenance notes, found ${notes.length}`);
+});
+
+test("every reference data file is paired with its provenance note, both ways", () => {
+  const files = new Set(referenceFiles());
+  const unpaired: string[] = [];
+
+  for (const dataset of REFERENCE_DATASETS) {
+    if (!files.has(`${dataset}.csv`)) unpaired.push(`${dataset}.csv is missing`);
+    if (!files.has(`${dataset}.md`)) unpaired.push(`${dataset}.md is missing`);
+  }
+  // The other direction: a note describing a file nobody committed is a
+  // claim about data this product does not have.
+  for (const file of files) {
+    const stem = file.replace(/\.(csv|md)$/, "");
+    if (!(REFERENCE_DATASETS as readonly string[]).includes(stem)) {
+      unpaired.push(`${file} is not a declared dataset`);
+    }
+  }
+
+  assert.deepEqual(unpaired, [], "the reference set is not a clean 7 pairs");
+});
+
+test("every provenance note says something about its data file", () => {
+  const thin: string[] = [];
+  for (const dataset of REFERENCE_DATASETS) {
+    const note = readFileSync(join(ROOT, "data", "reference", `${dataset}.md`), "utf8");
+    // A note is provenance or it is decoration. 400 bytes is not a quality
+    // bar, it is a floor under "this file was created and left empty".
+    if (note.trim().length < 400) thin.push(`${dataset}.md is ${note.trim().length} bytes`);
+  }
+  assert.deepEqual(thin, [], "these provenance notes are too thin to be provenance");
+});
+
+/* ---- 2b: row counts, against the ingested rows --------------------------- */
+
+test("every reference file holds the row count it is expected to", () => {
+  const mismatches: string[] = [];
+  for (const dataset of REFERENCE_DATASETS) {
+    const found = readTable(dataset).count;
+    const expected = REFERENCE_ROW_COUNTS[dataset];
+    if (found !== expected) mismatches.push(`${dataset}: found ${found}, expected ${expected}`);
+  }
+  assert.deepEqual(
+    mismatches,
+    [],
+    "an expected figure is NEVER adjusted to match what was found — fix the file " +
+      "or restate the denominator deliberately",
+  );
+});
+
+test("the Census workbook reconciles: 90,837 units + 1,313 dependent = 92,150", () => {
+  const units = readTable("census_govt_units_2022").count;
+  const dependent = readTable("census_govt_units_2022_dependent_school_systems").count;
+  assert.equal(units, 90_837);
+  assert.equal(dependent, 1_313);
+  assert.equal(
+    units + dependent,
+    92_150,
+    "every data row in the source workbook is accounted for by exactly one of the two files",
+  );
+});
+
+test("the Census type breakdown sums to the unit total", () => {
+  const table = readTable("census_govt_units_2022");
+  const idx = table.header.indexOf("gov_type");
+  const counts = new Map<string, number>();
+  for (const row of table.rows) {
+    const t = row[idx] ?? "";
+    counts.set(t, (counts.get(t) ?? 0) + 1);
+  }
+
+  const EXPECTED = {
+    COUNTY: 3_031,
+    MUNICIPAL: 19_491,
+    TOWNSHIP: 16_214,
+    "SPECIAL DISTRICT": 39_555,
+    "SCHOOL DISTRICT": 12_546,
+  } as const;
+
+  for (const [type, expected] of Object.entries(EXPECTED)) {
+    assert.equal(counts.get(type), expected, `gov_type ${type}`);
+  }
+  assert.equal(
+    Object.values(EXPECTED).reduce((a, b) => a + b, 0),
+    90_837,
+    "the five types ARE the universe — a sixth type would mean the denominator moved",
+  );
+});
+
+test("Open States reconciles: 7,439 state/territory/DC + 537 federal = 7,976", () => {
+  const table = readTable("openstates_legislators");
+  const idx = table.header.indexOf("jurisdiction_level");
+  const counts = new Map<string, number>();
+  for (const row of table.rows) counts.set(row[idx] ?? "", (counts.get(row[idx] ?? "") ?? 0) + 1);
+  assert.equal(counts.get("state"), 7_439);
+  assert.equal(counts.get("federal"), 537);
+  assert.equal(table.count, 7_976);
+});
+
+/* ---- 2c: the recorded properties, enforced rather than commented ---------- */
+
+test("2c: the 339 dormant Census units are RETAINED", () => {
+  const table = readTable("census_govt_units_2022");
+  const idx = table.header.indexOf("is_active");
+  const inactive = table.rows.filter((r) => r[idx] === "N").length;
+  assert.equal(
+    inactive,
+    CENSUS_INACTIVE_UNITS,
+    "the Census counts dormant units as governments. Filtering them breaks the " +
+      "90,837 reconciliation, and nobody removes them without restating the denominator.",
+  );
+});
+
+test("2c: the 13 Texas special districts with blank place are left as a stated gap", () => {
+  const table = readTable("census_govt_units_2022");
+  const [st, city, zip, fips] = ["state", "city", "zip", "fips_state"].map((c) =>
+    table.header.indexOf(c),
+  );
+  const blank = table.rows.filter(
+    (r) =>
+      (r[st] ?? "").trim() === "" &&
+      (r[city] ?? "").trim() === "" &&
+      (r[zip] ?? "").trim() === "" &&
+      (r[fips] ?? "") === "48",
+  );
+  assert.equal(
+    blank.length,
+    CENSUS_BLANK_PLACE_TX_UNITS,
+    "recoverable from fips_state = 48 and deliberately NOT filled in — a silently " +
+      "repaired row is indistinguishable from a row that was always complete",
+  );
+});
+
+test("2c: web_address is a seed list for crawling, not a detection surface", () => {
+  const table = readTable("census_govt_units_2022");
+  const idx = table.header.indexOf("web_address");
+  const blank = table.rows.filter((r) => (r[idx] ?? "").trim() === "").length;
+  assert.equal(blank, CENSUS_BLANK_WEB_ADDRESS);
+  const pct = (blank / table.count) * 100;
+  assert.ok(
+    pct > 56.8 && pct < 56.9,
+    `blank for ${pct.toFixed(2)}% of units — the Census documents the populated 43% ` +
+      "as having had minimal quality control, and a platform-signature scan returned " +
+      "1 hit in 39,182 Census URLs and 0 in 17,346 CCD URLs. A blank here is NOT " +
+      "'this body has no website'.",
+  );
+});
+
+test("2c: the Legistar file is 39 rows of fixture and claims no jurisdictions", () => {
+  assert.equal(LEGISTAR_IS_FIXTURE_NOT_ENUMERATION, true);
+  const table = readTable("granicus_legistar_tenants");
+  assert.equal(table.count, 39, "a test-fixture convenience sample, NOT an enumeration");
+
+  // Jurisdiction and state are blank ON PURPOSE. If they were populated the
+  // file would start reading as a tenant roster, which is the claim it must
+  // never make: no coverage figure may cite it as a tenant count.
+  const [j, s] = ["jurisdiction_name", "state"].map((c) => table.header.indexOf(c));
+  const named = table.rows.filter(
+    (r) => (r[j] ?? "").trim() !== "" || (r[s] ?? "").trim() !== "",
+  );
+  assert.equal(
+    named.length,
+    0,
+    "these rows grew a jurisdiction — the file now looks like an enumeration it is not",
+  );
+});
+
+test("2c: the BoardDocs file is deliberately empty, and zero is the correct state", () => {
+  assert.equal(BOARDDOCS_IS_DELIBERATELY_EMPTY, true);
+  const table = readTable("boarddocs_tenants");
+  assert.equal(
+    table.count,
+    0,
+    "header only, on purpose. Zero rows is NOT a failed acquisition and is NOT " +
+      "evidence that BoardDocs has no tenants — roughly 4,000 organizations are missing.",
+  );
+  assert.ok(table.header.length > 5, "the header is present, so the shape is declared");
+});
+
+/* ---- 2d.3: nothing reads this data from outside the repo ------------------ */
+
+/**
+ * The acquisition pass that produced these files ran outside this repo. The
+ * failure that follows is a module reading them from wherever they sat at
+ * acquisition time — a container's `outputs/`, a desktop folder, an absolute
+ * Windows path. That works on exactly one machine and silently narrows the
+ * denominator everywhere else, which is the one direction this data must
+ * never move in.
+ */
+test("2d: no module reads reference data from any path outside data/reference", () => {
+  const ALLOWED = new Set(["lib/reference/index.ts"]);
+  const DATASET_NAMES = REFERENCE_DATASETS.join("|");
+  // A dataset named alongside a path that is not the sanctioned one.
+  const OUTSIDE = new RegExp(
+    `(?:cowork|/mnt/(?:user-)?data|["'\`][a-z]:[\\\\/]|~/|/home/|Desktop|OneDrive|\\boutputs/)[^"'\`\\n]*(?:${DATASET_NAMES})`,
+    "i",
+  );
+
+  const offenders: string[] = [];
+  for (const abs of walk(join(ROOT, "app"))
+    .concat(walk(join(ROOT, "lib")), walk(join(ROOT, "scripts")), walk(join(ROOT, "components")))
+    .filter((f) => /\.(ts|tsx|mts|mjs)$/.test(f))) {
+    const rel = posixRelative(ROOT, abs);
+    if (ALLOWED.has(rel)) continue;
+    const source = readFileSync(abs, "utf8");
+    // Comments explain the rule; code is what can reach a file.
+    const code = source
+      .replace(/\/\*[\s\S]*?\*\//g, "")
+      .split("\n")
+      .filter((l) => !l.trim().startsWith("//") && !l.trim().startsWith("*"))
+      .join("\n");
+    if (OUTSIDE.test(code)) offenders.push(rel);
+  }
+
+  assert.deepEqual(
+    offenders,
+    [],
+    "these reach reference data by a path that exists on one machine — read it " +
+      "through lib/reference instead",
+  );
+});
+
+test("2d: the loader resolves every dataset inside data/reference", () => {
+  for (const dataset of REFERENCE_DATASETS) {
+    for (const ext of ["csv", "md"]) {
+      const p = posixRelative(ROOT, join(ROOT, "data", "reference", `${dataset}.${ext}`));
+      assert.equal(p, `data/reference/${dataset}.${ext}`);
+      assert.ok(statSync(join(ROOT, p)).size >= 0, `${p} is readable`);
+    }
+  }
+});
+
+/* ---- the parser the counts depend on ------------------------------------- */
+
+/**
+ * The row counts above are only as trustworthy as the reader that produced
+ * them, and the Census unit file carries quoted fields with embedded commas.
+ * A `split(",")` reader does not fail on those — it produces short rows and a
+ * correct-looking total, which is the "operation that returned nothing"
+ * shape one layer down.
+ */
+test("the CSV reader survives quoted commas, escaped quotes and embedded newlines", () => {
+  const rows = parseCsv('a,b,c\n"x,1","he said ""hi""","line\nbreak"\nplain,2,3');
+  assert.deepEqual(rows[0], ["a", "b", "c"]);
+  assert.deepEqual(rows[1], ["x,1", 'he said "hi"', "line\nbreak"]);
+  assert.deepEqual(rows[2], ["plain", "2", "3"]);
+  assert.equal(rows.length, 3, "a final line without a trailing newline is still a row");
+});
+
+function walk(dir: string, out: string[] = []): string[] {
+  for (const entry of readdirSync(dir)) {
+    if (entry === "node_modules" || entry.startsWith(".")) continue;
+    const full = join(dir, entry);
+    if (statSync(full).isDirectory()) walk(full, out);
+    else out.push(full);
+  }
+  return out;
+}

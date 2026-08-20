@@ -43,6 +43,10 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # F25: the platform default is 360 minutes. Runs #25 and #26 sat at the
+    # gate until GitHub killed them at six hours and reported no step name. A
+    # job that overruns this fails loudly, named, while a human is awake.
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
@@ -95,3 +99,60 @@ jobs:
           name: trace-files-${{ matrix.mode }}-${{ github.sha }}
           path: trace-files.txt
           if-no-files-found: warn
+
+  # ---------------------------------------------------------------------------
+  # THE SUITE, ON LINUX, ON EVERY PR (Prompt B item 1c, 2026-08-20).
+  #
+  # RULING 13: a green build check did not mean the tests ran. This file ran
+  # `pnpm build` and the bundle budgets and never `pnpm test`, so the four
+  # scheduled refresh gates were this repo's ONLY Linux runner of the suite.
+  # `tests/coverage-manifest.test.ts` shipped on 2026-08-18 passing on Windows
+  # and failing on every Linux runner, and the way the repo found out was the
+  # meetings snapshot going stale for two days — not a red PR check. Every
+  # green build check on PRs #73 through #115 was silent about tests on Linux.
+  #
+  # Its own job rather than a step in the matrix: the matrix builds twice, by
+  # mode, and the suite is mode-independent. Running it once is the honest
+  # amount of work, and a separate job names itself in the checks list, so
+  # "the tests ran" is readable without opening a log.
+  #
+  # Chromium because tests/beacon-guard.test.ts proves the synthetic-run guard
+  # by driving a real browser — the same reason the refresh gates install it.
+  gates:
+    name: gates (test · lint · tsc)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Enable corepack (pnpm pinned by packageManager)
+        run: corepack enable
+
+      - name: Install
+        run: corepack pnpm install --frozen-lockfile
+
+      - name: Install the browser the suite needs
+        timeout-minutes: 15
+        run: corepack pnpm exec playwright install --with-deps chromium
+
+      # `if: always()` on the two that follow, so one red gate does not hide
+      # the verdict of the others. A PR author gets all three answers from one
+      # run rather than three round trips.
+      - name: Test
+        timeout-minutes: 15
+        run: corepack pnpm test
+
+      - name: Lint
+        if: always()
+        timeout-minutes: 10
+        run: corepack pnpm lint
+
+      - name: Types
+        if: always()
+        timeout-minutes: 10
+        run: corepack pnpm exec tsc --noEmit

@@ -1,10 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+
+// Plain .mjs, shared with the plain-node scripts that never see tsx.
+import { posixRelative } from "../scripts/repo-path.mjs";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { readFile, readdir } from "node:fs/promises";
-import { join, sep } from "node:path";
+import { join } from "node:path";
 
 import { getTableConfig } from "drizzle-orm/pg-core";
 
@@ -257,7 +260,10 @@ test("no module reads search_log without the organic filter", async () => {
       // removed again, printing the delta rather than the total for the same
       // reason verify-readonly.mts gives.
       "scripts/verify-write-handle.mts",
-    ].map((p) => p.replace(/\//g, sep)),
+      // RULING 14: repo-relative paths are POSIX here, produced by
+      // posixRelative below. This list used to be inverted into the platform
+      // separator — the exact shape that broke coverage-manifest on Linux.
+    ],
   );
 
   async function walk(dir: string): Promise<string[]> {
@@ -277,7 +283,7 @@ test("no module reads search_log without the organic filter", async () => {
 
   const offenders: string[] = [];
   for (const file of files) {
-    const relative = file.slice(process.cwd().length + 1);
+    const relative = posixRelative(process.cwd(), file);
     if ([...ALLOWED].some((a) => relative === a)) continue;
     const src = await readFile(file, "utf8");
     // Strip comments so an explanation of the rule is not a violation of it.

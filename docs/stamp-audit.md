@@ -29,7 +29,7 @@ lying. The recovered dates come from the unfiltered pickaxe.
 | Rule (opening clause) | Claimed | Recovered | Delta | Introducing commit |
 |---|---|---|---|---|
 | THE TRANSPARENCY MANDATE | 2026-08-16 | 2026-08-16 | 0 | `5745c71` The mandate becomes law before the hunting starts, and the tracker stops carrying two rows per ID |
-| WHAT IS LAW HERE, AND WHAT IS A RULING | 2026-08-20 | **NOT FOUND** | — | — |
+| WHAT IS LAW HERE, AND WHAT IS A RULING | 2026-08-20 | 2026-08-20 | 0 | `07fcce1` Prompt C: the gate measures hunts, the sold stores start recording again, and the rulings get a home |
 | THE DEFERRAL BOUNDARY FALLS BETWEEN SUBJECTS, NEVER INSID… | 2026-08-17 | 2026-08-17 | 0 | `af766f5` The numbers stop contradicting each other, and our own robots stop counting as readers |
 | The design system is committed, not improvised. | 2026-08-15 | 2026-08-15 | 0 | `b8b6f7d` The system goes on the record |
 | The register is chosen by surface, and the ask-box beat d… | 2026-08-15 | 2026-08-15 | 0 | `800fecf` The money tells its story: sorting, the second hop, honest percentages, and a geocoder that works (#39) |
@@ -54,14 +54,14 @@ lying. The recovered dates come from the unfiltered pickaxe.
 | A failed fetch never silently empties a previously-full s… | 2026-08-16 | 2026-08-16 | 0 | `ea54049` The documents: four standing rules, the cuts, and the conflict left for the author |
 | A read from the subject's own official source IS the veri… | 2026-08-16 | 2026-08-16 | 0 | `ea54049` The documents: four standing rules, the cuts, and the conflict left for the author |
 | More viewport must never mean fewer pins. | 2026-08-16 | 2026-08-16 | 0 | `ea54049` The documents: four standing rules, the cuts, and the conflict left for the author |
-| Where collection and rendering can diverge, BOTH numbers … | 2026-08-20 | **NOT FOUND** | — | — |
-| A named instance is an example of a class-wide defect. | 2026-08-20 | **NOT FOUND** | — | — |
-| The Kelly standard, and there are no tiers of it. | 2026-08-20 | **NOT FOUND** | — | — |
-| Stated N equals rendered rows. | 2026-08-20 | **NOT FOUND** | — | — |
-| A ceiling moves only on proof, and the proof is a measure… | 2026-08-20 | **NOT FOUND** | — | — |
-| A session carries carryover and the deferred queue, and n… | 2026-08-20 | **NOT FOUND** | — | — |
-| Where a tool does not exist to reach a public record, BUI… | 2026-08-20 | **NOT FOUND** | — | — |
-| A zero-row extraction is a FAILED extraction, never an em… | 2026-08-20 | **NOT FOUND** | — | — |
+| Where collection and rendering can diverge, BOTH numbers … | 2026-08-20 | 2026-08-20 | 0 | `07fcce1` Prompt C: the gate measures hunts, the sold stores start recording again, and the rulings get a home |
+| A named instance is an example of a class-wide defect. | 2026-08-20 | 2026-08-20 | 0 | `07fcce1` Prompt C: the gate measures hunts, the sold stores start recording again, and the rulings get a home |
+| The Kelly standard, and there are no tiers of it. | 2026-08-20 | 2026-08-20 | 0 | `07fcce1` Prompt C: the gate measures hunts, the sold stores start recording again, and the rulings get a home |
+| Stated N equals rendered rows. | 2026-08-20 | 2026-08-20 | 0 | `07fcce1` Prompt C: the gate measures hunts, the sold stores start recording again, and the rulings get a home |
+| A ceiling moves only on proof, and the proof is a measure… | 2026-08-20 | 2026-08-20 | 0 | `07fcce1` Prompt C: the gate measures hunts, the sold stores start recording again, and the rulings get a home |
+| A session carries carryover and the deferred queue, and n… | 2026-08-20 | 2026-08-20 | 0 | `07fcce1` Prompt C: the gate measures hunts, the sold stores start recording again, and the rulings get a home |
+| Where a tool does not exist to reach a public record, BUI… | 2026-08-20 | 2026-08-20 | 0 | `07fcce1` Prompt C: the gate measures hunts, the sold stores start recording again, and the rulings get a home |
+| A zero-row extraction is a FAILED extraction, never an em… | 2026-08-20 | 2026-08-20 | 0 | `07fcce1` Prompt C: the gate measures hunts, the sold stores start recording again, and the rulings get a home |
 | Disclosure at the point of capture — the one-time acknowl… | 2026-08-13 | 2026-08-13 | 0 | `8fa5759` 3: the defect batch — what-first titles, the narrowing modal, the one-time disclosure, candidate reactions, the mayor, the past, the smalls |
 | One CODE merge per session; close-out records may follow … | 2026-08-19 | 2026-08-19 | 0 | `bd4b05b` F01-continued items 1-11: the numbers reconcile, and four reader-facing defects close |
 | The one exception, and it is the only one | 2026-08-20 | 2026-08-20 | 0 | `787e355` F22: the refresh was red on a path separator, and one vendor timeout emptied a township |
@@ -70,7 +70,7 @@ lying. The recovered dates come from the unfiltered pickaxe.
 
 - **0 stamp(s) disagree with git history.**
 - **0 stamp(s) are still later than today** (2026-08-20) — a date that had not happened when it was written.
-- **9 stamp(s) could not be recovered** and are printed `NOT FOUND` rather than guessed.
+- **0 stamp(s) could not be recovered** and are printed `NOT FOUND` rather than guessed.
 - **2 stamp(s) disagree BY DESIGN and the author has ruled them expected** — listed below, and still carrying their real delta in the table above.
 
 ### Ruled expected, not defects
@@ -94,7 +94,7 @@ well would leave nothing to re-audit if the ruling is ever revisited.
 | Rule (opening clause) | `--diff-filter=A` returned | Unfiltered matches |
 |---|---|---|
 | THE TRANSPARENCY MANDATE | none | 1 |
-| WHAT IS LAW HERE, AND WHAT IS A RULING | none | 0 |
+| WHAT IS LAW HERE, AND WHAT IS A RULING | none | 1 |
 | THE DEFERRAL BOUNDARY FALLS BETWEEN SUBJECTS, NEVER INSID… | none | 1 |
 | The design system is committed, not improvised. | none | 1 |
 | The register is chosen by surface, and the ask-box beat d… | none | 1 |
@@ -119,14 +119,14 @@ well would leave nothing to re-audit if the ruling is ever revisited.
 | A failed fetch never silently empties a previously-full s… | none | 1 |
 | A read from the subject's own official source IS the veri… | none | 1 |
 | More viewport must never mean fewer pins. | none | 1 |
-| Where collection and rendering can diverge, BOTH numbers … | none | 0 |
-| A named instance is an example of a class-wide defect. | none | 0 |
-| The Kelly standard, and there are no tiers of it. | none | 0 |
-| Stated N equals rendered rows. | none | 0 |
-| A ceiling moves only on proof, and the proof is a measure… | none | 0 |
-| A session carries carryover and the deferred queue, and n… | none | 0 |
-| Where a tool does not exist to reach a public record, BUI… | none | 0 |
-| A zero-row extraction is a FAILED extraction, never an em… | none | 0 |
+| Where collection and rendering can diverge, BOTH numbers … | none | 1 |
+| A named instance is an example of a class-wide defect. | none | 1 |
+| The Kelly standard, and there are no tiers of it. | none | 1 |
+| Stated N equals rendered rows. | none | 1 |
+| A ceiling moves only on proof, and the proof is a measure… | none | 1 |
+| A session carries carryover and the deferred queue, and n… | none | 1 |
+| Where a tool does not exist to reach a public record, BUI… | none | 1 |
+| A zero-row extraction is a FAILED extraction, never an em… | none | 1 |
 | Disclosure at the point of capture — the one-time acknowl… | none | 1 |
 | One CODE merge per session; close-out records may follow … | none | 1 |
 | The one exception, and it is the only one | none | 1 |

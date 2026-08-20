@@ -13346,3 +13346,177 @@ rebases and retries. A shared concurrency group was **rejected**: GitHub keeps
 one pending run per group and cancels earlier ones, trading a loud red for a
 quiet loss. Proved by forcing a real collision against real git repositories in
 `tests/push-main.test.ts` — both runs' artifacts present afterward.
+
+## Prompt C — the gate, the ledger's consequences, and the constitution (2026-08-20)
+
+**All fifteen items finished.** The session's deliverables are RULING 18's
+hunt-state gate, `docs/rulings.md`, and a repaired revenue path nobody knew was
+broken.
+
+**Ships.** One planned code merge, PR
+[#119](https://github.com/SeanJ22/We-The-People/pull/119) — code commit
+**`07fcce1`**, merged as **`ae720a9`**. Production serves `ae720a9`, deploy
+identifier `6a876b6edb300a0008afd8f0`, both read from `/api/build` with a
+declared synthetic header. The RULING 1 exception was not used. Close-out
+records follow as their own commits.
+
+### The thing that was not on the list: both sold stores had stopped recording
+
+Found while counting rows for a backfill denominator. **Migration `0011` added
+`coverage_tier` to `search_log` and `reactions`, shipped in Prompt B's code on
+2026-08-20, and was never applied to production.** `drizzle.__drizzle_migrations`
+held 11 of 13 committed entries and `information_schema` showed `search_log`
+with nine columns. Every insert named a column that does not exist and failed.
+
+`app/api/meetings/route.ts` catches that and `console.error`s it — correct for
+a reader, because a search still answers — so **the loss was invisible from
+every surface this repo can see**: no 500, no red check, no changed pixel. The
+last row either store accepted was **2026-08-20 15:53:51Z**. Recording was
+restored at **20:11:46Z** and proved with a declared synthetic GET, not assumed.
+**The window is 4h18m and its SIZE IS UNMEASURABLE** — the failures went to a
+function log this repo cannot read, so the number of lost reader searches is
+not recoverable and is not estimated. `D73`.
+
+**Why the walk did not catch it is the more important half.** `pnpm walk:all`
+already counted rows landed against requests issued, and printed Prompt B's
+77-issued / 0-landed as *"a gap is ordinary"*. It is ordinary; landing NOTHING
+is not. Zero-against-nonzero is now a named check, and the probe census moved
+above the summary — a check registered after the summary is a check the summary
+does not count, so a run could have printed "0 regressions" and exited 1.
+
+**And the sequencing lesson, which is now two migrations:** `0012` adds the new
+column NOT NULL and drops its default, which is right only when schema and code
+land together. Applied ahead of the code it broke the writes again from the
+other side. `0013` puts the default back, deliberately and temporarily; `0014`
+takes it off after the code that fills the column is serving. **A NOT NULL
+column with no default may only lose its default once the code that fills it is
+live.** `pnpm db:apply` grew `--upto=<tag>` so one half of a pair can be applied
+without hand-editing the journal.
+
+### RULING 18 — equal depth is measured by hunt completion
+
+Prompt B implemented RULING 7 as exact equality across the four Kelly fields,
+and the result was a permanent blackout: a write-in with no campaign site can
+never reach an incumbent's four, so their contest was withheld by their own
+circumstances, unclosable by any amount of hunting.
+
+Every Kelly field per candidate now carries `NOT_HUNTED`, `FOUND`, or
+`VERIFIED_ABSENT` — the last carrying the rungs walked and the date checked,
+because it is a claim about a named person. A contest renders when no field
+anywhere in it is `NOT_HUNTED`.
+
+**The withheld counts, as a pair.** 03255 **6 of 12 → 12 of 12** · 07866
+**3 of 6 → 6 of 6** · 85641 **7 of 9 → 9 of 9** · 85701 **6 of 9 → 9 of 9**.
+The brief predicted the count would stay near its old value and it did not: an
+all-thin contest used to render on equality-at-zero and now reads as
+unfinished, which it is. **The gate is not looser and not tighter for its own
+sake — it is aimed at the thing a depth session can close.** Migration state:
+**138 `FOUND`, 406 `NOT_HUNTED`, 0 `VERIFIED_ABSENT`** across 136 candidates
+and 544 fields; nothing is promoted to a finding by a backfill, and a test
+fails if it ever is.
+
+**The work is now named:** 30 rows, `HD01`–`HD30`, one per withheld contest,
+listing which candidates carry which unhunted fields — 84 candidates, 249
+fields owed, of which **Contact is 82**. Regenerate with `pnpm hunt:gaps`.
+
+**Proven by plant:** an evidenced `VERIFIED_ABSENT` was written for every
+unhunted field in `ballot-az-pima:mine-inspector`, the contest flipped from
+withheld to rendered, both cards carried their per-field findings, and the
+plant was reverted.
+
+### The type check had never run on a checkout that was never built
+
+One annotation. `app/layout.tsx` read `({ children }: LayoutProps<"/">)`, and
+`LayoutProps` is a global Next emits into `.next/types` during a build. Every
+"tsc clean" in every prior report was measured on a tree carrying generated
+files. The layout writes its own props type now, the check moved into the
+`gates` job — **which deliberately does not build** — and the one test that
+genuinely needs a build runs in the build job instead. That test is the whole
+of the 1377/1376 gap between platforms, and it is the honest kind: it reports
+CANNOT RUN rather than passing.
+
+### Two ladders, one numbering
+
+`docs/source-ladder.md`'s thirteen were a DISCOVERY ladder and `CLAUDE.md`'s
+fourteen are RETRIEVAL MECHANICS, and both were numbered, so "rung 7" meant two
+different things with nothing saying so. The thirteen are retired in place and
+live in `docs/zip-playbook.md` §2 as **A through M**, lettered precisely so the
+collision cannot return. **50 pre-F22 rung values are marked
+`PRE_F22_LADDER_UNKNOWN`** and not one is reinterpreted; every value the code
+writes from here carries `rungProvenance: "CANONICAL"`.
+
+`source-ladder.md`'s header claimed the document was "the method" while
+`coverage-audit.ts` held "the evidence". It is 1,900 lines of evidence, and the
+header now says so.
+
+### F11's extraction toolkit, and the layer that is why it exists
+
+Four layers under one contract: **a zero-row extraction is a failed extraction,
+never an empty document**, enforced inside the constructor rather than left to
+every caller. `EXTRACTED` / `ZERO_ROWS` / `CANNOT_RUN` are three answers, and
+the last two are deliberately different — a scanned agenda recorded as a
+document that published nothing is a false claim about a public body.
+
+Layer 4 verified live against the page that produced the row: `pnpm extract
+payload https://www.vailschooldistrict.org/page/superintendent --find "John
+Carruth"` returns **6 hits**, matching the six occurrences `F07` recorded, each
+with its key path — from a page whose rendered prose carries none of them.
+
+### The rest, briefly
+
+* **`docs/rulings.md`** — append-only, dated, one entry per ruling, each naming
+  what it supersedes, surfaced in `context.md`. It is what makes "hardcode the
+  ruling as fact" safe.
+* **`CLAUDE.md` 49,093 → 60,928 bytes.** Vercel corrected to Netlify and GitHub
+  Actions; Stack, sources, layout and commands became pointers with their
+  rationale kept; eight rules added as law.
+* **The whole tree is LF on every platform**, with recorded evidence exempt —
+  `tests/fixtures/**` and `data/reference/**` are `-text`, because a fixture is
+  the bytes a server sent.
+* **`pnpm zip:add`** — four stages, a denominator at each, and a gap queue that
+  is an OUTPUT. Verified as a dry structural run on 03255: 63 Census units
+  (62 independent + 1 dependent school system, reconciling with the h session's
+  frozen extract), 3 governments resolved, 6 bodies known, **auto-resolved
+  fraction 83.3%**.
+* **The asset store** — 938 binaries, 177.1 MB, behind their hashes outside the
+  repo, manifest committed. The bytes were NOT deleted: the deploy serves them
+  and the store is a path Netlify cannot reach. `R57`.
+* **`docs/intent.md`** — written from scratch, because the author's own copy is
+  not reachable from this repo and the ladder to find it is recorded. `R55`.
+
+### Gates, budgets and rows
+
+* **`pnpm test` 1431 pass / 0 fail / 0 skipped** locally.
+* **`pnpm lint`** 0 errors, **11 allowlisted warnings**.
+* **`tsc --noEmit`** clean — and, for the first time, clean on a tree with
+  `.next` moved aside.
+* **Both build modes green** locally.
+* **Budgets, exact from `scripts/bundle-budget.json`:** 1a **199** of 220
+  (baseline 195) · 1b default **927** of 1050 · 1b standalone **1130** of 1300 ·
+  client raw **2,742,298** and gzip **826,704** against 3,100,000 and 940,000 —
+  identical to the inherited figures.
+* **`walk:all` on the live build: 343 passed, 2 named regressions, 2 could not
+  run.** 345 distinct of 345; against Prompt B's 359 baseline, **+5 added, 19
+  GONE**.
+* **Production rows this session created: 211, all SYNTHETIC, 0 organic**,
+  across seven named run ids — `promptc-0820-dataloss-verify` (1),
+  `promptc-0820-closeout` (4), `promptc-0820-postdrop` (1), and two `walk:all`
+  runs (9 + 95, then 9 + 92). **No reaction was tapped.**
+* **Organic census: 139. Prompt B closed at 139. Delta 0.** Reported, not
+  investigated.
+* **Screenshots: 8 of 8 read as images.**
+
+### The two regressions and the nineteen GONE are the same fact
+
+Both regressions are `g3` claims at 85701 — candidate names opening their
+battlecards, and the five-point scale's group separators — and both fail
+because the gate withholds every contest. **Neither was fixed and neither check
+was removed.** They are the same two Prompt B named, for the same reason, and
+weakening the gate to make them green would trade the rule for the instrument.
+
+The 19 GONE are the same consequence: checks written inside a conditional on
+candidate rows existing. **Two reported COULD NOT RUN and seventeen said
+nothing** — the identity diff caught them, which is the last line of defence
+rather than the first. `R58` names all seventeen and the fix: invert the
+conditional, so a check that cannot reach its subject says so instead of
+vanishing.

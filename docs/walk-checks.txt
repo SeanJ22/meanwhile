@@ -86,23 +86,6 @@
 [0819] 85641: the ask box is on the who-governs card
 [0819] 85701: the ask box is on the who-governs card
 [0819] D40: distinct officials render distinct campaign books
-[F01C2] 07866: a multi-day window carries the affordance too
-[F01C2] 07866: every candidate row carries a battlecard pill
-[F01C2] 07866: every dated voting event can be calendared
-[F01C2] 07866: the ballot row carries the count, not the twelve-issue list
-[F01C2] 07866: the battlecard holds the sections the row gave up
-[F01C2] 07866: the in-app voting panel opens on the ballot
-[F01C2] 07866: the placeholder address names no region
-[F01C2] 07866: the polling-place affordance is an in-app pill, not a link out
-[F01C2] 85701: a multi-day window carries the affordance too
-[F01C2] 85701: every candidate row carries a battlecard pill
-[F01C2] 85701: every dated voting event can be calendared
-[F01C2] 85701: the ballot row carries the count, not the twelve-issue list
-[F01C2] 85701: the battlecard holds the sections the row gave up
-[F01C2] 85701: the in-app voting panel opens on the ballot
-[F01C2] 85701: the placeholder address names no region
-[F01C2] 85701: the polling-place affordance is an in-app pill, not a link out
-[F01C2] 85701: the positions search finds a term from the card's own text
 [F01C] 03255: after a clear, no surface still reflects a pick
 [F01C] 03255: after a clear, the stored picks file holds none
 [F01C] 03255: the picks tally's denominator equals the pick controls on the page
@@ -123,8 +106,6 @@
 [F01] 6.1: no "gap in our" phrasing on /transparency
 [F01] 9.2: the districts tile states a number, never Off
 [F01] 9.6: selecting a district shades it, closing deselects
-[F22] 07866: the polling-place pointer renders exactly once on the ballot
-[F22] 85701: the polling-place pointer renders exactly once on the ballot
 [f] 03255: Kearsarge Regional School District's sittings
 [g10] 85701: agenda attribution reaches the served payload
 [g10] 85701: an unresolved heading is attributed to NOTHING, never to the host
@@ -364,3 +345,8 @@
 [promptB] /ballot states its coverage tier at 07866
 [promptB] /ballot states its coverage tier at 85641
 [promptB] /ballot states its coverage tier at 85701
+[promptC] /api/build answers
+[promptC] /api/build states the code SHA
+[promptC] /api/build states the deploy identifier
+[promptC] /api/build's two identifiers are distinct facts, not one repeated
+[promptC] the sold store accepted this run's rows at all

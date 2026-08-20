@@ -42,7 +42,32 @@ const nextConfig: NextConfig = {
       "./public/geo/**",
       "./lib/registry/*.json",
       "./data/*.json",
+      // The coverage-tier ledger (RULING 6, Prompt B item 8). `/api/meetings`
+      // reaches it because every GET writes a search-log row and that row
+      // carries the tier.
+      "./data/derived/zip-coverage-tiers-runtime.json",
     ],
+    /*
+     * THE LEDGER IS READ THROUGH `process.cwd()`, WHICH NEXT CANNOT SEE.
+     *
+     * `lib/coverage/zip-tier.ts` builds its path at runtime, so the tracer has
+     * no static reference to follow and the file would simply not be in the
+     * deploy. The read would throw, the catch would return null, and every zip
+     * on production would render "we have not worked this ZIP code out yet"
+     * while every sold row was stamped UNKNOWN.
+     *
+     * That failure is worse than a crash because it is INDISTINGUISHABLE FROM
+     * HONEST MISSING DATA: the surface's own gap wording is what a broken
+     * deploy would produce, so nothing would look wrong. Named here per route
+     * that reaches it.
+     *
+     * Only the 666 KB runtime file is traced. The 18 MB audit file stays in the
+     * repo and out of every function bundle.
+     */
+    "/ballot": ["./data/derived/zip-coverage-tiers-runtime.json"],
+    "/about-area": ["./data/derived/zip-coverage-tiers-runtime.json"],
+    "/api/reactions": ["./data/derived/zip-coverage-tiers-runtime.json"],
+    "/api/log": ["./data/derived/zip-coverage-tiers-runtime.json"],
   },
   // The demo is unlisted. Platform-level visibility is the access control;
   // this keeps every route out of search indexes regardless of what a crawler

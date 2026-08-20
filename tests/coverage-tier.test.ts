@@ -340,3 +340,109 @@ test("6.5: no stamped zip carries a tier its own evidence does not support", () 
     `${overstated.length} zips are stamped above their own evidence`,
   );
 });
+
+/* ---- the runtime ledger, and the deploy that has to carry it ------------- */
+
+/**
+ * TWO FILES, ONE TRUTH (2026-08-20).
+ *
+ * The audit ledger is 18 MB — every zip, its evidence, and every
+ * government-to-zip edge with its own tier. The read path loads a 666 KB
+ * compact copy instead, because tracing 18 MB into a serverless function to
+ * answer "what tier is 85701" would pay the whole ledger's weight on every
+ * cold start.
+ *
+ * A second copy is a second thing that can be wrong, so this asserts they
+ * agree zip for zip. They are written in the same pass from the same values,
+ * which is what makes the assertion cheap rather than aspirational.
+ */
+test("the runtime ledger agrees with the audit ledger, zip for zip", () => {
+  const audit = JSON.parse(
+    readFileSync(join(ROOT, "data", "derived", "zip-coverage-tiers.json"), "utf8"),
+  ) as {
+    stampedAt: string;
+    zips: Record<
+      string,
+      {
+        tier: CoverageTier;
+        evidence: { territoryResolved: number; bodiesEnumeratedFor: number };
+        unresolvedSpecialDistrictsInCounties: number;
+      }
+    >;
+  };
+  const runtime = JSON.parse(
+    readFileSync(join(ROOT, "data", "derived", "zip-coverage-tiers-runtime.json"), "utf8"),
+  ) as {
+    stampedAt: string;
+    tiers: CoverageTier[];
+    zips: Record<string, [number, number, number, number]>;
+  };
+
+  assert.equal(runtime.stampedAt, audit.stampedAt, "both files carry the same stamp");
+  assert.equal(
+    Object.keys(runtime.zips).length,
+    Object.keys(audit.zips).length,
+    "STATED N EQUALS RENDERED ROWS — the two ledgers must hold the same zips",
+  );
+
+  const disagreements: string[] = [];
+  for (const [zip, a] of Object.entries(audit.zips)) {
+    const r = runtime.zips[zip];
+    if (!r) {
+      disagreements.push(`${zip}: missing from the runtime ledger`);
+      continue;
+    }
+    if (runtime.tiers[r[0]] !== a.tier) disagreements.push(`${zip}: tier`);
+    if (r[1] !== a.evidence.territoryResolved) disagreements.push(`${zip}: territoryResolved`);
+    if (r[2] !== a.evidence.bodiesEnumeratedFor) disagreements.push(`${zip}: bodiesEnumeratedFor`);
+    if (r[3] !== a.unresolvedSpecialDistrictsInCounties) {
+      disagreements.push(`${zip}: unresolvedSpecialDistrictsInCounties`);
+    }
+  }
+  assert.deepEqual(
+    disagreements.slice(0, 10),
+    [],
+    `${disagreements.length} zip(s) disagree between the two ledgers — rerun ` +
+      "corepack pnpm tiers:stamp, which writes both in one pass",
+  );
+});
+
+/**
+ * THE FAILURE THIS GUARDS IS INVISIBLE ON PRODUCTION.
+ *
+ * `lib/coverage/zip-tier.ts` builds its path with `process.cwd()`, which Next
+ * cannot resolve statically, so without an explicit tracing include the file
+ * is simply absent from the deploy. The read throws, the catch returns null,
+ * and every zip renders "we have not worked this ZIP code out yet" while
+ * every sold row is stamped UNKNOWN.
+ *
+ * That is worse than a crash: the surface's own honest gap wording is exactly
+ * what a broken deploy produces, so nothing looks wrong. Every route that can
+ * reach the ledger must name it.
+ */
+test("every route that reads the coverage ledger traces it into the deploy", () => {
+  const config = readFileSync(join(ROOT, "next.config.ts"), "utf8");
+  const RUNTIME = "zip-coverage-tiers-runtime.json";
+  for (const route of [
+    "/api/meetings",
+    "/ballot",
+    "/about-area",
+    "/api/reactions",
+    "/api/log",
+  ]) {
+    const at = config.indexOf(`"${route}"`);
+    assert.ok(at > 0, `${route} is not named in outputFileTracingIncludes`);
+    const block = config.slice(at, at + 600);
+    assert.ok(
+      block.includes(RUNTIME),
+      `${route} reaches the coverage ledger but does not trace it — on production ` +
+        "the read would fail silently and every zip would render as unresearched",
+    );
+  }
+
+  assert.ok(
+    !config.includes(`"./data/derived/zip-coverage-tiers.json"`),
+    "the 18 MB AUDIT ledger must never be traced into a function bundle — only " +
+      "the 666 KB runtime copy",
+  );
+});

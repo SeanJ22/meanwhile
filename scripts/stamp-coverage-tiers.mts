@@ -325,3 +325,54 @@ writeFileSync(
   "utf8",
 );
 console.log("\nWROTE data/derived/zip-coverage-tiers.json");
+
+/* -------------------------------------------------------------------------- */
+/* THE RUNTIME LEDGER — a second, compact file                                */
+/*                                                                            */
+/* The file above is the AUDITABLE artifact: every zip, its evidence, and     */
+/* every government-to-zip edge with its own tier. It is 18 MB, and tracing   */
+/* 18 MB into a serverless function to answer "what tier is 85701" would be   */
+/* paying the whole ledger's weight on every cold start.                      */
+/*                                                                            */
+/* So the read path gets its own file holding exactly what it needs: the tier,*/
+/* the two evidence counts the reader note prints, and the unresolved         */
+/* special-district count. Encoded as a fixed four-number tuple per zip,      */
+/* because 33,791 objects of named keys is mostly key names.                  */
+/*                                                                            */
+/* THE TWO FILES ARE WRITTEN IN THE SAME PASS, FROM THE SAME VALUES. That is  */
+/* the property that matters: a runtime copy generated separately is a copy   */
+/* that can drift, and a tier that disagrees with its own audit trail is      */
+/* worse than no tier at all. `tests/coverage-tier.test.ts` asserts they      */
+/* agree, zip for zip.                                                        */
+/* -------------------------------------------------------------------------- */
+
+const RUNTIME_TIERS: CoverageTier[] = ["TIER_0", "TIER_1", "TIER_2", "TIER_3"];
+const compact: Record<string, [number, number, number, number]> = {};
+for (const [zip, row] of Object.entries(stamped)) {
+  compact[zip] = [
+    RUNTIME_TIERS.indexOf(row.tier),
+    row.evidence.territoryResolved,
+    row.evidence.bodiesEnumeratedFor,
+    row.unresolvedSpecialDistrictsInCounties,
+  ];
+}
+
+writeFileSync(
+  join(DERIVED, "zip-coverage-tiers-runtime.json"),
+  `${JSON.stringify({
+    stampedAt: STAMPED_AT,
+    tiers: RUNTIME_TIERS,
+    shape: [
+      "tierIndex",
+      "territoryResolved",
+      "bodiesEnumeratedFor",
+      "unresolvedSpecialDistrictsInCounties",
+    ],
+    denominator: { zips: total },
+    distribution: Object.fromEntries(distribution),
+    ocdTiers: Object.fromEntries(ocdTiers),
+    zips: compact,
+  })}\n`,
+  "utf8",
+);
+console.log("WROTE data/derived/zip-coverage-tiers-runtime.json (the read path's copy)");

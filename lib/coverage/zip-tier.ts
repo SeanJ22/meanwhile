@@ -33,9 +33,20 @@ export type StampedZipRow = {
   edges: Array<{ layer: string; id: string; tier: CoverageTier }>;
 };
 
+/** The compact on-disk shape the read path actually loads. */
+type RuntimeLedger = {
+  stampedAt: string;
+  tiers: CoverageTier[];
+  denominator: { zips: number; source?: string };
+  distribution: Record<string, number>;
+  ocdTiers: Record<string, CoverageTier>;
+  /** [tierIndex, territoryResolved, bodiesEnumeratedFor, unresolvedSpecial] */
+  zips: Record<string, [number, number, number, number]>;
+};
+
 type Ledger = {
   stampedAt: string;
-  denominator: { zips: number; source: string };
+  denominator: { zips: number; source?: string };
   distribution: Record<string, number>;
   zips: Record<string, StampedZipRow>;
   /**
@@ -52,6 +63,28 @@ type Ledger = {
  * Loaded lazily and cached. The ledger is 33,791 rows and most requests never
  * need it; a top-level read would put it in every cold start.
  */
+/**
+ * THE READ PATH READS THE COMPACT FILE, NOT THE AUDIT FILE.
+ *
+ * `zip-coverage-tiers.json` is the auditable artifact — every zip, its
+ * evidence, and every government-to-zip edge with its own tier — and it is
+ * 18 MB. Tracing that into a serverless function to answer "what tier is
+ * 85701" would pay the whole ledger's weight on every cold start.
+ *
+ * `zip-coverage-tiers-runtime.json` is 666 KB and holds exactly what the
+ * reader note and the two sold-store write paths need. Both are written in
+ * the SAME pass from the SAME values by `corepack pnpm tiers:stamp`, so they
+ * cannot drift, and the suite asserts they agree zip for zip.
+ *
+ * IT MUST ALSO BE TRACED INTO THE DEPLOY. This file is read through
+ * `process.cwd()`, which Next cannot see statically, so `next.config.ts`
+ * names it in `outputFileTracingIncludes` for every route that reaches it.
+ * Without that the read throws, the catch below returns null, and every zip
+ * on production renders UNKNOWN while every sold row is stamped UNKNOWN —
+ * a silent degradation that looks exactly like honest missing data.
+ */
+const RUNTIME_FILE = "zip-coverage-tiers-runtime.json";
+
 let ledger: Ledger | null = null;
 
 export function loadLedger(): Ledger | null {
@@ -62,9 +95,37 @@ export function loadLedger(): Ledger | null {
     // not exist in an ES module and would have thrown the first time a
     // reaction was written, inside a try/catch that would have reported the
     // throw as "no ledger". Caught by tests/package-module-type.test.ts.
-    ledger = JSON.parse(
-      readFileSync(join(process.cwd(), "data", "derived", "zip-coverage-tiers.json"), "utf8"),
-    ) as Ledger;
+    const raw = JSON.parse(
+      readFileSync(join(process.cwd(), "data", "derived", RUNTIME_FILE), "utf8"),
+    ) as RuntimeLedger;
+
+    // Decode the tuples once, on load, so every caller below sees the same
+    // named shape whichever file it came from.
+    const zips: Record<string, StampedZipRow> = {};
+    for (const [zip, t] of Object.entries(raw.zips)) {
+      zips[zip] = {
+        tier: raw.tiers[t[0]]!,
+        stampedAt: raw.stampedAt,
+        evidence: {
+          // The universe is the resolved set PLUS the unresolved special
+          // districts — the same sum the stamper promoted from.
+          universeGovernments: t[1] + t[3],
+          territoryResolved: t[1],
+          bodiesEnumeratedFor: t[2],
+          people: 0,
+          peopleAtKellyDepth: 0,
+        },
+        unresolvedSpecialDistrictsInCounties: t[3],
+        edges: [],
+      };
+    }
+    ledger = {
+      stampedAt: raw.stampedAt,
+      denominator: raw.denominator,
+      distribution: raw.distribution,
+      ocdTiers: raw.ocdTiers,
+      zips,
+    };
     return ledger;
   } catch {
     // A missing ledger is a STATE, not a tier. Every caller below turns it

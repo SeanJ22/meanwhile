@@ -1623,3 +1623,109 @@ host. Egress reputation, rule updates and rate history all move it.
 The stable entries in this file are the ones about STRUCTURE — where a feed
 lives, how a platform keys its records, what a field means. Those keep. The
 ones about who a WAF lets through do not.
+
+## Territory resolves nationally in one pass, and it is cheap (Prompt B, 2026-08-20)
+
+**Which governments govern a zip does not need a per-state hunt.** The Census
+publishes national cartographic boundary files, they are public domain, and the
+whole country joins in **fourteen seconds**. Every session before this one
+resolved territory a state at a time; that was never necessary.
+
+**The seven files, all from `https://www2.census.gov/geo/tiger/`, fetched by
+`corepack pnpm tiger:fetch` into `.cache/tiger` (gitignored):**
+
+| File | Vintage | Rows |
+|---|---|---:|
+| `GENZ2023/shp/cb_2023_us_county_500k` | 2023 | 3,235 |
+| `GENZ2023/shp/cb_2023_us_place_500k` | 2023 | 32,608 |
+| `GENZ2023/shp/cb_2023_us_cousub_500k` | 2023 | 36,367 |
+| `GENZ2023/shp/cb_2023_us_unsd_500k` | 2023 | 10,894 |
+| `GENZ2023/shp/cb_2023_us_elsd_500k` | 2023 | 1,957 |
+| `GENZ2023/shp/cb_2023_us_scsd_500k` | 2023 | 480 |
+| `GENZ2020/shp/cb_2020_us_zcta520_500k` | 2020 | 33,791 |
+
+**`cb_2023_us_zcta520_500k` IS A 404 — checked, not assumed.** ZCTA is a 2020
+product and there is no 2023 edition, so any join of these layers carries a
+three-year vintage gap between the zips and the governments. State it; do not
+paper over it.
+
+### Rungs this added
+
+* **A shapefile needs no dependency.** `lib/geo/shapefile.ts` reads the `.zip`,
+  the `.shp` (polygon types 5 and 15) and the `.dbf` in about 200 lines. It
+  refuses a file whose geometry and attribute counts disagree, because
+  shapefile records pair **by position** — a tolerated mismatch gives every
+  feature past the gap another feature's name.
+* **THE ENCODING IS IN THE FILE. READ IT.** Every Census boundary zip ships a
+  `.cpg` sidecar and these all say `UTF-8`. Hardcoding `latin1` — the
+  historical dBase default, and a reasonable guess — wrote a Texas place name
+  as mojibake across the whole national output.
+* **Point-in-polygon needs a latitude-band edge index to finish.** These layers
+  carry 3.4 million vertices (`cousub`) and 2.2 million (`unsd`). A plain ray
+  cast does not complete; bucketing each polygon's edges by latitude band once
+  turns the whole national join into 14 seconds.
+* **Sample the ZCTA, then ask the government.** A 0.01° interior lattice
+  (≈1.1 km) misses any government smaller than the lattice — it left **2,213
+  incorporated places and CDPs** looking like they belonged to no zip. A second
+  pass that takes each unreached government's own representative interior point
+  and finds its containing ZCTA recovered 2,581 of them. Reporting the first
+  pass alone would have been a method limitation rendered as a fact about the
+  country.
+
+### Two things in these layers are NOT governments
+
+Both were found by reading the pilot output, and either would have put a
+fictional body in front of a reader.
+
+* **Pseudo-entities.** TIGER tiles its layers without holes using the reserved
+  local codes `99997` ("not defined"), `99998` (water) and `99999`
+  (unorganized). 85641 resolved to `School District Not Defined` [`0499997`].
+  **27 nationally.**
+* **Statistical entities.** **12,587 of 32,608** `place` rows are CDPs
+  (`LSAD 57`) and **5,198 of 36,367** `cousub` rows are CCDs (`LSAD 22`). A CDP
+  is a name the Census gives a populated area so it can publish statistics for
+  it; a CCD is a statistical subdivision drawn where there are no minor civil
+  divisions. Neither has a council, a budget, a meeting or an elected official.
+  Also statistical: `LSAD 23` (census subarea), `46` (unorganized territory),
+  `00` (no description).
+
+  **`CITY` and `COUNTY` are NOT stripped** when classifying — `Albertville
+  City` and `Marshall County` are different governments and both agencies keep
+  the word. And New England gores, grants, plantations, locations and purchases
+  land in `UNCLASSIFIED` rather than being guessed into either bucket, because
+  their governmental status varies by state and by entity.
+
+### The wall this cannot climb
+
+**TIGER publishes no special-district boundary at any vintage. Not a subset —
+none.** So **39,555 of 39,555** special districts are unresolved, and they are
+43.55% of every government in the country. No amount of work with these files
+moves that number.
+
+Four rungs, named and not walked (tracker `PB02`):
+
+1. County assessor / auditor special-district tax-levy layers — they carry
+   boundaries because they have to bill them.
+2. State special-district registries, where a district files its territory with
+   the secretary of state or a local-government commission.
+3. Per-state GIS open-data portals publishing fire, water and library district
+   layers county by county.
+4. The district's own published service-area map, per district.
+
+**A district office's mailing zip is not territory.** A county water authority
+head-quartered downtown serves the county, and 39,542 of these districts carry
+a mailing zip that says nothing about where their authority runs.
+
+### Joining two agencies' names is a normalizer problem before it is a data problem
+
+The Census-to-NCES school-district crosswalk matched **2,038 of 13,859** on the
+first attempt, and that number was a finding about the normalizer rather than
+about the data. Census writes `CASTRO VAL UNIFIED SCH DIST`, `CAYUGA IND SCH
+DIST 902`; CCD writes `Castro Valley Unified`, `ASPERMONT ISD`. With
+abbreviation expansion, district-type acronym expansion (`ISD`, `CUSD`, `UFSD`,
+`CCSD`, …) and structural-token removal it matches **9,776**.
+
+**A join returning almost nothing looks exactly like two universes that do not
+overlap.** Only opening the unmatched rows tells them apart — and district
+numbers must be held OUTSIDE the key and used only to break a tie both sides
+recorded, because Illinois numbers its districts on both sides and Texas on one.

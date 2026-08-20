@@ -640,3 +640,61 @@ No new commands.
    `x = -8`. Nothing in either change would have shown it; a measurement at
    390×844 did. Two of this session's own defects were found that way, and
    neither was findable by reading.
+
+---
+
+## F01-continued — verification, class fixes, and the new walkthrough defects (2026-08-19)
+
+Branch `claude/f01-continued-0819`, merged as `d722605` in one PR (#112).
+**Items 1 through 11 of 17. Item 12 is the first not started.**
+
+### Where the work landed, by item
+
+| Items | Files |
+|---|---|
+| 1 — D50 reconciles | `scripts/photo-review.mts`, `scripts/photo-census.mts`, `docs/photo-review.md`, `docs/photo-report.md` |
+| 3 — the drifting floor | `scripts/walk-all.mts` (`servedExpectation`, the staleness guard) |
+| 4, 5 — 0a and B15 | `docs/tracker.csv` (`F02`, `B15`) |
+| 7 — the merge cadence | `CLAUDE.md` (Repo layout, beside the tracker rule) |
+| 8, 9 — the tally and the clear | **`lib/ballot/pick-tally.ts` (new)**, `lib/ballot/picks.ts`, `components/ballot/my-picks.tsx`, `components/ballot/picks-card.tsx`, `components/ballot/pick-control.tsx`, `app/ballot/page.tsx`, `scripts/walk-all.mts` (section F01C), **`scripts/verify-picks-f01c.mts` (new)** |
+| 10 — single-token names | **`lib/officials/person-name.ts` (new)**, **`scripts/name-census.mts` (new)**, `lib/registry/body-rosters.ts`, `components/map/popup/district-popup.tsx`, `components/map/popup/entity-modal.tsx`, `docs/source-ladder.md` |
+| 11 — chrome in extraction | **`lib/text/boilerplate.ts` (new)**, `lib/candidates/corpus.ts`, `scripts/fetch-candidate-corpus.mts`, **`scripts/chrome-sweep.mts` (new)**, `data/candidates/corpus-2026.json` |
+
+New modules: `lib/ballot/pick-tally.ts`, `lib/officials/person-name.ts`,
+`lib/text/boilerplate.ts`.
+New tests: `pick-tally`, `person-name`, `boilerplate`.
+New commands: `pnpm names:census`, `pnpm chrome:sweep`.
+
+### The five things worth carrying forward
+
+1. **A source file holding a literal NUL is invisible to every class sweep.**
+   `components/ballot/pick-control.tsx` carried two, so ripgrep called it binary
+   and skipped it — on the ballot surface, where four of this session's items
+   live. Any sweep run against this repo before 2026-08-19 did not see that file.
+   A sweep reporting "nothing found" and a sweep that could not look produce the
+   same output.
+2. **A floor over a moving window drifts by construction, and writing a fresher
+   number is not the fix.** F01 diagnosed Kearsarge correctly and then wrote
+   `14`, which would have gone red again in two weeks. The expectation has to be
+   COMPUTED from the same window the server uses, or it is a transcription of one
+   day.
+3. **A corpus keyed on the hash of its own extracted text cannot tell "they
+   changed the page" from "we got better at reading it."** Stripping chrome would
+   have reported 59 campaigns revising their positions on a day none did.
+   `extractorVersion` is what keeps the revision signal meaning what the word
+   says.
+4. **Two shared paths for one concept IS the defect.** The pick control resolved
+   explicit and derived picks; "My picks" read the explicit file alone. Neither
+   was wrong on its own terms, and the reader's own ballot undercounted itself.
+5. **Over-stripping and under-stripping produce the same asymmetry.** The first
+   chrome-marker list matched substrings, took one page from 7,652 extracted
+   characters to 25, and would have rendered a candidate as having said nothing
+   because of their theme's class names. Measured, not reasoned about.
+
+### What the four-zip walk caught that reading did not
+
+`scripts/verify-picks-f01c.mts` failed on all four pilot zips against my own
+first draft of the clear: a contest holding both an explicit pick and a Yes came
+back EXPLICIT, escaped suppression, and re-derived the Yes the instant the
+explicit file was emptied. The unit tests I had written at that moment all
+passed.

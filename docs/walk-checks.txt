@@ -86,6 +86,14 @@
 [0819] 85641: the ask box is on the who-governs card
 [0819] 85701: the ask box is on the who-governs card
 [0819] D40: distinct officials render distinct campaign books
+[F01C] 03255: after a clear, no surface still reflects a pick
+[F01C] 03255: after a clear, the stored picks file holds none
+[F01C] 03255: the picks tally's denominator equals the pick controls on the page
+[F01C] 03255: the picks tally's stated N equals its rendered rows
+[F01C] 85701: after a clear, no surface still reflects a pick
+[F01C] 85701: after a clear, the stored picks file holds none
+[F01C] 85701: the picks tally's denominator equals the pick controls on the page
+[F01C] 85701: the picks tally's stated N equals its rendered rows
 [F01] /ballot links the data-handling page instead of the retired sentence at 03255
 [F01] /ballot links the data-handling page instead of the retired sentence at 07866
 [F01] /ballot links the data-handling page instead of the retired sentence at 85641

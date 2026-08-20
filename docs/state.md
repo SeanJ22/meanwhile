@@ -2099,7 +2099,36 @@ replaced.
 
 ## 7. Current state of the branch
 
-**CURRENT: `claude/f01-walkthrough-0819`** (2026-08-19, the F01 session, THE
+**CURRENT: `claude/f01-continued-0819`** (2026-08-19, F01-continued —
+VERIFICATION, CLASS FIXES AND THE NEW WALKTHROUGH DEFECTS), branched from
+`main@5253e5f`, code merged as `bd4b05b` through PR #112 (`d722605`) and the
+close-out records in their own commit after it. **ONE code merge**, which is
+what the amended cadence in `CLAUDE.md` now asks for: a document cannot name
+the commit containing it, so records follow the code and the report labels
+which SHA carries which.
+
+F01-continued carried **seventeen grouped items** and closed **1 through 11**.
+**Item 12 is the first item not started**; 12 through 17 are untouched and the
+next session is F01-continued again, in the same order, with nothing added.
+The full account is in the F01-continued block at the end of this document,
+and `docs/session-brief.md` carries what to know before touching any of it.
+
+The headline findings, because each corrects something a previous report said:
+
+* **D50 reconciles now** — 902 collected = 531 via a division mapping + 23 via
+  a curated roster + 348 reachable by nobody. F01's missing 23 were a missing
+  CATEGORY, not a missing number, and no portrait stopped rendering.
+* **The author's numbering holds 50 rows, not 55** — 46 numbers, 0a/0b/0c and
+  the address addition. 46 finished, 3 boundary, 1 withdrawn, 0 never reached.
+* **The Kearsarge floor stopped being a number** and is computed each run.
+* **The reader's own ballot was counting half of itself** — a candidate pick
+  derived from a Yes was never in the tally, and "Clear my picks" cleared the
+  card and not the picks. Both fixed at one shared path, verified on four zips.
+* **Issue extraction was reading press-release rails as candidate speech.**
+  Mentions fell 72 → 64 across eight candidates, all downward, and that
+  direction is the correct outcome.
+
+PRIOR: **`claude/f01-walkthrough-0819`** (2026-08-19, the F01 session, THE
 FEEDBACK GATE), branched from `main@b1a46b2`, code merged as `a119578` and the
 close-out records as `1203d48` and `5daeb8f` — **three merges, and the brief
 asked for one**; the reason, and which SHA carries what, are stated in the F01
@@ -12193,3 +12222,376 @@ while the code was already right.** It happened twice more here.
   every remaining body's next rung named).
 * `context.md` **25.5 KB of 40 KB**. Mirror: the canonical 15 present, nothing
   undeclared; code mirror 12 files, 465.4 KB at `93c5385`.
+
+## F01-continued — 2026-08-19: the numbers reconcile, and the ballot stops counting half of itself
+
+F01 shipped its build work and did not close. Its report did not reconcile, and
+the author's phone walkthrough of 2026-08-19 found seven further reader-facing
+defects. This session is items 1 through 11 of that brief, in the order given.
+**Item 12 is the first item not started.**
+
+### What the reconciliations found, and it was not what anyone expected
+
+**Item 1 — D50's missing 23 were never missing.** F01 reported 902 portraits,
+531 mapped to a division and 348 mapping to nothing, and 531 + 348 = 879. The
+gap is one CATEGORY, not one number: `photo-review.mts` builds its reach map
+from division mappings FIRST and then adds curated-body-roster keys that are not
+already present. Those 23 roster-only portraits are reachable, and F01 reported
+the division half against the whole. The doc's own committed figure was already
+554. The standing figure is now a PARTITION written by the generator, so it
+cannot be reported with a component missing:
+
+| | Count |
+|---|---|
+| **Collected** | **902** |
+| reachable via a division mapping | 531 |
+| reachable via a curated body roster | 23 |
+| reachable by nobody | 348 |
+
+**The 591 → 531 movement is not a movement.** They are two different measures,
+and neither is a correction of the other: 591 is the SLOT side — people the
+product renders, 591 of 751 with a portrait — and it is unchanged today. 531 is
+one component of the MANIFEST side. The old-method number for 2026-08-19 is 591.
+The denominator moved 750 → 751 because F01 added Dr. Gabriel Trujillo to the
+TUSD roster and the census was never re-run.
+
+**No portrait stopped rendering, and that is proven rather than asserted.**
+`git diff a606659..HEAD` over `officeholders-us/04/33/34.json`,
+`roster-photos.json` and `official-photos.json` is EMPTY — every input to the
+partition is byte-identical to before F01, so nothing's reachability could have
+moved.
+
+**Item 2 — the count is 50, not 55.** The F01 brief was recovered from the
+session transcript and the walkthrough document from git (`be0a590^`), so the
+numbering is read rather than guessed. Sean's namespace holds **46 decimal
+numbers (1.1 – 13.2), 0a/0b/0c, and the address addition — 50 rows.** No number
+is missing and none is duplicated, and every distinct finding in the walkthrough
+maps onto one, so nothing is unrepresented. The "fifty-five" counts spoken
+findings at a finer grain than the numbering collapses them to — the meetings
+order is raised twice, the gap language three times. **46 finished · 3 boundary
+· 1 withdrawn · 0 never reached**, summing to 50. The three boundary stops are
+1.2, 2.2 and 4.2, resolved from F01's own double-listing: each shipped its
+render with an honest named gap and left a data hunt behind it.
+
+**Item 4 — the 186 subcommittee rows are not 186 subcommittees.** Enumerated,
+not sampled: all 230 committee rows classified by id shape, name convention and
+seat presence. 181 children, and **every one of them is a genuine subcommittee**
+— 0 orphans, 0 name mismatches, 0 duplicates of a parent, 0 task forces, 0
+working groups, 0 commissions. The **186 reconciles as 179 seated subcommittees
+plus 7 seated parents** whose jurisdiction is absent upstream, and those 7 are
+all five joint bodies plus both House select committees. Upstream carries
+jurisdiction for standing committees only, which is a fact about the source's
+shape rather than a gap in our retrieval.
+
+### A floor stops being a number
+
+**Item 3.** F01 diagnosed the Kearsarge regression correctly — the snapshot held
+all fifteen sittings and the oldest had reached the ninety-day back edge of the
+serving window — and then wrote `14`, which is the same defect one day fresher.
+It would have gone red again on 2026-09-02 when 2026-06-04 aged out, and again <!-- expected-future: the date the old fixed floor would next have gone red -->
+in October. **The expectation is computed now**, every run, from the snapshot the
+deploy is serving and the server's own window constants, mirrored from
+`lib/meetings/query.ts`. `least` keeps only the durable half of the claim
+(Kearsarge's sittings are on the board, plural) and the computed half carries the
+precision — together strictly stronger than the old fifteen, because `least`
+catches rows vanishing from the data and the expectation catches any row the
+window admits failing to reach the reader. The staleness guard is the other half:
+when the deploy's snapshot stamp is not the one on disk it reports COULD NOT RUN
+with both stamps, never a red.
+
+The second stale check needed nothing. The `0814c` ballot device-only checks were
+already retired in F01 and replaced under the `F01` identity; the brief's premise
+that both were left armed holds for the floor alone.
+
+### The reader's own ballot was counting half of itself
+
+**Item 8.** A pick can be arrived at two ways: a tap on the pick control, or a
+Yes on the reaction control above it, which M134 derives a pick from. The
+per-contest control resolved both; **the "My picks" list read the explicit file
+alone.** The consequence fell along a line that matters — a MEASURE has no
+measure-level reaction, because reactions attach to provisions, so a measure pick
+can only ever be explicit and was always counted, while a CANDIDATE carries a
+reaction target and was often not. The author found it from the outside: *"the
+tally counts state ballot measures only."*
+
+Two surfaces counted picks and both were fed that list, which is the defect
+rather than an aggravation of it. They converge on `lib/ballot/pick-tally.ts`,
+which the per-contest control also resolves through, so the two cannot disagree
+about what a pick is. The denominator is built by the page's own
+`pickOptionsFor` — the same builder all three `PickControl` call sites render
+from — so M is the rendered row count by construction rather than by a second
+query free to disagree with the page it sits on.
+
+**Item 9.** "Clear my picks" emptied the explicit file, so the card vanished and
+every derived pick went on standing underneath it. A control a reader reads as a
+delete has to be one. The suppression lives in the picks file rather than in the
+reaction record, and that is not timidity: `wtp.reactions` is the device's copy
+of answers it has already sent, it exists so a reader can CHANGE one, and
+deleting it would take that away while removing nothing from the anonymous
+totals — which the capture notice already says cannot be un-joined.
+
+**The four-zip walk caught a defect in the fix.** The first draft resolved the
+suppression against the reader's stored picks, so a contest holding both an
+explicit pick and a Yes came back EXPLICIT, escaped suppression, and re-derived
+the Yes the instant the file was emptied. It failed on all four pilot zips with
+"Your pick for this race: Katie Hobbs" still standing. A clear removes the
+explicit picks, so the state to suppress is the state that exists after they are
+gone.
+
+Verified at 430×932 on the four pilot zips, all 32 checks green: 85701 N=2 of
+M=20, 85641 2 of 20, 07866 2 of 6, 03255 2 of 12; every zip's M equals its
+rendered pick controls, N equals its rendered rows, and after a clear no surface
+reflects a pick — including after a reload, which is where a suppression living
+in React state would have shown.
+
+### A name with one token in it
+
+**Item 10.** Vail Unified's superintendent was carried as "Carruth". A bare
+surname is not a partial answer, it is a confident one: a reader cannot tell it
+from a mononym, cannot search for the person, and cannot see that we are unsure.
+Nothing in this product had ever been asked the question. `pnpm names:census`
+asks it of all **1,369 people held — 0 incomplete names**, with the breakdown by
+kind and state and the flagged rows printed per person, because a mononym is a
+per-row ruling and nothing in the data marks one.
+
+Running the detector found two defects in the detector. It stripped honorifics
+and suffixes across the whole string, so "J.D." matched the Juris Doctor pattern
+and flagged **J.D. Mesnard** and **J.D. Bernardy** — two sitting legislators who
+publish themselves that way — as half-named; honorifics come off the front and
+suffixes off the back now. And the census read the statewide executives' outer
+row instead of their holder and reported three governors as nameless, which is a
+census reporting what it could not read as a finding about the data.
+
+**Vail's root cause is none of the three the brief proposed as likely.** Measured:
+the home page's static HTML already links `/page/superintendent`, so discovery was
+never blind; that page answers **200 to a plain fetch**, so no browser was needed;
+and its HTML holds "John Carruth" six times, including
+`<strong>John Carruth<br>Superintendent</strong>`. The fetch and the discovery both
+worked and **the extraction failed** — the district runs on **Apptegy**, which ships
+page content as an escaped JSON payload embedded in the HTML, so reading the
+rendered prose finds a news blurb saying "Superintendent Carruth" and never the
+byline. Rung 7 in miniature: the page's own data was right there and better than
+its prose. The class is **2, not large** — 2 of 19 wiring rows are `APPTEGY` — and
+it is bounded to person hunts, because the meetings adapter already reads that
+site's own events API.
+
+### The extraction was reading CMS templates as candidate speech
+
+**Item 11**, and it is a correctness and neutrality defect rather than a
+formatting one. Analilia Mejia was credited with health care and prescription
+costs on the strength of a press-release index rail — a list of links, beginning
+mid-word. A candidate whose site carries a "Read More" rail gets credited with
+issues they never addressed while a candidate on a simpler site shows "mentions 0
+of them", which is an information asymmetry **the product manufactures itself**
+inside a live contest.
+
+Three independent means, in `lib/text/boilerplate.ts`: structural exclusion
+before extraction on every site; a repetition test over pages of the same site;
+and a passage-level reading, because a rail inside `<main>` with no marking
+defeats both of the others. **The repetition test could not run anywhere** — all
+51 sites hold fewer than three pages — so structural exclusion stood alone on 51
+of 51, and that is stated rather than implied. RULING 9 is enforced where the
+passage is CREATED, so chrome cannot feed the tally either; filtering the display
+and not the count would leave the asymmetry in the number being sold while hiding
+it from the reader.
+
+| | before | after |
+|---|---|---|
+| quotations | 113 | 101 (12 withdrawn) |
+| issue mentions (candidate × issue) | 72 | 64 (−8) |
+| quotations beginning or ending mid-word | **113** | **0** |
+
+Eight of 49 candidates' counts moved and every one moved DOWN — Biggs 1→0, Swing
+3→2, Ciscomani 3→2, Grijalva 1→0, Pappas 4→3, Selen 2→1, Mejia 2→1, Booker 1→0.
+That direction is the correct outcome and is reported as a correction.
+
+**A defect in the fix, caught by measuring rather than by reasoning.** The first
+marker list matched substrings anywhere in an attribute, so `menu` hit 263
+containers on `azleg.gov` and the strip took a page from 7,652 extracted
+characters to 25 — the same asymmetry wearing the other face. Markers match whole
+class tokens now.
+
+**And the corpus needed a new field to survive the change.** It is keyed on the
+hash of its own extracted text, so stripping chrome would have reported 59
+campaigns revising their positions on a day none did — destroying the one signal
+that carries this product's accountability half by using it for something else.
+`extractorVersion` distinguishes "they changed the page" from "we got better at
+reading it": the re-collection reports **0 revisions and 30 re-extractions**, and
+`currentExtraction` supersedes an older-extractor copy for READING while the file
+stays append-only.
+
+### Two defects found in passing, both instruments lying quietly
+
+* **`components/ballot/pick-control.tsx` carried two literal NUL bytes** — a join
+  separator written as the character. **ripgrep classifies such a file as binary
+  and SKIPS it**, so every class sweep of this codebase silently missed a
+  ballot-surface file, on the surface four of this session's items live on. Any
+  sweep run against this repo before 2026-08-19 did not see that file.
+* **`scripts/photo-census.mts` dated its own document in UTC** and wrote
+  2026-08-20 at 18:19 on 2026-08-19 — the smaller sibling `CLAUDE.md`'s date rule <!-- expected-future: the wrong date the UTC bug produced, quoted as evidence -->
+  names, in a script nothing audited.
+
+Both are the same family as the two the reconciliations found: an instrument
+reporting confidently about something it was not measuring.
+
+### Two existing tests corrected, both wrong rather than newly broken
+
+`D05` asserted `attempted >= documents.length`, which append-only guarantees will
+break the first time a second run appends (68 attempted, 96 documents). And the
+`P02` headline test took the first candidate key in document order, which after
+the strip is a candidate whose only page is a JS shell — it was reading the
+NOTHING_COLLECTED sentence and calling that a failure of the other one.
+
+
+### Item 2 — the completion table, one row per number in the author's own numbering
+
+Read from the F01 brief (recovered from that session's transcript) and from the
+walkthrough document (recovered from git at `be0a590^`), so the numbering is read
+rather than guessed. Every row carries exactly ONE ending.
+
+| # | What it was | Ending |
+|---|---|---|
+| 0a | Are the child committee rows subcommittees? | finished |
+| 0b | Do we hold top-office-holder data at all? | finished |
+| 0c | Is `funding-fight` the 2026 shutdown vote? | finished |
+| 1.1 | "Places within" renders blank | finished |
+| 1.2 | Top two office holders on every small card | **boundary** — render shipped, appointed executives open (`F03`) |
+| 1.3 | Lock "More" to the bottom | finished |
+| 2.1 | The body's own website in Overview | finished |
+| 2.2 | Top office holders in Representation | **boundary** — same data half as 1.2 (`F03`) |
+| 2.3 | Photos on Representation rows | finished |
+| 2.4 | Fix the back path | finished |
+| 2.5 | Tab row stays fully visible | finished |
+| 3.1 | Reverse the meetings sort and group it | finished |
+| 3.2 | Annotate the repeated attribution | finished |
+| 4.1 | One expanded pill at a time | finished |
+| 4.2 | Explain and structure the committee list | **boundary** — hierarchy shipped, 186 descriptions open (`F02`) |
+| 4.3 | Hyperlink office addresses to Google Maps | finished |
+| 5.1 | Make "When it mattered" count what it says | finished |
+| 5.2 | Count every vote in a session the member served | finished |
+| 5.3 | Collapse sub-sections by default | finished |
+| 5.4 | Most recent votes sort to the top | finished |
+| 5.5 | Record chamber votes on bills that are not law | finished |
+| 5.6 | Fill the 2026 shutdown and appropriations gap | finished |
+| 6.1 | Strike the gap language everywhere | finished |
+| 6.2 | Keep the factual half only | finished |
+| 6.3 | Trim the incumbent line | finished |
+| 6.4 | Annotate filing provenance | finished |
+| 7.1 | Kill the stray divider lines | finished |
+| 7.2 | Fix the calendar-source contradiction | finished |
+| 7.3 | Check the mobile layout | finished |
+| 8.1 | Tapping outside closes Ask | finished |
+| 8.2 | Shrink the desktop Ask width | finished |
+| 8.3 | Rewrite the Ask placeholder | finished |
+| 9.1 | Popups open fully within the viewport | finished |
+| 9.2 | Fix "Districts in view" | finished |
+| 9.3 | Make the spider effect actually spider | finished |
+| 9.4 | Lightweight reset control on the map | finished |
+| 9.5 | Reset means "return to my last zip" | finished |
+| 9.6 | PRESERVE the select/deselect shading | finished |
+| 10.1 | The one-instance pill cluster | **withdrawn** by the author |
+| 10.2 | Match the sidebar widths | finished |
+| 10.3 | The sidebar sizes to its contents | finished |
+| 11.1 | Annotate the pending-wording disclaimer once | finished |
+| 11.2 | Delete the self-contradicting privacy line | finished |
+| 11.3 | Fix the alphabetical-order claim | finished |
+| 11.4 | Explain ordering honestly | finished |
+| 12.1 | Redesign the "Create my card" presentation | finished |
+| 12.2 | Respect the theme | finished |
+| 13.1 | Fix the Welcome pin alignment | finished |
+| 13.2 | Compress the mission vertically | finished |
+| — | The address copy (the brief's `1e`) | finished |
+
+**46 finished · 3 stopped cleanly at a boundary · 1 withdrawn · 0 never
+reached = 50 rows.**
+
+**The count is 50, not 55**, and the difference is not a missing item. Every
+number from 1.1 to 13.2 is present, none is duplicated, and every distinct
+finding in the recovered walkthrough maps onto one of them — so nothing the
+author raised is unrepresented. The "fifty-five" in the F01 brief counts spoken
+findings at a finer grain than the numbering collapses them to: the meetings
+order is raised twice, the gap language three times, "places within" twice.
+
+Each boundary stop shipped its render with an honest named gap and left a data
+hunt behind it, which is why it is a boundary and not a finish: 1.2 and 2.2 wait
+on appointed executives (`F03`, now 2 of 12), and 4.2 waits on 186 subcommittee
+descriptions the upstream file does not carry (`F02`).
+
+
+### State as of 2026-08-19 (F01-continued)
+
+* **Code SHA `d722605`** (PR #112, merging `bd4b05b`), verified via `/api/build`
+  — instrument: a `curl` against `https://sparkwtp.netlify.app/api/build`
+  carrying `x-wtp-synthetic-run: f01c-deploy@…` and `cache-control: no-cache`,
+  which returned
+  `{"commitShort":"d722605","branch":"main","context":"production"}`.
+  **ONE code merge**, as RULING 1 requires. This block ships in a separate
+  close-out commit, which it therefore cannot name — the amendment written into
+  `CLAUDE.md` this session says exactly why, and `git log` is the record of that
+  last hop.
+* `walk:all` against the shipped build `d722605`: **332 passed, 0 regressions, 0
+  could-not-run.** 332 distinct identities of 332 run; baseline 324, **added 8,
+  GONE 0.** All eight are the new `F01C` section — the picks tally's denominator
+  against the pick controls the page actually renders, its stated N against its
+  rendered rows, and, after a clear, that no surface still reflects a pick and
+  the stored file holds none, on 85701 and 03255 each.
+* Gates: test **1281 pass / 0 fail** (+41 this session), lint **0 errors / 11
+  allowlisted warnings**, `tsc --noEmit` clean, build green in **BOTH** modes.
+* Budgets, from `scripts/bundle-budget.json` and the build's own exact-bytes
+  line, never the rounded KB. Local: Budget 1a **196** files (baseline 195,
+  ceiling 220), identical in both modes; Budget 1b default **927** (baseline
+  935, ceiling 1050) and **standalone 1130** (baseline 1138, ceiling 1300);
+  Budget 2 raw **2,742,154** / gzip **826,504** across 13 chunks against
+  **3,100,000 / 940,000**. **No ceiling moved.**
+  The named CI run for the INHERITED figures (item 6) is
+  **GitHub Actions run 32314515770** at `5253e5f`, jobs **96263935351**
+  `build (default)` and **96263935615** `build (standalone)`, both success:
+  1a **196**, 1b default **935** and standalone **1138**, client raw
+  **2,742,226** / gzip **826,535**. F01 reported 927 and raw 2,741,934 / gzip
+  826,483 — its own windows/local figures. Same commit, different platform, and
+  the budget file already documents client cost as platform-dependent.
+* **Production rows this session: 205, all SYNTHETIC, across TWO run ids**, and
+  they are named because they are plumbing wearing reader clothes:
+  * `f01c-item3@2026-08-20T01:34:42Z` — **102 rows** (76 SEARCH, 2 <!-- expected-future: a run id, whose label is the UTC instant of the run -->
+    OFFICIAL_OPENED, 24 QUESTION_ASKED), 18:34–18:38 local. The local `walk:all`
+    proving item 3's change.
+  * `f01c-final@2026-08-20T02:26:20Z` — **103 rows** (77 SEARCH, 2 <!-- expected-future: a run id, whose label is the UTC instant of the run -->
+    OFFICIAL_OPENED, 24 QUESTION_ASKED), 19:26–19:30 local. The walk against the
+    shipped build.
+
+  **No reaction was tapped, no feedback row written.** The `f01c-deploy` curl hit
+  `/api/build`, which writes no search-log row. `scripts/verify-picks-f01c.mts`
+  DOES tap reactions and therefore refuses any base URL that is not localhost;
+  it ran against `localhost:3000`, whose `DATABASE_URL` points at a Neon branch
+  that cannot authenticate, so none of it landed anywhere. The corpus
+  re-collection and the Vail probes fetched external sites, not ours.
+* `search_log` **organic 139** — up from F01's 125, **delta +14** — synthetic
+  5079, unknown 2845, author 17, total 8080, reconciling exactly. Feedback
+  store: 3 rows, all synthetic, 0 organic, unchanged. **None of the +14 is
+  ours**, and the evidence is the clock rather than an assurance: all fourteen
+  landed 17:46–18:15 local, and this session's first production request was the
+  walk at 18:34. Three reaction rows landed in the same earlier window
+  (17:37–17:38, one browser key). Per the standing ruling the census is closed as
+  a question and nothing further was investigated.
+  **Worth knowing, and not fixed here:** `reactions` carries no `run_class` or
+  `run_id` column, so a reaction row cannot declare itself the way a search-log
+  row can. The only way to attribute one is its timestamp and its key hash.
+* Tracker **376 → 383 rows**, no duplicate IDs. `F04`–`F10` created;
+  `F02` (0a's standing answer), `F03` (1 of 12 → 2 of 12) and `B15` (the F01
+  close F01 never wrote into it) updated **in place**.
+* Screenshots: none existed for this session to read — the author's 29 were F01's
+  and were read there. This session PRODUCED eight
+  (`screenshots/f01c-picks-<zip>-{before,after}.png`) and **read four of eight**
+  as images: the four "before" shots, one per pilot zip, each showing the tally
+  line and the rows it claims to describe. The four full-page "after" shots were
+  verified by DOM assertion in the same script and again by the production walk,
+  and that difference is stated rather than smoothed.
+* Playbook diff: **nothing new for `docs/zip-playbook.md`** — no zip or depth run
+  happened. `docs/source-ladder.md`'s appointed-executive ladder gained a
+  rewritten Vail row (rung 2, HIT, with the extraction root cause) and moved from
+  1 of 12 to 2 of 12.
+* `context.md` **25.5 KB of 40 KB**. Mirror: the canonical 15 present, nothing
+  undeclared; code mirror 12 files, 465.4 KB at `bd4b05b`.
+* **Items 1–11 finished. Item 12 — moving the long sections onto the battlecard —
+  is the first item not started.** Items 12 through 17 are untouched, in the
+  brief's order, with nothing added.

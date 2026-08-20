@@ -8,7 +8,7 @@ walked straight past the `Author-revised` stamp on the disclosure rule.
 each one, and the corrected date is typed into `CLAUDE.md` by hand from
 `pnpm stamp` or from the recovered column below.**
 
-Run on 2026-08-19 (America/Phoenix). 25 stamp(s) audited.
+Run on 2026-08-19 (America/Phoenix). 26 stamp(s) audited.
 
 **Method.** Each rule's opening clause — the bold title it leads with — is a
 long string that entered `CLAUDE.md` once. `git log -S<clause> -- CLAUDE.md`
@@ -53,6 +53,7 @@ lying. The recovered dates come from the unfiltered pickaxe.
 | A read from the subject's own official source IS the veri… | 2026-08-16 | 2026-08-16 | 0 | `ea54049` The documents: four standing rules, the cuts, and the conflict left for the author |
 | More viewport must never mean fewer pins. | 2026-08-16 | 2026-08-16 | 0 | `ea54049` The documents: four standing rules, the cuts, and the conflict left for the author |
 | Disclosure at the point of capture — the one-time acknowl… | 2026-08-13 | 2026-08-13 | 0 | `8fa5759` 3: the defect batch — what-first titles, the narrowing modal, the one-time disclosure, candidate reactions, the mayor, the past, the smalls |
+| One CODE merge per session; close-out records may follow … | 2026-08-19 | 2026-08-19 | 0 | `bd4b05b` F01-continued items 1-11: the numbers reconcile, and four reader-facing defects close |
 
 ## What the deltas say
 
@@ -106,6 +107,7 @@ well would leave nothing to re-audit if the ruling is ever revisited.
 | A read from the subject's own official source IS the veri… | none | 1 |
 | More viewport must never mean fewer pins. | none | 1 |
 | Disclosure at the point of capture — the one-time acknowl… | none | 1 |
+| One CODE merge per session; close-out records may follow … | none | 1 |
 
 A `1` in the last column means the clause entered the file exactly once and
 the recovery is unambiguous. Anything higher means the string was touched more

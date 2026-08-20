@@ -98,7 +98,8 @@
     "tiger:fetch": "tsx scripts/fetch-tiger-national.mts",
     "zipgov:build": "tsx scripts/build-zip-governments.mts",
     "territory:resolve": "tsx scripts/resolve-census-territory.mts",
-    "pilot:verify": "tsx scripts/verify-pilot-zips.mts"
+    "pilot:verify": "tsx scripts/verify-pilot-zips.mts",
+    "tiers:stamp": "tsx scripts/stamp-coverage-tiers.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

@@ -146,7 +146,31 @@ export function readShp(buf: Buffer): ShapeRecord[] {
 /* .dbf                                                                       */
 /* -------------------------------------------------------------------------- */
 
-export function readDbf(buf: Buffer): Record<string, string>[] {
+/**
+ * THE ENCODING IS DECLARED IN THE FILE, AND THE FIRST DRAFT GUESSED IT WRONG.
+ *
+ * `readDbf` hardcoded `latin1`, and the national join wrote the Texas place
+ * César Chávez CDP with each of its two accented characters expanded into the
+ * two-character sequence a UTF-8 byte pair becomes when it is read one byte at
+ * a time. Caught by this repo's own `tests/mojibake.test.ts` rather than by
+ * anything here — and that guard then caught this comment, when the first
+ * version of it pasted the broken spelling in as an example. Every Census
+ * boundary zip ships a `.cpg` sidecar naming its code page, and these all say
+ * `UTF-8`.
+ *
+ * So the encoding is READ, never assumed. A shapefile with no `.cpg` falls
+ * back to `latin1`, which is the historical dBase default — stated here so
+ * the fallback is a decision rather than a leftover.
+ */
+function encodingFrom(entries: ZipEntry[]): BufferEncoding {
+  const cpg = entries.find((e) => e.name.toLowerCase().endsWith(".cpg"));
+  if (!cpg) return "latin1";
+  const declared = cpg.data.toString("ascii").trim().toUpperCase();
+  if (declared.includes("UTF-8") || declared.includes("UTF8")) return "utf8";
+  return "latin1";
+}
+
+export function readDbf(buf: Buffer, encoding: BufferEncoding = "latin1"): Record<string, string>[] {
   const headerLength = buf.readUInt16LE(8);
   const recordLength = buf.readUInt16LE(10);
   const recordCount = buf.readUInt32LE(4);
@@ -164,7 +188,7 @@ export function readDbf(buf: Buffer): Record<string, string>[] {
     let offset = start + 1;
     const row: Record<string, string> = {};
     for (const f of fields) {
-      row[f.name] = buf.toString("latin1", offset, offset + f.length).trim();
+      row[f.name] = buf.toString(encoding, offset, offset + f.length).trim();
       offset += f.length;
     }
     out.push(row);
@@ -198,7 +222,7 @@ export function readBoundaryZip(buf: Buffer): { features: Feature[]; counts: str
   if (!dbf) throw new Error("boundary zip holds no .dbf");
 
   const shapes = readShp(shp.data);
-  const rows = readDbf(dbf.data);
+  const rows = readDbf(dbf.data, encodingFrom(entries));
   if (shapes.length !== rows.length) {
     throw new Error(
       `shapefile pairing is broken: ${shapes.length} geometries against ${rows.length} ` +

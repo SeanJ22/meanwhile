@@ -276,6 +276,37 @@ export const searchLog = pgTable(
      * n-stores-never-join rule is unaffected.
      */
     runId: text("run_id"),
+    /**
+     * **THE COVERAGE TIER AT THE MOMENT THIS ROW WAS WRITTEN** (RULING 6,
+     * Prompt B item 8, 2026-08-20).
+     *
+     * The business sells aggregate civic-interest signal. Interest from a
+     * Tier 3 zip with forty candidate cards and interest from a Tier 1 zip
+     * with none are NOT the same measurement — the first is a reader
+     * responding to what they read, the second is a reader responding to an
+     * empty page. If the tier is not on the row, no buyer can weight them
+     * and neither can we.
+     *
+     * Stamped from the ledger at write time, never inferred at read time: a
+     * tier recomputed when a buyer runs an export would describe today’s
+     * coverage rather than the coverage the reader actually saw, which is
+     * the one thing the number is for.
+     *
+     * NOT NULLABLE AND NOT DEFAULTED. A write that cannot state a tier fails
+     * (item 8.3) rather than silently producing a row a buyer will read as
+     * Tier 0. `UNKNOWN` is the honest value for a row whose tier genuinely
+     * cannot be recovered — the backfill of rows written before this column
+     * existed — and it is never ordered against the four tiers.
+     *
+     * WHY THIS DOES NOT BREAK n-STORES-NEVER-JOIN: it is a five-value enum
+     * describing a PLACE’s research depth, identical for every reader in
+     * that place. A column that can hold "TIER_1" cannot single anyone out,
+     * exactly as `suspect_reason` cannot. `tests/db-schema.test.ts` carries
+     * it as an allowed shared column with this reasoning.
+     */
+    coverageTier: text("coverage_tier", {
+      enum: ["TIER_0", "TIER_1", "TIER_2", "TIER_3", "UNKNOWN"],
+    }).notNull(),
   },
   (table) => [
     index("search_log_occurred_at_idx").on(table.occurredAt),
@@ -492,6 +523,37 @@ export const reactions = pgTable(
      * already knows — `hashRunId` in `lib/db/reactions.ts`.
      */
     runId: text("run_id"),
+    /**
+     * **THE COVERAGE TIER AT THE MOMENT THIS ROW WAS WRITTEN** (RULING 6,
+     * Prompt B item 8, 2026-08-20).
+     *
+     * The business sells aggregate civic-interest signal. Interest from a
+     * Tier 3 zip with forty candidate cards and interest from a Tier 1 zip
+     * with none are NOT the same measurement — the first is a reader
+     * responding to what they read, the second is a reader responding to an
+     * empty page. If the tier is not on the row, no buyer can weight them
+     * and neither can we.
+     *
+     * Stamped from the ledger at write time, never inferred at read time: a
+     * tier recomputed when a buyer runs an export would describe today’s
+     * coverage rather than the coverage the reader actually saw, which is
+     * the one thing the number is for.
+     *
+     * NOT NULLABLE AND NOT DEFAULTED. A write that cannot state a tier fails
+     * (item 8.3) rather than silently producing a row a buyer will read as
+     * Tier 0. `UNKNOWN` is the honest value for a row whose tier genuinely
+     * cannot be recovered — the backfill of rows written before this column
+     * existed — and it is never ordered against the four tiers.
+     *
+     * WHY THIS DOES NOT BREAK n-STORES-NEVER-JOIN: it is a five-value enum
+     * describing a PLACE’s research depth, identical for every reader in
+     * that place. A column that can hold "TIER_1" cannot single anyone out,
+     * exactly as `suspect_reason` cannot. `tests/db-schema.test.ts` carries
+     * it as an allowed shared column with this reasoning.
+     */
+    coverageTier: text("coverage_tier", {
+      enum: ["TIER_0", "TIER_1", "TIER_2", "TIER_3", "UNKNOWN"],
+    }).notNull(),
   },
   (table) => [
     // One reaction per browser key per target: a changed answer overwrites

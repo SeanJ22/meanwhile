@@ -215,6 +215,19 @@ test("the collection stores share no joinable column", () => {
     "run_class",
     "run_id",
     "suspect_reason",
+    /*
+     * - `coverage_tier` (RULING 6, Prompt B item 8, 2026-08-20) — a five-value
+     *   enum describing how deeply this product has researched a PLACE:
+     *   TIER_0 through TIER_3, plus UNKNOWN. It is identical for every reader
+     *   in that place and changes only when a session does research, so it
+     *   carries no per-person value and cannot relate two readers' rows —
+     *   the same reasoning as `suspect_reason` directly above. It is on both
+     *   sold stores on purpose: a buyer weighting civic-interest signal by
+     *   coverage depth needs it on the row, and interest from a Tier 3 zip
+     *   with forty candidate cards is not the same measurement as interest
+     *   from a Tier 0 zip with none.
+     */
+    "coverage_tier",
   ]);
 
   /*

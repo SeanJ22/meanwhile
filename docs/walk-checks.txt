@@ -94,7 +94,6 @@
 [F01C2] 07866: the in-app voting panel opens on the ballot
 [F01C2] 07866: the placeholder address names no region
 [F01C2] 07866: the polling-place affordance is an in-app pill, not a link out
-[F01C2] 07866: the positions search finds a term from the card's own text
 [F01C2] 85701: a multi-day window carries the affordance too
 [F01C2] 85701: every candidate row carries a battlecard pill
 [F01C2] 85701: every dated voting event can be calendared
@@ -357,3 +356,11 @@
 [hotfix-0817] 03255: no carried row is claimed to be as fresh as the snapshot
 [hotfix-0817] 03255: only rows from a source that reported a gap carry a mark
 [hotfix-0817] 03255: the footer does not speak for the carried rows
+[promptB] /ballot explains every contest it withholds at 03255
+[promptB] /ballot explains every contest it withholds at 07866
+[promptB] /ballot explains every contest it withholds at 85641
+[promptB] /ballot explains every contest it withholds at 85701
+[promptB] /ballot states its coverage tier at 03255
+[promptB] /ballot states its coverage tier at 07866
+[promptB] /ballot states its coverage tier at 85641
+[promptB] /ballot states its coverage tier at 85701

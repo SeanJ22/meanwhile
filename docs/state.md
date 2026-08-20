@@ -13187,3 +13187,162 @@ cancellation.
   which the pills on the WHOLE page are countable by eye. That is what was
   read. The below-the-fold half of the claim rests on a picture, not on a DOM
   query.
+
+---
+
+## Prompt B — ingest, the national denominator, coverage tiers, and the tracker (2026-08-20)
+
+**All eleven items finished.** The session's deliverable is
+`data/derived/gap-ledger.md`.
+
+**Ships.** One planned code merge, PR
+[#116](https://github.com/SeanJ22/We-The-People/pull/116), merged as
+**`3bc8834`**, which is what `/api/build` reports production serving. The
+branch carried eight commits and they landed together; **there was no second
+code merge**, and the only exception RULING 1 permits was not used. Close-out
+records follow as their own commits, per the rule that a document cannot name
+the commit containing it.
+
+### What replaced the coverage number
+
+The product reported coverage against its own registry. That number always
+looked good and meant nothing, because a registry that defines its own
+denominator cannot be caught missing anything. Three real denominators now
+stand behind every claim:
+
+* **47,834 of 90,837** Census governments resolve to at least one zip (52.66%).
+* **39,555 of 39,555** special districts are **UNRESOLVED** — 43.55% of every
+  government in the country, and TIGER publishes no boundary for a single one
+  at any vintage.
+* **33,075 of 33,791 zips sit at Tier 0** (97.88%), 716 at Tier 1, none higher.
+
+The 97.88% is the honest number and the first draft of the stamper did not
+produce it. It set `universeGovernments = territoryResolved`, which makes Tier 1
+true by construction everywhere and printed **99.71% Tier 1** — the
+self-referential denominator this whole model exists to replace, reintroduced
+inside the model. The universe includes the special districts; a zip's tier is
+the **floor** across the governments touching it; one unresolved government
+drops the zip, because that is exactly the government a reader might live under
+and hear nothing about.
+
+### Three class defects found by reading output rather than trusting it
+
+1. **TIGER pseudo-entities are not governments.** 85641 resolved to
+   `School District Not Defined` [0499997]. TIGER tiles its layers without holes
+   using reserved local codes 99997/99998/99999. **27 excluded**, named on every
+   run.
+2. **Statistical entities are not governments.** **12,587 of 32,608** `place`
+   rows are CDPs and **5,198 of 36,367** `cousub` rows are CCDs. Neither has a
+   council, a budget, a meeting or an elected official. Every edge now carries
+   `GOVERNMENT` / `STATISTICAL` / `UNCLASSIFIED` with its LSAD — and the third
+   value is the point, because a New England gore is not guessed into either
+   bucket. **216,146** government edges, 42,407 statistical, 13,973 unclassified.
+3. **The DBF reader guessed its encoding.** It hardcoded `latin1` while every
+   Census boundary zip ships a `.cpg` declaring UTF-8, so the join wrote a Texas
+   place name as mojibake. Caught by this repo's own `tests/mojibake.test.ts`,
+   which then caught the *comment* explaining the fix for pasting the broken
+   spelling in as an example. The encoding is now **read from the file**.
+
+### The crosswalk's low match rate was a finding about the normalizer
+
+The first draft matched **2,038 of 13,859** and that number said nothing about
+the data. Census writes `CASTRO VAL UNIFIED SCH DIST` where CCD writes
+`Castro Valley Unified`. With abbreviation expansion, acronym expansion and
+structural-token removal it matches **9,776**. A join that returns almost
+nothing looks identical to a universe that genuinely does not overlap, and only
+opening the unmatched rows tells them apart.
+
+### The ledger would not have existed on production
+
+`lib/coverage/zip-tier.ts` builds its path with `process.cwd()`, which Next
+cannot resolve statically, so the file would simply not have been in the deploy.
+The read would have thrown, the catch would have returned null, and **every zip
+would have rendered "we have not worked this ZIP code out yet" while every sold
+row was stamped `UNKNOWN`** — the surface's own honest gap wording. A broken
+deploy and honest missing data are the same pixels.
+
+Two files now, written in one pass from the same values: the 18 MB audit ledger
+stays in the repo, and a **666 KB** runtime copy is traced into the five routes
+that read it. Verified in the built manifests and against the live site, not
+assumed.
+
+### The Linux gate caught something on its first run
+
+RULING 13 said a green build check did not mean the tests ran. `build-check.yml`
+grew a `gates` job. Its first run went red, and what it caught was **not this
+session's work**: `tsc --noEmit` has never been runnable on a clean checkout,
+because `tsconfig.json` includes `.next/types/**` and `LayoutProps` is generated
+by the build. It passes on a developer's machine because `.next` is lying around
+from the last build. Reproduced locally by moving `.next` aside — same error, on
+Windows, so not a platform difference. The type check now runs **after** the
+build, and the suite asserts that order.
+
+### Gates, budgets and rows
+
+* **`pnpm test` 1377 / 0 fail** locally; **1377 tests, 1376 pass, 0 fail on
+  ubuntu** in the new gates job — the first time this repo's suite has been
+  proven on Linux by a PR check rather than by a scheduled refresh going red.
+* **`pnpm lint`** 0 errors, **11 allowlisted warnings**, both platforms.
+* **`tsc --noEmit`** clean, after a build.
+* **Both build modes green** on ubuntu, run `32399671851`.
+* **Budgets, exact from `scripts/bundle-budget.json`:** 1a **199** of 220
+  (baseline 195) · 1b default **927** of 1050 · 1b standalone **1130** of 1300 ·
+  client raw **2,742,298** and gzip **826,704** against 3,100,000 and 940,000.
+  The client figures are **identical to the inherited ones** — everything added
+  is server-rendered.
+* **`walk:all` on the live build: 357 passed, 359 distinct of 359, 2 named
+  regressions, 1 could not run.** Baseline 352, **+8 added**, **1 GONE** — and
+  the GONE one reported itself as COULD NOT RUN rather than as a failure.
+* **Production rows this run created:** 77 search-log GETs and 57 ask/log
+  requests issued under `walk-all-local@2026-08-20T17:53:16.857Z`; **0 landed**,
+  which the walk states is ordinary. **No reaction was tapped.**
+* **Organic census: 139. F22 closed at 139. Delta 0.** Reported, not
+  investigated.
+* **Screenshots: 8 of 8 read as images.**
+
+### The two regressions are a ruling working, and the author has to rule again
+
+`PB14`, opened P0 and **Blocked on the author**. RULING 7's equal-depth gate
+withholds every contest whose candidates are not researched to the same depth:
+**6 of 9 contests at 85701**, 7 of 9 at 85641, 6 of 12 at 03255, 3 of 6 at
+07866 — overwhelmingly the federal races, because incumbents carry photo, blurb,
+contact and campaign site while challengers carry one or two.
+
+Two `g3` walk claims fail as a direct consequence, both at 85701: candidate
+names open their large battlecards (0 name links), and the five-point scale
+carries its group separators (0 separators). **Neither was fixed and neither
+check was removed.** Weakening the gate to make them green would trade the rule
+for the instrument, and a check leaves the suite only when the author retires
+the claim behind it. Verified before the row was written: the live page carries
+3 rendered and 6 withheld equal-depth blocks, which accounts for the missing
+links exactly.
+
+The decision owed: accept the withholding and retire the two claims, or tune
+what depth means. The gate currently requires **exact equality across four
+independent fields**, which is the strict reading of RULING 7 and is why so
+little renders. It is one shared function, so either ruling is a one-place
+change. Withheld contests still name every candidate and say why the cards are
+absent.
+
+### Two corrections to the brief, recorded so nobody re-derives them
+
+* **`data/reference/` was UNTRACKED at session open**, not committed as the
+  brief assumed — present in the working copy, never committed. This branch
+  committed it; the author then uploaded the same fourteen files to `main`
+  directly at 09:19 (`a82aeff`), mid-session. Resolved to the author's copy
+  after confirming the difference is **entirely line endings** and re-running
+  the full reconciliation against the copy that now stands: **0 mismatches**.
+* **`DATA_GOV_API_KEY` does not exist in this repo** — zero occurrences. FEC
+  uses `FEC_API_KEY`, Congress uses `CONGRESS_API_KEY`, and govinfo is not
+  fetched at all. `PB13` records it.
+
+### Five workflows push `main`, not four
+
+`R48` is closed. The four governed-artifact refreshes **plus the intake
+tripwire** push `main`, each with only its own concurrency group — so two runs
+of the same workflow could not collide and two different ones could
+(`refresh-dotgov` 09:17 Monday, `refresh-fec` 09:23). `scripts/push-main.mjs`
+rebases and retries. A shared concurrency group was **rejected**: GitHub keeps
+one pending run per group and cancels earlier ones, trading a loud red for a
+quiet loss. Proved by forcing a real collision against real git repositories in
+`tests/push-main.test.ts` — both runs' artifacts present afterward.

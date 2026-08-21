@@ -919,6 +919,66 @@ written into a named senator's record. The district was the loop variable all
 along. This is the playbook's own "strip the navigation before harvesting"
 lesson, and it still caught the session that wrote it down.
 
+### County offices are ONE branch serving SIX contests (NH Hunt 3, 2026-08-21)
+
+`pnpm nh:county`. The six county races — Register of Probate, Register of Deeds,
+Treasurer, Attorney, Sheriff, Commissioner — are the thinnest in the product and
+the ones a reader can research least easily alone. **The county publishes an
+office page for every one of them on one host**, so that is one branch serving
+six contests, independent of the Secretary of State's filings, of the General
+Court's roster, and of our own registry.
+
+What it produced on Merrimack County, 2026-08-21: 8 of 8 pages read. Samantha
+Morse named as **the Register** in the Registry's own staff directory — the
+office she is standing for; Meghan Hagaman listed twice by the County Attorney's
+own directory, as **County Solicitor** and **Assistant County Attorney**, while
+standing for County Attorney. Both are specific verified pages that our
+registry's name join could never have produced.
+
+Three mechanics worth carrying to the next county:
+
+- **A staff directory is a table.** Parse `<tr>` rows, not prose. Hagaman's roles
+  came out of two table rows in one pass; the same page read as text yields the
+  word "Hagaman" beside twenty repetitions of "Assistant County Attorney" and
+  nothing joinable.
+- **A group photo is a finding, and it is a refusal.** The Register of Deeds page
+  publishes exactly one image of Morse: a six-person staff photograph captioned
+  left to right. A group shot is prohibited at every door, so the photo is
+  refused — and under RULING 52 that is a branch result about THAT IMAGE, never a
+  conclusion that no portrait of her exists.
+- **Never harvest the CMS's own addresses.** Every page on a Revize site carries
+  `noreply@revize.com` and `webpageupdate_subscribers@revize.com`. Matching on
+  the vendor DOMAIN rather than the mailbox name generalises to the next site.
+
+**And Revize names its editable region `freeform-main`, not `<main>`.** Both
+`<main>` and `id="main"` are absent from this theme. Extract with a BALANCED tag
+walk, never a lazy `<div>…</div>` — a lazy match stops at the first closing tag,
+returns a few characters, and reads as "found the content region" while
+harvesting a wrapper. That is the empty-success shape wearing a parser's face.
+
+### The NH General Court publishes NO House portrait, and a Senate portrait per SEAT (NH Hunt 3, 2026-08-21)
+
+Two halves, and the first one nearly shipped three wrong faces.
+
+**The House serves a PLACEHOLDER.** `member.aspx?pid=<pid>` carries
+`<img src="/house/images/memberpics/nophoto.jpg">` — a real `src`, a real 200, a
+real image. Sampled 2026-08-21 across six member pages: **0 real portraits, 4
+placeholders** (two pids invalid). A hunt that trusted the `<img>` tag would have
+shipped one grey placeholder as Karen Ebel's, Paige Beauchemin's and Gregory
+Sargent's faces — the same class as the flag stock photo RULING 55 was adopted
+over. **Check the filename, and read the image.**
+
+So door 2 is dry at this branch, on this date. That is a branch result under
+RULING 52 and goes on RULING 53's 14-day clock — not a conclusion that these
+members have no published portrait anywhere.
+
+**The Senate portrait path is keyed to the SEAT, not the person.**
+`/senate/images/senators/<NN>.jpg`, two digits. Confirmed 2026-08-21 for seats
+01, 07 and 15 — all HTTP 200, real JPEGs. This is why it is worth writing down
+separately: a seat-keyed path means the Internet Archive holds the PREVIOUS
+occupant's portrait at the same URL, which is how a former senator's picture is
+recoverable at all (the route that produced Harold French's).
+
 ### The extraction toolkit (F11, added 2026-08-20)
 
 Four layers, one contract. **A ZERO-ROW EXTRACTION IS A FAILED EXTRACTION,

@@ -625,7 +625,7 @@
       "bio": null,
       "bioSourceUrl": null,
       "bioSourceLabel": null,
-      "email": null,
+      "email": "Deeds@Merrimackcounty.net",
       "phone": "(603) 228-0101",
       "filedAddress": "160 Woodridge Rd, Franklin NH 03235",
       "filedAddressSource": "Secretary of State 2026 filing"
@@ -890,7 +890,7 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null,
+      "phone": "603-228-0529",
       "filedAddress": "PO Box 1415, Concord NH 03302",
       "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
@@ -2065,6 +2065,18 @@
       "key": "ballot-nh-merrimack:us-senate:smith-sabrina-ann",
       "name": "Sabrina Ann Smith",
       "note": "CONTEST 12 of 12, same rungs. IDENTITY: Secretary of State 2026 filing — 'Sabrina Ann Smith PITTSFIELD 118 DEER MEADOW RD PITTSFIELD, NH 03263 REP'. NO FEC RECORD for New Hampshire since 2024 — the loose surname search returns four sitting House members named Smith, none of them her, which is why the match was made on given name as well. Her Citizens Count profile exists and carries no external link of her own. PHOTO, CAMPAIGN SITE, IN THEIR OWN WORDS, PHONE, EMAIL: all MISS. Rungs still owed: 13. NOT VERIFIED_ABSENT. FILED CONTACT (state): 118 Deer Meadow Rd, Pittsfield NH 03263.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:register-of-deeds:morse-samantha",
+      "name": "Samantha Morse",
+      "note": "COUNTY BRANCH, walked 2026-08-21 (pnpm nh:county). Merrimack County's own Register of Deeds staff directory names her as the REGISTER — the office she is standing for — in its own words: 'Samantha Morse (Register)'. SPECIFIC VERIFIED PAGE: https://www.merrimackcounty.net/departments/register_of_deeds/staff_directory.php, read 2026-08-21 at rung 2, HTTP 200. CONTACT: the Registry's published office email and phone, from the office page on the same host. PHOTO: REFUSED, and the refusal is the finding — the only image the county publishes of her is a GROUP PHOTOGRAPH of six staff, captioned left to right. A group shot is prohibited at every door of the photo rule and the composition standards never move, so this is a branch result under RULING 52 and not a permanent absence: a solo portrait may exist elsewhere and the hunt continues. BRANCH INDEPENDENT of the Secretary of State filing already recorded for her.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-attorney:hagaman-meg",
+      "name": "Meg Hagaman",
+      "note": "COUNTY BRANCH, walked 2026-08-21 (pnpm nh:county). The Merrimack County Attorney's own staff directory lists her twice, by her full name and her roles: 'Meghan Hagaman — County Solicitor' and 'Meghan Hagaman — Assistant County Attorney'. She is standing for County Attorney, and this is the office's own record of her in it. SPECIFIC VERIFIED PAGE: https://www.merrimackcounty.net/departments/county_attorney/staff_directory.php, read 2026-08-21 at rung 2, HTTP 200. CONTACT: the County Attorney's published office phone, from the office page on the same host — an office number for a serving officer, never presented as a personal one. PHOTO: still owed; the directory is a table of names and roles and carries no portraits at all. BRANCH INDEPENDENT of our officeholder registry, which is what makes it worth having: the registry's exact-name join is what produced 87 wrong 'no official page' records this session.",
       "attemptedAt": "2026-08-21"
     }
   ]

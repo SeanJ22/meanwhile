@@ -14322,3 +14322,317 @@ git and redone as an insertion, which is what it should have been.
   investigated, per RULING 3.
 * **`CLAUDE.md`: 71,289 bytes** — 72 smaller than before the third merge,
   because his sentence is shorter than mine.
+
+---
+
+## NH Hunt — 2026-08-20: the zero-row shape is made inexpressible, and Newbury's own calendar turns out to have been there all along
+
+**This is the first session that put DEPTH on the site.** Items 1, 2, 2b, 3, 4,
+7, 8 and 9 finished. Item 5 — the bodies — ran until the session was out of
+room and is reported mid-list with the list stated. Item 6 — the 47 candidacies
+— was not started, and where it stops is named at the foot of this section.
+
+### What a reader at 03255 has that they did not have this morning
+
+| At 03255 | Before | After |
+|---|---:|---:|
+| Bodies governing the point | 6 | **20** |
+| — of those, ingested | 6 | **17** |
+| Newbury town's own bodies | 4 | **17** |
+| Meeting rows on the live map | 16 | **28** |
+| Named officials with a sourced roster | 15 | **90** |
+| Rosters at 03255 and its county | 3 | **13** |
+
+Every one of those numbers is a body, a person or a sitting that a public body
+had already published and this product could not see.
+
+### The find, and it was a `webcal://` link on a page we had already read
+
+`https://www.newbury.nh.gov/calendar/ical/export.ics` — **1,157 events**, 94 of
+them upcoming, advertised by the town's own calendar page and wired to nothing.
+Ten Newbury committees had no meetings route at all while their sittings sat in
+a document the town publishes for exactly this purpose.
+
+Four things had to be built or fixed before that file could reach a reader, and
+each is a class fix rather than a Newbury fix:
+
+1. **`titleMatch` in the `ical` adapter.** The feed carries no `CATEGORIES`
+   field on any of its 1,157 events, and the adapter required one. A
+   category-only reader sees a town publishing everything as a town publishing
+   nothing. The match is a LIST, because a town spells its own bodies several
+   ways — Newbury writes both "Supervisors of the Checklist" and "Supervisions
+   of the Checklist", a typo it has repeated for years, and dropping the variant
+   would drop the meetings.
+2. **An empty `LOCATION` is not a placeless meeting.** D18's `placeless` means
+   the body published a string naming no building. Newbury publishes no
+   `LOCATION` line at all, and reading that silence as an assertion dropped
+   twenty-four sittings before the row's own `venueMatch` was ever consulted.
+3. **A 403 walks the ladder for every adapter.** The feed answers **403 to this
+   process and 200 to `curl`, 467,525 bytes, with either User-Agent** — a
+   TLS-fingerprint wall, ladder rung 4. The escalation existed and was reachable
+   only from the browser profile, so every adapter that had not opted in stopped
+   at rung 2 and called a serving feed a wall.
+4. **One feed is fetched once.** Ten bodies on one URL meant ten requests for
+   the same 466 KB per refresh. The town's reputation limiter started refusing
+   pages it had served minutes earlier, which is a wall we built ourselves.
+
+### The merge that had to exist before a second route could ship
+
+The four Newbury boards that were already wired hold **24 in-window sittings on
+the town's feed against the 16 their existing routes produce** — Selectboard 10
+against 7, Planning 5 against 3, Zoning 4 against 1, Conservation 5 against 5.
+
+Swapping was measured and REFUSED: the existing routes carry real agendas
+(`newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3370`,
+`/planning-board/agenda/agenda-15`) and the feed carries none. Trading a
+reader's agenda for a reader's date is not a trade this product should make.
+
+So both ship and `collapseDuplicateSittings` decides. It keys on
+`ocdId | bodyName | INSTANT` — the first version keyed on the string and
+collapsed nothing at all, because `schedulepage` writes
+`2026-06-16T19:00:00-04:00` and `ical` writes `2026-06-16T23:00:00.000Z` for the
+same moment. It collapses ACROSS SOURCES ONLY, so a board publishing a Regular
+and an Executive Session at one hour keeps both. It runs AGAIN after
+carry-forward, because carry-forward restores rows the merge never saw — three
+of Newbury's Conservation Commission sittings walked back in behind it on the
+first refresh. **The snapshot states the collapse as its own number and the
+pair reconciles**: 328 claimed by sources = 316 fresh + 12 collapsed.
+
+### Item 1 — the sixth sighting closed in the type, not in a sixth rule
+
+`normalizeWithDrops` returns a branded `Accounted<...>`. The only constructor is
+`accountedNormalize()`, and it THROWS rather than returning a value for a
+non-zero fetch with zero rows and zero drops. A plain object literal no longer
+compiles; `tsc` names it at the `return`, in the adapter, at authorship time.
+Twelve of twelve implementations converted.
+
+**It caught a real one on its first live run**, which is the best thing that can
+be said about a new contract: a fully refused `ical` source arrives as ten raw
+rows, zero meetings, zero drops — a WALL, correctly reported by the adapter, and
+the factory called it a broken parser. A refused row is not a document in hand,
+so the factory takes `unretrieved`.
+
+The six sightings, and whether the contract would have caught each:
+
+| # | Sighting | Caught? |
+|---|---|---|
+| 1 | An empty RSS feed recorded as working | **No** — a fetch layer, above this contract. |
+| 2 | A zero-match join presented as a clean build | **No** — a build script, not an adapter. |
+| 3 | A scripted edit that edited nothing and exited 0 | **No** — not an adapter at all. |
+| 4 | A NovusAgenda portal returning 200 with zero meetings, recorded as a HIT | **Yes**, had it been an adapter on this contract. |
+| 5 | An Apptegy page whose prose never held the byline | **No** — extraction, and layer 4 of the toolkit is what covers it. |
+| 6 | `ical` fetched 3, normalized 0, and Wilmot lost 23 meetings | **Yes**, at compile time and again at run time. |
+
+Two of six, and the honest reading is that this contract closes the ADAPTER
+class exactly and nothing else. The other four live in the fetch layer, in build
+scripts and in extraction — which is why the extraction toolkit carries the same
+refusal in `extracted()`, and why the remaining two shapes are still only a
+written rule.
+
+### Items 2 and 2b — the guard gap was the defect
+
+`positionsAnnotation`, `CandidatePositionsAnnotation`, `annotationSlot` and the
+buried gap enumeration are gone from four files. `positionsHeadline` carries no
+digit. A candidate we hold no published words for renders **no positions section
+at all**. `CLAUDE.md`'s fourth friction exception is retired with the reason
+attached.
+
+The new guard matches MEANING — subject + absence + coverage lexicons — and
+**proves it is not vacuous** by running the matcher against every such sentence
+this product has actually shipped plus three rewrites nobody has written. Its
+false negatives are stated in its own doc block: assembled sentences outside the
+named files, vocabulary the lexicons do not know, non-sentence markers, and
+context.
+
+`Delete` is a fourth resolution state, his alone; `B08` is hard-removed from
+both stores and recorded permanently. The RULING 48 hook refuses destructive git
+against his four files — **it blocked one of my own commands, and then blocked
+this session's own commit message**, which was a false positive, is fixed, and
+is guarded with the commit message as a test case.
+
+### What the hunt found that nobody had looked for
+
+* **Newbury's boards menu is an undercount.** Fourteen on the hover menu;
+  the sitemap carries Parks & Recreation, the Housing Committee and the Transfer
+  Station Committee as well. Two of those three answer
+  `302 → /user/login?destination=node/NN` — the site's own access control, where
+  the hunt stops.
+* **Five of Newbury's board links leave the town's domain.** The Energy and
+  Beautification Committees run their own sites, the Fire Department a
+  subdomain, the Library Trustees the library's site, and the Joint Assessing
+  Board is published by the **Town of Sunapee**, because it is a joint board of
+  three towns. A hunt that treats the 301 as a refusal loses five real bodies
+  and is wrong about which government publishes a sixth.
+* **Merrimack County's own Board of Commissioners page names no commissioner.**
+  Four paragraphs and a Zoom link. All three are in the county's own annual
+  report, on page 5 and again on page 6 over their signature block.
+* **The county's legislative body is not its commissioners.** It is the
+  DELEGATION — every state representative elected from the county, sitting
+  together to vote the county budget — and this product had never named it.
+* **Newbury publishes terms that expired years ago.** Cemetery Trustees at 2021,
+  2022 and 2023; a Planning Board alternate at March 2021. Shipped as published,
+  because correcting a term invents a fact about a named person and dropping the
+  row asserts an absence the town has not.
+* **The Cloudflare interstitial outgrew our size floor.** 29,809 bytes against a
+  20 KB global floor, so a challenged Kearsarge page was handed to the extractor
+  and reported as an empty document. The floor is now per-signature, and
+  `cdn-cgi/challenge-platform` KEEPS it — Cloudflare injects that script into
+  ordinary pages, and both recorded `schedulepage` fixtures carry it.
+
+### Read as an image, and what that found
+
+Twelve captures at 430×932, all twelve read. Two pairs are byte-identical
+(`card-85641`/`card-85701`, `foot-85641`/`foot-85701`) and are **proven** to be
+identical regions of demonstrably different pages: the two `page-*` captures
+differ (`aa4c3568…` against `cff4818f…`), and the two AZ zips share the Governor
+contest and the page footer.
+
+What the DOM could not have told us: **the ballot orders candidates by whether
+we hold a photo of them.** That is his own recorded ruling of 2026-08-16, whose
+doc block names the cost in terms — and RULING 42, four days later, says no
+ordering may indicate how complete one candidate's record is relative to
+another's. Both are his and they point opposite ways. Nothing was changed;
+`NH09` puts the conflict in front of him.
+
+### Ships, labelled
+
+**Two CODE merges. The second is the exception `CLAUDE.md` names, and it is
+named here.**
+
+* **Planned code merge:** `4872eee` → PR
+  [#129](https://github.com/SeanJ22/We-The-People/pull/129) → **`d33cfa4`**,
+  deploy id `6a87eeaf071c6a0008af5986`, read from `/api/build` with a declared
+  synthetic header.
+* **Second code merge, for a regression the live walk caught:** `0e904b7`.
+  The regression is *`03255`: the governing count matches the frozen external
+  denominator*, shipped by `h`, which the close-out walk found reading 4 against
+  a Census denominator of 3 — **caused by the planned merge**, which added the
+  Merrimack County Delegation as a second governing body of one government. The
+  check was counting bodies against a government denominator, which RULING 9
+  forbids in terms; it now counts distinct divisions and keeps its name and its
+  attribution. The same commit merges a duplicate roster the planned merge also
+  introduced.
+* Close-out record SHAs follow separately and are labelled as such.
+
+### The gates
+
+* **`pnpm test` 1486 of 1486, 0 failed, 0 skipped** on Windows. Prompt E closed
+  at 1459; the 27 added are the zero-row contract (6), the cross-source merge
+  (7), the challenge size floor (2), the RULING 46/48 guards (5), the semantic
+  RULING 44 guard and its vacuity proof (2), the roster-duplicate guard (1), and
+  four rewritten in place.
+* **`pnpm lint` 0 errors, 11 allowlisted warnings** — the same 11.
+* **`tsc --noEmit` clean.**
+* **Both build modes green. NO CEILING MOVED.** Read from
+  `scripts/bundle-budget.json`, not from the rounded KB line:
+  * client `/` initial JS — **raw 2,762,756** against baseline 2,716,714 and
+    ceiling **3,100,000**; **gzip 828,636** against baseline 818,445 and ceiling
+    **940,000**. 13 chunks against a recorded 12.
+  * largest app trace — **201 files**, baseline 195, ceiling 220. Identical in
+    both modes.
+  * framework runtime — **927 default** (baseline 935, ceiling 1050) and
+    **1,130 standalone** (baseline 1,138, ceiling 1,300).
+  * The committed baselines were measured on ubuntu standalone in
+    build-check.yml **run 32202237032, job 95918284374**; the figures above are
+    a windows measurement and are compared against the committed ceilings, not
+    substituted for the baselines.
+
+### `pnpm walk:all` against production
+
+**370 passed · 1 regression · 0 could not run · 371 of 371 distinct · 0 GONE ·
+0 silent.** Identical shape to Prompt E's close.
+
+The one regression is *no sold-store write raised an alarm in the last 24h*,
+shipped by `promptD`. It is **the same single row Prompt E reported** — a
+`search_log` insert refused at `2026-08-21T00:28:19Z`, <!-- expected-future: a UTC instant of a past event, not a stamp; 00:28Z on the 21st is 17:28 on 2026-08-20 in America/Phoenix, which is what pnpm stamp prints -->
+one alarm ever recorded, still inside the rolling 24-hour window. Read from the
+database's own words with
+`pnpm alarms --target=production`. Not suppressed, not deleted, and not this
+session's.
+
+The first walk of the session reported **3** regressions and is worth recording
+because two of them were the instrument being right: the governing count above,
+and R58 catching two checks that reported nothing — the two `F01C2` identities
+this session RENAMED when RULING 47 retired the claim behind them. A rename is
+exactly what R58 is built to notice, and it noticed.
+
+### Production rows this session created
+
+All SYNTHETIC, all declared, none organic:
+
+| Run id | Rows |
+|---|---:|
+| `nhhunt-walk@2026-08-21T06:24:45Z` | 104 | <!-- expected-future: a UTC instant, not a stamp; 2026-08-21 UTC is 2026-08-20 in America/Phoenix, which pnpm stamp prints -->
+| `nhhunt-walk2@2026-08-21T06:36:26Z` | 79 | <!-- expected-future: a UTC instant, not a stamp; 2026-08-21 UTC is 2026-08-20 in America/Phoenix, which pnpm stamp prints -->
+| `nhhunt-verify@2026-08-21T06:26:14Z` | 1 | <!-- expected-future: a UTC instant, not a stamp; 2026-08-21 UTC is 2026-08-20 in America/Phoenix, which pnpm stamp prints -->
+| `nhhunt-cov@2026-08-21T06:31:00Z` | 1 | <!-- expected-future: a UTC instant, not a stamp; 2026-08-21 UTC is 2026-08-20 in America/Phoenix, which pnpm stamp prints -->
+
+Plus the `nhhunt-deploy`, `nhhunt-verify2`, `nhhunt-ballot` and `nhhunt-shots`
+declarations, which are `/api/build`, `/about-area`, `/ballot` and the shoot —
+none of which write a `search_log` row. **0 reactions. 0 alarms raised by
+anything this session did.**
+
+**Organic census 159.** Prompt E closed at 159; the brief's stated figure was
+155. **Delta 0 against the previous close.** Reported and not investigated, per
+RULING 3.
+
+### Screenshots
+
+**12 of 12 read as images**, at 430×932, from `.prompte/shots`. Ten distinct
+sha256 digests: `card-85641`/`card-85701` and `foot-85641`/`foot-85701` are
+byte-identical, and are **proven** rather than assumed to be identical regions
+of different pages — the two `page-*` captures differ (`aa4c3568…` against
+`cff4818f…`), and the two Arizona zips share the Governor contest and the page
+footer.
+
+**107 candidate cards and 58 contests across the four pilot zips — neither went
+down.** Per-card completeness markers 0 at every zip; page-level disclosure
+exactly 1 at every zip.
+
+### Where the hunt stopped, and the next thing by name
+
+**Item 5 — the bodies.** `03255` now renders **20 of the ~60 bodies the frozen
+universe describes**, up from 6. Three governments were worked to depth:
+
+| Body worked | Found | Rungs | What remains |
+|---|---|---|---|
+| **Town of Newbury** | 17 bodies, 81 people, the town's whole calendar | 2, 3, 4, 6, 10 | Parks & Recreation and the Housing Committee are behind the town's own login (`NH02`) |
+| **Kearsarge Regional SD** | 14 district-office staff with direct phones and emails; superintendent, clerk and business administrator on the roster | 2, 3, 6, 11 | the board roster page is Cloudflare-walled and headless will not clear it (`NH01`) |
+| **Merrimack County** | 3 commissioners re-sourced to the county's own report, the delegation and its 6 officers, 14 pages read | 2, 3, 9 | the department staff directories are a Revize roster shape layer 5 cannot read (`NH07`) |
+
+**THE HUNT STOPS AT `NEXT BODY: the Kearsarge Regional School District's eight
+member towns` — Bradford, New London, Springfield, Sutton, Warner, Wilmot and
+Newbury, of which only Newbury, Wilmot and New London are wired.** Sutton,
+Bradford, Springfield and Warner have no bodies in this registry at all, and
+each is a New England town with a selectboard, a planning board and a zoning
+board that governs part of the district a 03255 reader's children attend.
+
+After those, `H05`'s **eighteen named special districts**, none of which was
+touched: `ANDOVER FIRE DISTRICT`, `ANDOVER VILLAGE DISTRICT`, `B C E P SOLID
+WASTE DISTRICT`, `CENTRAL HOOKSETT WATER PRECINCT`, `CONCORD HOUSING AUTHORITY`,
+`CONTOOCOOK VILLAGE PRECINCT`, `EAST ANDOVER FIRE PRECINCT`, `EPSOM VILLAGE
+DISTRICT`, `HARDY ROAD VILLAGE DISTRICT`, `HIGHLANDS VILLAGE DISTRICT`,
+`HOOKSETT VILLAGE WATER PRECINCT`, `HOPKINTON VILLAGE PRECINCT`, `LAKE TODD
+VILLAGE DISTRICT`, `MERRIMACK COUNTY CONSERVATION DISTRICT`, `NEW LONDON
+SPRINGFIELD WATER SYSTEM PRECINCT`, `NORTHFIELD SEWER DISTRICT`, `PENACOOK
+BOSCAWEN WATER PRECINCT`, `WARNER VILLAGE WATER DISTRICT`. **0 of 18 resolved,
+0 attempted individually.** The four routes named at the head of
+`docs/gap-ledger.md` — assessor levy layers, state district registries, per-state
+GIS portals, the district's own service-area map — are all unwalked.
+
+**Item 6 — the 47 candidacies — WAS NOT STARTED.** The order was fixed in item 4
+and is law: local first, federal last. **The next contest by name is
+`Merrimack County Register of Probate` (1 candidate), then Register of Deeds
+(2), Treasurer (2), Attorney (4), Sheriff (4), County Commissioner Second
+District (3), State Rep Merrimack 7 (3), State Senate 7 (2), Executive Council 2
+(3), Congress NH-2 (6), Governor (4), U.S. Senate (13).** `HD01`–`HD30`'s owed
+count is therefore **unchanged at 249 of 368 possible fields**, and
+**`VERIFIED_ABSENT` remains at 0** — that state is earned by a completed
+per-candidate hunt and no candidate hunt ran.
+
+`H03`'s re-walk cohort was not worked either: 0 re-walked.
+
+*Why it stopped there rather than at a tidier place.* The session took the
+bodies in the order item 4 fixed and worked them until the room ran out. The
+Kearsarge member towns are the next unit of work and are named above so the next
+session starts inside a body rather than choosing one.

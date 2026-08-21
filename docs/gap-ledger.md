@@ -74,7 +74,7 @@ resolution. A county water authority head-quartered downtown serves the county.
 
 **We have some of the governments that cover this ZIP code, and we are still working out the rest.**
 
-We know this government exists. We have not confirmed what it covers. (Coverage tier `TIER_0`, stamped 2026-08-20.)
+We know this government exists. We have not confirmed what it covers. (Coverage tier `TIER_0`, stamped 2026-08-21.)
 
 | Denominator | Count |
 |---|---:|
@@ -146,7 +146,7 @@ Concretely: 24 named special districts above have no published boundary, and unt
 
 **We have some of the governments that cover this ZIP code, and we are still working out the rest.**
 
-We know this government exists. We have not confirmed what it covers. (Coverage tier `TIER_0`, stamped 2026-08-20.)
+We know this government exists. We have not confirmed what it covers. (Coverage tier `TIER_0`, stamped 2026-08-21.)
 
 | Denominator | Count |
 |---|---:|
@@ -222,7 +222,7 @@ Concretely: 24 named special districts above have no published boundary, and unt
 
 **We have some of the governments that cover this ZIP code, and we are still working out the rest.**
 
-We know this government exists. We have not confirmed what it covers. (Coverage tier `TIER_0`, stamped 2026-08-20.)
+We know this government exists. We have not confirmed what it covers. (Coverage tier `TIER_0`, stamped 2026-08-21.)
 
 | Denominator | Count |
 |---|---:|
@@ -249,7 +249,7 @@ We know this government exists. We have not confirmed what it covers. (Coverage 
 
 We know these governments cover this zip. What we do not have is the list of boards, councils and commissions inside them — so a reader here could be governed by a body this product has never named.
 
-- **Rockaway borough** — last thing tried: the boundary join of 2026-08-20, which placed it over this zip and does not enumerate what is inside it. Nobody has read its own roster page. (cousub 3402764050)
+- **Rockaway borough** — last thing tried: the boundary join of 2026-08-21, which placed it over this zip and does not enumerate what is inside it. Nobody has read its own roster page. (cousub 3402764050)
 
 #### Not governments, and never rendered as one
 
@@ -296,7 +296,7 @@ Concretely: 18 named special districts above have no published boundary, and unt
 
 **We have some of the governments that cover this ZIP code, and we are still working out the rest.**
 
-We know this government exists. We have not confirmed what it covers. (Coverage tier `TIER_0`, stamped 2026-08-20.)
+We know this government exists. We have not confirmed what it covers. (Coverage tier `TIER_0`, stamped 2026-08-21.)
 
 | Denominator | Count |
 |---|---:|

@@ -9,7 +9,7 @@ Generated 2026-08-20 (America/Phoenix, from `pnpm stamp`).
 
 Newest first. An entry is a commit that opened or reworded a rule.
 
-**27 commits changed a rule**, out of 32 that touched either file. 32 diffs were read.
+**28 commits changed a rule**, out of 33 that touched either file. 33 diffs were read.
 
 `CLAUDE.md` is LAW: a rule there binds every session and is changed only by
 Sean. `docs/rulings.md` is the append-only record of decisions that are not
@@ -18,6 +18,37 @@ so; a ruling that contradicts `CLAUDE.md` does not silently win — the conflict
 is named and Sean rules.
 
 ---
+
+## 2026-08-20 · Prompt E
+
+*Prompt E: the tracker becomes a queue that empties, and the badge comes off the least-resourced candidate*
+
+**Changed or rewritten.**
+
+- RULING 42 — THE PAGE-LEVEL DISCLOSURE REPLACES THIN_CANDIDATE_LINE, AND NO PER-CARD COMPLETENESS MARKER MAY …  `CLAUDE.md`
+- Task status lives in the TWO TRACKER STORES, and the tracker is a queue that empties.  `CLAUDE.md`
+- RULING 37 — WHO MAY MOVE A ROW, AND IT CUTS BOTH WAYS.  `CLAUDE.md`
+- RULING 38 — THE AUTHOR'S RESOLUTION NOTES ARE INSTRUCTIONS, NOT COMMENTARY.  `CLAUDE.md`
+- RULING 41 — THE AUTHOR WRITES ROWS TOO, AND A SESSION NEVER REWORDS ONE.  `CLAUDE.md`
+- Priority is three levels, ranked inside a section and never across them  `CLAUDE.md`
+- RULING 29 — three priority levels, ranked inside a section and never across sections  `docs/rulings.md`
+- Not law. Recorded here.  `docs/rulings.md`
+- Priority is ranked independently inside each section.  `docs/rulings.md`
+- The interpretation call this session had to make  `docs/rulings.md`
+- RULING 30 — five P1 rows maximum per section, and an over-cap section is STOPPED  `docs/rulings.md`
+- RULING 31 — Needs Sean is always the first section  `docs/rulings.md`
+- RULING 32 — every row has a home  `docs/rulings.md`
+- RULING 33 — gaps are not tracker rows  `docs/rulings.md`
+- RULING 34 — the reader artifacts are generated, and hold no duplicated content  `docs/rulings.md`
+- RULING 35 — every section is a queue that empties  `docs/rulings.md`
+- RULING 36 — three resolution states, and only these three  `docs/rulings.md`
+- RULING 37 — who may move a row  `docs/rulings.md`
+- RULING 38 — the author's resolution notes are instructions, not commentary  `docs/rulings.md`
+- RULING 39 — resolution timestamps are written by the script, not by the spreadsheet  `docs/rulings.md`
+- RULING 40 — attribution has no soft landing  `docs/rulings.md`
+- RULING 41 — the author writes rows too  `docs/rulings.md`
+- RULING 42 — the page-level disclosure replaces THIN_CANDIDATE_LINE  `docs/rulings.md`
+- It replaces nothing else.  `docs/rulings.md`
 
 ## 2026-08-20 · Prompt D
 

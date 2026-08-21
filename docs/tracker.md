@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **143 open**, 315 resolved.
+- **142 open**, 317 resolved.
 - **37 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **3**
@@ -22,7 +22,7 @@ and when. Nothing is ever deleted.
   - New Jersey hunt — **0**
   - Arizona hunt — **0**
   - Visual feedback — **1**
-  - Data infrastructure — **1**
+  - Data infrastructure — **0**
   - Product / UI — **1**
   - Constitution & rules — **1**
   - Repo & ops — **0**
@@ -269,11 +269,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**48 open · 79 resolved.**
-
-### P1
-
-**PD04** — About one search in ninety was never recorded in the store this business sells, and nothing could see it happening. Diagnosed and fixed this session.
+**47 open · 81 resolved.**
 
 ### P2
 

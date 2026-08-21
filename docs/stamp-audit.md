@@ -8,7 +8,7 @@ walked straight past the `Author-revised` stamp on the disclosure rule.
 each one, and the corrected date is typed into `CLAUDE.md` by hand from
 `pnpm stamp` or from the recovered column below.**
 
-Run on 2026-08-20 (America/Phoenix). 41 stamp(s) audited.
+Run on 2026-08-20 (America/Phoenix). 45 stamp(s) audited.
 
 **Method.** Each rule's opening clause — the bold title it leads with — is a
 long string that entered `CLAUDE.md` once. `git log -S<clause> -- CLAUDE.md`
@@ -46,6 +46,7 @@ lying. The recovered dates come from the unfiltered pickaxe.
 | RULING 26 — SHOW EVERYTHING WE FIND. | 2026-08-20 | 2026-08-20 | 0 | `bb98d25` Prompt D: the product renders again, the gate is law-forbidden, and a silent failure gets a bell |
 | RULING 27 — NO SUPPRESSION PATH MAY EXIST IN THE CODEBASE. | 2026-08-20 | 2026-08-20 | 0 | `bb98d25` Prompt D: the product renders again, the gate is law-forbidden, and a silent failure gets a bell |
 | RULING 28 — ABSENCE IS ONE BURIED ANNOTATION PER CONTEST,… | 2026-08-20 | 2026-08-20 | 0 | `bb98d25` Prompt D: the product renders again, the gate is law-forbidden, and a silent failure gets a bell |
+| RULING 42 — THE PAGE-LEVEL DISCLOSURE REPLACES `THIN_CAND… | 2026-08-20 | 2026-08-20 | 0 | `0beba26` Prompt E: the tracker becomes a queue that empties, and the badge comes off the least-resourced candidate |
 | RULING 23 — the four-state field is DATA, not a gate. | 2026-08-20 | 2026-08-20 | 0 | `bb98d25` Prompt D: the product renders again, the gate is law-forbidden, and a silent failure gets a bell |
 | Every blurb carries its source class. | 2026-08-14 | 2026-08-14 | 0 | `1f00818` 7: two standing rules into CLAUDE.md |
 | Every production probe row a session creates is NAMED in … | 2026-08-15 | 2026-08-15 | 0 | `0b94547` The documents: section 24, the walk, the brief, and the probe-rows rule |
@@ -67,6 +68,9 @@ lying. The recovered dates come from the unfiltered pickaxe.
 | Where a tool does not exist to reach a public record, BUI… | 2026-08-20 | 2026-08-20 | 0 | `07fcce1` Prompt C: the gate measures hunts, the sold stores start recording again, and the rulings get a home |
 | A zero-row extraction is a FAILED extraction, never an em… | 2026-08-20 | 2026-08-20 | 0 | `07fcce1` Prompt C: the gate measures hunts, the sold stores start recording again, and the rulings get a home |
 | Disclosure at the point of capture — the one-time acknowl… | 2026-08-13 | 2026-08-13 | 0 | `8fa5759` 3: the defect batch — what-first titles, the narrowing modal, the one-time disclosure, candidate reactions, the mayor, the past, the smalls |
+| RULING 37 — WHO MAY MOVE A ROW, AND IT CUTS BOTH WAYS. | 2026-08-20 | 2026-08-20 | 0 | `0beba26` Prompt E: the tracker becomes a queue that empties, and the badge comes off the least-resourced candidate |
+| RULING 38 — THE AUTHOR'S RESOLUTION NOTES ARE INSTRUCTION… | 2026-08-20 | 2026-08-20 | 0 | `0beba26` Prompt E: the tracker becomes a queue that empties, and the badge comes off the least-resourced candidate |
+| RULING 41 — THE AUTHOR WRITES ROWS TOO, AND A SESSION NEV… | 2026-08-20 | 2026-08-20 | 0 | `0beba26` Prompt E: the tracker becomes a queue that empties, and the badge comes off the least-resourced candidate |
 | One CODE merge per session; close-out records may follow … | 2026-08-19 | 2026-08-19 | 0 | `bd4b05b` F01-continued items 1-11: the numbers reconcile, and four reader-facing defects close |
 | The one exception, and it is the only one | 2026-08-20 | 2026-08-20 | 0 | `787e355` F22: the refresh was red on a path separator, and one vendor timeout emptied a township |
 
@@ -119,6 +123,7 @@ well would leave nothing to re-audit if the ruling is ever revisited.
 | RULING 26 — SHOW EVERYTHING WE FIND. | none | 1 |
 | RULING 27 — NO SUPPRESSION PATH MAY EXIST IN THE CODEBASE. | none | 1 |
 | RULING 28 — ABSENCE IS ONE BURIED ANNOTATION PER CONTEST,… | none | 1 |
+| RULING 42 — THE PAGE-LEVEL DISCLOSURE REPLACES `THIN_CAND… | none | 1 |
 | RULING 23 — the four-state field is DATA, not a gate. | none | 1 |
 | Every blurb carries its source class. | none | 1 |
 | Every production probe row a session creates is NAMED in … | none | 1 |
@@ -140,6 +145,9 @@ well would leave nothing to re-audit if the ruling is ever revisited.
 | Where a tool does not exist to reach a public record, BUI… | none | 1 |
 | A zero-row extraction is a FAILED extraction, never an em… | none | 1 |
 | Disclosure at the point of capture — the one-time acknowl… | none | 1 |
+| RULING 37 — WHO MAY MOVE A ROW, AND IT CUTS BOTH WAYS. | none | 1 |
+| RULING 38 — THE AUTHOR'S RESOLUTION NOTES ARE INSTRUCTION… | none | 1 |
+| RULING 41 — THE AUTHOR WRITES ROWS TOO, AND A SESSION NEV… | none | 1 |
 | One CODE merge per session; close-out records may follow … | none | 1 |
 | The one exception, and it is the only one | none | 1 |
 

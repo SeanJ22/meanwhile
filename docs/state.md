@@ -13843,3 +13843,298 @@ than the truth. **Nobody could have known this before the alarm existed.**
   closed.
 * **Playbook diff: nothing new.** No hunt was run — this session restored
   rendering and repaired instruments, and no wall was walked.
+
+---
+
+## Prompt E — the tracker becomes readable, and the badge comes off the least-resourced candidate (2026-08-20)
+
+**All thirteen items finished.** The session's deliverables are `docs/tracker.md`,
+`docs/log.md`, `docs/gap-ledger.md` and `docs/tracker.xlsx` — the four things a
+person opens to find out where this project stands — plus two reader-facing
+changes and one live data-loss path closed.
+
+### Ships, labelled
+
+**Two CODE merges. The second is the exception `CLAUDE.md` names, and it is
+named here.**
+
+* **Planned code merge:** `0beba26` → PR
+  [#123](https://github.com/SeanJ22/We-The-People/pull/123) → **`8e6eba7`**.
+* **Second code merge, for a regression the live walk caught:** `b55d4b7` → PR
+  [#124](https://github.com/SeanJ22/We-The-People/pull/124) → **`2a92472`**.
+  The regression is `M123` — *Wilmot AND New London are in 03255's own answer*,
+  shipped by `g21` — which the close-out walk found showing Newbury, Kearsarge
+  and New London, with Wilmot's 23 meetings gone from a reader's page. Both SHAs
+  are stated above because the rule requires it.
+* **Production serves `2a92472`**, deploy id `6a87bdf564efbe0008c78062`, branch
+  `main`, context production, read from `/api/build` with a declared synthetic
+  header.
+* Close-out record SHAs follow separately and are labelled as such — this
+  section, the tracker moves, and the regenerated amendment history are the only
+  things in them.
+
+### What a reader sees differently
+
+Two changes, both ruled by the author, and nothing else in the render path moved.
+
+**RULING 42 — `THIN_CANDIDATE_LINE` is deleted and one page-level disclosure
+replaces it.** The line — *"We haven't found much about this candidate yet."* —
+printed on exactly one kind of card, the shortest one in the race. So a reader
+was told, on a named person's card, in that person's column, which candidate we
+know least about. That is the information asymmetry the equal-effort rule exists
+to catch, pointed the other way.
+
+**Removed from 4 sites in live code**, plus a fifth in the frozen field matrix:
+`lib/ballot/candidate-cards.ts` (the constant and its `isThinCandidateCard`
+predicate, both deleted, with a note in their place saying why),
+`components/ballot/candidate-card.tsx` (the import and the render),
+`CLAUDE.md` (the equal-effort rule's clause mandating it), and
+`lib/evidence/field-matrix.ts` (two `exhausted` cells that named it — **fields
+moved 0, requirements moved 0, denominators moved 0**, so the frozen version
+stayed `vH-1` with a dated correction note). `lib/officials/body-blurbs.ts`
+cited it as a sibling; that citation is replaced with the reason the BODY line
+is not deleted — one body is not ranked against another by how much we hold.
+
+**The disclosure that replaces it**, verbatim as shipped:
+
+> We show what we have collected. Every card here carries every detail we could
+> find, so cards are different lengths.
+
+`app/ballot/page.tsx`, `COLLECTION_NOTE`, rendered once per page inside the
+contests block, immediately after `NEUTRAL_NOTE` and before the footer links,
+carrying `data-collection-note`. Read as an image at all four pilot zips.
+
+**Unchanged, and confirmed unchanged:** the contest-level incumbency footnote
+sits exactly where Prompt D left it, after the candidate list and before the
+state-funding note (12 + 6 + 9 + 9 = 36 markers, 36 footnotes, marker count
+equals footnote count at every zip); and the `*` stays reserved page-wide for it
+with the source sequence starting at `†` — read on screen as `Governor*†`.
+
+**Guarded three ways.** `tests/candidate-cards.test.ts` asserts the module
+exports neither symbol, the card imports and calls neither, and the disclosure is
+declared once and rendered once. `tests/no-suppression.test.ts` bans the sentence
+from every render path. `pnpm walk:all` fails on the live deploy if the marker
+returns or the disclosure goes missing — 8 new checks, one of each per zip.
+
+### The tracker
+
+456 rows in one list that never emptied become **two stores**:
+`docs/tracker-working.csv` (open) and `docs/tracker-resolved.csv` (finished and
+permanent). **Nothing is deleted.** `docs/tracker.csv` is frozen as the
+pre-rebuild snapshot, digest-pinned in `tests/tracker-stores.test.ts`.
+
+| | |
+|---|---|
+| Working store | **142 open** |
+| Resolved store | **317** |
+| The pair | 142 + 317 = **459**, against 456 in plus 3 opened this session |
+| Sections | **9**, by area of the project |
+| Descriptions | **459 of 459**, none blank, none a restatement of the title |
+| Attribution | **459 of 459**, **0 `UNKNOWN`**, across **105 sessions** |
+
+**Per section, open · resolved, and P1 · P2 · P3:**
+
+| Section | Open | Resolved | P1 | P2 | P3 |
+|---|---:|---:|---:|---:|---:|
+| Needs Sean | 37 | 8 | 3 | 12 | 22 |
+| New Hampshire hunt | 15 | 0 | 2 | 13 | 0 |
+| New Jersey hunt | 6 | 0 | 0 | 6 | 0 |
+| Arizona hunt | 12 | 0 | 0 | 12 | 0 |
+| Visual feedback | 2 | 34 | 1 | 1 | 0 |
+| Data infrastructure | 47 | 81 | 0 | 23 | 24 |
+| Product / UI | 15 | 131 | 1 | 2 | 12 |
+| Constitution & rules | 3 | 7 | 1 | 2 | 0 |
+| Repo & ops | 5 | 56 | 0 | 1 | 4 |
+
+**No section is over the five-P1 cap** (RULING 30). The highest is Needs Sean at
+three.
+
+**The priority distribution, as the pair item 7.6 asks for:** 10 open P0 of 141
+open before; **7 P1, 72 P2, 62 P3 of 142 open** after. The 100-P0 figure two
+briefs carried was `docs/status.md` printing P0 across all 456 rows under a
+whole-tracker heading; the real open count was 17, then 10, and the retirement
+note in that file states both figures.
+
+**The section identifier scheme is a SLUG, never a number.** Rows carry
+`nh-hunt`; order comes from the array in `docs/tracker-sections.json`. Inserting
+"New Mexico hunt" between New Jersey and Arizona is one line added there and
+changes **no row at all** — asserted by running the insertion in
+`tests/tracker-stores.test.ts` and comparing every row's section value byte for
+byte while Arizona's ORDER moves from 3 to 4.
+
+**The done-row audit** (item 7.3), as a pair: of 317 resolved rows, **268 are
+verifiable** — 29 still asserted against production by `pnpm walk:all`, 239
+naming a file, test or command that exists today — and **49 rest on a session's
+word**. All 49 are named individually by `corepack pnpm tracker:audit`.
+
+### The queue model, and who may move a row
+
+`docs/tracker.xlsx` is the workbook the author edits: **Working**, **Resolved**,
+and a **How to use this** tab explaining the columns, the three resolution
+states, and how to add a row. It opens and edits normally in Excel and Google
+Sheets — verified by reading the shipped file back through .NET's own `ZipFile`
+and through this repo's reader, and by a round trip in which a note, a
+resolution and a brand-new blank-id row all survived, including a 13,211-character
+session record byte for byte.
+
+**Three columns are the author's** — `Resolution`, `Condition`, `Notes` — and a
+session never writes them. `corepack pnpm tracker:move` reads them back out of
+the workbook and into the stores; nothing else writes the workbook.
+
+**Collision safety:** the workbook is digested when it is read and digested again
+immediately before it is written. A difference means he saved it mid-run, and the
+run **refuses and writes nothing**, names the file, and says to run it again.
+The committed CSVs are what every other script and test reads, so a session that
+never runs the move script cannot collide with him at all.
+
+**RULING 37 and RULING 41 are guarded in both directions.** A session may not
+resolve or move a *Needs Sean* row; the same resolution in his handwriting does
+move. A session may not reword, retitle or delete a row he wrote; it may work it
+and set a priority if none is set. Both are pure functions in
+`scripts/tracker-core.mjs` so the guard and the script cannot drift apart, and
+`tests/tracker-stores.test.ts` fails the build on either.
+
+### `PD04` — the one lost insert in ninety, closed
+
+**Two defects, both ours, both on the write path only.** The reader-facing catch
+is unchanged (RULING 25) and the responses are byte-identical.
+
+1. **The loss.** `app/api/meetings/route.ts` called `logSearchEvent()` and never
+   awaited it and never handed it to `after()`, then returned its JSON on the
+   next line. On a serverless runtime the invocation ends when the response is
+   returned and a promise still in flight is dropped — **silently, without
+   rejecting, so no `.catch` could ever see it.** Prompt D fixed exactly this
+   shape for the ALARM and left the INSERT five lines above it.
+2. **The instrument.** `lib/db/write-alarm.ts` read `.code` and `.message` off
+   the object it was handed. Drizzle hands it a `DrizzleQueryError`, whose own
+   source carries no `code` and whose message is the SQL. So the alarm recorded
+   **SQLSTATE `null` for every query failure structurally**, and recorded the
+   statement where the reason should be. Both now walk the `.cause` chain.
+
+**Ruled out with evidence:** a constraint violation (the table carries only
+`NOT NULL`s and a generated primary key — no unique, check or foreign key is
+reachable) and a retry path reporting success (there is none, at either call
+site). **Ruled in:** the dropped promise, structurally.
+
+**Proved as a pair on the live deploy:** 200 declared synthetic GETs, run id
+`promptE-writeproof@2026-08-21T02:55:00Z`, window 02:41:21Z–02:42:06Z. <!-- expected-future: a run id and window minted in UTC; the Phoenix day was 2026-08-20 and UTC had already turned over -->
+**Attempted 200 · landed 200 · loss 0 of 200 (0.00%) · 0 alarms raised.**
+
+### The live regression, and the sixth sighting of a shape
+
+The close-out walk found `M123` red. The 02:00Z scheduled refresh had reported
+the `ical` source as `ok: true, fetched: 3, normalized: 0` with **every drop
+counter at zero** — three documents in hand, not one event out of them, and no
+drop to account for one. Because the source reported success, **carry-forward
+never ran**, and Wilmot went from 23 meetings to none.
+
+`CLAUDE.md`: *a zero-row extraction is a FAILED extraction, never an empty
+document.* Sixth sighting, first to reach a reader.
+
+**WALL or JOB, and half of it is not determinable.** The feed was healthy when
+fetched by hand minutes later — HTTP 200, 20 events, categories intact — and a
+local re-run read 3 fetched, 23 normalized. So what the CI runner received at
+02:00Z was not the calendar, and whether that was an egress served a different
+page (a wall at rung 5) or a transient empty response **cannot be recovered; the
+bytes are gone.** Both readings are stated rather than one being chosen. What is
+ours, and is what shipped, is that the composite recorded it as success.
+
+**Fixed at the shared code path**, not in the adapter it was found in: all
+eleven children pass through one line in `lib/sources/composite/index.ts`, and
+only `ical` had any notion of a refusal of its own — **class swept, 1 found, 1
+fixed, at a path covering 11.** The tension is stated in the code rather than
+hidden: a body that genuinely goes quiet is marked red too, which is the correct
+trade in this direction, because carried rows are clipped to the serving window
+and age out within days while a silently emptied town is wrong on screen
+immediately. A source that fetched and DROPPED everything is left alone.
+
+Snapshot regenerated: **318 meetings from 11/11 sources, Wilmot back at 23**,
+1 row carried. The walk after the fix reads *68 meeting(s) across 4
+jurisdiction(s)* at 03255.
+
+### The other items
+
+* **Item 1 — Prompt D's doctrine sweep confirmed.** `git grep -ani --untracked`
+  over every tracked and untracked file for *"same depth"*, *"none of them
+  ship"*, *"equal depth"*, *"until every candidate"* and *"thumb on the scale"*:
+  **0 hits, repo-wide.** *"still looking for"*: 7 hits, every one the rule's own
+  prohibition text or the guard's phrase list, 0 in a render string.
+  `tests/no-suppression.test.ts` passes **all five** of its tests and now sweeps
+  **documents as well as code** — `docs/**` and every root markdown file, with a
+  named record-file exemption for the files whose job is to hold the account of
+  what was removed.
+* **Item 11 — the gap ledger moved to `docs/gap-ledger.md`** and speaks in plain
+  sentences: each pilot zip opens with what the product would say to a reader
+  standing there, and every unresolved district names **what was last tried and
+  when**. Every denominator is unrounded and unchanged. `data/derived/gap-ledger.json`
+  stays where machines read it.
+* **Item 12 — `docs/status.md` is retired in place**, with its generator
+  (`scripts/status-report.mjs`) and the `pnpm status:report` command deleted in
+  the same commit: a retired document with a live generator is one command from
+  coming back. The note in it states the denominator defect and both figures.
+* **Item 13 — RULINGS 29–42 are in `docs/rulings.md`**, and **37, 38, 41 and 42
+  are law in `CLAUDE.md`**. Prompt D's `THIN_CANDIDATE_LINE` interpretation call
+  carries a SUPERSEDED note naming RULING 42, and records that raising it rather
+  than resolving it silently was correct.
+  `docs/amendment-history.md` is generated from `git log -p` over `CLAUDE.md` and
+  `docs/rulings.md` — 28 rule-changing commits of 33 that touched either file.
+
+### State at close
+
+* **`CLAUDE.md`: 65,046 bytes before, 71,361 after.** No cap.
+* **Gates.** `pnpm test` **Windows 1459 / 1459 pass / 0 fail / 0 skipped**;
+  **Linux 1459 / 1458 pass / 0 fail / 1 skipped** (the bundle scan, which runs
+  in the build job at 16 of 16). **The pair agrees at 1459.** Lint **0 errors,
+  11 allowlisted, 0 stale**. `tsc --noEmit` clean. Both build modes green.
+* **Budgets, read from `scripts/bundle-budget.json` and CI run `32441252022`:**
+  1a **201** of 220 (baseline 195, both modes) · 1b default **927** of 1050
+  (baseline 935) · 1b standalone **1130** of 1300 (baseline 1138) · client exact
+  **raw 2,742,298 · gzip 826,704** against 3,100,000 and 940,000. **No ceiling
+  was moved.** Client raw is 293 bytes SMALLER than Prompt D's 2,742,591 — the
+  deleted card line.
+* **`walk:all` on the live build: 370 passed, 1 named regression, 0 could not
+  run.** **371 distinct of 371; baseline 363 → 371, +8 added, 0 GONE, 0 silent.**
+  The one regression is `[promptD] no sold-store write raised an alarm in the
+  last 24h`, and it is the **single alarm row Prompt D's own close-out raised at
+  2026-08-21T00:28:19Z**, still inside the window — `pnpm alarms` reads *1 in the <!-- expected-future: a UTC instant on the Phoenix day 2026-08-20; UTC had already turned over -->
+  last 24h, of 1 ever recorded*, and the 200-request proof above raised none. It
+  goes green on its own once that row ages out. It was not suppressed and the row
+  was not deleted.
+* **Production rows this session created: 617, all SYNTHETIC, across 11 run
+  ids** — four `walk:all` runs (`walk-all@…02:36:12.294Z`, `…02:56:07.547Z`,
+  `…03:00:38.378Z`, `…03:04:48.546Z`, 95 rows each, plus their
+  `walk-all-local@…` siblings at 9 each), `promptE-writeproof@2026-08-21T02:55:00Z` <!-- expected-future: run ids minted in UTC on the Phoenix day 2026-08-20 -->
+  (200), and `promptE-m123@2026-08-21T02:45:00Z` (1). **0 reactions. 0 alarms.** <!-- expected-future: a UTC instant on the Phoenix day 2026-08-20; UTC had already turned over -->
+  `promptE-item3.6@…` and `promptE-distinctness@…` are browser runs against
+  `/ballot`, which is server-rendered and writes no log row — declared anyway.
+* **10 ORGANIC rows landed during the session window and are NOT ours**, named
+  here so nobody has to work that out later: 02:09:37Z–02:19:50Z, five searches
+  at 85701 and one at 88045, two official cards opened (Mark Kelly, the Arizona
+  governor), and two questions typed in prose — *"when does school start"*, which
+  correctly refused with `NO_ROUTE`. That is a person using the product at a
+  human pace. Every request this session made carried a declared header.
+* **Organic census: 154. Prompt D closed at 143. Delta +11**, of which 10 are the
+  rows above. Reported, not investigated, per RULING 3.
+* **Screenshots: 12 of 12 read as images**, all four pilot zips at 430×932
+  against the live deploy through `scripts/prompte-shots.mts` — a full-size first
+  contest, a full-size foot of the page, and a whole-page map shrunk with
+  `html{zoom:.18}` with cards banded green, contest footnotes amber and the
+  disclosure blue. `card-85641.png`/`card-85701.png` and
+  `foot-85641.png`/`foot-85701.png` are byte-identical pairs; **distinctness was
+  PROVEN rather than assumed** — both Arizona zips open on the same statewide
+  contest (`ballot-az-pima:governor`) and carry the same disclosure sentence,
+  and they diverge at the district races (`us-house-6`/`state-senate-19` against
+  `us-house-7`/`state-senate-20`) and in card count (25 against 20).
+* **The product did not regress: 36 of 36 contests rendering cards, 107
+  candidate cards**, per zip 03255 12/47 · 07866 6/15 · 85641 9/25 · 85701 9/20
+  — identical to Prompt D's figures. 58 contest blocks render in total; the
+  other 22 are ballot measures, which carry no candidates.
+* **Stamp audit: 45 stamps, 1 disagreeing, 2 ruled expected, 0 later than
+  today, 0 unrecoverable.** The one disagreement is `CLAUDE.md:192` — the
+  equal-effort rule, claimed 2026-08-14, recovered 2026-08-20 — because this
+  session **edited its wording** to remove the `THIN_CANDIDATE_LINE` clause. The
+  rule's adoption date is unchanged and correct; the audit recovers when text
+  entered the file and is blind to an amendment, which is the same blindness the
+  two author-ruled photo-door entries have. **Nothing was corrected
+  automatically.**
+* **Playbook diff: nothing new.** No hunt was run — this brief forbade one.

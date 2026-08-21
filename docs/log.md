@@ -14,6 +14,20 @@ their date and their own commit subject. That is a lookup rather than a guess, a
 
 ---
 
+## Prompt E · 2026-08-20
+
+**What it finished.** 2 row(s).
+
+- **PD04** — About one search in ninety was never recorded in the store this business sells, and nothing could see it happening. Diagnosed and fixed this session.
+- **PE03** — A meetings source fetched three of a town's calendars, produced no meetings from them, and reported that it had succeeded — so the safety net that preserves a town's meetings during an outage never ran, and Wilmot, New Hampshire went from 23 meetings to none on a reader's page. Fixed at the one line all eleven sources pass through.
+
+**What it started.** 3 row(s) opened, 2 still open.
+
+- **PE01** — A candidate we hold no published words for still gets a sentence on their card saying so. It is honest and it names the gap as ours, and it also appears only on the shortest cards — which is the same shape as the line RULING 42 just deleted. Whether it goes too is a call about a reader surface, so it is yours. Seen on the live ballot at every pilot zip. *(open)*
+- **PE02** — The short summary file generated at the end of every session still reads the frozen pre-rebuild tracker, so it reports a priority count on a scale that no longer exists. Nothing a reader sees is affected; the next session opens on a number that means nothing. *(open)*
+
+**Needs Sean.** PE01
+
 ## Prompt D · 2026-08-20
 
 Prompt C had added a rule that hid every candidate unless everybody in the race had the same information. That hid everyone. This session removed the rule, put 107 candidates back on the ballot across all 36 contests in the four test zips, and made the rule illegal so it cannot come back. It also gave a silently failing write a bell that somebody can hear.
@@ -22,12 +36,11 @@ Prompt C had added a rule that hid every candidate unless everybody in the race 
 
 - **R58** — Seventeen production checks stopped running and said nothing at all. Only two of nineteen reported that they could not run, so a suite that had lost most of a section still passed.
 
-**What it started.** 5 row(s) opened, 5 still open.
+**What it started.** 5 row(s) opened, 4 still open.
 
 - **PD01** — Roughly four million people in Washington DC and the five territories are shown no federal representative at all, because their at-large district is missing from the registry. The six people are real, non-voting members of Congress, and their constituents currently see nothing. *(open)*
 - **PD02** — The local development database is eight migrations behind production, so nothing can be tried locally against the real schema. *(open)*
 - **PD03** — When a reaction's location lookup fails, the row is written with an empty list of districts rather than a recorded failure — so a lookup that broke is indistinguishable from a place with no districts. *(open)*
-- **PD04** — About one search in ninety was never recorded in the store this business sells, and nothing could see it happening. Diagnosed and fixed this session. *(open)*
 - **PD05** — The production walk creates rows under two different run labels and then counts only one of them, so it under-reports how many rows it wrote. *(open)*
 
 **Needs Sean.** Nothing.
@@ -1504,12 +1517,3 @@ The first session. The map, the tracker, and congressional district boundaries o
 - …and 29 more still open.
 
 **Needs Sean.** B01, B08, C01, V01, V03, V05, B05, T01, V04, V06, B02, B03, T04, B07, T03, T05, B04, T02, X02, X03, T06, T07, C02, C03, C04
-
-## Prompt E
-
-**What it started.** 2 row(s) opened, 2 still open.
-
-- **PE01** — A candidate we hold no published words for still gets a sentence on their card saying so. It is honest and it names the gap as ours, and it also appears only on the shortest cards — which is the same shape as the line RULING 42 just deleted. Whether it goes too is a call about a reader surface, so it is yours. Seen on the live ballot at every pilot zip. *(open)*
-- **PE02** — The short summary file generated at the end of every session still reads the frozen pre-rebuild tracker, so it reports a priority count on a scale that no longer exists. Nothing a reader sees is affected; the next session opens on a number that means nothing. *(open)*
-
-**Needs Sean.** PE01

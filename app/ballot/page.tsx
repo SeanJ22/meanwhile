@@ -24,6 +24,7 @@ import {
 } from "@/lib/ballot/candidate-cards";
 import { BallotNarrowing } from "@/components/ballot/ballot-narrowing";
 import { photosFirst } from "@/lib/ballot/photo-order";
+import { COLLECTION_NOTE } from "@/lib/ballot/collection-note";
 import { FilingNote } from "@/components/ballot/filing-note";
 import { CandidateBattlecard } from "@/components/ballot/candidate-battlecard";
 import { CandidateCard } from "@/components/ballot/candidate-card";
@@ -167,7 +168,9 @@ const NEUTRAL_NOTE =
  * the product talking about itself rather than telling a reader anything, and
  * "That's it" is the whole instruction: say it once and stop.
  */
-const COLLECTION_NOTE = "What we have found, we are displaying here.";
+/* The sentence itself now lives in `lib/ballot/collection-note.ts`, imported
+   above, because RULING 51 gives it a second surface. Two literals is how a
+   sentence he has already rewritten once drifts into two sentences. */
 
 function candidatesOf(set: BallotSet, contest: Contest): Candidacy[] {
   return set.candidacies

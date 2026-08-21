@@ -4,7 +4,7 @@
 (`scripts/tracker.mjs`) from `docs/tracker-working.csv`. It cannot disagree with the
 store, because it is derived from it.
 
-Generated 2026-08-20 (America/Phoenix, from `pnpm stamp`).
+Generated 2026-08-21 (America/Phoenix, from `pnpm stamp`).
 
 Open rows only. Finished work is in `docs/tracker-resolved.csv` and on the
 **Resolved** tab of `docs/tracker.xlsx`, which is the record of what was decided
@@ -14,8 +14,8 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **150 open**, 318 resolved.
-- **38 waiting on Sean** — the first section below.
+- **155 open**, 321 resolved.
+- **40 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **2**
   - New Hampshire hunt — **2**
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**38 open · 9 resolved.**
+**40 open · 11 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -55,7 +55,9 @@ Only Sean closes a row here. A session may open one and may work it.
 
 **B01** — The product is called Meanwhile on screen while the real name is decided. Nothing a reader sees changes until Sean settles it; when he does, one file changes and the whole site follows.
 
-**NH09** — On 2026-08-16 you ruled that candidates we have a photo of should be listed first within a contest, and the cost was written down at the time: layout position stacks on top of the information advantage. RULING 42, four days later, says no ordering may indicate how complete one candidate's record is relative to another's. Both are yours and they point opposite ways. Nothing has been changed.
+**NH12** — The New Hampshire Secretary of State publishes a mailing address for every candidate on the ballot, and for most of them it is where they live. It is a public record, the state prints it, and it is the only working contact we hold for about half of the forty-seven people on Newbury's ballot. I have recorded all forty-seven in the hunt notes and rendered none of them, because putting a named person's home street address on a consumer app is a different act from a state PDF and I did not want to make that call on my own.
+
+**NH13** — The constitution records a wall that is not there. Two paragraphs - the source register in CLAUDE.md and the curator note in the New Hampshire ballot data - say gc.nh.gov 'refuses every client this project has, browsers included'. It answers a plain fetch at HTTP 200. Only you change CLAUDE.md, so this is a correction routed to you rather than made.
 
 **R33** — Sean's map of the project's sessions lived outside the repo, so nothing could read it. It is now committed, and the row stays open until he confirms the copy in the repo is the one he wants used.
 
@@ -97,7 +99,9 @@ Only Sean closes a row here. A session may open one and may work it.
 
 **NH08** — The Town of Newbury publishes its whole calendar as a feed nobody had wired, and it has more meeting dates on it than the portals we were using. Both now ship, and when they both carry the same meeting the site shows the one with the agenda attached. That is a change to what you see at 03255 and it is worth a look.
 
-**PE04** — Every candidate card carries a line saying how many of the twelve issues we search for turned up in their own pages — and, when none did, a sentence saying so. You asked for the page disclosure to be one sentence and no more. Whether that reaches this line too is the part your note does not settle, and it is worth asking because you ruled the opposite way on it once already.
+**NH10** — Tobin Menard is running for Executive Council in District 2, which covers Newbury. His campaign site publishes exactly one picture of him: a clean studio portrait with the words 'Accountability Responsibility' printed across it in red. The photo rule says a portrait, never a wordmark, and this is a portrait carrying one. I refused it, which means he shows initials on the ballot page while the sitting councillor beside him shows her face - and that is the visual asymmetry the equal-effort rule exists to stop. It is a call about how a real person looks on a reader's screen, so it is yours.
+
+**NH11** — Shaun Fife is running for Governor. He has no campaign website and no campaign Facebook page. What he has is a candidate page on a political party's own site, carrying his name, the office, his own words and a contact address. Two of our rules point in opposite directions about it and the third makes it worse, so it is yours to settle.
 
 **R56** — The old status page put 54% of the tracker in a section called "everything with no recorded prerequisite", which is not a place. Superseded by the rebuild this session, and it stays open until Sean says the new sections are right.
 
@@ -165,7 +169,7 @@ Only Sean closes a row here. A session may open one and may work it.
 
 Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies, officeholders, candidates, meetings, the ballot.
 
-**20 open · 0 resolved.**
+**21 open · 1 resolved.**
 
 ### P1
 
@@ -177,13 +181,15 @@ Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies
 
 ### P2
 
-**NH01** — The Kearsarge Regional School District publishes who sits on its school board, and its own page for that list refuses every way we have of reading it. The nine names we show came from an earlier read and the district may have changed them since. Getting a current list needs a route we have not walked yet.
-
 **NH02** — Newbury's own site lists a Parks and Recreation Committee and a Housing Committee in its sitemap, and both pages ask for a password. They are real committees the town has not published. We never sign in to anything, so their membership and meetings have to come from somewhere else.
 
 **NH04** — We now hold all three county commissioners, the delegation's officers and every department head by name. What the county publishes for reaching any of them is one main number. The Kelly standard asks for a working contact per person and the county does not print one.
 
 **NH05** — Ten Newbury boards now read their meetings off the town's own calendar, and the town has not posted a single upcoming date for any of them. Seventy-eight of their past sittings are on that calendar, so they do meet. A reader who wants to attend one cannot find out when from anything the town publishes.
+
+**NH14** — Lake Todd Village District and the Merrimack County Conservation District both have territory over 03255, both are real governments with meetings and budgets, and the product has never named either. A reader in Newbury can be governed by them and hear nothing.
+
+**NH15** — Six of the seven towns that send members to the Kearsarge Regional School Board had no bodies in this registry at all. They now have a list - 90 boards, committees and commissions, read from each town's own website with the rung recorded - and nothing is wired to any of them. A reader in one of those towns still sees nothing.
 
 **HD01** — Eleven people are running for United States Senator in New Hampshire and forty-one things about them have never been looked for — faces, their own words, a way to reach them, a website.
 
@@ -287,7 +293,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**49 open · 81 resolved.**
+**51 open · 81 resolved.**
 
 ### P2
 
@@ -364,6 +370,10 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **D69** — The Montana school-district disagreement, recorded as its own investigation. Named separately from the row above so the discrepancy has somewhere to be resolved rather than being carried as a caveat forever.
 
 **NH07** — Merrimack County's department pages all load cleanly and all of them list their staff in a table our reader cannot understand. It is a different table shape from the one we built for. Nobody has looked at how many other counties use it.
+
+**NH16** — Bradford, New Hampshire publishes every agenda and minute set on a vendor platform this product has never seen. Its own town website carries no boards index and no calendar, so the vendor is the only route to the town's meetings.
+
+**NH17** — The consolidated miss list says newbury.nh.gov/sitemap.xml is a 403 and that robots declares none. It answers HTTP 200 at 43,484 bytes. A sitemap is the discovery rung for every page on a site, and this one has been closed to us on a stale reading.
 
 **P12** — Showing readers what other readers answered. Sean tabled this: it anchors the next respondent and corrupts the very data being sold. Recorded so nobody builds it by accident.
 

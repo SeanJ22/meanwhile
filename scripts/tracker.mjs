@@ -56,6 +56,7 @@ import {
   COLUMNS,
   ALL_RESOLUTIONS,
   DELETIONS_JSON,
+  OPENED_JSON,
   planDeletions,
   RESOLVED_CSV,
   ROOT,
@@ -859,6 +860,31 @@ function modeAdd(working, resolved, sections) {
   console.log(`  working store          ${working.length} -> ${nextWorking.length}`);
   writeFileSync(join(ROOT, WORKING_CSV), writeStore(nextWorking), "utf8");
   console.log(`\n  written  ${WORKING_CSV}`);
+
+  /*
+   * THE LEDGER, appended in the same run that assigns the ids (item 1.4).
+   *
+   * A session reports "rows opened: N" and until now nothing could check
+   * that sentence against the stores. Now it can: every id this run
+   * assigns is written down here, and `tests/tracker-stores.test.ts` fails
+   * the build if any id in this file is absent from BOTH stores. Append-
+   * only, for the same reason the resolved store is — the point is the
+   * record of what was claimed, and a claim you can edit afterwards is not
+   * a claim.
+   */
+  const ledgerPath = join(ROOT, OPENED_JSON);
+  const ledger = existsSync(ledgerPath)
+    ? JSON.parse(readFileSync(ledgerPath, "utf8"))
+    : [];
+  ledger.push({
+    session: added[0]?.["Opened by"] ?? SESSION_LABEL,
+    opened: STAMP,
+    ids: added.map((r) => r.ID),
+  });
+  writeFileSync(ledgerPath, JSON.stringify(ledger, null, 2) + "\n", "utf8");
+  const claimed = ledger.reduce((n, e) => n + e.ids.length, 0);
+  console.log(`  written  ${OPENED_JSON}  (${ledger.length} entries, ${claimed} ids claimed)`);
+
   return { working: nextWorking, resolved };
 }
 

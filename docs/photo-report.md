@@ -1573,3 +1573,33 @@ every curated local roster member.
 **curated local rosters — NH (15):** Kristen Schultz; Scott Wheeler; Sandra Warde; Alison Mastin; Kristen Schultz; James MacKenna; David Keith; Art Bobruff; Patrick McGowan; Paul Lakevicius; Nancy Glynn; Eric Gregoire; Stuart D. Trachy; David M. Lovlien; Stephen Shurtleff
 
 **curated local rosters — NJ (23):** Joseph Jackson; Howard Morrison; Jonathan Sackett; Adam Salberg; Pawel Wojtowicz; Susan Fahrman Royek; John J. Quinn; Sophia Freire; Emanuel Friedlander; Tucker Kelley; Stephen H. Shaw; John Krickus; Douglas R. Cabana; Thomas J. Mastrangelo; Christine Myers; Deborah Smith; Alison McGeary; Noël Anderson; Lisa Mezik; Jacalyn Richardson; Jemila Ann Tourne; Jamie Gorman; Rachael Brookes
+
+## NH Hunt 2 — candidate portraits shipped 2026-08-21
+
+| Person | Served from | Door and source | Judgment (read as an image) |
+|---|---|---|---|
+| Samantha Morse | `/candidates/nh-merrimack-register-of-deeds-morse-samantha.jpg` | door 2 — official portrait published by Merrimack County on its own Register of Deeds page (merrimackcounty.net/departments/register_of_deeds), read 2026-08-21; committed copy served from our origin, remove on request | read as an image 2026-08-21: clean solo portrait, unambiguous sole subject, state flag behind her — the official-portrait shape |
+| Daniel E. Innis | `/candidates/nh-merrimack-state-senate-7-innis-daniel.jpg` | door 2 — official New Hampshire Senate portrait, published by the General Court on its own District 7 roster, read 2026-08-21; committed copy served from our origin, remove on request | read as an image 2026-08-21: clean solo portrait, unambiguous sole subject |
+| Karen Elizabeth Ebel | `/candidates/nh-merrimack-state-house-merrimack-7-ebel-karen.jpg` | door 2 — official New Hampshire House portrait, published by the General Court on its own member page for Merrimack District 7, read 2026-08-21; committed copy served from our origin, remove on request | read as an image 2026-08-21: clean solo portrait, unambiguous sole subject, small (about 150px) but a portrait rather than a thumbnail of something else |
+| Jason Gerhard | `/candidates/nh-merrimack-county-sheriff-gerhard-jason.jpg` | door 3 — campaign-provided — published on the candidate's own campaign site, gohardwithgerhard.com, read 2026-08-21; committed copy served from our origin, remove on request | read as an image 2026-08-21: solo photograph, unambiguous sole subject, face clear and unobstructed. Casual rather than a studio headshot, which the composition standard permits; what it forbids is a banner, a wordmark, a group shot or an ambiguous subject, and it is none of those. IDENTITY: the file is named 'mee' on a single-candidate campaign domain whose banner reads 'FORMER REP. JASON GERHARD - CANDIDATE FOR SHERIFF 2026!' |
+| Peter Shephard | `/candidates/nh-merrimack-county-sheriff-shephard-peter.jpg` | door 3 — campaign-provided — published on the candidate's own campaign site, sheriffpeteshephard.com, read 2026-08-21; committed copy served from our origin, remove on request | read as an image 2026-08-21: clean solo portrait, unambiguous sole subject, outdoors in front of a brick building. IDENTITY: the site's own alt text names him — 'Pete leaning on a granite post' — on a single-candidate domain titled 'Sheriff Pete Shephard' |
+
+## NH Hunt 2 — candidate portraits shipped 2026-08-21
+
+| Person | Served from | Door and source | Judgment (read as an image) |
+|---|---|---|---|
+| Maxwell L. Saal | `/candidates/nh-merrimack-us-senate-saal-maxwell.jpg` | door 3 — campaign-provided — published on the candidate's own campaign site, maxfornh.com, read 2026-08-21; committed copy served from our origin, remove on request | read as an image 2026-08-21: clean solo portrait, unambiguous sole subject, outdoors. IDENTITY: served from /uploads/headshot.jpg on his own domain with alt text 'Max Saal in Walpole, New Hampshire' |
+
+## NH Hunt 2 — candidate portraits shipped 2026-08-21
+
+| Person | Served from | Door and source | Judgment (read as an image) |
+|---|---|---|---|
+| Harold F. French | `/candidates/nh-merrimack-county-commissioner-2-french-harold.jpg` | door 2 — official New Hampshire Senate portrait, published by the General Court to identify its own member for District 7 while he held that seat; read from the Internet Archive's 2022-06-05 capture on 2026-08-21; committed copy served from our origin, remove on request | read as an image 2026-08-21: clean solo studio portrait, unambiguous sole subject, and VERIFIED TO BE HIM RATHER THAN THE PATH'S CURRENT OCCUPANT — the same URL live today serves Daniel Innis, a visibly different person |
+
+## NH Hunt 2 — candidate portraits shipped 2026-08-21
+
+| Person | Served from | Door and source | Judgment (read as an image) |
+|---|---|---|---|
+| Sarah Rogers | `/candidates/nh-merrimack-county-attorney-rogers-sarah.jpg` | door 3 — campaign-provided — published on the candidate's own campaign site, rogersforcountyattorney.com, read 2026-08-21; committed copy served from our origin, remove on request | read as an image 2026-08-21: clean solo campaign portrait, unambiguous sole subject, outdoors against foliage |
+| Sky Danley | `/candidates/nh-merrimack-us-senate-danley-sky.jpg` | door 3 — campaign-provided — published on the candidate's own campaign site, skydanley2026.com, read 2026-08-21; committed copy served from our origin, remove on request | read as an image 2026-08-21: clean solo studio portrait, unambiguous sole subject. IDENTITY: served from his own single-candidate domain and the site's own alt text describes the subject in detail |
+| Tom Alciere | `/candidates/nh-merrimack-us-senate-alciere-tom.jpg` | door 3 — campaign-provided — published on the candidate's own campaign site, tomalciere.us, read 2026-08-21; committed copy served from our origin, remove on request | read as an image 2026-08-21: clean solo studio portrait against a grey backdrop, unambiguous sole subject |

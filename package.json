@@ -122,7 +122,12 @@
     "rules:history": "node scripts/amendment-history.mjs",
     "hunt:roster": "tsx scripts/hunt-roster.mts",
     "tracker:add": "node scripts/tracker.mjs add",
-    "tracker:note": "node scripts/tracker.mjs note"
+    "tracker:note": "node scripts/tracker.mjs note",
+    "ladder": "tsx scripts/ladder-fetch.mts",
+    "probe:site": "tsx scripts/candidate-site-probe.mts",
+    "ship:candidate": "tsx scripts/ship-candidate-field.mts",
+    "nh:legislator": "tsx scripts/nh-legislator.mts",
+    "bodies:enumerate": "tsx scripts/enumerate-town-bodies.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

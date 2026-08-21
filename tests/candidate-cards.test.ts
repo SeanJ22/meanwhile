@@ -1,9 +1,18 @@
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { join, relative, sep } from "node:path";
 import { test } from "node:test";
 
 import { allCandidateCards } from "../lib/ballot/candidate-cards.ts";
+
+/** Every .ts/.tsx file under a directory, so a class sweep cannot miss a file by naming it. */
+function* walkFiles(dir: string): Generator<string> {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) yield* walkFiles(full);
+    else if (entry.name.endsWith(".ts") || entry.name.endsWith(".tsx")) yield full;
+  }
+}
 
 /**
  * 2b (2026-08-17): the Kelly-standard candidate cards. Every card's claims
@@ -192,9 +201,24 @@ test("RULING 42: the card component renders no completeness marker", () => {
   );
 });
 
-test("RULING 42: the page-level disclosure is declared once and rendered once", () => {
-  const src = readFileSync(join(process.cwd(), "app", "ballot", "page.tsx"), "utf8");
-  const declared = /const COLLECTION_NOTE =\s*\n?\s*"([^"]+)";/.exec(src);
+test("RULING 42 and RULING 51: the disclosure is declared once and renders once per surface", () => {
+  /*
+   * RULING 51 (2026-08-21) gave this sentence a SECOND surface — his note on
+   * `PE04`: *"That one line should be listed once in the ballot section and
+   * once again on their battlecard."* So the declaration moved out of the page
+   * and into `lib/ballot/collection-note.ts`, and this guard moved with it.
+   *
+   * The invariant that matters is unchanged and is now checkable on both
+   * surfaces at once: ONE declaration, and exactly ONE render per surface.
+   * Two literals would let a sentence he has already rewritten once drift into
+   * two sentences, and two renders on one surface is the per-card repetition
+   * RULING 28 ended, wearing a page-level costume.
+   */
+  const declaration = readFileSync(
+    join(process.cwd(), "lib", "ballot", "collection-note.ts"),
+    "utf8",
+  );
+  const declared = /export const COLLECTION_NOTE =\s*\n?\s*"([^"]+)";/.exec(declaration);
   assert.ok(declared, "the disclosure sentence is declared in one place");
   const note = declared![1]!;
 
@@ -220,21 +244,62 @@ test("RULING 42: the page-level disclosure is declared once and rendered once", 
     );
   }
 
-  assert.equal(
-    [...src.matchAll(/\{COLLECTION_NOTE\}/g)].length,
-    1,
-    "once per page — not once per contest, and never per card",
+  /*
+   * The two surfaces RULING 51 names, and NOTHING else may render it. A third
+   * importer is a third instance nobody ruled on, so the sweep is over the
+   * whole reader tree rather than over the two files we expect.
+   */
+  const surfaces: [string, string[]][] = [
+    ["the ballot section", ["app", "ballot", "page.tsx"]],
+    ["the battlecard", ["components", "ballot", "candidate-battlecard.tsx"]],
+  ];
+  for (const [label, parts] of surfaces) {
+    const src = readFileSync(join(process.cwd(), ...parts), "utf8");
+    assert.equal(
+      [...src.matchAll(/\{COLLECTION_NOTE\}/g)].length,
+      1,
+      `once on ${label} — not once per contest, and never per card`,
+    );
+    assert.equal(
+      [...src.matchAll(/data-collection-note/g)].length,
+      1,
+      `one marked instance on ${label}, so a DOM walk can count it`,
+    );
+  }
+
+  const allowed = new Set(
+    surfaces.map(([, parts]) => parts.join("/")).concat("lib/ballot/collection-note.ts"),
+  );
+  const importers: string[] = [];
+  for (const dir of ["app", "components", "lib"]) {
+    for (const file of walkFiles(join(process.cwd(), dir))) {
+      const rel = relative(process.cwd(), file).split(sep).join("/");
+      if (allowed.has(rel)) continue;
+      // Comments stripped first: three files EXPLAIN this constant and none
+      // renders it, and a guard that cannot tell prose from code is a guard
+      // that gets deleted the first time somebody writes a note about it.
+      const code = readFileSync(file, "utf8")
+        .replace(/\/\*[\s\S]*?\*\//g, "")
+        .replace(/^[ \t]*\/\/.*$/gm, "");
+      if (code.includes("COLLECTION_NOTE")) importers.push(rel);
+    }
+  }
+  assert.deepEqual(
+    importers,
+    [],
+    "RULING 51 names two surfaces; a third would be an instance nobody ruled on",
   );
 
   // RULING 42 replaces nothing else: the contest footnote and the marker
   // convention RULING 28 fixed are both still exactly where D left them.
+  const page = readFileSync(join(process.cwd(), "app", "ballot", "page.tsx"), "utf8");
   assert.equal(
-    [...src.matchAll(/<IncumbencyFootnote \/>/g)].length,
+    [...page.matchAll(/<IncumbencyFootnote \/>/g)].length,
     2,
     "the contest-level incumbency footnote is untouched — one per branch",
   );
   assert.equal(
-    [...src.matchAll(/<IncumbencyMarker \/>/g)].length,
+    [...page.matchAll(/<IncumbencyMarker \/>/g)].length,
     1,
     "the `*` marker construction is untouched",
   );

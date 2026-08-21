@@ -3,7 +3,6 @@ import test from "node:test";
 
 // Plain .mjs, shared with the plain-node scripts that never see tsx.
 import { posixRelative } from "../scripts/repo-path.mjs";
-import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { readFile, readdir } from "node:fs/promises";
@@ -20,6 +19,8 @@ import {
   syntheticRunHeaders,
 } from "../lib/db/run-marker.ts";
 import { organicDenominatorSentence } from "../lib/signal/search-log-reads.ts";
+
+import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 
 /**
  * C05 (2026-08-17): our own traffic stops contaminating the aggregate.
@@ -158,12 +159,7 @@ test("reactions grew the marker in its own value space — the stores still shar
   const roots = ["lib", "app", "scripts"];
   const offenders: string[] = [];
   for (const root of roots) {
-    const files = execFileSync("git", ["ls-files", root], {
-      cwd: process.cwd(),
-      encoding: "utf8",
-      maxBuffer: 64e6,
-    })
-      .split("\n")
+    const files = filesThatWouldBeCommitted({ cwd: process.cwd(), paths: [root] })
       .map((f) => f.trim())
       .filter((f) => /\.(ts|tsx|mts|mjs)$/.test(f));
     for (const file of files) {

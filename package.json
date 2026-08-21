@@ -127,7 +127,12 @@
     "probe:site": "tsx scripts/candidate-site-probe.mts",
     "ship:candidate": "tsx scripts/ship-candidate-field.mts",
     "nh:legislator": "tsx scripts/nh-legislator.mts",
-    "bodies:enumerate": "tsx scripts/enumerate-town-bodies.mts"
+    "bodies:enumerate": "tsx scripts/enumerate-town-bodies.mts",
+    "watch:workflows": "tsx scripts/watch-workflows.mts",
+    "stale": "tsx scripts/stale.mts",
+    "nh:roster": "tsx scripts/nh-roster-branch.mts",
+    "nh3:shots": "tsx scripts/nh3-shots.mts",
+    "nh:county": "tsx scripts/nh-county-branch.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

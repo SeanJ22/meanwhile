@@ -309,14 +309,20 @@ test("g13 audit: every scheduled workflow that writes carries a sanction", () =>
                                      workflow here that is not scheduled: it
                                      runs on push.
 
-    So: six workflows, one of which writes to the database. Four commit files
+      job-watch.yml                  no DB write; reads the Actions API and
+                                     commits a tracker row (RULING 56, NH Hunt
+                                     3, 2026-08-21). It holds no database
+                                     credential at all, deliberately: what it
+                                     watches is job outcomes, not data.
+
+    So: seven workflows, one of which writes to the database. Five commit files
     to the repository and never open a connection, and one writes nothing at
     all. This asserts that split rather than describing it, so a workflow that
     grows a DATABASE_URL later cannot join the class silently.
   */
   const dir = ".github/workflows";
   const workflows = readdirSync(dir).filter((f) => f.endsWith(".yml"));
-  assert.equal(workflows.length, 6, `the workflow set changed: ${workflows.join(", ")}`);
+  assert.equal(workflows.length, 7, `the workflow set changed: ${workflows.join(", ")}`);
 
   const withDatabase: string[] = [];
   for (const file of workflows) {

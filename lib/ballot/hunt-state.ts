@@ -43,6 +43,8 @@
  * NOT_HUNTED, and only with evidence behind it.
  */
 
+import { type Branch, isEvidencedByBranches } from "../hunt/discovery.ts";
+
 /** The four reader-visible Kelly fields, in the order they are reported. */
 export const KELLY_FIELDS = ["photo", "blurb", "contact", "campaignSite"] as const;
 
@@ -73,7 +75,26 @@ export interface WalkedRung {
 export type RecordedFieldState =
   | { state: "NOT_HUNTED" }
   | { state: "FOUND" }
-  | { state: "VERIFIED_ABSENT"; rungs: WalkedRung[]; checkedAt: string }
+  | {
+      state: "VERIFIED_ABSENT";
+      rungs: WalkedRung[];
+      /**
+       * **RULING 52, 2026-08-21: the BRANCHES walked, not only the rungs.**
+       *
+       * Rungs prove the retrieval discipline was followed on one route.
+       * Branches prove more than one route was tried at all — and every one of
+       * the three wrong verdicts that produced RULING 52 had a defensible rung
+       * history behind it. `gc.nh.gov` was recorded as refusing every client
+       * this project has and answers rung 2 at HTTP 200; Kearsarge's nine board
+       * emails were recorded absent twice and were in the page's own hrefs.
+       *
+       * Required, and validated by `isEvidencedAbsence` below. There are zero
+       * `VERIFIED_ABSENT` records in the product as of this ruling, so nothing
+       * is grandfathered and nothing needs to be.
+       */
+      branches: Branch[];
+      checkedAt: string;
+    }
   | { state: "NOT_APPLICABLE"; reason: string; checkedAt: string };
 
 /** Every field's recorded state for one candidate. */
@@ -103,10 +124,24 @@ const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
  */
 export function isEvidencedAbsence(
   record: RecordedFieldState | undefined,
-): record is { state: "VERIFIED_ABSENT"; rungs: WalkedRung[]; checkedAt: string } {
+): record is {
+  state: "VERIFIED_ABSENT";
+  rungs: WalkedRung[];
+  branches: Branch[];
+  checkedAt: string;
+} {
   if (!record || record.state !== "VERIFIED_ABSENT") return false;
   if (!Array.isArray(record.rungs) || record.rungs.length === 0) return false;
   if (typeof record.checkedAt !== "string" || !ISO_DATE.test(record.checkedAt)) {
+    return false;
+  }
+  /*
+   * RULING 52 (2026-08-21). Two INDEPENDENT branches minimum, each with its
+   * own date and result, and none of them may have found the thing. A single
+   * empty branch is a measurement, and calling it an absence is the ladder's
+   * `unreachable` verdict wearing a new name.
+   */
+  if (!isEvidencedByBranches({ branches: record.branches, checkedAt: record.checkedAt })) {
     return false;
   }
   return record.rungs.every(

@@ -89,3 +89,4 @@ next-env.d.ts
 # carries — the pixels are not the repo's to keep.
 /.prompte/
 /.f22tmp/
+/.nh3tmp/

@@ -1,7 +1,8 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { officialPhotoForPerson } from "../photos/person.ts";
+import { officialPhotoForPerson, personKey } from "../photos/person.ts";
+import { photoMayRender } from "../photos/review.ts";
 
 /**
  * Kelly-standard candidate cards (2b, 2026-08-17): the curated photo / bio /
@@ -29,6 +30,32 @@ export interface CandidateCardData {
   bioSourceLabel: string | null;
   email: string | null;
   phone: string | null;
+  /**
+   * **THE ADDRESS THE CANDIDATE FILED WITH THE STATE** (RULING 54, adopted
+   * 2026-08-21, the author's ruling; `NH12`).
+   *
+   * A candidate's filed mailing address is on a public form the candidate
+   * submitted for exactly this purpose — so that the public, and people who
+   * want to reach them about the office they are seeking, can. The state
+   * prints it. The project's standing commitment is that it looks hard enough
+   * to find what is public; having found it, withholding it is the information
+   * asymmetry the display rulings exist to prevent.
+   *
+   * It matters most for the people who have least. For Kathleen Donnelly and
+   * Cynthia Rusis it is the ONLY contact that exists, and their cards offered
+   * no way to reach them at all while their opponents showed phones and sites.
+   * That is a thin card tracking campaign professionalism rather than merit,
+   * which is exactly what the equal-effort rule was written to catch.
+   *
+   * **This does not extend to information that is not on a public filing.**
+   * The scope is the filing, and nothing beyond it.
+   */
+  filedAddress: string | null;
+  /**
+   * Which filing it came from, rendered with it. A contact without its source
+   * class is a generated claim, same as a blurb without one.
+   */
+  filedAddressSource: string | null;
 }
 
 interface CandidateCardsFile {
@@ -66,8 +93,48 @@ function withPersonPhoto(
 ): CandidateCardData | null {
   if (!card) return card;
   const official = officialPhotoForPerson(personName);
-  if (!official || official.url === card.photoUrl) return card;
-  return { ...card, photoUrl: official.url, photoSource: official.source };
+  const merged =
+    !official || official.url === card.photoUrl
+      ? card
+      : { ...card, photoUrl: official.url, photoSource: official.source };
+  return withReviewedPhotoOnly(merged, personName);
+}
+
+/**
+ * **RULING 55 — only an APPROVED photo renders.** (2026-08-21.)
+ *
+ * Three false portraits shipped past every mechanical check the repo had in a
+ * single session: a stock photograph of the United States flag alt-texted with
+ * a candidate's name and served from an `/images/headshots/` path; a scanned
+ * cover of a 1978 New Hampshire Grand Jury manual served as a campaign's own
+ * `og:image`; and a name-and-office banner. A file existing is not a
+ * photograph of a person, and rendering a wrong face is a false claim about a
+ * named person that a reader believes instantly.
+ *
+ * **This is a correctness gate on ONE FIELD and never a completeness gate on a
+ * card.** RULING 26 and RULING 27 forbid withholding what we hold about a
+ * person because something else about them is missing; nothing here does that.
+ * The photo is dropped only when the photo's OWN review says so, and every
+ * other field on the card is untouched — name, party, blurb, contacts, filed
+ * address, funding, votes, the battlecard door. A card whose photo is pending
+ * renders initials, which the frozen field matrix already calls a success
+ * rather than a gap ("never — honest initials are a success"), and per
+ * RULING 44 the card says nothing at all about the photo's state.
+ *
+ * `lib/photos/review.ts` carries the full reasoning and
+ * `tests/photo-review.test.ts` asserts a person renders fully with a photo
+ * pending — which is the claim that keeps this from becoming a suppression
+ * path by drift.
+ */
+function withReviewedPhotoOnly(
+  card: CandidateCardData,
+  personName: string,
+): CandidateCardData {
+  if (!card.photoUrl) return card;
+  if (photoMayRender(personKey(personName), card.photoUrl)) return card;
+  // The photo goes; its source goes with it, because a credit with no image is
+  // an attribution for nothing. Everything else stays exactly as it was.
+  return { ...card, photoUrl: null, photoSource: null };
 }
 
 /** The person's name as filed, recovered from the candidacy id's tail. */

@@ -229,6 +229,8 @@ export function makeIcalSource(
     };
     const unreachable: string[] = [];
     const seen = new Set<string>();
+    /** Events parsed and dated, then set aside as outside the served window. */
+    let outOfWindow = 0;
 
     const from = new Date(now.getTime() - WINDOW_BACK_DAYS * 86_400_000);
     const to = new Date(now.getTime() + WINDOW_FORWARD_DAYS * 86_400_000);
@@ -310,7 +312,13 @@ export function makeIcalSource(
           continue;
         }
         const when = new Date(start.iso);
-        if (when < from || when > to) continue;
+        if (when < from || when > to) {
+          // COUNTED, because an uncounted exit path is how a zero-row
+          // extraction passes for an accounted one. See `outOfWindow` in
+          // lib/sources/normalize-account.ts.
+          outOfWindow++;
+          continue;
+        }
 
         const rawLocation = (event.location ?? "").trim();
         /*
@@ -413,7 +421,7 @@ export function makeIcalSource(
       },
       // A refused row carries no document, so it is not one this pass could
       // have extracted from. See `accountedNormalize`.
-      { unretrieved: raw.filter((r) => r.refused).length },
+      { unretrieved: raw.filter((r) => r.refused).length, outOfWindow },
     );
   };
 
@@ -469,6 +477,11 @@ export function makeIcalSource(
             fetchImpl,
             accept: "text/calendar,text/plain;q=0.9,*/*;q=0.8",
             profile: wiring.config.profile === "browser" ? "browser" : undefined,
+            // A 200 with no VCALENDAR in it is not this town's empty calendar;
+            // it is a retrieval that failed while looking like a success. See
+            // `expect` in lib/sources/http.ts — this is the case that put
+            // `Refresh meetings snapshot` in the red on 2026-08-21.
+            expect: { label: "a calendar feed", marker: "BEGIN:VCALENDAR" },
           });
           /*
            * ASK FOR THE PAST AS WELL (M58's shape, applied here).
@@ -493,6 +506,7 @@ export function makeIcalSource(
                 accept: "text/calendar,text/plain;q=0.9,*/*;q=0.8",
                 profile:
                   wiring.config.profile === "browser" ? "browser" : undefined,
+                expect: { label: "a calendar feed", marker: "BEGIN:VCALENDAR" },
               });
               ics += past.text;
             } catch {

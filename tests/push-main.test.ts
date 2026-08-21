@@ -165,8 +165,11 @@ test("R48: every workflow that pushes main goes through the protected push", () 
   );
   assert.equal(
     pushers.length,
-    5,
-    `expected the five main-pushing workflows to use scripts/push-main.mjs, found ${pushers.length}: ${pushers.join(", ")}`,
+    6,
+    // Six as of NH Hunt 3 (2026-08-21): the five refresh/tripwire jobs plus
+    // job-watch.yml, which commits the Needs Sean row RULING 56 raises and so
+    // needs the same rebase-and-retry protection as any other main pusher.
+    `expected the six main-pushing workflows to use scripts/push-main.mjs, found ${pushers.length}: ${pushers.join(", ")}`,
   );
 });
 

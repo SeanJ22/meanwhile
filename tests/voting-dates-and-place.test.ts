@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
@@ -13,6 +12,8 @@ import {
 import { googleCalendarUrl, icsDataHref } from "../lib/calendar/event-links.ts";
 import { ELECTION_DATES } from "../lib/ballot/election-dates.ts";
 import { PLACEHOLDER_ADDRESS } from "../lib/ballot/placeholder-address.ts";
+
+import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 
 /**
  * F01-continued session 2, items 15, 16 and 17 (2026-08-19). Three
@@ -245,12 +246,10 @@ test("17: no reader-facing placeholder carries a region-specific address", () =>
   // literal NUL is classified binary and SKIPPED by the default tool, and a
   // sweep that could not look prints the same thing as a sweep that found
   // nothing.
-  const files = execFileSync("git", ["ls-files", "app", "components", "lib"], {
+  const files = filesThatWouldBeCommitted({
     cwd: ROOT,
-    encoding: "utf8",
-    maxBuffer: 64e6,
+    paths: ["app", "components", "lib"],
   })
-    .split("\n")
     .map((f) => f.trim())
     .filter((f) => /\.(ts|tsx)$/.test(f));
 

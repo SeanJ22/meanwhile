@@ -117,6 +117,88 @@ was enriched, or, for a genuinely new retrieval class, which number was added.
 A run that learned a new way past a wall and did not write it down has spent the
 discovery and kept nothing.
 
+### RULING 52 — DISCOVERY IS A TREE, NOT A LADDER
+
+(Adopted 2026-08-21, the author's ruling, NH Hunt 3. The ladder above is
+unchanged and its numbering is still canonical: this governs how the ladder is
+USED, and it is why the ladder can never produce the answer "unreachable.")
+
+**Branches to the same fact are independent. A branch returning empty is one
+measurement on one date, never a verdict about the fact.** The hunt does not
+stop when a branch fails; it takes another branch. Where no branch exists, one
+is built.
+
+*The rationale stays attached, because a stripped rule reads as guidance.*
+
+If the front door is locked and the back door is locked, that does not mean the
+building cannot be entered. There are windows, a loading dock, a fire escape, a
+neighbour with a key, a public filing describing the floor plan. **A ladder
+produces the answer "unreachable" because a ladder has one direction. A tree
+does not have that answer available to it.** The hunt is standing behaviour —
+constantly, consistently, always going after the same information by different
+avenues and different sources. It is not a special effort reserved for hard
+cases.
+
+This was adopted over three walls this repo had written down as permanent, all
+three of which fell in one session, and two of which were recorded as OURS:
+
+- `gc.nh.gov` was recorded as refusing every client this project has, browsers
+  included. Re-walked 2026-08-21: it answers rung 2 at HTTP 200.
+- `sos.nh.gov` stayed walled host-wide from 2026-08-13 until somebody walked
+  rung 5, on 2026-08-21.
+- Kearsarge's nine board emails sat in the page's own `href`s after two separate
+  sessions recorded them as honest absences; read at rung 4 on 2026-08-21.
+
+Every one of those had a defensible RUNG history behind it. That is the point:
+rungs prove the retrieval discipline was followed on one route, and no rung
+count proves a second route was ever tried.
+
+- **Every recorded absence names which branches were walked and on what date.**
+  "Not found" without branches and a date is not a valid record. Two
+  INDEPENDENT branches minimum — and two routes that fail for the same reason
+  are one route wearing two names, so a branch declares what it goes *through*
+  (a host, a vendor, a publisher) and independence is counted over distinct
+  dependencies rather than over branch names.
+- **A source recorded as walled is recorded with the date it was last tested,
+  never as a standing property.**
+- **No branch result is permanent. This is the second half of the law and it is
+  not separable from the first.** A fact not found today is hunted again on its
+  cadence, forever, until it is found. Nothing in this project is ever concluded
+  to be unobtainable.
+- **Persistence, not circumvention.** Captcha and challenge walls are named, not
+  defeated. A `robots.txt` disallow gets a compliant route to the same
+  information. Where a document is obtainable only by request, make the request
+  and record it. This does not narrow the two standing prohibitions in the
+  transparency mandate; it restates them for the tree.
+
+A **rung** is retrieval mechanics — how to get bytes past a wall, numbered above.
+A **branch** is where the fact might also live — a different publisher, a
+different document, a different body that files the same thing. A branch may be
+walked at any rung. `lib/hunt/discovery.ts` is the machinery; it is guarded in
+`tests/discovery-tree.test.ts`.
+
+### RULING 53 — RECORDED ABSENCES EXPIRE
+
+(Adopted 2026-08-21, the author's ruling, NH Hunt 3. Inseparable from RULING 52
+above — it is that ruling's second half made operational.)
+
+**An absence is a measurement with a shelf life, not a conclusion.**
+
+- **Candidate fields: 7 days.** Filings open, campaigns launch, sites appear.
+- **Bodies, rosters, and officials: 14 days.**
+- **Walled sources: 14 days, regardless of how emphatically the wall was
+  recorded.** That last clause is not decoration: `gc.nh.gov` and `sos.nh.gov`
+  were both recorded emphatically and both were wrong, as the re-walk of
+  2026-08-21 showed.
+
+Past its window a record is **stale** and is re-walked before it is relied on.
+Stale is not wrong and a stale record is never deleted — it means the
+measurement no longer carries a claim on being current. **Staleness is a state
+the data carries, not a note in a document**, and a record that cannot say when
+it was measured reads as stale rather than fresh, because defaulting the other
+way is how a bad date buys permanent trust. This runs on the scheduled refresh,
+not by hand.
+
 ### WHAT IS LAW HERE, AND WHAT IS A RULING
 
 (Adopted 2026-08-20, Prompt C item 5.)

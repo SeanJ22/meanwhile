@@ -10,7 +10,9 @@
       "bioSourceUrl": "https://kellyfornh.com",
       "bioSourceLabel": "In the campaign's words — kellyfornh.com, read 2026-08-14",
       "email": null,
-      "phone": "(603) 271-2121"
+      "phone": "(603) 271-2121",
+      "filedAddress": "PO Box 4723, Manchester NH 03108",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:governor:warmington-cinde": {
       "photoUrl": "/candidates/nh-merrimack-governor-warmington-cinde.jpg",
@@ -19,7 +21,9 @@
       "bioSourceUrl": "https://www.cindewarmington.com",
       "bioSourceLabel": "From the candidate's site — cindewarmington.com, read 2026-08-14",
       "email": "vote@cindewarmington.com",
-      "phone": null
+      "phone": null,
+      "filedAddress": "PO Box 2133, Concord NH 03302",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:us-senate:pappas-chris": {
       "photoUrl": "/officials/P000614.jpg",
@@ -28,7 +32,9 @@
       "bioSourceUrl": "https://chrispappas.org",
       "bioSourceLabel": "From the candidate's site — chrispappas.org, read 2026-08-14",
       "email": null,
-      "phone": "(603) 935-6710"
+      "phone": "(603) 935-6710",
+      "filedAddress": "629 Kearney Cir, Manchester NH 03104",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:us-senate:brown-scott-p-": {
       "photoUrl": "/candidates/nh-merrimack-us-senate-brown-scott-p-.jpg",
@@ -37,7 +43,9 @@
       "bioSourceUrl": "https://scottbrown.com",
       "bioSourceLabel": "From the candidate's site — scottbrown.com, read 2026-08-14",
       "email": "info@scottbrown.com",
-      "phone": "(617) 303-6800"
+      "phone": "(617) 303-6800",
+      "filedAddress": "33 Oceanview Ave, Rye NH 03870",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:us-senate:sununu-john-e-": {
       "photoUrl": "/candidates/nh-merrimack-us-senate-sununu-john-e-.jpg",
@@ -46,7 +54,9 @@
       "bioSourceUrl": "https://www.sununusenator.com",
       "bioSourceLabel": "From the candidate's site — sununusenator.com, read 2026-08-14",
       "email": "info@sununusenator.com",
-      "phone": "(706) 534-7780"
+      "phone": "(706) 534-7780",
+      "filedAddress": "799 Central Road, PO Box 55, Rye Beach NH 03871",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:us-house-2:tang-williams-lily": {
       "photoUrl": "/candidates/nh-merrimack-us-house-2-tang-williams-lily.png",
@@ -55,7 +65,9 @@
       "bioSourceUrl": "https://www.lilytangwilliams.com",
       "bioSourceLabel": "From the candidate's site — lilytangwilliams.com, read 2026-08-14",
       "email": "lily4congress@lilytangwilliams.com",
-      "phone": "(720) 938-4720"
+      "phone": "(720) 938-4720",
+      "filedAddress": "252 Pine Hill Rd, Weare NH 03281",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:state-senate-7:harned-rebecca": {
       "photoUrl": null,
@@ -64,7 +76,9 @@
       "bioSourceUrl": "https://www.rebeccafornh.com",
       "bioSourceLabel": "From the candidate's site — rebeccafornh.com, read 2026-08-14",
       "email": "info@rebeccafornh.com",
-      "phone": null
+      "phone": null,
+      "filedAddress": "PO Box 198, North Sutton NH 03260",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:state-house-merrimack-7:sargent-gregory-m-": {
       "photoUrl": "/candidates/nh-merrimack-state-house-merrimack-7-sargent-gregory-m-.jpg",
@@ -73,7 +87,9 @@
       "bioSourceUrl": "https://gregforrep.com",
       "bioSourceLabel": "From the candidate's site — gregforrep.com, read 2026-08-14",
       "email": "Gregory.Sargent@gc.nh.gov",
-      "phone": "(603) 674-5253"
+      "phone": "(603) 674-5253",
+      "filedAddress": "209 Squires Ln, New London NH 03257",
+      "filedAddressSource": "Secretary of State 2026 filing"
     },
     "ballot-nh-merrimack:executive-council-2:liot-hill-karen": {
       "photoUrl": "/candidates/nh-merrimack-executive-council-2-liot-hill-karen.jpg",
@@ -82,7 +98,9 @@
       "bioSourceUrl": "https://www.karenliothill.com",
       "bioSourceLabel": "From the candidate's site — karenliothill.com, read 2026-08-14",
       "email": "Karen@KarenLiotHill.com",
-      "phone": "603-252-2542"
+      "phone": "603-252-2542",
+      "filedAddress": "24 Messenger St, Lebanon NH 03766",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nj-morris:us-senate:booker": {
       "photoUrl": "/candidates/nj-morris-us-senate-booker.png",
@@ -91,7 +109,9 @@
       "bioSourceUrl": "https://corybooker.com",
       "bioSourceLabel": "In the campaign's words — corybooker.com, read 2026-08-14",
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-nj-morris:us-senate:murphy": {
       "photoUrl": "/candidates/nj-morris-us-senate-murphy.jpg",
@@ -100,7 +120,9 @@
       "bioSourceUrl": "https://jerseyjustin4senate.org",
       "bioSourceLabel": "From the candidate's site — jerseyjustin4senate.org, read 2026-08-14",
       "email": "jerseyjustin4senate@gmail.com",
-      "phone": "609-969-0959"
+      "phone": "609-969-0959",
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-nj-morris:us-house-11:hathaway": {
       "photoUrl": null,
@@ -109,7 +131,9 @@
       "bioSourceUrl": "https://www.joehathawayforcongress.com",
       "bioSourceLabel": "From the candidate's site — joehathawayforcongress.com, read 2026-08-14",
       "email": "info@joehathawayforcongress.com",
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-nj-morris:us-house-11:mejia": {
       "photoUrl": "/officials/M001246.jpg",
@@ -118,7 +142,9 @@
       "bioSourceUrl": "https://www.analiliafornj.com",
       "bioSourceLabel": "From the candidate's site — analiliafornj.com, read 2026-08-14",
       "email": "press@analiliafornj.com",
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-nj-morris:county-commissioner:selen": {
       "photoUrl": "/candidates/nj-morris-county-commissioner-selen.jpg",
@@ -127,7 +153,9 @@
       "bioSourceUrl": "https://www.selenformorriscounty.com",
       "bioSourceLabel": "From the candidate's site — selenformorriscounty.com, read 2026-08-14",
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:governor|Katie Hobbs": {
       "photoUrl": "/candidates/az-pima-governor-hobbs-katie.jpg",
@@ -136,7 +164,9 @@
       "bioSourceUrl": "https://katiehobbs.org",
       "bioSourceLabel": "From the candidate's site — katiehobbs.org, read 2026-08-14",
       "email": "info@katiehobbs.org",
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:governor|Andy Biggs": {
       "photoUrl": "/officials/B001302.jpg",
@@ -145,7 +175,9 @@
       "bioSourceUrl": "https://biggsforarizona.com",
       "bioSourceLabel": "From the candidate's site — biggsforarizona.com, read 2026-08-14",
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-nh-merrimack:us-house-2:goodlander-maggie": {
       "photoUrl": "/officials/G000604.jpg",
@@ -154,7 +186,9 @@
       "bioSourceUrl": "https://goodlander.house.gov/about",
       "bioSourceLabel": "From her official House page — goodlander.house.gov, read 2026-08-14 (in a browser; the host refuses automated clients)",
       "email": null,
-      "phone": "(603) 226-1002"
+      "phone": "(603) 226-1002",
+      "filedAddress": "15 Rockland Rd, Concord NH 03301",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-az-pima:governor:biggs-andy": {
       "photoUrl": "/officials/B001302.jpg",
@@ -163,7 +197,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:governor:schweikert-david": {
       "photoUrl": "/officials/S001183.jpg",
@@ -172,7 +208,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:us-house-6:ciscomani-juan": {
       "photoUrl": "/officials/C001133.jpg",
@@ -181,7 +219,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:us-house-6|Juan Ciscomani": {
       "photoUrl": "/officials/C001133.jpg",
@@ -190,7 +230,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:governor:hobbs-katie": {
       "photoUrl": "/candidates/az-pima-governor-hobbs-katie.jpg",
@@ -199,7 +241,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:secretary-of-state:fontes-adrian": {
       "photoUrl": "/candidates/az-pima-secretary-of-state-fontes-adrian.jpg",
@@ -208,7 +252,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:secretary-of-state|Adrian Fontes": {
       "photoUrl": "/candidates/az-pima-secretary-of-state-fontes-adrian.jpg",
@@ -217,7 +263,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:attorney-general:mayes-kris": {
       "photoUrl": "/candidates/az-pima-attorney-general-mayes-kris.jpg",
@@ -226,7 +274,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:attorney-general|Kris Mayes": {
       "photoUrl": "/candidates/az-pima-attorney-general-mayes-kris.jpg",
@@ -235,7 +285,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:state-senate-19:griffin-gail": {
       "photoUrl": "/candidates/az-pima-state-senate-19-griffin-gail.jpg",
@@ -244,7 +296,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:state-senate-19|Gail Griffin": {
       "photoUrl": "/candidates/az-pima-state-senate-19-griffin-gail.jpg",
@@ -253,7 +307,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:state-senate-20:hernandez-alma": {
       "photoUrl": "/candidates/az-pima-state-senate-20-hernandez-alma.jpg",
@@ -262,7 +318,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:state-senate-20|Alma Hernandez": {
       "photoUrl": "/candidates/az-pima-state-senate-20-hernandez-alma.jpg",
@@ -271,7 +329,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:state-house-19:diaz-lupe": {
       "photoUrl": "/candidates/az-pima-state-house-19-diaz-lupe.jpg",
@@ -280,7 +340,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:state-house-19|Lupe Diaz": {
       "photoUrl": "/candidates/az-pima-state-house-19-diaz-lupe.jpg",
@@ -289,7 +351,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:state-house-19:gowan-david": {
       "photoUrl": "/candidates/az-pima-state-house-19-gowan-david.jpg",
@@ -298,7 +362,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:state-house-19|David Gowan": {
       "photoUrl": "/candidates/az-pima-state-house-19-gowan-david.jpg",
@@ -307,7 +373,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:state-house-20:gonzales-sally-ann": {
       "photoUrl": "/candidates/az-pima-state-house-20-gonzales-sally-ann.jpg",
@@ -316,7 +384,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:state-house-20|Sally Ann Gonzales": {
       "photoUrl": "/candidates/az-pima-state-house-20-gonzales-sally-ann.jpg",
@@ -325,7 +395,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:state-house-20:villegas-betty": {
       "photoUrl": "/candidates/az-pima-state-house-20-villegas-betty.jpg",
@@ -334,7 +406,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:state-house-20|Betty Villegas": {
       "photoUrl": "/candidates/az-pima-state-house-20-villegas-betty.jpg",
@@ -343,7 +417,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:us-house-7:grijalva-adelita": {
       "photoUrl": "/officials/G000606.jpg",
@@ -352,7 +428,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:us-house-7|Adelita Grijalva": {
       "photoUrl": "/officials/G000606.jpg",
@@ -361,7 +439,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:attorney-general:petersen-warren": {
       "photoUrl": "/candidates/az-pima-attorney-general-petersen-warren.jpg",
@@ -370,7 +450,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:attorney-general|Warren Petersen": {
       "photoUrl": "/candidates/az-pima-attorney-general-petersen-warren.jpg",
@@ -379,7 +461,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:superintendent:yee-kimberly": {
       "photoUrl": "/candidates/az-pima-superintendent-yee-kimberly.jpg",
@@ -388,7 +472,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:superintendent|Kimberly Yee": {
       "photoUrl": "/candidates/az-pima-superintendent-yee-kimberly.jpg",
@@ -397,7 +483,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:secretary-of-state:kolodin-alexander": {
       "photoUrl": "/candidates/az-pima-secretary-of-state-kolodin-alexander.jpg",
@@ -406,7 +494,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:secretary-of-state|Alexander Kolodin": {
       "photoUrl": "/candidates/az-pima-secretary-of-state-kolodin-alexander.jpg",
@@ -415,7 +505,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:superintendent:horne-tom": {
       "photoUrl": "/candidates/az-pima-superintendent-horne-tom.jpg",
@@ -424,7 +516,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:state-treasurer|Nick Mansour": {
       "photoUrl": "/candidates/az-pima-state-treasurer-Nick-Mansour.jpg",
@@ -433,7 +527,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:superintendent|Teresa Leyba Ruiz": {
       "photoUrl": "/candidates/az-pima-superintendent-Teresa-Leyba-Ruiz.jpg",
@@ -442,7 +538,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-nj-morris:us-senate:fernandez": {
       "photoUrl": "/candidates/nj-morris-us-senate-fernandez.png",
@@ -451,7 +549,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:state-treasurer:mansour-nick": {
       "photoUrl": "/candidates/az-pima-state-treasurer-Nick-Mansour.jpg",
@@ -460,7 +560,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:superintendent:leyba-ruiz-teresa": {
       "photoUrl": "/candidates/az-pima-superintendent-Teresa-Leyba-Ruiz.jpg",
@@ -469,7 +571,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:governor|Teri Ann Hourihan": {
       "photoUrl": "/candidates/az-pima-governor-hourihan-teri-ann.jpg",
@@ -478,7 +582,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:mine-inspector|Walter \"Les\" Presmyk": {
       "photoUrl": "/candidates/az-pima-mine-inspector-presmyk-walter-les.jpg",
@@ -487,7 +593,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-az-pima:governor|Risa Lombardo": {
       "photoUrl": "/candidates/az-pima-governor-lombardo-risa.png",
@@ -496,7 +604,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": null,
+      "filedAddressSource": null
     },
     "ballot-nh-merrimack:register-of-probate:bradstreet-jane": {
       "photoUrl": null,
@@ -505,7 +615,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": "PO Box 149, Hopkinton NH 03229-0149",
+      "filedAddressSource": "the same roster and from the 2026 primary filing list"
     },
     "ballot-nh-merrimack:register-of-deeds:morse-samantha": {
       "photoUrl": "/candidates/nh-merrimack-register-of-deeds-morse-samantha.jpg",
@@ -513,8 +625,10 @@
       "bio": null,
       "bioSourceUrl": null,
       "bioSourceLabel": null,
-      "email": null,
-      "phone": "(603) 228-0101"
+      "email": "Deeds@Merrimackcounty.net",
+      "phone": "(603) 228-0101",
+      "filedAddress": "160 Woodridge Rd, Franklin NH 03235",
+      "filedAddressSource": "Secretary of State 2026 filing"
     },
     "ballot-nh-merrimack:register-of-deeds:davis-erica-s-": {
       "photoUrl": null,
@@ -523,7 +637,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": "24 Jackson St, Concord NH 03301",
+      "filedAddressSource": "Secretary of State 2026 filing"
     },
     "ballot-nh-merrimack:state-senate-7:innis-daniel-e-": {
       "photoUrl": "/candidates/nh-merrimack-state-senate-7-innis-daniel.jpg",
@@ -532,7 +648,9 @@
       "bioSourceUrl": "https://gc.nh.gov/senate/members/webpages/district07.aspx",
       "bioSourceLabel": "In the senator's own words — his New Hampshire Senate biography, read 2026-08-21",
       "email": "Daniel.Innis@gc.nh.gov",
-      "phone": "(603) 271-2609"
+      "phone": "(603) 271-2609",
+      "filedAddress": "328 Center Rd, Bradford NH 03221",
+      "filedAddressSource": "Secretary of State 2026 filing"
     },
     "ballot-nh-merrimack:state-house-merrimack-7:ebel-karen-elizabeth": {
       "photoUrl": "/candidates/nh-merrimack-state-house-merrimack-7-ebel-karen.jpg",
@@ -541,7 +659,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": "Karen.Ebel@gc.nh.gov",
-      "phone": "(603) 748-3876"
+      "phone": "(603) 748-3876",
+      "filedAddress": "PO Box 714, New London NH 03257",
+      "filedAddressSource": "Secretary of State 2026 filing"
     },
     "ballot-nh-merrimack:us-house-2:beauchemin-paige": {
       "photoUrl": null,
@@ -550,7 +670,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": "paige.beauchemin@gc.nh.gov",
-      "phone": "(603) 296-5489"
+      "phone": "(603) 296-5489",
+      "filedAddress": "16 Hughey St, Nashua NH 03064",
+      "filedAddressSource": "Secretary of State 2026 filing"
     },
     "ballot-nh-merrimack:county-sheriff:gerhard-jason": {
       "photoUrl": "/candidates/nh-merrimack-county-sheriff-gerhard-jason.jpg",
@@ -559,7 +681,9 @@
       "bioSourceUrl": "https://gohardwithgerhard.com/",
       "bioSourceLabel": "In the campaign's words — gohardwithgerhard.com, read 2026-08-21",
       "email": "jasongerhard@protonmail.com",
-      "phone": null
+      "phone": null,
+      "filedAddress": "30 Fellows Hill Rd, Northfield NH 03276",
+      "filedAddressSource": "Secretary of State 2026 filing"
     },
     "ballot-nh-merrimack:county-sheriff:shephard-peter": {
       "photoUrl": "/candidates/nh-merrimack-county-sheriff-shephard-peter.jpg",
@@ -568,7 +692,9 @@
       "bioSourceUrl": "https://www.sheriffpeteshephard.com/about",
       "bioSourceLabel": "In the campaign's words — sheriffpeteshephard.com, read 2026-08-21",
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": "25 Old Tilton Rd, Canterbury NH 03224",
+      "filedAddressSource": "Secretary of State 2026 filing"
     },
     "ballot-nh-merrimack:us-senate:saal-maxwell-l-": {
       "photoUrl": "/candidates/nh-merrimack-us-senate-saal-maxwell.jpg",
@@ -577,7 +703,9 @@
       "bioSourceUrl": "https://maxfornh.com/",
       "bioSourceLabel": "In the campaign's words — maxfornh.com, read 2026-08-21",
       "email": "campaign@maxfornh.com",
-      "phone": "(603) 338-1219"
+      "phone": "(603) 338-1219",
+      "filedAddress": "PO Box 1202, Walpole NH 03608",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:us-senate:manzur-karishma": {
       "photoUrl": null,
@@ -586,7 +714,9 @@
       "bioSourceUrl": "https://www.karishmaforsenate.com/",
       "bioSourceLabel": "In the campaign's words — karishmaforsenate.com, read 2026-08-21",
       "email": "info@karishmaforsenate.com",
-      "phone": "(978) 364-3614"
+      "phone": "(978) 364-3614",
+      "filedAddress": "6 Windemere Ln, Exeter NH 03833",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:us-house-2:orlando-victor": {
       "photoUrl": null,
@@ -595,7 +725,9 @@
       "bioSourceUrl": "https://votevdo.com/",
       "bioSourceLabel": "In the campaign's words — votevdo.com, read 2026-08-21",
       "email": "votevdo@gmail.com",
-      "phone": "(631) 977-0866"
+      "phone": "(631) 977-0866",
+      "filedAddress": "266 Depot Rd, Hollis NH 03049",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:us-house-2:nicholson-dan": {
       "photoUrl": null,
@@ -604,7 +736,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": "info@dannicholsonfornh.com",
-      "phone": "(603) 233-3186"
+      "phone": "(603) 233-3186",
+      "filedAddress": "53 Kinsley St Apt 7, Nashua NH 03060",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:county-commissioner-2:french-harold-f-": {
       "photoUrl": "/candidates/nh-merrimack-county-commissioner-2-french-harold.jpg",
@@ -613,7 +747,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": "contact@haroldfrench.com",
-      "phone": "(603) 848-8588"
+      "phone": "(603) 848-8588",
+      "filedAddress": "118 West Rd, Canterbury NH 03224",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:executive-council-2:menard-tobin": {
       "photoUrl": null,
@@ -622,7 +758,9 @@
       "bioSourceUrl": "https://tobinmenard.com/",
       "bioSourceLabel": "In the campaign's words — tobinmenard.com, read 2026-08-21",
       "email": null,
-      "phone": "(603) 477-1684"
+      "phone": "(603) 477-1684",
+      "filedAddress": "200 S Main St, Newport NH 03773",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:county-treasurer:schuett-dianne-e-": {
       "photoUrl": null,
@@ -631,7 +769,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": "533 Pembroke St, Pembroke NH 03275",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:county-treasurer:donnelly-kathleen": {
       "photoUrl": null,
@@ -640,7 +780,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": "481 Josiah Bartlett Rd, Concord NH 03301",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:state-house-merrimack-7:rusis-cynthia": {
       "photoUrl": null,
@@ -649,7 +791,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": "94 Northwood Lane #2387, New London NH 03257",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:county-attorney:rogers-sarah": {
       "photoUrl": "/candidates/nh-merrimack-county-attorney-rogers-sarah.jpg",
@@ -658,7 +802,9 @@
       "bioSourceUrl": "https://rogersforcountyattorney.com/",
       "bioSourceLabel": "In the campaign's words — rogersforcountyattorney.com, read 2026-08-21",
       "email": "SarahRogersforMCA@gmail.com",
-      "phone": "(508) 319-1391"
+      "phone": "(508) 319-1391",
+      "filedAddress": "27 Grove St, Concord NH 03301",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:us-senate:danley-sky": {
       "photoUrl": "/candidates/nh-merrimack-us-senate-danley-sky.jpg",
@@ -667,7 +813,9 @@
       "bioSourceUrl": "https://www.skydanley2026.com/",
       "bioSourceLabel": "In the campaign's words — skydanley2026.com, read 2026-08-21",
       "email": "skydanley2026@gmail.com",
-      "phone": "(603) 812-8506"
+      "phone": "(603) 812-8506",
+      "filedAddress": "PO Box 1161, Portsmouth NH 03802",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:us-senate:alciere-tom": {
       "photoUrl": "/candidates/nh-merrimack-us-senate-alciere-tom.jpg",
@@ -676,7 +824,9 @@
       "bioSourceUrl": "http://tomalciere.us/",
       "bioSourceLabel": "In the campaign's words — tomalciere.us, read 2026-08-21",
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": "PO Box 106, Nashua NH 03061",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:us-senate:vail-john": {
       "photoUrl": null,
@@ -685,7 +835,9 @@
       "bioSourceUrl": "https://www.sendnomoney.org/who",
       "bioSourceLabel": "In the campaign's words — sendnomoney.org, read 2026-08-21",
       "email": "john@sendnomoney.org",
-      "phone": null
+      "phone": null,
+      "filedAddress": "PO Box 784, Franconia NH 03580",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:us-senate:martin-andy": {
       "photoUrl": null,
@@ -694,7 +846,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": "(866) 214-3210"
+      "phone": "(866) 214-3210",
+      "filedAddress": "PO Box 742, Manchester NH 03105",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:governor:fife-shaun": {
       "photoUrl": null,
@@ -703,7 +857,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": "PO Box 72, Epsom NH 03234",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:governor:mcclory-bob-wayne": {
       "photoUrl": null,
@@ -712,7 +868,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": "55 Glass St Unit 139, Suncook NH 03275",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:executive-council-2:strathdee-kim": {
       "photoUrl": null,
@@ -721,7 +879,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": "PO Box 774, Plymouth NH 03264",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:county-attorney:hagaman-meg": {
       "photoUrl": null,
@@ -730,7 +890,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": "603-228-0529",
+      "filedAddress": "PO Box 1415, Concord NH 03302",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:county-attorney:endres-steven": {
       "photoUrl": null,
@@ -739,7 +901,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": "81A Fairgrounds Rd, Bradford NH 03221",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:county-attorney:raiche-jon": {
       "photoUrl": null,
@@ -748,7 +912,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": "12 Goodhue Rd, Boscawen NH 03303",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:county-sheriff:cassidy-frank-t-": {
       "photoUrl": null,
@@ -757,7 +923,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": "1040 Lane Rd, Epsom NH 03234",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:county-sheriff:weir-ben": {
       "photoUrl": null,
@@ -766,7 +934,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": "1267 Bound Tree Rd, Contoocook NH 03229",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:county-commissioner-2:ribas-vincent-s-": {
       "photoUrl": null,
@@ -775,7 +945,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": "4 Washington Ave, Franklin NH 03235",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:county-commissioner-2:bilodeau-richard": {
       "photoUrl": null,
@@ -784,7 +956,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": "22 Hollow Route Rd, Loudon NH 03307",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:us-house-2:callis-michael-anthony": {
       "photoUrl": null,
@@ -793,7 +967,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": "PO Box 259, Eaton NH 03832",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:us-senate:jarvis-david": {
       "photoUrl": null,
@@ -802,7 +978,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": "71 Nectaria Way #104, Manchester NH 03109",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:us-senate:maxwell-mary": {
       "photoUrl": null,
@@ -811,7 +989,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": "175 Loudon Rd Apt 6, Concord NH 03301",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:us-senate:mcmenamon-ii-richard-a-": {
       "photoUrl": null,
@@ -820,7 +1000,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": "10 Crystal Lake Rd, Gilmanton Iron Works NH 03837",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:us-senate:smith-sabrina-ann": {
       "photoUrl": null,
@@ -829,7 +1011,9 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": null,
+      "filedAddress": "118 Deer Meadow Rd, Pittsfield NH 03263",
+      "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     }
   },
   "hunts": [
@@ -1881,6 +2065,18 @@
       "key": "ballot-nh-merrimack:us-senate:smith-sabrina-ann",
       "name": "Sabrina Ann Smith",
       "note": "CONTEST 12 of 12, same rungs. IDENTITY: Secretary of State 2026 filing — 'Sabrina Ann Smith PITTSFIELD 118 DEER MEADOW RD PITTSFIELD, NH 03263 REP'. NO FEC RECORD for New Hampshire since 2024 — the loose surname search returns four sitting House members named Smith, none of them her, which is why the match was made on given name as well. Her Citizens Count profile exists and carries no external link of her own. PHOTO, CAMPAIGN SITE, IN THEIR OWN WORDS, PHONE, EMAIL: all MISS. Rungs still owed: 13. NOT VERIFIED_ABSENT. FILED CONTACT (state): 118 Deer Meadow Rd, Pittsfield NH 03263.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:register-of-deeds:morse-samantha",
+      "name": "Samantha Morse",
+      "note": "COUNTY BRANCH, walked 2026-08-21 (pnpm nh:county). Merrimack County's own Register of Deeds staff directory names her as the REGISTER — the office she is standing for — in its own words: 'Samantha Morse (Register)'. SPECIFIC VERIFIED PAGE: https://www.merrimackcounty.net/departments/register_of_deeds/staff_directory.php, read 2026-08-21 at rung 2, HTTP 200. CONTACT: the Registry's published office email and phone, from the office page on the same host. PHOTO: REFUSED, and the refusal is the finding — the only image the county publishes of her is a GROUP PHOTOGRAPH of six staff, captioned left to right. A group shot is prohibited at every door of the photo rule and the composition standards never move, so this is a branch result under RULING 52 and not a permanent absence: a solo portrait may exist elsewhere and the hunt continues. BRANCH INDEPENDENT of the Secretary of State filing already recorded for her.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-attorney:hagaman-meg",
+      "name": "Meg Hagaman",
+      "note": "COUNTY BRANCH, walked 2026-08-21 (pnpm nh:county). The Merrimack County Attorney's own staff directory lists her twice, by her full name and her roles: 'Meghan Hagaman — County Solicitor' and 'Meghan Hagaman — Assistant County Attorney'. She is standing for County Attorney, and this is the office's own record of her in it. SPECIFIC VERIFIED PAGE: https://www.merrimackcounty.net/departments/county_attorney/staff_directory.php, read 2026-08-21 at rung 2, HTTP 200. CONTACT: the County Attorney's published office phone, from the office page on the same host — an office number for a serving officer, never presented as a personal one. PHOTO: still owed; the directory is a table of names and roles and carries no portraits at all. BRANCH INDEPENDENT of our officeholder registry, which is what makes it worth having: the registry's exact-name join is what produced 87 wrong 'no official page' records this session.",
       "attemptedAt": "2026-08-21"
     }
   ]

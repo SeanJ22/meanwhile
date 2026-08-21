@@ -70,6 +70,27 @@ test("2.5: the validator refuses every defective shape — proven by plant", () 
       { rung: "2 plain fetch", attemptedAt: "2026-08-20", result: "404" },
       { rung: "6 live browser", attemptedAt: "2026-08-20", result: "no site found" },
     ],
+    // RULING 52 (2026-08-21): two INDEPENDENT branches, going through two
+    // different publishers. Rungs alone were never enough — every wrong
+    // verdict that produced the ruling had a defensible rung history.
+    branches: [
+      {
+        branch: "the candidate's filing with the Secretary of State",
+        through: "sos.nh.gov",
+        attemptedAt: "2026-08-20",
+        result: "filing carries no website field",
+        found: false,
+        rung: "2",
+      },
+      {
+        branch: "the county party's candidate listing",
+        through: "merrimackdems.org",
+        attemptedAt: "2026-08-20",
+        result: "listed with no link",
+        found: false,
+        rung: "6",
+      },
+    ],
   };
   assert.equal(isEvidencedAbsence(good), true, "a complete record is accepted");
 
@@ -300,6 +321,22 @@ test("statesFor reconciles presence against the record, field by field", () => {
       state: "VERIFIED_ABSENT",
       checkedAt: "2026-08-20",
       rungs: [{ rung: "2 plain fetch", attemptedAt: "2026-08-20", result: "none" }],
+      branches: [
+        {
+          branch: "state filing",
+          through: "sos.nh.gov",
+          attemptedAt: "2026-08-20",
+          result: "no website field",
+          found: false,
+        },
+        {
+          branch: "local press candidate profile",
+          through: "concordmonitor.com",
+          attemptedAt: "2026-08-20",
+          result: "profile names no site",
+          found: false,
+        },
+      ],
     },
   });
   assert.equal(states.photo, "FOUND", "present beats the record");

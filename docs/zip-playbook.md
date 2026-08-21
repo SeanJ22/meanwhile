@@ -115,6 +115,55 @@ C item 6; `docs/rulings.md` RULING 16).
 walked, every miss with its URL. Its own numbered header list is retired in
 place with a dated note and lives here now.
 
+### THE DISCOVERY LADDER IS A TREE (RULING 52, added 2026-08-21, NH Hunt 3)
+
+**The lettered list below is not walked to a verdict.** A to M are BRANCHES —
+independent routes to the same fact — and a branch coming back empty is one
+measurement on one date, never a finding about the fact. The letters are an
+ordering of where to look FIRST, not a sequence that terminates in
+"unreachable". A ladder produces that answer because a ladder has one
+direction; a tree does not have it available.
+
+Three walls this repo had written down as permanent fell in one session
+(2026-08-21), and all three had a defensible RUNG history behind them:
+`gc.nh.gov` answers rung 2 at HTTP 200 after being recorded as refusing every
+client including browsers; `sos.nh.gov` fell at rung 5 after being walled
+host-wide since 2026-08-13; Kearsarge's nine board emails were in the page's own
+`href`s after two sessions recorded them absent. Rungs prove the retrieval
+discipline was followed on ONE route. Nothing about a rung count proves a second
+route was ever tried.
+
+**How a branch is chosen.** Take the branch that fails for a DIFFERENT REASON
+than the one that just failed. That is the whole heuristic and it is what makes
+the tree worth more than a longer ladder:
+
+- A host refused you → take a branch through a **different publisher**, not a
+  different header. Different headers are rungs 2–4 on the same branch.
+- A document does not exist where it should → take a branch through a **body
+  that files the same fact for its own purposes** (the county clerk holds what
+  the town will not publish; the state holds what the county will not).
+- A page is a dead end → take a branch through **a different format of the same
+  publication** — the `.ics`, the JSON the widget calls, the PDF, the RSS.
+- Every online branch is dry → the **records-request branch** is a branch and
+  not a defeat, and it is made and recorded rather than described.
+
+**Independence is declared, not inferred.** Two routes that fail for the same
+reason are one route wearing two names, so a branch records what it goes
+*through* — a host, a vendor, a publisher — and independence is counted over
+distinct dependencies. Nothing automated can tell that two hostnames sit behind
+one WAF; a person can, and writes it down. `lib/hunt/discovery.ts` holds the
+model and `independentBranchCount` is the function that does the counting.
+
+**Reconciling two branches that both answer.** If they agree, record both — the
+second is what makes the first checkable. If they DISAGREE, that is the finding
+and it renders as one; the product does not quietly prefer one sourced claim
+over another. `verdictOf` returns `divergent` for exactly this case.
+
+**And no branch result is permanent** (RULING 53). Candidate fields go stale in
+7 days, bodies and rosters in 14, and walled sources in 14 regardless of how
+emphatically the wall was recorded. Past its window a record is re-walked before
+it is relied on.
+
 ### The discovery ladder, A to M
 
 Walked in order, each recorded with `attemptedAt` and its result. Reaching M
@@ -832,6 +881,136 @@ people-on-the-ledger against people-read-this-run.
 | `pnpm stamp` | Today, `America/Phoenix`. Every written date comes from here. |
 | `pnpm verify-stamps` | Audits `CLAUDE.md`'s Adopted dates against git history. |
 | `pnpm legiscan:fetch` | State-legislature roll calls for AZ/NJ/NH, hash-gated. `--force` re-downloads. |
+
+### The branch toolkit (NH Hunt 3, added 2026-08-21 — RULING 52 and 53)
+
+| Command | What it does |
+|---|---|
+| `pnpm stale` | Which dated measurements are past their RULING 53 window and owed a re-walk. Reports and never re-walks — re-walking is a hunt, and a hunt needs a session's judgement. Prints the pair per source, names its own blind spots, and says the total is a floor. |
+| `pnpm nh:roster [--name=X]` | The General Court's own roster as a branch INDEPENDENT of our officeholder registry. See the two-chamber recipe below. |
+| `pnpm watch:workflows [--open] [--asof=]` | RULING 56. Opens a Needs Sean row when a scheduled job fails twice consecutively. `--asof` holds the detector against a window whose outcome is already known, which is how it was proved without breaking anything. |
+
+**The NH General Court, two chambers, two branches** (2026-08-21). Worth
+recording as a shape rather than as one state's trivia: *the same host can treat
+two paths of one body completely differently, and meeting the refusal on one is
+no evidence at all about the other.*
+
+- **House — the name index is published as a form control.**
+  `gc.nh.gov/house/members/` answers rung 2 at 200 and carries a `<select>` of
+  every member: `<option value="700">Ebel, Karen</option>`. **The option value
+  IS the `pid`** in `member.aspx?pid=` — confirmed against Gregory Sargent,
+  whose option value 10832 matches his already-recorded pid. One request yields
+  a complete name-to-page index: **384 members of 400 seats**, measured
+  2026-08-21. This is the general lesson — *a `<select>` is a published index* —
+  and it is worth reaching for before any search engine.
+- **Senate — a path-scoped WAF, so there is no index and the DISTRICT is the
+  key.** `gc.nh.gov/senate/members/` answers **403** to the same client that
+  gets 200 from the House path one directory over. But
+  `senate/members/webpages/district07.aspx` answers 200 (districts 01, 07, 15
+  and 24 all confirmed). Twenty-four requests cover the chamber.
+
+A session that met the 403 and stopped would have written down "the Senate
+roster is walled", which is the sentence RULING 52 exists to stop.
+
+**And where a value is already known, never re-derive it from prose.** The first
+version of this tool parsed the district back out of the senator's page and
+harvested `District Maps` from the site navigation — a menu item, about to be
+written into a named senator's record. The district was the loop variable all
+along. This is the playbook's own "strip the navigation before harvesting"
+lesson, and it still caught the session that wrote it down.
+
+### County offices are ONE branch serving SIX contests (NH Hunt 3, 2026-08-21)
+
+`pnpm nh:county`. The six county races — Register of Probate, Register of Deeds,
+Treasurer, Attorney, Sheriff, Commissioner — are the thinnest in the product and
+the ones a reader can research least easily alone. **The county publishes an
+office page for every one of them on one host**, so that is one branch serving
+six contests, independent of the Secretary of State's filings, of the General
+Court's roster, and of our own registry.
+
+What it produced on Merrimack County, 2026-08-21: 8 of 8 pages read. Samantha
+Morse named as **the Register** in the Registry's own staff directory — the
+office she is standing for; Meghan Hagaman listed twice by the County Attorney's
+own directory, as **County Solicitor** and **Assistant County Attorney**, while
+standing for County Attorney. Both are specific verified pages that our
+registry's name join could never have produced.
+
+Three mechanics worth carrying to the next county:
+
+- **A staff directory is a table.** Parse `<tr>` rows, not prose. Hagaman's roles
+  came out of two table rows in one pass; the same page read as text yields the
+  word "Hagaman" beside twenty repetitions of "Assistant County Attorney" and
+  nothing joinable.
+- **A group photo is a finding, and it is a refusal.** The Register of Deeds page
+  publishes exactly one image of Morse: a six-person staff photograph captioned
+  left to right. A group shot is prohibited at every door, so the photo is
+  refused — and under RULING 52 that is a branch result about THAT IMAGE, never a
+  conclusion that no portrait of her exists.
+- **Never harvest the CMS's own addresses.** Every page on a Revize site carries
+  `noreply@revize.com` and `webpageupdate_subscribers@revize.com`. Matching on
+  the vendor DOMAIN rather than the mailbox name generalises to the next site.
+
+**And Revize names its editable region `freeform-main`, not `<main>`.** Both
+`<main>` and `id="main"` are absent from this theme. Extract with a BALANCED tag
+walk, never a lazy `<div>…</div>` — a lazy match stops at the first closing tag,
+returns a few characters, and reads as "found the content region" while
+harvesting a wrapper. That is the empty-success shape wearing a parser's face.
+
+### The NH General Court publishes NO House portrait, and a Senate portrait per SEAT (NH Hunt 3, 2026-08-21)
+
+Two halves, and the first one nearly shipped three wrong faces.
+
+**The House serves a PLACEHOLDER.** `member.aspx?pid=<pid>` carries
+`<img src="/house/images/memberpics/nophoto.jpg">` — a real `src`, a real 200, a
+real image. Sampled 2026-08-21 across six member pages: **0 real portraits, 4
+placeholders** (two pids invalid). A hunt that trusted the `<img>` tag would have
+shipped one grey placeholder as Karen Ebel's, Paige Beauchemin's and Gregory
+Sargent's faces — the same class as the flag stock photo RULING 55 was adopted
+over. **Check the filename, and read the image.**
+
+So door 2 is dry at this branch, on this date. That is a branch result under
+RULING 52 and goes on RULING 53's 14-day clock — not a conclusion that these
+members have no published portrait anywhere.
+
+**The Senate portrait path is keyed to the SEAT, not the person.**
+`/senate/images/senators/<NN>.jpg`, two digits. Confirmed 2026-08-21 for seats
+01, 07 and 15 — all HTTP 200, real JPEGs. This is why it is worth writing down
+separately: a seat-keyed path means the Internet Archive holds the PREVIOUS
+occupant's portrait at the same URL, which is how a former senator's picture is
+recoverable at all (the route that produced Harold French's).
+
+### An iCal export can be capped at the OLDEST N events (NH Hunt 3, 2026-08-21)
+
+The adapter's docstring already warns that `/events/?ical=1` serves the current
+VIEW rather than the calendar — Wilmot's month view returns four events where
+the list view returns twenty-three. **Springfield, NH is the worse version of
+that shape and the existing rule does not catch it.**
+
+`springfieldnh.org/events/list/?ical=1` answers 200 with a well-formed calendar
+of exactly **50 events, every one of them between 2023-11 and 2024-11**. So does
+`/events/`, `/events/month/`, `/events/upcoming/`, `?eventDisplay=list`, and
+`?tribe-bar-date=2026-08-01` — six views, one identical stale document. The
+plugin's REST API at `/wp-json/tribe/events/v1/events` answers **404**.
+
+**And the town has not stopped meeting.** Its own front page links
+`events/cemetery-trustees-meeting-2026-08-11/` and
+`events/conservation-commission-meeting-2026-09-03/`. <!-- expected-future: a real Springfield NH meeting the town publishes; the date is theirs, read 2026-08-21 --> The current meetings are
+in the HTML.
+
+Three things to carry:
+
+- **A round number is a cap.** Fifty events is not what a town's calendar
+  happens to hold; it is a limit. Treat any exactly-round VEVENT count as a
+  paging or export ceiling until proved otherwise.
+- **Check the feed's LATEST date, not just its count.** A feed that parses, and
+  is well-formed, and carries fifty real meetings, can still be describing a
+  year that has passed. `latest DTSTART` is one line and it is the check that
+  catches this.
+- **A stale feed is not a source, and wiring to it is worse than not wiring.**
+  Eight Springfield bodies would have rendered as having no meetings while the
+  town publishes them — the empty-success shape, shipped. They are recorded
+  `KNOWN_UNCOVERED` instead: enumerated, real, visible to the gap ledger, and
+  honest about the fact that no adapter reads their live route yet.
 
 ### The extraction toolkit (F11, added 2026-08-20)
 

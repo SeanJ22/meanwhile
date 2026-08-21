@@ -52,7 +52,6 @@
  */
 
 import { createHash } from "node:crypto";
-import { execFileSync } from "node:child_process";
 import {
   copyFileSync,
   existsSync,
@@ -63,6 +62,7 @@ import {
 } from "node:fs";
 import { dirname, extname, join, resolve } from "node:path";
 
+import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 import { today } from "./doc-dates.mjs";
 
 const MODE = process.argv[2];
@@ -102,11 +102,8 @@ interface Manifest {
 }
 
 function trackedBinaries(): string[] {
-  const out = execFileSync("git", ["ls-files", "-z"], { encoding: "utf8", maxBuffer: 1e9 });
-  return out
-    .split("\0")
-    .filter(Boolean)
-    .map((p) => p.replace(/\\/g, "/"))
+  // WHAT WOULD BE COMMITTED, not what already was — see lib/ops/repo-files.ts.
+  return filesThatWouldBeCommitted({ cwd: process.cwd() })
     .filter((p) => BINARY.test(p))
     .filter((p) => !STAYS_IN_REPO.some((re) => re.test(p)))
     .sort();

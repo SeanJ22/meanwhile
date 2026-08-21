@@ -1132,5 +1132,20 @@
         "NH17"
       ]
     }
+  },
+  {
+    "session": "NHHUNT3",
+    "opened": "2026-08-21",
+    "ids": [
+      "NH26"
+    ]
+  },
+  {
+    "session": "NHHUNT3",
+    "opened": "2026-08-21",
+    "ids": [
+      "NH27",
+      "NH28"
+    ]
   }
 ]

@@ -200,8 +200,45 @@ function main() {
   // The note opens with MISS on purpose: `tests/candidate-links.test.ts`
   // requires every hunt to say WHICH KIND of absence it is, because a miss
   // and a never-attempted are different claims and a bare blank is neither.
+  /*
+   * **WHOSE GAP IT IS** (corrected 2026-08-21, NH Hunt 3, RULING 52).
+   *
+   * This sentence used to read:
+   *
+   *   "no sitting officeholder in this state's registry matches this name
+   *    exactly, so there is no official page for us to link"
+   *
+   * The first clause is a true fact about US. The word **so** converted it
+   * into a claim about THEM, and the claim was false 10 times out of 10 in the
+   * sample re-walked on 2026-08-21. It was attached to Katie Hobbs, the sitting
+   * Governor of Arizona; to Adrian Fontes and Kris Mayes and Kimberly Yee and
+   * Tom Horne, every one of them a sitting statewide officer; to Andy Biggs,
+   * Juan Ciscomani and Adelita Grijalva in Congress; and to Daniel Innis and
+   * Karen Ebel, sitting members of the New Hampshire General Court whose pages
+   * answer a plain rung-2 fetch and name them.
+   *
+   * `CLAUDE.md`'s render-default rule says the gap must name whose it is, and
+   * that "we haven't recorded this yet" and "this does not exist" may never
+   * render as the same sentence. This is that rule at the data layer, where the
+   * lie gets written before any component sees it.
+   *
+   * **The join is NOT the defect and is unchanged.** Exact normalised match
+   * within one state, nothing fuzzy — the D40 discipline, and correct. What was
+   * wrong was reporting its failure as a finding about a person. And note the
+   * join can fail for two quite different reasons that this cannot tell apart:
+   * the person is not a sitting officeholder at all, or they are and our
+   * registry spells them differently. Neither is evidence about their page.
+   */
   const noteFor = (_p: BallotPerson) =>
-    `MISS — B14 official-page rung, ${TODAY}: no sitting officeholder in this state's registry matches this name exactly, so there is no official page for us to link. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.`;
+    `MISS — B14 official-page rung, ${TODAY}: OUR GAP, not theirs. No sitting ` +
+    `officeholder in this state's registry matches this name exactly, so this ` +
+    `rung could not resolve a page. That is a fact about our registry and is ` +
+    `NOT evidence that no official page exists — the join fails both for people ` +
+    `who hold no office and for sitting officeholders our registry spells ` +
+    `differently. BRANCHES STILL OWED (RULING 52): the body's own roster or ` +
+    `member lookup, which is independent of our registry; the campaign's own ` +
+    `site; and the social page CLAUDE.md's campaign-lives-on-Facebook rule ` +
+    `allows when authenticity is establishable.`;
 
   const already = new Set(file.hunts.map((h) => `${h.key}|${h.note.slice(0, 24)}`));
   for (const p of misses) {

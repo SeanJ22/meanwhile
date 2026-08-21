@@ -1,8 +1,4 @@
-import {
-  THIN_CANDIDATE_LINE,
-  isThinCandidateCard,
-  type CandidateCardData,
-} from "@/lib/ballot/candidate-cards";
+import { type CandidateCardData } from "@/lib/ballot/candidate-cards";
 import type { CandidateLinks } from "@/lib/ballot/candidate-sites";
 
 /**
@@ -99,10 +95,23 @@ export function CandidateCard({
   filedSiteUrl?: string | null;
 }) {
   const hasLinks = Boolean(links?.official || links?.campaign || filedSiteUrl);
-  // Item 5, the tester's finding: silent absence becomes named absence. The
-  // line lives here rather than in a page, so it travels to every surface
-  // the thin card renders on.
-  const thin = isThinCandidateCard(card ?? null, hasLinks);
+  /*
+   * **RULING 42 (Prompt E item 3, 2026-08-20) — there is no per-card marker.**
+   *
+   * `THIN_CANDIDATE_LINE` used to render here, on any card holding no photo,
+   * no words, no contact and no link. It was added for the right reason —
+   * silence reads as absence of the candidate rather than absence of our
+   * research — and it was the wrong instrument, because it printed only on the
+   * shortest card in the race. A marker that appears exactly on the
+   * least-resourced person is the information asymmetry pointed the other way:
+   * the reader is told which candidate we know least about, on their card, in
+   * their column, next to their name.
+   *
+   * The disclosure it was carrying is now made ONCE, at the foot of the ballot
+   * page, about every card equally — `app/ballot/page.tsx`, `COLLECTION_NOTE`.
+   * Nothing is hidden and nothing moved into a tooltip; the same fact is
+   * stated where it cannot single anybody out.
+   */
   return (
     /*
      * Item 6b3 (2026-08-15) — the author: "photos scattered through a contest
@@ -247,21 +256,13 @@ export function CandidateCard({
           </p>
         )}
 
-        {thin && (
-          // The absence, named. Not muted into a footnote: a reader
-          // skipping this candidate should see that the gap is ours.
-          // Voice register — it describes our research, never them.
-          <p className="mt-1 text-[0.75rem] leading-relaxed text-voice">
-            {THIN_CANDIDATE_LINE}
-          </p>
-        )}
-
         {annotationSlot}
 
-        {/* Item 12: directly beneath the links row, and beneath the thin
-            line where there is one — a candidate we hold little about still
-            gets the same door, because the pill is where the long sections
-            went and a card without one would simply have lost them. */}
+        {/* Item 12: directly beneath the links row — a candidate we hold
+            little about still gets the same door, because the pill is where
+            the long sections went and a card without one would simply have
+            lost them. (The thin line that used to sit above this went with
+            RULING 42; the door did not move.) */}
         {battlecardSlot}
       </div>
     </div>

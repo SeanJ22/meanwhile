@@ -133,6 +133,33 @@ export const runtime = "nodejs";
 const NEUTRAL_NOTE =
   "The official ballot order either hasn't been drawn yet or wasn't machine-readable from the authority's filings. Candidates with a photo are listed first, then the rest, alphabetically by surname within each group — a photo is what lets someone tell two names apart. Party labels and slogans appear as filed. Nothing on this page is a recommendation.";
 
+/**
+ * **THE ONE PAGE-LEVEL DISCLOSURE** (RULING 42, Prompt E item 3, 2026-08-20).
+ *
+ * It replaces `THIN_CANDIDATE_LINE`, which rendered per card and therefore
+ * rendered only on the shortest card in a race — a badge on the least
+ * resourced person running, which is the information asymmetry the
+ * equal-effort rule exists to catch, wearing the costume of honesty about it.
+ *
+ * The fact worth telling a reader was never about one candidate. It is about
+ * the page: cards are different lengths because we have collected different
+ * amounts, and a short card is the end of our research rather than the end of
+ * a person. Said once, at the foot, about every card equally, it cannot single
+ * anybody out.
+ *
+ * ONCE PER PAGE, not once per contest and never per card — the repetition
+ * RULING 28 ended. It sits below the contests, beside `NEUTRAL_NOTE`, and it
+ * replaces nothing else: the contest-level incumbency footnote is a different
+ * statement about a different thing and is untouched.
+ *
+ * LEVEL REGISTER, and unhedged. This is a claim surface — it is about our own
+ * coverage of real people — so it is plain, and it does not apologize. "We
+ * show what we have collected" is a fact; "we're sorry we don't have more"
+ * would be an editorial about ourselves, which F01 struck from this product.
+ */
+const COLLECTION_NOTE =
+  "We show what we have collected. Every card here carries every detail we could find, so cards are different lengths.";
+
 function candidatesOf(set: BallotSet, contest: Contest): Candidacy[] {
   return set.candidacies
     .filter((c) => c.contestId === contest.id)
@@ -1491,6 +1518,17 @@ export default async function BallotPage({
 
           <p className="mt-6 text-[0.75rem] leading-relaxed text-voice">
             {NEUTRAL_NOTE}
+          </p>
+
+          {/* RULING 42: the page-level disclosure, once, at the bottom. It
+              renders inside this block because this block is what renders
+              when contests render — a note about the cards on a page with no
+              cards would be a claim about nothing. */}
+          <p
+            data-collection-note
+            className="mt-3 text-[0.75rem] leading-relaxed text-voice"
+          >
+            {COLLECTION_NOTE}
           </p>
         </>
       )}

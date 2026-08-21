@@ -94,7 +94,13 @@ test("6.4: the alarm is raised on the SAME catch that swallows, in every route",
         .filter((n) => Number.isFinite(n)),
     );
     const after = src.slice(writeAt);
-    const catches = [...after.matchAll(/(\}\s*catch\s*(\([^)]*\))?\s*\{|\.catch\(\s*\()/g)];
+    // `async` handlers count. Prompt E made the meetings route's `.catch`
+    // async so it could `await` the alarm inside an `after()`, and the
+    // narrower pattern read that as "handles no error at all" — a guard
+    // reporting a route unguarded because it did not recognise the guard.
+    const catches = [
+      ...after.matchAll(/(\}\s*catch\s*(\([^)]*\))?\s*\{|\.catch\(\s*(async\s+)?\()/g),
+    ];
     assert.ok(catches.length > 0, `${f} writes to a sold store and handles no error at all`);
     // The FIRST handler after the write is the one that swallows it.
     const firstCatch = catches[0]!.index!;
@@ -324,4 +330,137 @@ test("6.1: the committed journal head matches the newest migration file", () => 
     files,
     "every journalled migration has a file and every file is journalled",
   );
+});
+
+/* ========================================================================== */
+/* PD04 (Prompt E item 4, 2026-08-20) — the write itself, and the error chain */
+/* ========================================================================== */
+
+test("PD04: no sold-store WRITE is left as a floating promise either", () => {
+  /*
+   * **THE CLASS, NOT THE INSTANCE.**
+   *
+   * Prompt D banned a floating `raiseWriteAlarm` because a promise still in
+   * flight when a serverless invocation returns is dropped by the runtime. The
+   * INSERT it was watching had exactly the same shape, in the same function,
+   * five lines further up: `logSearchEvent({…}).catch(…)` with nothing awaiting
+   * it and `return Response.json(…)` immediately below. Every row that had not
+   * reached Neon by the time the response went out was dropped — silently, and
+   * with no alarm, because a dropped promise never rejects and there is nothing
+   * for a `.catch` to catch.
+   *
+   * That is `PD04`: the alarm could only ever see the writes that got far
+   * enough to be REFUSED. So the ban is widened from the alarm to the write.
+   *
+   * A write qualifies if it is `await`ed, or if it is the body of an `after()`.
+   * The `after(` test is deliberately positional — the call must open before
+   * the write does — because `after()` somewhere else in the file proves
+   * nothing about this write.
+   */
+  const routes = soldStoreWriteRoutes();
+  assert.ok(routes.length >= 3, `only ${routes.length} sold-store write route(s) found`);
+
+  const floating: string[] = [];
+  for (const f of routes) {
+    /*
+     * Comments out first. This file's own doc block explains the defect and
+     * quotes the dead call — `logSearchEvent({…}).catch(…)` — and a sweep that
+     * reads its own explanation as a call site reports a defect that is not
+     * there. Same trap `tests/no-suppression.test.ts` strips comments for.
+     */
+    const src = readFileSync(join(ROOT, f), "utf8")
+      .replace(/\/\*[\s\S]*?\*\//g, "")
+      .replace(/^[ \t]*\/\/.*$/gm, "");
+    for (const call of ["logSearchEvent", "writeReaction"]) {
+      const re = new RegExp(`\\b${call}\\s*\\(`, "g");
+      for (const m of src.matchAll(re)) {
+        const at = m.index!;
+        const before = src.slice(Math.max(0, at - 200), at).trimEnd();
+        // `import { logSearchEvent }` and the export itself are not call sites.
+        if (/import\s*\{[^}]*$/.test(before)) continue;
+        const awaited = /\bawait$/.test(before);
+        // `after()` itself, or the wrapper that falls back to running the work
+        // when there is no request scope to defer into — `lib/log/after-response.ts`,
+        // which exists because a bare `after()` throws in every test that calls
+        // a route handler directly.
+        const deferred = /after(?:Response)?\(\s*(async\s*)?\(\s*\)\s*=>$/.test(before);
+        if (!awaited && !deferred) floating.push(`${f} — ${call}()`);
+      }
+    }
+  }
+  assert.deepEqual(
+    floating,
+    [],
+    "a sold-store write that is neither awaited nor inside after() is dropped " +
+      "by the runtime when the response returns — the loss is silent, and no " +
+      "alarm can see it because a dropped promise never rejects",
+  );
+});
+
+test("PD04: the alarm reads SQLSTATE and the reason from the CAUSE, not the wrapper", () => {
+  /*
+   * **THE INSTRUMENT DEFECT, PROVED FROM THE DRIVER'S OWN SOURCE.**
+   *
+   * `drizzle-orm/errors.js` — read, not assumed — defines `DrizzleQueryError`
+   * as four assignments: a message of `Failed query: <sql>\nparams: <params>`,
+   * `this.query`, `this.params`, and `this.cause`. It carries no `code`.
+   *
+   * So an alarm that reads `.code` off the object it is handed records `null`
+   * for EVERY query failure, structurally — not because the database withheld
+   * a SQLSTATE, but because it was asked the wrong object. And an alarm that
+   * reads `.message` off that object records the STATEMENT where the reason
+   * should be. `PD04`'s one row read exactly that: no code, and the SQL.
+   *
+   * The fixture below is the real shape, not a mock of a convenient one.
+   */
+  const driverError = Object.assign(
+    new Error(`column "coverage_tier" does not exist`),
+    { code: "42703" },
+  );
+  const wrapped = Object.assign(
+    new Error(
+      'Failed query: insert into "search_log" ("id", "occurred_at") values (default, $1)\n' +
+        "params: 2026-08-21T00:20:53.025Z,03255",
+    ),
+    { cause: driverError },
+  );
+
+  assert.equal(
+    errorCodeOf(wrapped),
+    "42703",
+    "the SQLSTATE is one link down .cause and the alarm has to walk to it",
+  );
+
+  const message = errorMessageOf(wrapped)!;
+  assert.match(
+    message,
+    /column "coverage_tier" does not exist/,
+    "the database's own sentence survives — it is the whole value of the row",
+  );
+  assert.ok(
+    message.indexOf("does not exist") < message.indexOf("Failed query"),
+    "the reason reads first; the statement is context behind it",
+  );
+
+  // And the scrub still applies to every link, not only the outermost one.
+  assert.ok(!message.includes("03255"), "no value from the params reaches the row");
+  assert.ok(!message.includes("params:"), "everything from params: onward is cut");
+});
+
+test("PD04: the chain walk terminates on a cycle and on a bare error", () => {
+  /*
+   * An alarm that hangs takes down the path it is watching, so the walk is
+   * depth-capped and cycle-safe. A `cause` pointing back at its own wrapper is
+   * not hypothetical — it is what a re-thrown error can produce.
+   */
+  const a: { message: string; cause?: unknown } = { message: "outer" };
+  const b: { message: string; cause?: unknown } = { message: "inner", cause: a };
+  a.cause = b;
+  const walked = errorMessageOf(a)!;
+  assert.match(walked, /outer/);
+  assert.match(walked, /inner/);
+
+  assert.equal(errorCodeOf(new Error("no code anywhere")), null);
+  assert.equal(errorMessageOf(null), null);
+  assert.equal(errorMessageOf(new Error("plain")), "plain");
 });

@@ -94,41 +94,29 @@ export function allCandidateCards(): CandidateCardsFile {
   return load();
 }
 
-/**
- * The standard line for a candidate the app holds almost nothing on — item
- * 5 of the tester's mobile pass, 2026-08-14.
+/*
+ * **`THIN_CANDIDATE_LINE` AND `isThinCandidateCard` ARE DELETED** (RULING 42,
+ * Prompt E item 3, 2026-08-20). This note stands in their place so the next
+ * reader of this file learns they were removed on purpose rather than
+ * wondering where they went.
  *
- * Her finding, which is the reason this exists: "Karen might be the perfect
- * fit for me, but she has no information here. So I'm only going to look at
- * the folks that do have information." The app says nothing about anyone and
- * still tilts the race, because a thin card tracks incumbency and campaign
- * professionalism rather than merit, and silence reads as absence of the
- * candidate rather than absence of our research.
+ * What they did: the constant was the sentence "We haven't found much about
+ * this candidate yet.", and the predicate decided which cards earned it — a
+ * card with no photo, no words, no contact and no link.
  *
- * Naming the gap is what converts it back into a statement about us. One
- * sentence, full stop: no apology, no second sentence, no explanation of
- * what we tried — that would be a paragraph on the thin cards and nothing on
- * the thick ones, which is the same asymmetry wearing a hair shirt.
+ * Why they are gone: the pair put a marker on exactly one kind of card, and
+ * the kind was "the candidate we know least about". A badge worn only by the
+ * least-resourced person in a race is the information asymmetry the
+ * equal-effort rule exists to catch, pointed the other way, and it was the
+ * per-card repetition RULING 28 had already ended everywhere else on the page.
+ *
+ * What replaced it: one page-level disclosure at the foot of the ballot —
+ * `COLLECTION_NOTE` in `app/ballot/page.tsx` — which says the same thing about
+ * every card at once and singles nobody out. The equal-effort discipline is
+ * unchanged and still binding; it lives in the HUNT, which is where
+ * `CLAUDE.md` and RULING 26 both say it belongs.
+ *
+ * Guarded: `tests/no-suppression.test.ts` fails the build if a per-card
+ * completeness marker returns, and `pnpm walk:all` fails against production
+ * on the same thing.
  */
-export const THIN_CANDIDATE_LINE =
-  "We haven't found much about this candidate yet.";
-
-/**
- * Whether a card is thin enough to earn the line.
- *
- * Deliberately the strict reading — thin means we found NOTHING a reader
- * could use: no photo, no words of their own, no way to reach them, and no
- * site to go read. A card carrying any one of those is not silent, and
- * stamping the line on it would be a false claim in the other direction.
- * Widening this is a one-line change here, and every surface follows.
- */
-export function isThinCandidateCard(
-  card: CandidateCardData | null,
-  hasAnyLink: boolean,
-): boolean {
-  if (hasAnyLink) return false;
-  if (!card) return true;
-  return (
-    !card.photoUrl && !card.bio && !card.email && !card.phone
-  );
-}

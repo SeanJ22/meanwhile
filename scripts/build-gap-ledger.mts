@@ -25,7 +25,11 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { COVERAGE_TIER_NEXT_STEP } from "../lib/coverage/tier.ts";
+import {
+  COVERAGE_TIER_NEXT_STEP,
+  COVERAGE_TIER_READER_LABEL,
+  COVERAGE_TIER_ZIP_HEADLINE,
+} from "../lib/coverage/tier.ts";
 import type { CoverageTier } from "../lib/coverage/tier.ts";
 import { readTable } from "../lib/reference/index.ts";
 import { today } from "./doc-dates.mjs";
@@ -222,7 +226,21 @@ for (const pilot of PILOTS) {
 
   w(`### ${pilot.zip} — ${pilot.what}`);
   w();
-  w(`**Stamped tier: ${stamp?.tier ?? "UNKNOWN"}** (stamped ${stamp ? tiers.stampedAt : "never"}).`);
+  /*
+   * **PLAIN SENTENCES FIRST** (Prompt E item 11.1, 2026-08-20).
+   *
+   * The tier CODE stays — RULING 6 requires that vocabulary verbatim wherever
+   * it appears — and it stops being the first thing a person meets. What comes
+   * first is the sentence the product would say to a reader standing here, and
+   * then the numbers. Legibility does not cost precision: every denominator
+   * below is the one that was there before, unrounded.
+   */
+  w(`**${COVERAGE_TIER_ZIP_HEADLINE[stamp?.tier ?? "TIER_0"]}**`);
+  w();
+  w(
+    `${COVERAGE_TIER_READER_LABEL[stamp?.tier ?? "TIER_0"]} ` +
+      `(Coverage tier \`${stamp?.tier ?? "UNKNOWN"}\`, stamped ${stamp ? tiers.stampedAt : "never"}.)`,
+  );
   w();
   w("| Denominator | Count |");
   w("|---|---:|");
@@ -250,12 +268,24 @@ for (const pilot of PILOTS) {
   const unenumerated = governments.filter(
     (g) => (edgeTier.get(`${g.layer}:${g.id}`) ?? "TIER_1") !== "TIER_2",
   );
-  w("#### Territory-resolved but bodies NOT enumerated — named");
+  w("#### Governments we can locate, whose boards we have not listed");
+  w();
+  w(
+    "We know these governments cover this zip. What we do not have is the list " +
+      "of boards, councils and commissions inside them — so a reader here could " +
+      "be governed by a body this product has never named.",
+  );
   w();
   if (unenumerated.length === 0) {
     w("None. Every government resolved to this zip has at least one enumerated body.");
   } else {
-    for (const g of unenumerated) w(`- **${g.name}** (${g.layer} ${g.id})`);
+    for (const g of unenumerated) {
+      w(
+        `- **${g.name}** — last thing tried: the boundary join of ${tiers.stampedAt}, ` +
+          `which placed it over this zip and does not enumerate what is inside it. ` +
+          `Nobody has read its own roster page. (${g.layer} ${g.id})`,
+      );
+    }
   }
   w();
 
@@ -277,21 +307,35 @@ for (const pilot of PILOTS) {
   }
 
   // 11.2: NAMED, not counted.
-  w(`#### The ${namedSpecial.length.toLocaleString()} unresolved special districts, by name`);
+  w(
+    `#### The ${namedSpecial.length.toLocaleString()} districts we cannot yet say you live in`,
+  );
   w();
   w(
-    "Every one of these is a government the Census counts, in a county over this " +
-      "zip, whose territory nobody has resolved. Whether each reaches this zip is " +
-      "**UNRESOLVED — a work item, never a false.**",
+    "Each of these is a real government — a fire district, a water district, an " +
+      "irrigation or library district — that the federal Census counts, in a county " +
+      "over this zip. Nobody publishes a map of where any of them starts and stops, " +
+      "so we cannot say whether it reaches this zip. **That is a work item and " +
+      "never a no**: recording one as \"does not govern here\" because we could not " +
+      "find its boundary would be inventing an answer.",
+  );
+  w();
+  w(
+    `**The last thing tried, and when.** The national boundary join of ` +
+      `${STAMPED_AT}, run against every published boundary vintage. It resolved ` +
+      `47,834 of the country's 90,837 governments and **not one special district** — ` +
+      "the boundaries are not published anywhere in that data at all. Nothing has " +
+      "been tried on these districts individually yet; the four routes that have " +
+      "not been walked are listed at the top of this file.",
   );
   w();
   if (namedSpecial.length === 0) {
     w("None. No county over this zip holds a special district.");
   } else {
-    w("| Census PID6 | District | Office city | State |");
+    w("| District | Where its office is | State | Census id |");
     w("|---|---|---|---|");
     for (const d of namedSpecial.sort((a, b) => a.name.localeCompare(b.name))) {
-      w(`| ${d.pid6} | ${d.name} | ${d.city} | ${d.state} |`);
+      w(`| ${d.name} | ${d.city} | ${d.state} | ${d.pid6} |`);
     }
   }
   w();
@@ -364,7 +408,15 @@ w(
 );
 w();
 
-writeFileSync(join(DERIVED, "gap-ledger.md"), `${md.join("\n")}\n`, "utf8");
+/*
+ * **THE READABLE HALF LIVES IN `docs/`** (Prompt E item 11, 2026-08-20).
+ *
+ * It was written to `data/derived/`, beside the JSON that feeds it, and a
+ * person looking for where the project stands does not open `data/derived`.
+ * The machine half stays where machines read it; the ledger a human reads moves
+ * next to the tracker and the log. One copy of each — RULING 34.
+ */
+writeFileSync(join(process.cwd(), "docs", "gap-ledger.md"), `${md.join("\n")}\n`, "utf8");
 writeFileSync(
   join(DERIVED, "gap-ledger.json"),
   `${JSON.stringify(
@@ -387,7 +439,7 @@ writeFileSync(
   "utf8",
 );
 
-console.log(`WROTE data/derived/gap-ledger.md (${md.length} lines)`);
+console.log(`WROTE docs/gap-ledger.md (${md.length} lines)`);
 console.log(`WROTE data/derived/gap-ledger.json`);
 console.log("");
 console.log("NATIONAL HEADLINES:");

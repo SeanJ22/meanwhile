@@ -13193,7 +13193,10 @@ cancellation.
 ## Prompt B — ingest, the national denominator, coverage tiers, and the tracker (2026-08-20)
 
 **All eleven items finished.** The session's deliverable is
-`data/derived/gap-ledger.md`.
+`data/derived/gap-ledger.md`. *(Moved to `docs/gap-ledger.md` on 2026-08-20 by
+Prompt E item 11 — a person looking for where the project stands does not open
+`data/derived`. The sentence above is left as Prompt B wrote it; this note is
+the pointer, not a rewrite.)*
 
 **Ships.** One planned code merge, PR
 [#116](https://github.com/SeanJ22/We-The-People/pull/116), merged as

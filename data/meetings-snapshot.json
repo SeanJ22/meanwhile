@@ -1,6 +1,6 @@
 {
  "formatVersion": 1,
- "generatedAt": "2026-08-21T21:51:56.556Z",
+ "generatedAt": "2026-08-21T22:05:40.429Z",
  "counts": {
   "fresh": 414,
   "duplicatesCollapsed": 12,
@@ -142,13 +142,13 @@
    "source": "ical",
    "ok": true,
    "error": null,
-   "fetched": 50,
+   "fetched": 52,
    "normalized": 113,
    "drops": {
     "placeless": 0,
     "unknownVenue": 2,
     "unplaceableInTime": 0,
-    "notConfigured": 32891
+    "notConfigured": 34171
    }
   }
  ],
@@ -172,7 +172,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1803&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-21T21:51:32.306Z",
+    "collectedAt": "2026-08-21T22:05:25.220Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -206,7 +206,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1804&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-21T21:51:32.306Z",
+    "collectedAt": "2026-08-21T22:05:25.220Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -267,7 +267,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1816&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-21T21:51:32.306Z",
+    "collectedAt": "2026-08-21T22:05:25.220Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -382,7 +382,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1817&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-21T21:51:32.306Z",
+    "collectedAt": "2026-08-21T22:05:25.220Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -506,7 +506,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1820&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-21T21:51:32.306Z",
+    "collectedAt": "2026-08-21T22:05:25.220Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -540,7 +540,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1821&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-21T21:51:32.306Z",
+    "collectedAt": "2026-08-21T22:05:25.220Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -610,7 +610,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1822&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-21T21:51:32.306Z",
+    "collectedAt": "2026-08-21T22:05:25.220Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -671,7 +671,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1823&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-21T21:51:32.306Z",
+    "collectedAt": "2026-08-21T22:05:25.220Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -705,7 +705,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1824&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-21T21:51:32.306Z",
+    "collectedAt": "2026-08-21T22:05:25.220Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -766,7 +766,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1825&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-21T21:51:32.306Z",
+    "collectedAt": "2026-08-21T22:05:25.220Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -817,7 +817,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1851&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-21T21:51:32.306Z",
+    "collectedAt": "2026-08-21T22:05:25.220Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -851,7 +851,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1854&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-21T21:51:32.306Z",
+    "collectedAt": "2026-08-21T22:05:25.220Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -884,7 +884,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1855&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-21T21:51:32.306Z",
+    "collectedAt": "2026-08-21T22:05:25.220Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -918,7 +918,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1858&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-21T21:51:32.306Z",
+    "collectedAt": "2026-08-21T22:05:25.220Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -951,7 +951,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1864&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-21T21:51:32.306Z",
+    "collectedAt": "2026-08-21T22:05:25.220Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -985,7 +985,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1869&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-21T21:51:32.306Z",
+    "collectedAt": "2026-08-21T22:05:25.220Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -1019,7 +1019,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1873&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-21T21:51:32.306Z",
+    "collectedAt": "2026-08-21T22:05:25.220Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -1053,7 +1053,7 @@
    "provenance": {
     "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1874&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
     "sourceOrg": "Pima County Clerk of the Board",
-    "collectedAt": "2026-08-21T21:51:32.306Z",
+    "collectedAt": "2026-08-21T22:05:25.220Z",
     "verifiedAt": null
    },
    "actingBodies": [
@@ -1087,7 +1087,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-21T21:51:32.096Z",
+    "collectedAt": "2026-08-21T22:05:25.270Z",
     "verifiedAt": null
    }
   },
@@ -1110,7 +1110,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-21T21:51:32.096Z",
+    "collectedAt": "2026-08-21T22:05:25.270Z",
     "verifiedAt": null
    }
   },
@@ -1133,7 +1133,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-21T21:51:32.096Z",
+    "collectedAt": "2026-08-21T22:05:25.270Z",
     "verifiedAt": null
    }
   },
@@ -1156,7 +1156,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-21T21:51:32.096Z",
+    "collectedAt": "2026-08-21T22:05:25.270Z",
     "verifiedAt": null
    }
   },
@@ -1179,7 +1179,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-21T21:51:32.096Z",
+    "collectedAt": "2026-08-21T22:05:25.270Z",
     "verifiedAt": null
    }
   },
@@ -1202,7 +1202,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-21T21:51:32.096Z",
+    "collectedAt": "2026-08-21T22:05:25.270Z",
     "verifiedAt": null
    }
   },
@@ -1225,7 +1225,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-21T21:51:32.096Z",
+    "collectedAt": "2026-08-21T22:05:25.270Z",
     "verifiedAt": null
    }
   },
@@ -1248,7 +1248,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-21T21:51:32.096Z",
+    "collectedAt": "2026-08-21T22:05:25.270Z",
     "verifiedAt": null
    }
   },
@@ -1271,7 +1271,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-21T21:51:32.096Z",
+    "collectedAt": "2026-08-21T22:05:25.270Z",
     "verifiedAt": null
    }
   },
@@ -1295,7 +1295,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-21T21:51:32.096Z",
+    "collectedAt": "2026-08-21T22:05:25.270Z",
     "verifiedAt": null
    }
   },
@@ -1319,7 +1319,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-21T21:51:32.096Z",
+    "collectedAt": "2026-08-21T22:05:25.270Z",
     "verifiedAt": null
    }
   },
@@ -1343,7 +1343,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-21T21:51:32.096Z",
+    "collectedAt": "2026-08-21T22:05:25.270Z",
     "verifiedAt": null
    }
   },
@@ -1367,7 +1367,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-21T21:51:32.096Z",
+    "collectedAt": "2026-08-21T22:05:25.270Z",
     "verifiedAt": null
    }
   },
@@ -1391,7 +1391,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-21T21:51:32.096Z",
+    "collectedAt": "2026-08-21T22:05:25.270Z",
     "verifiedAt": null
    }
   },
@@ -1415,7 +1415,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-21T21:51:32.096Z",
+    "collectedAt": "2026-08-21T22:05:25.270Z",
     "verifiedAt": null
    }
   },
@@ -1439,7 +1439,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-21T21:51:32.096Z",
+    "collectedAt": "2026-08-21T22:05:25.270Z",
     "verifiedAt": null
    }
   },
@@ -1463,7 +1463,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-21T21:51:32.096Z",
+    "collectedAt": "2026-08-21T22:05:25.270Z",
     "verifiedAt": null
    }
   },
@@ -1487,7 +1487,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-21T21:51:32.096Z",
+    "collectedAt": "2026-08-21T22:05:25.270Z",
     "verifiedAt": null
    }
   },
@@ -1511,7 +1511,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-21T21:51:32.096Z",
+    "collectedAt": "2026-08-21T22:05:25.270Z",
     "verifiedAt": null
    }
   },
@@ -1535,7 +1535,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-21T21:51:32.096Z",
+    "collectedAt": "2026-08-21T22:05:25.270Z",
     "verifiedAt": null
    }
   },
@@ -1559,7 +1559,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-21T21:51:32.096Z",
+    "collectedAt": "2026-08-21T22:05:25.270Z",
     "verifiedAt": null
    }
   },
@@ -1583,7 +1583,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township",
-    "collectedAt": "2026-08-21T21:51:32.096Z",
+    "collectedAt": "2026-08-21T22:05:25.270Z",
     "verifiedAt": null
    }
   },
@@ -1606,7 +1606,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-21T21:51:32.638Z",
+    "collectedAt": "2026-08-21T22:05:26.101Z",
     "verifiedAt": null
    }
   },
@@ -1629,7 +1629,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-21T21:51:32.638Z",
+    "collectedAt": "2026-08-21T22:05:26.101Z",
     "verifiedAt": null
    }
   },
@@ -1652,7 +1652,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-21T21:51:32.638Z",
+    "collectedAt": "2026-08-21T22:05:26.101Z",
     "verifiedAt": null
    }
   },
@@ -1675,7 +1675,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-21T21:51:32.638Z",
+    "collectedAt": "2026-08-21T22:05:26.101Z",
     "verifiedAt": null
    }
   },
@@ -1699,7 +1699,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-21T21:51:32.638Z",
+    "collectedAt": "2026-08-21T22:05:26.101Z",
     "verifiedAt": null
    }
   },
@@ -1723,7 +1723,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-21T21:51:32.638Z",
+    "collectedAt": "2026-08-21T22:05:26.101Z",
     "verifiedAt": null
    }
   },
@@ -1747,7 +1747,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-21T21:51:32.638Z",
+    "collectedAt": "2026-08-21T22:05:26.101Z",
     "verifiedAt": null
    }
   },
@@ -1771,7 +1771,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-21T21:51:32.638Z",
+    "collectedAt": "2026-08-21T22:05:26.101Z",
     "verifiedAt": null
    }
   },
@@ -1795,7 +1795,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-21T21:51:32.638Z",
+    "collectedAt": "2026-08-21T22:05:26.101Z",
     "verifiedAt": null
    }
   },
@@ -1819,7 +1819,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-21T21:51:32.638Z",
+    "collectedAt": "2026-08-21T22:05:26.101Z",
     "verifiedAt": null
    }
   },
@@ -1843,7 +1843,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Planning Board",
-    "collectedAt": "2026-08-21T21:51:32.638Z",
+    "collectedAt": "2026-08-21T22:05:26.101Z",
     "verifiedAt": null
    }
   },
@@ -1866,7 +1866,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-21T21:51:33.176Z",
+    "collectedAt": "2026-08-21T22:05:27.046Z",
     "verifiedAt": null
    }
   },
@@ -1889,7 +1889,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-21T21:51:33.176Z",
+    "collectedAt": "2026-08-21T22:05:27.046Z",
     "verifiedAt": null
    }
   },
@@ -1912,7 +1912,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-21T21:51:33.176Z",
+    "collectedAt": "2026-08-21T22:05:27.046Z",
     "verifiedAt": null
    }
   },
@@ -1935,7 +1935,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-21T21:51:33.176Z",
+    "collectedAt": "2026-08-21T22:05:27.046Z",
     "verifiedAt": null
    }
   },
@@ -1958,7 +1958,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-21T21:51:33.176Z",
+    "collectedAt": "2026-08-21T22:05:27.046Z",
     "verifiedAt": null
    }
   },
@@ -1981,7 +1981,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-21T21:51:33.176Z",
+    "collectedAt": "2026-08-21T22:05:27.046Z",
     "verifiedAt": null
    }
   },
@@ -2004,7 +2004,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-21T21:51:33.176Z",
+    "collectedAt": "2026-08-21T22:05:27.046Z",
     "verifiedAt": null
    }
   },
@@ -2028,7 +2028,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-21T21:51:33.176Z",
+    "collectedAt": "2026-08-21T22:05:27.046Z",
     "verifiedAt": null
    }
   },
@@ -2052,7 +2052,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-21T21:51:33.176Z",
+    "collectedAt": "2026-08-21T22:05:27.046Z",
     "verifiedAt": null
    }
   },
@@ -2076,7 +2076,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-21T21:51:33.176Z",
+    "collectedAt": "2026-08-21T22:05:27.046Z",
     "verifiedAt": null
    }
   },
@@ -2100,7 +2100,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-21T21:51:33.176Z",
+    "collectedAt": "2026-08-21T22:05:27.046Z",
     "verifiedAt": null
    }
   },
@@ -2124,7 +2124,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-21T21:51:33.176Z",
+    "collectedAt": "2026-08-21T22:05:27.046Z",
     "verifiedAt": null
    }
   },
@@ -2148,7 +2148,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-21T21:51:33.176Z",
+    "collectedAt": "2026-08-21T22:05:27.046Z",
     "verifiedAt": null
    }
   },
@@ -2172,7 +2172,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-21T21:51:33.176Z",
+    "collectedAt": "2026-08-21T22:05:27.046Z",
     "verifiedAt": null
    }
   },
@@ -2196,7 +2196,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-21T21:51:33.176Z",
+    "collectedAt": "2026-08-21T22:05:27.046Z",
     "verifiedAt": null
    }
   },
@@ -2220,7 +2220,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-21T21:51:33.176Z",
+    "collectedAt": "2026-08-21T22:05:27.046Z",
     "verifiedAt": null
    }
   },
@@ -2244,7 +2244,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-21T21:51:33.176Z",
+    "collectedAt": "2026-08-21T22:05:27.046Z",
     "verifiedAt": null
    }
   },
@@ -2268,7 +2268,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-21T21:51:33.176Z",
+    "collectedAt": "2026-08-21T22:05:27.046Z",
     "verifiedAt": null
    }
   },
@@ -2292,7 +2292,7 @@
    "provenance": {
     "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
     "sourceOrg": "Rockaway Township Board of Adjustment",
-    "collectedAt": "2026-08-21T21:51:33.176Z",
+    "collectedAt": "2026-08-21T22:05:27.046Z",
     "verifiedAt": null
    }
   },
@@ -2315,7 +2315,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1947&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.138Z",
+    "collectedAt": "2026-08-21T22:05:25.642Z",
     "verifiedAt": null
    }
   },
@@ -2338,7 +2338,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1958&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.138Z",
+    "collectedAt": "2026-08-21T22:05:25.642Z",
     "verifiedAt": null
    }
   },
@@ -2361,7 +2361,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1942&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.138Z",
+    "collectedAt": "2026-08-21T22:05:25.642Z",
     "verifiedAt": null
    }
   },
@@ -2384,7 +2384,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1927&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.138Z",
+    "collectedAt": "2026-08-21T22:05:25.642Z",
     "verifiedAt": null
    }
   },
@@ -2407,7 +2407,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1943&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.138Z",
+    "collectedAt": "2026-08-21T22:05:25.642Z",
     "verifiedAt": null
    }
   },
@@ -2430,7 +2430,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1928&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.138Z",
+    "collectedAt": "2026-08-21T22:05:25.642Z",
     "verifiedAt": null
    }
   },
@@ -2453,7 +2453,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1945&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.138Z",
+    "collectedAt": "2026-08-21T22:05:25.642Z",
     "verifiedAt": null
    }
   },
@@ -2476,7 +2476,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1956&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.138Z",
+    "collectedAt": "2026-08-21T22:05:25.642Z",
     "verifiedAt": null
    }
   },
@@ -2499,7 +2499,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1946&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.138Z",
+    "collectedAt": "2026-08-21T22:05:25.642Z",
     "verifiedAt": null
    }
   },
@@ -2522,7 +2522,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1957&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.138Z",
+    "collectedAt": "2026-08-21T22:05:25.642Z",
     "verifiedAt": null
    }
   },
@@ -2545,7 +2545,7 @@
    "provenance": {
     "sourceUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Meetings/ViewMeeting?id=1981&doctype=1",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.138Z",
+    "collectedAt": "2026-08-21T22:05:25.642Z",
     "verifiedAt": null
    }
   },
@@ -2568,7 +2568,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-23",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:32.002Z",
+    "collectedAt": "2026-08-21T22:05:25.405Z",
     "verifiedAt": null
    }
   },
@@ -2591,7 +2591,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-23",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:32.002Z",
+    "collectedAt": "2026-08-21T22:05:25.405Z",
     "verifiedAt": null
    }
   },
@@ -2614,7 +2614,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-23",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:32.002Z",
+    "collectedAt": "2026-08-21T22:05:25.405Z",
     "verifiedAt": null
    }
   },
@@ -2637,7 +2637,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-23",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:32.002Z",
+    "collectedAt": "2026-08-21T22:05:25.405Z",
     "verifiedAt": null
    }
   },
@@ -2660,7 +2660,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-23",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:32.002Z",
+    "collectedAt": "2026-08-21T22:05:25.405Z",
     "verifiedAt": null
    }
   },
@@ -2683,7 +2683,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-23",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:32.002Z",
+    "collectedAt": "2026-08-21T22:05:25.405Z",
     "verifiedAt": null
    }
   },
@@ -2706,7 +2706,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-23",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:32.002Z",
+    "collectedAt": "2026-08-21T22:05:25.405Z",
     "verifiedAt": null
    }
   },
@@ -2729,7 +2729,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-23",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:32.002Z",
+    "collectedAt": "2026-08-21T22:05:25.405Z",
     "verifiedAt": null
    }
   },
@@ -2752,7 +2752,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-23",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:32.002Z",
+    "collectedAt": "2026-08-21T22:05:25.405Z",
     "verifiedAt": null
    }
   },
@@ -2775,7 +2775,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-23",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:32.002Z",
+    "collectedAt": "2026-08-21T22:05:25.405Z",
     "verifiedAt": null
    }
   },
@@ -2798,7 +2798,7 @@
    "provenance": {
     "sourceUrl": "https://vailschooldistrictaz.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1&start_date=2026-05-23",
     "sourceOrg": "Vail School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:32.002Z",
+    "collectedAt": "2026-08-21T22:05:25.405Z",
     "verifiedAt": null
    }
   },
@@ -2821,7 +2821,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-23",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-21T21:51:33.749Z",
+    "collectedAt": "2026-08-21T22:05:27.168Z",
     "verifiedAt": null
    }
   },
@@ -2844,7 +2844,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-23",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-21T21:51:33.749Z",
+    "collectedAt": "2026-08-21T22:05:27.168Z",
     "verifiedAt": null
    }
   },
@@ -2867,7 +2867,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-23",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-21T21:51:33.749Z",
+    "collectedAt": "2026-08-21T22:05:27.168Z",
     "verifiedAt": null
    }
   },
@@ -2890,7 +2890,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-23",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-21T21:51:33.749Z",
+    "collectedAt": "2026-08-21T22:05:27.168Z",
     "verifiedAt": null
    }
   },
@@ -2913,7 +2913,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-23",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-21T21:51:33.749Z",
+    "collectedAt": "2026-08-21T22:05:27.168Z",
     "verifiedAt": null
    }
   },
@@ -2936,7 +2936,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-23",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-21T21:51:33.749Z",
+    "collectedAt": "2026-08-21T22:05:27.168Z",
     "verifiedAt": null
    }
   },
@@ -2959,7 +2959,7 @@
    "provenance": {
     "sourceUrl": "https://api.thrillshare.com/api/v4/o/4707/cms/events?locale=en&page_no=1&start_date=2026-05-23",
     "sourceOrg": "Rockaway Township Public Schools Board of Education",
-    "collectedAt": "2026-08-21T21:51:33.749Z",
+    "collectedAt": "2026-08-21T22:05:27.168Z",
     "verifiedAt": null
    }
   },
@@ -2982,7 +2982,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=499",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:31.761Z",
+    "collectedAt": "2026-08-21T22:05:24.764Z",
     "verifiedAt": null
    }
   },
@@ -3004,7 +3004,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=495",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:31.761Z",
+    "collectedAt": "2026-08-21T22:05:24.764Z",
     "verifiedAt": null
    }
   },
@@ -3026,7 +3026,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=497",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:31.761Z",
+    "collectedAt": "2026-08-21T22:05:24.764Z",
     "verifiedAt": null
    }
   },
@@ -3049,7 +3049,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=498",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:31.761Z",
+    "collectedAt": "2026-08-21T22:05:24.764Z",
     "verifiedAt": null
    }
   },
@@ -3072,7 +3072,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=493",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:31.761Z",
+    "collectedAt": "2026-08-21T22:05:24.764Z",
     "verifiedAt": null
    }
   },
@@ -3095,7 +3095,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=496",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:31.761Z",
+    "collectedAt": "2026-08-21T22:05:24.764Z",
     "verifiedAt": null
    }
   },
@@ -3117,7 +3117,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=494",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:31.761Z",
+    "collectedAt": "2026-08-21T22:05:24.764Z",
     "verifiedAt": null
    }
   },
@@ -3140,7 +3140,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=492",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:31.761Z",
+    "collectedAt": "2026-08-21T22:05:24.764Z",
     "verifiedAt": null
    }
   },
@@ -3162,7 +3162,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=491",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:31.761Z",
+    "collectedAt": "2026-08-21T22:05:24.764Z",
     "verifiedAt": null
    }
   },
@@ -3185,7 +3185,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=485",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:31.761Z",
+    "collectedAt": "2026-08-21T22:05:24.764Z",
     "verifiedAt": null
    }
   },
@@ -3207,7 +3207,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=490",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:31.761Z",
+    "collectedAt": "2026-08-21T22:05:24.764Z",
     "verifiedAt": null
    }
   },
@@ -3230,7 +3230,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=489",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:31.761Z",
+    "collectedAt": "2026-08-21T22:05:24.764Z",
     "verifiedAt": null
    }
   },
@@ -3253,7 +3253,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=484",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:31.761Z",
+    "collectedAt": "2026-08-21T22:05:24.764Z",
     "verifiedAt": null
    }
   },
@@ -3276,7 +3276,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=483",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:31.761Z",
+    "collectedAt": "2026-08-21T22:05:24.764Z",
     "verifiedAt": null
    }
   },
@@ -3299,7 +3299,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=481",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:31.761Z",
+    "collectedAt": "2026-08-21T22:05:24.764Z",
     "verifiedAt": null
    }
   },
@@ -3322,7 +3322,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=480",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:31.761Z",
+    "collectedAt": "2026-08-21T22:05:24.764Z",
     "verifiedAt": null
    }
   },
@@ -3344,7 +3344,7 @@
    "provenance": {
     "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=482",
     "sourceOrg": "Tucson Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:31.761Z",
+    "collectedAt": "2026-08-21T22:05:24.764Z",
     "verifiedAt": null
    }
   },
@@ -3367,7 +3367,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=169",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:32.337Z",
+    "collectedAt": "2026-08-21T22:05:25.201Z",
     "verifiedAt": null
    }
   },
@@ -3390,7 +3390,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=168",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:32.337Z",
+    "collectedAt": "2026-08-21T22:05:25.201Z",
     "verifiedAt": null
    }
   },
@@ -3413,7 +3413,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=167",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:32.337Z",
+    "collectedAt": "2026-08-21T22:05:25.201Z",
     "verifiedAt": null
    }
   },
@@ -3430,13 +3430,13 @@
     "lat": 32.137642,
     "lng": -110.938584
    },
-   "agendaUrl": null,
+   "agendaUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=166",
    "jurisdiction": "Sunnyside Unified School District, AZ",
    "status": "SCHEDULED",
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=166",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:32.337Z",
+    "collectedAt": "2026-08-21T22:05:25.201Z",
     "verifiedAt": null
    }
   },
@@ -3459,7 +3459,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=165",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:32.337Z",
+    "collectedAt": "2026-08-21T22:05:25.201Z",
     "verifiedAt": null
    }
   },
@@ -3482,7 +3482,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=174",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:32.337Z",
+    "collectedAt": "2026-08-21T22:05:25.201Z",
     "verifiedAt": null
    }
   },
@@ -3505,7 +3505,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=163",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:32.337Z",
+    "collectedAt": "2026-08-21T22:05:25.201Z",
     "verifiedAt": null
    }
   },
@@ -3528,7 +3528,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=162",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:32.337Z",
+    "collectedAt": "2026-08-21T22:05:25.201Z",
     "verifiedAt": null
    }
   },
@@ -3551,7 +3551,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=156",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:32.337Z",
+    "collectedAt": "2026-08-21T22:05:25.201Z",
     "verifiedAt": null
    }
   },
@@ -3574,7 +3574,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=155",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:32.337Z",
+    "collectedAt": "2026-08-21T22:05:25.201Z",
     "verifiedAt": null
    }
   },
@@ -3597,7 +3597,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=159",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:32.337Z",
+    "collectedAt": "2026-08-21T22:05:25.201Z",
     "verifiedAt": null
    }
   },
@@ -3620,7 +3620,7 @@
    "provenance": {
     "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=154",
     "sourceOrg": "Sunnyside Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:32.337Z",
+    "collectedAt": "2026-08-21T22:05:25.201Z",
     "verifiedAt": null
    }
   },
@@ -3643,7 +3643,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3371",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-21T21:51:32.803Z",
+    "collectedAt": "2026-08-21T22:05:25.638Z",
     "verifiedAt": null
    }
   },
@@ -3666,7 +3666,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3370",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-21T21:51:32.803Z",
+    "collectedAt": "2026-08-21T22:05:25.638Z",
     "verifiedAt": null
    }
   },
@@ -3689,7 +3689,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3368",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-21T21:51:32.803Z",
+    "collectedAt": "2026-08-21T22:05:25.638Z",
     "verifiedAt": null
    }
   },
@@ -3712,7 +3712,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3367",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-21T21:51:32.803Z",
+    "collectedAt": "2026-08-21T22:05:25.638Z",
     "verifiedAt": null
    }
   },
@@ -3735,7 +3735,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3364",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-21T21:51:32.803Z",
+    "collectedAt": "2026-08-21T22:05:25.638Z",
     "verifiedAt": null
    }
   },
@@ -3758,7 +3758,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3363",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-21T21:51:32.803Z",
+    "collectedAt": "2026-08-21T22:05:25.638Z",
     "verifiedAt": null
    }
   },
@@ -3781,7 +3781,7 @@
    "provenance": {
     "sourceUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3361",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-21T21:51:32.803Z",
+    "collectedAt": "2026-08-21T22:05:25.638Z",
     "verifiedAt": null
    }
   },
@@ -3803,7 +3803,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=699",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-21T21:51:33.346Z",
+    "collectedAt": "2026-08-21T22:05:26.080Z",
     "verifiedAt": null
    }
   },
@@ -3826,7 +3826,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=705",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-21T21:51:33.346Z",
+    "collectedAt": "2026-08-21T22:05:26.080Z",
     "verifiedAt": null
    }
   },
@@ -3849,7 +3849,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=707",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-21T21:51:33.346Z",
+    "collectedAt": "2026-08-21T22:05:26.080Z",
     "verifiedAt": null
    }
   },
@@ -3871,7 +3871,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=698",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-21T21:51:33.346Z",
+    "collectedAt": "2026-08-21T22:05:26.080Z",
     "verifiedAt": null
    }
   },
@@ -3894,7 +3894,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=706",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-21T21:51:33.346Z",
+    "collectedAt": "2026-08-21T22:05:26.080Z",
     "verifiedAt": null
    }
   },
@@ -3916,7 +3916,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=664",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-21T21:51:33.346Z",
+    "collectedAt": "2026-08-21T22:05:26.080Z",
     "verifiedAt": null
    }
   },
@@ -3939,7 +3939,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=695",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-21T21:51:33.346Z",
+    "collectedAt": "2026-08-21T22:05:26.080Z",
     "verifiedAt": null
    }
   },
@@ -3962,7 +3962,7 @@
    "provenance": {
     "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=696",
     "sourceOrg": "Pima Community College Governing Board",
-    "collectedAt": "2026-08-21T21:51:33.346Z",
+    "collectedAt": "2026-08-21T22:05:26.080Z",
     "verifiedAt": null
    }
   },
@@ -3984,7 +3984,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=9",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.529Z",
+    "collectedAt": "2026-08-21T22:05:24.515Z",
     "verifiedAt": null
    }
   },
@@ -4006,7 +4006,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=9",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.529Z",
+    "collectedAt": "2026-08-21T22:05:24.515Z",
     "verifiedAt": null
    }
   },
@@ -4028,7 +4028,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=9",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.529Z",
+    "collectedAt": "2026-08-21T22:05:24.515Z",
     "verifiedAt": null
    }
   },
@@ -4050,7 +4050,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=9",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.529Z",
+    "collectedAt": "2026-08-21T22:05:24.515Z",
     "verifiedAt": null
    }
   },
@@ -4072,7 +4072,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=9",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.529Z",
+    "collectedAt": "2026-08-21T22:05:24.515Z",
     "verifiedAt": null
    }
   },
@@ -4094,7 +4094,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=12",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.599Z",
+    "collectedAt": "2026-08-21T22:05:24.580Z",
     "verifiedAt": null
    }
   },
@@ -4116,7 +4116,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=12",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.599Z",
+    "collectedAt": "2026-08-21T22:05:24.580Z",
     "verifiedAt": null
    }
   },
@@ -4138,7 +4138,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=12",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.599Z",
+    "collectedAt": "2026-08-21T22:05:24.580Z",
     "verifiedAt": null
    }
   },
@@ -4160,7 +4160,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=12",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.599Z",
+    "collectedAt": "2026-08-21T22:05:24.580Z",
     "verifiedAt": null
    }
   },
@@ -4182,7 +4182,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=12",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.599Z",
+    "collectedAt": "2026-08-21T22:05:24.580Z",
     "verifiedAt": null
    }
   },
@@ -4205,7 +4205,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.652Z",
+    "collectedAt": "2026-08-21T22:05:24.647Z",
     "verifiedAt": null
    }
   },
@@ -4228,7 +4228,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.652Z",
+    "collectedAt": "2026-08-21T22:05:24.647Z",
     "verifiedAt": null
    }
   },
@@ -4251,7 +4251,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.652Z",
+    "collectedAt": "2026-08-21T22:05:24.647Z",
     "verifiedAt": null
    }
   },
@@ -4274,7 +4274,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.652Z",
+    "collectedAt": "2026-08-21T22:05:24.647Z",
     "verifiedAt": null
    }
   },
@@ -4297,7 +4297,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=8",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.652Z",
+    "collectedAt": "2026-08-21T22:05:24.647Z",
     "verifiedAt": null
    }
   },
@@ -4320,7 +4320,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.691Z",
+    "collectedAt": "2026-08-21T22:05:24.729Z",
     "verifiedAt": null
    }
   },
@@ -4343,7 +4343,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.691Z",
+    "collectedAt": "2026-08-21T22:05:24.729Z",
     "verifiedAt": null
    }
   },
@@ -4366,7 +4366,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.691Z",
+    "collectedAt": "2026-08-21T22:05:24.729Z",
     "verifiedAt": null
    }
   },
@@ -4389,7 +4389,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.691Z",
+    "collectedAt": "2026-08-21T22:05:24.729Z",
     "verifiedAt": null
    }
   },
@@ -4412,7 +4412,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=23",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.691Z",
+    "collectedAt": "2026-08-21T22:05:24.729Z",
     "verifiedAt": null
    }
   },
@@ -4434,7 +4434,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=3",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.778Z",
+    "collectedAt": "2026-08-21T22:05:24.815Z",
     "verifiedAt": null
    }
   },
@@ -4456,7 +4456,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=3",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.778Z",
+    "collectedAt": "2026-08-21T22:05:24.815Z",
     "verifiedAt": null
    }
   },
@@ -4478,7 +4478,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=3",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.778Z",
+    "collectedAt": "2026-08-21T22:05:24.815Z",
     "verifiedAt": null
    }
   },
@@ -4500,7 +4500,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=3",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.778Z",
+    "collectedAt": "2026-08-21T22:05:24.815Z",
     "verifiedAt": null
    }
   },
@@ -4522,7 +4522,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=131",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.843Z",
+    "collectedAt": "2026-08-21T22:05:24.875Z",
     "verifiedAt": null
    }
   },
@@ -4544,7 +4544,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=131",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.843Z",
+    "collectedAt": "2026-08-21T22:05:24.875Z",
     "verifiedAt": null
    }
   },
@@ -4566,7 +4566,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=131",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.843Z",
+    "collectedAt": "2026-08-21T22:05:24.875Z",
     "verifiedAt": null
    }
   },
@@ -4588,7 +4588,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=131",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.843Z",
+    "collectedAt": "2026-08-21T22:05:24.875Z",
     "verifiedAt": null
    }
   },
@@ -4610,7 +4610,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=131",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.843Z",
+    "collectedAt": "2026-08-21T22:05:24.875Z",
     "verifiedAt": null
    }
   },
@@ -4633,7 +4633,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.899Z",
+    "collectedAt": "2026-08-21T22:05:24.940Z",
     "verifiedAt": null
    }
   },
@@ -4656,7 +4656,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.899Z",
+    "collectedAt": "2026-08-21T22:05:24.940Z",
     "verifiedAt": null
    }
   },
@@ -4679,7 +4679,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.899Z",
+    "collectedAt": "2026-08-21T22:05:24.940Z",
     "verifiedAt": null
    }
   },
@@ -4702,7 +4702,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.899Z",
+    "collectedAt": "2026-08-21T22:05:24.940Z",
     "verifiedAt": null
    }
   },
@@ -4725,7 +4725,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=19",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.899Z",
+    "collectedAt": "2026-08-21T22:05:24.940Z",
     "verifiedAt": null
    }
   },
@@ -4747,7 +4747,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=130",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.961Z",
+    "collectedAt": "2026-08-21T22:05:24.996Z",
     "verifiedAt": null
    }
   },
@@ -4769,7 +4769,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=130",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.961Z",
+    "collectedAt": "2026-08-21T22:05:24.996Z",
     "verifiedAt": null
    }
   },
@@ -4791,7 +4791,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=130",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.961Z",
+    "collectedAt": "2026-08-21T22:05:24.996Z",
     "verifiedAt": null
    }
   },
@@ -4813,7 +4813,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=130",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.961Z",
+    "collectedAt": "2026-08-21T22:05:24.996Z",
     "verifiedAt": null
    }
   },
@@ -4835,7 +4835,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=130",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:31.961Z",
+    "collectedAt": "2026-08-21T22:05:24.996Z",
     "verifiedAt": null
    }
   },
@@ -4857,7 +4857,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=26",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.006Z",
+    "collectedAt": "2026-08-21T22:05:25.033Z",
     "verifiedAt": null
    }
   },
@@ -4879,7 +4879,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=26",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.006Z",
+    "collectedAt": "2026-08-21T22:05:25.033Z",
     "verifiedAt": null
    }
   },
@@ -4901,7 +4901,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=26",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.006Z",
+    "collectedAt": "2026-08-21T22:05:25.033Z",
     "verifiedAt": null
    }
   },
@@ -4923,7 +4923,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=26",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.006Z",
+    "collectedAt": "2026-08-21T22:05:25.033Z",
     "verifiedAt": null
    }
   },
@@ -4945,7 +4945,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=26",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.006Z",
+    "collectedAt": "2026-08-21T22:05:25.033Z",
     "verifiedAt": null
    }
   },
@@ -4967,7 +4967,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=26",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.006Z",
+    "collectedAt": "2026-08-21T22:05:25.033Z",
     "verifiedAt": null
    }
   },
@@ -4989,7 +4989,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=26",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.006Z",
+    "collectedAt": "2026-08-21T22:05:25.033Z",
     "verifiedAt": null
    }
   },
@@ -5011,7 +5011,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=26",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.006Z",
+    "collectedAt": "2026-08-21T22:05:25.033Z",
     "verifiedAt": null
    }
   },
@@ -5033,7 +5033,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=26",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.006Z",
+    "collectedAt": "2026-08-21T22:05:25.033Z",
     "verifiedAt": null
    }
   },
@@ -5055,7 +5055,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=42",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.136Z",
+    "collectedAt": "2026-08-21T22:05:25.128Z",
     "verifiedAt": null
    }
   },
@@ -5077,7 +5077,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=42",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.136Z",
+    "collectedAt": "2026-08-21T22:05:25.128Z",
     "verifiedAt": null
    }
   },
@@ -5099,7 +5099,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=42",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.136Z",
+    "collectedAt": "2026-08-21T22:05:25.128Z",
     "verifiedAt": null
    }
   },
@@ -5121,7 +5121,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=42",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.136Z",
+    "collectedAt": "2026-08-21T22:05:25.128Z",
     "verifiedAt": null
    }
   },
@@ -5143,7 +5143,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=42",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.136Z",
+    "collectedAt": "2026-08-21T22:05:25.128Z",
     "verifiedAt": null
    }
   },
@@ -5165,7 +5165,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=57",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.240Z",
+    "collectedAt": "2026-08-21T22:05:25.250Z",
     "verifiedAt": null
    }
   },
@@ -5187,7 +5187,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=57",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.240Z",
+    "collectedAt": "2026-08-21T22:05:25.250Z",
     "verifiedAt": null
    }
   },
@@ -5209,7 +5209,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=57",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.240Z",
+    "collectedAt": "2026-08-21T22:05:25.250Z",
     "verifiedAt": null
    }
   },
@@ -5231,7 +5231,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=57",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.240Z",
+    "collectedAt": "2026-08-21T22:05:25.250Z",
     "verifiedAt": null
    }
   },
@@ -5253,7 +5253,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=57",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.240Z",
+    "collectedAt": "2026-08-21T22:05:25.250Z",
     "verifiedAt": null
    }
   },
@@ -5276,7 +5276,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.395Z",
+    "collectedAt": "2026-08-21T22:05:25.364Z",
     "verifiedAt": null
    }
   },
@@ -5299,7 +5299,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.395Z",
+    "collectedAt": "2026-08-21T22:05:25.364Z",
     "verifiedAt": null
    }
   },
@@ -5322,7 +5322,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.395Z",
+    "collectedAt": "2026-08-21T22:05:25.364Z",
     "verifiedAt": null
    }
   },
@@ -5345,7 +5345,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.395Z",
+    "collectedAt": "2026-08-21T22:05:25.364Z",
     "verifiedAt": null
    }
   },
@@ -5368,7 +5368,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=38",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.395Z",
+    "collectedAt": "2026-08-21T22:05:25.364Z",
     "verifiedAt": null
    }
   },
@@ -5391,7 +5391,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.674Z",
+    "collectedAt": "2026-08-21T22:05:25.719Z",
     "verifiedAt": null
    }
   },
@@ -5414,7 +5414,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.674Z",
+    "collectedAt": "2026-08-21T22:05:25.719Z",
     "verifiedAt": null
    }
   },
@@ -5437,7 +5437,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.674Z",
+    "collectedAt": "2026-08-21T22:05:25.719Z",
     "verifiedAt": null
    }
   },
@@ -5460,7 +5460,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.674Z",
+    "collectedAt": "2026-08-21T22:05:25.719Z",
     "verifiedAt": null
    }
   },
@@ -5483,7 +5483,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=63",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.674Z",
+    "collectedAt": "2026-08-21T22:05:25.719Z",
     "verifiedAt": null
    }
   },
@@ -5505,7 +5505,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=61",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.816Z",
+    "collectedAt": "2026-08-21T22:05:25.855Z",
     "verifiedAt": null
    }
   },
@@ -5527,7 +5527,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=61",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.816Z",
+    "collectedAt": "2026-08-21T22:05:25.855Z",
     "verifiedAt": null
    }
   },
@@ -5549,7 +5549,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=61",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.816Z",
+    "collectedAt": "2026-08-21T22:05:25.855Z",
     "verifiedAt": null
    }
   },
@@ -5571,7 +5571,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=61",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.816Z",
+    "collectedAt": "2026-08-21T22:05:25.855Z",
     "verifiedAt": null
    }
   },
@@ -5593,7 +5593,7 @@
    "provenance": {
     "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=61",
     "sourceOrg": "City of Tucson Clerk",
-    "collectedAt": "2026-08-21T21:51:32.816Z",
+    "collectedAt": "2026-08-21T22:05:25.855Z",
     "verifiedAt": null
    }
   },
@@ -5616,7 +5616,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:31.767Z",
+    "collectedAt": "2026-08-21T22:05:24.779Z",
     "verifiedAt": null
    }
   },
@@ -5639,7 +5639,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:31.767Z",
+    "collectedAt": "2026-08-21T22:05:24.779Z",
     "verifiedAt": null
    }
   },
@@ -5662,7 +5662,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:31.767Z",
+    "collectedAt": "2026-08-21T22:05:24.779Z",
     "verifiedAt": null
    }
   },
@@ -5685,7 +5685,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:31.767Z",
+    "collectedAt": "2026-08-21T22:05:24.779Z",
     "verifiedAt": null
    }
   },
@@ -5708,7 +5708,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:31.767Z",
+    "collectedAt": "2026-08-21T22:05:24.779Z",
     "verifiedAt": null
    }
   },
@@ -5731,7 +5731,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:31.767Z",
+    "collectedAt": "2026-08-21T22:05:24.779Z",
     "verifiedAt": null
    }
   },
@@ -5754,7 +5754,7 @@
    "provenance": {
     "sourceUrl": "https://meetings.boardbook.org/Public/Organization/2065",
     "sourceOrg": "Amphitheater Unified School District Governing Board",
-    "collectedAt": "2026-08-21T21:51:31.767Z",
+    "collectedAt": "2026-08-21T22:05:24.779Z",
     "verifiedAt": null
    }
   },
@@ -5777,7 +5777,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2225",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-21T21:51:32.422Z",
+    "collectedAt": "2026-08-21T22:05:26.021Z",
     "verifiedAt": null
    }
   },
@@ -5800,7 +5800,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2227",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-21T21:51:32.422Z",
+    "collectedAt": "2026-08-21T22:05:26.021Z",
     "verifiedAt": null
    }
   },
@@ -5823,7 +5823,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2228",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-21T21:51:32.422Z",
+    "collectedAt": "2026-08-21T22:05:26.021Z",
     "verifiedAt": null
    }
   },
@@ -5846,7 +5846,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2234",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-21T21:51:32.422Z",
+    "collectedAt": "2026-08-21T22:05:26.021Z",
     "verifiedAt": null
    }
   },
@@ -5869,7 +5869,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2235",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-21T21:51:32.422Z",
+    "collectedAt": "2026-08-21T22:05:26.021Z",
     "verifiedAt": null
    }
   },
@@ -5892,7 +5892,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2229",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-21T21:51:32.422Z",
+    "collectedAt": "2026-08-21T22:05:26.021Z",
     "verifiedAt": null
    }
   },
@@ -5915,7 +5915,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2233",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-21T21:51:32.422Z",
+    "collectedAt": "2026-08-21T22:05:26.021Z",
     "verifiedAt": null
    }
   },
@@ -5938,7 +5938,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2239",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-21T21:51:32.422Z",
+    "collectedAt": "2026-08-21T22:05:26.021Z",
     "verifiedAt": null
    }
   },
@@ -5961,7 +5961,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2240",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-21T21:51:32.422Z",
+    "collectedAt": "2026-08-21T22:05:26.021Z",
     "verifiedAt": null
    }
   },
@@ -5984,7 +5984,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2236",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-21T21:51:32.422Z",
+    "collectedAt": "2026-08-21T22:05:26.021Z",
     "verifiedAt": null
    }
   },
@@ -6007,7 +6007,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2241",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-21T21:51:32.422Z",
+    "collectedAt": "2026-08-21T22:05:26.021Z",
     "verifiedAt": null
    }
   },
@@ -6030,7 +6030,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2242",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-21T21:51:32.422Z",
+    "collectedAt": "2026-08-21T22:05:26.021Z",
     "verifiedAt": null
    }
   },
@@ -6053,7 +6053,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2243",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-21T21:51:32.422Z",
+    "collectedAt": "2026-08-21T22:05:26.021Z",
     "verifiedAt": null
    }
   },
@@ -6076,7 +6076,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2244",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-21T21:51:32.422Z",
+    "collectedAt": "2026-08-21T22:05:26.021Z",
     "verifiedAt": null
    }
   },
@@ -6099,7 +6099,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2245",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-21T21:51:32.422Z",
+    "collectedAt": "2026-08-21T22:05:26.021Z",
     "verifiedAt": null
    }
   },
@@ -6122,7 +6122,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2246",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-21T21:51:32.422Z",
+    "collectedAt": "2026-08-21T22:05:26.021Z",
     "verifiedAt": null
    }
   },
@@ -6145,7 +6145,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2247",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-21T21:51:32.422Z",
+    "collectedAt": "2026-08-21T22:05:26.021Z",
     "verifiedAt": null
    }
   },
@@ -6168,7 +6168,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2248",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-21T21:51:32.422Z",
+    "collectedAt": "2026-08-21T22:05:26.021Z",
     "verifiedAt": null
    }
   },
@@ -6191,7 +6191,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2249",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-21T21:51:32.422Z",
+    "collectedAt": "2026-08-21T22:05:26.021Z",
     "verifiedAt": null
    }
   },
@@ -6214,7 +6214,7 @@
    "provenance": {
     "sourceUrl": "https://morriscountynj.iqm2.com/Citizens/Detail_Meeting.aspx?ID=2250",
     "sourceOrg": "Morris County Board of County Commissioners",
-    "collectedAt": "2026-08-21T21:51:32.422Z",
+    "collectedAt": "2026-08-21T22:05:26.021Z",
     "verifiedAt": null
    }
   },
@@ -6237,7 +6237,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-21T21:51:31.763Z",
+    "collectedAt": "2026-08-21T22:05:24.670Z",
     "verifiedAt": null
    }
   },
@@ -6261,7 +6261,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-21T21:51:31.763Z",
+    "collectedAt": "2026-08-21T22:05:24.670Z",
     "verifiedAt": null
    }
   },
@@ -6285,7 +6285,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-21T21:51:31.763Z",
+    "collectedAt": "2026-08-21T22:05:24.670Z",
     "verifiedAt": null
    }
   },
@@ -6309,7 +6309,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-21T21:51:31.763Z",
+    "collectedAt": "2026-08-21T22:05:24.670Z",
     "verifiedAt": null
    }
   },
@@ -6333,7 +6333,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-21T21:51:31.763Z",
+    "collectedAt": "2026-08-21T22:05:24.670Z",
     "verifiedAt": null
    }
   },
@@ -6357,7 +6357,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-21T21:51:31.763Z",
+    "collectedAt": "2026-08-21T22:05:24.670Z",
     "verifiedAt": null
    }
   },
@@ -6381,7 +6381,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-21T21:51:31.763Z",
+    "collectedAt": "2026-08-21T22:05:24.670Z",
     "verifiedAt": null
    }
   },
@@ -6405,7 +6405,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-21T21:51:31.763Z",
+    "collectedAt": "2026-08-21T22:05:24.670Z",
     "verifiedAt": null
    }
   },
@@ -6429,7 +6429,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-21T21:51:31.763Z",
+    "collectedAt": "2026-08-21T22:05:24.670Z",
     "verifiedAt": null
    }
   },
@@ -6453,7 +6453,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-21T21:51:31.763Z",
+    "collectedAt": "2026-08-21T22:05:24.670Z",
     "verifiedAt": null
    }
   },
@@ -6477,7 +6477,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-21T21:51:31.763Z",
+    "collectedAt": "2026-08-21T22:05:24.670Z",
     "verifiedAt": null
    }
   },
@@ -6501,7 +6501,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-21T21:51:31.763Z",
+    "collectedAt": "2026-08-21T22:05:24.670Z",
     "verifiedAt": null
    }
   },
@@ -6525,7 +6525,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-21T21:51:31.763Z",
+    "collectedAt": "2026-08-21T22:05:24.670Z",
     "verifiedAt": null
    }
   },
@@ -6549,7 +6549,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-21T21:51:31.763Z",
+    "collectedAt": "2026-08-21T22:05:24.670Z",
     "verifiedAt": null
    }
   },
@@ -6573,7 +6573,7 @@
    "provenance": {
     "sourceUrl": "https://www.merrimackcounty.net/board_of_commissioners_/public_notices,_agendas,_minutes,_.php",
     "sourceOrg": "Merrimack County Board of Commissioners",
-    "collectedAt": "2026-08-21T21:51:31.763Z",
+    "collectedAt": "2026-08-21T22:05:24.670Z",
     "verifiedAt": null
    }
   },
@@ -6596,7 +6596,7 @@
    "provenance": {
     "sourceUrl": "https://www.mhrd.org/administration/board-of-education/boe-meetings",
     "sourceOrg": "Morris Hills Regional District Board of Education",
-    "collectedAt": "2026-08-21T21:51:34.397Z",
+    "collectedAt": "2026-08-21T22:05:24.564Z",
     "verifiedAt": null
    }
   },
@@ -6619,7 +6619,7 @@
    "provenance": {
     "sourceUrl": "https://www.mhrd.org/administration/board-of-education/boe-meetings",
     "sourceOrg": "Morris Hills Regional District Board of Education",
-    "collectedAt": "2026-08-21T21:51:34.397Z",
+    "collectedAt": "2026-08-21T22:05:24.564Z",
     "verifiedAt": null
    }
   },
@@ -6642,7 +6642,7 @@
    "provenance": {
     "sourceUrl": "https://www.mhrd.org/administration/board-of-education/boe-meetings",
     "sourceOrg": "Morris Hills Regional District Board of Education",
-    "collectedAt": "2026-08-21T21:51:34.397Z",
+    "collectedAt": "2026-08-21T22:05:24.564Z",
     "verifiedAt": null
    }
   },
@@ -6665,7 +6665,7 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-21T21:51:35.598Z",
+    "collectedAt": "2026-08-21T22:05:25.488Z",
     "verifiedAt": null
    }
   },
@@ -6688,7 +6688,7 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-21T21:51:35.598Z",
+    "collectedAt": "2026-08-21T22:05:25.488Z",
     "verifiedAt": null
    }
   },
@@ -6711,7 +6711,7 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-21T21:51:35.598Z",
+    "collectedAt": "2026-08-21T22:05:25.488Z",
     "verifiedAt": null
    }
   },
@@ -6734,7 +6734,7 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-21T21:51:35.598Z",
+    "collectedAt": "2026-08-21T22:05:25.488Z",
     "verifiedAt": null
    }
   },
@@ -6757,7 +6757,7 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-21T21:51:35.598Z",
+    "collectedAt": "2026-08-21T22:05:25.488Z",
     "verifiedAt": null
    }
   },
@@ -6780,7 +6780,7 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-21T21:51:35.598Z",
+    "collectedAt": "2026-08-21T22:05:25.488Z",
     "verifiedAt": null
    }
   },
@@ -6803,7 +6803,7 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-21T21:51:35.598Z",
+    "collectedAt": "2026-08-21T22:05:25.488Z",
     "verifiedAt": null
    }
   },
@@ -6826,7 +6826,7 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-21T21:51:35.598Z",
+    "collectedAt": "2026-08-21T22:05:25.488Z",
     "verifiedAt": null
    }
   },
@@ -6849,7 +6849,7 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-21T21:51:35.598Z",
+    "collectedAt": "2026-08-21T22:05:25.488Z",
     "verifiedAt": null
    }
   },
@@ -6872,7 +6872,7 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-21T21:51:35.598Z",
+    "collectedAt": "2026-08-21T22:05:25.488Z",
     "verifiedAt": null
    }
   },
@@ -6895,7 +6895,7 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-21T21:51:35.598Z",
+    "collectedAt": "2026-08-21T22:05:25.488Z",
     "verifiedAt": null
    }
   },
@@ -6918,7 +6918,7 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-21T21:51:35.598Z",
+    "collectedAt": "2026-08-21T22:05:25.488Z",
     "verifiedAt": null
    }
   },
@@ -6941,7 +6941,7 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-21T21:51:35.598Z",
+    "collectedAt": "2026-08-21T22:05:25.488Z",
     "verifiedAt": null
    }
   },
@@ -6964,7 +6964,7 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-21T21:51:35.598Z",
+    "collectedAt": "2026-08-21T22:05:25.488Z",
     "verifiedAt": null
    }
   },
@@ -6987,7 +6987,7 @@
    "provenance": {
     "sourceUrl": "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
     "sourceOrg": "Kearsarge Regional School District School Board",
-    "collectedAt": "2026-08-21T21:51:35.598Z",
+    "collectedAt": "2026-08-21T22:05:25.488Z",
     "verifiedAt": null
    }
   },
@@ -7010,7 +7010,7 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/planning-board",
     "sourceOrg": "Newbury Planning Board",
-    "collectedAt": "2026-08-21T21:51:36.235Z",
+    "collectedAt": "2026-08-21T22:05:26.001Z",
     "verifiedAt": null
    }
   },
@@ -7033,7 +7033,7 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/planning-board",
     "sourceOrg": "Newbury Planning Board",
-    "collectedAt": "2026-08-21T21:51:36.235Z",
+    "collectedAt": "2026-08-21T22:05:26.001Z",
     "verifiedAt": null
    }
   },
@@ -7056,7 +7056,7 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/planning-board",
     "sourceOrg": "Newbury Planning Board",
-    "collectedAt": "2026-08-21T21:51:36.235Z",
+    "collectedAt": "2026-08-21T22:05:26.001Z",
     "verifiedAt": null
    }
   },
@@ -7079,7 +7079,7 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/conservation-commission",
     "sourceOrg": "Newbury Conservation Commission",
-    "collectedAt": "2026-08-21T21:51:37.161Z",
+    "collectedAt": "2026-08-21T22:05:26.339Z",
     "verifiedAt": null
    }
   },
@@ -7102,7 +7102,7 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/conservation-commission",
     "sourceOrg": "Newbury Conservation Commission",
-    "collectedAt": "2026-08-21T21:51:37.161Z",
+    "collectedAt": "2026-08-21T22:05:26.339Z",
     "verifiedAt": null
    }
   },
@@ -7125,7 +7125,7 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/conservation-commission",
     "sourceOrg": "Newbury Conservation Commission",
-    "collectedAt": "2026-08-21T21:51:37.161Z",
+    "collectedAt": "2026-08-21T22:05:26.339Z",
     "verifiedAt": null
    }
   },
@@ -7148,7 +7148,7 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/conservation-commission",
     "sourceOrg": "Newbury Conservation Commission",
-    "collectedAt": "2026-08-21T21:51:37.161Z",
+    "collectedAt": "2026-08-21T22:05:26.339Z",
     "verifiedAt": null
    }
   },
@@ -7171,7 +7171,7 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/conservation-commission",
     "sourceOrg": "Newbury Conservation Commission",
-    "collectedAt": "2026-08-21T21:51:37.161Z",
+    "collectedAt": "2026-08-21T22:05:26.339Z",
     "verifiedAt": null
    }
   },
@@ -7194,7 +7194,7 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/zoning-board-adjustment",
     "sourceOrg": "Newbury Zoning Board of Adjustment",
-    "collectedAt": "2026-08-21T21:51:37.779Z",
+    "collectedAt": "2026-08-21T22:05:26.701Z",
     "verifiedAt": null
    }
   },
@@ -7217,7 +7217,7 @@
    "provenance": {
     "sourceUrl": "https://newlondon.nh.gov/calendar",
     "sourceOrg": "New London Board of Selectmen",
-    "collectedAt": "2026-08-21T21:51:39.408Z",
+    "collectedAt": "2026-08-21T22:05:28.106Z",
     "verifiedAt": null
    }
   },
@@ -7240,7 +7240,7 @@
    "provenance": {
     "sourceUrl": "https://newlondon.nh.gov/calendar",
     "sourceOrg": "New London Board of Selectmen",
-    "collectedAt": "2026-08-21T21:51:39.408Z",
+    "collectedAt": "2026-08-21T22:05:28.106Z",
     "verifiedAt": null
    }
   },
@@ -7263,7 +7263,7 @@
    "provenance": {
     "sourceUrl": "https://newlondon.nh.gov/calendar",
     "sourceOrg": "New London Board of Selectmen",
-    "collectedAt": "2026-08-21T21:51:39.408Z",
+    "collectedAt": "2026-08-21T22:05:28.106Z",
     "verifiedAt": null
    }
   },
@@ -7286,7 +7286,7 @@
    "provenance": {
     "sourceUrl": "https://newlondon.nh.gov/calendar",
     "sourceOrg": "New London Board of Selectmen",
-    "collectedAt": "2026-08-21T21:51:39.408Z",
+    "collectedAt": "2026-08-21T22:05:28.106Z",
     "verifiedAt": null
    }
   },
@@ -7309,7 +7309,7 @@
    "provenance": {
     "sourceUrl": "https://newlondon.nh.gov/calendar",
     "sourceOrg": "New London Board of Selectmen",
-    "collectedAt": "2026-08-21T21:51:39.408Z",
+    "collectedAt": "2026-08-21T22:05:28.106Z",
     "verifiedAt": null
    }
   },
@@ -7332,7 +7332,7 @@
    "provenance": {
     "sourceUrl": "https://newlondon.nh.gov/calendar",
     "sourceOrg": "New London Board of Selectmen",
-    "collectedAt": "2026-08-21T21:51:39.408Z",
+    "collectedAt": "2026-08-21T22:05:28.106Z",
     "verifiedAt": null
    }
   },
@@ -7355,7 +7355,7 @@
    "provenance": {
     "sourceUrl": "https://newlondon.nh.gov/calendar",
     "sourceOrg": "New London Planning Board",
-    "collectedAt": "2026-08-21T21:51:40.092Z",
+    "collectedAt": "2026-08-21T22:05:28.865Z",
     "verifiedAt": null
    }
   },
@@ -7378,7 +7378,7 @@
    "provenance": {
     "sourceUrl": "https://newlondon.nh.gov/calendar",
     "sourceOrg": "New London Planning Board",
-    "collectedAt": "2026-08-21T21:51:40.092Z",
+    "collectedAt": "2026-08-21T22:05:28.865Z",
     "verifiedAt": null
    }
   },
@@ -7401,7 +7401,7 @@
    "provenance": {
     "sourceUrl": "https://newlondon.nh.gov/calendar",
     "sourceOrg": "New London Planning Board",
-    "collectedAt": "2026-08-21T21:51:40.092Z",
+    "collectedAt": "2026-08-21T22:05:28.865Z",
     "verifiedAt": null
    }
   },
@@ -7424,7 +7424,7 @@
    "provenance": {
     "sourceUrl": "https://newlondon.nh.gov/calendar",
     "sourceOrg": "New London Planning Board",
-    "collectedAt": "2026-08-21T21:51:40.092Z",
+    "collectedAt": "2026-08-21T22:05:28.865Z",
     "verifiedAt": null
    }
   },
@@ -7447,7 +7447,7 @@
    "provenance": {
     "sourceUrl": "https://newlondon.nh.gov/calendar",
     "sourceOrg": "New London Zoning Board",
-    "collectedAt": "2026-08-21T21:51:40.841Z",
+    "collectedAt": "2026-08-21T22:05:29.553Z",
     "verifiedAt": null
    }
   },
@@ -7470,7 +7470,7 @@
    "provenance": {
     "sourceUrl": "https://newlondon.nh.gov/calendar",
     "sourceOrg": "New London Zoning Board",
-    "collectedAt": "2026-08-21T21:51:40.841Z",
+    "collectedAt": "2026-08-21T22:05:29.553Z",
     "verifiedAt": null
    }
   },
@@ -7493,7 +7493,7 @@
    "provenance": {
     "sourceUrl": "https://newlondon.nh.gov/calendar",
     "sourceOrg": "New London Zoning Board",
-    "collectedAt": "2026-08-21T21:51:40.841Z",
+    "collectedAt": "2026-08-21T22:05:29.553Z",
     "verifiedAt": null
    }
   },
@@ -7516,7 +7516,7 @@
    "provenance": {
     "sourceUrl": "https://newlondon.nh.gov/calendar",
     "sourceOrg": "New London Conservation Commission",
-    "collectedAt": "2026-08-21T21:51:41.524Z",
+    "collectedAt": "2026-08-21T22:05:30.224Z",
     "verifiedAt": null
    }
   },
@@ -7539,7 +7539,7 @@
    "provenance": {
     "sourceUrl": "https://newlondon.nh.gov/calendar",
     "sourceOrg": "New London Conservation Commission",
-    "collectedAt": "2026-08-21T21:51:41.524Z",
+    "collectedAt": "2026-08-21T22:05:30.224Z",
     "verifiedAt": null
    }
   },
@@ -7562,7 +7562,7 @@
    "provenance": {
     "sourceUrl": "https://newlondon.nh.gov/calendar",
     "sourceOrg": "New London Budget Committee",
-    "collectedAt": "2026-08-21T21:51:42.204Z",
+    "collectedAt": "2026-08-21T22:05:30.897Z",
     "verifiedAt": null
    }
   },
@@ -7585,7 +7585,7 @@
    "provenance": {
     "sourceUrl": "https://newlondon.nh.gov/calendar",
     "sourceOrg": "New London Energy Committee",
-    "collectedAt": "2026-08-21T21:51:42.991Z",
+    "collectedAt": "2026-08-21T22:05:31.619Z",
     "verifiedAt": null
    }
   },
@@ -7608,7 +7608,7 @@
    "provenance": {
     "sourceUrl": "https://newlondon.nh.gov/calendar",
     "sourceOrg": "New London Energy Committee",
-    "collectedAt": "2026-08-21T21:51:42.991Z",
+    "collectedAt": "2026-08-21T22:05:31.619Z",
     "verifiedAt": null
    }
   },
@@ -7631,7 +7631,7 @@
    "provenance": {
     "sourceUrl": "https://newlondon.nh.gov/calendar",
     "sourceOrg": "New London Energy Committee",
-    "collectedAt": "2026-08-21T21:51:42.991Z",
+    "collectedAt": "2026-08-21T22:05:31.619Z",
     "verifiedAt": null
    }
   },
@@ -7654,7 +7654,7 @@
    "provenance": {
     "sourceUrl": "https://newlondon.nh.gov/calendar",
     "sourceOrg": "New London Energy Committee",
-    "collectedAt": "2026-08-21T21:51:42.991Z",
+    "collectedAt": "2026-08-21T22:05:31.619Z",
     "verifiedAt": null
    }
   },
@@ -7677,7 +7677,7 @@
    "provenance": {
     "sourceUrl": "https://newlondon.nh.gov/calendar",
     "sourceOrg": "New London Housing Commission",
-    "collectedAt": "2026-08-21T21:51:43.722Z",
+    "collectedAt": "2026-08-21T22:05:32.309Z",
     "verifiedAt": null
    }
   },
@@ -7700,7 +7700,7 @@
    "provenance": {
     "sourceUrl": "https://newlondon.nh.gov/calendar",
     "sourceOrg": "New London Recreation Commission",
-    "collectedAt": "2026-08-21T21:51:44.574Z",
+    "collectedAt": "2026-08-21T22:05:32.977Z",
     "verifiedAt": null
    }
   },
@@ -7723,7 +7723,7 @@
    "provenance": {
     "sourceUrl": "https://newlondon.nh.gov/calendar",
     "sourceOrg": "New London Recreation Commission",
-    "collectedAt": "2026-08-21T21:51:44.574Z",
+    "collectedAt": "2026-08-21T22:05:32.977Z",
     "verifiedAt": null
    }
   },
@@ -7746,7 +7746,7 @@
    "provenance": {
     "sourceUrl": "https://newlondon.nh.gov/calendar",
     "sourceOrg": "New London Recreation Commission",
-    "collectedAt": "2026-08-21T21:51:44.574Z",
+    "collectedAt": "2026-08-21T22:05:32.977Z",
     "verifiedAt": null
    }
   },
@@ -7769,7 +7769,7 @@
    "provenance": {
     "sourceUrl": "https://newlondon.nh.gov/calendar",
     "sourceOrg": "New London Tri-Town Assessing Board (New London, Sunapee & Newbury)",
-    "collectedAt": "2026-08-21T21:51:49.592Z",
+    "collectedAt": "2026-08-21T22:05:37.064Z",
     "verifiedAt": null
    }
   },
@@ -7792,7 +7792,7 @@
    "provenance": {
     "sourceUrl": "https://newlondon.nh.gov/calendar",
     "sourceOrg": "New London Supervisors of the Checklist",
-    "collectedAt": "2026-08-21T21:51:50.274Z",
+    "collectedAt": "2026-08-21T22:05:37.735Z",
     "verifiedAt": null
    }
   },
@@ -7815,7 +7815,7 @@
    "provenance": {
     "sourceUrl": "https://newlondon.nh.gov/calendar",
     "sourceOrg": "New London Supervisors of the Checklist",
-    "collectedAt": "2026-08-21T21:51:50.274Z",
+    "collectedAt": "2026-08-21T22:05:37.735Z",
     "verifiedAt": null
    }
   },
@@ -7838,7 +7838,7 @@
    "provenance": {
     "sourceUrl": "https://newlondon.nh.gov/calendar",
     "sourceOrg": "New London Capital Improvement Program Committee",
-    "collectedAt": "2026-08-21T21:51:50.962Z",
+    "collectedAt": "2026-08-21T22:05:38.396Z",
     "verifiedAt": null
    }
   },
@@ -7862,7 +7862,7 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/home/events/43761",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-21T21:51:33.715Z",
+    "collectedAt": "2026-08-21T22:05:26.588Z",
     "verifiedAt": null
    }
   },
@@ -7886,7 +7886,7 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/home/events/42956",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-21T21:51:33.715Z",
+    "collectedAt": "2026-08-21T22:05:26.588Z",
     "verifiedAt": null
    }
   },
@@ -7910,7 +7910,7 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/home/events/42961",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-21T21:51:33.715Z",
+    "collectedAt": "2026-08-21T22:05:26.588Z",
     "verifiedAt": null
    }
   },
@@ -7934,7 +7934,7 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/home/events/42966",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-21T21:51:33.715Z",
+    "collectedAt": "2026-08-21T22:05:26.588Z",
     "verifiedAt": null
    }
   },
@@ -7958,7 +7958,7 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/home/events/42971",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-21T21:51:33.715Z",
+    "collectedAt": "2026-08-21T22:05:26.588Z",
     "verifiedAt": null
    }
   },
@@ -7982,7 +7982,7 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/home/events/37986",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-21T21:51:33.715Z",
+    "collectedAt": "2026-08-21T22:05:26.588Z",
     "verifiedAt": null
    }
   },
@@ -8006,7 +8006,7 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/conservation-commission/events/42301",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-21T21:51:33.715Z",
+    "collectedAt": "2026-08-21T22:05:26.588Z",
     "verifiedAt": null
    }
   },
@@ -8030,7 +8030,7 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/conservation-commission/events/42306",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-21T21:51:33.715Z",
+    "collectedAt": "2026-08-21T22:05:26.588Z",
     "verifiedAt": null
    }
   },
@@ -8054,7 +8054,7 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/home/events/42531",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-21T21:51:33.715Z",
+    "collectedAt": "2026-08-21T22:05:26.588Z",
     "verifiedAt": null
    }
   },
@@ -8078,7 +8078,7 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/home/events/42541",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-21T21:51:33.715Z",
+    "collectedAt": "2026-08-21T22:05:26.588Z",
     "verifiedAt": null
    }
   },
@@ -8102,7 +8102,7 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/home/events/42546",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-21T21:51:33.715Z",
+    "collectedAt": "2026-08-21T22:05:26.588Z",
     "verifiedAt": null
    }
   },
@@ -8126,7 +8126,7 @@
    "provenance": {
     "sourceUrl": "https://www.newbury.nh.gov/home/events/42551",
     "sourceOrg": "Town of Newbury",
-    "collectedAt": "2026-08-21T21:51:33.715Z",
+    "collectedAt": "2026-08-21T22:05:26.588Z",
     "verifiedAt": null
    }
   },
@@ -8150,7 +8150,7 @@
    "provenance": {
     "sourceUrl": "https://www.wilmotnh.org/event/selectboard-meeting-2/2026-09-16/",
     "sourceOrg": "Wilmot Selectboard",
-    "collectedAt": "2026-08-21T21:51:35.544Z",
+    "collectedAt": "2026-08-21T22:05:32.923Z",
     "verifiedAt": null
    }
   },
@@ -8174,7 +8174,7 @@
    "provenance": {
     "sourceUrl": "https://www.wilmotnh.org/event/selectboard-meeting-2/2026-09-30/",
     "sourceOrg": "Wilmot Selectboard",
-    "collectedAt": "2026-08-21T21:51:35.544Z",
+    "collectedAt": "2026-08-21T22:05:32.923Z",
     "verifiedAt": null
    }
   },
@@ -8198,7 +8198,7 @@
    "provenance": {
     "sourceUrl": "https://www.wilmotnh.org/event/selectboard-meeting-2/2026-10-14/",
     "sourceOrg": "Wilmot Selectboard",
-    "collectedAt": "2026-08-21T21:51:35.544Z",
+    "collectedAt": "2026-08-21T22:05:32.923Z",
     "verifiedAt": null
    }
   },
@@ -8222,7 +8222,7 @@
    "provenance": {
     "sourceUrl": "https://www.wilmotnh.org/event/transfer-station-advisory-group-meeting-2/",
     "sourceOrg": "Wilmot Selectboard",
-    "collectedAt": "2026-08-21T21:51:35.544Z",
+    "collectedAt": "2026-08-21T22:05:32.923Z",
     "verifiedAt": null
    }
   },
@@ -8246,7 +8246,7 @@
    "provenance": {
     "sourceUrl": "https://www.wilmotnh.org/event/selectboard-meeting-2/2026-08-19/",
     "sourceOrg": "Wilmot Selectboard",
-    "collectedAt": "2026-08-21T21:51:35.544Z",
+    "collectedAt": "2026-08-21T22:05:32.923Z",
     "verifiedAt": null
    }
   },
@@ -8270,7 +8270,7 @@
    "provenance": {
     "sourceUrl": "https://www.wilmotnh.org/event/selectboard-meeting-2/2026-08-05/",
     "sourceOrg": "Wilmot Selectboard",
-    "collectedAt": "2026-08-21T21:51:35.544Z",
+    "collectedAt": "2026-08-21T22:05:32.923Z",
     "verifiedAt": null
    }
   },
@@ -8294,7 +8294,7 @@
    "provenance": {
     "sourceUrl": "https://www.wilmotnh.org/event/selectboard-meeting-2/2026-07-22/",
     "sourceOrg": "Wilmot Selectboard",
-    "collectedAt": "2026-08-21T21:51:35.544Z",
+    "collectedAt": "2026-08-21T22:05:32.923Z",
     "verifiedAt": null
    }
   },
@@ -8318,7 +8318,7 @@
    "provenance": {
     "sourceUrl": "https://www.wilmotnh.org/event/wilmot-safety-svcs-facility-cmte-meeting-3/",
     "sourceOrg": "Wilmot Selectboard",
-    "collectedAt": "2026-08-21T21:51:35.544Z",
+    "collectedAt": "2026-08-21T22:05:32.923Z",
     "verifiedAt": null
    }
   },
@@ -8342,7 +8342,7 @@
    "provenance": {
     "sourceUrl": "https://www.wilmotnh.org/event/wilmot-safety-svcs-facility-cmte-meeting-2/",
     "sourceOrg": "Wilmot Selectboard",
-    "collectedAt": "2026-08-21T21:51:35.544Z",
+    "collectedAt": "2026-08-21T22:05:32.923Z",
     "verifiedAt": null
    }
   },
@@ -8366,7 +8366,7 @@
    "provenance": {
     "sourceUrl": "https://www.wilmotnh.org/event/no-selectboard-meeting-quorum-not-available/",
     "sourceOrg": "Wilmot Selectboard",
-    "collectedAt": "2026-08-21T21:51:35.544Z",
+    "collectedAt": "2026-08-21T22:05:32.923Z",
     "verifiedAt": null
    }
   },
@@ -8390,7 +8390,7 @@
    "provenance": {
     "sourceUrl": "https://www.wilmotnh.org/event/selectboard-meeting/2026-06-24/",
     "sourceOrg": "Wilmot Selectboard",
-    "collectedAt": "2026-08-21T21:51:35.544Z",
+    "collectedAt": "2026-08-21T22:05:32.923Z",
     "verifiedAt": null
    }
   },
@@ -8414,7 +8414,7 @@
    "provenance": {
     "sourceUrl": "https://www.wilmotnh.org/event/selectboard-meeting/2026-06-10/",
     "sourceOrg": "Wilmot Selectboard",
-    "collectedAt": "2026-08-21T21:51:35.544Z",
+    "collectedAt": "2026-08-21T22:05:32.923Z",
     "verifiedAt": null
    }
   },
@@ -8438,7 +8438,7 @@
    "provenance": {
     "sourceUrl": "https://www.wilmotnh.org/event/selectboard-meeting/2026-05-27/",
     "sourceOrg": "Wilmot Selectboard",
-    "collectedAt": "2026-08-21T21:51:35.544Z",
+    "collectedAt": "2026-08-21T22:05:32.923Z",
     "verifiedAt": null
    }
   },
@@ -8462,7 +8462,7 @@
    "provenance": {
     "sourceUrl": "https://www.wilmotnh.org/event/planning-board-meeting-2-2/2026-09-17/",
     "sourceOrg": "Wilmot Planning Board",
-    "collectedAt": "2026-08-21T21:51:35.544Z",
+    "collectedAt": "2026-08-21T22:05:32.923Z",
     "verifiedAt": null
    }
   },
@@ -8486,7 +8486,7 @@
    "provenance": {
     "sourceUrl": "https://www.wilmotnh.org/event/planning-board-meeting-2-2/2026-10-15/",
     "sourceOrg": "Wilmot Planning Board",
-    "collectedAt": "2026-08-21T21:51:35.544Z",
+    "collectedAt": "2026-08-21T22:05:32.923Z",
     "verifiedAt": null
    }
   },
@@ -8510,7 +8510,7 @@
    "provenance": {
     "sourceUrl": "https://www.wilmotnh.org/event/planning-board-meeting-2-2/2026-08-20/",
     "sourceOrg": "Wilmot Planning Board",
-    "collectedAt": "2026-08-21T21:51:35.544Z",
+    "collectedAt": "2026-08-21T22:05:32.923Z",
     "verifiedAt": null
    }
   },
@@ -8534,7 +8534,7 @@
    "provenance": {
     "sourceUrl": "https://www.wilmotnh.org/event/planning-board-meeting-2-2/2026-07-16/",
     "sourceOrg": "Wilmot Planning Board",
-    "collectedAt": "2026-08-21T21:51:35.544Z",
+    "collectedAt": "2026-08-21T22:05:32.923Z",
     "verifiedAt": null
    }
   },
@@ -8558,7 +8558,7 @@
    "provenance": {
     "sourceUrl": "https://www.wilmotnh.org/event/planning-board-meeting-2-2/2026-06-18/",
     "sourceOrg": "Wilmot Planning Board",
-    "collectedAt": "2026-08-21T21:51:35.544Z",
+    "collectedAt": "2026-08-21T22:05:32.923Z",
     "verifiedAt": null
    }
   },
@@ -8582,7 +8582,7 @@
    "provenance": {
     "sourceUrl": "https://www.wilmotnh.org/event/cemetery-trustees-meeting-2/2026-09-14/",
     "sourceOrg": "Wilmot Cemetery Trustees",
-    "collectedAt": "2026-08-21T21:51:35.544Z",
+    "collectedAt": "2026-08-21T22:05:32.923Z",
     "verifiedAt": null
    }
   },
@@ -8606,7 +8606,7 @@
    "provenance": {
     "sourceUrl": "https://www.wilmotnh.org/event/cemetery-trustees-meeting-2/2026-10-12/",
     "sourceOrg": "Wilmot Cemetery Trustees",
-    "collectedAt": "2026-08-21T21:51:35.544Z",
+    "collectedAt": "2026-08-21T22:05:32.923Z",
     "verifiedAt": null
    }
   },
@@ -8630,7 +8630,7 @@
    "provenance": {
     "sourceUrl": "https://www.wilmotnh.org/event/cemetery-trustees-meeting-2/2026-08-10/",
     "sourceOrg": "Wilmot Cemetery Trustees",
-    "collectedAt": "2026-08-21T21:51:35.544Z",
+    "collectedAt": "2026-08-21T22:05:32.923Z",
     "verifiedAt": null
    }
   },
@@ -8654,7 +8654,7 @@
    "provenance": {
     "sourceUrl": "https://www.wilmotnh.org/event/cemetery-trustees-meeting-2/2026-07-13/",
     "sourceOrg": "Wilmot Cemetery Trustees",
-    "collectedAt": "2026-08-21T21:51:35.544Z",
+    "collectedAt": "2026-08-21T22:05:32.923Z",
     "verifiedAt": null
    }
   },
@@ -8678,7 +8678,7 @@
    "provenance": {
     "sourceUrl": "https://www.wilmotnh.org/event/cemetery-trustees-meeting-2/2026-06-08/",
     "sourceOrg": "Wilmot Cemetery Trustees",
-    "collectedAt": "2026-08-21T21:51:35.544Z",
+    "collectedAt": "2026-08-21T22:05:32.923Z",
     "verifiedAt": null
    }
   },
@@ -8702,7 +8702,7 @@
    "provenance": {
     "sourceUrl": "https://www.wilmotnh.org/event/conservation-commission-meeting-2/2026-09-15/",
     "sourceOrg": "Town of Wilmot",
-    "collectedAt": "2026-08-21T21:51:35.544Z",
+    "collectedAt": "2026-08-21T22:05:32.923Z",
     "verifiedAt": null
    }
   },
@@ -8726,7 +8726,7 @@
    "provenance": {
     "sourceUrl": "https://www.wilmotnh.org/event/conservation-commission-meeting-2/2026-08-18/",
     "sourceOrg": "Town of Wilmot",
-    "collectedAt": "2026-08-21T21:51:35.544Z",
+    "collectedAt": "2026-08-21T22:05:32.923Z",
     "verifiedAt": null
    }
   },
@@ -8750,7 +8750,7 @@
    "provenance": {
     "sourceUrl": "https://www.wilmotnh.org/event/conservation-cmsn-meeting-town-hall/",
     "sourceOrg": "Town of Wilmot",
-    "collectedAt": "2026-08-21T21:51:35.544Z",
+    "collectedAt": "2026-08-21T22:05:32.923Z",
     "verifiedAt": null
    }
   },
@@ -8774,7 +8774,7 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
     "sourceOrg": "Town of Bradford",
-    "collectedAt": "2026-08-21T21:51:36.145Z",
+    "collectedAt": "2026-08-21T22:05:33.458Z",
     "verifiedAt": null
    }
   },
@@ -8798,7 +8798,7 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
     "sourceOrg": "Town of Bradford",
-    "collectedAt": "2026-08-21T21:51:36.145Z",
+    "collectedAt": "2026-08-21T22:05:33.458Z",
     "verifiedAt": null
    }
   },
@@ -8822,7 +8822,7 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
     "sourceOrg": "Town of Bradford",
-    "collectedAt": "2026-08-21T21:51:36.145Z",
+    "collectedAt": "2026-08-21T22:05:33.458Z",
     "verifiedAt": null
    }
   },
@@ -8831,7 +8831,7 @@
    "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
    "bodyName": "Cemetery Trustees",
    "title": "Cemetery Commission",
-   "startsAt": "2026-06-16T19:00:00.000Z",
+   "startsAt": "2026-06-09T19:00:00.000Z",
    "startPrecision": "MINUTE",
    "timeZone": "America/New_York",
    "location": {
@@ -8846,7 +8846,7 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
     "sourceOrg": "Town of Bradford",
-    "collectedAt": "2026-08-21T21:51:36.145Z",
+    "collectedAt": "2026-08-21T22:05:33.458Z",
     "verifiedAt": null
    }
   },
@@ -8855,7 +8855,7 @@
    "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
    "bodyName": "Conservation Commission",
    "title": "Conservation Commission",
-   "startsAt": "2026-09-15T23:00:00.000Z",
+   "startsAt": "2026-07-21T23:00:00.000Z",
    "startPrecision": "MINUTE",
    "timeZone": "America/New_York",
    "location": {
@@ -8866,11 +8866,11 @@
    },
    "agendaUrl": null,
    "jurisdiction": "Bradford, NH",
-   "status": "SCHEDULED",
+   "status": "CONCLUDED",
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
     "sourceOrg": "Town of Bradford",
-    "collectedAt": "2026-08-21T21:51:36.145Z",
+    "collectedAt": "2026-08-21T22:05:33.458Z",
     "verifiedAt": null
    }
   },
@@ -8894,7 +8894,7 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
     "sourceOrg": "Town of Bradford",
-    "collectedAt": "2026-08-21T21:51:36.145Z",
+    "collectedAt": "2026-08-21T22:05:33.458Z",
     "verifiedAt": null
    }
   },
@@ -8918,7 +8918,7 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
     "sourceOrg": "Town of Bradford",
-    "collectedAt": "2026-08-21T21:51:36.145Z",
+    "collectedAt": "2026-08-21T22:05:33.458Z",
     "verifiedAt": null
    }
   },
@@ -8942,7 +8942,7 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
     "sourceOrg": "Town of Bradford",
-    "collectedAt": "2026-08-21T21:51:36.145Z",
+    "collectedAt": "2026-08-21T22:05:33.458Z",
     "verifiedAt": null
    }
   },
@@ -8966,7 +8966,7 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
     "sourceOrg": "Town of Bradford",
-    "collectedAt": "2026-08-21T21:51:36.145Z",
+    "collectedAt": "2026-08-21T22:05:33.458Z",
     "verifiedAt": null
    }
   },
@@ -8990,79 +8990,7 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
     "sourceOrg": "Town of Bradford",
-    "collectedAt": "2026-08-21T21:51:36.145Z",
-    "verifiedAt": null
-   }
-  },
-  {
-   "id": "ical:bradford-cip-committee:1se8l0ui790b74vcn60f9a4n6u@google.com",
-   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
-   "bodyName": "Capital Improvement Program Committee",
-   "title": "CIP Committee",
-   "startsAt": "2026-09-30T23:00:00.000Z",
-   "startPrecision": "MINUTE",
-   "timeZone": "America/New_York",
-   "location": {
-    "name": "Bradford Town Hall",
-    "address": "75 West Main Street, Bradford, NH 03221",
-    "lat": 43.269503712555,
-    "lng": -71.960454157651
-   },
-   "agendaUrl": null,
-   "jurisdiction": "Bradford, NH",
-   "status": "SCHEDULED",
-   "provenance": {
-    "sourceUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
-    "sourceOrg": "Town of Bradford",
-    "collectedAt": "2026-08-21T21:51:36.145Z",
-    "verifiedAt": null
-   }
-  },
-  {
-   "id": "ical:bradford-cip-committee:480mp9pc8ikj7do0eauc0hoqas@google.com",
-   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
-   "bodyName": "Capital Improvement Program Committee",
-   "title": "CIP Committee",
-   "startsAt": "2026-08-26T23:00:00.000Z",
-   "startPrecision": "MINUTE",
-   "timeZone": "America/New_York",
-   "location": {
-    "name": "Bradford Town Hall",
-    "address": "75 West Main Street, Bradford, NH 03221",
-    "lat": 43.269503712555,
-    "lng": -71.960454157651
-   },
-   "agendaUrl": null,
-   "jurisdiction": "Bradford, NH",
-   "status": "SCHEDULED",
-   "provenance": {
-    "sourceUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
-    "sourceOrg": "Town of Bradford",
-    "collectedAt": "2026-08-21T21:51:36.145Z",
-    "verifiedAt": null
-   }
-  },
-  {
-   "id": "ical:bradford-cip-committee:6gkbi49e20oghuu6kij0lfnusm@google.com",
-   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
-   "bodyName": "Capital Improvement Program Committee",
-   "title": "CIP Committee",
-   "startsAt": "2026-09-23T23:00:00.000Z",
-   "startPrecision": "MINUTE",
-   "timeZone": "America/New_York",
-   "location": {
-    "name": "Bradford Town Hall",
-    "address": "75 West Main Street, Bradford, NH 03221",
-    "lat": 43.269503712555,
-    "lng": -71.960454157651
-   },
-   "agendaUrl": null,
-   "jurisdiction": "Bradford, NH",
-   "status": "SCHEDULED",
-   "provenance": {
-    "sourceUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
-    "sourceOrg": "Town of Bradford",
-    "collectedAt": "2026-08-21T21:51:36.145Z",
+    "collectedAt": "2026-08-21T22:05:33.458Z",
     "verifiedAt": null
    }
   },
@@ -9086,7 +9014,31 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
     "sourceOrg": "Town of Bradford",
-    "collectedAt": "2026-08-21T21:51:36.145Z",
+    "collectedAt": "2026-08-21T22:05:33.458Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "ical:bradford-cip-committee:1se8l0ui790b74vcn60f9a4n6u@google.com",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
+   "bodyName": "Capital Improvement Program Committee",
+   "title": "CIP Committee",
+   "startsAt": "2026-09-30T23:00:00.000Z",
+   "startPrecision": "MINUTE",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Bradford Town Hall",
+    "address": "75 West Main Street, Bradford, NH 03221",
+    "lat": 43.269503712555,
+    "lng": -71.960454157651
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Bradford, NH",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+    "sourceOrg": "Town of Bradford",
+    "collectedAt": "2026-08-21T22:05:33.458Z",
     "verifiedAt": null
    }
   },
@@ -9110,7 +9062,55 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
     "sourceOrg": "Town of Bradford",
-    "collectedAt": "2026-08-21T21:51:36.145Z",
+    "collectedAt": "2026-08-21T22:05:33.458Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "ical:bradford-cip-committee:480mp9pc8ikj7do0eauc0hoqas@google.com",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
+   "bodyName": "Capital Improvement Program Committee",
+   "title": "CIP Committee",
+   "startsAt": "2026-08-26T23:00:00.000Z",
+   "startPrecision": "MINUTE",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Bradford Town Hall",
+    "address": "75 West Main Street, Bradford, NH 03221",
+    "lat": 43.269503712555,
+    "lng": -71.960454157651
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Bradford, NH",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+    "sourceOrg": "Town of Bradford",
+    "collectedAt": "2026-08-21T22:05:33.458Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "ical:bradford-cip-committee:6gkbi49e20oghuu6kij0lfnusm@google.com",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
+   "bodyName": "Capital Improvement Program Committee",
+   "title": "CIP Committee",
+   "startsAt": "2026-09-23T23:00:00.000Z",
+   "startPrecision": "MINUTE",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Bradford Town Hall",
+    "address": "75 West Main Street, Bradford, NH 03221",
+    "lat": 43.269503712555,
+    "lng": -71.960454157651
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Bradford, NH",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+    "sourceOrg": "Town of Bradford",
+    "collectedAt": "2026-08-21T22:05:33.458Z",
     "verifiedAt": null
    }
   },
@@ -9134,7 +9134,7 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
     "sourceOrg": "Town of Bradford",
-    "collectedAt": "2026-08-21T21:51:36.145Z",
+    "collectedAt": "2026-08-21T22:05:33.458Z",
     "verifiedAt": null
    }
   },
@@ -9158,31 +9158,7 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
     "sourceOrg": "Town of Bradford",
-    "collectedAt": "2026-08-21T21:51:36.145Z",
-    "verifiedAt": null
-   }
-  },
-  {
-   "id": "ical:bradford-independence-day-committee:71orqggta5g83pq9d6brgdrspe@google.com",
-   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
-   "bodyName": "Independence Day Committee",
-   "title": "Independence Day Committee",
-   "startsAt": "2026-09-24T22:00:00.000Z",
-   "startPrecision": "MINUTE",
-   "timeZone": "America/New_York",
-   "location": {
-    "name": "Bradford Area Community Center",
-    "address": "134 East Main Street, Bradford, NH 03221",
-    "lat": 43.26864360687,
-    "lng": -71.955354154019
-   },
-   "agendaUrl": null,
-   "jurisdiction": "Bradford, NH",
-   "status": "SCHEDULED",
-   "provenance": {
-    "sourceUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
-    "sourceOrg": "Town of Bradford",
-    "collectedAt": "2026-08-21T21:51:36.145Z",
+    "collectedAt": "2026-08-21T22:05:33.458Z",
     "verifiedAt": null
    }
   },
@@ -9206,23 +9182,23 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
     "sourceOrg": "Town of Bradford",
-    "collectedAt": "2026-08-21T21:51:36.145Z",
+    "collectedAt": "2026-08-21T22:05:33.458Z",
     "verifiedAt": null
    }
   },
   {
-   "id": "ical:bradford-supervisors-of-the-checklist:7e519j0r31ofdveh8aec6l4ljl@google.com",
+   "id": "ical:bradford-independence-day-committee:71orqggta5g83pq9d6brgdrspe@google.com",
    "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
-   "bodyName": "Supervisors of the Checklist",
-   "title": "Supervisors of Checklist",
-   "startsAt": "2026-08-26T22:00:00.000Z",
+   "bodyName": "Independence Day Committee",
+   "title": "Independence Day Committee",
+   "startsAt": "2026-09-24T22:00:00.000Z",
    "startPrecision": "MINUTE",
    "timeZone": "America/New_York",
    "location": {
-    "name": "Bradford Town Hall",
-    "address": "75 West Main Street, Bradford, NH 03221",
-    "lat": 43.269503712555,
-    "lng": -71.960454157651
+    "name": "Bradford Area Community Center",
+    "address": "134 East Main Street, Bradford, NH 03221",
+    "lat": 43.26864360687,
+    "lng": -71.955354154019
    },
    "agendaUrl": null,
    "jurisdiction": "Bradford, NH",
@@ -9230,31 +9206,7 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
     "sourceOrg": "Town of Bradford",
-    "collectedAt": "2026-08-21T21:51:36.145Z",
-    "verifiedAt": null
-   }
-  },
-  {
-   "id": "ical:bradford-supervisors-of-the-checklist:31qjnktuu4u1lftjjl423gj86l@google.com",
-   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
-   "bodyName": "Supervisors of the Checklist",
-   "title": "Supervisors of Checklist",
-   "startsAt": "2026-07-14T23:00:00.000Z",
-   "startPrecision": "MINUTE",
-   "timeZone": "America/New_York",
-   "location": {
-    "name": "Bradford Town Hall",
-    "address": "75 West Main Street, Bradford, NH 03221",
-    "lat": 43.269503712555,
-    "lng": -71.960454157651
-   },
-   "agendaUrl": null,
-   "jurisdiction": "Bradford, NH",
-   "status": "CONCLUDED",
-   "provenance": {
-    "sourceUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
-    "sourceOrg": "Town of Bradford",
-    "collectedAt": "2026-08-21T21:51:36.145Z",
+    "collectedAt": "2026-08-21T22:05:33.458Z",
     "verifiedAt": null
    }
   },
@@ -9278,151 +9230,55 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
     "sourceOrg": "Town of Bradford",
-    "collectedAt": "2026-08-21T21:51:36.145Z",
+    "collectedAt": "2026-08-21T22:05:33.458Z",
     "verifiedAt": null
    }
   },
   {
-   "id": "ical:warner-select-board:42cp3onvveme22uorqju8uhu34@google.com",
-   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-   "bodyName": "Select Board",
-   "title": "Select Board Meeting",
-   "startsAt": "2026-09-08T22:00:00.000Z",
+   "id": "ical:bradford-supervisors-of-the-checklist:31qjnktuu4u1lftjjl423gj86l@google.com",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
+   "bodyName": "Supervisors of the Checklist",
+   "title": "Supervisors of Checklist",
+   "startsAt": "2026-07-14T23:00:00.000Z",
    "startPrecision": "MINUTE",
    "timeZone": "America/New_York",
    "location": {
-    "name": "Warner Town Hall",
-    "address": "5 East Main Street, Warner, NH 03278",
-    "lat": 43.280620022052,
-    "lng": -71.815803778788
+    "name": "Bradford Town Hall",
+    "address": "75 West Main Street, Bradford, NH 03221",
+    "lat": 43.269503712555,
+    "lng": -71.960454157651
    },
    "agendaUrl": null,
-   "jurisdiction": "Warner, NH",
+   "jurisdiction": "Bradford, NH",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+    "sourceOrg": "Town of Bradford",
+    "collectedAt": "2026-08-21T22:05:33.458Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "ical:bradford-supervisors-of-the-checklist:7e519j0r31ofdveh8aec6l4ljl@google.com",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
+   "bodyName": "Supervisors of the Checklist",
+   "title": "Supervisors of Checklist",
+   "startsAt": "2026-08-26T22:00:00.000Z",
+   "startPrecision": "MINUTE",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Bradford Town Hall",
+    "address": "75 West Main Street, Bradford, NH 03221",
+    "lat": 43.269503712555,
+    "lng": -71.960454157651
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Bradford, NH",
    "status": "SCHEDULED",
    "provenance": {
-    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
-    "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
-    "verifiedAt": null
-   }
-  },
-  {
-   "id": "ical:warner-select-board:4qmb57lpej59222i8bmmt926m8@google.com",
-   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-   "bodyName": "Select Board",
-   "title": "Canceled Select Board Payroll Presentation",
-   "startsAt": "2026-07-14T20:00:00.000Z",
-   "startPrecision": "MINUTE",
-   "timeZone": "America/New_York",
-   "location": {
-    "name": "Warner Town Hall",
-    "address": "5 East Main Street, Warner, NH 03278",
-    "lat": 43.280620022052,
-    "lng": -71.815803778788
-   },
-   "agendaUrl": null,
-   "jurisdiction": "Warner, NH",
-   "status": "CANCELED",
-   "provenance": {
-    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
-    "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
-    "verifiedAt": null
-   }
-  },
-  {
-   "id": "ical:warner-select-board:2d0v911k521cvf2da12akkt62h@google.com",
-   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-   "bodyName": "Select Board",
-   "title": "Select Board Meeting",
-   "startsAt": "2026-09-22T22:00:00.000Z",
-   "startPrecision": "MINUTE",
-   "timeZone": "America/New_York",
-   "location": {
-    "name": "Warner Town Hall",
-    "address": "5 East Main Street, Warner, NH 03278",
-    "lat": 43.280620022052,
-    "lng": -71.815803778788
-   },
-   "agendaUrl": null,
-   "jurisdiction": "Warner, NH",
-   "status": "SCHEDULED",
-   "provenance": {
-    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
-    "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
-    "verifiedAt": null
-   }
-  },
-  {
-   "id": "ical:warner-select-board:5tpk7ac47licbb4e2sn9hvlhm2@google.com",
-   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-   "bodyName": "Select Board",
-   "title": "Select Board Meeting PayChex Presentation",
-   "startsAt": "2026-07-28T20:00:00.000Z",
-   "startPrecision": "MINUTE",
-   "timeZone": "America/New_York",
-   "location": {
-    "name": "Warner Town Hall",
-    "address": "5 East Main Street, Warner, NH 03278",
-    "lat": 43.280620022052,
-    "lng": -71.815803778788
-   },
-   "agendaUrl": null,
-   "jurisdiction": "Warner, NH",
-   "status": "CONCLUDED",
-   "provenance": {
-    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
-    "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
-    "verifiedAt": null
-   }
-  },
-  {
-   "id": "ical:warner-select-board:2f41c0rlb2q529hkps26pp7nk9@google.com",
-   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-   "bodyName": "Select Board",
-   "title": "Select Board Non Public",
-   "startsAt": "2026-06-11T21:00:00.000Z",
-   "startPrecision": "MINUTE",
-   "timeZone": "America/New_York",
-   "location": {
-    "name": "Warner Town Hall",
-    "address": "5 East Main Street, Warner, NH 03278",
-    "lat": 43.280620022052,
-    "lng": -71.815803778788
-   },
-   "agendaUrl": null,
-   "jurisdiction": "Warner, NH",
-   "status": "CONCLUDED",
-   "provenance": {
-    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
-    "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
-    "verifiedAt": null
-   }
-  },
-  {
-   "id": "ical:warner-select-board:1rg86muj5hmhpv8r98iida4su5@google.com",
-   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-   "bodyName": "Select Board",
-   "title": "Select Board Meeting",
-   "startsAt": "2026-07-28T22:00:00.000Z",
-   "startPrecision": "MINUTE",
-   "timeZone": "America/New_York",
-   "location": {
-    "name": "Warner Town Hall",
-    "address": "5 East Main Street, Warner, NH 03278",
-    "lat": 43.280620022052,
-    "lng": -71.815803778788
-   },
-   "agendaUrl": null,
-   "jurisdiction": "Warner, NH",
-   "status": "CONCLUDED",
-   "provenance": {
-    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
-    "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
+    "sourceUrl": "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+    "sourceOrg": "Town of Bradford",
+    "collectedAt": "2026-08-21T22:05:33.458Z",
     "verifiedAt": null
    }
   },
@@ -9446,7 +9302,7 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
     "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
     "verifiedAt": null
    }
   },
@@ -9455,7 +9311,7 @@
    "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
    "bodyName": "Select Board",
    "title": "Select Board Meeting",
-   "startsAt": "2026-06-09T22:00:00.000Z",
+   "startsAt": "2026-06-23T22:00:00.000Z",
    "startPrecision": "MINUTE",
    "timeZone": "America/New_York",
    "location": {
@@ -9470,16 +9326,16 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
     "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
     "verifiedAt": null
    }
   },
   {
-   "id": "ical:warner-select-board:5buoeu02pfigm32qd0l6gs38gp@google.com",
+   "id": "ical:warner-select-board:2f41c0rlb2q529hkps26pp7nk9@google.com",
    "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
    "bodyName": "Select Board",
-   "title": "Select Board Work Session",
-   "startsAt": "2026-07-07T20:30:00.000Z",
+   "title": "Select Board Non Public",
+   "startsAt": "2026-06-11T21:00:00.000Z",
    "startPrecision": "MINUTE",
    "timeZone": "America/New_York",
    "location": {
@@ -9494,88 +9350,16 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
     "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
     "verifiedAt": null
    }
   },
   {
-   "id": "ical:warner-select-board:46kcjr94t1o80jolj4q6l8t59r@google.com",
-   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-   "bodyName": "Select Board",
-   "title": "Select Board Work Session",
-   "startsAt": "2026-06-16T23:00:00.000Z",
-   "startPrecision": "MINUTE",
-   "timeZone": "America/New_York",
-   "location": {
-    "name": "Warner Town Hall",
-    "address": "5 East Main Street, Warner, NH 03278",
-    "lat": 43.280620022052,
-    "lng": -71.815803778788
-   },
-   "agendaUrl": null,
-   "jurisdiction": "Warner, NH",
-   "status": "CONCLUDED",
-   "provenance": {
-    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
-    "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
-    "verifiedAt": null
-   }
-  },
-  {
-   "id": "ical:warner-select-board:1fhkej0jn7inhv7uddmhq8bil6@google.com",
-   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-   "bodyName": "Select Board",
-   "title": "Select Board Mtg-Checkmate Presentation",
-   "startsAt": "2026-07-21T20:00:00.000Z",
-   "startPrecision": "MINUTE",
-   "timeZone": "America/New_York",
-   "location": {
-    "name": "Warner Town Hall",
-    "address": "5 East Main Street, Warner, NH 03278",
-    "lat": 43.280620022052,
-    "lng": -71.815803778788
-   },
-   "agendaUrl": null,
-   "jurisdiction": "Warner, NH",
-   "status": "CONCLUDED",
-   "provenance": {
-    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
-    "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
-    "verifiedAt": null
-   }
-  },
-  {
-   "id": "ical:warner-select-board:12bu8rrm50auv01tp0iqea7f31@google.com",
-   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-   "bodyName": "Select Board",
-   "title": "Canceled Select Board Mtg - Payroll Co. Presentation",
-   "startsAt": "2026-07-20T20:00:00.000Z",
-   "startPrecision": "MINUTE",
-   "timeZone": "America/New_York",
-   "location": {
-    "name": "Warner Town Hall",
-    "address": "5 East Main Street, Warner, NH 03278",
-    "lat": 43.280620022052,
-    "lng": -71.815803778788
-   },
-   "agendaUrl": null,
-   "jurisdiction": "Warner, NH",
-   "status": "CANCELED",
-   "provenance": {
-    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
-    "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
-    "verifiedAt": null
-   }
-  },
-  {
-   "id": "ical:warner-select-board:6sjanni2iuqihobibjuo518u28@google.com",
+   "id": "ical:warner-select-board:2d0v911k521cvf2da12akkt62h@google.com",
    "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
    "bodyName": "Select Board",
    "title": "Select Board Meeting",
-   "startsAt": "2026-07-14T22:00:00.000Z",
+   "startsAt": "2026-09-22T22:00:00.000Z",
    "startPrecision": "MINUTE",
    "timeZone": "America/New_York",
    "location": {
@@ -9586,11 +9370,11 @@
    },
    "agendaUrl": null,
    "jurisdiction": "Warner, NH",
-   "status": "CONCLUDED",
+   "status": "SCHEDULED",
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
     "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
     "verifiedAt": null
    }
   },
@@ -9614,7 +9398,223 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
     "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "ical:warner-select-board:1fhkej0jn7inhv7uddmhq8bil6@google.com",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "bodyName": "Select Board",
+   "title": "Select Board Mtg-Checkmate Presentation",
+   "startsAt": "2026-07-21T20:00:00.000Z",
+   "startPrecision": "MINUTE",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Warner Town Hall",
+    "address": "5 East Main Street, Warner, NH 03278",
+    "lat": 43.280620022052,
+    "lng": -71.815803778788
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Warner, NH",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "sourceOrg": "Town of Warner",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "ical:warner-select-board:4qmb57lpej59222i8bmmt926m8@google.com",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "bodyName": "Select Board",
+   "title": "Canceled Select Board Payroll Presentation",
+   "startsAt": "2026-07-14T20:00:00.000Z",
+   "startPrecision": "MINUTE",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Warner Town Hall",
+    "address": "5 East Main Street, Warner, NH 03278",
+    "lat": 43.280620022052,
+    "lng": -71.815803778788
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Warner, NH",
+   "status": "CANCELED",
+   "provenance": {
+    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "sourceOrg": "Town of Warner",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "ical:warner-select-board:5buoeu02pfigm32qd0l6gs38gp@google.com",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "bodyName": "Select Board",
+   "title": "Select Board Work Session",
+   "startsAt": "2026-07-07T20:30:00.000Z",
+   "startPrecision": "MINUTE",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Warner Town Hall",
+    "address": "5 East Main Street, Warner, NH 03278",
+    "lat": 43.280620022052,
+    "lng": -71.815803778788
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Warner, NH",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "sourceOrg": "Town of Warner",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "ical:warner-select-board:1rg86muj5hmhpv8r98iida4su5@google.com",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "bodyName": "Select Board",
+   "title": "Select Board Meeting",
+   "startsAt": "2026-07-28T22:00:00.000Z",
+   "startPrecision": "MINUTE",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Warner Town Hall",
+    "address": "5 East Main Street, Warner, NH 03278",
+    "lat": 43.280620022052,
+    "lng": -71.815803778788
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Warner, NH",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "sourceOrg": "Town of Warner",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "ical:warner-select-board:42cp3onvveme22uorqju8uhu34@google.com",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "bodyName": "Select Board",
+   "title": "Select Board Meeting",
+   "startsAt": "2026-09-08T22:00:00.000Z",
+   "startPrecision": "MINUTE",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Warner Town Hall",
+    "address": "5 East Main Street, Warner, NH 03278",
+    "lat": 43.280620022052,
+    "lng": -71.815803778788
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Warner, NH",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "sourceOrg": "Town of Warner",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "ical:warner-select-board:12bu8rrm50auv01tp0iqea7f31@google.com",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "bodyName": "Select Board",
+   "title": "Canceled Select Board Mtg - Payroll Co. Presentation",
+   "startsAt": "2026-07-20T20:00:00.000Z",
+   "startPrecision": "MINUTE",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Warner Town Hall",
+    "address": "5 East Main Street, Warner, NH 03278",
+    "lat": 43.280620022052,
+    "lng": -71.815803778788
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Warner, NH",
+   "status": "CANCELED",
+   "provenance": {
+    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "sourceOrg": "Town of Warner",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "ical:warner-select-board:5tpk7ac47licbb4e2sn9hvlhm2@google.com",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "bodyName": "Select Board",
+   "title": "Select Board Meeting PayChex Presentation",
+   "startsAt": "2026-07-28T20:00:00.000Z",
+   "startPrecision": "MINUTE",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Warner Town Hall",
+    "address": "5 East Main Street, Warner, NH 03278",
+    "lat": 43.280620022052,
+    "lng": -71.815803778788
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Warner, NH",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "sourceOrg": "Town of Warner",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "ical:warner-select-board:46kcjr94t1o80jolj4q6l8t59r@google.com",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "bodyName": "Select Board",
+   "title": "Select Board Work Session",
+   "startsAt": "2026-06-16T23:00:00.000Z",
+   "startPrecision": "MINUTE",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Warner Town Hall",
+    "address": "5 East Main Street, Warner, NH 03278",
+    "lat": 43.280620022052,
+    "lng": -71.815803778788
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Warner, NH",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "sourceOrg": "Town of Warner",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "ical:warner-select-board:6sjanni2iuqihobibjuo518u28@google.com",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "bodyName": "Select Board",
+   "title": "Select Board Meeting",
+   "startsAt": "2026-07-14T22:00:00.000Z",
+   "startPrecision": "MINUTE",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Warner Town Hall",
+    "address": "5 East Main Street, Warner, NH 03278",
+    "lat": 43.280620022052,
+    "lng": -71.815803778788
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Warner, NH",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "sourceOrg": "Town of Warner",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
     "verifiedAt": null
    }
   },
@@ -9638,199 +9638,7 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
     "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
-    "verifiedAt": null
-   }
-  },
-  {
-   "id": "ical:warner-budget-committee:20daeh99a4ov8t9j03b6crfa2k@google.com",
-   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-   "bodyName": "Budget Committee",
-   "title": "Budget Committee",
-   "startsAt": "2026-08-13T23:00:00.000Z",
-   "startPrecision": "MINUTE",
-   "timeZone": "America/New_York",
-   "location": {
-    "name": "Warner Fire Department",
-    "address": "148 West Main Street, Warner, NH 03278",
-    "lat": 43.286030243565,
-    "lng": -71.826973213785
-   },
-   "agendaUrl": null,
-   "jurisdiction": "Warner, NH",
-   "status": "CONCLUDED",
-   "provenance": {
-    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
-    "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
-    "verifiedAt": null
-   }
-  },
-  {
-   "id": "ical:warner-budget-committee:5m6vuqeiqgkan0r8psmgrb5e0o@google.com",
-   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-   "bodyName": "Budget Committee",
-   "title": "Budget Committee",
-   "startsAt": "2026-07-09T23:00:00.000Z",
-   "startPrecision": "MINUTE",
-   "timeZone": "America/New_York",
-   "location": {
-    "name": "Warner Town Hall",
-    "address": "5 East Main Street, Warner, NH 03278",
-    "lat": 43.280620022052,
-    "lng": -71.815803778788
-   },
-   "agendaUrl": null,
-   "jurisdiction": "Warner, NH",
-   "status": "CONCLUDED",
-   "provenance": {
-    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
-    "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
-    "verifiedAt": null
-   }
-  },
-  {
-   "id": "ical:warner-budget-committee:65pve53jlb22mm6acvi9e7gf5o@google.com",
-   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-   "bodyName": "Budget Committee",
-   "title": "Budget Committee",
-   "startsAt": "2026-09-10T23:00:00.000Z",
-   "startPrecision": "MINUTE",
-   "timeZone": "America/New_York",
-   "location": {
-    "name": "Warner Town Hall",
-    "address": "5 East Main Street, Warner, NH 03278",
-    "lat": 43.280620022052,
-    "lng": -71.815803778788
-   },
-   "agendaUrl": null,
-   "jurisdiction": "Warner, NH",
-   "status": "SCHEDULED",
-   "provenance": {
-    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
-    "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
-    "verifiedAt": null
-   }
-  },
-  {
-   "id": "ical:warner-budget-committee:4a1p26uelge9n8vvimugqmitko@google.com",
-   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-   "bodyName": "Budget Committee",
-   "title": "Budget Committee",
-   "startsAt": "2026-07-23T23:00:00.000Z",
-   "startPrecision": "MINUTE",
-   "timeZone": "America/New_York",
-   "location": {
-    "name": "Warner Town Hall",
-    "address": "5 East Main Street, Warner, NH 03278",
-    "lat": 43.280620022052,
-    "lng": -71.815803778788
-   },
-   "agendaUrl": null,
-   "jurisdiction": "Warner, NH",
-   "status": "CONCLUDED",
-   "provenance": {
-    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
-    "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
-    "verifiedAt": null
-   }
-  },
-  {
-   "id": "ical:warner-budget-committee:0jaqf9klcol3plqaevn0acsc18@google.com",
-   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-   "bodyName": "Budget Committee",
-   "title": "Budget Committee-Review 2026 & 2027 Budgets",
-   "startsAt": "2026-10-08T23:00:00.000Z",
-   "startPrecision": "MINUTE",
-   "timeZone": "America/New_York",
-   "location": {
-    "name": "Warner Town Hall",
-    "address": "5 East Main Street, Warner, NH 03278",
-    "lat": 43.280620022052,
-    "lng": -71.815803778788
-   },
-   "agendaUrl": null,
-   "jurisdiction": "Warner, NH",
-   "status": "SCHEDULED",
-   "provenance": {
-    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
-    "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
-    "verifiedAt": null
-   }
-  },
-  {
-   "id": "ical:warner-budget-committee:2o6ugnrmpig2klh1v2pe7ruhle@google.com",
-   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-   "bodyName": "Budget Committee",
-   "title": "CANCELED Budget Committee",
-   "startsAt": "2026-06-04T23:00:00.000Z",
-   "startPrecision": "MINUTE",
-   "timeZone": "America/New_York",
-   "location": {
-    "name": "Warner Town Hall",
-    "address": "5 East Main Street, Warner, NH 03278",
-    "lat": 43.280620022052,
-    "lng": -71.815803778788
-   },
-   "agendaUrl": null,
-   "jurisdiction": "Warner, NH",
-   "status": "CANCELED",
-   "provenance": {
-    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
-    "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
-    "verifiedAt": null
-   }
-  },
-  {
-   "id": "ical:warner-budget-committee:486hqpf2jkpa5cjjequ5go3971@google.com",
-   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-   "bodyName": "Budget Committee",
-   "title": "Budget Committee - CIP Presented",
-   "startsAt": "2026-08-27T23:00:00.000Z",
-   "startPrecision": "MINUTE",
-   "timeZone": "America/New_York",
-   "location": {
-    "name": "Warner Town Hall",
-    "address": "5 East Main Street, Warner, NH 03278",
-    "lat": 43.280620022052,
-    "lng": -71.815803778788
-   },
-   "agendaUrl": null,
-   "jurisdiction": "Warner, NH",
-   "status": "SCHEDULED",
-   "provenance": {
-    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
-    "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
-    "verifiedAt": null
-   }
-  },
-  {
-   "id": "ical:warner-budget-committee:3qvm6krpb4o9tq8hoo2phqd9ko@google.com",
-   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-   "bodyName": "Budget Committee",
-   "title": "Budget Committee-2027 Town & WVWD Budgets",
-   "startsAt": "2026-09-24T23:00:00.000Z",
-   "startPrecision": "MINUTE",
-   "timeZone": "America/New_York",
-   "location": {
-    "name": "Warner Town Hall",
-    "address": "5 East Main Street, Warner, NH 03278",
-    "lat": 43.280620022052,
-    "lng": -71.815803778788
-   },
-   "agendaUrl": null,
-   "jurisdiction": "Warner, NH",
-   "status": "SCHEDULED",
-   "provenance": {
-    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
-    "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
     "verifiedAt": null
    }
   },
@@ -9854,7 +9662,199 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
     "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "ical:warner-budget-committee:2o6ugnrmpig2klh1v2pe7ruhle@google.com",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "bodyName": "Budget Committee",
+   "title": "CANCELED Budget Committee",
+   "startsAt": "2026-06-04T23:00:00.000Z",
+   "startPrecision": "MINUTE",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Warner Town Hall",
+    "address": "5 East Main Street, Warner, NH 03278",
+    "lat": 43.280620022052,
+    "lng": -71.815803778788
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Warner, NH",
+   "status": "CANCELED",
+   "provenance": {
+    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "sourceOrg": "Town of Warner",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "ical:warner-budget-committee:3qvm6krpb4o9tq8hoo2phqd9ko@google.com",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "bodyName": "Budget Committee",
+   "title": "Budget Committee-2027 Town & WVWD Budgets",
+   "startsAt": "2026-09-24T23:00:00.000Z",
+   "startPrecision": "MINUTE",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Warner Town Hall",
+    "address": "5 East Main Street, Warner, NH 03278",
+    "lat": 43.280620022052,
+    "lng": -71.815803778788
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Warner, NH",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "sourceOrg": "Town of Warner",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "ical:warner-budget-committee:5m6vuqeiqgkan0r8psmgrb5e0o@google.com",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "bodyName": "Budget Committee",
+   "title": "Budget Committee",
+   "startsAt": "2026-07-09T23:00:00.000Z",
+   "startPrecision": "MINUTE",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Warner Town Hall",
+    "address": "5 East Main Street, Warner, NH 03278",
+    "lat": 43.280620022052,
+    "lng": -71.815803778788
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Warner, NH",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "sourceOrg": "Town of Warner",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "ical:warner-budget-committee:486hqpf2jkpa5cjjequ5go3971@google.com",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "bodyName": "Budget Committee",
+   "title": "Budget Committee - CIP Presented",
+   "startsAt": "2026-08-27T23:00:00.000Z",
+   "startPrecision": "MINUTE",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Warner Town Hall",
+    "address": "5 East Main Street, Warner, NH 03278",
+    "lat": 43.280620022052,
+    "lng": -71.815803778788
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Warner, NH",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "sourceOrg": "Town of Warner",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "ical:warner-budget-committee:65pve53jlb22mm6acvi9e7gf5o@google.com",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "bodyName": "Budget Committee",
+   "title": "Budget Committee",
+   "startsAt": "2026-09-10T23:00:00.000Z",
+   "startPrecision": "MINUTE",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Warner Town Hall",
+    "address": "5 East Main Street, Warner, NH 03278",
+    "lat": 43.280620022052,
+    "lng": -71.815803778788
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Warner, NH",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "sourceOrg": "Town of Warner",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "ical:warner-budget-committee:20daeh99a4ov8t9j03b6crfa2k@google.com",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "bodyName": "Budget Committee",
+   "title": "Budget Committee",
+   "startsAt": "2026-08-13T23:00:00.000Z",
+   "startPrecision": "MINUTE",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Warner Fire Department",
+    "address": "148 West Main Street, Warner, NH 03278",
+    "lat": 43.286030243565,
+    "lng": -71.826973213785
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Warner, NH",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "sourceOrg": "Town of Warner",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "ical:warner-budget-committee:4a1p26uelge9n8vvimugqmitko@google.com",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "bodyName": "Budget Committee",
+   "title": "Budget Committee",
+   "startsAt": "2026-07-23T23:00:00.000Z",
+   "startPrecision": "MINUTE",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Warner Town Hall",
+    "address": "5 East Main Street, Warner, NH 03278",
+    "lat": 43.280620022052,
+    "lng": -71.815803778788
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Warner, NH",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "sourceOrg": "Town of Warner",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "ical:warner-budget-committee:0jaqf9klcol3plqaevn0acsc18@google.com",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "bodyName": "Budget Committee",
+   "title": "Budget Committee-Review 2026 & 2027 Budgets",
+   "startsAt": "2026-10-08T23:00:00.000Z",
+   "startPrecision": "MINUTE",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Warner Town Hall",
+    "address": "5 East Main Street, Warner, NH 03278",
+    "lat": 43.280620022052,
+    "lng": -71.815803778788
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Warner, NH",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "sourceOrg": "Town of Warner",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
     "verifiedAt": null
    }
   },
@@ -9878,31 +9878,7 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
     "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
-    "verifiedAt": null
-   }
-  },
-  {
-   "id": "ical:warner-housing-committee:0qa45ocu7ffqe8h8j97niqsin9@google.com",
-   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-   "bodyName": "Housing Committee",
-   "title": "Housing Committee",
-   "startsAt": "2026-06-10T21:00:00.000Z",
-   "startPrecision": "MINUTE",
-   "timeZone": "America/New_York",
-   "location": {
-    "name": "Pillsbury Free Library",
-    "address": "18 East Main Street, Warner, NH 03278",
-    "lat": 43.280221446826,
-    "lng": -71.81523993338
-   },
-   "agendaUrl": null,
-   "jurisdiction": "Warner, NH",
-   "status": "CONCLUDED",
-   "provenance": {
-    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
-    "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
     "verifiedAt": null
    }
   },
@@ -9926,16 +9902,16 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
     "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
     "verifiedAt": null
    }
   },
   {
-   "id": "ical:warner-housing-committee:0h1e2fso4inh8rsoats56pv29d@google.com",
+   "id": "ical:warner-housing-committee:0qa45ocu7ffqe8h8j97niqsin9@google.com",
    "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
    "bodyName": "Housing Committee",
    "title": "Housing Committee",
-   "startsAt": "2026-06-24T21:00:00.000Z",
+   "startsAt": "2026-06-10T21:00:00.000Z",
    "startPrecision": "MINUTE",
    "timeZone": "America/New_York",
    "location": {
@@ -9950,7 +9926,7 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
     "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
     "verifiedAt": null
    }
   },
@@ -9974,7 +9950,7 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
     "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
     "verifiedAt": null
    }
   },
@@ -9998,7 +9974,31 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
     "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "ical:warner-housing-committee:0h1e2fso4inh8rsoats56pv29d@google.com",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "bodyName": "Housing Committee",
+   "title": "Housing Committee",
+   "startsAt": "2026-06-24T21:00:00.000Z",
+   "startPrecision": "MINUTE",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Pillsbury Free Library",
+    "address": "18 East Main Street, Warner, NH 03278",
+    "lat": 43.280221446826,
+    "lng": -71.81523993338
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Warner, NH",
+   "status": "CONCLUDED",
+   "provenance": {
+    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "sourceOrg": "Town of Warner",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
     "verifiedAt": null
    }
   },
@@ -10022,31 +10022,7 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
     "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
-    "verifiedAt": null
-   }
-  },
-  {
-   "id": "ical:warner-parks-and-recreation:0a7c4bh298kbi92udb2rrqae18@google.com",
-   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-   "bodyName": "Parks and Recreation Commission",
-   "title": "P&R Rescheduled to 9/21",
-   "startsAt": "2026-09-14T23:00:00.000Z",
-   "startPrecision": "MINUTE",
-   "timeZone": "America/New_York",
-   "location": {
-    "name": "Warner Town Hall",
-    "address": "5 East Main Street, Warner, NH 03278",
-    "lat": 43.280620022052,
-    "lng": -71.815803778788
-   },
-   "agendaUrl": null,
-   "jurisdiction": "Warner, NH",
-   "status": "SCHEDULED",
-   "provenance": {
-    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
-    "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
     "verifiedAt": null
    }
   },
@@ -10070,7 +10046,7 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
     "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
     "verifiedAt": null
    }
   },
@@ -10094,7 +10070,31 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
     "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
+    "verifiedAt": null
+   }
+  },
+  {
+   "id": "ical:warner-parks-and-recreation:0a7c4bh298kbi92udb2rrqae18@google.com",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+   "bodyName": "Parks and Recreation Commission",
+   "title": "P&R Rescheduled to 9/21",
+   "startsAt": "2026-09-14T23:00:00.000Z",
+   "startPrecision": "MINUTE",
+   "timeZone": "America/New_York",
+   "location": {
+    "name": "Warner Town Hall",
+    "address": "5 East Main Street, Warner, NH 03278",
+    "lat": 43.280620022052,
+    "lng": -71.815803778788
+   },
+   "agendaUrl": null,
+   "jurisdiction": "Warner, NH",
+   "status": "SCHEDULED",
+   "provenance": {
+    "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    "sourceOrg": "Town of Warner",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
     "verifiedAt": null
    }
   },
@@ -10118,7 +10118,7 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
     "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
     "verifiedAt": null
    }
   },
@@ -10142,7 +10142,7 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
     "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
     "verifiedAt": null
    }
   },
@@ -10166,7 +10166,7 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
     "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
     "verifiedAt": null
    }
   },
@@ -10190,7 +10190,7 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
     "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
     "verifiedAt": null
    }
   },
@@ -10214,7 +10214,7 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
     "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
     "verifiedAt": null
    }
   },
@@ -10223,7 +10223,7 @@
    "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
    "bodyName": "Zoning Board of Adjustment",
    "title": "Zoning Board Meeting",
-   "startsAt": "2026-06-10T23:00:00.000Z",
+   "startsAt": "2026-08-12T23:00:00.000Z",
    "startPrecision": "MINUTE",
    "timeZone": "America/New_York",
    "location": {
@@ -10238,7 +10238,7 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
     "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
     "verifiedAt": null
    }
   },
@@ -10262,7 +10262,7 @@
    "provenance": {
     "sourceUrl": "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
     "sourceOrg": "Town of Warner",
-    "collectedAt": "2026-08-21T21:51:36.558Z",
+    "collectedAt": "2026-08-21T22:05:33.844Z",
     "verifiedAt": null
    }
   }
@@ -11629,6 +11629,22 @@
    "extractionNote": null
   },
   {
+   "id": "diligent:susd12:166@8e852d1aec1688570d4bf592ff1886888c34fcea6f36e6878e3af88f8d65b62a",
+   "meetingId": "diligent:susd12:166",
+   "ocdId": "ocd-division/country:us/state:az/school_district:sunnyside_unified_district",
+   "documentUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=166",
+   "contentHash": "8e852d1aec1688570d4bf592ff1886888c34fcea6f36e6878e3af88f8d65b62a",
+   "retrievedAt": "2026-08-21T22:04:01.573Z",
+   "contentType": "text/html; charset=utf-8",
+   "sourceUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=166",
+   "sourceOrg": "Sunnyside Unified School District Governing Board",
+   "collectedAt": "2026-08-21T22:04:01.573Z",
+   "verifiedAt": null,
+   "text": "Sunnyside Unified School District #12 - Meeting Information Skip Navigation Jump to SideBar Quick Menu Public site Policy Sign in Your Javascript is turned off, without it, this site will not operate as intended. Home » Meeting Schedule » Meeting Information Welcome to Sunnyside Unified School District #12 Home Calendar Meetings Search Share Regular Governing Board Meeting Aug 25 2026 SUSD Governing Board Meeting Aug 11 2026 Regular Governing Board Meeting Jul 28 2026 Regular Governing Board Meeting Jul 07 2026 Governing Board Meeting Jun 23 2026 VIRTUAL Governing Board Meeting Jun 09 2026 Regular Governing Board Meeting May 26 2026 Regular Governing Board Meeting May 12 2026 Regular Governing Board Meeting Apr 28 2026 Regular Governing Board Meeting Apr 14 2026 Regular Governing Board Meeting Mar 24 2026 Regular Governing Board Meeting Feb 24 2026 Regular Governing Board Meeting Feb 10 2026 Regular Governing Board Meeting Jan 27 2026 Regular Governing Board Meeting Jan 13 2026 Organizational / Regular Governing Board Meeting Dec 09 2025 Regular Governing Board Meeting Nov 25 2025 VIRTUAL Governing Board Meeting Oct 28 2025 Regular Governing Board Meeting Time: Location: Private Version For: Public User Agenda Splitscreen Live Meeting Minutes Print Version Versions Signed Minutes Accessible Web Version Annotate Agenda Show Map Hide Map Board Application: -Select- Skip Side bar Schedule of Meetings Today's Meetings Loading... Upcoming Meetings Loading... More Recent Meetings Loading... More Goals © Diligent Community 2026 Sunnyside Unified School District #12 User name Password Sign In Remember me next time. Forgot password?",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
    "id": "diligent:susd12:165@aea79dc8a5ac9a638c24ed9a4b543976a462e51fb927995dea942b3dbe8a6eb6",
    "meetingId": "diligent:susd12:165",
    "ocdId": "ocd-division/country:us/state:az/school_district:sunnyside_unified_district",
@@ -12701,6 +12717,38 @@
    "extractionNote": null
   },
   {
+   "id": "schedulepage:newbury-conservation-commission:2026-09-10@076c5760b23770102be999dcaf06bba3668ae95929ec86062ccea635679552d4",
+   "meetingId": "schedulepage:newbury-conservation-commission:2026-09-10",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "documentUrl": "https://bradfordnh.gov/pages/calendar",
+   "contentHash": "076c5760b23770102be999dcaf06bba3668ae95929ec86062ccea635679552d4",
+   "retrievedAt": "2026-08-21T22:05:39.533Z",
+   "contentType": "text/html",
+   "sourceUrl": "https://bradfordnh.gov/pages/calendar",
+   "sourceOrg": "Newbury Conservation Commission",
+   "collectedAt": "2026-08-21T22:05:39.533Z",
+   "verifiedAt": null,
+   "text": "Calendar Select Board Office Office hours: Monday through Thursday (excluding holidays) from 8:30am-Noon, 1:00pm-4:00pm; Fridays from 8:30am to Noon. The Selectmen meet the 2nd and 4th Mondays of each month (excluding holidays) at 6:00pm in the Bradford Town Hall. Town Clerk/Tax Collector Telephone 938-2288 Office hours (excluding holidays): Tuesdays from 8:00am-12:00am and 1:00pm-4:00pm, Wednesdays from 12:00pm-5:00pm, Thursdays 10:00am-7:00pm. . Planning Board Meets the fourth Tuesday of each month in the Bradford Town Hall at 7:00pm. Office hours are kept by the Recording Secretary by appointment. Email planningboard@bradfordnh.org . Zoning Board of Adjustment Meets the first Wednesday of each month (excluding holidays) in the Bradford Town Hall at 7:00pm. Email zoningboard@bradfordnh.org . Conservation Commission Meets the third Tuesday of each month in Brown Memorial Library at 7:00pm. Brown Memorial Library Mondays from 10:00am to 6:00pm; Wednesdays from 11:00am to 7:00pm; Fridays from 10:00am to 6:00pm; Saturdays from 9:00am to 1:00pm. Transfer Station Wednesday, Saturday & Sunday (excluding holidays) from 10:00am to 5:00pm Building Inspector Contact the Select Board Office to make arrangements to meet with the Building Inspector Emergency Fire, Police & Rescue Emergency Telephone: 911 Police non-emergency number 938-2522 More Links Employment Opportunities Departments Tax Maps Town Clerk/Tax Collector Boards and Committees Calendar Helpful Links Where to Get Stuff Done",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "schedulepage:newbury-conservation-commission:2026-10-15@076c5760b23770102be999dcaf06bba3668ae95929ec86062ccea635679552d4",
+   "meetingId": "schedulepage:newbury-conservation-commission:2026-10-15",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "documentUrl": "https://bradfordnh.gov/pages/calendar",
+   "contentHash": "076c5760b23770102be999dcaf06bba3668ae95929ec86062ccea635679552d4",
+   "retrievedAt": "2026-08-21T22:05:39.765Z",
+   "contentType": "text/html",
+   "sourceUrl": "https://bradfordnh.gov/pages/calendar",
+   "sourceOrg": "Newbury Conservation Commission",
+   "collectedAt": "2026-08-21T22:05:39.765Z",
+   "verifiedAt": null,
+   "text": "Calendar Select Board Office Office hours: Monday through Thursday (excluding holidays) from 8:30am-Noon, 1:00pm-4:00pm; Fridays from 8:30am to Noon. The Selectmen meet the 2nd and 4th Mondays of each month (excluding holidays) at 6:00pm in the Bradford Town Hall. Town Clerk/Tax Collector Telephone 938-2288 Office hours (excluding holidays): Tuesdays from 8:00am-12:00am and 1:00pm-4:00pm, Wednesdays from 12:00pm-5:00pm, Thursdays 10:00am-7:00pm. . Planning Board Meets the fourth Tuesday of each month in the Bradford Town Hall at 7:00pm. Office hours are kept by the Recording Secretary by appointment. Email planningboard@bradfordnh.org . Zoning Board of Adjustment Meets the first Wednesday of each month (excluding holidays) in the Bradford Town Hall at 7:00pm. Email zoningboard@bradfordnh.org . Conservation Commission Meets the third Tuesday of each month in Brown Memorial Library at 7:00pm. Brown Memorial Library Mondays from 10:00am to 6:00pm; Wednesdays from 11:00am to 7:00pm; Fridays from 10:00am to 6:00pm; Saturdays from 9:00am to 1:00pm. Transfer Station Wednesday, Saturday & Sunday (excluding holidays) from 10:00am to 5:00pm Building Inspector Contact the Select Board Office to make arrangements to meet with the Building Inspector Emergency Fire, Police & Rescue Emergency Telephone: 911 Police non-emergency number 938-2522 More Links Employment Opportunities Departments Tax Maps Town Clerk/Tax Collector Boards and Committees Calendar Helpful Links Where to Get Stuff Done",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
    "id": "schedulepage:newbury-zoning-board-of-adjustment:2026-08-13@e7bb85d76787538aff1ab9a719333d61f8dfd2ea75bbc18524c8fbce6e795c8e",
    "meetingId": "schedulepage:newbury-zoning-board-of-adjustment:2026-08-13",
    "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
@@ -12713,6 +12761,54 @@
    "collectedAt": "2026-08-19T18:19:24.257Z",
    "verifiedAt": null,
    "text": "Agenda | Newbury NH Skip to main content Home Keywords About Us Newbury Demographics 2024 2022 Newbury Annual Town Report Departments Departments: Administration Assessor Code Enforcement Officer Emergency Management Fire Department Health Officer Highway Department Land Use Library Police Department Tax Collector Town Clerk Transfer Station All Departments Boards & Committees Boards & Committees: 2026 Advisory Budget Committee Blodgett Sewer User Advisory Committee Cemetery Trustees Conservation Commission Joint Assessing Board, Newbury Sunapee & New London Joint Loss Management Committee Newbury Beautification Committee Newbury Energy Committee Newbury Public Library Trustees Newbury Septic Committee Planning Board Selectboard Trustees of the Trust Funds Zoning Board of Adjustment All Boards and Committees Minutes & Agendas Community Organizations Coalition Communities 2.0 Center Meeting House Friends of the John Hay National Wildlife Refuge Joint Board Newbury, Sunapee & New London Kearsarge Calendar Kearsarge Regional School District Lake Sunapee Protective Association Lake Sunapee Region VNA Historical Society Sunapee Area Watershed Coalition Sunapee Greenway The Fells Veterans Memorial Committee Useful Links Find It Fast Annual Town Report Assessing & Mapping Database Change of Address Form Code Enforcement Officer Community Organizations Dog License Application Master Plan Documents Online Payments Recreation Recycling Information Selectboard Tax Bills 2016 Transfer Station Winter Parking Ban Absentee Ballot Request Town Election Only Absentee Ballot Request State & Federal Election Useful Links Click Here for More... Selectboard Meeting Minutes You are here Home ›› Zoning Board of Adjustment Agenda Submitted on July 31, 2026 - 7:42pm Date: Thursday, August 13, 2026 - 7:00pm TOWN OF NEWBURY ZONING BOARD OF ADJUSTMENT Agenda Wednesday, August 12, 2026 Administrative Business - Review Draft Minutes from June 10, 2026 7:05 p.m., Case #26-03-Frank Anzalone Associates (agent), Lapp Family Revocable Trust (owner), for property located at 103 Bay Point Road, Newbury, NH, will seek a Variances from the requirements of Article 5, Section 5.9.1 and Article 7, Section 7.4.2 of the Newbury Zoning Ordinance to permit the following: Alterations and Expansions of an existing non-conforming building. Newbury Tax Map 007-166-398. Other Busines - Land Use Board Fees 2023 -2026 Newbury Zoning Ordinance Downloadable Forms Equitable Waiver of Dimensional Requirement (5-19) Planning Board Special Exception (5/19) Variance Application (5/19) Zoning Board Application Checklist (6/25) Contact Info Address: 937 Route 103 PO Box 296 Newbury , NH 03255 United States See map: Google Maps Newbury Offices, PO Box 296, US Rte 103, Newbury, NH 03255 PH: (603) 763-4940 FAX: (603) 763-5298 View Map Website Disclaimer Government Websites by CivicPlus ® Login",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "ical:newbury-ical-governing:calendar.42956.field_date_and_time.0@www.newbury.nh.gov@076c5760b23770102be999dcaf06bba3668ae95929ec86062ccea635679552d4",
+   "meetingId": "ical:newbury-ical-governing:calendar.42956.field_date_and_time.0@www.newbury.nh.gov",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "documentUrl": "https://bradfordnh.gov/pages/calendar",
+   "contentHash": "076c5760b23770102be999dcaf06bba3668ae95929ec86062ccea635679552d4",
+   "retrievedAt": "2026-08-21T22:05:39.992Z",
+   "contentType": "text/html",
+   "sourceUrl": "https://bradfordnh.gov/pages/calendar",
+   "sourceOrg": "Town of Newbury",
+   "collectedAt": "2026-08-21T22:05:39.992Z",
+   "verifiedAt": null,
+   "text": "Calendar Select Board Office Office hours: Monday through Thursday (excluding holidays) from 8:30am-Noon, 1:00pm-4:00pm; Fridays from 8:30am to Noon. The Selectmen meet the 2nd and 4th Mondays of each month (excluding holidays) at 6:00pm in the Bradford Town Hall. Town Clerk/Tax Collector Telephone 938-2288 Office hours (excluding holidays): Tuesdays from 8:00am-12:00am and 1:00pm-4:00pm, Wednesdays from 12:00pm-5:00pm, Thursdays 10:00am-7:00pm. . Planning Board Meets the fourth Tuesday of each month in the Bradford Town Hall at 7:00pm. Office hours are kept by the Recording Secretary by appointment. Email planningboard@bradfordnh.org . Zoning Board of Adjustment Meets the first Wednesday of each month (excluding holidays) in the Bradford Town Hall at 7:00pm. Email zoningboard@bradfordnh.org . Conservation Commission Meets the third Tuesday of each month in Brown Memorial Library at 7:00pm. Brown Memorial Library Mondays from 10:00am to 6:00pm; Wednesdays from 11:00am to 7:00pm; Fridays from 10:00am to 6:00pm; Saturdays from 9:00am to 1:00pm. Transfer Station Wednesday, Saturday & Sunday (excluding holidays) from 10:00am to 5:00pm Building Inspector Contact the Select Board Office to make arrangements to meet with the Building Inspector Emergency Fire, Police & Rescue Emergency Telephone: 911 Police non-emergency number 938-2522 More Links Employment Opportunities Departments Tax Maps Town Clerk/Tax Collector Boards and Committees Calendar Helpful Links Where to Get Stuff Done",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "ical:newbury-ical-governing:calendar.42961.field_date_and_time.0@www.newbury.nh.gov@076c5760b23770102be999dcaf06bba3668ae95929ec86062ccea635679552d4",
+   "meetingId": "ical:newbury-ical-governing:calendar.42961.field_date_and_time.0@www.newbury.nh.gov",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "documentUrl": "https://bradfordnh.gov/pages/calendar",
+   "contentHash": "076c5760b23770102be999dcaf06bba3668ae95929ec86062ccea635679552d4",
+   "retrievedAt": "2026-08-21T22:05:40.205Z",
+   "contentType": "text/html",
+   "sourceUrl": "https://bradfordnh.gov/pages/calendar",
+   "sourceOrg": "Town of Newbury",
+   "collectedAt": "2026-08-21T22:05:40.205Z",
+   "verifiedAt": null,
+   "text": "Calendar Select Board Office Office hours: Monday through Thursday (excluding holidays) from 8:30am-Noon, 1:00pm-4:00pm; Fridays from 8:30am to Noon. The Selectmen meet the 2nd and 4th Mondays of each month (excluding holidays) at 6:00pm in the Bradford Town Hall. Town Clerk/Tax Collector Telephone 938-2288 Office hours (excluding holidays): Tuesdays from 8:00am-12:00am and 1:00pm-4:00pm, Wednesdays from 12:00pm-5:00pm, Thursdays 10:00am-7:00pm. . Planning Board Meets the fourth Tuesday of each month in the Bradford Town Hall at 7:00pm. Office hours are kept by the Recording Secretary by appointment. Email planningboard@bradfordnh.org . Zoning Board of Adjustment Meets the first Wednesday of each month (excluding holidays) in the Bradford Town Hall at 7:00pm. Email zoningboard@bradfordnh.org . Conservation Commission Meets the third Tuesday of each month in Brown Memorial Library at 7:00pm. Brown Memorial Library Mondays from 10:00am to 6:00pm; Wednesdays from 11:00am to 7:00pm; Fridays from 10:00am to 6:00pm; Saturdays from 9:00am to 1:00pm. Transfer Station Wednesday, Saturday & Sunday (excluding holidays) from 10:00am to 5:00pm Building Inspector Contact the Select Board Office to make arrangements to meet with the Building Inspector Emergency Fire, Police & Rescue Emergency Telephone: 911 Police non-emergency number 938-2522 More Links Employment Opportunities Departments Tax Maps Town Clerk/Tax Collector Boards and Committees Calendar Helpful Links Where to Get Stuff Done",
+   "extraction": "html",
+   "extractionNote": null
+  },
+  {
+   "id": "ical:newbury-ical-governing:calendar.42966.field_date_and_time.0@www.newbury.nh.gov@076c5760b23770102be999dcaf06bba3668ae95929ec86062ccea635679552d4",
+   "meetingId": "ical:newbury-ical-governing:calendar.42966.field_date_and_time.0@www.newbury.nh.gov",
+   "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+   "documentUrl": "https://bradfordnh.gov/pages/calendar",
+   "contentHash": "076c5760b23770102be999dcaf06bba3668ae95929ec86062ccea635679552d4",
+   "retrievedAt": "2026-08-21T22:05:40.428Z",
+   "contentType": "text/html",
+   "sourceUrl": "https://bradfordnh.gov/pages/calendar",
+   "sourceOrg": "Town of Newbury",
+   "collectedAt": "2026-08-21T22:05:40.428Z",
+   "verifiedAt": null,
+   "text": "Calendar Select Board Office Office hours: Monday through Thursday (excluding holidays) from 8:30am-Noon, 1:00pm-4:00pm; Fridays from 8:30am to Noon. The Selectmen meet the 2nd and 4th Mondays of each month (excluding holidays) at 6:00pm in the Bradford Town Hall. Town Clerk/Tax Collector Telephone 938-2288 Office hours (excluding holidays): Tuesdays from 8:00am-12:00am and 1:00pm-4:00pm, Wednesdays from 12:00pm-5:00pm, Thursdays 10:00am-7:00pm. . Planning Board Meets the fourth Tuesday of each month in the Bradford Town Hall at 7:00pm. Office hours are kept by the Recording Secretary by appointment. Email planningboard@bradfordnh.org . Zoning Board of Adjustment Meets the first Wednesday of each month (excluding holidays) in the Bradford Town Hall at 7:00pm. Email zoningboard@bradfordnh.org . Conservation Commission Meets the third Tuesday of each month in Brown Memorial Library at 7:00pm. Brown Memorial Library Mondays from 10:00am to 6:00pm; Wednesdays from 11:00am to 7:00pm; Fridays from 10:00am to 6:00pm; Saturdays from 9:00am to 1:00pm. Transfer Station Wednesday, Saturday & Sunday (excluding holidays) from 10:00am to 5:00pm Building Inspector Contact the Select Board Office to make arrangements to meet with the Building Inspector Emergency Fire, Police & Rescue Emergency Telephone: 911 Police non-emergency number 938-2522 More Links Employment Opportunities Departments Tax Maps Town Clerk/Tax Collector Boards and Committees Calendar Helpful Links Where to Get Stuff Done",
    "extraction": "html",
    "extractionNote": null
   },

@@ -134,7 +134,8 @@
     "nh3:shots": "tsx scripts/nh3-shots.mts",
     "nh:county": "tsx scripts/nh-county-branch.mts",
     "image:view": "tsx scripts/image-view.mts",
-    "portraits:normalise": "tsx scripts/normalise-portraits.mts"
+    "portraits:normalise": "tsx scripts/normalise-portraits.mts",
+    "twig:pair": "tsx scripts/twig-pair.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

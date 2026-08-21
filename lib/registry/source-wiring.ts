@@ -1815,6 +1815,56 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     noticeUrl: "https://warnernh.gov/calendar/",
     verifiedAt: "2026-08-21",
   },
+  // Lake Todd Village District, served on the newbury division. ONE body with
+  // two rows: its territory is Bradford AND Newbury by its own words and by
+  // the NH village-district register, and a body id here is <division>#<slot>.
+  // Its own site is HTTP 404 at every rung; the Town of Bradford's public
+  // calendar files its sittings, three of them on 2026-08-21.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#lake-todd-village-district",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Lake Todd Village District, NH",
+    publishingOrg: "Town of Bradford",
+    timeZone: "America/New_York",
+    config: {
+      slug: "lake-todd-village-district-newbury",
+      feedUrl: "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+      titleMatch: "Lake Todd",
+      bodyName: "Lake Todd Village District",
+    },
+    // Read 2026-08-21: the district's own page is HTTP 404 at every rung and
+    // the town's news item for its meeting is HTTP 404 too. The town's
+    // calendar page is the live notice, and it is the page its sittings
+    // come from.
+    noticeUrl: "https://bradfordnh.gov/pages/calendar",
+    verifiedAt: "2026-08-21",
+  },
+  // Lake Todd Village District, served on the bradford division. ONE body with
+  // two rows: its territory is Bradford AND Newbury by its own words and by
+  // the NH village-district register, and a body id here is <division>#<slot>.
+  // Its own site is HTTP 404 at every rung; the Town of Bradford's public
+  // calendar files its sittings, three of them on 2026-08-21.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#lake-todd-village-district",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Lake Todd Village District, NH",
+    publishingOrg: "Town of Bradford",
+    timeZone: "America/New_York",
+    config: {
+      slug: "lake-todd-village-district-bradford",
+      feedUrl: "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+      titleMatch: "Lake Todd",
+      bodyName: "Lake Todd Village District",
+    },
+    // Read 2026-08-21: the district's own page is HTTP 404 at every rung and
+    // the town's news item for its meeting is HTTP 404 too. The town's
+    // calendar page is the live notice, and it is the page its sittings
+    // come from.
+    noticeUrl: "https://bradfordnh.gov/pages/calendar",
+    verifiedAt: "2026-08-21",
+  },
 ];
 
 /** Rows a given adapter capability should serve. */

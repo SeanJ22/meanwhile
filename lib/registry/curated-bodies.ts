@@ -446,6 +446,7 @@ export const CURATED_BODIES: Body[] = [
   ...bradfordBoardRows(),
   ...suttonBoardRows(),
   ...warnerBoardRows(),
+  ...twigRows(),
 ];
 
 function newburyBoardRows(): Body[] {
@@ -849,14 +850,7 @@ function specialDistrictRows(): Body[] {
       name: "Morris County Soil Conservation District Board",
       homepage: "https://mcscd.org/",
     },
-    // Merrimack — the conservation district is county-wide and so serves
-    // 03255; no village district's boundary reaches Newbury (audit note).
-    {
-      slug: "merrimack-county-conservation-district",
-      state: "nh",
-      name: "Merrimack County Conservation District Board of Supervisors",
-      homepage: "https://merrimackccd.org/",
-    },
+
   ];
   const collected = "2026-08-14";
   return rows.map((row) => ({
@@ -1662,6 +1656,228 @@ function warnerBoardRows(): Body[] {
     provenance: {
       sourceUrl: "https://warnernh.gov/boards/",
       sourceOrg: "Town of Warner",
+      collectedAt: collected,
+      verifiedAt: collected,
+    },
+  }));
+}
+
+
+/**
+ * **THE TWIGS AT 03255** (NH Hunt 4, 2026-08-21, item 4; RULING 57).
+ *
+ * The trunk is the country, the branches are the states, and these are the
+ * twigs: a village district that governs the shoreline of one lake, a water
+ * precinct two towns share, a conservation district whose boundary is a
+ * statute. Each one governs something for somebody, and if this product does
+ * not name it, nobody else will.
+ *
+ * ## Two corrections this block makes to our own record
+ *
+ * **"No village district's boundary reaches Newbury" was WRONG**, and it was
+ * written in this file as a settled audit note. The New Hampshire Office of
+ * Business and Economic Affairs publishes a register of all ninety-one village
+ * districts with their host municipalities, and it lists **Lake Todd Village
+ * District twice — once under Bradford and once under NEWBURY**. The district's
+ * own archived history page says the same in its own words. It governs part of
+ * 03255 and it was not in this registry at all.
+ *
+ * **The Merrimack County Conservation District is NOT divisionless.** It shipped
+ * with `ocdId: null` under the D28 shape, which meant `bodiesAt` — which filters
+ * on `b.ocdId && ids.has(b.ocdId)` — could never return it for any point on
+ * earth. RSA 432:12 says each county "is hereby incorporated into a conservation
+ * district" whose "boundaries conform" to the county. That is a division, and it
+ * is the county's. HUNT05 resolved this district to 03255 on 2026-08-21 and it
+ * still did not render, because a resolution recorded in a derived file that
+ * only the gap ledger reads is not a resolution a reader can see.
+ *
+ * ## One body, two divisions — the shape this registry cannot yet express
+ *
+ * Lake Todd's territory is Bradford AND Newbury; the New London-Springfield
+ * Water System Precinct's is New London AND Springfield. A body id here is
+ * `<division>#<slot>`, so each ships as one row per division it serves. They
+ * are ONE body wearing two ids, not two districts, and the comment on each row
+ * says so. A tracker row carries the shape question.
+ */
+function twigRows(): Body[] {
+  const collected = "2026-08-21";
+  const NH = "ocd-division/country:us/state:nh";
+  const REGISTER =
+    "https://www.nheconomy.com/getmedia/f087979c-98b8-41b5-a2e0-1808faaa8ffe/village-districts-locations-addresses.csv";
+  const rows: Array<{
+    division: string;
+    slug: string;
+    name: string;
+    status: "LIVE" | "KNOWN_UNCOVERED";
+    sourceType: "ICAL" | "NONE";
+    sourceRef: string | null;
+    homepage: string;
+    sourceUrl: string;
+    org: string;
+  }> = [
+    // Lake Todd Village District — formed 2004 by the littoral owners of Lake
+    // Todd, territory in Bradford and Newbury. Its own site answers HTTP 404 at
+    // rungs 2, 3, 4, 5 and 6, so the branch that reaches it is the Town of
+    // Bradford, whose public calendar files its sittings: an Annual Meeting at
+    // the Bradford Area Community Center and two at the Town Hall meeting room.
+    {
+      division: `${NH}/county:merrimack/place:newbury_town`,
+      slug: "lake-todd-village-district",
+      name: "Lake Todd Village District",
+      status: "LIVE",
+      sourceType: "ICAL",
+      sourceRef:
+        "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+      homepage: "https://bradfordnh.gov/pages/calendar",
+      sourceUrl: REGISTER,
+      org: "Lake Todd Village District",
+    },
+    {
+      division: `${NH}/county:merrimack/place:bradford_town`,
+      slug: "lake-todd-village-district",
+      name: "Lake Todd Village District",
+      status: "LIVE",
+      sourceType: "ICAL",
+      sourceRef:
+        "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+      homepage: "https://bradfordnh.gov/pages/calendar",
+      sourceUrl: REGISTER,
+      org: "Lake Todd Village District",
+    },
+    // The Merrimack County Conservation District, on the division RSA 432:12
+    // gives it. Its board has no published calendar this session reached, so it
+    // is named and KNOWN_UNCOVERED rather than wired to nothing.
+    {
+      division: `${NH}/county:merrimack`,
+      slug: "conservation-district",
+      name: "Merrimack County Conservation District Board of Supervisors",
+      status: "KNOWN_UNCOVERED",
+      sourceType: "NONE",
+      sourceRef: null,
+      homepage: "https://merrimackccd.org/",
+      sourceUrl: "https://www.gencourt.state.nh.us/rsa/html/XL/432/432-12.htm",
+      org: "Merrimack County Conservation District",
+    },
+    // The New London-Springfield Water System Precinct. Its own site publishes
+    // its Board of Commissioners — Rip Cross as chairman, Ken Jacques and Peter
+    // Hoglund — meeting the first Monday of each month at 4:00pm at 73 Old Dump
+    // Road, and a phone. It publishes no calendar feed, so it is named and
+    // KNOWN_UNCOVERED.
+    {
+      division: `${NH}/county:merrimack/place:new_london_town`,
+      slug: "water-system-precinct",
+      name: "New London-Springfield Water System Precinct Board of Commissioners",
+      status: "KNOWN_UNCOVERED",
+      sourceType: "NONE",
+      sourceRef: null,
+      homepage: "https://www.nlswp.com/board-of-commissioners",
+      sourceUrl: "https://www.nlswp.com/board-of-commissioners",
+      org: "New London-Springfield Water System Precinct",
+    },
+    {
+      division: `${NH}/county:sullivan/place:springfield_town`,
+      slug: "water-system-precinct",
+      name: "New London-Springfield Water System Precinct Board of Commissioners",
+      status: "KNOWN_UNCOVERED",
+      sourceType: "NONE",
+      sourceRef: null,
+      homepage: "https://www.nlswp.com/board-of-commissioners",
+      sourceUrl: "https://www.nlswp.com/board-of-commissioners",
+      org: "New London-Springfield Water System Precinct",
+    },
+    // Highland Haven, in Washington. The state register gives its address and
+    // phone; no web presence of its own was reached on 2026-08-21.
+    {
+      division: `${NH}/county:sullivan/place:washington_town`,
+      slug: "highland-haven",
+      name: "Highland Haven Special District",
+      status: "KNOWN_UNCOVERED",
+      sourceType: "NONE",
+      sourceRef: null,
+      homepage: "https://www.washingtonnh.org/",
+      sourceUrl: REGISTER,
+      org: "Highland Haven Special District",
+    },
+    // Ashuelot Pond Dam Precinct, in Washington. It is in the Census of
+    // Governments and it is NOT in the state's village-district register — two
+    // official enumerations that disagree, which is a finding rather than an
+    // error, and the reason it is named here rather than dropped.
+    {
+      division: `${NH}/county:sullivan/place:washington_town`,
+      slug: "ashuelot-pond-dam-precinct",
+      name: "Ashuelot Pond Dam Precinct",
+      status: "KNOWN_UNCOVERED",
+      sourceType: "NONE",
+      sourceRef: null,
+      homepage: "https://www.washingtonnh.org/",
+      sourceUrl:
+        "2022 Census of Governments, Government Units Listing; absent from the NH village-district register read the same day",
+      org: "Ashuelot Pond Dam Precinct",
+    },
+    // Emerald Lake Village District, in Hillsborough.
+    {
+      division: `${NH}/county:hillsborough/place:hillsborough_town`,
+      slug: "emerald-lake-village-district",
+      name: "Emerald Lake Village District",
+      status: "KNOWN_UNCOVERED",
+      sourceType: "NONE",
+      sourceRef: null,
+      homepage: "https://www.town.hillsborough.nh.us/",
+      sourceUrl: REGISTER,
+      org: "Emerald Lake Village District",
+    },
+    // Andover's three, all in the state register or the Census or both.
+    {
+      division: `${NH}/county:merrimack/place:andover_town`,
+      slug: "andover-village-district",
+      name: "Andover Village District",
+      status: "KNOWN_UNCOVERED",
+      sourceType: "NONE",
+      sourceRef: null,
+      homepage: "https://www.andovernh.us.com/",
+      sourceUrl: REGISTER,
+      org: "Andover Village District",
+    },
+    {
+      division: `${NH}/county:merrimack/place:andover_town`,
+      slug: "andover-fire-district",
+      name: "Andover Fire District",
+      status: "KNOWN_UNCOVERED",
+      sourceType: "NONE",
+      sourceRef: null,
+      homepage: "https://www.andovernh.us.com/",
+      sourceUrl:
+        "2022 Census of Governments, Government Units Listing; the NH village-district register lists East Andover Fire District and not this one",
+      org: "Andover Fire District",
+    },
+    {
+      division: `${NH}/county:merrimack/place:andover_town`,
+      slug: "east-andover-fire-precinct",
+      name: "East Andover Fire Precinct",
+      status: "KNOWN_UNCOVERED",
+      sourceType: "NONE",
+      sourceRef: null,
+      homepage: "https://www.andovernh.us.com/",
+      sourceUrl: REGISTER,
+      org: "East Andover Fire District",
+    },
+  ];
+  return rows.map((row) => ({
+    id: `${row.division}#${row.slug}`,
+    ocdId: row.division as Body["ocdId"],
+    name: row.name,
+    bodyClass: "GOVERNING" as const,
+    bodyOrigin: "CURATED" as const,
+    coverageStatus: row.status,
+    agendaSourceType: row.sourceType,
+    agendaSourceRef: row.sourceRef,
+    meetingCadence: null,
+    homepageUrl: row.homepage,
+    demandCount: 0,
+    sourceDataset: "COG_2022" as const,
+    provenance: {
+      sourceUrl: row.sourceUrl,
+      sourceOrg: row.org,
       collectedAt: collected,
       verifiedAt: collected,
     },

@@ -224,6 +224,44 @@ test("6.2: the alarm records the database's own words, capped", () => {
   assert.equal(errorMessageOf({}), null);
 });
 
+test("6.2: the alarm carries the reason and NEVER the values", () => {
+  /*
+   * **THE ALARM'S FIRST REAL FIRING CAUGHT THIS** (2026-08-20, the Prompt D
+   * close-out walk). One search_log insert failed transiently out of 94, the
+   * alarm fired exactly as designed, and the row it wrote carried a reader's
+   * zip and the divisions their search had resolved to — because the Neon
+   * driver wraps a failure as the QUERY plus its PARAMS.
+   *
+   * The alarm's whole design is that it holds nothing about who was writing,
+   * and a column guard cannot see a value smuggled inside a text field it
+   * permits. So the shape is guarded there and the CONTENT is guarded here.
+   */
+  const real = new Error(
+    'Failed query: insert into "search_log" ("id", "occurred_at", "approximate_location", ' +
+      '"ocd_ids") values (default, $1, $2, $3) params: 2026-08-21T00:20:53.025Z,SEARCH,03255,' +
+      '["ocd-division/country:us/state:nh/school_district:kearsarge_regional_school_district"]',
+  );
+  const kept = errorMessageOf(real)!;
+  assert.ok(!kept.includes("params:"), "everything from params: onward is values and goes");
+  assert.ok(!kept.includes("03255"), "no zip survives");
+  assert.ok(!kept.includes("ocd-division/"), "no division id survives");
+  assert.ok(kept.includes("search_log"), "the table it failed on is kept — that is the reason");
+
+  // A driver that formats its values some other way is caught by the second
+  // line. Neither of these tokens belongs to a reason-for-failure sentence.
+  const loose = new Error('insert failed for 85701 at ocd-division/country:us/state:az/place:tucson');
+  const scrubbed = errorMessageOf(loose)!;
+  assert.ok(!scrubbed.includes("85701"), "a bare five-digit run is scrubbed");
+  assert.ok(!scrubbed.includes("ocd-division/country"), "a bare division id is scrubbed");
+
+  // And the sentence worth keeping is untouched by any of it. This is the one
+  // that would have closed D73 in a minute.
+  assert.equal(
+    errorMessageOf(new Error('column "coverage_tier" does not exist')),
+    'column "coverage_tier" does not exist',
+  );
+});
+
 test("6.1: the schema gate names the missing migration, and never rounds up", () => {
   const journal = [
     { idx: 0, when: 1, tag: "0000_a" },

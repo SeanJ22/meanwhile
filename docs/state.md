@@ -14829,3 +14829,206 @@ the ten; the manifest goes 940 → 948 rows.
 `pnpm bodies:enumerate` · `pnpm ship:candidate`, all registered in
 `docs/zip-playbook.md` §4, which gained 24 KB including a new §7 on how a
 candidacy is taken to Kelly depth.
+
+## NH Hunt 3 — 2026-08-21: the ladder becomes a tree, and ten recorded absences out of ten were wrong
+
+**Code merge `2440915` (PR #133), deploy `6a88b047d0f60a0008bb2a90`.** One
+planned code merge under RULING 1, eight commits. The close-out records that
+follow it are separate and are labelled as such: a document cannot name the
+commit that contains it.
+
+### The headline: an absence is not a finding, and this repo had 87 of them
+
+Ten recorded absences were re-walked under the new tree model. **Ten were
+wrong.** Not one survived contact with a second branch.
+
+87 of the 133 MISS records in `candidate-links-2026.json` came from one
+generator and carried one sentence:
+
+> no sitting officeholder in this state's registry matches this name exactly,
+> **so there is no official page for us to link**
+
+The first clause is a true fact about US. The word **so** turns it into a claim
+about THEM. It was attached to Katie Hobbs, the sitting Governor of Arizona;
+to Adrian Fontes, Kris Mayes, Kimberly Yee and Tom Horne, every one a sitting
+Arizona statewide officer; to Andy Biggs, Juan Ciscomani and Adelita Grijalva
+in Congress; and to Daniel Innis and Karen Ebel, sitting members of the New
+Hampshire General Court. Every one answered a plain rung-2 fetch on the first
+URL tried, and named the person.
+
+**The join is not the defect and is unchanged** — exact normalised match within
+one state, nothing fuzzy, which is the D40 discipline and correct. What was
+wrong was reporting its failure as a finding about a person. Note it fails for
+two quite different reasons it cannot tell apart: the person holds no office, or
+they do and our registry spells them differently. Neither is evidence about
+their page.
+
+### The wall that was compiled into a skip
+
+`scripts/audit-officials.mts` line 85 read
+`if (/gc\.nh\.gov/.test(url)) return "UNVERIFIABLE-INLINE"`. **84 New Hampshire
+officials were reported unverifiable on every run without a request ever being
+made**, on the strength of a TLS measurement taken 2026-08-17.
+
+A wall compiled into a skip is the worst form of what RULING 52 was adopted
+over, because it cannot be disproved by the instrument that records it: the
+audit could never notice the wall had fallen, having stopped asking. Removed,
+and the audit re-run:
+
+| | before 2026-08-16 | after 2026-08-21 |
+|---|---|---|
+| audited | 661 | 661 |
+| pages fetch-verified | 577 | **655** |
+| page misses | 0 | 6 |
+| unverifiable inline | **84** | **0** |
+
+78 officials recovered — and **6 genuine misses surfaced that the blanket
+label had been hiding**, which is the second cost of a wall nobody re-tests.
+
+### RULING 52 and RULING 53 are law
+
+`CLAUDE.md` **72,082 → 76,630 bytes**, with the rationale attached including the
+locked-building passage and the second half stated as inseparable from the
+first. `lib/hunt/discovery.ts` is the machinery; `VERIFIED_ABSENT` now requires
+**two INDEPENDENT branches**, and branches sharing a `through` collapse to one —
+three fetches of one host with different headers is ONE branch walked at three
+rungs, and counting it as three is how `gc.nh.gov` came to be recorded as
+refusing everything.
+
+`pnpm stale` reads every dated measurement and reports what is past its window:
+**0 stale of 39** today, the oldest wiring row 8 days against a 14-day window.
+It reads 39 of 39 dated rows — the 40th `verifiedAt` in `source-wiring.ts` is
+the type declaration — and names its own blind spots on every run.
+
+**Walls corrected in `CLAUDE.md`: 0, and that is reported rather than
+manufactured.** The `gc.nh.gov` sentence `NH13` names went out on 2026-08-20
+when Prompt C rewrote External sources. Three live false claims were corrected
+elsewhere, plus the compiled skip above.
+
+### A status is not a document
+
+`Refresh meetings snapshot` died on `ical: fetched 3, extracted 0, drops 0` —
+RULING 43 working exactly as designed, with the defect one layer up in the fetch
+layer RULING 43 says in as many words it does not cover. `politeGetText`
+accepted any non-challenge HTTP 200 as a document. It now refuses a blank body
+for every caller and a wrong-format body for callers that declare one, on both
+return paths including the curl rung.
+
+**Class swept: 2 found outside the shared path, 2 fixed.** `congress` and
+`plural` hand-roll their own backoff around a bare `fetch` and were each
+accepting a blank 200 as a complete roster — every member of Congress, or a
+state's whole legislature, reading as absent. Neither is on the meetings path,
+so neither would ever have surfaced through the nightly refresh.
+
+### The jobs now tell someone
+
+Measured over the window to 2026-08-21, as pairs:
+
+| workflow | failures of completed runs |
+|---|---|
+| `refresh-meetings-snapshot` | **14 of 36** |
+| `intake-tripwire` | 2 of 8 |
+| `refresh-dotgov-snapshot` | 1 of 8 — a third nobody had named |
+| `refresh-fec-snapshot` | 0 of 1 |
+| `refresh-legiscan-snapshot` | 0 of 2 |
+
+RULING 56 ships as `lib/ops/job-watch.ts`, `scripts/watch-workflows.mts` and
+`.github/workflows/job-watch.yml`, daily at 15:40 UTC after the other jobs have
+had their slot. Two consecutive failures opens a Needs Sean row. It never
+resolves one.
+
+**Proved without breaking anything to prove it**: `--asof` holds the detector
+against a window whose outcome is already known.
+`--asof=2026-08-20T14:00:00Z` finds the meetings refresh, names runs
+`32372995194` and `32342602616`, and names *Validate before committing*.
+
+### The gate that read the wrong repository
+
+RULING 20's photo guard asked `git ls-files` — TRACKED files — so it passed on a
+working tree holding ten unstaged portraits that the very next `git add`
+committed. Nothing was out of order in NH Hunt 2's steps; **the gate was reading
+a view of the repository that had not caught up with the change it was
+guarding.**
+
+**7 call sites read tracked-only state; exactly one already asked the right
+question.** So the repo knew the idiom and seven places had not been told. All
+seven route through `lib/ops/repo-files.ts` now. Proved by induced case: an
+untracked `.png` in `public/officials/` now fails the guard, where `git ls-files`
+returned 0 rows for it. It then caught me committing three screenshots an hour
+later.
+
+### RULING 54 — the 47 filed addresses render
+
+All 47 were hunted, recorded, and written into a prose `note` that nothing
+rendered, so the product held the only working contact for about half of those
+people and showed none. **Kathleen Donnelly** — 481 Josiah Bartlett Rd, Concord
+NH 03301. **Cynthia Rusis** — 94 Northwood Lane #2387, New London NH 03257.
+Both had no way to be reached at all while their opponents showed phones and
+sites.
+
+It renders as a FACT, not an affordance: no `href`, because a `mailto:` is an
+invitation to act now and a named person's home address dressed as a tappable
+control overstates what it is.
+
+Two bugs in my own lift, both caught by asking for the count rather than the
+exit code: a parse anchored on a period lifted 4 of 47, and after fixing it a
+`.find` over a `hunts` array holding 175 records against 92 cards **still**
+lifted 4 of 47 — the collapsing join, clean exit, wrong number.
+
+### RULING 55 — only a reviewed photo renders
+
+**63 photos held, 63 render, 0 dropped.** Gating on an empty store would have
+blanked every portrait the moment the rule shipped, so the 48 already shipping
+are `APPROVED` with `decidedBy: "grandfathered"` — labelled honestly as
+*shipping before the rule existed, NOT individually approved by the author*, and
+carrying a decision date so RULING 53's clock runs on them.
+
+It is a CORRECTNESS gate on one field, never a completeness gate on a card, and
+`tests/photo-review.test.ts` asserts a person renders fully with a photo
+pending — the claim that stops it drifting into a suppression path.
+
+Three bugs in my own build, all found by measuring: a key derived `HOBBS KATIE`
+where the lookup asks `KATIE HOBBS`; a grandfather pass that read the cards file
+when the statewide executives carry their portraits inline elsewhere; and a
+store keyed per PERSON, so recording that Kelly Ayotte's WinRed banner was
+refused also withheld her public-domain U.S. Senate portrait. **A decision is
+about an IMAGE.**
+
+### Springfield had no bodies at all, and its calendar is a year stale
+
+Eight governing bodies enumerated for one of the six Kearsarge member towns that
+were completely dark. The branch was **one request away**.
+
+And then the honest half: the iCal export is capped at the **oldest 50 events
+and stops at 2024-11-07** — six views tried, all identical; the REST API 404s.
+The town has not stopped meeting: its own front page links meetings this autumn.
+So they ship `KNOWN_UNCOVERED`, not `LIVE`. I wired them, ran the adapter, got
+0 meetings from 8 rows, and unwired them again.
+
+**What did not go red**: 46 events parsed, dated, and correctly judged outside
+the served window produced zero meetings and zero drops, and the run stayed
+green. That is item 1b's `outOfWindow` fix working on the first town it met that
+needed it.
+
+### The id that was minted twice
+
+I committed Item 2 on a red suite. The failing guard was NH Hunt 2's opened-row
+ledger, and it was right. NH Hunt 2 double-wrote NH18–NH25 and withdrew them
+from the working store; the ids were then absent from both stores, so `nextId`
+handed NH18 straight back to the next session that asked. **A claim is permanent
+even when the row it named was withdrawn** — that is what append-only means —
+and the ledger's claimed ids now join the pool `nextId` mints against.
+
+### What this session did NOT finish, stated plainly
+
+**Owed fields moved 197 → 196 of 368**, by `pnpm hunt:gaps`, the repo's own
+instrument. `FOUND` 171 → 172. `VERIFIED_ABSENT` **0**, which is correct: every
+remaining miss has branches owed and none has earned a finding.
+
+That is a small number and the reason is a choice. The session spent itself on
+the machinery that let a stale answer stand — and then found that the stale
+answers were 87 false claims about named public officials, which was worth more
+than the fields would have been. **Item 6 is 1 field of 197 and item 7 is 8
+bodies of 90.** Both are honestly short.
+
+Rows opened: `NH26` (photo review, Needs Sean), `NH27`, `NH28`, `NH29`.

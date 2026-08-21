@@ -14682,3 +14682,150 @@ session starts inside a body rather than choosing one.
   working. Diffed by hand, proven to be a strict PREFIX of the committed file
   (822,158 bytes against 830,698, nothing in the mirror absent from the repo),
   and only then overwritten.
+
+## NH Hunt 2 — all forty-seven candidacies, and three walls this repo had written down (2026-08-21)
+
+**Deployed: code `58ae918`, deploy `6a88877bf9cb300008095b2c`**, confirmed
+through `/api/build` with a declared synthetic run header. A second code merge,
+`fbb3006`, followed and is named as a deviation below.
+
+### The forty-seven
+
+Every candidate on Newbury's ballot is worked, contest by contest, local first —
+Register of Probate, Register of Deeds, County Treasurer, County Attorney,
+Sheriff, County Commissioner, State Representative, State Senator, Executive
+Councilor, Governor, Congress, Senate. **47 of 47, in twelve contests of
+twelve.** Fields owed fall **249 → 197 of 368**; FOUND rises **119 → 171**. Ten
+portraits ship, every one read as an image before it did.
+
+**`VERIFIED_ABSENT` is still 0, and that is the correct answer rather than a
+missing one.** Every remaining miss has a rung still owed — rung 13, the body's
+own records-request path, on all of them, and rung 9 or 11 on several. Recording
+`VERIFIED_ABSENT` on any of them would be asserting an absence the ladder has
+not earned, which is the one thing the transparency mandate forbids outright.
+
+### Three standing walls fell, and two of them were ours
+
+- **`gc.nh.gov` answers a plain fetch at 200.** `CLAUDE.md` and the New
+  Hampshire ballot data both record it as refusing *"every client this project
+  has, browsers included."* That was true on 2026-08-14 and had stopped being
+  true; nobody re-checked, because **a written-down wall reads as a fact rather
+  than as a measurement with a date on it.** Four Kelly-standard fields for four
+  candidates came off that host in one pass. `NH13` routes the correction to the
+  author, because only he changes `CLAUDE.md`.
+- **`kearsarge.org`'s board roster reads at rung 4.** `NH01` recorded a
+  Cloudflare challenge that a headless browser loads and never clears. A single
+  paced `curl` gets the page at 73,695 bytes — consistent with the playbook's own
+  note that this host's wall is a RATE wall. `NH01` is resolved.
+- **`sos.nh.gov` falls to rung 5.** Refused host-wide since 2026-08-13 and
+  worked around through the Internet Archive ever since. A different egress
+  reads it, PDFs included, and `cfs.sos.nh.gov` with it.
+
+**Rung 5 is real now.** `lib/hunt/egress.ts` walks the different-egress rung the
+ladder has named since the g sessions and that nothing in this repo could reach.
+It is not proxy spoofing, authenticates nothing, and carries a public URL and
+nothing else. Its first version reported a 404 as a 200 — the relay answers 200
+and puts the origin's status in the body — which is a wall arriving through a
+wall-breaker wearing a success, and it is fixed at the reader rather than at
+each caller.
+
+### What reading the image caught
+
+Three photographs were refused that every signal short of looking said were
+portraits: a file at `/images/headshots/victor-formal.jpg` with alt text
+"Victor Orlando", which is a stock photograph of a flag; a campaign's `og:image`
+and `twitter:image`, both the same scanned cover of a 1978 court manual; and a
+"SocialShare.jpg" that is a portrait beside a wordmark. A fourth was refused on
+copyright — a filename carrying a photographer's credit — and a fifth was a
+television screengrab of a courtroom, which is a screengrab, a group shot and a
+broadcaster's image at once.
+
+### Kearsarge's nine emails were in the `href`s
+
+The district's board page publishes twelve `mailto:` links: each member's NAME
+is the anchor text and their district email is the `href`. An extractor reading
+table CELLS as text gets the names and drops the addresses — and what it hands
+back looks exactly like a page carrying no contacts. That reading was recorded
+on 2026-08-17 as *"the absences are honest, not unhunted"* and repeated on
+2026-08-20. **Honest-looking and wrong, and worse than a wall**, because a wall
+stays open as a work item and a recorded honest absence closes the question.
+Both comments are struck in place with the correction attached.
+
+### `HUNT05` is 18 of 18, and the ledger says so
+
+TIGER publishes no boundary for any special district, so geometry was never
+going to answer this. Three documents did: which town the ZCTA falls in (109 of
+109 points in Newbury), RSA 52:1 on how a village district's territory is fixed,
+and the NH Department of Revenue Administration's village-district tax table,
+which lists a district even at a $0.00 rate.
+
+**Two reach 03255 and neither is in the registry** — the Merrimack County
+Conservation District, whose boundaries conform to the county by RSA 432:12, and
+Lake Todd Village District, whose dead website's archived history page says it
+is *"located in Bradford and Newbury"* and posts its warrant *"outside the
+Newbury Town Office."* `NH14` carries the wiring.
+
+`data/derived/special-district-territory.json` is new and is why the ledger
+moved: a district resolved by a DOCUMENT had nowhere to be recorded, so the
+generated ledger went on reporting all eighteen as untried while the answer sat
+in an evidence page. A district absent from that file stays UNRESOLVED, which is
+the default the section exists to protect.
+
+### The Kearsarge member towns
+
+**107 bodies across seven towns, 17 in the registry, 90 enumerated and not
+wired.** Six of the seven had no bodies at all. Also: **the district publishes
+SEVEN member towns, not eight** — the standing record said eight, and Croydon
+is the likely source of the extra, since it tuitions in under an anchor
+agreement without being a member.
+
+Bradford's are on **TownCloud**, a vendor family this repo had not seen, whose
+`/go/<slug>` path answers 200 with an empty shell for any slug — so a
+status-code probe reports every guess as a hit, and all six other member towns
+"existed" on it.
+
+### `HUNT03` — the re-walk cohort
+
+**11 records re-walked, 5 changed status, 6 confirmed.** The changed five are
+the three walls above plus Kearsarge's second board page and
+`newbury.nh.gov/sitemap.xml`, recorded as a 403 and reading at 200 — which is
+rung 10 for every page that town has. The six unchanged are recorded with their
+shape rather than their status: an empty RSS feed at 292 bytes, a 500 from a
+CivicWeb API on every rung, a portal shell served where an iCal feed was
+expected, a 404 sitemap, a bare `kearsarge.org` that fails TLS negotiation on
+every client, and an `nh.gov/council/` path that moved.
+
+### `RULING 50` and `RULING 51` ship
+
+His note on `NH09` settles the photos-first ordering: **ordering is
+presentation, suppression is data loss**, and a rule against one is not a rule
+against the other. The ordering ships unchanged. His note on `PE04` gives the
+collection disclosure a second surface: **once in the ballot section and once on
+the battlecard**, declared once in `lib/ballot/collection-note.ts` so a sentence
+he has rewritten once cannot drift into two. Both verified on the live deploy,
+at the DOM and read as images.
+
+### The opened-row ledger, and the thing it caught within the hour
+
+`docs/tracker-opened.json` makes "rows opened" a checkable claim: every id
+`tracker add` assigns is written down, and the build fails if one is in neither
+store. It caught this session's own double-write — the same eight rows written
+twice, because `tracker:add` prints its confirmation ABOVE the views summary and
+a `tail -20` hid it. The duplicates were removed and the ledger entry carries a
+retraction naming what became of the ids.
+
+### The deviation
+
+**`fbb3006` is a second code merge and RULING 1's exception does not cover it.**
+RULING 20's guard reads `git ls-files`; the ten portraits were UNTRACKED when
+the suite ran and TRACKED a minute later, so the gate passed and the merge left
+`main` with a failing test. The gate and the staging step were in the wrong
+order and the test was right both times. `pnpm assets migrate` content-addresses
+the ten; the manifest goes 940 → 948 rows.
+
+### Tools built
+
+`pnpm ladder` · `pnpm probe:site` · `pnpm nh:legislator` ·
+`pnpm bodies:enumerate` · `pnpm ship:candidate`, all registered in
+`docs/zip-playbook.md` §4, which gained 24 KB including a new §7 on how a
+candidacy is taken to Kelly depth.

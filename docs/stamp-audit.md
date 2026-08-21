@@ -31,7 +31,7 @@ lying. The recovered dates come from the unfiltered pickaxe.
 | THE TRANSPARENCY MANDATE | 2026-08-16 | 2026-08-16 | 0 | `5745c71` The mandate becomes law before the hunting starts, and the tracker stops carrying two rows per ID |
 | RULING 52 — DISCOVERY IS A TREE, NOT A LADDER | 2026-08-21 | 2026-08-21 | 0 | `2633089` Item 3: discovery is a tree, and a wall compiled into a skip cannot be disproved |
 | RULING 53 — RECORDED ABSENCES EXPIRE | 2026-08-21 | 2026-08-21 | 0 | `2633089` Item 3: discovery is a tree, and a wall compiled into a skip cannot be disproved |
-| RULING 57 — EVERY TWIG IS NAMED | 2026-08-21 | **NOT FOUND** | — | — |
+| RULING 57 — EVERY TWIG IS NAMED | 2026-08-21 | 2026-08-21 | 0 | `df1dfcf` Item 5 and item 1c: RULING 57 is law, and one stale URL form was 75 officials |
 | WHAT IS LAW HERE, AND WHAT IS A RULING | 2026-08-20 | 2026-08-20 | 0 | `07fcce1` Prompt C: the gate measures hunts, the sold stores start recording again, and the rulings get a home |
 | THE DEFERRAL BOUNDARY FALLS BETWEEN SUBJECTS, NEVER INSID… | 2026-08-17 | 2026-08-17 | 0 | `af766f5` The numbers stop contradicting each other, and our own robots stop counting as readers |
 | The design system is committed, not improvised. | 2026-08-15 | 2026-08-15 | 0 | `b8b6f7d` The system goes on the record |
@@ -81,7 +81,7 @@ lying. The recovered dates come from the unfiltered pickaxe.
 
 - **1 stamp(s) disagree with git history.**
 - **0 stamp(s) are still later than today** (2026-08-21) — a date that had not happened when it was written.
-- **1 stamp(s) could not be recovered** and are printed `NOT FOUND` rather than guessed.
+- **0 stamp(s) could not be recovered** and are printed `NOT FOUND` rather than guessed.
 - **2 stamp(s) disagree BY DESIGN and the author has ruled them expected** — listed below, and still carrying their real delta in the table above.
 
 ### Ruled expected, not defects
@@ -111,7 +111,7 @@ well would leave nothing to re-audit if the ruling is ever revisited.
 | THE TRANSPARENCY MANDATE | none | 1 |
 | RULING 52 — DISCOVERY IS A TREE, NOT A LADDER | none | 1 |
 | RULING 53 — RECORDED ABSENCES EXPIRE | none | 1 |
-| RULING 57 — EVERY TWIG IS NAMED | none | 0 |
+| RULING 57 — EVERY TWIG IS NAMED | none | 1 |
 | WHAT IS LAW HERE, AND WHAT IS A RULING | none | 1 |
 | THE DEFERRAL BOUNDARY FALLS BETWEEN SUBJECTS, NEVER INSID… | none | 1 |
 | The design system is committed, not improvised. | none | 1 |

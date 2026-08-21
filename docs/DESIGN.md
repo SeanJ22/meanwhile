@@ -172,7 +172,7 @@ votes.
 equal-effort rule, not a layout preference.** A thin challenger renders the
 same headers as a thirty-year incumbent with honest content behind each.
 Hiding a section because it would be empty makes the well-covered
-candidate's card taller and more substantial — a layout thumb on the scale,
+candidate's card taller and more substantial — a layout asymmetry,
 which is exactly the information asymmetry the equal-effort rule exists to
 catch. The only permitted exception is structural: a person with no
 roll-call store at all has no votes section, because there is no such thing

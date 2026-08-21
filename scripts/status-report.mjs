@@ -209,7 +209,22 @@ const put = (...lines) => out.push(...lines);
 const done = body.filter((r) => CLOSED.has(r[STATUS])).length;
 const blocked = body.filter((r) => BLOCKED.has(r[STATUS])).length;
 const open = body.length - done;
+/*
+ * **P0, STATED AS A PAIR** (Prompt D item 4, 2026-08-20).
+ *
+ * This file used to print one number — P0 across EVERY row, done ones
+ * included — under a heading about the whole tracker, and it read as "100 of
+ * the 137 open rows are top priority". It was never that. Of the 100, 17 were
+ * open; the other 83 were P0 rows that had already shipped, and a priority on
+ * a closed row is history rather than a queue.
+ *
+ * A single figure standing in front of two measurements is the D68 pattern,
+ * and it is the reason a re-prioritisation got scheduled against a premise the
+ * file itself had manufactured. Both numbers print now, and which one is the
+ * standing figure is stated: the OPEN count is the queue.
+ */
 const p0 = body.filter((r) => r[PRIORITY] === "P0").length;
+const p0Open = body.filter((r) => !CLOSED.has(r[STATUS]) && r[PRIORITY] === "P0").length;
 const areas = new Set(body.map((r) => r[AREA].trim()));
 
 put(
@@ -233,7 +248,16 @@ put(
   "## The whole tracker",
   "",
   `- **${body.length} rows** · **${done} done** · **${open} open** · **${blocked} of the open ones blocked or parked**`,
-  `- **${p0} P0** · **${bySection.size} sections** · **${areas.size} distinct Areas**`,
+  `- **${p0Open} OPEN P0** — the queue — of **${p0} P0 across all rows** (the rest have shipped)`,
+  `- **${bySection.size} sections** · **${areas.size} distinct Areas**`,
+  "",
+  "**P0 means: blocks a reader-visible outcome before 2026-11-03.** <!-- expected-future: US general polling day, the deadline this priority is defined against -->",
+  "(Adopted 2026-08-20, Prompt D item 4.) A row is P0 when a reader meets its",
+  "output on a surface, that surface is wrong, missing or unreachable until the",
+  "row closes, and it can land before polling day. Everything else is not P0",
+  "regardless of prior marking — real work, and no reader is blocked on it.",
+  "A priority field that marks three-quarters of a queue top priority sorts",
+  "nothing, which is what this definition exists to prevent.",
   "",
 );
 

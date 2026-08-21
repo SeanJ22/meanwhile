@@ -5,21 +5,19 @@ import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 import {
+  HUNT_STATES,
   KELLY_FIELDS,
-  KELLY_FIELD_LABEL,
-  VERIFIED_ABSENT_WORDING,
+  KELLY_FIELD_NOT_APPLICABLE_WHEN,
   isEvidencedAbsence,
+  isEvidencedNotApplicable,
   stateFor,
   statesFor,
 } from "../lib/ballot/hunt-state.ts";
 import type {
   CandidateHuntFile,
   FieldPresence,
-  KellyField,
   RecordedFieldState,
 } from "../lib/ballot/hunt-state.ts";
-import { equalDepthGate } from "../lib/coverage/tier.ts";
-import type { CandidateDepth } from "../lib/coverage/tier.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const FILE = join(ROOT, "data", "ballot", "candidate-hunt-state.json");
@@ -140,57 +138,74 @@ test("2.5: a stored FOUND on an absent field never reads as FOUND", () => {
 });
 
 /* ========================================================================== */
-/* 2.6 — no contest renders cards while any field in it is NOT_HUNTED         */
+/* Item 2 — NOT_APPLICABLE, the fourth state                                  */
 /* ========================================================================== */
 
-const fields = (spec: Partial<Record<KellyField, string>>) =>
-  Object.fromEntries(
-    KELLY_FIELDS.map((f) => [f, spec[f] ?? "FOUND"]),
-  ) as CandidateDepth["fields"];
-
-/**
- * The gate's whole contract, asserted from the outside: if any candidate in a
- * contest carries a NOT_HUNTED field, no cards ship.
- *
- * Exhaustive over the four fields and over which candidate carries the gap,
- * because the failure this guards against is a partial implementation — a gate
- * that checks three fields and forgets the fourth renders exactly the
- * asymmetry RULING 7 exists to refuse, and would pass a single-case test.
- */
-test("2.6: any NOT_HUNTED field, on any candidate, withholds the contest", () => {
-  for (const field of KELLY_FIELDS) {
-    for (const who of [0, 1]) {
-      const candidates: CandidateDepth[] = [
-        { candidateId: "a", candidateName: "A", fields: fields({}) },
-        { candidateId: "b", candidateName: "B", fields: fields({}) },
-      ];
-      candidates[who]!.fields[field] = "NOT_HUNTED";
-      const decision = equalDepthGate(candidates);
-      assert.equal(
-        decision.render,
-        false,
-        `a NOT_HUNTED ${field} on candidate ${who} must withhold the contest`,
-      );
-      if (!decision.render) {
-        assert.deepEqual(decision.unhunted.map((u) => u.candidateId), [
-          who === 0 ? "a" : "b",
-        ]);
-        assert.deepEqual(decision.unhunted[0]!.fields, [field]);
-      }
-    }
-  }
+test("2.1: NOT_APPLICABLE is a legal state and it is the fourth", () => {
+  assert.deepEqual([...HUNT_STATES], [
+    "NOT_HUNTED",
+    "FOUND",
+    "VERIFIED_ABSENT",
+    "NOT_APPLICABLE",
+  ]);
 });
 
-test("2.6: with no NOT_HUNTED field anywhere, the contest renders", () => {
-  const decision = equalDepthGate([
-    { candidateId: "a", candidateName: "A", fields: fields({}) },
-    {
-      candidateId: "b",
-      candidateName: "B",
-      fields: fields({ campaignSite: "VERIFIED_ABSENT", photo: "VERIFIED_ABSENT" }),
-    },
-  ]);
-  assert.equal(decision.render, true);
+test("2.7: NOT_APPLICABLE without a recorded reason and date is refused", () => {
+  /*
+   * The same evidence discipline VERIFIED_ABSENT carries, for the same reason.
+   * "This field cannot exist for this person" is a claim about a named person.
+   * A record missing its reason or its date is a GAP wearing a finding's name,
+   * and that is the one thing this repo may never render — so it is refused
+   * here and reads as NOT_HUNTED at the surface, which is the safe direction.
+   */
+  const bad: [string, unknown][] = [
+    ["no reason at all", { state: "NOT_APPLICABLE", checkedAt: "2026-08-20" }],
+    ["an empty reason", { state: "NOT_APPLICABLE", reason: "  ", checkedAt: "2026-08-20" }],
+    ["no date", { state: "NOT_APPLICABLE", reason: "never held the office" }],
+    [
+      "a date that is not a wall-clock stamp",
+      { state: "NOT_APPLICABLE", reason: "never held the office", checkedAt: "yesterday" },
+    ],
+  ];
+  for (const [why, shape] of bad) {
+    assert.equal(
+      isEvidencedNotApplicable(shape as RecordedFieldState),
+      false,
+      `refused: ${why}`,
+    );
+    assert.equal(
+      stateFor(false, shape as RecordedFieldState),
+      "NOT_HUNTED",
+      `${why} falls back to NOT_HUNTED rather than forward to a finding`,
+    );
+  }
+
+  const good: RecordedFieldState = {
+    state: "NOT_APPLICABLE",
+    reason: "the candidate has never held this office, so there is no roll-call record",
+    checkedAt: "2026-08-20",
+  };
+  assert.equal(isEvidencedNotApplicable(good), true);
+  assert.equal(stateFor(false, good), "NOT_APPLICABLE");
+  // Presence still wins upward: a field that is actually there is FOUND.
+  assert.equal(stateFor(true, good), "FOUND");
+});
+
+test("2.2: the structural-availability rule is stated for every Kelly field", () => {
+  /*
+   * Read off the frozen field matrix (vH-1, 2026-08-16), never decided by a
+   * session that wants the denominator smaller. All four read "never", which
+   * is why item 2 moved nothing out of the 249.
+   */
+  for (const field of KELLY_FIELDS) {
+    const rule = KELLY_FIELD_NOT_APPLICABLE_WHEN[field];
+    assert.ok(rule && rule.length > 0, `${field} states when it does not apply`);
+    assert.match(
+      rule,
+      /^never/,
+      `${field}: the frozen matrix says this field always applies to a candidate`,
+    );
+  }
 });
 
 /* ========================================================================== */
@@ -223,8 +238,26 @@ test("the migration promoted nothing to VERIFIED_ABSENT", () => {
   );
 });
 
+test("every NOT_APPLICABLE in the file carries its reason and its date", () => {
+  // Item 2.3's own record. Nothing moved in Prompt D — the frozen matrix says
+  // all four Kelly fields always apply to a candidate — so this is empty
+  // today, and it is the gate a later session's move has to pass.
+  const bad: string[] = [];
+  let count = 0;
+  for (const key of KEYS) {
+    for (const field of KELLY_FIELDS) {
+      const rec = file.candidates[key]![field];
+      if (rec.state !== "NOT_APPLICABLE") continue;
+      count += 1;
+      if (!isEvidencedNotApplicable(rec)) bad.push(`${key}.${field}`);
+    }
+  }
+  assert.deepEqual(bad, [], "a NOT_APPLICABLE without a reason and a date is not a finding");
+  console.log(`  NOT_APPLICABLE records in the file: ${count}`);
+});
+
 test("every candidate record carries all four fields with a legal state", () => {
-  const LEGAL = new Set(["NOT_HUNTED", "FOUND", "VERIFIED_ABSENT"]);
+  const LEGAL = new Set<string>(HUNT_STATES);
   const bad: string[] = [];
   for (const key of KEYS) {
     const rec = file.candidates[key]!;
@@ -249,37 +282,8 @@ test("the file's migratedAt is a wall-clock stamp, not a plausible date", () => 
 });
 
 /* ========================================================================== */
-/* The reader-facing half                                                     */
+/* Reconciliation                                                             */
 /* ========================================================================== */
-
-test("a completed hunt that found nothing has its own wording, per field", () => {
-  for (const field of KELLY_FIELDS) {
-    const sentence = VERIFIED_ABSENT_WORDING[field];
-    assert.ok(sentence && sentence.length > 20, `${field} has a sentence`);
-    /*
-     * The ATTRIBUTION is the rule, never a particular sentence. What must
-     * survive is that the reader can tell OUR unfinished hunt from THEIR
-     * absence, so every one of these has to say we looked AND say the thing
-     * does not exist.
-     */
-    assert.match(sentence, /\bWe searched\b/, `${field} says we did the work`);
-    assert.match(
-      sentence,
-      /\b(has not published|does not have|have not published)\b/,
-      `${field} states the absence as a fact about the candidate`,
-    );
-  }
-});
-
-test("no reader-facing label is an enum key", () => {
-  // Reader surfaces speak plain language: `campaignSite` is an identifier and
-  // never reaches a reader.
-  for (const field of KELLY_FIELDS) {
-    const label = KELLY_FIELD_LABEL[field];
-    assert.ok(label && label.length > 0, `${field} has a label`);
-    assert.notEqual(label, field, `${field}'s label is not its key`);
-  }
-});
 
 test("statesFor reconciles presence against the record, field by field", () => {
   const presence: FieldPresence = {

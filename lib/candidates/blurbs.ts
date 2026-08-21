@@ -10,9 +10,9 @@ import type { CandidateDocument } from "./corpus.ts";
  * *"Karen might be the perfect fit for me, but she has no information here.
  * So I'm only going to look at the folks that do have information."* The app
  * can say nothing about anyone and still tilt a race, because a thin card
- * tracks incumbency and campaign professionalism rather than merit. That is
- * a thumb on the scale no neutrality rule catches, and B14 is the answer:
- * run the hunt for EVERY candidate to the same rung depth.
+ * tracks incumbency and campaign professionalism rather than merit. No
+ * neutrality rule catches that on its own, and B14 is the answer: run the hunt
+ * for EVERY candidate in the contest.
  *
  * ## The rung this module is
  *

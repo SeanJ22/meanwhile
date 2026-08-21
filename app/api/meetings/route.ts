@@ -1,6 +1,7 @@
 import { haversineKm } from "@/lib/geo/distance";
 import { nearestZcta } from "@/lib/geo/zcta";
 import { logSearchEvent } from "@/lib/db/search-log";
+import { raiseWriteAlarm } from "@/lib/db/write-alarm";
 import { markerFromRequest } from "@/lib/db/run-marker";
 import { RADIUS_LADDER_KM, searchMeetings } from "@/lib/meetings/query";
 import { getActiveSnapshotMeta } from "@/lib/meetings/snapshot";
@@ -212,7 +213,19 @@ export async function GET(request: Request) {
     // C05: whose traffic this is. A walk declares itself in a header; a
     // reader declares nothing and is organic.
     marker: markerFromRequest(request),
-  }).catch((error) => console.error("search log write failed", error));
+  }).catch((error) => {
+    /*
+     * **RULING 25 — THE READER-FACING CATCH IS UNCHANGED** (Prompt D item 6,
+     * D73). This handler still swallows: the search has already answered, and
+     * a logging failure must never cost a reader their meetings. What is added
+     * is the SECOND path — a row somewhere this repo can read, because a
+     * console line in a serverless function log is a diary rather than an
+     * alarm, and that is precisely how both sold stores went dark for four
+     * hours with every instrument green.
+     */
+    console.error("search log write failed", error);
+    void raiseWriteAlarm("search_log", error);
+  });
 
   /*
    * M81 — which of these bodies actually governs the reader.

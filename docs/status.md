@@ -17,8 +17,17 @@ answer *what does this deliver* rather than *what kind of work is it*.
 
 ## The whole tracker
 
-- **451 rows** · **314 done** · **137 open** · **12 of the open ones blocked or parked**
-- **100 P0** · **7 sections** · **24 distinct Areas**
+- **454 rows** · **315 done** · **139 open** · **12 of the open ones blocked or parked**
+- **10 OPEN P0** — the queue — of **93 P0 across all rows** (the rest have shipped)
+- **7 sections** · **24 distinct Areas**
+
+**P0 means: blocks a reader-visible outcome before 2026-11-03.** <!-- expected-future: US general polling day, the deadline this priority is defined against -->
+(Adopted 2026-08-20, Prompt D item 4.) A row is P0 when a reader meets its
+output on a surface, that surface is wrong, missing or unreachable until the
+row closes, and it can land before polling day. Everything else is not P0
+regardless of prior marking — real work, and no reader is blocked on it.
+A priority field that marks three-quarters of a queue top priority sorts
+nothing, which is what this definition exists to prevent.
 
 **No row depends on anything in a later section.** The file reads front to back.
 
@@ -30,32 +39,26 @@ answer *what does this deliver* rather than *what kind of work is it*.
 
 **What you get:** NOT A DELIVERABLE, and named honestly rather than dressed as one. This is every row whose `Depends on` column is empty, which is most of the tracker — the column is sparse, so the graph cannot tell work that genuinely has no prerequisite from work whose prerequisite was never written down. See `R56`.
 
-**243 rows** · **192 done** · **51 open** · **8 blocked or parked**
+**246 rows** · **192 done** · **54 open** · **8 blocked or parked**
 
-**Open P0 in this section (10):**
+**Open P0 in this section (4):**
 
-- `B01` — Settle the name *(In progress)*
-- `B08` — Read separation agreement before signing *(Not started)*
-- `C01` — Mock export - one measure, synthetic data *(Not started)*
 - `D07` — OCD-ID resolution layer *(Not started)*
 - `D50` — Photos round 2 - door 2 opens and the chamber tier ships (item 6b) *(In progress)*
-- `PB02` — Special-district territory resolution, nationally - the single largest gap in the product *(Not started)*
-- `T10` — The demo-deletion promise - kept mechanically *(Waiting on testing end)*
-- `V01` — Five buyer calls *(Not started)*
-- `V03` — Legistar prototype, 3-5 cities *(Not started)*
-- `V05` — Beat-a-tracking-poll answer *(Not started)*
+- `D68` — A data-fetch script overwrote verified data with less of it, and reported success *(Open)*
+- `F01` — The author's 2026-08-18 testing pass: 40-odd findings across cards, meetings order, votes, the ask box, the ballot page and the map *(In progress)*
 
 ## Section 1 — The four pilot zips answer completely
 
 **What you get:** A reader at 03255, 07866, 85641 or 85701 gets every body, every officeholder and every contest that place actually has — the depth sweeps, the blurb equalization, the state voting records and the funding surface all sit here.
 
-**104 rows** · **54 done** · **50 open** · **0 blocked or parked**
+**104 rows** · **55 done** · **49 open** · **0 blocked or parked**
 
 **Open P0 in this section (3):**
 
-- `B02` — Trademark search *(Not started)*
-- `B09` — Counsel question: vendor terms vs. public records duty *(Not started)*
 - `HUNT01` — The 03255 depth sweep across the full body universe *(Not started)*
+- `P02` — Ballot mapping *(In progress)*
+- `P03` — Reaction capture *(In progress)*
 
 ## Section 2 — The bodies inside a government are known, not just the government
 
@@ -63,11 +66,10 @@ answer *what does this deliver* rather than *what kind of work is it*.
 
 **51 rows** · **31 done** · **20 open** · **2 blocked or parked**
 
-**Open P0 in this section (4):**
+**Open P0 in this section (3):**
 
 - `HUNT02` — Body enumeration per unit - the missing second layer of the who-governs denominator *(Not started)*
 - `HUNT04` — The 03255 candidate sweep - 47 candidacies to the Kelly standard *(Not started)*
-- `T03` — Security review *(In progress)*
 - `T05` — Abuse policy live *(Open)*
 
 ## Section 3 — The hard territory resolves and the extractors exist

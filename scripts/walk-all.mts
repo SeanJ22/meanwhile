@@ -619,30 +619,19 @@ for (const { zip } of FOUR) {
     );
 
     /*
-     * **PROMPT B ITEM 7.5 (2026-08-20) — no contest renders candidates at
-     * unequal depth.**
+     * **RULING 26 (Prompt D item 1, 2026-08-20) RETIRED PROMPT B ITEM 7.5 AND
+     * THIS CHECK WITH IT.**
      *
-     * RULING 7, and the tester's finding behind it: "Karen might be the
-     * perfect fit for me, but she has no information here. So I'm only going
-     * to look at the folks that do." A thin card tracks incumbency and
-     * campaign professionalism, not merit.
-     *
-     * The gate lives in ONE place (`equalDepthGate` in lib/coverage/tier.ts)
-     * so this check asks the page for the gate's own verdict rather than
-     * re-deriving depth from rendered HTML — a second implementation of the
-     * rule would be a second thing to get wrong. A contest the gate withheld
-     * carries the withheld marker AND says why; a contest it allowed carries
-     * neither.
+     * The claim behind it was that a contest withholding its candidate cards
+     * must say why. There is no longer any circumstance in which a contest
+     * withholds its cards: everything the product holds about a candidate
+     * renders, and collection state never governs display. A check leaves this
+     * suite only when the author retires the claim behind it, and that is what
+     * happened here — the author's ruling, recorded in `docs/rulings.md`. Its
+     * replacement is `tests/no-suppression.test.ts`, which fails the BUILD if
+     * a suppression path is reintroduced, rather than catching it in
+     * production after a reader has already met a blank contest.
      */
-    const withheld = [...ballot.text.matchAll(/data-equal-depth="withheld"/g)].length;
-    const withheldReasons = [...ballot.text.matchAll(/data-equal-depth-reason=/g)].length;
-    check(
-      "promptB",
-      `/ballot explains every contest it withholds at ${zip}`,
-      withheld === withheldReasons,
-      `${withheld} contest(s) withheld, ${withheldReasons} carry a reason — a ` +
-        "withheld contest that does not say why renders as an unexplained blank",
-    );
     /*
      * **F01 11.2 (2026-08-19) RETIRED 0814c's claim and this check with it.**
      *
@@ -3711,7 +3700,7 @@ section("M136. Body battlecards reach person-card depth (g13)");
    * The assertion is deliberately on the SET of section headers rather than on
    * their contents. A card that hid its empty sections would still look
    * plausible section-by-section while quietly making a well-covered body's
-   * card taller than a thin one's — the layout thumb on the scale that the
+   * card taller than a thin one's — the layout asymmetry that the
    * equal-effort rule exists to catch. So the check is: all six headers, on
    * all three bodies, whatever is inside them.
    *
@@ -4515,8 +4504,41 @@ for (const zip of ["07866", "85701"]) {
 
     const rows = await page.locator(".candidate-row").count();
     const pills = await page.locator("[data-battlecard-pill]").count();
+
+    /*
+     * **R58 (Prompt D item 3, 2026-08-20) — EVERY CHECK IN THIS BLOCK OWES AN
+     * ENDING, and until today only the first one paid.**
+     *
+     * The whole block used to sit behind `if (rows === 0) { cannotRun(ONE);
+     * continue; }`. When Prompt C's render gate withheld every contest on
+     * these two zips, exactly two checks reported COULD NOT RUN — the pill
+     * check, once per zip — and the other SEVENTEEN simply did not execute and
+     * printed nothing at all. The identity diff caught them as GONE with "a
+     * check that ran last time did not run now, and said nothing", which is
+     * the last line of defence rather than the first.
+     *
+     * RULING 24: a check that cannot run SAYS SO. So the block's checks are
+     * named up front, in one list, and any early exit declares all of them.
+     * The list is also what makes the census honest — registered and reporting
+     * have to be equal, and the assertion at the foot of this file goes red
+     * when they are not.
+     */
+    const BLOCK_CHECKS: [string, string][] = [
+      ["F01C2", `${zip}: every candidate row carries a battlecard pill`],
+      ["F01C2", `${zip}: the ballot row carries the count, not the twelve-issue list`],
+      ["F01C2", `${zip}: every dated voting event can be calendared`],
+      ["F01C2", `${zip}: a multi-day window carries the affordance too`],
+      ["F01C2", `${zip}: the battlecard holds the sections the row gave up`],
+      ["F01C2", `${zip}: the positions search finds a term from the card's own text`],
+      ["F01C2", `${zip}: the polling-place affordance is an in-app pill, not a link out`],
+      ["F01C2", `${zip}: the in-app voting panel opens on the ballot`],
+      ["F01C2", `${zip}: the placeholder address names no region`],
+      ["F22", `${zip}: the polling-place pointer renders exactly once on the ballot`],
+    ];
     if (rows === 0) {
-      cannotRun("F01C2", `${zip}: every candidate row carries a battlecard pill`, "no candidate rows on the page");
+      for (const [session, name] of BLOCK_CHECKS) {
+        cannotRun(session, name, "no candidate rows on the page");
+      }
       continue;
     }
 
@@ -4557,6 +4579,9 @@ for (const zip of ["07866", "85701"]) {
     )) as { text: string; hasButton: boolean; isWindow: boolean }[];
     if (dated.length === 0) {
       cannotRun("F01C2", `${zip}: every dated voting event can be calendared`, "no [data-dated-event] on the page");
+      // R58: the window check lives in the same else-branch and used to
+      // vanish with it.
+      cannotRun("F01C2", `${zip}: a multi-day window carries the affordance too`, "no [data-dated-event] on the page");
     } else {
       /*
        * A PAST event is not calendar material, and this check has to know
@@ -4779,12 +4804,18 @@ for (const zip of ["07866", "85701"]) {
       where === 1,
       `${where} in-app pill(s) — once per page since the F21 ruling`,
     );
-    if (where > 0) {
+    if (where === 0) {
+      // R58 again, one nesting level down: with no pill there is nothing to
+      // open, so the two checks inside declare rather than vanish.
+      cannotRun("F01C2", `${zip}: the in-app voting panel opens on the ballot`, "no polling-place pill to open");
+      cannotRun("F01C2", `${zip}: the placeholder address names no region`, "no polling-place pill to open");
+    } else {
       await page.locator("[data-where-to-vote-pill]").first().scrollIntoViewIfNeeded();
       await page.locator("[data-where-to-vote-pill]").first().click();
       const panel = await untilInteractive(page, ".voting-panel-input", 10_000);
       if (!panel) {
         cannotRun("F01C2", `${zip}: the in-app voting panel opens on the ballot`, "the panel never appeared");
+        cannotRun("F01C2", `${zip}: the placeholder address names no region`, "the panel never appeared");
       } else {
         const placeholder = await page
           .locator(".voting-panel-input")
@@ -4891,15 +4922,36 @@ console.log(
 loadEnv({ path: join(process.cwd(), ".env.local") });
 const PRODUCTION_DB = process.env.WTP_PRODUCTION_DATABASE_URL_READONLY;
 
+/*
+ * **R58 (Prompt D item 3.3, 2026-08-20) — THE SOLD-STORE CHECK IS THE SAME
+ * CLASS, one floor down.**
+ *
+ * "the sold store accepted this run's rows at all" only fires on the branch
+ * that actually reads production. Every other branch printed a sentence and
+ * moved on, so a run against localhost — or against production with no
+ * readonly credential — dropped the one observable the revenue path has, and
+ * said nothing about having dropped it. Found by the assertion added in item
+ * 3.4 on this session's first local walk, which is the assertion working.
+ *
+ * RULING 24: every branch now DECLARES.
+ */
+const LANDED_CHECK = "the sold store accepted this run's rows at all";
+
 if (BASE !== "https://sparkwtp.netlify.app") {
   console.log(
     `  rows landed: NOT READ — this run targeted ${BASE}, not production, so a production ` +
       `census would be answering about someone else's rows.`,
   );
+  cannotRun("promptC", LANDED_CHECK, `this run targeted ${BASE}, not production`);
 } else if (!PRODUCTION_DB) {
   console.log(
     `  rows landed: COULD NOT READ — WTP_PRODUCTION_DATABASE_URL_READONLY is not set. ` +
       `The issued counts above stand as issued counts and are NOT the landed number.`,
+  );
+  cannotRun(
+    "promptC",
+    LANDED_CHECK,
+    "WTP_PRODUCTION_DATABASE_URL_READONLY is not set — the landed number cannot be read",
   );
 } else {
   try {
@@ -4948,7 +5000,7 @@ if (BASE !== "https://sparkwtp.netlify.app") {
      */
     check(
       "promptC",
-      "the sold store accepted this run's rows at all",
+      LANDED_CHECK,
       !(searchLogRows + askRows > 0 && total === 0),
       total === 0
         ? `issued ${searchLogRows + askRows} write-triggering requests and NOTHING landed — ` +
@@ -4964,10 +5016,90 @@ if (BASE !== "https://sparkwtp.netlify.app") {
       `  rows landed: COULD NOT READ — ${(error as Error).message.slice(0, 120)}. ` +
         `The issued counts above stand as issued counts.`,
     );
+    cannotRun(
+      "promptC",
+      LANDED_CHECK,
+      `the production census threw: ${(error as Error).message.slice(0, 90)}`,
+    );
   }
 }
 
 console.log(`\n${new Array(60).fill("─").join("")}`);
+/* ── D73's class: the schema gate and the write alarm (Prompt D item 6) ──── */
+
+/*
+ * **TWO QUESTIONS THIS SUITE COULD NOT ASK BEFORE.**
+ *
+ * D73: migration 0011 added `coverage_tier` to both sold stores, the code
+ * shipped, the migration was never applied, every insert failed for four hours,
+ * and the walk was green throughout. The zero-landed check above closes the
+ * SYMPTOM. These two close the CAUSE, and the alarm on it.
+ *
+ * The schema check runs against whatever `BASE` is, because the deploy answers
+ * about the database IT is talking to — that is the whole point of asking the
+ * running process rather than asking from here. The alarm read needs the
+ * production credential and DECLARES when it does not have one, per RULING 24.
+ */
+{
+  section("D73's class — the schema gate and the write alarm");
+  const SCHEMA_CHECK = "the deploy's database has the migrations the deploy was built from";
+  const raw = await get("/api/schema");
+  if (raw.status === 200 || raw.status === 503) {
+    /*
+     * 200 and 503 are both ANSWERS — in sync and out of sync. Any other status
+     * means the question could not be asked, which is a different finding and
+     * must not be reported as the alarming one.
+     */
+    let summary = raw.text.slice(0, 300);
+    try {
+      const body = JSON.parse(raw.text) as { summary?: string };
+      if (body.summary) summary = body.summary;
+    } catch {
+      // A body that will not parse is reported as the bytes that arrived.
+    }
+    check("promptD", SCHEMA_CHECK, raw.status === 200, summary);
+  } else if (raw.status === 501) {
+    cannotRun("promptD", SCHEMA_CHECK, "the deploy reports no DATABASE_URL — nothing was compared");
+  } else {
+    cannotRun("promptD", SCHEMA_CHECK, `/api/schema answered HTTP ${raw.status}`);
+  }
+
+  const ALARM_CHECK = "no sold-store write raised an alarm in the last 24h";
+  if (!PRODUCTION_DB) {
+    cannotRun(
+      "promptD",
+      ALARM_CHECK,
+      "WTP_PRODUCTION_DATABASE_URL_READONLY is not set — an unread alarm table is not an empty one",
+    );
+  } else {
+    try {
+      const sql = neon(PRODUCTION_DB);
+      const alarms = (await sql`
+        SELECT store, COUNT(*)::int AS n
+        FROM write_alarm
+        WHERE raised_at > now() - interval '24 hours'
+        GROUP BY store
+      `) as { store: string; n: number }[];
+      const total = alarms.reduce((a, r) => a + r.n, 0);
+      check(
+        "promptD",
+        ALARM_CHECK,
+        total === 0,
+        total === 0
+          ? "the alarm table is empty for this window"
+          : `${alarms.map((a) => `${a.store}=${a.n}`).join(", ")} — run ` +
+            "corepack pnpm alarms --target=production for the database's own words",
+      );
+    } catch (error) {
+      cannotRun(
+        "promptD",
+        ALARM_CHECK,
+        `could not read write_alarm: ${(error as Error).message.slice(0, 90)}`,
+      );
+    }
+  }
+}
+
 console.log(`${passed} check(s) passed, ${failures.length} regression(s), ${blocked.length} could not run`);
 
 /*
@@ -5055,6 +5187,52 @@ if (previous === null) {
     );
   }
   if (added.length === 0 && gone.length === 0) console.log("    (the same set, exactly)");
+
+  /*
+   * **R58 / RULING 24 (Prompt D item 3.4, 2026-08-20) — REGISTERED AND
+   * REPORTING MUST BE EQUAL, AND THE RUN GOES RED WHEN THEY ARE NOT.**
+   *
+   * Everything above this line REPORTS. This ASSERTS, and that is the whole
+   * difference. Prompt C's close-out walk printed seventeen GONE lines each
+   * saying "a check that ran last time did not run now, and said nothing", and
+   * the run still exited 0 — so the suite noticed the exact failure it exists
+   * to catch and then passed. A diff nobody has to act on is a diff people
+   * learn to scroll past.
+   *
+   * The rule, stated as arithmetic a session can check: every identity in the
+   * committed baseline either RAN (it is in `identities`) or DECLARED it could
+   * not (it is in `declinedIdentities`). Anything in neither list is a check
+   * that vanished silently, and silence is not a passing result.
+   *
+   * A check the AUTHOR retires leaves the baseline in the same commit that
+   * removes it, so retiring a claim is a deliberate act and never a silent one.
+   */
+  const silent = gone.filter((c) => !declared.has(c));
+  console.log(
+    `  ENDINGS: ${ranNow.length} ran + ${new Set(declinedIdentities).size} declared ` +
+      `COULD NOT RUN · baseline ${previous.length} · silent ${silent.length}`,
+  );
+  if (silent.length > 0) {
+    failures.push({
+      session: "R58",
+      name: "every registered check reports an ending",
+      evidence:
+        `${silent.length} check(s) in the committed baseline neither ran nor declared ` +
+        `COULD NOT RUN: ${silent.join(" | ")}`,
+    });
+    console.log(
+      "\nNAMED REGRESSION [R58] every registered check reports an ending — " +
+        `${silent.length} check(s) reported NOTHING. A check that cannot run SAYS SO.`,
+    );
+    for (const c of silent) console.log(`    ×  ${c}`);
+    // The regression summary printed further up ran before this diff existed,
+    // so this prints its own line rather than counting on that one. The exit
+    // code is the part that matters and it is shared.
+    console.log(
+      `  the summary above was printed before this check ran; regressions are now ` +
+        `${failures.length}`,
+    );
+  }
 }
 
 writeFileSync(

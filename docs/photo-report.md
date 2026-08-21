@@ -69,7 +69,7 @@ person.
 
 ### Not shipped, per candidate, with the reason
 
-Every one of these was hunted to the same depth. Doors 1 and 2 had already
+Every one of these was hunted with the same ladder walked. Doors 1 and 2 had already
 failed for all of them in earlier rounds (no Commons licence, no government
 body publishes a portrait of a challenger); doors 3 and 4 were walked here.
 

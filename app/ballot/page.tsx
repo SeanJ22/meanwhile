@@ -80,13 +80,10 @@ import { resolveZip } from "@/lib/geo/zcta";
 import { divisionsAt } from "@/lib/registry/server";
 import { PRODUCT_NAME } from "@/lib/brand";
 import { CoverageNote } from "@/components/coverage/coverage-note";
-import { EqualDepth } from "@/components/ballot/equal-depth";
-import type { CandidateDepth } from "@/lib/coverage/tier";
-import { huntStatesFor } from "@/lib/ballot/hunt-state-server";
-import { KELLY_FIELDS } from "@/lib/ballot/hunt-state";
-import type { KellyField } from "@/lib/ballot/hunt-state";
-import type { CandidateCardData } from "@/lib/ballot/candidate-cards";
-import type { CandidateLinks } from "@/lib/ballot/candidate-sites";
+import {
+  IncumbencyFootnote,
+  IncumbencyMarker,
+} from "@/components/ballot/incumbency-note";
 
 /**
  * The ballot surface — S2.
@@ -182,60 +179,6 @@ function pickOptionsFor(
     label: `${cand.givenName} ${surnameDisplayCase(cand.familyName)}`,
     reactionTargetId: cand.id,
   }));
-}
-
-/**
- * **RULING 7's four fields, read for one person** (item 7.2, 2026-08-20),
- * **as HUNT STATES rather than as presence** (RULING 18, Prompt C item 2).
- *
- * The Kelly standard's reader-visible half: a photo, something in the
- * campaign's own words, a way to reach them, and their campaign's own site.
- * A candidate carrying all four and one carrying none may not appear side by
- * side, because the difference the reader sees is our research and not the
- * candidates.
- *
- * What is measured changed on 2026-08-20. Presence still decides FOUND, but a
- * field that is absent is now either NOT_HUNTED or VERIFIED_ABSENT, and only
- * the first withholds. A write-in with no campaign site is not a permanent
- * blackout on their contest; an unfinished hunt is.
- */
-function depthFor(
-  key: string,
-  name: string,
-  card: CandidateCardData | null,
-  links: CandidateLinks | null,
-  blurb: { text: string } | null,
-): CandidateDepth {
-  const presence = {
-    photo: Boolean(card?.photoUrl),
-    // Either kind of self-description counts: a curated bio and a captured
-    // blurb are the same rung to a reader, and treating them differently
-    // would withhold contests over a distinction only we can see.
-    blurb: Boolean(card?.bio) || Boolean(blurb?.text),
-    contact: Boolean(card?.email) || Boolean(card?.phone),
-    campaignSite: Boolean(links?.campaign?.url),
-  };
-  return {
-    candidateId: key,
-    candidateName: name,
-    fields: huntStatesFor(key, presence),
-  };
-}
-
-/**
- * The fields whose hunt is FINISHED and found nothing, for one candidate
- * (RULING 18, Prompt C item 2.4). Passed to the card so a completed hunt
- * renders as the finding it is rather than as a blank.
- */
-function verifiedAbsentFor(
-  key: string,
-  name: string,
-  card: CandidateCardData | null,
-  links: CandidateLinks | null,
-  blurb: { text: string } | null,
-): KellyField[] {
-  const depth = depthFor(key, name, card, links, blurb);
-  return KELLY_FIELDS.filter((f) => depth.fields[f] === "VERIFIED_ABSENT");
 }
 
 /** Federal is decided by the contest, never by division shape — a governor's
@@ -407,6 +350,23 @@ export default async function BallotPage({
    * De-cluttering, never de-sourcing.
    */
   const FOOTNOTE_MARKERS = ["*", "†", "‡", "§", "‖", "¶"];
+  /*
+   * **`*` IS RESERVED FOR THE INCUMBENCY FOOTNOTE** (RULING 28, Prompt D
+   * item 1d, 2026-08-20), so the source sequence starts at `†`.
+   *
+   * The page has always run ONE marker sequence — source notes first, scope
+   * notes continuing where they stop — precisely so that a `*` on this page
+   * means one thing. RULING 28 puts an asterisk on every contest heading that
+   * renders candidate cards, and without this the US Senate contest at 07866
+   * rendered "Member of the United States Senate**": one asterisk meaning the
+   * incumbency note and one meaning a source cited at the foot of the page,
+   * side by side, indistinguishable.
+   *
+   * Reserved UNCONDITIONALLY, including on a ballot that renders no candidate
+   * cards at all. A symbol that means different things on different pages is
+   * the same defect one page later.
+   */
+  const MARKER_START = 1;
   type SourceCite =
     | { kind: "canvass"; url: string; issuedBy: string; readAt: string }
     | { kind: "filing"; url: string | null; org: string; collectedAt: string };
@@ -445,8 +405,8 @@ export default async function BallotPage({
       sharedSources.push({
         key,
         marker:
-          FOOTNOTE_MARKERS[sharedSources.length] ??
-          `${sharedSources.length + 1}`,
+          FOOTNOTE_MARKERS[MARKER_START + sharedSources.length] ??
+          `${MARKER_START + sharedSources.length + 1}`,
         cite,
       });
     }
@@ -468,7 +428,7 @@ export default async function BallotPage({
    */
   const scopeNotes = sharedNotesFor(
     matched?.contests ?? [],
-    sharedSources.length,
+    MARKER_START + sharedSources.length,
   );
 
   const contestSourceRef = (
@@ -854,6 +814,11 @@ export default async function BallotPage({
               <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
                 <h2 className="text-[1.0625rem] font-semibold tracking-tight">
                   {contest.title}
+                  {/* RULING 28: the one buried annotation, on contests that
+                      actually render candidate cards. */}
+                  {(lineup || candidatesOf(set, contest).length > 0) && (
+                    <IncumbencyMarker />
+                  )}
                   {sourceRef.shared && (
                     <sup>
                       <a
@@ -941,18 +906,6 @@ export default async function BallotPage({
                   what a November voter actually chooses among. */}
               {lineup ? (
                 <>
-                <EqualDepth
-                  names={lineup.nominees.map((n) => n.name)}
-                  candidates={lineup.nominees.map((n) =>
-                    depthFor(
-                      `${contest.id}|${n.name}`,
-                      n.name,
-                      cardForNominee(contest.id, n.name),
-                      linksForNominee(contest.id, n.name),
-                      derivedBlurbFor(`${contest.id}|${n.name}`),
-                    ),
-                  )}
-                >
                 <ul className="mt-3.5 space-y-3">
                   {photosFirst(lineup.nominees, (n) => Boolean(cardForNominee(contest.id, n.name)?.photoUrl)).map((nominee) => (
                     <li
@@ -973,13 +926,6 @@ export default async function BallotPage({
                         card={cardForNominee(contest.id, nominee.name)}
                         links={linksForNominee(contest.id, nominee.name)}
                         derivedBlurb={derivedBlurbFor(`${contest.id}|${nominee.name}`)}
-                        verifiedAbsent={verifiedAbsentFor(
-                          `${contest.id}|${nominee.name}`,
-                          nominee.name,
-                          cardForNominee(contest.id, nominee.name),
-                          linksForNominee(contest.id, nominee.name),
-                          derivedBlurbFor(`${contest.id}|${nominee.name}`),
-                        )}
                         nameSlot={
                           <IncumbentName
                             targetKey={`${contest.id}|${nominee.name}`}
@@ -1081,7 +1027,7 @@ export default async function BallotPage({
                     </li>
                   ))}
                 </ul>
-                </EqualDepth>
+                <IncumbencyFootnote />
                 {!isFederalContest(contest) && (
                   <StateFundingNote note={STATE_FUNDING_NOTE} />
                 )}
@@ -1117,20 +1063,6 @@ export default async function BallotPage({
                         {contest.scopeNote}
                       </p>
                     ))}
-                  <EqualDepth
-                    names={candidatesOf(set, contest).map(
-                      (c) => `${c.givenName} ${surnameDisplayCase(c.familyName)}`,
-                    )}
-                    candidates={candidatesOf(set, contest).map((c) =>
-                      depthFor(
-                        c.id,
-                        `${c.givenName} ${surnameDisplayCase(c.familyName)}`,
-                        cardForCandidacy(c.id),
-                        linksForCandidacy(c.id),
-                        derivedBlurbFor(c.id),
-                      ),
-                    )}
-                  >
                   <ul className="mt-3.5 space-y-3">
                     {photosFirst(candidatesOf(set, contest), (x) => Boolean(cardForCandidacy(x.id)?.photoUrl)).map((cand) => (
                       <li
@@ -1161,13 +1093,6 @@ export default async function BallotPage({
                           links={linksForCandidacy(cand.id)}
                           derivedBlurb={derivedBlurbFor(cand.id)}
                           filedSiteUrl={cand.websiteUrl}
-                          verifiedAbsent={verifiedAbsentFor(
-                            cand.id,
-                            `${cand.givenName} ${surnameDisplayCase(cand.familyName)}`,
-                            cardForCandidacy(cand.id),
-                            linksForCandidacy(cand.id),
-                            derivedBlurbFor(cand.id),
-                          )}
                           nameSlot={
                             <IncumbentName
                               targetKey={cand.id}
@@ -1246,7 +1171,7 @@ export default async function BallotPage({
                       </li>
                     ))}
                   </ul>
-                  </EqualDepth>
+                  <IncumbencyFootnote />
                   {!isFederalContest(contest) && (
                     <StateFundingNote note={STATE_FUNDING_NOTE} />
                   )}

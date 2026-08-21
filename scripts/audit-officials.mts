@@ -41,12 +41,16 @@ interface Officeholder {
   email: string | null;
   campaignUrl: string | null;
   photo: { url: string; license: string | null } | null;
+  /** Two-letter USPS code, for naming an unlinked member by where they serve. */
+  state?: string;
 }
 
 interface OfficeholderSet {
   scope: string;
   officeholders: Officeholder[];
   divisions: { officeholderId: string; ocdId: string }[];
+  /** Links the build could not make, each with the division id it looked for. */
+  unmatched?: { officeholderId: string; reason: string }[];
 }
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -143,6 +147,31 @@ async function main() {
 
     lines.push(`## ${label} — ${audited.length} division-linked of ${set.officeholders.length}`);
     lines.push("");
+    /*
+     * **THE REMAINDER IS NAMED** (Prompt D item 5, 2026-08-20).
+     *
+     * "531 division-linked of 537" stood in this file since 2026-08-14 with
+     * nothing saying what the six were, and a stated number with an
+     * unexplained remainder is a margin. Six people could have been six
+     * delegates or six members our own join dropped, and the document read
+     * identically either way. The build already records WHY each link was
+     * dropped, per the operation-count rule; this prints it.
+     */
+    const unlinked = set.officeholders.filter((o) => !linked.has(o.id));
+    if (unlinked.length > 0) {
+      const why = new Map(
+        (set.unmatched ?? []).map((u) => [u.officeholderId, u.reason] as const),
+      );
+      lines.push(
+        `**The ${unlinked.length} not audited, named** — a reader cannot open these, ` +
+          `and the count above must not stand as an unexplained margin:`,
+      );
+      lines.push("");
+      for (const o of unlinked) {
+        lines.push(`- ${o.name} (${o.state ?? "?"}) — ${why.get(o.id) ?? "no reason recorded"}`);
+      }
+      lines.push("");
+    }
     lines.push("| Official | Office | Page | Contact | Phone | Photo | Campaign |");
     lines.push("|---|---|---|---|---|---|---|");
 

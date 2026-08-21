@@ -1,4 +1,5 @@
 import { markerFromRequestWithBody } from "@/lib/db/run-marker";
+import { raiseWriteAlarm } from "@/lib/db/write-alarm";
 import {
   assertDetailIsAnonymous,
   isValidEventType,
@@ -152,6 +153,20 @@ export async function POST(request: Request) {
     });
     return new Response(null, { status: stored ? 204 : 202 });
   } catch (error) {
+    /*
+     * **RULING 25 — THE READER-FACING ANSWER IS UNCHANGED** (Prompt D item 6.3,
+     * D73). The 400 and its body are exactly what shipped before.
+     *
+     * The sweep found this route by asking which call sites write to a SOLD
+     * STORE: three, and this is the third. `logSearchEvent` throws for two
+     * different reasons that arrive at this same catch — a caller sending a
+     * malformed event, which is genuinely a 400, and the DATABASE refusing the
+     * insert, which is not the caller's fault at all and is precisely D73's
+     * shape. The status cannot tell them apart and is deliberately left alone;
+     * the alarm does not need to, because a raised alarm is read by a human who
+     * can see the database's own words.
+     */
+    void raiseWriteAlarm("search_log", error);
     return Response.json({ error: String((error as Error).message) }, { status: 400 });
   }
 }

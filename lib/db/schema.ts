@@ -752,3 +752,49 @@ export const intakeLimiter = pgTable("intake_limiter", {
   minuteCount: integer("minute_count").notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" }).notNull(),
 });
+
+/**
+ * **THE WRITE ALARM — D73's second half** (Prompt D item 6.2, 2026-08-20).
+ *
+ * A failed write to a sold store raises HERE, on a path separate from the
+ * reader-facing catch. RULING 25 governs the split and it is the whole design:
+ * the reader-facing catch stays exactly as it is — a search still answers, a
+ * reaction still returns — and NOTHING a visitor sees changes. This is a second
+ * path, for us.
+ *
+ * D73 is why. Both sold stores stopped recording for four hours and every
+ * instrument stayed green, because the only place the failure existed was a
+ * `console.error` in a serverless function log this repo cannot read. A log
+ * nobody can reach is not an alarm; it is a diary.
+ *
+ * **IT IS ITS OWN SPACE, and the n-stores-never-join rule is why.** The same
+ * discipline `intake_limiter` carries: no zip, no division, no reaction
+ * content, no continuity key, no run id, no IP, no foreign key, no column that
+ * could join to any store. It records THAT a write to a named store failed, and
+ * the database's own words about why. Nothing about who was writing.
+ * `tests/db-schema.test.ts` asserts it shares no joinable column with any
+ * store.
+ *
+ * **What it may hold, exactly.** The store name (a closed enum of two), the
+ * Postgres error code, the error message TRUNCATED, and when. A message is the
+ * database describing its own schema — `column "coverage_tier" does not exist`
+ * is the sentence that would have closed D73 in a minute — and it is capped so
+ * a driver that echoes a parameter cannot spill a value into this table.
+ *
+ * It appears in no export and no aggregate. `scripts/read-alarms.mts` reads it
+ * and `pnpm walk:all` asserts it is empty, which is where "loudly" actually
+ * happens.
+ */
+export const writeAlarm = pgTable("write_alarm", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  raisedAt: timestamp("raised_at", { withTimezone: true, mode: "string" }).notNull(),
+  /** Which sold store refused the write. Closed enum, checked below. */
+  store: text("store").notNull(),
+  /** The Postgres SQLSTATE, where the driver gave one. */
+  errorCode: text("error_code"),
+  /** The database's own words, truncated at the call site. Never a value. */
+  errorMessage: text("error_message"),
+}, (t) => [
+  check("write_alarm_store_known", sql`${t.store} IN ('search_log', 'reactions')`),
+  index("write_alarm_raised_at_idx").on(t.raisedAt),
+]);

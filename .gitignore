@@ -83,4 +83,5 @@ next-env.d.ts
 # guard (RULING 20), which is the guard working: a PNG is a binary and binaries
 # do not go in git.
 /.promptc/
+/.promptd/
 /.f22tmp/

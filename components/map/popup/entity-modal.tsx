@@ -73,9 +73,9 @@ const TABS: { id: ModalTab; label: string }[] = [
  * line inside — the author's ruling of 2026-08-17 on M93's empty sections.
  *
  * Hiding an empty section would make a well-covered body's card taller than a
- * thin one's, which is the same layout thumb on the scale the equal-effort
- * rule catches for candidates. The SET of sections is identical for every
- * body; only what is inside them differs.
+ * thin one's, which is the same layout asymmetry the equal-effort rule catches
+ * for candidates. The SET of sections is identical for every body; only what
+ * is inside them differs.
  */
 export interface BodyCardSection {
   id: string;

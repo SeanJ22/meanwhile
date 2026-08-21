@@ -337,10 +337,6 @@
 [hotfix-0817] 03255: no carried row is claimed to be as fresh as the snapshot
 [hotfix-0817] 03255: only rows from a source that reported a gap carry a mark
 [hotfix-0817] 03255: the footer does not speak for the carried rows
-[promptB] /ballot explains every contest it withholds at 03255
-[promptB] /ballot explains every contest it withholds at 07866
-[promptB] /ballot explains every contest it withholds at 85641
-[promptB] /ballot explains every contest it withholds at 85701
 [promptB] /ballot states its coverage tier at 03255
 [promptB] /ballot states its coverage tier at 07866
 [promptB] /ballot states its coverage tier at 85641

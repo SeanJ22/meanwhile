@@ -65,21 +65,24 @@ const nextConfig: NextConfig = {
      * repo and out of every function bundle.
      */
     /*
-     * RULING 18's hunt states (Prompt C item 2). Named explicitly rather than
-     * left to the tracer, because the failure mode is the worst kind: an
-     * unreadable file reads as "nothing has been hunted", which withholds
-     * EVERY contest on the ballot behind the equal-depth gate — and a ballot
-     * page that withholds everything looks exactly like a ballot page doing
-     * its job. The other data/ballot files are traced today by the tracer's
-     * static read of a literal join(); this one does not rely on that.
+     * RULING 26 (Prompt D item 1, 2026-08-20) removed the hunt-state read from
+     * the ballot page: collection state never governs display, and no render
+     * path may even import the work queue. `candidate-hunt-state.json` is
+     * therefore no longer traced here — it is read by scripts and tests only.
      */
-    "/ballot": [
-      "./data/derived/zip-coverage-tiers-runtime.json",
-      "./data/ballot/candidate-hunt-state.json",
-    ],
+    "/ballot": ["./data/derived/zip-coverage-tiers-runtime.json"],
     "/about-area": ["./data/derived/zip-coverage-tiers-runtime.json"],
     "/api/reactions": ["./data/derived/zip-coverage-tiers-runtime.json"],
     "/api/log": ["./data/derived/zip-coverage-tiers-runtime.json"],
+    /*
+     * **The schema gate's journal** (Prompt D item 6.1). `readJournal()` reads
+     * `lib/db/migrations/meta/_journal.json` through `process.cwd()`, and a
+     * file read that way is absent from a Netlify deploy unless the tracer is
+     * told. Untraced, the route would throw on every request and answer 500 —
+     * a gate that reports its own absence as an outage, which is a better
+     * failure than a silent pass and still not one anybody should ship.
+     */
+    "/api/schema": ["./lib/db/migrations/meta/_journal.json"],
   },
   // The demo is unlisted. Platform-level visibility is the access control;
   // this keeps every route out of search indexes regardless of what a crawler

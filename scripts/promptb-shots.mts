@@ -22,10 +22,9 @@
  *   1. `note-<zip>.png` — the coverage note at FULL SIZE, clipped to the
  *      element. This is the one where the WORDS have to be legible, because
  *      item 7.1 is about what the sentence says to a reader.
- *   2. `map-<zip>.png` — the whole page shrunk, with the coverage note and
- *      every equal-depth decision banded. This is the one that proves the
- *      note is actually on the page once, in the right place, and that no
- *      contest anywhere down the page renders cards at unequal depth.
+ *   2. `map-<zip>.png` — the whole page shrunk, with the coverage note
+ *      banded. This is the one that proves the note is actually on the page
+ *      once, and in the right place.
  *
  * Run:  corepack pnpm shoot:promptb
  */
@@ -53,15 +52,12 @@ for (const zip of ZIPS) {
   const facts = (await page.evaluate(
     "(() => {" +
       " const note = document.querySelector('[data-coverage-note]');" +
-      " const rendered = document.querySelectorAll('[data-equal-depth=\"rendered\"]').length;" +
-      " const withheld = document.querySelectorAll('[data-equal-depth=\"withheld\"]').length;" +
-      " const reasons = document.querySelectorAll('[data-equal-depth-reason]').length;" +
       " return {" +
       "  tier: note ? note.getAttribute('data-coverage-note') : null," +
       "  stampedAt: note ? note.getAttribute('data-coverage-stamped-at') : null," +
       "  text: note ? (note.textContent || '').replace(/\\s+/g, ' ').trim() : null," +
       "  notes: document.querySelectorAll('[data-coverage-note]').length," +
-      "  rendered, withheld, reasons," +
+      "  cards: document.querySelectorAll('.candidate-row').length," +
       "  height: document.documentElement.scrollHeight" +
       " }; })()",
   )) as {
@@ -69,15 +65,13 @@ for (const zip of ZIPS) {
     stampedAt: string | null;
     text: string | null;
     notes: number;
-    rendered: number;
-    withheld: number;
-    reasons: number;
+    cards: number;
     height: number;
   };
 
   console.log(`\n${zip}: page is ${facts.height}px tall at 430x932`);
   console.log(`  coverage note: ${facts.notes} on the page, tier ${facts.tier}, stamped ${facts.stampedAt}`);
-  console.log(`  equal depth: ${facts.rendered} rendered, ${facts.withheld} withheld, ${facts.reasons} with a stated reason`);
+  console.log(`  candidate cards rendered: ${facts.cards}`);
   console.log(`  note text: ${facts.text?.slice(0, 200)}`);
 
   // 1. The note itself, full size, so the WORDS are legible in the image.
@@ -96,11 +90,7 @@ for (const zip of ZIPS) {
         outline:6px solid #00d0ff !important;
         box-shadow:0 0 0 100vw rgba(0,208,255,.30) !important;
       }
-      [data-equal-depth="withheld"]{
-        outline:6px solid #ff2200 !important;
-        box-shadow:0 0 0 100vw rgba(255,34,0,.30) !important;
-      }
-      [data-equal-depth="rendered"]{
+      .candidate-row{
         outline:4px solid #22cc55 !important;
       }
       html{zoom:.2}

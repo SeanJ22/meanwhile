@@ -70,6 +70,43 @@ jobs:
       # nothing else: this same job's reaction and search-log access stays
       # read-only, and any other script carrying this declaration is still
       # refused. Both halves are planted in tests/write-guard.test.ts.
+      # **THE SCHEMA GATE, ON A CLOCK** (Prompt D item 6.1, 2026-08-20; D73).
+      #
+      # A migration committed and not applied fails every insert that names a
+      # column it adds, and the route catches that and serves the page — so the
+      # loss is invisible from every surface. It stayed invisible for four
+      # hours. This job runs daily and has a database credential, which makes it
+      # the cheapest place in the repo to ASK.
+      #
+      # READ-ONLY, deliberately, and it runs BEFORE the tripwire: a gate that
+      # could fix what it finds would apply a migration nobody reviewed, at 4am,
+      # against production. It fails the run and names the migration instead.
+      #
+      # It exits 2 when it COULD NOT READ, which is distinct from exit 1's OUT
+      # OF SYNC — both fail the step, and the log says which.
+      # WHICH VARIABLE, and why not the "production" flag. In this workflow
+      # `secrets.DATABASE_URL` already IS production's connection string — the
+      # tripwire step below writes through it. `--target=production` would read
+      # `WTP_PRODUCTION_DATABASE_URL_READONLY`, and setting that name to a
+      # write-capable string to satisfy a flag would be a lie in a variable
+      # name, which is how the wrong database gets touched later. Both scripts
+      # print the role and host they connected to, so the log says what was
+      # actually asked.
+      - name: Schema gate — does production have the migrations this checkout commits?
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: corepack pnpm db:check
+
+      # **THE WRITE ALARM, READ** (Prompt D item 6.2). A failed write to a sold
+      # store raises a row in `write_alarm`; this is the daily reading of it.
+      # Exit 1 = alarms present, exit 2 = could not read, and the two are
+      # different on purpose — "I looked and found nothing" and "I could not
+      # look" printed identically for four hours once already.
+      - name: Write alarm — did a sold store refuse a write in the last day?
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: corepack pnpm alarms --hours=24
+
       - name: Run the tripwire
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}

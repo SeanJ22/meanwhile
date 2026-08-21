@@ -789,6 +789,26 @@ function modeMove(working, resolved, sections) {
  *   section over five P1s is REPORTED as stopped. This prints the census
  *   after the append and says so; it does not quietly re-rank anything.
  */
+/** The append-only ledger of every id any session has ever claimed. */
+function readLedger() {
+  const p = join(ROOT, OPENED_JSON);
+  return existsSync(p) ? JSON.parse(readFileSync(p, "utf8")) : [];
+}
+
+/**
+ * Every id the ledger records as claimed, whether or not the row survived.
+ *
+ * A withdrawn row's id is still spent — see the note at the mint site. This is
+ * deliberately flat and forgiving of shape: a ledger entry that somehow carries
+ * no `ids` contributes nothing rather than throwing, because an id minter that
+ * crashes on a malformed history cannot be used to repair one.
+ */
+function claimedInLedger() {
+  return readLedger().flatMap((entry) =>
+    Array.isArray(entry?.ids) ? entry.ids.filter((id) => typeof id === "string") : [],
+  );
+}
+
 function modeAdd(working, resolved, sections) {
   const path = process.argv[3];
   if (!path || !existsSync(path)) {
@@ -837,7 +857,32 @@ function modeAdd(working, resolved, sections) {
       continue;
     }
     const prefix = (row.prefix ?? "NH").toUpperCase().replace(/[^A-Z]/g, "");
-    const id = nextId(prefix, [...working, ...resolved, ...added]);
+    /*
+     * **AN ID IS MINTED AGAINST THE LEDGER TOO, NOT ONLY THE STORES.**
+     * (NH Hunt 3, 2026-08-21.)
+     *
+     * `nextId` reads the ids that EXIST in the two stores, which is right as
+     * far as it goes and is not far enough. NH Hunt 2 double-wrote NH18–NH25,
+     * removed them from the working store minutes later, and recorded the
+     * claim in the ledger with a note saying what had happened. The ids were
+     * then absent from both stores — so the very next `add`, this session's,
+     * minted NH18 a second time and the ledger held it twice.
+     *
+     * `tests/tracker-stores.test.ts` caught it, which is the ledger working;
+     * an id assigned twice is a ledger that has stopped being able to count.
+     * But a guard that only catches it after the write means every session
+     * following an aborted one has to notice and re-run by hand.
+     *
+     * So the ledger's claimed ids join the pool `nextId` mints against. A
+     * claim is permanent even when the row it named was withdrawn — that is
+     * what append-only means, and it is the whole reason the ledger exists.
+     */
+    const id = nextId(prefix, [
+      ...working,
+      ...resolved,
+      ...added,
+      ...claimedInLedger().map((claimedId) => ({ ID: claimedId })),
+    ]);
     const built = Object.fromEntries(COLUMNS.map((c) => [c, row[c] ?? ""]));
     built.ID = id;
     built["Opened by"] = (row["Opened by"] ?? "").trim() || SESSION_LABEL;
@@ -873,9 +918,7 @@ function modeAdd(working, resolved, sections) {
    * a claim.
    */
   const ledgerPath = join(ROOT, OPENED_JSON);
-  const ledger = existsSync(ledgerPath)
-    ? JSON.parse(readFileSync(ledgerPath, "utf8"))
-    : [];
+  const ledger = readLedger();
   ledger.push({
     session: added[0]?.["Opened by"] ?? SESSION_LABEL,
     opened: STAMP,

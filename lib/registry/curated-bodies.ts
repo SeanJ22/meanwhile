@@ -58,6 +58,43 @@ const SPRINGFIELD_OCD =
   "ocd-division/country:us/state:nh/county:sullivan/place:springfield_town";
 
 /** Newbury's own site — the source for every board row below. */
+/**
+ * **THE THREE KEARSARGE MEMBER TOWNS THAT WERE COMPLETELY DARK** (NH Hunt 4,
+ * 2026-08-21, item 3).
+ *
+ * Kearsarge Regional School District has seven member towns. Four of them had
+ * bodies in this registry; Bradford, Sutton and Warner had NONE — not one
+ * board, not one committee, not the select board. A reader at 03255 whose
+ * district reaches into those towns could learn nothing about who governs
+ * there, and it was not because the towns publish nothing. All three publish a
+ * full boards index AND a live iCalendar feed, and the feeds carry 643, 1,312
+ * and 439 events respectively. Nothing had ever asked them.
+ */
+const BRADFORD_OCD =
+  "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town";
+const SUTTON_OCD =
+  "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town";
+const WARNER_OCD =
+  "ocd-division/country:us/state:nh/county:merrimack/place:warner_town";
+
+/**
+ * One row of a town's own boards index, plus what its calendar says about that
+ * board. "sittings" and "upcoming" are COUNTS READ FROM THE FEED on
+ * "collected", kept because a body wired with zero sittings and a body wired
+ * with thirty are different facts and the row should not be able to hide which
+ * it is. "status" follows from "sittings": a board the town's own calendar
+ * files sittings under is LIVE; a board the index names and the calendar never
+ * mentions is KNOWN_UNCOVERED — named and rendered, with its meeting source
+ * still owed. It is never dropped for being quiet.
+ */
+interface TownBoardRow {
+  slug: string;
+  name: string;
+  sittings: number;
+  upcoming: number;
+  status: "LIVE" | "KNOWN_UNCOVERED";
+}
+
 const NEWBURY_OCD =
   "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town";
 
@@ -406,6 +443,9 @@ export const CURATED_BODIES: Body[] = [
   ...wilmotBoardRows(),
   ...newLondonBoardRows(),
   ...springfieldBoardRows(),
+  ...bradfordBoardRows(),
+  ...suttonBoardRows(),
+  ...warnerBoardRows(),
 ];
 
 function newburyBoardRows(): Body[] {
@@ -853,13 +893,84 @@ function specialDistrictRows(): Body[] {
  */
 function wilmotBoardRows(): Body[] {
   const collected = "2026-08-19";
-  const rows: Array<{ slug: string; name: string; path: string }> = [
-    { slug: "selectboard", name: "Selectboard", path: "/board/board-of-selectmen/" },
-    { slug: "planning-board", name: "Planning Board", path: "/board/planning-board/" },
+  /*
+   * **NINE MORE, AND TWO OF THEM ARE ON NO MENU AT ALL** (NH Hunt 4,
+   * 2026-08-21, item 3).
+   *
+   * Three boards were wired here on 2026-08-19 because three boards had
+   * categories in the town's calendar feed. The town has twelve. Its own
+   * /boards/ index names nine, and the feed's PAST view names two more that no
+   * index in this town lists anywhere: a **Wilmot Safety Services Facility
+   * Committee** and a **Transfer Station Advisory Group**, both meeting in
+   * 2026. Neither would ever have been found by reading a menu.
+   *
+   * `coverage` says how each is reached. LIVE means the feed files sittings
+   * under it today. KNOWN_UNCOVERED means the town's index names it and the
+   * feed does not mention it — the body is named and rendered, and a meeting
+   * source for it is still owed. It is never dropped for being quiet.
+   */
+  const rows: Array<{ slug: string; name: string; path: string; status: "LIVE" | "KNOWN_UNCOVERED" }> = [
+    { slug: "selectboard", name: "Selectboard", path: "/board/board-of-selectmen/", status: "LIVE" },
+    { slug: "planning-board", name: "Planning Board", path: "/board/planning-board/", status: "LIVE" },
     {
       slug: "cemetery-trustees",
       name: "Cemetery Trustees",
       path: "/board/cemetery-trustees/",
+      status: "LIVE",
+    },
+    {
+      slug: "conservation-commission",
+      name: "Conservation Commission",
+      path: "/board/conservation-commission/",
+      status: "LIVE",
+    },
+    {
+      slug: "master-plan-committee",
+      name: "Master Plan Committee",
+      path: "/boards/",
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "safety-services-facility-committee",
+      name: "Wilmot Safety Services Facility Committee",
+      path: "/boards/",
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "transfer-station-advisory-group",
+      name: "Transfer Station Advisory Group",
+      path: "/boards/",
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "zoning-board",
+      name: "Zoning Board of Adjustment",
+      path: "/board/zoning-board/",
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "supervisors-of-the-checklist",
+      name: "Supervisors of the Checklist",
+      path: "/board/supervisors-of-the-checklist/",
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "trustees-of-the-trust-funds",
+      name: "Trustees of the Trust Funds",
+      path: "/board/trustees-of-the-trust-funds/",
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "parks-and-recreation",
+      name: "Parks and Recreation",
+      path: "/community/parks-and-recreation/",
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "waste-reduction-advisory-committee",
+      name: "Wilmot Waste Reduction Advisory Committee",
+      path: "/community/wilmot-waste-reduction-committee/",
+      status: "KNOWN_UNCOVERED",
     },
   ];
   return rows.map((row) => ({
@@ -868,7 +979,7 @@ function wilmotBoardRows(): Body[] {
     name: row.name,
     bodyClass: "COMMISSION" as const,
     bodyOrigin: "CURATED" as const,
-    coverageStatus: "LIVE" as const,
+    coverageStatus: row.status,
     agendaSourceType: "ICAL" as const,
     agendaSourceRef: "https://www.wilmotnh.org/events/list/?ical=1",
     meetingCadence: null,
@@ -895,6 +1006,16 @@ function wilmotBoardRows(): Body[] {
  */
 function newLondonBoardRows(): Body[] {
   const collected = "2026-08-19";
+  /*
+   * **TWELVE MORE OFF THE SAME CALENDAR** (NH Hunt 4, 2026-08-21, item 3).
+   *
+   * Four were wired on 2026-08-19. The town's own BOARDS & COMMITTEES menu and
+   * its own calendar between them name sixteen, including an Archives
+   * Committee that appears on the calendar and nowhere else, and a **Tri-Town
+   * Assessing Board** that New London shares with Sunapee and Newbury and that
+   * meets in the Sunapee town offices — a body whose meetings are held in a
+   * different town from the one whose site publishes them.
+   */
   const rows: Array<{ slug: string; name: string; path: string }> = [
     { slug: "board-of-selectmen", name: "Board of Selectmen", path: "/selectmen" },
     { slug: "planning-board", name: "Planning Board", path: "/planningboard" },
@@ -902,6 +1023,38 @@ function newLondonBoardRows(): Body[] {
     {
       slug: "conservation-commission",
       name: "Conservation Commission",
+      path: "/calendar",
+    },
+    { slug: "budget-committee", name: "Budget Committee", path: "/budget" },
+    { slug: "energy-committee", name: "Energy Committee", path: "/energy" },
+    { slug: "housing-commission", name: "Housing Commission", path: "/calendar" },
+    { slug: "recreation-commission", name: "Recreation Commission", path: "/reccommission" },
+    { slug: "board-of-firewards", name: "Board of Firewards", path: "/firewards" },
+    { slug: "archives-committee", name: "Archives Committee", path: "/calendar" },
+    {
+      slug: "bicycle-pedestrian-advisory-committee",
+      name: "Bicycle & Pedestrian Advisory Committee",
+      path: "/calendar",
+    },
+    { slug: "citizens-committee", name: "Citizens' Committee", path: "/cac" },
+    {
+      slug: "trustees-of-the-trust-funds",
+      name: "Trustees of the Trust Funds",
+      path: "/calendar",
+    },
+    {
+      slug: "tri-town-assessing-board",
+      name: "Tri-Town Assessing Board (New London, Sunapee & Newbury)",
+      path: "/calendar",
+    },
+    {
+      slug: "supervisors-of-the-checklist",
+      name: "Supervisors of the Checklist",
+      path: "/calendar",
+    },
+    {
+      slug: "capital-improvement-program",
+      name: "Capital Improvement Program Committee",
       path: "/calendar",
     },
   ];
@@ -998,6 +1151,517 @@ function springfieldBoardRows(): Body[] {
     provenance: {
       sourceUrl: feed,
       sourceOrg: "Town of Springfield",
+      collectedAt: collected,
+      verifiedAt: collected,
+    },
+  }));
+}
+
+
+/**
+ * **BRADFORD, SUTTON AND WARNER, NH** (NH Hunt 4, 2026-08-21, item 3).
+ *
+ * Three of Kearsarge Regional School District's seven member towns, and the
+ * three that had no bodies in this registry at all. Each town's list is its
+ * OWN — read from the town's own boards index, then cross-read against the
+ * town's own calendar feed, which in every case named bodies the index had
+ * not: Bradford's index lists eight boards and its calendar files sittings for
+ * a CIP Committee, a Hazard Mitigation Committee, a Facilities Use Committee
+ * and an Independence Day Committee besides. **The menu is an undercount, and
+ * it was an undercount at Newbury too.**
+ *
+ * Names are the town's own, as the feed writes them, because the wiring
+ * matches on exactly those strings.
+ *
+ * **Warner's list includes the Warner Village Water District**, which is a
+ * separate governing body with its own elected commissioners and its own
+ * budget, and it is exactly the kind of twig this product exists to name.
+ */
+function bradfordBoardRows(): Body[] {
+  const collected = "2026-08-21";
+  const rows: TownBoardRow[] = [
+    {
+      slug: "select-board",
+      name: "Select Board",
+      sittings: 73,
+      upcoming: 2,
+      status: "LIVE",
+    },
+    {
+      slug: "budget-committee",
+      name: "Budget Committee",
+      sittings: 35,
+      upcoming: 1,
+      status: "LIVE",
+    },
+    {
+      slug: "cemetery-trustees",
+      name: "Cemetery Trustees",
+      sittings: 20,
+      upcoming: 0,
+      status: "LIVE",
+    },
+    {
+      slug: "community-power-committee",
+      name: "Community Power Committee",
+      sittings: 2,
+      upcoming: 0,
+      status: "LIVE",
+    },
+    {
+      slug: "conservation-commission",
+      name: "Conservation Commission",
+      sittings: 33,
+      upcoming: 4,
+      status: "LIVE",
+    },
+    {
+      slug: "economic-development-committee",
+      name: "Economic Development Committee",
+      sittings: 19,
+      upcoming: 0,
+      status: "LIVE",
+    },
+    {
+      slug: "energy-committee",
+      name: "Energy Committee",
+      sittings: 11,
+      upcoming: 0,
+      status: "LIVE",
+    },
+    {
+      slug: "parks-and-recreation",
+      name: "Parks and Recreation Committee",
+      sittings: 9,
+      upcoming: 0,
+      status: "LIVE",
+    },
+    {
+      slug: "planning-board",
+      name: "Planning Board",
+      sittings: 25,
+      upcoming: 2,
+      status: "LIVE",
+    },
+    {
+      slug: "zoning-board",
+      name: "Zoning Board of Adjustment",
+      sittings: 10,
+      upcoming: 0,
+      status: "LIVE",
+    },
+    {
+      slug: "cip-committee",
+      name: "Capital Improvement Program Committee",
+      sittings: 9,
+      upcoming: 5,
+      status: "LIVE",
+    },
+    {
+      slug: "hazard-mitigation-committee",
+      name: "Hazard Mitigation Committee",
+      sittings: 19,
+      upcoming: 0,
+      status: "LIVE",
+    },
+    {
+      slug: "facilities-use-committee",
+      name: "Facilities Use Committee",
+      sittings: 18,
+      upcoming: 0,
+      status: "LIVE",
+    },
+    {
+      slug: "independence-day-committee",
+      name: "Independence Day Committee",
+      sittings: 6,
+      upcoming: 5,
+      status: "LIVE",
+    },
+    {
+      slug: "supervisors-of-the-checklist",
+      name: "Supervisors of the Checklist",
+      sittings: 17,
+      upcoming: 3,
+      status: "LIVE",
+    },
+  ];
+  return rows.map((row) => ({
+    id: `${BRADFORD_OCD}#${row.slug}`,
+    ocdId: BRADFORD_OCD,
+    name: row.name,
+    bodyClass: "COMMISSION" as const,
+    bodyOrigin: "CURATED" as const,
+    coverageStatus: row.status,
+    agendaSourceType: "ICAL" as const,
+    agendaSourceRef: "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+    meetingCadence: null,
+    homepageUrl: "https://bradfordnh.gov/pages/boards-and-committees",
+    demandCount: 0,
+    sourceDataset: "GOV_DIRECTORY" as const,
+    provenance: {
+      sourceUrl: "https://bradfordnh.gov/pages/boards-and-committees",
+      sourceOrg: "Town of Bradford",
+      collectedAt: collected,
+      verifiedAt: collected,
+    },
+  }));
+}
+
+function suttonBoardRows(): Body[] {
+  const collected = "2026-08-21";
+  const rows: TownBoardRow[] = [
+    {
+      slug: "select-board",
+      name: "Select Board",
+      sittings: 548,
+      upcoming: 9,
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "planning-board",
+      name: "Planning Board",
+      sittings: 171,
+      upcoming: 4,
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "conservation-commission",
+      name: "Conservation Commission",
+      sittings: 152,
+      upcoming: 4,
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "zoning-board",
+      name: "Zoning Board of Adjustment",
+      sittings: 89,
+      upcoming: 4,
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "cemetery-commission",
+      name: "Cemetery Commission",
+      sittings: 9,
+      upcoming: 2,
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "budget-committee",
+      name: "Municipal Budget Committee",
+      sittings: 89,
+      upcoming: 0,
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "supervisors-of-the-checklist",
+      name: "Supervisors of the Checklist",
+      sittings: 5,
+      upcoming: 1,
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "trustees-of-the-trust-funds",
+      name: "Trustees of the Trust Funds",
+      sittings: 1,
+      upcoming: 0,
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "warner-river-local-advisory-committee",
+      name: "Warner River Local Advisory Committee",
+      sittings: 23,
+      upcoming: 2,
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "hazard-mitigation-committee",
+      name: "Hazard Mitigation Committee",
+      sittings: 3,
+      upcoming: 0,
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "website-committee",
+      name: "Website Committee",
+      sittings: 6,
+      upcoming: 0,
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "library-trustees",
+      name: "Sutton Free Library Board of Trustees",
+      sittings: 96,
+      upcoming: 0,
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "ad-hoc-waste-reduction-advisory-committee",
+      name: "Ad Hoc Waste Reduction Advisory Committee",
+      sittings: 8,
+      upcoming: 0,
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "ad-hoc-grist-mill-bridge-committee",
+      name: "Ad Hoc Grist Mill Bridge Committee",
+      sittings: 6,
+      upcoming: 0,
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "ad-hoc-fire-safety-municipal-building-committee",
+      name: "Ad Hoc Fire Safety Municipal Building Committee",
+      sittings: 12,
+      upcoming: 0,
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "ad-hoc-sutton-connects-committee",
+      name: "Ad Hoc Sutton Connects! Committee",
+      sittings: 13,
+      upcoming: 5,
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "ad-hoc-speed-sign-committee",
+      name: "Ad Hoc Speed Sign Committee",
+      sittings: 7,
+      upcoming: 4,
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "grist-mill-street-committee",
+      name: "26 Grist Mill Street Committee",
+      sittings: 20,
+      upcoming: 0,
+      status: "KNOWN_UNCOVERED",
+    },
+  ];
+  return rows.map((row) => ({
+    id: `${SUTTON_OCD}#${row.slug}`,
+    ocdId: SUTTON_OCD,
+    name: row.name,
+    bodyClass: "COMMISSION" as const,
+    bodyOrigin: "CURATED" as const,
+    coverageStatus: row.status,
+    agendaSourceType: "ICAL" as const,
+    agendaSourceRef: "https://www.suttonnh.gov/calendar/ical/calendar.ics",
+    meetingCadence: null,
+    homepageUrl: "https://www.suttonnh.gov/boards-committees",
+    demandCount: 0,
+    sourceDataset: "GOV_DIRECTORY" as const,
+    provenance: {
+      sourceUrl: "https://www.suttonnh.gov/boards-committees",
+      sourceOrg: "Town of Sutton",
+      collectedAt: collected,
+      verifiedAt: collected,
+    },
+  }));
+}
+
+function warnerBoardRows(): Body[] {
+  const collected = "2026-08-21";
+  const rows: TownBoardRow[] = [
+    {
+      slug: "select-board",
+      name: "Select Board",
+      sittings: 77,
+      upcoming: 3,
+      status: "LIVE",
+    },
+    {
+      slug: "agricultural-commission",
+      name: "Agricultural Commission",
+      sittings: 3,
+      upcoming: 0,
+      status: "LIVE",
+    },
+    {
+      slug: "auditor-search-committee",
+      name: "Auditor Search Committee",
+      sittings: 3,
+      upcoming: 0,
+      status: "LIVE",
+    },
+    {
+      slug: "budget-committee",
+      name: "Budget Committee",
+      sittings: 44,
+      upcoming: 15,
+      status: "LIVE",
+    },
+    {
+      slug: "cemetery-trustees",
+      name: "Cemetery Trustees",
+      sittings: 0,
+      upcoming: 0,
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "chandler-reservation-committee",
+      name: "Chandler Reservation Committee",
+      sittings: 1,
+      upcoming: 0,
+      status: "LIVE",
+    },
+    {
+      slug: "community-power-committee",
+      name: "Community Power Committee",
+      sittings: 0,
+      upcoming: 0,
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "conservation-commission",
+      name: "Conservation Commission",
+      sittings: 8,
+      upcoming: 0,
+      status: "LIVE",
+    },
+    {
+      slug: "corridor-committee",
+      name: "Corridor Committee",
+      sittings: 0,
+      upcoming: 0,
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "economic-development-advisory-committee",
+      name: "Economic Development Advisory Committee",
+      sittings: 0,
+      upcoming: 0,
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "energy-solar-committee",
+      name: "Energy/Solar Committee",
+      sittings: 3,
+      upcoming: 0,
+      status: "LIVE",
+    },
+    {
+      slug: "groundwater-protection-committee",
+      name: "Groundwater Protection Committee",
+      sittings: 0,
+      upcoming: 0,
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "highway-safety-committee",
+      name: "Highway Safety Committee",
+      sittings: 0,
+      upcoming: 0,
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "housing-advisory-committee",
+      name: "Housing Advisory Committee",
+      sittings: 0,
+      upcoming: 0,
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "housing-committee",
+      name: "Housing Committee",
+      sittings: 17,
+      upcoming: 1,
+      status: "LIVE",
+    },
+    {
+      slug: "joint-loss-management-committee",
+      name: "Joint Loss Management Committee",
+      sittings: 0,
+      upcoming: 0,
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "mink-hills-recreation-committee",
+      name: "Mink Hills Recreation Committee",
+      sittings: 0,
+      upcoming: 0,
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "parks-and-recreation",
+      name: "Parks and Recreation Commission",
+      sittings: 14,
+      upcoming: 4,
+      status: "LIVE",
+    },
+    {
+      slug: "planning-board",
+      name: "Planning Board",
+      sittings: 9,
+      upcoming: 0,
+      status: "LIVE",
+    },
+    {
+      slug: "record-preservation-committee",
+      name: "Record Preservation Committee",
+      sittings: 0,
+      upcoming: 0,
+      status: "KNOWN_UNCOVERED",
+    },
+    {
+      slug: "road-committee",
+      name: "Road Committee",
+      sittings: 4,
+      upcoming: 0,
+      status: "LIVE",
+    },
+    {
+      slug: "supervisors-of-the-checklist",
+      name: "Supervisors of the Checklist",
+      sittings: 6,
+      upcoming: 0,
+      status: "LIVE",
+    },
+    {
+      slug: "trustees-of-the-trust-funds",
+      name: "Trustees of the Trust Funds",
+      sittings: 3,
+      upcoming: 0,
+      status: "LIVE",
+    },
+    {
+      slug: "warner-river-local-advisory-committee",
+      name: "Warner River Local Advisory Committee",
+      sittings: 2,
+      upcoming: 0,
+      status: "LIVE",
+    },
+    {
+      slug: "warner-village-water-district",
+      name: "Warner Village Water District",
+      sittings: 2,
+      upcoming: 0,
+      status: "LIVE",
+    },
+    {
+      slug: "zoning-board",
+      name: "Zoning Board of Adjustment",
+      sittings: 19,
+      upcoming: 1,
+      status: "LIVE",
+    },
+  ];
+  return rows.map((row) => ({
+    id: `${WARNER_OCD}#${row.slug}`,
+    ocdId: WARNER_OCD,
+    name: row.name,
+    bodyClass: "COMMISSION" as const,
+    bodyOrigin: "CURATED" as const,
+    coverageStatus: row.status,
+    agendaSourceType: "ICAL" as const,
+    agendaSourceRef: "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+    meetingCadence: null,
+    homepageUrl: "https://warnernh.gov/boards/",
+    demandCount: 0,
+    sourceDataset: "GOV_DIRECTORY" as const,
+    provenance: {
+      sourceUrl: "https://warnernh.gov/boards/",
+      sourceOrg: "Town of Warner",
       collectedAt: collected,
       verifiedAt: collected,
     },

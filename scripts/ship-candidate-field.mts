@@ -65,6 +65,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { stripImageMetadata } from "./strip-image-metadata.mts";
+import { kindOf, normalisePortrait } from "./transcode-image.mts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CARDS = join(ROOT, "data", "ballot", "candidate-cards-2026.json");
@@ -210,17 +211,40 @@ async function main(): Promise<void> {
         process.exit(1);
       }
       const raw = Buffer.from(await response.arrayBuffer());
-      const { bytes, stripped, removed } = stripImageMetadata(raw);
+      /*
+       * THE CONTAINER IS NEVER A FINDING ABOUT THE PERSON (NH Hunt 4,
+       * 2026-08-21). `normalisePortrait` decodes WebP and AVIF, names the
+       * format from the BYTES rather than from the plan's filename, and caps
+       * what a card is asked to load. All three were live defects on this
+       * script's first run of the day: a WebP portrait refused outright, a
+       * JPEG shipped under a `.png` name because the plan said so, and a
+       * 2.7 MB image put on a card. Every change it makes is recorded in the
+       * photo's own source string, so nothing we re-encoded is ever cited as
+       * though it were the bytes the source published.
+       */
+      const portrait = await normalisePortrait(raw);
+      const planned = plan.photo.file.replace(/\.[A-Za-z0-9]+$/, "");
+      const fileName = `${planned}.${portrait.extension}`;
+      if (fileName !== plan.photo.file) {
+        console.log(
+          `  photo  ${plan.name}  filename corrected to ${fileName} — the bytes are ` +
+            `${kindOf(portrait.bytes)} and an extension that disagrees with its contents is a false label`,
+        );
+      }
+      if (portrait.note) console.log(`  photo  ${plan.name}  ${portrait.note}`);
+      const { bytes, stripped, removed } = stripImageMetadata(portrait.bytes);
       if (!stripped) {
         console.error(
-          `  ${plan.name}: not a JPEG/PNG this repo can strip (${response.headers.get("content-type")}) — ` +
-            "bytes we cannot inspect do not ship",
+          `  ${plan.name}: normalisePortrait returned a ${kindOf(portrait.bytes)} this repo cannot ` +
+            `strip (source content-type ${response.headers.get("content-type")}) — bytes we cannot inspect do not ship`,
         );
         process.exit(1);
       }
-      writeFileSync(join(PHOTO_DIR, plan.photo.file), bytes);
-      card.photoUrl = `/candidates/${plan.photo.file}`;
-      card.photoSource = plan.photo.source;
+      writeFileSync(join(PHOTO_DIR, fileName), bytes);
+      card.photoUrl = `/candidates/${fileName}`;
+      card.photoSource = portrait.note
+        ? `${plan.photo.source} — ${portrait.note}`
+        : plan.photo.source;
       photos++;
       /*
        * THE REPORT ROW IS WRITTEN BY THE SAME CALL THAT WRITES THE PHOTO.
@@ -233,10 +257,11 @@ async function main(): Promise<void> {
        * exactly what happened on this script's first run. One call, both files.
        */
       reportRows.push(
-        `| ${plan.name} | \`/candidates/${plan.photo.file}\` | door ${plan.photo.door} — ${plan.photo.source} | ${plan.photo.judgment} |`,
+        `| ${plan.name} | \`/candidates/${fileName}\` | door ${plan.photo.door} — ${card.photoSource} | ${plan.photo.judgment} |`,
       );
       console.log(
-        `  photo  ${plan.name}  door ${plan.photo.door}  ${bytes.length} bytes` +
+        `  photo  ${plan.name}  door ${plan.photo.door}  ${bytes.length} bytes  ` +
+          `(source ${portrait.sourceWidth}x${portrait.sourceHeight})` +
           (removed.length ? `  (stripped ${removed.join(", ")})` : "  (no metadata to strip)"),
       );
     }

@@ -15,6 +15,7 @@ import {
   rejections,
   reviewFor,
 } from "../lib/photos/review.ts";
+import { personKey } from "../lib/photos/person.ts";
 
 /**
  * **RULING 55 — a photo never blocks anything, and every photo is reviewed by
@@ -108,25 +109,67 @@ test("no photo that was rendering stopped rendering when the gate shipped", () =
    * reader-facing regression to satisfy a new rule is not a trade this product
    * makes — the same decision RULING 20's asset guard made, for the same
    * reason.
+   *
+   * **AMENDED 2026-08-21 (NH Hunt 4), and the amendment is the rule working.**
+   * The first form of this test asserted that EVERY photo the store holds
+   * renders. That made RULING 55's own PENDING state impossible: the first
+   * three portraits hunted after the gate shipped — Meg Hagaman's, Jon
+   * Raiche's and Vincent Ribas's — failed it, for being exactly what the
+   * ruling says a newly found photo is. A test that forbids a new photo from
+   * awaiting review has stopped guarding the ruling and started contradicting
+   * it.
+   *
+   * So the claim is stated as what it always meant: **a photo is dropped only
+   * by a DECISION about that photo.** Every drop must be either a REJECTED
+   * image or one the author has not looked at yet, and a portrait carrying an
+   * APPROVED record — which includes every one grandfathered on ship day — may
+   * never stop rendering. Both numbers print, because a growing pending queue
+   * is a fact somebody should be able to see.
    */
   const file = allCandidateCards();
   let raw = 0;
   let rendered = 0;
-  const dropped: string[] = [];
+  const droppedApproved: string[] = [];
+  const pending: string[] = [];
+  const refused: string[] = [];
   for (const [key, card] of Object.entries(file.cards)) {
     if (!card?.photoUrl) continue;
     raw += 1;
-    if (resolve(key)?.photoUrl) rendered += 1;
-    else dropped.push(key);
+    if (resolve(key)?.photoUrl) {
+      rendered += 1;
+      continue;
+    }
+    const state = reviewFor(personNameOf(key), card.photoUrl).state;
+    if (state === "APPROVED") droppedApproved.push(key);
+    else if (state === "REJECTED") refused.push(key);
+    else pending.push(key);
   }
   assert.ok(raw > 50, `expected the portrait set, counted ${raw}`);
   assert.deepEqual(
-    dropped,
+    droppedApproved,
     [],
-    `${dropped.length} of ${raw} portraits stopped rendering: ${dropped.join(", ")}`,
+    `${droppedApproved.length} of ${raw} APPROVED portraits stopped rendering: ` +
+      droppedApproved.join(", "),
   );
-  assert.equal(rendered, raw, "stated N equals rendered rows");
+  assert.equal(
+    rendered + pending.length + refused.length,
+    raw,
+    `the pair must reconcile: ${rendered} rendered + ${pending.length} pending + ` +
+      `${refused.length} refused should equal ${raw} held`,
+  );
 });
+
+/**
+ * The person key a photo decision is filed under, derived the same way
+ * `candidate-cards.ts` derives it — from the candidacy id's tail, or from the
+ * nominee name after the pipe.
+ */
+function personNameOf(key: string): string {
+  const raw = key.includes("|")
+    ? key.slice(key.indexOf("|") + 1)
+    : (key.split(":").pop() ?? key).split("-").reverse().join(" ");
+  return personKey(raw);
+}
 
 /* ─────────────────────────── the store's honesty ───────────────────────── */
 

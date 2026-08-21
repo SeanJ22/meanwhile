@@ -3,9 +3,9 @@
  "note": "RULING 20 (Prompt C item 14). Portraits and document corpora are stored by the SHA-256 of their own bytes, outside the repo; this manifest is what git carries. THE COMMITTED COPIES WERE NOT DELETED — the deploy serves public/officials/ and the store is a local path Netlify cannot reach, so removing them would blank every card in production. See R57. Reference data, per-zip snapshots and all provenance stay in git and are not here.",
  "store": "C:\\Users\\seanj\\dev\\we-the-people-assets",
  "counts": {
-  "rows": 948,
-  "bytes": 188429238,
-  "distinctHashes": 946
+  "rows": 951,
+  "bytes": 115960619,
+  "distinctHashes": 949
  },
  "rows": [
   {
@@ -52,8 +52,8 @@
   },
   {
    "path": "public/candidates/az-pima-governor-hourihan-teri-ann.jpg",
-   "sha256": "9a7504ea71a6a9fbbd592f10ec21390829705ee687b4dd77b21d7f6b888c793f",
-   "bytes": 625420,
+   "sha256": "73487350cde55248d819b7590e1ff067e064003b8e474871a8046fa35a394b55",
+   "bytes": 93180,
    "storedAt": "2026-08-21"
   },
   {
@@ -141,15 +141,33 @@
    "storedAt": "2026-08-21"
   },
   {
+   "path": "public/candidates/nh-merrimack-county-attorney-hagaman-meg.jpg",
+   "sha256": "411e058950a6369c2fad5601b3d46d8465043006f1c2ee95fb4fd1d78a11be0f",
+   "bytes": 89682,
+   "storedAt": "2026-08-21"
+  },
+  {
+   "path": "public/candidates/nh-merrimack-county-attorney-raiche-jon.jpg",
+   "sha256": "210b1e4a170a42433ae777eae4c2d5a78e7d1c48893e7c8b9847d70c60656897",
+   "bytes": 126687,
+   "storedAt": "2026-08-21"
+  },
+  {
    "path": "public/candidates/nh-merrimack-county-attorney-rogers-sarah.jpg",
-   "sha256": "8d94b9ce3d1575bee55570bf65a4681965b6f26607467770afc191bb11bfdcce",
-   "bytes": 669582,
+   "sha256": "a1cfe7fb49a0ea7b16072ac6ca002b729bd88540de644b714add8aad00e73d8c",
+   "bytes": 106365,
    "storedAt": "2026-08-21"
   },
   {
    "path": "public/candidates/nh-merrimack-county-commissioner-2-french-harold.jpg",
-   "sha256": "d3b22f0baeaf93403ff9024e18874335ce14ca809490f7483a42315139bd1f11",
-   "bytes": 1102404,
+   "sha256": "7acfe503dc83610deaa9ffbf997460e158e9c1c00481445acf36334dac3a103d",
+   "bytes": 169457,
+   "storedAt": "2026-08-21"
+  },
+  {
+   "path": "public/candidates/nh-merrimack-county-commissioner-2-ribas-vincent-s.jpg",
+   "sha256": "18f7a67ab3f2c4bf6d6f94b5d88433c633cde935017f23ed09595920d1ba0316",
+   "bytes": 15129,
    "storedAt": "2026-08-21"
   },
   {
@@ -166,8 +184,8 @@
   },
   {
    "path": "public/candidates/nh-merrimack-executive-council-2-liot-hill-karen.jpg",
-   "sha256": "5d2135b8da117a6b75be4319b628bbeb68ccac1798acae89f366a876452d8413",
-   "bytes": 2468959,
+   "sha256": "73925ef84d934fb6faf9e39f40937af2114edf98c780ac7429c82dae50ab0299",
+   "bytes": 242873,
    "storedAt": "2026-08-21"
   },
   {
@@ -178,8 +196,8 @@
   },
   {
    "path": "public/candidates/nh-merrimack-governor-warmington-cinde.jpg",
-   "sha256": "ea3ef07aa9ba1f4b8836cd60e54f082e3610b0a9602d42d12550e28f5cf5ebca",
-   "bytes": 2216653,
+   "sha256": "45605d4b01dc64746942c815b8306bd6e17924a507260845536f8046d731ae11",
+   "bytes": 144595,
    "storedAt": "2026-08-21"
   },
   {
@@ -244,8 +262,8 @@
   },
   {
    "path": "public/candidates/nj-morris-county-commissioner-selen.jpg",
-   "sha256": "b6aaec204194f00497e634b3d51766472838890d9c9d7b344fa68b03e7538cb0",
-   "bytes": 668978,
+   "sha256": "287107a5a805d3a9d1e883d4b7fb0e01281b7ea3a2446173c8bd5624e2ca595e",
+   "bytes": 117981,
    "storedAt": "2026-08-21"
   },
   {
@@ -256,8 +274,8 @@
   },
   {
    "path": "public/candidates/nj-morris-us-senate-fernandez.png",
-   "sha256": "f9fe1874c9a0f409ab9a43668b1cb4cd1256bef100b38571481dcb5c70a89602",
-   "bytes": 2985465,
+   "sha256": "a4567931310626b9b26b7f4cbe80ef88029a400617456b5bbc9a6765126b2dde",
+   "bytes": 1080799,
    "storedAt": "2026-08-21"
   },
   {
@@ -2914,8 +2932,8 @@
   },
   {
    "path": "public/officials/plural-01e401fa-3dca-460b-8eac-080f6e7fce90.jpg",
-   "sha256": "62bc88bd59556be53382402a16b92ea005b5b44f633e13e4b6f320d9f7770e9b",
-   "bytes": 4068865,
+   "sha256": "103b255a0766df1a09d584d450890733ee7033966166e689b56654c4e2771e6e",
+   "bytes": 101100,
    "storedAt": "2026-08-21"
   },
   {
@@ -2986,8 +3004,8 @@
   },
   {
    "path": "public/officials/plural-08622297-087a-4e0e-97ad-abd8e81a89d8.jpg",
-   "sha256": "4bdfa26c1225382e978b016c3c23f6b7d10a8f0a5b4ca0f21a3c3c4a5f7eea98",
-   "bytes": 1902455,
+   "sha256": "e8a0cd6382c948d3d9adf1f78bc5d915a1596986da1c57e53de78394b5917a7a",
+   "bytes": 167385,
    "storedAt": "2026-08-21"
   },
   {
@@ -3046,8 +3064,8 @@
   },
   {
    "path": "public/officials/plural-0d4bc96e-c56f-42a3-b602-54222dfdd883.jpg",
-   "sha256": "3ae7b7abb217744a2dbf359c35c2ca02d78524fc6568661310b5b4e24683450e",
-   "bytes": 732909,
+   "sha256": "aa08b816c5cf5f5c7b431004ffe1e0a7feac4006d42d0a24aeeb914f474fc98f",
+   "bytes": 140765,
    "storedAt": "2026-08-21"
   },
   {
@@ -3274,8 +3292,8 @@
   },
   {
    "path": "public/officials/plural-21a4a059-a8f3-4ec9-ac42-84983f16fb8d.jpg",
-   "sha256": "34b735256443e144e6a0c09171632dc23de9cb447c4bb75f0577efc272559667",
-   "bytes": 765476,
+   "sha256": "c218c4c9565ac3d024d76ed795fa35fa6f61ccfff25535bc9b34311b93a73e22",
+   "bytes": 134415,
    "storedAt": "2026-08-21"
   },
   {
@@ -3298,8 +3316,8 @@
   },
   {
    "path": "public/officials/plural-22809c1b-0676-4ad9-8d0e-8a0a9d19063a.jpg",
-   "sha256": "eb573e0dede3744e5945f2653b1fbe7cb1893b299c1e45bd77fff0dcbfe0b3ec",
-   "bytes": 5789535,
+   "sha256": "4fc2fa67fb9a5dbc1a0d59c8db5a1b90e62ac3d665e7c66609c1243174de3b9f",
+   "bytes": 148210,
    "storedAt": "2026-08-21"
   },
   {
@@ -3322,8 +3340,8 @@
   },
   {
    "path": "public/officials/plural-263ebe9c-566a-4b5c-bfbc-ea1f1d0dc3f2.jpg",
-   "sha256": "b0bb14b618dec84e20ac7fa7559417c502dec21e54beab16b376c387cf885598",
-   "bytes": 792575,
+   "sha256": "49d837ce37847ad48b4cb721e68b9cec2c07d0c6f90a0833de6619935f0429b2",
+   "bytes": 138509,
    "storedAt": "2026-08-21"
   },
   {
@@ -3586,8 +3604,8 @@
   },
   {
    "path": "public/officials/plural-3b5abb0c-bfa9-4dfb-a84d-a60f7d3f8bc7.jpg",
-   "sha256": "007a3a6c68df9dd899931c2071999ee4b9fb1b67d4ba8aec6a9346a328a747e4",
-   "bytes": 1088436,
+   "sha256": "93c4b56737ce5de6ed97df37c389bcede6be4dc4ce49f07378b27ba2c6ec9220",
+   "bytes": 122570,
    "storedAt": "2026-08-21"
   },
   {
@@ -3694,8 +3712,8 @@
   },
   {
    "path": "public/officials/plural-461c9024-c8c3-44a5-91d6-015a6587db5f.jpg",
-   "sha256": "20890c1a9efa53fbb9811657d29051e01f2e038a078361e68820f6be91fb24e1",
-   "bytes": 791237,
+   "sha256": "49bc8eddfa00f3d79e5c23085e7e083ec143aed26306d6ddb07309a0b416b7cb",
+   "bytes": 116006,
    "storedAt": "2026-08-21"
   },
   {
@@ -3712,8 +3730,8 @@
   },
   {
    "path": "public/officials/plural-472f8b30-237d-44fe-8d3e-af33b833d8eb.jpg",
-   "sha256": "59141bea77feaa915bbd1578b527de10eecf79b194f93b2c5ebcdea4bb89e59f",
-   "bytes": 1344084,
+   "sha256": "97e54718a8300e7b85bebb584af655a14f2dafde09cf5d2316083ac304b40715",
+   "bytes": 125685,
    "storedAt": "2026-08-21"
   },
   {
@@ -3748,8 +3766,8 @@
   },
   {
    "path": "public/officials/plural-4a80db99-34b2-4d33-995b-41d889592bf3.jpg",
-   "sha256": "c18ef9523679ba5ff33d36f77a3401ad5fa0bda91eabfd7eca4c8985a3121fc7",
-   "bytes": 2193358,
+   "sha256": "c92b7443d127e11596eb64e315748b18348563b89f1d77bbf447ecad4de2b5e5",
+   "bytes": 142714,
    "storedAt": "2026-08-21"
   },
   {
@@ -3880,8 +3898,8 @@
   },
   {
    "path": "public/officials/plural-538f12b2-0914-4107-9b08-6f498e7eec66.jpg",
-   "sha256": "acb252b2898c41745e354df1a255ad9b7342d4bd4233b394c4e981e3d6fb2135",
-   "bytes": 873548,
+   "sha256": "e9ba89134361c106c194d0707cec824929a62ee4314c6a4a309632e941073539",
+   "bytes": 228481,
    "storedAt": "2026-08-21"
   },
   {
@@ -3904,8 +3922,8 @@
   },
   {
    "path": "public/officials/plural-554fe6ba-061a-413f-b2c7-c0e10c47ad01.jpg",
-   "sha256": "565842fcb9a026d90df6b23f5e482b72e8f5e461157381a9ca32ee0064bfa5bb",
-   "bytes": 1922509,
+   "sha256": "09d0d0567ddc32301705cb3acc33468190e2488d1ad623f8a369643a16d029da",
+   "bytes": 158941,
    "storedAt": "2026-08-21"
   },
   {
@@ -3946,8 +3964,8 @@
   },
   {
    "path": "public/officials/plural-5a468f0d-8baf-47e9-92da-2db62373030f.jpg",
-   "sha256": "8016e03725c9e3f17ae04cbf9ff0270a5eefc3ef1b675427a9df18bb9f61518b",
-   "bytes": 3563888,
+   "sha256": "3e6c1ae705bea1c809e16ea8d3e4bb4f66986dfbd19a4fa6b887ce22a2d81a51",
+   "bytes": 135130,
    "storedAt": "2026-08-21"
   },
   {
@@ -4018,8 +4036,8 @@
   },
   {
    "path": "public/officials/plural-61dc96d8-140a-4042-b832-ac51bf0796f3.jpg",
-   "sha256": "478b3ed7426b192aae017ab693df0553211b79a0a17c27f89b9868a5e06c2a2e",
-   "bytes": 1097471,
+   "sha256": "26063b3cb16fc158a9b8ea0eb5e75ac62e982c035ed6df1fe8c15d62c6a8d234",
+   "bytes": 133555,
    "storedAt": "2026-08-21"
   },
   {
@@ -4060,14 +4078,14 @@
   },
   {
    "path": "public/officials/plural-66e496a4-a407-4af1-add3-ef6899b89807.jpg",
-   "sha256": "73a2702c72cd24fc93faa7de2d6df09a8e0d6c858d23639f55d8febd42d5f042",
-   "bytes": 15398873,
+   "sha256": "509be89d7f736f7874a7d679d51f29931e7c514405012c81a9ac27b18fc4a06b",
+   "bytes": 218201,
    "storedAt": "2026-08-21"
   },
   {
    "path": "public/officials/plural-68c38dfc-a12b-4c51-8b70-c4e02931cddf.jpg",
-   "sha256": "2c4bb86af0415bab689f33dfa4ad8d2aedb4329e134ce7834cfd6f0a5fe30830",
-   "bytes": 654215,
+   "sha256": "07b07f7647df45fbce51cb446203898b2e924db00d47abef51f83e1a095c4a96",
+   "bytes": 148954,
    "storedAt": "2026-08-21"
   },
   {
@@ -4162,8 +4180,8 @@
   },
   {
    "path": "public/officials/plural-74d3b542-b2d0-426f-9835-0de12d5e4895.jpg",
-   "sha256": "b4b8fc8b807782211820f27fbec354e2da5b7eeec76c9a07969f6f5ac72b4bba",
-   "bytes": 2419266,
+   "sha256": "6c9391e3f88bb643476e597da0dd99f3d3f06de0d477521e97ab59017eadab24",
+   "bytes": 209106,
    "storedAt": "2026-08-21"
   },
   {
@@ -4246,8 +4264,8 @@
   },
   {
    "path": "public/officials/plural-7cc1d333-efac-47fb-a109-98113c762790.jpg",
-   "sha256": "b15870e6b58410364bf8da30c116c0128d8ce63ed8b69980e57aced93030f127",
-   "bytes": 1831091,
+   "sha256": "4cd4caec6d4a1eaef0c33bf320e7300b12d157223ea63512c166bcc09eb4ff46",
+   "bytes": 130561,
    "storedAt": "2026-08-21"
   },
   {
@@ -4312,8 +4330,8 @@
   },
   {
    "path": "public/officials/plural-84fef36b-d3a0-4bb1-9458-7e7b165a51ff.jpg",
-   "sha256": "b3a1cf4f8a3595880713a1443424564e52ef098e68db8a4c289dd53ce371bbfe",
-   "bytes": 1713716,
+   "sha256": "55da40a3ceb689c73dcdec7869ed2f433ae32a2629893914a2f85fc5ae4d0bb2",
+   "bytes": 171157,
    "storedAt": "2026-08-21"
   },
   {
@@ -4432,8 +4450,8 @@
   },
   {
    "path": "public/officials/plural-9089a509-1f26-4770-adc6-199ed716e692.jpg",
-   "sha256": "fae8e77f1f4eddfc711136e8c1ff3a8ea427c4209940eec7bdd52f5863aae56e",
-   "bytes": 944444,
+   "sha256": "4154e512d9c9163e0d3599f839abc85103904b666b43b20f34853cb6ac66fefe",
+   "bytes": 133685,
    "storedAt": "2026-08-21"
   },
   {
@@ -4576,8 +4594,8 @@
   },
   {
    "path": "public/officials/plural-9e0a9394-7bcc-451a-9ae1-439248598eae.jpg",
-   "sha256": "a9dfa581688397dc44e06e58656d8dbbbc695f0dc1b1227706191a6068b3a860",
-   "bytes": 1500208,
+   "sha256": "125489176d502afe76ce065efe433e0018dcfccb40f7a23d08205836fe20e2ed",
+   "bytes": 125799,
    "storedAt": "2026-08-21"
   },
   {
@@ -4702,8 +4720,8 @@
   },
   {
    "path": "public/officials/plural-a8bcce41-eef2-4b18-b99f-8bb34c7f94ea.jpg",
-   "sha256": "f93591ad62502bdd120f96675cf775c3c095a464f985be3e7b36be5e56c23118",
-   "bytes": 870393,
+   "sha256": "b786d13a98e8e23a4eda8a28650a63a7bddc82ea15c76c8fba45d3c24cd1a822",
+   "bytes": 116828,
    "storedAt": "2026-08-21"
   },
   {
@@ -4726,8 +4744,8 @@
   },
   {
    "path": "public/officials/plural-ac414b7c-45dc-48b6-9530-eaa8e80b124f.jpg",
-   "sha256": "a67bc010b97613336fc78b258e308d2cd30a53a0572e428721e7a72bc31dda48",
-   "bytes": 897188,
+   "sha256": "6e66b8682c52a821925485957ea563826dae5bbe27fe84c8e33ae7c29e80c84e",
+   "bytes": 123743,
    "storedAt": "2026-08-21"
   },
   {
@@ -4744,8 +4762,8 @@
   },
   {
    "path": "public/officials/plural-acb20216-f193-42e1-9304-2b1d3572e61d.jpg",
-   "sha256": "705a3807e7b263726281246027d33b1c12015bb43a2ccb76e8a3bbf0def21c16",
-   "bytes": 1042452,
+   "sha256": "640c8ee3bab07cf2e70486b08250dc98fae00b683b490f3e309856b7888907d8",
+   "bytes": 12979,
    "storedAt": "2026-08-21"
   },
   {
@@ -4792,8 +4810,8 @@
   },
   {
    "path": "public/officials/plural-b14568dd-d9f5-4557-8ccd-0d000c231650.jpg",
-   "sha256": "b1e1b2b23ddab3d88c8bfff83f94ed1dee61a50e97e9dd9b3871cc3ebe4a56a0",
-   "bytes": 969312,
+   "sha256": "c96e10f831d9af111a1b877fbf9a8aff081dd7c1fdb205ac7bf533395b9a4238",
+   "bytes": 170637,
    "storedAt": "2026-08-21"
   },
   {
@@ -4894,8 +4912,8 @@
   },
   {
    "path": "public/officials/plural-b99b0bbb-4710-43c7-a6b5-0e04524eedf0.jpg",
-   "sha256": "b6860a6a9ea63f32307059262aab87994008e663bbf3733048d6ac8561ad61ef",
-   "bytes": 1087931,
+   "sha256": "d7db4c54e6bc6636596f7607e35d6a19babcb8542722336da054e704922687a4",
+   "bytes": 188857,
    "storedAt": "2026-08-21"
   },
   {
@@ -5008,8 +5026,8 @@
   },
   {
    "path": "public/officials/plural-c3c9bb99-9512-4bec-be04-d8b29ea96f3e.jpg",
-   "sha256": "2da500f4addf0b90eefffc4d7da74ee2a5cede53c2d8342a8a3448d20a8a3415",
-   "bytes": 782851,
+   "sha256": "106ae37f06097019e6568538a0b24758a296b8d8bb2ce47d2f61b2436006f885",
+   "bytes": 180164,
    "storedAt": "2026-08-21"
   },
   {
@@ -5098,8 +5116,8 @@
   },
   {
    "path": "public/officials/plural-cd3ca080-a00e-4ad2-a5c4-897d8939c32b.jpg",
-   "sha256": "6c73dd62f3b26d3ecfa22137c30da50bb3aaa6e23264e5a2eea11602c909a064",
-   "bytes": 2658896,
+   "sha256": "1e2f1d05ba61d3e7b36fa1550a64d05be1201a388f2a70084b3dc6c0149991ba",
+   "bytes": 112718,
    "storedAt": "2026-08-21"
   },
   {
@@ -5350,8 +5368,8 @@
   },
   {
    "path": "public/officials/plural-e849b9fb-0e1d-4ed5-b684-2a6b3520be6a.jpg",
-   "sha256": "09280b7028dfbbfae28f401056ada7e3bcace5533cf4ee8025e1efdb51f132f4",
-   "bytes": 1663348,
+   "sha256": "248c593172cba8bb0283c80a20ca4e4f1e8b10607f16fe30b14e54eb90046743",
+   "bytes": 165658,
    "storedAt": "2026-08-21"
   },
   {
@@ -5398,8 +5416,8 @@
   },
   {
    "path": "public/officials/plural-f1292af8-a209-4ff7-87b5-086acddcc10e.jpg",
-   "sha256": "0751d1a9ad90e4b76eceaf4399fad8ccd879884af0fadb003bc48eddc602b049",
-   "bytes": 998944,
+   "sha256": "c37ccc5522c95b447b5d7a19445aa0cd701e3ddf20e57e6d30bcd4c26ee16b95",
+   "bytes": 180700,
    "storedAt": "2026-08-21"
   },
   {
@@ -5422,8 +5440,8 @@
   },
   {
    "path": "public/officials/plural-f3e949ce-6d98-4826-bbca-08039cea4ea4.jpg",
-   "sha256": "86af05f962cca39f15bf1132270d8ea7a8fc79dbbbbe5bbd86054be86b3a48cd",
-   "bytes": 1265433,
+   "sha256": "8cde6d8920beb03e4a56705315e3d022555c652bce8fb883f92550226b9508b5",
+   "bytes": 184056,
    "storedAt": "2026-08-21"
   },
   {
@@ -5494,8 +5512,8 @@
   },
   {
    "path": "public/officials/plural-fcd4cdd8-007f-4d0d-b4c5-371db50e81a5.jpg",
-   "sha256": "683a30584381373b406ac053e324febace875c71b8382962fb1fa08481b5f4a3",
-   "bytes": 1024172,
+   "sha256": "8ec37d398644d0be4fa70fb16a509e28cb784ba2b3c6e3b65461fc3e319945eb",
+   "bytes": 140543,
    "storedAt": "2026-08-21"
   },
   {
@@ -5518,8 +5536,8 @@
   },
   {
    "path": "public/officials/plural-ff64ec8f-c8be-4e9c-8dce-3397cdc2401e.jpg",
-   "sha256": "249b95c351fc6fa30f173ab2c177adc45105345eb1138ee94e34486982ac1d0b",
-   "bytes": 4088647,
+   "sha256": "80f7cf18da19297e5227b1a5770c43c4bea126b0822c040f7047f5031aa88843",
+   "bytes": 112008,
    "storedAt": "2026-08-21"
   },
   {

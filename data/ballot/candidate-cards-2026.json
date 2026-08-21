@@ -884,11 +884,11 @@
       "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:county-attorney:hagaman-meg": {
-      "photoUrl": null,
-      "photoSource": null,
-      "bio": null,
-      "bioSourceUrl": null,
-      "bioSourceLabel": null,
+      "photoUrl": "/candidates/nh-merrimack-county-attorney-hagaman-meg.jpg",
+      "photoSource": "the campaign's own self-published portrait on its own domain — meg-for-merrimack.com/about, read 2026-08-21 — resampled 2500x1875 to 1200x900 for serving by pnpm ship:candidate",
+      "bio": "Meghan (Meg) Hagaman is running for Merrimack County Attorney in New Hampshire and will provide steady leadership, clear priorities, and a focus on prosecuting serious crime, while supporting law enforcement, standing with victims, and promoting a justice system people can trust because it is both strong and fair.",
+      "bioSourceUrl": "https://www.meg-for-merrimack.com/",
+      "bioSourceLabel": "In the campaign's words — meg-for-merrimack.com, read 2026-08-21",
       "email": null,
       "phone": "603-228-0529",
       "filedAddress": "PO Box 1415, Concord NH 03302",
@@ -906,12 +906,12 @@
       "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:county-attorney:raiche-jon": {
-      "photoUrl": null,
-      "photoSource": null,
-      "bio": null,
-      "bioSourceUrl": null,
-      "bioSourceLabel": null,
-      "email": null,
+      "photoUrl": "/candidates/nh-merrimack-county-attorney-raiche-jon.jpg",
+      "photoSource": "the campaign's own self-published portrait on its own domain — votejonraiche.com, alt text 'Jon Raiche Portrait', read 2026-08-21 — WEBP source decoded to JPEG, resampled 1758x2398 to 880x1200 for serving by pnpm ship:candidate",
+      "bio": "A proven leader dedicated to protecting our neighborhoods, upholding conservative principles, and demanding strict accountability in our courtrooms.",
+      "bioSourceUrl": "https://votejonraiche.com/",
+      "bioSourceLabel": "In the campaign's words — votejonraiche.com, read 2026-08-21",
+      "email": "JonRaiche@VoteJonRaiche.com",
       "phone": null,
       "filedAddress": "12 Goodhue Rd, Boscawen NH 03303",
       "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
@@ -930,22 +930,22 @@
     "ballot-nh-merrimack:county-sheriff:weir-ben": {
       "photoUrl": null,
       "photoSource": null,
-      "bio": null,
-      "bioSourceUrl": null,
-      "bioSourceLabel": null,
+      "bio": "I have dedicated my life to facilitating freedom in New Hampshire, always guided by a deep respect for our community. Every day, I strive to be a leader you can trust... and someone who listens, learns, and acts with integrity.",
+      "bioSourceUrl": "https://www.weir4liberty.org/",
+      "bioSourceLabel": "In the campaign's words — weir4liberty.org, read 2026-08-21",
       "email": null,
       "phone": null,
       "filedAddress": "1267 Bound Tree Rd, Contoocook NH 03229",
       "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
     "ballot-nh-merrimack:county-commissioner-2:ribas-vincent-s-": {
-      "photoUrl": null,
-      "photoSource": null,
+      "photoUrl": "/candidates/nh-merrimack-county-commissioner-2-ribas-vincent-s.jpg",
+      "photoSource": "the official portrait the City of Franklin publishes to identify its own councilor — franklinnh.gov/people/vincent-ribas, read 2026-08-21; attribution to the City of Franklin, remove on request",
       "bio": null,
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null,
+      "phone": "(603) 934-5330",
       "filedAddress": "4 Washington Ave, Franklin NH 03235",
       "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
@@ -2077,6 +2077,36 @@
       "key": "ballot-nh-merrimack:county-attorney:hagaman-meg",
       "name": "Meg Hagaman",
       "note": "COUNTY BRANCH, walked 2026-08-21 (pnpm nh:county). The Merrimack County Attorney's own staff directory lists her twice, by her full name and her roles: 'Meghan Hagaman — County Solicitor' and 'Meghan Hagaman — Assistant County Attorney'. She is standing for County Attorney, and this is the office's own record of her in it. SPECIFIC VERIFIED PAGE: https://www.merrimackcounty.net/departments/county_attorney/staff_directory.php, read 2026-08-21 at rung 2, HTTP 200. CONTACT: the County Attorney's published office phone, from the office page on the same host — an office number for a serving officer, never presented as a personal one. PHOTO: still owed; the directory is a table of names and roles and carries no portraits at all. BRANCH INDEPENDENT of our officeholder registry, which is what makes it worth having: the registry's exact-name join is what produced 87 wrong 'no official page' records this session.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-attorney:hagaman-meg",
+      "name": "Meg Hagaman",
+      "note": "NH Hunt 4, 2026-08-21. Two independent branches. BRANCH 1 — the NH Campaign Finance System's public filing-entity record (cfsapi.sos.nh.gov, reached at rung 7 through the app's own XHR after rungs 2-4 were refused HTTP 403 by Akamai): committee 'Meg For Merrimack', 2026 cycle, County Attorney, PO Box 1415 Concord NH 03302, phone (603) 498-5459, email MegForMerrimack@gmail.com, website Meg-For-Merrimack.com. BRANCH 2 — the campaign's own site at rung 2, which supplied the portrait, the og:description quoted as the blurb, and the treasurer disclaimer that matches branch 1. Photo shipped door 3 and is PENDING the author's review under RULING 55.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-attorney:raiche-jon",
+      "name": "Jon Raiche",
+      "note": "NH Hunt 4, 2026-08-21. Two independent branches. BRANCH 1 — the NH Campaign Finance System filing-entity record (rung 7 via the app's own XHR; rungs 2-4 refused HTTP 403): 'Raiche, Jonathan M. (Raiche, Jon)', County Attorney, 2026, 12 Goodhue Road Boscawen NH 03303, email JonRaiche@VoteJonRaiche.com, website VoteJonRaiche.com. BRANCH 2 — the campaign's own site at rung 2, which supplied the portrait, the blurb and the same email. Photo shipped door 3 and is PENDING the author's review under RULING 55.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-commissioner-2:ribas-vincent-s-",
+      "name": "Vincent S. Ribas",
+      "note": "NH Hunt 4, 2026-08-21. Two independent branches for this person. BRANCH 1 — the NH Secretary of State's 2026 cumulative filing, which places him in Franklin. BRANCH 2 — the City of Franklin's own site, which publishes his councilor page, portrait and phone. A THIRD route was walked and failed for a reason worth recording: franklinnh.org, the domain the search index still carries, redirects to www.franklinnh.org, which no resolver this project can reach answers for, and the apex serves a certificate for a different name. The town's live site is franklinnh.GOV. A campaign site and a blurb are still owed for him, and the NH Campaign Finance System holds no 2026 registration under this name.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-sheriff:weir-ben",
+      "name": "Ben Weir",
+      "note": "NH Hunt 4, 2026-08-21. Two independent branches. BRANCH 1 — the campaign's own site (weir4liberty.org, rung 2), which supplied the blurb and the site itself; its /contact page answered HTTP 403 to every rung tried, so a contact is still owed. BRANCH 2 — the NH Secretary of State, both the 2026 cumulative filing and a 2022 Ballot Law Commission decision in his name; the NH Campaign Finance System holds no 2026 registration for him. PHOTO REFUSED, and it is a decision about an IMAGE, not about him: the only portrait-shaped image the site publishes is a campaign photograph of him holding a yard sign whose wordmark dominates the frame, which the composition standard forbids by name. That is a branch result about that file and says nothing about whether a clean portrait of him exists.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:state-senate-7:innis-daniel-e-",
+      "name": "Daniel E. Innis",
+      "note": "NH Hunt 4, 2026-08-21. Two independent branches for the campaign site, which was the one field owed. BRANCH 1 — the NH Campaign Finance System's filing-entity record, reached at rung 7 through the app's own XHR (rungs 2-4 refused HTTP 403 by Akamai), which names InnisforNH.com as this candidate's website for the 2026 cycle. BRANCH 2 — the site itself at rung 2, whose title and prose name the same person, the same district and the same town as the filing.",
       "attemptedAt": "2026-08-21"
     }
   ]

@@ -26,14 +26,41 @@ const FIXTURE = readFileSync(
 /** The middle of the fixture's window, so the same rows are in range always. */
 const NOW = new Date("2026-08-19T12:00:00Z");
 
+/**
+ * The fixture is WILMOT's feed, and it goes only to Wilmot's rows.
+ *
+ * **Amended 2026-08-21 (NH Hunt 4).** This handed one town's calendar to every
+ * ICAL wiring row in the repo, which was harmless while Wilmot was the only
+ * town on the adapter and became a false failure the moment a second was
+ * wired: Bradford's "Planning Board" and Warner's "Select Board" phrases match
+ * Wilmot's event titles, and then Wilmot's rooms fail to resolve against a
+ * Bradford body — eleven sittings "lost to an unresolved venue" in a test where
+ * no such sitting existed. A fixture belongs to the feed it was recorded from.
+ */
 function rawFor(): IcalRaw[] {
-  return wiringForTypes(["ICAL"]).map((wiring) => ({
-    wiring,
-    ics: FIXTURE,
-    collectedAt: "2026-08-19T00:00:00.000Z",
-    sourceUrl: wiring.config.feedUrl ?? "",
-  }));
+  return wiringForTypes(["ICAL"])
+    .filter((wiring) => wiring.config.feedUrl?.includes("wilmotnh.org"))
+    .map((wiring) => ({
+      wiring,
+      ics: FIXTURE,
+      collectedAt: "2026-08-19T00:00:00.000Z",
+      sourceUrl: wiring.config.feedUrl ?? "",
+    }));
 }
+
+test("ICAL: the Wilmot fixture reaches Wilmot's rows and only those", () => {
+  const rows = rawFor();
+  assert.ok(rows.length >= 3, `expected Wilmot's wired boards, got ${rows.length}`);
+  assert.ok(
+    rows.every((r) => r.wiring.jurisdiction === "Wilmot, NH"),
+    "a fixture belongs to the feed it was recorded from",
+  );
+  // The denominator, so a shrinking filter cannot pass as a clean run.
+  assert.ok(
+    wiringForTypes(["ICAL"]).length > rows.length,
+    "other towns are wired on this adapter; this test deliberately excludes them",
+  );
+});
 
 /* ------------------------------------------------------------- parsing --- */
 

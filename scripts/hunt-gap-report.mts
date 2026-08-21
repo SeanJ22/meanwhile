@@ -41,6 +41,13 @@ import { huntStatesFor } from "../lib/ballot/hunt-state-server.ts";
 import type { FieldPresence, HuntState, KellyField } from "../lib/ballot/hunt-state.ts";
 import { readFileSync, writeFileSync } from "node:fs";
 import { today } from "./doc-dates.mjs";
+import { allCandidateCards } from "../lib/ballot/candidate-cards.ts";
+
+/** The photo this repo HOLDS for a key, before RULING 55's render gate. */
+function rawPhotoUrl(key: string): string | null {
+  return allCandidateCards().cards[key]?.photoUrl ?? null;
+}
+
 
 const asRows = process.argv.includes("--rows");
 const toTracker = process.argv.includes("--tracker");
@@ -59,8 +66,24 @@ function statesOf(
   links: ReturnType<typeof linksForCandidacy>,
   blurb: ReturnType<typeof derivedBlurbFor>,
 ): Record<KellyField, HuntState> {
+  /*
+   * **THE HUNT QUEUE ASKS WHETHER WE FOUND IT, NEVER WHETHER IT RENDERS**
+   * (NH Hunt 4, 2026-08-21).
+   *
+   * `cardForCandidacy` applies RULING 55's review gate, so a portrait that has
+   * been hunted, read as an image and shipped reads back as `photoUrl: null`
+   * until the author approves it. That is correct for the RENDER — an
+   * unreviewed image may not be a photograph of that person — and it was wrong
+   * here: three portraits were found, judged and committed and this queue went
+   * on listing all three as owed, which would send the next session out to hunt
+   * a photo already sitting in `public/candidates`.
+   *
+   * RULING 23 settles which reading belongs where: the four-state field is DATA
+   * about the HUNT and nothing reads it to decide what renders. So the queue
+   * reads the raw store, and the gate stays where it belongs.
+   */
   const presence: FieldPresence = {
-    photo: Boolean(card?.photoUrl),
+    photo: Boolean(rawPhotoUrl(key)) || Boolean(card?.photoUrl),
     blurb: Boolean(card?.bio) || Boolean(blurb?.text),
     contact: Boolean(card?.email) || Boolean(card?.phone),
     campaignSite: Boolean(links?.campaign?.url),

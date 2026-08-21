@@ -61,6 +61,75 @@ const zipGov = JSON.parse(readFileSync(join(DERIVED, "zip-governments.json"), "u
   zips: Record<string, Edge[]>;
 };
 
+/**
+ * **A DISTRICT RESOLVED BY A DOCUMENT IS A RESOLVED DISTRICT** (NH Hunt 4,
+ * 2026-08-21, item 6).
+ *
+ * The count below used to treat EVERY special district in an overlapping
+ * county as unresolved, because TIGER publishes no geometry for any of them.
+ * That was true when it was written and it stopped being true on 2026-08-21,
+ * when HUNT05 resolved two of Merrimack County's by DOCUMENT — RSA 432:12 for
+ * the conservation district, and the district's own words plus the state's
+ * village-district register for Lake Todd.
+ *
+ * The consequence was a live contradiction on the reader's own page: 03255
+ * renders Lake Todd Village District's meetings, and the coverage note on the
+ * same page said "18 more ... we have not worked out which of them reach this
+ * ZIP code" — with Lake Todd among the eighteen. A resolution recorded in a
+ * derived file that only the gap ledger reads is not a resolution a reader can
+ * see, and while it sat there the product was contradicting itself in print.
+ */
+const resolvedByDocument = (() => {
+  /*
+   * IT REPORTS WHAT IT READ, and the first draft of this loader did not.
+   *
+   * Sixteen of the eighteen rows in that file carry no `reaches` key at all —
+   * a district whose territory is recorded as UNRESOLVED has nothing to list.
+   * The first version iterated `district.reaches` unguarded, threw a
+   * TypeError on the third row, and the surrounding try/catch turned that into
+   * an empty map. The stamp then came out byte-identical and looked like a
+   * correct no-op. A failed read reported as nothing found, in the very file
+   * whose comment says an absent file must never become "everything is
+   * resolved" — caught by asking for the count instead of the exit code.
+   */
+  const byZip = new Map<string, Set<string>>();
+  let districtsRead = 0;
+  let withTerritory = 0;
+  try {
+    const file = JSON.parse(
+      readFileSync(join(DERIVED, "special-district-territory.json"), "utf8"),
+    ) as { districts?: { pid6: string; name: string; reaches?: string[] }[] };
+    const districts = file.districts ?? [];
+    districtsRead = districts.length;
+    for (const district of districts) {
+      if (!Array.isArray(district.reaches) || district.reaches.length === 0) continue;
+      withTerritory += 1;
+      for (const zip of district.reaches) {
+        const set = byZip.get(zip) ?? new Set<string>();
+        set.add(district.pid6);
+        byZip.set(zip, set);
+      }
+    }
+  } catch (error) {
+    /*
+     * Absent or unreadable is "nothing has been resolved by document", which is
+     * the honest default and the one this file started from. It is NOT "every
+     * district is resolved". It is PRINTED, because a silent fallback here is
+     * indistinguishable from a file with nothing in it.
+     */
+    console.log(
+      `  special-district-territory.json COULD NOT BE READ — ${(error as Error).message}. ` +
+        "Nothing is treated as resolved by document. This is not 'no districts are resolved'.",
+    );
+    return byZip;
+  }
+  console.log(
+    `  document-resolved special districts: ${withTerritory} of ${districtsRead} rows carry a territory, ` +
+      `covering ${byZip.size} zip(s)`,
+  );
+  return byZip;
+})();
+
 /* -------------------------------------------------------------------------- */
 /* What the registry actually enumerates — the ONLY route to Tier 2           */
 /* -------------------------------------------------------------------------- */
@@ -218,12 +287,22 @@ for (const [zip, edges] of Object.entries(zipGov.zips)) {
   // FLOOR across the governments touching it, not the ceiling. One
   // unresolved government drops the zip, because that is precisely the
   // government a reader might live under and hear nothing about.
-  const territoryResolved = governments.length;
   const counties = governments.filter((e) => e.layer === "county").map((e) => e.id);
-  const unresolvedSpecialDistricts = counties.reduce(
+  const inCounties = counties.reduce(
     (n, geoid) => n + (specialDistrictsByCountyGeoid.get(geoid) ?? 0),
     0,
   );
+  /*
+   * Districts resolved to THIS zip by a document move across: they are
+   * governments we have worked out, so they count as resolved and they stop
+   * being counted as "we have not worked out which of them reach this ZIP".
+   * Floored at zero — a territory file naming more districts than the county
+   * holds is a data problem and must not produce a negative count that reads
+   * as a discount.
+   */
+  const documentResolved = resolvedByDocument.get(zip)?.size ?? 0;
+  const territoryResolved = governments.length + documentResolved;
+  const unresolvedSpecialDistricts = Math.max(0, inCounties - documentResolved);
   const universeGovernments = territoryResolved + unresolvedSpecialDistricts;
 
   const bodiesEnumeratedFor = governments.filter((e) => enumeratedGeoids.has(e.id)).length;
@@ -264,9 +343,17 @@ for (const [zip, edges] of Object.entries(zipGov.zips)) {
    * is exactly the unresolved special districts, and is written as the
    * subtraction so the four numbers always sum to the universe.
    */
+  /*
+   * The document-resolved districts belong in this distribution too, and at
+   * TIER_1: their TERRITORY is known and nothing further is. Leaving them out
+   * is what broke tests/coverage-tier.test.ts item 3.1 the moment they started
+   * counting as resolved — the distribution stopped reconciling with the
+   * evidence stamped beside it, which is exactly the check that test exists to
+   * make. It caught this in the same run that introduced it.
+   */
   const governmentTierDistribution: Record<CoverageTier, number> = {
-    TIER_0: universeGovernments - edgeTiers.length,
-    TIER_1: edgeTiers.filter((e) => e.tier === "TIER_1").length,
+    TIER_0: universeGovernments - edgeTiers.length - documentResolved,
+    TIER_1: edgeTiers.filter((e) => e.tier === "TIER_1").length + documentResolved,
     TIER_2: edgeTiers.filter((e) => e.tier === "TIER_2").length,
     TIER_3: edgeTiers.filter((e) => e.tier === "TIER_3").length,
   };

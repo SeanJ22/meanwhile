@@ -1,4 +1,5 @@
 import { writeReaction } from "@/lib/db/reactions";
+import { raiseWriteAlarm } from "@/lib/db/write-alarm";
 import { noteSubmission } from "@/lib/db/intake-limiter";
 import { markerFromRequest } from "@/lib/db/run-marker";
 import { coverageAt } from "@/lib/registry/server";
@@ -322,7 +323,14 @@ export async function POST(request: Request) {
       headers: droppedText ? { [FREE_TEXT_CLOSED_HEADER]: "closed" } : undefined,
     });
   } catch (error) {
+    /*
+     * **RULING 25 — UNCHANGED FOR THE READER** (Prompt D item 6, D73). The
+     * 500 and its body are exactly what shipped before; a visitor sees no
+     * difference. `raiseWriteAlarm` is the second path, and it never throws,
+     * so it cannot turn a stored-reaction failure into a worse one.
+     */
     console.error("reaction write failed", error);
+    void raiseWriteAlarm("reactions", error);
     return Response.json({ error: "could not store the reaction" }, { status: 500 });
   }
 }

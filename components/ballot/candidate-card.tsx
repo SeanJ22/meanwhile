@@ -4,8 +4,6 @@ import {
   type CandidateCardData,
 } from "@/lib/ballot/candidate-cards";
 import type { CandidateLinks } from "@/lib/ballot/candidate-sites";
-import { VERIFIED_ABSENT_WORDING } from "@/lib/ballot/hunt-state";
-import type { KellyField } from "@/lib/ballot/hunt-state";
 
 /**
  * The Kelly-standard candidate card (2b): not a hyperlink — a card. Photo
@@ -40,7 +38,6 @@ export function CandidateCard({
   battlecardSlot,
   annotationSlot,
   derivedBlurb,
-  verifiedAbsent,
 }: {
   /**
    * **B14's blurb rung** — the campaign's own one-line self-description,
@@ -54,14 +51,6 @@ export function CandidateCard({
     sourceUrl: string;
     sourceLabel: string;
   } | null;
-  /**
-   * **RULING 18's findings** (Prompt C item 2.4, 2026-08-20). The Kelly fields
-   * whose hunt is FINISHED and found nothing. Distinct from a blank and from
-   * the thin line: the thin line is a fact about OUR research, and each of
-   * these is a fact about the CANDIDATE — they have not published one. The
-   * render-default rule requires the reader be able to tell those apart.
-   */
-  verifiedAbsent?: KellyField[];
   name: string;
   /**
    * The name rendered as the door to this person's large battlecard (g3 item
@@ -265,30 +254,6 @@ export function CandidateCard({
           <p className="mt-1 text-[0.75rem] leading-relaxed text-voice">
             {THIN_CANDIDATE_LINE}
           </p>
-        )}
-
-        {verifiedAbsent && verifiedAbsent.length > 0 && (
-          /*
-            **A COMPLETED HUNT THAT FOUND NOTHING IS A FINDING** (RULING 18).
-            It does not render as a blank, and it does not render as the thin
-            line above — that one says the gap is ours, and these say the
-            thing does not exist. Two different facts, and a render that
-            collapsed them would be the exact defect the render-default rule
-            names: our empty cell turned into a claim about a person, or a
-            real finding hidden as though we had never looked.
-
-            Its own register, too: the gap wording is `text-voice`, and a
-            finding is `text-muted` in the ordinary claim register, because a
-            colour is a claim as well.
-          */
-          <ul
-            data-verified-absent={verifiedAbsent.join(",")}
-            className="mt-1 space-y-0.5 text-[0.75rem] leading-relaxed text-muted"
-          >
-            {verifiedAbsent.map((field) => (
-              <li key={field}>{VERIFIED_ABSENT_WORDING[field]}</li>
-            ))}
-          </ul>
         )}
 
         {annotationSlot}

@@ -25,9 +25,9 @@ import type { IssuePosition } from "@/lib/candidates/positions";
  * The header states the denominator before any count: the same issue list is
  * searched for every candidate in the contest. A candidate with three matches
  * beside one with eleven is then a fact about what each has published, which
- * is what the equal-effort rule exists to make legible — a thin card that
- * tracks campaign professionalism is a thumb on the scale no neutrality rule
- * above catches.
+ * is what the equal-effort rule exists to make legible — a thin card tracks
+ * campaign professionalism rather than merit, and no neutrality rule above
+ * catches that on its own.
  *
  * ## Nothing is ordered by how much was found
  *

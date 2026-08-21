@@ -6666,7 +6666,7 @@ IS cannot use a phone number or a donor list.
 The section SET is identical per office class, and that is the equal-effort
 rule enforced at the component: hiding a section because it would be empty
 makes the well-covered candidate's card taller and more substantial, which is
-a layout thumb on the scale.
+a layout asymmetry.
 
 The votes split into two columns, both collapsed. **Recent** is the last 20
 roll calls, count-based rather than time-windowed because a congress votes in
@@ -10599,7 +10599,7 @@ Seven sections in the collapsible grammar, and the SET is identical for every
 body: an empty section collapses closed with its own honest line inside and its
 header visible, per the author's ruling on M93. Hiding empties would make a
 well-covered body's card taller than a thin one's, which is the same layout
-thumb on the scale the equal-effort rule exists to catch.
+asymmetry the equal-effort rule exists to catch.
 
 Section 2 is sourced, never generated: A.R.S. § 11-251 for Pima, § 15-341 for
 Tucson Unified, and the Tucson City Charter's council-manager form for Tucson —
@@ -13302,8 +13302,8 @@ build, and the suite asserts that order.
 
 ### The two regressions are a ruling working, and the author has to rule again
 
-`PB14`, opened P0 and **Blocked on the author**. RULING 7's equal-depth gate
-withholds every contest whose candidates are not researched to the same depth:
+`PB14`, opened P0 and **Blocked on the author**. RULING 7's render gate
+withholds every contest whose candidates are not all researched:
 **6 of 9 contests at 85701**, 7 of 9 at 85641, 6 of 12 at 03255, 3 of 6 at
 07866 — overwhelmingly the federal races, because incumbents carry photo, blurb,
 contact and campaign site while challengers carry one or two.
@@ -13393,7 +13393,7 @@ column with no default may only lose its default once the code that fills it is
 live.** `pnpm db:apply` grew `--upto=<tag>` so one half of a pair can be applied
 without hand-editing the journal.
 
-### RULING 18 — equal depth is measured by hunt completion
+### RULING 18 — the gate is re-aimed at hunt completion
 
 Prompt B implemented RULING 7 as exact equality across the four Kelly fields,
 and the result was a permanent blackout: a write-in with no campaign site can

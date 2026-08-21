@@ -43,11 +43,6 @@
  * and computes the tier from it. There is no setter.
  */
 
-// RULING 18's vocabulary. The gate at the foot of this file measures hunt
-// completion, and the states it measures are defined once, there.
-import { KELLY_FIELDS } from "../ballot/hunt-state.ts";
-import type { HuntState, KellyField } from "../ballot/hunt-state.ts";
-
 export const COVERAGE_TIERS = ["TIER_0", "TIER_1", "TIER_2", "TIER_3"] as const;
 export type CoverageTier = (typeof COVERAGE_TIERS)[number];
 
@@ -187,97 +182,4 @@ export interface StampedCoverageTier {
   tier: CoverageTier;
   stampedAt: string;
   evidence: CoverageEvidence;
-}
-
-/**
- * RULING 7 — the equal-depth gate, in one place rather than per surface
- * (Prompt B item 7.3). **RULING 18 (Prompt C item 2, 2026-08-20) re-points it
- * at hunt completion; this is the same one gate, measuring the right thing.**
- *
- * No candidate cards ship in a contest until EVERY candidate in that contest
- * can ship at equal depth. This is not a display preference. The app can say
- * nothing about anyone and still tilt a race, because a thin card tracks
- * incumbency and campaign professionalism rather than merit — the tester's
- * finding, in her words: "Karen might be the perfect fit for me, but she has
- * no information here. So I'm only going to look at the folks that do."
- *
- * WHAT CHANGED, and why the withheld count barely moves. Prompt B measured
- * depth by counting fields present, so a challenger with no campaign site
- * could never reach the incumbent's four and the contest was withheld
- * permanently — a blackout produced by that candidate's circumstances rather
- * than by our effort. Depth is now measured by whether the HUNT is finished:
- * a field is complete when it is FOUND or when a completed hunt established
- * that the thing does not exist (VERIFIED_ABSENT, with its rungs and date).
- * The gate is not loosened. It is aimed at the thing a depth session can
- * actually close. Nothing is promoted to VERIFIED_ABSENT by a migration.
- *
- * Returned as a decision with a REASON, so a surface that hides cards can say
- * why rather than rendering an unexplained blank — and, when it withholds, with
- * the exact field-by-field list of what is still unhunted, so the work the
- * reader is waiting on is nameable rather than vague.
- */
-export interface CandidateDepth {
-  candidateId: string;
-  /** The candidate's name, so a withheld contest can name the work owed. */
-  candidateName?: string;
-  /** Every Kelly field's hunt state. See lib/ballot/hunt-state.ts. */
-  fields: Record<KellyField, HuntState>;
-}
-
-/** One candidate's unfinished fields, for the withheld report. */
-export interface UnhuntedCandidate {
-  candidateId: string;
-  candidateName: string;
-  fields: KellyField[];
-}
-
-export type EqualDepthDecision =
-  | { render: true; complete: number }
-  | {
-      render: false;
-      reason: string;
-      unhunted: UnhuntedCandidate[];
-      /** Total NOT_HUNTED fields across the contest — the size of the work. */
-      unhuntedFields: number;
-    };
-
-/** How many of the four Kelly fields have a COMPLETED hunt behind them. */
-export function depthOf(c: CandidateDepth): number {
-  return KELLY_FIELDS.filter((f) => c.fields[f] !== "NOT_HUNTED").length;
-}
-
-/** The fields whose hunt is not finished. */
-export function unhuntedFieldsOf(c: CandidateDepth): KellyField[] {
-  return KELLY_FIELDS.filter((f) => c.fields[f] === "NOT_HUNTED");
-}
-
-export function equalDepthGate(candidates: CandidateDepth[]): EqualDepthDecision {
-  // A contest with no candidates has nothing to render and nothing to skew.
-  if (candidates.length === 0) return { render: true, complete: 0 };
-
-  const unhunted: UnhuntedCandidate[] = [];
-  for (const c of candidates) {
-    const fields = unhuntedFieldsOf(c);
-    if (fields.length > 0) {
-      unhunted.push({
-        candidateId: c.candidateId,
-        candidateName: c.candidateName ?? c.candidateId,
-        fields,
-      });
-    }
-  }
-
-  if (unhunted.length === 0) {
-    return { render: true, complete: candidates.length * KELLY_FIELDS.length };
-  }
-
-  return {
-    render: false,
-    unhunted,
-    unhuntedFields: unhunted.reduce((n, u) => n + u.fields.length, 0),
-    reason:
-      "We have not finished looking into every candidate in this contest yet, so " +
-      "no cards are shown. Showing the ones we know most about would put a thumb " +
-      "on the scale for whoever has the most professional campaign.",
-  };
 }

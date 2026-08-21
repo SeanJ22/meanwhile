@@ -1,46 +1,37 @@
 /**
- * RULING 18 — EQUAL DEPTH IS MEASURED BY HUNT COMPLETION, NOT FIELD PRESENCE.
+ * **THE HUNT-STATE WORK QUEUE — DATA, NEVER A GATE** (RULING 23 and RULING 26,
+ * Prompt D items 1 and 2, 2026-08-20).
  *
- * (Prompt C item 2, 2026-08-20. This supersedes the strict-equality
- * implementation Prompt B shipped in `equalDepthGate`.)
- *
- * ## What went wrong with counting fields
- *
- * RULING 7 says no candidate cards ship in a contest until every candidate in
- * it can ship at equal depth, and Prompt B implemented that as exact equality
- * across the four Kelly fields — photo, blurb, contact, campaign site. The
- * gate then withheld 6 of 9 contests at 85701, 7 of 9 at 85641, 6 of 12 at
- * 03255 and 3 of 6 at 07866, overwhelmingly the federal races. That is the
- * gate doing its job, and the measurement was still wrong.
- *
- * A minor-party or write-in candidate may genuinely have no campaign site and
- * never will. Under strict equality their contest can never render, no matter
- * how much hunting is done, because the incumbent beside them has one. That is
- * not equal effort — it is a permanent blackout produced by an artifact of a
- * candidate's circumstances, and it withholds the contest from the reader
- * forever as a side effect.
- *
- * ## The three states
- *
- * Every Kelly field, per candidate, carries exactly one:
+ * Every Kelly field, per candidate, carries exactly one of four states. They
+ * are how a hunt session knows what is left to do. **Nothing reads them to
+ * decide what renders, and no reader ever sees one.**
  *
  *   NOT_HUNTED       no completed hunt for this field.
  *   FOUND            the field is present, with its source recorded.
  *   VERIFIED_ABSENT  a completed hunt walked every applicable rung and the
- *                    thing does not exist.
+ *                    thing does not exist — a FINDING, earned by a hunt
+ *                    session and NEVER by a backfill, carrying the rungs
+ *                    walked and the date checked.
+ *   NOT_APPLICABLE   the field cannot exist for this candidate — structural
+ *                    absence, with its reason and its date. A candidate who
+ *                    has never held the office has no voting record to find,
+ *                    and counting one as owed is what stopped the queue ever
+ *                    reaching zero.
  *
- * `VERIFIED_ABSENT` is a FINDING, not a gap. It is the state that says "we did
- * the work; there is no campaign site" — and because it is a claim about a
- * named person, it carries the rungs walked and the date checked, the same
- * evidence standard the transparency mandate puts on every other claim of
- * absence. It is earned by a hunt session and NEVER by a backfill.
+ * ## What this file used to be, and why it is not that any more
  *
- * ## The gate
+ * RULING 18 (Prompt C) made these states the measurement behind a GATE: a
+ * contest rendered candidate cards only when no field anywhere in it was
+ * NOT_HUNTED. That gate withheld all 36 contests across the four pilot zips,
+ * so the product rendered no candidate cards at all while holding portraits,
+ * finance figures and verified pages in the database.
  *
- * A contest renders candidate cards when, for every candidate in it, every
- * Kelly field is either FOUND or VERIFIED_ABSENT — that is, when no field
- * anywhere in the contest is NOT_HUNTED. Equality is on hunt completion. It is
- * not on field presence.
+ * **RULING 26 killed it.** Completeness is a property of the HUNT. It kept
+ * being treated as a property of the record. Everything the product holds
+ * about a candidate renders; collection state never governs display; the
+ * correct response to an incomplete hunt is more hunting. RULING 18 and
+ * RULING 22 are superseded and neither returns in any form —
+ * `tests/no-suppression.test.ts` fails the build if one does.
  *
  * ## Why presence still wins at read time
  *
@@ -48,8 +39,8 @@
  * A field that is present is FOUND whatever the file says; a field that is
  * absent can never read FOUND, because that would be the render-default
  * failure — a stored value turning into a claim the data does not support.
- * The file's only authority is to raise an absent field from NOT_HUNTED to
- * VERIFIED_ABSENT, and only with rungs and a date behind it.
+ * The file's only authority over an absent field is to raise it out of
+ * NOT_HUNTED, and only with evidence behind it.
  */
 
 /** The four reader-visible Kelly fields, in the order they are reported. */
@@ -57,7 +48,12 @@ export const KELLY_FIELDS = ["photo", "blurb", "contact", "campaignSite"] as con
 
 export type KellyField = (typeof KELLY_FIELDS)[number];
 
-export const HUNT_STATES = ["NOT_HUNTED", "FOUND", "VERIFIED_ABSENT"] as const;
+export const HUNT_STATES = [
+  "NOT_HUNTED",
+  "FOUND",
+  "VERIFIED_ABSENT",
+  "NOT_APPLICABLE",
+] as const;
 
 export type HuntState = (typeof HUNT_STATES)[number];
 
@@ -77,7 +73,8 @@ export interface WalkedRung {
 export type RecordedFieldState =
   | { state: "NOT_HUNTED" }
   | { state: "FOUND" }
-  | { state: "VERIFIED_ABSENT"; rungs: WalkedRung[]; checkedAt: string };
+  | { state: "VERIFIED_ABSENT"; rungs: WalkedRung[]; checkedAt: string }
+  | { state: "NOT_APPLICABLE"; reason: string; checkedAt: string };
 
 /** Every field's recorded state for one candidate. */
 export type RecordedCandidateHunt = Record<KellyField, RecordedFieldState>;
@@ -136,7 +133,9 @@ export function stateFor(
   record: RecordedFieldState | undefined,
 ): HuntState {
   if (present) return "FOUND";
-  return isEvidencedAbsence(record) ? "VERIFIED_ABSENT" : "NOT_HUNTED";
+  if (isEvidencedAbsence(record)) return "VERIFIED_ABSENT";
+  if (isEvidencedNotApplicable(record)) return "NOT_APPLICABLE";
+  return "NOT_HUNTED";
 }
 
 /** Every field's live state for one candidate. */
@@ -152,30 +151,53 @@ export function statesFor(
 }
 
 /**
- * THE READER-FACING WORDING for a completed hunt that found nothing.
+ * Is this a `NOT_APPLICABLE` record the product is allowed to act on?
  *
- * Level register — this is a claim surface, about a real person. Each sentence
- * separates OUR action from THEIR absence, which is the attribution the render
- * -default rule requires: the reader must be able to tell "we haven't looked"
- * from "there is nothing to find", and these say the second one out loud.
- *
- * The RULE is the attribution, never these particular sentences; they may be
- * rewritten any day. What may not be lost is that a completed hunt reads
- * differently from an unfinished one.
+ * The same evidence discipline `isEvidencedAbsence` applies, for the same
+ * reason. "This field cannot exist for this person" is a claim about a named
+ * person, so it carries a REASON and a DATE, and a record missing either is
+ * not a structural finding — it is a gap wearing one's name.
  */
-export const VERIFIED_ABSENT_WORDING: Record<KellyField, string> = {
-  photo: "We searched for a portrait. This candidate has not published one.",
-  blurb:
-    "We searched for something in this candidate's own words. They have not published any.",
-  contact:
-    "We searched for a way to contact this candidate. They have not published one.",
-  campaignSite: "We searched for a campaign site. This candidate does not have one.",
-};
+export function isEvidencedNotApplicable(
+  record: RecordedFieldState | undefined,
+): record is { state: "NOT_APPLICABLE"; reason: string; checkedAt: string } {
+  if (!record || record.state !== "NOT_APPLICABLE") return false;
+  if (typeof record.reason !== "string" || record.reason.trim() === "") return false;
+  return typeof record.checkedAt === "string" && ISO_DATE.test(record.checkedAt);
+}
 
-/** Plain-language field names for a reader surface — never the enum key. */
-export const KELLY_FIELD_LABEL: Record<KellyField, string> = {
-  photo: "Photo",
-  blurb: "In their own words",
-  contact: "Contact",
-  campaignSite: "Campaign site",
+/**
+ * **WHEN EACH KELLY FIELD IS STRUCTURALLY UNAVAILABLE** (Prompt D item 2.2,
+ * 2026-08-20).
+ *
+ * Read straight off the frozen required-field matrix — `lib/evidence/
+ * field-matrix.ts`, version `vH-1`, frozen 2026-08-16 before any hunting
+ * began — rather than decided here, because a rule that decides when a field
+ * leaves the denominator must not be written by the session that wants the
+ * denominator smaller.
+ *
+ * **All four read `never`, and that is the finding.** A candidate can always
+ * in principle have a portrait, words of their own, a way to be reached, and a
+ * site; the matrix says so, and it said so before anybody counted. So nothing
+ * in the `HD01`–`HD30` queue is structurally unavailable, and none of its
+ * 249 owed fields moves out of the denominator.
+ *
+ * **THE CLEAR STRUCTURAL CASE IS A VOTING RECORD, and it is not tracked here.**
+ * A candidate who has never held the office has no roll-call record to find.
+ * That case is already handled structurally rather than by a state: the
+ * voting-record door on a ballot card comes from the exact-key incumbent join
+ * in `lib/ballot/incumbent-record.ts`, so a challenger simply has no door —
+ * no join, no link, and never a wrong one. It is named here so the rule is
+ * written down somewhere, and so the next session does not re-derive it and
+ * mistake it for one of these four.
+ *
+ * A field that later grows a genuine structural case is a SCHEMA CORRECTION
+ * with an audit trail, per the matrix's own rule — a new matrix entry with its
+ * own version stamp, never a quiet edit to this table.
+ */
+export const KELLY_FIELD_NOT_APPLICABLE_WHEN: Record<KellyField, string> = {
+  photo: "never — honest initials are a success",
+  blurb: "never",
+  contact: "never",
+  campaignSite: "never",
 };

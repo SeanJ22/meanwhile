@@ -80,6 +80,9 @@
     "verify:local-write": "tsx scripts/verify-local-write.mts",
     "census:runs": "tsx scripts/census-run-class.mts",
     "db:apply": "tsx scripts/apply-migrations.mts",
+    "db:check": "tsx scripts/check-schema-state.mts",
+    "alarms": "tsx scripts/read-alarms.mts",
+    "probe:alarm": "tsx scripts/probe-write-alarm.mts",
     "verify:write-handle": "tsx scripts/verify-write-handle.mts",
     "lint:allowlist": "node scripts/check-lint-allowlist.mjs",
     "voting-sites:fetch": "tsx scripts/fetch-voting-sites.mts",
@@ -102,6 +105,7 @@
     "pilot:verify": "tsx scripts/verify-pilot-zips.mts",
     "tiers:stamp": "tsx scripts/stamp-coverage-tiers.mts",
     "shoot:promptb": "tsx scripts/promptb-shots.mts",
+    "shoot:promptd": "tsx scripts/promptd-shots.mts",
     "ledger:build": "tsx scripts/build-gap-ledger.mts",
     "tracker:promptb": "tsx scripts/promptb-tracker.mts",
     "hunt:migrate": "tsx scripts/migrate-hunt-state.mts",
@@ -109,8 +113,7 @@
     "status:report": "node scripts/status-report.mjs",
     "extract": "tsx scripts/extract.mts",
     "zip:add": "tsx scripts/zip-add.mts",
-    "assets": "tsx scripts/assets.mts",
-    "shoot:promptc": "tsx scripts/promptc-shots.mts"
+    "assets": "tsx scripts/assets.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

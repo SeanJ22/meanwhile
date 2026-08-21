@@ -25,7 +25,7 @@
  * This rung structurally favours incumbents, and `CLAUDE.md`'s equal-effort
  * rule is explicit that a thin card tracks incumbency rather than merit. So:
  *
- * * The rung is run for **every one of the 94**, at the same depth, and every
+ * * The rung is run for **every one of the 94**, and every
  *   MISS is recorded per candidate with what was tried. A candidate this rung
  *   cannot reach is not left as a blank; the card's standing thin-candidate
  *   line already speaks for them.

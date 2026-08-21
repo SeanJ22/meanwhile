@@ -15,8 +15,6 @@ import {
   COVERAGE_TIER_READER_LABEL,
   COVERAGE_TIER_UNKNOWN,
   COVERAGE_TIER_ZIP_HEADLINE,
-  depthOf,
-  equalDepthGate,
   promote,
   tierExceedsEvidence,
 } from "../lib/coverage/tier.ts";
@@ -24,13 +22,7 @@ import {
   encodeTierDistribution,
   decodeTierDistribution,
 } from "../lib/coverage/zip-tier.ts";
-import type {
-  CandidateDepth,
-  CoverageEvidence,
-  CoverageTier,
-} from "../lib/coverage/tier.ts";
-import { KELLY_FIELDS } from "../lib/ballot/hunt-state.ts";
-import type { HuntState, KellyField } from "../lib/ballot/hunt-state.ts";
+import type { CoverageEvidence, CoverageTier } from "../lib/coverage/tier.ts";
 import { reactions, searchLog } from "../lib/db/schema.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -157,98 +149,15 @@ test("RULING 9: bodies enumerated is its own count, never derived from governmen
   );
 });
 
-/* ---- item 7.3 + RULING 18: the shared gate, measured by hunt completion --- */
-
-/**
- * RULING 18 (Prompt C item 2, 2026-08-20) supersedes the strict-equality
- * implementation these tests used to assert. Equality is on HUNT COMPLETION,
- * never on field presence: a write-in with no campaign site and a finished
- * hunt is complete, and their contest renders. What withholds is an
- * UNFINISHED hunt.
+/*
+ * **RULING 26 (Prompt D item 1, 2026-08-20) — the gate that lived here is
+ * GONE, and so are the tests that asserted its behaviour.**
+ *
+ * Collection state never governs display. There is no threshold, no
+ * completeness bar and no equality condition, so there is nothing here to
+ * assert about one. What replaces these is `tests/no-suppression.test.ts`,
+ * which fails the build if a suppression path is reintroduced anywhere.
  */
-
-/** Every field complete, by whichever of the two completed states. */
-const complete = (n: string, absent: KellyField[] = []): CandidateDepth => ({
-  candidateId: n,
-  candidateName: n,
-  fields: Object.fromEntries(
-    KELLY_FIELDS.map((f) => [f, absent.includes(f) ? "VERIFIED_ABSENT" : "FOUND"]),
-  ) as Record<KellyField, HuntState>,
-});
-
-/** `unhunted` fields left NOT_HUNTED; the rest FOUND. */
-const partial = (n: string, unhunted: KellyField[]): CandidateDepth => ({
-  candidateId: n,
-  candidateName: n,
-  fields: Object.fromEntries(
-    KELLY_FIELDS.map((f) => [f, unhunted.includes(f) ? "NOT_HUNTED" : "FOUND"]),
-  ) as Record<KellyField, HuntState>,
-});
-
-test("RULING 18: a contest renders when every candidate's hunt is finished", () => {
-  const both = equalDepthGate([complete("a"), complete("b")]);
-  assert.equal(both.render, true);
-});
-
-test("RULING 18: VERIFIED_ABSENT is a finished hunt, so it does not withhold", () => {
-  /*
-   * THE WHOLE POINT OF THE RULING. Under strict equality this contest could
-   * never render: the incumbent carries four fields and the write-in carries
-   * three, and no amount of hunting closes a campaign site that does not
-   * exist. That was a permanent blackout produced by a candidate's
-   * circumstances, not by our effort.
-   */
-  const decision = equalDepthGate([
-    complete("incumbent"),
-    complete("write-in", ["campaignSite"]),
-  ]);
-  assert.equal(decision.render, true);
-});
-
-test("RULING 18: one NOT_HUNTED field anywhere in the contest withholds it", () => {
-  // The tester's finding, in her words: "Karen might be the perfect fit for
-  // me, but she has no information here. So I'm only going to look at the
-  // folks that do." A thin card tracks incumbency and campaign
-  // professionalism, not merit.
-  const decision = equalDepthGate([
-    complete("incumbent"),
-    partial("karen", ["photo", "blurb", "contact", "campaignSite"]),
-  ]);
-  assert.equal(decision.render, false);
-  if (!decision.render) {
-    assert.equal(decision.unhunted.length, 1, "only Karen's hunt is unfinished");
-    assert.equal(decision.unhunted[0]!.candidateName, "karen");
-    assert.deepEqual(decision.unhunted[0]!.fields, [...KELLY_FIELDS]);
-    assert.equal(decision.unhuntedFields, 4);
-    assert.ok(
-      decision.reason.length > 40,
-      "a surface that hides cards says WHY rather than rendering an unexplained blank",
-    );
-  }
-});
-
-test("RULING 18: an unfinished hunt on the WELL-COVERED candidate withholds too", () => {
-  // Symmetry check. The rule is completion, not who is ahead — a contest
-  // where the incumbent's contact was never hunted is as unfinished as one
-  // where the challenger's was.
-  const decision = equalDepthGate([
-    partial("incumbent", ["contact"]),
-    complete("challenger", ["campaignSite"]),
-  ]);
-  assert.equal(decision.render, false);
-  if (!decision.render) assert.equal(decision.unhuntedFields, 1);
-});
-
-test("RULING 7: an empty contest renders — there is nothing to skew", () => {
-  assert.deepEqual(equalDepthGate([]), { render: true, complete: 0 });
-});
-
-test("depthOf counts the Kelly fields whose hunt is FINISHED", () => {
-  assert.equal(depthOf(partial("x", [...KELLY_FIELDS])), 0);
-  assert.equal(depthOf(complete("x")), 4);
-  assert.equal(depthOf(complete("x", ["photo", "contact"])), 4);
-  assert.equal(depthOf(partial("x", ["photo"])), 3);
-});
 
 /* ---- item 8: every aggregate record carries a tier ------------------------ */
 
@@ -319,6 +228,18 @@ test("item 8.4: every write path into a sold store states a tier", () => {
       "lib/db/intake-limiter.ts",
       "lib/db/reactions.ts",
       "lib/db/search-log.ts",
+      /*
+       * **RULED ON, Prompt D item 6.2 (2026-08-20): `write_alarm` is NOT a
+       * sold aggregate record and carries no coverage tier.**
+       *
+       * It records THAT a write to a named store failed and the database's own
+       * words about why. It holds no zip, so there is no place whose coverage
+       * depth could be stated; it appears in no export and no aggregate, so
+       * there is no buyer to state it to; and giving it a zip in order to give
+       * it a tier would put a location on the one table whose entire design is
+       * that it carries nothing about who was writing.
+       */
+      "lib/db/write-alarm.ts",
     ],
     "the set of insert sites moved — a new one must be ruled on: is it a SOLD " +
       "aggregate record (it needs the tier) or not (say why here)",

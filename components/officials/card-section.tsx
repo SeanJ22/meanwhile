@@ -100,8 +100,8 @@ export function CardSectionGroup({ children }: { children: React.ReactNode }) {
  * SET of sections is identical for every person of an office class, and the
  * honest empty content lives inside. Hiding a section for a thin challenger
  * and showing it for the incumbent would make the incumbent's card taller and
- * more substantial — a layout thumb on the scale, which is precisely the
- * information asymmetry the equal-effort rule exists to catch. Collapse is
+ * more substantial — a layout asymmetry, which is precisely the information
+ * asymmetry the equal-effort rule exists to catch. Collapse is
  * organization. It is never a way to render some people smaller than others.
  */
 export function CardSection({

@@ -26,9 +26,9 @@
  * than another, and `SEARCHED_NOTHING_MATCHED` is a first-class answer that
  * renders — so a candidate with fewer matched issues renders as a candidate
  * who has published less on their own site, with the pages and dates we
- * searched named. A thin card that tracks incumbency and campaign
- * professionalism is a thumb on the scale, and the surface says which of the
- * three things happened rather than leaving a blank to be read as absence.
+ * searched named. A thin card tracks incumbency and campaign professionalism
+ * rather than merit, and the surface says which of the three things happened
+ * rather than leaving a blank to be read as absence.
  *
  * ## The vocabulary is curated, and phrases are multi-word by preference
  *

@@ -321,7 +321,7 @@ test("B14: the blurb rung reaches every candidate whose page we hold, equally", 
   const { derivedBlurbFor } = await import("../lib/candidates/blurbs.ts");
   const { getCandidateCorpus } = await import("../lib/candidates/positions.ts");
 
-  // Equal depth: the rung is run for EVERY candidate, and the ones it
+  // Equal effort: the rung is run for EVERY candidate, and the ones it
   // reaches are exactly the ones whose page carries a self-description.
   // There is no path that skips a candidate for being obscure.
   const withMeta = new Set(

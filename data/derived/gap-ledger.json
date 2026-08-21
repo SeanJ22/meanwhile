@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-20",
+  "generatedAt": "2026-08-21",
   "timezone": "America/Phoenix",
   "national": {
     "zipsAtTier": {
@@ -571,7 +571,7 @@
     },
     "03255": {
       "tier": "TIER_0",
-      "universeGovernments": 21,
+      "universeGovernments": 3,
       "territoryResolved": 3,
       "bodiesEnumerated": 3,
       "resolvedGovernments": [
@@ -592,116 +592,7 @@
         }
       ],
       "unenumerated": [],
-      "unresolvedSpecialDistricts": [
-        {
-          "pid6": "152217",
-          "name": "ANDOVER FIRE DISTRICT",
-          "city": "ANDOVER",
-          "state": "NH"
-        },
-        {
-          "pid6": "130791",
-          "name": "ANDOVER VILLAGE DISTRICT",
-          "city": "ANDOVER",
-          "state": "NH"
-        },
-        {
-          "pid6": "152222",
-          "name": "B C E P SOLID WASTE DISTRICT",
-          "city": "PITTSFIELD",
-          "state": "NH"
-        },
-        {
-          "pid6": "130788",
-          "name": "CENTRAL HOOKSETT WATER PRECINCT",
-          "city": "HOOKSETT",
-          "state": "NH"
-        },
-        {
-          "pid6": "152226",
-          "name": "CONCORD HOUSING AUTHORITY",
-          "city": "CONCORD",
-          "state": "NH"
-        },
-        {
-          "pid6": "186525",
-          "name": "CONTOOCOOK VILLAGE PRECINCT",
-          "city": "CONTOOCOOK",
-          "state": "NH"
-        },
-        {
-          "pid6": "152218",
-          "name": "EAST ANDOVER FIRE PRECINCT",
-          "city": "ANDOVER",
-          "state": "NH"
-        },
-        {
-          "pid6": "108989",
-          "name": "EPSOM VILLAGE DISTRICT",
-          "city": "EPSOM",
-          "state": "NH"
-        },
-        {
-          "pid6": "130790",
-          "name": "HARDY ROAD VILLAGE DISTRICT",
-          "city": "LOUDON",
-          "state": "NH"
-        },
-        {
-          "pid6": "216991",
-          "name": "HIGHLANDS VILLAGE DISTRICT",
-          "city": "NORTHFIELD",
-          "state": "NH"
-        },
-        {
-          "pid6": "152219",
-          "name": "HOOKSETT VILLAGE WATER PRECINCT",
-          "city": "HOOKSETT",
-          "state": "NH"
-        },
-        {
-          "pid6": "152220",
-          "name": "HOPKINTON VILLAGE PRECINCT",
-          "city": "HOPKINTON",
-          "state": "NH"
-        },
-        {
-          "pid6": "217017",
-          "name": "LAKE TODD VILLAGE DISTRICT",
-          "city": "BRADFORD",
-          "state": "NH"
-        },
-        {
-          "pid6": "152224",
-          "name": "MERRIMACK COUNTY CONSERVATION DISTRICT",
-          "city": "CONCORD",
-          "state": "NH"
-        },
-        {
-          "pid6": "152221",
-          "name": "NEW LONDON SPRINGFIELD WATER SYSTEM PRECINCT",
-          "city": "NEW LONDON",
-          "state": "NH"
-        },
-        {
-          "pid6": "221008",
-          "name": "NORTHFIELD SEWER DISTRICT",
-          "city": "NORTHFIELD",
-          "state": "NH"
-        },
-        {
-          "pid6": "130789",
-          "name": "PENACOOK BOSCAWEN WATER PRECINCT",
-          "city": "BOSCAWEN",
-          "state": "NH"
-        },
-        {
-          "pid6": "108988",
-          "name": "WARNER VILLAGE WATER DISTRICT",
-          "city": "WARNER",
-          "state": "NH"
-        }
-      ],
+      "unresolvedSpecialDistricts": [],
       "statistical": [
         {
           "name": "Blodgett Landing CDP",

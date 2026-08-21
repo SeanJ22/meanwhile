@@ -1,6 +1,6 @@
 # The gap ledger
 
-Generated 2026-08-20 (America/Phoenix, `corepack pnpm stamp`).
+Generated 2026-08-21 (America/Phoenix, `corepack pnpm stamp`).
 Rebuild with `corepack pnpm ledger:build`.
 
 **This is what the digging sessions work, front to back.** Every entry names
@@ -107,7 +107,7 @@ These are Census STATISTICAL entities — a CDP is a name the Census gives a pop
 
 Each of these is a real government — a fire district, a water district, an irrigation or library district — that the federal Census counts, in a county over this zip. Nobody publishes a map of where any of them starts and stops, so we cannot say whether it reaches this zip. **That is a work item and never a no**: recording one as "does not govern here" because we could not find its boundary would be inventing an answer.
 
-**The last thing tried, and when.** The national boundary join of 2026-08-20, run against every published boundary vintage. It resolved 47,834 of the country's 90,837 governments and **not one special district** — the boundaries are not published anywhere in that data at all. Nothing has been tried on these districts individually yet; the four routes that have not been walked are listed at the top of this file.
+**The last thing tried, and when.** The national boundary join of 2026-08-21, run against every published boundary vintage. It resolved 47,834 of the country's 90,837 governments and **not one special district** — the boundaries are not published anywhere in that data at all. Nothing has been tried on these districts individually yet; the four routes that have not been walked are listed at the top of this file.
 
 | District | Where its office is | State | Census id |
 |---|---|---|---|
@@ -183,7 +183,7 @@ These are Census STATISTICAL entities — a CDP is a name the Census gives a pop
 
 Each of these is a real government — a fire district, a water district, an irrigation or library district — that the federal Census counts, in a county over this zip. Nobody publishes a map of where any of them starts and stops, so we cannot say whether it reaches this zip. **That is a work item and never a no**: recording one as "does not govern here" because we could not find its boundary would be inventing an answer.
 
-**The last thing tried, and when.** The national boundary join of 2026-08-20, run against every published boundary vintage. It resolved 47,834 of the country's 90,837 governments and **not one special district** — the boundaries are not published anywhere in that data at all. Nothing has been tried on these districts individually yet; the four routes that have not been walked are listed at the top of this file.
+**The last thing tried, and when.** The national boundary join of 2026-08-21, run against every published boundary vintage. It resolved 47,834 of the country's 90,837 governments and **not one special district** — the boundaries are not published anywhere in that data at all. Nothing has been tried on these districts individually yet; the four routes that have not been walked are listed at the top of this file.
 
 | District | Where its office is | State | Census id |
 |---|---|---|---|
@@ -263,7 +263,7 @@ These are Census STATISTICAL entities — a CDP is a name the Census gives a pop
 
 Each of these is a real government — a fire district, a water district, an irrigation or library district — that the federal Census counts, in a county over this zip. Nobody publishes a map of where any of them starts and stops, so we cannot say whether it reaches this zip. **That is a work item and never a no**: recording one as "does not govern here" because we could not find its boundary would be inventing an answer.
 
-**The last thing tried, and when.** The national boundary join of 2026-08-20, run against every published boundary vintage. It resolved 47,834 of the country's 90,837 governments and **not one special district** — the boundaries are not published anywhere in that data at all. Nothing has been tried on these districts individually yet; the four routes that have not been walked are listed at the top of this file.
+**The last thing tried, and when.** The national boundary join of 2026-08-21, run against every published boundary vintage. It resolved 47,834 of the country's 90,837 governments and **not one special district** — the boundaries are not published anywhere in that data at all. Nothing has been tried on these districts individually yet; the four routes that have not been walked are listed at the top of this file.
 
 | District | Where its office is | State | Census id |
 |---|---|---|---|
@@ -300,10 +300,10 @@ We know this government exists. We have not confirmed what it covers. (Coverage 
 
 | Denominator | Count |
 |---|---:|
-| Governments in the universe touching this zip | 21 |
-| — territory-resolved | 3 |
+| Governments in the universe touching this zip | 5 |
+| — territory-resolved | 5 |
 | — of those, bodies enumerated (Tier 2) | 3 |
-| — UNRESOLVED (special districts, named below) | 18 |
+| — UNRESOLVED (special districts, named below) | 0 |
 
 #### Territory-resolved governments
 
@@ -325,44 +325,52 @@ These are Census STATISTICAL entities — a CDP is a name the Census gives a pop
 
 - Blodgett Landing CDP — STATISTICAL (LSAD 57)
 
-#### The 18 districts we cannot yet say you live in
+#### Special districts, resolved by document rather than by map
+
+TIGER publishes no boundary for a special district, so geometry cannot answer these and never will. These were settled by reading something — a statute, a state tax table, a district describing its own territory. The evidence for each is in `docs/evidence/nhhunt2-hunt05-special-districts.md`.
+
+| District | Reaches this zip | Settled by |
+|---|---|---|
+| **MERRIMACK COUNTY CONSERVATION DISTRICT** | **YES** | STATUTE |
+| **LAKE TODD VILLAGE DISTRICT** | **YES** | THE DISTRICT'S OWN WORDS, TWICE |
+| WARNER VILLAGE WATER DISTRICT | no | DRA VILLAGE DISTRICT TAX RATES |
+| EPSOM VILLAGE DISTRICT | no | DRA VILLAGE DISTRICT TAX RATES |
+| CENTRAL HOOKSETT WATER PRECINCT | no | DRA VILLAGE DISTRICT TAX RATES |
+| PENACOOK BOSCAWEN WATER PRECINCT | no | DRA VILLAGE DISTRICT TAX RATES |
+| HARDY ROAD VILLAGE DISTRICT | no | DRA VILLAGE DISTRICT TAX RATES |
+| ANDOVER VILLAGE DISTRICT | no | DRA VILLAGE DISTRICT TAX RATES |
+| ANDOVER FIRE DISTRICT | no | DRA VILLAGE DISTRICT TAX RATES |
+| EAST ANDOVER FIRE PRECINCT | no | DRA VILLAGE DISTRICT TAX RATES |
+| HOOKSETT VILLAGE WATER PRECINCT | no | DRA VILLAGE DISTRICT TAX RATES |
+| HOPKINTON VILLAGE PRECINCT | no | DRA VILLAGE DISTRICT TAX RATES |
+| NEW LONDON SPRINGFIELD WATER SYSTEM PRECINCT | no | DRA VILLAGE DISTRICT TAX RATES, AND ITS OWN NAME |
+| B C E P SOLID WASTE DISTRICT | no | ENABLING STATUTE AND ITS OWN NAME |
+| CONCORD HOUSING AUTHORITY | no | ENABLING STATUTE |
+| CONTOOCOOK VILLAGE PRECINCT | no | DRA VILLAGE DISTRICT TAX RATES |
+| HIGHLANDS VILLAGE DISTRICT | no | DRA VILLAGE DISTRICT TAX RATES |
+| NORTHFIELD SEWER DISTRICT | no | DRA VILLAGE DISTRICT TAX RATES |
+
+**2 of these govern part of this zip and are not in the registry.** A reader here can live under one and hear nothing about it, which is what an unresolved government was always the risk of.
+
+#### The 0 districts we cannot yet say you live in
 
 Each of these is a real government — a fire district, a water district, an irrigation or library district — that the federal Census counts, in a county over this zip. Nobody publishes a map of where any of them starts and stops, so we cannot say whether it reaches this zip. **That is a work item and never a no**: recording one as "does not govern here" because we could not find its boundary would be inventing an answer.
 
-**The last thing tried, and when.** The national boundary join of 2026-08-20, run against every published boundary vintage. It resolved 47,834 of the country's 90,837 governments and **not one special district** — the boundaries are not published anywhere in that data at all. Nothing has been tried on these districts individually yet; the four routes that have not been walked are listed at the top of this file.
+**The last thing tried, and when.** The national boundary join of 2026-08-21, run against every published boundary vintage. It resolved 47,834 of the country's 90,837 governments and **not one special district** — the boundaries are not published anywhere in that data at all. Nothing has been tried on these districts individually yet; the four routes that have not been walked are listed at the top of this file.
 
-| District | Where its office is | State | Census id |
-|---|---|---|---|
-| ANDOVER FIRE DISTRICT | ANDOVER | NH | 152217 |
-| ANDOVER VILLAGE DISTRICT | ANDOVER | NH | 130791 |
-| B C E P SOLID WASTE DISTRICT | PITTSFIELD | NH | 152222 |
-| CENTRAL HOOKSETT WATER PRECINCT | HOOKSETT | NH | 130788 |
-| CONCORD HOUSING AUTHORITY | CONCORD | NH | 152226 |
-| CONTOOCOOK VILLAGE PRECINCT | CONTOOCOOK | NH | 186525 |
-| EAST ANDOVER FIRE PRECINCT | ANDOVER | NH | 152218 |
-| EPSOM VILLAGE DISTRICT | EPSOM | NH | 108989 |
-| HARDY ROAD VILLAGE DISTRICT | LOUDON | NH | 130790 |
-| HIGHLANDS VILLAGE DISTRICT | NORTHFIELD | NH | 216991 |
-| HOOKSETT VILLAGE WATER PRECINCT | HOOKSETT | NH | 152219 |
-| HOPKINTON VILLAGE PRECINCT | HOPKINTON | NH | 152220 |
-| LAKE TODD VILLAGE DISTRICT | BRADFORD | NH | 217017 |
-| MERRIMACK COUNTY CONSERVATION DISTRICT | CONCORD | NH | 152224 |
-| NEW LONDON SPRINGFIELD WATER SYSTEM PRECINCT | NEW LONDON | NH | 152221 |
-| NORTHFIELD SEWER DISTRICT | NORTHFIELD | NH | 221008 |
-| PENACOOK BOSCAWEN WATER PRECINCT | BOSCAWEN | NH | 130789 |
-| WARNER VILLAGE WATER DISTRICT | WARNER | NH | 108988 |
+None. No county over this zip holds a special district.
 
 #### What stands between this zip and the next tier
 
 Work out which of the remaining governments reach this ZIP code.
 
-Concretely: 18 named special districts above have no published boundary, and until their territory is resolved this zip cannot leave Tier 0 — because a tier is the floor across the governments touching it, and an unresolved government is exactly the one a reader might live under and hear nothing about.
+Concretely: 0 named special districts above have no published boundary, and until their territory is resolved this zip cannot leave Tier 0 — because a tier is the floor across the governments touching it, and an unresolved government is exactly the one a reader might live under and hear nothing about.
 
 ## 03255 against `HUNT05`
 
 `HUNT05` records **40 UNRESOLVED special districts at 03255**, found by the h session on 2026-08-16 by building the denominator.
 
-**This session resolves 0 of the 40.** The method that resolved every other government type cannot reach a single special district, because TIGER publishes no boundary for any of them. What this session adds is the NAMES: 18 districts in Merrimack County are listed above with their Census PID6 and office city, so the next session can start dialling instead of enumerating.
+**This session resolves 0 of the 40.** The method that resolved every other government type cannot reach a single special district, because TIGER publishes no boundary for any of them. What this session adds is the NAMES: 0 districts in Merrimack County are listed above with their Census PID6 and office city, so the next session can start dialling instead of enumerating.
 
 The two counts differ because they are counts of different things: `HUNT05` counted the districts inside 03255's own 166-unit enumerated universe, and this counts every special district in the counties whose territory overlaps the ZCTA. Neither is wrong; the second is the wider bound and the one a coverage claim has to clear.
 

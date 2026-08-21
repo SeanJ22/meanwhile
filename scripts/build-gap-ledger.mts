@@ -98,6 +98,26 @@ const [PID6, NAME, TYPE, FIPS_ST, FIPS_CTY, CITY, STATE] = [
   "state",
 ].map(col);
 
+/**
+ * Special districts resolved by a DOCUMENT rather than by geometry — a statute,
+ * a tax table, a district saying in its own words which towns it lies in.
+ * See the file's own note; a district absent from it stays UNRESOLVED.
+ */
+const districtTerritory = JSON.parse(
+  readFileSync(join(DERIVED, "special-district-territory.json"), "utf8"),
+) as {
+  evidenceDoc: string;
+  districts: {
+    pid6: string;
+    name: string;
+    reaches?: string[];
+    reachesNot?: string[];
+    basis: string;
+    evidence: string;
+    sourceUrl: string;
+  }[];
+};
+
 const specialByCounty = new Map<string, Array<{ pid6: string; name: string; city: string; state: string }>>();
 for (const r of units.rows) {
   if (r[TYPE] !== "SPECIAL DISTRICT") continue;
@@ -222,7 +242,42 @@ for (const pilot of PILOTS) {
   const edgeTier = new Map(stamp?.edges.map((e) => [`${e.layer}:${e.id}`, e.tier]) ?? []);
 
   const counties = governments.filter((e) => e.layer === "county");
-  const namedSpecial = counties.flatMap((c) => specialByCounty.get(c.id) ?? []);
+  const inCounties = counties.flatMap((c) => specialByCounty.get(c.id) ?? []);
+
+  /*
+   * **A DISTRICT RESOLVED BY A DOCUMENT LEAVES THE UNRESOLVED LIST.**
+   * (NH Hunt 2, item 4, 2026-08-21.)
+   *
+   * TIGER publishes no boundary for any special district, so the geometric join
+   * resolves none of the country's 39,555 and this file reported every one at
+   * every pilot zip as UNRESOLVED. That was right, and it had no way to become
+   * wrong: a hunt that resolved one by reading a statute or a tax table had
+   * nowhere to put the answer, so the resolution lived in an evidence page and
+   * the ledger went on saying nobody had tried.
+   *
+   * `data/derived/special-district-territory.json` is that place. A district
+   * with `reaches` including this zip moves into the resolved list; one with
+   * `reachesNot` including it leaves the picture entirely, because it is not a
+   * government over this zip at all. A district ABSENT from that file stays
+   * UNRESOLVED, which is the honest default this whole section exists to
+   * protect — "we could not find its boundary" is never "it does not govern
+   * here".
+   */
+  const reaches = new Set(
+    districtTerritory.districts
+      .filter((d) => (d.reaches ?? []).includes(pilot.zip))
+      .map((d) => d.pid6),
+  );
+  const reachesNot = new Set(
+    districtTerritory.districts
+      .filter((d) => (d.reachesNot ?? []).includes(pilot.zip))
+      .map((d) => d.pid6),
+  );
+  const namedSpecial = inCounties.filter(
+    (d) => !reaches.has(d.pid6) && !reachesNot.has(d.pid6),
+  );
+  const resolvedSpecial = inCounties.filter((d) => reaches.has(d.pid6));
+  const ruledOutSpecial = inCounties.filter((d) => reachesNot.has(d.pid6));
 
   w(`### ${pilot.zip} — ${pilot.what}`);
   w();
@@ -244,8 +299,21 @@ for (const pilot of PILOTS) {
   w();
   w("| Denominator | Count |");
   w("|---|---:|");
-  w(`| Governments in the universe touching this zip | ${(governments.length + namedSpecial.length).toLocaleString()} |`);
-  w(`| — territory-resolved | ${governments.length} |`);
+    /*
+   * A district resolved as REACHING this zip is a government touching it and a
+   * government whose territory is resolved, so it counts in both numbers. One
+   * ruled OUT is neither — it is not over this zip at all, and counting it as a
+   * government here would be the opposite error to the one this section exists
+   * to avoid.
+   */
+  w(
+    `| Governments in the universe touching this zip | ${(
+      governments.length +
+      resolvedSpecial.length +
+      namedSpecial.length
+    ).toLocaleString()} |`,
+  );
+  w(`| — territory-resolved | ${governments.length + resolvedSpecial.length} |`);
   w(`| — of those, bodies enumerated (Tier 2) | ${stamp?.evidence.bodiesEnumeratedFor ?? 0} |`);
   w(`| — UNRESOLVED (special districts, named below) | ${namedSpecial.length.toLocaleString()} |`);
   w();
@@ -307,7 +375,38 @@ for (const pilot of PILOTS) {
   }
 
   // 11.2: NAMED, not counted.
-  w(
+    if (resolvedSpecial.length || ruledOutSpecial.length) {
+    w("#### Special districts, resolved by document rather than by map");
+    w();
+    w(
+      "TIGER publishes no boundary for a special district, so geometry cannot " +
+        "answer these and never will. These were settled by reading something — a " +
+        "statute, a state tax table, a district describing its own territory. The " +
+        "evidence for each is in `" + districtTerritory.evidenceDoc + "`.",
+    );
+    w();
+    w("| District | Reaches this zip | Settled by |");
+    w("|---|---|---|");
+    for (const d of resolvedSpecial) {
+      const rec = districtTerritory.districts.find((x) => x.pid6 === d.pid6)!;
+      w(`| **${d.name}** | **YES** | ${rec.basis} |`);
+    }
+    for (const d of ruledOutSpecial) {
+      const rec = districtTerritory.districts.find((x) => x.pid6 === d.pid6)!;
+      w(`| ${d.name} | no | ${rec.basis} |`);
+    }
+    w();
+    if (resolvedSpecial.length) {
+      w(
+        `**${resolvedSpecial.length} of these govern part of this zip and are not in ` +
+          "the registry.** A reader here can live under one and hear nothing about " +
+          "it, which is what an unresolved government was always the risk of.",
+      );
+      w();
+    }
+  }
+
+w(
     `#### The ${namedSpecial.length.toLocaleString()} districts we cannot yet say you live in`,
   );
   w();

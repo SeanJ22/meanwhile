@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { CompositeSource } from "../lib/sources/composite/index.ts";
+import { accountedNormalize } from "../lib/sources/normalize-account.ts";
 import type {
   Meeting,
   MeetingQuery,
@@ -65,10 +66,10 @@ function stubChild(
       return behave.meetings?.(raw as unknown[]) ?? [];
     },
     normalizeWithDrops(raw) {
-      return {
+      return accountedNormalize(name, raw as unknown[], {
         meetings: behave.meetings?.(raw as unknown[]) ?? [],
         drops: { ...ZERO },
-      };
+      });
     },
     async upsert(meetings) {
       return { inserted: 0, updated: meetings.length };
@@ -155,10 +156,11 @@ test("the cache serves a repeat query without re-fetching, and reports so", asyn
       return [1];
     },
     normalize: () => [meetingOf("counting:m0")],
-    normalizeWithDrops: () => ({
-      meetings: [meetingOf("counting:m0")],
-      drops: { ...ZERO },
-    }),
+    normalizeWithDrops: (raw) =>
+      accountedNormalize("counting", raw, {
+        meetings: [meetingOf("counting:m0")],
+        drops: { ...ZERO },
+      }),
     upsert: async (m) => ({ inserted: 0, updated: m.length }),
   };
 
@@ -180,10 +182,11 @@ test("drops from every child surface in the report, per source", async () => {
     name: "droppy",
     fetch: async () => [1, 2, 3],
     normalize: () => [],
-    normalizeWithDrops: () => ({
-      meetings: [],
-      drops: { placeless: 2, unknownVenue: 1, unplaceableInTime: 0, notConfigured: 0 },
-    }),
+    normalizeWithDrops: (raw) =>
+      accountedNormalize("droppy", raw, {
+        meetings: [],
+        drops: { placeless: 2, unknownVenue: 1, unplaceableInTime: 0, notConfigured: 0 },
+      }),
     upsert: async (m) => ({ inserted: 0, updated: m.length }),
   };
 

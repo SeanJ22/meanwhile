@@ -403,3 +403,210 @@ test("RULING 28: the contest annotation is one asterisk and one footnote", () =>
     "one footnote per candidate branch — the lineup and the filing list",
   );
 });
+
+/* ========================================================================== */
+/* 6. No per-card completeness statement, BY MEANING rather than by spelling  */
+/* ========================================================================== */
+
+/**
+ * **RULING 44's guard, widened after it failed** (item 2.2, 2026-08-20).
+ *
+ * RULING 42 deleted `THIN_CANDIDATE_LINE` and the guard above was written to
+ * make sure it stayed deleted — by banning the string it rendered. In the same
+ * session the product shipped a semantically identical sentence with different
+ * words (*"We haven't collected anything this candidate has published yet —
+ * that's about our research, not about them."*), and the guard was happy,
+ * because the guard was matching a spelling. That is `PE01`, and the guard gap
+ * is the defect: a rule about MEANING enforced by a list of KNOWN STRINGS is a
+ * rule that only catches the instance already found.
+ *
+ * ## The method
+ *
+ * Every string literal in a per-card render surface is pulled out and read as
+ * a sentence, comments stripped. A sentence is a completeness statement when
+ * three things co-occur in it:
+ *
+ *   1. **a subject that is us or this record** — we, our, this candidate, this
+ *      card, so far, yet;
+ *   2. **an absence polarity** — haven't, no, nothing, none, missing, few,
+ *      little, thin, sparse, empty, still, not yet;
+ *   3. **a coverage object** — collected, found, information, detail, data,
+ *      record, published, research, words, profile, material, source.
+ *
+ * That is the concept, not a phrasing of it, so a rewrite that means the same
+ * thing trips it. The second matcher is the digit form RULING 47 named: an
+ * interpolated value inside a sentence about issues, coverage or absence — the
+ * banned statement compressed.
+ *
+ * ## What it will still miss, stated rather than implied
+ *
+ * A semantic guard has false negatives and this one has four kinds:
+ *
+ * - **Assembled sentences.** It reads literals in these files. A sentence
+ *   built from fragments, held in a data file, returned by a helper in `lib/`
+ *   or received as a prop from somewhere else is invisible to it. `PE01`
+ *   itself lived in `lib/candidates/positions.ts`, which is why `LIB_SURFACES`
+ *   below is swept too — but only the modules named there.
+ * - **Vocabulary it does not know.** "Their entry is light on specifics"
+ *   carries none of the three lexicons and passes. English has more ways to
+ *   say this than a list can hold.
+ * - **Non-sentence markers.** A dimmed style, an icon, a shorter card, an
+ *   ordering. RULING 44 bans those too and this guard cannot see them; the
+ *   structural guards in `tests/candidate-cards.test.ts` and the live walk are
+ *   what cover that half.
+ * - **Context.** It cannot tell a statement about a CANDIDATE's record from
+ *   one about a MEETING's agenda, so a legitimate line in these files must be
+ *   exempted BY NAME with a reason. That list is short on purpose: it is the
+ *   honest ledger of what this guard decided not to look at.
+ */
+const CARD_SURFACES = [
+  "components/ballot/candidate-card.tsx",
+  "components/ballot/candidate-positions.tsx",
+  "components/ballot/candidate-battlecard.tsx",
+  "components/ballot/incumbency-note.tsx",
+  "app/ballot/page.tsx",
+];
+
+/** Modules that BUILD the sentences those surfaces render. `PE01` lived here. */
+const LIB_SURFACES = [
+  "lib/ballot/candidate-cards.ts",
+  "lib/candidates/positions.ts",
+];
+
+const SUBJECT_SELF =
+  /\b(we|we'?ve|we'?re|our|us|this candidate'?s? (record|entry|card|page)|so far|yet)\b/i;
+const ABSENCE =
+  /\b(haven'?t|have not|hasn'?t|has not|didn'?t|did not|don'?t|do not|no|none|nothing|not|never|missing|few|little|thin|sparse|empty|blank|unknown|unavailable|absent|lack(s|ing)?|still|incomplete|partial)\b/i;
+const COVERAGE =
+  /\b(collect(ed|ing)?|found|find|information|info|detail(s)?|data|record(s|ed)?|publish(ed)?|research|words|profile|material|content|source(s)?|coverage|issues?)\b/i;
+
+/** Strings in those files that are NOT completeness statements, with why. */
+const CARD_STRING_EXEMPT = new Map<string, string>([
+  [
+    "the body hasn't published a join link",
+    "a fact about a MEETING's notice, not about our coverage of a candidate",
+  ],
+]);
+
+/** Pull every single- double- and back-quoted literal out of a source file. */
+function stringLiterals(src: string): string[] {
+  const out: string[] = [];
+  const re = /"([^"\\\n]|\\.)*"|'([^'\\\n]|\\.)*'|`([^`\\]|\\.)*`/g;
+  for (const m of src.match(re) ?? []) {
+    const body = m.slice(1, -1);
+    // Not prose: class lists, selectors, urls, identifiers, css.
+    if (!/\s/.test(body)) continue;
+    if (/^[a-z0-9 :_\-[\]().%/#*+,>~]+$/.test(body) && !/[A-Z]/.test(body)) {
+      // Tailwind class strings and selectors are all lowercase with no
+      // sentence punctuation. A real sentence has a capital or an apostrophe.
+      if (!/['’.!?]/.test(body)) continue;
+    }
+    out.push(body);
+  }
+  return out;
+}
+
+test("RULING 44: no per-card completeness statement, by meaning", () => {
+  const hits: string[] = [];
+  let scanned = 0;
+  let sentences = 0;
+
+  for (const relPath of [...CARD_SURFACES, ...LIB_SURFACES]) {
+    const full = join(ROOT, ...relPath.split("/"));
+    scanned += 1;
+    const src = withoutComments(readFileSync(full, "utf8"));
+    for (const raw of stringLiterals(src)) {
+      // A JSX-interpolated sentence arrives in pieces; judge the piece.
+      const s = raw.replace(/\s+/g, " ").trim();
+      if (s.length < 12) continue;
+      sentences += 1;
+      if ([...CARD_STRING_EXEMPT.keys()].some((k) => s.includes(k))) continue;
+
+      const meaningful =
+        SUBJECT_SELF.test(s) && ABSENCE.test(s) && COVERAGE.test(s);
+      /*
+       * The digit form (RULING 47): an interpolated value inside a sentence
+       * about coverage. `found` is deliberately NOT in this lexicon — it
+       * matched "Your ballot, with sources: found via ${PRODUCT_NAME}", which
+       * is a provenance line and not a measurement. The pattern is a count
+       * ABOUT the record, so the words that qualify it are the counting ones.
+       */
+      const counted =
+        /\$\{/.test(s) &&
+        /\b(issues?|of the|mention(s|ed)?|collect(ed)?|missing|nothing|so far)\b/i.test(
+          s,
+        );
+
+      if (meaningful || counted) {
+        hits.push(`${relPath} — "${s.slice(0, 110)}"`);
+      }
+    }
+  }
+
+  assert.equal(scanned, CARD_SURFACES.length + LIB_SURFACES.length);
+  assert.ok(
+    sentences > 30,
+    `only ${sentences} candidate sentences read — a sweep that read almost ` +
+      "nothing must not read as a sweep that found nothing",
+  );
+  assert.deepEqual(
+    hits,
+    [],
+    "RULING 44 — a card may not state, count, mark or imply what is missing " +
+      "from it, in ANY wording. The one disclosure is page-level.",
+  );
+});
+
+/**
+ * **The guard proves it is not vacuous.** A sweep that finds nothing is
+ * indistinguishable from a sweep that looks for nothing, and the guard this
+ * one replaces was exactly that: it passed while the sentence it was written
+ * for was on the live site in different words.
+ *
+ * So the matcher is run against the sentences the product has actually
+ * shipped — the deleted `THIN_CANDIDATE_LINE`, the `PE01` sentence, the
+ * `positionsAnnotation` count, and three rewrites nobody has written yet —
+ * and every one of them must be caught. The negatives are real lines from the
+ * same surfaces that must NOT be caught, because a guard that flags the whole
+ * page is a guard somebody turns off.
+ */
+test("RULING 44: the meaning matcher catches the sentences that shipped", () => {
+  const judge = (s: string) =>
+    (SUBJECT_SELF.test(s) && ABSENCE.test(s) && COVERAGE.test(s)) ||
+    (/\$\{/.test(s) &&
+      /\b(issues?|of the|mention(s|ed)?|collect(ed)?|missing|nothing|so far)\b/i.test(
+        s,
+      ));
+
+  const mustCatch = [
+    // RULING 42's deleted line, verbatim.
+    "We haven't found much about this candidate yet.",
+    // PE01, verbatim — the one the old guard missed.
+    "We haven't collected anything this candidate has published yet — that's about our research, not about them. Their battlecard has the detail.",
+    // RULING 47's count, in its template form.
+    "Their own pages mention ${issuesWithPassages} of the ${issuesSearched} issues we check for every candidate in this contest.",
+    // The buried enumeration's summary.
+    "Which ${searchedEmpty.length} we found nothing on",
+    // Rewrites nobody has shipped, which is the point of a meaning matcher.
+    "We have no information for this candidate so far.",
+    "Nothing has been collected for this candidate yet.",
+    "Our research on this candidate is still incomplete.",
+  ];
+  const mustPass = [
+    "What we have found, we are displaying here.",
+    "An incumbent is likely to have more information available here than the people running against them.",
+    "Passages below are this candidate's own words, from the pages named under each one.",
+    "Your ballot, with sources: found via ${PRODUCT_NAME}.",
+  ];
+
+  assert.deepEqual(
+    mustCatch.filter((s) => !judge(s)),
+    [],
+    "the matcher would let a shipped completeness statement through",
+  );
+  assert.deepEqual(
+    mustPass.filter((s) => judge(s)),
+    [],
+    "the matcher flags a line that is not a completeness statement",
+  );
+});

@@ -8,6 +8,10 @@ import type {
   NormalizeDropCounts,
   ReportingMeetingSource,
 } from "../types.ts";
+import {
+  accountedNormalize,
+  type Accounted,
+} from "../normalize-account.ts";
 
 /**
  * Hyland OnBase Agenda Online meeting source — tracker **D16**, reversed.
@@ -102,7 +106,7 @@ export function makeOnBaseSource(
   const normalizeWithDrops = (
     raw: OnBaseRaw[],
     now: Date = new Date(),
-  ): { meetings: Meeting[]; drops: NormalizeDropCounts } => {
+  ): Accounted<{ meetings: Meeting[]; drops: NormalizeDropCounts }> => {
     const meetings: Meeting[] = [];
     const drops: NormalizeDropCounts = {
       placeless: 0,
@@ -168,7 +172,7 @@ export function makeOnBaseSource(
       }
     }
 
-    return { meetings, drops };
+    return accountedNormalize(SOURCE_NAME, raw, { meetings, drops });
   };
 
   return {

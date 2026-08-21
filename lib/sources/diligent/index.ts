@@ -15,6 +15,10 @@ import type {
   NormalizeDropCounts,
   ReportingMeetingSource,
 } from "../types.ts";
+import {
+  accountedNormalize,
+  type Accounted,
+} from "../normalize-account.ts";
 
 /**
  * Diligent Community / iCompass CivicWeb meeting source — trackers **D13**
@@ -103,7 +107,7 @@ export function makeDiligentSource(
   const normalizeWithDrops = (
     raw: DiligentRaw[],
     now: Date = new Date(),
-  ): { meetings: Meeting[]; drops: NormalizeDropCounts } => {
+  ): Accounted<{ meetings: Meeting[]; drops: NormalizeDropCounts }> => {
     const meetings: Meeting[] = [];
     const drops: NormalizeDropCounts = {
       placeless: 0,
@@ -193,7 +197,7 @@ export function makeDiligentSource(
       }
     }
 
-    return { meetings, drops };
+    return accountedNormalize(SOURCE_NAME, raw, { meetings, drops });
   };
 
   return {

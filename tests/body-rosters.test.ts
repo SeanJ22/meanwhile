@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { test } from "node:test";
 
 import {
@@ -14,6 +15,29 @@ import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
  * Tier-3 rosters (5a/5b) — officeholder discipline held mechanically:
  * sourced, dated, keyed to real wired bodies, and actually rendered.
  */
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+
+/**
+ * The committed retrieval ledgers, concatenated once.
+ *
+ * A ledger line is the bytes a public body actually sent us, with the URL, the
+ * date, the HTTP status and the ladder rung it took to get them. An address
+ * that appears in one was published; an address that appears in none has only
+ * our word behind it.
+ */
+const EVIDENCE = (() => {
+  const dir = join(ROOT, "docs", "evidence");
+  if (!existsSync(dir)) return "";
+  return readdirSync(dir)
+    .filter((f) => f.endsWith(".jsonl") || f.endsWith(".json"))
+    .map((f) => readFileSync(join(dir, f), "utf8"))
+    .join("\n");
+})();
+
+function publishedInEvidence(email: string): boolean {
+  return EVIDENCE.includes(email);
+}
 
 test("every roster keys to a real body — a roster for nothing is a curation error", () => {
   // Generalized 2026-08-17 (Kearsarge): a roster may belong to a KNOWN
@@ -59,11 +83,39 @@ test("every member has a name, a published title, and no invented contact", () =
       assert.ok(!ids.has(member.id), `duplicate member id ${member.id}`);
       ids.add(member.id);
       if (member.email) {
-        // Only published addresses: government domains, never guessed ones.
-        assert.match(
-          member.email,
-          /@(tucsonaz\.gov|pima\.gov|tusd1\.org|vailschooldistrict\.org|newbury\.nh\.gov|rockawaytownship\.org|rocktwp\.net)$/,
-          `${member.name}: email must be from the body's own published domain`,
+        /*
+         * **THE RULE IS "PUBLISHED", AND THE DOMAIN LIST WAS ONLY A PROXY FOR
+         * IT.** (Widened 2026-08-20, NH Hunt.)
+         *
+         * What this guard exists to refuse is an INVENTED address — a
+         * `firstname.lastname@` pattern-matched onto a person who never
+         * published one. A hand-kept list of government domains catches that
+         * and also catches something it should not: Kearsarge Regional School
+         * District's own staff directory publishes its District Clerk at a
+         * `@gmail.com` address, on a `kearsarge.org` page, in the district's
+         * own words. That address is unusual and it is real, and refusing it
+         * would be refusing a published fact because of its shape.
+         *
+         * So there are two ways to pass, and the second is the stronger one:
+         *
+         *   1. the address is on the body's own domain — the fast path, and
+         *      still hand-kept, still a list;
+         *   2. the address appears VERBATIM in a committed retrieval ledger
+         *      under `docs/evidence/`, which is a recording of bytes a public
+         *      body actually sent us on a stated date.
+         *
+         * Proof beats pattern. A guessed address cannot satisfy (2) unless
+         * somebody forges a ledger, and a real one on an odd domain no longer
+         * has to be dropped to keep a test green.
+         */
+        const onOwnDomain =
+          /@(tucsonaz\.gov|pima\.gov|tusd1\.org|vailschooldistrict\.org|newbury\.nh\.gov|kearsarge\.org|rockawaytownship\.org|rocktwp\.net)$/.test(
+            member.email,
+          );
+        assert.ok(
+          onOwnDomain || publishedInEvidence(member.email),
+          `${member.name}: ${member.email} is neither on the body's own domain ` +
+            "nor recorded verbatim in any committed retrieval ledger under docs/evidence/",
         );
       }
     }

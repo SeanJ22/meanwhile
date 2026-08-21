@@ -180,23 +180,80 @@ async function curlGetText(
  * wall, which is the whole point — a challenge page must never be mistaken
  * for a body that publishes nothing.
  */
-const CHALLENGE_SIGNATURES: readonly { name: string; test: RegExp }[] = [
+/**
+ * **THE SIZE FLOOR IS PER-SIGNATURE, NOT GLOBAL** (NH Hunt, 2026-08-20).
+ *
+ * The floor exists for exactly one signature: a real 260 KB article that
+ * quotes "Checking your browser" is a page, not a wall. It was applied to all
+ * seven, and that is what let a challenge page through — Cloudflare's current
+ * interstitial is **29,809 bytes**, comfortably over the 20 KB floor, so a
+ * KEARSARGE REGIONAL SCHOOL DISTRICT board-roster page served as a challenge
+ * was handed to the extractor as a document. Layer 5 read the challenge page's
+ * own table, found no person in it, and reported `ZERO_ROWS` — a finding about
+ * the district's page, when the truth was that we never saw the district's
+ * page at all.
+ *
+ * That is the wall-rendered-as-an-emptiness shape the transparency mandate
+ * forbids by name, and it was one line of arithmetic.
+ *
+ * A signature that names a vendor's own machinery — `cdn-cgi/challenge-platform`,
+ * `<title>Just a moment...</title>`, `_Incapsula_Resource` — cannot appear in a
+ * real article by accident, so it needs no floor and gets none. Only the loose
+ * PROSE signature keeps one.
+ */
+const CHALLENGE_SIGNATURES: readonly {
+  name: string;
+  test: RegExp;
+  /** Bytes above which this signature is not trusted. Absent means any size. */
+  maxBytes?: number;
+}[] = [
   { name: "Fastly/Imperva client challenge", test: /<title>\s*Client Challenge\s*<\/title>/i },
-  { name: "Cloudflare interstitial", test: /cdn-cgi\/challenge-platform|cf-browser-verification/i },
   { name: "Cloudflare 'just a moment'", test: /<title>\s*Just a moment\.\.\.\s*<\/title>/i },
-  { name: "browser check", test: /Checking your browser before accessing/i },
+  /*
+   * The modern managed challenge, and the three marks that are UNAMBIGUOUS.
+   *
+   * `window._cf_chl_opt` is the challenge's own options object, the Turnstile
+   * widget host is only loaded by a challenge, and the prose line appears
+   * nowhere else. Verified against this repo's two `schedulepage` fixtures,
+   * which are real pages from a Cloudflare-fronted host: all three are absent
+   * from both, and all three are present in the 29,809-byte interstitial
+   * Kearsarge served on 2026-08-20.
+   */
+  {
+    name: "Cloudflare managed challenge",
+    test: /window\._cf_chl_opt|challenges\.cloudflare\.com|Performing security verification/i,
+  },
   { name: "Cloudflare attention-required", test: /Attention Required!\s*\|\s*Cloudflare/i },
   { name: "Imperva/Incapsula", test: /_Incapsula_Resource|Incapsula incident ID/i },
   { name: "PerimeterX", test: /px-captcha|PerimeterX/i },
+  /*
+   * The two that KEEP the floor, and why — corrected the same day the floor
+   * was made per-signature, because the first version of that change removed
+   * it from this one and broke two tests immediately.
+   *
+   * `cdn-cgi/challenge-platform` is NOT a challenge marker on its own:
+   * Cloudflare injects `/cdn-cgi/challenge-platform/scripts/jsd/main.js` into
+   * ORDINARY pages as its JS-detections beacon, and both recorded
+   * `schedulepage` fixtures — real Morris Hills pages that parse into real
+   * meetings — carry it. Reading it as a wall at any size would have marked a
+   * working source refused, which is the same defect pointed the other way.
+   * The floor is what keeps it usable: an 82 KB agenda page is a page.
+   */
+  {
+    name: "Cloudflare interstitial",
+    test: /cdn-cgi\/challenge-platform|cf-browser-verification/i,
+    maxBytes: 20_000,
+  },
+  { name: "browser check", test: /Checking your browser before accessing/i, maxBytes: 20_000 },
 ];
 
 /** The named wall, or null when the body is a real page. */
 export function challengeIn(text: string): string | null {
-  // Only worth asking of a SHORT body. A real 260 KB article that happens to
-  // quote the phrase "Checking your browser" is a page, not a wall, and a
-  // signature check with no size floor would refuse it.
-  if (text.length > 20_000) return null;
-  return CHALLENGE_SIGNATURES.find((s) => s.test.test(text))?.name ?? null;
+  return (
+    CHALLENGE_SIGNATURES.find(
+      (s) => (s.maxBytes === undefined || text.length <= s.maxBytes) && s.test.test(text),
+    )?.name ?? null
+  );
 }
 
 /**
@@ -259,12 +316,47 @@ export async function politeGetText(
       );
     }
 
-    // The browser rung's second half: an in-process refusal is not the
-    // answer, because the refusal is fingerprint-level and a different TLS
-    // stack is still the same public page. Only tried on the browser profile,
-    // and only once.
-    if (browser && !options.fetchImpl && response.status === 403) {
-      return curlGetText(url, headers);
+    /*
+     * **A 403 IS A RUNG, NOT AN ANSWER — AND THE LADDER IS WALKED IN ORDER.**
+     * (Widened 2026-08-20, NH Hunt.)
+     *
+     * The escalation to a different TLS stack was already here and was reached
+     * only from the BROWSER profile, so a caller on the plain profile — which
+     * is every adapter that does not opt in, including `ical` — stopped at
+     * rung 2 and reported a wall. The Town of Newbury proved the cost in one
+     * measurement: its own `export.ics` answers **403 to this process and 200
+     * to `curl`, 467,525 bytes, with either User-Agent**. Nothing about the
+     * headers mattered; the TLS fingerprint did. Ten wired Newbury bodies
+     * would have rendered as unreachable against a feed that was serving.
+     *
+     * So the rungs are walked in the order `CLAUDE.md` numbers them:
+     *   rung 2 refused → rung 3, the full browser header set
+     *   rung 3 refused → rung 4, a different client
+     *
+     * Only when the caller has not injected a `fetchImpl`, because a test's
+     * fake fetch is the thing under test and must not be routed around.
+     */
+    if (!options.fetchImpl && response.status === 403) {
+      if (!browser) {
+        const withBrowserHeaders = await impl(url, {
+          headers: {
+            ...browserProfileHeaders(),
+            ...(options.accept ? { Accept: options.accept } : {}),
+          },
+          signal: options.signal,
+        });
+        if (withBrowserHeaders.ok) {
+          const text = await withBrowserHeaders.text();
+          if (!challengeIn(text)) {
+            return {
+              status: withBrowserHeaders.status,
+              contentType: withBrowserHeaders.headers.get("content-type") ?? "",
+              text,
+            };
+          }
+        }
+      }
+      return curlGetText(url, browser ? headers : browserProfileHeaders());
     }
 
     const retryable = response.status === 429 || response.status >= 500;

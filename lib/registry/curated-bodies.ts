@@ -360,6 +360,44 @@ export const CURATED_BODIES: Body[] = [
   // the Selectboard; these three are on the town's own site, behind the host
   // that refuses this pipeline's ordinary client. The browser rung reached
   // them (M79).
+  /**
+   * **THE COUNTY DELEGATION** — Merrimack County's legislative body (NH Hunt,
+   * 2026-08-20).
+   *
+   * Every member of the New Hampshire House elected from the county, sitting
+   * together to appropriate the county budget. It is a real governing body
+   * with its own chair, clerk, executive committee, published meeting notices
+   * and Zoom link, and it is NOT the Board of Commissioners — a reader at
+   * 03255 who wants to know who votes on the county budget is asking about
+   * this body and would have found nothing here.
+   *
+   * The derivation cannot produce it: Census enumerates Merrimack County as
+   * one government, and a county's legislative body is a state-law creature
+   * with no boundary of its own. So it is curated, on the county's own page.
+   */
+  {
+    id: "ocd-division/country:us/state:nh/county:merrimack#delegation",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack",
+    name: "Merrimack County Delegation",
+    bodyClass: "GOVERNING" as const,
+    bodyOrigin: "CURATED" as const,
+    coverageStatus: "KNOWN_UNCOVERED" as const,
+    agendaSourceType: "HTML" as const,
+    agendaSourceRef:
+      "https://www.merrimackcounty.net/elected_officials/delegation/index.php",
+    meetingCadence: null,
+    homepageUrl:
+      "https://www.merrimackcounty.net/elected_officials/delegation/index.php",
+    demandCount: 0,
+    sourceDataset: "GOV_DIRECTORY" as const,
+    provenance: {
+      sourceUrl:
+        "https://www.merrimackcounty.net/elected_officials/delegation/index.php",
+      sourceOrg: "Merrimack County",
+      collectedAt: "2026-08-20",
+      verifiedAt: "2026-08-20",
+    },
+  },
   ...newburyBoardRows(),
   ...wilmotBoardRows(),
   ...newLondonBoardRows(),
@@ -374,6 +412,26 @@ function newburyBoardRows(): Body[] {
     live: boolean;
     /** Why not, in the reader's own terms. LIVE rows leave this null. */
     gap: string | null;
+    /**
+     * Where the body ACTUALLY publishes, when the town's menu entry is a
+     * redirect off the town's own domain (NH Hunt, 2026-08-20). Absent means
+     * the town's own path is the body's page, which is the normal case.
+     */
+    homepage?: string;
+    /**
+     * The day THIS row was read. The three original rows were read
+     * 2026-08-15; the fourteen added by the NH Hunt were read 2026-08-20, and
+     * stamping them all with one date would misdate provenance on eleven of
+     * them (`CLAUDE.md`: a plausible date is not a date).
+     */
+    collectedAt?: string;
+    /**
+     * How this body's meetings are retrieved. The three land-use boards each
+     * publish their own schedule page; the ten added by the NH Hunt come off
+     * the TOWN'S OWN iCalendar feed, which carries all fourteen boards'
+     * sittings in one document and had never been wired.
+     */
+    sourceType?: "SCHEDULEPAGE" | "ICAL";
   }> = [
     {
       slug: "planning-board",
@@ -406,6 +464,174 @@ function newburyBoardRows(): Body[] {
       live: true,
       gap: null,
     },
+
+    /*
+     * ── THE TEN THE MENU HAD AND THE REGISTRY DID NOT (NH Hunt, 2026-08-20) ──
+     *
+     * `docs/zip-playbook.md` recorded fourteen Newbury boards on 2026-08-15,
+     * read off the town's hover menu, with four wired and ten `NOT_ATTEMPTED`.
+     * This is the session that walked them. The names and paths below are read
+     * off the town's own `/boards` page and its `/sitemap.xml`, both retrieved
+     * 2026-08-20, and the roster on each is in `lib/registry/body-rosters.ts`
+     * with the page it came from.
+     *
+     * **The menu was an UNDERCOUNT, and that is the finding.** The sitemap
+     * carries three more bodies the hover menu never shows — Parks &
+     * Recreation, the Housing Committee and the Transfer Station Committee —
+     * so the town's own denominator is at least seventeen, not fourteen. Two
+     * of those three are behind the site's own login and are recorded below as
+     * exactly that.
+     *
+     * **Five of these are not on newbury.nh.gov at all.** The menu entry is a
+     * redirect: the Energy Committee and the Beautification Committee run
+     * their own domains, the Fire Department runs a subdomain, the Library
+     * Trustees are on the library's own site, and the Joint Assessing Board is
+     * hosted by the Town of SUNAPEE, because it is a joint board of three
+     * towns and Sunapee is the one that publishes it. `homepageUrl` names
+     * where the body actually publishes; the town's own path is what a reader
+     * following the town's menu would click, and both are recorded.
+     */
+    {
+      slug: "advisory-budget-committee",
+      collectedAt: "2026-08-20",
+      sourceType: "ICAL",
+      name: "2026 Advisory Budget Committee",
+      path: "/selectboard/2026-advisory-budget-committee",
+      live: true,
+      gap: null,
+    },
+    {
+      slug: "blodgett-sewer-user-advisory-committee",
+      collectedAt: "2026-08-20",
+      sourceType: "ICAL",
+      name: "Blodgett Sewer User Advisory Committee",
+      path: "/blodgett-sewer-user-advisory-committee",
+      live: true,
+      gap: null,
+    },
+    {
+      slug: "cemetery-trustees",
+      collectedAt: "2026-08-20",
+      sourceType: "ICAL",
+      name: "Cemetery Trustees",
+      path: "/cemetery-trustees",
+      live: true,
+      gap: null,
+    },
+    {
+      slug: "joint-loss-management-committee",
+      collectedAt: "2026-08-20",
+      sourceType: "ICAL",
+      name: "Joint Loss Management Committee",
+      path: "/joint-loss-management-committee",
+      live: true,
+      gap: null,
+    },
+    {
+      slug: "septic-committee",
+      collectedAt: "2026-08-20",
+      sourceType: "ICAL",
+      name: "Newbury Septic Committee",
+      path: "/newbury-septic-committee",
+      live: true,
+      gap: null,
+    },
+    {
+      slug: "trustees-of-the-trust-funds",
+      collectedAt: "2026-08-20",
+      sourceType: "ICAL",
+      name: "Trustees of the Trust Funds",
+      path: "/trustees-trust-funds",
+      live: true,
+      gap: null,
+    },
+    {
+      // The town's menu entry 301s to the committee's OWN domain. Read
+      // 2026-08-20 at rung 4 (curl followed the hop that every fetch client
+      // in this repo could only report as a refusal).
+      slug: "energy-committee",
+      collectedAt: "2026-08-20",
+      sourceType: "ICAL",
+      name: "Newbury Energy Committee",
+      path: "/newbury-energy-committee",
+      live: true,
+      gap: null,
+      homepage: "https://www.newburyenergynh.org/",
+    },
+    {
+      slug: "beautification-committee",
+      collectedAt: "2026-08-20",
+      sourceType: "ICAL",
+      name: "Newbury Beautification Committee",
+      path: "/newbury-beautification-committee",
+      live: true,
+      gap: null,
+      homepage: "https://www.newburybeautification.org/",
+    },
+    {
+      // A JOINT board of Newbury, Sunapee and New London, published by
+      // Sunapee. Newbury's own menu links straight there.
+      slug: "joint-assessing-board",
+      collectedAt: "2026-08-20",
+      sourceType: "ICAL",
+      name: "Joint Assessing Board (Newbury, Sunapee & New London)",
+      path: "/joint-assessing-board-newbury-sunapee-new-london",
+      live: true,
+      gap: null,
+      homepage: "https://www.sunapeenh.gov/joint-assessing-board",
+    },
+    {
+      slug: "library-trustees",
+      collectedAt: "2026-08-20",
+      sourceType: "ICAL",
+      name: "Newbury Public Library Trustees",
+      path: "/newbury-public-library-trustees",
+      live: true,
+      gap: null,
+      homepage: "http://newburynhlibrary.net/",
+    },
+    /*
+     * The two the sitemap names and the town does not publish. Both 302 to
+     * `/user/login?destination=node/…` — the site's OWN access control, which
+     * this product never authenticates past. That is a wall recorded on its
+     * rung, not a body that does not exist: the town lists them in its own
+     * sitemap, so they are real and they are unpublished.
+     *
+     * Rungs owed and not yet walked: 11 (the Internet Archive) and 9 (the
+     * annual town report, which prints every committee's membership).
+     */
+    {
+      /*
+       * An ELECTED town body (RSA 654:22, RSA 669:17) that the town's own
+       * boards menu does not list. Newbury publishes twenty-three of their
+       * statutory checklist sessions on its calendar and names them nowhere
+       * else, so the calendar IS the page — a constructed /supervisors-… path
+       * would 404, and pointing at one would be a fabricated citation.
+       */
+      slug: "supervisors-of-the-checklist",
+      name: "Supervisors of the Checklist",
+      path: "/calendar/month",
+      live: true,
+      gap: null,
+      collectedAt: "2026-08-20",
+      sourceType: "ICAL",
+    },
+    {
+      slug: "parks-recreation-committee",
+      collectedAt: "2026-08-20",
+      name: "Parks & Recreation Committee",
+      path: "/parks-recreation-committee",
+      live: false,
+      gap: "The town's own site keeps this committee's page behind its login.",
+    },
+    {
+      slug: "housing-committee",
+      collectedAt: "2026-08-20",
+      name: "Housing Committee",
+      path: "/housing-committee",
+      live: false,
+      gap: "The town's own site keeps this committee's page behind its login.",
+    },
   ];
 
   return rows.map((row) => ({
@@ -417,17 +643,17 @@ function newburyBoardRows(): Body[] {
     bodyClass: "COMMISSION" as const,
     bodyOrigin: "CURATED" as const,
     coverageStatus: row.live ? ("LIVE" as const) : ("KNOWN_UNCOVERED" as const),
-    agendaSourceType: row.live ? ("SCHEDULEPAGE" as const) : ("HTML" as const),
-    agendaSourceRef: `https://www.newbury.nh.gov${row.path}`,
+    agendaSourceType: row.live ? row.sourceType ?? "SCHEDULEPAGE" : "HTML",
+    agendaSourceRef: row.homepage ?? `https://www.newbury.nh.gov${row.path}`,
     meetingCadence: null,
-    homepageUrl: `https://www.newbury.nh.gov${row.path}`,
+    homepageUrl: row.homepage ?? `https://www.newbury.nh.gov${row.path}`,
     demandCount: 0,
     sourceDataset: "GOV_DIRECTORY" as const,
     provenance: {
-      sourceUrl: `https://www.newbury.nh.gov${row.path}`,
+      sourceUrl: row.homepage ?? `https://www.newbury.nh.gov${row.path}`,
       sourceOrg: "Town of Newbury",
-      collectedAt: collected,
-      verifiedAt: collected,
+      collectedAt: row.collectedAt ?? collected,
+      verifiedAt: row.collectedAt ?? collected,
     },
   }));
 }

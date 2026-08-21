@@ -332,6 +332,106 @@ export function auditSeanRows({ before, after }) {
   return refusals;
 }
 
+/* ------------------------------------------------------- RULING 46: Delete --- */
+
+/**
+ * **THE FOURTH RESOLUTION STATE, AND ONLY THE AUTHOR MAY SET IT.**
+ * (RULING 46, 2026-08-20.)
+ *
+ * RULING 35's "nothing is ever deleted" governs WORK rows — a session may not
+ * erase its own row by marking it done. It was never meant to bind his audit.
+ * He must be able to look at a row, judge that it is not project work and does
+ * not belong in the tracker at all, and have it gone. `B08` is the first: a
+ * personal legal errand that reached the tracker and has nothing to do with
+ * this product.
+ *
+ * `Delete` is therefore a resolution he can write, and a session never can. It
+ * is deliberately NOT in `RESOLUTIONS`, because that list is the set of states
+ * a row may CARRY and a deleted row carries nothing — it is gone from both
+ * stores. What survives is one line in `docs/tracker-deletions.json`, which
+ * `docs/log.md` renders: the id, the date, and that he removed it. The record
+ * that the row existed survives without the row cluttering anything.
+ */
+export const DELETE_RESOLUTION = "Delete";
+
+/** Every value the Resolution column may legally hold, for validation. */
+export const ALL_RESOLUTIONS = [...RESOLUTIONS, DELETE_RESOLUTION];
+
+/** The permanent record of what was deleted. Never rewritten, only appended. */
+export const DELETIONS_JSON = "docs/tracker-deletions.json";
+
+/**
+ * His instruction to delete, in his own words, as it appears in the Notes
+ * column he owns.
+ *
+ * This is the SECOND route to a deletion and it exists because the first one
+ * cannot reach a row he has already resolved: `Delete` is read out of the
+ * workbook's Resolution column, and he wrote "Delete this entirely" into the
+ * NOTES of a row he had already marked Resolved. Requiring his words in a
+ * column a session may not write is what stops this being a self-authorization
+ * — a session cannot manufacture the evidence, because writing that column is
+ * itself a refusal.
+ */
+export const DELETE_INSTRUCTION =
+  /\bdelete\s+(this|it|that|the\s+row)\b|\bdelete\s+entirely\b|\bremove\s+this\s+(row\s+)?entirely\b/i;
+
+/**
+ * Who may delete what, decided here so the move script and the guard test
+ * cannot disagree.
+ *
+ * @param {{rows: TrackerRow[], requested?: string[], resolutionAuthor?: Record<string,string>, actor?: string}} input
+ * @returns {{deletions: {row: TrackerRow, evidence: string}[], refusals: string[]}}
+ */
+export function planDeletions({
+  rows,
+  requested = [],
+  resolutionAuthor = {},
+  actor = "session",
+}) {
+  const byId = new Map(rows.map((r) => [(r.ID ?? "").trim(), r]));
+  /** @type {{row: TrackerRow, evidence: string}[]} */
+  const deletions = [];
+  const refusals = [];
+
+  const ids = new Set([
+    ...rows
+      .filter((r) => (r.Resolution ?? "").trim() === DELETE_RESOLUTION)
+      .map((r) => (r.ID ?? "").trim()),
+    ...requested.map((s) => s.trim()).filter(Boolean),
+  ]);
+
+  for (const id of ids) {
+    const row = byId.get(id);
+    if (!row) {
+      refusals.push(
+        `RULING 46 — ${id} was named for deletion and is in neither store.`,
+      );
+      continue;
+    }
+    const wroteResolution = (resolutionAuthor[id] ?? actor) === "sean";
+    const note = (row.Notes ?? "").trim();
+    const instructed = DELETE_INSTRUCTION.test(note);
+
+    if (!wroteResolution && !instructed) {
+      refusals.push(
+        `RULING 46 — ${id} may not be deleted. Delete is the author's state ` +
+          "alone: it is set by writing \"Delete\" into the workbook's Resolution " +
+          "column, or carried by his own instruction in the Notes column he " +
+          "owns. A session has neither here, and a session may never delete a " +
+          "row — not its own, and not his.",
+      );
+      continue;
+    }
+    deletions.push({
+      row,
+      evidence: wroteResolution
+        ? 'Resolution "Delete", in his handwriting, read out of the workbook'
+        : `his note: "${note}"`,
+    });
+  }
+  return { deletions, refusals };
+}
+
 /* ------------------------------------------------------------- collisions --- */
 
 /**

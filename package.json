@@ -119,7 +119,10 @@
     "tracker:move": "node scripts/tracker.mjs move",
     "tracker:audit": "node scripts/tracker-done-audit.mjs",
     "tracker:attribution": "node scripts/tracker-attribution.mjs",
-    "rules:history": "node scripts/amendment-history.mjs"
+    "rules:history": "node scripts/amendment-history.mjs",
+    "hunt:roster": "tsx scripts/hunt-roster.mts",
+    "tracker:add": "node scripts/tracker.mjs add",
+    "tracker:note": "node scripts/tracker.mjs note"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

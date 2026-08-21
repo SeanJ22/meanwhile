@@ -356,6 +356,38 @@ export const VENUE_CACHE: VenueEntry[] = [
     verifiedAt: "2026-08-15",
   },
 
+  // ── iCal: every Newbury body on the town's OWN calendar (NH Hunt, 2026-08-20)
+  //
+  // The town publishes `/calendar/ical/export.ics` — 1,157 events, ninety-four
+  // of them upcoming — and **writes no `LOCATION` on any of them.** Not "NH"
+  // like Wilmot; nothing at all. So every row on this feed reaches the
+  // `venueMatch` fallback, and this is the row it reaches.
+  //
+  // The address is not new and is not inferred here: it is the same building,
+  // the same two published statements and the same geocoder call as the
+  // `schedulepage` row above, which the town's own administration page
+  // addresses at 937 Route 103. What is new is only the `sourceId` scope —
+  // the cache is scoped per source on purpose, so a venue proved for one
+  // adapter cannot silently become a fact for another.
+  //
+  // Re-verified against the town's own administration page on 2026-08-20, and
+  // against the footer every page on newbury.nh.gov carries: "Newbury Offices,
+  // PO Box 296, US Rte 103".
+  {
+    sourceId: "ical",
+    bodyOcdId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+    match: "Newbury Town Office",
+    name: "Newbury Town Office",
+    address: "937 Route 103, Newbury, NH 03255",
+    lat: 43.321682,
+    lng: -72.03705,
+    addressSourceUrl: "https://www.newbury.nh.gov/administration",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=937+Route+103%2C+Newbury%2C+NH+03255&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-20",
+  },
+
   // ── SchedulePage: Newbury's Zoning Board of Adjustment ──────────────────
   // The row that took a body from KNOWN_UNCOVERED to LIVE with no other
   // change, 2026-08-15 (the mobile round-two session), and the reason the

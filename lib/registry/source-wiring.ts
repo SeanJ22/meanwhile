@@ -626,6 +626,360 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     verifiedAt: "2026-08-13",
   },
 
+
+  // ── Newbury, NH — TEN boards off the town's OWN iCalendar (NH Hunt, 2026-08-20)
+  //
+  // ## What was found
+  //
+  // `https://www.newbury.nh.gov/calendar/ical/export.ics` — advertised as a
+  // `webcal://` link on the town's own calendar page and never wired.
+  // Retrieved 2026-08-20: HTTP 200, 466,540 bytes, **1,157 `VEVENT`s, 94 of
+  // them upcoming.** 272 Selectboard sittings, 116 Conservation Commission,
+  // 108 Zoning Board, 84 Planning Board, and every committee below.
+  //
+  // The town was already wired through `newburynh.civicweb.net` for its
+  // Selectboard and through three `schedulepage` rows for its land-use
+  // boards. Ten of its fourteen boards were wired to nothing at all, while
+  // their meetings sat in one document the town publishes for exactly this
+  // purpose.
+  //
+  // ## Why `titleMatch` and not `categoryMatch`
+  //
+  // **The feed carries no `CATEGORIES` field on any of its 1,157 events.** A
+  // category-only adapter reads it as a calendar belonging to nobody, which is
+  // how a town publishing everything renders as a town publishing nothing. So
+  // `titleMatch` was added to the adapter for this feed; see
+  // `lib/sources/ical/index.ts`.
+  //
+  // Each list below is read off the feed's own summaries. The variants are not
+  // decoration: Newbury writes "Energy Committee Meeting" and "Newbury Energy
+  // Committee Meeting" for the same body, and "Trustees of the Trust Funds"
+  // and "Trust Funds" likewise.
+  //
+  // ## What is NOT here, and why
+  //
+  // The Selectboard, Planning Board, Conservation Commission and Zoning Board
+  // of Adjustment keep the routes they already have. Adding a second route for
+  // a body already served would double every one of its sittings on the
+  // reader's page, and this feed's ids are namespaced per body — there is no
+  // cross-source de-duplication that would catch it. Their coverage from this
+  // feed is a REPLACEMENT decision and a measurement, not an addition, and it
+  // is a tracker row rather than a change made in passing.
+  {
+    bodyId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#advisory-budget-committee",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+    agendaSourceType: "ICAL",
+    jurisdiction: "Newbury, NH",
+    publishingOrg: "Town of Newbury",
+    timeZone: "America/New_York",
+    config: {
+      slug: "newbury-advisory-budget-committee",
+      feedUrl: "https://www.newbury.nh.gov/calendar/ical/export.ics",
+      titleMatch: "Advisory Budget Committee",
+      bodyName: "2026 Advisory Budget Committee",
+      // Every event on this feed publishes an EMPTY `LOCATION`, so every row
+      // reaches the standing venue. See `lib/meetings/venue-cache.ts`.
+      venueMatch: "Newbury Town Office",
+    },
+    verifiedAt: "2026-08-20",
+  },
+  {
+    bodyId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#blodgett-sewer-user-advisory-committee",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+    agendaSourceType: "ICAL",
+    jurisdiction: "Newbury, NH",
+    publishingOrg: "Town of Newbury",
+    timeZone: "America/New_York",
+    config: {
+      slug: "newbury-blodgett-sewer-user-advisory-committee",
+      feedUrl: "https://www.newbury.nh.gov/calendar/ical/export.ics",
+      titleMatch: "Blodgett Sewer",
+      bodyName: "Blodgett Sewer User Advisory Committee",
+      // Every event on this feed publishes an EMPTY `LOCATION`, so every row
+      // reaches the standing venue. See `lib/meetings/venue-cache.ts`.
+      venueMatch: "Newbury Town Office",
+    },
+    verifiedAt: "2026-08-20",
+  },
+  {
+    bodyId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#cemetery-trustees",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+    agendaSourceType: "ICAL",
+    jurisdiction: "Newbury, NH",
+    publishingOrg: "Town of Newbury",
+    timeZone: "America/New_York",
+    config: {
+      slug: "newbury-cemetery-trustees",
+      feedUrl: "https://www.newbury.nh.gov/calendar/ical/export.ics",
+      titleMatch: "Cemetery Trustee",
+      bodyName: "Cemetery Trustees",
+      // Every event on this feed publishes an EMPTY `LOCATION`, so every row
+      // reaches the standing venue. See `lib/meetings/venue-cache.ts`.
+      venueMatch: "Newbury Town Office",
+    },
+    verifiedAt: "2026-08-20",
+  },
+  {
+    bodyId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#joint-loss-management-committee",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+    agendaSourceType: "ICAL",
+    jurisdiction: "Newbury, NH",
+    publishingOrg: "Town of Newbury",
+    timeZone: "America/New_York",
+    config: {
+      slug: "newbury-joint-loss-management-committee",
+      feedUrl: "https://www.newbury.nh.gov/calendar/ical/export.ics",
+      titleMatch: "Joint Loss",
+      bodyName: "Joint Loss Management Committee",
+      // Every event on this feed publishes an EMPTY `LOCATION`, so every row
+      // reaches the standing venue. See `lib/meetings/venue-cache.ts`.
+      venueMatch: "Newbury Town Office",
+    },
+    verifiedAt: "2026-08-20",
+  },
+  {
+    bodyId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#septic-committee",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+    agendaSourceType: "ICAL",
+    jurisdiction: "Newbury, NH",
+    publishingOrg: "Town of Newbury",
+    timeZone: "America/New_York",
+    config: {
+      slug: "newbury-septic-committee",
+      feedUrl: "https://www.newbury.nh.gov/calendar/ical/export.ics",
+      titleMatch: "Septic Committee",
+      bodyName: "Newbury Septic Committee",
+      // Every event on this feed publishes an EMPTY `LOCATION`, so every row
+      // reaches the standing venue. See `lib/meetings/venue-cache.ts`.
+      venueMatch: "Newbury Town Office",
+    },
+    verifiedAt: "2026-08-20",
+  },
+  {
+    bodyId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#trustees-of-the-trust-funds",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+    agendaSourceType: "ICAL",
+    jurisdiction: "Newbury, NH",
+    publishingOrg: "Town of Newbury",
+    timeZone: "America/New_York",
+    config: {
+      slug: "newbury-trustees-of-the-trust-funds",
+      feedUrl: "https://www.newbury.nh.gov/calendar/ical/export.ics",
+      titleMatch: "Trustees of the Trust Funds,Trust Funds",
+      bodyName: "Trustees of the Trust Funds",
+      // Every event on this feed publishes an EMPTY `LOCATION`, so every row
+      // reaches the standing venue. See `lib/meetings/venue-cache.ts`.
+      venueMatch: "Newbury Town Office",
+    },
+    verifiedAt: "2026-08-20",
+  },
+  {
+    bodyId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#energy-committee",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+    agendaSourceType: "ICAL",
+    jurisdiction: "Newbury, NH",
+    publishingOrg: "Town of Newbury",
+    timeZone: "America/New_York",
+    config: {
+      slug: "newbury-energy-committee",
+      feedUrl: "https://www.newbury.nh.gov/calendar/ical/export.ics",
+      titleMatch: "Energy Committee",
+      bodyName: "Newbury Energy Committee",
+      // Every event on this feed publishes an EMPTY `LOCATION`, so every row
+      // reaches the standing venue. See `lib/meetings/venue-cache.ts`.
+      venueMatch: "Newbury Town Office",
+    },
+    verifiedAt: "2026-08-20",
+  },
+  {
+    bodyId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#beautification-committee",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+    agendaSourceType: "ICAL",
+    jurisdiction: "Newbury, NH",
+    publishingOrg: "Town of Newbury",
+    timeZone: "America/New_York",
+    config: {
+      slug: "newbury-beautification-committee",
+      feedUrl: "https://www.newbury.nh.gov/calendar/ical/export.ics",
+      titleMatch: "Beautification",
+      bodyName: "Newbury Beautification Committee",
+      // Every event on this feed publishes an EMPTY `LOCATION`, so every row
+      // reaches the standing venue. See `lib/meetings/venue-cache.ts`.
+      venueMatch: "Newbury Town Office",
+    },
+    verifiedAt: "2026-08-20",
+  },
+  {
+    bodyId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#joint-assessing-board",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+    agendaSourceType: "ICAL",
+    jurisdiction: "Newbury, NH",
+    publishingOrg: "Town of Newbury",
+    timeZone: "America/New_York",
+    config: {
+      slug: "newbury-joint-assessing-board",
+      feedUrl: "https://www.newbury.nh.gov/calendar/ical/export.ics",
+      titleMatch: "Joint Assessing",
+      bodyName: "Joint Assessing Board (Newbury, Sunapee & New London)",
+      // Every event on this feed publishes an EMPTY `LOCATION`, so every row
+      // reaches the standing venue. See `lib/meetings/venue-cache.ts`.
+      venueMatch: "Newbury Town Office",
+    },
+    verifiedAt: "2026-08-20",
+  },
+  {
+    bodyId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#library-trustees",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+    agendaSourceType: "ICAL",
+    jurisdiction: "Newbury, NH",
+    publishingOrg: "Town of Newbury",
+    timeZone: "America/New_York",
+    config: {
+      slug: "newbury-library-trustees",
+      feedUrl: "https://www.newbury.nh.gov/calendar/ical/export.ics",
+      titleMatch: "Library Trustee",
+      bodyName: "Newbury Public Library Trustees",
+      // Every event on this feed publishes an EMPTY `LOCATION`, so every row
+      // reaches the standing venue. See `lib/meetings/venue-cache.ts`.
+      venueMatch: "Newbury Town Office",
+    },
+    verifiedAt: "2026-08-20",
+  },
+
+
+  // ── Newbury, NH — the SAME feed for the four boards already wired ──────────
+  //
+  // A SECOND route, not a replacement, and the measurement that decided it
+  // (NH Hunt, 2026-08-20). Inside the serving window the town's own feed holds
+  // **24 sittings of these four boards against the 16 their existing routes
+  // produce** — Selectboard 10 against 7, Planning 5 against 3, Zoning 4
+  // against 1, Conservation 5 against 5.
+  //
+  // The existing routes are NOT retired, because they carry what this feed
+  // does not: real agendas. `newburynh.civicweb.net/Portal/MeetingInformation`
+  // for the Selectboard, `/planning-board/agenda/agenda-15` for the land-use
+  // boards. Trading a reader's agenda for a reader's date is not a trade this
+  // product should make, so both ship and the merge decides — see
+  // `collapseDuplicateSittings` in `lib/sources/composite/index.ts`, which
+  // keeps the row carrying the agenda and states how many it collapsed.
+  //
+  // **This wiring is only safe because that merge exists.** Before it, a second
+  // route meant every shared sitting rendering twice.
+  {
+    bodyId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#governing",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+    agendaSourceType: "ICAL",
+    jurisdiction: "Newbury, NH",
+    publishingOrg: "Town of Newbury",
+    timeZone: "America/New_York",
+    config: {
+      slug: "newbury-ical-governing",
+      feedUrl: "https://www.newbury.nh.gov/calendar/ical/export.ics",
+      titleMatch: "Selectboard",
+      bodyName: "Selectboard",
+      venueMatch: "Newbury Town Office",
+    },
+    verifiedAt: "2026-08-20",
+  },
+  {
+    bodyId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#planning-board",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+    agendaSourceType: "ICAL",
+    jurisdiction: "Newbury, NH",
+    publishingOrg: "Town of Newbury",
+    timeZone: "America/New_York",
+    config: {
+      slug: "newbury-ical-planning-board",
+      feedUrl: "https://www.newbury.nh.gov/calendar/ical/export.ics",
+      titleMatch: "Planning Board",
+      bodyName: "Planning Board",
+      venueMatch: "Newbury Town Office",
+    },
+    verifiedAt: "2026-08-20",
+  },
+  {
+    bodyId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#conservation-commission",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+    agendaSourceType: "ICAL",
+    jurisdiction: "Newbury, NH",
+    publishingOrg: "Town of Newbury",
+    timeZone: "America/New_York",
+    config: {
+      slug: "newbury-ical-conservation-commission",
+      feedUrl: "https://www.newbury.nh.gov/calendar/ical/export.ics",
+      titleMatch: "Conservation Commission",
+      bodyName: "Conservation Commission",
+      venueMatch: "Newbury Town Office",
+    },
+    verifiedAt: "2026-08-20",
+  },
+  {
+    bodyId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#zoning-board-of-adjustment",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+    agendaSourceType: "ICAL",
+    jurisdiction: "Newbury, NH",
+    publishingOrg: "Town of Newbury",
+    timeZone: "America/New_York",
+    config: {
+      slug: "newbury-ical-zoning-board-of-adjustment",
+      feedUrl: "https://www.newbury.nh.gov/calendar/ical/export.ics",
+      titleMatch: "Zoning Board",
+      bodyName: "Zoning Board of Adjustment",
+      venueMatch: "Newbury Town Office",
+    },
+    verifiedAt: "2026-08-20",
+  },
+  {
+    /*
+     * **A body the town's boards MENU does not list and its CALENDAR does.**
+     *
+     * The Supervisors of the Checklist are an elected New Hampshire town body
+     * (RSA 654:22 and RSA 669:17), three per town, and they hold statutory
+     * public sessions to correct the voter checklist before every election.
+     * Newbury's own calendar carries twenty-three of their sittings; the
+     * town's `/boards` menu carries none of them, and neither did this
+     * registry. A reader who wanted to know when they could get on the
+     * checklist before the September primary could not find out here.
+     *
+     * They have no page on the town's site, so the body's `homepageUrl` is
+     * the town's own calendar — which is where the town actually publishes
+     * them — rather than a constructed path that would 404.
+     *
+     * Both spellings are matched because the town uses both: "Supervisors of
+     * the Checklist" and "Supervisions of the Checklist", the latter on eight
+     * sittings across several years. Dropping the typo would drop the meetings.
+     */
+    bodyId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#supervisors-of-the-checklist",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+    agendaSourceType: "ICAL",
+    jurisdiction: "Newbury, NH",
+    publishingOrg: "Town of Newbury",
+    timeZone: "America/New_York",
+    config: {
+      slug: "newbury-supervisors-of-the-checklist",
+      feedUrl: "https://www.newbury.nh.gov/calendar/ical/export.ics",
+      titleMatch: "Supervisors of the Checklist,Supervisions of the Checklist",
+      bodyName: "Supervisors of the Checklist",
+      venueMatch: "Newbury Town Office",
+    },
+    verifiedAt: "2026-08-20",
+  },
+
   // ── Wilmot, NH — three boards from one iCalendar feed (M123, 2026-08-19) ──
   //
   // The first rows on the `ICAL` type, which had been in the enum with no

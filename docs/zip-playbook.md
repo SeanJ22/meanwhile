@@ -46,6 +46,53 @@ done when every line is true or its exception is recorded with rungs.
 | 9 | **A stranger can read it** | The stranger test: no assumed local knowledge, every office explained, every body peopled. Walked at 390×844. |
 | 10 | **Misses carry rungs, per candidate and per body** | `docs/source-ladder.md` + `lib/registry/coverage-audit.ts`. Equal effort per candidate within a race is a hard rule, not a target. |
 
+## 1a. NEW HAMPSHIRE PRODUCES A DRAFT, NOT A FINISHED PLAYBOOK
+
+(Added 2026-08-20, the NH Hunt, and it is a warning about this document's own
+first state.)
+
+Everything in §3 dated 2026-08-20 was learned at 03255 — the Town of Newbury,
+the Kearsarge Regional School District and Merrimack County. **New Hampshire is
+the worst jurisdiction in the country to generalize a method from**, and a
+session reading these rungs as national is going to be wrong in ways that are
+hard to see:
+
+- **Town meeting government.** The legislative body of a New Hampshire town is
+  the voters, assembled once a year. There is no council to have a roster, no
+  ordinance calendar, and the budget is a warrant article rather than a
+  document a finance department publishes. "Find the council" returns nothing
+  because there is no council.
+- **The selectboard is not a council.** Three people, elected at large, running
+  the town between town meetings. A method that looks for wards, districts or
+  seats finds none.
+- **SB2.** A town that has adopted RSA 40:13 splits its town meeting into a
+  deliberative session and a ballot vote on a different day, so the same
+  government has two "town meetings" that are not the same event. Newbury's
+  calendar carries both.
+- **SAUs layered over districts.** A School Administrative Unit is an
+  administrative body that may serve one district or several, and the DISTRICT
+  is the government. Kearsarge Regional School District is SAU 65 and one
+  district across seven towns; the SAU and the district publish on one site and
+  are not the same entity.
+- **The county does almost nothing a county does elsewhere.** Merrimack County
+  runs a jail, a nursing home, a sheriff's office, a registry of deeds and an
+  attorney's office — and no roads, no schools, no zoning, no land use. Its
+  legislative body is not its commissioners: it is the county DELEGATION, every
+  state representative elected from the county sitting together to vote the
+  county budget. A method that maps "county legislative body" onto "board of
+  commissioners" is wrong here in a way that is invisible from outside.
+- **Village districts and precincts (RSA 52).** Real governments with elected
+  commissioners, their own budgets and their own meetings, and no boundary
+  published anywhere by anybody. Eighteen of them are named in the gap ledger
+  for 03255 alone.
+
+**Rockaway Township, New Jersey is the test of whether any of this
+generalizes.** A township with a mayor, a council, wards, a professional clerk,
+an AgendaCenter and a municipal budget document — the shape most of the country
+has. Rungs that survive both are method; rungs that only work at 03255 are New
+Hampshire, and this section is where a later session comes to find out which is
+which before trusting one.
+
 ## 2. The source ladder per jurisdiction type
 
 **TWO LADDERS, AND ONLY ONE OF THEM IS NUMBERED** (rewritten 2026-08-20, Prompt
@@ -632,6 +679,147 @@ Neither invents a coordinate. Detection is a location-string list
 vendor's phrasing is a new entry, and until it is added that vendor's virtual
 sittings drop as an unknown venue rather than being kept.
 
+### The VTS Drupal 7 family — one CMS, a town and a school district (NH Hunt, 2026-08-20)
+
+**Recognise it by its `generator` meta tag and its theme path.** `<meta
+name="generator" content="Drupal 7">` plus `sites/all/themes/custom/vts_aurora`
+in the asset URLs. That is Virtual Towns & Schools, and in New Hampshire it
+runs the Town of Newbury AND the Kearsarge Regional School District — a
+municipality and a school district on one shape, which is why this is a family
+rung and not a site note.
+
+What the family gives you, in order of value:
+
+| Where | What is there |
+|---|---|
+| `/boards` | every board and committee, as links |
+| `/departments` | every department, as links |
+| `/sitemap.xml` | **the real enumeration** — Newbury's carries 363 URLs and names three bodies the boards menu does not |
+| `/calendar/ical/export.ics` | **the whole calendar as iCalendar.** Newbury's is 1,157 events |
+| `/calendar/feed/YYYY-MM` | the month, as RSS |
+| any board page | a `views-table` roster: `views-field-title`, `views-field-field-job-title`, `views-field-field-staff-phone`, `views-field-field-staff-email` |
+| any person cell | `/user/NNNN/contact` — the site's own contact form for that person, which is a working contact route |
+
+**The boards menu is an UNDERCOUNT and the sitemap is the denominator.** Newbury's
+hover menu lists fourteen boards; its sitemap carries Parks & Recreation, the
+Housing Committee and the Transfer Station Committee as well. Two of those
+three answer `302 → /user/login?destination=node/NN`, which is the site's own
+access control and is where the hunt stops — we never authenticate past one.
+The third is a prose page with no table. Seventeen is the floor, not fourteen.
+
+**A board's menu entry can be a redirect OFF the town's domain, and the
+redirect is the trail.** Five of Newbury's:
+
+```
+/newbury-energy-committee          → newburyenergynh.org
+/newbury-beautification-committee  → newburybeautification.org
+/fire-rescue-department            → fire.newbury.nh.gov
+/newbury-public-library-trustees   → newburynhlibrary.net
+/joint-assessing-board-…           → sunapeenh.gov/joint-assessing-board
+```
+
+The last one is the important shape: a JOINT board of three towns, published by
+a different member town. A hunt that treats the 301 as a refusal loses five real
+bodies and gets the publishing government wrong about a sixth.
+
+### Rung 4 is a `curl`, and it beats Node on two different walls (NH Hunt, 2026-08-20)
+
+Two separate measurements, one day, one host:
+
+1. **The redirect could not be READ.** `politeGetText` reports the 301; a
+   `redirect: "manual"` probe from the same process gets a Cloudflare 403 with
+   no `Location` header at all. `curl -sL -w '%{url_effective}'` follows it in
+   one call and prints where it went.
+2. **The document could not be FETCHED.** `https://www.newbury.nh.gov/calendar/ical/export.ics`
+   answers **403 to Node's fetch and 200 to `curl`, 467,525 bytes, with EITHER
+   User-Agent.** Nothing about the headers mattered. It is a TLS-fingerprint
+   wall and rung 4 is the whole answer to it.
+
+`lib/sources/http.ts` now walks rung 2 → 3 → 4 on any 403, for every adapter,
+not just the ones that opted into the browser profile. Before that change the
+plain profile stopped at rung 2 and called a serving feed a wall.
+
+### The Cloudflare interstitial outgrew the size floor (NH Hunt, 2026-08-20)
+
+`challengeIn()` had one global 20 KB floor, on the reasoning that a long article
+quoting "Checking your browser" is a page. Cloudflare's current managed
+challenge is **29,809 bytes** and sailed straight through it — so Kearsarge's
+board-roster page was handed to the extractor as a document, read for its
+tables, and reported as `ZERO_ROWS`. A wall rendered as an emptiness.
+
+The floor is now per-signature. `window._cf_chl_opt`, `challenges.cloudflare.com`
+and "Performing security verification" are unambiguous and apply at any size;
+`cdn-cgi/challenge-platform` KEEPS the floor, because Cloudflare injects that
+script into ordinary pages and both of this repo's recorded `schedulepage`
+fixtures carry it.
+
+### Headless Chromium does not clear a Cloudflare managed challenge (NH Hunt, 2026-08-20)
+
+Rung 6 read every Cloudflare-challenged page on `newbury.nh.gov`. It did **not**
+clear `kearsarge.org`'s: the interstitial reports "Incompatible browser
+extension or network configuration" and never resolves. A HEADED launch was
+tried and is not available in this environment (`browserType.launch: spawn
+UNKNOWN` — no display session). Both are rungs, both recorded, and the honest
+next rungs are 11 and 9.
+
+### Rung 11 has TWO doors, and the availability API is the worse one (NH Hunt, 2026-08-20)
+
+`https://archive.org/wayback/available?url=…` returns the CLOSEST snapshot,
+which for the Kearsarge board roster was **2023-07-29** — three years stale and
+silently presented as the answer. The CDX index returns the list:
+
+```
+https://web.archive.org/cdx/search/cdx?url=<url>&output=json&filter=statuscode:200&limit=-3
+```
+
+That named three captures, newest 2023-11-30, which is the honest finding: the
+Archive holds nothing current for this page. Add `id_` after the timestamp
+(`/20231130130742id_/`) to get the original bytes without the Archive's own
+toolbar, which otherwise lands in the extraction as page furniture.
+
+### A county's own "Board of Commissioners" page may name no commissioners (NH Hunt, 2026-08-20)
+
+Merrimack County's does not. Four paragraphs, a Zoom link, no names. **The names
+are in the county's own Annual Report**, in a "County Directory · Officers and
+Department Heads (Current)" table on page 5, with every elected officer and
+department head — and repeated over the commissioners' signature block on page
+6, which is the second reading that makes it a verification.
+
+Revize sites put those reports in a Document Center whose file links are
+relative and unquoted in the HTML; the direct path
+`/<Category>/<Sub>/<File Name>.pdf` 302s to the CDN and serves. `pnpm extract
+text` reads them: 37 pages, born-digital, no OCR.
+
+**Generalise it:** where a county or town page describes a body without naming
+it, the annual report is rung 9 and it is almost always there. Ask for the
+report before concluding the body is unpublished.
+
+### An empty `LOCATION` is not a placeless meeting (NH Hunt, 2026-08-20)
+
+D18's `placeless` means the body published a location string naming no
+building — "Virtual Meeting". Newbury publishes **no `LOCATION` line at all** on
+any of its 1,157 events. Reading that silence as an assertion dropped
+twenty-four of its public meetings before the row's own `venueMatch` was ever
+consulted. An absent field and a field saying "nowhere" are different facts.
+
+### One feed, many bodies: fetch it ONCE (NH Hunt, 2026-08-20)
+
+Ten Newbury bodies are wired to one `export.ics`. The `ical` adapter's loop is
+per wiring row, so the town was being asked for the same 466 KB document ten
+times per refresh — and its reputation limiter started refusing pages it had
+served minutes earlier. Politeness is not a nicety here; it is the difference
+between a working source and a wall you built yourself.
+
+### A hunt ledger needs carry-forward too (NH Hunt, 2026-08-20)
+
+The refresh corollary is not only about the meetings snapshot. Three successive
+sweeps of Newbury read 88, then 82, then 77 people, because the host's limiter
+tightened as the sweeps went on — and each run overwrote the last. A hunt ledger
+that a failing run can empty is the same defect one layer sideways.
+`pnpm hunt:roster` now merges: a page that fails keeps its last successful line
+with its ORIGINAL `attemptedAt`, marked `carriedFrom`, and the run prints
+people-on-the-ledger against people-read-this-run.
+
 ## 4. The scripts that exist
 
 | Command | What it does |
@@ -686,6 +874,58 @@ Six hits, matching the six occurrences F07 recorded, each with the key path it
 came from. `tests/extract.test.ts` holds the shape offline, including the
 doubly-encoded case and the negative — a page whose prose has the name and
 whose payload does not.
+
+### Layer 5 — the roster table (NH Hunt, added 2026-08-20)
+
+| Command | Layer | What it does |
+|---|---|---|
+| `pnpm extract roster <file\|url>` | 5 · `lib/extract/roster-table.ts` | **Who sits on a board**, off the body's own page. Reads Drupal 7 Views tables by their `views-field-*` cell classes — the CONTRACT is the class names, not the column order — and falls back to `<thead>` labels for hand-built tables. Returns section, name, title, phone, email, contact-form URL and the bracketed term where the page prints one. Zero rows is `ZERO_ROWS` naming the tables it saw and rejected, never "this board has no members". |
+
+Built because the record was reachable and unreadable, which is friction and
+never refusal: Newbury's Selectboard page answers 200 to a plain fetch and its
+three members sit in a `views-table` that nothing here could turn into rows.
+
+**What it never does:** infer a role for a person with no title cell, parse a
+term into a date, or follow a `/user/NNNN/contact` link. Those are the caller's
+decisions and the next rung's work.
+
+**The header-row trap, recorded because it produced a fabricated person.** A
+`<tr>` inside `<tbody>` can BE the header — Kearsarge's district directory has
+one, `Name | Position | Phone`, with the same cell classes as the fourteen real
+rows below it — and the first run of this layer carried "Name" into the roster
+as the district's fifteenth staff member. The layer now drops a row whose name
+matches a header label.
+
+### `pnpm hunt:roster` — walk a list of body pages and keep the ledger (NH Hunt, added 2026-08-20)
+
+```
+pnpm hunt:roster <urls-file> [--out docs/evidence/<name>.jsonl]
+pnpm hunt:roster --url https://www.newbury.nh.gov/selectboard
+```
+
+One URL per line; `#` comments; anything after a tab or two spaces is a LABEL
+carried onto every person that page produces. `WTP_HUNT_PACE_MS` sets the gap
+between pages (default 4000).
+
+It is the harness a town hunt actually needs, and everything in it is a rule
+from `CLAUDE.md` made mechanical:
+
+- **It walks the ladder.** Rung 3 first; a 3xx escalates to rung 4 (`curl -sL`,
+  which follows the hops Node cannot read); a challenge escalates to rung 6
+  (a guarded headless browser, opened once and reused).
+- **It writes every rung down, worked or not.** One JSON line per page with the
+  URL, the redirect chain, the final URL, the HTTP status, the rung, the wall
+  in the source's own words, the extraction outcome, its counts, and the rows.
+- **It carries forward.** A page that fails keeps its last successful line with
+  its original `attemptedAt`, marked `carriedFrom`.
+- **It states counts, not a number.** Pages attempted / read / with a roster /
+  people, then the walls by name, then the pages that read cleanly and carried
+  no roster — which is a finding about the PAGE and never about the body.
+
+Committed URL lists live in `data/hunt/`: `newbury-bodies.urls`,
+`kearsarge-bodies.urls`, `merrimack-county-bodies.urls`. Their ledgers live in
+`docs/evidence/nhhunt-*.jsonl` and are read by `tests/body-rosters.test.ts` as
+proof that a published contact was published.
 
 ## 5. The state folders
 

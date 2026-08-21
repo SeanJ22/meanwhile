@@ -10,6 +10,10 @@ import {
   type MeetingBody,
 } from "../../meetings/attribution.ts";
 import { toZonedIso } from "../../time/zoned.ts";
+import {
+  accountedNormalize,
+  type Accounted,
+} from "../normalize-account.ts";
 import type {
   Meeting,
   MeetingQuery,
@@ -153,7 +157,11 @@ export interface NormalizeDrops {
 export function normalizeWithDrops(
   raw: LegistarEventWithClient[],
   now: Date = new Date(),
-): { meetings: Meeting[]; drops: NormalizeDrops; agendasRead: number } {
+): Accounted<{
+  meetings: Meeting[];
+  drops: NormalizeDrops;
+  agendasRead: number;
+}> {
   const meetings: Meeting[] = [];
   const drops: NormalizeDrops = {
     placeless: 0,
@@ -270,7 +278,7 @@ export function normalizeWithDrops(
     });
   }
 
-  return { meetings, drops, agendasRead };
+  return accountedNormalize("legistar", raw, { meetings, drops, agendasRead });
 }
 
 /**

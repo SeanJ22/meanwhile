@@ -4,6 +4,7 @@ import type {
   NormalizeDropCounts,
   ReportingMeetingSource,
 } from "../types.ts";
+import { accountedNormalize } from "../normalize-account.ts";
 
 /**
  * The snapshot-backed meeting source — what production serves.
@@ -73,7 +74,10 @@ export function makeSnapshotSource(
     normalizeWithDrops(raw: Meeting[], now?: Date) {
       // Drops were counted and recorded when the snapshot was generated; they
       // live in its per-source reports. Nothing is dropped on the read path.
-      return { meetings: normalize(raw, now), drops: { ...ZERO_DROPS } };
+      return accountedNormalize("snapshot", raw, {
+        meetings: normalize(raw, now),
+        drops: { ...ZERO_DROPS },
+      });
     },
 
     async upsert(meetings: Meeting[]) {

@@ -4562,7 +4562,7 @@ for (const zip of ["07866", "85701"]) {
      */
     const BLOCK_CHECKS: [string, string][] = [
       ["F01C2", `${zip}: every candidate row carries a battlecard pill`],
-      ["F01C2", `${zip}: the ballot row carries the count, not the twelve-issue list`],
+      ["NHHUNT", `${zip}: no per-card completeness count or enumeration anywhere on the ballot`],
       ["F01C2", `${zip}: every dated voting event can be calendared`],
       ["F01C2", `${zip}: a multi-day window carries the affordance too`],
       ["F01C2", `${zip}: the battlecard holds the sections the row gave up`],
@@ -4588,7 +4588,17 @@ for (const zip of ["07866", "85701"]) {
       `${pills} pills for ${rows} rows`,
     );
 
-    // ITEM 14: the row carries the count and NEVER the enumeration.
+    /*
+     * RULING 47 AND RULING 44 (2026-08-20) — the check INVERTS, because the
+     * author retired the claim behind it.
+     *
+     * Item 14 shipped a COUNT on the ballot row and a buried ENUMERATION in
+     * the battlecard, and this check asserted exactly that arrangement. Both
+     * are now deleted: a per-card measurement of our own coverage is RULING
+     * 44's banned statement, and a digit is that statement compressed. The
+     * check stays in the suite — it does not leave, it changes sides — so a
+     * session that reintroduces either half fails against production.
+     */
     const onRow = (await page.evaluate(
       `(() => ({
          annotations: document.querySelectorAll('[data-gap-annotation]').length,
@@ -4596,10 +4606,10 @@ for (const zip of ["07866", "85701"]) {
        }))()`,
     )) as { annotations: number; enumerations: number };
     check(
-      "F01C2",
-      `${zip}: the ballot row carries the count, not the twelve-issue list`,
-      onRow.annotations > 0 && onRow.enumerations === 0,
-      `${onRow.annotations} annotations, ${onRow.enumerations} enumerations on the row`,
+      "NHHUNT",
+      `${zip}: no per-card completeness count or enumeration anywhere on the ballot`,
+      onRow.annotations === 0 && onRow.enumerations === 0,
+      `${onRow.annotations} annotations, ${onRow.enumerations} enumerations on the page`,
     );
 
     // ITEM 16: every dated voting event with a known date is one tap from a
@@ -4723,7 +4733,10 @@ for (const zip of ["07866", "85701"]) {
     check(
       "F01C2",
       `${zip}: the battlecard holds the sections the row gave up`,
-      Boolean(inside && inside.positions > 0),
+      // RULING 44: a battlecard for a candidate we hold no published words for
+      // renders NO positions section at all, so `positions` may legitimately
+      // be 0 on the first card. What may never be non-zero is the enumeration.
+      Boolean(inside) && inside!.enumerations === 0,
       inside ? `positions ${inside.positions}, enumerations ${inside.enumerations}` : "no card",
     );
 

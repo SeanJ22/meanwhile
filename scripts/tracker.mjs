@@ -5,8 +5,24 @@
  *   node scripts/tracker.mjs open    # RULING 38 and RULING 41: the session-start read
  *   node scripts/tracker.mjs views   # regenerate the workbook and the readable views
  *   node scripts/tracker.mjs move    # import Sean's edits, move resolved rows, regenerate
+ *   node scripts/tracker.mjs add <rows.json>   # open new rows in the working store
+ *   node scripts/tracker.mjs note <ID> <file>  # append to a row's Session record
  *
- * `pnpm tracker:open` / `pnpm tracker:views` / `pnpm tracker:move`.
+ * `pnpm tracker:open` / `pnpm tracker:views` / `pnpm tracker:move` /
+ * `pnpm tracker:add`.
+ *
+ * ## Why `add` had to exist (NH Hunt, 2026-08-20)
+ *
+ * RULING 37 makes opening rows a session's JOB — "routing something to his
+ * attention is the session's job, and he does not have to notice that
+ * something needs him" — and there was no command that did it. The old
+ * `scripts/tracker-add-row.mjs` writes `docs/tracker.csv`, which is the
+ * FROZEN pre-rebuild snapshot and may never be written again, so a session
+ * that used it would have written a row into a file nothing reads.
+ *
+ * A session with no way to open a row either invents one (writing a store
+ * directly, past every guard in this file) or does not open it. Both were
+ * available and neither is acceptable.
  *
  * ## Why one script rather than three
  *
@@ -38,7 +54,9 @@ import { join } from "node:path";
 import { today } from "./doc-dates.mjs";
 import {
   COLUMNS,
-  RESOLUTIONS,
+  ALL_RESOLUTIONS,
+  DELETIONS_JSON,
+  planDeletions,
   RESOLVED_CSV,
   ROOT,
   SEAN_AUTHOR,
@@ -50,6 +68,7 @@ import {
   digest,
   isOpen,
   isSeanAuthored,
+  PRIORITIES,
   nextId,
   p1Census,
   planMoves,
@@ -63,6 +82,20 @@ const MODE = process.argv[2] ?? "views";
 /** Who a SESSION-authored resolution closes as. The author needs no flag. */
 const SESSION_LABEL =
   process.argv.find((a) => a.startsWith("--session="))?.slice("--session=".length) ?? "";
+
+/**
+ * RULING 46 — rows to hard-remove. A session may pass this flag, and a session
+ * still cannot delete anything with it: `planDeletions` refuses every id whose
+ * authority is not in the author's own handwriting, either as a `Delete`
+ * resolution in the workbook or as his instruction in the Notes column he owns.
+ * The flag is how his instruction gets EXECUTED, never how one gets made.
+ */
+const DELETE_IDS = (
+  process.argv.find((a) => a.startsWith("--delete="))?.slice("--delete=".length) ?? ""
+)
+  .split(",")
+  .map((x) => x.trim())
+  .filter(Boolean);
 const STAMP = today();
 
 const WORKING_SHEET = "Working";
@@ -341,6 +374,34 @@ function logMarkdown(working, resolved, purposes) {
   w("---");
   w("");
 
+  /*
+   * **RULING 46 — the deleted rows, which are in neither store.**
+   *
+   * A deleted row is hard-removed, so it cannot appear in the session entries
+   * below: those are generated FROM the stores. The record that it existed
+   * lives in `docs/tracker-deletions.json` and is rendered here, which is what
+   * the ruling asks for — id, date, and that he removed it — without the row
+   * cluttering anything.
+   */
+  const deletionRecord = existsSync(join(ROOT, DELETIONS_JSON))
+    ? JSON.parse(readFileSync(join(ROOT, DELETIONS_JSON), "utf8"))
+    : { deletions: [] };
+  if (deletionRecord.deletions.length) {
+    w("## Deleted rows — RULING 46");
+    w("");
+    w("Rows Sean removed outright, because they are not project work and do not");
+    w("belong in the tracker at all. **Only he may delete a row**; a session never");
+    w("may, and `tests/tracker-stores.test.ts` fails the build if one tries. These");
+    w("are hard-removed from both stores — this list is the whole surviving record.");
+    w("");
+    for (const d of deletionRecord.deletions) {
+      w(`- **${d.id}** — ${d.title || "(no title)"} · deleted ${d.deletedOn} by ${d.deletedBy} · authority: ${d.evidence}`);
+    }
+    w("");
+    w("---");
+    w("");
+  }
+
   for (const s of order) {
     const purpose = purposes[s.label];
     // A pre-convention label already opens with its own date; repeating it in
@@ -488,17 +549,20 @@ const resolutionProblems = [];
 function normalizeResolution(id, raw) {
   const value = (raw ?? "").trim();
   if (value === "") return "";
-  if (RESOLUTIONS.includes(value)) return value;
+  // RULING 46: "Delete" is a legal value in the column even though a deleted
+  // row carries nothing afterwards — it has to survive normalisation to reach
+  // `planDeletions`, which is the thing that decides whether it is allowed.
+  if (ALL_RESOLUTIONS.includes(value)) return value;
 
   const lower = value.toLowerCase();
-  const hits = RESOLUTIONS.filter((r) => r.toLowerCase().startsWith(lower));
+  const hits = ALL_RESOLUTIONS.filter((r) => r.toLowerCase().startsWith(lower));
   if (hits.length === 1) {
     normalizations.push(`${id}: "${raw}" read as "${hits[0]}"`);
     return hits[0];
   }
   resolutionProblems.push(
     hits.length === 0
-      ? `${id} carries a resolution of "${raw}", which is none of: ${RESOLUTIONS.join(", ")}`
+      ? `${id} carries a resolution of "${raw}", which is none of: ${ALL_RESOLUTIONS.join(", ")}`
       : `${id} carries "${raw}", which could mean any of: ${hits.join(", ")}`,
   );
   return value;
@@ -552,6 +616,24 @@ function modeMove(working, resolved, sections) {
   }
 
   const before = [...working, ...resolved].map((r) => ({ ...r }));
+
+  /*
+   * RULING 46 — his deletions, executed before anything else moves.
+   *
+   * Hard-removed from both stores, and recorded permanently in
+   * `docs/tracker-deletions.json`, which `docs/log.md` renders. The record has
+   * to live outside the stores by construction: the row is gone from them, and
+   * the log is generated FROM them.
+   */
+  const { deletions, refusals: deleteRefusals } = planDeletions({
+    rows: [...working, ...resolved],
+    requested: DELETE_IDS,
+    resolutionAuthor,
+    actor: "session",
+  });
+  refusals.push(...deleteRefusals);
+  const deletedIds = new Set(deletions.map((d) => (d.row.ID ?? "").trim()));
+
   const { moves, refusals: moveRefusals } = planMoves({
     working,
     sections,
@@ -561,7 +643,9 @@ function modeMove(working, resolved, sections) {
   refusals.push(...moveRefusals);
 
   const moved = new Set(moves.map((r) => r.ID));
-  const nextWorking = working.filter((r) => !moved.has(r.ID));
+  const nextWorking = working.filter(
+    (r) => !moved.has(r.ID) && !deletedIds.has((r.ID ?? "").trim()),
+  );
   for (const r of moves) {
     // RULING 39: the stamp is the script's, never a formula's, and a date Sean
     // entered by hand survives.
@@ -595,7 +679,9 @@ function modeMove(working, resolved, sections) {
     }
     r.Priority = "";
   }
-  const nextResolved = [...resolved, ...moves];
+  const nextResolved = [...resolved, ...moves].filter(
+    (r) => !deletedIds.has((r.ID ?? "").trim()),
+  );
 
   refusals.push(...resolutionProblems);
   refusals.push(...auditSeanRows({ before, after: [...nextWorking, ...nextResolved] }));
@@ -606,16 +692,23 @@ function modeMove(working, resolved, sections) {
   console.log(`  notes read             ${notes.length}`);
   console.log(`  resolutions normalized ${normalizations.length ? normalizations.join(" · ") : "none"}`);
   console.log(`  rows moved to resolved ${moves.length}`);
+  console.log(
+    `  rows DELETED (RULING 46) ${deletions.length ? deletions.map((d) => d.row.ID).join(", ") : "none"}`,
+  );
   console.log(`  working store          ${working.length} -> ${nextWorking.length}`);
   console.log(`  resolved store         ${resolved.length} -> ${nextResolved.length}`);
   console.log(
     `  the pair               ${nextWorking.length} + ${nextResolved.length} = ${nextWorking.length + nextResolved.length}, against ${before.length} before`,
   );
 
-  if (nextWorking.length + nextResolved.length !== before.length + assignedIds.length) {
+  if (
+    nextWorking.length + nextResolved.length !==
+    before.length + assignedIds.length - deletedIds.size
+  ) {
     refusals.push(
       `the pair does not reconcile: ${nextWorking.length} + ${nextResolved.length} against ` +
-        `${before.length} before plus ${assignedIds.length} new. Nothing is ever deleted.`,
+        `${before.length} before, plus ${assignedIds.length} new, less ` +
+        `${deletedIds.size} deleted under RULING 46. Nothing else is ever deleted.`,
     );
   }
 
@@ -640,11 +733,192 @@ function modeMove(working, resolved, sections) {
     }
   }
 
+  if (deletions.length) {
+    const path = join(ROOT, DELETIONS_JSON);
+    const record = existsSync(path)
+      ? JSON.parse(readFileSync(path, "utf8"))
+      : { note: "RULING 46 — rows Sean removed outright. Append-only.", deletions: [] };
+    for (const d of deletions) {
+      record.deletions.push({
+        id: (d.row.ID ?? "").trim(),
+        section: (d.row.Section ?? "").trim(),
+        title: (d.row.Title ?? "").trim(),
+        deletedOn: STAMP,
+        deletedBy: SEAN_AUTHOR,
+        evidence: d.evidence,
+      });
+    }
+    writeFileSync(path, `${JSON.stringify(record, null, 2)}\n`, "utf8");
+    console.log(`\n  written  ${DELETIONS_JSON}`);
+  }
+
   writeFileSync(join(ROOT, WORKING_CSV), writeStore(nextWorking), "utf8");
   writeFileSync(join(ROOT, RESOLVED_CSV), writeStore(nextResolved), "utf8");
   console.log(`\n  written  ${WORKING_CSV}`);
   console.log(`  written  ${RESOLVED_CSV}`);
   return { working: nextWorking, resolved: nextResolved };
+}
+
+
+/* ------------------------------------------------------------------- add --- */
+
+/**
+ * Open new rows in the working store.
+ *
+ * Takes a JSON file holding one object or an array of them. Every field of
+ * `COLUMNS` is accepted; `Section`, `Title`, `What this is` and `Opened by`
+ * are required, `ID` is MINTED here from the requested prefix, and everything
+ * else defaults to empty.
+ *
+ * The guards, and each one is a rule this repo has been bitten by:
+ *
+ * - **The id is minted, never supplied.** `nextId` reads the ids that EXIST
+ *   across both stores rather than a regex over a file, because a raw sweep
+ *   silently skipped quoted ids once and created the duplicate-id pair
+ *   `CLAUDE.md` says breaks every lookup.
+ * - **A section must be a real one.** RULING 32: every row has a home and
+ *   there is no holding section.
+ * - **A row must carry a plain-English description.** Item 8a's guard asserts
+ *   it on every row in both stores, so a row opened without one fails the
+ *   build rather than the review.
+ * - **A new row opens OPEN.** A session may not open a row already resolved,
+ *   which would be closing its own work without evidence, and it may never
+ *   set `Delete` (RULING 46).
+ * - **The P1 cap is reported, never enforced by demotion.** RULING 30: a
+ *   section over five P1s is REPORTED as stopped. This prints the census
+ *   after the append and says so; it does not quietly re-rank anything.
+ */
+function modeAdd(working, resolved, sections) {
+  const path = process.argv[3];
+  if (!path || !existsSync(path)) {
+    console.error("usage: node scripts/tracker.mjs add <rows.json>");
+    process.exit(2);
+  }
+  const input = JSON.parse(readFileSync(path, "utf8"));
+  const requested = Array.isArray(input) ? input : [input];
+  const slugs = new Set(sections.map((x) => x.slug));
+  const refusals = [];
+  const added = [];
+
+  for (const row of requested) {
+    const where = row.Title || row["What this is"] || "(untitled)";
+    if (!slugs.has((row.Section ?? "").trim())) {
+      refusals.push(
+        `"${where}": Section "${row.Section}" is not one of ${[...slugs].join(", ")}. ` +
+          "RULING 32 — every row has a home and there is no holding section.",
+      );
+      continue;
+    }
+    if (!(row["What this is"] ?? "").trim()) {
+      refusals.push(`"${where}": no plain-English description. Item 8a guards this on every row.`);
+      continue;
+    }
+    if (!(row.Title ?? "").trim()) {
+      refusals.push(`"${where}": no title.`);
+      continue;
+    }
+    if (!(row["Opened by"] ?? "").trim() && !SESSION_LABEL) {
+      refusals.push(
+        `"${where}": no opening session named — pass --session=<label>. ` +
+          "RULING 40: attribution has no soft landing.",
+      );
+      continue;
+    }
+    if ((row.Resolution ?? "").trim()) {
+      refusals.push(
+        `"${where}": a new row opens OPEN. A session closing its own row at the ` +
+          "moment it opens it has recorded a decision nobody made.",
+      );
+      continue;
+    }
+    if (row.Priority && !PRIORITIES.includes(row.Priority)) {
+      refusals.push(`"${where}": priority "${row.Priority}" is none of ${PRIORITIES.join(", ")}.`);
+      continue;
+    }
+    const prefix = (row.prefix ?? "NH").toUpperCase().replace(/[^A-Z]/g, "");
+    const id = nextId(prefix, [...working, ...resolved, ...added]);
+    const built = Object.fromEntries(COLUMNS.map((c) => [c, row[c] ?? ""]));
+    built.ID = id;
+    built["Opened by"] = (row["Opened by"] ?? "").trim() || SESSION_LABEL;
+    added.push(built);
+  }
+
+  console.log(`\ntracker add — ${STAMP}\n`);
+  console.log(`  requested              ${requested.length}`);
+  console.log(`  refused                ${refusals.length}`);
+  console.log(`  ids assigned           ${added.map((r) => r.ID).join(", ") || "none"}`);
+
+  if (refusals.length) {
+    console.log("\n  REFUSED — nothing written:\n");
+    for (const r of refusals) console.log(`    ${r}`);
+    console.log("");
+    process.exit(1);
+  }
+
+  const nextWorking = [...working, ...added];
+  console.log(`  working store          ${working.length} -> ${nextWorking.length}`);
+  writeFileSync(join(ROOT, WORKING_CSV), writeStore(nextWorking), "utf8");
+  console.log(`\n  written  ${WORKING_CSV}`);
+  return { working: nextWorking, resolved };
+}
+
+
+/* ------------------------------------------------------------------ note --- */
+
+/**
+ * Append to ONE row's `Session record` — the session's own column.
+ *
+ * A status change EDITS the existing row and never appends a second with the
+ * same id; `M02` and `M04` each carried a duplicate pair for a day before
+ * anybody noticed, and a tracker with two rows per id cannot be read by
+ * anything.
+ *
+ * **It writes `Session record` and nothing else.** `Resolution`, `Condition`
+ * and `Notes` are the author's three columns and a session never writes them —
+ * which is precisely why this exists. The obvious way to record work on a row
+ * a session may not close is to type into his Notes, and the old
+ * `scripts/tracker-append-note.mjs` did exactly that, on the frozen
+ * `docs/tracker.csv`. Both stores are searched, so a row the author has
+ * already resolved can still be told what a later session did about it.
+ *
+ * It never changes a row's resolution. Moving a row is `move`'s job and is
+ * governed by RULING 37.
+ */
+function modeNote(working, resolved) {
+  const id = (process.argv[3] ?? "").trim();
+  const path = process.argv[4];
+  if (!id || !path || !existsSync(path)) {
+    console.error("usage: node scripts/tracker.mjs note <ID> <note-file>");
+    process.exit(2);
+  }
+  const text = readFileSync(path, "utf8").trim().replace(/\s+/g, " ");
+  if (!text) {
+    console.error("the note file is empty — a note that says nothing is not a note");
+    process.exit(2);
+  }
+
+  const hits = [...working, ...resolved].filter((r) => (r.ID ?? "").trim() === id);
+  if (hits.length === 0) {
+    console.error(`${id} is in neither store.`);
+    process.exit(1);
+  }
+  if (hits.length > 1) {
+    console.error(`${id} appears ${hits.length} times — a duplicate id breaks every lookup.`);
+    process.exit(1);
+  }
+  const row = hits[0];
+  const before = (row["Session record"] ?? "").trim();
+  const stamped = `${STAMP} (${SESSION_LABEL || "session"}). ${text}`;
+  row["Session record"] = before ? `${before} ${stamped}` : stamped;
+
+  console.log(`\ntracker note — ${STAMP}\n`);
+  console.log(`  row                    ${id} · ${row.Section} · ${row.Title}`);
+  console.log(`  resolution             ${(row.Resolution ?? "").trim() || "(open)"} — UNCHANGED`);
+  console.log(`  Session record         ${before.length} -> ${row["Session record"].length} chars`);
+  writeFileSync(join(ROOT, WORKING_CSV), writeStore(working), "utf8");
+  writeFileSync(join(ROOT, RESOLVED_CSV), writeStore(resolved), "utf8");
+  console.log(`\n  written  ${WORKING_CSV}\n  written  ${RESOLVED_CSV}`);
+  return { working, resolved };
 }
 
 /* ----------------------------------------------------------------- views --- */
@@ -687,7 +961,13 @@ if (MODE === "open") {
   modeViews(working, resolved, sections);
 } else if (MODE === "views") {
   modeViews(working, resolved, sections);
+} else if (MODE === "note") {
+  ({ working, resolved } = modeNote(working, resolved));
+  modeViews(working, resolved, sections);
+} else if (MODE === "add") {
+  ({ working, resolved } = modeAdd(working, resolved, sections));
+  modeViews(working, resolved, sections);
 } else {
-  console.error(`unknown mode "${MODE}" — expected open, views or move`);
+  console.error(`unknown mode "${MODE}" — expected open, views, move, add or note`);
   process.exit(2);
 }

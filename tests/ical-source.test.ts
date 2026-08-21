@@ -184,9 +184,34 @@ test("ICAL: every wired feed names the LIST view, never the default view", () =>
   // month: four events, HTTP 200, well-formed, and nineteen public meetings
   // missing. The empty-success shape wearing a healthier face. A wiring row
   // that names the default URL is a five-fold silent clip.
+  /*
+   * **THE RULE IS THE FULL CALENDAR; `ical=1` WAS ONE VENDOR'S SPELLING OF IT.**
+   * (Widened 2026-08-20, NH Hunt.)
+   *
+   * The original assertion required `ical=1` in every feed URL, which is The
+   * Events Calendar's WordPress convention and nothing more. The Town of
+   * Newbury runs Drupal and publishes its whole calendar at
+   * `/calendar/ical/export.ics` — a perfectly ordinary iCalendar feed that this
+   * guard would have refused for not looking like WordPress. A guard written
+   * from one instance rejects the class.
+   *
+   * What is actually load-bearing is that the URL is a CALENDAR FEED and that
+   * it names the FULL calendar rather than a view of it, so the per-vendor
+   * full-view checks stay and are stated per vendor.
+   */
+  let checked = 0;
   for (const row of wiringForTypes(["ICAL"])) {
     const url = row.config.feedUrl ?? "";
-    assert.match(url, /ical=1/, `${row.config.slug} has no ical feed url`);
+    checked += 1;
+    assert.match(
+      url,
+      /^https?:\/\//,
+      `${row.config.slug}'s feed url is not absolute`,
+    );
+    assert.ok(
+      /\.ics(\?|$)/.test(url) || /ical=1/.test(url) || /format=ical/.test(url),
+      `${row.config.slug} does not name a calendar feed: ${url}`,
+    );
     if (/wilmotnh\.org/.test(url)) {
       assert.match(
         url,
@@ -194,5 +219,16 @@ test("ICAL: every wired feed names the LIST view, never the default view", () =>
         `${row.config.slug} names the default view, which returns a fifth of the calendar`,
       );
     }
+    if (/newbury\.nh\.gov/.test(url)) {
+      // Drupal's calendar serves `/calendar/month/YYYY-MM` as the view and
+      // `/calendar/ical/export.ics` as the whole thing — 1,157 events against
+      // one month's handful. Same trap, different vendor.
+      assert.match(
+        url,
+        /\/calendar\/ical\/export\.ics$/,
+        `${row.config.slug} names a month view rather than the export`,
+      );
+    }
   }
+  assert.ok(checked >= 13, `only ${checked} ICAL rows were checked`);
 });

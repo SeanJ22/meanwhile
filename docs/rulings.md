@@ -691,3 +691,115 @@ bullet both govern per-FIELD indicators, and `CLAUDE.md` mandated the card line
 in so many words. Deleting a line that law mandates, on a reading the brief did
 not require, would have been the session overruling the author. Naming the
 conflict and leaving it for him is what a session is supposed to do with one.
+
+### RULING 43 — a source may not report success with zero normalized rows from a non-zero fetch
+
+*Adopted 2026-08-20 (NH Hunt brief, item 1). Supersedes nothing; it makes an
+existing `CLAUDE.md` rule structural.*
+
+This is the SIXTH sighting of the zero-row shape and the first to reach a
+reader. `ical` reported `ok: true, fetched: 3, normalized: 0` with every drop
+counter at zero on the 02:00Z refresh, carry-forward therefore did not run, and
+Wilmot, New Hampshire went from 23 meetings to none on the page at 03255. The
+feed was healthy when checked by hand minutes later.
+
+Five written prohibitions did not stop it, because a written prohibition is
+something a session has to remember at the moment it writes a `return`. **The
+contract itself must refuse to express it.** `ReportingMeetingSource.normalizeWithDrops`
+now returns an `Accounted<...>` — a branded type whose only constructor,
+`accountedNormalize()` in `lib/sources/normalize-account.ts`, throws rather than
+returning a value for the forbidden shape. A plain object literal no longer
+compiles, and the composite routes the throw to `JOB`, which turns the run red.
+A seventh instance fails at build, not on the site.
+
+The invariant is deliberately narrow — documents in hand, nothing out, nothing
+dropped — and NOT full input/output accounting, which is false of honest
+adapters: one `.ics` document is twenty meetings.
+
+### RULING 44 — per-card completeness statements are gone, in any wording
+
+*Adopted 2026-08-20 (NH Hunt brief). Extends RULING 42, which deleted one named
+constant.*
+
+RULING 42 deleted `THIN_CANDIDATE_LINE` and Prompt E shipped a semantically
+identical sentence in the same session, because the guard matched known strings
+rather than meaning. **That guard gap is the defect**, and `PE01` is one
+instance of it. The page-level disclosure is the author's line, verbatim —
+*"What we have found, we are displaying here."* — and that is the whole
+disclosure. No card says what is missing from it, in any phrasing.
+
+Guarded by meaning rather than by spelling in `tests/no-suppression.test.ts`
+("RULING 44: no per-card completeness statement, by meaning"), which composes
+subject + absence + coverage lexicons rather than listing sentences, and which
+proves it is not vacuous by running the matcher against every such sentence the
+product has actually shipped. Its false negatives are stated in the test's own
+doc block rather than left to be discovered.
+
+### RULING 45 — the Kelly standard, and there are no tiers of it
+
+*Adopted 2026-08-20. Already law in `CLAUDE.md`; recorded here for the index.*
+
+Every official and every candidate carries a photo, a phone, a working contact,
+a specific verified page, and a campaign site.
+
+### RULING 46 — the author may delete a row outright; a session never may
+
+*Adopted 2026-08-20 (NH Hunt brief). Amends RULING 36, which named three
+resolution states, and clarifies the scope of RULING 35.*
+
+RULING 35's "nothing is ever deleted" governs WORK rows — a session may not
+erase its own row by marking it done. It was never meant to bind the author's
+audit. He must be able to look at a row, judge that it is not project work and
+does not belong in the tracker at all, and have it gone.
+
+`Delete` is a fourth resolution state, available to him alone. A session may
+never set it and `tests/tracker-stores.test.ts` fails the build if one does. A
+deleted row is HARD-REMOVED from both stores; the deletion is recorded in
+`docs/log.md` — row id, date, and that he removed it — so the record that it
+existed survives without the row cluttering anything.
+
+`B08` is deleted under this ruling, on his explicit instruction.
+
+### RULING 47 — the per-card issue count is removed
+
+*Adopted 2026-08-20 (NH Hunt brief). Supersedes F01-continued session 2 item
+14's "annotate and bury", and retires `CLAUDE.md`'s fourth friction exception.*
+
+A small count of what is still missing on a candidate card is RULING 44's banned
+statement compressed into a digit. Item 14 ruled the honesty right and the
+volume wrong and split the enumeration into a COUNT on the row and a LIST buried
+in the battlecard; the author has now ruled it out entirely. Both halves go, and
+the fourth friction exception — *"honesty about coverage gaps, which may never
+be smoothed into implied completeness"* — is retired with them, because it was
+written to protect exactly this statement.
+
+Honesty about coverage survives everywhere it was load-bearing: the gap ledger,
+stated-N-equals-rendered-rows, the two-numbers pair rule, and the prohibition on
+asserting absence. What is gone is the licence to spend a reader's attention on
+it, beside a named person's name, once per card. `PE04` closes on this.
+
+### RULING 48 — a session may not use git to revert the author's files
+
+*Adopted 2026-08-20 (NH Hunt brief).*
+
+Prompt E built collision safety on the tracker stores — digest before and after,
+a mid-run save refuses and writes nothing — and a session reaching for
+`git checkout` routes around it entirely. That happened: both CSVs were reverted
+mid-fix and his edits were destroyed, recovered only because it was noticed.
+
+- A guard fails the build if a session runs `git checkout`, `git restore`,
+  `git reset --hard`, or any equivalent against `docs/tracker.csv`,
+  `docs/tracker.xlsx`, the resolved store, or `docs/state.md`.
+- Section edits to `docs/state.md` INSERT; they never replace. A replace
+  destroyed 28 KB including the Phase A–E roadmap in the same session.
+
+Enforced, not remembered.
+
+### RULING 49 — a merge to satisfy a mid-session instruction from the author does not count against the cadence
+
+*Adopted 2026-08-20 (NH Hunt brief). Amends RULING 1.*
+
+RULING 38 makes his note binding on the session that reads it; RULING 1 caps
+merges. An instruction arriving late in a session put those in direct conflict
+and produced a reported deviation. The report names the instruction and the SHA.
+The exception requires an actual note from him and cannot be self-authorized.

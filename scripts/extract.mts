@@ -6,6 +6,7 @@
  *   pnpm extract tables   <file.pdf | url>
  *   pnpm extract ocr      <file.pdf | url>
  *   pnpm extract payload  <file.html | url>          [--find "John Carruth"]
+ *   pnpm extract roster   <file.html | url>          # who sits on the board
  *   pnpm extract auto     <file | url>               # text, then OCR if scanned
  *
  * Flags: `--json` prints the whole result object. `--find <text>` (payload
@@ -31,6 +32,7 @@ import { extractTextLayer } from "../lib/extract/text-layer.ts";
 import { extractTables } from "../lib/extract/tables.ts";
 import { runOcr } from "../lib/extract/ocr.ts";
 import { extractEmbeddedPayload, findInPayload } from "../lib/extract/embedded-payload.ts";
+import { extractRosterTables } from "../lib/extract/roster-table.ts";
 import { politeGetText } from "../lib/sources/http.ts";
 
 const [, , layer, target, ...rest] = process.argv;
@@ -38,7 +40,7 @@ const asJson = rest.includes("--json");
 const findAt = rest.indexOf("--find");
 const needle = findAt >= 0 ? rest[findAt + 1] : null;
 
-const LAYERS = ["text", "tables", "ocr", "payload", "auto"] as const;
+const LAYERS = ["text", "tables", "ocr", "payload", "roster", "auto"] as const;
 
 if (!layer || !target || !(LAYERS as readonly string[]).includes(layer)) {
   console.error(
@@ -112,6 +114,34 @@ switch (layer) {
       }
     }
     result = payload;
+    break;
+  }
+  case "roster": {
+    /*
+     * Layer 5 (NH Hunt, 2026-08-20). Who sits on a board, off the body's own
+     * page. Built because Newbury's Selectboard roster is a Drupal Views table
+     * and nothing here could read one — the record was reachable and
+     * unreadable, which is friction and never refusal.
+     */
+    const html = await textOf();
+    const roster = extractRosterTables(html, target!, isUrl ? target! : null);
+    for (const row of roster.items as {
+      section: string;
+      name: string;
+      title: string | null;
+      phone: string | null;
+      email: string | null;
+      contactUrl: string | null;
+    }[]) {
+      console.log(
+        `  [${row.section}] ${row.name}` +
+          (row.title ? ` — ${row.title}` : "") +
+          (row.phone ? ` · ${row.phone}` : "") +
+          (row.email ? ` · ${row.email}` : "") +
+          (row.contactUrl ? ` · ${row.contactUrl}` : ""),
+      );
+    }
+    result = roster;
     break;
   }
   case "auto": {

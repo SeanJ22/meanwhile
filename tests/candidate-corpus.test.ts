@@ -166,10 +166,12 @@ test("P02: equal effort — the same issue list for every candidate, no exceptio
   const stranger = positionsFor("nobody-at-all");
   assert.equal(stranger.length, expected);
   assert.ok(positionsSummary(stranger).nothingCollected);
-  assert.match(positionsHeadline(stranger), /we haven’t collected|we haven't collected/i);
+  // RULING 44 / RULING 47 (2026-08-20): a candidate we hold nothing published
+  // for gets NO line and NO section — not a sentence about our research.
+  assert.equal(positionsHeadline(stranger), null);
 });
 
-test("P02: the headline states the denominator before any count", () => {
+test("P02: the headline is provenance and carries no count at all", () => {
   const corpus = getCandidateCorpus();
   /*
    * A candidate with a READABLE document, chosen rather than taken first
@@ -183,9 +185,15 @@ test("P02: the headline states the denominator before any count", () => {
   const key = [...new Set(corpus.documents.filter((d) => d.text).map((d) => d.candidateKey))][0];
   assert.ok(key, "no candidate in the corpus has a readable document");
   const headline = positionsHeadline(positionsFor(key));
-  // "3 issues" means nothing without "of the 12 we search for everyone".
-  assert.match(headline, new RegExp(`same ${CANDIDATE_ISSUES.length} issues`));
-  assert.match(headline, /every candidate in this contest/);
+  assert.ok(headline, "a candidate with readable documents gets a line");
+  /*
+   * RULING 47: the count is gone, in both directions. The old assertion
+   * required the denominator ("the same 12 issues") because a bare "3 issues"
+   * implies completeness; the ruling removed the whole measurement instead.
+   * What must survive is provenance — whose words these are and where from.
+   */
+  assert.ok(!/[0-9]/.test(headline), `the headline carries a digit: ${headline}`);
+  assert.match(headline, /own words/i);
 });
 
 test("D05: the corpus is real, append-only, and states what it could not reach", () => {

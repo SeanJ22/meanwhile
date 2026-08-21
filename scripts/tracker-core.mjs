@@ -58,6 +58,24 @@ export const WORKING_CSV = "docs/tracker-working.csv";
 export const RESOLVED_CSV = "docs/tracker-resolved.csv";
 export const WORKBOOK = "docs/tracker.xlsx";
 export const SECTIONS_JSON = "docs/tracker-sections.json";
+
+/**
+ * **THE OPENED-ROW LEDGER** (2026-08-21, NH Hunt 2 item 1.4).
+ *
+ * Append-only, one entry per `tracker add` run: the session that ran it, the
+ * stamped day, and every id the run assigned. It exists because a session
+ * REPORTS how many rows it opened for the author and nothing checked that
+ * claim against the stores — so "opened for you" and "present in the tracker"
+ * were two different facts with no instrument between them, and the only way
+ * to notice a divergence was for him to go looking for a row and not find one.
+ *
+ * The invariant is small and total: **every id ever assigned is present in the
+ * working store or the resolved store.** Nothing is deleted from either except
+ * by his own hand (RULING 46), and a deletion he authorises is recorded in
+ * `docs/tracker-deletions.json`, so the guard reads that too rather than
+ * treating his decision as a missing row.
+ */
+export const OPENED_JSON = "docs/tracker-opened.json";
 /** The pre-rebuild tracker, frozen. Read for history; never written again. */
 export const FROZEN_CSV = "docs/tracker.csv";
 

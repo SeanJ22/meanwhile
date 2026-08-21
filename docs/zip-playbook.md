@@ -2104,3 +2104,412 @@ abbreviation expansion, district-type acronym expansion (`ISD`, `CUSD`, `UFSD`,
 overlap.** Only opening the unmatched rows tells them apart — and district
 numbers must be held OUTSIDE the key and used only to break a tie both sides
 recorded, because Illinois numbers its districts on both sides and Texas on one.
+
+### RUNG 5 IS REAL, IT IS CHEAP, AND IT BRINGS DOWN THREE WALLS THIS REPO HAD WRITTEN OFF (NH Hunt 2, 2026-08-21)
+
+`CLAUDE.md`'s rung 5 is g3's finding stated as a rule — a rung is
+`(client, headers, URL, egress)`, and a refusal aimed at where the request
+COMES FROM is not a header problem. It has been in the ladder since the g
+sessions and **nothing in this repo could walk it.** Two tracker rows and one
+constitution paragraph recorded rung 5 as "owed" and stopped there.
+
+`lib/hunt/egress.ts` walks it: a public reader service fetches the public URL
+from its own address and returns the page as text. It is NOT residential-proxy
+spoofing, which stays prohibited; it authenticates nothing and accepts no terms;
+it carries a public URL and nothing else, and `assertPublicUrl` refuses anything
+with credentials, a private host or a non-web scheme.
+
+**Three standing walls fell to it in one session:**
+
+| Host | What the record said | What rung 5 did |
+|---|---|---|
+| `sos.nh.gov` (and `cfs.sos.nh.gov`) | *"refuses this network"* — host-wide since 2026-08-13, worked around via the Internet Archive | **200.** HTML pages, and PDFs as extracted text. The archive detour is no longer the primary route |
+| `nh.gov` family — `council.nh.gov`, `governor.nh.gov`, `revenue.nh.gov` | not previously measured | **200.** These 403 at rungs 2, 3, 4 AND 6 — a guarded headless browser is refused exactly as a plain fetch is, which is what proves it is an EGRESS wall and not a fingerprint or a JavaScript problem |
+| `kearsarge.org` board roster (`NH01`) | *"headless Chromium does not clear a Cloudflare managed challenge"* | **200** — and so did rung 4 on the same day, see below |
+
+**The provenance cost, and it is real.** What comes back is the reader service's
+markdown RENDERING of the page, not the origin's bytes. A fact read this way is
+cited to the ORIGIN — that is the document that exists — and the retrieval note
+says which route reached it. It is therefore the WRONG rung for anything where
+the exact bytes are the evidence: a `contentHash`, an `.ics` feed, a PDF you
+mean to store. Those stop at rung 4 or go to rung 11.
+
+**The relay's 200 is the RELAY'S, not the origin's.** It answers HTTP 200 for a
+page the origin refused and puts the origin's status in the body:
+`Warning: Target URL returned error 404: Not Found`. The first version of the
+reader returned that as a successful read, and `pnpm probe:site` duly printed
+"HTTP 200 via rung 5" for a New Hampshire Executive Council page that does not
+exist. `readViaEgress` now parses that annotation and raises the origin's status
+as the refusal it is. A wall arriving through a wall-breaking rung, wearing a
+200, is the exact shape this repo has spent six sightings learning to refuse.
+
+### A WALL OBSERVED ONCE IS NOT A WALL (NH Hunt 2, 2026-08-21)
+
+Three of the walls re-walked this session were gone, and one of them was gone in
+a way that cost a whole tracker row:
+
+- **`gc.nh.gov` / `gencourt.state.nh.us`.** `CLAUDE.md` and
+  `data/ballot/nh-merrimack-2026.json` both say *"the General Court's own site
+  refuses every client this project has, browsers included"* (written
+  2026-08-14). It answers a **plain rung-2 fetch at HTTP 200** and probably has
+  for some time. Nobody re-checked, because the wall was written down and a
+  written-down wall reads as a fact rather than as a measurement with a date on
+  it. Four of the five Kelly fields for four candidates came off that host in
+  one pass once somebody tried.
+- **`kearsarge.org`'s board roster.** `NH01` records rung 6 loading a Cloudflare
+  interstitial that never resolves. On 2026-08-21 **rung 4 (`curl`) read it at
+  200, 73,695 bytes.** The playbook's own note on this host says the wall is a
+  RATE wall — *"a burst of fetches earns 403 where a paced fetch is served
+  200"* — and that is consistent: a paced single fetch gets the page.
+- **`hopkinton-nh.gov`.** Refused a raw `curl` with a Cloudflare "Just a
+  moment…" challenge, refused a guarded headless browser with "Incompatible
+  browser extension or network configuration" — and read at 200 through `curl`
+  minutes later, from the same machine, with the same User-Agent. **The
+  challenge is transient.** A single observation of a Cloudflare managed
+  challenge is not a finding about the host.
+
+**So: re-walk before recording, and re-walk before believing.** `pnpm ladder`
+exists so that costs one command.
+
+### `pnpm ladder` — the retrieval ladder as a command (NH Hunt 2, added 2026-08-21)
+
+| Command | What it does |
+|---|---|
+| `pnpm ladder <url> [--out <file>] [--stop-at <rung>] [--json]` | Walks rungs 2 → 3 → 4 → 5 → 6 in order, stops at the first that returns the document, and PRINTS EVERY RUNG WITH ITS RESULT — including the ones it did not need, marked `NOT_ATTEMPTED` rather than left off. `--out` writes the body of whichever rung read it. |
+
+Every rung body goes through `challengeIn()` before it counts as a read, so a
+Cloudflare interstitial at HTTP 200 is reported as WALLED with the challenge
+named. A URL no rung reads exits non-zero with the message that the rungs above
+6 are still owed and that this is **never an absence**.
+
+**Rungs 2 and 3 are RAW fetches here, deliberately not `politeGetText`.**
+`politeGetText` walks 2 → 3 → 4 by itself on a 403, which is right for an
+adapter and wrong for a ladder: the first run of this tool used it and printed
+"rung 2 READ, 200, 74,600 bytes" for a page whose raw rung 2 is a Cloudflare 403
+and whose rung 4 is a 200. A `walledAtRung` written from that would have been
+wrong in the database, in the direction that makes a wall disappear.
+
+### `pnpm probe:site` — what a campaign site publishes about its own candidate (NH Hunt 2, added 2026-08-21)
+
+| Command | What it does |
+|---|---|
+| `pnpm probe:site <url> [<url> …] [--json]` | Reports `og:image`, `twitter:image` and every non-structural `<img>` with its `alt`; `mailto:` and `tel:` links and phone-shaped prose; `og:description`, `meta[description]` and the first substantial paragraph, verbatim; and the rung that read the page. Four of the five Kelly fields, from one call. |
+
+It reports CANDIDATES for a photo and never picks one — the four-door rule and
+the composition standards are a judgement about a named person's face.
+
+**The lazy-load placeholder is what most campaign sites put in `src`.**
+WordPress themes ship a `data:image/svg+xml` spacer of the right aspect ratio in
+`src` and the real file in `data-src` / `data-lazy-src` / `data-original`. The
+first run of this printed five identical inline SVGs for a site whose portraits
+were all present. A probe that reads the placeholder reports "no photo here"
+about a page full of photographs.
+
+**Revize resolves an image `src` from the SITE ROOT, not from the page's own
+directory.** Merrimack County's Register of Deeds page writes
+`Departments/Register of Deeds/Images/Morse 1.30.25.jpg`; resolved against the
+page's directory that 404s, and resolved against the root it serves. A relative
+resolver reports a false miss on every Revize portrait in the product.
+
+### `pnpm nh:legislator` — the New Hampshire General Court, per member (NH Hunt 2, added 2026-08-21)
+
+| Command | What it does |
+|---|---|
+| `pnpm nh:legislator "<name>" [--chamber house\|senate] [--out <file>]` | Resolves a name against the current House roster (769 members) and Senate roster (24), and prints the member's page URL, official portrait, `@gc.nh.gov` email, phone, mailing address and — for senators — the biography they wrote themselves. |
+| `pnpm nh:legislator --list house\|senate` | The whole roster, name and pid. |
+
+**Four of the five Kelly fields for any sitting New Hampshire legislator, from
+one host.** The portrait is photo door 2.
+
+Three traps, all found by the first version getting them wrong:
+
+- **`nophoto.jpg` is the chamber's own placeholder and is not a portrait.**
+  Shipping it puts a grey silhouette under the words "official New Hampshire
+  House portrait" — a render default manufacturing a claim. Returned as `null`
+  by filename.
+- **The member page's name and district come from its own `<h1>` and its
+  CENTERED `<h3>`**, not from the flattened page text. The first version
+  returned the site's `<title>` as the member's name and three lines of
+  navigation chrome as their address.
+- **A phone test must be anchored on the WHOLE phone shape.** A test for "three
+  digits and a separator" ate the street number off `209 Squires Ln` and
+  reported a representative whose address begins at their town.
+
+**A former member's page survives and their portrait does not.** Confirmed on
+two people — Jason Gerhard (Merrimack 25, 2022–2024) and Dianne Schuett
+(2008–2024). Their `member.aspx?pid=` pages answer 200 and carry no image. The
+pid for a former member is recoverable from an Internet Archive capture of the
+roster page from a session they served in.
+
+### THE SEAT IS THE PATH: a former senator's portrait lives at the CURRENT holder's URL (NH Hunt 2, 2026-08-21)
+
+The New Hampshire Senate serves portraits from `/senate/images/senators/07.jpg`
+— **keyed to the DISTRICT, not to the person.** Harold French held District 7
+until Daniel Innis took it, and both faces have lived at that one URL.
+
+So for a former senator the route is the Internet Archive capture of the Senate
+roster from a session they served in: find the card headed with their name, take
+the `im_` URL beside it, and the archive serves the right face.
+
+**And the trap is the same fact pointed the other way.** Fetching that path live
+for Harold French would have shipped Daniel Innis's photograph under Harold
+French's name. Both were read as images before either shipped, which is the only
+reason it did not happen. This is not a Senate quirk — any body that serves
+portraits by seat has it.
+
+### A ROSTER'S CONTACTS CAN BE IN THE `href` AND NOT IN THE CELL (NH Hunt 2, 2026-08-21)
+
+Kearsarge's board-members page publishes **twelve `mailto:` links** — each
+board member's NAME is the anchor text and their district email is the `href` —
+and it always did. An extractor that reads table CELLS as text gets the nine
+names and drops the nine addresses, and what it hands back looks exactly like a
+page that carries no contacts.
+
+That reading was recorded on 2026-08-17 as *"the district publishes no
+per-member phone or email on this page — the absences are honest, not
+unhunted"*, and repeated on 2026-08-20. **Honest-looking and wrong**, and worse
+than a wall, because a wall stays open as a work item and a recorded honest
+absence closes the question.
+
+Two more traps on that one page: the column HEADERS also link to a member's
+address, so a first-mailto-wins parse gives every member the same email; and one
+member's row carries three addresses — his district one, a personal
+`@verizon.net` one the page exposes, and a typo of the first.
+
+### TOWNCLOUD — a vendor family, and a slug probe that reports every guess as a hit (NH Hunt 2, 2026-08-21)
+
+Bradford, New Hampshire publishes its agendas on `towncloud.io/go/bradford-nh`.
+Its own town site links out to it and carries no boards index of its own, so the
+vendor IS the route to the town's bodies.
+
+- **The table is a server-side DataTables POST** to `/go/<slug>/table_data`,
+  carrying `table_class=AgendaHomeTable` and a `context[city][…]` blob. A
+  replayed POST answers 422 without the page's own session, and so does the same
+  POST issued from inside the page. The route that works is rung 6 driving the
+  table's own paging control — 227 rows, 12 distinct bodies.
+- **A meeting-derived body list is a FLOOR, not a denominator.** A body that has
+  not met inside the published window is invisible to it.
+- **`towncloud.io/go/<anything>` answers HTTP 200 with an empty shell.** All six
+  other Kearsarge member towns "existed" on it by status code and none does. The
+  check that works is the rendered row count.
+
+### `pnpm bodies:enumerate` — what bodies does this town have? (NH Hunt 2, added 2026-08-21)
+
+| Command | What it does |
+|---|---|
+| `pnpm bodies:enumerate <town-site-url> [<url> …] [--json]` | Reports every link whose ANCHOR TEXT names a governing-body shape, with its href, the rung that read the page, and whether the final URL redirected. Separates links that look like documents (minutes, agendas, warrants) from links that look like bodies. |
+
+The contract is the ANCHOR, not the markup: New Hampshire town sites are five
+CMS families and a long tail, and every one of them puts its boards in a
+differently-shaped menu — but all of them link each body's own page with the
+body's name as the anchor text. False positives are left IN, because a missed
+body is invisible and a wrong line is one a session reads and discards.
+
+`selectboard`, `select board` and `board of selectmen` are all live in New
+Hampshire and a town uses exactly one; a vocabulary missing any of the three
+skips that town's governing body, which is the one body it is least acceptable
+to miss.
+
+**A town that marks its own boards `(E: Elected  A: Appointed)` has published
+its own denominator, and it is better than any external count.** Warner does
+this for 31 offices — including one marked "Dissolved", which is a body a
+name-based enumeration would have put on a reader's map.
+
+### FIVE OF SEVEN KEARSARGE MEMBER TOWNS HAVE MOVED TO `.gov` (NH Hunt 2, 2026-08-21)
+
+`bradfordnh.org → bradfordnh.gov`, `nl-nh.com → newlondon.nh.gov`,
+`sutton-nh.org → suttonnh.gov`, `warner.nh.us → warnernh.gov`. They redirect
+today and the school district's own board page still links the old ones. A link
+we hold is a link that will break; `pnpm bodies:enumerate` prints the redirect
+so a stale link is visible rather than inferred.
+
+`suttonnh.gov` refuses rung 2 and admits rung 4 — the same TLS-fingerprint shape
+as `hopkinton-nh.gov`.
+
+### NEW HAMPSHIRE SPECIAL DISTRICTS: THE ANSWER IS A TAX TABLE, NOT A MAP (NH Hunt 2, 2026-08-21)
+
+TIGER publishes no boundary for any special district at any vintage, so
+geometry cannot say whether a village district reaches a zip. Three documents
+answer it instead, and together they resolved all eighteen at 03255:
+
+1. **`data/derived/zip-governments.json`** — which town(s) the ZCTA falls in.
+   03255 is 109 of 109 sample points in Newbury town, so the question reduces to
+   "does this district include territory in Newbury".
+2. **RSA 52:1** — a village district is fixed by *"the selectmen of the town or
+   towns"* over *"such parts of the town or towns as may seem convenient."*
+   Note the plural: **a district may span towns**, so a name-based inference is
+   not safe. One of the eighteen spans two towns and names neither in its title.
+3. **The NH Department of Revenue Administration's annual Village District Tax
+   Rates** — 106 district-rate rows grouped by municipality, and it lists a
+   district **even at a $0.00 rate**, which is what makes an absence meaningful.
+   A district appearing under two municipalities is asterisked and appears
+   twice. `revenue.nh.gov` is 403 at rungs 2, 3 and 4 and unarchived; rung 5 is
+   the route.
+
+**RSA 432:12 settles conservation districts outright**: each of the ten counties
+*"is hereby incorporated into a conservation district"* whose boundaries
+*"conform"* to the county. No map needed, ever.
+
+**A dead district website is still in the archive, and its history page is where
+the towns are named.** Lake Todd Village District's site is 404 at every rung
+including 5 and 6; the Internet Archive's 2014 capture says in the district's
+own words that it is *"located in Bradford and Newbury"* and posts its warrant
+*"outside the Newbury Town Office."*
+
+### A LIBRARY OR A POLICE DEPARTMENT MAY MIRROR THE DOCUMENT A STATE AGENCY REFUSES YOU (NH Hunt 2, 2026-08-21)
+
+The New Hampshire Secretary of State's cumulative candidate filing list — the
+document behind every candidate on the New Hampshire ballot — is served at 403
+from `sos.nh.gov` to rungs 2, 3, 4 and 6. **Goffstown Public Library and the
+Goffstown Police Department each host a copy in their own document centres**,
+at 200 to a plain fetch, and a search-index query finds them by the document's
+own title.
+
+That is a rung-10 shape worth naming: a state document that a municipality is
+required to post locally often IS posted locally, on a host with no edge filter
+in front of it. Cite the original; record the mirror as the route.
+
+### THE FEC IS THE EQUAL-EFFORT INSTRUMENT FOR A FEDERAL CONTEST (NH Hunt 2, 2026-08-21)
+
+Thirteen candidates for one Senate seat is thirteen unequal name searches, or
+one API pass at the same rung for all of them. Every federal candidate past the
+$5,000 threshold has a Statement of Organization naming their committee's
+**website, email, phone and address** —
+`/v1/candidates/search/`, then `/v1/candidate/<id>/committees/`, then
+`/v1/committee/<id>/`. Eleven of nineteen New Hampshire federal candidates were
+reachable that way in one pass.
+
+- **No FEC record is a legitimate STATE, not a wall.** A candidate need not
+  register until they raise or spend $5,000. Record it as that, and check the
+  loose surname search too — two of the eight had records from earlier cycles
+  and none for 2026, which is a different fact from never having filed.
+- **The committee's filed email is often a COMPLIANCE FIRM's**
+  (`PAPPAS@MBACG.COM`, `GOODLANDER@CAPCOMPLIANCE.COM`). It is a real filed
+  contact and it would read on a card as "this is how you reach this person".
+  For a sitting member of Congress the committed `unitedstates/congress-legislators`
+  directory has their DISTRICT OFFICE line, which is the number that answers the
+  public.
+- **A surname search collides.** "Maxwell" returns Maxwell Saal — a different
+  person whose GIVEN name matches the surname being searched.
+
+## 7. The candidate hunt — how a candidacy is taken to Kelly depth (NH Hunt 2, added 2026-08-21)
+
+New territory for this playbook. Forty-seven New Hampshire candidacies were
+worked to this method on 2026-08-21; it is a draft that Rockaway Township will
+test.
+
+**The unit of work is the CONTEST, not the candidate.** RULING 26 and the
+equal-effort rule: every candidate in a contest gets the same rungs before the
+next contest starts. Doing the incumbents first across all contests produces a
+ranking.
+
+**Order is local first.** Register of Probate before Governor. The offices a
+reader has never heard of are the ones nobody else covers.
+
+### The rungs, in order
+
+1. **The filing record.** The state's cumulative candidate filing gives the
+   name as filed, the party, the office and — in New Hampshire — the **domicile
+   town and the filed mailing address, for every candidate at once.** That is
+   one document reaching the whole ballot at the same rung, on the same day.
+2. **The office roster.** A state's roster of current officeholders establishes
+   INCUMBENCY, which the filing does not. In New Hampshire that is the
+   Secretary of State's County Roster.
+3. **The legislature's own roster.** Any candidate who currently sits in the
+   state legislature has a portrait, an email, a phone, an address and a
+   specific verified page on one host. Check EVERY candidate against it —
+   four of forty-seven were sitting members and two of those were running for
+   Congress rather than for a legislative seat.
+4. **The FEC**, for federal offices. See above.
+5. **The body's own page**, for anyone holding office — a county's department
+   page, a governor's office, an executive council. This is photo door 2.
+6. **The campaign site.** A name-based domain sweep is cheap and finds perhaps a
+   third of them; a nonpartisan candidate directory is the trail to the rest.
+7. **The site itself**, through `pnpm probe:site` and then rung 6 if it renders
+   client-side.
+
+### What a domain sweep finds that is NOT a campaign site
+
+All of these were live at HTTP 200 in one sweep and not one is a campaign site:
+
+- **A parking lander** — `stevenendres.com` and `benweir.com` are 114 bytes
+  whose whole body redirects to `/lander`.
+- **A registered domain publishing a construction notice** —
+  `meghagaman.com` is a Squarespace "Coming Soon" page. Linking a reader to it
+  is friction with nothing at the end of it.
+- **An unfinished template** — `dannicholsonfornh.com` is his FEC-filed website
+  and its body is Wix's own placeholder prose. It is LINKED, because it is his
+  filed site and a reader looking for it should find it, and nothing on it is
+  quoted, because there is nothing on it that he wrote.
+- **Another family's website** — `mcclory.com` is a McClory genealogy site with
+  a different person's email on it.
+- **A personal or business site that is not a campaign** —
+  `haroldfrench.com` is auctions, real estate and folk art, copyright
+  2002–2018, and names an office he no longer holds. It supplied a working
+  CONTACT that matches his filed address exactly, and it is not recorded as a
+  campaign site.
+- **An empty React shell** — `rogersforcountyattorney.com` is 1,105 bytes at
+  rung 2 and indistinguishable from the landers above. **At rung 6 it is a full
+  campaign site** with the primary date on it. A rung-2-only sweep would have
+  recorded a real campaign as a parked domain.
+
+### Reading the image is not optional, and here is what it caught
+
+Three photographs were refused this session that every signal short of looking
+said were portraits:
+
+- **`victor-formal.jpg`, alt text "Victor Orlando", in an `/images/headshots/`
+  path** — read as an image, it is a stock photograph of the United States flag.
+  There is no person in it.
+- **A campaign's `og:image` and `twitter:image`, both the same file** — read as
+  an image, a scanned cover of a 1978 New Hampshire Grand Jury manual.
+- **A "SocialShare.jpg"** — a portrait beside a wordmark reading the candidate's
+  name and the office. A banner, which the composition standard forbids by name.
+
+And one was refused on the copyright rule rather than composition:
+`Monkman_Manzur_Campaign_022.jpg` carries a **photographer's credit in its
+filename**, and photographer-credited images are prohibited at every door.
+
+Two more shapes: a "WMUR" television screengrab of a courtroom (a screengrab,
+a group shot and a broadcaster's image, three prohibitions at once), and an
+"Introductory photo" that is the candidate with a child in a canoe.
+
+### Where the identity evidence comes from when there is no headshot page
+
+The site's own ALT TEXT and FILENAME, on a single-candidate domain: `mee.jpg`
+on a site whose banner reads "FORMER REP. JASON GERHARD — CANDIDATE FOR SHERIFF
+2026!", and "Pete leaning on a granite post" on a site titled "Sheriff Pete
+Shephard". Neither is proof on its own; both are proof on a domain that belongs
+to one person and says so.
+
+### A contact that is NOT this person's
+
+Recording one of these is a render default manufacturing a claim about a named
+person, and each was refused:
+
+- **An office line that now reaches their opponent.** Erica S. Davis appears in
+  four archived captures beside (603) 228-0101 — the Register of Deeds office
+  line, which now answers to the person who beat her.
+- **The site vendor's address.** `office@dardenstudio.com` appears as the only
+  `mailto:` on two different candidates' sites, which is how it was recognised.
+- **A named staffer's address**, where the campaign publishes its own alongside.
+- **A dead `@gc.nh.gov` address** belonging to a legislative seat a former
+  member no longer holds.
+
+### A social page needs authenticity, and Facebook will not let you check
+
+`CLAUDE.md`'s campaign-site rule lets a social page stand in for a site when it
+self-identifies with the filed name, the office AND the cycle. **Facebook serves
+a login wall to every unauthenticated client, including rung 5**, so that
+self-identification cannot be read — and we never authenticate. The honest
+record is a NAMED WALL, not an absence, with rung 11 owed against a capture from
+before the wall.
+
+### A party-hosted candidate page is a case the rules do not yet cover
+
+One candidate's only public presence is a page on a political party's website —
+his name, the office, his own words, a contact. The campaign-site rule wants a
+reader to reach it; the organizations-render-as-filed rule forbids this product
+characterising an organization; and `contact-pills.tsx` labels every non-Facebook
+campaign link "Campaign site", which would present the party's site as his.
+Routed to the author rather than decided in a hunt.

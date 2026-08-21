@@ -4,9 +4,9 @@
 (`scripts/tracker.mjs`) from the tracker's own attribution and description fields,
 plus one authored sentence per session in `docs/log-purposes.json`.
 
-Generated 2026-08-20 (America/Phoenix, from `pnpm stamp`).
+Generated 2026-08-21 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **108 sessions.**
+Newest first. **109 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -25,13 +25,34 @@ are hard-removed from both stores — this list is the whole surviving record.
 
 ---
 
-## Sean · 2026-08-20
+## Sean · 2026-08-21
+
+**What it finished.** 3 row(s).
+
+- **PE01** — A candidate we hold no published words for still gets a sentence on their card saying so. It is honest and it names the gap as ours, and it also appears only on the shortest cards — which is the same shape as the line RULING 42 just deleted. Whether it goes too is a call about a reader surface, so it is yours. Seen on the live ballot at every pilot zip.
+- **PE04** — Every candidate card carries a line saying how many of the twelve issues we search for turned up in their own pages — and, when none did, a sentence saying so. You asked for the page disclosure to be one sentence and no more. Whether that reaches this line too is the part your note does not settle, and it is worth asking because you ruled the opposite way on it once already.
+- **NH09** — On 2026-08-16 you ruled that candidates we have a photo of should be listed first within a contest, and the cost was written down at the time: layout position stacks on top of the information advantage. RULING 42, four days later, says no ordering may indicate how complete one candidate's record is relative to another's. Both are yours and they point opposite ways. Nothing has been changed.
+
+**Needs Sean.** Nothing.
+
+## NHHUNT2 · 2026-08-21
 
 **What it finished.** 1 row(s).
 
-- **PE01** — A candidate we hold no published words for still gets a sentence on their card saying so. It is honest and it names the gap as ours, and it also appears only on the shortest cards — which is the same shape as the line RULING 42 just deleted. Whether it goes too is a call about a reader surface, so it is yours. Seen on the live ballot at every pilot zip.
+- **NH01** — The Kearsarge Regional School District publishes who sits on its school board, and its own page for that list refuses every way we have of reading it. The nine names we show came from an earlier read and the district may have changed them since. Getting a current list needs a route we have not walked yet.
 
-**Needs Sean.** Nothing.
+**What it started.** 8 row(s) opened, 8 still open.
+
+- **NH10** — Tobin Menard is running for Executive Council in District 2, which covers Newbury. His campaign site publishes exactly one picture of him: a clean studio portrait with the words 'Accountability Responsibility' printed across it in red. The photo rule says a portrait, never a wordmark, and this is a portrait carrying one. I refused it, which means he shows initials on the ballot page while the sitting councillor beside him shows her face - and that is the visual asymmetry the equal-effort rule exists to stop. It is a call about how a real person looks on a reader's screen, so it is yours. *(open)*
+- **NH11** — Shaun Fife is running for Governor. He has no campaign website and no campaign Facebook page. What he has is a candidate page on a political party's own site, carrying his name, the office, his own words and a contact address. Two of our rules point in opposite directions about it and the third makes it worse, so it is yours to settle. *(open)*
+- **NH12** — The New Hampshire Secretary of State publishes a mailing address for every candidate on the ballot, and for most of them it is where they live. It is a public record, the state prints it, and it is the only working contact we hold for about half of the forty-seven people on Newbury's ballot. I have recorded all forty-seven in the hunt notes and rendered none of them, because putting a named person's home street address on a consumer app is a different act from a state PDF and I did not want to make that call on my own. *(open)*
+- **NH13** — The constitution records a wall that is not there. Two paragraphs - the source register in CLAUDE.md and the curator note in the New Hampshire ballot data - say gc.nh.gov 'refuses every client this project has, browsers included'. It answers a plain fetch at HTTP 200. Only you change CLAUDE.md, so this is a correction routed to you rather than made. *(open)*
+- **NH14** — Lake Todd Village District and the Merrimack County Conservation District both have territory over 03255, both are real governments with meetings and budgets, and the product has never named either. A reader in Newbury can be governed by them and hear nothing. *(open)*
+- **NH15** — Six of the seven towns that send members to the Kearsarge Regional School Board had no bodies in this registry at all. They now have a list - 90 boards, committees and commissions, read from each town's own website with the rung recorded - and nothing is wired to any of them. A reader in one of those towns still sees nothing. *(open)*
+- **NH16** — Bradford, New Hampshire publishes every agenda and minute set on a vendor platform this product has never seen. Its own town website carries no boards index and no calendar, so the vendor is the only route to the town's meetings. *(open)*
+- **NH17** — The consolidated miss list says newbury.nh.gov/sitemap.xml is a 403 and that robots declares none. It answers HTTP 200 at 43,484 bytes. A sitemap is the discovery rung for every page on a site, and this one has been closed to us on a stale reading. *(open)*
+
+**Needs Sean.** NH10, NH11, NH12, NH13
 
 ## Prompt E · 2026-08-20
 
@@ -40,12 +61,11 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **PD04** — About one search in ninety was never recorded in the store this business sells, and nothing could see it happening. Diagnosed and fixed this session.
 - **PE03** — A meetings source fetched three of a town's calendars, produced no meetings from them, and reported that it had succeeded — so the safety net that preserves a town's meetings during an outage never ran, and Wilmot, New Hampshire went from 23 meetings to none on a reader's page. Fixed at the one line all eleven sources pass through.
 
-**What it started.** 4 row(s) opened, 2 still open.
+**What it started.** 4 row(s) opened, 1 still open.
 
 - **PE02** — The short summary file generated at the end of every session still reads the frozen pre-rebuild tracker, so it reports a priority count on a scale that no longer exists. Nothing a reader sees is affected; the next session opens on a number that means nothing. *(open)*
-- **PE04** — Every candidate card carries a line saying how many of the twelve issues we search for turned up in their own pages — and, when none did, a sentence saying so. You asked for the page disclosure to be one sentence and no more. Whether that reaches this line too is the part your note does not settle, and it is worth asking because you ruled the opposite way on it once already. *(open)*
 
-**Needs Sean.** PE04
+**Needs Sean.** Nothing.
 
 ## Prompt D · 2026-08-20
 
@@ -1539,9 +1559,8 @@ The first session. The map, the tracker, and congressional district boundaries o
 
 ## NHHUNT
 
-**What it started.** 9 row(s) opened, 9 still open.
+**What it started.** 9 row(s) opened, 7 still open.
 
-- **NH01** — The Kearsarge Regional School District publishes who sits on its school board, and its own page for that list refuses every way we have of reading it. The nine names we show came from an earlier read and the district may have changed them since. Getting a current list needs a route we have not walked yet. *(open)*
 - **NH02** — Newbury's own site lists a Parks and Recreation Committee and a Housing Committee in its sitemap, and both pages ask for a password. They are real committees the town has not published. We never sign in to anything, so their membership and meetings have to come from somewhere else. *(open)*
 - **NH03** — The town's own pages state terms ending 2021, 2022 and 2023 for its Cemetery Trustees, and March 2021 for one Planning Board alternate. Those are the town's current published words and they are up to five years out of date. We render them as published, which is honest, and a reader may still be looking at people who left. *(open)*
 - **NH04** — We now hold all three county commissioners, the delegation's officers and every department head by name. What the county publishes for reaching any of them is one main number. The Kelly standard asks for a working contact per person and the county does not print one. *(open)*
@@ -1549,6 +1568,5 @@ The first session. The map, the tracker, and congressional district boundaries o
 - **NH06** — Newbury's Selectboard and its three land-use boards are now read from two places at once: the vendor portals that carry agendas, and the town calendar that carries more dates. A merge decides which row a reader sees. That works, and nobody has measured whether it is the right arrangement over a few refreshes. *(open)*
 - **NH07** — Merrimack County's department pages all load cleanly and all of them list their staff in a table our reader cannot understand. It is a different table shape from the one we built for. Nobody has looked at how many other counties use it. *(open)*
 - **NH08** — The Town of Newbury publishes its whole calendar as a feed nobody had wired, and it has more meeting dates on it than the portals we were using. Both now ship, and when they both carry the same meeting the site shows the one with the agenda attached. That is a change to what you see at 03255 and it is worth a look. *(open)*
-- **NH09** — On 2026-08-16 you ruled that candidates we have a photo of should be listed first within a contest, and the cost was written down at the time: layout position stacks on top of the information advantage. RULING 42, four days later, says no ordering may indicate how complete one candidate's record is relative to another's. Both are yours and they point opposite ways. Nothing has been changed. *(open)*
 
-**Needs Sean.** NH08, NH09
+**Needs Sean.** NH08

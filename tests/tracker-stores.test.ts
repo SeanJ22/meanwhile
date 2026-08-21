@@ -749,3 +749,143 @@ test("RULING 48: docs/state.md never loses a section or a third of its bytes", (
       "section edit adds and amends; it does not remove a tenth of the file",
   );
 });
+
+test("item 1.4: every row a session reported opening is present in a store", () => {
+  /*
+   * **THE INSTRUMENT THAT DID NOT EXIST** (NH Hunt 2 item 1.4, 2026-08-21).
+   *
+   * The author went looking for `PE01` — a row a session reported opening for
+   * him — and could not find it. It had not been lost; it was in the resolved
+   * store, because he had closed it himself the day before. But the hour spent
+   * establishing that is the whole point: "opened for you" and "present in the
+   * tracker" were two separate facts with nothing between them, so the only
+   * way to tell a row that MOVED from a row that VANISHED was to go and look.
+   *
+   * `docs/tracker-opened.json` is the missing half. `tracker add` appends every
+   * id it assigns; this asserts every id ever appended is still present in the
+   * working store or the resolved store. A row that moves stays green. A row
+   * that is lost — by a bad move, a stray checkout, a script writing a store
+   * directly — fails the build in the commit that loses it, rather than being
+   * discovered by him some days later.
+   *
+   * ## The one legitimate way an id leaves both stores
+   *
+   * RULING 46: the author may delete a row outright and a session never may.
+   * A deletion he authorises is recorded in `docs/tracker-deletions.json`, so
+   * that file is read here too — `B08` is the only entry so far. His decision
+   * is a decision, not a missing row, and the guard has to be able to tell the
+   * difference or it would fire on him doing something he is allowed to do.
+   *
+   * ## What the seed entries prove, and what they do not
+   *
+   * The 89 entries marked `reconstructed` were built on 2026-08-21 from the
+   * `Opened by` column of the rows that were present that day. They are stated
+   * as a reconstruction rather than as a record, because that is what they are:
+   * they cannot prove anything about a row lost BEFORE that date, since a row
+   * lost before that date left no `Opened by` behind to reconstruct from. What
+   * they do is put all 468 existing ids under the guard from here on.
+   */
+  const ledger = JSON.parse(
+    readFileSync(join(ROOT, "docs", "tracker-opened.json"), "utf8"),
+  ) as {
+    session: string;
+    opened: string;
+    reconstructed?: boolean;
+    ids: string[];
+    retracted?: {
+      reason: string;
+      retractedOn: string;
+      retractedBy: string;
+      survivingIds: string[];
+    };
+  }[];
+
+  const present = new Set(
+    [...readStore(WORKING_CSV), ...readStore(RESOLVED_CSV)].map((r) =>
+      (r.ID ?? "").trim(),
+    ),
+  );
+  const deletions = JSON.parse(
+    readFileSync(join(ROOT, "docs", "tracker-deletions.json"), "utf8"),
+  ) as { deletions: { id: string }[] };
+  const deleted = new Set(deletions.deletions.map((r) => r.id.trim()));
+
+  /*
+   * ## A RETRACTED ENTRY, and why the ledger keeps it rather than losing it
+   *
+   * `tracker add` run twice on the same file assigns a second set of ids to the
+   * same eight rows. It happened on 2026-08-21: the first run's confirmation
+   * printed below a `tail -20` window, was read as a failure, and the command
+   * was repeated. Eight byte-identical title twins landed in the working store
+   * and were removed minutes later, before anybody saw them.
+   *
+   * The ledger keeps the entry, because the run REALLY HAPPENED and the ledger
+   * is a record of claims rather than a tidy list of survivors. What it gains is
+   * a `retracted` block naming what became of the ids, when, by whom, and which
+   * rows carry the content instead. Those ids are then excused from the
+   * presence check, and NOTHING ELSE IS — a retraction has to say all four
+   * things or it does not count, so "retracted" cannot become a way to make an
+   * inconvenient row disappear.
+   *
+   * This is deliberately NOT `docs/tracker-deletions.json`. That file is the
+   * author's instrument under RULING 46 and records rows HE removed. A session
+   * undoing its own double-write minutes later is a different act and is
+   * recorded as a different thing.
+   */
+  const retracted = new Set<string>();
+  for (const entry of ledger) {
+    if (!entry.retracted) continue;
+    const r = entry.retracted;
+    assert.ok(
+      r.reason?.trim() && r.retractedOn?.trim() && r.retractedBy?.trim(),
+      `a retracted ledger entry names its reason, its date and who retracted it — ${entry.ids.join(", ")}`,
+    );
+    assert.ok(
+      Array.isArray(r.survivingIds) && r.survivingIds.length > 0,
+      `a retracted ledger entry names the rows that carry the content instead — ${entry.ids.join(", ")}`,
+    );
+    for (const surviving of r.survivingIds) {
+      assert.ok(
+        present.has(surviving),
+        `${entry.ids.join(", ")} was retracted in favour of ${surviving}, which is in neither store`,
+      );
+    }
+    for (const id of entry.ids) retracted.add(id);
+  }
+
+  const claimed = ledger.flatMap((e) => e.ids);
+  const missing = claimed.filter(
+    (id) => !present.has(id) && !deleted.has(id) && !retracted.has(id),
+  );
+  assert.deepEqual(
+    missing,
+    [],
+    "these ids were reported opened and are in neither store, and no deletion " +
+      "of them is recorded — a row written and then lost",
+  );
+
+  // Reported opened equals rows found, stated as the PAIR the reconciliation
+  // asks for rather than as one number that cannot be checked against anything.
+  assert.equal(
+    new Set(claimed).size,
+    claimed.length,
+    "an id is assigned once — a ledger with a duplicate id is a ledger that " +
+      "has stopped being able to count",
+  );
+  assert.ok(
+    claimed.length >= present.size,
+    `the ledger claims ${claimed.length} ids and the stores hold ${present.size}; ` +
+      "a store holding a row nothing claims to have opened is the other half " +
+      "of the same defect",
+  );
+
+  // And every id in the stores is claimed by somebody — the reverse direction,
+  // which is what would catch a row written into a store past `tracker add`.
+  const unclaimed = [...present].filter((id) => !new Set(claimed).has(id));
+  assert.deepEqual(
+    unclaimed,
+    [],
+    "these rows are in a store and no session's ledger entry claims them — a " +
+      "row that reached the tracker without going through `tracker add`",
+  );
+});

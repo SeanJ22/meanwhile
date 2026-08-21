@@ -3,6 +3,7 @@
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 
+import { COLLECTION_NOTE } from "@/lib/ballot/collection-note";
 import { PositionsSection } from "@/components/officials/positions-section";
 
 /**
@@ -166,6 +167,31 @@ export function CandidateBattlecard({
                 anything to search.
               */}
               <PositionsSection subjectId={subjectId} subjectName={name} />
+
+              {/*
+                RULING 51 (2026-08-21, his note on `PE04`): *"That one line
+                should be listed once in the ballot section and once again on
+                their battlecard."* Two surfaces, one instance each.
+
+                It is the LAST thing in the body, after everything we hold,
+                because it is a statement about what came above it. Read
+                before the evidence it describes, it is a disclaimer; read
+                after, it is the account of what the reader just looked at.
+
+                It is NOT a per-card marker and RULING 44 is untouched: a
+                battlecard is one surface a reader opened, not a card in a
+                column of cards, and this sentence says nothing about THIS
+                candidate relative to any other. It says the same thing on
+                every battlecard in the product.
+
+                LEVEL register — a claim surface, about our own coverage.
+              */}
+              <p
+                data-collection-note
+                className="mt-6 text-[0.75rem] leading-relaxed text-voice"
+              >
+                {COLLECTION_NOTE}
+              </p>
             </div>
           </div>
         </div>

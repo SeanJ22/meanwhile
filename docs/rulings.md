@@ -803,3 +803,65 @@ RULING 38 makes his note binding on the session that reads it; RULING 1 caps
 merges. An instruction arriving late in a session put those in direct conflict
 and produced a reported deviation. The report names the instruction and the SHA.
 The exception requires an actual note from him and cannot be self-authorized.
+
+### RULING 50 — photos-first ordering is presentation; withholding data is suppression, and the two are never conflated again
+
+*Adopted 2026-08-21. His note on `NH09`, verbatim: "Photos take priority.  The
+ruling was to not REMOVE data from all candidates because we're missing one or
+two things, e.g. "in their own words" or lacking a campaign site.  This is
+conflating two statements.  A candidate with a photo should be listed above
+candidates that don't have one and the same rule of "we are showing everything
+we can find" still applies."*
+
+`NH09` was opened by a session that read RULING 26 and RULING 42 as reaching the
+photos-first sort adopted on 2026-08-16, and routed the apparent contradiction to
+him rather than resolving it. There is no contradiction. The distinction, stated
+so a session cannot collapse it again:
+
+- **BANNED — suppression.** Removing or withholding data about a candidate
+  because something else about them is missing. A card with no "in their own
+  words" and no campaign site still renders everything else we hold about that
+  person. That is RULING 26, and it is what the display rulings protect.
+- **PERMITTED — ordering.** Sorting candidates within a contest so that those
+  we hold a photo of appear above those we do not. Nothing is hidden. Every
+  candidate renders with everything found, in full. Only the sequence differs.
+
+Ordering is presentation. Suppression is data loss. They are different acts with
+different consequences and a rule against one is not a rule against the other.
+
+The three constraints in `lib/ballot/photo-order.ts` are what keep the ordering
+from becoming a ranking and they are unchanged: the key is BINARY, order WITHIN
+each group is as filed, and the way a candidate moves up is the HUNT finding
+their photo. Equal effort stands undiminished — photo hunts run to the same rung
+depth for every candidate in a contest and every miss is recorded per candidate.
+
+The ordering ships unchanged. `NH09` closes on this. He closed it himself, per
+RULING 37.
+
+### RULING 51 — the collection disclosure renders once per surface, and there are two surfaces
+
+*Adopted 2026-08-21. His note on `PE04`, verbatim: "That one line should be
+listed once in the ballot section and once again on their battlecard."*
+
+His sentence — **"What we have found, we are displaying here."** — renders once
+in the ballot section and once on the battlecard. Two surfaces, one instance
+each.
+
+This is the `F21` polling-place-pill shape and it is correct: two surfaces is
+not two instances on one page. RULING 42's "once per page, not once per contest
+and never per card" is about REPETITION down a column of cards, which is what
+turns a page-level statement into a per-card marker. A battlecard is one surface
+a reader opened, not a card in a column, and the sentence says the same thing on
+every battlecard in the product — it singles nobody out, which is the whole test
+RULING 44 applies.
+
+Mechanically: the sentence is declared ONCE, in `lib/ballot/collection-note.ts`,
+and imported by both surfaces. He has rewritten it once already; a second string
+literal is how a rewrite reaches one surface and not the other, and the product
+ends up saying two different things about its own coverage.
+`tests/candidate-cards.test.ts` asserts one declaration, exactly one render and
+one `data-collection-note` marker per surface, and sweeps `app`, `components`
+and `lib` with comments stripped so a third surface fails the build rather than
+shipping.
+
+`PE04` closes on this. He closed it himself, per RULING 37.

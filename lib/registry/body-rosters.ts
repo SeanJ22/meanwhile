@@ -1481,20 +1481,53 @@ export const BODY_ROSTERS: BodyRoster[] = [
     ],
   },
   {
-    // 3d/6e (2026-08-17): the wall came down. kearsarge.org 403'd every
-    // client recorded in earlier hunts; a browser-UA fetch from this
-    // machine returned the full members page (200, 73 KB) — nine members,
-    // towns, term expirations, committees, all stated by the district
-    // itself. Newbury's representative is Kristen Schultz, who also chairs
-    // the Newbury Selectboard. The district publishes no per-member phone
-    // or email on this page — the absences are honest, not unhunted.
+    /*
+     * 3d/6e (2026-08-17): the wall came down. kearsarge.org 403'd every
+     * client recorded in earlier hunts; a browser-UA fetch from this machine
+     * returned the full members page (200, 73 KB) — nine members, towns, term
+     * expirations, committees, all stated by the district itself. Newbury's
+     * representative is Kristen Schultz, who also chairs the Newbury
+     * Selectboard.
+     *
+     * **CORRECTED 2026-08-21 (NH Hunt 2, item 3). THE EMAILS WERE ON THE PAGE
+     * THE WHOLE TIME, AND THIS COMMENT SAID THEY WERE NOT.**
+     *
+     * What stood here from 2026-08-17 was: *"The district publishes no
+     * per-member phone or email on this page — the absences are honest, not
+     * unhunted."* That sentence was wrong, and it was wrong in the most
+     * expensive direction available: it closed the question. `NH01` was later
+     * opened about this same page being unreadable, and the 2026-08-20 note on
+     * the superintendent below repeats the claim — *"the nine board members
+     * above still have neither, and the district publishes neither for them."*
+     *
+     * The page publishes **twelve `mailto:` links** and always did. Each
+     * member's NAME is the anchor text and their district email is the
+     * `href`. An extractor that reads table CELLS as text gets the names and
+     * drops the addresses, and what it hands back looks exactly like a page
+     * that carries no contacts. This is the playbook's own "prose said no; ask
+     * the markup" rung, pointed at a page we had already decided about.
+     *
+     * Re-read 2026-08-21 at RUNG 4 (`curl`, HTTP 200, 73,695 bytes) —
+     * rungs 2 and 3 still 403 — and independently at RUNG 5, a different
+     * egress, which is what surfaced the hrefs first. The nine names, towns,
+     * terms and committees are UNCHANGED from the 2026-08-16 read, so the
+     * roster was never stale; only our reading of it was incomplete.
+     *
+     * ART BOBRUFF'S ROW CARRIES THREE ADDRESSES and one is recorded. The page
+     * links `abobruff@kearsarge.org` (recorded — the district-issued one),
+     * `artbobruff@verizon.net` (a personal address the district page exposes,
+     * deliberately NOT recorded), and `abrobruff@kearsarge.org`, which is a
+     * typo of the first. The page's own column HEADERS also link to his
+     * address, which is how a naive first-mailto-wins parse would have given
+     * every member Bobruff's email.
+     */
     bodyId:
       "ocd-division/country:us/state:nh/school_district:kearsarge_regional_school_district#board",
     bodyName: "Kearsarge Regional School Board",
     sourceUrl:
       "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-members",
     sourceOrg: "Kearsarge Regional School District (SAU #65)",
-    collectedAt: "2026-08-14",
+    collectedAt: "2026-08-21",
     // M62, 2026-08-15: NONPARTISAN by statute. RSA 671:20 has the school
     // district clerk prepare ballots "in the same manner as town clerks for
     // non-partisan town elections" — the school ballot is a non-partisan
@@ -1508,7 +1541,7 @@ export const BODY_ROSTERS: BodyRoster[] = [
         name: "Alison Mastin",
         officeTitle: "School Board Chair",
         termNote: "Represents Wilmot · term expires 2028",
-        email: null,
+        email: "amastin@kearsarge.org",
         phone: null,
         websiteUrl:
           "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-members",
@@ -1518,7 +1551,7 @@ export const BODY_ROSTERS: BodyRoster[] = [
         name: "Kristen Schultz",
         officeTitle: "School Board Vice Chair",
         termNote: "Represents Newbury · term expires 2027",
-        email: null,
+        email: "kschultz@kearsarge.org",
         phone: null,
         websiteUrl:
           "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-members",
@@ -1528,7 +1561,7 @@ export const BODY_ROSTERS: BodyRoster[] = [
         name: "James MacKenna",
         officeTitle: "School Board Member",
         termNote: "Represents New London · term expires 2028",
-        email: null,
+        email: "jmackenna@kearsarge.org",
         phone: null,
         websiteUrl:
           "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-members",
@@ -1538,7 +1571,7 @@ export const BODY_ROSTERS: BodyRoster[] = [
         name: "David Keith",
         officeTitle: "School Board Member",
         termNote: "Represents New London · term expires 2029",
-        email: null,
+        email: "dkeith@kearsarge.org",
         phone: null,
         websiteUrl:
           "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-members",
@@ -1548,7 +1581,7 @@ export const BODY_ROSTERS: BodyRoster[] = [
         name: "Art Bobruff",
         officeTitle: "School Board Member",
         termNote: "Represents Springfield · term expires 2027",
-        email: null,
+        email: "abobruff@kearsarge.org",
         phone: null,
         websiteUrl:
           "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-members",
@@ -1558,7 +1591,7 @@ export const BODY_ROSTERS: BodyRoster[] = [
         name: "Patrick McGowan",
         officeTitle: "School Board Member",
         termNote: "Represents Warner · term expires 2027",
-        email: null,
+        email: "pmcgowan@kearsarge.org",
         phone: null,
         websiteUrl:
           "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-members",
@@ -1568,7 +1601,7 @@ export const BODY_ROSTERS: BodyRoster[] = [
         name: "Paul Lakevicius",
         officeTitle: "School Board Member",
         termNote: "Represents Warner · term expires 2027",
-        email: null,
+        email: "plakevicius@kearsarge.org",
         phone: null,
         websiteUrl:
           "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-members",
@@ -1578,7 +1611,7 @@ export const BODY_ROSTERS: BodyRoster[] = [
         name: "Nancy Glynn",
         officeTitle: "School Board Member",
         termNote: "Represents Sutton · term expires 2028",
-        email: null,
+        email: "nglynn@kearsarge.org",
         phone: null,
         websiteUrl:
           "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-members",
@@ -1588,7 +1621,7 @@ export const BODY_ROSTERS: BodyRoster[] = [
         name: "Eric Gregoire",
         officeTitle: "School Board Member",
         termNote: "Represents Bradford · term expires 2029",
-        email: null,
+        email: "egregoire@kearsarge.org",
         phone: null,
         websiteUrl:
           "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-members",
@@ -1610,9 +1643,15 @@ export const BODY_ROSTERS: BodyRoster[] = [
          * identified fetch on 2026-08-20 and carries the district office's
          * whole directory: fourteen people, each with a direct phone and, for
          * eleven of them, a district email. That is the first per-person
-         * contact this product has held for anyone at Kearsarge; the nine
-         * board members above still have neither, and the district publishes
-         * neither for them.
+         * contact this product has held for anyone at Kearsarge.
+         *
+         * **THE LAST CLAUSE OF THIS PARAGRAPH WAS WRONG AND IS STRUCK
+         * (2026-08-21, NH Hunt 2).** It read: *"the nine board members above
+         * still have neither, and the district publishes neither for them."*
+         * The district publishes an email for every one of them, in the
+         * `href` of their own name on the board-members page. See the
+         * correction on the body above. The PHONE half stands: no per-member
+         * number is published anywhere the ladder has reached.
          *
          * "Interim" is the district's own word and is carried verbatim. It is
          * a fact about the appointment and a reader is entitled to it.
@@ -1643,7 +1682,7 @@ export const BODY_ROSTERS: BodyRoster[] = [
         officeTitle:
           "District Clerk, and Administrative Assistant to the Superintendent and School Board",
         termNote: "Appointed staff, not elected",
-        email: "dbreault@gmail.com",
+        email: "dbreault@kearsarge.org",
         phone: "(603) 526-9163",
         websiteUrl: "https://www.kearsarge.org/district/district/pages/contact-us",
       },

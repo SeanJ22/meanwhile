@@ -328,9 +328,9 @@
     },
     "ballot-nh-merrimack:governor:ayotte-kelly": {
       "official": {
-        "url": "https://www.governor.nh.gov",
-        "verification": "Fetched 2026-08-13 (browser-UA rung — the host 403s plain clients): 'Welcome | Governor Kelly Ayotte'.",
-        "attemptedAt": "2026-08-13"
+        "url": "https://www.governor.nh.gov/meet-governor-ayotte",
+        "verification": "Read 2026-08-21 at RUNG 5 (a different egress; governor.nh.gov and the whole nh.gov family answer a bare 403 at rungs 2, 3, 4 and 6 from this network). The Office of the Governor's own page for the sitting Governor; the office's published line is (603) 271-2121 at the State House, 107 North Main Street, Concord NH 03301.",
+        "attemptedAt": "2026-08-21"
       },
       "campaign": {
         "url": "https://kellyfornh.com",
@@ -395,7 +395,11 @@
       }
     },
     "ballot-nh-merrimack:state-house-merrimack-7:sargent-gregory-m-": {
-      "official": null,
+      "official": {
+        "url": "https://gc.nh.gov/house/members/member.aspx?pid=10832",
+        "verification": "Read 2026-08-21 at rung 2 (HTTP 200): 'Representative Gregory Sargent (D)', 'Merrimack - District 7', 209 Squires Lane New London NH 03257-5847, Gregory.Sargent@gc.nh.gov, 603.674.5253.",
+        "attemptedAt": "2026-08-21"
+      },
       "campaign": {
         "url": "https://gregforrep.com",
         "verification": "Fetched 2026-08-13: 'Greg Sargent for NH State Representative | Newbury & New London'.",
@@ -471,11 +475,138 @@
     "ballot-nh-merrimack:us-house-2:beauchemin-paige": {
       "official": {
         "url": "https://gc.nh.gov/house/members/member.aspx?pid=11100",
-        "label": "State Representative — official page",
-        "verification": "Joined on an exact name match to this state's sitting-officeholder registry, built from Plural Open States (CC-0) and collected 2026-08-16T05:18:56.258Z; the URL is the one the legislature publishes for this member.",
-        "attemptedAt": "2026-08-19"
+        "verification": "Read 2026-08-21 at rung 2 (HTTP 200): 'Representative Paige Beauchemin (D)', 'Hillsborough - District 3', 107 North Main Street Concord NH 03301, paige.beauchemin@gc.nh.gov, 603.296.5489.",
+        "attemptedAt": "2026-08-21"
       },
       "campaign": null
+    },
+    "ballot-nh-merrimack:register-of-probate:bradstreet-jane": {
+      "official": {
+        "url": "https://www.hopkinton-nh.gov/people/jane-bradstreet",
+        "verification": "Read 2026-08-21 at rung 4 (curl; rungs 2 and 3 answered 403 with a Cloudflare challenge). The Town of Hopkinton's own page for this person: 'Jane Bradstreet', Board Memberships table, Planning/Building, Member, Active Membership.",
+        "attemptedAt": "2026-08-21"
+      },
+      "campaign": null
+    },
+    "ballot-nh-merrimack:register-of-deeds:morse-samantha": {
+      "official": {
+        "url": "https://www.merrimackcounty.net/departments/register_of_deeds/index.php",
+        "verification": "Read 2026-08-21 at rung 2 (HTTP 200): Merrimack County's own Register of Deeds page, carrying her portrait, the office line (603) 228-0101 and the office address, 163 North Main Street Suite 103, Concord NH 03301.",
+        "attemptedAt": "2026-08-21"
+      },
+      "campaign": null
+    },
+    "ballot-nh-merrimack:state-senate-7:innis-daniel-e-": {
+      "official": {
+        "url": "https://gc.nh.gov/senate/members/webpages/district07.aspx",
+        "verification": "Read 2026-08-21 at rung 2 (HTTP 200): the General Court's own District 7 page — 'Years Served in the Senate: Serving his third term in the NH Senate 2017-2019, 2023-2024, 2025-2026 (current)', with Daniel.Innis@gc.nh.gov on it.",
+        "attemptedAt": "2026-08-21"
+      },
+      "campaign": null
+    },
+    "ballot-nh-merrimack:state-house-merrimack-7:ebel-karen-elizabeth": {
+      "official": {
+        "url": "https://gc.nh.gov/house/members/member.aspx?pid=700",
+        "verification": "Read 2026-08-21 at rung 2 (HTTP 200): 'Representative Karen Ebel (D)', 'Merrimack - District 7', PO Box 714 New London NH 03257-0714, Karen.Ebel@gc.nh.gov, 603.748.3876, Seat #4005.",
+        "attemptedAt": "2026-08-21"
+      },
+      "campaign": null
+    },
+    "ballot-nh-merrimack:county-sheriff:gerhard-jason": {
+      "campaign": {
+        "url": "https://gohardwithgerhard.com/",
+        "verification": "Read 2026-08-21 at rung 6 (the live browser; the site is JavaScript-rendered and rungs 2 and 4 return the same 161,677-byte shell for every path). The rendered banner reads 'FORMER REP. JASON GERHARD' / 'CANDIDATE FOR SHERIFF 2026!' — the filed name, the office and the cycle, self-identified on the candidate's own domain.",
+        "attemptedAt": "2026-08-21"
+      },
+      "official": null
+    },
+    "ballot-nh-merrimack:county-sheriff:shephard-peter": {
+      "campaign": {
+        "url": "https://www.sheriffpeteshephard.com/",
+        "verification": "Read 2026-08-21 at rung 2 (HTTP 200): title 'Sheriff Pete Shephard', og:description 'Vote Pete Shephard for Merrimack County Sheriff! Learn more about Pete and follow his campaign here.' — the filed name, the office and a current campaign, on his own domain.",
+        "attemptedAt": "2026-08-21"
+      },
+      "official": null
+    },
+    "ballot-nh-merrimack:us-senate:saal-maxwell-l-": {
+      "campaign": {
+        "url": "https://maxfornh.com/",
+        "verification": "Read 2026-08-21 at rung 2 (HTTP 200): title 'Maxwell Saal for U.S. Senate | New Hampshire', og:description names the candidate, the office and the 8 September 2026 primary. The domain is the one his FEC-registered committee filed — MAXWELL SAAL FOR SENATE, C00954883, website HTTPS://MAXFORNH.COM.",
+        "attemptedAt": "2026-08-21"
+      },
+      "official": null
+    },
+    "ballot-nh-merrimack:us-senate:manzur-karishma": {
+      "campaign": {
+        "url": "https://www.karishmaforsenate.com/",
+        "verification": "Read 2026-08-21 at rung 2 (HTTP 200): title 'Karishma Manzur for Senate | Official Campaign Website'. The domain is the one her FEC-registered committee filed — KARISHMA FOR SENATE, C00916668, website KARISHMAFORSENATE.COM.",
+        "attemptedAt": "2026-08-21"
+      },
+      "official": null
+    },
+    "ballot-nh-merrimack:us-house-2:orlando-victor": {
+      "campaign": {
+        "url": "https://votevdo.com/",
+        "verification": "Read 2026-08-21 at rung 2 (HTTP 200): title 'Victor Orlando | Congress 2026 | NH District 2' — the filed name, the office, the district and the cycle. The domain is the one his FEC-registered committee filed — VOTE VDO VICTOR D ORLANDO, C00934919, website VOTEVDO.COM.",
+        "attemptedAt": "2026-08-21"
+      },
+      "official": null
+    },
+    "ballot-nh-merrimack:us-house-2:nicholson-dan": {
+      "campaign": {
+        "url": "https://www.dannicholsonfornh.com/",
+        "verification": "Read 2026-08-21 at rung 2 (HTTP 200). The domain is the one his FEC-registered committee filed — DAN NICHOLSON FOR CONGRESS, C00946699, website HTTPS://DANNICHOLSONFORNH.COM — which is the authoritative trail. THE PAGE ITSELF IS UNFINISHED: its title is 'HOME | Business' and its body is the Wix template's own placeholder prose ('This is a paragraph area where you can add your own text'). It is linked because it is his filed campaign site and a reader looking for it should find it; nothing on it is quoted, because there is nothing on it that he wrote.",
+        "attemptedAt": "2026-08-21"
+      },
+      "official": null
+    },
+    "ballot-nh-merrimack:executive-council-2:menard-tobin": {
+      "campaign": {
+        "url": "https://tobinmenard.com/",
+        "verification": "Read 2026-08-21 at rung 6 (the live browser; the site is a JavaScript-rendered GoDaddy build and rungs 2 and 4 return only the shell). The rendered banner reads 'Tobin Menard / Republican for Executive Council · District 2' with +1(603)477-1684 beside it — the filed name, the office and the district, on his own domain.",
+        "attemptedAt": "2026-08-21"
+      },
+      "official": null
+    },
+    "ballot-nh-merrimack:county-attorney:rogers-sarah": {
+      "campaign": {
+        "url": "https://rogersforcountyattorney.com/",
+        "verification": "Read 2026-08-21 at rung 6 (the live browser; the site is a React build whose rung-2 HTML is an empty root div — 1,105 bytes and no content, which a rung-2-only hunt would have recorded as a parked domain). Rendered, it carries 'REPUBLICAN PRIMARY • SEPT 8' and 'Sarah Rogers is a tough, experienced prosecutor running for Merrimack County Attorney' — the filed name, the office AND the cycle.",
+        "attemptedAt": "2026-08-21"
+      },
+      "official": null
+    },
+    "ballot-nh-merrimack:us-senate:danley-sky": {
+      "campaign": {
+        "url": "https://www.skydanley2026.com/",
+        "verification": "Read 2026-08-21 at rung 2 (HTTP 200): og:description 'Sky Danley', with skydanley2026@gmail.com and 603-812-8506 on the page. The domain carries the cycle in its own name.",
+        "attemptedAt": "2026-08-21"
+      },
+      "official": null
+    },
+    "ballot-nh-merrimack:us-senate:alciere-tom": {
+      "campaign": {
+        "url": "https://tomalciere.us/",
+        "verification": "Read 2026-08-21 at rung 2 (HTTP 200): the page's own title and heading are 'Tom Alciere for United States Senator, 2026' — the filed name, the office and the cycle — followed by 'Running in the Republican primary in New Hampshire'.",
+        "attemptedAt": "2026-08-21"
+      },
+      "official": null
+    },
+    "ballot-nh-merrimack:us-senate:vail-john": {
+      "campaign": {
+        "url": "https://www.sendnomoney.org/",
+        "verification": "Read 2026-08-21 at rung 2 (HTTP 200). The /who page names him as the candidate in his own voice — 'John Vail - ballot line', 'Actually John Vail is how the idea gets done' — and publishes john@sendnomoney.org. The trail to it is the Citizens Count candidate profile for John Vail. THE SITE IS DELIBERATELY NOT PERSON-BRANDED: its whole argument is 'ELECT AN IDEA', so it carries the office and the campaign without carrying his name in the domain, which is why a name-based domain sweep found nothing.",
+        "attemptedAt": "2026-08-21"
+      },
+      "official": null
+    },
+    "ballot-nh-merrimack:us-senate:martin-andy": {
+      "campaign": {
+        "url": "https://andymartinforussenator.blogspot.com/",
+        "verification": "Read 2026-08-21 at rung 2 (HTTP 200): title 'Andy Martin for U S Senator'. His FEC-registered committee (C00546432) files WWW.ANDYMARTIN2014.COM as its website; that domain is refused at every rung this project has, including the egress rung, so the blogspot he links from his Citizens Count profile is the reachable presence and is what is recorded.",
+        "attemptedAt": "2026-08-21"
+      },
+      "official": null
     }
   },
   "hunts": [
@@ -1168,6 +1299,156 @@
       "name": "Jackie O'Donnell Anderson",
       "note": "MISS — B14 official-page rung, 2026-08-19: no sitting officeholder in this state's registry matches this name exactly, so there is no official page for us to link. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
       "attemptedAt": "2026-08-19"
+    },
+    {
+      "key": "ballot-nh-merrimack:register-of-probate:bradstreet-jane",
+      "name": "Jane Bradstreet",
+      "note": "MISS — CONTEST 1 of 12, worked as a unit (one candidate; unopposed — the Secretary of State's cumulative filing shows the Republican Register of Probate line with no name under it). IDENTITY AND INCUMBENCY: Secretary of State County Roster 2025-2026 (roster-county-offices-2024.pdf), read 2026-08-21 at rung 11 via the Internet Archive capture of 2025-06-06 because sos.nh.gov 403s this egress at rungs 2, 3, 4 and 6 — 'Register of Probate Jane Bradstreet HOPKINTON PO BOX 149 HOPKINTON, NH 03229 DEM'. She is the sitting Register. FILED CONTACT: PO Box 149, Hopkinton NH 03229-0149, from the same roster and from the 2026 primary filing list. SPECIFIC VERIFIED PAGE: found, hopkinton-nh.gov/people/jane-bradstreet. PHOTO: MISS. Rungs walked — 2, 3, 4 on her town person page (read at 200, no image on it); 4 on hopkinton-nh.gov/planningbuilding (read at 200, staff contacts only, no board-member portraits); 2 on merrimackcounty.net/departments (the county publishes no Register of Probate page at all); 10 (search index) returns only LinkedIn, and social-media images are prohibited at every door of the photo rule; 11 (Internet Archive) has no capture of her town page. Rungs still owed: 9 (Hopkinton's annual town reports) and 13 (a records request). NOT VERIFIED_ABSENT — the ladder is not exhausted. CAMPAIGN SITE: MISS, searched 2026-08-21; no domain and no self-identified social page found. IN THEIR OWN WORDS: MISS, nothing published found. PHONE: MISS — the county has no Register of Probate line, and her town board seat has no per-member number.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:register-of-deeds:morse-samantha",
+      "name": "Samantha Morse",
+      "note": "MISS — CONTEST 2 of 12, worked as a unit (two candidates, equal rungs each). IDENTITY AND INCUMBENCY: Secretary of State County Roster 2025-2026 at rung 11 — 'Register of Deeds Samantha Morse FRANKLIN 160 WOODRIDGE RD FRANKLIN, NH 03235 REP'. She is the sitting Register and is standing again. PHOTO: FOUND at door 2 on the county's own page. THE URL RESOLUTION IS A PLAYBOOK RUNG: Revize resolves an image src from the SITE ROOT, not from the page's own directory, so the src as written on the page 404s and the root-relative form is the one that serves — a false miss for any probe that resolves relatively. PHONE: (603) 228-0101, the Register of Deeds office line, from the county's own page. FILED CONTACT: 160 Woodridge Rd, Franklin NH 03235 (Secretary of State 2026 filing). CAMPAIGN SITE: MISS. A Facebook page titled 'Samantha Morse - Register of Deeds, Merrimack County' exists, and it is deliberately NOT recorded as a campaign site: CLAUDE.md's campaign-site rule requires the page to self-identify with the office AND THE CYCLE, and an officeholder page for the seat she already holds does not. IN THEIR OWN WORDS: MISS — the county page's prose is the office's, not hers.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:register-of-deeds:davis-erica-s-",
+      "name": "Erica S. Davis",
+      "note": "MISS — CONTEST 2 of 12, second candidate, SAME RUNGS AS THE INCUMBENT and the result is thinner — which is the data, not the effort. IDENTITY: Secretary of State 2026 filing — 'Register of Deeds Erica S. Davis CONCORD 24 JACKSON ST CONCORD, NH 03301 DEM'. She is a FORMER Register of Deeds; the county's own page carried her portrait and details until the 2025 change of officeholder. PHOTO: MISS, and the miss is specific. The image existed at merrimackcounty.net/Departments/Register of Deeds/Images/Davis, Erica.jpg — it is referenced by four separate Internet Archive captures of the page (2023-06-04, 2023-12-01, 2024-04-13, 2024-09-11, all read 2026-08-21). The LIVE file is 404 and the archive captured the HTML but never the image bytes: a CDX query for that exact URL returns zero rows, and every dated im_ fetch returns the archive's 404 page. Rungs walked: 2 (live, 404), 11 (four captures, image not held). Rungs still owed: 9 (the county's annual reports) and 13 (a records request to the county). NOT VERIFIED_ABSENT. PHONE: MISS, AND DELIBERATELY SO. (603) 228-0101 appears beside her name in every archived capture — it is the REGISTER OF DEEDS OFFICE line, it now reaches the person who beat her, and recording it as her contact would be a render default manufacturing a claim about a named person. CAMPAIGN SITE: MISS, searched 2026-08-21 across name, office and town; nothing but aggregators and LinkedIn. IN THEIR OWN WORDS: MISS. FILED CONTACT: 24 Jackson St, Concord NH 03301 (Secretary of State 2026 filing).",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:state-senate-7:innis-daniel-e-",
+      "name": "Daniel E. Innis",
+      "note": "MISS — CONTEST 8 of 12. THE WALL THAT WAS NOT THERE: CLAUDE.md and data/ballot/nh-merrimack-2026.json both record that gc.nh.gov 'refuses every client this project has, browsers included' (written 2026-08-14). Re-walked 2026-08-21 and it is FALSE — gc.nh.gov and gencourt.state.nh.us both answer a plain rung-2 fetch at HTTP 200. Four of the five Kelly fields for this candidate came from that one host. He is the sitting Senator for District 7 and is standing again. PHOTO door 2, email, phone and specific verified page all from the General Court's own roster and district page. FILED CONTACT: 328 Center Rd, Bradford NH 03221 (Secretary of State 2026 filing). CAMPAIGN SITE: not yet searched at the time this row was written — owed.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:state-house-merrimack-7:ebel-karen-elizabeth",
+      "name": "Karen Elizabeth Ebel",
+      "note": "MISS — CONTEST 7 of 12. Sitting member for the very seat on this ballot — Merrimack District 7 is New London plus Newbury, two seats — confirmed against the General Court's own member page, which carries the district on it. Photo door 2, email, phone and the specific verified page from that page. FILED CONTACT: PO Box 714, New London NH 03257 (Secretary of State 2026 filing). CAMPAIGN SITE: owed.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-house-2:beauchemin-paige",
+      "name": "Paige Beauchemin",
+      "note": "MISS — CONTEST 11 of 12. She is a sitting New Hampshire House member (Hillsborough District 3) standing for Congress in District 2, so the General Court's own member page is her specific verified page and carries her email and phone. PHOTO: MISS, and the miss is the CHAMBER'S. Her member page serves /house/images/memberpics/nophoto.jpg — the House's own placeholder. Shipping it would put a grey silhouette under the words 'official New Hampshire House portrait', which is a render default manufacturing a claim, so the extractor now returns null for that filename by name. Rungs still owed for a photo: her campaign presence, and door 4. FILED CONTACT: 16 Hughey St, Nashua NH 03064 (Secretary of State 2026 filing).",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-commissioner-2:french-harold-f-",
+      "name": "Harold F. French",
+      "note": "MISS — CONTEST 6 of 12. PHOTO door 2, AND THE ROUTE IS A NEW RUNG WORTH THE PLAYBOOK. He is a FORMER New Hampshire Senator for District 7; the General Court keeps no portrait for a former member (checked — his successor's roster row is the only District 7 row, and the past-member House pages for Gerhard and Schuett both serve none). But the Senate's portrait path is the SEAT, not the person: /senate/images/senators/07.jpg. The Internet Archive's 2022-06-05 capture of the Senate roster shows that card headed 'District 07 - Senator Harold French' with that exact src, so the dated archive copy is his face and the live copy is Daniel Innis's. FETCHING THE LIVE PATH WOULD HAVE SHIPPED THE WRONG MAN'S PHOTOGRAPH UNDER THIS MAN'S NAME. Both were read as images before either shipped. CONTACT: haroldfrench.com publishes contact@haroldfrench.com and (603) 848-8588 at '118 West Road Canterbury, NH', which matches his Secretary of State filed address exactly — that is the identity evidence. CAMPAIGN SITE: MISS, and deliberately. haroldfrench.com is his personal and business site (auctions, real estate, folk art), its copyright line reads 2002-2018, and it names him as 'NH STATE SENATOR District 7' — an office he no longer holds. CLAUDE.md's campaign-site rule requires self-identification with the office AND THE CYCLE, and this identifies with neither of the 2026 ones, so it is used for contact and NOT recorded as a campaign site. FILED CONTACT (state): 118 West Rd, Canterbury NH 03224.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-treasurer:schuett-dianne-e-",
+      "name": "Dianne E. Schuett",
+      "note": "MISS — CONTEST 3 of 12, two candidates, worked as a unit — and both Democrats, because the Secretary of State's cumulative filing shows the Republican County Treasurer line with no name under it. She served in the New Hampshire House from 2008 to 2024 (Merrimack 7, then Merrimack 20, then Merrimack 12) and was Clerk of the House. PHOTO: MISS. Her past-member page still resolves — gc.nh.gov/house/members/member.aspx?pid=595, pid recovered from the Internet Archive's 2024-03-01 capture of the House roster, read 2026-08-21 at HTTP 200 — and it carries NO portrait. That is the second confirmation, after Jason Gerhard's, that the General Court drops a member's picture when they leave: the page survives, the face does not. The archive route that worked for Harold French does not apply here, because the House portrait path is keyed to the PERSON (memberpics/<id>.jpg) rather than to the seat, so there is no dated capture of a different occupant to recover. Rungs still owed: an archive capture of her own member page from a session she served in, and door 4. NOT VERIFIED_ABSENT. CAMPAIGN SITE: MISS, searched 2026-08-21. PHONE and EMAIL: MISS — her General Court contact left with her seat and recording a dead @gc.nh.gov address would be a claim that no longer holds. FILED CONTACT (state): 533 Pembroke St, Pembroke NH 03275.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-treasurer:donnelly-kathleen",
+      "name": "Kathleen Donnelly",
+      "note": "MISS — CONTEST 3 of 12, second candidate, same rungs. IDENTITY: Secretary of State 2026 filing — 'County Treasurer Kathleen Donnelly CONCORD 481 JOSIAH BARTLETT RD CONCORD, NH 03301-5919 DEM'. PHOTO, CAMPAIGN SITE, IN THEIR OWN WORDS, PHONE and EMAIL: all MISS. Rungs walked 2026-08-21: the 2026 filing list (rung 1, identity only); the Secretary of State's County Roster 2025-2026 at rung 11 (she is not a sitting county officer, so no entry); the New Hampshire House and Senate rosters at rung 2 (769 House members and 24 Senators read; the only Donnelly is Tanya Donnelly, a different person); a name-plus-office search at rung 10, which returns the filing documents and nothing else. Rungs still owed: 13 (a records request), and the Merrimack County Democratic committee as a discovery trail. NOT VERIFIED_ABSENT. FILED CONTACT (state): 481 Josiah Bartlett Rd, Concord NH 03301.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:state-house-merrimack-7:rusis-cynthia",
+      "name": "Cynthia Rusis",
+      "note": "MISS — CONTEST 7 of 12, third candidate, same rungs as the two sitting members she is running against — and this is the asymmetry the equal-effort rule names, measured rather than assumed. IDENTITY: Secretary of State 2026 filing — 'Cynthia Rusis NEW LONDON 94 NORTHWOOD LANE #2387 NEW LONDON, NH 03257 REP'. PHOTO, CAMPAIGN SITE, IN THEIR OWN WORDS, PHONE and EMAIL: all MISS. Rungs walked 2026-08-21: the House roster at rung 2 (769 members, no Rusis — she holds no seat, so the door-2 route that gave both her opponents a portrait, an email and a phone is simply not open to her); a name-plus-office-plus-town search at rung 10, which returns only general 2026 election pages; the Merrimack County Republican Committee's own candidate list at rung 2, which names her for this contest and links no site. Rungs still owed: 13, and the town committee. NOT VERIFIED_ABSENT. FILED CONTACT (state): 94 Northwood Lane #2387, New London NH 03257.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:governor:fife-shaun",
+      "name": "Shaun Fife",
+      "note": "MISS — CONTEST 10 of 12, same rungs. IDENTITY: Secretary of State 2026 filing — 'Shaun Fife GILMANTON PO BOX 72 EPSOM, NH 03234 REP'. A PUBLIC CAMPAIGN PRESENCE WAS FOUND AND DELIBERATELY NOT RECORDED AS A CAMPAIGN SITE. majiparty.org/nh-governor-shaun-fife, read 2026-08-21 at rung 2 (HTTP 200), is his candidate page — title 'NH Governor- Shaun Fife', his own words on it ('When your Constitution's foundation is resting on the Bible, you can stand tall'), and a contact, action4nh@gmail.com. It is hosted on a POLITICAL PARTY'S site whose og:description is 'The New Anti-Freemasonic Party'. Two rules collide there and neither is bent: the campaign-site rule wants a reader to reach a candidate's real presence, and the organizations-render-as-filed rule forbids this product characterising an organization — while `contact-pills.tsx` labels every non-Facebook campaign link 'Campaign site', which would present a party's site as his. Routed to the author rather than decided here. PHOTO, PHONE, EMAIL: MISS. A personal Facebook profile exists and is not a campaign page. FILED CONTACT (state): PO Box 72, Epsom NH 03234.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:governor:mcclory-bob-wayne",
+      "name": "Bob Wayne McClory",
+      "note": "MISS — CONTEST 10 of 12, same rungs. IDENTITY: Secretary of State 2026 filing — 'Bob Wayne McClory GOFFSTOWN 55 GLASS ST UNIT 139 SUNCOOK, NH 03275 REP'. PHOTO, CAMPAIGN SITE, IN THEIR OWN WORDS, PHONE, EMAIL: all MISS. Rungs walked 2026-08-21: the Citizens Count candidate directory (no profile — HTTP 404); a name-plus-office search at rung 10; a domain sweep. A NEAR-MISS WORTH RECORDING: mcclory.com resolves at HTTP 200 and is a DIFFERENT FAMILY'S genealogy site — 'McClory Family Home Page', contact tim@mcclory.com, last updated in a FrontPage 2002 build. Recording it would have put another household's web page on a named candidate's card. Rungs still owed: 13. NOT VERIFIED_ABSENT. FILED CONTACT (state): 55 Glass St Unit 139, Suncook NH 03275.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:executive-council-2:strathdee-kim",
+      "name": "Kim Strathdee",
+      "note": "MISS — CONTEST 9 of 12, third candidate, same rungs. IDENTITY: Secretary of State 2026 filing — 'Kim Strathdee PLYMOUTH PO BOX 774 PLYMOUTH, NH 03264 REP'. A FACEBOOK PAGE EXISTS AND ITS AUTHENTICITY COULD NOT BE ESTABLISHED, WHICH IS A DIFFERENT THING FROM IT NOT EXISTING. facebook.com/p/Kim-Strathdee-100066883759949 is linked from her Citizens Count profile, which is an authoritative-enough trail; but read at rung 5 on 2026-08-21 Facebook serves a LOGIN WALL to every unauthenticated client, so the page's own self-identification — the filed name, the office and the cycle, which CLAUDE.md's campaign-site rule requires before a social page may stand in for a site — cannot be read. We never authenticate and we never accept clickwrap terms, so this rung ends here. Recorded as a named wall rather than as an absence. PHOTO, PHONE, EMAIL, OWN WORDS: MISS. Rungs still owed: 11 (an archive capture of the page from before the login wall), and 13. FILED CONTACT (state): PO Box 774, Plymouth NH 03264.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-attorney:hagaman-meg",
+      "name": "Meg Hagaman",
+      "note": "MISS — CONTEST 4 of 12, same rungs as the three others. IDENTITY: Secretary of State 2026 filing — 'Meg Hagaman BOW PO BOX 1415 CONCORD, NH 03302 REP'. CAMPAIGN SITE: a REGISTERED DOMAIN THAT PUBLISHES NOTHING. meghagaman.com resolves at HTTP 200 and read 2026-08-21 it is a Squarespace parking page — title 'Coming Soon', body 'We're under construction. Please check back for an update soon.' It is not recorded as a campaign site: linking a reader to a construction notice is friction with nothing at the end of it, and the campaign-site rule asks for a presence rather than a reservation. IN THEIR OWN WORDS: a signed opinion column, 'Hagaman: Why The Merrimack County Attorney Matters More Than You Think', is published on Concord Patch. It is her byline and therefore her words, and it is NOT quoted here because a news publisher's page is not the campaign's own and the blurb rule's source class would have to say so — a decision worth revisiting when the domain goes live. PHOTO, PHONE, EMAIL: MISS. Rungs still owed: 11 and 13. FILED CONTACT (state): PO Box 1415, Concord NH 03302.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-attorney:endres-steven",
+      "name": "Steven Endres",
+      "note": "MISS — CONTEST 4 of 12, same rungs. IDENTITY: Secretary of State 2026 filing — 'County Attorney Steven Endres BRADFORD 81A FAIRGROUNDS RD BRADFORD, NH 03221 DEM'. He is the only Democrat filed for this office. PHOTO, CAMPAIGN SITE, IN THEIR OWN WORDS, PHONE, EMAIL: all MISS. Rungs walked 2026-08-21: the Citizens Count candidate directory (HTTP 404, no profile); a name-plus-office search at rung 10; a domain sweep, in which stevenendres.com resolves at HTTP 200 and is a DOMAIN-PARKING LANDER — 114 bytes whose entire body is a redirect to /lander — and is therefore not recorded. Rungs still owed: 13, and the Merrimack County Democratic committee as a discovery trail. NOT VERIFIED_ABSENT. FILED CONTACT (state): 81A Fairgrounds Rd, Bradford NH 03221.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-attorney:raiche-jon",
+      "name": "Jon Raiche",
+      "note": "MISS — CONTEST 4 of 12, same rungs. IDENTITY: Secretary of State 2026 filing — 'Jon Raiche BOSCAWEN 12 GOODHUE RD BOSCAWEN, NH 03303 REP'. Named for this contest on the Merrimack County Republican Committee's own candidate list (read 2026-08-21 at rung 2), which links no site for him or for anybody else on it. PHOTO, CAMPAIGN SITE, IN THEIR OWN WORDS, PHONE, EMAIL: all MISS. Rungs walked: the Citizens Count directory (HTTP 404); rung 10 by name and office; a domain sweep. Rungs still owed: 13. NOT VERIFIED_ABSENT. FILED CONTACT (state): 12 Goodhue Rd, Boscawen NH 03303.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-sheriff:cassidy-frank-t-",
+      "name": "Frank T. Cassidy",
+      "note": "MISS — CONTEST 5 of 12, same rungs as the two candidates in it whose photographs did ship. IDENTITY: Secretary of State 2026 filing — 'County Sheriff Frank T. Cassidy EPSOM 1040 LANE RD EPSOM, NH 03234 REP'. PHOTO: MISS, and the near-route is worth recording because it looked promising and was not. He is a serving member of the Merrimack County Sheriff's Office, so door 2 should have been open — but the county's own Sheriff page (read 2026-08-21 at rung 2, HTTP 200) publishes exactly one portrait, of Sheriff David Croft, plus a whole-department group photograph that is prohibited at every door. A department that photographs only its chief leaves every deputy running against him with nothing. CAMPAIGN SITE, OWN WORDS, PHONE, EMAIL: MISS; a name-plus-office search returns news coverage of the 2024 race and no campaign presence, and the county switchboard is not his. Rungs still owed: 13. NOT VERIFIED_ABSENT. FILED CONTACT (state): 1040 Lane Rd, Epsom NH 03234.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-sheriff:weir-ben",
+      "name": "Ben Weir",
+      "note": "MISS — CONTEST 5 of 12, same rungs. IDENTITY: Secretary of State 2026 filing — 'Ben Weir HOPKINTON 1267 BOUND TREE RD CONTOOCOOK, NH 03229 REP'. Contoocook is a village of Hopkinton, which is why the domicile and the mailing town differ. PHOTO, CAMPAIGN SITE, IN THEIR OWN WORDS, PHONE, EMAIL: all MISS. Rungs walked 2026-08-21: the Citizens Count directory (HTTP 404); rung 10 by name, office and town; a domain sweep in which benweir.com resolves at HTTP 200 and is a 114-byte parking lander, not recorded. A GENUINE DOCUMENT ABOUT HIM EXISTS AND IS NOT A CONTACT: the Secretary of State publishes a Ballot Law Commission decision, blc-decision-of-benjamin-weir.pdf, from an earlier cycle in which his placement on the ballot was appealed and allowed. It is on the sos.nh.gov host this network is refused by, and it is a legal record rather than any Kelly field. Rungs still owed: 11 for that PDF, and 13. NOT VERIFIED_ABSENT. FILED CONTACT (state): 1267 Bound Tree Rd, Contoocook NH 03229.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-commissioner-2:ribas-vincent-s-",
+      "name": "Vincent S. Ribas",
+      "note": "MISS — CONTEST 6 of 12, three candidates, same rungs. IDENTITY: Secretary of State 2026 filing — 'County Commissioner District 2 Vincent S. Ribas FRANKLIN 4 WASHINGTON AVE FRANKLIN, NH 03235 DEM'. He is the only Democrat filed for this seat. PHOTO, CAMPAIGN SITE, IN THEIR OWN WORDS, PHONE, EMAIL: all MISS. Rungs walked 2026-08-21: the Secretary of State County Roster 2025-2026 at rung 11 (the sitting Second District Commissioner is Stuart D. Trachy of Franklin, so Ribas holds no county seat and door 2 is closed to him); the New Hampshire House and Senate rosters at rung 2 (no match in 769 and 24); the Citizens Count directory (HTTP 404); rung 10; a domain sweep. Rungs still owed: 13, and the Franklin city and county Democratic committees as discovery trails. NOT VERIFIED_ABSENT. FILED CONTACT (state): 4 Washington Ave, Franklin NH 03235.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-commissioner-2:bilodeau-richard",
+      "name": "Richard Bilodeau",
+      "note": "MISS — CONTEST 6 of 12, same rungs. IDENTITY: Secretary of State 2026 filing — 'Richard Bilodeau LOUDON 22 HOLLOW ROUTE RD LOUDON, NH 03307 REP'. A DISCREPANCY WORTH NAMING: the Merrimack County Republican Committee's own 2026 candidate list, read 2026-08-21 at rung 2, names only Harold French under County Commissioner District 2 and does not list him, while the Secretary of State's filing does. The FILING governs — a party list is a discovery trail and never a source — and the difference is recorded rather than resolved. PHOTO, CAMPAIGN SITE, IN THEIR OWN WORDS, PHONE, EMAIL: all MISS. Rungs walked: the county roster at rung 11 (holds no county seat); the House and Senate rosters at rung 2 (no match); the Citizens Count directory (HTTP 404); rung 10; a domain sweep. Rungs still owed: 13. NOT VERIFIED_ABSENT. FILED CONTACT (state): 22 Hollow Route Rd, Loudon NH 03307.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-house-2:callis-michael-anthony",
+      "name": "Michael Anthony Callis",
+      "note": "MISS — CONTEST 11 of 12, same rungs as the five others. IDENTITY: Secretary of State 2026 filing — 'Michael Anthony Callis CONWAY PO BOX 259 EATON, NH 03832 REP'. NO 2026 FEC RECORD: he has an FEC candidate record for New Hampshire House races in 2006, 2016, 2018, 2020, 2022 and 2024 (H6NH01263, CALLIS, MICHAEL, REP) and NONE for 2026, so the FEC route that supplied a website, an email and a phone for four of his opponents is closed for him. That is a legitimate state — a federal candidate need not register until they raise or spend $5,000 — and it is recorded as one rather than as a wall. PHOTO, CAMPAIGN SITE, IN THEIR OWN WORDS, PHONE, EMAIL: all MISS. Rungs walked: the FEC by name and by loose surname; the Citizens Count directory (HTTP 404); a domain sweep. Rungs still owed: 11 for his earlier cycles' filings, and 13. NOT VERIFIED_ABSENT. FILED CONTACT (state): PO Box 259, Eaton NH 03832.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-senate:jarvis-david",
+      "name": "David Jarvis",
+      "note": "MISS — CONTEST 12 of 12, same rungs as the twelve others. IDENTITY: Secretary of State 2026 filing — 'David Jarvis MANCHESTER 71 NECTARIA WAY 104 MANCHESTER, NH 03109 DEM'. NO FEC RECORD for New Hampshire since 2024 under this name, by exact and loose search. His Citizens Count profile exists and carries NO external link of his own — the only outbound links on it are the site's own sponsors. PHOTO, CAMPAIGN SITE, IN THEIR OWN WORDS, PHONE, EMAIL: all MISS. Rungs walked: FEC; Citizens Count; rung 10; a domain sweep. Rungs still owed: 13. NOT VERIFIED_ABSENT. FILED CONTACT (state): 71 Nectaria Way #104, Manchester NH 03109.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-senate:maxwell-mary",
+      "name": "Mary Maxwell",
+      "note": "MISS — CONTEST 12 of 12, same rungs. IDENTITY: Secretary of State 2026 filing — 'Mary Maxwell CONCORD 175 LOUDON RD APT 6 CONCORD, NH 03301 REP'. NO FEC RECORD for New Hampshire since 2024 — a loose surname search returns only Maxwell Saal, a different person whose given name matches her surname, which is exactly the collision an exact-match-only sweep would have mistaken for a hit. Her Citizens Count profile links only press coverage of lesser-known-candidate forums and the site's own sponsors. PHOTO, CAMPAIGN SITE, IN THEIR OWN WORDS, PHONE, EMAIL: all MISS. Rungs still owed: 13. NOT VERIFIED_ABSENT. FILED CONTACT (state): 175 Loudon Rd Apt 6, Concord NH 03301.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-senate:mcmenamon-ii-richard-a-",
+      "name": "Richard A. McMenamon II",
+      "note": "MISS — CONTEST 12 of 12, same rungs. IDENTITY: Secretary of State 2026 filing — 'Richard A. McMenamon II GILMANTON 10 CRYSTAL LAKE RD GILMANTON IW, NH 03837 REP'. NO FEC RECORD for New Hampshire since 2024. NO Citizens Count profile (HTTP 404). PHOTO, CAMPAIGN SITE, IN THEIR OWN WORDS, PHONE, EMAIL: all MISS. Rungs walked: FEC by name and loose surname; Citizens Count; rung 10; a domain sweep. Rungs still owed: 13. NOT VERIFIED_ABSENT. FILED CONTACT (state): 10 Crystal Lake Rd, Gilmanton Iron Works NH 03837.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-senate:smith-sabrina-ann",
+      "name": "Sabrina Ann Smith",
+      "note": "MISS — CONTEST 12 of 12, same rungs. IDENTITY: Secretary of State 2026 filing — 'Sabrina Ann Smith PITTSFIELD 118 DEER MEADOW RD PITTSFIELD, NH 03263 REP'. NO FEC RECORD for New Hampshire since 2024 — the loose surname search returns four sitting House members named Smith, none of them her, which is why the match was made on given name as well. Her Citizens Count profile exists and carries no external link of her own. PHOTO, CAMPAIGN SITE, IN THEIR OWN WORDS, PHONE, EMAIL: all MISS. Rungs still owed: 13. NOT VERIFIED_ABSENT. FILED CONTACT (state): 118 Deer Meadow Rd, Pittsfield NH 03263.",
+      "attemptedAt": "2026-08-21"
     }
   ]
 }

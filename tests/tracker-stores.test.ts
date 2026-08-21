@@ -439,3 +439,67 @@ test("the workbook round-trips, and a shared-string sheet reads as text", () => 
     "an omitted leading cell is filled in, so no column shifts left",
   );
 });
+
+test("the stated open count equals the rows underneath it, section by section", () => {
+  /*
+   * **STATED N EQUALS RENDERED ROWS**, applied to the tracker's own summary.
+   *
+   * Caught 2026-08-20 on the workbook's first real contact with the author. He
+   * marked two rows `Pending review`; `isOpen` was written as "carries no
+   * resolution", so both rows stayed in the working store, kept rendering in
+   * their section, and vanished from every count. `docs/tracker.md` stated
+   * **140 open** above sections summing to **138**, and both lost rows were P1,
+   * which took Needs Sean from three P1 rows to zero without anything
+   * happening.
+   *
+   * A summary that can disagree with its own page is not a summary; it is a
+   * second opinion presented as arithmetic. So the two are asserted to
+   * reconcile, against the committed stores, rather than being computed twice
+   * and hoped about.
+   */
+  const census = p1Census(working, sections);
+  const summed = census.reduce((n, c) => n + c.open, 0);
+  assert.equal(
+    summed,
+    working.length,
+    `the per-section census counts ${summed} open row(s) and the working store ` +
+      `holds ${working.length} — every row in the store renders in a section, so ` +
+      "a row the census cannot see is a row the reader can see and the summary cannot",
+  );
+
+  // And the file says the same number the store holds.
+  const md = readFileSync(join(ROOT, "docs/tracker.md"), "utf8");
+  assert.ok(
+    md.includes(`**${working.length} open**`),
+    `docs/tracker.md states an open count other than ${working.length}`,
+  );
+  for (const c of census) {
+    assert.ok(
+      md.includes(`**${c.open} open · ${
+        resolved.filter((r) => (r.Section ?? "") === c.slug).length
+      } resolved.**`),
+      `${c.title}'s stated counts are not the ones the stores hold`,
+    );
+    assert.equal(
+      c.P1 + c.P2 + c.P3,
+      c.open,
+      `${c.title} holds ${c.open} open row(s) and ${c.P1 + c.P2 + c.P3} prioritised — ` +
+        "an open row with no priority is a row that sorts nowhere",
+    );
+  }
+});
+
+test("RULING 36: Pending review does NOT close a row", () => {
+  /*
+   * It means "needs a look before it can close" — the looking has not happened,
+   * so nothing has finished and the row belongs in the working store, counted.
+   * Only Resolved and Conditionally resolved move a row out.
+   */
+  assert.equal(isOpen({ Resolution: "Pending review" }), true);
+  assert.equal(isOpen({ Resolution: "" }), true);
+  assert.equal(isOpen({}), true);
+  assert.equal(isOpen({ Resolution: "Resolved" }), false);
+  assert.equal(isOpen({ Resolution: "Conditionally resolved" }), false);
+  assert.deepEqual(CLOSING_RESOLUTIONS, ["Resolved", "Conditionally resolved"]);
+  assert.ok(RESOLUTIONS.includes("Pending review"));
+});

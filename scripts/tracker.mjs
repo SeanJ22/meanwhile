@@ -38,6 +38,7 @@ import { join } from "node:path";
 import { today } from "./doc-dates.mjs";
 import {
   COLUMNS,
+  RESOLUTIONS,
   RESOLVED_CSV,
   ROOT,
   SEAN_AUTHOR,
@@ -59,6 +60,9 @@ import {
 import { buildWorkbook, readWorkbook } from "./xlsx.mjs";
 
 const MODE = process.argv[2] ?? "views";
+/** Who a SESSION-authored resolution closes as. The author needs no flag. */
+const SESSION_LABEL =
+  process.argv.find((a) => a.startsWith("--session="))?.slice("--session=".length) ?? "";
 const STAMP = today();
 
 const WORKING_SHEET = "Working";
@@ -458,6 +462,48 @@ function modeOpen(working, resolved) {
 
 /* ------------------------------------------------------------------ move --- */
 
+/**
+ * **AN ENUM NEAR-MISS IS NOT A REWORDING, AND A TRAILING SPACE IS NOT A
+ * DECISION.** (Added 2026-08-20, on the workbook's first real contact with the
+ * author — he typed `"Pending "` on two rows, meaning `Pending review`.)
+ *
+ * RULING 41 forbids a session rewording a row the author wrote. That protects
+ * his PROSE — the title and the description, where he is describing what he
+ * saw and a session rewriting it replaces the evidence with an interpretation.
+ * `Resolution` is not prose. It is a three-value enum, and the honest reading of
+ * `"Pending "` is the one state that can begin that way.
+ *
+ * So: trim, then match case-insensitively as a PREFIX of the three. Exactly one
+ * match is taken and REPORTED. Zero matches, or more than one, refuses the whole
+ * run and names the row — a value that could mean two things is a question for
+ * him, not a guess for a script.
+ *
+ * The alternative was refusing the run over a trailing space, and a mechanism
+ * that fails on the way somebody actually types is a mechanism that gets worked
+ * around rather than used.
+ */
+const normalizations = [];
+const resolutionProblems = [];
+
+function normalizeResolution(id, raw) {
+  const value = (raw ?? "").trim();
+  if (value === "") return "";
+  if (RESOLUTIONS.includes(value)) return value;
+
+  const lower = value.toLowerCase();
+  const hits = RESOLUTIONS.filter((r) => r.toLowerCase().startsWith(lower));
+  if (hits.length === 1) {
+    normalizations.push(`${id}: "${raw}" read as "${hits[0]}"`);
+    return hits[0];
+  }
+  resolutionProblems.push(
+    hits.length === 0
+      ? `${id} carries a resolution of "${raw}", which is none of: ${RESOLUTIONS.join(", ")}`
+      : `${id} carries "${raw}", which could mean any of: ${hits.join(", ")}`,
+  );
+  return value;
+}
+
 function modeMove(working, resolved, sections) {
   const book = readWorkbookRows();
   const refusals = [];
@@ -493,7 +539,7 @@ function modeMove(working, resolved, sections) {
         if ((row[c] ?? "") !== (store[c] ?? "")) {
           if (c === "Resolution") resolutionAuthor[id] = "sean";
           if (c === "Notes" && (row[c] ?? "").trim()) notes.push(`${id}: ${row[c].trim()}`);
-          store[c] = row[c] ?? "";
+          store[c] = c === "Resolution" ? normalizeResolution(id, row[c]) : (row[c] ?? "");
         }
       }
       // RULING 41 again: his row's own words, read back from the file he owns.
@@ -520,16 +566,45 @@ function modeMove(working, resolved, sections) {
     // RULING 39: the stamp is the script's, never a formula's, and a date Sean
     // entered by hand survives.
     if (!(r["Resolved on"] ?? "").trim()) r["Resolved on"] = STAMP;
+    /*
+     * **WHO CLOSED IT** (added 2026-08-20, on the first real move).
+     *
+     * RULING 40 says a finished row records which session finished it, and the
+     * guard asserts every resolved row carries a `Closed by`. The first move
+     * this script ever performed produced two rows with none, because moving a
+     * row and recording who moved it had been written as one step and only the
+     * first half existed.
+     *
+     * A resolution read out of the workbook is in the AUTHOR'S handwriting —
+     * that is the same fact RULING 37 leans on to let a Needs Sean row move at
+     * all — so it closes as `Sean`. Anything else closes as the session, named
+     * with `--session=<label>`, and a move with neither REFUSES rather than
+     * writing a blank into the column the guard is about to check.
+     */
+    const closer = resolutionAuthor[r.ID] === "sean" ? SEAN_AUTHOR : SESSION_LABEL;
+    if (!(r["Closed by"] ?? "").trim()) {
+      if (!closer) {
+        refusals.push(
+          `${r.ID} is being closed by a session and no session was named — ` +
+            "pass --session=<label>. RULING 40: a finished row records which " +
+            "session finished it, and a blank is not an attribution.",
+        );
+        continue;
+      }
+      r["Closed by"] = closer;
+    }
     r.Priority = "";
   }
   const nextResolved = [...resolved, ...moves];
 
+  refusals.push(...resolutionProblems);
   refusals.push(...auditSeanRows({ before, after: [...nextWorking, ...nextResolved] }));
 
   console.log(`\ntracker move — ${STAMP}\n`);
   console.log(`  workbook read          ${book ? `${book.working.length} working + ${book.resolved.length} resolved row(s)` : "not present — stores only"}`);
   console.log(`  ids assigned           ${assignedIds.length ? assignedIds.join(", ") : "none"}`);
   console.log(`  notes read             ${notes.length}`);
+  console.log(`  resolutions normalized ${normalizations.length ? normalizations.join(" · ") : "none"}`);
   console.log(`  rows moved to resolved ${moves.length}`);
   console.log(`  working store          ${working.length} -> ${nextWorking.length}`);
   console.log(`  resolved store         ${resolved.length} -> ${nextResolved.length}`);

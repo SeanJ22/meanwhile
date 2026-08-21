@@ -2099,7 +2099,69 @@ replaced.
 
 ## 7. Current state of the branch
 
-**CURRENT: `main@af2f208`** (2026-08-19, F01-continued SESSION 2 — THE BALLOT
+**CURRENT: `main@<this session's merge>`** (2026-08-20, PROMPT E — THE TRACKER
+BECOMES A QUEUE THAT EMPTIES, AND THE BADGE COMES OFF THE LEAST-RESOURCED
+CANDIDATE).
+
+**THIS SECTION HAD BEEN STALE SINCE 2026-08-19.** It named `main@af2f208` and
+F01-continued session 2 while Prompt B, Prompt C, Prompt D and F22 all shipped
+past it — four sessions, each of which appended its own section further down
+this file and none of which updated the one section that calls itself *current*.
+A heading that says "current" and is four sessions behind is worse than no
+heading, because it is read rather than checked. Updating it is part of the
+end-of-session ritual from here on.
+
+**Prompt E finished all thirteen of its items.** Nothing was deferred, nothing
+was a boundary stop, and nothing was never reached.
+
+**SHAs, labelled, because a reader must be able to tell at a glance which commit
+changed what a reader sees and which changed only our account of it:**
+
+| SHA | What it is |
+|---|---|
+| `0beba26` → PR #123 → **`8e6eba7`** | **CODE, the planned merge.** The tracker rebuild, RULING 42, and the `PD04` fix. |
+| `b55d4b7` → PR #124 → **`2a92472`** | **CODE, a second merge — the live-walk-regression exception, not a deviation.** `M123` went red: a source fetched three calendars, extracted nothing, reported success, and Wilmot lost 23 meetings. |
+| `e74f4db` → PR #125 | **CLOSE-OUT RECORD.** `state.md`, the tracker moves, the amendment history. |
+| `fbbeba7` → PR #126 | **CLOSE-OUT RECORD.** The two figures the first record could not know, because the last walk had not run yet. |
+| this commit | **CODE, a third merge — A DEVIATION FROM RULING 1, REPORTED AS ONE.** The author edited the tracker workbook at handoff and left two notes. One was a reader-facing wording instruction in his own words, and RULING 38 makes a note binding on the session that reads it. Carrying it would have left his own sentence unexecuted on a surface he had just looked at. Everything else in this commit is the tracker machinery his first use of it exposed. |
+
+**What the third merge carries**, so the deviation is legible rather than
+lumped:
+
+* `COLLECTION_NOTE` becomes his sentence — *"What we have found, we are
+  displaying here."* — down from the two the session first shipped.
+* `isOpen` stops treating **Pending review** as closed. It is one of the three
+  states and it does NOT close a row, so two rows he marked that way were
+  sitting in the working store, rendering in their section, and counted by
+  nothing: `docs/tracker.md` stated **140 open** above sections summing to
+  **138**, and both lost rows were P1, which took Needs Sean from three P1 rows
+  to zero without anything happening. That is the stated-N-equals-rendered-rows
+  rule broken by the session that rebuilt the tracker, and it is now asserted.
+* The move script normalises an enum near-miss — he typed `"Pending "` on two
+  rows — reports the normalization, and refuses on anything ambiguous. A
+  mechanism that fails on the way somebody actually types is a mechanism that
+  gets worked around.
+* The move script records **who closed a row**. The first real move produced two
+  resolved rows with an empty `Closed by`, which RULING 40's own guard catches;
+  a resolution read out of the workbook now closes as `Sean`, and a session must
+  name itself with `--session=`.
+
+**Deploy verified through `/api/build`** with a declared synthetic run and
+`cache-control: no-cache` at every step: `8e6eba7`, then `2a92472`, then
+`9ff9684`, then `17bd9de`.
+
+`pnpm walk:all` against the deployed `9ff9684`: **370 check(s) passed, 1 named
+regression, 0 could not run.** 371 distinct of 371 run. Against the inherited
+baseline of 363: **added 8, GONE 0, silent 0.** The one regression is Prompt D's
+own alarm row from `2026-08-21T00:28:19Z`, still inside its 24-hour window — <!-- expected-future: a UTC instant on the Phoenix day 2026-08-20; UTC had already turned over -->
+`pnpm alarms` reads *1 in the last 24h, of 1 ever recorded*, and a 200-request
+proof raised none. It goes green on its own. It was not suppressed and the row
+was not deleted.
+
+
+### The previous entry
+
+**PREVIOUS: `main@af2f208`** (2026-08-19, F01-continued SESSION 2 — THE BALLOT
 STOPS BEING A WALL, AND FOUR INSTRUMENTS STOP LYING ABOUT WHAT THEY MEASURED),
 branched from `main@d913ca8`.
 

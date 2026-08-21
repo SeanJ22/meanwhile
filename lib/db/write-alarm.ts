@@ -48,12 +48,55 @@ const MESSAGE_CAP = 400;
 interface PgLikeError {
   code?: unknown;
   message?: unknown;
+  cause?: unknown;
+}
+
+/**
+ * **THE ERROR CHAIN, NOT ITS TOP** (Prompt E item 4, 2026-08-20; `PD04`).
+ *
+ * `errorCodeOf` and `errorMessageOf` both used to read the object they were
+ * handed and stop. Drizzle never hands them that object. Every query failure
+ * arrives as a `DrizzleQueryError`, and its own source (`drizzle-orm/errors.js`
+ * — read, not assumed) is four lines long:
+ *
+ *     super(`Failed query: ${query}\nparams: ${params}`);
+ *     this.query = query; this.params = params; this.cause = cause;
+ *
+ * It carries no `code` and its message is the SQL. So the alarm recorded a
+ * SQLSTATE of `null` for **every** failure structurally — not because the
+ * driver withheld one — and it recorded the statement instead of the reason.
+ * `PD04`'s single row read "Failed query: insert into search_log (…)" with no
+ * code, which is the instrument describing itself rather than the database.
+ *
+ * The driver's own sentence — `terminating connection…`, `column "x" does not
+ * exist`, `duplicate key value violates…` — and its SQLSTATE both live one or
+ * more links down `.cause`. So both functions walk the chain.
+ *
+ * Depth is capped because a cyclic `cause` is a hang, and a hang inside an
+ * alarm takes down the path the alarm is watching.
+ */
+const CAUSE_DEPTH = 5;
+
+function chainOf(error: unknown): PgLikeError[] {
+  const out: PgLikeError[] = [];
+  const seen = new Set<unknown>();
+  let node: unknown = error;
+  while (node !== null && node !== undefined && out.length < CAUSE_DEPTH) {
+    if (seen.has(node)) break;
+    seen.add(node);
+    out.push(node as PgLikeError);
+    node = (node as PgLikeError).cause;
+  }
+  return out;
 }
 
 /** SQLSTATE where the driver supplies one — five alphanumerics, or null. */
 export function errorCodeOf(error: unknown): string | null {
-  const code = (error as PgLikeError | null)?.code;
-  return typeof code === "string" && /^[0-9A-Za-z]{5}$/.test(code) ? code : null;
+  for (const link of chainOf(error)) {
+    const code = link?.code;
+    if (typeof code === "string" && /^[0-9A-Za-z]{5}$/.test(code)) return code;
+  }
+  return null;
 }
 
 /**
@@ -80,12 +123,12 @@ export function errorCodeOf(error: unknown): string | null {
  * sentence that would have closed D73 in a minute — names a column and no
  * value.
  */
-export function errorMessageOf(error: unknown): string | null {
+function oneMessage(link: PgLikeError): string | null {
   const raw =
-    error instanceof Error
-      ? error.message
-      : typeof (error as PgLikeError | null)?.message === "string"
-        ? String((error as PgLikeError).message)
+    link instanceof Error
+      ? link.message
+      : typeof link?.message === "string"
+        ? String(link.message)
         : null;
   if (raw === null) return null;
 
@@ -96,13 +139,32 @@ export function errorMessageOf(error: unknown): string | null {
   // 2. Belt and braces, because a driver this repo has not met yet may format
   // its values differently: strip division ids and bare five-digit runs. Both
   // are things the alarm may never hold, and neither belongs to a genuine
-  // reason-for-failure sentence.
+  // reason-for-failure sentence. It applies to EVERY link in the chain —
+  // a Postgres detail line quotes the offending key, so the cause is no
+  // safer than the wrapper and is scrubbed on exactly the same terms.
   const scrubbed = withoutParams
     .replace(/ocd-division\/[^\s"',)\]]+/g, "[division]")
     .replace(/(?<![\d-])\d{5}(?![\d-])/g, "[digits]");
 
   const flat = scrubbed.replace(/\s+/g, " ").trim();
-  if (flat === "") return null;
+  return flat === "" ? null : flat;
+}
+
+export function errorMessageOf(error: unknown): string | null {
+  const parts: string[] = [];
+  for (const link of chainOf(error)) {
+    const message = oneMessage(link);
+    // A wrapper that merely restates its cause adds nothing but length.
+    if (message !== null && !parts.includes(message)) parts.push(message);
+  }
+  if (parts.length === 0) return null;
+
+  /*
+   * The cause reads FIRST. The reason a human wants — `column "coverage_tier"
+   * does not exist` — is the deepest link, and the shallowest is a page of SQL
+   * that pushes it past the cap. `←` points at what wrapped what.
+   */
+  const flat = parts.reverse().join(" ← ");
   return flat.length <= MESSAGE_CAP ? flat : `${flat.slice(0, MESSAGE_CAP)}… [truncated]`;
 }
 

@@ -1,7 +1,7 @@
 import { haversineKm } from "@/lib/geo/distance";
 import { nearestZcta } from "@/lib/geo/zcta";
 import { logSearchEvent } from "@/lib/db/search-log";
-import { after } from "next/server";
+import { afterResponse } from "@/lib/log/after-response";
 
 import { raiseWriteAlarm } from "@/lib/db/write-alarm";
 import { markerFromRequest } from "@/lib/db/run-marker";
@@ -200,50 +200,67 @@ export async function GET(request: Request) {
         ...coverage.seats.map((s) => s.ocdId),
       ]
     : [];
-  logSearchEvent({
-    eventType: "SEARCH",
-    // Zip-level either way: the typed zip, or the nearest centroid's zip for
-    // a panned viewport. Never coordinates — the log stays orientation-only.
-    approximateLocation: nearZip,
-    ocdIds: resolvedOcdIds,
-    detail: {
-      tier: result.tier,
-      radiusKm: result.radiusKm,
-      requestedRadiusKm: result.requestedRadiusKm,
-      meetingCount: result.meetings.length,
-    },
-    // C05: whose traffic this is. A walk declares itself in a header; a
-    // reader declares nothing and is organic.
-    marker: markerFromRequest(request),
-  }).catch((error) => {
-    /*
-     * **RULING 25 — THE READER-FACING CATCH IS UNCHANGED** (Prompt D item 6,
-     * D73). This handler still swallows: the search has already answered, and
-     * a logging failure must never cost a reader their meetings. What is added
-     * is the SECOND path — a row somewhere this repo can read, because a
-     * console line in a serverless function log is a diary rather than an
-     * alarm, and that is precisely how both sold stores went dark for four
-     * hours with every instrument green.
-     */
-    console.error("search log write failed", error);
-    /*
-     * **`after()`, not a bare promise** — the fix the live probe forced
-     * (Prompt D item 6.5, 2026-08-20).
-     *
-     * The first version fired the alarm as an unawaited promise. On a
-     * serverless runtime the invocation ends when the response is returned,
-     * and any promise still in flight is simply dropped — so the alarm did
-     * not land, and the probe against the live deploy found it. Which is the
-     * probe working, and the reason item 6.5 asks for a live induced failure
-     * rather than a green test.
-     *
-     * `after()` schedules work the platform keeps the invocation alive for.
-     * The reader is unaffected either way: this runs strictly after their
-     * response has gone, and the search had already answered before the log
-     * write was even attempted.
-     */
-    after(() => raiseWriteAlarm("search_log", error));
-  });
+  /*
+   * **THE WRITE ITSELF IS DEFERRED, NOT ONLY ITS ALARM** (Prompt E item 4,
+   * 2026-08-20; `PD04`).
+   *
+   * Prompt D found that an unawaited promise is dropped when a serverless
+   * invocation returns, and fixed it — for the ALARM. The INSERT one line
+   * above it had exactly the same shape and was left alone: `logSearchEvent()`
+   * was called, its promise was never awaited and never handed to `after()`,
+   * and the handler returned its JSON immediately below. Every row that had
+   * not reached Neon by the time the response went out was dropped by the
+   * runtime, silently, with no alarm — because a dropped promise never
+   * rejects, so there is nothing for a `.catch` to catch.
+   *
+   * That is the class the named-instance rule points at: one sighting of a
+   * floating promise on a sold-store write path was one of two, in the same
+   * function, five lines apart. `tests/write-alarm.test.ts` now asserts every
+   * sold-store write in `app/api/` is either awaited or inside `after()`, so
+   * the third one cannot ship.
+   *
+   * **RULING 25 — THE READER-FACING BEHAVIOUR IS UNCHANGED.** The catch still
+   * swallows, the search has already answered, and the response below is
+   * byte-identical. `after()` runs strictly after the response has gone; it
+   * costs the reader nothing and buys the row a runtime that stays alive long
+   * enough to write it.
+   */
+  /*
+   * Read from the request BEFORE the response goes. `after()` runs once the
+   * invocation has answered, and a request object read at that point is a
+   * different question from a request object read during the handler; a run
+   * that declared itself in a header must not become a reader because we
+   * asked too late. Captured here, used in the closure below.
+   */
+  const marker = markerFromRequest(request);
+  await afterResponse(() =>
+    logSearchEvent({
+      eventType: "SEARCH",
+      // Zip-level either way: the typed zip, or the nearest centroid's zip for
+      // a panned viewport. Never coordinates — the log stays orientation-only.
+      approximateLocation: nearZip,
+      ocdIds: resolvedOcdIds,
+      detail: {
+        tier: result.tier,
+        radiusKm: result.radiusKm,
+        requestedRadiusKm: result.requestedRadiusKm,
+        meetingCount: result.meetings.length,
+      },
+      // C05: whose traffic this is. A walk declares itself in a header; a
+      // reader declares nothing and is organic.
+      marker,
+    }).catch(async (error) => {
+      /*
+       * Still swallowed for the reader, still raised for us. The alarm no
+       * longer needs its own `after()` — it is already inside one, and
+       * nesting a second would schedule work from work the platform is
+       * already keeping alive. Awaited here so the invocation stays up for
+       * it, which is the whole reason `after()` is wrapped round the outside.
+       */
+      console.error("search log write failed", error);
+      await raiseWriteAlarm("search_log", error);
+    }),
+  );
 
   /*
    * M81 — which of these bodies actually governs the reader.

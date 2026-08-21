@@ -92,6 +92,20 @@ export const MIRRORED_DOCS = [
   // in docs/ during g16, and it is mirrored so the reviewer can read the
   // evidence behind the rows rather than the summary of it.
   { mirrorName: "audit-2026-08-18.md", repoPath: "docs/audit-2026-08-18.md" },
+  // Joined 2026-08-20 (Prompt E items 6, 9, 10 and 11), taking the set to
+  // NINETEEN. The tracker stopped being one CSV and became a workbook the
+  // author edits plus three generated views, and the whole point of that work
+  // is that he can open any of them and know where the project stands — which
+  // is exactly what the mirror is for. `tracker.csv` stays: it is the frozen
+  // pre-rebuild snapshot and it is the history.
+  //
+  // `binary: true` on the workbook for the same reason `deferred.xlsx` carries
+  // it — the drift check reads text and trims whitespace, which on a zip
+  // compares two corrupted strings and would refuse every ordinary update.
+  { mirrorName: "tracker.xlsx", repoPath: "docs/tracker.xlsx", binary: true },
+  { mirrorName: "tracker.md", repoPath: "docs/tracker.md" },
+  { mirrorName: "log.md", repoPath: "docs/log.md" },
+  { mirrorName: "gap-ledger.md", repoPath: "docs/gap-ledger.md" },
 ];
 
 /**

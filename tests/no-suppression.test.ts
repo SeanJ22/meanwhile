@@ -116,6 +116,92 @@ const SUPPRESSION_SYMBOLS = [
   "KELLY_FIELD_LABEL",
 ];
 
+/*
+ * **WHY `THIN_CANDIDATE_LINE` IS NOT ON THAT LIST** (RULING 42, Prompt E item
+ * 3, 2026-08-20), recorded so the next reader does not add it and then delete
+ * the guard when it fails.
+ *
+ * The sweep above reads RAW BYTES, deliberately: a suppression path commented
+ * out as a reference implementation is still a suppression path, and stripping
+ * comments would hide exactly that. But RULING 42's deletion is different in
+ * kind. Four files carry a NOTE saying the constant was deleted and why —
+ * `lib/ballot/candidate-cards.ts` where it lived, the card that rendered it,
+ * the page that replaced it, and the frozen field matrix that cited it. Those
+ * notes are the record of the decision, and a byte sweep cannot tell a record
+ * of a deletion from the deletion coming undone.
+ *
+ * So RULING 42 is guarded where the distinction is structural instead:
+ *   - `tests/candidate-cards.test.ts` asserts the module EXPORTS neither
+ *     symbol, the card IMPORTS and CALLS neither, and the page-level
+ *     disclosure is declared once and rendered once.
+ *   - the reader-vocabulary sweep below (comments stripped) bans the
+ *     SENTENCE, which is the thing a reader would actually meet.
+ *   - `pnpm walk:all` fails on the live deploy if either half comes undone.
+ *
+ * Three guards on the structure beat one guard on the spelling.
+ */
+
+/**
+ * **DOCUMENTS ARE SWEPT TOO** (Prompt E item 1, 2026-08-20).
+ *
+ * RULING 27 says no suppression path may exist in the CODEBASE, and the
+ * codebase is not only its `.ts` files. Both dead gates were SPECIFIED in a
+ * document before either was written, and a spec is how the third one arrives:
+ * a session reads a doc that still describes the gate as the plan and builds
+ * what it read.
+ *
+ * The files below are exempt, by name, because their JOB is to hold the record
+ * of what was removed — a guard that bans the historical account of the thing
+ * it bans erases the reason anybody knows not to rebuild it. Everything else
+ * under `docs/`, and every markdown file at the root, is swept.
+ */
+const DOC_ROOTS = ["docs"];
+const DOC_EXT = /\.(md|csv|json|txt)$/;
+const RECORD_FILES = new Set([
+  "CLAUDE.md",
+  "docs/rulings.md",
+  "docs/state.md",
+  "docs/tracker.csv",
+  "docs/tracker-working.csv",
+  "docs/tracker-resolved.csv",
+  "docs/deferred.csv",
+  "docs/log.md",
+  // Derived from git diffs of CLAUDE.md and docs/rulings.md themselves, so by
+  // construction it quotes the headings of rules that were removed. A guard
+  // that banned the record of a deletion would erase the reason anybody knows
+  // not to rebuild the thing.
+  "docs/amendment-history.md",
+]);
+
+/** The sentences the two dead gates were specified in, before any code. */
+const DEAD_DOCTRINE = [
+  "same depth",
+  "none of them ship",
+  "equal depth",
+  "until every candidate",
+  "thumb on the scale",
+];
+
+function docsUnder(): string[] {
+  const out: string[] = [];
+  for (const root of DOC_ROOTS) {
+    const stack = [join(ROOT, root)];
+    while (stack.length) {
+      const dir = stack.pop()!;
+      for (const entry of readdirSync(dir)) {
+        if (SKIP_DIRS.has(entry)) continue;
+        const full = join(dir, entry);
+        if (statSync(full).isDirectory()) stack.push(full);
+        else if (DOC_EXT.test(entry)) out.push(full);
+      }
+    }
+  }
+  for (const entry of readdirSync(ROOT)) {
+    if (/\.md$/.test(entry)) out.push(join(ROOT, entry));
+  }
+  return out;
+}
+
 test("RULING 27: no suppression path exists anywhere in the codebase", () => {
   const files = filesUnder(CODE_ROOTS);
   const hits: string[] = [];
@@ -134,12 +220,35 @@ test("RULING 27: no suppression path exists anywhere in the codebase", () => {
     `the sweep read ${files.length} files — a walk that read almost nothing ` +
       "must not read as a sweep that found nothing",
   );
+
+  const docs = docsUnder();
+  let docsRead = 0;
+  for (const f of docs) {
+    if (RECORD_FILES.has(rel(f))) continue;
+    docsRead += 1;
+    const src = readFileSync(f, "utf8");
+    for (const sym of SUPPRESSION_SYMBOLS) {
+      if (src.includes(sym)) hits.push(`${rel(f)} — ${sym}`);
+    }
+    // The prose form. A gate is specified in sentences long before it is
+    // specified in identifiers, and these are the sentences both dead
+    // versions were specified in.
+    for (const phrase of DEAD_DOCTRINE) {
+      if (src.toLowerCase().includes(phrase)) hits.push(`${rel(f)} — "${phrase}"`);
+    }
+  }
+  assert.ok(
+    docsRead > 20,
+    `the document sweep read ${docsRead} files — a walk that read almost ` +
+      "nothing must not read as a sweep that found nothing",
+  );
+
   assert.deepEqual(
     hits,
     [],
     "RULING 27 — a suppression path may not exist live, behind a flag, " +
-      "disabled, retained for a future feature, or commented out as a " +
-      "reference implementation",
+      "disabled, retained for a future feature, commented out as a " +
+      "reference implementation, or written down as a plan",
   );
 });
 
@@ -188,6 +297,11 @@ const READER_BANNED = [
   "NOT_ATTEMPTED",
   "NO_SOURCE_FOUND",
   "still looking for",
+  // RULING 42 (Prompt E item 3, 2026-08-20). The exact sentence the deleted
+  // per-card marker rendered. Comments are stripped before this sweep runs,
+  // so the notes recording the deletion may quote it and nothing a reader
+  // meets may contain it.
+  "found much about this candidate",
 ];
 
 test("RULING 28: no internal state vocabulary appears in a render path", () => {

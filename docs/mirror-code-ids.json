@@ -22,7 +22,11 @@
   },
   "pendingDocs": [
     "session-map.md",
-    "audit-2026-08-18.md"
+    "audit-2026-08-18.md",
+    "tracker.xlsx",
+    "tracker.md",
+    "log.md",
+    "gap-ledger.md"
   ],
   "pendingNote": "session-map.md joined the canonical set on 2026-08-17 (R33), taking it to fourteen. It has no Drive id here yet, and one cannot be invented: an id exists only once the file has been copied into the folder AND `pnpm mirror:ids` has run against live Drive. It is declared pending rather than left missing so the gap is loud — tests/mirror-code.test.ts requires recorded + pending to cover the WHOLE set, so an undeclared missing id still fails. Resolve by running `pnpm mirror:ids` after the first handoff that copies it.",
   "codeNote": "Recorded 2026-08-17 from the code subfolder's live contents (folder 1AYBm5B3w5pMuehmaDxQmcxeLZo6x_RxH), after Drive had synced the mirror's first run. A file created on the local filesystem has no Drive id until Drive assigns one, so a file added to the allowlist has no id here until the next `pnpm mirror:ids` pass; the manifest renders that as 'not yet recorded', never as 'no such file'. ID STABILITY WAS OBSERVED DIRECTLY HERE, not inferred from the documents: these thirteen were created at 16:03:51Z by one handoff run and modified at 16:04:49Z by the next, keeping the same ids across an overwrite.",
@@ -92,5 +96,6 @@
       "title": "code-manifest.md",
       "recordedOn": "2026-08-17"
     }
-  }
+  },
+  "pendingDocsNote": "A Drive id cannot be invented. These four joined the canonical set on 2026-08-20 (Prompt E) and have no id until they have been copied to Drive AND pnpm mirror:ids has run against the live folder. Declared rather than omitted, so the gap is loud: the id map still has to cover the whole set, and an undeclared missing id still fails the build."
 }

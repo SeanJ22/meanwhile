@@ -619,6 +619,43 @@ for (const { zip } of FOUR) {
     );
 
     /*
+     * **RULING 42 (Prompt E item 3, 2026-08-20) — THE DISCLOSURE MOVED FROM
+     * THE CARD TO THE PAGE, AND BOTH HALVES OF THAT ARE ASSERTED.**
+     *
+     * Two checks, because the ruling has two halves and either can come undone
+     * on its own. The first: the page-level disclosure is PRESENT — a
+     * disclosure that quietly stops rendering leaves a page of uneven cards
+     * with nothing saying why, which is the coverage-honesty exception the
+     * reader-friction rule protects. The second: the per-card marker has NOT
+     * come back — a card-level completeness label is a badge on the
+     * least-resourced person in a race, and it comes back the way it went in,
+     * as somebody reinstating a constant this file's law used to mandate.
+     *
+     * `tests/no-suppression.test.ts` catches a reintroduction at the BUILD.
+     * This catches it on the DEPLOY, which is where both previous display
+     * defects were actually found — by the author opening the site.
+     *
+     * The attribute is checked rather than the prose for the first, because
+     * the prose is meant to be rewritable; the SENTENCE is checked for the
+     * second, because that exact sentence is the thing that must never render.
+     */
+    check(
+      "promptE",
+      `/ballot carries the page-level collection disclosure at ${zip}`,
+      /data-collection-note/.test(ballot.text) ||
+        !/vote for/i.test(ballot.text),
+      "the page renders candidate contests and says nothing about what a " +
+        "short card means — RULING 42's disclosure is missing",
+    );
+    check(
+      "promptE",
+      `/ballot carries no per-card completeness marker at ${zip}`,
+      !/haven't found much about this candidate/i.test(ballot.text),
+      "a per-card completeness marker is back on the ballot — RULING 42 " +
+        "deleted it, and it lands on exactly the least-resourced candidate",
+    );
+
+    /*
      * **RULING 26 (Prompt D item 1, 2026-08-20) RETIRED PROMPT B ITEM 7.5 AND
      * THIS CHECK WITH IT.**
      *

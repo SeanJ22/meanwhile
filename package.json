@@ -110,10 +110,15 @@
     "tracker:promptb": "tsx scripts/promptb-tracker.mts",
     "hunt:migrate": "tsx scripts/migrate-hunt-state.mts",
     "hunt:gaps": "tsx scripts/hunt-gap-report.mts",
-    "status:report": "node scripts/status-report.mjs",
     "extract": "tsx scripts/extract.mts",
     "zip:add": "tsx scripts/zip-add.mts",
-    "assets": "tsx scripts/assets.mts"
+    "assets": "tsx scripts/assets.mts",
+    "tracker:open": "node scripts/tracker.mjs open",
+    "tracker:views": "node scripts/tracker.mjs views",
+    "tracker:move": "node scripts/tracker.mjs move",
+    "tracker:audit": "node scripts/tracker-done-audit.mjs",
+    "tracker:attribution": "node scripts/tracker-attribution.mjs",
+    "rules:history": "node scripts/amendment-history.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

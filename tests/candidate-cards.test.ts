@@ -135,84 +135,97 @@ test("no ranking vocabulary anywhere in the cards file", () => {
 });
 
 /**
- * Item 5 of the tester's mobile pass (2026-08-14) — the thin-candidate line,
- * and the equal-effort principle it belongs to.
+ * **RULING 42 (Prompt E item 3, 2026-08-20) — the three tests that used to
+ * guard `THIN_CANDIDATE_LINE` now guard its absence.**
  *
- * The tester, verbatim: "Karen might be the perfect fit for me, but she has
- * no information here. So I'm only going to look at the folks that do have
- * information... how could using this app actually impact voter outcomes
- * instead of collect information from voters." The app never says a word
- * about anyone and still tilts races, because thin cards track incumbency
- * and campaign professionalism rather than merit. Naming the absence is what
- * makes it a statement about our research instead of about the candidate.
+ * They were written for item 5 of the tester's mobile pass (2026-08-14), whose
+ * finding is still true and still governs this product: "Karen might be the
+ * perfect fit for me, but she has no information here. So I'm only going to
+ * look at the folks that do have information." The app never says a word about
+ * anyone and still tilts races.
+ *
+ * What changed is the instrument, not the finding. The per-card line printed
+ * on exactly one kind of card — the shortest one in the race — so it told a
+ * reader which named person we know least about, on that person's card. The
+ * disclosure now happens once, at the foot of the page, about every card
+ * equally. The hunt discipline that answers the finding properly is unchanged
+ * and lives where `CLAUDE.md` and RULING 26 both put it: in the hunt.
  */
-test("the thin-candidate line is one sentence, and it neither apologizes nor explains", async () => {
-  const { THIN_CANDIDATE_LINE } = await import(
-    "../lib/ballot/candidate-cards.ts"
-  );
-  assert.equal(
-    THIN_CANDIDATE_LINE,
-    "We haven't found much about this candidate yet.",
-  );
-  // Full stop means full stop: exactly one sentence.
-  assert.equal(
-    THIN_CANDIDATE_LINE.split(".").filter((s) => s.trim()).length,
-    1,
-    "no second sentence — an apology on the thin cards and silence on the thick ones is the same asymmetry",
-  );
-  for (const banned of ["sorry", "unfortunately", "apolog", "we tried", "please"]) {
-    assert.ok(
-      !THIN_CANDIDATE_LINE.toLowerCase().includes(banned),
-      `the line must not ${banned}`,
-    );
-  }
-  // And it never characterizes the candidate — the absence is ours.
-  for (const banned of ["little-known", "unknown", "minor", "obscure", "fringe"]) {
-    assert.ok(
-      !THIN_CANDIDATE_LINE.toLowerCase().includes(banned),
-      `the line describes our research, never the candidate (${banned})`,
-    );
-  }
-});
-
-test("thinness is decided by what we hold, and any one sourced field is enough to silence the line", async () => {
-  const { isThinCandidateCard } = await import(
-    "../lib/ballot/candidate-cards.ts"
-  );
-  const empty = {
-    photoUrl: null,
-    photoSource: null,
-    bio: null,
-    bioSourceUrl: null,
-    bioSourceLabel: null,
-    email: null,
-    phone: null,
-  };
-  assert.equal(isThinCandidateCard(null, false), true, "no card at all is thin");
-  assert.equal(isThinCandidateCard(empty, false), true, "an empty card is thin");
-  // A link alone is information a reader can act on.
-  assert.equal(isThinCandidateCard(null, true), false);
-  assert.equal(isThinCandidateCard(empty, true), false);
-  for (const field of ["photoUrl", "bio", "email", "phone"] as const) {
+test("RULING 42: no per-card completeness marker survives in the card library", async () => {
+  const mod = (await import("../lib/ballot/candidate-cards.ts")) as Record<
+    string,
+    unknown
+  >;
+  for (const dead of ["THIN_CANDIDATE_LINE", "isThinCandidateCard"]) {
     assert.equal(
-      isThinCandidateCard({ ...empty, [field]: "x" }, false),
+      dead in mod,
       false,
-      `${field} present means the card is not silent`,
+      `${dead} is deleted by RULING 42 — a card may not be labelled by how ` +
+        "much of it we managed to fill",
     );
   }
 });
 
-test("the line renders on the card component itself, so it travels to every surface a thin card reaches", () => {
-  const src = readFileSync(
+test("RULING 42: the card component renders no completeness marker", () => {
+  /*
+   * Comments stripped first, then NOTHING may name either symbol. The note
+   * left in the file records why they went, and a note is not a render — but
+   * outside a comment there is no innocent reason to write either word, so the
+   * assertion is the strongest one available: total absence in live code.
+   */
+  const live = readFileSync(
     join(process.cwd(), "components", "ballot", "candidate-card.tsx"),
     "utf8",
-  );
+  )
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/^[ \t]*\/\/.*$/gm, "");
+  for (const dead of ["THIN_CANDIDATE_LINE", "isThinCandidateCard"]) {
+    assert.ok(
+      !live.includes(dead),
+      `${dead} appears in live code on the card — RULING 42 deleted it`,
+    );
+  }
+  // And the sentence itself, in case somebody inlines it without the constant.
   assert.ok(
-    /THIN_CANDIDATE_LINE/.test(src),
-    "the shared constant renders — not a copy of the sentence",
+    !/found much about this candidate/i.test(live),
+    "the deleted sentence is not inlined back onto the card",
   );
-  assert.ok(
-    /isThinCandidateCard/.test(src),
-    "the shared predicate decides — not an inline condition that can drift",
+});
+
+test("RULING 42: the page-level disclosure is declared once and rendered once", () => {
+  const src = readFileSync(join(process.cwd(), "app", "ballot", "page.tsx"), "utf8");
+  const declared = /const COLLECTION_NOTE =\s*\n?\s*"([^"]+)";/.exec(src);
+  assert.ok(declared, "the disclosure sentence is declared in one place");
+  const note = declared![1]!;
+
+  // In substance, the two things RULING 42 requires it to say.
+  assert.match(note, /we show what we have collected/i);
+  assert.match(note, /every detail we could find/i);
+
+  // Unhedged. An apology about our own coverage is the editorial F01 struck.
+  for (const hedge of ["sorry", "unfortunately", "apolog", "we tried", "may not"]) {
+    assert.ok(
+      !note.toLowerCase().includes(hedge),
+      `the disclosure states a fact and does not ${hedge}`,
+    );
+  }
+
+  assert.equal(
+    [...src.matchAll(/\{COLLECTION_NOTE\}/g)].length,
+    1,
+    "once per page — not once per contest, and never per card",
+  );
+
+  // RULING 42 replaces nothing else: the contest footnote and the marker
+  // convention RULING 28 fixed are both still exactly where D left them.
+  assert.equal(
+    [...src.matchAll(/<IncumbencyFootnote \/>/g)].length,
+    2,
+    "the contest-level incumbency footnote is untouched — one per branch",
+  );
+  assert.equal(
+    [...src.matchAll(/<IncumbencyMarker \/>/g)].length,
+    1,
+    "the `*` marker construction is untouched",
   );
 });

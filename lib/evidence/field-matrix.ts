@@ -31,6 +31,17 @@
  * in the denominator: failing to find something is a cost, and a denominator
  * that quietly sheds its failures reports a completion rate that means
  * nothing.
+ *
+ * ## The one edit since the freeze, and why it did not move the version
+ *
+ * 2026-08-20 (Prompt E item 3, RULING 42). Two `exhausted` cells named
+ * `THIN_CANDIDATE_LINE`, the per-card line that RULING 42 deleted. They now
+ * name what actually happens instead. **Fields moved: 0. Requirements moved:
+ * 0. Denominators moved: 0.** The version stamps the FIELD SET and the field
+ * set is byte-for-byte what it was; `exhausted` is prose describing where the
+ * reader ends up, and it had come to describe a surface that no longer
+ * exists. Leaving it would have made the frozen document wrong, which is a
+ * worse property for a frozen document than having a dated correction note.
  */
 
 export const FIELD_MATRIX_VERSION = "vH-1";
@@ -192,8 +203,8 @@ export const FIELD_MATRIX: Record<SubjectType, FieldSpec[]> = {
     { field: "name_as_filed", requirement: "required", notApplicableWhen: "never", evidenceStandard: "the election authority's own filing", success: "the name as filed", exhausted: "n/a — a candidate without a filing is not on the ballot" },
     { field: "office_and_party_as_filed", requirement: "required", notApplicableWhen: "the contest is non-partisan by statute", evidenceStandard: "the election authority's own filing", success: "as filed", exhausted: "rungs recorded" },
     { field: "photo", requirement: "required", notApplicableWhen: "never — honest initials are a success", evidenceStandard: "the four-door rule, door recorded", success: "a portrait through a named door, or initials with doors tried", exhausted: "initials, doors recorded per candidate" },
-    { field: "campaign_site_or_page", requirement: "required", notApplicableWhen: "never", evidenceStandard: "own domain, or an authenticated social page labelled as one", success: "a fetched URL", exhausted: "THIN_CANDIDATE_LINE, with rungs — equal effort recorded per candidate" },
-    { field: "blurb_with_source_class", requirement: "required", notApplicableWhen: "never", evidenceStandard: "prose attributed in the committed register, or nothing at all", success: "labelled prose", exhausted: "no self-description found; the standard line renders" },
+    { field: "campaign_site_or_page", requirement: "required", notApplicableWhen: "never", evidenceStandard: "own domain, or an authenticated social page labelled as one", success: "a fetched URL", exhausted: "rungs recorded per candidate; nothing renders on the card — RULING 42" },
+    { field: "blurb_with_source_class", requirement: "required", notApplicableWhen: "never", evidenceStandard: "prose attributed in the committed register, or nothing at all", success: "labelled prose", exhausted: "no self-description found; the card carries no blurb and no marker — RULING 42" },
     { field: "sourced_positions", requirement: "optional", notApplicableWhen: "never", evidenceStandard: "a specific statement, vote, filing or questionnaire — never inferred from party", success: "positions with sources", exhausted: "'no public position found'" },
   ],
   school_body: [

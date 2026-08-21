@@ -114,7 +114,14 @@ export const DIVISION_BODY_BLURBS: ReadonlyArray<{
 
 /**
  * The honest absence line for section 2. One sentence, describing OUR
- * research and never the body — the same discipline as `THIN_CANDIDATE_LINE`.
+ * research and never the body.
+ *
+ * It used to cite the candidate card's `THIN_CANDIDATE_LINE` as its sibling.
+ * That line is deleted (RULING 42, 2026-08-20) and this one is NOT, because
+ * they are different things: a BODY is an institution, and one body is not
+ * ranked against another by how much we hold on it. The reason the card line
+ * had to go — a marker that lands on exactly the least-resourced PERSON in a
+ * contest — has no equivalent here.
  */
 export const NO_BODY_BLURB_LINE =
   "We haven't yet read the law that defines what this body can decide, so we're not going to describe it.";

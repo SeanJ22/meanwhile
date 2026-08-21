@@ -57,6 +57,43 @@ test("every roster keys to a real body — a roster for nothing is a curation er
   }
 });
 
+/**
+ * **NO TWO ROSTERS SHARE A BODY** (NH Hunt, 2026-08-20).
+ *
+ * `rosterHoldersForBody` returns the FIRST match, so a second roster on the
+ * same `bodyId` is a roster nothing can read: it renders nowhere, it is never
+ * checked against the page it cites, and it drifts silently from the one that
+ * does render. This session wrote one — a second Merrimack County Board of
+ * Commissioners, sourced from the county's own annual report while the live
+ * one was sourced from a copy the Town of Chichester hosts — and nothing in
+ * this file caught it. The two agreed on all three names, which is the only
+ * reason it was harmless; the next one would not be.
+ *
+ * The fix was a MERGE, not a deletion: the surviving row took the better
+ * source and recorded that two copies read three days apart agree. This is the
+ * assertion that makes the next session merge too.
+ */
+test("no two rosters claim the same body", () => {
+  const byId = new Map<string, string[]>();
+  for (const roster of BODY_ROSTERS) {
+    byId.set(roster.bodyId, [...(byId.get(roster.bodyId) ?? []), roster.bodyName]);
+  }
+  const clashes = [...byId.entries()].filter(([, names]) => names.length > 1);
+  assert.deepEqual(
+    clashes.map(([id, names]) => `${id} — ${names.join(" | ")}`),
+    [],
+    "a second roster on one bodyId renders nowhere and drifts from the one that does",
+  );
+  assert.equal(byId.size, BODY_ROSTERS.length);
+
+  // And every member id is unique across the WHOLE register, not only within
+  // its own roster — two people sharing an id is the same defect one level in.
+  const memberIds = BODY_ROSTERS.flatMap((r) => r.members.map((m) => m.id));
+  const seen = new Set<string>();
+  const dupes = memberIds.filter((id) => (seen.has(id) ? true : (seen.add(id), false)));
+  assert.deepEqual(dupes, []);
+});
+
 test("every roster cites the body's own page, never a vendor's", () => {
   const vendorHosts = /legistar|civicplus|hylandcloud|diligent|civicweb|apptegy|iqm2|revize/i;
   for (const roster of BODY_ROSTERS) {

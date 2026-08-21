@@ -1539,7 +1539,7 @@ The first session. The map, the tracker, and congressional district boundaries o
 
 ## NHHUNT
 
-**What it started.** 8 row(s) opened, 8 still open.
+**What it started.** 9 row(s) opened, 9 still open.
 
 - **NH01** — The Kearsarge Regional School District publishes who sits on its school board, and its own page for that list refuses every way we have of reading it. The nine names we show came from an earlier read and the district may have changed them since. Getting a current list needs a route we have not walked yet. *(open)*
 - **NH02** — Newbury's own site lists a Parks and Recreation Committee and a Housing Committee in its sitemap, and both pages ask for a password. They are real committees the town has not published. We never sign in to anything, so their membership and meetings have to come from somewhere else. *(open)*
@@ -1549,5 +1549,6 @@ The first session. The map, the tracker, and congressional district boundaries o
 - **NH06** — Newbury's Selectboard and its three land-use boards are now read from two places at once: the vendor portals that carry agendas, and the town calendar that carries more dates. A merge decides which row a reader sees. That works, and nobody has measured whether it is the right arrangement over a few refreshes. *(open)*
 - **NH07** — Merrimack County's department pages all load cleanly and all of them list their staff in a table our reader cannot understand. It is a different table shape from the one we built for. Nobody has looked at how many other counties use it. *(open)*
 - **NH08** — The Town of Newbury publishes its whole calendar as a feed nobody had wired, and it has more meeting dates on it than the portals we were using. Both now ship, and when they both carry the same meeting the site shows the one with the agenda attached. That is a change to what you see at 03255 and it is worth a look. *(open)*
+- **NH09** — On 2026-08-16 you ruled that candidates we have a photo of should be listed first within a contest, and the cost was written down at the time: layout position stacks on top of the information advantage. RULING 42, four days later, says no ordering may indicate how complete one candidate's record is relative to another's. Both are yours and they point opposite ways. Nothing has been changed. *(open)*
 
-**Needs Sean.** NH08
+**Needs Sean.** NH08, NH09

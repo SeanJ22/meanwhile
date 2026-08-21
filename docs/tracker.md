@@ -14,8 +14,8 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **149 open**, 318 resolved.
-- **37 waiting on Sean** — the first section below.
+- **150 open**, 318 resolved.
+- **38 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **2**
   - New Hampshire hunt — **2**
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**37 open · 9 resolved.**
+**38 open · 9 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -54,6 +54,8 @@ Only Sean closes a row here. A session may open one and may work it.
 ### P2
 
 **B01** — The product is called Meanwhile on screen while the real name is decided. Nothing a reader sees changes until Sean settles it; when he does, one file changes and the whole site follows.
+
+**NH09** — On 2026-08-16 you ruled that candidates we have a photo of should be listed first within a contest, and the cost was written down at the time: layout position stacks on top of the information advantage. RULING 42, four days later, says no ordering may indicate how complete one candidate's record is relative to another's. Both are yours and they point opposite ways. Nothing has been changed.
 
 **R33** — Sean's map of the project's sessions lived outside the repo, so nothing could read it. It is now committed, and the row stays open until he confirms the copy in the repo is the one he wants used.
 

@@ -14636,3 +14636,49 @@ per-candidate hunt and no candidate hunt ran.
 bodies in the order item 4 fixed and worked them until the room ran out. The
 Kearsarge member towns are the next unit of work and are named above so the next
 session starts inside a body rather than choosing one.
+
+### The final record
+
+* **Production serves `595b871`**, deploy id `6a87f44d02ccb10008b18390`, branch
+  `main`, context production, read from `/api/build` with a declared synthetic
+  header.
+* **Code SHAs:** `4872eee` → PR #129 → **`d33cfa4`** (planned), and `0e904b7` →
+  PR #130 → **`595b871`** (the live-walk regression, RULING 1's exception).
+* **Close-out record SHAs, which changed only our account of the work:**
+  `db1f6a6` (this section, the tracker moves and the regenerated views) and the
+  final-record commit that carries this paragraph.
+* **Tracker: 150 open · 318 resolved · pair 468.** Prompt E closed at 141 · 319
+  · 460. The resolved store fell by one because `B08` was HARD-REMOVED under
+  RULING 46 on his explicit instruction, and the pair fell with it — the only
+  circumstance in which either number goes down.
+  * Needs Sean **38** (2 P1) · NH hunt 20 (2 P1) · NJ hunt 6 · AZ hunt 12 ·
+    Visual feedback 2 (1 P1) · Data infrastructure 49 · Product / UI 15 (1 P1) ·
+    Constitution & rules 3 (1 P1) · Repo & ops 5. **Per-section sum 150, equal
+    to the stated total.**
+  * Priorities **7 P1 · 78 P2 · 65 P3**. No section is over the five-P1 cap.
+  * **Nine rows opened**, `NH01`–`NH09`. Two of them are his: `NH08` (the
+    Selectboard's two sources) and `NH09` (his photos-first ordering against
+    RULING 42).
+  * **Rows worked and recorded but NOT closed:** `PE01` and `PE04`, both Needs
+    Sean. RULING 37 says only he closes one; the brief asked for `PE04` to be
+    closed and the guard forbids it, so the conflict is named rather than
+    resolved by a session. `HUNT01`, `HUNT03`, `HUNT04`, `HUNT05` and `M123`
+    each carry this session's progress on their own `Session record`.
+* **`pnpm verify-stamps`: 45 stamps audited, 1 disagrees, 2 ruled expected by
+  the author, 0 later than today, 0 unrecoverable.** The one disagreement is
+  *Equal effort per candidate within a race*, claimed 2026-08-14 and recovered
+  2026-08-20 — because RULING 26 rewrote that rule's text on the 20th and the
+  audit recovers when the CURRENT text entered the file. It is the same class as
+  the two photo doors already ruled expected: the stamp is right and the method
+  is blind to a rule whose wording was later amended. **Nothing was corrected —
+  the author decides, and an agent that repaired a date would be doing the thing
+  that caused the defect.**
+* **`docs/context.md` 29.3 KB of the 40 KB cap.** `CLAUDE.md` **72,082 bytes**,
+  up 721 — the fourth friction exception's retirement, with its reason.
+* **The mirror carries the canonical 19 with nothing undeclared.** One repair
+  was needed and is recorded rather than smoothed: an earlier refused `--ship`
+  had copied an UNCOMMITTED `state.md` to the mirror, so the divergence check
+  refused to overwrite something it could not account for — which is the check
+  working. Diffed by hand, proven to be a strict PREFIX of the committed file
+  (822,158 bytes against 830,698, nothing in the mirror absent from the repo),
+  and only then overwritten.

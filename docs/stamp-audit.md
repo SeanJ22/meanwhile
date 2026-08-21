@@ -8,7 +8,7 @@ walked straight past the `Author-revised` stamp on the disclosure rule.
 each one, and the corrected date is typed into `CLAUDE.md` by hand from
 `pnpm stamp` or from the recovered column below.**
 
-Run on 2026-08-21 (America/Phoenix). 47 stamp(s) audited.
+Run on 2026-08-21 (America/Phoenix). 48 stamp(s) audited.
 
 **Method.** Each rule's opening clause — the bold title it leads with — is a
 long string that entered `CLAUDE.md` once. `git log -S<clause> -- CLAUDE.md`
@@ -31,6 +31,7 @@ lying. The recovered dates come from the unfiltered pickaxe.
 | THE TRANSPARENCY MANDATE | 2026-08-16 | 2026-08-16 | 0 | `5745c71` The mandate becomes law before the hunting starts, and the tracker stops carrying two rows per ID |
 | RULING 52 — DISCOVERY IS A TREE, NOT A LADDER | 2026-08-21 | 2026-08-21 | 0 | `2633089` Item 3: discovery is a tree, and a wall compiled into a skip cannot be disproved |
 | RULING 53 — RECORDED ABSENCES EXPIRE | 2026-08-21 | 2026-08-21 | 0 | `2633089` Item 3: discovery is a tree, and a wall compiled into a skip cannot be disproved |
+| RULING 57 — EVERY TWIG IS NAMED | 2026-08-21 | **NOT FOUND** | — | — |
 | WHAT IS LAW HERE, AND WHAT IS A RULING | 2026-08-20 | 2026-08-20 | 0 | `07fcce1` Prompt C: the gate measures hunts, the sold stores start recording again, and the rulings get a home |
 | THE DEFERRAL BOUNDARY FALLS BETWEEN SUBJECTS, NEVER INSID… | 2026-08-17 | 2026-08-17 | 0 | `af766f5` The numbers stop contradicting each other, and our own robots stop counting as readers |
 | The design system is committed, not improvised. | 2026-08-15 | 2026-08-15 | 0 | `b8b6f7d` The system goes on the record |
@@ -80,7 +81,7 @@ lying. The recovered dates come from the unfiltered pickaxe.
 
 - **1 stamp(s) disagree with git history.**
 - **0 stamp(s) are still later than today** (2026-08-21) — a date that had not happened when it was written.
-- **0 stamp(s) could not be recovered** and are printed `NOT FOUND` rather than guessed.
+- **1 stamp(s) could not be recovered** and are printed `NOT FOUND` rather than guessed.
 - **2 stamp(s) disagree BY DESIGN and the author has ruled them expected** — listed below, and still carrying their real delta in the table above.
 
 ### Ruled expected, not defects
@@ -96,12 +97,12 @@ well would leave nothing to re-audit if the ruling is ever revisited.
 
 | Line | Claimed | Recovered | Delta | Why this is expected |
 |---|---|---|---|---|
-| `CLAUDE.md:263` | 2026-08-13 | 2026-08-15 | -2 d | photo door 1, adopted 2026-08-13; the four-door restructure wrote it into CLAUDE.md two days later. Author-ruled expected 2026-08-17. |
-| `CLAUDE.md:264` | 2026-08-14 | 2026-08-15 | -1 d | photo door 2, adopted 2026-08-14; same restructure commit the day after. Author-ruled expected 2026-08-17. |
+| `CLAUDE.md:310` | 2026-08-13 | 2026-08-15 | -2 d | photo door 1, adopted 2026-08-13; the four-door restructure wrote it into CLAUDE.md two days later. Author-ruled expected 2026-08-17. |
+| `CLAUDE.md:311` | 2026-08-14 | 2026-08-15 | -1 d | photo door 2, adopted 2026-08-14; same restructure commit the day after. Author-ruled expected 2026-08-17. |
 
 | Line | Claimed | Recovered | Delta | Note |
 |---|---|---|---|---|
-| `CLAUDE.md:274` | 2026-08-14 | 2026-08-20 | -6 d | claimed date is later than the introducing commit |
+| `CLAUDE.md:321` | 2026-08-14 | 2026-08-20 | -6 d | claimed date is later than the introducing commit |
 
 ## The literal `--diff-filter=A` result, per stamp
 
@@ -110,6 +111,7 @@ well would leave nothing to re-audit if the ruling is ever revisited.
 | THE TRANSPARENCY MANDATE | none | 1 |
 | RULING 52 — DISCOVERY IS A TREE, NOT A LADDER | none | 1 |
 | RULING 53 — RECORDED ABSENCES EXPIRE | none | 1 |
+| RULING 57 — EVERY TWIG IS NAMED | none | 0 |
 | WHAT IS LAW HERE, AND WHAT IS A RULING | none | 1 |
 | THE DEFERRAL BOUNDARY FALLS BETWEEN SUBJECTS, NEVER INSID… | none | 1 |
 | The design system is committed, not improvised. | none | 1 |

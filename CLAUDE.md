@@ -199,6 +199,53 @@ it was measured reads as stale rather than fresh, because defaulting the other
 way is how a bad date buys permanent trust. This runs on the scheduled refresh,
 not by hand.
 
+### RULING 57 — EVERY TWIG IS NAMED
+
+(Adopted 2026-08-21, the author's ruling, NH Hunt 4. It sits beside RULING 52
+and RULING 53 because it decides WHAT the tree is grown over: those two govern
+how a fact is hunted, and this governs which bodies are owed a hunt at all.)
+
+**The trunk is the United States. The major branches are the states. Then
+counties, then towns, then districts, then the water authority in one
+township — and the twig is as relevant as the trunk.**
+
+A township water authority in New Hampshire governs something for somebody, and
+if this product does not name it, nobody else will either. **No body is too
+small to name. Name it, then find what can be found about it.**
+
+*The rationale stays attached, because a stripped rule reads as guidance.* A
+product that reaches only the bodies that are easy to reach is a worse version
+of what already exists. The easy bodies — the city council, the county board,
+the big district — are already covered by somebody: a newspaper, a vendor
+portal, a civic-tech aggregator. The cemetery trustees, the village district,
+the fire precinct, the transfer station advisory group are covered by nobody,
+and they are the ones a reader cannot research alone. Reaching only the easy
+ones does not make this product smaller than it could be; it makes it
+redundant.
+
+Operationally:
+
+- **A body is NAMED FIRST and hunted second.** Enumeration does not wait on
+  coverage. A body with no meeting source, no roster and no site is still
+  entered, still rendered, and still carries what is known about it — which may
+  be only its name, its host municipality and the enumeration that found it.
+  That is more than nothing, and nothing is what a reader has today.
+- **A body that cannot be reached today is a DATED MEASUREMENT with its
+  branches recorded, never a decision to leave it out.** RULING 52 and RULING
+  53 govern it from there: the branches are named, the date is stamped, and it
+  is re-walked on its cadence.
+- **Coverage is measured against the OFFICIAL universe**, as the coverage rule
+  above already requires — the Census of Governments, NCES, and the state
+  registers that enumerate the twigs the Census misses. `pnpm twig:pair`
+  reports the pair for a zip and NAMES every unit with no body here, because a
+  count is not a name and a village water district disappears into a statistic
+  the moment it is only counted.
+- **Two official enumerations that disagree is a FINDING, not an error.** The
+  Ashuelot Pond Dam Precinct is in the 2022 Census of Governments and absent
+  from New Hampshire's own village-district register, read the same day. It is
+  named here with both facts recorded, rather than dropped because two
+  authorities could not agree it exists.
+
 ### WHAT IS LAW HERE, AND WHAT IS A RULING
 
 (Adopted 2026-08-20, Prompt C item 5.)

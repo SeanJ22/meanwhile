@@ -865,3 +865,39 @@ and `lib` with comments stripped so a third surface fails the build rather than
 shipping.
 
 `PE04` closes on this. He closed it himself, per RULING 37.
+
+### RULING 57 — every twig is named
+
+*Adopted 2026-08-21, the author's ruling, NH Hunt 4. His words: "The trunk is
+the United States. The major branches are the states. Then counties, then
+towns, then districts, then the water authority in one township — and the twig
+is as relevant as the trunk."*
+
+**This one IS law**, and is written into `CLAUDE.md` beside RULING 52 and
+RULING 53 — those two govern how a fact is hunted, and this governs which
+bodies are owed a hunt at all. `CLAUDE.md` **76,630 → 79,374 bytes**, rationale
+attached.
+
+It supersedes nothing. It makes explicit what the stranger test and the
+official-universe coverage rule already implied and no session had been told in
+so many words: a body is never skipped for being small, it is NAMED first and
+hunted second, and a body that cannot be reached today is a dated measurement
+carrying its branches rather than a decision to leave it out.
+
+**What it changed on the day it was adopted.** Bradford, Sutton and Warner —
+three of Kearsarge Regional School District's seven member towns — had no
+bodies in this registry at all, and 59 were enumerated from their own
+publications in one session. Warner's list includes the **Warner Village Water
+District**, which is the author's own example wearing a New Hampshire name.
+Wilmot's Safety Services Facility Committee and its Transfer Station Advisory
+Group appear on no town index anywhere and were found only in the past view of
+the town's calendar feed.
+
+And it caught two claims this repo was making about itself: that no village
+district's boundary reaches Newbury (Lake Todd's does, twice over — its own
+words and the state register), and that the Merrimack County Conservation
+District had no division (RSA 432:12 gives it the county's).
+
+`pnpm twig:pair` is the instrument. It reports the Census denominator against
+the registry's numerator for a zip, makes them reconcile, and NAMES every unit
+with no body here — because a count is not a name.

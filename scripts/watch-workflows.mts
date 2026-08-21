@@ -158,6 +158,13 @@ function openRowsMentioning(marker: string): boolean {
 const findings: Finding[] = [];
 const unreadable: string[] = [];
 
+/**
+ * Workflows whose non-zero exit means "the thing I watch for HAPPENED", not
+ * "I could not run". Their red runs still count and still open a row on two
+ * consecutive; the label is what stops a reader misreading the rate.
+ */
+const ALARM_CHANNELS = new Set(["intake-tripwire.yml"]);
+
 for (const workflow of WATCHED) {
   let runs: Run[];
   try {
@@ -170,8 +177,30 @@ for (const workflow of WATCHED) {
   }
 
   const rate = failureRate(runs);
+  /*
+   * **A RED TRIPWIRE IS THE ALARM WORKING** (NH Hunt 4, 2026-08-21, item 7).
+   *
+   * `intake-tripwire.yml` runs `pnpm alarms`, which exits NON-ZERO when a sold
+   * store has refused a write in the window. So a failed run there does not
+   * mean the job is broken — it means the alarm FIRED, which is the whole
+   * reason the job exists. Both of its two failures to 2026-08-21 are that:
+   * one names a refused `search_log` insert at 00:28Z on 2026-08-21.
+   *
+   * Printing it in the same column as a refresh that could not build is a
+   * category error, and it is the kind that makes a rate meaningless — a real
+   * alarm and a broken job look identical in "2 of 8". The counting is
+   * unchanged, because two consecutive alarms deserve a row exactly as much as
+   * two consecutive breakages do; only the LABEL is added, so a reader knows
+   * which kind of red they are looking at.
+   */
+  const alarmChannel = ALARM_CHANNELS.has(workflow);
   console.log(
-    `  ${workflow.padEnd(34)} ${rate.failures} failure(s) of ${rate.completed} completed run(s)`,
+    `  ${workflow.padEnd(34)} ${rate.failures} ${alarmChannel ? "alarm(s) raised" : "failure(s)"} of ${rate.completed} completed run(s)` +
+      (alarmChannel && rate.failures > 0
+        ? "\n" +
+          "".padEnd(36) +
+          "a red run here is the ALARM firing, not the job breaking — read the run log for what a store refused"
+        : ""),
   );
 
   const consecutive = failedTwiceConsecutively(runs);

@@ -515,6 +515,48 @@ export function makeIcalSource(
               // jurisdiction with no concluded meetings.
             }
           }
+          /*
+           * **A CALENDAR WITH NO EVENTS IN IT IS A FAILED RETRIEVAL, NOT AN
+           * EMPTY CALENDAR** (NH Hunt 4, 2026-08-21, item 7).
+           *
+           * This is the named cause of the meetings refresh failing 14 of 37
+           * runs. The composite's RULING 43 guard was doing its job and going
+           * red on `ical: fetched 3 document(s) and extracted 0 meeting(s)`,
+           * with every drop counter at zero — and zero drops is the tell: with
+           * three rows over one feed, ANY event at all would have produced
+           * `notConfigured` hits on the rows it did not belong to. Zero drops
+           * means the document that arrived contained **no VEVENT at all**.
+           *
+           * `politeGetText` cannot catch it. NH Hunt 3 taught the fetch layer
+           * to refuse a blank body and a wrong-format body; this is the third
+           * shape — a well-formed `BEGIN:VCALENDAR` envelope with nothing
+           * inside. It passes every check the transport can make.
+           *
+           * So the row is REFUSED, which is what it is. That routes it into
+           * carry-forward: the body keeps its last known sittings, clipped to
+           * the serving window and still carrying their original
+           * `collectedAt`, instead of the whole source going red and every
+           * OTHER town's calendar going with it. A failed fetch never silently
+           * empties a previously-full surface, and it must not empty its
+           * neighbours either.
+           *
+           * THE TRADE, STATED. A calendar that genuinely empties — a town that
+           * really did stop publishing — is marked refused too, and carries
+           * forward for as long as its rows stay inside the window. That is the
+           * correct direction to be wrong in, and it is the same trade the
+           * composite's own guard makes one layer up.
+           */
+          if (!/BEGIN:VEVENT/i.test(ics)) {
+            fetched.set(url, { ics: "", refused: true });
+            collected.push({
+              wiring,
+              ics: "",
+              collectedAt: new Date().toISOString(),
+              refused: true,
+              sourceUrl: url,
+            });
+            continue;
+          }
           fetched.set(url, { ics, refused: false });
           collected.push({
             wiring,

@@ -132,7 +132,11 @@
     "stale": "tsx scripts/stale.mts",
     "nh:roster": "tsx scripts/nh-roster-branch.mts",
     "nh3:shots": "tsx scripts/nh3-shots.mts",
-    "nh:county": "tsx scripts/nh-county-branch.mts"
+    "nh:county": "tsx scripts/nh-county-branch.mts",
+    "image:view": "tsx scripts/image-view.mts",
+    "portraits:normalise": "tsx scripts/normalise-portraits.mts",
+    "twig:pair": "tsx scripts/twig-pair.mts",
+    "nh:fix-pages": "tsx scripts/fix-nh-official-pages.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

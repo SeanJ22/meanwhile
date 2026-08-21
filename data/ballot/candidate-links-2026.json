@@ -502,7 +502,11 @@
         "verification": "Read 2026-08-21 at rung 2 (HTTP 200): the General Court's own District 7 page — 'Years Served in the Senate: Serving his third term in the NH Senate 2017-2019, 2023-2024, 2025-2026 (current)', with Daniel.Innis@gc.nh.gov on it.",
         "attemptedAt": "2026-08-21"
       },
-      "campaign": null
+      "campaign": {
+        "url": "https://innisfornh.com/",
+        "verification": "Read 2026-08-21 at rung 2. Title 'Daniel Innis for NH State Senate District 7', and the page's own first paragraph names Daniel E. Innis as a former state senator and the owner of Trails End Farm in Bradford, NH. The NH Campaign Finance System independently records the committee 'Friends of Dan Innis', 2026 cycle, State Senate, 328 Center Rd Bradford NH 03221, with website InnisforNH.com.",
+        "attemptedAt": "2026-08-21"
+      }
     },
     "ballot-nh-merrimack:state-house-merrimack-7:ebel-karen-elizabeth": {
       "official": {
@@ -607,6 +611,38 @@
         "attemptedAt": "2026-08-21"
       },
       "official": null
+    },
+    "ballot-nh-merrimack:county-attorney:hagaman-meg": {
+      "official": null,
+      "campaign": {
+        "url": "https://www.meg-for-merrimack.com/",
+        "verification": "Read 2026-08-21 at rung 2. The site's own title is MEG HAGAMAN FOR MERRIMACK COUNTY ATTORNEY and its footer carries the filed disclaimer 'Paid for by Meg for Merrimack, P.O. Box 1415, Concord, NH 03302, Chase Hagaman, Treasurer' — the same committee name, address and 2026 cycle registered in the NH Campaign Finance System, which independently lists Meg-For-Merrimack.com as this candidate's website.",
+        "attemptedAt": "2026-08-21"
+      }
+    },
+    "ballot-nh-merrimack:county-attorney:raiche-jon": {
+      "official": null,
+      "campaign": {
+        "url": "https://votejonraiche.com/",
+        "verification": "Read 2026-08-21 at rung 2. Title 'Vote Jon Raiche', description 'Vote Jon Raiche for Merrimack County Attorney'. The NH Campaign Finance System independently records this candidate's 2026 County Attorney filing with website VoteJonRaiche.com and email JonRaiche@VoteJonRaiche.com, which is the same domain.",
+        "attemptedAt": "2026-08-21"
+      }
+    },
+    "ballot-nh-merrimack:county-commissioner-2:ribas-vincent-s-": {
+      "official": {
+        "url": "https://www.franklinnh.gov/people/vincent-ribas",
+        "verification": "Read 2026-08-21 at rung 5 (rungs 2, 3 and 4 were refused HTTP 403). The City of Franklin's own person page for Vincent Ribas names him a Councilor on City Council & Mayor with active membership, plus the City & School Liaison Committee and the Police Committee, and publishes his portrait and the phone (603) 934-5330.",
+        "attemptedAt": "2026-08-21"
+      },
+      "campaign": null
+    },
+    "ballot-nh-merrimack:county-sheriff:weir-ben": {
+      "official": null,
+      "campaign": {
+        "url": "https://www.weir4liberty.org/",
+        "verification": "Read 2026-08-21 at rung 2. Title 'Ben Weir For Merrimack County Sheriff'. The campaign's own hero photograph shows him holding a yard sign reading BEN WEIR FOR MERRIMACK COUNTY SHERIFF with www.Weir4Liberty.org printed on it, which is this domain.",
+        "attemptedAt": "2026-08-21"
+      }
     }
   },
   "hunts": [
@@ -1448,6 +1484,12 @@
       "key": "ballot-nh-merrimack:us-senate:smith-sabrina-ann",
       "name": "Sabrina Ann Smith",
       "note": "MISS — CONTEST 12 of 12, same rungs. IDENTITY: Secretary of State 2026 filing — 'Sabrina Ann Smith PITTSFIELD 118 DEER MEADOW RD PITTSFIELD, NH 03263 REP'. NO FEC RECORD for New Hampshire since 2024 — the loose surname search returns four sitting House members named Smith, none of them her, which is why the match was made on given name as well. Her Citizens Count profile exists and carries no external link of her own. PHOTO, CAMPAIGN SITE, IN THEIR OWN WORDS, PHONE, EMAIL: all MISS. Rungs still owed: 13. NOT VERIFIED_ABSENT. FILED CONTACT (state): 118 Deer Meadow Rd, Pittsfield NH 03263.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-commissioner-2:ribas-vincent-s-",
+      "name": "Vincent S. Ribas",
+      "note": "MISS — NH Hunt 4, 2026-08-21. Two independent branches for this person. BRANCH 1 — the NH Secretary of State's 2026 cumulative filing, which places him in Franklin. BRANCH 2 — the City of Franklin's own site, which publishes his councilor page, portrait and phone. A THIRD route was walked and failed for a reason worth recording: franklinnh.org, the domain the search index still carries, redirects to www.franklinnh.org, which no resolver this project can reach answers for, and the apex serves a certificate for a different name. The town's live site is franklinnh.GOV. A campaign site and a blurb are still owed for him, and the NH Campaign Finance System holds no 2026 registration under this name.",
       "attemptedAt": "2026-08-21"
     }
   ]

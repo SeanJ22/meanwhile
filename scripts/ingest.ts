@@ -96,10 +96,34 @@ const AGENDA_RETRIEVAL_CAP = 8;
 function documentUrlFor(meeting: Meeting): string | null {
   if (meeting.agendaUrl) return meeting.agendaUrl;
   if (meeting.status !== "SCHEDULED") return null;
-  const wired = SOURCE_WIRING.find(
+  /*
+   * **THE NOTICE PAGE BELONGS TO A BODY, NOT TO A DIVISION** (NH Hunt 4,
+   * 2026-08-21).
+   *
+   * This used to take the FIRST wiring row on the meeting's division that
+   * carried a notice URL. That was harmless while one division had one wired
+   * body and became a wrong document the moment a division had two: adding the
+   * Lake Todd Village District to Newbury's division attached Lake Todd's
+   * notice page to the Town of Newbury's own meetings, and the ingest went and
+   * fetched it for them. A collapsing join, exactly the D40 shape — one key
+   * standing in for many rows.
+   *
+   * So the body is matched first, by the name the wiring itself publishes. The
+   * division-wide fallback survives, because a town whose boards all share one
+   * calendar page is the common case and it is correct — but only when every
+   * notice URL on that division AGREES. Where they disagree, there is no
+   * single right answer and this returns nothing rather than picking one.
+   */
+  const onDivision = SOURCE_WIRING.filter(
     (row) => row.noticeUrl && row.ocdId !== null && row.ocdId === meeting.ocdId,
   );
-  return wired?.noticeUrl ?? null;
+  if (onDivision.length === 0) return null;
+  const forBody = onDivision.find(
+    (row) => (row.config.bodyName ?? row.publishingOrg) === meeting.bodyName,
+  );
+  if (forBody) return forBody.noticeUrl ?? null;
+  const distinct = new Set(onDivision.map((row) => row.noticeUrl));
+  return distinct.size === 1 ? (onDivision[0].noticeUrl ?? null) : null;
 }
 
 async function retrieveAgendas(meetings: Meeting[]) {

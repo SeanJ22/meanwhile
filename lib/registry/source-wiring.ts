@@ -1064,6 +1064,64 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     },
     verifiedAt: "2026-08-19",
   },
+  // Wilmot, NH — Conservation Commission. 3 upcoming sittings carry CATEGORIES:Conservation Commission (2026-08-21).
+  {
+    bodyId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town#conservation-commission",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Wilmot, NH",
+    publishingOrg: "Town of Wilmot",
+    timeZone: "America/New_York",
+    config: {
+      slug: "wilmot-conservation-commission",
+      feedUrl: "https://www.wilmotnh.org/events/list/?ical=1",
+      pastFeedUrl:
+        "https://www.wilmotnh.org/events/list/?tribe_event_display=past&ical=1",
+      categoryMatch: "Conservation Commission",
+      bodyName: "Conservation Commission",
+      venueMatch: "Wilmot Town Office Building",
+    },
+    verifiedAt: "2026-08-21",
+  },
+
+
+  /*
+   * **A SUBCOMMITTEE'S SITTINGS CAN BE FILED UNDER ITS PARENT BOARD, AND THAT
+   * IS NOT A GAP IN THE FEED** (NH Hunt 4, 2026-08-21).
+   *
+   * Wilmot has a Master Plan Committee, a Safety Services Facility Committee
+   * and a Transfer Station Advisory Group. All three meet, all three appear in
+   * the town's calendar, and NONE of them has a wiring row here — because the
+   * town files their sittings under CATEGORIES:Planning Board and
+   * CATEGORIES:Select Board. A title-matched row over the same feed would
+   * claim events that already belong to another board and count them twice.
+   *
+   * So they are NAMED in the registry and ship KNOWN_UNCOVERED. The body is
+   * real and it renders; what is owed is a source that separates its sittings
+   * from its parent's. Two of the three are on no town index at all and were
+   * found only in the feed's PAST view — which is the whole argument for
+   * reading a calendar rather than a menu.
+   */
+
+
+  /*
+   * **SUTTON, NH — EIGHTEEN BODIES, 1,312 EVENTS, AND NOT ONE LOCATION**
+   * (NH Hunt 4, 2026-08-21, item 3.)
+   *
+   * Sutton has NO rows here and that is a decision, not an oversight. Its
+   * CivicPlus calendar exports 1,312 events naming eighteen governing bodies,
+   * 47 of them upcoming — and every single one carries an EMPTY LOCATION
+   * field. The calendar page that would carry the room is rendered by script
+   * and did not finish loading in sixty seconds at rung 6, and no page reached
+   * on 2026-08-21 states a meeting venue for any Sutton body.
+   *
+   * Wiring them anyway would have produced eighteen bodies whose every sitting
+   * drops as unknownVenue — or, worse, eighteen bodies pinned at the town
+   * office because the town office is where boards usually meet, which is a
+   * guess about a specific sitting dressed as a fact. So the bodies are NAMED
+   * and ship KNOWN_UNCOVERED, and the venue hunt is a tracker row.
+   */
 
   // ── New London, NH — four boards off one town calendar (M123, 2026-08-19) ──
   //
@@ -1091,6 +1149,36 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
       ["planning-board", "Planning Board", "Planning Board"],
       ["zoning-board", "Zoning Board", "Zoning Board"],
       ["conservation-commission", "Conservation Commission", "Conservation Commission"],
+      // Twelve more off the same page (NH Hunt 4, 2026-08-21). Every phrase
+      // below was read off this calendar's own event titles on that date.
+      ["budget-committee", "Budget Committee", "Budget Committee"],
+      ["energy-committee", "Energy Committee", "Energy Committee"],
+      ["housing-commission", "Housing Commission", "Housing Commission"],
+      ["recreation-commission", "Recreation Commission", "Recreation Commission"],
+      ["board-of-firewards", "Firewards,Fire Wards", "Board of Firewards"],
+      ["archives-committee", "Archives Committee", "Archives Committee"],
+      [
+        "bicycle-pedestrian-advisory-committee",
+        "Bicycle & Pedestrian",
+        "Bicycle & Pedestrian Advisory Committee",
+      ],
+      ["citizens-committee", "Citizens' Committee", "Citizens' Committee"],
+      ["trustees-of-the-trust-funds", "Trust Funds", "Trustees of the Trust Funds"],
+      [
+        "tri-town-assessing-board",
+        "Tri-Town Assessing",
+        "Tri-Town Assessing Board (New London, Sunapee & Newbury)",
+      ],
+      [
+        "supervisors-of-the-checklist",
+        "Supervisors of the Checklist",
+        "Supervisors of the Checklist",
+      ],
+      [
+        "capital-improvement-program",
+        "Capital Improvement Program",
+        "Capital Improvement Program Committee",
+      ],
     ] as const
   ).map(([slug, titleMatch, bodyName]) => ({
     bodyId: `ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#${slug}`,
@@ -1117,6 +1205,666 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     },
     verifiedAt: "2026-08-19",
   })),
+
+  /*
+   * **BRADFORD, SUTTON AND WARNER, NH — 49 BODIES ON THREE LIVE CALENDARS**
+   * (NH Hunt 4, 2026-08-21, item 3.)
+   *
+   * Three Kearsarge member towns that had nothing here at all. Bradford and
+   * Warner publish a public Google Calendar; Sutton publishes CivicPlus's
+   * `.ics`. Every `titleMatch` below was checked against the feed it reads
+   * before it was written: the phrases were run over all 2,394 events, each
+   * body's distinct matched summaries were read, and the only summaries claimed
+   * by two bodies are JOINT MEETINGS, which genuinely belong to both.
+   *
+   * A body the town's index names and the calendar never mentions has NO row
+   * here and ships `KNOWN_UNCOVERED` — ten of Warner's twenty-six. It is named
+   * and it renders; what is owed is a meeting source, and saying so is not the
+   * same as saying it does not meet.
+   */
+  // Bradford, NH — Select Board: 73 sitting(s) in the feed on 2026-08-21, 2 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#select-board",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Bradford, NH",
+    publishingOrg: "Town of Bradford",
+    timeZone: "America/New_York",
+    config: {
+      slug: "bradford-select-board",
+      feedUrl: "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+      titleMatch: "Select Board,Board of Selectmen",
+      bodyName: "Select Board",
+    },
+    noticeUrl: "https://bradfordnh.gov/pages/calendar",
+    verifiedAt: "2026-08-21",
+  },
+  // Bradford, NH — Budget Committee: 35 sitting(s) in the feed on 2026-08-21, 1 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#budget-committee",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Bradford, NH",
+    publishingOrg: "Town of Bradford",
+    timeZone: "America/New_York",
+    config: {
+      slug: "bradford-budget-committee",
+      feedUrl: "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+      titleMatch: "Budget Committee",
+      bodyName: "Budget Committee",
+    },
+    noticeUrl: "https://bradfordnh.gov/pages/calendar",
+    verifiedAt: "2026-08-21",
+  },
+  // Bradford, NH — Cemetery Trustees: 20 sitting(s) in the feed on 2026-08-21, 0 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#cemetery-trustees",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Bradford, NH",
+    publishingOrg: "Town of Bradford",
+    timeZone: "America/New_York",
+    config: {
+      slug: "bradford-cemetery-trustees",
+      feedUrl: "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+      titleMatch: "Cemetery Commission,Cemetery Trustees",
+      bodyName: "Cemetery Trustees",
+    },
+    noticeUrl: "https://bradfordnh.gov/pages/calendar",
+    verifiedAt: "2026-08-21",
+  },
+  // Bradford, NH — Community Power Committee: 2 sitting(s) in the feed on 2026-08-21, 0 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#community-power-committee",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Bradford, NH",
+    publishingOrg: "Town of Bradford",
+    timeZone: "America/New_York",
+    config: {
+      slug: "bradford-community-power-committee",
+      feedUrl: "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+      titleMatch: "Community Power",
+      bodyName: "Community Power Committee",
+    },
+    noticeUrl: "https://bradfordnh.gov/pages/calendar",
+    verifiedAt: "2026-08-21",
+  },
+  // Bradford, NH — Conservation Commission: 33 sitting(s) in the feed on 2026-08-21, 4 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#conservation-commission",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Bradford, NH",
+    publishingOrg: "Town of Bradford",
+    timeZone: "America/New_York",
+    config: {
+      slug: "bradford-conservation-commission",
+      feedUrl: "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+      titleMatch: "Conservation Commission",
+      bodyName: "Conservation Commission",
+    },
+    noticeUrl: "https://bradfordnh.gov/pages/calendar",
+    verifiedAt: "2026-08-21",
+  },
+  // Bradford, NH — Economic Development Committee: 19 sitting(s) in the feed on 2026-08-21, 0 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#economic-development-committee",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Bradford, NH",
+    publishingOrg: "Town of Bradford",
+    timeZone: "America/New_York",
+    config: {
+      slug: "bradford-economic-development-committee",
+      feedUrl: "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+      titleMatch: "Economic Development",
+      bodyName: "Economic Development Committee",
+    },
+    noticeUrl: "https://bradfordnh.gov/pages/calendar",
+    verifiedAt: "2026-08-21",
+  },
+  // Bradford, NH — Energy Committee: 11 sitting(s) in the feed on 2026-08-21, 0 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#energy-committee",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Bradford, NH",
+    publishingOrg: "Town of Bradford",
+    timeZone: "America/New_York",
+    config: {
+      slug: "bradford-energy-committee",
+      feedUrl: "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+      titleMatch: "Energy Committee",
+      bodyName: "Energy Committee",
+    },
+    noticeUrl: "https://bradfordnh.gov/pages/calendar",
+    verifiedAt: "2026-08-21",
+  },
+  // Bradford, NH — Parks and Recreation Committee: 9 sitting(s) in the feed on 2026-08-21, 0 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#parks-and-recreation",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Bradford, NH",
+    publishingOrg: "Town of Bradford",
+    timeZone: "America/New_York",
+    config: {
+      slug: "bradford-parks-and-recreation",
+      feedUrl: "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+      titleMatch: "Parks and Recreation,Parks & Recreation,Parks and Rec,Parks & Rec",
+      bodyName: "Parks and Recreation Committee",
+    },
+    noticeUrl: "https://bradfordnh.gov/pages/calendar",
+    verifiedAt: "2026-08-21",
+  },
+  // Bradford, NH — Planning Board: 25 sitting(s) in the feed on 2026-08-21, 2 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#planning-board",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Bradford, NH",
+    publishingOrg: "Town of Bradford",
+    timeZone: "America/New_York",
+    config: {
+      slug: "bradford-planning-board",
+      feedUrl: "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+      titleMatch: "Planning Board",
+      bodyName: "Planning Board",
+    },
+    noticeUrl: "https://bradfordnh.gov/pages/calendar",
+    verifiedAt: "2026-08-21",
+  },
+  // Bradford, NH — Zoning Board of Adjustment: 10 sitting(s) in the feed on 2026-08-21, 0 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#zoning-board",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Bradford, NH",
+    publishingOrg: "Town of Bradford",
+    timeZone: "America/New_York",
+    config: {
+      slug: "bradford-zoning-board",
+      feedUrl: "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+      titleMatch: "Zoning Board,ZBA",
+      bodyName: "Zoning Board of Adjustment",
+    },
+    noticeUrl: "https://bradfordnh.gov/pages/calendar",
+    verifiedAt: "2026-08-21",
+  },
+  // Bradford, NH — Capital Improvement Program Committee: 9 sitting(s) in the feed on 2026-08-21, 5 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#cip-committee",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Bradford, NH",
+    publishingOrg: "Town of Bradford",
+    timeZone: "America/New_York",
+    config: {
+      slug: "bradford-cip-committee",
+      feedUrl: "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+      titleMatch: "CIP Committee,CIP Meeting",
+      bodyName: "Capital Improvement Program Committee",
+    },
+    noticeUrl: "https://bradfordnh.gov/pages/calendar",
+    verifiedAt: "2026-08-21",
+  },
+  // Bradford, NH — Hazard Mitigation Committee: 19 sitting(s) in the feed on 2026-08-21, 0 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#hazard-mitigation-committee",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Bradford, NH",
+    publishingOrg: "Town of Bradford",
+    timeZone: "America/New_York",
+    config: {
+      slug: "bradford-hazard-mitigation-committee",
+      feedUrl: "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+      titleMatch: "Hazard Mitigation",
+      bodyName: "Hazard Mitigation Committee",
+    },
+    noticeUrl: "https://bradfordnh.gov/pages/calendar",
+    verifiedAt: "2026-08-21",
+  },
+  // Bradford, NH — Facilities Use Committee: 18 sitting(s) in the feed on 2026-08-21, 0 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#facilities-use-committee",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Bradford, NH",
+    publishingOrg: "Town of Bradford",
+    timeZone: "America/New_York",
+    config: {
+      slug: "bradford-facilities-use-committee",
+      feedUrl: "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+      titleMatch: "Facilities Use",
+      bodyName: "Facilities Use Committee",
+    },
+    noticeUrl: "https://bradfordnh.gov/pages/calendar",
+    verifiedAt: "2026-08-21",
+  },
+  // Bradford, NH — Independence Day Committee: 6 sitting(s) in the feed on 2026-08-21, 5 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#independence-day-committee",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Bradford, NH",
+    publishingOrg: "Town of Bradford",
+    timeZone: "America/New_York",
+    config: {
+      slug: "bradford-independence-day-committee",
+      feedUrl: "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+      titleMatch: "Independence Day Committee",
+      bodyName: "Independence Day Committee",
+    },
+    noticeUrl: "https://bradfordnh.gov/pages/calendar",
+    verifiedAt: "2026-08-21",
+  },
+  // Bradford, NH — Supervisors of the Checklist: 17 sitting(s) in the feed on 2026-08-21, 3 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#supervisors-of-the-checklist",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Bradford, NH",
+    publishingOrg: "Town of Bradford",
+    timeZone: "America/New_York",
+    config: {
+      slug: "bradford-supervisors-of-the-checklist",
+      feedUrl: "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+      titleMatch: "Supervisors of Checklist,Supervisors of the Checklist,Checklist Session",
+      bodyName: "Supervisors of the Checklist",
+    },
+    noticeUrl: "https://bradfordnh.gov/pages/calendar",
+    verifiedAt: "2026-08-21",
+  },
+  // Warner, NH — Select Board: 77 sitting(s) in the feed on 2026-08-21, 3 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#select-board",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Warner, NH",
+    publishingOrg: "Town of Warner",
+    timeZone: "America/New_York",
+    config: {
+      slug: "warner-select-board",
+      feedUrl: "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+      titleMatch: "Select Board,SB Wk Sess,SB Work Session",
+      bodyName: "Select Board",
+      // The hall the Select Board's own page gives as its address, and the
+      // building this calendar names on 47 of its board sittings. Reached only
+      // when the event itself carried no location at all.
+      venueMatch: "Warner Town Hall",
+    },
+    noticeUrl: "https://warnernh.gov/calendar/",
+    verifiedAt: "2026-08-21",
+  },
+  // Warner, NH — Agricultural Commission: 3 sitting(s) in the feed on 2026-08-21, 0 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#agricultural-commission",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Warner, NH",
+    publishingOrg: "Town of Warner",
+    timeZone: "America/New_York",
+    config: {
+      slug: "warner-agricultural-commission",
+      feedUrl: "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+      titleMatch: "Agricultural Commission,Ag Commission",
+      bodyName: "Agricultural Commission",
+      // The hall the Select Board's own page gives as its address, and the
+      // building this calendar names on 47 of its board sittings. Reached only
+      // when the event itself carried no location at all.
+      venueMatch: "Warner Town Hall",
+    },
+    noticeUrl: "https://warnernh.gov/calendar/",
+    verifiedAt: "2026-08-21",
+  },
+  // Warner, NH — Auditor Search Committee: 3 sitting(s) in the feed on 2026-08-21, 0 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#auditor-search-committee",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Warner, NH",
+    publishingOrg: "Town of Warner",
+    timeZone: "America/New_York",
+    config: {
+      slug: "warner-auditor-search-committee",
+      feedUrl: "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+      titleMatch: "Auditor Search",
+      bodyName: "Auditor Search Committee",
+      // The hall the Select Board's own page gives as its address, and the
+      // building this calendar names on 47 of its board sittings. Reached only
+      // when the event itself carried no location at all.
+      venueMatch: "Warner Town Hall",
+    },
+    noticeUrl: "https://warnernh.gov/calendar/",
+    verifiedAt: "2026-08-21",
+  },
+  // Warner, NH — Budget Committee: 44 sitting(s) in the feed on 2026-08-21, 15 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#budget-committee",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Warner, NH",
+    publishingOrg: "Town of Warner",
+    timeZone: "America/New_York",
+    config: {
+      slug: "warner-budget-committee",
+      feedUrl: "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+      titleMatch: "Budget Comm",
+      bodyName: "Budget Committee",
+      // The hall the Select Board's own page gives as its address, and the
+      // building this calendar names on 47 of its board sittings. Reached only
+      // when the event itself carried no location at all.
+      venueMatch: "Warner Town Hall",
+    },
+    noticeUrl: "https://warnernh.gov/calendar/",
+    verifiedAt: "2026-08-21",
+  },
+  // Warner, NH — Chandler Reservation Committee: 1 sitting(s) in the feed on 2026-08-21, 0 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#chandler-reservation-committee",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Warner, NH",
+    publishingOrg: "Town of Warner",
+    timeZone: "America/New_York",
+    config: {
+      slug: "warner-chandler-reservation-committee",
+      feedUrl: "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+      titleMatch: "Chandler Reservation,Chandler Comm",
+      bodyName: "Chandler Reservation Committee",
+      // The hall the Select Board's own page gives as its address, and the
+      // building this calendar names on 47 of its board sittings. Reached only
+      // when the event itself carried no location at all.
+      venueMatch: "Warner Town Hall",
+    },
+    noticeUrl: "https://warnernh.gov/calendar/",
+    verifiedAt: "2026-08-21",
+  },
+  // Warner, NH — Conservation Commission: 8 sitting(s) in the feed on 2026-08-21, 0 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#conservation-commission",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Warner, NH",
+    publishingOrg: "Town of Warner",
+    timeZone: "America/New_York",
+    config: {
+      slug: "warner-conservation-commission",
+      feedUrl: "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+      titleMatch: "Conservation Commission,Con Com",
+      bodyName: "Conservation Commission",
+      // The hall the Select Board's own page gives as its address, and the
+      // building this calendar names on 47 of its board sittings. Reached only
+      // when the event itself carried no location at all.
+      venueMatch: "Warner Town Hall",
+    },
+    noticeUrl: "https://warnernh.gov/calendar/",
+    verifiedAt: "2026-08-21",
+  },
+  // Warner, NH — Energy/Solar Committee: 3 sitting(s) in the feed on 2026-08-21, 0 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#energy-solar-committee",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Warner, NH",
+    publishingOrg: "Town of Warner",
+    timeZone: "America/New_York",
+    config: {
+      slug: "warner-energy-solar-committee",
+      feedUrl: "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+      titleMatch: "Energy Committee,Solar Committee,Energy/Solar",
+      bodyName: "Energy/Solar Committee",
+      // The hall the Select Board's own page gives as its address, and the
+      // building this calendar names on 47 of its board sittings. Reached only
+      // when the event itself carried no location at all.
+      venueMatch: "Warner Town Hall",
+    },
+    noticeUrl: "https://warnernh.gov/calendar/",
+    verifiedAt: "2026-08-21",
+  },
+  // Warner, NH — Housing Committee: 17 sitting(s) in the feed on 2026-08-21, 1 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#housing-committee",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Warner, NH",
+    publishingOrg: "Town of Warner",
+    timeZone: "America/New_York",
+    config: {
+      slug: "warner-housing-committee",
+      feedUrl: "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+      titleMatch: "Housing Committee",
+      titleExclude: "Advisory",
+      bodyName: "Housing Committee",
+      // The hall the Select Board's own page gives as its address, and the
+      // building this calendar names on 47 of its board sittings. Reached only
+      // when the event itself carried no location at all.
+      venueMatch: "Warner Town Hall",
+    },
+    noticeUrl: "https://warnernh.gov/calendar/",
+    verifiedAt: "2026-08-21",
+  },
+  // Warner, NH — Parks and Recreation Commission: 14 sitting(s) in the feed on 2026-08-21, 4 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#parks-and-recreation",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Warner, NH",
+    publishingOrg: "Town of Warner",
+    timeZone: "America/New_York",
+    config: {
+      slug: "warner-parks-and-recreation",
+      feedUrl: "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+      titleMatch: "Parks & Rec,Parks and Rec,P&R",
+      bodyName: "Parks and Recreation Commission",
+      // The hall the Select Board's own page gives as its address, and the
+      // building this calendar names on 47 of its board sittings. Reached only
+      // when the event itself carried no location at all.
+      venueMatch: "Warner Town Hall",
+    },
+    noticeUrl: "https://warnernh.gov/calendar/",
+    verifiedAt: "2026-08-21",
+  },
+  // Warner, NH — Planning Board: 9 sitting(s) in the feed on 2026-08-21, 0 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#planning-board",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Warner, NH",
+    publishingOrg: "Town of Warner",
+    timeZone: "America/New_York",
+    config: {
+      slug: "warner-planning-board",
+      feedUrl: "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+      titleMatch: "Planning Board",
+      bodyName: "Planning Board",
+      // The hall the Select Board's own page gives as its address, and the
+      // building this calendar names on 47 of its board sittings. Reached only
+      // when the event itself carried no location at all.
+      venueMatch: "Warner Town Hall",
+    },
+    noticeUrl: "https://warnernh.gov/calendar/",
+    verifiedAt: "2026-08-21",
+  },
+  // Warner, NH — Road Committee: 4 sitting(s) in the feed on 2026-08-21, 0 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#road-committee",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Warner, NH",
+    publishingOrg: "Town of Warner",
+    timeZone: "America/New_York",
+    config: {
+      slug: "warner-road-committee",
+      feedUrl: "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+      titleMatch: "Road Committee",
+      bodyName: "Road Committee",
+      // The hall the Select Board's own page gives as its address, and the
+      // building this calendar names on 47 of its board sittings. Reached only
+      // when the event itself carried no location at all.
+      venueMatch: "Warner Town Hall",
+    },
+    noticeUrl: "https://warnernh.gov/calendar/",
+    verifiedAt: "2026-08-21",
+  },
+  // Warner, NH — Supervisors of the Checklist: 6 sitting(s) in the feed on 2026-08-21, 0 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#supervisors-of-the-checklist",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Warner, NH",
+    publishingOrg: "Town of Warner",
+    timeZone: "America/New_York",
+    config: {
+      slug: "warner-supervisors-of-the-checklist",
+      feedUrl: "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+      titleMatch: "Supervisors of the Checklist,Supervisors of Checklist",
+      bodyName: "Supervisors of the Checklist",
+      // The hall the Select Board's own page gives as its address, and the
+      // building this calendar names on 47 of its board sittings. Reached only
+      // when the event itself carried no location at all.
+      venueMatch: "Warner Town Hall",
+    },
+    noticeUrl: "https://warnernh.gov/calendar/",
+    verifiedAt: "2026-08-21",
+  },
+  // Warner, NH — Trustees of the Trust Funds: 3 sitting(s) in the feed on 2026-08-21, 0 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#trustees-of-the-trust-funds",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Warner, NH",
+    publishingOrg: "Town of Warner",
+    timeZone: "America/New_York",
+    config: {
+      slug: "warner-trustees-of-the-trust-funds",
+      feedUrl: "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+      titleMatch: "Trustees of Trust Funds,Trustees of the Trust Funds,Trust Funds",
+      bodyName: "Trustees of the Trust Funds",
+      // The hall the Select Board's own page gives as its address, and the
+      // building this calendar names on 47 of its board sittings. Reached only
+      // when the event itself carried no location at all.
+      venueMatch: "Warner Town Hall",
+    },
+    noticeUrl: "https://warnernh.gov/calendar/",
+    verifiedAt: "2026-08-21",
+  },
+  // Warner, NH — Warner River Local Advisory Committee: 2 sitting(s) in the feed on 2026-08-21, 0 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#warner-river-local-advisory-committee",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Warner, NH",
+    publishingOrg: "Town of Warner",
+    timeZone: "America/New_York",
+    config: {
+      slug: "warner-warner-river-local-advisory-committee",
+      feedUrl: "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+      titleMatch: "Warner River Local Advisory,WRLAC",
+      bodyName: "Warner River Local Advisory Committee",
+      // The hall the Select Board's own page gives as its address, and the
+      // building this calendar names on 47 of its board sittings. Reached only
+      // when the event itself carried no location at all.
+      venueMatch: "Warner Town Hall",
+    },
+    noticeUrl: "https://warnernh.gov/calendar/",
+    verifiedAt: "2026-08-21",
+  },
+  // Warner, NH — Warner Village Water District: 2 sitting(s) in the feed on 2026-08-21, 0 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#warner-village-water-district",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Warner, NH",
+    publishingOrg: "Town of Warner",
+    timeZone: "America/New_York",
+    config: {
+      slug: "warner-warner-village-water-district",
+      feedUrl: "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+      titleMatch: "Warner Village Water,WVWD",
+      titleExclude: "Budget Comm",
+      bodyName: "Warner Village Water District",
+      // The hall the Select Board's own page gives as its address, and the
+      // building this calendar names on 47 of its board sittings. Reached only
+      // when the event itself carried no location at all.
+      venueMatch: "Warner Town Hall",
+    },
+    noticeUrl: "https://warnernh.gov/calendar/",
+    verifiedAt: "2026-08-21",
+  },
+  // Warner, NH — Zoning Board of Adjustment: 19 sitting(s) in the feed on 2026-08-21, 1 upcoming.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#zoning-board",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Warner, NH",
+    publishingOrg: "Town of Warner",
+    timeZone: "America/New_York",
+    config: {
+      slug: "warner-zoning-board",
+      feedUrl: "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
+      titleMatch: "Zoning Board,ZBA",
+      bodyName: "Zoning Board of Adjustment",
+      // The hall the Select Board's own page gives as its address, and the
+      // building this calendar names on 47 of its board sittings. Reached only
+      // when the event itself carried no location at all.
+      venueMatch: "Warner Town Hall",
+    },
+    noticeUrl: "https://warnernh.gov/calendar/",
+    verifiedAt: "2026-08-21",
+  },
+  // Lake Todd Village District, served on the newbury division. ONE body with
+  // two rows: its territory is Bradford AND Newbury by its own words and by
+  // the NH village-district register, and a body id here is <division>#<slot>.
+  // Its own site is HTTP 404 at every rung; the Town of Bradford's public
+  // calendar files its sittings, three of them on 2026-08-21.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#lake-todd-village-district",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Lake Todd Village District, NH",
+    publishingOrg: "Town of Bradford",
+    timeZone: "America/New_York",
+    config: {
+      slug: "lake-todd-village-district-newbury",
+      feedUrl: "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+      titleMatch: "Lake Todd",
+      bodyName: "Lake Todd Village District",
+    },
+    // Read 2026-08-21: the district's own page is HTTP 404 at every rung and
+    // the town's news item for its meeting is HTTP 404 too. The town's
+    // calendar page is the live notice, and it is the page its sittings
+    // come from.
+    noticeUrl: "https://bradfordnh.gov/pages/calendar",
+    verifiedAt: "2026-08-21",
+  },
+  // Lake Todd Village District, served on the bradford division. ONE body with
+  // two rows: its territory is Bradford AND Newbury by its own words and by
+  // the NH village-district register, and a body id here is <division>#<slot>.
+  // Its own site is HTTP 404 at every rung; the Town of Bradford's public
+  // calendar files its sittings, three of them on 2026-08-21.
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#lake-todd-village-district",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Lake Todd Village District, NH",
+    publishingOrg: "Town of Bradford",
+    timeZone: "America/New_York",
+    config: {
+      slug: "lake-todd-village-district-bradford",
+      feedUrl: "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
+      titleMatch: "Lake Todd",
+      bodyName: "Lake Todd Village District",
+    },
+    // Read 2026-08-21: the district's own page is HTTP 404 at every rung and
+    // the town's news item for its meeting is HTTP 404 too. The town's
+    // calendar page is the live notice, and it is the page its sittings
+    // come from.
+    noticeUrl: "https://bradfordnh.gov/pages/calendar",
+    verifiedAt: "2026-08-21",
+  },
 ];
 
 /** Rows a given adapter capability should serve. */

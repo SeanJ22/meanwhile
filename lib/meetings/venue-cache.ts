@@ -793,6 +793,337 @@ export const VENUE_CACHE: VenueEntry[] = [
       "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=375+Main+Street%2C+New+London%2C+NH+03257&benchmark=Public_AR_Current&format=json",
     verifiedAt: "2026-08-19",
   },
+
+  // ── Bradford and Warner, NH — the rooms their own calendars name ────────
+  //
+  // (NH Hunt 4, 2026-08-21, item 3.) Both towns publish a public Google
+  // Calendar and both write a real street address into most events. What they
+  // do NOT do is write it consistently: Warner's Town Hall appears under
+  // ELEVEN distinct spellings on one calendar — with and without the town
+  // name, with the room, with two spaces before the zip, and once as "Town
+  // Hall - Main Auditorium". Each spelling is its own row here rather than a
+  // fuzzy match, because a fuzzy match that got it wrong would send a reader
+  // to the wrong building and nothing would catch it.
+  //
+  // Every address is the town's own; every coordinate is the Census geocoder's
+  // and its query URL is recorded beside it.
+  //
+  // **NOT keyed, deliberately:** Bradford writes a Zoom URL into LOCATION on
+  // 24 of its events. A Zoom link is a real fact about a meeting and it is not
+  // a building; pinning it at the town hall would be a fabricated location, so
+  // those rows drop as unknownVenue and appear in the counts.
+  {
+    sourceId: "ical",
+    bodyOcdId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
+    match: "75 W Main St, Bradford, NH 03221, USA",
+    name: "Bradford Town Hall",
+    address: "75 West Main Street, Bradford, NH 03221",
+    lat: 43.269503712555,
+    lng: -71.960454157651,
+    addressSourceUrl: "https://bradfordnh.gov/pages/boards-and-committees",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=75%20West%20Main%20Street%2C%20Bradford%2C%20NH%2003221&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-21",
+  },
+  {
+    sourceId: "ical",
+    bodyOcdId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
+    match: "75 W Main St, Bradford, NH 03221",
+    name: "Bradford Town Hall",
+    address: "75 West Main Street, Bradford, NH 03221",
+    lat: 43.269503712555,
+    lng: -71.960454157651,
+    addressSourceUrl: "https://bradfordnh.gov/pages/boards-and-committees",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=75%20West%20Main%20Street%2C%20Bradford%2C%20NH%2003221&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-21",
+  },
+  {
+    sourceId: "ical",
+    bodyOcdId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
+    match: "134 E Main St, Bradford, NH 03221, USA",
+    name: "Bradford Area Community Center",
+    address: "134 East Main Street, Bradford, NH 03221",
+    lat: 43.26864360687,
+    lng: -71.955354154019,
+    addressSourceUrl: "https://bradfordnh.gov/pages/boards-and-committees",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=134%20East%20Main%20Street%2C%20Bradford%2C%20NH%2003221&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-21",
+  },
+  {
+    sourceId: "ical",
+    bodyOcdId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
+    match: "134 E Main St, Bradford, NH 03221",
+    name: "Bradford Area Community Center",
+    address: "134 East Main Street, Bradford, NH 03221",
+    lat: 43.26864360687,
+    lng: -71.955354154019,
+    addressSourceUrl: "https://bradfordnh.gov/pages/boards-and-committees",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=134%20East%20Main%20Street%2C%20Bradford%2C%20NH%2003221&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-21",
+  },
+  {
+    sourceId: "ical",
+    bodyOcdId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
+    match: "Brown Memorial Library, 78 W Main St, Bradford, NH 03221, USA",
+    name: "Brown Memorial Library",
+    address: "78 West Main Street, Bradford, NH 03221",
+    lat: 43.269618481554,
+    lng: -71.960695973068,
+    addressSourceUrl: "https://bradfordnh.gov/pages/boards-and-committees",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=78%20West%20Main%20Street%2C%20Bradford%2C%20NH%2003221&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-21",
+  },
+  {
+    sourceId: "ical",
+    bodyOcdId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
+    match: "78 W Main St, Bradford, NH 03221, USA",
+    name: "Brown Memorial Library",
+    address: "78 West Main Street, Bradford, NH 03221",
+    lat: 43.269618481554,
+    lng: -71.960695973068,
+    addressSourceUrl: "https://bradfordnh.gov/pages/boards-and-committees",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=78%20West%20Main%20Street%2C%20Bradford%2C%20NH%2003221&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-21",
+  },
+  {
+    sourceId: "ical",
+    bodyOcdId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
+    match: "Brown Memorial Library",
+    name: "Brown Memorial Library",
+    address: "78 West Main Street, Bradford, NH 03221",
+    lat: 43.269618481554,
+    lng: -71.960695973068,
+    addressSourceUrl: "https://bradfordnh.gov/pages/boards-and-committees",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=78%20West%20Main%20Street%2C%20Bradford%2C%20NH%2003221&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-21",
+  },
+  {
+    sourceId: "ical",
+    bodyOcdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+    match: "Warner Town Hall, 5 E Main St, Warner, NH 03278, USA",
+    name: "Warner Town Hall",
+    address: "5 East Main Street, Warner, NH 03278",
+    lat: 43.280620022052,
+    lng: -71.815803778788,
+    addressSourceUrl: "https://warnernh.gov/departments/selectboard/",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=5%20East%20Main%20Street%2C%20Warner%2C%20NH%2003278&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-21",
+  },
+  {
+    sourceId: "ical",
+    bodyOcdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+    match: "Town Hall, 5 East Main St. Warner, NH 03278",
+    name: "Warner Town Hall",
+    address: "5 East Main Street, Warner, NH 03278",
+    lat: 43.280620022052,
+    lng: -71.815803778788,
+    addressSourceUrl: "https://warnernh.gov/departments/selectboard/",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=5%20East%20Main%20Street%2C%20Warner%2C%20NH%2003278&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-21",
+  },
+  {
+    sourceId: "ical",
+    bodyOcdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+    match: "Town Hall, 5 East Main St. Warner, NH  03278",
+    name: "Warner Town Hall",
+    address: "5 East Main Street, Warner, NH 03278",
+    lat: 43.280620022052,
+    lng: -71.815803778788,
+    addressSourceUrl: "https://warnernh.gov/departments/selectboard/",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=5%20East%20Main%20Street%2C%20Warner%2C%20NH%2003278&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-21",
+  },
+  {
+    sourceId: "ical",
+    bodyOcdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+    match: "Town Hall, 5 E. Main St., Warner NH 03278",
+    name: "Warner Town Hall",
+    address: "5 East Main Street, Warner, NH 03278",
+    lat: 43.280620022052,
+    lng: -71.815803778788,
+    addressSourceUrl: "https://warnernh.gov/departments/selectboard/",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=5%20East%20Main%20Street%2C%20Warner%2C%20NH%2003278&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-21",
+  },
+  {
+    sourceId: "ical",
+    bodyOcdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+    match: "Town Hall, Lower-Level Meeting Room",
+    name: "Warner Town Hall",
+    address: "5 East Main Street, Warner, NH 03278",
+    lat: 43.280620022052,
+    lng: -71.815803778788,
+    addressSourceUrl: "https://warnernh.gov/departments/selectboard/",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=5%20East%20Main%20Street%2C%20Warner%2C%20NH%2003278&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-21",
+  },
+  {
+    sourceId: "ical",
+    bodyOcdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+    match: "Town Hall - Lower Level",
+    name: "Warner Town Hall",
+    address: "5 East Main Street, Warner, NH 03278",
+    lat: 43.280620022052,
+    lng: -71.815803778788,
+    addressSourceUrl: "https://warnernh.gov/departments/selectboard/",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=5%20East%20Main%20Street%2C%20Warner%2C%20NH%2003278&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-21",
+  },
+  {
+    sourceId: "ical",
+    bodyOcdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+    match: "Town Hall - Main Auditorium",
+    name: "Warner Town Hall",
+    address: "5 East Main Street, Warner, NH 03278",
+    lat: 43.280620022052,
+    lng: -71.815803778788,
+    addressSourceUrl: "https://warnernh.gov/departments/selectboard/",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=5%20East%20Main%20Street%2C%20Warner%2C%20NH%2003278&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-21",
+  },
+  {
+    sourceId: "ical",
+    bodyOcdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+    match: "Warner Town Hall",
+    name: "Warner Town Hall",
+    address: "5 East Main Street, Warner, NH 03278",
+    lat: 43.280620022052,
+    lng: -71.815803778788,
+    addressSourceUrl: "https://warnernh.gov/departments/selectboard/",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=5%20East%20Main%20Street%2C%20Warner%2C%20NH%2003278&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-21",
+  },
+  {
+    sourceId: "ical",
+    bodyOcdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+    match: "Warner Town Hall, Second Floor",
+    name: "Warner Town Hall",
+    address: "5 East Main Street, Warner, NH 03278",
+    lat: 43.280620022052,
+    lng: -71.815803778788,
+    addressSourceUrl: "https://warnernh.gov/departments/selectboard/",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=5%20East%20Main%20Street%2C%20Warner%2C%20NH%2003278&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-21",
+  },
+  {
+    sourceId: "ical",
+    bodyOcdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+    match: "Warner Town Hall, Main Floor, Stage",
+    name: "Warner Town Hall",
+    address: "5 East Main Street, Warner, NH 03278",
+    lat: 43.280620022052,
+    lng: -71.815803778788,
+    addressSourceUrl: "https://warnernh.gov/departments/selectboard/",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=5%20East%20Main%20Street%2C%20Warner%2C%20NH%2003278&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-21",
+  },
+  {
+    sourceId: "ical",
+    bodyOcdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+    match: "Lower Meeting Room, Warner Town Hall, 5 E Main St, Warner, NH 03278, USA",
+    name: "Warner Town Hall",
+    address: "5 East Main Street, Warner, NH 03278",
+    lat: 43.280620022052,
+    lng: -71.815803778788,
+    addressSourceUrl: "https://warnernh.gov/departments/selectboard/",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=5%20East%20Main%20Street%2C%20Warner%2C%20NH%2003278&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-21",
+  },
+  {
+    sourceId: "ical",
+    bodyOcdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+    match: "Pillsbury Free Library, 18 E Main St, Warner, NH 03278, USA",
+    name: "Pillsbury Free Library",
+    address: "18 East Main Street, Warner, NH 03278",
+    lat: 43.280221446826,
+    lng: -71.81523993338,
+    addressSourceUrl: "https://warnernh.gov/calendar/",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=18%20East%20Main%20Street%2C%20Warner%2C%20NH%2003278&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-21",
+  },
+  {
+    sourceId: "ical",
+    bodyOcdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+    match: "Pillsbury Library Meeting Room",
+    name: "Pillsbury Free Library",
+    address: "18 East Main Street, Warner, NH 03278",
+    lat: 43.280221446826,
+    lng: -71.81523993338,
+    addressSourceUrl: "https://warnernh.gov/calendar/",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=18%20East%20Main%20Street%2C%20Warner%2C%20NH%2003278&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-21",
+  },
+  {
+    sourceId: "ical",
+    bodyOcdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+    match: "Frank Maria Meeting Room at the Library,",
+    name: "Pillsbury Free Library",
+    address: "18 East Main Street, Warner, NH 03278",
+    lat: 43.280221446826,
+    lng: -71.81523993338,
+    addressSourceUrl: "https://warnernh.gov/calendar/",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=18%20East%20Main%20Street%2C%20Warner%2C%20NH%2003278&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-21",
+  },
+  {
+    sourceId: "ical",
+    bodyOcdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+    match: "Warner Highway Garage, 190 New Hampshire Rte 103, Warner, NH 03278, USA",
+    name: "Warner Highway Garage",
+    address: "190 NH Route 103, Warner, NH 03278",
+    lat: 43.267454583198,
+    lng: -71.782203179225,
+    addressSourceUrl: "https://warnernh.gov/calendar/",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=190%20NH%20Route%20103%2C%20Warner%2C%20NH%2003278&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-21",
+  },
+  {
+    sourceId: "ical",
+    bodyOcdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+    match: "190 New Hampshire Rte 103, Warner, NH 03278, USA",
+    name: "Warner Highway Garage",
+    address: "190 NH Route 103, Warner, NH 03278",
+    lat: 43.267454583198,
+    lng: -71.782203179225,
+    addressSourceUrl: "https://warnernh.gov/calendar/",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=190%20NH%20Route%20103%2C%20Warner%2C%20NH%2003278&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-21",
+  },
+  {
+    sourceId: "ical",
+    bodyOcdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+    match: "Warner Fire Department, 148 W Main St, Warner, NH 03278, USA",
+    name: "Warner Fire Department",
+    address: "148 West Main Street, Warner, NH 03278",
+    lat: 43.286030243565,
+    lng: -71.826973213785,
+    addressSourceUrl: "https://warnernh.gov/calendar/",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=148%20West%20Main%20Street%2C%20Warner%2C%20NH%2003278&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-21",
+  },
 ];
 
 /**

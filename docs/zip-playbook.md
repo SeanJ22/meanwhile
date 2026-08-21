@@ -882,6 +882,15 @@ people-on-the-ledger against people-read-this-run.
 | `pnpm verify-stamps` | Audits `CLAUDE.md`'s Adopted dates against git history. |
 | `pnpm legiscan:fetch` | State-legislature roll calls for AZ/NJ/NH, hash-gated. `--force` re-downloads. |
 
+### The twig toolkit (NH Hunt 4, added 2026-08-21 — RULING 57)
+
+| Command | What it does |
+|---|---|
+| `pnpm twig:pair [--zip 03255]` | The coverage PAIR for a zip: units the Census of Governments places inside the first-rung circle, against units this registry holds a body for, reconciled — and every un-held unit NAMED with its distance, its type and the site the Census recorded. A count is not a name. |
+| `pnpm image:view <url-or-file>…` | Renders any image a browser can decode — WebP and AVIF included — to a PNG that can actually be READ. RULING 2 requires a person to look at a capture; campaign sites serve formats that cannot be opened, and Squarespace serves WebP bytes under a `.jpg` URL. Prints the source's natural dimensions, because a 96×96 avatar upscaled to 640 looks like a portrait until you know it was 96 wide. |
+| `pnpm portraits:normalise [--write]` | Sweeps every committed portrait for size and resamples what is over the cap. Never renames a file — a renamed portrait is a broken image — and REPORTS rather than silently corrects a file whose extension disagrees with its bytes. |
+| `scripts/transcode-image.mts` | The shared normaliser `pnpm ship:candidate` runs every portrait through: decodes WebP and AVIF, names the format from the BYTES rather than from the plan's filename, and caps the served size. Every change it makes is recorded in the photo's own source string, so nothing we re-encoded is cited as though it were the bytes the source published. |
+
 ### The branch toolkit (NH Hunt 3, added 2026-08-21 — RULING 52 and 53)
 
 | Command | What it does |
@@ -2692,3 +2701,179 @@ reader to reach it; the organizations-render-as-filed rule forbids this product
 characterising an organization; and `contact-pills.tsx` labels every non-Facebook
 campaign link "Campaign site", which would present the party's site as his.
 Routed to the author rather than decided in a hunt.
+
+## 2026-08-21 (NH Hunt 4) — twig enumeration, and eight rungs from real walls
+
+### 7. TWIG ENUMERATION — how a small body is found when no menu lists it
+
+*(New section, RULING 57. The other sections answer "how do I get this document";
+this one answers the question that comes before it — **which bodies exist here at
+all**, when the body is a cemetery trustee board, a village water district or a
+committee that meets four times a year.)*
+
+**Nothing here is optional and nothing here is enough on its own.** Every town
+worked on 2026-08-21 produced a different subset, and every single one of them
+produced bodies the others missed.
+
+**A. The town's boards index — and it is an UNDERCOUNT, every time.**
+Start here, but never stop here. Bradford's index lists eight boards; its
+calendar files sittings for four more. Newbury's menu was an undercount too, and
+that was recorded a session earlier. Treat the index as a floor.
+
+**B. The sitemap, when the menu hides the index.** `bradfordnh.gov` links
+"Supervisors of the Checklist" from its front page and NOTHING else
+body-shaped — one link out of 97. `/sitemap.xml` is eighteen URLs, and one of
+them is `/pages/boards-and-committees`, which lists the lot. Rung 10, and it is
+the first thing to try when `pnpm bodies:enumerate` returns one row from a real
+town.
+
+**C. THE CALENDAR IS A BODY DIRECTORY, and it is the best one.** A town's
+calendar names every body that actually meets, including the ones no page lists:
+
+| Town | Bodies on the index | Bodies the calendar adds |
+|---|---|---|
+| Bradford | 8 | CIP Committee, Hazard Mitigation Committee, Facilities Use Committee, Independence Day Committee |
+| Wilmot | 9 | Master Plan Committee, Safety Services Facility Committee, Transfer Station Advisory Group |
+| New London | 12 | Archives Committee, Tri-Town Assessing Board, Capital Improvement Program |
+
+**D. THE PAST VIEW, which is a different document.** Wilmot's Safety Services
+Facility Committee and its Transfer Station Advisory Group appear on NO index in
+that town and are absent from the upcoming feed. They exist in
+`?tribe_event_display=past&ical=1`, three sittings and two, both in 2026. A body
+that met in March and does not meet again until October is invisible to every
+forward-looking rung there is.
+
+**E. THE STATE REGISTER, for the class the town does not list at all.** A
+village district is a separate government and a town's own site frequently does
+not mention it. New Hampshire's Office of Business and Economic Affairs
+publishes
+`https://www.nheconomy.com/getmedia/f087979c-98b8-41b5-a2e0-1808faaa8ffe/village-districts-locations-addresses.csv`
+— **91 districts, with host municipality, postal address, street address and
+phone**, at rung 2. It is how Lake Todd Village District was found to have
+territory in NEWBURY, against a note in our own registry saying no village
+district reaches Newbury.
+
+*Every state will have one of these and it will be somewhere different.* Look
+for the state's municipal-services or economic-development agency, its
+Department of Revenue's tax-rate tables (which list a district even at a $0.00
+rate), and its Secretary of State's filings.
+
+**F. THE STATUTE, for a body whose boundary is defined by law rather than
+drawn.** RSA 432:12: "each of the 10 counties within the state is hereby
+incorporated into a conservation district; each of the 10 districts shall be
+known by the name of the county to which its boundaries conform." No geometry is
+needed and none is published — the law IS the boundary.
+
+**G. THE ANNUAL REPORT.** A county or town annual report names every officer and
+department head, prints their contact details, and carries each one's own report
+in their own words. Merrimack County's FY2025 report is 44 pages and was read at
+rung 2 from a MEMBER TOWN's website (`chichesternh.org`) rather than the
+county's own — the county's PDFs sit behind the same WAF as everything else on
+that host, and a town that reprints the county report is a second publisher of
+the same document.
+
+#### What to do when a body is known to exist and publishes nothing
+
+**Name it and ship it `KNOWN_UNCOVERED`.** That is the whole answer, and the
+temptation to do something else is what this paragraph exists to refuse:
+
+- **Do NOT leave it out.** A body absent from the registry is a body no reader
+  can learn exists, and the gap ledger cannot see it either.
+- **Do NOT wire it to a source that does not carry it.** Sutton's eighteen
+  bodies could all have been wired to a live feed carrying 1,312 events — and
+  every sitting would have dropped as `unknownVenue`, because that feed publishes
+  no `LOCATION` at all. A wired body producing nothing looks exactly like a body
+  that does not meet.
+- **Do NOT give it a venue because a venue is usually the town office.** That is
+  a guess about a specific sitting dressed as a fact, and a reader acts on it by
+  driving somewhere.
+- **DO record the branches walked and the date.** RULING 53's clock runs from
+  there and the scheduled refresh re-walks it.
+
+### A subcommittee's sittings can be filed under its PARENT board's category
+
+Wilmot's Master Plan Committee meets, and its meetings carry
+`CATEGORIES:Planning Board`. Its Transfer Station Advisory Group carries
+`CATEGORIES:Select Board`. So:
+
+- a **category-driven** adapter cannot separate the child from the parent, and
+- a **title-driven** row over the same feed CLAIMS EVENTS THAT ALREADY BELONG to
+  another body, and counts them twice.
+
+The body is still real and still named. It ships `KNOWN_UNCOVERED` with the
+reason recorded, and what is owed is a source that separates its sittings —
+not a second row over the same events.
+
+### One hall, eleven spellings, on one calendar
+
+Warner's Town Hall appears in its own Google Calendar as: `Warner Town Hall, 5 E
+Main St, Warner, NH 03278, USA`; `Town Hall, 5 East Main St. Warner, NH 03278`;
+the same again **with two spaces before the zip**; `Town Hall, 5 E. Main St.,
+Warner NH 03278`; `Town Hall, Lower-Level Meeting Room`; `Town Hall - Lower
+Level`; `Town Hall - Main Auditorium`; `Warner Town Hall`; `Warner Town Hall,
+Second Floor`; `Warner Town Hall, Main Floor, Stage`; and `Lower Meeting Room,
+Warner Town Hall, 5 E Main St, Warner, NH 03278, USA`.
+
+Every one is its own row in the venue cache. Do not fuzzy-match: a fuzzy match
+that gets it wrong sends a reader to the wrong building and nothing catches it.
+Dump the distinct `LOCATION` strings of the events a row actually matches
+BEFORE writing the row.
+
+### A Zoom URL in `LOCATION` is a fact, and it is not a building
+
+Bradford writes a Zoom join link into `LOCATION` on 24 events. Do not key those
+to the town hall via a `venueMatch` fallback: the fallback fires on ANY
+unresolved location, so a standing-venue fallback silently pins a remote meeting
+at a building. Bradford therefore gets no `venueMatch` at all — its blank and
+Zoom rows drop, are counted, and cost nothing upcoming.
+
+### A stale `.org` town domain, a live `.gov`, and a `www` host that resolves nowhere
+
+`franklinnh.org` is what the search index carries for the City of Franklin. It
+redirects to `www.franklinnh.org`, which no resolver this project can reach
+answers for, and the apex serves a certificate for a different name — so rungs
+2, 3, 4, 5 and 6 ALL fail, four of them with different errors. The town's live
+site is **`franklinnh.gov`**, and Vincent Ribas's official portrait, his
+councilor page and his phone are all on it.
+
+**When every rung fails on a town domain with different errors each time, the
+domain is the wrong one.** Try the `.gov`, then the `.us`, then the state's
+municipal directory. It is a cheaper rung than any of the five.
+
+### An Akamai 403 that a real browser does not see: rung 7 through the app's own XHR
+
+`cfs.sos.nh.gov` — the NH Campaign Finance System — refuses rung 2, rung 3, rung
+4 and **rung 6 with Playwright**, headless Chromium and a masked user agent
+alike, all HTTP 403 from Akamai. A visible browser on the same machine and the
+same IP gets HTTP 200. It is a headless-client wall, not an egress wall.
+
+The route through is rung 7:
+
+1. Load the app in a visible browser.
+2. Read its own JS bundles from the page (`performance.getEntriesByType('resource')`
+   gives every chunk) and grep them for endpoint strings. The API base is a
+   plain literal — here, `https://cfsapi.sos.nh.gov/api`.
+3. Call the API from the page's own context, where CORS is already allowed.
+
+`PublicFilerDetails/GetFilingEntityDetails`, `POST`, body `{ filerName, pageNumber,
+pageSize }` — and only `filerName` is honoured; `electionYear` and
+`filerTypeCode` are accepted and ignored, so filter client-side. The response
+row carries `candidateMailingAddress*`, `candidatePhone`, `candidateEmail`,
+`candidateWebsite`, the whole committee block, and the treasurer's name. **The
+search endpoint IS the detail endpoint** — no second call is needed, and the
+per-filer detail endpoints all answer 401 or 500 anyway.
+
+### A search summary is not a source
+
+A web search reported Vincent Ribas as the sitting Merrimack County Commissioner
+for District 2. The county's own board page names **Stuart D. Trachy**, and the
+Secretary of State's county roster agrees. Ribas is a challenger and a sitting
+Franklin city councilor. **Read the body's own page before believing a summary
+about who sits on it** — a summary is a lead, and a lead is never a citation.
+
+### Two official enumerations can disagree, and that is a finding
+
+The Ashuelot Pond Dam Precinct is in the 2022 Census of Governments and is
+ABSENT from New Hampshire's own village-district register, both read
+2026-08-21. Neither is wrong to consult and neither settles it. It ships named,
+with both facts recorded — RULING 57.

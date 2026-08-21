@@ -56,7 +56,30 @@ export function errorCodeOf(error: unknown): string | null {
   return typeof code === "string" && /^[0-9A-Za-z]{5}$/.test(code) ? code : null;
 }
 
-/** The message, truncated, with the truncation stated rather than silent. */
+/**
+ * The database's own words about WHY — and never the values it was given.
+ *
+ * **THE ALARM'S FIRST REAL FIRING CAUGHT THIS** (2026-08-20, the Prompt D
+ * close-out walk). One `search_log` insert failed transiently out of 94, the
+ * alarm worked exactly as designed, and the row it wrote read:
+ *
+ *     Failed query: insert into "search_log" (…) values (…) params:
+ *     2026-08-21T00:20:53.025Z,SEARCH,03255,["ocd-division/country:us/state:nh/…
+ *
+ * The Neon driver wraps a failure as the QUERY plus its PARAMS, so the message
+ * carried a reader's zip and the divisions their search resolved to — into the
+ * one table whose entire design is that it holds nothing about who was writing.
+ * The column guard cannot see that: the value was smuggled inside a text field
+ * the guard permits. `tests/db-schema.test.ts` asserts the SHAPE; this asserts
+ * the CONTENT, because a rule enforced only at the column level is a rule a
+ * string can walk past.
+ *
+ * So the message is cut at `params:` before anything else, and what survives is
+ * scrubbed of division- and zip-shaped tokens as a second line. The part worth
+ * keeping is untouched by either: `column "coverage_tier" does not exist` — the
+ * sentence that would have closed D73 in a minute — names a column and no
+ * value.
+ */
 export function errorMessageOf(error: unknown): string | null {
   const raw =
     error instanceof Error
@@ -65,7 +88,20 @@ export function errorMessageOf(error: unknown): string | null {
         ? String((error as PgLikeError).message)
         : null;
   if (raw === null) return null;
-  const flat = raw.replace(/\s+/g, " ").trim();
+
+  // 1. Everything from `params:` onward is VALUES. It goes, whole.
+  const at = raw.indexOf("params:");
+  const withoutParams = at >= 0 ? raw.slice(0, at) : raw;
+
+  // 2. Belt and braces, because a driver this repo has not met yet may format
+  // its values differently: strip division ids and bare five-digit runs. Both
+  // are things the alarm may never hold, and neither belongs to a genuine
+  // reason-for-failure sentence.
+  const scrubbed = withoutParams
+    .replace(/ocd-division\/[^\s"',)\]]+/g, "[division]")
+    .replace(/(?<![\d-])\d{5}(?![\d-])/g, "[digits]");
+
+  const flat = scrubbed.replace(/\s+/g, " ").trim();
   if (flat === "") return null;
   return flat.length <= MESSAGE_CAP ? flat : `${flat.slice(0, MESSAGE_CAP)}… [truncated]`;
 }

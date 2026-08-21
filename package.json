@@ -130,7 +130,8 @@
     "bodies:enumerate": "tsx scripts/enumerate-town-bodies.mts",
     "watch:workflows": "tsx scripts/watch-workflows.mts",
     "stale": "tsx scripts/stale.mts",
-    "nh:roster": "tsx scripts/nh-roster-branch.mts"
+    "nh:roster": "tsx scripts/nh-roster-branch.mts",
+    "nh3:shots": "tsx scripts/nh3-shots.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

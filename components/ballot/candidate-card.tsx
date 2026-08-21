@@ -245,6 +245,31 @@ export function CandidateCard({
           </p>
         )}
 
+        {/*
+          RULING 54 (2026-08-21): the address the candidate filed with the
+          state renders. It is on a public form they submitted for exactly this
+          purpose, and for some candidates it is the ONLY way to reach them —
+          Kathleen Donnelly and Cynthia Rusis had no contact at all while their
+          opponents showed phones and sites.
+
+          NOT a link. A `mailto:` or `tel:` is an invitation to act now; a
+          mailing address is a fact, and dressing it as a tappable affordance
+          would overstate what it is. It renders in the LEVEL register — this is
+          a claim surface, about a real person's real address.
+
+          The source rides with it, per the rule that every fact carries its
+          source class. A null renders NOTHING — no row, no label, no dash
+          (RULING 28).
+        */}
+        {card?.filedAddress && (
+          <p className="mt-1 text-[0.75rem] text-muted-foreground">
+            <span>{card.filedAddress}</span>
+            {card.filedAddressSource && (
+              <span className="opacity-80"> — {card.filedAddressSource}</span>
+            )}
+          </p>
+        )}
+
         {/* Item 12: directly beneath the links row — a candidate we hold
             little about still gets the same door, because the pill is where
             the long sections went and a card without one would simply have

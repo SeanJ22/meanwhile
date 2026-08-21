@@ -106,6 +106,7 @@
     "tiers:stamp": "tsx scripts/stamp-coverage-tiers.mts",
     "shoot:promptb": "tsx scripts/promptb-shots.mts",
     "shoot:promptd": "tsx scripts/promptd-shots.mts",
+    "shoot:prompte": "tsx scripts/prompte-shots.mts",
     "ledger:build": "tsx scripts/build-gap-ledger.mts",
     "tracker:promptb": "tsx scripts/promptb-tracker.mts",
     "hunt:migrate": "tsx scripts/migrate-hunt-state.mts",

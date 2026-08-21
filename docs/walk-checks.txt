@@ -368,3 +368,11 @@
 [promptC] the sold store accepted this run's rows at all
 [promptD] no sold-store write raised an alarm in the last 24h
 [promptD] the deploy's database has the migrations the deploy was built from
+[promptE] /ballot carries no per-card completeness marker at 03255
+[promptE] /ballot carries no per-card completeness marker at 07866
+[promptE] /ballot carries no per-card completeness marker at 85641
+[promptE] /ballot carries no per-card completeness marker at 85701
+[promptE] /ballot carries the page-level collection disclosure at 03255
+[promptE] /ballot carries the page-level collection disclosure at 07866
+[promptE] /ballot carries the page-level collection disclosure at 85641
+[promptE] /ballot carries the page-level collection disclosure at 85701

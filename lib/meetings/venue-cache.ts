@@ -388,6 +388,39 @@ export const VENUE_CACHE: VenueEntry[] = [
     verifiedAt: "2026-08-20",
   },
 
+  // ── iCal: SPRINGFIELD, one of the six Kearsarge member towns that had no
+  // bodies in this registry at all (NH Hunt 3, 2026-08-21).
+  //
+  // The town publishes `springfieldnh.org/events/list/?ical=1` — 50 events
+  // naming EIGHT distinct governing bodies, measured 2026-08-21. Nothing had
+  // ever asked it for one, which is the whole finding: the branch was one
+  // request away and six of seven member towns were dark.
+  //
+  // **The venue comes from the feed's own LOCATION line**, not from a guess or
+  // a neighbouring event: every one of the 50 events carries the full street
+  // address, in two spellings of the same room —
+  //
+  //     LOCATION:Protectworth Room, 2750 Main Street, Springfield, NH, 03284
+  //     LOCATION:Protectworth Room Springfield Town Office, 2750 Main Street, …
+  //
+  // so `match` is the shorter one both spellings contain. The coordinates are
+  // the Census geocoder's for the address the town itself published, and the
+  // URL that produced them is recorded beside them like every other row here.
+  {
+    sourceId: "ical",
+    bodyOcdId:
+      "ocd-division/country:us/state:nh/county:sullivan/place:springfield_town",
+    match: "Protectworth Room",
+    name: "Protectworth Room, Springfield Town Office",
+    address: "2750 Main Street, Springfield, NH 03284",
+    lat: 43.493209922548,
+    lng: -72.048060472105,
+    addressSourceUrl: "https://springfieldnh.org/events/list/?ical=1",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=2750+Main+Street%2C+Springfield%2C+NH+03284&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-21",
+  },
+
   // ── SchedulePage: Newbury's Zoning Board of Adjustment ──────────────────
   // The row that took a body from KNOWN_UNCOVERED to LIVE with no other
   // change, 2026-08-15 (the mobile round-two session), and the reason the

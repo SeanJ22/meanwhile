@@ -979,6 +979,39 @@ separately: a seat-keyed path means the Internet Archive holds the PREVIOUS
 occupant's portrait at the same URL, which is how a former senator's picture is
 recoverable at all (the route that produced Harold French's).
 
+### An iCal export can be capped at the OLDEST N events (NH Hunt 3, 2026-08-21)
+
+The adapter's docstring already warns that `/events/?ical=1` serves the current
+VIEW rather than the calendar — Wilmot's month view returns four events where
+the list view returns twenty-three. **Springfield, NH is the worse version of
+that shape and the existing rule does not catch it.**
+
+`springfieldnh.org/events/list/?ical=1` answers 200 with a well-formed calendar
+of exactly **50 events, every one of them between 2023-11 and 2024-11**. So does
+`/events/`, `/events/month/`, `/events/upcoming/`, `?eventDisplay=list`, and
+`?tribe-bar-date=2026-08-01` — six views, one identical stale document. The
+plugin's REST API at `/wp-json/tribe/events/v1/events` answers **404**.
+
+**And the town has not stopped meeting.** Its own front page links
+`events/cemetery-trustees-meeting-2026-08-11/` and
+`events/conservation-commission-meeting-2026-09-03/`. <!-- expected-future: a real Springfield NH meeting the town publishes; the date is theirs, read 2026-08-21 --> The current meetings are
+in the HTML.
+
+Three things to carry:
+
+- **A round number is a cap.** Fifty events is not what a town's calendar
+  happens to hold; it is a limit. Treat any exactly-round VEVENT count as a
+  paging or export ceiling until proved otherwise.
+- **Check the feed's LATEST date, not just its count.** A feed that parses, and
+  is well-formed, and carries fifty real meetings, can still be describing a
+  year that has passed. `latest DTSTART` is one line and it is the check that
+  catches this.
+- **A stale feed is not a source, and wiring to it is worse than not wiring.**
+  Eight Springfield bodies would have rendered as having no meetings while the
+  town publishes them — the empty-success shape, shipped. They are recorded
+  `KNOWN_UNCOVERED` instead: enumerated, real, visible to the gap ledger, and
+  honest about the fact that no adapter reads their live route yet.
+
 ### The extraction toolkit (F11, added 2026-08-20)
 
 Four layers, one contract. **A ZERO-ROW EXTRACTION IS A FAILED EXTRACTION,

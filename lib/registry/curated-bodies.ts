@@ -53,6 +53,10 @@ const WILMOT_OCD =
 const NEW_LONDON_OCD =
   "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town";
 
+/** Springfield, NH — Sullivan County. Confirmed against registry.json. */
+const SPRINGFIELD_OCD =
+  "ocd-division/country:us/state:nh/county:sullivan/place:springfield_town";
+
 /** Newbury's own site — the source for every board row below. */
 const NEWBURY_OCD =
   "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town";
@@ -401,6 +405,7 @@ export const CURATED_BODIES: Body[] = [
   ...newburyBoardRows(),
   ...wilmotBoardRows(),
   ...newLondonBoardRows(),
+  ...springfieldBoardRows(),
 ];
 
 function newburyBoardRows(): Body[] {
@@ -916,6 +921,83 @@ function newLondonBoardRows(): Body[] {
     provenance: {
       sourceUrl: "https://newlondon.nh.gov/calendar",
       sourceOrg: "Town of New London",
+      collectedAt: collected,
+      verifiedAt: collected,
+    },
+  }));
+}
+
+/**
+ * **SPRINGFIELD, NH — a town that had NO bodies in this registry at all**
+ * (NH Hunt 3, 2026-08-21, item 7).
+ *
+ * One of Kearsarge Regional School District's seven member towns, and one of
+ * the six of those seven that were completely dark here. The town publishes
+ * `springfieldnh.org/events/list/?ical=1`: 50 events naming these eight
+ * governing bodies, read 2026-08-21 at rung 2, HTTP 200.
+ *
+ * **The branch was one request away.** Nothing had ever asked this town for a
+ * calendar, and until something did, "we have no source for Springfield" was
+ * our gap wearing the town's name. That is RULING 52's whole point applied to
+ * a place rather than to a fact.
+ *
+ * ## Why these are KNOWN_UNCOVERED and not LIVE, which is the honest half
+ *
+ * **The iCal export is capped at the OLDEST 50 events and stops at
+ * 2024-11-07.** Every view was tried on 2026-08-21 — `/events/list/`,
+ * `/events/`, `/events/month/`, `/events/upcoming/`, `eventDisplay=list`
+ * and `tribe-bar-date=2026-08-01` — and all six return the identical 50
+ * events ending in November 2024. The plugin's REST API
+ * (`/wp-json/tribe/events/v1/events`) answers 404.
+ *
+ * The town has NOT stopped meeting, and this may never be recorded as though it
+ * had: its own front page links
+ * `events/cemetery-trustees-meeting-2026-08-11/` and
+ * `events/conservation-commission-meeting-2026-09-03/`. The current meetings
+ * are in the HTML and no adapter here reads that shape for this town yet.
+ *
+ * So the bodies are enumerated and real — which IS coverage progress, because
+ * the gap ledger can now see them — and the status says exactly what is true:
+ * a usable source was located, and no adapter reads it. Wiring them to the
+ * stale feed would have shipped eight bodies rendering as having no meetings
+ * while the town publishes them, which is the empty-success shape this whole
+ * session exists to end.
+ *
+ * Names are the town's OWN, taken from the feed's `SUMMARY` values, because
+ * the wiring matches on exactly those — a tidier name here than the town uses
+ * there would put two vocabularies on one body. "Town Meeting" and "Town
+ * Elections" appear in the same feed and are deliberately absent: they are
+ * events, not bodies.
+ */
+function springfieldBoardRows(): Body[] {
+  const collected = "2026-08-21";
+  const feed = "https://springfieldnh.org/events/list/?ical=1";
+  const rows: Array<{ slug: string; name: string; sittings: number }> = [
+    { slug: "select-board", name: "Select Board", sittings: 8 },
+    { slug: "planning-board", name: "Planning Board", sittings: 8 },
+    { slug: "zoning-board", name: "Zoning Board of Adjustment", sittings: 9 },
+    { slug: "conservation-commission", name: "Conservation Commission", sittings: 4 },
+    { slug: "library-trustees", name: "Library Trustees", sittings: 5 },
+    { slug: "cemetery-trustees", name: "Cemetery Trustees", sittings: 5 },
+    { slug: "trustees-of-the-trust-funds", name: "Trustees of the Trust Funds", sittings: 1 },
+    { slug: "website-committee", name: "Website Committee", sittings: 6 },
+  ];
+  return rows.map((row) => ({
+    id: `${SPRINGFIELD_OCD}#${row.slug}`,
+    ocdId: SPRINGFIELD_OCD,
+    name: row.name,
+    bodyClass: "COMMISSION" as const,
+    bodyOrigin: "CURATED" as const,
+    coverageStatus: "KNOWN_UNCOVERED" as const,
+    agendaSourceType: "SCHEDULEPAGE" as const,
+    agendaSourceRef: "https://springfieldnh.org/events/",
+    meetingCadence: null,
+    homepageUrl: "https://springfieldnh.org/events/",
+    demandCount: 0,
+    sourceDataset: "GOV_DIRECTORY" as const,
+    provenance: {
+      sourceUrl: feed,
+      sourceOrg: "Town of Springfield",
       collectedAt: collected,
       verifiedAt: collected,
     },

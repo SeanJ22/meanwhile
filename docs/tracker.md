@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **156 open**, 321 resolved.
+- **158 open**, 321 resolved.
 - **41 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **2**
@@ -295,7 +295,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**51 open · 81 resolved.**
+**53 open · 81 resolved.**
 
 ### P2
 
@@ -318,6 +318,10 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **F11** — One family of school-district websites ships its page content as data hidden inside the HTML, and the product's reader comes back empty without saying so. Sized, deliberately not built yet, and named so the silence is not mistaken for an empty page.
 
 **NH06** — Newbury's Selectboard and its three land-use boards are now read from two places at once: the vendor portals that carry agendas, and the town calendar that carries more dates. A merge decides which row a reader sees. That works, and nobody has measured whether it is the right arrangement over a few refreshes.
+
+**NH27** — Springfield is one of Kearsarge seven member towns and had no bodies in this registry at all. Eight are now enumerated and recorded KNOWN_UNCOVERED. They are not wired because the town iCal export is capped at the OLDEST 50 events and stops at 2024-11-07 - six different views all return the identical stale document and the plugin REST API answers 404. The town has NOT stopped meeting: its own front page links events/cemetery-trustees-meeting-2026-08-11 and events/conservation-commission-meeting-2026-09-03 [expected-future: the town's own published meeting date, read 2026-08-21]. The live meetings are in the HTML, and no adapter here reads that shape for this town yet. Wiring to the stale feed would have shipped eight bodies rendering as having no meetings while the town publishes them.
+
+**NH28** — Springfield was found by probing six conventional iCal paths against the town host - one request, and a town that had been dark since the registry was built produced eight named governing bodies. The same probe was run against Bradford, New London, Warner and Newbury; only Springfield and Newbury answered. Sutton at www.sutton-nh.gov does not resolve at all and needs its real host found. The remaining towns need the OTHER branches walked - vendor portals, board pages, minutes archives - rather than the conclusion that they publish nothing. Six of seven member towns were dark and this session moved one of them.
 
 **PB02** — Nobody publishes boundaries for special districts — fire, water, irrigation, library — so the product cannot tell a reader whether they live in one. They are 43.55% of every government in the country, and this is the largest single hole in the coverage promise.
 

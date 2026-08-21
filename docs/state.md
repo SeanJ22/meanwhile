@@ -14223,3 +14223,102 @@ rather than edited in place, so the delta is readable.
   GONE, 0 silent.** `M123` reads green — *68 meeting(s) across 4
   jurisdiction(s): Newbury · Wilmot · Kearsarge Regional School District · New
   London*. The one regression is the stale alarm row described above.
+
+### The handoff, and the author's own edits arriving in the middle of it
+
+**He opened `docs/tracker.xlsx` in Excel and saved it while the session was
+running.** That is the first real use of the workbook this session built, and it
+found four things — one of them his instruction, three of them defects of mine.
+
+**His four edits, read out of the workbook through `pnpm tracker:move` so the
+two Needs Sean rows moved under HIS authority rather than a session's:**
+
+| Row | What he did | What happened |
+|---|---|---|
+| `B08` | Resolved · *"This has absolutely nothing to do with this project at all. Delete this entirely"* | Moved to the resolved store, `Closed by: Sean`. **The conflict is named, not silently resolved either way** — see below. |
+| `PE01` | Resolved · *"We should simply say \"What we have found, we are displaying here.\" That's it."* | **Shipped, verbatim.** See below. |
+| `B05` | `"Pending "` | Normalized to `Pending review`, reported. Still open, still P1. |
+| `T05` | `"Pending "` | Same. |
+
+**`PE01` — his sentence replaced mine, and the half his note does not settle was
+NOT inferred.** `COLLECTION_NOTE` was two sentences and is now one:
+**"What we have found, we are displaying here."** The second sentence was
+explaining the first, which is the product talking about itself rather than
+telling a reader anything, and *"That's it"* is half the instruction — the guard
+now asserts one sentence. `CLAUDE.md` and `docs/rulings.md` carry his wording
+with the amendment recorded beside it.
+
+What his note does **not** settle is whether the per-card issue count goes too,
+and that is opened as **`PE04`** rather than guessed at: he ruled on that
+line himself in F01-continued session 2 item 14 — *"the honesty is right and
+stays; the volume is wrong"* — and it is `CLAUDE.md`'s fourth friction
+exception. Deleting it on an inference from a one-line note would be a session
+overturning his own earlier ruling on a reader surface.
+
+**`B08` — his instruction and the law disagree, and the disagreement is on the
+row.** He is right about the scope: it is his own employment paperwork and was
+never project work. The row left the working view, which is the whole visible
+effect of deleting it. It stays in the resolved store, because RULING 35 — which
+he set — says nothing is ever deleted, and a session removing it would be
+overruling the law on the strength of a note. If he wants it gone from the file
+as well, that is one line and it is explicitly his to say.
+
+**Three defects the first real use found, all of them mine, all shipped in the
+third code merge:**
+
+1. **`isOpen` treated `Pending review` as closed.** It is one of the three states
+   and it does not close a row, so two rows he marked that way sat in the working
+   store, rendered in their section, and were counted by nothing:
+   `docs/tracker.md` stated **140 open** above sections summing to **138**, and
+   both lost rows were P1, which took Needs Sean from three P1 rows to zero
+   without anything happening. **That is stated-N-equals-rendered-rows broken by
+   the session that rebuilt the tracker.** Now asserted section by section.
+2. **The move script recorded no `Closed by`.** The first move produced two
+   resolved rows with the column empty — which RULING 40's own guard catches. A
+   workbook resolution closes as `Sean`; a session must name itself.
+3. **An enum near-miss meant nothing and refused nothing.** Trim, unique-prefix
+   match against the three, report the normalization, refuse on anything
+   ambiguous. A mechanism that fails on the way somebody actually types is a
+   mechanism that gets worked around.
+
+**Two mistakes of mine during the recovery, recorded because they nearly cost
+something:** I ran `git checkout` on both CSVs while fixing defect 1, which
+reverted his edits out of the stores while the workbook was already ahead of
+them — recovered by re-applying his four edits to the workbook verbatim and
+re-running the move through the real path. And a first attempt at refreshing
+section 7 above REPLACED the whole section, destroying 28 KB including the
+branch-history chain back to 2026-08-12 and the Phase A–E roadmap; reverted from
+git and redone as an insertion, which is what it should have been.
+
+### Final state, after the third merge
+
+* **A THIRD CODE MERGE, and it is a DEVIATION from RULING 1 reported as one:**
+  `7866535` → PR [#127](https://github.com/SeanJ22/We-The-People/pull/127) →
+  **`5c48ac8`**. It is neither of the two the rule allows. The reason: he left a
+  reader-facing wording instruction at handoff, RULING 38 makes a note binding
+  on the session that reads it, and carrying it would have left his own sentence
+  unexecuted on a surface he had just looked at.
+* **Production serves `5c48ac8`**, deploy id `6a87cefbfa099200083355dd`.
+* **The product did not regress: 36 of 36 contests rendering cards, 107
+  candidate cards**, per zip 03255 12/47 · 07866 6/15 · 85641 9/25 · 85701 9/20.
+* **Screenshots: 12 of 12 read as images again** after the wording change, all
+  four pilot zips at 430×932 against `5c48ac8`. His sentence renders at the foot
+  of the page, one per page, under the neutral note.
+* **`walk:all`: 370 passed, 1 named regression, 0 could not run. 371 distinct of
+  371, baseline 371, 0 added, 0 GONE, 0 silent.** All eight `promptE` checks
+  fire. The one regression is Prompt D's alarm row from 00:28:19Z, still inside <!-- expected-future: a UTC instant on the Phoenix day 2026-08-20; UTC had already turned over -->
+  its window — `pnpm alarms` still reads **1 in the last 24h, of 1 ever
+  recorded**, so nothing new has failed since the fix.
+* **Gates: test 1461 / 1461 pass / 0 fail / 0 skipped.** Lint 0 errors, 11
+  allowlisted. `tsc --noEmit` clean. Both build modes green, **no ceiling
+  moved**.
+* **Tracker: 141 open · 319 resolved · pair 460.** Needs Sean 36 open (2 P1),
+  and `PE04` is the newest row in it.
+* **Production rows this session created: 825, all SYNTHETIC**, across 15 run
+  ids — six `walk:all` runs with their `walk-all-local` siblings, the
+  200-request write proof, and two single-row probes. **0 reactions. 0 alarms.**
+* **15 ORGANIC rows landed in the session window and NONE of them are ours.**
+  **Organic census 159**; Prompt D closed at 143, delta **+16**. Reported, not
+  investigated, per RULING 3.
+* **`CLAUDE.md`: 71,289 bytes** — 72 smaller than before the third merge,
+  because his sentence is shorter than mine.

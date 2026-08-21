@@ -157,8 +157,19 @@ const NEUTRAL_NOTE =
  * show what we have collected" is a fact; "we're sorry we don't have more"
  * would be an editorial about ourselves, which F01 struck from this product.
  */
-const COLLECTION_NOTE =
-  "We show what we have collected. Every card here carries every detail we could find, so cards are different lengths.";
+/*
+ * **THE AUTHOR'S OWN WORDS, AND THEY ARE SHORTER THAN MINE** (2026-08-20, his
+ * note on `PE01`, verbatim: *"We should simply say \"What we have found, we are
+ * displaying here.\" That's it."*).
+ *
+ * The first version of this shipped earlier the same day as two sentences —
+ * *"We show what we have collected. Every card here carries every detail we
+ * could find, so cards are different lengths."* He read it on the live deploy
+ * and cut it to one. The second sentence was explaining the FIRST one, which is
+ * the product talking about itself rather than telling a reader anything, and
+ * "That's it" is the whole instruction: say it once and stop.
+ */
+const COLLECTION_NOTE = "What we have found, we are displaying here.";
 
 function candidatesOf(set: BallotSet, contest: Contest): Candidacy[] {
   return set.candidacies

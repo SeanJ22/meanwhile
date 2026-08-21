@@ -667,10 +667,18 @@ A per-card marker naming the candidate we know least about is a badge on the
 least-resourced person in the race — the information-asymmetry problem pointed
 the other way — and it is the repetition RULING 28 exists to end.
 
-In its place, one plain page-level disclosure: **"We show what we have
-collected. Every card here carries every detail we could find, so cards are
-different lengths."** Simple, unhedged, at the bottom of the page, once per page
-— not once per contest and never per card.
+In its place, one plain page-level disclosure: **"What we have found, we are
+displaying here."** Simple, unhedged, at the bottom of the page, once per page —
+not once per contest and never per card.
+
+**AMENDED THE SAME DAY, BY THE AUTHOR, IN HIS OWN WORDS** (2026-08-20, his note
+on `PE01`, verbatim: *"We should simply say \"What we have found, we are
+displaying here.\" That's it."*). Prompt E first shipped this as two sentences —
+*"We show what we have collected. Every card here carries every detail we could
+find, so cards are different lengths."* — and he read it on the live deploy and
+cut it to one. The second sentence was explaining the first, which is the
+product talking about itself rather than telling a reader anything. **"That's
+it" is half the instruction**, and the guard now asserts one sentence.
 
 **It replaces nothing else.** The contest-level incumbency footnote Prompt D
 shipped stays verbatim, in its current position after the candidate list and

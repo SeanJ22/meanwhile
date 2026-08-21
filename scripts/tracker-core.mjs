@@ -179,10 +179,30 @@ export function writeStore(rows) {
   );
 }
 
-/** A row is OPEN when it carries no resolution. */
-/** @param {TrackerRow} row @returns {boolean} */
+/**
+ * A row is OPEN when it is not carrying a CLOSING resolution.
+ *
+ * **This read `!RESOLUTIONS.includes(...)` until 2026-08-20, and that was
+ * wrong** — caught on the workbook's first real contact with the author, which
+ * is the only place it could have been caught.
+ *
+ * `Pending review` is one of the three states and it does NOT close a row: it
+ * means "needs a look before it can close", and the row stays in the working
+ * store because nothing has finished. Treating it as not-open made two rows
+ * that were still sitting in the working store, still rendering in their
+ * section, invisible to every count — so `docs/tracker.md` stated **140 open**
+ * above sections summing to **138**, and the two rows it lost were both P1,
+ * which took Needs Sean from three P1 rows to zero without anything happening.
+ *
+ * A stated number that disagrees with the rows underneath it is the defect
+ * `CLAUDE.md`'s stated-N-equals-rendered-rows rule exists to refuse, and this
+ * shipped it. `tests/tracker-stores.test.ts` now asserts the summary and the
+ * per-section census reconcile, so the arithmetic cannot come apart again.
+ *
+ * @param {TrackerRow} row @returns {boolean}
+ */
 export function isOpen(row) {
-  return !RESOLUTIONS.includes((row.Resolution ?? "").trim());
+  return !CLOSING_RESOLUTIONS.includes((row.Resolution ?? "").trim());
 }
 
 /** @param {TrackerRow} row @returns {boolean} */

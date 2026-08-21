@@ -198,9 +198,19 @@ test("RULING 42: the page-level disclosure is declared once and rendered once", 
   assert.ok(declared, "the disclosure sentence is declared in one place");
   const note = declared![1]!;
 
-  // In substance, the two things RULING 42 requires it to say.
-  assert.match(note, /we show what we have collected/i);
-  assert.match(note, /every detail we could find/i);
+  /*
+   * In substance, what RULING 42 requires it to say — in the AUTHOR'S wording
+   * since 2026-08-20, when he read the first version live and cut it from two
+   * sentences to one. The assertion is on the SUBSTANCE and not the sentence,
+   * because the sentence is his to rewrite and has been rewritten once already.
+   */
+  assert.match(note, /what we have found/i);
+  assert.match(note, /displaying here/i);
+  assert.equal(
+    note.split(".").filter((s) => s.trim()).length,
+    1,
+    "one sentence — 'That's it' is half the instruction",
+  );
 
   // Unhedged. An apology about our own coverage is the editorial F01 struck.
   for (const hedge of ["sorry", "unfortunately", "apolog", "we tried", "may not"]) {

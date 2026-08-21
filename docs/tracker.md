@@ -14,10 +14,10 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **142 open**, 317 resolved.
-- **37 waiting on Sean** — the first section below.
+- **141 open**, 319 resolved.
+- **36 waiting on Sean** — the first section below.
 - P1 by section:
-  - Needs Sean — **3**
+  - Needs Sean — **2**
   - New Hampshire hunt — **2**
   - New Jersey hunt — **0**
   - Arizona hunt — **0**
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**37 open · 8 resolved.**
+**36 open · 10 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -43,11 +43,13 @@ Only Sean closes a row here. A session may open one and may work it.
 
 **B05** — Two lawyers, probably: one on privacy and one on election law. Both have long lead times and several other rows are waiting on them.
 
-**B08** — Sean has signed nothing since his October promotion and his employer has not sent the paperwork. Assignment and non-compete language is still readable before he signs, and reading it is the point.
+  Pending review.
 
 **T05** — The abuse policy is written but the review path behind it does not exist. No free-text answer can be accepted until somebody can actually act on a threat.
 
   Waiting on reaction capture (P03).
+
+  Pending review.
 
 ### P2
 
@@ -91,7 +93,7 @@ Only Sean closes a row here. A session may open one and may work it.
 
 **C01** — A sample of what a buyer actually receives: one Pima County measure broken into its provisions, with support per provision and counts by how well each answer was verified. Synthetic numbers, clearly labelled, built to show rather than to sell.
 
-**PE01** — A candidate we hold no published words for still gets a sentence on their card saying so. It is honest and it names the gap as ours, and it also appears only on the shortest cards — which is the same shape as the line RULING 42 just deleted. Whether it goes too is a call about a reader surface, so it is yours. Seen on the live ballot at every pilot zip.
+**PE04** — Every candidate card carries a line saying how many of the twelve issues we search for turned up in their own pages — and, when none did, a sentence saying so. You asked for the page disclosure to be one sentence and no more. Whether that reaches this line too is the part your note does not settle, and it is worth asking because you ruled the opposite way on it once already.
 
 **R56** — The old status page put 54% of the tracker in a section called "everything with no recorded prerequisite", which is not a place. Superseded by the rebuild this session, and it stays open until Sean says the new sections are right.
 

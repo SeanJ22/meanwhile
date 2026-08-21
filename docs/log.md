@@ -6,13 +6,22 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-08-20 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **106 sessions.**
+Newest first. **107 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
 `git log --grep` finds any of them.
 
 ---
+
+## Sean · 2026-08-20
+
+**What it finished.** 2 row(s).
+
+- **B08** — Sean has signed nothing since his October promotion and his employer has not sent the paperwork. Assignment and non-compete language is still readable before he signs, and reading it is the point.
+- **PE01** — A candidate we hold no published words for still gets a sentence on their card saying so. It is honest and it names the gap as ours, and it also appears only on the shortest cards — which is the same shape as the line RULING 42 just deleted. Whether it goes too is a call about a reader surface, so it is yours. Seen on the live ballot at every pilot zip.
+
+**Needs Sean.** Nothing.
 
 ## Prompt E · 2026-08-20
 
@@ -21,12 +30,12 @@ their date and their own commit subject. That is a lookup rather than a guess, a
 - **PD04** — About one search in ninety was never recorded in the store this business sells, and nothing could see it happening. Diagnosed and fixed this session.
 - **PE03** — A meetings source fetched three of a town's calendars, produced no meetings from them, and reported that it had succeeded — so the safety net that preserves a town's meetings during an outage never ran, and Wilmot, New Hampshire went from 23 meetings to none on a reader's page. Fixed at the one line all eleven sources pass through.
 
-**What it started.** 3 row(s) opened, 2 still open.
+**What it started.** 4 row(s) opened, 2 still open.
 
-- **PE01** — A candidate we hold no published words for still gets a sentence on their card saying so. It is honest and it names the gap as ours, and it also appears only on the shortest cards — which is the same shape as the line RULING 42 just deleted. Whether it goes too is a call about a reader surface, so it is yours. Seen on the live ballot at every pilot zip. *(open)*
 - **PE02** — The short summary file generated at the end of every session still reads the frozen pre-rebuild tracker, so it reports a priority count on a scale that no longer exists. Nothing a reader sees is affected; the next session opens on a number that means nothing. *(open)*
+- **PE04** — Every candidate card carries a line saying how many of the twelve issues we search for turned up in their own pages — and, when none did, a sentence saying so. You asked for the page disclosure to be one sentence and no more. Whether that reaches this line too is the part your note does not settle, and it is worth asking because you ruled the opposite way on it once already. *(open)*
 
-**Needs Sean.** PE01
+**Needs Sean.** PE04
 
 ## Prompt D · 2026-08-20
 
@@ -1500,10 +1509,9 @@ The first session. The map, the tracker, and congressional district boundaries o
 - **M03** — Congressional district boundaries as a layer the reader can switch on over the map.
 - **R03** — Nothing is marked done without the branch and which checks passed. An agent grading its own homework drifts optimistic.
 
-**What it started.** 69 row(s) opened, 41 still open.
+**What it started.** 69 row(s) opened, 40 still open.
 
 - **B01** — The product is called Meanwhile on screen while the real name is decided. Nothing a reader sees changes until Sean settles it; when he does, one file changes and the whole site follows. *(open)*
-- **B08** — Sean has signed nothing since his October promotion and his employer has not sent the paperwork. Assignment and non-compete language is still readable before he signs, and reading it is the point. *(open)*
 - **C01** — A sample of what a buyer actually receives: one Pima County measure broken into its provisions, with support per provision and counts by how well each answer was verified. Synthetic numbers, clearly labelled, built to show rather than to sell. *(open)*
 - **D07** — Turning a street address into the exact set of districts a person votes in. Without it the product can orient a reader by zip but cannot promise them their own ballot. *(open)*
 - **V01** — Five conversations with the people who would buy the data — campaign consultants, party data staff, PAC data directors, at least one on each side. The question to put to them is exclusivity. *(open)*
@@ -1514,6 +1522,7 @@ The first session. The map, the tracker, and congressional district boundaries o
 - **D08** — Pick the source that says which contests are on which ballot. The commercial-use terms are the first question to ask, because they decide whether the answer can ship. *(open)*
 - **T01** — The page that says, in plain words, what the product collects, how it is used, and that anonymous totals may be sold. Written before any marketing page, because the marketing has to be true. *(open)*
 - **V04** — Take one real Pima County down-ballot race and build the full side-by-side of sourced positions and the reader's own priorities. The test of whether the sourcing actually holds up end to end. *(open)*
-- …and 29 more still open.
+- **V06** — Read the plain-language output back to real people with real questions and find out whether it is actually plain. Synthetic test questions cannot tell you that. *(open)*
+- …and 28 more still open.
 
-**Needs Sean.** B01, B08, C01, V01, V03, V05, B05, T01, V04, V06, B02, B03, T04, B07, T03, T05, B04, T02, X02, X03, T06, T07, C02, C03, C04
+**Needs Sean.** B01, C01, V01, V03, V05, B05, T01, V04, V06, B02, B03, T04, B07, T03, T05, B04, T02, X02, X03, T06, T07, C02, C03, C04

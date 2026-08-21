@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -7,6 +6,8 @@ import test from "node:test";
 
 import { compareSchemaState, describeSchemaState } from "../lib/db/schema-state.ts";
 import { errorCodeOf, errorMessageOf } from "../lib/db/write-alarm.ts";
+
+import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 
 /**
  * **D73's CLASS, GUARDED** (Prompt D item 6.4, 2026-08-20).
@@ -33,12 +34,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
  * test run rather than on the day somebody remembers.
  */
 function soldStoreWriteRoutes(): string[] {
-  const files = execFileSync("git", ["ls-files", "app"], {
-    cwd: ROOT,
-    encoding: "utf8",
-    maxBuffer: 64e6,
-  })
-    .split("\n")
+  const files = filesThatWouldBeCommitted({ cwd: ROOT, paths: ["app"] })
     .map((f) => f.trim())
     .filter((f) => /\.ts$/.test(f));
   return files.filter((f) => {
@@ -315,11 +311,7 @@ test("6.1: the committed journal head matches the newest migration file", () => 
   const journal = JSON.parse(
     readFileSync(join(ROOT, "lib", "db", "migrations", "meta", "_journal.json"), "utf8"),
   ) as { entries: { tag: string }[] };
-  const files = execFileSync("git", ["ls-files", "lib/db/migrations"], {
-    cwd: ROOT,
-    encoding: "utf8",
-  })
-    .split("\n")
+  const files = filesThatWouldBeCommitted({ cwd: ROOT, paths: ["lib/db/migrations"] })
     .map((f) => f.trim())
     .filter((f) => f.endsWith(".sql"))
     .map((f) => f.replace(/^lib\/db\/migrations\//, "").replace(/\.sql$/, ""))

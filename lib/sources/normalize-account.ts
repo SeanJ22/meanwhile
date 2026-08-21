@@ -121,12 +121,31 @@ export function accountedNormalize<R extends NormalizeAccountInput>(
      * be tried against before it is trusted.
      */
     unretrieved?: number;
+    /**
+     * Events the pass PLACED IN TIME and then set aside as outside the served
+     * window (NH Hunt 3, 2026-08-21).
+     *
+     * The sibling of `unretrieved`, and it closes the same hole from the other
+     * end. The invariant is *documents in hand, nothing out, nothing dropped*,
+     * and an event correctly parsed, correctly dated, and correctly judged to
+     * fall outside the 60-days-forward / 90-days-back window is none of those
+     * three — it is the pass working. A town whose calendar genuinely holds no
+     * sitting in the next sixty days is an honest empty result and must not
+     * turn a nightly refresh red; that would be the WALL-versus-JOB confusion
+     * RULING 12 names, pointed at ourselves.
+     *
+     * It is a COUNT rather than a boolean so the window filter has to say how
+     * many it took, which is what keeps it from becoming a blanket excuse: a
+     * pass that sets aside nothing cannot claim this exemption.
+     */
+    outOfWindow?: number;
   } = {},
 ): Accounted<R> {
   const counters = result.drops as Readonly<Record<string, number>>;
   const droppedAny = Object.values(counters).some((n) => n > 0);
+  const accountedFor = droppedAny || (options.outOfWindow ?? 0) > 0;
   const inHand = input.length - (options.unretrieved ?? 0);
-  if (inHand > 0 && result.meetings.length === 0 && !droppedAny) {
+  if (inHand > 0 && result.meetings.length === 0 && !accountedFor) {
     throw new ZeroRowExtractionError(source, inHand);
   }
   return Object.assign(result, { [ACCOUNTED]: true as const });

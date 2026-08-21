@@ -127,7 +127,8 @@
     "probe:site": "tsx scripts/candidate-site-probe.mts",
     "ship:candidate": "tsx scripts/ship-candidate-field.mts",
     "nh:legislator": "tsx scripts/nh-legislator.mts",
-    "bodies:enumerate": "tsx scripts/enumerate-town-bodies.mts"
+    "bodies:enumerate": "tsx scripts/enumerate-town-bodies.mts",
+    "watch:workflows": "tsx scripts/watch-workflows.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

@@ -4,6 +4,8 @@ import type {
   OfficeholderSet,
 } from "../../officials/types.ts";
 
+import { notADocument } from "../http.ts";
+
 /**
  * State legislators, from Plural Open (ex-Open States). Phase 5.2 tier 2,
  * tracker **D03**.
@@ -240,7 +242,16 @@ async function fetchState(state: string): Promise<string> {
       headers: { "User-Agent": userAgent(), Accept: "text/csv" },
     });
 
-    if (response.ok) return response.text();
+    if (response.ok) {
+      const text = await response.text();
+      // A status is not a document (NH Hunt 3, 2026-08-21). This adapter hand-
+      // rolls its own backoff rather than using the shared client, so it gets
+      // the shared client's check by hand — a 200 with a blank body here is a
+      // state's whole legislature reading as empty.
+      const notDoc = notADocument(text, { label: "a bulk CSV", marker: "," });
+      if (notDoc !== null) throw new Error(`${url} returned HTTP 200 with ${notDoc}`);
+      return text;
+    }
 
     lastStatus = response.status;
     if (response.status !== 429 && response.status < 500) break;

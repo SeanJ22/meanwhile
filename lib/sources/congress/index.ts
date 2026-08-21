@@ -5,6 +5,8 @@ import type {
   OfficialSource,
 } from "../../officials/types.ts";
 
+import { notADocument } from "../http.ts";
+
 /**
  * The US Congress roster. Phase 5.2 tier 1, tracker **D02**.
  *
@@ -121,7 +123,14 @@ export const congressSource: OfficialSource<CongressLegislator> = {
       });
 
       if (response.ok) {
-        return (await response.json()) as CongressLegislator[];
+        // A status is not a document (NH Hunt 3, 2026-08-21). This adapter
+        // hand-rolls its own backoff rather than using the shared client, so
+        // it gets the shared client's check by hand: a 200 with a blank body
+        // here is every member of Congress reading as absent.
+        const text = await response.text();
+        const notDoc = notADocument(text, { label: "a bulk JSON file", marker: "[" });
+        if (notDoc !== null) throw new Error(`${BULK_URL} returned HTTP 200 with ${notDoc}`);
+        return JSON.parse(text) as CongressLegislator[];
       }
 
       lastStatus = response.status;

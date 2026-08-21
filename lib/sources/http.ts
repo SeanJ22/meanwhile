@@ -85,6 +85,57 @@ export interface HttpOptions {
    * human — which is the honest way round.
    */
   profile?: "index" | "browser";
+  /**
+   * What a real document from this URL must contain — **RULING 43, moved one
+   * layer down, to the fetch (NH Hunt 3, 2026-08-21).**
+   *
+   * `accountedNormalize` made "documents in hand, nothing out, nothing
+   * dropped" inexpressible at the NORMALIZE layer, and RULING 43 says in as
+   * many words that the fetch layer remains uncovered. This is that gap, and
+   * a scheduled job had already fallen into it: on 2026-08-21T13:12Z the
+   * `ical` source reported `fetched 3, extracted 0, drops 0`, the zero-row
+   * contract refused the result exactly as designed, and `Refresh meetings
+   * snapshot` went red. The contract was right and the bug was upstream of
+   * it — `parseIcs` was handed a 200 whose body carried no `VEVENT` at all,
+   * so the drop loop never executed and there was nothing to count.
+   *
+   * `challengeIn` below catches a 200 that is a KNOWN interstitial. It cannot
+   * catch a 200 that is a blank body, a truncated transfer, or an error page
+   * this repo has not met — and each of those is a retrieval failure wearing
+   * a successful status code. A document that fails this test is a **WALL**,
+   * recorded on its rung and carried forward as a refusal, never handed
+   * upward as an empty calendar.
+   *
+   * Two layers, because they answer different questions:
+   *
+   * - **Blank is universal and needs no configuration.** A whitespace-only
+   *   200 is never a document, for any caller, in any format. Enforced below
+   *   for every caller of this function whether or not they declare anything.
+   * - **`expect` is the caller's own format**, declared where the caller
+   *   knows it: `BEGIN:VCALENDAR` for an `.ics` feed. A caller that cannot
+   *   name a marker still gets the blank check.
+   */
+  expect?: {
+    /** What the format is called, so the wall names it in the reader's terms. */
+    label: string;
+    /** A marker every genuine document of this format carries. */
+    marker: string;
+  };
+}
+
+/**
+ * Is this 200 a document at all?
+ *
+ * Returns the reason it is not, or `null` when it passes. Kept separate from
+ * `politeGetText` so `tests/http-empty-success.test.ts` can hold it directly
+ * against the bytes a server actually sent.
+ */
+export function notADocument(text: string, expect?: HttpOptions["expect"]): string | null {
+  if (text.trim() === "") return "an empty body";
+  if (expect && !text.includes(expect.marker)) {
+    return `${expect.label} carrying no ${expect.marker}`;
+  }
+  return null;
 }
 
 /**
@@ -282,6 +333,22 @@ export async function politeGetText(
       const text = await response.text();
       const wall = challengeIn(text);
       if (!wall) {
+        /*
+         * A 200 is a status, not a document. See `expect` on HttpOptions: an
+         * empty or wrong-format body is a WALL on this rung, and saying so
+         * here is what stops it being written into the data as an absence one
+         * layer down.
+         */
+        const notDoc = notADocument(text, options.expect);
+        if (notDoc !== null) {
+          throw new SourceHttpError(
+            `HTTP 200 from ${url} with ${notDoc} — a status is not a document. ` +
+              "This is a WALL on this rung, not an empty source.",
+            response.status,
+            url,
+            browser ? 3 : 2,
+          );
+        }
         return {
           status: response.status,
           contentType: response.headers.get("content-type") ?? "",
@@ -294,7 +361,22 @@ export async function politeGetText(
       if (browser && !options.fetchImpl) {
         const viaCurl = await curlGetText(url, headers);
         const stillWalled = challengeIn(viaCurl.text);
-        if (!stillWalled) return viaCurl;
+        if (!stillWalled) {
+          // Rung 4 answers on its own terms and gets the same question asked
+          // of it. A document check that only guarded one of two return paths
+          // would be a guard with a door beside it.
+          const curlNotDoc = notADocument(viaCurl.text, options.expect);
+          if (curlNotDoc !== null) {
+            throw new SourceHttpError(
+              `HTTP 200 from ${url} with ${curlNotDoc} on the curl client — ` +
+                "a status is not a document. This is a WALL on rung 4.",
+              viaCurl.status,
+              url,
+              4,
+            );
+          }
+          return viaCurl;
+        }
         throw new SourceHttpError(
           `${stillWalled} at ${url} — HTTP 200 carrying a challenge page rather ` +
             "than the document, on both clients. This is a WALL, not an empty page.",

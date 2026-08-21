@@ -49,10 +49,13 @@ const SETUP_NODE_STEP = /-\s*uses:\s*actions\/setup-node@/;
 
 const workflows = readdirSync(DIR).filter((f) => f.endsWith(".yml"));
 
-test("the workflow set is still the six this rule was audited against", () => {
+test("the workflow set is still the seven this rule was audited against", () => {
   assert.equal(
     workflows.length,
-    6,
+    // Seven as of NH Hunt 3 (2026-08-21): job-watch.yml joined the set under
+    // RULING 56. Its pins were audited here at the same time — checkout@v7 and
+    // setup-node@v7, matching every other workflow.
+    7,
     `the workflow set changed: ${workflows.join(", ")} — audit the new one's action pins too`,
   );
 });
@@ -73,11 +76,12 @@ test("R45: no workflow pins an action major that targets Node 20", () => {
 
   assert.equal(
     pins,
-    14,
-    // Six workflows, one checkout + one setup-node each, plus the second job
-    // build-check.yml grew in Prompt B item 1c (the Linux gate) with its own
-    // pair. Counted rather than assumed, so a new job without pins is caught.
-    `expected 14 Node-runtime action pins across the workflow set, found ${pins}`,
+    16,
+    // Seven workflows, one checkout + one setup-node each, plus the second
+    // job build-check.yml grew in Prompt B item 1c (the Linux gate) with its
+    // own pair. 16 as of NH Hunt 3, when job-watch.yml added its pair. Counted
+    // rather than assumed, so a new job without pins is caught.
+    `expected 16 Node-runtime action pins across the workflow set, found ${pins}`,
   );
   assert.deepEqual(
     stale,

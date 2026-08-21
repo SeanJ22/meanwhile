@@ -1,0 +1,77 @@
+# RULING 56 — a scheduled job that fails tells someone. (NH Hunt 3, 2026-08-21.)
+#
+# `Refresh meetings snapshot` and `Intake tripwire` were failing intermittently
+# into a page nobody watches: 14 of 36 completed runs for the meetings refresh
+# over the 8 days to 2026-08-21, and nothing anywhere said so. That is the D73
+# shape — a data path degrading with every light green.
+#
+# This reads each watched workflow's run history and opens a **Needs Sean** row
+# where the two most recent completed runs are both failures. It never resolves
+# one: RULING 37 says only Sean closes a Needs Sean row, and a watcher that
+# tidied away its own rows when a job went green again would rebuild the
+# light-green problem one layer up.
+#
+# It runs AFTER the day's scheduled jobs rather than beside them — 15:40 UTC is
+# past the meetings refresh's 13:12 slot and the tripwire's 10:41 — so a
+# failure raised today is seen today rather than tomorrow.
+
+name: Job watch
+
+on:
+  schedule:
+    - cron: "40 15 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  # Reading other workflows' run history. The watcher's whole input.
+  actions: read
+
+concurrency:
+  group: job-watch
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    # Nothing here should take minutes. A job-watcher that itself hangs for six
+    # hours before GitHub kills it would be the joke this file is about.
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Enable corepack (pnpm pinned by packageManager)
+        run: corepack enable
+
+      - name: Install
+        run: corepack pnpm install --frozen-lockfile
+
+      # `--open` writes through scripts/tracker.mjs, which is the only writer of
+      # the two stores. Nothing here edits a CSV by hand.
+      #
+      # Exit 2 is COULD NOT READ — an unreachable Actions API is not a clean
+      # board, and it is deliberately distinct from exit 0's "nothing found".
+      - name: Watch the scheduled jobs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: corepack pnpm watch:workflows --open
+
+      - name: Commit any row it opened
+        run: |
+          if git diff --quiet -- docs/; then
+            echo "no row opened — nothing to commit"
+            exit 0
+          fi
+          git config user.name "job-watch[bot]"
+          git config user.email "noreply@github.com"
+          git add docs/
+          git commit -m "Job watch: a scheduled job has failed twice in a row"
+          # R48: rebase-before-push with retry. A rejected push never exits zero.
+          node scripts/push-main.mjs

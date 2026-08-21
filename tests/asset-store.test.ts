@@ -5,6 +5,8 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
+import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
+
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 /**
@@ -54,15 +56,12 @@ const manifest = JSON.parse(
 ) as Manifest;
 
 function trackedBinaries(): string[] {
-  return execFileSync("git", ["ls-files", "-z"], {
-    encoding: "utf8",
-    cwd: ROOT,
-    maxBuffer: 1e9,
-  })
-    .split("\0")
-    .filter(Boolean)
-    // RULING 14: a repo-relative path is POSIX everywhere it is compared.
-    .map((p) => p.replace(/\\/g, "/"))
+  // WHAT WOULD BE COMMITTED, not what already was. This guard asked
+  // `git ls-files` — tracked only — and so passed on a working tree holding
+  // ten unstaged portraits, which the very next `git add` committed. The
+  // ordering was the defect and it was a defect in the gate. See
+  // lib/ops/repo-files.ts.
+  return filesThatWouldBeCommitted({ cwd: ROOT })
     .filter((p) => BINARY.test(p))
     .filter((p) => !STAYS_IN_REPO.some((re) => re.test(p)));
 }
@@ -125,10 +124,7 @@ test("RULING 20: reference data and provenance stay in git", () => {
    * a file a reader can open.
    */
   const tracked = new Set(
-    execFileSync("git", ["ls-files", "-z"], { encoding: "utf8", cwd: ROOT, maxBuffer: 1e9 })
-      .split("\0")
-      .filter(Boolean)
-      .map((p) => p.replace(/\\/g, "/")),
+    filesThatWouldBeCommitted({ cwd: ROOT }),
   );
   for (const must of [
     "data/reference/census_govt_units_2022.csv",
